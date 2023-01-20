@@ -71,7 +71,7 @@ variable {D : Type u} [Category.{v} D]
 variable (G : D ⥤ C)
 
 /-- If `G : D ⥤ C` is a right adjoint it satisfies the solution set condition.  -/
-theorem solution_set_condition_of_is_right_adjoint [IsRightAdjoint G] : SolutionSetCondition G :=
+theorem solutionSetCondition_of_isRightAdjoint [IsRightAdjoint G] : SolutionSetCondition G :=
   by
   intro A
   refine'
@@ -79,7 +79,7 @@ theorem solution_set_condition_of_is_right_adjoint [IsRightAdjoint G] : Solution
   intro B h
   refine' ⟨PUnit.unit, ((adjunction.of_right_adjoint G).homEquiv _ _).symm h, _⟩
   rw [← adjunction.hom_equiv_unit, Equiv.apply_symm_apply]
-#align category_theory.solution_set_condition_of_is_right_adjoint CategoryTheory.solution_set_condition_of_is_right_adjoint
+#align category_theory.solution_set_condition_of_is_right_adjoint CategoryTheory.solutionSetCondition_of_isRightAdjoint
 
 /-- The general adjoint functor theorem says that if `G : D ⥤ C` preserves limits and `D` has them,
 if `G` satisfies the solution set condition then `G` is a right adjoint.
@@ -114,7 +114,7 @@ noncomputable def isRightAdjointOfPreservesLimitsOfIsCoseparating [HasLimits D] 
     {𝒢 : Set D} [Small.{v} 𝒢] (h𝒢 : IsCoseparating 𝒢) (G : D ⥤ C) [PreservesLimits G] :
     IsRightAdjoint G :=
   have : ∀ A, HasInitial (StructuredArrow A G) := fun A =>
-    has_initial_of_is_coseparating (StructuredArrow.is_coseparating_proj_preimage A G h𝒢)
+    hasInitial_of_isCoseparating (StructuredArrow.isCoseparating_proj_preimage A G h𝒢)
   is_right_adjoint_of_structured_arrow_initials _
 #align category_theory.is_right_adjoint_of_preserves_limits_of_is_coseparating CategoryTheory.isRightAdjointOfPreservesLimitsOfIsCoseparating
 
@@ -125,7 +125,7 @@ noncomputable def isLeftAdjointOfPreservesColimitsOfIsSeparatig [HasColimits C] 
     {𝒢 : Set C} [Small.{v} 𝒢] (h𝒢 : IsSeparating 𝒢) (F : C ⥤ D) [PreservesColimits F] :
     IsLeftAdjoint F :=
   have : ∀ A, HasTerminal (CostructuredArrow F A) := fun A =>
-    has_terminal_of_is_separating (CostructuredArrow.is_separating_proj_preimage F A h𝒢)
+    hasTerminal_of_isSeparating (CostructuredArrow.isSeparating_proj_preimage F A h𝒢)
   is_left_adjoint_of_costructured_arrow_terminals _
 #align category_theory.is_left_adjoint_of_preserves_colimits_of_is_separatig CategoryTheory.isLeftAdjointOfPreservesColimitsOfIsSeparatig
 
@@ -135,23 +135,23 @@ namespace Limits
 
 /-- A consequence of the special adjoint functor theorem: if `C` is complete, well-powered and
     has a small coseparating set, then it is cocomplete. -/
-theorem has_colimits_of_has_limits_of_is_coseparating [HasLimits C] [WellPowered C] {𝒢 : Set C}
+theorem hasColimits_of_hasLimits_of_isCoseparating [HasLimits C] [WellPowered C] {𝒢 : Set C}
     [Small.{v} 𝒢] (h𝒢 : IsCoseparating 𝒢) : HasColimits C :=
   {
     HasColimitsOfShape := fun J hJ =>
       has_colimits_of_shape_iff_is_right_adjoint_const.2
         ⟨is_right_adjoint_of_preserves_limits_of_is_coseparating h𝒢 _⟩ }
-#align category_theory.limits.has_colimits_of_has_limits_of_is_coseparating CategoryTheory.Limits.has_colimits_of_has_limits_of_is_coseparating
+#align category_theory.limits.has_colimits_of_has_limits_of_is_coseparating CategoryTheory.Limits.hasColimits_of_hasLimits_of_isCoseparating
 
 /-- A consequence of the special adjoint functor theorem: if `C` is cocomplete, well-copowered and
     has a small separating set, then it is complete. -/
-theorem has_limits_of_has_colimits_of_is_separating [HasColimits C] [WellPowered Cᵒᵖ] {𝒢 : Set C}
+theorem hasLimits_of_hasColimits_of_isSeparating [HasColimits C] [WellPowered Cᵒᵖ] {𝒢 : Set C}
     [Small.{v} 𝒢] (h𝒢 : IsSeparating 𝒢) : HasLimits C :=
   {
     HasLimitsOfShape := fun J hJ =>
       has_limits_of_shape_iff_is_left_adjoint_const.2
         ⟨is_left_adjoint_of_preserves_colimits_of_is_separatig h𝒢 _⟩ }
-#align category_theory.limits.has_limits_of_has_colimits_of_is_separating CategoryTheory.Limits.has_limits_of_has_colimits_of_is_separating
+#align category_theory.limits.has_limits_of_has_colimits_of_is_separating CategoryTheory.Limits.hasLimits_of_hasColimits_of_isSeparating
 
 end Limits
 

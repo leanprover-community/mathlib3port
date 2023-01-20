@@ -56,8 +56,8 @@ form a sheaf.
 In fact, the proof is identical when we do this for dependent functions to a type family `T`,
 so we do the more general case.
 -/
-theorem to_Types_is_sheaf (T : X → Type u) : (presheafToTypes X T).IsSheaf :=
-  is_sheaf_of_is_sheaf_unique_gluing_types _ fun ι U sf hsf =>
+theorem to_Types_isSheaf (T : X → Type u) : (presheafToTypes X T).IsSheaf :=
+  isSheaf_of_isSheafUniqueGluing_types _ fun ι U sf hsf =>
     -- We use the sheaf condition in terms of unique gluing
   -- U is a family of open sets, indexed by `ι` and `sf` is a compatible family of sections.
   -- In the informal comments below, I'll just write `U` to represent the union.
@@ -88,15 +88,15 @@ theorem to_Types_is_sheaf (T : X → Type u) : (presheafToTypes X T).IsSheaf :=
       convert congr_fun (ht (index x)) ⟨x.1, index_spec x⟩
       ext
       rfl
-#align Top.presheaf.to_Types_is_sheaf TopCat.Presheaf.to_Types_is_sheaf
+#align Top.presheaf.to_Types_is_sheaf TopCat.Presheaf.to_Types_isSheaf
 
 -- We verify that the non-dependent version is an immediate consequence:
 /-- The presheaf of not-necessarily-continuous functions to
 a target type `T` satsifies the sheaf condition.
 -/
-theorem to_Type_is_sheaf (T : Type u) : (presheafToType X T).IsSheaf :=
-  to_Types_is_sheaf X fun _ => T
-#align Top.presheaf.to_Type_is_sheaf TopCat.Presheaf.to_Type_is_sheaf
+theorem to_Type_isSheaf (T : Type u) : (presheafToType X T).IsSheaf :=
+  to_Types_isSheaf X fun _ => T
+#align Top.presheaf.to_Type_is_sheaf TopCat.Presheaf.to_Type_isSheaf
 
 end TopCat.Presheaf
 
@@ -106,13 +106,13 @@ namespace TopCat
 `T : X → Type u`.
 -/
 def sheafToTypes (T : X → Type u) : Sheaf (Type u) X :=
-  ⟨presheafToTypes X T, Presheaf.to_Types_is_sheaf _ _⟩
+  ⟨presheafToTypes X T, Presheaf.to_Types_isSheaf _ _⟩
 #align Top.sheaf_to_Types TopCat.sheafToTypes
 
 /-- The sheaf of not-necessarily-continuous functions on `X` with values in a type `T`.
 -/
 def sheafToType (T : Type u) : Sheaf (Type u) X :=
-  ⟨presheafToType X T, Presheaf.to_Type_is_sheaf _ _⟩
+  ⟨presheafToType X T, Presheaf.to_Type_isSheaf _ _⟩
 #align Top.sheaf_to_Type TopCat.sheafToType
 
 end TopCat

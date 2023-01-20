@@ -27,7 +27,7 @@ namespace Fin
 variable {α β : Type _} {n : ℕ}
 
 @[simp]
-theorem Ioi_zero_eq_map : ioi (0 : Fin n.succ) = univ.map (Fin.succEmbedding _).toEmbedding :=
+theorem ioi_zero_eq_map : ioi (0 : Fin n.succ) = univ.map (Fin.succEmbedding _).toEmbedding :=
   by
   ext i
   simp only [mem_Ioi, mem_map, mem_univ, Function.Embedding.coeFn_mk, exists_true_left]
@@ -38,10 +38,10 @@ theorem Ioi_zero_eq_map : ioi (0 : Fin n.succ) = univ.map (Fin.succEmbedding _).
       exact ⟨j, rfl⟩
   · rintro ⟨i, _, rfl⟩
     exact succ_pos _
-#align fin.Ioi_zero_eq_map Fin.Ioi_zero_eq_map
+#align fin.Ioi_zero_eq_map Fin.ioi_zero_eq_map
 
 @[simp]
-theorem Ioi_succ (i : Fin n) : ioi i.succ = (ioi i).map (Fin.succEmbedding _).toEmbedding :=
+theorem ioi_succ (i : Fin n) : ioi i.succ = (ioi i).map (Fin.succEmbedding _).toEmbedding :=
   by
   ext i
   simp only [mem_filter, mem_Ioi, mem_map, mem_univ, true_and_iff, Function.Embedding.coeFn_mk,
@@ -53,7 +53,7 @@ theorem Ioi_succ (i : Fin n) : ioi i.succ = (ioi i).map (Fin.succEmbedding _).to
       refine' ⟨i, succ_lt_succ_iff.mp hi, rfl⟩
   · rintro ⟨i, hi, rfl⟩
     simpa
-#align fin.Ioi_succ Fin.Ioi_succ
+#align fin.Ioi_succ Fin.ioi_succ
 
 theorem card_filter_univ_succ' (p : Fin (n + 1) → Prop) [DecidablePred p] :
     (univ.filter p).card = ite (p 0) 1 0 + (univ.filter (p ∘ Fin.succ)).card :=
@@ -68,7 +68,7 @@ theorem card_filter_univ_succ (p : Fin (n + 1) → Prop) [DecidablePred p] :
   (card_filter_univ_succ' p).trans (by split_ifs <;> simp [add_comm 1])
 #align fin.card_filter_univ_succ Fin.card_filter_univ_succ
 
-theorem card_filter_univ_eq_vector_nth_eq_count [DecidableEq α] (a : α) (v : Vector α n) :
+theorem card_filter_univ_eq_vector_get_eq_count [DecidableEq α] (a : α) (v : Vector α n) :
     (univ.filter fun i => a = v.nth i).card = v.toList.count a :=
   by
   induction' v using Vector.inductionOn with n x xs hxs
@@ -76,7 +76,7 @@ theorem card_filter_univ_eq_vector_nth_eq_count [DecidableEq α] (a : α) (v : V
   ·
     simp_rw [card_filter_univ_succ', Vector.get_cons_zero, Vector.toList_cons, Function.comp,
       Vector.get_cons_succ, hxs, List.count_cons', add_comm (ite (a = x) 1 0)]
-#align fin.card_filter_univ_eq_vector_nth_eq_count Fin.card_filter_univ_eq_vector_nth_eq_count
+#align fin.card_filter_univ_eq_vector_nth_eq_count Fin.card_filter_univ_eq_vector_get_eq_count
 
 end Fin
 

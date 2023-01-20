@@ -33,9 +33,9 @@ Dickson, order, partial well order
 ordered, when `σ` is `finite` and `α` is a linear well order.
 This version uses finsupps on a finite type as it is intended for use with `mv_power_series`.
 -/
-theorem Finsupp.is_pwo {α σ : Type _} [Zero α] [LinearOrder α] [IsWellOrder α (· < ·)] [Finite σ]
+theorem Finsupp.isPwo {α σ : Type _} [Zero α] [LinearOrder α] [IsWellOrder α (· < ·)] [Finite σ]
     (S : Set (σ →₀ α)) : S.IsPwo :=
   Finsupp.equivFunOnFinite.symm_image_image S ▸
-    Set.PartiallyWellOrderedOn.image_of_monotone_on (Pi.is_pwo _) fun a b ha hb => id
-#align finsupp.is_pwo Finsupp.is_pwo
+    Set.PartiallyWellOrderedOn.image_of_monotone_on (Pi.isPwo _) fun a b ha hb => id
+#align finsupp.is_pwo Finsupp.isPwo
 

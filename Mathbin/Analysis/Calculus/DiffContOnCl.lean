@@ -37,27 +37,25 @@ structure DiffContOnCl (f : E → F) (s : Set E) : Prop where
 
 variable {𝕜}
 
-theorem DifferentiableOn.diff_cont_on_cl (h : DifferentiableOn 𝕜 f (closure s)) :
-    DiffContOnCl 𝕜 f s :=
+theorem DifferentiableOn.diffContOnCl (h : DifferentiableOn 𝕜 f (closure s)) : DiffContOnCl 𝕜 f s :=
   ⟨h.mono subset_closure, h.ContinuousOn⟩
-#align differentiable_on.diff_cont_on_cl DifferentiableOn.diff_cont_on_cl
+#align differentiable_on.diff_cont_on_cl DifferentiableOn.diffContOnCl
 
-theorem Differentiable.diff_cont_on_cl (h : Differentiable 𝕜 f) : DiffContOnCl 𝕜 f s :=
+theorem Differentiable.diffContOnCl (h : Differentiable 𝕜 f) : DiffContOnCl 𝕜 f s :=
   ⟨h.DifferentiableOn, h.Continuous.ContinuousOn⟩
-#align differentiable.diff_cont_on_cl Differentiable.diff_cont_on_cl
+#align differentiable.diff_cont_on_cl Differentiable.diffContOnCl
 
-theorem IsClosed.diff_cont_on_cl_iff (hs : IsClosed s) :
-    DiffContOnCl 𝕜 f s ↔ DifferentiableOn 𝕜 f s :=
+theorem IsClosed.diffContOnCl_iff (hs : IsClosed s) : DiffContOnCl 𝕜 f s ↔ DifferentiableOn 𝕜 f s :=
   ⟨fun h => h.DifferentiableOn, fun h => ⟨h, hs.closure_eq.symm ▸ h.ContinuousOn⟩⟩
-#align is_closed.diff_cont_on_cl_iff IsClosed.diff_cont_on_cl_iff
+#align is_closed.diff_cont_on_cl_iff IsClosed.diffContOnCl_iff
 
-theorem diff_cont_on_cl_univ : DiffContOnCl 𝕜 f univ ↔ Differentiable 𝕜 f :=
-  is_closed_univ.diff_cont_on_cl_iff.trans differentiable_on_univ
-#align diff_cont_on_cl_univ diff_cont_on_cl_univ
+theorem diffContOnCl_univ : DiffContOnCl 𝕜 f univ ↔ Differentiable 𝕜 f :=
+  isClosed_univ.diff_cont_on_cl_iff.trans differentiableOn_univ
+#align diff_cont_on_cl_univ diffContOnCl_univ
 
-theorem diff_cont_on_cl_const {c : F} : DiffContOnCl 𝕜 (fun x : E => c) s :=
-  ⟨differentiable_on_const c, continuous_on_const⟩
-#align diff_cont_on_cl_const diff_cont_on_cl_const
+theorem diffContOnCl_const {c : F} : DiffContOnCl 𝕜 (fun x : E => c) s :=
+  ⟨differentiableOn_const c, continuousOn_const⟩
+#align diff_cont_on_cl_const diffContOnCl_const
 
 namespace DiffContOnCl
 
@@ -66,25 +64,25 @@ theorem comp {g : G → E} {t : Set G} (hf : DiffContOnCl 𝕜 f s) (hg : DiffCo
   ⟨hf.1.comp hg.1 h, hf.2.comp hg.2 <| h.closure_of_continuous_on hg.2⟩
 #align diff_cont_on_cl.comp DiffContOnCl.comp
 
-theorem continuous_on_ball [NormedSpace ℝ E] {x : E} {r : ℝ} (h : DiffContOnCl 𝕜 f (ball x r)) :
+theorem continuousOn_ball [NormedSpace ℝ E] {x : E} {r : ℝ} (h : DiffContOnCl 𝕜 f (ball x r)) :
     ContinuousOn f (closedBall x r) :=
   by
   rcases eq_or_ne r 0 with (rfl | hr)
   · rw [closed_ball_zero]
-    exact continuous_on_singleton f x
+    exact continuousOn_singleton f x
   · rw [← closure_ball x hr]
     exact h.continuous_on
-#align diff_cont_on_cl.continuous_on_ball DiffContOnCl.continuous_on_ball
+#align diff_cont_on_cl.continuous_on_ball DiffContOnCl.continuousOn_ball
 
 theorem mk_ball {x : E} {r : ℝ} (hd : DifferentiableOn 𝕜 f (ball x r))
     (hc : ContinuousOn f (closedBall x r)) : DiffContOnCl 𝕜 f (ball x r) :=
   ⟨hd, hc.mono <| closure_ball_subset_closed_ball⟩
 #align diff_cont_on_cl.mk_ball DiffContOnCl.mk_ball
 
-protected theorem differentiable_at (h : DiffContOnCl 𝕜 f s) (hs : IsOpen s) (hx : x ∈ s) :
+protected theorem differentiableAt (h : DiffContOnCl 𝕜 f s) (hs : IsOpen s) (hx : x ∈ s) :
     DifferentiableAt 𝕜 f x :=
   h.DifferentiableOn.DifferentiableAt <| hs.mem_nhds hx
-#align diff_cont_on_cl.differentiable_at DiffContOnCl.differentiable_at
+#align diff_cont_on_cl.differentiable_at DiffContOnCl.differentiableAt
 
 theorem differentiable_at' (h : DiffContOnCl 𝕜 f s) (hx : s ∈ 𝓝 x) : DifferentiableAt 𝕜 f x :=
   h.DifferentiableOn.DifferentiableAt hx
@@ -99,11 +97,11 @@ theorem add (hf : DiffContOnCl 𝕜 f s) (hg : DiffContOnCl 𝕜 g s) : DiffCont
 #align diff_cont_on_cl.add DiffContOnCl.add
 
 theorem add_const (hf : DiffContOnCl 𝕜 f s) (c : F) : DiffContOnCl 𝕜 (fun x => f x + c) s :=
-  hf.add diff_cont_on_cl_const
+  hf.add diffContOnCl_const
 #align diff_cont_on_cl.add_const DiffContOnCl.add_const
 
 theorem const_add (hf : DiffContOnCl 𝕜 f s) (c : F) : DiffContOnCl 𝕜 (fun x => c + f x) s :=
-  diff_cont_on_cl_const.add hf
+  diffContOnCl_const.add hf
 #align diff_cont_on_cl.const_add DiffContOnCl.const_add
 
 theorem neg (hf : DiffContOnCl 𝕜 f s) : DiffContOnCl 𝕜 (-f) s :=
@@ -115,11 +113,11 @@ theorem sub (hf : DiffContOnCl 𝕜 f s) (hg : DiffContOnCl 𝕜 g s) : DiffCont
 #align diff_cont_on_cl.sub DiffContOnCl.sub
 
 theorem sub_const (hf : DiffContOnCl 𝕜 f s) (c : F) : DiffContOnCl 𝕜 (fun x => f x - c) s :=
-  hf.sub diff_cont_on_cl_const
+  hf.sub diffContOnCl_const
 #align diff_cont_on_cl.sub_const DiffContOnCl.sub_const
 
 theorem const_sub (hf : DiffContOnCl 𝕜 f s) (c : F) : DiffContOnCl 𝕜 (fun x => c - f x) s :=
-  diff_cont_on_cl_const.sub hf
+  diffContOnCl_const.sub hf
 #align diff_cont_on_cl.const_sub DiffContOnCl.const_sub
 
 theorem const_smul {R : Type _} [Semiring R] [Module R F] [SMulCommClass 𝕜 R F]
@@ -136,23 +134,23 @@ theorem smul {𝕜' : Type _} [NontriviallyNormedField 𝕜'] [NormedAlgebra �
 theorem smul_const {𝕜' : Type _} [NontriviallyNormedField 𝕜'] [NormedAlgebra 𝕜 𝕜']
     [NormedSpace 𝕜' F] [IsScalarTower 𝕜 𝕜' F] {c : E → 𝕜'} {s : Set E} (hc : DiffContOnCl 𝕜 c s)
     (y : F) : DiffContOnCl 𝕜 (fun x => c x • y) s :=
-  hc.smul diff_cont_on_cl_const
+  hc.smul diffContOnCl_const
 #align diff_cont_on_cl.smul_const DiffContOnCl.smul_const
 
 theorem inv {f : E → 𝕜} (hf : DiffContOnCl 𝕜 f s) (h₀ : ∀ x ∈ closure s, f x ≠ 0) :
     DiffContOnCl 𝕜 f⁻¹ s :=
-  ⟨differentiable_on_inv.comp hf.1 fun x hx => h₀ _ (subset_closure hx), hf.2.inv₀ h₀⟩
+  ⟨differentiableOn_inv.comp hf.1 fun x hx => h₀ _ (subset_closure hx), hf.2.inv₀ h₀⟩
 #align diff_cont_on_cl.inv DiffContOnCl.inv
 
 end DiffContOnCl
 
-theorem Differentiable.comp_diff_cont_on_cl {g : G → E} {t : Set G} (hf : Differentiable 𝕜 f)
+theorem Differentiable.comp_diffContOnCl {g : G → E} {t : Set G} (hf : Differentiable 𝕜 f)
     (hg : DiffContOnCl 𝕜 g t) : DiffContOnCl 𝕜 (f ∘ g) t :=
   hf.DiffContOnCl.comp hg (mapsTo_image _ _)
-#align differentiable.comp_diff_cont_on_cl Differentiable.comp_diff_cont_on_cl
+#align differentiable.comp_diff_cont_on_cl Differentiable.comp_diffContOnCl
 
-theorem DifferentiableOn.diff_cont_on_cl_ball {U : Set E} {c : E} {R : ℝ}
-    (hf : DifferentiableOn 𝕜 f U) (hc : closedBall c R ⊆ U) : DiffContOnCl 𝕜 f (ball c R) :=
-  DiffContOnCl.mk_ball (hf.mono (ball_subset_closed_ball.trans hc)) (hf.ContinuousOn.mono hc)
-#align differentiable_on.diff_cont_on_cl_ball DifferentiableOn.diff_cont_on_cl_ball
+theorem DifferentiableOn.diffContOnCl_ball {U : Set E} {c : E} {R : ℝ} (hf : DifferentiableOn 𝕜 f U)
+    (hc : closedBall c R ⊆ U) : DiffContOnCl 𝕜 f (ball c R) :=
+  DiffContOnCl.mk_ball (hf.mono (ball_subset_closedBall.trans hc)) (hf.ContinuousOn.mono hc)
+#align differentiable_on.diff_cont_on_cl_ball DifferentiableOn.diffContOnCl_ball
 

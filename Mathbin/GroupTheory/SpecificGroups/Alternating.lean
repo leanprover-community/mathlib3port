@@ -58,44 +58,44 @@ instance [Subsingleton α] : Unique (alternatingGroup α) :=
 
 variable {α}
 
-theorem alternating_group_eq_sign_ker : alternatingGroup α = sign.ker :=
+theorem alternatingGroup_eq_sign_ker : alternatingGroup α = sign.ker :=
   rfl
-#align alternating_group_eq_sign_ker alternating_group_eq_sign_ker
+#align alternating_group_eq_sign_ker alternatingGroup_eq_sign_ker
 
 namespace Equiv.Perm
 
 @[simp]
-theorem mem_alternating_group {f : Perm α} : f ∈ alternatingGroup α ↔ sign f = 1 :=
+theorem mem_alternatingGroup {f : Perm α} : f ∈ alternatingGroup α ↔ sign f = 1 :=
   sign.mem_ker
-#align equiv.perm.mem_alternating_group Equiv.Perm.mem_alternating_group
+#align equiv.perm.mem_alternating_group Equiv.Perm.mem_alternatingGroup
 
-theorem prod_list_swap_mem_alternating_group_iff_even_length {l : List (Perm α)}
+theorem prod_list_swap_mem_alternatingGroup_iff_even_length {l : List (Perm α)}
     (hl : ∀ g ∈ l, IsSwap g) : l.Prod ∈ alternatingGroup α ↔ Even l.length :=
   by
   rw [mem_alternating_group, sign_prod_list_swap hl, ← Units.val_eq_one, Units.val_pow_eq_pow_val,
     Units.coe_neg_one, neg_one_pow_eq_one_iff_even]
   decide
-#align equiv.perm.prod_list_swap_mem_alternating_group_iff_even_length Equiv.Perm.prod_list_swap_mem_alternating_group_iff_even_length
+#align equiv.perm.prod_list_swap_mem_alternating_group_iff_even_length Equiv.Perm.prod_list_swap_mem_alternatingGroup_iff_even_length
 
-theorem IsThreeCycle.mem_alternating_group {f : Perm α} (h : IsThreeCycle f) :
+theorem IsThreeCycle.mem_alternatingGroup {f : Perm α} (h : IsThreeCycle f) :
     f ∈ alternatingGroup α :=
-  mem_alternating_group.2 h.sign
-#align equiv.perm.is_three_cycle.mem_alternating_group Equiv.Perm.IsThreeCycle.mem_alternating_group
+  mem_alternatingGroup.2 h.sign
+#align equiv.perm.is_three_cycle.mem_alternating_group Equiv.Perm.IsThreeCycle.mem_alternatingGroup
 
-theorem fin_rotate_bit1_mem_alternating_group {n : ℕ} :
+theorem finRotate_bit1_mem_alternatingGroup {n : ℕ} :
     finRotate (bit1 n) ∈ alternatingGroup (Fin (bit1 n)) := by
-  rw [mem_alternating_group, bit1, sign_fin_rotate, pow_bit0', Int.units_mul_self, one_pow]
-#align equiv.perm.fin_rotate_bit1_mem_alternating_group Equiv.Perm.fin_rotate_bit1_mem_alternating_group
+  rw [mem_alternating_group, bit1, sign_finRotate, pow_bit0', Int.units_mul_self, one_pow]
+#align equiv.perm.fin_rotate_bit1_mem_alternating_group Equiv.Perm.finRotate_bit1_mem_alternatingGroup
 
 end Equiv.Perm
 
-theorem two_mul_card_alternating_group [Nontrivial α] :
+theorem two_mul_card_alternatingGroup [Nontrivial α] :
     2 * card (alternatingGroup α) = card (Perm α) :=
   by
   let this := (QuotientGroup.quotientKerEquivOfSurjective _ (sign_surjective α)).toEquiv
   rw [← Fintype.card_units_int, ← Fintype.card_congr this]
   exact (Subgroup.card_eq_card_quotient_mul_card_subgroup _).symm
-#align two_mul_card_alternating_group two_mul_card_alternating_group
+#align two_mul_card_alternating_group two_mul_card_alternatingGroup
 
 namespace alternatingGroup
 
@@ -105,7 +105,7 @@ instance normal : (alternatingGroup α).Normal :=
   sign.normal_ker
 #align alternating_group.normal alternatingGroup.normal
 
-theorem is_conj_of {σ τ : alternatingGroup α} (hc : IsConj (σ : Perm α) (τ : Perm α))
+theorem isConj_of {σ τ : alternatingGroup α} (hc : IsConj (σ : Perm α) (τ : Perm α))
     (hσ : (σ : Perm α).Support.card + 2 ≤ Fintype.card α) : IsConj σ τ :=
   by
   obtain ⟨σ, hσ⟩ := σ
@@ -131,13 +131,13 @@ theorem is_conj_of {σ τ : alternatingGroup α} (hc : IsConj (σ : Perm α) (τ
         exact ⟨Finset.mem_compl.1 ha, Finset.mem_compl.1 hb⟩
       rw [mul_assoc π _ σ, hd.commute.eq, coe_inv, coe_mk]
       simp [mul_assoc]
-#align alternating_group.is_conj_of alternatingGroup.is_conj_of
+#align alternating_group.is_conj_of alternatingGroup.isConj_of
 
-theorem is_three_cycle_is_conj (h5 : 5 ≤ Fintype.card α) {σ τ : alternatingGroup α}
+theorem isThreeCycle_isConj (h5 : 5 ≤ Fintype.card α) {σ τ : alternatingGroup α}
     (hσ : IsThreeCycle (σ : Perm α)) (hτ : IsThreeCycle (τ : Perm α)) : IsConj σ τ :=
-  alternatingGroup.is_conj_of (is_conj_iff_cycle_type_eq.2 (hσ.trans hτ.symm))
+  alternatingGroup.isConj_of (isConj_iff_cycleType_eq.2 (hσ.trans hτ.symm))
     (by rwa [hσ.card_support])
-#align alternating_group.is_three_cycle_is_conj alternatingGroup.is_three_cycle_is_conj
+#align alternating_group.is_three_cycle_is_conj alternatingGroup.isThreeCycle_isConj
 
 end alternatingGroup
 
@@ -148,7 +148,7 @@ open alternatingGroup
 @[simp]
 theorem closure_three_cycles_eq_alternating :
     closure { σ : Perm α | IsThreeCycle σ } = alternatingGroup α :=
-  closure_eq_of_le _ (fun σ hσ => mem_alternating_group.2 hσ.sign) fun σ hσ =>
+  closure_eq_of_le _ (fun σ hσ => mem_alternatingGroup.2 hσ.sign) fun σ hσ =>
     by
     suffices hind :
       ∀ (n : ℕ) (l : List (perm α)) (hl : ∀ g, g ∈ l → is_swap g) (hn : l.length = 2 * n),
@@ -175,7 +175,7 @@ theorem closure_three_cycles_eq_alternating :
 
 /-- A key lemma to prove $A_5$ is simple. Shows that any normal subgroup of an alternating group on
   at least 5 elements is the entire alternating group if it contains a 3-cycle. -/
-theorem IsThreeCycle.alternating_normal_closure (h5 : 5 ≤ Fintype.card α) {f : Perm α}
+theorem IsThreeCycle.alternating_normalClosure (h5 : 5 ≤ Fintype.card α) {f : Perm α}
     (hf : IsThreeCycle f) :
     normalClosure ({⟨f, hf.mem_alternating_group⟩} : Set (alternatingGroup α)) = ⊤ :=
   eq_top_iff.2
@@ -187,21 +187,21 @@ theorem IsThreeCycle.alternating_normal_closure (h5 : 5 ≤ Fintype.card α) {f 
       intro g h
       obtain ⟨c, rfl⟩ := isConj_iff.1 (is_conj_iff_cycle_type_eq.2 (hf.trans h.symm))
       refine' ⟨⟨c * f * c⁻¹, h.mem_alternating_group⟩, _, rfl⟩
-      rw [Group.mem_conjugates_of_set_iff]
+      rw [Group.mem_conjugatesOfSet_iff]
       exact ⟨⟨f, hf.mem_alternating_group⟩, Set.mem_singleton _, is_three_cycle_is_conj h5 hf h⟩)
-#align equiv.perm.is_three_cycle.alternating_normal_closure Equiv.Perm.IsThreeCycle.alternating_normal_closure
+#align equiv.perm.is_three_cycle.alternating_normal_closure Equiv.Perm.IsThreeCycle.alternating_normalClosure
 
 /-- Part of proving $A_5$ is simple. Shows that the square of any element of $A_5$ with a 3-cycle in
   its cycle decomposition is a 3-cycle, so the normal closure of the original element must be
   $A_5$. -/
-theorem is_three_cycle_sq_of_three_mem_cycle_type_five {g : Perm (Fin 5)} (h : 3 ∈ cycleType g) :
+theorem isThreeCycle_sq_of_three_mem_cycleType_five {g : Perm (Fin 5)} (h : 3 ∈ cycleType g) :
     IsThreeCycle (g * g) :=
   by
   obtain ⟨c, g', rfl, hd, hc, h3⟩ := mem_cycle_type_iff.1 h
   simp only [mul_assoc]
   rw [hd.commute.eq, ← mul_assoc g']
   suffices hg' : orderOf g' ∣ 2
-  · rw [← pow_two, order_of_dvd_iff_pow_eq_one.1 hg', one_mul]
+  · rw [← pow_two, orderOf_dvd_iff_pow_eq_one.1 hg', one_mul]
     exact (card_support_eq_three_iff.1 h3).is_three_cycle_sq
   rw [← lcm_cycle_type, Multiset.lcm_dvd]
   intro n hn
@@ -209,7 +209,7 @@ theorem is_three_cycle_sq_of_three_mem_cycle_type_five {g : Perm (Fin 5)} (h : 3
   apply le_of_add_le_add_left
   rw [← hd.card_support_mul, h3]
   exact (c * g').Support.card_le_univ
-#align equiv.perm.is_three_cycle_sq_of_three_mem_cycle_type_five Equiv.Perm.is_three_cycle_sq_of_three_mem_cycle_type_five
+#align equiv.perm.is_three_cycle_sq_of_three_mem_cycle_type_five Equiv.Perm.isThreeCycle_sq_of_three_mem_cycleType_five
 
 end Equiv.Perm
 
@@ -222,7 +222,7 @@ theorem nontrivial_of_three_le_card (h3 : 3 ≤ card α) : Nontrivial (alternati
   haveI := Fintype.one_lt_card_iff_nontrivial.1 (lt_trans (by decide) h3)
   rw [← Fintype.one_lt_card_iff_nontrivial]
   refine' lt_of_mul_lt_mul_left _ (le_of_lt nat.prime_two.pos)
-  rw [two_mul_card_alternating_group, card_perm, ← Nat.succ_le_iff]
+  rw [two_mul_card_alternatingGroup, card_perm, ← Nat.succ_le_iff]
   exact le_trans h3 (card α).self_le_factorial
 #align alternating_group.nontrivial_of_three_le_card alternatingGroup.nontrivial_of_three_le_card
 
@@ -234,9 +234,9 @@ instance {n : ℕ} : Nontrivial (alternatingGroup (Fin (n + 3))) :=
 
 /-- The normal closure of the 5-cycle `fin_rotate 5` within $A_5$ is the whole group. This will be
   used to show that the normal closure of any 5-cycle within $A_5$ is the whole group. -/
-theorem normal_closure_fin_rotate_five :
+theorem normalClosure_finRotate_five :
     normalClosure
-        ({⟨finRotate 5, fin_rotate_bit1_mem_alternating_group⟩} : Set (alternatingGroup (Fin 5))) =
+        ({⟨finRotate 5, finRotate_bit1_mem_alternatingGroup⟩} : Set (alternatingGroup (Fin 5))) =
       ⊤ :=
   eq_top_iff.2
     (by
@@ -255,14 +255,14 @@ theorem normal_closure_fin_rotate_five :
           (subgroup.normal_closure_normal.conj_mem _ h
             ⟨Fin.cycleRange 2, fin.is_three_cycle_cycle_range_two.mem_alternating_group⟩)
           (inv_mem h))
-#align alternating_group.normal_closure_fin_rotate_five alternatingGroup.normal_closure_fin_rotate_five
+#align alternating_group.normal_closure_fin_rotate_five alternatingGroup.normalClosure_finRotate_five
 
 /-- The normal closure of $(04)(13)$ within $A_5$ is the whole group. This will be
   used to show that the normal closure of any permutation of cycle type $(2,2)$ is the whole group.
   -/
-theorem normal_closure_swap_mul_swap_five :
+theorem normalClosure_swap_mul_swap_five :
     normalClosure
-        ({⟨swap 0 4 * swap 1 3, mem_alternating_group.2 (by decide)⟩} :
+        ({⟨swap 0 4 * swap 1 3, mem_alternatingGroup.2 (by decide)⟩} :
           Set (alternatingGroup (Fin 5))) =
       ⊤ :=
   by
@@ -279,14 +279,14 @@ theorem normal_closure_swap_mul_swap_five :
   have h : g2 ∈ normal_closure {g2} :=
     SetLike.mem_coe.1 (subset_normal_closure (Set.mem_singleton _))
   exact mul_mem (subgroup.normal_closure_normal.conj_mem _ h g1) (inv_mem h)
-#align alternating_group.normal_closure_swap_mul_swap_five alternatingGroup.normal_closure_swap_mul_swap_five
+#align alternating_group.normal_closure_swap_mul_swap_five alternatingGroup.normalClosure_swap_mul_swap_five
 
 /-- Shows that any non-identity element of $A_5$ whose cycle decomposition consists only of swaps
   is conjugate to $(04)(13)$. This is used to show that the normal closure of such a permutation
   in $A_5$ is $A_5$. -/
-theorem is_conj_swap_mul_swap_of_cycle_type_two {g : Perm (Fin 5)}
-    (ha : g ∈ alternatingGroup (Fin 5)) (h1 : g ≠ 1)
-    (h2 : ∀ n, n ∈ cycleType (g : Perm (Fin 5)) → n = 2) : IsConj (swap 0 4 * swap 1 3) g :=
+theorem isConj_swap_mul_swap_of_cycleType_two {g : Perm (Fin 5)} (ha : g ∈ alternatingGroup (Fin 5))
+    (h1 : g ≠ 1) (h2 : ∀ n, n ∈ cycleType (g : Perm (Fin 5)) → n = 2) :
+    IsConj (swap 0 4 * swap 1 3) g :=
   by
   have h := g.support.card_le_univ
   rw [← Multiset.eq_replicate_card] at h2
@@ -311,11 +311,11 @@ theorem is_conj_swap_mul_swap_of_cycle_type_two {g : Perm (Fin 5)}
       decide
   · contrapose! ha
     simp [h_1]
-#align alternating_group.is_conj_swap_mul_swap_of_cycle_type_two alternatingGroup.is_conj_swap_mul_swap_of_cycle_type_two
+#align alternating_group.is_conj_swap_mul_swap_of_cycle_type_two alternatingGroup.isConj_swap_mul_swap_of_cycleType_two
 
 /-- Shows that $A_5$ is simple by taking an arbitrary non-identity element and showing by casework
   on its cycle type that its normal closure is all of $A_5$.   -/
-instance is_simple_group_five : IsSimpleGroup (alternatingGroup (Fin 5)) :=
+instance isSimpleGroup_five : IsSimpleGroup (alternatingGroup (Fin 5)) :=
   ⟨exists_pair_ne _, fun H => by
     intro Hn
     refine' or_not.imp id fun Hb => _
@@ -362,8 +362,8 @@ instance is_simple_group_five : IsSimpleGroup (alternatingGroup (Fin 5)) :=
     · -- If `n = 5`, then `g` is itself a 5-cycle, conjugate to `fin_rotate 5`.
       refine'
         (is_conj_iff_cycle_type_eq.2 _).normal_closure_eq_top_of normal_closure_fin_rotate_five
-      rw [cycle_type_of_card_le_mem_cycle_type_add_two (by decide) ng, cycle_type_fin_rotate]⟩
-#align alternating_group.is_simple_group_five alternatingGroup.is_simple_group_five
+      rw [cycle_type_of_card_le_mem_cycle_type_add_two (by decide) ng, cycleType_finRotate]⟩
+#align alternating_group.is_simple_group_five alternatingGroup.isSimpleGroup_five
 
 end alternatingGroup
 

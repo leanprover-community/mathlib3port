@@ -50,9 +50,9 @@ See
 * https://math.stackexchange.com/a/2727177
 * https://stacks.math.columbia.edu/tag/07RB (we only prove the forward direction!)
 -/
-instance unit_is_iso_of_L_fully_faithful [Full L] [Faithful L] : IsIso (Adjunction.unit h) :=
+instance unit_isIso_of_L_fully_faithful [Full L] [Faithful L] : IsIso (Adjunction.unit h) :=
   @NatIso.isIso_of_isIso_app _ _ _ _ _ _ (Adjunction.unit h) fun X =>
-    @yoneda.is_iso _ _ _ _ ((Adjunction.unit h).app X)
+    @yoneda.isIso _ _ _ _ ((Adjunction.unit h).app X)
       ⟨⟨{ app := fun Y f => L.preimage ((h.homEquiv (unop Y) (L.obj X)).symm f) },
           ⟨by
             ext (x f); dsimp
@@ -62,16 +62,16 @@ instance unit_is_iso_of_L_fully_faithful [Full L] [Faithful L] : IsIso (Adjuncti
             simp only [adjunction.hom_equiv_counit, preimage_comp, preimage_map, category.assoc]
             rw [← h.unit_naturality]
             simp⟩⟩⟩
-#align category_theory.unit_is_iso_of_L_fully_faithful CategoryTheory.unit_is_iso_of_L_fully_faithful
+#align category_theory.unit_is_iso_of_L_fully_faithful CategoryTheory.unit_isIso_of_L_fully_faithful
 
 /-- If the right adjoint is fully faithful, then the counit is an isomorphism.
 
 See <https://stacks.math.columbia.edu/tag/07RB> (we only prove the forward direction!)
 -/
-instance counit_is_iso_of_R_fully_faithful [Full R] [Faithful R] : IsIso (Adjunction.counit h) :=
+instance counit_isIso_of_R_fully_faithful [Full R] [Faithful R] : IsIso (Adjunction.counit h) :=
   @NatIso.isIso_of_isIso_app _ _ _ _ _ _ (Adjunction.counit h) fun X =>
-    @is_iso_of_op _ _ _ _ _ <|
-      @coyoneda.is_iso _ _ _ _ ((Adjunction.counit h).app X).op
+    @isIso_of_op _ _ _ _ _ <|
+      @coyoneda.isIso _ _ _ _ ((Adjunction.counit h).app X).op
         ⟨⟨{ app := fun Y f => R.preimage ((h.homEquiv (R.obj X) Y) f) },
             ⟨by
               ext (x f); dsimp
@@ -81,7 +81,7 @@ instance counit_is_iso_of_R_fully_faithful [Full R] [Faithful R] : IsIso (Adjunc
               simp only [adjunction.hom_equiv_unit, preimage_comp, preimage_map]
               rw [← h.counit_naturality]
               simp⟩⟩⟩
-#align category_theory.counit_is_iso_of_R_fully_faithful CategoryTheory.counit_is_iso_of_R_fully_faithful
+#align category_theory.counit_is_iso_of_R_fully_faithful CategoryTheory.counit_isIso_of_R_fully_faithful
 
 /-- If the unit of an adjunction is an isomorphism, then its inverse on the image of L is given
 by L whiskered with the counit. -/
@@ -117,13 +117,13 @@ noncomputable def lFullOfUnitIsIso [IsIso h.Unit] : Full L
 #align category_theory.L_full_of_unit_is_iso CategoryTheory.lFullOfUnitIsIso
 
 /-- If the unit is an isomorphism, then the left adjoint is faithful-/
-theorem L_faithful_of_unit_is_iso [IsIso h.Unit] : Faithful L :=
+theorem L_faithful_of_unit_isIso [IsIso h.Unit] : Faithful L :=
   {
     map_injective' := fun X Y f g H =>
       by
       rw [← (h.hom_equiv X (L.obj Y)).apply_eq_iff_eq] at H
       simpa using H =≫ inv (h.unit.app Y) }
-#align category_theory.L_faithful_of_unit_is_iso CategoryTheory.L_faithful_of_unit_is_iso
+#align category_theory.L_faithful_of_unit_is_iso CategoryTheory.L_faithful_of_unit_isIso
 
 /-- If the counit is an isomorphism, then the right adjoint is full-/
 noncomputable def rFullOfCounitIsIso [IsIso h.counit] : Full R
@@ -131,46 +131,46 @@ noncomputable def rFullOfCounitIsIso [IsIso h.counit] : Full R
 #align category_theory.R_full_of_counit_is_iso CategoryTheory.rFullOfCounitIsIso
 
 /-- If the counit is an isomorphism, then the right adjoint is faithful-/
-theorem R_faithful_of_counit_is_iso [IsIso h.counit] : Faithful R :=
+theorem R_faithful_of_counit_isIso [IsIso h.counit] : Faithful R :=
   {
     map_injective' := fun X Y f g H =>
       by
       rw [← (h.hom_equiv (R.obj X) Y).symm.apply_eq_iff_eq] at H
       simpa using inv (h.counit.app X) ≫= H }
-#align category_theory.R_faithful_of_counit_is_iso CategoryTheory.R_faithful_of_counit_is_iso
+#align category_theory.R_faithful_of_counit_is_iso CategoryTheory.R_faithful_of_counit_isIso
 
-instance whisker_left_counit_iso_of_L_fully_faithful [Full L] [Faithful L] :
+instance whiskerLeft_counit_iso_of_L_fully_faithful [Full L] [Faithful L] :
     IsIso (whiskerLeft L h.counit) := by
   have := h.left_triangle
   rw [← is_iso.eq_inv_comp] at this
   rw [this]
   infer_instance
-#align category_theory.whisker_left_counit_iso_of_L_fully_faithful CategoryTheory.whisker_left_counit_iso_of_L_fully_faithful
+#align category_theory.whisker_left_counit_iso_of_L_fully_faithful CategoryTheory.whiskerLeft_counit_iso_of_L_fully_faithful
 
-instance whisker_right_counit_iso_of_L_fully_faithful [Full L] [Faithful L] :
+instance whiskerRight_counit_iso_of_L_fully_faithful [Full L] [Faithful L] :
     IsIso (whiskerRight h.counit R) :=
   by
   have := h.right_triangle
   rw [← is_iso.eq_inv_comp] at this
   rw [this]
   infer_instance
-#align category_theory.whisker_right_counit_iso_of_L_fully_faithful CategoryTheory.whisker_right_counit_iso_of_L_fully_faithful
+#align category_theory.whisker_right_counit_iso_of_L_fully_faithful CategoryTheory.whiskerRight_counit_iso_of_L_fully_faithful
 
-instance whisker_left_unit_iso_of_R_fully_faithful [Full R] [Faithful R] :
+instance whiskerLeft_unit_iso_of_R_fully_faithful [Full R] [Faithful R] :
     IsIso (whiskerLeft R h.Unit) := by
   have := h.right_triangle
   rw [← is_iso.eq_comp_inv] at this
   rw [this]
   infer_instance
-#align category_theory.whisker_left_unit_iso_of_R_fully_faithful CategoryTheory.whisker_left_unit_iso_of_R_fully_faithful
+#align category_theory.whisker_left_unit_iso_of_R_fully_faithful CategoryTheory.whiskerLeft_unit_iso_of_R_fully_faithful
 
-instance whisker_right_unit_iso_of_R_fully_faithful [Full R] [Faithful R] :
+instance whiskerRight_unit_iso_of_R_fully_faithful [Full R] [Faithful R] :
     IsIso (whiskerRight h.Unit L) := by
   have := h.left_triangle
   rw [← is_iso.eq_comp_inv] at this
   rw [this]
   infer_instance
-#align category_theory.whisker_right_unit_iso_of_R_fully_faithful CategoryTheory.whisker_right_unit_iso_of_R_fully_faithful
+#align category_theory.whisker_right_unit_iso_of_R_fully_faithful CategoryTheory.whiskerRight_unit_iso_of_R_fully_faithful
 
 -- TODO also do the statements from Riehl 4.5.13 for full and faithful separately?
 universe v₃ v₄ u₃ u₄

@@ -34,9 +34,9 @@ def PosDef (M : Matrix n n 𝕜) :=
   M.IsHermitian ∧ ∀ x : n → 𝕜, x ≠ 0 → 0 < IsROrC.re (dotProduct (star x) (M.mulVec x))
 #align matrix.pos_def Matrix.PosDef
 
-theorem PosDef.is_hermitian {M : Matrix n n 𝕜} (hM : M.PosDef) : M.IsHermitian :=
+theorem PosDef.isHermitian {M : Matrix n n 𝕜} (hM : M.PosDef) : M.IsHermitian :=
   hM.1
-#align matrix.pos_def.is_hermitian Matrix.PosDef.is_hermitian
+#align matrix.pos_def.is_hermitian Matrix.PosDef.isHermitian
 
 /-- A matrix `M : matrix n n 𝕜` is positive semidefinite if it is hermitian
    and `xᴴMx` is nonnegative for all `x`. -/
@@ -73,31 +73,31 @@ theorem PosSemidef.submatrix {M : Matrix n n 𝕜} (hM : M.PosSemidef) (e : m �
 #align matrix.pos_semidef.submatrix Matrix.PosSemidef.submatrix
 
 @[simp]
-theorem pos_semidef_submatrix_equiv {M : Matrix n n 𝕜} (e : m ≃ n) :
+theorem posSemidef_submatrix_equiv {M : Matrix n n 𝕜} (e : m ≃ n) :
     (M.submatrix e e).PosSemidef ↔ M.PosSemidef :=
   ⟨fun h => by simpa using h.submatrix e.symm, fun h => h.submatrix _⟩
-#align matrix.pos_semidef_submatrix_equiv Matrix.pos_semidef_submatrix_equiv
+#align matrix.pos_semidef_submatrix_equiv Matrix.posSemidef_submatrix_equiv
 
 theorem PosDef.transpose {M : Matrix n n 𝕜} (hM : M.PosDef) : Mᵀ.PosDef :=
   by
   refine' ⟨is_hermitian.transpose hM.1, fun x hx => _⟩
   convert hM.2 (star x) (star_ne_zero.2 hx) using 2
-  rw [mul_vec_transpose, Matrix.dot_product_mul_vec, star_star, dot_product_comm]
+  rw [mul_vec_transpose, Matrix.dotProduct_mulVec, star_star, dot_product_comm]
 #align matrix.pos_def.transpose Matrix.PosDef.transpose
 
 theorem posDefOfToQuadraticForm' [DecidableEq n] {M : Matrix n n ℝ} (hM : M.IsSymm)
     (hMq : M.toQuadraticForm'.PosDef) : M.PosDef :=
   by
   refine' ⟨hM, fun x hx => _⟩
-  simp only [to_quadratic_form', QuadraticForm.PosDef, BilinForm.to_quadratic_form_apply,
-    Matrix.to_bilin'_apply'] at hMq
+  simp only [to_quadratic_form', QuadraticForm.PosDef, BilinForm.toQuadraticForm_apply,
+    Matrix.toBilin'_apply'] at hMq
   apply hMq x hx
 #align matrix.pos_def_of_to_quadratic_form' Matrix.posDefOfToQuadraticForm'
 
 theorem posDefToQuadraticForm' [DecidableEq n] {M : Matrix n n ℝ} (hM : M.PosDef) :
     M.toQuadraticForm'.PosDef := by
   intro x hx
-  simp only [to_quadratic_form', BilinForm.to_quadratic_form_apply, Matrix.to_bilin'_apply']
+  simp only [to_quadratic_form', BilinForm.toQuadraticForm_apply, Matrix.toBilin'_apply']
   apply hM.2 x hx
 #align matrix.pos_def_to_quadratic_form' Matrix.posDefToQuadraticForm'
 

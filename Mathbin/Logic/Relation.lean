@@ -439,8 +439,7 @@ theorem cases_head_iff : ReflTransGen r a b ↔ a = b ∨ ∃ c, r a c ∧ ReflT
 #align relation.refl_trans_gen.cases_head_iff Relation.ReflTransGen.cases_head_iff
 -/
 
-#print Relation.ReflTransGen.total_of_right_unique /-
-theorem total_of_right_unique (U : Relator.RightUnique r) (ab : ReflTransGen r a b)
+theorem total_of_rightUnique (U : Relator.RightUnique r) (ab : ReflTransGen r a b)
     (ac : ReflTransGen r a c) : ReflTransGen r b c ∨ ReflTransGen r c b :=
   by
   induction' ab with b d ab bd IH
@@ -451,8 +450,7 @@ theorem total_of_right_unique (U : Relator.RightUnique r) (ab : ReflTransGen r a
       · cases U bd be
         exact Or.inl ec
     · exact Or.inr (IH.tail bd)
-#align relation.refl_trans_gen.total_of_right_unique Relation.ReflTransGen.total_of_right_unique
--/
+#align relation.refl_trans_gen.total_of_right_unique Relation.ReflTransGen.total_of_rightUnique
 
 end ReflTransGen
 
@@ -564,17 +562,17 @@ theorem head'_iff : TransGen r a c ↔ ∃ b, r a b ∧ ReflTransGen r b c :=
 
 end TransGen
 
-theorem Acc.trans_gen (h : Acc r a) : Acc (TransGen r) a :=
+theorem Acc.transGen (h : Acc r a) : Acc (TransGen r) a :=
   by
   induction' h with x _ H
   refine' Acc.intro x fun y hy => _
   cases' hy with _ hyx z _ hyz hzx
   exacts[H y hyx, (H z hzx).inv hyz]
-#align acc.trans_gen Acc.trans_gen
+#align acc.trans_gen Acc.transGen
 
 #print acc_transGen_iff /-
 theorem acc_transGen_iff : Acc (TransGen r) a ↔ Acc r a :=
-  ⟨Subrelation.accessible fun _ _ => TransGen.single, Acc.trans_gen⟩
+  ⟨Subrelation.accessible fun _ _ => TransGen.single, Acc.transGen⟩
 #align acc_trans_gen_iff acc_transGen_iff
 -/
 
@@ -733,11 +731,9 @@ instance : IsRefl α (ReflTransGen r) :=
 instance : IsTrans α (ReflTransGen r) :=
   ⟨@ReflTransGen.trans α r⟩
 
-#print Relation.refl_trans_gen_idem /-
-theorem refl_trans_gen_idem : ReflTransGen (ReflTransGen r) = ReflTransGen r :=
+theorem reflTransGen_idem : ReflTransGen (ReflTransGen r) = ReflTransGen r :=
   reflTransGen_eq_self reflexive_reflTransGen transitive_reflTransGen
-#align relation.refl_trans_gen_idem Relation.refl_trans_gen_idem
--/
+#align relation.refl_trans_gen_idem Relation.reflTransGen_idem
 
 #print Relation.ReflTransGen.lift' /-
 theorem ReflTransGen.lift' {p : β → β → Prop} {a b : α} (f : α → β)

@@ -42,17 +42,17 @@ def PiToModule.fromMatrix [DecidableEq ι] : Matrix ι ι R →ₗ[R] (ι → R)
   (LinearMap.llcomp R _ _ _ (Fintype.total R R b)).comp algEquivMatrix'.symm.toLinearMap
 #align pi_to_module.from_matrix PiToModule.fromMatrix
 
-theorem PiToModule.from_matrix_apply [DecidableEq ι] (A : Matrix ι ι R) (w : ι → R) :
+theorem PiToModule.fromMatrix_apply [DecidableEq ι] (A : Matrix ι ι R) (w : ι → R) :
     PiToModule.fromMatrix R b A w = Fintype.total R R b (A.mulVec w) :=
   rfl
-#align pi_to_module.from_matrix_apply PiToModule.from_matrix_apply
+#align pi_to_module.from_matrix_apply PiToModule.fromMatrix_apply
 
-theorem PiToModule.from_matrix_apply_single_one [DecidableEq ι] (A : Matrix ι ι R) (j : ι) :
+theorem PiToModule.fromMatrix_apply_single_one [DecidableEq ι] (A : Matrix ι ι R) (j : ι) :
     PiToModule.fromMatrix R b A (Pi.single j 1) = ∑ i : ι, A i j • b i :=
   by
-  rw [PiToModule.from_matrix_apply, Fintype.total_apply, Matrix.mul_vec_single]
+  rw [PiToModule.fromMatrix_apply, Fintype.total_apply, Matrix.mulVec_single]
   simp_rw [mul_one]
-#align pi_to_module.from_matrix_apply_single_one PiToModule.from_matrix_apply_single_one
+#align pi_to_module.from_matrix_apply_single_one PiToModule.fromMatrix_apply_single_one
 
 /-- The endomorphisms of `M` acts on `(ι → R) →ₗ[R] M`, and takes the projection
 to a `(ι → R) →ₗ[R] M`. -/
@@ -60,21 +60,21 @@ def PiToModule.fromEnd : Module.EndCat R M →ₗ[R] (ι → R) →ₗ[R] M :=
   LinearMap.lcomp _ _ (Fintype.total R R b)
 #align pi_to_module.from_End PiToModule.fromEnd
 
-theorem PiToModule.from_End_apply (f : Module.EndCat R M) (w : ι → R) :
+theorem PiToModule.fromEnd_apply (f : Module.EndCat R M) (w : ι → R) :
     PiToModule.fromEnd R b f w = f (Fintype.total R R b w) :=
   rfl
-#align pi_to_module.from_End_apply PiToModule.from_End_apply
+#align pi_to_module.from_End_apply PiToModule.fromEnd_apply
 
-theorem PiToModule.from_End_apply_single_one [DecidableEq ι] (f : Module.EndCat R M) (i : ι) :
+theorem PiToModule.fromEnd_apply_single_one [DecidableEq ι] (f : Module.EndCat R M) (i : ι) :
     PiToModule.fromEnd R b f (Pi.single i 1) = f (b i) :=
   by
-  rw [PiToModule.from_End_apply]
+  rw [PiToModule.fromEnd_apply]
   congr
   convert Fintype.total_apply_single R b i 1
   rw [one_smul]
-#align pi_to_module.from_End_apply_single_one PiToModule.from_End_apply_single_one
+#align pi_to_module.from_End_apply_single_one PiToModule.fromEnd_apply_single_one
 
-theorem PiToModule.from_End_injective (hb : Submodule.span R (Set.range b) = ⊤) :
+theorem PiToModule.fromEnd_injective (hb : Submodule.span R (Set.range b) = ⊤) :
     Function.Injective (PiToModule.fromEnd R b) :=
   by
   intro x y e
@@ -84,7 +84,7 @@ theorem PiToModule.from_End_injective (hb : Submodule.span R (Set.range b) = ⊤
     rw [(Fintype.range_total R b).trans hb]
     trivial
   exact (LinearMap.congr_fun e m : _)
-#align pi_to_module.from_End_injective PiToModule.from_End_injective
+#align pi_to_module.from_End_injective PiToModule.fromEnd_injective
 
 section
 
@@ -114,11 +114,11 @@ theorem Matrix.represents_iff' {A : Matrix ι ι R} {f : Module.EndCat R M} :
   constructor
   · intro h i
     have := LinearMap.congr_fun h (Pi.single i 1)
-    rwa [PiToModule.from_End_apply_single_one, PiToModule.from_matrix_apply_single_one] at this
+    rwa [PiToModule.fromEnd_apply_single_one, PiToModule.fromMatrix_apply_single_one] at this
   · intro h
     ext
-    simp_rw [LinearMap.comp_apply, LinearMap.coe_single, PiToModule.from_End_apply_single_one,
-      PiToModule.from_matrix_apply_single_one]
+    simp_rw [LinearMap.comp_apply, LinearMap.coe_single, PiToModule.fromEnd_apply_single_one,
+      PiToModule.fromMatrix_apply_single_one]
     apply h
 #align matrix.represents_iff' Matrix.represents_iff'
 
@@ -126,7 +126,7 @@ theorem Matrix.Represents.mul {A A' : Matrix ι ι R} {f f' : Module.EndCat R M}
     (h : A.Represents b f) (h' : Matrix.Represents b A' f') : (A * A').Represents b (f * f') :=
   by
   delta Matrix.Represents PiToModule.fromMatrix
-  rw [LinearMap.comp_apply, AlgEquiv.to_linear_map_apply, map_mul]
+  rw [LinearMap.comp_apply, AlgEquiv.toLinearMap_apply, map_mul]
   ext
   dsimp [PiToModule.fromEnd]
   rw [← h'.congr_fun, ← h.congr_fun]
@@ -136,7 +136,7 @@ theorem Matrix.Represents.mul {A A' : Matrix ι ι R} {f f' : Module.EndCat R M}
 theorem Matrix.Represents.one : (1 : Matrix ι ι R).Represents b 1 :=
   by
   delta Matrix.Represents PiToModule.fromMatrix
-  rw [LinearMap.comp_apply, AlgEquiv.to_linear_map_apply, map_one]
+  rw [LinearMap.comp_apply, AlgEquiv.toLinearMap_apply, map_one]
   ext
   rfl
 #align matrix.represents.one Matrix.Represents.one
@@ -157,7 +157,7 @@ theorem Matrix.Represents.smul {A : Matrix ι ι R} {f : Module.EndCat R M} (h :
 
 theorem Matrix.Represents.eq {A : Matrix ι ι R} {f f' : Module.EndCat R M} (h : A.Represents b f)
     (h' : A.Represents b f') : f = f' :=
-  PiToModule.from_End_injective R b hb (h.symm.trans h')
+  PiToModule.fromEnd_injective R b hb (h.symm.trans h')
 #align matrix.represents.eq Matrix.Represents.eq
 
 variable (b R)
@@ -187,23 +187,23 @@ noncomputable def Matrix.isRepresentation.toEnd :
     (r • 1 : Matrix.isRepresentation R b).2.some_spec.Eq hb (Matrix.Represents.one.smul r)
 #align matrix.is_representation.to_End Matrix.isRepresentation.toEnd
 
-theorem Matrix.isRepresentation.to_End_represents (A : Matrix.isRepresentation R b) :
+theorem Matrix.isRepresentation.toEnd_represents (A : Matrix.isRepresentation R b) :
     (A : Matrix ι ι R).Represents b (Matrix.isRepresentation.toEnd R b hb A) :=
   A.2.some_spec
-#align matrix.is_representation.to_End_represents Matrix.isRepresentation.to_End_represents
+#align matrix.is_representation.to_End_represents Matrix.isRepresentation.toEnd_represents
 
-theorem Matrix.isRepresentation.eq_to_End_of_represents (A : Matrix.isRepresentation R b)
+theorem Matrix.isRepresentation.eq_toEnd_of_represents (A : Matrix.isRepresentation R b)
     {f : Module.EndCat R M} (h : (A : Matrix ι ι R).Represents b f) :
     Matrix.isRepresentation.toEnd R b hb A = f :=
   A.2.some_spec.Eq hb h
-#align matrix.is_representation.eq_to_End_of_represents Matrix.isRepresentation.eq_to_End_of_represents
+#align matrix.is_representation.eq_to_End_of_represents Matrix.isRepresentation.eq_toEnd_of_represents
 
-theorem Matrix.isRepresentation.to_End_exists_mem_ideal (f : Module.EndCat R M) (I : Ideal R)
+theorem Matrix.isRepresentation.toEnd_exists_mem_ideal (f : Module.EndCat R M) (I : Ideal R)
     (hI : f.range ≤ I • ⊤) : ∃ M, Matrix.isRepresentation.toEnd R b hb M = f ∧ ∀ i j, M.1 i j ∈ I :=
   by
   have : ∀ x, f x ∈ (Ideal.finsuppTotal ι M I b).range :=
     by
-    rw [Ideal.range_finsupp_total, hb]
+    rw [Ideal.range_finsuppTotal, hb]
     exact fun x => hI (f.mem_range_self x)
   choose bM' hbM'
   let A : Matrix ι ι R := fun i j => bM' (b j) i
@@ -212,20 +212,20 @@ theorem Matrix.isRepresentation.to_End_exists_mem_ideal (f : Module.EndCat R M) 
     dsimp [A]
     intro j
     specialize hbM' (b j)
-    rwa [Ideal.finsupp_total_apply_eq_of_fintype] at hbM'
+    rwa [Ideal.finsuppTotal_apply_eq_of_fintype] at hbM'
   exact
-    ⟨⟨A, f, this⟩, Matrix.isRepresentation.eq_to_End_of_represents R b hb ⟨A, f, this⟩ this,
+    ⟨⟨A, f, this⟩, Matrix.isRepresentation.eq_toEnd_of_represents R b hb ⟨A, f, this⟩ this,
       fun i j => (bM' (b j) i).Prop⟩
-#align matrix.is_representation.to_End_exists_mem_ideal Matrix.isRepresentation.to_End_exists_mem_ideal
+#align matrix.is_representation.to_End_exists_mem_ideal Matrix.isRepresentation.toEnd_exists_mem_ideal
 
-theorem Matrix.isRepresentation.to_End_surjective :
+theorem Matrix.isRepresentation.toEnd_surjective :
     Function.Surjective (Matrix.isRepresentation.toEnd R b hb) :=
   by
   intro f
-  obtain ⟨M, e, -⟩ := Matrix.isRepresentation.to_End_exists_mem_ideal R b hb f ⊤ _
+  obtain ⟨M, e, -⟩ := Matrix.isRepresentation.toEnd_exists_mem_ideal R b hb f ⊤ _
   exact ⟨M, e⟩
   simp
-#align matrix.is_representation.to_End_surjective Matrix.isRepresentation.to_End_surjective
+#align matrix.is_representation.to_End_surjective Matrix.isRepresentation.toEnd_surjective
 
 end
 
@@ -244,12 +244,12 @@ theorem LinearMap.exists_monic_and_coeff_mem_pow_and_aeval_eq_zero_of_range_le_s
     · exact ⟨0, Polynomial.monic_of_subsingleton _, by simp⟩
     obtain ⟨s : Finset M, hs : Submodule.span R (s : Set M) = ⊤⟩ := Module.Finite.out
     obtain ⟨A, rfl, h⟩ :=
-      Matrix.isRepresentation.to_End_exists_mem_ideal R (coe : s → M)
+      Matrix.isRepresentation.toEnd_exists_mem_ideal R (coe : s → M)
         (by rw [Subtype.range_coe_subtype, Finset.setOf_mem, hs]) f I hI
     refine' ⟨A.1.charpoly, A.1.charpoly_monic, _, _⟩
     · rw [A.1.charpoly_nat_degree_eq_dim]
       exact coeff_charpoly_mem_ideal_pow h
-    · rw [Polynomial.aeval_alg_hom_apply, ← map_zero (Matrix.isRepresentation.toEnd R coe _)]
+    · rw [Polynomial.aeval_algHom_apply, ← map_zero (Matrix.isRepresentation.toEnd R coe _)]
       congr 1
       ext1
       rw [Polynomial.aeval_subalgebra_coe, Subtype.val_eq_coe, Matrix.aeval_self_charpoly,

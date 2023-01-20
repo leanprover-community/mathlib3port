@@ -35,19 +35,19 @@ def atImInfty :=
   Filter.atTop.comap UpperHalfPlane.im
 #align upper_half_plane.at_im_infty UpperHalfPlane.atImInfty
 
-theorem at_im_infty_basis : atImInfty.HasBasis (fun _ => True) fun i : ℝ => im ⁻¹' Set.Ici i :=
-  Filter.HasBasis.comap UpperHalfPlane.im Filter.at_top_basis
-#align upper_half_plane.at_im_infty_basis UpperHalfPlane.at_im_infty_basis
+theorem atImInfty_basis : atImInfty.HasBasis (fun _ => True) fun i : ℝ => im ⁻¹' Set.Ici i :=
+  Filter.HasBasis.comap UpperHalfPlane.im Filter.atTop_basis
+#align upper_half_plane.at_im_infty_basis UpperHalfPlane.atImInfty_basis
 
-theorem at_im_infty_mem (S : Set ℍ) : S ∈ at_im_infty ↔ ∃ A : ℝ, ∀ z : ℍ, A ≤ im z → z ∈ S :=
+theorem atImInfty_mem (S : Set ℍ) : S ∈ at_im_infty ↔ ∃ A : ℝ, ∀ z : ℍ, A ≤ im z → z ∈ S :=
   by
-  simp only [at_im_infty, Filter.mem_comap', Filter.mem_at_top_sets, ge_iff_le, Set.mem_setOf_eq,
+  simp only [at_im_infty, Filter.mem_comap', Filter.mem_atTop_sets, ge_iff_le, Set.mem_setOf_eq,
     UpperHalfPlane.coe_im]
   refine' ⟨fun ⟨a, h⟩ => ⟨a, fun z hz => h (im z) hz rfl⟩, _⟩
   rintro ⟨A, h⟩
   refine' ⟨A, fun b hb x hx => h x _⟩
   rwa [hx]
-#align upper_half_plane.at_im_infty_mem UpperHalfPlane.at_im_infty_mem
+#align upper_half_plane.at_im_infty_mem UpperHalfPlane.atImInfty_mem
 
 /-- A function ` f : ℍ → α` is bounded at infinity if it is bounded along `at_im_infty`. -/
 def IsBoundedAtImInfty {α : Type _} [HasNorm α] (f : ℍ → α) : Prop :=
@@ -59,10 +59,10 @@ def IsZeroAtImInfty {α : Type _} [Zero α] [TopologicalSpace α] (f : ℍ → �
   ZeroAtFilter atImInfty f
 #align upper_half_plane.is_zero_at_im_infty UpperHalfPlane.IsZeroAtImInfty
 
-theorem zero_form_is_bounded_at_im_infty {α : Type _} [NormedField α] :
+theorem zero_form_isBoundedAtImInfty {α : Type _} [NormedField α] :
     IsBoundedAtImInfty (0 : ℍ → α) :=
-  const_bounded_at_filter atImInfty (0 : α)
-#align upper_half_plane.zero_form_is_bounded_at_im_infty UpperHalfPlane.zero_form_is_bounded_at_im_infty
+  const_boundedAtFilter atImInfty (0 : α)
+#align upper_half_plane.zero_form_is_bounded_at_im_infty UpperHalfPlane.zero_form_isBoundedAtImInfty
 
 /-- Module of functions that are zero at infinity. -/
 def zeroAtImInftySubmodule (α : Type _) [NormedField α] : Submodule α (ℍ → α) :=
@@ -81,7 +81,7 @@ theorem IsBoundedAtImInfty.mul {f g : ℍ → ℂ} (hf : IsBoundedAtImInfty f)
 
 theorem bounded_mem (f : ℍ → ℂ) :
     IsBoundedAtImInfty f ↔ ∃ M A : ℝ, ∀ z : ℍ, A ≤ im z → abs (f z) ≤ M := by
-  simp [is_bounded_at_im_infty, bounded_at_filter, Asymptotics.is_O_iff, Filter.Eventually,
+  simp [is_bounded_at_im_infty, bounded_at_filter, Asymptotics.isO_iff, Filter.Eventually,
     at_im_infty_mem]
 #align upper_half_plane.bounded_mem UpperHalfPlane.bounded_mem
 
@@ -92,7 +92,7 @@ theorem zero_at_im_infty (f : ℍ → ℂ) :
   constructor
   · simp_rw [Filter.Eventually, at_im_infty_mem]
     intro h ε hε
-    simpa using h (Metric.closedBall (0 : ℂ) ε) (Metric.closed_ball_mem_nhds (0 : ℂ) hε)
+    simpa using h (Metric.closedBall (0 : ℂ) ε) (Metric.closedBall_mem_nhds (0 : ℂ) hε)
   · simp_rw [Metric.mem_nhds_iff]
     intro h s hs
     simp_rw [Filter.Eventually, at_im_infty_mem]

@@ -140,7 +140,7 @@ theorem lt_of_testBit {n m : ℕ} (i : ℕ) (hn : testBit n i = ff) (hm : testBi
     rw [le_zero_iff] at hm
     simp [hm]
   induction' m using Nat.binaryRec with b' m hm' generalizing i
-  · exact False.elim (Bool.ff_ne_tt ((zero_test_bit i).symm.trans hm))
+  · exact False.elim (Bool.false_ne_true ((zero_test_bit i).symm.trans hm))
   by_cases hi : i = 0
   · subst hi
     simp only [test_bit_zero] at hn hm
@@ -344,10 +344,14 @@ theorem lxor'_right_injective {n : ℕ} : Function.Injective (lxor' n) := fun m 
 #align nat.lxor_right_injective Nat.lxor'_right_injective
 -/
 
-theorem lxor_left_injective {n : ℕ} : Function.Injective fun m => lxor' m n :=
+/- warning: nat.lxor_left_injective clashes with nat.lxor'_left_injective -> Nat.lxor'_left_injective
+Case conversion may be inaccurate. Consider using '#align nat.lxor_left_injective Nat.lxor'_left_injectiveₓ'. -/
+#print Nat.lxor'_left_injective /-
+theorem lxor'_left_injective {n : ℕ} : Function.Injective fun m => lxor' m n :=
   fun m m' (h : lxor' m n = lxor' m' n) => by
   rw [← lxor_cancel_right n m, ← lxor_cancel_right n m', h]
-#align nat.lxor_left_injective Nat.lxor_left_injective
+#align nat.lxor_left_injective Nat.lxor'_left_injective
+-/
 
 #print Nat.lxor'_right_inj /-
 @[simp]
@@ -359,7 +363,7 @@ theorem lxor'_right_inj {n m m' : ℕ} : lxor' n m = lxor' n m' ↔ m = m' :=
 #print Nat.lxor'_left_inj /-
 @[simp]
 theorem lxor'_left_inj {n m m' : ℕ} : lxor' m n = lxor' m' n ↔ m = m' :=
-  lxor_left_injective.eq_iff
+  lxor'_left_injective.eq_iff
 #align nat.lxor_left_inj Nat.lxor'_left_inj
 -/
 

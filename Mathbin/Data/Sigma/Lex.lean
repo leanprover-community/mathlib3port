@@ -149,7 +149,7 @@ instance [IsSymm ι r] [∀ i, IsSymm (α i) (s i)] : IsSymm _ (Lex r s) :=
     · exact lex.left _ _ (symm hij)
     · exact lex.right _ _ (symm hab)⟩
 
-attribute [local instance] IsAsymm.is_irrefl
+attribute [local instance] IsAsymm.isIrrefl
 
 instance [IsAsymm ι r] [∀ i, IsAntisymm (α i) (s i)] : IsAntisymm _ (Lex r s) :=
   ⟨by
@@ -157,7 +157,7 @@ instance [IsAsymm ι r] [∀ i, IsAntisymm (α i) (s i)] : IsAntisymm _ (Lex r s
     · exact (asymm hij hji).elim
     · exact (irrefl _ hij).elim
     · exact (irrefl _ hji).elim
-    · exact ext rfl (heq_of_eq <| antisymm hab hba)⟩
+    · exact ext rfl (hEq_of_eq <| antisymm hab hba)⟩
 
 instance [IsTrichotomous ι r] [∀ i, IsTotal (α i) (s i)] : IsTotal _ (Lex r s) :=
   ⟨by

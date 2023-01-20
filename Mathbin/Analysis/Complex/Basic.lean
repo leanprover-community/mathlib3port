@@ -73,7 +73,7 @@ instance {R : Type _} [NormedField R] [NormedAlgebra R ℝ] : NormedAlgebra R �
     where
   norm_smul_le r x :=
     by
-    rw [norm_eq_abs, norm_eq_abs, ← algebra_map_smul ℝ r x, Algebra.smul_def, map_mul, ←
+    rw [norm_eq_abs, norm_eq_abs, ← algebraMap_smul ℝ r x, Algebra.smul_def, map_mul, ←
       norm_algebra_map' ℝ r, coe_algebra_map, abs_of_real]
     rfl
   toAlgebra := Complex.algebra
@@ -177,9 +177,9 @@ theorem continuous_abs : Continuous abs :=
 #align complex.continuous_abs Complex.continuous_abs
 
 @[continuity]
-theorem continuous_norm_sq : Continuous normSq := by
+theorem continuous_normSq : Continuous normSq := by
   simpa [← norm_sq_eq_abs] using continuous_abs.pow 2
-#align complex.continuous_norm_sq Complex.continuous_norm_sq
+#align complex.continuous_norm_sq Complex.continuous_normSq
 
 @[simp, norm_cast]
 theorem nnnorm_real (r : ℝ) : ‖(r : ℂ)‖₊ = ‖r‖₊ :=
@@ -207,16 +207,16 @@ theorem norm_eq_one_of_pow_eq_one {ζ : ℂ} {n : ℕ} (h : ζ ^ n = 1) (hn : n 
 #align complex.norm_eq_one_of_pow_eq_one Complex.norm_eq_one_of_pow_eq_one
 
 /-- The `abs` function on `ℂ` is proper. -/
-theorem tendsto_abs_cocompact_at_top : Filter.Tendsto abs (Filter.cocompact ℂ) Filter.atTop :=
-  tendsto_norm_cocompact_at_top
-#align complex.tendsto_abs_cocompact_at_top Complex.tendsto_abs_cocompact_at_top
+theorem tendsto_abs_cocompact_atTop : Filter.Tendsto abs (Filter.cocompact ℂ) Filter.atTop :=
+  tendsto_norm_cocompact_atTop
+#align complex.tendsto_abs_cocompact_at_top Complex.tendsto_abs_cocompact_atTop
 
 /-- The `norm_sq` function on `ℂ` is proper. -/
-theorem tendsto_norm_sq_cocompact_at_top :
-    Filter.Tendsto normSq (Filter.cocompact ℂ) Filter.atTop := by
+theorem tendsto_normSq_cocompact_atTop : Filter.Tendsto normSq (Filter.cocompact ℂ) Filter.atTop :=
+  by
   simpa [mul_self_abs] using
     tendsto_abs_cocompact_at_top.at_top_mul_at_top tendsto_abs_cocompact_at_top
-#align complex.tendsto_norm_sq_cocompact_at_top Complex.tendsto_norm_sq_cocompact_at_top
+#align complex.tendsto_norm_sq_cocompact_at_top Complex.tendsto_normSq_cocompact_atTop
 
 open ContinuousLinearMap
 
@@ -231,28 +231,28 @@ theorem continuous_re : Continuous re :=
 #align complex.continuous_re Complex.continuous_re
 
 @[simp]
-theorem re_clm_coe : (coe reClm : ℂ →ₗ[ℝ] ℝ) = re_lm :=
+theorem reClm_coe : (coe reClm : ℂ →ₗ[ℝ] ℝ) = re_lm :=
   rfl
-#align complex.re_clm_coe Complex.re_clm_coe
+#align complex.re_clm_coe Complex.reClm_coe
 
 @[simp]
-theorem re_clm_apply (z : ℂ) : (reClm : ℂ → ℝ) z = z.re :=
+theorem reClm_apply (z : ℂ) : (reClm : ℂ → ℝ) z = z.re :=
   rfl
-#align complex.re_clm_apply Complex.re_clm_apply
+#align complex.re_clm_apply Complex.reClm_apply
 
 @[simp]
-theorem re_clm_norm : ‖re_clm‖ = 1 :=
-  le_antisymm (LinearMap.mk_continuous_norm_le _ zero_le_one _) <|
+theorem reClm_norm : ‖re_clm‖ = 1 :=
+  le_antisymm (LinearMap.mkContinuous_norm_le _ zero_le_one _) <|
     calc
       1 = ‖reClm 1‖ := by simp
       _ ≤ ‖re_clm‖ := unit_le_op_norm _ _ (by simp)
       
-#align complex.re_clm_norm Complex.re_clm_norm
+#align complex.re_clm_norm Complex.reClm_norm
 
 @[simp]
-theorem re_clm_nnnorm : ‖re_clm‖₊ = 1 :=
-  Subtype.ext re_clm_norm
-#align complex.re_clm_nnnorm Complex.re_clm_nnnorm
+theorem reClm_nnnorm : ‖re_clm‖₊ = 1 :=
+  Subtype.ext reClm_norm
+#align complex.re_clm_nnnorm Complex.reClm_nnnorm
 
 /-- Continuous linear map version of the real part function, from `ℂ` to `ℝ`. -/
 def imClm : ℂ →L[ℝ] ℝ :=
@@ -265,44 +265,44 @@ theorem continuous_im : Continuous im :=
 #align complex.continuous_im Complex.continuous_im
 
 @[simp]
-theorem im_clm_coe : (coe imClm : ℂ →ₗ[ℝ] ℝ) = im_lm :=
+theorem imClm_coe : (coe imClm : ℂ →ₗ[ℝ] ℝ) = im_lm :=
   rfl
-#align complex.im_clm_coe Complex.im_clm_coe
+#align complex.im_clm_coe Complex.imClm_coe
 
 @[simp]
-theorem im_clm_apply (z : ℂ) : (imClm : ℂ → ℝ) z = z.im :=
+theorem imClm_apply (z : ℂ) : (imClm : ℂ → ℝ) z = z.im :=
   rfl
-#align complex.im_clm_apply Complex.im_clm_apply
+#align complex.im_clm_apply Complex.imClm_apply
 
 @[simp]
-theorem im_clm_norm : ‖im_clm‖ = 1 :=
-  le_antisymm (LinearMap.mk_continuous_norm_le _ zero_le_one _) <|
+theorem imClm_norm : ‖im_clm‖ = 1 :=
+  le_antisymm (LinearMap.mkContinuous_norm_le _ zero_le_one _) <|
     calc
       1 = ‖imClm i‖ := by simp
       _ ≤ ‖im_clm‖ := unit_le_op_norm _ _ (by simp)
       
-#align complex.im_clm_norm Complex.im_clm_norm
+#align complex.im_clm_norm Complex.imClm_norm
 
 @[simp]
-theorem im_clm_nnnorm : ‖im_clm‖₊ = 1 :=
-  Subtype.ext im_clm_norm
-#align complex.im_clm_nnnorm Complex.im_clm_nnnorm
+theorem imClm_nnnorm : ‖im_clm‖₊ = 1 :=
+  Subtype.ext imClm_norm
+#align complex.im_clm_nnnorm Complex.imClm_nnnorm
 
-theorem restrict_scalars_one_smul_right' (x : E) :
+theorem restrictScalars_one_smul_right' (x : E) :
     ContinuousLinearMap.restrictScalars ℝ ((1 : ℂ →L[ℂ] ℂ).smul_right x : ℂ →L[ℂ] E) =
       reClm.smul_right x + I • imClm.smul_right x :=
   by
   ext ⟨a, b⟩
   simp [mk_eq_add_mul_I, add_smul, mul_smul, smul_comm I]
-#align complex.restrict_scalars_one_smul_right' Complex.restrict_scalars_one_smul_right'
+#align complex.restrict_scalars_one_smul_right' Complex.restrictScalars_one_smul_right'
 
-theorem restrict_scalars_one_smul_right (x : ℂ) :
+theorem restrictScalars_one_smulRight (x : ℂ) :
     ContinuousLinearMap.restrictScalars ℝ ((1 : ℂ →L[ℂ] ℂ).smul_right x : ℂ →L[ℂ] ℂ) = x • 1 :=
   by
   ext1 z
   dsimp
   apply mul_comm
-#align complex.restrict_scalars_one_smul_right Complex.restrict_scalars_one_smul_right
+#align complex.restrict_scalars_one_smul_right Complex.restrictScalars_one_smulRight
 
 /-- The complex-conjugation function from `ℂ` to itself is an isometric linear equivalence. -/
 def conjLie : ℂ ≃ₗᵢ[ℝ] ℂ :=
@@ -310,14 +310,14 @@ def conjLie : ℂ ≃ₗᵢ[ℝ] ℂ :=
 #align complex.conj_lie Complex.conjLie
 
 @[simp]
-theorem conj_lie_apply (z : ℂ) : conjLie z = conj z :=
+theorem conjLie_apply (z : ℂ) : conjLie z = conj z :=
   rfl
-#align complex.conj_lie_apply Complex.conj_lie_apply
+#align complex.conj_lie_apply Complex.conjLie_apply
 
 @[simp]
-theorem conj_lie_symm : conjLie.symm = conj_lie :=
+theorem conjLie_symm : conjLie.symm = conj_lie :=
   rfl
-#align complex.conj_lie_symm Complex.conj_lie_symm
+#align complex.conj_lie_symm Complex.conjLie_symm
 
 theorem isometry_conj : Isometry (conj : ℂ → ℂ) :=
   conjLie.Isometry
@@ -343,15 +343,15 @@ theorem nndist_conj_comm (z w : ℂ) : nndist (conj z) w = nndist z (conj w) :=
 
 /-- The determinant of `conj_lie`, as a linear map. -/
 @[simp]
-theorem det_conj_lie : (conjLie.toLinearEquiv : ℂ →ₗ[ℝ] ℂ).det = -1 :=
+theorem det_conjLie : (conjLie.toLinearEquiv : ℂ →ₗ[ℝ] ℂ).det = -1 :=
   det_conj_ae
-#align complex.det_conj_lie Complex.det_conj_lie
+#align complex.det_conj_lie Complex.det_conjLie
 
 /-- The determinant of `conj_lie`, as a linear equiv. -/
 @[simp]
-theorem linear_equiv_det_conj_lie : conjLie.toLinearEquiv.det = -1 :=
+theorem linearEquiv_det_conjLie : conjLie.toLinearEquiv.det = -1 :=
   linear_equiv_det_conj_ae
-#align complex.linear_equiv_det_conj_lie Complex.linear_equiv_det_conj_lie
+#align complex.linear_equiv_det_conj_lie Complex.linearEquiv_det_conjLie
 
 instance : HasContinuousStar ℂ :=
   ⟨conjLie.Continuous⟩
@@ -363,13 +363,13 @@ theorem continuous_conj : Continuous (conj : ℂ → ℂ) :=
 
 /-- The only continuous ring homomorphisms from `ℂ` to `ℂ` are the identity and the complex
 conjugation. -/
-theorem ring_hom_eq_id_or_conj_of_continuous {f : ℂ →+* ℂ} (hf : Continuous f) :
+theorem ringHom_eq_id_or_conj_of_continuous {f : ℂ →+* ℂ} (hf : Continuous f) :
     f = RingHom.id ℂ ∨ f = conj :=
   by
   refine'
     (real_alg_hom_eq_id_or_conj <| AlgHom.mk' f <| map_real_smul f hf).imp (fun h => _) fun h => _
   all_goals convert congr_arg AlgHom.toRingHom h; ext1; rfl
-#align complex.ring_hom_eq_id_or_conj_of_continuous Complex.ring_hom_eq_id_or_conj_of_continuous
+#align complex.ring_hom_eq_id_or_conj_of_continuous Complex.ringHom_eq_id_or_conj_of_continuous
 
 /-- Continuous linear equiv version of the conj function, from `ℂ` to `ℂ`. -/
 def conjCle : ℂ ≃L[ℝ] ℂ :=
@@ -377,24 +377,24 @@ def conjCle : ℂ ≃L[ℝ] ℂ :=
 #align complex.conj_cle Complex.conjCle
 
 @[simp]
-theorem conj_cle_coe : conjCle.toLinearEquiv = conjAe.toLinearEquiv :=
+theorem conjCle_coe : conjCle.toLinearEquiv = conjAe.toLinearEquiv :=
   rfl
-#align complex.conj_cle_coe Complex.conj_cle_coe
+#align complex.conj_cle_coe Complex.conjCle_coe
 
 @[simp]
-theorem conj_cle_apply (z : ℂ) : conjCle z = conj z :=
+theorem conjCle_apply (z : ℂ) : conjCle z = conj z :=
   rfl
-#align complex.conj_cle_apply Complex.conj_cle_apply
+#align complex.conj_cle_apply Complex.conjCle_apply
 
 @[simp]
-theorem conj_cle_norm : ‖(conjCle : ℂ →L[ℝ] ℂ)‖ = 1 :=
+theorem conjCle_norm : ‖(conjCle : ℂ →L[ℝ] ℂ)‖ = 1 :=
   conjLie.toLinearIsometry.norm_to_continuous_linear_map
-#align complex.conj_cle_norm Complex.conj_cle_norm
+#align complex.conj_cle_norm Complex.conjCle_norm
 
 @[simp]
-theorem conj_cle_nnorm : ‖(conjCle : ℂ →L[ℝ] ℂ)‖₊ = 1 :=
-  Subtype.ext conj_cle_norm
-#align complex.conj_cle_nnorm Complex.conj_cle_nnorm
+theorem conjCle_nnorm : ‖(conjCle : ℂ →L[ℝ] ℂ)‖₊ = 1 :=
+  Subtype.ext conjCle_norm
+#align complex.conj_cle_nnorm Complex.conjCle_nnorm
 
 /-- Linear isometry version of the canonical embedding of `ℝ` in `ℂ`. -/
 def ofRealLi : ℝ →ₗᵢ[ℝ] ℂ :=
@@ -411,13 +411,13 @@ theorem continuous_of_real : Continuous (coe : ℝ → ℂ) :=
 #align complex.continuous_of_real Complex.continuous_of_real
 
 /-- The only continuous ring homomorphism from `ℝ` to `ℂ` is the identity. -/
-theorem ring_hom_eq_of_real_of_continuous {f : ℝ →+* ℂ} (h : Continuous f) : f = Complex.ofReal :=
+theorem ringHom_eq_ofReal_of_continuous {f : ℝ →+* ℂ} (h : Continuous f) : f = Complex.ofReal :=
   by
   convert
     congr_arg AlgHom.toRingHom
       (Subsingleton.elim (AlgHom.mk' f <| map_real_smul f h) <| Algebra.ofId ℝ ℂ)
   ext1; rfl
-#align complex.ring_hom_eq_of_real_of_continuous Complex.ring_hom_eq_of_real_of_continuous
+#align complex.ring_hom_eq_of_real_of_continuous Complex.ringHom_eq_ofReal_of_continuous
 
 /-- Continuous linear map version of the canonical embedding of `ℝ` in `ℂ`. -/
 def ofRealClm : ℝ →L[ℝ] ℂ :=
@@ -425,54 +425,54 @@ def ofRealClm : ℝ →L[ℝ] ℂ :=
 #align complex.of_real_clm Complex.ofRealClm
 
 @[simp]
-theorem of_real_clm_coe : (ofRealClm : ℝ →ₗ[ℝ] ℂ) = ofRealAm.toLinearMap :=
+theorem ofRealClm_coe : (ofRealClm : ℝ →ₗ[ℝ] ℂ) = ofRealAm.toLinearMap :=
   rfl
-#align complex.of_real_clm_coe Complex.of_real_clm_coe
+#align complex.of_real_clm_coe Complex.ofRealClm_coe
 
 @[simp]
-theorem of_real_clm_apply (x : ℝ) : ofRealClm x = x :=
+theorem ofRealClm_apply (x : ℝ) : ofRealClm x = x :=
   rfl
-#align complex.of_real_clm_apply Complex.of_real_clm_apply
+#align complex.of_real_clm_apply Complex.ofRealClm_apply
 
 @[simp]
-theorem of_real_clm_norm : ‖of_real_clm‖ = 1 :=
+theorem ofRealClm_norm : ‖of_real_clm‖ = 1 :=
   ofRealLi.norm_to_continuous_linear_map
-#align complex.of_real_clm_norm Complex.of_real_clm_norm
+#align complex.of_real_clm_norm Complex.ofRealClm_norm
 
 @[simp]
-theorem of_real_clm_nnnorm : ‖of_real_clm‖₊ = 1 :=
+theorem ofRealClm_nnnorm : ‖of_real_clm‖₊ = 1 :=
   Subtype.ext <| of_real_clm_norm
-#align complex.of_real_clm_nnnorm Complex.of_real_clm_nnnorm
+#align complex.of_real_clm_nnnorm Complex.ofRealClm_nnnorm
 
 noncomputable instance : IsROrC ℂ
     where
   re := ⟨Complex.re, Complex.zero_re, Complex.add_re⟩
   im := ⟨Complex.im, Complex.zero_im, Complex.add_im⟩
   i := Complex.i
-  I_re_ax := by simp only [AddMonoidHom.coe_mk, Complex.I_re]
-  I_mul_I_ax := by simp only [Complex.I_mul_I, eq_self_iff_true, or_true_iff]
+  I_re_ax := by simp only [AddMonoidHom.coe_mk, Complex.i_re]
+  I_mul_I_ax := by simp only [Complex.i_mul_i, eq_self_iff_true, or_true_iff]
   re_add_im_ax z := by
-    simp only [AddMonoidHom.coe_mk, Complex.re_add_im, Complex.coe_algebra_map,
-      Complex.of_real_eq_coe]
+    simp only [AddMonoidHom.coe_mk, Complex.re_add_im, Complex.coe_algebraMap,
+      Complex.ofReal_eq_coe]
   of_real_re_ax r := by
-    simp only [AddMonoidHom.coe_mk, Complex.of_real_re, Complex.coe_algebra_map,
-      Complex.of_real_eq_coe]
+    simp only [AddMonoidHom.coe_mk, Complex.of_real_re, Complex.coe_algebraMap,
+      Complex.ofReal_eq_coe]
   of_real_im_ax r := by
-    simp only [AddMonoidHom.coe_mk, Complex.of_real_im, Complex.coe_algebra_map,
-      Complex.of_real_eq_coe]
+    simp only [AddMonoidHom.coe_mk, Complex.of_real_im, Complex.coe_algebraMap,
+      Complex.ofReal_eq_coe]
   mul_re_ax z w := by simp only [Complex.mul_re, AddMonoidHom.coe_mk]
   mul_im_ax z w := by simp only [AddMonoidHom.coe_mk, Complex.mul_im]
   conj_re_ax z := rfl
   conj_im_ax z := rfl
-  conj_I_ax := by simp only [Complex.conj_I, RingHom.coe_mk]
+  conj_I_ax := by simp only [Complex.conj_i, RingHom.coe_mk]
   norm_sq_eq_def_ax z := by
-    simp only [← Complex.norm_sq_eq_abs, ← Complex.norm_sq_apply, AddMonoidHom.coe_mk,
+    simp only [← Complex.normSq_eq_abs, ← Complex.normSq_apply, AddMonoidHom.coe_mk,
       Complex.norm_eq_abs]
-  mul_im_I_ax z := by simp only [mul_one, AddMonoidHom.coe_mk, Complex.I_im]
+  mul_im_I_ax z := by simp only [mul_one, AddMonoidHom.coe_mk, Complex.i_im]
   inv_def_ax z := by
-    simp only [Complex.inv_def, Complex.norm_sq_eq_abs, Complex.coe_algebra_map,
-      Complex.of_real_eq_coe, Complex.norm_eq_abs]
-  div_I_ax := Complex.div_I
+    simp only [Complex.inv_def, Complex.normSq_eq_abs, Complex.coe_algebraMap,
+      Complex.ofReal_eq_coe, Complex.norm_eq_abs]
+  div_I_ax := Complex.div_i
 
 theorem IsROrC.re_eq_complex_re : ⇑(IsROrC.re : ℂ →+ ℝ) = Complex.re :=
   rfl
@@ -517,7 +517,7 @@ def equivRealProdₗ : ℂ ≃L[ℝ] ℝ × ℝ :=
 
 end
 
-theorem has_sum_iff {α} (f : α → ℂ) (c : ℂ) :
+theorem hasSum_iff {α} (f : α → ℂ) (c : ℂ) :
     HasSum f c ↔ HasSum (fun x => (f x).re) c.re ∧ HasSum (fun x => (f x).im) c.im :=
   by
   -- For some reason, `continuous_linear_map.has_sum` is orders of magnitude faster than
@@ -528,7 +528,7 @@ theorem has_sum_iff {α} (f : α → ℂ) (c : ℂ) :
   · ext x <;> rfl
   · cases c
     rfl
-#align complex.has_sum_iff Complex.has_sum_iff
+#align complex.has_sum_iff Complex.hasSum_iff
 
 end Complex
 
@@ -560,14 +560,14 @@ theorem im_to_complex {x : ℂ} : imC x = x.im :=
 #align is_R_or_C.im_to_complex IsROrC.im_to_complex
 
 @[simp]
-theorem I_to_complex : IC = Complex.i :=
+theorem i_to_complex : IC = Complex.i :=
   rfl
-#align is_R_or_C.I_to_complex IsROrC.I_to_complex
+#align is_R_or_C.I_to_complex IsROrC.i_to_complex
 
 @[simp]
-theorem norm_sq_to_complex {x : ℂ} : norm_sqC x = Complex.normSq x := by
+theorem normSq_to_complex {x : ℂ} : norm_sqC x = Complex.normSq x := by
   simp [IsROrC.normSq, Complex.normSq]
-#align is_R_or_C.norm_sq_to_complex IsROrC.norm_sq_to_complex
+#align is_R_or_C.norm_sq_to_complex IsROrC.normSq_to_complex
 
 @[simp]
 theorem abs_to_complex {x : ℂ} : absC x = Complex.abs x := by simp [IsROrC.abs, Complex.abs]

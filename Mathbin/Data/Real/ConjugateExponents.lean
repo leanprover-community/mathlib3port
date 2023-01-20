@@ -117,32 +117,31 @@ theorem div_conj_eq_sub_one : p / q = p - 1 :=
 
 theorem one_lt_nnreal : 1 < Real.toNnreal p :=
   by
-  rw [← Real.to_nnreal_one, Real.to_nnreal_lt_to_nnreal_iff h.pos]
+  rw [← Real.toNnreal_one, Real.toNnreal_lt_toNnreal_iff h.pos]
   exact h.one_lt
 #align real.is_conjugate_exponent.one_lt_nnreal Real.IsConjugateExponent.one_lt_nnreal
 
 theorem inv_add_inv_conj_nnreal : 1 / Real.toNnreal p + 1 / Real.toNnreal q = 1 := by
-  rw [← Real.to_nnreal_one, ← Real.to_nnreal_div' h.nonneg, ← Real.to_nnreal_div' h.symm.nonneg, ←
-    Real.to_nnreal_add h.one_div_nonneg h.symm.one_div_nonneg, h.inv_add_inv_conj]
+  rw [← Real.toNnreal_one, ← Real.toNnreal_div' h.nonneg, ← Real.toNnreal_div' h.symm.nonneg, ←
+    Real.toNnreal_add h.one_div_nonneg h.symm.one_div_nonneg, h.inv_add_inv_conj]
 #align real.is_conjugate_exponent.inv_add_inv_conj_nnreal Real.IsConjugateExponent.inv_add_inv_conj_nnreal
 
 theorem inv_add_inv_conj_ennreal : 1 / Ennreal.ofReal p + 1 / Ennreal.ofReal q = 1 := by
-  rw [← Ennreal.of_real_one, ← Ennreal.of_real_div_of_pos h.pos, ←
-    Ennreal.of_real_div_of_pos h.symm.pos, ←
-    Ennreal.of_real_add h.one_div_nonneg h.symm.one_div_nonneg, h.inv_add_inv_conj]
+  rw [← Ennreal.ofReal_one, ← Ennreal.ofReal_div_of_pos h.pos, ←
+    Ennreal.ofReal_div_of_pos h.symm.pos, ←
+    Ennreal.ofReal_add h.one_div_nonneg h.symm.one_div_nonneg, h.inv_add_inv_conj]
 #align real.is_conjugate_exponent.inv_add_inv_conj_ennreal Real.IsConjugateExponent.inv_add_inv_conj_ennreal
 
 end IsConjugateExponent
 
-theorem is_conjugate_exponent_iff {p q : ℝ} (h : 1 < p) :
-    p.IsConjugateExponent q ↔ q = p / (p - 1) :=
+theorem isConjugateExponent_iff {p q : ℝ} (h : 1 < p) : p.IsConjugateExponent q ↔ q = p / (p - 1) :=
   ⟨fun H => H.conj_eq, fun H => ⟨h, by field_simp [H, ne_of_gt (lt_trans zero_lt_one h)] ⟩⟩
-#align real.is_conjugate_exponent_iff Real.is_conjugate_exponent_iff
+#align real.is_conjugate_exponent_iff Real.isConjugateExponent_iff
 
-theorem is_conjugate_exponent_conjugate_exponent {p : ℝ} (h : 1 < p) :
+theorem isConjugateExponent_conjugateExponent {p : ℝ} (h : 1 < p) :
     p.IsConjugateExponent (conjugateExponent p) :=
-  (is_conjugate_exponent_iff h).2 rfl
-#align real.is_conjugate_exponent_conjugate_exponent Real.is_conjugate_exponent_conjugate_exponent
+  (isConjugateExponent_iff h).2 rfl
+#align real.is_conjugate_exponent_conjugate_exponent Real.isConjugateExponent_conjugateExponent
 
 end Real
 

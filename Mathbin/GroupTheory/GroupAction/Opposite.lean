@@ -235,6 +235,6 @@ Case conversion may be inaccurate. Consider using '#align cancel_monoid_with_zer
 /-- `monoid.to_opposite_mul_action` is faithful on nontrivial cancellative monoids with zero. -/
 instance CancelMonoidWithZero.toFaithfulSMul_opposite [CancelMonoidWithZero α] [Nontrivial α] :
     FaithfulSMul αᵐᵒᵖ α :=
-  ⟨fun x y h => unop_injective <| mul_left_cancel₀ one_ne_zero (h 1)⟩
+  ⟨fun x y h => unop_injective <| mul_left_cancel₀ one_neZero (h 1)⟩
 #align cancel_monoid_with_zero.to_has_faithful_opposite_scalar CancelMonoidWithZero.toFaithfulSMul_opposite
 

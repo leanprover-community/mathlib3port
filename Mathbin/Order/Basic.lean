@@ -1154,8 +1154,14 @@ Case conversion may be inaccurate. Consider using '#align strong_lt.trans_le Str
 alias strongLT_of_strongLT_of_le ← StrongLT.trans_le
 #align strong_lt.trans_le StrongLT.trans_le
 
-alias strongLT_of_le_of_strongLT ← LE.le.trans_strong_lt
-#align has_le.le.trans_strong_lt LE.le.trans_strong_lt
+/- warning: has_le.le.trans_strong_lt -> LE.le.trans_strongLT is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {π : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Preorder.{u2} (π i)] {a : forall (i : ι), π i} {b : forall (i : ι), π i} {c : forall (i : ι), π i}, (LE.le.{max u1 u2} (forall (i : ι), π i) (Pi.hasLe.{u1, u2} ι (fun (i : ι) => π i) (fun (i : ι) => Preorder.toLE.{u2} (π i) (_inst_1 i))) a b) -> (StrongLT.{u1, u2} ι (fun (i : ι) => π i) (fun (i : ι) => Preorder.toLT.{u2} (π i) (_inst_1 i)) b c) -> (StrongLT.{u1, u2} ι (fun (i : ι) => π i) (fun (i : ι) => Preorder.toLT.{u2} (π i) (_inst_1 i)) a c)
+but is expected to have type
+  forall {ι : Type.{u2}} {π : ι -> Type.{u1}} [_inst_1 : forall (i : ι), Preorder.{u1} (π i)] {a : forall (i : ι), π i} {b : forall (i : ι), π i} {c : forall (i : ι), π i}, (LE.le.{max u2 u1} (forall (i : ι), π i) (Pi.hasLe.{u2, u1} ι (fun (i : ι) => π i) (fun (i : ι) => Preorder.toLE.{u1} (π i) (_inst_1 i))) a b) -> (StrongLT.{u2, u1} ι (fun (i : ι) => π i) (fun (i : ι) => Preorder.toLT.{u1} (π i) (_inst_1 i)) b c) -> (StrongLT.{u2, u1} ι (fun (i : ι) => π i) (fun (i : ι) => Preorder.toLT.{u1} (π i) (_inst_1 i)) a c)
+Case conversion may be inaccurate. Consider using '#align has_le.le.trans_strong_lt LE.le.trans_strongLTₓ'. -/
+alias strongLT_of_le_of_strongLT ← LE.le.trans_strongLT
+#align has_le.le.trans_strong_lt LE.le.trans_strongLT
 
 end Pi
 

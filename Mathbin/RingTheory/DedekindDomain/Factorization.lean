@@ -78,7 +78,7 @@ namespace Ideal
 
 /-- For every nonzero ideal `I` of `v`, there are finitely many maximal ideals `v` such that
   `v^(val_v(I))` is not the unit ideal. -/
-theorem finite_mul_support {I : Ideal R} (hI : I ≠ 0) :
+theorem finite_mulSupport {I : Ideal R} (hI : I ≠ 0) :
     (mulSupport fun v : HeightOneSpectrum R => v.maxPowDividing I).Finite :=
   haveI h_subset :
     { v : height_one_spectrum R | v.maxPowDividing I ≠ 1 } ⊆
@@ -91,11 +91,11 @@ theorem finite_mul_support {I : Ideal R} (hI : I ≠ 0) :
         pow_zero _]
     exact hv hv'
   finite.subset (filter.eventually_cofinite.mp (Associates.finite_factors hI)) h_subset
-#align ideal.finite_mul_support Ideal.finite_mul_support
+#align ideal.finite_mul_support Ideal.finite_mulSupport
 
 /-- For every nonzero ideal `I` of `v`, there are finitely many maximal ideals `v` such that
 `v^(val_v(I))`, regarded as a fractional ideal, is not `(1)`. -/
-theorem finite_mul_support_coe {I : Ideal R} (hI : I ≠ 0) :
+theorem finite_mulSupport_coe {I : Ideal R} (hI : I ≠ 0) :
     (mulSupport fun v : HeightOneSpectrum R =>
         (v.asIdeal : FractionalIdeal R⁰ K) ^
           ((Associates.mk v.asIdeal).count (Associates.mk I).factors : ℤ)).Finite :=
@@ -103,11 +103,11 @@ theorem finite_mul_support_coe {I : Ideal R} (hI : I ≠ 0) :
   rw [mul_support]
   simp_rw [Ne.def, zpow_ofNat, ← FractionalIdeal.coe_ideal_pow, FractionalIdeal.coe_ideal_eq_one]
   exact finite_mul_support hI
-#align ideal.finite_mul_support_coe Ideal.finite_mul_support_coe
+#align ideal.finite_mul_support_coe Ideal.finite_mulSupport_coe
 
 /-- For every nonzero ideal `I` of `v`, there are finitely many maximal ideals `v` such that
 `v^-(val_v(I))` is not the unit ideal. -/
-theorem finite_mul_support_inv {I : Ideal R} (hI : I ≠ 0) :
+theorem finite_mulSupport_inv {I : Ideal R} (hI : I ≠ 0) :
     (mulSupport fun v : HeightOneSpectrum R =>
         (v.asIdeal : FractionalIdeal R⁰ K) ^
           (-((Associates.mk v.asIdeal).count (Associates.mk I).factors : ℤ))).Finite :=
@@ -115,7 +115,7 @@ theorem finite_mul_support_inv {I : Ideal R} (hI : I ≠ 0) :
   rw [mul_support]
   simp_rw [zpow_neg, Ne.def, inv_eq_one]
   exact finite_mul_support_coe hI
-#align ideal.finite_mul_support_inv Ideal.finite_mul_support_inv
+#align ideal.finite_mul_support_inv Ideal.finite_mulSupport_inv
 
 /-- For every nonzero ideal `I` of `v`, `v^(val_v(I) + 1)` does not divide `∏_v v^(val_v(I))`. -/
 theorem finprod_not_dvd (I : Ideal R) (hI : I ≠ 0) :
@@ -126,10 +126,10 @@ theorem finprod_not_dvd (I : Ideal R) (hI : I ≠ 0) :
   have h_ne_zero : v.max_pow_dividing I ≠ 0 := pow_ne_zero _ v.ne_bot
   rw [← mul_finprod_cond_ne v hf, pow_add, pow_one, finprod_cond_ne _ _ hf]
   intro h_contr
-  have hv_prime : Prime v.as_ideal := Ideal.prime_of_is_prime v.ne_bot v.is_prime
+  have hv_prime : Prime v.as_ideal := Ideal.prime_of_isPrime v.ne_bot v.is_prime
   obtain ⟨w, hw, hvw'⟩ :=
     Prime.exists_mem_finset_dvd hv_prime ((mul_dvd_mul_iff_left h_ne_zero).mp h_contr)
-  have hw_prime : Prime w.as_ideal := Ideal.prime_of_is_prime w.ne_bot w.is_prime
+  have hw_prime : Prime w.as_ideal := Ideal.prime_of_isPrime w.ne_bot w.is_prime
   have hvw := Prime.dvd_of_dvd_pow hv_prime hvw'
   rw [Prime.dvd_prime_iff_associated hv_prime hw_prime, associated_iff_eq] at hvw
   exact (finset.mem_erase.mp hw).1 (height_one_spectrum.ext w v (Eq.symm hvw))
@@ -145,7 +145,7 @@ theorem Associates.finprod_ne_zero (I : Ideal R) :
   · rw [Finset.prod_ne_zero_iff]
     intro v hv
     apply pow_ne_zero _ v.ne_bot
-  · exact one_ne_zero
+  · exact one_neZero
 #align associates.finprod_ne_zero Associates.finprod_ne_zero
 
 namespace Ideal
@@ -158,7 +158,7 @@ theorem finprod_count (I : Ideal R) (hI : I ≠ 0) :
   by
   have h_ne_zero := Associates.finprod_ne_zero I
   have hv : Irreducible (Associates.mk v.as_ideal) := v.associates_irreducible
-  have h_dvd := finprod_mem_dvd v (Ideal.finite_mul_support hI)
+  have h_dvd := finprod_mem_dvd v (Ideal.finite_mulSupport hI)
   have h_not_dvd := Ideal.finprod_not_dvd v I hI
   simp only [IsDedekindDomain.HeightOneSpectrum.maxPowDividing] at h_dvd h_ne_zero h_not_dvd
   rw [← Associates.mk_dvd_mk, Associates.dvd_eq_le, Associates.mk_pow,
@@ -168,7 +168,7 @@ theorem finprod_count (I : Ideal R) (hI : I ≠ 0) :
 #align ideal.finprod_count Ideal.finprod_count
 
 /-- The ideal `I` equals the finprod `∏_v v^(val_v(I))`. -/
-theorem finprod_height_one_spectrum_factorization (I : Ideal R) (hI : I ≠ 0) :
+theorem finprod_heightOneSpectrum_factorization (I : Ideal R) (hI : I ≠ 0) :
     (∏ᶠ v : HeightOneSpectrum R, v.maxPowDividing I) = I :=
   by
   rw [← associated_iff_eq, ← Associates.mk_eq_mk_iff_associated]
@@ -182,21 +182,21 @@ theorem finprod_height_one_spectrum_factorization (I : Ideal R) (hI : I ≠ 0) :
   apply
     Ideal.finprod_count
       ⟨J, Ideal.isPrimeOfPrime (irreducible_iff_prime.mp hv), Irreducible.ne_zero hv⟩ I hI
-#align ideal.finprod_height_one_spectrum_factorization Ideal.finprod_height_one_spectrum_factorization
+#align ideal.finprod_height_one_spectrum_factorization Ideal.finprod_heightOneSpectrum_factorization
 
 /-- The ideal `I` equals the finprod `∏_v v^(val_v(I))`, when both sides are regarded as fractional
 ideals of `R`. -/
-theorem finprod_height_one_spectrum_factorization_coe (I : Ideal R) (hI : I ≠ 0) :
+theorem finprod_heightOneSpectrum_factorization_coe (I : Ideal R) (hI : I ≠ 0) :
     (∏ᶠ v : HeightOneSpectrum R,
         (v.asIdeal : FractionalIdeal R⁰ K) ^
           ((Associates.mk v.asIdeal).count (Associates.mk I).factors : ℤ)) =
       I :=
   by
-  conv_rhs => rw [← Ideal.finprod_height_one_spectrum_factorization I hI]
+  conv_rhs => rw [← Ideal.finprod_heightOneSpectrum_factorization I hI]
   rw [FractionalIdeal.coe_ideal_finprod R⁰ K (le_refl _)]
   simp_rw [IsDedekindDomain.HeightOneSpectrum.maxPowDividing, FractionalIdeal.coe_ideal_pow,
     zpow_ofNat]
-#align ideal.finprod_height_one_spectrum_factorization_coe Ideal.finprod_height_one_spectrum_factorization_coe
+#align ideal.finprod_height_one_spectrum_factorization_coe Ideal.finprod_heightOneSpectrum_factorization_coe
 
 end Ideal
 

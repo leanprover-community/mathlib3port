@@ -45,7 +45,7 @@ instance [LE α] [LE β] [Mul α] [Mul β] [ExistsMulOfLE α] [ExistsMulOfLE β]
 @[to_additive]
 instance [CanonicallyOrderedMonoid α] [CanonicallyOrderedMonoid β] :
     CanonicallyOrderedMonoid (α × β) :=
-  { Prod.orderedCommMonoid, Prod.orderBot _ _, Prod.has_exists_mul_of_le with
+  { Prod.orderedCommMonoid, Prod.orderBot _ _, Prod.existsMulOfLE with
     le_self_mul := fun a b => ⟨le_self_mul, le_self_mul⟩ }
 
 end Prod

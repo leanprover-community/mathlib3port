@@ -280,19 +280,19 @@ instance : InfSet (GrothendieckTopology C)
           J.transitive (hS _ ⟨⟨_, _, hJ, rfl⟩, rfl⟩) _ fun Y f hf => h hf _ ⟨⟨_, _, hJ, rfl⟩, rfl⟩ }
 
 /-- See <https://stacks.math.columbia.edu/tag/00Z7> -/
-theorem is_glb_Inf (s : Set (GrothendieckTopology C)) : IsGLB s (infₛ s) :=
+theorem isGLB_infₛ (s : Set (GrothendieckTopology C)) : IsGLB s (infₛ s) :=
   by
   refine' @IsGLB.of_image _ _ _ _ sieves _ _ _ _
   · intros
     rfl
   · exact isGLB_infₛ _
-#align category_theory.grothendieck_topology.is_glb_Inf CategoryTheory.GrothendieckTopology.is_glb_Inf
+#align category_theory.grothendieck_topology.is_glb_Inf CategoryTheory.GrothendieckTopology.isGLB_infₛ
 
 /-- Construct a complete lattice from the `Inf`, but make the trivial and discrete topologies
 definitionally equal to the bottom and top respectively.
 -/
 instance : CompleteLattice (GrothendieckTopology C) :=
-  CompleteLattice.copy (completeLatticeOfInf _ is_glb_Inf) _ rfl (discrete C)
+  CompleteLattice.copy (completeLatticeOfInf _ isGLB_infₛ) _ rfl (discrete C)
     (by
       apply le_antisymm
       · exact @CompleteLattice.le_top _ (completeLatticeOfInf _ isGLB_infₛ) (discrete C)

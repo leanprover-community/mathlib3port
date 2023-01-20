@@ -112,9 +112,9 @@ instance : CoeFun (CentroidHom α) fun _ => α → α :=
   FunLike.hasCoeToFun
 
 @[simp]
-theorem to_fun_eq_coe {f : CentroidHom α} : f.toFun = (f : α → α) :=
+theorem toFun_eq_coe {f : CentroidHom α} : f.toFun = (f : α → α) :=
   rfl
-#align centroid_hom.to_fun_eq_coe CentroidHom.to_fun_eq_coe
+#align centroid_hom.to_fun_eq_coe CentroidHom.toFun_eq_coe
 
 /- warning: centroid_hom.ext -> CentroidHom.ext is a dubious translation:
 lean 3 declaration is

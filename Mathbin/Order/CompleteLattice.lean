@@ -140,7 +140,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align le_Sup le_supₛₓ'. -/
 @[ematch]
 theorem le_supₛ : a ∈ s → a ≤ supₛ s :=
-  CompleteSemilatticeSup.le_Sup s a
+  CompleteSemilatticeSup.le_sup s a
 #align le_Sup le_supₛ
 
 /- warning: Sup_le -> supₛ_le is a dubious translation:
@@ -150,7 +150,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CompleteSemilatticeSup.{u1} α] {s : Set.{u1} α} {a : α}, (forall (b : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) b s) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeSup.toPartialOrder.{u1} α _inst_1))) b a)) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeSup.toPartialOrder.{u1} α _inst_1))) (SupSet.supₛ.{u1} α (CompleteSemilatticeSup.toSupSet.{u1} α _inst_1) s) a)
 Case conversion may be inaccurate. Consider using '#align Sup_le supₛ_leₓ'. -/
 theorem supₛ_le : (∀ b ∈ s, b ≤ a) → supₛ s ≤ a :=
-  CompleteSemilatticeSup.Sup_le s a
+  CompleteSemilatticeSup.sup_le s a
 #align Sup_le supₛ_le
 
 /- warning: is_lub_Sup -> isLUB_supₛ is a dubious translation:
@@ -274,7 +274,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align Inf_le infₛ_leₓ'. -/
 @[ematch]
 theorem infₛ_le : a ∈ s → infₛ s ≤ a :=
-  CompleteSemilatticeInf.Inf_le s a
+  CompleteSemilatticeInf.inf_le s a
 #align Inf_le infₛ_le
 
 /- warning: le_Inf -> le_infₛ is a dubious translation:
@@ -284,7 +284,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CompleteSemilatticeInf.{u1} α] {s : Set.{u1} α} {a : α}, (forall (b : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) b s) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α _inst_1))) a b)) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α _inst_1))) a (InfSet.infₛ.{u1} α (CompleteSemilatticeInf.toInfSet.{u1} α _inst_1) s))
 Case conversion may be inaccurate. Consider using '#align le_Inf le_infₛₓ'. -/
 theorem le_infₛ : (∀ b ∈ s, a ≤ b) → a ≤ infₛ s :=
-  CompleteSemilatticeInf.le_Inf s a
+  CompleteSemilatticeInf.le_inf s a
 #align le_Inf le_infₛ
 
 /- warning: is_glb_Inf -> isGLB_infₛ is a dubious translation:
@@ -348,9 +348,16 @@ theorem infₛ_le_iff : infₛ s ≤ a ↔ ∀ b ∈ lowerBounds s, b ≤ a :=
   ⟨fun h b hb => le_trans (le_infₛ hb) h, fun hb => hb _ fun x => infₛ_le⟩
 #align Inf_le_iff infₛ_le_iff
 
-theorem infi_le_iff {s : ι → α} : infᵢ s ≤ a ↔ ∀ b, (∀ i, b ≤ s i) → b ≤ a := by
+/- warning: infi_le_iff clashes with infᵢ_le_iff -> infᵢ_le_iff
+warning: infi_le_iff -> infᵢ_le_iff is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : CompleteSemilatticeInf.{u1} α] {a : α} {s : ι -> α}, Iff (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α _inst_1))) (infᵢ.{u1, u2} α (CompleteSemilatticeInf.toHasInf.{u1} α _inst_1) ι s) a) (forall (b : α), (forall (i : ι), LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α _inst_1))) b (s i)) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α _inst_1))) b a))
+but is expected to have type
+  forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : CompleteSemilatticeInf.{u2} α] {a : α} {s : ι -> α}, Iff (LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α _inst_1))) (infᵢ.{u2, u1} α (CompleteSemilatticeInf.toInfSet.{u2} α _inst_1) ι s) a) (forall (b : α), (forall (i : ι), LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α _inst_1))) b (s i)) -> (LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α _inst_1))) b a))
+Case conversion may be inaccurate. Consider using '#align infi_le_iff infᵢ_le_iffₓ'. -/
+theorem infᵢ_le_iff {s : ι → α} : infᵢ s ≤ a ↔ ∀ b, (∀ i, b ≤ s i) → b ≤ a := by
   simp [infᵢ, infₛ_le_iff, lowerBounds]
-#align infi_le_iff infi_le_iff
+#align infi_le_iff infᵢ_le_iff
 
 /- warning: Inf_le_Inf_of_forall_exists_le -> infₛ_le_infₛ_of_forall_exists_le is a dubious translation:
 lean 3 declaration is
@@ -517,10 +524,10 @@ variable (α)
 instance [CompleteLattice α] : CompleteLattice αᵒᵈ :=
   { OrderDual.lattice α, OrderDual.hasSup α, OrderDual.hasInf α,
     OrderDual.boundedOrder α with
-    le_Sup := @CompleteLattice.Inf_le α _
-    Sup_le := @CompleteLattice.le_Inf α _
-    Inf_le := @CompleteLattice.le_Sup α _
-    le_Inf := @CompleteLattice.Sup_le α _ }
+    le_Sup := @CompleteLattice.inf_le α _
+    Sup_le := @CompleteLattice.le_inf α _
+    Inf_le := @CompleteLattice.le_sup α _
+    le_Inf := @CompleteLattice.sup_le α _ }
 
 instance [CompleteLinearOrder α] : CompleteLinearOrder αᵒᵈ :=
   { OrderDual.completeLattice α, OrderDual.linearOrder α with }
@@ -1685,10 +1692,17 @@ theorem Monotone.le_map_supₛ [CompleteLattice β] {s : Set α} {f : α → β}
     (⨆ a ∈ s, f a) ≤ f (supₛ s) := by rw [supₛ_eq_supᵢ] <;> exact hf.le_map_supr₂ _
 #align monotone.le_map_Sup Monotone.le_map_supₛ
 
-theorem Antitone.le_map_Inf [CompleteLattice β] {s : Set α} {f : α → β} (hf : Antitone f) :
+/- warning: antitone.le_map_Inf clashes with antitone.le_map_infₛ -> Antitone.le_map_infₛ
+warning: antitone.le_map_Inf -> Antitone.le_map_infₛ is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : CompleteLattice.{u2} β] {s : Set.{u1} α} {f : α -> β}, (Antitone.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2))) f) -> (LE.le.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2)))) (supᵢ.{u2, succ u1} β (CompleteSemilatticeSup.toHasSup.{u2} β (CompleteLattice.toCompleteSemilatticeSup.{u2} β _inst_2)) α (fun (a : α) => supᵢ.{u2, 0} β (CompleteSemilatticeSup.toHasSup.{u2} β (CompleteLattice.toCompleteSemilatticeSup.{u2} β _inst_2)) (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) => f a))) (f (InfSet.infₛ.{u1} α (CompleteSemilatticeInf.toHasInf.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) s)))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : CompleteLattice.{u2} β] {s : Set.{u1} α} {f : α -> β}, (Antitone.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2))) f) -> (LE.le.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2)))) (supᵢ.{u2, succ u1} β (CompleteLattice.toSupSet.{u2} β _inst_2) α (fun (a : α) => supᵢ.{u2, 0} β (CompleteLattice.toSupSet.{u2} β _inst_2) (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s) => f a))) (f (InfSet.infₛ.{u1} α (CompleteLattice.toInfSet.{u1} α _inst_1) s)))
+Case conversion may be inaccurate. Consider using '#align antitone.le_map_Inf Antitone.le_map_infₛₓ'. -/
+theorem Antitone.le_map_infₛ [CompleteLattice β] {s : Set α} {f : α → β} (hf : Antitone f) :
     (⨆ a ∈ s, f a) ≤ f (infₛ s) :=
   hf.dual_left.le_map_Sup
-#align antitone.le_map_Inf Antitone.le_map_Inf
+#align antitone.le_map_Inf Antitone.le_map_infₛ
 
 /- warning: order_iso.map_supr -> OrderIso.map_supᵢ is a dubious translation:
 lean 3 declaration is
@@ -3524,65 +3538,65 @@ instance [InfSet α] [InfSet β] : InfSet (α × β) :=
 
 variable {α β}
 
-theorem fst_Inf [InfSet α] [InfSet β] (s : Set (α × β)) : (infₛ s).fst = infₛ (Prod.fst '' s) :=
+theorem fst_infₛ [InfSet α] [InfSet β] (s : Set (α × β)) : (infₛ s).fst = infₛ (Prod.fst '' s) :=
   rfl
-#align prod.fst_Inf Prod.fst_Inf
+#align prod.fst_Inf Prod.fst_infₛ
 
-theorem snd_Inf [InfSet α] [InfSet β] (s : Set (α × β)) : (infₛ s).snd = infₛ (Prod.snd '' s) :=
+theorem snd_infₛ [InfSet α] [InfSet β] (s : Set (α × β)) : (infₛ s).snd = infₛ (Prod.snd '' s) :=
   rfl
-#align prod.snd_Inf Prod.snd_Inf
+#align prod.snd_Inf Prod.snd_infₛ
 
-theorem swap_Inf [InfSet α] [InfSet β] (s : Set (α × β)) : (infₛ s).swap = infₛ (Prod.swap '' s) :=
+theorem swap_infₛ [InfSet α] [InfSet β] (s : Set (α × β)) : (infₛ s).swap = infₛ (Prod.swap '' s) :=
   ext (congr_arg infₛ <| image_comp Prod.fst swap s : _)
     (congr_arg infₛ <| image_comp Prod.snd swap s : _)
-#align prod.swap_Inf Prod.swap_Inf
+#align prod.swap_Inf Prod.swap_infₛ
 
-theorem fst_Sup [SupSet α] [SupSet β] (s : Set (α × β)) : (supₛ s).fst = supₛ (Prod.fst '' s) :=
+theorem fst_supₛ [SupSet α] [SupSet β] (s : Set (α × β)) : (supₛ s).fst = supₛ (Prod.fst '' s) :=
   rfl
-#align prod.fst_Sup Prod.fst_Sup
+#align prod.fst_Sup Prod.fst_supₛ
 
-theorem snd_Sup [SupSet α] [SupSet β] (s : Set (α × β)) : (supₛ s).snd = supₛ (Prod.snd '' s) :=
+theorem snd_supₛ [SupSet α] [SupSet β] (s : Set (α × β)) : (supₛ s).snd = supₛ (Prod.snd '' s) :=
   rfl
-#align prod.snd_Sup Prod.snd_Sup
+#align prod.snd_Sup Prod.snd_supₛ
 
-theorem swap_Sup [SupSet α] [SupSet β] (s : Set (α × β)) : (supₛ s).swap = supₛ (Prod.swap '' s) :=
+theorem swap_supₛ [SupSet α] [SupSet β] (s : Set (α × β)) : (supₛ s).swap = supₛ (Prod.swap '' s) :=
   ext (congr_arg supₛ <| image_comp Prod.fst swap s : _)
     (congr_arg supₛ <| image_comp Prod.snd swap s : _)
-#align prod.swap_Sup Prod.swap_Sup
+#align prod.swap_Sup Prod.swap_supₛ
 
-theorem fst_infi [InfSet α] [InfSet β] (f : ι → α × β) : (infᵢ f).fst = ⨅ i, (f i).fst :=
+theorem fst_infᵢ [InfSet α] [InfSet β] (f : ι → α × β) : (infᵢ f).fst = ⨅ i, (f i).fst :=
   congr_arg infₛ (range_comp _ _).symm
-#align prod.fst_infi Prod.fst_infi
+#align prod.fst_infi Prod.fst_infᵢ
 
-theorem snd_infi [InfSet α] [InfSet β] (f : ι → α × β) : (infᵢ f).snd = ⨅ i, (f i).snd :=
+theorem snd_infᵢ [InfSet α] [InfSet β] (f : ι → α × β) : (infᵢ f).snd = ⨅ i, (f i).snd :=
   congr_arg infₛ (range_comp _ _).symm
-#align prod.snd_infi Prod.snd_infi
+#align prod.snd_infi Prod.snd_infᵢ
 
-theorem swap_infi [InfSet α] [InfSet β] (f : ι → α × β) : (infᵢ f).swap = ⨅ i, (f i).swap := by
+theorem swap_infᵢ [InfSet α] [InfSet β] (f : ι → α × β) : (infᵢ f).swap = ⨅ i, (f i).swap := by
   simp_rw [infᵢ, swap_Inf, range_comp]
-#align prod.swap_infi Prod.swap_infi
+#align prod.swap_infi Prod.swap_infᵢ
 
-theorem infi_mk [InfSet α] [InfSet β] (f : ι → α) (g : ι → β) :
+theorem infᵢ_mk [InfSet α] [InfSet β] (f : ι → α) (g : ι → β) :
     (⨅ i, (f i, g i)) = (⨅ i, f i, ⨅ i, g i) :=
-  congr_arg₂ Prod.mk (fst_infi _) (snd_infi _)
-#align prod.infi_mk Prod.infi_mk
+  congr_arg₂ Prod.mk (fst_infᵢ _) (snd_infᵢ _)
+#align prod.infi_mk Prod.infᵢ_mk
 
-theorem fst_supr [SupSet α] [SupSet β] (f : ι → α × β) : (supᵢ f).fst = ⨆ i, (f i).fst :=
+theorem fst_supᵢ [SupSet α] [SupSet β] (f : ι → α × β) : (supᵢ f).fst = ⨆ i, (f i).fst :=
   congr_arg supₛ (range_comp _ _).symm
-#align prod.fst_supr Prod.fst_supr
+#align prod.fst_supr Prod.fst_supᵢ
 
-theorem snd_supr [SupSet α] [SupSet β] (f : ι → α × β) : (supᵢ f).snd = ⨆ i, (f i).snd :=
+theorem snd_supᵢ [SupSet α] [SupSet β] (f : ι → α × β) : (supᵢ f).snd = ⨆ i, (f i).snd :=
   congr_arg supₛ (range_comp _ _).symm
-#align prod.snd_supr Prod.snd_supr
+#align prod.snd_supr Prod.snd_supᵢ
 
-theorem swap_supr [SupSet α] [SupSet β] (f : ι → α × β) : (supᵢ f).swap = ⨆ i, (f i).swap := by
+theorem swap_supᵢ [SupSet α] [SupSet β] (f : ι → α × β) : (supᵢ f).swap = ⨆ i, (f i).swap := by
   simp_rw [supᵢ, swap_Sup, range_comp]
-#align prod.swap_supr Prod.swap_supr
+#align prod.swap_supr Prod.swap_supᵢ
 
-theorem supr_mk [SupSet α] [SupSet β] (f : ι → α) (g : ι → β) :
+theorem supᵢ_mk [SupSet α] [SupSet β] (f : ι → α) (g : ι → β) :
     (⨆ i, (f i, g i)) = (⨆ i, f i, ⨆ i, g i) :=
-  congr_arg₂ Prod.mk (fst_supr _) (snd_supr _)
-#align prod.supr_mk Prod.supr_mk
+  congr_arg₂ Prod.mk (fst_supᵢ _) (snd_supᵢ _)
+#align prod.supr_mk Prod.supᵢ_mk
 
 variable (α β)
 
@@ -3602,16 +3616,16 @@ instance [CompleteLattice α] [CompleteLattice β] : CompleteLattice (α × β) 
 end Prod
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem Inf_prod [InfSet α] [InfSet β] {s : Set α} {t : Set β} (hs : s.Nonempty) (ht : t.Nonempty) :
-    infₛ (s ×ˢ t) = (infₛ s, infₛ t) :=
+theorem infₛ_prod [InfSet α] [InfSet β] {s : Set α} {t : Set β} (hs : s.Nonempty)
+    (ht : t.Nonempty) : infₛ (s ×ˢ t) = (infₛ s, infₛ t) :=
   congr_arg₂ Prod.mk (congr_arg infₛ <| fst_image_prod _ ht) (congr_arg infₛ <| snd_image_prod hs _)
-#align Inf_prod Inf_prod
+#align Inf_prod infₛ_prod
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem Sup_prod [SupSet α] [SupSet β] {s : Set α} {t : Set β} (hs : s.Nonempty) (ht : t.Nonempty) :
-    supₛ (s ×ˢ t) = (supₛ s, supₛ t) :=
+theorem supₛ_prod [SupSet α] [SupSet β] {s : Set α} {t : Set β} (hs : s.Nonempty)
+    (ht : t.Nonempty) : supₛ (s ×ˢ t) = (supₛ s, supₛ t) :=
   congr_arg₂ Prod.mk (congr_arg supₛ <| fst_image_prod _ ht) (congr_arg supₛ <| snd_image_prod hs _)
-#align Sup_prod Sup_prod
+#align Sup_prod supₛ_prod
 
 section CompleteLattice
 

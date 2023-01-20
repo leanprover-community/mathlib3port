@@ -110,31 +110,31 @@ theorem card_of_mem_right {b : Board} {m : ℤ × ℤ} (h : m ∈ right b) : 2 �
   exact Nat.lt_of_le_of_lt i₂ i₁
 #align pgame.domineering.card_of_mem_right Pgame.Domineering.card_of_mem_right
 
-theorem move_left_card {b : Board} {m : ℤ × ℤ} (h : m ∈ left b) :
+theorem moveLeft_card {b : Board} {m : ℤ × ℤ} (h : m ∈ left b) :
     Finset.card (moveLeft b m) + 2 = Finset.card b :=
   by
   dsimp [move_left]
   rw [Finset.card_erase_of_mem (snd_pred_mem_erase_of_mem_left h)]
   rw [Finset.card_erase_of_mem (Finset.mem_of_mem_inter_left h)]
   exact tsub_add_cancel_of_le (card_of_mem_left h)
-#align pgame.domineering.move_left_card Pgame.Domineering.move_left_card
+#align pgame.domineering.move_left_card Pgame.Domineering.moveLeft_card
 
-theorem move_right_card {b : Board} {m : ℤ × ℤ} (h : m ∈ right b) :
+theorem moveRight_card {b : Board} {m : ℤ × ℤ} (h : m ∈ right b) :
     Finset.card (moveRight b m) + 2 = Finset.card b :=
   by
   dsimp [move_right]
   rw [Finset.card_erase_of_mem (fst_pred_mem_erase_of_mem_right h)]
   rw [Finset.card_erase_of_mem (Finset.mem_of_mem_inter_left h)]
   exact tsub_add_cancel_of_le (card_of_mem_right h)
-#align pgame.domineering.move_right_card Pgame.Domineering.move_right_card
+#align pgame.domineering.move_right_card Pgame.Domineering.moveRight_card
 
-theorem move_left_smaller {b : Board} {m : ℤ × ℤ} (h : m ∈ left b) :
+theorem moveLeft_smaller {b : Board} {m : ℤ × ℤ} (h : m ∈ left b) :
     Finset.card (moveLeft b m) / 2 < Finset.card b / 2 := by simp [← move_left_card h, lt_add_one]
-#align pgame.domineering.move_left_smaller Pgame.Domineering.move_left_smaller
+#align pgame.domineering.move_left_smaller Pgame.Domineering.moveLeft_smaller
 
-theorem move_right_smaller {b : Board} {m : ℤ × ℤ} (h : m ∈ right b) :
+theorem moveRight_smaller {b : Board} {m : ℤ × ℤ} (h : m ∈ right b) :
     Finset.card (moveRight b m) / 2 < Finset.card b / 2 := by simp [← move_right_card h, lt_add_one]
-#align pgame.domineering.move_right_smaller Pgame.Domineering.move_right_smaller
+#align pgame.domineering.move_right_smaller Pgame.Domineering.moveRight_smaller
 
 /-- The instance describing allowed moves on a Domineering board. -/
 instance state : State Board where

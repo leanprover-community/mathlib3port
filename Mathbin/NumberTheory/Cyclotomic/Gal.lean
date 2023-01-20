@@ -56,30 +56,30 @@ variable [CommRing L] [IsDomain L] (hμ : IsPrimitiveRoot μ n) [Algebra K L]
 /- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:132:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([2]) } -/
 /-- `is_primitive_root.aut_to_pow` is injective in the case that it's considered over a cyclotomic
 field extension. -/
-theorem aut_to_pow_injective : Function.Injective <| hμ.autToPow K :=
+theorem autToPow_injective : Function.Injective <| hμ.autToPow K :=
   by
   intro f g hfg
   apply_fun Units.val  at hfg
-  simp only [IsPrimitiveRoot.coe_aut_to_pow_apply, [anonymous]] at hfg
+  simp only [IsPrimitiveRoot.coe_autToPow_apply, [anonymous]] at hfg
   generalize_proofs hf' hg'  at hfg
   have hf := hf'.some_spec
   have hg := hg'.some_spec
   generalize_proofs hζ  at hf hg
   suffices f hμ.to_roots_of_unity = g hμ.to_roots_of_unity
     by
-    apply AlgEquiv.coe_alg_hom_injective
+    apply AlgEquiv.coe_algHom_injective
     apply (hμ.power_basis K).alg_hom_ext
     exact this
-  rw [Zmod.eq_iff_modeq_nat] at hfg
+  rw [Zmod.eq_iff_modEq_nat] at hfg
   refine' (hf.trans _).trans hg.symm
   rw [← rootsOfUnity.coe_pow _ hf'.some, ← rootsOfUnity.coe_pow _ hg'.some]
   congr 1
-  rw [pow_eq_pow_iff_modeq]
+  rw [pow_eq_pow_iff_modEq]
   convert hfg
   rw [hμ.eq_order_of]
   rw [← hμ.coe_to_roots_of_unity_coe]
-  rw [order_of_units, order_of_subgroup]
-#align is_primitive_root.aut_to_pow_injective IsPrimitiveRoot.aut_to_pow_injective
+  rw [orderOf_units, orderOf_subgroup]
+#align is_primitive_root.aut_to_pow_injective IsPrimitiveRoot.autToPow_injective
 
 end IsPrimitiveRoot
 
@@ -112,30 +112,30 @@ noncomputable def autEquivPow : (L ≃ₐ[K] L) ≃* (Zmod n)ˣ :=
       (hζ.PowerBasis K).equivOfMinpoly ((hμ t).PowerBasis K)
         (by
           haveI := IsCyclotomicExtension.ne_zero' n K L
-          simp only [IsPrimitiveRoot.power_basis_gen]
+          simp only [IsPrimitiveRoot.powerBasis_gen]
           have hr :=
             IsPrimitiveRoot.minpoly_eq_cyclotomic_of_irreducible
               ((zeta_spec n K L).pow_of_coprime _ (Zmod.val_coe_unit_coprime t)) h
           exact ((zeta_spec n K L).minpoly_eq_cyclotomic_of_irreducible h).symm.trans hr)
     left_inv := fun f => by
-      simp only [MonoidHom.to_fun_eq_coe]
-      apply AlgEquiv.coe_alg_hom_injective
+      simp only [MonoidHom.toFun_eq_coe]
+      apply AlgEquiv.coe_algHom_injective
       apply (hζ.power_basis K).alg_hom_ext
-      simp only [AlgEquiv.coe_alg_hom, AlgEquiv.map_pow]
-      rw [PowerBasis.equiv_of_minpoly_gen]
-      simp only [IsPrimitiveRoot.power_basis_gen, IsPrimitiveRoot.aut_to_pow_spec]
+      simp only [AlgEquiv.coe_algHom, AlgEquiv.map_pow]
+      rw [PowerBasis.equivOfMinpoly_gen]
+      simp only [IsPrimitiveRoot.powerBasis_gen, IsPrimitiveRoot.autToPow_spec]
     right_inv := fun x => by
-      simp only [MonoidHom.to_fun_eq_coe]
+      simp only [MonoidHom.toFun_eq_coe]
       generalize_proofs _ h
       have key := hζ.aut_to_pow_spec K ((hζ.power_basis K).equivOfMinpoly ((hμ x).PowerBasis K) h)
       have := (hζ.power_basis K).equiv_of_minpoly_gen ((hμ x).PowerBasis K) h
       rw [hζ.power_basis_gen K] at this
-      rw [this, IsPrimitiveRoot.power_basis_gen] at key
+      rw [this, IsPrimitiveRoot.powerBasis_gen] at key
       rw [← hζ.coe_to_roots_of_unity_coe] at key
       simp only [← coe_coe, ← rootsOfUnity.coe_pow] at key
       replace key := rootsOfUnity.coe_injective key
-      rw [pow_eq_pow_iff_modeq, ← order_of_subgroup, ← order_of_units, hζ.coe_to_roots_of_unity_coe,
-        ← (zeta_spec n K L).eq_order_of, ← Zmod.eq_iff_modeq_nat] at key
+      rw [pow_eq_pow_iff_modEq, ← orderOf_subgroup, ← orderOf_units, hζ.coe_to_roots_of_unity_coe, ←
+        (zeta_spec n K L).eq_order_of, ← Zmod.eq_iff_modEq_nat] at key
       simp only [Zmod.nat_cast_val, Zmod.cast_id', id.def] at key
       exact Units.ext key }
 #align is_cyclotomic_extension.aut_equiv_pow IsCyclotomicExtension.autEquivPow
@@ -153,15 +153,15 @@ noncomputable def fromZetaAut : L ≃ₐ[K] L :=
 #align is_cyclotomic_extension.from_zeta_aut IsCyclotomicExtension.fromZetaAut
 
 /- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:132:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([4]) } -/
-theorem from_zeta_aut_spec : fromZetaAut hμ h (zeta n K L) = μ :=
+theorem fromZetaAut_spec : fromZetaAut hμ h (zeta n K L) = μ :=
   by
   simp_rw [from_zeta_aut, aut_equiv_pow_symm_apply]
   generalize_proofs hζ h _ hμ _
   rw [← hζ.power_basis_gen K]
-  rw [PowerBasis.equiv_of_minpoly_gen, hμ.power_basis_gen K]
+  rw [PowerBasis.equivOfMinpoly_gen, hμ.power_basis_gen K]
   convert h.some_spec.some_spec
   exact Zmod.val_cast_of_lt h.some_spec.some
-#align is_cyclotomic_extension.from_zeta_aut_spec IsCyclotomicExtension.from_zeta_aut_spec
+#align is_cyclotomic_extension.from_zeta_aut_spec IsCyclotomicExtension.fromZetaAut_spec
 
 end IsCyclotomicExtension
 

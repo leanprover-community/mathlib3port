@@ -26,12 +26,12 @@ namespace GeneralizedContinuedFraction
 
 variable {K : Type _} {g : GeneralizedContinuedFraction K} {n : ℕ} [DivisionRing K]
 
-theorem continuants_aux_recurrence {gp ppred pred : Pair K} (nth_s_eq : g.s.nth n = some gp)
+theorem continuantsAux_recurrence {gp ppred pred : Pair K} (nth_s_eq : g.s.nth n = some gp)
     (nth_conts_aux_eq : g.continuantsAux n = ppred)
     (succ_nth_conts_aux_eq : g.continuantsAux (n + 1) = pred) :
     g.continuantsAux (n + 2) = ⟨gp.b * pred.a + gp.a * ppred.a, gp.b * pred.b + gp.a * ppred.b⟩ :=
   by simp [*, continuants_aux, next_continuants, next_denominator, next_numerator]
-#align generalized_continued_fraction.continuants_aux_recurrence GeneralizedContinuedFraction.continuants_aux_recurrence
+#align generalized_continued_fraction.continuants_aux_recurrence GeneralizedContinuedFraction.continuantsAux_recurrence
 
 theorem continuants_recurrence_aux {gp ppred pred : Pair K} (nth_s_eq : g.s.nth n = some gp)
     (nth_conts_aux_eq : g.continuantsAux n = ppred)

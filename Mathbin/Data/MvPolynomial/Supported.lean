@@ -60,18 +60,18 @@ noncomputable def supportedEquivMvPolynomial (s : Set σ) : supported R s ≃ₐ
 #align mv_polynomial.supported_equiv_mv_polynomial MvPolynomial.supportedEquivMvPolynomial
 
 @[simp]
-theorem supported_equiv_mv_polynomial_symm_C (s : Set σ) (x : R) :
+theorem supportedEquivMvPolynomial_symm_c (s : Set σ) (x : R) :
     (supportedEquivMvPolynomial s).symm (c x) = algebraMap R (supported R s) x :=
   by
   ext1
-  simp [supported_equiv_mv_polynomial, MvPolynomial.algebra_map_eq]
-#align mv_polynomial.supported_equiv_mv_polynomial_symm_C MvPolynomial.supported_equiv_mv_polynomial_symm_C
+  simp [supported_equiv_mv_polynomial, MvPolynomial.algebraMap_eq]
+#align mv_polynomial.supported_equiv_mv_polynomial_symm_C MvPolynomial.supportedEquivMvPolynomial_symm_c
 
 @[simp]
-theorem supported_equiv_mv_polynomial_symm_X (s : Set σ) (i : s) :
+theorem supportedEquivMvPolynomial_symm_x (s : Set σ) (i : s) :
     (↑((supportedEquivMvPolynomial s).symm (x i : MvPolynomial s R)) : MvPolynomial σ R) = x i := by
   simp [supported_equiv_mv_polynomial]
-#align mv_polynomial.supported_equiv_mv_polynomial_symm_X MvPolynomial.supported_equiv_mv_polynomial_symm_X
+#align mv_polynomial.supported_equiv_mv_polynomial_symm_X MvPolynomial.supportedEquivMvPolynomial_symm_x
 
 variable {s t : Set σ}
 
@@ -97,9 +97,9 @@ theorem mem_supported_vars (p : MvPolynomial σ R) : p ∈ supported R (↑p.var
 
 variable (s)
 
-theorem supported_eq_adjoin_X : supported R s = Algebra.adjoin R (X '' s) :=
+theorem supported_eq_adjoin_x : supported R s = Algebra.adjoin R (X '' s) :=
   rfl
-#align mv_polynomial.supported_eq_adjoin_X MvPolynomial.supported_eq_adjoin_X
+#align mv_polynomial.supported_eq_adjoin_X MvPolynomial.supported_eq_adjoin_x
 
 @[simp]
 theorem supported_univ : supported R (Set.univ : Set σ) = ⊤ := by
@@ -117,9 +117,9 @@ theorem supported_mono (st : s ⊆ t) : supported R s ≤ supported R t :=
 #align mv_polynomial.supported_mono MvPolynomial.supported_mono
 
 @[simp]
-theorem X_mem_supported [Nontrivial R] {i : σ} : x i ∈ supported R s ↔ i ∈ s := by
+theorem x_mem_supported [Nontrivial R] {i : σ} : x i ∈ supported R s ↔ i ∈ s := by
   simp [mem_supported]
-#align mv_polynomial.X_mem_supported MvPolynomial.X_mem_supported
+#align mv_polynomial.X_mem_supported MvPolynomial.x_mem_supported
 
 @[simp]
 theorem supported_le_supported_iff [Nontrivial R] : supported R s ≤ supported R t ↔ s ⊆ t :=
@@ -130,10 +130,10 @@ theorem supported_le_supported_iff [Nontrivial R] : supported R s ≤ supported 
   · exact supported_mono
 #align mv_polynomial.supported_le_supported_iff MvPolynomial.supported_le_supported_iff
 
-theorem supported_strict_mono [Nontrivial R] :
+theorem supported_strictMono [Nontrivial R] :
     StrictMono (supported R : Set σ → Subalgebra R (MvPolynomial σ R)) :=
   strictMono_of_le_iff_le fun _ _ => supported_le_supported_iff.symm
-#align mv_polynomial.supported_strict_mono MvPolynomial.supported_strict_mono
+#align mv_polynomial.supported_strict_mono MvPolynomial.supported_strictMono
 
 theorem exists_restrict_to_vars (R : Type _) [CommRing R] {F : MvPolynomial σ ℤ}
     (hF : ↑F.vars ⊆ s) : ∃ f : (s → R) → R, ∀ x : σ → R, f (x ∘ coe : s → R) = aeval x F := by

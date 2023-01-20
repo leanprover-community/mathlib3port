@@ -73,26 +73,26 @@ def StarConvex : Prop :=
 
 variable {𝕜 x s} {t : Set E}
 
-theorem star_convex_iff_segment_subset : StarConvex 𝕜 x s ↔ ∀ ⦃y⦄, y ∈ s → [x -[𝕜] y] ⊆ s :=
+theorem starConvex_iff_segment_subset : StarConvex 𝕜 x s ↔ ∀ ⦃y⦄, y ∈ s → [x -[𝕜] y] ⊆ s :=
   by
   constructor
   · rintro h y hy z ⟨a, b, ha, hb, hab, rfl⟩
     exact h hy ha hb hab
   · rintro h y hy a b ha hb hab
     exact h hy ⟨a, b, ha, hb, hab, rfl⟩
-#align star_convex_iff_segment_subset star_convex_iff_segment_subset
+#align star_convex_iff_segment_subset starConvex_iff_segment_subset
 
 theorem StarConvex.segment_subset (h : StarConvex 𝕜 x s) {y : E} (hy : y ∈ s) : [x -[𝕜] y] ⊆ s :=
-  star_convex_iff_segment_subset.1 h hy
+  starConvex_iff_segment_subset.1 h hy
 #align star_convex.segment_subset StarConvex.segment_subset
 
-theorem StarConvex.open_segment_subset (h : StarConvex 𝕜 x s) {y : E} (hy : y ∈ s) :
+theorem StarConvex.openSegment_subset (h : StarConvex 𝕜 x s) {y : E} (hy : y ∈ s) :
     openSegment 𝕜 x y ⊆ s :=
-  (open_segment_subset_segment 𝕜 x y).trans (h.segment_subset hy)
-#align star_convex.open_segment_subset StarConvex.open_segment_subset
+  (openSegment_subset_segment 𝕜 x y).trans (h.segment_subset hy)
+#align star_convex.open_segment_subset StarConvex.openSegment_subset
 
 /-- Alternative definition of star-convexity, in terms of pointwise set operations. -/
-theorem star_convex_iff_pointwise_add_subset :
+theorem starConvex_iff_pointwise_add_subset :
     StarConvex 𝕜 x s ↔ ∀ ⦃a b : 𝕜⦄, 0 ≤ a → 0 ≤ b → a + b = 1 → a • {x} + b • s ⊆ s :=
   by
   refine'
@@ -100,26 +100,26 @@ theorem star_convex_iff_pointwise_add_subset :
       h ha hb hab (add_mem_add (smul_mem_smul_set <| mem_singleton _) ⟨_, hy, rfl⟩)⟩
   rintro hA a b ha hb hab w ⟨au, bv, ⟨u, rfl : u = x, rfl⟩, ⟨v, hv, rfl⟩, rfl⟩
   exact hA hv ha hb hab
-#align star_convex_iff_pointwise_add_subset star_convex_iff_pointwise_add_subset
+#align star_convex_iff_pointwise_add_subset starConvex_iff_pointwise_add_subset
 
-theorem star_convex_empty (x : E) : StarConvex 𝕜 x ∅ := fun y hy => hy.elim
-#align star_convex_empty star_convex_empty
+theorem starConvex_empty (x : E) : StarConvex 𝕜 x ∅ := fun y hy => hy.elim
+#align star_convex_empty starConvex_empty
 
-theorem star_convex_univ (x : E) : StarConvex 𝕜 x univ := fun _ _ _ _ _ _ _ => trivial
-#align star_convex_univ star_convex_univ
+theorem starConvex_univ (x : E) : StarConvex 𝕜 x univ := fun _ _ _ _ _ _ _ => trivial
+#align star_convex_univ starConvex_univ
 
 theorem StarConvex.inter (hs : StarConvex 𝕜 x s) (ht : StarConvex 𝕜 x t) : StarConvex 𝕜 x (s ∩ t) :=
   fun y hy a b ha hb hab => ⟨hs hy.left ha hb hab, ht hy.right ha hb hab⟩
 #align star_convex.inter StarConvex.inter
 
-theorem star_convex_sInter {S : Set (Set E)} (h : ∀ s ∈ S, StarConvex 𝕜 x s) :
+theorem starConvex_interₛ {S : Set (Set E)} (h : ∀ s ∈ S, StarConvex 𝕜 x s) :
     StarConvex 𝕜 x (⋂₀ S) := fun y hy a b ha hb hab s hs => h s hs (hy s hs) ha hb hab
-#align star_convex_sInter star_convex_sInter
+#align star_convex_sInter starConvex_interₛ
 
-theorem star_convex_Inter {ι : Sort _} {s : ι → Set E} (h : ∀ i, StarConvex 𝕜 x (s i)) :
+theorem starConvex_interᵢ {ι : Sort _} {s : ι → Set E} (h : ∀ i, StarConvex 𝕜 x (s i)) :
     StarConvex 𝕜 x (⋂ i, s i) :=
-  interₛ_range s ▸ star_convex_sInter <| forall_range_iff.2 h
-#align star_convex_Inter star_convex_Inter
+  interₛ_range s ▸ starConvex_interₛ <| forall_range_iff.2 h
+#align star_convex_Inter starConvex_interᵢ
 
 theorem StarConvex.union (hs : StarConvex 𝕜 x s) (ht : StarConvex 𝕜 x t) : StarConvex 𝕜 x (s ∪ t) :=
   by
@@ -128,19 +128,19 @@ theorem StarConvex.union (hs : StarConvex 𝕜 x s) (ht : StarConvex 𝕜 x t) :
   · exact Or.inr (ht hy ha hb hab)
 #align star_convex.union StarConvex.union
 
-theorem star_convex_Union {ι : Sort _} {s : ι → Set E} (hs : ∀ i, StarConvex 𝕜 x (s i)) :
+theorem starConvex_unionᵢ {ι : Sort _} {s : ι → Set E} (hs : ∀ i, StarConvex 𝕜 x (s i)) :
     StarConvex 𝕜 x (⋃ i, s i) := by
   rintro y hy a b ha hb hab
   rw [mem_Union] at hy⊢
   obtain ⟨i, hy⟩ := hy
   exact ⟨i, hs i hy ha hb hab⟩
-#align star_convex_Union star_convex_Union
+#align star_convex_Union starConvex_unionᵢ
 
-theorem star_convex_sUnion {S : Set (Set E)} (hS : ∀ s ∈ S, StarConvex 𝕜 x s) :
+theorem starConvex_unionₛ {S : Set (Set E)} (hS : ∀ s ∈ S, StarConvex 𝕜 x s) :
     StarConvex 𝕜 x (⋃₀ S) := by
   rw [sUnion_eq_Union]
-  exact star_convex_Union fun s => hS _ s.2
-#align star_convex_sUnion star_convex_sUnion
+  exact starConvex_unionᵢ fun s => hS _ s.2
+#align star_convex_sUnion starConvex_unionₛ
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem StarConvex.prod {y : F} {s : Set E} {t : Set F} (hs : StarConvex 𝕜 x s)
@@ -148,10 +148,10 @@ theorem StarConvex.prod {y : F} {s : Set E} {t : Set F} (hs : StarConvex 𝕜 x 
   ⟨hs hy.1 ha hb hab, ht hy.2 ha hb hab⟩
 #align star_convex.prod StarConvex.prod
 
-theorem star_convex_pi {ι : Type _} {E : ι → Type _} [∀ i, AddCommMonoid (E i)] [∀ i, SMul 𝕜 (E i)]
+theorem starConvex_pi {ι : Type _} {E : ι → Type _} [∀ i, AddCommMonoid (E i)] [∀ i, SMul 𝕜 (E i)]
     {x : ∀ i, E i} {s : Set ι} {t : ∀ i, Set (E i)} (ht : ∀ ⦃i⦄, i ∈ s → StarConvex 𝕜 (x i) (t i)) :
     StarConvex 𝕜 x (s.pi t) := fun y hy a b ha hb hab i hi => ht hi (hy i hi) ha hb hab
-#align star_convex_pi star_convex_pi
+#align star_convex_pi starConvex_pi
 
 end SMul
 
@@ -166,7 +166,7 @@ theorem StarConvex.mem (hs : StarConvex 𝕜 x s) (h : s.Nonempty) : x ∈ s :=
   rw [one_smul, zero_smul, add_zero]
 #align star_convex.mem StarConvex.mem
 
-theorem star_convex_iff_forall_pos (hx : x ∈ s) :
+theorem starConvex_iff_forall_pos (hx : x ∈ s) :
     StarConvex 𝕜 x s ↔ ∀ ⦃y⦄, y ∈ s → ∀ ⦃a b : 𝕜⦄, 0 < a → 0 < b → a + b = 1 → a • x + b • y ∈ s :=
   by
   refine' ⟨fun h y hy a b ha hb hab => h hy ha.le hb.le hab, _⟩
@@ -178,9 +178,9 @@ theorem star_convex_iff_forall_pos (hx : x ∈ s) :
   · rw [add_zero] at hab
     rwa [hab, one_smul, zero_smul, add_zero]
   exact h hy ha hb hab
-#align star_convex_iff_forall_pos star_convex_iff_forall_pos
+#align star_convex_iff_forall_pos starConvex_iff_forall_pos
 
-theorem star_convex_iff_forall_ne_pos (hx : x ∈ s) :
+theorem starConvex_iff_forall_ne_pos (hx : x ∈ s) :
     StarConvex 𝕜 x s ↔
       ∀ ⦃y⦄, y ∈ s → x ≠ y → ∀ ⦃a b : 𝕜⦄, 0 < a → 0 < b → a + b = 1 → a • x + b • y ∈ s :=
   by
@@ -195,19 +195,19 @@ theorem star_convex_iff_forall_ne_pos (hx : x ∈ s) :
   obtain rfl | hxy := eq_or_ne x y
   · rwa [Convex.combo_self hab]
   exact h hy hxy ha' hb' hab
-#align star_convex_iff_forall_ne_pos star_convex_iff_forall_ne_pos
+#align star_convex_iff_forall_ne_pos starConvex_iff_forall_ne_pos
 
-theorem star_convex_iff_open_segment_subset (hx : x ∈ s) :
+theorem starConvex_iff_openSegment_subset (hx : x ∈ s) :
     StarConvex 𝕜 x s ↔ ∀ ⦃y⦄, y ∈ s → openSegment 𝕜 x y ⊆ s :=
-  star_convex_iff_segment_subset.trans <|
-    forall₂_congr fun y hy => (open_segment_subset_iff_segment_subset hx hy).symm
-#align star_convex_iff_open_segment_subset star_convex_iff_open_segment_subset
+  starConvex_iff_segment_subset.trans <|
+    forall₂_congr fun y hy => (openSegment_subset_iff_segment_subset hx hy).symm
+#align star_convex_iff_open_segment_subset starConvex_iff_openSegment_subset
 
-theorem star_convex_singleton (x : E) : StarConvex 𝕜 x {x} :=
+theorem starConvex_singleton (x : E) : StarConvex 𝕜 x {x} :=
   by
   rintro y (rfl : y = x) a b ha hb hab
   exact Convex.combo_self hab _
-#align star_convex_singleton star_convex_singleton
+#align star_convex_singleton starConvex_singleton
 
 theorem StarConvex.linear_image (hs : StarConvex 𝕜 x s) (f : E →ₗ[𝕜] F) :
     StarConvex 𝕜 (f x) (s.image f) :=
@@ -328,7 +328,7 @@ section AddCommMonoid
 
 variable [AddCommMonoid E] [SMulWithZero 𝕜 E] {s : Set E}
 
-theorem star_convex_zero_iff :
+theorem starConvex_zero_iff :
     StarConvex 𝕜 0 s ↔ ∀ ⦃x : E⦄, x ∈ s → ∀ ⦃a : 𝕜⦄, 0 ≤ a → a ≤ 1 → a • x ∈ s :=
   by
   refine'
@@ -342,7 +342,7 @@ theorem star_convex_zero_iff :
         (by
           rw [← hab]
           exact le_add_of_nonneg_left ha)
-#align star_convex_zero_iff star_convex_zero_iff
+#align star_convex_zero_iff starConvex_zero_iff
 
 end AddCommMonoid
 
@@ -413,7 +413,7 @@ section AddCommGroup
 variable [AddCommGroup E] [Module 𝕜 E] {x : E} {s : Set E}
 
 /-- Alternative definition of star-convexity, using division. -/
-theorem star_convex_iff_div :
+theorem starConvex_iff_div :
     StarConvex 𝕜 x s ↔
       ∀ ⦃y⦄,
         y ∈ s →
@@ -430,7 +430,7 @@ theorem star_convex_iff_div :
     have h' := h hy ha hb
     rw [hab, div_one, div_one] at h'
     exact h' zero_lt_one⟩
-#align star_convex_iff_div star_convex_iff_div
+#align star_convex_iff_div starConvex_iff_div
 
 theorem StarConvex.mem_smul (hs : StarConvex 𝕜 0 s) (hx : x ∈ s) {t : 𝕜} (ht : 1 ≤ t) : x ∈ t • s :=
   by
@@ -451,7 +451,7 @@ Relates `star_convex` and `set.ord_connected`.
 
 section OrdConnected
 
-theorem Set.OrdConnected.star_convex [OrderedSemiring 𝕜] [OrderedAddCommMonoid E] [Module 𝕜 E]
+theorem Set.OrdConnected.starConvex [OrderedSemiring 𝕜] [OrderedAddCommMonoid E] [Module 𝕜 E]
     [OrderedSMul 𝕜 E] {x : E} {s : Set E} (hs : s.OrdConnected) (hx : x ∈ s)
     (h : ∀ y ∈ s, x ≤ y ∨ y ≤ x) : StarConvex 𝕜 x s :=
   by
@@ -475,15 +475,15 @@ theorem Set.OrdConnected.star_convex [OrderedSemiring 𝕜] [OrderedAddCommMonoi
       a • x + b • y ≤ a • x + b • x := add_le_add_left (smul_le_smul_of_nonneg hyx hb) _
       _ = x := Convex.combo_self hab _
       
-#align set.ord_connected.star_convex Set.OrdConnected.star_convex
+#align set.ord_connected.star_convex Set.OrdConnected.starConvex
 
-theorem star_convex_iff_ord_connected [LinearOrderedField 𝕜] {x : 𝕜} {s : Set 𝕜} (hx : x ∈ s) :
+theorem starConvex_iff_ordConnected [LinearOrderedField 𝕜] {x : 𝕜} {s : Set 𝕜} (hx : x ∈ s) :
     StarConvex 𝕜 x s ↔ s.OrdConnected := by
-  simp_rw [ord_connected_iff_uIcc_subset_left hx, star_convex_iff_segment_subset, segment_eq_uIcc]
-#align star_convex_iff_ord_connected star_convex_iff_ord_connected
+  simp_rw [ord_connected_iff_uIcc_subset_left hx, starConvex_iff_segment_subset, segment_eq_uIcc]
+#align star_convex_iff_ord_connected starConvex_iff_ordConnected
 
-alias star_convex_iff_ord_connected ↔ StarConvex.ord_connected _
-#align star_convex.ord_connected StarConvex.ord_connected
+alias starConvex_iff_ordConnected ↔ StarConvex.ordConnected _
+#align star_convex.ord_connected StarConvex.ordConnected
 
 end OrdConnected
 

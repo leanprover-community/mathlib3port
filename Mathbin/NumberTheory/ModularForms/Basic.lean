@@ -31,12 +31,12 @@ open TopologicalSpace Manifold UpperHalfPlane
 noncomputable section
 
 instance UpperHalfPlane.chartedSpace : ChartedSpace ℂ ℍ :=
-  UpperHalfPlane.open_embedding_coe.singletonChartedSpace
+  UpperHalfPlane.openEmbedding_coe.singletonChartedSpace
 #align upper_half_plane.charted_space UpperHalfPlane.chartedSpace
 
-instance UpperHalfPlane.smooth_manifold_with_corners : SmoothManifoldWithCorners 𝓘(ℂ) ℍ :=
-  UpperHalfPlane.open_embedding_coe.singleton_smooth_manifold_with_corners 𝓘(ℂ)
-#align upper_half_plane.smooth_manifold_with_corners UpperHalfPlane.smooth_manifold_with_corners
+instance UpperHalfPlane.smoothManifoldWithCorners : SmoothManifoldWithCorners 𝓘(ℂ) ℍ :=
+  UpperHalfPlane.openEmbedding_coe.singleton_smooth_manifold_with_corners 𝓘(ℂ)
+#align upper_half_plane.smooth_manifold_with_corners UpperHalfPlane.smoothManifoldWithCorners
 
 -- mathport name: «expr↑ₘ »
 local prefix:1024 "↑ₘ" => @coe _ (Matrix (Fin 2) (Fin 2) _) _
@@ -111,14 +111,14 @@ instance (priority := 100) CuspFormClass.cuspForm : CuspFormClass (CuspForm Γ k
 variable {F Γ k}
 
 @[simp]
-theorem modular_form_to_fun_eq_coe {f : ModularForm Γ k} : f.toFun = (f : ℍ → ℂ) :=
+theorem modularForm_toFun_eq_coe {f : ModularForm Γ k} : f.toFun = (f : ℍ → ℂ) :=
   rfl
-#align modular_form_to_fun_eq_coe modular_form_to_fun_eq_coe
+#align modular_form_to_fun_eq_coe modularForm_toFun_eq_coe
 
 @[simp]
-theorem cusp_form_to_fun_eq_coe {f : CuspForm Γ k} : f.toFun = (f : ℍ → ℂ) :=
+theorem cuspForm_toFun_eq_coe {f : CuspForm Γ k} : f.toFun = (f : ℍ → ℂ) :=
   rfl
-#align cusp_form_to_fun_eq_coe cusp_form_to_fun_eq_coe
+#align cusp_form_to_fun_eq_coe cuspForm_toFun_eq_coe
 
 @[ext]
 theorem ModularForm.ext {f g : ModularForm Γ k} (h : ∀ x, f x = g x) : f = g :=
@@ -182,7 +182,7 @@ instance hasZero : Zero (ModularForm Γ k) :=
       (0 :
         SlashInvariantForm Γ
           k) with
-      holo' := fun _ => mdifferentiable_at_const 𝓘(ℂ, ℂ) 𝓘(ℂ, ℂ)
+      holo' := fun _ => mdifferentiableAt_const 𝓘(ℂ, ℂ) 𝓘(ℂ, ℂ)
       bdd_at_infty' := fun A => by simpa using zero_form_is_bounded_at_im_infty }⟩
 #align modular_form.has_zero ModularForm.hasZero
 
@@ -290,7 +290,7 @@ instance : One (ModularForm Γ 0) :=
       (1 :
         SlashInvariantForm Γ
           0) with
-      holo' := fun x => mdifferentiable_at_const 𝓘(ℂ, ℂ) 𝓘(ℂ, ℂ)
+      holo' := fun x => mdifferentiableAt_const 𝓘(ℂ, ℂ) 𝓘(ℂ, ℂ)
       bdd_at_infty' := fun A => by simpa using at_im_infty.const_bounded_at_filter (1 : ℂ) }⟩
 
 @[simp]
@@ -327,8 +327,8 @@ theorem add_apply (f g : CuspForm Γ k) (z : ℍ) : (f + g) z = f z + g z :=
 instance hasZero : Zero (CuspForm Γ k) :=
   ⟨{ (0 : SlashInvariantForm Γ k) with
       toFun := 0
-      holo' := fun _ => mdifferentiable_at_const 𝓘(ℂ, ℂ) 𝓘(ℂ, ℂ)
-      zero_at_infty' := by simpa using Filter.zero_zero_at_filter _ }⟩
+      holo' := fun _ => mdifferentiableAt_const 𝓘(ℂ, ℂ) 𝓘(ℂ, ℂ)
+      zero_at_infty' := by simpa using Filter.zero_zeroAtFilter _ }⟩
 #align cusp_form.has_zero CuspForm.hasZero
 
 @[simp]

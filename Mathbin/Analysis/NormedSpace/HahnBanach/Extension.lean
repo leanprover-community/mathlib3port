@@ -73,7 +73,7 @@ theorem exists_extension_norm_eq (p : Subspace 𝕜 F) (f : p →L[𝕜] 𝕜) :
     ∃ g : F →L[𝕜] 𝕜, (∀ x : p, g x = f x) ∧ ‖g‖ = ‖f‖ :=
   by
   letI : Module ℝ F := RestrictScalars.module ℝ 𝕜 F
-  letI : IsScalarTower ℝ 𝕜 F := RestrictScalars.is_scalar_tower _ _ _
+  letI : IsScalarTower ℝ 𝕜 F := RestrictScalars.isScalarTower _ _ _
   letI : NormedSpace ℝ F := NormedSpace.restrictScalars _ 𝕜 _
   -- Let `fr: p →L[ℝ] ℝ` be the real part of `f`.
   let fr := re_clm.comp (f.restrict_scalars ℝ)
@@ -88,7 +88,7 @@ theorem exists_extension_norm_eq (p : Subspace 𝕜 F) (f : p →L[𝕜] 𝕜) :
   -- It is an extension of `f`.
   have h : ∀ x : p, g.extend_to_𝕜 x = f x := by
     intro x
-    rw [ContinuousLinearMap.extend_to_𝕜_apply, ← Submodule.coe_smul, hextends, hextends]
+    rw [ContinuousLinearMap.extendTo𝕜_apply, ← Submodule.coe_smul, hextends, hextends]
     have : (fr x : 𝕜) - I * ↑(fr (I • x)) = (re (f x) : 𝕜) - (I : 𝕜) * re (f ((I : 𝕜) • x)) := by
       rfl
     rw [this]

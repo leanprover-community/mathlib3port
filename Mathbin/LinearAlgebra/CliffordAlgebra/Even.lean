@@ -59,9 +59,9 @@ def even : Subalgebra R (CliffordAlgebra Q) :=
 #align clifford_algebra.even CliffordAlgebra.even
 
 @[simp]
-theorem even_to_submodule : (even Q).toSubmodule = evenOdd Q 0 :=
+theorem even_toSubmodule : (even Q).toSubmodule = evenOdd Q 0 :=
   rfl
-#align clifford_algebra.even_to_submodule CliffordAlgebra.even_to_submodule
+#align clifford_algebra.even_to_submodule CliffordAlgebra.even_toSubmodule
 
 variable (A)
 
@@ -92,7 +92,7 @@ variable (Q)
 def even.ι : EvenHom Q (even Q)
     where
   bilin :=
-    LinearMap.mk₂ R (fun m₁ m₂ => ⟨ι Q m₁ * ι Q m₂, ι_mul_ι_mem_even_odd_zero _ _ _⟩)
+    LinearMap.mk₂ R (fun m₁ m₂ => ⟨ι Q m₁ * ι Q m₂, ι_mul_ι_mem_evenOdd_zero _ _ _⟩)
       (fun _ _ _ => by
         simp only [LinearMap.map_add, add_mul]
         rfl)
@@ -124,7 +124,7 @@ variable (f : EvenHom Q A)
 
 See note [partially-applied ext lemmas]. -/
 @[ext]
-theorem even.alg_hom_ext ⦃f g : even Q →ₐ[R] A⦄ (h : (even.ι Q).compr₂ f = (even.ι Q).compr₂ g) :
+theorem even.algHom_ext ⦃f g : even Q →ₐ[R] A⦄ (h : (even.ι Q).compr₂ f = (even.ι Q).compr₂ g) :
     f = g := by
   rw [even_hom.ext_iff] at h
   ext ⟨x, hx⟩
@@ -137,7 +137,7 @@ theorem even.alg_hom_ext ⦃f g : even Q →ₐ[R] A⦄ (h : (even.ι Q).compr�
   · intro m₁ m₂ x hx ih
     have := congr_arg₂ (· * ·) (LinearMap.congr_fun (LinearMap.congr_fun h m₁) m₂) ih
     exact (f.map_mul _ _).trans (this.trans <| (g.map_mul _ _).symm)
-#align clifford_algebra.even.alg_hom_ext CliffordAlgebra.even.alg_hom_ext
+#align clifford_algebra.even.alg_hom_ext CliffordAlgebra.even.algHom_ext
 
 variable {Q}
 
@@ -236,9 +236,9 @@ theorem aux_ι (m₁ m₂ : M) : aux f ((even.ι Q).bilin m₁ m₂) = f.bilin m
 #align clifford_algebra.even.lift.aux_ι CliffordAlgebra.even.Lift.aux_ι
 
 @[simp]
-theorem aux_algebra_map (r) (hr) : aux f ⟨algebraMap R _ r, hr⟩ = algebraMap R _ r :=
-  (congr_arg Prod.fst (foldr_algebra_map _ _ _ _ _)).trans (Algebra.algebra_map_eq_smul_one r).symm
-#align clifford_algebra.even.lift.aux_algebra_map CliffordAlgebra.even.Lift.aux_algebra_map
+theorem aux_algebraMap (r) (hr) : aux f ⟨algebraMap R _ r, hr⟩ = algebraMap R _ r :=
+  (congr_arg Prod.fst (foldr_algebraMap _ _ _ _ _)).trans (Algebra.algebraMap_eq_smul_one r).symm
+#align clifford_algebra.even.lift.aux_algebra_map CliffordAlgebra.even.Lift.aux_algebraMap
 
 @[simp]
 theorem aux_mul (x y : even Q) : aux f (x * y) = aux f x * aux f y :=
@@ -275,7 +275,7 @@ def even.lift : EvenHom Q A ≃ (CliffordAlgebra.even Q →ₐ[R] A)
   toFun f := AlgHom.ofLinearMap (aux f) (aux_one f) (aux_mul f)
   invFun F := (even.ι Q).compr₂ F
   left_inv f := EvenHom.ext _ _ <| LinearMap.ext₂ <| even.Lift.aux_ι f
-  right_inv F := even.alg_hom_ext Q <| EvenHom.ext _ _ <| LinearMap.ext₂ <| even.Lift.aux_ι _
+  right_inv F := even.algHom_ext Q <| EvenHom.ext _ _ <| LinearMap.ext₂ <| even.Lift.aux_ι _
 #align clifford_algebra.even.lift CliffordAlgebra.even.lift
 
 @[simp]

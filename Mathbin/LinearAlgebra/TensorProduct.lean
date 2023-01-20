@@ -239,7 +239,7 @@ performance reasons, we define it explicitly below. -/
 instance leftHasSmul : SMul R' (M ⊗[R] N) :=
   ⟨fun r =>
     (addConGen (TensorProduct.Eqv R M N)).lift (Smul.aux r : _ →+ M ⊗[R] N) <|
-      AddCon.add_con_gen_le fun x y hxy =>
+      AddCon.add_conGen_le fun x y hxy =>
         match x, y, hxy with
         | _, _, eqv.of_zero_left n =>
           (AddCon.ker_rel _).2 <| by
@@ -351,32 +351,32 @@ variable {R'₂ : Type _} [Monoid R'₂] [DistribMulAction R'₂ M]
 variable [SMulCommClass R R'₂ M] [SMul R'₂ R']
 
 /-- `is_scalar_tower R'₂ R' M` implies `is_scalar_tower R'₂ R' (M ⊗[R] N)` -/
-instance is_scalar_tower_left [IsScalarTower R'₂ R' M] : IsScalarTower R'₂ R' (M ⊗[R] N) :=
+instance isScalarTower_left [IsScalarTower R'₂ R' M] : IsScalarTower R'₂ R' (M ⊗[R] N) :=
   ⟨fun s r x =>
     TensorProduct.induction_on x (by simp)
       (fun m n => by rw [smul_tmul', smul_tmul', smul_tmul', smul_assoc]) fun x y ihx ihy => by
       rw [smul_add, smul_add, smul_add, ihx, ihy]⟩
-#align tensor_product.is_scalar_tower_left TensorProduct.is_scalar_tower_left
+#align tensor_product.is_scalar_tower_left TensorProduct.isScalarTower_left
 
 variable [DistribMulAction R'₂ N] [DistribMulAction R' N]
 
 variable [CompatibleSmul R R'₂ M N] [CompatibleSmul R R' M N]
 
 /-- `is_scalar_tower R'₂ R' N` implies `is_scalar_tower R'₂ R' (M ⊗[R] N)` -/
-instance is_scalar_tower_right [IsScalarTower R'₂ R' N] : IsScalarTower R'₂ R' (M ⊗[R] N) :=
+instance isScalarTower_right [IsScalarTower R'₂ R' N] : IsScalarTower R'₂ R' (M ⊗[R] N) :=
   ⟨fun s r x =>
     TensorProduct.induction_on x (by simp)
       (fun m n => by rw [← tmul_smul, ← tmul_smul, ← tmul_smul, smul_assoc]) fun x y ihx ihy => by
       rw [smul_add, smul_add, smul_add, ihx, ihy]⟩
-#align tensor_product.is_scalar_tower_right TensorProduct.is_scalar_tower_right
+#align tensor_product.is_scalar_tower_right TensorProduct.isScalarTower_right
 
 end
 
 /-- A short-cut instance for the common case, where the requirements for the `compatible_smul`
 instances are sufficient. -/
-instance is_scalar_tower [SMul R' R] [IsScalarTower R' R M] : IsScalarTower R' R (M ⊗[R] N) :=
-  TensorProduct.is_scalar_tower_left
-#align tensor_product.is_scalar_tower TensorProduct.is_scalar_tower
+instance isScalarTower [SMul R' R] [IsScalarTower R' R M] : IsScalarTower R' R (M ⊗[R] N) :=
+  TensorProduct.isScalarTower_left
+#align tensor_product.is_scalar_tower TensorProduct.isScalarTower
 
 -- or right
 variable (R M N)
@@ -458,7 +458,7 @@ with the property that its composition with the canonical bilinear map `M → N 
 the given bilinear map `M → N → P`. -/
 def liftAux : M ⊗[R] N →+ P :=
   (addConGen (TensorProduct.Eqv R M N)).lift (FreeAddMonoid.lift fun p : M × N => f p.1 p.2) <|
-    AddCon.add_con_gen_le fun x y hxy =>
+    AddCon.add_conGen_le fun x y hxy =>
       match x, y, hxy with
       | _, _, eqv.of_zero_left n =>
         (AddCon.ker_rel _).2 <| by
@@ -478,9 +478,9 @@ def liftAux : M ⊗[R] N →+ P :=
         (AddCon.ker_rel _).2 <| by simp_rw [AddMonoidHom.map_add, add_comm]
 #align tensor_product.lift_aux TensorProduct.liftAux
 
-theorem lift_aux_tmul (m n) : liftAux f (m ⊗ₜ n) = f m n :=
+theorem liftAux_tmul (m n) : liftAux f (m ⊗ₜ n) = f m n :=
   rfl
-#align tensor_product.lift_aux_tmul TensorProduct.lift_aux_tmul
+#align tensor_product.lift_aux_tmul TensorProduct.liftAux_tmul
 
 variable {f}
 
@@ -876,27 +876,27 @@ def homTensorHomMap : (M →ₗ[R] P) ⊗[R] (N →ₗ[R] Q) →ₗ[R] M ⊗[R] 
 variable {R M N P Q}
 
 @[simp]
-theorem map_bilinear_apply (f : M →ₗ[R] P) (g : N →ₗ[R] Q) : mapBilinear R M N P Q f g = map f g :=
+theorem mapBilinear_apply (f : M →ₗ[R] P) (g : N →ₗ[R] Q) : mapBilinear R M N P Q f g = map f g :=
   rfl
-#align tensor_product.map_bilinear_apply TensorProduct.map_bilinear_apply
+#align tensor_product.map_bilinear_apply TensorProduct.mapBilinear_apply
 
 @[simp]
-theorem ltensor_hom_to_hom_ltensor_apply (p : P) (f : M →ₗ[R] Q) (m : M) :
+theorem ltensorHomToHomLtensor_apply (p : P) (f : M →ₗ[R] Q) (m : M) :
     ltensorHomToHomLtensor R M P Q (p ⊗ₜ f) m = p ⊗ₜ f m :=
   rfl
-#align tensor_product.ltensor_hom_to_hom_ltensor_apply TensorProduct.ltensor_hom_to_hom_ltensor_apply
+#align tensor_product.ltensor_hom_to_hom_ltensor_apply TensorProduct.ltensorHomToHomLtensor_apply
 
 @[simp]
-theorem rtensor_hom_to_hom_rtensor_apply (f : M →ₗ[R] P) (q : Q) (m : M) :
+theorem rtensorHomToHomRtensor_apply (f : M →ₗ[R] P) (q : Q) (m : M) :
     rtensorHomToHomRtensor R M P Q (f ⊗ₜ q) m = f m ⊗ₜ q :=
   rfl
-#align tensor_product.rtensor_hom_to_hom_rtensor_apply TensorProduct.rtensor_hom_to_hom_rtensor_apply
+#align tensor_product.rtensor_hom_to_hom_rtensor_apply TensorProduct.rtensorHomToHomRtensor_apply
 
 @[simp]
-theorem hom_tensor_hom_map_apply (f : M →ₗ[R] P) (g : N →ₗ[R] Q) :
+theorem homTensorHomMap_apply (f : M →ₗ[R] P) (g : N →ₗ[R] Q) :
     homTensorHomMap R M N P Q (f ⊗ₜ g) = map f g :=
   rfl
-#align tensor_product.hom_tensor_hom_map_apply TensorProduct.hom_tensor_hom_map_apply
+#align tensor_product.hom_tensor_hom_map_apply TensorProduct.homTensorHomMap_apply
 
 end
 
@@ -933,15 +933,15 @@ def leftComm : M ⊗[R] N ⊗[R] P ≃ₗ[R] N ⊗[R] M ⊗[R] P :=
 variable {M N P Q}
 
 @[simp]
-theorem left_comm_tmul (m : M) (n : N) (p : P) : leftComm R M N P (m ⊗ₜ (n ⊗ₜ p)) = n ⊗ₜ (m ⊗ₜ p) :=
+theorem leftComm_tmul (m : M) (n : N) (p : P) : leftComm R M N P (m ⊗ₜ (n ⊗ₜ p)) = n ⊗ₜ (m ⊗ₜ p) :=
   rfl
-#align tensor_product.left_comm_tmul TensorProduct.left_comm_tmul
+#align tensor_product.left_comm_tmul TensorProduct.leftComm_tmul
 
 @[simp]
-theorem left_comm_symm_tmul (m : M) (n : N) (p : P) :
+theorem leftComm_symm_tmul (m : M) (n : N) (p : P) :
     (leftComm R M N P).symm (n ⊗ₜ (m ⊗ₜ p)) = m ⊗ₜ (n ⊗ₜ p) :=
   rfl
-#align tensor_product.left_comm_symm_tmul TensorProduct.left_comm_symm_tmul
+#align tensor_product.left_comm_symm_tmul TensorProduct.leftComm_symm_tmul
 
 variable (M N P Q)
 
@@ -965,16 +965,16 @@ def tensorTensorTensorComm : (M ⊗[R] N) ⊗[R] P ⊗[R] Q ≃ₗ[R] (M ⊗[R] 
 variable {M N P Q}
 
 @[simp]
-theorem tensor_tensor_tensor_comm_tmul (m : M) (n : N) (p : P) (q : Q) :
+theorem tensorTensorTensorComm_tmul (m : M) (n : N) (p : P) (q : Q) :
     tensorTensorTensorComm R M N P Q (m ⊗ₜ n ⊗ₜ (p ⊗ₜ q)) = m ⊗ₜ p ⊗ₜ (n ⊗ₜ q) :=
   rfl
-#align tensor_product.tensor_tensor_tensor_comm_tmul TensorProduct.tensor_tensor_tensor_comm_tmul
+#align tensor_product.tensor_tensor_tensor_comm_tmul TensorProduct.tensorTensorTensorComm_tmul
 
 @[simp]
-theorem tensor_tensor_tensor_comm_symm :
+theorem tensorTensorTensorComm_symm :
     (tensorTensorTensorComm R M N P Q).symm = tensorTensorTensorComm R M P N Q :=
   rfl
-#align tensor_product.tensor_tensor_tensor_comm_symm TensorProduct.tensor_tensor_tensor_comm_symm
+#align tensor_product.tensor_tensor_tensor_comm_symm TensorProduct.tensorTensorTensorComm_symm
 
 variable (M N P Q)
 
@@ -994,16 +994,16 @@ def tensorTensorTensorAssoc : (M ⊗[R] N) ⊗[R] P ⊗[R] Q ≃ₗ[R] (M ⊗[R]
 variable {M N P Q}
 
 @[simp]
-theorem tensor_tensor_tensor_assoc_tmul (m : M) (n : N) (p : P) (q : Q) :
+theorem tensorTensorTensorAssoc_tmul (m : M) (n : N) (p : P) (q : Q) :
     tensorTensorTensorAssoc R M N P Q (m ⊗ₜ n ⊗ₜ (p ⊗ₜ q)) = m ⊗ₜ (n ⊗ₜ p) ⊗ₜ q :=
   rfl
-#align tensor_product.tensor_tensor_tensor_assoc_tmul TensorProduct.tensor_tensor_tensor_assoc_tmul
+#align tensor_product.tensor_tensor_tensor_assoc_tmul TensorProduct.tensorTensorTensorAssoc_tmul
 
 @[simp]
-theorem tensor_tensor_tensor_assoc_symm_tmul (m : M) (n : N) (p : P) (q : Q) :
+theorem tensorTensorTensorAssoc_symm_tmul (m : M) (n : N) (p : P) (q : Q) :
     (tensorTensorTensorAssoc R M N P Q).symm (m ⊗ₜ (n ⊗ₜ p) ⊗ₜ q) = m ⊗ₜ n ⊗ₜ (p ⊗ₜ q) :=
   rfl
-#align tensor_product.tensor_tensor_tensor_assoc_symm_tmul TensorProduct.tensor_tensor_tensor_assoc_symm_tmul
+#align tensor_product.tensor_tensor_tensor_assoc_symm_tmul TensorProduct.tensorTensorTensorAssoc_symm_tmul
 
 end TensorProduct
 
@@ -1064,14 +1064,14 @@ def rtensorHom : (N →ₗ[R] P) →ₗ[R] N ⊗[R] M →ₗ[R] P ⊗[R] M
 #align linear_map.rtensor_hom LinearMap.rtensorHom
 
 @[simp]
-theorem coe_ltensor_hom : (ltensorHom M : (N →ₗ[R] P) → M ⊗[R] N →ₗ[R] M ⊗[R] P) = ltensor M :=
+theorem coe_ltensorHom : (ltensorHom M : (N →ₗ[R] P) → M ⊗[R] N →ₗ[R] M ⊗[R] P) = ltensor M :=
   rfl
-#align linear_map.coe_ltensor_hom LinearMap.coe_ltensor_hom
+#align linear_map.coe_ltensor_hom LinearMap.coe_ltensorHom
 
 @[simp]
-theorem coe_rtensor_hom : (rtensorHom M : (N →ₗ[R] P) → N ⊗[R] M →ₗ[R] P ⊗[R] M) = rtensor M :=
+theorem coe_rtensorHom : (rtensorHom M : (N →ₗ[R] P) → N ⊗[R] M →ₗ[R] P ⊗[R] M) = rtensor M :=
   rfl
-#align linear_map.coe_rtensor_hom LinearMap.coe_rtensor_hom
+#align linear_map.coe_rtensor_hom LinearMap.coe_rtensorHom
 
 @[simp]
 theorem ltensor_add (f g : N →ₗ[R] P) : (f + g).ltensor M = f.ltensor M + g.ltensor M :=
@@ -1243,7 +1243,7 @@ theorem Neg.aux_of (m : M) (n : N) : Neg.aux R (FreeAddMonoid.of (m, n)) = (-m) 
 instance : Neg (M ⊗[R] N)
     where neg :=
     (addConGen (TensorProduct.Eqv R M N)).lift (Neg.aux R) <|
-      AddCon.add_con_gen_le fun x y hxy =>
+      AddCon.add_conGen_le fun x y hxy =>
         match x, y, hxy with
         | _, _, eqv.of_zero_left n =>
           (AddCon.ker_rel _).2 <| by

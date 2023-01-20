@@ -68,27 +68,27 @@ noncomputable def toInvSubmonoid : M →* invSubmonoid M S :=
   (equivInvSubmonoid M S).toMonoidHom.comp ((algebraMap R S : R →* S).submonoidMap M)
 #align is_localization.to_inv_submonoid IsLocalization.toInvSubmonoid
 
-theorem to_inv_submonoid_surjective : Function.Surjective (toInvSubmonoid M S) :=
+theorem toInvSubmonoid_surjective : Function.Surjective (toInvSubmonoid M S) :=
   Function.Surjective.comp (Equiv.surjective _) (MonoidHom.submonoidMap_surjective _ _)
-#align is_localization.to_inv_submonoid_surjective IsLocalization.to_inv_submonoid_surjective
+#align is_localization.to_inv_submonoid_surjective IsLocalization.toInvSubmonoid_surjective
 
 @[simp]
-theorem to_inv_submonoid_mul (m : M) : (toInvSubmonoid M S m : S) * algebraMap R S m = 1 :=
-  Submonoid.left_inv_equiv_symm_mul _ _ _
-#align is_localization.to_inv_submonoid_mul IsLocalization.to_inv_submonoid_mul
+theorem toInvSubmonoid_mul (m : M) : (toInvSubmonoid M S m : S) * algebraMap R S m = 1 :=
+  Submonoid.leftInvEquiv_symm_mul _ _ _
+#align is_localization.to_inv_submonoid_mul IsLocalization.toInvSubmonoid_mul
 
 @[simp]
-theorem mul_to_inv_submonoid (m : M) : algebraMap R S m * (toInvSubmonoid M S m : S) = 1 :=
-  Submonoid.mul_left_inv_equiv_symm _ _ ⟨_, _⟩
-#align is_localization.mul_to_inv_submonoid IsLocalization.mul_to_inv_submonoid
+theorem mul_toInvSubmonoid (m : M) : algebraMap R S m * (toInvSubmonoid M S m : S) = 1 :=
+  Submonoid.mul_leftInvEquiv_symm _ _ ⟨_, _⟩
+#align is_localization.mul_to_inv_submonoid IsLocalization.mul_toInvSubmonoid
 
 @[simp]
-theorem smul_to_inv_submonoid (m : M) : m • (toInvSubmonoid M S m : S) = 1 :=
+theorem smul_toInvSubmonoid (m : M) : m • (toInvSubmonoid M S m : S) = 1 :=
   by
   convert mul_to_inv_submonoid M S m
   rw [← Algebra.smul_def]
   rfl
-#align is_localization.smul_to_inv_submonoid IsLocalization.smul_to_inv_submonoid
+#align is_localization.smul_to_inv_submonoid IsLocalization.smul_toInvSubmonoid
 
 variable {S}
 
@@ -100,31 +100,31 @@ theorem surj' (z : S) : ∃ (r : R)(m : M), z = r • toInvSubmonoid M S m :=
   simp
 #align is_localization.surj' IsLocalization.surj'
 
-theorem to_inv_submonoid_eq_mk' (x : M) : (toInvSubmonoid M S x : S) = mk' S 1 x :=
+theorem toInvSubmonoid_eq_mk' (x : M) : (toInvSubmonoid M S x : S) = mk' S 1 x :=
   by
   rw [← (IsLocalization.map_units S x).mul_left_inj]
   simp
-#align is_localization.to_inv_submonoid_eq_mk' IsLocalization.to_inv_submonoid_eq_mk'
+#align is_localization.to_inv_submonoid_eq_mk' IsLocalization.toInvSubmonoid_eq_mk'
 
-theorem mem_inv_submonoid_iff_exists_mk' (x : S) : x ∈ invSubmonoid M S ↔ ∃ m : M, mk' S 1 m = x :=
+theorem mem_invSubmonoid_iff_exists_mk' (x : S) : x ∈ invSubmonoid M S ↔ ∃ m : M, mk' S 1 m = x :=
   by
   simp_rw [← to_inv_submonoid_eq_mk']
   exact
     ⟨fun h => ⟨_, congr_arg Subtype.val (to_inv_submonoid_surjective M S ⟨x, h⟩).some_spec⟩,
       fun h => h.some_spec ▸ (to_inv_submonoid M S h.some).Prop⟩
-#align is_localization.mem_inv_submonoid_iff_exists_mk' IsLocalization.mem_inv_submonoid_iff_exists_mk'
+#align is_localization.mem_inv_submonoid_iff_exists_mk' IsLocalization.mem_invSubmonoid_iff_exists_mk'
 
 variable (S)
 
-theorem span_inv_submonoid : Submodule.span R (invSubmonoid M S : Set S) = ⊤ :=
+theorem span_invSubmonoid : Submodule.span R (invSubmonoid M S : Set S) = ⊤ :=
   by
   rw [eq_top_iff]
   rintro x -
   rcases IsLocalization.surj' M x with ⟨r, m, rfl⟩
   exact Submodule.smul_mem _ _ (Submodule.subset_span (to_inv_submonoid M S m).Prop)
-#align is_localization.span_inv_submonoid IsLocalization.span_inv_submonoid
+#align is_localization.span_inv_submonoid IsLocalization.span_invSubmonoid
 
-theorem finite_type_of_monoid_fg [Monoid.Fg M] : Algebra.FiniteType R S :=
+theorem finiteType_of_monoid_fg [Monoid.Fg M] : Algebra.FiniteType R S :=
   by
   have := Monoid.fg_of_surjective _ (to_inv_submonoid_surjective M S)
   rw [Monoid.fg_iff_submonoid_fg] at this
@@ -135,7 +135,7 @@ theorem finite_type_of_monoid_fg [Monoid.Fg M] : Algebra.FiniteType R S :=
   change x ∈ ((Algebra.adjoin R _ : Subalgebra R S).toSubmodule : Set S)
   rw [Algebra.adjoin_eq_span, hs, span_inv_submonoid]
   trivial
-#align is_localization.finite_type_of_monoid_fg IsLocalization.finite_type_of_monoid_fg
+#align is_localization.finite_type_of_monoid_fg IsLocalization.finiteType_of_monoid_fg
 
 end InvSubmonoid
 

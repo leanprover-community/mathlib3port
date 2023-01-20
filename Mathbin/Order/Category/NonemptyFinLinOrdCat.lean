@@ -220,9 +220,9 @@ instance : HasStrongEpiMonoFactorisations NonemptyFinLinOrdCat.{u} :=
 
 end NonemptyFinLinOrdCat
 
-theorem NonemptyFinLinOrd_dual_comp_forget_to_LinearOrder :
+theorem nonemptyFinLinOrdCat_dual_comp_forget_to_linearOrderCat :
     NonemptyFinLinOrdCat.dual ⋙ forget₂ NonemptyFinLinOrdCat LinearOrderCat =
       forget₂ NonemptyFinLinOrdCat LinearOrderCat ⋙ LinearOrderCat.dual :=
   rfl
-#align NonemptyFinLinOrd_dual_comp_forget_to_LinearOrder NonemptyFinLinOrd_dual_comp_forget_to_LinearOrder
+#align NonemptyFinLinOrd_dual_comp_forget_to_LinearOrder nonemptyFinLinOrdCat_dual_comp_forget_to_linearOrderCat
 

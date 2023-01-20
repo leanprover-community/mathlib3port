@@ -132,7 +132,7 @@ instance [∀ i, PartialOrder (α i)] : PartialOrder (Σi, α i) :=
   { Sigma.preorder with
     le_antisymm := by
       rintro _ _ ⟨i, a, b, hab⟩ ⟨_, _, _, hba⟩
-      exact ext rfl (heq_of_eq <| hab.antisymm hba) }
+      exact ext rfl (hEq_of_eq <| hab.antisymm hba) }
 
 instance [∀ i, Preorder (α i)] [∀ i, DenselyOrdered (α i)] : DenselyOrdered (Σi, α i) :=
   ⟨by

@@ -143,7 +143,7 @@ theorem ker_apply_mk_out {f : α → β} (a : α) :
         haveI := Setoid.ker f
         ⟦a⟧.out) =
       f a :=
-  @Quotient.mk_out _ (Setoid.ker f) a
+  @Quotient.mk''_out _ (Setoid.ker f) a
 #align setoid.ker_apply_mk_out Setoid.ker_apply_mk_out
 -/
 
@@ -444,7 +444,7 @@ theorem lift_unique {r : Setoid α} {f : α → β} (H : r ≤ ker f) (g : Quoti
     (Hg : f = g ∘ Quotient.mk'') : Quotient.lift f H = g :=
   by
   ext ⟨x⟩
-  erw [Quotient.lift_mk f H, Hg]
+  erw [Quotient.lift_mk'' f H, Hg]
   rfl
 #align setoid.lift_unique Setoid.lift_unique
 
@@ -487,7 +487,7 @@ noncomputable def quotientKerEquivRange : Quotient (ker f) ≃ Set.range f :=
       Subtype.ext_val h)
     ⟨fun x y h => ker_lift_injective f <| by rcases x with ⟨⟩ <;> rcases y with ⟨⟩ <;> injections,
       fun ⟨w, z, hz⟩ =>
-      ⟨@Quotient.mk'' _ (ker f) z, by rw [Quotient.lift_mk] <;> exact Subtype.ext_iff_val.2 hz⟩⟩
+      ⟨@Quotient.mk'' _ (ker f) z, by rw [Quotient.lift_mk''] <;> exact Subtype.ext_iff_val.2 hz⟩⟩
 #align setoid.quotient_ker_equiv_range Setoid.quotientKerEquivRange
 -/
 
@@ -511,7 +511,7 @@ def quotientKerEquivOfRightInverse (g : β → α) (hf : Function.RightInverse g
 If a specific right-inverse of `f` is known, `setoid.quotient_ker_equiv_of_right_inverse` can be
 definitionally more useful. -/
 noncomputable def quotientKerEquivOfSurjective (hf : Surjective f) : Quotient (ker f) ≃ β :=
-  quotientKerEquivOfRightInverse _ (Function.surjInv hf) (right_inverse_surj_inv hf)
+  quotientKerEquivOfRightInverse _ (Function.surjInv hf) (rightInverse_surjInv hf)
 #align setoid.quotient_ker_equiv_of_surjective Setoid.quotientKerEquivOfSurjective
 -/
 
@@ -655,8 +655,8 @@ theorem Quotient.subsingleton_iff {s : Setoid α} : Subsingleton (Quotient s) �
   by
   simp only [subsingleton_iff, eq_top_iff, Setoid.le_def, Setoid.top_def, Pi.top_apply,
     forall_const]
-  refine' (surjective_quotient_mk _).forall.trans (forall_congr' fun a => _)
-  refine' (surjective_quotient_mk _).forall.trans (forall_congr' fun b => _)
+  refine' (surjective_quotient_mk'' _).forall.trans (forall_congr' fun a => _)
+  refine' (surjective_quotient_mk'' _).forall.trans (forall_congr' fun b => _)
   exact Quotient.eq'
 #align quotient.subsingleton_iff Quotient.subsingleton_iff
 

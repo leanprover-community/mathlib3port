@@ -27,7 +27,7 @@ variable {α R : Type _} [MeasurableSpace α] [LinearOrderedRing R] [FloorRing R
 
 theorem Int.measurable_floor [OpensMeasurableSpace R] : Measurable (Int.floor : R → ℤ) :=
   measurable_to_countable fun x => by
-    simpa only [Int.preimage_floor_singleton] using measurable_set_Ico
+    simpa only [Int.preimage_floor_singleton] using measurableSet_ico
 #align int.measurable_floor Int.measurable_floor
 
 @[measurability]
@@ -38,7 +38,7 @@ theorem Measurable.floor [OpensMeasurableSpace R] {f : α → R} (hf : Measurabl
 
 theorem Int.measurable_ceil [OpensMeasurableSpace R] : Measurable (Int.ceil : R → ℤ) :=
   measurable_to_countable fun x => by
-    simpa only [Int.preimage_ceil_singleton] using measurable_set_Ioc
+    simpa only [Int.preimage_ceil_singleton] using measurableSet_ioc
 #align int.measurable_ceil Int.measurable_ceil
 
 @[measurability]
@@ -51,7 +51,7 @@ theorem measurable_fract [BorelSpace R] : Measurable (Int.fract : R → R) :=
   by
   intro s hs
   rw [Int.preimage_fract]
-  exact MeasurableSet.Union fun z => measurable_id.sub_const _ (hs.inter measurable_set_Ico)
+  exact MeasurableSet.unionᵢ fun z => measurable_id.sub_const _ (hs.inter measurableSet_ico)
 #align measurable_fract measurable_fract
 
 @[measurability]
@@ -64,7 +64,7 @@ theorem MeasurableSet.image_fract [BorelSpace R] {s : Set R} (hs : MeasurableSet
     MeasurableSet (Int.fract '' s) :=
   by
   simp only [Int.image_fract, sub_eq_add_neg, image_add_right']
-  exact MeasurableSet.Union fun m => (measurable_add_const _ hs).inter measurable_set_Ico
+  exact MeasurableSet.unionᵢ fun m => (measurable_add_const _ hs).inter measurableSet_ico
 #align measurable_set.image_fract MeasurableSet.image_fract
 
 end FloorRing

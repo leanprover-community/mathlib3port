@@ -95,22 +95,22 @@ def leTop (U : Opens X) : U ⟶ ⊤ :=
 
 -- We do not mark this as a simp lemma because it breaks open `x`.
 -- Nevertheless, it is useful in `sheaf_of_functions`.
-theorem inf_le_left_apply (U V : Opens X) (x) :
+theorem infLeLeft_apply (U V : Opens X) (x) :
     (infLeLeft U V) x = ⟨x.1, (@inf_le_left _ _ U V : _ ≤ _) x.2⟩ :=
   rfl
-#align topological_space.opens.inf_le_left_apply TopologicalSpace.Opens.inf_le_left_apply
+#align topological_space.opens.inf_le_left_apply TopologicalSpace.Opens.infLeLeft_apply
 
 @[simp]
-theorem inf_le_left_apply_mk (U V : Opens X) (x) (m) :
+theorem infLeLeft_apply_mk (U V : Opens X) (x) (m) :
     (infLeLeft U V) ⟨x, m⟩ = ⟨x, (@inf_le_left _ _ U V : _ ≤ _) m⟩ :=
   rfl
-#align topological_space.opens.inf_le_left_apply_mk TopologicalSpace.Opens.inf_le_left_apply_mk
+#align topological_space.opens.inf_le_left_apply_mk TopologicalSpace.Opens.infLeLeft_apply_mk
 
 @[simp]
-theorem le_supr_apply_mk {ι : Type _} (U : ι → Opens X) (i : ι) (x) (m) :
+theorem leSupr_apply_mk {ι : Type _} (U : ι → Opens X) (i : ι) (x) (m) :
     (leSupr U i) ⟨x, m⟩ = ⟨x, (le_supᵢ U i : _) m⟩ :=
   rfl
-#align topological_space.opens.le_supr_apply_mk TopologicalSpace.Opens.le_supr_apply_mk
+#align topological_space.opens.le_supr_apply_mk TopologicalSpace.Opens.leSupr_apply_mk
 
 /-- The functor from open sets in `X` to `Top`,
 realising each open set as a topological space itself.
@@ -124,10 +124,10 @@ def toTop (X : TopCat.{u}) : Opens X ⥤ TopCat
 #align topological_space.opens.to_Top TopologicalSpace.Opens.toTop
 
 @[simp]
-theorem to_Top_map (X : TopCat.{u}) {U V : Opens X} {f : U ⟶ V} {x} {h} :
+theorem toTop_map (X : TopCat.{u}) {U V : Opens X} {f : U ⟶ V} {x} {h} :
     ((toTop X).map f) ⟨x, h⟩ = ⟨x, f.le h⟩ :=
   rfl
-#align topological_space.opens.to_Top_map TopologicalSpace.Opens.to_Top_map
+#align topological_space.opens.to_Top_map TopologicalSpace.Opens.toTop_map
 
 /-- The inclusion map from an open subset to the whole space, as a morphism in `Top`.
 -/
@@ -138,9 +138,9 @@ def inclusion {X : TopCat.{u}} (U : Opens X) : (toTop X).obj U ⟶ X
   continuous_to_fun := continuous_subtype_coe
 #align topological_space.opens.inclusion TopologicalSpace.Opens.inclusion
 
-theorem open_embedding {X : TopCat.{u}} (U : Opens X) : OpenEmbedding (inclusion U) :=
-  IsOpen.open_embedding_subtype_coe U.2
-#align topological_space.opens.open_embedding TopologicalSpace.Opens.open_embedding
+theorem openEmbedding {X : TopCat.{u}} (U : Opens X) : OpenEmbedding (inclusion U) :=
+  IsOpen.openEmbedding_subtype_coe U.2
+#align topological_space.opens.open_embedding TopologicalSpace.Opens.openEmbedding
 
 /-- The inclusion of the top open subset (i.e. the whole space) is an isomorphism.
 -/
@@ -224,12 +224,12 @@ theorem op_map_comp_obj (f : X ⟶ Y) (g : Y ⟶ Z) (U) :
   rfl
 #align topological_space.opens.op_map_comp_obj TopologicalSpace.Opens.op_map_comp_obj
 
-theorem map_supr (f : X ⟶ Y) {ι : Type _} (U : ι → Opens Y) :
+theorem map_supᵢ (f : X ⟶ Y) {ι : Type _} (U : ι → Opens Y) :
     (map f).obj (supᵢ U) = supᵢ ((map f).obj ∘ U) :=
   by
   apply Subtype.eq; rw [supr_def, supr_def, map_obj]
   dsimp; rw [Set.preimage_unionᵢ]; rfl
-#align topological_space.opens.map_supr TopologicalSpace.Opens.map_supr
+#align topological_space.opens.map_supr TopologicalSpace.Opens.map_supᵢ
 
 section
 
@@ -291,22 +291,22 @@ theorem map_eq (f g : X ⟶ Y) (h : f = g) : map f = map g :=
 #align topological_space.opens.map_eq TopologicalSpace.Opens.map_eq
 
 @[simp]
-theorem map_iso_refl (f : X ⟶ Y) (h) : mapIso f f h = Iso.refl (map _) :=
+theorem mapIso_refl (f : X ⟶ Y) (h) : mapIso f f h = Iso.refl (map _) :=
   rfl
-#align topological_space.opens.map_iso_refl TopologicalSpace.Opens.map_iso_refl
+#align topological_space.opens.map_iso_refl TopologicalSpace.Opens.mapIso_refl
 
 @[simp]
-theorem map_iso_hom_app (f g : X ⟶ Y) (h : f = g) (U : Opens Y) :
+theorem mapIso_hom_app (f g : X ⟶ Y) (h : f = g) (U : Opens Y) :
     (mapIso f g h).Hom.app U = eqToHom (congr_fun (congr_arg Functor.obj (congr_arg map h)) U) :=
   rfl
-#align topological_space.opens.map_iso_hom_app TopologicalSpace.Opens.map_iso_hom_app
+#align topological_space.opens.map_iso_hom_app TopologicalSpace.Opens.mapIso_hom_app
 
 @[simp]
-theorem map_iso_inv_app (f g : X ⟶ Y) (h : f = g) (U : Opens Y) :
+theorem mapIso_inv_app (f g : X ⟶ Y) (h : f = g) (U : Opens Y) :
     (mapIso f g h).inv.app U =
       eqToHom (congr_fun (congr_arg Functor.obj (congr_arg map h.symm)) U) :=
   rfl
-#align topological_space.opens.map_iso_inv_app TopologicalSpace.Opens.map_iso_inv_app
+#align topological_space.opens.map_iso_inv_app TopologicalSpace.Opens.mapIso_inv_app
 
 /-- A homeomorphism of spaces gives an equivalence of categories of open sets. -/
 @[simps]
@@ -363,12 +363,12 @@ namespace TopologicalSpace.Opens
 open TopologicalSpace
 
 @[simp]
-theorem open_embedding_obj_top {X : TopCat} (U : Opens X) :
+theorem openEmbedding_obj_top {X : TopCat} (U : Opens X) :
     U.OpenEmbedding.IsOpenMap.Functor.obj ⊤ = U :=
   by
   ext1
   exact set.image_univ.trans Subtype.range_coe
-#align topological_space.opens.open_embedding_obj_top TopologicalSpace.Opens.open_embedding_obj_top
+#align topological_space.opens.open_embedding_obj_top TopologicalSpace.Opens.openEmbedding_obj_top
 
 @[simp]
 theorem inclusion_map_eq_top {X : TopCat} (U : Opens X) : (Opens.map U.inclusion).obj U = ⊤ :=
@@ -383,7 +383,7 @@ theorem adjunction_counit_app_self {X : TopCat} (U : Opens X) :
 #align topological_space.opens.adjunction_counit_app_self TopologicalSpace.Opens.adjunction_counit_app_self
 
 theorem inclusion_top_functor (X : TopCat) :
-    (@Opens.open_embedding X ⊤).IsOpenMap.Functor = map (inclusionTopIso X).inv :=
+    (@Opens.openEmbedding X ⊤).IsOpenMap.Functor = map (inclusionTopIso X).inv :=
   by
   apply functor.hext; intro ;
   abstract obj_eq 

@@ -170,10 +170,10 @@ theorem extentClosure_unionᵢ (f : ι → Set β) :
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp]
-theorem intent_closure_Union₂ (f : ∀ i, κ i → Set α) :
+theorem intentClosure_Union₂ (f : ∀ i, κ i → Set α) :
     intentClosure r (⋃ (i) (j), f i j) = ⋂ (i) (j), intentClosure r (f i j) :=
   (gc_intentClosure_extentClosure r).l_supr₂
-#align intent_closure_Union₂ intent_closure_Union₂
+#align intent_closure_Union₂ intentClosure_Union₂
 
 /- warning: extent_closure_Union₂ -> extentClosure_Union₂ is a dubious translation:
 lean 3 declaration is
@@ -186,7 +186,7 @@ Case conversion may be inaccurate. Consider using '#align extent_closure_Union�
 @[simp]
 theorem extentClosure_Union₂ (f : ∀ i, κ i → Set β) :
     extentClosure r (⋃ (i) (j), f i j) = ⋂ (i) (j), extentClosure r (f i j) :=
-  intent_closure_Union₂ _ _
+  intentClosure_Union₂ _ _
 #align extent_closure_Union₂ extentClosure_Union₂
 
 /- warning: subset_extent_closure_intent_closure -> subset_extentClosure_intentClosure is a dubious translation:
@@ -380,7 +380,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align concept.snd_ssubset_snd_iff Concept.snd_ssubset_snd_iffₓ'. -/
 @[simp]
 theorem snd_ssubset_snd_iff : c.snd ⊂ d.snd ↔ d < c := by
-  rw [ssubset_iff_subset_not_subset, lt_iff_le_not_le, snd_subset_snd_iff, snd_subset_snd_iff]
+  rw [sSubset_iff_subset_not_subset, lt_iff_le_not_le, snd_subset_snd_iff, snd_subset_snd_iff]
 #align concept.snd_ssubset_snd_iff Concept.snd_ssubset_snd_iff
 
 /- warning: concept.strict_mono_fst -> Concept.strictMono_fst is a dubious translation:
@@ -424,7 +424,7 @@ instance : SupSet (Concept α β r) :=
     { fst := extentClosure r (⋂ c ∈ S, (c : Concept _ _ _).snd)
       snd := ⋂ c ∈ S, (c : Concept _ _ _).snd
       closure_fst := by
-        simp_rw [← closure_fst, ← intent_closure_Union₂, intentClosure_extentClosure_intentClosure]
+        simp_rw [← closure_fst, ← intentClosure_Union₂, intentClosure_extentClosure_intentClosure]
       closure_snd := rfl }⟩
 
 instance : InfSet (Concept α β r) :=

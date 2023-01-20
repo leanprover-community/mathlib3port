@@ -49,14 +49,13 @@ def stepSet (S : Set σ) (a : α) : Set σ :=
   ⋃ s ∈ S, M.step s a
 #align NFA.step_set NFA.stepSet
 
-theorem mem_step_set (s : σ) (S : Set σ) (a : α) : s ∈ M.stepSet S a ↔ ∃ t ∈ S, s ∈ M.step t a :=
+theorem mem_stepSet (s : σ) (S : Set σ) (a : α) : s ∈ M.stepSet S a ↔ ∃ t ∈ S, s ∈ M.step t a :=
   mem_Union₂
-#align NFA.mem_step_set NFA.mem_step_set
+#align NFA.mem_step_set NFA.mem_stepSet
 
 @[simp]
-theorem step_set_empty (a : α) : M.stepSet ∅ a = ∅ := by
-  simp_rw [step_set, Union_false, Union_empty]
-#align NFA.step_set_empty NFA.step_set_empty
+theorem stepSet_empty (a : α) : M.stepSet ∅ a = ∅ := by simp_rw [step_set, Union_false, Union_empty]
+#align NFA.step_set_empty NFA.stepSet_empty
 
 /-- `M.eval_from S x` computes all possible paths though `M` with input `x` starting at an element
   of `S`. -/
@@ -65,20 +64,20 @@ def evalFrom (start : Set σ) : List α → Set σ :=
 #align NFA.eval_from NFA.evalFrom
 
 @[simp]
-theorem eval_from_nil (S : Set σ) : M.evalFrom S [] = S :=
+theorem evalFrom_nil (S : Set σ) : M.evalFrom S [] = S :=
   rfl
-#align NFA.eval_from_nil NFA.eval_from_nil
+#align NFA.eval_from_nil NFA.evalFrom_nil
 
 @[simp]
-theorem eval_from_singleton (S : Set σ) (a : α) : M.evalFrom S [a] = M.stepSet S a :=
+theorem evalFrom_singleton (S : Set σ) (a : α) : M.evalFrom S [a] = M.stepSet S a :=
   rfl
-#align NFA.eval_from_singleton NFA.eval_from_singleton
+#align NFA.eval_from_singleton NFA.evalFrom_singleton
 
 @[simp]
-theorem eval_from_append_singleton (S : Set σ) (x : List α) (a : α) :
+theorem evalFrom_append_singleton (S : Set σ) (x : List α) (a : α) :
     M.evalFrom S (x ++ [a]) = M.stepSet (M.evalFrom S x) a := by
   simp only [eval_from, List.foldl_append, List.foldl_cons, List.foldl_nil]
-#align NFA.eval_from_append_singleton NFA.eval_from_append_singleton
+#align NFA.eval_from_append_singleton NFA.evalFrom_append_singleton
 
 /-- `M.eval x` computes all possible paths though `M` with input `x` starting at an element of
   `M.start`. -/
@@ -98,7 +97,7 @@ theorem eval_singleton (a : α) : M.eval [a] = M.stepSet M.start a :=
 
 @[simp]
 theorem eval_append_singleton (x : List α) (a : α) : M.eval (x ++ [a]) = M.stepSet (M.eval x) a :=
-  eval_from_append_singleton _ _ _ _
+  evalFrom_append_singleton _ _ _ _
 #align NFA.eval_append_singleton NFA.eval_append_singleton
 
 /-- `M.accepts` is the language of `x` such that there is an accept state in `M.eval x`. -/
@@ -114,13 +113,13 @@ def toDFA : DFA α (Set σ) where
 #align NFA.to_DFA NFA.toDFA
 
 @[simp]
-theorem to_DFA_correct : M.toDFA.accepts = M.accepts :=
+theorem toDFA_correct : M.toDFA.accepts = M.accepts :=
   by
   ext x
   rw [accepts, DFA.accepts, eval, DFA.eval]
   change List.foldl _ _ _ ∈ { S | _ } ↔ _
   constructor <;> · exact fun ⟨w, h2, h3⟩ => ⟨w, h3, h2⟩
-#align NFA.to_DFA_correct NFA.to_DFA_correct
+#align NFA.to_DFA_correct NFA.toDFA_correct
 
 theorem pumping_lemma [Fintype σ] {x : List α} (hx : x ∈ M.accepts)
     (hlen : Fintype.card (Set σ) ≤ List.length x) :
@@ -147,7 +146,7 @@ def toNFA (M : DFA α σ') : NFA α σ'
 #align DFA.to_NFA DFA.toNFA
 
 @[simp]
-theorem to_NFA_eval_from_match (M : DFA α σ) (start : σ) (s : List α) :
+theorem toNFA_evalFrom_match (M : DFA α σ) (start : σ) (s : List α) :
     M.toNFA.evalFrom {start} s = {M.evalFrom start s} :=
   by
   change List.foldl M.to_NFA.step_set {start} s = {List.foldl M.step start s}
@@ -156,10 +155,10 @@ theorem to_NFA_eval_from_match (M : DFA α σ) (start : σ) (s : List α) :
   · rw [List.foldl, List.foldl,
       show M.to_NFA.step_set {start} a = {M.step start a} by simpa [NFA.stepSet] ]
     tauto
-#align DFA.to_NFA_eval_from_match DFA.to_NFA_eval_from_match
+#align DFA.to_NFA_eval_from_match DFA.toNFA_evalFrom_match
 
 @[simp]
-theorem to_NFA_correct (M : DFA α σ) : M.toNFA.accepts = M.accepts :=
+theorem toNFA_correct (M : DFA α σ) : M.toNFA.accepts = M.accepts :=
   by
   ext x
   change (∃ S H, S ∈ M.to_NFA.eval_from {M.start} x) ↔ _
@@ -168,7 +167,7 @@ theorem to_NFA_correct (M : DFA α σ) : M.toNFA.accepts = M.accepts :=
   · rintro ⟨S, hS₁, hS₂⟩
     rwa [set.mem_singleton_iff.mp hS₂] at hS₁
   · exact fun h => ⟨M.eval x, h, rfl⟩
-#align DFA.to_NFA_correct DFA.to_NFA_correct
+#align DFA.to_NFA_correct DFA.toNFA_correct
 
 end DFA
 

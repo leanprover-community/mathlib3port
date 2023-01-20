@@ -1699,7 +1699,7 @@ def ofHomInv {F G : Type _} [OrderHomClass F α β] [OrderHomClass G β α] (f :
   map_rel_iff' a b :=
     ⟨fun h => by
       replace h := map_rel g h
-      rwa [Equiv.coe_fn_mk, show g (f a) = (g : β →o α).comp (f : α →o β) a from rfl,
+      rwa [Equiv.coeFn_mk, show g (f a) = (g : β →o α).comp (f : α →o β) a from rfl,
         show g (f b) = (g : β →o α).comp (f : α →o β) b from rfl, h₂] at h,
       fun h => (f : α →o β).Monotone h⟩
 #align order_iso.of_hom_inv OrderIso.ofHomInv

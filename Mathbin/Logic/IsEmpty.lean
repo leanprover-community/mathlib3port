@@ -56,21 +56,29 @@ protected theorem Function.isEmpty [IsEmpty β] (f : α → β) : IsEmpty α :=
 instance {p : α → Sort _} [h : Nonempty α] [∀ x, IsEmpty (p x)] : IsEmpty (∀ x, p x) :=
   h.elim fun x => Function.isEmpty <| Function.eval x
 
-instance PProd.is_empty_left [IsEmpty α] : IsEmpty (PProd α β) :=
+#print PProd.isEmpty_left /-
+instance PProd.isEmpty_left [IsEmpty α] : IsEmpty (PProd α β) :=
   Function.isEmpty PProd.fst
-#align pprod.is_empty_left PProd.is_empty_left
+#align pprod.is_empty_left PProd.isEmpty_left
+-/
 
-instance PProd.is_empty_right [IsEmpty β] : IsEmpty (PProd α β) :=
+#print PProd.isEmpty_right /-
+instance PProd.isEmpty_right [IsEmpty β] : IsEmpty (PProd α β) :=
   Function.isEmpty PProd.snd
-#align pprod.is_empty_right PProd.is_empty_right
+#align pprod.is_empty_right PProd.isEmpty_right
+-/
 
-instance Prod.is_empty_left {α β} [IsEmpty α] : IsEmpty (α × β) :=
+#print Prod.isEmpty_left /-
+instance Prod.isEmpty_left {α β} [IsEmpty α] : IsEmpty (α × β) :=
   Function.isEmpty Prod.fst
-#align prod.is_empty_left Prod.is_empty_left
+#align prod.is_empty_left Prod.isEmpty_left
+-/
 
-instance Prod.is_empty_right {α β} [IsEmpty β] : IsEmpty (α × β) :=
+#print Prod.isEmpty_right /-
+instance Prod.isEmpty_right {α β} [IsEmpty β] : IsEmpty (α × β) :=
   Function.isEmpty Prod.snd
-#align prod.is_empty_right Prod.is_empty_right
+#align prod.is_empty_right Prod.isEmpty_right
+-/
 
 instance [IsEmpty α] [IsEmpty β] : IsEmpty (PSum α β) :=
   ⟨fun x => PSum.rec IsEmpty.false IsEmpty.false x⟩
@@ -89,14 +97,18 @@ theorem Subtype.isEmpty_of_false {p : α → Prop} (hp : ∀ a, ¬p a) : IsEmpty
 #align subtype.is_empty_of_false Subtype.isEmpty_of_false
 -/
 
+#print Subtype.isEmpty_false /-
 /-- subtypes by false are false. -/
-instance Subtype.is_empty_false : IsEmpty { a : α // False } :=
+instance Subtype.isEmpty_false : IsEmpty { a : α // False } :=
   Subtype.isEmpty_of_false fun a => id
-#align subtype.is_empty_false Subtype.is_empty_false
+#align subtype.is_empty_false Subtype.isEmpty_false
+-/
 
-instance Sigma.is_empty_left {α} [IsEmpty α] {E : α → Type _} : IsEmpty (Sigma E) :=
+#print Sigma.isEmpty_left /-
+instance Sigma.isEmpty_left {α} [IsEmpty α] {E : α → Type _} : IsEmpty (Sigma E) :=
   Function.isEmpty Sigma.fst
-#align sigma.is_empty_left Sigma.is_empty_left
+#align sigma.is_empty_left Sigma.isEmpty_left
+-/
 
 -- Test that `pi.is_empty` finds this instance.
 example [h : Nonempty α] [IsEmpty β] : IsEmpty (α → β) := by infer_instance
@@ -208,7 +220,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_empty_psigma isEmpty_psigmaₓ'. -/
 @[simp]
 theorem isEmpty_psigma {α} {E : α → Sort _} : IsEmpty (PSigma E) ↔ ∀ a, IsEmpty (E a) := by
-  simp only [← not_nonempty_iff, nonempty_psigma, not_exists]
+  simp only [← not_nonempty_iff, nonempty_pSigma, not_exists]
 #align is_empty_psigma isEmpty_psigma
 
 #print isEmpty_subtype /-
@@ -232,7 +244,7 @@ theorem isEmpty_prod {α β : Type _} : IsEmpty (α × β) ↔ IsEmpty α ∨ Is
 #print isEmpty_pprod /-
 @[simp]
 theorem isEmpty_pprod : IsEmpty (PProd α β) ↔ IsEmpty α ∨ IsEmpty β := by
-  simp only [← not_nonempty_iff, nonempty_pprod, not_and_or]
+  simp only [← not_nonempty_iff, nonempty_pProd, not_and_or]
 #align is_empty_pprod isEmpty_pprod
 -/
 
@@ -255,7 +267,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_empty_psum isEmpty_psumₓ'. -/
 @[simp]
 theorem isEmpty_psum {α β} : IsEmpty (PSum α β) ↔ IsEmpty α ∧ IsEmpty β := by
-  simp only [← not_nonempty_iff, nonempty_psum, not_or]
+  simp only [← not_nonempty_iff, nonempty_pSum, not_or]
 #align is_empty_psum isEmpty_psum
 
 /- warning: is_empty_ulift -> isEmpty_ulift is a dubious translation:
@@ -266,13 +278,13 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_empty_ulift isEmpty_uliftₓ'. -/
 @[simp]
 theorem isEmpty_ulift {α} : IsEmpty (ULift α) ↔ IsEmpty α := by
-  simp only [← not_nonempty_iff, nonempty_ulift]
+  simp only [← not_nonempty_iff, nonempty_uLift]
 #align is_empty_ulift isEmpty_ulift
 
 #print isEmpty_plift /-
 @[simp]
 theorem isEmpty_plift {α} : IsEmpty (PLift α) ↔ IsEmpty α := by
-  simp only [← not_nonempty_iff, nonempty_plift]
+  simp only [← not_nonempty_iff, nonempty_pLift]
 #align is_empty_plift isEmpty_plift
 -/
 

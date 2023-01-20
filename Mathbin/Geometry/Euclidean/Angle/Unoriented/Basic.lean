@@ -46,13 +46,13 @@ def angle (x y : V) : ℝ :=
   Real.arccos (⟪x, y⟫ / (‖x‖ * ‖y‖))
 #align inner_product_geometry.angle InnerProductGeometry.angle
 
-theorem continuous_at_angle {x : V × V} (hx1 : x.1 ≠ 0) (hx2 : x.2 ≠ 0) :
+theorem continuousAt_angle {x : V × V} (hx1 : x.1 ≠ 0) (hx2 : x.2 ≠ 0) :
     ContinuousAt (fun y : V × V => angle y.1 y.2) x :=
   Real.continuous_arccos.ContinuousAt.comp <|
     continuous_inner.ContinuousAt.div
       ((continuous_norm.comp continuous_fst).mul (continuous_norm.comp continuous_snd)).ContinuousAt
       (by simp [hx1, hx2])
-#align inner_product_geometry.continuous_at_angle InnerProductGeometry.continuous_at_angle
+#align inner_product_geometry.continuous_at_angle InnerProductGeometry.continuousAt_angle
 
 theorem angle_smul_smul {c : ℝ} (hc : c ≠ 0) (x y : V) : angle (c • x) (c • y) = angle x y :=
   by

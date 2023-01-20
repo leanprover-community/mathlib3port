@@ -205,11 +205,11 @@ def limitCone (F : J ⥤ α) : LimitCone F
     where
   Cone :=
     { x := infᵢ F.obj
-      π := { app := fun j => homOfLe (CompleteLattice.Inf_le _ _ (Set.mem_range_self _)) } }
+      π := { app := fun j => homOfLe (CompleteLattice.inf_le _ _ (Set.mem_range_self _)) } }
   IsLimit :=
     {
       lift := fun s =>
-        homOfLe (CompleteLattice.le_Inf _ _ (by rintro _ ⟨j, rfl⟩; exact (s.π.app j).le)) }
+        homOfLe (CompleteLattice.le_inf _ _ (by rintro _ ⟨j, rfl⟩; exact (s.π.app j).le)) }
 #align category_theory.limits.complete_lattice.limit_cone CategoryTheory.Limits.CompleteLattice.limitCone
 
 /-- The colimit cocone over any functor into a complete lattice.
@@ -218,36 +218,36 @@ def colimitCocone (F : J ⥤ α) : ColimitCocone F
     where
   Cocone :=
     { x := supᵢ F.obj
-      ι := { app := fun j => homOfLe (CompleteLattice.le_Sup _ _ (Set.mem_range_self _)) } }
+      ι := { app := fun j => homOfLe (CompleteLattice.le_sup _ _ (Set.mem_range_self _)) } }
   IsColimit :=
     {
       desc := fun s =>
-        homOfLe (CompleteLattice.Sup_le _ _ (by rintro _ ⟨j, rfl⟩; exact (s.ι.app j).le)) }
+        homOfLe (CompleteLattice.sup_le _ _ (by rintro _ ⟨j, rfl⟩; exact (s.ι.app j).le)) }
 #align category_theory.limits.complete_lattice.colimit_cocone CategoryTheory.Limits.CompleteLattice.colimitCocone
 
 -- It would be nice to only use the `Inf` half of the complete lattice, but
 -- this seems not to have been described separately.
 -- see Note [lower instance priority]
-instance (priority := 100) has_limits_of_complete_lattice : HasLimits α
+instance (priority := 100) hasLimits_of_completeLattice : HasLimits α
     where HasLimitsOfShape J 𝒥 := { HasLimit := fun F => has_limit.mk (limit_cone F) }
-#align category_theory.limits.complete_lattice.has_limits_of_complete_lattice CategoryTheory.Limits.CompleteLattice.has_limits_of_complete_lattice
+#align category_theory.limits.complete_lattice.has_limits_of_complete_lattice CategoryTheory.Limits.CompleteLattice.hasLimits_of_completeLattice
 
 -- see Note [lower instance priority]
-instance (priority := 100) has_colimits_of_complete_lattice : HasColimits α
+instance (priority := 100) hasColimits_of_completeLattice : HasColimits α
     where HasColimitsOfShape J 𝒥 := { HasColimit := fun F => has_colimit.mk (colimit_cocone F) }
-#align category_theory.limits.complete_lattice.has_colimits_of_complete_lattice CategoryTheory.Limits.CompleteLattice.has_colimits_of_complete_lattice
+#align category_theory.limits.complete_lattice.has_colimits_of_complete_lattice CategoryTheory.Limits.CompleteLattice.hasColimits_of_completeLattice
 
 /-- The limit of a functor into a complete lattice is the infimum of the objects in the image.
 -/
-theorem limit_eq_infi (F : J ⥤ α) : limit F = infᵢ F.obj :=
+theorem limit_eq_infᵢ (F : J ⥤ α) : limit F = infᵢ F.obj :=
   (IsLimit.conePointUniqueUpToIso (limit.isLimit F) (limitCone F).IsLimit).to_eq
-#align category_theory.limits.complete_lattice.limit_eq_infi CategoryTheory.Limits.CompleteLattice.limit_eq_infi
+#align category_theory.limits.complete_lattice.limit_eq_infi CategoryTheory.Limits.CompleteLattice.limit_eq_infᵢ
 
 /-- The colimit of a functor into a complete lattice is the supremum of the objects in the image.
 -/
-theorem colimit_eq_supr (F : J ⥤ α) : colimit F = supᵢ F.obj :=
+theorem colimit_eq_supᵢ (F : J ⥤ α) : colimit F = supᵢ F.obj :=
   (IsColimit.coconePointUniqueUpToIso (colimit.isColimit F) (colimitCocone F).IsColimit).to_eq
-#align category_theory.limits.complete_lattice.colimit_eq_supr CategoryTheory.Limits.CompleteLattice.colimit_eq_supr
+#align category_theory.limits.complete_lattice.colimit_eq_supr CategoryTheory.Limits.CompleteLattice.colimit_eq_supᵢ
 
 end CategoryTheory.Limits.CompleteLattice
 

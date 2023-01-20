@@ -59,26 +59,26 @@ def toSeminorm (f : E →ₗ[𝕜] 𝕜) : Seminorm 𝕜 E :=
   (normSeminorm 𝕜 𝕜).comp f
 #align linear_map.to_seminorm LinearMap.toSeminorm
 
-theorem coe_to_seminorm {f : E →ₗ[𝕜] 𝕜} : ⇑f.toSeminorm = fun x => ‖f x‖ :=
+theorem coe_toSeminorm {f : E →ₗ[𝕜] 𝕜} : ⇑f.toSeminorm = fun x => ‖f x‖ :=
   rfl
-#align linear_map.coe_to_seminorm LinearMap.coe_to_seminorm
+#align linear_map.coe_to_seminorm LinearMap.coe_toSeminorm
 
 @[simp]
-theorem to_seminorm_apply {f : E →ₗ[𝕜] 𝕜} {x : E} : f.toSeminorm x = ‖f x‖ :=
+theorem toSeminorm_apply {f : E →ₗ[𝕜] 𝕜} {x : E} : f.toSeminorm x = ‖f x‖ :=
   rfl
-#align linear_map.to_seminorm_apply LinearMap.to_seminorm_apply
+#align linear_map.to_seminorm_apply LinearMap.toSeminorm_apply
 
-theorem to_seminorm_ball_zero {f : E →ₗ[𝕜] 𝕜} {r : ℝ} :
+theorem toSeminorm_ball_zero {f : E →ₗ[𝕜] 𝕜} {r : ℝ} :
     Seminorm.ball f.toSeminorm 0 r = { x : E | ‖f x‖ < r } := by
   simp only [Seminorm.ball_zero_eq, to_seminorm_apply]
-#align linear_map.to_seminorm_ball_zero LinearMap.to_seminorm_ball_zero
+#align linear_map.to_seminorm_ball_zero LinearMap.toSeminorm_ball_zero
 
-theorem to_seminorm_comp (f : F →ₗ[𝕜] 𝕜) (g : E →ₗ[𝕜] F) :
+theorem toSeminorm_comp (f : F →ₗ[𝕜] 𝕜) (g : E →ₗ[𝕜] F) :
     f.toSeminorm.comp g = (f.comp g).toSeminorm :=
   by
   ext
   simp only [Seminorm.comp_apply, to_seminorm_apply, coe_comp]
-#align linear_map.to_seminorm_comp LinearMap.to_seminorm_comp
+#align linear_map.to_seminorm_comp LinearMap.toSeminorm_comp
 
 /-- Construct a family of seminorms from a bilinear form. -/
 def toSeminormFamily (B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜) : SeminormFamily 𝕜 E F := fun y =>
@@ -86,10 +86,9 @@ def toSeminormFamily (B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜) : SeminormFamily �
 #align linear_map.to_seminorm_family LinearMap.toSeminormFamily
 
 @[simp]
-theorem to_seminorm_family_apply {B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜} {x y} :
-    (B.toSeminormFamily y) x = ‖B x y‖ :=
+theorem toSeminormFamily_apply {B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜} {x y} : (B.toSeminormFamily y) x = ‖B x y‖ :=
   rfl
-#align linear_map.to_seminorm_family_apply LinearMap.to_seminorm_family_apply
+#align linear_map.to_seminorm_family_apply LinearMap.toSeminormFamily_apply
 
 end LinearMap
 
@@ -103,14 +102,14 @@ variable [Nonempty ι]
 
 variable {B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜}
 
-theorem LinearMap.has_basis_weak_bilin (B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜) :
+theorem LinearMap.hasBasis_weakBilin (B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜) :
     (𝓝 (0 : WeakBilin B)).HasBasis B.toSeminormFamily.basis_sets id :=
   by
   let p := B.to_seminorm_family
   rw [nhds_induced, nhds_pi]
   simp only [map_zero, LinearMap.zero_apply]
   have h := @Metric.nhds_basis_ball 𝕜 _ 0
-  have h' := Filter.has_basis_pi fun i : F => h
+  have h' := Filter.hasBasis_pi fun i : F => h
   have h'' := Filter.HasBasis.comap (fun x y => B x y) h'
   refine' h''.to_has_basis _ _
   · rintro (U : Set F × (F → ℝ)) hU
@@ -126,8 +125,8 @@ theorem LinearMap.has_basis_weak_bilin (B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜) 
           fun x hx y hy => _⟩
       simp only [Set.mem_preimage, Set.mem_pi, mem_ball_zero_iff]
       rw [Seminorm.mem_ball_zero] at hx
-      rw [← LinearMap.to_seminorm_family_apply]
-      have hyU' : y ∈ U' := (Set.Finite.mem_to_finset hU₁).mpr hy
+      rw [← LinearMap.toSeminormFamily_apply]
+      have hyU' : y ∈ U' := (Set.Finite.mem_toFinset hU₁).mpr hy
       have hp : p y ≤ U'.sup p := Finset.le_sup hyU'
       refine' lt_of_le_of_lt (hp x) (lt_of_lt_of_le hx _)
       exact Finset.inf'_le _ hyU'
@@ -135,16 +134,16 @@ theorem LinearMap.has_basis_weak_bilin (B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜) 
     simp only [Set.empty_pi, Set.preimage_univ, Set.subset_univ, and_true_iff]
     exact Exists.intro ((p 0).ball 0 1) (p.basis_sets_singleton_mem 0 one_pos)
   rintro U (hU : U ∈ p.basis_sets)
-  rw [SeminormFamily.basis_sets_iff] at hU
+  rw [SeminormFamily.basisSets_iff] at hU
   rcases hU with ⟨s, r, hr, hU⟩
   rw [hU]
   refine' ⟨(s, fun _ => r), ⟨by simp only [s.finite_to_set], fun y hy => hr⟩, fun x hx => _⟩
   simp only [Set.mem_preimage, Set.mem_pi, Finset.mem_coe, mem_ball_zero_iff] at hx
   simp only [id.def, Seminorm.mem_ball, sub_zero]
   refine' Seminorm.finset_sup_apply_lt hr fun y hy => _
-  rw [LinearMap.to_seminorm_family_apply]
+  rw [LinearMap.toSeminormFamily_apply]
   exact hx y hy
-#align linear_map.has_basis_weak_bilin LinearMap.has_basis_weak_bilin
+#align linear_map.has_basis_weak_bilin LinearMap.hasBasis_weakBilin
 
 theorem LinearMap.weakBilinWithSeminorms (B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜) :
     WithSeminorms (LinearMap.toSeminormFamily B : F → Seminorm 𝕜 (WeakBilin B)) :=

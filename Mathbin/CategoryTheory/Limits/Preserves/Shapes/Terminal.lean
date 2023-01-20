@@ -82,12 +82,12 @@ Note this property is somewhat unique to (co)limits of the empty diagram: for ge
 has limits of shape `J` and `G` preserves them, then `D` does not necessarily have limits of shape
 `J`.
 -/
-theorem has_terminal_of_has_terminal_of_preserves_limit [PreservesLimit (Functor.empty.{0} C) G] :
+theorem hasTerminal_of_hasTerminal_of_preservesLimit [PreservesLimit (Functor.empty.{0} C) G] :
     HasTerminal D :=
   ⟨fun F => by
     haveI := has_limit.mk ⟨_, is_limit_of_has_terminal_of_preserves_limit G⟩
     apply has_limit_of_iso F.unique_from_empty.symm⟩
-#align category_theory.limits.has_terminal_of_has_terminal_of_preserves_limit CategoryTheory.Limits.has_terminal_of_has_terminal_of_preserves_limit
+#align category_theory.limits.has_terminal_of_has_terminal_of_preserves_limit CategoryTheory.Limits.hasTerminal_of_hasTerminal_of_preservesLimit
 
 variable [HasTerminal D]
 
@@ -179,12 +179,12 @@ Note this property is somewhat unique to colimits of the empty diagram: for gene
 has colimits of shape `J` and `G` preserves them, then `D` does not necessarily have colimits of
 shape `J`.
 -/
-theorem has_initial_of_has_initial_of_preserves_colimit [PreservesColimit (Functor.empty.{0} C) G] :
+theorem hasInitial_of_hasInitial_of_preservesColimit [PreservesColimit (Functor.empty.{0} C) G] :
     HasInitial D :=
   ⟨fun F => by
     haveI := has_colimit.mk ⟨_, is_colimit_of_has_initial_of_preserves_colimit G⟩
     apply has_colimit_of_iso F.unique_from_empty⟩
-#align category_theory.limits.has_initial_of_has_initial_of_preserves_colimit CategoryTheory.Limits.has_initial_of_has_initial_of_preserves_colimit
+#align category_theory.limits.has_initial_of_has_initial_of_preserves_colimit CategoryTheory.Limits.hasInitial_of_hasInitial_of_preservesColimit
 
 variable [HasInitial D]
 

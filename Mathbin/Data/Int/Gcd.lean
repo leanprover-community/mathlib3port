@@ -104,14 +104,16 @@ theorem gcdB_zero_left {s : ℕ} : gcdB 0 s = 1 :=
 #align nat.gcd_b_zero_left Nat.gcdB_zero_left
 -/
 
+#print Nat.gcdA_zero_right /-
 @[simp]
-theorem gcd_a_zero_right {s : ℕ} (h : s ≠ 0) : gcdA s 0 = 1 :=
+theorem gcdA_zero_right {s : ℕ} (h : s ≠ 0) : gcdA s 0 = 1 :=
   by
   unfold gcd_a xgcd
   induction s
   · exact absurd rfl h
   · simp [xgcd_aux]
-#align nat.gcd_a_zero_right Nat.gcd_a_zero_right
+#align nat.gcd_a_zero_right Nat.gcdA_zero_right
+-/
 
 #print Nat.gcdB_zero_right /-
 @[simp]

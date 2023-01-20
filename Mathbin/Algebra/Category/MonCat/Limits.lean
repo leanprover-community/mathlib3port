@@ -125,10 +125,10 @@ instance hasLimitsOfSize : HasLimitsOfSize.{v} MonCat.{max v u}
 #align AddMon.has_limits_of_size AddMonCat.has_limits_of_size
 
 @[to_additive]
-instance has_limits : HasLimits MonCat.{u} :=
+instance hasLimits : HasLimits MonCat.{u} :=
   MonCat.hasLimitsOfSize.{u, u}
-#align Mon.has_limits MonCat.has_limits
-#align AddMon.has_limits AddMonCat.has_limits
+#align Mon.has_limits MonCat.hasLimits
+#align AddMon.has_limits AddMonCat.hasLimits
 
 /-- The forgetful functor from monoids to types preserves all limits.
 
@@ -222,10 +222,10 @@ instance hasLimitsOfSize : HasLimitsOfSize.{v, v} CommMonCat.{max v u}
 #align AddCommMon.has_limits_of_size AddCommMonCat.has_limits_of_size
 
 @[to_additive]
-instance has_limits : HasLimits CommMonCat.{u} :=
+instance hasLimits : HasLimits CommMonCat.{u} :=
   CommMonCat.hasLimitsOfSize.{u, u}
-#align CommMon.has_limits CommMonCat.has_limits
-#align AddCommMon.has_limits AddCommMonCat.has_limits
+#align CommMon.has_limits CommMonCat.hasLimits
+#align AddCommMon.has_limits AddCommMonCat.hasLimits
 
 /-- The forgetful functor from commutative monoids to monoids preserves all limits.
 

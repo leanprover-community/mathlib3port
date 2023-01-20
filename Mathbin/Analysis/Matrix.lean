@@ -120,18 +120,18 @@ theorem norm_transpose (A : Matrix m n α) : ‖Aᵀ‖ = ‖A‖ :=
 #align matrix.norm_transpose Matrix.norm_transpose
 
 @[simp]
-theorem nnnorm_conj_transpose [StarAddMonoid α] [NormedStarGroup α] (A : Matrix m n α) :
+theorem nnnorm_conjTranspose [StarAddMonoid α] [NormedStarGroup α] (A : Matrix m n α) :
     ‖Aᴴ‖₊ = ‖A‖₊ :=
   (nnnorm_map_eq _ _ nnnorm_star).trans A.nnnorm_transpose
-#align matrix.nnnorm_conj_transpose Matrix.nnnorm_conj_transpose
+#align matrix.nnnorm_conj_transpose Matrix.nnnorm_conjTranspose
 
 @[simp]
-theorem norm_conj_transpose [StarAddMonoid α] [NormedStarGroup α] (A : Matrix m n α) : ‖Aᴴ‖ = ‖A‖ :=
-  congr_arg coe <| nnnorm_conj_transpose A
-#align matrix.norm_conj_transpose Matrix.norm_conj_transpose
+theorem norm_conjTranspose [StarAddMonoid α] [NormedStarGroup α] (A : Matrix m n α) : ‖Aᴴ‖ = ‖A‖ :=
+  congr_arg coe <| nnnorm_conjTranspose A
+#align matrix.norm_conj_transpose Matrix.norm_conjTranspose
 
 instance [StarAddMonoid α] [NormedStarGroup α] : NormedStarGroup (Matrix m m α) :=
-  ⟨norm_conj_transpose⟩
+  ⟨norm_conjTranspose⟩
 
 @[simp]
 theorem nnnorm_col (v : m → α) : ‖col v‖₊ = ‖v‖₊ := by simp [Pi.nnnorm_def]
@@ -318,15 +318,15 @@ theorem linfty_op_norm_mul (A : Matrix l m α) (B : Matrix m n α) : ‖A ⬝ B�
   linfty_op_nnnorm_mul _ _
 #align matrix.linfty_op_norm_mul Matrix.linfty_op_norm_mul
 
-theorem linfty_op_nnnorm_mul_vec (A : Matrix l m α) (v : m → α) : ‖A.mulVec v‖₊ ≤ ‖A‖₊ * ‖v‖₊ :=
+theorem linfty_op_nnnorm_mulVec (A : Matrix l m α) (v : m → α) : ‖A.mulVec v‖₊ ≤ ‖A‖₊ * ‖v‖₊ :=
   by
   rw [← linfty_op_nnnorm_col (A.mul_vec v), ← linfty_op_nnnorm_col v]
   exact linfty_op_nnnorm_mul A (col v)
-#align matrix.linfty_op_nnnorm_mul_vec Matrix.linfty_op_nnnorm_mul_vec
+#align matrix.linfty_op_nnnorm_mul_vec Matrix.linfty_op_nnnorm_mulVec
 
-theorem linfty_op_norm_mul_vec (A : Matrix l m α) (v : m → α) : ‖Matrix.mulVec A v‖ ≤ ‖A‖ * ‖v‖ :=
-  linfty_op_nnnorm_mul_vec _ _
-#align matrix.linfty_op_norm_mul_vec Matrix.linfty_op_norm_mul_vec
+theorem linfty_op_norm_mulVec (A : Matrix l m α) (v : m → α) : ‖Matrix.mulVec A v‖ ≤ ‖A‖ * ‖v‖ :=
+  linfty_op_nnnorm_mulVec _ _
+#align matrix.linfty_op_norm_mul_vec Matrix.linfty_op_norm_mulVec
 
 end NonUnitalSemiNormedRing
 
@@ -342,9 +342,9 @@ protected def linftyOpNonUnitalSemiNormedRing [NonUnitalSemiNormedRing α] :
 
 /-- The `L₁-L∞` norm preserves one on non-empty matrices. Note this is safe as an instance, as it
 carries no data. -/
-instance linfty_op_norm_one_class [SemiNormedRing α] [NormOneClass α] [DecidableEq n] [Nonempty n] :
+instance linfty_op_normOneClass [SemiNormedRing α] [NormOneClass α] [DecidableEq n] [Nonempty n] :
     NormOneClass (Matrix n n α) where norm_one := (linfty_op_norm_diagonal _).trans norm_one
-#align matrix.linfty_op_norm_one_class Matrix.linfty_op_norm_one_class
+#align matrix.linfty_op_norm_one_class Matrix.linfty_op_normOneClass
 
 /-- Seminormed ring instance (using sup norm of L1 norm) for matrices over a semi normed ring.  Not
 declared as an instance because there are several natural choices for defining the norm of a
@@ -460,21 +460,21 @@ theorem frobenius_norm_transpose (A : Matrix m n α) : ‖Aᵀ‖ = ‖A‖ :=
 #align matrix.frobenius_norm_transpose Matrix.frobenius_norm_transpose
 
 @[simp]
-theorem frobenius_nnnorm_conj_transpose [StarAddMonoid α] [NormedStarGroup α] (A : Matrix m n α) :
+theorem frobenius_nnnorm_conjTranspose [StarAddMonoid α] [NormedStarGroup α] (A : Matrix m n α) :
     ‖Aᴴ‖₊ = ‖A‖₊ :=
   (frobenius_nnnorm_map_eq _ _ nnnorm_star).trans A.frobenius_nnnorm_transpose
-#align matrix.frobenius_nnnorm_conj_transpose Matrix.frobenius_nnnorm_conj_transpose
+#align matrix.frobenius_nnnorm_conj_transpose Matrix.frobenius_nnnorm_conjTranspose
 
 @[simp]
-theorem frobenius_norm_conj_transpose [StarAddMonoid α] [NormedStarGroup α] (A : Matrix m n α) :
+theorem frobenius_norm_conjTranspose [StarAddMonoid α] [NormedStarGroup α] (A : Matrix m n α) :
     ‖Aᴴ‖ = ‖A‖ :=
-  congr_arg coe <| frobenius_nnnorm_conj_transpose A
-#align matrix.frobenius_norm_conj_transpose Matrix.frobenius_norm_conj_transpose
+  congr_arg coe <| frobenius_nnnorm_conjTranspose A
+#align matrix.frobenius_norm_conj_transpose Matrix.frobenius_norm_conjTranspose
 
-instance frobenius_normed_star_group [StarAddMonoid α] [NormedStarGroup α] :
+instance frobenius_normedStarGroup [StarAddMonoid α] [NormedStarGroup α] :
     NormedStarGroup (Matrix m m α) :=
-  ⟨frobenius_norm_conj_transpose⟩
-#align matrix.frobenius_normed_star_group Matrix.frobenius_normed_star_group
+  ⟨frobenius_norm_conjTranspose⟩
+#align matrix.frobenius_normed_star_group Matrix.frobenius_normedStarGroup
 
 @[simp]
 theorem frobenius_norm_row (v : m → α) : ‖row v‖ = ‖(PiLp.equiv 2 _).symm v‖ :=
@@ -511,7 +511,7 @@ theorem frobenius_nnnorm_diagonal [DecidableEq n] (v : n → α) :
   · rw [Finset.sum_map, Nnreal.sqrt_eq_rpow]
     dsimp
     simp_rw [diagonal_apply_eq, Nnreal.rpow_two]
-  · suffices i.1 ≠ i.2 by rw [diagonal_apply_ne _ this, nnnorm_zero, Nnreal.zero_rpow two_ne_zero]
+  · suffices i.1 ≠ i.2 by rw [diagonal_apply_ne _ this, nnnorm_zero, Nnreal.zero_rpow two_neZero]
     intro h
     exact finset.mem_map.not.mp his ⟨i.1, Finset.mem_univ _, Prod.ext rfl h⟩
 #align matrix.frobenius_nnnorm_diagonal Matrix.frobenius_nnnorm_diagonal
@@ -529,7 +529,7 @@ theorem frobenius_nnnorm_one [DecidableEq n] [SeminormedAddCommGroup α] [One α
   by
   refine' (frobenius_nnnorm_diagonal _).trans _
   simp_rw [PiLp.nnnorm_equiv_symm_const Ennreal.two_ne_top, Nnreal.sqrt_eq_rpow]
-  simp only [Ennreal.to_real_div, Ennreal.one_to_real, Ennreal.to_real_bit0]
+  simp only [Ennreal.toReal_div, Ennreal.one_toReal, Ennreal.toReal_bit0]
 #align matrix.frobenius_nnnorm_one Matrix.frobenius_nnnorm_one
 
 section IsROrC
@@ -542,8 +542,8 @@ theorem frobenius_nnnorm_mul (A : Matrix l m α) (B : Matrix m n α) : ‖A ⬝ 
   rw [← Nnreal.mul_rpow, @Finset.sum_comm _ n m, Finset.sum_mul_sum, Finset.sum_product]
   refine' Nnreal.rpow_le_rpow _ one_half_pos.le
   refine' Finset.sum_le_sum fun i hi => Finset.sum_le_sum fun j hj => _
-  rw [← Nnreal.rpow_le_rpow_iff one_half_pos, ← Nnreal.rpow_mul,
-    mul_div_cancel' (1 : ℝ) two_ne_zero, Nnreal.rpow_one, Nnreal.mul_rpow]
+  rw [← Nnreal.rpow_le_rpow_iff one_half_pos, ← Nnreal.rpow_mul, mul_div_cancel' (1 : ℝ) two_neZero,
+    Nnreal.rpow_one, Nnreal.mul_rpow]
   dsimp only
   have :=
     @nnnorm_inner_le_nnnorm α _ _ _ ((PiLp.equiv 2 fun i => α).symm fun j => star (A i j))

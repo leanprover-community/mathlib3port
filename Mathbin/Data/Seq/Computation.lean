@@ -323,9 +323,9 @@ theorem mem_unique {s : Computation α} {a b : α} : a ∈ s → b ∈ s → a =
       (le_stable s (le_max_left m n) ha.symm).symm.trans (le_stable s (le_max_right m n) hb.symm)
 #align computation.mem_unique Computation.mem_unique
 
-theorem Mem.left_unique : Relator.LeftUnique ((· ∈ ·) : α → Computation α → Prop) := fun a s b =>
+theorem Mem.leftUnique : Relator.LeftUnique ((· ∈ ·) : α → Computation α → Prop) := fun a s b =>
   mem_unique
-#align computation.mem.left_unique Computation.Mem.left_unique
+#align computation.mem.left_unique Computation.Mem.leftUnique
 
 /-- `terminates s` asserts that the computation `s` eventually terminates with some value. -/
 class Terminates (s : Computation α) : Prop where
@@ -649,9 +649,9 @@ def bind (c : Computation α) (f : α → Computation β) : Computation β :=
 instance : Bind Computation :=
   ⟨@bind⟩
 
-theorem has_bind_eq_bind {β} (c : Computation α) (f : α → Computation β) : c >>= f = bind c f :=
+theorem hasBind_eq_bind {β} (c : Computation α) (f : α → Computation β) : c >>= f = bind c f :=
   rfl
-#align computation.has_bind_eq_bind Computation.has_bind_eq_bind
+#align computation.has_bind_eq_bind Computation.hasBind_eq_bind
 
 /-- Flatten a computation of computations into a single computation. -/
 def join (c : Computation (Computation α)) : Computation α :=
@@ -1055,7 +1055,7 @@ theorem LiftRel.imp {R S : α → β → Prop} (H : ∀ {a b}, R a b → S a b) 
       ⟨a, as, H ab⟩⟩
 #align computation.lift_rel.imp Computation.LiftRel.imp
 
-theorem terminates_of_lift_rel {R : α → β → Prop} {s t} :
+theorem terminates_of_liftRel {R : α → β → Prop} {s t} :
     LiftRel R s t → (Terminates s ↔ Terminates t)
   | ⟨l, r⟩ =>
     ⟨fun ⟨⟨a, as⟩⟩ =>
@@ -1064,35 +1064,35 @@ theorem terminates_of_lift_rel {R : α → β → Prop} {s t} :
       fun ⟨⟨b, bt⟩⟩ =>
       let ⟨a, as, ab⟩ := r bt
       ⟨⟨a, as⟩⟩⟩
-#align computation.terminates_of_lift_rel Computation.terminates_of_lift_rel
+#align computation.terminates_of_lift_rel Computation.terminates_of_liftRel
 
-theorem rel_of_lift_rel {R : α → β → Prop} {ca cb} :
+theorem rel_of_liftRel {R : α → β → Prop} {ca cb} :
     LiftRel R ca cb → ∀ {a b}, a ∈ ca → b ∈ cb → R a b
   | ⟨l, r⟩, a, b, ma, mb => by
     let ⟨b', mb', ab'⟩ := l ma
     rw [mem_unique mb mb'] <;> exact ab'
-#align computation.rel_of_lift_rel Computation.rel_of_lift_rel
+#align computation.rel_of_lift_rel Computation.rel_of_liftRel
 
-theorem lift_rel_of_mem {R : α → β → Prop} {a b ca cb} (ma : a ∈ ca) (mb : b ∈ cb) (ab : R a b) :
+theorem liftRel_of_mem {R : α → β → Prop} {a b ca cb} (ma : a ∈ ca) (mb : b ∈ cb) (ab : R a b) :
     LiftRel R ca cb :=
   ⟨fun a' ma' => by rw [mem_unique ma' ma] <;> exact ⟨b, mb, ab⟩, fun b' mb' => by
     rw [mem_unique mb' mb] <;> exact ⟨a, ma, ab⟩⟩
-#align computation.lift_rel_of_mem Computation.lift_rel_of_mem
+#align computation.lift_rel_of_mem Computation.liftRel_of_mem
 
-theorem exists_of_lift_rel_left {R : α → β → Prop} {ca cb} (H : LiftRel R ca cb) {a} (h : a ∈ ca) :
+theorem exists_of_liftRel_left {R : α → β → Prop} {ca cb} (H : LiftRel R ca cb) {a} (h : a ∈ ca) :
     ∃ b, b ∈ cb ∧ R a b :=
   H.left h
-#align computation.exists_of_lift_rel_left Computation.exists_of_lift_rel_left
+#align computation.exists_of_lift_rel_left Computation.exists_of_liftRel_left
 
-theorem exists_of_lift_rel_right {R : α → β → Prop} {ca cb} (H : LiftRel R ca cb) {b} (h : b ∈ cb) :
+theorem exists_of_liftRel_right {R : α → β → Prop} {ca cb} (H : LiftRel R ca cb) {b} (h : b ∈ cb) :
     ∃ a, a ∈ ca ∧ R a b :=
   H.right h
-#align computation.exists_of_lift_rel_right Computation.exists_of_lift_rel_right
+#align computation.exists_of_lift_rel_right Computation.exists_of_liftRel_right
 
-theorem lift_rel_def {R : α → β → Prop} {ca cb} :
+theorem liftRel_def {R : α → β → Prop} {ca cb} :
     LiftRel R ca cb ↔ (Terminates ca ↔ Terminates cb) ∧ ∀ {a b}, a ∈ ca → b ∈ cb → R a b :=
   ⟨fun h =>
-    ⟨terminates_of_lift_rel h, fun a b ma mb =>
+    ⟨terminates_of_liftRel h, fun a b ma mb =>
       by
       let ⟨b', mb', ab⟩ := h.left ma
       rwa [mem_unique mb mb']⟩,
@@ -1103,9 +1103,9 @@ theorem lift_rel_def {R : α → β → Prop} {ca cb} :
       fun b mb =>
       let ⟨⟨a, ma⟩⟩ := l.2 ⟨⟨_, mb⟩⟩
       ⟨a, ma, r ma mb⟩⟩⟩
-#align computation.lift_rel_def Computation.lift_rel_def
+#align computation.lift_rel_def Computation.liftRel_def
 
-theorem lift_rel_bind {δ} (R : α → β → Prop) (S : γ → δ → Prop) {s1 : Computation α}
+theorem liftRel_bind {δ} (R : α → β → Prop) (S : γ → δ → Prop) {s1 : Computation α}
     {s2 : Computation β} {f1 : α → Computation γ} {f2 : β → Computation δ} (h1 : LiftRel R s1 s2)
     (h2 : ∀ {a b}, R a b → LiftRel S (f1 a) (f2 b)) : LiftRel S (bind s1 f1) (bind s2 f2) :=
   let ⟨l1, r1⟩ := h1
@@ -1121,59 +1121,59 @@ theorem lift_rel_bind {δ} (R : α → β → Prop) (S : γ → δ → Prop) {s1
     let ⟨l2, r2⟩ := h2 ab
     let ⟨c, c₂, cd⟩ := r2 d1
     ⟨_, mem_bind a2 c₂, cd⟩⟩
-#align computation.lift_rel_bind Computation.lift_rel_bind
+#align computation.lift_rel_bind Computation.liftRel_bind
 
 @[simp]
-theorem lift_rel_return_left (R : α → β → Prop) (a : α) (cb : Computation β) :
+theorem liftRel_return_left (R : α → β → Prop) (a : α) (cb : Computation β) :
     LiftRel R (return a) cb ↔ ∃ b, b ∈ cb ∧ R a b :=
   ⟨fun ⟨l, r⟩ => l (ret_mem _), fun ⟨b, mb, ab⟩ =>
     ⟨fun a' ma' => by rw [eq_of_ret_mem ma'] <;> exact ⟨b, mb, ab⟩, fun b' mb' =>
       ⟨_, ret_mem _, by rw [mem_unique mb' mb] <;> exact ab⟩⟩⟩
-#align computation.lift_rel_return_left Computation.lift_rel_return_left
+#align computation.lift_rel_return_left Computation.liftRel_return_left
 
 @[simp]
-theorem lift_rel_return_right (R : α → β → Prop) (ca : Computation α) (b : β) :
+theorem liftRel_return_right (R : α → β → Prop) (ca : Computation α) (b : β) :
     LiftRel R ca (return b) ↔ ∃ a, a ∈ ca ∧ R a b := by rw [lift_rel.swap, lift_rel_return_left]
-#align computation.lift_rel_return_right Computation.lift_rel_return_right
+#align computation.lift_rel_return_right Computation.liftRel_return_right
 
 @[simp]
-theorem lift_rel_return (R : α → β → Prop) (a : α) (b : β) :
+theorem liftRel_return (R : α → β → Prop) (a : α) (b : β) :
     LiftRel R (return a) (return b) ↔ R a b := by
   rw [lift_rel_return_left] <;>
     exact ⟨fun ⟨b', mb', ab'⟩ => by rwa [eq_of_ret_mem mb'] at ab', fun ab => ⟨_, ret_mem _, ab⟩⟩
-#align computation.lift_rel_return Computation.lift_rel_return
+#align computation.lift_rel_return Computation.liftRel_return
 
 @[simp]
-theorem lift_rel_think_left (R : α → β → Prop) (ca : Computation α) (cb : Computation β) :
+theorem liftRel_think_left (R : α → β → Prop) (ca : Computation α) (cb : Computation β) :
     LiftRel R (think ca) cb ↔ LiftRel R ca cb :=
   and_congr (forall_congr' fun b => imp_congr ⟨of_think_mem, think_mem⟩ Iff.rfl)
     (forall_congr' fun b =>
       imp_congr Iff.rfl <| exists_congr fun b => and_congr ⟨of_think_mem, think_mem⟩ Iff.rfl)
-#align computation.lift_rel_think_left Computation.lift_rel_think_left
+#align computation.lift_rel_think_left Computation.liftRel_think_left
 
 @[simp]
-theorem lift_rel_think_right (R : α → β → Prop) (ca : Computation α) (cb : Computation β) :
+theorem liftRel_think_right (R : α → β → Prop) (ca : Computation α) (cb : Computation β) :
     LiftRel R ca (think cb) ↔ LiftRel R ca cb := by
   rw [← lift_rel.swap R, ← lift_rel.swap R] <;> apply lift_rel_think_left
-#align computation.lift_rel_think_right Computation.lift_rel_think_right
+#align computation.lift_rel_think_right Computation.liftRel_think_right
 
-theorem lift_rel_mem_cases {R : α → β → Prop} {ca cb} (Ha : ∀ a ∈ ca, LiftRel R ca cb)
+theorem liftRel_mem_cases {R : α → β → Prop} {ca cb} (Ha : ∀ a ∈ ca, LiftRel R ca cb)
     (Hb : ∀ b ∈ cb, LiftRel R ca cb) : LiftRel R ca cb :=
   ⟨fun a ma => (Ha _ ma).left ma, fun b mb => (Hb _ mb).right mb⟩
-#align computation.lift_rel_mem_cases Computation.lift_rel_mem_cases
+#align computation.lift_rel_mem_cases Computation.liftRel_mem_cases
 
-theorem lift_rel_congr {R : α → β → Prop} {ca ca' : Computation α} {cb cb' : Computation β}
+theorem liftRel_congr {R : α → β → Prop} {ca ca' : Computation α} {cb cb' : Computation β}
     (ha : ca ~ ca') (hb : cb ~ cb') : LiftRel R ca cb ↔ LiftRel R ca' cb' :=
   and_congr
     (forall_congr' fun a => imp_congr (ha _) <| exists_congr fun b => and_congr (hb _) Iff.rfl)
     (forall_congr' fun b => imp_congr (hb _) <| exists_congr fun a => and_congr (ha _) Iff.rfl)
-#align computation.lift_rel_congr Computation.lift_rel_congr
+#align computation.lift_rel_congr Computation.liftRel_congr
 
-theorem lift_rel_map {δ} (R : α → β → Prop) (S : γ → δ → Prop) {s1 : Computation α}
+theorem liftRel_map {δ} (R : α → β → Prop) (S : γ → δ → Prop) {s1 : Computation α}
     {s2 : Computation β} {f1 : α → γ} {f2 : β → δ} (h1 : LiftRel R s1 s2)
     (h2 : ∀ {a b}, R a b → S (f1 a) (f2 b)) : LiftRel S (map f1 s1) (map f2 s2) := by
   rw [← bind_ret, ← bind_ret] <;> apply lift_rel_bind _ _ h1 <;> simp <;> exact @h2
-#align computation.lift_rel_map Computation.lift_rel_map
+#align computation.lift_rel_map Computation.liftRel_map
 
 theorem map_congr (R : α → α → Prop) (S : β → β → Prop) {s1 s2 : Computation α} {f : α → β}
     (h1 : s1 ~ s2) : map f s1 ~ map f s2 := by
@@ -1227,14 +1227,14 @@ theorem LiftRelRec.lem {R : α → β → Prop} (C : Computation α → Computat
     exact IH _ h
 #align computation.lift_rel_rec.lem Computation.LiftRelRec.lem
 
-theorem lift_rel_rec {R : α → β → Prop} (C : Computation α → Computation β → Prop)
+theorem liftRel_rec {R : α → β → Prop} (C : Computation α → Computation β → Prop)
     (H : ∀ {ca cb}, C ca cb → LiftRelAux R C (destruct ca) (destruct cb)) (ca cb) (Hc : C ca cb) :
     LiftRel R ca cb :=
-  lift_rel_mem_cases (LiftRelRec.lem C (@H) ca cb Hc) fun b hb =>
+  liftRel_mem_cases (LiftRelRec.lem C (@H) ca cb Hc) fun b hb =>
     (LiftRel.swap _ _ _).2 <|
       LiftRelRec.lem (swap C) (fun cb ca h => cast (LiftRelAux.swap _ _ _ _).symm <| H h) cb ca Hc b
         hb
-#align computation.lift_rel_rec Computation.lift_rel_rec
+#align computation.lift_rel_rec Computation.liftRel_rec
 
 end Computation
 

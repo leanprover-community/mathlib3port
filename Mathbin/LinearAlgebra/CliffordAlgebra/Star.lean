@@ -65,10 +65,10 @@ theorem star_smul (r : R) (x : CliffordAlgebra Q) : star (r • x) = r • star 
 #align clifford_algebra.star_smul CliffordAlgebra.star_smul
 
 @[simp]
-theorem star_algebra_map (r : R) :
+theorem star_algebraMap (r : R) :
     star (algebraMap R (CliffordAlgebra Q) r) = algebraMap R (CliffordAlgebra Q) r := by
   rw [star_def, involute.commutes, reverse.commutes]
-#align clifford_algebra.star_algebra_map CliffordAlgebra.star_algebra_map
+#align clifford_algebra.star_algebra_map CliffordAlgebra.star_algebraMap
 
 end CliffordAlgebra
 

@@ -56,31 +56,31 @@ def pushoutCocone : Limits.PushoutCocone f g :=
 #align CommRing.pushout_cocone CommRingCat.pushoutCocone
 
 @[simp]
-theorem pushout_cocone_inl :
+theorem pushoutCocone_inl :
     (pushoutCocone f g).inl = by
       letI := f.to_algebra
       letI := g.to_algebra
       exact algebra.tensor_product.include_left.to_ring_hom :=
   rfl
-#align CommRing.pushout_cocone_inl CommRingCat.pushout_cocone_inl
+#align CommRing.pushout_cocone_inl CommRingCat.pushoutCocone_inl
 
 @[simp]
-theorem pushout_cocone_inr :
+theorem pushoutCocone_inr :
     (pushoutCocone f g).inr = by
       letI := f.to_algebra
       letI := g.to_algebra
       exact algebra.tensor_product.include_right.to_ring_hom :=
   rfl
-#align CommRing.pushout_cocone_inr CommRingCat.pushout_cocone_inr
+#align CommRing.pushout_cocone_inr CommRingCat.pushoutCocone_inr
 
 @[simp]
-theorem pushout_cocone_X :
+theorem pushoutCocone_x :
     (pushoutCocone f g).x = by
       letI := f.to_algebra
       letI := g.to_algebra
       exact CommRingCat.of (A ⊗[R] B) :=
   rfl
-#align CommRing.pushout_cocone_X CommRingCat.pushout_cocone_X
+#align CommRing.pushout_cocone_X CommRingCat.pushoutCocone_x
 
 /-- Verify that the `pushout_cocone` is indeed the colimit. -/
 def pushoutCoconeIsColimit : Limits.IsColimit (pushoutCocone f g) :=
@@ -107,10 +107,10 @@ def pushoutCoconeIsColimit : Limits.IsColimit (pushoutCocone f g) :=
     simp only [pushout_cocone_inl, pushout_cocone_inr]
     constructor
     · ext x
-      exact Algebra.TensorProduct.product_map_left_apply _ _ x
+      exact Algebra.TensorProduct.productMap_left_apply _ _ x
     constructor
     · ext x
-      exact Algebra.TensorProduct.product_map_right_apply _ _ x
+      exact Algebra.TensorProduct.productMap_right_apply _ _ x
     intro h eq1 eq2
     let h' : A ⊗[R] B →ₐ[R] s.X :=
       { h with
@@ -139,7 +139,7 @@ def punitIsTerminal : IsTerminal (CommRingCat.of.{u} PUnit) :=
   tidy
 #align CommRing.punit_is_terminal CommRingCat.punitIsTerminal
 
-instance CommRing_has_strict_terminal_objects : HasStrictTerminalObjects CommRingCat.{u} :=
+instance commRingCat_hasStrictTerminalObjects : HasStrictTerminalObjects CommRingCat.{u} :=
   by
   apply has_strict_terminal_objects_of_terminal_is_strict (CommRingCat.of PUnit)
   intro X f
@@ -151,12 +151,12 @@ instance CommRing_has_strict_terminal_objects : HasStrictTerminalObjects CommRin
   replace e : 0 * x = 1 * x := congr_arg (fun a => a * x) e
   rw [one_mul, zero_mul, ← f.map_zero] at e
   exact e
-#align CommRing.CommRing_has_strict_terminal_objects CommRingCat.CommRing_has_strict_terminal_objects
+#align CommRing.CommRing_has_strict_terminal_objects CommRingCat.commRingCat_hasStrictTerminalObjects
 
-theorem subsingleton_of_is_terminal {X : CommRingCat} (hX : IsTerminal X) : Subsingleton X :=
+theorem subsingleton_of_isTerminal {X : CommRingCat} (hX : IsTerminal X) : Subsingleton X :=
   (hX.uniqueUpToIso punitIsTerminal).commRingIsoToRingEquiv.toEquiv.subsingleton_congr.mpr
     (show Subsingleton PUnit by infer_instance)
-#align CommRing.subsingleton_of_is_terminal CommRingCat.subsingleton_of_is_terminal
+#align CommRing.subsingleton_of_is_terminal CommRingCat.subsingleton_of_isTerminal
 
 /-- `ℤ` is the initial object of `CommRing`. -/
 def zIsInitial : IsInitial (CommRingCat.of ℤ) :=
@@ -231,7 +231,7 @@ instance : IsLocalRingHom (equalizerFork f g).ι :=
   rw [isUnit_iff_exists_inv]
   exact ⟨⟨y, this⟩, Subtype.eq h₃⟩
 
-instance equalizer_ι_is_local_ring_hom (F : walking_parallel_pair ⥤ CommRingCat.{u}) :
+instance equalizer_ι_isLocalRingHom (F : walking_parallel_pair ⥤ CommRingCat.{u}) :
     IsLocalRingHom (limit.π F WalkingParallelPair.zero) :=
   by
   have := lim_map_π (diagram_iso_parallel_pair F).Hom walking_parallel_pair.zero
@@ -245,7 +245,7 @@ instance equalizer_ι_is_local_ring_hom (F : walking_parallel_pair ⥤ CommRingC
       walking_parallel_pair.zero]
   change IsLocalRingHom ((lim.map _ ≫ _ ≫ (equalizer_fork _ _).ι) ≫ _)
   infer_instance
-#align CommRing.equalizer_ι_is_local_ring_hom CommRingCat.equalizer_ι_is_local_ring_hom
+#align CommRing.equalizer_ι_is_local_ring_hom CommRingCat.equalizer_ι_isLocalRingHom
 
 open CategoryTheory.Limits.WalkingParallelPair Opposite
 

@@ -293,14 +293,14 @@ def Simps.apply (h : L₁ →ₗ⁅R⁆ L₂) : L₁ → L₂ :=
 initialize_simps_projections LieHom (to_linear_map_to_fun → apply)
 
 @[simp, norm_cast]
-theorem coe_to_linear_map (f : L₁ →ₗ⁅R⁆ L₂) : ((f : L₁ →ₗ[R] L₂) : L₁ → L₂) = f :=
+theorem coe_to_linearMap (f : L₁ →ₗ⁅R⁆ L₂) : ((f : L₁ →ₗ[R] L₂) : L₁ → L₂) = f :=
   rfl
-#align lie_hom.coe_to_linear_map LieHom.coe_to_linear_map
+#align lie_hom.coe_to_linear_map LieHom.coe_to_linearMap
 
 @[simp]
-theorem to_fun_eq_coe (f : L₁ →ₗ⁅R⁆ L₂) : f.toFun = ⇑f :=
+theorem toFun_eq_coe (f : L₁ →ₗ⁅R⁆ L₂) : f.toFun = ⇑f :=
   rfl
-#align lie_hom.to_fun_eq_coe LieHom.to_fun_eq_coe
+#align lie_hom.to_fun_eq_coe LieHom.toFun_eq_coe
 
 @[simp]
 theorem map_smul (f : L₁ →ₗ⁅R⁆ L₂) (c : R) (x : L₁) : f (c • x) = c • f x :=
@@ -424,10 +424,10 @@ theorem coe_comp (f : L₂ →ₗ⁅R⁆ L₃) (g : L₁ →ₗ⁅R⁆ L₂) : (
 #align lie_hom.coe_comp LieHom.coe_comp
 
 @[norm_cast, simp]
-theorem coe_linear_map_comp (f : L₂ →ₗ⁅R⁆ L₃) (g : L₁ →ₗ⁅R⁆ L₂) :
+theorem coe_linearMap_comp (f : L₂ →ₗ⁅R⁆ L₃) (g : L₁ →ₗ⁅R⁆ L₂) :
     (f.comp g : L₁ →ₗ[R] L₃) = (f : L₂ →ₗ[R] L₃).comp (g : L₁ →ₗ[R] L₂) :=
   rfl
-#align lie_hom.coe_linear_map_comp LieHom.coe_linear_map_comp
+#align lie_hom.coe_linear_map_comp LieHom.coe_linearMap_comp
 
 @[simp]
 theorem comp_id (f : L₁ →ₗ⁅R⁆ L₂) : f.comp (id : L₁ →ₗ⁅R⁆ L₁) = f :=
@@ -481,11 +481,11 @@ def LieRingModule.compLieHom : LieRingModule L₁ M
   leibniz_lie x y m := by simp only [lie_lie, sub_add_cancel, LieHom.map_lie]
 #align lie_ring_module.comp_lie_hom LieRingModule.compLieHom
 
-theorem LieRingModule.comp_lie_hom_apply (x : L₁) (m : M) :
+theorem LieRingModule.compLieHom_apply (x : L₁) (m : M) :
     haveI := LieRingModule.compLieHom M f
     ⁅x, m⁆ = ⁅f x, m⁆ :=
   rfl
-#align lie_ring_module.comp_lie_hom_apply LieRingModule.comp_lie_hom_apply
+#align lie_ring_module.comp_lie_hom_apply LieRingModule.compLieHom_apply
 
 /-- A Lie module may be pulled back along a morphism of Lie algebras.
 
@@ -541,33 +541,33 @@ instance : CoeFun (L₁ ≃ₗ⁅R⁆ L₂) fun _ => L₁ → L₂ :=
   ⟨fun e => e.toLieHom.toFun⟩
 
 @[simp, norm_cast]
-theorem coe_to_lie_hom (e : L₁ ≃ₗ⁅R⁆ L₂) : ((e : L₁ →ₗ⁅R⁆ L₂) : L₁ → L₂) = e :=
+theorem coe_to_lieHom (e : L₁ ≃ₗ⁅R⁆ L₂) : ((e : L₁ →ₗ⁅R⁆ L₂) : L₁ → L₂) = e :=
   rfl
-#align lie_equiv.coe_to_lie_hom LieEquiv.coe_to_lie_hom
+#align lie_equiv.coe_to_lie_hom LieEquiv.coe_to_lieHom
 
 @[simp, norm_cast]
-theorem coe_to_linear_equiv (e : L₁ ≃ₗ⁅R⁆ L₂) : ((e : L₁ ≃ₗ[R] L₂) : L₁ → L₂) = e :=
+theorem coe_to_linearEquiv (e : L₁ ≃ₗ⁅R⁆ L₂) : ((e : L₁ ≃ₗ[R] L₂) : L₁ → L₂) = e :=
   rfl
-#align lie_equiv.coe_to_linear_equiv LieEquiv.coe_to_linear_equiv
+#align lie_equiv.coe_to_linear_equiv LieEquiv.coe_to_linearEquiv
 
 @[simp]
-theorem to_linear_equiv_mk (f : L₁ →ₗ⁅R⁆ L₂) (g h₁ h₂) :
+theorem to_linearEquiv_mk (f : L₁ →ₗ⁅R⁆ L₂) (g h₁ h₂) :
     (mk f g h₁ h₂ : L₁ ≃ₗ[R] L₂) =
       { f with
         invFun := g
         left_inv := h₁
         right_inv := h₂ } :=
   rfl
-#align lie_equiv.to_linear_equiv_mk LieEquiv.to_linear_equiv_mk
+#align lie_equiv.to_linear_equiv_mk LieEquiv.to_linearEquiv_mk
 
-theorem coe_linear_equiv_injective : Injective (coe : (L₁ ≃ₗ⁅R⁆ L₂) → L₁ ≃ₗ[R] L₂) :=
+theorem coe_linearEquiv_injective : Injective (coe : (L₁ ≃ₗ⁅R⁆ L₂) → L₁ ≃ₗ[R] L₂) :=
   by
   intro f₁ f₂ h; cases f₁; cases f₂; dsimp at h; simp only at h
   congr ; exacts[LieHom.coe_injective h.1, h.2]
-#align lie_equiv.coe_linear_equiv_injective LieEquiv.coe_linear_equiv_injective
+#align lie_equiv.coe_linear_equiv_injective LieEquiv.coe_linearEquiv_injective
 
 theorem coe_injective : @Injective (L₁ ≃ₗ⁅R⁆ L₂) (L₁ → L₂) coeFn :=
-  LinearEquiv.coe_injective.comp coe_linear_equiv_injective
+  LinearEquiv.coe_injective.comp coe_linearEquiv_injective
 #align lie_equiv.coe_injective LieEquiv.coe_injective
 
 @[ext]
@@ -714,9 +714,9 @@ instance : CoeFun (M →ₗ⁅R,L⁆ N) fun _ => M → N :=
   ⟨fun f => f.toLinearMap.toFun⟩
 
 @[simp, norm_cast]
-theorem coe_to_linear_map (f : M →ₗ⁅R,L⁆ N) : ((f : M →ₗ[R] N) : M → N) = f :=
+theorem coe_to_linearMap (f : M →ₗ⁅R,L⁆ N) : ((f : M →ₗ[R] N) : M → N) = f :=
   rfl
-#align lie_module_hom.coe_to_linear_map LieModuleHom.coe_to_linear_map
+#align lie_module_hom.coe_to_linear_map LieModuleHom.coe_to_linearMap
 
 @[simp]
 theorem map_smul (f : M →ₗ⁅R,L⁆ N) (c : R) (x : M) : f (c • x) = c • f x :=
@@ -846,10 +846,10 @@ theorem coe_comp (f : N →ₗ⁅R,L⁆ P) (g : M →ₗ⁅R,L⁆ N) : (f.comp g
 #align lie_module_hom.coe_comp LieModuleHom.coe_comp
 
 @[norm_cast, simp]
-theorem coe_linear_map_comp (f : N →ₗ⁅R,L⁆ P) (g : M →ₗ⁅R,L⁆ N) :
+theorem coe_linearMap_comp (f : N →ₗ⁅R,L⁆ P) (g : M →ₗ⁅R,L⁆ N) :
     (f.comp g : M →ₗ[R] P) = (f : N →ₗ[R] P).comp (g : M →ₗ[R] N) :=
   rfl
-#align lie_module_hom.coe_linear_map_comp LieModuleHom.coe_linear_map_comp
+#align lie_module_hom.coe_linear_map_comp LieModuleHom.coe_linearMap_comp
 
 /-- The inverse of a bijective morphism of Lie modules is a morphism of Lie modules. -/
 def inverse (f : M →ₗ⁅R,L⁆ N) (g : N → M) (h₁ : Function.LeftInverse g f)
@@ -998,16 +998,16 @@ theorem coe_mk (f : M →ₗ⁅R,L⁆ N) (inv_fun h₁ h₂) :
 #align lie_module_equiv.coe_mk LieModuleEquiv.coe_mk
 
 @[simp, norm_cast]
-theorem coe_to_lie_module_hom (e : M ≃ₗ⁅R,L⁆ N) : ((e : M →ₗ⁅R,L⁆ N) : M → N) = e :=
+theorem coe_to_lieModuleHom (e : M ≃ₗ⁅R,L⁆ N) : ((e : M →ₗ⁅R,L⁆ N) : M → N) = e :=
   rfl
-#align lie_module_equiv.coe_to_lie_module_hom LieModuleEquiv.coe_to_lie_module_hom
+#align lie_module_equiv.coe_to_lie_module_hom LieModuleEquiv.coe_to_lieModuleHom
 
 @[simp, norm_cast]
-theorem coe_to_linear_equiv (e : M ≃ₗ⁅R,L⁆ N) : ((e : M ≃ₗ[R] N) : M → N) = e :=
+theorem coe_to_linearEquiv (e : M ≃ₗ⁅R,L⁆ N) : ((e : M ≃ₗ[R] N) : M → N) = e :=
   rfl
-#align lie_module_equiv.coe_to_linear_equiv LieModuleEquiv.coe_to_linear_equiv
+#align lie_module_equiv.coe_to_linear_equiv LieModuleEquiv.coe_to_linearEquiv
 
-theorem to_equiv_injective : Function.Injective (toEquiv : (M ≃ₗ⁅R,L⁆ N) → M ≃ N) := fun e₁ e₂ h =>
+theorem toEquiv_injective : Function.Injective (toEquiv : (M ≃ₗ⁅R,L⁆ N) → M ≃ N) := fun e₁ e₂ h =>
   by
   rcases e₁ with ⟨⟨⟩⟩; rcases e₂ with ⟨⟨⟩⟩
   have inj := Equiv.mk.inj h
@@ -1018,11 +1018,11 @@ theorem to_equiv_injective : Function.Injective (toEquiv : (M ≃ₗ⁅R,L⁆ N)
     ext
     rw [inj.1]
   · exact inj.2
-#align lie_module_equiv.to_equiv_injective LieModuleEquiv.to_equiv_injective
+#align lie_module_equiv.to_equiv_injective LieModuleEquiv.toEquiv_injective
 
 @[ext]
 theorem ext (e₁ e₂ : M ≃ₗ⁅R,L⁆ N) (h : ∀ m, e₁ m = e₂ m) : e₁ = e₂ :=
-  to_equiv_injective (Equiv.ext h)
+  toEquiv_injective (Equiv.ext h)
 #align lie_module_equiv.ext LieModuleEquiv.ext
 
 instance : One (M ≃ₗ⁅R,L⁆ M) :=

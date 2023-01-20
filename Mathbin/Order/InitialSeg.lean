@@ -72,14 +72,14 @@ instance : CoeFun (r ≼i s) fun _ => α → β :=
   ⟨fun f x => (f : r ↪r s) x⟩
 
 @[simp]
-theorem coe_fn_mk (f : r ↪r s) (o) : (@InitialSeg.mk _ _ r s f o : α → β) = f :=
+theorem coeFn_mk (f : r ↪r s) (o) : (@InitialSeg.mk _ _ r s f o : α → β) = f :=
   rfl
-#align initial_seg.coe_fn_mk InitialSeg.coe_fn_mk
+#align initial_seg.coe_fn_mk InitialSeg.coeFn_mk
 
 @[simp]
-theorem coe_fn_to_rel_embedding (f : r ≼i s) : (f.toRelEmbedding : α → β) = f :=
+theorem coeFn_toRelEmbedding (f : r ≼i s) : (f.toRelEmbedding : α → β) = f :=
   rfl
-#align initial_seg.coe_fn_to_rel_embedding InitialSeg.coe_fn_to_rel_embedding
+#align initial_seg.coe_fn_to_rel_embedding InitialSeg.coeFn_toRelEmbedding
 
 /- warning: initial_seg.coe_coe_fn -> InitialSeg.coe_coe_fn is a dubious translation:
 lean 3 declaration is
@@ -363,14 +363,14 @@ theorem coe_fn_mk (f : r ↪r s) (t o) : (@PrincipalSeg.mk _ _ r s f t o : α �
 #align principal_seg.coe_fn_mk PrincipalSeg.coe_fn_mk
 
 @[simp]
-theorem coe_fn_to_rel_embedding (f : r ≺i s) : (f.toRelEmbedding : α → β) = f :=
+theorem coeFn_toRelEmbedding (f : r ≺i s) : (f.toRelEmbedding : α → β) = f :=
   rfl
-#align principal_seg.coe_fn_to_rel_embedding PrincipalSeg.coe_fn_to_rel_embedding
+#align principal_seg.coe_fn_to_rel_embedding PrincipalSeg.coeFn_toRelEmbedding
 
 @[simp]
-theorem coe_coe_fn (f : r ≺i s) : ((f : r ↪r s) : α → β) = f :=
+theorem coe_coeFn (f : r ≺i s) : ((f : r ↪r s) : α → β) = f :=
   rfl
-#align principal_seg.coe_coe_fn PrincipalSeg.coe_coe_fn
+#align principal_seg.coe_coe_fn PrincipalSeg.coe_coeFn
 
 /- warning: principal_seg.down -> PrincipalSeg.down is a dubious translation:
 lean 3 declaration is
@@ -508,7 +508,7 @@ theorem trans_top [IsTrans γ t] (f : r ≺i s) (g : s ≺i t) : (f.trans g).top
 def equivLT (f : r ≃r s) (g : s ≺i t) : r ≺i t :=
   ⟨@RelEmbedding.trans _ _ _ r s t f g, g.top, fun c =>
     suffices (∃ a : β, g a = c) ↔ ∃ a : α, g (f a) = c by simpa [g.down]
-    ⟨fun ⟨b, h⟩ => ⟨f.symm b, by simp only [h, RelIso.apply_symm_apply, RelIso.coe_coe_fn]⟩,
+    ⟨fun ⟨b, h⟩ => ⟨f.symm b, by simp only [h, RelIso.apply_symm_apply, RelIso.coe_coeFn]⟩,
       fun ⟨a, h⟩ => ⟨f a, h⟩⟩⟩
 #align principal_seg.equiv_lt PrincipalSeg.equivLT
 -/

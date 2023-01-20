@@ -99,9 +99,9 @@ theorem coe_coe {F : Type _} [AlgHomClass F R A B] (f : F) : ⇑(f : A →ₐ[R]
 #align alg_hom.coe_coe AlgHom.coe_coe
 
 @[simp]
-theorem to_fun_eq_coe (f : A →ₐ[R] B) : f.toFun = f :=
+theorem toFun_eq_coe (f : A →ₐ[R] B) : f.toFun = f :=
   rfl
-#align alg_hom.to_fun_eq_coe AlgHom.to_fun_eq_coe
+#align alg_hom.to_fun_eq_coe AlgHom.toFun_eq_coe
 
 instance : AlgHomClass (A →ₐ[R] B) R A B
     where
@@ -135,46 +135,46 @@ theorem coe_mk {f : A → B} (h₁ h₂ h₃ h₄ h₅) : ⇑(⟨f, h₁, h₂, 
 
 -- make the coercion the simp-normal form
 @[simp]
-theorem to_ring_hom_eq_coe (f : A →ₐ[R] B) : f.toRingHom = f :=
+theorem toRingHom_eq_coe (f : A →ₐ[R] B) : f.toRingHom = f :=
   rfl
-#align alg_hom.to_ring_hom_eq_coe AlgHom.to_ring_hom_eq_coe
+#align alg_hom.to_ring_hom_eq_coe AlgHom.toRingHom_eq_coe
 
 @[simp, norm_cast]
-theorem coe_to_ring_hom (f : A →ₐ[R] B) : ⇑(f : A →+* B) = f :=
+theorem coe_to_ringHom (f : A →ₐ[R] B) : ⇑(f : A →+* B) = f :=
   rfl
-#align alg_hom.coe_to_ring_hom AlgHom.coe_to_ring_hom
+#align alg_hom.coe_to_ring_hom AlgHom.coe_to_ringHom
 
 @[simp, norm_cast]
-theorem coe_to_monoid_hom (f : A →ₐ[R] B) : ⇑(f : A →* B) = f :=
+theorem coe_to_monoidHom (f : A →ₐ[R] B) : ⇑(f : A →* B) = f :=
   rfl
-#align alg_hom.coe_to_monoid_hom AlgHom.coe_to_monoid_hom
+#align alg_hom.coe_to_monoid_hom AlgHom.coe_to_monoidHom
 
 @[simp, norm_cast]
-theorem coe_to_add_monoid_hom (f : A →ₐ[R] B) : ⇑(f : A →+ B) = f :=
+theorem coe_toAddMonoid_hom (f : A →ₐ[R] B) : ⇑(f : A →+ B) = f :=
   rfl
-#align alg_hom.coe_to_add_monoid_hom AlgHom.coe_to_add_monoid_hom
+#align alg_hom.coe_to_add_monoid_hom AlgHom.coe_toAddMonoid_hom
 
 variable (φ : A →ₐ[R] B)
 
-theorem coe_fn_injective : @Function.Injective (A →ₐ[R] B) (A → B) coeFn :=
+theorem coeFn_injective : @Function.Injective (A →ₐ[R] B) (A → B) coeFn :=
   FunLike.coe_injective
-#align alg_hom.coe_fn_injective AlgHom.coe_fn_injective
+#align alg_hom.coe_fn_injective AlgHom.coeFn_injective
 
-theorem coe_fn_inj {φ₁ φ₂ : A →ₐ[R] B} : (φ₁ : A → B) = φ₂ ↔ φ₁ = φ₂ :=
-  FunLike.coe_fn_eq
-#align alg_hom.coe_fn_inj AlgHom.coe_fn_inj
+theorem coeFn_inj {φ₁ φ₂ : A →ₐ[R] B} : (φ₁ : A → B) = φ₂ ↔ φ₁ = φ₂ :=
+  FunLike.coeFn_eq
+#align alg_hom.coe_fn_inj AlgHom.coeFn_inj
 
-theorem coe_ring_hom_injective : Function.Injective (coe : (A →ₐ[R] B) → A →+* B) := fun φ₁ φ₂ H =>
+theorem coe_ringHom_injective : Function.Injective (coe : (A →ₐ[R] B) → A →+* B) := fun φ₁ φ₂ H =>
   coe_fn_injective <| show ((φ₁ : A →+* B) : A → B) = ((φ₂ : A →+* B) : A → B) from congr_arg _ H
-#align alg_hom.coe_ring_hom_injective AlgHom.coe_ring_hom_injective
+#align alg_hom.coe_ring_hom_injective AlgHom.coe_ringHom_injective
 
-theorem coe_monoid_hom_injective : Function.Injective (coe : (A →ₐ[R] B) → A →* B) :=
-  RingHom.coe_monoidHom_injective.comp coe_ring_hom_injective
-#align alg_hom.coe_monoid_hom_injective AlgHom.coe_monoid_hom_injective
+theorem coe_monoidHom_injective : Function.Injective (coe : (A →ₐ[R] B) → A →* B) :=
+  RingHom.coe_monoidHom_injective.comp coe_ringHom_injective
+#align alg_hom.coe_monoid_hom_injective AlgHom.coe_monoidHom_injective
 
-theorem coe_add_monoid_hom_injective : Function.Injective (coe : (A →ₐ[R] B) → A →+ B) :=
-  RingHom.coe_addMonoidHom_injective.comp coe_ring_hom_injective
-#align alg_hom.coe_add_monoid_hom_injective AlgHom.coe_add_monoid_hom_injective
+theorem coe_addMonoidHom_injective : Function.Injective (coe : (A →ₐ[R] B) → A →+ B) :=
+  RingHom.coe_addMonoidHom_injective.comp coe_ringHom_injective
+#align alg_hom.coe_add_monoid_hom_injective AlgHom.coe_addMonoidHom_injective
 
 protected theorem congr_fun {φ₁ φ₂ : A →ₐ[R] B} (H : φ₁ = φ₂) (x : A) : φ₁ x = φ₂ x :=
   FunLike.congr_fun H x
@@ -203,9 +203,9 @@ theorem commutes (r : R) : φ (algebraMap R A r) = algebraMap R B r :=
   φ.commutes' r
 #align alg_hom.commutes AlgHom.commutes
 
-theorem comp_algebra_map : (φ : A →+* B).comp (algebraMap R A) = algebraMap R B :=
+theorem comp_algebraMap : (φ : A →+* B).comp (algebraMap R A) = algebraMap R B :=
   RingHom.ext <| φ.commutes
-#align alg_hom.comp_algebra_map AlgHom.comp_algebra_map
+#align alg_hom.comp_algebra_map AlgHom.comp_algebraMap
 
 protected theorem map_add (r s : A) : φ (r + s) = φ r + φ s :=
   map_add _ _ _
@@ -254,7 +254,7 @@ protected theorem map_bit1 (x) : φ (bit1 x) = bit1 (φ x) :=
 def mk' (f : A →+* B) (h : ∀ (c : R) (x), f (c • x) = c • f x) : A →ₐ[R] B :=
   { f with
     toFun := f
-    commutes' := fun c => by simp only [Algebra.algebra_map_eq_smul_one, h, f.map_one] }
+    commutes' := fun c => by simp only [Algebra.algebraMap_eq_smul_one, h, f.map_one] }
 #align alg_hom.mk' AlgHom.mk'
 
 @[simp]
@@ -277,9 +277,9 @@ theorem coe_id : ⇑(AlgHom.id R A) = id :=
 #align alg_hom.coe_id AlgHom.coe_id
 
 @[simp]
-theorem id_to_ring_hom : (AlgHom.id R A : A →+* A) = RingHom.id _ :=
+theorem id_to_ringHom : (AlgHom.id R A : A →+* A) = RingHom.id _ :=
   rfl
-#align alg_hom.id_to_ring_hom AlgHom.id_to_ring_hom
+#align alg_hom.id_to_ring_hom AlgHom.id_to_ringHom
 
 end
 
@@ -302,10 +302,10 @@ theorem comp_apply (φ₁ : B →ₐ[R] C) (φ₂ : A →ₐ[R] B) (p : A) : φ�
   rfl
 #align alg_hom.comp_apply AlgHom.comp_apply
 
-theorem comp_to_ring_hom (φ₁ : B →ₐ[R] C) (φ₂ : A →ₐ[R] B) :
+theorem comp_to_ringHom (φ₁ : B →ₐ[R] C) (φ₂ : A →ₐ[R] B) :
     (φ₁.comp φ₂ : A →+* C) = (φ₁ : B →+* C).comp ↑φ₂ :=
   rfl
-#align alg_hom.comp_to_ring_hom AlgHom.comp_to_ring_hom
+#align alg_hom.comp_to_ring_hom AlgHom.comp_to_ringHom
 
 @[simp]
 theorem comp_id : φ.comp (AlgHom.id R A) = φ :=
@@ -330,24 +330,24 @@ def toLinearMap : A →ₗ[R] B where
 #align alg_hom.to_linear_map AlgHom.toLinearMap
 
 @[simp]
-theorem to_linear_map_apply (p : A) : φ.toLinearMap p = φ p :=
+theorem toLinearMap_apply (p : A) : φ.toLinearMap p = φ p :=
   rfl
-#align alg_hom.to_linear_map_apply AlgHom.to_linear_map_apply
+#align alg_hom.to_linear_map_apply AlgHom.toLinearMap_apply
 
-theorem to_linear_map_injective : Function.Injective (toLinearMap : _ → A →ₗ[R] B) := fun φ₁ φ₂ h =>
+theorem toLinearMap_injective : Function.Injective (toLinearMap : _ → A →ₗ[R] B) := fun φ₁ φ₂ h =>
   ext <| LinearMap.congr_fun h
-#align alg_hom.to_linear_map_injective AlgHom.to_linear_map_injective
+#align alg_hom.to_linear_map_injective AlgHom.toLinearMap_injective
 
 @[simp]
-theorem comp_to_linear_map (f : A →ₐ[R] B) (g : B →ₐ[R] C) :
+theorem comp_toLinearMap (f : A →ₐ[R] B) (g : B →ₐ[R] C) :
     (g.comp f).toLinearMap = g.toLinearMap.comp f.toLinearMap :=
   rfl
-#align alg_hom.comp_to_linear_map AlgHom.comp_to_linear_map
+#align alg_hom.comp_to_linear_map AlgHom.comp_toLinearMap
 
 @[simp]
-theorem to_linear_map_id : toLinearMap (AlgHom.id R A) = LinearMap.id :=
+theorem toLinearMap_id : toLinearMap (AlgHom.id R A) = LinearMap.id :=
   LinearMap.ext fun _ => rfl
-#align alg_hom.to_linear_map_id AlgHom.to_linear_map_id
+#align alg_hom.to_linear_map_id AlgHom.toLinearMap_id
 
 /-- Promote a `linear_map` to an `alg_hom` by supplying proofs about the behavior on `1` and `*`. -/
 @[simps]
@@ -357,30 +357,30 @@ def ofLinearMap (f : A →ₗ[R] B) (map_one : f 1 = 1) (map_mul : ∀ x y, f (x
     toFun := f
     map_one' := map_one
     map_mul' := map_mul
-    commutes' := fun c => by simp only [Algebra.algebra_map_eq_smul_one, f.map_smul, map_one] }
+    commutes' := fun c => by simp only [Algebra.algebraMap_eq_smul_one, f.map_smul, map_one] }
 #align alg_hom.of_linear_map AlgHom.ofLinearMap
 
 @[simp]
-theorem of_linear_map_to_linear_map (map_one) (map_mul) :
+theorem ofLinearMap_toLinearMap (map_one) (map_mul) :
     ofLinearMap φ.toLinearMap map_one map_mul = φ :=
   by
   ext
   rfl
-#align alg_hom.of_linear_map_to_linear_map AlgHom.of_linear_map_to_linear_map
+#align alg_hom.of_linear_map_to_linear_map AlgHom.ofLinearMap_toLinearMap
 
 @[simp]
-theorem to_linear_map_of_linear_map (f : A →ₗ[R] B) (map_one) (map_mul) :
+theorem toLinearMap_ofLinearMap (f : A →ₗ[R] B) (map_one) (map_mul) :
     toLinearMap (ofLinearMap f map_one map_mul) = f :=
   by
   ext
   rfl
-#align alg_hom.to_linear_map_of_linear_map AlgHom.to_linear_map_of_linear_map
+#align alg_hom.to_linear_map_of_linear_map AlgHom.toLinearMap_ofLinearMap
 
 @[simp]
-theorem of_linear_map_id (map_one) (map_mul) :
+theorem ofLinearMap_id (map_one) (map_mul) :
     ofLinearMap LinearMap.id map_one map_mul = AlgHom.id R A :=
   ext fun _ => rfl
-#align alg_hom.of_linear_map_id AlgHom.of_linear_map_id
+#align alg_hom.of_linear_map_id AlgHom.ofLinearMap_id
 
 theorem map_smul_of_tower {R'} [SMul R' A] [SMul R' B] [LinearMap.CompatibleSmul A B R' R] (r : R')
     (x : A) : φ (r • x) = r • φ x :=
@@ -410,10 +410,10 @@ theorem mul_apply (φ ψ : A →ₐ[R] A) (x : A) : (φ * ψ) x = φ (ψ x) :=
   rfl
 #align alg_hom.mul_apply AlgHom.mul_apply
 
-theorem algebra_map_eq_apply (f : A →ₐ[R] B) {y : R} {x : A} (h : algebraMap R A y = x) :
+theorem algebraMap_eq_apply (f : A →ₐ[R] B) {y : R} {x : A} (h : algebraMap R A y = x) :
     algebraMap R B y = f x :=
   h ▸ (f.commutes _).symm
-#align alg_hom.algebra_map_eq_apply AlgHom.algebra_map_eq_apply
+#align alg_hom.algebra_map_eq_apply AlgHom.algebraMap_eq_apply
 
 end Semiring
 
@@ -480,10 +480,10 @@ def toRatAlgHom [Ring R] [Ring S] [Algebra ℚ R] [Algebra ℚ S] (f : R →+* S
 #align ring_hom.to_rat_alg_hom RingHom.toRatAlgHom
 
 @[simp]
-theorem to_rat_alg_hom_to_ring_hom [Ring R] [Ring S] [Algebra ℚ R] [Algebra ℚ S] (f : R →+* S) :
+theorem toRatAlgHom_to_ringHom [Ring R] [Ring S] [Algebra ℚ R] [Algebra ℚ S] (f : R →+* S) :
     ↑f.toRatAlgHom = f :=
   RingHom.ext fun x => rfl
-#align ring_hom.to_rat_alg_hom_to_ring_hom RingHom.to_rat_alg_hom_to_ring_hom
+#align ring_hom.to_rat_alg_hom_to_ring_hom RingHom.toRatAlgHom_to_ringHom
 
 end RingHom
 
@@ -492,10 +492,10 @@ section
 variable {R S : Type _}
 
 @[simp]
-theorem AlgHom.to_ring_hom_to_rat_alg_hom [Ring R] [Ring S] [Algebra ℚ R] [Algebra ℚ S]
+theorem AlgHom.to_ringHom_toRatAlgHom [Ring R] [Ring S] [Algebra ℚ R] [Algebra ℚ S]
     (f : R →ₐ[ℚ] S) : (f : R →+* S).toRatAlgHom = f :=
   AlgHom.ext fun x => rfl
-#align alg_hom.to_ring_hom_to_rat_alg_hom AlgHom.to_ring_hom_to_rat_alg_hom
+#align alg_hom.to_ring_hom_to_rat_alg_hom AlgHom.to_ringHom_toRatAlgHom
 
 /-- The equivalence between `ring_hom` and `ℚ`-algebra homomorphisms. -/
 @[simps]
@@ -503,8 +503,8 @@ def RingHom.equivRatAlgHom [Ring R] [Ring S] [Algebra ℚ R] [Algebra ℚ S] : (
     where
   toFun := RingHom.toRatAlgHom
   invFun := AlgHom.toRingHom
-  left_inv := RingHom.to_rat_alg_hom_to_ring_hom
-  right_inv := AlgHom.to_ring_hom_to_rat_alg_hom
+  left_inv := RingHom.toRatAlgHom_to_ringHom
+  right_inv := AlgHom.to_ringHom_toRatAlgHom
 #align ring_hom.equiv_rat_alg_hom RingHom.equivRatAlgHom
 
 end
@@ -522,9 +522,9 @@ def ofId : R →ₐ[R] A :=
 
 variable {R}
 
-theorem of_id_apply (r) : ofId R A r = algebraMap R A r :=
+theorem ofId_apply (r) : ofId R A r = algebraMap R A r :=
   rfl
-#align algebra.of_id_apply Algebra.of_id_apply
+#align algebra.of_id_apply Algebra.ofId_apply
 
 end Algebra
 
@@ -544,13 +544,13 @@ def toAlgHom (m : M) : A →ₐ[R] A :=
     MulSemiringAction.toRingHom _ _
       m with
     toFun := fun a => m • a
-    commutes' := smul_algebra_map _ }
+    commutes' := smul_algebraMap _ }
 #align mul_semiring_action.to_alg_hom MulSemiringAction.toAlgHom
 
-theorem to_alg_hom_injective [FaithfulSMul M A] :
+theorem toAlgHom_injective [FaithfulSMul M A] :
     Function.Injective (MulSemiringAction.toAlgHom R A : M → A →ₐ[R] A) := fun m₁ m₂ h =>
   eq_of_smul_eq_smul fun r => AlgHom.ext_iff.1 h r
-#align mul_semiring_action.to_alg_hom_injective MulSemiringAction.to_alg_hom_injective
+#align mul_semiring_action.to_alg_hom_injective MulSemiringAction.toAlgHom_injective
 
 end MulSemiringAction
 

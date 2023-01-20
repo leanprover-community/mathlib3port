@@ -79,10 +79,10 @@ instance structure : L.StructureCat ((u : Filter α).product M) :=
   language.quotient_structure
 #align first_order.language.ultraproduct.Structure FirstOrder.Language.Ultraproduct.structure
 
-theorem fun_map_cast {n : ℕ} (f : L.Functions n) (x : Fin n → ∀ a, M a) :
+theorem funMap_cast {n : ℕ} (f : L.Functions n) (x : Fin n → ∀ a, M a) :
     (funMap f fun i => (x i : (u : Filter α).product M)) = fun a => funMap f fun i => x i a := by
   apply fun_map_quotient_mk
-#align first_order.language.ultraproduct.fun_map_cast FirstOrder.Language.Ultraproduct.fun_map_cast
+#align first_order.language.ultraproduct.fun_map_cast FirstOrder.Language.Ultraproduct.funMap_cast
 
 theorem term_realize_cast {β : Type _} (x : β → ∀ a, M a) (t : L.term β) :
     (t.realize fun i => (x i : (u : Filter α).product M)) = fun a => t.realize fun i => x i a :=
@@ -99,7 +99,7 @@ theorem term_realize_cast {β : Type _} (x : β → ∀ a, M a) (t : L.term β) 
 
 variable [∀ a : α, Nonempty (M a)]
 
-theorem bounded_formula_realize_cast {β : Type _} {n : ℕ} (φ : L.BoundedFormula β n)
+theorem boundedFormula_realize_cast {β : Type _} {n : ℕ} (φ : L.BoundedFormula β n)
     (x : β → ∀ a, M a) (v : Fin n → ∀ a, M a) :
     (φ.realize (fun i : β => (x i : (u : Filter α).product M)) fun i => v i) ↔
       ∀ᶠ a : α in u, φ.realize (fun i : β => x i a) fun i => v i a :=
@@ -144,7 +144,7 @@ theorem bounded_formula_realize_cast {β : Type _} {n : ℕ} (φ : L.BoundedForm
       exact Filter.mem_of_superset h fun a ha => Classical.epsilon_spec ha
     · rw [Filter.eventually_iff] at *
       exact Filter.mem_of_superset h fun a ha => ha (m a)
-#align first_order.language.ultraproduct.bounded_formula_realize_cast FirstOrder.Language.Ultraproduct.bounded_formula_realize_cast
+#align first_order.language.ultraproduct.bounded_formula_realize_cast FirstOrder.Language.Ultraproduct.boundedFormula_realize_cast
 
 theorem realize_formula_cast {β : Type _} (φ : L.Formula β) (x : β → ∀ a, M a) :
     (φ.realize fun i => (x i : (u : Filter α).product M)) ↔

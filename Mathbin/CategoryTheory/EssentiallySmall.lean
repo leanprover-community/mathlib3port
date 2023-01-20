@@ -49,12 +49,12 @@ theorem EssentiallySmall.mk' {C : Type u} [Category.{v} C] {S : Type w} [SmallCa
 -/
 @[nolint has_nonempty_instance]
 def SmallModel (C : Type u) [Category.{v} C] [EssentiallySmall.{w} C] : Type w :=
-  Classical.choose (@EssentiallySmall.equiv_small_category C _ _)
+  Classical.choose (@EssentiallySmall.equiv_smallCategory C _ _)
 #align category_theory.small_model CategoryTheory.SmallModel
 
 noncomputable instance smallCategorySmallModel (C : Type u) [Category.{v} C]
     [EssentiallySmall.{w} C] : SmallCategory (SmallModel C) :=
-  Classical.choose (Classical.choose_spec (@EssentiallySmall.equiv_small_category C _ _))
+  Classical.choose (Classical.choose_spec (@EssentiallySmall.equiv_smallCategory C _ _))
 #align category_theory.small_category_small_model CategoryTheory.smallCategorySmallModel
 
 /-- The (noncomputable) categorical equivalence between
@@ -63,10 +63,10 @@ an essentially small category and its small model.
 noncomputable def equivSmallModel (C : Type u) [Category.{v} C] [EssentiallySmall.{w} C] :
     C ≌ SmallModel C :=
   Nonempty.some
-    (Classical.choose_spec (Classical.choose_spec (@EssentiallySmall.equiv_small_category C _ _)))
+    (Classical.choose_spec (Classical.choose_spec (@EssentiallySmall.equiv_smallCategory C _ _)))
 #align category_theory.equiv_small_model CategoryTheory.equivSmallModel
 
-theorem essentially_small_congr {C : Type u} [Category.{v} C] {D : Type u'} [Category.{v'} D]
+theorem essentiallySmall_congr {C : Type u} [Category.{v} C] {D : Type u'} [Category.{v'} D]
     (e : C ≌ D) : EssentiallySmall.{w} C ↔ EssentiallySmall.{w} D :=
   by
   fconstructor
@@ -76,7 +76,7 @@ theorem essentially_small_congr {C : Type u} [Category.{v} C] {D : Type u'} [Cat
   · rintro ⟨S, 𝒮, ⟨f⟩⟩
     skip
     exact essentially_small.mk' (e.trans f)
-#align category_theory.essentially_small_congr CategoryTheory.essentially_small_congr
+#align category_theory.essentially_small_congr CategoryTheory.essentiallySmall_congr
 
 theorem Discrete.essentiallySmallOfSmall {α : Type u} [Small.{w} α] :
     EssentiallySmall.{w} (Discrete α) :=
@@ -98,7 +98,7 @@ class LocallySmall (C : Type u) [Category.{v} C] : Prop where
 instance (C : Type u) [Category.{v} C] [LocallySmall.{w} C] (X Y : C) : Small (X ⟶ Y) :=
   LocallySmall.hom_small X Y
 
-theorem locally_small_congr {C : Type u} [Category.{v} C] {D : Type u'} [Category.{v'} D]
+theorem locallySmall_congr {C : Type u} [Category.{v} C] {D : Type u'} [Category.{v'} D]
     (e : C ≌ D) : LocallySmall.{w} C ↔ LocallySmall.{w} D :=
   by
   fconstructor
@@ -114,16 +114,16 @@ theorem locally_small_congr {C : Type u} [Category.{v} C] {D : Type u'} [Categor
     specialize L (e.functor.obj X) (e.functor.obj Y)
     refine' (small_congr _).mpr L
     exact equiv_of_fully_faithful e.functor
-#align category_theory.locally_small_congr CategoryTheory.locally_small_congr
+#align category_theory.locally_small_congr CategoryTheory.locallySmall_congr
 
-instance (priority := 100) locally_small_self (C : Type u) [Category.{v} C] : LocallySmall.{v} C
+instance (priority := 100) locallySmall_self (C : Type u) [Category.{v} C] : LocallySmall.{v} C
     where
-#align category_theory.locally_small_self CategoryTheory.locally_small_self
+#align category_theory.locally_small_self CategoryTheory.locallySmall_self
 
-instance (priority := 100) locally_small_of_essentially_small (C : Type u) [Category.{v} C]
+instance (priority := 100) locallySmall_of_essentiallySmall (C : Type u) [Category.{v} C]
     [EssentiallySmall.{w} C] : LocallySmall.{w} C :=
-  (locally_small_congr (equivSmallModel C)).mpr (CategoryTheory.locally_small_self _)
-#align category_theory.locally_small_of_essentially_small CategoryTheory.locally_small_of_essentially_small
+  (locallySmall_congr (equivSmallModel C)).mpr (CategoryTheory.locallySmall_self _)
+#align category_theory.locally_small_of_essentially_small CategoryTheory.locallySmall_of_essentiallySmall
 
 /-- We define a type alias `shrink_homs C` for `C`. When we have `locally_small.{w} C`,
 we'll put a `category.{w}` instance on `shrink_homs C`.
@@ -201,7 +201,7 @@ end ShrinkHoms
 the underlying type of its skeleton (i.e. the "set" of isomorphism classes) is small,
 and it is locally small.
 -/
-theorem essentially_small_iff (C : Type u) [Category.{v} C] :
+theorem essentiallySmall_iff (C : Type u) [Category.{v} C] :
     EssentiallySmall.{w} C ↔ Small.{w} (Skeleton C) ∧ LocallySmall.{w} C :=
   by
   -- This theorem is the only bit of real work in this file.
@@ -222,21 +222,21 @@ theorem essentially_small_iff (C : Type u) [Category.{v} C] :
     refine'
       (shrink_homs.equivalence C).trans
         ((skeleton_equivalence _).symm.trans (induced_functor (e'.trans e).symm).asEquivalence.symm)
-#align category_theory.essentially_small_iff CategoryTheory.essentially_small_iff
+#align category_theory.essentially_small_iff CategoryTheory.essentiallySmall_iff
 
 /-- Any thin category is locally small.
 -/
-instance (priority := 100) locally_small_of_thin {C : Type u} [Category.{v} C] [Quiver.IsThin C] :
+instance (priority := 100) locallySmall_of_thin {C : Type u} [Category.{v} C] [Quiver.IsThin C] :
     LocallySmall.{w} C where
-#align category_theory.locally_small_of_thin CategoryTheory.locally_small_of_thin
+#align category_theory.locally_small_of_thin CategoryTheory.locallySmall_of_thin
 
 /--
 A thin category is essentially small if and only if the underlying type of its skeleton is small.
 -/
-theorem essentially_small_iff_of_thin {C : Type u} [Category.{v} C] [Quiver.IsThin C] :
+theorem essentiallySmall_iff_of_thin {C : Type u} [Category.{v} C] [Quiver.IsThin C] :
     EssentiallySmall.{w} C ↔ Small.{w} (Skeleton C) := by
-  simp [essentially_small_iff, CategoryTheory.locally_small_of_thin]
-#align category_theory.essentially_small_iff_of_thin CategoryTheory.essentially_small_iff_of_thin
+  simp [essentially_small_iff, CategoryTheory.locallySmall_of_thin]
+#align category_theory.essentially_small_iff_of_thin CategoryTheory.essentiallySmall_iff_of_thin
 
 end CategoryTheory
 

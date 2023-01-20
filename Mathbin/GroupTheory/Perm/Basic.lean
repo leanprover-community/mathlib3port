@@ -412,7 +412,7 @@ Case conversion may be inaccurate. Consider using '#align equiv.perm.sum_congr_o
 @[simp]
 theorem sumCongr_one_swap {α β : Type _} [DecidableEq α] [DecidableEq β] (i j : β) :
     sumCongr (1 : Perm α) (Equiv.swap i j) = Equiv.swap (Sum.inr i) (Sum.inr j) :=
-  sum_congr_refl_swap i j
+  sumCongr_refl_swap i j
 #align equiv.perm.sum_congr_one_swap Equiv.Perm.sumCongr_one_swap
 
 /-! Lemmas about `equiv.perm.sigma_congr_right` re-expressed via the group structure. -/
@@ -597,14 +597,14 @@ theorem extendDomain_eq_one_iff {e : Perm α} {f : α ≃ Subtype p} : e.extendD
 #align equiv.perm.extend_domain_eq_one_iff Equiv.Perm.extendDomain_eq_one_iff
 
 @[simp]
-theorem extend_domain_pow (n : ℕ) : (e ^ n).extendDomain f = e.extendDomain f ^ n :=
+theorem extendDomain_pow (n : ℕ) : (e ^ n).extendDomain f = e.extendDomain f ^ n :=
   map_pow (extendDomainHom f) _ _
-#align equiv.perm.extend_domain_pow Equiv.Perm.extend_domain_pow
+#align equiv.perm.extend_domain_pow Equiv.Perm.extendDomain_pow
 
 @[simp]
-theorem extend_domain_zpow (n : ℤ) : (e ^ n).extendDomain f = e.extendDomain f ^ n :=
+theorem extendDomain_zpow (n : ℤ) : (e ^ n).extendDomain f = e.extendDomain f ^ n :=
   map_zpow (extendDomainHom f) _ _
-#align equiv.perm.extend_domain_zpow Equiv.Perm.extend_domain_zpow
+#align equiv.perm.extend_domain_zpow Equiv.Perm.extendDomain_zpow
 
 end ExtendDomain
 
@@ -971,59 +971,103 @@ section AddGroup
 
 variable [AddGroup α] (a b : α)
 
+/- warning: equiv.add_left_zero -> Equiv.addLeft_zero is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : AddGroup.{u1} α], Eq.{succ u1} (Equiv.Perm.{succ u1} α) (Equiv.addLeft.{u1} α _inst_1 (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α (AddZeroClass.toHasZero.{u1} α (AddMonoid.toAddZeroClass.{u1} α (SubNegMonoid.toAddMonoid.{u1} α (AddGroup.toSubNegMonoid.{u1} α _inst_1)))))))) (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (OfNat.mk.{u1} (Equiv.Perm.{succ u1} α) 1 (One.one.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : AddGroup.{u1} α], Eq.{succ u1} (Equiv.Perm.{succ u1} α) (Equiv.addLeft.{u1} α _inst_1 (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (NegZeroClass.toZero.{u1} α (SubNegZeroMonoid.toNegZeroClass.{u1} α (SubtractionMonoid.toSubNegZeroMonoid.{u1} α (AddGroup.toSubtractionMonoid.{u1} α _inst_1))))))) (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (One.toOfNat1.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))))
+Case conversion may be inaccurate. Consider using '#align equiv.add_left_zero Equiv.addLeft_zeroₓ'. -/
 @[simp]
-theorem add_left_zero : Equiv.addLeft (0 : α) = 1 :=
+theorem addLeft_zero : Equiv.addLeft (0 : α) = 1 :=
   ext zero_add
-#align equiv.add_left_zero Equiv.add_left_zero
+#align equiv.add_left_zero Equiv.addLeft_zero
 
+/- warning: equiv.add_right_zero -> Equiv.addRight_zero is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : AddGroup.{u1} α], Eq.{succ u1} (Equiv.Perm.{succ u1} α) (Equiv.addRight.{u1} α _inst_1 (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α (AddZeroClass.toHasZero.{u1} α (AddMonoid.toAddZeroClass.{u1} α (SubNegMonoid.toAddMonoid.{u1} α (AddGroup.toSubNegMonoid.{u1} α _inst_1)))))))) (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (OfNat.mk.{u1} (Equiv.Perm.{succ u1} α) 1 (One.one.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : AddGroup.{u1} α], Eq.{succ u1} (Equiv.Perm.{succ u1} α) (Equiv.addRight.{u1} α _inst_1 (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (NegZeroClass.toZero.{u1} α (SubNegZeroMonoid.toNegZeroClass.{u1} α (SubtractionMonoid.toSubNegZeroMonoid.{u1} α (AddGroup.toSubtractionMonoid.{u1} α _inst_1))))))) (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (One.toOfNat1.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))))
+Case conversion may be inaccurate. Consider using '#align equiv.add_right_zero Equiv.addRight_zeroₓ'. -/
 @[simp]
-theorem add_right_zero : Equiv.addRight (0 : α) = 1 :=
+theorem addRight_zero : Equiv.addRight (0 : α) = 1 :=
   ext add_zero
-#align equiv.add_right_zero Equiv.add_right_zero
+#align equiv.add_right_zero Equiv.addRight_zero
 
+/- warning: equiv.add_left_add -> Equiv.addLeft_add is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : AddGroup.{u1} α] (a : α) (b : α), Eq.{succ u1} (Equiv.Perm.{succ u1} α) (Equiv.addLeft.{u1} α _inst_1 (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddZeroClass.toHasAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (SubNegMonoid.toAddMonoid.{u1} α (AddGroup.toSubNegMonoid.{u1} α _inst_1))))) a b)) (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) (Equiv.addLeft.{u1} α _inst_1 a) (Equiv.addLeft.{u1} α _inst_1 b))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : AddGroup.{u1} α] (a : α) (b : α), Eq.{succ u1} (Equiv.Perm.{succ u1} α) (Equiv.addLeft.{u1} α _inst_1 (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (SubNegMonoid.toAddMonoid.{u1} α (AddGroup.toSubNegMonoid.{u1} α _inst_1))))) a b)) (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) (Equiv.addLeft.{u1} α _inst_1 a) (Equiv.addLeft.{u1} α _inst_1 b))
+Case conversion may be inaccurate. Consider using '#align equiv.add_left_add Equiv.addLeft_addₓ'. -/
 @[simp]
-theorem add_left_add : Equiv.addLeft (a + b) = Equiv.addLeft a * Equiv.addLeft b :=
+theorem addLeft_add : Equiv.addLeft (a + b) = Equiv.addLeft a * Equiv.addLeft b :=
   ext <| add_assoc _ _
-#align equiv.add_left_add Equiv.add_left_add
+#align equiv.add_left_add Equiv.addLeft_add
 
+/- warning: equiv.add_right_add -> Equiv.addRight_add is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : AddGroup.{u1} α] (a : α) (b : α), Eq.{succ u1} (Equiv.Perm.{succ u1} α) (Equiv.addRight.{u1} α _inst_1 (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddZeroClass.toHasAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (SubNegMonoid.toAddMonoid.{u1} α (AddGroup.toSubNegMonoid.{u1} α _inst_1))))) a b)) (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) (Equiv.addRight.{u1} α _inst_1 b) (Equiv.addRight.{u1} α _inst_1 a))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : AddGroup.{u1} α] (a : α) (b : α), Eq.{succ u1} (Equiv.Perm.{succ u1} α) (Equiv.addRight.{u1} α _inst_1 (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (SubNegMonoid.toAddMonoid.{u1} α (AddGroup.toSubNegMonoid.{u1} α _inst_1))))) a b)) (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) (Equiv.addRight.{u1} α _inst_1 b) (Equiv.addRight.{u1} α _inst_1 a))
+Case conversion may be inaccurate. Consider using '#align equiv.add_right_add Equiv.addRight_addₓ'. -/
 @[simp]
-theorem add_right_add : Equiv.addRight (a + b) = Equiv.addRight b * Equiv.addRight a :=
+theorem addRight_add : Equiv.addRight (a + b) = Equiv.addRight b * Equiv.addRight a :=
   ext fun _ => (add_assoc _ _ _).symm
-#align equiv.add_right_add Equiv.add_right_add
+#align equiv.add_right_add Equiv.addRight_add
 
+/- warning: equiv.inv_add_left -> Equiv.inv_addLeft is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : AddGroup.{u1} α] (a : α), Eq.{succ u1} (Equiv.Perm.{succ u1} α) (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toHasInv.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))) (Equiv.addLeft.{u1} α _inst_1 a)) (Equiv.addLeft.{u1} α _inst_1 (Neg.neg.{u1} α (SubNegMonoid.toHasNeg.{u1} α (AddGroup.toSubNegMonoid.{u1} α _inst_1)) a))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : AddGroup.{u1} α] (a : α), Eq.{succ u1} (Equiv.Perm.{succ u1} α) (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toInv.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (Equiv.addLeft.{u1} α _inst_1 a)) (Equiv.addLeft.{u1} α _inst_1 (Neg.neg.{u1} α (NegZeroClass.toNeg.{u1} α (SubNegZeroMonoid.toNegZeroClass.{u1} α (SubtractionMonoid.toSubNegZeroMonoid.{u1} α (AddGroup.toSubtractionMonoid.{u1} α _inst_1)))) a))
+Case conversion may be inaccurate. Consider using '#align equiv.inv_add_left Equiv.inv_addLeftₓ'. -/
 @[simp]
-theorem inv_add_left : (Equiv.addLeft a)⁻¹ = Equiv.addLeft (-a) :=
+theorem inv_addLeft : (Equiv.addLeft a)⁻¹ = Equiv.addLeft (-a) :=
   Equiv.coe_inj.1 rfl
-#align equiv.inv_add_left Equiv.inv_add_left
+#align equiv.inv_add_left Equiv.inv_addLeft
 
+/- warning: equiv.inv_add_right -> Equiv.inv_addRight is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : AddGroup.{u1} α] (a : α), Eq.{succ u1} (Equiv.Perm.{succ u1} α) (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toHasInv.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))) (Equiv.addRight.{u1} α _inst_1 a)) (Equiv.addRight.{u1} α _inst_1 (Neg.neg.{u1} α (SubNegMonoid.toHasNeg.{u1} α (AddGroup.toSubNegMonoid.{u1} α _inst_1)) a))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : AddGroup.{u1} α] (a : α), Eq.{succ u1} (Equiv.Perm.{succ u1} α) (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toInv.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (Equiv.addRight.{u1} α _inst_1 a)) (Equiv.addRight.{u1} α _inst_1 (Neg.neg.{u1} α (NegZeroClass.toNeg.{u1} α (SubNegZeroMonoid.toNegZeroClass.{u1} α (SubtractionMonoid.toSubNegZeroMonoid.{u1} α (AddGroup.toSubtractionMonoid.{u1} α _inst_1)))) a))
+Case conversion may be inaccurate. Consider using '#align equiv.inv_add_right Equiv.inv_addRightₓ'. -/
 @[simp]
-theorem inv_add_right : (Equiv.addRight a)⁻¹ = Equiv.addRight (-a) :=
+theorem inv_addRight : (Equiv.addRight a)⁻¹ = Equiv.addRight (-a) :=
   Equiv.coe_inj.1 rfl
-#align equiv.inv_add_right Equiv.inv_add_right
+#align equiv.inv_add_right Equiv.inv_addRight
 
+#print Equiv.pow_addLeft /-
 @[simp]
-theorem pow_add_left (n : ℕ) : Equiv.addLeft a ^ n = Equiv.addLeft (n • a) :=
+theorem pow_addLeft (n : ℕ) : Equiv.addLeft a ^ n = Equiv.addLeft (n • a) :=
   by
   ext
   simp [perm.coe_pow]
-#align equiv.pow_add_left Equiv.pow_add_left
+#align equiv.pow_add_left Equiv.pow_addLeft
+-/
 
+#print Equiv.pow_addRight /-
 @[simp]
-theorem pow_add_right (n : ℕ) : Equiv.addRight a ^ n = Equiv.addRight (n • a) :=
+theorem pow_addRight (n : ℕ) : Equiv.addRight a ^ n = Equiv.addRight (n • a) :=
   by
   ext
   simp [perm.coe_pow]
-#align equiv.pow_add_right Equiv.pow_add_right
+#align equiv.pow_add_right Equiv.pow_addRight
+-/
 
+#print Equiv.zpow_addLeft /-
 @[simp]
-theorem zpow_add_left (n : ℤ) : Equiv.addLeft a ^ n = Equiv.addLeft (n • a) :=
-  (map_zsmul (⟨Equiv.addLeft, add_left_zero, add_left_add⟩ : α →+ Additive (Perm α)) _ _).symm
-#align equiv.zpow_add_left Equiv.zpow_add_left
+theorem zpow_addLeft (n : ℤ) : Equiv.addLeft a ^ n = Equiv.addLeft (n • a) :=
+  (map_zsmul (⟨Equiv.addLeft, addLeft_zero, addLeft_add⟩ : α →+ Additive (Perm α)) _ _).symm
+#align equiv.zpow_add_left Equiv.zpow_addLeft
+-/
 
+#print Equiv.zpow_addRight /-
 @[simp]
-theorem zpow_add_right (n : ℤ) : Equiv.addRight a ^ n = Equiv.addRight (n • a) :=
-  @zpow_add_left αᵃᵒᵖ _ _ _
-#align equiv.zpow_add_right Equiv.zpow_add_right
+theorem zpow_addRight (n : ℤ) : Equiv.addRight a ^ n = Equiv.addRight (n • a) :=
+  @zpow_addLeft αᵃᵒᵖ _ _ _
+#align equiv.zpow_add_right Equiv.zpow_addRight
+-/
 
 end AddGroup
 
@@ -1031,70 +1075,114 @@ section Group
 
 variable [Group α] (a b : α)
 
+/- warning: equiv.mul_left_one -> Equiv.mulLeft_one is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α], Eq.{succ u1} (Equiv.Perm.{succ u1} α) (Equiv.mulLeft.{u1} α _inst_1 (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)))))))) (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (OfNat.mk.{u1} (Equiv.Perm.{succ u1} α) 1 (One.one.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α], Eq.{succ u1} (Equiv.Perm.{succ u1} α) (Equiv.mulLeft.{u1} α _inst_1 (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (InvOneClass.toOne.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1))))))) (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (One.toOfNat1.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))))
+Case conversion may be inaccurate. Consider using '#align equiv.mul_left_one Equiv.mulLeft_oneₓ'. -/
 @[simp, to_additive]
-theorem mul_left_one : Equiv.mulLeft (1 : α) = 1 :=
+theorem mulLeft_one : Equiv.mulLeft (1 : α) = 1 :=
   ext one_mul
-#align equiv.mul_left_one Equiv.mul_left_one
-#align equiv.add_left_zero Equiv.add_left_zero
+#align equiv.mul_left_one Equiv.mulLeft_one
+#align equiv.add_left_zero Equiv.addLeft_zero
 
+/- warning: equiv.mul_right_one -> Equiv.mulRight_one is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α], Eq.{succ u1} (Equiv.Perm.{succ u1} α) (Equiv.mulRight.{u1} α _inst_1 (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)))))))) (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (OfNat.mk.{u1} (Equiv.Perm.{succ u1} α) 1 (One.one.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α], Eq.{succ u1} (Equiv.Perm.{succ u1} α) (Equiv.mulRight.{u1} α _inst_1 (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (InvOneClass.toOne.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1))))))) (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (One.toOfNat1.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))))
+Case conversion may be inaccurate. Consider using '#align equiv.mul_right_one Equiv.mulRight_oneₓ'. -/
 @[simp, to_additive]
-theorem mul_right_one : Equiv.mulRight (1 : α) = 1 :=
+theorem mulRight_one : Equiv.mulRight (1 : α) = 1 :=
   ext mul_one
-#align equiv.mul_right_one Equiv.mul_right_one
-#align equiv.add_right_zero Equiv.add_right_zero
+#align equiv.mul_right_one Equiv.mulRight_one
+#align equiv.add_right_zero Equiv.addRight_zero
 
+/- warning: equiv.mul_left_mul -> Equiv.mulLeft_mul is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] (a : α) (b : α), Eq.{succ u1} (Equiv.Perm.{succ u1} α) (Equiv.mulLeft.{u1} α _inst_1 (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))) a b)) (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) (Equiv.mulLeft.{u1} α _inst_1 a) (Equiv.mulLeft.{u1} α _inst_1 b))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] (a : α) (b : α), Eq.{succ u1} (Equiv.Perm.{succ u1} α) (Equiv.mulLeft.{u1} α _inst_1 (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))) a b)) (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) (Equiv.mulLeft.{u1} α _inst_1 a) (Equiv.mulLeft.{u1} α _inst_1 b))
+Case conversion may be inaccurate. Consider using '#align equiv.mul_left_mul Equiv.mulLeft_mulₓ'. -/
 @[simp, to_additive]
-theorem mul_left_mul : Equiv.mulLeft (a * b) = Equiv.mulLeft a * Equiv.mulLeft b :=
+theorem mulLeft_mul : Equiv.mulLeft (a * b) = Equiv.mulLeft a * Equiv.mulLeft b :=
   ext <| mul_assoc _ _
-#align equiv.mul_left_mul Equiv.mul_left_mul
-#align equiv.add_left_add Equiv.add_left_add
+#align equiv.mul_left_mul Equiv.mulLeft_mul
+#align equiv.add_left_add Equiv.addLeft_add
 
+/- warning: equiv.mul_right_mul -> Equiv.mulRight_mul is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] (a : α) (b : α), Eq.{succ u1} (Equiv.Perm.{succ u1} α) (Equiv.mulRight.{u1} α _inst_1 (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))) a b)) (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) (Equiv.mulRight.{u1} α _inst_1 b) (Equiv.mulRight.{u1} α _inst_1 a))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] (a : α) (b : α), Eq.{succ u1} (Equiv.Perm.{succ u1} α) (Equiv.mulRight.{u1} α _inst_1 (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))) a b)) (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) (Equiv.mulRight.{u1} α _inst_1 b) (Equiv.mulRight.{u1} α _inst_1 a))
+Case conversion may be inaccurate. Consider using '#align equiv.mul_right_mul Equiv.mulRight_mulₓ'. -/
 @[simp, to_additive]
-theorem mul_right_mul : Equiv.mulRight (a * b) = Equiv.mulRight b * Equiv.mulRight a :=
+theorem mulRight_mul : Equiv.mulRight (a * b) = Equiv.mulRight b * Equiv.mulRight a :=
   ext fun _ => (mul_assoc _ _ _).symm
-#align equiv.mul_right_mul Equiv.mul_right_mul
-#align equiv.add_right_add Equiv.add_right_add
+#align equiv.mul_right_mul Equiv.mulRight_mul
+#align equiv.add_right_add Equiv.addRight_add
 
+/- warning: equiv.inv_mul_left -> Equiv.inv_mulLeft is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] (a : α), Eq.{succ u1} (Equiv.Perm.{succ u1} α) (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toHasInv.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))) (Equiv.mulLeft.{u1} α _inst_1 a)) (Equiv.mulLeft.{u1} α _inst_1 (Inv.inv.{u1} α (DivInvMonoid.toHasInv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)) a))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] (a : α), Eq.{succ u1} (Equiv.Perm.{succ u1} α) (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toInv.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (Equiv.mulLeft.{u1} α _inst_1 a)) (Equiv.mulLeft.{u1} α _inst_1 (Inv.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1)))) a))
+Case conversion may be inaccurate. Consider using '#align equiv.inv_mul_left Equiv.inv_mulLeftₓ'. -/
 @[simp, to_additive inv_add_left]
-theorem inv_mul_left : (Equiv.mulLeft a)⁻¹ = Equiv.mulLeft a⁻¹ :=
+theorem inv_mulLeft : (Equiv.mulLeft a)⁻¹ = Equiv.mulLeft a⁻¹ :=
   Equiv.coe_inj.1 rfl
-#align equiv.inv_mul_left Equiv.inv_mul_left
-#align equiv.inv_add_left Equiv.inv_add_left
+#align equiv.inv_mul_left Equiv.inv_mulLeft
+#align equiv.inv_add_left Equiv.inv_addLeft
 
+/- warning: equiv.inv_mul_right -> Equiv.inv_mulRight is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] (a : α), Eq.{succ u1} (Equiv.Perm.{succ u1} α) (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toHasInv.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))) (Equiv.mulRight.{u1} α _inst_1 a)) (Equiv.mulRight.{u1} α _inst_1 (Inv.inv.{u1} α (DivInvMonoid.toHasInv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)) a))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] (a : α), Eq.{succ u1} (Equiv.Perm.{succ u1} α) (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toInv.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (Equiv.mulRight.{u1} α _inst_1 a)) (Equiv.mulRight.{u1} α _inst_1 (Inv.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1)))) a))
+Case conversion may be inaccurate. Consider using '#align equiv.inv_mul_right Equiv.inv_mulRightₓ'. -/
 @[simp, to_additive inv_add_right]
-theorem inv_mul_right : (Equiv.mulRight a)⁻¹ = Equiv.mulRight a⁻¹ :=
+theorem inv_mulRight : (Equiv.mulRight a)⁻¹ = Equiv.mulRight a⁻¹ :=
   Equiv.coe_inj.1 rfl
-#align equiv.inv_mul_right Equiv.inv_mul_right
-#align equiv.inv_add_right Equiv.inv_add_right
+#align equiv.inv_mul_right Equiv.inv_mulRight
+#align equiv.inv_add_right Equiv.inv_addRight
 
+#print Equiv.pow_mulLeft /-
 @[simp, to_additive pow_add_left]
-theorem pow_mul_left (n : ℕ) : Equiv.mulLeft a ^ n = Equiv.mulLeft (a ^ n) :=
+theorem pow_mulLeft (n : ℕ) : Equiv.mulLeft a ^ n = Equiv.mulLeft (a ^ n) :=
   by
   ext
   simp [perm.coe_pow]
-#align equiv.pow_mul_left Equiv.pow_mul_left
-#align equiv.pow_add_left Equiv.pow_add_left
+#align equiv.pow_mul_left Equiv.pow_mulLeft
+#align equiv.pow_add_left Equiv.pow_addLeft
+-/
 
+#print Equiv.pow_mulRight /-
 @[simp, to_additive pow_add_right]
-theorem pow_mul_right (n : ℕ) : Equiv.mulRight a ^ n = Equiv.mulRight (a ^ n) :=
+theorem pow_mulRight (n : ℕ) : Equiv.mulRight a ^ n = Equiv.mulRight (a ^ n) :=
   by
   ext
   simp [perm.coe_pow]
-#align equiv.pow_mul_right Equiv.pow_mul_right
-#align equiv.pow_add_right Equiv.pow_add_right
+#align equiv.pow_mul_right Equiv.pow_mulRight
+#align equiv.pow_add_right Equiv.pow_addRight
+-/
 
+#print Equiv.zpow_mulLeft /-
 @[simp, to_additive zpow_add_left]
-theorem zpow_mul_left (n : ℤ) : Equiv.mulLeft a ^ n = Equiv.mulLeft (a ^ n) :=
-  (map_zpow (⟨Equiv.mulLeft, mul_left_one, mul_left_mul⟩ : α →* Perm α) _ _).symm
-#align equiv.zpow_mul_left Equiv.zpow_mul_left
-#align equiv.zpow_add_left Equiv.zpow_add_left
+theorem zpow_mulLeft (n : ℤ) : Equiv.mulLeft a ^ n = Equiv.mulLeft (a ^ n) :=
+  (map_zpow (⟨Equiv.mulLeft, mulLeft_one, mulLeft_mul⟩ : α →* Perm α) _ _).symm
+#align equiv.zpow_mul_left Equiv.zpow_mulLeft
+#align equiv.zpow_add_left Equiv.zpow_addLeft
+-/
 
+#print Equiv.zpow_mulRight /-
 @[simp, to_additive zpow_add_right]
-theorem zpow_mul_right : ∀ n : ℤ, Equiv.mulRight a ^ n = Equiv.mulRight (a ^ n)
+theorem zpow_mulRight : ∀ n : ℤ, Equiv.mulRight a ^ n = Equiv.mulRight (a ^ n)
   | Int.ofNat n => by simp
   | Int.negSucc n => by simp
-#align equiv.zpow_mul_right Equiv.zpow_mul_right
-#align equiv.zpow_add_right Equiv.zpow_add_right
+#align equiv.zpow_mul_right Equiv.zpow_mulRight
+#align equiv.zpow_add_right Equiv.zpow_addRight
+-/
 
 end Group
 
@@ -1107,9 +1195,9 @@ namespace Set
 variable {α : Type _} {f : Perm α} {s t : Set α}
 
 @[simp]
-theorem bij_on_perm_inv : BijOn (⇑f⁻¹) t s ↔ BijOn f s t :=
+theorem bijOn_perm_inv : BijOn (⇑f⁻¹) t s ↔ BijOn f s t :=
   Equiv.bijOn_symm
-#align set.bij_on_perm_inv Set.bij_on_perm_inv
+#align set.bij_on_perm_inv Set.bijOn_perm_inv
 
 /- warning: set.bij_on.perm_inv -> Set.BijOn.perm_inv is a dubious translation:
 lean 3 declaration is

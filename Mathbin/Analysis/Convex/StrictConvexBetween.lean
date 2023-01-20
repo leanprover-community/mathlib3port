@@ -30,14 +30,14 @@ theorem Sbtw.dist_lt_max_dist (p : P) {p₁ p₂ p₃ : P} (h : Sbtw ℝ p₁ p�
     dist p₂ p < max (dist p₁ p) (dist p₃ p) :=
   by
   have hp₁p₃ : p₁ -ᵥ p ≠ p₃ -ᵥ p := by simpa using h.left_ne_right
-  rw [Sbtw, ← wbtw_vsub_const_iff p, Wbtw, affine_segment_eq_segment, ←
-    insert_endpoints_open_segment, Set.mem_insert_iff, Set.mem_insert_iff] at h
+  rw [Sbtw, ← wbtw_vsub_const_iff p, Wbtw, affineSegment_eq_segment, ← insert_endpoints_openSegment,
+    Set.mem_insert_iff, Set.mem_insert_iff] at h
   rcases h with ⟨h | h | h, hp₂p₁, hp₂p₃⟩
   · rw [vsub_left_cancel_iff] at h
     exact False.elim (hp₂p₁ h)
   · rw [vsub_left_cancel_iff] at h
     exact False.elim (hp₂p₃ h)
-  · rw [open_segment_eq_image, Set.mem_image] at h
+  · rw [openSegment_eq_image, Set.mem_image] at h
     rcases h with ⟨r, ⟨hr0, hr1⟩, hr⟩
     simp_rw [@dist_eq_norm_vsub V, ← hr]
     exact

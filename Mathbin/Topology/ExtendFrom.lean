@@ -44,25 +44,24 @@ def extendFrom (A : Set X) (f : X → Y) : X → Y := fun x => @lim _ ⟨f x⟩ 
 
 /-- If `f` converges to some `y` as `x` tends to `x₀` within `A`,
 then `f` tends to `extend_from A f x` as `x` tends to `x₀`. -/
-theorem tendsto_extend_from {A : Set X} {f : X → Y} {x : X} (h : ∃ y, Tendsto f (𝓝[A] x) (𝓝 y)) :
+theorem tendsto_extendFrom {A : Set X} {f : X → Y} {x : X} (h : ∃ y, Tendsto f (𝓝[A] x) (𝓝 y)) :
     Tendsto f (𝓝[A] x) (𝓝 <| extendFrom A f x) :=
   tendsto_nhds_lim h
-#align tendsto_extend_from tendsto_extend_from
+#align tendsto_extend_from tendsto_extendFrom
 
-theorem extend_from_eq [T2Space Y] {A : Set X} {f : X → Y} {x : X} {y : Y} (hx : x ∈ closure A)
+theorem extendFrom_eq [T2Space Y] {A : Set X} {f : X → Y} {x : X} {y : Y} (hx : x ∈ closure A)
     (hf : Tendsto f (𝓝[A] x) (𝓝 y)) : extendFrom A f x = y :=
   haveI := mem_closure_iff_nhds_within_ne_bot.mp hx
   tendsto_nhds_unique (tendsto_nhds_lim ⟨y, hf⟩) hf
-#align extend_from_eq extend_from_eq
+#align extend_from_eq extendFrom_eq
 
-theorem extend_from_extends [T2Space Y] {f : X → Y} {A : Set X} (hf : ContinuousOn f A) :
-    ∀ x ∈ A, extendFrom A f x = f x := fun x x_in =>
-  extend_from_eq (subset_closure x_in) (hf x x_in)
-#align extend_from_extends extend_from_extends
+theorem extendFrom_extends [T2Space Y] {f : X → Y} {A : Set X} (hf : ContinuousOn f A) :
+    ∀ x ∈ A, extendFrom A f x = f x := fun x x_in => extendFrom_eq (subset_closure x_in) (hf x x_in)
+#align extend_from_extends extendFrom_extends
 
 /-- If `f` is a function to a T₃ space `Y` which has a limit within `A` at any
 point of a set `B ⊆ closure A`, then `extend_from A f` is continuous on `B`. -/
-theorem continuous_on_extend_from [RegularSpace Y] {f : X → Y} {A B : Set X} (hB : B ⊆ closure A)
+theorem continuousOn_extendFrom [RegularSpace Y] {f : X → Y} {A B : Set X} (hB : B ⊆ closure A)
     (hf : ∀ x ∈ B, ∃ y, Tendsto f (𝓝[A] x) (𝓝 y)) : ContinuousOn (extendFrom A f) B :=
   by
   set φ := extendFrom A f
@@ -72,25 +71,25 @@ theorem continuous_on_extend_from [RegularSpace Y] {f : X → Y} {A B : Set X} (
   intro V' V'_in V'_closed
   obtain ⟨V, V_in, V_op, hV⟩ : ∃ V ∈ 𝓝 x, IsOpen V ∧ V ∩ A ⊆ f ⁻¹' V' :=
     by
-    have := tendsto_extend_from (hf x x_in)
-    rcases(nhds_within_basis_open x A).tendsto_left_iff.mp this V' V'_in with ⟨V, ⟨hxV, V_op⟩, hV⟩
+    have := tendsto_extendFrom (hf x x_in)
+    rcases(nhdsWithin_basis_open x A).tendsto_left_iff.mp this V' V'_in with ⟨V, ⟨hxV, V_op⟩, hV⟩
     use V, IsOpen.mem_nhds V_op hxV, V_op, hV
   suffices : ∀ y ∈ V ∩ B, φ y ∈ V'
   exact mem_of_superset (inter_mem_inf V_in <| mem_principal_self B) this
   rintro y ⟨hyV, hyB⟩
   haveI := mem_closure_iff_nhds_within_ne_bot.mp (hB hyB)
-  have limy : tendsto f (𝓝[A] y) (𝓝 <| φ y) := tendsto_extend_from (hf y hyB)
+  have limy : tendsto f (𝓝[A] y) (𝓝 <| φ y) := tendsto_extendFrom (hf y hyB)
   have hVy : V ∈ 𝓝 y := IsOpen.mem_nhds V_op hyV
-  have : V ∩ A ∈ 𝓝[A] y := by simpa [inter_comm] using inter_mem_nhds_within _ hVy
+  have : V ∩ A ∈ 𝓝[A] y := by simpa [inter_comm] using inter_mem_nhdsWithin _ hVy
   exact V'_closed.mem_of_tendsto limy (mem_of_superset this hV)
-#align continuous_on_extend_from continuous_on_extend_from
+#align continuous_on_extend_from continuousOn_extendFrom
 
 /-- If a function `f` to a T₃ space `Y` has a limit within a
 dense set `A` for any `x`, then `extend_from A f` is continuous. -/
-theorem continuous_extend_from [RegularSpace Y] {f : X → Y} {A : Set X} (hA : Dense A)
+theorem continuous_extendFrom [RegularSpace Y] {f : X → Y} {A : Set X} (hA : Dense A)
     (hf : ∀ x, ∃ y, Tendsto f (𝓝[A] x) (𝓝 y)) : Continuous (extendFrom A f) :=
   by
-  rw [continuous_iff_continuous_on_univ]
-  exact continuous_on_extend_from (fun x _ => hA x) (by simpa using hf)
-#align continuous_extend_from continuous_extend_from
+  rw [continuous_iff_continuousOn_univ]
+  exact continuousOn_extendFrom (fun x _ => hA x) (by simpa using hf)
+#align continuous_extend_from continuous_extendFrom
 

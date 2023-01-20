@@ -34,7 +34,14 @@ section
 
 open Classical
 
-theorem Nat.is_coprime_iff_coprime {m n : ℕ} : IsCoprime (m : ℤ) n ↔ Nat.Coprime m n :=
+/- warning: nat.is_coprime_iff_coprime clashes with nat.isCoprime_iff_coprime -> Nat.isCoprime_iff_coprime
+warning: nat.is_coprime_iff_coprime -> Nat.isCoprime_iff_coprime is a dubious translation:
+lean 3 declaration is
+  forall {m : Nat} {n : Nat}, Iff (IsCoprime.{0} Int Int.commSemiring ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) m) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) n)) (Nat.Coprime m n)
+but is expected to have type
+  forall {m : Nat} {n : Nat}, Iff (IsCoprime.{0} Int Int.instCommSemiringInt (Nat.cast.{0} Int Int.instNatCastInt m) (Nat.cast.{0} Int Int.instNatCastInt n)) (Nat.coprime m n)
+Case conversion may be inaccurate. Consider using '#align nat.is_coprime_iff_coprime Nat.isCoprime_iff_coprimeₓ'. -/
+theorem Nat.isCoprime_iff_coprime {m n : ℕ} : IsCoprime (m : ℤ) n ↔ Nat.Coprime m n :=
   ⟨fun ⟨a, b, H⟩ =>
     Nat.eq_one_of_dvd_one <|
       Int.coe_nat_dvd.1 <| by
@@ -46,7 +53,7 @@ theorem Nat.is_coprime_iff_coprime {m n : ℕ} : IsCoprime (m : ℤ) n ↔ Nat.C
     ⟨Nat.gcdA m n, Nat.gcdB m n, by
       rw [mul_comm _ (m : ℤ), mul_comm _ (n : ℤ), ← Nat.gcd_eq_gcd_ab, show _ = _ from H,
         Int.ofNat_one]⟩⟩
-#align nat.is_coprime_iff_coprime Nat.is_coprime_iff_coprime
+#align nat.is_coprime_iff_coprime Nat.isCoprime_iff_coprime
 
 /- warning: is_coprime.nat_coprime -> IsCoprime.nat_coprime is a dubious translation:
 lean 3 declaration is
@@ -60,7 +67,7 @@ lean 3 declaration is
 but is expected to have type
   forall {m : Nat} {n : Nat}, (Nat.coprime m n) -> (IsCoprime.{0} Int Int.instCommSemiringInt (Nat.cast.{0} Int Int.instNatCastInt m) (Nat.cast.{0} Int Int.instNatCastInt n))
 Case conversion may be inaccurate. Consider using '#align nat.coprime.is_coprime Nat.coprime.isCoprimeₓ'. -/
-alias Nat.is_coprime_iff_coprime ↔ IsCoprime.nat_coprime Nat.coprime.isCoprime
+alias Nat.isCoprime_iff_coprime ↔ IsCoprime.nat_coprime Nat.coprime.isCoprime
 #align is_coprime.nat_coprime IsCoprime.nat_coprime
 #align nat.coprime.is_coprime Nat.coprime.isCoprime
 

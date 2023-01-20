@@ -65,9 +65,9 @@ def toBipointed (X : TwopCat) : BipointedCat :=
 #align Twop.to_Bipointed TwopCat.toBipointed
 
 @[simp]
-theorem coe_to_Bipointed (X : TwopCat) : ↥X.toBipointed = ↥X :=
+theorem coe_toBipointed (X : TwopCat) : ↥X.toBipointed = ↥X :=
   rfl
-#align Twop.coe_to_Bipointed TwopCat.coe_to_Bipointed
+#align Twop.coe_to_Bipointed TwopCat.coe_toBipointed
 
 instance largeCategory : LargeCategory TwopCat :=
   InducedCategory.category toBipointed
@@ -105,18 +105,18 @@ def swapEquiv : TwopCat ≌ TwopCat :=
 #align Twop.swap_equiv TwopCat.swapEquiv
 
 @[simp]
-theorem swap_equiv_symm : swapEquiv.symm = swap_equiv :=
+theorem swapEquiv_symm : swapEquiv.symm = swap_equiv :=
   rfl
-#align Twop.swap_equiv_symm TwopCat.swap_equiv_symm
+#align Twop.swap_equiv_symm TwopCat.swapEquiv_symm
 
 end TwopCat
 
 @[simp]
-theorem Twop_swap_comp_forget_to_Bipointed :
+theorem twopCat_swap_comp_forget_to_bipointedCat :
     TwopCat.swap ⋙ forget₂ TwopCat BipointedCat =
       forget₂ TwopCat BipointedCat ⋙ BipointedCat.swap :=
   rfl
-#align Twop_swap_comp_forget_to_Bipointed Twop_swap_comp_forget_to_Bipointed
+#align Twop_swap_comp_forget_to_Bipointed twopCat_swap_comp_forget_to_bipointedCat
 
 /-- The functor from `Pointed` to `Twop` which adds a second point. -/
 @[simps]
@@ -139,26 +139,26 @@ def pointedToTwopSnd : PointedCat.{u} ⥤ TwopCat
 #align Pointed_to_Twop_snd pointedToTwopSnd
 
 @[simp]
-theorem Pointed_to_Twop_fst_comp_swap : pointedToTwopFst ⋙ TwopCat.swap = pointedToTwopSnd :=
+theorem pointedToTwopFst_comp_swap : pointedToTwopFst ⋙ TwopCat.swap = pointedToTwopSnd :=
   rfl
-#align Pointed_to_Twop_fst_comp_swap Pointed_to_Twop_fst_comp_swap
+#align Pointed_to_Twop_fst_comp_swap pointedToTwopFst_comp_swap
 
 @[simp]
-theorem Pointed_to_Twop_snd_comp_swap : pointedToTwopSnd ⋙ TwopCat.swap = pointedToTwopFst :=
+theorem pointedToTwopSnd_comp_swap : pointedToTwopSnd ⋙ TwopCat.swap = pointedToTwopFst :=
   rfl
-#align Pointed_to_Twop_snd_comp_swap Pointed_to_Twop_snd_comp_swap
+#align Pointed_to_Twop_snd_comp_swap pointedToTwopSnd_comp_swap
 
 @[simp]
-theorem Pointed_to_Twop_fst_comp_forget_to_Bipointed :
+theorem pointedToTwopFst_comp_forget_to_bipointedCat :
     pointedToTwopFst ⋙ forget₂ TwopCat BipointedCat = pointedToBipointedFst :=
   rfl
-#align Pointed_to_Twop_fst_comp_forget_to_Bipointed Pointed_to_Twop_fst_comp_forget_to_Bipointed
+#align Pointed_to_Twop_fst_comp_forget_to_Bipointed pointedToTwopFst_comp_forget_to_bipointedCat
 
 @[simp]
-theorem Pointed_to_Twop_snd_comp_forget_to_Bipointed :
+theorem pointedToTwopSnd_comp_forget_to_bipointedCat :
     pointedToTwopSnd ⋙ forget₂ TwopCat BipointedCat = pointedToBipointedSnd :=
   rfl
-#align Pointed_to_Twop_snd_comp_forget_to_Bipointed Pointed_to_Twop_snd_comp_forget_to_Bipointed
+#align Pointed_to_Twop_snd_comp_forget_to_Bipointed pointedToTwopSnd_comp_forget_to_bipointedCat
 
 /-- Adding a second point is left adjoint to forgetting the second point. -/
 def pointedToTwopFstForgetCompBipointedToPointedFstAdjunction :

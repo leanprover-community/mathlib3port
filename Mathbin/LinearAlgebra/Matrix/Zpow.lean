@@ -135,7 +135,7 @@ theorem IsUnit.det_zpow {A : M} (h : IsUnit A.det) (n : ℤ) : IsUnit (A ^ n).de
   · simpa using h.pow n.succ
 #align is_unit.det_zpow IsUnit.det_zpow
 
-theorem is_unit_det_zpow_iff {A : M} {z : ℤ} : IsUnit (A ^ z).det ↔ IsUnit A.det ∨ z = 0 :=
+theorem isUnit_det_zpow_iff {A : M} {z : ℤ} : IsUnit (A ^ z).det ↔ IsUnit A.det ∨ z = 0 :=
   by
   induction' z using Int.induction_on with z IH z IH
   · simp
@@ -144,7 +144,7 @@ theorem is_unit_det_zpow_iff {A : M} {z : ℤ} : IsUnit (A ^ z).det ↔ IsUnit A
   · rw [← neg_add', ← Int.ofNat_succ, zpow_neg_coe_nat, is_unit_nonsing_inv_det_iff, det_pow,
       isUnit_pow_succ_iff, neg_eq_zero, ← Int.ofNat_zero, Int.ofNat_inj]
     simp
-#align matrix.is_unit_det_zpow_iff Matrix.is_unit_det_zpow_iff
+#align matrix.is_unit_det_zpow_iff Matrix.isUnit_det_zpow_iff
 
 theorem zpow_neg {A : M} (h : IsUnit A.det) : ∀ n : ℤ, A ^ (-n) = (A ^ n)⁻¹
   | (n : ℕ) => zpow_neg_coe_nat _ _
@@ -309,13 +309,13 @@ theorem coe_units_zpow (u : Mˣ) : ∀ n : ℤ, ((u ^ n : Mˣ) : M) = u ^ n
   | -[k+1] => by rw [zpow_negSucc, zpow_negSucc, ← inv_pow, u⁻¹.coe_pow, ← inv_pow', coe_units_inv]
 #align matrix.coe_units_zpow Matrix.coe_units_zpow
 
-theorem zpow_ne_zero_of_is_unit_det [Nonempty n'] [Nontrivial R] {A : M} (ha : IsUnit A.det)
+theorem zpow_ne_zero_of_isUnit_det [Nonempty n'] [Nontrivial R] {A : M} (ha : IsUnit A.det)
     (z : ℤ) : A ^ z ≠ 0 := by
   have := ha.det_zpow z
   contrapose! this
   rw [this, det_zero ‹_›]
   exact not_isUnit_zero
-#align matrix.zpow_ne_zero_of_is_unit_det Matrix.zpow_ne_zero_of_is_unit_det
+#align matrix.zpow_ne_zero_of_is_unit_det Matrix.zpow_ne_zero_of_isUnit_det
 
 theorem zpow_sub {A : M} (ha : IsUnit A.det) (z1 z2 : ℤ) : A ^ (z1 - z2) = A ^ z1 / A ^ z2 := by
   rw [sub_eq_add_neg, zpow_add ha, zpow_neg ha, div_eq_mul_inv]
@@ -353,10 +353,10 @@ theorem transpose_zpow (A : M) : ∀ n : ℤ, (A ^ n)ᵀ = Aᵀ ^ n
 #align matrix.transpose_zpow Matrix.transpose_zpow
 
 @[simp]
-theorem conj_transpose_zpow [StarRing R] (A : M) : ∀ n : ℤ, (A ^ n)ᴴ = Aᴴ ^ n
+theorem conjTranspose_zpow [StarRing R] (A : M) : ∀ n : ℤ, (A ^ n)ᴴ = Aᴴ ^ n
   | (n : ℕ) => by rw [zpow_ofNat, zpow_ofNat, conj_transpose_pow]
   | -[n+1] => by rw [zpow_negSucc, zpow_negSucc, conj_transpose_nonsing_inv, conj_transpose_pow]
-#align matrix.conj_transpose_zpow Matrix.conj_transpose_zpow
+#align matrix.conj_transpose_zpow Matrix.conjTranspose_zpow
 
 end Zpow
 

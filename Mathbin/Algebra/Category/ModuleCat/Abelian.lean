@@ -86,8 +86,8 @@ def normalEpi (hf : Epi f) : NormalEpi f
 instance : Abelian (ModuleCat R)
     where
   HasFiniteProducts := ⟨fun n => Limits.hasLimitsOfShapeOfHasLimits⟩
-  HasKernels := Limits.has_kernels_of_has_equalizers (ModuleCat R)
-  HasCokernels := has_cokernels_Module
+  HasKernels := Limits.hasKernels_of_hasEqualizers (ModuleCat R)
+  HasCokernels := hasCokernels_moduleCat
   normalMonoOfMono X Y := normalMono
   normalEpiOfEpi X Y := normalEpi
 

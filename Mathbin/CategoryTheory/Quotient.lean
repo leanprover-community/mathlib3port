@@ -205,14 +205,14 @@ def lift.isLift : functor r ⋙ lift r F H ≅ F :=
 #align category_theory.quotient.lift.is_lift CategoryTheory.Quotient.lift.isLift
 
 @[simp]
-theorem lift.is_lift_hom (X : C) : (lift.isLift r F H).Hom.app X = 𝟙 (F.obj X) :=
+theorem lift.isLift_hom (X : C) : (lift.isLift r F H).Hom.app X = 𝟙 (F.obj X) :=
   rfl
-#align category_theory.quotient.lift.is_lift_hom CategoryTheory.Quotient.lift.is_lift_hom
+#align category_theory.quotient.lift.is_lift_hom CategoryTheory.Quotient.lift.isLift_hom
 
 @[simp]
-theorem lift.is_lift_inv (X : C) : (lift.isLift r F H).inv.app X = 𝟙 (F.obj X) :=
+theorem lift.isLift_inv (X : C) : (lift.isLift r F H).inv.app X = 𝟙 (F.obj X) :=
   rfl
-#align category_theory.quotient.lift.is_lift_inv CategoryTheory.Quotient.lift.is_lift_inv
+#align category_theory.quotient.lift.is_lift_inv CategoryTheory.Quotient.lift.isLift_inv
 
 theorem lift_map_functor_map {X Y : C} (f : X ⟶ Y) :
     (lift r F H).map ((functor r).map f) = F.map f :=

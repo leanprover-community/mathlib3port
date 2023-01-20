@@ -35,35 +35,35 @@ variable {C : Type _} [Category C] [MonoidalCategory C]
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 -- See Proposition 2.2.4 of <http://www-math.mit.edu/~etingof/egnobookfinal.pdf>
 @[reassoc.1]
-theorem left_unitor_tensor' (X Y : C) : (α_ (𝟙_ C) X Y).Hom ≫ (λ_ (X ⊗ Y)).Hom = (λ_ X).Hom ⊗ 𝟙 Y :=
+theorem leftUnitor_tensor' (X Y : C) : (α_ (𝟙_ C) X Y).Hom ≫ (λ_ (X ⊗ Y)).Hom = (λ_ X).Hom ⊗ 𝟙 Y :=
   by coherence
-#align category_theory.monoidal_category.left_unitor_tensor' CategoryTheory.MonoidalCategory.left_unitor_tensor'
+#align category_theory.monoidal_category.left_unitor_tensor' CategoryTheory.MonoidalCategory.leftUnitor_tensor'
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[reassoc.1, simp]
-theorem left_unitor_tensor (X Y : C) :
-    (λ_ (X ⊗ Y)).Hom = (α_ (𝟙_ C) X Y).inv ≫ ((λ_ X).Hom ⊗ 𝟙 Y) := by coherence
-#align category_theory.monoidal_category.left_unitor_tensor CategoryTheory.MonoidalCategory.left_unitor_tensor
+theorem leftUnitor_tensor (X Y : C) : (λ_ (X ⊗ Y)).Hom = (α_ (𝟙_ C) X Y).inv ≫ ((λ_ X).Hom ⊗ 𝟙 Y) :=
+  by coherence
+#align category_theory.monoidal_category.left_unitor_tensor CategoryTheory.MonoidalCategory.leftUnitor_tensor
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[reassoc.1]
-theorem left_unitor_tensor_inv (X Y : C) :
+theorem leftUnitor_tensor_inv (X Y : C) :
     (λ_ (X ⊗ Y)).inv = ((λ_ X).inv ⊗ 𝟙 Y) ≫ (α_ (𝟙_ C) X Y).Hom := by coherence
-#align category_theory.monoidal_category.left_unitor_tensor_inv CategoryTheory.MonoidalCategory.left_unitor_tensor_inv
+#align category_theory.monoidal_category.left_unitor_tensor_inv CategoryTheory.MonoidalCategory.leftUnitor_tensor_inv
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[reassoc.1]
-theorem id_tensor_right_unitor_inv (X Y : C) : 𝟙 X ⊗ (ρ_ Y).inv = (ρ_ _).inv ≫ (α_ _ _ _).Hom := by
+theorem id_tensor_rightUnitor_inv (X Y : C) : 𝟙 X ⊗ (ρ_ Y).inv = (ρ_ _).inv ≫ (α_ _ _ _).Hom := by
   coherence
-#align category_theory.monoidal_category.id_tensor_right_unitor_inv CategoryTheory.MonoidalCategory.id_tensor_right_unitor_inv
+#align category_theory.monoidal_category.id_tensor_right_unitor_inv CategoryTheory.MonoidalCategory.id_tensor_rightUnitor_inv
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[reassoc.1]
-theorem left_unitor_inv_tensor_id (X Y : C) : (λ_ X).inv ⊗ 𝟙 Y = (λ_ _).inv ≫ (α_ _ _ _).inv := by
+theorem leftUnitor_inv_tensor_id (X Y : C) : (λ_ X).inv ⊗ 𝟙 Y = (λ_ _).inv ≫ (α_ _ _ _).inv := by
   coherence
-#align category_theory.monoidal_category.left_unitor_inv_tensor_id CategoryTheory.MonoidalCategory.left_unitor_inv_tensor_id
+#align category_theory.monoidal_category.left_unitor_inv_tensor_id CategoryTheory.MonoidalCategory.leftUnitor_inv_tensor_id
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/

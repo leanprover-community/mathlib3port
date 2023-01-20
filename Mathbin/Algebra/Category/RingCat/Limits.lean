@@ -118,9 +118,9 @@ irreducible_def hasLimitsOfSize : HasLimitsOfSize.{v} SemiRingCat.{max v u} :=
               IsLimit := limit_cone_is_limit F } } }
 #align SemiRing.has_limits_of_size SemiRingCat.hasLimitsOfSize
 
-instance has_limits : HasLimits SemiRingCat.{u} :=
+instance hasLimits : HasLimits SemiRingCat.{u} :=
   SemiRingCat.hasLimitsOfSize.{u, u}
-#align SemiRing.has_limits SemiRingCat.has_limits
+#align SemiRing.has_limits SemiRingCat.hasLimits
 
 /-- An auxiliary declaration to speed up typechecking.
 -/
@@ -248,9 +248,9 @@ irreducible_def hasLimitsOfSize : HasLimitsOfSize.{v, v} CommSemiRingCat.{max v 
           has_limit_of_created F (forget₂ CommSemiRingCat SemiRingCat.{max v u}) } }
 #align CommSemiRing.has_limits_of_size CommSemiRingCat.hasLimitsOfSize
 
-instance has_limits : HasLimits CommSemiRingCat.{u} :=
+instance hasLimits : HasLimits CommSemiRingCat.{u} :=
   CommSemiRingCat.hasLimitsOfSize.{u, u}
-#align CommSemiRing.has_limits CommSemiRingCat.has_limits
+#align CommSemiRing.has_limits CommSemiRingCat.hasLimits
 
 /-- The forgetful functor from rings to semirings preserves all limits.
 -/
@@ -348,9 +348,9 @@ irreducible_def hasLimitsOfSize : HasLimitsOfSize.{v, v} RingCat.{max v u} :=
       { HasLimit := fun F => has_limit_of_created F (forget₂ RingCat SemiRingCat.{max v u}) } }
 #align Ring.has_limits_of_size RingCat.hasLimitsOfSize
 
-instance has_limits : HasLimits RingCat.{u} :=
+instance hasLimits : HasLimits RingCat.{u} :=
   RingCat.hasLimitsOfSize.{u, u}
-#align Ring.has_limits RingCat.has_limits
+#align Ring.has_limits RingCat.hasLimits
 
 /-- The forgetful functor from rings to semirings preserves all limits.
 -/
@@ -476,9 +476,9 @@ irreducible_def hasLimitsOfSize : HasLimitsOfSize.{v, v} CommRingCat.{max v u} :
       { HasLimit := fun F => has_limit_of_created F (forget₂ CommRingCat RingCat.{max v u}) } }
 #align CommRing.has_limits_of_size CommRingCat.hasLimitsOfSize
 
-instance has_limits : HasLimits CommRingCat.{u} :=
+instance hasLimits : HasLimits CommRingCat.{u} :=
   CommRingCat.hasLimitsOfSize.{u, u}
-#align CommRing.has_limits CommRingCat.has_limits
+#align CommRing.has_limits CommRingCat.hasLimits
 
 /-- The forgetful functor from commutative rings to rings preserves all limits.
 (That is, the underlying rings could have been computed instead as limits in the category of rings.)

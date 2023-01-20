@@ -117,7 +117,7 @@ theorem exact_iff' {cg : KernelFork g} (hg : IsLimit cg) {cf : CokernelCofork f}
      (Command.declModifiers [] [] [] [] [] [])
      (Command.theorem
       "theorem"
-      (Command.declId `exact_tfae [])
+      (Command.declId `exact_tFAE [])
       (Command.declSig
        []
        (Term.typeSpec
@@ -213,7 +213,7 @@ theorem exact_iff' {cg : KernelFork g} (hg : IsLimit cg) {cf : CokernelCofork f}
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 theorem
-  exact_tfae
+  exact_tFAE
   :
     TFAE
       [
@@ -228,7 +228,7 @@ theorem
         ;
         · apply exact_iff_image_eq_kernel
         tfae_finish
-#align category_theory.abelian.exact_tfae CategoryTheory.Abelian.exact_tfae
+#align category_theory.abelian.exact_tfae CategoryTheory.Abelian.exact_tFAE
 
 theorem IsEquivalence.exact_iff {D : Type u₁} [Category.{v₁} D] [Abelian D] (F : C ⥤ D)
     [IsEquivalence F] : Exact (F.map f) (F.map g) ↔ Exact f g :=
@@ -283,8 +283,7 @@ def isColimitCoimage (h : Exact f g) :
 
 /-- If `(f, g)` is exact, then `factor_thru_image g` is a cokernel of `f`. -/
 def isColimitImage (h : Exact f g) :
-    IsColimit
-      (CokernelCofork.ofπ (Limits.factorThruImage g) (comp_factor_thru_image_eq_zero h.1)) :=
+    IsColimit (CokernelCofork.ofπ (Limits.factorThruImage g) (comp_factorThruImage_eq_zero h.1)) :=
   IsCokernel.cokernelIso _ _ (isColimitCoimage f g h) (coimageIsoImage' g) <|
     (cancel_mono (Limits.image.ι g)).1 <| by simp
 #align category_theory.abelian.is_colimit_image CategoryTheory.Abelian.isColimitImage
@@ -307,7 +306,7 @@ instance (h : Exact f g) : Mono (cokernel.desc f g h.w) :=
 
 /-- If `ex : exact f g` and `epi g`, then `cokernel.desc _ _ ex.w` is an isomorphism. -/
 instance (ex : Exact f g) [Epi g] : IsIso (cokernel.desc f g ex.w) :=
-  is_iso_of_mono_of_epi (Limits.cokernel.desc f g ex.w)
+  isIso_of_mono_of_epi (Limits.cokernel.desc f g ex.w)
 
 @[simp, reassoc.1]
 theorem Cokernel.Desc.inv [Epi g] (ex : Exact f g) :
@@ -315,7 +314,7 @@ theorem Cokernel.Desc.inv [Epi g] (ex : Exact f g) :
 #align category_theory.abelian.cokernel.desc.inv CategoryTheory.Abelian.Cokernel.Desc.inv
 
 instance (ex : Exact f g) [Mono f] : IsIso (kernel.lift g f ex.w) :=
-  is_iso_of_mono_of_epi (Limits.kernel.lift g f ex.w)
+  isIso_of_mono_of_epi (Limits.kernel.lift g f ex.w)
 
 @[simp, reassoc.1]
 theorem Kernel.Lift.inv [Mono f] (ex : Exact f g) : inv (kernel.lift _ _ ex.w) ≫ f = kernel.ι g :=
@@ -373,7 +372,7 @@ variable (Z)
      (Command.declModifiers [] [] [] [] [] [])
      (Command.theorem
       "theorem"
-      (Command.declId `tfae_mono [])
+      (Command.declId `tFAE_mono [])
       (Command.declSig
        []
        (Term.typeSpec
@@ -494,7 +493,7 @@ variable (Z)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 theorem
-  tfae_mono
+  tFAE_mono
   : TFAE [ Mono f , kernel.ι f = 0 , Exact ( 0 : Z ⟶ X ) f ]
   :=
     by
@@ -505,12 +504,12 @@ theorem
         tfae_have 2 → 1
         · exact mono_of_kernel_ι_eq_zero _
         tfae_finish
-#align category_theory.abelian.tfae_mono CategoryTheory.Abelian.tfae_mono
+#align category_theory.abelian.tfae_mono CategoryTheory.Abelian.tFAE_mono
 
 -- Note we've already proved `mono_iff_exact_zero_left : mono f ↔ exact (0 : Z ⟶ X) f`
 -- in any preadditive category with kernels and images.
 theorem mono_iff_kernel_ι_eq_zero : Mono f ↔ kernel.ι f = 0 :=
-  (tfae_mono X f).out 0 1
+  (tFAE_mono X f).out 0 1
 #align category_theory.abelian.mono_iff_kernel_ι_eq_zero CategoryTheory.Abelian.mono_iff_kernel_ι_eq_zero
 
 /- failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -518,7 +517,7 @@ theorem mono_iff_kernel_ι_eq_zero : Mono f ↔ kernel.ι f = 0 :=
      (Command.declModifiers [] [] [] [] [] [])
      (Command.theorem
       "theorem"
-      (Command.declId `tfae_epi [])
+      (Command.declId `tFAE_epi [])
       (Command.declSig
        []
        (Term.typeSpec
@@ -717,7 +716,7 @@ theorem mono_iff_kernel_ι_eq_zero : Mono f ↔ kernel.ι f = 0 :=
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 theorem
-  tfae_epi
+  tFAE_epi
   : TFAE [ Epi f , cokernel.π f = 0 , Exact f ( 0 : Y ⟶ Z ) ]
   :=
     by
@@ -728,12 +727,12 @@ theorem
         tfae_have 2 → 1
         · exact epi_of_cokernel_π_eq_zero _
         tfae_finish
-#align category_theory.abelian.tfae_epi CategoryTheory.Abelian.tfae_epi
+#align category_theory.abelian.tfae_epi CategoryTheory.Abelian.tFAE_epi
 
 -- Note we've already proved `epi_iff_exact_zero_right : epi f ↔ exact f (0 : Y ⟶ Z)`
 -- in any preadditive category with equalizers and images.
 theorem epi_iff_cokernel_π_eq_zero : Epi f ↔ cokernel.π f = 0 :=
-  (tfae_epi X f).out 0 1
+  (tFAE_epi X f).out 0 1
 #align category_theory.abelian.epi_iff_cokernel_π_eq_zero CategoryTheory.Abelian.epi_iff_cokernel_π_eq_zero
 
 end
@@ -832,15 +831,15 @@ include h
 open ZeroObject
 
 /-- A functor which preserves exactness preserves zero morphisms. -/
-theorem preserves_zero_morphisms_of_map_exact : L.PreservesZeroMorphisms :=
+theorem preservesZeroMorphisms_of_map_exact : L.PreservesZeroMorphisms :=
   by
   replace h := (h (exact_of_zero (𝟙 0) (𝟙 0))).w
   rw [L.map_id, category.comp_id] at h
   exact preserves_zero_morphisms_of_map_zero_object (id_zero_equiv_iso_zero _ h)
-#align category_theory.functor.preserves_zero_morphisms_of_map_exact CategoryTheory.Functor.preserves_zero_morphisms_of_map_exact
+#align category_theory.functor.preserves_zero_morphisms_of_map_exact CategoryTheory.Functor.preservesZeroMorphisms_of_map_exact
 
 /-- A functor which preserves exactness preserves monomorphisms. -/
-theorem preserves_monomorphisms_of_map_exact : L.PreservesMonomorphisms :=
+theorem preservesMonomorphisms_of_map_exact : L.PreservesMonomorphisms :=
   {
     preserves := fun X Y f hf =>
       by
@@ -848,10 +847,10 @@ theorem preserves_monomorphisms_of_map_exact : L.PreservesMonomorphisms :=
       apply ((tfae_mono (L.obj 0) (L.map f)).out 2 0).mp
       rw [← L.map_zero]
       exact h (((tfae_mono 0 f).out 0 2).mp hf) }
-#align category_theory.functor.preserves_monomorphisms_of_map_exact CategoryTheory.Functor.preserves_monomorphisms_of_map_exact
+#align category_theory.functor.preserves_monomorphisms_of_map_exact CategoryTheory.Functor.preservesMonomorphisms_of_map_exact
 
 /-- A functor which preserves exactness preserves epimorphisms. -/
-theorem preserves_epimorphisms_of_map_exact : L.PreservesEpimorphisms :=
+theorem preservesEpimorphisms_of_map_exact : L.PreservesEpimorphisms :=
   {
     preserves := fun X Y f hf =>
       by
@@ -859,7 +858,7 @@ theorem preserves_epimorphisms_of_map_exact : L.PreservesEpimorphisms :=
       apply ((tfae_epi (L.obj 0) (L.map f)).out 2 0).mp
       rw [← L.map_zero]
       exact h (((tfae_epi 0 f).out 0 2).mp hf) }
-#align category_theory.functor.preserves_epimorphisms_of_map_exact CategoryTheory.Functor.preserves_epimorphisms_of_map_exact
+#align category_theory.functor.preserves_epimorphisms_of_map_exact CategoryTheory.Functor.preservesEpimorphisms_of_map_exact
 
 /-- A functor which preserves exactness preserves kernels. -/
 def preservesKernelsOfMapExact (X Y : A) (f : X ⟶ Y) : PreservesLimit (parallelPair f 0) L

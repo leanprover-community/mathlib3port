@@ -59,14 +59,14 @@ def ofSigma : (Σa : α, β a → WType β) → WType β
 #align W_type.of_sigma WType.ofSigma
 
 @[simp]
-theorem of_sigma_to_sigma : ∀ w : WType β, ofSigma (toSigma w) = w
+theorem ofSigma_toSigma : ∀ w : WType β, ofSigma (toSigma w) = w
   | ⟨a, f⟩ => rfl
-#align W_type.of_sigma_to_sigma WType.of_sigma_to_sigma
+#align W_type.of_sigma_to_sigma WType.ofSigma_toSigma
 
 @[simp]
-theorem to_sigma_of_sigma : ∀ s : Σa : α, β a → WType β, toSigma (ofSigma s) = s
+theorem toSigma_ofSigma : ∀ s : Σa : α, β a → WType β, toSigma (ofSigma s) = s
   | ⟨a, f⟩ => rfl
-#align W_type.to_sigma_of_sigma WType.to_sigma_of_sigma
+#align W_type.to_sigma_of_sigma WType.toSigma_ofSigma
 
 variable (β)
 
@@ -77,8 +77,8 @@ def equivSigma : WType β ≃ Σa : α, β a → WType β
     where
   toFun := toSigma
   invFun := ofSigma
-  left_inv := of_sigma_to_sigma
-  right_inv := to_sigma_of_sigma
+  left_inv := ofSigma_toSigma
+  right_inv := toSigma_ofSigma
 #align W_type.equiv_sigma WType.equivSigma
 
 variable {β}
@@ -100,13 +100,13 @@ theorem elim_injective (γ : Type _) (fγ : (Σa : α, β a → γ) → γ)
     by
     obtain ⟨rfl, h⟩ := Sigma.mk.inj (fγ_injective h)
     congr with x
-    exact elim_injective (congr_fun (eq_of_heq h) x : _)
+    exact elim_injective (congr_fun (eq_of_hEq h) x : _)
 #align W_type.elim_injective WType.elim_injective
 
 instance [hα : IsEmpty α] : IsEmpty (WType β) :=
   ⟨fun w => WType.recOn w (IsEmpty.elim hα)⟩
 
-theorem infinite_of_nonempty_of_is_empty (a b : α) [ha : Nonempty (β a)] [he : IsEmpty (β b)] :
+theorem infinite_of_nonempty_of_isEmpty (a b : α) [ha : Nonempty (β a)] [he : IsEmpty (β b)] :
     Infinite (WType β) :=
   ⟨by
     intro hf
@@ -123,7 +123,7 @@ theorem infinite_of_nonempty_of_is_empty (a b : α) [ha : Nonempty (β a)] [he :
       · simp_all
       · refine' congr_arg Nat.succ (ih _)
         simp_all [Function.funext_iff]⟩
-#align W_type.infinite_of_nonempty_of_is_empty WType.infinite_of_nonempty_of_is_empty
+#align W_type.infinite_of_nonempty_of_is_empty WType.infinite_of_nonempty_of_isEmpty
 
 variable [∀ a : α, Fintype (β a)]
 

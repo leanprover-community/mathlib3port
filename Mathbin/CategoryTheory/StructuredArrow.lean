@@ -127,15 +127,15 @@ theorem epi_of_epi_right {A B : StructuredArrow S T} (f : A ⟶ B) [h : Epi f.ri
   (proj S T).epi_of_epi_map h
 #align category_theory.structured_arrow.epi_of_epi_right CategoryTheory.StructuredArrow.epi_of_epi_right
 
-instance mono_hom_mk {A B : StructuredArrow S T} (f : A.right ⟶ B.right) (w) [h : Mono f] :
+instance mono_homMk {A B : StructuredArrow S T} (f : A.right ⟶ B.right) (w) [h : Mono f] :
     Mono (homMk f w) :=
   (proj S T).mono_of_mono_map h
-#align category_theory.structured_arrow.mono_hom_mk CategoryTheory.StructuredArrow.mono_hom_mk
+#align category_theory.structured_arrow.mono_hom_mk CategoryTheory.StructuredArrow.mono_homMk
 
-instance epi_hom_mk {A B : StructuredArrow S T} (f : A.right ⟶ B.right) (w) [h : Epi f] :
+instance epi_homMk {A B : StructuredArrow S T} (f : A.right ⟶ B.right) (w) [h : Epi f] :
     Epi (homMk f w) :=
   (proj S T).epi_of_epi_map h
-#align category_theory.structured_arrow.epi_hom_mk CategoryTheory.StructuredArrow.epi_hom_mk
+#align category_theory.structured_arrow.epi_hom_mk CategoryTheory.StructuredArrow.epi_homMk
 
 /-- Eta rule for structured arrows. Prefer `structured_arrow.eta`, since equality of objects tends
     to cause problems. -/
@@ -228,7 +228,7 @@ def post (S : C) (F : B ⥤ C) (G : C ⥤ D) : StructuredArrow S F ⥤ Structure
       w' := by simp [functor.comp_map, ← G.map_comp, ← f.w] }
 #align category_theory.structured_arrow.post CategoryTheory.StructuredArrow.post
 
-instance small_proj_preimage_of_locally_small {𝒢 : Set C} [Small.{v₁} 𝒢] [LocallySmall.{v₁} D] :
+instance small_proj_preimage_of_locallySmall {𝒢 : Set C} [Small.{v₁} 𝒢] [LocallySmall.{v₁} D] :
     Small.{v₁} ((proj S T).obj ⁻¹' 𝒢) :=
   by
   suffices (proj S T).obj ⁻¹' 𝒢 = Set.range fun f : ΣG : 𝒢, S ⟶ T.obj G => mk f.2
@@ -236,7 +236,7 @@ instance small_proj_preimage_of_locally_small {𝒢 : Set C} [Small.{v₁} 𝒢]
     rw [this]
     infer_instance
   exact Set.ext fun X => ⟨fun h => ⟨⟨⟨_, h⟩, X.Hom⟩, (eq_mk _).symm⟩, by tidy⟩
-#align category_theory.structured_arrow.small_proj_preimage_of_locally_small CategoryTheory.StructuredArrow.small_proj_preimage_of_locally_small
+#align category_theory.structured_arrow.small_proj_preimage_of_locally_small CategoryTheory.StructuredArrow.small_proj_preimage_of_locallySmall
 
 end StructuredArrow
 
@@ -325,15 +325,15 @@ theorem epi_of_epi_left {A B : CostructuredArrow S T} (f : A ⟶ B) [h : Epi f.l
   (proj S T).epi_of_epi_map h
 #align category_theory.costructured_arrow.epi_of_epi_left CategoryTheory.CostructuredArrow.epi_of_epi_left
 
-instance mono_hom_mk {A B : CostructuredArrow S T} (f : A.left ⟶ B.left) (w) [h : Mono f] :
+instance mono_homMk {A B : CostructuredArrow S T} (f : A.left ⟶ B.left) (w) [h : Mono f] :
     Mono (homMk f w) :=
   (proj S T).mono_of_mono_map h
-#align category_theory.costructured_arrow.mono_hom_mk CategoryTheory.CostructuredArrow.mono_hom_mk
+#align category_theory.costructured_arrow.mono_hom_mk CategoryTheory.CostructuredArrow.mono_homMk
 
-instance epi_hom_mk {A B : CostructuredArrow S T} (f : A.left ⟶ B.left) (w) [h : Epi f] :
+instance epi_homMk {A B : CostructuredArrow S T} (f : A.left ⟶ B.left) (w) [h : Epi f] :
     Epi (homMk f w) :=
   (proj S T).epi_of_epi_map h
-#align category_theory.costructured_arrow.epi_hom_mk CategoryTheory.CostructuredArrow.epi_hom_mk
+#align category_theory.costructured_arrow.epi_hom_mk CategoryTheory.CostructuredArrow.epi_homMk
 
 /-- Eta rule for costructured arrows. Prefer `costructured_arrow.eta`, as equality of objects tends
     to cause problems. -/
@@ -428,7 +428,7 @@ def post (F : B ⥤ C) (G : C ⥤ D) (S : C) :
       w' := by simp [functor.comp_map, ← G.map_comp, ← f.w] }
 #align category_theory.costructured_arrow.post CategoryTheory.CostructuredArrow.post
 
-instance small_proj_preimage_of_locally_small {𝒢 : Set C} [Small.{v₁} 𝒢] [LocallySmall.{v₁} D] :
+instance small_proj_preimage_of_locallySmall {𝒢 : Set C} [Small.{v₁} 𝒢] [LocallySmall.{v₁} D] :
     Small.{v₁} ((proj S T).obj ⁻¹' 𝒢) :=
   by
   suffices (proj S T).obj ⁻¹' 𝒢 = Set.range fun f : ΣG : 𝒢, S.obj G ⟶ T => mk f.2
@@ -436,7 +436,7 @@ instance small_proj_preimage_of_locally_small {𝒢 : Set C} [Small.{v₁} 𝒢]
     rw [this]
     infer_instance
   exact Set.ext fun X => ⟨fun h => ⟨⟨⟨_, h⟩, X.Hom⟩, (eq_mk _).symm⟩, by tidy⟩
-#align category_theory.costructured_arrow.small_proj_preimage_of_locally_small CategoryTheory.CostructuredArrow.small_proj_preimage_of_locally_small
+#align category_theory.costructured_arrow.small_proj_preimage_of_locally_small CategoryTheory.CostructuredArrow.small_proj_preimage_of_locallySmall
 
 end CostructuredArrow
 

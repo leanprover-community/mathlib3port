@@ -55,14 +55,14 @@ theorem le_def {f g : Π₀ i, α i} : f ≤ g ↔ ∀ i, f i ≤ g i :=
 def orderEmbeddingToFun : (Π₀ i, α i) ↪o ∀ i, α i
     where
   toFun := coeFn
-  inj' := coe_fn_injective
+  inj' := coeFn_injective
   map_rel_iff' a b := (@le_def _ _ _ _ a b).symm
 #align dfinsupp.order_embedding_to_fun Dfinsupp.orderEmbeddingToFun
 
 @[simp]
-theorem order_embedding_to_fun_apply {f : Π₀ i, α i} {i : ι} : orderEmbeddingToFun f i = f i :=
+theorem orderEmbeddingToFun_apply {f : Π₀ i, α i} {i : ι} : orderEmbeddingToFun f i = f i :=
   rfl
-#align dfinsupp.order_embedding_to_fun_apply Dfinsupp.order_embedding_to_fun_apply
+#align dfinsupp.order_embedding_to_fun_apply Dfinsupp.orderEmbeddingToFun_apply
 
 end LE
 
@@ -75,8 +75,8 @@ instance : Preorder (Π₀ i, α i) :=
     le_refl := fun f i => le_rfl
     le_trans := fun f g h hfg hgh i => (hfg i).trans (hgh i) }
 
-theorem coe_fn_mono : Monotone (coeFn : (Π₀ i, α i) → ∀ i, α i) := fun f g => le_def.1
-#align dfinsupp.coe_fn_mono Dfinsupp.coe_fn_mono
+theorem coeFn_mono : Monotone (coeFn : (Π₀ i, α i) → ∀ i, α i) := fun f g => le_def.1
+#align dfinsupp.coe_fn_mono Dfinsupp.coeFn_mono
 
 end Preorder
 
@@ -101,7 +101,7 @@ instance [∀ i, SemilatticeInf (α i)] : SemilatticeInf (Π₀ i, α i) :=
 
 @[simp]
 theorem inf_apply [∀ i, SemilatticeInf (α i)] (f g : Π₀ i, α i) (i : ι) : (f ⊓ g) i = f i ⊓ g i :=
-  zip_with_apply _ _ _ _ _
+  zipWith_apply _ _ _ _ _
 #align dfinsupp.inf_apply Dfinsupp.inf_apply
 
 instance [∀ i, SemilatticeSup (α i)] : SemilatticeSup (Π₀ i, α i) :=
@@ -121,7 +121,7 @@ instance [∀ i, SemilatticeSup (α i)] : SemilatticeSup (Π₀ i, α i) :=
 
 @[simp]
 theorem sup_apply [∀ i, SemilatticeSup (α i)] (f g : Π₀ i, α i) (i : ι) : (f ⊔ g) i = f i ⊔ g i :=
-  zip_with_apply _ _ _ _ _
+  zipWith_apply _ _ _ _ _
 #align dfinsupp.sup_apply Dfinsupp.sup_apply
 
 instance lattice [∀ i, Lattice (α i)] : Lattice (Π₀ i, α i) :=
@@ -214,7 +214,7 @@ instance tsub : Sub (Π₀ i, α i) :=
 variable {α}
 
 theorem tsub_apply (f g : Π₀ i, α i) (i : ι) : (f - g) i = f i - g i :=
-  zip_with_apply _ _ _ _ _
+  zipWith_apply _ _ _ _ _
 #align dfinsupp.tsub_apply Dfinsupp.tsub_apply
 
 @[simp]

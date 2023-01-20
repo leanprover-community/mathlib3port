@@ -41,9 +41,9 @@ def natLt (f : ℕ → α) (H : ∀ n : ℕ, r (f n) (f (n + 1))) : ((· < ·) :
 #align rel_embedding.nat_lt RelEmbedding.natLt
 
 @[simp]
-theorem coe_nat_lt {f : ℕ → α} {H : ∀ n : ℕ, r (f n) (f (n + 1))} : ⇑(natLt f H) = f :=
+theorem coe_natLt {f : ℕ → α} {H : ∀ n : ℕ, r (f n) (f (n + 1))} : ⇑(natLt f H) = f :=
   rfl
-#align rel_embedding.coe_nat_lt RelEmbedding.coe_nat_lt
+#align rel_embedding.coe_nat_lt RelEmbedding.coe_natLt
 
 /-- If `f` is a strictly `r`-decreasing sequence, then this returns `f` as an order embedding. -/
 def natGt (f : ℕ → α) (H : ∀ n : ℕ, r (f (n + 1)) (f n)) : ((· > ·) : ℕ → ℕ → Prop) ↪r r :=
@@ -52,9 +52,9 @@ def natGt (f : ℕ → α) (H : ∀ n : ℕ, r (f (n + 1)) (f n)) : ((· > ·) :
 #align rel_embedding.nat_gt RelEmbedding.natGt
 
 @[simp]
-theorem coe_nat_gt {f : ℕ → α} {H : ∀ n : ℕ, r (f (n + 1)) (f n)} : ⇑(natGt f H) = f :=
+theorem coe_natGt {f : ℕ → α} {H : ∀ n : ℕ, r (f (n + 1)) (f n)} : ⇑(natGt f H) = f :=
   rfl
-#align rel_embedding.coe_nat_gt RelEmbedding.coe_nat_gt
+#align rel_embedding.coe_nat_gt RelEmbedding.coe_natGt
 
 theorem exists_not_acc_lt_of_not_acc {a : α} {r} (h : ¬Acc r a) : ∃ b, ¬Acc r b ∧ r b a :=
   by
@@ -92,7 +92,7 @@ theorem not_acc_of_decreasing_seq (f : ((· > ·) : ℕ → ℕ → Prop) ↪r r
 #align rel_embedding.not_acc_of_decreasing_seq RelEmbedding.not_acc_of_decreasing_seq
 
 /-- A relation is well-founded iff it doesn't have any infinite decreasing sequence. -/
-theorem well_founded_iff_no_descending_seq :
+theorem wellFounded_iff_no_descending_seq :
     WellFounded r ↔ IsEmpty (((· > ·) : ℕ → ℕ → Prop) ↪r r) :=
   by
   constructor
@@ -100,13 +100,13 @@ theorem well_founded_iff_no_descending_seq :
     exact ⟨fun f => not_acc_of_decreasing_seq f 0 (h _)⟩
   · intro h
     exact ⟨fun x => acc_iff_no_decreasing_seq.2 inferInstance⟩
-#align rel_embedding.well_founded_iff_no_descending_seq RelEmbedding.well_founded_iff_no_descending_seq
+#align rel_embedding.well_founded_iff_no_descending_seq RelEmbedding.wellFounded_iff_no_descending_seq
 
-theorem not_well_founded_of_decreasing_seq (f : ((· > ·) : ℕ → ℕ → Prop) ↪r r) : ¬WellFounded r :=
+theorem not_wellFounded_of_decreasing_seq (f : ((· > ·) : ℕ → ℕ → Prop) ↪r r) : ¬WellFounded r :=
   by
   rw [well_founded_iff_no_descending_seq, not_isEmpty_iff]
   exact ⟨f⟩
-#align rel_embedding.not_well_founded_of_decreasing_seq RelEmbedding.not_well_founded_of_decreasing_seq
+#align rel_embedding.not_well_founded_of_decreasing_seq RelEmbedding.not_wellFounded_of_decreasing_seq
 
 end RelEmbedding
 
@@ -128,30 +128,30 @@ noncomputable def Subtype.orderIsoOfNat : ℕ ≃o s := by
       RelIso.ofSurjective
         (RelEmbedding.orderEmbeddingOfLTEmbedding
           (RelEmbedding.natLt (Nat.Subtype.ofNat s) fun n => Nat.Subtype.lt_succ_self _))
-        Nat.Subtype.of_nat_surjective
+        Nat.Subtype.ofNat_surjective
 #align nat.subtype.order_iso_of_nat Nat.Subtype.orderIsoOfNat
 
 variable {s}
 
 @[simp]
-theorem coe_order_embedding_of_set : ⇑(orderEmbeddingOfSet s) = coe ∘ Subtype.ofNat s :=
+theorem coe_orderEmbeddingOfSet : ⇑(orderEmbeddingOfSet s) = coe ∘ Subtype.ofNat s :=
   rfl
-#align nat.coe_order_embedding_of_set Nat.coe_order_embedding_of_set
+#align nat.coe_order_embedding_of_set Nat.coe_orderEmbeddingOfSet
 
-theorem order_embedding_of_set_apply {n : ℕ} : orderEmbeddingOfSet s n = Subtype.ofNat s n :=
+theorem orderEmbeddingOfSet_apply {n : ℕ} : orderEmbeddingOfSet s n = Subtype.ofNat s n :=
   rfl
-#align nat.order_embedding_of_set_apply Nat.order_embedding_of_set_apply
+#align nat.order_embedding_of_set_apply Nat.orderEmbeddingOfSet_apply
 
 @[simp]
-theorem Subtype.order_iso_of_nat_apply {n : ℕ} : Subtype.orderIsoOfNat s n = Subtype.ofNat s n := by
+theorem Subtype.orderIsoOfNat_apply {n : ℕ} : Subtype.orderIsoOfNat s n = Subtype.ofNat s n := by
   simp [subtype.order_iso_of_nat]
-#align nat.subtype.order_iso_of_nat_apply Nat.Subtype.order_iso_of_nat_apply
+#align nat.subtype.order_iso_of_nat_apply Nat.Subtype.orderIsoOfNat_apply
 
 variable (s)
 
-theorem order_embedding_of_set_range : Set.range (Nat.orderEmbeddingOfSet s) = s :=
+theorem orderEmbeddingOfSet_range : Set.range (Nat.orderEmbeddingOfSet s) = s :=
   subtype.coe_comp_of_nat_range
-#align nat.order_embedding_of_set_range Nat.order_embedding_of_set_range
+#align nat.order_embedding_of_set_range Nat.orderEmbeddingOfSet_range
 
 theorem exists_subseq_of_forall_mem_union {s t : Set α} (e : ℕ → α) (he : ∀ n, e n ∈ s ∪ t) :
     ∃ g : ℕ ↪o ℕ, (∀ n, e (g n) ∈ s) ∨ ∀ n, e (g n) ∈ t := by
@@ -176,7 +176,7 @@ theorem exists_increasing_or_nonincreasing_subseq' (r : α → α → Prop) (f :
     · haveI := hbad
       refine' ⟨Nat.orderEmbeddingOfSet bad, Or.intro_right _ fun m n mn => _⟩
       have h := Set.mem_range_self m
-      rw [Nat.order_embedding_of_set_range bad] at h
+      rw [Nat.orderEmbeddingOfSet_range bad] at h
       exact h _ ((OrderEmbedding.lt_iff_lt _).2 mn)
     · rw [Set.infinite_coe_iff, Set.Infinite, not_not] at hbad
       obtain ⟨m, hm⟩ : ∃ m, ∀ n, m ≤ n → ¬n ∈ bad :=
@@ -228,7 +228,7 @@ theorem WellFounded.monotone_chain_condition' [Preorder α] :
   · have hne : (Set.range a).Nonempty := ⟨a 0, by simp⟩
     obtain ⟨x, ⟨n, rfl⟩, H⟩ := h.has_min _ hne
     exact ⟨n, fun m hm => H _ (Set.mem_range_self _)⟩
-  · refine' RelEmbedding.well_founded_iff_no_descending_seq.2 ⟨fun a => _⟩
+  · refine' RelEmbedding.wellFounded_iff_no_descending_seq.2 ⟨fun a => _⟩
     obtain ⟨n, hn⟩ := h (a.swap : ((· < ·) : ℕ → ℕ → Prop) →r ((· < ·) : α → α → Prop)).toOrderHom
     exact hn n.succ n.lt_succ_self.le ((RelEmbedding.map_rel_iff _).2 n.lt_succ_self)
 #align well_founded.monotone_chain_condition' WellFounded.monotone_chain_condition'
@@ -259,7 +259,7 @@ noncomputable def monotonicSequenceLimit [Preorder α] (a : ℕ →o α) :=
   a (monotonicSequenceLimitIndex a)
 #align monotonic_sequence_limit monotonicSequenceLimit
 
-theorem WellFounded.supr_eq_monotonic_sequence_limit [CompleteLattice α]
+theorem WellFounded.supᵢ_eq_monotonicSequenceLimit [CompleteLattice α]
     (h : WellFounded ((· > ·) : α → α → Prop)) (a : ℕ →o α) : supᵢ a = monotonicSequenceLimit a :=
   by
   suffices (⨆ m : ℕ, a m) ≤ monotonicSequenceLimit a by exact le_antisymm this (le_supᵢ a _)
@@ -270,11 +270,11 @@ theorem WellFounded.supr_eq_monotonic_sequence_limit [CompleteLattice α]
   · replace hm := le_of_not_le hm
     let S := { n | ∀ m, n ≤ m → a n = a m }
     have hInf : Inf S ∈ S := by
-      refine' Nat.Inf_mem _
+      refine' Nat.infₛ_mem _
       rw [WellFounded.monotone_chain_condition] at h
       exact h a
     change Inf S ≤ m at hm
     change a m ≤ a (Inf S)
     rw [hInf m hm]
-#align well_founded.supr_eq_monotonic_sequence_limit WellFounded.supr_eq_monotonic_sequence_limit
+#align well_founded.supr_eq_monotonic_sequence_limit WellFounded.supᵢ_eq_monotonicSequenceLimit
 

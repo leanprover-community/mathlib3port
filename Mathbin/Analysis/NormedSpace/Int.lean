@@ -41,15 +41,15 @@ theorem nnnorm_coe_nat (n : ℕ) : ‖(n : ℤ)‖₊ = n :=
 #align int.nnnorm_coe_nat Int.nnnorm_coe_nat
 
 @[simp]
-theorem to_nat_add_to_nat_neg_eq_nnnorm (n : ℤ) : ↑n.toNat + ↑(-n).toNat = ‖n‖₊ := by
-  rw [← Nat.cast_add, to_nat_add_to_nat_neg_eq_nat_abs, Nnreal.coe_nat_abs]
-#align int.to_nat_add_to_nat_neg_eq_nnnorm Int.to_nat_add_to_nat_neg_eq_nnnorm
+theorem toNat_add_toNat_neg_eq_nnnorm (n : ℤ) : ↑n.toNat + ↑(-n).toNat = ‖n‖₊ := by
+  rw [← Nat.cast_add, to_nat_add_to_nat_neg_eq_nat_abs, Nnreal.coe_natAbs]
+#align int.to_nat_add_to_nat_neg_eq_nnnorm Int.toNat_add_toNat_neg_eq_nnnorm
 
 @[simp]
-theorem to_nat_add_to_nat_neg_eq_norm (n : ℤ) : ↑n.toNat + ↑(-n).toNat = ‖n‖ := by
+theorem toNat_add_toNat_neg_eq_norm (n : ℤ) : ↑n.toNat + ↑(-n).toNat = ‖n‖ := by
   simpa only [Nnreal.coe_nat_cast, Nnreal.coe_add] using
     congr_arg (coe : _ → ℝ) (to_nat_add_to_nat_neg_eq_nnnorm n)
-#align int.to_nat_add_to_nat_neg_eq_norm Int.to_nat_add_to_nat_neg_eq_norm
+#align int.to_nat_add_to_nat_neg_eq_norm Int.toNat_add_toNat_neg_eq_norm
 
 end Int
 

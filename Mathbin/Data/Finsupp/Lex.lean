@@ -46,10 +46,10 @@ theorem lex_def {r : α → α → Prop} {s : N → N → Prop} {a b : α →₀
   Iff.rfl
 #align finsupp.lex_def Finsupp.lex_def
 
-theorem lex_eq_inv_image_dfinsupp_lex (r : α → α → Prop) (s : N → N → Prop) :
+theorem lex_eq_invImage_dfinsupp_lex (r : α → α → Prop) (s : N → N → Prop) :
     Finsupp.Lex r s = InvImage (Dfinsupp.Lex r fun a => s) toDfinsupp :=
   rfl
-#align finsupp.lex_eq_inv_image_dfinsupp_lex Finsupp.lex_eq_inv_image_dfinsupp_lex
+#align finsupp.lex_eq_inv_image_dfinsupp_lex Finsupp.lex_eq_invImage_dfinsupp_lex
 
 instance [LT α] [LT N] : LT (Lex (α →₀ N)) :=
   ⟨fun f g => Finsupp.Lex (· < ·) (· < ·) (ofLex f) (ofLex g)⟩
@@ -64,19 +64,19 @@ theorem lex_lt_of_lt [PartialOrder N] (r) [IsStrictOrder α r] {x y : α →₀ 
   Dfinsupp.lex_lt_of_lt r (id hlt : x.toDfinsupp < y.toDfinsupp)
 #align finsupp.lex_lt_of_lt Finsupp.lex_lt_of_lt
 
-instance Lex.is_strict_order [LinearOrder α] [PartialOrder N] :
+instance Lex.isStrictOrder [LinearOrder α] [PartialOrder N] :
     IsStrictOrder (Lex (α →₀ N)) (· < ·) :=
   let i : IsStrictOrder (Lex (α → N)) (· < ·) := Pi.Lex.isStrictOrder
   { irrefl := toLex.Surjective.forall.2 fun a => @irrefl _ _ i.to_is_irrefl a
     trans := toLex.Surjective.forall₃.2 fun a b c => @trans _ _ i.to_is_trans a b c }
-#align finsupp.lex.is_strict_order Finsupp.Lex.is_strict_order
+#align finsupp.lex.is_strict_order Finsupp.Lex.isStrictOrder
 
 variable [LinearOrder α]
 
 /-- The partial order on `finsupp`s obtained by the lexicographic ordering.
 See `finsupp.lex.linear_order` for a proof that this partial order is in fact linear. -/
 instance Lex.partialOrder [PartialOrder N] : PartialOrder (Lex (α →₀ N)) :=
-  PartialOrder.lift (fun x => toLex ⇑(ofLex x)) Finsupp.coe_fn_injective
+  PartialOrder.lift (fun x => toLex ⇑(ofLex x)) Finsupp.coeFn_injective
 #align finsupp.lex.partial_order Finsupp.Lex.partialOrder
 
 --fun_like.coe_injective
@@ -88,9 +88,9 @@ instance Lex.linearOrder [LinearOrder N] : LinearOrder (Lex (α →₀ N)) :=
 
 variable [PartialOrder N]
 
-theorem to_lex_monotone : Monotone (@toLex (α →₀ N)) := fun a b h =>
-  Dfinsupp.to_lex_monotone (id h : ∀ i, ofLex (toDfinsupp a) i ≤ ofLex (toDfinsupp b) i)
-#align finsupp.to_lex_monotone Finsupp.to_lex_monotone
+theorem toLex_monotone : Monotone (@toLex (α →₀ N)) := fun a b h =>
+  Dfinsupp.toLex_monotone (id h : ∀ i, ofLex (toDfinsupp a) i ≤ ofLex (toDfinsupp b) i)
+#align finsupp.to_lex_monotone Finsupp.toLex_monotone
 
 theorem lt_of_forall_lt_of_lt (a b : Lex (α →₀ N)) (i : α) :
     (∀ j < i, ofLex a j = ofLex b j) → ofLex a i < ofLex b i → a < b := fun h1 h2 => ⟨i, h1, h2⟩
@@ -114,16 +114,16 @@ section Left
 
 variable [CovariantClass N N (· + ·) (· < ·)]
 
-instance Lex.covariant_class_lt_left :
+instance Lex.covariantClass_lt_left :
     CovariantClass (Lex (α →₀ N)) (Lex (α →₀ N)) (· + ·) (· < ·) :=
   ⟨fun f g h ⟨a, lta, ha⟩ =>
     ⟨a, fun j ja => congr_arg ((· + ·) _) (lta j ja), add_lt_add_left ha _⟩⟩
-#align finsupp.lex.covariant_class_lt_left Finsupp.Lex.covariant_class_lt_left
+#align finsupp.lex.covariant_class_lt_left Finsupp.Lex.covariantClass_lt_left
 
-instance Lex.covariant_class_le_left :
+instance Lex.covariantClass_le_left :
     CovariantClass (Lex (α →₀ N)) (Lex (α →₀ N)) (· + ·) (· ≤ ·) :=
   Add.to_covariantClass_left _
-#align finsupp.lex.covariant_class_le_left Finsupp.Lex.covariant_class_le_left
+#align finsupp.lex.covariant_class_le_left Finsupp.Lex.covariantClass_le_left
 
 end Left
 
@@ -131,16 +131,16 @@ section Right
 
 variable [CovariantClass N N (Function.swap (· + ·)) (· < ·)]
 
-instance Lex.covariant_class_lt_right :
+instance Lex.covariantClass_lt_right :
     CovariantClass (Lex (α →₀ N)) (Lex (α →₀ N)) (Function.swap (· + ·)) (· < ·) :=
   ⟨fun f g h ⟨a, lta, ha⟩ =>
     ⟨a, fun j ja => congr_arg (· + ofLex f j) (lta j ja), add_lt_add_right ha _⟩⟩
-#align finsupp.lex.covariant_class_lt_right Finsupp.Lex.covariant_class_lt_right
+#align finsupp.lex.covariant_class_lt_right Finsupp.Lex.covariantClass_lt_right
 
-instance Lex.covariant_class_le_right :
+instance Lex.covariantClass_le_right :
     CovariantClass (Lex (α →₀ N)) (Lex (α →₀ N)) (Function.swap (· + ·)) (· ≤ ·) :=
   Add.to_covariantClass_right _
-#align finsupp.lex.covariant_class_le_right Finsupp.Lex.covariant_class_le_right
+#align finsupp.lex.covariant_class_le_right Finsupp.Lex.covariantClass_le_right
 
 end Right
 

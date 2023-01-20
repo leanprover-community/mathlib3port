@@ -66,9 +66,9 @@ theorem star_eq [Star R] {x : R} (hx : IsSelfAdjoint x) : star x = x :=
   hx
 #align is_self_adjoint.star_eq IsSelfAdjoint.star_eq
 
-theorem is_self_adjoint_iff [Star R] {x : R} : IsSelfAdjoint x ↔ star x = x :=
+theorem isSelfAdjoint_iff [Star R] {x : R} : IsSelfAdjoint x ↔ star x = x :=
   Iff.rfl
-#align is_self_adjoint_iff is_self_adjoint_iff
+#align is_self_adjoint_iff isSelfAdjoint_iff
 
 @[simp]
 theorem star_iff [InvolutiveStar R] {x : R} : IsSelfAdjoint (star x) ↔ IsSelfAdjoint x := by
@@ -97,26 +97,26 @@ variable [AddGroup R] [StarAddMonoid R]
 
 variable (R)
 
-theorem is_self_adjoint_zero : IsSelfAdjoint (0 : R) :=
+theorem isSelfAdjoint_zero : IsSelfAdjoint (0 : R) :=
   star_zero R
-#align is_self_adjoint_zero is_self_adjoint_zero
+#align is_self_adjoint_zero isSelfAdjoint_zero
 
 variable {R}
 
 theorem add {x y : R} (hx : IsSelfAdjoint x) (hy : IsSelfAdjoint y) : IsSelfAdjoint (x + y) := by
-  simp only [is_self_adjoint_iff, star_add, hx.star_eq, hy.star_eq]
+  simp only [isSelfAdjoint_iff, star_add, hx.star_eq, hy.star_eq]
 #align is_self_adjoint.add IsSelfAdjoint.add
 
 theorem neg {x : R} (hx : IsSelfAdjoint x) : IsSelfAdjoint (-x) := by
-  simp only [is_self_adjoint_iff, star_neg, hx.star_eq]
+  simp only [isSelfAdjoint_iff, star_neg, hx.star_eq]
 #align is_self_adjoint.neg IsSelfAdjoint.neg
 
 theorem sub {x y : R} (hx : IsSelfAdjoint x) (hy : IsSelfAdjoint y) : IsSelfAdjoint (x - y) := by
-  simp only [is_self_adjoint_iff, star_sub, hx.star_eq, hy.star_eq]
+  simp only [isSelfAdjoint_iff, star_sub, hx.star_eq, hy.star_eq]
 #align is_self_adjoint.sub IsSelfAdjoint.sub
 
 theorem bit0 {x : R} (hx : IsSelfAdjoint x) : IsSelfAdjoint (bit0 x) := by
-  simp only [is_self_adjoint_iff, star_bit0, hx.star_eq]
+  simp only [isSelfAdjoint_iff, star_bit0, hx.star_eq]
 #align is_self_adjoint.bit0 IsSelfAdjoint.bit0
 
 end AddGroup
@@ -126,16 +126,16 @@ section NonUnitalSemiring
 variable [NonUnitalSemiring R] [StarRing R]
 
 theorem conjugate {x : R} (hx : IsSelfAdjoint x) (z : R) : IsSelfAdjoint (z * x * star z) := by
-  simp only [is_self_adjoint_iff, star_mul, star_star, mul_assoc, hx.star_eq]
+  simp only [isSelfAdjoint_iff, star_mul, star_star, mul_assoc, hx.star_eq]
 #align is_self_adjoint.conjugate IsSelfAdjoint.conjugate
 
 theorem conjugate' {x : R} (hx : IsSelfAdjoint x) (z : R) : IsSelfAdjoint (star z * x * z) := by
-  simp only [is_self_adjoint_iff, star_mul, star_star, mul_assoc, hx.star_eq]
+  simp only [isSelfAdjoint_iff, star_mul, star_star, mul_assoc, hx.star_eq]
 #align is_self_adjoint.conjugate' IsSelfAdjoint.conjugate'
 
-theorem is_star_normal {x : R} (hx : IsSelfAdjoint x) : IsStarNormal x :=
+theorem isStarNormal {x : R} (hx : IsSelfAdjoint x) : IsStarNormal x :=
   ⟨by simp only [hx.star_eq]⟩
-#align is_self_adjoint.is_star_normal IsSelfAdjoint.is_star_normal
+#align is_self_adjoint.is_star_normal IsSelfAdjoint.isStarNormal
 
 end NonUnitalSemiring
 
@@ -145,18 +145,18 @@ variable [Ring R] [StarRing R]
 
 variable (R)
 
-theorem is_self_adjoint_one : IsSelfAdjoint (1 : R) :=
+theorem isSelfAdjoint_one : IsSelfAdjoint (1 : R) :=
   star_one R
-#align is_self_adjoint_one is_self_adjoint_one
+#align is_self_adjoint_one isSelfAdjoint_one
 
 variable {R}
 
 theorem bit1 {x : R} (hx : IsSelfAdjoint x) : IsSelfAdjoint (bit1 x) := by
-  simp only [is_self_adjoint_iff, star_bit1, hx.star_eq]
+  simp only [isSelfAdjoint_iff, star_bit1, hx.star_eq]
 #align is_self_adjoint.bit1 IsSelfAdjoint.bit1
 
 theorem pow {x : R} (hx : IsSelfAdjoint x) (n : ℕ) : IsSelfAdjoint (x ^ n) := by
-  simp only [is_self_adjoint_iff, star_pow, hx.star_eq]
+  simp only [isSelfAdjoint_iff, star_pow, hx.star_eq]
 #align is_self_adjoint.pow IsSelfAdjoint.pow
 
 end Ring
@@ -166,7 +166,7 @@ section NonUnitalCommRing
 variable [NonUnitalCommRing R] [StarRing R]
 
 theorem mul {x y : R} (hx : IsSelfAdjoint x) (hy : IsSelfAdjoint y) : IsSelfAdjoint (x * y) := by
-  simp only [is_self_adjoint_iff, star_mul', hx.star_eq, hy.star_eq]
+  simp only [isSelfAdjoint_iff, star_mul', hx.star_eq, hy.star_eq]
 #align is_self_adjoint.mul IsSelfAdjoint.mul
 
 end NonUnitalCommRing
@@ -176,15 +176,15 @@ section Field
 variable [Field R] [StarRing R]
 
 theorem inv {x : R} (hx : IsSelfAdjoint x) : IsSelfAdjoint x⁻¹ := by
-  simp only [is_self_adjoint_iff, star_inv', hx.star_eq]
+  simp only [isSelfAdjoint_iff, star_inv', hx.star_eq]
 #align is_self_adjoint.inv IsSelfAdjoint.inv
 
 theorem div {x y : R} (hx : IsSelfAdjoint x) (hy : IsSelfAdjoint y) : IsSelfAdjoint (x / y) := by
-  simp only [is_self_adjoint_iff, star_div', hx.star_eq, hy.star_eq]
+  simp only [isSelfAdjoint_iff, star_div', hx.star_eq, hy.star_eq]
 #align is_self_adjoint.div IsSelfAdjoint.div
 
 theorem zpow {x : R} (hx : IsSelfAdjoint x) (n : ℤ) : IsSelfAdjoint (x ^ n) := by
-  simp only [is_self_adjoint_iff, star_zpow₀, hx.star_eq]
+  simp only [isSelfAdjoint_iff, star_zpow₀, hx.star_eq]
 #align is_self_adjoint.zpow IsSelfAdjoint.zpow
 
 end Field
@@ -194,7 +194,7 @@ section SMul
 variable [Star R] [TrivialStar R] [AddGroup A] [StarAddMonoid A]
 
 theorem smul [SMul R A] [StarModule R A] (r : R) {x : A} (hx : IsSelfAdjoint x) :
-    IsSelfAdjoint (r • x) := by simp only [is_self_adjoint_iff, star_smul, star_trivial, hx.star_eq]
+    IsSelfAdjoint (r • x) := by simp only [isSelfAdjoint_iff, star_smul, star_trivial, hx.star_eq]
 #align is_self_adjoint.smul IsSelfAdjoint.smul
 
 end SMul
@@ -251,7 +251,7 @@ section Ring
 variable [Ring R] [StarRing R]
 
 instance : One (selfAdjoint R) :=
-  ⟨⟨1, is_self_adjoint_one R⟩⟩
+  ⟨⟨1, isSelfAdjoint_one R⟩⟩
 
 @[simp, norm_cast]
 theorem coe_one : ↑(1 : selfAdjoint R) = (1 : R) :=
@@ -265,13 +265,13 @@ instance : NatCast (selfAdjoint R) :=
   ⟨fun n =>
     ⟨n,
       Nat.recOn n (by simp [zero_mem]) fun k hk =>
-        (@Nat.cast_succ R _ k).symm ▸ add_mem hk (is_self_adjoint_one R)⟩⟩
+        (@Nat.cast_succ R _ k).symm ▸ add_mem hk (isSelfAdjoint_one R)⟩⟩
 
 instance : IntCast (selfAdjoint R) :=
   ⟨fun n =>
     ⟨n, by
       cases n <;> simp [show ↑n ∈ selfAdjoint R from (n : selfAdjoint R).2]
-      refine' add_mem (is_self_adjoint_one R).neg (n : selfAdjoint R).2.neg⟩⟩
+      refine' add_mem (isSelfAdjoint_one R).neg (n : selfAdjoint R).2.neg⟩⟩
 
 instance : Pow (selfAdjoint R) ℕ :=
   ⟨fun x n => ⟨(x : R) ^ n, x.Prop.pow n⟩⟩
@@ -432,14 +432,14 @@ theorem conjugate' {x : R} (hx : x ∈ skewAdjoint R) (z : R) : star z * x * z �
   simp only [mem_iff, star_mul, star_star, mem_iff.mp hx, neg_mul, mul_neg, mul_assoc]
 #align skew_adjoint.conjugate' skewAdjoint.conjugate'
 
-theorem is_star_normal_of_mem {x : R} (hx : x ∈ skewAdjoint R) : IsStarNormal x :=
+theorem isStarNormal_of_mem {x : R} (hx : x ∈ skewAdjoint R) : IsStarNormal x :=
   ⟨by
     simp only [mem_iff] at hx
     simp only [hx, Commute.neg_left]⟩
-#align skew_adjoint.is_star_normal_of_mem skewAdjoint.is_star_normal_of_mem
+#align skew_adjoint.is_star_normal_of_mem skewAdjoint.isStarNormal_of_mem
 
 instance (x : skewAdjoint R) : IsStarNormal (x : R) :=
-  is_star_normal_of_mem (SetLike.coe_mem _)
+  isStarNormal_of_mem (SetLike.coe_mem _)
 
 end Ring
 
@@ -471,28 +471,28 @@ end SMul
 
 end skewAdjoint
 
-instance is_star_normal_zero [Semiring R] [StarRing R] : IsStarNormal (0 : R) :=
+instance isStarNormal_zero [Semiring R] [StarRing R] : IsStarNormal (0 : R) :=
   ⟨by simp only [star_comm_self, star_zero]⟩
-#align is_star_normal_zero is_star_normal_zero
+#align is_star_normal_zero isStarNormal_zero
 
-instance is_star_normal_one [Monoid R] [StarSemigroup R] : IsStarNormal (1 : R) :=
+instance isStarNormal_one [Monoid R] [StarSemigroup R] : IsStarNormal (1 : R) :=
   ⟨by simp only [star_comm_self, star_one]⟩
-#align is_star_normal_one is_star_normal_one
+#align is_star_normal_one isStarNormal_one
 
-instance is_star_normal_star_self [Monoid R] [StarSemigroup R] {x : R} [IsStarNormal x] :
+instance isStarNormal_star_self [Monoid R] [StarSemigroup R] {x : R} [IsStarNormal x] :
     IsStarNormal (star x) :=
   ⟨show star (star x) * star x = star x * star (star x) by rw [star_star, star_comm_self']⟩
-#align is_star_normal_star_self is_star_normal_star_self
+#align is_star_normal_star_self isStarNormal_star_self
 
 -- see Note [lower instance priority]
-instance (priority := 100) TrivialStar.is_star_normal [Monoid R] [StarSemigroup R] [TrivialStar R]
+instance (priority := 100) TrivialStar.isStarNormal [Monoid R] [StarSemigroup R] [TrivialStar R]
     {x : R} : IsStarNormal x :=
   ⟨by rw [star_trivial]⟩
-#align has_trivial_star.is_star_normal TrivialStar.is_star_normal
+#align has_trivial_star.is_star_normal TrivialStar.isStarNormal
 
 -- see Note [lower instance priority]
-instance (priority := 100) CommMonoid.is_star_normal [CommMonoid R] [StarSemigroup R] {x : R} :
+instance (priority := 100) CommMonoid.isStarNormal [CommMonoid R] [StarSemigroup R] {x : R} :
     IsStarNormal x :=
   ⟨mul_comm _ _⟩
-#align comm_monoid.is_star_normal CommMonoid.is_star_normal
+#align comm_monoid.is_star_normal CommMonoid.isStarNormal
 

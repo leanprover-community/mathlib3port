@@ -67,9 +67,9 @@ def of : Generators G → G :=
 #align is_free_group.of IsFreeGroup.of
 
 @[simp]
-theorem of_eq_free_group_of {A : Type u} : @of (FreeGroup A) _ _ = FreeGroup.of :=
+theorem of_eq_freeGroup_of {A : Type u} : @of (FreeGroup A) _ _ = FreeGroup.of :=
   rfl
-#align is_free_group.of_eq_free_group_of IsFreeGroup.of_eq_free_group_of
+#align is_free_group.of_eq_free_group_of IsFreeGroup.of_eq_freeGroup_of
 
 variable {H : Type _} [Group H]
 
@@ -88,9 +88,9 @@ def lift : (Generators G → H) ≃ (G →* H) :=
 #align is_free_group.lift IsFreeGroup.lift
 
 @[simp]
-theorem lift'_eq_free_group_lift {A : Type u} : @lift (FreeGroup A) _ _ H _ = FreeGroup.lift :=
+theorem lift'_eq_freeGroup_lift {A : Type u} : @lift (FreeGroup A) _ _ H _ = FreeGroup.lift :=
   rfl
-#align is_free_group.lift'_eq_free_group_lift IsFreeGroup.lift'_eq_free_group_lift
+#align is_free_group.lift'_eq_free_group_lift IsFreeGroup.lift'_eq_freeGroup_lift
 
 @[simp]
 theorem lift_of (f : Generators G → H) (a : Generators G) : lift f (of a) = f a :=

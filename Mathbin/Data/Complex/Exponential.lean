@@ -211,8 +211,8 @@ theorem sum_range_diag_flip {α : Type _} [AddCommMonoid α] (n : ℕ) (f : ℕ 
           have hb : b₁ < n ∧ b₂ ≤ b₁ :=
             ⟨mem_range.1 (mem_sigma.1 hb).1, Nat.le_of_lt_succ (mem_range.1 (mem_sigma.1 hb).2)⟩
           have h : a₂ = b₂ ∧ _ := Sigma.mk.inj h
-          have h' : a₁ = b₁ - b₂ + a₂ := (tsub_eq_iff_eq_add_of_le ha.2).1 (eq_of_heq h.2)
-          Sigma.mk.inj_iff.2 ⟨tsub_add_cancel_of_le hb.2 ▸ h'.symm ▸ h.1 ▸ rfl, heq_of_eq h.1⟩)
+          have h' : a₁ = b₁ - b₂ + a₂ := (tsub_eq_iff_eq_add_of_le ha.2).1 (eq_of_hEq h.2)
+          Sigma.mk.inj_iff.2 ⟨tsub_add_cancel_of_le hb.2 ▸ h'.symm ▸ h.1 ▸ rfl, hEq_of_eq h.1⟩)
         fun ⟨a₁, a₂⟩ ha =>
         have ha : a₁ < n ∧ a₂ < n - a₁ :=
           ⟨mem_range.1 (mem_sigma.1 ha).1, mem_range.1 (mem_sigma.1 ha).2⟩
@@ -220,7 +220,7 @@ theorem sum_range_diag_flip {α : Type _} [AddCommMonoid α] (n : ℕ) (f : ℕ 
           ⟨mem_sigma.2
               ⟨mem_range.2 (lt_tsub_iff_right.1 ha.2),
                 mem_range.2 (Nat.lt_succ_of_le (Nat.le_add_left _ _))⟩,
-            Sigma.mk.inj_iff.2 ⟨rfl, heq_of_eq (add_tsub_cancel_right _ _).symm⟩⟩⟩
+            Sigma.mk.inj_iff.2 ⟨rfl, hEq_of_eq (add_tsub_cancel_right _ _).symm⟩⟩⟩
 #align sum_range_diag_flip sum_range_diag_flip
 
 end
@@ -278,7 +278,7 @@ theorem cauchy_product {a b : ℕ → β} (ha : IsCauSeq abs fun m => ∑ n in r
       by rw [← sum_add_distrib] <;> simp [(mul_add _ _ _).symm]
     have two_mul_two : (4 : α) = 2 * 2 := by norm_num
     have hQ0 : Q ≠ 0 := fun h => by simpa [h, lt_irrefl] using hQε0
-    have h2Q0 : 2 * Q ≠ 0 := mul_ne_zero two_ne_zero hQ0
+    have h2Q0 : 2 * Q ≠ 0 := mul_ne_zero two_neZero hQ0
     have hε : ε / (2 * P) * P + ε / (4 * Q) * (2 * Q) = ε := by
       rw [← div_div, div_mul_cancel _ (Ne.symm (ne_of_lt hP0)), two_mul_two, mul_assoc, ← div_div,
         div_mul_cancel _ h2Q0, add_halves]
@@ -600,11 +600,11 @@ theorem exp_of_real_re (x : ℝ) : (exp x).re = Real.exp x :=
 #align complex.exp_of_real_re Complex.exp_of_real_re
 
 theorem two_sinh : 2 * sinh x = exp x - exp (-x) :=
-  mul_div_cancel' _ two_ne_zero
+  mul_div_cancel' _ two_neZero
 #align complex.two_sinh Complex.two_sinh
 
 theorem two_cosh : 2 * cosh x = exp x + exp (-x) :=
-  mul_div_cancel' _ two_ne_zero
+  mul_div_cancel' _ two_neZero
 #align complex.two_cosh Complex.two_cosh
 
 @[simp]
@@ -819,30 +819,30 @@ theorem sin_neg : sin (-x) = -sin x := by
 #align complex.sin_neg Complex.sin_neg
 
 theorem two_sin : 2 * sin x = (exp (-x * I) - exp (x * I)) * I :=
-  mul_div_cancel' _ two_ne_zero
+  mul_div_cancel' _ two_neZero
 #align complex.two_sin Complex.two_sin
 
 theorem two_cos : 2 * cos x = exp (x * I) + exp (-x * I) :=
-  mul_div_cancel' _ two_ne_zero
+  mul_div_cancel' _ two_neZero
 #align complex.two_cos Complex.two_cos
 
-theorem sinh_mul_I : sinh (x * I) = sin x * I := by
+theorem sinh_mul_i : sinh (x * I) = sin x * I := by
   rw [← mul_right_inj' (two_ne_zero' ℂ), two_sinh, ← mul_assoc, two_sin, mul_assoc, I_mul_I,
     mul_neg_one, neg_sub, neg_mul_eq_neg_mul]
-#align complex.sinh_mul_I Complex.sinh_mul_I
+#align complex.sinh_mul_I Complex.sinh_mul_i
 
-theorem cosh_mul_I : cosh (x * I) = cos x := by
+theorem cosh_mul_i : cosh (x * I) = cos x := by
   rw [← mul_right_inj' (two_ne_zero' ℂ), two_cosh, two_cos, neg_mul_eq_neg_mul]
-#align complex.cosh_mul_I Complex.cosh_mul_I
+#align complex.cosh_mul_I Complex.cosh_mul_i
 
-theorem tanh_mul_I : tanh (x * I) = tan x * I := by
+theorem tanh_mul_i : tanh (x * I) = tan x * I := by
   rw [tanh_eq_sinh_div_cosh, cosh_mul_I, sinh_mul_I, mul_div_right_comm, tan]
-#align complex.tanh_mul_I Complex.tanh_mul_I
+#align complex.tanh_mul_I Complex.tanh_mul_i
 
-theorem cos_mul_I : cos (x * I) = cosh x := by rw [← cosh_mul_I] <;> ring_nf <;> simp
-#align complex.cos_mul_I Complex.cos_mul_I
+theorem cos_mul_i : cos (x * I) = cosh x := by rw [← cosh_mul_I] <;> ring_nf <;> simp
+#align complex.cos_mul_I Complex.cos_mul_i
 
-theorem sin_mul_I : sin (x * I) = sinh x * I :=
+theorem sin_mul_i : sin (x * I) = sinh x * I :=
   by
   have h : I * sin (x * I) = -sinh x :=
     by
@@ -850,11 +850,11 @@ theorem sin_mul_I : sin (x * I) = sinh x * I :=
     ring_nf
     simp
   simpa only [neg_mul, div_I, neg_neg] using CancelFactors.cancel_factors_eq_div h I_ne_zero
-#align complex.sin_mul_I Complex.sin_mul_I
+#align complex.sin_mul_I Complex.sin_mul_i
 
-theorem tan_mul_I : tan (x * I) = tanh x * I := by
+theorem tan_mul_i : tan (x * I) = tanh x * I := by
   rw [tan, sin_mul_I, cos_mul_I, mul_div_right_comm, tanh_eq_sinh_div_cosh]
-#align complex.tan_mul_I Complex.tan_mul_I
+#align complex.tan_mul_I Complex.tan_mul_i
 
 theorem sin_add : sin (x + y) = sin x * cos y + cos x * sin y := by
   rw [← mul_left_inj' I_ne_zero, ← sinh_mul_I, add_mul, add_mul, mul_right_comm, ← sinh_mul_I,
@@ -886,17 +886,17 @@ theorem cos_sub : cos (x - y) = cos x * cos y + sin x * sin y := by
   simp [sub_eq_add_neg, cos_add, sin_neg, cos_neg]
 #align complex.cos_sub Complex.cos_sub
 
-theorem sin_add_mul_I (x y : ℂ) : sin (x + y * I) = sin x * cosh y + cos x * sinh y * I := by
+theorem sin_add_mul_i (x y : ℂ) : sin (x + y * I) = sin x * cosh y + cos x * sinh y * I := by
   rw [sin_add, cos_mul_I, sin_mul_I, mul_assoc]
-#align complex.sin_add_mul_I Complex.sin_add_mul_I
+#align complex.sin_add_mul_I Complex.sin_add_mul_i
 
 theorem sin_eq (z : ℂ) : sin z = sin z.re * cosh z.im + cos z.re * sinh z.im * I := by
   convert sin_add_mul_I z.re z.im <;> exact (re_add_im z).symm
 #align complex.sin_eq Complex.sin_eq
 
-theorem cos_add_mul_I (x y : ℂ) : cos (x + y * I) = cos x * cosh y - sin x * sinh y * I := by
+theorem cos_add_mul_i (x y : ℂ) : cos (x + y * I) = cos x * cosh y - sin x * sinh y * I := by
   rw [cos_add, cos_mul_I, sin_mul_I, mul_assoc]
-#align complex.cos_add_mul_I Complex.cos_add_mul_I
+#align complex.cos_add_mul_I Complex.cos_add_mul_i
 
 theorem cos_eq (z : ℂ) : cos z = cos z.re * cosh z.im - sin z.re * sinh z.im * I := by
   convert cos_add_mul_I z.re z.im <;> exact (re_add_im z).symm
@@ -1020,13 +1020,13 @@ theorem tan_of_real_re (x : ℝ) : (tan x).re = Real.tan x :=
   rfl
 #align complex.tan_of_real_re Complex.tan_of_real_re
 
-theorem cos_add_sin_I : cos x + sin x * I = exp (x * I) := by
+theorem cos_add_sin_i : cos x + sin x * I = exp (x * I) := by
   rw [← cosh_add_sinh, sinh_mul_I, cosh_mul_I]
-#align complex.cos_add_sin_I Complex.cos_add_sin_I
+#align complex.cos_add_sin_I Complex.cos_add_sin_i
 
-theorem cos_sub_sin_I : cos x - sin x * I = exp (-x * I) := by
+theorem cos_sub_sin_i : cos x - sin x * I = exp (-x * I) := by
   rw [neg_mul, ← cosh_sub_sinh, sinh_mul_I, cosh_mul_I]
-#align complex.cos_sub_sin_I Complex.cos_sub_sin_I
+#align complex.cos_sub_sin_I Complex.cos_sub_sin_i
 
 @[simp]
 theorem sin_sq_add_cos_sq : sin x ^ 2 + cos x ^ 2 = 1 :=
@@ -1051,7 +1051,7 @@ theorem sin_two_mul : sin (2 * x) = 2 * sin x * cos x := by
 #align complex.sin_two_mul Complex.sin_two_mul
 
 theorem cos_sq : cos x ^ 2 = 1 / 2 + cos (2 * x) / 2 := by
-  simp [cos_two_mul, div_add_div_same, mul_div_cancel_left, two_ne_zero, -one_div]
+  simp [cos_two_mul, div_add_div_same, mul_div_cancel_left, two_neZero, -one_div]
 #align complex.cos_sq Complex.cos_sq
 
 theorem cos_sq' : cos x ^ 2 = 1 - sin x ^ 2 := by rw [← sin_sq_add_cos_sq x, add_sub_cancel']
@@ -1092,12 +1092,12 @@ theorem sin_three_mul : sin (3 * x) = 3 * sin x - 4 * sin x ^ 3 :=
   ring
 #align complex.sin_three_mul Complex.sin_three_mul
 
-theorem exp_mul_I : exp (x * I) = cos x + sin x * I :=
-  (cos_add_sin_I _).symm
-#align complex.exp_mul_I Complex.exp_mul_I
+theorem exp_mul_i : exp (x * I) = cos x + sin x * I :=
+  (cos_add_sin_i _).symm
+#align complex.exp_mul_I Complex.exp_mul_i
 
-theorem exp_add_mul_I : exp (x + y * I) = exp x * (cos y + sin y * I) := by rw [exp_add, exp_mul_I]
-#align complex.exp_add_mul_I Complex.exp_add_mul_I
+theorem exp_add_mul_i : exp (x + y * I) = exp x * (cos y + sin y * I) := by rw [exp_add, exp_mul_I]
+#align complex.exp_add_mul_I Complex.exp_add_mul_i
 
 theorem exp_eq_exp_re_mul_sin_add_cos : exp x = exp x.re * (cos x.im + sin x.im * I) := by
   rw [← exp_add_mul_I, re_add_im]
@@ -1116,24 +1116,24 @@ theorem exp_im : (exp x).im = Real.exp x.re * Real.sin x.im :=
 #align complex.exp_im Complex.exp_im
 
 @[simp]
-theorem exp_of_real_mul_I_re (x : ℝ) : (exp (x * I)).re = Real.cos x := by
+theorem exp_of_real_mul_i_re (x : ℝ) : (exp (x * I)).re = Real.cos x := by
   simp [exp_mul_I, cos_of_real_re]
-#align complex.exp_of_real_mul_I_re Complex.exp_of_real_mul_I_re
+#align complex.exp_of_real_mul_I_re Complex.exp_of_real_mul_i_re
 
 @[simp]
-theorem exp_of_real_mul_I_im (x : ℝ) : (exp (x * I)).im = Real.sin x := by
+theorem exp_of_real_mul_i_im (x : ℝ) : (exp (x * I)).im = Real.sin x := by
   simp [exp_mul_I, sin_of_real_re]
-#align complex.exp_of_real_mul_I_im Complex.exp_of_real_mul_I_im
+#align complex.exp_of_real_mul_I_im Complex.exp_of_real_mul_i_im
 
 /-- **De Moivre's formula** -/
-theorem cos_add_sin_mul_I_pow (n : ℕ) (z : ℂ) :
+theorem cos_add_sin_mul_i_pow (n : ℕ) (z : ℂ) :
     (cos z + sin z * I) ^ n = cos (↑n * z) + sin (↑n * z) * I :=
   by
   rw [← exp_mul_I, ← exp_mul_I]
   induction' n with n ih
   · rw [pow_zero, Nat.cast_zero, zero_mul, zero_mul, exp_zero]
   · rw [pow_succ', ih, Nat.cast_succ, add_mul, add_mul, one_mul, exp_add]
-#align complex.cos_add_sin_mul_I_pow Complex.cos_add_sin_mul_I_pow
+#align complex.cos_add_sin_mul_I_pow Complex.cos_add_sin_mul_i_pow
 
 end Complex
 
@@ -1359,7 +1359,7 @@ theorem sin_three_mul : sin (3 * x) = 3 * sin x - 4 * sin x ^ 3 := by
 
 /-- The definition of `sinh` in terms of `exp`. -/
 theorem sinh_eq (x : ℝ) : sinh x = (exp x - exp (-x)) / 2 :=
-  eq_div_of_mul_eq two_ne_zero <| by
+  eq_div_of_mul_eq two_neZero <| by
     rw [sinh, exp, exp, Complex.of_real_neg, Complex.sinh, mul_two, ← Complex.add_re, ← mul_two,
       div_mul_cancel _ (two_ne_zero' ℂ), Complex.sub_re]
 #align real.sinh_eq Real.sinh_eq
@@ -1378,7 +1378,7 @@ theorem sinh_add : sinh (x + y) = sinh x * cosh y + cosh x * sinh y := by
 
 /-- The definition of `cosh` in terms of `exp`. -/
 theorem cosh_eq (x : ℝ) : cosh x = (exp x + exp (-x)) / 2 :=
-  eq_div_of_mul_eq two_ne_zero <| by
+  eq_div_of_mul_eq two_neZero <| by
     rw [cosh, exp, exp, Complex.of_real_neg, Complex.cosh, mul_two, ← Complex.add_re, ← mul_two,
       div_mul_cancel _ (two_ne_zero' ℂ), Complex.add_re]
 #align real.cosh_eq Real.cosh_eq
@@ -1486,7 +1486,7 @@ open IsAbsoluteValue
 instead. -/
 theorem add_one_le_exp_of_nonneg {x : ℝ} (hx : 0 ≤ x) : x + 1 ≤ exp x :=
   calc
-    x + 1 ≤ lim (⟨fun n : ℕ => ((exp' x) n).re, is_cau_seq_re (exp' x)⟩ : CauSeq ℝ Abs.abs) :=
+    x + 1 ≤ lim (⟨fun n : ℕ => ((exp' x) n).re, isCauSeq_re (exp' x)⟩ : CauSeq ℝ Abs.abs) :=
       le_lim
         (CauSeq.le_of_exists
           ⟨2, fun j hj =>
@@ -1519,30 +1519,30 @@ theorem abs_exp (x : ℝ) : |exp x| = exp x :=
 #align real.abs_exp Real.abs_exp
 
 @[mono]
-theorem exp_strict_mono : StrictMono exp := fun x y h => by
+theorem exp_strictMono : StrictMono exp := fun x y h => by
   rw [← sub_add_cancel y x, Real.exp_add] <;>
     exact
       (lt_mul_iff_one_lt_left (exp_pos _)).2
         (lt_of_lt_of_le (by linarith) (add_one_le_exp_of_nonneg (by linarith)))
-#align real.exp_strict_mono Real.exp_strict_mono
+#align real.exp_strict_mono Real.exp_strictMono
 
 @[mono]
 theorem exp_monotone : Monotone exp :=
-  exp_strict_mono.Monotone
+  exp_strictMono.Monotone
 #align real.exp_monotone Real.exp_monotone
 
 @[simp]
 theorem exp_lt_exp {x y : ℝ} : exp x < exp y ↔ x < y :=
-  exp_strict_mono.lt_iff_lt
+  exp_strictMono.lt_iff_lt
 #align real.exp_lt_exp Real.exp_lt_exp
 
 @[simp]
 theorem exp_le_exp {x y : ℝ} : exp x ≤ exp y ↔ x ≤ y :=
-  exp_strict_mono.le_iff_le
+  exp_strictMono.le_iff_le
 #align real.exp_le_exp Real.exp_le_exp
 
 theorem exp_injective : Function.Injective exp :=
-  exp_strict_mono.Injective
+  exp_strictMono.Injective
 #align real.exp_injective Real.exp_injective
 
 @[simp]
@@ -1781,19 +1781,19 @@ def expNear (n : ℕ) (x r : ℝ) : ℝ :=
 #align real.exp_near Real.expNear
 
 @[simp]
-theorem exp_near_zero (x r) : expNear 0 x r = r := by simp [exp_near]
-#align real.exp_near_zero Real.exp_near_zero
+theorem expNear_zero (x r) : expNear 0 x r = r := by simp [exp_near]
+#align real.exp_near_zero Real.expNear_zero
 
 @[simp]
-theorem exp_near_succ (n x r) : expNear (n + 1) x r = expNear n x (1 + x / (n + 1) * r) := by
+theorem expNear_succ (n x r) : expNear (n + 1) x r = expNear n x (1 + x / (n + 1) * r) := by
   simp [exp_near, range_succ, mul_add, add_left_comm, add_assoc, pow_succ, div_eq_mul_inv,
       mul_inv] <;>
     ac_rfl
-#align real.exp_near_succ Real.exp_near_succ
+#align real.exp_near_succ Real.expNear_succ
 
-theorem exp_near_sub (n x r₁ r₂) : expNear n x r₁ - expNear n x r₂ = x ^ n / n ! * (r₁ - r₂) := by
+theorem expNear_sub (n x r₁ r₂) : expNear n x r₁ - expNear n x r₂ = x ^ n / n ! * (r₁ - r₂) := by
   simp [exp_near, mul_sub]
-#align real.exp_near_sub Real.exp_near_sub
+#align real.exp_near_sub Real.expNear_sub
 
 theorem exp_approx_end (n m : ℕ) (x : ℝ) (e₁ : n + 1 = m) (h : |x| ≤ 1) :
     |exp x - expNear m x 0| ≤ |x| ^ m / m ! * ((m + 1) / m) :=
@@ -2078,11 +2078,11 @@ end Tactic
 namespace Complex
 
 @[simp]
-theorem abs_cos_add_sin_mul_I (x : ℝ) : abs (cos x + sin x * I) = 1 :=
+theorem abs_cos_add_sin_mul_i (x : ℝ) : abs (cos x + sin x * I) = 1 :=
   by
   have := Real.sin_sq_add_cos_sq x
   simp_all [add_comm, abs, norm_sq, sq, sin_of_real_re, cos_of_real_re, mul_re]
-#align complex.abs_cos_add_sin_mul_I Complex.abs_cos_add_sin_mul_I
+#align complex.abs_cos_add_sin_mul_I Complex.abs_cos_add_sin_mul_i
 
 @[simp]
 theorem abs_exp_of_real (x : ℝ) : abs (exp x) = Real.exp x := by
@@ -2090,9 +2090,9 @@ theorem abs_exp_of_real (x : ℝ) : abs (exp x) = Real.exp x := by
 #align complex.abs_exp_of_real Complex.abs_exp_of_real
 
 @[simp]
-theorem abs_exp_of_real_mul_I (x : ℝ) : abs (exp (x * I)) = 1 := by
+theorem abs_exp_of_real_mul_i (x : ℝ) : abs (exp (x * I)) = 1 := by
   rw [exp_mul_I, abs_cos_add_sin_mul_I]
-#align complex.abs_exp_of_real_mul_I Complex.abs_exp_of_real_mul_I
+#align complex.abs_exp_of_real_mul_I Complex.abs_exp_of_real_mul_i
 
 theorem abs_exp (z : ℂ) : abs (exp z) = Real.exp z.re := by
   rw [exp_eq_exp_re_mul_sin_add_cos, map_mul, abs_exp_of_real, abs_cos_add_sin_mul_I, mul_one]

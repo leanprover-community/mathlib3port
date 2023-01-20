@@ -45,12 +45,12 @@ variable {G : Type _} [Group G] [MeasurableSpace G] [TopologicalSpace G] [Topolo
 /-- Measurability of the action of the topological group `G` on the left-coset space `G/Γ`. -/
 @[to_additive
       "Measurability of the action of the additive topological group `G` on the left-coset\n  space `G/Γ`."]
-instance QuotientGroup.has_measurable_smul [MeasurableSpace (G ⧸ Γ)] [BorelSpace (G ⧸ Γ)] :
+instance QuotientGroup.hasMeasurableSmul [MeasurableSpace (G ⧸ Γ)] [BorelSpace (G ⧸ Γ)] :
     HasMeasurableSmul G (G ⧸ Γ)
     where
   measurable_const_smul g := (continuous_const_smul g).Measurable
   measurable_smul_const x := (QuotientGroup.continuous_smul₁ x).Measurable
-#align quotient_group.has_measurable_smul QuotientGroup.has_measurable_smul
+#align quotient_group.has_measurable_smul QuotientGroup.hasMeasurableSmul
 #align quotient_add_group.has_measurable_vadd quotientAddGroup.has_measurable_vadd
 
 variable {𝓕 : Set G} (h𝓕 : IsFundamentalDomain Γ.opposite 𝓕 μ)
@@ -72,9 +72,9 @@ theorem MeasureTheory.IsFundamentalDomain.smulInvariantMeasureMap [μ.IsMulLeftI
       have meas_π : Measurable π := continuous_quotient_mk.measurable
       have 𝓕meas : null_measurable_set 𝓕 μ := h𝓕.null_measurable_set
       intro g A hA
-      have meas_πA : MeasurableSet (π ⁻¹' A) := measurable_set_preimage meas_π hA
+      have meas_πA : MeasurableSet (π ⁻¹' A) := measurableSet_preimage meas_π hA
       rw [measure.map_apply meas_π hA,
-        measure.map_apply meas_π (measurable_set_preimage (measurable_const_smul g) hA),
+        measure.map_apply meas_π (measurableSet_preimage (measurable_const_smul g) hA),
         measure.restrict_apply₀' 𝓕meas, measure.restrict_apply₀' 𝓕meas]
       set π_preA := π ⁻¹' A
       have : QuotientGroup.mk ⁻¹' ((fun x : G ⧸ Γ => g • x) ⁻¹' A) = Mul.mul g ⁻¹' π_preA :=
@@ -164,7 +164,7 @@ theorem MeasurePreservingQuotientGroup.mk' [Subgroup.Normal Γ]
     (h : μ (𝓕 ∩ QuotientGroup.mk' Γ ⁻¹' K) = c) :
     MeasurePreserving (QuotientGroup.mk' Γ) (μ.restrict 𝓕)
       (c • MeasureTheory.Measure.haarMeasure K) :=
-  { Measurable := continuous_quotient_mk.Measurable
+  { Measurable := continuous_quotient_mk''.Measurable
     map_eq := by rw [h𝓕.map_restrict_quotient K h𝓕_finite, h] <;> rfl }
 #align measure_preserving_quotient_group.mk' MeasurePreservingQuotientGroup.mk'
 #align measure_preserving_quotient_add_group.mk' MeasurePreservingQuotientAddGroup.mk'

@@ -221,11 +221,11 @@ example {f' : a ⟶ d} {f : a ⟶ b} {g : b ⟶ c} {h : c ⟶ d} (η : f' ⟶ (f
   η ⊗≫ 𝟙 _
 
 @[simp]
-theorem bicategorical_comp_refl {f g h : a ⟶ b} (η : f ⟶ g) (θ : g ⟶ h) : η ⊗≫ θ = η ≫ θ :=
+theorem bicategoricalComp_refl {f g h : a ⟶ b} (η : f ⟶ g) (θ : g ⟶ h) : η ⊗≫ θ = η ≫ θ :=
   by
   dsimp [bicategorical_comp]
   simp
-#align category_theory.bicategory.bicategorical_comp_refl CategoryTheory.Bicategory.bicategorical_comp_refl
+#align category_theory.bicategory.bicategorical_comp_refl CategoryTheory.Bicategory.bicategoricalComp_refl
 
 end CategoryTheory.Bicategory
 
@@ -277,10 +277,10 @@ this move brackets to the left in order to expose a maximal prefix
 built out of unitors and associators.
 -/
 @[nolint unused_arguments]
-theorem assoc_lift_hom₂ {f g h i : a ⟶ b} [LiftHom f] [LiftHom g] [LiftHom h] (η : f ⟶ g)
-    (θ : g ⟶ h) (ι : h ⟶ i) [LiftHom₂ η] [LiftHom₂ θ] : η ≫ θ ≫ ι = (η ≫ θ) ≫ ι :=
+theorem assoc_liftHom₂ {f g h i : a ⟶ b} [LiftHom f] [LiftHom g] [LiftHom h] (η : f ⟶ g) (θ : g ⟶ h)
+    (ι : h ⟶ i) [LiftHom₂ η] [LiftHom₂ θ] : η ≫ θ ≫ ι = (η ≫ θ) ≫ ι :=
   (Category.assoc _ _ _).symm
-#align tactic.bicategory.coherence.assoc_lift_hom₂ Tactic.Bicategory.Coherence.assoc_lift_hom₂
+#align tactic.bicategory.coherence.assoc_lift_hom₂ Tactic.Bicategory.Coherence.assoc_liftHom₂
 
 end Coherence
 

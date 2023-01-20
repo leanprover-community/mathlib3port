@@ -80,8 +80,8 @@ instance fullMonoidalSubcategory : MonoidalCategory (FullSubcategory P)
   tensor_id' X Y := tensor_id X.1 Y.1
   tensor_comp' X₁ Y₁ Z₁ X₂ Y₂ Z₂ f₁ f₂ g₁ g₂ := tensor_comp f₁ f₂ g₁ g₂
   associator_naturality' X₁ X₂ X₃ Y₁ Y₂ Y₃ f₁ f₂ f₃ := associator_naturality f₁ f₂ f₃
-  left_unitor_naturality' X Y f := left_unitor_naturality f
-  right_unitor_naturality' X Y f := right_unitor_naturality f
+  left_unitor_naturality' X Y f := leftUnitor_naturality f
+  right_unitor_naturality' X Y f := rightUnitor_naturality f
   pentagon' W X Y Z := pentagon W.1 X.1 Y.1 Z.1
   triangle' X Y := triangle X.1 Y.1
 #align category_theory.monoidal_category.full_monoidal_subcategory CategoryTheory.MonoidalCategory.fullMonoidalSubcategory
@@ -110,13 +110,13 @@ section
 
 variable [Preadditive C]
 
-instance full_monoidal_subcategory_inclusion_additive :
+instance fullMonoidalSubcategoryInclusion_additive :
     (fullMonoidalSubcategoryInclusion P).toFunctor.Additive :=
-  Functor.full_subcategory_inclusion_additive _
-#align category_theory.monoidal_category.full_monoidal_subcategory_inclusion_additive CategoryTheory.MonoidalCategory.full_monoidal_subcategory_inclusion_additive
+  Functor.fullSubcategoryInclusion_additive _
+#align category_theory.monoidal_category.full_monoidal_subcategory_inclusion_additive CategoryTheory.MonoidalCategory.fullMonoidalSubcategoryInclusion_additive
 
 instance [MonoidalPreadditive C] : MonoidalPreadditive (FullSubcategory P) :=
-  monoidal_preadditive_of_faithful (fullMonoidalSubcategoryInclusion P)
+  monoidalPreadditive_of_faithful (fullMonoidalSubcategoryInclusion P)
 
 variable (R : Type _) [Ring R] [Linear R C]
 
@@ -261,16 +261,16 @@ instance fullMonoidalClosedSubcategory : MonoidalClosed (FullSubcategory P)
 #align category_theory.monoidal_category.full_monoidal_closed_subcategory CategoryTheory.MonoidalCategory.fullMonoidalClosedSubcategory
 
 @[simp]
-theorem full_monoidal_closed_subcategory_ihom_obj (X Y : FullSubcategory P) :
+theorem fullMonoidalClosedSubcategory_ihom_obj (X Y : FullSubcategory P) :
     ((ihom X).obj Y).obj = (ihom X.obj).obj Y.obj :=
   rfl
-#align category_theory.monoidal_category.full_monoidal_closed_subcategory_ihom_obj CategoryTheory.MonoidalCategory.full_monoidal_closed_subcategory_ihom_obj
+#align category_theory.monoidal_category.full_monoidal_closed_subcategory_ihom_obj CategoryTheory.MonoidalCategory.fullMonoidalClosedSubcategory_ihom_obj
 
 @[simp]
-theorem full_monoidal_closed_subcategory_ihom_map (X : FullSubcategory P) {Y Z : FullSubcategory P}
+theorem fullMonoidalClosedSubcategory_ihom_map (X : FullSubcategory P) {Y Z : FullSubcategory P}
     (f : Y ⟶ Z) : (ihom X).map f = (ihom X.obj).map f :=
   rfl
-#align category_theory.monoidal_category.full_monoidal_closed_subcategory_ihom_map CategoryTheory.MonoidalCategory.full_monoidal_closed_subcategory_ihom_map
+#align category_theory.monoidal_category.full_monoidal_closed_subcategory_ihom_map CategoryTheory.MonoidalCategory.fullMonoidalClosedSubcategory_ihom_map
 
 end Closed
 

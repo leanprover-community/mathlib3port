@@ -49,19 +49,19 @@ inductive εClosure (S : Set σ) : Set σ
 #align ε_NFA.ε_closure εNFA.εClosure
 
 @[simp]
-theorem subset_ε_closure (S : Set σ) : S ⊆ M.εClosure S :=
+theorem subset_εClosure (S : Set σ) : S ⊆ M.εClosure S :=
   ε_closure.base
-#align ε_NFA.subset_ε_closure εNFA.subset_ε_closure
+#align ε_NFA.subset_ε_closure εNFA.subset_εClosure
 
 @[simp]
-theorem ε_closure_empty : M.εClosure ∅ = ∅ :=
+theorem εClosure_empty : M.εClosure ∅ = ∅ :=
   eq_empty_of_forall_not_mem fun s hs => by induction' hs with t ht _ _ _ _ ih <;> assumption
-#align ε_NFA.ε_closure_empty εNFA.ε_closure_empty
+#align ε_NFA.ε_closure_empty εNFA.εClosure_empty
 
 @[simp]
-theorem ε_closure_univ : M.εClosure univ = univ :=
-  eq_univ_of_univ_subset <| subset_ε_closure _ _
-#align ε_NFA.ε_closure_univ εNFA.ε_closure_univ
+theorem εClosure_univ : M.εClosure univ = univ :=
+  eq_univ_of_univ_subset <| subset_εClosure _ _
+#align ε_NFA.ε_closure_univ εNFA.εClosure_univ
 
 /-- `M.step_set S a` is the union of the ε-closure of `M.step s a` for all `s ∈ S`. -/
 def stepSet (S : Set σ) (a : α) : Set σ :=
@@ -71,14 +71,13 @@ def stepSet (S : Set σ) (a : α) : Set σ :=
 variable {M}
 
 @[simp]
-theorem mem_step_set_iff : s ∈ M.stepSet S a ↔ ∃ t ∈ S, s ∈ M.εClosure (M.step t a) :=
+theorem mem_stepSet_iff : s ∈ M.stepSet S a ↔ ∃ t ∈ S, s ∈ M.εClosure (M.step t a) :=
   mem_Union₂
-#align ε_NFA.mem_step_set_iff εNFA.mem_step_set_iff
+#align ε_NFA.mem_step_set_iff εNFA.mem_stepSet_iff
 
 @[simp]
-theorem step_set_empty (a : α) : M.stepSet ∅ a = ∅ := by
-  simp_rw [step_set, Union_false, Union_empty]
-#align ε_NFA.step_set_empty εNFA.step_set_empty
+theorem stepSet_empty (a : α) : M.stepSet ∅ a = ∅ := by simp_rw [step_set, Union_false, Union_empty]
+#align ε_NFA.step_set_empty εNFA.stepSet_empty
 
 variable (M)
 
@@ -89,28 +88,28 @@ def evalFrom (start : Set σ) : List α → Set σ :=
 #align ε_NFA.eval_from εNFA.evalFrom
 
 @[simp]
-theorem eval_from_nil (S : Set σ) : M.evalFrom S [] = M.εClosure S :=
+theorem evalFrom_nil (S : Set σ) : M.evalFrom S [] = M.εClosure S :=
   rfl
-#align ε_NFA.eval_from_nil εNFA.eval_from_nil
+#align ε_NFA.eval_from_nil εNFA.evalFrom_nil
 
 @[simp]
-theorem eval_from_singleton (S : Set σ) (a : α) : M.evalFrom S [a] = M.stepSet (M.εClosure S) a :=
+theorem evalFrom_singleton (S : Set σ) (a : α) : M.evalFrom S [a] = M.stepSet (M.εClosure S) a :=
   rfl
-#align ε_NFA.eval_from_singleton εNFA.eval_from_singleton
+#align ε_NFA.eval_from_singleton εNFA.evalFrom_singleton
 
 @[simp]
-theorem eval_from_append_singleton (S : Set σ) (x : List α) (a : α) :
+theorem evalFrom_append_singleton (S : Set σ) (x : List α) (a : α) :
     M.evalFrom S (x ++ [a]) = M.stepSet (M.evalFrom S x) a := by
   simp only [eval_from, List.foldl_append, List.foldl_cons, List.foldl_nil]
-#align ε_NFA.eval_from_append_singleton εNFA.eval_from_append_singleton
+#align ε_NFA.eval_from_append_singleton εNFA.evalFrom_append_singleton
 
 @[simp]
-theorem eval_from_empty (x : List α) : M.evalFrom ∅ x = ∅ :=
+theorem evalFrom_empty (x : List α) : M.evalFrom ∅ x = ∅ :=
   by
   induction' x using List.reverseRecOn with x a ih
   · rw [eval_from_nil, ε_closure_empty]
   · rw [eval_from_append_singleton, ih, step_set_empty]
-#align ε_NFA.eval_from_empty εNFA.eval_from_empty
+#align ε_NFA.eval_from_empty εNFA.evalFrom_empty
 
 /-- `M.eval x` computes all possible paths through `M` with input `x` starting at an element of
 `M.start`. -/
@@ -130,7 +129,7 @@ theorem eval_singleton (a : α) : M.eval [a] = M.stepSet (M.εClosure M.start) a
 
 @[simp]
 theorem eval_append_singleton (x : List α) (a : α) : M.eval (x ++ [a]) = M.stepSet (M.eval x) a :=
-  eval_from_append_singleton _ _ _ _
+  evalFrom_append_singleton _ _ _ _
 #align ε_NFA.eval_append_singleton εNFA.eval_append_singleton
 
 /-- `M.accepts` is the language of `x` such that there is an accept state in `M.eval x`. -/
@@ -149,18 +148,18 @@ def toNFA : NFA α σ where
 #align ε_NFA.to_NFA εNFA.toNFA
 
 @[simp]
-theorem to_NFA_eval_from_match (start : Set σ) :
+theorem toNFA_evalFrom_match (start : Set σ) :
     M.toNFA.evalFrom (M.εClosure start) = M.evalFrom start :=
   rfl
-#align ε_NFA.to_NFA_eval_from_match εNFA.to_NFA_eval_from_match
+#align ε_NFA.to_NFA_eval_from_match εNFA.toNFA_evalFrom_match
 
 @[simp]
-theorem to_NFA_correct : M.toNFA.accepts = M.accepts :=
+theorem toNFA_correct : M.toNFA.accepts = M.accepts :=
   by
   ext x
   rw [accepts, NFA.accepts, eval, NFA.eval, ← to_NFA_eval_from_match]
   rfl
-#align ε_NFA.to_NFA_correct εNFA.to_NFA_correct
+#align ε_NFA.to_NFA_correct εNFA.toNFA_correct
 
 theorem pumping_lemma [Fintype σ] {x : List α} (hx : x ∈ M.accepts)
     (hlen : Fintype.card (Set σ) ≤ List.length x) :
@@ -187,17 +186,17 @@ def toεNFA (M : NFA α σ) : εNFA α σ
 #align NFA.to_ε_NFA NFA.toεNFA
 
 @[simp]
-theorem to_ε_NFA_ε_closure (M : NFA α σ) (S : Set σ) : M.toεNFA.εClosure S = S :=
+theorem toεNFA_εClosure (M : NFA α σ) (S : Set σ) : M.toεNFA.εClosure S = S :=
   by
   ext a
   refine' ⟨_, εNFA.εClosure.base _⟩
   rintro (⟨_, h⟩ | ⟨_, _, h, _⟩)
   · exact h
   · cases h
-#align NFA.to_ε_NFA_ε_closure NFA.to_ε_NFA_ε_closure
+#align NFA.to_ε_NFA_ε_closure NFA.toεNFA_εClosure
 
 @[simp]
-theorem to_ε_NFA_eval_from_match (M : NFA α σ) (start : Set σ) :
+theorem toεNFA_evalFrom_match (M : NFA α σ) (start : Set σ) :
     M.toεNFA.evalFrom start = M.evalFrom start :=
   by
   rw [eval_from, εNFA.evalFrom, to_ε_NFA_ε_closure]
@@ -209,14 +208,14 @@ theorem to_ε_NFA_eval_from_match (M : NFA α σ) (start : Set σ) :
   intro t ht
   rw [M.to_ε_NFA_ε_closure]
   rfl
-#align NFA.to_ε_NFA_eval_from_match NFA.to_ε_NFA_eval_from_match
+#align NFA.to_ε_NFA_eval_from_match NFA.toεNFA_evalFrom_match
 
 @[simp]
-theorem to_ε_NFA_correct (M : NFA α σ) : M.toεNFA.accepts = M.accepts :=
+theorem toεNFA_correct (M : NFA α σ) : M.toεNFA.accepts = M.accepts :=
   by
   rw [accepts, εNFA.accepts, eval, εNFA.eval, to_ε_NFA_eval_from_match]
   rfl
-#align NFA.to_ε_NFA_correct NFA.to_ε_NFA_correct
+#align NFA.to_ε_NFA_correct NFA.toεNFA_correct
 
 end NFA
 

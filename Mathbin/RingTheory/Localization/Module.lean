@@ -46,7 +46,7 @@ variable {M : Type _} [AddCommMonoid M] [Module R M] [Module Rₛ M] [IsScalarTo
 
 theorem LinearIndependent.localization {ι : Type _} {b : ι → M} (hli : LinearIndependent R b) :
     LinearIndependent Rₛ b := by
-  rw [linear_independent_iff'] at hli⊢
+  rw [linearIndependent_iff'] at hli⊢
   intro s g hg i hi
   choose a g' hg' using IsLocalization.exist_integer_multiples S s g
   letI := fun i => Classical.propDecidable (i ∈ s)
@@ -54,7 +54,7 @@ theorem LinearIndependent.localization {ι : Type _} {b : ι → M} (hli : Linea
   · rw [← @smul_zero _ M _ _ (a : R), ← hg, Finset.smul_sum]
     refine' Finset.sum_congr rfl fun i hi => _
     dsimp only
-    rw [dif_pos hi, ← IsScalarTower.algebra_map_smul Rₛ, hg' i hi, smul_assoc]
+    rw [dif_pos hi, ← IsScalarTower.algebraMap_smul Rₛ, hg' i hi, smul_assoc]
     infer_instance
   refine' (IsLocalization.map_units Rₛ a).mul_right_eq_zero.mp _
   rw [← Algebra.smul_def, ← map_zero (algebraMap R Rₛ), ← hli]
@@ -71,8 +71,8 @@ variable {M : Type _} [AddCommGroup M] [Module R M] [Module Rₛ M] [IsScalarTow
 noncomputable def Basis.localization {ι : Type _} (b : Basis ι R M) : Basis ι Rₛ M :=
   Basis.mk (b.LinearIndependent.Localization Rₛ S) <|
     by
-    rw [← eq_top_iff, ← @Submodule.restrict_scalars_eq_top_iff Rₛ R, eq_top_iff, ← b.span_eq]
-    apply Submodule.span_le_restrict_scalars
+    rw [← eq_top_iff, ← @Submodule.restrictScalars_eq_top_iff Rₛ R, eq_top_iff, ← b.span_eq]
+    apply Submodule.span_le_restrictScalars
 #align basis.localization Basis.localization
 
 end AddCommGroup
@@ -88,7 +88,7 @@ variable {V : Type _} [AddCommGroup V] [Module R V] [Module K V] [IsScalarTower 
 theorem LinearIndependent.iff_fraction_ring {ι : Type _} {b : ι → V} :
     LinearIndependent R b ↔ LinearIndependent K b :=
   ⟨LinearIndependent.localization K R⁰,
-    LinearIndependent.restrict_scalars (smul_left_injective R one_ne_zero)⟩
+    LinearIndependent.restrict_scalars (smul_left_injective R one_neZero)⟩
 #align linear_independent.iff_fraction_ring LinearIndependent.iff_fraction_ring
 
 end FractionRing

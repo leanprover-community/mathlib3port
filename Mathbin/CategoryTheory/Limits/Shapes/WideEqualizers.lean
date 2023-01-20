@@ -133,19 +133,19 @@ def parallelFamily : WalkingParallelFamily J ⥤ C
 #align category_theory.limits.parallel_family CategoryTheory.Limits.parallelFamily
 
 @[simp]
-theorem parallel_family_obj_zero : (parallelFamily f).obj zero = X :=
+theorem parallelFamily_obj_zero : (parallelFamily f).obj zero = X :=
   rfl
-#align category_theory.limits.parallel_family_obj_zero CategoryTheory.Limits.parallel_family_obj_zero
+#align category_theory.limits.parallel_family_obj_zero CategoryTheory.Limits.parallelFamily_obj_zero
 
 @[simp]
-theorem parallel_family_obj_one : (parallelFamily f).obj one = Y :=
+theorem parallelFamily_obj_one : (parallelFamily f).obj one = Y :=
   rfl
-#align category_theory.limits.parallel_family_obj_one CategoryTheory.Limits.parallel_family_obj_one
+#align category_theory.limits.parallel_family_obj_one CategoryTheory.Limits.parallelFamily_obj_one
 
 @[simp]
-theorem parallel_family_map_left {j : J} : (parallelFamily f).map (line j) = f j :=
+theorem parallelFamily_map_left {j : J} : (parallelFamily f).map (line j) = f j :=
   rfl
-#align category_theory.limits.parallel_family_map_left CategoryTheory.Limits.parallel_family_map_left
+#align category_theory.limits.parallel_family_map_left CategoryTheory.Limits.parallelFamily_map_left
 
 /-- Every functor indexing a wide (co)equalizer is naturally isomorphic (actually, equal) to a
     `parallel_family` -/
@@ -247,15 +247,15 @@ def Cotrident.ofπ [Nonempty J] {P : C} (π : Y ⟶ P) (w : ∀ j₁ j₂, f j�
 #align category_theory.limits.cotrident.of_π CategoryTheory.Limits.Cotrident.ofπ
 
 -- See note [dsimp, simp]
-theorem Trident.ι_of_ι [Nonempty J] {P : C} (ι : P ⟶ X) (w : ∀ j₁ j₂, ι ≫ f j₁ = ι ≫ f j₂) :
+theorem Trident.ι_ofι [Nonempty J] {P : C} (ι : P ⟶ X) (w : ∀ j₁ j₂, ι ≫ f j₁ = ι ≫ f j₂) :
     (Trident.ofι ι w).ι = ι :=
   rfl
-#align category_theory.limits.trident.ι_of_ι CategoryTheory.Limits.Trident.ι_of_ι
+#align category_theory.limits.trident.ι_of_ι CategoryTheory.Limits.Trident.ι_ofι
 
-theorem Cotrident.π_of_π [Nonempty J] {P : C} (π : Y ⟶ P) (w : ∀ j₁ j₂, f j₁ ≫ π = f j₂ ≫ π) :
+theorem Cotrident.π_ofπ [Nonempty J] {P : C} (π : Y ⟶ P) (w : ∀ j₁ j₂, f j₁ ≫ π = f j₂ ≫ π) :
     (Cotrident.ofπ π w).π = π :=
   rfl
-#align category_theory.limits.cotrident.π_of_π CategoryTheory.Limits.Cotrident.π_of_π
+#align category_theory.limits.cotrident.π_of_π CategoryTheory.Limits.Cotrident.π_ofπ
 
 @[reassoc.1]
 theorem Trident.condition (j₁ j₂ : J) (t : Trident f) : t.ι ≫ f j₁ = t.ι ≫ f j₂ := by
@@ -375,11 +375,11 @@ def Trident.IsLimit.homIso [Nonempty J] {t : Trident f} (ht : IsLimit t) (Z : C)
 #align category_theory.limits.trident.is_limit.hom_iso CategoryTheory.Limits.Trident.IsLimit.homIso
 
 /-- The bijection of `trident.is_limit.hom_iso` is natural in `Z`. -/
-theorem Trident.IsLimit.hom_iso_natural [Nonempty J] {t : Trident f} (ht : IsLimit t) {Z Z' : C}
+theorem Trident.IsLimit.homIso_natural [Nonempty J] {t : Trident f} (ht : IsLimit t) {Z Z' : C}
     (q : Z' ⟶ Z) (k : Z ⟶ t.x) :
     (Trident.IsLimit.homIso ht _ (q ≫ k) : Z' ⟶ X) = q ≫ (Trident.IsLimit.homIso ht _ k : Z ⟶ X) :=
   Category.assoc _ _ _
-#align category_theory.limits.trident.is_limit.hom_iso_natural CategoryTheory.Limits.Trident.IsLimit.hom_iso_natural
+#align category_theory.limits.trident.is_limit.hom_iso_natural CategoryTheory.Limits.Trident.IsLimit.homIso_natural
 
 /-- Given a colimit cocone for the family `f : J → (X ⟶ Y)`, for any `Z`, morphisms from the cocone
 point to `Z` are in bijection with morphisms `h : Z ⟶ X` such that
@@ -397,12 +397,12 @@ def Cotrident.IsColimit.homIso [Nonempty J] {t : Cotrident f} (ht : IsColimit t)
 #align category_theory.limits.cotrident.is_colimit.hom_iso CategoryTheory.Limits.Cotrident.IsColimit.homIso
 
 /-- The bijection of `cotrident.is_colimit.hom_iso` is natural in `Z`. -/
-theorem Cotrident.IsColimit.hom_iso_natural [Nonempty J] {t : Cotrident f} {Z Z' : C} (q : Z ⟶ Z')
+theorem Cotrident.IsColimit.homIso_natural [Nonempty J] {t : Cotrident f} {Z Z' : C} (q : Z ⟶ Z')
     (ht : IsColimit t) (k : t.x ⟶ Z) :
     (Cotrident.IsColimit.homIso ht _ (k ≫ q) : Y ⟶ Z') =
       (Cotrident.IsColimit.homIso ht _ k : Y ⟶ Z) ≫ q :=
   (Category.assoc _ _ _).symm
-#align category_theory.limits.cotrident.is_colimit.hom_iso_natural CategoryTheory.Limits.Cotrident.IsColimit.hom_iso_natural
+#align category_theory.limits.cotrident.is_colimit.hom_iso_natural CategoryTheory.Limits.Cotrident.IsColimit.homIso_natural
 
 /-- This is a helper construction that can be useful when verifying that a category has certain wide
     equalizers. Given `F : walking_parallel_family ⥤ C`, which is really the same as
@@ -440,17 +440,17 @@ def Cocone.ofCotrident {F : WalkingParallelFamily J ⥤ C} (t : Cotrident fun j 
 #align category_theory.limits.cocone.of_cotrident CategoryTheory.Limits.Cocone.ofCotrident
 
 @[simp]
-theorem Cone.of_trident_π {F : WalkingParallelFamily J ⥤ C} (t : Trident fun j => F.map (line j))
+theorem Cone.ofTrident_π {F : WalkingParallelFamily J ⥤ C} (t : Trident fun j => F.map (line j))
     (j) : (Cone.ofTrident t).π.app j = t.π.app j ≫ eqToHom (by tidy) :=
   rfl
-#align category_theory.limits.cone.of_trident_π CategoryTheory.Limits.Cone.of_trident_π
+#align category_theory.limits.cone.of_trident_π CategoryTheory.Limits.Cone.ofTrident_π
 
 @[simp]
-theorem Cocone.of_cotrident_ι {F : WalkingParallelFamily J ⥤ C}
+theorem Cocone.ofCotrident_ι {F : WalkingParallelFamily J ⥤ C}
     (t : Cotrident fun j => F.map (line j)) (j) :
     (Cocone.ofCotrident t).ι.app j = eqToHom (by tidy) ≫ t.ι.app j :=
   rfl
-#align category_theory.limits.cocone.of_cotrident_ι CategoryTheory.Limits.Cocone.of_cotrident_ι
+#align category_theory.limits.cocone.of_cotrident_ι CategoryTheory.Limits.Cocone.ofCotrident_ι
 
 /-- Given `F : walking_parallel_family ⥤ C`, which is really the same as
     `parallel_family (λ j, F.map (line j))` and a cone on `F`, we get a trident on
@@ -471,16 +471,16 @@ def Cotrident.ofCocone {F : WalkingParallelFamily J ⥤ C} (t : Cocone F) :
 #align category_theory.limits.cotrident.of_cocone CategoryTheory.Limits.Cotrident.ofCocone
 
 @[simp]
-theorem Trident.of_cone_π {F : WalkingParallelFamily J ⥤ C} (t : Cone F) (j) :
+theorem Trident.ofCone_π {F : WalkingParallelFamily J ⥤ C} (t : Cone F) (j) :
     (Trident.ofCone t).π.app j = t.π.app j ≫ eqToHom (by tidy) :=
   rfl
-#align category_theory.limits.trident.of_cone_π CategoryTheory.Limits.Trident.of_cone_π
+#align category_theory.limits.trident.of_cone_π CategoryTheory.Limits.Trident.ofCone_π
 
 @[simp]
-theorem Cotrident.of_cocone_ι {F : WalkingParallelFamily J ⥤ C} (t : Cocone F) (j) :
+theorem Cotrident.ofCocone_ι {F : WalkingParallelFamily J ⥤ C} (t : Cocone F) (j) :
     (Cotrident.ofCocone t).ι.app j = eqToHom (by tidy) ≫ t.ι.app j :=
   rfl
-#align category_theory.limits.cotrident.of_cocone_ι CategoryTheory.Limits.Cotrident.of_cocone_ι
+#align category_theory.limits.cotrident.of_cocone_ι CategoryTheory.Limits.Cotrident.ofCocone_ι
 
 /-- Helper function for constructing morphisms between wide equalizer tridents.
 -/
@@ -623,10 +623,10 @@ section
 variable {f}
 
 /-- The wide equalizer morphism in any limit cone is a monomorphism. -/
-theorem mono_of_is_limit_parallel_family [Nonempty J] {c : Cone (parallelFamily f)}
-    (i : IsLimit c) : Mono (Trident.ι c) :=
+theorem mono_of_isLimit_parallelFamily [Nonempty J] {c : Cone (parallelFamily f)} (i : IsLimit c) :
+    Mono (Trident.ι c) :=
   { right_cancellation := fun Z h k w => Trident.IsLimit.hom_ext i w }
-#align category_theory.limits.mono_of_is_limit_parallel_family CategoryTheory.Limits.mono_of_is_limit_parallel_family
+#align category_theory.limits.mono_of_is_limit_parallel_family CategoryTheory.Limits.mono_of_isLimit_parallelFamily
 
 end
 
@@ -724,10 +724,10 @@ section
 variable {f}
 
 /-- The wide coequalizer morphism in any colimit cocone is an epimorphism. -/
-theorem epi_of_is_colimit_parallel_family [Nonempty J] {c : Cocone (parallelFamily f)}
+theorem epi_of_isColimit_parallelFamily [Nonempty J] {c : Cocone (parallelFamily f)}
     (i : IsColimit c) : Epi (c.ι.app one) :=
   { left_cancellation := fun Z h k w => Cotrident.IsColimit.hom_ext i w }
-#align category_theory.limits.epi_of_is_colimit_parallel_family CategoryTheory.Limits.epi_of_is_colimit_parallel_family
+#align category_theory.limits.epi_of_is_colimit_parallel_family CategoryTheory.Limits.epi_of_isColimit_parallelFamily
 
 end
 
@@ -744,28 +744,28 @@ abbrev HasWideCoequalizers :=
 #align category_theory.limits.has_wide_coequalizers CategoryTheory.Limits.HasWideCoequalizers
 
 /-- If `C` has all limits of diagrams `parallel_family f`, then it has all wide equalizers -/
-theorem has_wide_equalizers_of_has_limit_parallel_family
+theorem hasWideEqualizers_of_hasLimit_parallelFamily
     [∀ {J : Type w} {X Y : C} {f : J → (X ⟶ Y)}, HasLimit (parallelFamily f)] :
     HasWideEqualizers.{w} C := fun J =>
   { HasLimit := fun F => hasLimitOfIso (diagramIsoParallelFamily F).symm }
-#align category_theory.limits.has_wide_equalizers_of_has_limit_parallel_family CategoryTheory.Limits.has_wide_equalizers_of_has_limit_parallel_family
+#align category_theory.limits.has_wide_equalizers_of_has_limit_parallel_family CategoryTheory.Limits.hasWideEqualizers_of_hasLimit_parallelFamily
 
 /-- If `C` has all colimits of diagrams `parallel_family f`, then it has all wide coequalizers -/
-theorem has_wide_coequalizers_of_has_colimit_parallel_family
+theorem hasWideCoequalizers_of_hasColimit_parallelFamily
     [∀ {J : Type w} {X Y : C} {f : J → (X ⟶ Y)}, HasColimit (parallelFamily f)] :
     HasWideCoequalizers.{w} C := fun J =>
   { HasColimit := fun F => hasColimitOfIso (diagramIsoParallelFamily F) }
-#align category_theory.limits.has_wide_coequalizers_of_has_colimit_parallel_family CategoryTheory.Limits.has_wide_coequalizers_of_has_colimit_parallel_family
+#align category_theory.limits.has_wide_coequalizers_of_has_colimit_parallel_family CategoryTheory.Limits.hasWideCoequalizers_of_hasColimit_parallelFamily
 
-instance (priority := 10) has_equalizers_of_has_wide_equalizers [HasWideEqualizers.{w} C] :
+instance (priority := 10) hasEqualizers_of_hasWideEqualizers [HasWideEqualizers.{w} C] :
     HasEqualizers C :=
   hasLimitsOfShapeOfEquivalence.{w} walkingParallelFamilyEquivWalkingParallelPair
-#align category_theory.limits.has_equalizers_of_has_wide_equalizers CategoryTheory.Limits.has_equalizers_of_has_wide_equalizers
+#align category_theory.limits.has_equalizers_of_has_wide_equalizers CategoryTheory.Limits.hasEqualizers_of_hasWideEqualizers
 
-instance (priority := 10) has_coequalizers_of_has_wide_coequalizers [HasWideCoequalizers.{w} C] :
+instance (priority := 10) hasCoequalizers_of_hasWideCoequalizers [HasWideCoequalizers.{w} C] :
     HasCoequalizers C :=
   hasColimitsOfShapeOfEquivalence.{w} walkingParallelFamilyEquivWalkingParallelPair
-#align category_theory.limits.has_coequalizers_of_has_wide_coequalizers CategoryTheory.Limits.has_coequalizers_of_has_wide_coequalizers
+#align category_theory.limits.has_coequalizers_of_has_wide_coequalizers CategoryTheory.Limits.hasCoequalizers_of_hasWideCoequalizers
 
 end CategoryTheory.Limits
 

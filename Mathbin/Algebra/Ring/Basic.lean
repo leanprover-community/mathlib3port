@@ -208,7 +208,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : NonAssocRing.{u1} α] [_inst_2 : Nontrivial.{u1} α] (a : α), Ne.{succ u1} α (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α _inst_1))))) a (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (NonAssocRing.toOne.{u1} α _inst_1)))) a
 Case conversion may be inaccurate. Consider using '#align succ_ne_self succ_ne_selfₓ'. -/
 theorem succ_ne_self [NonAssocRing α] [Nontrivial α] (a : α) : a + 1 ≠ a := fun h =>
-  one_ne_zero ((add_right_inj a).mp (by simp [h]))
+  one_neZero ((add_right_inj a).mp (by simp [h]))
 #align succ_ne_self succ_ne_self
 
 /- warning: pred_ne_self -> pred_ne_self is a dubious translation:
@@ -218,7 +218,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : NonAssocRing.{u1} α] [_inst_2 : Nontrivial.{u1} α] (a : α), Ne.{succ u1} α (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α (AddGroupWithOne.toSub.{u1} α (NonAssocRing.toAddGroupWithOne.{u1} α _inst_1))) a (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (NonAssocRing.toOne.{u1} α _inst_1)))) a
 Case conversion may be inaccurate. Consider using '#align pred_ne_self pred_ne_selfₓ'. -/
 theorem pred_ne_self [NonAssocRing α] [Nontrivial α] (a : α) : a - 1 ≠ a := fun h =>
-  one_ne_zero (neg_injective ((add_right_inj a).mp (by simpa [sub_eq_add_neg] using h)))
+  one_neZero (neg_injective ((add_right_inj a).mp (by simpa [sub_eq_add_neg] using h)))
 #align pred_ne_self pred_ne_self
 
 section NoZeroDivisors

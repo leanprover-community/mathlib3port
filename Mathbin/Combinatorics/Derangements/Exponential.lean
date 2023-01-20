@@ -26,7 +26,7 @@ open BigOperators
 
 open TopologicalSpace
 
-theorem num_derangements_tendsto_inv_e :
+theorem numDerangements_tendsto_inv_e :
     Tendsto (fun n => (numDerangements n : ℝ) / n.factorial) atTop (𝓝 (Real.exp (-1))) :=
   by
   -- we show that d(n)/n! is the partial sum of exp(-1), but offset by 1.
@@ -43,18 +43,18 @@ theorem num_derangements_tendsto_inv_e :
     -- there's no specific lemma for ℝ that ∑ x^k/k! sums to exp(x), but it's
     -- true in more general fields, so use that lemma
     rw [Real.exp_eq_exp_ℝ]
-    exact exp_series_div_has_sum_exp ℝ (-1 : ℝ)
+    exact exp_series_div_hasSum_exp ℝ (-1 : ℝ)
   intro n
-  rw [← Int.cast_ofNat, num_derangements_sum]
+  rw [← Int.cast_ofNat, numDerangements_sum]
   push_cast
   rw [Finset.sum_div]
   -- get down to individual terms
   refine' Finset.sum_congr (refl _) _
   intro k hk
   have h_le : k ≤ n := finset.mem_range_succ_iff.mp hk
-  rw [Nat.asc_factorial_eq_div, add_tsub_cancel_of_le h_le]
+  rw [Nat.ascFactorial_eq_div, add_tsub_cancel_of_le h_le]
   push_cast [Nat.factorial_dvd_factorial h_le]
   field_simp [Nat.factorial_ne_zero]
   ring
-#align num_derangements_tendsto_inv_e num_derangements_tendsto_inv_e
+#align num_derangements_tendsto_inv_e numDerangements_tendsto_inv_e
 

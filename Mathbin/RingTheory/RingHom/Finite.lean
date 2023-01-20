@@ -23,20 +23,20 @@ open TensorProduct
 
 open TensorProduct Algebra.TensorProduct
 
-theorem finite_stable_under_composition : StableUnderComposition @Finite :=
+theorem finite_stableUnderComposition : StableUnderComposition @Finite :=
   by
   introv R hf hg
   exact hg.comp hf
-#align ring_hom.finite_stable_under_composition RingHom.finite_stable_under_composition
+#align ring_hom.finite_stable_under_composition RingHom.finite_stableUnderComposition
 
-theorem finite_respects_iso : RespectsIso @Finite :=
+theorem finite_respectsIso : RespectsIso @Finite :=
   by
   apply finite_stable_under_composition.respects_iso
   intros
   exact Finite.of_surjective _ e.to_equiv.surjective
-#align ring_hom.finite_respects_iso RingHom.finite_respects_iso
+#align ring_hom.finite_respects_iso RingHom.finite_respectsIso
 
-theorem finite_stable_under_base_change : StableUnderBaseChange @Finite :=
+theorem finite_stableUnderBaseChange : StableUnderBaseChange @Finite :=
   by
   refine' stable_under_base_change.mk _ finite_respects_iso _
   classical
@@ -55,7 +55,7 @@ theorem finite_stable_under_base_change : StableUnderBaseChange @Finite :=
       rw [Algebra.smul_def]
       rfl
     exact inferInstance
-#align ring_hom.finite_stable_under_base_change RingHom.finite_stable_under_base_change
+#align ring_hom.finite_stable_under_base_change RingHom.finite_stableUnderBaseChange
 
 end RingHom
 

@@ -280,7 +280,7 @@ theorem dlookup_isSome {a : α} : ∀ {l : List (Sigma β)}, (dlookup a l).isSom
 
 #print List.dlookup_eq_none /-
 theorem dlookup_eq_none {a : α} {l : List (Sigma β)} : dlookup a l = none ↔ a ∉ l.keys := by
-  simp [← lookup_is_some, Option.is_none_iff_eq_none]
+  simp [← lookup_is_some, Option.isNone_iff_eq_none]
 #align list.lookup_eq_none List.dlookup_eq_none
 -/
 
@@ -482,7 +482,7 @@ theorem kreplace_self {a : α} {b : β a} {l : List (Sigma β)} (nd : NodupKeys 
     dsimp [Option.guard]
     split_ifs
     · subst a'
-      exact ⟨rfl, heq_of_eq <| nd.eq_of_mk_mem h h'⟩
+      exact ⟨rfl, hEq_of_eq <| nd.eq_of_mk_mem h h'⟩
     · rfl
   · rintro ⟨a₁, b₁⟩ ⟨a₂, b₂⟩
     dsimp [Option.guard]

@@ -166,13 +166,13 @@ theorem coe_lcm (i j : ℤ) : ↑(Int.lcm i j) = GCDMonoid.lcm i j :=
   rfl
 #align int.coe_lcm Int.coe_lcm
 
-theorem nat_abs_gcd (i j : ℤ) : natAbs (GCDMonoid.gcd i j) = Int.gcd i j :=
+theorem natAbs_gcd (i j : ℤ) : natAbs (GCDMonoid.gcd i j) = Int.gcd i j :=
   rfl
-#align int.nat_abs_gcd Int.nat_abs_gcd
+#align int.nat_abs_gcd Int.natAbs_gcd
 
-theorem nat_abs_lcm (i j : ℤ) : natAbs (GCDMonoid.lcm i j) = Int.lcm i j :=
+theorem natAbs_lcm (i j : ℤ) : natAbs (GCDMonoid.lcm i j) = Int.lcm i j :=
   rfl
-#align int.nat_abs_lcm Int.nat_abs_lcm
+#align int.nat_abs_lcm Int.natAbs_lcm
 
 end GCDMonoid
 
@@ -186,9 +186,9 @@ theorem exists_unit_of_abs (a : ℤ) : ∃ (u : ℤ)(h : IsUnit u), (Int.natAbs 
     simp only [neg_mul, one_mul]
 #align int.exists_unit_of_abs Int.exists_unit_of_abs
 
-theorem gcd_eq_nat_abs {a b : ℤ} : Int.gcd a b = Nat.gcd a.natAbs b.natAbs :=
+theorem gcd_eq_natAbs {a b : ℤ} : Int.gcd a b = Nat.gcd a.natAbs b.natAbs :=
   rfl
-#align int.gcd_eq_nat_abs Int.gcd_eq_nat_abs
+#align int.gcd_eq_nat_abs Int.gcd_eq_natAbs
 
 theorem gcd_eq_one_iff_coprime {a b : ℤ} : Int.gcd a b = 1 ↔ IsCoprime a b :=
   by
@@ -249,15 +249,14 @@ theorem sq_of_coprime {a b c : ℤ} (h : IsCoprime a b) (heq : a * b = c ^ 2) :
   sq_of_gcd_eq_one (gcd_eq_one_iff_coprime.mpr h) HEq
 #align int.sq_of_coprime Int.sq_of_coprime
 
-theorem nat_abs_euclidean_domain_gcd (a b : ℤ) :
-    Int.natAbs (EuclideanDomain.gcd a b) = Int.gcd a b :=
+theorem natAbs_euclideanDomain_gcd (a b : ℤ) : Int.natAbs (EuclideanDomain.gcd a b) = Int.gcd a b :=
   by
   apply Nat.dvd_antisymm <;> rw [← Int.coe_nat_dvd]
   · rw [Int.natAbs_dvd]
     exact Int.dvd_gcd (EuclideanDomain.gcd_dvd_left _ _) (EuclideanDomain.gcd_dvd_right _ _)
   · rw [Int.dvd_natAbs]
     exact EuclideanDomain.dvd_gcd (Int.gcd_dvd_left _ _) (Int.gcd_dvd_right _ _)
-#align int.nat_abs_euclidean_domain_gcd Int.nat_abs_euclidean_domain_gcd
+#align int.nat_abs_euclidean_domain_gcd Int.natAbs_euclideanDomain_gcd
 
 end Int
 
@@ -349,9 +348,9 @@ theorem Nat.factors_multiset_prod_of_irreducible {s : Multiset ℕ}
 
 namespace multiplicity
 
-theorem finite_int_iff_nat_abs_finite {a b : ℤ} : Finite a b ↔ Finite a.natAbs b.natAbs := by
+theorem finite_int_iff_natAbs_finite {a b : ℤ} : Finite a b ↔ Finite a.natAbs b.natAbs := by
   simp only [finite_def, ← Int.natAbs_dvd_natAbs, Int.natAbs_pow]
-#align multiplicity.finite_int_iff_nat_abs_finite multiplicity.finite_int_iff_nat_abs_finite
+#align multiplicity.finite_int_iff_nat_abs_finite multiplicity.finite_int_iff_natAbs_finite
 
 theorem finite_int_iff {a b : ℤ} : Finite a b ↔ a.natAbs ≠ 1 ∧ b ≠ 0 := by
   rw [finite_int_iff_nat_abs_finite, finite_nat_iff, pos_iff_ne_zero, Int.natAbs_ne_zero]
@@ -379,40 +378,40 @@ theorem induction_on_primes {P : ℕ → Prop} (h₀ : P 0) (h₁ : P 1)
     exact h p a hp.nat_prime ha
 #align induction_on_primes induction_on_primes
 
-theorem Int.associated_nat_abs (k : ℤ) : Associated k k.natAbs :=
+theorem Int.associated_natAbs (k : ℤ) : Associated k k.natAbs :=
   associated_of_dvd_dvd (Int.coe_nat_dvd_right.mpr dvd_rfl) (Int.natAbs_dvd.mpr dvd_rfl)
-#align int.associated_nat_abs Int.associated_nat_abs
+#align int.associated_nat_abs Int.associated_natAbs
 
-theorem Int.prime_iff_nat_abs_prime {k : ℤ} : Prime k ↔ Nat.Prime k.natAbs :=
-  (Int.associated_nat_abs k).prime_iff.trans Nat.prime_iff_prime_int.symm
-#align int.prime_iff_nat_abs_prime Int.prime_iff_nat_abs_prime
+theorem Int.prime_iff_natAbs_prime {k : ℤ} : Prime k ↔ Nat.Prime k.natAbs :=
+  (Int.associated_natAbs k).prime_iff.trans Nat.prime_iff_prime_int.symm
+#align int.prime_iff_nat_abs_prime Int.prime_iff_natAbs_prime
 
-theorem Int.associated_iff_nat_abs {a b : ℤ} : Associated a b ↔ a.natAbs = b.natAbs :=
+theorem Int.associated_iff_natAbs {a b : ℤ} : Associated a b ↔ a.natAbs = b.natAbs :=
   by
   rw [← dvd_dvd_iff_associated, ← Int.natAbs_dvd_natAbs, ← Int.natAbs_dvd_natAbs,
     dvd_dvd_iff_associated]
   exact associated_iff_eq
-#align int.associated_iff_nat_abs Int.associated_iff_nat_abs
+#align int.associated_iff_nat_abs Int.associated_iff_natAbs
 
 theorem Int.associated_iff {a b : ℤ} : Associated a b ↔ a = b ∨ a = -b :=
   by
-  rw [Int.associated_iff_nat_abs]
+  rw [Int.associated_iff_natAbs]
   exact Int.natAbs_eq_natAbs_iff
 #align int.associated_iff Int.associated_iff
 
 namespace Int
 
-theorem zmultiples_nat_abs (a : ℤ) :
+theorem zmultiples_natAbs (a : ℤ) :
     AddSubgroup.zmultiples (a.natAbs : ℤ) = AddSubgroup.zmultiples a :=
   le_antisymm (AddSubgroup.zmultiples_subset (mem_zmultiples_iff.mpr (dvd_natAbs.mpr (dvd_refl a))))
     (AddSubgroup.zmultiples_subset (mem_zmultiples_iff.mpr (natAbs_dvd.mpr (dvd_refl a))))
-#align int.zmultiples_nat_abs Int.zmultiples_nat_abs
+#align int.zmultiples_nat_abs Int.zmultiples_natAbs
 
-theorem span_nat_abs (a : ℤ) : Ideal.span ({a.natAbs} : Set ℤ) = Ideal.span {a} :=
+theorem span_natAbs (a : ℤ) : Ideal.span ({a.natAbs} : Set ℤ) = Ideal.span {a} :=
   by
   rw [Ideal.span_singleton_eq_span_singleton]
   exact (associated_nat_abs _).symm
-#align int.span_nat_abs Int.span_nat_abs
+#align int.span_nat_abs Int.span_natAbs
 
 theorem eq_pow_of_mul_eq_pow_bit1_left {a b c : ℤ} (hab : IsCoprime a b) {k : ℕ}
     (h : a * b = c ^ bit1 k) : ∃ d, a = d ^ bit1 k :=

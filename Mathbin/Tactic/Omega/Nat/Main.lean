@@ -35,13 +35,13 @@ unsafe def desugar :=
   sorry
 #align omega.nat.desugar omega.nat.desugar
 
-theorem univ_close_of_unsat_neg_elim_not (m) (p : Preform) :
+theorem univClose_of_unsat_negElim_not (m) (p : Preform) :
     (negElim (¬* p)).Unsat → UnivClose p (fun _ => 0) m :=
   by
   intro h1; apply univ_close_of_valid
   apply valid_of_unsat_not; intro h2; apply h1
   apply preform.sat_of_implies_of_sat implies_neg_elim h2
-#align omega.nat.univ_close_of_unsat_neg_elim_not Omega.Nat.univ_close_of_unsat_neg_elim_not
+#align omega.nat.univ_close_of_unsat_neg_elim_not Omega.Nat.univClose_of_unsat_negElim_not
 
 /-- Return expr of proof that argument is free of subtractions -/
 unsafe def preterm.prove_sub_free : Preterm → tactic expr
@@ -106,13 +106,13 @@ unsafe def prove_unsat_neg_free : Preform → tactic expr
     | none => prove_unsat_sub_free p
     | some (t, s) => do
       let x ← prove_unsat_neg_free (subElim t s p)
-      return q(unsat_of_unsat_sub_elim $(q(t)) $(q(s)) $(q(p)) $(x))
+      return q(unsat_of_unsat_subElim $(q(t)) $(q(s)) $(q(p)) $(x))
 #align omega.nat.prove_unsat_neg_free omega.nat.prove_unsat_neg_free
 
 /-- Given a (m : nat) and (p : preform), return the expr of (t : univ_close m p). -/
 unsafe def prove_univ_close (m : Nat) (p : Preform) : tactic expr := do
   let x ← prove_unsat_neg_free (negElim (¬* p))
-  to_expr ``(univ_close_of_unsat_neg_elim_not $(q(m)) $(q(p)) $(x))
+  to_expr ``(univClose_of_unsat_negElim_not $(q(m)) $(q(p)) $(x))
 #align omega.nat.prove_univ_close omega.nat.prove_univ_close
 
 -- failed to format: unknown constant 'term.pseudo.antiquot'

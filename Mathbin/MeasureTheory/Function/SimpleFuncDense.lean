@@ -63,9 +63,9 @@ noncomputable def nearestPtInd (e : ℕ → α) : ℕ → α →ₛ ℕ
   | 0 => const α 0
   | N + 1 =>
     piecewise (⋂ k ≤ N, { x | edist (e (N + 1)) x < edist (e k) x })
-      (MeasurableSet.Inter fun k =>
-        MeasurableSet.Inter fun hk =>
-          measurable_set_lt measurable_edist_right measurable_edist_right)
+      (MeasurableSet.interᵢ fun k =>
+        MeasurableSet.interᵢ fun hk =>
+          measurableSet_lt measurable_edist_right measurable_edist_right)
       (const α <| N + 1) (nearest_pt_ind N)
 #align measure_theory.simple_func.nearest_pt_ind MeasureTheory.SimpleFunc.nearestPtInd
 
@@ -77,33 +77,33 @@ noncomputable def nearestPt (e : ℕ → α) (N : ℕ) : α →ₛ α :=
 #align measure_theory.simple_func.nearest_pt MeasureTheory.SimpleFunc.nearestPt
 
 @[simp]
-theorem nearest_pt_ind_zero (e : ℕ → α) : nearestPtInd e 0 = const α 0 :=
+theorem nearestPtInd_zero (e : ℕ → α) : nearestPtInd e 0 = const α 0 :=
   rfl
-#align measure_theory.simple_func.nearest_pt_ind_zero MeasureTheory.SimpleFunc.nearest_pt_ind_zero
+#align measure_theory.simple_func.nearest_pt_ind_zero MeasureTheory.SimpleFunc.nearestPtInd_zero
 
 @[simp]
-theorem nearest_pt_zero (e : ℕ → α) : nearestPt e 0 = const α (e 0) :=
+theorem nearestPt_zero (e : ℕ → α) : nearestPt e 0 = const α (e 0) :=
   rfl
-#align measure_theory.simple_func.nearest_pt_zero MeasureTheory.SimpleFunc.nearest_pt_zero
+#align measure_theory.simple_func.nearest_pt_zero MeasureTheory.SimpleFunc.nearestPt_zero
 
-theorem nearest_pt_ind_succ (e : ℕ → α) (N : ℕ) (x : α) :
+theorem nearestPtInd_succ (e : ℕ → α) (N : ℕ) (x : α) :
     nearestPtInd e (N + 1) x =
       if ∀ k ≤ N, edist (e (N + 1)) x < edist (e k) x then N + 1 else nearestPtInd e N x :=
   by
   simp only [nearest_pt_ind, coe_piecewise, Set.piecewise]
   congr
   simp
-#align measure_theory.simple_func.nearest_pt_ind_succ MeasureTheory.SimpleFunc.nearest_pt_ind_succ
+#align measure_theory.simple_func.nearest_pt_ind_succ MeasureTheory.SimpleFunc.nearestPtInd_succ
 
-theorem nearest_pt_ind_le (e : ℕ → α) (N : ℕ) (x : α) : nearestPtInd e N x ≤ N :=
+theorem nearestPtInd_le (e : ℕ → α) (N : ℕ) (x : α) : nearestPtInd e N x ≤ N :=
   by
   induction' N with N ihN; · simp
   simp only [nearest_pt_ind_succ]
   split_ifs
   exacts[le_rfl, ihN.trans N.le_succ]
-#align measure_theory.simple_func.nearest_pt_ind_le MeasureTheory.SimpleFunc.nearest_pt_ind_le
+#align measure_theory.simple_func.nearest_pt_ind_le MeasureTheory.SimpleFunc.nearestPtInd_le
 
-theorem edist_nearest_pt_le (e : ℕ → α) (x : α) {k N : ℕ} (hk : k ≤ N) :
+theorem edist_nearestPt_le (e : ℕ → α) (x : α) {k N : ℕ} (hk : k ≤ N) :
     edist (nearestPt e N x) x ≤ edist (e k) x :=
   by
   induction' N with N ihN generalizing k
@@ -116,16 +116,16 @@ theorem edist_nearest_pt_le (e : ℕ → α) (x : α) {k N : ℕ} (hk : k ≤ N)
       rcases h with ⟨l, hlN, hxl⟩
       rcases hk.eq_or_lt with (rfl | hk)
       exacts[(ihN hlN).trans hxl, ihN (Nat.lt_succ_iff.1 hk)]
-#align measure_theory.simple_func.edist_nearest_pt_le MeasureTheory.SimpleFunc.edist_nearest_pt_le
+#align measure_theory.simple_func.edist_nearest_pt_le MeasureTheory.SimpleFunc.edist_nearestPt_le
 
-theorem tendsto_nearest_pt {e : ℕ → α} {x : α} (hx : x ∈ closure (range e)) :
+theorem tendsto_nearestPt {e : ℕ → α} {x : α} (hx : x ∈ closure (range e)) :
     Tendsto (fun N => nearestPt e N x) atTop (𝓝 x) :=
   by
   refine' (at_top_basis.tendsto_iff nhds_basis_eball).2 fun ε hε => _
   rcases Emetric.mem_closure_iff.1 hx ε hε with ⟨_, ⟨N, rfl⟩, hN⟩
   rw [edist_comm] at hN
   exact ⟨N, trivial, fun n hn => (edist_nearest_pt_le e x hn).trans_lt hN⟩
-#align measure_theory.simple_func.tendsto_nearest_pt MeasureTheory.SimpleFunc.tendsto_nearest_pt
+#align measure_theory.simple_func.tendsto_nearest_pt MeasureTheory.SimpleFunc.tendsto_nearestPt
 
 variable [MeasurableSpace β] {f : β → α}
 
@@ -138,64 +138,64 @@ noncomputable def approxOn (f : β → α) (hf : Measurable f) (s : Set α) (y�
 #align measure_theory.simple_func.approx_on MeasureTheory.SimpleFunc.approxOn
 
 @[simp]
-theorem approx_on_zero {f : β → α} (hf : Measurable f) {s : Set α} {y₀ : α} (h₀ : y₀ ∈ s)
+theorem approxOn_zero {f : β → α} (hf : Measurable f) {s : Set α} {y₀ : α} (h₀ : y₀ ∈ s)
     [SeparableSpace s] (x : β) : approxOn f hf s y₀ h₀ 0 x = y₀ :=
   rfl
-#align measure_theory.simple_func.approx_on_zero MeasureTheory.SimpleFunc.approx_on_zero
+#align measure_theory.simple_func.approx_on_zero MeasureTheory.SimpleFunc.approxOn_zero
 
-theorem approx_on_mem {f : β → α} (hf : Measurable f) {s : Set α} {y₀ : α} (h₀ : y₀ ∈ s)
+theorem approxOn_mem {f : β → α} (hf : Measurable f) {s : Set α} {y₀ : α} (h₀ : y₀ ∈ s)
     [SeparableSpace s] (n : ℕ) (x : β) : approxOn f hf s y₀ h₀ n x ∈ s :=
   by
   haveI : Nonempty s := ⟨⟨y₀, h₀⟩⟩
   suffices ∀ n, (Nat.casesOn n y₀ (coe ∘ dense_seq s) : α) ∈ s by apply this
   rintro (_ | n)
   exacts[h₀, Subtype.mem _]
-#align measure_theory.simple_func.approx_on_mem MeasureTheory.SimpleFunc.approx_on_mem
+#align measure_theory.simple_func.approx_on_mem MeasureTheory.SimpleFunc.approxOn_mem
 
 @[simp]
-theorem approx_on_comp {γ : Type _} [MeasurableSpace γ] {f : β → α} (hf : Measurable f) {g : γ → β}
+theorem approxOn_comp {γ : Type _} [MeasurableSpace γ] {f : β → α} (hf : Measurable f) {g : γ → β}
     (hg : Measurable g) {s : Set α} {y₀ : α} (h₀ : y₀ ∈ s) [SeparableSpace s] (n : ℕ) :
     approxOn (f ∘ g) (hf.comp hg) s y₀ h₀ n = (approxOn f hf s y₀ h₀ n).comp g hg :=
   rfl
-#align measure_theory.simple_func.approx_on_comp MeasureTheory.SimpleFunc.approx_on_comp
+#align measure_theory.simple_func.approx_on_comp MeasureTheory.SimpleFunc.approxOn_comp
 
-theorem tendsto_approx_on {f : β → α} (hf : Measurable f) {s : Set α} {y₀ : α} (h₀ : y₀ ∈ s)
+theorem tendsto_approxOn {f : β → α} (hf : Measurable f) {s : Set α} {y₀ : α} (h₀ : y₀ ∈ s)
     [SeparableSpace s] {x : β} (hx : f x ∈ closure s) :
     Tendsto (fun n => approxOn f hf s y₀ h₀ n x) atTop (𝓝 <| f x) :=
   by
   haveI : Nonempty s := ⟨⟨y₀, h₀⟩⟩
   rw [← @Subtype.range_coe _ s, ← image_univ, ← (dense_range_dense_seq s).closure_eq] at hx
   simp only [approx_on, coe_comp]
-  refine' tendsto_nearest_pt (closure_minimal _ is_closed_closure hx)
+  refine' tendsto_nearest_pt (closure_minimal _ isClosed_closure hx)
   simp only [Nat.range_casesOn, closure_union, range_comp coe]
   exact
     subset.trans (image_closure_subset_closure_image continuous_subtype_coe)
       (subset_union_right _ _)
-#align measure_theory.simple_func.tendsto_approx_on MeasureTheory.SimpleFunc.tendsto_approx_on
+#align measure_theory.simple_func.tendsto_approx_on MeasureTheory.SimpleFunc.tendsto_approxOn
 
-theorem edist_approx_on_mono {f : β → α} (hf : Measurable f) {s : Set α} {y₀ : α} (h₀ : y₀ ∈ s)
+theorem edist_approxOn_mono {f : β → α} (hf : Measurable f) {s : Set α} {y₀ : α} (h₀ : y₀ ∈ s)
     [SeparableSpace s] (x : β) {m n : ℕ} (h : m ≤ n) :
     edist (approxOn f hf s y₀ h₀ n x) (f x) ≤ edist (approxOn f hf s y₀ h₀ m x) (f x) :=
   by
   dsimp only [approx_on, coe_comp, (· ∘ ·)]
   exact edist_nearest_pt_le _ _ ((nearest_pt_ind_le _ _ _).trans h)
-#align measure_theory.simple_func.edist_approx_on_mono MeasureTheory.SimpleFunc.edist_approx_on_mono
+#align measure_theory.simple_func.edist_approx_on_mono MeasureTheory.SimpleFunc.edist_approxOn_mono
 
-theorem edist_approx_on_le {f : β → α} (hf : Measurable f) {s : Set α} {y₀ : α} (h₀ : y₀ ∈ s)
+theorem edist_approxOn_le {f : β → α} (hf : Measurable f) {s : Set α} {y₀ : α} (h₀ : y₀ ∈ s)
     [SeparableSpace s] (x : β) (n : ℕ) : edist (approxOn f hf s y₀ h₀ n x) (f x) ≤ edist y₀ (f x) :=
-  edist_approx_on_mono hf h₀ x (zero_le n)
-#align measure_theory.simple_func.edist_approx_on_le MeasureTheory.SimpleFunc.edist_approx_on_le
+  edist_approxOn_mono hf h₀ x (zero_le n)
+#align measure_theory.simple_func.edist_approx_on_le MeasureTheory.SimpleFunc.edist_approxOn_le
 
-theorem edist_approx_on_y0_le {f : β → α} (hf : Measurable f) {s : Set α} {y₀ : α} (h₀ : y₀ ∈ s)
+theorem edist_approxOn_y0_le {f : β → α} (hf : Measurable f) {s : Set α} {y₀ : α} (h₀ : y₀ ∈ s)
     [SeparableSpace s] (x : β) (n : ℕ) :
     edist y₀ (approxOn f hf s y₀ h₀ n x) ≤ edist y₀ (f x) + edist y₀ (f x) :=
   calc
     edist y₀ (approxOn f hf s y₀ h₀ n x) ≤
         edist y₀ (f x) + edist (approxOn f hf s y₀ h₀ n x) (f x) :=
       edist_triangle_right _ _ _
-    _ ≤ edist y₀ (f x) + edist y₀ (f x) := add_le_add_left (edist_approx_on_le hf h₀ x n) _
+    _ ≤ edist y₀ (f x) + edist y₀ (f x) := add_le_add_left (edist_approxOn_le hf h₀ x n) _
     
-#align measure_theory.simple_func.edist_approx_on_y0_le MeasureTheory.SimpleFunc.edist_approx_on_y0_le
+#align measure_theory.simple_func.edist_approx_on_y0_le MeasureTheory.SimpleFunc.edist_approxOn_y0_le
 
 end SimpleFunc
 

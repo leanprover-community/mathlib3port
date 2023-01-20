@@ -70,9 +70,9 @@ section
 
 variable [HasStrictInitialObjects C] {I : C}
 
-theorem IsInitial.is_iso_to (hI : IsInitial I) {A : C} (f : A ⟶ I) : IsIso f :=
+theorem IsInitial.isIso_to (hI : IsInitial I) {A : C} (f : A ⟶ I) : IsIso f :=
   HasStrictInitialObjects.out f hI
-#align category_theory.limits.is_initial.is_iso_to CategoryTheory.Limits.IsInitial.is_iso_to
+#align category_theory.limits.is_initial.is_iso_to CategoryTheory.Limits.IsInitial.isIso_to
 
 theorem IsInitial.strict_hom_ext (hI : IsInitial I) {A : C} (f g : A ⟶ I) : f = g :=
   by
@@ -97,10 +97,10 @@ noncomputable def mulIsInitial (X : C) [HasBinaryProduct X I] (hI : IsInitial I)
 #align category_theory.limits.mul_is_initial CategoryTheory.Limits.mulIsInitial
 
 @[simp]
-theorem mul_is_initial_inv (X : C) [HasBinaryProduct X I] (hI : IsInitial I) :
+theorem mulIsInitial_inv (X : C) [HasBinaryProduct X I] (hI : IsInitial I) :
     (mulIsInitial X hI).inv = hI.to _ :=
   hI.hom_ext _ _
-#align category_theory.limits.mul_is_initial_inv CategoryTheory.Limits.mul_is_initial_inv
+#align category_theory.limits.mul_is_initial_inv CategoryTheory.Limits.mulIsInitial_inv
 
 /-- If `I` is initial, then `I ⨯ X` is isomorphic to it. -/
 @[simps Hom]
@@ -109,16 +109,16 @@ noncomputable def isInitialMul (X : C) [HasBinaryProduct I X] (hI : IsInitial I)
 #align category_theory.limits.is_initial_mul CategoryTheory.Limits.isInitialMul
 
 @[simp]
-theorem is_initial_mul_inv (X : C) [HasBinaryProduct I X] (hI : IsInitial I) :
+theorem isInitialMul_inv (X : C) [HasBinaryProduct I X] (hI : IsInitial I) :
     (isInitialMul X hI).inv = hI.to _ :=
   hI.hom_ext _ _
-#align category_theory.limits.is_initial_mul_inv CategoryTheory.Limits.is_initial_mul_inv
+#align category_theory.limits.is_initial_mul_inv CategoryTheory.Limits.isInitialMul_inv
 
 variable [HasInitial C]
 
-instance initial_is_iso_to {A : C} (f : A ⟶ ⊥_ C) : IsIso f :=
+instance initial_isIso_to {A : C} (f : A ⟶ ⊥_ C) : IsIso f :=
   initialIsInitial.is_iso_to _
-#align category_theory.limits.initial_is_iso_to CategoryTheory.Limits.initial_is_iso_to
+#align category_theory.limits.initial_is_iso_to CategoryTheory.Limits.initial_isIso_to
 
 @[ext]
 theorem initial.hom_ext {A : C} (f g : A ⟶ ⊥_ C) : f = g :=
@@ -139,9 +139,9 @@ noncomputable def mulInitial (X : C) [HasBinaryProduct X (⊥_ C)] : X ⨯ ⊥_ 
 #align category_theory.limits.mul_initial CategoryTheory.Limits.mulInitial
 
 @[simp]
-theorem mul_initial_inv (X : C) [HasBinaryProduct X (⊥_ C)] : (mulInitial X).inv = initial.to _ :=
+theorem mulInitial_inv (X : C) [HasBinaryProduct X (⊥_ C)] : (mulInitial X).inv = initial.to _ :=
   Subsingleton.elim _ _
-#align category_theory.limits.mul_initial_inv CategoryTheory.Limits.mul_initial_inv
+#align category_theory.limits.mul_initial_inv CategoryTheory.Limits.mulInitial_inv
 
 /-- The product of `X` with an initial object in a category with strict initial objects is itself
 initial.
@@ -153,21 +153,21 @@ noncomputable def initialMul (X : C) [HasBinaryProduct (⊥_ C) X] : (⊥_ C) �
 #align category_theory.limits.initial_mul CategoryTheory.Limits.initialMul
 
 @[simp]
-theorem initial_mul_inv (X : C) [HasBinaryProduct (⊥_ C) X] : (initialMul X).inv = initial.to _ :=
+theorem initialMul_inv (X : C) [HasBinaryProduct (⊥_ C) X] : (initialMul X).inv = initial.to _ :=
   Subsingleton.elim _ _
-#align category_theory.limits.initial_mul_inv CategoryTheory.Limits.initial_mul_inv
+#align category_theory.limits.initial_mul_inv CategoryTheory.Limits.initialMul_inv
 
 end
 
 /-- If `C` has an initial object such that every morphism *to* it is an isomorphism, then `C`
 has strict initial objects. -/
-theorem has_strict_initial_objects_of_initial_is_strict [HasInitial C]
+theorem hasStrictInitialObjects_of_initial_is_strict [HasInitial C]
     (h : ∀ (A) (f : A ⟶ ⊥_ C), IsIso f) : HasStrictInitialObjects C :=
   {
     out := fun I A f hI =>
       haveI := h A (f ≫ hI.to _)
       ⟨⟨hI.to _ ≫ inv (f ≫ hI.to (⊥_ C)), by rw [← assoc, is_iso.hom_inv_id], hI.hom_ext _ _⟩⟩ }
-#align category_theory.limits.has_strict_initial_objects_of_initial_is_strict CategoryTheory.Limits.has_strict_initial_objects_of_initial_is_strict
+#align category_theory.limits.has_strict_initial_objects_of_initial_is_strict CategoryTheory.Limits.hasStrictInitialObjects_of_initial_is_strict
 
 end StrictInitial
 
@@ -189,9 +189,9 @@ section
 
 variable [HasStrictTerminalObjects C] {I : C}
 
-theorem IsTerminal.is_iso_from (hI : IsTerminal I) {A : C} (f : I ⟶ A) : IsIso f :=
+theorem IsTerminal.isIso_from (hI : IsTerminal I) {A : C} (f : I ⟶ A) : IsIso f :=
   HasStrictTerminalObjects.out f hI
-#align category_theory.limits.is_terminal.is_iso_from CategoryTheory.Limits.IsTerminal.is_iso_from
+#align category_theory.limits.is_terminal.is_iso_from CategoryTheory.Limits.IsTerminal.isIso_from
 
 theorem IsTerminal.strict_hom_ext (hI : IsTerminal I) {A : C} (f g : I ⟶ A) : f = g :=
   by
@@ -209,7 +209,7 @@ variable {J : Type v} [SmallCategory J]
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (j «expr ≠ » i) -/
 /-- If all but one object in a diagram is strict terminal, the the limit is isomorphic to the
 said object via `limit.π`. -/
-theorem limit_π_is_iso_of_is_strict_terminal (F : J ⥤ C) [HasLimit F] (i : J)
+theorem limit_π_isIso_of_is_strict_terminal (F : J ⥤ C) [HasLimit F] (i : J)
     (H : ∀ (j) (_ : j ≠ i), IsTerminal (F.obj j)) [Subsingleton (i ⟶ i)] : IsIso (limit.π F i) := by
   classical
     refine' ⟨⟨limit.lift _ ⟨_, ⟨_, _⟩⟩, _, _⟩⟩
@@ -246,13 +246,13 @@ theorem limit_π_is_iso_of_is_strict_terminal (F : J ⥤ C) [HasLimit F] (i : J)
       · apply (H _ h).hom_ext
     · rw [limit.lift_π]
       simpa
-#align category_theory.limits.limit_π_is_iso_of_is_strict_terminal CategoryTheory.Limits.limit_π_is_iso_of_is_strict_terminal
+#align category_theory.limits.limit_π_is_iso_of_is_strict_terminal CategoryTheory.Limits.limit_π_isIso_of_is_strict_terminal
 
 variable [HasTerminal C]
 
-instance terminal_is_iso_from {A : C} (f : ⊤_ C ⟶ A) : IsIso f :=
+instance terminal_isIso_from {A : C} (f : ⊤_ C ⟶ A) : IsIso f :=
   terminalIsTerminal.is_iso_from _
-#align category_theory.limits.terminal_is_iso_from CategoryTheory.Limits.terminal_is_iso_from
+#align category_theory.limits.terminal_is_iso_from CategoryTheory.Limits.terminal_isIso_from
 
 @[ext]
 theorem terminal.hom_ext {A : C} (f g : ⊤_ C ⟶ A) : f = g :=
@@ -267,13 +267,13 @@ end
 
 /-- If `C` has an object such that every morphism *from* it is an isomorphism, then `C`
 has strict terminal objects. -/
-theorem has_strict_terminal_objects_of_terminal_is_strict (I : C) (h : ∀ (A) (f : I ⟶ A), IsIso f) :
+theorem hasStrictTerminalObjects_of_terminal_is_strict (I : C) (h : ∀ (A) (f : I ⟶ A), IsIso f) :
     HasStrictTerminalObjects C :=
   {
     out := fun I' A f hI' =>
       haveI := h A (hI'.from _ ≫ f)
       ⟨⟨inv (hI'.from I ≫ f) ≫ hI'.from I, hI'.hom_ext _ _, by rw [assoc, is_iso.inv_hom_id]⟩⟩ }
-#align category_theory.limits.has_strict_terminal_objects_of_terminal_is_strict CategoryTheory.Limits.has_strict_terminal_objects_of_terminal_is_strict
+#align category_theory.limits.has_strict_terminal_objects_of_terminal_is_strict CategoryTheory.Limits.hasStrictTerminalObjects_of_terminal_is_strict
 
 end StrictTerminal
 

@@ -53,11 +53,11 @@ def moduleOfAlgebraModule (M : ModuleCat.{v} A) : Module k M :=
 
 attribute [scoped instance] ModuleCat.moduleOfAlgebraModule
 
-theorem is_scalar_tower_of_algebra_Module (M : ModuleCat.{v} A) : IsScalarTower k A M :=
-  RestrictScalars.is_scalar_tower k A M
-#align Module.is_scalar_tower_of_algebra_Module ModuleCat.is_scalar_tower_of_algebra_Module
+theorem isScalarTower_of_algebra_moduleCat (M : ModuleCat.{v} A) : IsScalarTower k A M :=
+  RestrictScalars.isScalarTower k A M
+#align Module.is_scalar_tower_of_algebra_Module ModuleCat.isScalarTower_of_algebra_moduleCat
 
-attribute [scoped instance] ModuleCat.is_scalar_tower_of_algebra_Module
+attribute [scoped instance] ModuleCat.isScalarTower_of_algebra_moduleCat
 
 -- We verify that the morphism spaces become `k`-modules.
 example (M N : ModuleCat.{v} A) : Module k (M ⟶ N) := by infer_instance

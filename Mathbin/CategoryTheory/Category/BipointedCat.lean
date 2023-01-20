@@ -127,9 +127,9 @@ def swapEquiv : BipointedCat ≌ BipointedCat :=
 #align Bipointed.swap_equiv BipointedCat.swapEquiv
 
 @[simp]
-theorem swap_equiv_symm : swapEquiv.symm = swap_equiv :=
+theorem swapEquiv_symm : swapEquiv.symm = swap_equiv :=
   rfl
-#align Bipointed.swap_equiv_symm BipointedCat.swap_equiv_symm
+#align Bipointed.swap_equiv_symm BipointedCat.swapEquiv_symm
 
 end BipointedCat
 
@@ -148,28 +148,28 @@ def bipointedToPointedSnd : BipointedCat ⥤ PointedCat
 #align Bipointed_to_Pointed_snd bipointedToPointedSnd
 
 @[simp]
-theorem Bipointed_to_Pointed_fst_comp_forget :
+theorem bipointedToPointedFst_comp_forget :
     bipointedToPointedFst ⋙ forget PointedCat = forget BipointedCat :=
   rfl
-#align Bipointed_to_Pointed_fst_comp_forget Bipointed_to_Pointed_fst_comp_forget
+#align Bipointed_to_Pointed_fst_comp_forget bipointedToPointedFst_comp_forget
 
 @[simp]
-theorem Bipointed_to_Pointed_snd_comp_forget :
+theorem bipointedToPointedSnd_comp_forget :
     bipointedToPointedSnd ⋙ forget PointedCat = forget BipointedCat :=
   rfl
-#align Bipointed_to_Pointed_snd_comp_forget Bipointed_to_Pointed_snd_comp_forget
+#align Bipointed_to_Pointed_snd_comp_forget bipointedToPointedSnd_comp_forget
 
 @[simp]
-theorem swap_comp_Bipointed_to_Pointed_fst :
+theorem swap_comp_bipointedToPointedFst :
     BipointedCat.swap ⋙ bipointedToPointedFst = bipointedToPointedSnd :=
   rfl
-#align swap_comp_Bipointed_to_Pointed_fst swap_comp_Bipointed_to_Pointed_fst
+#align swap_comp_Bipointed_to_Pointed_fst swap_comp_bipointedToPointedFst
 
 @[simp]
-theorem swap_comp_Bipointed_to_Pointed_snd :
+theorem swap_comp_bipointedToPointedSnd :
     BipointedCat.swap ⋙ bipointedToPointedSnd = bipointedToPointedFst :=
   rfl
-#align swap_comp_Bipointed_to_Pointed_snd swap_comp_Bipointed_to_Pointed_snd
+#align swap_comp_Bipointed_to_Pointed_snd swap_comp_bipointedToPointedSnd
 
 /-- The functor from `Pointed` to `Bipointed` which bipoints the point. -/
 def pointedToBipointed : PointedCat.{u} ⥤ BipointedCat
@@ -197,16 +197,16 @@ def pointedToBipointedSnd : PointedCat.{u} ⥤ BipointedCat
 #align Pointed_to_Bipointed_snd pointedToBipointedSnd
 
 @[simp]
-theorem Pointed_to_Bipointed_fst_comp_swap :
+theorem pointedToBipointedFst_comp_swap :
     pointedToBipointedFst ⋙ BipointedCat.swap = pointedToBipointedSnd :=
   rfl
-#align Pointed_to_Bipointed_fst_comp_swap Pointed_to_Bipointed_fst_comp_swap
+#align Pointed_to_Bipointed_fst_comp_swap pointedToBipointedFst_comp_swap
 
 @[simp]
-theorem Pointed_to_Bipointed_snd_comp_swap :
+theorem pointedToBipointedSnd_comp_swap :
     pointedToBipointedSnd ⋙ BipointedCat.swap = pointedToBipointedFst :=
   rfl
-#align Pointed_to_Bipointed_snd_comp_swap Pointed_to_Bipointed_snd_comp_swap
+#align Pointed_to_Bipointed_snd_comp_swap pointedToBipointedSnd_comp_swap
 
 /-- `Bipointed_to_Pointed_fst` is inverse to `Pointed_to_Bipointed`. -/
 @[simps]

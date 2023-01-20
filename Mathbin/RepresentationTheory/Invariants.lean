@@ -110,18 +110,18 @@ noncomputable def averageMap : V →ₗ[k] V :=
 
 /-- The `average_map` sends elements of `V` to the subspace of invariants.
 -/
-theorem average_map_invariant (v : V) : averageMap ρ v ∈ invariants ρ := fun g => by
+theorem averageMap_invariant (v : V) : averageMap ρ v ∈ invariants ρ := fun g => by
   rw [average_map, ← as_algebra_hom_single_one, ← LinearMap.mul_apply, ← map_mul (as_algebra_hom ρ),
     mul_average_left]
-#align representation.average_map_invariant Representation.average_map_invariant
+#align representation.average_map_invariant Representation.averageMap_invariant
 
 /-- The `average_map` acts as the identity on the subspace of invariants.
 -/
-theorem average_map_id (v : V) (hv : v ∈ invariants ρ) : averageMap ρ v = v :=
+theorem averageMap_id (v : V) (hv : v ∈ invariants ρ) : averageMap ρ v = v :=
   by
   rw [mem_invariants] at hv
   simp [average, map_sum, hv, Finset.card_univ, nsmul_eq_smul_cast k _ v, smul_smul]
-#align representation.average_map_id Representation.average_map_id
+#align representation.average_map_id Representation.averageMap_id
 
 theorem isProjAverageMap : LinearMap.IsProj ρ.invariants ρ.averageMap :=
   ⟨ρ.average_map_invariant, ρ.average_map_id⟩

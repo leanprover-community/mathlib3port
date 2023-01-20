@@ -63,10 +63,10 @@ theorem IsHausdorff.haus (h : IsHausdorff I M) :
   IsHausdorff.haus'
 #align is_Hausdorff.haus IsHausdorff.haus
 
-theorem is_Hausdorff_iff :
+theorem isHausdorff_iff :
     IsHausdorff I M ↔ ∀ x : M, (∀ n : ℕ, x ≡ 0 [SMOD (I ^ n • ⊤ : Submodule R M)]) → x = 0 :=
   ⟨IsHausdorff.haus, fun h => ⟨h⟩⟩
-#align is_Hausdorff_iff is_Hausdorff_iff
+#align is_Hausdorff_iff isHausdorff_iff
 
 theorem IsPrecomplete.prec (h : IsPrecomplete I M) {f : ℕ → M} :
     (∀ {m n}, m ≤ n → f m ≡ f n [SMOD (I ^ m • ⊤ : Submodule R M)]) →
@@ -74,13 +74,13 @@ theorem IsPrecomplete.prec (h : IsPrecomplete I M) {f : ℕ → M} :
   IsPrecomplete.prec' _
 #align is_precomplete.prec IsPrecomplete.prec
 
-theorem is_precomplete_iff :
+theorem isPrecomplete_iff :
     IsPrecomplete I M ↔
       ∀ f : ℕ → M,
         (∀ {m n}, m ≤ n → f m ≡ f n [SMOD (I ^ m • ⊤ : Submodule R M)]) →
           ∃ L : M, ∀ n, f n ≡ L [SMOD (I ^ n • ⊤ : Submodule R M)] :=
   ⟨fun h => h.1, fun h => ⟨h⟩⟩
-#align is_precomplete_iff is_precomplete_iff
+#align is_precomplete_iff isPrecomplete_iff
 
 variable (I M)
 
@@ -133,10 +133,10 @@ instance (priority := 100) ofSubsingleton [Subsingleton M] : IsHausdorff I M :=
 
 variable {I M}
 
-theorem infi_pow_smul (h : IsHausdorff I M) : (⨅ n : ℕ, I ^ n • ⊤ : Submodule R M) = ⊥ :=
+theorem infᵢ_pow_smul (h : IsHausdorff I M) : (⨅ n : ℕ, I ^ n • ⊤ : Submodule R M) = ⊥ :=
   eq_bot_iff.2 fun x hx =>
     (mem_bot _).2 <| h.haus x fun n => Smodeq.zero.2 <| (mem_infi fun n : ℕ => I ^ n • ⊤).1 hx n
-#align is_Hausdorff.infi_pow_smul IsHausdorff.infi_pow_smul
+#align is_Hausdorff.infi_pow_smul IsHausdorff.infᵢ_pow_smul
 
 end IsHausdorff
 
@@ -161,7 +161,7 @@ instance : IsHausdorff I (HausdorffificationCat I M) :=
   ⟨fun x =>
     Quotient.inductionOn' x fun x hx =>
       (Quotient.mk_eq_zero _).2 <|
-        (mem_infi _).2 fun n =>
+        (mem_infᵢ _).2 fun n =>
           by
           have := comap_map_mkq (⨅ n : ℕ, I ^ n • ⊤ : Submodule R M) (I ^ n • ⊤)
           simp only [sup_of_le_right (infᵢ_le (fun n => (I ^ n • ⊤ : Submodule R M)) n)] at this

@@ -45,16 +45,16 @@ def piQuotientLift [Fintype ι] [DecidableEq ι] (p : ∀ i, Submodule R (Ms i))
 #align submodule.pi_quotient_lift Submodule.piQuotientLift
 
 @[simp]
-theorem pi_quotient_lift_mk [Fintype ι] [DecidableEq ι] (p : ∀ i, Submodule R (Ms i))
+theorem piQuotientLift_mk [Fintype ι] [DecidableEq ι] (p : ∀ i, Submodule R (Ms i))
     (q : Submodule R N) (f : ∀ i, Ms i →ₗ[R] N) (hf : ∀ i, p i ≤ q.comap (f i)) (x : ∀ i, Ms i) :
     (piQuotientLift p q f hf fun i => Quotient.mk (x i)) = Quotient.mk (lsum _ _ R f x) := by
   rw [pi_quotient_lift, lsum_apply, sum_apply, ← mkq_apply, lsum_apply, sum_apply,
       _root_.map_sum] <;>
     simp only [coe_proj, mapq_apply, mkq_apply, comp_apply]
-#align submodule.pi_quotient_lift_mk Submodule.pi_quotient_lift_mk
+#align submodule.pi_quotient_lift_mk Submodule.piQuotientLift_mk
 
 @[simp]
-theorem pi_quotient_lift_single [Fintype ι] [DecidableEq ι] (p : ∀ i, Submodule R (Ms i))
+theorem piQuotientLift_single [Fintype ι] [DecidableEq ι] (p : ∀ i, Submodule R (Ms i))
     (q : Submodule R N) (f : ∀ i, Ms i →ₗ[R] N) (hf : ∀ i, p i ≤ q.comap (f i)) (i)
     (x : Ms i ⧸ p i) : piQuotientLift p q f hf (Pi.single i x) = mapq _ _ (f i) (hf i) x :=
   by
@@ -66,7 +66,7 @@ theorem pi_quotient_lift_single [Fintype ι] [DecidableEq ι] (p : ∀ i, Submod
   · intros
     have := Finset.mem_univ i
     contradiction
-#align submodule.pi_quotient_lift_single Submodule.pi_quotient_lift_single
+#align submodule.pi_quotient_lift_single Submodule.piQuotientLift_single
 
 /-- Lift a family of maps to a quotient of direct sums. -/
 def quotientPiLift (p : ∀ i, Submodule R (Ms i)) (f : ∀ i, Ms i →ₗ[R] Ns i)
@@ -78,11 +78,11 @@ def quotientPiLift (p : ∀ i, Submodule R (Ms i)) (f : ∀ i, Ms i →ₗ[R] Ns
 #align submodule.quotient_pi_lift Submodule.quotientPiLift
 
 @[simp]
-theorem quotient_pi_lift_mk (p : ∀ i, Submodule R (Ms i)) (f : ∀ i, Ms i →ₗ[R] Ns i)
+theorem quotientPiLift_mk (p : ∀ i, Submodule R (Ms i)) (f : ∀ i, Ms i →ₗ[R] Ns i)
     (hf : ∀ i, p i ≤ ker (f i)) (x : ∀ i, Ms i) :
     quotientPiLift p f hf (Quotient.mk x) = fun i => f i (x i) :=
   rfl
-#align submodule.quotient_pi_lift_mk Submodule.quotient_pi_lift_mk
+#align submodule.quotient_pi_lift_mk Submodule.quotientPiLift_mk
 
 /-- The quotient of a direct sum is the direct sum of quotients. -/
 @[simps]
@@ -95,13 +95,13 @@ def quotientPi [Fintype ι] [DecidableEq ι] (p : ∀ i, Submodule R (Ms i)) :
     invFun := piQuotientLift p (pi Set.univ p) single fun i => le_comap_single_pi p
     left_inv := fun x =>
       Quotient.inductionOn' x fun x' => by
-        simp_rw [Quotient.mk'_eq_mk, quotient_pi_lift_mk, mkq_apply, pi_quotient_lift_mk,
+        simp_rw [Quotient.mk'_eq_mk'', quotient_pi_lift_mk, mkq_apply, pi_quotient_lift_mk,
           lsum_single, id_apply]
     right_inv := by
       rw [Function.rightInverse_iff_comp, ← coe_comp, ← @id_coe R]
       refine' congr_arg _ (pi_ext fun i x => Quotient.inductionOn' x fun x' => funext fun j => _)
-      rw [comp_apply, pi_quotient_lift_single, Quotient.mk'_eq_mk, mapq_apply, quotient_pi_lift_mk,
-        id_apply]
+      rw [comp_apply, pi_quotient_lift_single, Quotient.mk'_eq_mk'', mapq_apply,
+        quotient_pi_lift_mk, id_apply]
       by_cases hij : i = j <;> simp only [mkq_apply, coe_single]
       · subst hij
         simp only [Pi.single_eq_same]

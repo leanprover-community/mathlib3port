@@ -81,9 +81,9 @@ instance : CoeFun (RingInvo R) fun _ => R → Rᵐᵒᵖ :=
   ⟨fun f => f.toRingEquiv.toFun⟩
 
 @[simp]
-theorem to_fun_eq_coe (f : RingInvo R) : f.toFun = f :=
+theorem toFun_eq_coe (f : RingInvo R) : f.toFun = f :=
   rfl
-#align ring_invo.to_fun_eq_coe RingInvo.to_fun_eq_coe
+#align ring_invo.to_fun_eq_coe RingInvo.toFun_eq_coe
 
 @[simp]
 theorem involution (f : RingInvo R) (x : R) : (f (f x).unop).unop = x :=
@@ -95,9 +95,9 @@ instance hasCoeToRingEquiv : Coe (RingInvo R) (R ≃+* Rᵐᵒᵖ) :=
 #align ring_invo.has_coe_to_ring_equiv RingInvo.hasCoeToRingEquiv
 
 @[norm_cast]
-theorem coe_ring_equiv (f : RingInvo R) (a : R) : (f : R ≃+* Rᵐᵒᵖ) a = f a :=
+theorem coe_ringEquiv (f : RingInvo R) (a : R) : (f : R ≃+* Rᵐᵒᵖ) a = f a :=
   rfl
-#align ring_invo.coe_ring_equiv RingInvo.coe_ring_equiv
+#align ring_invo.coe_ring_equiv RingInvo.coe_ringEquiv
 
 @[simp]
 theorem map_eq_zero_iff (f : RingInvo R) {x : R} : f x = 0 ↔ x = 0 :=

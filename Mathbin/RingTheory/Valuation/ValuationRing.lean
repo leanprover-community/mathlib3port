@@ -116,8 +116,8 @@ protected theorem le_total (a b : ValueGroup A K) : a ≤ b ∨ b ≤ a :=
   rcases a with ⟨a⟩; rcases b with ⟨b⟩
   obtain ⟨xa, ya, hya, rfl⟩ : ∃ a b : A, _ := IsFractionRing.div_surjective a
   obtain ⟨xb, yb, hyb, rfl⟩ : ∃ a b : A, _ := IsFractionRing.div_surjective b
-  have : (algebraMap A K) ya ≠ 0 := IsFractionRing.to_map_ne_zero_of_mem_non_zero_divisors hya
-  have : (algebraMap A K) yb ≠ 0 := IsFractionRing.to_map_ne_zero_of_mem_non_zero_divisors hyb
+  have : (algebraMap A K) ya ≠ 0 := IsFractionRing.to_map_ne_zero_of_mem_nonZeroDivisors hya
+  have : (algebraMap A K) yb ≠ 0 := IsFractionRing.to_map_ne_zero_of_mem_nonZeroDivisors hyb
   obtain ⟨c, h | h⟩ := ValuationRing.cond (xa * yb) (xb * ya)
   · right
     use c
@@ -229,8 +229,8 @@ def valuation : Valuation K (ValueGroup A K)
     intro a b
     obtain ⟨xa, ya, hya, rfl⟩ : ∃ a b : A, _ := IsFractionRing.div_surjective a
     obtain ⟨xb, yb, hyb, rfl⟩ : ∃ a b : A, _ := IsFractionRing.div_surjective b
-    have : (algebraMap A K) ya ≠ 0 := IsFractionRing.to_map_ne_zero_of_mem_non_zero_divisors hya
-    have : (algebraMap A K) yb ≠ 0 := IsFractionRing.to_map_ne_zero_of_mem_non_zero_divisors hyb
+    have : (algebraMap A K) ya ≠ 0 := IsFractionRing.to_map_ne_zero_of_mem_nonZeroDivisors hya
+    have : (algebraMap A K) yb ≠ 0 := IsFractionRing.to_map_ne_zero_of_mem_nonZeroDivisors hyb
     obtain ⟨c, h | h⟩ := ValuationRing.cond (xa * yb) (xb * ya)
     dsimp
     · apply le_trans _ (le_max_left _ _)
@@ -287,15 +287,15 @@ noncomputable def equivInteger : A ≃+* (valuation A K).integer :=
 #align valuation_ring.equiv_integer ValuationRing.equivInteger
 
 @[simp]
-theorem coe_equiv_integer_apply (a : A) : (equivInteger A K a : K) = algebraMap A K a :=
+theorem coe_equivInteger_apply (a : A) : (equivInteger A K a : K) = algebraMap A K a :=
   rfl
-#align valuation_ring.coe_equiv_integer_apply ValuationRing.coe_equiv_integer_apply
+#align valuation_ring.coe_equiv_integer_apply ValuationRing.coe_equivInteger_apply
 
-theorem range_algebra_map_eq : (valuation A K).integer = (algebraMap A K).range :=
+theorem range_algebraMap_eq : (valuation A K).integer = (algebraMap A K).range :=
   by
   ext
   exact mem_integer_iff _ _ _
-#align valuation_ring.range_algebra_map_eq ValuationRing.range_algebra_map_eq
+#align valuation_ring.range_algebra_map_eq ValuationRing.range_algebraMap_eq
 
 end
 
@@ -304,7 +304,7 @@ section
 variable (A : Type u) [CommRing A] [IsDomain A] [ValuationRing A]
 
 instance (priority := 100) : LocalRing A :=
-  LocalRing.of_is_unit_or_is_unit_one_sub_self
+  LocalRing.of_isUnit_or_isUnit_one_sub_self
     (by
       intro a
       obtain ⟨c, h | h⟩ := ValuationRing.cond a (1 - a)
@@ -376,7 +376,7 @@ theorem unique_irreducible [ValuationRing R] ⦃p q : R⦄ (hp : Irreducible p) 
 
 variable (R)
 
-theorem iff_is_integer_or_is_integer :
+theorem iff_isInteger_or_isInteger :
     ValuationRing R ↔ ∀ x : K, IsLocalization.IsInteger R x ∨ IsLocalization.IsInteger R x⁻¹ :=
   by
   constructor
@@ -406,21 +406,21 @@ theorem iff_is_integer_or_is_integer :
       exact ⟨c, Or.inr e⟩
     · rw [inv_div, eq_div_iff ha, ← map_mul, (IsFractionRing.injective R K).eq_iff, mul_comm c] at e
       exact ⟨c, Or.inl e⟩
-#align valuation_ring.iff_is_integer_or_is_integer ValuationRing.iff_is_integer_or_is_integer
+#align valuation_ring.iff_is_integer_or_is_integer ValuationRing.iff_isInteger_or_isInteger
 
 variable {K}
 
-theorem is_integer_or_is_integer [h : ValuationRing R] (x : K) :
+theorem isInteger_or_isInteger [h : ValuationRing R] (x : K) :
     IsLocalization.IsInteger R x ∨ IsLocalization.IsInteger R x⁻¹ :=
-  (iff_is_integer_or_is_integer R K).mp h x
-#align valuation_ring.is_integer_or_is_integer ValuationRing.is_integer_or_is_integer
+  (iff_isInteger_or_isInteger R K).mp h x
+#align valuation_ring.is_integer_or_is_integer ValuationRing.isInteger_or_isInteger
 
 variable {R}
 
 -- This implies that valuation rings are integrally closed through typeclass search.
 instance (priority := 100) [ValuationRing R] : IsBezout R := by
   classical
-    rw [IsBezout.iff_span_pair_is_principal]
+    rw [IsBezout.iff_span_pair_isPrincipal]
     intro x y
     rw [Ideal.span_insert]
     cases le_total (Ideal.span {x} : Ideal R) (Ideal.span {y})
@@ -456,7 +456,7 @@ theorem iff_local_bezout_domain : ValuationRing R ↔ LocalRing R ∧ IsBezout R
     have : x * a + y * b = 1 := by
       apply mul_left_injective₀ h
       convert e' <;> ring_nf
-    cases' LocalRing.is_unit_or_is_unit_of_add_one this with h' h'
+    cases' LocalRing.isUnit_or_isUnit_of_add_one this with h' h'
     left
     swap
     right
@@ -469,7 +469,7 @@ theorem iff_local_bezout_domain : ValuationRing R ↔ LocalRing R ∧ IsBezout R
      (Command.declModifiers [] [] [(Command.protected "protected")] [] [] [])
      (Command.theorem
       "theorem"
-      (Command.declId `tfae [])
+      (Command.declId `tFAE [])
       (Command.declSig
        [(Term.explicitBinder "(" [`R] [":" (Term.type "Type" [`u])] [] ")")
         (Term.instBinder "[" [] (Term.app `CommRing [`R]) "]")
@@ -601,7 +601,7 @@ theorem iff_local_bezout_domain : ValuationRing R ↔ LocalRing R ∧ IsBezout R
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 protected
   theorem
-    tfae
+    tFAE
     ( R : Type u ) [ CommRing R ] [ IsDomain R ]
       :
         TFAE
@@ -631,18 +631,17 @@ protected
           ;
           · exact iff_local_bezout_domain
           tfae_finish
-#align valuation_ring.tfae ValuationRing.tfae
+#align valuation_ring.tfae ValuationRing.tFAE
 
 end
 
-theorem Function.Surjective.valuation_ring {R S : Type _} [CommRing R] [IsDomain R]
-    [ValuationRing R] [CommRing S] [IsDomain S] (f : R →+* S) (hf : Function.Surjective f) :
-    ValuationRing S :=
+theorem Function.Surjective.valuationRing {R S : Type _} [CommRing R] [IsDomain R] [ValuationRing R]
+    [CommRing S] [IsDomain S] (f : R →+* S) (hf : Function.Surjective f) : ValuationRing S :=
   ⟨fun a b => by
     obtain ⟨⟨a, rfl⟩, ⟨b, rfl⟩⟩ := hf a, hf b
     obtain ⟨c, rfl | rfl⟩ := ValuationRing.cond a b
     exacts[⟨f c, Or.inl <| (map_mul _ _ _).symm⟩, ⟨f c, Or.inr <| (map_mul _ _ _).symm⟩]⟩
-#align function.surjective.valuation_ring Function.Surjective.valuation_ring
+#align function.surjective.valuation_ring Function.Surjective.valuationRing
 
 section
 
@@ -693,7 +692,7 @@ section
 variable (A : Type u) [CommRing A] [IsDomain A] [DiscreteValuationRing A]
 
 /-- A DVR is a valuation ring. -/
-instance (priority := 100) of_discrete_valuation_ring : ValuationRing A :=
+instance (priority := 100) of_discreteValuationRing : ValuationRing A :=
   by
   constructor
   intro a b
@@ -721,7 +720,7 @@ instance (priority := 100) of_discrete_valuation_ring : ValuationRing A :=
     simp only [Units.mul_inv, mul_one, mul_comm _ (u : A), mul_assoc, ← pow_add]
     congr 2
     linarith
-#align valuation_ring.of_discrete_valuation_ring ValuationRing.of_discrete_valuation_ring
+#align valuation_ring.of_discrete_valuation_ring ValuationRing.of_discreteValuationRing
 
 end
 

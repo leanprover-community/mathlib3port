@@ -43,7 +43,7 @@ theorem op_nnnorm_mul : ‖mul 𝕜 E a‖₊ = ‖a‖₊ :=
       NormedField.exists_lt_nnnorm_lt 𝕜 (mul_lt_mul_of_pos_right hr <| Nnreal.inv_pos.2 ha)
     refine' ⟨_, ⟨k • star a, _, rfl⟩, _⟩
     ·
-      simpa only [mem_closed_ball_zero_iff, norm_smul, one_mul, norm_star] using
+      simpa only [mem_closedBall_zero_iff, norm_smul, one_mul, norm_star] using
         (Nnreal.le_inv_iff_mul_le ha.ne').1 (one_mul ‖a‖₊⁻¹ ▸ hk₂.le : ‖k‖₊ ≤ ‖a‖₊⁻¹)
     · simp only [map_smul, nnnorm_smul, mul_apply', mul_smul_comm, CstarRing.nnnorm_self_mul_star]
       rwa [← Nnreal.div_lt_iff (mul_pos ha ha).ne', div_eq_mul_inv, mul_inv, ← mul_assoc]

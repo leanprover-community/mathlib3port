@@ -83,7 +83,7 @@ open Valued
 
 /-- The topology coming from a valuation on a division ring makes it a topological division ring
     [BouAC, VI.5.1 middle of Proposition 1] -/
-instance (priority := 100) Valued.topological_division_ring [Valued K Γ₀] :
+instance (priority := 100) Valued.topologicalDivisionRing [Valued K Γ₀] :
     TopologicalDivisionRing K :=
   { (by infer_instance : TopologicalRing K) with
     continuous_at_inv₀ := by
@@ -99,7 +99,7 @@ instance (priority := 100) Valued.topological_division_ring [Valued K Γ₀] :
       simp only [mem_set_of_eq] at y_in
       rw [Units.min_val, Units.val_mul, Units.val_mul] at y_in
       exact Valuation.inversion_estimate _ x_ne y_in }
-#align valued.topological_division_ring Valued.topological_division_ring
+#align valued.topological_division_ring Valued.topologicalDivisionRing
 
 /-- A valued division ring is separated. -/
 instance (priority := 100) ValuedRing.separated [Valued K Γ₀] : SeparatedSpace K :=
@@ -122,7 +122,7 @@ open Valued
 
 theorem Valued.continuous_valuation [Valued K Γ₀] : Continuous (v : K → Γ₀) :=
   by
-  rw [continuous_iff_continuous_at]
+  rw [continuous_iff_continuousAt]
   intro x
   rcases eq_or_ne x 0 with (rfl | h)
   · rw [ContinuousAt, map_zero, LinearOrderedCommGroupWithZero.tendsto_zero]
@@ -207,7 +207,7 @@ attribute [local instance] LinearOrderedCommGroupWithZero.topologicalSpace
 
 /-- The extension of the valuation of a valued field to the completion of the field. -/
 noncomputable def extension : hat K → Γ₀ :=
-  Completion.dense_inducing_coe.extend (v : K → Γ₀)
+  Completion.denseInducing_coe.extend (v : K → Γ₀)
 #align valued.extension Valued.extension
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x y «expr ∈ » V') -/
@@ -319,7 +319,7 @@ noncomputable def extensionValuation : Valuation (hat K) Γ₀
       have c2 : Continuous fun x : hat K × hat K => Valued.extension x.1 * Valued.extension x.2 :=
         (valued.continuous_extension.comp continuous_fst).mul
           (valued.continuous_extension.comp continuous_snd)
-      exact is_closed_eq c1 c2
+      exact isClosed_eq c1 c2
     · intro x y
       norm_cast
       exact Valuation.map_mul _ _ _
@@ -328,8 +328,8 @@ noncomputable def extensionValuation : Valuation (hat K) Γ₀
     apply completion.induction_on₂ x y
     · have cont : Continuous (Valued.extension : hat K → Γ₀) := Valued.continuous_extension
       exact
-        (is_closed_le (cont.comp continuous_add) <| cont.comp continuous_fst).union
-          (is_closed_le (cont.comp continuous_add) <| cont.comp continuous_snd)
+        (isClosed_le (cont.comp continuous_add) <| cont.comp continuous_fst).union
+          (isClosed_le (cont.comp continuous_add) <| cont.comp continuous_snd)
     · intro x y
       dsimp
       norm_cast

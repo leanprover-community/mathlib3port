@@ -52,10 +52,10 @@ instance : One (Interval α) :=
 namespace NonemptyInterval
 
 @[simp, to_additive to_prod_zero]
-theorem to_prod_one : (1 : NonemptyInterval α).toProd = 1 :=
+theorem toProd_one : (1 : NonemptyInterval α).toProd = 1 :=
   rfl
-#align nonempty_interval.to_prod_one NonemptyInterval.to_prod_one
-#align nonempty_interval.to_prod_zero NonemptyInterval.to_prod_zero
+#align nonempty_interval.to_prod_one NonemptyInterval.toProd_one
+#align nonempty_interval.to_prod_zero NonemptyInterval.toProd_zero
 
 @[to_additive]
 theorem fst_one : (1 : NonemptyInterval α).fst = 1 :=
@@ -172,10 +172,10 @@ namespace NonemptyInterval
 variable (s t : NonemptyInterval α) (a b : α)
 
 @[simp, to_additive to_prod_add]
-theorem to_prod_mul : (s * t).toProd = s.toProd * t.toProd :=
+theorem toProd_mul : (s * t).toProd = s.toProd * t.toProd :=
   rfl
-#align nonempty_interval.to_prod_mul NonemptyInterval.to_prod_mul
-#align nonempty_interval.to_prod_add NonemptyInterval.to_prod_add
+#align nonempty_interval.to_prod_mul NonemptyInterval.toProd_mul
+#align nonempty_interval.to_prod_add NonemptyInterval.toProd_add
 
 @[to_additive]
 theorem fst_mul : (s * t).fst = s.fst * t.fst :=
@@ -248,10 +248,10 @@ namespace NonemptyInterval
 variable (s : NonemptyInterval α) (a : α) (n : ℕ)
 
 @[simp, to_additive to_prod_nsmul]
-theorem to_prod_pow : (s ^ n).toProd = s.toProd ^ n :=
+theorem toProd_pow : (s ^ n).toProd = s.toProd ^ n :=
   rfl
-#align nonempty_interval.to_prod_pow NonemptyInterval.to_prod_pow
-#align nonempty_interval.to_prod_nsmul NonemptyInterval.to_prod_nsmul
+#align nonempty_interval.to_prod_pow NonemptyInterval.toProd_pow
+#align nonempty_interval.to_prod_nsmul NonemptyInterval.toProd_nsmul
 
 @[to_additive]
 theorem fst_pow : (s ^ n).fst = s.fst ^ n :=
@@ -279,7 +279,7 @@ namespace NonemptyInterval
 
 @[to_additive]
 instance [OrderedCommMonoid α] : CommMonoid (NonemptyInterval α) :=
-  NonemptyInterval.to_prod_injective.CommMonoid _ to_prod_one to_prod_mul to_prod_pow
+  NonemptyInterval.toProd_injective.CommMonoid _ toProd_one toProd_mul toProd_pow
 
 end NonemptyInterval
 

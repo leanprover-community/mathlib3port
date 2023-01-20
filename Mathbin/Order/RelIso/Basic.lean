@@ -158,9 +158,9 @@ protected theorem map_rel (f : r →r s) {a b} : r a b → s (f a) (f b) :=
 #align rel_hom.map_rel RelHom.map_rel
 
 @[simp]
-theorem coe_fn_mk (f : α → β) (o) : (@RelHom.mk _ _ r s f o : α → β) = f :=
+theorem coeFn_mk (f : α → β) (o) : (@RelHom.mk _ _ r s f o : α → β) = f :=
   rfl
-#align rel_hom.coe_fn_mk RelHom.coe_fn_mk
+#align rel_hom.coe_fn_mk RelHom.coeFn_mk
 
 /- warning: rel_hom.coe_fn_to_fun -> RelHom.coe_fn_toFun is a dubious translation:
 lean 3 declaration is
@@ -352,14 +352,14 @@ def Simps.apply (h : r ↪r s) : α → β :=
 initialize_simps_projections RelEmbedding (to_embedding_to_fun → apply, -toEmbedding)
 
 @[simp]
-theorem to_rel_hom_eq_coe (f : r ↪r s) : f.toRelHom = f :=
+theorem toRelHom_eq_coe (f : r ↪r s) : f.toRelHom = f :=
   rfl
-#align rel_embedding.to_rel_hom_eq_coe RelEmbedding.to_rel_hom_eq_coe
+#align rel_embedding.to_rel_hom_eq_coe RelEmbedding.toRelHom_eq_coe
 
 @[simp]
-theorem coe_coe_fn (f : r ↪r s) : ((f : r →r s) : α → β) = f :=
+theorem coe_coeFn (f : r ↪r s) : ((f : r →r s) : α → β) = f :=
   rfl
-#align rel_embedding.coe_coe_fn RelEmbedding.coe_coe_fn
+#align rel_embedding.coe_coe_fn RelEmbedding.coe_coeFn
 
 /- warning: rel_embedding.injective -> RelEmbedding.injective is a dubious translation:
 lean 3 declaration is
@@ -393,14 +393,14 @@ theorem map_rel_iff (f : r ↪r s) {a b} : s (f a) (f b) ↔ r a b :=
 #align rel_embedding.map_rel_iff RelEmbedding.map_rel_iff
 
 @[simp]
-theorem coe_fn_mk (f : α ↪ β) (o) : (@RelEmbedding.mk _ _ r s f o : α → β) = f :=
+theorem coeFn_mk (f : α ↪ β) (o) : (@RelEmbedding.mk _ _ r s f o : α → β) = f :=
   rfl
-#align rel_embedding.coe_fn_mk RelEmbedding.coe_fn_mk
+#align rel_embedding.coe_fn_mk RelEmbedding.coeFn_mk
 
 @[simp]
-theorem coe_fn_to_embedding (f : r ↪r s) : (f.toEmbedding : α → β) = f :=
+theorem coeFn_toEmbedding (f : r ↪r s) : (f.toEmbedding : α → β) = f :=
   rfl
-#align rel_embedding.coe_fn_to_embedding RelEmbedding.coe_fn_to_embedding
+#align rel_embedding.coe_fn_to_embedding RelEmbedding.coeFn_toEmbedding
 
 /- warning: rel_embedding.coe_fn_injective -> RelEmbedding.coe_fn_injective is a dubious translation:
 lean 3 declaration is
@@ -673,7 +673,7 @@ noncomputable def Quotient.outRelEmbedding [s : Setoid α] {r : α → α → Pr
   ⟨Embedding.quotientOut α,
     by
     refine' fun x y => Quotient.induction_on₂ x y fun a b => _
-    apply iff_iff_eq.2 (H _ _ _ _ _ _) <;> apply Quotient.mk_out⟩
+    apply iff_iff_eq.2 (H _ _ _ _ _ _) <;> apply Quotient.mk''_out⟩
 #align quotient.out_rel_embedding Quotient.outRelEmbedding
 -/
 
@@ -726,7 +726,7 @@ theorem ofMapRelIff_coe (f : α → β) [IsAntisymm α r] [IsRefl β s]
   to show it is a relation embedding. -/
 def ofMonotone [IsTrichotomous α r] [IsAsymm β s] (f : α → β) (H : ∀ a b, r a b → s (f a) (f b)) :
     r ↪r s := by
-  haveI := @IsAsymm.is_irrefl β s _
+  haveI := @IsAsymm.isIrrefl β s _
   refine' ⟨⟨f, fun a b e => _⟩, fun a b => ⟨fun h => _, H _ _⟩⟩
   ·
     refine' ((@trichotomous _ r _ a b).resolve_left _).resolve_right _ <;>
@@ -901,18 +901,18 @@ instance : CoeFun (r ≃r s) fun _ => α → β :=
 -- TODO: define and instantiate a `rel_iso_class` when `equiv_like` is defined
 instance : RelHomClass (r ≃r s) r s where
   coe := coeFn
-  coe_injective' := Equiv.coe_fn_injective.comp toEquiv_injective
+  coe_injective' := Equiv.coeFn_injective.comp toEquiv_injective
   map_rel f a b := Iff.mpr (map_rel_iff' f)
 
 @[simp]
-theorem to_rel_embedding_eq_coe (f : r ≃r s) : f.toRelEmbedding = f :=
+theorem toRelEmbedding_eq_coe (f : r ≃r s) : f.toRelEmbedding = f :=
   rfl
-#align rel_iso.to_rel_embedding_eq_coe RelIso.to_rel_embedding_eq_coe
+#align rel_iso.to_rel_embedding_eq_coe RelIso.toRelEmbedding_eq_coe
 
 @[simp]
-theorem coe_coe_fn (f : r ≃r s) : ((f : r ↪r s) : α → β) = f :=
+theorem coe_coeFn (f : r ≃r s) : ((f : r ↪r s) : α → β) = f :=
   rfl
-#align rel_iso.coe_coe_fn RelIso.coe_coe_fn
+#align rel_iso.coe_coe_fn RelIso.coe_coeFn
 
 /- warning: rel_iso.map_rel_iff -> RelIso.map_rel_iff is a dubious translation:
 lean 3 declaration is
@@ -1038,7 +1038,7 @@ protected def cast {α β : Type u} {r : α → α → Prop} {s : β → β → 
     (h₂ : HEq r s) : r ≃r s :=
   ⟨Equiv.cast h₁, fun a b => by
     subst h₁
-    rw [eq_of_heq h₂]
+    rw [eq_of_hEq h₂]
     rfl⟩
 #align rel_iso.cast RelIso.cast
 -/

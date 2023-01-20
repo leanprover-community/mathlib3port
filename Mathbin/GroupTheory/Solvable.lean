@@ -44,27 +44,27 @@ def derivedSeries : ℕ → Subgroup G
 #align derived_series derivedSeries
 
 @[simp]
-theorem derived_series_zero : derivedSeries G 0 = ⊤ :=
+theorem derivedSeries_zero : derivedSeries G 0 = ⊤ :=
   rfl
-#align derived_series_zero derived_series_zero
+#align derived_series_zero derivedSeries_zero
 
 @[simp]
-theorem derived_series_succ (n : ℕ) :
+theorem derivedSeries_succ (n : ℕ) :
     derivedSeries G (n + 1) = ⁅derivedSeries G n, derivedSeries G n⁆ :=
   rfl
-#align derived_series_succ derived_series_succ
+#align derived_series_succ derivedSeries_succ
 
-theorem derived_series_normal (n : ℕ) : (derivedSeries G n).Normal :=
+theorem derivedSeries_normal (n : ℕ) : (derivedSeries G n).Normal :=
   by
   induction' n with n ih
   · exact (⊤ : Subgroup G).normal_of_characteristic
   · exact Subgroup.commutator_normal (derivedSeries G n) (derivedSeries G n)
-#align derived_series_normal derived_series_normal
+#align derived_series_normal derivedSeries_normal
 
 @[simp]
-theorem derived_series_one : derivedSeries G 1 = commutator G :=
+theorem derivedSeries_one : derivedSeries G 1 = commutator G :=
   rfl
-#align derived_series_one derived_series_one
+#align derived_series_one derivedSeries_one
 
 end derivedSeries
 
@@ -74,28 +74,28 @@ section DerivedSeriesMap
 
 variable (f)
 
-theorem map_derived_series_le_derived_series (n : ℕ) :
+theorem map_derivedSeries_le_derivedSeries (n : ℕ) :
     (derivedSeries G n).map f ≤ derivedSeries G' n :=
   by
   induction' n with n ih
   · exact le_top
-  · simp only [derived_series_succ, map_commutator, commutator_mono, ih]
-#align map_derived_series_le_derived_series map_derived_series_le_derived_series
+  · simp only [derivedSeries_succ, map_commutator, commutator_mono, ih]
+#align map_derived_series_le_derived_series map_derivedSeries_le_derivedSeries
 
 variable {f}
 
-theorem derived_series_le_map_derived_series (hf : Function.Surjective f) (n : ℕ) :
+theorem derivedSeries_le_map_derivedSeries (hf : Function.Surjective f) (n : ℕ) :
     derivedSeries G' n ≤ (derivedSeries G n).map f :=
   by
   induction' n with n ih
   · exact (map_top_of_surjective f hf).ge
   · exact commutator_le_map_commutator ih ih
-#align derived_series_le_map_derived_series derived_series_le_map_derived_series
+#align derived_series_le_map_derived_series derivedSeries_le_map_derivedSeries
 
-theorem map_derived_series_eq (hf : Function.Surjective f) (n : ℕ) :
+theorem map_derivedSeries_eq (hf : Function.Surjective f) (n : ℕ) :
     (derivedSeries G n).map f = derivedSeries G' n :=
-  le_antisymm (map_derived_series_le_derived_series f n) (derived_series_le_map_derived_series hf n)
-#align map_derived_series_eq map_derived_series_eq
+  le_antisymm (map_derivedSeries_le_derivedSeries f n) (derivedSeries_le_map_derivedSeries hf n)
+#align map_derived_series_eq map_derivedSeries_eq
 
 end DerivedSeriesMap
 
@@ -111,28 +111,28 @@ class IsSolvable : Prop where
   solvable : ∃ n : ℕ, derivedSeries G n = ⊥
 #align is_solvable IsSolvable
 
-theorem is_solvable_def : IsSolvable G ↔ ∃ n : ℕ, derivedSeries G n = ⊥ :=
+theorem isSolvable_def : IsSolvable G ↔ ∃ n : ℕ, derivedSeries G n = ⊥ :=
   ⟨fun h => h.solvable, fun h => ⟨h⟩⟩
-#align is_solvable_def is_solvable_def
+#align is_solvable_def isSolvable_def
 
-instance (priority := 100) CommGroup.is_solvable {G : Type _} [CommGroup G] : IsSolvable G :=
+instance (priority := 100) CommGroup.isSolvable {G : Type _} [CommGroup G] : IsSolvable G :=
   ⟨⟨1, le_bot_iff.mp (Abelianization.commutator_subset_ker (MonoidHom.id G))⟩⟩
-#align comm_group.is_solvable CommGroup.is_solvable
+#align comm_group.is_solvable CommGroup.isSolvable
 
-theorem is_solvable_of_comm {G : Type _} [hG : Group G] (h : ∀ a b : G, a * b = b * a) :
+theorem isSolvable_of_comm {G : Type _} [hG : Group G] (h : ∀ a b : G, a * b = b * a) :
     IsSolvable G := by
   letI hG' : CommGroup G := { hG with mul_comm := h }
   cases hG
-  exact CommGroup.is_solvable
-#align is_solvable_of_comm is_solvable_of_comm
+  exact CommGroup.isSolvable
+#align is_solvable_of_comm isSolvable_of_comm
 
-theorem is_solvable_of_top_eq_bot (h : (⊤ : Subgroup G) = ⊥) : IsSolvable G :=
+theorem isSolvable_of_top_eq_bot (h : (⊤ : Subgroup G) = ⊥) : IsSolvable G :=
   ⟨⟨0, h⟩⟩
-#align is_solvable_of_top_eq_bot is_solvable_of_top_eq_bot
+#align is_solvable_of_top_eq_bot isSolvable_of_top_eq_bot
 
-instance (priority := 100) is_solvable_of_subsingleton [Subsingleton G] : IsSolvable G :=
-  is_solvable_of_top_eq_bot G (by ext <;> simp at *)
-#align is_solvable_of_subsingleton is_solvable_of_subsingleton
+instance (priority := 100) isSolvable_of_subsingleton [Subsingleton G] : IsSolvable G :=
+  isSolvable_of_top_eq_bot G (by ext <;> simp at *)
+#align is_solvable_of_subsingleton isSolvable_of_subsingleton
 
 variable {G}
 
@@ -148,7 +148,7 @@ theorem solvable_of_ker_le_range {G' G'' : Type _} [Group G'] [Group G''] (f : G
     exact
       f.range_eq_map ▸
         ((derivedSeries G n).map_eq_bot_iff.mp
-              (le_bot_iff.mp ((map_derived_series_le_derived_series g n).trans hn.le))).trans
+              (le_bot_iff.mp ((map_derivedSeries_le_derivedSeries g n).trans hn.le))).trans
           hfg
   · exact commutator_le_map_commutator hm hm
 #align solvable_of_ker_le_range solvable_of_ker_le_range
@@ -183,39 +183,39 @@ section IsSimpleGroup
 
 variable [IsSimpleGroup G]
 
-theorem IsSimpleGroup.derived_series_succ {n : ℕ} : derivedSeries G n.succ = commutator G :=
+theorem IsSimpleGroup.derivedSeries_succ {n : ℕ} : derivedSeries G n.succ = commutator G :=
   by
   induction' n with n ih
-  · exact derived_series_one G
-  rw [derived_series_succ, ih]
+  · exact derivedSeries_one G
+  rw [derivedSeries_succ, ih]
   cases' (commutator.normal G).eq_bot_or_eq_top with h h
   · rw [h, commutator_bot_left]
   · rwa [h]
-#align is_simple_group.derived_series_succ IsSimpleGroup.derived_series_succ
+#align is_simple_group.derived_series_succ IsSimpleGroup.derivedSeries_succ
 
-theorem IsSimpleGroup.comm_iff_is_solvable : (∀ a b : G, a * b = b * a) ↔ IsSolvable G :=
-  ⟨is_solvable_of_comm, fun ⟨⟨n, hn⟩⟩ => by
+theorem IsSimpleGroup.comm_iff_isSolvable : (∀ a b : G, a * b = b * a) ↔ IsSolvable G :=
+  ⟨isSolvable_of_comm, fun ⟨⟨n, hn⟩⟩ => by
     cases n
     · intro a b
       refine' (mem_bot.1 _).trans (mem_bot.1 _).symm <;>
         · rw [← hn]
           exact mem_top _
-    · rw [IsSimpleGroup.derived_series_succ] at hn
+    · rw [IsSimpleGroup.derivedSeries_succ] at hn
       intro a b
       rw [← mul_inv_eq_one, mul_inv_rev, ← mul_assoc, ← mem_bot, ← hn, commutator_eq_closure]
       exact subset_closure ⟨a, b, rfl⟩⟩
-#align is_simple_group.comm_iff_is_solvable IsSimpleGroup.comm_iff_is_solvable
+#align is_simple_group.comm_iff_is_solvable IsSimpleGroup.comm_iff_isSolvable
 
 end IsSimpleGroup
 
 section PermNotSolvable
 
-theorem not_solvable_of_mem_derived_series {g : G} (h1 : g ≠ 1)
+theorem not_solvable_of_mem_derivedSeries {g : G} (h1 : g ≠ 1)
     (h2 : ∀ n : ℕ, g ∈ derivedSeries G n) : ¬IsSolvable G :=
-  mt (is_solvable_def _).mp
+  mt (isSolvable_def _).mp
     (not_exists_of_forall_not fun n h =>
       h1 (Subgroup.mem_bot.mp ((congr_arg (Membership.Mem g) h).mp (h2 n))))
-#align not_solvable_of_mem_derived_series not_solvable_of_mem_derived_series
+#align not_solvable_of_mem_derived_series not_solvable_of_mem_derivedSeries
 
 theorem Equiv.Perm.fin_5_not_solvable : ¬IsSolvable (Equiv.Perm (Fin 5)) :=
   by
@@ -223,11 +223,11 @@ theorem Equiv.Perm.fin_5_not_solvable : ¬IsSolvable (Equiv.Perm (Fin 5)) :=
   let y : Equiv.Perm (Fin 5) := ⟨![3, 4, 2, 0, 1], ![3, 4, 2, 0, 1], by decide, by decide⟩
   let z : Equiv.Perm (Fin 5) := ⟨![0, 3, 2, 1, 4], ![0, 3, 2, 1, 4], by decide, by decide⟩
   have key : x = z * ⁅x, y * x * y⁻¹⁆ * z⁻¹ := by decide
-  refine' not_solvable_of_mem_derived_series (show x ≠ 1 by decide) fun n => _
+  refine' not_solvable_of_mem_derivedSeries (show x ≠ 1 by decide) fun n => _
   induction' n with n ih
   · exact mem_top x
-  · rw [key, (derived_series_normal _ _).mem_comm_iff, inv_mul_cancel_left]
-    exact commutator_mem_commutator ih ((derived_series_normal _ _).conj_mem _ ih _)
+  · rw [key, (derivedSeries_normal _ _).mem_comm_iff, inv_mul_cancel_left]
+    exact commutator_mem_commutator ih ((derivedSeries_normal _ _).conj_mem _ ih _)
 #align equiv.perm.fin_5_not_solvable Equiv.Perm.fin_5_not_solvable
 
 theorem Equiv.Perm.not_solvable (X : Type _) (hX : 5 ≤ Cardinal.mk X) :

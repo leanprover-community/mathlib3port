@@ -55,9 +55,9 @@ noncomputable def wellOrderExtension : LinearOrder α :=
     congr_arg Prod.snd
 #align well_founded.well_order_extension WellFounded.wellOrderExtension
 
-instance wellOrderExtension.is_well_founded_lt : IsWellFounded α hwf.wellOrderExtension.lt :=
-  ⟨InvImage.wf _ <| Prod.lex_wf Ordinal.well_founded_lt.wf WellOrderingRel.is_well_order.wf⟩
-#align well_founded.well_order_extension.is_well_founded_lt WellFounded.wellOrderExtension.is_well_founded_lt
+instance wellOrderExtension.isWellFounded_lt : IsWellFounded α hwf.wellOrderExtension.lt :=
+  ⟨InvImage.wf _ <| Prod.lex_wf Ordinal.wellFoundedLt.wf WellOrderingRel.isWellOrder.wf⟩
+#align well_founded.well_order_extension.is_well_founded_lt WellFounded.wellOrderExtension.isWellFounded_lt
 
 /-- Any well-founded relation can be extended to a well-ordering on that type. -/
 theorem exists_well_order_ge : ∃ s, r ≤ s ∧ IsWellOrder α s :=
@@ -82,13 +82,13 @@ def toWellOrderExtension : α ≃ WellOrderExtension α :=
 noncomputable instance [LT α] [WellFoundedLt α] : LinearOrder (WellOrderExtension α) :=
   (IsWellFounded.wf : @WellFounded α (· < ·)).wellOrderExtension
 
-instance WellOrderExtension.well_founded_lt [LT α] [WellFoundedLt α] :
+instance WellOrderExtension.wellFoundedLt [LT α] [WellFoundedLt α] :
     WellFoundedLt (WellOrderExtension α) :=
-  WellFounded.wellOrderExtension.is_well_founded_lt _
-#align well_order_extension.well_founded_lt WellOrderExtension.well_founded_lt
+  WellFounded.wellOrderExtension.isWellFounded_lt _
+#align well_order_extension.well_founded_lt WellOrderExtension.wellFoundedLt
 
-theorem to_well_order_extension_strict_mono [Preorder α] [WellFoundedLt α] :
+theorem toWellOrderExtension_strictMono [Preorder α] [WellFoundedLt α] :
     StrictMono (toWellOrderExtension : α → WellOrderExtension α) := fun a b h =>
   Prod.Lex.left _ _ <| WellFounded.rank_lt_of_rel _ h
-#align to_well_order_extension_strict_mono to_well_order_extension_strict_mono
+#align to_well_order_extension_strict_mono toWellOrderExtension_strictMono
 

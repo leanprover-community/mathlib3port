@@ -61,9 +61,9 @@ def IsOrtho (B : M₁ →ₛₗ[I₁] M₂ →ₛₗ[I₂] R) (x y) : Prop :=
   B x y = 0
 #align linear_map.is_ortho LinearMap.IsOrtho
 
-theorem is_ortho_def {B : M₁ →ₛₗ[I₁] M₂ →ₛₗ[I₂] R} {x y} : B.IsOrtho x y ↔ B x y = 0 :=
+theorem isOrtho_def {B : M₁ →ₛₗ[I₁] M₂ →ₛₗ[I₂] R} {x y} : B.IsOrtho x y ↔ B x y = 0 :=
   Iff.rfl
-#align linear_map.is_ortho_def LinearMap.is_ortho_def
+#align linear_map.is_ortho_def LinearMap.isOrtho_def
 
 theorem isOrthoZeroLeft (B : M₁ →ₛₗ[I₁] M₂ →ₛₗ[I₂] R) (x) : IsOrtho B (0 : M₁) x :=
   by
@@ -75,9 +75,9 @@ theorem isOrthoZeroRight (B : M₁ →ₛₗ[I₁] M₂ →ₛₗ[I₂] R) (x) :
   map_zero (B x)
 #align linear_map.is_ortho_zero_right LinearMap.isOrthoZeroRight
 
-theorem is_ortho_flip {B : M₁ →ₛₗ[I₁] M₁ →ₛₗ[I₁'] R} {x y} : B.IsOrtho x y ↔ B.flip.IsOrtho y x :=
-  by simp_rw [is_ortho_def, flip_apply]
-#align linear_map.is_ortho_flip LinearMap.is_ortho_flip
+theorem isOrtho_flip {B : M₁ →ₛₗ[I₁] M₁ →ₛₗ[I₁'] R} {x y} : B.IsOrtho x y ↔ B.flip.IsOrtho y x := by
+  simp_rw [is_ortho_def, flip_apply]
+#align linear_map.is_ortho_flip LinearMap.isOrtho_flip
 
 /- warning: linear_map.is_Ortho clashes with linear_map.is_ortho -> LinearMap.IsOrtho
 warning: linear_map.is_Ortho -> LinearMap.IsOrtho is a dubious translation:
@@ -93,20 +93,34 @@ def IsOrtho (B : M₁ →ₛₗ[I₁] M₁ →ₛₗ[I₁'] R) (v : n → M₁) 
   Pairwise (B.IsOrtho on v)
 #align linear_map.is_Ortho LinearMap.IsOrtho
 
-theorem is_Ortho_def {B : M₁ →ₛₗ[I₁] M₁ →ₛₗ[I₁'] R} {v : n → M₁} :
+/- warning: linear_map.is_Ortho_def clashes with linear_map.is_ortho_def -> LinearMap.isOrtho_def
+warning: linear_map.is_Ortho_def -> LinearMap.isOrtho_def is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u_1}} {R₁ : Type.{u_2}} {M₁ : Type.{u_6}} {n : Type.{u_18}} [_inst_1 : CommSemiring.{u_1} R] [_inst_2 : CommSemiring.{u_2} R₁] [_inst_3 : AddCommMonoid.{u_6} M₁] [_inst_4 : Module.{u_2, u_6} R₁ M₁ (CommSemiring.toSemiring.{u_2} R₁ _inst_2) _inst_3] {I₁ : RingHom.{u_2, u_1} R₁ R (Semiring.toNonAssocSemiring.{u_2} R₁ (CommSemiring.toSemiring.{u_2} R₁ _inst_2)) (Semiring.toNonAssocSemiring.{u_1} R (CommSemiring.toSemiring.{u_1} R _inst_1))} {I₁' : RingHom.{u_2, u_1} R₁ R (Semiring.toNonAssocSemiring.{u_2} R₁ (CommSemiring.toSemiring.{u_2} R₁ _inst_2)) (Semiring.toNonAssocSemiring.{u_1} R (CommSemiring.toSemiring.{u_1} R _inst_1))} {B : LinearMap.{u_2, u_1, u_6, max u_6 u_1} R₁ R (CommSemiring.toSemiring.{u_2} R₁ _inst_2) (CommSemiring.toSemiring.{u_1} R _inst_1) I₁ M₁ (LinearMap.{u_2, u_1, u_6, u_1} R₁ R (CommSemiring.toSemiring.{u_2} R₁ _inst_2) (CommSemiring.toSemiring.{u_1} R _inst_1) I₁' M₁ R _inst_3 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u_1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} R (Semiring.toNonAssocSemiring.{u_1} R (CommSemiring.toSemiring.{u_1} R _inst_1)))) _inst_4 (Semiring.toModule.{u_1} R (CommSemiring.toSemiring.{u_1} R _inst_1))) _inst_3 (LinearMap.addCommMonoid.{u_2, u_1, u_6, u_1} R₁ R M₁ R (CommSemiring.toSemiring.{u_2} R₁ _inst_2) (CommSemiring.toSemiring.{u_1} R _inst_1) _inst_3 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u_1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} R (Semiring.toNonAssocSemiring.{u_1} R (CommSemiring.toSemiring.{u_1} R _inst_1)))) _inst_4 (Semiring.toModule.{u_1} R (CommSemiring.toSemiring.{u_1} R _inst_1)) I₁') _inst_4 (LinearMap.module.{u_2, u_1, u_1, u_6, u_1} R₁ R R M₁ R (CommSemiring.toSemiring.{u_2} R₁ _inst_2) (CommSemiring.toSemiring.{u_1} R _inst_1) _inst_3 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u_1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} R (Semiring.toNonAssocSemiring.{u_1} R (CommSemiring.toSemiring.{u_1} R _inst_1)))) _inst_4 (Semiring.toModule.{u_1} R (CommSemiring.toSemiring.{u_1} R _inst_1)) I₁' (CommSemiring.toSemiring.{u_1} R _inst_1) (Semiring.toModule.{u_1} R (CommSemiring.toSemiring.{u_1} R _inst_1)) (smulCommClass_self.{u_1, u_1} R R (CommSemiring.toCommMonoid.{u_1} R _inst_1) (Monoid.toMulAction.{u_1} R (CommMonoid.toMonoid.{u_1} R (CommSemiring.toCommMonoid.{u_1} R _inst_1)))))} {v : n -> M₁}, Iff (LinearMap.IsOrtho.{u_1, u_2, u_6, u_18} R R₁ M₁ n _inst_1 _inst_2 _inst_3 _inst_4 I₁ I₁' B v) (forall (i : n) (j : n), (Ne.{succ u_18} n i j) -> (Eq.{succ u_1} R (coeFn.{max (succ u_6) (succ u_1), max (succ u_6) (succ u_1)} (LinearMap.{u_2, u_1, u_6, u_1} R₁ R (CommSemiring.toSemiring.{u_2} R₁ _inst_2) (CommSemiring.toSemiring.{u_1} R _inst_1) I₁' M₁ R _inst_3 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u_1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} R (Semiring.toNonAssocSemiring.{u_1} R (CommSemiring.toSemiring.{u_1} R _inst_1)))) _inst_4 (Semiring.toModule.{u_1} R (CommSemiring.toSemiring.{u_1} R _inst_1))) (fun (_x : LinearMap.{u_2, u_1, u_6, u_1} R₁ R (CommSemiring.toSemiring.{u_2} R₁ _inst_2) (CommSemiring.toSemiring.{u_1} R _inst_1) I₁' M₁ R _inst_3 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u_1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} R (Semiring.toNonAssocSemiring.{u_1} R (CommSemiring.toSemiring.{u_1} R _inst_1)))) _inst_4 (Semiring.toModule.{u_1} R (CommSemiring.toSemiring.{u_1} R _inst_1))) => M₁ -> R) (LinearMap.hasCoeToFun.{u_2, u_1, u_6, u_1} R₁ R M₁ R (CommSemiring.toSemiring.{u_2} R₁ _inst_2) (CommSemiring.toSemiring.{u_1} R _inst_1) _inst_3 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u_1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} R (Semiring.toNonAssocSemiring.{u_1} R (CommSemiring.toSemiring.{u_1} R _inst_1)))) _inst_4 (Semiring.toModule.{u_1} R (CommSemiring.toSemiring.{u_1} R _inst_1)) I₁') (coeFn.{max (succ u_6) (succ (max u_6 u_1)), max (succ u_6) (succ (max u_6 u_1))} (LinearMap.{u_2, u_1, u_6, max u_6 u_1} R₁ R (CommSemiring.toSemiring.{u_2} R₁ _inst_2) (CommSemiring.toSemiring.{u_1} R _inst_1) I₁ M₁ (LinearMap.{u_2, u_1, u_6, u_1} R₁ R (CommSemiring.toSemiring.{u_2} R₁ _inst_2) (CommSemiring.toSemiring.{u_1} R _inst_1) I₁' M₁ R _inst_3 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u_1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} R (Semiring.toNonAssocSemiring.{u_1} R (CommSemiring.toSemiring.{u_1} R _inst_1)))) _inst_4 (Semiring.toModule.{u_1} R (CommSemiring.toSemiring.{u_1} R _inst_1))) _inst_3 (LinearMap.addCommMonoid.{u_2, u_1, u_6, u_1} R₁ R M₁ R (CommSemiring.toSemiring.{u_2} R₁ _inst_2) (CommSemiring.toSemiring.{u_1} R _inst_1) _inst_3 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u_1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} R (Semiring.toNonAssocSemiring.{u_1} R (CommSemiring.toSemiring.{u_1} R _inst_1)))) _inst_4 (Semiring.toModule.{u_1} R (CommSemiring.toSemiring.{u_1} R _inst_1)) I₁') _inst_4 (LinearMap.module.{u_2, u_1, u_1, u_6, u_1} R₁ R R M₁ R (CommSemiring.toSemiring.{u_2} R₁ _inst_2) (CommSemiring.toSemiring.{u_1} R _inst_1) _inst_3 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u_1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} R (Semiring.toNonAssocSemiring.{u_1} R (CommSemiring.toSemiring.{u_1} R _inst_1)))) _inst_4 (Semiring.toModule.{u_1} R (CommSemiring.toSemiring.{u_1} R _inst_1)) I₁' (CommSemiring.toSemiring.{u_1} R _inst_1) (Semiring.toModule.{u_1} R (CommSemiring.toSemiring.{u_1} R _inst_1)) (smulCommClass_self.{u_1, u_1} R R (CommSemiring.toCommMonoid.{u_1} R _inst_1) (Monoid.toMulAction.{u_1} R (CommMonoid.toMonoid.{u_1} R (CommSemiring.toCommMonoid.{u_1} R _inst_1)))))) (fun (_x : LinearMap.{u_2, u_1, u_6, max u_6 u_1} R₁ R (CommSemiring.toSemiring.{u_2} R₁ _inst_2) (CommSemiring.toSemiring.{u_1} R _inst_1) I₁ M₁ (LinearMap.{u_2, u_1, u_6, u_1} R₁ R (CommSemiring.toSemiring.{u_2} R₁ _inst_2) (CommSemiring.toSemiring.{u_1} R _inst_1) I₁' M₁ R _inst_3 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u_1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} R (Semiring.toNonAssocSemiring.{u_1} R (CommSemiring.toSemiring.{u_1} R _inst_1)))) _inst_4 (Semiring.toModule.{u_1} R (CommSemiring.toSemiring.{u_1} R _inst_1))) _inst_3 (LinearMap.addCommMonoid.{u_2, u_1, u_6, u_1} R₁ R M₁ R (CommSemiring.toSemiring.{u_2} R₁ _inst_2) (CommSemiring.toSemiring.{u_1} R _inst_1) _inst_3 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u_1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} R (Semiring.toNonAssocSemiring.{u_1} R (CommSemiring.toSemiring.{u_1} R _inst_1)))) _inst_4 (Semiring.toModule.{u_1} R (CommSemiring.toSemiring.{u_1} R _inst_1)) I₁') _inst_4 (LinearMap.module.{u_2, u_1, u_1, u_6, u_1} R₁ R R M₁ R (CommSemiring.toSemiring.{u_2} R₁ _inst_2) (CommSemiring.toSemiring.{u_1} R _inst_1) _inst_3 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u_1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} R (Semiring.toNonAssocSemiring.{u_1} R (CommSemiring.toSemiring.{u_1} R _inst_1)))) _inst_4 (Semiring.toModule.{u_1} R (CommSemiring.toSemiring.{u_1} R _inst_1)) I₁' (CommSemiring.toSemiring.{u_1} R _inst_1) (Semiring.toModule.{u_1} R (CommSemiring.toSemiring.{u_1} R _inst_1)) (smulCommClass_self.{u_1, u_1} R R (CommSemiring.toCommMonoid.{u_1} R _inst_1) (Monoid.toMulAction.{u_1} R (CommMonoid.toMonoid.{u_1} R (CommSemiring.toCommMonoid.{u_1} R _inst_1)))))) => M₁ -> (LinearMap.{u_2, u_1, u_6, u_1} R₁ R (CommSemiring.toSemiring.{u_2} R₁ _inst_2) (CommSemiring.toSemiring.{u_1} R _inst_1) I₁' M₁ R _inst_3 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u_1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} R (Semiring.toNonAssocSemiring.{u_1} R (CommSemiring.toSemiring.{u_1} R _inst_1)))) _inst_4 (Semiring.toModule.{u_1} R (CommSemiring.toSemiring.{u_1} R _inst_1)))) (LinearMap.hasCoeToFun.{u_2, u_1, u_6, max u_6 u_1} R₁ R M₁ (LinearMap.{u_2, u_1, u_6, u_1} R₁ R (CommSemiring.toSemiring.{u_2} R₁ _inst_2) (CommSemiring.toSemiring.{u_1} R _inst_1) I₁' M₁ R _inst_3 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u_1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} R (Semiring.toNonAssocSemiring.{u_1} R (CommSemiring.toSemiring.{u_1} R _inst_1)))) _inst_4 (Semiring.toModule.{u_1} R (CommSemiring.toSemiring.{u_1} R _inst_1))) (CommSemiring.toSemiring.{u_2} R₁ _inst_2) (CommSemiring.toSemiring.{u_1} R _inst_1) _inst_3 (LinearMap.addCommMonoid.{u_2, u_1, u_6, u_1} R₁ R M₁ R (CommSemiring.toSemiring.{u_2} R₁ _inst_2) (CommSemiring.toSemiring.{u_1} R _inst_1) _inst_3 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u_1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} R (Semiring.toNonAssocSemiring.{u_1} R (CommSemiring.toSemiring.{u_1} R _inst_1)))) _inst_4 (Semiring.toModule.{u_1} R (CommSemiring.toSemiring.{u_1} R _inst_1)) I₁') _inst_4 (LinearMap.module.{u_2, u_1, u_1, u_6, u_1} R₁ R R M₁ R (CommSemiring.toSemiring.{u_2} R₁ _inst_2) (CommSemiring.toSemiring.{u_1} R _inst_1) _inst_3 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u_1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} R (Semiring.toNonAssocSemiring.{u_1} R (CommSemiring.toSemiring.{u_1} R _inst_1)))) _inst_4 (Semiring.toModule.{u_1} R (CommSemiring.toSemiring.{u_1} R _inst_1)) I₁' (CommSemiring.toSemiring.{u_1} R _inst_1) (Semiring.toModule.{u_1} R (CommSemiring.toSemiring.{u_1} R _inst_1)) (smulCommClass_self.{u_1, u_1} R R (CommSemiring.toCommMonoid.{u_1} R _inst_1) (Monoid.toMulAction.{u_1} R (CommMonoid.toMonoid.{u_1} R (CommSemiring.toCommMonoid.{u_1} R _inst_1))))) I₁) B (v i)) (v j)) (OfNat.ofNat.{u_1} R 0 (OfNat.mk.{u_1} R 0 (Zero.zero.{u_1} R (MulZeroClass.toHasZero.{u_1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u_1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} R (Semiring.toNonAssocSemiring.{u_1} R (CommSemiring.toSemiring.{u_1} R _inst_1))))))))))
+but is expected to have type
+  PUnit.{0}
+Case conversion may be inaccurate. Consider using '#align linear_map.is_Ortho_def LinearMap.isOrtho_defₓ'. -/
+theorem isOrtho_def {B : M₁ →ₛₗ[I₁] M₁ →ₛₗ[I₁'] R} {v : n → M₁} :
     B.IsOrtho v ↔ ∀ i j : n, i ≠ j → B (v i) (v j) = 0 :=
   Iff.rfl
-#align linear_map.is_Ortho_def LinearMap.is_Ortho_def
+#align linear_map.is_Ortho_def LinearMap.isOrtho_def
 
-theorem is_Ortho_flip (B : M₁ →ₛₗ[I₁] M₁ →ₛₗ[I₁'] R) {v : n → M₁} :
-    B.IsOrtho v ↔ B.flip.IsOrtho v := by
+/- warning: linear_map.is_Ortho_flip clashes with linear_map.is_ortho_flip -> LinearMap.isOrtho_flip
+warning: linear_map.is_Ortho_flip -> LinearMap.isOrtho_flip is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u_1}} {R₁ : Type.{u_2}} {M₁ : Type.{u_6}} {n : Type.{u_18}} [_inst_1 : CommSemiring.{u_1} R] [_inst_2 : CommSemiring.{u_2} R₁] [_inst_3 : AddCommMonoid.{u_6} M₁] [_inst_4 : Module.{u_2, u_6} R₁ M₁ (CommSemiring.toSemiring.{u_2} R₁ _inst_2) _inst_3] {I₁ : RingHom.{u_2, u_1} R₁ R (Semiring.toNonAssocSemiring.{u_2} R₁ (CommSemiring.toSemiring.{u_2} R₁ _inst_2)) (Semiring.toNonAssocSemiring.{u_1} R (CommSemiring.toSemiring.{u_1} R _inst_1))} {I₁' : RingHom.{u_2, u_1} R₁ R (Semiring.toNonAssocSemiring.{u_2} R₁ (CommSemiring.toSemiring.{u_2} R₁ _inst_2)) (Semiring.toNonAssocSemiring.{u_1} R (CommSemiring.toSemiring.{u_1} R _inst_1))} (B : LinearMap.{u_2, u_1, u_6, max u_6 u_1} R₁ R (CommSemiring.toSemiring.{u_2} R₁ _inst_2) (CommSemiring.toSemiring.{u_1} R _inst_1) I₁ M₁ (LinearMap.{u_2, u_1, u_6, u_1} R₁ R (CommSemiring.toSemiring.{u_2} R₁ _inst_2) (CommSemiring.toSemiring.{u_1} R _inst_1) I₁' M₁ R _inst_3 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u_1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} R (Semiring.toNonAssocSemiring.{u_1} R (CommSemiring.toSemiring.{u_1} R _inst_1)))) _inst_4 (Semiring.toModule.{u_1} R (CommSemiring.toSemiring.{u_1} R _inst_1))) _inst_3 (LinearMap.addCommMonoid.{u_2, u_1, u_6, u_1} R₁ R M₁ R (CommSemiring.toSemiring.{u_2} R₁ _inst_2) (CommSemiring.toSemiring.{u_1} R _inst_1) _inst_3 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u_1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} R (Semiring.toNonAssocSemiring.{u_1} R (CommSemiring.toSemiring.{u_1} R _inst_1)))) _inst_4 (Semiring.toModule.{u_1} R (CommSemiring.toSemiring.{u_1} R _inst_1)) I₁') _inst_4 (LinearMap.module.{u_2, u_1, u_1, u_6, u_1} R₁ R R M₁ R (CommSemiring.toSemiring.{u_2} R₁ _inst_2) (CommSemiring.toSemiring.{u_1} R _inst_1) _inst_3 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u_1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} R (Semiring.toNonAssocSemiring.{u_1} R (CommSemiring.toSemiring.{u_1} R _inst_1)))) _inst_4 (Semiring.toModule.{u_1} R (CommSemiring.toSemiring.{u_1} R _inst_1)) I₁' (CommSemiring.toSemiring.{u_1} R _inst_1) (Semiring.toModule.{u_1} R (CommSemiring.toSemiring.{u_1} R _inst_1)) (smulCommClass_self.{u_1, u_1} R R (CommSemiring.toCommMonoid.{u_1} R _inst_1) (Monoid.toMulAction.{u_1} R (CommMonoid.toMonoid.{u_1} R (CommSemiring.toCommMonoid.{u_1} R _inst_1)))))) {v : n -> M₁}, Iff (LinearMap.IsOrtho.{u_1, u_2, u_6, u_18} R R₁ M₁ n _inst_1 _inst_2 _inst_3 _inst_4 I₁ I₁' B v) (LinearMap.IsOrtho.{u_1, u_2, u_6, u_18} R R₁ M₁ n _inst_1 _inst_2 _inst_3 _inst_4 I₁' I₁ (LinearMap.flip.{u_2, u_2, u_1, u_1, u_6, u_6, u_1} R₁ (CommSemiring.toSemiring.{u_2} R₁ _inst_2) R₁ (CommSemiring.toSemiring.{u_2} R₁ _inst_2) R (CommSemiring.toSemiring.{u_1} R _inst_1) R (CommSemiring.toSemiring.{u_1} R _inst_1) M₁ M₁ R _inst_3 _inst_3 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u_1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} R (Semiring.toNonAssocSemiring.{u_1} R (CommSemiring.toSemiring.{u_1} R _inst_1)))) _inst_4 _inst_4 (Semiring.toModule.{u_1} R (CommSemiring.toSemiring.{u_1} R _inst_1)) (Semiring.toModule.{u_1} R (CommSemiring.toSemiring.{u_1} R _inst_1)) (smulCommClass_self.{u_1, u_1} R R (CommSemiring.toCommMonoid.{u_1} R _inst_1) (Monoid.toMulAction.{u_1} R (CommMonoid.toMonoid.{u_1} R (CommSemiring.toCommMonoid.{u_1} R _inst_1)))) I₁ I₁' B) v)
+but is expected to have type
+  PUnit.{0}
+Case conversion may be inaccurate. Consider using '#align linear_map.is_Ortho_flip LinearMap.isOrtho_flipₓ'. -/
+theorem isOrtho_flip (B : M₁ →ₛₗ[I₁] M₁ →ₛₗ[I₁'] R) {v : n → M₁} : B.IsOrtho v ↔ B.flip.IsOrtho v :=
+  by
   simp_rw [is_Ortho_def]
   constructor <;> intro h i j hij
   · rw [flip_apply]
     exact h j i (Ne.symm hij)
   simp_rw [flip_apply] at h
   exact h j i (Ne.symm hij)
-#align linear_map.is_Ortho_flip LinearMap.is_Ortho_flip
+#align linear_map.is_Ortho_flip LinearMap.isOrtho_flip
 
 end CommRing
 
@@ -146,10 +160,10 @@ theorem ortho_smul_right {B : V₁ →ₛₗ[I₁] V₂ →ₛₗ[I₂] K} {x y}
 
 /-- A set of orthogonal vectors `v` with respect to some sesquilinear form `B` is linearly
   independent if for all `i`, `B (v i) (v i) ≠ 0`. -/
-theorem linear_independent_of_is_Ortho {B : V₁ →ₛₗ[I₁] V₁ →ₛₗ[I₁'] K} {v : n → V₁}
-    (hv₁ : B.IsOrtho v) (hv₂ : ∀ i, ¬B.IsOrtho (v i) (v i)) : LinearIndependent K₁ v := by
+theorem linearIndependent_of_isOrtho {B : V₁ →ₛₗ[I₁] V₁ →ₛₗ[I₁'] K} {v : n → V₁} (hv₁ : B.IsOrtho v)
+    (hv₂ : ∀ i, ¬B.IsOrtho (v i) (v i)) : LinearIndependent K₁ v := by
   classical
-    rw [linear_independent_iff']
+    rw [linearIndependent_iff']
     intro s w hs i hi
     have : B (s.sum fun i : n => w i • v i) (v i) = 0 := by rw [hs, map_zero, zero_apply]
     have hsum : (s.sum fun j : n => I₁ (w j) * B (v j) (v i)) = I₁ (w i) * B (v i) (v i) :=
@@ -160,7 +174,7 @@ theorem linear_independent_of_is_Ortho {B : V₁ →ₛₗ[I₁] V₁ →ₛₗ[
     simp_rw [B.map_sum₂, map_smulₛₗ₂, smul_eq_mul, hsum] at this
     apply (map_eq_zero I₁).mp
     exact eq_zero_of_ne_zero_of_mul_right_eq_zero (hv₂ i) this
-#align linear_map.linear_independent_of_is_Ortho LinearMap.linear_independent_of_is_Ortho
+#align linear_map.linear_independent_of_is_Ortho LinearMap.linearIndependent_of_isOrtho
 
 end Field
 
@@ -195,9 +209,9 @@ theorem domRestrictRefl (H : B.IsRefl) (p : Submodule R₁ M₁) : (B.domRestric
 #align linear_map.is_refl.dom_restrict_refl LinearMap.IsRefl.domRestrictRefl
 
 @[simp]
-theorem flip_is_refl_iff : B.flip.IsRefl ↔ B.IsRefl :=
+theorem flip_isRefl_iff : B.flip.IsRefl ↔ B.IsRefl :=
   ⟨fun h x y H => h y x ((B.flip_apply _ _).trans H), fun h x y => h y x⟩
-#align linear_map.is_refl.flip_is_refl_iff LinearMap.IsRefl.flip_is_refl_iff
+#align linear_map.is_refl.flip_is_refl_iff LinearMap.IsRefl.flip_isRefl_iff
 
 theorem ker_flip_eq_bot (H : B.IsRefl) (h : B.ker = ⊥) : B.flip.ker = ⊥ :=
   by
@@ -252,7 +266,7 @@ theorem domRestrictSymm (H : B.IsSymm) (p : Submodule R M) : (B.domRestrict₁�
 
 end IsSymm
 
-theorem is_symm_iff_eq_flip {B : M →ₗ[R] M →ₗ[R] R} : B.IsSymm ↔ B = B.flip :=
+theorem isSymm_iff_eq_flip {B : M →ₗ[R] M →ₗ[R] R} : B.IsSymm ↔ B = B.flip :=
   by
   constructor <;> intro h
   · ext
@@ -260,7 +274,7 @@ theorem is_symm_iff_eq_flip {B : M →ₗ[R] M →ₗ[R] R} : B.IsSymm ↔ B = B
   intro x y
   conv_lhs => rw [h]
   rw [flip_apply, RingHom.id_apply]
-#align linear_map.is_symm_iff_eq_flip LinearMap.is_symm_iff_eq_flip
+#align linear_map.is_symm_iff_eq_flip LinearMap.isSymm_iff_eq_flip
 
 end Symmetric
 
@@ -306,7 +320,7 @@ theorem ortho_comm {x y} : IsOrtho B x y ↔ IsOrtho B y x :=
 
 end IsAlt
 
-theorem is_alt_iff_eq_neg_flip [NoZeroDivisors R] [CharZero R] {B : M₁ →ₛₗ[I] M₁ →ₛₗ[I] R} :
+theorem isAlt_iff_eq_neg_flip [NoZeroDivisors R] [CharZero R] {B : M₁ →ₛₗ[I] M₁ →ₛₗ[I] R} :
     B.IsAlt ↔ B = -B.flip := by
   constructor <;> intro h
   · ext
@@ -316,7 +330,7 @@ theorem is_alt_iff_eq_neg_flip [NoZeroDivisors R] [CharZero R] {B : M₁ →ₛ�
   let h' := congr_fun₂ h x x
   simp only [neg_apply, flip_apply, ← add_eq_zero_iff_eq_neg] at h'
   exact add_self_eq_zero.mp h'
-#align linear_map.is_alt_iff_eq_neg_flip LinearMap.is_alt_iff_eq_neg_flip
+#align linear_map.is_alt_iff_eq_neg_flip LinearMap.isAlt_iff_eq_neg_flip
 
 end Alternating
 
@@ -351,17 +365,17 @@ def orthogonalBilin (N : Submodule R₁ M₁) (B : M₁ →ₛₗ[I₁] M₁ →
 variable {N L : Submodule R₁ M₁}
 
 @[simp]
-theorem mem_orthogonal_bilin_iff {m : M₁} : m ∈ N.orthogonalBilin B ↔ ∀ n ∈ N, B.IsOrtho n m :=
+theorem mem_orthogonalBilin_iff {m : M₁} : m ∈ N.orthogonalBilin B ↔ ∀ n ∈ N, B.IsOrtho n m :=
   Iff.rfl
-#align submodule.mem_orthogonal_bilin_iff Submodule.mem_orthogonal_bilin_iff
+#align submodule.mem_orthogonal_bilin_iff Submodule.mem_orthogonalBilin_iff
 
-theorem orthogonal_bilin_le (h : N ≤ L) : L.orthogonalBilin B ≤ N.orthogonalBilin B :=
+theorem orthogonalBilin_le (h : N ≤ L) : L.orthogonalBilin B ≤ N.orthogonalBilin B :=
   fun _ hn l hl => hn l (h hl)
-#align submodule.orthogonal_bilin_le Submodule.orthogonal_bilin_le
+#align submodule.orthogonal_bilin_le Submodule.orthogonalBilin_le
 
-theorem le_orthogonal_bilin_orthogonal_bilin (b : B.IsRefl) :
+theorem le_orthogonalBilin_orthogonalBilin (b : B.IsRefl) :
     N ≤ (N.orthogonalBilin B).orthogonalBilin B := fun n hn m hm => b _ _ (hm n hn)
-#align submodule.le_orthogonal_bilin_orthogonal_bilin Submodule.le_orthogonal_bilin_orthogonal_bilin
+#align submodule.le_orthogonal_bilin_orthogonal_bilin Submodule.le_orthogonalBilin_orthogonalBilin
 
 end Submodule
 
@@ -399,7 +413,7 @@ theorem orthogonal_span_singleton_eq_to_lin_ker {B : V →ₗ[K] V →ₛₗ[J] 
     Submodule.orthogonalBilin (K ∙ x) B = (B x).ker :=
   by
   ext y
-  simp_rw [Submodule.mem_orthogonal_bilin_iff, LinearMap.mem_ker, Submodule.mem_span_singleton]
+  simp_rw [Submodule.mem_orthogonalBilin_iff, LinearMap.mem_ker, Submodule.mem_span_singleton]
   constructor
   · exact fun h => h x ⟨1, one_smul _ _⟩
   · rintro h _ ⟨z, rfl⟩
@@ -418,11 +432,11 @@ theorem span_singleton_sup_orthogonal_eq_top {B : V →ₗ[K] V →ₗ[K] K} {x 
 -- todo: Generalize this to sesquilinear maps
 /-- Given a bilinear form `B` and some `x` such that `B x x ≠ 0`, the span of the singleton of `x`
   is complement to its orthogonal complement. -/
-theorem is_compl_span_singleton_orthogonal {B : V →ₗ[K] V →ₗ[K] K} {x : V} (hx : ¬B.IsOrtho x x) :
+theorem isCompl_span_singleton_orthogonal {B : V →ₗ[K] V →ₗ[K] K} {x : V} (hx : ¬B.IsOrtho x x) :
     IsCompl (K ∙ x) (Submodule.orthogonalBilin (K ∙ x) B) :=
   { Disjoint := disjoint_iff.2 <| span_singleton_inf_orthogonal_eq_bot B x hx
     Codisjoint := codisjoint_iff.2 <| span_singleton_sup_orthogonal_eq_top hx }
-#align linear_map.is_compl_span_singleton_orthogonal LinearMap.is_compl_span_singleton_orthogonal
+#align linear_map.is_compl_span_singleton_orthogonal LinearMap.isCompl_span_singleton_orthogonal
 
 end Orthogonal
 
@@ -457,7 +471,7 @@ def IsAdjointPair :=
 
 variable {B B' f g}
 
-theorem is_adjoint_pair_iff_comp_eq_compl₂ : IsAdjointPair B B' f g ↔ B'.comp f = B.compl₂ g :=
+theorem isAdjointPair_iff_comp_eq_compl₂ : IsAdjointPair B B' f g ↔ B'.comp f = B.compl₂ g :=
   by
   constructor <;> intro h
   · ext (x y)
@@ -465,7 +479,7 @@ theorem is_adjoint_pair_iff_comp_eq_compl₂ : IsAdjointPair B B' f g ↔ B'.com
     exact h x y
   · intro _ _
     rw [← compl₂_apply, ← comp_apply, h]
-#align linear_map.is_adjoint_pair_iff_comp_eq_compl₂ LinearMap.is_adjoint_pair_iff_comp_eq_compl₂
+#align linear_map.is_adjoint_pair_iff_comp_eq_compl₂ LinearMap.isAdjointPair_iff_comp_eq_compl₂
 
 theorem isAdjointPairZero : IsAdjointPair B B' 0 0 := fun _ _ => by simp only [zero_apply, map_zero]
 #align linear_map.is_adjoint_pair_zero LinearMap.isAdjointPairZero
@@ -585,12 +599,12 @@ def skewAdjointSubmodule :=
 variable {B F}
 
 @[simp]
-theorem mem_is_pair_self_adjoint_submodule (f : Module.EndCat R M) :
+theorem mem_isPairSelfAdjointSubmodule (f : Module.EndCat R M) :
     f ∈ isPairSelfAdjointSubmodule B F ↔ IsPairSelfAdjoint B F f :=
   Iff.rfl
-#align linear_map.mem_is_pair_self_adjoint_submodule LinearMap.mem_is_pair_self_adjoint_submodule
+#align linear_map.mem_is_pair_self_adjoint_submodule LinearMap.mem_isPairSelfAdjointSubmodule
 
-theorem is_pair_self_adjoint_equiv (e : M₁ ≃ₗ[R] M) (f : Module.EndCat R M) :
+theorem isPairSelfAdjoint_equiv (e : M₁ ≃ₗ[R] M) (f : Module.EndCat R M) :
     IsPairSelfAdjoint B F f ↔
       IsPairSelfAdjoint (B.compl₁₂ ↑e ↑e) (F.compl₁₂ ↑e ↑e) (e.symm.conj f) :=
   by
@@ -610,26 +624,26 @@ theorem is_pair_self_adjoint_equiv (e : M₁ ≃ₗ[R] M) (f : Module.EndCat R M
       compl₁₂_apply, LinearEquiv.apply_symm_apply]
   have he : Function.Surjective (⇑(↑e : M₁ →ₗ[R] M) : M₁ → M) := e.surjective
   simp_rw [is_pair_self_adjoint, is_adjoint_pair_iff_comp_eq_compl₂, hₗ, hᵣ, compl₁₂_inj he he]
-#align linear_map.is_pair_self_adjoint_equiv LinearMap.is_pair_self_adjoint_equiv
+#align linear_map.is_pair_self_adjoint_equiv LinearMap.isPairSelfAdjoint_equiv
 
-theorem is_skew_adjoint_iff_neg_self_adjoint (f : Module.EndCat R M) :
+theorem isSkewAdjoint_iff_neg_self_adjoint (f : Module.EndCat R M) :
     B.IsSkewAdjoint f ↔ IsAdjointPair (-B) B f f :=
   show (∀ x y, B (f x) y = B x ((-f) y)) ↔ ∀ x y, B (f x) y = (-B) x (f y) by simp
-#align linear_map.is_skew_adjoint_iff_neg_self_adjoint LinearMap.is_skew_adjoint_iff_neg_self_adjoint
+#align linear_map.is_skew_adjoint_iff_neg_self_adjoint LinearMap.isSkewAdjoint_iff_neg_self_adjoint
 
 @[simp]
-theorem mem_self_adjoint_submodule (f : Module.EndCat R M) :
+theorem mem_selfAdjointSubmodule (f : Module.EndCat R M) :
     f ∈ B.selfAdjointSubmodule ↔ B.IsSelfAdjoint f :=
   Iff.rfl
-#align linear_map.mem_self_adjoint_submodule LinearMap.mem_self_adjoint_submodule
+#align linear_map.mem_self_adjoint_submodule LinearMap.mem_selfAdjointSubmodule
 
 @[simp]
-theorem mem_skew_adjoint_submodule (f : Module.EndCat R M) :
+theorem mem_skewAdjointSubmodule (f : Module.EndCat R M) :
     f ∈ B.skewAdjointSubmodule ↔ B.IsSkewAdjoint f :=
   by
   rw [is_skew_adjoint_iff_neg_self_adjoint]
   exact Iff.rfl
-#align linear_map.mem_skew_adjoint_submodule LinearMap.mem_skew_adjoint_submodule
+#align linear_map.mem_skew_adjoint_submodule LinearMap.mem_skewAdjointSubmodule
 
 end AddCommGroup
 
@@ -655,15 +669,15 @@ def SeparatingLeft (B : M₁ →ₛₗ[I₁] M₂ →ₛₗ[I₂] R) : Prop :=
 variable (M₁ M₂ I₁ I₂)
 
 /-- In a non-trivial module, zero is not non-degenerate. -/
-theorem not_separating_left_zero [Nontrivial M₁] : ¬(0 : M₁ →ₛₗ[I₁] M₂ →ₛₗ[I₂] R).SeparatingLeft :=
+theorem not_separatingLeft_zero [Nontrivial M₁] : ¬(0 : M₁ →ₛₗ[I₁] M₂ →ₛₗ[I₂] R).SeparatingLeft :=
   let ⟨m, hm⟩ := exists_ne (0 : M₁)
   fun h => hm (h m fun n => rfl)
-#align linear_map.not_separating_left_zero LinearMap.not_separating_left_zero
+#align linear_map.not_separating_left_zero LinearMap.not_separatingLeft_zero
 
 variable {M₁ M₂ I₁ I₂}
 
 theorem SeparatingLeft.ne_zero [Nontrivial M₁] {B : M₁ →ₛₗ[I₁] M₂ →ₛₗ[I₂] R}
-    (h : B.SeparatingLeft) : B ≠ 0 := fun h0 => not_separating_left_zero M₁ M₂ I₁ I₂ <| h0 ▸ h
+    (h : B.SeparatingLeft) : B ≠ 0 := fun h0 => not_separatingLeft_zero M₁ M₂ I₁ I₂ <| h0 ▸ h
 #align linear_map.separating_left.ne_zero LinearMap.SeparatingLeft.ne_zero
 
 section Linear
@@ -681,19 +695,19 @@ theorem SeparatingLeft.congr (h : B.SeparatingLeft) :
   rw [← e₁.symm.map_eq_zero_iff]
   refine' h (e₁.symm x) fun y => _
   specialize hx (e₂ y)
-  simp only [LinearEquiv.arrow_congr_apply, LinearEquiv.symm_apply_apply,
+  simp only [LinearEquiv.arrowCongr_apply, LinearEquiv.symm_apply_apply,
     LinearEquiv.map_eq_zero_iff] at hx
   exact hx
 #align linear_map.separating_left.congr LinearMap.SeparatingLeft.congr
 
 @[simp]
-theorem separating_left_congr_iff :
+theorem separatingLeft_congr_iff :
     (e₁.arrowCongr (e₂.arrowCongr (LinearEquiv.refl R R)) B).SeparatingLeft ↔ B.SeparatingLeft :=
   ⟨fun h => by
     convert h.congr e₁.symm e₂.symm
     ext (x y)
     simp, SeparatingLeft.congr e₁ e₂⟩
-#align linear_map.separating_left_congr_iff LinearMap.separating_left_congr_iff
+#align linear_map.separating_left_congr_iff LinearMap.separatingLeft_congr_iff
 
 end Linear
 
@@ -710,22 +724,22 @@ def Nondegenerate (B : M₁ →ₛₗ[I₁] M₂ →ₛₗ[I₂] R) : Prop :=
 #align linear_map.nondegenerate LinearMap.Nondegenerate
 
 @[simp]
-theorem flip_separating_right {B : M₁ →ₛₗ[I₁] M₂ →ₛₗ[I₂] R} :
+theorem flip_separatingRight {B : M₁ →ₛₗ[I₁] M₂ →ₛₗ[I₂] R} :
     B.flip.SeparatingRight ↔ B.SeparatingLeft :=
   ⟨fun hB x hy => hB x hy, fun hB x hy => hB x hy⟩
-#align linear_map.flip_separating_right LinearMap.flip_separating_right
+#align linear_map.flip_separating_right LinearMap.flip_separatingRight
 
 @[simp]
-theorem flip_separating_left {B : M₁ →ₛₗ[I₁] M₂ →ₛₗ[I₂] R} :
+theorem flip_separatingLeft {B : M₁ →ₛₗ[I₁] M₂ →ₛₗ[I₂] R} :
     B.flip.SeparatingLeft ↔ SeparatingRight B := by rw [← flip_separating_right, flip_flip]
-#align linear_map.flip_separating_left LinearMap.flip_separating_left
+#align linear_map.flip_separating_left LinearMap.flip_separatingLeft
 
 @[simp]
 theorem flip_nondegenerate {B : M₁ →ₛₗ[I₁] M₂ →ₛₗ[I₂] R} : B.flip.Nondegenerate ↔ B.Nondegenerate :=
-  Iff.trans and_comm (and_congr flip_separating_right flip_separating_left)
+  Iff.trans and_comm (and_congr flip_separatingRight flip_separatingLeft)
 #align linear_map.flip_nondegenerate LinearMap.flip_nondegenerate
 
-theorem separating_left_iff_linear_nontrivial {B : M₁ →ₛₗ[I₁] M₂ →ₛₗ[I₂] R} :
+theorem separatingLeft_iff_linear_nontrivial {B : M₁ →ₛₗ[I₁] M₂ →ₛₗ[I₂] R} :
     B.SeparatingLeft ↔ ∀ x : M₁, B x = 0 → x = 0 :=
   by
   constructor <;> intro h x hB
@@ -737,24 +751,24 @@ theorem separating_left_iff_linear_nontrivial {B : M₁ →ₛₗ[I₁] M₂ →
     rw [zero_apply]
     exact hB _
   exact h x h'
-#align linear_map.separating_left_iff_linear_nontrivial LinearMap.separating_left_iff_linear_nontrivial
+#align linear_map.separating_left_iff_linear_nontrivial LinearMap.separatingLeft_iff_linear_nontrivial
 
-theorem separating_right_iff_linear_flip_nontrivial {B : M₁ →ₛₗ[I₁] M₂ →ₛₗ[I₂] R} :
+theorem separatingRight_iff_linear_flip_nontrivial {B : M₁ →ₛₗ[I₁] M₂ →ₛₗ[I₂] R} :
     B.SeparatingRight ↔ ∀ y : M₂, B.flip y = 0 → y = 0 := by
   rw [← flip_separating_left, separating_left_iff_linear_nontrivial]
-#align linear_map.separating_right_iff_linear_flip_nontrivial LinearMap.separating_right_iff_linear_flip_nontrivial
+#align linear_map.separating_right_iff_linear_flip_nontrivial LinearMap.separatingRight_iff_linear_flip_nontrivial
 
 /-- A bilinear form is left-separating if and only if it has a trivial kernel. -/
-theorem separating_left_iff_ker_eq_bot {B : M₁ →ₛₗ[I₁] M₂ →ₛₗ[I₂] R} :
+theorem separatingLeft_iff_ker_eq_bot {B : M₁ →ₛₗ[I₁] M₂ →ₛₗ[I₂] R} :
     B.SeparatingLeft ↔ B.ker = ⊥ :=
-  Iff.trans separating_left_iff_linear_nontrivial LinearMap.ker_eq_bot'.symm
-#align linear_map.separating_left_iff_ker_eq_bot LinearMap.separating_left_iff_ker_eq_bot
+  Iff.trans separatingLeft_iff_linear_nontrivial LinearMap.ker_eq_bot'.symm
+#align linear_map.separating_left_iff_ker_eq_bot LinearMap.separatingLeft_iff_ker_eq_bot
 
 /-- A bilinear form is right-separating if and only if its flip has a trivial kernel. -/
-theorem separating_right_iff_flip_ker_eq_bot {B : M₁ →ₛₗ[I₁] M₂ →ₛₗ[I₂] R} :
+theorem separatingRight_iff_flip_ker_eq_bot {B : M₁ →ₛₗ[I₁] M₂ →ₛₗ[I₂] R} :
     B.SeparatingRight ↔ B.flip.ker = ⊥ := by
   rw [← flip_separating_left, separating_left_iff_ker_eq_bot]
-#align linear_map.separating_right_iff_flip_ker_eq_bot LinearMap.separating_right_iff_flip_ker_eq_bot
+#align linear_map.separating_right_iff_flip_ker_eq_bot LinearMap.separatingRight_iff_flip_ker_eq_bot
 
 end CommSemiring
 
@@ -797,7 +811,7 @@ theorem nondegenerateRestrictOfDisjointOrthogonal {B : M →ₗ[R] M →ₗ[R] R
 
 /-- An orthogonal basis with respect to a left-separating bilinear form has no self-orthogonal
 elements. -/
-theorem IsOrtho.not_is_ortho_basis_self_of_separating_left [Nontrivial R] {B : M →ₛₗ[I] M →ₛₗ[I'] R}
+theorem IsOrtho.not_isOrtho_basis_self_of_separatingLeft [Nontrivial R] {B : M →ₛₗ[I] M →ₛₗ[I'] R}
     {v : Basis n R M} (h : B.IsOrtho v) (hB : B.SeparatingLeft) (i : n) : ¬B.IsOrtho (v i) (v i) :=
   by
   intro ho
@@ -811,18 +825,17 @@ theorem IsOrtho.not_is_ortho_basis_self_of_separating_left [Nontrivial R] {B : M
   obtain rfl | hij := eq_or_ne i j
   · exact ho
   · exact h hij
-#align linear_map.is_Ortho.not_is_ortho_basis_self_of_separating_left LinearMap.IsOrtho.not_is_ortho_basis_self_of_separating_left
+#align linear_map.is_Ortho.not_is_ortho_basis_self_of_separating_left LinearMap.IsOrtho.not_isOrtho_basis_self_of_separatingLeft
 
 /-- An orthogonal basis with respect to a right-separating bilinear form has no self-orthogonal
 elements. -/
-theorem IsOrtho.not_is_ortho_basis_self_of_separating_right [Nontrivial R]
-    {B : M →ₛₗ[I] M →ₛₗ[I'] R} {v : Basis n R M} (h : B.IsOrtho v) (hB : B.SeparatingRight)
-    (i : n) : ¬B.IsOrtho (v i) (v i) :=
+theorem IsOrtho.not_isOrtho_basis_self_of_separatingRight [Nontrivial R] {B : M →ₛₗ[I] M →ₛₗ[I'] R}
+    {v : Basis n R M} (h : B.IsOrtho v) (hB : B.SeparatingRight) (i : n) : ¬B.IsOrtho (v i) (v i) :=
   by
   rw [is_Ortho_flip] at h
   rw [is_ortho_flip]
   exact h.not_is_ortho_basis_self_of_separating_left (flip_separating_left.mpr hB) i
-#align linear_map.is_Ortho.not_is_ortho_basis_self_of_separating_right LinearMap.IsOrtho.not_is_ortho_basis_self_of_separating_right
+#align linear_map.is_Ortho.not_is_ortho_basis_self_of_separating_right LinearMap.IsOrtho.not_isOrtho_basis_self_of_separatingRight
 
 /-- Given an orthogonal basis with respect to a bilinear form, the bilinear form is left-separating
 if the basis has no elements which are self-orthogonal. -/

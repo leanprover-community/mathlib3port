@@ -154,18 +154,18 @@ theorem two_zsmul_oangle_center_add_two_zsmul_oangle_eq_pi {s : Sphere P} {p₁ 
 #align euclidean_geometry.sphere.two_zsmul_oangle_center_add_two_zsmul_oangle_eq_pi EuclideanGeometry.Sphere.two_zsmul_oangle_center_add_two_zsmul_oangle_eq_pi
 
 /-- A base angle of an isosceles triangle with apex at the center of a circle is acute. -/
-theorem abs_oangle_center_left_to_real_lt_pi_div_two {s : Sphere P} {p₁ p₂ : P} (hp₁ : p₁ ∈ s)
+theorem abs_oangle_center_left_toReal_lt_pi_div_two {s : Sphere P} {p₁ p₂ : P} (hp₁ : p₁ ∈ s)
     (hp₂ : p₂ ∈ s) : |(∡ s.center p₂ p₁).toReal| < π / 2 :=
-  abs_oangle_right_to_real_lt_pi_div_two_of_dist_eq
+  abs_oangle_right_toReal_lt_pi_div_two_of_dist_eq
     (dist_center_eq_dist_center_of_mem_sphere' hp₂ hp₁)
-#align euclidean_geometry.sphere.abs_oangle_center_left_to_real_lt_pi_div_two EuclideanGeometry.Sphere.abs_oangle_center_left_to_real_lt_pi_div_two
+#align euclidean_geometry.sphere.abs_oangle_center_left_to_real_lt_pi_div_two EuclideanGeometry.Sphere.abs_oangle_center_left_toReal_lt_pi_div_two
 
 /-- A base angle of an isosceles triangle with apex at the center of a circle is acute. -/
-theorem abs_oangle_center_right_to_real_lt_pi_div_two {s : Sphere P} {p₁ p₂ : P} (hp₁ : p₁ ∈ s)
+theorem abs_oangle_center_right_toReal_lt_pi_div_two {s : Sphere P} {p₁ p₂ : P} (hp₁ : p₁ ∈ s)
     (hp₂ : p₂ ∈ s) : |(∡ p₂ p₁ s.center).toReal| < π / 2 :=
-  abs_oangle_left_to_real_lt_pi_div_two_of_dist_eq
+  abs_oangle_left_toReal_lt_pi_div_two_of_dist_eq
     (dist_center_eq_dist_center_of_mem_sphere' hp₂ hp₁)
-#align euclidean_geometry.sphere.abs_oangle_center_right_to_real_lt_pi_div_two EuclideanGeometry.Sphere.abs_oangle_center_right_to_real_lt_pi_div_two
+#align euclidean_geometry.sphere.abs_oangle_center_right_to_real_lt_pi_div_two EuclideanGeometry.Sphere.abs_oangle_center_right_toReal_lt_pi_div_two
 
 /-- Given two points on a circle, the center of that circle may be expressed explicitly as a
 multiple (by half the tangent of the angle between the chord and the radius at one of those
@@ -247,7 +247,7 @@ theorem dist_div_sin_oangle_div_two_eq_radius {s : Sphere P} {p₁ p₂ p₃ : P
   rw [←
     Real.Angle.abs_cos_eq_abs_sin_of_two_zsmul_add_two_zsmul_eq_pi
       (two_zsmul_oangle_center_add_two_zsmul_oangle_eq_pi hp₁ hp₂ hp₃ hp₁p₂.symm hp₂p₃ hp₁p₃),
-    _root_.abs_of_nonneg (Real.Angle.cos_nonneg_iff_abs_to_real_le_pi_div_two.2 _)]
+    _root_.abs_of_nonneg (Real.Angle.cos_nonneg_iff_abs_toReal_le_pi_div_two.2 _)]
   exact (abs_oangle_center_right_to_real_lt_pi_div_two hp₁ hp₃).le
 #align euclidean_geometry.sphere.dist_div_sin_oangle_div_two_eq_radius EuclideanGeometry.Sphere.dist_div_sin_oangle_div_two_eq_radius
 
@@ -375,9 +375,9 @@ theorem mem_circumsphere_of_two_zsmul_oangle_eq {t : Triangle ℝ P} {p : P} {i�
   have h₃ : t'p i₃ = t.points i₃ := by simp [t'p, h₂₃.symm]
   have ha : AffineIndependent ℝ t'p :=
     by
-    rw [affine_independent_iff_not_collinear_of_ne h₁₂ h₁₃ h₂₃, h₁, h₂, h₃,
+    rw [affineIndependent_iff_not_collinear_of_ne h₁₂ h₁₃ h₂₃, h₁, h₂, h₃,
       collinear_iff_of_two_zsmul_oangle_eq h, ←
-      affine_independent_iff_not_collinear_of_ne h₁₂ h₁₃ h₂₃]
+      affineIndependent_iff_not_collinear_of_ne h₁₂ h₁₃ h₂₃]
     exact t.independent
   let t' : triangle ℝ P := ⟨t'p, ha⟩
   have h₁' : t'.points i₁ = t.points i₁ := h₁
@@ -415,8 +415,8 @@ theorem cospherical_of_two_zsmul_oangle_eq_of_not_collinear {p₁ p₂ p₃ p₄
   by
   have hn' : ¬Collinear ℝ ({p₁, p₃, p₄} : Set P) := by
     rwa [← collinear_iff_of_two_zsmul_oangle_eq h]
-  let t₁ : Affine.Triangle ℝ P := ⟨![p₁, p₂, p₄], affine_independent_iff_not_collinear_set.2 hn⟩
-  let t₂ : Affine.Triangle ℝ P := ⟨![p₁, p₃, p₄], affine_independent_iff_not_collinear_set.2 hn'⟩
+  let t₁ : Affine.Triangle ℝ P := ⟨![p₁, p₂, p₄], affineIndependent_iff_not_collinear_set.2 hn⟩
+  let t₂ : Affine.Triangle ℝ P := ⟨![p₁, p₃, p₄], affineIndependent_iff_not_collinear_set.2 hn'⟩
   rw [cospherical_iff_exists_sphere]
   refine' ⟨t₂.circumsphere, _⟩
   simp_rw [Set.insert_subset, Set.singleton_subset_iff]
@@ -449,7 +449,7 @@ theorem cospherical_or_collinear_of_two_zsmul_oangle_eq {p₁ p₂ p₃ p₄ : P
       by_cases hl : Collinear ℝ ({p₂, p₃, p₄} : Set P)
       · exact Or.inr hl
       rw [or_iff_left hl]
-      let t : Affine.Triangle ℝ P := ⟨![p₂, p₃, p₄], affine_independent_iff_not_collinear_set.2 hl⟩
+      let t : Affine.Triangle ℝ P := ⟨![p₂, p₃, p₄], affineIndependent_iff_not_collinear_set.2 hl⟩
       rw [cospherical_iff_exists_sphere]
       refine' ⟨t.circumsphere, _⟩
       simp_rw [Set.insert_subset, Set.singleton_subset_iff]

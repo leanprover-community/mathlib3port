@@ -42,7 +42,7 @@ variable {Ω : Type _} {m0 : MeasurableSpace Ω} {μ : Measure Ω} {𝒢 : Filtr
 /-- Given a submartingale `f` and bounded stopping times `τ` and `π` such that `τ ≤ π`, the
 expectation of `stopped_value f τ` is less than or equal to the expectation of `stopped_value f π`.
 This is the forward direction of the optional stopping theorem. -/
-theorem Submartingale.expected_stopped_value_mono [SigmaFiniteFiltration μ 𝒢]
+theorem Submartingale.expected_stoppedValue_mono [SigmaFiniteFiltration μ 𝒢]
     (hf : Submartingale f 𝒢 μ) (hτ : IsStoppingTime 𝒢 τ) (hπ : IsStoppingTime 𝒢 π) (hle : τ ≤ π)
     {N : ℕ} (hbdd : ∀ ω, π ω ≤ N) : μ[stoppedValue f τ] ≤ μ[stoppedValue f π] :=
   by
@@ -66,7 +66,7 @@ theorem Submartingale.expected_stopped_value_mono [SigmaFiniteFiltration μ 𝒢
       integrable.indicator (integrable.sub (hf.integrable _) (hf.integrable _)) (𝒢.le _ _ (this _))
   · exact hf.integrable_stopped_value hπ hbdd
   · exact hf.integrable_stopped_value hτ fun ω => le_trans (hle ω) (hbdd ω)
-#align measure_theory.submartingale.expected_stopped_value_mono MeasureTheory.Submartingale.expected_stopped_value_mono
+#align measure_theory.submartingale.expected_stopped_value_mono MeasureTheory.Submartingale.expected_stoppedValue_mono
 
 /-- The converse direction of the optional stopping theorem, i.e. an adapted integrable process `f`
 is a submartingale if for all bounded stopping times `τ` and `π` such that `τ ≤ π`, the
@@ -94,7 +94,7 @@ theorem submartingaleOfExpectedStoppedValueMono [IsFiniteMeasure μ] (hadp : Ada
 /-- **The optional stopping theorem** (fair game theorem): an adapted integrable process `f`
 is a submartingale if and only if for all bounded stopping times `τ` and `π` such that `τ ≤ π`, the
 stopped value of `f` at `τ` has expectation smaller than its stopped value at `π`. -/
-theorem submartingale_iff_expected_stopped_value_mono [IsFiniteMeasure μ] (hadp : Adapted 𝒢 f)
+theorem submartingale_iff_expected_stoppedValue_mono [IsFiniteMeasure μ] (hadp : Adapted 𝒢 f)
     (hint : ∀ i, Integrable (f i) μ) :
     Submartingale f 𝒢 μ ↔
       ∀ τ π : Ω → ℕ,
@@ -103,7 +103,7 @@ theorem submartingale_iff_expected_stopped_value_mono [IsFiniteMeasure μ] (hadp
             τ ≤ π → (∃ N, ∀ x, π x ≤ N) → μ[stoppedValue f τ] ≤ μ[stoppedValue f π] :=
   ⟨fun hf _ _ hτ hπ hle ⟨N, hN⟩ => hf.expected_stopped_value_mono hτ hπ hle hN,
     submartingaleOfExpectedStoppedValueMono hadp hint⟩
-#align measure_theory.submartingale_iff_expected_stopped_value_mono MeasureTheory.submartingale_iff_expected_stopped_value_mono
+#align measure_theory.submartingale_iff_expected_stopped_value_mono MeasureTheory.submartingale_iff_expected_stoppedValue_mono
 
 /-- The stopped process of a submartingale with respect to a stopping time is a submartingale. -/
 @[protected]
@@ -127,7 +127,7 @@ section Maximal
 
 open Finset
 
-theorem smul_le_stopped_value_hitting [IsFiniteMeasure μ] (hsub : Submartingale f 𝒢 μ) {ε : ℝ≥0}
+theorem smul_le_stoppedValue_hitting [IsFiniteMeasure μ] (hsub : Submartingale f 𝒢 μ) {ε : ℝ≥0}
     (n : ℕ) :
     ε • μ { ω | (ε : ℝ) ≤ (range (n + 1)).sup' nonempty_range_succ fun k => f k ω } ≤
       Ennreal.ofReal
@@ -151,18 +151,18 @@ theorem smul_le_stopped_value_hitting [IsFiniteMeasure μ] (hsub : Submartingale
       ⟨j, hj₁, hj₂⟩
   have h :=
     set_integral_ge_of_const_le
-      (measurable_set_le measurable_const
+      (measurableSet_le measurable_const
         (Finset.measurable_range_sup'' fun n _ =>
           (hsub.strongly_measurable n).Measurable.le (𝒢.le n)))
       (measure_ne_top _ _) this
       (integrable.integrable_on
-        (hsub.integrable_stopped_value (hitting_is_stopping_time hsub.adapted measurable_set_Ici)
+        (hsub.integrable_stopped_value (hitting_is_stopping_time hsub.adapted measurableSet_ici)
           hitting_le))
-  rw [Ennreal.le_of_real_iff_to_real_le, Ennreal.to_real_smul]
+  rw [Ennreal.le_ofReal_iff_toReal_le, Ennreal.toReal_smul]
   · exact h
   · exact Ennreal.mul_ne_top (by simp) (measure_ne_top _ _)
-  · exact le_trans (mul_nonneg ε.coe_nonneg Ennreal.to_real_nonneg) h
-#align measure_theory.smul_le_stopped_value_hitting MeasureTheory.smul_le_stopped_value_hitting
+  · exact le_trans (mul_nonneg ε.coe_nonneg Ennreal.toReal_nonneg) h
+#align measure_theory.smul_le_stopped_value_hitting MeasureTheory.smul_le_stoppedValue_hitting
 
 /-- **Doob's maximal inequality**: Given a non-negative submartingale `f`, for all `ε : ℝ≥0`,
 we have `ε • μ {ε ≤ f* n} ≤ ∫ ω in {ε ≤ f* n}, f n` where `f* n ω = max_{k ≤ n}, f k ω`.
@@ -191,7 +191,7 @@ theorem maximal_ineq [IsFiniteMeasure μ] (hsub : Submartingale f 𝒢 μ) (hnon
             (∫ ω in { ω | ((range (n + 1)).sup' nonempty_range_succ fun k => f k ω) < ↑ε },
               f n ω ∂μ) :=
       by
-      rw [← Ennreal.of_real_add, ← integral_union]
+      rw [← Ennreal.ofReal_add, ← integral_union]
       · conv_lhs => rw [← integral_univ]
         convert rfl
         ext ω
@@ -202,13 +202,13 @@ theorem maximal_ineq [IsFiniteMeasure μ] (hsub : Submartingale f 𝒢 μ) (hnon
         exact (not_le.2 hω₂) hω₁
       ·
         exact
-          measurable_set_lt
+          measurableSet_lt
             (Finset.measurable_range_sup'' fun n _ =>
               (hsub.strongly_measurable n).Measurable.le (𝒢.le n))
             measurable_const
       exacts[(hsub.integrable _).IntegrableOn, (hsub.integrable _).IntegrableOn,
         integral_nonneg (hnonneg _), integral_nonneg (hnonneg _)]
-    rwa [hadd, Ennreal.add_le_add_iff_right Ennreal.of_real_ne_top] at this
+    rwa [hadd, Ennreal.add_le_add_iff_right Ennreal.ofReal_ne_top] at this
   calc
     ε • μ { ω | (ε : ℝ) ≤ (range (n + 1)).sup' nonempty_range_succ fun k => f k ω } +
           Ennreal.ofReal
@@ -223,12 +223,12 @@ theorem maximal_ineq [IsFiniteMeasure μ] (hsub : Submartingale f 𝒢 μ) (hnon
       by
       refine'
         add_le_add (smul_le_stopped_value_hitting hsub _)
-          (Ennreal.of_real_le_of_real
+          (Ennreal.ofReal_le_ofReal
             (set_integral_mono_on (hsub.integrable n).IntegrableOn
               (integrable.integrable_on
                 (hsub.integrable_stopped_value
-                  (hitting_is_stopping_time hsub.adapted measurable_set_Ici) hitting_le))
-              (measurable_set_lt
+                  (hitting_is_stopping_time hsub.adapted measurableSet_ici) hitting_le))
+              (measurableSet_lt
                 (Finset.measurable_range_sup'' fun n _ =>
                   (hsub.strongly_measurable n).Measurable.le (𝒢.le n))
                 measurable_const)
@@ -246,7 +246,7 @@ theorem maximal_ineq [IsFiniteMeasure μ] (hsub : Submartingale f 𝒢 μ) (hnon
       simp_rw [stopped_value, this]
     _ = Ennreal.ofReal (∫ ω, stopped_value f (hitting f { y : ℝ | ↑ε ≤ y } 0 n) ω ∂μ) :=
       by
-      rw [← Ennreal.of_real_add, ← integral_union]
+      rw [← Ennreal.ofReal_add, ← integral_union]
       · conv_rhs => rw [← integral_univ]
         convert rfl
         ext ω
@@ -257,27 +257,27 @@ theorem maximal_ineq [IsFiniteMeasure μ] (hsub : Submartingale f 𝒢 μ) (hnon
         exact (not_le.2 hω₂) hω₁
       ·
         exact
-          measurable_set_lt
+          measurableSet_lt
             (Finset.measurable_range_sup'' fun n _ =>
               (hsub.strongly_measurable n).Measurable.le (𝒢.le n))
             measurable_const
       ·
         exact
           integrable.integrable_on
-            (hsub.integrable_stopped_value
-              (hitting_is_stopping_time hsub.adapted measurable_set_Ici) hitting_le)
+            (hsub.integrable_stopped_value (hitting_is_stopping_time hsub.adapted measurableSet_ici)
+              hitting_le)
       ·
         exact
           integrable.integrable_on
-            (hsub.integrable_stopped_value
-              (hitting_is_stopping_time hsub.adapted measurable_set_Ici) hitting_le)
+            (hsub.integrable_stopped_value (hitting_is_stopping_time hsub.adapted measurableSet_ici)
+              hitting_le)
       exacts[integral_nonneg fun x => hnonneg _ _, integral_nonneg fun x => hnonneg _ _]
     _ ≤ Ennreal.ofReal (μ[f n]) :=
       by
-      refine' Ennreal.of_real_le_of_real _
+      refine' Ennreal.ofReal_le_ofReal _
       rw [← stopped_value_const f n]
       exact
-        hsub.expected_stopped_value_mono (hitting_is_stopping_time hsub.adapted measurable_set_Ici)
+        hsub.expected_stopped_value_mono (hitting_is_stopping_time hsub.adapted measurableSet_ici)
           (is_stopping_time_const _ _) (fun ω => hitting_le ω) (fun ω => le_rfl : ∀ ω, n ≤ n)
     
 #align measure_theory.maximal_ineq MeasureTheory.maximal_ineq

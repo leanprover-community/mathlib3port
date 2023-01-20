@@ -63,7 +63,7 @@ instance : LieRingModule L (⨁ i, M i)
 
 @[simp]
 theorem lie_module_bracket_apply (x : L) (m : ⨁ i, M i) (i : ι) : ⁅x, m⁆ i = ⁅x, m i⁆ :=
-  map_range_apply _ _ m i
+  mapRange_apply _ _ m i
 #align direct_sum.lie_module_bracket_apply DirectSum.lie_module_bracket_apply
 
 instance : LieModule R L (⨁ i, M i)
@@ -91,7 +91,7 @@ def lieModuleOf [DecidableEq ι] (j : ι) : M j →ₗ⁅R,L⁆ ⨁ i, M i :=
 def lieModuleComponent (j : ι) : (⨁ i, M i) →ₗ⁅R,L⁆ M j :=
   { component R ι M j with
     map_lie' := fun x m => by
-      simp only [component, lapply_apply, lie_module_bracket_apply, LinearMap.to_fun_eq_coe] }
+      simp only [component, lapply_apply, lie_module_bracket_apply, LinearMap.toFun_eq_coe] }
 #align direct_sum.lie_module_component DirectSum.lieModuleComponent
 
 end Modules
@@ -128,7 +128,7 @@ instance lieRing : LieRing (⨁ i, L i) :=
 
 @[simp]
 theorem bracket_apply (x y : ⨁ i, L i) (i : ι) : ⁅x, y⁆ i = ⁅x i, y i⁆ :=
-  zip_with_apply _ _ x y i
+  zipWith_apply _ _ x y i
 #align direct_sum.bracket_apply DirectSum.bracket_apply
 
 instance lieAlgebra : LieAlgebra R (⨁ i, L i) :=
@@ -159,14 +159,14 @@ def lieAlgebraComponent (j : ι) : (⨁ i, L i) →ₗ⁅R⁆ L j :=
   { component R ι L j with
     toFun := component R ι L j
     map_lie' := fun x y => by
-      simp only [component, bracket_apply, lapply_apply, LinearMap.to_fun_eq_coe] }
+      simp only [component, bracket_apply, lapply_apply, LinearMap.toFun_eq_coe] }
 #align direct_sum.lie_algebra_component DirectSum.lieAlgebraComponent
 
 @[ext]
-theorem lie_algebra_ext {x y : ⨁ i, L i}
+theorem lieAlgebra_ext {x y : ⨁ i, L i}
     (h : ∀ i, lieAlgebraComponent R ι L i x = lieAlgebraComponent R ι L i y) : x = y :=
   Dfinsupp.ext h
-#align direct_sum.lie_algebra_ext DirectSum.lie_algebra_ext
+#align direct_sum.lie_algebra_ext DirectSum.lieAlgebra_ext
 
 include R
 
@@ -245,12 +245,12 @@ def toLieAlgebra [DecidableEq ι] (L' : Type w₁) [LieRing L'] [LieAlgebra R L'
         ext (j x)
         exact this j i x y
       intro i j y x
-      simp only [lie_of R, lie_algebra_of_apply, LieHom.coe_to_linear_map, to_add_monoid_of,
-        coe_to_module_eq_coe_to_add_monoid, LinearMap.to_add_monoid_hom_coe]
+      simp only [lie_of R, lie_algebra_of_apply, LieHom.coe_to_linearMap, to_add_monoid_of,
+        coe_to_module_eq_coe_to_add_monoid, LinearMap.toAddMonoidHom_coe]
       rcases eq_or_ne i j with (h | h)
       · have h' : f j (h.rec_on y) = f i y := Eq.drec (Eq.refl _) h
-        simp only [h, h', LieHom.coe_to_linear_map, dif_pos, LieHom.map_lie, to_add_monoid_of,
-          LinearMap.to_add_monoid_hom_coe]
+        simp only [h, h', LieHom.coe_to_linearMap, dif_pos, LieHom.map_lie, to_add_monoid_of,
+          LinearMap.toAddMonoidHom_coe]
       · simp only [h, hf j i h.symm x y, dif_neg, not_false_iff, AddMonoidHom.map_zero] }
 #align direct_sum.to_lie_algebra DirectSum.toLieAlgebra
 

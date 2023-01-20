@@ -75,8 +75,8 @@ instance : CoeFun (M ↪ₑ[L] N) fun _ => M → N :=
   FunLike.hasCoeToFun
 
 @[simp]
-theorem map_bounded_formula (f : M ↪ₑ[L] N) {α : Type} {n : ℕ} (φ : L.BoundedFormula α n)
-    (v : α → M) (xs : Fin n → M) : φ.realize (f ∘ v) (f ∘ xs) ↔ φ.realize v xs := by
+theorem map_boundedFormula (f : M ↪ₑ[L] N) {α : Type} {n : ℕ} (φ : L.BoundedFormula α n) (v : α → M)
+    (xs : Fin n → M) : φ.realize (f ∘ v) (f ∘ xs) ↔ φ.realize v xs := by
   classical
     rw [← bounded_formula.realize_restrict_free_var Set.Subset.rfl, Set.inclusion_eq_id, iff_eq_eq]
     swap
@@ -93,7 +93,7 @@ theorem map_bounded_formula (f : M ↪ₑ[L] N) {α : Type} {n : ℕ} (φ : L.Bo
     rw [Function.comp.assoc _ _ (Fintype.equivFin _), Equiv.symm_comp_self, Function.comp.right_id,
       Sum.elim_comp_inl, Sum.elim_comp_inr, ← Set.inclusion_eq_id,
       bounded_formula.realize_restrict_free_var Set.Subset.rfl]
-#align first_order.language.elementary_embedding.map_bounded_formula FirstOrder.Language.ElementaryEmbedding.map_bounded_formula
+#align first_order.language.elementary_embedding.map_bounded_formula FirstOrder.Language.ElementaryEmbedding.map_boundedFormula
 
 @[simp]
 theorem map_formula (f : M ↪ₑ[L] N) {α : Type} (φ : L.Formula α) (x : α → M) :
@@ -109,13 +109,13 @@ theorem map_sentence (f : M ↪ₑ[L] N) (φ : L.Sentence) : M ⊨ φ ↔ N ⊨ 
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem Theory_model_iff (f : M ↪ₑ[L] N) (T : L.TheoryCat) : M ⊨ T ↔ N ⊨ T := by
+theorem theoryCat_model_iff (f : M ↪ₑ[L] N) (T : L.TheoryCat) : M ⊨ T ↔ N ⊨ T := by
   simp only [Theory.model_iff, f.map_sentence]
-#align first_order.language.elementary_embedding.Theory_model_iff FirstOrder.Language.ElementaryEmbedding.Theory_model_iff
+#align first_order.language.elementary_embedding.Theory_model_iff FirstOrder.Language.ElementaryEmbedding.theoryCat_model_iff
 
-theorem elementarily_equivalent (f : M ↪ₑ[L] N) : M ≅[L] N :=
-  elementarily_equivalent_iff.2 f.map_sentence
-#align first_order.language.elementary_embedding.elementarily_equivalent FirstOrder.Language.ElementaryEmbedding.elementarily_equivalent
+theorem elementarilyEquivalent (f : M ↪ₑ[L] N) : M ≅[L] N :=
+  elementarilyEquivalent_iff.2 f.map_sentence
+#align first_order.language.elementary_embedding.elementarily_equivalent FirstOrder.Language.ElementaryEmbedding.elementarilyEquivalent
 
 @[simp]
 theorem injective (φ : M ↪ₑ[L] N) : Function.Injective φ :=
@@ -172,19 +172,19 @@ def toHom (f : M ↪ₑ[L] N) : M →[L] N where toFun := f
 #align first_order.language.elementary_embedding.to_hom FirstOrder.Language.ElementaryEmbedding.toHom
 
 @[simp]
-theorem to_embedding_to_hom (f : M ↪ₑ[L] N) : f.toEmbedding.toHom = f.toHom :=
+theorem toEmbedding_toHom (f : M ↪ₑ[L] N) : f.toEmbedding.toHom = f.toHom :=
   rfl
-#align first_order.language.elementary_embedding.to_embedding_to_hom FirstOrder.Language.ElementaryEmbedding.to_embedding_to_hom
+#align first_order.language.elementary_embedding.to_embedding_to_hom FirstOrder.Language.ElementaryEmbedding.toEmbedding_toHom
 
 @[simp]
-theorem coe_to_hom {f : M ↪ₑ[L] N} : (f.toHom : M → N) = (f : M → N) :=
+theorem coe_toHom {f : M ↪ₑ[L] N} : (f.toHom : M → N) = (f : M → N) :=
   rfl
-#align first_order.language.elementary_embedding.coe_to_hom FirstOrder.Language.ElementaryEmbedding.coe_to_hom
+#align first_order.language.elementary_embedding.coe_to_hom FirstOrder.Language.ElementaryEmbedding.coe_toHom
 
 @[simp]
-theorem coe_to_embedding (f : M ↪ₑ[L] N) : (f.toEmbedding : M → N) = (f : M → N) :=
+theorem coe_toEmbedding (f : M ↪ₑ[L] N) : (f.toEmbedding : M → N) = (f : M → N) :=
   rfl
-#align first_order.language.elementary_embedding.coe_to_embedding FirstOrder.Language.ElementaryEmbedding.coe_to_embedding
+#align first_order.language.elementary_embedding.coe_to_embedding FirstOrder.Language.ElementaryEmbedding.coe_toEmbedding
 
 theorem coe_injective : @Function.Injective (M ↪ₑ[L] N) (M → N) coeFn :=
   FunLike.coe_injective
@@ -324,16 +324,16 @@ def toElementaryEmbedding (f : M ≃[L] N) : M ↪ₑ[L] N where toFun := f
 #align first_order.language.equiv.to_elementary_embedding FirstOrder.Language.Equiv.toElementaryEmbedding
 
 @[simp]
-theorem to_elementary_embedding_to_embedding (f : M ≃[L] N) :
+theorem toElementaryEmbedding_toEmbedding (f : M ≃[L] N) :
     f.toElementaryEmbedding.toEmbedding = f.toEmbedding :=
   rfl
-#align first_order.language.equiv.to_elementary_embedding_to_embedding FirstOrder.Language.Equiv.to_elementary_embedding_to_embedding
+#align first_order.language.equiv.to_elementary_embedding_to_embedding FirstOrder.Language.Equiv.toElementaryEmbedding_toEmbedding
 
 @[simp]
-theorem coe_to_elementary_embedding (f : M ≃[L] N) :
+theorem coe_toElementaryEmbedding (f : M ≃[L] N) :
     (f.toElementaryEmbedding : M → N) = (f : M → N) :=
   rfl
-#align first_order.language.equiv.coe_to_elementary_embedding FirstOrder.Language.Equiv.coe_to_elementary_embedding
+#align first_order.language.equiv.coe_to_elementary_embedding FirstOrder.Language.Equiv.coe_toElementaryEmbedding
 
 end Equiv
 
@@ -346,13 +346,13 @@ theorem realize_term_substructure {α : Type _} {S : L.Substructure M} (v : α �
 namespace Substructure
 
 @[simp]
-theorem realize_bounded_formula_top {α : Type _} {n : ℕ} {φ : L.BoundedFormula α n}
+theorem realize_boundedFormula_top {α : Type _} {n : ℕ} {φ : L.BoundedFormula α n}
     {v : α → (⊤ : L.Substructure M)} {xs : Fin n → (⊤ : L.Substructure M)} :
     φ.realize v xs ↔ φ.realize ((coe : _ → M) ∘ v) (coe ∘ xs) :=
   by
   rw [← substructure.top_equiv.realize_bounded_formula φ]
   simp
-#align first_order.language.substructure.realize_bounded_formula_top FirstOrder.Language.Substructure.realize_bounded_formula_top
+#align first_order.language.substructure.realize_bounded_formula_top FirstOrder.Language.Substructure.realize_boundedFormula_top
 
 @[simp]
 theorem realize_formula_top {α : Type _} {φ : L.Formula α} {v : α → (⊤ : L.Substructure M)} :
@@ -397,9 +397,9 @@ instance inducedStructure (S : L.ElementarySubstructure M) : L.StructureCat S :=
 #align first_order.language.elementary_substructure.induced_Structure FirstOrder.Language.ElementarySubstructure.inducedStructure
 
 @[simp]
-theorem is_elementary (S : L.ElementarySubstructure M) : (S : L.Substructure M).IsElementary :=
+theorem isElementary (S : L.ElementarySubstructure M) : (S : L.Substructure M).IsElementary :=
   S.is_elementary'
-#align first_order.language.elementary_substructure.is_elementary FirstOrder.Language.ElementarySubstructure.is_elementary
+#align first_order.language.elementary_substructure.is_elementary FirstOrder.Language.ElementarySubstructure.isElementary
 
 /-- The natural embedding of an `L.substructure` of `M` into `M`. -/
 def subtype (S : L.ElementarySubstructure M) : S ↪ₑ[L] M
@@ -409,9 +409,9 @@ def subtype (S : L.ElementarySubstructure M) : S ↪ₑ[L] M
 #align first_order.language.elementary_substructure.subtype FirstOrder.Language.ElementarySubstructure.subtype
 
 @[simp]
-theorem coe_subtype {S : L.ElementarySubstructure M} : ⇑S.Subtype = coe :=
+theorem coeSubtype {S : L.ElementarySubstructure M} : ⇑S.Subtype = coe :=
   rfl
-#align first_order.language.elementary_substructure.coe_subtype FirstOrder.Language.ElementarySubstructure.coe_subtype
+#align first_order.language.elementary_substructure.coe_subtype FirstOrder.Language.ElementarySubstructure.coeSubtype
 
 /-- The substructure `M` of the structure `M` is elementary. -/
 instance : Top (L.ElementarySubstructure M) :=
@@ -440,35 +440,35 @@ theorem realize_sentence (S : L.ElementarySubstructure M) (φ : L.Sentence) : S 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem Theory_model_iff (S : L.ElementarySubstructure M) (T : L.TheoryCat) : S ⊨ T ↔ M ⊨ T := by
+theorem theoryCat_model_iff (S : L.ElementarySubstructure M) (T : L.TheoryCat) : S ⊨ T ↔ M ⊨ T := by
   simp only [Theory.model_iff, realize_sentence]
-#align first_order.language.elementary_substructure.Theory_model_iff FirstOrder.Language.ElementarySubstructure.Theory_model_iff
+#align first_order.language.elementary_substructure.Theory_model_iff FirstOrder.Language.ElementarySubstructure.theoryCat_model_iff
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-instance Theory_model {T : L.TheoryCat} [h : M ⊨ T] {S : L.ElementarySubstructure M} : S ⊨ T :=
-  (Theory_model_iff S T).2 h
-#align first_order.language.elementary_substructure.Theory_model FirstOrder.Language.ElementarySubstructure.Theory_model
+instance theoryCat_model {T : L.TheoryCat} [h : M ⊨ T] {S : L.ElementarySubstructure M} : S ⊨ T :=
+  (theoryCat_model_iff S T).2 h
+#align first_order.language.elementary_substructure.Theory_model FirstOrder.Language.ElementarySubstructure.theoryCat_model
 
 instance [h : Nonempty M] {S : L.ElementarySubstructure M} : Nonempty S :=
-  (model_nonempty_theory_iff L).1 inferInstance
+  (model_nonemptyTheory_iff L).1 inferInstance
 
-theorem elementarily_equivalent (S : L.ElementarySubstructure M) : S ≅[L] M :=
+theorem elementarilyEquivalent (S : L.ElementarySubstructure M) : S ≅[L] M :=
   S.Subtype.ElementarilyEquivalent
-#align first_order.language.elementary_substructure.elementarily_equivalent FirstOrder.Language.ElementarySubstructure.elementarily_equivalent
+#align first_order.language.elementary_substructure.elementarily_equivalent FirstOrder.Language.ElementarySubstructure.elementarilyEquivalent
 
 end ElementarySubstructure
 
 namespace Substructure
 
 /-- The Tarski-Vaught test for elementarity of a substructure. -/
-theorem is_elementary_of_exists (S : L.Substructure M)
+theorem isElementary_of_exists (S : L.Substructure M)
     (htv :
       ∀ (n : ℕ) (φ : L.BoundedFormula Empty (n + 1)) (x : Fin n → S) (a : M),
         φ.realize default (Fin.snoc (coe ∘ x) a : _ → M) →
           ∃ b : S, φ.realize default (Fin.snoc (coe ∘ x) b : _ → M)) :
     S.IsElementary := fun n => S.Subtype.is_elementary_of_exists htv
-#align first_order.language.substructure.is_elementary_of_exists FirstOrder.Language.Substructure.is_elementary_of_exists
+#align first_order.language.substructure.is_elementary_of_exists FirstOrder.Language.Substructure.isElementary_of_exists
 
 /-- Bundles a substructure satisfying the Tarski-Vaught test as an elementary substructure. -/
 @[simps]

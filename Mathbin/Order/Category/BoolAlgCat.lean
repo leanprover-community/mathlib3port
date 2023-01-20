@@ -55,9 +55,9 @@ def toBoundedDistribLattice (X : BoolAlgCat) : BoundedDistribLatticeCat :=
 #align BoolAlg.to_BoundedDistribLattice BoolAlgCat.toBoundedDistribLattice
 
 @[simp]
-theorem coe_to_BoundedDistribLattice (X : BoolAlgCat) : ↥X.toBoundedDistribLattice = ↥X :=
+theorem coe_toBoundedDistribLattice (X : BoolAlgCat) : ↥X.toBoundedDistribLattice = ↥X :=
   rfl
-#align BoolAlg.coe_to_BoundedDistribLattice BoolAlgCat.coe_to_BoundedDistribLattice
+#align BoolAlg.coe_to_BoundedDistribLattice BoolAlgCat.coe_toBoundedDistribLattice
 
 instance : LargeCategory.{u} BoolAlgCat :=
   InducedCategory.category toBoundedDistribLattice
@@ -113,9 +113,9 @@ def dualEquiv : BoolAlgCat ≌ BoolAlgCat :=
 
 end BoolAlgCat
 
-theorem BoolAlg_dual_comp_forget_to_BoundedDistribLattice :
+theorem boolAlgCat_dual_comp_forget_to_boundedDistribLatticeCat :
     BoolAlgCat.dual ⋙ forget₂ BoolAlgCat BoundedDistribLatticeCat =
       forget₂ BoolAlgCat BoundedDistribLatticeCat ⋙ BoundedDistribLatticeCat.dual :=
   rfl
-#align BoolAlg_dual_comp_forget_to_BoundedDistribLattice BoolAlg_dual_comp_forget_to_BoundedDistribLattice
+#align BoolAlg_dual_comp_forget_to_BoundedDistribLattice boolAlgCat_dual_comp_forget_to_boundedDistribLatticeCat
 

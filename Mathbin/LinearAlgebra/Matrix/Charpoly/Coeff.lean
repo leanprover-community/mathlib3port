@@ -47,14 +47,14 @@ open Finset
 
 variable {M : Matrix n n R}
 
-theorem charmatrix_apply_nat_degree [Nontrivial R] (i j : n) :
+theorem charmatrix_apply_natDegree [Nontrivial R] (i j : n) :
     (charmatrix M i j).natDegree = ite (i = j) 1 0 := by
   by_cases i = j <;> simp [h, ← degree_eq_iff_nat_degree_eq_of_pos (Nat.succ_pos 0)]
-#align charmatrix_apply_nat_degree charmatrix_apply_nat_degree
+#align charmatrix_apply_nat_degree charmatrix_apply_natDegree
 
-theorem charmatrix_apply_nat_degree_le (i j : n) : (charmatrix M i j).natDegree ≤ ite (i = j) 1 0 :=
+theorem charmatrix_apply_natDegree_le (i j : n) : (charmatrix M i j).natDegree ≤ ite (i = j) 1 0 :=
   by split_ifs <;> simp [h, nat_degree_X_sub_C_le]
-#align charmatrix_apply_nat_degree_le charmatrix_apply_nat_degree_le
+#align charmatrix_apply_nat_degree_le charmatrix_apply_natDegree_le
 
 namespace Matrix
 
@@ -72,9 +72,9 @@ theorem charpoly_sub_diagonal_degree_lt :
   apply Submodule.smul_mem (degree_lt R (Fintype.card n - 1)) ↑↑(Equiv.Perm.sign c)
   rw [mem_degree_lt]; apply lt_of_le_of_lt degree_le_nat_degree _; rw [WithBot.coe_lt_coe]
   apply lt_of_le_of_lt _ (Equiv.Perm.fixed_point_card_lt_of_ne_one (ne_of_mem_erase hc))
-  apply le_trans (Polynomial.nat_degree_prod_le univ fun i : n => charmatrix M (c i) i) _
+  apply le_trans (Polynomial.natDegree_prod_le univ fun i : n => charmatrix M (c i) i) _
   rw [card_eq_sum_ones]; rw [sum_filter]; apply sum_le_sum
-  intros ; apply charmatrix_apply_nat_degree_le
+  intros ; apply charmatrix_apply_natDegree_le
 #align matrix.charpoly_sub_diagonal_degree_lt Matrix.charpoly_sub_diagonal_degree_lt
 
 theorem charpoly_coeff_eq_prod_coeff_of_le {k : ℕ} (h : Fintype.card n - 1 ≤ k) :
@@ -123,10 +123,10 @@ theorem charpoly_degree_eq_dim [Nontrivial R] (M : Matrix n n R) :
   apply h
 #align matrix.charpoly_degree_eq_dim Matrix.charpoly_degree_eq_dim
 
-theorem charpoly_nat_degree_eq_dim [Nontrivial R] (M : Matrix n n R) :
+theorem charpoly_natDegree_eq_dim [Nontrivial R] (M : Matrix n n R) :
     M.charpoly.natDegree = Fintype.card n :=
-  nat_degree_eq_of_degree_eq_some (charpoly_degree_eq_dim M)
-#align matrix.charpoly_nat_degree_eq_dim Matrix.charpoly_nat_degree_eq_dim
+  natDegree_eq_of_degree_eq_some (charpoly_degree_eq_dim M)
+#align matrix.charpoly_nat_degree_eq_dim Matrix.charpoly_natDegree_eq_dim
 
 theorem charpoly_monic (M : Matrix n n R) : M.charpoly.Monic :=
   by
@@ -162,7 +162,7 @@ theorem trace_eq_neg_charpoly_coeff [Nonempty n] (M : Matrix n n R) :
 #align matrix.trace_eq_neg_charpoly_coeff Matrix.trace_eq_neg_charpoly_coeff
 
 -- I feel like this should use polynomial.alg_hom_eval₂_algebra_map
-theorem mat_poly_equiv_eval (M : Matrix n n R[X]) (r : R) (i j : n) :
+theorem matPolyEquiv_eval (M : Matrix n n R[X]) (r : R) (i j : n) :
     (matPolyEquiv M).eval ((scalar n) r) i j = (M i j).eval r :=
   by
   unfold Polynomial.eval; unfold eval₂
@@ -175,12 +175,12 @@ theorem mat_poly_equiv_eval (M : Matrix n n R[X]) (r : R) (i j : n) :
     simp only [coe_scalar, Matrix.one_mul, RingHom.id_apply, Pi.smul_apply, smul_eq_mul, mul_eq_mul,
       Algebra.smul_mul_assoc]
     have h : ∀ x : ℕ, (fun (e : ℕ) (a : R) => r ^ e * a) x 0 = 0 := by simp
-    simp only [Polynomial.sum, mat_poly_equiv_coeff_apply, mul_comm]
-    apply (Finset.sum_subset (support_subset_support_mat_poly_equiv _ _ _) _).symm
+    simp only [Polynomial.sum, matPolyEquiv_coeff_apply, mul_comm]
+    apply (Finset.sum_subset (support_subset_support_matPolyEquiv _ _ _) _).symm
     intro n hn h'n
     rw [not_mem_support_iff] at h'n
     simp only [h'n, zero_mul]
-#align matrix.mat_poly_equiv_eval Matrix.mat_poly_equiv_eval
+#align matrix.mat_poly_equiv_eval Matrix.matPolyEquiv_eval
 
 theorem eval_det (M : Matrix n n R[X]) (r : R) :
     Polynomial.eval r M.det = (Polynomial.eval (scalar n r) (matPolyEquiv M)).det :=
@@ -192,7 +192,7 @@ theorem eval_det (M : Matrix n n R[X]) (r : R) :
 theorem det_eq_sign_charpoly_coeff (M : Matrix n n R) :
     M.det = (-1) ^ Fintype.card n * M.charpoly.coeff 0 :=
   by
-  rw [coeff_zero_eq_eval_zero, charpoly, eval_det, mat_poly_equiv_charmatrix, ← det_smul]
+  rw [coeff_zero_eq_eval_zero, charpoly, eval_det, matPolyEquiv_charmatrix, ← det_smul]
   simp
 #align matrix.det_eq_sign_charpoly_coeff Matrix.det_eq_sign_charpoly_coeff
 
@@ -200,13 +200,13 @@ end Matrix
 
 variable {p : ℕ} [Fact p.Prime]
 
-theorem mat_poly_equiv_eq_X_pow_sub_C {K : Type _} (k : ℕ) [Field K] (M : Matrix n n K) :
+theorem matPolyEquiv_eq_x_pow_sub_c {K : Type _} (k : ℕ) [Field K] (M : Matrix n n K) :
     matPolyEquiv ((expand K k : K[X] →+* K[X]).mapMatrix (charmatrix (M ^ k))) =
       X ^ k - c (M ^ k) :=
   by
   ext m
-  rw [coeff_sub, coeff_C, mat_poly_equiv_coeff_apply, RingHom.map_matrix_apply, Matrix.map_apply,
-    AlgHom.coe_to_ring_hom, DMatrix.sub_apply, coeff_X_pow]
+  rw [coeff_sub, coeff_C, matPolyEquiv_coeff_apply, RingHom.mapMatrix_apply, Matrix.map_apply,
+    AlgHom.coe_to_ringHom, DMatrix.sub_apply, coeff_X_pow]
   by_cases hij : i = j
   · rw [hij, charmatrix_apply_eq, AlgHom.map_sub, expand_C, expand_X, coeff_sub, coeff_X_pow,
       coeff_C]
@@ -215,7 +215,7 @@ theorem mat_poly_equiv_eq_X_pow_sub_C {K : Type _} (k : ℕ) [Field K] (M : Matr
     split_ifs with m0 mp <;>
       simp only [hij, zero_sub, DMatrix.zero_apply, sub_zero, neg_zero, Matrix.one_apply_ne, Ne.def,
         not_false_iff]
-#align mat_poly_equiv_eq_X_pow_sub_C mat_poly_equiv_eq_X_pow_sub_C
+#align mat_poly_equiv_eq_X_pow_sub_C matPolyEquiv_eq_x_pow_sub_c
 
 namespace Matrix
 
@@ -223,7 +223,7 @@ namespace Matrix
 is equivalent to a polynomial with degree less than the dimension of the matrix. -/
 theorem aeval_eq_aeval_mod_charpoly (M : Matrix n n R) (p : R[X]) :
     aeval M p = aeval M (p %ₘ M.charpoly) :=
-  (aeval_mod_by_monic_eq_self_of_root M.charpoly_monic M.aeval_self_charpoly).symm
+  (aeval_modByMonic_eq_self_of_root M.charpoly_monic M.aeval_self_charpoly).symm
 #align matrix.aeval_eq_aeval_mod_charpoly Matrix.aeval_eq_aeval_mod_charpoly
 
 /-- Any matrix power can be computed as the sum of matrix powers less than `fintype.card n`.

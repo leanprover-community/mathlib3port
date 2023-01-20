@@ -50,9 +50,9 @@ theorem adjoin_le {S : Subalgebra R A} (H : s ⊆ S) : adjoin R s ≤ S :=
   Algebra.gc.l_le H
 #align algebra.adjoin_le Algebra.adjoin_le
 
-theorem adjoin_eq_Inf : adjoin R s = infₛ { p | s ⊆ p } :=
+theorem adjoin_eq_infₛ : adjoin R s = infₛ { p | s ⊆ p } :=
   le_antisymm (le_infₛ fun _ h => adjoin_le h) (infₛ_le subset_adjoin)
-#align algebra.adjoin_eq_Inf Algebra.adjoin_eq_Inf
+#align algebra.adjoin_eq_Inf Algebra.adjoin_eq_infₛ
 
 theorem adjoin_le_iff {S : Subalgebra R A} : adjoin R s ≤ S ↔ s ⊆ S :=
   Algebra.gc _ _
@@ -70,14 +70,14 @@ theorem adjoin_eq (S : Subalgebra R A) : adjoin R ↑S = S :=
   adjoin_eq_of_le _ (Set.Subset.refl _) subset_adjoin
 #align algebra.adjoin_eq Algebra.adjoin_eq
 
-theorem adjoin_Union {α : Type _} (s : α → Set A) :
+theorem adjoin_unionᵢ {α : Type _} (s : α → Set A) :
     adjoin R (Set.unionᵢ s) = ⨆ i : α, adjoin R (s i) :=
   (@Algebra.gc R A _ _ _).l_supr
-#align algebra.adjoin_Union Algebra.adjoin_Union
+#align algebra.adjoin_Union Algebra.adjoin_unionᵢ
 
-theorem adjoin_attach_bUnion [DecidableEq A] {α : Type _} {s : Finset α} (f : s → Finset A) :
+theorem adjoin_attach_bunionᵢ [DecidableEq A] {α : Type _} {s : Finset α} (f : s → Finset A) :
     adjoin R (s.attach.bUnion f : Set A) = ⨆ x, adjoin R (f x) := by simpa [adjoin_Union]
-#align algebra.adjoin_attach_bUnion Algebra.adjoin_attach_bUnion
+#align algebra.adjoin_attach_bUnion Algebra.adjoin_attach_bunionᵢ
 
 @[elab_as_elim]
 theorem adjoin_induction {p : A → Prop} {x : A} (h : x ∈ adjoin R s) (Hs : ∀ x ∈ s, p x)
@@ -125,7 +125,7 @@ theorem adjoin_induction' {p : adjoin R s → Prop} (Hs : ∀ (x) (h : x ∈ s),
     refine' Exists.elim _ fun (hx : x ∈ adjoin R s) (hc : p ⟨x, hx⟩) => hc
     exact
       adjoin_induction hx (fun x hx => ⟨subset_adjoin hx, Hs x hx⟩)
-        (fun r => ⟨Subalgebra.algebra_map_mem _ r, Halg r⟩)
+        (fun r => ⟨Subalgebra.algebraMap_mem _ r, Halg r⟩)
         (fun x y hx hy =>
           Exists.elim hx fun hx' hx =>
             Exists.elim hy fun hy' hy => ⟨Subalgebra.add_mem _ hx' hy', Hadd _ _ hx hy⟩)
@@ -141,7 +141,7 @@ theorem adjoin_adjoin_coe_preimage {s : Set A} : adjoin R ((coe : adjoin R s →
     eq_top_iff.2 fun x =>
       adjoin_induction' (fun a ha => _) (fun r => _) (fun _ _ => _) (fun _ _ => _) x
   · exact subset_adjoin ha
-  · exact Subalgebra.algebra_map_mem _ r
+  · exact Subalgebra.algebraMap_mem _ r
   · exact Subalgebra.add_mem _
   · exact Subalgebra.mul_mem _
 #align algebra.adjoin_adjoin_coe_preimage Algebra.adjoin_adjoin_coe_preimage
@@ -205,14 +205,14 @@ theorem span_le_adjoin (s : Set A) : span R s ≤ (adjoin R s).toSubmodule :=
   span_le.mpr subset_adjoin
 #align algebra.span_le_adjoin Algebra.span_le_adjoin
 
-theorem adjoin_to_submodule_le {s : Set A} {t : Submodule R A} :
+theorem adjoin_toSubmodule_le {s : Set A} {t : Submodule R A} :
     (adjoin R s).toSubmodule ≤ t ↔ ↑(Submonoid.closure s) ⊆ (t : Set A) := by
   rw [adjoin_eq_span, span_le]
-#align algebra.adjoin_to_submodule_le Algebra.adjoin_to_submodule_le
+#align algebra.adjoin_to_submodule_le Algebra.adjoin_toSubmodule_le
 
 theorem adjoin_eq_span_of_subset {s : Set A} (hs : ↑(Submonoid.closure s) ⊆ (span R s : Set A)) :
     (adjoin R s).toSubmodule = span R s :=
-  le_antisymm ((adjoin_to_submodule_le R).mpr hs) (span_le_adjoin R s)
+  le_antisymm ((adjoin_toSubmodule_le R).mpr hs) (span_le_adjoin R s)
 #align algebra.adjoin_eq_span_of_subset Algebra.adjoin_eq_span_of_subset
 
 @[simp]
@@ -360,8 +360,8 @@ theorem pow_smul_mem_of_smul_subset_of_mem_adjoin [CommSemiring B] [Algebra R B]
   have : n ≥ n₁ a := le_trans (Finset.le_sup ha) hn
   dsimp only
   rw [← tsub_add_cancel_of_le this, pow_add, ← smul_smul, ←
-    IsScalarTower.algebra_map_smul A (l a) (a : B), smul_smul (r ^ n₁ a), mul_comm, ← smul_smul,
-    smul_def, map_pow, IsScalarTower.algebra_map_smul]
+    IsScalarTower.algebraMap_smul A (l a) (a : B), smul_smul (r ^ n₁ a), mul_comm, ← smul_smul,
+    smul_def, map_pow, IsScalarTower.algebraMap_smul]
   apply Subalgebra.mul_mem _ (Subalgebra.pow_mem _ hr _) _
   refine' Subalgebra.smul_mem _ _ _
   change _ ∈ B'.to_submonoid
@@ -371,7 +371,7 @@ theorem pow_smul_mem_of_smul_subset_of_mem_adjoin [CommSemiring B] [Algebra R B]
 
 theorem pow_smul_mem_adjoin_smul (r : R) (s : Set A) {x : A} (hx : x ∈ adjoin R s) :
     ∃ n₀ : ℕ, ∀ n ≥ n₀, r ^ n • x ∈ adjoin R (r • s) :=
-  pow_smul_mem_of_smul_subset_of_mem_adjoin r s _ subset_adjoin hx (Subalgebra.algebra_map_mem _ _)
+  pow_smul_mem_of_smul_subset_of_mem_adjoin r s _ subset_adjoin hx (Subalgebra.algebraMap_mem _ _)
 #align algebra.pow_smul_mem_adjoin_smul Algebra.pow_smul_mem_adjoin_smul
 
 end CommSemiring

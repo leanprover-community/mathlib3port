@@ -163,7 +163,7 @@ variable (F) [EssSurj F]
     codomain. Applying the functor to this preimage will yield an object isomorphic to `Y`, see
     `obj_obj_preimage_iso`. -/
 def Functor.objPreimage (Y : D) : C :=
-  (EssSurj.mem_ess_image F Y).witness
+  (EssSurj.mem_essImage F Y).witness
 #align category_theory.functor.obj_preimage CategoryTheory.Functor.objPreimage
 -/
 
@@ -176,7 +176,7 @@ Case conversion may be inaccurate. Consider using '#align category_theory.functo
 /-- Applying an essentially surjective functor to a preimage of `Y` yields an object that is
     isomorphic to `Y`. -/
 def Functor.objObjPreimageIso (Y : D) : F.obj (F.objPreimage Y) ≅ Y :=
-  (EssSurj.mem_ess_image F Y).getIso
+  (EssSurj.mem_essImage F Y).getIso
 #align category_theory.functor.obj_obj_preimage_iso CategoryTheory.Functor.objObjPreimageIso
 
 #print CategoryTheory.Faithful.toEssImage /-

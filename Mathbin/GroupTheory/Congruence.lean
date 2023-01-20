@@ -1334,6 +1334,7 @@ Case conversion may be inaccurate. Consider using '#align con.ker_lift_mk Con.ke
 theorem kerLift_mk (x : M) : kerLift f x = f x :=
   rfl
 #align con.ker_lift_mk Con.kerLift_mk
+#align add_con.ker_lift_mk AddCon.kerLift_mk
 
 #print Con.kerLift_range_eq /-
 /-- Given a monoid homomorphism `f`, the induced homomorphism on the quotient by `f`'s kernel has
@@ -1344,6 +1345,7 @@ theorem kerLift_mk (x : M) : kerLift f x = f x :=
 theorem kerLift_range_eq : (kerLift f).mrange = f.mrange :=
   lift_range fun _ _ => id
 #align con.ker_lift_range_eq Con.kerLift_range_eq
+#align add_con.ker_lift_range_eq AddCon.kerLift_range_eq
 -/
 
 /- warning: con.ker_lift_injective -> Con.kerLift_injective is a dubious translation:
@@ -1358,6 +1360,7 @@ Case conversion may be inaccurate. Consider using '#align con.ker_lift_injective
 theorem kerLift_injective (f : M →* P) : Injective (kerLift f) := fun x y =>
   Quotient.inductionOn₂' x y fun _ _ => (ker f).Eq.2
 #align con.ker_lift_injective Con.kerLift_injective
+#align add_con.ker_lift_injective AddCon.kerLift_injective
 
 /- warning: con.map -> Con.map is a dubious translation:
 lean 3 declaration is
@@ -1739,7 +1742,7 @@ def liftOnUnits (u : Units c.Quotient) (f : ∀ x y : M, c (x * y) 1 → c (y * 
   rintro Hxy Hxy' -
   ext1; · rw [c.eq.2 hx, c.eq.2 hy]
   rintro Hyx Hyx' -
-  exact heq_of_eq (Hf _ _ _ _ _ _ _ _ hx hy)
+  exact hEq_of_eq (Hf _ _ _ _ _ _ _ _ hx hy)
 #align con.lift_on_units Con.liftOnUnits
 #align add_con.lift_on_add_units AddCon.liftOnAddUnits
 

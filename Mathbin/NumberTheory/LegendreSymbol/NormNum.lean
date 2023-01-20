@@ -93,9 +93,9 @@ theorem jacobiSymNat.one_left_odd (b : ℕ) : jacobiSymNat 1 (bit1 b) = 1 := by
 #align norm_num.jacobi_sym_nat.one_left_odd NormNum.jacobiSymNat.one_left_odd
 
 /-- Turn a Legendre symbol into a Jacobi symbol. -/
-theorem LegendreSym.to_jacobi_sym (p : ℕ) (pp : Fact p.Prime) (a r : ℤ) (hr : jacobiSym a p = r) :
-    legendreSym p a = r := by rwa [@legendreSym.to_jacobi_sym p pp a]
-#align norm_num.legendre_sym.to_jacobi_sym NormNum.LegendreSym.to_jacobi_sym
+theorem LegendreSym.to_jacobiSym (p : ℕ) (pp : Fact p.Prime) (a r : ℤ) (hr : jacobiSym a p = r) :
+    legendreSym p a = r := by rwa [@legendreSym.to_jacobiSym p pp a]
+#align norm_num.legendre_sym.to_jacobi_sym NormNum.LegendreSym.to_jacobiSym
 
 /-- The value depends only on the residue class of `a` mod `b`. -/
 theorem JacobiSym.mod_left (a : ℤ) (b ab' : ℕ) (ab r b' : ℤ) (hb' : (b : ℤ) = b')
@@ -125,7 +125,7 @@ theorem jacobiSymNat.odd_even (a b : ℕ) (r : ℤ) (hr : jacobiSymNat (bit1 a) 
     jacobiSymNat (bit1 a) (bit0 b) = r :=
   by
   have ha : legendreSym 2 (bit1 a) = 1 := by
-    simp only [legendreSym, quadratic_char_apply, quadratic_char_fun_one, Int.cast_bit1,
+    simp only [legendreSym, quadraticChar_apply, quadraticCharFun_one, Int.cast_bit1,
       CharTwo.bit1_eq_one, Pi.one_apply]
   cases' eq_or_ne b 0 with hb hb
   · rw [← hr, hb, jacobi_sym_nat.zero_right]
@@ -538,7 +538,7 @@ unsafe def eval_jacobi_sym : expr → tactic (expr × expr)
           q(ℤ)
     let nc ← mk_instance_cache q(ℕ)
     let (zc, nc, er, pf) ← norm_num.prove_jacobi_sym zc nc ea ep
-    pure (er, q(NormNum.LegendreSym.to_jacobi_sym).mk_app [ep, inst, ea, er, pf])
+    pure (er, q(NormNum.LegendreSym.to_jacobiSym).mk_app [ep, inst, ea, er, pf])
   | _ => failed
 #align tactic.norm_num.eval_jacobi_sym tactic.norm_num.eval_jacobi_sym
 

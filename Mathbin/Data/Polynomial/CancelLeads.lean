@@ -48,11 +48,11 @@ def cancelLeads : R[X] :=
 variable {p q}
 
 @[simp]
-theorem neg_cancel_leads : -p.cancelLeads q = q.cancelLeads p :=
+theorem neg_cancelLeads : -p.cancelLeads q = q.cancelLeads p :=
   neg_sub _ _
-#align polynomial.neg_cancel_leads Polynomial.neg_cancel_leads
+#align polynomial.neg_cancel_leads Polynomial.neg_cancelLeads
 
-theorem nat_degree_cancel_leads_lt_of_nat_degree_le_nat_degree_of_comm
+theorem natDegree_cancelLeads_lt_of_natDegree_le_natDegree_of_comm
     (comm : p.leadingCoeff * q.leadingCoeff = q.leadingCoeff * p.leadingCoeff)
     (h : p.natDegree ≤ q.natDegree) (hq : 0 < q.natDegree) :
     (p.cancelLeads q).natDegree < q.natDegree :=
@@ -73,7 +73,7 @@ theorem nat_degree_cancel_leads_lt_of_nat_degree_le_nat_degree_of_comm
     simp only [coeff_mul_X_pow, coeff_neg, coeff_C_mul, add_tsub_cancel_left, coeff_add]
     rw [add_comm p.nat_degree, tsub_add_cancel_of_le h, ← leading_coeff, ← leading_coeff, comm,
       add_right_neg]
-#align polynomial.nat_degree_cancel_leads_lt_of_nat_degree_le_nat_degree_of_comm Polynomial.nat_degree_cancel_leads_lt_of_nat_degree_le_nat_degree_of_comm
+#align polynomial.nat_degree_cancel_leads_lt_of_nat_degree_le_nat_degree_of_comm Polynomial.natDegree_cancelLeads_lt_of_natDegree_le_natDegree_of_comm
 
 end Ring
 
@@ -81,14 +81,14 @@ section CommRing
 
 variable [CommRing R] {p q : R[X]}
 
-theorem dvd_cancel_leads_of_dvd_of_dvd {r : R[X]} (pq : p ∣ q) (pr : p ∣ r) : p ∣ q.cancelLeads r :=
+theorem dvd_cancelLeads_of_dvd_of_dvd {r : R[X]} (pq : p ∣ q) (pr : p ∣ r) : p ∣ q.cancelLeads r :=
   dvd_sub (pr.trans (Dvd.intro_left _ rfl)) (pq.trans (Dvd.intro_left _ rfl))
-#align polynomial.dvd_cancel_leads_of_dvd_of_dvd Polynomial.dvd_cancel_leads_of_dvd_of_dvd
+#align polynomial.dvd_cancel_leads_of_dvd_of_dvd Polynomial.dvd_cancelLeads_of_dvd_of_dvd
 
-theorem nat_degree_cancel_leads_lt_of_nat_degree_le_nat_degree (h : p.natDegree ≤ q.natDegree)
+theorem natDegree_cancelLeads_lt_of_natDegree_le_natDegree (h : p.natDegree ≤ q.natDegree)
     (hq : 0 < q.natDegree) : (p.cancelLeads q).natDegree < q.natDegree :=
-  nat_degree_cancel_leads_lt_of_nat_degree_le_nat_degree_of_comm (mul_comm _ _) h hq
-#align polynomial.nat_degree_cancel_leads_lt_of_nat_degree_le_nat_degree Polynomial.nat_degree_cancel_leads_lt_of_nat_degree_le_nat_degree
+  natDegree_cancelLeads_lt_of_natDegree_le_natDegree_of_comm (mul_comm _ _) h hq
+#align polynomial.nat_degree_cancel_leads_lt_of_nat_degree_le_nat_degree Polynomial.natDegree_cancelLeads_lt_of_natDegree_le_natDegree
 
 end CommRing
 

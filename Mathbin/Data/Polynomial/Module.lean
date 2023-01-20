@@ -107,15 +107,15 @@ noncomputable instance polynomialModule : Module R[X] (PolynomialModule R M) :=
 
 instance (M : Type u) [AddCommGroup M] [Module R M] [Module S M] [IsScalarTower S R M] :
     IsScalarTower S R (PolynomialModule R M) :=
-  Finsupp.is_scalar_tower _ _
+  Finsupp.isScalarTower _ _
 
 instance is_scalar_tower' (M : Type u) [AddCommGroup M] [Module R M] [Module S M]
     [IsScalarTower S R M] : IsScalarTower S R[X] (PolynomialModule R M) :=
   by
-  haveI : IsScalarTower R R[X] (PolynomialModule R M) := modulePolynomialOfEndo.is_scalar_tower _
+  haveI : IsScalarTower R R[X] (PolynomialModule R M) := modulePolynomialOfEndo.isScalarTower _
   constructor
   intro x y z
-  rw [← @IsScalarTower.algebra_map_smul S R, ← @IsScalarTower.algebra_map_smul S R, smul_assoc]
+  rw [← @IsScalarTower.algebraMap_smul S R, ← @IsScalarTower.algebraMap_smul S R, smul_assoc]
 #align polynomial_module.is_scalar_tower' PolynomialModule.is_scalar_tower'
 
 @[simp]
@@ -123,14 +123,14 @@ theorem monomial_smul_single (i : ℕ) (r : R) (j : ℕ) (m : M) :
     monomial i r • single R j m = single R (i + j) (r • m) :=
   by
   simp only [LinearMap.mul_apply, Polynomial.aeval_monomial, LinearMap.pow_apply,
-    Module.algebra_map_End_apply, module_polynomial_of_endo_smul_def]
+    Module.algebraMap_endCat_apply, modulePolynomialOfEndo_smul_def]
   induction i generalizing r j m
   · simp [single]
   · rw [Function.iterate_succ, Function.comp_apply, Nat.succ_eq_add_one, add_assoc, ← i_ih]
     congr 2
     ext a
     dsimp [single]
-    rw [Finsupp.map_domain_single, Nat.succ_eq_one_add]
+    rw [Finsupp.mapDomain_single, Nat.succ_eq_one_add]
 #align polynomial_module.monomial_smul_single PolynomialModule.monomial_smul_single
 
 @[simp]
@@ -194,8 +194,8 @@ noncomputable def equivPolynomialSelf : PolynomialModule R R ≃ₗ[R[X]] R[X] :
       · simp_all only [add_smul, map_add, [anonymous]]
       · ext i
         dsimp
-        rw [monomial_smul_apply, ← Polynomial.C_mul_X_pow_eq_monomial, mul_assoc,
-          Polynomial.coeff_C_mul, Polynomial.coeff_X_pow_mul', mul_ite, mul_zero]
+        rw [monomial_smul_apply, ← Polynomial.c_mul_x_pow_eq_monomial, mul_assoc,
+          Polynomial.coeff_c_mul, Polynomial.coeff_x_pow_mul', mul_ite, mul_zero]
         simp }
 #align polynomial_module.equiv_polynomial_self PolynomialModule.equivPolynomialSelf
 
@@ -216,7 +216,7 @@ noncomputable def map (f : M →ₗ[R] M') : PolynomialModule R M →ₗ[R] Poly
 
 @[simp]
 theorem map_single (f : M →ₗ[R] M') (i : ℕ) (m : M) : map R' f (single R i m) = single R' i (f m) :=
-  Finsupp.map_range_single
+  Finsupp.mapRange_single
 #align polynomial_module.map_single PolynomialModule.map_single
 
 theorem map_smul (f : M →ₗ[R] M') (p : R[X]) (q : PolynomialModule R M) :
@@ -232,7 +232,7 @@ theorem map_smul (f : M →ₗ[R] M') (p : R[X]) (q : PolynomialModule R M) :
     rw [add_smul, map_add, e₁, e₂, Polynomial.map_add, add_smul]
   · intro j s
     rw [monomial_smul_single, map_single, Polynomial.map_monomial, map_single, monomial_smul_single,
-      f.map_smul, algebra_map_smul]
+      f.map_smul, algebraMap_smul]
 #align polynomial_module.map_smul PolynomialModule.map_smul
 
 /-- Evaulate a polynomial `p : polynomial_module R M` at `r : R`. -/
@@ -283,7 +283,7 @@ theorem eval_map (f : M →ₗ[R] M') (q : PolynomialModule R M) (r : R) :
   · intro f g e₁ e₂
     simp_rw [map_add, e₁, e₂]
   · intro i m
-    rw [map_single, eval_single, eval_single, f.map_smul, ← map_pow, algebra_map_smul]
+    rw [map_single, eval_single, eval_single, f.map_smul, ← map_pow, algebraMap_smul]
 #align polynomial_module.eval_map PolynomialModule.eval_map
 
 @[simp]

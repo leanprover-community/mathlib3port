@@ -63,9 +63,9 @@ def mapLinearMap {X Y : C} : (X ⟶ Y) →ₗ[R] F.obj X ⟶ F.obj Y :=
   { F.mapAddHom with map_smul' := fun r f => F.map_smul r f }
 #align category_theory.functor.map_linear_map CategoryTheory.Functor.mapLinearMap
 
-theorem coe_map_linear_map {X Y : C} : ⇑(F.mapLinearMap R : (X ⟶ Y) →ₗ[R] _) = @map C _ D _ F X Y :=
+theorem coe_mapLinearMap {X Y : C} : ⇑(F.mapLinearMap R : (X ⟶ Y) →ₗ[R] _) = @map C _ D _ F X Y :=
   rfl
-#align category_theory.functor.coe_map_linear_map CategoryTheory.Functor.coe_map_linear_map
+#align category_theory.functor.coe_map_linear_map CategoryTheory.Functor.coe_mapLinearMap
 
 end
 

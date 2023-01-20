@@ -101,9 +101,9 @@ def dualEquiv : CompleteLatticeCat ≌ CompleteLatticeCat :=
 
 end CompleteLatticeCat
 
-theorem CompleteLattice_dual_comp_forget_to_BoundedLattice :
+theorem completeLatticeCat_dual_comp_forget_to_boundedLatticeCat :
     CompleteLatticeCat.dual ⋙ forget₂ CompleteLatticeCat BoundedLatticeCat =
       forget₂ CompleteLatticeCat BoundedLatticeCat ⋙ BoundedLatticeCat.dual :=
   rfl
-#align CompleteLattice_dual_comp_forget_to_BoundedLattice CompleteLattice_dual_comp_forget_to_BoundedLattice
+#align CompleteLattice_dual_comp_forget_to_BoundedLattice completeLatticeCat_dual_comp_forget_to_boundedLatticeCat
 

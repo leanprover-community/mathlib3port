@@ -109,14 +109,14 @@ variable (q : ℕ) {f : F[X]} (hf : HasSeparableContraction q f)
 
 /-- Every irreducible polynomial can be contracted to a separable polynomial.
 https://stacks.math.columbia.edu/tag/09H0 -/
-theorem Irreducible.has_separable_contraction (q : ℕ) [hF : ExpChar F q] (f : F[X])
+theorem Irreducible.hasSeparableContraction (q : ℕ) [hF : ExpChar F q] (f : F[X])
     (irred : Irreducible f) : HasSeparableContraction q f :=
   by
   cases hF
   · exact ⟨f, irred.separable, ⟨0, by rw [pow_zero, expand_one]⟩⟩
   · rcases exists_separable_of_irreducible q irred ‹q.prime›.NeZero with ⟨n, g, hgs, hge⟩
     exact ⟨g, hgs, n, hge⟩
-#align irreducible.has_separable_contraction Irreducible.has_separable_contraction
+#align irreducible.has_separable_contraction Irreducible.hasSeparableContraction
 
 /-- If two expansions (along the positive characteristic) of two separable polynomials `g` and `g'`
 agree, then they have the same degree. -/

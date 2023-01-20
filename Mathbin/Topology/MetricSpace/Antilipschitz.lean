@@ -52,26 +52,26 @@ section Metric
 
 variable [PseudoMetricSpace α] [PseudoMetricSpace β] {K : ℝ≥0} {f : α → β}
 
-theorem antilipschitz_with_iff_le_mul_nndist :
+theorem antilipschitzWith_iff_le_mul_nndist :
     AntilipschitzWith K f ↔ ∀ x y, nndist x y ≤ K * nndist (f x) (f y) :=
   by
   simp only [AntilipschitzWith, edist_nndist]
   norm_cast
-#align antilipschitz_with_iff_le_mul_nndist antilipschitz_with_iff_le_mul_nndist
+#align antilipschitz_with_iff_le_mul_nndist antilipschitzWith_iff_le_mul_nndist
 
-alias antilipschitz_with_iff_le_mul_nndist ↔
+alias antilipschitzWith_iff_le_mul_nndist ↔
   AntilipschitzWith.le_mul_nndist AntilipschitzWith.of_le_mul_nndist
 #align antilipschitz_with.le_mul_nndist AntilipschitzWith.le_mul_nndist
 #align antilipschitz_with.of_le_mul_nndist AntilipschitzWith.of_le_mul_nndist
 
-theorem antilipschitz_with_iff_le_mul_dist :
+theorem antilipschitzWith_iff_le_mul_dist :
     AntilipschitzWith K f ↔ ∀ x y, dist x y ≤ K * dist (f x) (f y) :=
   by
-  simp only [antilipschitz_with_iff_le_mul_nndist, dist_nndist]
+  simp only [antilipschitzWith_iff_le_mul_nndist, dist_nndist]
   norm_cast
-#align antilipschitz_with_iff_le_mul_dist antilipschitz_with_iff_le_mul_dist
+#align antilipschitz_with_iff_le_mul_dist antilipschitzWith_iff_le_mul_dist
 
-alias antilipschitz_with_iff_le_mul_dist ↔
+alias antilipschitzWith_iff_le_mul_dist ↔
   AntilipschitzWith.le_mul_dist AntilipschitzWith.of_le_mul_dist
 #align antilipschitz_with.le_mul_dist AntilipschitzWith.le_mul_dist
 #align antilipschitz_with.of_le_mul_dist AntilipschitzWith.of_le_mul_dist
@@ -144,9 +144,9 @@ theorem restrict (hf : AntilipschitzWith K f) (s : Set α) : AntilipschitzWith K
   fun x y => hf x y
 #align antilipschitz_with.restrict AntilipschitzWith.restrict
 
-theorem cod_restrict (hf : AntilipschitzWith K f) {s : Set β} (hs : ∀ x, f x ∈ s) :
+theorem codRestrict (hf : AntilipschitzWith K f) {s : Set β} (hs : ∀ x, f x ∈ s) :
     AntilipschitzWith K (s.codRestrict f hs) := fun x y => hf x y
-#align antilipschitz_with.cod_restrict AntilipschitzWith.cod_restrict
+#align antilipschitz_with.cod_restrict AntilipschitzWith.codRestrict
 
 theorem to_right_inv_on' {s : Set α} (hf : AntilipschitzWith K (s.restrict f)) {g : β → α}
     {t : Set β} (g_maps : MapsTo g t s) (g_inv : RightInvOn g f t) :
@@ -155,17 +155,17 @@ theorem to_right_inv_on' {s : Set α} (hf : AntilipschitzWith K (s.restrict f)) 
     hf ⟨g x, g_maps x.mem⟩ ⟨g y, g_maps y.mem⟩
 #align antilipschitz_with.to_right_inv_on' AntilipschitzWith.to_right_inv_on'
 
-theorem to_right_inv_on (hf : AntilipschitzWith K f) {g : β → α} {t : Set β}
-    (h : RightInvOn g f t) : LipschitzWith K (t.restrict g) :=
+theorem to_rightInvOn (hf : AntilipschitzWith K f) {g : β → α} {t : Set β} (h : RightInvOn g f t) :
+    LipschitzWith K (t.restrict g) :=
   (hf.restrict univ).to_right_inv_on' (mapsTo_univ g t) h
-#align antilipschitz_with.to_right_inv_on AntilipschitzWith.to_right_inv_on
+#align antilipschitz_with.to_right_inv_on AntilipschitzWith.to_rightInvOn
 
-theorem to_right_inverse (hf : AntilipschitzWith K f) {g : β → α} (hg : Function.RightInverse g f) :
+theorem to_rightInverse (hf : AntilipschitzWith K f) {g : β → α} (hg : Function.RightInverse g f) :
     LipschitzWith K g := by
   intro x y
   have := hf (g x) (g y)
   rwa [hg x, hg y] at this
-#align antilipschitz_with.to_right_inverse AntilipschitzWith.to_right_inverse
+#align antilipschitz_with.to_right_inverse AntilipschitzWith.to_rightInverse
 
 theorem comap_uniformity_le (hf : AntilipschitzWith K f) : (𝓤 β).comap (Prod.map f f) ≤ 𝓤 α :=
   by
@@ -177,33 +177,33 @@ theorem comap_uniformity_le (hf : AntilipschitzWith K f) : (𝓤 β).comap (Prod
   exact Ennreal.mul_lt_of_lt_div hx
 #align antilipschitz_with.comap_uniformity_le AntilipschitzWith.comap_uniformity_le
 
-protected theorem uniform_inducing (hf : AntilipschitzWith K f) (hfc : UniformContinuous f) :
+protected theorem uniformInducing (hf : AntilipschitzWith K f) (hfc : UniformContinuous f) :
     UniformInducing f :=
   ⟨le_antisymm hf.comap_uniformity_le hfc.le_comap⟩
-#align antilipschitz_with.uniform_inducing AntilipschitzWith.uniform_inducing
+#align antilipschitz_with.uniform_inducing AntilipschitzWith.uniformInducing
 
-protected theorem uniform_embedding {α : Type _} {β : Type _} [EmetricSpace α]
-    [PseudoEmetricSpace β] {K : ℝ≥0} {f : α → β} (hf : AntilipschitzWith K f)
-    (hfc : UniformContinuous f) : UniformEmbedding f :=
+protected theorem uniformEmbedding {α : Type _} {β : Type _} [EmetricSpace α] [PseudoEmetricSpace β]
+    {K : ℝ≥0} {f : α → β} (hf : AntilipschitzWith K f) (hfc : UniformContinuous f) :
+    UniformEmbedding f :=
   ⟨hf.UniformInducing hfc, hf.Injective⟩
-#align antilipschitz_with.uniform_embedding AntilipschitzWith.uniform_embedding
+#align antilipschitz_with.uniform_embedding AntilipschitzWith.uniformEmbedding
 
-theorem is_complete_range [CompleteSpace α] (hf : AntilipschitzWith K f)
+theorem isComplete_range [CompleteSpace α] (hf : AntilipschitzWith K f)
     (hfc : UniformContinuous f) : IsComplete (range f) :=
   (hf.UniformInducing hfc).is_complete_range
-#align antilipschitz_with.is_complete_range AntilipschitzWith.is_complete_range
+#align antilipschitz_with.is_complete_range AntilipschitzWith.isComplete_range
 
-theorem is_closed_range {α β : Type _} [PseudoEmetricSpace α] [EmetricSpace β] [CompleteSpace α]
+theorem isClosed_range {α β : Type _} [PseudoEmetricSpace α] [EmetricSpace β] [CompleteSpace α]
     {f : α → β} {K : ℝ≥0} (hf : AntilipschitzWith K f) (hfc : UniformContinuous f) :
     IsClosed (range f) :=
   (hf.is_complete_range hfc).IsClosed
-#align antilipschitz_with.is_closed_range AntilipschitzWith.is_closed_range
+#align antilipschitz_with.is_closed_range AntilipschitzWith.isClosed_range
 
-theorem closed_embedding {α : Type _} {β : Type _} [EmetricSpace α] [EmetricSpace β] {K : ℝ≥0}
+theorem closedEmbedding {α : Type _} {β : Type _} [EmetricSpace α] [EmetricSpace β] {K : ℝ≥0}
     {f : α → β} [CompleteSpace α] (hf : AntilipschitzWith K f) (hfc : UniformContinuous f) :
     ClosedEmbedding f :=
   { (hf.UniformEmbedding hfc).Embedding with closed_range := hf.is_closed_range hfc }
-#align antilipschitz_with.closed_embedding AntilipschitzWith.closed_embedding
+#align antilipschitz_with.closed_embedding AntilipschitzWith.closedEmbedding
 
 theorem subtype_coe (s : Set α) : AntilipschitzWith 1 (coe : s → α) :=
   AntilipschitzWith.id.restrict s
@@ -238,27 +238,27 @@ theorem bounded_preimage (hf : AntilipschitzWith K f) {s : Set β} (hs : Bounded
 
 theorem tendsto_cobounded (hf : AntilipschitzWith K f) : Tendsto f (cobounded α) (cobounded β) :=
   compl_surjective.forall.2 fun s (hs : IsBounded s) =>
-    Metric.is_bounded_iff.2 <| hf.bounded_preimage <| Metric.is_bounded_iff.1 hs
+    Metric.isBounded_iff.2 <| hf.bounded_preimage <| Metric.isBounded_iff.1 hs
 #align antilipschitz_with.tendsto_cobounded AntilipschitzWith.tendsto_cobounded
 
 /-- The image of a proper space under an expanding onto map is proper. -/
-protected theorem proper_space {α : Type _} [MetricSpace α] {K : ℝ≥0} {f : α → β} [ProperSpace α]
+protected theorem properSpace {α : Type _} [MetricSpace α] {K : ℝ≥0} {f : α → β} [ProperSpace α]
     (hK : AntilipschitzWith K f) (f_cont : Continuous f) (hf : Function.Surjective f) :
     ProperSpace β :=
   by
-  apply proper_space_of_compact_closed_ball_of_le 0 fun x₀ r hr => _
+  apply properSpace_of_compact_closedBall_of_le 0 fun x₀ r hr => _
   let K := f ⁻¹' closed_ball x₀ r
   have A : IsClosed K := is_closed_ball.preimage f_cont
   have B : bounded K := hK.bounded_preimage bounded_closed_ball
   have : IsCompact K := is_compact_iff_is_closed_bounded.2 ⟨A, B⟩
   convert this.image f_cont
   exact (hf.image_preimage _).symm
-#align antilipschitz_with.proper_space AntilipschitzWith.proper_space
+#align antilipschitz_with.proper_space AntilipschitzWith.properSpace
 
 end AntilipschitzWith
 
-theorem LipschitzWith.to_right_inverse [PseudoEmetricSpace α] [PseudoEmetricSpace β] {K : ℝ≥0}
+theorem LipschitzWith.to_rightInverse [PseudoEmetricSpace α] [PseudoEmetricSpace β] {K : ℝ≥0}
     {f : α → β} (hf : LipschitzWith K f) {g : β → α} (hg : Function.RightInverse g f) :
     AntilipschitzWith K g := fun x y => by simpa only [hg _] using hf (g x) (g y)
-#align lipschitz_with.to_right_inverse LipschitzWith.to_right_inverse
+#align lipschitz_with.to_right_inverse LipschitzWith.to_rightInverse
 

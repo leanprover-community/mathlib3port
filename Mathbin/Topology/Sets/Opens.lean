@@ -92,7 +92,7 @@ instance : PartialOrder (Opens α) :=
 
 /-- The interior of a set, as an element of `opens`. -/
 def interior (s : Set α) : Opens α :=
-  ⟨interior s, is_open_interior⟩
+  ⟨interior s, isOpen_interior⟩
 #align topological_space.opens.interior TopologicalSpace.Opens.interior
 
 theorem gc : GaloisConnection (coe : Opens α → Set α) interior := fun U s =>
@@ -104,7 +104,7 @@ open OrderDual (ofDual toDual)
 /-- The galois coinsertion between sets and opens. -/
 def gi : GaloisCoinsertion Subtype.val (@interior α _)
     where
-  choice s hs := ⟨s, interior_eq_iff_is_open.mp <| le_antisymm interior_subset hs⟩
+  choice s hs := ⟨s, interior_eq_iff_isOpen.mp <| le_antisymm interior_subset hs⟩
   gc := gc
   u_l_le _ := interior_subset
   choice_eq s hs := le_antisymm hs interior_subset
@@ -115,9 +115,9 @@ instance : CompleteLattice (Opens α) :=
     (-- le
     fun U V => U ⊆ V)
     rfl-- top
-    ⟨univ, is_open_univ⟩
+    ⟨univ, isOpen_univ⟩
     (ext interior_univ.symm)-- bot
-    ⟨∅, is_open_empty⟩
+    ⟨∅, isOpen_empty⟩
     rfl
     (-- sup
     fun U V => ⟨↑U ∪ ↑V, U.2.union V.2⟩)
@@ -126,7 +126,7 @@ instance : CompleteLattice (Opens α) :=
     fun U V => ⟨↑U ∩ ↑V, U.2.inter V.2⟩)
     (funext fun U => funext fun V => ext (U.2.inter V.2).interior_eq.symm)
     (-- Sup
-    fun S => ⟨⋃ s ∈ S, ↑s, is_open_bUnion fun s _ => s.2⟩)
+    fun S => ⟨⋃ s ∈ S, ↑s, isOpen_bUnion fun s _ => s.2⟩)
     (funext fun S => ext supₛ_image.symm)-- Inf
     _
     rfl
@@ -162,9 +162,9 @@ theorem coe_top : ((⊤ : Opens α) : Set α) = Set.univ :=
 #align topological_space.opens.coe_top TopologicalSpace.Opens.coe_top
 
 @[simp, norm_cast]
-theorem coe_Sup {S : Set (Opens α)} : (↑(supₛ S) : Set α) = ⋃ i ∈ S, ↑i :=
+theorem coe_supₛ {S : Set (Opens α)} : (↑(supₛ S) : Set α) = ⋃ i ∈ S, ↑i :=
   rfl
-#align topological_space.opens.coe_Sup TopologicalSpace.Opens.coe_Sup
+#align topological_space.opens.coe_Sup TopologicalSpace.Opens.coe_supₛ
 
 @[simp, norm_cast]
 theorem coe_finset_sup (f : ι → Opens α) (s : Finset ι) : (↑(s.sup f) : Set α) = s.sup (coe ∘ f) :=
@@ -203,37 +203,37 @@ theorem empty_eq : (∅ : Opens α) = ⊥ :=
   rfl
 #align topological_space.opens.empty_eq TopologicalSpace.Opens.empty_eq
 
-theorem supr_def {ι} (s : ι → Opens α) : (⨆ i, s i) = ⟨⋃ i, s i, is_open_Union fun i => (s i).2⟩ :=
+theorem supᵢ_def {ι} (s : ι → Opens α) : (⨆ i, s i) = ⟨⋃ i, s i, isOpen_unionᵢ fun i => (s i).2⟩ :=
   by
   ext
   simp only [supᵢ, coe_Sup, bUnion_range]
   rfl
-#align topological_space.opens.supr_def TopologicalSpace.Opens.supr_def
+#align topological_space.opens.supr_def TopologicalSpace.Opens.supᵢ_def
 
 @[simp]
-theorem supr_mk {ι} (s : ι → Set α) (h : ∀ i, IsOpen (s i)) :
-    (⨆ i, ⟨s i, h i⟩ : Opens α) = ⟨⋃ i, s i, is_open_Union h⟩ :=
+theorem supᵢ_mk {ι} (s : ι → Set α) (h : ∀ i, IsOpen (s i)) :
+    (⨆ i, ⟨s i, h i⟩ : Opens α) = ⟨⋃ i, s i, isOpen_unionᵢ h⟩ :=
   by
   rw [supr_def]
   simp
-#align topological_space.opens.supr_mk TopologicalSpace.Opens.supr_mk
+#align topological_space.opens.supr_mk TopologicalSpace.Opens.supᵢ_mk
 
 @[simp, norm_cast]
-theorem coe_supr {ι} (s : ι → Opens α) : ((⨆ i, s i : Opens α) : Set α) = ⋃ i, s i := by
+theorem coe_supᵢ {ι} (s : ι → Opens α) : ((⨆ i, s i : Opens α) : Set α) = ⋃ i, s i := by
   simp [supr_def]
-#align topological_space.opens.coe_supr TopologicalSpace.Opens.coe_supr
+#align topological_space.opens.coe_supr TopologicalSpace.Opens.coe_supᵢ
 
 @[simp]
-theorem mem_supr {ι} {x : α} {s : ι → Opens α} : x ∈ supᵢ s ↔ ∃ i, x ∈ s i :=
+theorem mem_supᵢ {ι} {x : α} {s : ι → Opens α} : x ∈ supᵢ s ↔ ∃ i, x ∈ s i :=
   by
   rw [← mem_coe]
   simp
-#align topological_space.opens.mem_supr TopologicalSpace.Opens.mem_supr
+#align topological_space.opens.mem_supr TopologicalSpace.Opens.mem_supᵢ
 
 @[simp]
-theorem mem_Sup {Us : Set (Opens α)} {x : α} : x ∈ supₛ Us ↔ ∃ u ∈ Us, x ∈ u := by
+theorem mem_supₛ {Us : Set (Opens α)} {x : α} : x ∈ supₛ Us ↔ ∃ u ∈ Us, x ∈ u := by
   simp_rw [supₛ_eq_supᵢ, mem_supr]
-#align topological_space.opens.mem_Sup TopologicalSpace.Opens.mem_Sup
+#align topological_space.opens.mem_Sup TopologicalSpace.Opens.mem_supₛ
 
 instance : Frame (Opens α) :=
   { Opens.completeLattice with
@@ -241,13 +241,13 @@ instance : Frame (Opens α) :=
     inf_Sup_le_supr_inf := fun a s =>
       (ext <| by simp only [coe_inf, coe_supr, coe_Sup, Set.inter_unionᵢ₂]).le }
 
-theorem open_embedding_of_le {U V : Opens α} (i : U ≤ V) : OpenEmbedding (Set.inclusion i) :=
+theorem openEmbedding_of_le {U V : Opens α} (i : U ≤ V) : OpenEmbedding (Set.inclusion i) :=
   { inj := Set.inclusion_injective i
     induced := (@induced_compose _ _ _ _ (Set.inclusion i) coe).symm
     open_range := by
       rw [Set.range_inclusion i]
       exact U.property.preimage continuous_subtype_val }
-#align topological_space.opens.open_embedding_of_le TopologicalSpace.Opens.open_embedding_of_le
+#align topological_space.opens.open_embedding_of_le TopologicalSpace.Opens.openEmbedding_of_le
 
 theorem not_nonempty_iff_eq_bot (U : Opens α) : ¬Set.Nonempty (U : Set α) ↔ U = ⊥ := by
   rw [← subtype.coe_injective.eq_iff, opens.coe_bot, ← Set.not_nonempty_iff_eq_empty]
@@ -270,7 +270,7 @@ def IsBasis (B : Set (Opens α)) : Prop :=
   IsTopologicalBasis ((coe : _ → Set α) '' B)
 #align topological_space.opens.is_basis TopologicalSpace.Opens.IsBasis
 
-theorem is_basis_iff_nbhd {B : Set (Opens α)} :
+theorem isBasis_iff_nbhd {B : Set (Opens α)} :
     IsBasis B ↔ ∀ {U : Opens α} {x}, x ∈ U → ∃ U' ∈ B, x ∈ U' ∧ U' ⊆ U :=
   by
   constructor <;> intro h
@@ -287,10 +287,10 @@ theorem is_basis_iff_nbhd {B : Set (Opens α)} :
     · intro x sU hx hsU
       rcases@h (⟨sU, hsU⟩ : opens α) x hx with ⟨V, hV, H⟩
       exact ⟨V, ⟨V, hV, rfl⟩, H⟩
-#align topological_space.opens.is_basis_iff_nbhd TopologicalSpace.Opens.is_basis_iff_nbhd
+#align topological_space.opens.is_basis_iff_nbhd TopologicalSpace.Opens.isBasis_iff_nbhd
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (Us «expr ⊆ » B) -/
-theorem is_basis_iff_cover {B : Set (Opens α)} :
+theorem isBasis_iff_cover {B : Set (Opens α)} :
     IsBasis B ↔ ∀ U : Opens α, ∃ (Us : _)(_ : Us ⊆ B), U = supₛ Us :=
   by
   constructor
@@ -306,26 +306,26 @@ theorem is_basis_iff_cover {B : Set (Opens α)} :
     rcases h U with ⟨Us, hUs, rfl⟩
     rcases mem_Sup.1 hx with ⟨U, Us, xU⟩
     exact ⟨U, hUs Us, xU, le_supₛ Us⟩
-#align topological_space.opens.is_basis_iff_cover TopologicalSpace.Opens.is_basis_iff_cover
+#align topological_space.opens.is_basis_iff_cover TopologicalSpace.Opens.isBasis_iff_cover
 
 /-- If `α` has a basis consisting of compact opens, then an open set in `α` is compact open iff
   it is a finite union of some elements in the basis -/
-theorem is_compact_open_iff_eq_finite_Union_of_is_basis {ι : Type _} (b : ι → Opens α)
+theorem isCompact_open_iff_eq_finite_unionᵢ_of_isBasis {ι : Type _} (b : ι → Opens α)
     (hb : Opens.IsBasis (Set.range b)) (hb' : ∀ i, IsCompact (b i : Set α)) (U : Set α) :
     IsCompact U ∧ IsOpen U ↔ ∃ s : Set ι, s.Finite ∧ U = ⋃ i ∈ s, b i :=
   by
-  apply is_compact_open_iff_eq_finite_Union_of_is_topological_basis fun i : ι => (b i).1
+  apply isCompact_open_iff_eq_finite_unionᵢ_of_isTopologicalBasis fun i : ι => (b i).1
   · convert hb
     ext
     simp
   · exact hb'
-#align topological_space.opens.is_compact_open_iff_eq_finite_Union_of_is_basis TopologicalSpace.Opens.is_compact_open_iff_eq_finite_Union_of_is_basis
+#align topological_space.opens.is_compact_open_iff_eq_finite_Union_of_is_basis TopologicalSpace.Opens.isCompact_open_iff_eq_finite_unionᵢ_of_isBasis
 
 @[simp]
-theorem is_compact_element_iff (s : Opens α) :
+theorem isCompactElement_iff (s : Opens α) :
     CompleteLattice.IsCompactElement s ↔ IsCompact (s : Set α) :=
   by
-  rw [is_compact_iff_finite_subcover, CompleteLattice.is_compact_element_iff]
+  rw [isCompact_iff_finite_subcover, CompleteLattice.isCompactElement_iff]
   refine' ⟨_, fun H ι U hU => _⟩
   · introv H hU hU'
     obtain ⟨t, ht⟩ := H ι (fun i => ⟨U i, hU i⟩) (by simpa)
@@ -338,7 +338,7 @@ theorem is_compact_element_iff (s : Opens α) :
     simp only [Set.unionᵢ_subset_iff]
     show ∀ i ∈ t, U i ≤ t.sup U
     exact fun i => Finset.le_sup
-#align topological_space.opens.is_compact_element_iff TopologicalSpace.Opens.is_compact_element_iff
+#align topological_space.opens.is_compact_element_iff TopologicalSpace.Opens.isCompactElement_iff
 
 /-- The preimage of an open set, as an open set. -/
 def comap (f : C(α, β)) : FrameHom (Opens β) (Opens α)
@@ -423,7 +423,7 @@ def OpenNhdsOf (x : α) : Type _ :=
 
 instance OpenNhdsOf.inhabited {α : Type _} [TopologicalSpace α] (x : α) :
     Inhabited (OpenNhdsOf x) :=
-  ⟨⟨Set.univ, is_open_univ, Set.mem_univ _⟩⟩
+  ⟨⟨Set.univ, isOpen_univ, Set.mem_univ _⟩⟩
 #align topological_space.open_nhds_of.inhabited TopologicalSpace.OpenNhdsOf.inhabited
 
 instance [Finite α] : Finite (Opens α) :=

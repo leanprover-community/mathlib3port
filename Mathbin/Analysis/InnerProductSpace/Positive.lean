@@ -57,9 +57,9 @@ def IsPositive (T : E →L[𝕜] E) : Prop :=
   IsSelfAdjoint T ∧ ∀ x, 0 ≤ T.reApplyInnerSelf x
 #align continuous_linear_map.is_positive ContinuousLinearMap.IsPositive
 
-theorem IsPositive.is_self_adjoint {T : E →L[𝕜] E} (hT : IsPositive T) : IsSelfAdjoint T :=
+theorem IsPositive.isSelfAdjoint {T : E →L[𝕜] E} (hT : IsPositive T) : IsSelfAdjoint T :=
   hT.1
-#align continuous_linear_map.is_positive.is_self_adjoint ContinuousLinearMap.IsPositive.is_self_adjoint
+#align continuous_linear_map.is_positive.is_self_adjoint ContinuousLinearMap.IsPositive.isSelfAdjoint
 
 theorem IsPositive.inner_nonneg_left {T : E →L[𝕜] E} (hT : IsPositive T) (x : E) :
     0 ≤ re ⟪T x, x⟫ :=
@@ -72,13 +72,13 @@ theorem IsPositive.inner_nonneg_right {T : E →L[𝕜] E} (hT : IsPositive T) (
 
 theorem isPositiveZero : IsPositive (0 : E →L[𝕜] E) :=
   by
-  refine' ⟨is_self_adjoint_zero _, fun x => _⟩
+  refine' ⟨isSelfAdjoint_zero _, fun x => _⟩
   change 0 ≤ re ⟪_, _⟫
   rw [zero_apply, inner_zero_left, ZeroHomClass.map_zero]
 #align continuous_linear_map.is_positive_zero ContinuousLinearMap.isPositiveZero
 
 theorem isPositiveOne : IsPositive (1 : E →L[𝕜] E) :=
-  ⟨is_self_adjoint_one _, fun x => inner_self_nonneg⟩
+  ⟨isSelfAdjoint_one _, fun x => inner_self_nonneg⟩
 #align continuous_linear_map.is_positive_one ContinuousLinearMap.isPositiveOne
 
 theorem IsPositive.add {T S : E →L[𝕜] E} (hT : T.IsPositive) (hS : S.IsPositive) :
@@ -109,7 +109,7 @@ theorem IsPositive.conjOrthogonalProjection (U : Submodule 𝕜 E) {T : E →L[�
         orthogonalProjection U ∘L T ∘L U.subtypeL ∘L orthogonalProjection U).IsPositive :=
   by
   have := hT.conj_adjoint (U.subtypeL ∘L orthogonalProjection U)
-  rwa [(orthogonal_projection_is_self_adjoint U).adjoint_eq] at this
+  rwa [(orthogonalProjection_isSelfAdjoint U).adjoint_eq] at this
 #align continuous_linear_map.is_positive.conj_orthogonal_projection ContinuousLinearMap.IsPositive.conjOrthogonalProjection
 
 theorem IsPositive.orthogonalProjectionComp {T : E →L[𝕜] E} (hT : T.IsPositive) (U : Submodule 𝕜 E)
@@ -123,13 +123,13 @@ section Complex
 
 variable {E' : Type _} [InnerProductSpace ℂ E'] [CompleteSpace E']
 
-theorem is_positive_iff_complex (T : E' →L[ℂ] E') :
+theorem isPositive_iff_complex (T : E' →L[ℂ] E') :
     IsPositive T ↔ ∀ x, (re ⟪T x, x⟫_ℂ : ℂ) = ⟪T x, x⟫_ℂ ∧ 0 ≤ re ⟪T x, x⟫_ℂ :=
   by
   simp_rw [is_positive, forall_and, is_self_adjoint_iff_is_symmetric,
-    LinearMap.is_symmetric_iff_inner_map_self_real, eq_conj_iff_re]
+    LinearMap.isSymmetric_iff_inner_map_self_real, eq_conj_iff_re]
   rfl
-#align continuous_linear_map.is_positive_iff_complex ContinuousLinearMap.is_positive_iff_complex
+#align continuous_linear_map.is_positive_iff_complex ContinuousLinearMap.isPositive_iff_complex
 
 end Complex
 

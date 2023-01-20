@@ -30,11 +30,11 @@ would result in less delta-reduced statements.
 -/
 
 
-alias heq_iff_eq ↔ HEq.eq Eq.heq
+alias hEq_iff_eq ↔ HEq.eq Eq.hEq
 #align heq.eq HEq.eq
-#align eq.heq Eq.heq
+#align eq.heq Eq.hEq
 
-attribute [protected] HEq.eq Eq.heq
+attribute [protected] HEq.eq Eq.hEq
 
 alias ne_of_eq_of_ne ← Eq.trans_ne
 #align eq.trans_ne Eq.trans_ne

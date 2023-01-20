@@ -90,9 +90,9 @@ def dualEquiv : LinearOrderCat ≌ LinearOrderCat :=
 
 end LinearOrderCat
 
-theorem LinearOrder_dual_comp_forget_to_Lattice :
+theorem linearOrderCat_dual_comp_forget_to_latticeCat :
     LinearOrderCat.dual ⋙ forget₂ LinearOrderCat LatticeCat =
       forget₂ LinearOrderCat LatticeCat ⋙ LatticeCat.dual :=
   rfl
-#align LinearOrder_dual_comp_forget_to_Lattice LinearOrder_dual_comp_forget_to_Lattice
+#align LinearOrder_dual_comp_forget_to_Lattice linearOrderCat_dual_comp_forget_to_latticeCat
 

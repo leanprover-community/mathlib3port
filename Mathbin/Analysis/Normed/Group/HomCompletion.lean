@@ -74,7 +74,7 @@ def NormedAddGroupHom.completion (f : NormedAddGroupHom G H) :
       apply completion.induction_on y
       ·
         exact
-          is_closed_le
+          isClosed_le
             (continuous_norm.comp <| f.to_add_monoid_hom.continuous_completion f.continuous)
             (continuous_const.mul continuous_norm)
       · intro x
@@ -132,8 +132,8 @@ theorem NormedAddGroupHom.completion_comp (f : NormedAddGroupHom G H) (g : Norme
   ext x
   rw [NormedAddGroupHom.coe_comp, NormedAddGroupHom.completion_def,
     NormedAddGroupHom.completion_coe_to_fun, NormedAddGroupHom.completion_coe_to_fun,
-    completion.map_comp (NormedAddGroupHom.uniform_continuous _)
-      (NormedAddGroupHom.uniform_continuous _)]
+    completion.map_comp (NormedAddGroupHom.uniformContinuous _)
+      (NormedAddGroupHom.uniformContinuous _)]
   rfl
 #align normed_add_group_hom.completion_comp NormedAddGroupHom.completion_comp
 
@@ -167,22 +167,22 @@ def NormedAddCommGroup.toCompl : NormedAddGroupHom G (Completion G)
 
 open NormedAddCommGroup
 
-theorem NormedAddCommGroup.norm_to_compl (x : G) : ‖toCompl x‖ = ‖x‖ :=
+theorem NormedAddCommGroup.norm_toCompl (x : G) : ‖toCompl x‖ = ‖x‖ :=
   Completion.norm_coe x
-#align normed_add_comm_group.norm_to_compl NormedAddCommGroup.norm_to_compl
+#align normed_add_comm_group.norm_to_compl NormedAddCommGroup.norm_toCompl
 
-theorem NormedAddCommGroup.dense_range_to_compl : DenseRange (toCompl : G → Completion G) :=
-  Completion.dense_inducing_coe.dense
-#align normed_add_comm_group.dense_range_to_compl NormedAddCommGroup.dense_range_to_compl
+theorem NormedAddCommGroup.denseRange_toCompl : DenseRange (toCompl : G → Completion G) :=
+  Completion.denseInducing_coe.dense
+#align normed_add_comm_group.dense_range_to_compl NormedAddCommGroup.denseRange_toCompl
 
 @[simp]
-theorem NormedAddGroupHom.completion_to_compl (f : NormedAddGroupHom G H) :
+theorem NormedAddGroupHom.completion_toCompl (f : NormedAddGroupHom G H) :
     f.Completion.comp toCompl = toCompl.comp f :=
   by
   ext x
   change f.completion x = _
   simpa
-#align normed_add_group_hom.completion_to_compl NormedAddGroupHom.completion_to_compl
+#align normed_add_group_hom.completion_to_compl NormedAddGroupHom.completion_toCompl
 
 @[simp]
 theorem NormedAddGroupHom.norm_completion (f : NormedAddGroupHom G H) : ‖f.Completion‖ = ‖f‖ :=
@@ -190,7 +190,7 @@ theorem NormedAddGroupHom.norm_completion (f : NormedAddGroupHom G H) : ‖f.Com
   apply f.completion.op_norm_eq_of_bounds (norm_nonneg _)
   · intro x
     apply completion.induction_on x
-    · apply is_closed_le
+    · apply isClosed_le
       continuity
     · intro g
       simp [f.le_op_norm g]
@@ -278,10 +278,10 @@ def NormedAddGroupHom.extension (f : NormedAddGroupHom G H) : NormedAddGroupHom 
   { f.toAddMonoidHom.extension f.Continuous with
     bound' :=
       by
-      refine' ⟨‖f‖, fun v => completion.induction_on v (is_closed_le _ _) fun a => _⟩
+      refine' ⟨‖f‖, fun v => completion.induction_on v (isClosed_le _ _) fun a => _⟩
       · exact Continuous.comp continuous_norm completion.continuous_extension
       · exact Continuous.mul continuous_const continuous_norm
-      · rw [completion.norm_coe, AddMonoidHom.to_fun_eq_coe, AddMonoidHom.extension_coe]
+      · rw [completion.norm_coe, AddMonoidHom.toFun_eq_coe, AddMonoidHom.extension_coe]
         exact le_op_norm f a }
 #align normed_add_group_hom.extension NormedAddGroupHom.extension
 

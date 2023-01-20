@@ -182,34 +182,34 @@ instance : Coe (A →ₐ[R] B) (A →ₗ⁅R⁆ B) :=
   ⟨toLieHom⟩
 
 @[simp]
-theorem to_lie_hom_coe : f.toLieHom = ↑f :=
+theorem toLieHom_coe : f.toLieHom = ↑f :=
   rfl
-#align alg_hom.to_lie_hom_coe AlgHom.to_lie_hom_coe
+#align alg_hom.to_lie_hom_coe AlgHom.toLieHom_coe
 
 @[simp]
-theorem coe_to_lie_hom : ((f : A →ₗ⁅R⁆ B) : A → B) = f :=
+theorem coe_to_lieHom : ((f : A →ₗ⁅R⁆ B) : A → B) = f :=
   rfl
-#align alg_hom.coe_to_lie_hom AlgHom.coe_to_lie_hom
+#align alg_hom.coe_to_lie_hom AlgHom.coe_to_lieHom
 
-theorem to_lie_hom_apply (x : A) : f.toLieHom x = f x :=
+theorem toLieHom_apply (x : A) : f.toLieHom x = f x :=
   rfl
-#align alg_hom.to_lie_hom_apply AlgHom.to_lie_hom_apply
-
-@[simp]
-theorem to_lie_hom_id : (AlgHom.id R A : A →ₗ⁅R⁆ A) = LieHom.id :=
-  rfl
-#align alg_hom.to_lie_hom_id AlgHom.to_lie_hom_id
+#align alg_hom.to_lie_hom_apply AlgHom.toLieHom_apply
 
 @[simp]
-theorem to_lie_hom_comp : (g.comp f : A →ₗ⁅R⁆ C) = (g : B →ₗ⁅R⁆ C).comp (f : A →ₗ⁅R⁆ B) :=
+theorem to_lieHom_id : (AlgHom.id R A : A →ₗ⁅R⁆ A) = LieHom.id :=
   rfl
-#align alg_hom.to_lie_hom_comp AlgHom.to_lie_hom_comp
+#align alg_hom.to_lie_hom_id AlgHom.to_lieHom_id
 
-theorem to_lie_hom_injective {f g : A →ₐ[R] B} (h : (f : A →ₗ⁅R⁆ B) = (g : A →ₗ⁅R⁆ B)) : f = g :=
+@[simp]
+theorem to_lieHom_comp : (g.comp f : A →ₗ⁅R⁆ C) = (g : B →ₗ⁅R⁆ C).comp (f : A →ₗ⁅R⁆ B) :=
+  rfl
+#align alg_hom.to_lie_hom_comp AlgHom.to_lieHom_comp
+
+theorem to_lieHom_injective {f g : A →ₐ[R] B} (h : (f : A →ₗ⁅R⁆ B) = (g : A →ₗ⁅R⁆ B)) : f = g :=
   by
   ext a
   exact LieHom.congr_fun h a
-#align alg_hom.to_lie_hom_injective AlgHom.to_lie_hom_injective
+#align alg_hom.to_lie_hom_injective AlgHom.to_lieHom_injective
 
 end AlgHom
 
@@ -257,23 +257,23 @@ theorem LieAlgebra.ad_apply (x y : L) : LieAlgebra.ad R L x y = ⁅x, y⁆ :=
 #align lie_algebra.ad_apply LieAlgebra.ad_apply
 
 @[simp]
-theorem LieModule.to_endomorphism_module_End :
+theorem LieModule.toEndomorphism_module_endCat :
     LieModule.toEndomorphism R (Module.EndCat R M) M = LieHom.id :=
   by
   ext (g m)
   simp [lie_eq_smul]
-#align lie_module.to_endomorphism_module_End LieModule.to_endomorphism_module_End
+#align lie_module.to_endomorphism_module_End LieModule.toEndomorphism_module_endCat
 
-theorem LieSubalgebra.to_endomorphism_eq (K : LieSubalgebra R L) {x : K} :
+theorem LieSubalgebra.toEndomorphism_eq (K : LieSubalgebra R L) {x : K} :
     LieModule.toEndomorphism R K M x = LieModule.toEndomorphism R L M x :=
   rfl
-#align lie_subalgebra.to_endomorphism_eq LieSubalgebra.to_endomorphism_eq
+#align lie_subalgebra.to_endomorphism_eq LieSubalgebra.toEndomorphism_eq
 
 @[simp]
-theorem LieSubalgebra.to_endomorphism_mk (K : LieSubalgebra R L) {x : L} (hx : x ∈ K) :
+theorem LieSubalgebra.toEndomorphism_mk (K : LieSubalgebra R L) {x : L} (hx : x ∈ K) :
     LieModule.toEndomorphism R K M ⟨x, hx⟩ = LieModule.toEndomorphism R L M x :=
   rfl
-#align lie_subalgebra.to_endomorphism_mk LieSubalgebra.to_endomorphism_mk
+#align lie_subalgebra.to_endomorphism_mk LieSubalgebra.toEndomorphism_mk
 
 variable {R L M}
 
@@ -283,27 +283,27 @@ open LieModule
 
 variable {N : LieSubmodule R L M} {x : L}
 
-theorem coe_map_to_endomorphism_le :
+theorem coe_map_toEndomorphism_le :
     (N : Submodule R M).map (LieModule.toEndomorphism R L M x) ≤ N :=
   by
   rintro n ⟨m, hm, rfl⟩
   exact N.lie_mem hm
-#align lie_submodule.coe_map_to_endomorphism_le LieSubmodule.coe_map_to_endomorphism_le
+#align lie_submodule.coe_map_to_endomorphism_le LieSubmodule.coe_map_toEndomorphism_le
 
 variable (N x)
 
-theorem to_endomorphism_comp_subtype_mem (m : M) (hm : m ∈ (N : Submodule R M)) :
+theorem toEndomorphism_comp_subtype_mem (m : M) (hm : m ∈ (N : Submodule R M)) :
     (toEndomorphism R L M x).comp (N : Submodule R M).Subtype ⟨m, hm⟩ ∈ (N : Submodule R M) := by
   simpa using N.lie_mem hm
-#align lie_submodule.to_endomorphism_comp_subtype_mem LieSubmodule.to_endomorphism_comp_subtype_mem
+#align lie_submodule.to_endomorphism_comp_subtype_mem LieSubmodule.toEndomorphism_comp_subtype_mem
 
 @[simp]
-theorem to_endomorphism_restrict_eq_to_endomorphism (h := N.to_endomorphism_comp_subtype_mem x) :
+theorem toEndomorphism_restrict_eq_toEndomorphism (h := N.to_endomorphism_comp_subtype_mem x) :
     (toEndomorphism R L M x).restrict h = toEndomorphism R L N x :=
   by
   ext
   simp [LinearMap.restrict_apply]
-#align lie_submodule.to_endomorphism_restrict_eq_to_endomorphism LieSubmodule.to_endomorphism_restrict_eq_to_endomorphism
+#align lie_submodule.to_endomorphism_restrict_eq_to_endomorphism LieSubmodule.toEndomorphism_restrict_eq_toEndomorphism
 
 end LieSubmodule
 
@@ -320,7 +320,7 @@ theorem LieSubalgebra.ad_comp_incl_eq (K : LieSubalgebra R L) (x : K) :
     (ad R L ↑x).comp (K.incl : K →ₗ[R] L) = (K.incl : K →ₗ[R] L).comp (ad R K x) :=
   by
   ext y
-  simp only [ad_apply, LieHom.coe_to_linear_map, LieSubalgebra.coe_incl, LinearMap.coe_comp,
+  simp only [ad_apply, LieHom.coe_to_linearMap, LieSubalgebra.coe_incl, LinearMap.coe_comp,
     LieSubalgebra.coe_bracket, Function.comp_apply]
 #align lie_subalgebra.ad_comp_incl_eq LieSubalgebra.ad_comp_incl_eq
 
@@ -358,14 +358,14 @@ def lieConj : Module.EndCat R M₁ ≃ₗ⁅R⁆ Module.EndCat R M₂ :=
 #align linear_equiv.lie_conj LinearEquiv.lieConj
 
 @[simp]
-theorem lie_conj_apply (f : Module.EndCat R M₁) : e.lieConj f = e.conj f :=
+theorem lieConj_apply (f : Module.EndCat R M₁) : e.lieConj f = e.conj f :=
   rfl
-#align linear_equiv.lie_conj_apply LinearEquiv.lie_conj_apply
+#align linear_equiv.lie_conj_apply LinearEquiv.lieConj_apply
 
 @[simp]
-theorem lie_conj_symm : e.lieConj.symm = e.symm.lieConj :=
+theorem lieConj_symm : e.lieConj.symm = e.symm.lieConj :=
   rfl
-#align linear_equiv.lie_conj_symm LinearEquiv.lie_conj_symm
+#align linear_equiv.lie_conj_symm LinearEquiv.lieConj_symm
 
 end LinearEquiv
 
@@ -385,14 +385,14 @@ def toLieEquiv : A₁ ≃ₗ⁅R⁆ A₂ :=
 #align alg_equiv.to_lie_equiv AlgEquiv.toLieEquiv
 
 @[simp]
-theorem to_lie_equiv_apply (x : A₁) : e.toLieEquiv x = e x :=
+theorem toLieEquiv_apply (x : A₁) : e.toLieEquiv x = e x :=
   rfl
-#align alg_equiv.to_lie_equiv_apply AlgEquiv.to_lie_equiv_apply
+#align alg_equiv.to_lie_equiv_apply AlgEquiv.toLieEquiv_apply
 
 @[simp]
-theorem to_lie_equiv_symm_apply (x : A₂) : e.toLieEquiv.symm x = e.symm x :=
+theorem toLieEquiv_symm_apply (x : A₂) : e.toLieEquiv.symm x = e.symm x :=
   rfl
-#align alg_equiv.to_lie_equiv_symm_apply AlgEquiv.to_lie_equiv_symm_apply
+#align alg_equiv.to_lie_equiv_symm_apply AlgEquiv.toLieEquiv_symm_apply
 
 end AlgEquiv
 

@@ -52,7 +52,7 @@ theorem cardinal_mk_le_sigma_polynomial :
         have h : p.1.map (algebraMap R L) ≠ 0 :=
           by
           rw [Ne.def, ← Polynomial.degree_eq_bot,
-            Polynomial.degree_map_eq_of_injective (NoZeroSMulDivisors.algebra_map_injective R L),
+            Polynomial.degree_map_eq_of_injective (NoZeroSMulDivisors.algebraMap_injective R L),
             Polynomial.degree_eq_bot]
           exact p.2.1
         erw [Polynomial.mem_roots h, Polynomial.IsRoot, Polynomial.eval_map, ← Polynomial.aeval_def,
@@ -60,7 +60,7 @@ theorem cardinal_mk_le_sigma_polynomial :
     fun x y => by
     intro h
     simp only at h
-    refine' (Subtype.heq_iff_coe_eq _).1 h.2
+    refine' (Subtype.hEq_iff_coe_eq _).1 h.2
     simp only [h.1, iff_self_iff, forall_true_iff]
 #align algebra.is_algebraic.cardinal_mk_le_sigma_polynomial Algebra.IsAlgebraic.cardinal_mk_le_sigma_polynomial
 
@@ -160,7 +160,7 @@ theorem cardinal_le_max_transcendence_basis (hv : IsTranscendenceBasis R v) :
 
 /-- If `K` is an uncountable algebraically closed field, then its
 cardinality is the same as that of a transcendence basis. -/
-theorem cardinal_eq_cardinal_transcendence_basis_of_aleph_0_lt [Nontrivial R]
+theorem cardinal_eq_cardinal_transcendence_basis_of_aleph0_lt [Nontrivial R]
     (hv : IsTranscendenceBasis R v) (hR : (#R) ≤ ℵ₀) (hK : ℵ₀ < (#K)) : (#K) = (#ι) :=
   have : ℵ₀ ≤ (#ι) :=
     le_of_not_lt fun h =>
@@ -178,7 +178,7 @@ theorem cardinal_eq_cardinal_transcendence_basis_of_aleph_0_lt [Nontrivial R]
         · exact le_max_of_le_right this
       )
     (mk_le_of_injective (show Function.Injective v from hv.1.Injective))
-#align is_alg_closed.cardinal_eq_cardinal_transcendence_basis_of_aleph_0_lt IsAlgClosed.cardinal_eq_cardinal_transcendence_basis_of_aleph_0_lt
+#align is_alg_closed.cardinal_eq_cardinal_transcendence_basis_of_aleph_0_lt IsAlgClosed.cardinal_eq_cardinal_transcendence_basis_of_aleph0_lt
 
 end Cardinal
 
@@ -191,11 +191,11 @@ theorem ringEquivOfCardinalEqOfCharZero [CharZero K] [CharZero L] (hK : ℵ₀ <
     (hKL : (#K) = (#L)) : K ≃+* L := by
   apply Classical.choice
   cases'
-    exists_is_transcendence_basis ℤ
+    exists_isTranscendenceBasis ℤ
       (show Function.Injective (algebraMap ℤ K) from Int.cast_injective) with
     s hs
   cases'
-    exists_is_transcendence_basis ℤ
+    exists_isTranscendenceBasis ℤ
       (show Function.Injective (algebraMap ℤ L) from Int.cast_injective) with
     t ht
   have : (#s) = (#t) :=
@@ -212,11 +212,11 @@ private theorem ring_equiv_of_cardinal_eq_of_char_p (p : ℕ) [Fact p.Prime] [Ch
   by
   apply Classical.choice
   cases'
-    exists_is_transcendence_basis (Zmod p)
+    exists_isTranscendenceBasis (Zmod p)
       (show Function.Injective (algebraMap (Zmod p) K) from RingHom.injective _) with
     s hs
   cases'
-    exists_is_transcendence_basis (Zmod p)
+    exists_isTranscendenceBasis (Zmod p)
       (show Function.Injective (algebraMap (Zmod p) L) from RingHom.injective _) with
     t ht
   have : (#s) = (#t) :=
@@ -244,8 +244,8 @@ theorem ringEquivOfCardinalEqOfCharEq (p : ℕ) [CharP K p] [CharP L p] (hK : �
     exact ⟨ring_equiv_of_cardinal_eq_of_char_p p hK hKL⟩
   · rw [hp] at *
     skip
-    letI : CharZero K := CharP.char_p_to_char_zero K
-    letI : CharZero L := CharP.char_p_to_char_zero L
+    letI : CharZero K := CharP.charP_to_charZero K
+    letI : CharZero L := CharP.charP_to_charZero L
     exact ⟨ring_equiv_of_cardinal_eq_of_char_zero hK hKL⟩
 #align is_alg_closed.ring_equiv_of_cardinal_eq_of_char_eq IsAlgClosed.ringEquivOfCardinalEqOfCharEq
 

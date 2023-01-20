@@ -60,14 +60,14 @@ def SimpleContinuedFraction.of : SimpleContinuedFraction K :=
   ⟨of v, GeneralizedContinuedFraction.ofIsSimpleContinuedFraction v⟩
 #align simple_continued_fraction.of SimpleContinuedFraction.of
 
-theorem SimpleContinuedFraction.of_is_continued_fraction :
+theorem SimpleContinuedFraction.of_isContinuedFraction :
     (SimpleContinuedFraction.of v).IsContinuedFraction := fun _ denom nth_part_denom_eq =>
   lt_of_lt_of_le zero_lt_one (of_one_le_nth_part_denom nth_part_denom_eq)
-#align simple_continued_fraction.of_is_continued_fraction SimpleContinuedFraction.of_is_continued_fraction
+#align simple_continued_fraction.of_is_continued_fraction SimpleContinuedFraction.of_isContinuedFraction
 
 /-- Creates the continued fraction of a value. -/
 def ContinuedFraction.of : ContinuedFraction K :=
-  ⟨SimpleContinuedFraction.of v, SimpleContinuedFraction.of_is_continued_fraction v⟩
+  ⟨SimpleContinuedFraction.of v, SimpleContinuedFraction.of_isContinuedFraction v⟩
 #align continued_fraction.of ContinuedFraction.of
 
 namespace GeneralizedContinuedFraction

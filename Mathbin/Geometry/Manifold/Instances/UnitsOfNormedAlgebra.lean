@@ -58,20 +58,20 @@ namespace Units
 variable {R : Type _} [NormedRing R] [CompleteSpace R]
 
 instance : ChartedSpace R Rˣ :=
-  open_embedding_coe.singletonChartedSpace
+  openEmbedding_coe.singletonChartedSpace
 
-theorem chart_at_apply {a : Rˣ} {b : Rˣ} : chartAt R a b = b :=
+theorem chartAt_apply {a : Rˣ} {b : Rˣ} : chartAt R a b = b :=
   rfl
-#align units.chart_at_apply Units.chart_at_apply
+#align units.chart_at_apply Units.chartAt_apply
 
-theorem chart_at_source {a : Rˣ} : (chartAt R a).source = Set.univ :=
+theorem chartAt_source {a : Rˣ} : (chartAt R a).source = Set.univ :=
   rfl
-#align units.chart_at_source Units.chart_at_source
+#align units.chart_at_source Units.chartAt_source
 
 variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] [NormedAlgebra 𝕜 R]
 
 instance : SmoothManifoldWithCorners 𝓘(𝕜, R) Rˣ :=
-  open_embedding_coe.singleton_smooth_manifold_with_corners 𝓘(𝕜, R)
+  openEmbedding_coe.singleton_smooth_manifold_with_corners 𝓘(𝕜, R)
 
 end Units
 

@@ -125,16 +125,16 @@ noncomputable def imageIsoRange {G H : ModuleCat.{v} R} (f : G ⟶ H) :
 #align Module.image_iso_range ModuleCat.imageIsoRange
 
 @[simp, reassoc.1, elementwise]
-theorem image_iso_range_inv_image_ι {G H : ModuleCat.{v} R} (f : G ⟶ H) :
+theorem imageIsoRange_inv_image_ι {G H : ModuleCat.{v} R} (f : G ⟶ H) :
     (imageIsoRange f).inv ≫ Limits.image.ι f = ModuleCat.ofHom f.range.Subtype :=
-  IsImage.iso_ext_inv_m _ _
-#align Module.image_iso_range_inv_image_ι ModuleCat.image_iso_range_inv_image_ι
+  IsImage.isoExt_inv_m _ _
+#align Module.image_iso_range_inv_image_ι ModuleCat.imageIsoRange_inv_image_ι
 
 @[simp, reassoc.1, elementwise]
-theorem image_iso_range_hom_subtype {G H : ModuleCat.{v} R} (f : G ⟶ H) :
+theorem imageIsoRange_hom_subtype {G H : ModuleCat.{v} R} (f : G ⟶ H) :
     (imageIsoRange f).hom ≫ ModuleCat.ofHom f.range.Subtype = Limits.image.ι f := by
   erw [← image_iso_range_inv_image_ι f, iso.hom_inv_id_assoc]
-#align Module.image_iso_range_hom_subtype ModuleCat.image_iso_range_hom_subtype
+#align Module.image_iso_range_hom_subtype ModuleCat.imageIsoRange_hom_subtype
 
 end ModuleCat
 

@@ -54,7 +54,7 @@ If an element `r : R` is invertible in `S`, then it is invertible in `A`. -/
 def Invertible.algebraTower (r : R) [Invertible (algebraMap R S r)] :
     Invertible (algebraMap R A r) :=
   Invertible.copy (Invertible.map (algebraMap S A) (algebraMap R S r)) (algebraMap R A r)
-    (IsScalarTower.algebra_map_apply R S A r)
+    (IsScalarTower.algebraMap_apply R S A r)
 #align is_scalar_tower.invertible.algebra_tower IsScalarTower.Invertible.algebraTower
 
 /-- A natural number that is invertible when coerced to `R` is also invertible
@@ -91,14 +91,14 @@ noncomputable def Basis.algebraMapCoeffs : Basis ι A M :=
   b.mapCoeffs (RingEquiv.ofBijective _ h) fun c x => by simp
 #align basis.algebra_map_coeffs Basis.algebraMapCoeffs
 
-theorem Basis.algebra_map_coeffs_apply (i : ι) : b.algebraMapCoeffs A h i = b i :=
+theorem Basis.algebraMapCoeffs_apply (i : ι) : b.algebraMapCoeffs A h i = b i :=
   b.map_coeffs_apply _ _ _
-#align basis.algebra_map_coeffs_apply Basis.algebra_map_coeffs_apply
+#align basis.algebra_map_coeffs_apply Basis.algebraMapCoeffs_apply
 
 @[simp]
-theorem Basis.coe_algebra_map_coeffs : (b.algebraMapCoeffs A h : ι → M) = b :=
+theorem Basis.coe_algebraMapCoeffs : (b.algebraMapCoeffs A h : ι → M) = b :=
   b.coe_map_coeffs _ _
-#align basis.coe_algebra_map_coeffs Basis.coe_algebra_map_coeffs
+#align basis.coe_algebra_map_coeffs Basis.coe_algebraMapCoeffs
 
 end AlgebraMapCoeffs
 
@@ -117,11 +117,11 @@ variable [CommSemiring R] [Semiring S] [AddCommMonoid A]
 variable [Algebra R S] [Module S A] [Module R A] [IsScalarTower R S A]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem linear_independent_smul {ι : Type v₁} {b : ι → S} {ι' : Type w₁} {c : ι' → A}
+theorem linearIndependent_smul {ι : Type v₁} {b : ι → S} {ι' : Type w₁} {c : ι' → A}
     (hb : LinearIndependent R b) (hc : LinearIndependent S c) :
     LinearIndependent R fun p : ι × ι' => b p.1 • c p.2 :=
   by
-  rw [linear_independent_iff'] at hb hc; rw [linear_independent_iff'']; rintro s g hg hsg ⟨i, k⟩
+  rw [linearIndependent_iff'] at hb hc; rw [linearIndependent_iff'']; rintro s g hg hsg ⟨i, k⟩
   by_cases hik : (i, k) ∈ s
   · have h1 : (∑ i in s.image Prod.fst ×ˢ s.image Prod.snd, g i • b i.1 • c i.2) = 0 :=
       by
@@ -133,7 +133,7 @@ theorem linear_independent_smul {ι : Type v₁} {b : ι → S} {ι' : Type w₁
     simp_rw [← smul_assoc, ← Finset.sum_smul] at h1
     exact hb _ _ (hc _ _ h1 k (Finset.mem_image_of_mem _ hik)) i (Finset.mem_image_of_mem _ hik)
   exact hg _ hik
-#align linear_independent_smul linear_independent_smul
+#align linear_independent_smul linearIndependent_smul
 
 /-- `basis.smul (b : basis ι R S) (c : basis ι S A)` is the `R`-basis on `A`
 where the `(i, j)`th basis vector is `b i • c j`. -/
@@ -178,11 +178,11 @@ variable {R S}
 
 variable [CommRing R] [Ring S] [Algebra R S]
 
-theorem Basis.algebra_map_injective {ι : Type _} [NoZeroDivisors R] [Nontrivial S]
+theorem Basis.algebraMap_injective {ι : Type _} [NoZeroDivisors R] [Nontrivial S]
     (b : Basis ι R S) : Function.Injective (algebraMap R S) :=
   have : NoZeroSMulDivisors R S := b.NoZeroSmulDivisors
-  NoZeroSMulDivisors.algebra_map_injective R S
-#align basis.algebra_map_injective Basis.algebra_map_injective
+  NoZeroSMulDivisors.algebraMap_injective R S
+#align basis.algebra_map_injective Basis.algebraMap_injective
 
 end Ring
 

@@ -77,7 +77,7 @@ protected theorem id (μ : Measure α) : Conservative id μ :=
   { toQuasiMeasurePreserving := QuasiMeasurePreserving.id μ
     exists_mem_image_mem := fun s hs h0 =>
       let ⟨x, hx⟩ := nonempty_of_measure_ne_zero h0
-      ⟨x, hx, 1, one_ne_zero, hx⟩ }
+      ⟨x, hx, 1, one_neZero, hx⟩ }
 #align measure_theory.conservative.id MeasureTheory.Conservative.id
 
 /-- If `f` is a conservative map and `s` is a measurable set of nonzero measure, then
@@ -117,7 +117,7 @@ after `m` iterations of `f`. -/
 theorem exists_gt_measure_inter_ne_zero (hf : Conservative f μ) (hs : MeasurableSet s)
     (h0 : μ s ≠ 0) (N : ℕ) : ∃ m > N, μ (s ∩ f^[m] ⁻¹' s) ≠ 0 :=
   let ⟨m, hm, hmN⟩ :=
-    ((hf.frequently_measure_inter_ne_zero hs h0).and_eventually (eventually_gt_at_top N)).exists
+    ((hf.frequently_measure_inter_ne_zero hs h0).and_eventually (eventually_gt_atTop N)).exists
   ⟨m, hmN, hm⟩
 #align measure_theory.conservative.exists_gt_measure_inter_ne_zero MeasureTheory.Conservative.exists_gt_measure_inter_ne_zero
 
@@ -150,7 +150,7 @@ theorem ae_mem_imp_frequently_image_mem (hf : Conservative f μ) (hs : Measurabl
 
 theorem inter_frequently_image_mem_ae_eq (hf : Conservative f μ) (hs : MeasurableSet s) :
     (s ∩ { x | ∃ᶠ n in at_top, (f^[n]) x ∈ s } : Set α) =ᵐ[μ] s :=
-  inter_eventually_eq_left.2 <| hf.ae_mem_imp_frequently_image_mem hs
+  inter_eventuallyEq_left.2 <| hf.ae_mem_imp_frequently_image_mem hs
 #align measure_theory.conservative.inter_frequently_image_mem_ae_eq MeasureTheory.Conservative.inter_frequently_image_mem_ae_eq
 
 theorem measure_inter_frequently_image_mem_eq (hf : Conservative f μ) (hs : MeasurableSet s) :
@@ -204,8 +204,8 @@ protected theorem iterate (hf : Conservative f μ) (n : ℕ) : Conservative (f^[
   /- We take a point `x ∈ s` such that `f^[k] x ∈ s` for infinitely many values of `k`,
     then we choose two of these values `k < l` such that `k ≡ l [MOD (n + 1)]`.
     Then `f^[k] x ∈ s` and `(f^[n + 1])^[(l - k) / (n + 1)] (f^[k] x) = f^[l] x ∈ s`. -/
-  rw [Nat.frequently_at_top_iff_infinite] at hx
-  rcases Nat.exists_lt_modeq_of_infinite hx n.succ_pos with ⟨k, hk, l, hl, hkl, hn⟩
+  rw [Nat.frequently_atTop_iff_infinite] at hx
+  rcases Nat.exists_lt_modEq_of_infinite hx n.succ_pos with ⟨k, hk, l, hl, hkl, hn⟩
   set m := (l - k) / (n + 1)
   have : (n + 1) * m = l - k := by
     apply Nat.mul_div_cancel'

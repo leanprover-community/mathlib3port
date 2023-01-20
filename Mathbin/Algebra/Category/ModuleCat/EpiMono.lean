@@ -72,15 +72,15 @@ instance epi_as_hom''_mkq (U : Submodule R X) : Epi (↿U.mkq) :=
   (epi_iff_range_eq_top _).mpr <| Submodule.range_mkq _
 #align Module.epi_as_hom''_mkq ModuleCat.epi_as_hom''_mkq
 
-instance forget_preserves_epimorphisms : (forget (ModuleCat.{v} R)).PreservesEpimorphisms
+instance forget_preservesEpimorphisms : (forget (ModuleCat.{v} R)).PreservesEpimorphisms
     where preserves X Y f hf := by
     rwa [forget_map_eq_coe, CategoryTheory.epi_iff_surjective, ← epi_iff_surjective]
-#align Module.forget_preserves_epimorphisms ModuleCat.forget_preserves_epimorphisms
+#align Module.forget_preserves_epimorphisms ModuleCat.forget_preservesEpimorphisms
 
-instance forget_preserves_monomorphisms : (forget (ModuleCat.{v} R)).PreservesMonomorphisms
+instance forget_preservesMonomorphisms : (forget (ModuleCat.{v} R)).PreservesMonomorphisms
     where preserves X Y f hf := by
     rwa [forget_map_eq_coe, CategoryTheory.mono_iff_injective, ← mono_iff_injective]
-#align Module.forget_preserves_monomorphisms ModuleCat.forget_preserves_monomorphisms
+#align Module.forget_preserves_monomorphisms ModuleCat.forget_preservesMonomorphisms
 
 end ModuleCat
 

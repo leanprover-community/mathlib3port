@@ -121,9 +121,9 @@ theorem derivative_succ_aux (n ν : ℕ) :
     by
     simpa only [Polynomial.derivative_pow, ← sub_eq_add_neg, Nat.succ_sub_succ_eq_sub,
       Polynomial.derivative_mul, Polynomial.derivative_nat_cast, zero_mul, Nat.cast_add,
-      algebraMap.coe_one, Polynomial.derivative_X, mul_one, zero_add, Polynomial.derivative_sub,
+      algebraMap.coe_one, Polynomial.derivative_x, mul_one, zero_add, Polynomial.derivative_sub,
       Polynomial.derivative_one, zero_sub, mul_neg, Nat.sub_zero, ← Nat.cast_succ,
-      Polynomial.C_eq_nat_cast]
+      Polynomial.c_eq_nat_cast]
   conv_rhs => rw [mul_sub]
   -- We'll prove the two terms match up separately.
   refine' congr (congr_arg Sub.sub _) _
@@ -263,11 +263,11 @@ theorem iterate_derivative_at_1_ne_zero [CharZero R] (n ν : ℕ) (h : ν ≤ n)
 
 open Submodule
 
-theorem linear_independent_aux (n k : ℕ) (h : k ≤ n + 1) :
+theorem linearIndependent_aux (n k : ℕ) (h : k ≤ n + 1) :
     LinearIndependent ℚ fun ν : Fin k => bernsteinPolynomial ℚ n ν :=
   by
   induction' k with k ih
-  · apply linear_independent_empty_type
+  · apply linearIndependent_empty_type
   · apply linear_independent_fin_succ'.mpr
     fconstructor
     · exact ih (le_of_lt h)
@@ -299,7 +299,7 @@ theorem linear_independent_aux (n k : ℕ) (h : k ≤ n + 1) :
         simp [hx, hy]
       · intro a x h
         simp [h]
-#align bernstein_polynomial.linear_independent_aux bernsteinPolynomial.linear_independent_aux
+#align bernstein_polynomial.linear_independent_aux bernsteinPolynomial.linearIndependent_aux
 
 /-- The Bernstein polynomials are linearly independent.
 
@@ -308,10 +308,10 @@ are linearly independent.
 The inductive step relies on the observation that the `(n-k)`-th derivative, evaluated at 1,
 annihilates `bernstein_polynomial n ν` for `ν < k`, but has a nonzero value at `ν = k`.
 -/
-theorem linear_independent (n : ℕ) :
+theorem linearIndependent (n : ℕ) :
     LinearIndependent ℚ fun ν : Fin (n + 1) => bernsteinPolynomial ℚ n ν :=
-  linear_independent_aux n (n + 1) le_rfl
-#align bernstein_polynomial.linear_independent bernsteinPolynomial.linear_independent
+  linearIndependent_aux n (n + 1) le_rfl
+#align bernstein_polynomial.linear_independent bernsteinPolynomial.linearIndependent
 
 theorem sum (n : ℕ) : (∑ ν in Finset.range (n + 1), bernsteinPolynomial R n ν) = 1 :=
   calc
@@ -362,12 +362,12 @@ theorem sum_smul (n : ℕ) : (∑ ν in Finset.range (n + 1), ν • bernsteinPo
     -- Step inside the sum:
     refine' Finset.sum_congr rfl fun k hk => (w k).trans _
     simp only [pderiv_tt_x, pderiv_tt_y, Algebra.id.smul_eq_mul, nsmul_eq_mul, e, Bool.cond_true,
-      Bool.cond_false, add_zero, mul_one, mul_zero, smul_zero, MvPolynomial.aeval_X,
+      Bool.cond_false, add_zero, mul_one, mul_zero, smul_zero, MvPolynomial.aeval_x,
       MvPolynomial.pderiv_mul, Derivation.leibniz_pow, Derivation.map_coe_nat, map_nat_cast,
       map_pow, map_mul]
   · rw [(pderiv tt).leibniz_pow, (pderiv tt).map_add, pderiv_tt_x, pderiv_tt_y]
     simp only [Algebra.id.smul_eq_mul, nsmul_eq_mul, map_nat_cast, map_pow, map_add, map_mul, e,
-      Bool.cond_true, Bool.cond_false, MvPolynomial.aeval_X, add_sub_cancel'_right, one_pow,
+      Bool.cond_true, Bool.cond_false, MvPolynomial.aeval_x, add_sub_cancel'_right, one_pow,
       add_zero, mul_one]
 #align bernstein_polynomial.sum_smul bernsteinPolynomial.sum_smul
 
@@ -411,15 +411,15 @@ theorem sum_mul_smul (n : ℕ) :
     -- Step inside the sum:
     refine' Finset.sum_congr rfl fun k hk => (w k).trans _
     simp only [pderiv_tt_x, pderiv_tt_y, Algebra.id.smul_eq_mul, nsmul_eq_mul, e, Bool.cond_true,
-      Bool.cond_false, add_zero, zero_add, mul_zero, smul_zero, mul_one, MvPolynomial.aeval_X,
-      MvPolynomial.pderiv_X_self, MvPolynomial.pderiv_X_of_ne, Derivation.leibniz_pow,
+      Bool.cond_false, add_zero, zero_add, mul_zero, smul_zero, mul_one, MvPolynomial.aeval_x,
+      MvPolynomial.pderiv_x_self, MvPolynomial.pderiv_x_of_ne, Derivation.leibniz_pow,
       Derivation.leibniz, Derivation.map_coe_nat, map_nat_cast, map_pow, map_mul, map_add]
   -- On the right hand side, we'll just simplify.
   ·
     simp only [pderiv_one, pderiv_mul, (pderiv _).leibniz_pow, (pderiv _).map_coe_nat,
       (pderiv tt).map_add, pderiv_tt_x, pderiv_tt_y, Algebra.id.smul_eq_mul, add_zero, mul_one,
       Derivation.map_smul_of_tower, map_nsmul, map_pow, map_add, e, Bool.cond_true, Bool.cond_false,
-      MvPolynomial.aeval_X, add_sub_cancel'_right, one_pow, smul_smul, smul_one_mul]
+      MvPolynomial.aeval_x, add_sub_cancel'_right, one_pow, smul_smul, smul_one_mul]
 #align bernstein_polynomial.sum_mul_smul bernsteinPolynomial.sum_mul_smul
 
 /-- A certain linear combination of the previous three identities,

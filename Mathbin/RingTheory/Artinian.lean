@@ -69,8 +69,8 @@ include R
 theorem isArtinianOfInjective (f : M →ₗ[R] P) (h : Function.Injective f) [IsArtinian R P] :
     IsArtinian R M :=
   ⟨Subrelation.wf
-      (fun A B hAB => show A.map f < B.map f from Submodule.map_strict_mono_of_injective h hAB)
-      (InvImage.wf (Submodule.map f) (IsArtinian.well_founded_submodule_lt R P))⟩
+      (fun A B hAB => show A.map f < B.map f from Submodule.map_strictMono_of_injective h hAB)
+      (InvImage.wf (Submodule.map f) (IsArtinian.wellFounded_submodule_lt R P))⟩
 #align is_artinian_of_injective isArtinianOfInjective
 
 instance isArtinianSubmodule' [IsArtinian R M] (N : Submodule R M) : IsArtinian R N :=
@@ -78,7 +78,7 @@ instance isArtinianSubmodule' [IsArtinian R M] (N : Submodule R M) : IsArtinian 
 #align is_artinian_submodule' isArtinianSubmodule'
 
 theorem isArtinianOfLe {s t : Submodule R M} [ht : IsArtinian R t] (h : s ≤ t) : IsArtinian R s :=
-  isArtinianOfInjective (Submodule.ofLe h) (Submodule.of_le_injective h)
+  isArtinianOfInjective (Submodule.ofLe h) (Submodule.ofLe_injective h)
 #align is_artinian_of_le isArtinianOfLe
 
 variable (M)
@@ -87,8 +87,8 @@ theorem isArtinianOfSurjective (f : M →ₗ[R] P) (hf : Function.Surjective f) 
     IsArtinian R P :=
   ⟨Subrelation.wf
       (fun A B hAB =>
-        show A.comap f < B.comap f from Submodule.comap_strict_mono_of_surjective hf hAB)
-      (InvImage.wf (Submodule.comap f) (IsArtinian.well_founded_submodule_lt _ _))⟩
+        show A.comap f < B.comap f from Submodule.comap_strictMono_of_surjective hf hAB)
+      (InvImage.wf (Submodule.comap f) (IsArtinian.wellFounded_submodule_lt _ _))⟩
 #align is_artinian_of_surjective isArtinianOfSurjective
 
 variable {M}
@@ -100,8 +100,8 @@ theorem isArtinianOfLinearEquiv (f : M ≃ₗ[R] P) [IsArtinian R M] : IsArtinia
 theorem isArtinianOfRangeEqKer [IsArtinian R M] [IsArtinian R P] (f : M →ₗ[R] N) (g : N →ₗ[R] P)
     (hf : Function.Injective f) (hg : Function.Surjective g) (h : f.range = g.ker) :
     IsArtinian R N :=
-  ⟨wellFounded_lt_exact_sequence (IsArtinian.well_founded_submodule_lt _ _)
-      (IsArtinian.well_founded_submodule_lt _ _) f.range (Submodule.map f) (Submodule.comap f)
+  ⟨wellFounded_lt_exact_sequence (IsArtinian.wellFounded_submodule_lt _ _)
+      (IsArtinian.wellFounded_submodule_lt _ _) f.range (Submodule.map f) (Submodule.comap f)
       (Submodule.comap g) (Submodule.map g) (Submodule.gciMapComap hf) (Submodule.giMapComap hg)
       (by simp [Submodule.map_comap_eq, inf_comm]) (by simp [Submodule.comap_map_eq, h])⟩
 #align is_artinian_of_range_eq_ker isArtinianOfRangeEqKer
@@ -149,19 +149,19 @@ section Ring
 
 variable {R M : Type _} [Ring R] [AddCommGroup M] [Module R M]
 
-theorem is_artinian_iff_well_founded :
+theorem isArtinian_iff_wellFounded :
     IsArtinian R M ↔ WellFounded ((· < ·) : Submodule R M → Submodule R M → Prop) :=
   ⟨fun h => h.1, IsArtinian.mk⟩
-#align is_artinian_iff_well_founded is_artinian_iff_well_founded
+#align is_artinian_iff_well_founded isArtinian_iff_wellFounded
 
 variable {R M}
 
-theorem IsArtinian.finite_of_linear_independent [Nontrivial R] [IsArtinian R M] {s : Set M}
+theorem IsArtinian.finite_of_linearIndependent [Nontrivial R] [IsArtinian R M] {s : Set M}
     (hs : LinearIndependent R (coe : s → M)) : s.Finite :=
   by
   refine'
     by_contradiction fun hf =>
-      (RelEmbedding.well_founded_iff_no_descending_seq.1 (well_founded_submodule_lt R M)).elim' _
+      (RelEmbedding.wellFounded_iff_no_descending_seq.1 (well_founded_submodule_lt R M)).elim' _
   have f : ℕ ↪ s := Set.Infinite.natEmbedding s hf
   have : ∀ n, coe ∘ f '' { m | n ≤ m } ⊆ s :=
     by
@@ -181,14 +181,14 @@ theorem IsArtinian.finite_of_linear_independent [Nontrivial R] [IsArtinian R M] 
       intro a b
       conv_rhs => rw [GT.gt, lt_iff_le_not_le, this, this, ← lt_iff_le_not_le]
       simp⟩
-#align is_artinian.finite_of_linear_independent IsArtinian.finite_of_linear_independent
+#align is_artinian.finite_of_linear_independent IsArtinian.finite_of_linearIndependent
 
 /-- A module is Artinian iff every nonempty set of submodules has a minimal submodule among them.
 -/
 theorem set_has_minimal_iff_artinian :
     (∀ a : Set <| Submodule R M, a.Nonempty → ∃ M' ∈ a, ∀ I ∈ a, I ≤ M' → I = M') ↔
       IsArtinian R M :=
-  by rw [is_artinian_iff_well_founded, WellFounded.wellFounded_iff_has_min']
+  by rw [isArtinian_iff_wellFounded, WellFounded.wellFounded_iff_has_min']
 #align set_has_minimal_iff_artinian set_has_minimal_iff_artinian
 
 theorem IsArtinian.set_has_minimal [IsArtinian R M] (a : Set <| Submodule R M) (ha : a.Nonempty) :
@@ -200,7 +200,7 @@ theorem IsArtinian.set_has_minimal [IsArtinian R M] (a : Set <| Submodule R M) (
 theorem monotone_stabilizes_iff_artinian :
     (∀ f : ℕ →o (Submodule R M)ᵒᵈ, ∃ n, ∀ m, n ≤ m → f n = f m) ↔ IsArtinian R M :=
   by
-  rw [is_artinian_iff_well_founded]
+  rw [isArtinian_iff_wellFounded]
   exact well_founded.monotone_chain_condition.symm
 #align monotone_stabilizes_iff_artinian monotone_stabilizes_iff_artinian
 
@@ -215,7 +215,7 @@ theorem monotone_stabilizes (f : ℕ →o (Submodule R M)ᵒᵈ) : ∃ n, ∀ m,
 /-- If `∀ I > J, P I` implies `P J`, then `P` holds for all submodules. -/
 theorem induction {P : Submodule R M → Prop} (hgt : ∀ I, (∀ J < I, P J) → P I) (I : Submodule R M) :
     P I :=
-  (well_founded_submodule_lt R M).recursion I hgt
+  (wellFounded_submodule_lt R M).recursion I hgt
 #align is_artinian.induction IsArtinian.induction
 
 /-- For any endomorphism of a Artinian module, there is some nontrivial iterate
@@ -340,9 +340,9 @@ def IsArtinianRing (R) [Ring R] :=
   IsArtinian R R
 #align is_artinian_ring IsArtinianRing
 
-theorem is_artinian_ring_iff {R} [Ring R] : IsArtinianRing R ↔ IsArtinian R R :=
+theorem isArtinianRing_iff {R} [Ring R] : IsArtinianRing R ↔ IsArtinian R R :=
   Iff.rfl
-#align is_artinian_ring_iff is_artinian_ring_iff
+#align is_artinian_ring_iff isArtinianRing_iff
 
 theorem Ring.is_artinian_of_zero_eq_one {R} [Ring R] (h01 : (0 : R) = 1) : IsArtinianRing R :=
   have := subsingleton_of_zero_eq_one h01
@@ -363,7 +363,7 @@ also Artinian. -/
 theorem isArtinianOfTower (R) {S M} [CommRing R] [Ring S] [AddCommGroup M] [Algebra R S]
     [Module S M] [Module R M] [IsScalarTower R S M] (h : IsArtinian R M) : IsArtinian S M :=
   by
-  rw [is_artinian_iff_well_founded] at h⊢
+  rw [isArtinian_iff_wellFounded] at h⊢
   refine' (Submodule.restrictScalarsEmbedding R S M).WellFounded h
 #align is_artinian_of_tower isArtinianOfTower
 
@@ -411,17 +411,17 @@ theorem isArtinianSpanOfFinite (R) {M} [Ring R] [AddCommGroup M] [Module R M] [I
   isArtinianOfFgOfArtinian _ (Submodule.fg_def.mpr ⟨A, hA, rfl⟩)
 #align is_artinian_span_of_finite isArtinianSpanOfFinite
 
-theorem Function.Surjective.is_artinian_ring {R} [Ring R] {S} [Ring S] {F} [RingHomClass F R S]
+theorem Function.Surjective.isArtinianRing {R} [Ring R] {S} [Ring S] {F} [RingHomClass F R S]
     {f : F} (hf : Function.Surjective f) [H : IsArtinianRing R] : IsArtinianRing S :=
   by
-  rw [is_artinian_ring_iff, is_artinian_iff_well_founded] at H⊢
+  rw [isArtinianRing_iff, isArtinian_iff_wellFounded] at H⊢
   exact (Ideal.orderEmbeddingOfSurjective f hf).WellFounded H
-#align function.surjective.is_artinian_ring Function.Surjective.is_artinian_ring
+#align function.surjective.is_artinian_ring Function.Surjective.isArtinianRing
 
-instance is_artinian_ring_range {R} [Ring R] {S} [Ring S] (f : R →+* S) [IsArtinianRing R] :
+instance isArtinianRing_range {R} [Ring R] {S} [Ring S] (f : R →+* S) [IsArtinianRing R] :
     IsArtinianRing f.range :=
   f.range_restrict_surjective.IsArtinianRing
-#align is_artinian_ring_range is_artinian_ring_range
+#align is_artinian_ring_range isArtinianRing_range
 
 namespace IsArtinianRing
 
@@ -429,7 +429,7 @@ open IsArtinian
 
 variable {R : Type _} [CommRing R] [IsArtinianRing R]
 
-theorem is_nilpotent_jacobson_bot : IsNilpotent (Ideal.jacobson (⊥ : Ideal R)) :=
+theorem isNilpotent_jacobson_bot : IsNilpotent (Ideal.jacobson (⊥ : Ideal R)) :=
   by
   let Jac := Ideal.jacobson (⊥ : Ideal R)
   let f : ℕ →o (Ideal R)ᵒᵈ := ⟨fun n => Jac ^ n, fun _ _ h => Ideal.pow_le_pow h⟩
@@ -468,7 +468,7 @@ theorem is_nilpotent_jacobson_bot : IsNilpotent (Ideal.jacobson (⊥ : Ideal R))
   refine' hxJ (mem_annihilator.2 fun y hy => (mem_bot R).1 _)
   refine' this (mul_mem_mul (mem_span_singleton_self x) _)
   rwa [← hn (n + 1) (Nat.le_succ _)]
-#align is_artinian_ring.is_nilpotent_jacobson_bot IsArtinianRing.is_nilpotent_jacobson_bot
+#align is_artinian_ring.is_nilpotent_jacobson_bot IsArtinianRing.isNilpotent_jacobson_bot
 
 section Localization
 

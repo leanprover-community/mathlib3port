@@ -154,9 +154,9 @@ instance [h : ∀ i : ι, Projective R (A i)] : Projective R (Π₀ i, A i) := b
     use Dfinsupp.coprodMap f ∘ₗ Dfinsupp.mapRange.linearMap s
     ext (i x j)
     simp only [Dfinsupp.coprodMap, DirectSum.lof, total_map_domain, coe_comp, coe_lsum, id_coe,
-      LinearEquiv.coe_to_linear_map, finsupp_lequiv_dfinsupp_symm_apply, Function.comp_apply,
-      Dfinsupp.lsingle_apply, Dfinsupp.mapRange.linear_map_apply, Dfinsupp.map_range_single,
-      lmap_domain_apply, Dfinsupp.to_finsupp_single, Finsupp.sum_single_index, id.def,
+      LinearEquiv.coe_toLinearMap, finsuppLequivDfinsupp_symm_apply, Function.comp_apply,
+      Dfinsupp.lsingle_apply, Dfinsupp.mapRange.linearMap_apply, Dfinsupp.mapRange_single,
+      lmap_domain_apply, Dfinsupp.toFinsupp_single, Finsupp.sum_single_index, id.def,
       Function.comp.left_id, Dfinsupp.single_apply]
     rw [← Dfinsupp.lapply_apply j, apply_total R]
     obtain rfl | hij := eq_or_ne i j

@@ -41,7 +41,7 @@ theorem irrational_iff_ne_rational (x : ℝ) : Irrational x ↔ ∀ a b : ℤ, x
 theorem Transcendental.irrational {r : ℝ} (tr : Transcendental ℚ r) : Irrational r :=
   by
   rintro ⟨a, rfl⟩
-  exact tr (is_algebraic_algebra_map a)
+  exact tr (isAlgebraic_algebraMap a)
 #align transcendental.irrational Transcendental.irrational
 
 /-!
@@ -100,7 +100,7 @@ theorem irrational_sqrt_of_multiplicity_odd (m : ℤ) (hm : 0 < m) (p : ℕ) [hp
       (multiplicity (p : ℤ) m).get (finite_int_iff.2 ⟨hp.1.ne_one, (ne_of_lt hm).symm⟩) % 2 = 1) :
     Irrational (sqrt m) :=
   @irrational_nrt_of_n_not_dvd_multiplicity _ 2 _ (Ne.symm (ne_of_lt hm)) p hp
-    (sq_sqrt (Int.cast_nonneg.2 <| le_of_lt hm)) (by rw [Hpv] <;> exact one_ne_zero)
+    (sq_sqrt (Int.cast_nonneg.2 <| le_of_lt hm)) (by rw [Hpv] <;> exact one_neZero)
 #align irrational_sqrt_of_multiplicity_odd irrational_sqrt_of_multiplicity_odd
 
 theorem Nat.Prime.irrational_sqrt {p : ℕ} (hp : Nat.Prime p) : Irrational (sqrt p) :=
@@ -509,7 +509,7 @@ open Polynomial
 
 variable (x : ℝ) (p : ℤ[X])
 
-theorem one_lt_nat_degree_of_irrational_root (hx : Irrational x) (p_nonzero : p ≠ 0)
+theorem one_lt_natDegree_of_irrational_root (hx : Irrational x) (p_nonzero : p ≠ 0)
     (x_is_root : aeval x p = 0) : 1 < p.natDegree :=
   by
   by_contra rid
@@ -523,7 +523,7 @@ theorem one_lt_nat_degree_of_irrational_root (hx : Irrational x) (p_nonzero : p 
     refine' hx ⟨-b / a, _⟩
     assumption_mod_cast
     assumption_mod_cast
-#align one_lt_nat_degree_of_irrational_root one_lt_nat_degree_of_irrational_root
+#align one_lt_nat_degree_of_irrational_root one_lt_natDegree_of_irrational_root
 
 end Polynomial
 

@@ -77,11 +77,11 @@ theorem IsUniform.symm : Symmetric (IsUniform G ε) := fun s t h t' ht' s' hs' h
 
 variable (G)
 
-theorem is_uniform_comm : IsUniform G ε s t ↔ IsUniform G ε t s :=
+theorem isUniform_comm : IsUniform G ε s t ↔ IsUniform G ε t s :=
   ⟨fun h => h.symm, fun h => h.symm⟩
-#align simple_graph.is_uniform_comm SimpleGraph.is_uniform_comm
+#align simple_graph.is_uniform_comm SimpleGraph.isUniform_comm
 
-theorem is_uniform_singleton (hε : 0 < ε) : G.IsUniform ε {a} {b} :=
+theorem isUniform_singleton (hε : 0 < ε) : G.IsUniform ε {a} {b} :=
   by
   intro s' hs' t' ht' hs ht
   rw [card_singleton, Nat.cast_one, one_mul] at hs ht
@@ -92,24 +92,24 @@ theorem is_uniform_singleton (hε : 0 < ε) : G.IsUniform ε {a} {b} :=
   · replace ht : ε ≤ 0 := by simpa using ht
     exact (hε.not_le ht).elim
   · rwa [sub_self, abs_zero]
-#align simple_graph.is_uniform_singleton SimpleGraph.is_uniform_singleton
+#align simple_graph.is_uniform_singleton SimpleGraph.isUniform_singleton
 
-theorem not_is_uniform_zero : ¬G.IsUniform (0 : 𝕜) s t := fun h =>
+theorem not_isUniform_zero : ¬G.IsUniform (0 : 𝕜) s t := fun h =>
   (abs_nonneg _).not_lt <| h (empty_subset _) (empty_subset _) (by simp) (by simp)
-#align simple_graph.not_is_uniform_zero SimpleGraph.not_is_uniform_zero
+#align simple_graph.not_is_uniform_zero SimpleGraph.not_isUniform_zero
 
-theorem is_uniform_one : G.IsUniform (1 : 𝕜) s t :=
+theorem isUniform_one : G.IsUniform (1 : 𝕜) s t :=
   by
   intro s' hs' t' ht' hs ht
   rw [mul_one] at hs ht
   rw [eq_of_subset_of_card_le hs' (Nat.cast_le.1 hs),
     eq_of_subset_of_card_le ht' (Nat.cast_le.1 ht), sub_self, abs_zero]
   exact zero_lt_one
-#align simple_graph.is_uniform_one SimpleGraph.is_uniform_one
+#align simple_graph.is_uniform_one SimpleGraph.isUniform_one
 
 variable {G}
 
-theorem not_is_uniform_iff :
+theorem not_isUniform_iff :
     ¬G.IsUniform ε s t ↔
       ∃ s',
         s' ⊆ s ∧
@@ -120,7 +120,7 @@ theorem not_is_uniform_iff :
   by
   unfold is_uniform
   simp only [not_forall, not_lt, exists_prop]
-#align simple_graph.not_is_uniform_iff SimpleGraph.not_is_uniform_iff
+#align simple_graph.not_is_uniform_iff SimpleGraph.not_isUniform_iff
 
 open Classical
 
@@ -131,46 +131,46 @@ returns `(s, t)`. Witnesses for `(s, t)` and `(t, s)` don't necessarily match. S
 `simple_graph.nonuniform_witness`. -/
 noncomputable def nonuniformWitnesses (ε : 𝕜) (s t : Finset α) : Finset α × Finset α :=
   if h : ¬G.IsUniform ε s t then
-    ((not_is_uniform_iff.1 h).some, (not_is_uniform_iff.1 h).some_spec.2.some)
+    ((not_isUniform_iff.1 h).some, (not_isUniform_iff.1 h).some_spec.2.some)
   else (s, t)
 #align simple_graph.nonuniform_witnesses SimpleGraph.nonuniformWitnesses
 
-theorem left_nonuniform_witnesses_subset (h : ¬G.IsUniform ε s t) :
+theorem left_nonuniformWitnesses_subset (h : ¬G.IsUniform ε s t) :
     (G.nonuniformWitnesses ε s t).1 ⊆ s :=
   by
   rw [nonuniform_witnesses, dif_pos h]
   exact (not_is_uniform_iff.1 h).some_spec.1
-#align simple_graph.left_nonuniform_witnesses_subset SimpleGraph.left_nonuniform_witnesses_subset
+#align simple_graph.left_nonuniform_witnesses_subset SimpleGraph.left_nonuniformWitnesses_subset
 
-theorem left_nonuniform_witnesses_card (h : ¬G.IsUniform ε s t) :
+theorem left_nonuniformWitnesses_card (h : ¬G.IsUniform ε s t) :
     (s.card : 𝕜) * ε ≤ (G.nonuniformWitnesses ε s t).1.card :=
   by
   rw [nonuniform_witnesses, dif_pos h]
   exact (not_is_uniform_iff.1 h).some_spec.2.some_spec.2.1
-#align simple_graph.left_nonuniform_witnesses_card SimpleGraph.left_nonuniform_witnesses_card
+#align simple_graph.left_nonuniform_witnesses_card SimpleGraph.left_nonuniformWitnesses_card
 
-theorem right_nonuniform_witnesses_subset (h : ¬G.IsUniform ε s t) :
+theorem right_nonuniformWitnesses_subset (h : ¬G.IsUniform ε s t) :
     (G.nonuniformWitnesses ε s t).2 ⊆ t :=
   by
   rw [nonuniform_witnesses, dif_pos h]
   exact (not_is_uniform_iff.1 h).some_spec.2.some_spec.1
-#align simple_graph.right_nonuniform_witnesses_subset SimpleGraph.right_nonuniform_witnesses_subset
+#align simple_graph.right_nonuniform_witnesses_subset SimpleGraph.right_nonuniformWitnesses_subset
 
-theorem right_nonuniform_witnesses_card (h : ¬G.IsUniform ε s t) :
+theorem right_nonuniformWitnesses_card (h : ¬G.IsUniform ε s t) :
     (t.card : 𝕜) * ε ≤ (G.nonuniformWitnesses ε s t).2.card :=
   by
   rw [nonuniform_witnesses, dif_pos h]
   exact (not_is_uniform_iff.1 h).some_spec.2.some_spec.2.2.1
-#align simple_graph.right_nonuniform_witnesses_card SimpleGraph.right_nonuniform_witnesses_card
+#align simple_graph.right_nonuniform_witnesses_card SimpleGraph.right_nonuniformWitnesses_card
 
-theorem nonuniform_witnesses_spec (h : ¬G.IsUniform ε s t) :
+theorem nonuniformWitnesses_spec (h : ¬G.IsUniform ε s t) :
     ε ≤
       |G.edgeDensity (G.nonuniformWitnesses ε s t).1 (G.nonuniformWitnesses ε s t).2 -
           G.edgeDensity s t| :=
   by
   rw [nonuniform_witnesses, dif_pos h]
   exact (not_is_uniform_iff.1 h).some_spec.2.some_spec.2.2.2
-#align simple_graph.nonuniform_witnesses_spec SimpleGraph.nonuniform_witnesses_spec
+#align simple_graph.nonuniform_witnesses_spec SimpleGraph.nonuniformWitnesses_spec
 
 /-- Arbitrary witness of non-uniformity. `G.nonuniform_witness ε s t` and
 `G.nonuniform_witness ε t s` form a pair of subsets witnessing the non-uniformity of `(s, t)`. If
@@ -179,24 +179,24 @@ noncomputable def nonuniformWitness (ε : 𝕜) (s t : Finset α) : Finset α :=
   if WellOrderingRel s t then (G.nonuniformWitnesses ε s t).1 else (G.nonuniformWitnesses ε t s).2
 #align simple_graph.nonuniform_witness SimpleGraph.nonuniformWitness
 
-theorem nonuniform_witness_subset (h : ¬G.IsUniform ε s t) : G.nonuniformWitness ε s t ⊆ s :=
+theorem nonuniformWitness_subset (h : ¬G.IsUniform ε s t) : G.nonuniformWitness ε s t ⊆ s :=
   by
   unfold nonuniform_witness
   split_ifs
   · exact G.left_nonuniform_witnesses_subset h
   · exact G.right_nonuniform_witnesses_subset fun i => h i.symm
-#align simple_graph.nonuniform_witness_subset SimpleGraph.nonuniform_witness_subset
+#align simple_graph.nonuniform_witness_subset SimpleGraph.nonuniformWitness_subset
 
-theorem nonuniform_witness_card_le (h : ¬G.IsUniform ε s t) :
+theorem nonuniformWitness_card_le (h : ¬G.IsUniform ε s t) :
     (s.card : 𝕜) * ε ≤ (G.nonuniformWitness ε s t).card :=
   by
   unfold nonuniform_witness
   split_ifs
   · exact G.left_nonuniform_witnesses_card h
   · exact G.right_nonuniform_witnesses_card fun i => h i.symm
-#align simple_graph.nonuniform_witness_card_le SimpleGraph.nonuniform_witness_card_le
+#align simple_graph.nonuniform_witness_card_le SimpleGraph.nonuniformWitness_card_le
 
-theorem nonuniform_witness_spec (h₁ : s ≠ t) (h₂ : ¬G.IsUniform ε s t) :
+theorem nonuniformWitness_spec (h₁ : s ≠ t) (h₂ : ¬G.IsUniform ε s t) :
     ε ≤
       |G.edgeDensity (G.nonuniformWitness ε s t) (G.nonuniformWitness ε t s) - G.edgeDensity s t| :=
   by
@@ -207,7 +207,7 @@ theorem nonuniform_witness_spec (h₁ : s ≠ t) (h₂ : ¬G.IsUniform ε s t) :
   · cases h₁ rfl
   · rw [if_neg (asymm GT.gt), if_pos GT.gt, edge_density_comm, edge_density_comm _ s]
     apply G.nonuniform_witnesses_spec fun i => h₂ i.symm
-#align simple_graph.nonuniform_witness_spec SimpleGraph.nonuniform_witness_spec
+#align simple_graph.nonuniform_witness_spec SimpleGraph.nonuniformWitness_spec
 
 end SimpleGraph
 
@@ -227,24 +227,24 @@ noncomputable def nonUniforms (ε : 𝕜) : Finset (Finset α × Finset α) :=
   P.parts.offDiag.filter fun uv => ¬G.IsUniform ε uv.1 uv.2
 #align finpartition.non_uniforms Finpartition.nonUniforms
 
-theorem mk_mem_non_uniforms_iff (u v : Finset α) (ε : 𝕜) :
+theorem mk_mem_nonUniforms_iff (u v : Finset α) (ε : 𝕜) :
     (u, v) ∈ P.nonUniforms G ε ↔ u ∈ P.parts ∧ v ∈ P.parts ∧ u ≠ v ∧ ¬G.IsUniform ε u v := by
   rw [non_uniforms, mem_filter, mem_off_diag, and_assoc', and_assoc']
-#align finpartition.mk_mem_non_uniforms_iff Finpartition.mk_mem_non_uniforms_iff
+#align finpartition.mk_mem_non_uniforms_iff Finpartition.mk_mem_nonUniforms_iff
 
-theorem non_uniforms_mono {ε ε' : 𝕜} (h : ε ≤ ε') : P.nonUniforms G ε' ⊆ P.nonUniforms G ε :=
+theorem nonUniforms_mono {ε ε' : 𝕜} (h : ε ≤ ε') : P.nonUniforms G ε' ⊆ P.nonUniforms G ε :=
   monotone_filter_right _ fun uv => mt <| SimpleGraph.IsUniform.mono h
-#align finpartition.non_uniforms_mono Finpartition.non_uniforms_mono
+#align finpartition.non_uniforms_mono Finpartition.nonUniforms_mono
 
-theorem non_uniforms_bot (hε : 0 < ε) : (⊥ : Finpartition A).nonUniforms G ε = ∅ :=
+theorem nonUniforms_bot (hε : 0 < ε) : (⊥ : Finpartition A).nonUniforms G ε = ∅ :=
   by
   rw [eq_empty_iff_forall_not_mem]
   rintro ⟨u, v⟩
-  simp only [Finpartition.mk_mem_non_uniforms_iff, Finpartition.parts_bot, mem_map, not_and,
-    not_not, exists_imp]
+  simp only [Finpartition.mk_mem_nonUniforms_iff, Finpartition.parts_bot, mem_map, not_and, not_not,
+    exists_imp]
   rintro x hx rfl y hy rfl h
   exact G.is_uniform_singleton hε
-#align finpartition.non_uniforms_bot Finpartition.non_uniforms_bot
+#align finpartition.non_uniforms_bot Finpartition.nonUniforms_bot
 
 /-- A finpartition of a graph's vertex set is `ε`-uniform (aka `ε`-regular) iff the proportion of
 its pairs of parts that are not `ε`-uniform is at most `ε`. -/
@@ -290,10 +290,10 @@ noncomputable def nonuniformWitnesses : Finset (Finset α) :=
 
 variable {P G ε s} {t : Finset α}
 
-theorem nonuniform_witness_mem_nonuniform_witnesses (h : ¬G.IsUniform ε s t) (ht : t ∈ P.parts)
+theorem nonuniformWitness_mem_nonuniformWitnesses (h : ¬G.IsUniform ε s t) (ht : t ∈ P.parts)
     (hst : s ≠ t) : G.nonuniformWitness ε s t ∈ P.nonuniformWitnesses G ε s :=
   mem_image_of_mem _ <| mem_filter.2 ⟨ht, hst, h⟩
-#align finpartition.nonuniform_witness_mem_nonuniform_witnesses Finpartition.nonuniform_witness_mem_nonuniform_witnesses
+#align finpartition.nonuniform_witness_mem_nonuniform_witnesses Finpartition.nonuniformWitness_mem_nonuniformWitnesses
 
 end Finpartition
 

@@ -33,19 +33,19 @@ unsafe def desugar :=
   sorry
 #align omega.int.desugar omega.int.desugar
 
-theorem univ_close_of_unsat_clausify (m : Nat) (p : Preform) :
+theorem univClose_of_unsat_clausify (m : Nat) (p : Preform) :
     Clauses.Unsat (dnf (¬* p)) → UnivClose p (fun x => 0) m
   | h1 => by
     apply univ_close_of_valid
     apply valid_of_unsat_not
     apply unsat_of_clauses_unsat
     exact h1
-#align omega.int.univ_close_of_unsat_clausify Omega.Int.univ_close_of_unsat_clausify
+#align omega.int.univ_close_of_unsat_clausify Omega.Int.univClose_of_unsat_clausify
 
 /-- Given a (p : preform), return the expr of a (t : univ_close m p) -/
 unsafe def prove_univ_close (m : Nat) (p : Preform) : tactic expr := do
   let x ← prove_unsats (dnf (¬* p))
-  return q(univ_close_of_unsat_clausify $(q(m)) $(q(p)) $(x))
+  return q(univClose_of_unsat_clausify $(q(m)) $(q(p)) $(x))
 #align omega.int.prove_univ_close omega.int.prove_univ_close
 
 -- failed to format: unknown constant 'term.pseudo.antiquot'

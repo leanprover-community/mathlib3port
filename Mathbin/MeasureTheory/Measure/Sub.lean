@@ -81,14 +81,14 @@ theorem sub_apply [IsFiniteMeasure ν] (h₁ : MeasurableSet s) (h₂ : ν ≤ �
       (fun (t : Set α) (h_t_measurable_set : MeasurableSet t) => μ t - ν t) (by simp)
       (by
         intro g h_meas h_disj; simp only; rw [Ennreal.tsum_sub]
-        repeat' rw [← MeasureTheory.measure_Union h_disj h_meas]
+        repeat' rw [← MeasureTheory.measure_unionᵢ h_disj h_meas]
         exacts[MeasureTheory.measure_ne_top _ _, fun i => h₂ _ (h_meas _)])
   -- Now, we demonstrate `μ - ν = measure_sub`, and apply it.
   · have h_measure_sub_add : ν + measure_sub = μ :=
       by
       ext (t h_t_measurable_set)
       simp only [Pi.add_apply, coe_add]
-      rw [MeasureTheory.Measure.of_measurable_apply _ h_t_measurable_set, add_comm,
+      rw [MeasureTheory.Measure.ofMeasurable_apply _ h_t_measurable_set, add_comm,
         tsub_add_cancel_of_le (h₂ t h_t_measurable_set)]
     have h_measure_sub_eq : μ - ν = measure_sub :=
       by

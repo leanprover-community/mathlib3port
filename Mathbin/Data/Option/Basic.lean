@@ -110,15 +110,19 @@ theorem get_some (x : α) (h : isSome (some x)) : Option.get h = x :=
 #align option.get_some Option.get_some
 -/
 
+#print Option.getD_some /-
 @[simp]
-theorem get_or_else_some (x y : α) : Option.getD (some x) y = x :=
+theorem getD_some (x y : α) : Option.getD (some x) y = x :=
   rfl
-#align option.get_or_else_some Option.get_or_else_some
+#align option.get_or_else_some Option.getD_some
+-/
 
+#print Option.getD_none /-
 @[simp]
-theorem get_or_else_none (x : α) : Option.getD none x = x :=
+theorem getD_none (x : α) : Option.getD none x = x :=
   rfl
-#align option.get_or_else_none Option.get_or_else_none
+#align option.get_or_else_none Option.getD_none
+-/
 
 #print Option.getD_coe /-
 @[simp]
@@ -127,9 +131,11 @@ theorem getD_coe (x y : α) : Option.getD (↑x) y = x :=
 #align option.get_or_else_coe Option.getD_coe
 -/
 
-theorem get_or_else_of_ne_none {x : Option α} (hx : x ≠ none) (y : α) : some (x.getOrElse y) = x :=
-  by cases x <;> [contradiction, rw [get_or_else_some]]
-#align option.get_or_else_of_ne_none Option.get_or_else_of_ne_none
+#print Option.getD_of_ne_none /-
+theorem getD_of_ne_none {x : Option α} (hx : x ≠ none) (y : α) : some (x.getOrElse y) = x := by
+  cases x <;> [contradiction, rw [get_or_else_some]]
+#align option.get_or_else_of_ne_none Option.getD_of_ne_none
+-/
 
 #print Option.coe_get /-
 @[simp]
@@ -1081,30 +1087,48 @@ def casesOn' : Option α → β → (α → β) → β
 #align option.cases_on' Option.casesOn'
 -/
 
+#print Option.casesOn'_none /-
 @[simp]
-theorem cases_on'_none (x : β) (f : α → β) : casesOn' none x f = x :=
+theorem casesOn'_none (x : β) (f : α → β) : casesOn' none x f = x :=
   rfl
-#align option.cases_on'_none Option.cases_on'_none
+#align option.cases_on'_none Option.casesOn'_none
+-/
 
+#print Option.casesOn'_some /-
 @[simp]
-theorem cases_on'_some (x : β) (f : α → β) (a : α) : casesOn' (some a) x f = f a :=
+theorem casesOn'_some (x : β) (f : α → β) (a : α) : casesOn' (some a) x f = f a :=
   rfl
-#align option.cases_on'_some Option.cases_on'_some
+#align option.cases_on'_some Option.casesOn'_some
+-/
 
+#print Option.casesOn'_coe /-
 @[simp]
-theorem cases_on'_coe (x : β) (f : α → β) (a : α) : casesOn' (a : Option α) x f = f a :=
+theorem casesOn'_coe (x : β) (f : α → β) (a : α) : casesOn' (a : Option α) x f = f a :=
   rfl
-#align option.cases_on'_coe Option.cases_on'_coe
+#align option.cases_on'_coe Option.casesOn'_coe
+-/
 
+/- warning: option.cases_on'_none_coe -> Option.casesOn'_none_coe is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} (f : (Option.{u1} α) -> β) (o : Option.{u1} α), Eq.{succ u2} β (Option.casesOn'.{u1, u2} α β o (f (Option.none.{u1} α)) (Function.comp.{succ u1, succ u1, succ u2} α (Option.{u1} α) β f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (Option.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (Option.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (Option.{u1} α) (coeOption.{u1} α)))))) (f o)
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} (f : (Option.{u2} α) -> β) (o : Option.{u2} α), Eq.{succ u1} β (Option.casesOn'.{u2, u1} α β o (f (Option.none.{u2} α)) (Function.comp.{succ u2, succ u2, succ u1} α (Option.{u2} α) β f (fun (a : α) => Option.some.{u2} α a))) (f o)
+Case conversion may be inaccurate. Consider using '#align option.cases_on'_none_coe Option.casesOn'_none_coeₓ'. -/
 @[simp]
-theorem cases_on'_none_coe (f : Option α → β) (o : Option α) :
-    casesOn' o (f none) (f ∘ coe) = f o := by cases o <;> rfl
-#align option.cases_on'_none_coe Option.cases_on'_none_coe
-
-@[simp]
-theorem get_or_else_map (f : α → β) (x : α) (o : Option α) : getD (o.map f) (f x) = f (getD o x) :=
+theorem casesOn'_none_coe (f : Option α → β) (o : Option α) : casesOn' o (f none) (f ∘ coe) = f o :=
   by cases o <;> rfl
-#align option.get_or_else_map Option.get_or_else_map
+#align option.cases_on'_none_coe Option.casesOn'_none_coe
+
+/- warning: option.get_or_else_map -> Option.getD_map is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} (f : α -> β) (x : α) (o : Option.{u1} α), Eq.{succ u2} β (Option.getD.{u2} β (Option.map.{u1, u2} α β f o) (f x)) (f (Option.getD.{u1} α o x))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} (f : α -> β) (x : α) (o : Option.{u2} α), Eq.{succ u1} β (Option.getD.{u1} β (Option.map.{u2, u1} α β f o) (f x)) (f (Option.getD.{u2} α o x))
+Case conversion may be inaccurate. Consider using '#align option.get_or_else_map Option.getD_mapₓ'. -/
+@[simp]
+theorem getD_map (f : α → β) (x : α) (o : Option α) : getD (o.map f) (f x) = f (getD o x) := by
+  cases o <;> rfl
+#align option.get_or_else_map Option.getD_map
 
 theorem orelse_eq_some (o o' : Option α) (x : α) :
     (o <|> o') = some x ↔ o = some x ∨ o = none ∧ o' = some x :=
@@ -1173,30 +1197,20 @@ theorem choice_isSome_iff_nonempty {α : Type _} : (choice α).isSome ↔ Nonemp
 
 end
 
-#print Option.to_list_some /-
 @[simp]
-theorem to_list_some (a : α) : (a : Option α).toList = [a] :=
+theorem toList_some (a : α) : (a : Option α).toList = [a] :=
   rfl
-#align option.to_list_some Option.to_list_some
--/
+#align option.to_list_some Option.toList_some
 
-#print Option.to_list_none /-
 @[simp]
-theorem to_list_none (α : Type _) : (none : Option α).toList = [] :=
+theorem toList_none (α : Type _) : (none : Option α).toList = [] :=
   rfl
-#align option.to_list_none Option.to_list_none
--/
+#align option.to_list_none Option.toList_none
 
-/- warning: option.elim_none_some -> Option.elim_none_some is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (f : (Option.{u1} α) -> β), Eq.{max (succ u1) (succ u2)} ((Option.{u1} α) -> β) (Option.elim'.{u1, u2} α β (f (Option.none.{u1} α)) (Function.comp.{succ u1, succ u1, succ u2} α (Option.{u1} α) β f (Option.some.{u1} α))) f
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (f : (Option.{u2} α) -> β), Eq.{max (succ u2) (succ u1)} ((Option.{u2} α) -> β) (fun (x : Option.{u2} α) => Option.elim.{u2, succ u1} α β x (f (Option.none.{u2} α)) (Function.comp.{succ u2, succ u2, succ u1} α (Option.{u2} α) β f (Option.some.{u2} α))) f
-Case conversion may be inaccurate. Consider using '#align option.elim_none_some Option.elim_none_someₓ'. -/
 @[simp]
-theorem elim_none_some (f : Option α → β) : Option.elim' (f none) (f ∘ some) = f :=
+theorem elim'_none_some (f : Option α → β) : Option.elim' (f none) (f ∘ some) = f :=
   funext fun o => by cases o <;> rfl
-#align option.elim_none_some Option.elim_none_some
+#align option.elim_none_some Option.elim'_none_some
 
 end Option
 

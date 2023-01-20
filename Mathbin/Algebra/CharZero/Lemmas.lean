@@ -96,7 +96,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align add_self_eq_zero add_self_eq_zeroₓ'. -/
 @[simp]
 theorem add_self_eq_zero {a : R} : a + a = 0 ↔ a = 0 := by
-  simp only [(two_mul a).symm, mul_eq_zero, two_ne_zero, false_or_iff]
+  simp only [(two_mul a).symm, mul_eq_zero, two_neZero, false_or_iff]
 #align add_self_eq_zero add_self_eq_zero
 
 /- warning: bit0_eq_zero -> bit0_eq_zero is a dubious translation:
@@ -201,7 +201,7 @@ theorem bit0_injective : Function.Injective (bit0 : R → R) := fun a b h =>
   by
   dsimp [bit0] at h
   simp only [(two_mul a).symm, (two_mul b).symm] at h
-  refine' nat_mul_inj' _ two_ne_zero
+  refine' nat_mul_inj' _ two_neZero
   exact_mod_cast h
 #align bit0_injective bit0_injective
 
@@ -276,7 +276,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : DivisionRing.{u1} R] [_inst_2 : CharZero.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (Ring.toAddGroupWithOne.{u1} R (DivisionRing.toRing.{u1} R _inst_1)))] (a : R), Eq.{succ u1} R (HDiv.hDiv.{u1, u1, u1} R R R (instHDiv.{u1} R (DivisionRing.toDiv.{u1} R _inst_1)) (HAdd.hAdd.{u1, u1, u1} R R R (instHAdd.{u1} R (Distrib.toAdd.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (DivisionRing.toRing.{u1} R _inst_1))))))) a a) (OfNat.ofNat.{u1} R 2 (instOfNat.{u1} R 2 (NonAssocRing.toNatCast.{u1} R (Ring.toNonAssocRing.{u1} R (DivisionRing.toRing.{u1} R _inst_1))) (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))))) a
 Case conversion may be inaccurate. Consider using '#align half_add_self half_add_selfₓ'. -/
 @[simp]
-theorem half_add_self (a : R) : (a + a) / 2 = a := by rw [← mul_two, mul_div_cancel a two_ne_zero]
+theorem half_add_self (a : R) : (a + a) / 2 = a := by rw [← mul_two, mul_div_cancel a two_neZero]
 #align half_add_self half_add_self
 
 /- warning: add_halves' -> add_halves' is a dubious translation:

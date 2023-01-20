@@ -44,19 +44,19 @@ namespace Rat
 variable {p q : ℚ} {s t : Set ℚ}
 
 theorem interior_compact_eq_empty (hs : IsCompact s) : interior s = ∅ :=
-  dense_embedding_coe_real.to_dense_inducing.interior_compact_eq_empty dense_irrational hs
+  denseEmbedding_coe_real.to_dense_inducing.interior_compact_eq_empty dense_irrational hs
 #align rat.interior_compact_eq_empty Rat.interior_compact_eq_empty
 
 theorem dense_compl_compact (hs : IsCompact s) : Dense (sᶜ) :=
   interior_eq_empty_iff_dense_compl.1 (interior_compact_eq_empty hs)
 #align rat.dense_compl_compact Rat.dense_compl_compact
 
-instance cocompact_inf_nhds_ne_bot : NeBot (cocompact ℚ ⊓ 𝓝 p) :=
+instance cocompact_inf_nhds_neBot : NeBot (cocompact ℚ ⊓ 𝓝 p) :=
   by
   refine' (has_basis_cocompact.inf (nhds_basis_opens _)).ne_bot_iff.2 _
   rintro ⟨s, o⟩ ⟨hs, hpo, ho⟩; rw [inter_comm]
   exact (dense_compl_compact hs).inter_open_nonempty _ ho ⟨p, hpo⟩
-#align rat.cocompact_inf_nhds_ne_bot Rat.cocompact_inf_nhds_ne_bot
+#align rat.cocompact_inf_nhds_ne_bot Rat.cocompact_inf_nhds_neBot
 
 theorem not_countably_generated_cocompact : ¬IsCountablyGenerated (cocompact ℚ) :=
   by
@@ -76,17 +76,17 @@ theorem not_countably_generated_nhds_infty_alexandroff : ¬IsCountablyGenerated 
   exact not_countably_generated_cocompact this
 #align rat.not_countably_generated_nhds_infty_alexandroff Rat.not_countably_generated_nhds_infty_alexandroff
 
-theorem not_first_countable_topology_alexandroff : ¬FirstCountableTopology ℚ∞ :=
+theorem not_firstCountableTopology_alexandroff : ¬FirstCountableTopology ℚ∞ :=
   by
   intro
   exact not_countably_generated_nhds_infty_alexandroff inferInstance
-#align rat.not_first_countable_topology_alexandroff Rat.not_first_countable_topology_alexandroff
+#align rat.not_first_countable_topology_alexandroff Rat.not_firstCountableTopology_alexandroff
 
-theorem not_second_countable_topology_alexandroff : ¬SecondCountableTopology ℚ∞ :=
+theorem not_secondCountableTopology_alexandroff : ¬SecondCountableTopology ℚ∞ :=
   by
   intro
   exact not_first_countable_topology_alexandroff inferInstance
-#align rat.not_second_countable_topology_alexandroff Rat.not_second_countable_topology_alexandroff
+#align rat.not_second_countable_topology_alexandroff Rat.not_secondCountableTopology_alexandroff
 
 instance : TotallyDisconnectedSpace ℚ :=
   by
@@ -95,7 +95,7 @@ instance : TotallyDisconnectedSpace ℚ :=
   wlog hlt : x < y := H.lt_or_lt using x y, y x
   rcases exists_irrational_btwn (Rat.cast_lt.2 hlt) with ⟨z, hz, hxz, hzy⟩
   have := hs.image coe continuous_coe_real.continuous_on
-  rw [is_preconnected_iff_ord_connected] at this
+  rw [isPreconnected_iff_ordConnected] at this
   have : z ∈ coe '' s := this.out (mem_image_of_mem _ hx) (mem_image_of_mem _ hy) ⟨hxz.le, hzy.le⟩
   exact hz (image_subset_range _ _ this)
 

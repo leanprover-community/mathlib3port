@@ -215,10 +215,10 @@ theorem pow_card_le_prod (s : Finset ι) (f : ι → N) (n : N) (h : ∀ x ∈ s
 #align finset.pow_card_le_prod Finset.pow_card_le_prod
 #align finset.card_nsmul_le_sum Finset.card_nsmul_le_sum
 
-theorem card_bUnion_le_card_mul [DecidableEq β] (s : Finset ι) (f : ι → Finset β) (n : ℕ)
+theorem card_bunionᵢ_le_card_mul [DecidableEq β] (s : Finset ι) (f : ι → Finset β) (n : ℕ)
     (h : ∀ a ∈ s, (f a).card ≤ n) : (s.bUnion f).card ≤ s.card * n :=
   card_bunionᵢ_le.trans <| sum_le_card_nsmul _ _ _ h
-#align finset.card_bUnion_le_card_mul Finset.card_bUnion_le_card_mul
+#align finset.card_bUnion_le_card_mul Finset.card_bunionᵢ_le_card_mul
 
 variable {ι' : Type _} [DecidableEq ι']
 
@@ -362,14 +362,14 @@ theorem sum_card [Fintype α] (h : ∀ a, (B.filter <| (· ∈ ·) a).card = n) 
   simp_rw [Fintype.card, ← sum_card_inter fun a _ => h a, univ_inter]
 #align finset.sum_card Finset.sum_card
 
-theorem card_le_card_bUnion {s : Finset ι} {f : ι → Finset α} (hs : (s : Set ι).PairwiseDisjoint f)
+theorem card_le_card_bunionᵢ {s : Finset ι} {f : ι → Finset α} (hs : (s : Set ι).PairwiseDisjoint f)
     (hf : ∀ i ∈ s, (f i).Nonempty) : s.card ≤ (s.bUnion f).card :=
   by
   rw [card_bUnion hs, card_eq_sum_ones]
   exact sum_le_sum fun i hi => (hf i hi).card_pos
-#align finset.card_le_card_bUnion Finset.card_le_card_bUnion
+#align finset.card_le_card_bUnion Finset.card_le_card_bunionᵢ
 
-theorem card_le_card_bUnion_add_card_fiber {s : Finset ι} {f : ι → Finset α}
+theorem card_le_card_bunionᵢ_add_card_fiber {s : Finset ι} {f : ι → Finset α}
     (hs : (s : Set ι).PairwiseDisjoint f) :
     s.card ≤ (s.bUnion f).card + (s.filter fun i => f i = ∅).card :=
   by
@@ -380,14 +380,14 @@ theorem card_le_card_bUnion_add_card_fiber {s : Finset ι} {f : ι → Finset α
             nonempty_of_ne_empty <| (mem_filter.1 hi).2).trans <|
         card_le_of_subset <| bUnion_subset_bUnion_of_subset_left _ <| filter_subset _ _)
       _
-#align finset.card_le_card_bUnion_add_card_fiber Finset.card_le_card_bUnion_add_card_fiber
+#align finset.card_le_card_bUnion_add_card_fiber Finset.card_le_card_bunionᵢ_add_card_fiber
 
-theorem card_le_card_bUnion_add_one {s : Finset ι} {f : ι → Finset α} (hf : Injective f)
+theorem card_le_card_bunionᵢ_add_one {s : Finset ι} {f : ι → Finset α} (hf : Injective f)
     (hs : (s : Set ι).PairwiseDisjoint f) : s.card ≤ (s.bUnion f).card + 1 :=
-  (card_le_card_bUnion_add_card_fiber hs).trans <|
+  (card_le_card_bunionᵢ_add_card_fiber hs).trans <|
     add_le_add_left
       (card_le_one.2 fun i hi j hj => hf <| (mem_filter.1 hi).2.trans (mem_filter.1 hj).2.symm) _
-#align finset.card_le_card_bUnion_add_one Finset.card_le_card_bUnion_add_one
+#align finset.card_le_card_bUnion_add_one Finset.card_le_card_bunionᵢ_add_one
 
 end DoubleCounting
 
@@ -682,7 +682,7 @@ theorem prod_strict_mono' [OrderedCancelCommMonoid M] : StrictMono fun f : ι �
   let ⟨hle, i, hlt⟩ := Pi.lt_def.mp hfg
   Finset.prod_lt_prod' (fun i _ => hle i) ⟨i, Finset.mem_univ i, hlt⟩
 #align fintype.prod_strict_mono' Fintype.prod_strict_mono'
-#align fintype.sum_strict_mono Fintype.sum_strict_mono
+#align fintype.sum_strict_mono Fintype.sum_strictMono
 
 end Fintype
 

@@ -50,10 +50,10 @@ def isomorphismClasses : Cat.{v, u} ⥤ Type u
   map C D F := Quot.map F.obj fun X Y ⟨f⟩ => ⟨F.mapIso f⟩
 #align category_theory.isomorphism_classes CategoryTheory.isomorphismClasses
 
-theorem Groupoid.is_isomorphic_iff_nonempty_hom {C : Type u} [Groupoid.{v} C] {X Y : C} :
+theorem Groupoid.isIsomorphic_iff_nonempty_hom {C : Type u} [Groupoid.{v} C] {X Y : C} :
     IsIsomorphic X Y ↔ Nonempty (X ⟶ Y) :=
   (Groupoid.isoEquivHom X Y).nonempty_congr
-#align category_theory.groupoid.is_isomorphic_iff_nonempty_hom CategoryTheory.Groupoid.is_isomorphic_iff_nonempty_hom
+#align category_theory.groupoid.is_isomorphic_iff_nonempty_hom CategoryTheory.Groupoid.isIsomorphic_iff_nonempty_hom
 
 -- PROJECT: define `skeletal`, and show every category is equivalent to a skeletal category,
 -- using the axiom of choice to pick a representative of every isomorphism class.

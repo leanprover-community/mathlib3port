@@ -205,13 +205,13 @@ instance monoidalCategoryOp : MonoidalCategory Cᵒᵖ
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem op_tensor_obj (X Y : Cᵒᵖ) : X ⊗ Y = op (unop X ⊗ unop Y) :=
+theorem op_tensorObj (X Y : Cᵒᵖ) : X ⊗ Y = op (unop X ⊗ unop Y) :=
   rfl
-#align category_theory.op_tensor_obj CategoryTheory.op_tensor_obj
+#align category_theory.op_tensor_obj CategoryTheory.op_tensorObj
 
-theorem op_tensor_unit : 𝟙_ Cᵒᵖ = op (𝟙_ C) :=
+theorem op_tensorUnit : 𝟙_ Cᵒᵖ = op (𝟙_ C) :=
   rfl
-#align category_theory.op_tensor_unit CategoryTheory.op_tensor_unit
+#align category_theory.op_tensor_unit CategoryTheory.op_tensorUnit
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -247,13 +247,13 @@ instance monoidalCategoryMop : MonoidalCategory Cᴹᵒᵖ
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem mop_tensor_obj (X Y : Cᴹᵒᵖ) : X ⊗ Y = mop (unmop Y ⊗ unmop X) :=
+theorem mop_tensorObj (X Y : Cᴹᵒᵖ) : X ⊗ Y = mop (unmop Y ⊗ unmop X) :=
   rfl
-#align category_theory.mop_tensor_obj CategoryTheory.mop_tensor_obj
+#align category_theory.mop_tensor_obj CategoryTheory.mop_tensorObj
 
-theorem mop_tensor_unit : 𝟙_ Cᴹᵒᵖ = mop (𝟙_ C) :=
+theorem mop_tensorUnit : 𝟙_ Cᴹᵒᵖ = mop (𝟙_ C) :=
   rfl
-#align category_theory.mop_tensor_unit CategoryTheory.mop_tensor_unit
+#align category_theory.mop_tensor_unit CategoryTheory.mop_tensorUnit
 
 end CategoryTheory
 

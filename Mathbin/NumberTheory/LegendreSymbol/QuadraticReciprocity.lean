@@ -62,7 +62,7 @@ theorem euler_criterion_units (x : (Zmod p)ˣ) : (∃ y : (Zmod p)ˣ, y ^ 2 = x)
   by_cases hc : p = 2
   · subst hc
     simp only [eq_iff_true_of_subsingleton, exists_const]
-  · have h₀ := FiniteField.unit_is_square_iff (by rwa [ring_char_zmod_n]) x
+  · have h₀ := FiniteField.unit_isSquare_iff (by rwa [ring_char_zmod_n]) x
     have hs : (∃ y : (Zmod p)ˣ, y ^ 2 = x) ↔ IsSquare x :=
       by
       rw [isSquare_iff_exists_sq x]
@@ -135,35 +135,35 @@ theorem eq_pow (a : ℤ) : (legendreSym p a : Zmod p) = a ^ (p / 2) :=
   by
   cases' eq_or_ne (ringChar (Zmod p)) 2 with hc hc
   · by_cases ha : (a : Zmod p) = 0
-    · rw [legendreSym, ha, quadratic_char_zero,
+    · rw [legendreSym, ha, quadraticChar_zero,
         zero_pow (Nat.div_pos (Fact.out p.prime).two_le (succ_pos 1))]
       norm_cast
     · have := (ring_char_zmod_n p).symm.trans hc
       -- p = 2
       subst p
-      rw [legendreSym, quadratic_char_eq_one_of_char_two hc ha]
+      rw [legendreSym, quadraticChar_eq_one_of_char_two hc ha]
       revert ha
       generalize (a : Zmod 2) = b
       revert b
       decide
-  · convert quadratic_char_eq_pow_of_char_ne_two' hc (a : Zmod p)
+  · convert quadraticChar_eq_pow_of_char_ne_two' hc (a : Zmod p)
     exact (card p).symm
 #align legendre_sym.eq_pow legendreSym.eq_pow
 
 /-- If `p ∤ a`, then `legendre_sym p a` is `1` or `-1`. -/
 theorem eq_one_or_neg_one {a : ℤ} (ha : (a : Zmod p) ≠ 0) :
     legendreSym p a = 1 ∨ legendreSym p a = -1 :=
-  quadratic_char_dichotomy ha
+  quadraticChar_dichotomy ha
 #align legendre_sym.eq_one_or_neg_one legendreSym.eq_one_or_neg_one
 
 theorem eq_neg_one_iff_not_one {a : ℤ} (ha : (a : Zmod p) ≠ 0) :
     legendreSym p a = -1 ↔ ¬legendreSym p a = 1 :=
-  quadratic_char_eq_neg_one_iff_not_one ha
+  quadraticChar_eq_neg_one_iff_not_one ha
 #align legendre_sym.eq_neg_one_iff_not_one legendreSym.eq_neg_one_iff_not_one
 
 /-- The Legendre symbol of `p` and `a` is zero iff `p ∣ a`. -/
 theorem eq_zero_iff (a : ℤ) : legendreSym p a = 0 ↔ (a : Zmod p) = 0 :=
-  quadratic_char_eq_zero_iff
+  quadraticChar_eq_zero_iff
 #align legendre_sym.eq_zero_iff legendreSym.eq_zero_iff
 
 @[simp]
@@ -190,12 +190,12 @@ def hom : ℤ →*₀ ℤ where
 
 /-- The square of the symbol is 1 if `p ∤ a`. -/
 theorem sq_one {a : ℤ} (ha : (a : Zmod p) ≠ 0) : legendreSym p a ^ 2 = 1 :=
-  quadratic_char_sq_one ha
+  quadraticChar_sq_one ha
 #align legendre_sym.sq_one legendreSym.sq_one
 
 /-- The Legendre symbol of `a^2` at `p` is 1 if `p ∤ a`. -/
 theorem sq_one' {a : ℤ} (ha : (a : Zmod p) ≠ 0) : legendreSym p (a ^ 2) = 1 := by
-  exact_mod_cast quadratic_char_sq_one' ha
+  exact_mod_cast quadraticChar_sq_one' ha
 #align legendre_sym.sq_one' legendreSym.sq_one'
 
 /-- The Legendre symbol depends only on `a` mod `p`. -/
@@ -205,7 +205,7 @@ protected theorem mod (a : ℤ) : legendreSym p a = legendreSym p (a % p) := by
 
 /-- When `p ∤ a`, then `legendre_sym p a = 1` iff `a` is a square mod `p`. -/
 theorem eq_one_iff {a : ℤ} (ha0 : (a : Zmod p) ≠ 0) : legendreSym p a = 1 ↔ IsSquare (a : Zmod p) :=
-  quadratic_char_one_iff_is_square ha0
+  quadraticChar_one_iff_isSquare ha0
 #align legendre_sym.eq_one_iff legendreSym.eq_one_iff
 
 theorem eq_one_iff' {a : ℕ} (ha0 : (a : Zmod p) ≠ 0) :
@@ -218,7 +218,7 @@ theorem eq_one_iff' {a : ℕ} (ha0 : (a : Zmod p) ≠ 0) :
 
 /-- `legendre_sym p a = -1` iff `a` is a nonsquare mod `p`. -/
 theorem eq_neg_one_iff {a : ℤ} : legendreSym p a = -1 ↔ ¬IsSquare (a : Zmod p) :=
-  quadratic_char_neg_one_iff_not_is_square
+  quadraticChar_neg_one_iff_not_isSquare
 #align legendre_sym.eq_neg_one_iff legendreSym.eq_neg_one_iff
 
 theorem eq_neg_one_iff' {a : ℕ} : legendreSym p a = -1 ↔ ¬IsSquare (a : Zmod p) :=
@@ -230,7 +230,7 @@ theorem eq_neg_one_iff' {a : ℕ} : legendreSym p a = -1 ↔ ¬IsSquare (a : Zmo
 /-- The number of square roots of `a` modulo `p` is determined by the Legendre symbol. -/
 theorem card_sqrts (hp : p ≠ 2) (a : ℤ) :
     ↑{ x : Zmod p | x ^ 2 = a }.toFinset.card = legendreSym p a + 1 :=
-  quadratic_char_card_sqrts ((ring_char_zmod_n p).substr hp) a
+  quadraticChar_card_sqrts ((ringChar_zmod_n p).substr hp) a
 #align legendre_sym.card_sqrts legendreSym.card_sqrts
 
 end legendreSym
@@ -252,7 +252,7 @@ open Zmod
 
 /-- `legendre_sym p (-1)` is given by `χ₄ p`. -/
 theorem legendreSym.at_neg_one (hp : p ≠ 2) : legendreSym p (-1) = χ₄ p := by
-  simp only [legendreSym, card p, quadratic_char_neg_one ((ring_char_zmod_n p).substr hp),
+  simp only [legendreSym, card p, quadraticChar_neg_one ((ring_char_zmod_n p).substr hp),
     Int.cast_neg, Int.cast_one]
 #align legendre_sym.at_neg_one legendreSym.at_neg_one
 
@@ -260,7 +260,7 @@ namespace Zmod
 
 /-- `-1` is a square in `zmod p` iff `p` is not congruent to `3` mod `4`. -/
 theorem exists_sq_eq_neg_one_iff : IsSquare (-1 : Zmod p) ↔ p % 4 ≠ 3 := by
-  rw [FiniteField.is_square_neg_one_iff, card p]
+  rw [FiniteField.isSquare_neg_one_iff, card p]
 #align zmod.exists_sq_eq_neg_one_iff Zmod.exists_sq_eq_neg_one_iff
 
 theorem mod_four_ne_three_of_sq_eq_neg_one {y : Zmod p} (hy : y ^ 2 = -1) : p % 4 ≠ 3 :=
@@ -299,13 +299,13 @@ include hp
 
 /-- `legendre_sym p 2` is given by `χ₈ p`. -/
 theorem at_two : legendreSym p 2 = χ₈ p := by
-  simp only [legendreSym, card p, quadratic_char_two ((ring_char_zmod_n p).substr hp),
-    Int.cast_bit0, Int.cast_one]
+  simp only [legendreSym, card p, quadraticChar_two ((ring_char_zmod_n p).substr hp), Int.cast_bit0,
+    Int.cast_one]
 #align legendre_sym.at_two legendreSym.at_two
 
 /-- `legendre_sym p (-2)` is given by `χ₈' p`. -/
 theorem at_neg_two : legendreSym p (-2) = χ₈' p := by
-  simp only [legendreSym, card p, quadratic_char_neg_two ((ring_char_zmod_n p).substr hp),
+  simp only [legendreSym, card p, quadraticChar_neg_two ((ring_char_zmod_n p).substr hp),
     Int.cast_bit0, Int.cast_one, Int.cast_neg]
 #align legendre_sym.at_neg_two legendreSym.at_neg_two
 
@@ -320,7 +320,7 @@ include hp
 /-- `2` is a square modulo an odd prime `p` iff `p` is congruent to `1` or `7` mod `8`. -/
 theorem exists_sq_eq_two_iff : IsSquare (2 : Zmod p) ↔ p % 8 = 1 ∨ p % 8 = 7 :=
   by
-  rw [FiniteField.is_square_two_iff, card p]
+  rw [FiniteField.isSquare_two_iff, card p]
   have h₁ := prime.mod_two_eq_one_iff_ne_two.mpr hp
   rw [← mod_mod_of_dvd p (by norm_num : 2 ∣ 8)] at h₁
   have h₂ := mod_lt p (by norm_num : 0 < 8)
@@ -332,7 +332,7 @@ theorem exists_sq_eq_two_iff : IsSquare (2 : Zmod p) ↔ p % 8 = 1 ∨ p % 8 = 7
 /-- `-2` is a square modulo an odd prime `p` iff `p` is congruent to `1` or `3` mod `8`. -/
 theorem exists_sq_eq_neg_two_iff : IsSquare (-2 : Zmod p) ↔ p % 8 = 1 ∨ p % 8 = 3 :=
   by
-  rw [FiniteField.is_square_neg_two_iff, card p]
+  rw [FiniteField.isSquare_neg_two_iff, card p]
   have h₁ := prime.mod_two_eq_one_iff_ne_two.mpr hp
   rw [← mod_mod_of_dvd p (by norm_num : 2 ∣ 8)] at h₁
   have h₂ := mod_lt p (by norm_num : 0 < 8)
@@ -370,13 +370,13 @@ theorem quadratic_reciprocity (hp : p ≠ 2) (hq : q ≠ 2) (hpq : p ≠ q) :
   have hq₁ := (prime.eq_two_or_odd <| Fact.out q.prime).resolve_left hq
   have hq₂ := (ring_char_zmod_n q).substr hq
   have h :=
-    quadratic_char_odd_prime ((ring_char_zmod_n p).substr hp) hq ((ring_char_zmod_n p).substr hpq)
+    quadraticChar_odd_prime ((ring_char_zmod_n p).substr hp) hq ((ring_char_zmod_n p).substr hpq)
   rw [card p] at h
   have nc : ∀ n r : ℕ, ((n : ℤ) : Zmod r) = n := fun n r => by norm_cast
   have nc' : (((-1) ^ (p / 2) : ℤ) : Zmod q) = (-1) ^ (p / 2) := by norm_cast
   rw [legendreSym, legendreSym, nc, nc, h, map_mul, mul_rotate', mul_comm (p / 2), ← pow_two,
-    quadratic_char_sq_one (prime_ne_zero q p hpq.symm), mul_one, pow_mul, χ₄_eq_neg_one_pow hp₁,
-    nc', map_pow, quadratic_char_neg_one hq₂, card q, χ₄_eq_neg_one_pow hq₁]
+    quadraticChar_sq_one (prime_ne_zero q p hpq.symm), mul_one, pow_mul, χ₄_eq_neg_one_pow hp₁, nc',
+    map_pow, quadraticChar_neg_one hq₂, card q, χ₄_eq_neg_one_pow hq₁]
 #align legendre_sym.quadratic_reciprocity legendreSym.quadratic_reciprocity
 
 /-- The Law of Quadratic Reciprocity: if `p` and `q` are odd primes, then

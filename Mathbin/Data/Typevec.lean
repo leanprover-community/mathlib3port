@@ -412,9 +412,16 @@ theorem appendFun_comp' {α₀ α₁ α₂ : TypeVec n} {β₀ β₁ β₂ : Typ
   eq_of_drop_last_eq rfl rfl
 #align typevec.append_fun_comp' TypeVec.appendFun_comp'
 
-theorem nil_fun_comp {α₀ : TypeVec 0} (f₀ : α₀ ⟹ Fin2.elim0) : nil_fun ⊚ f₀ = f₀ :=
+/- warning: typevec.nil_fun_comp clashes with typevec.nilFun_comp -> TypeVec.nilFun_comp
+warning: typevec.nil_fun_comp -> TypeVec.nilFun_comp is a dubious translation:
+lean 3 declaration is
+  forall {α₀ : TypeVec.{u1} (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))} (f₀ : TypeVec.Arrow.{u1, u2} (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) α₀ (Fin2.elim0.{succ (succ u2)} (fun (ᾰ : Fin2 (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) => Type.{u2}))), Eq.{max 1 (succ u1) (succ u2)} (TypeVec.Arrow.{u1, u2} (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) α₀ (Fin2.elim0.{succ (succ u2)} (fun (ᾰ : Fin2 (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) => Type.{u2}))) (TypeVec.comp.{u1, u2, u2} (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) α₀ (Fin2.elim0.{succ (succ u2)} (fun (ᾰ : Fin2 (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) => Type.{u2})) (Fin2.elim0.{succ (succ u2)} (fun (ᾰ : Fin2 (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) => Type.{u2})) (TypeVec.nilFun.{u2, u2} (Fin2.elim0.{succ (succ u2)} (fun (ᾰ : Fin2 (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) => Type.{u2})) (Fin2.elim0.{succ (succ u2)} (fun (ᾰ : Fin2 (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) => Type.{u2}))) f₀) f₀
+but is expected to have type
+  forall {α₀ : TypeVec.{u2} (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))} (f₀ : TypeVec.Arrow.{u2, u1} (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) α₀ (Fin2.elim0.{succ (succ u1)} (fun (ᾰ : Fin2 (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) => Type.{u1}))), Eq.{max (succ u2) (succ u1)} (TypeVec.Arrow.{u2, u1} (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) α₀ (Fin2.elim0.{succ (succ u1)} (fun (ᾰ : Fin2 (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) => Type.{u1}))) (TypeVec.comp.{u2, u1, u1} (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) α₀ (Fin2.elim0.{succ (succ u1)} (fun (ᾰ : Fin2 (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) => Type.{u1})) (Fin2.elim0.{succ (succ u1)} (fun (ᾰ : Fin2 (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) => Type.{u1})) (TypeVec.nilFun.{u1, u1} (Fin2.elim0.{succ (succ u1)} (fun (ᾰ : Fin2 (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) => Type.{u1})) (Fin2.elim0.{succ (succ u1)} (fun (ᾰ : Fin2 (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) => Type.{u1}))) f₀) f₀
+Case conversion may be inaccurate. Consider using '#align typevec.nil_fun_comp TypeVec.nilFun_compₓ'. -/
+theorem nilFun_comp {α₀ : TypeVec 0} (f₀ : α₀ ⟹ Fin2.elim0) : nil_fun ⊚ f₀ = f₀ :=
   funext fun x => Fin2.elim0 x
-#align typevec.nil_fun_comp TypeVec.nil_fun_comp
+#align typevec.nil_fun_comp TypeVec.nilFun_comp
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/

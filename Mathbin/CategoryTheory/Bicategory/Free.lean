@@ -341,15 +341,15 @@ def liftHom : ∀ {a b : B}, Hom a b → (F.obj a ⟶ F.obj b)
 #align category_theory.free_bicategory.lift_hom CategoryTheory.FreeBicategory.liftHom
 
 @[simp]
-theorem lift_hom_id (a : FreeBicategory B) : liftHom F (𝟙 a) = 𝟙 (F.obj a) :=
+theorem liftHom_id (a : FreeBicategory B) : liftHom F (𝟙 a) = 𝟙 (F.obj a) :=
   rfl
-#align category_theory.free_bicategory.lift_hom_id CategoryTheory.FreeBicategory.lift_hom_id
+#align category_theory.free_bicategory.lift_hom_id CategoryTheory.FreeBicategory.liftHom_id
 
 @[simp]
-theorem lift_hom_comp {a b c : FreeBicategory B} (f : a ⟶ b) (g : b ⟶ c) :
+theorem liftHom_comp {a b c : FreeBicategory B} (f : a ⟶ b) (g : b ⟶ c) :
     liftHom F (f ≫ g) = liftHom F f ≫ liftHom F g :=
   rfl
-#align category_theory.free_bicategory.lift_hom_comp CategoryTheory.FreeBicategory.lift_hom_comp
+#align category_theory.free_bicategory.lift_hom_comp CategoryTheory.FreeBicategory.liftHom_comp
 
 end
 
@@ -382,9 +382,9 @@ def liftHom₂ : ∀ {a b : B} {f g : Hom a b}, Hom₂ f g → (liftHom F f ⟶ 
 
 attribute [local simp] whisker_exchange
 
-theorem lift_hom₂_congr {a b : B} {f g : Hom a b} {η θ : Hom₂ f g} (H : Rel η θ) :
+theorem liftHom₂_congr {a b : B} {f g : Hom a b} {η θ : Hom₂ f g} (H : Rel η θ) :
     liftHom₂ F η = liftHom₂ F θ := by induction H <;> tidy
-#align category_theory.free_bicategory.lift_hom₂_congr CategoryTheory.FreeBicategory.lift_hom₂_congr
+#align category_theory.free_bicategory.lift_hom₂_congr CategoryTheory.FreeBicategory.liftHom₂_congr
 
 /-- A prefunctor from a quiver `B` to a bicategory `C` can be lifted to a pseudofunctor from
 `free_bicategory B` to `C`.
@@ -394,7 +394,7 @@ def lift : Pseudofunctor (FreeBicategory B) C
     where
   obj := F.obj
   map a b := liftHom F
-  map₂ a b f g := Quot.lift (liftHom₂ F) fun η θ H => lift_hom₂_congr F H
+  map₂ a b f g := Quot.lift (liftHom₂ F) fun η θ H => liftHom₂_congr F H
   map_id a := Iso.refl _
   map_comp a b c f g := Iso.refl _
 #align category_theory.free_bicategory.lift CategoryTheory.FreeBicategory.lift

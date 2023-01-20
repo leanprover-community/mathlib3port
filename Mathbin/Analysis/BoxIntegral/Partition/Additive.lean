@@ -73,9 +73,9 @@ instance : CoeFun (ι →ᵇᵃ[I₀] M) fun _ => Box ι → M :=
 initialize_simps_projections box_integral.box_additive_map (toFun → apply)
 
 @[simp]
-theorem to_fun_eq_coe (f : ι →ᵇᵃ[I₀] M) : f.toFun = f :=
+theorem toFun_eq_coe (f : ι →ᵇᵃ[I₀] M) : f.toFun = f :=
   rfl
-#align box_integral.box_additive_map.to_fun_eq_coe BoxIntegral.BoxAdditiveMap.to_fun_eq_coe
+#align box_integral.box_additive_map.to_fun_eq_coe BoxIntegral.BoxAdditiveMap.toFun_eq_coe
 
 @[simp]
 theorem coe_mk (f h) : ⇑(mk f h : ι →ᵇᵃ[I₀] M) = f :=
@@ -201,9 +201,9 @@ def toSmul (f : ι →ᵇᵃ[I₀] ℝ) : ι →ᵇᵃ[I₀] E →L[ℝ] E :=
 #align box_integral.box_additive_map.to_smul BoxIntegral.BoxAdditiveMap.toSmul
 
 @[simp]
-theorem to_smul_apply (f : ι →ᵇᵃ[I₀] ℝ) (I : Box ι) (x : E) : f.toSmul I x = f I • x :=
+theorem toSmul_apply (f : ι →ᵇᵃ[I₀] ℝ) (I : Box ι) (x : E) : f.toSmul I x = f I • x :=
   rfl
-#align box_integral.box_additive_map.to_smul_apply BoxIntegral.BoxAdditiveMap.to_smul_apply
+#align box_integral.box_additive_map.to_smul_apply BoxIntegral.BoxAdditiveMap.toSmul_apply
 
 end ToSmul
 

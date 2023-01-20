@@ -186,16 +186,16 @@ def setoidOfDisjointUnion {c : Set (Set α)} (hu : Set.unionₛ c = @Set.univ α
 
 /-- The equivalence relation made from the equivalence classes of an equivalence
     relation r equals r. -/
-theorem mk_classes_classes (r : Setoid α) : mkClasses r.classes classes_eqv_classes = r :=
+theorem mkClasses_classes (r : Setoid α) : mkClasses r.classes classes_eqv_classes = r :=
   ext' fun x y =>
     ⟨fun h => r.symm' (h { z | r.Rel z x } (r.mem_classes x) <| r.refl' x), fun h b hb hx =>
       eq_of_mem_classes (r.mem_classes x) (r.refl' x) hb hx ▸ r.symm' h⟩
-#align setoid.mk_classes_classes Setoid.mk_classes_classes
+#align setoid.mk_classes_classes Setoid.mkClasses_classes
 
 @[simp]
-theorem sUnion_classes (r : Setoid α) : ⋃₀ r.classes = Set.univ :=
+theorem unionₛ_classes (r : Setoid α) : ⋃₀ r.classes = Set.univ :=
   Set.eq_univ_of_forall fun x => Set.mem_unionₛ.2 ⟨{ y | r.Rel y x }, ⟨x, rfl⟩, Setoid.refl _⟩
-#align setoid.sUnion_classes Setoid.sUnion_classes
+#align setoid.sUnion_classes Setoid.unionₛ_classes
 
 section Partition
 
@@ -212,23 +212,23 @@ theorem nonempty_of_mem_partition {c : Set (Set α)} (hc : IsPartition c) {s} (h
   Set.nonempty_iff_ne_empty.2 fun hs0 => hc.1 <| hs0 ▸ h
 #align setoid.nonempty_of_mem_partition Setoid.nonempty_of_mem_partition
 
-theorem is_partition_classes (r : Setoid α) : IsPartition r.classes :=
+theorem isPartition_classes (r : Setoid α) : IsPartition r.classes :=
   ⟨empty_not_mem_classes, classes_eqv_classes⟩
-#align setoid.is_partition_classes Setoid.is_partition_classes
+#align setoid.is_partition_classes Setoid.isPartition_classes
 
-theorem IsPartition.pairwise_disjoint {c : Set (Set α)} (hc : IsPartition c) :
+theorem IsPartition.pairwiseDisjoint {c : Set (Set α)} (hc : IsPartition c) :
     c.PairwiseDisjoint id :=
   eqv_classes_disjoint hc.2
-#align setoid.is_partition.pairwise_disjoint Setoid.IsPartition.pairwise_disjoint
+#align setoid.is_partition.pairwise_disjoint Setoid.IsPartition.pairwiseDisjoint
 
-theorem IsPartition.sUnion_eq_univ {c : Set (Set α)} (hc : IsPartition c) : ⋃₀ c = Set.univ :=
+theorem IsPartition.unionₛ_eq_univ {c : Set (Set α)} (hc : IsPartition c) : ⋃₀ c = Set.univ :=
   Set.eq_univ_of_forall fun x =>
     Set.mem_unionₛ.2 <|
       let ⟨t, ht⟩ := hc.2 x
       ⟨t, by
-        simp only [exists_unique_iff_exists] at ht
+        simp only [existsUnique_iff_exists] at ht
         tauto⟩
-#align setoid.is_partition.sUnion_eq_univ Setoid.IsPartition.sUnion_eq_univ
+#align setoid.is_partition.sUnion_eq_univ Setoid.IsPartition.unionₛ_eq_univ
 
 /-- All elements of a partition of α are the equivalence class of some y ∈ α. -/
 theorem exists_of_mem_partition {c : Set (Set α)} (hc : IsPartition c) {s} (hs : s ∈ c) :
@@ -239,8 +239,7 @@ theorem exists_of_mem_partition {c : Set (Set α)} (hc : IsPartition c) {s} (hs 
 
 /-- The equivalence classes of the equivalence relation defined by a partition of α equal
     the original partition. -/
-theorem classes_mk_classes (c : Set (Set α)) (hc : IsPartition c) :
-    (mkClasses c hc.2).classes = c :=
+theorem classes_mkClasses (c : Set (Set α)) (hc : IsPartition c) : (mkClasses c hc.2).classes = c :=
   Set.ext fun s =>
     ⟨fun ⟨y, hs⟩ =>
       (hc.2 y).elim2 fun b hm hb hy => by
@@ -250,7 +249,7 @@ theorem classes_mk_classes (c : Set (Set α)) (hc : IsPartition c) :
                 ⟨fun hx => symm' (mk_classes c hc.2) hx b hm hb, fun hx b' hc' hx' =>
                   eq_of_mem_eqv_class hc.2 hm hx hc' hx' ▸ hb⟩],
       exists_of_mem_partition hc⟩
-#align setoid.classes_mk_classes Setoid.classes_mk_classes
+#align setoid.classes_mk_classes Setoid.classes_mkClasses
 
 /-- Defining `≤` on partitions as the `≤` defined on their induced equivalence relations. -/
 instance Partition.le : LE (Subtype (@IsPartition α)) :=
@@ -279,7 +278,7 @@ protected def Partition.orderIso : Setoid α ≃o { C : Set (Set α) // IsPartit
     where
   toFun r := ⟨r.classes, empty_not_mem_classes, classes_eqv_classes⟩
   invFun C := mkClasses C.1 C.2.2
-  left_inv := mk_classes_classes
+  left_inv := mkClasses_classes
   right_inv C := by rw [Subtype.ext_iff_val, ← classes_mk_classes C.1 C.2]
   map_rel_iff' r s :=
     by
@@ -312,12 +311,12 @@ def IsPartition.finpartition {c : Finset (Set α)} (hc : Setoid.IsPartition (c :
 end Setoid
 
 /-- A finpartition gives rise to a setoid partition -/
-theorem Finpartition.is_partition_parts {α} (f : Finpartition (Set.univ : Set α)) :
+theorem Finpartition.isPartition_parts {α} (f : Finpartition (Set.univ : Set α)) :
     Setoid.IsPartition (f.parts : Set (Set α)) :=
   ⟨f.not_bot_mem,
     Setoid.eqv_classes_of_disjoint_union (f.parts.sup_id_set_eq_sUnion.symm.trans f.sup_parts)
       f.SupIndep.PairwiseDisjoint⟩
-#align finpartition.is_partition_parts Finpartition.is_partition_parts
+#align finpartition.is_partition_parts Finpartition.isPartition_parts
 
 /-- Constructive information associated with a partition of a type `α` indexed by another type `ι`,
 `s : ι → set α`.
@@ -369,10 +368,10 @@ theorem exists_mem (x : α) : ∃ i, x ∈ s i :=
   ⟨hs.index x, hs.mem_index x⟩
 #align indexed_partition.exists_mem IndexedPartition.exists_mem
 
-theorem Union : (⋃ i, s i) = univ := by
+theorem unionᵢ : (⋃ i, s i) = univ := by
   ext x
   simp [hs.exists_mem x]
-#align indexed_partition.Union IndexedPartition.Union
+#align indexed_partition.Union IndexedPartition.unionᵢ
 
 theorem disjoint : ∀ {i j}, i ≠ j → Disjoint (s i) (s j) := fun i j h =>
   disjoint_left.mpr fun x hxi hxj => h (hs.eq_of_mem hxi hxj)
@@ -430,18 +429,18 @@ def equivQuotient : ι ≃ hs.Quotient :=
 #align indexed_partition.equiv_quotient IndexedPartition.equivQuotient
 
 @[simp]
-theorem equiv_quotient_index_apply (x : α) : hs.equivQuotient (hs.index x) = hs.proj x :=
+theorem equivQuotient_index_apply (x : α) : hs.equivQuotient (hs.index x) = hs.proj x :=
   hs.proj_eq_iff.mpr (some_index hs x)
-#align indexed_partition.equiv_quotient_index_apply IndexedPartition.equiv_quotient_index_apply
+#align indexed_partition.equiv_quotient_index_apply IndexedPartition.equivQuotient_index_apply
 
 @[simp]
-theorem equiv_quotient_symm_proj_apply (x : α) : hs.equivQuotient.symm (hs.proj x) = hs.index x :=
+theorem equivQuotient_symm_proj_apply (x : α) : hs.equivQuotient.symm (hs.proj x) = hs.index x :=
   rfl
-#align indexed_partition.equiv_quotient_symm_proj_apply IndexedPartition.equiv_quotient_symm_proj_apply
+#align indexed_partition.equiv_quotient_symm_proj_apply IndexedPartition.equivQuotient_symm_proj_apply
 
-theorem equiv_quotient_index : hs.equivQuotient ∘ hs.index = hs.proj :=
+theorem equivQuotient_index : hs.equivQuotient ∘ hs.index = hs.proj :=
   funext hs.equiv_quotient_index_apply
-#align indexed_partition.equiv_quotient_index IndexedPartition.equiv_quotient_index
+#align indexed_partition.equiv_quotient_index IndexedPartition.equivQuotient_index
 
 /-- A map choosing a representative for each element of the quotient associated to an indexed
 partition. This is a computable version of `quotient.out'` using `indexed_partition.some`. -/

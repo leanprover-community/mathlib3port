@@ -32,7 +32,7 @@ variable [Abelian 𝒜]
 
 open ZeroObject
 
-theorem is_iso_of_short_exact_of_is_iso_of_is_iso (h : ShortExact f g) (h' : ShortExact f' g')
+theorem isIso_of_shortExact_of_isIso_of_isIso (h : ShortExact f g) (h' : ShortExact f' g')
     (i₁ : A ⟶ A') (i₂ : B ⟶ B') (i₃ : C ⟶ C') (comm₁ : i₁ ≫ f' = f ≫ i₂) (comm₂ : i₂ ≫ g' = g ≫ i₃)
     [IsIso i₁] [IsIso i₃] : IsIso i₂ := by
   obtain ⟨_⟩ := h
@@ -45,7 +45,7 @@ theorem is_iso_of_short_exact_of_is_iso_of_is_iso (h : ShortExact f g) (h' : Sho
         try apply exact_zero_left_of_mono <;>
       try assumption <;>
     rwa [← epi_iff_exact_zero_right]
-#align category_theory.is_iso_of_short_exact_of_is_iso_of_is_iso CategoryTheory.is_iso_of_short_exact_of_is_iso_of_is_iso
+#align category_theory.is_iso_of_short_exact_of_is_iso_of_is_iso CategoryTheory.isIso_of_shortExact_of_isIso_of_isIso
 
 /-- To construct a splitting of `A -f⟶ B -g⟶ C` it suffices to supply
 a *morphism* `i : B ⟶ A ⊞ C` such that `f ≫ i` is the canonical map `biprod.inl : A ⟶ A ⊞ C` and

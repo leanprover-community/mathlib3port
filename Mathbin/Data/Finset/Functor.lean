@@ -84,14 +84,14 @@ theorem seq_def (s : Finset α) (t : Finset (α → β)) : t <*> s = t.sup fun f
 #align finset.seq_def Finset.seq_def
 
 @[simp]
-theorem seq_left_def (s : Finset α) (t : Finset β) : s <* t = if t = ∅ then ∅ else s :=
+theorem seqLeft_def (s : Finset α) (t : Finset β) : s <* t = if t = ∅ then ∅ else s :=
   rfl
-#align finset.seq_left_def Finset.seq_left_def
+#align finset.seq_left_def Finset.seqLeft_def
 
 @[simp]
-theorem seq_right_def (s : Finset α) (t : Finset β) : s *> t = if s = ∅ then ∅ else t :=
+theorem seqRight_def (s : Finset α) (t : Finset β) : s *> t = if s = ∅ then ∅ else t :=
   rfl
-#align finset.seq_right_def Finset.seq_right_def
+#align finset.seq_right_def Finset.seqRight_def
 
 /-- `finset.image₂` in terms of monadic operations. Note that this can't be taken as the definition
 because of the lack of universe polymorphism. -/
@@ -103,7 +103,7 @@ theorem image₂_def {α β γ : Type _} (f : α → β → γ) (s : Finset α) 
 
 instance : LawfulApplicative Finset :=
   {
-    Finset.is_lawful_functor with
+    Finset.lawfulFunctor with
     seq_left_eq := fun α β s t =>
       by
       rw [seq_def, fmap_def, seq_left_def]
@@ -146,7 +146,7 @@ instance : LawfulApplicative Finset :=
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 instance : CommApplicative Finset :=
-  { Finset.is_lawful_applicative with
+  { Finset.lawfulApplicative with
     commutative_prod := fun α β s t =>
       by
       simp_rw [seq_def, fmap_def, sup_image, sup_eq_bUnion]
@@ -173,7 +173,7 @@ theorem bind_def {α β} : (· >>= ·) = @sup (Finset α) β _ _ :=
 
 instance : LawfulMonad Finset :=
   {
-    Finset.is_lawful_applicative with
+    Finset.lawfulApplicative with
     bind_pure_comp_eq_map := fun α β f s => sup_singleton'' _ _
     bind_map_eq_seq := fun α β t s => rfl
     pure_bind := fun α β t s => sup_singleton

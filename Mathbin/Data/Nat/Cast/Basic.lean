@@ -393,12 +393,18 @@ theorem NeZero.nat_of_injective {n : ℕ} [h : NeZero (n : R)] [RingHomClass F R
   ⟨fun h => NeZero.natCast_ne n R <| hf <| by simpa only [map_nat_cast, map_zero] ⟩
 #align ne_zero.nat_of_injective NeZero.nat_of_injective
 
-theorem NeZero.nat_of_ne_zero {R S} [Semiring R] [Semiring S] {F} [RingHomClass F R S] (f : F)
+/- warning: ne_zero.nat_of_ne_zero -> NeZero.nat_of_neZero is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u1}} {S : Type.{u2}} [_inst_3 : Semiring.{u1} R] [_inst_4 : Semiring.{u2} S] {F : Type.{u3}} [_inst_5 : RingHomClass.{u3, u1, u2} F R S (Semiring.toNonAssocSemiring.{u1} R _inst_3) (Semiring.toNonAssocSemiring.{u2} S _inst_4)], F -> (forall {n : Nat} [hn : NeZero.{u2} S (MulZeroClass.toHasZero.{u2} S (NonUnitalNonAssocSemiring.toMulZeroClass.{u2} S (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} S (Semiring.toNonAssocSemiring.{u2} S _inst_4)))) ((fun (a : Type) (b : Type.{u2}) [self : HasLiftT.{1, succ u2} a b] => self.0) Nat S (HasLiftT.mk.{1, succ u2} Nat S (CoeTCₓ.coe.{1, succ u2} Nat S (Nat.castCoe.{u2} S (AddMonoidWithOne.toNatCast.{u2} S (AddCommMonoidWithOne.toAddMonoidWithOne.{u2} S (NonAssocSemiring.toAddCommMonoidWithOne.{u2} S (Semiring.toNonAssocSemiring.{u2} S _inst_4))))))) n)], NeZero.{u1} R (MulZeroClass.toHasZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_3)))) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Nat R (HasLiftT.mk.{1, succ u1} Nat R (CoeTCₓ.coe.{1, succ u1} Nat R (Nat.castCoe.{u1} R (AddMonoidWithOne.toNatCast.{u1} R (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} R (NonAssocSemiring.toAddCommMonoidWithOne.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_3))))))) n))
+but is expected to have type
+  forall {R : Type.{u3}} {S : Type.{u2}} [_inst_3 : Semiring.{u3} R] [_inst_4 : Semiring.{u2} S] {F : Type.{u1}} [_inst_5 : RingHomClass.{u1, u3, u2} F R S (Semiring.toNonAssocSemiring.{u3} R _inst_3) (Semiring.toNonAssocSemiring.{u2} S _inst_4)], F -> (forall {n : Nat} [hn : NeZero.{u2} S (MonoidWithZero.toZero.{u2} S (Semiring.toMonoidWithZero.{u2} S _inst_4)) (Nat.cast.{u2} S (Semiring.toNatCast.{u2} S _inst_4) n)], NeZero.{u3} R (MonoidWithZero.toZero.{u3} R (Semiring.toMonoidWithZero.{u3} R _inst_3)) (Nat.cast.{u3} R (Semiring.toNatCast.{u3} R _inst_3) n))
+Case conversion may be inaccurate. Consider using '#align ne_zero.nat_of_ne_zero NeZero.nat_of_neZeroₓ'. -/
+theorem NeZero.nat_of_neZero {R S} [Semiring R] [Semiring S] {F} [RingHomClass F R S] (f : F)
     {n : ℕ} [hn : NeZero (n : S)] : NeZero (n : R) :=
   by
   apply NeZero.of_map f
   simp only [map_nat_cast, hn]
-#align ne_zero.nat_of_ne_zero NeZero.nat_of_ne_zero
+#align ne_zero.nat_of_ne_zero NeZero.nat_of_neZero
 
 end RingHomClass
 
@@ -420,10 +426,12 @@ theorem Nat.cast_id (n : ℕ) : ↑n = n :=
 #align nat.cast_id Nat.cast_id
 -/
 
+#print Nat.castRingHom_nat /-
 @[simp]
-theorem Nat.cast_ring_hom_nat : Nat.castRingHom ℕ = RingHom.id ℕ :=
+theorem Nat.castRingHom_nat : Nat.castRingHom ℕ = RingHom.id ℕ :=
   rfl
-#align nat.cast_ring_hom_nat Nat.cast_ring_hom_nat
+#align nat.cast_ring_hom_nat Nat.castRingHom_nat
+-/
 
 #print Nat.uniqueRingHom /-
 -- I don't think `ring_hom_class` is good here, because of the `subsingleton` TC slowness
@@ -503,14 +511,14 @@ instance [h : AddCommMonoidWithOne α] : AddCommMonoidWithOne αᵒᵈ :=
   h
 
 @[simp]
-theorem to_dual_nat_cast [NatCast α] (n : ℕ) : toDual (n : α) = n :=
+theorem toDual_nat_cast [NatCast α] (n : ℕ) : toDual (n : α) = n :=
   rfl
-#align to_dual_nat_cast to_dual_nat_cast
+#align to_dual_nat_cast toDual_nat_cast
 
 @[simp]
-theorem of_dual_nat_cast [NatCast α] (n : ℕ) : (ofDual n : α) = n :=
+theorem ofDual_nat_cast [NatCast α] (n : ℕ) : (ofDual n : α) = n :=
   rfl
-#align of_dual_nat_cast of_dual_nat_cast
+#align of_dual_nat_cast ofDual_nat_cast
 
 /-! ### Lexicographic order -/
 
@@ -525,12 +533,12 @@ instance [h : AddCommMonoidWithOne α] : AddCommMonoidWithOne (Lex α) :=
   h
 
 @[simp]
-theorem to_lex_nat_cast [NatCast α] (n : ℕ) : toLex (n : α) = n :=
+theorem toLex_nat_cast [NatCast α] (n : ℕ) : toLex (n : α) = n :=
   rfl
-#align to_lex_nat_cast to_lex_nat_cast
+#align to_lex_nat_cast toLex_nat_cast
 
 @[simp]
-theorem of_lex_nat_cast [NatCast α] (n : ℕ) : (ofLex n : α) = n :=
+theorem ofLex_nat_cast [NatCast α] (n : ℕ) : (ofLex n : α) = n :=
   rfl
-#align of_lex_nat_cast of_lex_nat_cast
+#align of_lex_nat_cast ofLex_nat_cast
 

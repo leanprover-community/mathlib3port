@@ -61,7 +61,7 @@ namespace Idempotents
 
 /-- A category is idempotent complete iff for all idempotent endomorphisms,
 the equalizer of the identity and this idempotent exists. -/
-theorem is_idempotent_complete_iff_has_equalizer_of_id_and_idempotent :
+theorem isIdempotentComplete_iff_hasEqualizer_of_id_and_idempotent :
     IsIdempotentComplete C ↔ ∀ (X : C) (p : X ⟶ X), p ≫ p = p → HasEqualizer (𝟙 X) p :=
   by
   constructor
@@ -97,7 +97,7 @@ theorem is_idempotent_complete_iff_has_equalizer_of_id_and_idempotent :
         erw [← comp_id (equalizer.ι (𝟙 X) p)]
       exact (limits.fork.condition (equalizer.fork (𝟙 X) p)).symm
     · rw [equalizer.lift_ι]
-#align category_theory.idempotents.is_idempotent_complete_iff_has_equalizer_of_id_and_idempotent CategoryTheory.Idempotents.is_idempotent_complete_iff_has_equalizer_of_id_and_idempotent
+#align category_theory.idempotents.is_idempotent_complete_iff_has_equalizer_of_id_and_idempotent CategoryTheory.Idempotents.isIdempotentComplete_iff_hasEqualizer_of_id_and_idempotent
 
 variable {C}
 
@@ -111,7 +111,7 @@ theorem idem_of_id_sub_idem [Preadditive C] {X : C} (p : X ⟶ X) (hp : p ≫ p 
 variable (C)
 
 /-- A preadditive category is pseudoabelian iff all idempotent endomorphisms have a kernel. -/
-theorem is_idempotent_complete_iff_idempotents_have_kernels [Preadditive C] :
+theorem isIdempotentComplete_iff_idempotents_have_kernels [Preadditive C] :
     IsIdempotentComplete C ↔ ∀ (X : C) (p : X ⟶ X), p ≫ p = p → HasKernel p :=
   by
   rw [is_idempotent_complete_iff_has_equalizer_of_id_and_idempotent]
@@ -123,16 +123,16 @@ theorem is_idempotent_complete_iff_idempotents_have_kernels [Preadditive C] :
   · intro h X p hp
     haveI : has_kernel (𝟙 _ - p) := h X (𝟙 _ - p) (idem_of_id_sub_idem p hp)
     apply preadditive.has_equalizer_of_has_kernel
-#align category_theory.idempotents.is_idempotent_complete_iff_idempotents_have_kernels CategoryTheory.Idempotents.is_idempotent_complete_iff_idempotents_have_kernels
+#align category_theory.idempotents.is_idempotent_complete_iff_idempotents_have_kernels CategoryTheory.Idempotents.isIdempotentComplete_iff_idempotents_have_kernels
 
 /-- An abelian category is idempotent complete. -/
-instance (priority := 100) is_idempotent_complete_of_abelian (D : Type _) [Category D] [Abelian D] :
+instance (priority := 100) isIdempotentComplete_of_abelian (D : Type _) [Category D] [Abelian D] :
     IsIdempotentComplete D :=
   by
   rw [is_idempotent_complete_iff_idempotents_have_kernels]
   intros
   infer_instance
-#align category_theory.idempotents.is_idempotent_complete_of_abelian CategoryTheory.Idempotents.is_idempotent_complete_of_abelian
+#align category_theory.idempotents.is_idempotent_complete_of_abelian CategoryTheory.Idempotents.isIdempotentComplete_of_abelian
 
 variable {C}
 
@@ -163,7 +163,7 @@ theorem split_iff_of_iso {X X' : C} (φ : X ≅ X') (p : X ⟶ X) (p' : X' ⟶ X
     simpa only [id_comp]
 #align category_theory.idempotents.split_iff_of_iso CategoryTheory.Idempotents.split_iff_of_iso
 
-theorem Equivalence.is_idempotent_complete {D : Type _} [Category D] (ε : C ≌ D)
+theorem Equivalence.isIdempotentComplete {D : Type _} [Category D] (ε : C ≌ D)
     (h : IsIdempotentComplete C) : IsIdempotentComplete D :=
   by
   refine' ⟨_⟩
@@ -180,18 +180,18 @@ theorem Equivalence.is_idempotent_complete {D : Type _} [Category D] (ε : C ≌
   constructor
   · rw [← ε.functor.map_comp, h₁, ε.functor.map_id]
   · simpa only [← ε.functor.map_comp, h₂, equivalence.fun_inv_map]
-#align category_theory.idempotents.equivalence.is_idempotent_complete CategoryTheory.Idempotents.Equivalence.is_idempotent_complete
+#align category_theory.idempotents.equivalence.is_idempotent_complete CategoryTheory.Idempotents.Equivalence.isIdempotentComplete
 
 /-- If `C` and `D` are equivalent categories, that `C` is idempotent complete iff `D` is. -/
-theorem is_idempotent_complete_iff_of_equivalence {D : Type _} [Category D] (ε : C ≌ D) :
+theorem isIdempotentComplete_iff_of_equivalence {D : Type _} [Category D] (ε : C ≌ D) :
     IsIdempotentComplete C ↔ IsIdempotentComplete D :=
   by
   constructor
   · exact equivalence.is_idempotent_complete ε
   · exact equivalence.is_idempotent_complete ε.symm
-#align category_theory.idempotents.is_idempotent_complete_iff_of_equivalence CategoryTheory.Idempotents.is_idempotent_complete_iff_of_equivalence
+#align category_theory.idempotents.is_idempotent_complete_iff_of_equivalence CategoryTheory.Idempotents.isIdempotentComplete_iff_of_equivalence
 
-theorem is_idempotent_complete_of_is_idempotent_complete_opposite (h : IsIdempotentComplete Cᵒᵖ) :
+theorem isIdempotentComplete_of_isIdempotentComplete_opposite (h : IsIdempotentComplete Cᵒᵖ) :
     IsIdempotentComplete C := by
   refine' ⟨_⟩
   intro X p hp
@@ -201,9 +201,9 @@ theorem is_idempotent_complete_of_is_idempotent_complete_opposite (h : IsIdempot
   constructor
   · simpa only [← unop_comp, h₁]
   · simpa only [← unop_comp, h₂]
-#align category_theory.idempotents.is_idempotent_complete_of_is_idempotent_complete_opposite CategoryTheory.Idempotents.is_idempotent_complete_of_is_idempotent_complete_opposite
+#align category_theory.idempotents.is_idempotent_complete_of_is_idempotent_complete_opposite CategoryTheory.Idempotents.isIdempotentComplete_of_isIdempotentComplete_opposite
 
-theorem is_idempotent_complete_iff_opposite : IsIdempotentComplete Cᵒᵖ ↔ IsIdempotentComplete C :=
+theorem isIdempotentComplete_iff_opposite : IsIdempotentComplete Cᵒᵖ ↔ IsIdempotentComplete C :=
   by
   constructor
   · exact is_idempotent_complete_of_is_idempotent_complete_opposite
@@ -211,7 +211,7 @@ theorem is_idempotent_complete_iff_opposite : IsIdempotentComplete Cᵒᵖ ↔ I
     apply is_idempotent_complete_of_is_idempotent_complete_opposite
     rw [is_idempotent_complete_iff_of_equivalence (op_op_equivalence C)]
     exact h
-#align category_theory.idempotents.is_idempotent_complete_iff_opposite CategoryTheory.Idempotents.is_idempotent_complete_iff_opposite
+#align category_theory.idempotents.is_idempotent_complete_iff_opposite CategoryTheory.Idempotents.isIdempotentComplete_iff_opposite
 
 instance [IsIdempotentComplete C] : IsIdempotentComplete Cᵒᵖ := by
   rwa [is_idempotent_complete_iff_opposite]

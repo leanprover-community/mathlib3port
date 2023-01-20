@@ -36,20 +36,20 @@ def stepBound (n : ℕ) : ℕ :=
   n * 4 ^ n
 #align szemeredi_regularity.step_bound SzemerediRegularity.stepBound
 
-theorem le_step_bound : id ≤ step_bound := fun n =>
+theorem le_stepBound : id ≤ step_bound := fun n =>
   Nat.le_mul_of_pos_right <| pow_pos (by norm_num) n
-#align szemeredi_regularity.le_step_bound SzemerediRegularity.le_step_bound
+#align szemeredi_regularity.le_step_bound SzemerediRegularity.le_stepBound
 
-theorem step_bound_mono : Monotone stepBound := fun a b h =>
+theorem stepBound_mono : Monotone stepBound := fun a b h =>
   Nat.mul_le_mul h <| Nat.pow_le_pow_of_le_right (by norm_num) h
-#align szemeredi_regularity.step_bound_mono SzemerediRegularity.step_bound_mono
+#align szemeredi_regularity.step_bound_mono SzemerediRegularity.stepBound_mono
 
-theorem step_bound_pos_iff {n : ℕ} : 0 < stepBound n ↔ 0 < n :=
+theorem stepBound_pos_iff {n : ℕ} : 0 < stepBound n ↔ 0 < n :=
   zero_lt_mul_right <| by positivity
-#align szemeredi_regularity.step_bound_pos_iff SzemerediRegularity.step_bound_pos_iff
+#align szemeredi_regularity.step_bound_pos_iff SzemerediRegularity.stepBound_pos_iff
 
 alias step_bound_pos_iff ↔ _ step_bound_pos
-#align szemeredi_regularity.step_bound_pos SzemerediRegularity.step_bound_pos
+#align szemeredi_regularity.step_bound_pos SzemerediRegularity.stepBound_pos
 
 variable {α : Type _} [DecidableEq α] [Fintype α] {P : Finpartition (univ : Finset α)}
   {u : Finset α} {ε : ℝ}
@@ -62,7 +62,7 @@ local notation "a" => (card α / P.parts.card - m * 4 ^ P.parts.card : ℕ)
 
 theorem m_pos [Nonempty α] (hPα : P.parts.card * 16 ^ P.parts.card ≤ card α) : 0 < m :=
   Nat.div_pos ((Nat.mul_le_mul_left _ <| Nat.pow_le_pow_of_le_left (by norm_num) _).trans hPα) <|
-    step_bound_pos (P.parts_nonempty <| univ_nonempty.ne_empty).card_pos
+    stepBound_pos (P.parts_nonempty <| univ_nonempty.ne_empty).card_pos
 #align szemeredi_regularity.m_pos SzemerediRegularity.m_pos
 
 theorem m_coe_pos [Nonempty α] (hPα : P.parts.card * 16 ^ P.parts.card ≤ card α) : (0 : ℝ) < m :=
@@ -145,19 +145,19 @@ noncomputable def initialBound : ℕ :=
   max 7 <| max l <| ⌊log (100 / ε ^ 5) / log 4⌋₊ + 1
 #align szemeredi_regularity.initial_bound SzemerediRegularity.initialBound
 
-theorem le_initial_bound : l ≤ initialBound ε l :=
+theorem le_initialBound : l ≤ initialBound ε l :=
   (le_max_left _ _).trans <| le_max_right _ _
-#align szemeredi_regularity.le_initial_bound SzemerediRegularity.le_initial_bound
+#align szemeredi_regularity.le_initial_bound SzemerediRegularity.le_initialBound
 
-theorem seven_le_initial_bound : 7 ≤ initialBound ε l :=
+theorem seven_le_initialBound : 7 ≤ initialBound ε l :=
   le_max_left _ _
-#align szemeredi_regularity.seven_le_initial_bound SzemerediRegularity.seven_le_initial_bound
+#align szemeredi_regularity.seven_le_initial_bound SzemerediRegularity.seven_le_initialBound
 
-theorem initial_bound_pos : 0 < initialBound ε l :=
-  Nat.succ_pos'.trans_le <| seven_le_initial_bound _ _
-#align szemeredi_regularity.initial_bound_pos SzemerediRegularity.initial_bound_pos
+theorem initialBound_pos : 0 < initialBound ε l :=
+  Nat.succ_pos'.trans_le <| seven_le_initialBound _ _
+#align szemeredi_regularity.initial_bound_pos SzemerediRegularity.initialBound_pos
 
-theorem hundred_lt_pow_initial_bound_mul {ε : ℝ} (hε : 0 < ε) (l : ℕ) :
+theorem hundred_lt_pow_initialBound_mul {ε : ℝ} (hε : 0 < ε) (l : ℕ) :
     100 < 4 ^ initialBound ε l * ε ^ 5 :=
   by
   rw [← rpow_nat_cast 4, ← div_lt_iff (pow_pos hε 5), lt_rpow_iff_log_lt _ zero_lt_four, ←
@@ -166,7 +166,7 @@ theorem hundred_lt_pow_initial_bound_mul {ε : ℝ} (hε : 0 < ε) (l : ℕ) :
     exact lt_max_of_lt_right (lt_max_of_lt_right <| Nat.lt_floor_add_one _)
   · exact log_pos (by norm_num)
   · exact div_pos (by norm_num) (pow_pos hε 5)
-#align szemeredi_regularity.hundred_lt_pow_initial_bound_mul SzemerediRegularity.hundred_lt_pow_initial_bound_mul
+#align szemeredi_regularity.hundred_lt_pow_initial_bound_mul SzemerediRegularity.hundred_lt_pow_initialBound_mul
 
 /-- An explicit bound on the size of the equipartition whose existence is given by Szemerédi's
 regularity lemma. -/
@@ -175,16 +175,16 @@ noncomputable def bound : ℕ :=
     16 ^ (step_bound^[⌊4 / ε ^ 5⌋₊] <| initialBound ε l)
 #align szemeredi_regularity.bound SzemerediRegularity.bound
 
-theorem initial_bound_le_bound : initialBound ε l ≤ bound ε l :=
-  (id_le_iterate_of_id_le le_step_bound _ _).trans <| Nat.le_mul_of_pos_right <| by positivity
-#align szemeredi_regularity.initial_bound_le_bound SzemerediRegularity.initial_bound_le_bound
+theorem initialBound_le_bound : initialBound ε l ≤ bound ε l :=
+  (id_le_iterate_of_id_le le_stepBound _ _).trans <| Nat.le_mul_of_pos_right <| by positivity
+#align szemeredi_regularity.initial_bound_le_bound SzemerediRegularity.initialBound_le_bound
 
 theorem le_bound : l ≤ bound ε l :=
-  (le_initial_bound ε l).trans <| initial_bound_le_bound ε l
+  (le_initialBound ε l).trans <| initialBound_le_bound ε l
 #align szemeredi_regularity.le_bound SzemerediRegularity.le_bound
 
 theorem bound_pos : 0 < bound ε l :=
-  (initial_bound_pos ε l).trans_le <| initial_bound_le_bound ε l
+  (initialBound_pos ε l).trans_le <| initialBound_le_bound ε l
 #align szemeredi_regularity.bound_pos SzemerediRegularity.bound_pos
 
 end SzemerediRegularity

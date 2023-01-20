@@ -217,9 +217,9 @@ protected def subtype : S' →[R] M :=
 #align sub_mul_action.smul_mem_class.subtype SubMulAction.smulMemClass.subtype
 
 @[simp]
-protected theorem coe_subtype : (smulMemClass.subtype S' : S' → M) = coe :=
+protected theorem coeSubtype : (smulMemClass.subtype S' : S' → M) = coe :=
   rfl
-#align sub_mul_action.smul_mem_class.coe_subtype SubMulAction.smulMemClass.coe_subtype
+#align sub_mul_action.smul_mem_class.coe_subtype SubMulAction.smulMemClass.coeSubtype
 
 end SmulMemClass
 
@@ -311,7 +311,7 @@ variable [Group R] [MulAction R M]
 theorem stabilizer_of_sub_mul {p : SubMulAction R M} (m : p) :
     MulAction.stabilizer R m = MulAction.stabilizer R (m : M) :=
   by
-  rw [← Subgroup.to_submonoid_eq]
+  rw [← Subgroup.toSubmonoid_eq]
   exact stabilizer_of_sub_mul.submonoid m
 #align sub_mul_action.stabilizer_of_sub_mul SubMulAction.stabilizer_of_sub_mul
 

@@ -79,27 +79,27 @@ def basisSets (p : SeminormFamily 𝕜 E ι) : Set (Set E) :=
 
 variable (p : SeminormFamily 𝕜 E ι)
 
-theorem basis_sets_iff {U : Set E} :
+theorem basisSets_iff {U : Set E} :
     U ∈ p.basis_sets ↔ ∃ (i : Finset ι)(r : _)(hr : 0 < r), U = ball (i.sup p) 0 r := by
   simp only [basis_sets, mem_Union, mem_singleton_iff]
-#align seminorm_family.basis_sets_iff SeminormFamily.basis_sets_iff
+#align seminorm_family.basis_sets_iff SeminormFamily.basisSets_iff
 
-theorem basis_sets_mem (i : Finset ι) {r : ℝ} (hr : 0 < r) : (i.sup p).ball 0 r ∈ p.basis_sets :=
-  (basis_sets_iff _).mpr ⟨i, _, hr, rfl⟩
-#align seminorm_family.basis_sets_mem SeminormFamily.basis_sets_mem
+theorem basisSets_mem (i : Finset ι) {r : ℝ} (hr : 0 < r) : (i.sup p).ball 0 r ∈ p.basis_sets :=
+  (basisSets_iff _).mpr ⟨i, _, hr, rfl⟩
+#align seminorm_family.basis_sets_mem SeminormFamily.basisSets_mem
 
-theorem basis_sets_singleton_mem (i : ι) {r : ℝ} (hr : 0 < r) : (p i).ball 0 r ∈ p.basis_sets :=
-  (basis_sets_iff _).mpr ⟨{i}, _, hr, by rw [Finset.sup_singleton]⟩
-#align seminorm_family.basis_sets_singleton_mem SeminormFamily.basis_sets_singleton_mem
+theorem basisSets_singleton_mem (i : ι) {r : ℝ} (hr : 0 < r) : (p i).ball 0 r ∈ p.basis_sets :=
+  (basisSets_iff _).mpr ⟨{i}, _, hr, by rw [Finset.sup_singleton]⟩
+#align seminorm_family.basis_sets_singleton_mem SeminormFamily.basisSets_singleton_mem
 
-theorem basis_sets_nonempty [Nonempty ι] : p.basis_sets.Nonempty :=
+theorem basisSets_nonempty [Nonempty ι] : p.basis_sets.Nonempty :=
   by
   let i := Classical.arbitrary ι
   refine' set.nonempty_def.mpr ⟨(p i).ball 0 1, _⟩
   exact p.basis_sets_singleton_mem i zero_lt_one
-#align seminorm_family.basis_sets_nonempty SeminormFamily.basis_sets_nonempty
+#align seminorm_family.basis_sets_nonempty SeminormFamily.basisSets_nonempty
 
-theorem basis_sets_intersect (U V : Set E) (hU : U ∈ p.basis_sets) (hV : V ∈ p.basis_sets) :
+theorem basisSets_intersect (U V : Set E) (hU : U ∈ p.basis_sets) (hV : V ∈ p.basis_sets) :
     ∃ (z : Set E)(H : z ∈ p.basis_sets), z ⊆ U ∩ V := by
   classical
     rcases p.basis_sets_iff.mp hU with ⟨s, r₁, hr₁, hU⟩
@@ -114,16 +114,16 @@ theorem basis_sets_intersect (U V : Set E) (hU : U ∈ p.basis_sets) (hV : V ∈
           ⟨i, Finset.subset_union_left _ _ hi, ball_mono <| min_le_left _ _⟩)
         (Set.interᵢ₂_mono' fun i hi =>
           ⟨i, Finset.subset_union_right _ _ hi, ball_mono <| min_le_right _ _⟩)
-#align seminorm_family.basis_sets_intersect SeminormFamily.basis_sets_intersect
+#align seminorm_family.basis_sets_intersect SeminormFamily.basisSets_intersect
 
-theorem basis_sets_zero (U) (hU : U ∈ p.basis_sets) : (0 : E) ∈ U :=
+theorem basisSets_zero (U) (hU : U ∈ p.basis_sets) : (0 : E) ∈ U :=
   by
   rcases p.basis_sets_iff.mp hU with ⟨ι', r, hr, hU⟩
   rw [hU, mem_ball_zero, map_zero]
   exact hr
-#align seminorm_family.basis_sets_zero SeminormFamily.basis_sets_zero
+#align seminorm_family.basis_sets_zero SeminormFamily.basisSets_zero
 
-theorem basis_sets_add (U) (hU : U ∈ p.basis_sets) :
+theorem basisSets_add (U) (hU : U ∈ p.basis_sets) :
     ∃ (V : Set E)(H : V ∈ p.basis_sets), V + V ⊆ U :=
   by
   rcases p.basis_sets_iff.mp hU with ⟨s, r, hr, hU⟩
@@ -131,15 +131,15 @@ theorem basis_sets_add (U) (hU : U ∈ p.basis_sets) :
   refine' ⟨p.basis_sets_mem s (div_pos hr zero_lt_two), _⟩
   refine' Set.Subset.trans (ball_add_ball_subset (s.sup p) (r / 2) (r / 2) 0 0) _
   rw [hU, add_zero, add_halves']
-#align seminorm_family.basis_sets_add SeminormFamily.basis_sets_add
+#align seminorm_family.basis_sets_add SeminormFamily.basisSets_add
 
-theorem basis_sets_neg (U) (hU' : U ∈ p.basis_sets) :
+theorem basisSets_neg (U) (hU' : U ∈ p.basis_sets) :
     ∃ (V : Set E)(H : V ∈ p.basis_sets), V ⊆ (fun x : E => -x) ⁻¹' U :=
   by
   rcases p.basis_sets_iff.mp hU' with ⟨s, r, hr, hU⟩
   rw [hU, neg_preimage, neg_ball (s.sup p), neg_zero]
   exact ⟨U, hU', Eq.subset hU⟩
-#align seminorm_family.basis_sets_neg SeminormFamily.basis_sets_neg
+#align seminorm_family.basis_sets_neg SeminormFamily.basisSets_neg
 
 /-- The `add_group_filter_basis` induced by the filter basis `seminorm_basis_zero`. -/
 protected def addGroupFilterBasis [Nonempty ι] : AddGroupFilterBasis E :=
@@ -147,7 +147,7 @@ protected def addGroupFilterBasis [Nonempty ι] : AddGroupFilterBasis E :=
     p.basis_sets_zero p.basis_sets_add p.basis_sets_neg
 #align seminorm_family.add_group_filter_basis SeminormFamily.addGroupFilterBasis
 
-theorem basis_sets_smul_right (v : E) (U : Set E) (hU : U ∈ p.basis_sets) :
+theorem basisSets_smul_right (v : E) (U : Set E) (hU : U ∈ p.basis_sets) :
     ∀ᶠ x : 𝕜 in 𝓝 0, x • v ∈ U :=
   by
   rcases p.basis_sets_iff.mp hU with ⟨s, r, hr, hU⟩
@@ -158,12 +158,12 @@ theorem basis_sets_smul_right (v : E) (U : Set E) (hU : U ∈ p.basis_sets) :
     rw [← _root_.ball_zero_eq]
     exact Metric.ball_mem_nhds 0 (div_pos hr h)
   simp_rw [le_antisymm (not_lt.mp h) (map_nonneg _ v), mul_zero, hr]
-  exact IsOpen.mem_nhds is_open_univ (mem_univ 0)
-#align seminorm_family.basis_sets_smul_right SeminormFamily.basis_sets_smul_right
+  exact IsOpen.mem_nhds isOpen_univ (mem_univ 0)
+#align seminorm_family.basis_sets_smul_right SeminormFamily.basisSets_smul_right
 
 variable [Nonempty ι]
 
-theorem basis_sets_smul (U) (hU : U ∈ p.basis_sets) :
+theorem basisSets_smul (U) (hU : U ∈ p.basis_sets) :
     ∃ (V : Set 𝕜)(H : V ∈ 𝓝 (0 : 𝕜))(W : Set E)(H : W ∈ p.AddGroupFilterBasis.sets), V • W ⊆ U :=
   by
   rcases p.basis_sets_iff.mp hU with ⟨s, r, hr, hU⟩
@@ -171,9 +171,9 @@ theorem basis_sets_smul (U) (hU : U ∈ p.basis_sets) :
   refine' ⟨(s.sup p).ball 0 r.sqrt, p.basis_sets_mem s (real.sqrt_pos.mpr hr), _⟩
   refine' Set.Subset.trans (ball_smul_ball (s.sup p) r.sqrt r.sqrt) _
   rw [hU, Real.mul_self_sqrt (le_of_lt hr)]
-#align seminorm_family.basis_sets_smul SeminormFamily.basis_sets_smul
+#align seminorm_family.basis_sets_smul SeminormFamily.basisSets_smul
 
-theorem basis_sets_smul_left (x : 𝕜) (U : Set E) (hU : U ∈ p.basis_sets) :
+theorem basisSets_smul_left (x : 𝕜) (U : Set E) (hU : U ∈ p.basis_sets) :
     ∃ (V : Set E)(H : V ∈ p.AddGroupFilterBasis.sets), V ⊆ (fun y : E => x • y) ⁻¹' U :=
   by
   rcases p.basis_sets_iff.mp hU with ⟨s, r, hr, hU⟩
@@ -185,7 +185,7 @@ theorem basis_sets_smul_left (x : 𝕜) (U : Set E) (hU : U ∈ p.basis_sets) :
   refine' ⟨(s.sup p).ball 0 r, p.basis_sets_mem s hr, _⟩
   simp only [not_ne_iff.mp h, subset_def, mem_ball_zero, hr, mem_univ, map_zero, imp_true_iff,
     preimage_const_of_mem, zero_smul]
-#align seminorm_family.basis_sets_smul_left SeminormFamily.basis_sets_smul_left
+#align seminorm_family.basis_sets_smul_left SeminormFamily.basisSets_smul_left
 
 /-- The `module_filter_basis` induced by the filter basis `seminorm_basis_zero`. -/
 protected def moduleFilterBasis : ModuleFilterBasis 𝕜 E
@@ -196,7 +196,7 @@ protected def moduleFilterBasis : ModuleFilterBasis 𝕜 E
   smul_right' := p.basis_sets_smul_right
 #align seminorm_family.module_filter_basis SeminormFamily.moduleFilterBasis
 
-theorem filter_eq_infi (p : SeminormFamily 𝕜 E ι) :
+theorem filter_eq_infᵢ (p : SeminormFamily 𝕜 E ι) :
     p.ModuleFilterBasis.toFilterBasis.filter = ⨅ i, (𝓝 0).comap (p i) :=
   by
   refine' le_antisymm (le_infᵢ fun i => _) _
@@ -210,12 +210,12 @@ theorem filter_eq_infi (p : SeminormFamily 𝕜 E ι) :
   · rw [p.module_filter_basis.to_filter_basis.has_basis.ge_iff]
     rintro U (hU : U ∈ p.basis_sets)
     rcases p.basis_sets_iff.mp hU with ⟨s, r, hr, rfl⟩
-    rw [id, Seminorm.ball_finset_sup_eq_Inter _ _ _ hr, s.Inter_mem_sets]
+    rw [id, Seminorm.ball_finset_sup_eq_interᵢ _ _ _ hr, s.Inter_mem_sets]
     exact fun i hi =>
-      Filter.mem_infi_of_mem i
+      Filter.mem_infᵢ_of_mem i
         ⟨Metric.ball 0 r, Metric.ball_mem_nhds 0 hr,
           Eq.subset (p i).ball_zero_eq_preimage_ball.symm⟩
-#align seminorm_family.filter_eq_infi SeminormFamily.filter_eq_infi
+#align seminorm_family.filter_eq_infi SeminormFamily.filter_eq_infᵢ
 
 end SeminormFamily
 
@@ -237,13 +237,13 @@ def IsBounded (p : ι → Seminorm 𝕜 E) (q : ι' → Seminorm 𝕜₂ F) (f :
   ∀ i, ∃ s : Finset ι, ∃ C : ℝ≥0, C ≠ 0 ∧ (q i).comp f ≤ C • s.sup p
 #align seminorm.is_bounded Seminorm.IsBounded
 
-theorem is_bounded_const (ι' : Type _) [Nonempty ι'] {p : ι → Seminorm 𝕜 E} {q : Seminorm 𝕜₂ F}
+theorem isBounded_const (ι' : Type _) [Nonempty ι'] {p : ι → Seminorm 𝕜 E} {q : Seminorm 𝕜₂ F}
     (f : E →ₛₗ[σ₁₂] F) :
     IsBounded p (fun _ : ι' => q) f ↔ ∃ (s : Finset ι)(C : ℝ≥0), C ≠ 0 ∧ q.comp f ≤ C • s.sup p :=
   by simp only [is_bounded, forall_const]
-#align seminorm.is_bounded_const Seminorm.is_bounded_const
+#align seminorm.is_bounded_const Seminorm.isBounded_const
 
-theorem const_is_bounded (ι : Type _) [Nonempty ι] {p : Seminorm 𝕜 E} {q : ι' → Seminorm 𝕜₂ F}
+theorem const_isBounded (ι : Type _) [Nonempty ι] {p : Seminorm 𝕜 E} {q : ι' → Seminorm 𝕜₂ F}
     (f : E →ₛₗ[σ₁₂] F) :
     IsBounded (fun _ : ι => p) q f ↔ ∀ i, ∃ C : ℝ≥0, C ≠ 0 ∧ (q i).comp f ≤ C • p :=
   by
@@ -252,9 +252,9 @@ theorem const_is_bounded (ι : Type _) [Nonempty ι] {p : Seminorm 𝕜 E} {q : 
     exact ⟨C, hC, le_trans h (smul_le_smul (Finset.sup_le fun _ _ => le_rfl) le_rfl)⟩
   use {Classical.arbitrary ι}
   simp only [h, Finset.sup_singleton]
-#align seminorm.const_is_bounded Seminorm.const_is_bounded
+#align seminorm.const_is_bounded Seminorm.const_isBounded
 
-theorem is_bounded_sup {p : ι → Seminorm 𝕜 E} {q : ι' → Seminorm 𝕜₂ F} {f : E →ₛₗ[σ₁₂] F}
+theorem isBounded_sup {p : ι → Seminorm 𝕜 E} {q : ι' → Seminorm 𝕜₂ F} {f : E →ₛₗ[σ₁₂] F}
     (hf : IsBounded p q f) (s' : Finset ι') :
     ∃ (C : ℝ≥0)(s : Finset ι), 0 < C ∧ (s'.sup q).comp f ≤ C • s.sup p := by
   classical
@@ -276,7 +276,7 @@ theorem is_bounded_sup {p : ι → Seminorm 𝕜 E} {q : ι' → Seminorm 𝕜�
     refine' le_trans (Finset.sum_le_sum hs) _
     rw [Finset.sum_const, smul_assoc]
     exact le_rfl
-#align seminorm.is_bounded_sup Seminorm.is_bounded_sup
+#align seminorm.is_bounded_sup Seminorm.isBounded_sup
 
 end Seminorm
 
@@ -291,41 +291,41 @@ structure WithSeminorms (p : SeminormFamily 𝕜 E ι) [t : TopologicalSpace E] 
   topology_eq_with_seminorms : t = p.ModuleFilterBasis.topology
 #align with_seminorms WithSeminorms
 
-theorem WithSeminorms.with_seminorms_eq {p : SeminormFamily 𝕜 E ι} [t : TopologicalSpace E]
+theorem WithSeminorms.withSeminorms_eq {p : SeminormFamily 𝕜 E ι} [t : TopologicalSpace E]
     (hp : WithSeminorms p) : t = p.ModuleFilterBasis.topology :=
   hp.1
-#align with_seminorms.with_seminorms_eq WithSeminorms.with_seminorms_eq
+#align with_seminorms.with_seminorms_eq WithSeminorms.withSeminorms_eq
 
 variable [TopologicalSpace E]
 
 variable {p : SeminormFamily 𝕜 E ι}
 
-theorem WithSeminorms.topological_add_group (hp : WithSeminorms p) : TopologicalAddGroup E :=
+theorem WithSeminorms.topologicalAddGroup (hp : WithSeminorms p) : TopologicalAddGroup E :=
   by
   rw [hp.with_seminorms_eq]
   exact AddGroupFilterBasis.is_topological_add_group _
-#align with_seminorms.topological_add_group WithSeminorms.topological_add_group
+#align with_seminorms.topological_add_group WithSeminorms.topologicalAddGroup
 
-theorem WithSeminorms.has_basis (hp : WithSeminorms p) :
+theorem WithSeminorms.hasBasis (hp : WithSeminorms p) :
     (𝓝 (0 : E)).HasBasis (fun s : Set E => s ∈ p.basis_sets) id :=
   by
   rw [congr_fun (congr_arg (@nhds E) hp.1) 0]
-  exact AddGroupFilterBasis.nhds_zero_has_basis _
-#align with_seminorms.has_basis WithSeminorms.has_basis
+  exact AddGroupFilterBasis.nhds_zero_hasBasis _
+#align with_seminorms.has_basis WithSeminorms.hasBasis
 
-theorem WithSeminorms.has_basis_zero_ball (hp : WithSeminorms p) :
+theorem WithSeminorms.hasBasis_zero_ball (hp : WithSeminorms p) :
     (𝓝 (0 : E)).HasBasis (fun sr : Finset ι × ℝ => 0 < sr.2) fun sr => (sr.1.sup p).ball 0 sr.2 :=
   by
   refine' ⟨fun V => _⟩
-  simp only [hp.has_basis.mem_iff, SeminormFamily.basis_sets_iff, Prod.exists]
+  simp only [hp.has_basis.mem_iff, SeminormFamily.basisSets_iff, Prod.exists]
   constructor
   · rintro ⟨-, ⟨s, r, hr, rfl⟩, hV⟩
     exact ⟨s, r, hr, hV⟩
   · rintro ⟨s, r, hr, hV⟩
     exact ⟨_, ⟨s, r, hr, rfl⟩, hV⟩
-#align with_seminorms.has_basis_zero_ball WithSeminorms.has_basis_zero_ball
+#align with_seminorms.has_basis_zero_ball WithSeminorms.hasBasis_zero_ball
 
-theorem WithSeminorms.has_basis_ball (hp : WithSeminorms p) {x : E} :
+theorem WithSeminorms.hasBasis_ball (hp : WithSeminorms p) {x : E} :
     (𝓝 (x : E)).HasBasis (fun sr : Finset ι × ℝ => 0 < sr.2) fun sr => (sr.1.sup p).ball x sr.2 :=
   by
   haveI : TopologicalAddGroup E := hp.topological_add_group
@@ -335,7 +335,7 @@ theorem WithSeminorms.has_basis_ball (hp : WithSeminorms p) {x : E} :
   have : (sr.fst.sup p).ball (x +ᵥ 0) sr.snd = x +ᵥ (sr.fst.sup p).ball 0 sr.snd :=
     Eq.symm (Seminorm.vadd_ball (sr.fst.sup p))
   rwa [vadd_eq_add, add_zero] at this
-#align with_seminorms.has_basis_ball WithSeminorms.has_basis_ball
+#align with_seminorms.has_basis_ball WithSeminorms.hasBasis_ball
 
 /-- The `x`-neighbourhoods of a space whose topology is induced by a family of seminorms
 are exactly the sets which contain seminorm balls around `x`.-/
@@ -346,10 +346,10 @@ theorem WithSeminorms.mem_nhds_iff (hp : WithSeminorms p) (x : E) (U : Set E) :
 
 /-- The open sets of a space whose topology is induced by a family of seminorms
 are exactly the sets which contain seminorm balls around all of their points.-/
-theorem WithSeminorms.is_open_iff_mem_balls (hp : WithSeminorms p) (U : Set E) :
+theorem WithSeminorms.isOpen_iff_mem_balls (hp : WithSeminorms p) (U : Set E) :
     IsOpen U ↔ ∀ x ∈ U, ∃ s : Finset ι, ∃ r > 0, (s.sup p).ball x r ⊆ U := by
-  simp_rw [← WithSeminorms.mem_nhds_iff hp _ U, is_open_iff_mem_nhds]
-#align with_seminorms.is_open_iff_mem_balls WithSeminorms.is_open_iff_mem_balls
+  simp_rw [← WithSeminorms.mem_nhds_iff hp _ U, isOpen_iff_mem_nhds]
+#align with_seminorms.is_open_iff_mem_balls WithSeminorms.isOpen_iff_mem_balls
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x «expr ≠ » 0) -/
 /- Note that through the following lemmas, one also immediately has that separating families
@@ -360,8 +360,8 @@ theorem WithSeminorms.t1_of_separating (hp : WithSeminorms p)
     (h : ∀ (x) (_ : x ≠ 0), ∃ i, p i x ≠ 0) : T1Space E :=
   by
   haveI := hp.topological_add_group
-  refine' TopologicalAddGroup.t1_space _ _
-  rw [← is_open_compl_iff, hp.is_open_iff_mem_balls]
+  refine' TopologicalAddGroup.t1Space _ _
+  rw [← isOpen_compl_iff, hp.is_open_iff_mem_balls]
   rintro x (hx : x ≠ 0)
   cases' h x hx with i pi_nonzero
   refine' ⟨{i}, p i x, by positivity, subset_compl_singleton_iff.mpr _⟩
@@ -371,7 +371,7 @@ theorem WithSeminorms.t1_of_separating (hp : WithSeminorms p)
 /-- A family of seminorms inducing a T₁ topology is separating. -/
 theorem WithSeminorms.separating_of_t1 [T1Space E] (hp : WithSeminorms p) (x : E) (hx : x ≠ 0) :
     ∃ i, p i x ≠ 0 := by
-  have := ((t1_space_tfae E).out 0 9).mp inferInstance
+  have := ((t1Space_tFAE E).out 0 9).mp inferInstance
   by_contra' h
   refine' hx (this _)
   rw [hp.has_basis_zero_ball.specializes_iff]
@@ -416,39 +416,39 @@ theorem SeminormFamily.withSeminormsOfHasBasis (p : SeminormFamily 𝕜 E ι)
     Filter.HasBasis.eq_of_same_basis h p.AddGroupFilterBasis.toFilterBasis.HasBasis
 #align seminorm_family.with_seminorms_of_has_basis SeminormFamily.withSeminormsOfHasBasis
 
-theorem SeminormFamily.with_seminorms_iff_nhds_eq_infi (p : SeminormFamily 𝕜 E ι) :
+theorem SeminormFamily.withSeminorms_iff_nhds_eq_infᵢ (p : SeminormFamily 𝕜 E ι) :
     WithSeminorms p ↔ (𝓝 0 : Filter E) = ⨅ i, (𝓝 0).comap (p i) :=
   by
   rw [← p.filter_eq_infi]
   refine' ⟨fun h => _, p.with_seminorms_of_nhds⟩
   rw [h.topology_eq_with_seminorms]
   exact AddGroupFilterBasis.nhds_zero_eq _
-#align seminorm_family.with_seminorms_iff_nhds_eq_infi SeminormFamily.with_seminorms_iff_nhds_eq_infi
+#align seminorm_family.with_seminorms_iff_nhds_eq_infi SeminormFamily.withSeminorms_iff_nhds_eq_infᵢ
 
 theorem WithSeminorms.continuous_seminorm [NontriviallyNormedField 𝕝] [Module 𝕝 E]
     [HasContinuousConstSmul 𝕝 E] {p : SeminormFamily 𝕝 E ι} (hp : WithSeminorms p) (i : ι) :
     Continuous (p i) := by
   refine' Seminorm.continuous one_pos _
   rw [p.with_seminorms_iff_nhds_eq_infi.mp hp, ball_zero_eq_preimage_ball]
-  exact Filter.mem_infi_of_mem i (Filter.preimage_mem_comap <| Metric.ball_mem_nhds _ one_pos)
+  exact Filter.mem_infᵢ_of_mem i (Filter.preimage_mem_comap <| Metric.ball_mem_nhds _ one_pos)
 #align with_seminorms.continuous_seminorm WithSeminorms.continuous_seminorm
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr «expr = »(_, «expr⨅ , »((i), _))]] -/
 /-- The topology induced by a family of seminorms is exactly the infimum of the ones induced by
 each seminorm individually. We express this as a characterization of `with_seminorms p`. -/
-theorem SeminormFamily.with_seminorms_iff_topological_space_eq_infi (p : SeminormFamily 𝕜 E ι) :
+theorem SeminormFamily.withSeminorms_iff_topologicalSpace_eq_infᵢ (p : SeminormFamily 𝕜 E ι) :
     WithSeminorms p ↔
       t =
         ⨅ i, (p i).toAddGroupSeminorm.toSeminormedAddCommGroup.toUniformSpace.toTopologicalSpace :=
   by
   rw [p.with_seminorms_iff_nhds_eq_infi,
-    TopologicalAddGroup.ext_iff inferInstance (topological_add_group_infi fun i => inferInstance),
-    nhds_infi]
+    TopologicalAddGroup.ext_iff inferInstance (topological_add_group_infᵢ fun i => inferInstance),
+    nhds_infᵢ]
   trace
     "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr «expr = »(_, «expr⨅ , »((i), _))]]"
   exact @comap_norm_nhds_zero _ (p i).toAddGroupSeminorm.toSeminormedAddGroup
   all_goals infer_instance
-#align seminorm_family.with_seminorms_iff_topological_space_eq_infi SeminormFamily.with_seminorms_iff_topological_space_eq_infi
+#align seminorm_family.with_seminorms_iff_topological_space_eq_infi SeminormFamily.withSeminorms_iff_topologicalSpace_eq_infᵢ
 
 omit t
 
@@ -456,18 +456,18 @@ omit t
 /-- The uniform structure induced by a family of seminorms is exactly the infimum of the ones
 induced by each seminorm individually. We express this as a characterization of
 `with_seminorms p`. -/
-theorem SeminormFamily.with_seminorms_iff_uniform_space_eq_infi [u : UniformSpace E]
+theorem SeminormFamily.withSeminorms_iff_uniformSpace_eq_infᵢ [u : UniformSpace E]
     [UniformAddGroup E] (p : SeminormFamily 𝕜 E ι) :
     WithSeminorms p ↔ u = ⨅ i, (p i).toAddGroupSeminorm.toSeminormedAddCommGroup.toUniformSpace :=
   by
   rw [p.with_seminorms_iff_nhds_eq_infi,
-    UniformAddGroup.ext_iff inferInstance (uniform_add_group_infi fun i => inferInstance),
-    to_topological_space_infi, nhds_infi]
+    UniformAddGroup.ext_iff inferInstance (uniform_add_group_infᵢ fun i => inferInstance),
+    toTopologicalSpace_infᵢ, nhds_infᵢ]
   trace
     "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr «expr = »(_, «expr⨅ , »((i), _))]]"
   exact @comap_norm_nhds_zero _ (p i).toAddGroupSeminorm.toSeminormedAddGroup
   all_goals infer_instance
-#align seminorm_family.with_seminorms_iff_uniform_space_eq_infi SeminormFamily.with_seminorms_iff_uniform_space_eq_infi
+#align seminorm_family.with_seminorms_iff_uniform_space_eq_infi SeminormFamily.withSeminorms_iff_uniformSpace_eq_infᵢ
 
 end TopologicalAddGroup
 
@@ -482,9 +482,9 @@ theorem normWithSeminorms (𝕜 E) [NormedField 𝕜] [SeminormedAddCommGroup E]
     ⟨seminormed_add_comm_group.to_topological_add_group.ext
         p.add_group_filter_basis.is_topological_add_group _⟩
   refine' Filter.HasBasis.eq_of_same_basis Metric.nhds_basis_ball _
-  rw [← ball_norm_seminorm 𝕜 E]
+  rw [← ball_normSeminorm 𝕜 E]
   refine'
-    Filter.HasBasis.to_has_basis p.add_group_filter_basis.nhds_zero_has_basis _ fun r hr =>
+    Filter.HasBasis.to_hasBasis p.add_group_filter_basis.nhds_zero_has_basis _ fun r hr =>
       ⟨(normSeminorm 𝕜 E).ball 0 r, p.basis_sets_singleton_mem 0 hr, rfl.subset⟩
   rintro U (hU : U ∈ p.basis_sets)
   rcases p.basis_sets_iff.mp hU with ⟨s, r, hr, hU⟩
@@ -506,8 +506,7 @@ variable {p : SeminormFamily 𝕜 E ι}
 
 variable [TopologicalSpace E]
 
-theorem WithSeminorms.is_vonN_bounded_iff_finset_seminorm_bounded {s : Set E}
-    (hp : WithSeminorms p) :
+theorem WithSeminorms.isVonNBounded_iff_finset_seminorm_bounded {s : Set E} (hp : WithSeminorms p) :
     Bornology.IsVonNBounded 𝕜 s ↔ ∀ I : Finset ι, ∃ (r : _)(hr : 0 < r), ∀ x ∈ s, I.sup p x < r :=
   by
   rw [hp.has_basis.is_vonN_bounded_basis_iff]
@@ -530,16 +529,16 @@ theorem WithSeminorms.is_vonN_bounded_iff_finset_seminorm_bounded {s : Set E}
   simp_rw [← (I.sup p).mem_ball_zero] at h'
   refine' Absorbs.mono_right _ h'
   exact (Finset.sup I p).ball_zero_absorbs_ball_zero hr
-#align with_seminorms.is_vonN_bounded_iff_finset_seminorm_bounded WithSeminorms.is_vonN_bounded_iff_finset_seminorm_bounded
+#align with_seminorms.is_vonN_bounded_iff_finset_seminorm_bounded WithSeminorms.isVonNBounded_iff_finset_seminorm_bounded
 
-theorem WithSeminorms.image_is_vonN_bounded_iff_finset_seminorm_bounded (f : G → E) {s : Set G}
+theorem WithSeminorms.image_isVonNBounded_iff_finset_seminorm_bounded (f : G → E) {s : Set G}
     (hp : WithSeminorms p) :
     Bornology.IsVonNBounded 𝕜 (f '' s) ↔
       ∀ I : Finset ι, ∃ (r : _)(hr : 0 < r), ∀ x ∈ s, I.sup p (f x) < r :=
   by simp_rw [hp.is_vonN_bounded_iff_finset_seminorm_bounded, Set.ball_image_iff]
-#align with_seminorms.image_is_vonN_bounded_iff_finset_seminorm_bounded WithSeminorms.image_is_vonN_bounded_iff_finset_seminorm_bounded
+#align with_seminorms.image_is_vonN_bounded_iff_finset_seminorm_bounded WithSeminorms.image_isVonNBounded_iff_finset_seminorm_bounded
 
-theorem WithSeminorms.is_vonN_bounded_iff_seminorm_bounded {s : Set E} (hp : WithSeminorms p) :
+theorem WithSeminorms.isVonNBounded_iff_seminorm_bounded {s : Set E} (hp : WithSeminorms p) :
     Bornology.IsVonNBounded 𝕜 s ↔ ∀ i : ι, ∃ (r : _)(hr : 0 < r), ∀ x ∈ s, p i x < r :=
   by
   rw [hp.is_vonN_bounded_iff_finset_seminorm_bounded]
@@ -560,13 +559,13 @@ theorem WithSeminorms.is_vonN_bounded_iff_seminorm_bounded {s : Set E} (hp : Wit
   simp only [finset.not_nonempty_iff_eq_empty.mp hI, Finset.sup_empty, coe_bot, Pi.zero_apply,
     exists_prop]
   exact ⟨1, zero_lt_one, fun _ _ => zero_lt_one⟩
-#align with_seminorms.is_vonN_bounded_iff_seminorm_bounded WithSeminorms.is_vonN_bounded_iff_seminorm_bounded
+#align with_seminorms.is_vonN_bounded_iff_seminorm_bounded WithSeminorms.isVonNBounded_iff_seminorm_bounded
 
-theorem WithSeminorms.image_is_vonN_bounded_iff_seminorm_bounded (f : G → E) {s : Set G}
+theorem WithSeminorms.image_isVonNBounded_iff_seminorm_bounded (f : G → E) {s : Set G}
     (hp : WithSeminorms p) :
     Bornology.IsVonNBounded 𝕜 (f '' s) ↔ ∀ i : ι, ∃ (r : _)(hr : 0 < r), ∀ x ∈ s, p i (f x) < r :=
   by simp_rw [hp.is_vonN_bounded_iff_seminorm_bounded, Set.ball_image_iff]
-#align with_seminorms.image_is_vonN_bounded_iff_seminorm_bounded WithSeminorms.image_is_vonN_bounded_iff_seminorm_bounded
+#align with_seminorms.image_is_vonN_bounded_iff_seminorm_bounded WithSeminorms.image_isVonNBounded_iff_seminorm_bounded
 
 end NontriviallyNormedField
 
@@ -593,7 +592,7 @@ theorem continuous_of_continuous_comp {q : SeminormFamily 𝕝₂ F ι'} [Topolo
     (f : E →ₛₗ[τ₁₂] F) (hf : ∀ i, Continuous ((q i).comp f)) : Continuous f :=
   by
   refine' continuous_of_continuous_at_zero f _
-  simp_rw [ContinuousAt, f.map_zero, q.with_seminorms_iff_nhds_eq_infi.mp hq, Filter.tendsto_infi,
+  simp_rw [ContinuousAt, f.map_zero, q.with_seminorms_iff_nhds_eq_infi.mp hq, Filter.tendsto_infᵢ,
     Filter.tendsto_comap_iff]
   intro i
   convert (hf i).ContinuousAt
@@ -612,8 +611,8 @@ theorem continuous_from_bounded {p : SeminormFamily 𝕝 E ι} {q : SeminormFami
     [TopologicalAddGroup F] (hq : WithSeminorms q) (f : E →ₛₗ[τ₁₂] F)
     (hf : Seminorm.IsBounded p q f) : Continuous f :=
   by
-  refine' continuous_of_continuous_comp hq _ fun i => Seminorm.continuous_of_continuous_at_zero _
-  rw [Metric.continuous_at_iff', map_zero]
+  refine' continuous_of_continuous_comp hq _ fun i => Seminorm.continuous_of_continuousAt_zero _
+  rw [Metric.continuousAt_iff', map_zero]
   intro r hr
   rcases hf i with ⟨s₁, C, hC, hf⟩
   have hC' : 0 < C := hC.bot_lt
@@ -625,22 +624,22 @@ theorem continuous_from_bounded {p : SeminormFamily 𝕝 E ι} {q : SeminormFami
   rfl
 #align seminorm.continuous_from_bounded Seminorm.continuous_from_bounded
 
-theorem cont_with_seminorms_normed_space (F) [SeminormedAddCommGroup F] [NormedSpace 𝕝₂ F]
+theorem cont_withSeminorms_normedSpace (F) [SeminormedAddCommGroup F] [NormedSpace 𝕝₂ F]
     [UniformSpace E] [UniformAddGroup E] {p : ι → Seminorm 𝕝 E} (hp : WithSeminorms p)
     (f : E →ₛₗ[τ₁₂] F)
     (hf : ∃ (s : Finset ι)(C : ℝ≥0), C ≠ 0 ∧ (normSeminorm 𝕝₂ F).comp f ≤ C • s.sup p) :
     Continuous f := by
-  rw [← Seminorm.is_bounded_const (Fin 1)] at hf
+  rw [← Seminorm.isBounded_const (Fin 1)] at hf
   exact continuous_from_bounded hp (normWithSeminorms 𝕝₂ F) f hf
-#align seminorm.cont_with_seminorms_normed_space Seminorm.cont_with_seminorms_normed_space
+#align seminorm.cont_with_seminorms_normed_space Seminorm.cont_withSeminorms_normedSpace
 
-theorem cont_normed_space_to_with_seminorms (E) [SeminormedAddCommGroup E] [NormedSpace 𝕝 E]
+theorem cont_normedSpace_to_withSeminorms (E) [SeminormedAddCommGroup E] [NormedSpace 𝕝 E]
     [UniformSpace F] [UniformAddGroup F] {q : ι → Seminorm 𝕝₂ F} (hq : WithSeminorms q)
     (f : E →ₛₗ[τ₁₂] F) (hf : ∀ i : ι, ∃ C : ℝ≥0, C ≠ 0 ∧ (q i).comp f ≤ C • normSeminorm 𝕝 E) :
     Continuous f := by
-  rw [← Seminorm.const_is_bounded (Fin 1)] at hf
+  rw [← Seminorm.const_isBounded (Fin 1)] at hf
   exact continuous_from_bounded (normWithSeminorms 𝕝 E) hq f hf
-#align seminorm.cont_normed_space_to_with_seminorms Seminorm.cont_normed_space_to_with_seminorms
+#align seminorm.cont_normed_space_to_with_seminorms Seminorm.cont_normedSpace_to_withSeminorms
 
 end Seminorm
 
@@ -657,8 +656,8 @@ theorem WithSeminorms.toLocallyConvexSpace {p : SeminormFamily 𝕜 E ι} (hp : 
     LocallyConvexSpace ℝ E :=
   by
   apply of_basis_zero ℝ E id fun s => s ∈ p.basis_sets
-  · rw [hp.1, AddGroupFilterBasis.nhds_eq _, AddGroupFilterBasis.N_zero]
-    exact FilterBasis.has_basis _
+  · rw [hp.1, AddGroupFilterBasis.nhds_eq _, AddGroupFilterBasis.n_zero]
+    exact FilterBasis.hasBasis _
   · intro s hs
     change s ∈ Set.unionᵢ _ at hs
     simp_rw [Set.mem_unionᵢ, Set.mem_singleton_iff] at hs
@@ -722,7 +721,7 @@ theorem LinearMap.withSeminormsInduced [hι : Nonempty ι] {q : SeminormFamily �
   letI : TopologicalSpace E := induced f inferInstance
   letI : TopologicalAddGroup E := topological_add_group_induced f
   rw [(q.comp f).with_seminorms_iff_nhds_eq_infi, nhds_induced, map_zero,
-    q.with_seminorms_iff_nhds_eq_infi.mp hq, Filter.comap_infi]
+    q.with_seminorms_iff_nhds_eq_infi.mp hq, Filter.comap_infᵢ]
   refine' infᵢ_congr fun i => _
   exact Filter.comap_comap
 #align linear_map.with_seminorms_induced LinearMap.withSeminormsInduced
@@ -752,9 +751,9 @@ theorem WithSeminorms.first_countable (hp : WithSeminorms p) :
   have : (𝓝 (0 : E)).IsCountablyGenerated :=
     by
     rw [p.with_seminorms_iff_nhds_eq_infi.mp hp]
-    exact Filter.Infi.is_countably_generated _
+    exact Filter.Infi.isCountablyGenerated _
   haveI : (uniformity E).IsCountablyGenerated := UniformAddGroup.uniformity_countably_generated
-  exact UniformSpace.first_countable_topology E
+  exact UniformSpace.firstCountableTopology E
 #align with_seminorms.first_countable WithSeminorms.first_countable
 
 end TopologicalProperties

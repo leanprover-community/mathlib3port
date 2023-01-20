@@ -101,7 +101,7 @@ theorem hofer {X : Type _} [MetricSpace X] [CompleteSpace X] (x : X) (ε : ℝ) 
   -- Hence u is Cauchy
   have cauchy_u : CauchySeq u :=
     by
-    refine' cauchy_seq_of_le_geometric _ ε one_half_lt_one fun n => _
+    refine' cauchySeq_of_le_geometric _ ε one_half_lt_one fun n => _
     simpa only [one_div, inv_pow] using key₁ n
   -- So u converges to some y
   obtain ⟨y, limy⟩ : ∃ y, tendsto u at_top (𝓝 y)
@@ -117,11 +117,11 @@ theorem hofer {X : Type _} [MetricSpace X] [CompleteSpace X] (x : X) (ε : ℝ) 
         0 ≤ 2 * ϕ (u 0) := by linarith
         _ < ϕ (u (0 + 1)) := key₂ 0
         
-    apply tendsto_at_top_of_geom_le hv₀ one_lt_two
+    apply tendsto_atTop_of_geom_le hv₀ one_lt_two
     exact fun n => (key₂ (n + 1)).le
   -- But ϕ ∘ u also needs to go to ϕ(y)
   have lim : tendsto (ϕ ∘ u) at_top (𝓝 (ϕ y)) := tendsto.comp cont.continuous_at limy
   -- So we have our contradiction!
-  exact not_tendsto_at_top_of_tendsto_nhds lim lim_top
+  exact not_tendsto_atTop_of_tendsto_nhds lim lim_top
 #align hofer hofer
 

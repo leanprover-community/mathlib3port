@@ -122,18 +122,18 @@ theorem exists_smul_eq (hH : Nat.Coprime (Nat.card H) H.index) (α β : H.Quotie
           (diff_inv _ _ _).symm.trans
             (inv_eq_one.mpr
               ((smul_diff' β α ((powCoprime hH).symm (diff (MonoidHom.id H) β α))⁻¹).trans
-                (by rw [inv_pow, ← pow_coprime_apply hH, Equiv.apply_symm_apply, mul_inv_self])))⟩)
+                (by rw [inv_pow, ← powCoprime_apply hH, Equiv.apply_symm_apply, mul_inv_self])))⟩)
 #align subgroup.exists_smul_eq Subgroup.exists_smul_eq
 
-theorem is_complement'_stabilizer_of_coprime {α : H.QuotientDiff}
+theorem isComplement'_stabilizer_of_coprime {α : H.QuotientDiff}
     (hH : Nat.Coprime (Nat.card H) H.index) : IsComplement' H (stabilizer G α) :=
-  is_complement'_stabilizer α (eq_one_of_smul_eq_one hH α) fun g => exists_smul_eq hH (g • α) α
-#align subgroup.is_complement'_stabilizer_of_coprime Subgroup.is_complement'_stabilizer_of_coprime
+  isComplement'_stabilizer α (eq_one_of_smul_eq_one hH α) fun g => exists_smul_eq hH (g • α) α
+#align subgroup.is_complement'_stabilizer_of_coprime Subgroup.isComplement'_stabilizer_of_coprime
 
 /-- Do not use this lemma: It is made obsolete by `exists_right_complement'_of_coprime` -/
 private theorem exists_right_complement'_of_coprime_aux (hH : Nat.Coprime (Nat.card H) H.index) :
     ∃ K : Subgroup G, IsComplement' H K :=
-  instNonempty.elim fun α => ⟨stabilizer G α, is_complement'_stabilizer_of_coprime hH⟩
+  instNonempty.elim fun α => ⟨stabilizer G α, isComplement'_stabilizer_of_coprime hH⟩
 #align subgroup.exists_right_complement'_of_coprime_aux subgroup.exists_right_complement'_of_coprime_aux
 
 end SchurZassenhausAbelian
@@ -340,7 +340,7 @@ theorem exists_right_complement'_of_coprime {N : Subgroup G} [N.Normal]
     exact mul_ne_zero hN1 hN2
   haveI :=
     (cardinal.lt_aleph_0_iff_fintype.mp
-        (lt_of_not_ge (mt Cardinal.to_nat_apply_of_aleph_0_le hN3))).some
+        (lt_of_not_ge (mt Cardinal.toNat_apply_of_aleph0_le hN3))).some
   rw [Nat.card_eq_fintype_card] at hN
   exact exists_right_complement'_of_coprime_of_fintype hN
 #align subgroup.exists_right_complement'_of_coprime Subgroup.exists_right_complement'_of_coprime

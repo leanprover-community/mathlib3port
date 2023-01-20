@@ -82,7 +82,7 @@ theorem disjoint_disjointed (f : ℕ → α) : Pairwise (Disjoint on disjointed 
   · exact (Nat.not_lt_zero _ h).elim
   exact
     disjoint_sdiff_self_right.mono_left
-      ((disjointed_le f m).trans (le_partial_sups_of_le f (Nat.lt_add_one_iff.1 h)))
+      ((disjointed_le f m).trans (le_partialSups_of_le f (Nat.lt_add_one_iff.1 h)))
 #align disjoint_disjointed disjoint_disjointed
 
 /- warning: disjointed_rec -> disjointedRec is a dubious translation:
@@ -102,15 +102,15 @@ def disjointedRec {f : ℕ → α} {p : α → Sort _} (hdiff : ∀ ⦃t i⦄, p
     rintro k
     induction' k with k ih
     · exact hdiff h
-    rw [partial_sups_succ, ← sdiff_sdiff_left]
+    rw [partialSups_succ, ← sdiff_sdiff_left]
     exact hdiff ih
 #align disjointed_rec disjointedRec
 
 @[simp]
-theorem disjointed_rec_zero {f : ℕ → α} {p : α → Sort _} (hdiff : ∀ ⦃t i⦄, p t → p (t \ f i))
+theorem disjointedRec_zero {f : ℕ → α} {p : α → Sort _} (hdiff : ∀ ⦃t i⦄, p t → p (t \ f i))
     (h₀ : p (f 0)) : disjointedRec hdiff h₀ = h₀ :=
   rfl
-#align disjointed_rec_zero disjointed_rec_zero
+#align disjointed_rec_zero disjointedRec_zero
 
 -- TODO: Find a useful statement of `disjointed_rec_succ`.
 theorem Monotone.disjointed_eq {f : ℕ → α} (hf : Monotone f) (n : ℕ) :
@@ -118,13 +118,13 @@ theorem Monotone.disjointed_eq {f : ℕ → α} (hf : Monotone f) (n : ℕ) :
 #align monotone.disjointed_eq Monotone.disjointed_eq
 
 @[simp]
-theorem partial_sups_disjointed (f : ℕ → α) : partialSups (disjointed f) = partialSups f :=
+theorem partialSups_disjointed (f : ℕ → α) : partialSups (disjointed f) = partialSups f :=
   by
   ext n
   induction' n with k ih
-  · rw [partial_sups_zero, partial_sups_zero, disjointed_zero]
-  · rw [partial_sups_succ, partial_sups_succ, disjointed_succ, ih, sup_sdiff_self_right]
-#align partial_sups_disjointed partial_sups_disjointed
+  · rw [partialSups_zero, partialSups_zero, disjointed_zero]
+  · rw [partialSups_succ, partialSups_succ, disjointed_succ, ih, sup_sdiff_self_right]
+#align partial_sups_disjointed partialSups_disjointed
 
 /-- `disjointed f` is the unique sequence that is pairwise disjoint and has the same partial sups
 as `f`. -/
@@ -133,17 +133,16 @@ theorem disjointed_unique {f d : ℕ → α} (hdisj : Pairwise (Disjoint on d))
   by
   ext n
   cases n
-  · rw [← partial_sups_zero d, hsups, partial_sups_zero, disjointed_zero]
+  · rw [← partialSups_zero d, hsups, partialSups_zero, disjointed_zero]
   suffices h : d n.succ = partialSups d n.succ \ partialSups d n
-  · rw [h, hsups, partial_sups_succ, disjointed_succ, sup_sdiff, sdiff_self, bot_sup_eq]
-  rw [partial_sups_succ, sup_sdiff, sdiff_self, bot_sup_eq, eq_comm, sdiff_eq_self_iff_disjoint]
+  · rw [h, hsups, partialSups_succ, disjointed_succ, sup_sdiff, sdiff_self, bot_sup_eq]
+  rw [partialSups_succ, sup_sdiff, sdiff_self, bot_sup_eq, eq_comm, sdiff_eq_self_iff_disjoint]
   suffices h : ∀ m ≤ n, Disjoint (partialSups d m) (d n.succ)
   · exact h n le_rfl
   rintro m hm
   induction' m with m ih
   · exact hdisj (Nat.succ_ne_zero _).symm
-  rw [partial_sups_succ, disjoint_iff, inf_sup_right, sup_eq_bot_iff, ← disjoint_iff, ←
-    disjoint_iff]
+  rw [partialSups_succ, disjoint_iff, inf_sup_right, sup_eq_bot_iff, ← disjoint_iff, ← disjoint_iff]
   exact ⟨ih (Nat.le_of_succ_le hm), hdisj (Nat.lt_succ_of_le hm).Ne⟩
 #align disjointed_unique disjointed_unique
 
@@ -153,9 +152,9 @@ section CompleteBooleanAlgebra
 
 variable [CompleteBooleanAlgebra α]
 
-theorem supr_disjointed (f : ℕ → α) : (⨆ n, disjointed f n) = ⨆ n, f n :=
-  supr_eq_supr_of_partial_sups_eq_partial_sups (partial_sups_disjointed f)
-#align supr_disjointed supr_disjointed
+theorem supᵢ_disjointed (f : ℕ → α) : (⨆ n, disjointed f n) = ⨆ n, f n :=
+  supᵢ_eq_supᵢ_of_partialSups_eq_partialSups (partialSups_disjointed f)
+#align supr_disjointed supᵢ_disjointed
 
 theorem disjointed_eq_inf_compl (f : ℕ → α) (n : ℕ) : disjointed f n = f n ⊓ ⨅ i < n, f iᶜ :=
   by
@@ -163,7 +162,7 @@ theorem disjointed_eq_inf_compl (f : ℕ → α) (n : ℕ) : disjointed f n = f 
   · rw [disjointed_zero, eq_comm, inf_eq_left]
     simp_rw [le_infᵢ_iff]
     exact fun i hi => (i.not_lt_zero hi).elim
-  simp_rw [disjointed_succ, partial_sups_eq_bsupr, sdiff_eq, compl_supᵢ]
+  simp_rw [disjointed_succ, partialSups_eq_bsupr, sdiff_eq, compl_supᵢ]
   congr
   ext i
   rw [Nat.lt_succ_iff]
@@ -178,9 +177,9 @@ theorem disjointed_subset (f : ℕ → Set α) (n : ℕ) : disjointed f n ⊆ f 
   disjointed_le f n
 #align disjointed_subset disjointed_subset
 
-theorem Union_disjointed {f : ℕ → Set α} : (⋃ n, disjointed f n) = ⋃ n, f n :=
-  supr_disjointed f
-#align Union_disjointed Union_disjointed
+theorem unionᵢ_disjointed {f : ℕ → Set α} : (⋃ n, disjointed f n) = ⋃ n, f n :=
+  supᵢ_disjointed f
+#align Union_disjointed unionᵢ_disjointed
 
 theorem disjointed_eq_inter_compl (f : ℕ → Set α) (n : ℕ) : disjointed f n = f n ∩ ⋂ i < n, f iᶜ :=
   disjointed_eq_inf_compl f n

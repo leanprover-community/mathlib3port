@@ -364,14 +364,14 @@ def vaddConst (p : P) : G ≃ P where
 #align equiv.vadd_const Equiv.vaddConst
 
 @[simp]
-theorem coe_vadd_const (p : P) : ⇑(vaddConst p) = fun v => v +ᵥ p :=
+theorem coe_vaddConst (p : P) : ⇑(vaddConst p) = fun v => v +ᵥ p :=
   rfl
-#align equiv.coe_vadd_const Equiv.coe_vadd_const
+#align equiv.coe_vadd_const Equiv.coe_vaddConst
 
 @[simp]
-theorem coe_vadd_const_symm (p : P) : ⇑(vaddConst p).symm = fun p' => p' -ᵥ p :=
+theorem coe_vaddConst_symm (p : P) : ⇑(vaddConst p).symm = fun p' => p' -ᵥ p :=
   rfl
-#align equiv.coe_vadd_const_symm Equiv.coe_vadd_const_symm
+#align equiv.coe_vadd_const_symm Equiv.coe_vaddConst_symm
 
 /-- `p' ↦ p -ᵥ p'` as an equivalence. -/
 def constVsub (p : P) : P ≃ G where
@@ -382,14 +382,14 @@ def constVsub (p : P) : P ≃ G where
 #align equiv.const_vsub Equiv.constVsub
 
 @[simp]
-theorem coe_const_vsub (p : P) : ⇑(constVsub p) = (· -ᵥ ·) p :=
+theorem coe_constVsub (p : P) : ⇑(constVsub p) = (· -ᵥ ·) p :=
   rfl
-#align equiv.coe_const_vsub Equiv.coe_const_vsub
+#align equiv.coe_const_vsub Equiv.coe_constVsub
 
 @[simp]
-theorem coe_const_vsub_symm (p : P) : ⇑(constVsub p).symm = fun v => -v +ᵥ p :=
+theorem coe_constVsub_symm (p : P) : ⇑(constVsub p).symm = fun v => -v +ᵥ p :=
   rfl
-#align equiv.coe_const_vsub_symm Equiv.coe_const_vsub_symm
+#align equiv.coe_const_vsub_symm Equiv.coe_constVsub_symm
 
 variable (P)
 
@@ -402,30 +402,30 @@ def constVadd (v : G) : Equiv.Perm P where
 #align equiv.const_vadd Equiv.constVadd
 
 @[simp]
-theorem coe_const_vadd (v : G) : ⇑(constVadd P v) = (· +ᵥ ·) v :=
+theorem coe_constVadd (v : G) : ⇑(constVadd P v) = (· +ᵥ ·) v :=
   rfl
-#align equiv.coe_const_vadd Equiv.coe_const_vadd
+#align equiv.coe_const_vadd Equiv.coe_constVadd
 
 variable (G)
 
 @[simp]
-theorem const_vadd_zero : constVadd P (0 : G) = 1 :=
+theorem constVadd_zero : constVadd P (0 : G) = 1 :=
   ext <| zero_vadd G
-#align equiv.const_vadd_zero Equiv.const_vadd_zero
+#align equiv.const_vadd_zero Equiv.constVadd_zero
 
 variable {G}
 
 @[simp]
-theorem const_vadd_add (v₁ v₂ : G) : constVadd P (v₁ + v₂) = constVadd P v₁ * constVadd P v₂ :=
+theorem constVadd_add (v₁ v₂ : G) : constVadd P (v₁ + v₂) = constVadd P v₁ * constVadd P v₂ :=
   ext <| add_vadd v₁ v₂
-#align equiv.const_vadd_add Equiv.const_vadd_add
+#align equiv.const_vadd_add Equiv.constVadd_add
 
 /-- `equiv.const_vadd` as a homomorphism from `multiplicative G` to `equiv.perm P` -/
 def constVaddHom : Multiplicative G →* Equiv.Perm P
     where
   toFun v := constVadd P v.toAdd
-  map_one' := const_vadd_zero G P
-  map_mul' := const_vadd_add P
+  map_one' := constVadd_zero G P
+  map_mul' := constVadd_add P
 #align equiv.const_vadd_hom Equiv.constVaddHom
 
 variable {P}
@@ -437,42 +437,42 @@ def pointReflection (x : P) : Perm P :=
   (constVsub x).trans (vaddConst x)
 #align equiv.point_reflection Equiv.pointReflection
 
-theorem point_reflection_apply (x y : P) : pointReflection x y = x -ᵥ y +ᵥ x :=
+theorem pointReflection_apply (x y : P) : pointReflection x y = x -ᵥ y +ᵥ x :=
   rfl
-#align equiv.point_reflection_apply Equiv.point_reflection_apply
+#align equiv.point_reflection_apply Equiv.pointReflection_apply
 
 @[simp]
-theorem point_reflection_symm (x : P) : (pointReflection x).symm = pointReflection x :=
+theorem pointReflection_symm (x : P) : (pointReflection x).symm = pointReflection x :=
   ext <| by simp [point_reflection]
-#align equiv.point_reflection_symm Equiv.point_reflection_symm
+#align equiv.point_reflection_symm Equiv.pointReflection_symm
 
 @[simp]
-theorem point_reflection_self (x : P) : pointReflection x x = x :=
+theorem pointReflection_self (x : P) : pointReflection x x = x :=
   vsub_vadd _ _
-#align equiv.point_reflection_self Equiv.point_reflection_self
+#align equiv.point_reflection_self Equiv.pointReflection_self
 
-theorem point_reflection_involutive (x : P) : Involutive (pointReflection x : P → P) := fun y =>
+theorem pointReflection_involutive (x : P) : Involutive (pointReflection x : P → P) := fun y =>
   (Equiv.apply_eq_iff_eq_symm_apply _).2 <| by rw [point_reflection_symm]
-#align equiv.point_reflection_involutive Equiv.point_reflection_involutive
+#align equiv.point_reflection_involutive Equiv.pointReflection_involutive
 
 /-- `x` is the only fixed point of `point_reflection x`. This lemma requires
 `x + x = y + y ↔ x = y`. There is no typeclass to use here, so we add it as an explicit argument. -/
-theorem point_reflection_fixed_iff_of_injective_bit0 {x y : P} (h : Injective (bit0 : G → G)) :
+theorem pointReflection_fixed_iff_of_injective_bit0 {x y : P} (h : Injective (bit0 : G → G)) :
     pointReflection x y = y ↔ y = x := by
   rw [point_reflection_apply, eq_comm, eq_vadd_iff_vsub_eq, ← neg_vsub_eq_vsub_rev,
     neg_eq_iff_add_eq_zero, ← bit0, ← bit0_zero, h.eq_iff, vsub_eq_zero_iff_eq, eq_comm]
-#align equiv.point_reflection_fixed_iff_of_injective_bit0 Equiv.point_reflection_fixed_iff_of_injective_bit0
+#align equiv.point_reflection_fixed_iff_of_injective_bit0 Equiv.pointReflection_fixed_iff_of_injective_bit0
 
 omit G
 
-theorem injective_point_reflection_left_of_injective_bit0 {G P : Type _} [AddCommGroup G]
+theorem injective_pointReflection_left_of_injective_bit0 {G P : Type _} [AddCommGroup G]
     [AddTorsor G P] (h : Injective (bit0 : G → G)) (y : P) :
     Injective fun x : P => pointReflection x y :=
   fun x₁ x₂ (hy : pointReflection x₁ y = pointReflection x₂ y) => by
   rwa [point_reflection_apply, point_reflection_apply, vadd_eq_vadd_iff_sub_eq_vsub,
     vsub_sub_vsub_cancel_right, ← neg_vsub_eq_vsub_rev, neg_eq_iff_add_eq_zero, ← bit0, ← bit0_zero,
     h.eq_iff, vsub_eq_zero_iff_eq] at hy
-#align equiv.injective_point_reflection_left_of_injective_bit0 Equiv.injective_point_reflection_left_of_injective_bit0
+#align equiv.injective_point_reflection_left_of_injective_bit0 Equiv.injective_pointReflection_left_of_injective_bit0
 
 end Equiv
 

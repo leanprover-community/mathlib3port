@@ -122,11 +122,9 @@ theorem BiTotal.rel_exists (h : BiTotal R) :
 #align relator.bi_total.rel_exists Relator.BiTotal.rel_exists
 -/
 
-#print Relator.left_unique_of_rel_eq /-
-theorem left_unique_of_rel_eq {eq' : β → β → Prop} (he : (R ⇒ R ⇒ Iff) Eq eq') : LeftUnique R :=
+theorem leftUnique_of_rel_eq {eq' : β → β → Prop} (he : (R ⇒ R ⇒ Iff) Eq eq') : LeftUnique R :=
   fun a b c (ac : R a c) (bc : R b c) => (he ac bc).mpr ((he bc bc).mp rfl)
-#align relator.left_unique_of_rel_eq Relator.left_unique_of_rel_eq
--/
+#align relator.left_unique_of_rel_eq Relator.leftUnique_of_rel_eq
 
 end
 
@@ -140,12 +138,10 @@ theorem rel_not : (Iff ⇒ Iff) Not Not := fun p q h => not_congr h
 #align relator.rel_not Relator.rel_not
 -/
 
-#print Relator.bi_total_eq /-
-theorem bi_total_eq {α : Type u₁} : Relator.BiTotal (@Eq α) :=
+theorem biTotal_eq {α : Type u₁} : Relator.BiTotal (@Eq α) :=
   { left := fun a => ⟨a, rfl⟩
     right := fun a => ⟨a, rfl⟩ }
-#align relator.bi_total_eq Relator.bi_total_eq
--/
+#align relator.bi_total_eq Relator.biTotal_eq
 
 variable {α : Type _} {β : Type _} {γ : Type _} {δ : Type _}
 

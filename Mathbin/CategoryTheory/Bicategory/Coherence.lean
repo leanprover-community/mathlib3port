@@ -161,7 +161,7 @@ def normalizeIso {a : B} :
 /-- Given a 2-morphism between `f` and `g` in the free bicategory, we have the equality
 `normalize_aux p f = normalize_aux p g`.
 -/
-theorem normalize_aux_congr {a b c : B} (p : Path a b) {f g : Hom b c} (η : f ⟶ g) :
+theorem normalizeAux_congr {a b c : B} (p : Path a b) {f g : Hom b c} (η : f ⟶ g) :
     normalizeAux p f = normalizeAux p g :=
   by
   rcases η with ⟨⟩
@@ -173,13 +173,13 @@ theorem normalize_aux_congr {a b c : B} (p : Path a b) {f g : Hom b c} (η : f �
   case whisker_left _ _ _ _ _ _ _ ih => funext; apply congr_fun ih
   case whisker_right _ _ _ _ _ _ _ ih => funext; apply congr_arg₂ _ (congr_fun ih p) rfl
   all_goals funext; rfl
-#align category_theory.free_bicategory.normalize_aux_congr CategoryTheory.FreeBicategory.normalize_aux_congr
+#align category_theory.free_bicategory.normalize_aux_congr CategoryTheory.FreeBicategory.normalizeAux_congr
 
 /-- The 2-isomorphism `normalize_iso p f` is natural in `f`. -/
 theorem normalize_naturality {a b c : B} (p : Path a b) {f g : Hom b c} (η : f ⟶ g) :
     (preinclusion B).map ⟨p⟩ ◁ η ≫ (normalizeIso p g).Hom =
       (normalizeIso p f).Hom ≫
-        (preinclusion B).map₂ (eqToHom (Discrete.ext _ _ (normalize_aux_congr p η))) :=
+        (preinclusion B).map₂ (eqToHom (Discrete.ext _ _ (normalizeAux_congr p η))) :=
   by
   rcases η with ⟨⟩; induction η
   case id => simp
@@ -202,14 +202,14 @@ theorem normalize_naturality {a b c : B} (p : Path a b) {f g : Hom b c} (η : f 
 #align category_theory.free_bicategory.normalize_naturality CategoryTheory.FreeBicategory.normalize_naturality
 
 @[simp]
-theorem normalize_aux_nil_comp {a b c : B} (f : Hom a b) (g : Hom b c) :
+theorem normalizeAux_nil_comp {a b c : B} (f : Hom a b) (g : Hom b c) :
     normalizeAux nil (f.comp g) = (normalizeAux nil f).comp (normalizeAux nil g) :=
   by
   induction g generalizing a
   case id => rfl
   case of => rfl
   case comp _ _ _ g _ ihf ihg => erw [ihg (f.comp g), ihf f, ihg g, comp_assoc]
-#align category_theory.free_bicategory.normalize_aux_nil_comp CategoryTheory.FreeBicategory.normalize_aux_nil_comp
+#align category_theory.free_bicategory.normalize_aux_nil_comp CategoryTheory.FreeBicategory.normalizeAux_nil_comp
 
 /-- The normalization pseudofunctor for the free bicategory on a quiver `B`. -/
 def normalize (B : Type u) [Quiver.{v + 1} B] :
@@ -217,9 +217,9 @@ def normalize (B : Type u) [Quiver.{v + 1} B] :
     where
   obj := id
   map a b f := ⟨normalizeAux nil f⟩
-  map₂ a b f g η := eq_to_hom <| Discrete.ext _ _ <| normalize_aux_congr nil η
+  map₂ a b f g η := eq_to_hom <| Discrete.ext _ _ <| normalizeAux_congr nil η
   map_id a := eq_to_iso <| Discrete.ext _ _ rfl
-  map_comp a b c f g := eq_to_iso <| Discrete.ext _ _ <| normalize_aux_nil_comp f g
+  map_comp a b c f g := eq_to_iso <| Discrete.ext _ _ <| normalizeAux_nil_comp f g
 #align category_theory.free_bicategory.normalize CategoryTheory.FreeBicategory.normalize
 
 /-- Auxiliary definition for `normalize_equiv`. -/

@@ -97,7 +97,7 @@ variable {p : R}
 -- mathport name: exprP
 local notation "P" => Submodule.span R {p}
 
-theorem exists_mem_adjoin_mul_eq_pow_nat_degree {x : S} (hx : aeval x f = 0) (hmo : f.Monic)
+theorem exists_mem_adjoin_mul_eq_pow_natDegree {x : S} (hx : aeval x f = 0) (hmo : f.Monic)
     (hf : f.IsWeaklyEisensteinAt P) :
     ∃ y ∈ adjoin R ({x} : Set S), (algebraMap R S) p * y = x ^ (f.map (algebraMap R S)).natDegree :=
   by
@@ -123,11 +123,11 @@ theorem exists_mem_adjoin_mul_eq_pow_nat_degree {x : S} (hx : aeval x f = 0) (hm
   exact
     Subalgebra.mul_mem _ (Subalgebra.neg_mem _ (Subalgebra.one_mem _))
       (Subalgebra.sum_mem _ fun i hi =>
-        Subalgebra.mul_mem _ (Subalgebra.algebra_map_mem _ _)
+        Subalgebra.mul_mem _ (Subalgebra.algebraMap_mem _ _)
           (Subalgebra.pow_mem _ (subset_adjoin (Set.mem_singleton x)) _))
-#align polynomial.is_weakly_eisenstein_at.exists_mem_adjoin_mul_eq_pow_nat_degree Polynomial.IsWeaklyEisensteinAt.exists_mem_adjoin_mul_eq_pow_nat_degree
+#align polynomial.is_weakly_eisenstein_at.exists_mem_adjoin_mul_eq_pow_nat_degree Polynomial.IsWeaklyEisensteinAt.exists_mem_adjoin_mul_eq_pow_natDegree
 
-theorem exists_mem_adjoin_mul_eq_pow_nat_degree_le {x : S} (hx : aeval x f = 0) (hmo : f.Monic)
+theorem exists_mem_adjoin_mul_eq_pow_natDegree_le {x : S} (hx : aeval x f = 0) (hmo : f.Monic)
     (hf : f.IsWeaklyEisensteinAt P) :
     ∀ i,
       (f.map (algebraMap R S)).natDegree ≤ i →
@@ -140,13 +140,13 @@ theorem exists_mem_adjoin_mul_eq_pow_nat_degree_le {x : S} (hx : aeval x f = 0) 
   refine' ⟨y * x ^ k, _, _⟩
   · exact Subalgebra.mul_mem _ hy (Subalgebra.pow_mem _ (subset_adjoin (Set.mem_singleton x)) _)
   · rw [← mul_assoc _ y, H]
-#align polynomial.is_weakly_eisenstein_at.exists_mem_adjoin_mul_eq_pow_nat_degree_le Polynomial.IsWeaklyEisensteinAt.exists_mem_adjoin_mul_eq_pow_nat_degree_le
+#align polynomial.is_weakly_eisenstein_at.exists_mem_adjoin_mul_eq_pow_nat_degree_le Polynomial.IsWeaklyEisensteinAt.exists_mem_adjoin_mul_eq_pow_natDegree_le
 
 end Principal
 
 include hf
 
-theorem pow_nat_degree_le_of_root_of_monic_mem {x : R} (hroot : IsRoot f x) (hmo : f.Monic) :
+theorem pow_natDegree_le_of_root_of_monic_mem {x : R} (hroot : IsRoot f x) (hmo : f.Monic) :
     ∀ i, f.natDegree ≤ i → x ^ i ∈ 𝓟 := by
   intro i hi
   obtain ⟨k, hk⟩ := exists_add_of_le hi
@@ -157,9 +157,9 @@ theorem pow_nat_degree_le_of_root_of_monic_mem {x : R} (hroot : IsRoot f x) (hmo
     hroot
   rw [eq_neg_of_add_eq_zero_left hroot, neg_mem_iff]
   refine' Submodule.sum_mem _ fun i hi => mul_mem_right _ _ (hf.mem (Fin.is_lt i))
-#align polynomial.is_weakly_eisenstein_at.pow_nat_degree_le_of_root_of_monic_mem Polynomial.IsWeaklyEisensteinAt.pow_nat_degree_le_of_root_of_monic_mem
+#align polynomial.is_weakly_eisenstein_at.pow_nat_degree_le_of_root_of_monic_mem Polynomial.IsWeaklyEisensteinAt.pow_natDegree_le_of_root_of_monic_mem
 
-theorem pow_nat_degree_le_of_aeval_zero_of_monic_mem_map {x : S} (hx : aeval x f = 0)
+theorem pow_natDegree_le_of_aeval_zero_of_monic_mem_map {x : S} (hx : aeval x f = 0)
     (hmo : f.Monic) :
     ∀ i, (f.map (algebraMap R S)).natDegree ≤ i → x ^ i ∈ 𝓟.map (algebraMap R S) :=
   by
@@ -171,7 +171,7 @@ theorem pow_nat_degree_le_of_aeval_zero_of_monic_mem_map {x : S} (hx : aeval x f
     refine' mul_mem_right _ _ this
   rw [aeval_def, eval₂_eq_eval_map, ← is_root.def] at hx
   refine' pow_nat_degree_le_of_root_of_monic_mem (hf.map _) hx (hmo.map _) _ rfl.le
-#align polynomial.is_weakly_eisenstein_at.pow_nat_degree_le_of_aeval_zero_of_monic_mem_map Polynomial.IsWeaklyEisensteinAt.pow_nat_degree_le_of_aeval_zero_of_monic_mem_map
+#align polynomial.is_weakly_eisenstein_at.pow_nat_degree_le_of_aeval_zero_of_monic_mem_map Polynomial.IsWeaklyEisensteinAt.pow_natDegree_le_of_aeval_zero_of_monic_mem_map
 
 end CommRing
 
@@ -190,7 +190,7 @@ theorem scaleRoots.isWeaklyEisensteinAt (p : R[X]) {x : R} {P : Ideal R} (hP : x
   exact Ideal.mul_mem_left _ _ (Ideal.pow_mem_of_mem P hP _ hi)
 #align polynomial.scale_roots.is_weakly_eisenstein_at Polynomial.scaleRoots.isWeaklyEisensteinAt
 
-theorem dvd_pow_nat_degree_of_eval₂_eq_zero {f : R →+* A} (hf : Function.Injective f) {p : R[X]}
+theorem dvd_pow_natDegree_of_eval₂_eq_zero {f : R →+* A} (hf : Function.Injective f) {p : R[X]}
     (hp : p.Monic) (x y : R) (z : A) (h : p.eval₂ f z = 0) (hz : f x * z = f y) :
     x ∣ y ^ p.natDegree :=
   by
@@ -202,14 +202,14 @@ theorem dvd_pow_nat_degree_of_eval₂_eq_zero {f : R →+* A} (hf : Function.Inj
   rw [injective_iff_map_eq_zero'] at hf
   have := scale_roots_eval₂_eq_zero f h
   rwa [hz, Polynomial.eval₂_at_apply, hf] at this
-#align polynomial.dvd_pow_nat_degree_of_eval₂_eq_zero Polynomial.dvd_pow_nat_degree_of_eval₂_eq_zero
+#align polynomial.dvd_pow_nat_degree_of_eval₂_eq_zero Polynomial.dvd_pow_natDegree_of_eval₂_eq_zero
 
-theorem dvd_pow_nat_degree_of_aeval_eq_zero [Algebra R A] [Nontrivial A] [NoZeroSMulDivisors R A]
+theorem dvd_pow_natDegree_of_aeval_eq_zero [Algebra R A] [Nontrivial A] [NoZeroSMulDivisors R A]
     {p : R[X]} (hp : p.Monic) (x y : R) (z : A) (h : Polynomial.aeval z p = 0)
     (hz : z * algebraMap R A x = algebraMap R A y) : x ∣ y ^ p.natDegree :=
-  dvd_pow_nat_degree_of_eval₂_eq_zero (NoZeroSMulDivisors.algebra_map_injective R A) hp x y z h
+  dvd_pow_natDegree_of_eval₂_eq_zero (NoZeroSMulDivisors.algebraMap_injective R A) hp x y z h
     ((mul_comm _ _).trans hz)
-#align polynomial.dvd_pow_nat_degree_of_aeval_eq_zero Polynomial.dvd_pow_nat_degree_of_aeval_eq_zero
+#align polynomial.dvd_pow_nat_degree_of_aeval_eq_zero Polynomial.dvd_pow_natDegree_of_aeval_eq_zero
 
 end ScaleRoots
 
@@ -219,9 +219,9 @@ section CommSemiring
 
 variable [CommSemiring R] {𝓟 : Ideal R} {f : R[X]} (hf : f.IsEisensteinAt 𝓟)
 
-theorem Polynomial.Monic.leading_coeff_not_mem (hf : f.Monic) (h : 𝓟 ≠ ⊤) : ¬f.leadingCoeff ∈ 𝓟 :=
+theorem Polynomial.Monic.leadingCoeff_not_mem (hf : f.Monic) (h : 𝓟 ≠ ⊤) : ¬f.leadingCoeff ∈ 𝓟 :=
   hf.leadingCoeff.symm ▸ (Ideal.ne_top_iff_one _).1 h
-#align polynomial.monic.leading_coeff_not_mem Polynomial.Monic.leading_coeff_not_mem
+#align polynomial.monic.leading_coeff_not_mem Polynomial.Monic.leadingCoeff_not_mem
 
 theorem Polynomial.Monic.isEisensteinAtOfMemOfNotMem (hf : f.Monic) (h : 𝓟 ≠ ⊤)
     (hmem : ∀ {n}, n < f.natDegree → f.coeff n ∈ 𝓟) (hnot_mem : f.coeff 0 ∉ 𝓟 ^ 2) :
@@ -256,7 +256,7 @@ irreducible. -/
 theorem irreducible (hprime : 𝓟.IsPrime) (hu : f.IsPrimitive) (hfd0 : 0 < f.natDegree) :
     Irreducible f :=
   irreducible_of_eisenstein_criterion hprime hf.leading (fun n hn => hf.Mem (coe_lt_degree.1 hn))
-    (nat_degree_pos_iff_degree_pos.1 hfd0) hf.not_mem hu
+    (natDegree_pos_iff_degree_pos.1 hfd0) hf.not_mem hu
 #align polynomial.is_eisenstein_at.irreducible Polynomial.IsEisensteinAt.irreducible
 
 end IsDomain
@@ -417,9 +417,9 @@ theorem dvd_coeff_zero_of_aeval_eq_prime_smul_of_minpoly_is_eiseinstein_at {B : 
       (z * B.gen ^ n - ∑ x : ℕ in (range (Q.nat_degree + 1)).erase 0, Q.coeff x • f (x + n)) :=
     by
     refine'
-      is_integral_sub (is_integral_mul hzint (IsIntegral.pow hBint _))
-        (IsIntegral.sum _ fun i hi => is_integral_smul _ _)
-    exact adjoin_le_integral_closure hBint (hf _ (aux i hi)).1
+      isIntegral_sub (isIntegral_mul hzint (IsIntegral.pow hBint _))
+        (IsIntegral.sum _ fun i hi => isIntegral_smul _ _)
+    exact adjoin_le_integralClosure hBint (hf _ (aux i hi)).1
   obtain ⟨r, hr⟩ := is_integral_iff.1 (is_integral_norm K hintsum)
   use r
   -- Do the computation in `K` so we can work in terms of `z` instead of `r`.
@@ -435,14 +435,14 @@ theorem dvd_coeff_zero_of_aeval_eq_prime_smul_of_minpoly_is_eiseinstein_at {B : 
       congr_arg (norm K) (eq_sub_of_add_eq _)
     _ = _ := _
     
-  · simp only [Algebra.smul_def, algebra_map_apply R K L, Algebra.norm_algebra_map, _root_.map_mul,
+  · simp only [Algebra.smul_def, algebra_map_apply R K L, Algebra.norm_algebraMap, _root_.map_mul,
       _root_.map_pow, finrank_K_L, power_basis.norm_gen_eq_coeff_zero_minpoly,
       minpoly.gcd_domain_eq_field_fractions' K hBint, coeff_map, ← hn]
     ring
   swap
   ·
     simp_rw [← smul_sum, ← smul_sub, Algebra.smul_def p, algebra_map_apply R K L, _root_.map_mul,
-      Algebra.norm_algebra_map, finrank_K_L, hr, ← hn]
+      Algebra.norm_algebraMap, finrank_K_L, hr, ← hn]
   calc
     _ =
         (Q.coeff 0 • 1 + ∑ x : ℕ in (range (Q.nat_degree + 1)).erase 0, Q.coeff x • B.gen ^ x) *
@@ -613,12 +613,11 @@ theorem mem_adjoin_of_smul_prime_smul_of_minpoly_is_eiseinstein_at {B : PowerBas
             ∑ x : ℕ in range (j + 1), g x • B.gen ^ x * B.gen ^ (P.nat_degree - (j + 2)))) :=
       by
       refine'
-        is_integral_sub (is_integral_mul hzint (IsIntegral.pow hBint _))
-          (is_integral_add (IsIntegral.sum _ fun k hk => is_integral_smul _ _)
+        isIntegral_sub (isIntegral_mul hzint (IsIntegral.pow hBint _))
+          (isIntegral_add (IsIntegral.sum _ fun k hk => isIntegral_smul _ _)
             (IsIntegral.sum _ fun k hk =>
-              is_integral_mul (is_integral_smul _ (IsIntegral.pow hBint _))
-                (IsIntegral.pow hBint _)))
-      refine' adjoin_le_integral_closure hBint (hf _ _).1
+              isIntegral_mul (isIntegral_smul _ (IsIntegral.pow hBint _)) (IsIntegral.pow hBint _)))
+      refine' adjoin_le_integralClosure hBint (hf _ _).1
       rw [(minpoly.monic hBint).nat_degree_map (algebraMap R L)]
       rw [add_comm, Nat.add_sub_assoc, le_add_iff_nonneg_right]
       · exact zero_le _
@@ -627,7 +626,7 @@ theorem mem_adjoin_of_smul_prime_smul_of_minpoly_is_eiseinstein_at {B : PowerBas
         simpa using hk
     obtain ⟨r, hr⟩ := is_integral_iff.1 (is_integral_norm K hintsum)
     rw [Algebra.smul_def, mul_assoc, ← mul_sub, _root_.map_mul, algebra_map_apply R K L, map_pow,
-      Algebra.norm_algebra_map, _root_.map_mul, algebra_map_apply R K L, Algebra.norm_algebra_map,
+      Algebra.norm_algebraMap, _root_.map_mul, algebra_map_apply R K L, Algebra.norm_algebraMap,
       finrank B, ← hr, power_basis.norm_gen_eq_coeff_zero_minpoly,
       minpoly.gcd_domain_eq_field_fractions' K hBint, coeff_map,
       show (-1 : K) = algebraMap R K (-1) by simp, ← map_pow, ← map_pow, ← _root_.map_mul, ←
@@ -654,7 +653,7 @@ theorem mem_adjoin_of_smul_prime_pow_smul_of_minpoly_is_eiseinstein_at {B : Powe
     exact
       hn
         (mem_adjoin_of_smul_prime_smul_of_minpoly_is_eiseinstein_at hp hBint
-          (is_integral_smul _ hzint) hz hei)
+          (isIntegral_smul _ hzint) hz hei)
 #align mem_adjoin_of_smul_prime_pow_smul_of_minpoly_is_eiseinstein_at mem_adjoin_of_smul_prime_pow_smul_of_minpoly_is_eiseinstein_at
 
 end IsIntegral

@@ -41,7 +41,7 @@ variable {R : Type _} [CommSemiring R]
 /-- A sum version of Vieta's formula for `multiset`: the product of the linear terms `X + λ` where
 `λ` runs through a multiset `s` is equal to a linear combination of the symmetric functions
 `esymm s` of the `λ`'s .-/
-theorem prod_X_add_C_eq_sum_esymm (s : Multiset R) :
+theorem prod_x_add_c_eq_sum_esymm (s : Multiset R) :
     (s.map fun r => X + c r).Prod =
       ∑ j in Finset.range (s.card + 1), c (s.esymm j) * X ^ (s.card - j) :=
   by
@@ -53,11 +53,11 @@ theorem prod_X_add_C_eq_sum_esymm (s : Multiset R) :
     intro _ ht
     rw [mem_powerset_len] at ht
     simp [ht, map_const, prod_replicate, prod_hom', map_id', card_sub]
-#align multiset.prod_X_add_C_eq_sum_esymm Multiset.prod_X_add_C_eq_sum_esymm
+#align multiset.prod_X_add_C_eq_sum_esymm Multiset.prod_x_add_c_eq_sum_esymm
 
 /-- Vieta's formula for the coefficients of the product of linear terms `X + λ` where `λ` runs
 through a multiset `s` : the `k`th coefficient is the symmetric function `esymm (card s - k) s`. -/
-theorem prod_X_add_C_coeff (s : Multiset R) {k : ℕ} (h : k ≤ s.card) :
+theorem prod_x_add_c_coeff (s : Multiset R) {k : ℕ} (h : k ≤ s.card) :
     (s.map fun r => X + c r).Prod.coeff k = s.esymm (s.card - k) :=
   by
   convert polynomial.ext_iff.mp (prod_X_add_C_eq_sum_esymm s) k
@@ -71,19 +71,19 @@ theorem prod_X_add_C_coeff (s : Multiset R) {k : ℕ} (h : k ≤ s.card) :
       exact Ne.irrefl hj2
   · rw [Finset.mem_range]
     exact Nat.sub_lt_succ s.card k
-#align multiset.prod_X_add_C_coeff Multiset.prod_X_add_C_coeff
+#align multiset.prod_X_add_C_coeff Multiset.prod_x_add_c_coeff
 
-theorem prod_X_add_C_coeff' {σ} (s : Multiset σ) (r : σ → R) {k : ℕ} (h : k ≤ s.card) :
+theorem prod_x_add_c_coeff' {σ} (s : Multiset σ) (r : σ → R) {k : ℕ} (h : k ≤ s.card) :
     (s.map fun i => X + c (r i)).Prod.coeff k = (s.map r).esymm (s.card - k) := by
   rw [← map_map (fun r => X + C r) r, prod_X_add_C_coeff] <;> rwa [s.card_map r]
-#align multiset.prod_X_add_C_coeff' Multiset.prod_X_add_C_coeff'
+#align multiset.prod_X_add_C_coeff' Multiset.prod_x_add_c_coeff'
 
-theorem Finset.prod_X_add_C_coeff {σ} (s : Finset σ) (r : σ → R) {k : ℕ} (h : k ≤ s.card) :
+theorem Finset.prod_x_add_c_coeff {σ} (s : Finset σ) (r : σ → R) {k : ℕ} (h : k ≤ s.card) :
     (∏ i in s, X + c (r i)).coeff k = ∑ t in s.powersetLen (s.card - k), ∏ i in t, r i :=
   by
   rw [Finset.prod, prod_X_add_C_coeff' _ r h, Finset.esymm_map_val]
   rfl
-#align finset.prod_X_add_C_coeff Finset.prod_X_add_C_coeff
+#align finset.prod_X_add_C_coeff Finset.prod_x_add_c_coeff
 
 end Semiring
 
@@ -102,7 +102,7 @@ theorem esymm_neg (s : Multiset R) (k : ℕ) : (map Neg.neg s).esymm k = (-1) ^ 
   exact fun z _ => neg_one_mul z
 #align multiset.esymm_neg Multiset.esymm_neg
 
-theorem prod_X_sub_C_eq_sum_esymm (s : Multiset R) :
+theorem prod_x_sub_c_eq_sum_esymm (s : Multiset R) :
     (s.map fun t => X - c t).Prod =
       ∑ j in Finset.range (s.card + 1), (-1) ^ j * (c (s.esymm j) * X ^ (s.card - j)) :=
   by
@@ -115,9 +115,9 @@ theorem prod_X_sub_C_eq_sum_esymm (s : Multiset R) :
   convert prod_X_add_C_eq_sum_esymm (map (fun t => -t) s) using 1
   · rwa [map_map]
   · simp only [esymm_neg, card_map, mul_assoc, map_mul, map_pow, map_neg, map_one]
-#align multiset.prod_X_sub_C_eq_sum_esymm Multiset.prod_X_sub_C_eq_sum_esymm
+#align multiset.prod_X_sub_C_eq_sum_esymm Multiset.prod_x_sub_c_eq_sum_esymm
 
-theorem prod_X_sub_C_coeff (s : Multiset R) {k : ℕ} (h : k ≤ s.card) :
+theorem prod_x_sub_c_coeff (s : Multiset R) {k : ℕ} (h : k ≤ s.card) :
     (s.map fun t => X - c t).Prod.coeff k = (-1) ^ (s.card - k) * s.esymm (s.card - k) :=
   by
   conv_lhs =>
@@ -131,7 +131,7 @@ theorem prod_X_sub_C_coeff (s : Multiset R) {k : ℕ} (h : k ≤ s.card) :
   · rwa [map_map]
   · rwa [esymm_neg, card_map]
   · rwa [card_map]
-#align multiset.prod_X_sub_C_coeff Multiset.prod_X_sub_C_coeff
+#align multiset.prod_X_sub_C_coeff Multiset.prod_x_sub_c_coeff
 
 /-- Vieta's formula for the coefficients and the roots of a polynomial over an integral domain
   with as many roots as its degree. -/
@@ -164,29 +164,29 @@ variable (R σ : Type _) [CommSemiring R] [Fintype σ]
 /-- A sum version of Vieta's formula for `mv_polynomial`: viewing `X i` as variables,
 the product of linear terms `λ + X i` is equal to a linear combination of
 the symmetric polynomials `esymm σ R j`. -/
-theorem MvPolynomial.prod_C_add_X_eq_sum_esymm :
+theorem MvPolynomial.prod_c_add_x_eq_sum_esymm :
     (∏ i : σ, X + c (MvPolynomial.x i)) =
       ∑ j in range (card σ + 1), c (MvPolynomial.esymm σ R j) * X ^ (card σ - j) :=
   by
   let s := finset.univ.val.map fun i : σ => MvPolynomial.x i
   rw [(_ : card σ = s.card)]
   · simp_rw [MvPolynomial.esymm_eq_multiset_esymm σ R, Finset.prod_eq_multiset_prod]
-    convert Multiset.prod_X_add_C_eq_sum_esymm s
+    convert Multiset.prod_x_add_c_eq_sum_esymm s
     rwa [Multiset.map_map]
   · rw [Multiset.card_map]
     rfl
-#align mv_polynomial.prod_C_add_X_eq_sum_esymm MvPolynomial.prod_C_add_X_eq_sum_esymm
+#align mv_polynomial.prod_C_add_X_eq_sum_esymm MvPolynomial.prod_c_add_x_eq_sum_esymm
 
-theorem MvPolynomial.prod_X_add_C_coeff (k : ℕ) (h : k ≤ card σ) :
+theorem MvPolynomial.prod_x_add_c_coeff (k : ℕ) (h : k ≤ card σ) :
     (∏ i : σ, X + c (MvPolynomial.x i)).coeff k = MvPolynomial.esymm σ R (card σ - k) :=
   by
   let s := finset.univ.val.map fun i => (MvPolynomial.x i : MvPolynomial σ R)
   rw [(_ : card σ = s.card)] at h⊢
   · rw [MvPolynomial.esymm_eq_multiset_esymm σ R, Finset.prod_eq_multiset_prod]
-    convert Multiset.prod_X_add_C_coeff s h
+    convert Multiset.prod_x_add_c_coeff s h
     rwa [Multiset.map_map]
   repeat' rw [Multiset.card_map]; rfl
-#align mv_polynomial.prod_X_add_C_coeff MvPolynomial.prod_X_add_C_coeff
+#align mv_polynomial.prod_X_add_C_coeff MvPolynomial.prod_x_add_c_coeff
 
 end MvPolynomial
 

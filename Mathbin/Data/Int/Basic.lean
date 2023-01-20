@@ -906,11 +906,15 @@ theorem mem_toNat' : ∀ (a : ℤ) (n : ℕ), n ∈ toNat' a ↔ a = n
 #align int.mem_to_nat' Int.mem_toNat'
 -/
 
+/- warning: int.to_nat_neg_nat clashes with int.toNat_neg_nat -> Int.toNat_neg_nat
+Case conversion may be inaccurate. Consider using '#align int.to_nat_neg_nat Int.toNat_neg_natₓ'. -/
+#print Int.toNat_neg_nat /-
 @[simp]
-theorem to_nat_neg_nat : ∀ n : ℕ, (-(n : ℤ)).toNat = 0
+theorem toNat_neg_nat : ∀ n : ℕ, (-(n : ℤ)).toNat = 0
   | 0 => rfl
   | n + 1 => rfl
-#align int.to_nat_neg_nat Int.to_nat_neg_nat
+#align int.to_nat_neg_nat Int.toNat_neg_nat
+-/
 
 end Int
 

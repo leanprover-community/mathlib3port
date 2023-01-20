@@ -110,13 +110,13 @@ theorem coeff_select (x : 𝕎 R) (n : ℕ) : (select P x).coeff n = aeval x.coe
 #align witt_vector.coeff_select WittVector.coeff_select
 
 @[is_poly]
-theorem select_is_poly (P : ℕ → Prop) : IsPoly p fun R _Rcr x => select P x :=
+theorem select_isPoly (P : ℕ → Prop) : IsPoly p fun R _Rcr x => select P x :=
   by
   use select_poly P
   rintro R _Rcr x
   funext i
   apply coeff_select
-#align witt_vector.select_is_poly WittVector.select_is_poly
+#align witt_vector.select_is_poly WittVector.select_isPoly
 
 include hp
 
@@ -132,7 +132,7 @@ theorem select_add_select_not : ∀ x : 𝕎 R, select P x + select (fun i => ¬
     by
     apply_fun aeval x.coeff  at this
     simpa only [AlgHom.map_add, aeval_bind₁, ← coeff_select]
-  simp only [witt_polynomial_eq_sum_C_mul_X_pow, select_poly, AlgHom.map_sum, AlgHom.map_pow,
+  simp only [wittPolynomial_eq_sum_c_mul_x_pow, select_poly, AlgHom.map_sum, AlgHom.map_pow,
     AlgHom.map_mul, bind₁_X_right, bind₁_C_right, ← Finset.sum_add_distrib, ← mul_add]
   apply Finset.sum_congr rfl
   refine' fun m hm => mul_eq_mul_left_iff.mpr (Or.inl _)
@@ -239,9 +239,9 @@ variable (p)
 omit hp
 
 /-- `witt_vector.init n x` is polynomial in the coefficients of `x`. -/
-theorem init_is_poly (n : ℕ) : IsPoly p fun R _Rcr => init n :=
-  select_is_poly fun i => i < n
-#align witt_vector.init_is_poly WittVector.init_is_poly
+theorem init_isPoly (n : ℕ) : IsPoly p fun R _Rcr => init n :=
+  select_isPoly fun i => i < n
+#align witt_vector.init_is_poly WittVector.init_isPoly
 
 end
 

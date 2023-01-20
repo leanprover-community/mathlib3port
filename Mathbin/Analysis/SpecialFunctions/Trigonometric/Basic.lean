@@ -60,9 +60,9 @@ theorem continuous_sin : Continuous sin :=
   continuity
 #align complex.continuous_sin Complex.continuous_sin
 
-theorem continuous_on_sin {s : Set ℂ} : ContinuousOn sin s :=
+theorem continuousOn_sin {s : Set ℂ} : ContinuousOn sin s :=
   continuous_sin.ContinuousOn
-#align complex.continuous_on_sin Complex.continuous_on_sin
+#align complex.continuous_on_sin Complex.continuousOn_sin
 
 @[continuity]
 theorem continuous_cos : Continuous cos :=
@@ -71,9 +71,9 @@ theorem continuous_cos : Continuous cos :=
   continuity
 #align complex.continuous_cos Complex.continuous_cos
 
-theorem continuous_on_cos {s : Set ℂ} : ContinuousOn cos s :=
+theorem continuousOn_cos {s : Set ℂ} : ContinuousOn cos s :=
   continuous_cos.ContinuousOn
-#align complex.continuous_on_cos Complex.continuous_on_cos
+#align complex.continuous_on_cos Complex.continuousOn_cos
 
 @[continuity]
 theorem continuous_sinh : Continuous sinh :=
@@ -100,18 +100,18 @@ theorem continuous_sin : Continuous sin :=
   Complex.continuous_re.comp (Complex.continuous_sin.comp Complex.continuous_of_real)
 #align real.continuous_sin Real.continuous_sin
 
-theorem continuous_on_sin {s} : ContinuousOn sin s :=
+theorem continuousOn_sin {s} : ContinuousOn sin s :=
   continuous_sin.ContinuousOn
-#align real.continuous_on_sin Real.continuous_on_sin
+#align real.continuous_on_sin Real.continuousOn_sin
 
 @[continuity]
 theorem continuous_cos : Continuous cos :=
   Complex.continuous_re.comp (Complex.continuous_cos.comp Complex.continuous_of_real)
 #align real.continuous_cos Real.continuous_cos
 
-theorem continuous_on_cos {s} : ContinuousOn cos s :=
+theorem continuousOn_cos {s} : ContinuousOn cos s :=
   continuous_cos.ContinuousOn
-#align real.continuous_on_cos Real.continuous_on_cos
+#align real.continuous_on_cos Real.continuousOn_cos
 
 @[continuity]
 theorem continuous_sinh : Continuous sinh :=
@@ -128,7 +128,7 @@ end Real
 namespace Real
 
 theorem exists_cos_eq_zero : 0 ∈ cos '' Icc (1 : ℝ) 2 :=
-  intermediate_value_Icc' (by norm_num) continuous_on_cos
+  intermediate_value_Icc' (by norm_num) continuousOn_cos
     ⟨le_of_lt cos_two_neg, le_of_lt cos_one_pos⟩
 #align real.exists_cos_eq_zero Real.exists_cos_eq_zero
 
@@ -418,20 +418,20 @@ theorem sin_pos_of_pos_of_lt_pi {x : ℝ} (h0x : 0 < x) (hxp : x < π) : 0 < sin
     sin_pi_sub x ▸ sin_pos_of_pos_of_le_two (sub_pos.2 hxp) this
 #align real.sin_pos_of_pos_of_lt_pi Real.sin_pos_of_pos_of_lt_pi
 
-theorem sin_pos_of_mem_Ioo {x : ℝ} (hx : x ∈ Ioo 0 π) : 0 < sin x :=
+theorem sin_pos_of_mem_ioo {x : ℝ} (hx : x ∈ Ioo 0 π) : 0 < sin x :=
   sin_pos_of_pos_of_lt_pi hx.1 hx.2
-#align real.sin_pos_of_mem_Ioo Real.sin_pos_of_mem_Ioo
+#align real.sin_pos_of_mem_Ioo Real.sin_pos_of_mem_ioo
 
-theorem sin_nonneg_of_mem_Icc {x : ℝ} (hx : x ∈ Icc 0 π) : 0 ≤ sin x :=
+theorem sin_nonneg_of_mem_icc {x : ℝ} (hx : x ∈ Icc 0 π) : 0 ≤ sin x :=
   by
-  rw [← closure_Ioo pi_ne_zero.symm] at hx
+  rw [← closure_ioo pi_ne_zero.symm] at hx
   exact
     closure_lt_subset_le continuous_const continuous_sin
       (closure_mono (fun y => sin_pos_of_mem_Ioo) hx)
-#align real.sin_nonneg_of_mem_Icc Real.sin_nonneg_of_mem_Icc
+#align real.sin_nonneg_of_mem_Icc Real.sin_nonneg_of_mem_icc
 
 theorem sin_nonneg_of_nonneg_of_le_pi {x : ℝ} (h0x : 0 ≤ x) (hxp : x ≤ π) : 0 ≤ sin x :=
-  sin_nonneg_of_mem_Icc ⟨h0x, hxp⟩
+  sin_nonneg_of_mem_icc ⟨h0x, hxp⟩
 #align real.sin_nonneg_of_nonneg_of_le_pi Real.sin_nonneg_of_nonneg_of_le_pi
 
 theorem sin_neg_of_neg_of_neg_pi_lt {x : ℝ} (hx0 : x < 0) (hpx : -π < x) : sin x < 0 :=
@@ -470,27 +470,27 @@ theorem cos_pi_div_two_sub (x : ℝ) : cos (π / 2 - x) = sin x := by
   rw [← cos_neg, neg_sub, cos_sub_pi_div_two]
 #align real.cos_pi_div_two_sub Real.cos_pi_div_two_sub
 
-theorem cos_pos_of_mem_Ioo {x : ℝ} (hx : x ∈ Ioo (-(π / 2)) (π / 2)) : 0 < cos x :=
-  sin_add_pi_div_two x ▸ sin_pos_of_mem_Ioo ⟨by linarith [hx.1], by linarith [hx.2]⟩
-#align real.cos_pos_of_mem_Ioo Real.cos_pos_of_mem_Ioo
+theorem cos_pos_of_mem_ioo {x : ℝ} (hx : x ∈ Ioo (-(π / 2)) (π / 2)) : 0 < cos x :=
+  sin_add_pi_div_two x ▸ sin_pos_of_mem_ioo ⟨by linarith [hx.1], by linarith [hx.2]⟩
+#align real.cos_pos_of_mem_Ioo Real.cos_pos_of_mem_ioo
 
-theorem cos_nonneg_of_mem_Icc {x : ℝ} (hx : x ∈ Icc (-(π / 2)) (π / 2)) : 0 ≤ cos x :=
-  sin_add_pi_div_two x ▸ sin_nonneg_of_mem_Icc ⟨by linarith [hx.1], by linarith [hx.2]⟩
-#align real.cos_nonneg_of_mem_Icc Real.cos_nonneg_of_mem_Icc
+theorem cos_nonneg_of_mem_icc {x : ℝ} (hx : x ∈ Icc (-(π / 2)) (π / 2)) : 0 ≤ cos x :=
+  sin_add_pi_div_two x ▸ sin_nonneg_of_mem_icc ⟨by linarith [hx.1], by linarith [hx.2]⟩
+#align real.cos_nonneg_of_mem_Icc Real.cos_nonneg_of_mem_icc
 
 theorem cos_nonneg_of_neg_pi_div_two_le_of_le {x : ℝ} (hl : -(π / 2) ≤ x) (hu : x ≤ π / 2) :
     0 ≤ cos x :=
-  cos_nonneg_of_mem_Icc ⟨hl, hu⟩
+  cos_nonneg_of_mem_icc ⟨hl, hu⟩
 #align real.cos_nonneg_of_neg_pi_div_two_le_of_le Real.cos_nonneg_of_neg_pi_div_two_le_of_le
 
 theorem cos_neg_of_pi_div_two_lt_of_lt {x : ℝ} (hx₁ : π / 2 < x) (hx₂ : x < π + π / 2) :
     cos x < 0 :=
-  neg_pos.1 <| cos_pi_sub x ▸ cos_pos_of_mem_Ioo ⟨by linarith, by linarith⟩
+  neg_pos.1 <| cos_pi_sub x ▸ cos_pos_of_mem_ioo ⟨by linarith, by linarith⟩
 #align real.cos_neg_of_pi_div_two_lt_of_lt Real.cos_neg_of_pi_div_two_lt_of_lt
 
 theorem cos_nonpos_of_pi_div_two_le_of_le {x : ℝ} (hx₁ : π / 2 ≤ x) (hx₂ : x ≤ π + π / 2) :
     cos x ≤ 0 :=
-  neg_nonneg.1 <| cos_pi_sub x ▸ cos_nonneg_of_mem_Icc ⟨by linarith, by linarith⟩
+  neg_nonneg.1 <| cos_pi_sub x ▸ cos_nonneg_of_mem_icc ⟨by linarith, by linarith⟩
 #align real.cos_nonpos_of_pi_div_two_le_of_le Real.cos_nonpos_of_pi_div_two_le_of_le
 
 theorem sin_eq_sqrt_one_sub_cos_sq {x : ℝ} (hl : 0 ≤ x) (hu : x ≤ π) :
@@ -586,7 +586,7 @@ theorem cos_lt_cos_of_nonneg_of_le_pi {x y : ℝ} (hx₁ : 0 ≤ x) (hy₂ : y �
       (fun hx =>
         calc
           cos y ≤ 0 := cos_nonpos_of_pi_div_two_le_of_le hy (by linarith [pi_pos])
-          _ < cos x := cos_pos_of_mem_Ioo ⟨by linarith, hx⟩
+          _ < cos x := cos_pos_of_mem_ioo ⟨by linarith, hx⟩
           )
       fun hx =>
       calc
@@ -601,13 +601,13 @@ theorem cos_lt_cos_of_nonneg_of_le_pi {x y : ℝ} (hx₁ : 0 ≤ x) (hy₂ : y �
           linarith)
 #align real.cos_lt_cos_of_nonneg_of_le_pi Real.cos_lt_cos_of_nonneg_of_le_pi
 
-theorem strict_anti_on_cos : StrictAntiOn cos (Icc 0 π) := fun x hx y hy hxy =>
+theorem strictAntiOn_cos : StrictAntiOn cos (Icc 0 π) := fun x hx y hy hxy =>
   cos_lt_cos_of_nonneg_of_le_pi hx.1 hy.2 hxy
-#align real.strict_anti_on_cos Real.strict_anti_on_cos
+#align real.strict_anti_on_cos Real.strictAntiOn_cos
 
 theorem cos_le_cos_of_nonneg_of_le_pi {x y : ℝ} (hx₁ : 0 ≤ x) (hy₂ : y ≤ π) (hxy : x ≤ y) :
     cos y ≤ cos x :=
-  (strict_anti_on_cos.le_iff_le ⟨hx₁.trans hxy, hy₂⟩ ⟨hx₁, hxy.trans hy₂⟩).2 hxy
+  (strictAntiOn_cos.le_iff_le ⟨hx₁.trans hxy, hy₂⟩ ⟨hx₁, hxy.trans hy₂⟩).2 hxy
 #align real.cos_le_cos_of_nonneg_of_le_pi Real.cos_le_cos_of_nonneg_of_le_pi
 
 theorem sin_lt_sin_of_lt_of_le_pi_div_two {x y : ℝ} (hx₁ : -(π / 2) ≤ x) (hy₂ : y ≤ π / 2)
@@ -617,62 +617,62 @@ theorem sin_lt_sin_of_lt_of_le_pi_div_two {x y : ℝ} (hx₁ : -(π / 2) ≤ x) 
     linarith
 #align real.sin_lt_sin_of_lt_of_le_pi_div_two Real.sin_lt_sin_of_lt_of_le_pi_div_two
 
-theorem strict_mono_on_sin : StrictMonoOn sin (Icc (-(π / 2)) (π / 2)) := fun x hx y hy hxy =>
+theorem strictMonoOn_sin : StrictMonoOn sin (Icc (-(π / 2)) (π / 2)) := fun x hx y hy hxy =>
   sin_lt_sin_of_lt_of_le_pi_div_two hx.1 hy.2 hxy
-#align real.strict_mono_on_sin Real.strict_mono_on_sin
+#align real.strict_mono_on_sin Real.strictMonoOn_sin
 
 theorem sin_le_sin_of_le_of_le_pi_div_two {x y : ℝ} (hx₁ : -(π / 2) ≤ x) (hy₂ : y ≤ π / 2)
     (hxy : x ≤ y) : sin x ≤ sin y :=
-  (strict_mono_on_sin.le_iff_le ⟨hx₁, hxy.trans hy₂⟩ ⟨hx₁.trans hxy, hy₂⟩).2 hxy
+  (strictMonoOn_sin.le_iff_le ⟨hx₁, hxy.trans hy₂⟩ ⟨hx₁.trans hxy, hy₂⟩).2 hxy
 #align real.sin_le_sin_of_le_of_le_pi_div_two Real.sin_le_sin_of_le_of_le_pi_div_two
 
-theorem inj_on_sin : InjOn sin (Icc (-(π / 2)) (π / 2)) :=
-  strict_mono_on_sin.InjOn
-#align real.inj_on_sin Real.inj_on_sin
+theorem injOn_sin : InjOn sin (Icc (-(π / 2)) (π / 2)) :=
+  strictMonoOn_sin.InjOn
+#align real.inj_on_sin Real.injOn_sin
 
-theorem inj_on_cos : InjOn cos (Icc 0 π) :=
-  strict_anti_on_cos.InjOn
-#align real.inj_on_cos Real.inj_on_cos
+theorem injOn_cos : InjOn cos (Icc 0 π) :=
+  strictAntiOn_cos.InjOn
+#align real.inj_on_cos Real.injOn_cos
 
-theorem surj_on_sin : SurjOn sin (Icc (-(π / 2)) (π / 2)) (Icc (-1) 1) := by
+theorem surjOn_sin : SurjOn sin (Icc (-(π / 2)) (π / 2)) (Icc (-1) 1) := by
   simpa only [sin_neg, sin_pi_div_two] using
-    intermediate_value_Icc (neg_le_self pi_div_two_pos.le) continuous_sin.continuous_on
-#align real.surj_on_sin Real.surj_on_sin
+    intermediate_value_icc (neg_le_self pi_div_two_pos.le) continuous_sin.continuous_on
+#align real.surj_on_sin Real.surjOn_sin
 
-theorem surj_on_cos : SurjOn cos (Icc 0 π) (Icc (-1) 1) := by
+theorem surjOn_cos : SurjOn cos (Icc 0 π) (Icc (-1) 1) := by
   simpa only [cos_zero, cos_pi] using intermediate_value_Icc' pi_pos.le continuous_cos.continuous_on
-#align real.surj_on_cos Real.surj_on_cos
+#align real.surj_on_cos Real.surjOn_cos
 
-theorem sin_mem_Icc (x : ℝ) : sin x ∈ Icc (-1 : ℝ) 1 :=
+theorem sin_mem_icc (x : ℝ) : sin x ∈ Icc (-1 : ℝ) 1 :=
   ⟨neg_one_le_sin x, sin_le_one x⟩
-#align real.sin_mem_Icc Real.sin_mem_Icc
+#align real.sin_mem_Icc Real.sin_mem_icc
 
-theorem cos_mem_Icc (x : ℝ) : cos x ∈ Icc (-1 : ℝ) 1 :=
+theorem cos_mem_icc (x : ℝ) : cos x ∈ Icc (-1 : ℝ) 1 :=
   ⟨neg_one_le_cos x, cos_le_one x⟩
-#align real.cos_mem_Icc Real.cos_mem_Icc
+#align real.cos_mem_Icc Real.cos_mem_icc
 
-theorem maps_to_sin (s : Set ℝ) : MapsTo sin s (Icc (-1 : ℝ) 1) := fun x _ => sin_mem_Icc x
-#align real.maps_to_sin Real.maps_to_sin
+theorem mapsTo_sin (s : Set ℝ) : MapsTo sin s (Icc (-1 : ℝ) 1) := fun x _ => sin_mem_icc x
+#align real.maps_to_sin Real.mapsTo_sin
 
-theorem maps_to_cos (s : Set ℝ) : MapsTo cos s (Icc (-1 : ℝ) 1) := fun x _ => cos_mem_Icc x
-#align real.maps_to_cos Real.maps_to_cos
+theorem mapsTo_cos (s : Set ℝ) : MapsTo cos s (Icc (-1 : ℝ) 1) := fun x _ => cos_mem_icc x
+#align real.maps_to_cos Real.mapsTo_cos
 
-theorem bij_on_sin : BijOn sin (Icc (-(π / 2)) (π / 2)) (Icc (-1) 1) :=
-  ⟨maps_to_sin _, inj_on_sin, surj_on_sin⟩
-#align real.bij_on_sin Real.bij_on_sin
+theorem bijOn_sin : BijOn sin (Icc (-(π / 2)) (π / 2)) (Icc (-1) 1) :=
+  ⟨mapsTo_sin _, injOn_sin, surjOn_sin⟩
+#align real.bij_on_sin Real.bijOn_sin
 
-theorem bij_on_cos : BijOn cos (Icc 0 π) (Icc (-1) 1) :=
-  ⟨maps_to_cos _, inj_on_cos, surj_on_cos⟩
-#align real.bij_on_cos Real.bij_on_cos
+theorem bijOn_cos : BijOn cos (Icc 0 π) (Icc (-1) 1) :=
+  ⟨mapsTo_cos _, injOn_cos, surjOn_cos⟩
+#align real.bij_on_cos Real.bijOn_cos
 
 @[simp]
 theorem range_cos : range cos = (Icc (-1) 1 : Set ℝ) :=
-  Subset.antisymm (range_subset_iff.2 cos_mem_Icc) surj_on_cos.subset_range
+  Subset.antisymm (range_subset_iff.2 cos_mem_icc) surjOn_cos.subset_range
 #align real.range_cos Real.range_cos
 
 @[simp]
 theorem range_sin : range sin = (Icc (-1) 1 : Set ℝ) :=
-  Subset.antisymm (range_subset_iff.2 sin_mem_Icc) surj_on_sin.subset_range
+  Subset.antisymm (range_subset_iff.2 sin_mem_icc) surjOn_sin.subset_range
 #align real.range_sin Real.range_sin
 
 theorem range_cos_infinite : (range Real.cos).Infinite :=
@@ -700,26 +700,26 @@ noncomputable def sqrtTwoAddSeries (x : ℝ) : ℕ → ℝ
   | n + 1 => sqrt (2 + sqrt_two_add_series n)
 #align real.sqrt_two_add_series Real.sqrtTwoAddSeries
 
-theorem sqrt_two_add_series_zero : sqrtTwoAddSeries x 0 = x := by simp
-#align real.sqrt_two_add_series_zero Real.sqrt_two_add_series_zero
+theorem sqrtTwoAddSeries_zero : sqrtTwoAddSeries x 0 = x := by simp
+#align real.sqrt_two_add_series_zero Real.sqrtTwoAddSeries_zero
 
-theorem sqrt_two_add_series_one : sqrtTwoAddSeries 0 1 = sqrt 2 := by simp
-#align real.sqrt_two_add_series_one Real.sqrt_two_add_series_one
+theorem sqrtTwoAddSeries_one : sqrtTwoAddSeries 0 1 = sqrt 2 := by simp
+#align real.sqrt_two_add_series_one Real.sqrtTwoAddSeries_one
 
-theorem sqrt_two_add_series_two : sqrtTwoAddSeries 0 2 = sqrt (2 + sqrt 2) := by simp
-#align real.sqrt_two_add_series_two Real.sqrt_two_add_series_two
+theorem sqrtTwoAddSeries_two : sqrtTwoAddSeries 0 2 = sqrt (2 + sqrt 2) := by simp
+#align real.sqrt_two_add_series_two Real.sqrtTwoAddSeries_two
 
-theorem sqrt_two_add_series_zero_nonneg : ∀ n : ℕ, 0 ≤ sqrtTwoAddSeries 0 n
+theorem sqrtTwoAddSeries_zero_nonneg : ∀ n : ℕ, 0 ≤ sqrtTwoAddSeries 0 n
   | 0 => le_refl 0
   | n + 1 => sqrt_nonneg _
-#align real.sqrt_two_add_series_zero_nonneg Real.sqrt_two_add_series_zero_nonneg
+#align real.sqrt_two_add_series_zero_nonneg Real.sqrtTwoAddSeries_zero_nonneg
 
-theorem sqrt_two_add_series_nonneg {x : ℝ} (h : 0 ≤ x) : ∀ n : ℕ, 0 ≤ sqrtTwoAddSeries x n
+theorem sqrtTwoAddSeries_nonneg {x : ℝ} (h : 0 ≤ x) : ∀ n : ℕ, 0 ≤ sqrtTwoAddSeries x n
   | 0 => h
   | n + 1 => sqrt_nonneg _
-#align real.sqrt_two_add_series_nonneg Real.sqrt_two_add_series_nonneg
+#align real.sqrt_two_add_series_nonneg Real.sqrtTwoAddSeries_nonneg
 
-theorem sqrt_two_add_series_lt_two : ∀ n : ℕ, sqrtTwoAddSeries 0 n < 2
+theorem sqrtTwoAddSeries_lt_two : ∀ n : ℕ, sqrtTwoAddSeries 0 n < 2
   | 0 => by norm_num
   | n + 1 => by
     refine' lt_of_lt_of_le _ (sqrt_sq zero_lt_two.le).le
@@ -727,27 +727,27 @@ theorem sqrt_two_add_series_lt_two : ∀ n : ℕ, sqrtTwoAddSeries 0 n < 2
     · refine' (sqrt_two_add_series_lt_two n).trans_le _
       norm_num
     · exact add_nonneg zero_le_two (sqrt_two_add_series_zero_nonneg n)
-#align real.sqrt_two_add_series_lt_two Real.sqrt_two_add_series_lt_two
+#align real.sqrt_two_add_series_lt_two Real.sqrtTwoAddSeries_lt_two
 
-theorem sqrt_two_add_series_succ (x : ℝ) :
+theorem sqrtTwoAddSeries_succ (x : ℝ) :
     ∀ n : ℕ, sqrtTwoAddSeries x (n + 1) = sqrtTwoAddSeries (sqrt (2 + x)) n
   | 0 => rfl
   | n + 1 => by rw [sqrt_two_add_series, sqrt_two_add_series_succ, sqrt_two_add_series]
-#align real.sqrt_two_add_series_succ Real.sqrt_two_add_series_succ
+#align real.sqrt_two_add_series_succ Real.sqrtTwoAddSeries_succ
 
-theorem sqrt_two_add_series_monotone_left {x y : ℝ} (h : x ≤ y) :
+theorem sqrtTwoAddSeries_monotone_left {x y : ℝ} (h : x ≤ y) :
     ∀ n : ℕ, sqrtTwoAddSeries x n ≤ sqrtTwoAddSeries y n
   | 0 => h
   | n + 1 => by
     rw [sqrt_two_add_series, sqrt_two_add_series]
     exact sqrt_le_sqrt (add_le_add_left (sqrt_two_add_series_monotone_left _) _)
-#align real.sqrt_two_add_series_monotone_left Real.sqrt_two_add_series_monotone_left
+#align real.sqrt_two_add_series_monotone_left Real.sqrtTwoAddSeries_monotone_left
 
 @[simp]
 theorem cos_pi_over_two_pow : ∀ n : ℕ, cos (π / 2 ^ (n + 1)) = sqrtTwoAddSeries 0 n / 2
   | 0 => by simp
   | n + 1 => by
-    have : (2 : ℝ) ≠ 0 := two_ne_zero
+    have : (2 : ℝ) ≠ 0 := two_neZero
     symm; rw [div_eq_iff_mul_eq this]; symm
     rw [sqrt_two_add_series, sqrt_eq_iff_sq_eq, mul_pow, cos_sq, ← mul_div_assoc, Nat.add_succ,
       pow_succ, mul_div_mul_left _ _ this, cos_pi_over_two_pow, add_mul]
@@ -958,17 +958,17 @@ end CosDivSq
 
 /-- `real.sin` as an `order_iso` between `[-(π / 2), π / 2]` and `[-1, 1]`. -/
 def sinOrderIso : Icc (-(π / 2)) (π / 2) ≃o Icc (-1 : ℝ) 1 :=
-  (strict_mono_on_sin.OrderIso _ _).trans <| OrderIso.setCongr _ _ bij_on_sin.image_eq
+  (strictMonoOn_sin.OrderIso _ _).trans <| OrderIso.setCongr _ _ bijOn_sin.image_eq
 #align real.sin_order_iso Real.sinOrderIso
 
 @[simp]
-theorem coe_sin_order_iso_apply (x : Icc (-(π / 2)) (π / 2)) : (sinOrderIso x : ℝ) = sin x :=
+theorem coe_sinOrderIso_apply (x : Icc (-(π / 2)) (π / 2)) : (sinOrderIso x : ℝ) = sin x :=
   rfl
-#align real.coe_sin_order_iso_apply Real.coe_sin_order_iso_apply
+#align real.coe_sin_order_iso_apply Real.coe_sinOrderIso_apply
 
-theorem sin_order_iso_apply (x : Icc (-(π / 2)) (π / 2)) : sinOrderIso x = ⟨sin x, sin_mem_Icc x⟩ :=
+theorem sinOrderIso_apply (x : Icc (-(π / 2)) (π / 2)) : sinOrderIso x = ⟨sin x, sin_mem_icc x⟩ :=
   rfl
-#align real.sin_order_iso_apply Real.sin_order_iso_apply
+#align real.sin_order_iso_apply Real.sinOrderIso_apply
 
 @[simp]
 theorem tan_pi_div_four : tan (π / 4) = 1 :=
@@ -1036,17 +1036,17 @@ theorem tan_lt_tan_of_lt_of_lt_pi_div_two {x y : ℝ} (hx₁ : -(π / 2) < x) (h
   | Or.inr hx0, Or.inr hy0 => tan_lt_tan_of_nonneg_of_lt_pi_div_two hx0 hy₂ hxy
 #align real.tan_lt_tan_of_lt_of_lt_pi_div_two Real.tan_lt_tan_of_lt_of_lt_pi_div_two
 
-theorem strict_mono_on_tan : StrictMonoOn tan (Ioo (-(π / 2)) (π / 2)) := fun x hx y hy =>
+theorem strictMonoOn_tan : StrictMonoOn tan (Ioo (-(π / 2)) (π / 2)) := fun x hx y hy =>
   tan_lt_tan_of_lt_of_lt_pi_div_two hx.1 hy.2
-#align real.strict_mono_on_tan Real.strict_mono_on_tan
+#align real.strict_mono_on_tan Real.strictMonoOn_tan
 
-theorem inj_on_tan : InjOn tan (Ioo (-(π / 2)) (π / 2)) :=
-  strict_mono_on_tan.InjOn
-#align real.inj_on_tan Real.inj_on_tan
+theorem injOn_tan : InjOn tan (Ioo (-(π / 2)) (π / 2)) :=
+  strictMonoOn_tan.InjOn
+#align real.inj_on_tan Real.injOn_tan
 
 theorem tan_inj_of_lt_of_lt_pi_div_two {x y : ℝ} (hx₁ : -(π / 2) < x) (hx₂ : x < π / 2)
     (hy₁ : -(π / 2) < y) (hy₂ : y < π / 2) (hxy : tan x = tan y) : x = y :=
-  inj_on_tan ⟨hx₁, hx₂⟩ ⟨hy₁, hy₂⟩ hxy
+  injOn_tan ⟨hx₁, hx₂⟩ ⟨hy₁, hy₂⟩ hxy
 #align real.tan_inj_of_lt_of_lt_pi_div_two Real.tan_inj_of_lt_of_lt_pi_div_two
 
 theorem tan_periodic : Function.Periodic tan π := by
@@ -1109,11 +1109,11 @@ theorem tendsto_sin_pi_div_two : Tendsto sin (𝓝[<] (π / 2)) (𝓝 1) :=
 
 theorem tendsto_cos_pi_div_two : Tendsto cos (𝓝[<] (π / 2)) (𝓝[>] 0) :=
   by
-  apply tendsto_nhds_within_of_tendsto_nhds_of_eventually_within
+  apply tendsto_nhdsWithin_of_tendsto_nhds_of_eventually_within
   · convert continuous_cos.continuous_within_at
     simp
   ·
-    filter_upwards [Ioo_mem_nhds_within_Iio
+    filter_upwards [ioo_mem_nhdsWithin_iio
         (right_mem_Ioc.mpr (neg_lt_self pi_div_two_pos))] with x hx using cos_pos_of_mem_Ioo hx
 #align real.tendsto_cos_pi_div_two Real.tendsto_cos_pi_div_two
 
@@ -1131,11 +1131,11 @@ theorem tendsto_sin_neg_pi_div_two : Tendsto sin (𝓝[>] (-(π / 2))) (𝓝 (-1
 
 theorem tendsto_cos_neg_pi_div_two : Tendsto cos (𝓝[>] (-(π / 2))) (𝓝[>] 0) :=
   by
-  apply tendsto_nhds_within_of_tendsto_nhds_of_eventually_within
+  apply tendsto_nhdsWithin_of_tendsto_nhds_of_eventually_within
   · convert continuous_cos.continuous_within_at
     simp
   ·
-    filter_upwards [Ioo_mem_nhds_within_Ioi
+    filter_upwards [ioo_mem_nhdsWithin_ioi
         (left_mem_Ico.mpr (neg_lt_self pi_div_two_pos))] with x hx using cos_pos_of_mem_Ioo hx
 #align real.tendsto_cos_neg_pi_div_two Real.tendsto_cos_neg_pi_div_two
 
@@ -1410,43 +1410,43 @@ theorem exp_periodic : Function.Periodic exp (2 * π * I) :=
   (mul_assoc (2 : ℂ) π i).symm ▸ exp_antiperiodic.Periodic
 #align complex.exp_periodic Complex.exp_periodic
 
-theorem exp_mul_I_antiperiodic : Function.Antiperiodic (fun x => exp (x * I)) π := by
+theorem exp_mul_i_antiperiodic : Function.Antiperiodic (fun x => exp (x * I)) π := by
   simpa only [mul_inv_cancel_right₀ I_ne_zero] using exp_antiperiodic.mul_const I_ne_zero
-#align complex.exp_mul_I_antiperiodic Complex.exp_mul_I_antiperiodic
+#align complex.exp_mul_I_antiperiodic Complex.exp_mul_i_antiperiodic
 
-theorem exp_mul_I_periodic : Function.Periodic (fun x => exp (x * I)) (2 * π) :=
-  exp_mul_I_antiperiodic.Periodic
-#align complex.exp_mul_I_periodic Complex.exp_mul_I_periodic
+theorem exp_mul_i_periodic : Function.Periodic (fun x => exp (x * I)) (2 * π) :=
+  exp_mul_i_antiperiodic.Periodic
+#align complex.exp_mul_I_periodic Complex.exp_mul_i_periodic
 
 @[simp]
-theorem exp_pi_mul_I : exp (π * I) = -1 :=
+theorem exp_pi_mul_i : exp (π * I) = -1 :=
   exp_zero ▸ exp_antiperiodic.Eq
-#align complex.exp_pi_mul_I Complex.exp_pi_mul_I
+#align complex.exp_pi_mul_I Complex.exp_pi_mul_i
 
 @[simp]
-theorem exp_two_pi_mul_I : exp (2 * π * I) = 1 :=
+theorem exp_two_pi_mul_i : exp (2 * π * I) = 1 :=
   exp_periodic.Eq.trans exp_zero
-#align complex.exp_two_pi_mul_I Complex.exp_two_pi_mul_I
+#align complex.exp_two_pi_mul_I Complex.exp_two_pi_mul_i
 
 @[simp]
-theorem exp_nat_mul_two_pi_mul_I (n : ℕ) : exp (n * (2 * π * I)) = 1 :=
+theorem exp_nat_mul_two_pi_mul_i (n : ℕ) : exp (n * (2 * π * I)) = 1 :=
   (exp_periodic.nat_mul_eq n).trans exp_zero
-#align complex.exp_nat_mul_two_pi_mul_I Complex.exp_nat_mul_two_pi_mul_I
+#align complex.exp_nat_mul_two_pi_mul_I Complex.exp_nat_mul_two_pi_mul_i
 
 @[simp]
-theorem exp_int_mul_two_pi_mul_I (n : ℤ) : exp (n * (2 * π * I)) = 1 :=
+theorem exp_int_mul_two_pi_mul_i (n : ℤ) : exp (n * (2 * π * I)) = 1 :=
   (exp_periodic.int_mul_eq n).trans exp_zero
-#align complex.exp_int_mul_two_pi_mul_I Complex.exp_int_mul_two_pi_mul_I
+#align complex.exp_int_mul_two_pi_mul_I Complex.exp_int_mul_two_pi_mul_i
 
 @[simp]
-theorem exp_add_pi_mul_I (z : ℂ) : exp (z + π * I) = -exp z :=
+theorem exp_add_pi_mul_i (z : ℂ) : exp (z + π * I) = -exp z :=
   exp_antiperiodic z
-#align complex.exp_add_pi_mul_I Complex.exp_add_pi_mul_I
+#align complex.exp_add_pi_mul_I Complex.exp_add_pi_mul_i
 
 @[simp]
-theorem exp_sub_pi_mul_I (z : ℂ) : exp (z - π * I) = -exp z :=
+theorem exp_sub_pi_mul_i (z : ℂ) : exp (z - π * I) = -exp z :=
   exp_antiperiodic.sub_eq z
-#align complex.exp_sub_pi_mul_I Complex.exp_sub_pi_mul_I
+#align complex.exp_sub_pi_mul_I Complex.exp_sub_pi_mul_i
 
 /-- A supporting lemma for the **Phragmen-Lindelöf principle** in a horizontal strip. If `z : ℂ`
 belongs to a horizontal strip `|complex.im z| ≤ b`, `b ≤ π / 2`, and `a ≤ 0`, then
@@ -1465,7 +1465,7 @@ theorem abs_exp_mul_exp_add_exp_neg_le_of_abs_im_le {a b : ℝ} (ha : a ≤ 0) {
     exact
       Real.cos_le_cos_of_nonneg_of_le_pi (_root_.abs_nonneg _)
         (hb.trans <| half_le_self <| real.pi_pos.le) hz
-  · refine' Real.cos_nonneg_of_mem_Icc ⟨_, hb⟩
+  · refine' Real.cos_nonneg_of_mem_icc ⟨_, hb⟩
     exact (neg_nonpos.2 <| real.pi_div_two_pos.le).trans ((_root_.abs_nonneg _).trans hz)
 #align complex.abs_exp_mul_exp_add_exp_neg_le_of_abs_im_le Complex.abs_exp_mul_exp_add_exp_neg_le_of_abs_im_le
 

@@ -182,14 +182,14 @@ def liftStar {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, F.o
   eqToIso rfl
 #align category_theory.with_terminal.lift_star CategoryTheory.WithTerminal.liftStar
 
-theorem lift_map_lift_star {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, F.obj x ⟶ Z)
+theorem lift_map_liftStar {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, F.obj x ⟶ Z)
     (hM : ∀ (x y : C) (f : x ⟶ y), F.map f ≫ M y = M x) (x : C) :
     (lift F M hM).map (starTerminal.from (incl.obj x)) ≫ (liftStar F M hM).Hom =
       (inclLift F M hM).Hom.app x ≫ M x :=
   by
   erw [category.id_comp, category.comp_id]
   rfl
-#align category_theory.with_terminal.lift_map_lift_star CategoryTheory.WithTerminal.lift_map_lift_star
+#align category_theory.with_terminal.lift_map_lift_star CategoryTheory.WithTerminal.lift_map_liftStar
 
 /-- The uniqueness of `lift`. -/
 @[simp]
@@ -241,8 +241,8 @@ def homFrom (X : C) : incl.obj X ⟶ star :=
   starTerminal.from _
 #align category_theory.with_terminal.hom_from CategoryTheory.WithTerminal.homFrom
 
-instance is_iso_of_from_star {X : WithTerminal C} (f : star ⟶ X) : IsIso f := by tidy
-#align category_theory.with_terminal.is_iso_of_from_star CategoryTheory.WithTerminal.is_iso_of_from_star
+instance isIso_of_from_star {X : WithTerminal C} (f : star ⟶ X) : IsIso f := by tidy
+#align category_theory.with_terminal.is_iso_of_from_star CategoryTheory.WithTerminal.isIso_of_from_star
 
 end WithTerminal
 
@@ -370,14 +370,14 @@ def liftStar {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, Z �
   eqToIso rfl
 #align category_theory.with_initial.lift_star CategoryTheory.WithInitial.liftStar
 
-theorem lift_star_lift_map {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, Z ⟶ F.obj x)
+theorem liftStar_lift_map {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, Z ⟶ F.obj x)
     (hM : ∀ (x y : C) (f : x ⟶ y), M x ≫ F.map f = M y) (x : C) :
     (liftStar F M hM).Hom ≫ (lift F M hM).map (starInitial.to (incl.obj x)) =
       M x ≫ (inclLift F M hM).Hom.app x :=
   by
   erw [category.id_comp, category.comp_id]
   rfl
-#align category_theory.with_initial.lift_star_lift_map CategoryTheory.WithInitial.lift_star_lift_map
+#align category_theory.with_initial.lift_star_lift_map CategoryTheory.WithInitial.liftStar_lift_map
 
 /-- The uniqueness of `lift`. -/
 @[simp]
@@ -432,8 +432,8 @@ def homTo (X : C) : star ⟶ incl.obj X :=
   starInitial.to _
 #align category_theory.with_initial.hom_to CategoryTheory.WithInitial.homTo
 
-instance is_iso_of_to_star {X : WithInitial C} (f : X ⟶ star) : IsIso f := by tidy
-#align category_theory.with_initial.is_iso_of_to_star CategoryTheory.WithInitial.is_iso_of_to_star
+instance isIso_of_to_star {X : WithInitial C} (f : X ⟶ star) : IsIso f := by tidy
+#align category_theory.with_initial.is_iso_of_to_star CategoryTheory.WithInitial.isIso_of_to_star
 
 end WithInitial
 

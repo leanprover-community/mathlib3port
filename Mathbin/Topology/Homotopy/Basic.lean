@@ -149,9 +149,9 @@ theorem apply_one (F : Homotopy f₀ f₁) (x : X) : F (1, x) = f₁ x :=
 #align continuous_map.homotopy.apply_one ContinuousMap.Homotopy.apply_one
 
 @[simp]
-theorem coe_to_continuous_map (F : Homotopy f₀ f₁) : ⇑F.toContinuousMap = F :=
+theorem coe_toContinuousMap (F : Homotopy f₀ f₁) : ⇑F.toContinuousMap = F :=
   rfl
-#align continuous_map.homotopy.coe_to_continuous_map ContinuousMap.Homotopy.coe_to_continuous_map
+#align continuous_map.homotopy.coe_to_continuous_map ContinuousMap.Homotopy.coe_toContinuousMap
 
 /-- Currying a homotopy to a continuous function fron `I` to `C(X, Y)`.
 -/
@@ -259,7 +259,7 @@ theorem trans_apply {f₀ f₁ f₂ : C(X, Y)} (F : Homotopy f₀ f₁) (G : Hom
         G (⟨2 * x.1 - 1, unitInterval.two_mul_sub_one_mem_iff.2 ⟨(not_le.1 h).le, x.1.2.2⟩⟩, x.2) :=
   show ite _ _ _ = _ by
     split_ifs <;>
-      · rw [extend, ContinuousMap.coe_Icc_extend, Set.IccExtend_of_mem]
+      · rw [extend, ContinuousMap.coe_iccExtend, Set.IccExtend_of_mem]
         rfl
 #align continuous_map.homotopy.trans_apply ContinuousMap.Homotopy.trans_apply
 
@@ -366,11 +366,11 @@ variable {f₀ f₁ : C(X, Y)} {P : C(X, Y) → Prop}
 instance : CoeFun (HomotopyWith f₀ f₁ P) fun _ => I × X → Y :=
   ⟨fun F => F.toFun⟩
 
-theorem coe_fn_injective : @Function.Injective (HomotopyWith f₀ f₁ P) (I × X → Y) coeFn :=
+theorem coeFn_injective : @Function.Injective (HomotopyWith f₀ f₁ P) (I × X → Y) coeFn :=
   by
   rintro ⟨⟨⟨F, _⟩, _⟩, _⟩ ⟨⟨⟨G, _⟩, _⟩, _⟩ h
   congr 3
-#align continuous_map.homotopy_with.coe_fn_injective ContinuousMap.HomotopyWith.coe_fn_injective
+#align continuous_map.homotopy_with.coe_fn_injective ContinuousMap.HomotopyWith.coeFn_injective
 
 @[ext]
 theorem ext {F G : HomotopyWith f₀ f₁ P} (h : ∀ x, F x = G x) : F = G :=
@@ -402,14 +402,14 @@ theorem apply_one (F : HomotopyWith f₀ f₁ P) (x : X) : F (1, x) = f₁ x :=
 #align continuous_map.homotopy_with.apply_one ContinuousMap.HomotopyWith.apply_one
 
 @[simp]
-theorem coe_to_continuous_map (F : HomotopyWith f₀ f₁ P) : ⇑F.toContinuousMap = F :=
+theorem coe_toContinuousMap (F : HomotopyWith f₀ f₁ P) : ⇑F.toContinuousMap = F :=
   rfl
-#align continuous_map.homotopy_with.coe_to_continuous_map ContinuousMap.HomotopyWith.coe_to_continuous_map
+#align continuous_map.homotopy_with.coe_to_continuous_map ContinuousMap.HomotopyWith.coe_toContinuousMap
 
 @[simp]
-theorem coe_to_homotopy (F : HomotopyWith f₀ f₁ P) : ⇑F.toHomotopy = F :=
+theorem coe_toHomotopy (F : HomotopyWith f₀ f₁ P) : ⇑F.toHomotopy = F :=
   rfl
-#align continuous_map.homotopy_with.coe_to_homotopy ContinuousMap.HomotopyWith.coe_to_homotopy
+#align continuous_map.homotopy_with.coe_to_homotopy ContinuousMap.HomotopyWith.coe_toHomotopy
 
 theorem prop (F : HomotopyWith f₀ f₁ P) (t : I) : P (F.toHomotopy.curry t) :=
   F.prop' t

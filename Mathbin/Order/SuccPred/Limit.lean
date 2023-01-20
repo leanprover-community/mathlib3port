@@ -248,10 +248,10 @@ theorem isSuccLimitRecOn_succ' (hs : ∀ a, ¬IsMax a → C (succ a)) (hl : ∀ 
   have hb' := not_is_succ_limit_succ_of_not_is_max hb
   have H := Classical.choose_spec (not_is_succ_limit_iff.1 hb')
   rw [is_succ_limit_rec_on]
-  simp only [cast_eq_iff_heq, hb', not_false_iff, eq_mpr_eq_cast, dif_neg]
+  simp only [cast_eq_iff_hEq, hb', not_false_iff, eq_mpr_eq_cast, dif_neg]
   congr
   · exact (succ_eq_succ_iff_of_not_is_max H.1 hb).1 H.2
-  · apply proof_irrel_heq
+  · apply proof_irrel_hEq
 #align order.is_succ_limit_rec_on_succ' Order.isSuccLimitRecOn_succ'
 
 section NoMaxOrder
@@ -389,11 +389,15 @@ theorem isPredLimit_top [OrderTop α] : IsPredLimit (⊤ : α) :=
 
 variable [PredOrder α]
 
-protected theorem IsPredLimit.is_min (h : IsPredLimit (pred a)) : IsMin a :=
+/- warning: order.is_pred_limit.is_min clashes with order.isPredLimit.is_min -> Order.IsPredLimit.isMin
+Case conversion may be inaccurate. Consider using '#align order.is_pred_limit.is_min Order.IsPredLimit.isMinₓ'. -/
+#print Order.IsPredLimit.isMin /-
+protected theorem IsPredLimit.isMin (h : IsPredLimit (pred a)) : IsMin a :=
   by
   by_contra H
   exact h a (pred_covby_of_not_is_min H)
-#align order.is_pred_limit.is_min Order.IsPredLimit.is_min
+#align order.is_pred_limit.is_min Order.IsPredLimit.isMin
+-/
 
 #print Order.not_isPredLimit_pred_of_not_isMin /-
 theorem not_isPredLimit_pred_of_not_isMin (ha : ¬IsMin a) : ¬IsPredLimit (pred a) :=
@@ -555,9 +559,13 @@ section IsPredArchimedean
 
 variable [IsPredArchimedean α]
 
-protected theorem IsPredLimit.is_max (h : IsPredLimit a) : IsMax a :=
+/- warning: order.is_pred_limit.is_max clashes with order.isPredLimit.is_max -> Order.IsPredLimit.isMax
+Case conversion may be inaccurate. Consider using '#align order.is_pred_limit.is_max Order.IsPredLimit.isMaxₓ'. -/
+#print Order.IsPredLimit.isMax /-
+protected theorem IsPredLimit.isMax (h : IsPredLimit a) : IsMax a :=
   h.dual.IsMin
-#align order.is_pred_limit.is_max Order.IsPredLimit.is_max
+#align order.is_pred_limit.is_max Order.IsPredLimit.isMax
+-/
 
 #print Order.isPredLimit_iff /-
 @[simp]

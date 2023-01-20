@@ -194,19 +194,19 @@ def uliftFunctor : Type u ⥤ Type max u v
 #align category_theory.ulift_functor CategoryTheory.uliftFunctor
 
 @[simp]
-theorem ulift_functor_map {X Y : Type u} (f : X ⟶ Y) (x : ULift.{v} X) :
+theorem uliftFunctor_map {X Y : Type u} (f : X ⟶ Y) (x : ULift.{v} X) :
     uliftFunctor.map f x = ULift.up (f x.down) :=
   rfl
-#align category_theory.ulift_functor_map CategoryTheory.ulift_functor_map
+#align category_theory.ulift_functor_map CategoryTheory.uliftFunctor_map
 
 instance uliftFunctorFull : Full.{u} uliftFunctor where preimage X Y f x := (f (ULift.up x)).down
 #align category_theory.ulift_functor_full CategoryTheory.uliftFunctorFull
 
-instance ulift_functor_faithful : Faithful uliftFunctor
+instance uliftFunctor_faithful : Faithful uliftFunctor
     where map_injective' X Y f g p :=
     funext fun x =>
       congr_arg ULift.down (congr_fun p (ULift.up x) : ULift.up (f x) = ULift.up (g x))
-#align category_theory.ulift_functor_faithful CategoryTheory.ulift_functor_faithful
+#align category_theory.ulift_functor_faithful CategoryTheory.uliftFunctor_faithful
 
 /-- The functor embedding `Type u` into `Type u` via `ulift` is isomorphic to the identity functor.
  -/
@@ -220,9 +220,9 @@ def uliftFunctorTrivial : ulift_functor.{u, u} ≅ 𝟭 _ :=
 def homOfElement {X : Type u} (x : X) : PUnit ⟶ X := fun _ => x
 #align category_theory.hom_of_element CategoryTheory.homOfElement
 
-theorem hom_of_element_eq_iff {X : Type u} (x y : X) : homOfElement x = homOfElement y ↔ x = y :=
+theorem homOfElement_eq_iff {X : Type u} (x y : X) : homOfElement x = homOfElement y ↔ x = y :=
   ⟨fun H => congr_fun H PUnit.unit, by cc⟩
-#align category_theory.hom_of_element_eq_iff CategoryTheory.hom_of_element_eq_iff
+#align category_theory.hom_of_element_eq_iff CategoryTheory.homOfElement_eq_iff
 
 /-- A morphism in `Type` is a monomorphism if and only if it is injective.
 
@@ -277,15 +277,15 @@ def ofTypeFunctor (m : Type u → Type v) [Functor m] [LawfulFunctor m] : Type u
 variable (m : Type u → Type v) [Functor m] [LawfulFunctor m]
 
 @[simp]
-theorem of_type_functor_obj : (ofTypeFunctor m).obj = m :=
+theorem ofTypeFunctor_obj : (ofTypeFunctor m).obj = m :=
   rfl
-#align category_theory.of_type_functor_obj CategoryTheory.of_type_functor_obj
+#align category_theory.of_type_functor_obj CategoryTheory.ofTypeFunctor_obj
 
 @[simp]
-theorem of_type_functor_map {α β} (f : α → β) :
+theorem ofTypeFunctor_map {α β} (f : α → β) :
     (ofTypeFunctor m).map f = (Functor.map f : m α → m β) :=
   rfl
-#align category_theory.of_type_functor_map CategoryTheory.of_type_functor_map
+#align category_theory.of_type_functor_map CategoryTheory.ofTypeFunctor_map
 
 end
 
@@ -309,14 +309,14 @@ def toIso (e : X ≃ Y) : X ≅ Y where
 #align equiv.to_iso Equiv.toIso
 
 @[simp]
-theorem to_iso_hom {e : X ≃ Y} : e.toIso.Hom = e :=
+theorem toIso_hom {e : X ≃ Y} : e.toIso.Hom = e :=
   rfl
-#align equiv.to_iso_hom Equiv.to_iso_hom
+#align equiv.to_iso_hom Equiv.toIso_hom
 
 @[simp]
-theorem to_iso_inv {e : X ≃ Y} : e.toIso.inv = e.symm :=
+theorem toIso_inv {e : X ≃ Y} : e.toIso.inv = e.symm :=
   rfl
-#align equiv.to_iso_inv Equiv.to_iso_inv
+#align equiv.to_iso_inv Equiv.toIso_inv
 
 end Equiv
 
@@ -338,41 +338,41 @@ def toEquiv (i : X ≅ Y) : X ≃ Y where
 #align category_theory.iso.to_equiv CategoryTheory.Iso.toEquiv
 
 @[simp]
-theorem to_equiv_fun (i : X ≅ Y) : (i.toEquiv : X → Y) = i.Hom :=
+theorem toEquiv_fun (i : X ≅ Y) : (i.toEquiv : X → Y) = i.Hom :=
   rfl
-#align category_theory.iso.to_equiv_fun CategoryTheory.Iso.to_equiv_fun
+#align category_theory.iso.to_equiv_fun CategoryTheory.Iso.toEquiv_fun
 
 @[simp]
-theorem to_equiv_symm_fun (i : X ≅ Y) : (i.toEquiv.symm : Y → X) = i.inv :=
+theorem toEquiv_symm_fun (i : X ≅ Y) : (i.toEquiv.symm : Y → X) = i.inv :=
   rfl
-#align category_theory.iso.to_equiv_symm_fun CategoryTheory.Iso.to_equiv_symm_fun
+#align category_theory.iso.to_equiv_symm_fun CategoryTheory.Iso.toEquiv_symm_fun
 
 @[simp]
-theorem to_equiv_id (X : Type u) : (Iso.refl X).toEquiv = Equiv.refl X :=
+theorem toEquiv_id (X : Type u) : (Iso.refl X).toEquiv = Equiv.refl X :=
   rfl
-#align category_theory.iso.to_equiv_id CategoryTheory.Iso.to_equiv_id
+#align category_theory.iso.to_equiv_id CategoryTheory.Iso.toEquiv_id
 
 @[simp]
-theorem to_equiv_comp {X Y Z : Type u} (f : X ≅ Y) (g : Y ≅ Z) :
+theorem toEquiv_comp {X Y Z : Type u} (f : X ≅ Y) (g : Y ≅ Z) :
     (f ≪≫ g).toEquiv = f.toEquiv.trans g.toEquiv :=
   rfl
-#align category_theory.iso.to_equiv_comp CategoryTheory.Iso.to_equiv_comp
+#align category_theory.iso.to_equiv_comp CategoryTheory.Iso.toEquiv_comp
 
 end CategoryTheory.Iso
 
 namespace CategoryTheory
 
 /-- A morphism in `Type u` is an isomorphism if and only if it is bijective. -/
-theorem is_iso_iff_bijective {X Y : Type u} (f : X ⟶ Y) : IsIso f ↔ Function.Bijective f :=
+theorem isIso_iff_bijective {X Y : Type u} (f : X ⟶ Y) : IsIso f ↔ Function.Bijective f :=
   Iff.intro (fun i => (as_iso f : X ≅ Y).toEquiv.Bijective) fun b =>
     IsIso.of_iso (Equiv.ofBijective f b).toIso
-#align category_theory.is_iso_iff_bijective CategoryTheory.is_iso_iff_bijective
+#align category_theory.is_iso_iff_bijective CategoryTheory.isIso_iff_bijective
 
 instance : SplitEpiCategory (Type u)
     where is_split_epi_of_epi X Y f hf :=
     IsSplitEpi.mk'
       { section_ := Function.surjInv <| (epi_iff_surjective f).1 hf
-        id' := funext <| Function.right_inverse_surj_inv <| (epi_iff_surjective f).1 hf }
+        id' := funext <| Function.rightInverse_surjInv <| (epi_iff_surjective f).1 hf }
 
 end CategoryTheory
 
@@ -394,12 +394,12 @@ def equivEquivIso {X Y : Type u} : X ≃ Y ≃ (X ≅ Y) :=
 #align equiv_equiv_iso equivEquivIso
 
 @[simp]
-theorem equiv_equiv_iso_hom {X Y : Type u} (e : X ≃ Y) : equivEquivIso e = e.toIso :=
+theorem equivEquivIso_hom {X Y : Type u} (e : X ≃ Y) : equivEquivIso e = e.toIso :=
   rfl
-#align equiv_equiv_iso_hom equiv_equiv_iso_hom
+#align equiv_equiv_iso_hom equivEquivIso_hom
 
 @[simp]
-theorem equiv_equiv_iso_inv {X Y : Type u} (e : X ≅ Y) : equivEquivIso.symm e = e.toEquiv :=
+theorem equivEquivIso_inv {X Y : Type u} (e : X ≅ Y) : equivEquivIso.symm e = e.toEquiv :=
   rfl
-#align equiv_equiv_iso_inv equiv_equiv_iso_inv
+#align equiv_equiv_iso_inv equivEquivIso_inv
 

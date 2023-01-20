@@ -122,10 +122,10 @@ instance hasLimitsOfSize : HasLimitsOfSize.{v, v} GroupCat.{max v u}
 #align AddGroup.has_limits_of_size AddGroupCat.has_limits_of_size
 
 @[to_additive]
-instance has_limits : HasLimits GroupCat.{u} :=
+instance hasLimits : HasLimits GroupCat.{u} :=
   GroupCat.hasLimitsOfSize.{u, u}
-#align Group.has_limits GroupCat.has_limits
-#align AddGroup.has_limits AddGroupCat.has_limits
+#align Group.has_limits GroupCat.hasLimits
+#align AddGroup.has_limits AddGroupCat.hasLimits
 
 /-- The forgetful functor from groups to monoids preserves all limits.
 
@@ -238,10 +238,10 @@ instance hasLimitsOfSize : HasLimitsOfSize.{v, v} CommGroupCat.{max v u}
 #align AddCommGroup.has_limits_of_size AddCommGroupCat.has_limits_of_size
 
 @[to_additive]
-instance has_limits : HasLimits CommGroupCat.{u} :=
+instance hasLimits : HasLimits CommGroupCat.{u} :=
   CommGroupCat.hasLimitsOfSize.{u, u}
-#align CommGroup.has_limits CommGroupCat.has_limits
-#align AddCommGroup.has_limits AddCommGroupCat.has_limits
+#align CommGroup.has_limits CommGroupCat.hasLimits
+#align AddCommGroup.has_limits AddCommGroupCat.hasLimits
 
 /-- The forgetful functor from commutative groups to groups preserves all limits.
 (That is, the underlying group could have been computed instead as limits in the category
@@ -338,17 +338,17 @@ def kernelIsoKer {G H : AddCommGroupCat.{u}} (f : G ⟶ H) : kernel f ≅ AddCom
 #align AddCommGroup.kernel_iso_ker AddCommGroupCat.kernelIsoKer
 
 @[simp]
-theorem kernel_iso_ker_hom_comp_subtype {G H : AddCommGroupCat} (f : G ⟶ H) :
+theorem kernelIsoKer_hom_comp_subtype {G H : AddCommGroupCat} (f : G ⟶ H) :
     (kernelIsoKer f).Hom ≫ AddSubgroup.subtype f.ker = kernel.ι f := by ext <;> rfl
-#align AddCommGroup.kernel_iso_ker_hom_comp_subtype AddCommGroupCat.kernel_iso_ker_hom_comp_subtype
+#align AddCommGroup.kernel_iso_ker_hom_comp_subtype AddCommGroupCat.kernelIsoKer_hom_comp_subtype
 
 @[simp]
-theorem kernel_iso_ker_inv_comp_ι {G H : AddCommGroupCat} (f : G ⟶ H) :
+theorem kernelIsoKer_inv_comp_ι {G H : AddCommGroupCat} (f : G ⟶ H) :
     (kernelIsoKer f).inv ≫ kernel.ι f = AddSubgroup.subtype f.ker :=
   by
   ext
   simp [kernel_iso_ker]
-#align AddCommGroup.kernel_iso_ker_inv_comp_ι AddCommGroupCat.kernel_iso_ker_inv_comp_ι
+#align AddCommGroup.kernel_iso_ker_inv_comp_ι AddCommGroupCat.kernelIsoKer_inv_comp_ι
 
 /-- The categorical kernel inclusion for `f : G ⟶ H`, as an object over `G`,
 agrees with the `subtype` map.

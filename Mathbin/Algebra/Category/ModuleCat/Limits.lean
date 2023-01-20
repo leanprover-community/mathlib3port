@@ -140,9 +140,9 @@ irreducible_def hasLimitsOfSize : HasLimitsOfSize.{v, v} (ModuleCat.{max v w} R)
               IsLimit := limit_cone_is_limit F } } }
 #align Module.has_limits_of_size ModuleCat.hasLimitsOfSize
 
-instance has_limits : HasLimits (ModuleCat.{w} R) :=
+instance hasLimits : HasLimits (ModuleCat.{w} R) :=
   ModuleCat.hasLimitsOfSize.{w, w, u}
-#align Module.has_limits ModuleCat.has_limits
+#align Module.has_limits ModuleCat.hasLimits
 
 /-- An auxiliary declaration to speed up typechecking.
 -/

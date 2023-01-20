@@ -42,7 +42,7 @@ unsafe def prove_unsat_lin_comb (ks : List Nat) (ts : List Term) : tactic expr :
   do
   let x1 ← prove_neg b
   let x2 ← prove_forall_mem_eq_zero as
-  to_expr ``(unsat_lin_comb_of $(q(ks)) $(q(ts)) $(x1) $(x2))
+  to_expr ``(unsatLinComb_of $(q(ks)) $(q(ts)) $(x1) $(x2))
 #align omega.prove_unsat_lin_comb omega.prove_unsat_lin_comb
 
 /-- Given a (([],les) : clause), return the expr of a term (t : clause.unsat ([],les)). -/
@@ -51,14 +51,14 @@ unsafe def prove_unsat_ef : Clause → tactic expr
   | ([], les) => do
     let ks ← find_scalars les
     let x ← prove_unsat_lin_comb ks les
-    return q(unsat_of_unsat_lin_comb $(q(ks)) $(q(les)) $(x))
+    return q(unsat_of_unsatLinComb $(q(ks)) $(q(les)) $(x))
 #align omega.prove_unsat_ef omega.prove_unsat_ef
 
 /-- Given a (c : clause), return the expr of a term (t : clause.unsat c)  -/
 unsafe def prove_unsat (c : Clause) : tactic expr := do
   let ee ← find_ees c
   let x ← prove_unsat_ef (eqElim ee c)
-  return q(unsat_of_unsat_eq_elim $(q(ee)) $(q(c)) $(x))
+  return q(unsat_of_unsat_eqElim $(q(ee)) $(q(c)) $(x))
 #align omega.prove_unsat omega.prove_unsat
 
 /-- Given a (cs : list clause), return the expr of a term (t : clauses.unsat cs)  -/

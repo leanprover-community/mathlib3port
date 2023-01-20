@@ -300,16 +300,16 @@ protected def toNat {n : Nat} (v : Bitvec n) : Nat :=
   bitsToNat (toList v)
 #align bitvec.to_nat Bitvec.toNat
 
-theorem bits_to_nat_to_list {n : ℕ} (x : Bitvec n) : Bitvec.toNat x = bitsToNat (Vector.toList x) :=
+theorem bitsToNat_toList {n : ℕ} (x : Bitvec n) : Bitvec.toNat x = bitsToNat (Vector.toList x) :=
   rfl
-#align bitvec.bits_to_nat_to_list Bitvec.bits_to_nat_to_list
+#align bitvec.bits_to_nat_to_list Bitvec.bitsToNat_toList
 
 attribute [local simp] Nat.add_comm Nat.add_assoc Nat.add_left_comm Nat.mul_comm Nat.mul_assoc
 
 attribute [local simp] Nat.zero_add Nat.add_zero Nat.one_mul Nat.mul_one Nat.zero_mul Nat.mul_zero
 
 -- mul_left_comm
-theorem to_nat_append {m : ℕ} (xs : Bitvec m) (b : Bool) :
+theorem toNat_append {m : ℕ} (xs : Bitvec m) (b : Bool) :
     Bitvec.toNat (xs++ₜb ::ᵥ nil) = Bitvec.toNat xs * 2 + Bitvec.toNat (b ::ᵥ nil) :=
   by
   cases' xs with xs P
@@ -325,27 +325,27 @@ theorem to_nat_append {m : ℕ} (xs : Bitvec m) (b : Bool) :
     simp [Nat.mul_succ]
   · simp
     apply xs_ih
-#align bitvec.to_nat_append Bitvec.to_nat_append
+#align bitvec.to_nat_append Bitvec.toNat_append
 
-theorem bits_to_nat_to_bool (n : ℕ) : Bitvec.toNat (decide (n % 2 = 1) ::ᵥ nil) = n % 2 :=
+theorem bits_toNat_decide (n : ℕ) : Bitvec.toNat (decide (n % 2 = 1) ::ᵥ nil) = n % 2 :=
   by
   simp [bits_to_nat_to_list]
   unfold bits_to_nat add_lsb List.foldl cond
   simp [cond_to_bool_mod_two]
-#align bitvec.bits_to_nat_to_bool Bitvec.bits_to_nat_to_bool
+#align bitvec.bits_to_nat_to_bool Bitvec.bits_toNat_decide
 
-theorem of_nat_succ {k n : ℕ} :
+theorem ofNat_succ {k n : ℕ} :
     Bitvec.ofNat (succ k) n = Bitvec.ofNat k (n / 2)++ₜdecide (n % 2 = 1) ::ᵥ nil :=
   rfl
-#align bitvec.of_nat_succ Bitvec.of_nat_succ
+#align bitvec.of_nat_succ Bitvec.ofNat_succ
 
-theorem to_nat_of_nat {k n : ℕ} : Bitvec.toNat (Bitvec.ofNat k n) = n % 2 ^ k :=
+theorem toNat_ofNat {k n : ℕ} : Bitvec.toNat (Bitvec.ofNat k n) = n % 2 ^ k :=
   by
   induction' k with k ih generalizing n
   · simp [Nat.mod_one]
     rfl
   · rw [of_nat_succ, to_nat_append, ih, bits_to_nat_to_bool, mod_pow_succ, Nat.mul_comm]
-#align bitvec.to_nat_of_nat Bitvec.to_nat_of_nat
+#align bitvec.to_nat_of_nat Bitvec.toNat_ofNat
 
 /-- Return the integer encoded by the input bitvector -/
 protected def toInt : ∀ {n : Nat}, Bitvec n → Int

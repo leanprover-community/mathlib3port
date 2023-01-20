@@ -127,9 +127,9 @@ instance : CoeFun (α →ₘ[μ] β) fun _ => α → β :=
   ⟨fun f =>
     AeStronglyMeasurable.mk _ (Quotient.out' f : { f : α → β // AeStronglyMeasurable f μ }).2⟩
 
-protected theorem strongly_measurable (f : α →ₘ[μ] β) : StronglyMeasurable f :=
-  AeStronglyMeasurable.strongly_measurable_mk _
-#align measure_theory.ae_eq_fun.strongly_measurable MeasureTheory.AeEqFun.strongly_measurable
+protected theorem stronglyMeasurable (f : α →ₘ[μ] β) : StronglyMeasurable f :=
+  AeStronglyMeasurable.stronglyMeasurable_mk _
+#align measure_theory.ae_eq_fun.strongly_measurable MeasureTheory.AeEqFun.stronglyMeasurable
 
 protected theorem aeStronglyMeasurable (f : α →ₘ[μ] β) : AeStronglyMeasurable f μ :=
   f.StronglyMeasurable.AeStronglyMeasurable
@@ -157,14 +157,14 @@ theorem mk_eq_mk {f g : α → β} {hf hg} : (mk f hf : α →ₘ[μ] β) = mk g
 #align measure_theory.ae_eq_fun.mk_eq_mk MeasureTheory.AeEqFun.mk_eq_mk
 
 @[simp]
-theorem mk_coe_fn (f : α →ₘ[μ] β) : mk f f.AeStronglyMeasurable = f :=
+theorem mk_coeFn (f : α →ₘ[μ] β) : mk f f.AeStronglyMeasurable = f :=
   by
   conv_rhs => rw [← Quotient.out_eq' f]
   set g : { f : α → β // ae_strongly_measurable f μ } := Quotient.out' f with hg
   have : g = ⟨g.1, g.2⟩ := Subtype.eq rfl
   rw [this, ← mk, mk_eq_mk]
   exact (ae_strongly_measurable.ae_eq_mk _).symm
-#align measure_theory.ae_eq_fun.mk_coe_fn MeasureTheory.AeEqFun.mk_coe_fn
+#align measure_theory.ae_eq_fun.mk_coe_fn MeasureTheory.AeEqFun.mk_coeFn
 
 @[ext]
 theorem ext {f g : α →ₘ[μ] β} (h : f =ᵐ[μ] g) : f = g := by
@@ -175,11 +175,11 @@ theorem ext_iff {f g : α →ₘ[μ] β} : f = g ↔ f =ᵐ[μ] g :=
   ⟨fun h => by rw [h], fun h => ext h⟩
 #align measure_theory.ae_eq_fun.ext_iff MeasureTheory.AeEqFun.ext_iff
 
-theorem coe_fn_mk (f : α → β) (hf) : (mk f hf : α →ₘ[μ] β) =ᵐ[μ] f :=
+theorem coeFn_mk (f : α → β) (hf) : (mk f hf : α →ₘ[μ] β) =ᵐ[μ] f :=
   by
   apply (ae_strongly_measurable.ae_eq_mk _).symm.trans
   exact @Quotient.mk_out' _ (μ.ae_eq_setoid β) (⟨f, hf⟩ : { f // ae_strongly_measurable f μ })
-#align measure_theory.ae_eq_fun.coe_fn_mk MeasureTheory.AeEqFun.coe_fn_mk
+#align measure_theory.ae_eq_fun.coe_fn_mk MeasureTheory.AeEqFun.coeFn_mk
 
 @[elab_as_elim]
 theorem inductionOn (f : α →ₘ[μ] β) {p : (α →ₘ[μ] β) → Prop} (H : ∀ f hf, p (mk f hf)) : p f :=
@@ -221,11 +221,11 @@ theorem comp_eq_mk (g : β → γ) (hg : Continuous g) (f : α →ₘ[μ] β) :
   rw [← comp_mk g hg f f.ae_strongly_measurable, mk_coe_fn]
 #align measure_theory.ae_eq_fun.comp_eq_mk MeasureTheory.AeEqFun.comp_eq_mk
 
-theorem coe_fn_comp (g : β → γ) (hg : Continuous g) (f : α →ₘ[μ] β) : comp g hg f =ᵐ[μ] g ∘ f :=
+theorem coeFn_comp (g : β → γ) (hg : Continuous g) (f : α →ₘ[μ] β) : comp g hg f =ᵐ[μ] g ∘ f :=
   by
   rw [comp_eq_mk]
   apply coe_fn_mk
-#align measure_theory.ae_eq_fun.coe_fn_comp MeasureTheory.AeEqFun.coe_fn_comp
+#align measure_theory.ae_eq_fun.coe_fn_comp MeasureTheory.AeEqFun.coeFn_comp
 
 section CompMeasurable
 
@@ -242,24 +242,24 @@ def compMeasurable (g : β → γ) (hg : Measurable g) (f : α →ₘ[μ] β) : 
 #align measure_theory.ae_eq_fun.comp_measurable MeasureTheory.AeEqFun.compMeasurable
 
 @[simp]
-theorem comp_measurable_mk (g : β → γ) (hg : Measurable g) (f : α → β)
+theorem compMeasurable_mk (g : β → γ) (hg : Measurable g) (f : α → β)
     (hf : AeStronglyMeasurable f μ) :
     compMeasurable g hg (mk f hf : α →ₘ[μ] β) =
       mk (g ∘ f) (hg.compAeMeasurable hf.AeMeasurable).AeStronglyMeasurable :=
   rfl
-#align measure_theory.ae_eq_fun.comp_measurable_mk MeasureTheory.AeEqFun.comp_measurable_mk
+#align measure_theory.ae_eq_fun.comp_measurable_mk MeasureTheory.AeEqFun.compMeasurable_mk
 
-theorem comp_measurable_eq_mk (g : β → γ) (hg : Measurable g) (f : α →ₘ[μ] β) :
+theorem compMeasurable_eq_mk (g : β → γ) (hg : Measurable g) (f : α →ₘ[μ] β) :
     compMeasurable g hg f = mk (g ∘ f) (hg.compAeMeasurable f.AeMeasurable).AeStronglyMeasurable :=
   by rw [← comp_measurable_mk g hg f f.ae_strongly_measurable, mk_coe_fn]
-#align measure_theory.ae_eq_fun.comp_measurable_eq_mk MeasureTheory.AeEqFun.comp_measurable_eq_mk
+#align measure_theory.ae_eq_fun.comp_measurable_eq_mk MeasureTheory.AeEqFun.compMeasurable_eq_mk
 
-theorem coe_fn_comp_measurable (g : β → γ) (hg : Measurable g) (f : α →ₘ[μ] β) :
+theorem coeFn_compMeasurable (g : β → γ) (hg : Measurable g) (f : α →ₘ[μ] β) :
     compMeasurable g hg f =ᵐ[μ] g ∘ f :=
   by
   rw [comp_measurable_eq_mk]
   apply coe_fn_mk
-#align measure_theory.ae_eq_fun.coe_fn_comp_measurable MeasureTheory.AeEqFun.coe_fn_comp_measurable
+#align measure_theory.ae_eq_fun.coe_fn_comp_measurable MeasureTheory.AeEqFun.coeFn_compMeasurable
 
 end CompMeasurable
 
@@ -280,11 +280,11 @@ theorem pair_eq_mk (f : α →ₘ[μ] β) (g : α →ₘ[μ] γ) :
   by simp only [← pair_mk_mk, mk_coe_fn]
 #align measure_theory.ae_eq_fun.pair_eq_mk MeasureTheory.AeEqFun.pair_eq_mk
 
-theorem coe_fn_pair (f : α →ₘ[μ] β) (g : α →ₘ[μ] γ) : f.pair g =ᵐ[μ] fun x => (f x, g x) :=
+theorem coeFn_pair (f : α →ₘ[μ] β) (g : α →ₘ[μ] γ) : f.pair g =ᵐ[μ] fun x => (f x, g x) :=
   by
   rw [pair_eq_mk]
   apply coe_fn_mk
-#align measure_theory.ae_eq_fun.coe_fn_pair MeasureTheory.AeEqFun.coe_fn_pair
+#align measure_theory.ae_eq_fun.coe_fn_pair MeasureTheory.AeEqFun.coeFn_pair
 
 /-- Given a continuous function `g : β → γ → δ`, and almost everywhere equal functions
     `[f₁] : α →ₘ β` and `[f₂] : α →ₘ γ`, return the equivalence class of the function
@@ -316,12 +316,12 @@ theorem comp₂_eq_mk (g : β → γ → δ) (hg : Continuous (uncurry g)) (f₁
   by rw [comp₂_eq_pair, pair_eq_mk, comp_mk] <;> rfl
 #align measure_theory.ae_eq_fun.comp₂_eq_mk MeasureTheory.AeEqFun.comp₂_eq_mk
 
-theorem coe_fn_comp₂ (g : β → γ → δ) (hg : Continuous (uncurry g)) (f₁ : α →ₘ[μ] β)
+theorem coeFn_comp₂ (g : β → γ → δ) (hg : Continuous (uncurry g)) (f₁ : α →ₘ[μ] β)
     (f₂ : α →ₘ[μ] γ) : comp₂ g hg f₁ f₂ =ᵐ[μ] fun a => g (f₁ a) (f₂ a) :=
   by
   rw [comp₂_eq_mk]
   apply coe_fn_mk
-#align measure_theory.ae_eq_fun.coe_fn_comp₂ MeasureTheory.AeEqFun.coe_fn_comp₂
+#align measure_theory.ae_eq_fun.coe_fn_comp₂ MeasureTheory.AeEqFun.coeFn_comp₂
 
 section
 
@@ -339,33 +339,33 @@ def comp₂Measurable (g : β → γ → δ) (hg : Measurable (uncurry g)) (f₁
 #align measure_theory.ae_eq_fun.comp₂_measurable MeasureTheory.AeEqFun.comp₂Measurable
 
 @[simp]
-theorem comp₂_measurable_mk_mk (g : β → γ → δ) (hg : Measurable (uncurry g)) (f₁ : α → β)
+theorem comp₂Measurable_mk_mk (g : β → γ → δ) (hg : Measurable (uncurry g)) (f₁ : α → β)
     (f₂ : α → γ) (hf₁ hf₂) :
     comp₂Measurable g hg (mk f₁ hf₁ : α →ₘ[μ] β) (mk f₂ hf₂) =
       mk (fun a => g (f₁ a) (f₂ a))
         (hg.compAeMeasurable (hf₁.AeMeasurable.prod_mk hf₂.AeMeasurable)).AeStronglyMeasurable :=
   rfl
-#align measure_theory.ae_eq_fun.comp₂_measurable_mk_mk MeasureTheory.AeEqFun.comp₂_measurable_mk_mk
+#align measure_theory.ae_eq_fun.comp₂_measurable_mk_mk MeasureTheory.AeEqFun.comp₂Measurable_mk_mk
 
-theorem comp₂_measurable_eq_pair (g : β → γ → δ) (hg : Measurable (uncurry g)) (f₁ : α →ₘ[μ] β)
+theorem comp₂Measurable_eq_pair (g : β → γ → δ) (hg : Measurable (uncurry g)) (f₁ : α →ₘ[μ] β)
     (f₂ : α →ₘ[μ] γ) : comp₂Measurable g hg f₁ f₂ = compMeasurable _ hg (f₁.pair f₂) :=
   rfl
-#align measure_theory.ae_eq_fun.comp₂_measurable_eq_pair MeasureTheory.AeEqFun.comp₂_measurable_eq_pair
+#align measure_theory.ae_eq_fun.comp₂_measurable_eq_pair MeasureTheory.AeEqFun.comp₂Measurable_eq_pair
 
-theorem comp₂_measurable_eq_mk (g : β → γ → δ) (hg : Measurable (uncurry g)) (f₁ : α →ₘ[μ] β)
+theorem comp₂Measurable_eq_mk (g : β → γ → δ) (hg : Measurable (uncurry g)) (f₁ : α →ₘ[μ] β)
     (f₂ : α →ₘ[μ] γ) :
     comp₂Measurable g hg f₁ f₂ =
       mk (fun a => g (f₁ a) (f₂ a))
         (hg.compAeMeasurable (f₁.AeMeasurable.prod_mk f₂.AeMeasurable)).AeStronglyMeasurable :=
   by rw [comp₂_measurable_eq_pair, pair_eq_mk, comp_measurable_mk] <;> rfl
-#align measure_theory.ae_eq_fun.comp₂_measurable_eq_mk MeasureTheory.AeEqFun.comp₂_measurable_eq_mk
+#align measure_theory.ae_eq_fun.comp₂_measurable_eq_mk MeasureTheory.AeEqFun.comp₂Measurable_eq_mk
 
-theorem coe_fn_comp₂_measurable (g : β → γ → δ) (hg : Measurable (uncurry g)) (f₁ : α →ₘ[μ] β)
+theorem coeFn_comp₂Measurable (g : β → γ → δ) (hg : Measurable (uncurry g)) (f₁ : α →ₘ[μ] β)
     (f₂ : α →ₘ[μ] γ) : comp₂Measurable g hg f₁ f₂ =ᵐ[μ] fun a => g (f₁ a) (f₂ a) :=
   by
   rw [comp₂_measurable_eq_mk]
   apply coe_fn_mk
-#align measure_theory.ae_eq_fun.coe_fn_comp₂_measurable MeasureTheory.AeEqFun.coe_fn_comp₂_measurable
+#align measure_theory.ae_eq_fun.coe_fn_comp₂_measurable MeasureTheory.AeEqFun.coeFn_comp₂Measurable
 
 end
 
@@ -376,42 +376,42 @@ def toGerm (f : α →ₘ[μ] β) : Germ μ.ae β :=
 #align measure_theory.ae_eq_fun.to_germ MeasureTheory.AeEqFun.toGerm
 
 @[simp]
-theorem mk_to_germ (f : α → β) (hf) : (mk f hf : α →ₘ[μ] β).toGerm = f :=
+theorem mk_toGerm (f : α → β) (hf) : (mk f hf : α →ₘ[μ] β).toGerm = f :=
   rfl
-#align measure_theory.ae_eq_fun.mk_to_germ MeasureTheory.AeEqFun.mk_to_germ
+#align measure_theory.ae_eq_fun.mk_to_germ MeasureTheory.AeEqFun.mk_toGerm
 
-theorem to_germ_eq (f : α →ₘ[μ] β) : f.toGerm = (f : α → β) := by rw [← mk_to_germ, mk_coe_fn]
-#align measure_theory.ae_eq_fun.to_germ_eq MeasureTheory.AeEqFun.to_germ_eq
+theorem toGerm_eq (f : α →ₘ[μ] β) : f.toGerm = (f : α → β) := by rw [← mk_to_germ, mk_coe_fn]
+#align measure_theory.ae_eq_fun.to_germ_eq MeasureTheory.AeEqFun.toGerm_eq
 
-theorem to_germ_injective : Injective (toGerm : (α →ₘ[μ] β) → Germ μ.ae β) := fun f g H =>
+theorem toGerm_injective : Injective (toGerm : (α →ₘ[μ] β) → Germ μ.ae β) := fun f g H =>
   ext <| Germ.coe_eq.1 <| by rwa [← to_germ_eq, ← to_germ_eq]
-#align measure_theory.ae_eq_fun.to_germ_injective MeasureTheory.AeEqFun.to_germ_injective
+#align measure_theory.ae_eq_fun.to_germ_injective MeasureTheory.AeEqFun.toGerm_injective
 
-theorem comp_to_germ (g : β → γ) (hg : Continuous g) (f : α →ₘ[μ] β) :
+theorem comp_toGerm (g : β → γ) (hg : Continuous g) (f : α →ₘ[μ] β) :
     (comp g hg f).toGerm = f.toGerm.map g :=
   inductionOn f fun f hf => by simp
-#align measure_theory.ae_eq_fun.comp_to_germ MeasureTheory.AeEqFun.comp_to_germ
+#align measure_theory.ae_eq_fun.comp_to_germ MeasureTheory.AeEqFun.comp_toGerm
 
-theorem comp_measurable_to_germ [MeasurableSpace β] [BorelSpace β] [PseudoMetrizableSpace β]
+theorem compMeasurable_toGerm [MeasurableSpace β] [BorelSpace β] [PseudoMetrizableSpace β]
     [PseudoMetrizableSpace γ] [SecondCountableTopology γ] [MeasurableSpace γ]
     [OpensMeasurableSpace γ] (g : β → γ) (hg : Measurable g) (f : α →ₘ[μ] β) :
     (compMeasurable g hg f).toGerm = f.toGerm.map g :=
   inductionOn f fun f hf => by simp
-#align measure_theory.ae_eq_fun.comp_measurable_to_germ MeasureTheory.AeEqFun.comp_measurable_to_germ
+#align measure_theory.ae_eq_fun.comp_measurable_to_germ MeasureTheory.AeEqFun.compMeasurable_toGerm
 
-theorem comp₂_to_germ (g : β → γ → δ) (hg : Continuous (uncurry g)) (f₁ : α →ₘ[μ] β)
+theorem comp₂_toGerm (g : β → γ → δ) (hg : Continuous (uncurry g)) (f₁ : α →ₘ[μ] β)
     (f₂ : α →ₘ[μ] γ) : (comp₂ g hg f₁ f₂).toGerm = f₁.toGerm.map₂ g f₂.toGerm :=
   inductionOn₂ f₁ f₂ fun f₁ hf₁ f₂ hf₂ => by simp
-#align measure_theory.ae_eq_fun.comp₂_to_germ MeasureTheory.AeEqFun.comp₂_to_germ
+#align measure_theory.ae_eq_fun.comp₂_to_germ MeasureTheory.AeEqFun.comp₂_toGerm
 
-theorem comp₂_measurable_to_germ [PseudoMetrizableSpace β] [SecondCountableTopology β]
+theorem comp₂Measurable_toGerm [PseudoMetrizableSpace β] [SecondCountableTopology β]
     [MeasurableSpace β] [BorelSpace β] [PseudoMetrizableSpace γ] [SecondCountableTopology γ]
     [MeasurableSpace γ] [BorelSpace γ] [PseudoMetrizableSpace δ] [SecondCountableTopology δ]
     [MeasurableSpace δ] [OpensMeasurableSpace δ] (g : β → γ → δ) (hg : Measurable (uncurry g))
     (f₁ : α →ₘ[μ] β) (f₂ : α →ₘ[μ] γ) :
     (comp₂Measurable g hg f₁ f₂).toGerm = f₁.toGerm.map₂ g f₂.toGerm :=
   inductionOn₂ f₁ f₂ fun f₁ hf₁ f₂ hf₂ => by simp
-#align measure_theory.ae_eq_fun.comp₂_measurable_to_germ MeasureTheory.AeEqFun.comp₂_measurable_to_germ
+#align measure_theory.ae_eq_fun.comp₂_measurable_to_germ MeasureTheory.AeEqFun.comp₂Measurable_toGerm
 
 /-- Given a predicate `p` and an equivalence class `[f]`, return true if `p` holds of `f a`
     for almost all `a` -/
@@ -425,14 +425,14 @@ def LiftRel (r : β → γ → Prop) (f : α →ₘ[μ] β) (g : α →ₘ[μ] �
   f.toGerm.LiftRel r g.toGerm
 #align measure_theory.ae_eq_fun.lift_rel MeasureTheory.AeEqFun.LiftRel
 
-theorem lift_rel_mk_mk {r : β → γ → Prop} {f : α → β} {g : α → γ} {hf hg} :
+theorem liftRel_mk_mk {r : β → γ → Prop} {f : α → β} {g : α → γ} {hf hg} :
     LiftRel r (mk f hf : α →ₘ[μ] β) (mk g hg) ↔ ∀ᵐ a ∂μ, r (f a) (g a) :=
   Iff.rfl
-#align measure_theory.ae_eq_fun.lift_rel_mk_mk MeasureTheory.AeEqFun.lift_rel_mk_mk
+#align measure_theory.ae_eq_fun.lift_rel_mk_mk MeasureTheory.AeEqFun.liftRel_mk_mk
 
-theorem lift_rel_iff_coe_fn {r : β → γ → Prop} {f : α →ₘ[μ] β} {g : α →ₘ[μ] γ} :
+theorem liftRel_iff_coeFn {r : β → γ → Prop} {f : α →ₘ[μ] β} {g : α →ₘ[μ] γ} :
     LiftRel r f g ↔ ∀ᵐ a ∂μ, r (f a) (g a) := by rw [← lift_rel_mk_mk, mk_coe_fn, mk_coe_fn]
-#align measure_theory.ae_eq_fun.lift_rel_iff_coe_fn MeasureTheory.AeEqFun.lift_rel_iff_coe_fn
+#align measure_theory.ae_eq_fun.lift_rel_iff_coe_fn MeasureTheory.AeEqFun.liftRel_iff_coeFn
 
 section Order
 
@@ -445,12 +445,12 @@ theorem mk_le_mk [Preorder β] {f g : α → β} (hf hg) : (mk f hf : α →ₘ[
 #align measure_theory.ae_eq_fun.mk_le_mk MeasureTheory.AeEqFun.mk_le_mk
 
 @[simp, norm_cast]
-theorem coe_fn_le [Preorder β] {f g : α →ₘ[μ] β} : (f : α → β) ≤ᵐ[μ] g ↔ f ≤ g :=
-  lift_rel_iff_coe_fn.symm
-#align measure_theory.ae_eq_fun.coe_fn_le MeasureTheory.AeEqFun.coe_fn_le
+theorem coeFn_le [Preorder β] {f g : α →ₘ[μ] β} : (f : α → β) ≤ᵐ[μ] g ↔ f ≤ g :=
+  liftRel_iff_coeFn.symm
+#align measure_theory.ae_eq_fun.coe_fn_le MeasureTheory.AeEqFun.coeFn_le
 
 instance [PartialOrder β] : PartialOrder (α →ₘ[μ] β) :=
-  PartialOrder.lift toGerm to_germ_injective
+  PartialOrder.lift toGerm toGerm_injective
 
 section Lattice
 
@@ -460,9 +460,9 @@ variable [SemilatticeSup β] [HasContinuousSup β]
 
 instance : HasSup (α →ₘ[μ] β) where sup f g := AeEqFun.comp₂ (· ⊔ ·) continuous_sup f g
 
-theorem coe_fn_sup (f g : α →ₘ[μ] β) : ⇑(f ⊔ g) =ᵐ[μ] fun x => f x ⊔ g x :=
-  coe_fn_comp₂ _ _ _ _
-#align measure_theory.ae_eq_fun.coe_fn_sup MeasureTheory.AeEqFun.coe_fn_sup
+theorem coeFn_sup (f g : α →ₘ[μ] β) : ⇑(f ⊔ g) =ᵐ[μ] fun x => f x ⊔ g x :=
+  coeFn_comp₂ _ _ _ _
+#align measure_theory.ae_eq_fun.coe_fn_sup MeasureTheory.AeEqFun.coeFn_sup
 
 protected theorem le_sup_left (f g : α →ₘ[μ] β) : f ≤ f ⊔ g :=
   by
@@ -496,9 +496,9 @@ variable [SemilatticeInf β] [HasContinuousInf β]
 
 instance : HasInf (α →ₘ[μ] β) where inf f g := AeEqFun.comp₂ (· ⊓ ·) continuous_inf f g
 
-theorem coe_fn_inf (f g : α →ₘ[μ] β) : ⇑(f ⊓ g) =ᵐ[μ] fun x => f x ⊓ g x :=
-  coe_fn_comp₂ _ _ _ _
-#align measure_theory.ae_eq_fun.coe_fn_inf MeasureTheory.AeEqFun.coe_fn_inf
+theorem coeFn_inf (f g : α →ₘ[μ] β) : ⇑(f ⊓ g) =ᵐ[μ] fun x => f x ⊓ g x :=
+  coeFn_comp₂ _ _ _ _
+#align measure_theory.ae_eq_fun.coe_fn_inf MeasureTheory.AeEqFun.coeFn_inf
 
 protected theorem inf_le_left (f g : α →ₘ[μ] β) : f ⊓ g ≤ f :=
   by
@@ -549,9 +549,9 @@ def const (b : β) : α →ₘ[μ] β :=
   mk (fun a : α => b) aeStronglyMeasurableConst
 #align measure_theory.ae_eq_fun.const MeasureTheory.AeEqFun.const
 
-theorem coe_fn_const (b : β) : (const α b : α →ₘ[μ] β) =ᵐ[μ] Function.const α b :=
-  coe_fn_mk _ _
-#align measure_theory.ae_eq_fun.coe_fn_const MeasureTheory.AeEqFun.coe_fn_const
+theorem coeFn_const (b : β) : (const α b : α →ₘ[μ] β) =ᵐ[μ] Function.const α b :=
+  coeFn_mk _ _
+#align measure_theory.ae_eq_fun.coe_fn_const MeasureTheory.AeEqFun.coeFn_const
 
 variable {α}
 
@@ -569,15 +569,15 @@ theorem one_def [One β] : (1 : α →ₘ[μ] β) = mk (fun a : α => 1) aeStron
 #align measure_theory.ae_eq_fun.zero_def MeasureTheory.AeEqFun.zero_def
 
 @[to_additive]
-theorem coe_fn_one [One β] : ⇑(1 : α →ₘ[μ] β) =ᵐ[μ] 1 :=
-  coe_fn_const _ _
-#align measure_theory.ae_eq_fun.coe_fn_one MeasureTheory.AeEqFun.coe_fn_one
+theorem coeFn_one [One β] : ⇑(1 : α →ₘ[μ] β) =ᵐ[μ] 1 :=
+  coeFn_const _ _
+#align measure_theory.ae_eq_fun.coe_fn_one MeasureTheory.AeEqFun.coeFn_one
 #align measure_theory.ae_eq_fun.coe_fn_zero MeasureTheory.AeEqFun.coe_fn_zero
 
 @[simp, to_additive]
-theorem one_to_germ [One β] : (1 : α →ₘ[μ] β).toGerm = 1 :=
+theorem one_toGerm [One β] : (1 : α →ₘ[μ] β).toGerm = 1 :=
   rfl
-#align measure_theory.ae_eq_fun.one_to_germ MeasureTheory.AeEqFun.one_to_germ
+#align measure_theory.ae_eq_fun.one_to_germ MeasureTheory.AeEqFun.one_toGerm
 #align measure_theory.ae_eq_fun.zero_to_germ MeasureTheory.AeEqFun.zero_to_germ
 
 -- Note we set up the scalar actions before the `monoid` structures in case we want to
@@ -599,13 +599,13 @@ theorem smul_mk (c : 𝕜) (f : α → γ) (hf : AeStronglyMeasurable f μ) :
   rfl
 #align measure_theory.ae_eq_fun.smul_mk MeasureTheory.AeEqFun.smul_mk
 
-theorem coe_fn_smul (c : 𝕜) (f : α →ₘ[μ] γ) : ⇑(c • f) =ᵐ[μ] c • f :=
-  coe_fn_comp _ _ _
-#align measure_theory.ae_eq_fun.coe_fn_smul MeasureTheory.AeEqFun.coe_fn_smul
+theorem coeFn_smul (c : 𝕜) (f : α →ₘ[μ] γ) : ⇑(c • f) =ᵐ[μ] c • f :=
+  coeFn_comp _ _ _
+#align measure_theory.ae_eq_fun.coe_fn_smul MeasureTheory.AeEqFun.coeFn_smul
 
-theorem smul_to_germ (c : 𝕜) (f : α →ₘ[μ] γ) : (c • f).toGerm = c • f.toGerm :=
-  comp_to_germ _ _ _
-#align measure_theory.ae_eq_fun.smul_to_germ MeasureTheory.AeEqFun.smul_to_germ
+theorem smul_toGerm (c : 𝕜) (f : α →ₘ[μ] γ) : (c • f).toGerm = c • f.toGerm :=
+  comp_toGerm _ _ _
+#align measure_theory.ae_eq_fun.smul_to_germ MeasureTheory.AeEqFun.smul_toGerm
 
 instance [SMulCommClass 𝕜 𝕜' γ] : SMulCommClass 𝕜 𝕜' (α →ₘ[μ] γ) :=
   ⟨fun a b f => inductionOn f fun f hf => by simp_rw [smul_mk, smul_comm]⟩
@@ -634,24 +634,24 @@ theorem mk_mul_mk (f g : α → γ) (hf : AeStronglyMeasurable f μ) (hg : AeStr
 #align measure_theory.ae_eq_fun.mk_add_mk MeasureTheory.AeEqFun.mk_add_mk
 
 @[to_additive]
-theorem coe_fn_mul (f g : α →ₘ[μ] γ) : ⇑(f * g) =ᵐ[μ] f * g :=
-  coe_fn_comp₂ _ _ _ _
-#align measure_theory.ae_eq_fun.coe_fn_mul MeasureTheory.AeEqFun.coe_fn_mul
+theorem coeFn_mul (f g : α →ₘ[μ] γ) : ⇑(f * g) =ᵐ[μ] f * g :=
+  coeFn_comp₂ _ _ _ _
+#align measure_theory.ae_eq_fun.coe_fn_mul MeasureTheory.AeEqFun.coeFn_mul
 #align measure_theory.ae_eq_fun.coe_fn_add MeasureTheory.AeEqFun.coe_fn_add
 
 @[simp, to_additive]
-theorem mul_to_germ (f g : α →ₘ[μ] γ) : (f * g).toGerm = f.toGerm * g.toGerm :=
-  comp₂_to_germ _ _ _ _
-#align measure_theory.ae_eq_fun.mul_to_germ MeasureTheory.AeEqFun.mul_to_germ
+theorem mul_toGerm (f g : α →ₘ[μ] γ) : (f * g).toGerm = f.toGerm * g.toGerm :=
+  comp₂_toGerm _ _ _ _
+#align measure_theory.ae_eq_fun.mul_to_germ MeasureTheory.AeEqFun.mul_toGerm
 #align measure_theory.ae_eq_fun.add_to_germ MeasureTheory.AeEqFun.add_to_germ
 
 end Mul
 
 instance [AddMonoid γ] [HasContinuousAdd γ] : AddMonoid (α →ₘ[μ] γ) :=
-  to_germ_injective.AddMonoid toGerm zero_to_germ add_to_germ fun _ _ => smul_to_germ _ _
+  toGerm_injective.AddMonoid toGerm zero_to_germ add_to_germ fun _ _ => smul_toGerm _ _
 
 instance [AddCommMonoid γ] [HasContinuousAdd γ] : AddCommMonoid (α →ₘ[μ] γ) :=
-  to_germ_injective.AddCommMonoid toGerm zero_to_germ add_to_germ fun _ _ => smul_to_germ _ _
+  toGerm_injective.AddCommMonoid toGerm zero_to_germ add_to_germ fun _ _ => smul_toGerm _ _
 
 section Monoid
 
@@ -666,26 +666,26 @@ theorem mk_pow (f : α → γ) (hf) (n : ℕ) :
   rfl
 #align measure_theory.ae_eq_fun.mk_pow MeasureTheory.AeEqFun.mk_pow
 
-theorem coe_fn_pow (f : α →ₘ[μ] γ) (n : ℕ) : ⇑(f ^ n) =ᵐ[μ] f ^ n :=
-  coe_fn_comp _ _ _
-#align measure_theory.ae_eq_fun.coe_fn_pow MeasureTheory.AeEqFun.coe_fn_pow
+theorem coeFn_pow (f : α →ₘ[μ] γ) (n : ℕ) : ⇑(f ^ n) =ᵐ[μ] f ^ n :=
+  coeFn_comp _ _ _
+#align measure_theory.ae_eq_fun.coe_fn_pow MeasureTheory.AeEqFun.coeFn_pow
 
 @[simp]
-theorem pow_to_germ (f : α →ₘ[μ] γ) (n : ℕ) : (f ^ n).toGerm = f.toGerm ^ n :=
-  comp_to_germ _ _ _
-#align measure_theory.ae_eq_fun.pow_to_germ MeasureTheory.AeEqFun.pow_to_germ
+theorem pow_toGerm (f : α →ₘ[μ] γ) (n : ℕ) : (f ^ n).toGerm = f.toGerm ^ n :=
+  comp_toGerm _ _ _
+#align measure_theory.ae_eq_fun.pow_to_germ MeasureTheory.AeEqFun.pow_toGerm
 
 @[to_additive]
 instance : Monoid (α →ₘ[μ] γ) :=
-  to_germ_injective.Monoid toGerm one_to_germ mul_to_germ pow_to_germ
+  toGerm_injective.Monoid toGerm one_toGerm mul_toGerm pow_toGerm
 
 /-- `ae_eq_fun.to_germ` as a `monoid_hom`. -/
 @[to_additive "`ae_eq_fun.to_germ` as an `add_monoid_hom`.", simps]
 def toGermMonoidHom : (α →ₘ[μ] γ) →* μ.ae.Germ γ
     where
   toFun := toGerm
-  map_one' := one_to_germ
-  map_mul' := mul_to_germ
+  map_one' := one_toGerm
+  map_mul' := mul_toGerm
 #align measure_theory.ae_eq_fun.to_germ_monoid_hom MeasureTheory.AeEqFun.toGermMonoidHom
 #align measure_theory.ae_eq_fun.to_germ_add_monoid_hom MeasureTheory.AeEqFun.to_germ_add_monoid_hom
 
@@ -693,7 +693,7 @@ end Monoid
 
 @[to_additive]
 instance [CommMonoid γ] [HasContinuousMul γ] : CommMonoid (α →ₘ[μ] γ) :=
-  to_germ_injective.CommMonoid toGerm one_to_germ mul_to_germ pow_to_germ
+  toGerm_injective.CommMonoid toGerm one_toGerm mul_toGerm pow_toGerm
 
 section Group
 
@@ -712,15 +712,15 @@ theorem inv_mk (f : α → γ) (hf) : (mk f hf : α →ₘ[μ] γ)⁻¹ = mk f�
 #align measure_theory.ae_eq_fun.neg_mk MeasureTheory.AeEqFun.neg_mk
 
 @[to_additive]
-theorem coe_fn_inv (f : α →ₘ[μ] γ) : ⇑f⁻¹ =ᵐ[μ] f⁻¹ :=
-  coe_fn_comp _ _ _
-#align measure_theory.ae_eq_fun.coe_fn_inv MeasureTheory.AeEqFun.coe_fn_inv
+theorem coeFn_inv (f : α →ₘ[μ] γ) : ⇑f⁻¹ =ᵐ[μ] f⁻¹ :=
+  coeFn_comp _ _ _
+#align measure_theory.ae_eq_fun.coe_fn_inv MeasureTheory.AeEqFun.coeFn_inv
 #align measure_theory.ae_eq_fun.coe_fn_neg MeasureTheory.AeEqFun.coe_fn_neg
 
 @[to_additive]
-theorem inv_to_germ (f : α →ₘ[μ] γ) : f⁻¹.toGerm = f.toGerm⁻¹ :=
-  comp_to_germ _ _ _
-#align measure_theory.ae_eq_fun.inv_to_germ MeasureTheory.AeEqFun.inv_to_germ
+theorem inv_toGerm (f : α →ₘ[μ] γ) : f⁻¹.toGerm = f.toGerm⁻¹ :=
+  comp_toGerm _ _ _
+#align measure_theory.ae_eq_fun.inv_to_germ MeasureTheory.AeEqFun.inv_toGerm
 #align measure_theory.ae_eq_fun.neg_to_germ MeasureTheory.AeEqFun.neg_to_germ
 
 end Inv
@@ -739,15 +739,15 @@ theorem mk_div (f g : α → γ) (hf : AeStronglyMeasurable f μ) (hg : AeStrong
 #align measure_theory.ae_eq_fun.mk_sub MeasureTheory.AeEqFun.mk_sub
 
 @[to_additive]
-theorem coe_fn_div (f g : α →ₘ[μ] γ) : ⇑(f / g) =ᵐ[μ] f / g :=
-  coe_fn_comp₂ _ _ _ _
-#align measure_theory.ae_eq_fun.coe_fn_div MeasureTheory.AeEqFun.coe_fn_div
+theorem coeFn_div (f g : α →ₘ[μ] γ) : ⇑(f / g) =ᵐ[μ] f / g :=
+  coeFn_comp₂ _ _ _ _
+#align measure_theory.ae_eq_fun.coe_fn_div MeasureTheory.AeEqFun.coeFn_div
 #align measure_theory.ae_eq_fun.coe_fn_sub MeasureTheory.AeEqFun.coe_fn_sub
 
 @[to_additive]
-theorem div_to_germ (f g : α →ₘ[μ] γ) : (f / g).toGerm = f.toGerm / g.toGerm :=
-  comp₂_to_germ _ _ _ _
-#align measure_theory.ae_eq_fun.div_to_germ MeasureTheory.AeEqFun.div_to_germ
+theorem div_toGerm (f g : α →ₘ[μ] γ) : (f / g).toGerm = f.toGerm / g.toGerm :=
+  comp₂_toGerm _ _ _ _
+#align measure_theory.ae_eq_fun.div_to_germ MeasureTheory.AeEqFun.div_toGerm
 #align measure_theory.ae_eq_fun.sub_to_germ MeasureTheory.AeEqFun.sub_to_germ
 
 end Div
@@ -764,51 +764,50 @@ theorem mk_zpow (f : α → γ) (hf) (n : ℤ) :
   rfl
 #align measure_theory.ae_eq_fun.mk_zpow MeasureTheory.AeEqFun.mk_zpow
 
-theorem coe_fn_zpow (f : α →ₘ[μ] γ) (n : ℤ) : ⇑(f ^ n) =ᵐ[μ] f ^ n :=
-  coe_fn_comp _ _ _
-#align measure_theory.ae_eq_fun.coe_fn_zpow MeasureTheory.AeEqFun.coe_fn_zpow
+theorem coeFn_zpow (f : α →ₘ[μ] γ) (n : ℤ) : ⇑(f ^ n) =ᵐ[μ] f ^ n :=
+  coeFn_comp _ _ _
+#align measure_theory.ae_eq_fun.coe_fn_zpow MeasureTheory.AeEqFun.coeFn_zpow
 
 @[simp]
-theorem zpow_to_germ (f : α →ₘ[μ] γ) (n : ℤ) : (f ^ n).toGerm = f.toGerm ^ n :=
-  comp_to_germ _ _ _
-#align measure_theory.ae_eq_fun.zpow_to_germ MeasureTheory.AeEqFun.zpow_to_germ
+theorem zpow_toGerm (f : α →ₘ[μ] γ) (n : ℤ) : (f ^ n).toGerm = f.toGerm ^ n :=
+  comp_toGerm _ _ _
+#align measure_theory.ae_eq_fun.zpow_to_germ MeasureTheory.AeEqFun.zpow_toGerm
 
 end Zpow
 
 end Group
 
 instance [AddGroup γ] [TopologicalAddGroup γ] : AddGroup (α →ₘ[μ] γ) :=
-  to_germ_injective.AddGroup toGerm zero_to_germ add_to_germ neg_to_germ sub_to_germ
-    (fun _ _ => smul_to_germ _ _) fun _ _ => smul_to_germ _ _
+  toGerm_injective.AddGroup toGerm zero_to_germ add_to_germ neg_to_germ sub_to_germ
+    (fun _ _ => smul_toGerm _ _) fun _ _ => smul_toGerm _ _
 
 instance [AddCommGroup γ] [TopologicalAddGroup γ] : AddCommGroup (α →ₘ[μ] γ) :=
-  to_germ_injective.AddCommGroup toGerm zero_to_germ add_to_germ neg_to_germ sub_to_germ
-    (fun _ _ => smul_to_germ _ _) fun _ _ => smul_to_germ _ _
+  toGerm_injective.AddCommGroup toGerm zero_to_germ add_to_germ neg_to_germ sub_to_germ
+    (fun _ _ => smul_toGerm _ _) fun _ _ => smul_toGerm _ _
 
 @[to_additive]
 instance [Group γ] [TopologicalGroup γ] : Group (α →ₘ[μ] γ) :=
-  to_germ_injective.Group _ one_to_germ mul_to_germ inv_to_germ div_to_germ pow_to_germ zpow_to_germ
+  toGerm_injective.Group _ one_toGerm mul_toGerm inv_toGerm div_toGerm pow_toGerm zpow_toGerm
 
 @[to_additive]
 instance [CommGroup γ] [TopologicalGroup γ] : CommGroup (α →ₘ[μ] γ) :=
-  to_germ_injective.CommGroup _ one_to_germ mul_to_germ inv_to_germ div_to_germ pow_to_germ
-    zpow_to_germ
+  toGerm_injective.CommGroup _ one_toGerm mul_toGerm inv_toGerm div_toGerm pow_toGerm zpow_toGerm
 
 section Module
 
 variable {𝕜 : Type _}
 
 instance [Monoid 𝕜] [MulAction 𝕜 γ] [HasContinuousConstSmul 𝕜 γ] : MulAction 𝕜 (α →ₘ[μ] γ) :=
-  to_germ_injective.MulAction toGerm smul_to_germ
+  toGerm_injective.MulAction toGerm smul_toGerm
 
 instance [Monoid 𝕜] [AddMonoid γ] [HasContinuousAdd γ] [DistribMulAction 𝕜 γ]
     [HasContinuousConstSmul 𝕜 γ] : DistribMulAction 𝕜 (α →ₘ[μ] γ) :=
-  to_germ_injective.DistribMulAction (to_germ_add_monoid_hom : (α →ₘ[μ] γ) →+ _) fun c : 𝕜 =>
-    smul_to_germ c
+  toGerm_injective.DistribMulAction (to_germ_add_monoid_hom : (α →ₘ[μ] γ) →+ _) fun c : 𝕜 =>
+    smul_toGerm c
 
 instance [Semiring 𝕜] [AddCommMonoid γ] [HasContinuousAdd γ] [Module 𝕜 γ]
     [HasContinuousConstSmul 𝕜 γ] : Module 𝕜 (α →ₘ[μ] γ) :=
-  to_germ_injective.Module 𝕜 (to_germ_add_monoid_hom : (α →ₘ[μ] γ) →+ _) smul_to_germ
+  toGerm_injective.Module 𝕜 (to_germ_add_monoid_hom : (α →ₘ[μ] γ) →+ _) smul_toGerm
 
 end Module
 
@@ -824,9 +823,9 @@ theorem lintegral_mk (f : α → ℝ≥0∞) (hf) : (mk f hf : α →ₘ[μ] ℝ
   rfl
 #align measure_theory.ae_eq_fun.lintegral_mk MeasureTheory.AeEqFun.lintegral_mk
 
-theorem lintegral_coe_fn (f : α →ₘ[μ] ℝ≥0∞) : (∫⁻ a, f a ∂μ) = f.lintegral := by
+theorem lintegral_coeFn (f : α →ₘ[μ] ℝ≥0∞) : (∫⁻ a, f a ∂μ) = f.lintegral := by
   rw [← lintegral_mk, mk_coe_fn]
-#align measure_theory.ae_eq_fun.lintegral_coe_fn MeasureTheory.AeEqFun.lintegral_coe_fn
+#align measure_theory.ae_eq_fun.lintegral_coe_fn MeasureTheory.AeEqFun.lintegral_coeFn
 
 @[simp]
 theorem lintegral_zero : lintegral (0 : α →ₘ[μ] ℝ≥0∞) = 0 :=
@@ -848,13 +847,13 @@ theorem lintegral_mono {f g : α →ₘ[μ] ℝ≥0∞} : f ≤ g → lintegral 
 
 section Abs
 
-theorem coe_fn_abs {β} [TopologicalSpace β] [Lattice β] [TopologicalLattice β] [AddGroup β]
+theorem coeFn_abs {β} [TopologicalSpace β] [Lattice β] [TopologicalLattice β] [AddGroup β]
     [TopologicalAddGroup β] (f : α →ₘ[μ] β) : ⇑(|f|) =ᵐ[μ] fun x => |f x| :=
   by
   simp_rw [abs_eq_sup_neg]
   filter_upwards [ae_eq_fun.coe_fn_sup f (-f), ae_eq_fun.coe_fn_neg f] with x hx_sup hx_neg
   rw [hx_sup, hx_neg, Pi.neg_apply]
-#align measure_theory.ae_eq_fun.coe_fn_abs MeasureTheory.AeEqFun.coe_fn_abs
+#align measure_theory.ae_eq_fun.coe_fn_abs MeasureTheory.AeEqFun.coeFn_abs
 
 end Abs
 
@@ -868,16 +867,16 @@ def posPart (f : α →ₘ[μ] γ) : α →ₘ[μ] γ :=
 #align measure_theory.ae_eq_fun.pos_part MeasureTheory.AeEqFun.posPart
 
 @[simp]
-theorem pos_part_mk (f : α → γ) (hf) :
+theorem posPart_mk (f : α → γ) (hf) :
     posPart (mk f hf : α →ₘ[μ] γ) =
       mk (fun x => max (f x) 0)
         ((continuous_id.max continuous_const).compAeStronglyMeasurable hf) :=
   rfl
-#align measure_theory.ae_eq_fun.pos_part_mk MeasureTheory.AeEqFun.pos_part_mk
+#align measure_theory.ae_eq_fun.pos_part_mk MeasureTheory.AeEqFun.posPart_mk
 
-theorem coe_fn_pos_part (f : α →ₘ[μ] γ) : ⇑(posPart f) =ᵐ[μ] fun a => max (f a) 0 :=
-  coe_fn_comp _ _ _
-#align measure_theory.ae_eq_fun.coe_fn_pos_part MeasureTheory.AeEqFun.coe_fn_pos_part
+theorem coeFn_posPart (f : α →ₘ[μ] γ) : ⇑(posPart f) =ᵐ[μ] fun a => max (f a) 0 :=
+  coeFn_comp _ _ _
+#align measure_theory.ae_eq_fun.coe_fn_pos_part MeasureTheory.AeEqFun.coeFn_posPart
 
 end PosPart
 
@@ -899,9 +898,9 @@ def toAeEqFun (f : C(α, β)) : α →ₘ[μ] β :=
   AeEqFun.mk f f.Continuous.AeStronglyMeasurable
 #align continuous_map.to_ae_eq_fun ContinuousMap.toAeEqFun
 
-theorem coe_fn_to_ae_eq_fun (f : C(α, β)) : f.toAeEqFun μ =ᵐ[μ] f :=
-  AeEqFun.coe_fn_mk f _
-#align continuous_map.coe_fn_to_ae_eq_fun ContinuousMap.coe_fn_to_ae_eq_fun
+theorem coeFn_toAeEqFun (f : C(α, β)) : f.toAeEqFun μ =ᵐ[μ] f :=
+  AeEqFun.coeFn_mk f _
+#align continuous_map.coe_fn_to_ae_eq_fun ContinuousMap.coeFn_toAeEqFun
 
 variable [Group β] [TopologicalGroup β]
 

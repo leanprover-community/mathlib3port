@@ -102,10 +102,14 @@ theorem natPred_succPNat (n : ℕ) : n.succPnat.natPred = n :=
 #align nat.nat_pred_succ_pnat Nat.natPred_succPNat
 -/
 
+/- warning: pnat.succ_pnat_nat_pred clashes with nat._root_.pnat.succ_pnat_nat_pred -> PNat.succPNat_natPred
+Case conversion may be inaccurate. Consider using '#align pnat.succ_pnat_nat_pred PNat.succPNat_natPredₓ'. -/
+#print PNat.succPNat_natPred /-
 @[simp]
-theorem PNat.succ_pnat_nat_pred (n : ℕ+) : n.natPred.succPnat = n :=
+theorem PNat.succPNat_natPred (n : ℕ+) : n.natPred.succPnat = n :=
   Subtype.eq <| succ_pred_eq_of_pos n.2
-#align pnat.succ_pnat_nat_pred PNat.succ_pnat_nat_pred
+#align pnat.succ_pnat_nat_pred PNat.succPNat_natPred
+-/
 
 #print Nat.toPNat' /-
 /-- Convert a natural number to a pnat. `n+1` is mapped to itself,
@@ -194,13 +198,9 @@ theorem ne_zero (n : ℕ+) : (n : ℕ) ≠ 0 :=
 #align pnat.ne_zero PNat.ne_zero
 -/
 
-/- warning: ne_zero.pnat clashes with pnat._root_.ne_zero.pnat -> NeZero.pnat
-Case conversion may be inaccurate. Consider using '#align ne_zero.pnat NeZero.pnatₓ'. -/
-#print NeZero.pnat /-
-instance NeZero.pnat {a : ℕ+} : NeZero (a : ℕ) :=
+instance NeZero.pNat {a : ℕ+} : NeZero (a : ℕ) :=
   ⟨a.NeZero⟩
-#align ne_zero.pnat NeZero.pnat
--/
+#align ne_zero.pnat NeZero.pNat
 
 #print PNat.toPNat'_coe /-
 theorem toPNat'_coe {n : ℕ} : 0 < n → (n.toPnat' : ℕ) = n :=

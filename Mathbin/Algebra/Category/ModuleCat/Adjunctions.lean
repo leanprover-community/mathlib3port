@@ -47,10 +47,10 @@ def free : Type u ⥤ ModuleCat R
   map X Y f := Finsupp.lmapDomain _ _ f
   map_id' := by
     intros
-    exact Finsupp.lmap_domain_id _ _
+    exact Finsupp.lmapDomain_id _ _
   map_comp' := by
     intros
-    exact Finsupp.lmap_domain_comp _ _ _ _
+    exact Finsupp.lmapDomain_comp _ _ _ _
 #align Module.free ModuleCat.free
 
 /-- The free-forgetful adjunction for R-modules.
@@ -61,8 +61,7 @@ def adj : free R ⊣ forget (ModuleCat.{u} R) :=
       hom_equiv_naturality_left_symm' := fun _ _ M f g =>
         Finsupp.lhom_ext' fun x =>
           LinearMap.ext_ring
-            (Finsupp.sum_map_domain_index_add_monoid_hom fun y =>
-                (smulAddHom R M).flip (g y)).symm }
+            (Finsupp.sum_mapDomain_index_addMonoidHom fun y => (smulAddHom R M).flip (g y)).symm }
 #align Module.adj ModuleCat.adj
 
 instance : IsRightAdjoint (forget (ModuleCat.{u} R)) :=
@@ -101,8 +100,8 @@ theorem μ_natural {X Y X' Y' : Type u} (f : X ⟶ Y) (g : X' ⟶ Y') :
   intros
   ext (x x'⟨y, y'⟩)
   dsimp [μ]
-  simp_rw [Finsupp.map_domain_single, finsupp_tensor_finsupp'_single_tmul_single, mul_one,
-    Finsupp.map_domain_single, CategoryTheory.tensor_apply]
+  simp_rw [Finsupp.mapDomain_single, finsuppTensorFinsupp'_single_tmul_single, mul_one,
+    Finsupp.mapDomain_single, CategoryTheory.tensor_apply]
 #align Module.free.μ_natural ModuleCat.free.μ_natural
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -113,9 +112,9 @@ theorem left_unitality (X : Type u) :
   intros
   ext
   dsimp [ε, μ]
-  simp_rw [finsupp_tensor_finsupp'_single_tmul_single,
-    ModuleCat.monoidalCategory.left_unitor_hom_apply, Finsupp.smul_single', mul_one,
-    Finsupp.map_domain_single, CategoryTheory.left_unitor_hom_apply]
+  simp_rw [finsuppTensorFinsupp'_single_tmul_single,
+    ModuleCat.monoidalCategory.leftUnitor_hom_apply, Finsupp.smul_single', mul_one,
+    Finsupp.mapDomain_single, CategoryTheory.leftUnitor_hom_apply]
 #align Module.free.left_unitality ModuleCat.free.left_unitality
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -126,9 +125,9 @@ theorem right_unitality (X : Type u) :
   intros
   ext
   dsimp [ε, μ]
-  simp_rw [finsupp_tensor_finsupp'_single_tmul_single,
-    ModuleCat.monoidalCategory.right_unitor_hom_apply, Finsupp.smul_single', mul_one,
-    Finsupp.map_domain_single, CategoryTheory.right_unitor_hom_apply]
+  simp_rw [finsuppTensorFinsupp'_single_tmul_single,
+    ModuleCat.monoidalCategory.rightUnitor_hom_apply, Finsupp.smul_single', mul_one,
+    Finsupp.mapDomain_single, CategoryTheory.rightUnitor_hom_apply]
 #align Module.free.right_unitality ModuleCat.free.right_unitality
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -143,7 +142,7 @@ theorem associativity (X Y Z : Type u) :
   intros
   ext
   dsimp [μ]
-  simp_rw [finsupp_tensor_finsupp'_single_tmul_single, Finsupp.map_domain_single, mul_one,
+  simp_rw [finsuppTensorFinsupp'_single_tmul_single, Finsupp.mapDomain_single, mul_one,
     CategoryTheory.associator_hom_apply]
 #align Module.free.associativity ModuleCat.free.associativity
 

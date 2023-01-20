@@ -82,10 +82,10 @@ class SubringClass (S : Type _) (R : outParam <| Type u) [Ring R] [SetLike S R] 
 #align subring_class SubringClass
 
 -- See note [lower instance priority]
-instance (priority := 100) SubringClass.add_subgroup_class (S : Type _) (R : outParam <| Type u)
+instance (priority := 100) SubringClass.addSubgroupClass (S : Type _) (R : outParam <| Type u)
     [SetLike S R] [Ring R] [h : SubringClass S R] : AddSubgroupClass S R :=
   { h with }
-#align subring_class.add_subgroup_class SubringClass.add_subgroup_class
+#align subring_class.add_subgroup_class SubringClass.addSubgroupClass
 
 variable [SetLike S R] [hSR : SubringClass S R] (s : S)
 
@@ -164,9 +164,9 @@ def subtype (s : S) : s →+* R :=
 #align subring_class.subtype SubringClass.subtype
 
 @[simp]
-theorem coe_subtype : (subtype s : s → R) = coe :=
+theorem coeSubtype : (subtype s : s → R) = coe :=
   rfl
-#align subring_class.coe_subtype SubringClass.coe_subtype
+#align subring_class.coe_subtype SubringClass.coeSubtype
 
 @[simp, norm_cast]
 theorem coe_nat_cast (n : ℕ) : ((n : s) : R) = n :=
@@ -261,47 +261,46 @@ theorem copy_eq (S : Subring R) (s : Set R) (hs : s = ↑S) : S.copy s hs = S :=
   SetLike.coe_injective hs
 #align subring.copy_eq Subring.copy_eq
 
-theorem to_subsemiring_injective : Function.Injective (toSubsemiring : Subring R → Subsemiring R)
+theorem toSubsemiring_injective : Function.Injective (toSubsemiring : Subring R → Subsemiring R)
   | r, s, h => ext (SetLike.ext_iff.mp h : _)
-#align subring.to_subsemiring_injective Subring.to_subsemiring_injective
+#align subring.to_subsemiring_injective Subring.toSubsemiring_injective
 
 @[mono]
-theorem to_subsemiring_strict_mono : StrictMono (toSubsemiring : Subring R → Subsemiring R) :=
+theorem toSubsemiring_strictMono : StrictMono (toSubsemiring : Subring R → Subsemiring R) :=
   fun _ _ => id
-#align subring.to_subsemiring_strict_mono Subring.to_subsemiring_strict_mono
+#align subring.to_subsemiring_strict_mono Subring.toSubsemiring_strictMono
 
 @[mono]
-theorem to_subsemiring_mono : Monotone (toSubsemiring : Subring R → Subsemiring R) :=
-  to_subsemiring_strict_mono.Monotone
-#align subring.to_subsemiring_mono Subring.to_subsemiring_mono
+theorem toSubsemiring_mono : Monotone (toSubsemiring : Subring R → Subsemiring R) :=
+  toSubsemiring_strictMono.Monotone
+#align subring.to_subsemiring_mono Subring.toSubsemiring_mono
 
-theorem to_add_subgroup_injective : Function.Injective (toAddSubgroup : Subring R → AddSubgroup R)
+theorem toAddSubgroup_injective : Function.Injective (toAddSubgroup : Subring R → AddSubgroup R)
   | r, s, h => ext (SetLike.ext_iff.mp h : _)
-#align subring.to_add_subgroup_injective Subring.to_add_subgroup_injective
+#align subring.to_add_subgroup_injective Subring.toAddSubgroup_injective
 
 @[mono]
-theorem to_add_subgroup_strict_mono : StrictMono (toAddSubgroup : Subring R → AddSubgroup R) :=
+theorem toAddSubgroup_strictMono : StrictMono (toAddSubgroup : Subring R → AddSubgroup R) :=
   fun _ _ => id
-#align subring.to_add_subgroup_strict_mono Subring.to_add_subgroup_strict_mono
+#align subring.to_add_subgroup_strict_mono Subring.toAddSubgroup_strictMono
 
 @[mono]
-theorem to_add_subgroup_mono : Monotone (toAddSubgroup : Subring R → AddSubgroup R) :=
-  to_add_subgroup_strict_mono.Monotone
-#align subring.to_add_subgroup_mono Subring.to_add_subgroup_mono
+theorem toAddSubgroup_mono : Monotone (toAddSubgroup : Subring R → AddSubgroup R) :=
+  toAddSubgroup_strictMono.Monotone
+#align subring.to_add_subgroup_mono Subring.toAddSubgroup_mono
 
-theorem to_submonoid_injective : Function.Injective (toSubmonoid : Subring R → Submonoid R)
+theorem toSubmonoid_injective : Function.Injective (toSubmonoid : Subring R → Submonoid R)
   | r, s, h => ext (SetLike.ext_iff.mp h : _)
-#align subring.to_submonoid_injective Subring.to_submonoid_injective
+#align subring.to_submonoid_injective Subring.toSubmonoid_injective
 
 @[mono]
-theorem to_submonoid_strict_mono : StrictMono (toSubmonoid : Subring R → Submonoid R) := fun _ _ =>
-  id
-#align subring.to_submonoid_strict_mono Subring.to_submonoid_strict_mono
+theorem toSubmonoid_strictMono : StrictMono (toSubmonoid : Subring R → Submonoid R) := fun _ _ => id
+#align subring.to_submonoid_strict_mono Subring.toSubmonoid_strictMono
 
 @[mono]
-theorem to_submonoid_mono : Monotone (toSubmonoid : Subring R → Submonoid R) :=
-  to_submonoid_strict_mono.Monotone
-#align subring.to_submonoid_mono Subring.to_submonoid_mono
+theorem toSubmonoid_mono : Monotone (toSubmonoid : Subring R → Submonoid R) :=
+  toSubmonoid_strictMono.Monotone
+#align subring.to_submonoid_mono Subring.toSubmonoid_mono
 
 /-- Construct a `subring R` from a set `s`, a submonoid `sm`, and an additive
 subgroup `sa` such that `x ∈ s ↔ x ∈ sm ↔ x ∈ sa`. -/
@@ -328,16 +327,16 @@ theorem mem_mk' {s : Set R} {sm : Submonoid R} (hm : ↑sm = s) {sa : AddSubgrou
 #align subring.mem_mk' Subring.mem_mk'
 
 @[simp]
-theorem mk'_to_submonoid {s : Set R} {sm : Submonoid R} (hm : ↑sm = s) {sa : AddSubgroup R}
+theorem mk'_toSubmonoid {s : Set R} {sm : Submonoid R} (hm : ↑sm = s) {sa : AddSubgroup R}
     (ha : ↑sa = s) : (Subring.mk' s sm sa hm ha).toSubmonoid = sm :=
   SetLike.coe_injective hm.symm
-#align subring.mk'_to_submonoid Subring.mk'_to_submonoid
+#align subring.mk'_to_submonoid Subring.mk'_toSubmonoid
 
 @[simp]
-theorem mk'_to_add_subgroup {s : Set R} {sm : Submonoid R} (hm : ↑sm = s) {sa : AddSubgroup R}
+theorem mk'_toAddSubgroup {s : Set R} {sm : Submonoid R} (hm : ↑sm = s) {sa : AddSubgroup R}
     (ha : ↑sa = s) : (Subring.mk' s sm sa hm ha).toAddSubgroup = sa :=
   SetLike.coe_injective ha.symm
-#align subring.mk'_to_add_subgroup Subring.mk'_to_add_subgroup
+#align subring.mk'_to_add_subgroup Subring.mk'_toAddSubgroup
 
 end Subring
 
@@ -523,9 +522,9 @@ def subtype (s : Subring R) : s →+* R :=
 #align subring.subtype Subring.subtype
 
 @[simp]
-theorem coe_subtype : ⇑s.Subtype = coe :=
+theorem coeSubtype : ⇑s.Subtype = coe :=
   rfl
-#align subring.coe_subtype Subring.coe_subtype
+#align subring.coe_subtype Subring.coeSubtype
 
 @[simp, norm_cast]
 theorem coe_nat_cast : ∀ n : ℕ, ((n : s) : R) = n :=
@@ -541,24 +540,24 @@ theorem coe_int_cast : ∀ n : ℤ, ((n : s) : R) = n :=
 
 
 @[simp]
-theorem mem_to_submonoid {s : Subring R} {x : R} : x ∈ s.toSubmonoid ↔ x ∈ s :=
+theorem mem_toSubmonoid {s : Subring R} {x : R} : x ∈ s.toSubmonoid ↔ x ∈ s :=
   Iff.rfl
-#align subring.mem_to_submonoid Subring.mem_to_submonoid
+#align subring.mem_to_submonoid Subring.mem_toSubmonoid
 
 @[simp]
-theorem coe_to_submonoid (s : Subring R) : (s.toSubmonoid : Set R) = s :=
+theorem coe_toSubmonoid (s : Subring R) : (s.toSubmonoid : Set R) = s :=
   rfl
-#align subring.coe_to_submonoid Subring.coe_to_submonoid
+#align subring.coe_to_submonoid Subring.coe_toSubmonoid
 
 @[simp]
-theorem mem_to_add_subgroup {s : Subring R} {x : R} : x ∈ s.toAddSubgroup ↔ x ∈ s :=
+theorem mem_toAddSubgroup {s : Subring R} {x : R} : x ∈ s.toAddSubgroup ↔ x ∈ s :=
   Iff.rfl
-#align subring.mem_to_add_subgroup Subring.mem_to_add_subgroup
+#align subring.mem_to_add_subgroup Subring.mem_toAddSubgroup
 
 @[simp]
-theorem coe_to_add_subgroup (s : Subring R) : (s.toAddSubgroup : Set R) = s :=
+theorem coe_toAddSubgroup (s : Subring R) : (s.toAddSubgroup : Set R) = s :=
   rfl
-#align subring.coe_to_add_subgroup Subring.coe_to_add_subgroup
+#align subring.coe_to_add_subgroup Subring.coe_toAddSubgroup
 
 /-! ## top -/
 
@@ -654,10 +653,10 @@ noncomputable def equivMapOfInjective (f : R →+* S) (hf : Function.Injective f
 #align subring.equiv_map_of_injective Subring.equivMapOfInjective
 
 @[simp]
-theorem coe_equiv_map_of_injective_apply (f : R →+* S) (hf : Function.Injective f) (x : s) :
+theorem coe_equivMapOfInjective_apply (f : R →+* S) (hf : Function.Injective f) (x : s) :
     (equivMapOfInjective s f hf x : S) = f x :=
   rfl
-#align subring.coe_equiv_map_of_injective_apply Subring.coe_equiv_map_of_injective_apply
+#align subring.coe_equiv_map_of_injective_apply Subring.coe_equivMapOfInjective_apply
 
 end Subring
 
@@ -749,34 +748,34 @@ instance : InfSet (Subring R) :=
       (by simp) (by simp)⟩
 
 @[simp, norm_cast]
-theorem coe_Inf (S : Set (Subring R)) : ((infₛ S : Subring R) : Set R) = ⋂ s ∈ S, ↑s :=
+theorem coe_infₛ (S : Set (Subring R)) : ((infₛ S : Subring R) : Set R) = ⋂ s ∈ S, ↑s :=
   rfl
-#align subring.coe_Inf Subring.coe_Inf
+#align subring.coe_Inf Subring.coe_infₛ
 
-theorem mem_Inf {S : Set (Subring R)} {x : R} : x ∈ infₛ S ↔ ∀ p ∈ S, x ∈ p :=
+theorem mem_infₛ {S : Set (Subring R)} {x : R} : x ∈ infₛ S ↔ ∀ p ∈ S, x ∈ p :=
   Set.mem_interᵢ₂
-#align subring.mem_Inf Subring.mem_Inf
+#align subring.mem_Inf Subring.mem_infₛ
 
 @[simp, norm_cast]
-theorem coe_infi {ι : Sort _} {S : ι → Subring R} : (↑(⨅ i, S i) : Set R) = ⋂ i, S i := by
+theorem coe_infᵢ {ι : Sort _} {S : ι → Subring R} : (↑(⨅ i, S i) : Set R) = ⋂ i, S i := by
   simp only [infᵢ, coe_Inf, Set.binterᵢ_range]
-#align subring.coe_infi Subring.coe_infi
+#align subring.coe_infi Subring.coe_infᵢ
 
-theorem mem_infi {ι : Sort _} {S : ι → Subring R} {x : R} : (x ∈ ⨅ i, S i) ↔ ∀ i, x ∈ S i := by
+theorem mem_infᵢ {ι : Sort _} {S : ι → Subring R} {x : R} : (x ∈ ⨅ i, S i) ↔ ∀ i, x ∈ S i := by
   simp only [infᵢ, mem_Inf, Set.forall_range_iff]
-#align subring.mem_infi Subring.mem_infi
+#align subring.mem_infi Subring.mem_infᵢ
 
 @[simp]
-theorem Inf_to_submonoid (s : Set (Subring R)) :
+theorem infₛ_toSubmonoid (s : Set (Subring R)) :
     (infₛ s).toSubmonoid = ⨅ t ∈ s, Subring.toSubmonoid t :=
-  mk'_to_submonoid _ _
-#align subring.Inf_to_submonoid Subring.Inf_to_submonoid
+  mk'_toSubmonoid _ _
+#align subring.Inf_to_submonoid Subring.infₛ_toSubmonoid
 
 @[simp]
-theorem Inf_to_add_subgroup (s : Set (Subring R)) :
+theorem infₛ_toAddSubgroup (s : Set (Subring R)) :
     (infₛ s).toAddSubgroup = ⨅ t ∈ s, Subring.toAddSubgroup t :=
-  mk'_to_add_subgroup _ _
-#align subring.Inf_to_add_subgroup Subring.Inf_to_add_subgroup
+  mk'_toAddSubgroup _ _
+#align subring.Inf_to_add_subgroup Subring.infₛ_toAddSubgroup
 
 /-- Subrings of a ring form a complete lattice. -/
 instance : CompleteLattice (Subring R) :=
@@ -818,9 +817,9 @@ theorem coe_center : ↑(center R) = Set.center R :=
 #align subring.coe_center Subring.coe_center
 
 @[simp]
-theorem center_to_subsemiring : (center R).toSubsemiring = Subsemiring.center R :=
+theorem center_toSubsemiring : (center R).toSubsemiring = Subsemiring.center R :=
   rfl
-#align subring.center_to_subsemiring Subring.center_to_subsemiring
+#align subring.center_to_subsemiring Subring.center_toSubsemiring
 
 variable {R}
 
@@ -1033,31 +1032,31 @@ theorem closure_union (s t : Set R) : closure (s ∪ t) = closure s ⊔ closure 
   (Subring.gi R).gc.l_sup
 #align subring.closure_union Subring.closure_union
 
-theorem closure_Union {ι} (s : ι → Set R) : closure (⋃ i, s i) = ⨆ i, closure (s i) :=
+theorem closure_unionᵢ {ι} (s : ι → Set R) : closure (⋃ i, s i) = ⨆ i, closure (s i) :=
   (Subring.gi R).gc.l_supr
-#align subring.closure_Union Subring.closure_Union
+#align subring.closure_Union Subring.closure_unionᵢ
 
-theorem closure_sUnion (s : Set (Set R)) : closure (⋃₀ s) = ⨆ t ∈ s, closure t :=
+theorem closure_unionₛ (s : Set (Set R)) : closure (⋃₀ s) = ⨆ t ∈ s, closure t :=
   (Subring.gi R).gc.l_Sup
-#align subring.closure_sUnion Subring.closure_sUnion
+#align subring.closure_sUnion Subring.closure_unionₛ
 
 theorem map_sup (s t : Subring R) (f : R →+* S) : (s ⊔ t).map f = s.map f ⊔ t.map f :=
   (gc_map_comap f).l_sup
 #align subring.map_sup Subring.map_sup
 
-theorem map_supr {ι : Sort _} (f : R →+* S) (s : ι → Subring R) :
+theorem map_supᵢ {ι : Sort _} (f : R →+* S) (s : ι → Subring R) :
     (supᵢ s).map f = ⨆ i, (s i).map f :=
   (gc_map_comap f).l_supr
-#align subring.map_supr Subring.map_supr
+#align subring.map_supr Subring.map_supᵢ
 
 theorem comap_inf (s t : Subring S) (f : R →+* S) : (s ⊓ t).comap f = s.comap f ⊓ t.comap f :=
   (gc_map_comap f).u_inf
 #align subring.comap_inf Subring.comap_inf
 
-theorem comap_infi {ι : Sort _} (f : R →+* S) (s : ι → Subring S) :
+theorem comap_infᵢ {ι : Sort _} (f : R →+* S) (s : ι → Subring S) :
     (infᵢ s).comap f = ⨅ i, (s i).comap f :=
   (gc_map_comap f).u_infi
-#align subring.comap_infi Subring.comap_infi
+#align subring.comap_infi Subring.comap_infᵢ
 
 @[simp]
 theorem map_bot (f : R →+* S) : (⊥ : Subring R).map f = ⊥ :=
@@ -1123,34 +1122,34 @@ def prodEquiv (s : Subring R) (t : Subring S) : s.Prod t ≃+* s × t :=
 /-- The underlying set of a non-empty directed Sup of subrings is just a union of the subrings.
   Note that this fails without the directedness assumption (the union of two subrings is
   typically not a subring) -/
-theorem mem_supr_of_directed {ι} [hι : Nonempty ι] {S : ι → Subring R} (hS : Directed (· ≤ ·) S)
+theorem mem_supᵢ_of_directed {ι} [hι : Nonempty ι] {S : ι → Subring R} (hS : Directed (· ≤ ·) S)
     {x : R} : (x ∈ ⨆ i, S i) ↔ ∃ i, x ∈ S i :=
   by
   refine' ⟨_, fun ⟨i, hi⟩ => (SetLike.le_def.1 <| le_supᵢ S i) hi⟩
   let U : Subring R :=
     Subring.mk' (⋃ i, (S i : Set R)) (⨆ i, (S i).toSubmonoid) (⨆ i, (S i).toAddSubgroup)
-      (Submonoid.coe_supr_of_directed <| hS.mono_comp _ fun _ _ => id)
-      (AddSubgroup.coe_supr_of_directed <| hS.mono_comp _ fun _ _ => id)
+      (Submonoid.coe_supᵢ_of_directed <| hS.mono_comp _ fun _ _ => id)
+      (AddSubgroup.coe_supᵢ_of_directed <| hS.mono_comp _ fun _ _ => id)
   suffices (⨆ i, S i) ≤ U by simpa using @this x
   exact supᵢ_le fun i x hx => Set.mem_unionᵢ.2 ⟨i, hx⟩
-#align subring.mem_supr_of_directed Subring.mem_supr_of_directed
+#align subring.mem_supr_of_directed Subring.mem_supᵢ_of_directed
 
-theorem coe_supr_of_directed {ι} [hι : Nonempty ι] {S : ι → Subring R} (hS : Directed (· ≤ ·) S) :
+theorem coe_supᵢ_of_directed {ι} [hι : Nonempty ι] {S : ι → Subring R} (hS : Directed (· ≤ ·) S) :
     ((⨆ i, S i : Subring R) : Set R) = ⋃ i, ↑(S i) :=
   Set.ext fun x => by simp [mem_supr_of_directed hS]
-#align subring.coe_supr_of_directed Subring.coe_supr_of_directed
+#align subring.coe_supr_of_directed Subring.coe_supᵢ_of_directed
 
-theorem mem_Sup_of_directed_on {S : Set (Subring R)} (Sne : S.Nonempty) (hS : DirectedOn (· ≤ ·) S)
+theorem mem_supₛ_of_directedOn {S : Set (Subring R)} (Sne : S.Nonempty) (hS : DirectedOn (· ≤ ·) S)
     {x : R} : x ∈ supₛ S ↔ ∃ s ∈ S, x ∈ s :=
   by
   haveI : Nonempty S := Sne.to_subtype
   simp only [supₛ_eq_supᵢ', mem_supr_of_directed hS.directed_coe, SetCoe.exists, Subtype.coe_mk]
-#align subring.mem_Sup_of_directed_on Subring.mem_Sup_of_directed_on
+#align subring.mem_Sup_of_directed_on Subring.mem_supₛ_of_directedOn
 
-theorem coe_Sup_of_directed_on {S : Set (Subring R)} (Sne : S.Nonempty)
+theorem coe_supₛ_of_directedOn {S : Set (Subring R)} (Sne : S.Nonempty)
     (hS : DirectedOn (· ≤ ·) S) : (↑(supₛ S) : Set R) = ⋃ s ∈ S, ↑s :=
   Set.ext fun x => by simp [mem_Sup_of_directed_on Sne hS]
-#align subring.coe_Sup_of_directed_on Subring.coe_Sup_of_directed_on
+#align subring.coe_Sup_of_directed_on Subring.coe_supₛ_of_directedOn
 
 theorem mem_map_equiv {f : R ≃+* S} {K : Subring R} {x : S} :
     x ∈ K.map (f : R →+* S) ↔ f.symm x ∈ K :=
@@ -1183,15 +1182,15 @@ def rangeRestrict (f : R →+* S) : R →+* f.range :=
 #align ring_hom.range_restrict RingHom.rangeRestrict
 
 @[simp]
-theorem coe_range_restrict (f : R →+* S) (x : R) : (f.range_restrict x : S) = f x :=
+theorem coe_rangeRestrict (f : R →+* S) (x : R) : (f.range_restrict x : S) = f x :=
   rfl
-#align ring_hom.coe_range_restrict RingHom.coe_range_restrict
+#align ring_hom.coe_range_restrict RingHom.coe_rangeRestrict
 
-theorem range_restrict_surjective (f : R →+* S) : Function.Surjective f.range_restrict :=
+theorem rangeRestrict_surjective (f : R →+* S) : Function.Surjective f.range_restrict :=
   fun ⟨y, hy⟩ =>
   let ⟨x, hx⟩ := mem_range.mp hy
   ⟨x, Subtype.ext hx⟩
-#align ring_hom.range_restrict_surjective RingHom.range_restrict_surjective
+#align ring_hom.range_restrict_surjective RingHom.rangeRestrict_surjective
 
 theorem range_top_iff_surjective {f : R →+* S} :
     f.range = (⊤ : Subring S) ↔ Function.Surjective f :=
@@ -1211,24 +1210,24 @@ def eqLocus (f g : R →+* S) : Subring R :=
 #align ring_hom.eq_locus RingHom.eqLocus
 
 @[simp]
-theorem eq_locus_same (f : R →+* S) : f.eqLocus f = ⊤ :=
+theorem eqLocus_same (f : R →+* S) : f.eqLocus f = ⊤ :=
   SetLike.ext fun _ => eq_self_iff_true _
-#align ring_hom.eq_locus_same RingHom.eq_locus_same
+#align ring_hom.eq_locus_same RingHom.eqLocus_same
 
 /-- If two ring homomorphisms are equal on a set, then they are equal on its subring closure. -/
-theorem eq_on_set_closure {f g : R →+* S} {s : Set R} (h : Set.EqOn f g s) :
+theorem eqOn_set_closure {f g : R →+* S} {s : Set R} (h : Set.EqOn f g s) :
     Set.EqOn f g (closure s) :=
   show closure s ≤ f.eqLocus g from closure_le.2 h
-#align ring_hom.eq_on_set_closure RingHom.eq_on_set_closure
+#align ring_hom.eq_on_set_closure RingHom.eqOn_set_closure
 
-theorem eq_of_eq_on_set_top {f g : R →+* S} (h : Set.EqOn f g (⊤ : Subring R)) : f = g :=
+theorem eq_of_eqOn_set_top {f g : R →+* S} (h : Set.EqOn f g (⊤ : Subring R)) : f = g :=
   ext fun x => h trivial
-#align ring_hom.eq_of_eq_on_set_top RingHom.eq_of_eq_on_set_top
+#align ring_hom.eq_of_eq_on_set_top RingHom.eq_of_eqOn_set_top
 
-theorem eq_of_eq_on_set_dense {s : Set R} (hs : closure s = ⊤) {f g : R →+* S} (h : s.EqOn f g) :
+theorem eq_of_eqOn_set_dense {s : Set R} (hs : closure s = ⊤) {f g : R →+* S} (h : s.EqOn f g) :
     f = g :=
-  eq_of_eq_on_set_top <| hs ▸ eq_on_set_closure h
-#align ring_hom.eq_of_eq_on_set_dense RingHom.eq_of_eq_on_set_dense
+  eq_of_eq_on_set_top <| hs ▸ eqOn_set_closure h
+#align ring_hom.eq_of_eq_on_set_dense RingHom.eq_of_eqOn_set_dense
 
 theorem closure_preimage_le (f : R →+* S) (s : Set S) : closure (f ⁻¹' s) ≤ (closure s).comap f :=
   closure_le.2 fun x hx => SetLike.mem_coe.2 <| mem_comap.2 <| subset_closure hx
@@ -1307,16 +1306,16 @@ def ofLeftInverse {g : S → R} {f : R →+* S} (h : Function.LeftInverse g f) :
 #align ring_equiv.of_left_inverse RingEquiv.ofLeftInverse
 
 @[simp]
-theorem of_left_inverse_apply {g : S → R} {f : R →+* S} (h : Function.LeftInverse g f) (x : R) :
+theorem ofLeftInverse_apply {g : S → R} {f : R →+* S} (h : Function.LeftInverse g f) (x : R) :
     ↑(ofLeftInverse h x) = f x :=
   rfl
-#align ring_equiv.of_left_inverse_apply RingEquiv.of_left_inverse_apply
+#align ring_equiv.of_left_inverse_apply RingEquiv.ofLeftInverse_apply
 
 @[simp]
-theorem of_left_inverse_symm_apply {g : S → R} {f : R →+* S} (h : Function.LeftInverse g f)
+theorem ofLeftInverse_symm_apply {g : S → R} {f : R →+* S} (h : Function.LeftInverse g f)
     (x : f.range) : (ofLeftInverse h).symm x = g x :=
   rfl
-#align ring_equiv.of_left_inverse_symm_apply RingEquiv.of_left_inverse_symm_apply
+#align ring_equiv.of_left_inverse_symm_apply RingEquiv.ofLeftInverse_symm_apply
 
 /-- Given an equivalence `e : R ≃+* S` of rings and a subring `s` of `R`,
 `subring_equiv_map e s` is the induced equivalence between `s` and `s.map e` -/
@@ -1418,15 +1417,15 @@ theorem smul_def [SMul R α] {S : Subring R} (g : S) (m : α) : g • m = (g : R
   rfl
 #align subring.smul_def Subring.smul_def
 
-instance smul_comm_class_left [SMul R β] [SMul α β] [SMulCommClass R α β] (S : Subring R) :
+instance sMulCommClass_left [SMul R β] [SMul α β] [SMulCommClass R α β] (S : Subring R) :
     SMulCommClass S α β :=
   S.toSubsemiring.smul_comm_class_left
-#align subring.smul_comm_class_left Subring.smul_comm_class_left
+#align subring.smul_comm_class_left Subring.sMulCommClass_left
 
-instance smul_comm_class_right [SMul α β] [SMul R β] [SMulCommClass α R β] (S : Subring R) :
+instance sMulCommClass_right [SMul α β] [SMul R β] [SMulCommClass α R β] (S : Subring R) :
     SMulCommClass α S β :=
   S.toSubsemiring.smul_comm_class_right
-#align subring.smul_comm_class_right Subring.smul_comm_class_right
+#align subring.smul_comm_class_right Subring.sMulCommClass_right
 
 /-- Note that this provides `is_scalar_tower S R R` which is needed by `smul_mul_assoc`. -/
 instance [SMul α β] [SMul R α] [SMul R β] [IsScalarTower R α β] (S : Subring R) :
@@ -1465,14 +1464,14 @@ instance [Semiring α] [MulSemiringAction R α] (S : Subring R) : MulSemiringAct
   S.toSubmonoid.MulSemiringAction
 
 /-- The center of a semiring acts commutatively on that semiring. -/
-instance center.smul_comm_class_left : SMulCommClass (center R) R R :=
-  Subsemiring.center.smul_comm_class_left
-#align subring.center.smul_comm_class_left Subring.center.smul_comm_class_left
+instance center.sMulCommClass_left : SMulCommClass (center R) R R :=
+  Subsemiring.center.sMulCommClass_left
+#align subring.center.smul_comm_class_left Subring.center.sMulCommClass_left
 
 /-- The center of a semiring acts commutatively on that semiring. -/
-instance center.smul_comm_class_right : SMulCommClass R (center R) R :=
-  Subsemiring.center.smul_comm_class_right
-#align subring.center.smul_comm_class_right Subring.center.smul_comm_class_right
+instance center.sMulCommClass_right : SMulCommClass R (center R) R :=
+  Subsemiring.center.sMulCommClass_right
+#align subring.center.smul_comm_class_right Subring.center.sMulCommClass_right
 
 end Subring
 
@@ -1490,8 +1489,8 @@ def Units.posSubgroup (R : Type _) [LinearOrderedSemiring R] : Subgroup Rˣ :=
 #align units.pos_subgroup Units.posSubgroup
 
 @[simp]
-theorem Units.mem_pos_subgroup {R : Type _} [LinearOrderedSemiring R] (u : Rˣ) :
+theorem Units.mem_posSubgroup {R : Type _} [LinearOrderedSemiring R] (u : Rˣ) :
     u ∈ Units.posSubgroup R ↔ (0 : R) < u :=
   Iff.rfl
-#align units.mem_pos_subgroup Units.mem_pos_subgroup
+#align units.mem_pos_subgroup Units.mem_posSubgroup
 

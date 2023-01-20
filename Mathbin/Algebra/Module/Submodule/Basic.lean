@@ -72,9 +72,9 @@ instance : AddSubmonoidClass (Submodule R M) M
 instance : SubmoduleClass (Submodule R M) R M where smul_mem := smul_mem'
 
 @[simp]
-theorem mem_to_add_submonoid (p : Submodule R M) (x : M) : x ∈ p.toAddSubmonoid ↔ x ∈ p :=
+theorem mem_toAddSubmonoid (p : Submodule R M) (x : M) : x ∈ p.toAddSubmonoid ↔ x ∈ p :=
   Iff.rfl
-#align submodule.mem_to_add_submonoid Submodule.mem_to_add_submonoid
+#align submodule.mem_to_add_submonoid Submodule.mem_toAddSubmonoid
 
 variable {p q : Submodule R M}
 
@@ -118,58 +118,57 @@ theorem copy_eq (S : Submodule R M) (s : Set M) (hs : s = ↑S) : S.copy s hs = 
   SetLike.coe_injective hs
 #align submodule.copy_eq Submodule.copy_eq
 
-theorem to_add_submonoid_injective : Injective (toAddSubmonoid : Submodule R M → AddSubmonoid M) :=
+theorem toAddSubmonoid_injective : Injective (toAddSubmonoid : Submodule R M → AddSubmonoid M) :=
   fun p q h => SetLike.ext'_iff.2 (show _ from SetLike.ext'_iff.1 h)
-#align submodule.to_add_submonoid_injective Submodule.to_add_submonoid_injective
+#align submodule.to_add_submonoid_injective Submodule.toAddSubmonoid_injective
 
 @[simp]
-theorem to_add_submonoid_eq : p.toAddSubmonoid = q.toAddSubmonoid ↔ p = q :=
-  to_add_submonoid_injective.eq_iff
-#align submodule.to_add_submonoid_eq Submodule.to_add_submonoid_eq
+theorem toAddSubmonoid_eq : p.toAddSubmonoid = q.toAddSubmonoid ↔ p = q :=
+  toAddSubmonoid_injective.eq_iff
+#align submodule.to_add_submonoid_eq Submodule.toAddSubmonoid_eq
 
 @[mono]
-theorem to_add_submonoid_strict_mono :
-    StrictMono (toAddSubmonoid : Submodule R M → AddSubmonoid M) := fun _ _ => id
-#align submodule.to_add_submonoid_strict_mono Submodule.to_add_submonoid_strict_mono
+theorem toAddSubmonoid_strictMono : StrictMono (toAddSubmonoid : Submodule R M → AddSubmonoid M) :=
+  fun _ _ => id
+#align submodule.to_add_submonoid_strict_mono Submodule.toAddSubmonoid_strictMono
 
-theorem to_add_submonoid_le : p.toAddSubmonoid ≤ q.toAddSubmonoid ↔ p ≤ q :=
+theorem toAddSubmonoid_le : p.toAddSubmonoid ≤ q.toAddSubmonoid ↔ p ≤ q :=
   Iff.rfl
-#align submodule.to_add_submonoid_le Submodule.to_add_submonoid_le
+#align submodule.to_add_submonoid_le Submodule.toAddSubmonoid_le
 
 @[mono]
-theorem to_add_submonoid_mono : Monotone (toAddSubmonoid : Submodule R M → AddSubmonoid M) :=
-  to_add_submonoid_strict_mono.Monotone
-#align submodule.to_add_submonoid_mono Submodule.to_add_submonoid_mono
+theorem toAddSubmonoid_mono : Monotone (toAddSubmonoid : Submodule R M → AddSubmonoid M) :=
+  toAddSubmonoid_strictMono.Monotone
+#align submodule.to_add_submonoid_mono Submodule.toAddSubmonoid_mono
 
 @[simp]
-theorem coe_to_add_submonoid (p : Submodule R M) : (p.toAddSubmonoid : Set M) = p :=
+theorem coe_toAddSubmonoid (p : Submodule R M) : (p.toAddSubmonoid : Set M) = p :=
   rfl
-#align submodule.coe_to_add_submonoid Submodule.coe_to_add_submonoid
+#align submodule.coe_to_add_submonoid Submodule.coe_toAddSubmonoid
 
-theorem to_sub_mul_action_injective :
-    Injective (toSubMulAction : Submodule R M → SubMulAction R M) := fun p q h =>
-  SetLike.ext'_iff.2 (show _ from SetLike.ext'_iff.1 h)
-#align submodule.to_sub_mul_action_injective Submodule.to_sub_mul_action_injective
+theorem toSubMulAction_injective : Injective (toSubMulAction : Submodule R M → SubMulAction R M) :=
+  fun p q h => SetLike.ext'_iff.2 (show _ from SetLike.ext'_iff.1 h)
+#align submodule.to_sub_mul_action_injective Submodule.toSubMulAction_injective
 
 @[simp]
-theorem to_sub_mul_action_eq : p.toSubMulAction = q.toSubMulAction ↔ p = q :=
-  to_sub_mul_action_injective.eq_iff
-#align submodule.to_sub_mul_action_eq Submodule.to_sub_mul_action_eq
+theorem toSubMulAction_eq : p.toSubMulAction = q.toSubMulAction ↔ p = q :=
+  toSubMulAction_injective.eq_iff
+#align submodule.to_sub_mul_action_eq Submodule.toSubMulAction_eq
 
 @[mono]
-theorem to_sub_mul_action_strict_mono :
+theorem toSubMulAction_strictMono :
     StrictMono (toSubMulAction : Submodule R M → SubMulAction R M) := fun _ _ => id
-#align submodule.to_sub_mul_action_strict_mono Submodule.to_sub_mul_action_strict_mono
+#align submodule.to_sub_mul_action_strict_mono Submodule.toSubMulAction_strictMono
 
 @[mono]
-theorem to_sub_mul_action_mono : Monotone (toSubMulAction : Submodule R M → SubMulAction R M) :=
-  to_sub_mul_action_strict_mono.Monotone
-#align submodule.to_sub_mul_action_mono Submodule.to_sub_mul_action_mono
+theorem toSubMulAction_mono : Monotone (toSubMulAction : Submodule R M → SubMulAction R M) :=
+  toSubMulAction_strictMono.Monotone
+#align submodule.to_sub_mul_action_mono Submodule.toSubMulAction_mono
 
 @[simp]
-theorem coe_to_sub_mul_action (p : Submodule R M) : (p.toSubMulAction : Set M) = p :=
+theorem coe_toSubMulAction (p : Submodule R M) : (p.toSubMulAction : Set M) = p :=
   rfl
-#align submodule.coe_to_sub_mul_action Submodule.coe_to_sub_mul_action
+#align submodule.coe_to_sub_mul_action Submodule.coe_toSubMulAction
 
 end Submodule
 
@@ -192,9 +191,9 @@ protected def subtype : S' →ₗ[R] M :=
 #align submodule_class.subtype SubmoduleClass.subtype
 
 @[simp]
-protected theorem coe_subtype : (SubmoduleClass.subtype S' : S' → M) = coe :=
+protected theorem coeSubtype : (SubmoduleClass.subtype S' : S' → M) = coe :=
   rfl
-#align submodule_class.coe_subtype SubmoduleClass.coe_subtype
+#align submodule_class.coe_subtype SubmoduleClass.coeSubtype
 
 end SubmoduleClass
 
@@ -340,11 +339,11 @@ instance module' [Semiring S] [SMul S R] [Module S M] [IsScalarTower S R M] : Mo
 instance : Module R p :=
   p.module'
 
-instance no_zero_smul_divisors [NoZeroSMulDivisors R M] : NoZeroSMulDivisors R p :=
+instance noZeroSMulDivisors [NoZeroSMulDivisors R M] : NoZeroSMulDivisors R p :=
   ⟨fun c x h =>
     have : c = 0 ∨ (x : M) = 0 := eq_zero_or_eq_zero_of_smul_eq_zero (congr_arg coe h)
     this.imp_right (@Subtype.ext_iff _ _ x 0).mpr⟩
-#align submodule.no_zero_smul_divisors Submodule.no_zero_smul_divisors
+#align submodule.no_zero_smul_divisors Submodule.noZeroSMulDivisors
 
 /-- Embedding of a submodule `p` to the ambient space `M`. -/
 protected def subtype : p →ₗ[R] M := by refine' { toFun := coe.. } <;> simp [coe_smul]
@@ -355,9 +354,9 @@ theorem subtype_apply (x : p) : p.Subtype x = x :=
 #align submodule.subtype_apply Submodule.subtype_apply
 
 @[simp]
-theorem coe_subtype : (Submodule.subtype p : p → M) = coe :=
+theorem coeSubtype : (Submodule.subtype p : p → M) = coe :=
   rfl
-#align submodule.coe_subtype Submodule.coe_subtype
+#align submodule.coe_subtype Submodule.coeSubtype
 
 theorem injective_subtype : Injective p.Subtype :=
   Subtype.coe_injective
@@ -385,32 +384,32 @@ def restrictScalars (V : Submodule R M) : Submodule S M
 #align submodule.restrict_scalars Submodule.restrictScalars
 
 @[simp]
-theorem coe_restrict_scalars (V : Submodule R M) : (V.restrictScalars S : Set M) = V :=
+theorem coe_restrictScalars (V : Submodule R M) : (V.restrictScalars S : Set M) = V :=
   rfl
-#align submodule.coe_restrict_scalars Submodule.coe_restrict_scalars
+#align submodule.coe_restrict_scalars Submodule.coe_restrictScalars
 
 @[simp]
-theorem restrict_scalars_mem (V : Submodule R M) (m : M) : m ∈ V.restrictScalars S ↔ m ∈ V :=
+theorem restrictScalars_mem (V : Submodule R M) (m : M) : m ∈ V.restrictScalars S ↔ m ∈ V :=
   Iff.refl _
-#align submodule.restrict_scalars_mem Submodule.restrict_scalars_mem
+#align submodule.restrict_scalars_mem Submodule.restrictScalars_mem
 
 @[simp]
-theorem restrict_scalars_self (V : Submodule R M) : V.restrictScalars R = V :=
+theorem restrictScalars_self (V : Submodule R M) : V.restrictScalars R = V :=
   SetLike.coe_injective rfl
-#align submodule.restrict_scalars_self Submodule.restrict_scalars_self
+#align submodule.restrict_scalars_self Submodule.restrictScalars_self
 
 variable (R S M)
 
-theorem restrict_scalars_injective :
+theorem restrictScalars_injective :
     Function.Injective (restrictScalars S : Submodule R M → Submodule S M) := fun V₁ V₂ h =>
   ext <| Set.ext_iff.1 (SetLike.ext'_iff.1 h : _)
-#align submodule.restrict_scalars_injective Submodule.restrict_scalars_injective
+#align submodule.restrict_scalars_injective Submodule.restrictScalars_injective
 
 @[simp]
-theorem restrict_scalars_inj {V₁ V₂ : Submodule R M} :
+theorem restrictScalars_inj {V₁ V₂ : Submodule R M} :
     restrictScalars S V₁ = restrictScalars S V₂ ↔ V₁ = V₂ :=
-  (restrict_scalars_injective S _ _).eq_iff
-#align submodule.restrict_scalars_inj Submodule.restrict_scalars_inj
+  (restrictScalars_injective S _ _).eq_iff
+#align submodule.restrict_scalars_inj Submodule.restrictScalars_inj
 
 /-- Even though `p.restrict_scalars S` has type `submodule S M`, it is still an `R`-module. -/
 instance restrictScalars.origModule (p : Submodule R M) : Module R (p.restrictScalars S) :=
@@ -426,7 +425,7 @@ the lattice of `S`-submodules. -/
 def restrictScalarsEmbedding : Submodule R M ↪o Submodule S M
     where
   toFun := restrictScalars S
-  inj' := restrict_scalars_injective S R M
+  inj' := restrictScalars_injective S R M
   map_rel_iff' p q := by simp [SetLike.le_def]
 #align submodule.restrict_scalars_embedding Submodule.restrictScalarsEmbedding
 
@@ -455,7 +454,7 @@ variable (p p' : Submodule R M)
 variable {r : R} {x y : M}
 
 instance [Module R M] : AddSubgroupClass (Submodule R M) M :=
-  { Submodule.add_submonoid_class with neg_mem := fun p x => p.toSubMulAction.neg_mem }
+  { Submodule.addSubmonoidClass with neg_mem := fun p x => p.toSubMulAction.neg_mem }
 
 protected theorem neg_mem (hx : x ∈ p) : -x ∈ p :=
   neg_mem hx
@@ -467,39 +466,39 @@ def toAddSubgroup : AddSubgroup M :=
 #align submodule.to_add_subgroup Submodule.toAddSubgroup
 
 @[simp]
-theorem coe_to_add_subgroup : (p.toAddSubgroup : Set M) = p :=
+theorem coe_toAddSubgroup : (p.toAddSubgroup : Set M) = p :=
   rfl
-#align submodule.coe_to_add_subgroup Submodule.coe_to_add_subgroup
+#align submodule.coe_to_add_subgroup Submodule.coe_toAddSubgroup
 
 @[simp]
-theorem mem_to_add_subgroup : x ∈ p.toAddSubgroup ↔ x ∈ p :=
+theorem mem_toAddSubgroup : x ∈ p.toAddSubgroup ↔ x ∈ p :=
   Iff.rfl
-#align submodule.mem_to_add_subgroup Submodule.mem_to_add_subgroup
+#align submodule.mem_to_add_subgroup Submodule.mem_toAddSubgroup
 
 include module_M
 
-theorem to_add_subgroup_injective : Injective (toAddSubgroup : Submodule R M → AddSubgroup M)
+theorem toAddSubgroup_injective : Injective (toAddSubgroup : Submodule R M → AddSubgroup M)
   | p, q, h => SetLike.ext (SetLike.ext_iff.1 h : _)
-#align submodule.to_add_subgroup_injective Submodule.to_add_subgroup_injective
+#align submodule.to_add_subgroup_injective Submodule.toAddSubgroup_injective
 
 @[simp]
-theorem to_add_subgroup_eq : p.toAddSubgroup = p'.toAddSubgroup ↔ p = p' :=
-  to_add_subgroup_injective.eq_iff
-#align submodule.to_add_subgroup_eq Submodule.to_add_subgroup_eq
+theorem toAddSubgroup_eq : p.toAddSubgroup = p'.toAddSubgroup ↔ p = p' :=
+  toAddSubgroup_injective.eq_iff
+#align submodule.to_add_subgroup_eq Submodule.toAddSubgroup_eq
 
 @[mono]
-theorem to_add_subgroup_strict_mono : StrictMono (toAddSubgroup : Submodule R M → AddSubgroup M) :=
+theorem toAddSubgroup_strictMono : StrictMono (toAddSubgroup : Submodule R M → AddSubgroup M) :=
   fun _ _ => id
-#align submodule.to_add_subgroup_strict_mono Submodule.to_add_subgroup_strict_mono
+#align submodule.to_add_subgroup_strict_mono Submodule.toAddSubgroup_strictMono
 
-theorem to_add_subgroup_le : p.toAddSubgroup ≤ p'.toAddSubgroup ↔ p ≤ p' :=
+theorem toAddSubgroup_le : p.toAddSubgroup ≤ p'.toAddSubgroup ↔ p ≤ p' :=
   Iff.rfl
-#align submodule.to_add_subgroup_le Submodule.to_add_subgroup_le
+#align submodule.to_add_subgroup_le Submodule.toAddSubgroup_le
 
 @[mono]
-theorem to_add_subgroup_mono : Monotone (toAddSubgroup : Submodule R M → AddSubgroup M) :=
-  to_add_subgroup_strict_mono.Monotone
-#align submodule.to_add_subgroup_mono Submodule.to_add_subgroup_mono
+theorem toAddSubgroup_mono : Monotone (toAddSubgroup : Submodule R M → AddSubgroup M) :=
+  toAddSubgroup_strictMono.Monotone
+#align submodule.to_add_subgroup_mono Submodule.toAddSubgroup_mono
 
 omit module_M
 

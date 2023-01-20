@@ -68,7 +68,7 @@ include hp
 private theorem ghost_component_teichmuller_fun (r : R) (n : ℕ) :
     ghostComponent n (teichmullerFun p r) = r ^ p ^ n :=
   by
-  rw [ghost_component_apply, aeval_witt_polynomial, Finset.sum_eq_single 0, pow_zero, one_mul,
+  rw [ghost_component_apply, aeval_wittPolynomial, Finset.sum_eq_single 0, pow_zero, one_mul,
     tsub_zero]
   · rfl
   · intro i hi h0
@@ -148,15 +148,15 @@ theorem teichmuller_zero : teichmuller p (0 : R) = 0 := by
 /-- `teichmuller` is a natural transformation. -/
 @[simp]
 theorem map_teichmuller (f : R →+* S) (r : R) : map f (teichmuller p r) = teichmuller p (f r) :=
-  map_teichmuller_fun _ _ _
+  map_teichmullerFun _ _ _
 #align witt_vector.map_teichmuller WittVector.map_teichmuller
 
 /-- The `n`-th ghost component of `teichmuller p r` is `r ^ p ^ n`. -/
 @[simp]
-theorem ghost_component_teichmuller (r : R) (n : ℕ) :
+theorem ghostComponent_teichmuller (r : R) (n : ℕ) :
     ghostComponent n (teichmuller p r) = r ^ p ^ n :=
-  ghost_component_teichmuller_fun _ _ _
-#align witt_vector.ghost_component_teichmuller WittVector.ghost_component_teichmuller
+  ghostComponent_teichmullerFun _ _ _
+#align witt_vector.ghost_component_teichmuller WittVector.ghostComponent_teichmuller
 
 end WittVector
 

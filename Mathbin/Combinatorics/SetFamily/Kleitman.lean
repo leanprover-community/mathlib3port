@@ -37,7 +37,7 @@ variable {ι α : Type _} [Fintype α] [DecidableEq α] [Nonempty α]
 
 /-- **Kleitman's theorem**. An intersecting family on `n` elements contains at most `2ⁿ⁻¹` sets, and
 each further intersecting family takes at most half of the sets that are in no previous family. -/
-theorem Finset.card_bUnion_le_of_intersecting (s : Finset ι) (f : ι → Finset (Finset α))
+theorem Finset.card_bunionᵢ_le_of_intersecting (s : Finset ι) (f : ι → Finset (Finset α))
     (hf : ∀ i ∈ s, (f i : Set (Finset α)).Intersecting) :
     (s.bUnion f).card ≤ 2 ^ card α - 2 ^ (card α - s.card) :=
   by
@@ -81,7 +81,7 @@ theorem Finset.card_bUnion_le_of_intersecting (s : Finset ι) (f : ι → Finset
             (mul_le_mul_left <| zero_lt_two' ℕ).2 <| IsUpperSet.card_inter_le_finset _ _).trans
         _
     · rw [coe_bUnion]
-      exact is_upper_set_Union₂ fun i hi => hf₂ _ <| subset_cons _ hi
+      exact isUpperSet_Union₂ fun i hi => hf₂ _ <| subset_cons _ hi
     · rw [coe_compl]
       exact (hf₂ _ <| mem_cons_self _ _).compl
     rw [mul_tsub, card_compl, Fintype.card_finset, mul_left_comm, mul_tsub,
@@ -97,5 +97,5 @@ theorem Finset.card_bUnion_le_of_intersecting (s : Finset ι) (f : ι → Finset
     rw [mul_tsub, two_mul, ← pow_succ, ←
       add_tsub_assoc_of_le (pow_le_pow' (one_le_two : (1 : ℕ) ≤ 2) tsub_le_self),
       tsub_add_eq_add_tsub hs, card_cons, add_tsub_add_eq_tsub_right]
-#align finset.card_bUnion_le_of_intersecting Finset.card_bUnion_le_of_intersecting
+#align finset.card_bUnion_le_of_intersecting Finset.card_bunionᵢ_le_of_intersecting
 

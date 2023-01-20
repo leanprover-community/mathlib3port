@@ -157,19 +157,19 @@ theorem act_symm_apply (x y : R) : (act x).symm y = x ◃⁻¹ y :=
 #align rack.act_symm_apply Rack.act_symm_apply
 
 @[simp]
-theorem inv_act_apply (x y : R) : (act x)⁻¹ y = x ◃⁻¹ y :=
+theorem invAct_apply (x y : R) : (act x)⁻¹ y = x ◃⁻¹ y :=
   rfl
-#align rack.inv_act_apply Rack.inv_act_apply
+#align rack.inv_act_apply Rack.invAct_apply
 
 @[simp]
-theorem inv_act_act_eq (x y : R) : x ◃⁻¹ x ◃ y = y :=
+theorem invAct_act_eq (x y : R) : x ◃⁻¹ x ◃ y = y :=
   left_inv x y
-#align rack.inv_act_act_eq Rack.inv_act_act_eq
+#align rack.inv_act_act_eq Rack.invAct_act_eq
 
 @[simp]
-theorem act_inv_act_eq (x y : R) : x ◃ x ◃⁻¹ y = y :=
+theorem act_invAct_eq (x y : R) : x ◃ x ◃⁻¹ y = y :=
   right_inv x y
-#align rack.act_inv_act_eq Rack.act_inv_act_eq
+#align rack.act_inv_act_eq Rack.act_invAct_eq
 
 theorem left_cancel (x : R) {y y' : R} : x ◃ y = x ◃ y' ↔ y = y' :=
   by
@@ -228,36 +228,36 @@ theorem op_act_op_eq {x y : R} : op x ◃ op y = op (x ◃⁻¹ y) :=
 #align rack.op_act_op_eq Rack.op_act_op_eq
 
 @[simp]
-theorem op_inv_act_op_eq {x y : R} : op x ◃⁻¹ op y = op (x ◃ y) :=
+theorem op_invAct_op_eq {x y : R} : op x ◃⁻¹ op y = op (x ◃ y) :=
   rfl
-#align rack.op_inv_act_op_eq Rack.op_inv_act_op_eq
+#align rack.op_inv_act_op_eq Rack.op_invAct_op_eq
 
 @[simp]
 theorem self_act_act_eq {x y : R} : (x ◃ x) ◃ y = x ◃ y := by rw [← right_inv x y, ← self_distrib]
 #align rack.self_act_act_eq Rack.self_act_act_eq
 
 @[simp]
-theorem self_inv_act_inv_act_eq {x y : R} : (x ◃⁻¹ x) ◃⁻¹ y = x ◃⁻¹ y :=
+theorem self_invAct_invAct_eq {x y : R} : (x ◃⁻¹ x) ◃⁻¹ y = x ◃⁻¹ y :=
   by
   have h := @self_act_act_eq _ _ (op x) (op y)
   simpa using h
-#align rack.self_inv_act_inv_act_eq Rack.self_inv_act_inv_act_eq
+#align rack.self_inv_act_inv_act_eq Rack.self_invAct_invAct_eq
 
 @[simp]
-theorem self_act_inv_act_eq {x y : R} : (x ◃ x) ◃⁻¹ y = x ◃⁻¹ y :=
+theorem self_act_invAct_eq {x y : R} : (x ◃ x) ◃⁻¹ y = x ◃⁻¹ y :=
   by
   rw [← left_cancel (x ◃ x)]
   rw [right_inv]
   rw [self_act_act_eq]
   rw [right_inv]
-#align rack.self_act_inv_act_eq Rack.self_act_inv_act_eq
+#align rack.self_act_inv_act_eq Rack.self_act_invAct_eq
 
 @[simp]
-theorem self_inv_act_act_eq {x y : R} : (x ◃⁻¹ x) ◃ y = x ◃ y :=
+theorem self_invAct_act_eq {x y : R} : (x ◃⁻¹ x) ◃ y = x ◃ y :=
   by
   have h := @self_act_inv_act_eq _ _ (op x) (op y)
   simpa using h
-#align rack.self_inv_act_act_eq Rack.self_inv_act_act_eq
+#align rack.self_inv_act_act_eq Rack.self_invAct_act_eq
 
 theorem self_act_eq_iff_eq {x y : R} : x ◃ x = y ◃ y ↔ x = y :=
   by
@@ -268,11 +268,11 @@ theorem self_act_eq_iff_eq {x y : R} : x ◃ x = y ◃ y ↔ x = y :=
   rw [h, ← left_cancel (y ◃ y), right_inv, self_act_act_eq]
 #align rack.self_act_eq_iff_eq Rack.self_act_eq_iff_eq
 
-theorem self_inv_act_eq_iff_eq {x y : R} : x ◃⁻¹ x = y ◃⁻¹ y ↔ x = y :=
+theorem self_invAct_eq_iff_eq {x y : R} : x ◃⁻¹ x = y ◃⁻¹ y ↔ x = y :=
   by
   have h := @self_act_eq_iff_eq _ _ (op x) (op y)
   simpa using h
-#align rack.self_inv_act_eq_iff_eq Rack.self_inv_act_eq_iff_eq
+#align rack.self_inv_act_eq_iff_eq Rack.self_invAct_eq_iff_eq
 
 /-- The map `x ↦ x ◃ x` is a bijection.  (This has applications for the
 regular isotopy version of the Reidemeister I move for knot diagrams.)
@@ -291,11 +291,11 @@ def IsInvolutory (R : Type _) [Rack R] : Prop :=
   ∀ x : R, Function.Involutive (Shelf.act x)
 #align rack.is_involutory Rack.IsInvolutory
 
-theorem involutory_inv_act_eq_act {R : Type _} [Rack R] (h : IsInvolutory R) (x y : R) :
+theorem involutory_invAct_eq_act {R : Type _} [Rack R] (h : IsInvolutory R) (x y : R) :
     x ◃⁻¹ y = x ◃ y := by
   rw [← left_cancel x, right_inv]
   exact ((h x).LeftInverse y).symm
-#align rack.involutory_inv_act_eq_act Rack.involutory_inv_act_eq_act
+#align rack.involutory_inv_act_eq_act Rack.involutory_invAct_eq_act
 
 /-- An abelian rack is one for which the mediality axiom holds.
 -/
@@ -321,9 +321,9 @@ instance : CoeFun (S₁ →◃ S₂) fun _ => S₁ → S₂ :=
   ⟨ShelfHom.toFun⟩
 
 @[simp]
-theorem to_fun_eq_coe (f : S₁ →◃ S₂) : f.toFun = f :=
+theorem toFun_eq_coe (f : S₁ →◃ S₂) : f.toFun = f :=
   rfl
-#align shelf_hom.to_fun_eq_coe ShelfHom.to_fun_eq_coe
+#align shelf_hom.to_fun_eq_coe ShelfHom.toFun_eq_coe
 
 @[simp]
 theorem map_act (f : S₁ →◃ S₂) {x y : S₁} : f (x ◃ y) = f x ◃ f y :=
@@ -755,10 +755,10 @@ def envelAction {R : Type _} [Rack R] : EnvelGroup R →* R ≃ R :=
 #align rack.envel_action Rack.envelAction
 
 @[simp]
-theorem envel_action_prop {R : Type _} [Rack R] (x y : R) :
+theorem envelAction_prop {R : Type _} [Rack R] (x y : R) :
     envelAction (toEnvelGroup R x) y = x ◃ y :=
   rfl
-#align rack.envel_action_prop Rack.envel_action_prop
+#align rack.envel_action_prop Rack.envelAction_prop
 
 end EnvelGroup
 

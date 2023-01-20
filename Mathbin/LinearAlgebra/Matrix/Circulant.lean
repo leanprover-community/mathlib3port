@@ -81,20 +81,20 @@ theorem transpose_circulant [AddGroup n] (v : n → α) : (circulant v)ᵀ = cir
   by ext <;> simp
 #align matrix.transpose_circulant Matrix.transpose_circulant
 
-theorem conj_transpose_circulant [Star α] [AddGroup n] (v : n → α) :
+theorem conjTranspose_circulant [Star α] [AddGroup n] (v : n → α) :
     (circulant v)ᴴ = circulant (star fun i => v (-i)) := by ext <;> simp
-#align matrix.conj_transpose_circulant Matrix.conj_transpose_circulant
+#align matrix.conj_transpose_circulant Matrix.conjTranspose_circulant
 
 theorem Fin.transpose_circulant : ∀ {n} (v : Fin n → α), (circulant v)ᵀ = circulant fun i => v (-i)
   | 0 => by decide
   | n + 1 => transpose_circulant
 #align matrix.fin.transpose_circulant Matrix.Fin.transpose_circulant
 
-theorem Fin.conj_transpose_circulant [Star α] :
+theorem Fin.conjTranspose_circulant [Star α] :
     ∀ {n} (v : Fin n → α), (circulant v)ᴴ = circulant (star fun i => v (-i))
   | 0 => by decide
-  | n + 1 => conj_transpose_circulant
-#align matrix.fin.conj_transpose_circulant Matrix.Fin.conj_transpose_circulant
+  | n + 1 => conjTranspose_circulant
+#align matrix.fin.conj_transpose_circulant Matrix.Fin.conjTranspose_circulant
 
 theorem map_circulant [Sub n] (v : n → α) (f : α → β) :
     (circulant v).map f = circulant fun i => f (v i) :=
@@ -192,25 +192,25 @@ theorem Fin.circulant_ite (α) [Zero α] [One α] :
 #align matrix.fin.circulant_ite Matrix.Fin.circulant_ite
 
 /-- A circulant of `v` is symmetric iff `v` equals its reverse. -/
-theorem circulant_is_symm_iff [AddGroup n] {v : n → α} : (circulant v).IsSymm ↔ ∀ i, v (-i) = v i :=
+theorem circulant_isSymm_iff [AddGroup n] {v : n → α} : (circulant v).IsSymm ↔ ∀ i, v (-i) = v i :=
   by rw [IsSymm, transpose_circulant, circulant_inj, funext_iff]
-#align matrix.circulant_is_symm_iff Matrix.circulant_is_symm_iff
+#align matrix.circulant_is_symm_iff Matrix.circulant_isSymm_iff
 
-theorem Fin.circulant_is_symm_iff : ∀ {n} {v : Fin n → α}, (circulant v).IsSymm ↔ ∀ i, v (-i) = v i
+theorem Fin.circulant_isSymm_iff : ∀ {n} {v : Fin n → α}, (circulant v).IsSymm ↔ ∀ i, v (-i) = v i
   | 0 => fun v => by simp [is_symm.ext_iff, IsEmpty.forall_iff]
-  | n + 1 => fun v => circulant_is_symm_iff
-#align matrix.fin.circulant_is_symm_iff Matrix.Fin.circulant_is_symm_iff
+  | n + 1 => fun v => circulant_isSymm_iff
+#align matrix.fin.circulant_is_symm_iff Matrix.Fin.circulant_isSymm_iff
 
 /-- If `circulant v` is symmetric, `∀ i j : I, v (- i) = v i`. -/
-theorem circulant_is_symm_apply [AddGroup n] {v : n → α} (h : (circulant v).IsSymm) (i : n) :
+theorem circulant_isSymm_apply [AddGroup n] {v : n → α} (h : (circulant v).IsSymm) (i : n) :
     v (-i) = v i :=
-  circulant_is_symm_iff.1 h i
-#align matrix.circulant_is_symm_apply Matrix.circulant_is_symm_apply
+  circulant_isSymm_iff.1 h i
+#align matrix.circulant_is_symm_apply Matrix.circulant_isSymm_apply
 
-theorem Fin.circulant_is_symm_apply {n} {v : Fin n → α} (h : (circulant v).IsSymm) (i : Fin n) :
+theorem Fin.circulant_isSymm_apply {n} {v : Fin n → α} (h : (circulant v).IsSymm) (i : Fin n) :
     v (-i) = v i :=
-  Fin.circulant_is_symm_iff.1 h i
-#align matrix.fin.circulant_is_symm_apply Matrix.Fin.circulant_is_symm_apply
+  Fin.circulant_isSymm_iff.1 h i
+#align matrix.fin.circulant_is_symm_apply Matrix.Fin.circulant_isSymm_apply
 
 end Matrix
 

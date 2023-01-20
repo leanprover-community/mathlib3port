@@ -106,9 +106,9 @@ theorem adapted (hf : Martingale f ℱ μ) : Adapted ℱ f :=
 #align measure_theory.martingale.adapted MeasureTheory.Martingale.adapted
 
 @[protected]
-theorem strongly_measurable (hf : Martingale f ℱ μ) (i : ι) : strongly_measurable[ℱ i] (f i) :=
+theorem stronglyMeasurable (hf : Martingale f ℱ μ) (i : ι) : strongly_measurable[ℱ i] (f i) :=
   hf.Adapted i
-#align measure_theory.martingale.strongly_measurable MeasureTheory.Martingale.strongly_measurable
+#align measure_theory.martingale.strongly_measurable MeasureTheory.Martingale.stronglyMeasurable
 
 theorem condexp_ae_eq (hf : Martingale f ℱ μ) {i j : ι} (hij : i ≤ j) : μ[f j|ℱ i] =ᵐ[μ] f i :=
   hf.2 i j hij
@@ -168,7 +168,7 @@ theorem martingale_iff [PartialOrder E] :
 
 theorem martingaleCondexp (f : Ω → E) (ℱ : Filtration ι m0) (μ : Measure Ω)
     [SigmaFiniteFiltration μ ℱ] : Martingale (fun i => μ[f|ℱ i]) ℱ μ :=
-  ⟨fun i => strongly_measurable_condexp, fun i j hij => condexp_condexp_of_le (ℱ.mono hij) (ℱ.le j)⟩
+  ⟨fun i => stronglyMeasurable_condexp, fun i j hij => condexp_condexp_of_le (ℱ.mono hij) (ℱ.le j)⟩
 #align measure_theory.martingale_condexp MeasureTheory.martingaleCondexp
 
 namespace Supermartingale
@@ -179,10 +179,10 @@ theorem adapted [LE E] (hf : Supermartingale f ℱ μ) : Adapted ℱ f :=
 #align measure_theory.supermartingale.adapted MeasureTheory.Supermartingale.adapted
 
 @[protected]
-theorem strongly_measurable [LE E] (hf : Supermartingale f ℱ μ) (i : ι) :
+theorem stronglyMeasurable [LE E] (hf : Supermartingale f ℱ μ) (i : ι) :
     strongly_measurable[ℱ i] (f i) :=
   hf.Adapted i
-#align measure_theory.supermartingale.strongly_measurable MeasureTheory.Supermartingale.strongly_measurable
+#align measure_theory.supermartingale.strongly_measurable MeasureTheory.Supermartingale.stronglyMeasurable
 
 @[protected]
 theorem integrable [LE E] (hf : Supermartingale f ℱ μ) (i : ι) : Integrable (f i) μ :=
@@ -237,10 +237,10 @@ theorem adapted [LE E] (hf : Submartingale f ℱ μ) : Adapted ℱ f :=
 #align measure_theory.submartingale.adapted MeasureTheory.Submartingale.adapted
 
 @[protected]
-theorem strongly_measurable [LE E] (hf : Submartingale f ℱ μ) (i : ι) :
+theorem stronglyMeasurable [LE E] (hf : Submartingale f ℱ μ) (i : ι) :
     strongly_measurable[ℱ i] (f i) :=
   hf.Adapted i
-#align measure_theory.submartingale.strongly_measurable MeasureTheory.Submartingale.strongly_measurable
+#align measure_theory.submartingale.strongly_measurable MeasureTheory.Submartingale.stronglyMeasurable
 
 @[protected]
 theorem integrable [LE E] (hf : Submartingale f ℱ μ) (i : ι) : Integrable (f i) μ :=
@@ -618,15 +618,15 @@ theorem Submartingale.sumMulSub [IsFiniteMeasure μ] {R : ℝ} {ξ f : ℕ → �
   have hadp : adapted 𝒢 fun n => ∑ k in Finset.range n, ξ k * (f (k + 1) - f k) :=
     by
     intro m
-    refine' Finset.strongly_measurable_sum' _ fun i hi => _
+    refine' Finset.stronglyMeasurable_sum' _ fun i hi => _
     rw [Finset.mem_range] at hi
     exact
       (hξ.strongly_measurable_le hi.le).mul
         ((hf.adapted.strongly_measurable_le (Nat.succ_le_of_lt hi)).sub
           (hf.adapted.strongly_measurable_le hi.le))
   refine' submartingale_of_condexp_sub_nonneg_nat hadp hint fun i => _
-  simp only [← Finset.sum_Ico_eq_sub _ (Nat.le_succ _), Finset.sum_apply, Pi.mul_apply,
-    Pi.sub_apply, Nat.Ico_succ_singleton, Finset.sum_singleton]
+  simp only [← Finset.sum_ico_eq_sub _ (Nat.le_succ _), Finset.sum_apply, Pi.mul_apply,
+    Pi.sub_apply, Nat.ico_succ_singleton, Finset.sum_singleton]
   exact
     eventually_le.trans
       (eventually_le.mul_nonneg (eventually_of_forall (hnonneg _))

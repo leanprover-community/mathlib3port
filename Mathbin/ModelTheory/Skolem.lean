@@ -84,7 +84,7 @@ noncomputable instance skolem₁Structure : L.skolem₁.StructureCat M :=
 
 namespace Substructure
 
-theorem skolem₁_reduct_is_elementary (S : (L.Sum L.skolem₁).Substructure M) :
+theorem skolem₁_reduct_isElementary (S : (L.Sum L.skolem₁).Substructure M) :
     (LhomCat.sumInl.substructureReduct S).IsElementary :=
   by
   apply (Lhom.sum_inl.substructure_reduct S).is_elementary_of_exists
@@ -93,7 +93,7 @@ theorem skolem₁_reduct_is_elementary (S : (L.Sum L.skolem₁).Substructure M) 
   exact
     ⟨⟨fun_map φ' (coe ∘ x), S.fun_mem (Lhom.sum_inr.on_function φ) (coe ∘ x) fun i => (x i).2⟩,
       Classical.epsilon_spec ⟨a, h⟩⟩
-#align first_order.language.substructure.skolem₁_reduct_is_elementary FirstOrder.Language.Substructure.skolem₁_reduct_is_elementary
+#align first_order.language.substructure.skolem₁_reduct_is_elementary FirstOrder.Language.Substructure.skolem₁_reduct_isElementary
 
 /-- Any `L.sum L.skolem₁`-substructure is an elementary `L`-substructure. -/
 noncomputable def elementarySkolem₁Reduct (S : (L.Sum L.skolem₁).Substructure M) :
@@ -101,10 +101,10 @@ noncomputable def elementarySkolem₁Reduct (S : (L.Sum L.skolem₁).Substructur
   ⟨LhomCat.sumInl.substructureReduct S, S.skolem₁_reduct_is_elementary⟩
 #align first_order.language.substructure.elementary_skolem₁_reduct FirstOrder.Language.Substructure.elementarySkolem₁Reduct
 
-theorem coe_sort_elementary_skolem₁_reduct (S : (L.Sum L.skolem₁).Substructure M) :
+theorem coeSort_elementarySkolem₁Reduct (S : (L.Sum L.skolem₁).Substructure M) :
     (S.elementarySkolem₁Reduct : Type w) = S :=
   rfl
-#align first_order.language.substructure.coe_sort_elementary_skolem₁_reduct FirstOrder.Language.Substructure.coe_sort_elementary_skolem₁_reduct
+#align first_order.language.substructure.coe_sort_elementary_skolem₁_reduct FirstOrder.Language.Substructure.coeSort_elementarySkolem₁Reduct
 
 end Substructure
 
@@ -117,10 +117,9 @@ instance : Small (⊥ : (L.Sum L.skolem₁).Substructure M).elementarySkolem₁R
   rw [coe_sort_elementary_skolem₁_reduct]
   infer_instance
 
-theorem exists_small_elementary_substructure :
-    ∃ S : L.ElementarySubstructure M, Small.{max u v} S :=
+theorem exists_small_elementarySubstructure : ∃ S : L.ElementarySubstructure M, Small.{max u v} S :=
   ⟨Substructure.elementarySkolem₁Reduct ⊥, inferInstance⟩
-#align first_order.language.exists_small_elementary_substructure FirstOrder.Language.exists_small_elementary_substructure
+#align first_order.language.exists_small_elementary_substructure FirstOrder.Language.exists_small_elementarySubstructure
 
 variable {M}
 
@@ -128,7 +127,7 @@ variable {M}
   If `s` is a set in an `L`-structure `M` and `κ` an infinite cardinal such that
   `max (# s, L.card) ≤ κ` and `κ ≤ # M`, then `M` has an elementary substructure containing `s` of
   cardinality `κ`.  -/
-theorem exists_elementary_substructure_card_eq (s : Set M) (κ : Cardinal.{w'}) (h1 : ℵ₀ ≤ κ)
+theorem exists_elementarySubstructure_card_eq (s : Set M) (κ : Cardinal.{w'}) (h1 : ℵ₀ ≤ κ)
     (h2 : Cardinal.lift.{w'} (#s) ≤ Cardinal.lift.{w} κ)
     (h3 : Cardinal.lift.{w'} L.card ≤ Cardinal.lift.{max u v} κ)
     (h4 : Cardinal.lift.{w} κ ≤ Cardinal.lift.{w'} (#M)) :
@@ -160,7 +159,7 @@ theorem exists_elementary_substructure_card_eq (s : Set M) (κ : Cardinal.{w'}) 
   · refine' trans _ (lift_le.2 (mk_le_mk_of_subset (Set.subset_union_right _ _)))
     rw [aleph_0_le_lift, ← aleph_0_le_lift, h]
     exact h1
-#align first_order.language.exists_elementary_substructure_card_eq FirstOrder.Language.exists_elementary_substructure_card_eq
+#align first_order.language.exists_elementary_substructure_card_eq FirstOrder.Language.exists_elementarySubstructure_card_eq
 
 end Language
 

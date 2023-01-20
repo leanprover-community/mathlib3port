@@ -136,15 +136,14 @@ theorem Finset.card_pi [DecidableEq α] {δ : α → Type _} (s : Finset α) (t 
 #align finset.card_pi Finset.card_pi
 
 @[simp]
-theorem Fintype.card_pi_finset [DecidableEq α] [Fintype α] {δ : α → Type _}
-    (t : ∀ a, Finset (δ a)) : (Fintype.piFinset t).card = ∏ a, card (t a) := by
-  simp [Fintype.piFinset, card_map]
-#align fintype.card_pi_finset Fintype.card_pi_finset
+theorem Fintype.card_piFinset [DecidableEq α] [Fintype α] {δ : α → Type _} (t : ∀ a, Finset (δ a)) :
+    (Fintype.piFinset t).card = ∏ a, card (t a) := by simp [Fintype.piFinset, card_map]
+#align fintype.card_pi_finset Fintype.card_piFinset
 
 @[simp]
 theorem Fintype.card_pi {β : α → Type _} [DecidableEq α] [Fintype α] [f : ∀ a, Fintype (β a)] :
     Fintype.card (∀ a, β a) = ∏ a, Fintype.card (β a) :=
-  Fintype.card_pi_finset _
+  Fintype.card_piFinset _
 #align fintype.card_pi Fintype.card_pi
 
 -- FIXME ouch, this should be in the main file.
@@ -244,13 +243,13 @@ theorem Finset.prod_fin_eq_prod_range [CommMonoid β] {n : ℕ} (c : Fin n → �
 #align finset.sum_fin_eq_sum_range Finset.sum_fin_eq_sum_range
 
 @[to_additive]
-theorem Finset.prod_to_finset_eq_subtype {M : Type _} [CommMonoid M] [Fintype α] (p : α → Prop)
+theorem Finset.prod_toFinset_eq_subtype {M : Type _} [CommMonoid M] [Fintype α] (p : α → Prop)
     [DecidablePred p] (f : α → M) : (∏ a in { x | p x }.toFinset, f a) = ∏ a : Subtype p, f a :=
   by
   rw [← Finset.prod_subtype]
   simp
-#align finset.prod_to_finset_eq_subtype Finset.prod_to_finset_eq_subtype
-#align finset.sum_to_finset_eq_subtype Finset.sum_to_finset_eq_subtype
+#align finset.prod_to_finset_eq_subtype Finset.prod_toFinset_eq_subtype
+#align finset.sum_to_finset_eq_subtype Finset.sum_toFinset_eq_subtype
 
 @[to_additive]
 theorem Finset.prod_fiberwise [DecidableEq β] [Fintype β] [CommMonoid γ] (s : Finset α) (f : α → β)

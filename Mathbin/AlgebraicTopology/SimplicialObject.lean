@@ -87,11 +87,11 @@ def eqToIso {n m : ℕ} (h : n = m) : X _[n] ≅ X _[m] :=
 #align category_theory.simplicial_object.eq_to_iso CategoryTheory.SimplicialObject.eqToIso
 
 @[simp]
-theorem eq_to_iso_refl {n : ℕ} (h : n = n) : X.eqToIso h = Iso.refl _ :=
+theorem eqToIso_refl {n : ℕ} (h : n = n) : X.eqToIso h = Iso.refl _ :=
   by
   ext
   simp [eq_to_iso]
-#align category_theory.simplicial_object.eq_to_iso_refl CategoryTheory.SimplicialObject.eq_to_iso_refl
+#align category_theory.simplicial_object.eq_to_iso_refl CategoryTheory.SimplicialObject.eqToIso_refl
 
 /-- The generic case of the first simplicial identity -/
 @[reassoc.1]
@@ -448,11 +448,11 @@ def eqToIso {n m : ℕ} (h : n = m) : X _[n] ≅ X _[m] :=
 #align category_theory.cosimplicial_object.eq_to_iso CategoryTheory.CosimplicialObject.eqToIso
 
 @[simp]
-theorem eq_to_iso_refl {n : ℕ} (h : n = n) : X.eqToIso h = Iso.refl _ :=
+theorem eqToIso_refl {n : ℕ} (h : n = n) : X.eqToIso h = Iso.refl _ :=
   by
   ext
   simp [eq_to_iso]
-#align category_theory.cosimplicial_object.eq_to_iso_refl CategoryTheory.CosimplicialObject.eq_to_iso_refl
+#align category_theory.cosimplicial_object.eq_to_iso_refl CategoryTheory.CosimplicialObject.eqToIso_refl
 
 /-- The generic case of the first cosimplicial identity -/
 @[reassoc.1]

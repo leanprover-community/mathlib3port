@@ -30,23 +30,23 @@ theorem terminatedStable (n_le_m : n ≤ m) (terminated_at_n : g.TerminatedAt n)
 
 variable [DivisionRing K]
 
-theorem continuants_aux_stable_step_of_terminated (terminated_at_n : g.TerminatedAt n) :
+theorem continuantsAux_stable_step_of_terminated (terminated_at_n : g.TerminatedAt n) :
     g.continuantsAux (n + 2) = g.continuantsAux (n + 1) :=
   by
   rw [terminated_at_iff_s_none] at terminated_at_n
   simp only [terminated_at_n, continuants_aux]
-#align generalized_continued_fraction.continuants_aux_stable_step_of_terminated GeneralizedContinuedFraction.continuants_aux_stable_step_of_terminated
+#align generalized_continued_fraction.continuants_aux_stable_step_of_terminated GeneralizedContinuedFraction.continuantsAux_stable_step_of_terminated
 
-theorem continuants_aux_stable_of_terminated (n_lt_m : n < m) (terminated_at_n : g.TerminatedAt n) :
+theorem continuantsAux_stable_of_terminated (n_lt_m : n < m) (terminated_at_n : g.TerminatedAt n) :
     g.continuantsAux m = g.continuantsAux (n + 1) :=
   by
   refine' Nat.le_induction rfl (fun k hnk hk => _) _ n_lt_m
   rcases Nat.exists_eq_add_of_lt hnk with ⟨k, rfl⟩
   refine' (continuants_aux_stable_step_of_terminated _).trans hk
   exact terminated_stable (Nat.le_add_right _ _) terminated_at_n
-#align generalized_continued_fraction.continuants_aux_stable_of_terminated GeneralizedContinuedFraction.continuants_aux_stable_of_terminated
+#align generalized_continued_fraction.continuants_aux_stable_of_terminated GeneralizedContinuedFraction.continuantsAux_stable_of_terminated
 
-theorem convergents'_aux_stable_step_of_terminated {s : Seq <| Pair K}
+theorem convergents'Aux_stable_step_of_terminated {s : Seq <| Pair K}
     (terminated_at_n : s.TerminatedAt n) : convergents'Aux s (n + 1) = convergents'Aux s n :=
   by
   change s.nth n = none at terminated_at_n
@@ -59,16 +59,16 @@ theorem convergents'_aux_stable_step_of_terminated {s : Seq <| Pair K}
       some =>
       have : s.tail.terminated_at n := by simp only [Seq.TerminatedAt, s.nth_tail, terminated_at_n]
       simp only [convergents'_aux, s_head_eq, IH this]
-#align generalized_continued_fraction.convergents'_aux_stable_step_of_terminated GeneralizedContinuedFraction.convergents'_aux_stable_step_of_terminated
+#align generalized_continued_fraction.convergents'_aux_stable_step_of_terminated GeneralizedContinuedFraction.convergents'Aux_stable_step_of_terminated
 
-theorem convergents'_aux_stable_of_terminated {s : Seq <| Pair K} (n_le_m : n ≤ m)
+theorem convergents'Aux_stable_of_terminated {s : Seq <| Pair K} (n_le_m : n ≤ m)
     (terminated_at_n : s.TerminatedAt n) : convergents'Aux s m = convergents'Aux s n :=
   by
   induction' n_le_m with m n_le_m IH
   · rfl
   · refine' (convergents'_aux_stable_step_of_terminated _).trans IH
     exact s.terminated_stable n_le_m terminated_at_n
-#align generalized_continued_fraction.convergents'_aux_stable_of_terminated GeneralizedContinuedFraction.convergents'_aux_stable_of_terminated
+#align generalized_continued_fraction.convergents'_aux_stable_of_terminated GeneralizedContinuedFraction.convergents'Aux_stable_of_terminated
 
 theorem continuants_stable_of_terminated (n_le_m : n ≤ m) (terminated_at_n : g.TerminatedAt n) :
     g.continuants m = g.continuants n := by

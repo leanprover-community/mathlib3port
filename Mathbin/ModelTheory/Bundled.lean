@@ -125,7 +125,7 @@ def equivInduced {M : ModelCat.{u, v, w} T} {N : Type w'} (e : M ≃ N) : ModelC
     where
   carrier := N
   struc := e.inducedStructure
-  is_model := @Equiv.Theory_model L M N _ e.inducedStructure T e.inducedStructureEquiv _
+  is_model := @Equiv.theoryCat_model L M N _ e.inducedStructure T e.inducedStructureEquiv _
   nonempty' := e.symm.Nonempty
 #align first_order.language.Theory.Model.equiv_induced FirstOrder.Language.TheoryCat.ModelCat.equivInduced
 
@@ -152,7 +152,7 @@ def reduct {L' : Language} (φ : L →ᴸ L') (M : (φ.onTheory T).ModelCat) : T
   carrier := M
   struc := φ.reduct M
   nonempty' := M.nonempty'
-  is_model := (@LhomCat.on_Theory_model L L' M (φ.reduct M) _ φ _ T).1 M.is_model
+  is_model := (@LhomCat.onTheory_model L L' M (φ.reduct M) _ φ _ T).1 M.is_model
 #align first_order.language.Theory.Model.reduct FirstOrder.Language.TheoryCat.ModelCat.reduct
 
 /-- When `φ` is injective, `default_expansion` expands a model of `T` to a model of `φ.on_Theory T`
@@ -167,7 +167,7 @@ noncomputable def defaultExpansion {L' : Language} {φ : L →ᴸ L'} (h : φ.In
   struc := φ.defaultExpansion M
   nonempty' := M.nonempty'
   is_model :=
-    (@LhomCat.on_Theory_model L L' M _ (φ.defaultExpansion M) φ (h.is_expansion_on_default M) T).2
+    (@LhomCat.onTheory_model L L' M _ (φ.defaultExpansion M) φ (h.is_expansion_on_default M) T).2
       M.is_model
 #align first_order.language.Theory.Model.default_expansion FirstOrder.Language.TheoryCat.ModelCat.defaultExpansion
 
@@ -190,10 +190,10 @@ def subtheoryModel (M : T.ModelCat) {T' : L.TheoryCat} (h : T' ⊆ T) : T'.Model
 #align first_order.language.Theory.Model.subtheory_Model FirstOrder.Language.TheoryCat.ModelCat.subtheoryModel
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-instance subtheory_Model_models (M : T.ModelCat) {T' : L.TheoryCat} (h : T' ⊆ T) :
+instance subtheoryModel_models (M : T.ModelCat) {T' : L.TheoryCat} (h : T' ⊆ T) :
     M.subtheoryModel h ⊨ T :=
   M.is_model
-#align first_order.language.Theory.Model.subtheory_Model_models FirstOrder.Language.TheoryCat.ModelCat.subtheory_Model_models
+#align first_order.language.Theory.Model.subtheory_Model_models FirstOrder.Language.TheoryCat.ModelCat.subtheoryModel_models
 
 end ModelCat
 

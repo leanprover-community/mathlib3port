@@ -456,13 +456,13 @@ protected def Faithful.div (F : C ⥤ E) (G : D ⥤ E) [Faithful G] (obj : C →
     map_id' := by
       intro X
       apply G.map_injective
-      apply eq_of_heq
+      apply eq_of_hEq
       trans F.map (𝟙 X); exact h_map
       rw [F.map_id, G.map_id, h_obj X]
     map_comp' := by
       intro X Y Z f g
       apply G.map_injective
-      apply eq_of_heq
+      apply eq_of_hEq
       trans F.map (f ≫ g); exact h_map
       rw [F.map_comp, G.map_comp]
       congr 1 <;> try exact (h_obj _).symm <;> exact h_map.symm }
@@ -490,7 +490,7 @@ theorem Faithful.div_comp (F : C ⥤ E) [Faithful F] (G : D ⥤ E) [Faithful G] 
   subst this
   congr
   funext
-  exact eq_of_heq h_map
+  exact eq_of_hEq h_map
 #align category_theory.faithful.div_comp CategoryTheory.Faithful.div_comp
 
 /- warning: category_theory.faithful.div_faithful -> CategoryTheory.Faithful.div_faithful is a dubious translation:

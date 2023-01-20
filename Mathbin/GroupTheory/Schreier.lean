@@ -89,7 +89,7 @@ theorem closure_mul_image_eq (hR : R ∈ rightTransversals (H : Set G)) (hR1 : (
   `(R * S).image (λ g, g * (to_fun hR g)⁻¹)`. -/
 theorem closure_mul_image_eq_top (hR : R ∈ rightTransversals (H : Set G)) (hR1 : (1 : G) ∈ R)
     (hS : closure S = ⊤) :
-    closure ((R * S).image fun g => ⟨g * (toFun hR g)⁻¹, mul_inv_to_fun_mem hR g⟩ : Set H) = ⊤ :=
+    closure ((R * S).image fun g => ⟨g * (toFun hR g)⁻¹, mul_inv_toFun_mem hR g⟩ : Set H) = ⊤ :=
   by
   rw [eq_top_iff, ← map_subtype_le_map_subtype, MonoidHom.map_closure, Set.image_image]
   exact (map_subtype_le ⊤).trans (ge_of_eq (closure_mul_image_eq hR hR1 hS))
@@ -101,7 +101,7 @@ theorem closure_mul_image_eq_top (hR : R ∈ rightTransversals (H : Set G)) (hR1
 theorem closure_mul_image_eq_top' [DecidableEq G] {R S : Finset G}
     (hR : (R : Set G) ∈ rightTransversals (H : Set G)) (hR1 : (1 : G) ∈ R)
     (hS : closure (S : Set G) = ⊤) :
-    closure (((R * S).image fun g => ⟨_, mul_inv_to_fun_mem hR g⟩ : Finset H) : Set H) = ⊤ :=
+    closure (((R * S).image fun g => ⟨_, mul_inv_toFun_mem hR g⟩ : Finset H) : Set H) = ⊤ :=
   by
   rw [Finset.coe_image, Finset.coe_mul]
   exact closure_mul_image_eq_top hR hR1 hS
@@ -130,7 +130,7 @@ theorem exists_finset_card_le_mul [FiniteIndex H] {S : Finset G} (hS : closure (
   calc
     R.card = Fintype.card R := (Fintype.card_coe R).symm
     _ = _ := (Fintype.card_congr (mem_right_transversals.to_equiv hR)).symm
-    _ = Fintype.card (G ⧸ H) := QuotientGroup.card_quotient_right_rel H
+    _ = Fintype.card (G ⧸ H) := QuotientGroup.card_quotient_rightRel H
     _ = H.index := H.index_eq_card.symm
     
 #align subgroup.exists_finset_card_le_mul Subgroup.exists_finset_card_le_mul
@@ -198,13 +198,13 @@ def cardCommutatorBound (n : ℕ) :=
 
 /-- A theorem of Schur: The size of the commutator subgroup is bounded in terms of the number of
   commutators. -/
-theorem card_commutator_le_of_finite_commutator_set [Finite (commutatorSet G)] :
+theorem card_commutator_le_of_finite_commutatorSet [Finite (commutatorSet G)] :
     Nat.card (commutator G) ≤ cardCommutatorBound (Nat.card (commutatorSet G)) :=
   by
   have h1 := index_center_le_pow (closureCommutatorRepresentatives G)
   have h2 := card_commutator_dvd_index_center_pow (closureCommutatorRepresentatives G)
-  rw [card_commutator_set_closure_commutator_representatives] at h1 h2
-  rw [card_commutator_closure_commutator_representatives] at h2
+  rw [card_commutatorSet_closureCommutatorRepresentatives] at h1 h2
+  rw [card_commutator_closureCommutatorRepresentatives] at h2
   replace h1 :=
     h1.trans
       (Nat.pow_le_pow_of_le_right Finite.card_pos (rank_closure_commutator_representations_le G))
@@ -212,14 +212,14 @@ theorem card_commutator_le_of_finite_commutator_set [Finite (commutatorSet G)] :
   rw [← pow_succ'] at h2
   refine' (Nat.le_of_dvd _ h2).trans (Nat.pow_le_pow_of_le_left h1 _)
   exact pow_pos (Nat.pos_of_ne_zero finite_index.finite_index) _
-#align subgroup.card_commutator_le_of_finite_commutator_set Subgroup.card_commutator_le_of_finite_commutator_set
+#align subgroup.card_commutator_le_of_finite_commutator_set Subgroup.card_commutator_le_of_finite_commutatorSet
 
 /-- A theorem of Schur: A group with finitely many commutators has finite commutator subgroup. -/
 instance [Finite (commutatorSet G)] : Finite (commutator G) :=
   by
   have h2 := card_commutator_dvd_index_center_pow (closureCommutatorRepresentatives G)
   refine' Nat.finite_of_card_ne_zero fun h => _
-  rw [card_commutator_closure_commutator_representatives, h, zero_dvd_iff] at h2
+  rw [card_commutator_closureCommutatorRepresentatives, h, zero_dvd_iff] at h2
   exact finite_index.finite_index (pow_eq_zero h2)
 
 end Subgroup

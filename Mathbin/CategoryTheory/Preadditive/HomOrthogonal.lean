@@ -129,7 +129,7 @@ noncomputable def matrixDecompositionAddEquiv (o : HomOrthogonal s) {α β : Typ
 #align category_theory.hom_orthogonal.matrix_decomposition_add_equiv CategoryTheory.HomOrthogonal.matrixDecompositionAddEquiv
 
 @[simp]
-theorem matrix_decomposition_id (o : HomOrthogonal s) {α : Type} [Fintype α] {f : α → ι} (i : ι) :
+theorem matrixDecomposition_id (o : HomOrthogonal s) {α : Type} [Fintype α] {f : α → ι} (i : ι) :
     o.matrixDecomposition (𝟙 (⨁ fun a => s (f a))) i = 1 :=
   by
   ext (⟨b, ⟨⟩⟩⟨a⟩)
@@ -141,9 +141,9 @@ theorem matrix_decomposition_id (o : HomOrthogonal s) {α : Type} [Fintype α] {
     simp
   · convert comp_zero
     simpa using biproduct.ι_π_ne _ (Ne.symm h)
-#align category_theory.hom_orthogonal.matrix_decomposition_id CategoryTheory.HomOrthogonal.matrix_decomposition_id
+#align category_theory.hom_orthogonal.matrix_decomposition_id CategoryTheory.HomOrthogonal.matrixDecomposition_id
 
-theorem matrix_decomposition_comp (o : HomOrthogonal s) {α β γ : Type} [Fintype α] [Fintype β]
+theorem matrixDecomposition_comp (o : HomOrthogonal s) {α β γ : Type} [Fintype α] [Fintype β]
     [Fintype γ] {f : α → ι} {g : β → ι} {h : γ → ι} (z : (⨁ fun a => s (f a)) ⟶ ⨁ fun b => s (g b))
     (w : (⨁ fun b => s (g b)) ⟶ ⨁ fun c => s (h c)) (i : ι) :
     o.matrixDecomposition (z ≫ w) i = o.matrixDecomposition w i ⬝ o.matrixDecomposition z i :=
@@ -167,7 +167,7 @@ theorem matrix_decomposition_comp (o : HomOrthogonal s) {α β γ : Type} [Finty
     convert comp_zero
     convert comp_zero
     apply o.eq_zero nm
-#align category_theory.hom_orthogonal.matrix_decomposition_comp CategoryTheory.HomOrthogonal.matrix_decomposition_comp
+#align category_theory.hom_orthogonal.matrix_decomposition_comp CategoryTheory.HomOrthogonal.matrixDecomposition_comp
 
 section
 

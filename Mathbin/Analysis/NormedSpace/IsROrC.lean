@@ -103,9 +103,9 @@ variable (𝕜)
 
 include 𝕜
 
-theorem NormedSpace.sphere_nonempty_is_R_or_C [Nontrivial E] {r : ℝ} (hr : 0 ≤ r) :
+theorem NormedSpace.sphere_nonempty_isROrC [Nontrivial E] {r : ℝ} (hr : 0 ≤ r) :
     Nonempty (sphere (0 : E) r) :=
   letI : NormedSpace ℝ E := NormedSpace.restrictScalars ℝ 𝕜 E
   (normed_space.sphere_nonempty.mpr hr).coeSort
-#align normed_space.sphere_nonempty_is_R_or_C NormedSpace.sphere_nonempty_is_R_or_C
+#align normed_space.sphere_nonempty_is_R_or_C NormedSpace.sphere_nonempty_isROrC
 

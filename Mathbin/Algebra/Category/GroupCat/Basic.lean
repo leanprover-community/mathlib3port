@@ -72,10 +72,10 @@ def ofHom {X Y : Type u} [Group X] [Group Y] (f : X →* Y) : of X ⟶ of Y :=
 add_decl_doc AddGroupCat.ofHom
 
 @[simp, to_additive]
-theorem of_hom_apply {X Y : Type _} [Group X] [Group Y] (f : X →* Y) (x : X) : ofHom f x = f x :=
+theorem ofHom_apply {X Y : Type _} [Group X] [Group Y] (f : X →* Y) (x : X) : ofHom f x = f x :=
   rfl
-#align Group.of_hom_apply GroupCat.of_hom_apply
-#align AddGroup.of_hom_apply AddGroupCat.of_hom_apply
+#align Group.of_hom_apply GroupCat.ofHom_apply
+#align AddGroup.of_hom_apply AddGroupCat.ofHom_apply
 
 @[to_additive]
 instance (G : GroupCat) : Group G :=
@@ -172,11 +172,11 @@ def ofHom {X Y : Type u} [CommGroup X] [CommGroup Y] (f : X →* Y) : of X ⟶ o
 add_decl_doc AddCommGroupCat.ofHom
 
 @[simp, to_additive]
-theorem of_hom_apply {X Y : Type _} [CommGroup X] [CommGroup Y] (f : X →* Y) (x : X) :
+theorem ofHom_apply {X Y : Type _} [CommGroup X] [CommGroup Y] (f : X →* Y) (x : X) :
     ofHom f x = f x :=
   rfl
-#align CommGroup.of_hom_apply CommGroupCat.of_hom_apply
-#align AddCommGroup.of_hom_apply AddCommGroupCat.of_hom_apply
+#align CommGroup.of_hom_apply CommGroupCat.ofHom_apply
+#align AddCommGroup.of_hom_apply AddCommGroupCat.ofHom_apply
 
 @[to_additive]
 instance commGroupInstance (G : CommGroupCat) : CommGroup G :=
@@ -253,13 +253,13 @@ def asHom {G : AddCommGroupCat.{0}} (g : G) : AddCommGroupCat.of ℤ ⟶ G :=
 #align AddCommGroup.as_hom AddCommGroupCat.asHom
 
 @[simp]
-theorem as_hom_apply {G : AddCommGroupCat.{0}} (g : G) (i : ℤ) : (asHom g) i = i • g :=
+theorem asHom_apply {G : AddCommGroupCat.{0}} (g : G) (i : ℤ) : (asHom g) i = i • g :=
   rfl
-#align AddCommGroup.as_hom_apply AddCommGroupCat.as_hom_apply
+#align AddCommGroup.as_hom_apply AddCommGroupCat.asHom_apply
 
-theorem as_hom_injective {G : AddCommGroupCat.{0}} : Function.Injective (@asHom G) := fun h k w =>
-  by convert congr_arg (fun k : AddCommGroupCat.of ℤ ⟶ G => (k : ℤ → G) (1 : ℤ)) w <;> simp
-#align AddCommGroup.as_hom_injective AddCommGroupCat.as_hom_injective
+theorem asHom_injective {G : AddCommGroupCat.{0}} : Function.Injective (@asHom G) := fun h k w => by
+  convert congr_arg (fun k : AddCommGroupCat.of ℤ ⟶ G => (k : ℤ → G) (1 : ℤ)) w <;> simp
+#align AddCommGroup.as_hom_injective AddCommGroupCat.asHom_injective
 
 @[ext]
 theorem int_hom_ext {G : AddCommGroupCat.{0}} (f g : AddCommGroupCat.of ℤ ⟶ G)

@@ -77,15 +77,14 @@ def ContinuousLinearMap.toExposed (l : E →L[𝕜] 𝕜) (A : Set E) : Set E :=
   { x ∈ A | ∀ y ∈ A, l y ≤ l x }
 #align continuous_linear_map.to_exposed ContinuousLinearMap.toExposed
 
-theorem ContinuousLinearMap.toExposed.is_exposed : IsExposed 𝕜 A (l.toExposed A) := fun h =>
-  ⟨l, rfl⟩
-#align continuous_linear_map.to_exposed.is_exposed ContinuousLinearMap.toExposed.is_exposed
+theorem ContinuousLinearMap.toExposed.isExposed : IsExposed 𝕜 A (l.toExposed A) := fun h => ⟨l, rfl⟩
+#align continuous_linear_map.to_exposed.is_exposed ContinuousLinearMap.toExposed.isExposed
 
-theorem is_exposed_empty : IsExposed 𝕜 A ∅ := fun ⟨x, hx⟩ =>
+theorem isExposed_empty : IsExposed 𝕜 A ∅ := fun ⟨x, hx⟩ =>
   by
   exfalso
   exact hx
-#align is_exposed_empty is_exposed_empty
+#align is_exposed_empty isExposed_empty
 
 namespace IsExposed
 
@@ -168,7 +167,7 @@ protected theorem inter [HasContinuousAdd 𝕜] {A B C : Set E} (hB : IsExposed 
       (add_le_add_iff_left (l₁ x)).1 (le_trans (add_le_add (hwB.2 x hxA) (hwC.2 y hy)) (hx w hwB.1))
 #align is_exposed.inter IsExposed.inter
 
-theorem sInter [HasContinuousAdd 𝕜] {F : Finset (Set E)} (hF : F.Nonempty)
+theorem interₛ [HasContinuousAdd 𝕜] {F : Finset (Set E)} (hF : F.Nonempty)
     (hAF : ∀ B ∈ F, IsExposed 𝕜 A B) : IsExposed 𝕜 A (⋂₀ F) :=
   by
   revert hF F
@@ -184,7 +183,7 @@ theorem sInter [HasContinuousAdd 𝕜] {F : Finset (Set E)} (hF : F.Nonempty)
   exact
     (hCF C (Finset.mem_insert_self C F)).inter
       (hF hFnemp fun B hB => hCF B (Finset.mem_insert_of_mem hB))
-#align is_exposed.sInter IsExposed.sInter
+#align is_exposed.sInter IsExposed.interₛ
 
 theorem inter_left (hC : IsExposed 𝕜 A C) (hCB : C ⊆ B) : IsExposed 𝕜 (A ∩ B) C :=
   by
@@ -202,19 +201,19 @@ theorem inter_right (hC : IsExposed 𝕜 B C) (hCA : C ⊆ A) : IsExposed 𝕜 (
   exact hC.inter_left hCA
 #align is_exposed.inter_right IsExposed.inter_right
 
-protected theorem is_closed [OrderClosedTopology 𝕜] {A B : Set E} (hAB : IsExposed 𝕜 A B)
+protected theorem isClosed [OrderClosedTopology 𝕜] {A B : Set E} (hAB : IsExposed 𝕜 A B)
     (hA : IsClosed A) : IsClosed B :=
   by
   obtain rfl | hB := B.eq_empty_or_nonempty
   · simp
   obtain ⟨l, a, rfl⟩ := hAB.eq_inter_halfspace' hB
-  exact hA.is_closed_le continuous_on_const l.continuous.continuous_on
-#align is_exposed.is_closed IsExposed.is_closed
+  exact hA.is_closed_le continuousOn_const l.continuous.continuous_on
+#align is_exposed.is_closed IsExposed.isClosed
 
-protected theorem is_compact [OrderClosedTopology 𝕜] [T2Space E] {A B : Set E}
+protected theorem isCompact [OrderClosedTopology 𝕜] [T2Space E] {A B : Set E}
     (hAB : IsExposed 𝕜 A B) (hA : IsCompact A) : IsCompact B :=
-  is_compact_of_is_closed_subset hA (hAB.IsClosed hA.IsClosed) hAB.Subset
-#align is_exposed.is_compact IsExposed.is_compact
+  isCompact_of_isClosed_subset hA (hAB.IsClosed hA.IsClosed) hAB.Subset
+#align is_exposed.is_compact IsExposed.isCompact
 
 end IsExposed
 
@@ -233,16 +232,16 @@ theorem exposed_point_def :
   Iff.rfl
 #align exposed_point_def exposed_point_def
 
-theorem exposed_points_subset : A.exposedPoints 𝕜 ⊆ A := fun x hx => hx.1
-#align exposed_points_subset exposed_points_subset
+theorem exposedPoints_subset : A.exposedPoints 𝕜 ⊆ A := fun x hx => hx.1
+#align exposed_points_subset exposedPoints_subset
 
 @[simp]
-theorem exposed_points_empty : (∅ : Set E).exposedPoints 𝕜 = ∅ :=
-  subset_empty_iff.1 exposed_points_subset
-#align exposed_points_empty exposed_points_empty
+theorem exposedPoints_empty : (∅ : Set E).exposedPoints 𝕜 = ∅ :=
+  subset_empty_iff.1 exposedPoints_subset
+#align exposed_points_empty exposedPoints_empty
 
 /-- Exposed points exactly correspond to exposed singletons. -/
-theorem mem_exposed_points_iff_exposed_singleton : x ∈ A.exposedPoints 𝕜 ↔ IsExposed 𝕜 A {x} :=
+theorem mem_exposedPoints_iff_exposed_singleton : x ∈ A.exposedPoints 𝕜 ↔ IsExposed 𝕜 A {x} :=
   by
   use fun ⟨hxA, l, hl⟩ h =>
     ⟨l,
@@ -255,7 +254,7 @@ theorem mem_exposed_points_iff_exposed_singleton : x ∈ A.exposedPoints 𝕜 �
   exact
     ⟨hl.1.1, l, fun y hy =>
       ⟨hl.1.2 y hy, fun hxy => hl.2 y ⟨hy, fun z hz => (hl.1.2 z hz).trans hxy⟩⟩⟩
-#align mem_exposed_points_iff_exposed_singleton mem_exposed_points_iff_exposed_singleton
+#align mem_exposed_points_iff_exposed_singleton mem_exposedPoints_iff_exposed_singleton
 
 end OrderedRing
 
@@ -277,7 +276,7 @@ protected theorem convex (hAB : IsExposed 𝕜 A B) (hA : Convex 𝕜 A) : Conve
           ⟨mem_univ _, hx₂.2 y hy⟩ ha hb hab).2⟩
 #align is_exposed.convex IsExposed.convex
 
-protected theorem is_extreme (hAB : IsExposed 𝕜 A B) : IsExtreme 𝕜 A B :=
+protected theorem isExtreme (hAB : IsExposed 𝕜 A B) : IsExtreme 𝕜 A B :=
   by
   refine' ⟨hAB.subset, fun x₁ hx₁A x₂ hx₂A x hxB hx => _⟩
   obtain ⟨l, rfl⟩ := hAB ⟨x, hxB⟩
@@ -290,14 +289,13 @@ protected theorem is_extreme (hAB : IsExposed 𝕜 A B) : IsExtreme 𝕜 A B :=
     exact hxB.2 y hy
   · rw [hlx₂.antisymm (hl.le_right_of_left_le (mem_univ _) (mem_univ _) hx hlx₁)]
     exact hxB.2 y hy
-#align is_exposed.is_extreme IsExposed.is_extreme
+#align is_exposed.is_extreme IsExposed.isExtreme
 
 end IsExposed
 
-theorem exposed_points_subset_extreme_points : A.exposedPoints 𝕜 ⊆ A.extremePoints 𝕜 := fun x hx =>
-  mem_extreme_points_iff_extreme_singleton.2
-    (mem_exposed_points_iff_exposed_singleton.1 hx).IsExtreme
-#align exposed_points_subset_extreme_points exposed_points_subset_extreme_points
+theorem exposedPoints_subset_extremePoints : A.exposedPoints 𝕜 ⊆ A.extremePoints 𝕜 := fun x hx =>
+  mem_extremePoints_iff_extreme_singleton.2 (mem_exposedPoints_iff_exposed_singleton.1 hx).IsExtreme
+#align exposed_points_subset_extreme_points exposedPoints_subset_extremePoints
 
 end LinearOrderedRing
 

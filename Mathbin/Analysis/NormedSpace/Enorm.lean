@@ -58,9 +58,9 @@ variable {𝕜 : Type _} {V : Type _} [NormedField 𝕜] [AddCommGroup V] [Modul
 instance : CoeFun (Enorm 𝕜 V) fun _ => V → ℝ≥0∞ :=
   ⟨Enorm.toFun⟩
 
-theorem coe_fn_injective : Function.Injective (coeFn : Enorm 𝕜 V → V → ℝ≥0∞) := fun e₁ e₂ h => by
+theorem coeFn_injective : Function.Injective (coeFn : Enorm 𝕜 V → V → ℝ≥0∞) := fun e₁ e₂ h => by
   cases e₁ <;> cases e₂ <;> congr <;> exact h
-#align enorm.coe_fn_injective Enorm.coe_fn_injective
+#align enorm.coe_fn_injective Enorm.coeFn_injective
 
 @[ext]
 theorem ext {e₁ e₂ : Enorm 𝕜 V} (h : ∀ x, e₁ x = e₂ x) : e₁ = e₂ :=
@@ -73,7 +73,7 @@ theorem ext_iff {e₁ e₂ : Enorm 𝕜 V} : e₁ = e₂ ↔ ∀ x, e₁ x = e�
 
 @[simp, norm_cast]
 theorem coe_inj {e₁ e₂ : Enorm 𝕜 V} : (e₁ : V → ℝ≥0∞) = e₂ ↔ e₁ = e₂ :=
-  coe_fn_injective.eq_iff
+  coeFn_injective.eq_iff
 #align enorm.coe_inj Enorm.coe_inj
 
 @[simp]
@@ -244,7 +244,7 @@ theorem finite_norm_eq (x : e.finiteSubspace) : ‖x‖ = (e x).toReal :=
 
 /-- Normed space instance on `e.finite_subspace`. -/
 instance : NormedSpace 𝕜 e.finiteSubspace
-    where norm_smul_le c x := le_of_eq <| by simp [finite_norm_eq, Ennreal.to_real_mul]
+    where norm_smul_le c x := le_of_eq <| by simp [finite_norm_eq, Ennreal.toReal_mul]
 
 end Enorm
 

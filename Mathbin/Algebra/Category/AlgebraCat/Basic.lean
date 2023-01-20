@@ -82,10 +82,10 @@ def ofHom {R : Type u} [CommRing R] {X Y : Type v} [Ring X] [Algebra R X] [Ring 
 #align Algebra.of_hom AlgebraCat.ofHom
 
 @[simp]
-theorem of_hom_apply {R : Type u} [CommRing R] {X Y : Type v} [Ring X] [Algebra R X] [Ring Y]
+theorem ofHom_apply {R : Type u} [CommRing R] {X Y : Type v} [Ring X] [Algebra R X] [Ring Y]
     [Algebra R Y] (f : X →ₐ[R] Y) (x : X) : ofHom f x = f x :=
   rfl
-#align Algebra.of_hom_apply AlgebraCat.of_hom_apply
+#align Algebra.of_hom_apply AlgebraCat.ofHom_apply
 
 instance : Inhabited (AlgebraCat R) :=
   ⟨of R R⟩

@@ -42,30 +42,30 @@ def j : Matrix (Sum l l) (Sum l l) R :=
 #align matrix.J Matrix.j
 
 @[simp]
-theorem J_transpose : (j l R)ᵀ = -j l R :=
+theorem j_transpose : (j l R)ᵀ = -j l R :=
   by
   rw [J, from_blocks_transpose, ← neg_one_smul R (from_blocks _ _ _ _), from_blocks_smul,
     Matrix.transpose_zero, Matrix.transpose_one, transpose_neg]
   simp [from_blocks]
-#align matrix.J_transpose Matrix.J_transpose
+#align matrix.J_transpose Matrix.j_transpose
 
 variable [Fintype l]
 
-theorem J_squared : j l R ⬝ j l R = -1 :=
+theorem j_squared : j l R ⬝ j l R = -1 :=
   by
   rw [J, from_blocks_multiply]
   simp only [Matrix.zero_mul, Matrix.neg_mul, zero_add, neg_zero, Matrix.one_mul, add_zero]
-  rw [← neg_zero, ← Matrix.from_blocks_neg, ← from_blocks_one]
-#align matrix.J_squared Matrix.J_squared
+  rw [← neg_zero, ← Matrix.fromBlocks_neg, ← from_blocks_one]
+#align matrix.J_squared Matrix.j_squared
 
-theorem J_inv : (j l R)⁻¹ = -j l R :=
+theorem j_inv : (j l R)⁻¹ = -j l R :=
   by
   refine' Matrix.inv_eq_right_inv _
   rw [Matrix.mul_neg, J_squared]
   exact neg_neg 1
-#align matrix.J_inv Matrix.J_inv
+#align matrix.J_inv Matrix.j_inv
 
-theorem J_det_mul_J_det : det (j l R) * det (j l R) = 1 :=
+theorem j_det_mul_j_det : det (j l R) * det (j l R) = 1 :=
   by
   rw [← det_mul, J_squared]
   rw [← one_smul R (-1 : Matrix _ _ R)]
@@ -73,11 +73,11 @@ theorem J_det_mul_J_det : det (j l R) * det (j l R) = 1 :=
   simp only [Fintype.card_sum, det_one, mul_one]
   apply Even.neg_one_pow
   exact even_add_self _
-#align matrix.J_det_mul_J_det Matrix.J_det_mul_J_det
+#align matrix.J_det_mul_J_det Matrix.j_det_mul_j_det
 
-theorem is_unit_det_J : IsUnit (det (j l R)) :=
-  isUnit_iff_exists_inv.mpr ⟨det (j l R), J_det_mul_J_det _ _⟩
-#align matrix.is_unit_det_J Matrix.is_unit_det_J
+theorem isUnit_det_j : IsUnit (det (j l R)) :=
+  isUnit_iff_exists_inv.mpr ⟨det (j l R), j_det_mul_j_det _ _⟩
+#align matrix.is_unit_det_J Matrix.isUnit_det_j
 
 end JMatrixLemmas
 
@@ -114,23 +114,23 @@ section SymplecticJ
 
 variable (l) (R)
 
-theorem J_mem : j l R ∈ symplecticGroup l R :=
+theorem j_mem : j l R ∈ symplecticGroup l R :=
   by
   rw [mem_iff, J, from_blocks_multiply, from_blocks_transpose, from_blocks_multiply]
   simp
-#align symplectic_group.J_mem SymplecticGroup.J_mem
+#align symplectic_group.J_mem SymplecticGroup.j_mem
 
 /-- The canonical skew-symmetric matrix as an element in the symplectic group. -/
 def symJ : symplecticGroup l R :=
-  ⟨j l R, J_mem l R⟩
+  ⟨j l R, j_mem l R⟩
 #align symplectic_group.sym_J SymplecticGroup.symJ
 
 variable {l} {R}
 
 @[simp]
-theorem coe_J : ↑(symJ l R) = j l R :=
+theorem coe_j : ↑(symJ l R) = j l R :=
   rfl
-#align symplectic_group.coe_J SymplecticGroup.coe_J
+#align symplectic_group.coe_J SymplecticGroup.coe_j
 
 end SymplecticJ
 
@@ -188,7 +188,7 @@ theorem mem_iff' : A ∈ symplecticGroup l R ↔ Aᵀ ⬝ j l R ⬝ A = j l R :=
 instance : Inv (symplecticGroup l R)
     where inv A :=
     ⟨(-j l R) ⬝ (A : Matrix (Sum l l) (Sum l l) R)ᵀ ⬝ j l R,
-      mul_mem (mul_mem (neg_mem <| J_mem _ _) <| transpose_mem A.2) <| J_mem _ _⟩
+      mul_mem (mul_mem (neg_mem <| j_mem _ _) <| transpose_mem A.2) <| j_mem _ _⟩
 
 theorem coe_inv (A : symplecticGroup l R) : (↑A⁻¹ : Matrix _ _ _) = (-j l R) ⬝ (↑A)ᵀ ⬝ j l R :=
   rfl

@@ -171,7 +171,7 @@ def coeffsReduce : Nat → Int → List Int → Term
     (symSym m b, as.map (symSym m) {n ↦ -a})
 #align omega.coeffs_reduce Omega.coeffsReduce
 
-theorem coeffs_reduce_correct {v : Nat → Int} {b : Int} {as : List Int} {n : Nat} :
+theorem coeffsReduce_correct {v : Nat → Int} {b : Int} {as : List Int} {n : Nat} :
     0 < get n as →
       0 = Term.val v (b, as) → 0 = Term.val (v ⟨n ↦ sgm v b as n⟩) (coeffsReduce n b as) :=
   by
@@ -266,7 +266,7 @@ theorem coeffs_reduce_correct {v : Nat → Int} {b : Int} {as : List Int} {n : N
         rw [← coeffs.val_except_add_eq n, coeffs.val_except_update_set, get_set, update_eq]
       
   rw [← Int.mul_ediv_cancel (term.val _ _) h3, ← h4, Int.zero_div]
-#align omega.coeffs_reduce_correct Omega.coeffs_reduce_correct
+#align omega.coeffs_reduce_correct Omega.coeffsReduce_correct
 
 -- Requires : t1.coeffs[m] = 1
 def cancel (m : Nat) (t1 t2 : Term) : Term :=
@@ -354,7 +354,7 @@ theorem sat_empty : Clause.Sat ([], []) :=
 #align omega.sat_empty Omega.sat_empty
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic tactic.rotate -/
-theorem sat_eq_elim : ∀ {es : List Ee} {c : Clause}, c.Sat → (eqElim es c).Sat
+theorem sat_eqElim : ∀ {es : List Ee} {c : Clause}, c.Sat → (eqElim es c).Sat
   | [], ([], les), h => h
   | e :: _, ([], les), h => by cases e <;> simp only [eq_elim] <;> apply sat_empty
   | [], (_ :: _, les), h => sat_empty
@@ -450,15 +450,15 @@ theorem sat_eq_elim : ∀ {es : List Ee} {c : Clause}, c.Sat → (eqElim es c).S
       rw [← h1, mul_zero, zero_add]
     · apply h3 _ h4
     · apply h2 _ h4
-#align omega.sat_eq_elim Omega.sat_eq_elim
+#align omega.sat_eq_elim Omega.sat_eqElim
 
 /-- If the result of equality elimination is unsatisfiable, the original clause is unsatisfiable. -/
-theorem unsat_of_unsat_eq_elim (ee : List Ee) (c : Clause) : (eqElim ee c).Unsat → c.Unsat :=
+theorem unsat_of_unsat_eqElim (ee : List Ee) (c : Clause) : (eqElim ee c).Unsat → c.Unsat :=
   by
   intro h1 h2
   apply h1
   apply sat_eq_elim h2
-#align omega.unsat_of_unsat_eq_elim Omega.unsat_of_unsat_eq_elim
+#align omega.unsat_of_unsat_eq_elim Omega.unsat_of_unsat_eqElim
 
 end Omega
 

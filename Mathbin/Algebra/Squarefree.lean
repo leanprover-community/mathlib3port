@@ -130,7 +130,7 @@ theorem finite_prime_left {a b : R} (ha : Prime a) (hb : b ≠ 0) : multiplicity
     refine'
       WfDvdMonoid.induction_on_irreducible b (by contradiction) (fun u hu hu' => _)
         fun b p hb hp ih hpb => _
-    · rw [multiplicity.finite_iff_dom, multiplicity.is_unit_right ha.not_unit hu]
+    · rw [multiplicity.finite_iff_dom, multiplicity.isUnit_right ha.not_unit hu]
       exact PartEnat.dom_coe 0
     · refine'
         multiplicity.finite_mul ha
@@ -202,8 +202,8 @@ theorem IsRadical.squarefree {x : R} (h0 : x ≠ 0) (h : IsRadical x) : Squarefr
 
 variable [GCDMonoid R]
 
-theorem Squarefree.is_radical {x : R} (hx : Squarefree x) : IsRadical x :=
-  (is_radical_iff_pow_one_lt 2 one_lt_two).2 fun y hy =>
+theorem Squarefree.isRadical {x : R} (hx : Squarefree x) : IsRadical x :=
+  (isRadical_iff_pow_one_lt 2 one_lt_two).2 fun y hy =>
     And.right <|
       (dvd_gcd_iff x x y).1
         (by
@@ -216,19 +216,19 @@ theorem Squarefree.is_radical {x : R} (hx : Squarefree x) : IsRadical x :=
           rw [pow_two, mul_dvd_mul_iff_left h] at hy
           obtain ⟨w, hw⟩ := hy
           exact (hx z ⟨w, by rwa [mul_right_comm, ← hw]⟩).mul_right_dvd.2 dvd_rfl)
-#align squarefree.is_radical Squarefree.is_radical
+#align squarefree.is_radical Squarefree.isRadical
 
-theorem is_radical_iff_squarefree_or_zero {x : R} : IsRadical x ↔ Squarefree x ∨ x = 0 :=
+theorem isRadical_iff_squarefree_or_zero {x : R} : IsRadical x ↔ Squarefree x ∨ x = 0 :=
   ⟨fun hx => (em <| x = 0).elim Or.inr fun h => Or.inl <| hx.Squarefree h,
-    Or.ndrec Squarefree.is_radical <| by
+    Or.ndrec Squarefree.isRadical <| by
       rintro rfl
-      rw [zero_is_radical_iff]
+      rw [zero_isRadical_iff]
       infer_instance⟩
-#align is_radical_iff_squarefree_or_zero is_radical_iff_squarefree_or_zero
+#align is_radical_iff_squarefree_or_zero isRadical_iff_squarefree_or_zero
 
-theorem is_radical_iff_squarefree_of_ne_zero {x : R} (h : x ≠ 0) : IsRadical x ↔ Squarefree x :=
-  ⟨IsRadical.squarefree h, Squarefree.is_radical⟩
-#align is_radical_iff_squarefree_of_ne_zero is_radical_iff_squarefree_of_ne_zero
+theorem isRadical_iff_squarefree_of_ne_zero {x : R} (h : x ≠ 0) : IsRadical x ↔ Squarefree x :=
+  ⟨IsRadical.squarefree h, Squarefree.isRadical⟩
+#align is_radical_iff_squarefree_of_ne_zero isRadical_iff_squarefree_of_ne_zero
 
 end IsRadical
 
@@ -236,7 +236,7 @@ namespace UniqueFactorizationMonoid
 
 variable [CancelCommMonoidWithZero R] [UniqueFactorizationMonoid R]
 
-theorem squarefree_iff_nodup_normalized_factors [NormalizationMonoid R] [DecidableEq R] {x : R}
+theorem squarefree_iff_nodup_normalizedFactors [NormalizationMonoid R] [DecidableEq R] {x : R}
     (x0 : x ≠ 0) : Squarefree x ↔ Multiset.Nodup (normalizedFactors x) :=
   by
   have drel : DecidableRel (Dvd.Dvd : R → R → Prop) := by classical infer_instance
@@ -262,7 +262,7 @@ theorem squarefree_iff_nodup_normalized_factors [NormalizationMonoid R] [Decidab
     rw [multiplicity_eq_count_normalized_factors hib x0]
     specialize h (normalize b)
     assumption_mod_cast
-#align unique_factorization_monoid.squarefree_iff_nodup_normalized_factors UniqueFactorizationMonoid.squarefree_iff_nodup_normalized_factors
+#align unique_factorization_monoid.squarefree_iff_nodup_normalized_factors UniqueFactorizationMonoid.squarefree_iff_nodup_normalizedFactors
 
 theorem dvd_pow_iff_dvd_of_squarefree {x y : R} {n : ℕ} (hsq : Squarefree x) (h0 : n ≠ 0) :
     x ∣ y ^ n ↔ x ∣ y := by

@@ -216,16 +216,16 @@ theorem inv_top : (⊤ : Submonoid G)⁻¹ = ⊤ :=
 #align add_submonoid.neg_top AddSubmonoid.neg_top
 
 @[simp, to_additive]
-theorem inv_infi {ι : Sort _} (S : ι → Submonoid G) : (⨅ i, S i)⁻¹ = ⨅ i, (S i)⁻¹ :=
+theorem inv_infᵢ {ι : Sort _} (S : ι → Submonoid G) : (⨅ i, S i)⁻¹ = ⨅ i, (S i)⁻¹ :=
   (invOrderIso : Submonoid G ≃o Submonoid G).map_infi _
-#align submonoid.inv_infi Submonoid.inv_infi
+#align submonoid.inv_infi Submonoid.inv_infᵢ
 #align add_submonoid.neg_infi AddSubmonoid.neg_infi
 
 @[simp, to_additive]
-theorem inv_supr {ι : Sort _} (S : ι → Submonoid G) : (⨆ i, S i)⁻¹ = ⨆ i, (S i)⁻¹ :=
+theorem inv_supᵢ {ι : Sort _} (S : ι → Submonoid G) : (⨆ i, S i)⁻¹ = ⨆ i, (S i)⁻¹ :=
   (invOrderIso : Submonoid G ≃o Submonoid G).map_supr _
-#align submonoid.inv_supr Submonoid.inv_supr
-#align add_submonoid.neg_supr AddSubmonoid.neg_supr
+#align submonoid.inv_supr Submonoid.inv_supᵢ
+#align add_submonoid.neg_supr AddSubmonoid.neg_supᵢ
 
 end Submonoid
 

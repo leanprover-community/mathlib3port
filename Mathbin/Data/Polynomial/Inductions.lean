@@ -42,32 +42,32 @@ def divX (p : R[X]) : R[X] :=
 #align polynomial.div_X Polynomial.divX
 
 @[simp]
-theorem coeff_div_X : (divX p).coeff n = p.coeff (n + 1) :=
+theorem coeff_divX : (divX p).coeff n = p.coeff (n + 1) :=
   by
   simp only [div_X, coeff_monomial, true_and_iff, finset_sum_coeff, not_lt, mem_Ico, zero_le,
     Finset.sum_ite_eq', ite_eq_left_iff]
   intro h
   rw [coeff_eq_zero_of_nat_degree_lt (Nat.lt_succ_of_le h)]
-#align polynomial.coeff_div_X Polynomial.coeff_div_X
+#align polynomial.coeff_div_X Polynomial.coeff_divX
 
-theorem div_X_mul_X_add (p : R[X]) : divX p * X + c (p.coeff 0) = p :=
+theorem divX_mul_x_add (p : R[X]) : divX p * X + c (p.coeff 0) = p :=
   ext <| by rintro ⟨_ | _⟩ <;> simp [coeff_C, Nat.succ_ne_zero, coeff_mul_X]
-#align polynomial.div_X_mul_X_add Polynomial.div_X_mul_X_add
+#align polynomial.div_X_mul_X_add Polynomial.divX_mul_x_add
 
 @[simp]
-theorem div_X_C (a : R) : divX (c a) = 0 :=
+theorem divX_c (a : R) : divX (c a) = 0 :=
   ext fun n => by simp [div_X, coeff_C] <;> simp [coeff]
-#align polynomial.div_X_C Polynomial.div_X_C
+#align polynomial.div_X_C Polynomial.divX_c
 
-theorem div_X_eq_zero_iff : divX p = 0 ↔ p = c (p.coeff 0) :=
+theorem divX_eq_zero_iff : divX p = 0 ↔ p = c (p.coeff 0) :=
   ⟨fun h => by simpa [eq_comm, h] using div_X_mul_X_add p, fun h => by rw [h, div_X_C]⟩
-#align polynomial.div_X_eq_zero_iff Polynomial.div_X_eq_zero_iff
+#align polynomial.div_X_eq_zero_iff Polynomial.divX_eq_zero_iff
 
-theorem div_X_add : divX (p + q) = divX p + divX q :=
+theorem divX_add : divX (p + q) = divX p + divX q :=
   ext <| by simp
-#align polynomial.div_X_add Polynomial.div_X_add
+#align polynomial.div_X_add Polynomial.divX_add
 
-theorem degree_div_X_lt (hp0 : p ≠ 0) : (divX p).degree < p.degree := by
+theorem degree_divX_lt (hp0 : p ≠ 0) : (divX p).degree < p.degree := by
   haveI := nontrivial.of_polynomial_ne hp0 <;>
     calc
       (div_X p).degree < (div_X p * X + C (p.coeff 0)).degree :=
@@ -98,7 +98,7 @@ theorem degree_div_X_lt (hp0 : p ≠ 0) : (divX p).degree < p.degree := by
           rw [degree_add_eq_left_of_degree_lt this] <;> exact degree_lt_degree_mul_X hXp0
       _ = p.degree := congr_arg _ (div_X_mul_X_add _)
       
-#align polynomial.degree_div_X_lt Polynomial.degree_div_X_lt
+#align polynomial.degree_div_X_lt Polynomial.degree_divX_lt
 
 /- warning: polynomial.rec_on_horner -> Polynomial.recOnHorner is a dubious translation:
 lean 3 declaration is
@@ -115,7 +115,7 @@ noncomputable def recOnHorner {M : R[X] → Sort _} :
   | p => fun M0 MC MX =>
     if hp : p = 0 then Eq.recOn hp.symm M0
     else by
-      have wf : degree (divX p) < degree p := degree_div_X_lt hp
+      have wf : degree (divX p) < degree p := degree_divX_lt hp
       rw [← div_X_mul_X_add p] at * <;>
         exact
           if hcp0 : coeff p 0 = 0 then by
@@ -145,7 +145,7 @@ theorem degree_pos_induction_on {P : R[X] → Prop} (p : R[X]) (h0 : 0 < degree 
     (fun p a _ _ ih h0 =>
       have : 0 < degree p :=
         lt_of_not_ge fun h =>
-          not_lt_of_ge degree_C_le <| by rwa [eq_C_of_degree_le_zero h, ← C_add] at h0
+          not_lt_of_ge degree_c_le <| by rwa [eq_C_of_degree_le_zero h, ← C_add] at h0
       hadd this (ih this))
     (fun p _ ih h0' =>
       if h0 : 0 < degree p then hX h0 (ih h0)
@@ -166,7 +166,7 @@ multiplication in the statement.
 See `degree_pos_induction_on` for a similar statement involving more explicit multiplications.
  -/
 @[elab_as_elim]
-theorem nat_degree_ne_zero_induction_on {M : R[X] → Prop} {f : R[X]} (f0 : f.natDegree ≠ 0)
+theorem natDegree_ne_zero_induction_on {M : R[X] → Prop} {f : R[X]} (f0 : f.natDegree ≠ 0)
     (h_C_add : ∀ {a p}, M p → M (c a + p)) (h_add : ∀ {p q}, M p → M q → M (p + q))
     (h_monomial : ∀ {n : ℕ} {a : R}, a ≠ 0 → n ≠ 0 → M (monomial n a)) : M f :=
   by
@@ -189,7 +189,7 @@ theorem nat_degree_ne_zero_induction_on {M : R[X] → Prop} {f : R[X]} (f0 : f.n
     · refine' Or.inr _
       rw [C_mul_X_pow_eq_monomial]
       exact h_monomial a0 n.succ_ne_zero
-#align polynomial.nat_degree_ne_zero_induction_on Polynomial.nat_degree_ne_zero_induction_on
+#align polynomial.nat_degree_ne_zero_induction_on Polynomial.natDegree_ne_zero_induction_on
 
 end Semiring
 

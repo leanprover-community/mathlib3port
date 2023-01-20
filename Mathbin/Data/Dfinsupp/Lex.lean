@@ -70,19 +70,19 @@ theorem lex_lt_of_lt [∀ i, PartialOrder (α i)] (r) [IsStrictOrder ι r] {x y 
   exact lex_lt_of_lt_of_preorder r hlt
 #align dfinsupp.lex_lt_of_lt Dfinsupp.lex_lt_of_lt
 
-instance Lex.is_strict_order [LinearOrder ι] [∀ i, PartialOrder (α i)] :
+instance Lex.isStrictOrder [LinearOrder ι] [∀ i, PartialOrder (α i)] :
     IsStrictOrder (Lex (Π₀ i, α i)) (· < ·) :=
   let i : IsStrictOrder (Lex (∀ i, α i)) (· < ·) := Pi.Lex.isStrictOrder
   { irrefl := toLex.Surjective.forall.2 fun a => @irrefl _ _ i.to_is_irrefl a
     trans := toLex.Surjective.forall₃.2 fun a b c => @trans _ _ i.to_is_trans a b c }
-#align dfinsupp.lex.is_strict_order Dfinsupp.Lex.is_strict_order
+#align dfinsupp.lex.is_strict_order Dfinsupp.Lex.isStrictOrder
 
 variable [LinearOrder ι]
 
 /-- The partial order on `dfinsupp`s obtained by the lexicographic ordering.
 See `dfinsupp.lex.linear_order` for a proof that this partial order is in fact linear. -/
 instance Lex.partialOrder [∀ i, PartialOrder (α i)] : PartialOrder (Lex (Π₀ i, α i)) :=
-  PartialOrder.lift (fun x => toLex ⇑(ofLex x)) Dfinsupp.coe_fn_injective
+  PartialOrder.lift (fun x => toLex ⇑(ofLex x)) Dfinsupp.coeFn_injective
 #align dfinsupp.lex.partial_order Dfinsupp.Lex.partialOrder
 
 section LinearOrder
@@ -98,15 +98,15 @@ private def lt_trichotomy_rec {P : Lex (Π₀ i, α i) → Lex (Π₀ i, α i) �
   Lex.rec fun f =>
     Lex.rec fun g =>
       match (motive := ∀ y, (f.neLocus g).min = y → _) _, rfl with
-      | ⊤, h => h_eq (ne_locus_eq_empty.mp <| Finset.min_eq_top.mp h)
+      | ⊤, h => h_eq (neLocus_eq_empty.mp <| Finset.min_eq_top.mp h)
       | (wit : ι), h =>
-        (mem_ne_locus.mp <| Finset.mem_of_min h).lt_or_lt.byCases
+        (mem_neLocus.mp <| Finset.mem_of_min h).lt_or_lt.byCases
           (fun hwit =>
-            h_lt ⟨wit, fun j hj => not_mem_ne_locus.mp (Finset.not_mem_of_lt_min hj h), hwit⟩)
+            h_lt ⟨wit, fun j hj => not_mem_neLocus.mp (Finset.not_mem_of_lt_min hj h), hwit⟩)
           fun hwit =>
           h_gt
             ⟨wit, fun j hj =>
-              not_mem_ne_locus.mp (Finset.not_mem_of_lt_min hj <| by rwa [ne_locus_comm]), hwit⟩
+              not_mem_neLocus.mp (Finset.not_mem_of_lt_min hj <| by rwa [ne_locus_comm]), hwit⟩
 #align dfinsupp.lt_trichotomy_rec dfinsupp.lt_trichotomy_rec
 
 /- ./././Mathport/Syntax/Translate/Command.lean:317:38: unsupported irreducible non-definition -/
@@ -137,14 +137,14 @@ end LinearOrder
 
 variable [∀ i, PartialOrder (α i)]
 
-theorem to_lex_monotone : Monotone (@toLex (Π₀ i, α i)) := fun a b h =>
+theorem toLex_monotone : Monotone (@toLex (Π₀ i, α i)) := fun a b h =>
   le_of_lt_or_eq <|
     or_iff_not_imp_right.2 fun hne => by
       classical exact
           ⟨Finset.min' _ (nonempty_ne_locus_iff.2 hne), fun j hj =>
             not_mem_ne_locus.1 fun h => (Finset.min'_le _ _ h).not_lt hj,
             (h _).lt_of_ne (mem_ne_locus.1 <| Finset.min'_mem _ _)⟩
-#align dfinsupp.to_lex_monotone Dfinsupp.to_lex_monotone
+#align dfinsupp.to_lex_monotone Dfinsupp.toLex_monotone
 
 theorem lt_of_forall_lt_of_lt (a b : Lex (Π₀ i, α i)) (i : ι) :
     (∀ j < i, ofLex a j = ofLex b j) → ofLex a i < ofLex b i → a < b := fun h1 h2 => ⟨i, h1, h2⟩
@@ -166,16 +166,16 @@ section Left
 
 variable [∀ i, CovariantClass (α i) (α i) (· + ·) (· < ·)]
 
-instance Lex.covariant_class_lt_left :
+instance Lex.covariantClass_lt_left :
     CovariantClass (Lex (Π₀ i, α i)) (Lex (Π₀ i, α i)) (· + ·) (· < ·) :=
   ⟨fun f g h ⟨a, lta, ha⟩ =>
     ⟨a, fun j ja => congr_arg ((· + ·) _) (lta j ja), add_lt_add_left ha _⟩⟩
-#align dfinsupp.lex.covariant_class_lt_left Dfinsupp.Lex.covariant_class_lt_left
+#align dfinsupp.lex.covariant_class_lt_left Dfinsupp.Lex.covariantClass_lt_left
 
-instance Lex.covariant_class_le_left :
+instance Lex.covariantClass_le_left :
     CovariantClass (Lex (Π₀ i, α i)) (Lex (Π₀ i, α i)) (· + ·) (· ≤ ·) :=
   Add.to_covariantClass_left _
-#align dfinsupp.lex.covariant_class_le_left Dfinsupp.Lex.covariant_class_le_left
+#align dfinsupp.lex.covariant_class_le_left Dfinsupp.Lex.covariantClass_le_left
 
 end Left
 
@@ -183,16 +183,16 @@ section Right
 
 variable [∀ i, CovariantClass (α i) (α i) (Function.swap (· + ·)) (· < ·)]
 
-instance Lex.covariant_class_lt_right :
+instance Lex.covariantClass_lt_right :
     CovariantClass (Lex (Π₀ i, α i)) (Lex (Π₀ i, α i)) (Function.swap (· + ·)) (· < ·) :=
   ⟨fun f g h ⟨a, lta, ha⟩ =>
     ⟨a, fun j ja => congr_arg (· + ofLex f j) (lta j ja), add_lt_add_right ha _⟩⟩
-#align dfinsupp.lex.covariant_class_lt_right Dfinsupp.Lex.covariant_class_lt_right
+#align dfinsupp.lex.covariant_class_lt_right Dfinsupp.Lex.covariantClass_lt_right
 
-instance Lex.covariant_class_le_right :
+instance Lex.covariantClass_le_right :
     CovariantClass (Lex (Π₀ i, α i)) (Lex (Π₀ i, α i)) (Function.swap (· + ·)) (· ≤ ·) :=
   Add.to_covariantClass_right _
-#align dfinsupp.lex.covariant_class_le_right Dfinsupp.Lex.covariant_class_le_right
+#align dfinsupp.lex.covariant_class_le_right Dfinsupp.Lex.covariantClass_le_right
 
 end Right
 

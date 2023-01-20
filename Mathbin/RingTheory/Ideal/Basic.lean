@@ -89,10 +89,10 @@ theorem eq_top_of_unit_mem (x y : α) (hx : x ∈ I) (h : y * x = 1) : I = ⊤ :
       
 #align ideal.eq_top_of_unit_mem Ideal.eq_top_of_unit_mem
 
-theorem eq_top_of_is_unit_mem {x} (hx : x ∈ I) (h : IsUnit x) : I = ⊤ :=
+theorem eq_top_of_isUnit_mem {x} (hx : x ∈ I) (h : IsUnit x) : I = ⊤ :=
   let ⟨y, hy⟩ := h.exists_left_inv
   eq_top_of_unit_mem I x y hx hy
-#align ideal.eq_top_of_is_unit_mem Ideal.eq_top_of_is_unit_mem
+#align ideal.eq_top_of_is_unit_mem Ideal.eq_top_of_isUnit_mem
 
 theorem eq_top_iff_one : I = ⊤ ↔ (1 : α) ∈ I :=
   ⟨by rintro rfl <;> trivial, fun h => eq_top_of_unit_mem _ _ 1 h (by simp)⟩
@@ -135,9 +135,9 @@ theorem span_union (s t : Set α) : span (s ∪ t) = span s ⊔ span t :=
   Submodule.span_union _ _
 #align ideal.span_union Ideal.span_union
 
-theorem span_Union {ι} (s : ι → Set α) : span (⋃ i, s i) = ⨆ i, span (s i) :=
-  Submodule.span_Union _
-#align ideal.span_Union Ideal.span_Union
+theorem span_unionᵢ {ι} (s : ι → Set α) : span (⋃ i, s i) = ⨆ i, span (s i) :=
+  Submodule.span_unionᵢ _
+#align ideal.span_Union Ideal.span_unionᵢ
 
 theorem mem_span {s : Set α} (x) : x ∈ span s ↔ ∀ p : Ideal α, s ⊆ p → x ∈ p :=
   mem_Inter₂
@@ -244,9 +244,9 @@ class IsPrime (I : Ideal α) : Prop where
   mem_or_mem' : ∀ {x y : α}, x * y ∈ I → x ∈ I ∨ y ∈ I
 #align ideal.is_prime Ideal.IsPrime
 
-theorem is_prime_iff {I : Ideal α} : IsPrime I ↔ I ≠ ⊤ ∧ ∀ {x y : α}, x * y ∈ I → x ∈ I ∨ y ∈ I :=
+theorem isPrime_iff {I : Ideal α} : IsPrime I ↔ I ≠ ⊤ ∧ ∀ {x y : α}, x * y ∈ I → x ∈ I ∨ y ∈ I :=
   ⟨fun h => ⟨h.1, fun _ _ => h.2⟩, fun h => ⟨h.1, fun _ _ => h.2⟩⟩
-#align ideal.is_prime_iff Ideal.is_prime_iff
+#align ideal.is_prime_iff Ideal.isPrime_iff
 
 theorem IsPrime.ne_top {I : Ideal α} (hI : I.IsPrime) : I ≠ ⊤ :=
   hI.1
@@ -272,22 +272,22 @@ theorem IsPrime.mem_of_pow_mem {I : Ideal α} (hI : I.IsPrime) {r : α} (n : ℕ
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x «expr ∉ » I) -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (y «expr ∉ » I) -/
-theorem not_is_prime_iff {I : Ideal α} :
+theorem not_isPrime_iff {I : Ideal α} :
     ¬I.IsPrime ↔ I = ⊤ ∨ ∃ (x : _)(_ : x ∉ I)(y : _)(_ : y ∉ I), x * y ∈ I :=
   by
-  simp_rw [Ideal.is_prime_iff, not_and_or, Ne.def, not_not, not_forall, not_or]
+  simp_rw [Ideal.isPrime_iff, not_and_or, Ne.def, not_not, not_forall, not_or]
   exact
     or_congr Iff.rfl
       ⟨fun ⟨x, y, hxy, hx, hy⟩ => ⟨x, hx, y, hy, hxy⟩, fun ⟨x, hx, y, hy, hxy⟩ =>
         ⟨x, y, hxy, hx, hy⟩⟩
-#align ideal.not_is_prime_iff Ideal.not_is_prime_iff
+#align ideal.not_is_prime_iff Ideal.not_isPrime_iff
 
 theorem zero_ne_one_of_proper {I : Ideal α} (h : I ≠ ⊤) : (0 : α) ≠ 1 := fun hz =>
   I.ne_top_iff_one.1 h <| hz ▸ I.zero_mem
 #align ideal.zero_ne_one_of_proper Ideal.zero_ne_one_of_proper
 
 theorem botPrime {R : Type _} [Ring R] [IsDomain R] : (⊥ : Ideal R).IsPrime :=
-  ⟨fun h => one_ne_zero (by rwa [Ideal.eq_top_iff_one, Submodule.mem_bot] at h), fun x y h =>
+  ⟨fun h => one_neZero (by rwa [Ideal.eq_top_iff_one, Submodule.mem_bot] at h), fun x y h =>
     mul_eq_zero.mp (by simpa only [Submodule.mem_bot] using h)⟩
 #align ideal.bot_prime Ideal.botPrime
 
@@ -296,17 +296,17 @@ class IsMaximal (I : Ideal α) : Prop where
   out : IsCoatom I
 #align ideal.is_maximal Ideal.IsMaximal
 
-theorem is_maximal_def {I : Ideal α} : I.IsMaximal ↔ IsCoatom I :=
+theorem isMaximal_def {I : Ideal α} : I.IsMaximal ↔ IsCoatom I :=
   ⟨fun h => h.1, fun h => ⟨h⟩⟩
-#align ideal.is_maximal_def Ideal.is_maximal_def
+#align ideal.is_maximal_def Ideal.isMaximal_def
 
 theorem IsMaximal.ne_top {I : Ideal α} (h : I.IsMaximal) : I ≠ ⊤ :=
-  (is_maximal_def.1 h).1
+  (isMaximal_def.1 h).1
 #align ideal.is_maximal.ne_top Ideal.IsMaximal.ne_top
 
-theorem is_maximal_iff {I : Ideal α} :
+theorem isMaximal_iff {I : Ideal α} :
     I.IsMaximal ↔ (1 : α) ∉ I ∧ ∀ (J : Ideal α) (x), I ≤ J → x ∉ I → x ∈ J → (1 : α) ∈ J :=
-  is_maximal_def.trans <|
+  isMaximal_def.trans <|
     and_congr I.ne_top_iff_one <|
       forall_congr' fun J => by
         rw [lt_iff_le_not_le] <;>
@@ -315,7 +315,7 @@ theorem is_maximal_iff {I : Ideal α} :
               fun H ⟨h₁, h₂⟩ =>
               let ⟨x, xJ, xI⟩ := not_subset.1 h₂
               J.eq_top_iff_one.2 <| H x h₁ xI xJ⟩
-#align ideal.is_maximal_iff Ideal.is_maximal_iff
+#align ideal.is_maximal_iff Ideal.isMaximal_iff
 
 theorem IsMaximal.eq_of_le {I J : Ideal α} (hI : I.IsMaximal) (hJ : J ≠ ⊤) (IJ : I ≤ J) : I = J :=
   eq_iff_le_not_lt.2 ⟨IJ, fun h => hJ (hI.1.2 _ h)⟩
@@ -325,7 +325,7 @@ instance : IsCoatomic (Ideal α) :=
   by
   apply CompleteLattice.coatomic_of_top_compact
   rw [← span_singleton_one]
-  exact Submodule.singleton_span_is_compact_element 1
+  exact Submodule.singleton_span_isCompactElement 1
 
 /-- **Krull's theorem**: if `I` is an ideal that is not the whole ring, then it is included in some
     maximal ideal. -/
@@ -414,18 +414,18 @@ theorem mem_sup_right {S T : Ideal R} : ∀ {x : R}, x ∈ T → x ∈ S ⊔ T :
   show T ≤ S ⊔ T from le_sup_right
 #align ideal.mem_sup_right Ideal.mem_sup_right
 
-theorem mem_supr_of_mem {ι : Sort _} {S : ι → Ideal R} (i : ι) : ∀ {x : R}, x ∈ S i → x ∈ supᵢ S :=
+theorem mem_supᵢ_of_mem {ι : Sort _} {S : ι → Ideal R} (i : ι) : ∀ {x : R}, x ∈ S i → x ∈ supᵢ S :=
   show S i ≤ supᵢ S from le_supᵢ _ _
-#align ideal.mem_supr_of_mem Ideal.mem_supr_of_mem
+#align ideal.mem_supr_of_mem Ideal.mem_supᵢ_of_mem
 
-theorem mem_Sup_of_mem {S : Set (Ideal R)} {s : Ideal R} (hs : s ∈ S) :
+theorem mem_supₛ_of_mem {S : Set (Ideal R)} {s : Ideal R} (hs : s ∈ S) :
     ∀ {x : R}, x ∈ s → x ∈ supₛ S :=
   show s ≤ supₛ S from le_supₛ hs
-#align ideal.mem_Sup_of_mem Ideal.mem_Sup_of_mem
+#align ideal.mem_Sup_of_mem Ideal.mem_supₛ_of_mem
 
-theorem mem_Inf {s : Set (Ideal R)} {x : R} : x ∈ infₛ s ↔ ∀ ⦃I⦄, I ∈ s → x ∈ I :=
+theorem mem_infₛ {s : Set (Ideal R)} {x : R} : x ∈ infₛ s ↔ ∀ ⦃I⦄, I ∈ s → x ∈ I :=
   ⟨fun hx I his => hx I ⟨I, infᵢ_pos his⟩, fun H I ⟨J, hij⟩ => hij ▸ fun S ⟨hj, hS⟩ => hS ▸ H hj⟩
-#align ideal.mem_Inf Ideal.mem_Inf
+#align ideal.mem_Inf Ideal.mem_infₛ
 
 @[simp]
 theorem mem_inf {I J : Ideal R} {x : R} : x ∈ I ⊓ J ↔ x ∈ I ∧ x ∈ J :=
@@ -433,9 +433,9 @@ theorem mem_inf {I J : Ideal R} {x : R} : x ∈ I ⊓ J ↔ x ∈ I ∧ x ∈ J 
 #align ideal.mem_inf Ideal.mem_inf
 
 @[simp]
-theorem mem_infi {ι : Sort _} {I : ι → Ideal R} {x : R} : x ∈ infᵢ I ↔ ∀ i, x ∈ I i :=
-  Submodule.mem_infi _
-#align ideal.mem_infi Ideal.mem_infi
+theorem mem_infᵢ {ι : Sort _} {I : ι → Ideal R} {x : R} : x ∈ infᵢ I ↔ ∀ i, x ∈ I i :=
+  Submodule.mem_infᵢ _
+#align ideal.mem_infi Ideal.mem_infᵢ
 
 @[simp]
 theorem mem_bot {x : R} : x ∈ (⊥ : Ideal R) ↔ x = 0 :=
@@ -468,8 +468,9 @@ theorem infIsPrimeOfIsChain {s : Set (Ideal α)} (hs : s.Nonempty) (hs' : IsChai
     let ⟨x, hx⟩ := hs
     (H x hx).ne_top (eq_top_iff.mpr (e.symm.trans_le (infₛ_le hx))),
     fun x y e =>
-    or_iff_not_imp_left.mpr fun hx => by
-      rw [Ideal.mem_Inf] at hx e⊢
+    or_iff_not_imp_left.mpr fun hx =>
+      by
+      rw [Ideal.mem_infₛ] at hx e⊢
       push_neg  at hx
       obtain ⟨I, hI, hI'⟩ := hx
       intro J hJ
@@ -754,12 +755,12 @@ namespace Ring
 
 variable {R : Type _} [CommRing R]
 
-theorem not_is_field_of_subsingleton {R : Type _} [Ring R] [Subsingleton R] : ¬IsField R :=
+theorem not_isField_of_subsingleton {R : Type _} [Ring R] [Subsingleton R] : ¬IsField R :=
   fun ⟨⟨x, y, hxy⟩, _, _⟩ => hxy (Subsingleton.elim x y)
-#align ring.not_is_field_of_subsingleton Ring.not_is_field_of_subsingleton
+#align ring.not_is_field_of_subsingleton Ring.not_isField_of_subsingleton
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x «expr ≠ » (0 : R)) -/
-theorem exists_not_is_unit_of_not_is_field [Nontrivial R] (hf : ¬IsField R) :
+theorem exists_not_isUnit_of_not_isField [Nontrivial R] (hf : ¬IsField R) :
     ∃ (x : _)(_ : x ≠ (0 : R)), ¬IsUnit x :=
   by
   have : ¬_ := fun h => hf ⟨exists_pair_ne R, mul_comm, h⟩
@@ -767,9 +768,9 @@ theorem exists_not_is_unit_of_not_is_field [Nontrivial R] (hf : ¬IsField R) :
   push_neg  at this⊢
   obtain ⟨x, hx, not_unit⟩ := this
   exact ⟨x, hx, not_unit⟩
-#align ring.exists_not_is_unit_of_not_is_field Ring.exists_not_is_unit_of_not_is_field
+#align ring.exists_not_is_unit_of_not_is_field Ring.exists_not_isUnit_of_not_isField
 
-theorem not_is_field_iff_exists_ideal_bot_lt_and_lt_top [Nontrivial R] :
+theorem not_isField_iff_exists_ideal_bot_lt_and_lt_top [Nontrivial R] :
     ¬IsField R ↔ ∃ I : Ideal R, ⊥ < I ∧ I < ⊤ :=
   by
   constructor
@@ -784,26 +785,26 @@ theorem not_is_field_iff_exists_ideal_bot_lt_and_lt_top [Nontrivial R] :
     obtain ⟨y, hy⟩ := hf.mul_inv_cancel NeZero
     rw [lt_top_iff_ne_top, Ne.def, Ideal.eq_top_iff_one, ← hy] at lt_top
     exact lt_top (I.mul_mem_right _ mem)
-#align ring.not_is_field_iff_exists_ideal_bot_lt_and_lt_top Ring.not_is_field_iff_exists_ideal_bot_lt_and_lt_top
+#align ring.not_is_field_iff_exists_ideal_bot_lt_and_lt_top Ring.not_isField_iff_exists_ideal_bot_lt_and_lt_top
 
-theorem not_is_field_iff_exists_prime [Nontrivial R] :
+theorem not_isField_iff_exists_prime [Nontrivial R] :
     ¬IsField R ↔ ∃ p : Ideal R, p ≠ ⊥ ∧ p.IsPrime :=
-  not_is_field_iff_exists_ideal_bot_lt_and_lt_top.trans
+  not_isField_iff_exists_ideal_bot_lt_and_lt_top.trans
     ⟨fun ⟨I, bot_lt, lt_top⟩ =>
       let ⟨p, hp, le_p⟩ := I.exists_le_maximal (lt_top_iff_ne_top.mp lt_top)
       ⟨p, bot_lt_iff_ne_bot.mp (lt_of_lt_of_le bot_lt le_p), hp.IsPrime⟩,
       fun ⟨p, ne_bot, Prime⟩ => ⟨p, bot_lt_iff_ne_bot.mpr ne_bot, lt_top_iff_ne_top.mpr Prime.1⟩⟩
-#align ring.not_is_field_iff_exists_prime Ring.not_is_field_iff_exists_prime
+#align ring.not_is_field_iff_exists_prime Ring.not_isField_iff_exists_prime
 
 /-- When a ring is not a field, the maximal ideals are nontrivial. -/
-theorem ne_bot_of_is_maximal_of_not_is_field [Nontrivial R] {M : Ideal R} (max : M.IsMaximal)
+theorem ne_bot_of_isMaximal_of_not_isField [Nontrivial R] {M : Ideal R} (max : M.IsMaximal)
     (not_field : ¬IsField R) : M ≠ ⊥ := by
   rintro h
   rw [h] at max
   rcases max with ⟨⟨h1, h2⟩⟩
   obtain ⟨I, hIbot, hItop⟩ := not_is_field_iff_exists_ideal_bot_lt_and_lt_top.mp not_field
   exact ne_of_lt hItop (h2 I hIbot)
-#align ring.ne_bot_of_is_maximal_of_not_is_field Ring.ne_bot_of_is_maximal_of_not_is_field
+#align ring.ne_bot_of_is_maximal_of_not_is_field Ring.ne_bot_of_isMaximal_of_not_isField
 
 end Ring
 
@@ -813,7 +814,7 @@ variable {R : Type u} [CommRing R] [Nontrivial R]
 
 theorem bot_lt_of_maximal (M : Ideal R) [hm : M.IsMaximal] (non_field : ¬IsField R) : ⊥ < M :=
   by
-  rcases Ring.not_is_field_iff_exists_ideal_bot_lt_and_lt_top.1 non_field with ⟨I, Ibot, Itop⟩
+  rcases Ring.not_isField_iff_exists_ideal_bot_lt_and_lt_top.1 non_field with ⟨I, Ibot, Itop⟩
   constructor; · simp
   intro mle
   apply @irrefl _ (· < ·) _ (⊤ : Ideal R)

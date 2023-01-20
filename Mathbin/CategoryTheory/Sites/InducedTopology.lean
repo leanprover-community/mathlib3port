@@ -106,18 +106,18 @@ def inducedTopology : GrothendieckTopology C
 #align category_theory.locally_cover_dense.induced_topology CategoryTheory.LocallyCoverDense.inducedTopology
 
 /-- `G` is cover-lifting wrt the induced topology. -/
-theorem induced_topology_cover_lifting : CoverLifting Hld.inducedTopology K G :=
+theorem inducedTopology_coverLifting : CoverLifting Hld.inducedTopology K G :=
   ⟨fun _ S hS => Hld ⟨S, hS⟩⟩
-#align category_theory.locally_cover_dense.induced_topology_cover_lifting CategoryTheory.LocallyCoverDense.induced_topology_cover_lifting
+#align category_theory.locally_cover_dense.induced_topology_cover_lifting CategoryTheory.LocallyCoverDense.inducedTopology_coverLifting
 
 /-- `G` is cover-preserving wrt the induced topology. -/
-theorem induced_topology_cover_preserving : CoverPreserving Hld.inducedTopology K G :=
+theorem inducedTopology_coverPreserving : CoverPreserving Hld.inducedTopology K G :=
   ⟨fun _ S hS => hS⟩
-#align category_theory.locally_cover_dense.induced_topology_cover_preserving CategoryTheory.LocallyCoverDense.induced_topology_cover_preserving
+#align category_theory.locally_cover_dense.induced_topology_cover_preserving CategoryTheory.LocallyCoverDense.inducedTopology_coverPreserving
 
 end LocallyCoverDense
 
-theorem CoverDense.locally_cover_dense [Full G] (H : CoverDense K G) : LocallyCoverDense K G :=
+theorem CoverDense.locallyCoverDense [Full G] (H : CoverDense K G) : LocallyCoverDense K G :=
   by
   intro X T
   refine' K.superset_covering _ (K.bind_covering T.property fun Y f Hf => H.is_cover Y)
@@ -126,7 +126,7 @@ theorem CoverDense.locally_cover_dense [Full G] (H : CoverDense K G) : LocallyCo
   constructor
   simpa using T.val.downward_closed hf f'
   simp
-#align category_theory.cover_dense.locally_cover_dense CategoryTheory.CoverDense.locally_cover_dense
+#align category_theory.cover_dense.locally_cover_dense CategoryTheory.CoverDense.locallyCoverDense
 
 /-- Given a fully faithful cover-dense functor `G : C ⥤ (D, K)`, we may induce a topology on `C`.
 -/
@@ -137,7 +137,7 @@ abbrev CoverDense.inducedTopology [Full G] [Faithful G] (H : CoverDense K G) :
 
 variable (J)
 
-theorem over_forget_locally_cover_dense (X : C) : LocallyCoverDense J (Over.forget X) :=
+theorem over_forget_locallyCoverDense (X : C) : LocallyCoverDense J (Over.forget X) :=
   by
   intro Y T
   convert T.property
@@ -147,7 +147,7 @@ theorem over_forget_locally_cover_dense (X : C) : LocallyCoverDense J (Over.forg
     exact T.val.downward_closed hg g'
   · intro hf
     exact ⟨over.mk (f ≫ Y.hom), over.hom_mk f, 𝟙 _, hf, (category.id_comp _).symm⟩
-#align category_theory.over_forget_locally_cover_dense CategoryTheory.over_forget_locally_cover_dense
+#align category_theory.over_forget_locally_cover_dense CategoryTheory.over_forget_locallyCoverDense
 
 end
 

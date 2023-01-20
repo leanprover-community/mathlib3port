@@ -45,9 +45,9 @@ class HasLiftingProperty : Prop where
   sq_has_lift : ∀ {f : A ⟶ X} {g : B ⟶ Y} (sq : CommSq f i p g), sq.HasLift
 #align category_theory.has_lifting_property CategoryTheory.HasLiftingProperty
 
-instance (priority := 100) sq_has_lift_of_has_lifting_property {f : A ⟶ X} {g : B ⟶ Y}
+instance (priority := 100) sq_hasLift_of_hasLiftingProperty {f : A ⟶ X} {g : B ⟶ Y}
     (sq : CommSq f i p g) [hip : HasLiftingProperty i p] : sq.HasLift := by apply hip.sq_has_lift
-#align category_theory.sq_has_lift_of_has_lifting_property CategoryTheory.sq_has_lift_of_has_lifting_property
+#align category_theory.sq_has_lift_of_has_lifting_property CategoryTheory.sq_hasLift_of_hasLiftingProperty
 
 namespace HasLiftingProperty
 

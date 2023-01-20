@@ -189,13 +189,13 @@ variable {C : Type u₁} [Category.{v₁} C] {D : Type u₂} [Category.{v₁} D]
 
 attribute [local instance] has_finite_limits_of_has_finite_limits_of_size
 
-theorem cofiltered_of_has_finite_limits [HasFiniteLimits C] : IsCofiltered C :=
+theorem cofiltered_of_hasFiniteLimits [HasFiniteLimits C] : IsCofiltered C :=
   { cone_objs := fun A B => ⟨Limits.prod A B, Limits.prod.fst, Limits.prod.snd, trivial⟩
     cone_maps := fun A B f g => ⟨equalizer f g, equalizer.ι f g, equalizer.condition f g⟩
     Nonempty := ⟨⊤_ C⟩ }
-#align category_theory.cofiltered_of_has_finite_limits CategoryTheory.cofiltered_of_has_finite_limits
+#align category_theory.cofiltered_of_has_finite_limits CategoryTheory.cofiltered_of_hasFiniteLimits
 
-theorem flat_of_preserves_finite_limits [HasFiniteLimits C] (F : C ⥤ D) [PreservesFiniteLimits F] :
+theorem flat_of_preservesFiniteLimits [HasFiniteLimits C] (F : C ⥤ D) [PreservesFiniteLimits F] :
     RepresentablyFlat F :=
   ⟨fun X =>
     haveI : has_finite_limits (structured_arrow X F) :=
@@ -203,7 +203,7 @@ theorem flat_of_preserves_finite_limits [HasFiniteLimits C] (F : C ⥤ D) [Prese
       apply hasFiniteLimitsOfHasFiniteLimitsOfSize.{v₁} (structured_arrow X F)
       intro J sJ fJ; skip; constructor
     cofiltered_of_has_finite_limits⟩
-#align category_theory.flat_of_preserves_finite_limits CategoryTheory.flat_of_preserves_finite_limits
+#align category_theory.flat_of_preserves_finite_limits CategoryTheory.flat_of_preservesFiniteLimits
 
 namespace PreservesFiniteLimitsOfFlat
 
@@ -1927,10 +1927,10 @@ noncomputable instance lanPreservesFiniteLimitsOfFlat (F : C ⥤ D) [Representab
   exact preserves_limits_of_shape_of_nat_iso (Lan_evaluation_iso_colim _ _ _).symm
 #align category_theory.Lan_preserves_finite_limits_of_flat CategoryTheory.lanPreservesFiniteLimitsOfFlat
 
-instance Lan_flat_of_flat (F : C ⥤ D) [RepresentablyFlat F] :
+instance lan_flat_of_flat (F : C ⥤ D) [RepresentablyFlat F] :
     RepresentablyFlat (lan F.op : _ ⥤ Dᵒᵖ ⥤ E) :=
-  flat_of_preserves_finite_limits _
-#align category_theory.Lan_flat_of_flat CategoryTheory.Lan_flat_of_flat
+  flat_of_preservesFiniteLimits _
+#align category_theory.Lan_flat_of_flat CategoryTheory.lan_flat_of_flat
 
 variable [HasFiniteLimits C]
 
@@ -1941,7 +1941,7 @@ noncomputable instance lanPreservesFiniteLimitsOfPreservesFiniteLimits (F : C �
   infer_instance
 #align category_theory.Lan_preserves_finite_limits_of_preserves_finite_limits CategoryTheory.lanPreservesFiniteLimitsOfPreservesFiniteLimits
 
-theorem flat_iff_Lan_flat (F : C ⥤ D) :
+theorem flat_iff_lan_flat (F : C ⥤ D) :
     RepresentablyFlat F ↔ RepresentablyFlat (lan F.op : _ ⥤ Dᵒᵖ ⥤ Type u₁) :=
   ⟨fun H => inferInstance, fun H => by
     skip
@@ -1951,7 +1951,7 @@ theorem flat_iff_Lan_flat (F : C ⥤ D) :
       apply preservesFiniteLimitsOfPreservesFiniteLimitsOfSize.{u₁}
       intros ; skip; apply preserves_limit_of_Lan_presesrves_limit
     apply flat_of_preserves_finite_limits⟩
-#align category_theory.flat_iff_Lan_flat CategoryTheory.flat_iff_Lan_flat
+#align category_theory.flat_iff_Lan_flat CategoryTheory.flat_iff_lan_flat
 
 /-- If `C` is finitely complete, then `F : C ⥤ D` preserves finite limits iff
 `Lan F.op : (Cᵒᵖ ⥤ Type*) ⥤ (Dᵒᵖ ⥤ Type*)` preserves finite limits.

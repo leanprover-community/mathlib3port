@@ -264,7 +264,7 @@ theorem tendsto_measure_of_null_frontier {ι : Type _} {L : Filter ι} {μ : Mea
   haveI h_closeds : ∀ F, IsClosed F → (L.limsup fun i => μs i F) ≤ μ F :=
     limsup_measure_closed_le_iff_liminf_measure_open_ge.mpr h_opens
   tendsto_measure_of_le_liminf_measure_of_limsup_measure_le interior_subset subset_closure
-    E_nullbdry (h_opens _ is_open_interior) (h_closeds _ is_closed_closure)
+    E_nullbdry (h_opens _ isOpen_interior) (h_closeds _ isClosed_closure)
 #align measure_theory.tendsto_measure_of_null_frontier MeasureTheory.tendsto_measure_of_null_frontier
 
 end TendstoOfNullFrontier
@@ -340,7 +340,7 @@ theorem measure_of_cont_bdd_of_tendsto_indicator [TopologicalSpace Ω] [OpensMea
 /-- The integrals of thickened indicators of a closed set against a finite measure tend to the
 measure of the closed set if the thickening radii tend to zero.
 -/
-theorem tendsto_lintegral_thickened_indicator_of_is_closed {Ω : Type _} [MeasurableSpace Ω]
+theorem tendsto_lintegral_thickenedIndicator_of_isClosed {Ω : Type _} [MeasurableSpace Ω]
     [PseudoEmetricSpace Ω] [OpensMeasurableSpace Ω] (μ : Measure Ω) [IsFiniteMeasure μ] {F : Set Ω}
     (F_closed : IsClosed F) {δs : ℕ → ℝ} (δs_pos : ∀ n, 0 < δs n)
     (δs_lim : Tendsto δs atTop (𝓝 0)) :
@@ -349,11 +349,10 @@ theorem tendsto_lintegral_thickened_indicator_of_is_closed {Ω : Type _} [Measur
   by
   apply
     measure_of_cont_bdd_of_tendsto_indicator μ F_closed.measurable_set
-      (fun n => thickenedIndicator (δs_pos n) F) fun n ω =>
-      thickened_indicator_le_one (δs_pos n) F ω
-  have key := thickened_indicator_tendsto_indicator_closure δs_pos δs_lim F
+      (fun n => thickenedIndicator (δs_pos n) F) fun n ω => thickenedIndicator_le_one (δs_pos n) F ω
+  have key := thickenedIndicator_tendsto_indicator_closure δs_pos δs_lim F
   rwa [F_closed.closure_eq] at key
-#align measure_theory.tendsto_lintegral_thickened_indicator_of_is_closed MeasureTheory.tendsto_lintegral_thickened_indicator_of_is_closed
+#align measure_theory.tendsto_lintegral_thickened_indicator_of_is_closed MeasureTheory.tendsto_lintegral_thickenedIndicator_of_isClosed
 
 /-- One implication of the portmanteau theorem:
 Weak convergence of finite measures implies that the limsup of the measures of any closed set is
@@ -370,7 +369,7 @@ theorem FiniteMeasure.limsup_measure_closed_le_of_tendsto {Ω ι : Type _} {L : 
   intro ε ε_pos μ_F_finite
   set δs := fun n : ℕ => (1 : ℝ) / (n + 1) with def_δs
   have δs_pos : ∀ n, 0 < δs n := fun n => Nat.one_div_pos_of_nat
-  have δs_lim : tendsto δs at_top (𝓝 0) := tendsto_one_div_add_at_top_nhds_0_nat
+  have δs_lim : tendsto δs at_top (𝓝 0) := tendsto_one_div_add_atTop_nhds_0_nat
   have key₁ :=
     tendsto_lintegral_thickened_indicator_of_is_closed (μ : Measure Ω) F_closed δs_pos δs_lim
   have room₁ : (μ : Measure Ω) F < (μ : Measure Ω) F + ε / 2 := by
@@ -390,7 +389,7 @@ theorem FiniteMeasure.limsup_measure_closed_le_of_tendsto {Ω ι : Type _} {L : 
   have ev_near := eventually.mono (eventually_lt_of_tendsto_lt room₂ key₂) fun n => le_of_lt
   have aux := fun n =>
     le_trans
-      (measure_le_lintegral_thickened_indicator (μs n : Measure Ω) F_closed.measurable_set
+      (measure_le_lintegral_thickenedIndicator (μs n : Measure Ω) F_closed.measurable_set
         (δs_pos M))
   have ev_near' := eventually.mono ev_near aux
   apply (Filter.limsup_le_limsup ev_near').trans
@@ -454,7 +453,7 @@ theorem ProbabilityMeasure.tendsto_measure_of_null_frontier_of_tendsto {Ω ι : 
   have E_nullbdry' : (μ : Measure Ω) (frontier E) = 0 := by
     rw [← probability_measure.ennreal_coe_fn_eq_coe_fn_to_measure, E_nullbdry, Ennreal.coe_zero]
   have key := probability_measure.tendsto_measure_of_null_frontier_of_tendsto' μs_lim E_nullbdry'
-  exact (Ennreal.tendsto_to_nnreal (measure_ne_top (↑μ) E)).comp key
+  exact (Ennreal.tendsto_toNnreal (measure_ne_top (↑μ) E)).comp key
 #align measure_theory.probability_measure.tendsto_measure_of_null_frontier_of_tendsto MeasureTheory.ProbabilityMeasure.tendsto_measure_of_null_frontier_of_tendsto
 
 end ConvergenceImpliesLimsupClosedLe
@@ -474,12 +473,12 @@ theorem exists_null_frontier_thickening (μ : Measure Ω) [SigmaFinite μ] (s : 
     (hab : a < b) : ∃ r ∈ Ioo a b, μ (frontier (Metric.thickening r s)) = 0 :=
   by
   have mbles : ∀ r : ℝ, MeasurableSet (frontier (Metric.thickening r s)) := fun r =>
-    is_closed_frontier.MeasurableSet
+    isClosed_frontier.MeasurableSet
   have disjs := Metric.frontier_thickening_disjoint s
   have key := @measure.countable_meas_pos_of_disjoint_Union Ω _ _ μ _ _ mbles disjs
   have aux := @measure_diff_null ℝ _ volume (Ioo a b) _ (Set.Countable.measure_zero key volume)
-  have len_pos : 0 < Ennreal.ofReal (b - a) := by simp only [hab, Ennreal.of_real_pos, sub_pos]
-  rw [← Real.volume_Ioo, ← aux] at len_pos
+  have len_pos : 0 < Ennreal.ofReal (b - a) := by simp only [hab, Ennreal.ofReal_pos, sub_pos]
+  rw [← Real.volume_ioo, ← aux] at len_pos
   rcases nonempty_of_measure_ne_zero len_pos.ne.symm with ⟨r, ⟨r_in_Ioo, hr⟩⟩
   refine' ⟨r, r_in_Ioo, _⟩
   simpa only [mem_set_of_eq, not_lt, le_zero_iff] using hr
@@ -489,7 +488,7 @@ theorem exists_null_frontiers_thickening (μ : Measure Ω) [SigmaFinite μ] (s :
     ∃ rs : ℕ → ℝ,
       Tendsto rs atTop (𝓝 0) ∧ ∀ n, 0 < rs n ∧ μ (frontier (Metric.thickening (rs n) s)) = 0 :=
   by
-  rcases exists_seq_strict_anti_tendsto (0 : ℝ) with ⟨Rs, ⟨rubbish, ⟨Rs_pos, Rs_lim⟩⟩⟩
+  rcases exists_seq_strictAnti_tendsto (0 : ℝ) with ⟨Rs, ⟨rubbish, ⟨Rs_pos, Rs_lim⟩⟩⟩
   have obs := fun n : ℕ => exists_null_frontier_thickening μ s (Rs_pos n)
   refine' ⟨fun n : ℕ => (obs n).some, ⟨_, _⟩⟩
   ·

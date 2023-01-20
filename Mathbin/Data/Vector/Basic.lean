@@ -177,10 +177,14 @@ theorem get_eq_get :
 #align vector.nth_eq_nth_le Vector.get_eq_get
 -/
 
+/- warning: vector.nth_replicate clashes with vector.nth_repeat -> Vector.get_replicate
+Case conversion may be inaccurate. Consider using '#align vector.nth_replicate Vector.get_replicateₓ'. -/
+#print Vector.get_replicate /-
 @[simp]
-theorem nth_replicate (a : α) (i : Fin n) : (Vector.replicate n a).nth i = a :=
+theorem get_replicate (a : α) (i : Fin n) : (Vector.replicate n a).nth i = a :=
   List.nthLe_replicate _ _
-#align vector.nth_replicate Vector.nth_replicate
+#align vector.nth_replicate Vector.get_replicate
+-/
 
 #print Vector.get_map /-
 @[simp]
@@ -836,6 +840,7 @@ theorem prod_set [Monoid α] (v : Vector α n) (i : Fin n) (a : α) :
   have : ↑i < v.to_list.length := lt_of_lt_of_le i.2 (le_of_eq v.2.symm)
   simp_all
 #align vector.prod_update_nth Vector.prod_set
+#align vector.sum_update_nth Vector.sum_set
 
 /- warning: vector.prod_update_nth' -> Vector.prod_set' is a dubious translation:
 lean 3 declaration is

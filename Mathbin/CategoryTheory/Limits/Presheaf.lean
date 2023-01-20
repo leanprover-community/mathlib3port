@@ -121,14 +121,14 @@ def restrictYonedaHomEquiv (P : Cᵒᵖ ⥤ Type u₁) (E : ℰ)
 /--
 (Implementation). Show that the bijection in `restrict_yoneda_hom_equiv` is natural (on the right).
 -/
-theorem restrict_yoneda_hom_equiv_natural (P : Cᵒᵖ ⥤ Type u₁) (E₁ E₂ : ℰ) (g : E₁ ⟶ E₂)
-    {c : Cocone _} (t : IsColimit c) (k : c.x ⟶ E₁) :
+theorem restrictYonedaHomEquiv_natural (P : Cᵒᵖ ⥤ Type u₁) (E₁ E₂ : ℰ) (g : E₁ ⟶ E₂) {c : Cocone _}
+    (t : IsColimit c) (k : c.x ⟶ E₁) :
     restrictYonedaHomEquiv A P E₂ t (k ≫ g) =
       restrictYonedaHomEquiv A P E₁ t k ≫ (restrictedYoneda A).map g :=
   by
   ext (_ X p)
   apply (assoc _ _ _).symm
-#align category_theory.colimit_adj.restrict_yoneda_hom_equiv_natural CategoryTheory.ColimitAdj.restrict_yoneda_hom_equiv_natural
+#align category_theory.colimit_adj.restrict_yoneda_hom_equiv_natural CategoryTheory.ColimitAdj.restrictYonedaHomEquiv_natural
 
 variable [HasColimits ℰ]
 
@@ -139,16 +139,16 @@ it is the left Kan extension of `A` through the yoneda embedding.
 -/
 def extendAlongYoneda : (Cᵒᵖ ⥤ Type u₁) ⥤ ℰ :=
   Adjunction.leftAdjointOfEquiv (fun P E => restrictYonedaHomEquiv A P E (colimit.isColimit _))
-    fun P E E' g => restrict_yoneda_hom_equiv_natural A P E E' g _
+    fun P E E' g => restrictYonedaHomEquiv_natural A P E E' g _
 #align category_theory.colimit_adj.extend_along_yoneda CategoryTheory.ColimitAdj.extendAlongYoneda
 
 @[simp]
-theorem extend_along_yoneda_obj (P : Cᵒᵖ ⥤ Type u₁) :
+theorem extendAlongYoneda_obj (P : Cᵒᵖ ⥤ Type u₁) :
     (extendAlongYoneda A).obj P = colimit ((categoryOfElements.π P).leftOp ⋙ A) :=
   rfl
-#align category_theory.colimit_adj.extend_along_yoneda_obj CategoryTheory.ColimitAdj.extend_along_yoneda_obj
+#align category_theory.colimit_adj.extend_along_yoneda_obj CategoryTheory.ColimitAdj.extendAlongYoneda_obj
 
-theorem extend_along_yoneda_map {X Y : Cᵒᵖ ⥤ Type u₁} (f : X ⟶ Y) :
+theorem extendAlongYoneda_map {X Y : Cᵒᵖ ⥤ Type u₁} (f : X ⟶ Y) :
     (extendAlongYoneda A).map f =
       colimit.pre ((categoryOfElements.π Y).leftOp ⋙ A) (categoryOfElements.map f).op :=
   by
@@ -157,7 +157,7 @@ theorem extend_along_yoneda_map {X Y : Cᵒᵖ ⥤ Type u₁} (f : X ⟶ Y) :
   dsimp only [extend_along_yoneda, restrict_yoneda_hom_equiv, is_colimit.hom_iso',
     is_colimit.hom_iso, ulift_trivial]
   simpa
-#align category_theory.colimit_adj.extend_along_yoneda_map CategoryTheory.ColimitAdj.extend_along_yoneda_map
+#align category_theory.colimit_adj.extend_along_yoneda_map CategoryTheory.ColimitAdj.extendAlongYoneda_map
 
 /-- Show `extend_along_yoneda` is left adjoint to `restricted_yoneda`.
 
@@ -310,26 +310,25 @@ def coconeOfRepresentable (P : Cᵒᵖ ⥤ Type u₁) : Cocone (functorToReprese
 #align category_theory.cocone_of_representable CategoryTheory.coconeOfRepresentable
 
 @[simp]
-theorem cocone_of_representable_X (P : Cᵒᵖ ⥤ Type u₁) : (coconeOfRepresentable P).x = P :=
+theorem coconeOfRepresentable_x (P : Cᵒᵖ ⥤ Type u₁) : (coconeOfRepresentable P).x = P :=
   rfl
-#align category_theory.cocone_of_representable_X CategoryTheory.cocone_of_representable_X
+#align category_theory.cocone_of_representable_X CategoryTheory.coconeOfRepresentable_x
 
 -- Marking this as a simp lemma seems to make things more awkward.
 /-- An explicit formula for the legs of the cocone `cocone_of_representable`. -/
-theorem cocone_of_representable_ι_app (P : Cᵒᵖ ⥤ Type u₁) (j : P.Elementsᵒᵖ) :
+theorem coconeOfRepresentable_ι_app (P : Cᵒᵖ ⥤ Type u₁) (j : P.Elementsᵒᵖ) :
     (coconeOfRepresentable P).ι.app j = (yonedaSectionsSmall _ _).inv j.unop.2 :=
   colimit.ι_desc _ _
-#align category_theory.cocone_of_representable_ι_app CategoryTheory.cocone_of_representable_ι_app
+#align category_theory.cocone_of_representable_ι_app CategoryTheory.coconeOfRepresentable_ι_app
 
 /-- The legs of the cocone `cocone_of_representable` are natural in the choice of presheaf. -/
-theorem cocone_of_representable_naturality {P₁ P₂ : Cᵒᵖ ⥤ Type u₁} (α : P₁ ⟶ P₂)
-    (j : P₁.Elementsᵒᵖ) :
+theorem coconeOfRepresentable_naturality {P₁ P₂ : Cᵒᵖ ⥤ Type u₁} (α : P₁ ⟶ P₂) (j : P₁.Elementsᵒᵖ) :
     (coconeOfRepresentable P₁).ι.app j ≫ α =
       (coconeOfRepresentable P₂).ι.app ((categoryOfElements.map α).op.obj j) :=
   by
   ext (T f)
   simpa [cocone_of_representable_ι_app] using functor_to_types.naturality _ _ α f.op _
-#align category_theory.cocone_of_representable_naturality CategoryTheory.cocone_of_representable_naturality
+#align category_theory.cocone_of_representable_naturality CategoryTheory.coconeOfRepresentable_naturality
 
 /-- The cocone with point `P` given by `the_cocone` is a colimit: that is, we have exhibited an
 arbitrary presheaf `P` as a colimit of representables.

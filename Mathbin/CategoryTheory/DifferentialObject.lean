@@ -99,13 +99,13 @@ theorem comp_f {X Y Z : DifferentialObject C} (f : X ⟶ Y) (g : Y ⟶ Z) : (f �
 #align category_theory.differential_object.comp_f CategoryTheory.DifferentialObject.comp_f
 
 @[simp]
-theorem eq_to_hom_f {X Y : DifferentialObject C} (h : X = Y) :
+theorem eqToHom_f {X Y : DifferentialObject C} (h : X = Y) :
     Hom.f (eqToHom h) = eqToHom (congr_arg _ h) :=
   by
   subst h
   rw [eq_to_hom_refl, eq_to_hom_refl]
   rfl
-#align category_theory.differential_object.eq_to_hom_f CategoryTheory.DifferentialObject.eq_to_hom_f
+#align category_theory.differential_object.eq_to_hom_f CategoryTheory.DifferentialObject.eqToHom_f
 
 variable (C)
 
@@ -141,20 +141,20 @@ def isoApp {X Y : DifferentialObject C} (f : X ≅ Y) : X.x ≅ Y.x :=
 #align category_theory.differential_object.iso_app CategoryTheory.DifferentialObject.isoApp
 
 @[simp]
-theorem iso_app_refl (X : DifferentialObject C) : isoApp (Iso.refl X) = Iso.refl X.x :=
+theorem isoApp_refl (X : DifferentialObject C) : isoApp (Iso.refl X) = Iso.refl X.x :=
   rfl
-#align category_theory.differential_object.iso_app_refl CategoryTheory.DifferentialObject.iso_app_refl
+#align category_theory.differential_object.iso_app_refl CategoryTheory.DifferentialObject.isoApp_refl
 
 @[simp]
-theorem iso_app_symm {X Y : DifferentialObject C} (f : X ≅ Y) : isoApp f.symm = (isoApp f).symm :=
+theorem isoApp_symm {X Y : DifferentialObject C} (f : X ≅ Y) : isoApp f.symm = (isoApp f).symm :=
   rfl
-#align category_theory.differential_object.iso_app_symm CategoryTheory.DifferentialObject.iso_app_symm
+#align category_theory.differential_object.iso_app_symm CategoryTheory.DifferentialObject.isoApp_symm
 
 @[simp]
-theorem iso_app_trans {X Y Z : DifferentialObject C} (f : X ≅ Y) (g : Y ≅ Z) :
+theorem isoApp_trans {X Y Z : DifferentialObject C} (f : X ≅ Y) (g : Y ≅ Z) :
     isoApp (f ≪≫ g) = isoApp f ≪≫ isoApp g :=
   rfl
-#align category_theory.differential_object.iso_app_trans CategoryTheory.DifferentialObject.iso_app_trans
+#align category_theory.differential_object.iso_app_trans CategoryTheory.DifferentialObject.isoApp_trans
 
 /-- An isomorphism of differential objects can be constructed
 from an isomorphism of the underlying objects that commutes with the differentials. -/
@@ -237,9 +237,9 @@ variable [HasZeroObject C] [HasZeroMorphisms C] [HasShift C ℤ]
 
 open ZeroObject
 
-instance has_zero_object : HasZeroObject (DifferentialObject C) := by
+instance hasZeroObject : HasZeroObject (DifferentialObject C) := by
   refine' ⟨⟨⟨0, 0⟩, fun X => ⟨⟨⟨⟨0⟩⟩, fun f => _⟩⟩, fun X => ⟨⟨⟨⟨0⟩⟩, fun f => _⟩⟩⟩⟩ <;> ext
-#align category_theory.differential_object.has_zero_object CategoryTheory.DifferentialObject.has_zero_object
+#align category_theory.differential_object.has_zero_object CategoryTheory.DifferentialObject.hasZeroObject
 
 end DifferentialObject
 

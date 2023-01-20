@@ -62,7 +62,7 @@ structure IsTree : Prop where
 
 variable {G}
 
-theorem is_acyclic_iff_forall_adj_is_bridge :
+theorem isAcyclic_iff_forall_adj_isBridge :
     G.IsAcyclic ↔ ∀ ⦃v w : V⦄, G.Adj v w → G.IsBridge ⟦(v, w)⟧ :=
   by
   simp_rw [is_bridge_iff_adj_and_forall_cycle_not_mem]
@@ -77,11 +77,11 @@ theorem is_acyclic_iff_forall_adj_is_bridge :
       apply hb.2 _ hp
       rw [walk.edges_cons]
       apply List.mem_cons_self
-#align simple_graph.is_acyclic_iff_forall_adj_is_bridge SimpleGraph.is_acyclic_iff_forall_adj_is_bridge
+#align simple_graph.is_acyclic_iff_forall_adj_is_bridge SimpleGraph.isAcyclic_iff_forall_adj_isBridge
 
-theorem is_acyclic_iff_forall_edge_is_bridge : G.IsAcyclic ↔ ∀ ⦃e⦄, e ∈ G.edgeSet → G.IsBridge e :=
-  by simp [is_acyclic_iff_forall_adj_is_bridge, Sym2.forall]
-#align simple_graph.is_acyclic_iff_forall_edge_is_bridge SimpleGraph.is_acyclic_iff_forall_edge_is_bridge
+theorem isAcyclic_iff_forall_edge_isBridge : G.IsAcyclic ↔ ∀ ⦃e⦄, e ∈ G.edgeSet → G.IsBridge e := by
+  simp [is_acyclic_iff_forall_adj_is_bridge, Sym2.forall]
+#align simple_graph.is_acyclic_iff_forall_edge_is_bridge SimpleGraph.isAcyclic_iff_forall_edge_isBridge
 
 theorem IsAcyclic.path_unique {G : SimpleGraph V} (h : G.IsAcyclic) {v w : V} (p q : G.Path v w) :
     p = q := by
@@ -109,7 +109,7 @@ theorem IsAcyclic.path_unique {G : SimpleGraph V} (h : G.IsAcyclic) {v w : V} (p
       exact absurd (walk.fst_mem_support_of_mem_edges _ h) hp.2
 #align simple_graph.is_acyclic.path_unique SimpleGraph.IsAcyclic.path_unique
 
-theorem is_acyclic_of_path_unique (h : ∀ (v w : V) (p q : G.Path v w), p = q) : G.IsAcyclic :=
+theorem isAcyclic_of_path_unique (h : ∀ (v w : V) (p q : G.Path v w), p = q) : G.IsAcyclic :=
   by
   intro v c hc
   simp only [walk.is_cycle_def, Ne.def] at hc
@@ -120,13 +120,13 @@ theorem is_acyclic_of_path_unique (h : ∀ (v w : V) (p q : G.Path v w), p = q) 
     specialize h _ _ ⟨c_p, by simp only [walk.is_path_def, hc.2]⟩ (path.singleton (G.symm c_h))
     simp only [path.singleton] at h
     simpa [-Quotient.eq, Sym2.eq_swap, h] using hc
-#align simple_graph.is_acyclic_of_path_unique SimpleGraph.is_acyclic_of_path_unique
+#align simple_graph.is_acyclic_of_path_unique SimpleGraph.isAcyclic_of_path_unique
 
-theorem is_acyclic_iff_path_unique : G.IsAcyclic ↔ ∀ ⦃v w : V⦄ (p q : G.Path v w), p = q :=
-  ⟨IsAcyclic.path_unique, is_acyclic_of_path_unique⟩
-#align simple_graph.is_acyclic_iff_path_unique SimpleGraph.is_acyclic_iff_path_unique
+theorem isAcyclic_iff_path_unique : G.IsAcyclic ↔ ∀ ⦃v w : V⦄ (p q : G.Path v w), p = q :=
+  ⟨IsAcyclic.path_unique, isAcyclic_of_path_unique⟩
+#align simple_graph.is_acyclic_iff_path_unique SimpleGraph.isAcyclic_iff_path_unique
 
-theorem is_tree_iff_exists_unique_path :
+theorem isTree_iff_existsUnique_path :
     G.IsTree ↔ Nonempty V ∧ ∀ v w : V, ∃! p : G.Walk v w, p.IsPath := by
   classical
     rw [is_tree_iff, is_acyclic_iff_path_unique]
@@ -147,7 +147,7 @@ theorem is_tree_iff_exists_unique_path :
         exact p.reachable
       · rintro v w ⟨p, hp⟩ ⟨q, hq⟩
         simp only [ExistsUnique.unique (h v w) hp hq]
-#align simple_graph.is_tree_iff_exists_unique_path SimpleGraph.is_tree_iff_exists_unique_path
+#align simple_graph.is_tree_iff_exists_unique_path SimpleGraph.isTree_iff_existsUnique_path
 
 end SimpleGraph
 

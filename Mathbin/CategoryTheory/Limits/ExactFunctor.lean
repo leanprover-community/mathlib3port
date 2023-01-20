@@ -90,28 +90,28 @@ def RightExactFunctorCat.ofExact : (C ⥤ₑ D) ⥤ C ⥤ᵣ D :=
 variable {C D}
 
 @[simp]
-theorem LeftExactFunctorCat.of_exact_obj (F : C ⥤ₑ D) :
+theorem LeftExactFunctorCat.ofExact_obj (F : C ⥤ₑ D) :
     (LeftExactFunctorCat.ofExact C D).obj F = ⟨F.1, F.2.1⟩ :=
   rfl
-#align category_theory.LeftExactFunctor.of_exact_obj CategoryTheory.LeftExactFunctorCat.of_exact_obj
+#align category_theory.LeftExactFunctor.of_exact_obj CategoryTheory.LeftExactFunctorCat.ofExact_obj
 
 @[simp]
-theorem RightExactFunctorCat.of_exact_obj (F : C ⥤ₑ D) :
+theorem RightExactFunctorCat.ofExact_obj (F : C ⥤ₑ D) :
     (RightExactFunctorCat.ofExact C D).obj F = ⟨F.1, F.2.2⟩ :=
   rfl
-#align category_theory.RightExactFunctor.of_exact_obj CategoryTheory.RightExactFunctorCat.of_exact_obj
+#align category_theory.RightExactFunctor.of_exact_obj CategoryTheory.RightExactFunctorCat.ofExact_obj
 
 @[simp]
-theorem LeftExactFunctorCat.of_exact_map {F G : C ⥤ₑ D} (α : F ⟶ G) :
+theorem LeftExactFunctorCat.ofExact_map {F G : C ⥤ₑ D} (α : F ⟶ G) :
     (LeftExactFunctorCat.ofExact C D).map α = α :=
   rfl
-#align category_theory.LeftExactFunctor.of_exact_map CategoryTheory.LeftExactFunctorCat.of_exact_map
+#align category_theory.LeftExactFunctor.of_exact_map CategoryTheory.LeftExactFunctorCat.ofExact_map
 
 @[simp]
-theorem RightExactFunctorCat.of_exact_map {F G : C ⥤ₑ D} (α : F ⟶ G) :
+theorem RightExactFunctorCat.ofExact_map {F G : C ⥤ₑ D} (α : F ⟶ G) :
     (RightExactFunctorCat.ofExact C D).map α = α :=
   rfl
-#align category_theory.RightExactFunctor.of_exact_map CategoryTheory.RightExactFunctorCat.of_exact_map
+#align category_theory.RightExactFunctor.of_exact_map CategoryTheory.RightExactFunctorCat.ofExact_map
 
 @[simp]
 theorem LeftExactFunctorCat.forget_obj (F : C ⥤ₗ D) :

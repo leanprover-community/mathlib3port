@@ -145,22 +145,22 @@ theorem map₂_eq_bot_iff : map₂ m f g = ⊥ ↔ f = ⊥ ∨ g = ⊥ :=
 #align filter.map₂_eq_bot_iff Filter.map₂_eq_bot_iff
 
 @[simp]
-theorem map₂_ne_bot_iff : (map₂ m f g).ne_bot ↔ f.ne_bot ∧ g.ne_bot :=
+theorem map₂_neBot_iff : (map₂ m f g).ne_bot ↔ f.ne_bot ∧ g.ne_bot :=
   by
   simp_rw [ne_bot_iff]
   exact map₂_eq_bot_iff.not.trans not_or
-#align filter.map₂_ne_bot_iff Filter.map₂_ne_bot_iff
+#align filter.map₂_ne_bot_iff Filter.map₂_neBot_iff
 
 theorem NeBot.map₂ (hf : f.ne_bot) (hg : g.ne_bot) : (map₂ m f g).ne_bot :=
-  map₂_ne_bot_iff.2 ⟨hf, hg⟩
+  map₂_neBot_iff.2 ⟨hf, hg⟩
 #align filter.ne_bot.map₂ Filter.NeBot.map₂
 
 theorem NeBot.of_map₂_left (h : (map₂ m f g).ne_bot) : f.ne_bot :=
-  (map₂_ne_bot_iff.1 h).1
+  (map₂_neBot_iff.1 h).1
 #align filter.ne_bot.of_map₂_left Filter.NeBot.of_map₂_left
 
 theorem NeBot.of_map₂_right (h : (map₂ m f g).ne_bot) : g.ne_bot :=
-  (map₂_ne_bot_iff.1 h).2
+  (map₂_neBot_iff.1 h).2
 #align filter.ne_bot.of_map₂_right Filter.NeBot.of_map₂_right
 
 theorem map₂_sup_left : map₂ m (f₁ ⊔ f₂) g = map₂ m f₁ g ⊔ map₂ m f₂ g :=

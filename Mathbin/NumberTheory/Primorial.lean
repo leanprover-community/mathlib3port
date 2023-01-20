@@ -85,7 +85,7 @@ theorem primorial_le_4_pow : ∀ n : ℕ, n# ≤ 4 ^ n
           (n + 2)# = ∏ i in filter Nat.Prime (range (2 * m + 2)), i := by simpa [two_mul, ← twice_m]
           _ = ∏ i in filter Nat.Prime (Finset.ico (m + 2) (2 * m + 2) ∪ range (m + 2)), i :=
             by
-            rw [range_eq_Ico, Finset.union_comm, Finset.Ico_union_Ico_eq_Ico]
+            rw [range_eq_Ico, Finset.union_comm, Finset.ico_union_ico_eq_ico]
             · exact bot_le
             · simpa only [add_le_add_iff_right, two_mul] using Nat.le_add_left m m
           _ =
@@ -101,7 +101,7 @@ theorem primorial_le_4_pow : ∀ n : ℕ, n# ≤ 4 ^ n
             apply Finset.prod_union
             have disj : Disjoint (Finset.ico (m + 2) (2 * m + 2)) (range (m + 2)) :=
               by
-              simp only [Finset.disjoint_left, and_imp, Finset.mem_Ico, not_lt, Finset.mem_range]
+              simp only [Finset.disjoint_left, and_imp, Finset.mem_ico, not_lt, Finset.mem_range]
               intro _ pr _
               exact pr
             exact Finset.disjoint_filter_filter disj
@@ -121,7 +121,7 @@ theorem primorial_le_4_pow : ∀ n : ℕ, n# ≤ 4 ^ n
                 rw [Finset.mem_filter]
                 intro pr
                 rcases pr with ⟨size, is_prime⟩
-                simp only [Finset.mem_Ico] at size
+                simp only [Finset.mem_ico] at size
                 rcases size with ⟨a_big, a_small⟩
                 exact dvd_choose_of_middling_prime a is_prime m a_big (nat.lt_succ_iff.mp a_small)
             have r :

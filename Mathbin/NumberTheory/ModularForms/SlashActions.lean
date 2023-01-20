@@ -166,7 +166,7 @@ local notation:73 f "∣[" k:0 "," A "]" => SlashAction.map ℂ k A f
 theorem is_invariant_one (A : SL(2, ℤ)) : (1 : ℍ → ℂ)∣[(0 : ℤ),A] = (1 : ℍ → ℂ) :=
   by
   have : ((↑ₘ(A : GL(2, ℝ)⁺)).det : ℝ) = 1 := by
-    simp only [coe_coe, Matrix.SpecialLinearGroup.coe_GL_pos_coe_GL_coe_matrix,
+    simp only [coe_coe, Matrix.SpecialLinearGroup.coe_gLPos_coe_GL_coe_matrix,
       Matrix.SpecialLinearGroup.det_coe]
   funext
   rw [SL_slash, slash, zero_sub, this]
@@ -182,7 +182,7 @@ theorem slash_action_eq'_iff (k : ℤ) (Γ : Subgroup SL(2, ℤ)) (f : ℍ → �
   simp only [subgroup_slash, ModularForm.slash]
   convert inv_mul_eq_iff_eq_mul₀ _ using 2
   · rw [mul_comm]
-    simp only [denom, coe_coe, Matrix.SpecialLinearGroup.coe_GL_pos_coe_GL_coe_matrix, zpow_neg,
+    simp only [denom, coe_coe, Matrix.SpecialLinearGroup.coe_gLPos_coe_GL_coe_matrix, zpow_neg,
       Matrix.SpecialLinearGroup.det_coe, of_real_one, one_zpow, mul_one, subgroup_to_sl_moeb,
       sl_moeb]
     rfl

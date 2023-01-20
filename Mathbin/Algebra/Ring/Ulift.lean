@@ -247,7 +247,7 @@ instance field [Field α] : Field (ULift α) :=
     intro a b h1 h2
     ext
     rw [rat_cast_down, mul_down, inv_down, nat_cast_down, int_cast_down]
-    exact Field.rat_cast_mk a b h1 h2
+    exact Field.ratCast_mk a b h1 h2
   refine_struct
       { @ULift.nontrivial α _,
         ULift.commRing with

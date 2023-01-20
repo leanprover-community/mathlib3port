@@ -116,9 +116,9 @@ instance Equiv.Perm.coeEmbedding : Coe (Equiv.Perm α) (α ↪ α) :=
 -/
 
 @[simp]
-theorem Equiv.coe_eq_to_embedding : ↑f = f.toEmbedding :=
+theorem Equiv.coe_eq_toEmbedding : ↑f = f.toEmbedding :=
   rfl
-#align equiv.coe_eq_to_embedding Equiv.coe_eq_to_embedding
+#align equiv.coe_eq_to_embedding Equiv.coe_eq_toEmbedding
 
 /- warning: equiv.as_embedding -> Equiv.asEmbedding is a dubious translation:
 lean 3 declaration is

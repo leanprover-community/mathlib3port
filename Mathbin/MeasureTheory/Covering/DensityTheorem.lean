@@ -63,7 +63,7 @@ irreducible_def vitaliFamily (K : ℝ) : VitaliFamily μ :=
     by
     intro x
     apply frequently_iff.2 fun U hU => _
-    obtain ⟨ε, εpos, hε⟩ := mem_nhds_within_Ioi_iff_exists_Ioc_subset.1 hU
+    obtain ⟨ε, εpos, hε⟩ := mem_nhdsWithin_ioi_iff_exists_ioc_subset.1 hU
     refine' ⟨min ε R, hε ⟨lt_min εpos Rpos, min_le_left _ _⟩, _⟩
     exact
       measure_mul_le_scaling_constant_of_mul μ ⟨zero_lt_three, le_max_right _ _⟩ (min_le_right _ _)
@@ -74,13 +74,13 @@ irreducible_def vitaliFamily (K : ℝ) : VitaliFamily μ :=
 
 /-- In the Vitali family `is_doubling_measure.vitali_family K`, the sets based at `x` contain all
 balls `closed_ball y r` when `dist x y ≤ K * r`. -/
-theorem closed_ball_mem_vitali_family_of_dist_le_mul {K : ℝ} {x y : α} {r : ℝ}
-    (h : dist x y ≤ K * r) (rpos : 0 < r) : closedBall y r ∈ (vitaliFamily μ K).setsAt x :=
+theorem closedBall_mem_vitaliFamily_of_dist_le_mul {K : ℝ} {x y : α} {r : ℝ} (h : dist x y ≤ K * r)
+    (rpos : 0 < r) : closedBall y r ∈ (vitaliFamily μ K).setsAt x :=
   by
   let R := scaling_scale_of μ (max (4 * K + 3) 3)
   simp only [VitaliFamily, VitaliFamily.enlarge, Vitali.vitaliFamily, mem_union, mem_set_of_eq,
     is_closed_ball, true_and_iff, (nonempty_ball.2 rpos).mono ball_subset_interior_closed_ball,
-    measurable_set_closed_ball]
+    measurableSet_closedBall]
   /- The measure is doubling on scales smaller than `R`. Therefore, we treat differently small
     and large balls. For large balls, this follows directly from the enlargement we used in the
     definition. -/
@@ -118,25 +118,25 @@ theorem closed_ball_mem_vitali_family_of_dist_le_mul {K : ℝ} {x y : α} {r : �
     apply (measure_mono this).trans _
     refine' le_mul_of_one_le_left (zero_le _) _
     exact Ennreal.one_le_coe_iff.2 (le_max_right _ _)
-#align is_doubling_measure.closed_ball_mem_vitali_family_of_dist_le_mul IsDoublingMeasure.closed_ball_mem_vitali_family_of_dist_le_mul
+#align is_doubling_measure.closed_ball_mem_vitali_family_of_dist_le_mul IsDoublingMeasure.closedBall_mem_vitaliFamily_of_dist_le_mul
 
-theorem tendsto_closed_ball_filter_at {K : ℝ} {x : α} {ι : Type _} {l : Filter ι} (w : ι → α)
+theorem tendsto_closedBall_filterAt {K : ℝ} {x : α} {ι : Type _} {l : Filter ι} (w : ι → α)
     (δ : ι → ℝ) (δlim : Tendsto δ l (𝓝[>] 0)) (xmem : ∀ᶠ j in l, x ∈ closedBall (w j) (K * δ j)) :
     Tendsto (fun j => closedBall (w j) (δ j)) l ((vitaliFamily μ K).filterAt x) :=
   by
   refine' (VitaliFamily μ K).tendsto_filter_at_iff.mpr ⟨_, fun ε hε => _⟩
-  · filter_upwards [xmem, δlim self_mem_nhds_within] with j hj h'j
+  · filter_upwards [xmem, δlim self_mem_nhdsWithin] with j hj h'j
     exact closed_ball_mem_vitali_family_of_dist_le_mul μ hj h'j
   · by_cases l.ne_bot
     swap
     · simp [not_ne_bot.1 h]
     have hK : 0 ≤ K := by
       skip
-      rcases(xmem.and (δlim self_mem_nhds_within)).exists with ⟨j, hj, h'j⟩
+      rcases(xmem.and (δlim self_mem_nhdsWithin)).exists with ⟨j, hj, h'j⟩
       have : 0 ≤ K * δ j := nonempty_closed_ball.1 ⟨x, hj⟩
       exact (mul_nonneg_iff_left_nonneg_of_pos (mem_Ioi.1 h'j)).1 this
-    have δpos := eventually_mem_of_tendsto_nhds_within δlim
-    replace δlim := tendsto_nhds_of_tendsto_nhds_within δlim
+    have δpos := eventually_mem_of_tendsto_nhdsWithin δlim
+    replace δlim := tendsto_nhds_of_tendsto_nhdsWithin δlim
     replace hK : 0 < K + 1
     · linarith
     apply (((metric.tendsto_nhds.mp δlim _ (div_pos hε hK)).And δpos).And xmem).mono
@@ -145,7 +145,7 @@ theorem tendsto_closed_ball_filter_at {K : ℝ} {x : α} {ι : Type _} {l : Filt
       simpa [abs_eq_self.mpr hj₀.le] using (lt_div_iff' hK).mp hjε
     simp only [mem_closed_ball] at hx hy⊢
     linarith [dist_triangle_right y x (w j)]
-#align is_doubling_measure.tendsto_closed_ball_filter_at IsDoublingMeasure.tendsto_closed_ball_filter_at
+#align is_doubling_measure.tendsto_closed_ball_filter_at IsDoublingMeasure.tendsto_closedBall_filterAt
 
 end
 

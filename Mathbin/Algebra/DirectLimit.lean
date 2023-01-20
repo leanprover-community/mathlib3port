@@ -145,8 +145,8 @@ to a unique map out of the direct limit. -/
 def lift : DirectLimit G f →ₗ[R] P :=
   liftq _ (DirectSum.toModule R ι P g)
     (span_le.2 fun a ⟨i, j, hij, x, hx⟩ => by
-      rw [← hx, SetLike.mem_coe, LinearMap.sub_mem_ker_iff, DirectSum.to_module_lof,
-        DirectSum.to_module_lof, Hg])
+      rw [← hx, SetLike.mem_coe, LinearMap.sub_mem_ker_iff, DirectSum.toModule_lof,
+        DirectSum.toModule_lof, Hg])
 #align module.direct_limit.lift Module.DirectLimit.lift
 
 variable {R ι G f}
@@ -154,7 +154,7 @@ variable {R ι G f}
 omit Hg
 
 theorem lift_of {i} (x) : lift R ι G f g Hg (of R ι G f i x) = g i x :=
-  DirectSum.to_module_lof R _ _
+  DirectSum.toModule_lof R _ _
 #align module.direct_limit.lift_of Module.DirectLimit.lift_of
 
 theorem lift_unique [Nonempty ι] [IsDirected ι (· ≤ ·)] (F : DirectLimit G f →ₗ[R] P) (x) :
@@ -195,7 +195,7 @@ variable [DirectedSystem G fun i j h => f i j h]
 
 open Classical
 
-theorem to_module_totalize_of_le {x : DirectSum ι G} {i j : ι} (hij : i ≤ j)
+theorem toModule_totalize_of_le {x : DirectSum ι G} {i j : ι} (hij : i ≤ j)
     (hx : ∀ k ∈ x.support, k ≤ i) :
     DirectSum.toModule R ι (G j) (fun k => totalize G f k j) x =
       f i j hij (DirectSum.toModule R ι (G i) (fun k => totalize G f k i) x) :=
@@ -204,9 +204,9 @@ theorem to_module_totalize_of_le {x : DirectSum ι G} {i j : ι} (hij : i ≤ j)
   unfold Dfinsupp.sum
   simp only [LinearMap.map_sum]
   refine' Finset.sum_congr rfl fun k hk => _
-  rw [DirectSum.single_eq_lof R k (x k), DirectSum.to_module_lof, DirectSum.to_module_lof,
+  rw [DirectSum.single_eq_lof R k (x k), DirectSum.toModule_lof, DirectSum.toModule_lof,
     totalize_of_le (hx k hk), totalize_of_le (le_trans (hx k hk) hij), DirectedSystem.map_map]
-#align module.direct_limit.to_module_totalize_of_le Module.DirectLimit.to_module_totalize_of_le
+#align module.direct_limit.to_module_totalize_of_le Module.DirectLimit.toModule_totalize_of_le
 
 theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : DirectSum ι G}
     (H : Submodule.Quotient.mk x = (0 : DirectLimit G f)) :
@@ -279,10 +279,10 @@ variable (f : ∀ i j, i ≤ j → G i →+ G j)
 
 omit dec_ι
 
-protected theorem directed_system [h : DirectedSystem G fun i j h => f i j h] :
+protected theorem directedSystem [h : DirectedSystem G fun i j h => f i j h] :
     DirectedSystem G fun i j hij => (f i j hij).toIntLinearMap :=
   h
-#align add_comm_group.direct_limit.directed_system AddCommGroup.DirectLimit.directed_system
+#align add_comm_group.direct_limit.directed_system AddCommGroup.DirectLimit.directedSystem
 
 include dec_ι
 
@@ -694,7 +694,7 @@ instance nontrivial [DirectedSystem G fun i j h => f' i j h] :
         rw [← (Ring.DirectLimit.of _ _ _).map_one]
         intro H; rcases Ring.DirectLimit.of.zero_exact H.symm with ⟨j, hij, hf⟩
         rw [(f' i j hij).map_one] at hf
-        exact one_ne_zero hf⟩⟩
+        exact one_neZero hf⟩⟩
 #align field.direct_limit.nontrivial Field.DirectLimit.nontrivial
 
 theorem exists_inv {p : Ring.DirectLimit G f} : p ≠ 0 → ∃ y, p * y = 1 :=

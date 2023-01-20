@@ -50,9 +50,9 @@ variable [EmetricSpace α] [cs : CompleteSpace α] {K : ℝ≥0} {f : α → α}
 
 open Emetric Set
 
-theorem to_lipschitz_with (hf : ContractingWith K f) : LipschitzWith K f :=
+theorem to_lipschitzWith (hf : ContractingWith K f) : LipschitzWith K f :=
   hf.2
-#align contracting_with.to_lipschitz_with ContractingWith.to_lipschitz_with
+#align contracting_with.to_lipschitz_with ContractingWith.to_lipschitzWith
 
 theorem one_sub_K_pos' (hf : ContractingWith K f) : (0 : ℝ≥0∞) < 1 - K := by simp [hf.1]
 #align contracting_with.one_sub_K_pos' ContractingWith.one_sub_K_pos'
@@ -112,10 +112,10 @@ theorem exists_fixed_point (hf : ContractingWith K f) (x : α) (hx : edist x (f 
         Tendsto (fun n => (f^[n]) x) atTop (𝓝 y) ∧
           ∀ n : ℕ, edist ((f^[n]) x) y ≤ edist x (f x) * K ^ n / (1 - K) :=
   have : CauchySeq fun n => (f^[n]) x :=
-    cauchy_seq_of_edist_le_geometric K (edist x (f x)) (Ennreal.coe_lt_one_iff.2 hf.1) hx
+    cauchySeq_of_edist_le_geometric K (edist x (f x)) (Ennreal.coe_lt_one_iff.2 hf.1) hx
       (hf.to_lipschitz_with.edist_iterate_succ_le_geometric x)
-  let ⟨y, hy⟩ := cauchy_seq_tendsto_of_complete this
-  ⟨y, is_fixed_pt_of_tendsto_iterate hy hf.2.Continuous.ContinuousAt, hy,
+  let ⟨y, hy⟩ := cauchySeq_tendsto_of_complete this
+  ⟨y, isFixedPt_of_tendsto_iterate hy hf.2.Continuous.ContinuousAt, hy,
     edist_le_of_edist_le_geometric_of_tendsto K (edist x (f x))
       (hf.to_lipschitz_with.edist_iterate_succ_le_geometric x) hy⟩
 #align contracting_with.exists_fixed_point ContractingWith.exists_fixed_point
@@ -132,36 +132,36 @@ noncomputable def efixedPoint (hf : ContractingWith K f) (x : α) (hx : edist x 
 
 variable {f}
 
-theorem efixed_point_is_fixed_pt (hf : ContractingWith K f) {x : α} (hx : edist x (f x) ≠ ∞) :
+theorem efixedPoint_isFixedPt (hf : ContractingWith K f) {x : α} (hx : edist x (f x) ≠ ∞) :
     IsFixedPt f (efixedPoint f hf x hx) :=
   (Classical.choose_spec <| hf.exists_fixed_point x hx).1
-#align contracting_with.efixed_point_is_fixed_pt ContractingWith.efixed_point_is_fixed_pt
+#align contracting_with.efixed_point_is_fixed_pt ContractingWith.efixedPoint_isFixedPt
 
-theorem tendsto_iterate_efixed_point (hf : ContractingWith K f) {x : α} (hx : edist x (f x) ≠ ∞) :
+theorem tendsto_iterate_efixedPoint (hf : ContractingWith K f) {x : α} (hx : edist x (f x) ≠ ∞) :
     Tendsto (fun n => (f^[n]) x) atTop (𝓝 <| efixedPoint f hf x hx) :=
   (Classical.choose_spec <| hf.exists_fixed_point x hx).2.1
-#align contracting_with.tendsto_iterate_efixed_point ContractingWith.tendsto_iterate_efixed_point
+#align contracting_with.tendsto_iterate_efixed_point ContractingWith.tendsto_iterate_efixedPoint
 
-theorem apriori_edist_iterate_efixed_point_le (hf : ContractingWith K f) {x : α}
+theorem apriori_edist_iterate_efixedPoint_le (hf : ContractingWith K f) {x : α}
     (hx : edist x (f x) ≠ ∞) (n : ℕ) :
     edist ((f^[n]) x) (efixedPoint f hf x hx) ≤ edist x (f x) * K ^ n / (1 - K) :=
   (Classical.choose_spec <| hf.exists_fixed_point x hx).2.2 n
-#align contracting_with.apriori_edist_iterate_efixed_point_le ContractingWith.apriori_edist_iterate_efixed_point_le
+#align contracting_with.apriori_edist_iterate_efixed_point_le ContractingWith.apriori_edist_iterate_efixedPoint_le
 
-theorem edist_efixed_point_le (hf : ContractingWith K f) {x : α} (hx : edist x (f x) ≠ ∞) :
+theorem edist_efixedPoint_le (hf : ContractingWith K f) {x : α} (hx : edist x (f x) ≠ ∞) :
     edist x (efixedPoint f hf x hx) ≤ edist x (f x) / (1 - K) :=
   by
   convert hf.apriori_edist_iterate_efixed_point_le hx 0
   simp only [pow_zero, mul_one]
-#align contracting_with.edist_efixed_point_le ContractingWith.edist_efixed_point_le
+#align contracting_with.edist_efixed_point_le ContractingWith.edist_efixedPoint_le
 
-theorem edist_efixed_point_lt_top (hf : ContractingWith K f) {x : α} (hx : edist x (f x) ≠ ∞) :
+theorem edist_efixedPoint_lt_top (hf : ContractingWith K f) {x : α} (hx : edist x (f x) ≠ ∞) :
     edist x (efixedPoint f hf x hx) < ∞ :=
   (hf.edist_efixed_point_le hx).trans_lt
     (Ennreal.mul_lt_top hx <| Ennreal.inv_ne_top.2 hf.one_sub_K_ne_zero)
-#align contracting_with.edist_efixed_point_lt_top ContractingWith.edist_efixed_point_lt_top
+#align contracting_with.edist_efixed_point_lt_top ContractingWith.edist_efixedPoint_lt_top
 
-theorem efixed_point_eq_of_edist_lt_top (hf : ContractingWith K f) {x : α} (hx : edist x (f x) ≠ ∞)
+theorem efixedPoint_eq_of_edist_lt_top (hf : ContractingWith K f) {x : α} (hx : edist x (f x) ≠ ∞)
     {y : α} (hy : edist y (f y) ≠ ∞) (h : edist x y ≠ ∞) :
     efixedPoint f hf x hx = efixedPoint f hf y hy :=
   by
@@ -174,7 +174,7 @@ theorem efixed_point_eq_of_edist_lt_top (hf : ContractingWith K f) {x : α} (hx 
     exact hf.edist_efixed_point_lt_top hx
   trans y
   exacts[lt_top_iff_ne_top.2 h, hf.edist_efixed_point_lt_top hy]
-#align contracting_with.efixed_point_eq_of_edist_lt_top ContractingWith.efixed_point_eq_of_edist_lt_top
+#align contracting_with.efixed_point_eq_of_edist_lt_top ContractingWith.efixedPoint_eq_of_edist_lt_top
 
 omit cs
 
@@ -222,11 +222,11 @@ theorem efixed_point_is_fixed_pt' {s : Set α} (hsc : IsComplete s) (hsf : MapsT
   (Classical.choose_spec <| hf.exists_fixed_point' hsc hsf hxs hx).snd.1
 #align contracting_with.efixed_point_is_fixed_pt' ContractingWith.efixed_point_is_fixed_pt'
 
-theorem tendsto_iterate_efixed_point' {s : Set α} (hsc : IsComplete s) (hsf : MapsTo f s s)
+theorem tendsto_iterate_efixedPoint' {s : Set α} (hsc : IsComplete s) (hsf : MapsTo f s s)
     (hf : ContractingWith K <| hsf.restrict f s s) {x : α} (hxs : x ∈ s) (hx : edist x (f x) ≠ ∞) :
     Tendsto (fun n => (f^[n]) x) atTop (𝓝 <| efixedPoint' f hsc hsf hf x hxs hx) :=
   (Classical.choose_spec <| hf.exists_fixed_point' hsc hsf hxs hx).snd.2.1
-#align contracting_with.tendsto_iterate_efixed_point' ContractingWith.tendsto_iterate_efixed_point'
+#align contracting_with.tendsto_iterate_efixed_point' ContractingWith.tendsto_iterate_efixedPoint'
 
 theorem apriori_edist_iterate_efixed_point_le' {s : Set α} (hsc : IsComplete s) (hsf : MapsTo f s s)
     (hf : ContractingWith K <| hsf.restrict f s s) {x : α} (hxs : x ∈ s) (hx : edist x (f x) ≠ ∞)
@@ -334,51 +334,51 @@ def fixedPoint : α :=
 variable {f}
 
 /-- The point provided by `contracting_with.fixed_point` is actually a fixed point. -/
-theorem fixed_point_is_fixed_pt : IsFixedPt f (fixedPoint f hf) :=
+theorem fixedPoint_isFixedPt : IsFixedPt f (fixedPoint f hf) :=
   hf.efixed_point_is_fixed_pt _
-#align contracting_with.fixed_point_is_fixed_pt ContractingWith.fixed_point_is_fixed_pt
+#align contracting_with.fixed_point_is_fixed_pt ContractingWith.fixedPoint_isFixedPt
 
-theorem fixed_point_unique {x} (hx : IsFixedPt f x) : x = fixedPoint f hf :=
+theorem fixedPoint_unique {x} (hx : IsFixedPt f x) : x = fixedPoint f hf :=
   hf.fixed_point_unique' hx hf.fixed_point_is_fixed_pt
-#align contracting_with.fixed_point_unique ContractingWith.fixed_point_unique
+#align contracting_with.fixed_point_unique ContractingWith.fixedPoint_unique
 
-theorem dist_fixed_point_le (x) : dist x (fixedPoint f hf) ≤ dist x (f x) / (1 - K) :=
+theorem dist_fixedPoint_le (x) : dist x (fixedPoint f hf) ≤ dist x (f x) / (1 - K) :=
   hf.dist_le_of_fixed_point x hf.fixed_point_is_fixed_pt
-#align contracting_with.dist_fixed_point_le ContractingWith.dist_fixed_point_le
+#align contracting_with.dist_fixed_point_le ContractingWith.dist_fixedPoint_le
 
 /-- Aposteriori estimates on the convergence of iterates to the fixed point. -/
-theorem aposteriori_dist_iterate_fixed_point_le (x n) :
+theorem aposteriori_dist_iterate_fixedPoint_le (x n) :
     dist ((f^[n]) x) (fixedPoint f hf) ≤ dist ((f^[n]) x) ((f^[n + 1]) x) / (1 - K) :=
   by
   rw [iterate_succ']
   apply hf.dist_fixed_point_le
-#align contracting_with.aposteriori_dist_iterate_fixed_point_le ContractingWith.aposteriori_dist_iterate_fixed_point_le
+#align contracting_with.aposteriori_dist_iterate_fixed_point_le ContractingWith.aposteriori_dist_iterate_fixedPoint_le
 
-theorem apriori_dist_iterate_fixed_point_le (x n) :
+theorem apriori_dist_iterate_fixedPoint_le (x n) :
     dist ((f^[n]) x) (fixedPoint f hf) ≤ dist x (f x) * K ^ n / (1 - K) :=
   le_trans (hf.aposteriori_dist_iterate_fixed_point_le x n) <|
     (div_le_div_right hf.one_sub_K_pos).2 <| hf.to_lipschitz_with.dist_iterate_succ_le_geometric x n
-#align contracting_with.apriori_dist_iterate_fixed_point_le ContractingWith.apriori_dist_iterate_fixed_point_le
+#align contracting_with.apriori_dist_iterate_fixed_point_le ContractingWith.apriori_dist_iterate_fixedPoint_le
 
-theorem tendsto_iterate_fixed_point (x) :
+theorem tendsto_iterate_fixedPoint (x) :
     Tendsto (fun n => (f^[n]) x) atTop (𝓝 <| fixedPoint f hf) :=
   by
   convert tendsto_iterate_efixed_point hf (edist_ne_top x _)
   refine' (fixed_point_unique _ _).symm
   apply efixed_point_is_fixed_pt
-#align contracting_with.tendsto_iterate_fixed_point ContractingWith.tendsto_iterate_fixed_point
+#align contracting_with.tendsto_iterate_fixed_point ContractingWith.tendsto_iterate_fixedPoint
 
-theorem fixed_point_lipschitz_in_map {g : α → α} (hg : ContractingWith K g) {C}
+theorem fixedPoint_lipschitz_in_map {g : α → α} (hg : ContractingWith K g) {C}
     (hfg : ∀ z, dist (f z) (g z) ≤ C) : dist (fixedPoint f hf) (fixedPoint g hg) ≤ C / (1 - K) :=
   hf.dist_fixed_point_fixed_point_of_dist_le' g hf.fixed_point_is_fixed_pt
     hg.fixed_point_is_fixed_pt hfg
-#align contracting_with.fixed_point_lipschitz_in_map ContractingWith.fixed_point_lipschitz_in_map
+#align contracting_with.fixed_point_lipschitz_in_map ContractingWith.fixedPoint_lipschitz_in_map
 
 omit hf
 
 /-- If a map `f` has a contracting iterate `f^[n]`, then the fixed point of `f^[n]` is also a fixed
 point of `f`. -/
-theorem is_fixed_pt_fixed_point_iterate {n : ℕ} (hf : ContractingWith K (f^[n])) :
+theorem isFixedPt_fixedPoint_iterate {n : ℕ} (hf : ContractingWith K (f^[n])) :
     IsFixedPt f (hf.fixedPoint (f^[n])) :=
   by
   set x := hf.fixed_point (f^[n])
@@ -388,7 +388,7 @@ theorem is_fixed_pt_fixed_point_iterate {n : ℕ} (hf : ContractingWith K (f^[n]
   contrapose! this
   have := dist_pos.2 (Ne.symm this)
   simpa only [Nnreal.coe_one, one_mul, Nnreal.val_eq_coe] using (mul_lt_mul_right this).mpr hf.left
-#align contracting_with.is_fixed_pt_fixed_point_iterate ContractingWith.is_fixed_pt_fixed_point_iterate
+#align contracting_with.is_fixed_pt_fixed_point_iterate ContractingWith.isFixedPt_fixedPoint_iterate
 
 end ContractingWith
 

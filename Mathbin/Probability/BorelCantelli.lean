@@ -59,7 +59,7 @@ theorem IndepFun.condexp_natrual_ae_eq_of_lt [SecondCountableTopology β] [Compl
     (comap_measurable <| f j).StronglyMeasurable (hfi.indepComapNaturalOfLt hf hij)
 #align probability_theory.Indep_fun.condexp_natrual_ae_eq_of_lt ProbabilityTheory.IndepFun.condexp_natrual_ae_eq_of_lt
 
-theorem IndepSet.condexp_indicator_filtration_of_set_ae_eq (hsm : ∀ n, MeasurableSet (s n))
+theorem IndepSet.condexp_indicator_filtrationOfSet_ae_eq (hsm : ∀ n, MeasurableSet (s n))
     (hs : IndepSet s μ) (hij : i < j) :
     μ[(s j).indicator (fun ω => 1 : Ω → ℝ)|filtrationOfSet hsm i] =ᵐ[μ] fun ω => (μ (s j)).toReal :=
   by
@@ -67,7 +67,7 @@ theorem IndepSet.condexp_indicator_filtration_of_set_ae_eq (hsm : ∀ n, Measura
   refine' (Indep_fun.condexp_natrual_ae_eq_of_lt _ hs.Indep_fun_indicator hij).trans _
   · simp only [integral_indicator_const _ (hsm _), Algebra.id.smul_eq_mul, mul_one]
   · infer_instance
-#align probability_theory.Indep_set.condexp_indicator_filtration_of_set_ae_eq ProbabilityTheory.IndepSet.condexp_indicator_filtration_of_set_ae_eq
+#align probability_theory.Indep_set.condexp_indicator_filtration_of_set_ae_eq ProbabilityTheory.IndepSet.condexp_indicator_filtrationOfSet_ae_eq
 
 open Filter
 
@@ -106,15 +106,15 @@ theorem measure_limsup_eq_one {s : ℕ → Set Ω} (hsm : ∀ n, MeasurableSet (
   refine' tendsto_at_top_at_top_of_monotone' _ _
   · refine' monotone_nat_of_le_succ fun n => _
     rw [← sub_nonneg, Finset.sum_range_succ_sub_sum]
-    exact Ennreal.to_real_nonneg
+    exact Ennreal.toReal_nonneg
   · rintro ⟨B, hB⟩
     refine' not_eventually.2 (frequently_of_forall fun n => _) (htends B.to_nnreal)
     rw [mem_upperBounds] at hB
     specialize hB (∑ k : ℕ in Finset.range n, μ (s (k + 1))).toReal _
     · refine' ⟨n, _⟩
-      rw [Ennreal.to_real_sum]
+      rw [Ennreal.toReal_sum]
       exact fun _ _ => measure_ne_top _ _
-    · rw [not_lt, ← Ennreal.to_real_le_to_real (Ennreal.sum_lt_top _).Ne Ennreal.coe_ne_top]
+    · rw [not_lt, ← Ennreal.toReal_le_toReal (Ennreal.sum_lt_top _).Ne Ennreal.coe_ne_top]
       · exact hB.trans (by simp)
       · exact fun _ _ => measure_ne_top _ _
 #align probability_theory.measure_limsup_eq_one ProbabilityTheory.measure_limsup_eq_one

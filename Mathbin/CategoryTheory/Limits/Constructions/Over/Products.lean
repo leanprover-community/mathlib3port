@@ -177,7 +177,7 @@ way we want to define terminal objects.
 (For instance, this gives a terminal object which is different from the generic one given by
 `over_product_of_wide_pullback` above.)
 -/
-theorem over_has_terminal (B : C) : HasTerminal (Over B) :=
+theorem over_hasTerminal (B : C) : HasTerminal (Over B) :=
   {
     HasLimit := fun F =>
       HasLimit.mk
@@ -193,7 +193,7 @@ theorem over_has_terminal (B : C) : HasTerminal (Over B) :=
                 have := m.w
                 dsimp at this
                 rwa [category.comp_id, category.comp_id] at this } } }
-#align category_theory.over.over_has_terminal CategoryTheory.Over.over_has_terminal
+#align category_theory.over.over_has_terminal CategoryTheory.Over.over_hasTerminal
 
 end CategoryTheory.Over
 

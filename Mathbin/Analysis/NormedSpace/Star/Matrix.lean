@@ -45,8 +45,8 @@ theorem entry_norm_bound_of_unitary {U : Matrix n n 𝕜} (hU : U ∈ Matrix.uni
       simp only [eq_self_iff_true, Finset.mem_univ_val, and_self_iff, sq_eq_sq]
   -- The L2 norm of a row is a diagonal entry of U ⬝ Uᴴ
   have diag_eq_norm_sum : (U ⬝ Uᴴ) i i = ∑ x : n, ‖U i x‖ ^ 2 := by
-    simp only [Matrix.mul_apply, Matrix.conj_transpose_apply, ← starRingEnd_apply, IsROrC.mul_conj,
-      IsROrC.norm_sq_eq_def', IsROrC.of_real_pow]
+    simp only [Matrix.mul_apply, Matrix.conjTranspose_apply, ← starRingEnd_apply, IsROrC.mul_conj,
+      IsROrC.normSq_eq_def', IsROrC.of_real_pow]
   -- The L2 norm of a row is a diagonal entry of U ⬝ Uᴴ, real part
   have re_diag_eq_norm_sum : IsROrC.re ((U ⬝ Uᴴ) i i) = ∑ x : n, ‖U i x‖ ^ 2 :=
     by

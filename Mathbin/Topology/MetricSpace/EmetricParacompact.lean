@@ -111,7 +111,7 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
     have Dopen : ∀ n i, IsOpen (D n i) := by
       intro n i
       rw [Dn]
-      iterate 4 refine' is_open_Union fun _ => _
+      iterate 4 refine' isOpen_unionᵢ fun _ => _
       exact is_open_ball
     -- the covering `D n i` is a refinement of the original covering: `D n i ⊆ s i`
     have HDS : ∀ n i, D n i ⊆ s i := by

@@ -103,10 +103,10 @@ variable (C)
 
 -- This is not an instance, as it is not always how one wants to construct binary products!
 /-- Any category with pullbacks and terminal object has binary products. -/
-theorem has_binary_products_of_has_terminal_and_pullbacks [HasTerminal C] [HasPullbacks C] :
+theorem hasBinaryProducts_of_hasTerminal_and_pullbacks [HasTerminal C] [HasPullbacks C] :
     HasBinaryProducts C :=
   { HasLimit := fun F => HasLimit.mk (limitConeOfTerminalAndPullbacks F) }
-#align has_binary_products_of_has_terminal_and_pullbacks has_binary_products_of_has_terminal_and_pullbacks
+#align has_binary_products_of_has_terminal_and_pullbacks hasBinaryProducts_of_hasTerminal_and_pullbacks
 
 variable {C}
 
@@ -201,10 +201,10 @@ variable (C)
 
 -- This is not an instance, as it is not always how one wants to construct binary coproducts!
 /-- Any category with pushouts and initial object has binary coproducts. -/
-theorem has_binary_coproducts_of_has_initial_and_pushouts [HasInitial C] [HasPushouts C] :
+theorem hasBinaryCoproducts_of_hasInitial_and_pushouts [HasInitial C] [HasPushouts C] :
     HasBinaryCoproducts C :=
   { HasColimit := fun F => HasColimit.mk (colimitCoconeOfInitialAndPushouts F) }
-#align has_binary_coproducts_of_has_initial_and_pushouts has_binary_coproducts_of_has_initial_and_pushouts
+#align has_binary_coproducts_of_has_initial_and_pushouts hasBinaryCoproducts_of_hasInitial_and_pushouts
 
 variable {C}
 

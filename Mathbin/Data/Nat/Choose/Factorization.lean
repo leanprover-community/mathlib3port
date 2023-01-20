@@ -47,9 +47,9 @@ theorem factorization_choose_le_log : (choose n k).factorization p ≤ log p n :
   have hkn : k ≤ n := by
     refine' le_of_not_lt fun hnk => h _
     simp [choose_eq_zero_of_lt hnk]
-  rw [factorization_def _ hp, @padic_val_nat_def _ ⟨hp⟩ _ (choose_pos hkn)]
+  rw [factorization_def _ hp, @padicValNat_def _ ⟨hp⟩ _ (choose_pos hkn)]
   simp only [hp.multiplicity_choose hkn (lt_add_one _), PartEnat.get_coe]
-  refine' (Finset.card_filter_le _ _).trans (le_of_eq (Nat.card_Ico _ _))
+  refine' (Finset.card_filter_le _ _).trans (le_of_eq (Nat.card_ico _ _))
 #align nat.factorization_choose_le_log Nat.factorization_choose_le_log
 
 /-- A `pow` form of `nat.factorization_choose_le`
@@ -75,7 +75,7 @@ theorem factorization_choose_of_lt_three_mul (hp' : p ≠ 2) (hk : p ≤ k) (hk'
   · exact factorization_eq_zero_of_non_prime (choose n k) hp
   cases' lt_or_le n k with hnk hkn
   · simp [choose_eq_zero_of_lt hnk]
-  rw [factorization_def _ hp, @padic_val_nat_def _ ⟨hp⟩ _ (choose_pos hkn)]
+  rw [factorization_def _ hp, @padicValNat_def _ ⟨hp⟩ _ (choose_pos hkn)]
   simp only [hp.multiplicity_choose hkn (lt_add_one _), PartEnat.get_coe, Finset.card_eq_zero,
     Finset.filter_eq_empty_iff, not_le]
   intro i hi
@@ -103,14 +103,14 @@ theorem factorization_choose_of_lt_three_mul (hp' : p ≠ 2) (hk : p ≤ k) (hk'
 /-- Primes greater than about `2 * n / 3` and less than `n` do not appear in the factorization of
 `central_binom n`.
 -/
-theorem factorization_central_binom_of_two_mul_self_lt_three_mul (n_big : 2 < n) (p_le_n : p ≤ n)
+theorem factorization_centralBinom_of_two_mul_self_lt_three_mul (n_big : 2 < n) (p_le_n : p ≤ n)
     (big : 2 * n < 3 * p) : (centralBinom n).factorization p = 0 :=
   by
   refine' factorization_choose_of_lt_three_mul _ p_le_n (p_le_n.trans _) big
   · rintro rfl
     linarith
   · rw [two_mul, add_tsub_cancel_left]
-#align nat.factorization_central_binom_of_two_mul_self_lt_three_mul Nat.factorization_central_binom_of_two_mul_self_lt_three_mul
+#align nat.factorization_central_binom_of_two_mul_self_lt_three_mul Nat.factorization_centralBinom_of_two_mul_self_lt_three_mul
 
 theorem factorization_factorial_eq_zero_of_lt (h : n < p) : (factorial n).factorization p = 0 :=
   by
@@ -130,17 +130,17 @@ theorem factorization_choose_eq_zero_of_lt (h : n < p) : (choose n k).factorizat
 /-- If a prime `p` has positive multiplicity in the `n`th central binomial coefficient,
 `p` is no more than `2 * n`
 -/
-theorem factorization_central_binom_eq_zero_of_two_mul_lt (h : 2 * n < p) :
+theorem factorization_centralBinom_eq_zero_of_two_mul_lt (h : 2 * n < p) :
     (centralBinom n).factorization p = 0 :=
   factorization_choose_eq_zero_of_lt h
-#align nat.factorization_central_binom_eq_zero_of_two_mul_lt Nat.factorization_central_binom_eq_zero_of_two_mul_lt
+#align nat.factorization_central_binom_eq_zero_of_two_mul_lt Nat.factorization_centralBinom_eq_zero_of_two_mul_lt
 
 /-- Contrapositive form of `nat.factorization_central_binom_eq_zero_of_two_mul_lt`
 -/
-theorem le_two_mul_of_factorization_central_binom_pos
+theorem le_two_mul_of_factorization_centralBinom_pos
     (h_pos : 0 < (centralBinom n).factorization p) : p ≤ 2 * n :=
   le_of_not_lt (pos_iff_ne_zero.mp h_pos ∘ factorization_central_binom_eq_zero_of_two_mul_lt)
-#align nat.le_two_mul_of_factorization_central_binom_pos Nat.le_two_mul_of_factorization_central_binom_pos
+#align nat.le_two_mul_of_factorization_central_binom_pos Nat.le_two_mul_of_factorization_centralBinom_pos
 
 /-- A binomial coefficient is the product of its prime factors, which are at most `n`. -/
 theorem prod_pow_factorization_choose (n k : ℕ) (hkn : k ≤ n) :
@@ -159,12 +159,12 @@ theorem prod_pow_factorization_choose (n k : ℕ) (hkn : k ≤ n) :
 
 /-- The `n`th central binomial coefficient is the product of its prime factors, which are
 at most `2n`. -/
-theorem prod_pow_factorization_central_binom (n : ℕ) :
+theorem prod_pow_factorization_centralBinom (n : ℕ) :
     (∏ p in Finset.range (2 * n + 1), p ^ (centralBinom n).factorization p) = centralBinom n :=
   by
   apply prod_pow_factorization_choose
   linarith
-#align nat.prod_pow_factorization_central_binom Nat.prod_pow_factorization_central_binom
+#align nat.prod_pow_factorization_central_binom Nat.prod_pow_factorization_centralBinom
 
 end Nat
 

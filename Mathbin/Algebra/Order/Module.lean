@@ -120,9 +120,9 @@ theorem antitone_smul_left (hc : c ≤ 0) : Antitone (SMul.smul c : M → M) := 
   smul_le_smul_of_nonpos h hc
 #align antitone_smul_left antitone_smul_left
 
-theorem strict_anti_smul_left (hc : c < 0) : StrictAnti (SMul.smul c : M → M) := fun a b h =>
+theorem strictAnti_smul_left (hc : c < 0) : StrictAnti (SMul.smul c : M → M) := fun a b h =>
   smul_lt_smul_of_neg h hc
-#align strict_anti_smul_left strict_anti_smul_left
+#align strict_anti_smul_left strictAnti_smul_left
 
 /-- Binary **rearrangement inequality**. -/
 theorem smul_add_smul_le_smul_add_smul [ContravariantClass M M (· + ·) (· ≤ ·)] {a b : k} {c d : M}
@@ -223,15 +223,15 @@ section OrderedRing
 
 variable [OrderedRing k] [OrderedAddCommGroup M] [Module k M] [OrderedSMul k M] {s : Set M} {c : k}
 
-theorem smul_lower_bounds_subset_upper_bounds_smul (hc : c ≤ 0) :
+theorem smul_lowerBounds_subset_upperBounds_smul (hc : c ≤ 0) :
     c • lowerBounds s ⊆ upperBounds (c • s) :=
   (antitone_smul_left hc).image_lower_bounds_subset_upper_bounds_image
-#align smul_lower_bounds_subset_upper_bounds_smul smul_lower_bounds_subset_upper_bounds_smul
+#align smul_lower_bounds_subset_upper_bounds_smul smul_lowerBounds_subset_upperBounds_smul
 
-theorem smul_upper_bounds_subset_lower_bounds_smul (hc : c ≤ 0) :
+theorem smul_upperBounds_subset_lowerBounds_smul (hc : c ≤ 0) :
     c • upperBounds s ⊆ lowerBounds (c • s) :=
   (antitone_smul_left hc).image_upper_bounds_subset_lower_bounds_image
-#align smul_upper_bounds_subset_lower_bounds_smul smul_upper_bounds_subset_lower_bounds_smul
+#align smul_upper_bounds_subset_lower_bounds_smul smul_upperBounds_subset_lowerBounds_smul
 
 theorem BddBelow.smul_of_nonpos (hc : c ≤ 0) (hs : BddBelow s) : BddAbove (c • s) :=
   (antitone_smul_left hc).map_bdd_below hs
@@ -249,24 +249,24 @@ variable [LinearOrderedField k] [OrderedAddCommGroup M] [Module k M] [OrderedSMu
   {c : k}
 
 @[simp]
-theorem lower_bounds_smul_of_neg (hc : c < 0) : lowerBounds (c • s) = c • upperBounds s :=
+theorem lowerBounds_smul_of_neg (hc : c < 0) : lowerBounds (c • s) = c • upperBounds s :=
   (OrderIso.smulLeftDual M hc).upper_bounds_image
-#align lower_bounds_smul_of_neg lower_bounds_smul_of_neg
+#align lower_bounds_smul_of_neg lowerBounds_smul_of_neg
 
 @[simp]
-theorem upper_bounds_smul_of_neg (hc : c < 0) : upperBounds (c • s) = c • lowerBounds s :=
+theorem upperBounds_smul_of_neg (hc : c < 0) : upperBounds (c • s) = c • lowerBounds s :=
   (OrderIso.smulLeftDual M hc).lower_bounds_image
-#align upper_bounds_smul_of_neg upper_bounds_smul_of_neg
+#align upper_bounds_smul_of_neg upperBounds_smul_of_neg
 
 @[simp]
-theorem bdd_below_smul_iff_of_neg (hc : c < 0) : BddBelow (c • s) ↔ BddAbove s :=
+theorem bddBelow_smul_iff_of_neg (hc : c < 0) : BddBelow (c • s) ↔ BddAbove s :=
   (OrderIso.smulLeftDual M hc).bdd_above_image
-#align bdd_below_smul_iff_of_neg bdd_below_smul_iff_of_neg
+#align bdd_below_smul_iff_of_neg bddBelow_smul_iff_of_neg
 
 @[simp]
-theorem bdd_above_smul_iff_of_neg (hc : c < 0) : BddAbove (c • s) ↔ BddBelow s :=
+theorem bddAbove_smul_iff_of_neg (hc : c < 0) : BddAbove (c • s) ↔ BddBelow s :=
   (OrderIso.smulLeftDual M hc).bdd_below_image
-#align bdd_above_smul_iff_of_neg bdd_above_smul_iff_of_neg
+#align bdd_above_smul_iff_of_neg bddAbove_smul_iff_of_neg
 
 end LinearOrderedField
 

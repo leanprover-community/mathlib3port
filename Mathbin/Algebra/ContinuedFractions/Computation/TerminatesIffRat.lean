@@ -204,13 +204,13 @@ theorem coe_stream_nth_rat_eq :
         simpa [int_fract_pair.stream, IH.symm, v_eq_q, stream_q_nth_eq, fr_ne_zero]
 #align generalized_continued_fraction.int_fract_pair.coe_stream_nth_rat_eq GeneralizedContinuedFraction.IntFractPair.coe_stream_nth_rat_eq
 
-theorem coe_stream_rat_eq :
+theorem coe_stream'_rat_eq :
     ((IntFractPair.stream q).map (Option.map (mapFr coe)) : Stream' <| Option <| IntFractPair K) =
       IntFractPair.stream v :=
   by
   funext n
   exact int_fract_pair.coe_stream_nth_rat_eq v_eq_q n
-#align generalized_continued_fraction.int_fract_pair.coe_stream_rat_eq GeneralizedContinuedFraction.IntFractPair.coe_stream_rat_eq
+#align generalized_continued_fraction.int_fract_pair.coe_stream_rat_eq GeneralizedContinuedFraction.IntFractPair.coe_stream'_rat_eq
 
 end IntFractPair
 
@@ -355,9 +355,8 @@ end IntFractPair
 theorem terminatesOfRat (q : ℚ) : (of q).Terminates :=
   Exists.elim (IntFractPair.exists_nth_stream_eq_none_of_rat q) fun n stream_nth_eq_none =>
     Exists.intro n
-      (have : IntFractPair.stream q (n + 1) = none :=
-        IntFractPair.stream_is_seq q stream_nth_eq_none
-      of_terminated_at_n_iff_succ_nth_int_fract_pair_stream_eq_none.elimRight this)
+      (have : IntFractPair.stream q (n + 1) = none := IntFractPair.stream_isSeq q stream_nth_eq_none
+      of_terminatedAt_n_iff_succ_nth_intFractPair_stream_eq_none.elimRight this)
 #align generalized_continued_fraction.terminates_of_rat GeneralizedContinuedFraction.terminatesOfRat
 
 end TerminatesOfRat

@@ -79,19 +79,19 @@ def domCoprod' :
 #align multilinear_map.dom_coprod' MultilinearMap.domCoprod'
 
 @[simp]
-theorem dom_coprod'_apply (a : MultilinearMap R (fun _ : ι₁ => N) N₁)
+theorem domCoprod'_apply (a : MultilinearMap R (fun _ : ι₁ => N) N₁)
     (b : MultilinearMap R (fun _ : ι₂ => N) N₂) : domCoprod' (a ⊗ₜ[R] b) = domCoprod a b :=
   rfl
-#align multilinear_map.dom_coprod'_apply MultilinearMap.dom_coprod'_apply
+#align multilinear_map.dom_coprod'_apply MultilinearMap.domCoprod'_apply
 
 /-- When passed an `equiv.sum_congr`, `multilinear_map.dom_dom_congr` distributes over
 `multilinear_map.dom_coprod`. -/
-theorem dom_coprod_dom_dom_congr_sum_congr (a : MultilinearMap R (fun _ : ι₁ => N) N₁)
+theorem domCoprod_domDomCongr_sumCongr (a : MultilinearMap R (fun _ : ι₁ => N) N₁)
     (b : MultilinearMap R (fun _ : ι₂ => N) N₂) (σa : ι₁ ≃ ι₃) (σb : ι₂ ≃ ι₄) :
     (a.domCoprod b).domDomCongr (σa.sumCongr σb) =
       (a.domDomCongr σa).domCoprod (b.domDomCongr σb) :=
   rfl
-#align multilinear_map.dom_coprod_dom_dom_congr_sum_congr MultilinearMap.dom_coprod_dom_dom_congr_sum_congr
+#align multilinear_map.dom_coprod_dom_dom_congr_sum_congr MultilinearMap.domCoprod_domDomCongr_sumCongr
 
 end DomCoprod
 

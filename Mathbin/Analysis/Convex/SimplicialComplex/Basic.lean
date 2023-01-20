@@ -85,25 +85,25 @@ theorem mem_space_iff : x ∈ K.space ↔ ∃ s ∈ K.faces, x ∈ convexHull �
   mem_Union₂
 #align geometry.simplicial_complex.mem_space_iff Geometry.SimplicialComplex.mem_space_iff
 
-theorem convex_hull_subset_space (hs : s ∈ K.faces) : convexHull 𝕜 ↑s ⊆ K.space :=
+theorem convexHull_subset_space (hs : s ∈ K.faces) : convexHull 𝕜 ↑s ⊆ K.space :=
   subset_bunionᵢ_of_mem hs
-#align geometry.simplicial_complex.convex_hull_subset_space Geometry.SimplicialComplex.convex_hull_subset_space
+#align geometry.simplicial_complex.convex_hull_subset_space Geometry.SimplicialComplex.convexHull_subset_space
 
 protected theorem subset_space (hs : s ∈ K.faces) : (s : Set E) ⊆ K.space :=
-  (subset_convex_hull 𝕜 _).trans <| convex_hull_subset_space hs
+  (subset_convexHull 𝕜 _).trans <| convexHull_subset_space hs
 #align geometry.simplicial_complex.subset_space Geometry.SimplicialComplex.subset_space
 
-theorem convex_hull_inter_convex_hull (hs : s ∈ K.faces) (ht : t ∈ K.faces) :
+theorem convexHull_inter_convexHull (hs : s ∈ K.faces) (ht : t ∈ K.faces) :
     convexHull 𝕜 ↑s ∩ convexHull 𝕜 ↑t = convexHull 𝕜 (s ∩ t : Set E) :=
   (K.inter_subset_convex_hull hs ht).antisymm <|
-    subset_inter (convex_hull_mono <| Set.inter_subset_left _ _) <|
-      convex_hull_mono <| Set.inter_subset_right _ _
-#align geometry.simplicial_complex.convex_hull_inter_convex_hull Geometry.SimplicialComplex.convex_hull_inter_convex_hull
+    subset_inter (convexHull_mono <| Set.inter_subset_left _ _) <|
+      convexHull_mono <| Set.inter_subset_right _ _
+#align geometry.simplicial_complex.convex_hull_inter_convex_hull Geometry.SimplicialComplex.convexHull_inter_convexHull
 
 /-- The conclusion is the usual meaning of "glue nicely" in textbooks. It turns out to be quite
 unusable, as it's about faces as sets in space rather than simplices. Further,  additional structure
 on `𝕜` means the only choice of `u` is `s ∩ t` (but it's hard to prove). -/
-theorem disjoint_or_exists_inter_eq_convex_hull (hs : s ∈ K.faces) (ht : t ∈ K.faces) :
+theorem disjoint_or_exists_inter_eq_convexHull (hs : s ∈ K.faces) (ht : t ∈ K.faces) :
     Disjoint (convexHull 𝕜 (s : Set E)) (convexHull 𝕜 ↑t) ∨
       ∃ u ∈ K.faces, convexHull 𝕜 (s : Set E) ∩ convexHull 𝕜 ↑t = convexHull 𝕜 ↑u :=
   by
@@ -114,10 +114,10 @@ theorem disjoint_or_exists_inter_eq_convex_hull (hs : s ∈ K.faces) (ht : t ∈
         (K.down_closed hs (inter_subset_left _ _) fun hst =>
           h.1 <| disjoint_iff_inf_le.mpr <| (K.inter_subset_convex_hull hs ht).trans _)
         _
-    · rw [← coe_inter, hst, coe_empty, convex_hull_empty]
+    · rw [← coe_inter, hst, coe_empty, convexHull_empty]
       rfl
     · rw [coe_inter, convex_hull_inter_convex_hull hs ht]
-#align geometry.simplicial_complex.disjoint_or_exists_inter_eq_convex_hull Geometry.SimplicialComplex.disjoint_or_exists_inter_eq_convex_hull
+#align geometry.simplicial_complex.disjoint_or_exists_inter_eq_convex_hull Geometry.SimplicialComplex.disjoint_or_exists_inter_eq_convexHull
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (s t «expr ∈ » faces) -/
@@ -170,29 +170,29 @@ theorem vertices_eq : K.vertices = ⋃ k ∈ K.faces, (k : Set E) :=
 #align geometry.simplicial_complex.vertices_eq Geometry.SimplicialComplex.vertices_eq
 
 theorem vertices_subset_space : K.vertices ⊆ K.space :=
-  vertices_eq.Subset.trans <| Union₂_mono fun x hx => subset_convex_hull 𝕜 x
+  vertices_eq.Subset.trans <| Union₂_mono fun x hx => subset_convexHull 𝕜 x
 #align geometry.simplicial_complex.vertices_subset_space Geometry.SimplicialComplex.vertices_subset_space
 
-theorem vertex_mem_convex_hull_iff (hx : x ∈ K.vertices) (hs : s ∈ K.faces) :
+theorem vertex_mem_convexHull_iff (hx : x ∈ K.vertices) (hs : s ∈ K.faces) :
     x ∈ convexHull 𝕜 (s : Set E) ↔ x ∈ s :=
   by
-  refine' ⟨fun h => _, fun h => subset_convex_hull _ _ h⟩
+  refine' ⟨fun h => _, fun h => subset_convexHull _ _ h⟩
   classical
     have h := K.inter_subset_convex_hull hx hs ⟨by simp, h⟩
     by_contra H
     rwa [← coe_inter,
       Finset.disjoint_iff_inter_eq_empty.1 (Finset.disjoint_singleton_right.2 H).symm, coe_empty,
-      convex_hull_empty] at h
-#align geometry.simplicial_complex.vertex_mem_convex_hull_iff Geometry.SimplicialComplex.vertex_mem_convex_hull_iff
+      convexHull_empty] at h
+#align geometry.simplicial_complex.vertex_mem_convex_hull_iff Geometry.SimplicialComplex.vertex_mem_convexHull_iff
 
 /-- A face is a subset of another one iff its vertices are.  -/
 theorem face_subset_face_iff (hs : s ∈ K.faces) (ht : t ∈ K.faces) :
     convexHull 𝕜 (s : Set E) ⊆ convexHull 𝕜 ↑t ↔ s ⊆ t :=
   ⟨fun h x hxs =>
-    (vertex_mem_convex_hull_iff
+    (vertex_mem_convexHull_iff
           (K.down_closed hs (Finset.singleton_subset_iff.2 hxs) <| singleton_ne_empty _) ht).1
-      (h (subset_convex_hull 𝕜 (↑s) hxs)),
-    convex_hull_mono⟩
+      (h (subset_convexHull 𝕜 (↑s) hxs)),
+    convexHull_mono⟩
 #align geometry.simplicial_complex.face_subset_face_iff Geometry.SimplicialComplex.face_subset_face_iff
 
 /-! ### Facets -/

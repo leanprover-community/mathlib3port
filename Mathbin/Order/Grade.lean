@@ -147,7 +147,7 @@ but is expected to have type
   forall {𝕆 : Type.{u1}} {α : Type.{u2}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} 𝕆] [_inst_3 : GradeOrder.{u1, u2} 𝕆 α _inst_2 _inst_1], StrictMono.{u2, u1} α 𝕆 _inst_1 _inst_2 (grade.{u1, u2} 𝕆 α _inst_1 _inst_2 _inst_3)
 Case conversion may be inaccurate. Consider using '#align grade_strict_mono grade_strict_monoₓ'. -/
 theorem grade_strict_mono : StrictMono (grade 𝕆 : α → 𝕆) :=
-  GradeOrder.grade_strict_mono
+  GradeOrder.grade_strictMono
 #align grade_strict_mono grade_strict_mono
 
 /- warning: covby_iff_lt_covby_grade -> covby_iff_lt_covby_grade is a dubious translation:
@@ -174,7 +174,7 @@ but is expected to have type
   forall (𝕆 : Type.{u1}) {α : Type.{u2}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} 𝕆] [_inst_3 : GradeMinOrder.{u1, u2} 𝕆 α _inst_2 _inst_1] {a : α}, (IsMin.{u2} α (Preorder.toLE.{u2} α _inst_1) a) -> (IsMin.{u1} 𝕆 (Preorder.toLE.{u1} 𝕆 _inst_2) (grade.{u1, u2} 𝕆 α _inst_1 _inst_2 (GradeMinOrder.toGradeOrder.{u1, u2} 𝕆 α _inst_2 _inst_1 _inst_3) a))
 Case conversion may be inaccurate. Consider using '#align is_min.grade IsMin.gradeₓ'. -/
 protected theorem IsMin.grade (h : IsMin a) : IsMin (grade 𝕆 a) :=
-  GradeMinOrder.is_min_grade h
+  GradeMinOrder.isMin_grade h
 #align is_min.grade IsMin.grade
 
 variable {𝕆}
@@ -203,7 +203,7 @@ but is expected to have type
   forall (𝕆 : Type.{u1}) {α : Type.{u2}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} 𝕆] [_inst_3 : GradeMaxOrder.{u1, u2} 𝕆 α _inst_2 _inst_1] {a : α}, (IsMax.{u2} α (Preorder.toLE.{u2} α _inst_1) a) -> (IsMax.{u1} 𝕆 (Preorder.toLE.{u1} 𝕆 _inst_2) (grade.{u1, u2} 𝕆 α _inst_1 _inst_2 (GradeMaxOrder.toGradeOrder.{u1, u2} 𝕆 α _inst_2 _inst_1 _inst_3) a))
 Case conversion may be inaccurate. Consider using '#align is_max.grade IsMax.gradeₓ'. -/
 protected theorem IsMax.grade (h : IsMax a) : IsMax (grade 𝕆 a) :=
-  GradeMaxOrder.is_max_grade h
+  GradeMaxOrder.isMax_grade h
 #align is_max.grade IsMax.grade
 
 variable {𝕆}

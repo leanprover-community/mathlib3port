@@ -973,12 +973,12 @@ def coconeOfConeLeftOp (c : Cone F.leftOp) : Cocone F
 #align category_theory.limits.cocone_of_cone_left_op CategoryTheory.Limits.coconeOfConeLeftOp
 
 @[simp]
-theorem cocone_of_cone_left_op_ι_app (c : Cone F.leftOp) (j) :
+theorem coconeOfConeLeftOp_ι_app (c : Cone F.leftOp) (j) :
     (coconeOfConeLeftOp c).ι.app j = (c.π.app (op j)).op :=
   by
   dsimp only [cocone_of_cone_left_op]
   simp
-#align category_theory.limits.cocone_of_cone_left_op_ι_app CategoryTheory.Limits.cocone_of_cone_left_op_ι_app
+#align category_theory.limits.cocone_of_cone_left_op_ι_app CategoryTheory.Limits.coconeOfConeLeftOp_ι_app
 
 /-- Change a cocone on `F : J ⥤ Cᵒᵖ` to a cone on `F.left_op : Jᵒᵖ ⥤ C`. -/
 @[simps (config :=

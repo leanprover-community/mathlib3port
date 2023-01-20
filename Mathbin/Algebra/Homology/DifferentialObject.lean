@@ -44,10 +44,10 @@ abbrev CategoryTheory.DifferentialObject.xEqToHom
 #align category_theory.differential_object.X_eq_to_hom CategoryTheory.DifferentialObject.xEqToHom
 
 @[simp]
-theorem CategoryTheory.DifferentialObject.X_eq_to_hom_refl
+theorem CategoryTheory.DifferentialObject.xEqToHom_refl
     (X : DifferentialObject (GradedObjectWithShift b V)) (i : β) : X.xEqToHom (refl i) = 𝟙 _ :=
   rfl
-#align category_theory.differential_object.X_eq_to_hom_refl CategoryTheory.DifferentialObject.X_eq_to_hom_refl
+#align category_theory.differential_object.X_eq_to_hom_refl CategoryTheory.DifferentialObject.xEqToHom_refl
 
 @[simp, reassoc.1]
 theorem eq_to_hom_d (X : DifferentialObject (GradedObjectWithShift b V)) {x y : β} (h : x = y) :
@@ -64,12 +64,12 @@ theorem eq_to_hom_d (X : DifferentialObject (GradedObjectWithShift b V)) {x y : 
 #align homological_complex.eq_to_hom_d HomologicalComplex.eq_to_hom_d
 
 @[simp, reassoc.1]
-theorem d_eq_to_hom (X : HomologicalComplex V (ComplexShape.up' b)) {x y z : β} (h : y = z) :
+theorem d_eqToHom (X : HomologicalComplex V (ComplexShape.up' b)) {x y z : β} (h : y = z) :
     X.d x y ≫ eqToHom (congr_arg X.x h) = X.d x z :=
   by
   cases h
   simp
-#align homological_complex.d_eq_to_hom HomologicalComplex.d_eq_to_hom
+#align homological_complex.d_eq_to_hom HomologicalComplex.d_eqToHom
 
 @[simp, reassoc.1]
 theorem eq_to_hom_f' {X Y : DifferentialObject (GradedObjectWithShift b V)} (f : X ⟶ Y) {x y : β}

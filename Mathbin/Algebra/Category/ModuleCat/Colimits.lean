@@ -390,26 +390,26 @@ def colimitCoconeIsColimit : IsColimit (colimitCocone F)
     rfl
 #align Module.colimits.colimit_cocone_is_colimit ModuleCat.Colimits.colimitCoconeIsColimit
 
-instance has_colimits_Module : HasColimits (ModuleCat.{max v u} R)
+instance hasColimits_moduleCat : HasColimits (ModuleCat.{max v u} R)
     where HasColimitsOfShape J 𝒥 :=
     {
       HasColimit := fun F =>
         has_colimit.mk
           { Cocone := colimit_cocone F
             IsColimit := colimit_cocone_is_colimit F } }
-#align Module.colimits.has_colimits_Module ModuleCat.Colimits.has_colimits_Module
+#align Module.colimits.has_colimits_Module ModuleCat.Colimits.hasColimits_moduleCat
 
 -- We manually add a `has_colimits` instance with universe parameters swapped, for otherwise
 -- the instance is not found by typeclass search.
-instance has_colimits_Module' (R : Type u) [Ring R] : HasColimits (ModuleCat.{max u v} R) :=
-  ModuleCat.Colimits.has_colimits_Module.{u, v}
-#align Module.colimits.has_colimits_Module' ModuleCat.Colimits.has_colimits_Module'
+instance hasColimits_Module' (R : Type u) [Ring R] : HasColimits (ModuleCat.{max u v} R) :=
+  ModuleCat.Colimits.hasColimits_moduleCat.{u, v}
+#align Module.colimits.has_colimits_Module' ModuleCat.Colimits.hasColimits_Module'
 
 -- We manually add a `has_colimits` instance with equal universe parameters, for otherwise
 -- the instance is not found by typeclass search.
-instance has_colimits_Module'' (R : Type u) [Ring R] : HasColimits (ModuleCat.{u} R) :=
-  ModuleCat.Colimits.has_colimits_Module.{u, u}
-#align Module.colimits.has_colimits_Module'' ModuleCat.Colimits.has_colimits_Module''
+instance hasColimits_Module'' (R : Type u) [Ring R] : HasColimits (ModuleCat.{u} R) :=
+  ModuleCat.Colimits.hasColimits_moduleCat.{u, u}
+#align Module.colimits.has_colimits_Module'' ModuleCat.Colimits.hasColimits_Module''
 
 -- Sanity checks, just to make sure typeclass search can find the instances we want.
 example (R : Type u) [Ring R] : HasColimits (ModuleCat.{max v u} R) :=

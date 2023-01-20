@@ -49,17 +49,17 @@ def iso {X Y : A} (f : X ⟶ Y) : image (L.map f) ≅ L.obj (image f) :=
   let aux1 : StrongEpiMonoFactorisation (L.map f) :=
     { i := L.obj (Limits.image f)
       m := L.map <| Limits.image.ι _
-      m_mono := preserves_mono_of_preserves_limit _ _
+      m_mono := preserves_mono_of_preservesLimit _ _
       e := L.map <| factorThruImage _
-      e_strong_epi := @strong_epi_of_epi _ _ _ <| preserves_epi_of_preserves_colimit L _
+      e_strong_epi := @strongEpi_of_epi _ _ _ <| preserves_epi_of_preservesColimit L _
       fac' := by rw [← L.map_comp, limits.image.fac] }
   IsImage.isoExt (Image.isImage (L.map f)) aux1.toMonoIsImage
 #align category_theory.preserves_image.iso CategoryTheory.PreservesImage.iso
 
 @[reassoc.1]
-theorem factor_thru_image_comp_hom {X Y : A} (f : X ⟶ Y) :
+theorem factorThruImage_comp_hom {X Y : A} (f : X ⟶ Y) :
     factorThruImage (L.map f) ≫ (iso L f).Hom = L.map (factorThruImage f) := by simp
-#align category_theory.preserves_image.factor_thru_image_comp_hom CategoryTheory.PreservesImage.factor_thru_image_comp_hom
+#align category_theory.preserves_image.factor_thru_image_comp_hom CategoryTheory.PreservesImage.factorThruImage_comp_hom
 
 @[reassoc.1]
 theorem hom_comp_map_image_ι {X Y : A} (f : X ⟶ Y) :

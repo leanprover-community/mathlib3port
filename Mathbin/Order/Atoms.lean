@@ -141,20 +141,14 @@ theorem bot_covby_iff : ⊥ ⋖ a ↔ IsAtom a := by
   simp only [Covby, bot_lt_iff_ne_bot, IsAtom, not_imp_not]
 #align bot_covby_iff bot_covby_iff
 
-/- warning: covby.is_atom -> Covby.is_atom is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α}, (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)) a) -> (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α}, (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)) a) -> (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a)
-Case conversion may be inaccurate. Consider using '#align covby.is_atom Covby.is_atomₓ'. -/
 /- warning: is_atom.bot_covby -> IsAtom.bot_covby is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α}, (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a) -> (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)) a)
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α}, (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a) -> (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)) a)
 Case conversion may be inaccurate. Consider using '#align is_atom.bot_covby IsAtom.bot_covbyₓ'. -/
-alias bot_covby_iff ↔ Covby.is_atom IsAtom.bot_covby
-#align covby.is_atom Covby.is_atom
+alias bot_covby_iff ↔ Covby.isAtom IsAtom.bot_covby
+#align covby.is_atom Covby.isAtom
 #align is_atom.bot_covby IsAtom.bot_covby
 
 end IsAtom
@@ -263,20 +257,14 @@ theorem covby_top_iff : a ⋖ ⊤ ↔ IsCoatom a :=
   toDual_covby_toDual_iff.symm.trans bot_covby_iff
 #align covby_top_iff covby_top_iff
 
-/- warning: covby.is_coatom -> Covby.is_coatom is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α}, (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2))) -> (IsCoatom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α}, (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a (Top.top.{u1} α (OrderTop.toTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2))) -> (IsCoatom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a)
-Case conversion may be inaccurate. Consider using '#align covby.is_coatom Covby.is_coatomₓ'. -/
 /- warning: is_coatom.covby_top -> IsCoatom.covby_top is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α}, (IsCoatom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a) -> (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α}, (IsCoatom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a) -> (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a (Top.top.{u1} α (OrderTop.toTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)))
 Case conversion may be inaccurate. Consider using '#align is_coatom.covby_top IsCoatom.covby_topₓ'. -/
-alias covby_top_iff ↔ Covby.is_coatom IsCoatom.covby_top
-#align covby.is_coatom Covby.is_coatom
+alias covby_top_iff ↔ Covby.isCoatom IsCoatom.covby_top
+#align covby.is_coatom Covby.isCoatom
 #align is_coatom.covby_top IsCoatom.covby_top
 
 end IsCoatom
@@ -765,7 +753,7 @@ instance (priority := 100) : IsAtomic α :=
 
 -- see Note [lower instance priority]
 instance (priority := 100) : IsCoatomic α :=
-  isAtomic_dual_iff_isCoatomic.1 IsSimpleOrder.is_atomic
+  isAtomic_dual_iff_isCoatomic.1 IsSimpleOrder.isAtomic
 
 end BoundedOrder
 
@@ -899,7 +887,7 @@ instance : IsAtomistic α :=
         (Set.mem_singleton_iff.1 ha).symm ▸ isAtom_top⟩⟩
 
 instance : IsCoatomistic α :=
-  isAtomistic_dual_iff_isCoatomistic.1 IsSimpleOrder.is_atomistic
+  isAtomistic_dual_iff_isCoatomistic.1 IsSimpleOrder.isAtomistic
 
 end IsSimpleOrder
 
@@ -1190,7 +1178,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align order_iso.is_atomic_iff OrderIso.isAtomic_iffₓ'. -/
 protected theorem isAtomic_iff [OrderBot α] [OrderBot β] (f : α ≃o β) : IsAtomic α ↔ IsAtomic β :=
   by
-  simp only [is_atomic_iff, f.surjective.forall, f.surjective.exists, ← map_bot f, f.eq_iff_eq,
+  simp only [isAtomic_iff, f.surjective.forall, f.surjective.exists, ← map_bot f, f.eq_iff_eq,
     f.le_iff_le, f.is_atom_iff]
 #align order_iso.is_atomic_iff OrderIso.isAtomic_iff
 

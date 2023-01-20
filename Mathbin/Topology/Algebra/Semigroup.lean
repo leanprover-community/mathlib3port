@@ -62,13 +62,13 @@ theorem exists_idempotent_of_compact_t2_of_continuous_mul_left {M} [Nonempty M] 
     exact hm.2
   refine' zorn_superset _ fun c hcs hc => _
   refine'
-    ⟨⋂₀ c, ⟨is_closed_sInter fun t ht => (hcs ht).1, _, fun m hm m' hm' => _⟩, fun s hs =>
+    ⟨⋂₀ c, ⟨isClosed_interₛ fun t ht => (hcs ht).1, _, fun m hm m' hm' => _⟩, fun s hs =>
       Set.interₛ_subset_of_mem hs⟩
   · obtain rfl | hcnemp := c.eq_empty_or_nonempty
     · rw [Set.interₛ_empty]
       apply Set.univ_nonempty
     convert
-      @IsCompact.nonempty_Inter_of_directed_nonempty_compact_closed _ _ _ hcnemp.coe_sort
+      @IsCompact.nonempty_interᵢ_of_directed_nonempty_compact_closed _ _ _ hcnemp.coe_sort
         (coe : c → Set M) _ _ _ _
     · simp only [Subtype.range_coe_subtype, Set.setOf_mem_eq]
     · refine' DirectedOn.directed_coe (IsChain.directedOn hc.symm)

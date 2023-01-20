@@ -64,15 +64,15 @@ variable [Algebra K L] [FiniteDimensional K L] [Algebra A L] [IsScalarTower A K 
 
 variable [Algebra C L] [IsIntegralClosure C A L] [Algebra A C] [IsScalarTower A C L]
 
-theorem IsIntegralClosure.range_le_span_dual_basis [IsSeparable K L] {ι : Type _} [Fintype ι]
+theorem IsIntegralClosure.range_le_span_dualBasis [IsSeparable K L] {ι : Type _} [Fintype ι]
     [DecidableEq ι] (b : Basis ι K L) (hb_int : ∀ i, IsIntegral A (b i)) [IsIntegrallyClosed A] :
     ((Algebra.linearMap C L).restrictScalars A).range ≤
       Submodule.span A (Set.range <| (traceForm K L).dualBasis (traceFormNondegenerate K L) b) :=
   by
   let db := (trace_form K L).dualBasis (traceFormNondegenerate K L) b
   rintro _ ⟨x, rfl⟩
-  simp only [LinearMap.coe_restrict_scalars_eq_coe, Algebra.linear_map_apply]
-  have hx : IsIntegral A (algebraMap C L x) := (IsIntegralClosure.is_integral A L x).algebraMap
+  simp only [LinearMap.coe_restrictScalars_eq_coe, Algebra.linearMap_apply]
+  have hx : IsIntegral A (algebraMap C L x) := (IsIntegralClosure.isIntegral A L x).algebraMap
   rsuffices ⟨c, x_eq⟩ : ∃ c : ι → A, algebraMap C L x = ∑ i, c i • db i
   · rw [x_eq]
     refine' Submodule.sum_mem _ fun i _ => Submodule.smul_mem _ _ (Submodule.subset_span _)
@@ -86,21 +86,21 @@ theorem IsIntegralClosure.range_le_span_dual_basis [IsSeparable K L] {ι : Type 
     use fun i => Classical.choose (hc' i)
     refine' hx.trans (Finset.sum_congr rfl fun i _ => _)
     conv_lhs => rw [← Classical.choose_spec (hc' i)]
-    rw [← IsScalarTower.algebra_map_smul K (Classical.choose (hc' i)) (db i)]
+    rw [← IsScalarTower.algebraMap_smul K (Classical.choose (hc' i)) (db i)]
   refine' ⟨fun i => db.repr (algebraMap C L x) i, fun i => _, (db.sum_repr _).symm⟩
-  rw [BilinForm.dual_basis_repr_apply]
-  exact is_integral_trace (is_integral_mul hx (hb_int i))
-#align is_integral_closure.range_le_span_dual_basis IsIntegralClosure.range_le_span_dual_basis
+  rw [BilinForm.dualBasis_repr_apply]
+  exact is_integral_trace (isIntegral_mul hx (hb_int i))
+#align is_integral_closure.range_le_span_dual_basis IsIntegralClosure.range_le_span_dualBasis
 
-theorem integral_closure_le_span_dual_basis [IsSeparable K L] {ι : Type _} [Fintype ι]
-    [DecidableEq ι] (b : Basis ι K L) (hb_int : ∀ i, IsIntegral A (b i)) [IsIntegrallyClosed A] :
+theorem integralClosure_le_span_dualBasis [IsSeparable K L] {ι : Type _} [Fintype ι] [DecidableEq ι]
+    (b : Basis ι K L) (hb_int : ∀ i, IsIntegral A (b i)) [IsIntegrallyClosed A] :
     (integralClosure A L).toSubmodule ≤
       Submodule.span A (Set.range <| (traceForm K L).dualBasis (traceFormNondegenerate K L) b) :=
   by
-  refine' le_trans _ (IsIntegralClosure.range_le_span_dual_basis (integralClosure A L) b hb_int)
+  refine' le_trans _ (IsIntegralClosure.range_le_span_dualBasis (integralClosure A L) b hb_int)
   intro x hx
   exact ⟨⟨x, hx⟩, rfl⟩
-#align integral_closure_le_span_dual_basis integral_closure_le_span_dual_basis
+#align integral_closure_le_span_dual_basis integralClosure_le_span_dualBasis
 
 variable (A) (K)
 
@@ -114,20 +114,20 @@ theorem exists_integral_multiples (s : Finset L) :
   by
   haveI := Classical.decEq L
   refine' s.induction _ _
-  · use 1, one_ne_zero
+  · use 1, one_neZero
     rintro x ⟨⟩
   · rintro x s hx ⟨y, hy, hs⟩
     obtain ⟨x', y', hy', hx'⟩ :=
       exists_integral_multiple
-        ((IsFractionRing.is_algebraic_iff A K L).mpr (is_algebraic_of_finite _ _ x))
+        ((IsFractionRing.isAlgebraic_iff A K L).mpr (is_algebraic_of_finite _ _ x))
         ((injective_iff_map_eq_zero (algebraMap A L)).mp _)
     refine' ⟨y * y', mul_ne_zero hy hy', fun x'' hx'' => _⟩
     rcases finset.mem_insert.mp hx'' with (rfl | hx'')
     · rw [mul_smul, Algebra.smul_def, Algebra.smul_def, mul_comm _ x'', hx']
-      exact is_integral_mul is_integral_algebra_map x'.2
+      exact isIntegral_mul isIntegral_algebraMap x'.2
     · rw [mul_comm, mul_smul, Algebra.smul_def]
-      exact is_integral_mul is_integral_algebra_map (hs _ hx'')
-    · rw [IsScalarTower.algebra_map_eq A K L]
+      exact isIntegral_mul isIntegral_algebraMap (hs _ hx'')
+    · rw [IsScalarTower.algebraMap_eq A K L]
       apply (algebraMap K L).Injective.comp
       exact IsFractionRing.injective _ _
 #align exists_integral_multiples exists_integral_multiples
@@ -147,7 +147,7 @@ theorem FiniteDimensional.exists_is_basis_integral :
   have hy' : algebraMap A L y ≠ 0 :=
     by
     refine' mt ((injective_iff_map_eq_zero (algebraMap A L)).mp _ _) hy
-    rw [IsScalarTower.algebra_map_eq A K L]
+    rw [IsScalarTower.algebraMap_eq A K L]
     exact (algebraMap K L).Injective.comp (IsFractionRing.injective A K)
   refine'
     ⟨s',
@@ -185,30 +185,30 @@ theorem IsIntegralClosure.isNoetherian [IsIntegrallyClosed A] [IsNoetherianRing 
   let b' := (trace_form K L).dualBasis (traceFormNondegenerate K L) b
   letI := isNoetherianSpanOfFinite A (Set.finite_range b')
   let f : C →ₗ[A] Submodule.span A (Set.range b') :=
-    (Submodule.ofLe (IsIntegralClosure.range_le_span_dual_basis C b hb_int)).comp
+    (Submodule.ofLe (IsIntegralClosure.range_le_span_dualBasis C b hb_int)).comp
       ((Algebra.linearMap C L).restrictScalars A).range_restrict
   refine' isNoetherianOfKerBot f _
-  rw [LinearMap.ker_comp, Submodule.ker_of_le, Submodule.comap_bot, LinearMap.ker_cod_restrict]
-  exact LinearMap.ker_eq_bot_of_injective (IsIntegralClosure.algebra_map_injective C A L)
+  rw [LinearMap.ker_comp, Submodule.ker_ofLe, Submodule.comap_bot, LinearMap.ker_codRestrict]
+  exact LinearMap.ker_eq_bot_of_injective (IsIntegralClosure.algebraMap_injective C A L)
 #align is_integral_closure.is_noetherian IsIntegralClosure.isNoetherian
 
 /- If `L` is a finite separable extension of `K = Frac(A)`, where `A` is
 integrally closed and Noetherian, the integral closure `C` of `A` in `L` is
 Noetherian. -/
-theorem IsIntegralClosure.is_noetherian_ring [IsIntegrallyClosed A] [IsNoetherianRing A] :
+theorem IsIntegralClosure.isNoetherianRing [IsIntegrallyClosed A] [IsNoetherianRing A] :
     IsNoetherianRing C :=
-  is_noetherian_ring_iff.mpr <| isNoetherianOfTower A (IsIntegralClosure.isNoetherian A K L C)
-#align is_integral_closure.is_noetherian_ring IsIntegralClosure.is_noetherian_ring
+  isNoetherianRing_iff.mpr <| isNoetherianOfTower A (IsIntegralClosure.isNoetherian A K L C)
+#align is_integral_closure.is_noetherian_ring IsIntegralClosure.isNoetherianRing
 
 variable {A K}
 
 /- If `L` is a finite separable extension of `K = Frac(A)`, where `A` is
 integrally closed and Noetherian, the integral closure of `A` in `L` is
 Noetherian. -/
-theorem integralClosure.is_noetherian_ring [IsIntegrallyClosed A] [IsNoetherianRing A] :
+theorem integralClosure.isNoetherianRing [IsIntegrallyClosed A] [IsNoetherianRing A] :
     IsNoetherianRing (integralClosure A L) :=
-  IsIntegralClosure.is_noetherian_ring A K L (integralClosure A L)
-#align integral_closure.is_noetherian_ring integralClosure.is_noetherian_ring
+  IsIntegralClosure.isNoetherianRing A K L (integralClosure A L)
+#align integral_closure.is_noetherian_ring integralClosure.isNoetherianRing
 
 variable (A K) [IsDomain C]
 
@@ -220,12 +220,11 @@ Can't be an instance since `A`, `K` or `L` can't be inferred. See also the insta
 and `C := integral_closure A L`.
 -/
 theorem IsIntegralClosure.isDedekindDomain [h : IsDedekindDomain A] : IsDedekindDomain C :=
-  haveI : IsFractionRing C L := IsIntegralClosure.is_fraction_ring_of_finite_extension A K L C
-  ⟨IsIntegralClosure.is_noetherian_ring A K L C, h.dimension_le_one.is_integral_closure _ L _,
-    (is_integrally_closed_iff L).mpr fun x hx =>
-      ⟨IsIntegralClosure.mk' C x
-          (is_integral_trans (IsIntegralClosure.is_integral_algebra A L) _ hx),
-        IsIntegralClosure.algebra_map_mk' _ _ _⟩⟩
+  haveI : IsFractionRing C L := IsIntegralClosure.isFractionRing_of_finite_extension A K L C
+  ⟨IsIntegralClosure.isNoetherianRing A K L C, h.dimension_le_one.is_integral_closure _ L _,
+    (isIntegrallyClosed_iff L).mpr fun x hx =>
+      ⟨IsIntegralClosure.mk' C x (isIntegral_trans (IsIntegralClosure.isIntegral_algebra A L) _ hx),
+        IsIntegralClosure.algebraMap_mk' _ _ _⟩⟩
 #align is_integral_closure.is_dedekind_domain IsIntegralClosure.isDedekindDomain
 
 /- If `L` is a finite separable extension of `K = Frac(A)`, where `A` is a Dedekind domain,

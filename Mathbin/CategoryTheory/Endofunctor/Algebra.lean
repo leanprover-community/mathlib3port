@@ -270,9 +270,9 @@ theorem right_inv : A.str ≫ strInv h = 𝟙 _ :=
 /-- The structure map of the inital algebra is an isomorphism,
 hence endofunctors preserve their initial algebras
 -/
-theorem str_is_iso (h : Limits.IsInitial A) : IsIso A.str :=
+theorem str_isIso (h : Limits.IsInitial A) : IsIso A.str :=
   { out := ⟨strInv h, right_inv _, left_inv _⟩ }
-#align category_theory.endofunctor.algebra.initial.str_is_iso CategoryTheory.Endofunctor.Algebra.Initial.str_is_iso
+#align category_theory.endofunctor.algebra.initial.str_is_iso CategoryTheory.Endofunctor.Algebra.Initial.str_isIso
 
 end Initial
 
@@ -491,17 +491,17 @@ namespace Adjunction
 
 variable {F : C ⥤ C} {G : C ⥤ C}
 
-theorem Algebra.hom_equiv_naturality_str (adj : F ⊣ G) (A₁ A₂ : Algebra F) (f : A₁ ⟶ A₂) :
+theorem Algebra.homEquiv_naturality_str (adj : F ⊣ G) (A₁ A₂ : Algebra F) (f : A₁ ⟶ A₂) :
     (adj.homEquiv A₁.a A₁.a) A₁.str ≫ G.map f.f = f.f ≫ (adj.homEquiv A₂.a A₂.a) A₂.str := by
   rw [← adjunction.hom_equiv_naturality_right, ← adjunction.hom_equiv_naturality_left, f.h]
-#align category_theory.endofunctor.adjunction.algebra.hom_equiv_naturality_str CategoryTheory.Endofunctor.Adjunction.Algebra.hom_equiv_naturality_str
+#align category_theory.endofunctor.adjunction.algebra.hom_equiv_naturality_str CategoryTheory.Endofunctor.Adjunction.Algebra.homEquiv_naturality_str
 
-theorem Coalgebra.hom_equiv_naturality_str_symm (adj : F ⊣ G) (V₁ V₂ : Coalgebra G) (f : V₁ ⟶ V₂) :
+theorem Coalgebra.homEquiv_naturality_str_symm (adj : F ⊣ G) (V₁ V₂ : Coalgebra G) (f : V₁ ⟶ V₂) :
     F.map f.f ≫ (adj.homEquiv V₂.V V₂.V).symm V₂.str = (adj.homEquiv V₁.V V₁.V).symm V₁.str ≫ f.f :=
   by
   rw [← adjunction.hom_equiv_naturality_left_symm, ← adjunction.hom_equiv_naturality_right_symm,
     f.h]
-#align category_theory.endofunctor.adjunction.coalgebra.hom_equiv_naturality_str_symm CategoryTheory.Endofunctor.Adjunction.Coalgebra.hom_equiv_naturality_str_symm
+#align category_theory.endofunctor.adjunction.coalgebra.hom_equiv_naturality_str_symm CategoryTheory.Endofunctor.Adjunction.Coalgebra.homEquiv_naturality_str_symm
 
 /-- Given an adjunction `F ⊣ G`, the functor that associates to an algebra over `F` a
 coalgebra over `G` defined via adjunction applied to the structure map. -/
@@ -512,7 +512,7 @@ def Algebra.toCoalgebraOf (adj : F ⊣ G) : Algebra F ⥤ Coalgebra G
       str := (adj.homEquiv A.1 A.1).toFun A.2 }
   map A₁ A₂ f :=
     { f := f.1
-      h' := Algebra.hom_equiv_naturality_str adj A₁ A₂ f }
+      h' := Algebra.homEquiv_naturality_str adj A₁ A₂ f }
 #align category_theory.endofunctor.adjunction.algebra.to_coalgebra_of CategoryTheory.Endofunctor.Adjunction.Algebra.toCoalgebraOf
 
 /-- Given an adjunction `F ⊣ G`, the functor that associates to a coalgebra over `G` an algebra over
@@ -524,7 +524,7 @@ def Coalgebra.toAlgebraOf (adj : F ⊣ G) : Coalgebra G ⥤ Algebra F
       str := (adj.homEquiv V.1 V.1).invFun V.2 }
   map V₁ V₂ f :=
     { f := f.1
-      h' := Coalgebra.hom_equiv_naturality_str_symm adj V₁ V₂ f }
+      h' := Coalgebra.homEquiv_naturality_str_symm adj V₁ V₂ f }
 #align category_theory.endofunctor.adjunction.coalgebra.to_algebra_of CategoryTheory.Endofunctor.Adjunction.Coalgebra.toAlgebraOf
 
 /-- Given an adjunction, assigning to an algebra over the left adjoint a coalgebra over its right

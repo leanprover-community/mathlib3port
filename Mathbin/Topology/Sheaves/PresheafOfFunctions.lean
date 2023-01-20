@@ -57,16 +57,16 @@ def presheafToTypes (T : X → Type v) : X.Presheaf (Type v)
 #align Top.presheaf_to_Types TopCat.presheafToTypes
 
 @[simp]
-theorem presheaf_to_Types_obj {T : X → Type v} {U : (Opens X)ᵒᵖ} :
+theorem presheafToTypes_obj {T : X → Type v} {U : (Opens X)ᵒᵖ} :
     (presheafToTypes X T).obj U = ∀ x : unop U, T x :=
   rfl
-#align Top.presheaf_to_Types_obj TopCat.presheaf_to_Types_obj
+#align Top.presheaf_to_Types_obj TopCat.presheafToTypes_obj
 
 @[simp]
-theorem presheaf_to_Types_map {T : X → Type v} {U V : (Opens X)ᵒᵖ} {i : U ⟶ V} {f} :
+theorem presheafToTypes_map {T : X → Type v} {U V : (Opens X)ᵒᵖ} {i : U ⟶ V} {f} :
     (presheafToTypes X T).map i f = fun x => f (i.unop x) :=
   rfl
-#align Top.presheaf_to_Types_map TopCat.presheaf_to_Types_map
+#align Top.presheaf_to_Types_map TopCat.presheafToTypes_map
 
 -- We don't just define this in terms of `presheaf_to_Types`,
 -- as it's helpful later to see (at a syntactic level) that `(presheaf_to_Type X T).obj U`
@@ -88,16 +88,16 @@ def presheafToType (T : Type v) : X.Presheaf (Type v)
 #align Top.presheaf_to_Type TopCat.presheafToType
 
 @[simp]
-theorem presheaf_to_Type_obj {T : Type v} {U : (Opens X)ᵒᵖ} :
+theorem presheafToType_obj {T : Type v} {U : (Opens X)ᵒᵖ} :
     (presheafToType X T).obj U = (unop U → T) :=
   rfl
-#align Top.presheaf_to_Type_obj TopCat.presheaf_to_Type_obj
+#align Top.presheaf_to_Type_obj TopCat.presheafToType_obj
 
 @[simp]
-theorem presheaf_to_Type_map {T : Type v} {U V : (Opens X)ᵒᵖ} {i : U ⟶ V} {f} :
+theorem presheafToType_map {T : Type v} {U V : (Opens X)ᵒᵖ} {i : U ⟶ V} {f} :
     (presheafToType X T).map i f = f ∘ i.unop :=
   rfl
-#align Top.presheaf_to_Type_map TopCat.presheaf_to_Type_map
+#align Top.presheaf_to_Type_map TopCat.presheafToType_map
 
 /-- The presheaf of continuous functions on `X` with values in fixed target topological space
 `T`. -/
@@ -106,10 +106,10 @@ def presheafToTop (T : TopCat.{v}) : X.Presheaf (Type v) :=
 #align Top.presheaf_to_Top TopCat.presheafToTop
 
 @[simp]
-theorem presheaf_to_Top_obj (T : TopCat.{v}) (U : (Opens X)ᵒᵖ) :
+theorem presheafToTop_obj (T : TopCat.{v}) (U : (Opens X)ᵒᵖ) :
     (presheafToTop X T).obj U = ((Opens.toTop X).obj (unop U) ⟶ T) :=
   rfl
-#align Top.presheaf_to_Top_obj TopCat.presheaf_to_Top_obj
+#align Top.presheaf_to_Top_obj TopCat.presheafToTop_obj
 
 -- TODO upgrade the result to TopCommRing?
 /-- The (bundled) commutative ring of continuous functions from a topological space

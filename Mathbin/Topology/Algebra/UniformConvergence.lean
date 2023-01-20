@@ -115,30 +115,30 @@ instance : UniformGroup (α →ᵤ G) :=
           -- `((/) ∘ —) : (α →ᵤ G × G) → (α →ᵤ G)` is uniformly continuous too. By precomposing with
           -- `uniform_fun.uniform_equiv_prod_arrow`, this gives that
           -- `(/) : (α →ᵤ G) × (α →ᵤ G) → (α →ᵤ G)` is also uniformly continuous
-          UniformFun.postcomp_uniform_continuous
-          uniform_continuous_div).comp
+          UniformFun.postcomp_uniformContinuous
+          uniformContinuous_div).comp
       UniformFun.uniformEquivProdArrow.symm.UniformContinuous⟩
 
 @[to_additive]
-protected theorem UniformFun.has_basis_nhds_one_of_basis {p : ι → Prop} {b : ι → Set G}
+protected theorem UniformFun.hasBasis_nhds_one_of_basis {p : ι → Prop} {b : ι → Set G}
     (h : (𝓝 1 : Filter G).HasBasis p b) :
     (𝓝 1 : Filter (α →ᵤ G)).HasBasis p fun i => { f : α →ᵤ G | ∀ x, f x ∈ b i } :=
   by
   have := h.comap fun p : G × G => p.2 / p.1
   rw [← uniformity_eq_comap_nhds_one] at this
-  convert UniformFun.has_basis_nhds_of_basis α _ 1 this
+  convert UniformFun.hasBasis_nhds_of_basis α _ 1 this
   ext (i f)
   simp [UniformFun.gen]
-#align uniform_fun.has_basis_nhds_one_of_basis UniformFun.has_basis_nhds_one_of_basis
-#align uniform_fun.has_basis_nhds_zero_of_basis UniformFun.has_basis_nhds_zero_of_basis
+#align uniform_fun.has_basis_nhds_one_of_basis UniformFun.hasBasis_nhds_one_of_basis
+#align uniform_fun.has_basis_nhds_zero_of_basis UniformFun.hasBasis_nhds_zero_of_basis
 
 @[to_additive]
-protected theorem UniformFun.has_basis_nhds_one :
+protected theorem UniformFun.hasBasis_nhds_one :
     (𝓝 1 : Filter (α →ᵤ G)).HasBasis (fun V : Set G => V ∈ (𝓝 1 : Filter G)) fun V =>
       { f : α → G | ∀ x, f x ∈ V } :=
-  UniformFun.has_basis_nhds_one_of_basis (basis_sets _)
-#align uniform_fun.has_basis_nhds_one UniformFun.has_basis_nhds_one
-#align uniform_fun.has_basis_nhds_zero UniformFun.has_basis_nhds_zero
+  UniformFun.hasBasis_nhds_one_of_basis (basis_sets _)
+#align uniform_fun.has_basis_nhds_one UniformFun.hasBasis_nhds_one
+#align uniform_fun.has_basis_nhds_zero UniformFun.hasBasis_nhds_zero
 
 /-- Let `𝔖 : set (set α)`. If `G` is a uniform group, then `α →ᵤ[𝔖] G` is a uniform group as
 well. -/
@@ -150,12 +150,12 @@ instance : UniformGroup (α →ᵤ[𝔖] G) :=
           -- `((/) ∘ —) : (α →ᵤ[𝔖] G × G) → (α →ᵤ[𝔖] G)` is uniformly continuous too. By precomposing with
           -- `uniform_on_fun.uniform_equiv_prod_arrow`, this gives that
           -- `(/) : (α →ᵤ[𝔖] G) × (α →ᵤ[𝔖] G) → (α →ᵤ[𝔖] G)` is also uniformly continuous
-          UniformOnFun.postcomp_uniform_continuous
-          uniform_continuous_div).comp
+          UniformOnFun.postcomp_uniformContinuous
+          uniformContinuous_div).comp
       UniformOnFun.uniformEquivProdArrow.symm.UniformContinuous⟩
 
 @[to_additive]
-protected theorem UniformOnFun.has_basis_nhds_one_of_basis (𝔖 : Set <| Set α) (h𝔖₁ : 𝔖.Nonempty)
+protected theorem UniformOnFun.hasBasis_nhds_one_of_basis (𝔖 : Set <| Set α) (h𝔖₁ : 𝔖.Nonempty)
     (h𝔖₂ : DirectedOn (· ⊆ ·) 𝔖) {p : ι → Prop} {b : ι → Set G}
     (h : (𝓝 1 : Filter G).HasBasis p b) :
     (𝓝 1 : Filter (α →ᵤ[𝔖] G)).HasBasis (fun Si : Set α × ι => Si.1 ∈ 𝔖 ∧ p Si.2) fun Si =>
@@ -163,21 +163,21 @@ protected theorem UniformOnFun.has_basis_nhds_one_of_basis (𝔖 : Set <| Set α
   by
   have := h.comap fun p : G × G => p.1 / p.2
   rw [← uniformity_eq_comap_nhds_one_swapped] at this
-  convert UniformOnFun.has_basis_nhds_of_basis α _ 𝔖 1 h𝔖₁ h𝔖₂ this
+  convert UniformOnFun.hasBasis_nhds_of_basis α _ 𝔖 1 h𝔖₁ h𝔖₂ this
   ext (i f)
   simp [UniformOnFun.gen]
-#align uniform_on_fun.has_basis_nhds_one_of_basis UniformOnFun.has_basis_nhds_one_of_basis
-#align uniform_on_fun.has_basis_nhds_zero_of_basis UniformOnFun.has_basis_nhds_zero_of_basis
+#align uniform_on_fun.has_basis_nhds_one_of_basis UniformOnFun.hasBasis_nhds_one_of_basis
+#align uniform_on_fun.has_basis_nhds_zero_of_basis UniformOnFun.hasBasis_nhds_zero_of_basis
 
 @[to_additive]
-protected theorem UniformOnFun.has_basis_nhds_one (𝔖 : Set <| Set α) (h𝔖₁ : 𝔖.Nonempty)
+protected theorem UniformOnFun.hasBasis_nhds_one (𝔖 : Set <| Set α) (h𝔖₁ : 𝔖.Nonempty)
     (h𝔖₂ : DirectedOn (· ⊆ ·) 𝔖) :
     (𝓝 1 : Filter (α →ᵤ[𝔖] G)).HasBasis
       (fun SV : Set α × Set G => SV.1 ∈ 𝔖 ∧ SV.2 ∈ (𝓝 1 : Filter G)) fun SV =>
       { f : α →ᵤ[𝔖] G | ∀ x ∈ SV.1, f x ∈ SV.2 } :=
-  UniformOnFun.has_basis_nhds_one_of_basis 𝔖 h𝔖₁ h𝔖₂ (basis_sets _)
-#align uniform_on_fun.has_basis_nhds_one UniformOnFun.has_basis_nhds_one
-#align uniform_on_fun.has_basis_nhds_zero UniformOnFun.has_basis_nhds_zero
+  UniformOnFun.hasBasis_nhds_one_of_basis 𝔖 h𝔖₁ h𝔖₂ (basis_sets _)
+#align uniform_on_fun.has_basis_nhds_one UniformOnFun.hasBasis_nhds_one
+#align uniform_on_fun.has_basis_nhds_zero UniformOnFun.hasBasis_nhds_zero
 
 end Group
 
@@ -196,7 +196,7 @@ For convenience, we don't literally ask for `H : submodule (α →ᵤ[𝔖] E)`.
 result for any vector space `H` equipped with a linear inducing to `α →ᵤ[𝔖] E`, which is often
 easier to use. We also state the `submodule` version as
 `uniform_on_fun.has_continuous_smul_submodule_of_image_bounded`. -/
-theorem UniformOnFun.has_continuous_smul_induced_of_image_bounded (h𝔖₁ : 𝔖.Nonempty)
+theorem UniformOnFun.hasContinuousSmul_induced_of_image_bounded (h𝔖₁ : 𝔖.Nonempty)
     (h𝔖₂ : DirectedOn (· ⊆ ·) 𝔖) (φ : hom) (hφ : Inducing φ)
     (h : ∀ u : H, ∀ s ∈ 𝔖, Bornology.IsVonNBounded 𝕜 ((φ u : α → E) '' s)) :
     HasContinuousSmul 𝕜 H :=
@@ -207,7 +207,7 @@ theorem UniformOnFun.has_continuous_smul_induced_of_image_bounded (h𝔖₁ : �
   have : (𝓝 0 : Filter H).HasBasis _ _ :=
     by
     rw [hφ.induced, nhds_induced, map_zero]
-    exact (UniformOnFun.has_basis_nhds_zero 𝔖 h𝔖₁ h𝔖₂).comap φ
+    exact (UniformOnFun.hasBasis_nhds_zero 𝔖 h𝔖₁ h𝔖₂).comap φ
   refine' HasContinuousSmul.of_basis_zero this _ _ _
   · rintro ⟨S, V⟩ ⟨hS, hV⟩
     have : tendsto (fun kx : 𝕜 × E => kx.1 • kx.2) (𝓝 (0, 0)) (𝓝 <| (0 : 𝕜) • 0) :=
@@ -243,23 +243,23 @@ theorem UniformOnFun.has_continuous_smul_induced_of_image_bounded (h𝔖₁ : �
         rw [norm_inv, le_inv hrpos ha0]
         exact ha.le
       rwa [Set.mem_inv_smul_set_iff₀ ha0] at this
-#align uniform_on_fun.has_continuous_smul_induced_of_image_bounded UniformOnFun.has_continuous_smul_induced_of_image_bounded
+#align uniform_on_fun.has_continuous_smul_induced_of_image_bounded UniformOnFun.hasContinuousSmul_induced_of_image_bounded
 
 /-- Let `E` be a TVS, `𝔖 : set (set α)` and `H` a submodule of `α →ᵤ[𝔖] E`. If the image of any
 `S ∈ 𝔖` by any `u ∈ H` is bounded (in the sense of `bornology.is_vonN_bounded`), then `H`,
 equipped with the topology of `𝔖`-convergence, is a TVS.
 
 If you have a hard time using this lemma, try the one above instead. -/
-theorem UniformOnFun.has_continuous_smul_submodule_of_image_bounded (h𝔖₁ : 𝔖.Nonempty)
+theorem UniformOnFun.hasContinuousSmul_submodule_of_image_bounded (h𝔖₁ : 𝔖.Nonempty)
     (h𝔖₂ : DirectedOn (· ⊆ ·) 𝔖) (H : Submodule 𝕜 (α →ᵤ[𝔖] E))
     (h : ∀ u ∈ H, ∀ s ∈ 𝔖, Bornology.IsVonNBounded 𝕜 (u '' s)) :
     @HasContinuousSmul 𝕜 H _ _
       ((UniformOnFun.topologicalSpace α E 𝔖).induced (coe : H → α →ᵤ[𝔖] E)) :=
   haveI : TopologicalAddGroup H :=
     topological_add_group_induced (linear_map.id.dom_restrict H : H →ₗ[𝕜] α → E)
-  UniformOnFun.has_continuous_smul_induced_of_image_bounded 𝕜 α E H h𝔖₁ h𝔖₂
+  UniformOnFun.hasContinuousSmul_induced_of_image_bounded 𝕜 α E H h𝔖₁ h𝔖₂
     (linear_map.id.dom_restrict H : H →ₗ[𝕜] α → E) inducing_coe fun ⟨u, hu⟩ => h u hu
-#align uniform_on_fun.has_continuous_smul_submodule_of_image_bounded UniformOnFun.has_continuous_smul_submodule_of_image_bounded
+#align uniform_on_fun.has_continuous_smul_submodule_of_image_bounded UniformOnFun.hasContinuousSmul_submodule_of_image_bounded
 
 end Module
 

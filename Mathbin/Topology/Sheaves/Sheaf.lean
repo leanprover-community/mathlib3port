@@ -98,19 +98,19 @@ def IsSheaf (F : Presheaf.{w, v, u} C X) : Prop :=
 
 /-- The presheaf valued in `unit` over any topological space is a sheaf.
 -/
-theorem is_sheaf_unit (F : Presheaf (CategoryTheory.Discrete Unit) X) : F.IsSheaf :=
+theorem isSheaf_unit (F : Presheaf (CategoryTheory.Discrete Unit) X) : F.IsSheaf :=
   fun x U S hS x hx => ⟨eqToHom (Subsingleton.elim _ _), by tidy, by tidy⟩
-#align Top.presheaf.is_sheaf_unit TopCat.Presheaf.is_sheaf_unit
+#align Top.presheaf.is_sheaf_unit TopCat.Presheaf.isSheaf_unit
 
-theorem is_sheaf_iso_iff {F G : Presheaf C X} (α : F ≅ G) : F.IsSheaf ↔ G.IsSheaf :=
-  Presheaf.is_sheaf_of_iso_iff α
-#align Top.presheaf.is_sheaf_iso_iff TopCat.Presheaf.is_sheaf_iso_iff
+theorem isSheaf_iso_iff {F G : Presheaf C X} (α : F ≅ G) : F.IsSheaf ↔ G.IsSheaf :=
+  Presheaf.isSheaf_of_iso_iff α
+#align Top.presheaf.is_sheaf_iso_iff TopCat.Presheaf.isSheaf_iso_iff
 
 /-- Transfer the sheaf condition across an isomorphism of presheaves.
 -/
-theorem is_sheaf_of_iso {F G : Presheaf C X} (α : F ≅ G) (h : F.IsSheaf) : G.IsSheaf :=
-  (is_sheaf_iso_iff α).1 h
-#align Top.presheaf.is_sheaf_of_iso TopCat.Presheaf.is_sheaf_of_iso
+theorem isSheaf_of_iso {F G : Presheaf C X} (α : F ≅ G) (h : F.IsSheaf) : G.IsSheaf :=
+  (isSheaf_iso_iff α).1 h
+#align Top.presheaf.is_sheaf_of_iso TopCat.Presheaf.isSheaf_of_iso
 
 end Presheaf
 
@@ -134,7 +134,7 @@ variable (C X)
 
 -- Let's construct a trivial example, to keep the inhabited linter happy.
 instance sheafInhabited : Inhabited (Sheaf (CategoryTheory.Discrete PUnit) X) :=
-  ⟨⟨Functor.star _, Presheaf.is_sheaf_unit _⟩⟩
+  ⟨⟨Functor.star _, Presheaf.isSheaf_unit _⟩⟩
 #align Top.sheaf_inhabited TopCat.sheafInhabited
 
 namespace Sheaf

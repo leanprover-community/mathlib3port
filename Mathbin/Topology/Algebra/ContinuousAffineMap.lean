@@ -58,14 +58,14 @@ include V W
 instance : CoeFun (P →A[R] Q) fun _ => P → Q :=
   ⟨fun f => f.toAffineMap.toFun⟩
 
-theorem to_fun_eq_coe (f : P →A[R] Q) : f.toFun = ⇑f :=
+theorem toFun_eq_coe (f : P →A[R] Q) : f.toFun = ⇑f :=
   rfl
-#align continuous_affine_map.to_fun_eq_coe ContinuousAffineMap.to_fun_eq_coe
+#align continuous_affine_map.to_fun_eq_coe ContinuousAffineMap.toFun_eq_coe
 
 theorem coe_injective : @Function.Injective (P →A[R] Q) (P → Q) coeFn :=
   by
   rintro ⟨⟨f, ⟨f', hf₁, hf₂⟩, hf₀⟩, hf₁⟩ ⟨⟨g, ⟨g', hg₁, hg₂⟩, hg₀⟩, hg₁⟩ h
-  have : f = g ∧ f' = g' := by simpa only using AffineMap.coe_fn_injective h
+  have : f = g ∧ f' = g' := by simpa only using AffineMap.coeFn_injective h
   congr
   exacts[this.1, this.2]
 #align continuous_affine_map.coe_injective ContinuousAffineMap.coe_injective
@@ -97,46 +97,46 @@ instance : Coe (P →A[R] Q) C(P, Q) :=
   ⟨toContinuousMap⟩
 
 @[simp]
-theorem to_affine_map_eq_coe (f : P →A[R] Q) : f.toAffineMap = ↑f :=
+theorem toAffineMap_eq_coe (f : P →A[R] Q) : f.toAffineMap = ↑f :=
   rfl
-#align continuous_affine_map.to_affine_map_eq_coe ContinuousAffineMap.to_affine_map_eq_coe
+#align continuous_affine_map.to_affine_map_eq_coe ContinuousAffineMap.toAffineMap_eq_coe
 
 @[simp]
-theorem to_continuous_map_coe (f : P →A[R] Q) : f.toContinuousMap = ↑f :=
+theorem toContinuousMap_coe (f : P →A[R] Q) : f.toContinuousMap = ↑f :=
   rfl
-#align continuous_affine_map.to_continuous_map_coe ContinuousAffineMap.to_continuous_map_coe
+#align continuous_affine_map.to_continuous_map_coe ContinuousAffineMap.toContinuousMap_coe
 
 @[simp, norm_cast]
-theorem coe_to_affine_map (f : P →A[R] Q) : ((f : P →ᵃ[R] Q) : P → Q) = f :=
+theorem coe_to_affineMap (f : P →A[R] Q) : ((f : P →ᵃ[R] Q) : P → Q) = f :=
   rfl
-#align continuous_affine_map.coe_to_affine_map ContinuousAffineMap.coe_to_affine_map
+#align continuous_affine_map.coe_to_affine_map ContinuousAffineMap.coe_to_affineMap
 
 @[simp, norm_cast]
-theorem coe_to_continuous_map (f : P →A[R] Q) : ((f : C(P, Q)) : P → Q) = f :=
+theorem coe_to_continuousMap (f : P →A[R] Q) : ((f : C(P, Q)) : P → Q) = f :=
   rfl
-#align continuous_affine_map.coe_to_continuous_map ContinuousAffineMap.coe_to_continuous_map
+#align continuous_affine_map.coe_to_continuous_map ContinuousAffineMap.coe_to_continuousMap
 
-theorem to_affine_map_injective {f g : P →A[R] Q} (h : (f : P →ᵃ[R] Q) = (g : P →ᵃ[R] Q)) : f = g :=
+theorem to_affineMap_injective {f g : P →A[R] Q} (h : (f : P →ᵃ[R] Q) = (g : P →ᵃ[R] Q)) : f = g :=
   by
   ext a
   exact AffineMap.congr_fun h a
-#align continuous_affine_map.to_affine_map_injective ContinuousAffineMap.to_affine_map_injective
+#align continuous_affine_map.to_affine_map_injective ContinuousAffineMap.to_affineMap_injective
 
-theorem to_continuous_map_injective {f g : P →A[R] Q} (h : (f : C(P, Q)) = (g : C(P, Q))) : f = g :=
+theorem to_continuousMap_injective {f g : P →A[R] Q} (h : (f : C(P, Q)) = (g : C(P, Q))) : f = g :=
   by
   ext a
   exact ContinuousMap.congr_fun h a
-#align continuous_affine_map.to_continuous_map_injective ContinuousAffineMap.to_continuous_map_injective
+#align continuous_affine_map.to_continuous_map_injective ContinuousAffineMap.to_continuousMap_injective
 
 @[norm_cast]
-theorem coe_affine_map_mk (f : P →ᵃ[R] Q) (h) : ((⟨f, h⟩ : P →A[R] Q) : P →ᵃ[R] Q) = f :=
+theorem coe_affineMap_mk (f : P →ᵃ[R] Q) (h) : ((⟨f, h⟩ : P →A[R] Q) : P →ᵃ[R] Q) = f :=
   rfl
-#align continuous_affine_map.coe_affine_map_mk ContinuousAffineMap.coe_affine_map_mk
+#align continuous_affine_map.coe_affine_map_mk ContinuousAffineMap.coe_affineMap_mk
 
 @[norm_cast]
-theorem coe_continuous_map_mk (f : P →ᵃ[R] Q) (h) : ((⟨f, h⟩ : P →A[R] Q) : C(P, Q)) = ⟨f, h⟩ :=
+theorem coe_continuousMap_mk (f : P →ᵃ[R] Q) (h) : ((⟨f, h⟩ : P →A[R] Q) : C(P, Q)) = ⟨f, h⟩ :=
   rfl
-#align continuous_affine_map.coe_continuous_map_mk ContinuousAffineMap.coe_continuous_map_mk
+#align continuous_affine_map.coe_continuous_map_mk ContinuousAffineMap.coe_continuousMap_mk
 
 @[simp]
 theorem coe_mk (f : P →ᵃ[R] Q) (h) : ((⟨f, h⟩ : P →A[R] Q) : P → Q) = f :=
@@ -313,13 +313,13 @@ def toContinuousAffineMap (f : V →L[R] W) : V →A[R] W
 #align continuous_linear_map.to_continuous_affine_map ContinuousLinearMap.toContinuousAffineMap
 
 @[simp]
-theorem coe_to_continuous_affine_map (f : V →L[R] W) : ⇑f.toContinuousAffineMap = f :=
+theorem coe_toContinuousAffineMap (f : V →L[R] W) : ⇑f.toContinuousAffineMap = f :=
   rfl
-#align continuous_linear_map.coe_to_continuous_affine_map ContinuousLinearMap.coe_to_continuous_affine_map
+#align continuous_linear_map.coe_to_continuous_affine_map ContinuousLinearMap.coe_toContinuousAffineMap
 
 @[simp]
-theorem to_continuous_affine_map_map_zero (f : V →L[R] W) : f.toContinuousAffineMap 0 = 0 := by simp
-#align continuous_linear_map.to_continuous_affine_map_map_zero ContinuousLinearMap.to_continuous_affine_map_map_zero
+theorem toContinuousAffineMap_map_zero (f : V →L[R] W) : f.toContinuousAffineMap 0 = 0 := by simp
+#align continuous_linear_map.to_continuous_affine_map_map_zero ContinuousLinearMap.toContinuousAffineMap_map_zero
 
 end ContinuousLinearMap
 

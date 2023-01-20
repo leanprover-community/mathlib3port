@@ -55,7 +55,7 @@ theorem injective_of_injective_as_module [Injective (⟨A⟩ : ModuleCat ℤ)] :
         let β' : AddCommGroupCat.of Z ⟶ X := β.to_add_monoid_hom
         have eq2 : α' ≫ f = β' ≫ f := by
           ext
-          simp only [CategoryTheory.comp_apply, LinearMap.to_add_monoid_hom_coe]
+          simp only [CategoryTheory.comp_apply, LinearMap.toAddMonoidHom_coe]
           simpa only [ModuleCat.coe_comp, LinearMap.coe_mk, Function.comp_apply] using
             FunLike.congr_fun eq1 x
         rw [cancel_mono] at eq2
@@ -79,7 +79,7 @@ theorem injective_as_module_of_injective_as_Ab [Injective (⟨A⟩ : AddCommGrou
         exact ((ModuleCat.mono_iff_injective f).mp m) h
       refine' ⟨{ injective.factor_thru G F with map_smul' := _ }, _⟩
       · intro m x
-        rw [AddMonoidHom.to_fun_eq_coe, RingHom.id_apply]
+        rw [AddMonoidHom.toFun_eq_coe, RingHom.id_apply]
         induction' m using Int.induction_on with n hn n hn
         · rw [zero_smul]
           convert map_zero _

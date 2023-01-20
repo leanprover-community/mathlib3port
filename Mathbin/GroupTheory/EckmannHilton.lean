@@ -52,7 +52,7 @@ lean 3 declaration is
 but is expected to have type
   forall {X : Type.{u1}} [G : MulOneClass.{u1} X], EckmannHilton.IsUnital.{u1} X (fun (x._@.Mathlib.GroupTheory.EckmannHilton._hyg.284 : X) (x._@.Mathlib.GroupTheory.EckmannHilton._hyg.286 : X) => HMul.hMul.{u1, u1, u1} X X X (instHMul.{u1} X (MulOneClass.toMul.{u1} X G)) x._@.Mathlib.GroupTheory.EckmannHilton._hyg.284 x._@.Mathlib.GroupTheory.EckmannHilton._hyg.286) (OfNat.ofNat.{u1} X 1 (One.toOfNat1.{u1} X (MulOneClass.toOne.{u1} X G)))
 Case conversion may be inaccurate. Consider using '#align eckmann_hilton.mul_one_class.is_unital EckmannHilton.MulOneClass.isUnitalₓ'. -/
-@[to_additive EckmannHilton.AddZeroClass.is_unital]
+@[to_additive EckmannHilton.AddZeroClass.isUnital]
 theorem MulOneClass.isUnital [G : MulOneClass X] : IsUnital (· * ·) (1 : X) :=
   IsUnital.mk (by infer_instance) (by infer_instance)
 #align eckmann_hilton.mul_one_class.is_unital EckmannHilton.MulOneClass.isUnital

@@ -230,8 +230,8 @@ theorem iso_of_countable_dense [Encodable α] [DenselyOrdered α] [NoMinOrder α
   let to_cofinal : Sum α β → Cofinal (PartialIso α β) := fun p =>
     Sum.recOn p (definedAtLeft β) (definedAtRight α)
   let our_ideal : Ideal (PartialIso α β) := idealOfCofinals default to_cofinal
-  let F a := funOfIdeal a our_ideal (cofinal_meets_ideal_of_cofinals _ to_cofinal (Sum.inl a))
-  let G b := invOfIdeal b our_ideal (cofinal_meets_ideal_of_cofinals _ to_cofinal (Sum.inr b))
+  let F a := funOfIdeal a our_ideal (cofinal_meets_idealOfCofinals _ to_cofinal (Sum.inl a))
+  let G b := invOfIdeal b our_ideal (cofinal_meets_idealOfCofinals _ to_cofinal (Sum.inr b))
   ⟨OrderIso.ofCmpEqCmp (fun a => (F a).val) (fun b => (G b).val) fun a b =>
       by
       rcases(F a).Prop with ⟨f, hf, ha⟩

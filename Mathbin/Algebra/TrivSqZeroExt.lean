@@ -204,15 +204,15 @@ instance [SMul S R] [SMul S M] : SMul S (tsze R M) :=
 
 instance [SMul T R] [SMul T M] [SMul S R] [SMul S M] [SMul T S] [IsScalarTower T S R]
     [IsScalarTower T S M] : IsScalarTower T S (tsze R M) :=
-  Prod.is_scalar_tower
+  Prod.isScalarTower
 
 instance [SMul T R] [SMul T M] [SMul S R] [SMul S M] [SMulCommClass T S R] [SMulCommClass T S M] :
     SMulCommClass T S (tsze R M) :=
-  Prod.smul_comm_class
+  Prod.sMulCommClass
 
 instance [SMul S R] [SMul S M] [SMul Sᵐᵒᵖ R] [SMul Sᵐᵒᵖ M] [IsCentralScalar S R]
     [IsCentralScalar S M] : IsCentralScalar S (tsze R M) :=
-  Prod.is_central_scalar
+  Prod.isCentralScalar
 
 instance [Monoid S] [MulAction S R] [MulAction S M] : MulAction S (tsze R M) :=
   Prod.mulAction
@@ -359,11 +359,11 @@ theorem ind {R M} [AddZeroClass R] [AddZeroClass M] {P : TrivSqZeroExt R M → P
 
 /-- This cannot be marked `@[ext]` as it ends up being used instead of `linear_map.prod_ext` when
 working with `R × M`. -/
-theorem linear_map_ext {N} [Semiring S] [AddCommMonoid R] [AddCommMonoid M] [AddCommMonoid N]
+theorem linearMap_ext {N} [Semiring S] [AddCommMonoid R] [AddCommMonoid M] [AddCommMonoid N]
     [Module S R] [Module S M] [Module S N] ⦃f g : tsze R M →ₗ[S] N⦄
     (hl : ∀ r, f (inl r) = g (inl r)) (hr : ∀ m, f (inr m) = g (inr m)) : f = g :=
   LinearMap.prod_ext (LinearMap.ext hl) (LinearMap.ext hr)
-#align triv_sq_zero_ext.linear_map_ext TrivSqZeroExt.linear_map_ext
+#align triv_sq_zero_ext.linear_map_ext TrivSqZeroExt.linearMap_ext
 
 variable (R M)
 
@@ -621,24 +621,24 @@ instance algebra' : Algebra S (tsze R M) :=
     smul_def' := fun r x =>
       ext (Algebra.smul_def _ _) <|
         show r • x.2 = algebraMap S R r • x.2 + x.1 • 0 by
-          rw [smul_zero, add_zero, algebra_map_smul] }
+          rw [smul_zero, add_zero, algebraMap_smul] }
 #align triv_sq_zero_ext.algebra' TrivSqZeroExt.algebra'
 
 -- shortcut instance for the common case
 instance : Algebra R (tsze R M) :=
   TrivSqZeroExt.algebra' _ _ _
 
-theorem algebra_map_eq_inl : ⇑(algebraMap R (tsze R M)) = inl :=
+theorem algebraMap_eq_inl : ⇑(algebraMap R (tsze R M)) = inl :=
   rfl
-#align triv_sq_zero_ext.algebra_map_eq_inl TrivSqZeroExt.algebra_map_eq_inl
+#align triv_sq_zero_ext.algebra_map_eq_inl TrivSqZeroExt.algebraMap_eq_inl
 
-theorem algebra_map_eq_inl_hom : algebraMap R (tsze R M) = inlHom R M :=
+theorem algebraMap_eq_inlHom : algebraMap R (tsze R M) = inlHom R M :=
   rfl
-#align triv_sq_zero_ext.algebra_map_eq_inl_hom TrivSqZeroExt.algebra_map_eq_inl_hom
+#align triv_sq_zero_ext.algebra_map_eq_inl_hom TrivSqZeroExt.algebraMap_eq_inlHom
 
-theorem algebra_map_eq_inl' (s : S) : algebraMap S (tsze R M) s = inl (algebraMap S R s) :=
+theorem algebraMap_eq_inl' (s : S) : algebraMap S (tsze R M) s = inl (algebraMap S R s) :=
   rfl
-#align triv_sq_zero_ext.algebra_map_eq_inl' TrivSqZeroExt.algebra_map_eq_inl'
+#align triv_sq_zero_ext.algebra_map_eq_inl' TrivSqZeroExt.algebraMap_eq_inl'
 
 /-- The canonical `R`-algebra projection `triv_sq_zero_ext R M → R`. -/
 @[simps]
@@ -653,17 +653,17 @@ def fstHom : tsze R M →ₐ[R] R where
 
 variable {R S M}
 
-theorem alg_hom_ext {A} [Semiring A] [Algebra R A] ⦃f g : tsze R M →ₐ[R] A⦄
+theorem algHom_ext {A} [Semiring A] [Algebra R A] ⦃f g : tsze R M →ₐ[R] A⦄
     (h : ∀ m, f (inr m) = g (inr m)) : f = g :=
-  AlgHom.to_linear_map_injective <|
-    linear_map_ext (fun r => (f.commutes _).trans (g.commutes _).symm) h
-#align triv_sq_zero_ext.alg_hom_ext TrivSqZeroExt.alg_hom_ext
+  AlgHom.toLinearMap_injective <|
+    linearMap_ext (fun r => (f.commutes _).trans (g.commutes _).symm) h
+#align triv_sq_zero_ext.alg_hom_ext TrivSqZeroExt.algHom_ext
 
 @[ext]
-theorem alg_hom_ext' {A} [Semiring A] [Algebra R A] ⦃f g : tsze R M →ₐ[R] A⦄
+theorem algHom_ext' {A} [Semiring A] [Algebra R A] ⦃f g : tsze R M →ₐ[R] A⦄
     (h : f.toLinearMap.comp (inrHom R M) = g.toLinearMap.comp (inrHom R M)) : f = g :=
   alg_hom_ext <| LinearMap.congr_fun h
-#align triv_sq_zero_ext.alg_hom_ext' TrivSqZeroExt.alg_hom_ext'
+#align triv_sq_zero_ext.alg_hom_ext' TrivSqZeroExt.algHom_ext'
 
 variable {A : Type _} [Semiring A] [Algebra R A]
 
@@ -683,22 +683,22 @@ def liftAux (f : M →ₗ[R] A) (hf : ∀ x y, f x * f y = 0) : tsze R M →ₐ[
 #align triv_sq_zero_ext.lift_aux TrivSqZeroExt.liftAux
 
 @[simp]
-theorem lift_aux_apply_inr (f : M →ₗ[R] A) (hf : ∀ x y, f x * f y = 0) (m : M) :
+theorem liftAux_apply_inr (f : M →ₗ[R] A) (hf : ∀ x y, f x * f y = 0) (m : M) :
     liftAux f hf (inr m) = f m :=
   show algebraMap R A 0 + f m = f m by rw [RingHom.map_zero, zero_add]
-#align triv_sq_zero_ext.lift_aux_apply_inr TrivSqZeroExt.lift_aux_apply_inr
+#align triv_sq_zero_ext.lift_aux_apply_inr TrivSqZeroExt.liftAux_apply_inr
 
 @[simp]
-theorem lift_aux_comp_inr_hom (f : M →ₗ[R] A) (hf : ∀ x y, f x * f y = 0) :
+theorem liftAux_comp_inrHom (f : M →ₗ[R] A) (hf : ∀ x y, f x * f y = 0) :
     (liftAux f hf).toLinearMap.comp (inrHom R M) = f :=
-  LinearMap.ext <| lift_aux_apply_inr f hf
-#align triv_sq_zero_ext.lift_aux_comp_inr_hom TrivSqZeroExt.lift_aux_comp_inr_hom
+  LinearMap.ext <| liftAux_apply_inr f hf
+#align triv_sq_zero_ext.lift_aux_comp_inr_hom TrivSqZeroExt.liftAux_comp_inrHom
 
 -- When applied to `inr` itself, `lift_aux` is the identity.
 @[simp]
-theorem lift_aux_inr_hom : liftAux (inrHom R M) (inr_mul_inr R) = AlgHom.id R (tsze R M) :=
-  alg_hom_ext' <| lift_aux_comp_inr_hom _ _
-#align triv_sq_zero_ext.lift_aux_inr_hom TrivSqZeroExt.lift_aux_inr_hom
+theorem liftAux_inrHom : liftAux (inrHom R M) (inr_mul_inr R) = AlgHom.id R (tsze R M) :=
+  alg_hom_ext' <| liftAux_comp_inrHom _ _
+#align triv_sq_zero_ext.lift_aux_inr_hom TrivSqZeroExt.liftAux_inrHom
 
 /-- A universal property of the trivial square-zero extension, providing a unique
 `triv_sq_zero_ext R M →ₐ[R] A` for every linear map `M →ₗ[R] A` whose range has no non-zero
@@ -712,8 +712,8 @@ def lift : { f : M →ₗ[R] A // ∀ x y, f x * f y = 0 } ≃ (tsze R M →ₐ[
   invFun F :=
     ⟨F.toLinearMap.comp (inrHom R M), fun x y =>
       (F.map_mul _ _).symm.trans <| (F.congr_arg <| inr_mul_inr _ _ _).trans F.map_zero⟩
-  left_inv f := Subtype.ext <| lift_aux_comp_inr_hom _ _
-  right_inv F := alg_hom_ext' <| lift_aux_comp_inr_hom _ _
+  left_inv f := Subtype.ext <| liftAux_comp_inrHom _ _
+  right_inv F := alg_hom_ext' <| liftAux_comp_inrHom _ _
 #align triv_sq_zero_ext.lift TrivSqZeroExt.lift
 
 end Algebra

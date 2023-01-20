@@ -50,28 +50,28 @@ def IsInteger (a : S) : Prop :=
 
 end
 
-theorem is_integer_zero : IsInteger R (0 : S) :=
+theorem isInteger_zero : IsInteger R (0 : S) :=
   Subring.zero_mem _
-#align is_localization.is_integer_zero IsLocalization.is_integer_zero
+#align is_localization.is_integer_zero IsLocalization.isInteger_zero
 
-theorem is_integer_one : IsInteger R (1 : S) :=
+theorem isInteger_one : IsInteger R (1 : S) :=
   Subring.one_mem _
-#align is_localization.is_integer_one IsLocalization.is_integer_one
+#align is_localization.is_integer_one IsLocalization.isInteger_one
 
-theorem is_integer_add {a b : S} (ha : IsInteger R a) (hb : IsInteger R b) : IsInteger R (a + b) :=
+theorem isInteger_add {a b : S} (ha : IsInteger R a) (hb : IsInteger R b) : IsInteger R (a + b) :=
   Subring.add_mem _ ha hb
-#align is_localization.is_integer_add IsLocalization.is_integer_add
+#align is_localization.is_integer_add IsLocalization.isInteger_add
 
-theorem is_integer_mul {a b : S} (ha : IsInteger R a) (hb : IsInteger R b) : IsInteger R (a * b) :=
+theorem isInteger_mul {a b : S} (ha : IsInteger R a) (hb : IsInteger R b) : IsInteger R (a * b) :=
   Subring.mul_mem _ ha hb
-#align is_localization.is_integer_mul IsLocalization.is_integer_mul
+#align is_localization.is_integer_mul IsLocalization.isInteger_mul
 
-theorem is_integer_smul {a : R} {b : S} (hb : IsInteger R b) : IsInteger R (a • b) :=
+theorem isInteger_smul {a : R} {b : S} (hb : IsInteger R b) : IsInteger R (a • b) :=
   by
   rcases hb with ⟨b', hb⟩
   use a * b'
   rw [← hb, (algebraMap R S).map_mul, Algebra.smul_def]
-#align is_localization.is_integer_smul IsLocalization.is_integer_smul
+#align is_localization.is_integer_smul IsLocalization.isInteger_smul
 
 variable (M) {S} [IsLocalization M S]
 
@@ -135,10 +135,10 @@ noncomputable def integerMultiple {ι : Type _} (s : Finset ι) (f : ι → S) (
 #align is_localization.integer_multiple IsLocalization.integerMultiple
 
 @[simp]
-theorem map_integer_multiple {ι : Type _} (s : Finset ι) (f : ι → S) (i : s) :
+theorem map_integerMultiple {ι : Type _} (s : Finset ι) (f : ι → S) (i : s) :
     algebraMap R S (integerMultiple M s f i) = commonDenom M s f • f i :=
   ((exist_integer_multiples M s f).some_spec _ i.Prop).some_spec
-#align is_localization.map_integer_multiple IsLocalization.map_integer_multiple
+#align is_localization.map_integer_multiple IsLocalization.map_integerMultiple
 
 /-- A choice of a common multiple of the denominators of a finite set of fractions. -/
 noncomputable def commonDenomOfFinset (s : Finset S) : M :=
@@ -152,7 +152,7 @@ noncomputable def finsetIntegerMultiple [DecidableEq R] (s : Finset S) : Finset 
 
 open Pointwise
 
-theorem finset_integer_multiple_image [DecidableEq R] (s : Finset S) :
+theorem finsetIntegerMultiple_image [DecidableEq R] (s : Finset S) :
     algebraMap R S '' finsetIntegerMultiple M s = commonDenomOfFinset M s • s :=
   by
   delta finset_integer_multiple common_denom
@@ -164,7 +164,7 @@ theorem finset_integer_multiple_image [DecidableEq R] (s : Finset S) :
     exact Set.mem_image_of_mem _ x.prop
   · rintro ⟨x, hx, rfl⟩
     exact ⟨_, ⟨⟨x, hx⟩, s.mem_attach _, rfl⟩, map_integer_multiple M s id _⟩
-#align is_localization.finset_integer_multiple_image IsLocalization.finset_integer_multiple_image
+#align is_localization.finset_integer_multiple_image IsLocalization.finsetIntegerMultiple_image
 
 end IsLocalization
 

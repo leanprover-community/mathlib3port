@@ -182,10 +182,10 @@ def normalizedMooreComplex : SimplicialObject C ⥤ ChainComplex C ℕ
 variable {C}
 
 @[simp]
-theorem normalized_Moore_complex_obj_d (X : SimplicialObject C) (n : ℕ) :
+theorem normalizedMooreComplex_objD (X : SimplicialObject C) (n : ℕ) :
     ((normalizedMooreComplex C).obj X).d (n + 1) n = NormalizedMooreComplex.objD X n := by
   apply ChainComplex.of_d
-#align algebraic_topology.normalized_Moore_complex_obj_d AlgebraicTopology.normalized_Moore_complex_obj_d
+#align algebraic_topology.normalized_Moore_complex_obj_d AlgebraicTopology.normalizedMooreComplex_objD
 
 end AlgebraicTopology
 

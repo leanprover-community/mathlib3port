@@ -137,11 +137,11 @@ theorem hfunext {α α' : Sort u} {β : α → Sort v} {β' : α' → Sort v} {f
     exact h a a (HEq.refl a)
   have : β = β' := by
     funext a
-    exact type_eq_of_heq (this a)
+    exact type_eq_of_hEq (this a)
   subst this
-  apply heq_of_eq
+  apply hEq_of_eq
   funext a
-  exact eq_of_heq (this a)
+  exact eq_of_hEq (this a)
 #align function.hfunext Function.hfunext
 -/
 
@@ -864,9 +864,16 @@ theorem Injective.hasLeftInverse (hf : Injective f) : HasLeftInverse f :=
   ⟨invFun f, leftInverse_invFun hf⟩
 #align function.injective.has_left_inverse Function.Injective.hasLeftInverse
 
-theorem injective_iff_has_left_inverse : Injective f ↔ HasLeftInverse f :=
+/- warning: function.injective_iff_has_left_inverse clashes with function.injective_iff_has_leftInverse -> Function.injective_iff_hasLeftInverse
+warning: function.injective_iff_has_left_inverse -> Function.injective_iff_hasLeftInverse is a dubious translation:
+lean 3 declaration is
+  forall {α : Sort.{u1}} {β : Sort.{u2}} [_inst_1 : Nonempty.{u1} α] {f : α -> β}, Iff (Function.Injective.{u1, u2} α β f) (Function.HasLeftInverse.{u1, u2} α β f)
+but is expected to have type
+  forall {α : Sort.{u2}} {β : Sort.{u1}} [_inst_1 : Nonempty.{u2} α] {f : α -> β}, Iff (Function.Injective.{u2, u1} α β f) (Function.HasLeftInverse.{u2, u1} α β f)
+Case conversion may be inaccurate. Consider using '#align function.injective_iff_has_left_inverse Function.injective_iff_hasLeftInverseₓ'. -/
+theorem injective_iff_hasLeftInverse : Injective f ↔ HasLeftInverse f :=
   ⟨Injective.hasLeftInverse, HasLeftInverse.injective⟩
-#align function.injective_iff_has_left_inverse Function.injective_iff_has_left_inverse
+#align function.injective_iff_has_left_inverse Function.injective_iff_hasLeftInverse
 
 end InvFun
 
@@ -888,19 +895,23 @@ theorem surjInv_eq (h : Surjective f) (b) : f (surjInv h b) = b :=
 #align function.surj_inv_eq Function.surjInv_eq
 -/
 
-theorem right_inverse_surj_inv (hf : Surjective f) : RightInverse (surjInv hf) f :=
+/- warning: function.right_inverse_surj_inv clashes with function.right_inverse_surjInv -> Function.rightInverse_surjInv
+Case conversion may be inaccurate. Consider using '#align function.right_inverse_surj_inv Function.rightInverse_surjInvₓ'. -/
+#print Function.rightInverse_surjInv /-
+theorem rightInverse_surjInv (hf : Surjective f) : RightInverse (surjInv hf) f :=
   surjInv_eq hf
-#align function.right_inverse_surj_inv Function.right_inverse_surj_inv
+#align function.right_inverse_surj_inv Function.rightInverse_surjInv
+-/
 
 #print Function.leftInverse_surjInv /-
 theorem leftInverse_surjInv (hf : Bijective f) : LeftInverse (surjInv hf.2) f :=
-  rightInverse_of_injective_of_leftInverse hf.1 (right_inverse_surj_inv hf.2)
+  rightInverse_of_injective_of_leftInverse hf.1 (rightInverse_surjInv hf.2)
 #align function.left_inverse_surj_inv Function.leftInverse_surjInv
 -/
 
 #print Function.Surjective.hasRightInverse /-
 theorem Surjective.hasRightInverse (hf : Surjective f) : HasRightInverse f :=
-  ⟨_, right_inverse_surj_inv hf⟩
+  ⟨_, rightInverse_surjInv hf⟩
 #align function.surjective.has_right_inverse Function.Surjective.hasRightInverse
 -/
 
@@ -912,14 +923,14 @@ theorem surjective_iff_hasRightInverse : Surjective f ↔ HasRightInverse f :=
 
 #print Function.bijective_iff_has_inverse /-
 theorem bijective_iff_has_inverse : Bijective f ↔ ∃ g, LeftInverse g f ∧ RightInverse g f :=
-  ⟨fun hf => ⟨_, leftInverse_surjInv hf, right_inverse_surj_inv hf.2⟩, fun ⟨g, gl, gr⟩ =>
+  ⟨fun hf => ⟨_, leftInverse_surjInv hf, rightInverse_surjInv hf.2⟩, fun ⟨g, gl, gr⟩ =>
     ⟨gl.Injective, gr.Surjective⟩⟩
 #align function.bijective_iff_has_inverse Function.bijective_iff_has_inverse
 -/
 
 #print Function.injective_surjInv /-
 theorem injective_surjInv (h : Surjective f) : Injective (surjInv h) :=
-  (right_inverse_surj_inv h).Injective
+  (rightInverse_surjInv h).Injective
 #align function.injective_surj_inv Function.injective_surjInv
 -/
 
@@ -935,7 +946,7 @@ theorem surjective_to_subsingleton [na : Nonempty α] [Subsingleton β] (f : α 
 /-- Composition by an surjective function on the left is itself surjective. -/
 theorem Surjective.comp_left {g : β → γ} (hg : Surjective g) :
     Surjective ((· ∘ ·) g : (α → β) → α → γ) := fun f =>
-  ⟨surjInv hg ∘ f, funext fun x => right_inverse_surj_inv _ _⟩
+  ⟨surjInv hg ∘ f, funext fun x => rightInverse_surjInv _ _⟩
 #align function.surjective.comp_left Function.Surjective.comp_left
 -/
 
@@ -974,7 +985,7 @@ theorem update_apply {β : Sort _} (f : α → β) (a' : α) (b : β) (a : α) :
   dsimp only [update]
   congr
   funext
-  rw [eq_rec_constant]
+  rw [eq_ndrec_constant]
 #align function.update_apply Function.update_apply
 
 #print Function.update_same /-
@@ -1217,9 +1228,9 @@ def FactorsThrough (g : α → γ) (f : α → β) : Prop :=
 #align function.factors_through Function.FactorsThrough
 -/
 
-theorem Injective.factors_through (hf : Injective f) (g : α → γ) : g.FactorsThrough f :=
-  fun a b h => congr_arg g (hf h)
-#align function.injective.factors_through Function.Injective.factors_through
+theorem Injective.factorsThrough (hf : Injective f) (g : α → γ) : g.FactorsThrough f := fun a b h =>
+  congr_arg g (hf h)
+#align function.injective.factors_through Function.Injective.factorsThrough
 
 /- warning: function.extend_def -> Function.extend_def is a dubious translation:
 lean 3 declaration is
@@ -1270,13 +1281,18 @@ theorem extend_apply' (g : α → γ) (e' : β → γ) (b : β) (hb : ¬∃ a, f
     extend f g e' b = e' b := by simp [Function.extend_def, hb]
 #align function.extend_apply' Function.extend_apply'
 
-theorem factors_through_iff (g : α → γ) [Nonempty γ] :
-    g.FactorsThrough f ↔ ∃ e : β → γ, g = e ∘ f :=
+/- warning: function.factors_through_iff -> Function.factorsThrough_iff is a dubious translation:
+lean 3 declaration is
+  forall {α : Sort.{u1}} {β : Sort.{u2}} {γ : Sort.{u3}} {f : α -> β} (g : α -> γ) [_inst_1 : Nonempty.{u3} γ], Iff (Function.FactorsThrough.{u1, u2, u3} α β γ g f) (Exists.{imax u2 u3} (β -> γ) (fun (e : β -> γ) => Eq.{imax u1 u3} (α -> γ) g (Function.comp.{u1, u2, u3} α β γ e f)))
+but is expected to have type
+  forall {α : Sort.{u2}} {β : Sort.{u1}} {γ : Sort.{u3}} {f : α -> β} (g : α -> γ) [_inst_1 : Nonempty.{u3} γ], Iff (Function.FactorsThrough.{u2, u1, u3} α β γ g f) (Exists.{imax u1 u3} (β -> γ) (fun (e : β -> γ) => Eq.{imax u2 u3} (α -> γ) g (Function.comp.{u2, u1, u3} α β γ e f)))
+Case conversion may be inaccurate. Consider using '#align function.factors_through_iff Function.factorsThrough_iffₓ'. -/
+theorem factorsThrough_iff (g : α → γ) [Nonempty γ] : g.FactorsThrough f ↔ ∃ e : β → γ, g = e ∘ f :=
   ⟨fun hf =>
     ⟨extend f g (const β (Classical.arbitrary γ)),
       funext fun x => by simp only [comp_app, hf.extend_apply]⟩,
     fun h a b hf => by rw [Classical.choose_spec h, comp_apply, hf]⟩
-#align function.factors_through_iff Function.factors_through_iff
+#align function.factors_through_iff Function.factorsThrough_iff
 
 /- warning: function.factors_through.apply_extend -> Function.FactorsThrough.apply_extend is a dubious translation:
 lean 3 declaration is
@@ -1508,9 +1524,11 @@ theorem involutive_iff_iter_2_eq_id {α} {f : α → α} : Involutive f ↔ f^[2
 #align function.involutive_iff_iter_2_eq_id Function.involutive_iff_iter_2_eq_id
 -/
 
-theorem Bool.involutive_bnot : Involutive not :=
+#print Bool.involutive_not /-
+theorem Bool.involutive_not : Involutive not :=
   Bool.not_not
-#align bool.involutive_bnot Bool.involutive_bnot
+#align bool.involutive_bnot Bool.involutive_not
+-/
 
 namespace Involutive
 
@@ -1525,13 +1543,21 @@ theorem comp_self : f ∘ f = id :=
 #align function.involutive.comp_self Function.Involutive.comp_self
 -/
 
-protected theorem left_inverse : LeftInverse f f :=
+/- warning: function.involutive.left_inverse clashes with involutive.left_inverse -> Function.Involutive.leftInverse
+Case conversion may be inaccurate. Consider using '#align function.involutive.left_inverse Function.Involutive.leftInverseₓ'. -/
+#print Function.Involutive.leftInverse /-
+protected theorem leftInverse : LeftInverse f f :=
   h
-#align function.involutive.left_inverse Function.Involutive.left_inverse
+#align function.involutive.left_inverse Function.Involutive.leftInverse
+-/
 
-protected theorem right_inverse : RightInverse f f :=
+/- warning: function.involutive.right_inverse clashes with involutive.right_inverse -> Function.Involutive.rightInverse
+Case conversion may be inaccurate. Consider using '#align function.involutive.right_inverse Function.Involutive.rightInverseₓ'. -/
+#print Function.Involutive.rightInverse /-
+protected theorem rightInverse : RightInverse f f :=
   h
-#align function.involutive.right_inverse Function.Involutive.right_inverse
+#align function.involutive.right_inverse Function.Involutive.rightInverse
+-/
 
 #print Function.Involutive.injective /-
 protected theorem injective : Injective f :=
@@ -1687,32 +1713,26 @@ def Set.piecewise {α : Type u} {β : α → Sort v} (s : Set α) (f g : ∀ i, 
 /-! ### Bijectivity of `eq.rec`, `eq.mp`, `eq.mpr`, and `cast` -/
 
 
-/- warning: eq_rec_on_bijective -> eq_rec_on_bijective is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {C : α -> Sort.{u2}} {a : α} {a' : α} (h : Eq.{u1} α a a'), Function.Bijective.{u2, u2} (C a) (C a') (Eq.recOn.{u2, u1} α a C a' h)
-but is expected to have type
-  forall {α : Sort.{u2}} {C : α -> Sort.{u1}} {a : α} {a' : α} (h : Eq.{u2} α a a'), Function.Bijective.{u1, u1} (C a) (C a') (fun (x._@.Mathlib.Logic.Function.Basic._hyg.10866 : C a) => Eq.ndrec.{u1, u2} α a C x._@.Mathlib.Logic.Function.Basic._hyg.10866 a' h)
-Case conversion may be inaccurate. Consider using '#align eq_rec_on_bijective eq_rec_on_bijectiveₓ'. -/
-theorem eq_rec_on_bijective {α : Sort _} {C : α → Sort _} :
+theorem eq_recOn_bijective {α : Sort _} {C : α → Sort _} :
     ∀ {a a' : α} (h : a = a'), Function.Bijective (@Eq.recOn _ _ C _ h)
   | _, _, rfl => ⟨fun x y => id, fun x => ⟨x, rfl⟩⟩
-#align eq_rec_on_bijective eq_rec_on_bijective
+#align eq_rec_on_bijective eq_recOn_bijective
 
 #print eq_mp_bijective /-
 theorem eq_mp_bijective {α β : Sort _} (h : α = β) : Function.Bijective (Eq.mp h) :=
-  eq_rec_on_bijective h
+  eq_recOn_bijective h
 #align eq_mp_bijective eq_mp_bijective
 -/
 
 #print eq_mpr_bijective /-
 theorem eq_mpr_bijective {α β : Sort _} (h : α = β) : Function.Bijective (Eq.mpr h) :=
-  eq_rec_on_bijective h.symm
+  eq_recOn_bijective h.symm
 #align eq_mpr_bijective eq_mpr_bijective
 -/
 
 #print cast_bijective /-
 theorem cast_bijective {α β : Sort _} (h : α = β) : Function.Bijective (cast h) :=
-  eq_rec_on_bijective h
+  eq_recOn_bijective h
 #align cast_bijective cast_bijective
 -/
 
@@ -1720,17 +1740,11 @@ theorem cast_bijective {α β : Sort _} (h : α = β) : Function.Bijective (cast
 is trivial anyway.-/
 
 
-/- warning: eq_rec_inj -> eq_rec_inj is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {a : α} {a' : α} (h : Eq.{u1} α a a') {C : α -> Type.{u2}} (x : C a) (y : C a), Iff (Eq.{succ u2} ((fun (_x : α) => C _x) a') (Eq.ndrec.{succ u2, u1} α a (fun (_x : α) => C _x) x a' h) (Eq.ndrec.{succ u2, u1} α a (fun (_x : α) => (fun (_x : α) => C _x) _x) y a' h)) (Eq.{succ u2} (C a) x y)
-but is expected to have type
-  forall {α : Sort.{u2}} {a : α} {a' : α} (h : Eq.{u2} α a a') {C : α -> Type.{u1}} (x : C a) (y : C a), Iff (Eq.{succ u1} (C a') (Eq.ndrec.{succ u1, u2} α a C x a' h) (Eq.ndrec.{succ u1, u2} α a C y a' h)) (Eq.{succ u1} (C a) x y)
-Case conversion may be inaccurate. Consider using '#align eq_rec_inj eq_rec_injₓ'. -/
 @[simp]
-theorem eq_rec_inj {α : Sort _} {a a' : α} (h : a = a') {C : α → Type _} (x y : C a) :
+theorem eq_ndrec_inj {α : Sort _} {a a' : α} (h : a = a') {C : α → Type _} (x y : C a) :
     (Eq.ndrec x h : C a') = Eq.ndrec y h ↔ x = y :=
-  (eq_rec_on_bijective h).Injective.eq_iff
-#align eq_rec_inj eq_rec_inj
+  (eq_recOn_bijective h).Injective.eq_iff
+#align eq_rec_inj eq_ndrec_inj
 
 #print cast_inj /-
 @[simp]
@@ -1739,29 +1753,17 @@ theorem cast_inj {α β : Type _} (h : α = β) {x y : α} : cast h x = cast h y
 #align cast_inj cast_inj
 -/
 
-/- warning: function.left_inverse.eq_rec_eq -> Function.LeftInverse.eq_rec_eq is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u2}} {β : Sort.{u3}} {γ : β -> Sort.{u1}} {f : α -> β} {g : β -> α} (h : Function.LeftInverse.{u2, u3} α β g f) (C : forall (a : α), γ (f a)) (a : α), Eq.{u1} (γ (f a)) (Eq.ndrec.{u1, u3} β (f (g (f a))) γ (C (g (f a))) (f a) (congr_arg.{u2, u3} α β (g (f a)) a f (h a))) (C a)
-but is expected to have type
-  forall {α : Sort.{u2}} {β : Sort.{u1}} {γ : β -> Sort.{u3}} {f : α -> β} {g : β -> α} (h : Function.LeftInverse.{u2, u1} α β g f) (C : forall (a : α), γ (f a)) (a : α), Eq.{u3} (γ (f a)) (Eq.rec.{u3, u1} β (f (g (f a))) (fun (x : β) (x._@.Mathlib.Logic.Function.Basic._hyg.11189 : Eq.{u1} β (f (g (f a))) x) => γ x) (C (g (f a))) (f a) (congr_arg.{u2, u1} α β (g (f a)) a f (h a))) (C a)
-Case conversion may be inaccurate. Consider using '#align function.left_inverse.eq_rec_eq Function.LeftInverse.eq_rec_eqₓ'. -/
-theorem Function.LeftInverse.eq_rec_eq {α β : Sort _} {γ : β → Sort v} {f : α → β} {g : β → α}
+theorem Function.LeftInverse.eq_ndrec_eq {α β : Sort _} {γ : β → Sort v} {f : α → β} {g : β → α}
     (h : Function.LeftInverse g f) (C : ∀ a : α, γ (f a)) (a : α) :
     (congr_arg f (h a)).rec (C (g (f a))) = C a :=
-  eq_of_heq <| (eq_rec_heq _ _).trans <| by rw [h]
-#align function.left_inverse.eq_rec_eq Function.LeftInverse.eq_rec_eq
+  eq_of_hEq <| (eq_rec_hEq _ _).trans <| by rw [h]
+#align function.left_inverse.eq_rec_eq Function.LeftInverse.eq_ndrec_eq
 
-/- warning: function.left_inverse.eq_rec_on_eq -> Function.LeftInverse.eq_rec_on_eq is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u2}} {β : Sort.{u3}} {γ : β -> Sort.{u1}} {f : α -> β} {g : β -> α} (h : Function.LeftInverse.{u2, u3} α β g f) (C : forall (a : α), γ (f a)) (a : α), Eq.{u1} (γ (f a)) (Eq.recOn.{u1, u3} β (f (g (f a))) γ (f a) (congr_arg.{u2, u3} α β (g (f a)) a f (h a)) (C (g (f a)))) (C a)
-but is expected to have type
-  forall {α : Sort.{u2}} {β : Sort.{u1}} {γ : β -> Sort.{u3}} {f : α -> β} {g : β -> α} (h : Function.LeftInverse.{u2, u1} α β g f) (C : forall (a : α), γ (f a)) (a : α), Eq.{u3} (γ (f a)) (Eq.recOn.{u3, u1} β (f (g (f a))) (fun (x : β) (x._@.Mathlib.Logic.Function.Basic._hyg.11304 : Eq.{u1} β (f (g (f a))) x) => γ x) (f a) (congr_arg.{u2, u1} α β (g (f a)) a f (h a)) (C (g (f a)))) (C a)
-Case conversion may be inaccurate. Consider using '#align function.left_inverse.eq_rec_on_eq Function.LeftInverse.eq_rec_on_eqₓ'. -/
-theorem Function.LeftInverse.eq_rec_on_eq {α β : Sort _} {γ : β → Sort v} {f : α → β} {g : β → α}
+theorem Function.LeftInverse.eq_recOn_eq {α β : Sort _} {γ : β → Sort v} {f : α → β} {g : β → α}
     (h : Function.LeftInverse g f) (C : ∀ a : α, γ (f a)) (a : α) :
     (congr_arg f (h a)).recOn (C (g (f a))) = C a :=
   h.eq_rec_eq _ _
-#align function.left_inverse.eq_rec_on_eq Function.LeftInverse.eq_rec_on_eq
+#align function.left_inverse.eq_rec_on_eq Function.LeftInverse.eq_recOn_eq
 
 /- warning: function.left_inverse.cast_eq -> Function.LeftInverse.cast_eq is a dubious translation:
 lean 3 declaration is
@@ -1772,7 +1774,7 @@ Case conversion may be inaccurate. Consider using '#align function.left_inverse.
 theorem Function.LeftInverse.cast_eq {α β : Sort _} {γ : β → Sort v} {f : α → β} {g : β → α}
     (h : Function.LeftInverse g f) (C : ∀ a : α, γ (f a)) (a : α) :
     cast (congr_arg (fun a => γ (f a)) (h a)) (C (g (f a))) = C a :=
-  eq_of_heq <| (eq_rec_heq _ _).trans <| by rw [h]
+  eq_of_hEq <| (eq_rec_hEq _ _).trans <| by rw [h]
 #align function.left_inverse.cast_eq Function.LeftInverse.cast_eq
 
 #print Set.SeparatesPoints /-

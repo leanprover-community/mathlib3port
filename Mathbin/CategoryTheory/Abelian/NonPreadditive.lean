@@ -152,9 +152,9 @@ instance : Epi (Abelian.factorThruImage f) :=
     -- ker g is an epimorphism, but ker g ≫ g = 0 = ker g ≫ 0, so g = 0 as required.
     exact zero_of_epi_comp _ (kernel.condition g)
 
-instance is_iso_factor_thru_image [Mono f] : IsIso (Abelian.factorThruImage f) :=
-  is_iso_of_mono_of_epi _
-#align category_theory.non_preadditive_abelian.is_iso_factor_thru_image CategoryTheory.NonPreadditiveAbelian.is_iso_factor_thru_image
+instance isIso_factorThruImage [Mono f] : IsIso (Abelian.factorThruImage f) :=
+  isIso_of_mono_of_epi _
+#align category_theory.non_preadditive_abelian.is_iso_factor_thru_image CategoryTheory.NonPreadditiveAbelian.isIso_factorThruImage
 
 /-- The canonical morphism `i : coimage f ⟶ Q` is a monomorphism -/
 instance : Mono (Abelian.factorThruCoimage f) :=
@@ -198,9 +198,9 @@ instance : Mono (Abelian.factorThruCoimage f) :=
     -- coker g is a monomorphism, but g ≫ coker g = 0 = 0 ≫ coker g, so g = 0 as required.
     exact zero_of_comp_mono _ (cokernel.condition g)
 
-instance is_iso_factor_thru_coimage [Epi f] : IsIso (Abelian.factorThruCoimage f) :=
-  is_iso_of_mono_of_epi _
-#align category_theory.non_preadditive_abelian.is_iso_factor_thru_coimage CategoryTheory.NonPreadditiveAbelian.is_iso_factor_thru_coimage
+instance isIso_factorThruCoimage [Epi f] : IsIso (Abelian.factorThruCoimage f) :=
+  isIso_of_mono_of_epi _
+#align category_theory.non_preadditive_abelian.is_iso_factor_thru_coimage CategoryTheory.NonPreadditiveAbelian.isIso_factorThruCoimage
 
 end Factor
 
@@ -292,9 +292,9 @@ instance epi_r {A : C} : Epi (r A) :=
   rw [← ht, htt, comp_zero, comp_zero]
 #align category_theory.non_preadditive_abelian.epi_r CategoryTheory.NonPreadditiveAbelian.epi_r
 
-instance is_iso_r {A : C} : IsIso (r A) :=
-  is_iso_of_mono_of_epi _
-#align category_theory.non_preadditive_abelian.is_iso_r CategoryTheory.NonPreadditiveAbelian.is_iso_r
+instance isIso_r {A : C} : IsIso (r A) :=
+  isIso_of_mono_of_epi _
+#align category_theory.non_preadditive_abelian.is_iso_r CategoryTheory.NonPreadditiveAbelian.isIso_r
 
 /-- The composite `A ⨯ A ⟶ cokernel (diag A) ⟶ A` given by the natural projection into the cokernel
     followed by the inverse of `r`. In the category of modules, using the normal kernels and

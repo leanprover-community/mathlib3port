@@ -49,41 +49,40 @@ def Finsupp.toFreeAbelianGroup : (X →₀ ℤ) →+ FreeAbelianGroup X :=
 open Finsupp FreeAbelianGroup
 
 @[simp]
-theorem Finsupp.to_free_abelian_group_comp_single_add_hom (x : X) :
+theorem Finsupp.toFreeAbelianGroup_comp_singleAddHom (x : X) :
     Finsupp.toFreeAbelianGroup.comp (Finsupp.singleAddHom x) =
       (smulAddHom ℤ (FreeAbelianGroup X)).flip (of x) :=
   by
   ext
-  simp only [AddMonoidHom.coe_comp, Finsupp.single_add_hom_apply, Function.comp_apply, one_smul,
-    to_free_abelian_group, Finsupp.lift_add_hom_apply_single]
-#align finsupp.to_free_abelian_group_comp_single_add_hom Finsupp.to_free_abelian_group_comp_single_add_hom
+  simp only [AddMonoidHom.coe_comp, Finsupp.singleAddHom_apply, Function.comp_apply, one_smul,
+    to_free_abelian_group, Finsupp.liftAddHom_apply_single]
+#align finsupp.to_free_abelian_group_comp_single_add_hom Finsupp.toFreeAbelianGroup_comp_singleAddHom
 
 @[simp]
-theorem FreeAbelianGroup.to_finsupp_comp_to_free_abelian_group :
+theorem FreeAbelianGroup.toFinsupp_comp_toFreeAbelianGroup :
     toFinsupp.comp toFreeAbelianGroup = AddMonoidHom.id (X →₀ ℤ) :=
   by
   ext (x y); simp only [AddMonoidHom.id_comp]
-  rw [AddMonoidHom.comp_assoc, Finsupp.to_free_abelian_group_comp_single_add_hom]
-  simp only [to_finsupp, AddMonoidHom.coe_comp, Finsupp.single_add_hom_apply, Function.comp_apply,
+  rw [AddMonoidHom.comp_assoc, Finsupp.toFreeAbelianGroup_comp_singleAddHom]
+  simp only [to_finsupp, AddMonoidHom.coe_comp, Finsupp.singleAddHom_apply, Function.comp_apply,
     one_smul, lift.of, AddMonoidHom.flip_apply, smul_add_hom_apply, AddMonoidHom.id_apply]
-#align free_abelian_group.to_finsupp_comp_to_free_abelian_group FreeAbelianGroup.to_finsupp_comp_to_free_abelian_group
+#align free_abelian_group.to_finsupp_comp_to_free_abelian_group FreeAbelianGroup.toFinsupp_comp_toFreeAbelianGroup
 
 @[simp]
-theorem Finsupp.to_free_abelian_group_comp_to_finsupp :
+theorem Finsupp.toFreeAbelianGroup_comp_toFinsupp :
     toFreeAbelianGroup.comp toFinsupp = AddMonoidHom.id (FreeAbelianGroup X) :=
   by
   ext
   rw [to_free_abelian_group, to_finsupp, AddMonoidHom.comp_apply, lift.of,
     lift_add_hom_apply_single, AddMonoidHom.flip_apply, smul_add_hom_apply, one_smul,
     AddMonoidHom.id_apply]
-#align finsupp.to_free_abelian_group_comp_to_finsupp Finsupp.to_free_abelian_group_comp_to_finsupp
+#align finsupp.to_free_abelian_group_comp_to_finsupp Finsupp.toFreeAbelianGroup_comp_toFinsupp
 
 @[simp]
-theorem Finsupp.to_free_abelian_group_to_finsupp {X} (x : FreeAbelianGroup X) :
+theorem Finsupp.toFreeAbelianGroup_toFinsupp {X} (x : FreeAbelianGroup X) :
     x.toFinsupp.toFreeAbelianGroup = x := by
-  rw [← AddMonoidHom.comp_apply, Finsupp.to_free_abelian_group_comp_to_finsupp,
-    AddMonoidHom.id_apply]
-#align finsupp.to_free_abelian_group_to_finsupp Finsupp.to_free_abelian_group_to_finsupp
+  rw [← AddMonoidHom.comp_apply, Finsupp.toFreeAbelianGroup_comp_toFinsupp, AddMonoidHom.id_apply]
+#align finsupp.to_free_abelian_group_to_finsupp Finsupp.toFreeAbelianGroup_toFinsupp
 
 namespace FreeAbelianGroup
 
@@ -92,14 +91,14 @@ open Finsupp
 variable {X}
 
 @[simp]
-theorem to_finsupp_of (x : X) : toFinsupp (of x) = Finsupp.single x 1 := by
+theorem toFinsupp_of (x : X) : toFinsupp (of x) = Finsupp.single x 1 := by
   simp only [to_finsupp, lift.of]
-#align free_abelian_group.to_finsupp_of FreeAbelianGroup.to_finsupp_of
+#align free_abelian_group.to_finsupp_of FreeAbelianGroup.toFinsupp_of
 
 @[simp]
-theorem to_finsupp_to_free_abelian_group (f : X →₀ ℤ) : f.toFreeAbelianGroup.toFinsupp = f := by
+theorem toFinsupp_toFreeAbelianGroup (f : X →₀ ℤ) : f.toFreeAbelianGroup.toFinsupp = f := by
   rw [← AddMonoidHom.comp_apply, to_finsupp_comp_to_free_abelian_group, AddMonoidHom.id_apply]
-#align free_abelian_group.to_finsupp_to_free_abelian_group FreeAbelianGroup.to_finsupp_to_free_abelian_group
+#align free_abelian_group.to_finsupp_to_free_abelian_group FreeAbelianGroup.toFinsupp_toFreeAbelianGroup
 
 variable (X)
 
@@ -109,8 +108,8 @@ def equivFinsupp : FreeAbelianGroup X ≃+ (X →₀ ℤ)
     where
   toFun := toFinsupp
   invFun := toFreeAbelianGroup
-  left_inv := to_free_abelian_group_to_finsupp
-  right_inv := to_finsupp_to_free_abelian_group
+  left_inv := toFreeAbelianGroup_toFinsupp
+  right_inv := toFinsupp_toFreeAbelianGroup
   map_add' := toFinsupp.map_add
 #align free_abelian_group.equiv_finsupp FreeAbelianGroup.equivFinsupp
 
@@ -179,7 +178,7 @@ theorem support_zero : support (0 : FreeAbelianGroup X) = ∅ := by
 
 @[simp]
 theorem support_of (x : X) : support (of x) = {x} := by
-  simp only [support, to_finsupp_of, Finsupp.support_single_ne_zero _ one_ne_zero]
+  simp only [support, to_finsupp_of, Finsupp.support_single_ne_zero _ one_neZero]
 #align free_abelian_group.support_of FreeAbelianGroup.support_of
 
 @[simp]

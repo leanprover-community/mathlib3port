@@ -87,16 +87,16 @@ def augment (C : ChainComplex V ℕ) {X : V} (f : C.x 0 ⟶ X) (w : C.d 1 0 ≫ 
 #align chain_complex.augment ChainComplex.augment
 
 @[simp]
-theorem augment_X_zero (C : ChainComplex V ℕ) {X : V} (f : C.x 0 ⟶ X) (w : C.d 1 0 ≫ f = 0) :
+theorem augment_x_zero (C : ChainComplex V ℕ) {X : V} (f : C.x 0 ⟶ X) (w : C.d 1 0 ≫ f = 0) :
     (augment C f w).x 0 = X :=
   rfl
-#align chain_complex.augment_X_zero ChainComplex.augment_X_zero
+#align chain_complex.augment_X_zero ChainComplex.augment_x_zero
 
 @[simp]
-theorem augment_X_succ (C : ChainComplex V ℕ) {X : V} (f : C.x 0 ⟶ X) (w : C.d 1 0 ≫ f = 0)
+theorem augment_x_succ (C : ChainComplex V ℕ) {X : V} (f : C.x 0 ⟶ X) (w : C.d 1 0 ≫ f = 0)
     (i : ℕ) : (augment C f w).x (i + 1) = C.x i :=
   rfl
-#align chain_complex.augment_X_succ ChainComplex.augment_X_succ
+#align chain_complex.augment_X_succ ChainComplex.augment_x_succ
 
 @[simp]
 theorem augment_d_one_zero (C : ChainComplex V ℕ) {X : V} (f : C.x 0 ⟶ X) (w : C.d 1 0 ≫ f = 0) :
@@ -140,23 +140,23 @@ def truncateAugment (C : ChainComplex V ℕ) {X : V} (f : C.x 0 ⟶ X) (w : C.d 
 #align chain_complex.truncate_augment ChainComplex.truncateAugment
 
 @[simp]
-theorem truncate_augment_hom_f (C : ChainComplex V ℕ) {X : V} (f : C.x 0 ⟶ X) (w : C.d 1 0 ≫ f = 0)
+theorem truncateAugment_hom_f (C : ChainComplex V ℕ) {X : V} (f : C.x 0 ⟶ X) (w : C.d 1 0 ≫ f = 0)
     (i : ℕ) : (truncateAugment C f w).Hom.f i = 𝟙 (C.x i) :=
   rfl
-#align chain_complex.truncate_augment_hom_f ChainComplex.truncate_augment_hom_f
+#align chain_complex.truncate_augment_hom_f ChainComplex.truncateAugment_hom_f
 
 @[simp]
-theorem truncate_augment_inv_f (C : ChainComplex V ℕ) {X : V} (f : C.x 0 ⟶ X) (w : C.d 1 0 ≫ f = 0)
+theorem truncateAugment_inv_f (C : ChainComplex V ℕ) {X : V} (f : C.x 0 ⟶ X) (w : C.d 1 0 ≫ f = 0)
     (i : ℕ) : (truncateAugment C f w).inv.f i = 𝟙 ((truncate.obj (augment C f w)).x i) :=
   rfl
-#align chain_complex.truncate_augment_inv_f ChainComplex.truncate_augment_inv_f
+#align chain_complex.truncate_augment_inv_f ChainComplex.truncateAugment_inv_f
 
 @[simp]
-theorem chain_complex_d_succ_succ_zero (C : ChainComplex V ℕ) (i : ℕ) : C.d (i + 2) 0 = 0 :=
+theorem chainComplex_d_succ_succ_zero (C : ChainComplex V ℕ) (i : ℕ) : C.d (i + 2) 0 = 0 :=
   by
   rw [C.shape]
   simpa using i.succ_succ_ne_one.symm
-#align chain_complex.chain_complex_d_succ_succ_zero ChainComplex.chain_complex_d_succ_succ_zero
+#align chain_complex.chain_complex_d_succ_succ_zero ChainComplex.chainComplex_d_succ_succ_zero
 
 /-- Augmenting a truncated complex with the original object and morphism is isomorphic
 (with components the identity) to the original complex.
@@ -189,28 +189,28 @@ def augmentTruncate (C : ChainComplex V ℕ) :
 #align chain_complex.augment_truncate ChainComplex.augmentTruncate
 
 @[simp]
-theorem augment_truncate_hom_f_zero (C : ChainComplex V ℕ) :
+theorem augmentTruncate_hom_f_zero (C : ChainComplex V ℕ) :
     (augmentTruncate C).Hom.f 0 = 𝟙 (C.x 0) :=
   rfl
-#align chain_complex.augment_truncate_hom_f_zero ChainComplex.augment_truncate_hom_f_zero
+#align chain_complex.augment_truncate_hom_f_zero ChainComplex.augmentTruncate_hom_f_zero
 
 @[simp]
-theorem augment_truncate_hom_f_succ (C : ChainComplex V ℕ) (i : ℕ) :
+theorem augmentTruncate_hom_f_succ (C : ChainComplex V ℕ) (i : ℕ) :
     (augmentTruncate C).Hom.f (i + 1) = 𝟙 (C.x (i + 1)) :=
   rfl
-#align chain_complex.augment_truncate_hom_f_succ ChainComplex.augment_truncate_hom_f_succ
+#align chain_complex.augment_truncate_hom_f_succ ChainComplex.augmentTruncate_hom_f_succ
 
 @[simp]
-theorem augment_truncate_inv_f_zero (C : ChainComplex V ℕ) :
+theorem augmentTruncate_inv_f_zero (C : ChainComplex V ℕ) :
     (augmentTruncate C).inv.f 0 = 𝟙 (C.x 0) :=
   rfl
-#align chain_complex.augment_truncate_inv_f_zero ChainComplex.augment_truncate_inv_f_zero
+#align chain_complex.augment_truncate_inv_f_zero ChainComplex.augmentTruncate_inv_f_zero
 
 @[simp]
-theorem augment_truncate_inv_f_succ (C : ChainComplex V ℕ) (i : ℕ) :
+theorem augmentTruncate_inv_f_succ (C : ChainComplex V ℕ) (i : ℕ) :
     (augmentTruncate C).inv.f (i + 1) = 𝟙 (C.x (i + 1)) :=
   rfl
-#align chain_complex.augment_truncate_inv_f_succ ChainComplex.augment_truncate_inv_f_succ
+#align chain_complex.augment_truncate_inv_f_succ ChainComplex.augmentTruncate_inv_f_succ
 
 /-- A chain map from a chain complex to a single object chain complex in degree zero
 can be reinterpreted as a chain complex.
@@ -287,16 +287,16 @@ def augment (C : CochainComplex V ℕ) {X : V} (f : X ⟶ C.x 0) (w : f ≫ C.d 
 #align cochain_complex.augment CochainComplex.augment
 
 @[simp]
-theorem augment_X_zero (C : CochainComplex V ℕ) {X : V} (f : X ⟶ C.x 0) (w : f ≫ C.d 0 1 = 0) :
+theorem augment_x_zero (C : CochainComplex V ℕ) {X : V} (f : X ⟶ C.x 0) (w : f ≫ C.d 0 1 = 0) :
     (augment C f w).x 0 = X :=
   rfl
-#align cochain_complex.augment_X_zero CochainComplex.augment_X_zero
+#align cochain_complex.augment_X_zero CochainComplex.augment_x_zero
 
 @[simp]
-theorem augment_X_succ (C : CochainComplex V ℕ) {X : V} (f : X ⟶ C.x 0) (w : f ≫ C.d 0 1 = 0)
+theorem augment_x_succ (C : CochainComplex V ℕ) {X : V} (f : X ⟶ C.x 0) (w : f ≫ C.d 0 1 = 0)
     (i : ℕ) : (augment C f w).x (i + 1) = C.x i :=
   rfl
-#align cochain_complex.augment_X_succ CochainComplex.augment_X_succ
+#align cochain_complex.augment_X_succ CochainComplex.augment_x_succ
 
 @[simp]
 theorem augment_d_zero_one (C : CochainComplex V ℕ) {X : V} (f : X ⟶ C.x 0) (w : f ≫ C.d 0 1 = 0) :
@@ -336,25 +336,24 @@ def truncateAugment (C : CochainComplex V ℕ) {X : V} (f : X ⟶ C.x 0) (w : f 
 #align cochain_complex.truncate_augment CochainComplex.truncateAugment
 
 @[simp]
-theorem truncate_augment_hom_f (C : CochainComplex V ℕ) {X : V} (f : X ⟶ C.x 0)
-    (w : f ≫ C.d 0 1 = 0) (i : ℕ) : (truncateAugment C f w).Hom.f i = 𝟙 (C.x i) :=
+theorem truncateAugment_hom_f (C : CochainComplex V ℕ) {X : V} (f : X ⟶ C.x 0) (w : f ≫ C.d 0 1 = 0)
+    (i : ℕ) : (truncateAugment C f w).Hom.f i = 𝟙 (C.x i) :=
   rfl
-#align cochain_complex.truncate_augment_hom_f CochainComplex.truncate_augment_hom_f
+#align cochain_complex.truncate_augment_hom_f CochainComplex.truncateAugment_hom_f
 
 @[simp]
-theorem truncate_augment_inv_f (C : CochainComplex V ℕ) {X : V} (f : X ⟶ C.x 0)
-    (w : f ≫ C.d 0 1 = 0) (i : ℕ) :
-    (truncateAugment C f w).inv.f i = 𝟙 ((truncate.obj (augment C f w)).x i) :=
+theorem truncateAugment_inv_f (C : CochainComplex V ℕ) {X : V} (f : X ⟶ C.x 0) (w : f ≫ C.d 0 1 = 0)
+    (i : ℕ) : (truncateAugment C f w).inv.f i = 𝟙 ((truncate.obj (augment C f w)).x i) :=
   rfl
-#align cochain_complex.truncate_augment_inv_f CochainComplex.truncate_augment_inv_f
+#align cochain_complex.truncate_augment_inv_f CochainComplex.truncateAugment_inv_f
 
 @[simp]
-theorem cochain_complex_d_succ_succ_zero (C : CochainComplex V ℕ) (i : ℕ) : C.d 0 (i + 2) = 0 :=
+theorem cochainComplex_d_succ_succ_zero (C : CochainComplex V ℕ) (i : ℕ) : C.d 0 (i + 2) = 0 :=
   by
   rw [C.shape]
   simp only [ComplexShape.up_rel, zero_add]
   exact (Nat.one_lt_succ_succ _).Ne
-#align cochain_complex.cochain_complex_d_succ_succ_zero CochainComplex.cochain_complex_d_succ_succ_zero
+#align cochain_complex.cochain_complex_d_succ_succ_zero CochainComplex.cochainComplex_d_succ_succ_zero
 
 /-- Augmenting a truncated complex with the original object and morphism is isomorphic
 (with components the identity) to the original complex.
@@ -387,28 +386,28 @@ def augmentTruncate (C : CochainComplex V ℕ) :
 #align cochain_complex.augment_truncate CochainComplex.augmentTruncate
 
 @[simp]
-theorem augment_truncate_hom_f_zero (C : CochainComplex V ℕ) :
+theorem augmentTruncate_hom_f_zero (C : CochainComplex V ℕ) :
     (augmentTruncate C).Hom.f 0 = 𝟙 (C.x 0) :=
   rfl
-#align cochain_complex.augment_truncate_hom_f_zero CochainComplex.augment_truncate_hom_f_zero
+#align cochain_complex.augment_truncate_hom_f_zero CochainComplex.augmentTruncate_hom_f_zero
 
 @[simp]
-theorem augment_truncate_hom_f_succ (C : CochainComplex V ℕ) (i : ℕ) :
+theorem augmentTruncate_hom_f_succ (C : CochainComplex V ℕ) (i : ℕ) :
     (augmentTruncate C).Hom.f (i + 1) = 𝟙 (C.x (i + 1)) :=
   rfl
-#align cochain_complex.augment_truncate_hom_f_succ CochainComplex.augment_truncate_hom_f_succ
+#align cochain_complex.augment_truncate_hom_f_succ CochainComplex.augmentTruncate_hom_f_succ
 
 @[simp]
-theorem augment_truncate_inv_f_zero (C : CochainComplex V ℕ) :
+theorem augmentTruncate_inv_f_zero (C : CochainComplex V ℕ) :
     (augmentTruncate C).inv.f 0 = 𝟙 (C.x 0) :=
   rfl
-#align cochain_complex.augment_truncate_inv_f_zero CochainComplex.augment_truncate_inv_f_zero
+#align cochain_complex.augment_truncate_inv_f_zero CochainComplex.augmentTruncate_inv_f_zero
 
 @[simp]
-theorem augment_truncate_inv_f_succ (C : CochainComplex V ℕ) (i : ℕ) :
+theorem augmentTruncate_inv_f_succ (C : CochainComplex V ℕ) (i : ℕ) :
     (augmentTruncate C).inv.f (i + 1) = 𝟙 (C.x (i + 1)) :=
   rfl
-#align cochain_complex.augment_truncate_inv_f_succ CochainComplex.augment_truncate_inv_f_succ
+#align cochain_complex.augment_truncate_inv_f_succ CochainComplex.augmentTruncate_inv_f_succ
 
 /-- A chain map from a single object cochain complex in degree zero to a cochain complex
 can be reinterpreted as a cochain complex.

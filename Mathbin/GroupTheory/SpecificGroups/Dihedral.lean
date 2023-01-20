@@ -160,21 +160,21 @@ theorem sr_mul_self (i : Zmod n) : sr i * sr i = 1 := by rw [sr_mul_sr, sub_self
 /-- If `0 < n`, then `sr i` has order 2.
 -/
 @[simp]
-theorem order_of_sr (i : Zmod n) : orderOf (sr i) = 2 :=
+theorem orderOf_sr (i : Zmod n) : orderOf (sr i) = 2 :=
   by
-  rw [order_of_eq_prime _ _]
+  rw [orderOf_eq_prime _ _]
   · exact ⟨Nat.prime_two⟩
   rw [sq, sr_mul_self]
   decide
-#align dihedral_group.order_of_sr DihedralGroup.order_of_sr
+#align dihedral_group.order_of_sr DihedralGroup.orderOf_sr
 
 /-- If `0 < n`, then `r 1` has order `n`.
 -/
 @[simp]
-theorem order_of_r_one : orderOf (r 1 : DihedralGroup n) = n :=
+theorem orderOf_r_one : orderOf (r 1 : DihedralGroup n) = n :=
   by
   rcases eq_zero_or_neZero n with (rfl | hn)
-  · rw [order_of_eq_zero_iff']
+  · rw [orderOf_eq_zero_iff']
     intro n hn
     rw [r_one_pow, one_def]
     apply mt r.inj
@@ -182,22 +182,22 @@ theorem order_of_r_one : orderOf (r 1 : DihedralGroup n) = n :=
   · skip
     apply
       (Nat.le_of_dvd (NeZero.pos n) <|
-            order_of_dvd_of_pow_eq_one <| @r_one_pow_n n).lt_or_eq.resolve_left
+            orderOf_dvd_of_pow_eq_one <| @r_one_pow_n n).lt_or_eq.resolve_left
     intro h
-    have h1 : (r 1 : DihedralGroup n) ^ orderOf (r 1) = 1 := pow_order_of_eq_one _
+    have h1 : (r 1 : DihedralGroup n) ^ orderOf (r 1) = 1 := pow_orderOf_eq_one _
     rw [r_one_pow] at h1
     injection h1 with h2
     rw [← Zmod.val_eq_zero, Zmod.val_nat_cast, Nat.mod_eq_of_lt h] at h2
-    exact absurd h2.symm (order_of_pos _).Ne
-#align dihedral_group.order_of_r_one DihedralGroup.order_of_r_one
+    exact absurd h2.symm (orderOf_pos _).Ne
+#align dihedral_group.order_of_r_one DihedralGroup.orderOf_r_one
 
 /-- If `0 < n`, then `i : zmod n` has order `n / gcd n i`.
 -/
-theorem order_of_r [NeZero n] (i : Zmod n) : orderOf (r i) = n / Nat.gcd n i.val :=
+theorem orderOf_r [NeZero n] (i : Zmod n) : orderOf (r i) = n / Nat.gcd n i.val :=
   by
   conv_lhs => rw [← Zmod.nat_cast_zmod_val i]
-  rw [← r_one_pow, order_of_pow, order_of_r_one]
-#align dihedral_group.order_of_r DihedralGroup.order_of_r
+  rw [← r_one_pow, orderOf_pow, order_of_r_one]
+#align dihedral_group.order_of_r DihedralGroup.orderOf_r
 
 theorem exponent : Monoid.exponent (DihedralGroup n) = lcm n 2 :=
   by
@@ -207,10 +207,10 @@ theorem exponent : Monoid.exponent (DihedralGroup n) = lcm n 2 :=
   apply Nat.dvd_antisymm
   · apply Monoid.exponent_dvd_of_forall_pow_eq_one
     rintro (m | m)
-    · rw [← order_of_dvd_iff_pow_eq_one, order_of_r]
+    · rw [← orderOf_dvd_iff_pow_eq_one, order_of_r]
       refine' Nat.dvd_trans ⟨gcd n m.val, _⟩ (dvd_lcm_left n 2)
       · exact (Nat.div_mul_cancel (Nat.gcd_dvd_left n m.val)).symm
-    · rw [← order_of_dvd_iff_pow_eq_one, order_of_sr]
+    · rw [← orderOf_dvd_iff_pow_eq_one, order_of_sr]
       exact dvd_lcm_right n 2
   · apply lcm_dvd
     · convert Monoid.order_dvd_exponent (r 1)

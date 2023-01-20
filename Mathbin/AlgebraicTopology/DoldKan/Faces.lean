@@ -83,7 +83,7 @@ theorem of_comp {Y Z : C} {q n : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFacesVa
     HigherFacesVanish q (f ≫ φ) := fun j hj => by rw [assoc, v j hj, comp_zero]
 #align algebraic_topology.dold_kan.higher_faces_vanish.of_comp AlgebraicTopology.DoldKan.HigherFacesVanish.of_comp
 
-theorem comp_Hσ_eq {Y : C} {n a q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFacesVanish q φ)
+theorem comp_hσ_eq {Y : C} {n a q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFacesVanish q φ)
     (hnaq : n = a + q) :
     φ ≫ (hσ q).f (n + 1) =
       -φ ≫
@@ -94,7 +94,7 @@ theorem comp_Hσ_eq {Y : C} {n a q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFac
     by
     intro d
     rw [add_assoc, add_comm d, ← add_assoc, hnaq]
-  rw [Hσ, Homotopy.null_homotopic_map'_f (c_mk (n + 2) (n + 1) rfl) (c_mk (n + 1) n rfl),
+  rw [Hσ, Homotopy.nullHomotopicMap'_f (c_mk (n + 2) (n + 1) rfl) (c_mk (n + 1) n rfl),
     hσ'_eq hnaq (c_mk (n + 1) n rfl), hσ'_eq (hnaq_shift 1) (c_mk (n + 2) (n + 1) rfl)]
   simp only [alternating_face_map_complex.obj_d_eq, eq_to_hom_refl, comp_id, comp_sum, sum_comp,
     comp_add]
@@ -130,8 +130,8 @@ theorem comp_Hσ_eq {Y : C} {n a q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFac
   conv_lhs =>
     congr
     skip
-    rw [Fin.sum_univ_cast_succ, Fin.sum_univ_cast_succ]
-  rw [Fin.sum_univ_cast_succ]
+    rw [Fin.sum_univ_castSucc, Fin.sum_univ_castSucc]
+  rw [Fin.sum_univ_castSucc]
   simp only [Fin.last, Fin.castLe_mk, Fin.coe_cast, Fin.cast_mk, Fin.coe_castLe, Fin.val_mk,
     Fin.castSucc_mk, Fin.coe_castSucc]
   /- the purpose of the following `simplif` is to create three subgoals in order
@@ -160,12 +160,12 @@ theorem comp_Hσ_eq {Y : C} {n a q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFac
       δ_comp_σ_of_le X hia, add_eq_zero_iff_eq_neg, ← neg_zsmul]
     congr
     ring
-#align algebraic_topology.dold_kan.higher_faces_vanish.comp_Hσ_eq AlgebraicTopology.DoldKan.HigherFacesVanish.comp_Hσ_eq
+#align algebraic_topology.dold_kan.higher_faces_vanish.comp_Hσ_eq AlgebraicTopology.DoldKan.HigherFacesVanish.comp_hσ_eq
 
-theorem comp_Hσ_eq_zero {Y : C} {n q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFacesVanish q φ)
+theorem comp_hσ_eq_zero {Y : C} {n q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFacesVanish q φ)
     (hqn : n < q) : φ ≫ (hσ q).f (n + 1) = 0 :=
   by
-  simp only [Hσ, Homotopy.null_homotopic_map'_f (c_mk (n + 2) (n + 1) rfl) (c_mk (n + 1) n rfl)]
+  simp only [Hσ, Homotopy.nullHomotopicMap'_f (c_mk (n + 2) (n + 1) rfl) (c_mk (n + 1) n rfl)]
   rw [hσ'_eq_zero hqn (c_mk (n + 1) n rfl), comp_zero, zero_add]
   by_cases hqn' : n + 1 < q
   · rw [hσ'_eq_zero hqn' (c_mk (n + 2) (n + 1) rfl), zero_comp, comp_zero]
@@ -173,7 +173,7 @@ theorem comp_Hσ_eq_zero {Y : C} {n q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : Higher
       Fin.mk_zero, one_zsmul, eq_to_hom_refl, comp_id, comp_sum,
       alternating_face_map_complex.obj_d_eq]
     rw [← Fin.sum_congr' _ (show 2 + (n + 1) = n + 1 + 2 by linarith), Fin.sum_trunc]
-    · simp only [Fin.sum_univ_cast_succ, Fin.sum_univ_zero, zero_add, Fin.last, Fin.castLe_mk,
+    · simp only [Fin.sum_univ_castSucc, Fin.sum_univ_zero, zero_add, Fin.last, Fin.castLe_mk,
         Fin.cast_mk, Fin.castSucc_mk]
       simp only [Fin.mk_zero, Fin.val_zero, pow_zero, one_zsmul, Fin.mk_one, Fin.val_one, pow_one,
         neg_smul, comp_neg]
@@ -190,7 +190,7 @@ theorem comp_Hσ_eq_zero {Y : C} {n q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : Higher
       · rw [Fin.lt_iff_val_lt_val]
         dsimp
         linarith
-#align algebraic_topology.dold_kan.higher_faces_vanish.comp_Hσ_eq_zero AlgebraicTopology.DoldKan.HigherFacesVanish.comp_Hσ_eq_zero
+#align algebraic_topology.dold_kan.higher_faces_vanish.comp_Hσ_eq_zero AlgebraicTopology.DoldKan.HigherFacesVanish.comp_hσ_eq_zero
 
 theorem induction {Y : C} {n q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFacesVanish q φ) :
     HigherFacesVanish (q + 1) (φ ≫ (𝟙 _ + hσ q).f (n + 1)) :=

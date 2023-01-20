@@ -118,7 +118,7 @@ theorem det_vandermonde {n : ℕ} (v : Fin n → R) :
     _ = (∏ i : Fin n, v (Fin.succ i) - v 0) * det fun i j : Fin n => v (Fin.succ i) ^ (j : ℕ) :=
       congr_arg ((· * ·) _) _
     _ = ∏ i : Fin n.succ, ∏ j in Ioi i, v j - v i := by
-      simp_rw [ih (v ∘ Fin.succ), Fin.prod_univ_succ, Fin.prod_Ioi_zero, Fin.prod_Ioi_succ]
+      simp_rw [ih (v ∘ Fin.succ), Fin.prod_univ_succ, Fin.prod_ioi_zero, Fin.prod_ioi_succ]
     
   · intro i j
     simp_rw [of_apply]
@@ -160,7 +160,7 @@ theorem det_vandermonde_ne_zero_iff [IsDomain R] {n : ℕ} {v : Fin n → R} :
 theorem eq_zero_of_forall_index_sum_pow_mul_eq_zero {R : Type _} [CommRing R] [IsDomain R] {n : ℕ}
     {f v : Fin n → R} (hf : Function.Injective f)
     (hfv : ∀ j, (∑ i : Fin n, f j ^ (i : ℕ) * v i) = 0) : v = 0 :=
-  eq_zero_of_mul_vec_eq_zero (det_vandermonde_ne_zero_iff.mpr hf) (funext hfv)
+  eq_zero_of_mulVec_eq_zero (det_vandermonde_ne_zero_iff.mpr hf) (funext hfv)
 #align matrix.eq_zero_of_forall_index_sum_pow_mul_eq_zero Matrix.eq_zero_of_forall_index_sum_pow_mul_eq_zero
 
 theorem eq_zero_of_forall_index_sum_mul_pow_eq_zero {R : Type _} [CommRing R] [IsDomain R] {n : ℕ}
@@ -174,7 +174,7 @@ theorem eq_zero_of_forall_index_sum_mul_pow_eq_zero {R : Type _} [CommRing R] [I
 theorem eq_zero_of_forall_pow_sum_mul_pow_eq_zero {R : Type _} [CommRing R] [IsDomain R] {n : ℕ}
     {f v : Fin n → R} (hf : Function.Injective f)
     (hfv : ∀ i : Fin n, (∑ j : Fin n, v j * f j ^ (i : ℕ)) = 0) : v = 0 :=
-  eq_zero_of_vec_mul_eq_zero (det_vandermonde_ne_zero_iff.mpr hf) (funext hfv)
+  eq_zero_of_vecMul_eq_zero (det_vandermonde_ne_zero_iff.mpr hf) (funext hfv)
 #align matrix.eq_zero_of_forall_pow_sum_mul_pow_eq_zero Matrix.eq_zero_of_forall_pow_sum_mul_pow_eq_zero
 
 end Matrix

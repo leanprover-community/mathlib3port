@@ -115,12 +115,12 @@ instance : TopologicalSpace (WeakBilin B) :=
   TopologicalSpace.induced (fun x y => B x y) PiCat.topologicalSpace
 
 /-- The coercion `(λ x y, B x y) : E → (F → 𝕜)` is continuous. -/
-theorem coe_fn_continuous : Continuous fun (x : WeakBilin B) y => B x y :=
+theorem coeFn_continuous : Continuous fun (x : WeakBilin B) y => B x y :=
   continuous_induced_dom
-#align weak_bilin.coe_fn_continuous WeakBilin.coe_fn_continuous
+#align weak_bilin.coe_fn_continuous WeakBilin.coeFn_continuous
 
 theorem eval_continuous (y : F) : Continuous fun x : WeakBilin B => B x y :=
-  (continuous_pi_iff.mp (coe_fn_continuous B)) y
+  (continuous_pi_iff.mp (coeFn_continuous B)) y
 #align weak_bilin.eval_continuous WeakBilin.eval_continuous
 
 theorem continuous_of_continuous_eval [TopologicalSpace α] {g : α → WeakBilin B}
@@ -254,21 +254,21 @@ instance module' (R) [Semiring R] [Module R 𝕜] [SMulCommClass 𝕜 R 𝕜] [H
 instance (M) [Monoid M] [DistribMulAction M 𝕜] [SMulCommClass 𝕜 M 𝕜] [HasContinuousConstSmul M 𝕜] :
     HasContinuousConstSmul M (WeakDual 𝕜 E) :=
   ⟨fun m =>
-    continuous_induced_rng.2 <| (WeakBilin.coe_fn_continuous (topDualPairing 𝕜 E)).const_smul m⟩
+    continuous_induced_rng.2 <| (WeakBilin.coeFn_continuous (topDualPairing 𝕜 E)).const_smul m⟩
 
 /-- If a monoid `M` distributively continuously acts on `𝕜` and this action commutes with
 multiplication on `𝕜`, then it continuously acts on `weak_dual 𝕜 E`. -/
 instance (M) [Monoid M] [DistribMulAction M 𝕜] [SMulCommClass 𝕜 M 𝕜] [TopologicalSpace M]
     [HasContinuousSmul M 𝕜] : HasContinuousSmul M (WeakDual 𝕜 E) :=
   ⟨continuous_induced_rng.2 <|
-      continuous_fst.smul ((WeakBilin.coe_fn_continuous (topDualPairing 𝕜 E)).comp continuous_snd)⟩
+      continuous_fst.smul ((WeakBilin.coeFn_continuous (topDualPairing 𝕜 E)).comp continuous_snd)⟩
 
-theorem coe_fn_continuous : Continuous fun (x : WeakDual 𝕜 E) y => x y :=
+theorem coeFn_continuous : Continuous fun (x : WeakDual 𝕜 E) y => x y :=
   continuous_induced_dom
-#align weak_dual.coe_fn_continuous WeakDual.coe_fn_continuous
+#align weak_dual.coe_fn_continuous WeakDual.coeFn_continuous
 
 theorem eval_continuous (y : E) : Continuous fun x : WeakDual 𝕜 E => x y :=
-  continuous_pi_iff.mp coe_fn_continuous y
+  continuous_pi_iff.mp coeFn_continuous y
 #align weak_dual.eval_continuous WeakDual.eval_continuous
 
 theorem continuous_of_continuous_eval [TopologicalSpace α] {g : α → WeakDual 𝕜 E}
@@ -317,12 +317,12 @@ theorem coe_map (f : E →L[𝕜] F) : (WeakSpace.map f : E → F) = f :=
 
 end WeakSpace
 
-theorem tendsto_iff_forall_eval_tendsto_top_dual_pairing {l : Filter α} {f : α → WeakDual 𝕜 E}
+theorem tendsto_iff_forall_eval_tendsto_topDualPairing {l : Filter α} {f : α → WeakDual 𝕜 E}
     {x : WeakDual 𝕜 E} :
     Tendsto f l (𝓝 x) ↔
       ∀ y, Tendsto (fun i => topDualPairing 𝕜 E (f i) y) l (𝓝 (topDualPairing 𝕜 E x y)) :=
   WeakBilin.tendsto_iff_forall_eval_tendsto _ ContinuousLinearMap.coe_injective
-#align tendsto_iff_forall_eval_tendsto_top_dual_pairing tendsto_iff_forall_eval_tendsto_top_dual_pairing
+#align tendsto_iff_forall_eval_tendsto_top_dual_pairing tendsto_iff_forall_eval_tendsto_topDualPairing
 
 end WeakStarTopology
 

@@ -85,12 +85,12 @@ theorem map_snd_prod (I : Ideal R) (J : Ideal S) : map (RingHom.snd R S) (prod I
 #align ideal.map_snd_prod Ideal.map_snd_prod
 
 @[simp]
-theorem map_prod_comm_prod :
+theorem map_prodComm_prod :
     map ((RingEquiv.prodComm : R × S ≃+* S × R) : R × S →+* S × R) (prod I J) = prod J I :=
   by
   refine' trans (ideal_prod_eq _) _
   simp [map_map]
-#align ideal.map_prod_comm_prod Ideal.map_prod_comm_prod
+#align ideal.map_prod_comm_prod Ideal.map_prodComm_prod
 
 /-- Ideals of `R × S` are in one-to-one correspondence with pairs of ideals of `R` and ideals of
     `S`. -/
@@ -103,10 +103,10 @@ def idealProdEquiv : Ideal (R × S) ≃ Ideal R × Ideal S
 #align ideal.ideal_prod_equiv Ideal.idealProdEquiv
 
 @[simp]
-theorem ideal_prod_equiv_symm_apply (I : Ideal R) (J : Ideal S) :
+theorem idealProdEquiv_symm_apply (I : Ideal R) (J : Ideal S) :
     idealProdEquiv.symm ⟨I, J⟩ = prod I J :=
   rfl
-#align ideal.ideal_prod_equiv_symm_apply Ideal.ideal_prod_equiv_symm_apply
+#align ideal.ideal_prod_equiv_symm_apply Ideal.idealProdEquiv_symm_apply
 
 theorem prod.ext_iff {I I' : Ideal R} {J J' : Ideal S} : prod I J = prod I' J' ↔ I = I' ∧ J = J' :=
   by

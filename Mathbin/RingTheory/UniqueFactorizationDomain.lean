@@ -46,13 +46,13 @@ class WfDvdMonoid (α : Type _) [CommMonoidWithZero α] : Prop where
 export WfDvdMonoid (well_founded_dvd_not_unit)
 
 -- see Note [lower instance priority]
-instance (priority := 100) IsNoetherianRing.wf_dvd_monoid [CommRing α] [IsDomain α]
+instance (priority := 100) IsNoetherianRing.wfDvdMonoid [CommRing α] [IsDomain α]
     [IsNoetherianRing α] : WfDvdMonoid α :=
   ⟨by
-    convert InvImage.wf (fun a => Ideal.span ({a} : Set α)) (well_founded_submodule_gt _ _)
+    convert InvImage.wf (fun a => Ideal.span ({a} : Set α)) (wellFounded_submodule_gt _ _)
     ext
     exact ideal.span_singleton_lt_span_singleton.symm⟩
-#align is_noetherian_ring.wf_dvd_monoid IsNoetherianRing.wf_dvd_monoid
+#align is_noetherian_ring.wf_dvd_monoid IsNoetherianRing.wfDvdMonoid
 
 namespace WfDvdMonoid
 
@@ -60,30 +60,30 @@ variable [CommMonoidWithZero α]
 
 open Associates Nat
 
-theorem of_wf_dvd_monoid_associates (h : WfDvdMonoid (Associates α)) : WfDvdMonoid α :=
+theorem of_wfDvdMonoid_associates (h : WfDvdMonoid (Associates α)) : WfDvdMonoid α :=
   ⟨by
     haveI := h
     refine' (Surjective.wellFounded_iff mk_surjective _).2 well_founded_dvd_not_unit
     intros ; rw [mk_dvd_not_unit_mk_iff]⟩
-#align wf_dvd_monoid.of_wf_dvd_monoid_associates WfDvdMonoid.of_wf_dvd_monoid_associates
+#align wf_dvd_monoid.of_wf_dvd_monoid_associates WfDvdMonoid.of_wfDvdMonoid_associates
 
 variable [WfDvdMonoid α]
 
-instance wf_dvd_monoid_associates : WfDvdMonoid (Associates α) :=
+instance wfDvdMonoid_associates : WfDvdMonoid (Associates α) :=
   ⟨by
     refine' (Surjective.wellFounded_iff mk_surjective _).1 well_founded_dvd_not_unit
     intros ; rw [mk_dvd_not_unit_mk_iff]⟩
-#align wf_dvd_monoid.wf_dvd_monoid_associates WfDvdMonoid.wf_dvd_monoid_associates
+#align wf_dvd_monoid.wf_dvd_monoid_associates WfDvdMonoid.wfDvdMonoid_associates
 
-theorem well_founded_associates : WellFounded ((· < ·) : Associates α → Associates α → Prop) :=
-  Subrelation.wf (fun x y => dvdNotUnit_of_lt) well_founded_dvd_not_unit
-#align wf_dvd_monoid.well_founded_associates WfDvdMonoid.well_founded_associates
+theorem wellFounded_associates : WellFounded ((· < ·) : Associates α → Associates α → Prop) :=
+  Subrelation.wf (fun x y => dvdNotUnit_of_lt) wellFounded_dvdNotUnit
+#align wf_dvd_monoid.well_founded_associates WfDvdMonoid.wellFounded_associates
 
 attribute [local elab_as_elim] WellFounded.fix
 
 theorem exists_irreducible_factor {a : α} (ha : ¬IsUnit a) (ha0 : a ≠ 0) :
     ∃ i, Irreducible i ∧ i ∣ a :=
-  let ⟨b, hs, hr⟩ := well_founded_dvd_not_unit.has_min { b | b ∣ a ∧ ¬IsUnit b } ⟨a, dvd_rfl, ha⟩
+  let ⟨b, hs, hr⟩ := wellFounded_dvdNotUnit.has_min { b | b ∣ a ∧ ¬IsUnit b } ⟨a, dvd_rfl, ha⟩
   ⟨b,
     ⟨hs.2, fun c d he =>
       let h := dvd_trans ⟨d, he⟩ hs.1
@@ -136,19 +136,19 @@ theorem not_unit_iff_exists_factors_eq (a : α) (hn0 : a ≠ 0) :
 
 end WfDvdMonoid
 
-theorem WfDvdMonoid.of_well_founded_associates [CancelCommMonoidWithZero α]
+theorem WfDvdMonoid.of_wellFounded_associates [CancelCommMonoidWithZero α]
     (h : WellFounded ((· < ·) : Associates α → Associates α → Prop)) : WfDvdMonoid α :=
-  WfDvdMonoid.of_wf_dvd_monoid_associates
+  WfDvdMonoid.of_wfDvdMonoid_associates
     ⟨by
       convert h
       ext
       exact Associates.dvdNotUnit_iff_lt⟩
-#align wf_dvd_monoid.of_well_founded_associates WfDvdMonoid.of_well_founded_associates
+#align wf_dvd_monoid.of_well_founded_associates WfDvdMonoid.of_wellFounded_associates
 
-theorem WfDvdMonoid.iff_well_founded_associates [CancelCommMonoidWithZero α] :
+theorem WfDvdMonoid.iff_wellFounded_associates [CancelCommMonoidWithZero α] :
     WfDvdMonoid α ↔ WellFounded ((· < ·) : Associates α → Associates α → Prop) :=
-  ⟨by apply WfDvdMonoid.well_founded_associates, WfDvdMonoid.of_well_founded_associates⟩
-#align wf_dvd_monoid.iff_well_founded_associates WfDvdMonoid.iff_well_founded_associates
+  ⟨by apply WfDvdMonoid.wellFounded_associates, WfDvdMonoid.of_wellFounded_associates⟩
+#align wf_dvd_monoid.iff_well_founded_associates WfDvdMonoid.iff_wellFounded_associates
 
 section Prio
 
@@ -181,14 +181,14 @@ class UniqueFactorizationMonoid (α : Type _) [CancelCommMonoidWithZero α] exte
 
 /-- Can't be an instance because it would cause a loop `ufm → wf_dvd_monoid → ufm → ...`. -/
 @[reducible]
-theorem ufm_of_gcd_of_wf_dvd_monoid [CancelCommMonoidWithZero α] [WfDvdMonoid α] [GCDMonoid α] :
+theorem ufm_of_gcd_of_wfDvdMonoid [CancelCommMonoidWithZero α] [WfDvdMonoid α] [GCDMonoid α] :
     UniqueFactorizationMonoid α :=
   { ‹WfDvdMonoid α› with irreducible_iff_prime := fun _ => GCDMonoid.irreducible_iff_prime }
-#align ufm_of_gcd_of_wf_dvd_monoid ufm_of_gcd_of_wf_dvd_monoid
+#align ufm_of_gcd_of_wf_dvd_monoid ufm_of_gcd_of_wfDvdMonoid
 
 instance Associates.ufm [CancelCommMonoidWithZero α] [UniqueFactorizationMonoid α] :
     UniqueFactorizationMonoid (Associates α) :=
-  { (WfDvdMonoid.wf_dvd_monoid_associates : WfDvdMonoid (Associates α)) with
+  { (WfDvdMonoid.wfDvdMonoid_associates : WfDvdMonoid (Associates α)) with
     irreducible_iff_prime := by
       rw [← Associates.irreducible_iff_prime_iff]
       apply UniqueFactorizationMonoid.irreducible_iff_prime }
@@ -358,7 +358,7 @@ section
 
 variable {β : Type _} [CancelCommMonoidWithZero α] [CancelCommMonoidWithZero β]
 
-theorem MulEquiv.unique_factorization_monoid (e : α ≃* β) (hα : UniqueFactorizationMonoid α) :
+theorem MulEquiv.uniqueFactorizationMonoid (e : α ≃* β) (hα : UniqueFactorizationMonoid α) :
     UniqueFactorizationMonoid β :=
   by
   rw [UniqueFactorizationMonoid.iff_exists_prime_factors] at hα⊢; intro a ha
@@ -375,12 +375,12 @@ theorem MulEquiv.unique_factorization_monoid (e : α ≃* β) (hα : UniqueFacto
       by
       erw [Multiset.prod_hom, ← e.map_mul, h]
       simp⟩
-#align mul_equiv.unique_factorization_monoid MulEquiv.unique_factorization_monoid
+#align mul_equiv.unique_factorization_monoid MulEquiv.uniqueFactorizationMonoid
 
-theorem MulEquiv.unique_factorization_monoid_iff (e : α ≃* β) :
+theorem MulEquiv.uniqueFactorizationMonoid_iff (e : α ≃* β) :
     UniqueFactorizationMonoid α ↔ UniqueFactorizationMonoid β :=
   ⟨e.UniqueFactorizationMonoid, e.symm.UniqueFactorizationMonoid⟩
-#align mul_equiv.unique_factorization_monoid_iff MulEquiv.unique_factorization_monoid_iff
+#align mul_equiv.unique_factorization_monoid_iff MulEquiv.uniqueFactorizationMonoid_iff
 
 end
 
@@ -488,7 +488,7 @@ theorem factors_one : factors (1 : α) = 0 :=
   rw [← Multiset.rel_zero_right]
   refine' factors_unique irreducible_of_factor (fun x hx => (Multiset.not_mem_zero x hx).elim) _
   rw [Multiset.prod_zero]
-  exact factors_prod one_ne_zero
+  exact factors_prod one_neZero
 #align unique_factorization_monoid.factors_one UniqueFactorizationMonoid.factors_one
 
 theorem exists_mem_factors_of_dvd {a p : α} (ha0 : a ≠ 0) (hp : Irreducible p) :
@@ -569,16 +569,16 @@ noncomputable def normalizedFactors (a : α) : Multiset α :=
 /-- An arbitrary choice of factors of `x : M` is exactly the (unique) normalized set of factors,
 if `M` has a trivial group of units. -/
 @[simp]
-theorem factors_eq_normalized_factors {M : Type _} [CancelCommMonoidWithZero M] [DecidableEq M]
+theorem factors_eq_normalizedFactors {M : Type _} [CancelCommMonoidWithZero M] [DecidableEq M]
     [UniqueFactorizationMonoid M] [Unique Mˣ] (x : M) : factors x = normalizedFactors x :=
   by
   unfold normalized_factors
   convert (Multiset.map_id (factors x)).symm
   ext p
   exact normalize_eq p
-#align unique_factorization_monoid.factors_eq_normalized_factors UniqueFactorizationMonoid.factors_eq_normalized_factors
+#align unique_factorization_monoid.factors_eq_normalized_factors UniqueFactorizationMonoid.factors_eq_normalizedFactors
 
-theorem normalized_factors_prod {a : α} (ane0 : a ≠ 0) : Associated (normalizedFactors a).Prod a :=
+theorem normalizedFactors_prod {a : α} (ane0 : a ≠ 0) : Associated (normalizedFactors a).Prod a :=
   by
   rw [normalized_factors, factors, dif_neg ane0]
   refine' Associated.trans _ (Classical.choose_spec (exists_prime_factors a ane0)).2
@@ -587,7 +587,7 @@ theorem normalized_factors_prod {a : α} (ane0 : a ≠ 0) : Associated (normaliz
   congr 2
   ext
   rw [Function.comp_apply, Associates.mk_normalize]
-#align unique_factorization_monoid.normalized_factors_prod UniqueFactorizationMonoid.normalized_factors_prod
+#align unique_factorization_monoid.normalized_factors_prod UniqueFactorizationMonoid.normalizedFactors_prod
 
 theorem prime_of_normalized_factor {a : α} : ∀ x : α, x ∈ normalizedFactors a → Prime x :=
   by
@@ -612,7 +612,7 @@ theorem normalize_normalized_factor {a : α} : ∀ x : α, x ∈ normalizedFacto
   apply normalize_idem
 #align unique_factorization_monoid.normalize_normalized_factor UniqueFactorizationMonoid.normalize_normalized_factor
 
-theorem normalized_factors_irreducible {a : α} (ha : Irreducible a) :
+theorem normalizedFactors_irreducible {a : α} (ha : Irreducible a) :
     normalizedFactors a = {normalize a} :=
   by
   obtain ⟨p, a_assoc, hp⟩ :=
@@ -622,10 +622,10 @@ theorem normalized_factors_irreducible {a : α} (ha : Irreducible a) :
     exact Multiset.mem_singleton_self _
   convert hp
   rwa [← normalize_normalized_factor p p_mem, normalize_eq_normalize_iff, dvd_dvd_iff_associated]
-#align unique_factorization_monoid.normalized_factors_irreducible UniqueFactorizationMonoid.normalized_factors_irreducible
+#align unique_factorization_monoid.normalized_factors_irreducible UniqueFactorizationMonoid.normalizedFactors_irreducible
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (p q «expr ∈ » normalized_factors[unique_factorization_monoid.normalized_factors] a) -/
-theorem normalized_factors_eq_of_dvd (a : α) :
+theorem normalizedFactors_eq_of_dvd (a : α) :
     ∀ (p) (_ : p ∈ normalizedFactors a) (q) (_ : q ∈ normalizedFactors a), p ∣ q → p = q :=
   by
   intro p hp q hq hdvd
@@ -635,9 +635,9 @@ theorem normalized_factors_eq_of_dvd (a : α) :
             (prime_of_normalized_factor _ hq).Irreducible hdvd) <;>
       apply (normalize_normalized_factor _ _).symm <;>
     assumption
-#align unique_factorization_monoid.normalized_factors_eq_of_dvd UniqueFactorizationMonoid.normalized_factors_eq_of_dvd
+#align unique_factorization_monoid.normalized_factors_eq_of_dvd UniqueFactorizationMonoid.normalizedFactors_eq_of_dvd
 
-theorem exists_mem_normalized_factors_of_dvd {a p : α} (ha0 : a ≠ 0) (hp : Irreducible p) :
+theorem exists_mem_normalizedFactors_of_dvd {a p : α} (ha0 : a ≠ 0) (hp : Irreducible p) :
     p ∣ a → ∃ q ∈ normalizedFactors a, p ~ᵤ q := fun ⟨b, hb⟩ =>
   have hb0 : b ≠ 0 := fun hb0 => by simp_all
   have : Multiset.Rel Associated (p ::ₘ normalizedFactors b) (normalizedFactors a) :=
@@ -647,29 +647,29 @@ theorem exists_mem_normalized_factors_of_dvd {a p : α} (ha0 : a ≠ 0) (hp : Ir
       irreducible_of_normalized_factor
       (Associated.symm <|
         calc
-          Multiset.prod (normalizedFactors a) ~ᵤ a := normalized_factors_prod ha0
+          Multiset.prod (normalizedFactors a) ~ᵤ a := normalizedFactors_prod ha0
           _ = p * b := hb
           _ ~ᵤ Multiset.prod (p ::ₘ normalizedFactors b) := by
             rw [Multiset.prod_cons] <;> exact (normalized_factors_prod hb0).symm.mul_left _
           )
   Multiset.exists_mem_of_rel_of_mem this (by simp)
-#align unique_factorization_monoid.exists_mem_normalized_factors_of_dvd UniqueFactorizationMonoid.exists_mem_normalized_factors_of_dvd
+#align unique_factorization_monoid.exists_mem_normalized_factors_of_dvd UniqueFactorizationMonoid.exists_mem_normalizedFactors_of_dvd
 
-theorem exists_mem_normalized_factors {x : α} (hx : x ≠ 0) (h : ¬IsUnit x) :
+theorem exists_mem_normalizedFactors {x : α} (hx : x ≠ 0) (h : ¬IsUnit x) :
     ∃ p, p ∈ normalizedFactors x :=
   by
   obtain ⟨p', hp', hp'x⟩ := WfDvdMonoid.exists_irreducible_factor h hx
   obtain ⟨p, hp, hpx⟩ := exists_mem_normalized_factors_of_dvd hx hp' hp'x
   exact ⟨p, hp⟩
-#align unique_factorization_monoid.exists_mem_normalized_factors UniqueFactorizationMonoid.exists_mem_normalized_factors
+#align unique_factorization_monoid.exists_mem_normalized_factors UniqueFactorizationMonoid.exists_mem_normalizedFactors
 
 @[simp]
-theorem normalized_factors_zero : normalizedFactors (0 : α) = 0 := by
+theorem normalizedFactors_zero : normalizedFactors (0 : α) = 0 := by
   simp [normalized_factors, factors]
-#align unique_factorization_monoid.normalized_factors_zero UniqueFactorizationMonoid.normalized_factors_zero
+#align unique_factorization_monoid.normalized_factors_zero UniqueFactorizationMonoid.normalizedFactors_zero
 
 @[simp]
-theorem normalized_factors_one : normalizedFactors (1 : α) = 0 :=
+theorem normalizedFactors_one : normalizedFactors (1 : α) = 0 :=
   by
   nontriviality α using normalized_factors, factors
   rw [← Multiset.rel_zero_right]
@@ -677,12 +677,12 @@ theorem normalized_factors_one : normalizedFactors (1 : α) = 0 :=
   · intro x hx
     exfalso
     apply Multiset.not_mem_zero x hx
-  · simp [normalized_factors_prod one_ne_zero]
+  · simp [normalized_factors_prod one_neZero]
   infer_instance
-#align unique_factorization_monoid.normalized_factors_one UniqueFactorizationMonoid.normalized_factors_one
+#align unique_factorization_monoid.normalized_factors_one UniqueFactorizationMonoid.normalizedFactors_one
 
 @[simp]
-theorem normalized_factors_mul {x y : α} (hx : x ≠ 0) (hy : y ≠ 0) :
+theorem normalizedFactors_mul {x y : α} (hx : x ≠ 0) (hy : y ≠ 0) :
     normalizedFactors (x * y) = normalizedFactors x + normalizedFactors y :=
   by
   have h : (normalize : α → α) = Associates.out ∘ Associates.mk :=
@@ -704,10 +704,10 @@ theorem normalized_factors_mul {x y : α} (hx : x ≠ 0) (hy : y ≠ 0) :
     exact
       ((normalized_factors_prod hx).mul_mul (normalized_factors_prod hy)).trans
         (normalized_factors_prod (mul_ne_zero hx hy)).symm
-#align unique_factorization_monoid.normalized_factors_mul UniqueFactorizationMonoid.normalized_factors_mul
+#align unique_factorization_monoid.normalized_factors_mul UniqueFactorizationMonoid.normalizedFactors_mul
 
 @[simp]
-theorem normalized_factors_pow {x : α} (n : ℕ) :
+theorem normalizedFactors_pow {x : α} (n : ℕ) :
     normalizedFactors (x ^ n) = n • normalizedFactors x :=
   by
   induction' n with n ih
@@ -715,14 +715,14 @@ theorem normalized_factors_pow {x : α} (n : ℕ) :
   by_cases h0 : x = 0
   · simp [h0, zero_pow n.succ_pos, smul_zero]
   rw [pow_succ, succ_nsmul, normalized_factors_mul h0 (pow_ne_zero _ h0), ih]
-#align unique_factorization_monoid.normalized_factors_pow UniqueFactorizationMonoid.normalized_factors_pow
+#align unique_factorization_monoid.normalized_factors_pow UniqueFactorizationMonoid.normalizedFactors_pow
 
-theorem Irreducible.normalized_factors_pow {p : α} (hp : Irreducible p) (k : ℕ) :
+theorem Irreducible.normalizedFactors_pow {p : α} (hp : Irreducible p) (k : ℕ) :
     normalizedFactors (p ^ k) = Multiset.replicate k (normalize p) := by
   rw [normalized_factors_pow, normalized_factors_irreducible hp, Multiset.nsmul_singleton]
-#align irreducible.normalized_factors_pow Irreducible.normalized_factors_pow
+#align irreducible.normalized_factors_pow Irreducible.normalizedFactors_pow
 
-theorem normalized_factors_prod_eq (s : Multiset α) (hs : ∀ a ∈ s, Irreducible a) :
+theorem normalizedFactors_prod_eq (s : Multiset α) (hs : ∀ a ∈ s, Irreducible a) :
     normalizedFactors s.Prod = s.map normalize :=
   by
   induction' s using Multiset.induction with a s ih
@@ -737,9 +737,9 @@ theorem normalized_factors_prod_eq (s : Multiset α) (hs : ∀ a ∈ s, Irreduci
     rw [Multiset.prod_cons, Multiset.map_cons, normalized_factors_mul ia.ne_zero,
       normalized_factors_irreducible ia, ih]
     exacts[rfl, ib, Multiset.prod_ne_zero fun h => (ib 0 h).NeZero rfl]
-#align unique_factorization_monoid.normalized_factors_prod_eq UniqueFactorizationMonoid.normalized_factors_prod_eq
+#align unique_factorization_monoid.normalized_factors_prod_eq UniqueFactorizationMonoid.normalizedFactors_prod_eq
 
-theorem dvd_iff_normalized_factors_le_normalized_factors {x y : α} (hx : x ≠ 0) (hy : y ≠ 0) :
+theorem dvd_iff_normalizedFactors_le_normalizedFactors {x y : α} (hx : x ≠ 0) (hy : y ≠ 0) :
     x ∣ y ↔ normalizedFactors x ≤ normalizedFactors y :=
   by
   constructor
@@ -748,60 +748,60 @@ theorem dvd_iff_normalized_factors_le_normalized_factors {x y : α} (hx : x ≠ 
   · rw [← (normalized_factors_prod hx).dvd_iff_dvd_left, ←
       (normalized_factors_prod hy).dvd_iff_dvd_right]
     apply Multiset.prod_dvd_prod_of_le
-#align unique_factorization_monoid.dvd_iff_normalized_factors_le_normalized_factors UniqueFactorizationMonoid.dvd_iff_normalized_factors_le_normalized_factors
+#align unique_factorization_monoid.dvd_iff_normalized_factors_le_normalized_factors UniqueFactorizationMonoid.dvd_iff_normalizedFactors_le_normalizedFactors
 
-theorem associated_iff_normalized_factors_eq_normalized_factors {x y : α} (hx : x ≠ 0)
-    (hy : y ≠ 0) : x ~ᵤ y ↔ normalizedFactors x = normalizedFactors y :=
+theorem associated_iff_normalizedFactors_eq_normalizedFactors {x y : α} (hx : x ≠ 0) (hy : y ≠ 0) :
+    x ~ᵤ y ↔ normalizedFactors x = normalizedFactors y :=
   by
   refine'
     ⟨fun h => _, fun h =>
       (normalized_factors_prod hx).symm.trans (trans (by rw [h]) (normalized_factors_prod hy))⟩
   apply le_antisymm <;> rw [← dvd_iff_normalized_factors_le_normalized_factors]
   all_goals simp [*, h.dvd, h.symm.dvd]
-#align unique_factorization_monoid.associated_iff_normalized_factors_eq_normalized_factors UniqueFactorizationMonoid.associated_iff_normalized_factors_eq_normalized_factors
+#align unique_factorization_monoid.associated_iff_normalized_factors_eq_normalized_factors UniqueFactorizationMonoid.associated_iff_normalizedFactors_eq_normalizedFactors
 
-theorem normalized_factors_of_irreducible_pow {p : α} (hp : Irreducible p) (k : ℕ) :
+theorem normalizedFactors_of_irreducible_pow {p : α} (hp : Irreducible p) (k : ℕ) :
     normalizedFactors (p ^ k) = Multiset.replicate k (normalize p) := by
   rw [normalized_factors_pow, normalized_factors_irreducible hp, Multiset.nsmul_singleton]
-#align unique_factorization_monoid.normalized_factors_of_irreducible_pow UniqueFactorizationMonoid.normalized_factors_of_irreducible_pow
+#align unique_factorization_monoid.normalized_factors_of_irreducible_pow UniqueFactorizationMonoid.normalizedFactors_of_irreducible_pow
 
-theorem zero_not_mem_normalized_factors (x : α) : (0 : α) ∉ normalizedFactors x := fun h =>
+theorem zero_not_mem_normalizedFactors (x : α) : (0 : α) ∉ normalizedFactors x := fun h =>
   Prime.ne_zero (prime_of_normalized_factor _ h) rfl
-#align unique_factorization_monoid.zero_not_mem_normalized_factors UniqueFactorizationMonoid.zero_not_mem_normalized_factors
+#align unique_factorization_monoid.zero_not_mem_normalized_factors UniqueFactorizationMonoid.zero_not_mem_normalizedFactors
 
-theorem dvd_of_mem_normalized_factors {a p : α} (H : p ∈ normalizedFactors a) : p ∣ a :=
+theorem dvd_of_mem_normalizedFactors {a p : α} (H : p ∈ normalizedFactors a) : p ∣ a :=
   by
   by_cases hcases : a = 0
   · rw [hcases]
     exact dvd_zero p
   · exact dvd_trans (Multiset.dvd_prod H) (Associated.dvd (normalized_factors_prod hcases))
-#align unique_factorization_monoid.dvd_of_mem_normalized_factors UniqueFactorizationMonoid.dvd_of_mem_normalized_factors
+#align unique_factorization_monoid.dvd_of_mem_normalized_factors UniqueFactorizationMonoid.dvd_of_mem_normalizedFactors
 
 theorem exists_associated_prime_pow_of_unique_normalized_factor {p r : α}
     (h : ∀ {m}, m ∈ normalizedFactors r → m = p) (hr : r ≠ 0) : ∃ i : ℕ, Associated (p ^ i) r :=
   by
   use (normalized_factors r).card
-  have := UniqueFactorizationMonoid.normalized_factors_prod hr
+  have := UniqueFactorizationMonoid.normalizedFactors_prod hr
   rwa [Multiset.eq_replicate_of_mem fun b => h, Multiset.prod_replicate] at this
 #align unique_factorization_monoid.exists_associated_prime_pow_of_unique_normalized_factor UniqueFactorizationMonoid.exists_associated_prime_pow_of_unique_normalized_factor
 
-theorem normalized_factors_prod_of_prime [Nontrivial α] [Unique αˣ] {m : Multiset α}
+theorem normalizedFactors_prod_of_prime [Nontrivial α] [Unique αˣ] {m : Multiset α}
     (h : ∀ p ∈ m, Prime p) : normalizedFactors m.Prod = m := by
   simpa only [← Multiset.rel_eq, ← associated_eq_eq] using
     prime_factors_unique prime_of_normalized_factor h
       (normalized_factors_prod (m.prod_ne_zero_of_prime h))
-#align unique_factorization_monoid.normalized_factors_prod_of_prime UniqueFactorizationMonoid.normalized_factors_prod_of_prime
+#align unique_factorization_monoid.normalized_factors_prod_of_prime UniqueFactorizationMonoid.normalizedFactors_prod_of_prime
 
-theorem mem_normalized_factors_eq_of_associated {a b c : α} (ha : a ∈ normalizedFactors c)
+theorem mem_normalizedFactors_eq_of_associated {a b c : α} (ha : a ∈ normalizedFactors c)
     (hb : b ∈ normalizedFactors c) (h : Associated a b) : a = b :=
   by
   rw [← normalize_normalized_factor a ha, ← normalize_normalized_factor b hb,
     normalize_eq_normalize_iff]
   apply Associated.dvd_dvd h
-#align unique_factorization_monoid.mem_normalized_factors_eq_of_associated UniqueFactorizationMonoid.mem_normalized_factors_eq_of_associated
+#align unique_factorization_monoid.mem_normalized_factors_eq_of_associated UniqueFactorizationMonoid.mem_normalizedFactors_eq_of_associated
 
 @[simp]
-theorem normalized_factors_pos (x : α) (hx : x ≠ 0) : 0 < normalizedFactors x ↔ ¬IsUnit x :=
+theorem normalizedFactors_pos (x : α) (hx : x ≠ 0) : 0 < normalizedFactors x ↔ ¬IsUnit x :=
   by
   constructor
   · intro h hx
@@ -814,10 +814,10 @@ theorem normalized_factors_pos (x : α) (hx : x ≠ 0) : 0 < normalizedFactors x
     exact
       bot_lt_iff_ne_bot.mpr
         (mt multiset.eq_zero_iff_forall_not_mem.mp (not_forall.mpr ⟨p, not_not.mpr hp⟩))
-#align unique_factorization_monoid.normalized_factors_pos UniqueFactorizationMonoid.normalized_factors_pos
+#align unique_factorization_monoid.normalized_factors_pos UniqueFactorizationMonoid.normalizedFactors_pos
 
-theorem dvd_not_unit_iff_normalized_factors_lt_normalized_factors {x y : α} (hx : x ≠ 0)
-    (hy : y ≠ 0) : DvdNotUnit x y ↔ normalizedFactors x < normalizedFactors y :=
+theorem dvdNotUnit_iff_normalizedFactors_lt_normalizedFactors {x y : α} (hx : x ≠ 0) (hy : y ≠ 0) :
+    DvdNotUnit x y ↔ normalizedFactors x < normalizedFactors y :=
   by
   constructor
   · rintro ⟨_, c, hc, rfl⟩
@@ -828,7 +828,7 @@ theorem dvd_not_unit_iff_normalized_factors_lt_normalized_factors {x y : α} (hx
       dvdNotUnit_of_dvd_of_not_dvd
         ((dvd_iff_normalized_factors_le_normalized_factors hx hy).mpr h.le)
         (mt (dvd_iff_normalized_factors_le_normalized_factors hy hx).mp h.not_le)
-#align unique_factorization_monoid.dvd_not_unit_iff_normalized_factors_lt_normalized_factors UniqueFactorizationMonoid.dvd_not_unit_iff_normalized_factors_lt_normalized_factors
+#align unique_factorization_monoid.dvd_not_unit_iff_normalized_factors_lt_normalized_factors UniqueFactorizationMonoid.dvdNotUnit_iff_normalizedFactors_lt_normalizedFactors
 
 end UniqueFactorizationMonoid
 
@@ -991,7 +991,7 @@ open multiplicity Multiset
 
 include dec_dvd
 
-theorem le_multiplicity_iff_replicate_le_normalized_factors {a b : R} {n : ℕ} (ha : Irreducible a)
+theorem le_multiplicity_iff_replicate_le_normalizedFactors {a b : R} {n : ℕ} (ha : Irreducible a)
     (hb : b ≠ 0) : ↑n ≤ multiplicity a b ↔ replicate n (normalize a) ≤ normalizedFactors b :=
   by
   rw [← pow_dvd_iff_le_multiplicity]
@@ -1008,7 +1008,7 @@ theorem le_multiplicity_iff_replicate_le_normalized_factors {a b : R} {n : ℕ} 
     rintro ⟨u, hu⟩
     rw [← (normalized_factors_prod hb).dvd_iff_dvd_right, hu, prod_add, prod_replicate]
     exact (Associated.pow_pow <| associated_normalize a).Dvd.trans (Dvd.intro u.prod rfl)
-#align unique_factorization_monoid.le_multiplicity_iff_replicate_le_normalized_factors UniqueFactorizationMonoid.le_multiplicity_iff_replicate_le_normalized_factors
+#align unique_factorization_monoid.le_multiplicity_iff_replicate_le_normalized_factors UniqueFactorizationMonoid.le_multiplicity_iff_replicate_le_normalizedFactors
 
 /-- The multiplicity of an irreducible factor of a nonzero element is exactly the number of times
 the normalized factor occurs in the `normalized_factors`.
@@ -1016,7 +1016,7 @@ the normalized factor occurs in the `normalized_factors`.
 See also `count_normalized_factors_eq` which expands the definition of `multiplicity`
 to produce a specification for `count (normalized_factors _) _`..
 -/
-theorem multiplicity_eq_count_normalized_factors {a b : R} (ha : Irreducible a) (hb : b ≠ 0) :
+theorem multiplicity_eq_count_normalizedFactors {a b : R} (ha : Irreducible a) (hb : b ≠ 0) :
     multiplicity a b = (normalizedFactors b).count (normalize a) :=
   by
   apply le_antisymm
@@ -1025,7 +1025,7 @@ theorem multiplicity_eq_count_normalized_factors {a b : R} (ha : Irreducible a) 
       le_multiplicity_iff_replicate_le_normalized_factors ha hb, ← le_count_iff_replicate_le]
     simp
   rw [le_multiplicity_iff_replicate_le_normalized_factors ha hb, ← le_count_iff_replicate_le]
-#align unique_factorization_monoid.multiplicity_eq_count_normalized_factors UniqueFactorizationMonoid.multiplicity_eq_count_normalized_factors
+#align unique_factorization_monoid.multiplicity_eq_count_normalized_factors UniqueFactorizationMonoid.multiplicity_eq_count_normalizedFactors
 
 omit dec_dvd
 
@@ -1034,7 +1034,7 @@ the number of times it divides `x`.
 
 See also `multiplicity_eq_count_normalized_factors` if `n` is given by `multiplicity p x`.
 -/
-theorem count_normalized_factors_eq {p x : R} (hp : Irreducible p) (hnorm : normalize p = p) {n : ℕ}
+theorem count_normalizedFactors_eq {p x : R} (hp : Irreducible p) (hnorm : normalize p = p) {n : ℕ}
     (hle : p ^ n ∣ x) (hlt : ¬p ^ (n + 1) ∣ x) : (normalizedFactors x).count p = n :=
   by
   letI : DecidableRel ((· ∣ ·) : R → R → Prop) := fun _ _ => Classical.propDecidable _
@@ -1045,7 +1045,7 @@ theorem count_normalized_factors_eq {p x : R} (hp : Irreducible p) (hnorm : norm
   convert (multiplicity_eq_count_normalized_factors hp hx0).symm
   · exact hnorm.symm
   exact (multiplicity.eq_coe_iff.mpr ⟨hle, hlt⟩).symm
-#align unique_factorization_monoid.count_normalized_factors_eq UniqueFactorizationMonoid.count_normalized_factors_eq
+#align unique_factorization_monoid.count_normalized_factors_eq UniqueFactorizationMonoid.count_normalizedFactors_eq
 
 /-- The number of times an irreducible factor `p` appears in `normalized_factors x` is defined by
 the number of times it divides `x`. This is a slightly more general version of
@@ -1053,9 +1053,8 @@ the number of times it divides `x`. This is a slightly more general version of
 
 See also `multiplicity_eq_count_normalized_factors` if `n` is given by `multiplicity p x`.
 -/
-theorem count_normalized_factors_eq' {p x : R} (hp : p = 0 ∨ Irreducible p)
-    (hnorm : normalize p = p) {n : ℕ} (hle : p ^ n ∣ x) (hlt : ¬p ^ (n + 1) ∣ x) :
-    (normalizedFactors x).count p = n :=
+theorem count_normalizedFactors_eq' {p x : R} (hp : p = 0 ∨ Irreducible p) (hnorm : normalize p = p)
+    {n : ℕ} (hle : p ^ n ∣ x) (hlt : ¬p ^ (n + 1) ∣ x) : (normalizedFactors x).count p = n :=
   by
   rcases hp with (rfl | hp)
   · cases n
@@ -1063,7 +1062,7 @@ theorem count_normalized_factors_eq' {p x : R} (hp : p = 0 ∨ Irreducible p)
     · rw [zero_pow (Nat.succ_pos _)] at hle hlt
       exact absurd hle hlt
   · exact count_normalized_factors_eq hp hnorm hle hlt
-#align unique_factorization_monoid.count_normalized_factors_eq' UniqueFactorizationMonoid.count_normalized_factors_eq'
+#align unique_factorization_monoid.count_normalized_factors_eq' UniqueFactorizationMonoid.count_normalizedFactors_eq'
 
 end multiplicity
 
@@ -1373,24 +1372,24 @@ instance : Membership (Associates α) (FactorSet α) :=
   ⟨FactorSetMem⟩
 
 @[simp]
-theorem factor_set_mem_eq_mem (p : Associates α) (s : FactorSet α) : FactorSetMem p s = (p ∈ s) :=
+theorem factorSetMem_eq_mem (p : Associates α) (s : FactorSet α) : FactorSetMem p s = (p ∈ s) :=
   rfl
-#align associates.factor_set_mem_eq_mem Associates.factor_set_mem_eq_mem
+#align associates.factor_set_mem_eq_mem Associates.factorSetMem_eq_mem
 
-theorem mem_factor_set_top {p : Associates α} {hp : Irreducible p} : p ∈ (⊤ : FactorSet α) := by
+theorem mem_factorSet_top {p : Associates α} {hp : Irreducible p} : p ∈ (⊤ : FactorSet α) := by
   dsimp only [Membership.Mem]; dsimp only [factor_set_mem]; split_ifs; exact trivial
-#align associates.mem_factor_set_top Associates.mem_factor_set_top
+#align associates.mem_factor_set_top Associates.mem_factorSet_top
 
-theorem mem_factor_set_some {p : Associates α} {hp : Irreducible p}
+theorem mem_factorSet_some {p : Associates α} {hp : Irreducible p}
     {l : Multiset { a : Associates α // Irreducible a }} :
     p ∈ (l : FactorSet α) ↔ Subtype.mk p hp ∈ l := by dsimp only [Membership.Mem];
   dsimp only [factor_set_mem]; split_ifs; rfl
-#align associates.mem_factor_set_some Associates.mem_factor_set_some
+#align associates.mem_factor_set_some Associates.mem_factorSet_some
 
-theorem reducible_not_mem_factor_set {p : Associates α} (hp : ¬Irreducible p) (s : FactorSet α) :
+theorem reducible_not_mem_factorSet {p : Associates α} (hp : ¬Irreducible p) (s : FactorSet α) :
     ¬p ∈ s := fun h : if hp : Irreducible p then BfactorSetMem ⟨p, hp⟩ s else False => by
   rwa [dif_neg hp] at h
-#align associates.reducible_not_mem_factor_set Associates.reducible_not_mem_factor_set
+#align associates.reducible_not_mem_factor_set Associates.reducible_not_mem_factorSet
 
 omit dec_irr
 
@@ -1483,7 +1482,7 @@ noncomputable def factors (a : Associates α) : FactorSet α :=
   · have : a ~ᵤ 0 ↔ b ~ᵤ 0 := Iff.intro (fun ha0 => hab.symm.trans ha0) fun hb0 => hab.trans hb0
     simp only [associated_zero_iff_eq_zero] at this
     simp only [quotient_mk_eq_mk, this, mk_eq_zero]
-  exact fun ha hb eq => heq_of_eq <| congr_arg some <| factors'_cong hab
+  exact fun ha hb eq => hEq_of_eq <| congr_arg some <| factors'_cong hab
 #align associates.factors Associates.factors
 
 @[simp]
@@ -1560,7 +1559,7 @@ theorem eq_factors_of_eq_counts {a b : Associates α} (ha : a ≠ 0) (hb : b ≠
     rw [← count_some, ← count_some, h p hp]
   apply multiset.to_finsupp.injective
   ext ⟨p, hp⟩
-  rw [Multiset.to_finsupp_apply, Multiset.to_finsupp_apply, h_count p hp]
+  rw [Multiset.toFinsupp_apply, Multiset.toFinsupp_apply, h_count p hp]
 #align associates.eq_factors_of_eq_counts Associates.eq_factors_of_eq_counts
 
 theorem eq_of_eq_counts {a b : Associates α} (ha : a ≠ 0) (hb : b ≠ 0)
@@ -2146,7 +2145,7 @@ theorem factorization_one : factorization (1 : α) = 0 := by simp [factorization
 @[simp]
 theorem support_factorization {n : α} :
     (factorization n).support = (normalizedFactors n).toFinset := by
-  simp [factorization, Multiset.to_finsupp_support]
+  simp [factorization, Multiset.toFinsupp_support]
 #align support_factorization support_factorization
 
 /-- For nonzero `a` and `b`, the power of `p` in `a * b` is the sum of the powers in `a` and `b` -/

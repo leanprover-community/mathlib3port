@@ -185,38 +185,37 @@ section Poly
 open Polynomial
 
 /-- The characteristic polynomial of `fib_rec` is `X² - (X + 1)`. -/
-theorem fib_rec_char_poly_eq {β : Type _} [CommRing β] :
-    fibRec.charPoly = X ^ 2 - (X + (1 : β[X])) :=
+theorem fibRec_charPoly_eq {β : Type _} [CommRing β] : fibRec.charPoly = X ^ 2 - (X + (1 : β[X])) :=
   by
   rw [fibRec, LinearRecurrence.charPoly]
   simp [Finset.sum_fin_eq_sum_range, Finset.sum_range_succ', ← smul_X_eq_monomial]
-#align fib_rec_char_poly_eq fib_rec_char_poly_eq
+#align fib_rec_char_poly_eq fibRec_charPoly_eq
 
 end Poly
 
 /-- As expected, the Fibonacci sequence is a solution of `fib_rec`. -/
-theorem fib_is_sol_fib_rec : fibRec.IsSolution (fun x => x.fib : ℕ → α) :=
+theorem fib_is_sol_fibRec : fibRec.IsSolution (fun x => x.fib : ℕ → α) :=
   by
   rw [fibRec]
   intro n
   simp only
   rw [Nat.fib_add_two, add_comm]
   simp [Finset.sum_fin_eq_sum_range, Finset.sum_range_succ']
-#align fib_is_sol_fib_rec fib_is_sol_fib_rec
+#align fib_is_sol_fib_rec fib_is_sol_fibRec
 
 /-- The geometric sequence `λ n, φ^n` is a solution of `fib_rec`. -/
-theorem geom_gold_is_sol_fib_rec : fibRec.IsSolution (pow φ) :=
+theorem geom_gold_is_sol_fibRec : fibRec.IsSolution (pow φ) :=
   by
-  rw [fib_rec.geom_sol_iff_root_char_poly, fib_rec_char_poly_eq]
+  rw [fib_rec.geom_sol_iff_root_char_poly, fibRec_charPoly_eq]
   simp [sub_eq_zero]
-#align geom_gold_is_sol_fib_rec geom_gold_is_sol_fib_rec
+#align geom_gold_is_sol_fib_rec geom_gold_is_sol_fibRec
 
 /-- The geometric sequence `λ n, ψ^n` is a solution of `fib_rec`. -/
-theorem geom_gold_conj_is_sol_fib_rec : fibRec.IsSolution (pow ψ) :=
+theorem geom_gold_conj_is_sol_fibRec : fibRec.IsSolution (pow ψ) :=
   by
-  rw [fib_rec.geom_sol_iff_root_char_poly, fib_rec_char_poly_eq]
+  rw [fib_rec.geom_sol_iff_root_char_poly, fibRec_charPoly_eq]
   simp [sub_eq_zero]
-#align geom_gold_conj_is_sol_fib_rec geom_gold_conj_is_sol_fib_rec
+#align geom_gold_conj_is_sol_fib_rec geom_gold_conj_is_sol_fibRec
 
 end Fibrec
 
@@ -230,12 +229,12 @@ theorem Real.coe_fib_eq' : (fun n => Nat.fib n : ℕ → ℝ) = fun n => (φ ^ n
     · simp only [goldenRatio, goldenConj]
       ring
       rw [mul_inv_cancel] <;> norm_num
-  · exact fib_is_sol_fib_rec
+  · exact fib_is_sol_fibRec
   · ring_nf
     exact
       (@fibRec ℝ _).solSpace.sub_mem
-        (Submodule.smul_mem fib_rec.sol_space (Real.sqrt 5)⁻¹ geom_gold_is_sol_fib_rec)
-        (Submodule.smul_mem fib_rec.sol_space (Real.sqrt 5)⁻¹ geom_gold_conj_is_sol_fib_rec)
+        (Submodule.smul_mem fib_rec.sol_space (Real.sqrt 5)⁻¹ geom_gold_is_sol_fibRec)
+        (Submodule.smul_mem fib_rec.sol_space (Real.sqrt 5)⁻¹ geom_gold_conj_is_sol_fibRec)
 #align real.coe_fib_eq' Real.coe_fib_eq'
 
 /-- Binet's formula as a dependent equality. -/

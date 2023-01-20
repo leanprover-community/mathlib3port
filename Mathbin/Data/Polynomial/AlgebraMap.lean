@@ -58,41 +58,41 @@ instance algebraOfAlgebra : Algebra R A[X]
   toRingHom := c.comp (algebraMap R A)
 #align polynomial.algebra_of_algebra Polynomial.algebraOfAlgebra
 
-theorem algebra_map_apply (r : R) : algebraMap R A[X] r = c (algebraMap R A r) :=
+theorem algebraMap_apply (r : R) : algebraMap R A[X] r = c (algebraMap R A r) :=
   rfl
-#align polynomial.algebra_map_apply Polynomial.algebra_map_apply
+#align polynomial.algebra_map_apply Polynomial.algebraMap_apply
 
 @[simp]
-theorem to_finsupp_algebra_map (r : R) : (algebraMap R A[X] r).toFinsupp = algebraMap R _ r :=
+theorem toFinsupp_algebraMap (r : R) : (algebraMap R A[X] r).toFinsupp = algebraMap R _ r :=
   show toFinsupp (c (algebraMap _ _ r)) = _
     by
     rw [to_finsupp_C]
     rfl
-#align polynomial.to_finsupp_algebra_map Polynomial.to_finsupp_algebra_map
+#align polynomial.to_finsupp_algebra_map Polynomial.toFinsupp_algebraMap
 
-theorem of_finsupp_algebra_map (r : R) : (⟨algebraMap R _ r⟩ : A[X]) = algebraMap R A[X] r :=
-  to_finsupp_injective (to_finsupp_algebra_map _).symm
-#align polynomial.of_finsupp_algebra_map Polynomial.of_finsupp_algebra_map
+theorem of_finsupp_algebraMap (r : R) : (⟨algebraMap R _ r⟩ : A[X]) = algebraMap R A[X] r :=
+  toFinsupp_injective (toFinsupp_algebraMap _).symm
+#align polynomial.of_finsupp_algebra_map Polynomial.of_finsupp_algebraMap
 
 /-- When we have `[comm_semiring R]`, the function `C` is the same as `algebra_map R R[X]`.
 
 (But note that `C` is defined when `R` is not necessarily commutative, in which case
 `algebra_map` is not available.)
 -/
-theorem C_eq_algebra_map (r : R) : c r = algebraMap R R[X] r :=
+theorem c_eq_algebraMap (r : R) : c r = algebraMap R R[X] r :=
   rfl
-#align polynomial.C_eq_algebra_map Polynomial.C_eq_algebra_map
+#align polynomial.C_eq_algebra_map Polynomial.c_eq_algebraMap
 
 variable {R}
 
 /-- Extensionality lemma for algebra maps out of `A'[X]` over a smaller base ring than `A'`
 -/
 @[ext]
-theorem alg_hom_ext' [Algebra R A'] [Algebra R B'] {f g : A'[X] →ₐ[R] B'}
+theorem algHom_ext' [Algebra R A'] [Algebra R B'] {f g : A'[X] →ₐ[R] B'}
     (h₁ : f.comp (IsScalarTower.toAlgHom R A' A'[X]) = g.comp (IsScalarTower.toAlgHom R A' A'[X]))
     (h₂ : f x = g x) : f = g :=
-  AlgHom.coe_ring_hom_injective (Polynomial.ring_hom_ext' (congr_arg AlgHom.toRingHom h₁) h₂)
-#align polynomial.alg_hom_ext' Polynomial.alg_hom_ext'
+  AlgHom.coe_ringHom_injective (Polynomial.ringHom_ext' (congr_arg AlgHom.toRingHom h₁) h₂)
+#align polynomial.alg_hom_ext' Polynomial.algHom_ext'
 
 variable (R)
 
@@ -120,36 +120,36 @@ instance [Nontrivial A] : Nontrivial (Subalgebra R A[X]) :=
       simp [coeff_C]⟩⟩
 
 @[simp]
-theorem alg_hom_eval₂_algebra_map {R A B : Type _} [CommSemiring R] [Semiring A] [Semiring B]
+theorem algHom_eval₂_algebraMap {R A B : Type _} [CommSemiring R] [Semiring A] [Semiring B]
     [Algebra R A] [Algebra R B] (p : R[X]) (f : A →ₐ[R] B) (a : A) :
     f (eval₂ (algebraMap R A) a p) = eval₂ (algebraMap R B) (f a) p :=
   by
   dsimp [eval₂, Sum]
   simp only [f.map_sum, f.map_mul, f.map_pow, eq_intCast, map_intCast, AlgHom.commutes]
-#align polynomial.alg_hom_eval₂_algebra_map Polynomial.alg_hom_eval₂_algebra_map
+#align polynomial.alg_hom_eval₂_algebra_map Polynomial.algHom_eval₂_algebraMap
 
 @[simp]
-theorem eval₂_algebra_map_X {R A : Type _} [CommSemiring R] [Semiring A] [Algebra R A] (p : R[X])
+theorem eval₂_algebraMap_x {R A : Type _} [CommSemiring R] [Semiring A] [Algebra R A] (p : R[X])
     (f : R[X] →ₐ[R] A) : eval₂ (algebraMap R A) (f x) p = f p :=
   by
-  conv_rhs => rw [← Polynomial.sum_C_mul_X_pow_eq p]
+  conv_rhs => rw [← Polynomial.sum_c_mul_x_pow_eq p]
   dsimp [eval₂, Sum]
   simp only [f.map_sum, f.map_mul, f.map_pow, eq_intCast, map_intCast]
-  simp [Polynomial.C_eq_algebra_map]
-#align polynomial.eval₂_algebra_map_X Polynomial.eval₂_algebra_map_X
+  simp [Polynomial.c_eq_algebraMap]
+#align polynomial.eval₂_algebra_map_X Polynomial.eval₂_algebraMap_x
 
 -- these used to be about `algebra_map ℤ R`, but now the simp-normal form is `int.cast_ring_hom R`.
 @[simp]
-theorem ring_hom_eval₂_cast_int_ring_hom {R S : Type _} [Ring R] [Ring S] (p : ℤ[X]) (f : R →+* S)
+theorem ringHom_eval₂_cast_int_ringHom {R S : Type _} [Ring R] [Ring S] (p : ℤ[X]) (f : R →+* S)
     (r : R) : f (eval₂ (Int.castRingHom R) r p) = eval₂ (Int.castRingHom S) (f r) p :=
-  alg_hom_eval₂_algebra_map p f.toIntAlgHom r
-#align polynomial.ring_hom_eval₂_cast_int_ring_hom Polynomial.ring_hom_eval₂_cast_int_ring_hom
+  algHom_eval₂_algebraMap p f.toIntAlgHom r
+#align polynomial.ring_hom_eval₂_cast_int_ring_hom Polynomial.ringHom_eval₂_cast_int_ringHom
 
 @[simp]
-theorem eval₂_int_cast_ring_hom_X {R : Type _} [Ring R] (p : ℤ[X]) (f : ℤ[X] →+* R) :
+theorem eval₂_int_castRingHom_x {R : Type _} [Ring R] (p : ℤ[X]) (f : ℤ[X] →+* R) :
     eval₂ (Int.castRingHom R) (f x) p = f p :=
-  eval₂_algebra_map_X p f.toIntAlgHom
-#align polynomial.eval₂_int_cast_ring_hom_X Polynomial.eval₂_int_cast_ring_hom_X
+  eval₂_algebraMap_x p f.toIntAlgHom
+#align polynomial.eval₂_int_cast_ring_hom_X Polynomial.eval₂_int_castRingHom_x
 
 end CommSemiring
 
@@ -169,24 +169,24 @@ the unique `R`-algebra homomorphism from `R[X]` to `A` sending `X` to `x`.
 This is a stronger variant of the linear map `polynomial.leval`. -/
 def aeval : R[X] →ₐ[R] A :=
   { eval₂RingHom' (algebraMap R A) x fun a => Algebra.commutes _ _ with
-    commutes' := fun r => eval₂_C _ _ }
+    commutes' := fun r => eval₂_c _ _ }
 #align polynomial.aeval Polynomial.aeval
 
 variable {R A}
 
 @[simp]
-theorem adjoin_X : Algebra.adjoin R ({x} : Set R[X]) = ⊤ :=
+theorem adjoin_x : Algebra.adjoin R ({x} : Set R[X]) = ⊤ :=
   by
   refine' top_unique fun p hp => _
   set S := Algebra.adjoin R ({X} : Set R[X])
   rw [← sum_monomial_eq p]; simp only [← smul_X_eq_monomial, Sum]
   exact S.sum_mem fun n hn => S.smul_mem (S.pow_mem (Algebra.subset_adjoin rfl) _) _
-#align polynomial.adjoin_X Polynomial.adjoin_X
+#align polynomial.adjoin_X Polynomial.adjoin_x
 
 @[ext]
-theorem alg_hom_ext {f g : R[X] →ₐ[R] A} (h : f x = g x) : f = g :=
-  AlgHom.ext_of_adjoin_eq_top adjoin_X fun p hp => (Set.mem_singleton_iff.1 hp).symm ▸ h
-#align polynomial.alg_hom_ext Polynomial.alg_hom_ext
+theorem algHom_ext {f g : R[X] →ₐ[R] A} (h : f x = g x) : f = g :=
+  AlgHom.ext_of_adjoin_eq_top adjoin_x fun p hp => (Set.mem_singleton_iff.1 hp).symm ▸ h
+#align polynomial.alg_hom_ext Polynomial.algHom_ext
 
 theorem aeval_def (p : R[X]) : aeval x p = eval₂ (algebraMap R A) x p :=
   rfl
@@ -198,14 +198,14 @@ theorem aeval_zero : aeval x (0 : R[X]) = 0 :=
 #align polynomial.aeval_zero Polynomial.aeval_zero
 
 @[simp]
-theorem aeval_X : aeval x (x : R[X]) = x :=
-  eval₂_X _ x
-#align polynomial.aeval_X Polynomial.aeval_X
+theorem aeval_x : aeval x (x : R[X]) = x :=
+  eval₂_x _ x
+#align polynomial.aeval_X Polynomial.aeval_x
 
 @[simp]
-theorem aeval_C (r : R) : aeval x (c r) = algebraMap R A r :=
-  eval₂_C _ x
-#align polynomial.aeval_C Polynomial.aeval_C
+theorem aeval_c (r : R) : aeval x (c r) = algebraMap R A r :=
+  eval₂_c _ x
+#align polynomial.aeval_C Polynomial.aeval_c
 
 @[simp]
 theorem aeval_monomial {n : ℕ} {r : R} : aeval x (monomial n r) = algebraMap _ _ r * x ^ n :=
@@ -213,9 +213,9 @@ theorem aeval_monomial {n : ℕ} {r : R} : aeval x (monomial n r) = algebraMap _
 #align polynomial.aeval_monomial Polynomial.aeval_monomial
 
 @[simp]
-theorem aeval_X_pow {n : ℕ} : aeval x ((x : R[X]) ^ n) = x ^ n :=
-  eval₂_X_pow _ _
-#align polynomial.aeval_X_pow Polynomial.aeval_X_pow
+theorem aeval_x_pow {n : ℕ} : aeval x ((x : R[X]) ^ n) = x ^ n :=
+  eval₂_x_pow _ _
+#align polynomial.aeval_X_pow Polynomial.aeval_x_pow
 
 @[simp]
 theorem aeval_add : aeval x (p + q) = aeval x p + aeval x q :=
@@ -251,38 +251,38 @@ theorem aeval_comp {A : Type _} [CommSemiring A] [Algebra R A] (x : A) :
   eval₂_comp (algebraMap R A)
 #align polynomial.aeval_comp Polynomial.aeval_comp
 
-theorem aeval_alg_hom (f : A →ₐ[R] B) (x : A) : aeval (f x) = f.comp (aeval x) :=
+theorem aeval_algHom (f : A →ₐ[R] B) (x : A) : aeval (f x) = f.comp (aeval x) :=
   alg_hom_ext <| by simp only [aeval_X, AlgHom.comp_apply]
-#align polynomial.aeval_alg_hom Polynomial.aeval_alg_hom
+#align polynomial.aeval_alg_hom Polynomial.aeval_algHom
 
 @[simp]
-theorem aeval_X_left : aeval (x : R[X]) = AlgHom.id R R[X] :=
-  alg_hom_ext <| aeval_X x
-#align polynomial.aeval_X_left Polynomial.aeval_X_left
+theorem aeval_x_left : aeval (x : R[X]) = AlgHom.id R R[X] :=
+  alg_hom_ext <| aeval_x x
+#align polynomial.aeval_X_left Polynomial.aeval_x_left
 
-theorem aeval_X_left_apply (p : R[X]) : aeval x p = p :=
-  AlgHom.congr_fun (@aeval_X_left R _) p
-#align polynomial.aeval_X_left_apply Polynomial.aeval_X_left_apply
+theorem aeval_x_left_apply (p : R[X]) : aeval x p = p :=
+  AlgHom.congr_fun (@aeval_x_left R _) p
+#align polynomial.aeval_X_left_apply Polynomial.aeval_x_left_apply
 
 theorem eval_unique (φ : R[X] →ₐ[R] A) (p) : φ p = eval₂ (algebraMap R A) (φ x) p := by
   rw [← aeval_def, aeval_alg_hom, aeval_X_left, AlgHom.comp_id]
 #align polynomial.eval_unique Polynomial.eval_unique
 
-theorem aeval_alg_hom_apply {F : Type _} [AlgHomClass F R A B] (f : F) (x : A) (p : R[X]) :
+theorem aeval_algHom_apply {F : Type _} [AlgHomClass F R A B] (f : F) (x : A) (p : R[X]) :
     aeval (f x) p = f (aeval x p) :=
   by
   refine' Polynomial.induction_on p (by simp) (fun p q hp hq => _) (by simp)
   rw [map_add, hp, hq, ← map_add, ← map_add]
-#align polynomial.aeval_alg_hom_apply Polynomial.aeval_alg_hom_apply
+#align polynomial.aeval_alg_hom_apply Polynomial.aeval_algHom_apply
 
-theorem aeval_alg_equiv (f : A ≃ₐ[R] B) (x : A) : aeval (f x) = (f : A →ₐ[R] B).comp (aeval x) :=
-  aeval_alg_hom (f : A →ₐ[R] B) x
-#align polynomial.aeval_alg_equiv Polynomial.aeval_alg_equiv
+theorem aeval_algEquiv (f : A ≃ₐ[R] B) (x : A) : aeval (f x) = (f : A →ₐ[R] B).comp (aeval x) :=
+  aeval_algHom (f : A →ₐ[R] B) x
+#align polynomial.aeval_alg_equiv Polynomial.aeval_algEquiv
 
-theorem aeval_algebra_map_apply_eq_algebra_map_eval (x : R) (p : R[X]) :
+theorem aeval_algebraMap_apply_eq_algebraMap_eval (x : R) (p : R[X]) :
     aeval (algebraMap R A x) p = algebraMap R A (p.eval x) :=
-  aeval_alg_hom_apply (Algebra.ofId R A) x p
-#align polynomial.aeval_algebra_map_apply_eq_algebra_map_eval Polynomial.aeval_algebra_map_apply_eq_algebra_map_eval
+  aeval_algHom_apply (Algebra.ofId R A) x p
+#align polynomial.aeval_algebra_map_apply_eq_algebra_map_eval Polynomial.aeval_algebraMap_apply_eq_algebraMap_eval
 
 @[simp]
 theorem coe_aeval_eq_eval (r : R) : (aeval r : R[X] → R) = eval r :=
@@ -292,13 +292,13 @@ theorem coe_aeval_eq_eval (r : R) : (aeval r : R[X] → R) = eval r :=
 @[simp]
 theorem aeval_fn_apply {X : Type _} (g : R[X]) (f : X → R) (x : X) :
     ((aeval f) g) x = aeval (f x) g :=
-  (aeval_alg_hom_apply (Pi.evalAlgHom R (fun _ => R) x) f g).symm
+  (aeval_algHom_apply (Pi.evalAlgHom R (fun _ => R) x) f g).symm
 #align polynomial.aeval_fn_apply Polynomial.aeval_fn_apply
 
 @[norm_cast]
 theorem aeval_subalgebra_coe (g : R[X]) {A : Type _} [Semiring A] [Algebra R A] (s : Subalgebra R A)
     (f : s) : (aeval f g : A) = aeval (f : A) g :=
-  (aeval_alg_hom_apply s.val f g).symm
+  (aeval_algHom_apply s.val f g).symm
 #align polynomial.aeval_subalgebra_coe Polynomial.aeval_subalgebra_coe
 
 theorem coeff_zero_eq_aeval_zero (p : R[X]) : p.coeff 0 = aeval 0 p := by
@@ -352,18 +352,18 @@ theorem aeval_eq_sum_range' [Algebra R S] {p : R[X]} {n : ℕ} (hn : p.natDegree
   exact eval₂_eq_sum_range' (algebraMap R S) hn x
 #align polynomial.aeval_eq_sum_range' Polynomial.aeval_eq_sum_range'
 
-theorem is_root_of_eval₂_map_eq_zero (hf : Function.Injective f) {r : R} :
+theorem isRoot_of_eval₂_map_eq_zero (hf : Function.Injective f) {r : R} :
     eval₂ f (f r) p = 0 → p.IsRoot r := by
   intro h
   apply hf
   rw [← eval₂_hom, h, f.map_zero]
-#align polynomial.is_root_of_eval₂_map_eq_zero Polynomial.is_root_of_eval₂_map_eq_zero
+#align polynomial.is_root_of_eval₂_map_eq_zero Polynomial.isRoot_of_eval₂_map_eq_zero
 
-theorem is_root_of_aeval_algebra_map_eq_zero [Algebra R S] {p : R[X]}
+theorem isRoot_of_aeval_algebraMap_eq_zero [Algebra R S] {p : R[X]}
     (inj : Function.Injective (algebraMap R S)) {r : R} (hr : aeval (algebraMap R S r) p = 0) :
     p.IsRoot r :=
-  is_root_of_eval₂_map_eq_zero inj hr
-#align polynomial.is_root_of_aeval_algebra_map_eq_zero Polynomial.is_root_of_aeval_algebra_map_eq_zero
+  isRoot_of_eval₂_map_eq_zero inj hr
+#align polynomial.is_root_of_aeval_algebra_map_eq_zero Polynomial.isRoot_of_aeval_algebraMap_eq_zero
 
 end Semiring
 
@@ -382,53 +382,52 @@ def aevalTower (f : R →ₐ[S] A') (x : A') : R[X] →ₐ[S] A' :=
 variable (g : R →ₐ[S] A') (y : A')
 
 @[simp]
-theorem aeval_tower_X : aevalTower g y x = y :=
-  eval₂_X _ _
-#align polynomial.aeval_tower_X Polynomial.aeval_tower_X
+theorem aevalTower_x : aevalTower g y x = y :=
+  eval₂_x _ _
+#align polynomial.aeval_tower_X Polynomial.aevalTower_x
 
 @[simp]
-theorem aeval_tower_C (x : R) : aevalTower g y (c x) = g x :=
-  eval₂_C _ _
-#align polynomial.aeval_tower_C Polynomial.aeval_tower_C
+theorem aevalTower_c (x : R) : aevalTower g y (c x) = g x :=
+  eval₂_c _ _
+#align polynomial.aeval_tower_C Polynomial.aevalTower_c
 
 @[simp]
-theorem aeval_tower_comp_C : (aevalTower g y : R[X] →+* A').comp c = g :=
-  RingHom.ext <| aeval_tower_C _ _
-#align polynomial.aeval_tower_comp_C Polynomial.aeval_tower_comp_C
+theorem aevalTower_comp_c : (aevalTower g y : R[X] →+* A').comp c = g :=
+  RingHom.ext <| aevalTower_c _ _
+#align polynomial.aeval_tower_comp_C Polynomial.aevalTower_comp_c
 
 @[simp]
-theorem aeval_tower_algebra_map (x : R) : aevalTower g y (algebraMap R R[X] x) = g x :=
-  eval₂_C _ _
-#align polynomial.aeval_tower_algebra_map Polynomial.aeval_tower_algebra_map
+theorem aevalTower_algebraMap (x : R) : aevalTower g y (algebraMap R R[X] x) = g x :=
+  eval₂_c _ _
+#align polynomial.aeval_tower_algebra_map Polynomial.aevalTower_algebraMap
 
 @[simp]
-theorem aeval_tower_comp_algebra_map :
-    (aevalTower g y : R[X] →+* A').comp (algebraMap R R[X]) = g :=
-  aeval_tower_comp_C _ _
-#align polynomial.aeval_tower_comp_algebra_map Polynomial.aeval_tower_comp_algebra_map
+theorem aevalTower_comp_algebraMap : (aevalTower g y : R[X] →+* A').comp (algebraMap R R[X]) = g :=
+  aevalTower_comp_c _ _
+#align polynomial.aeval_tower_comp_algebra_map Polynomial.aevalTower_comp_algebraMap
 
-theorem aeval_tower_to_alg_hom (x : R) : aevalTower g y (IsScalarTower.toAlgHom S R R[X] x) = g x :=
-  aeval_tower_algebra_map _ _ _
-#align polynomial.aeval_tower_to_alg_hom Polynomial.aeval_tower_to_alg_hom
-
-@[simp]
-theorem aeval_tower_comp_to_alg_hom : (aevalTower g y).comp (IsScalarTower.toAlgHom S R R[X]) = g :=
-  AlgHom.coe_ring_hom_injective <| aeval_tower_comp_algebra_map _ _
-#align polynomial.aeval_tower_comp_to_alg_hom Polynomial.aeval_tower_comp_to_alg_hom
+theorem aevalTower_toAlgHom (x : R) : aevalTower g y (IsScalarTower.toAlgHom S R R[X] x) = g x :=
+  aevalTower_algebraMap _ _ _
+#align polynomial.aeval_tower_to_alg_hom Polynomial.aevalTower_toAlgHom
 
 @[simp]
-theorem aeval_tower_id : aevalTower (AlgHom.id S S) = aeval :=
+theorem aevalTower_comp_toAlgHom : (aevalTower g y).comp (IsScalarTower.toAlgHom S R R[X]) = g :=
+  AlgHom.coe_ringHom_injective <| aevalTower_comp_algebraMap _ _
+#align polynomial.aeval_tower_comp_to_alg_hom Polynomial.aevalTower_comp_toAlgHom
+
+@[simp]
+theorem aevalTower_id : aevalTower (AlgHom.id S S) = aeval :=
   by
   ext
   simp only [eval_X, aeval_tower_X, coe_aeval_eq_eval]
-#align polynomial.aeval_tower_id Polynomial.aeval_tower_id
+#align polynomial.aeval_tower_id Polynomial.aevalTower_id
 
 @[simp]
-theorem aeval_tower_of_id : aevalTower (Algebra.ofId S A') = aeval :=
+theorem aevalTower_ofId : aevalTower (Algebra.ofId S A') = aeval :=
   by
   ext
   simp only [aeval_X, aeval_tower_X]
-#align polynomial.aeval_tower_of_id Polynomial.aeval_tower_of_id
+#align polynomial.aeval_tower_of_id Polynomial.aevalTower_ofId
 
 end AevalTower
 
@@ -455,10 +454,10 @@ theorem dvd_term_of_dvd_eval_of_dvd_terms {z p : S} {f : S[X]} (i : ℕ) (dvd_ev
 #align polynomial.dvd_term_of_dvd_eval_of_dvd_terms Polynomial.dvd_term_of_dvd_eval_of_dvd_terms
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (j «expr ≠ » i) -/
-theorem dvd_term_of_is_root_of_dvd_terms {r p : S} {f : S[X]} (i : ℕ) (hr : f.IsRoot r)
+theorem dvd_term_of_isRoot_of_dvd_terms {r p : S} {f : S[X]} (i : ℕ) (hr : f.IsRoot r)
     (h : ∀ (j) (_ : j ≠ i), p ∣ f.coeff j * r ^ j) : p ∣ f.coeff i * r ^ i :=
   dvd_term_of_dvd_eval_of_dvd_terms i (Eq.symm hr ▸ dvd_zero p) h
-#align polynomial.dvd_term_of_is_root_of_dvd_terms Polynomial.dvd_term_of_is_root_of_dvd_terms
+#align polynomial.dvd_term_of_is_root_of_dvd_terms Polynomial.dvd_term_of_isRoot_of_dvd_terms
 
 end CommRing
 
@@ -474,7 +473,7 @@ when evaluated at `r`.
 
 This is the key step in our proof of the Cayley-Hamilton theorem.
 -/
-theorem eval_mul_X_sub_C {p : R[X]} (r : R) : (p * (X - c r)).eval r = 0 :=
+theorem eval_mul_x_sub_c {p : R[X]} (r : R) : (p * (X - c r)).eval r = 0 :=
   by
   simp only [eval, eval₂, RingHom.id_apply]
   have bound :=
@@ -493,11 +492,11 @@ theorem eval_mul_X_sub_C {p : R[X]} (r : R) : (p * (X - c r)).eval r = 0 :=
     skip
     rw [coeff_mul_X_sub_C, sub_mul, mul_assoc, ← pow_succ]
   simp [sum_range_sub', coeff_monomial]
-#align polynomial.eval_mul_X_sub_C Polynomial.eval_mul_X_sub_C
+#align polynomial.eval_mul_X_sub_C Polynomial.eval_mul_x_sub_c
 
-theorem not_is_unit_X_sub_C [Nontrivial R] (r : R) : ¬IsUnit (X - c r) :=
+theorem not_isUnit_x_sub_c [Nontrivial R] (r : R) : ¬IsUnit (X - c r) :=
   fun ⟨⟨_, g, hfg, hgf⟩, rfl⟩ => zero_ne_one' R <| by erw [← eval_mul_X_sub_C, hgf, eval_one]
-#align polynomial.not_is_unit_X_sub_C Polynomial.not_is_unit_X_sub_C
+#align polynomial.not_is_unit_X_sub_C Polynomial.not_isUnit_x_sub_c
 
 end Ring
 

@@ -144,7 +144,7 @@ theorem principal_add_of_le_one {o : Ordinal} (ho : o ≤ 1) : Principal (· + �
   · exact principal_add_one
 #align ordinal.principal_add_of_le_one Ordinal.principal_add_of_le_one
 
-theorem principal_add_is_limit {o : Ordinal} (ho₁ : 1 < o) (ho : Principal (· + ·) o) : o.IsLimit :=
+theorem principal_add_isLimit {o : Ordinal} (ho₁ : 1 < o) (ho : Principal (· + ·) o) : o.IsLimit :=
   by
   refine' ⟨fun ho₀ => _, fun a hao => _⟩
   · rw [ho₀] at ho₁
@@ -154,7 +154,7 @@ theorem principal_add_is_limit {o : Ordinal} (ho₁ : 1 < o) (ho : Principal (·
       exact ho₁
     · refine' lt_of_le_of_lt _ (ho hao hao)
       rwa [← add_one_eq_succ, add_le_add_iff_left, one_le_iff_ne_zero]
-#align ordinal.principal_add_is_limit Ordinal.principal_add_is_limit
+#align ordinal.principal_add_is_limit Ordinal.principal_add_isLimit
 
 theorem principal_add_iff_add_left_eq_self {o : Ordinal} :
     Principal (· + ·) o ↔ ∀ a < o, a + o = o :=
@@ -328,10 +328,10 @@ theorem principal_add_of_principal_mul {o : Ordinal} (ho : Principal (· * ·) o
     exact add_le_add (le_max_left a b) (le_max_right a b)
 #align ordinal.principal_add_of_principal_mul Ordinal.principal_add_of_principal_mul
 
-theorem principal_mul_is_limit {o : Ordinal.{u}} (ho₂ : 2 < o) (ho : Principal (· * ·) o) :
+theorem principal_mul_isLimit {o : Ordinal.{u}} (ho₂ : 2 < o) (ho : Principal (· * ·) o) :
     o.IsLimit :=
-  principal_add_is_limit ((lt_succ 1).trans ho₂) (principal_add_of_principal_mul ho (ne_of_gt ho₂))
-#align ordinal.principal_mul_is_limit Ordinal.principal_mul_is_limit
+  principal_add_isLimit ((lt_succ 1).trans ho₂) (principal_add_of_principal_mul ho (ne_of_gt ho₂))
+#align ordinal.principal_mul_is_limit Ordinal.principal_mul_isLimit
 
 theorem principal_mul_iff_mul_left_eq {o : Ordinal} :
     Principal (· * ·) o ↔ ∀ a, 0 < a → a < o → a * o = o :=
@@ -458,7 +458,7 @@ theorem principal_opow_omega : Principal (·^·) omega := fun a b ha hb =>
 
 theorem opow_omega {a : Ordinal} (a1 : 1 < a) (h : a < omega) : (a^omega) = omega :=
   le_antisymm
-    ((opow_le_of_limit (one_le_iff_ne_zero.1 <| le_of_lt a1) omega_is_limit).2 fun b hb =>
+    ((opow_le_of_limit (one_le_iff_ne_zero.1 <| le_of_lt a1) omega_isLimit).2 fun b hb =>
       (principal_opow_omega h hb).le)
     (right_le_opow _ a1)
 #align ordinal.opow_omega Ordinal.opow_omega

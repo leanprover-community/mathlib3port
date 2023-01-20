@@ -119,10 +119,10 @@ theorem lift_comp : of σ ⋙q lift σ φ τ h = φ :=
     exact h X
   · rintro _ _ f
     simp only [Prefunctor.comp_map]
-    apply eq_of_heq
-    iterate 2 apply (cast_heq _ _).trans
+    apply eq_of_hEq
+    iterate 2 apply (cast_hEq _ _).trans
     symm
-    iterate 2 apply (eq_rec_heq _ _).trans
+    iterate 2 apply (eq_rec_hEq _ _).trans
     rfl
 #align quiver.push.lift_comp Quiver.Push.lift_comp
 

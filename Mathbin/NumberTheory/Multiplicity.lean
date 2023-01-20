@@ -377,7 +377,7 @@ theorem Int.two_pow_sub_pow {x y : ℤ} {n : ℕ} (hxy : 2 ∣ x - y) (hx : ¬2 
     rw [multiplicity.multiplicity_self _ _]
     · apply Prime.not_unit
       simp only [← Nat.prime_iff, Nat.prime_two]
-    · exact two_ne_zero
+    · exact two_neZero
   · rw [← even_iff_two_dvd, ← Int.odd_iff_not_even]
     apply Odd.pow
     simp only [Int.odd_iff_not_even, even_iff_two_dvd, hx, not_false_iff]
@@ -413,7 +413,7 @@ theorem pow_two_sub_pow (hyx : y < x) (hxy : 2 ∣ x - y) (hx : ¬2 ∣ x) {n : 
       padicValNat 2 (x + y) + padicValNat 2 (x - y) + padicValNat 2 n :=
   by
   simp only [← PartEnat.coe_inj, Nat.cast_add]
-  iterate 4 rw [padic_val_nat_def, PartEnat.coe_get]
+  iterate 4 rw [padicValNat_def, PartEnat.coe_get]
   · convert Nat.two_pow_sub_pow hxy hx hneven using 2
   · exact hn
   · exact Nat.sub_pos_of_lt hyx
@@ -429,7 +429,7 @@ theorem pow_sub_pow (hyx : y < x) (hxy : p ∣ x - y) (hx : ¬p ∣ x) {n : ℕ}
     padicValNat p (x ^ n - y ^ n) = padicValNat p (x - y) + padicValNat p n :=
   by
   rw [← PartEnat.coe_inj, Nat.cast_add]
-  iterate 3 rw [padic_val_nat_def, PartEnat.coe_get]
+  iterate 3 rw [padicValNat_def, PartEnat.coe_get]
   · exact multiplicity.Nat.pow_sub_pow hp.out hp1 hxy hx n
   · exact hn
   · exact Nat.sub_pos_of_lt hyx
@@ -443,7 +443,7 @@ theorem pow_add_pow (hxy : p ∣ x + y) (hx : ¬p ∣ x) {n : ℕ} (hn : Odd n) 
   · have := dvd_zero p
     contradiction
   rw [← PartEnat.coe_inj, Nat.cast_add]
-  iterate 3 rw [padic_val_nat_def, PartEnat.coe_get]
+  iterate 3 rw [padicValNat_def, PartEnat.coe_get]
   · exact multiplicity.Nat.pow_add_pow hp.out hp1 hxy hx hn
   · exact Odd.pos hn
   · simp only [add_pos_iff, Nat.succ_pos', or_true_iff]

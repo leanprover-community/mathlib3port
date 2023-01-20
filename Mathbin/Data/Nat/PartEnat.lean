@@ -238,9 +238,9 @@ def coeHom : ℕ →+ PartEnat :=
 #align part_enat.coe_hom PartEnat.coeHom
 
 @[simp]
-theorem coe_coe_hom : ⇑coe_hom = coe :=
+theorem coe_coeHom : ⇑coe_hom = coe :=
   rfl
-#align part_enat.coe_coe_hom PartEnat.coe_coe_hom
+#align part_enat.coe_coe_hom PartEnat.coe_coeHom
 
 instance : PartialOrder PartEnat where
   le := (· ≤ ·)
@@ -365,9 +365,9 @@ theorem coe_ne_top (x : ℕ) : (x : PartEnat) ≠ ⊤ :=
   ne_of_lt (coe_lt_top x)
 #align part_enat.coe_ne_top PartEnat.coe_ne_top
 
-theorem not_is_max_coe (x : ℕ) : ¬IsMax (x : PartEnat) :=
+theorem not_isMax_coe (x : ℕ) : ¬IsMax (x : PartEnat) :=
   not_isMax_of_lt (coe_lt_top x)
-#align part_enat.not_is_max_coe PartEnat.not_is_max_coe
+#align part_enat.not_is_max_coe PartEnat.not_isMax_coe
 
 theorem ne_top_iff {x : PartEnat} : x ≠ ⊤ ↔ ∃ n : ℕ, x = n := by
   simpa only [← some_eq_coe] using Part.ne_none_iff
@@ -541,48 +541,48 @@ def toWithTop (x : PartEnat) [Decidable x.Dom] : ℕ∞ :=
   x.toOption
 #align part_enat.to_with_top PartEnat.toWithTop
 
-theorem to_with_top_top : toWithTop ⊤ = ⊤ :=
+theorem toWithTop_top : toWithTop ⊤ = ⊤ :=
   rfl
-#align part_enat.to_with_top_top PartEnat.to_with_top_top
+#align part_enat.to_with_top_top PartEnat.toWithTop_top
 
 @[simp]
-theorem to_with_top_top' {h : Decidable (⊤ : PartEnat).Dom} : toWithTop ⊤ = ⊤ := by
+theorem toWithTop_top' {h : Decidable (⊤ : PartEnat).Dom} : toWithTop ⊤ = ⊤ := by
   convert to_with_top_top
-#align part_enat.to_with_top_top' PartEnat.to_with_top_top'
+#align part_enat.to_with_top_top' PartEnat.toWithTop_top'
 
-theorem to_with_top_zero : toWithTop 0 = 0 :=
+theorem toWithTop_zero : toWithTop 0 = 0 :=
   rfl
-#align part_enat.to_with_top_zero PartEnat.to_with_top_zero
+#align part_enat.to_with_top_zero PartEnat.toWithTop_zero
 
 @[simp]
-theorem to_with_top_zero' {h : Decidable (0 : PartEnat).Dom} : toWithTop 0 = 0 := by
+theorem toWithTop_zero' {h : Decidable (0 : PartEnat).Dom} : toWithTop 0 = 0 := by
   convert to_with_top_zero
-#align part_enat.to_with_top_zero' PartEnat.to_with_top_zero'
+#align part_enat.to_with_top_zero' PartEnat.toWithTop_zero'
 
-theorem to_with_top_some (n : ℕ) : toWithTop (some n) = n :=
+theorem toWithTop_some (n : ℕ) : toWithTop (some n) = n :=
   rfl
-#align part_enat.to_with_top_some PartEnat.to_with_top_some
+#align part_enat.to_with_top_some PartEnat.toWithTop_some
 
-theorem to_with_top_coe (n : ℕ) {_ : Decidable (n : PartEnat).Dom} : toWithTop n = n := by
+theorem toWithTop_coe (n : ℕ) {_ : Decidable (n : PartEnat).Dom} : toWithTop n = n := by
   simp only [← some_eq_coe, ← to_with_top_some]
-#align part_enat.to_with_top_coe PartEnat.to_with_top_coe
+#align part_enat.to_with_top_coe PartEnat.toWithTop_coe
 
 @[simp]
-theorem to_with_top_coe' (n : ℕ) {h : Decidable (n : PartEnat).Dom} :
-    toWithTop (n : PartEnat) = n := by convert to_with_top_coe n
-#align part_enat.to_with_top_coe' PartEnat.to_with_top_coe'
+theorem toWithTop_coe' (n : ℕ) {h : Decidable (n : PartEnat).Dom} : toWithTop (n : PartEnat) = n :=
+  by convert to_with_top_coe n
+#align part_enat.to_with_top_coe' PartEnat.toWithTop_coe'
 
 @[simp]
-theorem to_with_top_le {x y : PartEnat} :
+theorem toWithTop_le {x y : PartEnat} :
     ∀ [Decidable x.Dom] [Decidable y.Dom], to_with_top x ≤ to_with_top y ↔ x ≤ y :=
   PartEnat.cases_on y (by simp) (PartEnat.cases_on x (by simp) (by intros <;> simp))
-#align part_enat.to_with_top_le PartEnat.to_with_top_le
+#align part_enat.to_with_top_le PartEnat.toWithTop_le
 
 @[simp]
-theorem to_with_top_lt {x y : PartEnat} [Decidable x.Dom] [Decidable y.Dom] :
+theorem toWithTop_lt {x y : PartEnat} [Decidable x.Dom] [Decidable y.Dom] :
     toWithTop x < toWithTop y ↔ x < y :=
-  lt_iff_lt_of_le_iff_le to_with_top_le
-#align part_enat.to_with_top_lt PartEnat.to_with_top_lt
+  lt_iff_lt_of_le_iff_le toWithTop_le
+#align part_enat.to_with_top_lt PartEnat.toWithTop_lt
 
 end WithTop
 
@@ -591,9 +591,9 @@ section WithTopEquiv
 open Classical
 
 @[simp]
-theorem to_with_top_add {x y : PartEnat} : toWithTop (x + y) = toWithTop x + toWithTop y := by
+theorem toWithTop_add {x y : PartEnat} : toWithTop (x + y) = toWithTop x + toWithTop y := by
   apply PartEnat.cases_on y <;> apply PartEnat.cases_on x <;> simp [← Nat.cast_add, ← Enat.coe_add]
-#align part_enat.to_with_top_add PartEnat.to_with_top_add
+#align part_enat.to_with_top_add PartEnat.toWithTop_add
 
 /-- `equiv` between `part_enat` and `ℕ∞` (for the order isomorphism see
 `with_top_order_iso`). -/
@@ -609,59 +609,59 @@ noncomputable def withTopEquiv : PartEnat ≃ ℕ∞
 #align part_enat.with_top_equiv PartEnat.withTopEquiv
 
 @[simp]
-theorem with_top_equiv_top : withTopEquiv ⊤ = ⊤ :=
+theorem withTopEquiv_top : withTopEquiv ⊤ = ⊤ :=
   to_with_top_top'
-#align part_enat.with_top_equiv_top PartEnat.with_top_equiv_top
+#align part_enat.with_top_equiv_top PartEnat.withTopEquiv_top
 
 @[simp]
-theorem with_top_equiv_coe (n : Nat) : withTopEquiv n = n :=
-  to_with_top_coe' _
-#align part_enat.with_top_equiv_coe PartEnat.with_top_equiv_coe
+theorem withTopEquiv_coe (n : Nat) : withTopEquiv n = n :=
+  toWithTop_coe' _
+#align part_enat.with_top_equiv_coe PartEnat.withTopEquiv_coe
 
 @[simp]
-theorem with_top_equiv_zero : withTopEquiv 0 = 0 := by
+theorem withTopEquiv_zero : withTopEquiv 0 = 0 := by
   simpa only [Nat.cast_zero] using with_top_equiv_coe 0
-#align part_enat.with_top_equiv_zero PartEnat.with_top_equiv_zero
+#align part_enat.with_top_equiv_zero PartEnat.withTopEquiv_zero
 
 @[simp]
-theorem with_top_equiv_le {x y : PartEnat} : withTopEquiv x ≤ withTopEquiv y ↔ x ≤ y :=
+theorem withTopEquiv_le {x y : PartEnat} : withTopEquiv x ≤ withTopEquiv y ↔ x ≤ y :=
   to_with_top_le
-#align part_enat.with_top_equiv_le PartEnat.with_top_equiv_le
+#align part_enat.with_top_equiv_le PartEnat.withTopEquiv_le
 
 @[simp]
-theorem with_top_equiv_lt {x y : PartEnat} : withTopEquiv x < withTopEquiv y ↔ x < y :=
+theorem withTopEquiv_lt {x y : PartEnat} : withTopEquiv x < withTopEquiv y ↔ x < y :=
   to_with_top_lt
-#align part_enat.with_top_equiv_lt PartEnat.with_top_equiv_lt
+#align part_enat.with_top_equiv_lt PartEnat.withTopEquiv_lt
 
 /-- `to_with_top` induces an order isomorphism between `part_enat` and `ℕ∞`. -/
 noncomputable def withTopOrderIso : PartEnat ≃o ℕ∞ :=
-  { withTopEquiv with map_rel_iff' := fun _ _ => with_top_equiv_le }
+  { withTopEquiv with map_rel_iff' := fun _ _ => withTopEquiv_le }
 #align part_enat.with_top_order_iso PartEnat.withTopOrderIso
 
 @[simp]
-theorem with_top_equiv_symm_top : withTopEquiv.symm ⊤ = ⊤ :=
+theorem withTopEquiv_symm_top : withTopEquiv.symm ⊤ = ⊤ :=
   rfl
-#align part_enat.with_top_equiv_symm_top PartEnat.with_top_equiv_symm_top
+#align part_enat.with_top_equiv_symm_top PartEnat.withTopEquiv_symm_top
 
 @[simp]
-theorem with_top_equiv_symm_coe (n : Nat) : withTopEquiv.symm n = n :=
+theorem withTopEquiv_symm_coe (n : Nat) : withTopEquiv.symm n = n :=
   rfl
-#align part_enat.with_top_equiv_symm_coe PartEnat.with_top_equiv_symm_coe
+#align part_enat.with_top_equiv_symm_coe PartEnat.withTopEquiv_symm_coe
 
 @[simp]
-theorem with_top_equiv_symm_zero : withTopEquiv.symm 0 = 0 :=
+theorem withTopEquiv_symm_zero : withTopEquiv.symm 0 = 0 :=
   rfl
-#align part_enat.with_top_equiv_symm_zero PartEnat.with_top_equiv_symm_zero
+#align part_enat.with_top_equiv_symm_zero PartEnat.withTopEquiv_symm_zero
 
 @[simp]
-theorem with_top_equiv_symm_le {x y : ℕ∞} : withTopEquiv.symm x ≤ withTopEquiv.symm y ↔ x ≤ y := by
+theorem withTopEquiv_symm_le {x y : ℕ∞} : withTopEquiv.symm x ≤ withTopEquiv.symm y ↔ x ≤ y := by
   rw [← with_top_equiv_le] <;> simp
-#align part_enat.with_top_equiv_symm_le PartEnat.with_top_equiv_symm_le
+#align part_enat.with_top_equiv_symm_le PartEnat.withTopEquiv_symm_le
 
 @[simp]
-theorem with_top_equiv_symm_lt {x y : ℕ∞} : withTopEquiv.symm x < withTopEquiv.symm y ↔ x < y := by
+theorem withTopEquiv_symm_lt {x y : ℕ∞} : withTopEquiv.symm x < withTopEquiv.symm y ↔ x < y := by
   rw [← with_top_equiv_lt] <;> simp
-#align part_enat.with_top_equiv_symm_lt PartEnat.with_top_equiv_symm_lt
+#align part_enat.with_top_equiv_symm_lt PartEnat.withTopEquiv_symm_lt
 
 /-- `to_with_top` induces an additive monoid isomorphism between `part_enat` and `ℕ∞`. -/
 noncomputable def withTopAddEquiv : PartEnat ≃+ ℕ∞ :=

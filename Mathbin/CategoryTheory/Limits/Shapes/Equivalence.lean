@@ -27,21 +27,21 @@ universe v₁ v₂ u₁ u₂
 
 variable {C : Type u₁} [Category.{v₁} C] {D : Type u₂} [Category.{v₂} D]
 
-theorem has_initial_of_equivalence (e : D ⥤ C) [IsEquivalence e] [HasInitial C] : HasInitial D :=
+theorem hasInitial_of_equivalence (e : D ⥤ C) [IsEquivalence e] [HasInitial C] : HasInitial D :=
   Adjunction.hasColimitsOfShapeOfEquivalence e
-#align category_theory.has_initial_of_equivalence CategoryTheory.has_initial_of_equivalence
+#align category_theory.has_initial_of_equivalence CategoryTheory.hasInitial_of_equivalence
 
-theorem Equivalence.has_initial_iff (e : C ≌ D) : HasInitial C ↔ HasInitial D :=
+theorem Equivalence.hasInitial_iff (e : C ≌ D) : HasInitial C ↔ HasInitial D :=
   ⟨fun h => has_initial_of_equivalence e.inverse, fun h => has_initial_of_equivalence e.functor⟩
-#align category_theory.equivalence.has_initial_iff CategoryTheory.Equivalence.has_initial_iff
+#align category_theory.equivalence.has_initial_iff CategoryTheory.Equivalence.hasInitial_iff
 
-theorem has_terminal_of_equivalence (e : D ⥤ C) [IsEquivalence e] [HasTerminal C] : HasTerminal D :=
+theorem hasTerminal_of_equivalence (e : D ⥤ C) [IsEquivalence e] [HasTerminal C] : HasTerminal D :=
   Adjunction.hasLimitsOfShapeOfEquivalence e
-#align category_theory.has_terminal_of_equivalence CategoryTheory.has_terminal_of_equivalence
+#align category_theory.has_terminal_of_equivalence CategoryTheory.hasTerminal_of_equivalence
 
-theorem Equivalence.has_terminal_iff (e : C ≌ D) : HasTerminal C ↔ HasTerminal D :=
+theorem Equivalence.hasTerminal_iff (e : C ≌ D) : HasTerminal C ↔ HasTerminal D :=
   ⟨fun h => has_terminal_of_equivalence e.inverse, fun h => has_terminal_of_equivalence e.functor⟩
-#align category_theory.equivalence.has_terminal_iff CategoryTheory.Equivalence.has_terminal_iff
+#align category_theory.equivalence.has_terminal_iff CategoryTheory.Equivalence.hasTerminal_iff
 
 end CategoryTheory
 

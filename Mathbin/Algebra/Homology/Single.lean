@@ -169,36 +169,36 @@ def single₀ : V ⥤ ChainComplex V ℕ
 #align chain_complex.single₀ ChainComplex.single₀
 
 @[simp]
-theorem single₀_obj_X_0 (X : V) : ((single₀ V).obj X).x 0 = X :=
+theorem single₀_obj_x_0 (X : V) : ((single₀ V).obj X).x 0 = X :=
   rfl
-#align chain_complex.single₀_obj_X_0 ChainComplex.single₀_obj_X_0
+#align chain_complex.single₀_obj_X_0 ChainComplex.single₀_obj_x_0
 
 @[simp]
-theorem single₀_obj_X_succ (X : V) (n : ℕ) : ((single₀ V).obj X).x (n + 1) = 0 :=
+theorem single₀_obj_x_succ (X : V) (n : ℕ) : ((single₀ V).obj X).x (n + 1) = 0 :=
   rfl
-#align chain_complex.single₀_obj_X_succ ChainComplex.single₀_obj_X_succ
+#align chain_complex.single₀_obj_X_succ ChainComplex.single₀_obj_x_succ
 
 @[simp]
-theorem single₀_obj_X_d (X : V) (i j : ℕ) : ((single₀ V).obj X).d i j = 0 :=
+theorem single₀_obj_x_d (X : V) (i j : ℕ) : ((single₀ V).obj X).d i j = 0 :=
   rfl
-#align chain_complex.single₀_obj_X_d ChainComplex.single₀_obj_X_d
+#align chain_complex.single₀_obj_X_d ChainComplex.single₀_obj_x_d
 
 @[simp]
-theorem single₀_obj_X_d_to (X : V) (j : ℕ) : ((single₀ V).obj X).dTo j = 0 :=
+theorem single₀_obj_x_dTo (X : V) (j : ℕ) : ((single₀ V).obj X).dTo j = 0 :=
   by
   rw [d_to_eq ((single₀ V).obj X) rfl]
   simp
-#align chain_complex.single₀_obj_X_d_to ChainComplex.single₀_obj_X_d_to
+#align chain_complex.single₀_obj_X_d_to ChainComplex.single₀_obj_x_dTo
 
 @[simp]
-theorem single₀_obj_X_d_from (X : V) (i : ℕ) : ((single₀ V).obj X).dFrom i = 0 :=
+theorem single₀_obj_x_dFrom (X : V) (i : ℕ) : ((single₀ V).obj X).dFrom i = 0 :=
   by
   cases i
   · rw [d_from_eq_zero]
     simp
   · rw [d_from_eq ((single₀ V).obj X) rfl]
     simp
-#align chain_complex.single₀_obj_X_d_from ChainComplex.single₀_obj_X_d_from
+#align chain_complex.single₀_obj_X_d_from ChainComplex.single₀_obj_x_dFrom
 
 @[simp]
 theorem single₀_map_f_0 {X Y : V} (f : X ⟶ Y) : ((single₀ V).map f).f 0 = f :=
@@ -378,36 +378,36 @@ def single₀ : V ⥤ CochainComplex V ℕ
 #align cochain_complex.single₀ CochainComplex.single₀
 
 @[simp]
-theorem single₀_obj_X_0 (X : V) : ((single₀ V).obj X).x 0 = X :=
+theorem single₀_obj_x_0 (X : V) : ((single₀ V).obj X).x 0 = X :=
   rfl
-#align cochain_complex.single₀_obj_X_0 CochainComplex.single₀_obj_X_0
+#align cochain_complex.single₀_obj_X_0 CochainComplex.single₀_obj_x_0
 
 @[simp]
-theorem single₀_obj_X_succ (X : V) (n : ℕ) : ((single₀ V).obj X).x (n + 1) = 0 :=
+theorem single₀_obj_x_succ (X : V) (n : ℕ) : ((single₀ V).obj X).x (n + 1) = 0 :=
   rfl
-#align cochain_complex.single₀_obj_X_succ CochainComplex.single₀_obj_X_succ
+#align cochain_complex.single₀_obj_X_succ CochainComplex.single₀_obj_x_succ
 
 @[simp]
-theorem single₀_obj_X_d (X : V) (i j : ℕ) : ((single₀ V).obj X).d i j = 0 :=
+theorem single₀_obj_x_d (X : V) (i j : ℕ) : ((single₀ V).obj X).d i j = 0 :=
   rfl
-#align cochain_complex.single₀_obj_X_d CochainComplex.single₀_obj_X_d
+#align cochain_complex.single₀_obj_X_d CochainComplex.single₀_obj_x_d
 
 @[simp]
-theorem single₀_obj_X_d_from (X : V) (j : ℕ) : ((single₀ V).obj X).dFrom j = 0 :=
+theorem single₀_obj_x_dFrom (X : V) (j : ℕ) : ((single₀ V).obj X).dFrom j = 0 :=
   by
   rw [d_from_eq ((single₀ V).obj X) rfl]
   simp
-#align cochain_complex.single₀_obj_X_d_from CochainComplex.single₀_obj_X_d_from
+#align cochain_complex.single₀_obj_X_d_from CochainComplex.single₀_obj_x_dFrom
 
 @[simp]
-theorem single₀_obj_X_d_to (X : V) (i : ℕ) : ((single₀ V).obj X).dTo i = 0 :=
+theorem single₀_obj_x_dTo (X : V) (i : ℕ) : ((single₀ V).obj X).dTo i = 0 :=
   by
   cases i
   · rw [d_to_eq_zero]
     simp
   · rw [d_to_eq ((single₀ V).obj X) rfl]
     simp
-#align cochain_complex.single₀_obj_X_d_to CochainComplex.single₀_obj_X_d_to
+#align cochain_complex.single₀_obj_X_d_to CochainComplex.single₀_obj_x_dTo
 
 @[simp]
 theorem single₀_map_f_0 {X Y : V} (f : X ⟶ Y) : ((single₀ V).map f).f 0 = f :=

@@ -48,10 +48,10 @@ theorem Summable.mul_of_nonneg {f : ι → ℝ} {g : ι' → ℝ} (hf : Summable
       sum_congr rfl fun x _ => mul_sum.symm
     _ ≤ ∑ x in u.image Prod.fst, f x * t :=
       sum_le_sum fun x _ =>
-        mul_le_mul_of_nonneg_left (sum_le_has_sum _ (fun _ _ => hg' _) hg) (hf' _)
+        mul_le_mul_of_nonneg_left (sum_le_hasSum _ (fun _ _ => hg' _) hg) (hf' _)
     _ = (∑ x in u.image Prod.fst, f x) * t := sum_mul.symm
     _ ≤ s * t :=
-      mul_le_mul_of_nonneg_right (sum_le_has_sum _ (fun _ _ => hf' _) hf) (hg.Nonneg fun _ => hg' _)
+      mul_le_mul_of_nonneg_right (sum_le_hasSum _ (fun _ _ => hf' _) hf) (hg.Nonneg fun _ => hg' _)
     
 #align summable.mul_of_nonneg Summable.mul_of_nonneg
 

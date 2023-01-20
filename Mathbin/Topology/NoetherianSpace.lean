@@ -51,16 +51,16 @@ class NoetherianSpace : Prop where
   WellFounded : WellFounded ((· > ·) : Opens α → Opens α → Prop)
 #align topological_space.noetherian_space TopologicalSpace.NoetherianSpace
 
-theorem noetherian_space_iff_opens : NoetherianSpace α ↔ ∀ s : Opens α, IsCompact (s : Set α) :=
+theorem noetherianSpace_iff_opens : NoetherianSpace α ↔ ∀ s : Opens α, IsCompact (s : Set α) :=
   by
-  rw [noetherian_space_iff, CompleteLattice.well_founded_iff_is_Sup_finite_compact,
-    CompleteLattice.is_Sup_finite_compact_iff_all_elements_compact]
+  rw [noetherian_space_iff, CompleteLattice.wellFounded_iff_isSupFiniteCompact,
+    CompleteLattice.isSupFiniteCompact_iff_all_elements_compact]
   exact forall_congr' opens.is_compact_element_iff
-#align topological_space.noetherian_space_iff_opens TopologicalSpace.noetherian_space_iff_opens
+#align topological_space.noetherian_space_iff_opens TopologicalSpace.noetherianSpace_iff_opens
 
-instance (priority := 100) NoetherianSpace.compact_space [h : NoetherianSpace α] : CompactSpace α :=
-  is_compact_univ_iff.mp ((noetherian_space_iff_opens α).mp h ⊤)
-#align topological_space.noetherian_space.compact_space TopologicalSpace.NoetherianSpace.compact_space
+instance (priority := 100) NoetherianSpace.compactSpace [h : NoetherianSpace α] : CompactSpace α :=
+  isCompact_univ_iff.mp ((noetherianSpace_iff_opens α).mp h ⊤)
+#align topological_space.noetherian_space.compact_space TopologicalSpace.NoetherianSpace.compactSpace
 
 variable {α}
 
@@ -92,7 +92,7 @@ example (α : Type _) : Set α ≃o (Set α)ᵒᵈ := by refine' OrderIso.compl 
      (Command.declModifiers [] [] [] [] [] [])
      (Command.theorem
       "theorem"
-      (Command.declId `noetherian_space_tfae [])
+      (Command.declId `noetherianSpace_tFAE [])
       (Command.declSig
        []
        (Term.typeSpec
@@ -173,7 +173,7 @@ example (α : Type _) : Set α ≃o (Set α)ᵒᵈ := by refine' OrderIso.compl 
              (Tactic.rwSeq
               "rw"
               []
-              (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `is_compact_iff_compact_space)] "]")
+              (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `isCompact_iff_compactSpace)] "]")
               [])
              []
              (Tactic.skip "skip")
@@ -239,7 +239,7 @@ example (α : Type _) : Set α ≃o (Set α)ᵒᵈ := by refine' OrderIso.compl 
             (Tactic.rwSeq
              "rw"
              []
-             (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `is_compact_iff_compact_space)] "]")
+             (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `isCompact_iff_compactSpace)] "]")
              [])
             []
             (Tactic.skip "skip")
@@ -312,7 +312,7 @@ example (α : Type _) : Set α ≃o (Set α)ᵒᵈ := by refine' OrderIso.compl 
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 theorem
-  noetherian_space_tfae
+  noetherianSpace_tFAE
   :
     TFAE
       [
@@ -334,17 +334,17 @@ theorem
         tfae_have 1 ↔ 4
         · exact noetherian_space_iff_opens α
         tfae_have 1 → 3
-        · intro H s rw [ is_compact_iff_compact_space ] skip infer_instance
+        · intro H s rw [ isCompact_iff_compactSpace ] skip infer_instance
         tfae_have 3 → 4
         · exact fun H s => H s
         tfae_finish
-#align topological_space.noetherian_space_tfae TopologicalSpace.noetherian_space_tfae
+#align topological_space.noetherian_space_tfae TopologicalSpace.noetherianSpace_tFAE
 
 variable {α β}
 
 instance {α} : NoetherianSpace (CofiniteTopology α) :=
   by
-  simp only [noetherian_space_iff_opens, is_compact_iff_ultrafilter_le_nhds,
+  simp only [noetherian_space_iff_opens, isCompact_iff_ultrafilter_le_nhds,
     CofiniteTopology.nhds_eq, Ultrafilter.le_sup_iff]
   intro s f hs
   rcases f.le_cofinite_or_eq_pure with (hf | ⟨a, rfl⟩)
@@ -352,33 +352,33 @@ instance {α} : NoetherianSpace (CofiniteTopology α) :=
     exact ⟨a, ha, Or.inr hf⟩
   · exact ⟨a, filter.le_principal_iff.mp hs, Or.inl le_rfl⟩
 
-theorem NoetherianSpace.is_compact [h : NoetherianSpace α] (s : Set α) : IsCompact s :=
-  let H := (noetherian_space_tfae α).out 0 2
+theorem NoetherianSpace.isCompact [h : NoetherianSpace α] (s : Set α) : IsCompact s :=
+  let H := (noetherianSpace_tFAE α).out 0 2
   H.mp h s
-#align topological_space.noetherian_space.is_compact TopologicalSpace.NoetherianSpace.is_compact
+#align topological_space.noetherian_space.is_compact TopologicalSpace.NoetherianSpace.isCompact
 
-theorem noetherian_space_of_surjective [NoetherianSpace α] (f : α → β) (hf : Continuous f)
+theorem noetherianSpace_of_surjective [NoetherianSpace α] (f : α → β) (hf : Continuous f)
     (hf' : Function.Surjective f) : NoetherianSpace β :=
   by
   rw [noetherian_space_iff_opens]
   intro s
   obtain ⟨t, e⟩ := set.image_surjective.mpr hf' s
   exact e ▸ (noetherian_space.is_compact t).image hf
-#align topological_space.noetherian_space_of_surjective TopologicalSpace.noetherian_space_of_surjective
+#align topological_space.noetherian_space_of_surjective TopologicalSpace.noetherianSpace_of_surjective
 
-theorem noetherian_space_iff_of_homeomorph (f : α ≃ₜ β) : NoetherianSpace α ↔ NoetherianSpace β :=
-  ⟨fun h => @noetherian_space_of_surjective _ _ h f f.Continuous f.Surjective, fun h =>
-    @noetherian_space_of_surjective _ _ h f.symm f.symm.Continuous f.symm.Surjective⟩
-#align topological_space.noetherian_space_iff_of_homeomorph TopologicalSpace.noetherian_space_iff_of_homeomorph
+theorem noetherianSpace_iff_of_homeomorph (f : α ≃ₜ β) : NoetherianSpace α ↔ NoetherianSpace β :=
+  ⟨fun h => @noetherianSpace_of_surjective _ _ h f f.Continuous f.Surjective, fun h =>
+    @noetherianSpace_of_surjective _ _ h f.symm f.symm.Continuous f.symm.Surjective⟩
+#align topological_space.noetherian_space_iff_of_homeomorph TopologicalSpace.noetherianSpace_iff_of_homeomorph
 
 theorem NoetherianSpace.range [NoetherianSpace α] (f : α → β) (hf : Continuous f) :
     NoetherianSpace (Set.range f) :=
-  noetherian_space_of_surjective (Set.codRestrict f _ Set.mem_range_self) (by continuity)
+  noetherianSpace_of_surjective (Set.codRestrict f _ Set.mem_range_self) (by continuity)
     fun ⟨a, b, h⟩ => ⟨b, Subtype.ext h⟩
 #align topological_space.noetherian_space.range TopologicalSpace.NoetherianSpace.range
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (t «expr ⊆ » s) -/
-theorem noetherian_space_set_iff (s : Set α) : NoetherianSpace s ↔ ∀ (t) (_ : t ⊆ s), IsCompact t :=
+theorem noetherianSpace_set_iff (s : Set α) : NoetherianSpace s ↔ ∀ (t) (_ : t ⊆ s), IsCompact t :=
   by
   rw [(noetherian_space_tfae s).out 0 2]
   constructor
@@ -388,26 +388,26 @@ theorem noetherian_space_set_iff (s : Set α) : NoetherianSpace s ↔ ∀ (t) (_
   · intro H t
     refine' embedding_subtype_coe.is_compact_iff_is_compact_image.mpr (H (coe '' t) _)
     simp
-#align topological_space.noetherian_space_set_iff TopologicalSpace.noetherian_space_set_iff
+#align topological_space.noetherian_space_set_iff TopologicalSpace.noetherianSpace_set_iff
 
 @[simp]
 theorem noetherian_univ_iff : NoetherianSpace (Set.univ : Set α) ↔ NoetherianSpace α :=
-  noetherian_space_iff_of_homeomorph (Homeomorph.Set.univ α)
+  noetherianSpace_iff_of_homeomorph (Homeomorph.Set.univ α)
 #align topological_space.noetherian_univ_iff TopologicalSpace.noetherian_univ_iff
 
-theorem NoetherianSpace.Union {ι : Type _} (f : ι → Set α) [Finite ι]
+theorem NoetherianSpace.unionᵢ {ι : Type _} (f : ι → Set α) [Finite ι]
     [hf : ∀ i, NoetherianSpace (f i)] : NoetherianSpace (⋃ i, f i) :=
   by
   cases nonempty_fintype ι
   simp_rw [noetherian_space_set_iff] at hf⊢
   intro t ht
   rw [← set.inter_eq_left_iff_subset.mpr ht, Set.inter_unionᵢ]
-  exact is_compact_Union fun i => hf i _ (Set.inter_subset_right _ _)
-#align topological_space.noetherian_space.Union TopologicalSpace.NoetherianSpace.Union
+  exact isCompact_unionᵢ fun i => hf i _ (Set.inter_subset_right _ _)
+#align topological_space.noetherian_space.Union TopologicalSpace.NoetherianSpace.unionᵢ
 
 -- This is not an instance since it makes a loop with `t2_space_discrete`.
 theorem NoetherianSpace.discrete [NoetherianSpace α] [T2Space α] : DiscreteTopology α :=
-  ⟨eq_bot_iff.mpr fun U _ => is_closed_compl_iff.mp (NoetherianSpace.is_compact _).IsClosed⟩
+  ⟨eq_bot_iff.mpr fun U _ => isClosed_compl_iff.mp (NoetherianSpace.isCompact _).IsClosed⟩
 #align topological_space.noetherian_space.discrete TopologicalSpace.NoetherianSpace.discrete
 
 attribute [local instance] noetherian_space.discrete
@@ -420,9 +420,9 @@ theorem NoetherianSpace.finite [NoetherianSpace α] [T2Space α] : Finite α :=
   infer_instance
 #align topological_space.noetherian_space.finite TopologicalSpace.NoetherianSpace.finite
 
-instance (priority := 100) Finite.to_noetherian_space [Finite α] : NoetherianSpace α :=
+instance (priority := 100) Finite.to_noetherianSpace [Finite α] : NoetherianSpace α :=
   ⟨Finite.wellFounded_of_trans_of_irrefl _⟩
-#align topological_space.finite.to_noetherian_space TopologicalSpace.Finite.to_noetherian_space
+#align topological_space.finite.to_noetherian_space TopologicalSpace.Finite.to_noetherianSpace
 
 theorem NoetherianSpace.exists_finset_irreducible [NoetherianSpace α] (s : Closeds α) :
     ∃ S : Finset (Closeds α), (∀ k : S, IsIrreducible (k : Set α)) ∧ s = S.sup id := by
@@ -443,7 +443,7 @@ theorem NoetherianSpace.exists_finset_irreducible [NoetherianSpace α] (s : Clos
       rintro ⟨k, hk⟩
       cases finset.mem_singleton.mp hk
       exact ⟨h, h₁⟩
-    · rw [is_preirreducible_iff_closed_union_closed] at h₁
+    · rw [isPreirreducible_iff_closed_union_closed] at h₁
       push_neg  at h₁
       obtain ⟨z₁, z₂, hz₁, hz₂, h, hz₁', hz₂'⟩ := h₁
       obtain ⟨S₁, hS₁, hS₁'⟩ := H (s ⊓ ⟨z₁, hz₁⟩) (inf_lt_left.2 hz₁')
@@ -454,7 +454,7 @@ theorem NoetherianSpace.exists_finset_irreducible [NoetherianSpace α] (s : Clos
       · rwa [Finset.sup_union, ← hS₁', ← hS₂', ← inf_sup_left, left_eq_inf]
 #align topological_space.noetherian_space.exists_finset_irreducible TopologicalSpace.NoetherianSpace.exists_finset_irreducible
 
-theorem NoetherianSpace.finite_irreducible_components [NoetherianSpace α] :
+theorem NoetherianSpace.finite_irreducibleComponents [NoetherianSpace α] :
     (irreducibleComponents α).Finite := by
   classical
     obtain ⟨S, hS₁, hS₂⟩ := noetherian_space.exists_finset_irreducible (⊤ : closeds α)
@@ -474,7 +474,7 @@ theorem NoetherianSpace.finite_irreducible_components [NoetherianSpace α] :
     symm
     suffices K ≤ s by exact this.antisymm (hK.2 (hS₁ ⟨s, hs⟩) this)
     simpa
-#align topological_space.noetherian_space.finite_irreducible_components TopologicalSpace.NoetherianSpace.finite_irreducible_components
+#align topological_space.noetherian_space.finite_irreducible_components TopologicalSpace.NoetherianSpace.finite_irreducibleComponents
 
 end TopologicalSpace
 

@@ -133,7 +133,7 @@ theorem lift_add (x y : ℍ[R,c₁,c₂]) : q.lift (x + y) = q.lift x + q.lift y
 
 theorem lift_mul (x y : ℍ[R,c₁,c₂]) : q.lift (x * y) = q.lift x * q.lift y :=
   by
-  simp only [lift, Algebra.algebra_map_eq_smul_one]
+  simp only [lift, Algebra.algebraMap_eq_smul_one]
   simp only [add_mul]
   simp only [add_mul, mul_add, smul_mul_assoc, mul_smul_comm, one_mul, mul_one, ← Algebra.smul_def,
     smul_add, smul_smul]

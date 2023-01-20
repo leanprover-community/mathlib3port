@@ -198,22 +198,22 @@ def liftAux (f : X → CommutatorRing L) :=
   lib.lift R f
 #align free_lie_algebra.lift_aux FreeLieAlgebra.liftAux
 
-theorem lift_aux_map_smul (f : X → L) (t : R) (a : lib R X) :
+theorem liftAux_map_smul (f : X → L) (t : R) (a : lib R X) :
     liftAux R f (t • a) = t • liftAux R f a :=
   NonUnitalAlgHom.map_smul _ t a
-#align free_lie_algebra.lift_aux_map_smul FreeLieAlgebra.lift_aux_map_smul
+#align free_lie_algebra.lift_aux_map_smul FreeLieAlgebra.liftAux_map_smul
 
-theorem lift_aux_map_add (f : X → L) (a b : lib R X) :
+theorem liftAux_map_add (f : X → L) (a b : lib R X) :
     liftAux R f (a + b) = liftAux R f a + liftAux R f b :=
   NonUnitalAlgHom.map_add _ a b
-#align free_lie_algebra.lift_aux_map_add FreeLieAlgebra.lift_aux_map_add
+#align free_lie_algebra.lift_aux_map_add FreeLieAlgebra.liftAux_map_add
 
-theorem lift_aux_map_mul (f : X → L) (a b : lib R X) :
+theorem liftAux_map_mul (f : X → L) (a b : lib R X) :
     liftAux R f (a * b) = ⁅liftAux R f a, liftAux R f b⁆ :=
   NonUnitalAlgHom.map_mul _ a b
-#align free_lie_algebra.lift_aux_map_mul FreeLieAlgebra.lift_aux_map_mul
+#align free_lie_algebra.lift_aux_map_mul FreeLieAlgebra.liftAux_map_mul
 
-theorem lift_aux_spec (f : X → L) (a b : lib R X) (h : FreeLieAlgebra.Rel R X a b) :
+theorem liftAux_spec (f : X → L) (a b : lib R X) (h : FreeLieAlgebra.Rel R X a b) :
     liftAux R f a = liftAux R f b := by
   induction h
   case lie_self a' => simp only [lift_aux_map_mul, NonUnitalAlgHom.map_zero, lie_self]
@@ -223,7 +223,7 @@ theorem lift_aux_spec (f : X → L) (a b : lib R X) (h : FreeLieAlgebra.Rel R X 
   case add_right a' b' c' h₁ h₂ => simp only [lift_aux_map_add, h₂]
   case mul_left a' b' c' h₁ h₂ => simp only [lift_aux_map_mul, h₂]
   case mul_right a' b' c' h₁ h₂ => simp only [lift_aux_map_mul, h₂]
-#align free_lie_algebra.lift_aux_spec FreeLieAlgebra.lift_aux_spec
+#align free_lie_algebra.lift_aux_spec FreeLieAlgebra.liftAux_spec
 
 /-- The quotient map as a `non_unital_alg_hom`. -/
 def mk : lib R X →ₙₐ[R] CommutatorRing (FreeLieAlgebra R X)
@@ -240,7 +240,7 @@ algebras over `R` is adjoint to the forgetful functor in the other direction. -/
 def lift : (X → L) ≃ (FreeLieAlgebra R X →ₗ⁅R⁆ L)
     where
   toFun f :=
-    { toFun := fun c => Quot.liftOn c (liftAux R f) (lift_aux_spec R f)
+    { toFun := fun c => Quot.liftOn c (liftAux R f) (liftAux_spec R f)
       map_add' := by
         rintro ⟨a⟩ ⟨b⟩
         rw [← lift_aux_map_add]

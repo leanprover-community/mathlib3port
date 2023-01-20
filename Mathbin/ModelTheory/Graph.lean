@@ -73,19 +73,19 @@ protected def TheoryCat.simpleGraph : Language.graph.TheoryCat :=
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem TheoryCat.simple_graph_model_iff [Language.graph.StructureCat V] :
+theorem TheoryCat.simpleGraph_model_iff [Language.graph.StructureCat V] :
     V ⊨ Theory.simple_graph ↔
       (Irreflexive fun x y : V => RelMap adj ![x, y]) ∧
         Symmetric fun x y : V => RelMap adj ![x, y] :=
   by simp [Theory.simple_graph]
-#align first_order.language.Theory.simple_graph_model_iff FirstOrder.Language.TheoryCat.simple_graph_model_iff
+#align first_order.language.Theory.simple_graph_model_iff FirstOrder.Language.TheoryCat.simpleGraph_model_iff
 
-instance simple_graph_model (G : SimpleGraph V) :
+instance simpleGraph_model (G : SimpleGraph V) :
     @TheoryCat.Model _ V G.StructureCat TheoryCat.simpleGraph :=
   by
   simp only [Theory.simple_graph_model_iff, rel_map_apply₂]
   exact ⟨G.loopless, G.symm⟩
-#align first_order.language.simple_graph_model FirstOrder.Language.simple_graph_model
+#align first_order.language.simple_graph_model FirstOrder.Language.simpleGraph_model
 
 variable (V)
 
@@ -107,16 +107,16 @@ def simpleGraphOfStructure [Language.graph.StructureCat V] [V ⊨ Theory.simple_
 variable {V}
 
 @[simp]
-theorem SimpleGraph.simple_graph_of_structure (G : SimpleGraph V) :
+theorem SimpleGraph.simpleGraphOfStructure (G : SimpleGraph V) :
     @simpleGraphOfStructure V G.StructureCat _ = G :=
   by
   ext
   rfl
-#align simple_graph.simple_graph_of_structure SimpleGraph.simple_graph_of_structure
+#align simple_graph.simple_graph_of_structure SimpleGraph.simpleGraphOfStructure
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem Structure_simple_graph_of_structure [S : Language.graph.StructureCat V]
+theorem structureCat_simpleGraphOfStructure [S : Language.graph.StructureCat V]
     [V ⊨ Theory.simple_graph] : (simpleGraphOfStructure V).StructureCat = S :=
   by
   ext (n f xs)
@@ -133,11 +133,11 @@ theorem Structure_simple_graph_of_structure [S : Language.graph.StructureCat V]
           refine' congr rfl (funext _)
           simp [Fin.forall_fin_two]
         · exact r.elim
-#align first_order.language.Structure_simple_graph_of_structure FirstOrder.Language.Structure_simple_graph_of_structure
+#align first_order.language.Structure_simple_graph_of_structure FirstOrder.Language.structureCat_simpleGraphOfStructure
 
-theorem TheoryCat.simple_graph_is_satisfiable : TheoryCat.IsSatisfiable TheoryCat.simpleGraph :=
+theorem TheoryCat.simpleGraph_isSatisfiable : TheoryCat.IsSatisfiable TheoryCat.simpleGraph :=
   ⟨@TheoryCat.ModelCat.of _ _ Unit (SimpleGraph.structure ⊥) _ _⟩
-#align first_order.language.Theory.simple_graph_is_satisfiable FirstOrder.Language.TheoryCat.simple_graph_is_satisfiable
+#align first_order.language.Theory.simple_graph_is_satisfiable FirstOrder.Language.TheoryCat.simpleGraph_isSatisfiable
 
 end Language
 

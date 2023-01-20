@@ -54,7 +54,7 @@ def LinearMap.clmOfExistsBoundedImage (f : E →ₗ[𝕜] F)
     by
     -- It suffices to show that `f` is continuous at `0`.
     refine' continuous_of_continuous_at_zero f _
-    rw [continuous_at_def, f.map_zero]
+    rw [continuousAt_def, f.map_zero]
     intro U hU
     -- Continuity means that `U ∈ 𝓝 0` implies that `f ⁻¹' U ∈ 𝓝 0`.
     rcases h with ⟨V, hV, h⟩
@@ -78,18 +78,18 @@ def LinearMap.clmOfExistsBoundedImage (f : E →ₗ[𝕜] F)
     exact (smul_zero _).symm⟩
 #align linear_map.clm_of_exists_bounded_image LinearMap.clmOfExistsBoundedImage
 
-theorem LinearMap.clm_of_exists_bounded_image_coe {f : E →ₗ[𝕜] F}
+theorem LinearMap.clmOfExistsBoundedImage_coe {f : E →ₗ[𝕜] F}
     {h : ∃ (V : Set E)(hV : V ∈ 𝓝 (0 : E)), Bornology.IsVonNBounded 𝕜 (f '' V)} :
     (f.clmOfExistsBoundedImage h : E →ₗ[𝕜] F) = f :=
   rfl
-#align linear_map.clm_of_exists_bounded_image_coe LinearMap.clm_of_exists_bounded_image_coe
+#align linear_map.clm_of_exists_bounded_image_coe LinearMap.clmOfExistsBoundedImage_coe
 
 @[simp]
-theorem LinearMap.clm_of_exists_bounded_image_apply {f : E →ₗ[𝕜] F}
+theorem LinearMap.clmOfExistsBoundedImage_apply {f : E →ₗ[𝕜] F}
     {h : ∃ (V : Set E)(hV : V ∈ 𝓝 (0 : E)), Bornology.IsVonNBounded 𝕜 (f '' V)} {x : E} :
     f.clmOfExistsBoundedImage h x = f x :=
   rfl
-#align linear_map.clm_of_exists_bounded_image_apply LinearMap.clm_of_exists_bounded_image_apply
+#align linear_map.clm_of_exists_bounded_image_apply LinearMap.clmOfExistsBoundedImage_apply
 
 end NontriviallyNormedField
 
@@ -105,7 +105,7 @@ variable [IsROrC 𝕜'] [Module 𝕜' F] [HasContinuousSmul 𝕜' F]
 
 variable {σ : 𝕜 →+* 𝕜'}
 
-theorem LinearMap.continuous_at_zero_of_locally_bounded (f : E →ₛₗ[σ] F)
+theorem LinearMap.continuousAt_zero_of_locally_bounded (f : E →ₛₗ[σ] F)
     (hf : ∀ (s : Set E) (hs : IsVonNBounded 𝕜 s), IsVonNBounded 𝕜' (f '' s)) : ContinuousAt f 0 :=
   by
   -- Assume that f is not continuous at 0
@@ -181,7 +181,7 @@ theorem LinearMap.continuous_at_zero_of_locally_bounded (f : E →ₛₗ[σ] F)
     simp only [hn', inv_smul_smul₀, Ne.def, Nat.cast_eq_zero, not_false_iff] at h'
     rwa [← h']
   exact hu' n hn' h''
-#align linear_map.continuous_at_zero_of_locally_bounded LinearMap.continuous_at_zero_of_locally_bounded
+#align linear_map.continuous_at_zero_of_locally_bounded LinearMap.continuousAt_zero_of_locally_bounded
 
 /-- If `E` is first countable, then every locally bounded linear map `E →ₛₗ[σ] F` is continuous. -/
 theorem LinearMap.continuous_of_locally_bounded [UniformAddGroup F] (f : E →ₛₗ[σ] F)

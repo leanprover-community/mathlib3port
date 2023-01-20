@@ -158,13 +158,13 @@ def comparisonAdjunction
   Adjunction.adjunctionOfEquivLeft _ _
 #align category_theory.monad.monadicity_internal.comparison_adjunction CategoryTheory.Monad.MonadicityInternal.comparisonAdjunction
 
-theorem comparison_adjunction_unit_f_aux
+theorem comparisonAdjunction_unit_f_aux
     [∀ A : adj.toMonad.Algebra, HasCoequalizer (F.map A.a) (adj.counit.app (F.obj A.A))]
     (A : adj.toMonad.Algebra) :
     (comparison_adjunction.Unit.app A).f =
       adj.homEquiv A.A _ (coequalizer.π (F.map A.a) (adj.counit.app (F.obj A.A))) :=
   congr_arg (adj.homEquiv _ _) (Category.comp_id _)
-#align category_theory.monad.monadicity_internal.comparison_adjunction_unit_f_aux CategoryTheory.Monad.MonadicityInternal.comparison_adjunction_unit_f_aux
+#align category_theory.monad.monadicity_internal.comparison_adjunction_unit_f_aux CategoryTheory.Monad.MonadicityInternal.comparisonAdjunction_unit_f_aux
 
 /-- This is a cofork which is helpful for establishing monadicity: the morphism from the Beck
 coequalizer to this cofork is the unit for the adjunction on the comparison functor.
@@ -179,13 +179,13 @@ def unitCofork (A : adj.toMonad.Algebra) [HasCoequalizer (F.map A.a) (adj.counit
 #align category_theory.monad.monadicity_internal.unit_cofork CategoryTheory.Monad.MonadicityInternal.unitCofork
 
 @[simp]
-theorem unit_cofork_π (A : adj.toMonad.Algebra)
+theorem unitCofork_π (A : adj.toMonad.Algebra)
     [HasCoequalizer (F.map A.a) (adj.counit.app (F.obj A.A))] :
     (unit_cofork A).π = G.map (coequalizer.π (F.map A.a) (adj.counit.app (F.obj A.A))) :=
   rfl
-#align category_theory.monad.monadicity_internal.unit_cofork_π CategoryTheory.Monad.MonadicityInternal.unit_cofork_π
+#align category_theory.monad.monadicity_internal.unit_cofork_π CategoryTheory.Monad.MonadicityInternal.unitCofork_π
 
-theorem comparison_adjunction_unit_f
+theorem comparisonAdjunction_unit_f
     [∀ A : adj.toMonad.Algebra, HasCoequalizer (F.map A.a) (adj.counit.app (F.obj A.A))]
     (A : adj.toMonad.Algebra) :
     (comparison_adjunction.Unit.app A).f = (beckCoequalizer A).desc (unit_cofork A) :=
@@ -196,7 +196,7 @@ theorem comparison_adjunction_unit_f
   rw [comparison_adjunction_unit_f_aux, ← adj.hom_equiv_naturality_left A.a, coequalizer.condition,
     adj.hom_equiv_naturality_right, adj.hom_equiv_unit, category.assoc]
   apply adj.right_triangle_components_assoc
-#align category_theory.monad.monadicity_internal.comparison_adjunction_unit_f CategoryTheory.Monad.MonadicityInternal.comparison_adjunction_unit_f
+#align category_theory.monad.monadicity_internal.comparison_adjunction_unit_f CategoryTheory.Monad.MonadicityInternal.comparisonAdjunction_unit_f
 
 /-- The cofork which describes the counit of the adjunction: the morphism from the coequalizer of
 this pair to this morphism is the counit.
@@ -223,7 +223,7 @@ def counitCoequalizerOfReflectsCoequalizer (B : D)
   isColimitOfIsColimitCoforkMap G _ (beckCoequalizer ((comparison adj).obj B))
 #align category_theory.monad.monadicity_internal.counit_coequalizer_of_reflects_coequalizer CategoryTheory.Monad.MonadicityInternal.counitCoequalizerOfReflectsCoequalizer
 
-theorem comparison_adjunction_counit_app
+theorem comparisonAdjunction_counit_app
     [∀ A : adj.toMonad.Algebra, HasCoequalizer (F.map A.a) (adj.counit.app (F.obj A.A))] (B : D) :
     comparison_adjunction.counit.app B = colimit.desc _ (counit_cofork B) :=
   by
@@ -232,7 +232,7 @@ theorem comparison_adjunction_counit_app
     coequalizer.π _ _ ≫ coequalizer.desc ((adj.homEquiv _ B).symm (𝟙 _)) _ =
       coequalizer.π _ _ ≫ coequalizer.desc _ _
   simp
-#align category_theory.monad.monadicity_internal.comparison_adjunction_counit_app CategoryTheory.Monad.MonadicityInternal.comparison_adjunction_counit_app
+#align category_theory.monad.monadicity_internal.comparison_adjunction_counit_app CategoryTheory.Monad.MonadicityInternal.comparisonAdjunction_counit_app
 
 end
 

@@ -220,11 +220,11 @@ noncomputable def quotAdjoinEquivQuotMap (hx : (conductor R x).comap (algebraMap
 #align quot_adjoin_equiv_quot_map quotAdjoinEquivQuotMap
 
 @[simp]
-theorem quot_adjoin_equiv_quot_map_apply_mk (hx : (conductor R x).comap (algebraMap R S) ⊔ I = ⊤)
+theorem quotAdjoinEquivQuotMap_apply_mk (hx : (conductor R x).comap (algebraMap R S) ⊔ I = ⊤)
     (h_alg : Function.Injective (algebraMap R<x> S)) (a : R<x>) :
     quotAdjoinEquivQuotMap hx h_alg ((I.map (algebraMap R R<x>)) a) = (I.map (algebraMap R S)) ↑a :=
   rfl
-#align quot_adjoin_equiv_quot_map_apply_mk quot_adjoin_equiv_quot_map_apply_mk
+#align quot_adjoin_equiv_quot_map_apply_mk quotAdjoinEquivQuotMap_apply_mk
 
 namespace KummerDedekind
 
@@ -270,12 +270,12 @@ theorem multiplicity_factors_map_eq_multiplicity (hI : IsMaximal I) (hI' : I ≠
   by
   rw [normalized_factors_map_equiv_normalized_factors_min_poly_mk, Equiv.coe_trans,
     Function.comp_apply,
-    multiplicity_normalized_factors_equiv_span_normalized_factors_symm_eq_multiplicity,
-    normalized_factors_equiv_of_quot_equiv_multiplicity_eq_multiplicity]
+    multiplicity_normalizedFactorsEquivSpanNormalizedFactors_symm_eq_multiplicity,
+    normalizedFactorsEquivOfQuotEquiv_multiplicity_eq_multiplicity]
 #align kummer_dedekind.multiplicity_factors_map_eq_multiplicity KummerDedekind.multiplicity_factors_map_eq_multiplicity
 
 /-- The **Kummer-Dedekind Theorem**. -/
-theorem normalized_factors_ideal_map_eq_normalized_factors_min_poly_mk_map (hI : IsMaximal I)
+theorem normalizedFactors_ideal_map_eq_normalizedFactors_min_poly_mk_map (hI : IsMaximal I)
     (hI' : I ≠ ⊥) :
     normalizedFactors (I.map (algebraMap R S)) =
       Multiset.map
@@ -318,7 +318,7 @@ theorem normalized_factors_ideal_map_eq_normalized_factors_min_poly_mk_map (hI :
   · exact Polynomial.map_monic_ne_zero (minpoly.monic pb.is_integral_gen)
   · exact irreducible_of_normalized_factor _ hJ
   · rwa [← bot_eq_zero, Ne.def, map_eq_bot_iff_of_injective pb.basis.algebra_map_injective]
-#align kummer_dedekind.normalized_factors_ideal_map_eq_normalized_factors_min_poly_mk_map KummerDedekind.normalized_factors_ideal_map_eq_normalized_factors_min_poly_mk_map
+#align kummer_dedekind.normalized_factors_ideal_map_eq_normalized_factors_min_poly_mk_map KummerDedekind.normalizedFactors_ideal_map_eq_normalizedFactors_min_poly_mk_map
 
 theorem Ideal.irreducible_map_of_irreducible_minpoly (hI : IsMaximal I) (hI' : I ≠ ⊥)
     (hf : Irreducible (map I (minpoly R pb.gen))) : Irreducible (I.map (algebraMap R S)) :=

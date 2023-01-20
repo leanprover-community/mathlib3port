@@ -62,9 +62,9 @@ protected theorem countable_iff_exists_injective {s : Set α} :
 
 /-- A set `s : set α` is countable if and only if there exists a function `α → ℕ` injective
 on `s`. -/
-theorem countable_iff_exists_inj_on {s : Set α} : s.Countable ↔ ∃ f : α → ℕ, InjOn f s :=
+theorem countable_iff_exists_injOn {s : Set α} : s.Countable ↔ ∃ f : α → ℕ, InjOn f s :=
   Set.countable_iff_exists_injective.trans exists_injOn_iff_injective.symm
-#align set.countable_iff_exists_inj_on Set.countable_iff_exists_inj_on
+#align set.countable_iff_exists_inj_on Set.countable_iff_exists_injOn
 
 /-- Convert `set.countable s` to `encodable s` (noncomputable). -/
 protected def Countable.toEncodable {s : Set α} : s.Countable → Encodable s :=
@@ -146,23 +146,23 @@ theorem Countable.image {s : Set α} (hs : s.Countable) (f : α → β) : (f '' 
   apply countable_range
 #align set.countable.image Set.Countable.image
 
-theorem MapsTo.countable_of_inj_on {s : Set α} {t : Set β} {f : α → β} (hf : MapsTo f s t)
+theorem MapsTo.countable_of_injOn {s : Set α} {t : Set β} {f : α → β} (hf : MapsTo f s t)
     (hf' : InjOn f s) (ht : t.Countable) : s.Countable :=
   have : Injective (hf.restrict f s t) := (injOn_iff_injective.1 hf').codRestrict _
   ⟨@Encodable.ofInj _ _ ht.toEncodable _ this⟩
-#align set.maps_to.countable_of_inj_on Set.MapsTo.countable_of_inj_on
+#align set.maps_to.countable_of_inj_on Set.MapsTo.countable_of_injOn
 
-theorem Countable.preimage_of_inj_on {s : Set β} (hs : s.Countable) {f : α → β}
+theorem Countable.preimage_of_injOn {s : Set β} (hs : s.Countable) {f : α → β}
     (hf : InjOn f (f ⁻¹' s)) : (f ⁻¹' s).Countable :=
   (mapsTo_preimage f s).countable_of_inj_on hf hs
-#align set.countable.preimage_of_inj_on Set.Countable.preimage_of_inj_on
+#align set.countable.preimage_of_inj_on Set.Countable.preimage_of_injOn
 
 protected theorem Countable.preimage {s : Set β} (hs : s.Countable) {f : α → β} (hf : Injective f) :
     (f ⁻¹' s).Countable :=
   hs.preimage_of_inj_on (hf.InjOn _)
 #align set.countable.preimage Set.Countable.preimage
 
-theorem exists_seq_supr_eq_top_iff_countable [CompleteLattice α] {p : α → Prop} (h : ∃ x, p x) :
+theorem exists_seq_supᵢ_eq_top_iff_countable [CompleteLattice α] {p : α → Prop} (h : ∃ x, p x) :
     (∃ s : ℕ → α, (∀ n, p (s n)) ∧ (⨆ n, s n) = ⊤) ↔
       ∃ S : Set α, S.Countable ∧ (∀ s ∈ S, p s) ∧ supₛ S = ⊤ :=
   by
@@ -179,32 +179,32 @@ theorem exists_seq_supr_eq_top_iff_countable [CompleteLattice α] {p : α → Pr
     · rcases(Set.countable_iff_exists_surjective hne).1 hSc with ⟨s, hs⟩
       refine' ⟨fun n => s n, fun n => hps _ (s n).coe_prop, _⟩
       rwa [hs.supr_comp, ← supₛ_eq_supᵢ']
-#align set.exists_seq_supr_eq_top_iff_countable Set.exists_seq_supr_eq_top_iff_countable
+#align set.exists_seq_supr_eq_top_iff_countable Set.exists_seq_supᵢ_eq_top_iff_countable
 
 theorem exists_seq_cover_iff_countable {p : Set α → Prop} (h : ∃ s, p s) :
     (∃ s : ℕ → Set α, (∀ n, p (s n)) ∧ (⋃ n, s n) = univ) ↔
       ∃ S : Set (Set α), S.Countable ∧ (∀ s ∈ S, p s) ∧ ⋃₀ S = univ :=
-  exists_seq_supr_eq_top_iff_countable h
+  exists_seq_supᵢ_eq_top_iff_countable h
 #align set.exists_seq_cover_iff_countable Set.exists_seq_cover_iff_countable
 
 theorem countable_of_injective_of_countable_image {s : Set α} {f : α → β} (hf : InjOn f s)
     (hs : (f '' s).Countable) : s.Countable :=
-  let ⟨g, hg⟩ := countable_iff_exists_inj_on.1 hs
-  countable_iff_exists_inj_on.2 ⟨g ∘ f, hg.comp hf (mapsTo_image _ _)⟩
+  let ⟨g, hg⟩ := countable_iff_exists_injOn.1 hs
+  countable_iff_exists_injOn.2 ⟨g ∘ f, hg.comp hf (mapsTo_image _ _)⟩
 #align set.countable_of_injective_of_countable_image Set.countable_of_injective_of_countable_image
 
-theorem countable_Union {t : ι → Set α} [Countable ι] (ht : ∀ i, (t i).Countable) :
+theorem countable_unionᵢ {t : ι → Set α} [Countable ι] (ht : ∀ i, (t i).Countable) :
     (⋃ i, t i).Countable := by
   haveI := fun a => (ht a).to_subtype
   rw [Union_eq_range_psigma]
   apply countable_range
-#align set.countable_Union Set.countable_Union
+#align set.countable_Union Set.countable_unionᵢ
 
 @[simp]
-theorem countable_Union_iff [Countable ι] {t : ι → Set α} :
+theorem countable_unionᵢ_iff [Countable ι] {t : ι → Set α} :
     (⋃ i, t i).Countable ↔ ∀ i, (t i).Countable :=
-  ⟨fun h i => h.mono <| subset_unionᵢ _ _, countable_Union⟩
-#align set.countable_Union_iff Set.countable_Union_iff
+  ⟨fun h i => h.mono <| subset_unionᵢ _ _, countable_unionᵢ⟩
+#align set.countable_Union_iff Set.countable_unionᵢ_iff
 
 theorem Countable.bUnion_iff {s : Set α} {t : ∀ a ∈ s, Set β} (hs : s.Countable) :
     (⋃ a ∈ s, t a ‹_›).Countable ↔ ∀ a ∈ s, (t a ‹_›).Countable :=
@@ -213,15 +213,15 @@ theorem Countable.bUnion_iff {s : Set α} {t : ∀ a ∈ s, Set β} (hs : s.Coun
   rw [bUnion_eq_Union, countable_Union_iff, SetCoe.forall']
 #align set.countable.bUnion_iff Set.Countable.bUnion_iff
 
-theorem Countable.sUnion_iff {s : Set (Set α)} (hs : s.Countable) :
+theorem Countable.unionₛ_iff {s : Set (Set α)} (hs : s.Countable) :
     (⋃₀ s).Countable ↔ ∀ a ∈ s, (a : _).Countable := by rw [sUnion_eq_bUnion, hs.bUnion_iff]
-#align set.countable.sUnion_iff Set.Countable.sUnion_iff
+#align set.countable.sUnion_iff Set.Countable.unionₛ_iff
 
 alias countable.bUnion_iff ↔ _ countable.bUnion
 #align set.countable.bUnion Set.Countable.bUnion
 
 alias countable.sUnion_iff ↔ _ countable.sUnion
-#align set.countable.sUnion Set.Countable.sUnion
+#align set.countable.sUnion Set.Countable.unionₛ
 
 @[simp]
 theorem countable_union {s t : Set α} : (s ∪ t).Countable ↔ s.Countable ∧ t.Countable := by
@@ -254,16 +254,16 @@ theorem Subsingleton.countable {s : Set α} (hs : s.Subsingleton) : s.Countable 
   hs.Finite.Countable
 #align set.subsingleton.countable Set.Subsingleton.countable
 
-theorem countable_is_top (α : Type _) [PartialOrder α] : { x : α | IsTop x }.Countable :=
-  (finite_is_top α).Countable
-#align set.countable_is_top Set.countable_is_top
+theorem countable_isTop (α : Type _) [PartialOrder α] : { x : α | IsTop x }.Countable :=
+  (finite_isTop α).Countable
+#align set.countable_is_top Set.countable_isTop
 
-theorem countable_is_bot (α : Type _) [PartialOrder α] : { x : α | IsBot x }.Countable :=
-  (finite_is_bot α).Countable
-#align set.countable_is_bot Set.countable_is_bot
+theorem countable_isBot (α : Type _) [PartialOrder α] : { x : α | IsBot x }.Countable :=
+  (finite_isBot α).Countable
+#align set.countable_is_bot Set.countable_isBot
 
 /-- The set of finite subsets of a countable set is countable. -/
-theorem countable_set_of_finite_subset {s : Set α} :
+theorem countable_setOf_finite_subset {s : Set α} :
     s.Countable → { t | Set.Finite t ∧ t ⊆ s }.Countable
   | ⟨h⟩ => by
     skip
@@ -272,7 +272,7 @@ theorem countable_set_of_finite_subset {s : Set α} :
     rintro t ⟨⟨ht⟩, ts⟩; skip
     refine' ⟨finset.univ.map (embedding_of_subset _ _ ts), Set.ext fun a => _⟩
     simpa using @ts a
-#align set.countable_set_of_finite_subset Set.countable_set_of_finite_subset
+#align set.countable_set_of_finite_subset Set.countable_setOf_finite_subset
 
 theorem countable_univ_pi {π : α → Type _} [Finite α] {s : ∀ a, Set (π a)}
     (hs : ∀ a, (s a).Countable) : (pi univ s).Countable :=

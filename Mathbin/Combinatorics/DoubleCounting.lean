@@ -58,42 +58,42 @@ def bipartiteAbove : Finset β :=
   t.filter (r a)
 #align finset.bipartite_above Finset.bipartiteAbove
 
-theorem bipartite_below_swap : t.bipartiteBelow (swap r) a = t.bipartiteAbove r a :=
+theorem bipartiteBelow_swap : t.bipartiteBelow (swap r) a = t.bipartiteAbove r a :=
   rfl
-#align finset.bipartite_below_swap Finset.bipartite_below_swap
+#align finset.bipartite_below_swap Finset.bipartiteBelow_swap
 
-theorem bipartite_above_swap : s.bipartiteAbove (swap r) b = s.bipartiteBelow r b :=
+theorem bipartiteAbove_swap : s.bipartiteAbove (swap r) b = s.bipartiteBelow r b :=
   rfl
-#align finset.bipartite_above_swap Finset.bipartite_above_swap
+#align finset.bipartite_above_swap Finset.bipartiteAbove_swap
 
 @[simp, norm_cast]
-theorem coe_bipartite_below : (s.bipartiteBelow r b : Set α) = { a ∈ s | r a b } :=
+theorem coe_bipartiteBelow : (s.bipartiteBelow r b : Set α) = { a ∈ s | r a b } :=
   coe_filter _ _
-#align finset.coe_bipartite_below Finset.coe_bipartite_below
+#align finset.coe_bipartite_below Finset.coe_bipartiteBelow
 
 @[simp, norm_cast]
-theorem coe_bipartite_above : (t.bipartiteAbove r a : Set β) = { b ∈ t | r a b } :=
+theorem coe_bipartiteAbove : (t.bipartiteAbove r a : Set β) = { b ∈ t | r a b } :=
   coe_filter _ _
-#align finset.coe_bipartite_above Finset.coe_bipartite_above
+#align finset.coe_bipartite_above Finset.coe_bipartiteAbove
 
 variable {s t a a' b b'}
 
 @[simp]
-theorem mem_bipartite_below {a : α} : a ∈ s.bipartiteBelow r b ↔ a ∈ s ∧ r a b :=
+theorem mem_bipartiteBelow {a : α} : a ∈ s.bipartiteBelow r b ↔ a ∈ s ∧ r a b :=
   mem_filter
-#align finset.mem_bipartite_below Finset.mem_bipartite_below
+#align finset.mem_bipartite_below Finset.mem_bipartiteBelow
 
 @[simp]
-theorem mem_bipartite_above {b : β} : b ∈ t.bipartiteAbove r a ↔ b ∈ t ∧ r a b :=
+theorem mem_bipartiteAbove {b : β} : b ∈ t.bipartiteAbove r a ↔ b ∈ t ∧ r a b :=
   mem_filter
-#align finset.mem_bipartite_above Finset.mem_bipartite_above
+#align finset.mem_bipartite_above Finset.mem_bipartiteAbove
 
-theorem sum_card_bipartite_above_eq_sum_card_bipartite_below [∀ a b, Decidable (r a b)] :
+theorem sum_card_bipartiteAbove_eq_sum_card_bipartiteBelow [∀ a b, Decidable (r a b)] :
     (∑ a in s, (t.bipartiteAbove r a).card) = ∑ b in t, (s.bipartiteBelow r b).card :=
   by
   simp_rw [card_eq_sum_ones, bipartite_above, bipartite_below, sum_filter]
   exact sum_comm
-#align finset.sum_card_bipartite_above_eq_sum_card_bipartite_below Finset.sum_card_bipartite_above_eq_sum_card_bipartite_below
+#align finset.sum_card_bipartite_above_eq_sum_card_bipartite_below Finset.sum_card_bipartiteAbove_eq_sum_card_bipartiteBelow
 
 /-- Double counting argument. Considering `r` as a bipartite graph, the LHS is a lower bound on the
 number of edges while the RHS is an upper bound. -/
@@ -103,7 +103,7 @@ theorem card_mul_le_card_mul [∀ a b, Decidable (r a b)]
   calc
     _ ≤ ∑ a in s, (t.bipartiteAbove r a).card := s.card_nsmul_le_sum _ _ hm
     _ = ∑ b in t, (s.bipartiteBelow r b).card :=
-      sum_card_bipartite_above_eq_sum_card_bipartite_below _
+      sum_card_bipartiteAbove_eq_sum_card_bipartiteBelow _
     _ ≤ _ := t.sum_le_card_nsmul _ _ hn
     
 #align finset.card_mul_le_card_mul Finset.card_mul_le_card_mul
@@ -151,15 +151,15 @@ namespace Fintype
 
 variable [Fintype α] [Fintype β] {r : α → β → Prop}
 
-theorem card_le_card_of_left_total_unique (h₁ : LeftTotal r) (h₂ : LeftUnique r) :
+theorem card_le_card_of_leftTotal_unique (h₁ : LeftTotal r) (h₂ : LeftUnique r) :
     Fintype.card α ≤ Fintype.card β :=
   card_le_card_of_forall_subsingleton r (by simpa using h₁) fun b _ a₁ ha₁ a₂ ha₂ => h₂ ha₁.2 ha₂.2
-#align fintype.card_le_card_of_left_total_unique Fintype.card_le_card_of_left_total_unique
+#align fintype.card_le_card_of_left_total_unique Fintype.card_le_card_of_leftTotal_unique
 
-theorem card_le_card_of_right_total_unique (h₁ : RightTotal r) (h₂ : RightUnique r) :
+theorem card_le_card_of_rightTotal_unique (h₁ : RightTotal r) (h₂ : RightUnique r) :
     Fintype.card β ≤ Fintype.card α :=
   card_le_card_of_forall_subsingleton' r (by simpa using h₁) fun b _ a₁ ha₁ a₂ ha₂ => h₂ ha₁.2 ha₂.2
-#align fintype.card_le_card_of_right_total_unique Fintype.card_le_card_of_right_total_unique
+#align fintype.card_le_card_of_right_total_unique Fintype.card_le_card_of_rightTotal_unique
 
 end Fintype
 

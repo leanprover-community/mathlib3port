@@ -61,7 +61,7 @@ def factorization (n : ℕ) : ℕ →₀ ℕ
       and_congr_right_iff]
     rintro p hp
     haveI := fact_iff.mpr hp
-    exact dvd_iff_padic_val_nat_ne_zero hn0
+    exact dvd_iff_padicValNat_ne_zero hn0
 #align nat.factorization Nat.factorization
 
 theorem factorization_def (n : ℕ) {p : ℕ} (pp : p.Prime) : n.factorization p = padicValNat p n := by
@@ -78,8 +78,8 @@ theorem factors_count_eq {n p : ℕ} : n.factors.count p = n.factorization p :=
   · rw [count_eq_zero_of_not_mem (mt prime_of_mem_factors pp)]
     simp [factorization, pp]
   simp only [factorization, coe_mk, pp, if_true]
-  rw [← PartEnat.coe_inj, padic_val_nat_def' pp.ne_one hn0,
-    UniqueFactorizationMonoid.multiplicity_eq_count_normalized_factors pp hn0.ne']
+  rw [← PartEnat.coe_inj, padicValNat_def' pp.ne_one hn0,
+    UniqueFactorizationMonoid.multiplicity_eq_count_normalizedFactors pp hn0.ne']
   simp [factors_eq]
 #align nat.factors_count_eq Nat.factors_count_eq
 
@@ -92,7 +92,7 @@ theorem factorization_eq_factors_multiset (n : ℕ) :
 
 theorem multiplicity_eq_factorization {n p : ℕ} (pp : p.Prime) (hn : n ≠ 0) :
     multiplicity p n = n.factorization p := by
-  simp [factorization, pp, padic_val_nat_def' pp.ne_one hn.bot_lt]
+  simp [factorization, pp, padicValNat_def' pp.ne_one hn.bot_lt]
 #align nat.multiplicity_eq_factorization Nat.multiplicity_eq_factorization
 
 /-! ### Basic facts about factorization -/
@@ -102,7 +102,7 @@ theorem multiplicity_eq_factorization {n p : ℕ} (pp : p.Prime) (hn : n ≠ 0) 
 theorem factorization_prod_pow_eq_self {n : ℕ} (hn : n ≠ 0) : n.factorization.Prod pow = n :=
   by
   rw [factorization_eq_factors_multiset n]
-  simp only [← prod_to_multiset, factorization, Multiset.coe_prod, Multiset.to_finsupp_to_multiset]
+  simp only [← prod_to_multiset, factorization, Multiset.coe_prod, Multiset.toFinsupp_toMultiset]
   exact prod_factors hn
 #align nat.factorization_prod_pow_eq_self Nat.factorization_prod_pow_eq_self
 
@@ -333,16 +333,16 @@ def factorizationEquiv : ℕ+ ≃ { f : ℕ →₀ ℕ | ∀ p ∈ f.support, Pr
   right_inv := fun ⟨f, hf⟩ => Subtype.ext <| prod_pow_factorization_eq_self hf
 #align nat.factorization_equiv Nat.factorizationEquiv
 
-theorem factorization_equiv_apply (n : ℕ+) : (factorizationEquiv n).1 = n.1.factorization :=
+theorem factorizationEquiv_apply (n : ℕ+) : (factorizationEquiv n).1 = n.1.factorization :=
   by
   cases n
   rfl
-#align nat.factorization_equiv_apply Nat.factorization_equiv_apply
+#align nat.factorization_equiv_apply Nat.factorizationEquiv_apply
 
-theorem factorization_equiv_inv_apply {f : ℕ →₀ ℕ} (hf : ∀ p ∈ f.support, Prime p) :
+theorem factorizationEquiv_inv_apply {f : ℕ →₀ ℕ} (hf : ∀ p ∈ f.support, Prime p) :
     (factorizationEquiv.symm ⟨f, hf⟩).1 = f.Prod pow :=
   rfl
-#align nat.factorization_equiv_inv_apply Nat.factorization_equiv_inv_apply
+#align nat.factorization_equiv_inv_apply Nat.factorizationEquiv_inv_apply
 
 /-! ### Generalisation of the "even part" and "odd part" of a natural number
 
@@ -717,16 +717,16 @@ theorem prod_factors_gcd_mul_prod_factors_mul {β : Type _} [CommMonoid β] (m n
 #align nat.prod_factors_gcd_mul_prod_factors_mul Nat.prod_factors_gcd_mul_prod_factors_mul
 #align nat.sum_factors_gcd_add_sum_factors_mul Nat.sum_factors_gcd_add_sum_factors_mul
 
-theorem set_of_pow_dvd_eq_Icc_factorization {n p : ℕ} (pp : p.Prime) (hn : n ≠ 0) :
+theorem setOf_pow_dvd_eq_icc_factorization {n p : ℕ} (pp : p.Prime) (hn : n ≠ 0) :
     { i : ℕ | i ≠ 0 ∧ p ^ i ∣ n } = Set.Icc 1 (n.factorization p) :=
   by
   ext
   simp [lt_succ_iff, one_le_iff_ne_zero, pp.pow_dvd_iff_le_factorization hn]
-#align nat.set_of_pow_dvd_eq_Icc_factorization Nat.set_of_pow_dvd_eq_Icc_factorization
+#align nat.set_of_pow_dvd_eq_Icc_factorization Nat.setOf_pow_dvd_eq_icc_factorization
 
 /-- The set of positive powers of prime `p` that divide `n` is exactly the set of
 positive natural numbers up to `n.factorization p`. -/
-theorem Icc_factorization_eq_pow_dvd (n : ℕ) {p : ℕ} (pp : Prime p) :
+theorem icc_factorization_eq_pow_dvd (n : ℕ) {p : ℕ} (pp : Prime p) :
     icc 1 (n.factorization p) = (ico 1 n).filter fun i : ℕ => p ^ i ∣ n :=
   by
   rcases eq_or_ne n 0 with (rfl | hn); · simp
@@ -734,14 +734,14 @@ theorem Icc_factorization_eq_pow_dvd (n : ℕ) {p : ℕ} (pp : Prime p) :
   simp only [mem_Icc, Finset.mem_filter, mem_Ico, and_assoc', and_congr_right_iff,
     pp.pow_dvd_iff_le_factorization hn, iff_and_self]
   exact fun H1 H2 => lt_of_le_of_lt H2 (factorization_lt p hn)
-#align nat.Icc_factorization_eq_pow_dvd Nat.Icc_factorization_eq_pow_dvd
+#align nat.Icc_factorization_eq_pow_dvd Nat.icc_factorization_eq_pow_dvd
 
 theorem factorization_eq_card_pow_dvd (n : ℕ) {p : ℕ} (pp : p.Prime) :
     n.factorization p = ((ico 1 n).filter fun i => p ^ i ∣ n).card := by
   simp [← Icc_factorization_eq_pow_dvd n pp]
 #align nat.factorization_eq_card_pow_dvd Nat.factorization_eq_card_pow_dvd
 
-theorem Ico_filter_pow_dvd_eq {n p b : ℕ} (pp : p.Prime) (hn : n ≠ 0) (hb : n ≤ p ^ b) :
+theorem ico_filter_pow_dvd_eq {n p b : ℕ} (pp : p.Prime) (hn : n ≠ 0) (hb : n ≤ p ^ b) :
     ((ico 1 n).filter fun i => p ^ i ∣ n) = (icc 1 b).filter fun i => p ^ i ∣ n :=
   by
   ext x
@@ -749,7 +749,7 @@ theorem Ico_filter_pow_dvd_eq {n p b : ℕ} (pp : p.Prime) (hn : n ≠ 0) (hb : 
   rintro h1 -
   simp [lt_of_pow_dvd_right hn pp.two_le h1,
     (pow_le_iff_le_right pp.two_le).1 ((le_of_dvd hn.bot_lt h1).trans hb)]
-#align nat.Ico_filter_pow_dvd_eq Nat.Ico_filter_pow_dvd_eq
+#align nat.Ico_filter_pow_dvd_eq Nat.ico_filter_pow_dvd_eq
 
 /-! ### Factorization and coprimes -/
 
@@ -912,7 +912,7 @@ theorem multiplicative_factorization' {β : Type _} [CommMonoid β] (f : ℕ →
 #align nat.multiplicative_factorization' Nat.multiplicative_factorization'
 
 /-- Two positive naturals are equal if their prime padic valuations are equal -/
-theorem eq_iff_prime_padic_val_nat_eq (a b : ℕ) (ha : a ≠ 0) (hb : b ≠ 0) :
+theorem eq_iff_prime_padicValNat_eq (a b : ℕ) (ha : a ≠ 0) (hb : b ≠ 0) :
     a = b ↔ ∀ p : ℕ, p.Prime → padicValNat p a = padicValNat p b :=
   by
   constructor
@@ -923,9 +923,9 @@ theorem eq_iff_prime_padic_val_nat_eq (a b : ℕ) (ha : a ≠ 0) (hb : b ≠ 0) 
     by_cases pp : p.prime
     · simp [factorization_def, pp, h p pp]
     · simp [factorization_eq_zero_of_non_prime, pp]
-#align nat.eq_iff_prime_padic_val_nat_eq Nat.eq_iff_prime_padic_val_nat_eq
+#align nat.eq_iff_prime_padic_val_nat_eq Nat.eq_iff_prime_padicValNat_eq
 
-theorem prod_pow_prime_padic_val_nat (n : Nat) (hn : n ≠ 0) (m : Nat) (pr : n < m) :
+theorem prod_pow_prime_padicValNat (n : Nat) (hn : n ≠ 0) (m : Nat) (pr : n < m) :
     (∏ p in Finset.filter Nat.Prime (Finset.range m), p ^ padicValNat p n) = n :=
   by
   nth_rw_rhs 1 [← factorization_prod_pow_eq_self hn]
@@ -942,7 +942,7 @@ theorem prod_pow_prime_padic_val_nat (n : Nat) (hn : n ≠ 0) (m : Nat) (pr : n 
     simp [finsupp.not_mem_support_iff.mp hp2]
   · intro p hp
     simp [factorization_def n (prime_of_mem_factorization hp)]
-#align nat.prod_pow_prime_padic_val_nat Nat.prod_pow_prime_padic_val_nat
+#align nat.prod_pow_prime_padic_val_nat Nat.prod_pow_prime_padicValNat
 
 /-! ### Lemmas about factorizations of particular functions -/
 
@@ -957,7 +957,7 @@ theorem card_multiples (n p : ℕ) : card ((Finset.range n).filter fun e => p �
 #align nat.card_multiples Nat.card_multiples
 
 /-- Exactly `n / p` naturals in `(0, n]` are multiples of `p`. -/
-theorem Ioc_filter_dvd_card_eq_div (n p : ℕ) : ((ioc 0 n).filter fun x => p ∣ x).card = n / p :=
+theorem ioc_filter_dvd_card_eq_div (n p : ℕ) : ((ioc 0 n).filter fun x => p ∣ x).card = n / p :=
   by
   induction' n with n IH
   · simp
@@ -969,7 +969,7 @@ theorem Ioc_filter_dvd_card_eq_div (n p : ℕ) : ((ioc 0 n).filter fun x => p �
     simp_rw [← Ico_succ_succ, Ico_insert_right (succ_le_succ hn.le), Ico_succ_right]
   simp [Nat.succ_div, add_ite, add_zero, h1, filter_insert, apply_ite card, card_insert_eq_ite, IH,
     Finset.mem_filter, mem_Ioc, not_le.2 (lt_add_one n)]
-#align nat.Ioc_filter_dvd_card_eq_div Nat.Ioc_filter_dvd_card_eq_div
+#align nat.Ioc_filter_dvd_card_eq_div Nat.ioc_filter_dvd_card_eq_div
 
 end Nat
 

@@ -43,8 +43,8 @@ theorem FiniteField.Matrix.charpoly_pow_card {K : Type _} [Field K] [Fintype K] 
     rw [AlgHom.map_det, ← coe_det_monoid_hom, ← (det_monoid_hom : Matrix n n K[X] →* K[X]).map_pow]
     apply congr_arg det
     refine' mat_poly_equiv.injective _
-    rw [AlgEquiv.map_pow, mat_poly_equiv_charmatrix, hk, sub_pow_char_pow_of_commute, ← C_pow]
-    · exact (id (mat_poly_equiv_eq_X_pow_sub_C (p ^ k) M) : _)
+    rw [AlgEquiv.map_pow, matPolyEquiv_charmatrix, hk, sub_pow_char_pow_of_commute, ← C_pow]
+    · exact (id (matPolyEquiv_eq_x_pow_sub_c (p ^ k) M) : _)
     · exact (C M).commute_X
   · exact congr_arg _ (Subsingleton.elim _ _)
 #align finite_field.matrix.charpoly_pow_card FiniteField.Matrix.charpoly_pow_card

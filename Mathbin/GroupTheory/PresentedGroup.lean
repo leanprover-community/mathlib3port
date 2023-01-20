@@ -65,7 +65,7 @@ local notation "F" => FreeGroup.lift f
 variable (h : ∀ r ∈ rels, F r = 1)
 
 theorem closure_rels_subset_ker : Subgroup.normalClosure rels ≤ MonoidHom.ker F :=
-  Subgroup.normal_closure_le_normal fun x w => (MonoidHom.mem_ker _).2 (h x w)
+  Subgroup.normalClosure_le_normal fun x w => (MonoidHom.mem_ker _).2 (h x w)
 #align presented_group.closure_rels_subset_ker PresentedGroup.closure_rels_subset_ker
 
 theorem to_group_eq_one_of_mem_closure : ∀ x ∈ Subgroup.normalClosure rels, F x = 1 := fun x w =>

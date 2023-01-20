@@ -301,7 +301,7 @@ theorem mul_den_eq_num {q : ℚ} : q * q.denom = q.num :=
     conv => pattern (occs := 1) q <;> (rw [← @num_denom q])
     rwa [coe_int_eq_mk, coe_nat_eq_mk]
   have : (q.denom : ℤ) ≠ 0 := ne_of_gt (by exact_mod_cast q.pos)
-  rw [Rat.mul_def' this one_ne_zero, mul_comm (q.denom : ℤ) 1, div_mk_div_cancel_left this]
+  rw [Rat.mul_def' this one_neZero, mul_comm (q.denom : ℤ) 1, div_mk_div_cancel_left this]
 #align rat.mul_denom_eq_num Rat.mul_den_eq_num
 -/
 

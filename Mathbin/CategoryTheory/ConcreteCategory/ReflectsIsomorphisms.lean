@@ -32,7 +32,7 @@ variable (D : Type (u + 1)) [Category D] [ConcreteCategory.{u} D]
 /-- A `forget₂ C D` forgetful functor between concrete categories `C` and `D`
 where `forget C` reflects isomorphisms, itself reflects isomorphisms.
 -/
-theorem reflects_isomorphisms_forget₂ [HasForget₂ C D] [ReflectsIsomorphisms (forget C)] :
+theorem reflectsIsomorphisms_forget₂ [HasForget₂ C D] [ReflectsIsomorphisms (forget C)] :
     ReflectsIsomorphisms (forget₂ C D) :=
   {
     reflects := fun X Y f i => by
@@ -45,7 +45,7 @@ theorem reflects_isomorphisms_forget₂ [HasForget₂ C D] [ReflectsIsomorphisms
         rw [← this]
         exact i'
       apply is_iso_of_reflects_iso f (forget C) }
-#align category_theory.reflects_isomorphisms_forget₂ CategoryTheory.reflects_isomorphisms_forget₂
+#align category_theory.reflects_isomorphisms_forget₂ CategoryTheory.reflectsIsomorphisms_forget₂
 
 end CategoryTheory
 

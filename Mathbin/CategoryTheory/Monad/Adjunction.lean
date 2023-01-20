@@ -251,7 +251,7 @@ instance [Reflective R] (X : (Adjunction.ofRightAdjoint R).toMonad.Algebra) :
         erw [X.unit]
         simp⟩⟩⟩
 
-instance comparison_ess_surj [Reflective R] :
+instance comparison_essSurj [Reflective R] :
     EssSurj (Monad.comparison (Adjunction.ofRightAdjoint R)) :=
   by
   refine' ⟨fun X => ⟨(left_adjoint R).obj X.a, ⟨_⟩⟩⟩
@@ -263,7 +263,7 @@ instance comparison_ess_surj [Reflective R] :
   rw [← cancel_epi ((adjunction.of_right_adjoint R).Unit.app X.A), adjunction.unit_naturality_assoc,
     adjunction.right_triangle_components, comp_id]
   apply (X.unit_assoc _).symm
-#align category_theory.reflective.comparison_ess_surj CategoryTheory.Reflective.comparison_ess_surj
+#align category_theory.reflective.comparison_ess_surj CategoryTheory.Reflective.comparison_essSurj
 
 instance comparisonFull [Full R] [IsRightAdjoint R] :
     Full (Monad.comparison (Adjunction.ofRightAdjoint R)) where preimage X Y f := R.preimage f.f

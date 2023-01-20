@@ -219,7 +219,7 @@ theorem map_π_preserves_coequalizer_inv_desc {W : D} (k : G.obj Y ⟶ W)
 #align category_theory.limits.map_π_preserves_coequalizer_inv_desc CategoryTheory.Limits.map_π_preserves_coequalizer_inv_desc
 
 @[reassoc.1]
-theorem map_π_preserves_coequalizer_inv_colim_map {X' Y' : D} (f' g' : X' ⟶ Y')
+theorem map_π_preserves_coequalizer_inv_colimMap {X' Y' : D} (f' g' : X' ⟶ Y')
     [HasCoequalizer f' g'] (p : G.obj X ⟶ X') (q : G.obj Y ⟶ Y') (wf : G.map f ≫ q = p ≫ f')
     (wg : G.map g ≫ q = p ≫ g') :
     G.map (coequalizer.π f g) ≫
@@ -227,10 +227,10 @@ theorem map_π_preserves_coequalizer_inv_colim_map {X' Y' : D} (f' g' : X' ⟶ Y
           colimMap (parallelPairHom (G.map f) (G.map g) f' g' p q wf wg) =
       q ≫ coequalizer.π f' g' :=
   by rw [← category.assoc, map_π_preserves_coequalizer_inv, ι_colim_map, parallel_pair_hom_app_one]
-#align category_theory.limits.map_π_preserves_coequalizer_inv_colim_map CategoryTheory.Limits.map_π_preserves_coequalizer_inv_colim_map
+#align category_theory.limits.map_π_preserves_coequalizer_inv_colim_map CategoryTheory.Limits.map_π_preserves_coequalizer_inv_colimMap
 
 @[reassoc.1]
-theorem map_π_preserves_coequalizer_inv_colim_map_desc {X' Y' : D} (f' g' : X' ⟶ Y')
+theorem map_π_preserves_coequalizer_inv_colimMap_desc {X' Y' : D} (f' g' : X' ⟶ Y')
     [HasCoequalizer f' g'] (p : G.obj X ⟶ X') (q : G.obj Y ⟶ Y') (wf : G.map f ≫ q = p ≫ f')
     (wg : G.map g ≫ q = p ≫ g') {Z' : D} (h : Y' ⟶ Z') (wh : f' ≫ h = g' ≫ h) :
     G.map (coequalizer.π f g) ≫
@@ -240,7 +240,7 @@ theorem map_π_preserves_coequalizer_inv_colim_map_desc {X' Y' : D} (f' g' : X' 
   by
   slice_lhs 1 3 => rw [map_π_preserves_coequalizer_inv_colim_map]
   slice_lhs 2 3 => rw [coequalizer.π_desc]
-#align category_theory.limits.map_π_preserves_coequalizer_inv_colim_map_desc CategoryTheory.Limits.map_π_preserves_coequalizer_inv_colim_map_desc
+#align category_theory.limits.map_π_preserves_coequalizer_inv_colim_map_desc CategoryTheory.Limits.map_π_preserves_coequalizer_inv_colimMap_desc
 
 /-- Any functor preserves coequalizers of split pairs. -/
 instance (priority := 1) preservesSplitCoequalizers (f g : X ⟶ Y) [HasSplitCoequalizer f g] :

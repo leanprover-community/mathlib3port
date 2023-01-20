@@ -41,28 +41,28 @@ def stdBasisMatrix (i : m) (j : n) (a : α) : Matrix m n α := fun i' j' =>
 #align matrix.std_basis_matrix Matrix.stdBasisMatrix
 
 @[simp]
-theorem smul_std_basis_matrix (i : m) (j : n) (a b : α) :
+theorem smul_stdBasisMatrix (i : m) (j : n) (a b : α) :
     b • stdBasisMatrix i j a = stdBasisMatrix i j (b • a) :=
   by
   unfold std_basis_matrix
   ext
   simp
-#align matrix.smul_std_basis_matrix Matrix.smul_std_basis_matrix
+#align matrix.smul_std_basis_matrix Matrix.smul_stdBasisMatrix
 
 @[simp]
-theorem std_basis_matrix_zero (i : m) (j : n) : stdBasisMatrix i j (0 : α) = 0 :=
+theorem stdBasisMatrix_zero (i : m) (j : n) : stdBasisMatrix i j (0 : α) = 0 :=
   by
   unfold std_basis_matrix
   ext
   simp
-#align matrix.std_basis_matrix_zero Matrix.std_basis_matrix_zero
+#align matrix.std_basis_matrix_zero Matrix.stdBasisMatrix_zero
 
-theorem std_basis_matrix_add (i : m) (j : n) (a b : α) :
+theorem stdBasisMatrix_add (i : m) (j : n) (a b : α) :
     stdBasisMatrix i j (a + b) = stdBasisMatrix i j a + stdBasisMatrix i j b :=
   by
   unfold std_basis_matrix; ext
   split_ifs with h <;> simp [h]
-#align matrix.std_basis_matrix_add Matrix.std_basis_matrix_add
+#align matrix.std_basis_matrix_add Matrix.stdBasisMatrix_add
 
 theorem matrix_eq_sum_std_basis [Fintype m] [Fintype n] (x : Matrix m n α) :
     x = ∑ (i : m) (j : n), stdBasisMatrix i j (x i j) :=

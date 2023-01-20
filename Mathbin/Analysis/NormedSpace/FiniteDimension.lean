@@ -77,16 +77,16 @@ def toLinearIsometryEquiv (li : E₁ →ₗᵢ[R₁] F) (h : finrank R₁ E₁ =
 #align linear_isometry.to_linear_isometry_equiv LinearIsometry.toLinearIsometryEquiv
 
 @[simp]
-theorem coe_to_linear_isometry_equiv (li : E₁ →ₗᵢ[R₁] F) (h : finrank R₁ E₁ = finrank R₁ F) :
+theorem coe_toLinearIsometryEquiv (li : E₁ →ₗᵢ[R₁] F) (h : finrank R₁ E₁ = finrank R₁ F) :
     (li.toLinearIsometryEquiv h : E₁ → F) = li :=
   rfl
-#align linear_isometry.coe_to_linear_isometry_equiv LinearIsometry.coe_to_linear_isometry_equiv
+#align linear_isometry.coe_to_linear_isometry_equiv LinearIsometry.coe_toLinearIsometryEquiv
 
 @[simp]
-theorem to_linear_isometry_equiv_apply (li : E₁ →ₗᵢ[R₁] F) (h : finrank R₁ E₁ = finrank R₁ F)
+theorem toLinearIsometryEquiv_apply (li : E₁ →ₗᵢ[R₁] F) (h : finrank R₁ E₁ = finrank R₁ F)
     (x : E₁) : (li.toLinearIsometryEquiv h) x = li x :=
   rfl
-#align linear_isometry.to_linear_isometry_equiv_apply LinearIsometry.to_linear_isometry_equiv_apply
+#align linear_isometry.to_linear_isometry_equiv_apply LinearIsometry.toLinearIsometryEquiv_apply
 
 end LinearIsometry
 
@@ -109,16 +109,16 @@ def toAffineIsometryEquiv [Inhabited P₁] (li : P₁ →ᵃⁱ[𝕜] P₂) (h :
 #align affine_isometry.to_affine_isometry_equiv AffineIsometry.toAffineIsometryEquiv
 
 @[simp]
-theorem coe_to_affine_isometry_equiv [Inhabited P₁] (li : P₁ →ᵃⁱ[𝕜] P₂)
+theorem coe_toAffineIsometryEquiv [Inhabited P₁] (li : P₁ →ᵃⁱ[𝕜] P₂)
     (h : finrank 𝕜 V₁ = finrank 𝕜 V₂) : (li.toAffineIsometryEquiv h : P₁ → P₂) = li :=
   rfl
-#align affine_isometry.coe_to_affine_isometry_equiv AffineIsometry.coe_to_affine_isometry_equiv
+#align affine_isometry.coe_to_affine_isometry_equiv AffineIsometry.coe_toAffineIsometryEquiv
 
 @[simp]
-theorem to_affine_isometry_equiv_apply [Inhabited P₁] (li : P₁ →ᵃⁱ[𝕜] P₂)
+theorem toAffineIsometryEquiv_apply [Inhabited P₁] (li : P₁ →ᵃⁱ[𝕜] P₂)
     (h : finrank 𝕜 V₁ = finrank 𝕜 V₂) (x : P₁) : (li.toAffineIsometryEquiv h) x = li x :=
   rfl
-#align affine_isometry.to_affine_isometry_equiv_apply AffineIsometry.to_affine_isometry_equiv_apply
+#align affine_isometry.to_affine_isometry_equiv_apply AffineIsometry.toAffineIsometryEquiv_apply
 
 end AffineIsometry
 
@@ -136,13 +136,13 @@ variable {PE PF : Type _} [MetricSpace PE] [NormedAddTorsor E PE] [MetricSpace P
 
 include E F
 
-theorem AffineMap.continuous_of_finite_dimensional (f : PE →ᵃ[𝕜] PF) : Continuous f :=
+theorem AffineMap.continuous_of_finiteDimensional (f : PE →ᵃ[𝕜] PF) : Continuous f :=
   AffineMap.continuous_linear_iff.1 f.linear.continuous_of_finite_dimensional
-#align affine_map.continuous_of_finite_dimensional AffineMap.continuous_of_finite_dimensional
+#align affine_map.continuous_of_finite_dimensional AffineMap.continuous_of_finiteDimensional
 
-theorem AffineEquiv.continuous_of_finite_dimensional (f : PE ≃ᵃ[𝕜] PF) : Continuous f :=
+theorem AffineEquiv.continuous_of_finiteDimensional (f : PE ≃ᵃ[𝕜] PF) : Continuous f :=
   f.toAffineMap.continuous_of_finite_dimensional
-#align affine_equiv.continuous_of_finite_dimensional AffineEquiv.continuous_of_finite_dimensional
+#align affine_equiv.continuous_of_finite_dimensional AffineEquiv.continuous_of_finiteDimensional
 
 /-- Reinterpret an affine equivalence as a homeomorphism. -/
 def AffineEquiv.toHomeomorphOfFiniteDimensional (f : PE ≃ᵃ[𝕜] PF) : PE ≃ₜ PF
@@ -155,16 +155,16 @@ def AffineEquiv.toHomeomorphOfFiniteDimensional (f : PE ≃ᵃ[𝕜] PF) : PE �
 #align affine_equiv.to_homeomorph_of_finite_dimensional AffineEquiv.toHomeomorphOfFiniteDimensional
 
 @[simp]
-theorem AffineEquiv.coe_to_homeomorph_of_finite_dimensional (f : PE ≃ᵃ[𝕜] PF) :
+theorem AffineEquiv.coe_toHomeomorphOfFiniteDimensional (f : PE ≃ᵃ[𝕜] PF) :
     ⇑f.toHomeomorphOfFiniteDimensional = f :=
   rfl
-#align affine_equiv.coe_to_homeomorph_of_finite_dimensional AffineEquiv.coe_to_homeomorph_of_finite_dimensional
+#align affine_equiv.coe_to_homeomorph_of_finite_dimensional AffineEquiv.coe_toHomeomorphOfFiniteDimensional
 
 @[simp]
-theorem AffineEquiv.coe_to_homeomorph_of_finite_dimensional_symm (f : PE ≃ᵃ[𝕜] PF) :
+theorem AffineEquiv.coe_toHomeomorphOfFiniteDimensional_symm (f : PE ≃ᵃ[𝕜] PF) :
     ⇑f.toHomeomorphOfFiniteDimensional.symm = f.symm :=
   rfl
-#align affine_equiv.coe_to_homeomorph_of_finite_dimensional_symm AffineEquiv.coe_to_homeomorph_of_finite_dimensional_symm
+#align affine_equiv.coe_to_homeomorph_of_finite_dimensional_symm AffineEquiv.coe_toHomeomorphOfFiniteDimensional_symm
 
 end Affine
 
@@ -174,7 +174,7 @@ theorem ContinuousLinearMap.continuous_det : Continuous fun f : E →L[𝕜] E =
   by_cases h : ∃ s : Finset E, Nonempty (Basis (↥s) 𝕜 E)
   · rcases h with ⟨s, ⟨b⟩⟩
     haveI : FiniteDimensional 𝕜 E := FiniteDimensional.of_fintype_basis b
-    simp_rw [LinearMap.det_eq_det_to_matrix_of_finset b]
+    simp_rw [LinearMap.det_eq_det_toMatrix_of_finset b]
     refine' Continuous.matrix_det _
     exact
       ((LinearMap.toMatrix b b).toLinearMap.comp
@@ -193,12 +193,12 @@ irreducible_def lipschitzExtensionConstant (E' : Type _) [NormedAddCommGroup E']
   max (‖A.symm.toContinuousLinearMap‖₊ * ‖A.toContinuousLinearMap‖₊) 1
 #align lipschitz_extension_constant lipschitzExtensionConstant
 
-theorem lipschitz_extension_constant_pos (E' : Type _) [NormedAddCommGroup E'] [NormedSpace ℝ E']
+theorem lipschitzExtensionConstant_pos (E' : Type _) [NormedAddCommGroup E'] [NormedSpace ℝ E']
     [FiniteDimensional ℝ E'] : 0 < lipschitzExtensionConstant E' :=
   by
   rw [lipschitzExtensionConstant]
   exact zero_lt_one.trans_le (le_max_right _ _)
-#align lipschitz_extension_constant_pos lipschitz_extension_constant_pos
+#align lipschitz_extension_constant_pos lipschitzExtensionConstant_pos
 
 /-- Any `K`-Lipschitz map from a subset `s` of a metric space `α` to a finite-dimensional real
 vector space `E'` can be extended to a Lipschitz map on the whole space `α`, with a slightly worse
@@ -229,7 +229,7 @@ theorem LipschitzOnWith.extend_finite_dimension {α : Type _} [PseudoMetricSpace
     simp only [(· ∘ ·), ← this, A.symm_apply_apply]
 #align lipschitz_on_with.extend_finite_dimension LipschitzOnWith.extend_finite_dimension
 
-theorem LinearMap.exists_antilipschitz_with [FiniteDimensional 𝕜 E] (f : E →ₗ[𝕜] F)
+theorem LinearMap.exists_antilipschitzWith [FiniteDimensional 𝕜 E] (f : E →ₗ[𝕜] F)
     (hf : f.ker = ⊥) : ∃ K > 0, AntilipschitzWith K f :=
   by
   cases subsingleton_or_nontrivial E
@@ -237,14 +237,14 @@ theorem LinearMap.exists_antilipschitz_with [FiniteDimensional 𝕜 E] (f : E �
   · rw [LinearMap.ker_eq_bot] at hf
     let e : E ≃L[𝕜] f.range := (LinearEquiv.ofInjective f hf).toContinuousLinearEquiv
     exact ⟨_, e.nnnorm_symm_pos, e.antilipschitz⟩
-#align linear_map.exists_antilipschitz_with LinearMap.exists_antilipschitz_with
+#align linear_map.exists_antilipschitz_with LinearMap.exists_antilipschitzWith
 
 protected theorem LinearIndependent.eventually {ι} [Finite ι] {f : ι → E}
     (hf : LinearIndependent 𝕜 f) : ∀ᶠ g in 𝓝 f, LinearIndependent 𝕜 g :=
   by
   cases nonempty_fintype ι
-  simp only [Fintype.linear_independent_iff'] at hf⊢
-  rcases LinearMap.exists_antilipschitz_with _ hf with ⟨K, K0, hK⟩
+  simp only [Fintype.linearIndependent_iff'] at hf⊢
+  rcases LinearMap.exists_antilipschitzWith _ hf with ⟨K, K0, hK⟩
   have : tendsto (fun g : ι → E => ∑ i, ‖g i - f i‖) (𝓝 f) (𝓝 <| ∑ i, ‖f i - f i‖) :=
     tendsto_finset_sum _ fun i hi =>
       tendsto.norm <| ((continuous_apply i).Tendsto _).sub tendsto_const_nhds
@@ -257,41 +257,41 @@ protected theorem LinearIndependent.eventually {ι} [Finite ι] {f : ι → E}
   rw [LinearMap.ker_eq_bot]
   refine' (hK.add_sub_lipschitz_with (LipschitzWith.of_dist_le_mul fun v u => _) hg).Injective
   simp only [dist_eq_norm, LinearMap.lsum_apply, Pi.sub_apply, LinearMap.sum_apply,
-    LinearMap.comp_apply, LinearMap.proj_apply, LinearMap.smul_right_apply, LinearMap.id_apply, ←
+    LinearMap.comp_apply, LinearMap.proj_apply, LinearMap.smulRight_apply, LinearMap.id_apply, ←
     Finset.sum_sub_distrib, ← smul_sub, ← sub_smul, Nnreal.coe_sum, coe_nnnorm, Finset.sum_mul]
   refine' norm_sum_le_of_le _ fun i _ => _
   rw [norm_smul, mul_comm]
   exact mul_le_mul_of_nonneg_left (norm_le_pi_norm (v - u) i) (norm_nonneg _)
 #align linear_independent.eventually LinearIndependent.eventually
 
-theorem is_open_set_of_linear_independent {ι : Type _} [Finite ι] :
+theorem isOpen_setOf_linearIndependent {ι : Type _} [Finite ι] :
     IsOpen { f : ι → E | LinearIndependent 𝕜 f } :=
-  is_open_iff_mem_nhds.2 fun f => LinearIndependent.eventually
-#align is_open_set_of_linear_independent is_open_set_of_linear_independent
+  isOpen_iff_mem_nhds.2 fun f => LinearIndependent.eventually
+#align is_open_set_of_linear_independent isOpen_setOf_linearIndependent
 
-theorem is_open_set_of_nat_le_rank (n : ℕ) : IsOpen { f : E →L[𝕜] F | ↑n ≤ rank (f : E →ₗ[𝕜] F) } :=
+theorem isOpen_setOf_nat_le_rank (n : ℕ) : IsOpen { f : E →L[𝕜] F | ↑n ≤ rank (f : E →ₗ[𝕜] F) } :=
   by
-  simp only [le_rank_iff_exists_linear_independent_finset, set_of_exists, ← exists_prop]
-  refine' is_open_bUnion fun t ht => _
+  simp only [le_rank_iff_exists_linearIndependent_finset, set_of_exists, ← exists_prop]
+  refine' isOpen_bUnion fun t ht => _
   have : Continuous fun f : E →L[𝕜] F => fun x : (t : Set E) => f x :=
     continuous_pi fun x => (ContinuousLinearMap.apply 𝕜 F (x : E)).Continuous
   exact is_open_set_of_linear_independent.preimage this
-#align is_open_set_of_nat_le_rank is_open_set_of_nat_le_rank
+#align is_open_set_of_nat_le_rank isOpen_setOf_nat_le_rank
 
 /-- Two finite-dimensional normed spaces are continuously linearly equivalent if they have the same
 (finite) dimension. -/
-theorem FiniteDimensional.nonempty_continuous_linear_equiv_of_finrank_eq [FiniteDimensional 𝕜 E]
+theorem FiniteDimensional.nonempty_continuousLinearEquiv_of_finrank_eq [FiniteDimensional 𝕜 E]
     [FiniteDimensional 𝕜 F] (cond : finrank 𝕜 E = finrank 𝕜 F) : Nonempty (E ≃L[𝕜] F) :=
-  (nonempty_linear_equiv_of_finrank_eq cond).map LinearEquiv.toContinuousLinearEquiv
-#align finite_dimensional.nonempty_continuous_linear_equiv_of_finrank_eq FiniteDimensional.nonempty_continuous_linear_equiv_of_finrank_eq
+  (nonempty_linearEquiv_of_finrank_eq cond).map LinearEquiv.toContinuousLinearEquiv
+#align finite_dimensional.nonempty_continuous_linear_equiv_of_finrank_eq FiniteDimensional.nonempty_continuousLinearEquiv_of_finrank_eq
 
 /-- Two finite-dimensional normed spaces are continuously linearly equivalent if and only if they
 have the same (finite) dimension. -/
-theorem FiniteDimensional.nonempty_continuous_linear_equiv_iff_finrank_eq [FiniteDimensional 𝕜 E]
+theorem FiniteDimensional.nonempty_continuousLinearEquiv_iff_finrank_eq [FiniteDimensional 𝕜 E]
     [FiniteDimensional 𝕜 F] : Nonempty (E ≃L[𝕜] F) ↔ finrank 𝕜 E = finrank 𝕜 F :=
   ⟨fun ⟨h⟩ => h.toLinearEquiv.finrank_eq, fun h =>
-    FiniteDimensional.nonempty_continuous_linear_equiv_of_finrank_eq h⟩
-#align finite_dimensional.nonempty_continuous_linear_equiv_iff_finrank_eq FiniteDimensional.nonempty_continuous_linear_equiv_iff_finrank_eq
+    FiniteDimensional.nonempty_continuousLinearEquiv_of_finrank_eq h⟩
+#align finite_dimensional.nonempty_continuous_linear_equiv_iff_finrank_eq FiniteDimensional.nonempty_continuousLinearEquiv_iff_finrank_eq
 
 /-- A continuous linear equivalence between two finite-dimensional normed spaces of the same
 (finite) dimension. -/
@@ -421,7 +421,7 @@ instance [FiniteDimensional 𝕜 E] [SecondCountableTopology F] :
     replace hn : ∀ i : Fin d, ‖(φ - (v.constrL <| u ∘ n)) (v i)‖ ≤ ε / (2 * C)
     · simp [hn]
     have : C * (ε / (2 * C)) = ε / 2 := by
-      rw [eq_div_iff (two_ne_zero : (2 : ℝ) ≠ 0), mul_comm, ← mul_assoc,
+      rw [eq_div_iff (two_neZero : (2 : ℝ) ≠ 0), mul_comm, ← mul_assoc,
         mul_div_cancel' _ (ne_of_gt h_2C)]
     specialize hC (le_of_lt hε2C) hn
     rwa [this] at hC
@@ -442,28 +442,28 @@ theorem FiniteDimensional.complete [FiniteDimensional 𝕜 E] : CompleteSpace E 
   by
   set e := ContinuousLinearEquiv.ofFinrankEq (@finrank_fin_fun 𝕜 _ (finrank 𝕜 E)).symm
   have : UniformEmbedding e.to_linear_equiv.to_equiv.symm := e.symm.uniform_embedding
-  exact (complete_space_congr this).1 (by infer_instance)
+  exact (completeSpace_congr this).1 (by infer_instance)
 #align finite_dimensional.complete FiniteDimensional.complete
 
 variable {𝕜 E}
 
 /-- A finite-dimensional subspace is complete. -/
-theorem Submodule.complete_of_finite_dimensional (s : Submodule 𝕜 E) [FiniteDimensional 𝕜 s] :
+theorem Submodule.complete_of_finiteDimensional (s : Submodule 𝕜 E) [FiniteDimensional 𝕜 s] :
     IsComplete (s : Set E) :=
-  complete_space_coe_iff_is_complete.1 (FiniteDimensional.complete 𝕜 s)
-#align submodule.complete_of_finite_dimensional Submodule.complete_of_finite_dimensional
+  completeSpace_coe_iff_isComplete.1 (FiniteDimensional.complete 𝕜 s)
+#align submodule.complete_of_finite_dimensional Submodule.complete_of_finiteDimensional
 
 /-- A finite-dimensional subspace is closed. -/
-theorem Submodule.closed_of_finite_dimensional (s : Submodule 𝕜 E) [FiniteDimensional 𝕜 s] :
+theorem Submodule.closed_of_finiteDimensional (s : Submodule 𝕜 E) [FiniteDimensional 𝕜 s] :
     IsClosed (s : Set E) :=
   s.complete_of_finite_dimensional.IsClosed
-#align submodule.closed_of_finite_dimensional Submodule.closed_of_finite_dimensional
+#align submodule.closed_of_finite_dimensional Submodule.closed_of_finiteDimensional
 
-theorem AffineSubspace.closed_of_finite_dimensional {P : Type _} [MetricSpace P]
+theorem AffineSubspace.closed_of_finiteDimensional {P : Type _} [MetricSpace P]
     [NormedAddTorsor E P] (s : AffineSubspace 𝕜 P) [FiniteDimensional 𝕜 s.direction] :
     IsClosed (s : Set P) :=
   s.is_closed_direction_iff.mp s.direction.closed_of_finite_dimensional
-#align affine_subspace.closed_of_finite_dimensional AffineSubspace.closed_of_finite_dimensional
+#align affine_subspace.closed_of_finite_dimensional AffineSubspace.closed_of_finiteDimensional
 
 section Riesz
 
@@ -476,7 +476,7 @@ theorem exists_norm_le_le_norm_sub_of_finset {c : 𝕜} (hc : 1 < ‖c‖) {R : 
   haveI : FiniteDimensional 𝕜 F :=
     Module.finite_def.2
       ((Submodule.fg_top _).2 (Submodule.fg_def.2 ⟨s, Finset.finite_to_set _, rfl⟩))
-  have Fclosed : IsClosed (F : Set E) := Submodule.closed_of_finite_dimensional _
+  have Fclosed : IsClosed (F : Set E) := Submodule.closed_of_finiteDimensional _
   have : ∃ x, x ∉ F := by
     contrapose! h
     have : (⊤ : Submodule 𝕜 E) = F := by
@@ -524,7 +524,7 @@ variable (𝕜)
 
 /-- **Riesz's theorem**: if a closed ball with center zero of positive radius is compact in a vector
 space, then the space is finite-dimensional. -/
-theorem finite_dimensional_of_is_compact_closed_ball₀ {r : ℝ} (rpos : 0 < r)
+theorem finiteDimensional_of_isCompact_closed_ball₀ {r : ℝ} (rpos : 0 < r)
     (h : IsCompact (Metric.closedBall (0 : E) r)) : FiniteDimensional 𝕜 E :=
   by
   by_contra hfin
@@ -537,7 +537,7 @@ theorem finite_dimensional_of_is_compact_closed_ball₀ {r : ℝ} (rpos : 0 < r)
   have A : ∀ n, g n ∈ Metric.closedBall (0 : E) r :=
     by
     intro n
-    simp only [norm_smul, dist_zero_right, Metric.mem_closed_ball]
+    simp only [norm_smul, dist_zero_right, Metric.mem_closedBall]
     calc
       ‖c‖ * ‖f n‖ ≤ r / R * R := mul_le_mul hc.2.le (fle n) (norm_nonneg _) rRpos.le
       _ = r := by field_simp [(zero_lt_one.trans Rgt).ne']
@@ -548,7 +548,7 @@ theorem finite_dimensional_of_is_compact_closed_ball₀ {r : ℝ} (rpos : 0 < r)
     h.tendsto_subseq A
   have B : CauchySeq (g ∘ φ) := φlim.cauchy_seq
   obtain ⟨N, hN⟩ : ∃ N : ℕ, ∀ n : ℕ, N ≤ n → dist ((g ∘ φ) n) ((g ∘ φ) N) < ‖c‖ :=
-    Metric.cauchy_seq_iff'.1 B ‖c‖ hc.1
+    Metric.cauchySeq_iff'.1 B ‖c‖ hc.1
   apply lt_irrefl ‖c‖
   calc
     ‖c‖ ≤ dist (g (φ (N + 1))) (g (φ N)) :=
@@ -559,23 +559,23 @@ theorem finite_dimensional_of_is_compact_closed_ball₀ {r : ℝ} (rpos : 0 < r)
       exact φmono (Nat.lt_succ_self N)
     _ < ‖c‖ := hN (N + 1) (Nat.le_succ N)
     
-#align finite_dimensional_of_is_compact_closed_ball₀ finite_dimensional_of_is_compact_closed_ball₀
+#align finite_dimensional_of_is_compact_closed_ball₀ finiteDimensional_of_isCompact_closed_ball₀
 
 /-- **Riesz's theorem**: if a closed ball of positive radius is compact in a vector space, then the
 space is finite-dimensional. -/
-theorem finite_dimensional_of_is_compact_closed_ball {r : ℝ} (rpos : 0 < r) {c : E}
+theorem finiteDimensional_of_isCompact_closedBall {r : ℝ} (rpos : 0 < r) {c : E}
     (h : IsCompact (Metric.closedBall c r)) : FiniteDimensional 𝕜 E :=
   by
-  apply finite_dimensional_of_is_compact_closed_ball₀ 𝕜 rpos
+  apply finiteDimensional_of_isCompact_closed_ball₀ 𝕜 rpos
   have : Continuous fun x => -c + x := continuous_const.add continuous_id
   simpa using h.image this
-#align finite_dimensional_of_is_compact_closed_ball finite_dimensional_of_is_compact_closed_ball
+#align finite_dimensional_of_is_compact_closed_ball finiteDimensional_of_isCompact_closedBall
 
 /-- If a function has compact multiplicative support, then either the function is trivial or the
 space if finite-dimensional. -/
 @[to_additive
       "If a function has compact support, then either the function is trivial or the\nspace if finite-dimensional."]
-theorem HasCompactMulSupport.eq_one_or_finite_dimensional {X : Type _} [TopologicalSpace X] [One X]
+theorem HasCompactMulSupport.eq_one_or_finiteDimensional {X : Type _} [TopologicalSpace X] [One X]
     [T2Space X] {f : E → X} (hf : HasCompactMulSupport f) (h'f : Continuous f) :
     f = 1 ∨ FiniteDimensional 𝕜 E := by
   by_cases h : ∀ x, f x = 1
@@ -590,22 +590,22 @@ theorem HasCompactMulSupport.eq_one_or_finite_dimensional {X : Type _} [Topologi
   obtain ⟨r, rpos, hr⟩ : ∃ (r : ℝ)(hi : 0 < r), Metric.closedBall x r ⊆ Function.mulSupport f
   exact metric.nhds_basis_closed_ball.mem_iff.1 this
   have : IsCompact (Metric.closedBall x r) :=
-    is_compact_of_is_closed_subset hf Metric.is_closed_ball (hr.trans (subset_mul_tsupport _))
-  exact finite_dimensional_of_is_compact_closed_ball 𝕜 rpos this
-#align has_compact_mul_support.eq_one_or_finite_dimensional HasCompactMulSupport.eq_one_or_finite_dimensional
+    isCompact_of_isClosed_subset hf Metric.isClosed_ball (hr.trans (subset_mulTsupport _))
+  exact finiteDimensional_of_isCompact_closedBall 𝕜 rpos this
+#align has_compact_mul_support.eq_one_or_finite_dimensional HasCompactMulSupport.eq_one_or_finiteDimensional
 #align has_compact_support.eq_zero_or_finite_dimensional HasCompactSupport.eq_zero_or_finite_dimensional
 
 end Riesz
 
 /-- An injective linear map with finite-dimensional domain is a closed embedding. -/
-theorem LinearEquiv.closed_embedding_of_injective {f : E →ₗ[𝕜] F} (hf : f.ker = ⊥)
+theorem LinearEquiv.closedEmbedding_of_injective {f : E →ₗ[𝕜] F} (hf : f.ker = ⊥)
     [FiniteDimensional 𝕜 E] : ClosedEmbedding ⇑f :=
   let g := LinearEquiv.ofInjective f (LinearMap.ker_eq_bot.mp hf)
   { embedding_subtype_coe.comp g.toContinuousLinearEquiv.toHomeomorph.Embedding with
     closed_range := by
       haveI := f.finite_dimensional_range
       simpa [f.range_coe] using f.range.closed_of_finite_dimensional }
-#align linear_equiv.closed_embedding_of_injective LinearEquiv.closed_embedding_of_injective
+#align linear_equiv.closed_embedding_of_injective LinearEquiv.closedEmbedding_of_injective
 
 theorem ContinuousLinearMap.exists_right_inverse_of_surjective [FiniteDimensional 𝕜 F]
     (f : E →L[𝕜] F) (hf : LinearMap.range f = ⊤) :
@@ -614,18 +614,18 @@ theorem ContinuousLinearMap.exists_right_inverse_of_surjective [FiniteDimensiona
   ⟨g.toContinuousLinearMap, ContinuousLinearMap.ext <| LinearMap.ext_iff.1 hg⟩
 #align continuous_linear_map.exists_right_inverse_of_surjective ContinuousLinearMap.exists_right_inverse_of_surjective
 
-theorem closed_embedding_smul_left {c : E} (hc : c ≠ 0) : ClosedEmbedding fun x : 𝕜 => x • c :=
-  LinearEquiv.closed_embedding_of_injective (LinearMap.ker_to_span_singleton 𝕜 E hc)
-#align closed_embedding_smul_left closed_embedding_smul_left
+theorem closedEmbedding_smul_left {c : E} (hc : c ≠ 0) : ClosedEmbedding fun x : 𝕜 => x • c :=
+  LinearEquiv.closedEmbedding_of_injective (LinearMap.ker_toSpanSingleton 𝕜 E hc)
+#align closed_embedding_smul_left closedEmbedding_smul_left
 
 -- `smul` is a closed map in the first argument.
-theorem is_closed_map_smul_left (c : E) : IsClosedMap fun x : 𝕜 => x • c :=
+theorem isClosedMap_smul_left (c : E) : IsClosedMap fun x : 𝕜 => x • c :=
   by
   by_cases hc : c = 0
   · simp_rw [hc, smul_zero]
-    exact is_closed_map_const
-  · exact (closed_embedding_smul_left hc).IsClosedMap
-#align is_closed_map_smul_left is_closed_map_smul_left
+    exact isClosedMap_const
+  · exact (closedEmbedding_smul_left hc).IsClosedMap
+#align is_closed_map_smul_left isClosedMap_smul_left
 
 open ContinuousLinearMap
 
@@ -643,7 +643,7 @@ def ContinuousLinearEquiv.piRing (ι : Type _) [Fintype ι] [DecidableEq ι] :
       exact (ContinuousLinearMap.apply 𝕜 E (Pi.single i 1)).Continuous
     continuous_inv_fun :=
       by
-      simp_rw [LinearEquiv.inv_fun_eq_symm, LinearEquiv.trans_symm, LinearEquiv.symm_symm]
+      simp_rw [LinearEquiv.invFun_eq_symm, LinearEquiv.trans_symm, LinearEquiv.symm_symm]
       change
         Continuous
           (linear_map.to_continuous_linear_map.to_linear_map.comp
@@ -651,8 +651,8 @@ def ContinuousLinearEquiv.piRing (ι : Type _) [Fintype ι] [DecidableEq ι] :
       apply AddMonoidHomClass.continuous_of_bound _ (Fintype.card ι : ℝ) fun g => _
       rw [← nsmul_eq_mul]
       apply op_norm_le_bound _ (nsmul_nonneg (norm_nonneg g) (Fintype.card ι)) fun t => _
-      simp_rw [LinearMap.coe_comp, LinearEquiv.coe_to_linear_map, Function.comp_apply,
-        LinearMap.coe_to_continuous_linear_map', LinearEquiv.pi_ring_symm_apply]
+      simp_rw [LinearMap.coe_comp, LinearEquiv.coe_toLinearMap, Function.comp_apply,
+        LinearMap.coe_to_continuous_linear_map', LinearEquiv.piRing_symm_apply]
       apply le_trans (norm_sum_le _ _)
       rw [smul_mul_assoc]
       refine' Finset.sum_le_card_nsmul _ _ _ fun i hi => _
@@ -661,7 +661,7 @@ def ContinuousLinearEquiv.piRing (ι : Type _) [Fintype ι] [DecidableEq ι] :
 #align continuous_linear_equiv.pi_ring ContinuousLinearEquiv.piRing
 
 /-- A family of continuous linear maps is continuous on `s` if all its applications are. -/
-theorem continuous_on_clm_apply {X : Type _} [TopologicalSpace X] [FiniteDimensional 𝕜 E]
+theorem continuousOn_clm_apply {X : Type _} [TopologicalSpace X] [FiniteDimensional 𝕜 E]
     {f : X → E →L[𝕜] F} {s : Set X} : ContinuousOn f s ↔ ∀ y, ContinuousOn (fun x => f x y) s :=
   by
   refine' ⟨fun h y => (ContinuousLinearMap.apply 𝕜 F y).Continuous.comp_continuous_on h, fun h => _⟩
@@ -672,11 +672,11 @@ theorem continuous_on_clm_apply {X : Type _} [TopologicalSpace X] [FiniteDimensi
     (e₁.arrow_congr (1 : F ≃L[𝕜] F)).trans (ContinuousLinearEquiv.piRing (Fin d))
   rw [← Function.comp.left_id f, ← e₂.symm_comp_self]
   exact e₂.symm.continuous.comp_continuous_on (continuous_on_pi.mpr fun i => h _)
-#align continuous_on_clm_apply continuous_on_clm_apply
+#align continuous_on_clm_apply continuousOn_clm_apply
 
 theorem continuous_clm_apply {X : Type _} [TopologicalSpace X] [FiniteDimensional 𝕜 E]
     {f : X → E →L[𝕜] F} : Continuous f ↔ ∀ y, Continuous fun x => f x y := by
-  simp_rw [continuous_iff_continuous_on_univ, continuous_on_clm_apply]
+  simp_rw [continuous_iff_continuousOn_univ, continuousOn_clm_apply]
 #align continuous_clm_apply continuous_clm_apply
 
 end CompleteField
@@ -709,25 +709,24 @@ instance (priority := 900) FiniteDimensional.proper_real (E : Type u) [NormedAdd
 `x` that is not equal to the whole space, then there exists a point `y ∈ frontier s` at distance
 `metric.inf_dist x sᶜ` from `x`. See also
 `is_compact.exists_mem_frontier_inf_dist_compl_eq_dist`. -/
-theorem exists_mem_frontier_inf_dist_compl_eq_dist {E : Type _} [NormedAddCommGroup E]
+theorem exists_mem_frontier_infDist_compl_eq_dist {E : Type _} [NormedAddCommGroup E]
     [NormedSpace ℝ E] [FiniteDimensional ℝ E] {x : E} {s : Set E} (hx : x ∈ s) (hs : s ≠ univ) :
     ∃ y ∈ frontier s, Metric.infDist x (sᶜ) = dist x y :=
   by
-  rcases Metric.exists_mem_closure_inf_dist_eq_dist (nonempty_compl.2 hs) x with ⟨y, hys, hyd⟩
+  rcases Metric.exists_mem_closure_infDist_eq_dist (nonempty_compl.2 hs) x with ⟨y, hys, hyd⟩
   rw [closure_compl] at hys
   refine'
     ⟨y,
-      ⟨Metric.closed_ball_inf_dist_compl_subset_closure hx <|
-          Metric.mem_closed_ball.2 <| ge_of_eq _,
+      ⟨Metric.closedBall_infDist_compl_subset_closure hx <| Metric.mem_closedBall.2 <| ge_of_eq _,
         hys⟩,
       hyd⟩
   rwa [dist_comm]
-#align exists_mem_frontier_inf_dist_compl_eq_dist exists_mem_frontier_inf_dist_compl_eq_dist
+#align exists_mem_frontier_inf_dist_compl_eq_dist exists_mem_frontier_infDist_compl_eq_dist
 
 /-- If `K` is a compact set in a nontrivial real normed space and `x ∈ K`, then there exists a point
 `y` of the boundary of `K` at distance `metric.inf_dist x Kᶜ` from `x`. See also
 `exists_mem_frontier_inf_dist_compl_eq_dist`. -/
-theorem IsCompact.exists_mem_frontier_inf_dist_compl_eq_dist {E : Type _} [NormedAddCommGroup E]
+theorem IsCompact.exists_mem_frontier_infDist_compl_eq_dist {E : Type _} [NormedAddCommGroup E]
     [NormedSpace ℝ E] [Nontrivial E] {x : E} {K : Set E} (hK : IsCompact K) (hx : x ∈ K) :
     ∃ y ∈ frontier K, Metric.infDist x (Kᶜ) = dist x y :=
   by
@@ -738,13 +737,13 @@ theorem IsCompact.exists_mem_frontier_inf_dist_compl_eq_dist {E : Type _} [Norme
   · rw [mem_interior_iff_mem_nhds, metric.nhds_basis_closed_ball.mem_iff] at hx'
     rcases hx' with ⟨r, hr₀, hrK⟩
     have : FiniteDimensional ℝ E :=
-      finite_dimensional_of_is_compact_closed_ball ℝ hr₀
-        (is_compact_of_is_closed_subset hK Metric.is_closed_ball hrK)
-    exact exists_mem_frontier_inf_dist_compl_eq_dist hx hK.ne_univ
+      finiteDimensional_of_isCompact_closedBall ℝ hr₀
+        (isCompact_of_isClosed_subset hK Metric.isClosed_ball hrK)
+    exact exists_mem_frontier_infDist_compl_eq_dist hx hK.ne_univ
   · refine' ⟨x, hx', _⟩
     rw [frontier_eq_closure_inter_closure] at hx'
-    rw [Metric.inf_dist_zero_of_mem_closure hx'.2, dist_self]
-#align is_compact.exists_mem_frontier_inf_dist_compl_eq_dist IsCompact.exists_mem_frontier_inf_dist_compl_eq_dist
+    rw [Metric.infDist_zero_of_mem_closure hx'.2, dist_self]
+#align is_compact.exists_mem_frontier_inf_dist_compl_eq_dist IsCompact.exists_mem_frontier_infDist_compl_eq_dist
 
 /-- In a finite dimensional vector space over `ℝ`, the series `∑ x, ‖f x‖` is unconditionally
 summable if and only if the series `∑ x, f x` is unconditionally summable. One implication holds in
@@ -778,35 +777,35 @@ theorem summable_norm_iff {α E : Type _} [NormedAddCommGroup E] [NormedSpace �
 theorem summable_of_is_O' {ι E F : Type _} [NormedAddCommGroup E] [CompleteSpace E]
     [NormedAddCommGroup F] [NormedSpace ℝ F] [FiniteDimensional ℝ F] {f : ι → E} {g : ι → F}
     (hg : Summable g) (h : f =O[cofinite] g) : Summable f :=
-  summable_of_is_O (summable_norm_iff.mpr hg) h.norm_right
+  summable_of_isO (summable_norm_iff.mpr hg) h.norm_right
 #align summable_of_is_O' summable_of_is_O'
 
-theorem summable_of_is_O_nat' {E F : Type _} [NormedAddCommGroup E] [CompleteSpace E]
+theorem summable_of_isO_nat' {E F : Type _} [NormedAddCommGroup E] [CompleteSpace E]
     [NormedAddCommGroup F] [NormedSpace ℝ F] [FiniteDimensional ℝ F] {f : ℕ → E} {g : ℕ → F}
     (hg : Summable g) (h : f =O[at_top] g) : Summable f :=
-  summable_of_is_O_nat (summable_norm_iff.mpr hg) h.norm_right
-#align summable_of_is_O_nat' summable_of_is_O_nat'
+  summable_of_isO_nat (summable_norm_iff.mpr hg) h.norm_right
+#align summable_of_is_O_nat' summable_of_isO_nat'
 
-theorem summable_of_is_equivalent {ι E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
+theorem summable_of_isEquivalent {ι E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
     [FiniteDimensional ℝ E] {f : ι → E} {g : ι → E} (hg : Summable g) (h : f ~[cofinite] g) :
     Summable f :=
   hg.trans_sub (summable_of_is_O' hg h.IsO.IsO)
-#align summable_of_is_equivalent summable_of_is_equivalent
+#align summable_of_is_equivalent summable_of_isEquivalent
 
-theorem summable_of_is_equivalent_nat {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
+theorem summable_of_isEquivalent_nat {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
     [FiniteDimensional ℝ E] {f : ℕ → E} {g : ℕ → E} (hg : Summable g) (h : f ~[at_top] g) :
     Summable f :=
-  hg.trans_sub (summable_of_is_O_nat' hg h.IsO.IsO)
-#align summable_of_is_equivalent_nat summable_of_is_equivalent_nat
+  hg.trans_sub (summable_of_isO_nat' hg h.IsO.IsO)
+#align summable_of_is_equivalent_nat summable_of_isEquivalent_nat
 
 theorem IsEquivalent.summable_iff {ι E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
     [FiniteDimensional ℝ E] {f : ι → E} {g : ι → E} (h : f ~[cofinite] g) :
     Summable f ↔ Summable g :=
-  ⟨fun hf => summable_of_is_equivalent hf h.symm, fun hg => summable_of_is_equivalent hg h⟩
+  ⟨fun hf => summable_of_isEquivalent hf h.symm, fun hg => summable_of_isEquivalent hg h⟩
 #align is_equivalent.summable_iff IsEquivalent.summable_iff
 
 theorem IsEquivalent.summable_iff_nat {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
     [FiniteDimensional ℝ E] {f : ℕ → E} {g : ℕ → E} (h : f ~[at_top] g) : Summable f ↔ Summable g :=
-  ⟨fun hf => summable_of_is_equivalent_nat hf h.symm, fun hg => summable_of_is_equivalent_nat hg h⟩
+  ⟨fun hf => summable_of_isEquivalent_nat hf h.symm, fun hg => summable_of_isEquivalent_nat hg h⟩
 #align is_equivalent.summable_iff_nat IsEquivalent.summable_iff_nat
 

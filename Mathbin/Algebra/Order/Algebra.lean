@@ -40,13 +40,13 @@ variable {R A : Type _} {a b : A} {r : R}
 
 variable [OrderedCommRing R] [OrderedRing A] [Algebra R A] [OrderedSMul R A]
 
-theorem algebra_map_monotone : Monotone (algebraMap R A) := fun a b h =>
+theorem algebraMap_monotone : Monotone (algebraMap R A) := fun a b h =>
   by
-  rw [Algebra.algebra_map_eq_smul_one, Algebra.algebra_map_eq_smul_one, ← sub_nonneg, ← sub_smul]
+  rw [Algebra.algebraMap_eq_smul_one, Algebra.algebraMap_eq_smul_one, ← sub_nonneg, ← sub_smul]
   trans (b - a) • (0 : A)
   · simp
   · exact smul_le_smul_of_nonneg zero_le_one (sub_nonneg.mpr h)
-#align algebra_map_monotone algebra_map_monotone
+#align algebra_map_monotone algebraMap_monotone
 
 end OrderedAlgebra
 

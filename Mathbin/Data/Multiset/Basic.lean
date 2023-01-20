@@ -615,14 +615,14 @@ theorem mem_toList {a : α} {s : Multiset α} : a ∈ s.toList ↔ a ∈ s := by
 -/
 
 @[simp]
-theorem to_list_eq_singleton_iff {a : α} {m : Multiset α} : m.toList = [a] ↔ m = {a} := by
+theorem toList_eq_singleton_iff {a : α} {m : Multiset α} : m.toList = [a] ↔ m = {a} := by
   rw [← perm_singleton, ← coe_eq_coe, coe_to_list, coe_singleton]
-#align multiset.to_list_eq_singleton_iff Multiset.to_list_eq_singleton_iff
+#align multiset.to_list_eq_singleton_iff Multiset.toList_eq_singleton_iff
 
 @[simp]
-theorem to_list_singleton (a : α) : ({a} : Multiset α).toList = [a] :=
-  Multiset.to_list_eq_singleton_iff.2 rfl
-#align multiset.to_list_singleton Multiset.to_list_singleton
+theorem toList_singleton (a : α) : ({a} : Multiset α).toList = [a] :=
+  Multiset.toList_eq_singleton_iff.2 rfl
+#align multiset.to_list_singleton Multiset.toList_singleton
 
 end ToList
 

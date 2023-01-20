@@ -100,7 +100,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align norm_unit_one normUnit_oneₓ'. -/
 @[simp]
 theorem normUnit_one : normUnit (1 : α) = 1 :=
-  norm_unit_coe_units 1
+  normUnit_coe_units 1
 #align norm_unit_one normUnit_one
 
 #print normalize /-

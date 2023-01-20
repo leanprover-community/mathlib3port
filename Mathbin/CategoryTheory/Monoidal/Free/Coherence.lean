@@ -95,16 +95,16 @@ def normalizeObj : F C → NormalMonoidalObject C → N C
 #align category_theory.free_monoidal_category.normalize_obj CategoryTheory.FreeMonoidalCategory.normalizeObj
 
 @[simp]
-theorem normalize_obj_unitor (n : NormalMonoidalObject C) : normalizeObj (𝟙_ (F C)) n = ⟨n⟩ :=
+theorem normalizeObj_unitor (n : NormalMonoidalObject C) : normalizeObj (𝟙_ (F C)) n = ⟨n⟩ :=
   rfl
-#align category_theory.free_monoidal_category.normalize_obj_unitor CategoryTheory.FreeMonoidalCategory.normalize_obj_unitor
+#align category_theory.free_monoidal_category.normalize_obj_unitor CategoryTheory.FreeMonoidalCategory.normalizeObj_unitor
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem normalize_obj_tensor (X Y : F C) (n : NormalMonoidalObject C) :
+theorem normalizeObj_tensor (X Y : F C) (n : NormalMonoidalObject C) :
     normalizeObj (X ⊗ Y) n = normalizeObj Y (normalizeObj X n).as :=
   rfl
-#align category_theory.free_monoidal_category.normalize_obj_tensor CategoryTheory.FreeMonoidalCategory.normalize_obj_tensor
+#align category_theory.free_monoidal_category.normalize_obj_tensor CategoryTheory.FreeMonoidalCategory.normalizeObj_tensor
 
 section
 
@@ -197,18 +197,18 @@ def tensorFunc : F C ⥤ N C ⥤ F C
 #align category_theory.free_monoidal_category.tensor_func CategoryTheory.FreeMonoidalCategory.tensorFunc
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem tensor_func_map_app {X Y : F C} (f : X ⟶ Y) (n) : ((tensorFunc C).map f).app n = 𝟙 _ ⊗ f :=
+theorem tensorFunc_map_app {X Y : F C} (f : X ⟶ Y) (n) : ((tensorFunc C).map f).app n = 𝟙 _ ⊗ f :=
   rfl
-#align category_theory.free_monoidal_category.tensor_func_map_app CategoryTheory.FreeMonoidalCategory.tensor_func_map_app
+#align category_theory.free_monoidal_category.tensor_func_map_app CategoryTheory.FreeMonoidalCategory.tensorFunc_map_app
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem tensor_func_obj_map (Z : F C) {n n' : N C} (f : n ⟶ n') :
+theorem tensorFunc_obj_map (Z : F C) {n n' : N C} (f : n ⟶ n') :
     ((tensorFunc C).obj Z).map f = inclusion.map f ⊗ 𝟙 Z :=
   by
   cases n
   cases n'
   tidy
-#align category_theory.free_monoidal_category.tensor_func_obj_map CategoryTheory.FreeMonoidalCategory.tensor_func_obj_map
+#align category_theory.free_monoidal_category.tensor_func_obj_map CategoryTheory.FreeMonoidalCategory.tensorFunc_obj_map
 
 /-- Auxiliary definition for `normalize_iso`. Here we construct the isomorphism between
     `n ⊗ X` and `normalize X n`. -/
@@ -223,16 +223,16 @@ def normalizeIsoApp :
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem normalize_iso_app_tensor (X Y : F C) (n : N C) :
+theorem normalizeIsoApp_tensor (X Y : F C) (n : N C) :
     normalizeIsoApp C (X ⊗ Y) n =
       (α_ _ _ _).symm ≪≫ tensorIso (normalizeIsoApp C X n) (Iso.refl _) ≪≫ normalizeIsoApp _ _ _ :=
   rfl
-#align category_theory.free_monoidal_category.normalize_iso_app_tensor CategoryTheory.FreeMonoidalCategory.normalize_iso_app_tensor
+#align category_theory.free_monoidal_category.normalize_iso_app_tensor CategoryTheory.FreeMonoidalCategory.normalizeIsoApp_tensor
 
 @[simp]
-theorem normalize_iso_app_unitor (n : N C) : normalizeIsoApp C (𝟙_ (F C)) n = ρ_ _ :=
+theorem normalizeIsoApp_unitor (n : N C) : normalizeIsoApp C (𝟙_ (F C)) n = ρ_ _ :=
   rfl
-#align category_theory.free_monoidal_category.normalize_iso_app_unitor CategoryTheory.FreeMonoidalCategory.normalize_iso_app_unitor
+#align category_theory.free_monoidal_category.normalize_iso_app_unitor CategoryTheory.FreeMonoidalCategory.normalizeIsoApp_unitor
 
 /-- Auxiliary definition for `normalize_iso`. -/
 @[simp]
@@ -323,7 +323,7 @@ def normalizeIso : tensorFunc C ≅ normalize' C :=
         conv_lhs => rw [← @category.id_comp (F C) _ _ _ ⟦f_g⟧]
         simp only [category.comp_id, tensor_comp, category.assoc]
         congr 2
-        rw [← mk_tensor, Quotient.lift_mk]
+        rw [← mk_tensor, Quotient.lift_mk'']
         dsimp
         rw [functor.map_comp, ← category.assoc, ← f_ih_g ⟦f_g⟧, ←
           @category.comp_id (F C) _ _ _ ⟦f_g⟧, ←

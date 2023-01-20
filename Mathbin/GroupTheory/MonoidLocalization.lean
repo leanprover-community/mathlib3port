@@ -317,10 +317,10 @@ theorem mk_pow (n : ℕ) (a : M) (b : S) : mk a b ^ n = mk (a ^ n) (b ^ n) :=
 #align add_localization.mk_nsmul addLocalization.mk_nsmul
 
 @[simp, to_additive]
-theorem rec_mk {p : Localization S → Sort u} (f : ∀ (a : M) (b : S), p (mk a b)) (H) (a : M)
+theorem ndrec_mk {p : Localization S → Sort u} (f : ∀ (a : M) (b : S), p (mk a b)) (H) (a : M)
     (b : S) : (rec f H (mk a b) : p (mk a b)) = f a b :=
   rfl
-#align localization.rec_mk Localization.rec_mk
+#align localization.rec_mk Localization.ndrec_mk
 #align add_localization.rec_mk addLocalization.rec_mk
 
 /-- Non-dependent recursion principle for localizations: given elements `f a b : p`
@@ -331,15 +331,15 @@ then `f` is defined on the whole `localization S`. -/
       "Non-dependent recursion principle for `add_localizations`: given elements `f a b : p`\nfor all `a b`, such that `r S (a, b) (c, d)` implies `f a b = f c d`,\nthen `f` is defined on the whole `localization S`."]
 def liftOn {p : Sort u} (x : Localization S) (f : M → S → p)
     (H : ∀ {a c : M} {b d : S} (h : r S (a, b) (c, d)), f a b = f c d) : p :=
-  rec f (fun a c b d h => by rw [eq_rec_constant, H h]) x
+  rec f (fun a c b d h => by rw [eq_ndrec_constant, H h]) x
 #align localization.lift_on Localization.liftOn
 #align add_localization.lift_on addLocalization.liftOn
 
 @[to_additive]
-theorem lift_on_mk {p : Sort u} (f : ∀ (a : M) (b : S), p) (H) (a : M) (b : S) :
+theorem liftOn_mk {p : Sort u} (f : ∀ (a : M) (b : S), p) (H) (a : M) (b : S) :
     liftOn (mk a b) f H = f a b :=
   rfl
-#align localization.lift_on_mk Localization.lift_on_mk
+#align localization.lift_on_mk Localization.liftOn_mk
 #align add_localization.lift_on_mk addLocalization.lift_on_mk
 
 @[elab_as_elim, to_additive]
@@ -371,10 +371,10 @@ def liftOn₂ {p : Sort u} (x y : Localization S) (f : M → S → M → S → p
 #align add_localization.lift_on₂ addLocalization.liftOn₂
 
 @[to_additive]
-theorem lift_on₂_mk {p : Sort _} (f : M → S → M → S → p) (H) (a c : M) (b d : S) :
+theorem liftOn₂_mk {p : Sort _} (f : M → S → M → S → p) (H) (a c : M) (b d : S) :
     liftOn₂ (mk a b) (mk c d) f H = f a b c d :=
   rfl
-#align localization.lift_on₂_mk Localization.lift_on₂_mk
+#align localization.lift_on₂_mk Localization.liftOn₂_mk
 #align add_localization.lift_on₂_mk addLocalization.lift_on₂_mk
 
 @[elab_as_elim, to_additive]
@@ -447,7 +447,7 @@ instance [SMul R₁ M] [SMul R₂ M] [IsScalarTower R₁ M M] [IsScalarTower R�
     where smul_assoc s t :=
     Localization.ind <| Prod.rec fun r x => by simp only [smul_mk, smul_assoc s t r]
 
-instance smul_comm_class_right {R : Type _} [SMul R M] [IsScalarTower R M M] :
+instance sMulCommClass_right {R : Type _} [SMul R M] [IsScalarTower R M M] :
     SMulCommClass R (Localization S) (Localization S)
     where smul_comm s :=
     Localization.ind <|
@@ -455,16 +455,16 @@ instance smul_comm_class_right {R : Type _} [SMul R M] [IsScalarTower R M M] :
         Localization.ind <|
           Prod.rec fun r₂ x₂ => by
             simp only [smul_mk, smul_eq_mul, mk_mul, mul_comm r₁, smul_mul_assoc]
-#align localization.smul_comm_class_right Localization.smul_comm_class_right
+#align localization.smul_comm_class_right Localization.sMulCommClass_right
 
-instance is_scalar_tower_right {R : Type _} [SMul R M] [IsScalarTower R M M] :
+instance isScalarTower_right {R : Type _} [SMul R M] [IsScalarTower R M M] :
     IsScalarTower R (Localization S) (Localization S)
     where smul_assoc s :=
     Localization.ind <|
       Prod.rec fun r₁ x₁ =>
         Localization.ind <|
           Prod.rec fun r₂ x₂ => by simp only [smul_mk, smul_eq_mul, mk_mul, smul_mul_assoc]
-#align localization.is_scalar_tower_right Localization.is_scalar_tower_right
+#align localization.is_scalar_tower_right Localization.isScalarTower_right
 
 instance [SMul R M] [SMul Rᵐᵒᵖ M] [IsScalarTower R M M] [IsScalarTower Rᵐᵒᵖ M M]
     [IsCentralScalar R M] : IsCentralScalar R (Localization S)
@@ -544,10 +544,10 @@ theorem ext_iff {f g : LocalizationMap S N} : f = g ↔ ∀ x, f.toMap x = g.toM
 #align add_submonoid.localization_map.ext_iff AddSubmonoid.LocalizationMap.ext_iff
 
 @[to_additive]
-theorem to_map_injective : Function.Injective (@LocalizationMap.toMap _ _ S N _) := fun _ _ h =>
+theorem toMap_injective : Function.Injective (@LocalizationMap.toMap _ _ S N _) := fun _ _ h =>
   ext <| MonoidHom.ext_iff.1 h
-#align submonoid.localization_map.to_map_injective Submonoid.LocalizationMap.to_map_injective
-#align add_submonoid.localization_map.to_map_injective AddSubmonoid.LocalizationMap.to_map_injective
+#align submonoid.localization_map.to_map_injective Submonoid.LocalizationMap.toMap_injective
+#align add_submonoid.localization_map.to_map_injective AddSubmonoid.LocalizationMap.toMap_injective
 
 @[to_additive]
 theorem map_units (f : LocalizationMap S N) (y : S) : IsUnit (f.toMap y) :=
@@ -831,10 +831,10 @@ theorem mk'_mul_cancel_left (x) (y : S) : f.mk' ((y : M) * x) y = f.toMap x := b
 #align add_submonoid.localization_map.mk'_add_cancel_left AddSubmonoid.LocalizationMap.mk'_add_cancel_left
 
 @[to_additive]
-theorem is_unit_comp (j : N →* P) (y : S) : IsUnit (j.comp f.toMap y) :=
+theorem isUnit_comp (j : N →* P) (y : S) : IsUnit (j.comp f.toMap y) :=
   ⟨Units.map j <| IsUnit.liftRight (f.toMap.restrict S) f.map_units y,
     show j _ = j _ from congr_arg j <| IsUnit.coe_liftRight (f.toMap.restrict S) f.map_units _⟩
-#align submonoid.localization_map.is_unit_comp Submonoid.LocalizationMap.is_unit_comp
+#align submonoid.localization_map.is_unit_comp Submonoid.LocalizationMap.isUnit_comp
 #align add_submonoid.localization_map.is_add_unit_comp AddSubmonoid.LocalizationMap.is_add_unit_comp
 
 variable {g : M →* P}
@@ -977,12 +977,12 @@ theorem lift_of_comp (j : N →* P) : f.lift (f.is_unit_comp j) = j :=
 #align add_submonoid.localization_map.lift_of_comp AddSubmonoid.LocalizationMap.lift_of_comp
 
 @[to_additive]
-theorem epic_of_localization_map {j k : N →* P} (h : ∀ a, j.comp f.toMap a = k.comp f.toMap a) :
+theorem epic_of_localizationMap {j k : N →* P} (h : ∀ a, j.comp f.toMap a = k.comp f.toMap a) :
     j = k := by
   rw [← f.lift_of_comp j, ← f.lift_of_comp k]
   congr 1 with x; exact h x
-#align submonoid.localization_map.epic_of_localization_map Submonoid.LocalizationMap.epic_of_localization_map
-#align add_submonoid.localization_map.epic_of_localization_map AddSubmonoid.LocalizationMap.epic_of_localization_map
+#align submonoid.localization_map.epic_of_localization_map Submonoid.LocalizationMap.epic_of_localizationMap
+#align add_submonoid.localization_map.epic_of_localization_map AddSubmonoid.LocalizationMap.epic_of_localizationMap
 
 @[to_additive]
 theorem lift_unique {j : N →* P} (hj : ∀ x, j (f.toMap x) = g x) : f.lift hg = j :=
@@ -1298,24 +1298,24 @@ noncomputable def mulEquivOfLocalizations (k : LocalizationMap S P) : N ≃* P :
 #align add_submonoid.localization_map.add_equiv_of_localizations AddSubmonoid.LocalizationMap.addEquivOfLocalizations
 
 @[simp, to_additive]
-theorem mul_equiv_of_localizations_apply {k : LocalizationMap S P} {x} :
+theorem mulEquivOfLocalizations_apply {k : LocalizationMap S P} {x} :
     f.mulEquivOfLocalizations k x = f.lift k.map_units x :=
   rfl
-#align submonoid.localization_map.mul_equiv_of_localizations_apply Submonoid.LocalizationMap.mul_equiv_of_localizations_apply
+#align submonoid.localization_map.mul_equiv_of_localizations_apply Submonoid.LocalizationMap.mulEquivOfLocalizations_apply
 #align add_submonoid.localization_map.add_equiv_of_localizations_apply AddSubmonoid.LocalizationMap.add_equiv_of_localizations_apply
 
 @[simp, to_additive]
-theorem mul_equiv_of_localizations_symm_apply {k : LocalizationMap S P} {x} :
+theorem mulEquivOfLocalizations_symm_apply {k : LocalizationMap S P} {x} :
     (f.mulEquivOfLocalizations k).symm x = k.lift f.map_units x :=
   rfl
-#align submonoid.localization_map.mul_equiv_of_localizations_symm_apply Submonoid.LocalizationMap.mul_equiv_of_localizations_symm_apply
+#align submonoid.localization_map.mul_equiv_of_localizations_symm_apply Submonoid.LocalizationMap.mulEquivOfLocalizations_symm_apply
 #align add_submonoid.localization_map.add_equiv_of_localizations_symm_apply AddSubmonoid.LocalizationMap.add_equiv_of_localizations_symm_apply
 
 @[to_additive]
-theorem mul_equiv_of_localizations_symm_eq_mul_equiv_of_localizations {k : LocalizationMap S P} :
+theorem mulEquivOfLocalizations_symm_eq_mulEquivOfLocalizations {k : LocalizationMap S P} :
     (k.mulEquivOfLocalizations f).symm = f.mulEquivOfLocalizations k :=
   rfl
-#align submonoid.localization_map.mul_equiv_of_localizations_symm_eq_mul_equiv_of_localizations Submonoid.LocalizationMap.mul_equiv_of_localizations_symm_eq_mul_equiv_of_localizations
+#align submonoid.localization_map.mul_equiv_of_localizations_symm_eq_mul_equiv_of_localizations Submonoid.LocalizationMap.mulEquivOfLocalizations_symm_eq_mulEquivOfLocalizations
 #align add_submonoid.localization_map.add_equiv_of_localizations_symm_eq_add_equiv_of_localizations AddSubmonoid.LocalizationMap.add_equiv_of_localizations_symm_eq_add_equiv_of_localizations
 
 /-- If `f : M →* N` is a localization map for a submonoid `S` and `k : N ≃* P` is an isomorphism
@@ -1323,7 +1323,7 @@ of `comm_monoid`s, `k ∘ f` is a localization map for `M` at `S`. -/
 @[to_additive
       "If `f : M →+ N` is a localization map for a submonoid `S` and `k : N ≃+ P` is an\nisomorphism of `add_comm_monoid`s, `k ∘ f` is a localization map for `M` at `S`."]
 def ofMulEquivOfLocalizations (k : N ≃* P) : LocalizationMap S P :=
-  (k.toMonoidHom.comp f.toMap).toLocalizationMap (fun y => is_unit_comp f k.toMonoidHom y)
+  (k.toMonoidHom.comp f.toMap).toLocalizationMap (fun y => isUnit_comp f k.toMonoidHom y)
     (fun v =>
       let ⟨z, hz⟩ := k.toEquiv.Surjective v
       let ⟨x, hx⟩ := f.surj z
@@ -1333,80 +1333,80 @@ def ofMulEquivOfLocalizations (k : N ≃* P) : LocalizationMap S P :=
 #align add_submonoid.localization_map.of_add_equiv_of_localizations AddSubmonoid.LocalizationMap.ofAddEquivOfLocalizations
 
 @[simp, to_additive]
-theorem of_mul_equiv_of_localizations_apply {k : N ≃* P} (x) :
+theorem ofMulEquivOfLocalizations_apply {k : N ≃* P} (x) :
     (f.ofMulEquivOfLocalizations k).toMap x = k (f.toMap x) :=
   rfl
-#align submonoid.localization_map.of_mul_equiv_of_localizations_apply Submonoid.LocalizationMap.of_mul_equiv_of_localizations_apply
+#align submonoid.localization_map.of_mul_equiv_of_localizations_apply Submonoid.LocalizationMap.ofMulEquivOfLocalizations_apply
 #align add_submonoid.localization_map.of_add_equiv_of_localizations_apply AddSubmonoid.LocalizationMap.of_add_equiv_of_localizations_apply
 
 @[to_additive]
-theorem of_mul_equiv_of_localizations_eq {k : N ≃* P} :
+theorem ofMulEquivOfLocalizations_eq {k : N ≃* P} :
     (f.ofMulEquivOfLocalizations k).toMap = k.toMonoidHom.comp f.toMap :=
   rfl
-#align submonoid.localization_map.of_mul_equiv_of_localizations_eq Submonoid.LocalizationMap.of_mul_equiv_of_localizations_eq
+#align submonoid.localization_map.of_mul_equiv_of_localizations_eq Submonoid.LocalizationMap.ofMulEquivOfLocalizations_eq
 #align add_submonoid.localization_map.of_add_equiv_of_localizations_eq AddSubmonoid.LocalizationMap.of_add_equiv_of_localizations_eq
 
 @[to_additive]
-theorem symm_comp_of_mul_equiv_of_localizations_apply {k : N ≃* P} (x) :
+theorem symm_comp_ofMulEquivOfLocalizations_apply {k : N ≃* P} (x) :
     k.symm ((f.ofMulEquivOfLocalizations k).toMap x) = f.toMap x :=
   k.symm_apply_apply (f.toMap x)
-#align submonoid.localization_map.symm_comp_of_mul_equiv_of_localizations_apply Submonoid.LocalizationMap.symm_comp_of_mul_equiv_of_localizations_apply
+#align submonoid.localization_map.symm_comp_of_mul_equiv_of_localizations_apply Submonoid.LocalizationMap.symm_comp_ofMulEquivOfLocalizations_apply
 #align add_submonoid.localization_map.symm_comp_of_add_equiv_of_localizations_apply AddSubmonoid.LocalizationMap.symm_comp_of_add_equiv_of_localizations_apply
 
 @[to_additive]
-theorem symm_comp_of_mul_equiv_of_localizations_apply' {k : P ≃* N} (x) :
+theorem symm_comp_ofMulEquivOfLocalizations_apply' {k : P ≃* N} (x) :
     k ((f.ofMulEquivOfLocalizations k.symm).toMap x) = f.toMap x :=
   k.apply_symm_apply (f.toMap x)
-#align submonoid.localization_map.symm_comp_of_mul_equiv_of_localizations_apply' Submonoid.LocalizationMap.symm_comp_of_mul_equiv_of_localizations_apply'
+#align submonoid.localization_map.symm_comp_of_mul_equiv_of_localizations_apply' Submonoid.LocalizationMap.symm_comp_ofMulEquivOfLocalizations_apply'
 #align add_submonoid.localization_map.symm_comp_of_add_equiv_of_localizations_apply' AddSubmonoid.LocalizationMap.symm_comp_of_add_equiv_of_localizations_apply'
 
 @[to_additive]
-theorem of_mul_equiv_of_localizations_eq_iff_eq {k : N ≃* P} {x y} :
+theorem ofMulEquivOfLocalizations_eq_iff_eq {k : N ≃* P} {x y} :
     (f.ofMulEquivOfLocalizations k).toMap x = y ↔ f.toMap x = k.symm y :=
   k.toEquiv.eq_symm_apply.symm
-#align submonoid.localization_map.of_mul_equiv_of_localizations_eq_iff_eq Submonoid.LocalizationMap.of_mul_equiv_of_localizations_eq_iff_eq
+#align submonoid.localization_map.of_mul_equiv_of_localizations_eq_iff_eq Submonoid.LocalizationMap.ofMulEquivOfLocalizations_eq_iff_eq
 #align add_submonoid.localization_map.of_add_equiv_of_localizations_eq_iff_eq AddSubmonoid.LocalizationMap.of_add_equiv_of_localizations_eq_iff_eq
 
 @[to_additive add_equiv_of_localizations_right_inv]
-theorem mul_equiv_of_localizations_right_inv (k : LocalizationMap S P) :
+theorem mulEquivOfLocalizations_right_inv (k : LocalizationMap S P) :
     f.ofMulEquivOfLocalizations (f.mulEquivOfLocalizations k) = k :=
   to_map_injective <| f.lift_comp k.map_units
-#align submonoid.localization_map.mul_equiv_of_localizations_right_inv Submonoid.LocalizationMap.mul_equiv_of_localizations_right_inv
+#align submonoid.localization_map.mul_equiv_of_localizations_right_inv Submonoid.LocalizationMap.mulEquivOfLocalizations_right_inv
 #align add_submonoid.localization_map.add_equiv_of_localizations_right_inv AddSubmonoid.LocalizationMap.add_equiv_of_localizations_right_inv
 
 @[simp, to_additive add_equiv_of_localizations_right_inv_apply]
-theorem mul_equiv_of_localizations_right_inv_apply {k : LocalizationMap S P} {x} :
+theorem mulEquivOfLocalizations_right_inv_apply {k : LocalizationMap S P} {x} :
     (f.ofMulEquivOfLocalizations (f.mulEquivOfLocalizations k)).toMap x = k.toMap x :=
   ext_iff.1 (f.mul_equiv_of_localizations_right_inv k) x
-#align submonoid.localization_map.mul_equiv_of_localizations_right_inv_apply Submonoid.LocalizationMap.mul_equiv_of_localizations_right_inv_apply
+#align submonoid.localization_map.mul_equiv_of_localizations_right_inv_apply Submonoid.LocalizationMap.mulEquivOfLocalizations_right_inv_apply
 #align add_submonoid.localization_map.add_equiv_of_localizations_right_inv_apply AddSubmonoid.LocalizationMap.add_equiv_of_localizations_right_inv_apply
 
 @[to_additive]
-theorem mul_equiv_of_localizations_left_inv (k : N ≃* P) :
+theorem mulEquivOfLocalizations_left_inv (k : N ≃* P) :
     f.mulEquivOfLocalizations (f.ofMulEquivOfLocalizations k) = k :=
   MulEquiv.ext <| MonoidHom.ext_iff.1 <| f.lift_of_comp k.toMonoidHom
-#align submonoid.localization_map.mul_equiv_of_localizations_left_inv Submonoid.LocalizationMap.mul_equiv_of_localizations_left_inv
+#align submonoid.localization_map.mul_equiv_of_localizations_left_inv Submonoid.LocalizationMap.mulEquivOfLocalizations_left_inv
 #align add_submonoid.localization_map.add_equiv_of_localizations_left_neg AddSubmonoid.LocalizationMap.add_equiv_of_localizations_left_neg
 
 @[simp, to_additive]
-theorem mul_equiv_of_localizations_left_inv_apply {k : N ≃* P} (x) :
+theorem mulEquivOfLocalizations_left_inv_apply {k : N ≃* P} (x) :
     f.mulEquivOfLocalizations (f.ofMulEquivOfLocalizations k) x = k x := by
   rw [mul_equiv_of_localizations_left_inv]
-#align submonoid.localization_map.mul_equiv_of_localizations_left_inv_apply Submonoid.LocalizationMap.mul_equiv_of_localizations_left_inv_apply
+#align submonoid.localization_map.mul_equiv_of_localizations_left_inv_apply Submonoid.LocalizationMap.mulEquivOfLocalizations_left_inv_apply
 #align add_submonoid.localization_map.add_equiv_of_localizations_left_neg_apply AddSubmonoid.LocalizationMap.add_equiv_of_localizations_left_neg_apply
 
 @[simp, to_additive]
-theorem of_mul_equiv_of_localizations_id : f.ofMulEquivOfLocalizations (MulEquiv.refl N) = f := by
+theorem ofMulEquivOfLocalizations_id : f.ofMulEquivOfLocalizations (MulEquiv.refl N) = f := by
   ext <;> rfl
-#align submonoid.localization_map.of_mul_equiv_of_localizations_id Submonoid.LocalizationMap.of_mul_equiv_of_localizations_id
+#align submonoid.localization_map.of_mul_equiv_of_localizations_id Submonoid.LocalizationMap.ofMulEquivOfLocalizations_id
 #align add_submonoid.localization_map.of_add_equiv_of_localizations_id AddSubmonoid.LocalizationMap.of_add_equiv_of_localizations_id
 
 @[to_additive]
-theorem of_mul_equiv_of_localizations_comp {k : N ≃* P} {j : P ≃* Q} :
+theorem ofMulEquivOfLocalizations_comp {k : N ≃* P} {j : P ≃* Q} :
     (f.ofMulEquivOfLocalizations (k.trans j)).toMap =
       j.toMonoidHom.comp (f.ofMulEquivOfLocalizations k).toMap :=
   by ext <;> rfl
-#align submonoid.localization_map.of_mul_equiv_of_localizations_comp Submonoid.LocalizationMap.of_mul_equiv_of_localizations_comp
+#align submonoid.localization_map.of_mul_equiv_of_localizations_comp Submonoid.LocalizationMap.ofMulEquivOfLocalizations_comp
 #align add_submonoid.localization_map.of_add_equiv_of_localizations_comp AddSubmonoid.LocalizationMap.of_add_equiv_of_localizations_comp
 
 /-- Given `comm_monoid`s `M, P` and submonoids `S ⊆ M, T ⊆ P`, if `f : M →* N` is a localization
@@ -1442,42 +1442,42 @@ def ofMulEquivOfDom {k : P ≃* M} (H : T.map k.toMonoidHom = S) : LocalizationM
 #align add_submonoid.localization_map.of_add_equiv_of_dom AddSubmonoid.LocalizationMap.ofAddEquivOfDom
 
 @[simp, to_additive]
-theorem of_mul_equiv_of_dom_apply {k : P ≃* M} (H : T.map k.toMonoidHom = S) (x) :
+theorem ofMulEquivOfDom_apply {k : P ≃* M} (H : T.map k.toMonoidHom = S) (x) :
     (f.ofMulEquivOfDom H).toMap x = f.toMap (k x) :=
   rfl
-#align submonoid.localization_map.of_mul_equiv_of_dom_apply Submonoid.LocalizationMap.of_mul_equiv_of_dom_apply
+#align submonoid.localization_map.of_mul_equiv_of_dom_apply Submonoid.LocalizationMap.ofMulEquivOfDom_apply
 #align add_submonoid.localization_map.of_add_equiv_of_dom_apply AddSubmonoid.LocalizationMap.of_add_equiv_of_dom_apply
 
 @[to_additive]
-theorem of_mul_equiv_of_dom_eq {k : P ≃* M} (H : T.map k.toMonoidHom = S) :
+theorem ofMulEquivOfDom_eq {k : P ≃* M} (H : T.map k.toMonoidHom = S) :
     (f.ofMulEquivOfDom H).toMap = f.toMap.comp k.toMonoidHom :=
   rfl
-#align submonoid.localization_map.of_mul_equiv_of_dom_eq Submonoid.LocalizationMap.of_mul_equiv_of_dom_eq
+#align submonoid.localization_map.of_mul_equiv_of_dom_eq Submonoid.LocalizationMap.ofMulEquivOfDom_eq
 #align add_submonoid.localization_map.of_add_equiv_of_dom_eq AddSubmonoid.LocalizationMap.of_add_equiv_of_dom_eq
 
 @[to_additive]
-theorem of_mul_equiv_of_dom_comp_symm {k : P ≃* M} (H : T.map k.toMonoidHom = S) (x) :
+theorem ofMulEquivOfDom_comp_symm {k : P ≃* M} (H : T.map k.toMonoidHom = S) (x) :
     (f.ofMulEquivOfDom H).toMap (k.symm x) = f.toMap x :=
   congr_arg f.toMap <| k.apply_symm_apply x
-#align submonoid.localization_map.of_mul_equiv_of_dom_comp_symm Submonoid.LocalizationMap.of_mul_equiv_of_dom_comp_symm
+#align submonoid.localization_map.of_mul_equiv_of_dom_comp_symm Submonoid.LocalizationMap.ofMulEquivOfDom_comp_symm
 #align add_submonoid.localization_map.of_add_equiv_of_dom_comp_symm AddSubmonoid.LocalizationMap.of_add_equiv_of_dom_comp_symm
 
 @[to_additive]
-theorem of_mul_equiv_of_dom_comp {k : M ≃* P} (H : T.map k.symm.toMonoidHom = S) (x) :
+theorem ofMulEquivOfDom_comp {k : M ≃* P} (H : T.map k.symm.toMonoidHom = S) (x) :
     (f.ofMulEquivOfDom H).toMap (k x) = f.toMap x :=
   congr_arg f.toMap <| k.symm_apply_apply x
-#align submonoid.localization_map.of_mul_equiv_of_dom_comp Submonoid.LocalizationMap.of_mul_equiv_of_dom_comp
+#align submonoid.localization_map.of_mul_equiv_of_dom_comp Submonoid.LocalizationMap.ofMulEquivOfDom_comp
 #align add_submonoid.localization_map.of_add_equiv_of_dom_comp AddSubmonoid.LocalizationMap.of_add_equiv_of_dom_comp
 
 /-- A special case of `f ∘ id = f`, `f` a localization map. -/
 @[simp, to_additive "A special case of `f ∘ id = f`, `f` a localization map."]
-theorem of_mul_equiv_of_dom_id :
+theorem ofMulEquivOfDom_id :
     f.ofMulEquivOfDom
         (show S.map (MulEquiv.refl M).toMonoidHom = S from
           Submonoid.ext fun x => ⟨fun ⟨y, hy, h⟩ => h ▸ hy, fun h => ⟨x, h, rfl⟩⟩) =
       f :=
   by ext <;> rfl
-#align submonoid.localization_map.of_mul_equiv_of_dom_id Submonoid.LocalizationMap.of_mul_equiv_of_dom_id
+#align submonoid.localization_map.of_mul_equiv_of_dom_id Submonoid.LocalizationMap.ofMulEquivOfDom_id
 #align add_submonoid.localization_map.of_add_equiv_of_dom_id AddSubmonoid.LocalizationMap.of_add_equiv_of_dom_id
 
 /-- Given localization maps `f : M →* N, k : P →* U` for submonoids `S, T` respectively, an
@@ -1492,52 +1492,51 @@ noncomputable def mulEquivOfMulEquiv (k : LocalizationMap T Q) {j : M ≃* P}
 #align add_submonoid.localization_map.add_equiv_of_add_equiv AddSubmonoid.LocalizationMap.addEquivOfAddEquiv
 
 @[simp, to_additive]
-theorem mul_equiv_of_mul_equiv_eq_map_apply {k : LocalizationMap T Q} {j : M ≃* P}
+theorem mulEquivOfMulEquiv_eq_map_apply {k : LocalizationMap T Q} {j : M ≃* P}
     (H : S.map j.toMonoidHom = T) (x) :
     f.mulEquivOfMulEquiv k H x =
       f.map (fun y : S => show j.toMonoidHom y ∈ T from H ▸ Set.mem_image_of_mem j y.2) k x :=
   rfl
-#align submonoid.localization_map.mul_equiv_of_mul_equiv_eq_map_apply Submonoid.LocalizationMap.mul_equiv_of_mul_equiv_eq_map_apply
+#align submonoid.localization_map.mul_equiv_of_mul_equiv_eq_map_apply Submonoid.LocalizationMap.mulEquivOfMulEquiv_eq_map_apply
 #align add_submonoid.localization_map.add_equiv_of_add_equiv_eq_map_apply AddSubmonoid.LocalizationMap.add_equiv_of_add_equiv_eq_map_apply
 
 @[to_additive]
-theorem mul_equiv_of_mul_equiv_eq_map {k : LocalizationMap T Q} {j : M ≃* P}
+theorem mulEquivOfMulEquiv_eq_map {k : LocalizationMap T Q} {j : M ≃* P}
     (H : S.map j.toMonoidHom = T) :
     (f.mulEquivOfMulEquiv k H).toMonoidHom =
       f.map (fun y : S => show j.toMonoidHom y ∈ T from H ▸ Set.mem_image_of_mem j y.2) k :=
   rfl
-#align submonoid.localization_map.mul_equiv_of_mul_equiv_eq_map Submonoid.LocalizationMap.mul_equiv_of_mul_equiv_eq_map
+#align submonoid.localization_map.mul_equiv_of_mul_equiv_eq_map Submonoid.LocalizationMap.mulEquivOfMulEquiv_eq_map
 #align add_submonoid.localization_map.add_equiv_of_add_equiv_eq_map AddSubmonoid.LocalizationMap.add_equiv_of_add_equiv_eq_map
 
 @[simp, to_additive]
-theorem mul_equiv_of_mul_equiv_eq {k : LocalizationMap T Q} {j : M ≃* P}
-    (H : S.map j.toMonoidHom = T) (x) : f.mulEquivOfMulEquiv k H (f.toMap x) = k.toMap (j x) :=
+theorem mulEquivOfMulEquiv_eq {k : LocalizationMap T Q} {j : M ≃* P} (H : S.map j.toMonoidHom = T)
+    (x) : f.mulEquivOfMulEquiv k H (f.toMap x) = k.toMap (j x) :=
   f.map_eq (fun y : S => H ▸ Set.mem_image_of_mem j y.2) _
-#align submonoid.localization_map.mul_equiv_of_mul_equiv_eq Submonoid.LocalizationMap.mul_equiv_of_mul_equiv_eq
+#align submonoid.localization_map.mul_equiv_of_mul_equiv_eq Submonoid.LocalizationMap.mulEquivOfMulEquiv_eq
 #align add_submonoid.localization_map.add_equiv_of_add_equiv_eq AddSubmonoid.LocalizationMap.add_equiv_of_add_equiv_eq
 
 @[simp, to_additive]
-theorem mul_equiv_of_mul_equiv_mk' {k : LocalizationMap T Q} {j : M ≃* P}
-    (H : S.map j.toMonoidHom = T) (x y) :
+theorem mulEquivOfMulEquiv_mk' {k : LocalizationMap T Q} {j : M ≃* P} (H : S.map j.toMonoidHom = T)
+    (x y) :
     f.mulEquivOfMulEquiv k H (f.mk' x y) = k.mk' (j x) ⟨j y, H ▸ Set.mem_image_of_mem j y.2⟩ :=
   f.map_mk' (fun y : S => H ▸ Set.mem_image_of_mem j y.2) _ _
-#align submonoid.localization_map.mul_equiv_of_mul_equiv_mk' Submonoid.LocalizationMap.mul_equiv_of_mul_equiv_mk'
+#align submonoid.localization_map.mul_equiv_of_mul_equiv_mk' Submonoid.LocalizationMap.mulEquivOfMulEquiv_mk'
 #align add_submonoid.localization_map.add_equiv_of_add_equiv_mk' AddSubmonoid.LocalizationMap.add_equiv_of_add_equiv_mk'
 
 @[simp, to_additive]
-theorem of_mul_equiv_of_mul_equiv_apply {k : LocalizationMap T Q} {j : M ≃* P}
+theorem of_mulEquivOfMulEquiv_apply {k : LocalizationMap T Q} {j : M ≃* P}
     (H : S.map j.toMonoidHom = T) (x) :
     (f.ofMulEquivOfLocalizations (f.mulEquivOfMulEquiv k H)).toMap x = k.toMap (j x) :=
   ext_iff.1 (f.mul_equiv_of_localizations_right_inv (k.ofMulEquivOfDom H)) x
-#align submonoid.localization_map.of_mul_equiv_of_mul_equiv_apply Submonoid.LocalizationMap.of_mul_equiv_of_mul_equiv_apply
+#align submonoid.localization_map.of_mul_equiv_of_mul_equiv_apply Submonoid.LocalizationMap.of_mulEquivOfMulEquiv_apply
 #align add_submonoid.localization_map.of_add_equiv_of_add_equiv_apply AddSubmonoid.LocalizationMap.of_add_equiv_of_add_equiv_apply
 
 @[to_additive]
-theorem of_mul_equiv_of_mul_equiv {k : LocalizationMap T Q} {j : M ≃* P}
-    (H : S.map j.toMonoidHom = T) :
+theorem of_mulEquivOfMulEquiv {k : LocalizationMap T Q} {j : M ≃* P} (H : S.map j.toMonoidHom = T) :
     (f.ofMulEquivOfLocalizations (f.mulEquivOfMulEquiv k H)).toMap = k.toMap.comp j.toMonoidHom :=
   MonoidHom.ext <| f.of_mul_equiv_of_mul_equiv_apply H
-#align submonoid.localization_map.of_mul_equiv_of_mul_equiv Submonoid.LocalizationMap.of_mul_equiv_of_mul_equiv
+#align submonoid.localization_map.of_mul_equiv_of_mul_equiv Submonoid.LocalizationMap.of_mulEquivOfMulEquiv
 #align add_submonoid.localization_map.of_add_equiv_of_add_equiv AddSubmonoid.LocalizationMap.of_add_equiv_of_add_equiv
 
 end LocalizationMap
@@ -1572,13 +1571,13 @@ def monoidOf : Submonoid.LocalizationMap S (Localization S) :=
 variable {S}
 
 @[to_additive]
-theorem mk_one_eq_monoid_of_mk (x) : mk x 1 = (monoidOf S).toMap x :=
+theorem mk_one_eq_monoidOf_mk (x) : mk x 1 = (monoidOf S).toMap x :=
   rfl
-#align localization.mk_one_eq_monoid_of_mk Localization.mk_one_eq_monoid_of_mk
+#align localization.mk_one_eq_monoid_of_mk Localization.mk_one_eq_monoidOf_mk
 #align add_localization.mk_zero_eq_add_monoid_of_mk addLocalization.mk_zero_eq_add_monoid_of_mk
 
 @[to_additive]
-theorem mk_eq_monoid_of_mk'_apply (x y) : mk x y = (monoidOf S).mk' x y :=
+theorem mk_eq_monoidOf_mk'_apply (x y) : mk x y = (monoidOf S).mk' x y :=
   show _ = _ * _ from
     (Submonoid.LocalizationMap.mul_inv_right (monoidOf S).map_units _ _ _).2 <|
       by
@@ -1586,28 +1585,28 @@ theorem mk_eq_monoid_of_mk'_apply (x y) : mk x y = (monoidOf S).mk' x y :=
         show mk x y * mk y 1 = mk (x * y) (1 * y) by rw [mul_comm 1 y, mk_mul],
         show mk x 1 = mk (x * 1) ((1 : S) * 1) by rw [mul_one, mul_one]]
       exact mk_eq_mk_iff.2 (Con.symm _ <| (Localization.r S).mul (Con.refl _ (x, 1)) <| one_rel _)
-#align localization.mk_eq_monoid_of_mk'_apply Localization.mk_eq_monoid_of_mk'_apply
-#align add_localization.mk_eq_add_monoid_of_mk'_apply addLocalization.mk_eq_add_monoid_of_mk'_apply
+#align localization.mk_eq_monoid_of_mk'_apply Localization.mk_eq_monoidOf_mk'_apply
+#align add_localization.mk_eq_add_monoid_of_mk'_apply addLocalization.mk_eq_add_monoidOf_mk'_apply
 
 @[simp, to_additive]
-theorem mk_eq_monoid_of_mk' : mk = (monoidOf S).mk' :=
-  funext fun _ => funext fun _ => mk_eq_monoid_of_mk'_apply _ _
-#align localization.mk_eq_monoid_of_mk' Localization.mk_eq_monoid_of_mk'
-#align add_localization.mk_eq_add_monoid_of_mk' addLocalization.mk_eq_add_monoid_of_mk'
+theorem mk_eq_monoidOf_mk' : mk = (monoidOf S).mk' :=
+  funext fun _ => funext fun _ => mk_eq_monoidOf_mk'_apply _ _
+#align localization.mk_eq_monoid_of_mk' Localization.mk_eq_monoidOf_mk'
+#align add_localization.mk_eq_add_monoid_of_mk' addLocalization.mk_eq_add_monoidOf_mk'
 
 universe u
 
 @[simp, to_additive]
-theorem lift_on_mk' {p : Sort u} (f : ∀ (a : M) (b : S), p) (H) (a : M) (b : S) :
+theorem liftOn_mk' {p : Sort u} (f : ∀ (a : M) (b : S), p) (H) (a : M) (b : S) :
     liftOn ((monoidOf S).mk' a b) f H = f a b := by rw [← mk_eq_monoid_of_mk', lift_on_mk]
-#align localization.lift_on_mk' Localization.lift_on_mk'
+#align localization.lift_on_mk' Localization.liftOn_mk'
 #align add_localization.lift_on_mk' addLocalization.lift_on_mk'
 
 @[simp, to_additive]
-theorem lift_on₂_mk' {p : Sort _} (f : M → S → M → S → p) (H) (a c : M) (b d : S) :
+theorem liftOn₂_mk' {p : Sort _} (f : M → S → M → S → p) (H) (a c : M) (b d : S) :
     liftOn₂ ((monoidOf S).mk' a b) ((monoidOf S).mk' c d) f H = f a b c d := by
   rw [← mk_eq_monoid_of_mk', lift_on₂_mk]
-#align localization.lift_on₂_mk' Localization.lift_on₂_mk'
+#align localization.lift_on₂_mk' Localization.liftOn₂_mk'
 #align add_localization.lift_on₂_mk' addLocalization.lift_on₂_mk'
 
 variable (f : Submonoid.LocalizationMap S N)
@@ -1624,50 +1623,48 @@ noncomputable def mulEquivOfQuotient (f : Submonoid.LocalizationMap S N) : Local
 variable {f}
 
 @[simp, to_additive]
-theorem mul_equiv_of_quotient_apply (x) :
-    mulEquivOfQuotient f x = (monoidOf S).lift f.map_units x :=
+theorem mulEquivOfQuotient_apply (x) : mulEquivOfQuotient f x = (monoidOf S).lift f.map_units x :=
   rfl
-#align localization.mul_equiv_of_quotient_apply Localization.mul_equiv_of_quotient_apply
+#align localization.mul_equiv_of_quotient_apply Localization.mulEquivOfQuotient_apply
 #align add_localization.add_equiv_of_quotient_apply addLocalization.add_equiv_of_quotient_apply
 
 @[simp, to_additive]
-theorem mul_equiv_of_quotient_mk' (x y) : mulEquivOfQuotient f ((monoidOf S).mk' x y) = f.mk' x y :=
+theorem mulEquivOfQuotient_mk' (x y) : mulEquivOfQuotient f ((monoidOf S).mk' x y) = f.mk' x y :=
   (monoidOf S).lift_mk' _ _ _
-#align localization.mul_equiv_of_quotient_mk' Localization.mul_equiv_of_quotient_mk'
+#align localization.mul_equiv_of_quotient_mk' Localization.mulEquivOfQuotient_mk'
 #align add_localization.add_equiv_of_quotient_mk' addLocalization.add_equiv_of_quotient_mk'
 
 @[to_additive]
-theorem mul_equiv_of_quotient_mk (x y) : mulEquivOfQuotient f (mk x y) = f.mk' x y := by
+theorem mulEquivOfQuotient_mk (x y) : mulEquivOfQuotient f (mk x y) = f.mk' x y := by
   rw [mk_eq_monoid_of_mk'_apply] <;> exact mul_equiv_of_quotient_mk' _ _
-#align localization.mul_equiv_of_quotient_mk Localization.mul_equiv_of_quotient_mk
+#align localization.mul_equiv_of_quotient_mk Localization.mulEquivOfQuotient_mk
 #align add_localization.add_equiv_of_quotient_mk addLocalization.add_equiv_of_quotient_mk
 
 @[simp, to_additive]
-theorem mul_equiv_of_quotient_monoid_of (x) :
-    mulEquivOfQuotient f ((monoidOf S).toMap x) = f.toMap x :=
+theorem mulEquivOfQuotient_monoidOf (x) : mulEquivOfQuotient f ((monoidOf S).toMap x) = f.toMap x :=
   (monoidOf S).liftEq _ _
-#align localization.mul_equiv_of_quotient_monoid_of Localization.mul_equiv_of_quotient_monoid_of
-#align add_localization.add_equiv_of_quotient_add_monoid_of addLocalization.add_equiv_of_quotient_add_monoid_of
+#align localization.mul_equiv_of_quotient_monoid_of Localization.mulEquivOfQuotient_monoidOf
+#align add_localization.add_equiv_of_quotient_add_monoid_of addLocalization.add_equiv_of_quotient_add_monoidOf
 
 @[simp, to_additive]
-theorem mul_equiv_of_quotient_symm_mk' (x y) :
+theorem mulEquivOfQuotient_symm_mk' (x y) :
     (mulEquivOfQuotient f).symm (f.mk' x y) = (monoidOf S).mk' x y :=
   f.lift_mk' _ _ _
-#align localization.mul_equiv_of_quotient_symm_mk' Localization.mul_equiv_of_quotient_symm_mk'
+#align localization.mul_equiv_of_quotient_symm_mk' Localization.mulEquivOfQuotient_symm_mk'
 #align add_localization.add_equiv_of_quotient_symm_mk' addLocalization.add_equiv_of_quotient_symm_mk'
 
 @[to_additive]
-theorem mul_equiv_of_quotient_symm_mk (x y) : (mulEquivOfQuotient f).symm (f.mk' x y) = mk x y := by
+theorem mulEquivOfQuotient_symm_mk (x y) : (mulEquivOfQuotient f).symm (f.mk' x y) = mk x y := by
   rw [mk_eq_monoid_of_mk'_apply] <;> exact mul_equiv_of_quotient_symm_mk' _ _
-#align localization.mul_equiv_of_quotient_symm_mk Localization.mul_equiv_of_quotient_symm_mk
+#align localization.mul_equiv_of_quotient_symm_mk Localization.mulEquivOfQuotient_symm_mk
 #align add_localization.add_equiv_of_quotient_symm_mk addLocalization.add_equiv_of_quotient_symm_mk
 
 @[simp, to_additive]
-theorem mul_equiv_of_quotient_symm_monoid_of (x) :
+theorem mulEquivOfQuotient_symm_monoidOf (x) :
     (mulEquivOfQuotient f).symm (f.toMap x) = (monoidOf S).toMap x :=
   f.liftEq _ _
-#align localization.mul_equiv_of_quotient_symm_monoid_of Localization.mul_equiv_of_quotient_symm_monoid_of
-#align add_localization.add_equiv_of_quotient_symm_add_monoid_of addLocalization.add_equiv_of_quotient_symm_add_monoid_of
+#align localization.mul_equiv_of_quotient_symm_monoid_of Localization.mulEquivOfQuotient_symm_monoidOf
+#align add_localization.add_equiv_of_quotient_symm_add_monoid_of addLocalization.add_equiv_of_quotient_symm_add_monoidOf
 
 section Away
 
@@ -1702,10 +1699,10 @@ def Away.monoidOf : Submonoid.LocalizationMap.AwayMap x (Away x) :=
 #align add_localization.away.add_monoid_of addLocalization.Away.addMonoidOf
 
 @[simp, to_additive]
-theorem Away.mk_eq_monoid_of_mk' : mk = (Away.monoidOf x).mk' :=
+theorem Away.mk_eq_monoidOf_mk' : mk = (Away.monoidOf x).mk' :=
   mk_eq_monoid_of_mk'
-#align localization.away.mk_eq_monoid_of_mk' Localization.Away.mk_eq_monoid_of_mk'
-#align add_localization.away.mk_eq_add_monoid_of_mk' addLocalization.Away.mk_eq_add_monoid_of_mk'
+#align localization.away.mk_eq_monoid_of_mk' Localization.Away.mk_eq_monoidOf_mk'
+#align add_localization.away.mk_eq_add_monoid_of_mk' addLocalization.Away.mk_eq_add_monoidOf_mk'
 
 /-- Given `x : M` and a localization map `f : M →* N` away from `x`, we get an isomorphism between
 the localization of `M` at the submonoid generated by `x` as a quotient type and `N`. -/
@@ -1782,9 +1779,9 @@ theorem mk_zero (x : S) : mk 0 (x : S) = 0 :=
     
 #align localization.mk_zero Localization.mk_zero
 
-theorem lift_on_zero {p : Type _} (f : ∀ (x : M) (y : S), p) (H) : liftOn 0 f H = f 0 1 := by
+theorem liftOn_zero {p : Type _} (f : ∀ (x : M) (y : S), p) (H) : liftOn 0 f H = f 0 1 := by
   rw [← mk_zero 1, lift_on_mk]
-#align localization.lift_on_zero Localization.lift_on_zero
+#align localization.lift_on_zero Localization.liftOn_zero
 
 end Localization
 
@@ -1808,7 +1805,7 @@ noncomputable def lift (f : LocalizationWithZeroMap S N) (g : M →*₀ P)
   { @LocalizationMap.lift _ _ _ _ _ _ _ f.toLocalizationMap g.toMonoidHom hg with
     map_zero' :=
       by
-      rw [MonoidHom.to_fun_eq_coe, localization_map.lift_spec, mul_zero, ← map_zero g, ←
+      rw [MonoidHom.toFun_eq_coe, localization_map.lift_spec, mul_zero, ← map_zero g, ←
         g.to_monoid_hom_coe]
       refine' f.to_localization_map.eq_of_eq hg _
       rw [localization_map.sec_zero_fst]

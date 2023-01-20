@@ -38,7 +38,7 @@ variable (R : Type u) [CommSemiring R] {S : Type v} [CommSemiring S] (p q : ℕ)
 
 /-- Expand the polynomial by a factor of p, so `∑ aₙ xⁿ` becomes `∑ aₙ xⁿᵖ`. -/
 noncomputable def expand : R[X] →ₐ[R] R[X] :=
-  { (eval₂RingHom c (X ^ p) : R[X] →+* R[X]) with commutes' := fun r => eval₂_C _ _ }
+  { (eval₂RingHom c (X ^ p) : R[X] →+* R[X]) with commutes' := fun r => eval₂_c _ _ }
 #align polynomial.expand Polynomial.expand
 
 theorem coe_expand : (expand R p : R[X] → R[X]) = eval₂ c (X ^ p) :=
@@ -54,14 +54,14 @@ theorem expand_eq_sum {f : R[X]} : expand R p f = f.Sum fun e a => c a * (X ^ p)
 #align polynomial.expand_eq_sum Polynomial.expand_eq_sum
 
 @[simp]
-theorem expand_C (r : R) : expand R p (c r) = c r :=
-  eval₂_C _ _
-#align polynomial.expand_C Polynomial.expand_C
+theorem expand_c (r : R) : expand R p (c r) = c r :=
+  eval₂_c _ _
+#align polynomial.expand_C Polynomial.expand_c
 
 @[simp]
-theorem expand_X : expand R p x = X ^ p :=
-  eval₂_X _ _
-#align polynomial.expand_X Polynomial.expand_X
+theorem expand_x : expand R p x = X ^ p :=
+  eval₂_x _ _
+#align polynomial.expand_X Polynomial.expand_x
 
 @[simp]
 theorem expand_monomial (r : R) : expand R p (monomial q r) = monomial (q * p) r := by
@@ -148,11 +148,11 @@ theorem expand_ne_zero {p : ℕ} (hp : 0 < p) {f : R[X]} : expand R p f ≠ 0 �
   (expand_eq_zero hp).Not
 #align polynomial.expand_ne_zero Polynomial.expand_ne_zero
 
-theorem expand_eq_C {p : ℕ} (hp : 0 < p) {f : R[X]} {r : R} : expand R p f = c r ↔ f = c r := by
+theorem expand_eq_c {p : ℕ} (hp : 0 < p) {f : R[X]} {r : R} : expand R p f = c r ↔ f = c r := by
   rw [← expand_C, expand_inj hp, expand_C]
-#align polynomial.expand_eq_C Polynomial.expand_eq_C
+#align polynomial.expand_eq_C Polynomial.expand_eq_c
 
-theorem nat_degree_expand (p : ℕ) (f : R[X]) : (expand R p f).natDegree = f.natDegree * p :=
+theorem natDegree_expand (p : ℕ) (f : R[X]) : (expand R p f).natDegree = f.natDegree * p :=
   by
   cases' p.eq_zero_or_pos with hp hp
   · rw [hp, coe_expand, pow_zero, mul_zero, ← C_1, eval₂_hom, nat_degree_C]
@@ -171,7 +171,7 @@ theorem nat_degree_expand (p : ℕ) (f : R[X]) : (expand R p f).natDegree = f.na
   · refine' le_degree_of_ne_zero _
     rw [coeff_expand_mul hp, ← leading_coeff]
     exact mt leading_coeff_eq_zero.1 hf
-#align polynomial.nat_degree_expand Polynomial.nat_degree_expand
+#align polynomial.nat_degree_expand Polynomial.natDegree_expand
 
 theorem Monic.expand {p : ℕ} {f : R[X]} (hp : 0 < p) (h : f.Monic) : (expand R p f).Monic :=
   by
@@ -279,20 +279,20 @@ section IsDomain
 
 variable (R : Type u) [CommRing R] [IsDomain R]
 
-theorem is_local_ring_hom_expand {p : ℕ} (hp : 0 < p) :
+theorem isLocalRingHom_expand {p : ℕ} (hp : 0 < p) :
     IsLocalRingHom (↑(expand R p) : R[X] →+* R[X]) :=
   by
-  refine' ⟨fun f hf1 => _⟩; rw [← coe_fn_coe_base] at hf1
+  refine' ⟨fun f hf1 => _⟩; rw [← coeFn_coeBase] at hf1
   have hf2 := eq_C_of_degree_eq_zero (degree_eq_zero_of_is_unit hf1)
   rw [coeff_expand hp, if_pos (dvd_zero _), p.zero_div] at hf2
   rw [hf2, is_unit_C] at hf1; rw [expand_eq_C hp] at hf2; rwa [hf2, is_unit_C]
-#align polynomial.is_local_ring_hom_expand Polynomial.is_local_ring_hom_expand
+#align polynomial.is_local_ring_hom_expand Polynomial.isLocalRingHom_expand
 
 variable {R}
 
 theorem of_irreducible_expand {p : ℕ} (hp : p ≠ 0) {f : R[X]} (hf : Irreducible (expand R p f)) :
     Irreducible f :=
-  let _ := is_local_ring_hom_expand R hp.bot_lt
+  let _ := isLocalRingHom_expand R hp.bot_lt
   of_irreducible_map (↑(expand R p)) hf
 #align polynomial.of_irreducible_expand Polynomial.of_irreducible_expand
 

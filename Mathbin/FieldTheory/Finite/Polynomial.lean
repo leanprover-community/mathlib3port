@@ -25,10 +25,10 @@ variable {σ : Type _}
 
 /-- A polynomial over the integers is divisible by `n : ℕ`
 if and only if it is zero over `zmod n`. -/
-theorem C_dvd_iff_zmod (n : ℕ) (φ : MvPolynomial σ ℤ) :
+theorem c_dvd_iff_zmod (n : ℕ) (φ : MvPolynomial σ ℤ) :
     c (n : ℤ) ∣ φ ↔ map (Int.castRingHom (Zmod n)) φ = 0 :=
-  C_dvd_iff_map_hom_eq_zero _ _ (CharP.int_cast_eq_zero_iff (Zmod n) n) _
-#align mv_polynomial.C_dvd_iff_zmod MvPolynomial.C_dvd_iff_zmod
+  c_dvd_iff_map_hom_eq_zero _ _ (CharP.int_cast_eq_zero_iff (Zmod n) n) _
+#align mv_polynomial.C_dvd_iff_zmod MvPolynomial.c_dvd_iff_zmod
 
 section frobenius
 
@@ -99,7 +99,7 @@ theorem degrees_indicator (c : σ → K) :
   exact degrees_X' _
 #align mv_polynomial.degrees_indicator MvPolynomial.degrees_indicator
 
-theorem indicator_mem_restrict_degree (c : σ → K) :
+theorem indicator_mem_restrictDegree (c : σ → K) :
     indicator c ∈ restrictDegree σ K (Fintype.card K - 1) :=
   by
   rw [mem_restrict_degree_iff_sup, indicator]
@@ -114,7 +114,7 @@ theorem indicator_mem_restrict_degree (c : σ → K) :
   · intro h
     exact (h <| Finset.mem_univ _).elim
   · rw [Multiset.count_singleton_self, mul_one]
-#align mv_polynomial.indicator_mem_restrict_degree MvPolynomial.indicator_mem_restrict_degree
+#align mv_polynomial.indicator_mem_restrict_degree MvPolynomial.indicator_mem_restrictDegree
 
 end CommRing
 
@@ -211,7 +211,7 @@ end CommRing
 
 variable [Field K]
 
-theorem dim_R [Fintype σ] : Module.rank K (R σ K) = Fintype.card (σ → K) :=
+theorem dim_r [Fintype σ] : Module.rank K (R σ K) = Fintype.card (σ → K) :=
   calc
     Module.rank K (R σ K) =
         Module.rank K (↥{ s : σ →₀ ℕ | ∀ n : σ, s n ≤ Fintype.card K - 1 } →₀ K) :=
@@ -231,7 +231,7 @@ theorem dim_R [Fintype σ] : Module.rank K (R σ K) = Fintype.card (σ → K) :=
     _ = (#σ → K) := (Equiv.arrowCongr (Equiv.refl σ) (Fintype.equivFin K).symm).cardinal_eq
     _ = Fintype.card (σ → K) := Cardinal.mk_fintype _
     
-#align mv_polynomial.dim_R MvPolynomial.dim_R
+#align mv_polynomial.dim_R MvPolynomial.dim_r
 
 instance [Finite σ] : FiniteDimensional K (R σ K) :=
   by
@@ -239,11 +239,11 @@ instance [Finite σ] : FiniteDimensional K (R σ K) :=
   exact
     IsNoetherian.iff_fg.1
       (is_noetherian.iff_dim_lt_aleph_0.mpr <| by
-        simpa only [dim_R] using Cardinal.nat_lt_aleph_0 (Fintype.card (σ → K)))
+        simpa only [dim_R] using Cardinal.nat_lt_aleph0 (Fintype.card (σ → K)))
 
-theorem finrank_R [Fintype σ] : FiniteDimensional.finrank K (R σ K) = Fintype.card (σ → K) :=
-  FiniteDimensional.finrank_eq_of_dim_eq (dim_R σ K)
-#align mv_polynomial.finrank_R MvPolynomial.finrank_R
+theorem finrank_r [Fintype σ] : FiniteDimensional.finrank K (R σ K) = Fintype.card (σ → K) :=
+  FiniteDimensional.finrank_eq_of_dim_eq (dim_r σ K)
+#align mv_polynomial.finrank_R MvPolynomial.finrank_r
 
 theorem range_evalᵢ [Finite σ] : (evalᵢ σ K).range = ⊤ :=
   by

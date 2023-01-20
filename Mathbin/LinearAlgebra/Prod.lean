@@ -316,59 +316,59 @@ def prodMap (f : M →ₗ[R] M₃) (g : M₂ →ₗ[R] M₄) : M × M₂ →ₗ[
 #align linear_map.prod_map LinearMap.prodMap
 
 @[simp]
-theorem prod_map_apply (f : M →ₗ[R] M₃) (g : M₂ →ₗ[R] M₄) (x) : f.prod_map g x = (f x.1, g x.2) :=
+theorem prodMap_apply (f : M →ₗ[R] M₃) (g : M₂ →ₗ[R] M₄) (x) : f.prod_map g x = (f x.1, g x.2) :=
   rfl
-#align linear_map.prod_map_apply LinearMap.prod_map_apply
+#align linear_map.prod_map_apply LinearMap.prodMap_apply
 
-theorem prod_map_comap_prod (f : M →ₗ[R] M₂) (g : M₃ →ₗ[R] M₄) (S : Submodule R M₂)
+theorem prodMap_comap_prod (f : M →ₗ[R] M₂) (g : M₃ →ₗ[R] M₄) (S : Submodule R M₂)
     (S' : Submodule R M₄) :
     (Submodule.prod S S').comap (LinearMap.prodMap f g) = (S.comap f).Prod (S'.comap g) :=
   SetLike.coe_injective <| Set.preimage_prod_map_prod f g _ _
-#align linear_map.prod_map_comap_prod LinearMap.prod_map_comap_prod
+#align linear_map.prod_map_comap_prod LinearMap.prodMap_comap_prod
 
-theorem ker_prod_map (f : M →ₗ[R] M₂) (g : M₃ →ₗ[R] M₄) :
+theorem ker_prodMap (f : M →ₗ[R] M₂) (g : M₃ →ₗ[R] M₄) :
     (LinearMap.prodMap f g).ker = Submodule.prod f.ker g.ker :=
   by
   dsimp only [ker]
   rw [← prod_map_comap_prod, Submodule.prod_bot]
-#align linear_map.ker_prod_map LinearMap.ker_prod_map
+#align linear_map.ker_prod_map LinearMap.ker_prodMap
 
 @[simp]
-theorem prod_map_id : (id : M →ₗ[R] M).prod_map (id : M₂ →ₗ[R] M₂) = id :=
+theorem prodMap_id : (id : M →ₗ[R] M).prod_map (id : M₂ →ₗ[R] M₂) = id :=
   LinearMap.ext fun _ => Prod.mk.eta
-#align linear_map.prod_map_id LinearMap.prod_map_id
+#align linear_map.prod_map_id LinearMap.prodMap_id
 
 @[simp]
-theorem prod_map_one : (1 : M →ₗ[R] M).prod_map (1 : M₂ →ₗ[R] M₂) = 1 :=
+theorem prodMap_one : (1 : M →ₗ[R] M).prod_map (1 : M₂ →ₗ[R] M₂) = 1 :=
   LinearMap.ext fun _ => Prod.mk.eta
-#align linear_map.prod_map_one LinearMap.prod_map_one
+#align linear_map.prod_map_one LinearMap.prodMap_one
 
-theorem prod_map_comp (f₁₂ : M →ₗ[R] M₂) (f₂₃ : M₂ →ₗ[R] M₃) (g₁₂ : M₄ →ₗ[R] M₅)
+theorem prodMap_comp (f₁₂ : M →ₗ[R] M₂) (f₂₃ : M₂ →ₗ[R] M₃) (g₁₂ : M₄ →ₗ[R] M₅)
     (g₂₃ : M₅ →ₗ[R] M₆) :
     f₂₃.prod_map g₂₃ ∘ₗ f₁₂.prod_map g₁₂ = (f₂₃ ∘ₗ f₁₂).prod_map (g₂₃ ∘ₗ g₁₂) :=
   rfl
-#align linear_map.prod_map_comp LinearMap.prod_map_comp
+#align linear_map.prod_map_comp LinearMap.prodMap_comp
 
-theorem prod_map_mul (f₁₂ : M →ₗ[R] M) (f₂₃ : M →ₗ[R] M) (g₁₂ : M₂ →ₗ[R] M₂) (g₂₃ : M₂ →ₗ[R] M₂) :
+theorem prodMap_mul (f₁₂ : M →ₗ[R] M) (f₂₃ : M →ₗ[R] M) (g₁₂ : M₂ →ₗ[R] M₂) (g₂₃ : M₂ →ₗ[R] M₂) :
     f₂₃.prod_map g₂₃ * f₁₂.prod_map g₁₂ = (f₂₃ * f₁₂).prod_map (g₂₃ * g₁₂) :=
   rfl
-#align linear_map.prod_map_mul LinearMap.prod_map_mul
+#align linear_map.prod_map_mul LinearMap.prodMap_mul
 
-theorem prod_map_add (f₁ : M →ₗ[R] M₃) (f₂ : M →ₗ[R] M₃) (g₁ : M₂ →ₗ[R] M₄) (g₂ : M₂ →ₗ[R] M₄) :
+theorem prodMap_add (f₁ : M →ₗ[R] M₃) (f₂ : M →ₗ[R] M₃) (g₁ : M₂ →ₗ[R] M₄) (g₂ : M₂ →ₗ[R] M₄) :
     (f₁ + f₂).prod_map (g₁ + g₂) = f₁.prod_map g₁ + f₂.prod_map g₂ :=
   rfl
-#align linear_map.prod_map_add LinearMap.prod_map_add
+#align linear_map.prod_map_add LinearMap.prodMap_add
 
 @[simp]
-theorem prod_map_zero : (0 : M →ₗ[R] M₂).prod_map (0 : M₃ →ₗ[R] M₄) = 0 :=
+theorem prodMap_zero : (0 : M →ₗ[R] M₂).prod_map (0 : M₃ →ₗ[R] M₄) = 0 :=
   rfl
-#align linear_map.prod_map_zero LinearMap.prod_map_zero
+#align linear_map.prod_map_zero LinearMap.prodMap_zero
 
 @[simp]
-theorem prod_map_smul [Module S M₃] [Module S M₄] [SMulCommClass R S M₃] [SMulCommClass R S M₄]
+theorem prodMap_smul [Module S M₃] [Module S M₄] [SMulCommClass R S M₃] [SMulCommClass R S M₄]
     (s : S) (f : M →ₗ[R] M₃) (g : M₂ →ₗ[R] M₄) : prodMap (s • f) (s • g) = s • prodMap f g :=
   rfl
-#align linear_map.prod_map_smul LinearMap.prod_map_smul
+#align linear_map.prod_map_smul LinearMap.prodMap_smul
 
 variable (R M M₂ M₃ M₄)
 
@@ -387,7 +387,7 @@ def prodMapLinear [Module S M₃] [Module S M₄] [SMulCommClass R S M₃] [SMul
 def prodMapRingHom : (M →ₗ[R] M) × (M₂ →ₗ[R] M₂) →+* M × M₂ →ₗ[R] M × M₂
     where
   toFun f := prodMap f.1 f.2
-  map_one' := prod_map_one
+  map_one' := prodMap_one
   map_zero' := rfl
   map_add' _ _ := rfl
   map_mul' _ _ := rfl
@@ -446,7 +446,7 @@ theorem range_coprod (f : M →ₗ[R] M₃) (g : M₂ →ₗ[R] M₃) : (f.copro
   Submodule.ext fun x => by simp [mem_sup]
 #align linear_map.range_coprod LinearMap.range_coprod
 
-theorem is_compl_range_inl_inr : IsCompl (inl R M M₂).range (inr R M M₂).range :=
+theorem isCompl_range_inl_inr : IsCompl (inl R M M₂).range (inr R M M₂).range :=
   by
   constructor
   · rw [disjoint_def]
@@ -458,10 +458,10 @@ theorem is_compl_range_inl_inr : IsCompl (inl R M M₂).range (inr R M M₂).ran
     simp only [mem_sup, mem_range, exists_prop]
     refine' ⟨(x, 0), ⟨x, rfl⟩, (0, y), ⟨y, rfl⟩, _⟩
     simp
-#align linear_map.is_compl_range_inl_inr LinearMap.is_compl_range_inl_inr
+#align linear_map.is_compl_range_inl_inr LinearMap.isCompl_range_inl_inr
 
 theorem sup_range_inl_inr : (inl R M M₂).range ⊔ (inr R M M₂).range = ⊤ :=
-  IsCompl.sup_eq_top is_compl_range_inl_inr
+  IsCompl.sup_eq_top isCompl_range_inl_inr
 #align linear_map.sup_range_inl_inr LinearMap.sup_range_inl_inr
 
 theorem disjoint_inl_inr : Disjoint (inl R M M₂).range (inr R M M₂).range := by
@@ -798,15 +798,15 @@ protected def skewProd (f : M →ₗ[R] M₄) : (M × M₃) ≃ₗ[R] M₂ × M�
 #align linear_equiv.skew_prod LinearEquiv.skewProd
 
 @[simp]
-theorem skew_prod_apply (f : M →ₗ[R] M₄) (x) : e₁.skewProd e₂ f x = (e₁ x.1, e₂ x.2 + f x.1) :=
+theorem skewProd_apply (f : M →ₗ[R] M₄) (x) : e₁.skewProd e₂ f x = (e₁ x.1, e₂ x.2 + f x.1) :=
   rfl
-#align linear_equiv.skew_prod_apply LinearEquiv.skew_prod_apply
+#align linear_equiv.skew_prod_apply LinearEquiv.skewProd_apply
 
 @[simp]
-theorem skew_prod_symm_apply (f : M →ₗ[R] M₄) (x) :
+theorem skewProd_symm_apply (f : M →ₗ[R] M₄) (x) :
     (e₁.skewProd e₂ f).symm x = (e₁.symm x.1, e₂.symm (x.2 - f (e₁.symm x.1))) :=
   rfl
-#align linear_equiv.skew_prod_symm_apply LinearEquiv.skew_prod_symm_apply
+#align linear_equiv.skew_prod_symm_apply LinearEquiv.skewProd_symm_apply
 
 end
 
@@ -879,10 +879,10 @@ def tunnelAux (f : M × N →ₗ[R] M) (Kφ : ΣK : Submodule R M, K ≃ₗ[R] M
   (Kφ.1.Subtype.comp Kφ.2.symm.toLinearMap).comp f
 #align linear_map.tunnel_aux LinearMap.tunnelAux
 
-theorem tunnel_aux_injective (f : M × N →ₗ[R] M) (i : Injective f)
+theorem tunnelAux_injective (f : M × N →ₗ[R] M) (i : Injective f)
     (Kφ : ΣK : Submodule R M, K ≃ₗ[R] M) : Injective (tunnelAux f Kφ) :=
   (Subtype.val_injective.comp Kφ.2.symm.Injective).comp i
-#align linear_map.tunnel_aux_injective LinearMap.tunnel_aux_injective
+#align linear_map.tunnel_aux_injective LinearMap.tunnelAux_injective
 
 noncomputable section
 
@@ -893,8 +893,7 @@ noncomputable def tunnel' (f : M × N →ₗ[R] M) (i : Injective f) : ℕ → �
   | 0 => ⟨⊤, LinearEquiv.ofTop ⊤ rfl⟩
   | n + 1 =>
     ⟨(Submodule.fst R M N).map (tunnelAux f (tunnel' n)),
-      ((Submodule.fst R M N).equivMapOfInjective _
-              (tunnel_aux_injective f i (tunnel' n))).symm.trans
+      ((Submodule.fst R M N).equivMapOfInjective _ (tunnelAux_injective f i (tunnel' n))).symm.trans
         (Submodule.fstEquiv R M N)⟩
 #align linear_map.tunnel' LinearMap.tunnel'
 
@@ -918,8 +917,7 @@ def tailing (f : M × N →ₗ[R] M) (i : Injective f) (n : ℕ) : Submodule R M
 
 /-- Each `tailing f i n` is a copy of `N`. -/
 def tailingLinearEquiv (f : M × N →ₗ[R] M) (i : Injective f) (n : ℕ) : tailing f i n ≃ₗ[R] N :=
-  ((Submodule.snd R M N).equivMapOfInjective _
-          (tunnel_aux_injective f i (tunnel' f i n))).symm.trans
+  ((Submodule.snd R M N).equivMapOfInjective _ (tunnelAux_injective f i (tunnel' f i n))).symm.trans
     (Submodule.sndEquiv R M N)
 #align linear_map.tailing_linear_equiv LinearMap.tailingLinearEquiv
 

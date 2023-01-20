@@ -148,7 +148,7 @@ theorem of_injective : Function.Injective (of : α → FreeAbelianGroup α) := f
     have hfx1 : f (of x) = 1 := (lift.of _ _).trans <| if_pos rfl
     have hfy1 : f (of y) = 1 := hoxy ▸ hfx1
     have hfy0 : f (of y) = 0 := (lift.of _ _).trans <| if_neg hxy
-    one_ne_zero <| hfy1.symm.trans hfy0
+    one_neZero <| hfy1.symm.trans hfy0
 #align free_abelian_group.of_injective FreeAbelianGroup.of_injective
 
 end
@@ -509,9 +509,9 @@ def ofMulHom : α →* FreeAbelianGroup α where
 #align free_abelian_group.of_mul_hom FreeAbelianGroup.ofMulHom
 
 @[simp]
-theorem of_mul_hom_coe : (ofMulHom : α → FreeAbelianGroup α) = of :=
+theorem ofMulHom_coe : (ofMulHom : α → FreeAbelianGroup α) = of :=
   rfl
-#align free_abelian_group.of_mul_hom_coe FreeAbelianGroup.of_mul_hom_coe
+#align free_abelian_group.of_mul_hom_coe FreeAbelianGroup.ofMulHom_coe
 
 /-- If `f` preserves multiplication, then so does `lift f`. -/
 def liftMonoid : (α →* R) ≃ (FreeAbelianGroup α →+* R)
@@ -540,19 +540,19 @@ def liftMonoid : (α →* R) ≃ (FreeAbelianGroup α →+* R)
 #align free_abelian_group.lift_monoid FreeAbelianGroup.liftMonoid
 
 @[simp]
-theorem lift_monoid_coe_add_monoid_hom (f : α →* R) : ↑(liftMonoid f) = lift f :=
+theorem liftMonoid_coe_addMonoidHom (f : α →* R) : ↑(liftMonoid f) = lift f :=
   rfl
-#align free_abelian_group.lift_monoid_coe_add_monoid_hom FreeAbelianGroup.lift_monoid_coe_add_monoid_hom
+#align free_abelian_group.lift_monoid_coe_add_monoid_hom FreeAbelianGroup.liftMonoid_coe_addMonoidHom
 
 @[simp]
-theorem lift_monoid_coe (f : α →* R) : ⇑(liftMonoid f) = lift f :=
+theorem liftMonoid_coe (f : α →* R) : ⇑(liftMonoid f) = lift f :=
   rfl
-#align free_abelian_group.lift_monoid_coe FreeAbelianGroup.lift_monoid_coe
+#align free_abelian_group.lift_monoid_coe FreeAbelianGroup.liftMonoid_coe
 
 @[simp]
-theorem lift_monoid_symm_coe (f : FreeAbelianGroup α →+* R) : ⇑(liftMonoid.symm f) = lift.symm ↑f :=
+theorem liftMonoid_symm_coe (f : FreeAbelianGroup α →+* R) : ⇑(liftMonoid.symm f) = lift.symm ↑f :=
   rfl
-#align free_abelian_group.lift_monoid_symm_coe FreeAbelianGroup.lift_monoid_symm_coe
+#align free_abelian_group.lift_monoid_symm_coe FreeAbelianGroup.liftMonoid_symm_coe
 
 theorem one_def : (1 : FreeAbelianGroup α) = of 1 :=
   rfl

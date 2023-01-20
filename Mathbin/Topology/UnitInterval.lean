@@ -132,7 +132,7 @@ theorem continuous_symm : Continuous σ := by continuity!
 #align unit_interval.continuous_symm unitInterval.continuous_symm
 
 instance : ConnectedSpace I :=
-  Subtype.connected_space ⟨nonempty_Icc.mpr zero_le_one, is_preconnected_Icc⟩
+  Subtype.connectedSpace ⟨nonempty_Icc.mpr zero_le_one, isPreconnected_icc⟩
 
 /-- Verify there is an instance for `compact_space I`. -/
 example : CompactSpace I := by infer_instance
@@ -181,14 +181,14 @@ theorem two_mul_sub_one_mem_iff {t : ℝ} : 2 * t - 1 ∈ I ↔ t ∈ Set.Icc (1
 end unitInterval
 
 @[simp]
-theorem proj_Icc_eq_zero {x : ℝ} : projIcc (0 : ℝ) 1 zero_le_one x = 0 ↔ x ≤ 0 :=
+theorem projIcc_eq_zero {x : ℝ} : projIcc (0 : ℝ) 1 zero_le_one x = 0 ↔ x ≤ 0 :=
   projIcc_eq_left zero_lt_one
-#align proj_Icc_eq_zero proj_Icc_eq_zero
+#align proj_Icc_eq_zero projIcc_eq_zero
 
 @[simp]
-theorem proj_Icc_eq_one {x : ℝ} : projIcc (0 : ℝ) 1 zero_le_one x = 1 ↔ 1 ≤ x :=
+theorem projIcc_eq_one {x : ℝ} : projIcc (0 : ℝ) 1 zero_le_one x = 1 ↔ 1 ≤ x :=
   projIcc_eq_right zero_lt_one
-#align proj_Icc_eq_one proj_Icc_eq_one
+#align proj_Icc_eq_one projIcc_eq_one
 
 namespace Tactic.Interactive
 
@@ -211,9 +211,9 @@ variable {𝕜 : Type _} [LinearOrderedField 𝕜] [TopologicalSpace 𝕜] [Topo
 -- At the end of the day I only care about `ℝ`, so I'm hesitant to put work into generalizing.
 /-- The image of `[0,1]` under the homeomorphism `λ x, a * x + b` is `[b, a+b]`.
 -/
-theorem affine_homeomorph_image_I (a b : 𝕜) (h : 0 < a) :
+theorem affineHomeomorph_image_I (a b : 𝕜) (h : 0 < a) :
     affineHomeomorph a b h.Ne.symm '' Set.Icc 0 1 = Set.Icc b (a + b) := by simp [h]
-#align affine_homeomorph_image_I affine_homeomorph_image_I
+#align affine_homeomorph_image_I affineHomeomorph_image_I
 
 /-- The affine homeomorphism from a nontrivial interval `[a,b]` to `[0,1]`.
 -/
@@ -226,16 +226,16 @@ def iccHomeoI (a b : 𝕜) (h : a < b) : Set.Icc a b ≃ₜ Set.Icc (0 : 𝕜) (
 #align Icc_homeo_I iccHomeoI
 
 @[simp]
-theorem Icc_homeo_I_apply_coe (a b : 𝕜) (h : a < b) (x : Set.Icc a b) :
+theorem iccHomeoI_apply_coe (a b : 𝕜) (h : a < b) (x : Set.Icc a b) :
     ((iccHomeoI a b h) x : 𝕜) = (x - a) / (b - a) :=
   rfl
-#align Icc_homeo_I_apply_coe Icc_homeo_I_apply_coe
+#align Icc_homeo_I_apply_coe iccHomeoI_apply_coe
 
 @[simp]
-theorem Icc_homeo_I_symm_apply_coe (a b : 𝕜) (h : a < b) (x : Set.Icc (0 : 𝕜) (1 : 𝕜)) :
+theorem iccHomeoI_symm_apply_coe (a b : 𝕜) (h : a < b) (x : Set.Icc (0 : 𝕜) (1 : 𝕜)) :
     ((iccHomeoI a b h).symm x : 𝕜) = (b - a) * x + a :=
   rfl
-#align Icc_homeo_I_symm_apply_coe Icc_homeo_I_symm_apply_coe
+#align Icc_homeo_I_symm_apply_coe iccHomeoI_symm_apply_coe
 
 end
 

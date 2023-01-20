@@ -71,12 +71,12 @@ def approxOrderOf (A : Type _) [SeminormedGroup A] (n : ℕ) (δ : ℝ) : Set A 
 #align approx_order_of approxOrderOf
 #align approx_add_order_of approxAddOrderOf
 
-@[to_additive mem_approx_add_order_of_iff]
-theorem mem_approx_order_of_iff {A : Type _} [SeminormedGroup A] {n : ℕ} {δ : ℝ} {a : A} :
+@[to_additive mem_approx_add_orderOf_iff]
+theorem mem_approxOrderOf_iff {A : Type _} [SeminormedGroup A] {n : ℕ} {δ : ℝ} {a : A} :
     a ∈ approxOrderOf A n δ ↔ ∃ b : A, orderOf b = n ∧ a ∈ ball b δ := by
   simp only [approxOrderOf, thickening_eq_bUnion_ball, mem_Union₂, mem_set_of_eq, exists_prop]
-#align mem_approx_order_of_iff mem_approx_order_of_iff
-#align mem_approx_add_order_of_iff mem_approx_add_order_of_iff
+#align mem_approx_order_of_iff mem_approxOrderOf_iff
+#align mem_approx_add_order_of_iff mem_approx_add_orderOf_iff
 
 /-- In a seminormed group `A`, given a sequence of distances `δ₁, δ₂, ...`, `well_approximable A δ`
 is the limsup as `n → ∞` of the sets `approx_order_of A n δₙ`. Thus, it is the set of points that
@@ -88,13 +88,13 @@ def wellApproximable (A : Type _) [SeminormedGroup A] (δ : ℕ → ℝ) : Set A
 #align well_approximable wellApproximable
 #align add_well_approximable addWellApproximable
 
-@[to_additive mem_add_well_approximable_iff]
-theorem mem_well_approximable_iff {A : Type _} [SeminormedGroup A] {δ : ℕ → ℝ} {a : A} :
+@[to_additive mem_add_wellApproximable_iff]
+theorem mem_wellApproximable_iff {A : Type _} [SeminormedGroup A] {δ : ℕ → ℝ} {a : A} :
     a ∈ wellApproximable A δ ↔
       a ∈ blimsup (fun n => approxOrderOf A n (δ n)) atTop fun n => 0 < n :=
   Iff.rfl
-#align mem_well_approximable_iff mem_well_approximable_iff
-#align mem_add_well_approximable_iff mem_add_well_approximable_iff
+#align mem_well_approximable_iff mem_wellApproximable_iff
+#align mem_add_well_approximable_iff mem_add_wellApproximable_iff
 
 namespace approxOrderOf
 
@@ -108,7 +108,7 @@ theorem image_pow_subset_of_coprime (hm : 0 < m) (hmn : n.Coprime m) :
   obtain ⟨b, hb, hab⟩ := mem_approx_order_of_iff.mp ha
   replace hb : b ^ m ∈ { u : A | orderOf u = n };
   · rw [← hb] at hmn⊢
-    exact order_of_pow_coprime hmn
+    exact orderOf_pow_coprime hmn
   apply ball_subset_thickening hb ((m : ℝ) • δ)
   convert pow_mem_ball hm hab using 1
   simp only [nsmul_eq_mul, Algebra.id.smul_eq_mul]
@@ -122,7 +122,7 @@ theorem image_pow_subset (n : ℕ) (hm : 0 < m) :
   rintro - ⟨a, ha, rfl⟩
   obtain ⟨b, hb : orderOf b = n * m, hab : a ∈ ball b δ⟩ := mem_approx_order_of_iff.mp ha
   replace hb : b ^ m ∈ { y : A | orderOf y = n }
-  · rw [mem_set_of_eq, order_of_pow' b hm.ne', hb, Nat.gcd_mul_left_left, n.mul_div_cancel hm]
+  · rw [mem_set_of_eq, orderOf_pow' b hm.ne', hb, Nat.gcd_mul_left_left, n.mul_div_cancel hm]
   apply ball_subset_thickening hb (m * δ)
   convert pow_mem_ball hm hab
   simp only [nsmul_eq_mul]
@@ -159,7 +159,7 @@ theorem smul_eq_of_mul_dvd (hn : 0 < n) (han : orderOf a ^ 2 ∣ n) :
   have hf : surjective f := by
     rintro ⟨b, hb⟩
     refine' ⟨⟨a⁻¹ * b, _⟩, _⟩
-    · rw [mem_set_of_eq, ← order_of_inv, mul_inv_rev, inv_inv, mul_comm]
+    · rw [mem_set_of_eq, ← orderOf_inv, mul_inv_rev, inv_inv, mul_comm]
       apply han
       simpa
     · simp only [Subtype.mk_eq_mk, Subtype.coe_mk, mul_inv_cancel_left]
@@ -172,32 +172,32 @@ end approxOrderOf
 
 namespace UnitAddCircle
 
-theorem mem_approx_add_order_of_iff {δ : ℝ} {x : UnitAddCircle} {n : ℕ} (hn : 0 < n) :
+theorem mem_approxAddOrderOf_iff {δ : ℝ} {x : UnitAddCircle} {n : ℕ} (hn : 0 < n) :
     x ∈ approxAddOrderOf UnitAddCircle n δ ↔ ∃ m < n, gcd m n = 1 ∧ ‖x - ↑((m : ℝ) / n)‖ < δ :=
   by
   haveI := Real.fact_zero_lt_one
-  simp only [mem_approx_add_order_of_iff, mem_set_of_eq, ball, exists_prop, dist_eq_norm,
-    AddCircle.add_order_of_eq_pos_iff hn, mul_one]
+  simp only [mem_approx_add_orderOf_iff, mem_set_of_eq, ball, exists_prop, dist_eq_norm,
+    AddCircle.addOrderOf_eq_pos_iff hn, mul_one]
   constructor
   · rintro ⟨y, ⟨m, hm₁, hm₂, rfl⟩, hx⟩
     exact ⟨m, hm₁, hm₂, hx⟩
   · rintro ⟨m, hm₁, hm₂, hx⟩
     exact ⟨↑((m : ℝ) / n), ⟨m, hm₁, hm₂, rfl⟩, hx⟩
-#align unit_add_circle.mem_approx_add_order_of_iff UnitAddCircle.mem_approx_add_order_of_iff
+#align unit_add_circle.mem_approx_add_order_of_iff UnitAddCircle.mem_approxAddOrderOf_iff
 
-theorem mem_add_well_approximable_iff (δ : ℕ → ℝ) (x : UnitAddCircle) :
+theorem mem_addWellApproximable_iff (δ : ℕ → ℝ) (x : UnitAddCircle) :
     x ∈ addWellApproximable UnitAddCircle δ ↔
       { n : ℕ | ∃ m < n, gcd m n = 1 ∧ ‖x - ↑((m : ℝ) / n)‖ < δ n }.Infinite :=
   by
-  simp only [mem_add_well_approximable_iff, ← Nat.cofinite_eq_at_top, cofinite.blimsup_set_eq,
+  simp only [mem_add_wellApproximable_iff, ← Nat.cofinite_eq_atTop, cofinite.blimsup_set_eq,
     mem_set_of_eq]
   refine' iff_of_eq (congr_arg Set.Infinite <| ext fun n => ⟨fun hn => _, fun hn => _⟩)
-  · exact (mem_approx_add_order_of_iff hn.1).mp hn.2
+  · exact (mem_approx_add_orderOf_iff hn.1).mp hn.2
   · have h : 0 < n := by
       obtain ⟨m, hm₁, hm₂, hm₃⟩ := hn
       exact pos_of_gt hm₁
-    exact ⟨h, (mem_approx_add_order_of_iff h).mpr hn⟩
-#align unit_add_circle.mem_add_well_approximable_iff UnitAddCircle.mem_add_well_approximable_iff
+    exact ⟨h, (mem_approx_add_orderOf_iff h).mpr hn⟩
+#align unit_add_circle.mem_add_well_approximable_iff UnitAddCircle.mem_addWellApproximable_iff
 
 end UnitAddCircle
 
@@ -217,7 +217,7 @@ local notation a "∣∣" b => a ∣ b ∧ (a * a)∤b
 local notation "𝕊" => AddCircle T
 
 /-- *Gallagher's ergodic theorem* on Diophantine approximation. -/
-theorem add_well_approximable_ae_empty_or_univ (δ : ℕ → ℝ) (hδ : Tendsto δ atTop (𝓝 0)) :
+theorem addWellApproximable_ae_empty_or_univ (δ : ℕ → ℝ) (hδ : Tendsto δ atTop (𝓝 0)) :
     (∀ᵐ x, ¬addWellApproximable 𝕊 δ x) ∨ ∀ᵐ x, addWellApproximable 𝕊 δ x :=
   by
   /- Sketch of proof:
@@ -262,13 +262,13 @@ theorem add_well_approximable_ae_empty_or_univ (δ : ℕ → ℝ) (hδ : Tendsto
   set B : ℕ → Set 𝕊 := fun p => blimsup X at_top fun n => 0 < n ∧ p∣∣n
   set C : ℕ → Set 𝕊 := fun p => blimsup X at_top fun n => 0 < n ∧ p ^ 2 ∣ n
   have hA₀ : ∀ p, MeasurableSet (A p) := fun p =>
-    MeasurableSet.measurable_set_blimsup fun n hn => is_open_thickening.measurable_set
+    MeasurableSet.measurableSet_blimsup fun n hn => is_open_thickening.measurable_set
   have hB₀ : ∀ p, MeasurableSet (B p) := fun p =>
-    MeasurableSet.measurable_set_blimsup fun n hn => is_open_thickening.measurable_set
+    MeasurableSet.measurableSet_blimsup fun n hn => is_open_thickening.measurable_set
   have hE₀ : null_measurable_set E μ :=
     by
     refine'
-      (MeasurableSet.measurable_set_blimsup fun n hn => IsOpen.measurable_set _).NullMeasurableSet
+      (MeasurableSet.measurableSet_blimsup fun n hn => IsOpen.measurableSet _).NullMeasurableSet
     exact is_open_thickening
   have hE₁ : ∀ p, E = A p ∪ B p ∪ C p := by
     intro p
@@ -291,7 +291,7 @@ theorem add_well_approximable_ae_empty_or_univ (δ : ℕ → ℝ) (hδ : Tendsto
       f '' A p ⊆ blimsup (fun n => approxAddOrderOf 𝕊 n (p * δ n)) at_top fun n => 0 < n ∧ p∤n
       by
       apply (ergodic_nsmul hp.one_lt).ae_empty_or_univ_of_image_ae_le (hA₀ p)
-      apply (HasSubset.Subset.eventually_le this).congr eventually_eq.rfl
+      apply (HasSubset.Subset.eventuallyLe this).congr eventually_eq.rfl
       exact
         blimsup_thickening_mul_ae_eq μ (fun n => 0 < n ∧ p∤n) (fun n => { y | addOrderOf y = n })
           (nat.cast_pos.mpr hp.pos) _ hδ
@@ -307,7 +307,7 @@ theorem add_well_approximable_ae_empty_or_univ (δ : ℕ → ℝ) (hδ : Tendsto
       f '' B p ⊆ blimsup (fun n => approxAddOrderOf 𝕊 n (p * δ n)) at_top fun n => 0 < n ∧ p∣∣n
       by
       apply (ergodic_nsmul_add x hp.one_lt).ae_empty_or_univ_of_image_ae_le (hB₀ p)
-      apply (HasSubset.Subset.eventually_le this).congr eventually_eq.rfl
+      apply (HasSubset.Subset.eventuallyLe this).congr eventually_eq.rfl
       exact
         blimsup_thickening_mul_ae_eq μ (fun n => 0 < n ∧ p∣∣n) (fun n => { y | addOrderOf y = n })
           (nat.cast_pos.mpr hp.pos) _ hδ
@@ -324,7 +324,7 @@ theorem add_well_approximable_ae_empty_or_univ (δ : ℕ → ℝ) (hδ : Tendsto
       ext
       simp [add_comm x]
     simp_rw [comp_app]
-    rw [le_eq_subset, SupHom.set_image_to_fun, hf, image_comp]
+    rw [le_eq_subset, SupHom.setImage_to_fun, hf, image_comp]
     have := @monotone_image 𝕊 𝕊 fun y => x + y
     specialize this (approxAddOrderOf.image_nsmul_subset (δ n) (n / p) hp.pos)
     simp only [h_div] at this⊢
@@ -362,7 +362,7 @@ theorem add_well_approximable_ae_empty_or_univ (δ : ℕ → ℝ) (hδ : Tendsto
     · cases hB p
       · contradiction
       simp only [h, union_ae_eq_univ_of_ae_eq_univ_left, union_ae_eq_univ_of_ae_eq_univ_right]
-#align add_circle.add_well_approximable_ae_empty_or_univ AddCircle.add_well_approximable_ae_empty_or_univ
+#align add_circle.add_well_approximable_ae_empty_or_univ AddCircle.addWellApproximable_ae_empty_or_univ
 
 end AddCircle
 

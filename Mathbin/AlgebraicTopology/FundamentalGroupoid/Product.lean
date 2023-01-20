@@ -104,11 +104,11 @@ def coneDiscreteComp :
   Limits.Cones.postcomposeEquivalence (Discrete.compNatIsoDiscrete X π)
 #align fundamental_groupoid_functor.cone_discrete_comp FundamentalGroupoidFunctor.coneDiscreteComp
 
-theorem cone_discrete_comp_obj_map_cone :
+theorem coneDiscreteComp_obj_mapCone :
     (coneDiscreteComp X).Functor.obj (π.mapCone (TopCat.piFan.{u} X)) =
       Limits.Fan.mk (πₓ (TopCat.of (∀ i, X i))) (proj X) :=
   rfl
-#align fundamental_groupoid_functor.cone_discrete_comp_obj_map_cone FundamentalGroupoidFunctor.cone_discrete_comp_obj_map_cone
+#align fundamental_groupoid_functor.cone_discrete_comp_obj_map_cone FundamentalGroupoidFunctor.coneDiscreteComp_obj_mapCone
 
 /-- This is `pi_iso.inv` as a cone morphism (in fact, isomorphism) -/
 def piTopToPiCone :
@@ -150,16 +150,16 @@ def projRight : πₓ (TopCat.of (A × B)) ⥤ πₓ B :=
 #align fundamental_groupoid_functor.proj_right FundamentalGroupoidFunctor.projRight
 
 @[simp]
-theorem proj_left_map (x₀ x₁ : πₓ (TopCat.of (A × B))) (p : x₀ ⟶ x₁) :
+theorem projLeft_map (x₀ x₁ : πₓ (TopCat.of (A × B))) (p : x₀ ⟶ x₁) :
     (projLeft A B).map p = Path.Homotopic.projLeft p :=
   rfl
-#align fundamental_groupoid_functor.proj_left_map FundamentalGroupoidFunctor.proj_left_map
+#align fundamental_groupoid_functor.proj_left_map FundamentalGroupoidFunctor.projLeft_map
 
 @[simp]
-theorem proj_right_map (x₀ x₁ : πₓ (TopCat.of (A × B))) (p : x₀ ⟶ x₁) :
+theorem projRight_map (x₀ x₁ : πₓ (TopCat.of (A × B))) (p : x₀ ⟶ x₁) :
     (projRight A B).map p = Path.Homotopic.projRight p :=
   rfl
-#align fundamental_groupoid_functor.proj_right_map FundamentalGroupoidFunctor.proj_right_map
+#align fundamental_groupoid_functor.proj_right_map FundamentalGroupoidFunctor.projRight_map
 
 /--
 The map taking the product of two fundamental groupoids to the fundamental groupoid of the product
@@ -182,11 +182,11 @@ def prodToProdTop : πₓ A × πₓ B ⥤ πₓ (TopCat.of (A × B))
       (Path.Homotopic.comp_prod_eq_prod_comp f₀ f₁ g₀ g₁).symm
 #align fundamental_groupoid_functor.prod_to_prod_Top FundamentalGroupoidFunctor.prodToProdTop
 
-theorem prod_to_prod_Top_map {x₀ x₁ : πₓ A} {y₀ y₁ : πₓ B} (p₀ : x₀ ⟶ x₁) (p₁ : y₀ ⟶ y₁) :
+theorem prodToProdTop_map {x₀ x₁ : πₓ A} {y₀ y₁ : πₓ B} (p₀ : x₀ ⟶ x₁) (p₁ : y₀ ⟶ y₁) :
     @CategoryTheory.Functor.map _ _ _ _ (prodToProdTop A B) (x₀, y₀) (x₁, y₁) (p₀, p₁) =
       Path.Homotopic.prod p₀ p₁ :=
   rfl
-#align fundamental_groupoid_functor.prod_to_prod_Top_map FundamentalGroupoidFunctor.prod_to_prod_Top_map
+#align fundamental_groupoid_functor.prod_to_prod_Top_map FundamentalGroupoidFunctor.prodToProdTop_map
 
 /-- Shows `prod_to_prod_Top` is an isomorphism, whose inverse is precisely the product
 of the induced left and right projections.
@@ -203,7 +203,7 @@ def prodIso : CategoryTheory.GroupoidCat.of (πₓ A × πₓ B) ≅ πₓ (TopC
     · intros
       ext <;> simp <;> rfl
     rintro ⟨x₀, x₁⟩ ⟨y₀, y₁⟩ ⟨f₀, f₁⟩
-    have := And.intro (Path.Homotopic.proj_left_prod f₀ f₁) (Path.Homotopic.proj_right_prod f₀ f₁)
+    have := And.intro (Path.Homotopic.projLeft_prod f₀ f₁) (Path.Homotopic.projRight_prod f₀ f₁)
     simpa
   inv_hom_id' :=
     by
@@ -212,7 +212,7 @@ def prodIso : CategoryTheory.GroupoidCat.of (πₓ A × πₓ B) ≅ πₓ (TopC
     · intros
       ext <;> simp <;> rfl
     rintro ⟨x₀, x₁⟩ ⟨y₀, y₁⟩ f
-    have := Path.Homotopic.prod_proj_left_proj_right f
+    have := Path.Homotopic.prod_projLeft_projRight f
     simpa
 #align fundamental_groupoid_functor.prod_iso FundamentalGroupoidFunctor.prodIso
 

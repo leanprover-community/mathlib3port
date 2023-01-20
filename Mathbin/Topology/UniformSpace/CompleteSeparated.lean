@@ -26,14 +26,14 @@ open TopologicalSpace Filter
 variable {α : Type _}
 
 --In a separated space, a complete set is closed
-theorem IsComplete.is_closed [UniformSpace α] [SeparatedSpace α] {s : Set α} (h : IsComplete s) :
+theorem IsComplete.isClosed [UniformSpace α] [SeparatedSpace α] {s : Set α} (h : IsComplete s) :
     IsClosed s :=
-  is_closed_iff_cluster_pt.2 fun a ha => by
+  isClosed_iff_clusterPt.2 fun a ha => by
     let f := 𝓝[s] a
     have : Cauchy f := cauchy_nhds.mono' ha inf_le_left
     rcases h f this inf_le_right with ⟨y, ys, fy⟩
     rwa [(tendsto_nhds_unique' ha inf_le_left fy : a = y)]
-#align is_complete.is_closed IsComplete.is_closed
+#align is_complete.is_closed IsComplete.isClosed
 
 namespace DenseInducing
 

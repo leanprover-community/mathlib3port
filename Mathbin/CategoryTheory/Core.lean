@@ -101,7 +101,7 @@ def ofEquivFunctor (m : Type u₁ → Type u₂) [EquivFunctor m] : Core (Type u
   map_id' α := by ext; exact congr_fun (EquivFunctor.map_refl _) x
   map_comp' α β γ f g := by
     ext
-    simp only [EquivFunctor.mapEquiv_apply, Equiv.to_iso_hom, Function.comp_apply, core.comp_hom,
+    simp only [EquivFunctor.mapEquiv_apply, Equiv.toIso_hom, Function.comp_apply, core.comp_hom,
       types_comp]
     erw [iso.to_equiv_comp, EquivFunctor.map_trans]
 #align category_theory.of_equiv_functor CategoryTheory.ofEquivFunctor

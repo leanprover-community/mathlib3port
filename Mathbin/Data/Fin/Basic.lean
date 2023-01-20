@@ -1088,9 +1088,9 @@ theorem ofNat_eq_val (n : ℕ) (a : ℕ) : (ofNat a : Fin (n + 1)) = a :=
 #align fin.of_nat_eq_coe Fin.ofNat_eq_val
 
 @[simp]
-theorem of_nat'_eq_coe (n : ℕ) [NeZero n] (a : ℕ) : (ofNat'' a : Fin n) = a :=
+theorem ofNat''_eq_coe (n : ℕ) [NeZero n] (a : ℕ) : (ofNat'' a : Fin n) = a :=
   rfl
-#align fin.of_nat'_eq_coe Fin.of_nat'_eq_coe
+#align fin.of_nat'_eq_coe Fin.ofNat''ₓ_eq_coe
 
 /- warning: fin.coe_val_of_lt -> Fin.val_cast_of_lt is a dubious translation:
 lean 3 declaration is
@@ -3016,7 +3016,7 @@ theorem addCases_right {m n : ℕ} {C : Fin (m + n) → Sort _} (hleft : ∀ i, 
   by
   have : ¬(nat_add m i : ℕ) < m := (le_coe_nat_add _ _).not_lt
   rw [add_cases, dif_neg this]
-  refine' eq_of_heq ((eq_rec_heq _ _).trans _)
+  refine' eq_of_hEq ((eq_rec_hEq _ _).trans _)
   congr 1
   simp
 #align fin.add_cases_right Fin.addCases_right

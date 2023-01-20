@@ -165,10 +165,11 @@ lean 3 declaration is
 but is expected to have type
   forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] [_inst_2 : Preorder.{u1} M] [_inst_3 : CovariantClass.{u1, u1} M M (fun (x._@.Mathlib.Algebra.GroupPower.Order._hyg.1109 : M) (x._@.Mathlib.Algebra.GroupPower.Order._hyg.1111 : M) => HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) x._@.Mathlib.Algebra.GroupPower.Order._hyg.1109 x._@.Mathlib.Algebra.GroupPower.Order._hyg.1111) (fun (x._@.Mathlib.Algebra.GroupPower.Order._hyg.1124 : M) (x._@.Mathlib.Algebra.GroupPower.Order._hyg.1126 : M) => LE.le.{u1} M (Preorder.toLE.{u1} M _inst_2) x._@.Mathlib.Algebra.GroupPower.Order._hyg.1124 x._@.Mathlib.Algebra.GroupPower.Order._hyg.1126)] [_inst_4 : CovariantClass.{u1, u1} M M (fun (x._@.Mathlib.Algebra.GroupPower.Order._hyg.1144 : M) (x._@.Mathlib.Algebra.GroupPower.Order._hyg.1146 : M) => HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) x._@.Mathlib.Algebra.GroupPower.Order._hyg.1144 x._@.Mathlib.Algebra.GroupPower.Order._hyg.1146) (fun (x._@.Mathlib.Algebra.GroupPower.Order._hyg.1159 : M) (x._@.Mathlib.Algebra.GroupPower.Order._hyg.1161 : M) => LT.lt.{u1} M (Preorder.toLT.{u1} M _inst_2) x._@.Mathlib.Algebra.GroupPower.Order._hyg.1159 x._@.Mathlib.Algebra.GroupPower.Order._hyg.1161)] {a : M}, (LT.lt.{u1} M (Preorder.toLT.{u1} M _inst_2) (OfNat.ofNat.{u1} M 1 (One.toOfNat1.{u1} M (Monoid.toOne.{u1} M _inst_1))) a) -> (StrictMono.{0, u1} Nat M (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) _inst_2 ((fun (x._@.Mathlib.Algebra.GroupPower.Order._hyg.1189 : M) (x._@.Mathlib.Algebra.GroupPower.Order._hyg.1191 : Nat) => HPow.hPow.{u1, 0, u1} M Nat M (instHPow.{u1, 0} M Nat (Monoid.Pow.{u1} M _inst_1)) x._@.Mathlib.Algebra.GroupPower.Order._hyg.1189 x._@.Mathlib.Algebra.GroupPower.Order._hyg.1191) a))
 Case conversion may be inaccurate. Consider using '#align pow_strict_mono_left pow_strictMono_leftₓ'. -/
-@[to_additive nsmul_strict_mono_right]
+@[to_additive nsmul_strictMono_right]
 theorem pow_strictMono_left [CovariantClass M M (· * ·) (· < ·)] {a : M} (ha : 1 < a) :
     StrictMono ((· ^ ·) a : ℕ → M) := fun m n => pow_lt_pow' ha
 #align pow_strict_mono_left pow_strictMono_left
+#align nsmul_strict_mono_right nsmul_strictMono_right
 
 /- warning: left.one_le_pow_of_le -> Left.one_le_pow_of_le is a dubious translation:
 lean 3 declaration is
@@ -254,11 +255,11 @@ theorem StrictMono.pow_right' (hf : StrictMono f) : ∀ {n : ℕ}, n ≠ 0 → S
 #align strict_mono.nsmul_left StrictMono.nsmul_left
 
 /-- See also `pow_strict_mono_right` -/
-@[nolint to_additive_doc, to_additive nsmul_strict_mono_left]
-theorem pow_strict_mono_right' {n : ℕ} (hn : n ≠ 0) : StrictMono fun a : M => a ^ n :=
+@[nolint to_additive_doc, to_additive nsmul_strictMono_left]
+theorem pow_strictMono_right' {n : ℕ} (hn : n ≠ 0) : StrictMono fun a : M => a ^ n :=
   strictMono_id.pow_right' hn
-#align pow_strict_mono_right' pow_strict_mono_right'
-#align nsmul_strict_mono_left nsmul_strict_mono_left
+#align pow_strict_mono_right' pow_strictMono_right'
+#align nsmul_strict_mono_left nsmul_strictMono_left
 
 end CovariantLtSwap
 
@@ -453,7 +454,7 @@ variable [CovariantClass M M (· * ·) (· < ·)] [CovariantClass M M (swap (· 
 
 @[to_additive le_of_nsmul_le_nsmul]
 theorem le_of_pow_le_pow' {a b : M} {n : ℕ} (hn : n ≠ 0) : a ^ n ≤ b ^ n → a ≤ b :=
-  (pow_strict_mono_right' hn).le_iff_le.1
+  (pow_strictMono_right' hn).le_iff_le.1
 #align le_of_pow_le_pow' le_of_pow_le_pow'
 #align le_of_nsmul_le_nsmul le_of_nsmul_le_nsmul
 
@@ -694,27 +695,27 @@ theorem strictMonoOn_pow (hn : 0 < n) : StrictMonoOn (fun x : R => x ^ n) (Set.I
   fun x hx y hy h => pow_lt_pow_of_lt_left h hx hn
 #align strict_mono_on_pow strictMonoOn_pow
 
-theorem pow_strict_mono_right (h : 1 < a) : StrictMono fun n : ℕ => a ^ n :=
+theorem pow_strictMono_right (h : 1 < a) : StrictMono fun n : ℕ => a ^ n :=
   have : 0 < a := zero_le_one.trans_lt h
   strictMono_nat_of_lt_succ fun n => by
     simpa only [one_mul, pow_succ] using mul_lt_mul h (le_refl (a ^ n)) (pow_pos this _) this.le
-#align pow_strict_mono_right pow_strict_mono_right
+#align pow_strict_mono_right pow_strictMono_right
 
 #print pow_lt_pow /-
 theorem pow_lt_pow (h : 1 < a) (h2 : n < m) : a ^ n < a ^ m :=
-  pow_strict_mono_right h h2
+  pow_strictMono_right h h2
 #align pow_lt_pow pow_lt_pow
 -/
 
 #print pow_lt_pow_iff /-
 theorem pow_lt_pow_iff (h : 1 < a) : a ^ n < a ^ m ↔ n < m :=
-  (pow_strict_mono_right h).lt_iff_lt
+  (pow_strictMono_right h).lt_iff_lt
 #align pow_lt_pow_iff pow_lt_pow_iff
 -/
 
 #print pow_le_pow_iff /-
 theorem pow_le_pow_iff (h : 1 < a) : a ^ n ≤ a ^ m ↔ n ≤ m :=
-  (pow_strict_mono_right h).le_iff_le
+  (pow_strictMono_right h).le_iff_le
 #align pow_le_pow_iff pow_le_pow_iff
 -/
 
@@ -725,7 +726,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : StrictOrderedSemiring.{u1} R] {a : R}, (LT.lt.{u1} R (Preorder.toLT.{u1} R (PartialOrder.toPreorder.{u1} R (StrictOrderedSemiring.toPartialOrder.{u1} R _inst_1))) (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R (StrictOrderedSemiring.toSemiring.{u1} R _inst_1))))) a) -> (LT.lt.{u1} R (Preorder.toLT.{u1} R (PartialOrder.toPreorder.{u1} R (StrictOrderedSemiring.toPartialOrder.{u1} R _inst_1))) a (OfNat.ofNat.{u1} R 1 (One.toOfNat1.{u1} R (Semiring.toOne.{u1} R (StrictOrderedSemiring.toSemiring.{u1} R _inst_1))))) -> (StrictAnti.{0, u1} Nat R (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) (PartialOrder.toPreorder.{u1} R (StrictOrderedSemiring.toPartialOrder.{u1} R _inst_1)) (fun (n : Nat) => HPow.hPow.{u1, 0, u1} R Nat R (instHPow.{u1, 0} R Nat (Monoid.Pow.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (StrictOrderedSemiring.toSemiring.{u1} R _inst_1))))) a n))
 Case conversion may be inaccurate. Consider using '#align strict_anti_pow strictAnti_powₓ'. -/
 theorem strictAnti_pow (h₀ : 0 < a) (h₁ : a < 1) : StrictAnti fun n : ℕ => a ^ n :=
-  strict_anti_nat_of_succ_lt fun n => by
+  strictAnti_nat_of_succ_lt fun n => by
     simpa only [pow_succ, one_mul] using mul_lt_mul h₁ le_rfl (pow_pos h₀ n) zero_le_one
 #align strict_anti_pow strictAnti_pow
 
@@ -1067,7 +1068,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} R] (a : R), Iff (LT.lt.{u1} R (Preorder.toLT.{u1} R (PartialOrder.toPreorder.{u1} R (StrictOrderedRing.toPartialOrder.{u1} R (LinearOrderedRing.toStrictOrderedRing.{u1} R _inst_1)))) (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R (StrictOrderedSemiring.toSemiring.{u1} R (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} R (LinearOrderedRing.toLinearOrderedSemiring.{u1} R _inst_1))))))) (HPow.hPow.{u1, 0, u1} R Nat R (instHPow.{u1, 0} R Nat (Monoid.Pow.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (StrictOrderedSemiring.toSemiring.{u1} R (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} R (LinearOrderedRing.toLinearOrderedSemiring.{u1} R _inst_1))))))) a (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))) (Ne.{succ u1} R a (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R (StrictOrderedSemiring.toSemiring.{u1} R (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} R (LinearOrderedRing.toLinearOrderedSemiring.{u1} R _inst_1))))))))
 Case conversion may be inaccurate. Consider using '#align sq_pos_iff sq_pos_iffₓ'. -/
 theorem sq_pos_iff (a : R) : 0 < a ^ 2 ↔ a ≠ 0 :=
-  pow_bit0_pos_iff a one_ne_zero
+  pow_bit0_pos_iff a one_neZero
 #align sq_pos_iff sq_pos_iff
 
 variable {x y : R}

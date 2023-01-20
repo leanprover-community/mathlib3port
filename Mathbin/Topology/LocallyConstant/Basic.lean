@@ -49,7 +49,7 @@ namespace IsLocallyConstant
      (Command.declModifiers [] [] [(Command.protected "protected")] [] [] [])
      (Command.theorem
       "theorem"
-      (Command.declId `tfae [])
+      (Command.declId `tFAE [])
       (Command.declSig
        [(Term.explicitBinder "(" [`f] [":" (Term.arrow `X "→" `Y)] [] ")")]
        (Term.typeSpec
@@ -204,7 +204,7 @@ namespace IsLocallyConstant
              (Tactic.refine'
               "refine'"
               (Term.app
-               (Term.proj `is_open_iff_forall_mem_open "." (fieldIdx "2"))
+               (Term.proj `isOpen_iff_forall_mem_open "." (fieldIdx "2"))
                [(Term.fun "fun" (Term.basicFun [`x `hx] [] "=>" (Term.hole "_")))]))
              []
              (Std.Tactic.rcases
@@ -333,7 +333,7 @@ namespace IsLocallyConstant
             (Tactic.refine'
              "refine'"
              (Term.app
-              (Term.proj `is_open_iff_forall_mem_open "." (fieldIdx "2"))
+              (Term.proj `isOpen_iff_forall_mem_open "." (fieldIdx "2"))
               [(Term.fun "fun" (Term.basicFun [`x `hx] [] "=>" (Term.hole "_")))]))
             []
             (Std.Tactic.rcases
@@ -397,7 +397,7 @@ namespace IsLocallyConstant
         (Tactic.refine'
          "refine'"
          (Term.app
-          (Term.proj `is_open_iff_forall_mem_open "." (fieldIdx "2"))
+          (Term.proj `isOpen_iff_forall_mem_open "." (fieldIdx "2"))
           [(Term.fun "fun" (Term.basicFun [`x `hx] [] "=>" (Term.hole "_")))]))
         []
         (Std.Tactic.rcases
@@ -616,11 +616,11 @@ namespace IsLocallyConstant
       (Tactic.refine'
        "refine'"
        (Term.app
-        (Term.proj `is_open_iff_forall_mem_open "." (fieldIdx "2"))
+        (Term.proj `isOpen_iff_forall_mem_open "." (fieldIdx "2"))
         [(Term.fun "fun" (Term.basicFun [`x `hx] [] "=>" (Term.hole "_")))]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app
-       (Term.proj `is_open_iff_forall_mem_open "." (fieldIdx "2"))
+       (Term.proj `isOpen_iff_forall_mem_open "." (fieldIdx "2"))
        [(Term.fun "fun" (Term.basicFun [`x `hx] [] "=>" (Term.hole "_")))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
@@ -646,9 +646,9 @@ namespace IsLocallyConstant
      [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-      (Term.proj `is_open_iff_forall_mem_open "." (fieldIdx "2"))
+      (Term.proj `isOpen_iff_forall_mem_open "." (fieldIdx "2"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      `is_open_iff_forall_mem_open
+      `isOpen_iff_forall_mem_open
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
      [anonymous]) <=? (some 1022, term)
@@ -682,7 +682,7 @@ namespace IsLocallyConstant
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 protected
   theorem
-    tfae
+    tFAE
     ( f : X → Y )
       :
         TFAE
@@ -716,36 +716,36 @@ protected
           tfae_have 5 → 1
           ·
             intro h s
-              refine' is_open_iff_forall_mem_open . 2 fun x hx => _
+              refine' isOpen_iff_forall_mem_open . 2 fun x hx => _
               rcases h x with ⟨ U , hU , hxU , eq ⟩
               exact ⟨ U , fun x' hx' => mem_preimage . 2 <| Eq x' hx' . symm ▸ hx , hU , hxU ⟩
           tfae_finish
-#align is_locally_constant.tfae IsLocallyConstant.tfae
+#align is_locally_constant.tfae IsLocallyConstant.tFAE
 
 @[nontriviality]
 theorem of_discrete [DiscreteTopology X] (f : X → Y) : IsLocallyConstant f := fun s =>
-  is_open_discrete _
+  isOpen_discrete _
 #align is_locally_constant.of_discrete IsLocallyConstant.of_discrete
 
-theorem is_open_fiber {f : X → Y} (hf : IsLocallyConstant f) (y : Y) : IsOpen { x | f x = y } :=
+theorem isOpen_fiber {f : X → Y} (hf : IsLocallyConstant f) (y : Y) : IsOpen { x | f x = y } :=
   hf {y}
-#align is_locally_constant.is_open_fiber IsLocallyConstant.is_open_fiber
+#align is_locally_constant.is_open_fiber IsLocallyConstant.isOpen_fiber
 
-theorem is_closed_fiber {f : X → Y} (hf : IsLocallyConstant f) (y : Y) : IsClosed { x | f x = y } :=
+theorem isClosed_fiber {f : X → Y} (hf : IsLocallyConstant f) (y : Y) : IsClosed { x | f x = y } :=
   ⟨hf ({y}ᶜ)⟩
-#align is_locally_constant.is_closed_fiber IsLocallyConstant.is_closed_fiber
+#align is_locally_constant.is_closed_fiber IsLocallyConstant.isClosed_fiber
 
-theorem is_clopen_fiber {f : X → Y} (hf : IsLocallyConstant f) (y : Y) : IsClopen { x | f x = y } :=
-  ⟨is_open_fiber hf _, is_closed_fiber hf _⟩
-#align is_locally_constant.is_clopen_fiber IsLocallyConstant.is_clopen_fiber
+theorem isClopen_fiber {f : X → Y} (hf : IsLocallyConstant f) (y : Y) : IsClopen { x | f x = y } :=
+  ⟨isOpen_fiber hf _, isClosed_fiber hf _⟩
+#align is_locally_constant.is_clopen_fiber IsLocallyConstant.isClopen_fiber
 
 theorem iff_exists_open (f : X → Y) :
     IsLocallyConstant f ↔ ∀ x, ∃ (U : Set X)(hU : IsOpen U)(hx : x ∈ U), ∀ x' ∈ U, f x' = f x :=
-  (IsLocallyConstant.tfae f).out 0 4
+  (IsLocallyConstant.tFAE f).out 0 4
 #align is_locally_constant.iff_exists_open IsLocallyConstant.iff_exists_open
 
 theorem iff_eventually_eq (f : X → Y) : IsLocallyConstant f ↔ ∀ x, ∀ᶠ y in 𝓝 x, f y = f x :=
-  (IsLocallyConstant.tfae f).out 0 1
+  (IsLocallyConstant.tFAE f).out 0 1
 #align is_locally_constant.iff_eventually_eq IsLocallyConstant.iff_eventually_eq
 
 theorem exists_open {f : X → Y} (hf : IsLocallyConstant f) (x : X) :
@@ -765,7 +765,7 @@ protected theorem continuous [TopologicalSpace Y] {f : X → Y} (hf : IsLocallyC
 
 theorem iff_continuous {_ : TopologicalSpace Y} [DiscreteTopology Y] (f : X → Y) :
     IsLocallyConstant f ↔ Continuous f :=
-  ⟨IsLocallyConstant.continuous, fun h s => h.is_open_preimage s (is_open_discrete _)⟩
+  ⟨IsLocallyConstant.continuous, fun h s => h.is_open_preimage s (isOpen_discrete _)⟩
 #align is_locally_constant.iff_continuous IsLocallyConstant.iff_continuous
 
 theorem iff_continuous_bot (f : X → Y) : IsLocallyConstant f ↔ @Continuous X Y _ ⊥ f :=
@@ -805,7 +805,7 @@ theorem comp_continuous [TopologicalSpace Y] {g : Y → Z} {f : X → Y} (hg : I
 #align is_locally_constant.comp_continuous IsLocallyConstant.comp_continuous
 
 /-- A locally constant function is constant on any preconnected set. -/
-theorem apply_eq_of_is_preconnected {f : X → Y} (hf : IsLocallyConstant f) {s : Set X}
+theorem apply_eq_of_isPreconnected {f : X → Y} (hf : IsLocallyConstant f) {s : Set X}
     (hs : IsPreconnected s) {x y : X} (hx : x ∈ s) (hy : y ∈ s) : f x = f y :=
   by
   let U := f ⁻¹' {f y}
@@ -814,12 +814,12 @@ theorem apply_eq_of_is_preconnected {f : X → Y} (hf : IsLocallyConstant f) {s 
   specialize hs U (Uᶜ) (hf {f y}) (hf ({f y}ᶜ)) _ ⟨y, ⟨hy, rfl⟩⟩ ⟨x, ⟨hx, hxV⟩⟩
   · simp only [union_compl_self, subset_univ]
   · simpa only [inter_empty, not_nonempty_empty, inter_compl_self] using hs
-#align is_locally_constant.apply_eq_of_is_preconnected IsLocallyConstant.apply_eq_of_is_preconnected
+#align is_locally_constant.apply_eq_of_is_preconnected IsLocallyConstant.apply_eq_of_isPreconnected
 
-theorem apply_eq_of_preconnected_space [PreconnectedSpace X] {f : X → Y} (hf : IsLocallyConstant f)
+theorem apply_eq_of_preconnectedSpace [PreconnectedSpace X] {f : X → Y} (hf : IsLocallyConstant f)
     (x y : X) : f x = f y :=
-  hf.apply_eq_of_is_preconnected is_preconnected_univ trivial trivial
-#align is_locally_constant.apply_eq_of_preconnected_space IsLocallyConstant.apply_eq_of_preconnected_space
+  hf.apply_eq_of_is_preconnected isPreconnected_univ trivial trivial
+#align is_locally_constant.apply_eq_of_preconnected_space IsLocallyConstant.apply_eq_of_preconnectedSpace
 
 theorem eq_const [PreconnectedSpace X] {f : X → Y} (hf : IsLocallyConstant f) (x : X) :
     f = Function.const X (f x) :=
@@ -834,7 +834,7 @@ theorem exists_eq_const [PreconnectedSpace X] [Nonempty Y] {f : X → Y} (hf : I
 #align is_locally_constant.exists_eq_const IsLocallyConstant.exists_eq_const
 
 theorem iff_is_const [PreconnectedSpace X] {f : X → Y} : IsLocallyConstant f ↔ ∀ x y, f x = f y :=
-  ⟨fun h x y => h.apply_eq_of_is_preconnected is_preconnected_univ trivial trivial, of_constant _⟩
+  ⟨fun h x y => h.apply_eq_of_is_preconnected isPreconnected_univ trivial trivial, of_constant _⟩
 #align is_locally_constant.iff_is_const IsLocallyConstant.iff_is_const
 
 theorem range_finite [CompactSpace X] {f : X → Y} (hf : IsLocallyConstant f) :
@@ -842,7 +842,7 @@ theorem range_finite [CompactSpace X] {f : X → Y} (hf : IsLocallyConstant f) :
   letI : TopologicalSpace Y := ⊥
   haveI : DiscreteTopology Y := ⟨rfl⟩
   rw [@iff_continuous X Y ‹_› ‹_›] at hf
-  exact (is_compact_range hf).finite_of_discrete
+  exact (isCompact_range hf).finite_of_discrete
 #align is_locally_constant.range_finite IsLocallyConstant.range_finite
 
 @[to_additive]
@@ -876,7 +876,7 @@ constant, then the locally constant property descends to `f`. -/
 theorem desc {α β : Type _} (f : X → α) (g : α → β) (h : IsLocallyConstant (g ∘ f))
     (inj : Function.Injective g) : IsLocallyConstant f :=
   by
-  rw [(IsLocallyConstant.tfae f).out 0 3]
+  rw [(IsLocallyConstant.tFAE f).out 0 3]
   intro a
   have : f ⁻¹' {a} = g ∘ f ⁻¹' {g a} := by
     ext x
@@ -890,15 +890,15 @@ theorem of_constant_on_connected_components [LocallyConnectedSpace X] {f : X →
     (h : ∀ x, ∀ y ∈ connectedComponent x, f y = f x) : IsLocallyConstant f :=
   by
   rw [iff_exists_open]
-  exact fun x => ⟨connectedComponent x, is_open_connected_component, mem_connected_component, h x⟩
+  exact fun x => ⟨connectedComponent x, isOpen_connectedComponent, mem_connectedComponent, h x⟩
 #align is_locally_constant.of_constant_on_connected_components IsLocallyConstant.of_constant_on_connected_components
 
 theorem of_constant_on_preconnected_clopens [LocallyConnectedSpace X] {f : X → Y}
     (h : ∀ U : Set X, IsPreconnected U → IsClopen U → ∀ x ∈ U, ∀ y ∈ U, f y = f x) :
     IsLocallyConstant f :=
   of_constant_on_connected_components fun x =>
-    h (connectedComponent x) is_preconnected_connected_component is_clopen_connected_component x
-      mem_connected_component
+    h (connectedComponent x) isPreconnected_connectedComponent isClopen_connectedComponent x
+      mem_connectedComponent
 #align is_locally_constant.of_constant_on_preconnected_clopens IsLocallyConstant.of_constant_on_preconnected_clopens
 
 end IsLocallyConstant
@@ -920,9 +920,9 @@ instance : CoeFun (LocallyConstant X Y) fun _ => X → Y :=
 initialize_simps_projections LocallyConstant (toFun → apply)
 
 @[simp]
-theorem to_fun_eq_coe (f : LocallyConstant X Y) : f.toFun = f :=
+theorem toFun_eq_coe (f : LocallyConstant X Y) : f.toFun = f :=
   rfl
-#align locally_constant.to_fun_eq_coe LocallyConstant.to_fun_eq_coe
+#align locally_constant.to_fun_eq_coe LocallyConstant.toFun_eq_coe
 
 @[simp]
 theorem coe_mk (f : X → Y) (h) : ⇑(⟨f, h⟩ : LocallyConstant X Y) = f :=
@@ -975,19 +975,19 @@ instance : Coe (LocallyConstant X Y) C(X, Y) :=
   ⟨toContinuousMap⟩
 
 @[simp]
-theorem to_continuous_map_eq_coe : f.toContinuousMap = f :=
+theorem toContinuousMap_eq_coe : f.toContinuousMap = f :=
   rfl
-#align locally_constant.to_continuous_map_eq_coe LocallyConstant.to_continuous_map_eq_coe
+#align locally_constant.to_continuous_map_eq_coe LocallyConstant.toContinuousMap_eq_coe
 
 @[simp]
-theorem coe_continuous_map : ((f : C(X, Y)) : X → Y) = (f : X → Y) :=
+theorem coe_continuousMap : ((f : C(X, Y)) : X → Y) = (f : X → Y) :=
   rfl
-#align locally_constant.coe_continuous_map LocallyConstant.coe_continuous_map
+#align locally_constant.coe_continuous_map LocallyConstant.coe_continuousMap
 
-theorem to_continuous_map_injective :
+theorem toContinuousMap_injective :
     Function.Injective (toContinuousMap : LocallyConstant X Y → C(X, Y)) := fun _ _ h =>
   ext (ContinuousMap.congr_fun h)
-#align locally_constant.to_continuous_map_injective LocallyConstant.to_continuous_map_injective
+#align locally_constant.to_continuous_map_injective LocallyConstant.toContinuousMap_injective
 
 end CodomainTopologicalSpace
 
@@ -1008,7 +1008,7 @@ def ofClopen {X : Type _} [TopologicalSpace X] {U : Set X} [∀ x, Decidable (x 
   toFun x := if x ∈ U then 0 else 1
   IsLocallyConstant :=
     by
-    rw [(IsLocallyConstant.tfae fun x => if x ∈ U then (0 : Fin 2) else 1).out 0 3]
+    rw [(IsLocallyConstant.tFAE fun x => if x ∈ U then (0 : Fin 2) else 1).out 0 3]
     intro e
     fin_cases e
     · convert hU.1 using 1
@@ -1016,56 +1016,56 @@ def ofClopen {X : Type _} [TopologicalSpace X] {U : Set X} [∀ x, Decidable (x 
       simp only [mem_singleton_iff, Fin.one_eq_zero_iff, mem_preimage, ite_eq_left_iff,
         Nat.succ_succ_ne_one]
       tauto
-    · rw [← is_closed_compl_iff]
+    · rw [← isClosed_compl_iff]
       convert hU.2
       ext
       simp
 #align locally_constant.of_clopen LocallyConstant.ofClopen
 
 @[simp]
-theorem of_clopen_fiber_zero {X : Type _} [TopologicalSpace X] {U : Set X} [∀ x, Decidable (x ∈ U)]
+theorem ofClopen_fiber_zero {X : Type _} [TopologicalSpace X] {U : Set X} [∀ x, Decidable (x ∈ U)]
     (hU : IsClopen U) : ofClopen hU ⁻¹' ({0} : Set (Fin 2)) = U :=
   by
   ext
   simp only [of_clopen, mem_singleton_iff, Fin.one_eq_zero_iff, coe_mk, mem_preimage,
     ite_eq_left_iff, Nat.succ_succ_ne_one]
   tauto
-#align locally_constant.of_clopen_fiber_zero LocallyConstant.of_clopen_fiber_zero
+#align locally_constant.of_clopen_fiber_zero LocallyConstant.ofClopen_fiber_zero
 
 @[simp]
-theorem of_clopen_fiber_one {X : Type _} [TopologicalSpace X] {U : Set X} [∀ x, Decidable (x ∈ U)]
+theorem ofClopen_fiber_one {X : Type _} [TopologicalSpace X] {U : Set X} [∀ x, Decidable (x ∈ U)]
     (hU : IsClopen U) : ofClopen hU ⁻¹' ({1} : Set (Fin 2)) = Uᶜ :=
   by
   ext
   simp only [of_clopen, mem_singleton_iff, coe_mk, Fin.zero_eq_one_iff, mem_preimage,
     ite_eq_right_iff, mem_compl_iff, Nat.succ_succ_ne_one]
   tauto
-#align locally_constant.of_clopen_fiber_one LocallyConstant.of_clopen_fiber_one
+#align locally_constant.of_clopen_fiber_one LocallyConstant.ofClopen_fiber_one
 
-theorem locally_constant_eq_of_fiber_zero_eq {X : Type _} [TopologicalSpace X]
+theorem locallyConstant_eq_of_fiber_zero_eq {X : Type _} [TopologicalSpace X]
     (f g : LocallyConstant X (Fin 2)) (h : f ⁻¹' ({0} : Set (Fin 2)) = g ⁻¹' {0}) : f = g :=
   by
   simp only [Set.ext_iff, mem_singleton_iff, mem_preimage] at h
   ext1 x
   exact Fin.fin_two_eq_of_eq_zero_iff (h x)
-#align locally_constant.locally_constant_eq_of_fiber_zero_eq LocallyConstant.locally_constant_eq_of_fiber_zero_eq
+#align locally_constant.locally_constant_eq_of_fiber_zero_eq LocallyConstant.locallyConstant_eq_of_fiber_zero_eq
 
 theorem range_finite [CompactSpace X] (f : LocallyConstant X Y) : (Set.range f).Finite :=
   f.IsLocallyConstant.range_finite
 #align locally_constant.range_finite LocallyConstant.range_finite
 
-theorem apply_eq_of_is_preconnected (f : LocallyConstant X Y) {s : Set X} (hs : IsPreconnected s)
+theorem apply_eq_of_isPreconnected (f : LocallyConstant X Y) {s : Set X} (hs : IsPreconnected s)
     {x y : X} (hx : x ∈ s) (hy : y ∈ s) : f x = f y :=
   f.IsLocallyConstant.apply_eq_of_is_preconnected hs hx hy
-#align locally_constant.apply_eq_of_is_preconnected LocallyConstant.apply_eq_of_is_preconnected
+#align locally_constant.apply_eq_of_is_preconnected LocallyConstant.apply_eq_of_isPreconnected
 
-theorem apply_eq_of_preconnected_space [PreconnectedSpace X] (f : LocallyConstant X Y) (x y : X) :
+theorem apply_eq_of_preconnectedSpace [PreconnectedSpace X] (f : LocallyConstant X Y) (x y : X) :
     f x = f y :=
-  f.IsLocallyConstant.apply_eq_of_is_preconnected is_preconnected_univ trivial trivial
-#align locally_constant.apply_eq_of_preconnected_space LocallyConstant.apply_eq_of_preconnected_space
+  f.IsLocallyConstant.apply_eq_of_is_preconnected isPreconnected_univ trivial trivial
+#align locally_constant.apply_eq_of_preconnected_space LocallyConstant.apply_eq_of_preconnectedSpace
 
 theorem eq_const [PreconnectedSpace X] (f : LocallyConstant X Y) (x : X) : f = const X (f x) :=
-  ext fun y => apply_eq_of_preconnected_space f _ _
+  ext fun y => apply_eq_of_preconnectedSpace f _ _
 #align locally_constant.eq_const LocallyConstant.eq_const
 
 theorem exists_eq_const [PreconnectedSpace X] [Nonempty Y] (f : LocallyConstant X Y) :
@@ -1114,11 +1114,11 @@ def unflip {X α β : Type _} [Fintype α] [TopologicalSpace X] (f : α → Loca
     LocallyConstant X (α → β) where
   toFun x a := f a x
   IsLocallyConstant := by
-    rw [(IsLocallyConstant.tfae fun x a => f a x).out 0 3]
+    rw [(IsLocallyConstant.tFAE fun x a => f a x).out 0 3]
     intro g
     have : (fun (x : X) (a : α) => f a x) ⁻¹' {g} = ⋂ a : α, f a ⁻¹' {g a} := by tidy
     rw [this]
-    apply is_open_Inter
+    apply isOpen_interᵢ
     intro a
     apply (f a).IsLocallyConstant
 #align locally_constant.unflip LocallyConstant.unflip
@@ -1159,7 +1159,7 @@ noncomputable def comap (f : X → Y) : LocallyConstant Y Z → LocallyConstant 
     · intro g
       refine' ⟨fun x => (H ⟨x⟩).elim, _⟩
       intro s
-      rw [is_open_iff_nhds]
+      rw [isOpen_iff_nhds]
       intro x
       exact (H ⟨x⟩).elim
 #align locally_constant.comap LocallyConstant.comap
@@ -1242,7 +1242,7 @@ noncomputable def mulIndicator (hU : IsClopen U) : LocallyConstant X R
     · refine' ⟨U ∩ V, IsOpen.inter hU.1 hV, Set.mem_inter h hx, _⟩
       rintro y hy
       rw [Set.mem_inter_iff] at hy
-      rw [Set.mul_indicator_of_mem hy.1, Set.mul_indicator_of_mem h]
+      rw [Set.mulIndicator_of_mem hy.1, Set.mulIndicator_of_mem h]
       apply h' y hy.2
     · rw [← Set.mem_compl_iff] at h
       refine' ⟨Uᶜ, (IsClopen.compl hU).1, h, _⟩
@@ -1256,28 +1256,28 @@ noncomputable def mulIndicator (hU : IsClopen U) : LocallyConstant X R
 variable (a : X)
 
 @[to_additive]
-theorem mul_indicator_apply_eq_if (hU : IsClopen U) :
+theorem mulIndicator_apply_eq_if (hU : IsClopen U) :
     mulIndicator f hU a = if a ∈ U then f a else 1 :=
-  Set.mul_indicator_apply U f a
-#align locally_constant.mul_indicator_apply_eq_if LocallyConstant.mul_indicator_apply_eq_if
+  Set.mulIndicator_apply U f a
+#align locally_constant.mul_indicator_apply_eq_if LocallyConstant.mulIndicator_apply_eq_if
 #align locally_constant.indicator_apply_eq_if LocallyConstant.indicator_apply_eq_if
 
 variable {a}
 
 @[to_additive]
-theorem mul_indicator_of_mem (hU : IsClopen U) (h : a ∈ U) : f.mulIndicator hU a = f a :=
+theorem mulIndicator_of_mem (hU : IsClopen U) (h : a ∈ U) : f.mulIndicator hU a = f a :=
   by
   rw [mul_indicator_apply]
-  apply Set.mul_indicator_of_mem h
-#align locally_constant.mul_indicator_of_mem LocallyConstant.mul_indicator_of_mem
+  apply Set.mulIndicator_of_mem h
+#align locally_constant.mul_indicator_of_mem LocallyConstant.mulIndicator_of_mem
 #align locally_constant.indicator_of_mem LocallyConstant.indicator_of_mem
 
 @[to_additive]
-theorem mul_indicator_of_not_mem (hU : IsClopen U) (h : a ∉ U) : f.mulIndicator hU a = 1 :=
+theorem mulIndicator_of_not_mem (hU : IsClopen U) (h : a ∉ U) : f.mulIndicator hU a = 1 :=
   by
   rw [mul_indicator_apply]
-  apply Set.mul_indicator_of_not_mem h
-#align locally_constant.mul_indicator_of_not_mem LocallyConstant.mul_indicator_of_not_mem
+  apply Set.mulIndicator_of_not_mem h
+#align locally_constant.mul_indicator_of_not_mem LocallyConstant.mulIndicator_of_not_mem
 #align locally_constant.indicator_of_not_mem LocallyConstant.indicator_of_not_mem
 
 end Indicator

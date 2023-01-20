@@ -114,15 +114,15 @@ def dualEquiv : BoundedOrderCat ≌ BoundedOrderCat :=
 
 end BoundedOrderCat
 
-theorem BoundedOrder_dual_comp_forget_to_PartialOrder :
+theorem boundedOrderCat_dual_comp_forget_to_partialOrderCat :
     BoundedOrderCat.dual ⋙ forget₂ BoundedOrderCat PartialOrderCat =
       forget₂ BoundedOrderCat PartialOrderCat ⋙ PartialOrderCat.dual :=
   rfl
-#align BoundedOrder_dual_comp_forget_to_PartialOrder BoundedOrder_dual_comp_forget_to_PartialOrder
+#align BoundedOrder_dual_comp_forget_to_PartialOrder boundedOrderCat_dual_comp_forget_to_partialOrderCat
 
-theorem BoundedOrder_dual_comp_forget_to_Bipointed :
+theorem boundedOrderCat_dual_comp_forget_to_bipointedCat :
     BoundedOrderCat.dual ⋙ forget₂ BoundedOrderCat BipointedCat =
       forget₂ BoundedOrderCat BipointedCat ⋙ BipointedCat.swap :=
   rfl
-#align BoundedOrder_dual_comp_forget_to_Bipointed BoundedOrder_dual_comp_forget_to_Bipointed
+#align BoundedOrder_dual_comp_forget_to_Bipointed boundedOrderCat_dual_comp_forget_to_bipointedCat
 

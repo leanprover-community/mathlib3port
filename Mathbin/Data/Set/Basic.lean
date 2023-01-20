@@ -191,12 +191,6 @@ alias le_iff_subset ↔ _root_.has_le.le.subset _root_.has_subset.subset.le
 #align has_le.le.subset LE.le.subset
 #align has_subset.subset.le HasSubset.Subset.le
 
-/- warning: has_lt.lt.ssubset -> LT.lt.ssubset is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α}, (LT.lt.{u1} (Set.{u1} α) (Preorder.toLT.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (Lattice.toSemilatticeInf.{u1} (Set.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} α) (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)))))))) s t) -> (HasSSubset.SSubset.{u1} (Set.{u1} α) (Set.hasSsubset.{u1} α) s t)
-but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α}, (LT.lt.{u1} (Set.{u1} α) (Preorder.toLT.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (Lattice.toSemilatticeInf.{u1} (Set.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} α) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} α) (BiheytingAlgebra.toCoheytingAlgebra.{u1} (Set.{u1} α) (BooleanAlgebra.toBiheytingAlgebra.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α))))))))) s t) -> (HasSSubset.SSubset.{u1} (Set.{u1} α) (Set.instHasSSubsetSet.{u1} α) s t)
-Case conversion may be inaccurate. Consider using '#align has_lt.lt.ssubset LT.lt.ssubsetₓ'. -/
 /- warning: has_ssubset.ssubset.lt -> HasSSubset.SSubset.lt is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α}, (HasSSubset.SSubset.{u1} (Set.{u1} α) (Set.hasSsubset.{u1} α) s t) -> (LT.lt.{u1} (Set.{u1} α) (Preorder.toLT.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (Lattice.toSemilatticeInf.{u1} (Set.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} α) (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)))))))) s t)
@@ -204,7 +198,7 @@ but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α}, (HasSSubset.SSubset.{u1} (Set.{u1} α) (Set.instHasSSubsetSet.{u1} α) s t) -> (LT.lt.{u1} (Set.{u1} α) (Preorder.toLT.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (Lattice.toSemilatticeInf.{u1} (Set.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} α) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} α) (BiheytingAlgebra.toCoheytingAlgebra.{u1} (Set.{u1} α) (BooleanAlgebra.toBiheytingAlgebra.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α))))))))) s t)
 Case conversion may be inaccurate. Consider using '#align has_ssubset.ssubset.lt HasSSubset.SSubset.ltₓ'. -/
 alias lt_iff_ssubset ↔ _root_.has_lt.lt.ssubset _root_.has_ssubset.ssubset.lt
-#align has_lt.lt.ssubset LT.lt.ssubset
+#align has_lt.lt.ssubset LT.lt.sSubset
 #align has_ssubset.ssubset.lt HasSSubset.SSubset.lt
 
 /-- Coercion from a set to the corresponding subtype. -/
@@ -428,22 +422,22 @@ theorem setOf_or {p q : α → Prop} : { a | p a ∨ q a } = { a | p a } ∪ { a
 
 
 instance : IsRefl (Set α) (· ⊆ ·) :=
-  LE.le.is_refl
+  LE.le.isRefl
 
 instance : IsTrans (Set α) (· ⊆ ·) :=
-  LE.le.is_trans
+  LE.le.isTrans
 
 instance : IsAntisymm (Set α) (· ⊆ ·) :=
-  LE.le.is_antisymm
+  LE.le.isAntisymm
 
 instance : IsIrrefl (Set α) (· ⊂ ·) :=
-  LT.lt.is_irrefl
+  LT.lt.isIrrefl
 
 instance : IsTrans (Set α) (· ⊂ ·) :=
-  LT.lt.is_trans
+  LT.lt.isTrans
 
 instance : IsAsymm (Set α) (· ⊂ ·) :=
-  LT.lt.is_asymm
+  LT.lt.isAsymm
 
 instance : IsNonstrictStrictOrder (Set α) (· ⊆ ·) (· ⊂ ·) :=
   ⟨fun _ _ => Iff.rfl⟩
@@ -628,7 +622,7 @@ theorem nonempty_coe_sort {s : Set α} : Nonempty ↥s ↔ s.Nonempty :=
 -/
 
 alias nonempty_coe_sort ↔ _ nonempty.coe_sort
-#align set.nonempty.coe_sort Set.Nonempty.coe_sort
+#align set.nonempty.coe_sort Set.Nonempty.coeSort
 
 #print Set.nonempty_def /-
 theorem nonempty_def : s.Nonempty ↔ ∃ x, x ∈ s :=
@@ -958,14 +952,8 @@ theorem empty_ssubset : ∅ ⊂ s ↔ s.Nonempty :=
   (@bot_lt_iff_ne_bot (Set α) _ _ _).trans nonempty_iff_ne_empty.symm
 #align set.empty_ssubset Set.empty_ssubset
 
-/- warning: set.nonempty.empty_ssubset -> Set.Nonempty.empty_ssubset is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α}, (Set.Nonempty.{u1} α s) -> (HasSSubset.SSubset.{u1} (Set.{u1} α) (Set.hasSsubset.{u1} α) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.hasEmptyc.{u1} α)) s)
-but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} α}, (Set.Nonempty.{u1} α s) -> (HasSSubset.SSubset.{u1} (Set.{u1} α) (Set.instHasSSubsetSet.{u1} α) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.instEmptyCollectionSet.{u1} α)) s)
-Case conversion may be inaccurate. Consider using '#align set.nonempty.empty_ssubset Set.Nonempty.empty_ssubsetₓ'. -/
 alias empty_ssubset ↔ _ nonempty.empty_ssubset
-#align set.nonempty.empty_ssubset Set.Nonempty.empty_ssubset
+#align set.nonempty.empty_ssubset Set.Nonempty.empty_sSubset
 
 /-!
 
@@ -2168,7 +2156,7 @@ theorem ball_insert_iff {P : α → Prop} {a : α} {s : Set α} :
 
 #print Set.singleton_def /-
 theorem singleton_def (a : α) : ({a} : Set α) = insert a ∅ :=
-  (insert_emptyc_eq _).symm
+  (insert_emptyCollection_eq _).symm
 #align set.singleton_def Set.singleton_def
 -/
 
@@ -2575,7 +2563,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.ssubset_singleton_iff Set.ssubset_singleton_iffₓ'. -/
 theorem ssubset_singleton_iff {s : Set α} {x : α} : s ⊂ {x} ↔ s = ∅ :=
   by
-  rw [ssubset_iff_subset_ne, subset_singleton_iff_eq, or_and_right, and_not_self_iff, or_false_iff,
+  rw [sSubset_iff_subset_ne, subset_singleton_iff_eq, or_and_right, and_not_self_iff, or_false_iff,
     and_iff_left_iff_imp]
   exact fun h => ne_of_eq_of_ne h (singleton_ne_empty _).symm
 #align set.ssubset_singleton_iff Set.ssubset_singleton_iff
@@ -4729,7 +4717,7 @@ theorem nontrivial_coe_sort {s : Set α} : Nontrivial s ↔ s.Nontrivial := by
 -/
 
 alias nontrivial_coe_sort ↔ _ nontrivial.coe_sort
-#align set.nontrivial.coe_sort Set.Nontrivial.coe_sort
+#align set.nontrivial.coe_sort Set.Nontrivial.coeSort
 
 #print Set.nontrivial_of_nontrivial_coe /-
 /-- A type with a set `s` whose `coe_sort` is a nontrivial type is nontrivial.

@@ -73,15 +73,15 @@ def quotConjEquiv (H K : Subgroup G) (g : ConjAct G) :
     by
     dsimp
     rw [← Quotient.eq', ← Quotient.eq', QuotientGroup.eq', QuotientGroup.eq',
-      Subgroup.mem_subgroup_of, Subgroup.mem_subgroup_of, ← MulEquiv.map_inv, ← MulEquiv.map_mul,
-      Subgroup.equiv_smul_apply_coe]
+      Subgroup.mem_subgroupOf, Subgroup.mem_subgroupOf, ← MulEquiv.map_inv, ← MulEquiv.map_mul,
+      Subgroup.equivSmul_apply_coe]
     exact subgroup.smul_mem_pointwise_smul_iff.symm
 #align commensurable.quot_conj_equiv Commensurable.quotConjEquiv
 
 theorem commensurable_conj {H K : Subgroup G} (g : ConjAct G) :
     Commensurable H K ↔ Commensurable (g • H) (g • K) :=
-  and_congr (not_iff_not.mpr (Eq.congr_left (Cardinal.to_nat_congr (quotConjEquiv H K g))))
-    (not_iff_not.mpr (Eq.congr_left (Cardinal.to_nat_congr (quotConjEquiv K H g))))
+  and_congr (not_iff_not.mpr (Eq.congr_left (Cardinal.toNat_congr (quotConjEquiv H K g))))
+    (not_iff_not.mpr (Eq.congr_left (Cardinal.toNat_congr (quotConjEquiv K H g))))
 #align commensurable.commensurable_conj Commensurable.commensurable_conj
 
 theorem commensurable_inv (H : Subgroup G) (g : ConjAct G) :

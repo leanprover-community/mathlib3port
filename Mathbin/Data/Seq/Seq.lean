@@ -729,20 +729,20 @@ instance coeList : Coe (List α) (Seq α) :=
 #align seq.coe_list Seq.coeList
 
 @[simp]
-theorem of_list_nil : ofList [] = (nil : Seq α) :=
+theorem ofList_nil : ofList [] = (nil : Seq α) :=
   rfl
-#align seq.of_list_nil Seq.of_list_nil
+#align seq.of_list_nil Seq.ofList_nil
 
 @[simp]
-theorem of_list_nth (l : List α) (n : ℕ) : (ofList l).nth n = l.nth n :=
+theorem ofList_nth (l : List α) (n : ℕ) : (ofList l).nth n = l.nth n :=
   rfl
-#align seq.of_list_nth Seq.of_list_nth
+#align seq.of_list_nth Seq.ofList_nth
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem of_list_cons (a : α) (l : List α) : ofList (a::l) = cons a (ofList l) := by
+theorem ofList_cons (a : α) (l : List α) : ofList (a::l) = cons a (ofList l) := by
   ext1 (_ | n) <;> rfl
-#align seq.of_list_cons Seq.of_list_cons
+#align seq.of_list_cons Seq.ofList_cons
 
 /-- Embed an infinite stream as a sequence -/
 def ofStream (s : Stream' α) : Seq α :=
@@ -870,10 +870,10 @@ def zipWith (f : α → β → γ) (s₁ : Seq α) (s₂ : Seq β) : Seq γ :=
 variable {s : Seq α} {s' : Seq β} {n : ℕ}
 
 @[simp]
-theorem nth_zip_with (f : α → β → γ) (s s' n) :
+theorem nth_zipWith (f : α → β → γ) (s s' n) :
     (zipWith f s s').nth n = Option.map₂ f (s.nth n) (s'.nth n) :=
   rfl
-#align seq.nth_zip_with Seq.nth_zip_with
+#align seq.nth_zip_with Seq.nth_zipWith
 
 end ZipWith
 
@@ -884,7 +884,7 @@ def zip : Seq α → Seq β → Seq (α × β) :=
 
 theorem nth_zip (s : Seq α) (t : Seq β) (n : ℕ) :
     nth (zip s t) n = Option.map₂ Prod.mk (nth s n) (nth t n) :=
-  nth_zip_with _ _ _ _
+  nth_zipWith _ _ _ _
 #align seq.nth_zip Seq.nth_zip
 
 /-- Separate a sequence of pairs into two sequences -/
@@ -1102,20 +1102,20 @@ theorem join_append (S T : Seq (Seq1 α)) : join (append S T) = append (join S) 
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem of_stream_cons (a : α) (s) : ofStream (a::s) = cons a (ofStream s) := by
+theorem ofStream_cons (a : α) (s) : ofStream (a::s) = cons a (ofStream s) := by
   apply Subtype.eq <;> simp [of_stream, cons] <;> rw [Stream'.map_cons]
-#align seq.of_stream_cons Seq.of_stream_cons
+#align seq.of_stream_cons Seq.ofStream_cons
 
 @[simp]
-theorem of_list_append (l l' : List α) : ofList (l ++ l') = append (ofList l) (ofList l') := by
+theorem ofList_append (l l' : List α) : ofList (l ++ l') = append (ofList l) (ofList l') := by
   induction l <;> simp [*]
-#align seq.of_list_append Seq.of_list_append
+#align seq.of_list_append Seq.ofList_append
 
 @[simp]
-theorem of_stream_append (l : List α) (s : Stream' α) :
+theorem ofStream_append (l : List α) (s : Stream' α) :
     ofStream (l ++ₛ s) = append (ofList l) (ofStream s) := by
   induction l <;> simp [*, Stream'.nil_append_stream, Stream'.cons_append_stream]
-#align seq.of_stream_append Seq.of_stream_append
+#align seq.of_stream_append Seq.ofStream_append
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Convert a sequence into a list, embedded in a computation to allow for

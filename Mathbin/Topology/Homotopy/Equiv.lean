@@ -59,9 +59,9 @@ instance : CoeFun (HomotopyEquiv X Y) fun _ => X → Y :=
   ⟨fun h => h.toFun⟩
 
 @[simp]
-theorem to_fun_eq_coe (h : HomotopyEquiv X Y) : (h.toFun : X → Y) = h :=
+theorem toFun_eq_coe (h : HomotopyEquiv X Y) : (h.toFun : X → Y) = h :=
   rfl
-#align continuous_map.homotopy_equiv.to_fun_eq_coe ContinuousMap.HomotopyEquiv.to_fun_eq_coe
+#align continuous_map.homotopy_equiv.to_fun_eq_coe ContinuousMap.HomotopyEquiv.toFun_eq_coe
 
 @[continuity]
 theorem continuous (h : HomotopyEquiv X Y) : Continuous h :=
@@ -93,9 +93,9 @@ def toHomotopyEquiv (h : X ≃ₜ Y) : X ≃ₕ Y
 #align homeomorph.to_homotopy_equiv Homeomorph.toHomotopyEquiv
 
 @[simp]
-theorem coe_to_homotopy_equiv (h : X ≃ₜ Y) : ⇑h.toHomotopyEquiv = h :=
+theorem coe_toHomotopyEquiv (h : X ≃ₜ Y) : ⇑h.toHomotopyEquiv = h :=
   rfl
-#align homeomorph.coe_to_homotopy_equiv Homeomorph.coe_to_homotopy_equiv
+#align homeomorph.coe_to_homotopy_equiv Homeomorph.coe_toHomotopyEquiv
 
 end Homeomorph
 
@@ -113,9 +113,9 @@ def symm (h : X ≃ₕ Y) : Y ≃ₕ X where
 #align continuous_map.homotopy_equiv.symm ContinuousMap.HomotopyEquiv.symm
 
 @[simp]
-theorem coe_inv_fun (h : HomotopyEquiv X Y) : (⇑h.invFun : Y → X) = ⇑h.symm :=
+theorem coe_invFun (h : HomotopyEquiv X Y) : (⇑h.invFun : Y → X) = ⇑h.symm :=
   rfl
-#align continuous_map.homotopy_equiv.coe_inv_fun ContinuousMap.HomotopyEquiv.coe_inv_fun
+#align continuous_map.homotopy_equiv.coe_inv_fun ContinuousMap.HomotopyEquiv.coe_invFun
 
 /-- See Note [custom simps projection]. We need to specify this projection explicitly in this case,
 because it is a composition of multiple projections. -/
@@ -181,21 +181,21 @@ open ContinuousMap
 namespace Homeomorph
 
 @[simp]
-theorem refl_to_homotopy_equiv (X : Type u) [TopologicalSpace X] :
+theorem refl_toHomotopyEquiv (X : Type u) [TopologicalSpace X] :
     (Homeomorph.refl X).toHomotopyEquiv = HomotopyEquiv.refl X :=
   rfl
-#align homeomorph.refl_to_homotopy_equiv Homeomorph.refl_to_homotopy_equiv
+#align homeomorph.refl_to_homotopy_equiv Homeomorph.refl_toHomotopyEquiv
 
 @[simp]
-theorem symm_to_homotopy_equiv (h : X ≃ₜ Y) : h.symm.toHomotopyEquiv = h.toHomotopyEquiv.symm :=
+theorem symm_toHomotopyEquiv (h : X ≃ₜ Y) : h.symm.toHomotopyEquiv = h.toHomotopyEquiv.symm :=
   rfl
-#align homeomorph.symm_to_homotopy_equiv Homeomorph.symm_to_homotopy_equiv
+#align homeomorph.symm_to_homotopy_equiv Homeomorph.symm_toHomotopyEquiv
 
 @[simp]
-theorem trans_to_homotopy_equiv (h₀ : X ≃ₜ Y) (h₁ : Y ≃ₜ Z) :
+theorem trans_toHomotopyEquiv (h₀ : X ≃ₜ Y) (h₁ : Y ≃ₜ Z) :
     (h₀.trans h₁).toHomotopyEquiv = h₀.toHomotopyEquiv.trans h₁.toHomotopyEquiv :=
   rfl
-#align homeomorph.trans_to_homotopy_equiv Homeomorph.trans_to_homotopy_equiv
+#align homeomorph.trans_to_homotopy_equiv Homeomorph.trans_toHomotopyEquiv
 
 end Homeomorph
 

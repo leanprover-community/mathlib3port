@@ -89,23 +89,23 @@ noncomputable def colimitLimitToLimitColimit :
 this lemma characterises it.
 -/
 @[simp, reassoc.1]
-theorem ι_colimit_limit_to_limit_colimit_π (j) (k) :
+theorem ι_colimitLimitToLimitColimit_π (j) (k) :
     colimit.ι _ k ≫ colimitLimitToLimitColimit F ≫ limit.π _ j =
       limit.π ((curry.obj (swap K J ⋙ F)).obj k) j ≫ colimit.ι ((curry.obj F).obj j) k :=
   by
   dsimp [colimit_limit_to_limit_colimit]
   simp
-#align category_theory.limits.ι_colimit_limit_to_limit_colimit_π CategoryTheory.Limits.ι_colimit_limit_to_limit_colimit_π
+#align category_theory.limits.ι_colimit_limit_to_limit_colimit_π CategoryTheory.Limits.ι_colimitLimitToLimitColimit_π
 
 @[simp]
-theorem ι_colimit_limit_to_limit_colimit_π_apply (F : J × K ⥤ Type v) (j) (k) (f) :
+theorem ι_colimitLimitToLimitColimit_π_apply (F : J × K ⥤ Type v) (j) (k) (f) :
     limit.π (curry.obj F ⋙ colim) j
         (colimitLimitToLimitColimit F (colimit.ι (curry.obj (swap K J ⋙ F) ⋙ lim) k f)) =
       colimit.ι ((curry.obj F).obj j) k (limit.π ((curry.obj (swap K J ⋙ F)).obj k) j f) :=
   by
   dsimp [colimit_limit_to_limit_colimit]
   simp
-#align category_theory.limits.ι_colimit_limit_to_limit_colimit_π_apply CategoryTheory.Limits.ι_colimit_limit_to_limit_colimit_π_apply
+#align category_theory.limits.ι_colimit_limit_to_limit_colimit_π_apply CategoryTheory.Limits.ι_colimitLimitToLimitColimit_π_apply
 
 /-- The map `colimit_limit_to_limit_colimit` realized as a map of cones. -/
 @[simps]

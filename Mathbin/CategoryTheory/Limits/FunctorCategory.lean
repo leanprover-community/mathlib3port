@@ -208,17 +208,17 @@ def limitObjIsoLimitCompEvaluation [HasLimitsOfShape J C] (F : J ⥤ K ⥤ C) (k
 #align category_theory.limits.limit_obj_iso_limit_comp_evaluation CategoryTheory.Limits.limitObjIsoLimitCompEvaluation
 
 @[simp, reassoc.1]
-theorem limit_obj_iso_limit_comp_evaluation_hom_π [HasLimitsOfShape J C] (F : J ⥤ K ⥤ C) (j : J)
+theorem limitObjIsoLimitCompEvaluation_hom_π [HasLimitsOfShape J C] (F : J ⥤ K ⥤ C) (j : J)
     (k : K) :
     (limitObjIsoLimitCompEvaluation F k).Hom ≫ limit.π (F ⋙ (evaluation K C).obj k) j =
       (limit.π F j).app k :=
   by
   dsimp [limit_obj_iso_limit_comp_evaluation]
   simp
-#align category_theory.limits.limit_obj_iso_limit_comp_evaluation_hom_π CategoryTheory.Limits.limit_obj_iso_limit_comp_evaluation_hom_π
+#align category_theory.limits.limit_obj_iso_limit_comp_evaluation_hom_π CategoryTheory.Limits.limitObjIsoLimitCompEvaluation_hom_π
 
 @[simp, reassoc.1]
-theorem limit_obj_iso_limit_comp_evaluation_inv_π_app [HasLimitsOfShape J C] (F : J ⥤ K ⥤ C) (j : J)
+theorem limitObjIsoLimitCompEvaluation_inv_π_app [HasLimitsOfShape J C] (F : J ⥤ K ⥤ C) (j : J)
     (k : K) :
     (limitObjIsoLimitCompEvaluation F k).inv ≫ (limit.π F j).app k =
       limit.π (F ⋙ (evaluation K C).obj k) j :=
@@ -226,10 +226,10 @@ theorem limit_obj_iso_limit_comp_evaluation_inv_π_app [HasLimitsOfShape J C] (F
   dsimp [limit_obj_iso_limit_comp_evaluation]
   rw [iso.inv_comp_eq]
   simp
-#align category_theory.limits.limit_obj_iso_limit_comp_evaluation_inv_π_app CategoryTheory.Limits.limit_obj_iso_limit_comp_evaluation_inv_π_app
+#align category_theory.limits.limit_obj_iso_limit_comp_evaluation_inv_π_app CategoryTheory.Limits.limitObjIsoLimitCompEvaluation_inv_π_app
 
 @[simp, reassoc.1]
-theorem limit_map_limit_obj_iso_limit_comp_evaluation_hom [HasLimitsOfShape J C] {i j : K}
+theorem limit_map_limitObjIsoLimitCompEvaluation_hom [HasLimitsOfShape J C] {i j : K}
     (F : J ⥤ K ⥤ C) (f : i ⟶ j) :
     (limit F).map f ≫ (limitObjIsoLimitCompEvaluation _ _).Hom =
       (limitObjIsoLimitCompEvaluation _ _).Hom ≫ limMap (whiskerLeft _ ((evaluation _ _).map f)) :=
@@ -237,17 +237,17 @@ theorem limit_map_limit_obj_iso_limit_comp_evaluation_hom [HasLimitsOfShape J C]
   ext
   dsimp
   simp
-#align category_theory.limits.limit_map_limit_obj_iso_limit_comp_evaluation_hom CategoryTheory.Limits.limit_map_limit_obj_iso_limit_comp_evaluation_hom
+#align category_theory.limits.limit_map_limit_obj_iso_limit_comp_evaluation_hom CategoryTheory.Limits.limit_map_limitObjIsoLimitCompEvaluation_hom
 
 @[simp, reassoc.1]
-theorem limit_obj_iso_limit_comp_evaluation_inv_limit_map [HasLimitsOfShape J C] {i j : K}
+theorem limitObjIsoLimitCompEvaluation_inv_limit_map [HasLimitsOfShape J C] {i j : K}
     (F : J ⥤ K ⥤ C) (f : i ⟶ j) :
     (limitObjIsoLimitCompEvaluation _ _).inv ≫ (limit F).map f =
       limMap (whiskerLeft _ ((evaluation _ _).map f)) ≫ (limitObjIsoLimitCompEvaluation _ _).inv :=
   by
   rw [iso.inv_comp_eq, ← category.assoc, iso.eq_comp_inv,
     limit_map_limit_obj_iso_limit_comp_evaluation_hom]
-#align category_theory.limits.limit_obj_iso_limit_comp_evaluation_inv_limit_map CategoryTheory.Limits.limit_obj_iso_limit_comp_evaluation_inv_limit_map
+#align category_theory.limits.limit_obj_iso_limit_comp_evaluation_inv_limit_map CategoryTheory.Limits.limitObjIsoLimitCompEvaluation_inv_limit_map
 
 @[ext]
 theorem limit_obj_ext {H : J ⥤ K ⥤ C} [HasLimitsOfShape J C] {k : K} {W : C}
@@ -275,17 +275,17 @@ def colimitObjIsoColimitCompEvaluation [HasColimitsOfShape J C] (F : J ⥤ K ⥤
 #align category_theory.limits.colimit_obj_iso_colimit_comp_evaluation CategoryTheory.Limits.colimitObjIsoColimitCompEvaluation
 
 @[simp, reassoc.1]
-theorem colimit_obj_iso_colimit_comp_evaluation_ι_inv [HasColimitsOfShape J C] (F : J ⥤ K ⥤ C)
-    (j : J) (k : K) :
+theorem colimitObjIsoColimitCompEvaluation_ι_inv [HasColimitsOfShape J C] (F : J ⥤ K ⥤ C) (j : J)
+    (k : K) :
     colimit.ι (F ⋙ (evaluation K C).obj k) j ≫ (colimitObjIsoColimitCompEvaluation F k).inv =
       (colimit.ι F j).app k :=
   by
   dsimp [colimit_obj_iso_colimit_comp_evaluation]
   simp
-#align category_theory.limits.colimit_obj_iso_colimit_comp_evaluation_ι_inv CategoryTheory.Limits.colimit_obj_iso_colimit_comp_evaluation_ι_inv
+#align category_theory.limits.colimit_obj_iso_colimit_comp_evaluation_ι_inv CategoryTheory.Limits.colimitObjIsoColimitCompEvaluation_ι_inv
 
 @[simp, reassoc.1]
-theorem colimit_obj_iso_colimit_comp_evaluation_ι_app_hom [HasColimitsOfShape J C] (F : J ⥤ K ⥤ C)
+theorem colimitObjIsoColimitCompEvaluation_ι_app_hom [HasColimitsOfShape J C] (F : J ⥤ K ⥤ C)
     (j : J) (k : K) :
     (colimit.ι F j).app k ≫ (colimitObjIsoColimitCompEvaluation F k).Hom =
       colimit.ι (F ⋙ (evaluation K C).obj k) j :=
@@ -293,11 +293,11 @@ theorem colimit_obj_iso_colimit_comp_evaluation_ι_app_hom [HasColimitsOfShape J
   dsimp [colimit_obj_iso_colimit_comp_evaluation]
   rw [← iso.eq_comp_inv]
   simp
-#align category_theory.limits.colimit_obj_iso_colimit_comp_evaluation_ι_app_hom CategoryTheory.Limits.colimit_obj_iso_colimit_comp_evaluation_ι_app_hom
+#align category_theory.limits.colimit_obj_iso_colimit_comp_evaluation_ι_app_hom CategoryTheory.Limits.colimitObjIsoColimitCompEvaluation_ι_app_hom
 
 @[simp, reassoc.1]
-theorem colimit_obj_iso_colimit_comp_evaluation_inv_colimit_map [HasColimitsOfShape J C]
-    (F : J ⥤ K ⥤ C) {i j : K} (f : i ⟶ j) :
+theorem colimitObjIsoColimitCompEvaluation_inv_colimit_map [HasColimitsOfShape J C] (F : J ⥤ K ⥤ C)
+    {i j : K} (f : i ⟶ j) :
     (colimitObjIsoColimitCompEvaluation _ _).inv ≫ (colimit F).map f =
       colimMap (whiskerLeft _ ((evaluation _ _).map f)) ≫
         (colimitObjIsoColimitCompEvaluation _ _).inv :=
@@ -305,18 +305,18 @@ theorem colimit_obj_iso_colimit_comp_evaluation_inv_colimit_map [HasColimitsOfSh
   ext
   dsimp
   simp
-#align category_theory.limits.colimit_obj_iso_colimit_comp_evaluation_inv_colimit_map CategoryTheory.Limits.colimit_obj_iso_colimit_comp_evaluation_inv_colimit_map
+#align category_theory.limits.colimit_obj_iso_colimit_comp_evaluation_inv_colimit_map CategoryTheory.Limits.colimitObjIsoColimitCompEvaluation_inv_colimit_map
 
 @[simp, reassoc.1]
-theorem colimit_map_colimit_obj_iso_colimit_comp_evaluation_hom [HasColimitsOfShape J C]
-    (F : J ⥤ K ⥤ C) {i j : K} (f : i ⟶ j) :
+theorem colimit_map_colimitObjIsoColimitCompEvaluation_hom [HasColimitsOfShape J C] (F : J ⥤ K ⥤ C)
+    {i j : K} (f : i ⟶ j) :
     (colimit F).map f ≫ (colimitObjIsoColimitCompEvaluation _ _).Hom =
       (colimitObjIsoColimitCompEvaluation _ _).Hom ≫
         colimMap (whiskerLeft _ ((evaluation _ _).map f)) :=
   by
   rw [← iso.inv_comp_eq, ← category.assoc, ← iso.eq_comp_inv,
     colimit_obj_iso_colimit_comp_evaluation_inv_colimit_map]
-#align category_theory.limits.colimit_map_colimit_obj_iso_colimit_comp_evaluation_hom CategoryTheory.Limits.colimit_map_colimit_obj_iso_colimit_comp_evaluation_hom
+#align category_theory.limits.colimit_map_colimit_obj_iso_colimit_comp_evaluation_hom CategoryTheory.Limits.colimit_map_colimitObjIsoColimitCompEvaluation_hom
 
 @[ext]
 theorem colimit_obj_ext {H : J ⥤ K ⥤ C} [HasColimitsOfShape J C] {k : K} {W : C}

@@ -128,9 +128,9 @@ instance : CoeFun (PseudoEpimorphism α β) fun _ => α → β :=
   FunLike.hasCoeToFun
 
 @[simp]
-theorem to_fun_eq_coe {f : PseudoEpimorphism α β} : f.toFun = (f : α → β) :=
+theorem toFun_eq_coe {f : PseudoEpimorphism α β} : f.toFun = (f : α → β) :=
   rfl
-#align pseudo_epimorphism.to_fun_eq_coe PseudoEpimorphism.to_fun_eq_coe
+#align pseudo_epimorphism.to_fun_eq_coe PseudoEpimorphism.toFun_eq_coe
 
 @[ext]
 theorem ext {f g : PseudoEpimorphism α β} (h : ∀ a, f a = g a) : f = g :=
@@ -168,9 +168,9 @@ theorem coe_id : ⇑(PseudoEpimorphism.id α) = id :=
 #align pseudo_epimorphism.coe_id PseudoEpimorphism.coe_id
 
 @[simp]
-theorem coe_id_order_hom : (PseudoEpimorphism.id α : α →o α) = OrderHom.id :=
+theorem coe_id_orderHom : (PseudoEpimorphism.id α : α →o α) = OrderHom.id :=
   rfl
-#align pseudo_epimorphism.coe_id_order_hom PseudoEpimorphism.coe_id_order_hom
+#align pseudo_epimorphism.coe_id_order_hom PseudoEpimorphism.coe_id_orderHom
 
 variable {α}
 
@@ -195,10 +195,10 @@ theorem coe_comp (g : PseudoEpimorphism β γ) (f : PseudoEpimorphism α β) :
 #align pseudo_epimorphism.coe_comp PseudoEpimorphism.coe_comp
 
 @[simp]
-theorem coe_comp_order_hom (g : PseudoEpimorphism β γ) (f : PseudoEpimorphism α β) :
+theorem coe_comp_orderHom (g : PseudoEpimorphism β γ) (f : PseudoEpimorphism α β) :
     (g.comp f : α →o γ) = (g : β →o γ).comp f :=
   rfl
-#align pseudo_epimorphism.coe_comp_order_hom PseudoEpimorphism.coe_comp_order_hom
+#align pseudo_epimorphism.coe_comp_order_hom PseudoEpimorphism.coe_comp_orderHom
 
 @[simp]
 theorem comp_apply (g : PseudoEpimorphism β γ) (f : PseudoEpimorphism α β) (a : α) :
@@ -264,9 +264,9 @@ instance : CoeFun (EsakiaHom α β) fun _ => α → β :=
   FunLike.hasCoeToFun
 
 @[simp]
-theorem to_fun_eq_coe {f : EsakiaHom α β} : f.toFun = (f : α → β) :=
+theorem toFun_eq_coe {f : EsakiaHom α β} : f.toFun = (f : α → β) :=
   rfl
-#align esakia_hom.to_fun_eq_coe EsakiaHom.to_fun_eq_coe
+#align esakia_hom.to_fun_eq_coe EsakiaHom.toFun_eq_coe
 
 @[ext]
 theorem ext {f g : EsakiaHom α β} (h : ∀ a, f a = g a) : f = g :=
@@ -305,15 +305,15 @@ theorem coe_id : ⇑(EsakiaHom.id α) = id :=
 #align esakia_hom.coe_id EsakiaHom.coe_id
 
 @[simp]
-theorem coe_id_continuous_order_hom : (EsakiaHom.id α : α →Co α) = ContinuousOrderHom.id α :=
+theorem coe_id_continuousOrderHom : (EsakiaHom.id α : α →Co α) = ContinuousOrderHom.id α :=
   rfl
-#align esakia_hom.coe_id_continuous_order_hom EsakiaHom.coe_id_continuous_order_hom
+#align esakia_hom.coe_id_continuous_order_hom EsakiaHom.coe_id_continuousOrderHom
 
 @[simp]
-theorem coe_id_pseudo_epimorphism :
+theorem coe_id_pseudoEpimorphism :
     (EsakiaHom.id α : PseudoEpimorphism α α) = PseudoEpimorphism.id α :=
   rfl
-#align esakia_hom.coe_id_pseudo_epimorphism EsakiaHom.coe_id_pseudo_epimorphism
+#align esakia_hom.coe_id_pseudo_epimorphism EsakiaHom.coe_id_pseudoEpimorphism
 
 variable {α}
 
@@ -342,16 +342,16 @@ theorem comp_apply (g : EsakiaHom β γ) (f : EsakiaHom α β) (a : α) : (g.com
 #align esakia_hom.comp_apply EsakiaHom.comp_apply
 
 @[simp]
-theorem coe_comp_continuous_order_hom (g : EsakiaHom β γ) (f : EsakiaHom α β) :
+theorem coe_comp_continuousOrderHom (g : EsakiaHom β γ) (f : EsakiaHom α β) :
     (g.comp f : α →Co γ) = (g : β →Co γ).comp f :=
   rfl
-#align esakia_hom.coe_comp_continuous_order_hom EsakiaHom.coe_comp_continuous_order_hom
+#align esakia_hom.coe_comp_continuous_order_hom EsakiaHom.coe_comp_continuousOrderHom
 
 @[simp]
-theorem coe_comp_pseudo_epimorphism (g : EsakiaHom β γ) (f : EsakiaHom α β) :
+theorem coe_comp_pseudoEpimorphism (g : EsakiaHom β γ) (f : EsakiaHom α β) :
     (g.comp f : PseudoEpimorphism α γ) = (g : PseudoEpimorphism β γ).comp f :=
   rfl
-#align esakia_hom.coe_comp_pseudo_epimorphism EsakiaHom.coe_comp_pseudo_epimorphism
+#align esakia_hom.coe_comp_pseudo_epimorphism EsakiaHom.coe_comp_pseudoEpimorphism
 
 @[simp]
 theorem comp_assoc (h : EsakiaHom γ δ) (g : EsakiaHom β γ) (f : EsakiaHom α β) :

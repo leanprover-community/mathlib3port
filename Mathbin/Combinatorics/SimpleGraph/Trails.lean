@@ -93,14 +93,14 @@ def IsEulerian {u v : V} (p : G.Walk u v) : Prop :=
   ∀ e, e ∈ G.edgeSet → p.edges.count e = 1
 #align simple_graph.walk.is_eulerian SimpleGraph.Walk.IsEulerian
 
-theorem IsEulerian.is_trail {u v : V} {p : G.Walk u v} (h : p.IsEulerian) : p.IsTrail :=
+theorem IsEulerian.isTrail {u v : V} {p : G.Walk u v} (h : p.IsEulerian) : p.IsTrail :=
   by
   rw [is_trail_def, List.nodup_iff_count_le_one]
   intro e
   by_cases he : e ∈ p.edges
   · exact (h e (edges_subset_edge_set _ he)).le
   · simp [he]
-#align simple_graph.walk.is_eulerian.is_trail SimpleGraph.Walk.IsEulerian.is_trail
+#align simple_graph.walk.is_eulerian.is_trail SimpleGraph.Walk.IsEulerian.isTrail
 
 theorem IsEulerian.mem_edges_iff {u v : V} {p : G.Walk u v} (h : p.IsEulerian) {e : Sym2 V} :
     e ∈ p.edges ↔ e ∈ G.edgeSet :=
@@ -113,12 +113,12 @@ def IsEulerian.fintypeEdgeSet {u v : V} {p : G.Walk u v} (h : p.IsEulerian) : Fi
     simp only [Finset.mem_mk, Multiset.mem_coe, h.mem_edges_iff]
 #align simple_graph.walk.is_eulerian.fintype_edge_set SimpleGraph.Walk.IsEulerian.fintypeEdgeSet
 
-theorem IsTrail.is_eulerian_of_forall_mem {u v : V} {p : G.Walk u v} (h : p.IsTrail)
+theorem IsTrail.isEulerian_of_forall_mem {u v : V} {p : G.Walk u v} (h : p.IsTrail)
     (hc : ∀ e, e ∈ G.edgeSet → e ∈ p.edges) : p.IsEulerian := fun e he =>
   List.count_eq_one_of_mem h.edges_nodup (hc e he)
-#align simple_graph.walk.is_trail.is_eulerian_of_forall_mem SimpleGraph.Walk.IsTrail.is_eulerian_of_forall_mem
+#align simple_graph.walk.is_trail.is_eulerian_of_forall_mem SimpleGraph.Walk.IsTrail.isEulerian_of_forall_mem
 
-theorem is_eulerian_iff {u v : V} (p : G.Walk u v) :
+theorem isEulerian_iff {u v : V} (p : G.Walk u v) :
     p.IsEulerian ↔ p.IsTrail ∧ ∀ e, e ∈ G.edgeSet → e ∈ p.edges :=
   by
   constructor
@@ -126,14 +126,14 @@ theorem is_eulerian_iff {u v : V} (p : G.Walk u v) :
     exact ⟨h.is_trail, fun _ => h.mem_edges_iff.mpr⟩
   · rintro ⟨h, hl⟩
     exact h.is_eulerian_of_forall_mem hl
-#align simple_graph.walk.is_eulerian_iff SimpleGraph.Walk.is_eulerian_iff
+#align simple_graph.walk.is_eulerian_iff SimpleGraph.Walk.isEulerian_iff
 
-theorem IsEulerian.edges_finset_eq [Fintype G.edgeSet] {u v : V} {p : G.Walk u v}
+theorem IsEulerian.edgesFinset_eq [Fintype G.edgeSet] {u v : V} {p : G.Walk u v}
     (h : p.IsEulerian) : h.IsTrail.edgesFinset = G.edgeFinset :=
   by
   ext e
   simp [h.mem_edges_iff]
-#align simple_graph.walk.is_eulerian.edges_finset_eq SimpleGraph.Walk.IsEulerian.edges_finset_eq
+#align simple_graph.walk.is_eulerian.edges_finset_eq SimpleGraph.Walk.IsEulerian.edgesFinset_eq
 
 theorem IsEulerian.even_degree_iff {x u v : V} {p : G.Walk u v} (ht : p.IsEulerian) [Fintype V]
     [DecidableRel G.Adj] : Even (G.degree x) ↔ u ≠ v → x ≠ u ∧ x ≠ v :=

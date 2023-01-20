@@ -62,8 +62,8 @@ def asLimitCone : CategoryTheory.Limits.Cone X.diagram :=
     π := { app := fun S => ⟨S.proj, S.proj_is_locally_constant.Continuous⟩ } }
 #align Profinite.as_limit_cone ProfiniteCat.asLimitCone
 
-instance is_iso_as_limit_cone_lift : IsIso ((limitConeIsLimit X.diagram).lift X.asLimitCone) :=
-  is_iso_of_bijective _
+instance isIso_asLimitCone_lift : IsIso ((limitConeIsLimit X.diagram).lift X.asLimitCone) :=
+  isIso_of_bijective _
     (by
       refine' ⟨fun a b => _, fun a => _⟩
       · intro h
@@ -75,7 +75,7 @@ instance is_iso_as_limit_cone_lift : IsIso ((limitConeIsLimit X.diagram).lift X.
         refine' ⟨b, _⟩
         ext S : 3
         apply hb)
-#align Profinite.is_iso_as_limit_cone_lift ProfiniteCat.is_iso_as_limit_cone_lift
+#align Profinite.is_iso_as_limit_cone_lift ProfiniteCat.isIso_asLimitCone_lift
 
 /-- The isomorphism between `X` and the explicit limit of `X.diagram`,
 induced by lifting `X.as_limit_cone`.

@@ -27,7 +27,7 @@ open Nat
 
 /-- For any positive `k : ℕ` there exists an arbitrarily large prime `p` such that
 `p ≡ 1 [MOD k]`. -/
-theorem exists_prime_gt_modeq_one {k : ℕ} (n : ℕ) (hk0 : k ≠ 0) :
+theorem exists_prime_gt_modEq_one {k : ℕ} (n : ℕ) (hk0 : k ≠ 0) :
     ∃ p : ℕ, Nat.Prime p ∧ n < p ∧ p ≡ 1 [MOD k] :=
   by
   rcases(one_le_iff_ne_zero.2 hk0).eq_or_lt with (rfl | hk1)
@@ -56,27 +56,27 @@ theorem exists_prime_gt_modeq_one {k : ℕ} (n : ℕ) (hk0 : k ≠ 0) :
   refine' ⟨p, hprime.1, not_le.1 fun habs => _, _⟩
   · exact hpb (dvd_mul_of_dvd_right (dvd_factorial (min_fac_pos _) habs) _)
   · have hdiv : orderOf (b : Zmod p) ∣ p - 1 :=
-      Zmod.order_of_dvd_card_sub_one (mt (CharP.cast_eq_zero_iff _ _ _).1 hpb)
+      Zmod.orderOf_dvd_card_sub_one (mt (CharP.cast_eq_zero_iff _ _ _).1 hpb)
     haveI : NeZero (k : Zmod p) :=
       NeZero.of_not_dvd (Zmod p) fun hpk => hpb (dvd_mul_of_dvd_left hpk _)
     have : k = orderOf (b : Zmod p) := (is_root_cyclotomic_iff.mp hroot).eq_order_of
     rw [← this] at hdiv
     exact ((modeq_iff_dvd' hprime.1.Pos).2 hdiv).symm
-#align nat.exists_prime_gt_modeq_one Nat.exists_prime_gt_modeq_one
+#align nat.exists_prime_gt_modeq_one Nat.exists_prime_gt_modEq_one
 
-theorem frequently_at_top_modeq_one {k : ℕ} (hk0 : k ≠ 0) :
+theorem frequently_atTop_modEq_one {k : ℕ} (hk0 : k ≠ 0) :
     ∃ᶠ p in at_top, Nat.Prime p ∧ p ≡ 1 [MOD k] :=
   by
   refine' frequently_at_top.2 fun n => _
   obtain ⟨p, hp⟩ := exists_prime_gt_modeq_one n hk0
   exact ⟨p, ⟨hp.2.1.le, hp.1, hp.2.2⟩⟩
-#align nat.frequently_at_top_modeq_one Nat.frequently_at_top_modeq_one
+#align nat.frequently_at_top_modeq_one Nat.frequently_atTop_modEq_one
 
 /-- For any positive `k : ℕ` there are infinitely many primes `p` such that `p ≡ 1 [MOD k]`. -/
-theorem infinite_set_of_prime_modeq_one {k : ℕ} (hk0 : k ≠ 0) :
+theorem infinite_setOf_prime_modEq_one {k : ℕ} (hk0 : k ≠ 0) :
     Set.Infinite { p : ℕ | Nat.Prime p ∧ p ≡ 1 [MOD k] } :=
-  frequently_at_top_iff_infinite.1 (frequently_at_top_modeq_one hk0)
-#align nat.infinite_set_of_prime_modeq_one Nat.infinite_set_of_prime_modeq_one
+  frequently_atTop_iff_infinite.1 (frequently_atTop_modEq_one hk0)
+#align nat.infinite_set_of_prime_modeq_one Nat.infinite_setOf_prime_modEq_one
 
 end Nat
 

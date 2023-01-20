@@ -90,14 +90,14 @@ def limitConeIsLimit (F : J ⥤ Mon_ C) : IsLimit (limitCone F)
     exact congr_arg Mon_.Hom.hom (w j)
 #align Mon_.limit_cone_is_limit Mon_.limitConeIsLimit
 
-instance has_limits : HasLimits (Mon_ C)
+instance hasLimits : HasLimits (Mon_ C)
     where HasLimitsOfShape J 𝒥 :=
     {
       HasLimit := fun F =>
         has_limit.mk
           { Cone := limit_cone F
             IsLimit := limit_cone_is_limit F } }
-#align Mon_.has_limits Mon_.has_limits
+#align Mon_.has_limits Mon_.hasLimits
 
 instance forgetPreservesLimits : PreservesLimits (Mon_.forget C)
     where PreservesLimitsOfShape J 𝒥 :=

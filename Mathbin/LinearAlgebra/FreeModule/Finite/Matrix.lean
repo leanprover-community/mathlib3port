@@ -91,12 +91,12 @@ variable [AddCommGroup N] [Module R N] [Module.Free R N] [Module.Finite R N]
 /-- The finrank of `M →ₗ[R] N` is `(finrank R M) * (finrank R N)`. -/
 theorem finrank_linear_hom : finrank R (M →ₗ[R] N) = finrank R M * finrank R N := by
   classical
-    letI := nontrivial_of_invariant_basis_number R
+    letI := nontrivial_of_invariantBasisNumber R
     have h := LinearMap.toMatrix (choose_basis R M) (choose_basis R N)
     let b := (Matrix.stdBasis _ _ _).map h.symm
-    rw [finrank, dim_eq_card_basis b, ← Cardinal.mk_fintype, Cardinal.mk_to_nat_eq_card, finrank,
+    rw [finrank, dim_eq_card_basis b, ← Cardinal.mk_fintype, Cardinal.mk_toNat_eq_card, finrank,
       finrank, rank_eq_card_choose_basis_index, rank_eq_card_choose_basis_index,
-      Cardinal.mk_to_nat_eq_card, Cardinal.mk_to_nat_eq_card, Fintype.card_prod, mul_comm]
+      Cardinal.mk_toNat_eq_card, Cardinal.mk_toNat_eq_card, Fintype.card_prod, mul_comm]
 #align module.free.finrank_linear_hom Module.Free.finrank_linear_hom
 
 end CommRing

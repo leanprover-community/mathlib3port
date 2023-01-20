@@ -35,14 +35,14 @@ theorem merge' {f g} (hf : Nat.Partrec f) (hg : Nat.Partrec g) :
   obtain ⟨cg, rfl⟩ := code.exists_code.1 hg
   have : Nat.Partrec fun n => Nat.rfindOpt fun k => cf.evaln k n <|> cg.evaln k n :=
     Partrec.nat_iff.1
-      (Partrec.rfind_opt <|
+      (Partrec.rfindOpt <|
         primrec.option_orelse.to_comp.comp
           (code.evaln_prim.to_comp.comp <| (snd.pair (const cf)).pair fst)
           (code.evaln_prim.to_comp.comp <| (snd.pair (const cg)).pair fst))
   refine' ⟨_, this, fun n => _⟩
   suffices; refine' ⟨this, ⟨fun h => (this _ ⟨h, rfl⟩).imp Exists.fst Exists.fst, _⟩⟩
   · intro h
-    rw [Nat.rfind_opt_dom]
+    rw [Nat.rfindOpt_dom]
     simp only [dom_iff_mem, code.evaln_complete, Option.mem_def] at h
     obtain ⟨x, k, e⟩ | ⟨x, k, e⟩ := h
     · refine' ⟨k, x, _⟩
@@ -52,7 +52,7 @@ theorem merge' {f g} (hf : Nat.Partrec f) (hg : Nat.Partrec g) :
       · exact ⟨x, by simp only [e, Option.mem_def, Option.none_orElse]⟩
       · exact ⟨y, by simp only [Option.some_orElse, Option.mem_def]⟩
   intro x h
-  obtain ⟨k, e⟩ := Nat.rfind_opt_spec h
+  obtain ⟨k, e⟩ := Nat.rfindOpt_spec h
   revert e
   simp only [Option.mem_def] <;> cases' e' : cf.evaln k n with y <;> simp <;> intro
   · exact Or.inr (code.evaln_sound e)
@@ -374,7 +374,7 @@ theorem comp₁ {n} (f : ℕ →. ℕ) {g : Vector ℕ n → ℕ} (hf : @Partrec
   simpa using hf.comp' (partrec'.cons hg partrec'.nil)
 #align nat.partrec'.comp₁ Nat.Partrec'.comp₁
 
-theorem rfind_opt {n} {f : Vector ℕ (n + 1) → ℕ} (hf : @Partrec' (n + 1) f) :
+theorem rfindOpt {n} {f : Vector ℕ (n + 1) → ℕ} (hf : @Partrec' (n + 1) f) :
     @Partrec' n fun v => Nat.rfindOpt fun a => ofNat (Option ℕ) (f (a ::ᵥ v)) :=
   ((rfind <|
             (of_prim (Primrec.nat_sub.comp (Primrec.const 1) Primrec.vector_head)).comp₁
@@ -397,7 +397,7 @@ theorem rfind_opt {n} {f : Vector ℕ (n + 1) → ℕ} (hf : @Partrec' (n + 1) f
         · cases this
         rw [← Option.some_inj, eq_comm]
         rfl
-#align nat.partrec'.rfind_opt Nat.Partrec'.rfind_opt
+#align nat.partrec'.rfind_opt Nat.Partrec'.rfindOpt
 
 open Nat.Partrec.Code
 
@@ -426,7 +426,7 @@ theorem part_iff {n f} : @Partrec' n f ↔ Partrec f :=
 theorem part_iff₁ {f : ℕ →. ℕ} : (@Partrec' 1 fun v => f v.head) ↔ Partrec f :=
   part_iff.trans
     ⟨fun h =>
-      (h.comp <| (Primrec.vector_of_fn fun i => Primrec.id).to_comp).of_eq fun v => by
+      (h.comp <| (Primrec.vector_ofFn fun i => Primrec.id).to_comp).of_eq fun v => by
         simp only [id.def, head_of_fn],
       fun h => h.comp vector_head⟩
 #align nat.partrec'.part_iff₁ Nat.Partrec'.part_iff₁
@@ -441,7 +441,7 @@ theorem part_iff₂ {f : ℕ → ℕ →. ℕ} : (@Partrec' 2 fun v => f v.head 
 
 theorem vec_iff {m n f} : @Vec m n f ↔ Computable f :=
   ⟨fun h => by simpa only [of_fn_nth] using vector_of_fn fun i => to_part (h i), fun h i =>
-    of_part <| vector_nth.comp h (const i)⟩
+    of_part <| vector_get.comp h (const i)⟩
 #align nat.partrec'.vec_iff Nat.Partrec'.vec_iff
 
 end Nat.Partrec'

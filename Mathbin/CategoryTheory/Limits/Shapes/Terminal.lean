@@ -163,14 +163,14 @@ theorem IsInitial.to_self {X : C} (t : IsInitial X) : t.to X = 𝟙 X :=
 #align category_theory.limits.is_initial.to_self CategoryTheory.Limits.IsInitial.to_self
 
 /-- Any morphism from a terminal object is split mono. -/
-theorem IsTerminal.is_split_mono_from {X Y : C} (t : IsTerminal X) (f : X ⟶ Y) : IsSplitMono f :=
+theorem IsTerminal.isSplitMono_from {X Y : C} (t : IsTerminal X) (f : X ⟶ Y) : IsSplitMono f :=
   IsSplitMono.mk' ⟨t.from _, t.hom_ext _ _⟩
-#align category_theory.limits.is_terminal.is_split_mono_from CategoryTheory.Limits.IsTerminal.is_split_mono_from
+#align category_theory.limits.is_terminal.is_split_mono_from CategoryTheory.Limits.IsTerminal.isSplitMono_from
 
 /-- Any morphism to an initial object is split epi. -/
-theorem IsInitial.is_split_epi_to {X Y : C} (t : IsInitial X) (f : Y ⟶ X) : IsSplitEpi f :=
+theorem IsInitial.isSplitEpi_to {X Y : C} (t : IsInitial X) (f : Y ⟶ X) : IsSplitEpi f :=
   IsSplitEpi.mk' ⟨t.to _, t.hom_ext _ _⟩
-#align category_theory.limits.is_initial.is_split_epi_to CategoryTheory.Limits.IsInitial.is_split_epi_to
+#align category_theory.limits.is_initial.is_split_epi_to CategoryTheory.Limits.IsInitial.isSplitEpi_to
 
 /-- Any morphism from a terminal object is mono. -/
 theorem IsTerminal.mono_from {X Y : C} (t : IsTerminal X) (f : X ⟶ Y) : Mono f := by
@@ -318,25 +318,25 @@ variable {C}
 
 /-- We can more explicitly show that a category has a terminal object by specifying the object,
 and showing there is a unique morphism to it from any other object. -/
-theorem has_terminal_of_unique (X : C) [h : ∀ Y : C, Unique (Y ⟶ X)] : HasTerminal C :=
+theorem hasTerminal_of_unique (X : C) [h : ∀ Y : C, Unique (Y ⟶ X)] : HasTerminal C :=
   { HasLimit := fun F => HasLimit.mk ⟨_, (isTerminalEquivUnique F X).invFun h⟩ }
-#align category_theory.limits.has_terminal_of_unique CategoryTheory.Limits.has_terminal_of_unique
+#align category_theory.limits.has_terminal_of_unique CategoryTheory.Limits.hasTerminal_of_unique
 
-theorem IsTerminal.has_terminal {X : C} (h : IsTerminal X) : HasTerminal C :=
+theorem IsTerminal.hasTerminal {X : C} (h : IsTerminal X) : HasTerminal C :=
   { HasLimit := fun F => HasLimit.mk ⟨⟨X, by tidy⟩, isLimitChangeEmptyCone _ h _ (Iso.refl _)⟩ }
-#align category_theory.limits.is_terminal.has_terminal CategoryTheory.Limits.IsTerminal.has_terminal
+#align category_theory.limits.is_terminal.has_terminal CategoryTheory.Limits.IsTerminal.hasTerminal
 
 /-- We can more explicitly show that a category has an initial object by specifying the object,
 and showing there is a unique morphism from it to any other object. -/
-theorem has_initial_of_unique (X : C) [h : ∀ Y : C, Unique (X ⟶ Y)] : HasInitial C :=
+theorem hasInitial_of_unique (X : C) [h : ∀ Y : C, Unique (X ⟶ Y)] : HasInitial C :=
   { HasColimit := fun F => HasColimit.mk ⟨_, (isInitialEquivUnique F X).invFun h⟩ }
-#align category_theory.limits.has_initial_of_unique CategoryTheory.Limits.has_initial_of_unique
+#align category_theory.limits.has_initial_of_unique CategoryTheory.Limits.hasInitial_of_unique
 
-theorem IsInitial.has_initial {X : C} (h : IsInitial X) : HasInitial C :=
+theorem IsInitial.hasInitial {X : C} (h : IsInitial X) : HasInitial C :=
   {
     HasColimit := fun F =>
       HasColimit.mk ⟨⟨X, by tidy⟩, isColimitChangeEmptyCocone _ h _ (Iso.refl _)⟩ }
-#align category_theory.limits.is_initial.has_initial CategoryTheory.Limits.IsInitial.has_initial
+#align category_theory.limits.is_initial.has_initial CategoryTheory.Limits.IsInitial.hasInitial
 
 /-- The map from an object to the terminal object. -/
 abbrev terminal.from [HasTerminal C] (P : C) : P ⟶ ⊤_ C :=
@@ -387,14 +387,14 @@ def terminalIsoIsTerminal [HasTerminal C] {P : C} (t : IsTerminal P) : ⊤_ C �
 #align category_theory.limits.terminal_iso_is_terminal CategoryTheory.Limits.terminalIsoIsTerminal
 
 /-- Any morphism from a terminal object is split mono. -/
-instance terminal.is_split_mono_from {Y : C} [HasTerminal C] (f : ⊤_ C ⟶ Y) : IsSplitMono f :=
-  IsTerminal.is_split_mono_from terminalIsTerminal _
-#align category_theory.limits.terminal.is_split_mono_from CategoryTheory.Limits.terminal.is_split_mono_from
+instance terminal.isSplitMono_from {Y : C} [HasTerminal C] (f : ⊤_ C ⟶ Y) : IsSplitMono f :=
+  IsTerminal.isSplitMono_from terminalIsTerminal _
+#align category_theory.limits.terminal.is_split_mono_from CategoryTheory.Limits.terminal.isSplitMono_from
 
 /-- Any morphism to an initial object is split epi. -/
-instance initial.is_split_epi_to {Y : C} [HasInitial C] (f : Y ⟶ ⊥_ C) : IsSplitEpi f :=
-  IsInitial.is_split_epi_to initialIsInitial _
-#align category_theory.limits.initial.is_split_epi_to CategoryTheory.Limits.initial.is_split_epi_to
+instance initial.isSplitEpi_to {Y : C} [HasInitial C] (f : Y ⟶ ⊥_ C) : IsSplitEpi f :=
+  IsInitial.isSplitEpi_to initialIsInitial _
+#align category_theory.limits.initial.is_split_epi_to CategoryTheory.Limits.initial.isSplitEpi_to
 
 /-- An initial object is terminal in the opposite category. -/
 def terminalOpOfInitial {X : C} (t : IsInitial X) : IsTerminal (Opposite.op X)
@@ -424,21 +424,21 @@ def initialUnopOfTerminal {X : Cᵒᵖ} (t : IsTerminal X) : IsInitial X.unop
   uniq' s m w := Quiver.Hom.op_inj (t.hom_ext _ _)
 #align category_theory.limits.initial_unop_of_terminal CategoryTheory.Limits.initialUnopOfTerminal
 
-instance has_initial_op_of_has_terminal [HasTerminal C] : HasInitial Cᵒᵖ :=
+instance hasInitial_op_of_hasTerminal [HasTerminal C] : HasInitial Cᵒᵖ :=
   (initialOpOfTerminal terminalIsTerminal).HasInitial
-#align category_theory.limits.has_initial_op_of_has_terminal CategoryTheory.Limits.has_initial_op_of_has_terminal
+#align category_theory.limits.has_initial_op_of_has_terminal CategoryTheory.Limits.hasInitial_op_of_hasTerminal
 
-instance has_terminal_op_of_has_initial [HasInitial C] : HasTerminal Cᵒᵖ :=
+instance hasTerminal_op_of_hasInitial [HasInitial C] : HasTerminal Cᵒᵖ :=
   (terminalOpOfInitial initialIsInitial).HasTerminal
-#align category_theory.limits.has_terminal_op_of_has_initial CategoryTheory.Limits.has_terminal_op_of_has_initial
+#align category_theory.limits.has_terminal_op_of_has_initial CategoryTheory.Limits.hasTerminal_op_of_hasInitial
 
-theorem has_terminal_of_has_initial_op [HasInitial Cᵒᵖ] : HasTerminal C :=
+theorem hasTerminal_of_hasInitial_op [HasInitial Cᵒᵖ] : HasTerminal C :=
   (terminalUnopOfInitial initialIsInitial).HasTerminal
-#align category_theory.limits.has_terminal_of_has_initial_op CategoryTheory.Limits.has_terminal_of_has_initial_op
+#align category_theory.limits.has_terminal_of_has_initial_op CategoryTheory.Limits.hasTerminal_of_hasInitial_op
 
-theorem has_initial_of_has_terminal_op [HasTerminal Cᵒᵖ] : HasInitial C :=
+theorem hasInitial_of_hasTerminal_op [HasTerminal Cᵒᵖ] : HasInitial C :=
   (initialUnopOfTerminal terminalIsTerminal).HasInitial
-#align category_theory.limits.has_initial_of_has_terminal_op CategoryTheory.Limits.has_initial_of_has_terminal_op
+#align category_theory.limits.has_initial_of_has_terminal_op CategoryTheory.Limits.hasInitial_of_hasTerminal_op
 
 instance {J : Type _} [Category J] {C : Type _} [Category C] [HasTerminal C] :
     HasLimit ((CategoryTheory.Functor.const J).obj (⊤_ C)) :=
@@ -461,12 +461,12 @@ def limitConstTerminal {J : Type _} [Category J] {C : Type _} [Category C] [HasT
 #align category_theory.limits.limit_const_terminal CategoryTheory.Limits.limitConstTerminal
 
 @[simp, reassoc.1]
-theorem limit_const_terminal_inv_π {J : Type _} [Category J] {C : Type _} [Category C]
-    [HasTerminal C] {j : J} :
+theorem limitConstTerminal_inv_π {J : Type _} [Category J] {C : Type _} [Category C] [HasTerminal C]
+    {j : J} :
     limitConstTerminal.inv ≫ limit.π ((CategoryTheory.Functor.const J).obj (⊤_ C)) j =
       terminal.from _ :=
   by ext ⟨⟨⟩⟩
-#align category_theory.limits.limit_const_terminal_inv_π CategoryTheory.Limits.limit_const_terminal_inv_π
+#align category_theory.limits.limit_const_terminal_inv_π CategoryTheory.Limits.limitConstTerminal_inv_π
 
 instance {J : Type _} [Category J] {C : Type _} [Category C] [HasInitial C] :
     HasColimit ((CategoryTheory.Functor.const J).obj (⊥_ C)) :=
@@ -489,12 +489,12 @@ def colimitConstInitial {J : Type _} [Category J] {C : Type _} [Category C] [Has
 #align category_theory.limits.colimit_const_initial CategoryTheory.Limits.colimitConstInitial
 
 @[simp, reassoc.1]
-theorem ι_colimit_const_initial_hom {J : Type _} [Category J] {C : Type _} [Category C]
-    [HasInitial C] {j : J} :
+theorem ι_colimitConstInitial_hom {J : Type _} [Category J] {C : Type _} [Category C] [HasInitial C]
+    {j : J} :
     colimit.ι ((CategoryTheory.Functor.const J).obj (⊥_ C)) j ≫ colimitConstInitial.Hom =
       initial.to _ :=
   by ext ⟨⟨⟩⟩
-#align category_theory.limits.ι_colimit_const_initial_hom CategoryTheory.Limits.ι_colimit_const_initial_hom
+#align category_theory.limits.ι_colimit_const_initial_hom CategoryTheory.Limits.ι_colimitConstInitial_hom
 
 /-- A category is a `initial_mono_class` if the canonical morphism of an initial object is a
 monomorphism.  In practice, this is most useful when given an arbitrary morphism out of the chosen
@@ -521,34 +521,34 @@ instance (priority := 100) initial.mono_from [HasInitial C] [InitialMonoClass C]
 
 /-- To show a category is a `initial_mono_class` it suffices to give an initial object such that
 every morphism out of it is a monomorphism. -/
-theorem InitialMonoClass.of_is_initial {I : C} (hI : IsInitial I) (h : ∀ X, Mono (hI.to X)) :
+theorem InitialMonoClass.of_isInitial {I : C} (hI : IsInitial I) (h : ∀ X, Mono (hI.to X)) :
     InitialMonoClass C :=
   {
     is_initial_mono_from := fun I' X hI' =>
       by
       rw [hI'.hom_ext (hI'.to X) ((hI'.unique_up_to_iso hI).Hom ≫ hI.to X)]
       apply mono_comp }
-#align category_theory.limits.initial_mono_class.of_is_initial CategoryTheory.Limits.InitialMonoClass.of_is_initial
+#align category_theory.limits.initial_mono_class.of_is_initial CategoryTheory.Limits.InitialMonoClass.of_isInitial
 
 /-- To show a category is a `initial_mono_class` it suffices to show every morphism out of the
 initial object is a monomorphism. -/
 theorem InitialMonoClass.of_initial [HasInitial C] (h : ∀ X : C, Mono (initial.to X)) :
     InitialMonoClass C :=
-  InitialMonoClass.of_is_initial initialIsInitial h
+  InitialMonoClass.of_isInitial initialIsInitial h
 #align category_theory.limits.initial_mono_class.of_initial CategoryTheory.Limits.InitialMonoClass.of_initial
 
 /-- To show a category is a `initial_mono_class` it suffices to show the unique morphism from an
 initial object to a terminal object is a monomorphism. -/
-theorem InitialMonoClass.of_is_terminal {I T : C} (hI : IsInitial I) (hT : IsTerminal T)
+theorem InitialMonoClass.of_isTerminal {I T : C} (hI : IsInitial I) (hT : IsTerminal T)
     (f : Mono (hI.to T)) : InitialMonoClass C :=
-  InitialMonoClass.of_is_initial hI fun X => mono_of_mono_fac (hI.hom_ext (_ ≫ hT.from X) (hI.to T))
-#align category_theory.limits.initial_mono_class.of_is_terminal CategoryTheory.Limits.InitialMonoClass.of_is_terminal
+  InitialMonoClass.of_isInitial hI fun X => mono_of_mono_fac (hI.hom_ext (_ ≫ hT.from X) (hI.to T))
+#align category_theory.limits.initial_mono_class.of_is_terminal CategoryTheory.Limits.InitialMonoClass.of_isTerminal
 
 /-- To show a category is a `initial_mono_class` it suffices to show the unique morphism from the
 initial object to a terminal object is a monomorphism. -/
 theorem InitialMonoClass.of_terminal [HasInitial C] [HasTerminal C] (h : Mono (initial.to (⊤_ C))) :
     InitialMonoClass C :=
-  InitialMonoClass.of_is_terminal initialIsInitial terminalIsTerminal h
+  InitialMonoClass.of_isTerminal initialIsInitial terminalIsTerminal h
 #align category_theory.limits.initial_mono_class.of_terminal CategoryTheory.Limits.InitialMonoClass.of_terminal
 
 section Comparison
@@ -714,57 +714,56 @@ def colimitOfInitial (F : J ⥤ C) [HasInitial J] [HasColimit F]
 
 /-- If `j` is initial in the index category, then the map `limit.π F j` is an isomorphism.
 -/
-theorem is_iso_π_of_is_initial {j : J} (I : IsInitial j) (F : J ⥤ C) [HasLimit F] :
+theorem isIso_π_of_isInitial {j : J} (I : IsInitial j) (F : J ⥤ C) [HasLimit F] :
     IsIso (limit.π F j) :=
   ⟨⟨limit.lift _ (coneOfDiagramInitial I F),
       ⟨by
         ext
         simp, by simp⟩⟩⟩
-#align category_theory.limits.is_iso_π_of_is_initial CategoryTheory.Limits.is_iso_π_of_is_initial
+#align category_theory.limits.is_iso_π_of_is_initial CategoryTheory.Limits.isIso_π_of_isInitial
 
-instance is_iso_π_initial [HasInitial J] (F : J ⥤ C) [HasLimit F] : IsIso (limit.π F (⊥_ J)) :=
-  is_iso_π_of_is_initial initialIsInitial F
-#align category_theory.limits.is_iso_π_initial CategoryTheory.Limits.is_iso_π_initial
+instance isIso_π_initial [HasInitial J] (F : J ⥤ C) [HasLimit F] : IsIso (limit.π F (⊥_ J)) :=
+  isIso_π_of_isInitial initialIsInitial F
+#align category_theory.limits.is_iso_π_initial CategoryTheory.Limits.isIso_π_initial
 
-theorem is_iso_π_of_is_terminal {j : J} (I : IsTerminal j) (F : J ⥤ C) [HasLimit F]
+theorem isIso_π_of_isTerminal {j : J} (I : IsTerminal j) (F : J ⥤ C) [HasLimit F]
     [∀ (i j : J) (f : i ⟶ j), IsIso (F.map f)] : IsIso (limit.π F j) :=
   ⟨⟨limit.lift _ (coneOfDiagramTerminal I F), by
       ext
       simp, by simp⟩⟩
-#align category_theory.limits.is_iso_π_of_is_terminal CategoryTheory.Limits.is_iso_π_of_is_terminal
+#align category_theory.limits.is_iso_π_of_is_terminal CategoryTheory.Limits.isIso_π_of_isTerminal
 
-instance is_iso_π_terminal [HasTerminal J] (F : J ⥤ C) [HasLimit F]
+instance isIso_π_terminal [HasTerminal J] (F : J ⥤ C) [HasLimit F]
     [∀ (i j : J) (f : i ⟶ j), IsIso (F.map f)] : IsIso (limit.π F (⊤_ J)) :=
-  is_iso_π_of_is_terminal terminalIsTerminal F
-#align category_theory.limits.is_iso_π_terminal CategoryTheory.Limits.is_iso_π_terminal
+  isIso_π_of_isTerminal terminalIsTerminal F
+#align category_theory.limits.is_iso_π_terminal CategoryTheory.Limits.isIso_π_terminal
 
 /-- If `j` is terminal in the index category, then the map `colimit.ι F j` is an isomorphism.
 -/
-theorem is_iso_ι_of_is_terminal {j : J} (I : IsTerminal j) (F : J ⥤ C) [HasColimit F] :
+theorem isIso_ι_of_isTerminal {j : J} (I : IsTerminal j) (F : J ⥤ C) [HasColimit F] :
     IsIso (colimit.ι F j) :=
   ⟨⟨colimit.desc _ (coconeOfDiagramTerminal I F),
       ⟨by simp, by
         ext
         simp⟩⟩⟩
-#align category_theory.limits.is_iso_ι_of_is_terminal CategoryTheory.Limits.is_iso_ι_of_is_terminal
+#align category_theory.limits.is_iso_ι_of_is_terminal CategoryTheory.Limits.isIso_ι_of_isTerminal
 
-instance is_iso_ι_terminal [HasTerminal J] (F : J ⥤ C) [HasColimit F] :
-    IsIso (colimit.ι F (⊤_ J)) :=
-  is_iso_ι_of_is_terminal terminalIsTerminal F
-#align category_theory.limits.is_iso_ι_terminal CategoryTheory.Limits.is_iso_ι_terminal
+instance isIso_ι_terminal [HasTerminal J] (F : J ⥤ C) [HasColimit F] : IsIso (colimit.ι F (⊤_ J)) :=
+  isIso_ι_of_isTerminal terminalIsTerminal F
+#align category_theory.limits.is_iso_ι_terminal CategoryTheory.Limits.isIso_ι_terminal
 
-theorem is_iso_ι_of_is_initial {j : J} (I : IsInitial j) (F : J ⥤ C) [HasColimit F]
+theorem isIso_ι_of_isInitial {j : J} (I : IsInitial j) (F : J ⥤ C) [HasColimit F]
     [∀ (i j : J) (f : i ⟶ j), IsIso (F.map f)] : IsIso (colimit.ι F j) :=
   ⟨⟨colimit.desc _ (coconeOfDiagramInitial I F),
       ⟨by tidy, by
         ext
         simp⟩⟩⟩
-#align category_theory.limits.is_iso_ι_of_is_initial CategoryTheory.Limits.is_iso_ι_of_is_initial
+#align category_theory.limits.is_iso_ι_of_is_initial CategoryTheory.Limits.isIso_ι_of_isInitial
 
-instance is_iso_ι_initial [HasInitial J] (F : J ⥤ C) [HasColimit F]
+instance isIso_ι_initial [HasInitial J] (F : J ⥤ C) [HasColimit F]
     [∀ (i j : J) (f : i ⟶ j), IsIso (F.map f)] : IsIso (colimit.ι F (⊥_ J)) :=
-  is_iso_ι_of_is_initial initialIsInitial F
-#align category_theory.limits.is_iso_ι_initial CategoryTheory.Limits.is_iso_ι_initial
+  isIso_ι_of_isInitial initialIsInitial F
+#align category_theory.limits.is_iso_ι_initial CategoryTheory.Limits.isIso_ι_initial
 
 end
 

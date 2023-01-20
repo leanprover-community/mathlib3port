@@ -29,7 +29,7 @@ namespace StronglyMeasurable
 protected theorem inner {𝕜 : Type _} {E : Type _} [IsROrC 𝕜] [InnerProductSpace 𝕜 E]
     {m : MeasurableSpace α} {f g : α → E} (hf : StronglyMeasurable f) (hg : StronglyMeasurable g) :
     StronglyMeasurable fun t => @inner 𝕜 _ _ (f t) (g t) :=
-  Continuous.comp_strongly_measurable continuous_inner (hf.prod_mk hg)
+  Continuous.comp_stronglyMeasurable continuous_inner (hf.prod_mk hg)
 #align measure_theory.strongly_measurable.inner MeasureTheory.StronglyMeasurable.inner
 
 end StronglyMeasurable

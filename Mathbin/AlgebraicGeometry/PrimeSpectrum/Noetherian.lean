@@ -29,7 +29,7 @@ variable {A : Type u} [CommRing A] [IsDomain A] [IsNoetherianRing A]
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (z «expr ∉ » M) -/
 /-- In a noetherian ring, every ideal contains a product of prime ideals
 ([samuel, § 3.3, Lemma 3])-/
-theorem exists_prime_spectrum_prod_le (I : Ideal R) :
+theorem exists_primeSpectrum_prod_le (I : Ideal R) :
     ∃ Z : Multiset (PrimeSpectrum R), Multiset.prod (Z.map asIdeal) ≤ I :=
   by
   refine' IsNoetherian.induction (fun (M : Ideal R) hgt => _) I
@@ -57,13 +57,13 @@ theorem exists_prime_spectrum_prod_le (I : Ideal R) :
   rw [mul_add]
   apply sup_le (show span R {x} * M ≤ M from Ideal.mul_le_left)
   rwa [span_mul_span, Set.singleton_mul_singleton, span_singleton_le_iff_mem]
-#align prime_spectrum.exists_prime_spectrum_prod_le PrimeSpectrum.exists_prime_spectrum_prod_le
+#align prime_spectrum.exists_prime_spectrum_prod_le PrimeSpectrum.exists_primeSpectrum_prod_le
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (z «expr ∉ » M) -/
 /-- In a noetherian integral domain which is not a field, every non-zero ideal contains a non-zero
   product of prime ideals; in a field, the whole ring is a non-zero ideal containing only 0 as
   product or prime ideals ([samuel, § 3.3, Lemma 3]) -/
-theorem exists_prime_spectrum_prod_le_and_ne_bot_of_domain (h_fA : ¬IsField A) {I : Ideal A}
+theorem exists_primeSpectrum_prod_le_and_ne_bot_of_domain (h_fA : ¬IsField A) {I : Ideal A}
     (h_nzI : I ≠ ⊥) :
     ∃ Z : Multiset (PrimeSpectrum A),
       Multiset.prod (Z.map asIdeal) ≤ I ∧ Multiset.prod (Z.map asIdeal) ≠ ⊥ :=
@@ -101,7 +101,7 @@ theorem exists_prime_spectrum_prod_le_and_ne_bot_of_domain (h_fA : ¬IsField A) 
     apply sup_le (show span A {x} * M ≤ M from Ideal.mul_le_left)
     rwa [span_mul_span, Set.singleton_mul_singleton, span_singleton_le_iff_mem]
   · rintro (hx | hy) <;> contradiction
-#align prime_spectrum.exists_prime_spectrum_prod_le_and_ne_bot_of_domain PrimeSpectrum.exists_prime_spectrum_prod_le_and_ne_bot_of_domain
+#align prime_spectrum.exists_prime_spectrum_prod_le_and_ne_bot_of_domain PrimeSpectrum.exists_primeSpectrum_prod_le_and_ne_bot_of_domain
 
 open TopologicalSpace
 
@@ -109,7 +109,7 @@ instance : NoetherianSpace (PrimeSpectrum R) :=
   by
   rw [(noetherian_space_tfae <| PrimeSpectrum R).out 0 1]
   have H := ‹IsNoetherianRing R›
-  rw [is_noetherian_ring_iff, is_noetherian_iff_well_founded] at H
+  rw [isNoetherianRing_iff, isNoetherian_iff_wellFounded] at H
   exact (closeds_embedding R).dual.WellFounded H
 
 end PrimeSpectrum

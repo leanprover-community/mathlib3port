@@ -134,14 +134,14 @@ def limitConeLift (F : J ⥤ Cat.{v, v}) (s : Cone F) : s.x ⟶ limitConeX F
 #align category_theory.Cat.has_limits.limit_cone_lift CategoryTheory.CatCat.HasLimits.limitConeLift
 
 @[simp]
-theorem limit_π_hom_diagram_eq_to_hom {F : J ⥤ Cat.{v, v}} (X Y : limit (F ⋙ Cat.objects.{v, v}))
+theorem limit_π_homDiagram_eqToHom {F : J ⥤ Cat.{v, v}} (X Y : limit (F ⋙ Cat.objects.{v, v}))
     (j : J) (h : X = Y) :
     limit.π (homDiagram X Y) j (eqToHom h) =
       eqToHom (congr_arg (limit.π (F ⋙ Cat.objects.{v, v}) j) h) :=
   by
   subst h
   simp
-#align category_theory.Cat.has_limits.limit_π_hom_diagram_eq_to_hom CategoryTheory.CatCat.HasLimits.limit_π_hom_diagram_eq_to_hom
+#align category_theory.Cat.has_limits.limit_π_hom_diagram_eq_to_hom CategoryTheory.CatCat.HasLimits.limit_π_homDiagram_eqToHom
 
 /-- Auxiliary definition: the proposed cone is a limit cone. -/
 def limitConeIsLimit (F : J ⥤ Cat.{v, v}) : IsLimit (limitCone F)

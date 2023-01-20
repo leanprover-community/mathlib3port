@@ -40,18 +40,18 @@ section Order
 
 variable [NormedLatticeAddCommGroup E]
 
-theorem coe_fn_le (f g : lp E p μ) : f ≤ᵐ[μ] g ↔ f ≤ g := by
-  rw [← Subtype.coe_le_coe, ← ae_eq_fun.coe_fn_le, ← coe_fn_coe_base, ← coe_fn_coe_base]
-#align measure_theory.Lp.coe_fn_le MeasureTheory.lp.coe_fn_le
+theorem coeFn_le (f g : lp E p μ) : f ≤ᵐ[μ] g ↔ f ≤ g := by
+  rw [← Subtype.coe_le_coe, ← ae_eq_fun.coe_fn_le, ← coeFn_coeBase, ← coeFn_coeBase]
+#align measure_theory.Lp.coe_fn_le MeasureTheory.lp.coeFn_le
 
-theorem coe_fn_nonneg (f : lp E p μ) : 0 ≤ᵐ[μ] f ↔ 0 ≤ f :=
+theorem coeFn_nonneg (f : lp E p μ) : 0 ≤ᵐ[μ] f ↔ 0 ≤ f :=
   by
   rw [← coe_fn_le]
   have h0 := Lp.coe_fn_zero E p μ
   constructor <;> intro h <;> filter_upwards [h, h0] with _ _ h2
   · rwa [h2]
   · rwa [← h2]
-#align measure_theory.Lp.coe_fn_nonneg MeasureTheory.lp.coe_fn_nonneg
+#align measure_theory.Lp.coe_fn_nonneg MeasureTheory.lp.coeFn_nonneg
 
 instance : CovariantClass (lp E p μ) (lp E p μ) (· + ·) (· ≤ ·) :=
   by
@@ -90,17 +90,17 @@ instance : Lattice (lp E p μ) :=
     rw [mem_Lp_iff_mem_ℒp] at *
     exact (mem_ℒp_congr_ae (ae_eq_fun.coe_fn_inf _ _)).mpr (hf.inf hg)
 
-theorem coe_fn_sup (f g : lp E p μ) : ⇑(f ⊔ g) =ᵐ[μ] ⇑f ⊔ ⇑g :=
-  AeEqFun.coe_fn_sup _ _
-#align measure_theory.Lp.coe_fn_sup MeasureTheory.lp.coe_fn_sup
+theorem coeFn_sup (f g : lp E p μ) : ⇑(f ⊔ g) =ᵐ[μ] ⇑f ⊔ ⇑g :=
+  AeEqFun.coeFn_sup _ _
+#align measure_theory.Lp.coe_fn_sup MeasureTheory.lp.coeFn_sup
 
-theorem coe_fn_inf (f g : lp E p μ) : ⇑(f ⊓ g) =ᵐ[μ] ⇑f ⊓ ⇑g :=
-  AeEqFun.coe_fn_inf _ _
-#align measure_theory.Lp.coe_fn_inf MeasureTheory.lp.coe_fn_inf
+theorem coeFn_inf (f g : lp E p μ) : ⇑(f ⊓ g) =ᵐ[μ] ⇑f ⊓ ⇑g :=
+  AeEqFun.coeFn_inf _ _
+#align measure_theory.Lp.coe_fn_inf MeasureTheory.lp.coeFn_inf
 
-theorem coe_fn_abs (f : lp E p μ) : ⇑(|f|) =ᵐ[μ] fun x => |f x| :=
-  AeEqFun.coe_fn_abs _
-#align measure_theory.Lp.coe_fn_abs MeasureTheory.lp.coe_fn_abs
+theorem coeFn_abs (f : lp E p μ) : ⇑(|f|) =ᵐ[μ] fun x => |f x| :=
+  AeEqFun.coeFn_abs _
+#align measure_theory.Lp.coe_fn_abs MeasureTheory.lp.coeFn_abs
 
 noncomputable instance [Fact (1 ≤ p)] : NormedLatticeAddCommGroup (lp E p μ) :=
   { lp.lattice,
@@ -108,7 +108,7 @@ noncomputable instance [Fact (1 ≤ p)] : NormedLatticeAddCommGroup (lp E p μ) 
     add_le_add_left := fun f g => add_le_add_left
     solid := fun f g hfg => by
       rw [← coe_fn_le] at hfg
-      simp_rw [Lp.norm_def, Ennreal.to_real_le_to_real (Lp.snorm_ne_top f) (Lp.snorm_ne_top g)]
+      simp_rw [Lp.norm_def, Ennreal.toReal_le_toReal (Lp.snorm_ne_top f) (Lp.snorm_ne_top g)]
       refine' snorm_mono_ae _
       filter_upwards [hfg, Lp.coe_fn_abs f, Lp.coe_fn_abs g] with x hx hxf hxg
       rw [hxf, hxg] at hx

@@ -135,14 +135,14 @@ theorem ext_iff {f g : α →₀ M} : f = g ↔ ∀ a, f a = g a :=
 #align finsupp.ext_iff Finsupp.ext_iff
 
 /-- Deprecated. Use `fun_like.coe_fn_eq` instead. -/
-theorem coe_fn_inj {f g : α →₀ M} : (f : α → M) = g ↔ f = g :=
-  FunLike.coe_fn_eq
-#align finsupp.coe_fn_inj Finsupp.coe_fn_inj
+theorem coeFn_inj {f g : α →₀ M} : (f : α → M) = g ↔ f = g :=
+  FunLike.coeFn_eq
+#align finsupp.coe_fn_inj Finsupp.coeFn_inj
 
 /-- Deprecated. Use `fun_like.coe_injective` instead. -/
-theorem coe_fn_injective : @Function.Injective (α →₀ M) (α → M) coeFn :=
+theorem coeFn_injective : @Function.Injective (α →₀ M) (α → M) coeFn :=
   FunLike.coe_injective
-#align finsupp.coe_fn_injective Finsupp.coe_fn_injective
+#align finsupp.coe_fn_injective Finsupp.coeFn_injective
 
 /-- Deprecated. Use `fun_like.congr_fun` instead. -/
 theorem congr_fun {f g : α →₀ M} (h : f = g) (a : α) : f a = g a :=
@@ -237,15 +237,15 @@ theorem support_subset_iff {s : Set α} {f : α →₀ M} : ↑f.support ⊆ s �
 def equivFunOnFinite [Finite α] : (α →₀ M) ≃ (α → M)
     where
   toFun := coeFn
-  invFun f := mk (Function.support f).to_finite.toFinset f fun a => Set.Finite.mem_to_finset _
+  invFun f := mk (Function.support f).to_finite.toFinset f fun a => Set.Finite.mem_toFinset _
   left_inv f := ext fun x => rfl
   right_inv f := rfl
 #align finsupp.equiv_fun_on_finite Finsupp.equivFunOnFinite
 
 @[simp]
-theorem equiv_fun_on_finite_symm_coe {α} [Finite α] (f : α →₀ M) : equivFunOnFinite.symm f = f :=
+theorem equivFunOnFinite_symm_coe {α} [Finite α] (f : α →₀ M) : equivFunOnFinite.symm f = f :=
   equivFunOnFinite.symm_apply_apply f
-#align finsupp.equiv_fun_on_finite_symm_coe Finsupp.equiv_fun_on_finite_symm_coe
+#align finsupp.equiv_fun_on_finite_symm_coe Finsupp.equivFunOnFinite_symm_coe
 
 /--
 If `α` has a unique term, the type of finitely supported functions `α →₀ β` is equivalent to `β`.
@@ -487,18 +487,18 @@ theorem card_support_le_one' [Nonempty α] {f : α →₀ M} :
 #align finsupp.card_support_le_one' Finsupp.card_support_le_one'
 
 @[simp]
-theorem equiv_fun_on_finite_single [DecidableEq α] [Finite α] (x : α) (m : M) :
+theorem equivFunOnFinite_single [DecidableEq α] [Finite α] (x : α) (m : M) :
     Finsupp.equivFunOnFinite (Finsupp.single x m) = Pi.single x m :=
   by
   ext
   simp [Finsupp.single_eq_pi_single]
-#align finsupp.equiv_fun_on_finite_single Finsupp.equiv_fun_on_finite_single
+#align finsupp.equiv_fun_on_finite_single Finsupp.equivFunOnFinite_single
 
 @[simp]
-theorem equiv_fun_on_finite_symm_single [DecidableEq α] [Finite α] (x : α) (m : M) :
+theorem equivFunOnFinite_symm_single [DecidableEq α] [Finite α] (x : α) (m : M) :
     Finsupp.equivFunOnFinite.symm (Pi.single x m) = Finsupp.single x m := by
   rw [← equiv_fun_on_finite_single, Equiv.symm_apply_apply]
-#align finsupp.equiv_fun_on_finite_symm_single Finsupp.equiv_fun_on_finite_symm_single
+#align finsupp.equiv_fun_on_finite_symm_single Finsupp.equivFunOnFinite_symm_single
 
 end Single
 
@@ -637,25 +637,25 @@ def onFinset (s : Finset α) (f : α → M) (hf : ∀ a, f a ≠ 0 → a ∈ s) 
 #align finsupp.on_finset Finsupp.onFinset
 
 @[simp]
-theorem on_finset_apply {s : Finset α} {f : α → M} {hf a} : (onFinset s f hf : α →₀ M) a = f a :=
+theorem onFinset_apply {s : Finset α} {f : α → M} {hf a} : (onFinset s f hf : α →₀ M) a = f a :=
   rfl
-#align finsupp.on_finset_apply Finsupp.on_finset_apply
+#align finsupp.on_finset_apply Finsupp.onFinset_apply
 
 @[simp]
-theorem support_on_finset_subset {s : Finset α} {f : α → M} {hf} : (onFinset s f hf).support ⊆ s :=
+theorem support_onFinset_subset {s : Finset α} {f : α → M} {hf} : (onFinset s f hf).support ⊆ s :=
   filter_subset _ _
-#align finsupp.support_on_finset_subset Finsupp.support_on_finset_subset
+#align finsupp.support_on_finset_subset Finsupp.support_onFinset_subset
 
 @[simp]
-theorem mem_support_on_finset {s : Finset α} {f : α → M} (hf : ∀ a : α, f a ≠ 0 → a ∈ s) {a : α} :
+theorem mem_support_onFinset {s : Finset α} {f : α → M} (hf : ∀ a : α, f a ≠ 0 → a ∈ s) {a : α} :
     a ∈ (Finsupp.onFinset s f hf).support ↔ f a ≠ 0 := by
-  rw [Finsupp.mem_support_iff, Finsupp.on_finset_apply]
-#align finsupp.mem_support_on_finset Finsupp.mem_support_on_finset
+  rw [Finsupp.mem_support_iff, Finsupp.onFinset_apply]
+#align finsupp.mem_support_on_finset Finsupp.mem_support_onFinset
 
-theorem support_on_finset {s : Finset α} {f : α → M} (hf : ∀ a : α, f a ≠ 0 → a ∈ s) :
+theorem support_onFinset {s : Finset α} {f : α → M} (hf : ∀ a : α, f a ≠ 0 → a ∈ s) :
     (Finsupp.onFinset s f hf).support = s.filter fun a => f a ≠ 0 :=
   rfl
-#align finsupp.support_on_finset Finsupp.support_on_finset
+#align finsupp.support_on_finset Finsupp.support_onFinset
 
 end OnFinset
 
@@ -671,10 +671,10 @@ noncomputable def ofSupportFinite (f : α → M) (hf : (Function.support f).Fini
   mem_support_to_fun _ := hf.mem_to_finset
 #align finsupp.of_support_finite Finsupp.ofSupportFinite
 
-theorem of_support_finite_coe {f : α → M} {hf : (Function.support f).Finite} :
+theorem ofSupportFinite_coe {f : α → M} {hf : (Function.support f).Finite} :
     (ofSupportFinite f hf : α → M) = f :=
   rfl
-#align finsupp.of_support_finite_coe Finsupp.of_support_finite_coe
+#align finsupp.of_support_finite_coe Finsupp.ofSupportFinite_coe
 
 instance canLift : CanLift (α → M) (α →₀ M) coeFn fun f => (Function.support f).Finite
     where prf f hf := ⟨ofSupportFinite f hf, rfl⟩
@@ -708,44 +708,44 @@ def mapRange (f : M → N) (hf : f 0 = 0) (g : α →₀ M) : α →₀ N :=
 #align finsupp.map_range Finsupp.mapRange
 
 @[simp]
-theorem map_range_apply {f : M → N} {hf : f 0 = 0} {g : α →₀ M} {a : α} :
+theorem mapRange_apply {f : M → N} {hf : f 0 = 0} {g : α →₀ M} {a : α} :
     mapRange f hf g a = f (g a) :=
   rfl
-#align finsupp.map_range_apply Finsupp.map_range_apply
+#align finsupp.map_range_apply Finsupp.mapRange_apply
 
 @[simp]
-theorem map_range_zero {f : M → N} {hf : f 0 = 0} : mapRange f hf (0 : α →₀ M) = 0 :=
+theorem mapRange_zero {f : M → N} {hf : f 0 = 0} : mapRange f hf (0 : α →₀ M) = 0 :=
   ext fun a => by simp only [hf, zero_apply, map_range_apply]
-#align finsupp.map_range_zero Finsupp.map_range_zero
+#align finsupp.map_range_zero Finsupp.mapRange_zero
 
 @[simp]
-theorem map_range_id (g : α →₀ M) : mapRange id rfl g = g :=
+theorem mapRange_id (g : α →₀ M) : mapRange id rfl g = g :=
   ext fun _ => rfl
-#align finsupp.map_range_id Finsupp.map_range_id
+#align finsupp.map_range_id Finsupp.mapRange_id
 
-theorem map_range_comp (f : N → P) (hf : f 0 = 0) (f₂ : M → N) (hf₂ : f₂ 0 = 0) (h : (f ∘ f₂) 0 = 0)
+theorem mapRange_comp (f : N → P) (hf : f 0 = 0) (f₂ : M → N) (hf₂ : f₂ 0 = 0) (h : (f ∘ f₂) 0 = 0)
     (g : α →₀ M) : mapRange (f ∘ f₂) h g = mapRange f hf (mapRange f₂ hf₂ g) :=
   ext fun _ => rfl
-#align finsupp.map_range_comp Finsupp.map_range_comp
+#align finsupp.map_range_comp Finsupp.mapRange_comp
 
-theorem support_map_range {f : M → N} {hf : f 0 = 0} {g : α →₀ M} :
+theorem support_mapRange {f : M → N} {hf : f 0 = 0} {g : α →₀ M} :
     (mapRange f hf g).support ⊆ g.support :=
   support_on_finset_subset
-#align finsupp.support_map_range Finsupp.support_map_range
+#align finsupp.support_map_range Finsupp.support_mapRange
 
 @[simp]
-theorem map_range_single {f : M → N} {hf : f 0 = 0} {a : α} {b : M} :
+theorem mapRange_single {f : M → N} {hf : f 0 = 0} {a : α} {b : M} :
     mapRange f hf (single a b) = single a (f b) :=
   ext fun a' => by simpa only [single_eq_pi_single] using Pi.apply_single _ (fun _ => hf) a _ a'
-#align finsupp.map_range_single Finsupp.map_range_single
+#align finsupp.map_range_single Finsupp.mapRange_single
 
-theorem support_map_range_of_injective {e : M → N} (he0 : e 0 = 0) (f : ι →₀ M)
+theorem support_mapRange_of_injective {e : M → N} (he0 : e 0 = 0) (f : ι →₀ M)
     (he : Function.Injective e) : (Finsupp.mapRange e he0 f).support = f.support :=
   by
   ext
-  simp only [Finsupp.mem_support_iff, Ne.def, Finsupp.map_range_apply]
+  simp only [Finsupp.mem_support_iff, Ne.def, Finsupp.mapRange_apply]
   exact he.ne_iff' he0
-#align finsupp.support_map_range_of_injective Finsupp.support_map_range_of_injective
+#align finsupp.support_map_range_of_injective Finsupp.support_mapRange_of_injective
 
 end MapRange
 
@@ -775,47 +775,47 @@ def embDomain (f : α ↪ β) (v : α →₀ M) : β →₀ M :=
 #align finsupp.emb_domain Finsupp.embDomain
 
 @[simp]
-theorem support_emb_domain (f : α ↪ β) (v : α →₀ M) : (embDomain f v).support = v.support.map f :=
+theorem support_embDomain (f : α ↪ β) (v : α →₀ M) : (embDomain f v).support = v.support.map f :=
   rfl
-#align finsupp.support_emb_domain Finsupp.support_emb_domain
+#align finsupp.support_emb_domain Finsupp.support_embDomain
 
 @[simp]
-theorem emb_domain_zero (f : α ↪ β) : (embDomain f 0 : β →₀ M) = 0 :=
+theorem embDomain_zero (f : α ↪ β) : (embDomain f 0 : β →₀ M) = 0 :=
   rfl
-#align finsupp.emb_domain_zero Finsupp.emb_domain_zero
+#align finsupp.emb_domain_zero Finsupp.embDomain_zero
 
 @[simp]
-theorem emb_domain_apply (f : α ↪ β) (v : α →₀ M) (a : α) : embDomain f v (f a) = v a :=
+theorem embDomain_apply (f : α ↪ β) (v : α →₀ M) (a : α) : embDomain f v (f a) = v a :=
   by
   change dite _ _ _ = _
   split_ifs <;> rw [Finset.mem_map' f] at h
   · refine' congr_arg (v : α → M) (f.inj' _)
     exact Finset.choose_property (fun a₁ => f a₁ = f a) _ _
   · exact (not_mem_support_iff.1 h).symm
-#align finsupp.emb_domain_apply Finsupp.emb_domain_apply
+#align finsupp.emb_domain_apply Finsupp.embDomain_apply
 
-theorem emb_domain_notin_range (f : α ↪ β) (v : α →₀ M) (a : β) (h : a ∉ Set.range f) :
+theorem embDomain_notin_range (f : α ↪ β) (v : α →₀ M) (a : β) (h : a ∉ Set.range f) :
     embDomain f v a = 0 := by
   refine' dif_neg (mt (fun h => _) h)
   rcases Finset.mem_map.1 h with ⟨a, h, rfl⟩
   exact Set.mem_range_self a
-#align finsupp.emb_domain_notin_range Finsupp.emb_domain_notin_range
+#align finsupp.emb_domain_notin_range Finsupp.embDomain_notin_range
 
-theorem emb_domain_injective (f : α ↪ β) : Function.Injective (embDomain f : (α →₀ M) → β →₀ M) :=
+theorem embDomain_injective (f : α ↪ β) : Function.Injective (embDomain f : (α →₀ M) → β →₀ M) :=
   fun l₁ l₂ h => ext fun a => by simpa only [emb_domain_apply] using ext_iff.1 h (f a)
-#align finsupp.emb_domain_injective Finsupp.emb_domain_injective
+#align finsupp.emb_domain_injective Finsupp.embDomain_injective
 
 @[simp]
-theorem emb_domain_inj {f : α ↪ β} {l₁ l₂ : α →₀ M} : embDomain f l₁ = embDomain f l₂ ↔ l₁ = l₂ :=
-  (emb_domain_injective f).eq_iff
-#align finsupp.emb_domain_inj Finsupp.emb_domain_inj
+theorem embDomain_inj {f : α ↪ β} {l₁ l₂ : α →₀ M} : embDomain f l₁ = embDomain f l₂ ↔ l₁ = l₂ :=
+  (embDomain_injective f).eq_iff
+#align finsupp.emb_domain_inj Finsupp.embDomain_inj
 
 @[simp]
-theorem emb_domain_eq_zero {f : α ↪ β} {l : α →₀ M} : embDomain f l = 0 ↔ l = 0 :=
-  (emb_domain_injective f).eq_iff' <| emb_domain_zero f
-#align finsupp.emb_domain_eq_zero Finsupp.emb_domain_eq_zero
+theorem embDomain_eq_zero {f : α ↪ β} {l : α →₀ M} : embDomain f l = 0 ↔ l = 0 :=
+  (embDomain_injective f).eq_iff' <| embDomain_zero f
+#align finsupp.emb_domain_eq_zero Finsupp.embDomain_eq_zero
 
-theorem emb_domain_map_range (f : α ↪ β) (g : M → N) (p : α →₀ M) (hg : g 0 = 0) :
+theorem embDomain_mapRange (f : α ↪ β) (g : M → N) (p : α →₀ M) (hg : g 0 = 0) :
     embDomain f (mapRange g hg p) = mapRange g hg (embDomain f p) :=
   by
   ext a
@@ -823,9 +823,9 @@ theorem emb_domain_map_range (f : α ↪ β) (g : M → N) (p : α →₀ M) (hg
   · rcases h with ⟨a', rfl⟩
     rw [map_range_apply, emb_domain_apply, emb_domain_apply, map_range_apply]
   · rw [map_range_apply, emb_domain_notin_range, emb_domain_notin_range, ← hg] <;> assumption
-#align finsupp.emb_domain_map_range Finsupp.emb_domain_map_range
+#align finsupp.emb_domain_map_range Finsupp.embDomain_mapRange
 
-theorem single_of_emb_domain_single (l : α →₀ M) (f : α ↪ β) (a : β) (b : M) (hb : b ≠ 0)
+theorem single_of_embDomain_single (l : α →₀ M) (f : α ↪ β) (a : β) (b : M) (hb : b ≠ 0)
     (h : l.embDomain f = single a b) : ∃ x, l = single x b ∧ f x = a :=
   by
   have h_map_support : Finset.map f l.support = {a} := by
@@ -842,10 +842,10 @@ theorem single_of_emb_domain_single (l : α →₀ M) (f : α ↪ β) (a : β) (
       by_contra hfd
       exact h_cases (f.injective (hc₂.trans hfd))
   · exact hc₂
-#align finsupp.single_of_emb_domain_single Finsupp.single_of_emb_domain_single
+#align finsupp.single_of_emb_domain_single Finsupp.single_of_embDomain_single
 
 @[simp]
-theorem emb_domain_single (f : α ↪ β) (a : α) (m : M) : embDomain f (single a m) = single (f a) m :=
+theorem embDomain_single (f : α ↪ β) (a : α) (m : M) : embDomain f (single a m) = single (f a) m :=
   by
   ext b
   by_cases h : b ∈ Set.range f
@@ -855,7 +855,7 @@ theorem emb_domain_single (f : α ↪ β) (a : α) (m : M) : embDomain f (single
     rw [if_neg]
     rintro rfl
     simpa using h
-#align finsupp.emb_domain_single Finsupp.emb_domain_single
+#align finsupp.emb_domain_single Finsupp.embDomain_single
 
 end EmbDomain
 
@@ -877,15 +877,15 @@ def zipWith (f : M → N → P) (hf : f 0 0 = 0) (g₁ : α →₀ M) (g₂ : α
 #align finsupp.zip_with Finsupp.zipWith
 
 @[simp]
-theorem zip_with_apply {f : M → N → P} {hf : f 0 0 = 0} {g₁ : α →₀ M} {g₂ : α →₀ N} {a : α} :
+theorem zipWith_apply {f : M → N → P} {hf : f 0 0 = 0} {g₁ : α →₀ M} {g₂ : α →₀ N} {a : α} :
     zipWith f hf g₁ g₂ a = f (g₁ a) (g₂ a) :=
   rfl
-#align finsupp.zip_with_apply Finsupp.zip_with_apply
+#align finsupp.zip_with_apply Finsupp.zipWith_apply
 
-theorem support_zip_with [D : DecidableEq α] {f : M → N → P} {hf : f 0 0 = 0} {g₁ : α →₀ M}
+theorem support_zipWith [D : DecidableEq α] {f : M → N → P} {hf : f 0 0 = 0} {g₁ : α →₀ M}
     {g₂ : α →₀ N} : (zipWith f hf g₁ g₂).support ⊆ g₁.support ∪ g₂.support := by
   rw [Subsingleton.elim D] <;> exact support_on_finset_subset
-#align finsupp.support_zip_with Finsupp.support_zip_with
+#align finsupp.support_zip_with Finsupp.support_zipWith
 
 end ZipWith
 
@@ -915,7 +915,7 @@ theorem support_add [DecidableEq α] {g₁ g₂ : α →₀ M} :
 
 theorem support_add_eq [DecidableEq α] {g₁ g₂ : α →₀ M} (h : Disjoint g₁.support g₂.support) :
     (g₁ + g₂).support = g₁.support ∪ g₂.support :=
-  le_antisymm support_zip_with fun a ha =>
+  le_antisymm support_zipWith fun a ha =>
     (Finset.mem_union.1 ha).elim
       (fun ha => by
         have : a ∉ g₂.support := disjoint_left.1 h ha
@@ -1041,19 +1041,19 @@ theorem induction_linear {p : (α →₀ M) → Prop} (f : α →₀ M) (h0 : p 
 #align finsupp.induction_linear Finsupp.induction_linear
 
 @[simp]
-theorem add_closure_set_of_eq_single :
+theorem add_closure_setOf_eq_single :
     AddSubmonoid.closure { f : α →₀ M | ∃ a b, f = single a b } = ⊤ :=
   top_unique fun x hx =>
     Finsupp.induction x (AddSubmonoid.zero_mem _) fun a b f ha hb hf =>
       AddSubmonoid.add_mem _ (AddSubmonoid.subset_closure <| ⟨a, b, rfl⟩) hf
-#align finsupp.add_closure_set_of_eq_single Finsupp.add_closure_set_of_eq_single
+#align finsupp.add_closure_set_of_eq_single Finsupp.add_closure_setOf_eq_single
 
 /-- If two additive homomorphisms from `α →₀ M` are equal on each `single a b`,
 then they are equal. -/
 theorem add_hom_ext [AddZeroClass N] ⦃f g : (α →₀ M) →+ N⦄
     (H : ∀ x y, f (single x y) = g (single x y)) : f = g :=
   by
-  refine' AddMonoidHom.eq_of_eq_on_mdense add_closure_set_of_eq_single _
+  refine' AddMonoidHom.eq_of_eqOn_mdense add_closure_set_of_eq_single _
   rintro _ ⟨x, y, rfl⟩
   apply H
 #align finsupp.add_hom_ext Finsupp.add_hom_ext
@@ -1084,16 +1084,16 @@ theorem mul_hom_ext' [MulOneClass N] {f g : Multiplicative (α →₀ M) →* N}
   mul_hom_ext fun x => MonoidHom.congr_fun (H x)
 #align finsupp.mul_hom_ext' Finsupp.mul_hom_ext'
 
-theorem map_range_add [AddZeroClass N] {f : M → N} {hf : f 0 = 0}
+theorem mapRange_add [AddZeroClass N] {f : M → N} {hf : f 0 = 0}
     (hf' : ∀ x y, f (x + y) = f x + f y) (v₁ v₂ : α →₀ M) :
     mapRange f hf (v₁ + v₂) = mapRange f hf v₁ + mapRange f hf v₂ :=
   ext fun _ => by simp only [hf', add_apply, map_range_apply]
-#align finsupp.map_range_add Finsupp.map_range_add
+#align finsupp.map_range_add Finsupp.mapRange_add
 
-theorem map_range_add' [AddZeroClass N] [AddMonoidHomClass β M N] {f : β} (v₁ v₂ : α →₀ M) :
+theorem mapRange_add' [AddZeroClass N] [AddMonoidHomClass β M N] {f : β} (v₁ v₂ : α →₀ M) :
     mapRange f (map_zero f) (v₁ + v₂) = mapRange f (map_zero f) v₁ + mapRange f (map_zero f) v₂ :=
-  map_range_add (map_add f) v₁ v₂
-#align finsupp.map_range_add' Finsupp.map_range_add'
+  mapRange_add (map_add f) v₁ v₂
+#align finsupp.map_range_add' Finsupp.mapRange_add'
 
 /-- Bundle `emb_domain f` as an additive map from `α →₀ M` to `β →₀ M`. -/
 @[simps]
@@ -1110,10 +1110,10 @@ def embDomain.addMonoidHom (f : α ↪ β) : (α →₀ M) →+ β →₀ M
 #align finsupp.emb_domain.add_monoid_hom Finsupp.embDomain.addMonoidHom
 
 @[simp]
-theorem emb_domain_add (f : α ↪ β) (v w : α →₀ M) :
+theorem embDomain_add (f : α ↪ β) (v w : α →₀ M) :
     embDomain f (v + w) = embDomain f v + embDomain f w :=
   (embDomain.addMonoidHom f).map_add v w
-#align finsupp.emb_domain_add Finsupp.emb_domain_add
+#align finsupp.emb_domain_add Finsupp.embDomain_add
 
 end AddZeroClass
 
@@ -1147,15 +1147,15 @@ theorem neg_apply [NegZeroClass G] (g : α →₀ G) (a : α) : (-g) a = -g a :=
   rfl
 #align finsupp.neg_apply Finsupp.neg_apply
 
-theorem map_range_neg [NegZeroClass G] [NegZeroClass H] {f : G → H} {hf : f 0 = 0}
+theorem mapRange_neg [NegZeroClass G] [NegZeroClass H] {f : G → H} {hf : f 0 = 0}
     (hf' : ∀ x, f (-x) = -f x) (v : α →₀ G) : mapRange f hf (-v) = -mapRange f hf v :=
   ext fun _ => by simp only [hf', neg_apply, map_range_apply]
-#align finsupp.map_range_neg Finsupp.map_range_neg
+#align finsupp.map_range_neg Finsupp.mapRange_neg
 
-theorem map_range_neg' [AddGroup G] [SubtractionMonoid H] [AddMonoidHomClass β G H] {f : β}
+theorem mapRange_neg' [AddGroup G] [SubtractionMonoid H] [AddMonoidHomClass β G H] {f : β}
     (v : α →₀ G) : mapRange f (map_zero f) (-v) = -mapRange f (map_zero f) v :=
-  map_range_neg (map_neg f) v
-#align finsupp.map_range_neg' Finsupp.map_range_neg'
+  mapRange_neg (map_neg f) v
+#align finsupp.map_range_neg' Finsupp.mapRange_neg'
 
 instance [SubNegZeroMonoid G] : Sub (α →₀ G) :=
   ⟨zipWith Sub.sub (sub_zero _)⟩
@@ -1169,17 +1169,17 @@ theorem sub_apply [SubNegZeroMonoid G] (g₁ g₂ : α →₀ G) (a : α) : (g�
   rfl
 #align finsupp.sub_apply Finsupp.sub_apply
 
-theorem map_range_sub [SubNegZeroMonoid G] [SubNegZeroMonoid H] {f : G → H} {hf : f 0 = 0}
+theorem mapRange_sub [SubNegZeroMonoid G] [SubNegZeroMonoid H] {f : G → H} {hf : f 0 = 0}
     (hf' : ∀ x y, f (x - y) = f x - f y) (v₁ v₂ : α →₀ G) :
     mapRange f hf (v₁ - v₂) = mapRange f hf v₁ - mapRange f hf v₂ :=
   ext fun _ => by simp only [hf', sub_apply, map_range_apply]
-#align finsupp.map_range_sub Finsupp.map_range_sub
+#align finsupp.map_range_sub Finsupp.mapRange_sub
 
-theorem map_range_sub' [AddGroup G] [SubtractionMonoid H] [AddMonoidHomClass β G H] {f : β}
+theorem mapRange_sub' [AddGroup G] [SubtractionMonoid H] [AddMonoidHomClass β G H] {f : β}
     (v₁ v₂ : α →₀ G) :
     mapRange f (map_zero f) (v₁ - v₂) = mapRange f (map_zero f) v₁ - mapRange f (map_zero f) v₂ :=
-  map_range_sub (map_sub f) v₁ v₂
-#align finsupp.map_range_sub' Finsupp.map_range_sub'
+  mapRange_sub (map_sub f) v₁ v₂
+#align finsupp.map_range_sub' Finsupp.mapRange_sub'
 
 /-- Note the general `finsupp.has_smul` instance doesn't apply as `ℤ` is not distributive
 unless `β i`'s addition is commutative. -/
@@ -1205,10 +1205,10 @@ theorem single_add_single_eq_single_add_single [AddCommMonoid M] {k l m n : α} 
 
 @[simp]
 theorem support_neg [AddGroup G] (f : α →₀ G) : support (-f) = support f :=
-  Finset.Subset.antisymm support_map_range
+  Finset.Subset.antisymm support_mapRange
     (calc
       support f = support (- -f) := congr_arg support (neg_neg _).symm
-      _ ⊆ support (-f) := support_map_range
+      _ ⊆ support (-f) := support_mapRange
       )
 #align finsupp.support_neg Finsupp.support_neg
 

@@ -279,7 +279,7 @@ theorem Equiv.fg_iff {N : Type _} [L.StructureCat N] (f : M ≃[L] N) :
     h.mapOfSurjective f.symm.toHom f.toEquiv.symm.Surjective⟩
 #align first_order.language.equiv.fg_iff FirstOrder.Language.Equiv.fg_iff
 
-theorem Substructure.fg_iff_Structure_fg (S : L.Substructure M) : S.Fg ↔ StructureCat.Fg L S :=
+theorem Substructure.fg_iff_structureCat_fg (S : L.Substructure M) : S.Fg ↔ StructureCat.Fg L S :=
   by
   rw [Structure.fg_def]
   refine' ⟨fun h => fg.of_map_embedding S.subtype _, fun h => _⟩
@@ -288,7 +288,7 @@ theorem Substructure.fg_iff_Structure_fg (S : L.Substructure M) : S.Fg ↔ Struc
   · have h := h.map S.subtype.to_hom
     rw [← hom.range_eq_map, range_subtype] at h
     exact h
-#align first_order.language.substructure.fg_iff_Structure_fg FirstOrder.Language.Substructure.fg_iff_Structure_fg
+#align first_order.language.substructure.fg_iff_Structure_fg FirstOrder.Language.Substructure.fg_iff_structureCat_fg
 
 theorem Equiv.cg_iff {N : Type _} [L.StructureCat N] (f : M ≃[L] N) :
     StructureCat.Cg L M ↔ StructureCat.Cg L N :=
@@ -296,7 +296,7 @@ theorem Equiv.cg_iff {N : Type _} [L.StructureCat N] (f : M ≃[L] N) :
     h.mapOfSurjective f.symm.toHom f.toEquiv.symm.Surjective⟩
 #align first_order.language.equiv.cg_iff FirstOrder.Language.Equiv.cg_iff
 
-theorem Substructure.cg_iff_Structure_cg (S : L.Substructure M) : S.Cg ↔ StructureCat.Cg L S :=
+theorem Substructure.cg_iff_structureCat_cg (S : L.Substructure M) : S.Cg ↔ StructureCat.Cg L S :=
   by
   rw [Structure.cg_def]
   refine' ⟨fun h => cg.of_map_embedding S.subtype _, fun h => _⟩
@@ -305,7 +305,7 @@ theorem Substructure.cg_iff_Structure_cg (S : L.Substructure M) : S.Cg ↔ Struc
   · have h := h.map S.subtype.to_hom
     rw [← hom.range_eq_map, range_subtype] at h
     exact h
-#align first_order.language.substructure.cg_iff_Structure_cg FirstOrder.Language.Substructure.cg_iff_Structure_cg
+#align first_order.language.substructure.cg_iff_Structure_cg FirstOrder.Language.Substructure.cg_iff_structureCat_cg
 
 end Language
 

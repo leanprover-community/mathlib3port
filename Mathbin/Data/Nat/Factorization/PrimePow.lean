@@ -20,15 +20,15 @@ This file deals with factorizations of prime powers.
 
 variable {R : Type _} [CommMonoidWithZero R] (n p : R) (k : ℕ)
 
-theorem IsPrimePow.min_fac_pow_factorization_eq {n : ℕ} (hn : IsPrimePow n) :
+theorem IsPrimePow.minFac_pow_factorization_eq {n : ℕ} (hn : IsPrimePow n) :
     n.minFac ^ n.factorization n.minFac = n :=
   by
   obtain ⟨p, k, hp, hk, rfl⟩ := hn
   rw [← Nat.prime_iff] at hp
   rw [hp.pow_min_fac hk.ne', hp.factorization_pow, Finsupp.single_eq_same]
-#align is_prime_pow.min_fac_pow_factorization_eq IsPrimePow.min_fac_pow_factorization_eq
+#align is_prime_pow.min_fac_pow_factorization_eq IsPrimePow.minFac_pow_factorization_eq
 
-theorem is_prime_pow_of_min_fac_pow_factorization_eq {n : ℕ}
+theorem isPrimePow_of_minFac_pow_factorization_eq {n : ℕ}
     (h : n.minFac ^ n.factorization n.minFac = n) (hn : n ≠ 1) : IsPrimePow n :=
   by
   rcases eq_or_ne n 0 with (rfl | hn')
@@ -37,18 +37,17 @@ theorem is_prime_pow_of_min_fac_pow_factorization_eq {n : ℕ}
   rw [pos_iff_ne_zero, ← Finsupp.mem_support_iff, Nat.factor_iff_mem_factorization,
     Nat.mem_factors_iff_dvd hn' (Nat.minFac_prime hn)]
   apply Nat.minFac_dvd
-#align is_prime_pow_of_min_fac_pow_factorization_eq is_prime_pow_of_min_fac_pow_factorization_eq
+#align is_prime_pow_of_min_fac_pow_factorization_eq isPrimePow_of_minFac_pow_factorization_eq
 
-theorem is_prime_pow_iff_min_fac_pow_factorization_eq {n : ℕ} (hn : n ≠ 1) :
+theorem isPrimePow_iff_minFac_pow_factorization_eq {n : ℕ} (hn : n ≠ 1) :
     IsPrimePow n ↔ n.minFac ^ n.factorization n.minFac = n :=
-  ⟨fun h => h.min_fac_pow_factorization_eq, fun h =>
-    is_prime_pow_of_min_fac_pow_factorization_eq h hn⟩
-#align is_prime_pow_iff_min_fac_pow_factorization_eq is_prime_pow_iff_min_fac_pow_factorization_eq
+  ⟨fun h => h.min_fac_pow_factorization_eq, fun h => isPrimePow_of_minFac_pow_factorization_eq h hn⟩
+#align is_prime_pow_iff_min_fac_pow_factorization_eq isPrimePow_iff_minFac_pow_factorization_eq
 
-theorem is_prime_pow_iff_factorization_eq_single {n : ℕ} :
+theorem isPrimePow_iff_factorization_eq_single {n : ℕ} :
     IsPrimePow n ↔ ∃ p k : ℕ, 0 < k ∧ n.factorization = Finsupp.single p k :=
   by
-  rw [is_prime_pow_nat_iff]
+  rw [isPrimePow_nat_iff]
   refine' exists₂_congr fun p k => _
   constructor
   · rintro ⟨hp, hk, hn⟩
@@ -60,18 +59,18 @@ theorem is_prime_pow_iff_factorization_eq_single {n : ℕ} :
     rw [Nat.eq_pow_of_factorization_eq_single hn0 hn]
     exact
       ⟨Nat.prime_of_mem_factorization (by simp [hn, hk.ne'] : p ∈ n.factorization.support), hk, rfl⟩
-#align is_prime_pow_iff_factorization_eq_single is_prime_pow_iff_factorization_eq_single
+#align is_prime_pow_iff_factorization_eq_single isPrimePow_iff_factorization_eq_single
 
-theorem is_prime_pow_iff_card_support_factorization_eq_one {n : ℕ} :
+theorem isPrimePow_iff_card_support_factorization_eq_one {n : ℕ} :
     IsPrimePow n ↔ n.factorization.support.card = 1 := by
-  simp_rw [is_prime_pow_iff_factorization_eq_single, Finsupp.card_support_eq_one', exists_prop,
+  simp_rw [isPrimePow_iff_factorization_eq_single, Finsupp.card_support_eq_one', exists_prop,
     pos_iff_ne_zero]
-#align is_prime_pow_iff_card_support_factorization_eq_one is_prime_pow_iff_card_support_factorization_eq_one
+#align is_prime_pow_iff_card_support_factorization_eq_one isPrimePow_iff_card_support_factorization_eq_one
 
 theorem IsPrimePow.exists_ord_compl_eq_one {n : ℕ} (h : IsPrimePow n) :
     ∃ p : ℕ, p.Prime ∧ ord_compl[p] n = 1 :=
   by
-  rcases eq_or_ne n 0 with (rfl | hn0); · cases not_is_prime_pow_zero h
+  rcases eq_or_ne n 0 with (rfl | hn0); · cases not_isPrimePow_zero h
   rcases is_prime_pow_iff_factorization_eq_single.mp h with ⟨p, k, hk0, h1⟩
   rcases em' p.prime with (pp | pp)
   · refine' absurd _ hk0.ne'
@@ -82,23 +81,23 @@ theorem IsPrimePow.exists_ord_compl_eq_one {n : ℕ} (h : IsPrimePow n) :
   simp
 #align is_prime_pow.exists_ord_compl_eq_one IsPrimePow.exists_ord_compl_eq_one
 
-theorem exists_ord_compl_eq_one_iff_is_prime_pow {n : ℕ} (hn : n ≠ 1) :
+theorem exists_ord_compl_eq_one_iff_isPrimePow {n : ℕ} (hn : n ≠ 1) :
     IsPrimePow n ↔ ∃ p : ℕ, p.Prime ∧ ord_compl[p] n = 1 :=
   by
   refine' ⟨fun h => IsPrimePow.exists_ord_compl_eq_one h, fun h => _⟩
   rcases h with ⟨p, pp, h⟩
-  rw [is_prime_pow_nat_iff]
+  rw [isPrimePow_nat_iff]
   rw [← Nat.eq_of_dvd_of_div_eq_one (Nat.ord_proj_dvd n p) h] at hn⊢
   refine' ⟨p, n.factorization p, pp, _, by simp⟩
   contrapose! hn
   simp [le_zero_iff.1 hn]
-#align exists_ord_compl_eq_one_iff_is_prime_pow exists_ord_compl_eq_one_iff_is_prime_pow
+#align exists_ord_compl_eq_one_iff_is_prime_pow exists_ord_compl_eq_one_iff_isPrimePow
 
 /-- An equivalent definition for prime powers: `n` is a prime power iff there is a unique prime
 dividing it. -/
-theorem is_prime_pow_iff_unique_prime_dvd {n : ℕ} : IsPrimePow n ↔ ∃! p : ℕ, p.Prime ∧ p ∣ n :=
+theorem isPrimePow_iff_unique_prime_dvd {n : ℕ} : IsPrimePow n ↔ ∃! p : ℕ, p.Prime ∧ p ∣ n :=
   by
-  rw [is_prime_pow_nat_iff]
+  rw [isPrimePow_nat_iff]
   constructor
   · rintro ⟨p, k, hp, hk, rfl⟩
     refine' ⟨p, ⟨hp, dvd_pow_self _ hk.ne'⟩, _⟩
@@ -117,30 +116,30 @@ theorem is_prime_pow_iff_unique_prime_dvd {n : ℕ} : IsPrimePow n ↔ ∃! p : 
   rw [Nat.mem_factors hn₀] at hq'
   cases hq _ hq'.1 hq'.2
   simp
-#align is_prime_pow_iff_unique_prime_dvd is_prime_pow_iff_unique_prime_dvd
+#align is_prime_pow_iff_unique_prime_dvd isPrimePow_iff_unique_prime_dvd
 
-theorem is_prime_pow_pow_iff {n k : ℕ} (hk : k ≠ 0) : IsPrimePow (n ^ k) ↔ IsPrimePow n :=
+theorem isPrimePow_pow_iff {n k : ℕ} (hk : k ≠ 0) : IsPrimePow (n ^ k) ↔ IsPrimePow n :=
   by
-  simp only [is_prime_pow_iff_unique_prime_dvd]
-  apply exists_unique_congr
+  simp only [isPrimePow_iff_unique_prime_dvd]
+  apply existsUnique_congr
   simp only [and_congr_right_iff]
   intro p hp
   exact ⟨hp.dvd_of_dvd_pow, fun t => t.trans (dvd_pow_self _ hk)⟩
-#align is_prime_pow_pow_iff is_prime_pow_pow_iff
+#align is_prime_pow_pow_iff isPrimePow_pow_iff
 
-theorem Nat.Coprime.is_prime_pow_dvd_mul {n a b : ℕ} (hab : Nat.Coprime a b) (hn : IsPrimePow n) :
+theorem Nat.Coprime.isPrimePow_dvd_mul {n a b : ℕ} (hab : Nat.Coprime a b) (hn : IsPrimePow n) :
     n ∣ a * b ↔ n ∣ a ∨ n ∣ b :=
   by
   rcases eq_or_ne a 0 with (rfl | ha)
   · simp only [Nat.coprime_zero_left] at hab
-    simp [hab, Finset.filter_singleton, not_is_prime_pow_one]
+    simp [hab, Finset.filter_singleton, not_isPrimePow_one]
   rcases eq_or_ne b 0 with (rfl | hb)
   · simp only [Nat.coprime_zero_right] at hab
-    simp [hab, Finset.filter_singleton, not_is_prime_pow_one]
+    simp [hab, Finset.filter_singleton, not_isPrimePow_one]
   refine'
     ⟨_, fun h =>
       Or.elim h (fun i => i.trans (dvd_mul_right _ _)) fun i => i.trans (dvd_mul_left _ _)⟩
-  obtain ⟨p, k, hp, hk, rfl⟩ := (is_prime_pow_nat_iff _).1 hn
+  obtain ⟨p, k, hp, hk, rfl⟩ := (isPrimePow_nat_iff _).1 hn
   simp only [hp.pow_dvd_iff_le_factorization (mul_ne_zero ha hb), Nat.factorization_mul ha hb,
     hp.pow_dvd_iff_le_factorization ha, hp.pow_dvd_iff_le_factorization hb, Pi.add_apply,
     Finsupp.coe_add]
@@ -150,17 +149,17 @@ theorem Nat.Coprime.is_prime_pow_dvd_mul {n a b : ℕ} (hab : Nat.Coprime a b) (
       Finset.mem_inter]
     exact fun t => (Nat.factorization_disjoint_of_coprime hab).le_bot t
   cases this <;> simp [this, imp_or]
-#align nat.coprime.is_prime_pow_dvd_mul Nat.Coprime.is_prime_pow_dvd_mul
+#align nat.coprime.is_prime_pow_dvd_mul Nat.Coprime.isPrimePow_dvd_mul
 
 theorem Nat.mul_divisors_filter_prime_pow {a b : ℕ} (hab : a.Coprime b) :
     (a * b).divisors.filter IsPrimePow = (a.divisors ∪ b.divisors).filter IsPrimePow :=
   by
   rcases eq_or_ne a 0 with (rfl | ha)
   · simp only [Nat.coprime_zero_left] at hab
-    simp [hab, Finset.filter_singleton, not_is_prime_pow_one]
+    simp [hab, Finset.filter_singleton, not_isPrimePow_one]
   rcases eq_or_ne b 0 with (rfl | hb)
   · simp only [Nat.coprime_zero_right] at hab
-    simp [hab, Finset.filter_singleton, not_is_prime_pow_one]
+    simp [hab, Finset.filter_singleton, not_isPrimePow_one]
   ext n
   simp only [ha, hb, Finset.mem_union, Finset.mem_filter, Nat.mul_eq_zero, and_true_iff, Ne.def,
     and_congr_left_iff, not_false_iff, Nat.mem_divisors, or_self_iff]

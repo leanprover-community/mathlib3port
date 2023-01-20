@@ -73,13 +73,12 @@ def toDualMap : E →ₗᵢ⋆[𝕜] NormedSpace.Dual 𝕜 E :=
 variable {E}
 
 @[simp]
-theorem to_dual_map_apply {x y : E} : toDualMap 𝕜 E x y = ⟪x, y⟫ :=
+theorem toDualMap_apply {x y : E} : toDualMap 𝕜 E x y = ⟪x, y⟫ :=
   rfl
-#align inner_product_space.to_dual_map_apply InnerProductSpace.to_dual_map_apply
+#align inner_product_space.to_dual_map_apply InnerProductSpace.toDualMap_apply
 
 theorem innerSL_norm [Nontrivial E] : ‖(innerSL : E →L⋆[𝕜] E →L[𝕜] 𝕜)‖ = 1 :=
-  show ‖(toDualMap 𝕜 E).toContinuousLinearMap‖ = 1 from
-    LinearIsometry.norm_to_continuous_linear_map _
+  show ‖(toDualMap 𝕜 E).toContinuousLinearMap‖ = 1 from LinearIsometry.norm_toContinuousLinearMap _
 #align inner_product_space.innerSL_norm InnerProductSpace.innerSL_norm
 
 variable {𝕜}
@@ -162,16 +161,16 @@ def toDual : E ≃ₗᵢ⋆[𝕜] NormedSpace.Dual 𝕜 E :=
 variable {𝕜} {E}
 
 @[simp]
-theorem to_dual_apply {x y : E} : toDual 𝕜 E x y = ⟪x, y⟫ :=
+theorem toDual_apply {x y : E} : toDual 𝕜 E x y = ⟪x, y⟫ :=
   rfl
-#align inner_product_space.to_dual_apply InnerProductSpace.to_dual_apply
+#align inner_product_space.to_dual_apply InnerProductSpace.toDual_apply
 
 @[simp]
-theorem to_dual_symm_apply {x : E} {y : NormedSpace.Dual 𝕜 E} : ⟪(toDual 𝕜 E).symm y, x⟫ = y x :=
+theorem toDual_symm_apply {x : E} {y : NormedSpace.Dual 𝕜 E} : ⟪(toDual 𝕜 E).symm y, x⟫ = y x :=
   by
   rw [← to_dual_apply]
   simp only [LinearIsometryEquiv.apply_symm_apply]
-#align inner_product_space.to_dual_symm_apply InnerProductSpace.to_dual_symm_apply
+#align inner_product_space.to_dual_symm_apply InnerProductSpace.toDual_symm_apply
 
 variable {E 𝕜}
 
@@ -189,17 +188,17 @@ local postfix:1024 "♯" => continuousLinearMapOfBilin
 variable (B : E →L⋆[𝕜] E →L[𝕜] 𝕜)
 
 @[simp]
-theorem continuous_linear_map_of_bilin_apply (v w : E) : ⟪B♯ v, w⟫ = B v w := by
+theorem continuousLinearMapOfBilin_apply (v w : E) : ⟪B♯ v, w⟫ = B v w := by
   simp [continuous_linear_map_of_bilin]
-#align inner_product_space.continuous_linear_map_of_bilin_apply InnerProductSpace.continuous_linear_map_of_bilin_apply
+#align inner_product_space.continuous_linear_map_of_bilin_apply InnerProductSpace.continuousLinearMapOfBilin_apply
 
-theorem unique_continuous_linear_map_of_bilin {v f : E} (is_lax_milgram : ∀ w, ⟪f, w⟫ = B v w) :
+theorem unique_continuousLinearMapOfBilin {v f : E} (is_lax_milgram : ∀ w, ⟪f, w⟫ = B v w) :
     f = B♯ v := by
   refine' ext_inner_right 𝕜 _
   intro w
   rw [continuous_linear_map_of_bilin_apply]
   exact is_lax_milgram w
-#align inner_product_space.unique_continuous_linear_map_of_bilin InnerProductSpace.unique_continuous_linear_map_of_bilin
+#align inner_product_space.unique_continuous_linear_map_of_bilin InnerProductSpace.unique_continuousLinearMapOfBilin
 
 end InnerProductSpace
 

@@ -92,9 +92,9 @@ instance : CoeFun (RingSeminorm R) fun _ => R → ℝ :=
   FunLike.hasCoeToFun
 
 @[simp]
-theorem to_fun_eq_coe (p : RingSeminorm R) : p.toFun = p :=
+theorem toFun_eq_coe (p : RingSeminorm R) : p.toFun = p :=
   rfl
-#align ring_seminorm.to_fun_eq_coe RingSeminorm.to_fun_eq_coe
+#align ring_seminorm.to_fun_eq_coe RingSeminorm.toFun_eq_coe
 
 @[ext]
 theorem ext {p q : RingSeminorm R} : (∀ x, p x = q x) → p = q :=
@@ -146,7 +146,7 @@ theorem seminorm_one_eq_one_iff_ne_zero (hp : p 1 ≤ 1) : p 1 = 1 ↔ p ≠ 0 :
       ne_zero_iff.mpr
         ⟨1, by
           rw [h]
-          exact one_ne_zero⟩,
+          exact one_neZero⟩,
       fun h => _⟩
   obtain hp0 | hp0 := (map_nonneg p (1 : R)).eq_or_gt
   · cases h (ext fun x => (map_nonneg _ _).antisymm' _)
@@ -186,9 +186,9 @@ instance : CoeFun (RingNorm R) fun _ => R → ℝ :=
   ⟨fun p => p.toFun⟩
 
 @[simp]
-theorem to_fun_eq_coe (p : RingNorm R) : p.toFun = p :=
+theorem toFun_eq_coe (p : RingNorm R) : p.toFun = p :=
   rfl
-#align ring_norm.to_fun_eq_coe RingNorm.to_fun_eq_coe
+#align ring_norm.to_fun_eq_coe RingNorm.toFun_eq_coe
 
 @[ext]
 theorem ext {p q : RingNorm R} : (∀ x, p x = q x) → p = q :=
@@ -232,9 +232,9 @@ instance : CoeFun (MulRingSeminorm R) fun _ => R → ℝ :=
   FunLike.hasCoeToFun
 
 @[simp]
-theorem to_fun_eq_coe (p : MulRingSeminorm R) : p.toFun = p :=
+theorem toFun_eq_coe (p : MulRingSeminorm R) : p.toFun = p :=
   rfl
-#align mul_ring_seminorm.to_fun_eq_coe MulRingSeminorm.to_fun_eq_coe
+#align mul_ring_seminorm.to_fun_eq_coe MulRingSeminorm.toFun_eq_coe
 
 @[ext]
 theorem ext {p q : MulRingSeminorm R} : (∀ x, p x = q x) → p = q :=
@@ -247,7 +247,7 @@ variable [DecidableEq R] [NoZeroDivisors R] [Nontrivial R]
 every other element. -/
 instance : One (MulRingSeminorm R) :=
   ⟨{ (1 : AddGroupSeminorm R) with
-      map_one' := if_neg one_ne_zero
+      map_one' := if_neg one_neZero
       map_mul' := fun x y => by
         obtain rfl | hx := eq_or_ne x 0
         · simp
@@ -286,9 +286,9 @@ instance : CoeFun (MulRingNorm R) fun _ => R → ℝ :=
   ⟨fun p => p.toFun⟩
 
 @[simp]
-theorem to_fun_eq_coe (p : MulRingNorm R) : p.toFun = p :=
+theorem toFun_eq_coe (p : MulRingNorm R) : p.toFun = p :=
   rfl
-#align mul_ring_norm.to_fun_eq_coe MulRingNorm.to_fun_eq_coe
+#align mul_ring_norm.to_fun_eq_coe MulRingNorm.toFun_eq_coe
 
 @[ext]
 theorem ext {p q : MulRingNorm R} : (∀ x, p x = q x) → p = q :=
@@ -325,7 +325,7 @@ def RingSeminorm.toRingNorm {K : Type _} [Field K] (f : RingSeminorm K) (hnt : f
         rw [← mul_one c, ← mul_inv_cancel hn0, ← mul_assoc, mul_comm c, mul_assoc]
         exact
           le_antisymm
-            (le_trans (map_mul_le_mul f _ _) (by rw [← RingSeminorm.to_fun_eq_coe, hx, zero_mul]))
+            (le_trans (map_mul_le_mul f _ _) (by rw [← RingSeminorm.toFun_eq_coe, hx, zero_mul]))
             (map_nonneg f _)
       exact hc hc0 }
 #align ring_seminorm.to_ring_norm RingSeminorm.toRingNorm

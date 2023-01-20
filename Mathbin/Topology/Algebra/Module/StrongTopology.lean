@@ -88,92 +88,92 @@ def strongUniformity [UniformSpace F] [UniformAddGroup F] (𝔖 : Set (Set E)) :
     UniformSpace (E →SL[σ] F) :=
   @UniformSpace.replaceTopology _ (strongTopology σ F 𝔖)
     ((UniformOnFun.uniformSpace E F 𝔖).comap coeFn)
-    (by rw [strong_topology, UniformAddGroup.to_uniform_space_eq] <;> rfl)
+    (by rw [strong_topology, UniformAddGroup.toUniformSpace_eq] <;> rfl)
 #align continuous_linear_map.strong_uniformity ContinuousLinearMap.strongUniformity
 
 @[simp]
-theorem strong_uniformity_topology_eq [UniformSpace F] [UniformAddGroup F] (𝔖 : Set (Set E)) :
+theorem strongUniformity_topology_eq [UniformSpace F] [UniformAddGroup F] (𝔖 : Set (Set E)) :
     (strongUniformity σ F 𝔖).toTopologicalSpace = strongTopology σ F 𝔖 :=
   rfl
-#align continuous_linear_map.strong_uniformity_topology_eq ContinuousLinearMap.strong_uniformity_topology_eq
+#align continuous_linear_map.strong_uniformity_topology_eq ContinuousLinearMap.strongUniformity_topology_eq
 
-theorem strongUniformity.uniform_embedding_coe_fn [UniformSpace F] [UniformAddGroup F]
+theorem strongUniformity.uniformEmbedding_coeFn [UniformSpace F] [UniformAddGroup F]
     (𝔖 : Set (Set E)) :
     @UniformEmbedding (E →SL[σ] F) (E →ᵤ[𝔖] F) (strongUniformity σ F 𝔖)
       (UniformOnFun.uniformSpace E F 𝔖) coeFn :=
   letI : UniformSpace (E →SL[σ] F) := strong_uniformity σ F 𝔖
   ⟨⟨rfl⟩, FunLike.coe_injective⟩
-#align continuous_linear_map.strong_uniformity.uniform_embedding_coe_fn ContinuousLinearMap.strongUniformity.uniform_embedding_coe_fn
+#align continuous_linear_map.strong_uniformity.uniform_embedding_coe_fn ContinuousLinearMap.strongUniformity.uniformEmbedding_coeFn
 
-theorem strongTopology.embedding_coe_fn [UniformSpace F] [UniformAddGroup F] (𝔖 : Set (Set E)) :
+theorem strongTopology.embedding_coeFn [UniformSpace F] [UniformAddGroup F] (𝔖 : Set (Set E)) :
     @Embedding (E →SL[σ] F) (E →ᵤ[𝔖] F) (strongTopology σ F 𝔖) (UniformOnFun.topologicalSpace E F 𝔖)
       (UniformOnFun.ofFun 𝔖 ∘ coeFn) :=
-  @UniformEmbedding.embedding _ _ (id _) _ _ (strongUniformity.uniform_embedding_coe_fn _ _ _)
-#align continuous_linear_map.strong_topology.embedding_coe_fn ContinuousLinearMap.strongTopology.embedding_coe_fn
+  @UniformEmbedding.embedding _ _ (id _) _ _ (strongUniformity.uniformEmbedding_coeFn _ _ _)
+#align continuous_linear_map.strong_topology.embedding_coe_fn ContinuousLinearMap.strongTopology.embedding_coeFn
 
-theorem strongUniformity.uniform_add_group [UniformSpace F] [UniformAddGroup F] (𝔖 : Set (Set E)) :
+theorem strongUniformity.uniformAddGroup [UniformSpace F] [UniformAddGroup F] (𝔖 : Set (Set E)) :
     @UniformAddGroup (E →SL[σ] F) (strongUniformity σ F 𝔖) _ :=
   by
   letI : UniformSpace (E →SL[σ] F) := strong_uniformity σ F 𝔖
-  rw [strong_uniformity, UniformSpace.replace_topology_eq]
+  rw [strong_uniformity, UniformSpace.replaceTopology_eq]
   let φ : (E →SL[σ] F) →+ E →ᵤ[𝔖] F := ⟨(coeFn : (E →SL[σ] F) → E →ᵤ F), rfl, fun _ _ => rfl⟩
   exact uniform_add_group_comap φ
-#align continuous_linear_map.strong_uniformity.uniform_add_group ContinuousLinearMap.strongUniformity.uniform_add_group
+#align continuous_linear_map.strong_uniformity.uniform_add_group ContinuousLinearMap.strongUniformity.uniformAddGroup
 
-theorem strongTopology.topological_add_group [TopologicalSpace F] [TopologicalAddGroup F]
+theorem strongTopology.topologicalAddGroup [TopologicalSpace F] [TopologicalAddGroup F]
     (𝔖 : Set (Set E)) : @TopologicalAddGroup (E →SL[σ] F) (strongTopology σ F 𝔖) _ :=
   by
   letI : UniformSpace F := TopologicalAddGroup.toUniformSpace F
-  haveI : UniformAddGroup F := topological_add_comm_group_is_uniform
+  haveI : UniformAddGroup F := topological_add_commGroup_is_uniform
   letI : UniformSpace (E →SL[σ] F) := strong_uniformity σ F 𝔖
   haveI : UniformAddGroup (E →SL[σ] F) := strong_uniformity.uniform_add_group σ F 𝔖
   infer_instance
-#align continuous_linear_map.strong_topology.topological_add_group ContinuousLinearMap.strongTopology.topological_add_group
+#align continuous_linear_map.strong_topology.topological_add_group ContinuousLinearMap.strongTopology.topologicalAddGroup
 
 theorem strongTopology.t2Space [TopologicalSpace F] [TopologicalAddGroup F] [T2Space F]
     (𝔖 : Set (Set E)) (h𝔖 : ⋃₀ 𝔖 = Set.univ) : @T2Space (E →SL[σ] F) (strongTopology σ F 𝔖) :=
   by
   letI : UniformSpace F := TopologicalAddGroup.toUniformSpace F
-  haveI : UniformAddGroup F := topological_add_comm_group_is_uniform
+  haveI : UniformAddGroup F := topological_add_commGroup_is_uniform
   letI : TopologicalSpace (E →SL[σ] F) := strong_topology σ F 𝔖
   haveI : T2Space (E →ᵤ[𝔖] F) := UniformOnFun.t2SpaceOfCovering h𝔖
   exact (strong_topology.embedding_coe_fn σ F 𝔖).T2Space
 #align continuous_linear_map.strong_topology.t2_space ContinuousLinearMap.strongTopology.t2Space
 
-theorem strongTopology.has_continuous_smul [RingHomSurjective σ] [RingHomIsometric σ]
+theorem strongTopology.hasContinuousSmul [RingHomSurjective σ] [RingHomIsometric σ]
     [TopologicalSpace F] [TopologicalAddGroup F] [HasContinuousSmul 𝕜₂ F] (𝔖 : Set (Set E))
     (h𝔖₁ : 𝔖.Nonempty) (h𝔖₂ : DirectedOn (· ⊆ ·) 𝔖) (h𝔖₃ : ∀ S ∈ 𝔖, Bornology.IsVonNBounded 𝕜₁ S) :
     @HasContinuousSmul 𝕜₂ (E →SL[σ] F) _ _ (strongTopology σ F 𝔖) :=
   by
   letI : UniformSpace F := TopologicalAddGroup.toUniformSpace F
-  haveI : UniformAddGroup F := topological_add_comm_group_is_uniform
+  haveI : UniformAddGroup F := topological_add_commGroup_is_uniform
   letI : TopologicalSpace (E →SL[σ] F) := strong_topology σ F 𝔖
   let φ : (E →SL[σ] F) →ₗ[𝕜₂] E →ᵤ[𝔖] F :=
     ⟨(coeFn : (E →SL[σ] F) → E → F), fun _ _ => rfl, fun _ _ => rfl⟩
   exact
-    UniformOnFun.has_continuous_smul_induced_of_image_bounded 𝕜₂ E F (E →SL[σ] F) h𝔖₁ h𝔖₂ φ ⟨rfl⟩
+    UniformOnFun.hasContinuousSmul_induced_of_image_bounded 𝕜₂ E F (E →SL[σ] F) h𝔖₁ h𝔖₂ φ ⟨rfl⟩
       fun u s hs => (h𝔖₃ s hs).image u
-#align continuous_linear_map.strong_topology.has_continuous_smul ContinuousLinearMap.strongTopology.has_continuous_smul
+#align continuous_linear_map.strong_topology.has_continuous_smul ContinuousLinearMap.strongTopology.hasContinuousSmul
 
-theorem strongTopology.has_basis_nhds_zero_of_basis [TopologicalSpace F] [TopologicalAddGroup F]
+theorem strongTopology.hasBasis_nhds_zero_of_basis [TopologicalSpace F] [TopologicalAddGroup F]
     {ι : Type _} (𝔖 : Set (Set E)) (h𝔖₁ : 𝔖.Nonempty) (h𝔖₂ : DirectedOn (· ⊆ ·) 𝔖) {p : ι → Prop}
     {b : ι → Set F} (h : (𝓝 0 : Filter F).HasBasis p b) :
     (@nhds (E →SL[σ] F) (strongTopology σ F 𝔖) 0).HasBasis (fun Si : Set E × ι => Si.1 ∈ 𝔖 ∧ p Si.2)
       fun Si => { f : E →SL[σ] F | ∀ x ∈ Si.1, f x ∈ b Si.2 } :=
   by
   letI : UniformSpace F := TopologicalAddGroup.toUniformSpace F
-  haveI : UniformAddGroup F := topological_add_comm_group_is_uniform
+  haveI : UniformAddGroup F := topological_add_commGroup_is_uniform
   rw [nhds_induced]
-  exact (UniformOnFun.has_basis_nhds_zero_of_basis 𝔖 h𝔖₁ h𝔖₂ h).comap coeFn
-#align continuous_linear_map.strong_topology.has_basis_nhds_zero_of_basis ContinuousLinearMap.strongTopology.has_basis_nhds_zero_of_basis
+  exact (UniformOnFun.hasBasis_nhds_zero_of_basis 𝔖 h𝔖₁ h𝔖₂ h).comap coeFn
+#align continuous_linear_map.strong_topology.has_basis_nhds_zero_of_basis ContinuousLinearMap.strongTopology.hasBasis_nhds_zero_of_basis
 
-theorem strongTopology.has_basis_nhds_zero [TopologicalSpace F] [TopologicalAddGroup F]
+theorem strongTopology.hasBasis_nhds_zero [TopologicalSpace F] [TopologicalAddGroup F]
     (𝔖 : Set (Set E)) (h𝔖₁ : 𝔖.Nonempty) (h𝔖₂ : DirectedOn (· ⊆ ·) 𝔖) :
     (@nhds (E →SL[σ] F) (strongTopology σ F 𝔖) 0).HasBasis
       (fun SV : Set E × Set F => SV.1 ∈ 𝔖 ∧ SV.2 ∈ (𝓝 0 : Filter F)) fun SV =>
       { f : E →SL[σ] F | ∀ x ∈ SV.1, f x ∈ SV.2 } :=
-  strongTopology.has_basis_nhds_zero_of_basis σ F 𝔖 h𝔖₁ h𝔖₂ (𝓝 0).basis_sets
-#align continuous_linear_map.strong_topology.has_basis_nhds_zero ContinuousLinearMap.strongTopology.has_basis_nhds_zero
+  strongTopology.hasBasis_nhds_zero_of_basis σ F 𝔖 h𝔖₁ h𝔖₂ (𝓝 0).basis_sets
+#align continuous_linear_map.strong_topology.has_basis_nhds_zero ContinuousLinearMap.strongTopology.hasBasis_nhds_zero
 
 theorem strongTopology.locallyConvexSpace [TopologicalSpace F'] [TopologicalAddGroup F']
     [HasContinuousConstSmul ℝ F'] [LocallyConvexSpace ℝ F'] (𝔖 : Set (Set E')) (h𝔖₁ : 𝔖.Nonempty)
@@ -205,45 +205,45 @@ instance [TopologicalSpace F] [TopologicalAddGroup F] : TopologicalSpace (E →S
   strongTopology σ F { S | Bornology.IsVonNBounded 𝕜₁ S }
 
 instance [TopologicalSpace F] [TopologicalAddGroup F] : TopologicalAddGroup (E →SL[σ] F) :=
-  strongTopology.topological_add_group σ F _
+  strongTopology.topologicalAddGroup σ F _
 
 instance [RingHomSurjective σ] [RingHomIsometric σ] [TopologicalSpace F] [TopologicalAddGroup F]
     [HasContinuousSmul 𝕜₂ F] : HasContinuousSmul 𝕜₂ (E →SL[σ] F) :=
-  strongTopology.has_continuous_smul σ F { S | Bornology.IsVonNBounded 𝕜₁ S }
-    ⟨∅, Bornology.is_vonN_bounded_empty 𝕜₁ E⟩
+  strongTopology.hasContinuousSmul σ F { S | Bornology.IsVonNBounded 𝕜₁ S }
+    ⟨∅, Bornology.isVonNBounded_empty 𝕜₁ E⟩
     (directedOn_of_sup_mem fun _ _ => Bornology.IsVonNBounded.union) fun s hs => hs
 
 instance [UniformSpace F] [UniformAddGroup F] : UniformSpace (E →SL[σ] F) :=
   strongUniformity σ F { S | Bornology.IsVonNBounded 𝕜₁ S }
 
 instance [UniformSpace F] [UniformAddGroup F] : UniformAddGroup (E →SL[σ] F) :=
-  strongUniformity.uniform_add_group σ F _
+  strongUniformity.uniformAddGroup σ F _
 
 instance [TopologicalSpace F] [TopologicalAddGroup F] [HasContinuousSmul 𝕜₁ E] [T2Space F] :
     T2Space (E →SL[σ] F) :=
   strongTopology.t2Space σ F _
     (Set.eq_univ_of_forall fun x =>
-      Set.mem_unionₛ_of_mem (Set.mem_singleton x) (Bornology.is_vonN_bounded_singleton x))
+      Set.mem_unionₛ_of_mem (Set.mem_singleton x) (Bornology.isVonNBounded_singleton x))
 
-protected theorem has_basis_nhds_zero_of_basis [TopologicalSpace F] [TopologicalAddGroup F]
+protected theorem hasBasis_nhds_zero_of_basis [TopologicalSpace F] [TopologicalAddGroup F]
     {ι : Type _} {p : ι → Prop} {b : ι → Set F} (h : (𝓝 0 : Filter F).HasBasis p b) :
     (𝓝 (0 : E →SL[σ] F)).HasBasis (fun Si : Set E × ι => Bornology.IsVonNBounded 𝕜₁ Si.1 ∧ p Si.2)
       fun Si => { f : E →SL[σ] F | ∀ x ∈ Si.1, f x ∈ b Si.2 } :=
-  strongTopology.has_basis_nhds_zero_of_basis σ F { S | Bornology.IsVonNBounded 𝕜₁ S }
-    ⟨∅, Bornology.is_vonN_bounded_empty 𝕜₁ E⟩
+  strongTopology.hasBasis_nhds_zero_of_basis σ F { S | Bornology.IsVonNBounded 𝕜₁ S }
+    ⟨∅, Bornology.isVonNBounded_empty 𝕜₁ E⟩
     (directedOn_of_sup_mem fun _ _ => Bornology.IsVonNBounded.union) h
-#align continuous_linear_map.has_basis_nhds_zero_of_basis ContinuousLinearMap.has_basis_nhds_zero_of_basis
+#align continuous_linear_map.has_basis_nhds_zero_of_basis ContinuousLinearMap.hasBasis_nhds_zero_of_basis
 
-protected theorem has_basis_nhds_zero [TopologicalSpace F] [TopologicalAddGroup F] :
+protected theorem hasBasis_nhds_zero [TopologicalSpace F] [TopologicalAddGroup F] :
     (𝓝 (0 : E →SL[σ] F)).HasBasis
       (fun SV : Set E × Set F => Bornology.IsVonNBounded 𝕜₁ SV.1 ∧ SV.2 ∈ (𝓝 0 : Filter F))
       fun SV => { f : E →SL[σ] F | ∀ x ∈ SV.1, f x ∈ SV.2 } :=
-  ContinuousLinearMap.has_basis_nhds_zero_of_basis (𝓝 0).basis_sets
-#align continuous_linear_map.has_basis_nhds_zero ContinuousLinearMap.has_basis_nhds_zero
+  ContinuousLinearMap.hasBasis_nhds_zero_of_basis (𝓝 0).basis_sets
+#align continuous_linear_map.has_basis_nhds_zero ContinuousLinearMap.hasBasis_nhds_zero
 
 instance [TopologicalSpace E'] [TopologicalSpace F'] [TopologicalAddGroup F']
     [HasContinuousConstSmul ℝ F'] [LocallyConvexSpace ℝ F'] : LocallyConvexSpace ℝ (E' →L[ℝ] F') :=
-  strongTopology.locallyConvexSpace _ ⟨∅, Bornology.is_vonN_bounded_empty ℝ E'⟩
+  strongTopology.locallyConvexSpace _ ⟨∅, Bornology.isVonNBounded_empty ℝ E'⟩
     (directedOn_of_sup_mem fun _ _ => Bornology.IsVonNBounded.union)
 
 end BoundedSets

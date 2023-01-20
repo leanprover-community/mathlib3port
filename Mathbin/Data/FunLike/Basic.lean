@@ -171,16 +171,10 @@ include i
 @[nolint dangerous_instance]
 instance (priority := 100) : CoeFun F fun _ => ∀ a : α, β a where coe := FunLike.coe
 
-/- warning: fun_like.coe_eq_coe_fn -> FunLike.coe_eq_coe_fn is a dubious translation:
-lean 3 declaration is
-  forall {F : Sort.{u1}} {α : Sort.{u2}} {β : α -> Sort.{u3}} [i : FunLike.{u1, u2, u3} F α β], Eq.{imax u1 u2 u3} (F -> (forall (a : α), β a)) (FunLike.coe.{u1, u2, u3} F α (fun (a : α) => β a) i) (coeFn.{u1, imax u2 u3} F (fun (ᾰ : F) => forall (a : α), β a) (FunLike.hasCoeToFun.{u1, u2, u3} F α β i))
-but is expected to have type
-  forall {F : Sort.{u3}} {α : Sort.{u2}} {β : α -> Sort.{u1}} [i : FunLike.{u3, u2, u1} F α β], Eq.{imax u3 u2 u1} (F -> (forall (a : α), β a)) (FunLike.coe.{u3, u2, u1} F α β i) (fun (f : F) => FunLike.coe.{u3, u2, u1} F α (fun (a : α) => β a) i f)
-Case conversion may be inaccurate. Consider using '#align fun_like.coe_eq_coe_fn FunLike.coe_eq_coe_fnₓ'. -/
 @[simp]
-theorem coe_eq_coe_fn : (FunLike.coe : F → ∀ a : α, β a) = coeFn :=
+theorem coe_eq_coeFn : (FunLike.coe : F → ∀ a : α, β a) = coeFn :=
   rfl
-#align fun_like.coe_eq_coe_fn FunLike.coe_eq_coe_fn
+#align fun_like.coe_eq_coe_fn FunLike.coe_eq_coeFn
 
 /- warning: fun_like.coe_injective -> FunLike.coe_injective is a dubious translation:
 lean 3 declaration is
@@ -192,16 +186,10 @@ theorem coe_injective : Function.Injective (coeFn : F → ∀ a : α, β a) :=
   FunLike.coe_injective'
 #align fun_like.coe_injective FunLike.coe_injective
 
-/- warning: fun_like.coe_fn_eq -> FunLike.coe_fn_eq is a dubious translation:
-lean 3 declaration is
-  forall {F : Sort.{u1}} {α : Sort.{u2}} {β : α -> Sort.{u3}} [i : FunLike.{u1, u2, u3} F α β] {f : F} {g : F}, Iff (Eq.{imax u2 u3} ((fun (_x : F) => forall (a : α), β a) f) (coeFn.{u1, imax u2 u3} F (fun (_x : F) => forall (a : α), β a) (FunLike.hasCoeToFun.{u1, u2, u3} F α β i) f) (coeFn.{u1, imax u2 u3} F (fun (_x : F) => forall (a : α), β a) (FunLike.hasCoeToFun.{u1, u2, u3} F α β i) g)) (Eq.{u1} F f g)
-but is expected to have type
-  forall {F : Sort.{u1}} {α : Sort.{u3}} {β : α -> Sort.{u2}} [i : FunLike.{u1, u3, u2} F α β] {f : F} {g : F}, Iff (Eq.{imax u3 u2} (forall (a : α), β a) (FunLike.coe.{u1, u3, u2} F α (fun (_x : α) => β _x) i f) (FunLike.coe.{u1, u3, u2} F α (fun (_x : α) => β _x) i g)) (Eq.{u1} F f g)
-Case conversion may be inaccurate. Consider using '#align fun_like.coe_fn_eq FunLike.coe_fn_eqₓ'. -/
 @[simp, norm_cast]
-theorem coe_fn_eq {f g : F} : (f : ∀ a : α, β a) = (g : ∀ a : α, β a) ↔ f = g :=
+theorem coeFn_eq {f g : F} : (f : ∀ a : α, β a) = (g : ∀ a : α, β a) ↔ f = g :=
   ⟨fun h => @coe_injective _ _ _ i _ _ h, fun h => by cases h <;> rfl⟩
-#align fun_like.coe_fn_eq FunLike.coe_fn_eq
+#align fun_like.coe_fn_eq FunLike.coeFn_eq
 
 /- warning: fun_like.ext' -> FunLike.ext' is a dubious translation:
 lean 3 declaration is
@@ -220,7 +208,7 @@ but is expected to have type
   forall {F : Sort.{u3}} {α : Sort.{u2}} {β : α -> Sort.{u1}} [i : FunLike.{u3, u2, u1} F α β] {f : F} {g : F}, Iff (Eq.{u3} F f g) (Eq.{imax u2 u1} (forall (a : α), β a) (FunLike.coe.{u3, u2, u1} F α (fun (_x : α) => β _x) i f) (FunLike.coe.{u3, u2, u1} F α (fun (_x : α) => β _x) i g))
 Case conversion may be inaccurate. Consider using '#align fun_like.ext'_iff FunLike.ext'_iffₓ'. -/
 theorem ext'_iff {f g : F} : f = g ↔ (f : ∀ a : α, β a) = (g : ∀ a : α, β a) :=
-  coe_fn_eq.symm
+  coeFn_eq.symm
 #align fun_like.ext'_iff FunLike.ext'_iff
 
 /- warning: fun_like.ext -> FunLike.ext is a dubious translation:
@@ -240,7 +228,7 @@ but is expected to have type
   forall {F : Sort.{u3}} {α : Sort.{u1}} {β : α -> Sort.{u2}} [i : FunLike.{u3, u1, u2} F α β] {f : F} {g : F}, Iff (Eq.{u3} F f g) (forall (x : α), Eq.{u2} (β x) (FunLike.coe.{u3, u1, u2} F α (fun (_x : α) => β _x) i f x) (FunLike.coe.{u3, u1, u2} F α (fun (_x : α) => β _x) i g x))
 Case conversion may be inaccurate. Consider using '#align fun_like.ext_iff FunLike.ext_iffₓ'. -/
 theorem ext_iff {f g : F} : f = g ↔ ∀ x, f x = g x :=
-  coe_fn_eq.symm.trans Function.funext_iff
+  coeFn_eq.symm.trans Function.funext_iff
 #align fun_like.ext_iff FunLike.ext_iff
 
 /- warning: fun_like.congr_fun -> FunLike.congr_fun is a dubious translation:

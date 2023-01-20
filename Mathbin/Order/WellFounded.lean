@@ -42,12 +42,12 @@ instance {α : Sort _} [WellFoundedRelation α] : IsAsymm α WellFoundedRelation
 
 #print WellFounded.isIrrefl /-
 protected theorem isIrrefl {α : Sort _} {r : α → α → Prop} (h : WellFounded r) : IsIrrefl α r :=
-  @IsAsymm.is_irrefl α r h.IsAsymm
+  @IsAsymm.isIrrefl α r h.IsAsymm
 #align well_founded.is_irrefl WellFounded.isIrrefl
 -/
 
 instance {α : Sort _} [WellFoundedRelation α] : IsIrrefl α WellFoundedRelation.R :=
-  IsAsymm.is_irrefl
+  IsAsymm.isIrrefl
 
 /- warning: well_founded.has_min -> WellFounded.has_min is a dubious translation:
 lean 3 declaration is

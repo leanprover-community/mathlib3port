@@ -553,7 +553,7 @@ theorem pwFilter_eq_self {l : List α} : pwFilter R l = l ↔ Pairwise R l :=
 -/
 
 alias pw_filter_eq_self ↔ _ pairwise.pw_filter
-#align list.pairwise.pw_filter List.Pairwise.pw_filter
+#align list.pairwise.pw_filter List.Pairwise.pwFilter
 
 attribute [protected] pairwise.pw_filter
 

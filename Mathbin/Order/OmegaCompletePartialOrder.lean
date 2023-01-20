@@ -486,7 +486,7 @@ instance (priority := 100) [CompleteLattice α] : OmegaCompletePartialOrder α
 
 variable {α} {β : Type v} [OmegaCompletePartialOrder α] [CompleteLattice β]
 
-theorem Sup_continuous (s : Set <| α →o β) (hs : ∀ f ∈ s, Continuous f) : Continuous (supₛ s) :=
+theorem supₛ_continuous (s : Set <| α →o β) (hs : ∀ f ∈ s, Continuous f) : Continuous (supₛ s) :=
   by
   intro c
   apply eq_of_forall_ge_iff
@@ -494,21 +494,21 @@ theorem Sup_continuous (s : Set <| α →o β) (hs : ∀ f ∈ s, Continuous f) 
   suffices (∀ f ∈ s, ∀ (n), (f : _) (c n) ≤ z) ↔ ∀ (n), ∀ f ∈ s, (f : _) (c n) ≤ z by
     simpa (config := { contextual := true }) [ωSup_le_iff, hs _ _ _]
   exact ⟨fun H n f hf => H f hf n, fun H f hf n => H n f hf⟩
-#align complete_lattice.Sup_continuous CompleteLattice.Sup_continuous
+#align complete_lattice.Sup_continuous CompleteLattice.supₛ_continuous
 
-theorem supr_continuous {ι : Sort _} {f : ι → α →o β} (h : ∀ i, Continuous (f i)) :
+theorem supᵢ_continuous {ι : Sort _} {f : ι → α →o β} (h : ∀ i, Continuous (f i)) :
     Continuous (⨆ i, f i) :=
-  Sup_continuous _ <| Set.forall_range_iff.2 h
-#align complete_lattice.supr_continuous CompleteLattice.supr_continuous
+  supₛ_continuous _ <| Set.forall_range_iff.2 h
+#align complete_lattice.supr_continuous CompleteLattice.supᵢ_continuous
 
-theorem Sup_continuous' (s : Set (α → β)) (hc : ∀ f ∈ s, Continuous' f) : Continuous' (supₛ s) :=
+theorem supₛ_continuous' (s : Set (α → β)) (hc : ∀ f ∈ s, Continuous' f) : Continuous' (supₛ s) :=
   by
   lift s to Set (α →o β) using fun f hf => (hc f hf).to_monotone
   simp only [Set.ball_image_iff, continuous'_coe] at hc
   rw [supₛ_image]
   norm_cast
   exact supr_continuous fun f => supr_continuous fun hf => hc f hf
-#align complete_lattice.Sup_continuous' CompleteLattice.Sup_continuous'
+#align complete_lattice.Sup_continuous' CompleteLattice.supₛ_continuous'
 
 theorem sup_continuous {f g : α →o β} (hf : Continuous f) (hg : Continuous g) :
     Continuous (f ⊔ g) := by
@@ -519,8 +519,8 @@ theorem sup_continuous {f g : α →o β} (hf : Continuous f) (hg : Continuous g
 theorem top_continuous : Continuous (⊤ : α →o β) :=
   by
   intro c; apply eq_of_forall_ge_iff; intro z
-  simp only [ωSup_le_iff, forall_const, chain.map_coe, (· ∘ ·), Function.const,
-    OrderHom.has_top_top, OrderHom.const_coe_coe]
+  simp only [ωSup_le_iff, forall_const, chain.map_coe, (· ∘ ·), Function.const, OrderHom.hasTop_top,
+    OrderHom.const_coe_coe]
 #align complete_lattice.top_continuous CompleteLattice.top_continuous
 
 theorem bot_continuous : Continuous (⊥ : α →o β) :=
@@ -539,7 +539,7 @@ theorem inf_continuous (f g : α →o β) (hf : Continuous f) (hg : Continuous g
     Continuous (f ⊓ g) := by
   refine' fun c => eq_of_forall_ge_iff fun z => _
   simp only [inf_le_iff, hf c, hg c, ωSup_le_iff, ← forall_or_left, ← forall_or_right,
-    Function.comp_apply, chain.map_coe, OrderHom.has_inf_inf_coe]
+    Function.comp_apply, chain.map_coe, OrderHom.hasInf_inf_coe]
   exact
     ⟨fun h _ => h _ _, fun h i j =>
       (h (max i j)).imp (le_trans <| f.mono <| c.mono <| le_max_left _ _)

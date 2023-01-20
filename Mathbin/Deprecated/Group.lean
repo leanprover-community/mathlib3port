@@ -175,12 +175,18 @@ theorem coe_of {f : M → N} (hf : IsMonoidHom f) : ⇑(MonoidHom.of hf) = f :=
 #align monoid_hom.coe_of MonoidHom.coe_of
 #align add_monoid_hom.coe_of AddMonoidHom.coe_of
 
+/- warning: monoid_hom.is_monoid_hom_coe clashes with monoid_hom.isMonoidHom_coe -> MonoidHom.isMonoidHom_coe
+warning: monoid_hom.is_monoid_hom_coe -> MonoidHom.isMonoidHom_coe is a dubious translation:
+lean 3 declaration is
+  forall {M : Type.{u1}} {N : Type.{u2}} {mM : MulOneClass.{u1} M} {mN : MulOneClass.{u2} N} (f : MonoidHom.{u1, u2} M N mM mN), IsMonoidHom.{u1, u2} M N mM mN (coeFn.{max (succ u2) (succ u1), max (succ u1) (succ u2)} (MonoidHom.{u1, u2} M N mM mN) (fun (_x : MonoidHom.{u1, u2} M N mM mN) => M -> N) (MonoidHom.hasCoeToFun.{u1, u2} M N mM mN) f)
+but is expected to have type
+  forall {M : Type.{u2}} {N : Type.{u1}} {mM : MulOneClass.{u2} M} {mN : MulOneClass.{u1} N} (f : MonoidHom.{u2, u1} M N mM mN), IsMonoidHom.{u2, u1} M N mM mN (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (MonoidHom.{u2, u1} M N mM mN) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : M) => N) _x) (MulHomClass.toFunLike.{max u2 u1, u2, u1} (MonoidHom.{u2, u1} M N mM mN) M N (MulOneClass.toMul.{u2} M mM) (MulOneClass.toMul.{u1} N mN) (MonoidHomClass.toMulHomClass.{max u2 u1, u2, u1} (MonoidHom.{u2, u1} M N mM mN) M N mM mN (MonoidHom.monoidHomClass.{u2, u1} M N mM mN))) f)
+Case conversion may be inaccurate. Consider using '#align monoid_hom.is_monoid_hom_coe MonoidHom.isMonoidHom_coeₓ'. -/
 @[to_additive]
-theorem is_monoid_hom_coe (f : M →* N) : IsMonoidHom (f : M → N) :=
+theorem isMonoidHom_coe (f : M →* N) : IsMonoidHom (f : M → N) :=
   { map_mul := f.map_mul
     map_one := f.map_one }
-#align monoid_hom.is_monoid_hom_coe MonoidHom.is_monoid_hom_coe
-#align add_monoid_hom.is_add_monoid_hom_coe AddMonoidHom.is_add_monoid_hom_coe
+#align monoid_hom.is_monoid_hom_coe MonoidHom.isMonoidHom_coe
 
 end MonoidHom
 
@@ -200,15 +206,21 @@ theorem isMulHom (h : M ≃* N) : IsMulHom h :=
   ⟨h.map_mul⟩
 #align mul_equiv.is_mul_hom MulEquiv.isMulHom
 
+/- warning: mul_equiv.is_monoid_hom clashes with mul_equiv.isMonoidHom -> MulEquiv.isMonoidHom
+warning: mul_equiv.is_monoid_hom -> MulEquiv.isMonoidHom is a dubious translation:
+lean 3 declaration is
+  forall {M : Type.{u1}} {N : Type.{u2}} [_inst_1 : MulOneClass.{u1} M] [_inst_2 : MulOneClass.{u2} N] (h : MulEquiv.{u1, u2} M N (MulOneClass.toHasMul.{u1} M _inst_1) (MulOneClass.toHasMul.{u2} N _inst_2)), IsMonoidHom.{u1, u2} M N _inst_1 _inst_2 (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (MulEquiv.{u1, u2} M N (MulOneClass.toHasMul.{u1} M _inst_1) (MulOneClass.toHasMul.{u2} N _inst_2)) (fun (_x : MulEquiv.{u1, u2} M N (MulOneClass.toHasMul.{u1} M _inst_1) (MulOneClass.toHasMul.{u2} N _inst_2)) => M -> N) (MulEquiv.hasCoeToFun.{u1, u2} M N (MulOneClass.toHasMul.{u1} M _inst_1) (MulOneClass.toHasMul.{u2} N _inst_2)) h)
+but is expected to have type
+  forall {M : Type.{u2}} {N : Type.{u1}} [_inst_1 : MulOneClass.{u2} M] [_inst_2 : MulOneClass.{u1} N] (h : MulEquiv.{u2, u1} M N (MulOneClass.toMul.{u2} M _inst_1) (MulOneClass.toMul.{u1} N _inst_2)), IsMonoidHom.{u2, u1} M N _inst_1 _inst_2 (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (MulEquiv.{u2, u1} M N (MulOneClass.toMul.{u2} M _inst_1) (MulOneClass.toMul.{u1} N _inst_2)) M (fun (_x : M) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : M) => N) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (MulEquiv.{u2, u1} M N (MulOneClass.toMul.{u2} M _inst_1) (MulOneClass.toMul.{u1} N _inst_2)) M N (EquivLike.toEmbeddingLike.{max (succ u2) (succ u1), succ u2, succ u1} (MulEquiv.{u2, u1} M N (MulOneClass.toMul.{u2} M _inst_1) (MulOneClass.toMul.{u1} N _inst_2)) M N (MulEquivClass.toEquivLike.{max u2 u1, u2, u1} (MulEquiv.{u2, u1} M N (MulOneClass.toMul.{u2} M _inst_1) (MulOneClass.toMul.{u1} N _inst_2)) M N (MulOneClass.toMul.{u2} M _inst_1) (MulOneClass.toMul.{u1} N _inst_2) (MulEquiv.instMulEquivClassMulEquiv.{u2, u1} M N (MulOneClass.toMul.{u2} M _inst_1) (MulOneClass.toMul.{u1} N _inst_2))))) h)
+Case conversion may be inaccurate. Consider using '#align mul_equiv.is_monoid_hom MulEquiv.isMonoidHomₓ'. -/
 /-- A multiplicative bijection between two monoids is a monoid hom
   (deprecated -- use `mul_equiv.to_monoid_hom`). -/
 @[to_additive
       "An additive bijection between two additive monoids is an additive\nmonoid hom (deprecated). "]
-theorem is_monoid_hom (h : M ≃* N) : IsMonoidHom h :=
+theorem isMonoidHom (h : M ≃* N) : IsMonoidHom h :=
   { map_mul := h.map_mul
     map_one := h.map_one }
-#align mul_equiv.is_monoid_hom MulEquiv.is_monoid_hom
-#align add_equiv.is_add_monoid_hom AddEquiv.is_add_monoid_hom
+#align mul_equiv.is_monoid_hom MulEquiv.isMonoidHom
 
 end MulEquiv
 
@@ -243,14 +255,20 @@ theorem inv {α β} [MulOneClass α] [CommGroup β] {f : α → β} (hf : IsMono
 
 end IsMonoidHom
 
+/- warning: is_mul_hom.to_is_monoid_hom clashes with is_mul_hom.toIsMonoidHom -> IsMulHom.to_isMonoidHom
+warning: is_mul_hom.to_is_monoid_hom -> IsMulHom.to_isMonoidHom is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : MulOneClass.{u1} α] [_inst_2 : Group.{u2} β] {f : α -> β}, (IsMulHom.{u1, u2} α β (MulOneClass.toHasMul.{u1} α _inst_1) (MulOneClass.toHasMul.{u2} β (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β _inst_2)))) f) -> (IsMonoidHom.{u1, u2} α β _inst_1 (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β _inst_2))) f)
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : MulOneClass.{u1} α] [_inst_2 : Group.{u2} β] {f : α -> β}, (IsMulHom.{u1, u2} α β (MulOneClass.toMul.{u1} α _inst_1) (MulOneClass.toMul.{u2} β (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β _inst_2)))) f) -> (IsMonoidHom.{u1, u2} α β _inst_1 (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β _inst_2))) f)
+Case conversion may be inaccurate. Consider using '#align is_mul_hom.to_is_monoid_hom IsMulHom.to_isMonoidHomₓ'. -/
 /-- A map to a group preserving multiplication is a monoid homomorphism. -/
 @[to_additive "A map to an additive group preserving addition is an additive monoid\nhomomorphism."]
-theorem IsMulHom.to_is_monoid_hom [MulOneClass α] [Group β] {f : α → β} (hf : IsMulHom f) :
+theorem IsMulHom.to_isMonoidHom [MulOneClass α] [Group β] {f : α → β} (hf : IsMulHom f) :
     IsMonoidHom f :=
   { map_one := mul_right_eq_self.1 <| by rw [← hf.map_mul, one_mul]
     map_mul := hf.map_mul }
-#align is_mul_hom.to_is_monoid_hom IsMulHom.to_is_monoid_hom
-#align is_add_hom.to_is_add_monoid_hom IsAddHom.to_is_add_monoid_hom
+#align is_mul_hom.to_is_monoid_hom IsMulHom.to_isMonoidHom
 
 namespace IsMonoidHom
 
@@ -385,12 +403,15 @@ theorem map_mul' : ∀ x y, f (x * y) = f x * f y :=
   hf.to_is_mul_hom.map_mul
 #align is_group_hom.map_mul IsGroupHom.map_mul'
 
+/- warning: is_group_hom.to_is_monoid_hom clashes with is_group_hom.toIsMonoidHom -> IsGroupHom.to_isMonoidHom
+Case conversion may be inaccurate. Consider using '#align is_group_hom.to_is_monoid_hom IsGroupHom.to_isMonoidHomₓ'. -/
+#print IsGroupHom.to_isMonoidHom /-
 /-- A group homomorphism is a monoid homomorphism. -/
 @[to_additive "An additive group homomorphism is an additive monoid homomorphism."]
-theorem to_is_monoid_hom : IsMonoidHom f :=
+theorem to_isMonoidHom : IsMonoidHom f :=
   hf.to_is_mul_hom.to_is_monoid_hom
-#align is_group_hom.to_is_monoid_hom IsGroupHom.to_is_monoid_hom
-#align is_add_group_hom.to_is_add_monoid_hom IsAddGroupHom.to_is_add_monoid_hom
+#align is_group_hom.to_is_monoid_hom IsGroupHom.to_isMonoidHom
+-/
 
 /- warning: is_group_hom.map_one -> IsGroupHom.map_one is a dubious translation:
 lean 3 declaration is
@@ -515,10 +536,17 @@ section
 
 variable [NonAssocSemiring R] [NonAssocSemiring S]
 
-theorem to_is_monoid_hom (f : R →+* S) : IsMonoidHom f :=
+/- warning: ring_hom.to_is_monoid_hom clashes with ring_hom.toIsMonoidHom -> RingHom.to_isMonoidHom
+warning: ring_hom.to_is_monoid_hom -> RingHom.to_isMonoidHom is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u1}} {S : Type.{u2}} [_inst_1 : NonAssocSemiring.{u1} R] [_inst_2 : NonAssocSemiring.{u2} S] (f : RingHom.{u1, u2} R S _inst_1 _inst_2), IsMonoidHom.{u1, u2} R S (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R _inst_1)) (MulZeroOneClass.toMulOneClass.{u2} S (NonAssocSemiring.toMulZeroOneClass.{u2} S _inst_2)) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (RingHom.{u1, u2} R S _inst_1 _inst_2) (fun (_x : RingHom.{u1, u2} R S _inst_1 _inst_2) => R -> S) (RingHom.hasCoeToFun.{u1, u2} R S _inst_1 _inst_2) f)
+but is expected to have type
+  forall {R : Type.{u2}} {S : Type.{u1}} [_inst_1 : NonAssocSemiring.{u2} R] [_inst_2 : NonAssocSemiring.{u1} S] (f : RingHom.{u2, u1} R S _inst_1 _inst_2), IsMonoidHom.{u2, u1} R S (MulZeroOneClass.toMulOneClass.{u2} R (NonAssocSemiring.toMulZeroOneClass.{u2} R _inst_1)) (MulZeroOneClass.toMulOneClass.{u1} S (NonAssocSemiring.toMulZeroOneClass.{u1} S _inst_2)) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (RingHom.{u2, u1} R S _inst_1 _inst_2) R (fun (_x : R) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : R) => S) _x) (MulHomClass.toFunLike.{max u2 u1, u2, u1} (RingHom.{u2, u1} R S _inst_1 _inst_2) R S (NonUnitalNonAssocSemiring.toMul.{u2} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} R _inst_1)) (NonUnitalNonAssocSemiring.toMul.{u1} S (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} S _inst_2)) (NonUnitalRingHomClass.toMulHomClass.{max u2 u1, u2, u1} (RingHom.{u2, u1} R S _inst_1 _inst_2) R S (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} S _inst_2) (RingHomClass.toNonUnitalRingHomClass.{max u2 u1, u2, u1} (RingHom.{u2, u1} R S _inst_1 _inst_2) R S _inst_1 _inst_2 (RingHom.instRingHomClassRingHom.{u2, u1} R S _inst_1 _inst_2)))) f)
+Case conversion may be inaccurate. Consider using '#align ring_hom.to_is_monoid_hom RingHom.to_isMonoidHomₓ'. -/
+theorem to_isMonoidHom (f : R →+* S) : IsMonoidHom f :=
   { map_one := f.map_one
     map_mul := f.map_mul }
-#align ring_hom.to_is_monoid_hom RingHom.to_is_monoid_hom
+#align ring_hom.to_is_monoid_hom RingHom.to_isMonoidHom
 
 /- warning: ring_hom.to_is_add_monoid_hom -> RingHom.to_isAddMonoidHom is a dubious translation:
 lean 3 declaration is
@@ -604,9 +632,16 @@ theorem coe_map' {f : M → N} (hf : IsMonoidHom f) (x : Mˣ) : ↑((map' hf : M
   rfl
 #align units.coe_map' Units.coe_map'
 
-theorem coe_is_monoid_hom : IsMonoidHom (coe : Mˣ → M) :=
+/- warning: units.coe_is_monoid_hom clashes with units.coe_isMonoidHom -> Units.coe_isMonoidHom
+warning: units.coe_is_monoid_hom -> Units.coe_isMonoidHom is a dubious translation:
+lean 3 declaration is
+  forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M], IsMonoidHom.{u1, u1} (Units.{u1} M _inst_1) M (Units.mulOneClass.{u1} M _inst_1) (Monoid.toMulOneClass.{u1} M _inst_1) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Units.{u1} M _inst_1) M (HasLiftT.mk.{succ u1, succ u1} (Units.{u1} M _inst_1) M (CoeTCₓ.coe.{succ u1, succ u1} (Units.{u1} M _inst_1) M (coeBase.{succ u1, succ u1} (Units.{u1} M _inst_1) M (Units.hasCoe.{u1} M _inst_1)))))
+but is expected to have type
+  forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M], IsMonoidHom.{u1, u1} (Units.{u1} M _inst_1) M (Units.instMulOneClassUnits.{u1} M _inst_1) (Monoid.toMulOneClass.{u1} M _inst_1) (fun (x._@.Mathlib.Deprecated.Group._hyg.1887 : Units.{u1} M _inst_1) => Units.val.{u1} M _inst_1 x._@.Mathlib.Deprecated.Group._hyg.1887)
+Case conversion may be inaccurate. Consider using '#align units.coe_is_monoid_hom Units.coe_isMonoidHomₓ'. -/
+theorem coe_isMonoidHom : IsMonoidHom (coe : Mˣ → M) :=
   (coeHom M).is_monoid_hom_coe
-#align units.coe_is_monoid_hom Units.coe_is_monoid_hom
+#align units.coe_is_monoid_hom Units.coe_isMonoidHom
 
 end Units
 
@@ -656,10 +691,14 @@ theorem Additive.isAddMonoidHom [MulOneClass α] [MulOneClass β] {f : α → β
 #align additive.is_add_monoid_hom Additive.isAddMonoidHom
 -/
 
-theorem Multiplicative.is_monoid_hom [AddZeroClass α] [AddZeroClass β] {f : α → β}
+/- warning: multiplicative.is_monoid_hom clashes with multiplicative.isMonoidHom -> Multiplicative.isMonoidHom
+Case conversion may be inaccurate. Consider using '#align multiplicative.is_monoid_hom Multiplicative.isMonoidHomₓ'. -/
+#print Multiplicative.isMonoidHom /-
+theorem Multiplicative.isMonoidHom [AddZeroClass α] [AddZeroClass β] {f : α → β}
     (hf : IsAddMonoidHom f) : @IsMonoidHom (Multiplicative α) (Multiplicative β) _ _ f :=
   { Multiplicative.isMulHom hf.to_is_add_hom with map_one := IsAddMonoidHom.map_zero hf }
-#align multiplicative.is_monoid_hom Multiplicative.is_monoid_hom
+#align multiplicative.is_monoid_hom Multiplicative.isMonoidHom
+-/
 
 #print Additive.isAddGroupHom /-
 theorem Additive.isAddGroupHom [Group α] [Group β] {f : α → β} (hf : IsGroupHom f) :

@@ -121,13 +121,13 @@ theorem w_mk_right {f : Arrow T} {X Y : T} {g : X ⟶ Y} (sq : f ⟶ mk g) :
   sq.w
 #align category_theory.arrow.w_mk_right CategoryTheory.Arrow.w_mk_right
 
-theorem is_iso_of_iso_left_of_is_iso_right {f g : Arrow T} (ff : f ⟶ g) [IsIso ff.left]
+theorem isIso_of_iso_left_of_isIso_right {f g : Arrow T} (ff : f ⟶ g) [IsIso ff.left]
     [IsIso ff.right] : IsIso ff :=
   {
     out :=
       ⟨⟨inv ff.left, inv ff.right⟩, by ext <;> dsimp <;> simp only [is_iso.hom_inv_id], by
         ext <;> dsimp <;> simp only [is_iso.inv_hom_id]⟩ }
-#align category_theory.arrow.is_iso_of_iso_left_of_is_iso_right CategoryTheory.Arrow.is_iso_of_iso_left_of_is_iso_right
+#align category_theory.arrow.is_iso_of_iso_left_of_is_iso_right CategoryTheory.Arrow.isIso_of_iso_left_of_isIso_right
 
 /-- Create an isomorphism between arrows,
 by providing isomorphisms between the domains and codomains,
@@ -169,19 +169,19 @@ section
 
 variable {f g : Arrow T} (sq : f ⟶ g)
 
-instance is_iso_left [IsIso sq] : IsIso sq.left
+instance isIso_left [IsIso sq] : IsIso sq.left
     where out :=
     ⟨(inv sq).left, by
       simp only [← comma.comp_left, is_iso.hom_inv_id, is_iso.inv_hom_id, arrow.id_left,
         eq_self_iff_true, and_self_iff]⟩
-#align category_theory.arrow.is_iso_left CategoryTheory.Arrow.is_iso_left
+#align category_theory.arrow.is_iso_left CategoryTheory.Arrow.isIso_left
 
-instance is_iso_right [IsIso sq] : IsIso sq.right
+instance isIso_right [IsIso sq] : IsIso sq.right
     where out :=
     ⟨(inv sq).right, by
       simp only [← comma.comp_right, is_iso.hom_inv_id, is_iso.inv_hom_id, arrow.id_right,
         eq_self_iff_true, and_self_iff]⟩
-#align category_theory.arrow.is_iso_right CategoryTheory.Arrow.is_iso_right
+#align category_theory.arrow.is_iso_right CategoryTheory.Arrow.isIso_right
 
 @[simp]
 theorem inv_left [IsIso sq] : (inv sq).left = inv sq.left :=

@@ -57,17 +57,17 @@ instance : Coe (Q₁.Isometry Q₂) (M₁ ≃ₗ[R] M₂) :=
   ⟨Isometry.toLinearEquiv⟩
 
 @[simp]
-theorem to_linear_equiv_eq_coe (f : Q₁.Isometry Q₂) : f.toLinearEquiv = f :=
+theorem toLinearEquiv_eq_coe (f : Q₁.Isometry Q₂) : f.toLinearEquiv = f :=
   rfl
-#align quadratic_form.isometry.to_linear_equiv_eq_coe QuadraticForm.Isometry.to_linear_equiv_eq_coe
+#align quadratic_form.isometry.to_linear_equiv_eq_coe QuadraticForm.Isometry.toLinearEquiv_eq_coe
 
 instance : CoeFun (Q₁.Isometry Q₂) fun _ => M₁ → M₂ :=
   ⟨fun f => ⇑(f : M₁ ≃ₗ[R] M₂)⟩
 
 @[simp]
-theorem coe_to_linear_equiv (f : Q₁.Isometry Q₂) : ⇑(f : M₁ ≃ₗ[R] M₂) = f :=
+theorem coe_to_linearEquiv (f : Q₁.Isometry Q₂) : ⇑(f : M₁ ≃ₗ[R] M₂) = f :=
   rfl
-#align quadratic_form.isometry.coe_to_linear_equiv QuadraticForm.Isometry.coe_to_linear_equiv
+#align quadratic_form.isometry.coe_to_linear_equiv QuadraticForm.Isometry.coe_to_linearEquiv
 
 @[simp]
 theorem map_app (f : Q₁.Isometry Q₂) (m : M₁) : Q₂ (f m) = Q₁ m :=
@@ -132,7 +132,7 @@ def isometryOfCompLinearEquiv (Q : QuadraticForm R M) (f : M₁ ≃ₗ[R] M) :
   { f.symm with
     map_app' := by
       intro
-      simp only [comp_apply, LinearEquiv.coe_coe, LinearEquiv.to_fun_eq_coe,
+      simp only [comp_apply, LinearEquiv.coe_coe, LinearEquiv.toFun_eq_coe,
         LinearEquiv.apply_symm_apply, f.apply_symm_apply] }
 #align quadratic_form.isometry_of_comp_linear_equiv QuadraticForm.isometryOfCompLinearEquiv
 
@@ -159,13 +159,13 @@ variable [FiniteDimensional K V]
 
 open BilinForm
 
-theorem equivalent_weighted_sum_squares (Q : QuadraticForm K V) :
+theorem equivalent_weightedSumSquares (Q : QuadraticForm K V) :
     ∃ w : Fin (FiniteDimensional.finrank K V) → K, Equivalent Q (weightedSumSquares K w) :=
   let ⟨v, hv₁⟩ := exists_orthogonal_basis (associatedIsSymm _ Q)
   ⟨_, ⟨Q.isometryWeightedSumSquares v hv₁⟩⟩
-#align quadratic_form.equivalent_weighted_sum_squares QuadraticForm.equivalent_weighted_sum_squares
+#align quadratic_form.equivalent_weighted_sum_squares QuadraticForm.equivalent_weightedSumSquares
 
-theorem equivalent_weighted_sum_squares_units_of_nondegenerate' (Q : QuadraticForm K V)
+theorem equivalent_weightedSumSquares_units_of_nondegenerate' (Q : QuadraticForm K V)
     (hQ : (associated Q).Nondegenerate) :
     ∃ w : Fin (FiniteDimensional.finrank K V) → Kˣ, Equivalent Q (weightedSumSquares K w) :=
   by
@@ -173,7 +173,7 @@ theorem equivalent_weighted_sum_squares_units_of_nondegenerate' (Q : QuadraticFo
   have hv₂ := hv₁.not_is_ortho_basis_self_of_nondegenerate hQ
   simp_rw [is_ortho, associated_eq_self_apply] at hv₂
   exact ⟨fun i => Units.mk0 _ (hv₂ i), ⟨Q.isometry_weighted_sum_squares v hv₁⟩⟩
-#align quadratic_form.equivalent_weighted_sum_squares_units_of_nondegenerate' QuadraticForm.equivalent_weighted_sum_squares_units_of_nondegenerate'
+#align quadratic_form.equivalent_weighted_sum_squares_units_of_nondegenerate' QuadraticForm.equivalent_weightedSumSquares_units_of_nondegenerate'
 
 end QuadraticForm
 

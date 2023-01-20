@@ -78,14 +78,14 @@ instance coeComonad : Coe (Comonad C) (C ⥤ C) :=
 #align category_theory.coe_comonad CategoryTheory.coeComonad
 
 @[simp]
-theorem monad_to_functor_eq_coe : T.toFunctor = T :=
+theorem monad_toFunctor_eq_coe : T.toFunctor = T :=
   rfl
-#align category_theory.monad_to_functor_eq_coe CategoryTheory.monad_to_functor_eq_coe
+#align category_theory.monad_to_functor_eq_coe CategoryTheory.monad_toFunctor_eq_coe
 
 @[simp]
-theorem comonad_to_functor_eq_coe : G.toFunctor = G :=
+theorem comonad_toFunctor_eq_coe : G.toFunctor = G :=
   rfl
-#align category_theory.comonad_to_functor_eq_coe CategoryTheory.comonad_to_functor_eq_coe
+#align category_theory.comonad_to_functor_eq_coe CategoryTheory.comonad_toFunctor_eq_coe
 
 /-- The unit for the monad `T`. -/
 def Monad.η : 𝟭 _ ⟶ (T : C ⥤ C) :=
@@ -243,29 +243,29 @@ instance {T : Monad C} : Inhabited (MonadHom T T) :=
   ⟨𝟙 T⟩
 
 @[simp]
-theorem MonadHom.id_to_nat_trans (T : Monad C) : (𝟙 T : T ⟶ T).toNatTrans = 𝟙 (T : C ⥤ C) :=
+theorem MonadHom.id_toNatTrans (T : Monad C) : (𝟙 T : T ⟶ T).toNatTrans = 𝟙 (T : C ⥤ C) :=
   rfl
-#align category_theory.monad_hom.id_to_nat_trans CategoryTheory.MonadHom.id_to_nat_trans
+#align category_theory.monad_hom.id_to_nat_trans CategoryTheory.MonadHom.id_toNatTrans
 
 @[simp]
-theorem MonadHom.comp_to_nat_trans {T₁ T₂ T₃ : Monad C} (f : T₁ ⟶ T₂) (g : T₂ ⟶ T₃) :
+theorem MonadHom.comp_toNatTrans {T₁ T₂ T₃ : Monad C} (f : T₁ ⟶ T₂) (g : T₂ ⟶ T₃) :
     (f ≫ g).toNatTrans = ((f.toNatTrans : _ ⟶ (T₂ : C ⥤ C)) ≫ g.toNatTrans : (T₁ : C ⥤ C) ⟶ T₃) :=
   rfl
-#align category_theory.monad_hom.comp_to_nat_trans CategoryTheory.MonadHom.comp_to_nat_trans
+#align category_theory.monad_hom.comp_to_nat_trans CategoryTheory.MonadHom.comp_toNatTrans
 
 instance {G : Comonad C} : Inhabited (ComonadHom G G) :=
   ⟨𝟙 G⟩
 
 @[simp]
-theorem ComonadHom.id_to_nat_trans (T : Comonad C) : (𝟙 T : T ⟶ T).toNatTrans = 𝟙 (T : C ⥤ C) :=
+theorem ComonadHom.id_toNatTrans (T : Comonad C) : (𝟙 T : T ⟶ T).toNatTrans = 𝟙 (T : C ⥤ C) :=
   rfl
-#align category_theory.comonad_hom.id_to_nat_trans CategoryTheory.ComonadHom.id_to_nat_trans
+#align category_theory.comonad_hom.id_to_nat_trans CategoryTheory.ComonadHom.id_toNatTrans
 
 @[simp]
-theorem comp_to_nat_trans {T₁ T₂ T₃ : Comonad C} (f : T₁ ⟶ T₂) (g : T₂ ⟶ T₃) :
+theorem comp_toNatTrans {T₁ T₂ T₃ : Comonad C} (f : T₁ ⟶ T₂) (g : T₂ ⟶ T₃) :
     (f ≫ g).toNatTrans = ((f.toNatTrans : _ ⟶ (T₂ : C ⥤ C)) ≫ g.toNatTrans : (T₁ : C ⥤ C) ⟶ T₃) :=
   rfl
-#align category_theory.comp_to_nat_trans CategoryTheory.comp_to_nat_trans
+#align category_theory.comp_to_nat_trans CategoryTheory.comp_toNatTrans
 
 /-- Construct a monad isomorphism from a natural isomorphism of functors where the forward
 direction is a monad morphism. -/
@@ -318,12 +318,12 @@ def monadToFunctor : Monad C ⥤ C ⥤ C where
 instance : Faithful (monadToFunctor C) where
 
 @[simp]
-theorem monad_to_functor_map_iso_monad_iso_mk {M N : Monad C} (f : (M : C ⥤ C) ≅ N) (f_η f_μ) :
+theorem monadToFunctor_mapIso_monad_iso_mk {M N : Monad C} (f : (M : C ⥤ C) ≅ N) (f_η f_μ) :
     (monadToFunctor _).mapIso (MonadIso.mk f f_η f_μ) = f :=
   by
   ext
   rfl
-#align category_theory.monad_to_functor_map_iso_monad_iso_mk CategoryTheory.monad_to_functor_map_iso_monad_iso_mk
+#align category_theory.monad_to_functor_map_iso_monad_iso_mk CategoryTheory.monadToFunctor_mapIso_monad_iso_mk
 
 instance : ReflectsIsomorphisms (monadToFunctor C)
     where reflects M N f i := by
@@ -342,12 +342,12 @@ def comonadToFunctor : Comonad C ⥤ C ⥤ C where
 instance : Faithful (comonadToFunctor C) where
 
 @[simp]
-theorem comonad_to_functor_map_iso_comonad_iso_mk {M N : Comonad C} (f : (M : C ⥤ C) ≅ N)
-    (f_ε f_δ) : (comonadToFunctor _).mapIso (ComonadIso.mk f f_ε f_δ) = f :=
+theorem comonadToFunctor_mapIso_comonad_iso_mk {M N : Comonad C} (f : (M : C ⥤ C) ≅ N) (f_ε f_δ) :
+    (comonadToFunctor _).mapIso (ComonadIso.mk f f_ε f_δ) = f :=
   by
   ext
   rfl
-#align category_theory.comonad_to_functor_map_iso_comonad_iso_mk CategoryTheory.comonad_to_functor_map_iso_comonad_iso_mk
+#align category_theory.comonad_to_functor_map_iso_comonad_iso_mk CategoryTheory.comonadToFunctor_mapIso_comonad_iso_mk
 
 instance : ReflectsIsomorphisms (comonadToFunctor C)
     where reflects M N f i := by

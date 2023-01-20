@@ -118,16 +118,16 @@ theorem verschiebung_mul_frobenius (x y : 𝕎 R) :
   rintro ⟨⟩ <;> ghost_simp [mul_assoc]
 #align witt_vector.verschiebung_mul_frobenius WittVector.verschiebung_mul_frobenius
 
-theorem mul_char_p_coeff_zero [CharP R p] (x : 𝕎 R) : (x * p).coeff 0 = 0 :=
+theorem mul_charP_coeff_zero [CharP R p] (x : 𝕎 R) : (x * p).coeff 0 = 0 :=
   by
   rw [← frobenius_verschiebung, coeff_frobenius_char_p, verschiebung_coeff_zero, zero_pow]
   exact Nat.Prime.pos hp.out
-#align witt_vector.mul_char_p_coeff_zero WittVector.mul_char_p_coeff_zero
+#align witt_vector.mul_char_p_coeff_zero WittVector.mul_charP_coeff_zero
 
-theorem mul_char_p_coeff_succ [CharP R p] (x : 𝕎 R) (i : ℕ) :
+theorem mul_charP_coeff_succ [CharP R p] (x : 𝕎 R) (i : ℕ) :
     (x * p).coeff (i + 1) = x.coeff i ^ p := by
   rw [← frobenius_verschiebung, coeff_frobenius_char_p, verschiebung_coeff_succ]
-#align witt_vector.mul_char_p_coeff_succ WittVector.mul_char_p_coeff_succ
+#align witt_vector.mul_char_p_coeff_succ WittVector.mul_charP_coeff_succ
 
 theorem verschiebung_frobenius [CharP R p] (x : 𝕎 R) : verschiebung (frobenius x) = x * p :=
   by

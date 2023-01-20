@@ -73,24 +73,24 @@ variable (p)
 
 /-- Multiplication by `n` is a polynomial function. -/
 @[is_poly]
-theorem mul_n_is_poly (n : ℕ) : IsPoly p fun R _Rcr x => x * n :=
+theorem mul_n_isPoly (n : ℕ) : IsPoly p fun R _Rcr x => x * n :=
   ⟨⟨wittMulN p n, fun R _Rcr x => by
       funext k
       exact mul_n_coeff n x k⟩⟩
-#align witt_vector.mul_n_is_poly WittVector.mul_n_is_poly
+#align witt_vector.mul_n_is_poly WittVector.mul_n_isPoly
 
 @[simp]
-theorem bind₁_witt_mul_n_witt_polynomial (n k : ℕ) :
+theorem bind₁_wittMulN_wittPolynomial (n k : ℕ) :
     bind₁ (wittMulN p n) (wittPolynomial p ℤ k) = n * wittPolynomial p ℤ k :=
   by
   induction' n with n ih
   · simp only [witt_mul_n, Nat.cast_zero, zero_mul, bind₁_zero_witt_polynomial]
-  · rw [witt_mul_n, ← bind₁_bind₁, witt_add, witt_structure_int_prop]
+  · rw [witt_mul_n, ← bind₁_bind₁, witt_add, wittStructureInt_prop]
     simp only [AlgHom.map_add, Nat.cast_succ, bind₁_X_right]
     rw [add_mul, one_mul, bind₁_rename, bind₁_rename]
     simp only [ih, Function.uncurry, Function.comp, bind₁_X_left, AlgHom.id_apply,
       Matrix.cons_val_zero, Matrix.head_cons, Matrix.cons_val_one]
-#align witt_vector.bind₁_witt_mul_n_witt_polynomial WittVector.bind₁_witt_mul_n_witt_polynomial
+#align witt_vector.bind₁_witt_mul_n_witt_polynomial WittVector.bind₁_wittMulN_wittPolynomial
 
 end WittVector
 

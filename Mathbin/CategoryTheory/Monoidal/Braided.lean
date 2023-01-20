@@ -167,14 +167,14 @@ variable (C : Type u₁) [Category.{v₁} C] [MonoidalCategory C] [BraidedCatego
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem braiding_left_unitor_aux₁ (X : C) :
+theorem braiding_leftUnitor_aux₁ (X : C) :
     (α_ (𝟙_ C) (𝟙_ C) X).Hom ≫
         (𝟙 (𝟙_ C) ⊗ (β_ X (𝟙_ C)).inv) ≫ (α_ _ X _).inv ≫ ((λ_ X).Hom ⊗ 𝟙 _) =
       ((λ_ _).Hom ⊗ 𝟙 X) ≫ (β_ X (𝟙_ C)).inv :=
   by
   rw [← left_unitor_tensor, left_unitor_naturality]
   simp
-#align category_theory.braiding_left_unitor_aux₁ CategoryTheory.braiding_left_unitor_aux₁
+#align category_theory.braiding_left_unitor_aux₁ CategoryTheory.braiding_leftUnitor_aux₁
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -193,7 +193,7 @@ theorem braiding_left_unitor_aux₁ (X : C) :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem braiding_left_unitor_aux₂ (X : C) :
+theorem braiding_leftUnitor_aux₂ (X : C) :
     ((β_ X (𝟙_ C)).Hom ⊗ 𝟙 (𝟙_ C)) ≫ ((λ_ X).Hom ⊗ 𝟙 (𝟙_ C)) = (ρ_ X).Hom ⊗ 𝟙 (𝟙_ C) :=
   calc
     ((β_ X (𝟙_ C)).Hom ⊗ 𝟙 (𝟙_ C)) ≫ ((λ_ X).Hom ⊗ 𝟙 (𝟙_ C)) =
@@ -224,24 +224,24 @@ theorem braiding_left_unitor_aux₂ (X : C) :
     _ = (α_ _ _ _).Hom ≫ (𝟙 _ ⊗ (λ_ _).Hom) := by rw [iso.hom_inv_id, comp_id]
     _ = (ρ_ X).Hom ⊗ 𝟙 (𝟙_ C) := by rw [triangle]
     
-#align category_theory.braiding_left_unitor_aux₂ CategoryTheory.braiding_left_unitor_aux₂
+#align category_theory.braiding_left_unitor_aux₂ CategoryTheory.braiding_leftUnitor_aux₂
 
 @[simp]
-theorem braiding_left_unitor (X : C) : (β_ X (𝟙_ C)).Hom ≫ (λ_ X).Hom = (ρ_ X).Hom := by
+theorem braiding_leftUnitor (X : C) : (β_ X (𝟙_ C)).Hom ≫ (λ_ X).Hom = (ρ_ X).Hom := by
   rw [← tensor_right_iff, comp_tensor_id, braiding_left_unitor_aux₂]
-#align category_theory.braiding_left_unitor CategoryTheory.braiding_left_unitor
+#align category_theory.braiding_left_unitor CategoryTheory.braiding_leftUnitor
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem braiding_right_unitor_aux₁ (X : C) :
+theorem braiding_rightUnitor_aux₁ (X : C) :
     (α_ X (𝟙_ C) (𝟙_ C)).inv ≫
         ((β_ (𝟙_ C) X).inv ⊗ 𝟙 (𝟙_ C)) ≫ (α_ _ X _).Hom ≫ (𝟙 _ ⊗ (ρ_ X).Hom) =
       (𝟙 X ⊗ (ρ_ _).Hom) ≫ (β_ (𝟙_ C) X).inv :=
   by
   rw [← right_unitor_tensor, right_unitor_naturality]
   simp
-#align category_theory.braiding_right_unitor_aux₁ CategoryTheory.braiding_right_unitor_aux₁
+#align category_theory.braiding_right_unitor_aux₁ CategoryTheory.braiding_rightUnitor_aux₁
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -260,7 +260,7 @@ theorem braiding_right_unitor_aux₁ (X : C) :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem braiding_right_unitor_aux₂ (X : C) :
+theorem braiding_rightUnitor_aux₂ (X : C) :
     (𝟙 (𝟙_ C) ⊗ (β_ (𝟙_ C) X).Hom) ≫ (𝟙 (𝟙_ C) ⊗ (ρ_ X).Hom) = 𝟙 (𝟙_ C) ⊗ (λ_ X).Hom :=
   calc
     (𝟙 (𝟙_ C) ⊗ (β_ (𝟙_ C) X).Hom) ≫ (𝟙 (𝟙_ C) ⊗ (ρ_ X).Hom) =
@@ -291,26 +291,26 @@ theorem braiding_right_unitor_aux₂ (X : C) :
     _ = (α_ _ _ _).inv ≫ ((ρ_ _).Hom ⊗ 𝟙 _) := by rw [iso.hom_inv_id, comp_id]
     _ = 𝟙 (𝟙_ C) ⊗ (λ_ X).Hom := by rw [triangle_assoc_comp_right]
     
-#align category_theory.braiding_right_unitor_aux₂ CategoryTheory.braiding_right_unitor_aux₂
+#align category_theory.braiding_right_unitor_aux₂ CategoryTheory.braiding_rightUnitor_aux₂
 
 @[simp]
-theorem braiding_right_unitor (X : C) : (β_ (𝟙_ C) X).Hom ≫ (ρ_ X).Hom = (λ_ X).Hom := by
+theorem braiding_rightUnitor (X : C) : (β_ (𝟙_ C) X).Hom ≫ (ρ_ X).Hom = (λ_ X).Hom := by
   rw [← tensor_left_iff, id_tensor_comp, braiding_right_unitor_aux₂]
-#align category_theory.braiding_right_unitor CategoryTheory.braiding_right_unitor
+#align category_theory.braiding_right_unitor CategoryTheory.braiding_rightUnitor
 
 @[simp]
-theorem left_unitor_inv_braiding (X : C) : (λ_ X).inv ≫ (β_ (𝟙_ C) X).Hom = (ρ_ X).inv :=
+theorem leftUnitor_inv_braiding (X : C) : (λ_ X).inv ≫ (β_ (𝟙_ C) X).Hom = (ρ_ X).inv :=
   by
   apply (cancel_mono (ρ_ X).Hom).1
   simp only [assoc, braiding_right_unitor, iso.inv_hom_id]
-#align category_theory.left_unitor_inv_braiding CategoryTheory.left_unitor_inv_braiding
+#align category_theory.left_unitor_inv_braiding CategoryTheory.leftUnitor_inv_braiding
 
 @[simp]
-theorem right_unitor_inv_braiding (X : C) : (ρ_ X).inv ≫ (β_ X (𝟙_ C)).Hom = (λ_ X).inv :=
+theorem rightUnitor_inv_braiding (X : C) : (ρ_ X).inv ≫ (β_ X (𝟙_ C)).Hom = (λ_ X).inv :=
   by
   apply (cancel_mono (λ_ X).Hom).1
   simp only [assoc, braiding_left_unitor, iso.inv_hom_id]
-#align category_theory.right_unitor_inv_braiding CategoryTheory.right_unitor_inv_braiding
+#align category_theory.right_unitor_inv_braiding CategoryTheory.rightUnitor_inv_braiding
 
 end
 
@@ -375,10 +375,10 @@ instance categoryLaxBraidedFunctor : Category (LaxBraidedFunctor C D) :=
 #align category_theory.lax_braided_functor.category_lax_braided_functor CategoryTheory.LaxBraidedFunctor.categoryLaxBraidedFunctor
 
 @[simp]
-theorem comp_to_nat_trans {F G H : LaxBraidedFunctor C D} {α : F ⟶ G} {β : G ⟶ H} :
+theorem comp_toNatTrans {F G H : LaxBraidedFunctor C D} {α : F ⟶ G} {β : G ⟶ H} :
     (α ≫ β).toNatTrans = @CategoryStruct.comp (C ⥤ D) _ _ _ _ α.toNatTrans β.toNatTrans :=
   rfl
-#align category_theory.lax_braided_functor.comp_to_nat_trans CategoryTheory.LaxBraidedFunctor.comp_to_nat_trans
+#align category_theory.lax_braided_functor.comp_to_nat_trans CategoryTheory.LaxBraidedFunctor.comp_toNatTrans
 
 /-- Interpret a natural isomorphism of the underlyling lax monoidal functors as an
 isomorphism of the lax braided monoidal functors.
@@ -446,10 +446,10 @@ instance categoryBraidedFunctor : Category (BraidedFunctor C D) :=
 #align category_theory.braided_functor.category_braided_functor CategoryTheory.BraidedFunctor.categoryBraidedFunctor
 
 @[simp]
-theorem comp_to_nat_trans {F G H : BraidedFunctor C D} {α : F ⟶ G} {β : G ⟶ H} :
+theorem comp_toNatTrans {F G H : BraidedFunctor C D} {α : F ⟶ G} {β : G ⟶ H} :
     (α ≫ β).toNatTrans = @CategoryStruct.comp (C ⥤ D) _ _ _ _ α.toNatTrans β.toNatTrans :=
   rfl
-#align category_theory.braided_functor.comp_to_nat_trans CategoryTheory.BraidedFunctor.comp_to_nat_trans
+#align category_theory.braided_functor.comp_to_nat_trans CategoryTheory.BraidedFunctor.comp_toNatTrans
 
 /-- Interpret a natural isomorphism of the underlyling monoidal functors as an
 isomorphism of the braided monoidal functors.
@@ -503,13 +503,13 @@ def tensorμ (X Y : C × C) : (tensor C).obj X ⊗ (tensor C).obj Y ⟶ (tensor 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem tensor_μ_def₁ (X₁ X₂ Y₁ Y₂ : C) :
+theorem tensorμ_def₁ (X₁ X₂ Y₁ Y₂ : C) :
     tensorμ C (X₁, X₂) (Y₁, Y₂) ≫ (α_ X₁ Y₁ (X₂ ⊗ Y₂)).Hom ≫ (𝟙 X₁ ⊗ (α_ Y₁ X₂ Y₂).inv) =
       (α_ X₁ X₂ (Y₁ ⊗ Y₂)).Hom ≫ (𝟙 X₁ ⊗ (α_ X₂ Y₁ Y₂).inv) ≫ (𝟙 X₁ ⊗ (β_ X₂ Y₁).Hom ⊗ 𝟙 Y₂) :=
   by
   dsimp [tensor_μ]
   simp
-#align category_theory.tensor_μ_def₁ CategoryTheory.tensor_μ_def₁
+#align category_theory.tensor_μ_def₁ CategoryTheory.tensorμ_def₁
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -517,13 +517,13 @@ theorem tensor_μ_def₁ (X₁ X₂ Y₁ Y₂ : C) :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem tensor_μ_def₂ (X₁ X₂ Y₁ Y₂ : C) :
+theorem tensorμ_def₂ (X₁ X₂ Y₁ Y₂ : C) :
     (𝟙 X₁ ⊗ (α_ X₂ Y₁ Y₂).Hom) ≫ (α_ X₁ X₂ (Y₁ ⊗ Y₂)).inv ≫ tensorμ C (X₁, X₂) (Y₁, Y₂) =
       (𝟙 X₁ ⊗ (β_ X₂ Y₁).Hom ⊗ 𝟙 Y₂) ≫ (𝟙 X₁ ⊗ (α_ Y₁ X₂ Y₂).Hom) ≫ (α_ X₁ Y₁ (X₂ ⊗ Y₂)).inv :=
   by
   dsimp [tensor_μ]
   simp
-#align category_theory.tensor_μ_def₂ CategoryTheory.tensor_μ_def₂
+#align category_theory.tensor_μ_def₂ CategoryTheory.tensorμ_def₂
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -531,7 +531,7 @@ theorem tensor_μ_def₂ (X₁ X₂ Y₁ Y₂ : C) :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem tensor_μ_natural {X₁ X₂ Y₁ Y₂ U₁ U₂ V₁ V₂ : C} (f₁ : X₁ ⟶ Y₁) (f₂ : X₂ ⟶ Y₂) (g₁ : U₁ ⟶ V₁)
+theorem tensorμ_natural {X₁ X₂ Y₁ Y₂ U₁ U₂ V₁ V₂ : C} (f₁ : X₁ ⟶ Y₁) (f₂ : X₂ ⟶ Y₂) (g₁ : U₁ ⟶ V₁)
     (g₂ : U₂ ⟶ V₂) :
     ((f₁ ⊗ f₂) ⊗ g₁ ⊗ g₂) ≫ tensorμ C (Y₁, Y₂) (V₁, V₂) =
       tensorμ C (X₁, X₂) (U₁, U₂) ≫ ((f₁ ⊗ g₁) ⊗ f₂ ⊗ g₂) :=
@@ -546,7 +546,7 @@ theorem tensor_μ_natural {X₁ X₂ Y₁ Y₂ U₁ U₂ V₁ V₂ : C} (f₁ : 
   slice_lhs 4 5 => rw [← tensor_comp, comp_id f₁, ← id_comp f₁, associator_naturality, tensor_comp]
   slice_lhs 5 6 => rw [associator_inv_naturality]
   simp only [assoc]
-#align category_theory.tensor_μ_natural CategoryTheory.tensor_μ_natural
+#align category_theory.tensor_μ_natural CategoryTheory.tensorμ_natural
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -849,7 +849,7 @@ def tensorMonoidal : MonoidalFunctor (C × C) C :=
   { tensor C with
     ε := (λ_ (𝟙_ C)).inv
     μ := fun X Y => tensorμ C X Y
-    μ_natural' := fun X Y X' Y' f g => tensor_μ_natural C f.1 f.2 g.1 g.2
+    μ_natural' := fun X Y X' Y' f g => tensorμ_natural C f.1 f.2 g.1 g.2
     associativity' := fun X Y Z => tensor_associativity C X.1 X.2 Y.1 Y.2 Z.1 Z.2
     left_unitality' := fun ⟨X₁, X₂⟩ => tensor_left_unitality C X₁ X₂
     right_unitality' := fun ⟨X₁, X₂⟩ => tensor_right_unitality C X₁ X₂
@@ -868,7 +868,7 @@ def tensorMonoidal : MonoidalFunctor (C × C) C :=
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem left_unitor_monoidal (X₁ X₂ : C) :
+theorem leftUnitor_monoidal (X₁ X₂ : C) :
     (λ_ X₁).Hom ⊗ (λ_ X₂).Hom =
       tensorμ C (𝟙_ C, X₁) (𝟙_ C, X₂) ≫ ((λ_ (𝟙_ C)).Hom ⊗ 𝟙 (X₁ ⊗ X₂)) ≫ (λ_ (X₁ ⊗ X₂)).Hom :=
   by
@@ -883,7 +883,7 @@ theorem left_unitor_monoidal (X₁ X₂ : C) :
   slice_lhs 3 4 => rw [← id_comp (𝟙 X₂), tensor_comp]
   slice_lhs 3 4 => rw [← left_unitor_naturality]
   coherence
-#align category_theory.left_unitor_monoidal CategoryTheory.left_unitor_monoidal
+#align category_theory.left_unitor_monoidal CategoryTheory.leftUnitor_monoidal
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -895,7 +895,7 @@ theorem left_unitor_monoidal (X₁ X₂ : C) :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem right_unitor_monoidal (X₁ X₂ : C) :
+theorem rightUnitor_monoidal (X₁ X₂ : C) :
     (ρ_ X₁).Hom ⊗ (ρ_ X₂).Hom =
       tensorμ C (X₁, 𝟙_ C) (X₂, 𝟙_ C) ≫ (𝟙 (X₁ ⊗ X₂) ⊗ (λ_ (𝟙_ C)).Hom) ≫ (ρ_ (X₁ ⊗ X₂)).Hom :=
   by
@@ -910,7 +910,7 @@ theorem right_unitor_monoidal (X₁ X₂ : C) :
   slice_lhs 3 4 => rw [← id_comp (𝟙 X₁), tensor_comp, id_comp]
   slice_lhs 3 4 => rw [← tensor_comp, ← right_unitor_naturality, tensor_comp]
   coherence
-#align category_theory.right_unitor_monoidal CategoryTheory.right_unitor_monoidal
+#align category_theory.right_unitor_monoidal CategoryTheory.rightUnitor_monoidal
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/

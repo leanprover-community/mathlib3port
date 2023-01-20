@@ -131,9 +131,9 @@ theorem le_hitting_of_exists {m : ι} (h_exists : ∃ j ∈ Set.Icc n m, u j ω 
   simpa using h_exists
 #align measure_theory.le_hitting_of_exists MeasureTheory.le_hitting_of_exists
 
-theorem hitting_mem_Icc {m : ι} (hnm : n ≤ m) (ω : Ω) : hitting u s n m ω ∈ Set.Icc n m :=
+theorem hitting_mem_icc {m : ι} (hnm : n ≤ m) (ω : Ω) : hitting u s n m ω ∈ Set.Icc n m :=
   ⟨le_hitting hnm ω, hitting_le ω⟩
-#align measure_theory.hitting_mem_Icc MeasureTheory.hitting_mem_Icc
+#align measure_theory.hitting_mem_Icc MeasureTheory.hitting_mem_icc
 
 theorem hitting_mem_set [IsWellOrder ι (· < ·)] {m : ι} (h_exists : ∃ j ∈ Set.Icc n m, u j ω ∈ s) :
     u (hitting u s n m ω) ω ∈ s :=
@@ -245,7 +245,7 @@ theorem hitting_mono {m₁ m₂ : ι} (hm : m₁ ≤ m₂) : hitting u s n m₁ 
 end Inequalities
 
 /-- A discrete hitting time is a stopping time. -/
-theorem hitting_is_stopping_time [ConditionallyCompleteLinearOrder ι] [IsWellOrder ι (· < ·)]
+theorem hitting_isStoppingTime [ConditionallyCompleteLinearOrder ι] [IsWellOrder ι (· < ·)]
     [Countable ι] [TopologicalSpace β] [PseudoMetrizableSpace β] [MeasurableSpace β] [BorelSpace β]
     {f : Filtration ι m} {u : ι → Ω → β} {s : Set β} {n n' : ι} (hu : Adapted f u)
     (hs : MeasurableSet s) : IsStoppingTime f (hitting u s n n') :=
@@ -261,11 +261,11 @@ theorem hitting_is_stopping_time [ConditionallyCompleteLinearOrder ι] [IsWellOr
       simp only [Set.mem_Icc, exists_prop, Set.mem_unionᵢ, Set.mem_preimage]
     rw [h_set_eq_Union]
     exact
-      MeasurableSet.Union fun j =>
-        MeasurableSet.Union fun hj => f.mono hj.2 _ ((hu j).Measurable hs)
-#align measure_theory.hitting_is_stopping_time MeasureTheory.hitting_is_stopping_time
+      MeasurableSet.unionᵢ fun j =>
+        MeasurableSet.unionᵢ fun hj => f.mono hj.2 _ ((hu j).Measurable hs)
+#align measure_theory.hitting_is_stopping_time MeasureTheory.hitting_isStoppingTime
 
-theorem stopped_value_hitting_mem [ConditionallyCompleteLinearOrder ι] [IsWellOrder ι (· < ·)]
+theorem stoppedValue_hitting_mem [ConditionallyCompleteLinearOrder ι] [IsWellOrder ι (· < ·)]
     {u : ι → Ω → β} {s : Set β} {n m : ι} {ω : Ω} (h : ∃ j ∈ Set.Icc n m, u j ω ∈ s) :
     stoppedValue u (hitting u s n m) ω ∈ s :=
   by
@@ -274,11 +274,11 @@ theorem stopped_value_hitting_mem [ConditionallyCompleteLinearOrder ι] [IsWellO
   have : Inf (Set.Icc n m ∩ { i | u i ω ∈ s }) ∈ Set.Icc n m ∩ { i | u i ω ∈ s } :=
     cinfₛ_mem (Set.nonempty_of_mem ⟨hj₁, hj₂⟩)
   exact this.2
-#align measure_theory.stopped_value_hitting_mem MeasureTheory.stopped_value_hitting_mem
+#align measure_theory.stopped_value_hitting_mem MeasureTheory.stoppedValue_hitting_mem
 
 /-- The hitting time of a discrete process with the starting time indexed by a stopping time
 is a stopping time. -/
-theorem is_stopping_time_hitting_is_stopping_time [ConditionallyCompleteLinearOrder ι]
+theorem isStoppingTime_hitting_isStoppingTime [ConditionallyCompleteLinearOrder ι]
     [IsWellOrder ι (· < ·)] [Countable ι] [TopologicalSpace ι] [OrderTopology ι]
     [FirstCountableTopology ι] [TopologicalSpace β] [PseudoMetrizableSpace β] [MeasurableSpace β]
     [BorelSpace β] {f : Filtration ι m} {u : ι → Ω → β} {τ : Ω → ι} (hτ : IsStoppingTime f τ)
@@ -302,16 +302,16 @@ theorem is_stopping_time_hitting_is_stopping_time [ConditionallyCompleteLinearOr
     exact lt_of_lt_of_le hm (le_hitting (hτbdd _) _)
   rw [h₁, h₂, Set.union_empty]
   exact
-    MeasurableSet.Union fun i =>
-      MeasurableSet.Union fun hi =>
+    MeasurableSet.unionᵢ fun i =>
+      MeasurableSet.unionᵢ fun hi =>
         (f.mono hi _ (hτ.measurable_set_eq i)).inter (hitting_is_stopping_time hf hs n)
-#align measure_theory.is_stopping_time_hitting_is_stopping_time MeasureTheory.is_stopping_time_hitting_is_stopping_time
+#align measure_theory.is_stopping_time_hitting_is_stopping_time MeasureTheory.isStoppingTime_hitting_isStoppingTime
 
 section CompleteLattice
 
 variable [CompleteLattice ι] {u : ι → Ω → β} {s : Set β} {f : Filtration ι m}
 
-theorem hitting_eq_Inf (ω : Ω) : hitting u s ⊥ ⊤ ω = infₛ { i : ι | u i ω ∈ s } :=
+theorem hitting_eq_infₛ (ω : Ω) : hitting u s ⊥ ⊤ ω = infₛ { i : ι | u i ω ∈ s } :=
   by
   simp only [hitting, Set.mem_Icc, bot_le, le_top, and_self_iff, exists_true_left, Set.Icc_bot,
     Set.Iic_top, Set.univ_inter, ite_eq_left_iff, not_exists]
@@ -319,7 +319,7 @@ theorem hitting_eq_Inf (ω : Ω) : hitting u s ⊥ ⊤ ω = infₛ { i : ι | u 
   symm
   rw [infₛ_eq_top]
   exact fun i hi_mem_s => absurd hi_mem_s (h_nmem_s i)
-#align measure_theory.hitting_eq_Inf MeasureTheory.hitting_eq_Inf
+#align measure_theory.hitting_eq_Inf MeasureTheory.hitting_eq_infₛ
 
 end CompleteLattice
 

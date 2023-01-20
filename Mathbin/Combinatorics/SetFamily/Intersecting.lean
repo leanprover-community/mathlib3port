@@ -113,7 +113,7 @@ theorem intersecting_iff_eq_empty_of_subsingleton [Subsingleton α] (s : Set α)
 #align set.intersecting_iff_eq_empty_of_subsingleton Set.intersecting_iff_eq_empty_of_subsingleton
 
 /-- Maximal intersecting families are upper sets. -/
-protected theorem Intersecting.is_upper_set (hs : s.Intersecting)
+protected theorem Intersecting.isUpperSet (hs : s.Intersecting)
     (h : ∀ t : Set α, t.Intersecting → s ⊆ t → s = t) : IsUpperSet s := by
   classical
     rintro a b hab ha
@@ -121,7 +121,7 @@ protected theorem Intersecting.is_upper_set (hs : s.Intersecting)
     · exact mem_insert _ _
     exact
       hs.insert (mt (eq_bot_mono hab) <| hs.ne_bot ha) fun c hc hbc => hs ha hc <| hbc.mono_left hab
-#align set.intersecting.is_upper_set Set.Intersecting.is_upper_set
+#align set.intersecting.is_upper_set Set.Intersecting.isUpperSet
 
 /-- Maximal intersecting families are upper sets. Finset version. -/
 theorem Intersecting.is_upper_set' {s : Finset α} (hs : (s : Set α).Intersecting)

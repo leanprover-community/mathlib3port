@@ -63,7 +63,7 @@ theorem AccPt.nhds_inter {x : α} {U : Set α} (h_acc : AccPt x (𝓟 C)) (hU : 
   by
   have : 𝓝[≠] x ≤ 𝓟 U := by
     rw [le_principal_iff]
-    exact mem_nhds_within_of_mem_nhds hU
+    exact mem_nhdsWithin_of_mem_nhds hU
   rw [AccPt, ← inf_principal, ← inf_assoc, inf_of_le_left this]
   exact h_acc
 #align acc_pt.nhds_inter AccPt.nhds_inter
@@ -84,7 +84,7 @@ structure Perfect (C : Set α) : Prop where
 #align perfect Perfect
 
 theorem preperfect_iff_nhds : Preperfect C ↔ ∀ x ∈ C, ∀ U ∈ 𝓝 x, ∃ y ∈ U ∩ C, y ≠ x := by
-  simp only [Preperfect, acc_pt_iff_nhds]
+  simp only [Preperfect, accPt_iff_nhds]
 #align preperfect_iff_nhds preperfect_iff_nhds
 
 /-- The intersection of a preperfect set and an open set is preperfect-/
@@ -99,7 +99,7 @@ theorem Preperfect.open_inter {U : Set α} (hC : Preperfect C) (hU : IsOpen U) :
 For a converse, see `preperfect_iff_perfect_closure`-/
 theorem Preperfect.perfect_closure (hC : Preperfect C) : Perfect (closure C) :=
   by
-  constructor; · exact is_closed_closure
+  constructor; · exact isClosed_closure
   intro x hx
   by_cases h : x ∈ C <;> apply AccPt.mono _ (principal_mono.mpr subset_closure)
   · exact hC _ h
@@ -116,11 +116,11 @@ theorem preperfect_iff_perfect_closure [T1Space α] : Preperfect C ↔ Perfect (
   · exact h.perfect_closure
   intro x xC
   have H : AccPt x (𝓟 (closure C)) := h.acc _ (subset_closure xC)
-  rw [acc_pt_iff_frequently] at *
+  rw [accPt_iff_frequently] at *
   have : ∀ y, y ≠ x ∧ y ∈ closure C → ∃ᶠ z in 𝓝 y, z ≠ x ∧ z ∈ C :=
     by
     rintro y ⟨hyx, yC⟩
-    simp only [← mem_compl_singleton_iff, @and_comm' _ (_ ∈ C), ← frequently_nhds_within_iff,
+    simp only [← mem_compl_singleton_iff, @and_comm' _ (_ ∈ C), ← frequently_nhdsWithin_iff,
       hyx.nhds_within_compl_singleton, ← mem_closure_iff_frequently]
     exact yC
   rw [← frequently_frequently_nhds]
@@ -147,7 +147,7 @@ theorem Perfect.splitting [T25Space α] (hC : Perfect C) (hnonempty : C.Nonempty
   obtain ⟨x, xC, hxy⟩ : ∃ x ∈ C, x ≠ y :=
     by
     have := hC.acc _ yC
-    rw [acc_pt_iff_nhds] at this
+    rw [accPt_iff_nhds] at this
     rcases this univ univ_mem with ⟨x, xC, hxy⟩
     exact ⟨x, xC.2, hxy⟩
   obtain ⟨U, xU, Uop, V, yV, Vop, hUV⟩ := exists_open_nhds_disjoint_closure hxy
@@ -167,7 +167,7 @@ section Kernel
 
 /-- The **Cantor-Bendixson Theorem**: Any closed subset of a second countable space
 can be written as the union of a countable set and a perfect set.-/
-theorem exists_countable_union_perfect_of_is_closed [SecondCountableTopology α]
+theorem exists_countable_union_perfect_of_isClosed [SecondCountableTopology α]
     (hclosed : IsClosed C) : ∃ V D : Set α, V.Countable ∧ Perfect D ∧ C = V ∪ D :=
   by
   obtain ⟨b, bct, bnontrivial, bbasis⟩ := TopologicalSpace.exists_countable_basis α
@@ -181,7 +181,7 @@ theorem exists_countable_union_perfect_of_is_closed [SecondCountableTopology α]
     · exact countable.mono (inter_subset_left _ _) bct
     · exact inter_subset_right _ _
   refine' ⟨V ∩ C, D, Vct, ⟨_, _⟩, _⟩
-  · refine' hclosed.sdiff (is_open_bUnion fun U => _)
+  · refine' hclosed.sdiff (isOpen_bUnion fun U => _)
     exact fun ⟨Ub, _⟩ => is_topological_basis.is_open bbasis Ub
   · rw [preperfect_iff_nhds]
     intro x xD E xE
@@ -204,13 +204,13 @@ theorem exists_countable_union_perfect_of_is_closed [SecondCountableTopology α]
     push_neg  at h
     exact absurd (countable.mono h (Set.countable_singleton _)) this
   · rw [inter_comm, inter_union_diff]
-#align exists_countable_union_perfect_of_is_closed exists_countable_union_perfect_of_is_closed
+#align exists_countable_union_perfect_of_is_closed exists_countable_union_perfect_of_isClosed
 
 /-- Any uncountable closed set in a second countable space contains a nonempty perfect subset.-/
-theorem exists_perfect_nonempty_of_is_closed_of_not_countable [SecondCountableTopology α]
+theorem exists_perfect_nonempty_of_isClosed_of_not_countable [SecondCountableTopology α]
     (hclosed : IsClosed C) (hunc : ¬C.Countable) : ∃ D : Set α, Perfect D ∧ D.Nonempty ∧ D ⊆ C :=
   by
-  rcases exists_countable_union_perfect_of_is_closed hclosed with ⟨V, D, Vct, Dperf, VD⟩
+  rcases exists_countable_union_perfect_of_isClosed hclosed with ⟨V, D, Vct, Dperf, VD⟩
   refine' ⟨D, ⟨Dperf, _⟩⟩
   constructor
   · rw [nonempty_iff_ne_empty]
@@ -220,7 +220,7 @@ theorem exists_perfect_nonempty_of_is_closed_of_not_countable [SecondCountableTo
     contradiction
   rw [VD]
   exact subset_union_right _ _
-#align exists_perfect_nonempty_of_is_closed_of_not_countable exists_perfect_nonempty_of_is_closed_of_not_countable
+#align exists_perfect_nonempty_of_is_closed_of_not_countable exists_perfect_nonempty_of_isClosed_of_not_countable
 
 end Kernel
 

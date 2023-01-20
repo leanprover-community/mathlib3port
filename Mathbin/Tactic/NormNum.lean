@@ -1058,7 +1058,7 @@ unsafe def prove_add_rat' (ic : instance_cache) (a b : expr) :
 #align norm_num.prove_add_rat' norm_num.prove_add_rat'
 
 theorem clear_denom_simple_nat {α} [DivisionRing α] (a : α) : (1 : α) ≠ 0 ∧ a * 1 = a :=
-  ⟨one_ne_zero, mul_one _⟩
+  ⟨one_neZero, mul_one _⟩
 #align norm_num.clear_denom_simple_nat NormNum.clear_denom_simple_nat
 
 theorem clear_denom_simple_div {α} [DivisionRing α] (a b : α) (h : b ≠ 0) : b ≠ 0 ∧ a / b * b = a :=
@@ -1558,45 +1558,45 @@ unsafe def prove_nat_succ (ic : instance_cache) : expr → tactic (instance_cach
     return (ic, n, e, p)
 #align norm_num.prove_nat_succ norm_num.prove_nat_succ
 
-theorem int_to_nat_pos (a : ℤ) (b : ℕ)
+theorem int_toNat_pos (a : ℤ) (b : ℕ)
     (h :
       (haveI := @Nat.castCoe ℤ
           b :
           ℤ) =
         a) :
     a.toNat = b := by rw [← h] <;> simp
-#align norm_num.int_to_nat_pos NormNum.int_to_nat_pos
+#align norm_num.int_to_nat_pos NormNum.int_toNat_pos
 
-theorem int_to_nat_neg (a : ℤ) (h : 0 < a) : (-a).toNat = 0 := by
+theorem int_toNat_neg (a : ℤ) (h : 0 < a) : (-a).toNat = 0 := by
   simp only [Int.toNat_of_nonpos, h.le, neg_nonpos]
-#align norm_num.int_to_nat_neg NormNum.int_to_nat_neg
+#align norm_num.int_to_nat_neg NormNum.int_toNat_neg
 
-theorem nat_abs_pos (a : ℤ) (b : ℕ)
+theorem natAbs_pos (a : ℤ) (b : ℕ)
     (h :
       (haveI := @Nat.castCoe ℤ
           b :
           ℤ) =
         a) :
     a.natAbs = b := by rw [← h] <;> simp
-#align norm_num.nat_abs_pos NormNum.nat_abs_pos
+#align norm_num.nat_abs_pos NormNum.natAbs_pos
 
-theorem nat_abs_neg (a : ℤ) (b : ℕ)
+theorem natAbs_neg (a : ℤ) (b : ℕ)
     (h :
       (haveI := @Nat.castCoe ℤ
           b :
           ℤ) =
         a) :
     (-a).natAbs = b := by rw [← h] <;> simp
-#align norm_num.nat_abs_neg NormNum.nat_abs_neg
+#align norm_num.nat_abs_neg NormNum.natAbs_neg
 
-theorem neg_succ_of_nat (a b : ℕ) (c : ℤ) (h₁ : a + 1 = b)
+theorem negSucc (a b : ℕ) (c : ℤ) (h₁ : a + 1 = b)
     (h₂ :
       (haveI := @Nat.castCoe ℤ
           b :
           ℤ) =
         c) :
     -[a+1] = -c := by rw [← h₂, ← h₁] <;> rfl
-#align norm_num.neg_succ_of_nat NormNum.neg_succ_of_nat
+#align norm_num.neg_succ_of_nat NormNum.negSucc
 
 /-- Evaluates `nat.succ`, `int.to_nat`, `int.nat_abs`, `int.neg_succ_of_nat`. -/
 unsafe def eval_nat_int : expr → tactic (expr × expr)
@@ -1610,22 +1610,22 @@ unsafe def eval_nat_int : expr → tactic (expr × expr)
     if n ≥ 0 then do
         let nc ← mk_instance_cache q(ℕ)
         let (_, _, b, p) ← prove_nat_uncast ic nc a
-        pure (b, q(int_to_nat_pos).mk_app [a, b, p])
+        pure (b, q(int_toNat_pos).mk_app [a, b, p])
       else do
         let a ← match_neg a
         let (_, p) ← prove_pos ic a
-        pure (q(0), q(int_to_nat_neg).mk_app [a, p])
+        pure (q(0), q(int_toNat_neg).mk_app [a, p])
   | q(Int.natAbs $(a)) => do
     let n ← a.to_int
     let ic ← mk_instance_cache q(ℤ)
     let nc ← mk_instance_cache q(ℕ)
     if n ≥ 0 then do
         let (_, _, b, p) ← prove_nat_uncast ic nc a
-        pure (b, q(nat_abs_pos).mk_app [a, b, p])
+        pure (b, q(natAbs_pos).mk_app [a, b, p])
       else do
         let a ← match_neg a
         let (_, _, b, p) ← prove_nat_uncast ic nc a
-        pure (b, q(nat_abs_neg).mk_app [a, b, p])
+        pure (b, q(natAbs_neg).mk_app [a, b, p])
   | q(Int.negSucc $(a)) => do
     let na ← a.toNat
     let ic ← mk_instance_cache q(ℤ)
@@ -1635,7 +1635,7 @@ unsafe def eval_nat_int : expr → tactic (expr × expr)
     let (nc, p₁) ← prove_add_nat nc a q(1) b
     let (ic, c) ← ic.ofNat nb
     let (_, _, _, p₂) ← prove_nat_uncast ic nc c
-    pure (q((-$(c) : ℤ)), q(neg_succ_of_nat).mk_app [a, b, c, p₁, p₂])
+    pure (q((-$(c) : ℤ)), q(negSucc).mk_app [a, b, c, p₁, p₂])
   | _ => failed
 #align norm_num.eval_nat_int norm_num.eval_nat_int
 

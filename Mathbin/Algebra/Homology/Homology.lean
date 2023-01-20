@@ -51,10 +51,10 @@ abbrev cycles (i : ι) : Subobject (C.x i) :=
   kernelSubobject (C.dFrom i)
 #align homological_complex.cycles HomologicalComplex.cycles
 
-theorem cycles_eq_kernel_subobject {i j : ι} (r : c.Rel i j) :
+theorem cycles_eq_kernelSubobject {i j : ι} (r : c.Rel i j) :
     C.cycles i = kernelSubobject (C.d i j) :=
   C.kernel_from_eq_kernel r
-#align homological_complex.cycles_eq_kernel_subobject HomologicalComplex.cycles_eq_kernel_subobject
+#align homological_complex.cycles_eq_kernel_subobject HomologicalComplex.cycles_eq_kernelSubobject
 
 /-- The underlying object of `C.cycles i` is isomorphic to `kernel (C.d i j)`,
 for any `j` such that `rel i j`.
@@ -81,10 +81,10 @@ abbrev boundaries (C : HomologicalComplex V c) (j : ι) : Subobject (C.x j) :=
   imageSubobject (C.dTo j)
 #align homological_complex.boundaries HomologicalComplex.boundaries
 
-theorem boundaries_eq_image_subobject [HasEqualizers V] {i j : ι} (r : c.Rel i j) :
+theorem boundaries_eq_imageSubobject [HasEqualizers V] {i j : ι} (r : c.Rel i j) :
     C.boundaries j = imageSubobject (C.d i j) :=
   C.image_to_eq_image r
-#align homological_complex.boundaries_eq_image_subobject HomologicalComplex.boundaries_eq_image_subobject
+#align homological_complex.boundaries_eq_image_subobject HomologicalComplex.boundaries_eq_imageSubobject
 
 /-- The underlying object of `C.boundaries j` is isomorphic to `image (C.d i j)`,
 for any `i` such that `rel i j`.
@@ -120,10 +120,10 @@ abbrev boundariesToCycles (C : HomologicalComplex V c) (i : ι) :
 
 /-- Prefer `boundaries_to_cycles`. -/
 @[simp]
-theorem image_to_kernel_as_boundaries_to_cycles (C : HomologicalComplex V c) (i : ι) (h) :
+theorem image_to_kernel_as_boundariesToCycles (C : HomologicalComplex V c) (i : ι) (h) :
     (C.boundaries i).of_le (C.cycles i) h = C.boundariesToCycles i :=
   rfl
-#align homological_complex.image_to_kernel_as_boundaries_to_cycles HomologicalComplex.image_to_kernel_as_boundaries_to_cycles
+#align homological_complex.image_to_kernel_as_boundaries_to_cycles HomologicalComplex.image_to_kernel_as_boundariesToCycles
 
 variable [HasCokernels V]
 
@@ -158,7 +158,7 @@ def ChainComplex.homologyZeroIso [HasKernels V] [HasImages V] [HasCokernels V]
           Arrow.mk (C.dTo 0) ≅ Arrow.mk (C.d 1 0))
         (Arrow.isoMk (Iso.refl _) (Iso.refl _) <| by
             simp [C.d_from_eq_zero fun h : _ = _ =>
-                one_ne_zero <| by rwa [ChainComplex.next_nat_zero] at h] :
+                one_neZero <| by rwa [ChainComplex.next_nat_zero] at h] :
           Arrow.mk (C.dFrom 0) ≅ Arrow.mk 0)
         rfl).trans <|
     homologyOfZeroRight _
@@ -168,7 +168,7 @@ def ChainComplex.homologyZeroIso [HasKernels V] [HasImages V] [HasCokernels V]
 def CochainComplex.homologyZeroIso [HasZeroObject V] [HasKernels V] [HasImages V] [HasCokernels V]
     (C : CochainComplex V ℕ) : C.homology 0 ≅ kernel (C.d 0 1) :=
   (homology.mapIso _ _
-          (Arrow.isoMk (C.xPrevIsoSelf (by rw [CochainComplex.prev_nat_zero] <;> exact one_ne_zero))
+          (Arrow.isoMk (C.xPrevIsoSelf (by rw [CochainComplex.prev_nat_zero] <;> exact one_neZero))
               (Iso.refl _) (by simp) :
             Arrow.mk (C.dTo 0) ≅ Arrow.mk 0)
           (Arrow.isoMk (Iso.refl _) (C.xNextIso rfl) (by simp) :
@@ -209,28 +209,28 @@ variable {C₁ C₂ C₃ : HomologicalComplex V c} (f : C₁ ⟶ C₂)
 /-- The morphism between cycles induced by a chain map.
 -/
 abbrev cyclesMap (f : C₁ ⟶ C₂) (i : ι) : (C₁.cycles i : V) ⟶ (C₂.cycles i : V) :=
-  Subobject.factorThru _ ((C₁.cycles i).arrow ≫ f.f i) (kernel_subobject_factors _ _ (by simp))
+  Subobject.factorThru _ ((C₁.cycles i).arrow ≫ f.f i) (kernelSubobject_factors _ _ (by simp))
 #align cycles_map cyclesMap
 
 @[simp, reassoc.1, elementwise]
-theorem cycles_map_arrow (f : C₁ ⟶ C₂) (i : ι) :
+theorem cyclesMap_arrow (f : C₁ ⟶ C₂) (i : ι) :
     cyclesMap f i ≫ (C₂.cycles i).arrow = (C₁.cycles i).arrow ≫ f.f i := by simp
-#align cycles_map_arrow cycles_map_arrow
+#align cycles_map_arrow cyclesMap_arrow
 
 @[simp]
-theorem cycles_map_id (i : ι) : cyclesMap (𝟙 C₁) i = 𝟙 _ :=
+theorem cyclesMap_id (i : ι) : cyclesMap (𝟙 C₁) i = 𝟙 _ :=
   by
   dsimp only [cyclesMap]
   simp
-#align cycles_map_id cycles_map_id
+#align cycles_map_id cyclesMap_id
 
 @[simp]
-theorem cycles_map_comp (f : C₁ ⟶ C₂) (g : C₂ ⟶ C₃) (i : ι) :
+theorem cyclesMap_comp (f : C₁ ⟶ C₂) (g : C₂ ⟶ C₃) (i : ι) :
     cyclesMap (f ≫ g) i = cyclesMap f i ≫ cyclesMap g i :=
   by
   dsimp only [cyclesMap]
   simp [subobject.factor_thru_right]
-#align cycles_map_comp cycles_map_comp
+#align cycles_map_comp cyclesMap_comp
 
 variable (V c)
 
@@ -281,12 +281,12 @@ variable [HasEqualizers V] [HasImages V] [HasImageMaps V]
 variable {C₁ C₂ : HomologicalComplex V c} (f : C₁ ⟶ C₂)
 
 @[simp, reassoc.1]
-theorem boundaries_to_cycles_naturality (i : ι) :
+theorem boundariesToCycles_naturality (i : ι) :
     boundariesMap f i ≫ C₂.boundariesToCycles i = C₁.boundariesToCycles i ≫ cyclesMap f i :=
   by
   ext
   simp
-#align boundaries_to_cycles_naturality boundaries_to_cycles_naturality
+#align boundaries_to_cycles_naturality boundariesToCycles_naturality
 
 variable (V c)
 
@@ -295,7 +295,7 @@ variable (V c)
 def boundariesToCyclesNatTrans (i : ι) : boundariesFunctor V c i ⟶ cyclesFunctor V c i
     where
   app C := C.boundariesToCycles i
-  naturality' C₁ C₂ f := boundaries_to_cycles_naturality f i
+  naturality' C₁ C₂ f := boundariesToCycles_naturality f i
 #align boundaries_to_cycles_nat_trans boundariesToCyclesNatTrans
 
 /-- The `i`-th homology, as a functor to `V`. -/
@@ -325,12 +325,12 @@ def gradedHomologyFunctor [HasCokernels V] : HomologicalComplex V c ⥤ GradedOb
   map C C' f i := (homologyFunctor V c i).map f
   map_id' := by
     intros ; ext
-    simp only [pi.id_apply, homology.π_map, homology_functor_map, kernel_subobject_map_id,
+    simp only [pi.id_apply, homology.π_map, homologyFunctor_map, kernel_subobject_map_id,
       hom.sq_from_id, category.id_comp, category.comp_id]
   map_comp' := by
     intros ; ext
     simp only [hom.sq_from_comp, kernel_subobject_map_comp, homology.π_map_assoc, pi.comp_apply,
-      homology.π_map, homology_functor_map, category.assoc]
+      homology.π_map, homologyFunctor_map, category.assoc]
 #align graded_homology_functor gradedHomologyFunctor
 
 end

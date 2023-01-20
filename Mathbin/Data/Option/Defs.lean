@@ -53,9 +53,11 @@ theorem mem_iff {a : α} {b : Option α} : a ∈ b ↔ b = a :=
 #align option.mem_iff Option.mem_iff
 -/
 
-theorem is_none_iff_eq_none {o : Option α} : o.isNone = tt ↔ o = none :=
+#print Option.isNone_iff_eq_none /-
+theorem isNone_iff_eq_none {o : Option α} : o.isNone = tt ↔ o = none :=
   ⟨Option.eq_none_of_isNone, fun e => e.symm ▸ rfl⟩
-#align option.is_none_iff_eq_none Option.is_none_iff_eq_none
+#align option.is_none_iff_eq_none Option.isNone_iff_eq_none
+-/
 
 #print Option.some_inj /-
 theorem some_inj {a b : α} : some a = some b ↔ a = b := by simp
@@ -75,7 +77,7 @@ Try to use `o.is_none` or `o.is_some` instead.
 -/
 @[inline]
 def decidableEqNone {o : Option α} : Decidable (o = none) :=
-  decidable_of_decidable_of_iff (Bool.decidableEq _ _) is_none_iff_eq_none
+  decidable_of_decidable_of_iff (Bool.decidableEq _ _) isNone_iff_eq_none
 #align option.decidable_eq_none Option.decidableEqNone
 -/
 

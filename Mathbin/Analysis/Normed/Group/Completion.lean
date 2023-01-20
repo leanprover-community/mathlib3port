@@ -36,7 +36,7 @@ instance [UniformSpace E] [HasNorm E] : HasNorm (Completion E)
 
 @[simp]
 theorem norm_coe {E} [SeminormedAddCommGroup E] (x : E) : ‖(x : Completion E)‖ = ‖x‖ :=
-  Completion.extension_coe uniform_continuous_norm x
+  Completion.extension_coe uniformContinuous_norm x
 #align uniform_space.completion.norm_coe UniformSpace.Completion.norm_coe
 
 instance [SeminormedAddCommGroup E] : NormedAddCommGroup (Completion E) :=
@@ -44,7 +44,7 @@ instance [SeminormedAddCommGroup E] : NormedAddCommGroup (Completion E) :=
     dist_eq := by
       intro x y
       apply completion.induction_on₂ x y <;> clear x y
-      · refine' is_closed_eq (completion.uniform_continuous_extension₂ _).Continuous _
+      · refine' isClosed_eq (completion.uniform_continuous_extension₂ _).Continuous _
         exact Continuous.comp completion.continuous_extension continuous_sub
       · intro x y
         rw [← completion.coe_sub, norm_coe, completion.dist_eq, dist_eq_norm] }

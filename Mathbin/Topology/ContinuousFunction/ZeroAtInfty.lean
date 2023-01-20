@@ -156,7 +156,7 @@ def zeroAtInftyContinuousMapClass.ofCompact {G : Type _} [ContinuousMapClass G �
     [CompactSpace α] : ZeroAtInftyContinuousMapClass G α β
     where
   coe g := g
-  coe_injective' f g h := FunLike.coe_fn_eq.mp h
+  coe_injective' f g h := FunLike.coeFn_eq.mp h
   map_continuous := map_continuous
   zero_at_infty := by simp
 #align zero_at_infty_continuous_map.zero_at_infty_continuous_map_class.of_compact ZeroAtInftyContinuousMap.zeroAtInftyContinuousMapClass.ofCompact
@@ -228,10 +228,10 @@ section AddMonoid
 variable [AddMonoid β] [HasContinuousAdd β] (f g : C₀(α, β))
 
 @[simp]
-theorem coe_nsmul_rec : ∀ n, ⇑(nsmulRec n f) = n • f
+theorem coe_nsmulRec : ∀ n, ⇑(nsmulRec n f) = n • f
   | 0 => by rw [nsmulRec, zero_smul, coe_zero]
   | n + 1 => by rw [nsmulRec, succ_nsmul, coe_add, coe_nsmul_rec]
-#align zero_at_infty_continuous_map.coe_nsmul_rec ZeroAtInftyContinuousMap.coe_nsmul_rec
+#align zero_at_infty_continuous_map.coe_nsmul_rec ZeroAtInftyContinuousMap.coe_nsmulRec
 
 instance hasNatScalar : SMul ℕ C₀(α, β) :=
   ⟨fun n f => ⟨n • f, by simpa [coe_nsmul_rec] using zero_at_infty (nsmulRec n f)⟩⟩
@@ -274,10 +274,10 @@ theorem sub_apply : (f - g) x = f x - g x :=
 #align zero_at_infty_continuous_map.sub_apply ZeroAtInftyContinuousMap.sub_apply
 
 @[simp]
-theorem coe_zsmul_rec : ∀ z, ⇑(zsmulRec z f) = z • f
+theorem coe_zsmulRec : ∀ z, ⇑(zsmulRec z f) = z • f
   | Int.ofNat n => by rw [zsmulRec, Int.ofNat_eq_coe, coe_nsmul_rec, coe_nat_zsmul]
   | -[n+1] => by rw [zsmulRec, negSucc_zsmul, coe_neg, coe_nsmul_rec]
-#align zero_at_infty_continuous_map.coe_zsmul_rec ZeroAtInftyContinuousMap.coe_zsmul_rec
+#align zero_at_infty_continuous_map.coe_zsmul_rec ZeroAtInftyContinuousMap.coe_zsmulRec
 
 instance hasIntScalar : SMul ℤ C₀(α, β) :=
   ⟨fun n f => ⟨n • f, by simpa using zero_at_infty (zsmulRec n f)⟩⟩
@@ -367,9 +367,9 @@ section Uniform
 
 variable [UniformSpace β] [UniformSpace γ] [Zero γ] [ZeroAtInftyContinuousMapClass F β γ]
 
-theorem uniform_continuous (f : F) : UniformContinuous (f : β → γ) :=
+theorem uniformContinuous (f : F) : UniformContinuous (f : β → γ) :=
   (map_continuous f).uniform_continuous_of_zero_at_infty (zero_at_infty f)
-#align zero_at_infty_continuous_map.uniform_continuous ZeroAtInftyContinuousMap.uniform_continuous
+#align zero_at_infty_continuous_map.uniform_continuous ZeroAtInftyContinuousMap.uniformContinuous
 
 end Uniform
 
@@ -428,11 +428,11 @@ section
 
 variable (α) (β)
 
-theorem to_bcf_injective : Function.Injective (toBcf : C₀(α, β) → α →ᵇ β) := fun f g h =>
+theorem toBcf_injective : Function.Injective (toBcf : C₀(α, β) → α →ᵇ β) := fun f g h =>
   by
   ext
   simpa only using FunLike.congr_fun h x
-#align zero_at_infty_continuous_map.to_bcf_injective ZeroAtInftyContinuousMap.to_bcf_injective
+#align zero_at_infty_continuous_map.to_bcf_injective ZeroAtInftyContinuousMap.toBcf_injective
 
 end
 
@@ -441,30 +441,30 @@ variable {C : ℝ} {f g : C₀(α, β)}
 /-- The type of continuous functions vanishing at infinity, with the uniform distance induced by the
 inclusion `zero_at_infinity_continuous_map.to_bcf`, is a metric space. -/
 noncomputable instance : MetricSpace C₀(α, β) :=
-  MetricSpace.induced _ (to_bcf_injective α β) (by infer_instance)
+  MetricSpace.induced _ (toBcf_injective α β) (by infer_instance)
 
 @[simp]
-theorem dist_to_bcf_eq_dist {f g : C₀(α, β)} : dist f.toBcf g.toBcf = dist f g :=
+theorem dist_toBcf_eq_dist {f g : C₀(α, β)} : dist f.toBcf g.toBcf = dist f g :=
   rfl
-#align zero_at_infty_continuous_map.dist_to_bcf_eq_dist ZeroAtInftyContinuousMap.dist_to_bcf_eq_dist
+#align zero_at_infty_continuous_map.dist_to_bcf_eq_dist ZeroAtInftyContinuousMap.dist_toBcf_eq_dist
 
 open BoundedContinuousFunction
 
 /-- Convergence in the metric on `C₀(α, β)` is uniform convergence. -/
-theorem tendsto_iff_tendsto_uniformly {ι : Type _} {F : ι → C₀(α, β)} {f : C₀(α, β)}
-    {l : Filter ι} : Tendsto F l (𝓝 f) ↔ TendstoUniformly (fun i => F i) f l := by
+theorem tendsto_iff_tendstoUniformly {ι : Type _} {F : ι → C₀(α, β)} {f : C₀(α, β)} {l : Filter ι} :
+    Tendsto F l (𝓝 f) ↔ TendstoUniformly (fun i => F i) f l := by
   simpa only [Metric.tendsto_nhds] using
-    @BoundedContinuousFunction.tendsto_iff_tendsto_uniformly _ _ _ _ _ (fun i => (F i).toBcf)
+    @BoundedContinuousFunction.tendsto_iff_tendstoUniformly _ _ _ _ _ (fun i => (F i).toBcf)
       f.to_bcf l
-#align zero_at_infty_continuous_map.tendsto_iff_tendsto_uniformly ZeroAtInftyContinuousMap.tendsto_iff_tendsto_uniformly
+#align zero_at_infty_continuous_map.tendsto_iff_tendsto_uniformly ZeroAtInftyContinuousMap.tendsto_iff_tendstoUniformly
 
-theorem isometry_to_bcf : Isometry (toBcf : C₀(α, β) → α →ᵇ β) := by tauto
-#align zero_at_infty_continuous_map.isometry_to_bcf ZeroAtInftyContinuousMap.isometry_to_bcf
+theorem isometry_toBcf : Isometry (toBcf : C₀(α, β) → α →ᵇ β) := by tauto
+#align zero_at_infty_continuous_map.isometry_to_bcf ZeroAtInftyContinuousMap.isometry_toBcf
 
-theorem closed_range_to_bcf : IsClosed (range (toBcf : C₀(α, β) → α →ᵇ β)) :=
+theorem closed_range_toBcf : IsClosed (range (toBcf : C₀(α, β) → α →ᵇ β)) :=
   by
   refine' is_closed_iff_cluster_pt.mpr fun f hf => _
-  rw [cluster_pt_principal_iff] at hf
+  rw [clusterPt_principal_iff] at hf
   have : tendsto f (cocompact α) (𝓝 0) :=
     by
     refine' metric.tendsto_nhds.mpr fun ε hε => _
@@ -481,13 +481,13 @@ theorem closed_range_to_bcf : IsClosed (range (toBcf : C₀(α, β) → α →�
     ⟨⟨f.to_continuous_map, this⟩, by
       ext
       rfl⟩
-#align zero_at_infty_continuous_map.closed_range_to_bcf ZeroAtInftyContinuousMap.closed_range_to_bcf
+#align zero_at_infty_continuous_map.closed_range_to_bcf ZeroAtInftyContinuousMap.closed_range_toBcf
 
 /-- Continuous functions vanishing at infinity taking values in a complete space form a
 complete space. -/
 instance [CompleteSpace β] : CompleteSpace C₀(α, β) :=
-  (complete_space_iff_is_complete_range isometry_to_bcf.UniformInducing).mpr
-    closed_range_to_bcf.IsComplete
+  (completeSpace_iff_isComplete_range isometry_toBcf.UniformInducing).mpr
+    closed_range_toBcf.IsComplete
 
 end Metric
 
@@ -507,12 +507,12 @@ variable [NormedAddCommGroup β] {𝕜 : Type _} [NormedField 𝕜] [NormedSpace
 
 noncomputable instance : NormedAddCommGroup C₀(α, β) :=
   NormedAddCommGroup.induced C₀(α, β) (α →ᵇ β) (⟨toBcf, rfl, fun x y => rfl⟩ : C₀(α, β) →+ α →ᵇ β)
-    (to_bcf_injective α β)
+    (toBcf_injective α β)
 
 @[simp]
-theorem norm_to_bcf_eq_norm {f : C₀(α, β)} : ‖f.toBcf‖ = ‖f‖ :=
+theorem norm_toBcf_eq_norm {f : C₀(α, β)} : ‖f.toBcf‖ = ‖f‖ :=
   rfl
-#align zero_at_infty_continuous_map.norm_to_bcf_eq_norm ZeroAtInftyContinuousMap.norm_to_bcf_eq_norm
+#align zero_at_infty_continuous_map.norm_to_bcf_eq_norm ZeroAtInftyContinuousMap.norm_toBcf_eq_norm
 
 instance : NormedSpace 𝕜 C₀(α, β) where norm_smul_le k f := (norm_smul k f.toBcf).le
 

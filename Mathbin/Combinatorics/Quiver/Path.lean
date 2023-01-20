@@ -77,25 +77,13 @@ theorem obj_eq_of_cons_eq_cons {p : Path a b} {p' : Path a c} {e : b ⟶ d} {e' 
     (h : p.cons e = p'.cons e') : b = c := by injection h
 #align quiver.path.obj_eq_of_cons_eq_cons Quiver.Path.obj_eq_of_cons_eq_cons
 
-/- warning: quiver.path.heq_of_cons_eq_cons -> Quiver.Path.heq_of_cons_eq_cons is a dubious translation:
-lean 3 declaration is
-  forall {V : Type.{u1}} [_inst_1 : Quiver.{u2, u1} V] {a : V} {b : V} {c : V} {d : V} {p : Quiver.Path.{u2, u1} V _inst_1 a b} {p' : Quiver.Path.{u2, u1} V _inst_1 a c} {e : Quiver.Hom.{u2, u1} V _inst_1 b d} {e' : Quiver.Hom.{u2, u1} V _inst_1 c d}, (Eq.{max (succ u1) u2} (Quiver.Path.{u2, u1} V _inst_1 a d) (Quiver.Path.cons.{u2, u1} V _inst_1 a b d p e) (Quiver.Path.cons.{u2, u1} V _inst_1 a c d p' e')) -> (HEq.{max (succ u1) u2} (Quiver.Path.{u2, u1} V _inst_1 a b) p (Quiver.Path.{u2, u1} V _inst_1 a c) p')
-but is expected to have type
-  forall {V : Type.{u2}} [_inst_1 : Quiver.{u1, u2} V] {a : V} {b : V} {c : V} {d : V} {p : Quiver.Path.{u1, u2} V _inst_1 a b} {p' : Quiver.Path.{u1, u2} V _inst_1 a c} {e : Quiver.Hom.{u1, u2} V _inst_1 b d} {e' : Quiver.Hom.{u1, u2} V _inst_1 c d}, (Eq.{max (succ u2) u1} (Quiver.Path.{u1, u2} V _inst_1 a d) (Quiver.Path.cons.{u1, u2} V _inst_1 a b d p e) (Quiver.Path.cons.{u1, u2} V _inst_1 a c d p' e')) -> (HEq.{max (succ u2) u1} (Quiver.Path.{u1, u2} V _inst_1 a b) p (Quiver.Path.{u1, u2} V _inst_1 a c) p')
-Case conversion may be inaccurate. Consider using '#align quiver.path.heq_of_cons_eq_cons Quiver.Path.heq_of_cons_eq_consₓ'. -/
-theorem heq_of_cons_eq_cons {p : Path a b} {p' : Path a c} {e : b ⟶ d} {e' : c ⟶ d}
+theorem hEq_of_cons_eq_cons {p : Path a b} {p' : Path a c} {e : b ⟶ d} {e' : c ⟶ d}
     (h : p.cons e = p'.cons e') : HEq p p' := by injection h
-#align quiver.path.heq_of_cons_eq_cons Quiver.Path.heq_of_cons_eq_cons
+#align quiver.path.heq_of_cons_eq_cons Quiver.Path.hEq_of_cons_eq_cons
 
-/- warning: quiver.path.hom_heq_of_cons_eq_cons -> Quiver.Path.hom_heq_of_cons_eq_cons is a dubious translation:
-lean 3 declaration is
-  forall {V : Type.{u1}} [_inst_1 : Quiver.{u2, u1} V] {a : V} {b : V} {c : V} {d : V} {p : Quiver.Path.{u2, u1} V _inst_1 a b} {p' : Quiver.Path.{u2, u1} V _inst_1 a c} {e : Quiver.Hom.{u2, u1} V _inst_1 b d} {e' : Quiver.Hom.{u2, u1} V _inst_1 c d}, (Eq.{max (succ u1) u2} (Quiver.Path.{u2, u1} V _inst_1 a d) (Quiver.Path.cons.{u2, u1} V _inst_1 a b d p e) (Quiver.Path.cons.{u2, u1} V _inst_1 a c d p' e')) -> (HEq.{u2} (Quiver.Hom.{u2, u1} V _inst_1 b d) e (Quiver.Hom.{u2, u1} V _inst_1 c d) e')
-but is expected to have type
-  forall {V : Type.{u2}} [_inst_1 : Quiver.{u1, u2} V] {a : V} {b : V} {c : V} {d : V} {p : Quiver.Path.{u1, u2} V _inst_1 a b} {p' : Quiver.Path.{u1, u2} V _inst_1 a c} {e : Quiver.Hom.{u1, u2} V _inst_1 b d} {e' : Quiver.Hom.{u1, u2} V _inst_1 c d}, (Eq.{max (succ u2) u1} (Quiver.Path.{u1, u2} V _inst_1 a d) (Quiver.Path.cons.{u1, u2} V _inst_1 a b d p e) (Quiver.Path.cons.{u1, u2} V _inst_1 a c d p' e')) -> (HEq.{u1} (Quiver.Hom.{u1, u2} V _inst_1 b d) e (Quiver.Hom.{u1, u2} V _inst_1 c d) e')
-Case conversion may be inaccurate. Consider using '#align quiver.path.hom_heq_of_cons_eq_cons Quiver.Path.hom_heq_of_cons_eq_consₓ'. -/
-theorem hom_heq_of_cons_eq_cons {p : Path a b} {p' : Path a c} {e : b ⟶ d} {e' : c ⟶ d}
+theorem hom_hEq_of_cons_eq_cons {p : Path a b} {p' : Path a c} {e : b ⟶ d} {e' : c ⟶ d}
     (h : p.cons e = p'.cons e') : HEq e e' := by injection h
-#align quiver.path.hom_heq_of_cons_eq_cons Quiver.Path.hom_heq_of_cons_eq_cons
+#align quiver.path.hom_heq_of_cons_eq_cons Quiver.Path.hom_hEq_of_cons_eq_cons
 
 #print Quiver.Path.length /-
 /-- The length of a path is the number of arrows it uses. -/

@@ -53,9 +53,9 @@ abbrev pullbackFst (F : walking_parallel_pair ⥤ C) :
   pullback.fst
 #align category_theory.limits.has_equalizers_of_has_pullbacks_and_binary_products.pullback_fst CategoryTheory.Limits.HasEqualizersOfHasPullbacksAndBinaryProducts.pullbackFst
 
-theorem pullback_fst_eq_pullback_snd (F : walking_parallel_pair ⥤ C) :
+theorem pullbackFst_eq_pullback_snd (F : walking_parallel_pair ⥤ C) :
     pullbackFst F = pullback.snd := by convert pullback.condition =≫ limits.prod.fst <;> simp
-#align category_theory.limits.has_equalizers_of_has_pullbacks_and_binary_products.pullback_fst_eq_pullback_snd CategoryTheory.Limits.HasEqualizersOfHasPullbacksAndBinaryProducts.pullback_fst_eq_pullback_snd
+#align category_theory.limits.has_equalizers_of_has_pullbacks_and_binary_products.pullback_fst_eq_pullback_snd CategoryTheory.Limits.HasEqualizersOfHasPullbacksAndBinaryProducts.pullbackFst_eq_pullback_snd
 
 /-- Define the equalizing cone -/
 @[reducible]
@@ -89,14 +89,14 @@ open HasEqualizersOfHasPullbacksAndBinaryProducts
 
 -- This is not an instance, as it is not always how one wants to construct equalizers!
 /-- Any category with pullbacks and binary products, has equalizers. -/
-theorem has_equalizers_of_has_pullbacks_and_binary_products [HasBinaryProducts C] [HasPullbacks C] :
+theorem hasEqualizers_of_hasPullbacks_and_binary_products [HasBinaryProducts C] [HasPullbacks C] :
     HasEqualizers C :=
   {
     HasLimit := fun F =>
       HasLimit.mk
         { Cone := equalizerCone F
           IsLimit := equalizerConeIsLimit F } }
-#align category_theory.limits.has_equalizers_of_has_pullbacks_and_binary_products CategoryTheory.Limits.has_equalizers_of_has_pullbacks_and_binary_products
+#align category_theory.limits.has_equalizers_of_has_pullbacks_and_binary_products CategoryTheory.Limits.hasEqualizers_of_hasPullbacks_and_binary_products
 
 attribute [local instance] has_pullback_of_preserves_pullback
 
@@ -157,9 +157,9 @@ abbrev pushoutInl (F : walking_parallel_pair ⥤ C) :
   pushout.inl
 #align category_theory.limits.has_coequalizers_of_has_pushouts_and_binary_coproducts.pushout_inl CategoryTheory.Limits.HasCoequalizersOfHasPushoutsAndBinaryCoproducts.pushoutInl
 
-theorem pushout_inl_eq_pushout_inr (F : walking_parallel_pair ⥤ C) : pushoutInl F = pushout.inr :=
-  by convert limits.coprod.inl ≫= pushout.condition <;> simp
-#align category_theory.limits.has_coequalizers_of_has_pushouts_and_binary_coproducts.pushout_inl_eq_pushout_inr CategoryTheory.Limits.HasCoequalizersOfHasPushoutsAndBinaryCoproducts.pushout_inl_eq_pushout_inr
+theorem pushoutInl_eq_pushout_inr (F : walking_parallel_pair ⥤ C) : pushoutInl F = pushout.inr := by
+  convert limits.coprod.inl ≫= pushout.condition <;> simp
+#align category_theory.limits.has_coequalizers_of_has_pushouts_and_binary_coproducts.pushout_inl_eq_pushout_inr CategoryTheory.Limits.HasCoequalizersOfHasPushoutsAndBinaryCoproducts.pushoutInl_eq_pushout_inr
 
 /-- Define the equalizing cocone -/
 @[reducible]
@@ -196,14 +196,14 @@ open HasCoequalizersOfHasPushoutsAndBinaryCoproducts
 
 -- This is not an instance, as it is not always how one wants to construct equalizers!
 /-- Any category with pullbacks and binary products, has equalizers. -/
-theorem has_coequalizers_of_has_pushouts_and_binary_coproducts [HasBinaryCoproducts C]
+theorem hasCoequalizers_of_hasPushouts_and_binary_coproducts [HasBinaryCoproducts C]
     [HasPushouts C] : HasCoequalizers C :=
   {
     HasColimit := fun F =>
       HasColimit.mk
         { Cocone := coequalizerCocone F
           IsColimit := coequalizerCoconeIsColimit F } }
-#align category_theory.limits.has_coequalizers_of_has_pushouts_and_binary_coproducts CategoryTheory.Limits.has_coequalizers_of_has_pushouts_and_binary_coproducts
+#align category_theory.limits.has_coequalizers_of_has_pushouts_and_binary_coproducts CategoryTheory.Limits.hasCoequalizers_of_hasPushouts_and_binary_coproducts
 
 attribute [local instance] has_pushout_of_preserves_pushout
 

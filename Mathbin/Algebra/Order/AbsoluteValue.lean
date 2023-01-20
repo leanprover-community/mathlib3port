@@ -296,7 +296,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align absolute_value.map_one AbsoluteValue.map_oneₓ'. -/
 @[simp]
 protected theorem map_one : abv 1 = 1 :=
-  abv.map_one_of_is_regular (isRegular_of_ne_zero <| abv.NeZero one_ne_zero).left
+  abv.map_one_of_is_regular (isRegular_of_ne_zero <| abv.NeZero one_neZero).left
 #align absolute_value.map_one AbsoluteValue.map_one
 
 instance : MonoidWithZeroHomClass (AbsoluteValue R S) R S :=
@@ -679,7 +679,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_absolute_value.abv_one' IsAbsoluteValue.abv_one'ₓ'. -/
 theorem abv_one' : abv 1 = 1 :=
   (toAbsoluteValue abv).map_one_of_is_regular <|
-    (isRegular_of_ne_zero <| (toAbsoluteValue abv).NeZero one_ne_zero).left
+    (isRegular_of_ne_zero <| (toAbsoluteValue abv).NeZero one_neZero).left
 #align is_absolute_value.abv_one' IsAbsoluteValue.abv_one'
 
 #print IsAbsoluteValue.abvHom' /-

@@ -53,11 +53,11 @@ theorem mem_of_integral {x : R} (hx : IsIntegral O x) : x ∈ v.integer :=
       exact pow_lt_pow₀ hvx (Finset.mem_range.1 hi)
 #align valuation.integers.mem_of_integral Valuation.Integers.mem_of_integral
 
-protected theorem integral_closure : integralClosure O R = ⊥ :=
+protected theorem integralClosure : integralClosure O R = ⊥ :=
   bot_unique fun r hr =>
     let ⟨x, hx⟩ := hv.3 (hv.mem_of_integral hr)
     Algebra.mem_bot.2 ⟨x, hx⟩
-#align valuation.integers.integral_closure Valuation.Integers.integral_closure
+#align valuation.integers.integral_closure Valuation.Integers.integralClosure
 
 end CommRing
 
@@ -72,7 +72,7 @@ variable [Algebra O K] [IsFractionRing O K]
 variable (hv : Integers v O)
 
 theorem integrallyClosed : IsIntegrallyClosed O :=
-  (IsIntegrallyClosed.integral_closure_eq_bot_iff K).mp (Valuation.Integers.integral_closure hv)
+  (IsIntegrallyClosed.integralClosure_eq_bot_iff K).mp (Valuation.Integers.integralClosure hv)
 #align valuation.integers.integrally_closed Valuation.Integers.integrallyClosed
 
 end FractionField

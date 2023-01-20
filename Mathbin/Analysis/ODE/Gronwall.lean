@@ -48,65 +48,65 @@ noncomputable def gronwallBound (δ K ε x : ℝ) : ℝ :=
   if K = 0 then δ + ε * x else δ * exp (K * x) + ε / K * (exp (K * x) - 1)
 #align gronwall_bound gronwallBound
 
-theorem gronwall_bound_K0 (δ ε : ℝ) : gronwallBound δ 0 ε = fun x => δ + ε * x :=
+theorem gronwallBound_K0 (δ ε : ℝ) : gronwallBound δ 0 ε = fun x => δ + ε * x :=
   funext fun x => if_pos rfl
-#align gronwall_bound_K0 gronwall_bound_K0
+#align gronwall_bound_K0 gronwallBound_K0
 
-theorem gronwall_bound_of_K_ne_0 {δ K ε : ℝ} (hK : K ≠ 0) :
+theorem gronwallBound_of_K_ne_0 {δ K ε : ℝ} (hK : K ≠ 0) :
     gronwallBound δ K ε = fun x => δ * exp (K * x) + ε / K * (exp (K * x) - 1) :=
   funext fun x => if_neg hK
-#align gronwall_bound_of_K_ne_0 gronwall_bound_of_K_ne_0
+#align gronwall_bound_of_K_ne_0 gronwallBound_of_K_ne_0
 
-theorem has_deriv_at_gronwall_bound (δ K ε x : ℝ) :
+theorem hasDerivAt_gronwallBound (δ K ε x : ℝ) :
     HasDerivAt (gronwallBound δ K ε) (K * gronwallBound δ K ε x + ε) x :=
   by
   by_cases hK : K = 0
   · subst K
-    simp only [gronwall_bound_K0, zero_mul, zero_add]
-    convert ((has_deriv_at_id x).const_mul ε).const_add δ
+    simp only [gronwallBound_K0, zero_mul, zero_add]
+    convert ((hasDerivAt_id x).const_mul ε).const_add δ
     rw [mul_one]
-  · simp only [gronwall_bound_of_K_ne_0 hK]
+  · simp only [gronwallBound_of_K_ne_0 hK]
     convert
-      (((has_deriv_at_id x).const_mul K).exp.const_mul δ).add
-        ((((has_deriv_at_id x).const_mul K).exp.sub_const 1).const_mul (ε / K)) using
+      (((hasDerivAt_id x).const_mul K).exp.const_mul δ).add
+        ((((hasDerivAt_id x).const_mul K).exp.sub_const 1).const_mul (ε / K)) using
       1
     simp only [id, mul_add, (mul_assoc _ _ _).symm, mul_comm _ K, mul_div_cancel' _ hK]
     ring
-#align has_deriv_at_gronwall_bound has_deriv_at_gronwall_bound
+#align has_deriv_at_gronwall_bound hasDerivAt_gronwallBound
 
-theorem has_deriv_at_gronwall_bound_shift (δ K ε x a : ℝ) :
+theorem hasDerivAt_gronwallBound_shift (δ K ε x a : ℝ) :
     HasDerivAt (fun y => gronwallBound δ K ε (y - a)) (K * gronwallBound δ K ε (x - a) + ε) x :=
   by
-  convert (has_deriv_at_gronwall_bound δ K ε _).comp x ((has_deriv_at_id x).sub_const a)
+  convert (hasDerivAt_gronwallBound δ K ε _).comp x ((hasDerivAt_id x).sub_const a)
   rw [id, mul_one]
-#align has_deriv_at_gronwall_bound_shift has_deriv_at_gronwall_bound_shift
+#align has_deriv_at_gronwall_bound_shift hasDerivAt_gronwallBound_shift
 
-theorem gronwall_bound_x0 (δ K ε : ℝ) : gronwallBound δ K ε 0 = δ :=
+theorem gronwallBound_x0 (δ K ε : ℝ) : gronwallBound δ K ε 0 = δ :=
   by
   by_cases hK : K = 0
   · simp only [gronwallBound, if_pos hK, mul_zero, add_zero]
   · simp only [gronwallBound, if_neg hK, mul_zero, exp_zero, sub_self, mul_one, add_zero]
-#align gronwall_bound_x0 gronwall_bound_x0
+#align gronwall_bound_x0 gronwallBound_x0
 
-theorem gronwall_bound_ε0 (δ K x : ℝ) : gronwallBound δ K 0 x = δ * exp (K * x) :=
+theorem gronwallBound_ε0 (δ K x : ℝ) : gronwallBound δ K 0 x = δ * exp (K * x) :=
   by
   by_cases hK : K = 0
-  · simp only [gronwall_bound_K0, hK, zero_mul, exp_zero, add_zero, mul_one]
-  · simp only [gronwall_bound_of_K_ne_0 hK, zero_div, zero_mul, add_zero]
-#align gronwall_bound_ε0 gronwall_bound_ε0
+  · simp only [gronwallBound_K0, hK, zero_mul, exp_zero, add_zero, mul_one]
+  · simp only [gronwallBound_of_K_ne_0 hK, zero_div, zero_mul, add_zero]
+#align gronwall_bound_ε0 gronwallBound_ε0
 
-theorem gronwall_bound_ε0_δ0 (K x : ℝ) : gronwallBound 0 K 0 x = 0 := by
-  simp only [gronwall_bound_ε0, zero_mul]
-#align gronwall_bound_ε0_δ0 gronwall_bound_ε0_δ0
+theorem gronwallBound_ε0_δ0 (K x : ℝ) : gronwallBound 0 K 0 x = 0 := by
+  simp only [gronwallBound_ε0, zero_mul]
+#align gronwall_bound_ε0_δ0 gronwallBound_ε0_δ0
 
-theorem gronwall_bound_continuous_ε (δ K x : ℝ) : Continuous fun ε => gronwallBound δ K ε x :=
+theorem gronwallBound_continuous_ε (δ K x : ℝ) : Continuous fun ε => gronwallBound δ K ε x :=
   by
   by_cases hK : K = 0
-  · simp only [gronwall_bound_K0, hK]
+  · simp only [gronwallBound_K0, hK]
     exact continuous_const.add (continuous_id.mul continuous_const)
-  · simp only [gronwall_bound_of_K_ne_0 hK]
+  · simp only [gronwallBound_of_K_ne_0 hK]
     exact continuous_const.add ((continuous_id.mul continuous_const).mul continuous_const)
-#align gronwall_bound_continuous_ε gronwall_bound_continuous_ε
+#align gronwall_bound_continuous_ε gronwallBound_continuous_ε
 
 /-! ### Inequality and corollaries -/
 
@@ -118,7 +118,7 @@ is bounded by `gronwall_bound δ K ε (x - a)` on `[a, b]`.
 
 See also `norm_le_gronwall_bound_of_norm_deriv_right_le` for a version bounding `‖f x‖`,
 `f : ℝ → E`. -/
-theorem le_gronwall_bound_of_liminf_deriv_right_le {f f' : ℝ → ℝ} {δ K ε : ℝ} {a b : ℝ}
+theorem le_gronwallBound_of_liminf_deriv_right_le {f f' : ℝ → ℝ} {δ K ε : ℝ} {a b : ℝ}
     (hf : ContinuousOn f (Icc a b))
     (hf' : ∀ x ∈ Ico a b, ∀ r, f' x < r → ∃ᶠ z in 𝓝[>] x, (z - x)⁻¹ * (f z - f x) < r)
     (ha : f a ≤ δ) (bound : ∀ x ∈ Ico a b, f' x ≤ K * f x + ε) :
@@ -128,8 +128,8 @@ theorem le_gronwall_bound_of_liminf_deriv_right_le {f f' : ℝ → ℝ} {δ K ε
     by
     intro x hx ε' hε'
     apply image_le_of_liminf_slope_right_lt_deriv_boundary hf hf'
-    · rwa [sub_self, gronwall_bound_x0]
-    · exact fun x => has_deriv_at_gronwall_bound_shift δ K ε' x a
+    · rwa [sub_self, gronwallBound_x0]
+    · exact fun x => hasDerivAt_gronwallBound_shift δ K ε' x a
     · intro x hx hfB
       rw [← hfB]
       apply lt_of_le_of_lt (bound x hx)
@@ -138,21 +138,21 @@ theorem le_gronwall_bound_of_liminf_deriv_right_le {f f' : ℝ → ℝ} {δ K ε
   intro x hx
   change f x ≤ (fun ε' => gronwallBound δ K ε' (x - a)) ε
   convert continuous_within_at_const.closure_le _ _ (H x hx)
-  · simp only [closure_Ioi, left_mem_Ici]
-  exact (gronwall_bound_continuous_ε δ K (x - a)).ContinuousWithinAt
-#align le_gronwall_bound_of_liminf_deriv_right_le le_gronwall_bound_of_liminf_deriv_right_le
+  · simp only [closure_ioi, left_mem_Ici]
+  exact (gronwallBound_continuous_ε δ K (x - a)).ContinuousWithinAt
+#align le_gronwall_bound_of_liminf_deriv_right_le le_gronwallBound_of_liminf_deriv_right_le
 
 /-- A Grönwall-like inequality: if `f : ℝ → E` is continuous on `[a, b]`, has right derivative
 `f' x` at every point `x ∈ [a, b)`, and satisfies the inequalities `‖f a‖ ≤ δ`,
 `∀ x ∈ [a, b), ‖f' x‖ ≤ K * ‖f x‖ + ε`, then `‖f x‖` is bounded by `gronwall_bound δ K ε (x - a)`
 on `[a, b]`. -/
-theorem norm_le_gronwall_bound_of_norm_deriv_right_le {f f' : ℝ → E} {δ K ε : ℝ} {a b : ℝ}
+theorem norm_le_gronwallBound_of_norm_deriv_right_le {f f' : ℝ → E} {δ K ε : ℝ} {a b : ℝ}
     (hf : ContinuousOn f (Icc a b)) (hf' : ∀ x ∈ Ico a b, HasDerivWithinAt f (f' x) (Ici x) x)
     (ha : ‖f a‖ ≤ δ) (bound : ∀ x ∈ Ico a b, ‖f' x‖ ≤ K * ‖f x‖ + ε) :
     ∀ x ∈ Icc a b, ‖f x‖ ≤ gronwallBound δ K ε (x - a) :=
-  le_gronwall_bound_of_liminf_deriv_right_le (continuous_norm.comp_continuous_on hf)
+  le_gronwallBound_of_liminf_deriv_right_le (continuous_norm.comp_continuous_on hf)
     (fun x hx r hr => (hf' x hx).liminf_right_slope_norm_le hr) ha bound
-#align norm_le_gronwall_bound_of_norm_deriv_right_le norm_le_gronwall_bound_of_norm_deriv_right_le
+#align norm_le_gronwall_bound_of_norm_deriv_right_le norm_le_gronwallBound_of_norm_deriv_right_le
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x y «expr ∈ » s t) -/
 /-- If `f` and `g` are two approximate solutions of the same ODE, then the distance between them
@@ -174,7 +174,7 @@ theorem dist_le_of_approx_trajectories_ODE_of_mem_set {v : ℝ → E → E} {s :
   simp only [dist_eq_norm] at ha⊢
   have h_deriv : ∀ t ∈ Ico a b, HasDerivWithinAt (fun t => f t - g t) (f' t - g' t) (Ici t) t :=
     fun t ht => (hf' t ht).sub (hg' t ht)
-  apply norm_le_gronwall_bound_of_norm_deriv_right_le (hf.sub hg) h_deriv ha
+  apply norm_le_gronwallBound_of_norm_deriv_right_le (hf.sub hg) h_deriv ha
   intro t ht
   have := dist_triangle4_right (f' t) (g' t) (v t (f t)) (v t (g t))
   rw [dist_eq_norm] at this
@@ -229,7 +229,7 @@ theorem dist_le_of_trajectories_ODE_of_mem_set {v : ℝ → E → E} {s : ℝ �
   intro t ht
   have :=
     dist_le_of_approx_trajectories_ODE_of_mem_set hv hf hf' f_bound hfs hg hg' g_bound hgs ha t ht
-  rwa [zero_add, gronwall_bound_ε0] at this
+  rwa [zero_add, gronwallBound_ε0] at this
 #align dist_le_of_trajectories_ODE_of_mem_set dist_le_of_trajectories_ODE_of_mem_set
 
 /-- If `f` and `g` are two exact solutions of the same ODE, then the distance between them

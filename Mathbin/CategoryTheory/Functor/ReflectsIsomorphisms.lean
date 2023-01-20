@@ -46,10 +46,10 @@ class ReflectsIsomorphisms (F : C ⥤ D) : Prop where
 #align category_theory.reflects_isomorphisms CategoryTheory.ReflectsIsomorphisms
 
 /-- If `F` reflects isos and `F.map f` is an iso, then `f` is an iso. -/
-theorem is_iso_of_reflects_iso {A B : C} (f : A ⟶ B) (F : C ⥤ D) [IsIso (F.map f)]
+theorem isIso_of_reflects_iso {A B : C} (f : A ⟶ B) (F : C ⥤ D) [IsIso (F.map f)]
     [ReflectsIsomorphisms F] : IsIso f :=
   ReflectsIsomorphisms.reflects F f
-#align category_theory.is_iso_of_reflects_iso CategoryTheory.is_iso_of_reflects_iso
+#align category_theory.is_iso_of_reflects_iso CategoryTheory.isIso_of_reflects_iso
 
 instance (priority := 100) of_full_and_faithful (F : C ⥤ D) [Full F] [Faithful F] :
     ReflectsIsomorphisms F
@@ -64,7 +64,7 @@ instance (F : C ⥤ D) (G : D ⥤ E) [ReflectsIsomorphisms F] [ReflectsIsomorphi
     haveI := is_iso_of_reflects_iso (F.map f) G
     exact is_iso_of_reflects_iso f F⟩
 
-instance (priority := 100) reflects_isomorphisms_of_reflects_monomorphisms_of_reflects_epimorphisms
+instance (priority := 100) reflectsIsomorphisms_of_reflectsMonomorphisms_of_reflectsEpimorphisms
     [Balanced C] (F : C ⥤ D) [ReflectsMonomorphisms F] [ReflectsEpimorphisms F] :
     ReflectsIsomorphisms F
     where reflects A B f hf := by
@@ -72,7 +72,7 @@ instance (priority := 100) reflects_isomorphisms_of_reflects_monomorphisms_of_re
     haveI : epi f := epi_of_epi_map F inferInstance
     haveI : mono f := mono_of_mono_map F inferInstance
     exact is_iso_of_mono_of_epi f
-#align category_theory.reflects_isomorphisms_of_reflects_monomorphisms_of_reflects_epimorphisms CategoryTheory.reflects_isomorphisms_of_reflects_monomorphisms_of_reflects_epimorphisms
+#align category_theory.reflects_isomorphisms_of_reflects_monomorphisms_of_reflects_epimorphisms CategoryTheory.reflectsIsomorphisms_of_reflectsMonomorphisms_of_reflectsEpimorphisms
 
 end ReflectsIso
 

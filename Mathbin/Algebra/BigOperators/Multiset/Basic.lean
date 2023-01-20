@@ -103,6 +103,7 @@ theorem prod_toList (s : Multiset α) : s.toList.Prod = s.Prod :=
   conv_rhs => rw [← coe_to_list s]
   rw [coe_prod]
 #align multiset.prod_to_list Multiset.prod_toList
+#align multiset.sum_to_list Multiset.sum_toList
 
 /- warning: multiset.prod_zero -> Multiset.prod_zero is a dubious translation:
 lean 3 declaration is

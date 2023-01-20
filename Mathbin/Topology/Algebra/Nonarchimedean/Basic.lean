@@ -57,10 +57,10 @@ class NonarchimedeanRing (R : Type _) [Ring R] [TopologicalSpace R] extends Topo
 
 -- see Note [lower instance priority]
 /-- Every nonarchimedean ring is naturally a nonarchimedean additive group. -/
-instance (priority := 100) NonarchimedeanRing.to_nonarchimedean_add_group (R : Type _) [Ring R]
+instance (priority := 100) NonarchimedeanRing.to_nonarchimedeanAddGroup (R : Type _) [Ring R]
     [TopologicalSpace R] [t : NonarchimedeanRing R] : NonarchimedeanAddGroup R :=
   { t with }
-#align nonarchimedean_ring.to_nonarchimedean_add_group NonarchimedeanRing.to_nonarchimedean_add_group
+#align nonarchimedean_ring.to_nonarchimedean_add_group NonarchimedeanRing.to_nonarchimedeanAddGroup
 
 namespace NonarchimedeanGroup
 

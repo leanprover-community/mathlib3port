@@ -57,29 +57,29 @@ protected theorem continuous_proj (h : IsHomeomorphicTrivialFiberBundle F proj) 
 #align is_homeomorphic_trivial_fiber_bundle.continuous_proj IsHomeomorphicTrivialFiberBundle.continuous_proj
 
 /-- The projection from a trivial fiber bundle to its base is open. -/
-protected theorem is_open_map_proj (h : IsHomeomorphicTrivialFiberBundle F proj) : IsOpenMap proj :=
+protected theorem isOpenMap_proj (h : IsHomeomorphicTrivialFiberBundle F proj) : IsOpenMap proj :=
   by
   obtain ⟨e, rfl⟩ := h.proj_eq
   exact is_open_map_fst.comp e.is_open_map
-#align is_homeomorphic_trivial_fiber_bundle.is_open_map_proj IsHomeomorphicTrivialFiberBundle.is_open_map_proj
+#align is_homeomorphic_trivial_fiber_bundle.is_open_map_proj IsHomeomorphicTrivialFiberBundle.isOpenMap_proj
 
 /-- The projection from a trivial fiber bundle to its base is open. -/
-protected theorem quotient_map_proj [Nonempty F] (h : IsHomeomorphicTrivialFiberBundle F proj) :
+protected theorem quotientMap_proj [Nonempty F] (h : IsHomeomorphicTrivialFiberBundle F proj) :
     QuotientMap proj :=
   h.is_open_map_proj.to_quotient_map h.continuous_proj h.surjective_proj
-#align is_homeomorphic_trivial_fiber_bundle.quotient_map_proj IsHomeomorphicTrivialFiberBundle.quotient_map_proj
+#align is_homeomorphic_trivial_fiber_bundle.quotient_map_proj IsHomeomorphicTrivialFiberBundle.quotientMap_proj
 
 end IsHomeomorphicTrivialFiberBundle
 
 /-- The first projection in a product is a trivial fiber bundle. -/
-theorem is_homeomorphic_trivial_fiber_bundle_fst :
+theorem isHomeomorphicTrivialFiberBundle_fst :
     IsHomeomorphicTrivialFiberBundle F (Prod.fst : B × F → B) :=
   ⟨Homeomorph.refl _, fun x => rfl⟩
-#align is_homeomorphic_trivial_fiber_bundle_fst is_homeomorphic_trivial_fiber_bundle_fst
+#align is_homeomorphic_trivial_fiber_bundle_fst isHomeomorphicTrivialFiberBundle_fst
 
 /-- The second projection in a product is a trivial fiber bundle. -/
-theorem is_homeomorphic_trivial_fiber_bundle_snd :
+theorem isHomeomorphicTrivialFiberBundle_snd :
     IsHomeomorphicTrivialFiberBundle F (Prod.snd : F × B → B) :=
   ⟨Homeomorph.prodComm _ _, fun x => rfl⟩
-#align is_homeomorphic_trivial_fiber_bundle_snd is_homeomorphic_trivial_fiber_bundle_snd
+#align is_homeomorphic_trivial_fiber_bundle_snd isHomeomorphicTrivialFiberBundle_snd
 

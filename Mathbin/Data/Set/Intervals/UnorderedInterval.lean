@@ -96,13 +96,13 @@ theorem nonempty_uIcc : [a, b].Nonempty :=
   nonempty_Icc.2 inf_le_sup
 #align set.nonempty_uIcc Set.nonempty_uIcc
 
-theorem Icc_subset_uIcc : Icc a b ⊆ [a, b] :=
+theorem icc_subset_uIcc : Icc a b ⊆ [a, b] :=
   Icc_subset_Icc inf_le_left le_sup_right
-#align set.Icc_subset_uIcc Set.Icc_subset_uIcc
+#align set.Icc_subset_uIcc Set.icc_subset_uIcc
 
-theorem Icc_subset_uIcc' : Icc b a ⊆ [a, b] :=
+theorem icc_subset_uIcc' : Icc b a ⊆ [a, b] :=
   Icc_subset_Icc inf_le_right le_sup_left
-#align set.Icc_subset_uIcc' Set.Icc_subset_uIcc'
+#align set.Icc_subset_uIcc' Set.icc_subset_uIcc'
 
 @[simp]
 theorem left_mem_uIcc : a ∈ [a, b] :=
@@ -115,20 +115,20 @@ theorem right_mem_uIcc : b ∈ [a, b] :=
 #align set.right_mem_uIcc Set.right_mem_uIcc
 
 theorem mem_uIcc_of_le (ha : a ≤ x) (hb : x ≤ b) : x ∈ [a, b] :=
-  Icc_subset_uIcc ⟨ha, hb⟩
+  icc_subset_uIcc ⟨ha, hb⟩
 #align set.mem_uIcc_of_le Set.mem_uIcc_of_le
 
 theorem mem_uIcc_of_ge (hb : b ≤ x) (ha : x ≤ a) : x ∈ [a, b] :=
-  Icc_subset_uIcc' ⟨hb, ha⟩
+  icc_subset_uIcc' ⟨hb, ha⟩
 #align set.mem_uIcc_of_ge Set.mem_uIcc_of_ge
 
 theorem uIcc_subset_uIcc (h₁ : a₁ ∈ [a₂, b₂]) (h₂ : b₁ ∈ [a₂, b₂]) : [a₁, b₁] ⊆ [a₂, b₂] :=
   Icc_subset_Icc (le_inf h₁.1 h₂.1) (sup_le h₁.2 h₂.2)
 #align set.uIcc_subset_uIcc Set.uIcc_subset_uIcc
 
-theorem uIcc_subset_Icc (ha : a₁ ∈ Icc a₂ b₂) (hb : b₁ ∈ Icc a₂ b₂) : [a₁, b₁] ⊆ Icc a₂ b₂ :=
+theorem uIcc_subset_icc (ha : a₁ ∈ Icc a₂ b₂) (hb : b₁ ∈ Icc a₂ b₂) : [a₁, b₁] ⊆ Icc a₂ b₂ :=
   Icc_subset_Icc (le_inf ha.1 hb.1) (sup_le ha.2 hb.2)
-#align set.uIcc_subset_Icc Set.uIcc_subset_Icc
+#align set.uIcc_subset_Icc Set.uIcc_subset_icc
 
 theorem uIcc_subset_uIcc_iff_mem : [a₁, b₁] ⊆ [a₂, b₂] ↔ a₁ ∈ [a₂, b₂] ∧ b₁ ∈ [a₂, b₂] :=
   Iff.intro (fun h => ⟨h left_mem_uIcc, h right_mem_uIcc⟩) fun h => uIcc_subset_uIcc h.1 h.2
@@ -146,11 +146,11 @@ theorem uIcc_subset_uIcc_left (h : x ∈ [a, b]) : [a, x] ⊆ [a, b] :=
   uIcc_subset_uIcc left_mem_uIcc h
 #align set.uIcc_subset_uIcc_left Set.uIcc_subset_uIcc_left
 
-theorem bdd_below_bdd_above_iff_subset_uIcc (s : Set α) :
+theorem bddBelow_bddAbove_iff_subset_uIcc (s : Set α) :
     BddBelow s ∧ BddAbove s ↔ ∃ a b, s ⊆ [a, b] :=
   bddBelow_bddAbove_iff_subset_Icc.trans
-    ⟨fun ⟨a, b, h⟩ => ⟨a, b, fun x hx => Icc_subset_uIcc (h hx)⟩, fun ⟨a, b, h⟩ => ⟨_, _, h⟩⟩
-#align set.bdd_below_bdd_above_iff_subset_uIcc Set.bdd_below_bdd_above_iff_subset_uIcc
+    ⟨fun ⟨a, b, h⟩ => ⟨a, b, fun x hx => icc_subset_uIcc (h hx)⟩, fun ⟨a, b, h⟩ => ⟨_, _, h⟩⟩
+#align set.bdd_below_bdd_above_iff_subset_uIcc Set.bddBelow_bddAbove_iff_subset_uIcc
 
 end Lattice
 
@@ -240,12 +240,12 @@ theorem monotone_or_antitone_iff_uIcc :
 #align set.monotone_or_antitone_iff_uIcc Set.monotone_or_antitone_iff_uIcc
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (a b c «expr ∈ » s) -/
-theorem monotone_on_or_antitone_on_iff_uIcc :
+theorem monotoneOn_or_antitoneOn_iff_uIcc :
     MonotoneOn f s ∨ AntitoneOn f s ↔
       ∀ (a) (_ : a ∈ s) (b) (_ : b ∈ s) (c) (_ : c ∈ s), c ∈ [a, b] → f c ∈ [f a, f b] :=
   by
   simp [monotone_on_iff_monotone, antitone_on_iff_antitone, monotone_or_antitone_iff_uIcc, mem_uIcc]
-#align set.monotone_on_or_antitone_on_iff_uIcc Set.monotone_on_or_antitone_on_iff_uIcc
+#align set.monotone_on_or_antitone_on_iff_uIcc Set.monotoneOn_or_antitoneOn_iff_uIcc
 
 /-- The open-closed interval with unordered bounds. -/
 def uIoc : α → α → Set α := fun a b => Ioc (min a b) (max a b)
@@ -296,13 +296,13 @@ theorem uIoc_subset_uIoc_of_uIcc_subset_uIcc (h : [a, b] ⊆ [c, d]) : Ι a b �
 theorem uIoc_swap (a b : α) : Ι a b = Ι b a := by simp only [uIoc, min_comm a b, max_comm a b]
 #align set.uIoc_swap Set.uIoc_swap
 
-theorem Ioc_subset_uIoc : Ioc a b ⊆ Ι a b :=
+theorem ioc_subset_uIoc : Ioc a b ⊆ Ι a b :=
   Ioc_subset_Ioc (min_le_left _ _) (le_max_right _ _)
-#align set.Ioc_subset_uIoc Set.Ioc_subset_uIoc
+#align set.Ioc_subset_uIoc Set.ioc_subset_uIoc
 
-theorem Ioc_subset_uIoc' : Ioc a b ⊆ Ι b a :=
+theorem ioc_subset_uIoc' : Ioc a b ⊆ Ι b a :=
   Ioc_subset_Ioc (min_le_right _ _) (le_max_left _ _)
-#align set.Ioc_subset_uIoc' Set.Ioc_subset_uIoc'
+#align set.Ioc_subset_uIoc' Set.ioc_subset_uIoc'
 
 theorem eq_of_mem_uIoc_of_mem_uIoc : a ∈ Ι b c → b ∈ Ι a c → a = b := by
   simp_rw [mem_uIoc] <;> rintro (⟨_, _⟩ | ⟨_, _⟩) (⟨_, _⟩ | ⟨_, _⟩) <;> apply le_antisymm <;>

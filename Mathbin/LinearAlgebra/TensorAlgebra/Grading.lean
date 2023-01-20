@@ -49,22 +49,22 @@ instance gradedAlgebra :
   GradedAlgebra.ofAlgHom _ (lift R <| GradedAlgebra.ι R M)
     (by
       ext m
-      dsimp only [LinearMap.comp_apply, AlgHom.to_linear_map_apply, AlgHom.comp_apply,
+      dsimp only [LinearMap.comp_apply, AlgHom.toLinearMap_apply, AlgHom.comp_apply,
         AlgHom.id_apply]
-      rw [lift_ι_apply, graded_algebra.ι_apply R M, DirectSum.coe_alg_hom_of, Subtype.coe_mk])
+      rw [lift_ι_apply, graded_algebra.ι_apply R M, DirectSum.coeAlgHom_of, Subtype.coe_mk])
     fun i x => by
     cases' x with x hx
     dsimp only [Subtype.coe_mk, DirectSum.lof_eq_of]
     refine'
       Submodule.powInductionOnLeft' _ (fun r => _) (fun x y i hx hy ihx ihy => _)
         (fun m hm i x hx ih => _) hx
-    · rw [AlgHom.commutes, DirectSum.algebra_map_apply]
+    · rw [AlgHom.commutes, DirectSum.algebraMap_apply]
       rfl
     · rw [AlgHom.map_add, ihx, ihy, ← map_add]
       rfl
     · obtain ⟨_, rfl⟩ := hm
       rw [AlgHom.map_mul, ih, lift_ι_apply, graded_algebra.ι_apply R M, DirectSum.of_mul_of]
-      exact DirectSum.of_eq_of_graded_monoid_eq (Sigma.subtype_ext (add_comm _ _) rfl)
+      exact DirectSum.of_eq_of_gradedMonoid_eq (Sigma.subtype_ext (add_comm _ _) rfl)
 #align tensor_algebra.graded_algebra TensorAlgebra.gradedAlgebra
 
 end TensorAlgebra

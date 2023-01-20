@@ -24,7 +24,7 @@ variable (C : Type _) [Groupoid C]
 
 section Thin
 
-theorem is_thin_iff : Quiver.IsThin C ↔ ∀ c : C, Subsingleton (c ⟶ c) :=
+theorem isThin_iff : Quiver.IsThin C ↔ ∀ c : C, Subsingleton (c ⟶ c) :=
   by
   refine' ⟨fun h c => h c c, fun h c d => Subsingleton.intro fun f g => _⟩
   haveI := h d
@@ -33,7 +33,7 @@ theorem is_thin_iff : Quiver.IsThin C ↔ ∀ c : C, Subsingleton (c ⟶ c) :=
     _ = f ≫ inv f ≫ g := by congr
     _ = g := by simp only [inv_eq_inv, is_iso.hom_inv_id_assoc]
     
-#align category_theory.groupoid.is_thin_iff CategoryTheory.Groupoid.is_thin_iff
+#align category_theory.groupoid.is_thin_iff CategoryTheory.Groupoid.isThin_iff
 
 end Thin
 

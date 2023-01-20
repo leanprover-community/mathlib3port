@@ -50,28 +50,28 @@ instance small_subobject [WellPowered C] (X : C) : Small.{v} (Subobject X) :=
   WellPowered.subobject_small X
 #align category_theory.small_subobject CategoryTheory.small_subobject
 
-instance (priority := 100) well_powered_of_small_category (C : Type u₁) [SmallCategory C] :
+instance (priority := 100) wellPowered_of_smallCategory (C : Type u₁) [SmallCategory C] :
     WellPowered C where
-#align category_theory.well_powered_of_small_category CategoryTheory.well_powered_of_small_category
+#align category_theory.well_powered_of_small_category CategoryTheory.wellPowered_of_smallCategory
 
 variable {C}
 
-theorem essentially_small_mono_over_iff_small_subobject (X : C) :
+theorem essentiallySmall_monoOver_iff_small_subobject (X : C) :
     EssentiallySmall.{v} (MonoOver X) ↔ Small.{v} (Subobject X) :=
   essentially_small_iff_of_thin
-#align category_theory.essentially_small_mono_over_iff_small_subobject CategoryTheory.essentially_small_mono_over_iff_small_subobject
+#align category_theory.essentially_small_mono_over_iff_small_subobject CategoryTheory.essentiallySmall_monoOver_iff_small_subobject
 
-theorem well_powered_of_essentially_small_mono_over
-    (h : ∀ X : C, EssentiallySmall.{v} (MonoOver X)) : WellPowered C :=
-  { subobject_small := fun X => (essentially_small_mono_over_iff_small_subobject X).mp (h X) }
-#align category_theory.well_powered_of_essentially_small_mono_over CategoryTheory.well_powered_of_essentially_small_mono_over
+theorem wellPowered_of_essentiallySmall_monoOver (h : ∀ X : C, EssentiallySmall.{v} (MonoOver X)) :
+    WellPowered C :=
+  { subobject_small := fun X => (essentiallySmall_monoOver_iff_small_subobject X).mp (h X) }
+#align category_theory.well_powered_of_essentially_small_mono_over CategoryTheory.wellPowered_of_essentiallySmall_monoOver
 
 section
 
 variable [WellPowered C]
 
 instance essentiallySmallMonoOver (X : C) : EssentiallySmall.{v} (MonoOver X) :=
-  (essentially_small_mono_over_iff_small_subobject X).mpr (WellPowered.subobject_small X)
+  (essentiallySmall_monoOver_iff_small_subobject X).mpr (WellPowered.subobject_small X)
 #align category_theory.essentially_small_mono_over CategoryTheory.essentiallySmallMonoOver
 
 end
@@ -80,16 +80,16 @@ section Equivalence
 
 variable {D : Type u₂} [Category.{v} D]
 
-theorem well_powered_of_equiv (e : C ≌ D) [WellPowered C] : WellPowered D :=
+theorem wellPowered_of_equiv (e : C ≌ D) [WellPowered C] : WellPowered D :=
   well_powered_of_essentially_small_mono_over fun X =>
-    (essentially_small_congr (MonoOver.congr X e.symm)).2 <| by infer_instance
-#align category_theory.well_powered_of_equiv CategoryTheory.well_powered_of_equiv
+    (essentiallySmall_congr (MonoOver.congr X e.symm)).2 <| by infer_instance
+#align category_theory.well_powered_of_equiv CategoryTheory.wellPowered_of_equiv
 
 /-- Being well-powered is preserved by equivalences, as long as the two categories involved have
     their morphisms in the same universe. -/
-theorem well_powered_congr (e : C ≌ D) : WellPowered C ↔ WellPowered D :=
+theorem wellPowered_congr (e : C ≌ D) : WellPowered C ↔ WellPowered D :=
   ⟨fun i => well_powered_of_equiv e, fun i => well_powered_of_equiv e.symm⟩
-#align category_theory.well_powered_congr CategoryTheory.well_powered_congr
+#align category_theory.well_powered_congr CategoryTheory.wellPowered_congr
 
 end Equivalence
 

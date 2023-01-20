@@ -61,15 +61,15 @@ def oangle (x y : V) : Real.Angle :=
 #align orientation.oangle Orientation.oangle
 
 /-- Oriented angles are continuous when the vectors involved are nonzero. -/
-theorem continuous_at_oangle {x : V × V} (hx1 : x.1 ≠ 0) (hx2 : x.2 ≠ 0) :
+theorem continuousAt_oangle {x : V × V} (hx1 : x.1 ≠ 0) (hx2 : x.2 ≠ 0) :
     ContinuousAt (fun y : V × V => o.oangle y.1 y.2) x :=
   by
-  refine' (Complex.continuous_at_arg_coe_angle _).comp _
+  refine' (Complex.continuousAt_arg_coe_angle _).comp _
   · exact o.kahler_ne_zero hx1 hx2
   exact
     ((continuous_of_real.comp continuous_inner).add
         ((continuous_of_real.comp o.area_form'.continuous₂).mul continuous_const)).ContinuousAt
-#align orientation.continuous_at_oangle Orientation.continuous_at_oangle
+#align orientation.continuous_at_oangle Orientation.continuousAt_oangle
 
 /-- If the first vector passed to `oangle` is 0, the result is 0. -/
 @[simp]
@@ -427,12 +427,12 @@ theorem oangle_eq_zero_iff_oangle_rev_eq_zero {x y : V} : o.oangle x y = 0 ↔ o
 #align orientation.oangle_eq_zero_iff_oangle_rev_eq_zero Orientation.oangle_eq_zero_iff_oangle_rev_eq_zero
 
 /-- The oriented angle between two vectors is zero if and only if they are on the same ray. -/
-theorem oangle_eq_zero_iff_same_ray {x y : V} : o.oangle x y = 0 ↔ SameRay ℝ x y :=
+theorem oangle_eq_zero_iff_sameRay {x y : V} : o.oangle x y = 0 ↔ SameRay ℝ x y :=
   by
-  rw [oangle, kahler_apply_apply, Complex.arg_coe_angle_eq_iff_eq_to_real, Real.Angle.to_real_zero,
+  rw [oangle, kahler_apply_apply, Complex.arg_coe_angle_eq_iff_eq_toReal, Real.Angle.toReal_zero,
     Complex.arg_eq_zero_iff]
   simpa using o.nonneg_inner_and_area_form_eq_zero_iff_same_ray x y
-#align orientation.oangle_eq_zero_iff_same_ray Orientation.oangle_eq_zero_iff_same_ray
+#align orientation.oangle_eq_zero_iff_same_ray Orientation.oangle_eq_zero_iff_sameRay
 
 /-- The oriented angle between two vectors is `π` if and only if the angle with the vectors
 swapped is `π`. -/
@@ -442,7 +442,7 @@ theorem oangle_eq_pi_iff_oangle_rev_eq_pi {x y : V} : o.oangle x y = π ↔ o.oa
 
 /-- The oriented angle between two vectors is `π` if and only they are nonzero and the first is
 on the same ray as the negation of the second. -/
-theorem oangle_eq_pi_iff_same_ray_neg {x y : V} :
+theorem oangle_eq_pi_iff_sameRay_neg {x y : V} :
     o.oangle x y = π ↔ x ≠ 0 ∧ y ≠ 0 ∧ SameRay ℝ x (-y) :=
   by
   rw [← o.oangle_eq_zero_iff_same_ray]
@@ -456,15 +456,15 @@ theorem oangle_eq_pi_iff_same_ray_neg {x y : V} :
     rw [o.oangle_neg_right hx hy, h, Real.Angle.coe_pi_add_coe_pi]
   · rintro ⟨hx, hy, h⟩
     rwa [o.oangle_neg_right hx hy, ← Real.Angle.sub_coe_pi_eq_add_coe_pi, sub_eq_zero] at h
-#align orientation.oangle_eq_pi_iff_same_ray_neg Orientation.oangle_eq_pi_iff_same_ray_neg
+#align orientation.oangle_eq_pi_iff_same_ray_neg Orientation.oangle_eq_pi_iff_sameRay_neg
 
 /-- The oriented angle between two vectors is zero or `π` if and only if those two vectors are
 not linearly independent. -/
-theorem oangle_eq_zero_or_eq_pi_iff_not_linear_independent {x y : V} :
+theorem oangle_eq_zero_or_eq_pi_iff_not_linearIndependent {x y : V} :
     o.oangle x y = 0 ∨ o.oangle x y = π ↔ ¬LinearIndependent ℝ ![x, y] := by
   rw [oangle_eq_zero_iff_same_ray, oangle_eq_pi_iff_same_ray_neg,
-    same_ray_or_ne_zero_and_same_ray_neg_iff_not_linear_independent]
-#align orientation.oangle_eq_zero_or_eq_pi_iff_not_linear_independent Orientation.oangle_eq_zero_or_eq_pi_iff_not_linear_independent
+    sameRay_or_ne_zero_and_sameRay_neg_iff_not_linearIndependent]
+#align orientation.oangle_eq_zero_or_eq_pi_iff_not_linear_independent Orientation.oangle_eq_zero_or_eq_pi_iff_not_linearIndependent
 
 /-- The oriented angle between two vectors is zero or `π` if and only if the first vector is zero
 or the second is a multiple of the first. -/
@@ -489,17 +489,17 @@ theorem oangle_eq_zero_or_eq_pi_iff_right_eq_smul {x y : V} :
     · simp [hx]
     rcases lt_trichotomy r 0 with (hr | hr | hr)
     · rw [← neg_smul]
-      exact Or.inr ⟨hx, smul_ne_zero hr.ne hx, same_ray_pos_smul_right x (Left.neg_pos_iff.2 hr)⟩
+      exact Or.inr ⟨hx, smul_ne_zero hr.ne hx, sameRay_pos_smul_right x (Left.neg_pos_iff.2 hr)⟩
     · simp [hr]
-    · exact Or.inl (same_ray_pos_smul_right x hr)
+    · exact Or.inl (sameRay_pos_smul_right x hr)
 #align orientation.oangle_eq_zero_or_eq_pi_iff_right_eq_smul Orientation.oangle_eq_zero_or_eq_pi_iff_right_eq_smul
 
 /-- The oriented angle between two vectors is not zero or `π` if and only if those two vectors
 are linearly independent. -/
-theorem oangle_ne_zero_and_ne_pi_iff_linear_independent {x y : V} :
+theorem oangle_ne_zero_and_ne_pi_iff_linearIndependent {x y : V} :
     o.oangle x y ≠ 0 ∧ o.oangle x y ≠ π ↔ LinearIndependent ℝ ![x, y] := by
   rw [← not_or, ← not_iff_not, not_not, oangle_eq_zero_or_eq_pi_iff_not_linear_independent]
-#align orientation.oangle_ne_zero_and_ne_pi_iff_linear_independent Orientation.oangle_ne_zero_and_ne_pi_iff_linear_independent
+#align orientation.oangle_ne_zero_and_ne_pi_iff_linear_independent Orientation.oangle_ne_zero_and_ne_pi_iff_linearIndependent
 
 /-- Two vectors are equal if and only if they have equal norms and zero angle between them. -/
 theorem eq_iff_norm_eq_and_oangle_eq_zero (x y : V) : x = y ↔ ‖x‖ = ‖y‖ ∧ o.oangle x y = 0 :=
@@ -692,17 +692,17 @@ theorem oangle_eq_angle_or_eq_neg_angle {x y : V} (hx : x ≠ 0) (hy : y ≠ 0) 
 
 /-- The unoriented angle between two nonzero vectors is the absolute value of the oriented angle,
 converted to a real. -/
-theorem angle_eq_abs_oangle_to_real {x y : V} (hx : x ≠ 0) (hy : y ≠ 0) :
+theorem angle_eq_abs_oangle_toReal {x y : V} (hx : x ≠ 0) (hy : y ≠ 0) :
     InnerProductGeometry.angle x y = |(o.oangle x y).toReal| :=
   by
   have h0 := InnerProductGeometry.angle_nonneg x y
   have hpi := InnerProductGeometry.angle_le_pi x y
   rcases o.oangle_eq_angle_or_eq_neg_angle hx hy with (h | h)
-  · rw [h, eq_comm, Real.Angle.abs_to_real_coe_eq_self_iff]
+  · rw [h, eq_comm, Real.Angle.abs_toReal_coe_eq_self_iff]
     exact ⟨h0, hpi⟩
-  · rw [h, eq_comm, Real.Angle.abs_to_real_neg_coe_eq_self_iff]
+  · rw [h, eq_comm, Real.Angle.abs_toReal_neg_coe_eq_self_iff]
     exact ⟨h0, hpi⟩
-#align orientation.angle_eq_abs_oangle_to_real Orientation.angle_eq_abs_oangle_to_real
+#align orientation.angle_eq_abs_oangle_to_real Orientation.angle_eq_abs_oangle_toReal
 
 /-- If the sign of the oriented angle between two vectors is zero, either one of the vectors is
 zero or the unoriented angle is 0 or π. -/
@@ -744,7 +744,7 @@ theorem oangle_eq_of_angle_eq_of_sign_eq {w x y z : V}
       intro hpi
       rw [div_eq_iff, eq_comm, ← sub_eq_zero, mul_two, add_sub_cancel] at hpi
       · exact real.pi_pos.ne.symm hpi
-      · exact two_ne_zero
+      · exact two_neZero
     have h0wx : w = 0 ∨ x = 0 :=
       by
       have h0' := o.eq_zero_or_angle_eq_zero_or_pi_of_sign_oangle_eq_zero hswx
@@ -755,7 +755,7 @@ theorem oangle_eq_of_angle_eq_of_sign_eq {w x y z : V}
       simpa [hyz, real.pi_pos.ne.symm, hpi] using h0'
     rcases h0wx with (h0wx | h0wx) <;> rcases h0yz with (h0yz | h0yz) <;> simp [h0wx, h0yz]
   · push_neg  at h0
-    rw [Real.Angle.eq_iff_abs_to_real_eq_of_sign_eq hs]
+    rw [Real.Angle.eq_iff_abs_toReal_eq_of_sign_eq hs]
     rwa [o.angle_eq_abs_oangle_to_real h0.1.1 h0.1.2,
       o.angle_eq_abs_oangle_to_real h0.2.1 h0.2.2] at h
 #align orientation.oangle_eq_of_angle_eq_of_sign_eq Orientation.oangle_eq_of_angle_eq_of_sign_eq
@@ -850,7 +850,7 @@ theorem eq_zero_or_oangle_eq_iff_inner_eq_zero {x y : V} :
   by_cases hy : y = 0; · simp [hy]
   rw [InnerProductGeometry.inner_eq_zero_iff_angle_eq_pi_div_two, or_iff_right hx, or_iff_right hy]
   refine' ⟨fun h => _, fun h => _⟩
-  · rwa [o.angle_eq_abs_oangle_to_real hx hy, Real.Angle.abs_to_real_eq_pi_div_two_iff]
+  · rwa [o.angle_eq_abs_oangle_to_real hx hy, Real.Angle.abs_toReal_eq_pi_div_two_iff]
   · convert o.oangle_eq_angle_or_eq_neg_angle hx hy <;> rw [h]
     exact neg_div _ _
 #align orientation.eq_zero_or_oangle_eq_iff_inner_eq_zero Orientation.eq_zero_or_oangle_eq_iff_inner_eq_zero
@@ -920,7 +920,7 @@ outside of that proof. -/
 theorem oangle_smul_add_right_eq_zero_or_eq_pi_iff {x y : V} (r : ℝ) :
     o.oangle x (r • x + y) = 0 ∨ o.oangle x (r • x + y) = π ↔ o.oangle x y = 0 ∨ o.oangle x y = π :=
   by
-  simp_rw [oangle_eq_zero_or_eq_pi_iff_not_linear_independent, Fintype.not_linear_independent_iff,
+  simp_rw [oangle_eq_zero_or_eq_pi_iff_not_linear_independent, Fintype.not_linearIndependent_iff,
     Fin.sum_univ_two, Fin.exists_fin_two]
   refine' ⟨fun h => _, fun h => _⟩
   · rcases h with ⟨m, h, hm⟩
@@ -966,7 +966,7 @@ theorem oangle_sign_smul_add_right (x y : V) (r : ℝ) :
           ((continuous_id.smul continuous_const).add continuous_const)).ContinuousOn
   have hf : ContinuousOn (fun z : V × V => o.oangle z.1 z.2) s :=
     by
-    refine' ContinuousAt.continuous_on fun z hz => o.continuous_at_oangle _ _
+    refine' ContinuousAt.continuousOn fun z hz => o.continuous_at_oangle _ _
     all_goals
       simp_rw [s, Set.mem_image] at hz
       obtain ⟨r', -, rfl⟩ := hz
@@ -985,7 +985,7 @@ theorem oangle_sign_smul_add_right (x y : V) (r : ℝ) :
     convert Set.mem_image_of_mem (fun r' : ℝ => (x, r' • x + y)) (Set.mem_univ 0)
     simp
   have hy : (x, r • x + y) ∈ s := Set.mem_image_of_mem _ (Set.mem_univ _)
-  convert Real.Angle.sign_eq_of_continuous_on hc hf hs hx hy
+  convert Real.Angle.sign_eq_of_continuousOn hc hf hs hx hy
 #align orientation.oangle_sign_smul_add_right Orientation.oangle_sign_smul_add_right
 
 /-- Adding a multiple of the second vector passed to `oangle` to the first vector does not change
@@ -1125,7 +1125,7 @@ theorem oangle_sign_smul_add_smul_smul_add_smul (x y : V) (r₁ r₂ r₃ r₄ :
 #align orientation.oangle_sign_smul_add_smul_smul_add_smul Orientation.oangle_sign_smul_add_smul_smul_add_smul
 
 /-- A base angle of an isosceles triangle is acute, oriented vector angle form. -/
-theorem abs_oangle_sub_left_to_real_lt_pi_div_two {x y : V} (h : ‖x‖ = ‖y‖) :
+theorem abs_oangle_sub_left_toReal_lt_pi_div_two {x y : V} (h : ‖x‖ = ‖y‖) :
     |(o.oangle (y - x) y).toReal| < π / 2 :=
   by
   by_cases hn : x = y
@@ -1138,7 +1138,7 @@ theorem abs_oangle_sub_left_to_real_lt_pi_div_two {x y : V} (h : ‖x‖ = ‖y�
   rcases hs with (hs | hs)
   · rw [oangle_eq_pi_iff_oangle_rev_eq_pi, oangle_eq_pi_iff_same_ray_neg, neg_sub] at hs
     rcases hs with ⟨hy, -, hr⟩
-    rw [← exists_nonneg_left_iff_same_ray hy] at hr
+    rw [← exists_nonneg_left_iff_sameRay hy] at hr
     rcases hr with ⟨r, hr0, hr⟩
     rw [eq_sub_iff_add_eq] at hr
     nth_rw 2 [← one_smul ℝ y] at hr
@@ -1148,13 +1148,13 @@ theorem abs_oangle_sub_left_to_real_lt_pi_div_two {x y : V} (h : ‖x‖ = ‖y�
     rw [h, zero_add, one_smul] at hr
     exact False.elim (hn hr.symm)
   · exact hs
-#align orientation.abs_oangle_sub_left_to_real_lt_pi_div_two Orientation.abs_oangle_sub_left_to_real_lt_pi_div_two
+#align orientation.abs_oangle_sub_left_to_real_lt_pi_div_two Orientation.abs_oangle_sub_left_toReal_lt_pi_div_two
 
 /-- A base angle of an isosceles triangle is acute, oriented vector angle form. -/
-theorem abs_oangle_sub_right_to_real_lt_pi_div_two {x y : V} (h : ‖x‖ = ‖y‖) :
+theorem abs_oangle_sub_right_toReal_lt_pi_div_two {x y : V} (h : ‖x‖ = ‖y‖) :
     |(o.oangle x (x - y)).toReal| < π / 2 :=
   (o.oangle_sub_eq_oangle_sub_rev_of_norm_eq h).symm ▸ o.abs_oangle_sub_left_to_real_lt_pi_div_two h
-#align orientation.abs_oangle_sub_right_to_real_lt_pi_div_two Orientation.abs_oangle_sub_right_to_real_lt_pi_div_two
+#align orientation.abs_oangle_sub_right_to_real_lt_pi_div_two Orientation.abs_oangle_sub_right_toReal_lt_pi_div_two
 
 end Orientation
 

@@ -158,32 +158,32 @@ theorem mk_coe (e : A₁ ≃ₐ[R] A₂) (e' h₁ h₂ h₃ h₄ h₅) :
 #align alg_equiv.mk_coe AlgEquiv.mk_coe
 
 @[simp]
-theorem to_fun_eq_coe (e : A₁ ≃ₐ[R] A₂) : e.toFun = e :=
+theorem toFun_eq_coe (e : A₁ ≃ₐ[R] A₂) : e.toFun = e :=
   rfl
-#align alg_equiv.to_fun_eq_coe AlgEquiv.to_fun_eq_coe
+#align alg_equiv.to_fun_eq_coe AlgEquiv.toFun_eq_coe
 
 @[simp]
-theorem to_equiv_eq_coe : e.toEquiv = e :=
+theorem toEquiv_eq_coe : e.toEquiv = e :=
   rfl
-#align alg_equiv.to_equiv_eq_coe AlgEquiv.to_equiv_eq_coe
+#align alg_equiv.to_equiv_eq_coe AlgEquiv.toEquiv_eq_coe
 
 @[simp]
-theorem to_ring_equiv_eq_coe : e.toRingEquiv = e :=
+theorem toRingEquiv_eq_coe : e.toRingEquiv = e :=
   rfl
-#align alg_equiv.to_ring_equiv_eq_coe AlgEquiv.to_ring_equiv_eq_coe
+#align alg_equiv.to_ring_equiv_eq_coe AlgEquiv.toRingEquiv_eq_coe
 
 @[simp, norm_cast]
-theorem coe_ring_equiv : ((e : A₁ ≃+* A₂) : A₁ → A₂) = e :=
+theorem coe_ringEquiv : ((e : A₁ ≃+* A₂) : A₁ → A₂) = e :=
   rfl
-#align alg_equiv.coe_ring_equiv AlgEquiv.coe_ring_equiv
+#align alg_equiv.coe_ring_equiv AlgEquiv.coe_ringEquiv
 
 theorem coe_ring_equiv' : (e.toRingEquiv : A₁ → A₂) = e :=
   rfl
 #align alg_equiv.coe_ring_equiv' AlgEquiv.coe_ring_equiv'
 
-theorem coe_ring_equiv_injective : Function.Injective (coe : (A₁ ≃ₐ[R] A₂) → A₁ ≃+* A₂) :=
+theorem coe_ringEquiv_injective : Function.Injective (coe : (A₁ ≃ₐ[R] A₂) → A₁ ≃+* A₂) :=
   fun e₁ e₂ h => ext <| RingEquiv.congr_fun h
-#align alg_equiv.coe_ring_equiv_injective AlgEquiv.coe_ring_equiv_injective
+#align alg_equiv.coe_ring_equiv_injective AlgEquiv.coe_ringEquiv_injective
 
 protected theorem map_add : ∀ x y, e (x + y) = e x + e y :=
   map_add e
@@ -231,23 +231,23 @@ def toAlgHom : A₁ →ₐ[R] A₂ :=
 #align alg_equiv.to_alg_hom AlgEquiv.toAlgHom
 
 @[simp]
-theorem to_alg_hom_eq_coe : e.toAlgHom = e :=
+theorem toAlgHom_eq_coe : e.toAlgHom = e :=
   rfl
-#align alg_equiv.to_alg_hom_eq_coe AlgEquiv.to_alg_hom_eq_coe
+#align alg_equiv.to_alg_hom_eq_coe AlgEquiv.toAlgHom_eq_coe
 
 @[simp, norm_cast]
-theorem coe_alg_hom : ((e : A₁ →ₐ[R] A₂) : A₁ → A₂) = e :=
+theorem coe_algHom : ((e : A₁ →ₐ[R] A₂) : A₁ → A₂) = e :=
   rfl
-#align alg_equiv.coe_alg_hom AlgEquiv.coe_alg_hom
+#align alg_equiv.coe_alg_hom AlgEquiv.coe_algHom
 
-theorem coe_alg_hom_injective : Function.Injective (coe : (A₁ ≃ₐ[R] A₂) → A₁ →ₐ[R] A₂) :=
+theorem coe_algHom_injective : Function.Injective (coe : (A₁ ≃ₐ[R] A₂) → A₁ →ₐ[R] A₂) :=
   fun e₁ e₂ h => ext <| AlgHom.congr_fun h
-#align alg_equiv.coe_alg_hom_injective AlgEquiv.coe_alg_hom_injective
+#align alg_equiv.coe_alg_hom_injective AlgEquiv.coe_algHom_injective
 
 /-- The two paths coercion can take to a `ring_hom` are equivalent -/
-theorem coe_ring_hom_commutes : ((e : A₁ →ₐ[R] A₂) : A₁ →+* A₂) = ((e : A₁ ≃+* A₂) : A₁ →+* A₂) :=
+theorem coe_ringHom_commutes : ((e : A₁ →ₐ[R] A₂) : A₁ →+* A₂) = ((e : A₁ ≃+* A₂) : A₁ →+* A₂) :=
   rfl
-#align alg_equiv.coe_ring_hom_commutes AlgEquiv.coe_ring_hom_commutes
+#align alg_equiv.coe_ring_hom_commutes AlgEquiv.coe_ringHom_commutes
 
 protected theorem map_pow : ∀ (x : A₁) (n : ℕ), e (x ^ n) = e x ^ n :=
   map_pow _
@@ -275,9 +275,9 @@ instance : Inhabited (A₁ ≃ₐ[R] A₁) :=
   ⟨refl⟩
 
 @[simp]
-theorem refl_to_alg_hom : ↑(refl : A₁ ≃ₐ[R] A₁) = AlgHom.id R A₁ :=
+theorem refl_to_algHom : ↑(refl : A₁ ≃ₐ[R] A₁) = AlgHom.id R A₁ :=
   rfl
-#align alg_equiv.refl_to_alg_hom AlgEquiv.refl_to_alg_hom
+#align alg_equiv.refl_to_alg_hom AlgEquiv.refl_to_algHom
 
 @[simp]
 theorem coe_refl : ⇑(refl : A₁ ≃ₐ[R] A₁) = id :=
@@ -316,9 +316,9 @@ theorem coe_coe_symm_apply_coe_apply {F : Type _} [AlgEquivClass F R A₁ A₂] 
 #align alg_equiv.coe_coe_symm_apply_coe_apply AlgEquiv.coe_coe_symm_apply_coe_apply
 
 @[simp]
-theorem inv_fun_eq_symm {e : A₁ ≃ₐ[R] A₂} : e.invFun = e.symm :=
+theorem invFun_eq_symm {e : A₁ ≃ₐ[R] A₂} : e.invFun = e.symm :=
   rfl
-#align alg_equiv.inv_fun_eq_symm AlgEquiv.inv_fun_eq_symm
+#align alg_equiv.inv_fun_eq_symm AlgEquiv.invFun_eq_symm
 
 @[simp]
 theorem symm_symm (e : A₁ ≃ₐ[R] A₂) : e.symm.symm = e :=
@@ -354,14 +354,14 @@ theorem refl_symm : (AlgEquiv.refl : A₁ ≃ₐ[R] A₁).symm = AlgEquiv.refl :
 #align alg_equiv.refl_symm AlgEquiv.refl_symm
 
 --this should be a simp lemma but causes a lint timeout
-theorem to_ring_equiv_symm (f : A₁ ≃ₐ[R] A₁) : (f : A₁ ≃+* A₁).symm = f.symm :=
+theorem to_ringEquiv_symm (f : A₁ ≃ₐ[R] A₁) : (f : A₁ ≃+* A₁).symm = f.symm :=
   rfl
-#align alg_equiv.to_ring_equiv_symm AlgEquiv.to_ring_equiv_symm
+#align alg_equiv.to_ring_equiv_symm AlgEquiv.to_ringEquiv_symm
 
 @[simp]
-theorem symm_to_ring_equiv : (e.symm : A₂ ≃+* A₁) = (e : A₁ ≃+* A₂).symm :=
+theorem symm_to_ringEquiv : (e.symm : A₂ ≃+* A₁) = (e : A₁ ≃+* A₂).symm :=
   rfl
-#align alg_equiv.symm_to_ring_equiv AlgEquiv.symm_to_ring_equiv
+#align alg_equiv.symm_to_ring_equiv AlgEquiv.symm_to_ringEquiv
 
 /-- Algebra equivalences are transitive. -/
 @[trans]
@@ -410,13 +410,13 @@ theorem symm_comp (e : A₁ ≃ₐ[R] A₂) : AlgHom.comp ↑e.symm (e : A₁ �
   simp
 #align alg_equiv.symm_comp AlgEquiv.symm_comp
 
-theorem left_inverse_symm (e : A₁ ≃ₐ[R] A₂) : Function.LeftInverse e.symm e :=
+theorem leftInverse_symm (e : A₁ ≃ₐ[R] A₂) : Function.LeftInverse e.symm e :=
   e.left_inv
-#align alg_equiv.left_inverse_symm AlgEquiv.left_inverse_symm
+#align alg_equiv.left_inverse_symm AlgEquiv.leftInverse_symm
 
-theorem right_inverse_symm (e : A₁ ≃ₐ[R] A₂) : Function.RightInverse e.symm e :=
+theorem rightInverse_symm (e : A₁ ≃ₐ[R] A₂) : Function.RightInverse e.symm e :=
   e.right_inv
-#align alg_equiv.right_inverse_symm AlgEquiv.right_inverse_symm
+#align alg_equiv.right_inverse_symm AlgEquiv.rightInverse_symm
 
 /-- If `A₁` is equivalent to `A₁'` and `A₂` is equivalent to `A₂'`, then the type of maps
 `A₁ →ₐ[R] A₂` is equivalent to the type of maps `A₁' →ₐ[R] A₂'`. -/
@@ -433,42 +433,42 @@ def arrowCongr {A₁' A₂' : Type _} [Semiring A₁'] [Semiring A₂'] [Algebra
     simp only [← AlgHom.comp_assoc, comp_symm, AlgHom.id_comp, AlgHom.comp_id]
 #align alg_equiv.arrow_congr AlgEquiv.arrowCongr
 
-theorem arrow_congr_comp {A₁' A₂' A₃' : Type _} [Semiring A₁'] [Semiring A₂'] [Semiring A₃']
+theorem arrowCongr_comp {A₁' A₂' A₃' : Type _} [Semiring A₁'] [Semiring A₂'] [Semiring A₃']
     [Algebra R A₁'] [Algebra R A₂'] [Algebra R A₃'] (e₁ : A₁ ≃ₐ[R] A₁') (e₂ : A₂ ≃ₐ[R] A₂')
     (e₃ : A₃ ≃ₐ[R] A₃') (f : A₁ →ₐ[R] A₂) (g : A₂ →ₐ[R] A₃) :
     arrowCongr e₁ e₃ (g.comp f) = (arrowCongr e₂ e₃ g).comp (arrowCongr e₁ e₂ f) :=
   by
   ext
-  simp only [arrow_congr, Equiv.coe_fn_mk, AlgHom.comp_apply]
+  simp only [arrow_congr, Equiv.coeFn_mk, AlgHom.comp_apply]
   congr
   exact (e₂.symm_apply_apply _).symm
-#align alg_equiv.arrow_congr_comp AlgEquiv.arrow_congr_comp
+#align alg_equiv.arrow_congr_comp AlgEquiv.arrowCongr_comp
 
 @[simp]
-theorem arrow_congr_refl : arrowCongr AlgEquiv.refl AlgEquiv.refl = Equiv.refl (A₁ →ₐ[R] A₂) :=
+theorem arrowCongr_refl : arrowCongr AlgEquiv.refl AlgEquiv.refl = Equiv.refl (A₁ →ₐ[R] A₂) :=
   by
   ext
   rfl
-#align alg_equiv.arrow_congr_refl AlgEquiv.arrow_congr_refl
+#align alg_equiv.arrow_congr_refl AlgEquiv.arrowCongr_refl
 
 @[simp]
-theorem arrow_congr_trans {A₁' A₂' A₃' : Type _} [Semiring A₁'] [Semiring A₂'] [Semiring A₃']
+theorem arrowCongr_trans {A₁' A₂' A₃' : Type _} [Semiring A₁'] [Semiring A₂'] [Semiring A₃']
     [Algebra R A₁'] [Algebra R A₂'] [Algebra R A₃'] (e₁ : A₁ ≃ₐ[R] A₂) (e₁' : A₁' ≃ₐ[R] A₂')
     (e₂ : A₂ ≃ₐ[R] A₃) (e₂' : A₂' ≃ₐ[R] A₃') :
     arrowCongr (e₁.trans e₂) (e₁'.trans e₂') = (arrowCongr e₁ e₁').trans (arrowCongr e₂ e₂') :=
   by
   ext
   rfl
-#align alg_equiv.arrow_congr_trans AlgEquiv.arrow_congr_trans
+#align alg_equiv.arrow_congr_trans AlgEquiv.arrowCongr_trans
 
 @[simp]
-theorem arrow_congr_symm {A₁' A₂' : Type _} [Semiring A₁'] [Semiring A₂'] [Algebra R A₁']
+theorem arrowCongr_symm {A₁' A₂' : Type _} [Semiring A₁'] [Semiring A₂'] [Algebra R A₁']
     [Algebra R A₂'] (e₁ : A₁ ≃ₐ[R] A₁') (e₂ : A₂ ≃ₐ[R] A₂') :
     (arrowCongr e₁ e₂).symm = arrowCongr e₁.symm e₂.symm :=
   by
   ext
   rfl
-#align alg_equiv.arrow_congr_symm AlgEquiv.arrow_congr_symm
+#align alg_equiv.arrow_congr_symm AlgEquiv.arrowCongr_symm
 
 /-- If an algebra morphism has an inverse, it is a algebra isomorphism. -/
 def ofAlgHom (f : A₁ →ₐ[R] A₂) (g : A₂ →ₐ[R] A₁) (h₁ : f.comp g = AlgHom.id R A₂)
@@ -480,21 +480,21 @@ def ofAlgHom (f : A₁ →ₐ[R] A₂) (g : A₂ →ₐ[R] A₁) (h₁ : f.comp 
     right_inv := AlgHom.ext_iff.1 h₁ }
 #align alg_equiv.of_alg_hom AlgEquiv.ofAlgHom
 
-theorem coe_alg_hom_of_alg_hom (f : A₁ →ₐ[R] A₂) (g : A₂ →ₐ[R] A₁) (h₁ h₂) :
+theorem coe_algHom_ofAlgHom (f : A₁ →ₐ[R] A₂) (g : A₂ →ₐ[R] A₁) (h₁ h₂) :
     ↑(ofAlgHom f g h₁ h₂) = f :=
   AlgHom.ext fun _ => rfl
-#align alg_equiv.coe_alg_hom_of_alg_hom AlgEquiv.coe_alg_hom_of_alg_hom
+#align alg_equiv.coe_alg_hom_of_alg_hom AlgEquiv.coe_algHom_ofAlgHom
 
 @[simp]
-theorem of_alg_hom_coe_alg_hom (f : A₁ ≃ₐ[R] A₂) (g : A₂ →ₐ[R] A₁) (h₁ h₂) :
+theorem ofAlgHom_coe_algHom (f : A₁ ≃ₐ[R] A₂) (g : A₂ →ₐ[R] A₁) (h₁ h₂) :
     ofAlgHom (↑f) g h₁ h₂ = f :=
   ext fun _ => rfl
-#align alg_equiv.of_alg_hom_coe_alg_hom AlgEquiv.of_alg_hom_coe_alg_hom
+#align alg_equiv.of_alg_hom_coe_alg_hom AlgEquiv.ofAlgHom_coe_algHom
 
-theorem of_alg_hom_symm (f : A₁ →ₐ[R] A₂) (g : A₂ →ₐ[R] A₁) (h₁ h₂) :
+theorem ofAlgHom_symm (f : A₁ →ₐ[R] A₂) (g : A₂ →ₐ[R] A₁) (h₁ h₂) :
     (ofAlgHom f g h₁ h₂).symm = ofAlgHom g f h₂ h₁ :=
   rfl
-#align alg_equiv.of_alg_hom_symm AlgEquiv.of_alg_hom_symm
+#align alg_equiv.of_alg_hom_symm AlgEquiv.ofAlgHom_symm
 
 /-- Promotes a bijective algebra homomorphism to an algebra equivalence. -/
 noncomputable def ofBijective (f : A₁ →ₐ[R] A₂) (hf : Function.Bijective f) : A₁ ≃ₐ[R] A₂ :=
@@ -502,15 +502,15 @@ noncomputable def ofBijective (f : A₁ →ₐ[R] A₂) (hf : Function.Bijective
 #align alg_equiv.of_bijective AlgEquiv.ofBijective
 
 @[simp]
-theorem coe_of_bijective {f : A₁ →ₐ[R] A₂} {hf : Function.Bijective f} :
+theorem coe_ofBijective {f : A₁ →ₐ[R] A₂} {hf : Function.Bijective f} :
     (AlgEquiv.ofBijective f hf : A₁ → A₂) = f :=
   rfl
-#align alg_equiv.coe_of_bijective AlgEquiv.coe_of_bijective
+#align alg_equiv.coe_of_bijective AlgEquiv.coe_ofBijective
 
-theorem of_bijective_apply {f : A₁ →ₐ[R] A₂} {hf : Function.Bijective f} (a : A₁) :
+theorem ofBijective_apply {f : A₁ →ₐ[R] A₂} {hf : Function.Bijective f} (a : A₁) :
     (AlgEquiv.ofBijective f hf) a = f a :=
   rfl
-#align alg_equiv.of_bijective_apply AlgEquiv.of_bijective_apply
+#align alg_equiv.of_bijective_apply AlgEquiv.ofBijective_apply
 
 /-- Forgetting the multiplicative structures, an equivalence of algebras is a linear equivalence. -/
 @[simps apply]
@@ -522,25 +522,24 @@ def toLinearEquiv (e : A₁ ≃ₐ[R] A₂) : A₁ ≃ₗ[R] A₂ :=
 #align alg_equiv.to_linear_equiv AlgEquiv.toLinearEquiv
 
 @[simp]
-theorem to_linear_equiv_refl :
-    (AlgEquiv.refl : A₁ ≃ₐ[R] A₁).toLinearEquiv = LinearEquiv.refl R A₁ :=
+theorem toLinearEquiv_refl : (AlgEquiv.refl : A₁ ≃ₐ[R] A₁).toLinearEquiv = LinearEquiv.refl R A₁ :=
   rfl
-#align alg_equiv.to_linear_equiv_refl AlgEquiv.to_linear_equiv_refl
+#align alg_equiv.to_linear_equiv_refl AlgEquiv.toLinearEquiv_refl
 
 @[simp]
-theorem to_linear_equiv_symm (e : A₁ ≃ₐ[R] A₂) : e.toLinearEquiv.symm = e.symm.toLinearEquiv :=
+theorem toLinearEquiv_symm (e : A₁ ≃ₐ[R] A₂) : e.toLinearEquiv.symm = e.symm.toLinearEquiv :=
   rfl
-#align alg_equiv.to_linear_equiv_symm AlgEquiv.to_linear_equiv_symm
+#align alg_equiv.to_linear_equiv_symm AlgEquiv.toLinearEquiv_symm
 
 @[simp]
-theorem to_linear_equiv_trans (e₁ : A₁ ≃ₐ[R] A₂) (e₂ : A₂ ≃ₐ[R] A₃) :
+theorem toLinearEquiv_trans (e₁ : A₁ ≃ₐ[R] A₂) (e₂ : A₂ ≃ₐ[R] A₃) :
     (e₁.trans e₂).toLinearEquiv = e₁.toLinearEquiv.trans e₂.toLinearEquiv :=
   rfl
-#align alg_equiv.to_linear_equiv_trans AlgEquiv.to_linear_equiv_trans
+#align alg_equiv.to_linear_equiv_trans AlgEquiv.toLinearEquiv_trans
 
-theorem to_linear_equiv_injective : Function.Injective (toLinearEquiv : _ → A₁ ≃ₗ[R] A₂) :=
+theorem toLinearEquiv_injective : Function.Injective (toLinearEquiv : _ → A₁ ≃ₗ[R] A₂) :=
   fun e₁ e₂ h => ext <| LinearEquiv.congr_fun h
-#align alg_equiv.to_linear_equiv_injective AlgEquiv.to_linear_equiv_injective
+#align alg_equiv.to_linear_equiv_injective AlgEquiv.toLinearEquiv_injective
 
 /-- Interpret an algebra equivalence as a linear map. -/
 def toLinearMap : A₁ →ₗ[R] A₂ :=
@@ -548,29 +547,29 @@ def toLinearMap : A₁ →ₗ[R] A₂ :=
 #align alg_equiv.to_linear_map AlgEquiv.toLinearMap
 
 @[simp]
-theorem to_alg_hom_to_linear_map : (e : A₁ →ₐ[R] A₂).toLinearMap = e.toLinearMap :=
+theorem to_algHom_toLinearMap : (e : A₁ →ₐ[R] A₂).toLinearMap = e.toLinearMap :=
   rfl
-#align alg_equiv.to_alg_hom_to_linear_map AlgEquiv.to_alg_hom_to_linear_map
+#align alg_equiv.to_alg_hom_to_linear_map AlgEquiv.to_algHom_toLinearMap
 
 @[simp]
-theorem to_linear_equiv_to_linear_map : e.toLinearEquiv.toLinearMap = e.toLinearMap :=
+theorem toLinearEquiv_toLinearMap : e.toLinearEquiv.toLinearMap = e.toLinearMap :=
   rfl
-#align alg_equiv.to_linear_equiv_to_linear_map AlgEquiv.to_linear_equiv_to_linear_map
+#align alg_equiv.to_linear_equiv_to_linear_map AlgEquiv.toLinearEquiv_toLinearMap
 
 @[simp]
-theorem to_linear_map_apply (x : A₁) : e.toLinearMap x = e x :=
+theorem toLinearMap_apply (x : A₁) : e.toLinearMap x = e x :=
   rfl
-#align alg_equiv.to_linear_map_apply AlgEquiv.to_linear_map_apply
+#align alg_equiv.to_linear_map_apply AlgEquiv.toLinearMap_apply
 
-theorem to_linear_map_injective : Function.Injective (toLinearMap : _ → A₁ →ₗ[R] A₂) :=
-  fun e₁ e₂ h => ext <| LinearMap.congr_fun h
-#align alg_equiv.to_linear_map_injective AlgEquiv.to_linear_map_injective
+theorem toLinearMap_injective : Function.Injective (toLinearMap : _ → A₁ →ₗ[R] A₂) := fun e₁ e₂ h =>
+  ext <| LinearMap.congr_fun h
+#align alg_equiv.to_linear_map_injective AlgEquiv.toLinearMap_injective
 
 @[simp]
-theorem trans_to_linear_map (f : A₁ ≃ₐ[R] A₂) (g : A₂ ≃ₐ[R] A₃) :
+theorem trans_toLinearMap (f : A₁ ≃ₐ[R] A₂) (g : A₂ ≃ₐ[R] A₃) :
     (f.trans g).toLinearMap = g.toLinearMap.comp f.toLinearMap :=
   rfl
-#align alg_equiv.trans_to_linear_map AlgEquiv.trans_to_linear_map
+#align alg_equiv.trans_to_linear_map AlgEquiv.trans_toLinearMap
 
 section OfLinearEquiv
 
@@ -590,27 +589,27 @@ def ofLinearEquiv : A₁ ≃ₐ[R] A₂ :=
 #align alg_equiv.of_linear_equiv AlgEquiv.ofLinearEquiv
 
 @[simp]
-theorem of_linear_equiv_symm :
+theorem ofLinearEquiv_symm :
     (ofLinearEquiv l map_mul commutes).symm =
       ofLinearEquiv l.symm (ofLinearEquiv l map_mul commutes).symm.map_mul
         (ofLinearEquiv l map_mul commutes).symm.commutes :=
   rfl
-#align alg_equiv.of_linear_equiv_symm AlgEquiv.of_linear_equiv_symm
+#align alg_equiv.of_linear_equiv_symm AlgEquiv.ofLinearEquiv_symm
 
 @[simp]
-theorem of_linear_equiv_to_linear_equiv (map_mul) (commutes) :
+theorem ofLinearEquiv_toLinearEquiv (map_mul) (commutes) :
     ofLinearEquiv e.toLinearEquiv map_mul commutes = e :=
   by
   ext
   rfl
-#align alg_equiv.of_linear_equiv_to_linear_equiv AlgEquiv.of_linear_equiv_to_linear_equiv
+#align alg_equiv.of_linear_equiv_to_linear_equiv AlgEquiv.ofLinearEquiv_toLinearEquiv
 
 @[simp]
-theorem to_linear_equiv_of_linear_equiv : toLinearEquiv (ofLinearEquiv l map_mul commutes) = l :=
+theorem toLinearEquiv_ofLinearEquiv : toLinearEquiv (ofLinearEquiv l map_mul commutes) = l :=
   by
   ext
   rfl
-#align alg_equiv.to_linear_equiv_of_linear_equiv AlgEquiv.to_linear_equiv_of_linear_equiv
+#align alg_equiv.to_linear_equiv_of_linear_equiv AlgEquiv.toLinearEquiv_ofLinearEquiv
 
 end OfLinearEquiv
 
@@ -667,22 +666,22 @@ def autCongr (ϕ : A₁ ≃ₐ[R] A₂) : (A₁ ≃ₐ[R] A₁) ≃* A₂ ≃ₐ
 #align alg_equiv.aut_congr AlgEquiv.autCongr
 
 @[simp]
-theorem aut_congr_refl : autCongr AlgEquiv.refl = MulEquiv.refl (A₁ ≃ₐ[R] A₁) :=
+theorem autCongr_refl : autCongr AlgEquiv.refl = MulEquiv.refl (A₁ ≃ₐ[R] A₁) :=
   by
   ext
   rfl
-#align alg_equiv.aut_congr_refl AlgEquiv.aut_congr_refl
+#align alg_equiv.aut_congr_refl AlgEquiv.autCongr_refl
 
 @[simp]
-theorem aut_congr_symm (ϕ : A₁ ≃ₐ[R] A₂) : (autCongr ϕ).symm = autCongr ϕ.symm :=
+theorem autCongr_symm (ϕ : A₁ ≃ₐ[R] A₂) : (autCongr ϕ).symm = autCongr ϕ.symm :=
   rfl
-#align alg_equiv.aut_congr_symm AlgEquiv.aut_congr_symm
+#align alg_equiv.aut_congr_symm AlgEquiv.autCongr_symm
 
 @[simp]
-theorem aut_congr_trans (ϕ : A₁ ≃ₐ[R] A₂) (ψ : A₂ ≃ₐ[R] A₃) :
+theorem autCongr_trans (ϕ : A₁ ≃ₐ[R] A₂) (ψ : A₂ ≃ₐ[R] A₃) :
     (autCongr ϕ).trans (autCongr ψ) = autCongr (ϕ.trans ψ) :=
   rfl
-#align alg_equiv.aut_congr_trans AlgEquiv.aut_congr_trans
+#align alg_equiv.aut_congr_trans AlgEquiv.autCongr_trans
 
 /-- The tautological action by `A₁ ≃ₐ[R] A₁` on `A₁`.
 
@@ -703,24 +702,24 @@ protected theorem smul_def (f : A₁ ≃ₐ[R] A₁) (a : A₁) : f • a = f a 
   rfl
 #align alg_equiv.smul_def AlgEquiv.smul_def
 
-instance apply_has_faithful_smul : FaithfulSMul (A₁ ≃ₐ[R] A₁) A₁ :=
+instance apply_faithfulSMul : FaithfulSMul (A₁ ≃ₐ[R] A₁) A₁ :=
   ⟨fun _ _ => AlgEquiv.ext⟩
-#align alg_equiv.apply_has_faithful_smul AlgEquiv.apply_has_faithful_smul
+#align alg_equiv.apply_has_faithful_smul AlgEquiv.apply_faithfulSMul
 
-instance apply_smul_comm_class : SMulCommClass R (A₁ ≃ₐ[R] A₁) A₁
+instance apply_sMulCommClass : SMulCommClass R (A₁ ≃ₐ[R] A₁) A₁
     where smul_comm r e a := (e.map_smul r a).symm
-#align alg_equiv.apply_smul_comm_class AlgEquiv.apply_smul_comm_class
+#align alg_equiv.apply_smul_comm_class AlgEquiv.apply_sMulCommClass
 
 instance apply_smul_comm_class' : SMulCommClass (A₁ ≃ₐ[R] A₁) R A₁
     where smul_comm e r a := e.map_smul r a
 #align alg_equiv.apply_smul_comm_class' AlgEquiv.apply_smul_comm_class'
 
 @[simp]
-theorem algebra_map_eq_apply (e : A₁ ≃ₐ[R] A₂) {y : R} {x : A₁} :
+theorem algebraMap_eq_apply (e : A₁ ≃ₐ[R] A₂) {y : R} {x : A₁} :
     algebraMap R A₂ y = e x ↔ algebraMap R A₁ y = x :=
   ⟨fun h => by simpa using e.symm.to_alg_hom.algebra_map_eq_apply h, fun h =>
     e.toAlgHom.algebra_map_eq_apply h⟩
-#align alg_equiv.algebra_map_eq_apply AlgEquiv.algebra_map_eq_apply
+#align alg_equiv.algebra_map_eq_apply AlgEquiv.algebraMap_eq_apply
 
 end Semiring
 
@@ -776,10 +775,10 @@ def toAlgEquiv (g : G) : A ≃ₐ[R] A :=
   { MulSemiringAction.toRingEquiv _ _ g, MulSemiringAction.toAlgHom R A g with }
 #align mul_semiring_action.to_alg_equiv MulSemiringAction.toAlgEquiv
 
-theorem to_alg_equiv_injective [FaithfulSMul G A] :
+theorem toAlgEquiv_injective [FaithfulSMul G A] :
     Function.Injective (MulSemiringAction.toAlgEquiv R A : G → A ≃ₐ[R] A) := fun m₁ m₂ h =>
   eq_of_smul_eq_smul fun r => AlgEquiv.ext_iff.1 h r
-#align mul_semiring_action.to_alg_equiv_injective MulSemiringAction.to_alg_equiv_injective
+#align mul_semiring_action.to_alg_equiv_injective MulSemiringAction.toAlgEquiv_injective
 
 end
 

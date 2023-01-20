@@ -49,16 +49,16 @@ class HasContinuousSup (L : Type _) [TopologicalSpace L] [HasSup L] : Prop where
 #align has_continuous_sup HasContinuousSup
 
 -- see Note [lower instance priority]
-instance (priority := 100) OrderDual.has_continuous_sup (L : Type _) [TopologicalSpace L] [HasInf L]
+instance (priority := 100) OrderDual.hasContinuousSup (L : Type _) [TopologicalSpace L] [HasInf L]
     [HasContinuousInf L] : HasContinuousSup Lᵒᵈ
     where continuous_sup := @HasContinuousInf.continuous_inf L _ _ _
-#align order_dual.has_continuous_sup OrderDual.has_continuous_sup
+#align order_dual.has_continuous_sup OrderDual.hasContinuousSup
 
 -- see Note [lower instance priority]
-instance (priority := 100) OrderDual.has_continuous_inf (L : Type _) [TopologicalSpace L] [HasSup L]
+instance (priority := 100) OrderDual.hasContinuousInf (L : Type _) [TopologicalSpace L] [HasSup L]
     [HasContinuousSup L] : HasContinuousInf Lᵒᵈ
     where continuous_inf := @HasContinuousSup.continuous_sup L _ _ _
-#align order_dual.has_continuous_inf OrderDual.has_continuous_inf
+#align order_dual.has_continuous_inf OrderDual.hasContinuousInf
 
 /-- Let `L` be a lattice equipped with a topology such that `L` has continuous infimum and supremum.
 Then `L` is said to be a *topological lattice*.

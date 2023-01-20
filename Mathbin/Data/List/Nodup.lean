@@ -510,7 +510,7 @@ Case conversion may be inaccurate. Consider using '#align list.nodup.sigma List.
                     [(Tactic.«tactic_<;>_»
                       (Tactic.injection "injection" `h ["with" ["_" `h]])
                       "<;>"
-                      (Tactic.exact "exact" (Term.app `eq_of_heq [`h])))])))))])))
+                      (Tactic.exact "exact" (Term.app `eq_of_hEq [`h])))])))))])))
            ","
            (Term.app
             (Term.proj `d₁ "." `imp)
@@ -606,7 +606,7 @@ Case conversion may be inaccurate. Consider using '#align list.nodup.sigma List.
                    [(Tactic.«tactic_<;>_»
                      (Tactic.injection "injection" `h ["with" ["_" `h]])
                      "<;>"
-                     (Tactic.exact "exact" (Term.app `eq_of_heq [`h])))])))))])))
+                     (Tactic.exact "exact" (Term.app `eq_of_hEq [`h])))])))))])))
           ","
           (Term.app
            (Term.proj `d₁ "." `imp)
@@ -697,7 +697,7 @@ Case conversion may be inaccurate. Consider using '#align list.nodup.sigma List.
                  [(Tactic.«tactic_<;>_»
                    (Tactic.injection "injection" `h ["with" ["_" `h]])
                    "<;>"
-                   (Tactic.exact "exact" (Term.app `eq_of_heq [`h])))])))))])))
+                   (Tactic.exact "exact" (Term.app `eq_of_hEq [`h])))])))))])))
         ","
         (Term.app
          (Term.proj `d₁ "." `imp)
@@ -1095,7 +1095,7 @@ Case conversion may be inaccurate. Consider using '#align list.nodup.sigma List.
                [(Tactic.«tactic_<;>_»
                  (Tactic.injection "injection" `h ["with" ["_" `h]])
                  "<;>"
-                 (Tactic.exact "exact" (Term.app `eq_of_heq [`h])))])))))])))
+                 (Tactic.exact "exact" (Term.app `eq_of_hEq [`h])))])))))])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app
        (Term.proj (Term.app `d₂ [`a]) "." `map)
@@ -1112,7 +1112,7 @@ Case conversion may be inaccurate. Consider using '#align list.nodup.sigma List.
              [(Tactic.«tactic_<;>_»
                (Tactic.injection "injection" `h ["with" ["_" `h]])
                "<;>"
-               (Tactic.exact "exact" (Term.app `eq_of_heq [`h])))])))))])
+               (Tactic.exact "exact" (Term.app `eq_of_hEq [`h])))])))))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -1129,7 +1129,7 @@ Case conversion may be inaccurate. Consider using '#align list.nodup.sigma List.
            [(Tactic.«tactic_<;>_»
              (Tactic.injection "injection" `h ["with" ["_" `h]])
              "<;>"
-             (Tactic.exact "exact" (Term.app `eq_of_heq [`h])))])))))
+             (Tactic.exact "exact" (Term.app `eq_of_hEq [`h])))])))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.byTactic
        "by"
@@ -1138,17 +1138,17 @@ Case conversion may be inaccurate. Consider using '#align list.nodup.sigma List.
          [(Tactic.«tactic_<;>_»
            (Tactic.injection "injection" `h ["with" ["_" `h]])
            "<;>"
-           (Tactic.exact "exact" (Term.app `eq_of_heq [`h])))])))
+           (Tactic.exact "exact" (Term.app `eq_of_hEq [`h])))])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.«tactic_<;>_»
        (Tactic.injection "injection" `h ["with" ["_" `h]])
        "<;>"
-       (Tactic.exact "exact" (Term.app `eq_of_heq [`h])))
+       (Tactic.exact "exact" (Term.app `eq_of_hEq [`h])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Tactic.exact "exact" (Term.app `eq_of_heq [`h]))
+      (Tactic.exact "exact" (Term.app `eq_of_hEq [`h]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app `eq_of_heq [`h])
+      (Term.app `eq_of_hEq [`h])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -1156,7 +1156,7 @@ Case conversion may be inaccurate. Consider using '#align list.nodup.sigma List.
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
      [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-      `eq_of_heq
+      `eq_of_hEq
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
      [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
@@ -1183,7 +1183,7 @@ theorem
   :=
     nodup_bind . 2
       ⟨
-        fun a ma => d₂ a . map fun b b' h => by injection h with _ h <;> exact eq_of_heq h
+        fun a ma => d₂ a . map fun b b' h => by injection h with _ h <;> exact eq_of_hEq h
           ,
           d₁ . imp
             fun

@@ -75,7 +75,7 @@ def liouvilleNumberTail (m : ℝ) (k : ℕ) : ℝ :=
   ∑' i, 1 / m ^ (i + (k + 1))!
 #align liouville.liouville_number_tail Liouville.liouvilleNumberTail
 
-theorem liouville_number_tail_pos {m : ℝ} (hm : 1 < m) (k : ℕ) : 0 < liouvilleNumberTail m k :=
+theorem liouvilleNumberTail_pos {m : ℝ} (hm : 1 < m) (k : ℕ) : 0 < liouvilleNumberTail m k :=
   calc
     -- replace `0` with the constantly zero series `∑ i : ℕ, 0`
         (0 : ℝ) =
@@ -99,13 +99,13 @@ theorem liouville_number_tail_pos {m : ℝ} (hm : 1 < m) (k : ℕ) : 0 < liouvil
           summable_one_div_pow_of_le
           hm fun i => trans le_self_add (Nat.self_le_factorial _)
     
-#align liouville.liouville_number_tail_pos Liouville.liouville_number_tail_pos
+#align liouville.liouville_number_tail_pos Liouville.liouvilleNumberTail_pos
 
 /-- Split the sum definining a Liouville number into the first `k` term and the rest. -/
-theorem liouville_number_eq_initial_terms_add_tail {m : ℝ} (hm : 1 < m) (k : ℕ) :
+theorem liouvilleNumber_eq_initial_terms_add_tail {m : ℝ} (hm : 1 < m) (k : ℕ) :
     liouvilleNumber m = liouvilleNumberInitialTerms m k + liouvilleNumberTail m k :=
   (sum_add_tsum_nat_add _ (summable_one_div_pow_of_le hm fun i => i.self_le_factorial)).symm
-#align liouville.liouville_number_eq_initial_terms_add_tail Liouville.liouville_number_eq_initial_terms_add_tail
+#align liouville.liouville_number_eq_initial_terms_add_tail Liouville.liouvilleNumber_eq_initial_terms_add_tail
 
 /-! We now prove two useful inequalities, before collecting everything together. -/
 

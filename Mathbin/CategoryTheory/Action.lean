@@ -118,15 +118,15 @@ def stabilizerIsoEnd : Stabilizer.submonoid M x ≃* EndCat (↑x : ActionCatego
 #align category_theory.action_category.stabilizer_iso_End CategoryTheory.ActionCategory.stabilizerIsoEnd
 
 @[simp]
-theorem stabilizer_iso_End_apply (f : Stabilizer.submonoid M x) :
+theorem stabilizerIsoEnd_apply (f : Stabilizer.submonoid M x) :
     (stabilizerIsoEnd M x).toFun f = f :=
   rfl
-#align category_theory.action_category.stabilizer_iso_End_apply CategoryTheory.ActionCategory.stabilizer_iso_End_apply
+#align category_theory.action_category.stabilizer_iso_End_apply CategoryTheory.ActionCategory.stabilizerIsoEnd_apply
 
 @[simp]
-theorem stabilizer_iso_End_symm_apply (f : EndCat _) : (stabilizerIsoEnd M x).invFun f = f :=
+theorem stabilizerIsoEnd_symm_apply (f : EndCat _) : (stabilizerIsoEnd M x).invFun f = f :=
   rfl
-#align category_theory.action_category.stabilizer_iso_End_symm_apply CategoryTheory.ActionCategory.stabilizer_iso_End_symm_apply
+#align category_theory.action_category.stabilizer_iso_End_symm_apply CategoryTheory.ActionCategory.stabilizerIsoEnd_symm_apply
 
 variable {M X}
 

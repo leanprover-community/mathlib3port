@@ -42,7 +42,7 @@ class QuasiIso (f : C ⟶ D) : Prop where
   IsIso : ∀ i, IsIso ((homologyFunctor V c i).map f)
 #align quasi_iso QuasiIso
 
-attribute [instance] QuasiIso.is_iso
+attribute [instance] QuasiIso.isIso
 
 instance (priority := 100) quasiIsoOfIso (f : C ⟶ D) [IsIso f] : QuasiIso f
     where IsIso i :=
@@ -81,13 +81,13 @@ theorem toQuasiIso {C D : HomologicalComplex W c} (e : HomotopyEquiv C D) : Quas
     exacts[e.homotopy_hom_inv_id, e.homotopy_inv_hom_id]⟩
 #align homotopy_equiv.to_quasi_iso HomotopyEquiv.toQuasiIso
 
-theorem to_quasi_iso_inv {C D : HomologicalComplex W c} (e : HomotopyEquiv C D) (i : ι) :
+theorem toQuasiIso_inv {C D : HomologicalComplex W c} (e : HomotopyEquiv C D) (i : ι) :
     (@asIso _ _ _ _ _ (e.toQuasiIso.1 i)).inv = (homologyFunctor W c i).map e.inv :=
   by
   symm
   simp only [← iso.hom_comp_eq_id, as_iso_hom, ← functor.map_comp, ← (homologyFunctor W c i).map_id,
     homology_map_eq_of_homotopy e.homotopy_hom_inv_id _]
-#align homotopy_equiv.to_quasi_iso_inv HomotopyEquiv.to_quasi_iso_inv
+#align homotopy_equiv.to_quasi_iso_inv HomotopyEquiv.toQuasiIso_inv
 
 end
 
@@ -110,7 +110,7 @@ noncomputable def toSingle₀CokernelAtZeroIso : cokernel (X.d 1 0) ≅ Y :=
     ((@asIso _ _ _ _ _ (hf.1 0)).trans ((ChainComplex.homologyFunctor0Single₀ W).app Y))
 #align homological_complex.hom.to_single₀_cokernel_at_zero_iso HomologicalComplex.Hom.toSingle₀CokernelAtZeroIso
 
-theorem to_single₀_cokernel_at_zero_iso_hom_eq [hf : QuasiIso f] :
+theorem toSingle₀CokernelAtZeroIso_hom_eq [hf : QuasiIso f] :
     f.toSingle₀CokernelAtZeroIso.Hom =
       cokernel.desc (X.d 1 0) (f.f 0) (by rw [← f.2 1 0 rfl] <;> exact comp_zero) :=
   by
@@ -120,7 +120,7 @@ theorem to_single₀_cokernel_at_zero_iso_hom_eq [hf : QuasiIso f] :
   dsimp
   simp only [cokernel.π_desc, category.assoc, homology.map_desc, cokernel.π_desc_assoc]
   simp [homology.desc, iso.refl_inv (X.X 0)]
-#align homological_complex.hom.to_single₀_cokernel_at_zero_iso_hom_eq HomologicalComplex.Hom.to_single₀_cokernel_at_zero_iso_hom_eq
+#align homological_complex.hom.to_single₀_cokernel_at_zero_iso_hom_eq HomologicalComplex.Hom.toSingle₀CokernelAtZeroIso_hom_eq
 
 theorem to_single₀_epi_at_zero [hf : QuasiIso f] : Epi (f.f 0) :=
   by
@@ -135,7 +135,7 @@ theorem to_single₀_exact_d_f_at_zero [hf : QuasiIso f] : Exact (X.d 1 0) (f.f 
   by
   rw [preadditive.exact_iff_homology_zero]
   have h : X.d 1 0 ≫ f.f 0 = 0 := by
-    simp only [← f.2 1 0 rfl, ChainComplex.single₀_obj_X_d, comp_zero]
+    simp only [← f.2 1 0 rfl, ChainComplex.single₀_obj_x_d, comp_zero]
   refine' ⟨h, Nonempty.intro (homologyIsoKernelDesc _ _ _ ≪≫ _)⟩
   · suffices is_iso (cokernel.desc _ _ h) by
       haveI := this
@@ -165,7 +165,7 @@ noncomputable def fromSingle₀KernelAtZeroIso [hf : QuasiIso f] : kernel (X.d 0
     ((@asIso _ _ _ _ _ (hf.1 0)).symm.trans ((CochainComplex.homologyFunctor0Single₀ W).app Y))
 #align homological_complex.hom.from_single₀_kernel_at_zero_iso HomologicalComplex.Hom.fromSingle₀KernelAtZeroIso
 
-theorem from_single₀_kernel_at_zero_iso_inv_eq [hf : QuasiIso f] :
+theorem fromSingle₀KernelAtZeroIso_inv_eq [hf : QuasiIso f] :
     f.fromSingle₀KernelAtZeroIso.inv =
       kernel.lift (X.d 0 1) (f.f 0) (by rw [f.2 0 1 rfl] <;> exact zero_comp) :=
   by
@@ -179,7 +179,7 @@ theorem from_single₀_kernel_at_zero_iso_inv_eq [hf : QuasiIso f] :
     cokernel_iso_of_eq_hom_comp_desc, kernel_subobject_arrow, homology.π_map_assoc,
     is_iso.inv_comp_eq]
   simp [homology.π, kernel_subobject_map_comp, iso.refl_hom (X.X 0), category.comp_id]
-#align homological_complex.hom.from_single₀_kernel_at_zero_iso_inv_eq HomologicalComplex.Hom.from_single₀_kernel_at_zero_iso_inv_eq
+#align homological_complex.hom.from_single₀_kernel_at_zero_iso_inv_eq HomologicalComplex.Hom.fromSingle₀KernelAtZeroIso_inv_eq
 
 theorem from_single₀_mono_at_zero [hf : QuasiIso f] : Mono (f.f 0) :=
   by
@@ -194,7 +194,7 @@ theorem from_single₀_exact_f_d_at_zero [hf : QuasiIso f] : Exact (f.f 0) (X.d 
   by
   rw [preadditive.exact_iff_homology_zero]
   have h : f.f 0 ≫ X.d 0 1 = 0 := by
-    simp only [HomologicalComplex.Hom.comm, CochainComplex.single₀_obj_X_d, zero_comp]
+    simp only [HomologicalComplex.Hom.comm, CochainComplex.single₀_obj_x_d, zero_comp]
   refine' ⟨h, Nonempty.intro (homologyIsoCokernelLift _ _ _ ≪≫ _)⟩
   · suffices is_iso (kernel.lift (X.d 0 1) (f.f 0) h)
       by

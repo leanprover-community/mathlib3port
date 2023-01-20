@@ -177,15 +177,15 @@ instance [SMul S R] [SMul S A] : SMul S (Unitization R A) :=
 
 instance [SMul T R] [SMul T A] [SMul S R] [SMul S A] [SMul T S] [IsScalarTower T S R]
     [IsScalarTower T S A] : IsScalarTower T S (Unitization R A) :=
-  Prod.is_scalar_tower
+  Prod.isScalarTower
 
 instance [SMul T R] [SMul T A] [SMul S R] [SMul S A] [SMulCommClass T S R] [SMulCommClass T S A] :
     SMulCommClass T S (Unitization R A) :=
-  Prod.smul_comm_class
+  Prod.sMulCommClass
 
 instance [SMul S R] [SMul S A] [SMul Sᵐᵒᵖ R] [SMul Sᵐᵒᵖ A] [IsCentralScalar S R]
     [IsCentralScalar S A] : IsCentralScalar S (Unitization R A) :=
-  Prod.is_central_scalar
+  Prod.isCentralScalar
 
 instance [Monoid S] [MulAction S R] [MulAction S A] : MulAction S (Unitization R A) :=
   Prod.mulAction
@@ -309,11 +309,11 @@ theorem ind {R A} [AddZeroClass R] [AddZeroClass A] {P : Unitization R A → Pro
 
 /-- This cannot be marked `@[ext]` as it ends up being used instead of `linear_map.prod_ext` when
 working with `R × A`. -/
-theorem linear_map_ext {N} [Semiring S] [AddCommMonoid R] [AddCommMonoid A] [AddCommMonoid N]
+theorem linearMap_ext {N} [Semiring S] [AddCommMonoid R] [AddCommMonoid A] [AddCommMonoid N]
     [Module S R] [Module S A] [Module S N] ⦃f g : Unitization R A →ₗ[S] N⦄
     (hl : ∀ r, f (inl r) = g (inl r)) (hr : ∀ a : A, f a = g a) : f = g :=
   LinearMap.prod_ext (LinearMap.ext hl) (LinearMap.ext hr)
-#align unitization.linear_map_ext Unitization.linear_map_ext
+#align unitization.linear_map_ext Unitization.linearMap_ext
 
 variable (R A)
 
@@ -576,26 +576,26 @@ instance algebra : Algebra S (Unitization R A) :=
     smul_def' := fun s x => by
       induction x using Unitization.ind
       simp only [mul_add, smul_add, RingHom.toFun_eq_coe, RingHom.coe_comp, Function.comp_apply,
-        inl_ring_hom_apply, Algebra.algebra_map_eq_smul_one]
+        inl_ring_hom_apply, Algebra.algebraMap_eq_smul_one]
       rw [inl_mul_inl, inl_mul_coe, smul_one_mul, inl_smul, coe_smul, smul_one_smul] }
 #align unitization.algebra Unitization.algebra
 
-theorem algebra_map_eq_inl_comp : ⇑(algebraMap S (Unitization R A)) = inl ∘ algebraMap S R :=
+theorem algebraMap_eq_inl_comp : ⇑(algebraMap S (Unitization R A)) = inl ∘ algebraMap S R :=
   rfl
-#align unitization.algebra_map_eq_inl_comp Unitization.algebra_map_eq_inl_comp
+#align unitization.algebra_map_eq_inl_comp Unitization.algebraMap_eq_inl_comp
 
-theorem algebra_map_eq_inl_ring_hom_comp :
+theorem algebraMap_eq_inlRingHom_comp :
     algebraMap S (Unitization R A) = (inlRingHom R A).comp (algebraMap S R) :=
   rfl
-#align unitization.algebra_map_eq_inl_ring_hom_comp Unitization.algebra_map_eq_inl_ring_hom_comp
+#align unitization.algebra_map_eq_inl_ring_hom_comp Unitization.algebraMap_eq_inlRingHom_comp
 
-theorem algebra_map_eq_inl : ⇑(algebraMap R (Unitization R A)) = inl :=
+theorem algebraMap_eq_inl : ⇑(algebraMap R (Unitization R A)) = inl :=
   rfl
-#align unitization.algebra_map_eq_inl Unitization.algebra_map_eq_inl
+#align unitization.algebra_map_eq_inl Unitization.algebraMap_eq_inl
 
-theorem algebra_map_eq_inl_hom : algebraMap R (Unitization R A) = inlRingHom R A :=
+theorem algebraMap_eq_inl_hom : algebraMap R (Unitization R A) = inlRingHom R A :=
   rfl
-#align unitization.algebra_map_eq_inl_hom Unitization.algebra_map_eq_inl_hom
+#align unitization.algebra_map_eq_inl_hom Unitization.algebraMap_eq_inl_hom
 
 /-- The canonical `R`-algebra projection `unitization R A → R`. -/
 @[simps]
@@ -632,23 +632,23 @@ variable {S R A : Type _} [CommSemiring S] [CommSemiring R] [NonUnitalSemiring A
   [SMulCommClass R A A] [IsScalarTower R A A] {B : Type _} [Semiring B] [Algebra S B] [Algebra S R]
   [DistribMulAction S A] [IsScalarTower S R A] {C : Type _} [Ring C] [Algebra R C]
 
-theorem alg_hom_ext {φ ψ : Unitization R A →ₐ[S] B} (h : ∀ a : A, φ a = ψ a)
+theorem algHom_ext {φ ψ : Unitization R A →ₐ[S] B} (h : ∀ a : A, φ a = ψ a)
     (h' : ∀ r, φ (algebraMap R (Unitization R A) r) = ψ (algebraMap R (Unitization R A) r)) :
     φ = ψ := by
   ext
   induction x using Unitization.ind
   simp only [map_add, ← algebra_map_eq_inl, h, h']
-#align unitization.alg_hom_ext Unitization.alg_hom_ext
+#align unitization.alg_hom_ext Unitization.algHom_ext
 
 /-- See note [partially-applied ext lemmas] -/
 @[ext]
-theorem alg_hom_ext' {φ ψ : Unitization R A →ₐ[R] C}
+theorem algHom_ext' {φ ψ : Unitization R A →ₐ[R] C}
     (h :
       φ.toNonUnitalAlgHom.comp (coeNonUnitalAlgHom R A) =
         ψ.toNonUnitalAlgHom.comp (coeNonUnitalAlgHom R A)) :
     φ = ψ :=
-  alg_hom_ext (NonUnitalAlgHom.congr_fun h) (by simp [AlgHom.commutes])
-#align unitization.alg_hom_ext' Unitization.alg_hom_ext'
+  algHom_ext (NonUnitalAlgHom.congr_fun h) (by simp [AlgHom.commutes])
+#align unitization.alg_hom_ext' Unitization.algHom_ext'
 
 /-- Non-unital algebra homomorphisms from `A` into a unital `R`-algebra `C` lift uniquely to
 `unitization R A →ₐ[R] C`. This is the universal property of the unitization. -/
@@ -665,7 +665,7 @@ def lift : (A →ₙₐ[R] C) ≃ (Unitization R A →ₐ[R] C)
           add_zero, zero_mul, map_mul, snd_add, snd_mul, snd_inl, smul_zero, snd_coe, zero_add,
           φ.map_add, φ.map_smul, φ.map_mul, zero_smul, zero_add]
         rw [← Algebra.commutes _ (φ x_a)]
-        simp only [Algebra.algebra_map_eq_smul_one, smul_one_mul, add_assoc]
+        simp only [Algebra.algebraMap_eq_smul_one, smul_one_mul, add_assoc]
       map_zero' := by simp only [fst_zero, map_zero, snd_zero, φ.map_zero, add_zero]
       map_add' := fun x y => by
         induction x using Unitization.ind
@@ -680,7 +680,7 @@ def lift : (A →ₙₐ[R] C) ≃ (Unitization R A →ₐ[R] C)
     ext
     simp
   right_inv φ :=
-    Unitization.alg_hom_ext'
+    Unitization.algHom_ext'
       (by
         ext
         simp)

@@ -86,7 +86,7 @@ theorem aeval : aeval x (minpoly A x) = 0 :=
 theorem ne_one [Nontrivial B] : minpoly A x ≠ 1 :=
   by
   intro h
-  refine' (one_ne_zero : (1 : B) ≠ 0) _
+  refine' (one_neZero : (1 : B) ≠ 0) _
   simpa using congr_arg (Polynomial.aeval x) h
 #align minpoly.ne_one minpoly.ne_one
 
@@ -99,14 +99,14 @@ theorem map_ne_one [Nontrivial B] {R : Type _} [Semiring R] [Nontrivial R] (f : 
 #align minpoly.map_ne_one minpoly.map_ne_one
 
 /-- A minimal polynomial is not a unit. -/
-theorem not_is_unit [Nontrivial B] : ¬IsUnit (minpoly A x) :=
+theorem not_isUnit [Nontrivial B] : ¬IsUnit (minpoly A x) :=
   by
   haveI : Nontrivial A := (algebraMap A B).domain_nontrivial
   by_cases hx : IsIntegral A x
   · exact mt (monic hx).eq_one_of_is_unit (ne_one A x)
   · rw [eq_zero hx]
     exact not_isUnit_zero
-#align minpoly.not_is_unit minpoly.not_is_unit
+#align minpoly.not_is_unit minpoly.not_isUnit
 
 theorem mem_range_of_degree_eq_one (hx : (minpoly A x).degree = 1) : x ∈ (algebraMap A B).range :=
   by
@@ -179,7 +179,7 @@ variable [Ring B] [Algebra A B]
 variable {x : B}
 
 /-- The degree of a minimal polynomial, as a natural number, is positive. -/
-theorem nat_degree_pos [Nontrivial B] (hx : IsIntegral A x) : 0 < natDegree (minpoly A x) :=
+theorem natDegree_pos [Nontrivial B] (hx : IsIntegral A x) : 0 < natDegree (minpoly A x) :=
   by
   rw [pos_iff_ne_zero]
   intro ndeg_eq_zero
@@ -188,17 +188,17 @@ theorem nat_degree_pos [Nontrivial B] (hx : IsIntegral A x) : 0 < natDegree (min
     rw [eq_C_of_nat_degree_eq_zero ndeg_eq_zero]
     convert C_1
     simpa only [ndeg_eq_zero.symm] using (monic hx).leadingCoeff
-  simpa only [eq_one, AlgHom.map_one, one_ne_zero] using aeval A x
-#align minpoly.nat_degree_pos minpoly.nat_degree_pos
+  simpa only [eq_one, AlgHom.map_one, one_neZero] using aeval A x
+#align minpoly.nat_degree_pos minpoly.natDegree_pos
 
 /-- The degree of a minimal polynomial is positive. -/
 theorem degree_pos [Nontrivial B] (hx : IsIntegral A x) : 0 < degree (minpoly A x) :=
-  nat_degree_pos_iff_degree_pos.mp (nat_degree_pos hx)
+  natDegree_pos_iff_degree_pos.mp (natDegree_pos hx)
 #align minpoly.degree_pos minpoly.degree_pos
 
 /-- If `B/A` is an injective ring extension, and `a` is an element of `A`,
 then the minimal polynomial of `algebra_map A B a` is `X - C a`. -/
-theorem eq_X_sub_C_of_algebra_map_inj (a : A) (hf : Function.Injective (algebraMap A B)) :
+theorem eq_x_sub_c_of_algebraMap_inj (a : A) (hf : Function.Injective (algebraMap A B)) :
     minpoly A (algebraMap A B a) = X - c a :=
   by
   nontriviality A
@@ -209,7 +209,7 @@ theorem eq_X_sub_C_of_algebra_map_inj (a : A) (hf : Function.Injective (algebraM
   rw [← nat_degree_lt_nat_degree_iff h0, nat_degree_X_sub_C, Nat.lt_one_iff] at hl
   rw [eq_C_of_nat_degree_eq_zero hl] at h0⊢
   rwa [aeval_C, map_ne_zero_iff _ hf, ← C_ne_zero]
-#align minpoly.eq_X_sub_C_of_algebra_map_inj minpoly.eq_X_sub_C_of_algebra_map_inj
+#align minpoly.eq_X_sub_C_of_algebra_map_inj minpoly.eq_x_sub_c_of_algebraMap_inj
 
 end Ring
 
@@ -220,7 +220,7 @@ variable [Ring B] [Algebra A B]
 variable {x : B}
 
 /-- If `a` strictly divides the minimal polynomial of `x`, then `x` cannot be a root for `a`. -/
-theorem aeval_ne_zero_of_dvd_not_unit_minpoly {a : A[X]} (hx : IsIntegral A x) (hamonic : a.Monic)
+theorem aeval_ne_zero_of_dvdNotUnit_minpoly {a : A[X]} (hx : IsIntegral A x) (hamonic : a.Monic)
     (hdvd : DvdNotUnit a (minpoly A x)) : Polynomial.aeval x a ≠ 0 :=
   by
   refine' fun ha => (min A x hamonic ha).not_lt (degree_lt_degree _)
@@ -231,7 +231,7 @@ theorem aeval_ne_zero_of_dvd_not_unit_minpoly {a : A[X]} (hx : IsIntegral A x) (
   rw [eq_C_of_nat_degree_le_zero h, ← Nat.eq_zero_of_le_zero h, ← leading_coeff, hcm.leading_coeff,
     C_1]
   exact isUnit_one
-#align minpoly.aeval_ne_zero_of_dvd_not_unit_minpoly minpoly.aeval_ne_zero_of_dvd_not_unit_minpoly
+#align minpoly.aeval_ne_zero_of_dvd_not_unit_minpoly minpoly.aeval_ne_zero_of_dvdNotUnit_minpoly
 
 variable [IsDomain A] [IsDomain B]
 

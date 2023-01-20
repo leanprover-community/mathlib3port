@@ -54,9 +54,9 @@ def q' : QuadraticForm R (M × R) :=
   Q.Prod <| -@QuadraticForm.sq R _
 #align clifford_algebra.equiv_even.Q' CliffordAlgebra.EquivEven.q'
 
-theorem Q'_apply (m : M × R) : q' Q m = Q m.1 - m.2 * m.2 :=
+theorem q'_apply (m : M × R) : q' Q m = Q m.1 - m.2 * m.2 :=
   (sub_eq_add_neg _ _).symm
-#align clifford_algebra.equiv_even.Q'_apply CliffordAlgebra.EquivEven.Q'_apply
+#align clifford_algebra.equiv_even.Q'_apply CliffordAlgebra.EquivEven.q'_apply
 
 /-- The unit vector in the new dimension -/
 def e0 : CliffordAlgebra (q' Q) :=
@@ -128,22 +128,22 @@ open EquivEven
 def toEven : CliffordAlgebra Q →ₐ[R] CliffordAlgebra.even (q' Q) :=
   by
   refine' CliffordAlgebra.lift Q ⟨_, fun m => _⟩
-  · refine' LinearMap.codRestrict _ _ fun m => Submodule.mem_supr_of_mem ⟨2, rfl⟩ _
+  · refine' LinearMap.codRestrict _ _ fun m => Submodule.mem_supᵢ_of_mem ⟨2, rfl⟩ _
     exact (LinearMap.mulLeft R <| e0 Q).comp (v Q)
     rw [Subtype.coe_mk, pow_two]
     exact Submodule.mul_mem_mul (LinearMap.mem_range_self _ _) (LinearMap.mem_range_self _ _)
   · ext1
-    dsimp only [Subalgebra.coe_mul, LinearMap.cod_restrict_apply, LinearMap.comp_apply,
-      LinearMap.mul_left_apply, LinearMap.inl_apply, Subalgebra.coe_algebra_map]
+    dsimp only [Subalgebra.coe_mul, LinearMap.codRestrict_apply, LinearMap.comp_apply,
+      LinearMap.mulLeft_apply, LinearMap.inl_apply, Subalgebra.coe_algebraMap]
     rw [← mul_assoc, e0_mul_v_mul_e0, v_sq_scalar]
 #align clifford_algebra.to_even CliffordAlgebra.toEven
 
 @[simp]
-theorem to_even_ι (m : M) : (toEven Q (ι Q m) : CliffordAlgebra (q' Q)) = e0 Q * v Q m :=
+theorem toEven_ι (m : M) : (toEven Q (ι Q m) : CliffordAlgebra (q' Q)) = e0 Q * v Q m :=
   by
-  rw [to_even, CliffordAlgebra.lift_ι_apply, LinearMap.cod_restrict_apply]
+  rw [to_even, CliffordAlgebra.lift_ι_apply, LinearMap.codRestrict_apply]
   rfl
-#align clifford_algebra.to_even_ι CliffordAlgebra.to_even_ι
+#align clifford_algebra.to_even_ι CliffordAlgebra.toEven_ι
 
 /-- The embedding from the even subalgebra with an extra dimension into the original algebra. -/
 def ofEven : CliffordAlgebra.even (q' Q) →ₐ[R] CliffordAlgebra Q :=
@@ -177,14 +177,14 @@ def ofEven : CliffordAlgebra.even (q' Q) →ₐ[R] CliffordAlgebra Q :=
       Algebra.smul_def, ← mul_assoc, hm]
 #align clifford_algebra.of_even CliffordAlgebra.ofEven
 
-theorem of_even_ι (x y : M × R) :
+theorem ofEven_ι (x y : M × R) :
     ofEven Q ((even.ι _).bilin x y) =
       (ι Q x.1 + algebraMap R _ x.2) * (ι Q y.1 - algebraMap R _ y.2) :=
   even.lift_ι _ _ _ _
-#align clifford_algebra.of_even_ι CliffordAlgebra.of_even_ι
+#align clifford_algebra.of_even_ι CliffordAlgebra.ofEven_ι
 
-theorem to_even_comp_of_even : (toEven Q).comp (ofEven Q) = AlgHom.id R _ :=
-  even.alg_hom_ext (q' Q) <|
+theorem toEven_comp_ofEven : (toEven Q).comp (ofEven Q) = AlgHom.id R _ :=
+  even.algHom_ext (q' Q) <|
     EvenHom.ext _ _ <|
       LinearMap.ext fun m₁ =>
         LinearMap.ext fun m₂ =>
@@ -197,7 +197,7 @@ theorem to_even_comp_of_even : (toEven Q).comp (ofEven Q) = AlgHom.id R _ :=
                 by
                 rw [of_even_ι, AlgHom.map_mul, AlgHom.map_add, AlgHom.map_sub, AlgHom.commutes,
                   AlgHom.commutes, Subalgebra.coe_mul, Subalgebra.coe_add, Subalgebra.coe_sub,
-                  to_even_ι, to_even_ι, Subalgebra.coe_algebra_map, Subalgebra.coe_algebra_map]
+                  to_even_ι, to_even_ι, Subalgebra.coe_algebraMap, Subalgebra.coe_algebraMap]
               _ =
                   e0 Q * v Q m₁ * (e0 Q * v Q m₂) + r₁ • e0 Q * v Q m₂ - r₂ • e0 Q * v Q m₁ -
                     algebraMap R _ (r₁ * r₂) :=
@@ -213,14 +213,14 @@ theorem to_even_comp_of_even : (toEven Q).comp (ofEven Q) = AlgHom.id R _ :=
                 have h2 : -(r₂ • e0 Q * v Q m₁) = v Q m₁ * r₂ • e0 Q := by
                   rw [mul_smul_comm, smul_mul_assoc, ← smul_neg, neg_e0_mul_v]
                 have h3 : -algebraMap R _ (r₁ * r₂) = r₁ • e0 Q * r₂ • e0 Q := by
-                  rw [Algebra.algebra_map_eq_smul_one, smul_mul_smul, e0_mul_e0, smul_neg]
+                  rw [Algebra.algebraMap_eq_smul_one, smul_mul_smul, e0_mul_e0, smul_neg]
                 rw [sub_eq_add_neg, sub_eq_add_neg, h1, h2, h3]
               _ = ι _ (m₁, r₁) * ι _ (m₂, r₂) := by
                 rw [ι_eq_v_add_smul_e0, ι_eq_v_add_smul_e0, mul_add, add_mul, add_mul, add_assoc]
               
-#align clifford_algebra.to_even_comp_of_even CliffordAlgebra.to_even_comp_of_even
+#align clifford_algebra.to_even_comp_of_even CliffordAlgebra.toEven_comp_ofEven
 
-theorem of_even_comp_to_even : (ofEven Q).comp (toEven Q) = AlgHom.id R _ :=
+theorem ofEven_comp_toEven : (ofEven Q).comp (toEven Q) = AlgHom.id R _ :=
   CliffordAlgebra.hom_ext <|
     LinearMap.ext fun m =>
       calc
@@ -232,29 +232,29 @@ theorem of_even_comp_to_even : (ofEven Q).comp (toEven Q) = AlgHom.id R _ :=
           exact of_even_ι Q _ _
         _ = ι Q m := by rw [map_one, map_zero, map_zero, sub_zero, zero_add, one_mul]
         
-#align clifford_algebra.of_even_comp_to_even CliffordAlgebra.of_even_comp_to_even
+#align clifford_algebra.of_even_comp_to_even CliffordAlgebra.ofEven_comp_toEven
 
 /-- Any clifford algebra is isomorphic to the even subalgebra of a clifford algebra with an extra
 dimension (that is, with vector space `M × R`), with a quadratic form evaluating to `-1` on that new
 basis vector. -/
 @[simps]
 def equivEven : CliffordAlgebra Q ≃ₐ[R] CliffordAlgebra.even (q' Q) :=
-  AlgEquiv.ofAlgHom (toEven Q) (ofEven Q) (to_even_comp_of_even Q) (of_even_comp_to_even Q)
+  AlgEquiv.ofAlgHom (toEven Q) (ofEven Q) (toEven_comp_ofEven Q) (ofEven_comp_toEven Q)
 #align clifford_algebra.equiv_even CliffordAlgebra.equivEven
 
 /-- The representation of the clifford conjugate (i.e. the reverse of the involute) in the even
 subalgebra is just the reverse of the representation. -/
-theorem coe_to_even_reverse_involute (x : CliffordAlgebra Q) :
+theorem coe_toEven_reverse_involute (x : CliffordAlgebra Q) :
     ↑(toEven Q (reverse (involute x))) = reverse (toEven Q x : CliffordAlgebra (q' Q)) :=
   by
   induction x using CliffordAlgebra.induction
-  case h_grade0 r => simp only [AlgHom.commutes, Subalgebra.coe_algebra_map, reverse.commutes]
+  case h_grade0 r => simp only [AlgHom.commutes, Subalgebra.coe_algebraMap, reverse.commutes]
   case h_grade1 m =>
     simp only [involute_ι, Subalgebra.coe_neg, to_even_ι, reverse.map_mul, reverse_v, reverse_e0,
       reverse_ι, neg_e0_mul_v, map_neg]
   case h_mul x y hx hy => simp only [map_mul, Subalgebra.coe_mul, reverse.map_mul, hx, hy]
   case h_add x y hx hy => simp only [map_add, Subalgebra.coe_add, hx, hy]
-#align clifford_algebra.coe_to_even_reverse_involute CliffordAlgebra.coe_to_even_reverse_involute
+#align clifford_algebra.coe_to_even_reverse_involute CliffordAlgebra.coe_toEven_reverse_involute
 
 /-! ### Constructions needed for `clifford_algebra.even_equiv_even_neg` -/
 
@@ -273,19 +273,19 @@ def evenToNeg (Q' : QuadraticForm R M) (h : Q' = -Q) :
 #align clifford_algebra.even_to_neg CliffordAlgebra.evenToNeg
 
 @[simp]
-theorem even_to_neg_ι (Q' : QuadraticForm R M) (h : Q' = -Q) (m₁ m₂ : M) :
+theorem evenToNeg_ι (Q' : QuadraticForm R M) (h : Q' = -Q) (m₁ m₂ : M) :
     evenToNeg Q Q' h ((even.ι Q).bilin m₁ m₂) = -(even.ι Q').bilin m₁ m₂ :=
   even.lift_ι _ _ m₁ m₂
-#align clifford_algebra.even_to_neg_ι CliffordAlgebra.even_to_neg_ι
+#align clifford_algebra.even_to_neg_ι CliffordAlgebra.evenToNeg_ι
 
-theorem even_to_neg_comp_even_to_neg (Q' : QuadraticForm R M) (h : Q' = -Q) (h' : Q = -Q') :
+theorem evenToNeg_comp_evenToNeg (Q' : QuadraticForm R M) (h : Q' = -Q) (h' : Q = -Q') :
     (evenToNeg Q' Q h').comp (evenToNeg Q Q' h) = AlgHom.id R _ :=
   by
   ext (m₁ m₂) : 4
-  dsimp only [even_hom.compr₂_bilin, LinearMap.compr₂_apply, AlgHom.to_linear_map_apply,
+  dsimp only [even_hom.compr₂_bilin, LinearMap.compr₂_apply, AlgHom.toLinearMap_apply,
     AlgHom.comp_apply, AlgHom.id_apply]
   rw [even_to_neg_ι, map_neg, even_to_neg_ι, neg_neg]
-#align clifford_algebra.even_to_neg_comp_even_to_neg CliffordAlgebra.even_to_neg_comp_even_to_neg
+#align clifford_algebra.even_to_neg_comp_even_to_neg CliffordAlgebra.evenToNeg_comp_evenToNeg
 
 /-- The even subalgebras of the algebras with quadratic form `Q` and `-Q` are isomorphic.
 
@@ -293,7 +293,7 @@ Stated another way, `𝒞ℓ⁺(p,q,r)` and `𝒞ℓ⁺(q,p,r)` are isomorphic. 
 @[simps]
 def evenEquivEvenNeg : CliffordAlgebra.even Q ≃ₐ[R] CliffordAlgebra.even (-Q) :=
   AlgEquiv.ofAlgHom (evenToNeg Q _ rfl) (evenToNeg (-Q) _ (neg_neg _).symm)
-    (even_to_neg_comp_even_to_neg _ _ _ _) (even_to_neg_comp_even_to_neg _ _ _ _)
+    (evenToNeg_comp_evenToNeg _ _ _ _) (evenToNeg_comp_evenToNeg _ _ _ _)
 #align clifford_algebra.even_equiv_even_neg CliffordAlgebra.evenEquivEvenNeg
 
 end CliffordAlgebra

@@ -45,36 +45,36 @@ instance : LocallyFiniteOrder (Multiset α) :=
       (Finset.icc f.toDfinsupp g.toDfinsupp).map Multiset.equivDfinsupp.toEquiv.symm.toEmbedding)
     fun f g x => by simp
 
-theorem Icc_eq :
+theorem icc_eq :
     Finset.icc f g =
       (Finset.icc f.toDfinsupp g.toDfinsupp).map Multiset.equivDfinsupp.toEquiv.symm.toEmbedding :=
   rfl
-#align multiset.Icc_eq Multiset.Icc_eq
+#align multiset.Icc_eq Multiset.icc_eq
 
-theorem card_Icc :
+theorem card_icc :
     (Finset.icc f g).card = ∏ i in f.toFinset ∪ g.toFinset, g.count i + 1 - f.count i := by
-  simp_rw [Icc_eq, Finset.card_map, Dfinsupp.card_Icc, Nat.card_Icc, Multiset.to_dfinsupp_apply,
+  simp_rw [Icc_eq, Finset.card_map, Dfinsupp.card_icc, Nat.card_icc, Multiset.toDfinsupp_apply,
     to_dfinsupp_support]
-#align multiset.card_Icc Multiset.card_Icc
+#align multiset.card_Icc Multiset.card_icc
 
-theorem card_Ico :
+theorem card_ico :
     (Finset.ico f g).card = (∏ i in f.toFinset ∪ g.toFinset, g.count i + 1 - f.count i) - 1 := by
   rw [card_Ico_eq_card_Icc_sub_one, card_Icc]
-#align multiset.card_Ico Multiset.card_Ico
+#align multiset.card_Ico Multiset.card_ico
 
-theorem card_Ioc :
+theorem card_ioc :
     (Finset.ioc f g).card = (∏ i in f.toFinset ∪ g.toFinset, g.count i + 1 - f.count i) - 1 := by
   rw [card_Ioc_eq_card_Icc_sub_one, card_Icc]
-#align multiset.card_Ioc Multiset.card_Ioc
+#align multiset.card_Ioc Multiset.card_ioc
 
-theorem card_Ioo :
+theorem card_ioo :
     (Finset.ioo f g).card = (∏ i in f.toFinset ∪ g.toFinset, g.count i + 1 - f.count i) - 2 := by
   rw [card_Ioo_eq_card_Icc_sub_two, card_Icc]
-#align multiset.card_Ioo Multiset.card_Ioo
+#align multiset.card_Ioo Multiset.card_ioo
 
-theorem card_Iic : (Finset.iic f).card = ∏ i in f.toFinset, f.count i + 1 := by
+theorem card_iic : (Finset.iic f).card = ∏ i in f.toFinset, f.count i + 1 := by
   simp_rw [Iic_eq_Icc, card_Icc, bot_eq_zero, to_finset_zero, empty_union, count_zero, tsub_zero]
-#align multiset.card_Iic Multiset.card_Iic
+#align multiset.card_Iic Multiset.card_iic
 
 end Multiset
 

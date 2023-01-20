@@ -369,10 +369,10 @@ theorem mem_parallel {S : Wseq (Computation α)} {a} (H : ∀ s ∈ S, s ~> a) {
 theorem parallel_congr_lem {S T : Wseq (Computation α)} {a} (H : S.LiftRel Equiv T) :
     (∀ s ∈ S, s ~> a) ↔ ∀ t ∈ T, t ~> a :=
   ⟨fun h1 t tT =>
-    let ⟨s, sS, se⟩ := Wseq.exists_of_lift_rel_right H tT
+    let ⟨s, sS, se⟩ := Wseq.exists_of_liftRel_right H tT
     (promises_congr se _).1 (h1 _ sS),
     fun h2 s sS =>
-    let ⟨t, tT, se⟩ := Wseq.exists_of_lift_rel_left H sS
+    let ⟨t, tT, se⟩ := Wseq.exists_of_liftRel_left H sS
     (promises_congr se _).2 (h2 _ tT)⟩
 #align computation.parallel_congr_lem Computation.parallel_congr_lem
 
@@ -386,14 +386,14 @@ theorem parallel_congr_left {S T : Wseq (Computation α)} {a} (h1 : ∀ s ∈ S,
     have aa := parallel_promises h1 h <;> rw [← aa] <;> rw [← aa] at h <;>
       exact
         let ⟨s, sS, as⟩ := exists_of_mem_parallel h
-        let ⟨t, tT, st⟩ := Wseq.exists_of_lift_rel_left H sS
+        let ⟨t, tT, st⟩ := Wseq.exists_of_liftRel_left H sS
         let aT := (st _).1 as
         mem_parallel h2 tT aT,
     fun h => by
     have aa := parallel_promises h2 h <;> rw [← aa] <;> rw [← aa] at h <;>
       exact
         let ⟨s, sS, as⟩ := exists_of_mem_parallel h
-        let ⟨t, tT, st⟩ := Wseq.exists_of_lift_rel_right H sS
+        let ⟨t, tT, st⟩ := Wseq.exists_of_liftRel_right H sS
         let aT := (st _).2 as
         mem_parallel h1 tT aT⟩
 #align computation.parallel_congr_left Computation.parallel_congr_left

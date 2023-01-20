@@ -38,7 +38,7 @@ section FiniteDimensional
 variable {m n : Type _} {R : Type v} [Field R]
 
 instance [Finite m] [Finite n] : FiniteDimensional R (Matrix m n R) :=
-  LinearEquiv.finite_dimensional (LinearEquiv.curry R m n)
+  LinearEquiv.finiteDimensional (LinearEquiv.curry R m n)
 
 /-- The dimension of the space of finite dimensional matrices
 is the product of the number of rows and columns.

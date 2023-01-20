@@ -128,12 +128,12 @@ theorem mem_iff_generator_dvd (S : Ideal R) [S.IsPrincipal] {x : R} : x ∈ S �
   (mem_iff_eq_smul_generator S).trans (exists_congr fun a => by simp only [mul_comm, smul_eq_mul])
 #align submodule.is_principal.mem_iff_generator_dvd Submodule.IsPrincipal.mem_iff_generator_dvd
 
-theorem prime_generator_of_is_prime (S : Ideal R) [Submodule.IsPrincipal S] [is_prime : S.IsPrime]
+theorem prime_generator_of_isPrime (S : Ideal R) [Submodule.IsPrincipal S] [is_prime : S.IsPrime]
     (ne_bot : S ≠ ⊥) : Prime (generator S) :=
   ⟨fun h => ne_bot ((eq_bot_iff_generator_eq_zero S).2 h), fun h =>
     is_prime.ne_top (S.eq_top_of_is_unit_mem (generator_mem S) h), fun _ _ => by
     simpa only [← mem_iff_generator_dvd S] using is_prime.2⟩
-#align submodule.is_principal.prime_generator_of_is_prime Submodule.IsPrincipal.prime_generator_of_is_prime
+#align submodule.is_principal.prime_generator_of_is_prime Submodule.IsPrincipal.prime_generator_of_isPrime
 
 -- Note that the converse may not hold if `ϕ` is not injective.
 theorem generator_map_dvd_of_mem {N : Submodule R M} (ϕ : M →ₗ[R] R) [(N.map ϕ).IsPrincipal] {x : M}
@@ -144,13 +144,13 @@ theorem generator_map_dvd_of_mem {N : Submodule R M} (ϕ : M →ₗ[R] R) [(N.ma
 #align submodule.is_principal.generator_map_dvd_of_mem Submodule.IsPrincipal.generator_map_dvd_of_mem
 
 -- Note that the converse may not hold if `ϕ` is not injective.
-theorem generator_submodule_image_dvd_of_mem {N O : Submodule R M} (hNO : N ≤ O) (ϕ : O →ₗ[R] R)
+theorem generator_submoduleImage_dvd_of_mem {N O : Submodule R M} (hNO : N ≤ O) (ϕ : O →ₗ[R] R)
     [(ϕ.submoduleImage N).IsPrincipal] {x : M} (hx : x ∈ N) :
     generator (ϕ.submoduleImage N) ∣ ϕ ⟨x, hNO hx⟩ :=
   by
-  rw [← mem_iff_generator_dvd, LinearMap.mem_submodule_image_of_le hNO]
+  rw [← mem_iff_generator_dvd, LinearMap.mem_submoduleImage_of_le hNO]
   exact ⟨x, hx, rfl⟩
-#align submodule.is_principal.generator_submodule_image_dvd_of_mem Submodule.IsPrincipal.generator_submodule_image_dvd_of_mem
+#align submodule.is_principal.generator_submodule_image_dvd_of_mem Submodule.IsPrincipal.generator_submoduleImage_dvd_of_mem
 
 end CommRing
 
@@ -166,7 +166,7 @@ open Submodule.IsPrincipal Ideal
 -- prove this (quotient out by p).
 theorem toMaximalIdeal [CommRing R] [IsDomain R] [IsPrincipalIdealRing R] {S : Ideal R}
     [hpi : IsPrime S] (hS : S ≠ ⊥) : IsMaximal S :=
-  is_maximal_iff.2
+  isMaximal_iff.2
     ⟨(ne_top_iff_one S).1 hpi.1, by
       intro T x hST hxS hxT
       cases' (mem_iff_generator_dvd _).1 (hST <| generator_mem S) with z hz
@@ -244,15 +244,15 @@ namespace PrincipalIdealRing
 open IsPrincipalIdealRing
 
 -- see Note [lower instance priority]
-instance (priority := 100) is_noetherian_ring [Ring R] [IsPrincipalIdealRing R] :
+instance (priority := 100) isNoetherianRing [Ring R] [IsPrincipalIdealRing R] :
     IsNoetherianRing R :=
-  is_noetherian_ring_iff.2
+  isNoetherianRing_iff.2
     ⟨fun s : Ideal R =>
       by
       rcases(IsPrincipalIdealRing.principal s).principal with ⟨a, rfl⟩
       rw [← Finset.coe_singleton]
       exact ⟨{a}, SetLike.coe_injective rfl⟩⟩
-#align principal_ideal_ring.is_noetherian_ring PrincipalIdealRing.is_noetherian_ring
+#align principal_ideal_ring.is_noetherian_ring PrincipalIdealRing.isNoetherianRing
 
 theorem isMaximalOfIrreducible [CommRing R] [IsPrincipalIdealRing R] {p : R} (hp : Irreducible p) :
     Ideal.IsMaximal (span R ({p} : Set R)) :=
@@ -307,18 +307,18 @@ theorem mem_submonoid_of_factors_subset_of_units_subset (s : Submonoid R) {a : R
 
 /-- If a `ring_hom` maps all units and all factors of an element `a` into a submonoid `s`, then it
 also maps `a` into that submonoid. -/
-theorem ring_hom_mem_submonoid_of_factors_subset_of_units_subset {R S : Type _} [CommRing R]
+theorem ringHom_mem_submonoid_of_factors_subset_of_units_subset {R S : Type _} [CommRing R]
     [IsDomain R] [IsPrincipalIdealRing R] [Semiring S] (f : R →+* S) (s : Submonoid S) (a : R)
     (ha : a ≠ 0) (h : ∀ b ∈ factors a, f b ∈ s) (hf : ∀ c : Rˣ, f c ∈ s) : f a ∈ s :=
   mem_submonoid_of_factors_subset_of_units_subset (s.comap f.toMonoidHom) ha h hf
-#align principal_ideal_ring.ring_hom_mem_submonoid_of_factors_subset_of_units_subset PrincipalIdealRing.ring_hom_mem_submonoid_of_factors_subset_of_units_subset
+#align principal_ideal_ring.ring_hom_mem_submonoid_of_factors_subset_of_units_subset PrincipalIdealRing.ringHom_mem_submonoid_of_factors_subset_of_units_subset
 
 -- see Note [lower instance priority]
 /-- A principal ideal domain has unique factorization -/
-instance (priority := 100) to_unique_factorization_monoid : UniqueFactorizationMonoid R :=
-  { (IsNoetherianRing.wf_dvd_monoid : WfDvdMonoid R) with
+instance (priority := 100) to_uniqueFactorizationMonoid : UniqueFactorizationMonoid R :=
+  { (IsNoetherianRing.wfDvdMonoid : WfDvdMonoid R) with
     irreducible_iff_prime := fun _ => PrincipalIdealRing.irreducible_iff_prime }
-#align principal_ideal_ring.to_unique_factorization_monoid PrincipalIdealRing.to_unique_factorization_monoid
+#align principal_ideal_ring.to_unique_factorization_monoid PrincipalIdealRing.to_uniqueFactorizationMonoid
 
 end
 
@@ -392,25 +392,25 @@ theorem exists_gcd_eq_mul_add_mul (a b : R) : ∃ x y, gcd a b = a * x + b * y :
   rw [← gcd_dvd_iff_exists]
 #align exists_gcd_eq_mul_add_mul exists_gcd_eq_mul_add_mul
 
-theorem gcd_is_unit_iff (x y : R) : IsUnit (gcd x y) ↔ IsCoprime x y := by
+theorem gcd_isUnit_iff (x y : R) : IsUnit (gcd x y) ↔ IsCoprime x y := by
   rw [IsCoprime, ← Ideal.mem_span_pair, ← span_gcd, ← span_singleton_eq_top, eq_top_iff_one]
-#align gcd_is_unit_iff gcd_is_unit_iff
+#align gcd_is_unit_iff gcd_isUnit_iff
 
 -- this should be proved for UFDs surely?
-theorem is_coprime_of_dvd (x y : R) (nonzero : ¬(x = 0 ∧ y = 0))
+theorem isCoprime_of_dvd (x y : R) (nonzero : ¬(x = 0 ∧ y = 0))
     (H : ∀ z ∈ nonunits R, z ≠ 0 → z ∣ x → ¬z ∣ y) : IsCoprime x y :=
   by
-  rw [← gcd_is_unit_iff]
+  rw [← gcd_isUnit_iff]
   by_contra h
   refine' H _ h _ (gcd_dvd_left _ _) (gcd_dvd_right _ _)
   rwa [Ne, gcd_eq_zero_iff]
-#align is_coprime_of_dvd is_coprime_of_dvd
+#align is_coprime_of_dvd isCoprime_of_dvd
 
 -- this should be proved for UFDs surely?
 theorem dvd_or_coprime (x y : R) (h : Irreducible x) : x ∣ y ∨ IsCoprime x y :=
   by
   refine' or_iff_not_imp_left.2 fun h' => _
-  apply is_coprime_of_dvd
+  apply isCoprime_of_dvd
   · rintro ⟨rfl, rfl⟩
     simpa using h
   · rintro z nu nz ⟨w, rfl⟩ dy
@@ -418,21 +418,21 @@ theorem dvd_or_coprime (x y : R) (h : Irreducible x) : x ∣ y ∨ IsCoprime x y
     simpa using mul_dvd_mul_left z (isUnit_iff_dvd_one.1 <| (of_irreducible_mul h).resolve_left nu)
 #align dvd_or_coprime dvd_or_coprime
 
-theorem is_coprime_of_irreducible_dvd {x y : R} (nonzero : ¬(x = 0 ∧ y = 0))
+theorem isCoprime_of_irreducible_dvd {x y : R} (nonzero : ¬(x = 0 ∧ y = 0))
     (H : ∀ z : R, Irreducible z → z ∣ x → ¬z ∣ y) : IsCoprime x y :=
   by
-  apply is_coprime_of_dvd x y nonzero
+  apply isCoprime_of_dvd x y nonzero
   intro z znu znz zx zy
   obtain ⟨i, h1, h2⟩ := WfDvdMonoid.exists_irreducible_factor znu znz
   apply H i h1 <;>
     · apply dvd_trans h2
       assumption
-#align is_coprime_of_irreducible_dvd is_coprime_of_irreducible_dvd
+#align is_coprime_of_irreducible_dvd isCoprime_of_irreducible_dvd
 
-theorem is_coprime_of_prime_dvd {x y : R} (nonzero : ¬(x = 0 ∧ y = 0))
+theorem isCoprime_of_prime_dvd {x y : R} (nonzero : ¬(x = 0 ∧ y = 0))
     (H : ∀ z : R, Prime z → z ∣ x → ¬z ∣ y) : IsCoprime x y :=
-  is_coprime_of_irreducible_dvd nonzero fun z zi => H z <| GCDMonoid.prime_of_irreducible zi
-#align is_coprime_of_prime_dvd is_coprime_of_prime_dvd
+  isCoprime_of_irreducible_dvd nonzero fun z zi => H z <| GCDMonoid.prime_of_irreducible zi
+#align is_coprime_of_prime_dvd isCoprime_of_prime_dvd
 
 theorem Irreducible.coprime_iff_not_dvd {p n : R} (pp : Irreducible p) : IsCoprime p n ↔ ¬p ∣ n :=
   by
@@ -444,7 +444,7 @@ theorem Irreducible.coprime_iff_not_dvd {p n : R} (pp : Irreducible p) : IsCopri
     rw [mul_one n]
     exact H
   · intro nd
-    apply is_coprime_of_irreducible_dvd
+    apply isCoprime_of_irreducible_dvd
     · rintro ⟨hp, -⟩
       exact pp.ne_zero hp
     rintro z zi zp zn
@@ -470,7 +470,7 @@ theorem Irreducible.coprime_or_dvd {p : R} (hp : Irreducible p) (i : R) : IsCopr
 
 theorem exists_associated_pow_of_mul_eq_pow' {a b c : R} (hab : IsCoprime a b) {k : ℕ}
     (h : a * b = c ^ k) : ∃ d, Associated (d ^ k) a :=
-  exists_associated_pow_of_mul_eq_pow ((gcd_is_unit_iff _ _).mpr hab) h
+  exists_associated_pow_of_mul_eq_pow ((gcd_isUnit_iff _ _).mpr hab) h
 #align exists_associated_pow_of_mul_eq_pow' exists_associated_pow_of_mul_eq_pow'
 
 end

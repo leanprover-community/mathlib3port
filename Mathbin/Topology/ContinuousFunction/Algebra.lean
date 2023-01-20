@@ -358,8 +358,8 @@ instance {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β]
     where
   continuous_mul := by
     letI : UniformSpace β := TopologicalGroup.toUniformSpace β
-    have : UniformGroup β := topological_comm_group_is_uniform
-    rw [continuous_iff_continuous_at]
+    have : UniformGroup β := topological_commGroup_is_uniform
+    rw [continuous_iff_continuousAt]
     rintro ⟨f, g⟩
     rw [ContinuousAt, tendsto_iff_forall_compact_tendsto_uniformly_on, nhds_prod_eq]
     exact fun K hK =>
@@ -368,8 +368,8 @@ instance {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β]
           (tendsto_iff_forall_compact_tendsto_uniformly_on.mp Filter.tendsto_id K hK))
   continuous_inv := by
     letI : UniformSpace β := TopologicalGroup.toUniformSpace β
-    have : UniformGroup β := topological_comm_group_is_uniform
-    rw [continuous_iff_continuous_at]
+    have : UniformGroup β := topological_commGroup_is_uniform
+    rw [continuous_iff_continuousAt]
     intro f
     rw [ContinuousAt, tendsto_iff_forall_compact_tendsto_uniformly_on]
     exact fun K hK =>
@@ -654,9 +654,9 @@ def ContinuousMap.c : R →+* C(α, A)
 #align continuous_map.C ContinuousMap.c
 
 @[simp]
-theorem ContinuousMap.C_apply (r : R) (a : α) : ContinuousMap.c r a = algebraMap R A r :=
+theorem ContinuousMap.c_apply (r : R) (a : α) : ContinuousMap.c r a = algebraMap R A r :=
   rfl
-#align continuous_map.C_apply ContinuousMap.C_apply
+#align continuous_map.C_apply ContinuousMap.c_apply
 
 instance ContinuousMap.algebra : Algebra R C(α, A)
     where
@@ -723,20 +723,20 @@ abbrev Subalgebra.SeparatesPoints (s : Subalgebra R C(α, A)) : Prop :=
   Set.SeparatesPoints ((fun f : C(α, A) => (f : α → A)) '' (s : Set C(α, A)))
 #align subalgebra.separates_points Subalgebra.SeparatesPoints
 
-theorem Subalgebra.separates_points_monotone :
+theorem Subalgebra.separatesPoints_monotone :
     Monotone fun s : Subalgebra R C(α, A) => s.SeparatesPoints := fun s s' r h x y n =>
   by
   obtain ⟨f, m, w⟩ := h n
   rcases m with ⟨f, ⟨m, rfl⟩⟩
   exact ⟨_, ⟨f, ⟨r m, rfl⟩⟩, w⟩
-#align subalgebra.separates_points_monotone Subalgebra.separates_points_monotone
+#align subalgebra.separates_points_monotone Subalgebra.separatesPoints_monotone
 
 @[simp]
-theorem algebra_map_apply (k : R) (a : α) : algebraMap R C(α, A) k a = k • 1 :=
+theorem algebraMap_apply (k : R) (a : α) : algebraMap R C(α, A) k a = k • 1 :=
   by
-  rw [Algebra.algebra_map_eq_smul_one]
+  rw [Algebra.algebraMap_eq_smul_one]
   rfl
-#align algebra_map_apply algebra_map_apply
+#align algebra_map_apply algebraMap_apply
 
 variable {𝕜 : Type _} [TopologicalSpace 𝕜]
 
@@ -772,21 +772,21 @@ theorem Subalgebra.SeparatesPoints.strongly {s : Subalgebra 𝕜 C(α, 𝕜)} (h
     use (v x • 1 : C(α, 𝕜))
     · apply s.smul_mem
       apply s.one_mem
-    · simp [coe_fn_coe_base']
+    · simp [coeFn_coe_base']
   obtain ⟨f, ⟨f, ⟨m, rfl⟩⟩, w⟩ := h n
   replace w : f x - f y ≠ 0 := sub_ne_zero_of_ne w
   let a := v x
   let b := v y
   let f' := ((b - a) * (f x - f y)⁻¹) • (ContinuousMap.c (f x) - f) + ContinuousMap.c a
   refine' ⟨⟨f', _⟩, _, _⟩
-  · simp only [f', SetLike.mem_coe, Subalgebra.mem_to_submodule]
+  · simp only [f', SetLike.mem_coe, Subalgebra.mem_toSubmodule]
     -- TODO should there be a tactic for this?
     -- We could add an attribute `@[subobject_mem]`, and a tactic
     -- ``def subobject_mem := `[solve_by_elim with subobject_mem { max_depth := 10 }]``
     solve_by_elim (config := { max_depth := 6 }) [Subalgebra.add_mem, Subalgebra.smul_mem,
-      Subalgebra.sub_mem, Subalgebra.algebra_map_mem]
-  · simp [f', coe_fn_coe_base']
-  · simp [f', coe_fn_coe_base', inv_mul_cancel_right₀ w]
+      Subalgebra.sub_mem, Subalgebra.algebraMap_mem]
+  · simp [f', coeFn_coe_base']
+  · simp [f', coeFn_coe_base', inv_mul_cancel_right₀ w]
 #align subalgebra.separates_points.strongly Subalgebra.SeparatesPoints.strongly
 
 end ContinuousMap
@@ -801,10 +801,10 @@ instance ContinuousMap.subsingleton_subalgebra (α : Type _) [TopologicalSpace �
     ext f
     have h : f = algebraMap R C(α, R) (f x) := by
       ext x'
-      simp only [mul_one, Algebra.id.smul_eq_mul, algebra_map_apply]
+      simp only [mul_one, Algebra.id.smul_eq_mul, algebraMap_apply]
       congr
     rw [h]
-    simp only [Subalgebra.algebra_map_mem]
+    simp only [Subalgebra.algebraMap_mem]
   · ext f
     have h : f = 0 := by
       ext x'
@@ -978,16 +978,15 @@ def compStarAlgHom' (f : C(X, Y)) : C(Y, A) →⋆ₐ[𝕜] C(X, A)
 
 /-- `continuous_map.comp_star_alg_hom'` sends the identity continuous map to the identity
 `star_alg_hom` -/
-theorem comp_star_alg_hom'_id :
-    compStarAlgHom' 𝕜 A (ContinuousMap.id X) = StarAlgHom.id 𝕜 C(X, A) :=
+theorem compStarAlgHom'_id : compStarAlgHom' 𝕜 A (ContinuousMap.id X) = StarAlgHom.id 𝕜 C(X, A) :=
   StarAlgHom.ext fun _ => ContinuousMap.ext fun _ => rfl
-#align continuous_map.comp_star_alg_hom'_id ContinuousMap.comp_star_alg_hom'_id
+#align continuous_map.comp_star_alg_hom'_id ContinuousMap.compStarAlgHom'_id
 
 /-- `continuous_map.comp_star_alg_hom` is functorial. -/
-theorem comp_star_alg_hom'_comp (g : C(Y, Z)) (f : C(X, Y)) :
+theorem compStarAlgHom'_comp (g : C(Y, Z)) (f : C(X, Y)) :
     compStarAlgHom' 𝕜 A (g.comp f) = (compStarAlgHom' 𝕜 A f).comp (compStarAlgHom' 𝕜 A g) :=
   StarAlgHom.ext fun _ => ContinuousMap.ext fun _ => rfl
-#align continuous_map.comp_star_alg_hom'_comp ContinuousMap.comp_star_alg_hom'_comp
+#align continuous_map.comp_star_alg_hom'_comp ContinuousMap.compStarAlgHom'_comp
 
 end ContinuousMap
 
@@ -1011,10 +1010,10 @@ def compStarAlgEquiv' (f : X ≃ₜ Y) : C(Y, A) ≃⋆ₐ[𝕜] C(X, A) :=
     toFun := (f : C(X, Y)).compStarAlgHom' 𝕜 A
     invFun := (f.symm : C(Y, X)).compStarAlgHom' 𝕜 A
     left_inv := fun g => by
-      simp only [ContinuousMap.comp_star_alg_hom'_apply, ContinuousMap.comp_assoc,
+      simp only [ContinuousMap.compStarAlgHom'_apply, ContinuousMap.comp_assoc,
         to_continuous_map_comp_symm, ContinuousMap.comp_id]
     right_inv := fun g => by
-      simp only [ContinuousMap.comp_star_alg_hom'_apply, ContinuousMap.comp_assoc,
+      simp only [ContinuousMap.compStarAlgHom'_apply, ContinuousMap.comp_assoc,
         symm_comp_to_continuous_map, ContinuousMap.comp_id]
     map_smul' := fun k a => map_smul (f.toContinuousMap.compStarAlgHom' 𝕜 A) k a }
 #align homeomorph.comp_star_alg_equiv' Homeomorph.compStarAlgEquiv'

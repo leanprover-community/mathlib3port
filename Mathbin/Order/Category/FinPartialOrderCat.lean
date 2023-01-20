@@ -46,9 +46,9 @@ instance (X : FinPartialOrderCat) : PartialOrder X :=
 attribute [instance] FinPartialOrderCat.isFintype
 
 @[simp]
-theorem coe_to_PartialOrder (X : FinPartialOrderCat) : ↥X.toPartialOrder = ↥X :=
+theorem coe_toPartialOrder (X : FinPartialOrderCat) : ↥X.toPartialOrder = ↥X :=
   rfl
-#align FinPartialOrder.coe_to_PartialOrder FinPartialOrderCat.coe_to_PartialOrder
+#align FinPartialOrder.coe_to_PartialOrder FinPartialOrderCat.coe_toPartialOrder
 
 /-- Construct a bundled `FinPartialOrder` from `fintype` + `partial_order`. -/
 def of (α : Type _) [PartialOrder α] [Fintype α] : FinPartialOrderCat :=
@@ -113,9 +113,9 @@ def dualEquiv : FinPartialOrderCat ≌ FinPartialOrderCat :=
 
 end FinPartialOrderCat
 
-theorem FinPartialOrder_dual_comp_forget_to_PartialOrder :
+theorem finPartialOrderCat_dual_comp_forget_to_partialOrderCat :
     FinPartialOrderCat.dual ⋙ forget₂ FinPartialOrderCat PartialOrderCat =
       forget₂ FinPartialOrderCat PartialOrderCat ⋙ PartialOrderCat.dual :=
   rfl
-#align FinPartialOrder_dual_comp_forget_to_PartialOrder FinPartialOrder_dual_comp_forget_to_PartialOrder
+#align FinPartialOrder_dual_comp_forget_to_PartialOrder finPartialOrderCat_dual_comp_forget_to_partialOrderCat
 

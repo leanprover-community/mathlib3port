@@ -37,7 +37,7 @@ def frobeniusEquiv [PerfectRing R p] : R ≃+* R :=
   { frobenius R p with
     invFun := PerfectRing.pthRoot' p
     left_inv := PerfectRing.pth_root_frobenius'
-    right_inv := PerfectRing.frobenius_pth_root' }
+    right_inv := PerfectRing.frobenius_pthRoot' }
 #align frobenius_equiv frobeniusEquiv
 
 /-- `p`-th root of an element in a `perfect_ring` as a `ring_hom`. -/
@@ -53,77 +53,77 @@ variable {R : Type u} [CommSemiring R] {S : Type v} [CommSemiring S] (f : R →*
   {p : ℕ} [Fact p.Prime] [CharP R p] [PerfectRing R p] [CharP S p] [PerfectRing S p]
 
 @[simp]
-theorem coe_frobenius_equiv : ⇑(frobeniusEquiv R p) = frobenius R p :=
+theorem coe_frobeniusEquiv : ⇑(frobeniusEquiv R p) = frobenius R p :=
   rfl
-#align coe_frobenius_equiv coe_frobenius_equiv
+#align coe_frobenius_equiv coe_frobeniusEquiv
 
 @[simp]
-theorem coe_frobenius_equiv_symm : ⇑(frobeniusEquiv R p).symm = pthRoot R p :=
+theorem coe_frobeniusEquiv_symm : ⇑(frobeniusEquiv R p).symm = pthRoot R p :=
   rfl
-#align coe_frobenius_equiv_symm coe_frobenius_equiv_symm
+#align coe_frobenius_equiv_symm coe_frobeniusEquiv_symm
 
 @[simp]
-theorem frobenius_pth_root (x : R) : frobenius R p (pthRoot R p x) = x :=
+theorem frobenius_pthRoot (x : R) : frobenius R p (pthRoot R p x) = x :=
   (frobeniusEquiv R p).apply_symm_apply x
-#align frobenius_pth_root frobenius_pth_root
+#align frobenius_pth_root frobenius_pthRoot
 
 @[simp]
-theorem pth_root_pow_p (x : R) : pthRoot R p x ^ p = x :=
-  frobenius_pth_root x
-#align pth_root_pow_p pth_root_pow_p
+theorem pthRoot_pow_p (x : R) : pthRoot R p x ^ p = x :=
+  frobenius_pthRoot x
+#align pth_root_pow_p pthRoot_pow_p
 
 @[simp]
-theorem pth_root_frobenius (x : R) : pthRoot R p (frobenius R p x) = x :=
+theorem pthRoot_frobenius (x : R) : pthRoot R p (frobenius R p x) = x :=
   (frobeniusEquiv R p).symm_apply_apply x
-#align pth_root_frobenius pth_root_frobenius
+#align pth_root_frobenius pthRoot_frobenius
 
 @[simp]
-theorem pth_root_pow_p' (x : R) : pthRoot R p (x ^ p) = x :=
-  pth_root_frobenius x
-#align pth_root_pow_p' pth_root_pow_p'
+theorem pthRoot_pow_p' (x : R) : pthRoot R p (x ^ p) = x :=
+  pthRoot_frobenius x
+#align pth_root_pow_p' pthRoot_pow_p'
 
-theorem left_inverse_pth_root_frobenius : LeftInverse (pthRoot R p) (frobenius R p) :=
-  pth_root_frobenius
-#align left_inverse_pth_root_frobenius left_inverse_pth_root_frobenius
+theorem leftInverse_pthRoot_frobenius : LeftInverse (pthRoot R p) (frobenius R p) :=
+  pthRoot_frobenius
+#align left_inverse_pth_root_frobenius leftInverse_pthRoot_frobenius
 
-theorem right_inverse_pth_root_frobenius : Function.RightInverse (pthRoot R p) (frobenius R p) :=
-  frobenius_pth_root
-#align right_inverse_pth_root_frobenius right_inverse_pth_root_frobenius
+theorem rightInverse_pthRoot_frobenius : Function.RightInverse (pthRoot R p) (frobenius R p) :=
+  frobenius_pthRoot
+#align right_inverse_pth_root_frobenius rightInverse_pthRoot_frobenius
 
-theorem commute_frobenius_pth_root : Function.Commute (frobenius R p) (pthRoot R p) := fun x =>
-  (frobenius_pth_root x).trans (pth_root_frobenius x).symm
-#align commute_frobenius_pth_root commute_frobenius_pth_root
+theorem commute_frobenius_pthRoot : Function.Commute (frobenius R p) (pthRoot R p) := fun x =>
+  (frobenius_pthRoot x).trans (pthRoot_frobenius x).symm
+#align commute_frobenius_pth_root commute_frobenius_pthRoot
 
-theorem eq_pth_root_iff {x y : R} : x = pthRoot R p y ↔ frobenius R p x = y :=
+theorem eq_pthRoot_iff {x y : R} : x = pthRoot R p y ↔ frobenius R p x = y :=
   (frobeniusEquiv R p).toEquiv.eq_symm_apply
-#align eq_pth_root_iff eq_pth_root_iff
+#align eq_pth_root_iff eq_pthRoot_iff
 
-theorem pth_root_eq_iff {x y : R} : pthRoot R p x = y ↔ x = frobenius R p y :=
+theorem pthRoot_eq_iff {x y : R} : pthRoot R p x = y ↔ x = frobenius R p y :=
   (frobeniusEquiv R p).toEquiv.symm_apply_eq
-#align pth_root_eq_iff pth_root_eq_iff
+#align pth_root_eq_iff pthRoot_eq_iff
 
-theorem MonoidHom.map_pth_root (x : R) : f (pthRoot R p x) = pthRoot S p (f x) :=
-  eq_pth_root_iff.2 <| by rw [← f.map_frobenius, frobenius_pth_root]
-#align monoid_hom.map_pth_root MonoidHom.map_pth_root
+theorem MonoidHom.map_pthRoot (x : R) : f (pthRoot R p x) = pthRoot S p (f x) :=
+  eq_pthRoot_iff.2 <| by rw [← f.map_frobenius, frobenius_pthRoot]
+#align monoid_hom.map_pth_root MonoidHom.map_pthRoot
 
-theorem MonoidHom.map_iterate_pth_root (x : R) (n : ℕ) :
+theorem MonoidHom.map_iterate_pthRoot (x : R) (n : ℕ) :
     f ((pthRoot R p^[n]) x) = (pthRoot S p^[n]) (f x) :=
   Semiconj.iterate_right f.map_pth_root n x
-#align monoid_hom.map_iterate_pth_root MonoidHom.map_iterate_pth_root
+#align monoid_hom.map_iterate_pth_root MonoidHom.map_iterate_pthRoot
 
-theorem RingHom.map_pth_root (x : R) : g (pthRoot R p x) = pthRoot S p (g x) :=
+theorem RingHom.map_pthRoot (x : R) : g (pthRoot R p x) = pthRoot S p (g x) :=
   g.toMonoidHom.map_pth_root x
-#align ring_hom.map_pth_root RingHom.map_pth_root
+#align ring_hom.map_pth_root RingHom.map_pthRoot
 
-theorem RingHom.map_iterate_pth_root (x : R) (n : ℕ) :
+theorem RingHom.map_iterate_pthRoot (x : R) (n : ℕ) :
     g ((pthRoot R p^[n]) x) = (pthRoot S p^[n]) (g x) :=
   g.toMonoidHom.map_iterate_pth_root x n
-#align ring_hom.map_iterate_pth_root RingHom.map_iterate_pth_root
+#align ring_hom.map_iterate_pth_root RingHom.map_iterate_pthRoot
 
 variable (p)
 
 theorem injective_pow_p {x y : R} (hxy : x ^ p = y ^ p) : x = y :=
-  left_inverse_pth_root_frobenius.Injective hxy
+  leftInverse_pthRoot_frobenius.Injective hxy
 #align injective_pow_p injective_pow_p
 
 end
@@ -173,10 +173,10 @@ def liftOn {L : Type _} (x : PerfectClosure K p) (f : ℕ × K → L)
 #align perfect_closure.lift_on PerfectClosure.liftOn
 
 @[simp]
-theorem lift_on_mk {L : Sort _} (f : ℕ × K → L) (hf : ∀ x y, R K p x y → f x = f y) (x : ℕ × K) :
+theorem liftOn_mk {L : Sort _} (f : ℕ × K → L) (hf : ∀ x y, R K p x y → f x = f y) (x : ℕ × K) :
     (mk K p x).liftOn f hf = f x :=
   rfl
-#align perfect_closure.lift_on_mk PerfectClosure.lift_on_mk
+#align perfect_closure.lift_on_mk PerfectClosure.liftOn_mk
 
 @[elab_as_elim]
 theorem induction_on (x : PerfectClosure K p) {q : PerfectClosure K p → Prop}
@@ -423,7 +423,7 @@ theorem nat_cast (n x : ℕ) : (x : PerfectClosure K p) = mk K p (n, x) :=
 #align perfect_closure.nat_cast PerfectClosure.nat_cast
 
 theorem int_cast (x : ℤ) : (x : PerfectClosure K p) = mk K p (0, x) := by
-  induction x <;> simp only [Int.cast_of_nat, Int.cast_negSucc, nat_cast K p 0] <;> rfl
+  induction x <;> simp only [Int.cast_ofNat, Int.cast_negSucc, nat_cast K p 0] <;> rfl
 #align perfect_closure.int_cast PerfectClosure.int_cast
 
 theorem nat_cast_eq_iff (x y : ℕ) : (x : PerfectClosure K p) = y ↔ (x : K) = y :=
@@ -524,12 +524,12 @@ instance : PerfectRing (PerfectClosure K p) p
       simp only [lift_on_mk, frobenius_mk]
       exact (Quot.sound <| r.intro _ _).symm
 
-theorem eq_pth_root (x : ℕ × K) : mk K p x = (pthRoot (PerfectClosure K p) p^[x.1]) (of K p x.2) :=
+theorem eq_pthRoot (x : ℕ × K) : mk K p x = (pthRoot (PerfectClosure K p) p^[x.1]) (of K p x.2) :=
   by
   rcases x with ⟨m, x⟩
   induction' m with m ih; · rfl
   rw [iterate_succ_apply', ← ih] <;> rfl
-#align perfect_closure.eq_pth_root PerfectClosure.eq_pth_root
+#align perfect_closure.eq_pth_root PerfectClosure.eq_pthRoot
 
 /-- Given a field `K` of characteristic `p` and a perfect ring `L` of the same characteristic,
 any homomorphism `K →+* L` can be lifted to `perfect_closure K p`. -/
@@ -544,7 +544,7 @@ def lift (L : Type v) [CommSemiring L] [CharP L p] [PerfectRing L p] :
     field to_fun =>
       refine' fun e => lift_on e (fun x => (pthRoot L p^[x.1]) (f x.2)) _
       rintro a b ⟨n⟩
-      simp only [f.map_frobenius, iterate_succ_apply, pth_root_frobenius]
+      simp only [f.map_frobenius, iterate_succ_apply, pthRoot_frobenius]
     field map_one' => exact f.map_one
     field map_zero' => exact f.map_zero
     field map_mul' =>
@@ -562,7 +562,7 @@ def lift (L : Type v) [CommSemiring L] [CharP L p] [PerfectRing L p] :
   field right_inv =>
     intro f; ext ⟨x⟩
     simp only [RingHom.coe_mk, quot_mk_eq_mk, RingHom.comp_apply, lift_on_mk]
-    rw [eq_pth_root, RingHom.map_iterate_pth_root]
+    rw [eq_pth_root, RingHom.map_iterate_pthRoot]
 #align perfect_closure.lift PerfectClosure.lift
 
 end Field

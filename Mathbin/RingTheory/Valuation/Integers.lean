@@ -73,16 +73,16 @@ variable {v O} (hv : Integers v O)
 
 include hv
 
-theorem one_of_is_unit {x : O} (hx : IsUnit x) : v (algebraMap O R x) = 1 :=
+theorem one_of_isUnit {x : O} (hx : IsUnit x) : v (algebraMap O R x) = 1 :=
   let ⟨u, hu⟩ := hx
   le_antisymm (hv.2 _) <|
     by
     rw [← v.map_one, ← (algebraMap O R).map_one, ← u.mul_inv, ← mul_one (v (algebraMap O R x)), hu,
       (algebraMap O R).map_mul, v.map_mul]
     exact mul_le_mul_left' (hv.2 (u⁻¹ : Units O)) _
-#align valuation.integers.one_of_is_unit Valuation.Integers.one_of_is_unit
+#align valuation.integers.one_of_is_unit Valuation.Integers.one_of_isUnit
 
-theorem is_unit_of_one {x : O} (hx : IsUnit (algebraMap O R x)) (hvx : v (algebraMap O R x) = 1) :
+theorem isUnit_of_one {x : O} (hx : IsUnit (algebraMap O R x)) (hvx : v (algebraMap O R x) = 1) :
     IsUnit x :=
   let ⟨u, hu⟩ := hx
   have h1 : v u ≤ 1 := hu.symm ▸ hv.2 x
@@ -93,7 +93,7 @@ theorem is_unit_of_one {x : O} (hx : IsUnit (algebraMap O R x)) (hvx : v (algebr
   ⟨⟨r1, r2, hv.1 <| by rw [RingHom.map_mul, RingHom.map_one, hr1, hr2, Units.mul_inv],
       hv.1 <| by rw [RingHom.map_mul, RingHom.map_one, hr1, hr2, Units.inv_mul]⟩,
     hv.1 <| hr1.trans hu⟩
-#align valuation.integers.is_unit_of_one Valuation.Integers.is_unit_of_one
+#align valuation.integers.is_unit_of_one Valuation.Integers.isUnit_of_one
 
 theorem le_of_dvd {x y : O} (h : x ∣ y) : v (algebraMap O R y) ≤ v (algebraMap O R x) :=
   by

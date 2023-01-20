@@ -149,9 +149,9 @@ section
 attribute [local instance] has_limit_parallel_pair
 
 /-- A `normal_mono_category` category with finite products and kernels has all equalizers. -/
-instance (priority := 100) has_equalizers : HasEqualizers C :=
-  has_equalizers_of_has_limit_parallel_pair _
-#align category_theory.normal_mono_category.has_equalizers CategoryTheory.NormalMonoCategory.has_equalizers
+instance (priority := 100) hasEqualizers : HasEqualizers C :=
+  hasEqualizers_of_hasLimit_parallelPair _
+#align category_theory.normal_mono_category.has_equalizers CategoryTheory.NormalMonoCategory.hasEqualizers
 
 end
 
@@ -313,9 +313,9 @@ section
 attribute [local instance] has_colimit_parallel_pair
 
 /-- A `normal_epi_category` category with finite coproducts and cokernels has all coequalizers. -/
-instance (priority := 100) has_coequalizers : HasCoequalizers C :=
-  has_coequalizers_of_has_colimit_parallel_pair _
-#align category_theory.normal_epi_category.has_coequalizers CategoryTheory.NormalEpiCategory.has_coequalizers
+instance (priority := 100) hasCoequalizers : HasCoequalizers C :=
+  hasCoequalizers_of_hasColimit_parallelPair _
+#align category_theory.normal_epi_category.has_coequalizers CategoryTheory.NormalEpiCategory.hasCoequalizers
 
 end
 

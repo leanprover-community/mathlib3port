@@ -72,7 +72,7 @@ instance : NormedAddCommGroup (Dual 𝕜 F) :=
   ContinuousLinearMap.toNormedAddCommGroup
 
 instance [FiniteDimensional 𝕜 E] : FiniteDimensional 𝕜 (Dual 𝕜 E) :=
-  ContinuousLinearMap.finite_dimensional
+  ContinuousLinearMap.finiteDimensional
 
 /-- The inclusion of a normed space in its double (topological) dual, considered
    as a bounded linear map. -/
@@ -85,16 +85,16 @@ theorem dual_def (x : E) (f : Dual 𝕜 E) : inclusionInDoubleDual 𝕜 E x f = 
   rfl
 #align normed_space.dual_def NormedSpace.dual_def
 
-theorem inclusion_in_double_dual_norm_eq :
+theorem inclusionInDoubleDual_norm_eq :
     ‖inclusionInDoubleDual 𝕜 E‖ = ‖ContinuousLinearMap.id 𝕜 (Dual 𝕜 E)‖ :=
   ContinuousLinearMap.op_norm_flip _
-#align normed_space.inclusion_in_double_dual_norm_eq NormedSpace.inclusion_in_double_dual_norm_eq
+#align normed_space.inclusion_in_double_dual_norm_eq NormedSpace.inclusionInDoubleDual_norm_eq
 
-theorem inclusion_in_double_dual_norm_le : ‖inclusionInDoubleDual 𝕜 E‖ ≤ 1 :=
+theorem inclusionInDoubleDual_norm_le : ‖inclusionInDoubleDual 𝕜 E‖ ≤ 1 :=
   by
   rw [inclusion_in_double_dual_norm_eq]
   exact ContinuousLinearMap.norm_id_le
-#align normed_space.inclusion_in_double_dual_norm_le NormedSpace.inclusion_in_double_dual_norm_le
+#align normed_space.inclusion_in_double_dual_norm_le NormedSpace.inclusionInDoubleDual_norm_le
 
 theorem double_dual_bound (x : E) : ‖(inclusionInDoubleDual 𝕜 E) x‖ ≤ ‖x‖ := by
   simpa using ContinuousLinearMap.le_of_op_norm_le _ (inclusion_in_double_dual_norm_le 𝕜 E) x
@@ -106,13 +106,13 @@ def dualPairing : Dual 𝕜 E →ₗ[𝕜] E →ₗ[𝕜] 𝕜 :=
 #align normed_space.dual_pairing NormedSpace.dualPairing
 
 @[simp]
-theorem dual_pairing_apply {v : Dual 𝕜 E} {x : E} : dualPairing 𝕜 E v x = v x :=
+theorem dualPairing_apply {v : Dual 𝕜 E} {x : E} : dualPairing 𝕜 E v x = v x :=
   rfl
-#align normed_space.dual_pairing_apply NormedSpace.dual_pairing_apply
+#align normed_space.dual_pairing_apply NormedSpace.dualPairing_apply
 
 theorem dualPairingSeparatingLeft : (dualPairing 𝕜 E).SeparatingLeft :=
   by
-  rw [LinearMap.separating_left_iff_ker_eq_bot, LinearMap.ker_eq_bot]
+  rw [LinearMap.separatingLeft_iff_ker_eq_bot, LinearMap.ker_eq_bot]
   exact ContinuousLinearMap.coe_injective
 #align normed_space.dual_pairing_separating_left NormedSpace.dualPairingSeparatingLeft
 
@@ -191,16 +191,16 @@ theorem mem_polar_iff {x' : Dual 𝕜 E} (s : Set E) : x' ∈ polar 𝕜 s ↔ �
 @[simp]
 theorem polar_univ : polar 𝕜 (univ : Set E) = {(0 : dual 𝕜 E)} :=
   (dualPairing 𝕜 E).flip.polar_univ
-    (LinearMap.flip_separating_right.mpr (dualPairingSeparatingLeft 𝕜 E))
+    (LinearMap.flip_separatingRight.mpr (dualPairingSeparatingLeft 𝕜 E))
 #align normed_space.polar_univ NormedSpace.polar_univ
 
-theorem is_closed_polar (s : Set E) : IsClosed (polar 𝕜 s) :=
+theorem isClosed_polar (s : Set E) : IsClosed (polar 𝕜 s) :=
   by
   dsimp only [NormedSpace.polar]
-  simp only [LinearMap.polar_eq_Inter, LinearMap.flip_apply]
-  refine' is_closed_bInter fun z hz => _
+  simp only [LinearMap.polar_eq_interᵢ, LinearMap.flip_apply]
+  refine' isClosed_bInter fun z hz => _
   exact is_closed_Iic.preimage (ContinuousLinearMap.apply 𝕜 𝕜 z).Continuous.norm
-#align normed_space.is_closed_polar NormedSpace.is_closed_polar
+#align normed_space.is_closed_polar NormedSpace.isClosed_polar
 
 @[simp]
 theorem polar_closure (s : Set E) : polar 𝕜 (closure s) = polar 𝕜 s :=
@@ -231,45 +231,45 @@ theorem smul_mem_polar {s : Set E} {x' : Dual 𝕜 E} {c : 𝕜} (hc : ∀ z, z 
   rwa [cancel] at le
 #align normed_space.smul_mem_polar NormedSpace.smul_mem_polar
 
-theorem polar_ball_subset_closed_ball_div {c : 𝕜} (hc : 1 < ‖c‖) {r : ℝ} (hr : 0 < r) :
+theorem polar_ball_subset_closedBall_div {c : 𝕜} (hc : 1 < ‖c‖) {r : ℝ} (hr : 0 < r) :
     polar 𝕜 (ball (0 : E) r) ⊆ closedBall (0 : Dual 𝕜 E) (‖c‖ / r) :=
   by
   intro x' hx'
   rw [mem_polar_iff] at hx'
-  simp only [polar, mem_set_of_eq, mem_closed_ball_zero_iff, mem_ball_zero_iff] at *
+  simp only [polar, mem_set_of_eq, mem_closedBall_zero_iff, mem_ball_zero_iff] at *
   have hcr : 0 < ‖c‖ / r := div_pos (zero_lt_one.trans hc) hr
   refine' ContinuousLinearMap.op_norm_le_of_shell hr hcr.le hc fun x h₁ h₂ => _
   calc
     ‖x' x‖ ≤ 1 := hx' _ h₂
     _ ≤ ‖c‖ / r * ‖x‖ := (inv_pos_le_iff_one_le_mul' hcr).1 (by rwa [inv_div])
     
-#align normed_space.polar_ball_subset_closed_ball_div NormedSpace.polar_ball_subset_closed_ball_div
+#align normed_space.polar_ball_subset_closed_ball_div NormedSpace.polar_ball_subset_closedBall_div
 
 variable (𝕜)
 
-theorem closed_ball_inv_subset_polar_closed_ball {r : ℝ} :
+theorem closedBall_inv_subset_polar_closedBall {r : ℝ} :
     closedBall (0 : Dual 𝕜 E) r⁻¹ ⊆ polar 𝕜 (closedBall (0 : E) r) := fun x' hx' x hx =>
   calc
     ‖x' x‖ ≤ ‖x'‖ * ‖x‖ := x'.le_op_norm x
     _ ≤ r⁻¹ * r :=
-      mul_le_mul (mem_closed_ball_zero_iff.1 hx') (mem_closed_ball_zero_iff.1 hx) (norm_nonneg _)
+      mul_le_mul (mem_closedBall_zero_iff.1 hx') (mem_closedBall_zero_iff.1 hx) (norm_nonneg _)
         (dist_nonneg.trans hx')
     _ = r / r := inv_mul_eq_div _ _
     _ ≤ 1 := div_self_le_one r
     
-#align normed_space.closed_ball_inv_subset_polar_closed_ball NormedSpace.closed_ball_inv_subset_polar_closed_ball
+#align normed_space.closed_ball_inv_subset_polar_closed_ball NormedSpace.closedBall_inv_subset_polar_closedBall
 
 /-- The `polar` of closed ball in a normed space `E` is the closed ball of the dual with
 inverse radius. -/
-theorem polar_closed_ball {𝕜 E : Type _} [IsROrC 𝕜] [NormedAddCommGroup E] [NormedSpace 𝕜 E] {r : ℝ}
+theorem polar_closedBall {𝕜 E : Type _} [IsROrC 𝕜] [NormedAddCommGroup E] [NormedSpace 𝕜 E] {r : ℝ}
     (hr : 0 < r) : polar 𝕜 (closedBall (0 : E) r) = closedBall (0 : Dual 𝕜 E) r⁻¹ :=
   by
   refine' subset.antisymm _ (closed_ball_inv_subset_polar_closed_ball _)
   intro x' h
-  simp only [mem_closed_ball_zero_iff]
+  simp only [mem_closedBall_zero_iff]
   refine' ContinuousLinearMap.op_norm_le_of_ball hr (inv_nonneg.mpr hr.le) fun z hz => _
   simpa only [one_div] using LinearMap.bound_of_ball_bound' hr 1 x'.to_linear_map h z
-#align normed_space.polar_closed_ball NormedSpace.polar_closed_ball
+#align normed_space.polar_closed_ball NormedSpace.polar_closedBall
 
 /-- Given a neighborhood `s` of the origin in a normed space `E`, the dual norms
 of all elements of the polar `polar 𝕜 s` are bounded by a constant. -/

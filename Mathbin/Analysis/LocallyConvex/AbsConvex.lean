@@ -61,10 +61,10 @@ theorem nhds_basis_abs_convex :
   refine'
     (LocallyConvexSpace.convex_basis_zero ℝ E).to_has_basis (fun s hs => _) fun s hs =>
       ⟨s, ⟨hs.1, hs.2.2⟩, rfl.subset⟩
-  refine' ⟨convexHull ℝ (balancedCore 𝕜 s), _, convex_hull_min (balanced_core_subset s) hs.2⟩
-  refine' ⟨Filter.mem_of_superset (balanced_core_mem_nhds_zero hs.1) (subset_convex_hull ℝ _), _⟩
-  refine' ⟨balanced_convex_hull_of_balanced (balanced_core_balanced s), _⟩
-  exact convex_convex_hull ℝ (balancedCore 𝕜 s)
+  refine' ⟨convexHull ℝ (balancedCore 𝕜 s), _, convexHull_min (balancedCore_subset s) hs.2⟩
+  refine' ⟨Filter.mem_of_superset (balancedCore_mem_nhds_zero hs.1) (subset_convexHull ℝ _), _⟩
+  refine' ⟨balanced_convexHull_of_balanced (balancedCore_balanced s), _⟩
+  exact convex_convexHull ℝ (balancedCore 𝕜 s)
 #align nhds_basis_abs_convex nhds_basis_abs_convex
 
 variable [HasContinuousSmul ℝ E] [TopologicalAddGroup E]
@@ -76,7 +76,7 @@ theorem nhds_basis_abs_convex_open :
   · rintro s ⟨hs_nhds, hs_balanced, hs_convex⟩
     refine' ⟨interior s, _, interior_subset⟩
     exact
-      ⟨mem_interior_iff_mem_nhds.mpr hs_nhds, is_open_interior,
+      ⟨mem_interior_iff_mem_nhds.mpr hs_nhds, isOpen_interior,
         hs_balanced.interior (mem_interior_iff_mem_nhds.mpr hs_nhds), hs_convex.interior⟩
   rintro s ⟨hs_zero, hs_open, hs_balanced, hs_convex⟩
   exact ⟨s, ⟨hs_open.mem_nhds hs_zero, hs_balanced, hs_convex⟩, rfl.subset⟩
@@ -109,9 +109,9 @@ theorem coe_zero_mem (s : AbsConvexOpenSets 𝕜 E) : (0 : E) ∈ (s : Set E) :=
   s.2.1
 #align abs_convex_open_sets.coe_zero_mem AbsConvexOpenSets.coe_zero_mem
 
-theorem coe_is_open (s : AbsConvexOpenSets 𝕜 E) : IsOpen (s : Set E) :=
+theorem coe_isOpen (s : AbsConvexOpenSets 𝕜 E) : IsOpen (s : Set E) :=
   s.2.2.1
-#align abs_convex_open_sets.coe_is_open AbsConvexOpenSets.coe_is_open
+#align abs_convex_open_sets.coe_is_open AbsConvexOpenSets.coe_isOpen
 
 theorem coe_nhds (s : AbsConvexOpenSets 𝕜 E) : (s : Set E) ∈ 𝓝 (0 : E) :=
   s.coe_is_open.mem_nhds s.coe_zero_mem
@@ -132,7 +132,7 @@ instance : Nonempty (AbsConvexOpenSets 𝕜 E) :=
   rw [← exists_true_iff_nonempty]
   dsimp only [AbsConvexOpenSets]
   rw [Subtype.exists]
-  exact ⟨Set.univ, ⟨mem_univ 0, is_open_univ, balanced_univ, convex_univ⟩, trivial⟩
+  exact ⟨Set.univ, ⟨mem_univ 0, isOpen_univ, balanced_univ, convex_univ⟩, trivial⟩
 
 end AbsolutelyConvexSets
 
@@ -153,14 +153,14 @@ noncomputable def gaugeSeminormFamily : SeminormFamily 𝕜 E (AbsConvexOpenSets
 
 variable {𝕜 E}
 
-theorem gauge_seminorm_family_ball (s : AbsConvexOpenSets 𝕜 E) :
+theorem gaugeSeminormFamily_ball (s : AbsConvexOpenSets 𝕜 E) :
     (gaugeSeminormFamily 𝕜 E s).ball 0 1 = (s : Set E) :=
   by
   dsimp only [gaugeSeminormFamily]
   rw [Seminorm.ball_zero_eq]
-  simp_rw [gauge_seminorm_to_fun]
+  simp_rw [gaugeSeminorm_to_fun]
   exact gauge_lt_one_eq_self_of_open s.coe_convex s.coe_zero_mem s.coe_is_open
-#align gauge_seminorm_family_ball gauge_seminorm_family_ball
+#align gauge_seminorm_family_ball gaugeSeminormFamily_ball
 
 variable [TopologicalAddGroup E] [HasContinuousSmul 𝕜 E]
 
@@ -173,21 +173,21 @@ theorem withGaugeSeminormFamily : WithSeminorms (gaugeSeminormFamily 𝕜 E) :=
   refine' (nhds_basis_abs_convex_open 𝕜 E).to_has_basis (fun s hs => _) fun s hs => _
   · refine' ⟨s, ⟨_, rfl.subset⟩⟩
     convert (gaugeSeminormFamily _ _).basis_sets_singleton_mem ⟨s, hs⟩ one_pos
-    rw [gauge_seminorm_family_ball, Subtype.coe_mk]
+    rw [gaugeSeminormFamily_ball, Subtype.coe_mk]
   refine' ⟨s, ⟨_, rfl.subset⟩⟩
-  rw [SeminormFamily.basis_sets_iff] at hs
+  rw [SeminormFamily.basisSets_iff] at hs
   rcases hs with ⟨t, r, hr, rfl⟩
-  rw [Seminorm.ball_finset_sup_eq_Inter _ _ _ hr]
+  rw [Seminorm.ball_finset_sup_eq_interᵢ _ _ _ hr]
   -- We have to show that the intersection contains zero, is open, balanced, and convex
   refine'
     ⟨mem_Inter₂.mpr fun _ _ => by simp [Seminorm.mem_ball_zero, hr],
-      is_open_bInter (to_finite _) fun S _ => _,
+      isOpen_bInter (to_finite _) fun S _ => _,
       balanced_Inter₂ fun _ _ => Seminorm.balanced_ball_zero _ _,
       convex_Inter₂ fun _ _ => Seminorm.convex_ball _ _ _⟩
   -- The only nontrivial part is to show that the ball is open
   have hr' : r = ‖(r : 𝕜)‖ * 1 := by simp [abs_of_pos hr]
   have hr'' : (r : 𝕜) ≠ 0 := by simp [hr.ne']
-  rw [hr', ← Seminorm.smul_ball_zero hr'', gauge_seminorm_family_ball]
+  rw [hr', ← Seminorm.smul_ball_zero hr'', gaugeSeminormFamily_ball]
   exact S.coe_is_open.smul₀ hr''
 #align with_gauge_seminorm_family withGaugeSeminormFamily
 

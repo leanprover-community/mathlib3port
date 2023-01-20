@@ -53,15 +53,15 @@ theorem eventually_cofinite {p : α → Prop} : (∀ᶠ x in cofinite, p x) ↔ 
   Iff.rfl
 #align filter.eventually_cofinite Filter.eventually_cofinite
 
-theorem has_basis_cofinite : HasBasis cofinite (fun s : Set α => s.Finite) compl :=
+theorem hasBasis_cofinite : HasBasis cofinite (fun s : Set α => s.Finite) compl :=
   ⟨fun s =>
     ⟨fun h => ⟨sᶜ, h, (compl_compl s).Subset⟩, fun ⟨t, htf, hts⟩ =>
       htf.Subset <| compl_subset_comm.2 hts⟩⟩
-#align filter.has_basis_cofinite Filter.has_basis_cofinite
+#align filter.has_basis_cofinite Filter.hasBasis_cofinite
 
-instance cofinite_ne_bot [Infinite α] : NeBot (@cofinite α) :=
-  has_basis_cofinite.ne_bot_iff.2 fun s hs => hs.infinite_compl.Nonempty
-#align filter.cofinite_ne_bot Filter.cofinite_ne_bot
+instance cofinite_neBot [Infinite α] : NeBot (@cofinite α) :=
+  hasBasis_cofinite.ne_bot_iff.2 fun s hs => hs.infinite_compl.Nonempty
+#align filter.cofinite_ne_bot Filter.cofinite_neBot
 
 theorem frequently_cofinite_iff_infinite {p : α → Prop} :
     (∃ᶠ x in cofinite, p x) ↔ Set.Infinite { x | p x } := by
@@ -102,9 +102,9 @@ theorem le_cofinite_iff_eventually_ne : l ≤ cofinite ↔ ∀ x, ∀ᶠ y in l,
 #align filter.le_cofinite_iff_eventually_ne Filter.le_cofinite_iff_eventually_ne
 
 /-- If `α` is a preorder with no maximal element, then `at_top ≤ cofinite`. -/
-theorem at_top_le_cofinite [Preorder α] [NoMaxOrder α] : (atTop : Filter α) ≤ cofinite :=
-  le_cofinite_iff_eventually_ne.mpr eventually_ne_at_top
-#align filter.at_top_le_cofinite Filter.at_top_le_cofinite
+theorem atTop_le_cofinite [Preorder α] [NoMaxOrder α] : (atTop : Filter α) ≤ cofinite :=
+  le_cofinite_iff_eventually_ne.mpr eventually_ne_atTop
+#align filter.at_top_le_cofinite Filter.atTop_le_cofinite
 
 theorem comap_cofinite_le (f : α → β) : comap f cofinite ≤ cofinite :=
   le_cofinite_iff_eventually_ne.mpr fun x =>
@@ -117,12 +117,19 @@ theorem coprod_cofinite : (cofinite : Filter α).coprod (cofinite : Filter β) =
     simp only [compl_mem_coprod, mem_cofinite, compl_compl, finite_image_fst_and_snd_iff]
 #align filter.coprod_cofinite Filter.coprod_cofinite
 
+/- warning: filter.Coprod_cofinite clashes with filter.coprod_cofinite -> Filter.coprod_cofinite
+warning: filter.Coprod_cofinite -> Filter.coprod_cofinite is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : Finite.{succ u1} ι], Eq.{succ (max u1 u2)} (Filter.{max u1 u2} (forall (i : ι), α i)) (Filter.coprod.{u1, u2} ι (fun (i : ι) => α i) (fun (i : ι) => Filter.cofinite.{u2} (α i))) (Filter.cofinite.{max u1 u2} (forall (i : ι), α i))
+but is expected to have type
+  forall {ι : Type.{u1}} {α : Type.{u2}}, Eq.{succ (max u1 u2)} (Filter.{max u1 u2} (Prod.{u1, u2} ι α)) (Filter.coprod.{u1, u2} ι α (Filter.cofinite.{u1} ι) (Filter.cofinite.{u2} α)) (Filter.cofinite.{max u1 u2} (Prod.{u1, u2} ι α))
+Case conversion may be inaccurate. Consider using '#align filter.Coprod_cofinite Filter.coprod_cofiniteₓ'. -/
 /-- Finite product of finite sets is finite -/
-theorem Coprod_cofinite {α : ι → Type _} [Finite ι] :
+theorem coprod_cofinite {α : ι → Type _} [Finite ι] :
     (Filter.coprod fun i => (cofinite : Filter (α i))) = cofinite :=
   Filter.coext fun s => by
     simp only [compl_mem_Coprod, mem_cofinite, compl_compl, forall_finite_image_eval_iff]
-#align filter.Coprod_cofinite Filter.Coprod_cofinite
+#align filter.Coprod_cofinite Filter.coprod_cofinite
 
 @[simp]
 theorem disjoint_cofinite_left : Disjoint cofinite l ↔ ∃ s ∈ l, Set.Finite s :=
@@ -143,17 +150,17 @@ end Filter
 open Filter
 
 /-- For natural numbers the filters `cofinite` and `at_top` coincide. -/
-theorem Nat.cofinite_eq_at_top : @cofinite ℕ = at_top :=
+theorem Nat.cofinite_eq_atTop : @cofinite ℕ = at_top :=
   by
   refine' le_antisymm _ at_top_le_cofinite
   refine' at_top_basis.ge_iff.2 fun N hN => _
   simpa only [mem_cofinite, compl_Ici] using finite_lt_nat N
-#align nat.cofinite_eq_at_top Nat.cofinite_eq_at_top
+#align nat.cofinite_eq_at_top Nat.cofinite_eq_atTop
 
-theorem Nat.frequently_at_top_iff_infinite {p : ℕ → Prop} :
+theorem Nat.frequently_atTop_iff_infinite {p : ℕ → Prop} :
     (∃ᶠ n in at_top, p n) ↔ Set.Infinite { n | p n } := by
-  rw [← Nat.cofinite_eq_at_top, frequently_cofinite_iff_infinite]
-#align nat.frequently_at_top_iff_infinite Nat.frequently_at_top_iff_infinite
+  rw [← Nat.cofinite_eq_atTop, frequently_cofinite_iff_infinite]
+#align nat.frequently_at_top_iff_infinite Nat.frequently_atTop_iff_infinite
 
 theorem Filter.Tendsto.exists_within_forall_le {α β : Type _} [LinearOrder β] {s : Set α}
     (hs : s.Nonempty) {f : α → β} (hf : Filter.Tendsto f Filter.cofinite Filter.atTop) :
@@ -204,8 +211,8 @@ theorem Function.Injective.comap_cofinite_eq {f : α → β} (hf : Injective f) 
 #align function.injective.comap_cofinite_eq Function.Injective.comap_cofinite_eq
 
 /-- An injective sequence `f : ℕ → ℕ` tends to infinity at infinity. -/
-theorem Function.Injective.nat_tendsto_at_top {f : ℕ → ℕ} (hf : Injective f) :
+theorem Function.Injective.nat_tendsto_atTop {f : ℕ → ℕ} (hf : Injective f) :
     Tendsto f atTop atTop :=
-  Nat.cofinite_eq_at_top ▸ hf.tendsto_cofinite
-#align function.injective.nat_tendsto_at_top Function.Injective.nat_tendsto_at_top
+  Nat.cofinite_eq_atTop ▸ hf.tendsto_cofinite
+#align function.injective.nat_tendsto_at_top Function.Injective.nat_tendsto_atTop
 

@@ -87,7 +87,7 @@ theorem antidiagonal_filter_snd_eq (f g : α →₀ ℕ)
 
 @[simp]
 theorem antidiagonal_zero : antidiagonal (0 : α →₀ ℕ) = singleton (0, 0) := by
-  rw [antidiagonal, antidiagonal', Multiset.to_finsupp_support] <;> rfl
+  rw [antidiagonal, antidiagonal', Multiset.toFinsupp_support] <;> rfl
 #align finsupp.antidiagonal_zero Finsupp.antidiagonal_zero
 
 @[to_additive]

@@ -59,14 +59,14 @@ instance hasBracket : Bracket (LieIdeal R L) (LieSubmodule R L M) :=
   ⟨fun I N => lieSpan R L { m | ∃ (x : I)(n : N), ⁅(x : L), (n : M)⁆ = m }⟩
 #align lie_submodule.has_bracket LieSubmodule.hasBracket
 
-theorem lie_ideal_oper_eq_span :
+theorem lieIdeal_oper_eq_span :
     ⁅I, N⁆ = lieSpan R L { m | ∃ (x : I)(n : N), ⁅(x : L), (n : M)⁆ = m } :=
   rfl
-#align lie_submodule.lie_ideal_oper_eq_span LieSubmodule.lie_ideal_oper_eq_span
+#align lie_submodule.lie_ideal_oper_eq_span LieSubmodule.lieIdeal_oper_eq_span
 
 /-- See also `lie_submodule.lie_ideal_oper_eq_linear_span'` and
 `lie_submodule.lie_ideal_oper_eq_tensor_map_range`. -/
-theorem lie_ideal_oper_eq_linear_span :
+theorem lieIdeal_oper_eq_linear_span :
     (↑⁅I, N⁆ : Submodule R M) = Submodule.span R { m | ∃ (x : I)(n : N), ⁅(x : L), (n : M)⁆ = m } :=
   by
   apply le_antisymm
@@ -94,9 +94,9 @@ theorem lie_ideal_oper_eq_linear_span :
     exact Submodule.subset_span
   · rw [lie_ideal_oper_eq_span]
     apply submodule_span_le_lie_span
-#align lie_submodule.lie_ideal_oper_eq_linear_span LieSubmodule.lie_ideal_oper_eq_linear_span
+#align lie_submodule.lie_ideal_oper_eq_linear_span LieSubmodule.lieIdeal_oper_eq_linear_span
 
-theorem lie_ideal_oper_eq_linear_span' :
+theorem lieIdeal_oper_eq_linear_span' :
     (↑⁅I, N⁆ : Submodule R M) = Submodule.span R { m | ∃ x ∈ I, ∃ n ∈ N, ⁅x, n⁆ = m } :=
   by
   rw [lie_ideal_oper_eq_linear_span]
@@ -107,11 +107,11 @@ theorem lie_ideal_oper_eq_linear_span' :
     exact ⟨x, hx, n, hn, rfl⟩
   · rintro ⟨x, hx, n, hn, rfl⟩
     exact ⟨⟨x, hx⟩, ⟨n, hn⟩, rfl⟩
-#align lie_submodule.lie_ideal_oper_eq_linear_span' LieSubmodule.lie_ideal_oper_eq_linear_span'
+#align lie_submodule.lie_ideal_oper_eq_linear_span' LieSubmodule.lieIdeal_oper_eq_linear_span'
 
 theorem lie_le_iff : ⁅I, N⁆ ≤ N' ↔ ∀ x ∈ I, ∀ m ∈ N, ⁅x, m⁆ ∈ N' :=
   by
-  rw [lie_ideal_oper_eq_span, LieSubmodule.lie_span_le]
+  rw [lie_ideal_oper_eq_span, LieSubmodule.lieSpan_le]
   refine' ⟨fun h x hx m hm => h ⟨⟨x, hx⟩, ⟨m, hm⟩, rfl⟩, _⟩
   rintro h _ ⟨⟨x, hx⟩, ⟨m, hm⟩, rfl⟩
   exact h x hx m hm
@@ -177,7 +177,7 @@ theorem bot_lie : ⁅(⊥ : LieIdeal R L), N⁆ = ⊥ :=
 
 theorem lie_eq_bot_iff : ⁅I, N⁆ = ⊥ ↔ ∀ x ∈ I, ∀ m ∈ N, ⁅(x : L), m⁆ = 0 :=
   by
-  rw [lie_ideal_oper_eq_span, LieSubmodule.lie_span_eq_bot_iff]
+  rw [lie_ideal_oper_eq_span, LieSubmodule.lieSpan_eq_bot_iff]
   refine' ⟨fun h x hx m hm => h ⁅x, m⁆ ⟨⟨x, hx⟩, ⟨m, hm⟩, rfl⟩, _⟩
   rintro h - ⟨⟨x, hx⟩, ⟨⟨n, hn⟩, rfl⟩⟩
   exact h x hx n hn
@@ -268,7 +268,7 @@ theorem map_bracket_eq : map f ⁅I, N⁆ = ⁅I, map f N⁆ :=
   ext m
   constructor
   · rintro ⟨-, ⟨⟨x, ⟨n, hn⟩, rfl⟩, hm⟩⟩
-    simp only [LieModuleHom.coe_to_linear_map, LieModuleHom.map_lie] at hm
+    simp only [LieModuleHom.coe_to_linearMap, LieModuleHom.map_lie] at hm
     exact ⟨x, ⟨f n, (mem_map (f n)).mpr ⟨n, hn, rfl⟩⟩, hm⟩
   · rintro ⟨x, ⟨m₂, hm₂ : m₂ ∈ map f N⟩, rfl⟩
     obtain ⟨n, hn, rfl⟩ := (mem_map m₂).mp hm₂
@@ -327,7 +327,7 @@ variable (f : L →ₗ⁅R⁆ L') (I : LieIdeal R L) (J : LieIdeal R L')
 simple algebra. -/
 theorem map_bracket_le {I₁ I₂ : LieIdeal R L} : map f ⁅I₁, I₂⁆ ≤ ⁅map f I₁, map f I₂⁆ :=
   by
-  rw [map_le_iff_le_comap]; erw [LieSubmodule.lie_span_le]
+  rw [map_le_iff_le_comap]; erw [LieSubmodule.lieSpan_le]
   intro x hx; obtain ⟨⟨y₁, hy₁⟩, ⟨y₂, hy₂⟩, hx⟩ := hx; rw [← hx]
   let fy₁ : ↥(map f I₁) := ⟨f y₁, mem_map hy₁⟩
   let fy₂ : ↥(map f I₂) := ⟨f y₂, mem_map hy₂⟩
@@ -340,8 +340,8 @@ theorem map_bracket_eq {I₁ I₂ : LieIdeal R L} (h : Function.Surjective f) :
     map f ⁅I₁, I₂⁆ = ⁅map f I₁, map f I₂⁆ :=
   by
   suffices ⁅map f I₁, map f I₂⁆ ≤ map f ⁅I₁, I₂⁆ by exact le_antisymm (map_bracket_le f) this
-  rw [← LieSubmodule.coe_submodule_le_coe_submodule, coe_map_of_surjective h,
-    LieSubmodule.lie_ideal_oper_eq_linear_span, LieSubmodule.lie_ideal_oper_eq_linear_span,
+  rw [← LieSubmodule.coeSubmodule_le_coeSubmodule, coe_map_of_surjective h,
+    LieSubmodule.lieIdeal_oper_eq_linear_span, LieSubmodule.lieIdeal_oper_eq_linear_span,
     LinearMap.map_span]
   apply Submodule.span_mono
   rintro x ⟨⟨z₁, h₁⟩, ⟨z₂, h₂⟩, rfl⟩
@@ -371,9 +371,9 @@ theorem comap_bracket_eq {J₁ J₂ : LieIdeal R L'} (h : f.IsIdealMorphism) :
   by
   rw [← LieSubmodule.coe_to_submodule_eq_iff, comap_coe_submodule,
     LieSubmodule.sup_coe_to_submodule, f.ker_coe_submodule, ← Submodule.comap_map_eq,
-    LieSubmodule.lie_ideal_oper_eq_linear_span, LieSubmodule.lie_ideal_oper_eq_linear_span,
+    LieSubmodule.lieIdeal_oper_eq_linear_span, LieSubmodule.lieIdeal_oper_eq_linear_span,
     LinearMap.map_span]
-  congr ; simp only [LieHom.coe_to_linear_map, Set.mem_setOf_eq]; ext y
+  congr ; simp only [LieHom.coe_to_linearMap, Set.mem_setOf_eq]; ext y
   constructor
   · rintro ⟨⟨x₁, hx₁⟩, ⟨x₂, hx₂⟩, hy⟩
     rw [← hy]

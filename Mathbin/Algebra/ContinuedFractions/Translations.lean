@@ -34,27 +34,27 @@ us to access the numerators and denominators of a continued fraction.
 
 variable {α : Type _} {g : GeneralizedContinuedFraction α} {n : ℕ}
 
-theorem terminated_at_iff_s_terminated_at : g.TerminatedAt n ↔ g.s.TerminatedAt n := by rfl
-#align generalized_continued_fraction.terminated_at_iff_s_terminated_at GeneralizedContinuedFraction.terminated_at_iff_s_terminated_at
+theorem terminatedAt_iff_s_terminatedAt : g.TerminatedAt n ↔ g.s.TerminatedAt n := by rfl
+#align generalized_continued_fraction.terminated_at_iff_s_terminated_at GeneralizedContinuedFraction.terminatedAt_iff_s_terminatedAt
 
-theorem terminated_at_iff_s_none : g.TerminatedAt n ↔ g.s.nth n = none := by rfl
-#align generalized_continued_fraction.terminated_at_iff_s_none GeneralizedContinuedFraction.terminated_at_iff_s_none
+theorem terminatedAt_iff_s_none : g.TerminatedAt n ↔ g.s.nth n = none := by rfl
+#align generalized_continued_fraction.terminated_at_iff_s_none GeneralizedContinuedFraction.terminatedAt_iff_s_none
 
 theorem part_num_none_iff_s_none : g.partialNumerators.nth n = none ↔ g.s.nth n = none := by
   cases s_nth_eq : g.s.nth n <;> simp [partial_numerators, s_nth_eq]
 #align generalized_continued_fraction.part_num_none_iff_s_none GeneralizedContinuedFraction.part_num_none_iff_s_none
 
-theorem terminated_at_iff_part_num_none : g.TerminatedAt n ↔ g.partialNumerators.nth n = none := by
+theorem terminatedAt_iff_part_num_none : g.TerminatedAt n ↔ g.partialNumerators.nth n = none := by
   rw [terminated_at_iff_s_none, part_num_none_iff_s_none]
-#align generalized_continued_fraction.terminated_at_iff_part_num_none GeneralizedContinuedFraction.terminated_at_iff_part_num_none
+#align generalized_continued_fraction.terminated_at_iff_part_num_none GeneralizedContinuedFraction.terminatedAt_iff_part_num_none
 
 theorem part_denom_none_iff_s_none : g.partialDenominators.nth n = none ↔ g.s.nth n = none := by
   cases s_nth_eq : g.s.nth n <;> simp [partial_denominators, s_nth_eq]
 #align generalized_continued_fraction.part_denom_none_iff_s_none GeneralizedContinuedFraction.part_denom_none_iff_s_none
 
-theorem terminated_at_iff_part_denom_none : g.TerminatedAt n ↔ g.partialDenominators.nth n = none :=
+theorem terminatedAt_iff_part_denom_none : g.TerminatedAt n ↔ g.partialDenominators.nth n = none :=
   by rw [terminated_at_iff_s_none, part_denom_none_iff_s_none]
-#align generalized_continued_fraction.terminated_at_iff_part_denom_none GeneralizedContinuedFraction.terminated_at_iff_part_denom_none
+#align generalized_continued_fraction.terminated_at_iff_part_denom_none GeneralizedContinuedFraction.terminatedAt_iff_part_denom_none
 
 theorem part_num_eq_s_a {gp : Pair α} (s_nth_eq : g.s.nth n = some gp) :
     g.partialNumerators.nth n = some gp.a := by simp [partial_numerators, s_nth_eq]

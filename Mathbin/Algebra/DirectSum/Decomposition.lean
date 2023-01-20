@@ -70,9 +70,9 @@ instance : Subsingleton (Decomposition ℳ) :=
 
 variable [Decomposition ℳ]
 
-protected theorem Decomposition.is_internal : DirectSum.IsInternal ℳ :=
+protected theorem Decomposition.isInternal : DirectSum.IsInternal ℳ :=
   ⟨Decomposition.right_inv.Injective, Decomposition.left_inv.Surjective⟩
-#align direct_sum.decomposition.is_internal DirectSum.Decomposition.is_internal
+#align direct_sum.decomposition.is_internal DirectSum.Decomposition.isInternal
 
 /-- If `M` is graded by `ι` with degree `i` component `ℳ i`, then it is isomorphic as
 to a direct sum of components. This is the canonical spelling of the `decompose'` field. -/
@@ -94,10 +94,9 @@ protected theorem Decomposition.induction_on {p : M → Prop} (h_zero : p 0)
       left_inv := fun _ => (decompose ℳ).left_inv _
       right_inv := fun _ => (decompose ℳ).right_inv _ }
   have mem : ∀ m, m ∈ supᵢ ℳ' := fun m =>
-    (DirectSum.IsInternal.add_submonoid_supr_eq_top ℳ' (decomposition.is_internal ℳ')).symm ▸
-      trivial
+    (DirectSum.IsInternal.addSubmonoid_supᵢ_eq_top ℳ' (decomposition.is_internal ℳ')).symm ▸ trivial
   exact fun m =>
-    AddSubmonoid.supr_induction ℳ' (mem m) (fun i m h => h_homogeneous ⟨m, h⟩) h_zero h_add
+    AddSubmonoid.supᵢ_induction ℳ' (mem m) (fun i m h => h_homogeneous ⟨m, h⟩) h_zero h_add
 #align direct_sum.decomposition.induction_on DirectSum.Decomposition.induction_on
 
 @[simp]
@@ -107,7 +106,7 @@ theorem Decomposition.decompose'_eq : decomposition.decompose' = decompose ℳ :
 
 @[simp]
 theorem decompose_symm_of {i : ι} (x : ℳ i) : (decompose ℳ).symm (DirectSum.of _ i x) = x :=
-  DirectSum.coe_add_monoid_hom_of ℳ _ _
+  DirectSum.coeAddMonoidHom_of ℳ _ _
 #align direct_sum.decompose_symm_of DirectSum.decompose_symm_of
 
 @[simp]

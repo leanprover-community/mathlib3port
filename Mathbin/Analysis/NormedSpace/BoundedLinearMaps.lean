@@ -178,31 +178,31 @@ protected theorem tendsto (x : E) (hf : IsBoundedLinearMap 𝕜 f) : Tendsto f (
 #align is_bounded_linear_map.tendsto IsBoundedLinearMap.tendsto
 
 theorem continuous (hf : IsBoundedLinearMap 𝕜 f) : Continuous f :=
-  continuous_iff_continuous_at.2 fun _ => hf.Tendsto _
+  continuous_iff_continuousAt.2 fun _ => hf.Tendsto _
 #align is_bounded_linear_map.continuous IsBoundedLinearMap.continuous
 
 theorem lim_zero_bounded_linear_map (hf : IsBoundedLinearMap 𝕜 f) : Tendsto f (𝓝 0) (𝓝 0) :=
-  (hf.1.mk' _).map_zero ▸ continuous_iff_continuous_at.1 hf.Continuous 0
+  (hf.1.mk' _).map_zero ▸ continuous_iff_continuousAt.1 hf.Continuous 0
 #align is_bounded_linear_map.lim_zero_bounded_linear_map IsBoundedLinearMap.lim_zero_bounded_linear_map
 
 section
 
 open Asymptotics Filter
 
-theorem is_O_id {f : E → F} (h : IsBoundedLinearMap 𝕜 f) (l : Filter E) : f =O[l] fun x => x :=
+theorem isO_id {f : E → F} (h : IsBoundedLinearMap 𝕜 f) (l : Filter E) : f =O[l] fun x => x :=
   let ⟨M, hMp, hM⟩ := h.bound
   IsO.of_bound _ (mem_of_superset univ_mem fun x _ => hM x)
-#align is_bounded_linear_map.is_O_id IsBoundedLinearMap.is_O_id
+#align is_bounded_linear_map.is_O_id IsBoundedLinearMap.isO_id
 
-theorem is_O_comp {E : Type _} {g : F → G} (hg : IsBoundedLinearMap 𝕜 g) {f : E → F}
-    (l : Filter E) : (fun x' => g (f x')) =O[l] f :=
+theorem isO_comp {E : Type _} {g : F → G} (hg : IsBoundedLinearMap 𝕜 g) {f : E → F} (l : Filter E) :
+    (fun x' => g (f x')) =O[l] f :=
   (hg.is_O_id ⊤).comp_tendsto le_top
-#align is_bounded_linear_map.is_O_comp IsBoundedLinearMap.is_O_comp
+#align is_bounded_linear_map.is_O_comp IsBoundedLinearMap.isO_comp
 
-theorem is_O_sub {f : E → F} (h : IsBoundedLinearMap 𝕜 f) (l : Filter E) (x : E) :
+theorem isO_sub {f : E → F} (h : IsBoundedLinearMap 𝕜 f) (l : Filter E) (x : E) :
     (fun x' => f (x' - x)) =O[l] fun x' => x' - x :=
-  is_O_comp h l
-#align is_bounded_linear_map.is_O_sub IsBoundedLinearMap.is_O_sub
+  isO_comp h l
+#align is_bounded_linear_map.is_O_sub IsBoundedLinearMap.isO_sub
 
 end
 
@@ -370,23 +370,23 @@ theorem ContinuousLinearMap.isBoundedBilinearMap (f : E →L[𝕜] F →L[𝕜] 
             "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr mul_le_mul_of_nonneg_right, \",\", expr norm_nonneg, \",\", expr le_max_left, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"⟩ }
 #align continuous_linear_map.is_bounded_bilinear_map ContinuousLinearMap.isBoundedBilinearMap
 
-protected theorem IsBoundedBilinearMap.is_O (h : IsBoundedBilinearMap 𝕜 f) :
+protected theorem IsBoundedBilinearMap.isO (h : IsBoundedBilinearMap 𝕜 f) :
     f =O[⊤] fun p : E × F => ‖p.1‖ * ‖p.2‖ :=
   let ⟨C, Cpos, hC⟩ := h.bound
   Asymptotics.IsO.of_bound _ <|
     Filter.eventually_of_forall fun ⟨x, y⟩ => by simpa [mul_assoc] using hC x y
-#align is_bounded_bilinear_map.is_O IsBoundedBilinearMap.is_O
+#align is_bounded_bilinear_map.is_O IsBoundedBilinearMap.isO
 
-theorem IsBoundedBilinearMap.is_O_comp {α : Type _} (H : IsBoundedBilinearMap 𝕜 f) {g : α → E}
+theorem IsBoundedBilinearMap.isO_comp {α : Type _} (H : IsBoundedBilinearMap 𝕜 f) {g : α → E}
     {h : α → F} {l : Filter α} : (fun x => f (g x, h x)) =O[l] fun x => ‖g x‖ * ‖h x‖ :=
   H.IsO.comp_tendsto le_top
-#align is_bounded_bilinear_map.is_O_comp IsBoundedBilinearMap.is_O_comp
+#align is_bounded_bilinear_map.is_O_comp IsBoundedBilinearMap.isO_comp
 
 protected theorem IsBoundedBilinearMap.is_O' (h : IsBoundedBilinearMap 𝕜 f) :
     f =O[⊤] fun p : E × F => ‖p‖ * ‖p‖ :=
   h.IsO.trans <|
-    (@Asymptotics.is_O_fst_prod' _ E F _ _ _ _).norm_norm.mul
-      (@Asymptotics.is_O_snd_prod' _ E F _ _ _ _).norm_norm
+    (@Asymptotics.isO_fst_prod' _ E F _ _ _ _).norm_norm.mul
+      (@Asymptotics.isO_snd_prod' _ E F _ _ _ _).norm_norm
 #align is_bounded_bilinear_map.is_O' IsBoundedBilinearMap.is_O'
 
 theorem IsBoundedBilinearMap.map_sub_left (h : IsBoundedBilinearMap 𝕜 f) {x y : E} {z : F} :
@@ -412,7 +412,7 @@ theorem IsBoundedBilinearMap.continuous (h : IsBoundedBilinearMap 𝕜 f) : Cont
   by
   have one_ne : (1 : ℝ) ≠ 0 := by simp
   obtain ⟨C, Cpos : 0 < C, hC⟩ := h.bound
-  rw [continuous_iff_continuous_at]
+  rw [continuous_iff_continuousAt]
   intro x
   have H : ∀ (a : E) (b : F), ‖f (a, b)‖ ≤ C * ‖‖a‖ * ‖b‖‖ :=
     by
@@ -420,20 +420,20 @@ theorem IsBoundedBilinearMap.continuous (h : IsBoundedBilinearMap 𝕜 f) : Cont
     simpa [mul_assoc] using hC a b
   have h₁ : (fun e : E × F => f (e.1 - x.1, e.2)) =o[𝓝 x] fun e => (1 : ℝ) :=
     by
-    refine' (Asymptotics.is_O_of_le' (𝓝 x) fun e => H (e.1 - x.1) e.2).trans_is_o _
-    rw [Asymptotics.is_o_const_iff one_ne]
+    refine' (Asymptotics.isO_of_le' (𝓝 x) fun e => H (e.1 - x.1) e.2).trans_is_o _
+    rw [Asymptotics.isO_const_iff one_ne]
     convert ((continuous_fst.sub continuous_const).norm.mul continuous_snd.norm).ContinuousAt
     · simp
     infer_instance
   have h₂ : (fun e : E × F => f (x.1, e.2 - x.2)) =o[𝓝 x] fun e => (1 : ℝ) :=
     by
-    refine' (Asymptotics.is_O_of_le' (𝓝 x) fun e => H x.1 (e.2 - x.2)).trans_is_o _
-    rw [Asymptotics.is_o_const_iff one_ne]
+    refine' (Asymptotics.isO_of_le' (𝓝 x) fun e => H x.1 (e.2 - x.2)).trans_is_o _
+    rw [Asymptotics.isO_const_iff one_ne]
     convert (continuous_const.mul (continuous_snd.sub continuous_const).norm).ContinuousAt
     · simp
     infer_instance
   have := h₁.add h₂
-  rw [Asymptotics.is_o_const_iff one_ne] at this
+  rw [Asymptotics.isO_const_iff one_ne] at this
   change tendsto _ _ _
   convert this.add_const (f x)
   · ext e
@@ -584,10 +584,10 @@ def IsBoundedBilinearMap.deriv (h : IsBoundedBilinearMap 𝕜 f) (p : E × F) : 
 #align is_bounded_bilinear_map.deriv IsBoundedBilinearMap.deriv
 
 @[simp]
-theorem is_bounded_bilinear_map_deriv_coe (h : IsBoundedBilinearMap 𝕜 f) (p q : E × F) :
+theorem isBoundedBilinearMap_deriv_coe (h : IsBoundedBilinearMap 𝕜 f) (p q : E × F) :
     h.deriv p q = f (p.1, q.2) + f (q.1, p.2) :=
   rfl
-#align is_bounded_bilinear_map_deriv_coe is_bounded_bilinear_map_deriv_coe
+#align is_bounded_bilinear_map_deriv_coe isBoundedBilinearMap_deriv_coe
 
 variable (𝕜)
 
@@ -613,12 +613,12 @@ theorem IsBoundedBilinearMap.isBoundedLinearMapDeriv (h : IsBoundedBilinearMap �
   ·
     ext <;>
         simp only [h.add_left, h.add_right, coe_comp', Function.comp_apply, inl_apply,
-          is_bounded_bilinear_map_deriv_coe, Prod.fst_add, Prod.snd_add, add_apply] <;>
+          isBoundedBilinearMap_deriv_coe, Prod.fst_add, Prod.snd_add, add_apply] <;>
       abel
   ·
     ext <;>
       simp only [h.smul_left, h.smul_right, smul_add, coe_comp', Function.comp_apply,
-        is_bounded_bilinear_map_deriv_coe, Prod.smul_fst, Prod.smul_snd, coe_smul', Pi.smul_apply]
+        isBoundedBilinearMap_deriv_coe, Prod.smul_fst, Prod.smul_snd, coe_smul', Pi.smul_apply]
   · refine'
       ContinuousLinearMap.op_norm_le_bound _
         (mul_nonneg (add_nonneg Cpos.le Cpos.le) (norm_nonneg _)) fun q => _
@@ -657,9 +657,9 @@ spaces is an open subset of the space of linear maps between them.
 -/
 
 
-protected theorem is_open [CompleteSpace E] : IsOpen (range (coe : (E ≃L[𝕜] F) → E →L[𝕜] F)) :=
+protected theorem isOpen [CompleteSpace E] : IsOpen (range (coe : (E ≃L[𝕜] F) → E →L[𝕜] F)) :=
   by
-  rw [is_open_iff_mem_nhds, forall_range_iff]
+  rw [isOpen_iff_mem_nhds, forall_range_iff]
   refine' fun e => IsOpen.mem_nhds _ (mem_range_self _)
   let O : (E →L[𝕜] F) → E →L[𝕜] E := fun f => (e.symm : F →L[𝕜] E).comp f
   have h_O : Continuous O := is_bounded_bilinear_map_comp.continuous_right
@@ -671,12 +671,12 @@ protected theorem is_open [CompleteSpace E] : IsOpen (range (coe : (E ≃L[𝕜]
   · rintro ⟨w, hw⟩
     use (units_equiv 𝕜 E w).trans e
     ext x
-    simp [coe_fn_coe_base' w, hw]
-#align continuous_linear_equiv.is_open ContinuousLinearEquiv.is_open
+    simp [coeFn_coe_base' w, hw]
+#align continuous_linear_equiv.is_open ContinuousLinearEquiv.isOpen
 
 protected theorem nhds [CompleteSpace E] (e : E ≃L[𝕜] F) :
     range (coe : (E ≃L[𝕜] F) → E →L[𝕜] F) ∈ 𝓝 (e : E →L[𝕜] F) :=
-  IsOpen.mem_nhds ContinuousLinearEquiv.is_open (by simp)
+  IsOpen.mem_nhds ContinuousLinearEquiv.isOpen (by simp)
 #align continuous_linear_equiv.nhds ContinuousLinearEquiv.nhds
 
 end ContinuousLinearEquiv

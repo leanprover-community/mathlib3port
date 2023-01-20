@@ -51,7 +51,7 @@ As `Q q` is the complement projection to `P q`, this implies that in the case of
 simplicial abelian groups, any $(n+1)$-simplex $x$ can be decomposed as
 $x = x' + \sum (i=0}^{q-1} σ_{n-i}(y_i)$ where $x'$ is in the image of `P q` and
 the $y_i$ are in degree $n$. -/
-theorem decomposition_Q (n q : ℕ) :
+theorem decomposition_q (n q : ℕ) :
     ((q q).f (n + 1) : X _[n + 1] ⟶ X _[n + 1]) =
       ∑ i : Fin (n + 1) in Finset.filter (fun i : Fin (n + 1) => (i : ℕ) < q) Finset.univ,
         (p i).f (n + 1) ≫ X.δ i.rev.succ ≫ X.σ i.rev :=
@@ -82,7 +82,7 @@ theorem decomposition_Q (n q : ℕ) :
         simpa only [Fin.val_mk, (higher_faces_vanish.of_P q n).comp_Hσ_eq hnaq', q'.rev_eq hnaq',
           neg_neg]
       · simp only [Finset.mem_filter, Fin.val_mk, lt_self_iff_false, and_false_iff, not_false_iff]
-#align algebraic_topology.dold_kan.decomposition_Q AlgebraicTopology.DoldKan.decomposition_Q
+#align algebraic_topology.dold_kan.decomposition_Q AlgebraicTopology.DoldKan.decomposition_q
 
 variable (X)
 
@@ -138,11 +138,11 @@ def postComp : MorphComponents X n Z' where
 #align algebraic_topology.dold_kan.morph_components.post_comp AlgebraicTopology.DoldKan.MorphComponents.postComp
 
 @[simp]
-theorem post_comp_φ : (f.postComp h).φ = f.φ ≫ h :=
+theorem postComp_φ : (f.postComp h).φ = f.φ ≫ h :=
   by
   unfold φ post_comp
   simp only [add_comp, sum_comp, assoc]
-#align algebraic_topology.dold_kan.morph_components.post_comp_φ AlgebraicTopology.DoldKan.MorphComponents.post_comp_φ
+#align algebraic_topology.dold_kan.morph_components.post_comp_φ AlgebraicTopology.DoldKan.MorphComponents.postComp_φ
 
 /-- A `morph_components` can be precomposed with a morphism of simplicial objects. -/
 @[simps]
@@ -153,14 +153,14 @@ def preComp : MorphComponents X' n Z
 #align algebraic_topology.dold_kan.morph_components.pre_comp AlgebraicTopology.DoldKan.MorphComponents.preComp
 
 @[simp]
-theorem pre_comp_φ : (f.preComp g).φ = g.app (op [n + 1]) ≫ f.φ :=
+theorem preComp_φ : (f.preComp g).φ = g.app (op [n + 1]) ≫ f.φ :=
   by
   unfold φ pre_comp
   simp only [P_infty_f, comp_add]
   congr 1
   · simp only [P_f_naturality_assoc]
   · simp only [comp_sum, P_f_naturality_assoc, simplicial_object.δ_naturality_assoc]
-#align algebraic_topology.dold_kan.morph_components.pre_comp_φ AlgebraicTopology.DoldKan.MorphComponents.pre_comp_φ
+#align algebraic_topology.dold_kan.morph_components.pre_comp_φ AlgebraicTopology.DoldKan.MorphComponents.preComp_φ
 
 end MorphComponents
 

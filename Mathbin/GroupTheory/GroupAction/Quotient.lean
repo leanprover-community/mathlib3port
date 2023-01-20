@@ -57,17 +57,17 @@ class AddAction.QuotientAction {α : Type _} (β : Type _) [AddGroup α] [AddMon
 attribute [to_additive AddAction.QuotientAction] MulAction.QuotientAction
 
 @[to_additive]
-instance left_quotient_action : QuotientAction α H :=
+instance left_quotientAction : QuotientAction α H :=
   ⟨fun _ _ _ _ => by rwa [smul_eq_mul, smul_eq_mul, mul_inv_rev, mul_assoc, inv_mul_cancel_left]⟩
-#align mul_action.left_quotient_action MulAction.left_quotient_action
-#align add_action.left_quotient_action AddAction.left_quotient_action
+#align mul_action.left_quotient_action MulAction.left_quotientAction
+#align add_action.left_quotient_action AddAction.left_quotientAction
 
 @[to_additive]
-instance right_quotient_action : QuotientAction H.normalizer.opposite H :=
+instance right_quotientAction : QuotientAction H.normalizer.opposite H :=
   ⟨fun b c _ _ => by
     rwa [smul_def, smul_def, smul_eq_mul_unop, smul_eq_mul_unop, mul_inv_rev, ← mul_assoc,
       mem_normalizer_iff'.mp b.prop, mul_assoc, mul_inv_cancel_left]⟩
-#align mul_action.right_quotient_action MulAction.right_quotient_action
+#align mul_action.right_quotient_action MulAction.right_quotientAction
 #align add_action.right_quotient_action AddAction.right_quotient_action
 
 @[to_additive]
@@ -83,7 +83,7 @@ instance quotient [QuotientAction β H] : MulAction β (α ⧸ H)
     where
   smul b :=
     Quotient.map' ((· • ·) b) fun a a' h =>
-      left_rel_apply.mpr <| QuotientAction.inv_mul_mem b <| left_rel_apply.mp h
+      leftRel_apply.mpr <| QuotientAction.inv_mul_mem b <| leftRel_apply.mp h
   one_smul q := Quotient.inductionOn' q fun a => congr_arg Quotient.mk' (one_smul β a)
   mul_smul b b' q := Quotient.inductionOn' q fun a => congr_arg Quotient.mk' (mul_smul b b' a)
 #align mul_action.quotient MulAction.quotient
@@ -116,11 +116,11 @@ theorem quotient.coe_smul_out' [QuotientAction β H] (b : β) (q : α ⧸ H) : �
 #align mul_action.quotient.coe_smul_out' MulAction.quotient.coe_smul_out'
 #align add_action.quotient.coe_vadd_out' AddAction.quotient.coe_vadd_out'
 
-theorem QuotientGroup.out'_conj_pow_minimal_period_mem (a : α) (q : α ⧸ H) :
+theorem QuotientGroup.out'_conj_pow_minimalPeriod_mem (a : α) (q : α ⧸ H) :
     q.out'⁻¹ * a ^ Function.minimalPeriod ((· • ·) a) q * q.out' ∈ H := by
   rw [mul_assoc, ← QuotientGroup.eq', QuotientGroup.out_eq', ← smul_eq_mul, quotient.mk_smul_out',
     eq_comm, pow_smul_eq_iff_minimal_period_dvd]
-#align quotient_group.out'_conj_pow_minimal_period_mem QuotientGroup.out'_conj_pow_minimal_period_mem
+#align quotient_group.out'_conj_pow_minimal_period_mem QuotientGroup.out'_conj_pow_minimalPeriod_mem
 
 end QuotientAction
 
@@ -132,9 +132,9 @@ def MulActionHom.toQuotient (H : Subgroup α) : α →[α] α ⧸ H :=
 #align mul_action_hom.to_quotient MulActionHom.toQuotient
 
 @[simp]
-theorem MulActionHom.to_quotient_apply (H : Subgroup α) (g : α) : MulActionHom.toQuotient H g = g :=
+theorem MulActionHom.toQuotient_apply (H : Subgroup α) (g : α) : MulActionHom.toQuotient H g = g :=
   rfl
-#align mul_action_hom.to_quotient_apply MulActionHom.to_quotient_apply
+#align mul_action_hom.to_quotient_apply MulActionHom.toQuotient_apply
 
 @[to_additive]
 instance mulLeftCosetsCompSubtypeVal (H I : Subgroup α) : MulAction I (α ⧸ H) :=
@@ -149,49 +149,48 @@ variable (α) {β} [MulAction α β] (x : β)
 def ofQuotientStabilizer (g : α ⧸ MulAction.stabilizer α x) : β :=
   Quotient.liftOn' g (· • x) fun g1 g2 H =>
     calc
-      g1 • x = g1 • (g1⁻¹ * g2) • x := congr_arg _ (left_rel_apply.mp H).symm
+      g1 • x = g1 • (g1⁻¹ * g2) • x := congr_arg _ (leftRel_apply.mp H).symm
       _ = g2 • x := by rw [smul_smul, mul_inv_cancel_left]
       
 #align mul_action.of_quotient_stabilizer MulAction.ofQuotientStabilizer
 #align add_action.of_quotient_stabilizer AddAction.ofQuotientStabilizer
 
 @[simp, to_additive]
-theorem of_quotient_stabilizer_mk (g : α) : ofQuotientStabilizer α x (QuotientGroup.mk g) = g • x :=
+theorem ofQuotientStabilizer_mk (g : α) : ofQuotientStabilizer α x (QuotientGroup.mk g) = g • x :=
   rfl
-#align mul_action.of_quotient_stabilizer_mk MulAction.of_quotient_stabilizer_mk
-#align add_action.of_quotient_stabilizer_mk AddAction.of_quotient_stabilizer_mk
+#align mul_action.of_quotient_stabilizer_mk MulAction.ofQuotientStabilizer_mk
+#align add_action.of_quotient_stabilizer_mk AddAction.ofQuotientStabilizer_mk
 
 @[to_additive]
-theorem of_quotient_stabilizer_mem_orbit (g) : ofQuotientStabilizer α x g ∈ orbit α x :=
+theorem ofQuotientStabilizer_mem_orbit (g) : ofQuotientStabilizer α x g ∈ orbit α x :=
   Quotient.inductionOn' g fun g => ⟨g, rfl⟩
-#align mul_action.of_quotient_stabilizer_mem_orbit MulAction.of_quotient_stabilizer_mem_orbit
-#align add_action.of_quotient_stabilizer_mem_orbit AddAction.of_quotient_stabilizer_mem_orbit
+#align mul_action.of_quotient_stabilizer_mem_orbit MulAction.ofQuotientStabilizer_mem_orbit
+#align add_action.of_quotient_stabilizer_mem_orbit AddAction.ofQuotientStabilizer_mem_orbit
 
 @[to_additive]
-theorem of_quotient_stabilizer_smul (g : α) (g' : α ⧸ MulAction.stabilizer α x) :
+theorem ofQuotientStabilizer_smul (g : α) (g' : α ⧸ MulAction.stabilizer α x) :
     ofQuotientStabilizer α x (g • g') = g • ofQuotientStabilizer α x g' :=
   Quotient.inductionOn' g' fun _ => mul_smul _ _ _
-#align mul_action.of_quotient_stabilizer_smul MulAction.of_quotient_stabilizer_smul
-#align add_action.of_quotient_stabilizer_vadd AddAction.of_quotient_stabilizer_vadd
+#align mul_action.of_quotient_stabilizer_smul MulAction.ofQuotientStabilizer_smul
+#align add_action.of_quotient_stabilizer_vadd AddAction.ofQuotientStabilizer_vadd
 
 @[to_additive]
-theorem injective_of_quotient_stabilizer : Function.Injective (ofQuotientStabilizer α x) :=
+theorem injective_ofQuotientStabilizer : Function.Injective (ofQuotientStabilizer α x) :=
   fun y₁ y₂ =>
   Quotient.inductionOn₂' y₁ y₂ fun g₁ g₂ (H : g₁ • x = g₂ • x) =>
     Quotient.sound' <| by
       rw [left_rel_apply]
       show (g₁⁻¹ * g₂) • x = x
       rw [mul_smul, ← H, inv_smul_smul]
-#align mul_action.injective_of_quotient_stabilizer MulAction.injective_of_quotient_stabilizer
-#align add_action.injective_of_quotient_stabilizer AddAction.injective_of_quotient_stabilizer
+#align mul_action.injective_of_quotient_stabilizer MulAction.injective_ofQuotientStabilizer
+#align add_action.injective_of_quotient_stabilizer AddAction.injective_ofQuotientStabilizer
 
 /-- Orbit-stabilizer theorem. -/
 @[to_additive "Orbit-stabilizer theorem."]
 noncomputable def orbitEquivQuotientStabilizer (b : β) : orbit α b ≃ α ⧸ stabilizer α b :=
   Equiv.symm <|
-    Equiv.ofBijective
-      (fun g => ⟨ofQuotientStabilizer α b g, of_quotient_stabilizer_mem_orbit α b g⟩)
-      ⟨fun x y hxy => injective_of_quotient_stabilizer α b (by convert congr_arg Subtype.val hxy),
+    Equiv.ofBijective (fun g => ⟨ofQuotientStabilizer α b g, ofQuotientStabilizer_mem_orbit α b g⟩)
+      ⟨fun x y hxy => injective_ofQuotientStabilizer α b (by convert congr_arg Subtype.val hxy),
         fun ⟨b, ⟨g, hgb⟩⟩ => ⟨g, Subtype.eq hgb⟩⟩
 #align mul_action.orbit_equiv_quotient_stabilizer MulAction.orbitEquivQuotientStabilizer
 #align add_action.orbit_equiv_quotient_stabilizer AddAction.orbitEquivQuotientStabilizer
@@ -214,10 +213,10 @@ theorem card_orbit_mul_card_stabilizer_eq_card_group (b : β) [Fintype α] [Fint
 #align add_action.card_orbit_add_card_stabilizer_eq_card_add_group AddAction.card_orbit_add_card_stabilizer_eq_card_add_group
 
 @[simp, to_additive]
-theorem orbit_equiv_quotient_stabilizer_symm_apply (b : β) (a : α) :
+theorem orbitEquivQuotientStabilizer_symm_apply (b : β) (a : α) :
     ((orbitEquivQuotientStabilizer α b).symm a : β) = a • b :=
   rfl
-#align mul_action.orbit_equiv_quotient_stabilizer_symm_apply MulAction.orbit_equiv_quotient_stabilizer_symm_apply
+#align mul_action.orbit_equiv_quotient_stabilizer_symm_apply MulAction.orbitEquivQuotientStabilizer_symm_apply
 #align add_action.orbit_equiv_quotient_stabilizer_symm_apply AddAction.orbit_equiv_quotient_stabilizer_symm_apply
 
 @[simp, to_additive]
@@ -325,21 +324,21 @@ noncomputable def sigmaFixedByEquivOrbitsProdGroup : (Σa : α, fixedBy α β a)
 elements fixed by each `g ∈ G` is the number of orbits. -/
 @[to_additive
       "**Burnside's lemma** : given a finite additive group `G` acting on a set `X`,\nthe average number of elements fixed by each `g ∈ G` is the number of orbits. "]
-theorem sum_card_fixed_by_eq_card_orbits_mul_card_group [Fintype α] [∀ a, Fintype <| fixedBy α β a]
+theorem sum_card_fixedBy_eq_card_orbits_mul_card_group [Fintype α] [∀ a, Fintype <| fixedBy α β a]
     [Fintype Ω] : (∑ a : α, Fintype.card (fixedBy α β a)) = Fintype.card Ω * Fintype.card α := by
   rw [← Fintype.card_prod, ← Fintype.card_sigma,
     Fintype.card_congr (sigma_fixed_by_equiv_orbits_prod_group α β)]
-#align mul_action.sum_card_fixed_by_eq_card_orbits_mul_card_group MulAction.sum_card_fixed_by_eq_card_orbits_mul_card_group
-#align add_action.sum_card_fixed_by_eq_card_orbits_add_card_add_group AddAction.sum_card_fixed_by_eq_card_orbits_add_card_add_group
+#align mul_action.sum_card_fixed_by_eq_card_orbits_mul_card_group MulAction.sum_card_fixedBy_eq_card_orbits_mul_card_group
+#align add_action.sum_card_fixed_by_eq_card_orbits_add_card_add_group AddAction.sum_card_fixedBy_eq_card_orbits_add_card_add_group
 
 @[to_additive]
-instance is_pretransitive_quotient (G) [Group G] (H : Subgroup G) : IsPretransitive G (G ⧸ H)
+instance isPretransitive_quotient (G) [Group G] (H : Subgroup G) : IsPretransitive G (G ⧸ H)
     where exists_smul_eq := by
     rintro ⟨x⟩ ⟨y⟩
     refine' ⟨y * x⁻¹, quotient_group.eq.mpr _⟩
     simp only [smul_eq_mul, H.one_mem, mul_left_inv, inv_mul_cancel_right]
-#align mul_action.is_pretransitive_quotient MulAction.is_pretransitive_quotient
-#align add_action.is_pretransitive_quotient AddAction.is_pretransitive_quotient
+#align mul_action.is_pretransitive_quotient MulAction.isPretransitive_quotient
+#align add_action.is_pretransitive_quotient AddAction.isPretransitive_quotient
 
 end MulAction
 
@@ -347,7 +346,7 @@ namespace Subgroup
 
 variable {G : Type _} [Group G] (H : Subgroup G)
 
-theorem normal_core_eq_ker : H.normalCore = (MulAction.toPermHom G (G ⧸ H)).ker :=
+theorem normalCore_eq_ker : H.normalCore = (MulAction.toPermHom G (G ⧸ H)).ker :=
   by
   refine'
     le_antisymm
@@ -360,7 +359,7 @@ theorem normal_core_eq_ker : H.normalCore = (MulAction.toPermHom G (G ⧸ H)).ke
     exact H.normal_core.inv_mem hg g'⁻¹
   · rw [← H.inv_mem_iff, ← mul_one g⁻¹, ← QuotientGroup.eq, ← mul_one g]
     exact (MulAction.quotient.smul_mk H g 1).symm.trans (equiv.perm.ext_iff.mp hg (1 : G))
-#align subgroup.normal_core_eq_ker Subgroup.normal_core_eq_ker
+#align subgroup.normal_core_eq_ker Subgroup.normalCore_eq_ker
 
 open QuotientGroup
 
@@ -376,10 +375,10 @@ noncomputable def quotientCentralizerEmbedding (g : G) :
       fun x y => Subtype.ext ∘ mul_right_cancel ∘ Subtype.ext_iff.mp⟩
 #align subgroup.quotient_centralizer_embedding Subgroup.quotientCentralizerEmbedding
 
-theorem quotient_centralizer_embedding_apply (g : G) (x : G) :
+theorem quotientCentralizerEmbedding_apply (g : G) (x : G) :
     quotientCentralizerEmbedding g x = ⟨⁅x, g⁆, x, g, rfl⟩ :=
   rfl
-#align subgroup.quotient_centralizer_embedding_apply Subgroup.quotient_centralizer_embedding_apply
+#align subgroup.quotient_centralizer_embedding_apply Subgroup.quotientCentralizerEmbedding_apply
 
 /-- If `G` is generated by `S`, then the quotient by the center embeds into `S`-indexed sequences
 of commutators. -/
@@ -390,10 +389,10 @@ noncomputable def quotientCenterEmbedding {S : Set G} (hS : closure S = ⊤) :
       (Function.Embedding.piCongrRight fun g => quotientCentralizerEmbedding g))
 #align subgroup.quotient_center_embedding Subgroup.quotientCenterEmbedding
 
-theorem quotient_center_embedding_apply {S : Set G} (hS : closure S = ⊤) (g : G) (s : S) :
+theorem quotientCenterEmbedding_apply {S : Set G} (hS : closure S = ⊤) (g : G) (s : S) :
     quotientCenterEmbedding hS g s = ⟨⁅g, s⁆, g, s, rfl⟩ :=
   rfl
-#align subgroup.quotient_center_embedding_apply Subgroup.quotient_center_embedding_apply
+#align subgroup.quotient_center_embedding_apply Subgroup.quotientCenterEmbedding_apply
 
 end Subgroup
 

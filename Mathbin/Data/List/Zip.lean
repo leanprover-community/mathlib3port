@@ -128,13 +128,20 @@ theorem zip_swap : ∀ (l₁ : List α) (l₂ : List β), (zip l₁ l₂).map Pr
     simp only [zip_cons_cons, map_cons, zip_swap l₁ l₂, Prod.swap_prod_mk] <;> constructor <;> rfl
 #align list.zip_swap List.zip_swap
 
+/- warning: list.length_zip_with clashes with list.length_map₂ -> List.length_zipWith
+warning: list.length_zip_with -> List.length_zipWith is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} (f : α -> β -> γ) (l₁ : List.{u1} α) (l₂ : List.{u2} β), Eq.{1} Nat (List.length.{u3} γ (List.zipWith.{u1, u2, u3} α β γ f l₁ l₂)) (LinearOrder.min.{0} Nat Nat.linearOrder (List.length.{u1} α l₁) (List.length.{u2} β l₂))
+but is expected to have type
+  forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} (f : α -> β -> γ) (l₁ : List.{u3} α) (l₂ : List.{u2} β), Eq.{1} Nat (List.length.{u1} γ (List.zipWith.{u3, u2, u1} α β γ f l₁ l₂)) (Min.min.{0} Nat Nat.instMinNat (List.length.{u3} α l₁) (List.length.{u2} β l₂))
+Case conversion may be inaccurate. Consider using '#align list.length_zip_with List.length_zipWithₓ'. -/
 @[simp]
-theorem length_zip_with (f : α → β → γ) :
+theorem length_zipWith (f : α → β → γ) :
     ∀ (l₁ : List α) (l₂ : List β), length (zipWith f l₁ l₂) = min (length l₁) (length l₂)
   | [], l₂ => rfl
   | l₁, [] => by simp only [length, min_zero, zip_with_nil_right]
   | a :: l₁, b :: l₂ => by simp [length, zip_cons_cons, length_zip_with l₁ l₂, min_add_add_right]
-#align list.length_zip_with List.length_zip_with
+#align list.length_zip_with List.length_zipWith
 
 /- warning: list.length_zip -> List.length_zip is a dubious translation:
 lean 3 declaration is
@@ -145,7 +152,7 @@ Case conversion may be inaccurate. Consider using '#align list.length_zip List.l
 @[simp]
 theorem length_zip :
     ∀ (l₁ : List α) (l₂ : List β), length (zip l₁ l₂) = min (length l₁) (length l₂) :=
-  length_zip_with _
+  length_zipWith _
 #align list.length_zip List.length_zip
 
 /- warning: list.all₂_zip_with -> List.all₂_zipWith is a dubious translation:
@@ -740,8 +747,14 @@ theorem get?_zip_eq_some (l₁ : List α) (l₂ : List β) (z : α × β) (i : �
     exact ⟨_, _, h₀, h₁, rfl⟩
 #align list.nth_zip_eq_some List.get?_zip_eq_some
 
+/- warning: list.nth_le_zip_with -> List.nthLe_zipWith is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {f : α -> β -> γ} {l : List.{u1} α} {l' : List.{u2} β} {i : Nat} {h : LT.lt.{0} Nat Nat.hasLt i (List.length.{u3} γ (List.zipWith.{u1, u2, u3} α β γ f l l'))}, Eq.{succ u3} γ (List.nthLe.{u3} γ (List.zipWith.{u1, u2, u3} α β γ f l l') i h) (f (List.nthLe.{u1} α l i (List.lt_length_left_of_zipWith.{u1, u2, u3} α β γ f i l l' h)) (List.nthLe.{u2} β l' i (List.lt_length_right_of_zipWith.{u1, u2, u3} α β γ f i l l' h)))
+but is expected to have type
+  forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} {f : α -> β -> γ} {l : List.{u3} α} {l' : List.{u2} β} {i : Nat} {h : LT.lt.{0} Nat instLTNat i (List.length.{u1} γ (List.zipWith.{u3, u2, u1} α β γ f l l'))}, Eq.{succ u1} γ (List.nthLe.{u1} γ (List.zipWith.{u3, u2, u1} α β γ f l l') i h) (f (List.nthLe.{u3} α l i (List.lt_length_left_of_zipWith.{u1, u2, u3} α β γ f i l l' h)) (List.nthLe.{u2} β l' i (List.lt_length_right_of_zipWith.{u1, u2, u3} α β γ f i l l' h)))
+Case conversion may be inaccurate. Consider using '#align list.nth_le_zip_with List.nthLe_zipWithₓ'. -/
 @[simp]
-theorem nth_le_zip_with {f : α → β → γ} {l : List α} {l' : List β} {i : ℕ}
+theorem nthLe_zipWith {f : α → β → γ} {l : List α} {l' : List β} {i : ℕ}
     {h : i < (zipWith f l l').length} :
     (zipWith f l l').nthLe i h =
       f (l.nthLe i (lt_length_left_of_zipWith h)) (l'.nthLe i (lt_length_right_of_zipWith h)) :=
@@ -751,7 +764,7 @@ theorem nth_le_zip_with {f : α → β → γ} {l : List α} {l' : List β} {i :
     ⟨l.nth_le i (lt_length_left_of_zip_with h), l'.nth_le i (lt_length_right_of_zip_with h),
       nth_le_nth _, _⟩
   simp only [← nth_le_nth, eq_self_iff_true, and_self_iff]
-#align list.nth_le_zip_with List.nth_le_zip_with
+#align list.nth_le_zip_with List.nthLe_zipWith
 
 /- warning: list.nth_le_zip -> List.nthLe_zip is a dubious translation:
 lean 3 declaration is
@@ -931,6 +944,7 @@ theorem prod_mul_prod_eq_prod_zipWith_mul_prod_drop :
       prod_mul_prod_eq_prod_zip_with_mul_prod_drop xs ys, mul_assoc, mul_assoc, mul_assoc,
       mul_assoc]
 #align list.prod_mul_prod_eq_prod_zip_with_mul_prod_drop List.prod_mul_prod_eq_prod_zipWith_mul_prod_drop
+#align list.sum_add_sum_eq_sum_zip_with_add_sum_drop List.sum_add_sum_eq_sum_zipWith_add_sum_drop
 
 /- warning: list.prod_mul_prod_eq_prod_zip_with_of_length_eq -> List.prod_mul_prod_eq_prod_zipWith_of_length_eq is a dubious translation:
 lean 3 declaration is
@@ -943,6 +957,7 @@ theorem prod_mul_prod_eq_prod_zipWith_of_length_eq (L L' : List α) (h : L.lengt
     L.Prod * L'.Prod = (zipWith (· * ·) L L').Prod :=
   (prod_mul_prod_eq_prod_zipWith_mul_prod_drop L L').trans (by simp [h])
 #align list.prod_mul_prod_eq_prod_zip_with_of_length_eq List.prod_mul_prod_eq_prod_zipWith_of_length_eq
+#align list.sum_add_sum_eq_sum_zip_with_of_length_eq List.sum_add_sum_eq_sum_zipWith_of_length_eq
 
 end CommMonoid
 

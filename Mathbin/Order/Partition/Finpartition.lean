@@ -74,7 +74,7 @@ structure Finpartition [Lattice α] [OrderBot α] (a : α) where
   deriving DecidableEq
 #align finpartition Finpartition
 
-attribute [protected] Finpartition.sup_indep
+attribute [protected] Finpartition.supIndep
 
 namespace Finpartition
 
@@ -467,9 +467,9 @@ theorem exists_mem {a : α} (ha : a ∈ s) : ∃ t ∈ P.parts, a ∈ t :=
   exact mem_sup.1 ha
 #align finpartition.exists_mem Finpartition.exists_mem
 
-theorem bUnion_parts : P.parts.bUnion id = s :=
+theorem bunionᵢ_parts : P.parts.bUnion id = s :=
   (sup_eq_bunionᵢ _ _).symm.trans P.sup_parts
-#align finpartition.bUnion_parts Finpartition.bUnion_parts
+#align finpartition.bUnion_parts Finpartition.bunionᵢ_parts
 
 theorem sum_card_parts : (∑ i in P.parts, i.card) = s.card :=
   by
@@ -573,7 +573,7 @@ theorem card_atomise_le : (atomise s F).parts.card ≤ 2 ^ F.card :=
   (card_le_of_subset <| erase_subset _ _).trans <| Finset.card_image_le.trans (card_powerset _).le
 #align finpartition.card_atomise_le Finpartition.card_atomise_le
 
-theorem bUnion_filter_atomise (ht : t ∈ F) (hts : t ⊆ s) :
+theorem bunionᵢ_filter_atomise (ht : t ∈ F) (hts : t ⊆ s) :
     ((atomise s F).parts.filter fun u => u ⊆ t ∧ u.Nonempty).bUnion id = t :=
   by
   ext a
@@ -583,7 +583,7 @@ theorem bUnion_filter_atomise (ht : t ∈ F) (hts : t ⊆ s) :
   obtain ⟨Q, hQ, rfl⟩ := (mem_atomise.1 hu).2
   rw [mem_filter] at hau hb
   rwa [← hb.2 _ ht, hau.2 _ ht]
-#align finpartition.bUnion_filter_atomise Finpartition.bUnion_filter_atomise
+#align finpartition.bUnion_filter_atomise Finpartition.bunionᵢ_filter_atomise
 
 theorem card_filter_atomise_le_two_pow (ht : t ∈ F) :
     ((atomise s F).parts.filter fun u => u ⊆ t ∧ u.Nonempty).card ≤ 2 ^ (F.card - 1) :=

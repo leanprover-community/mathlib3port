@@ -46,37 +46,37 @@ def homCongr {X Y X₁ Y₁ : C} (α : X ≅ X₁) (β : Y ≅ Y₁) : (X ⟶ Y)
 #align category_theory.iso.hom_congr CategoryTheory.Iso.homCongr
 
 @[simp]
-theorem hom_congr_apply {X Y X₁ Y₁ : C} (α : X ≅ X₁) (β : Y ≅ Y₁) (f : X ⟶ Y) :
+theorem homCongr_apply {X Y X₁ Y₁ : C} (α : X ≅ X₁) (β : Y ≅ Y₁) (f : X ⟶ Y) :
     α.homCongr β f = α.inv ≫ f ≫ β.Hom :=
   rfl
-#align category_theory.iso.hom_congr_apply CategoryTheory.Iso.hom_congr_apply
+#align category_theory.iso.hom_congr_apply CategoryTheory.Iso.homCongr_apply
 
-theorem hom_congr_comp {X Y Z X₁ Y₁ Z₁ : C} (α : X ≅ X₁) (β : Y ≅ Y₁) (γ : Z ≅ Z₁) (f : X ⟶ Y)
+theorem homCongr_comp {X Y Z X₁ Y₁ Z₁ : C} (α : X ≅ X₁) (β : Y ≅ Y₁) (γ : Z ≅ Z₁) (f : X ⟶ Y)
     (g : Y ⟶ Z) : α.homCongr γ (f ≫ g) = α.homCongr β f ≫ β.homCongr γ g := by simp
-#align category_theory.iso.hom_congr_comp CategoryTheory.Iso.hom_congr_comp
+#align category_theory.iso.hom_congr_comp CategoryTheory.Iso.homCongr_comp
 
 @[simp]
-theorem hom_congr_refl {X Y : C} (f : X ⟶ Y) : (Iso.refl X).homCongr (Iso.refl Y) f = f := by simp
-#align category_theory.iso.hom_congr_refl CategoryTheory.Iso.hom_congr_refl
+theorem homCongr_refl {X Y : C} (f : X ⟶ Y) : (Iso.refl X).homCongr (Iso.refl Y) f = f := by simp
+#align category_theory.iso.hom_congr_refl CategoryTheory.Iso.homCongr_refl
 
 @[simp]
-theorem hom_congr_trans {X₁ Y₁ X₂ Y₂ X₃ Y₃ : C} (α₁ : X₁ ≅ X₂) (β₁ : Y₁ ≅ Y₂) (α₂ : X₂ ≅ X₃)
+theorem homCongr_trans {X₁ Y₁ X₂ Y₂ X₃ Y₃ : C} (α₁ : X₁ ≅ X₂) (β₁ : Y₁ ≅ Y₂) (α₂ : X₂ ≅ X₃)
     (β₂ : Y₂ ≅ Y₃) (f : X₁ ⟶ Y₁) :
     (α₁ ≪≫ α₂).homCongr (β₁ ≪≫ β₂) f = (α₁.homCongr β₁).trans (α₂.homCongr β₂) f := by simp
-#align category_theory.iso.hom_congr_trans CategoryTheory.Iso.hom_congr_trans
+#align category_theory.iso.hom_congr_trans CategoryTheory.Iso.homCongr_trans
 
 @[simp]
-theorem hom_congr_symm {X₁ Y₁ X₂ Y₂ : C} (α : X₁ ≅ X₂) (β : Y₁ ≅ Y₂) :
+theorem homCongr_symm {X₁ Y₁ X₂ Y₂ : C} (α : X₁ ≅ X₂) (β : Y₁ ≅ Y₂) :
     (α.homCongr β).symm = α.symm.homCongr β.symm :=
   rfl
-#align category_theory.iso.hom_congr_symm CategoryTheory.Iso.hom_congr_symm
+#align category_theory.iso.hom_congr_symm CategoryTheory.Iso.homCongr_symm
 
 variable {X Y : C} (α : X ≅ Y)
 
 /-- An isomorphism between two objects defines a monoid isomorphism between their
 monoid of endomorphisms. -/
 def conj : EndCat X ≃* EndCat Y :=
-  { homCongr α α with map_mul' := fun f g => hom_congr_comp α α α g f }
+  { homCongr α α with map_mul' := fun f g => homCongr_comp α α α g f }
 #align category_theory.iso.conj CategoryTheory.Iso.conj
 
 theorem conj_apply (f : EndCat X) : α.conj f = α.inv ≫ f ≫ α.Hom :=
@@ -100,7 +100,7 @@ theorem refl_conj (f : EndCat X) : (Iso.refl X).conj f = f := by
 
 @[simp]
 theorem trans_conj {Z : C} (β : Y ≅ Z) (f : EndCat X) : (α ≪≫ β).conj f = β.conj (α.conj f) :=
-  hom_congr_trans α α β β f
+  homCongr_trans α α β β f
 #align category_theory.iso.trans_conj CategoryTheory.Iso.trans_conj
 
 @[simp]
@@ -124,40 +124,40 @@ def conjAut : AutCat X ≃* AutCat Y :=
     (Units.mapEquiv α.conj).trans <| AutCat.unitsEndEquivAut Y
 #align category_theory.iso.conj_Aut CategoryTheory.Iso.conjAut
 
-theorem conj_Aut_apply (f : AutCat X) : α.conjAut f = α.symm ≪≫ f ≪≫ α := by
+theorem conjAut_apply (f : AutCat X) : α.conjAut f = α.symm ≪≫ f ≪≫ α := by
   cases f <;> cases α <;> ext <;> rfl
-#align category_theory.iso.conj_Aut_apply CategoryTheory.Iso.conj_Aut_apply
+#align category_theory.iso.conj_Aut_apply CategoryTheory.Iso.conjAut_apply
 
 @[simp]
-theorem conj_Aut_hom (f : AutCat X) : (α.conjAut f).Hom = α.conj f.Hom :=
+theorem conjAut_hom (f : AutCat X) : (α.conjAut f).Hom = α.conj f.Hom :=
   rfl
-#align category_theory.iso.conj_Aut_hom CategoryTheory.Iso.conj_Aut_hom
+#align category_theory.iso.conj_Aut_hom CategoryTheory.Iso.conjAut_hom
 
 @[simp]
-theorem trans_conj_Aut {Z : C} (β : Y ≅ Z) (f : AutCat X) :
+theorem trans_conjAut {Z : C} (β : Y ≅ Z) (f : AutCat X) :
     (α ≪≫ β).conjAut f = β.conjAut (α.conjAut f) := by
   simp only [conj_Aut_apply, iso.trans_symm, iso.trans_assoc]
-#align category_theory.iso.trans_conj_Aut CategoryTheory.Iso.trans_conj_Aut
+#align category_theory.iso.trans_conj_Aut CategoryTheory.Iso.trans_conjAut
 
 @[simp]
-theorem conj_Aut_mul (f g : AutCat X) : α.conjAut (f * g) = α.conjAut f * α.conjAut g :=
+theorem conjAut_mul (f g : AutCat X) : α.conjAut (f * g) = α.conjAut f * α.conjAut g :=
   α.conjAut.map_mul f g
-#align category_theory.iso.conj_Aut_mul CategoryTheory.Iso.conj_Aut_mul
+#align category_theory.iso.conj_Aut_mul CategoryTheory.Iso.conjAut_mul
 
 @[simp]
-theorem conj_Aut_trans (f g : AutCat X) : α.conjAut (f ≪≫ g) = α.conjAut f ≪≫ α.conjAut g :=
-  conj_Aut_mul α g f
-#align category_theory.iso.conj_Aut_trans CategoryTheory.Iso.conj_Aut_trans
+theorem conjAut_trans (f g : AutCat X) : α.conjAut (f ≪≫ g) = α.conjAut f ≪≫ α.conjAut g :=
+  conjAut_mul α g f
+#align category_theory.iso.conj_Aut_trans CategoryTheory.Iso.conjAut_trans
 
 @[simp]
-theorem conj_Aut_pow (f : AutCat X) (n : ℕ) : α.conjAut (f ^ n) = α.conjAut f ^ n :=
+theorem conjAut_pow (f : AutCat X) (n : ℕ) : α.conjAut (f ^ n) = α.conjAut f ^ n :=
   α.conjAut.toMonoidHom.map_pow f n
-#align category_theory.iso.conj_Aut_pow CategoryTheory.Iso.conj_Aut_pow
+#align category_theory.iso.conj_Aut_pow CategoryTheory.Iso.conjAut_pow
 
 @[simp]
-theorem conj_Aut_zpow (f : AutCat X) (n : ℤ) : α.conjAut (f ^ n) = α.conjAut f ^ n :=
+theorem conjAut_zpow (f : AutCat X) (n : ℤ) : α.conjAut (f ^ n) = α.conjAut f ^ n :=
   α.conjAut.toMonoidHom.map_zpow f n
-#align category_theory.iso.conj_Aut_zpow CategoryTheory.Iso.conj_Aut_zpow
+#align category_theory.iso.conj_Aut_zpow CategoryTheory.Iso.conjAut_zpow
 
 end Iso
 
@@ -167,19 +167,19 @@ universe v₁ u₁
 
 variable {C : Type u} [Category.{v} C] {D : Type u₁} [Category.{v₁} D] (F : C ⥤ D)
 
-theorem map_hom_congr {X Y X₁ Y₁ : C} (α : X ≅ X₁) (β : Y ≅ Y₁) (f : X ⟶ Y) :
+theorem map_homCongr {X Y X₁ Y₁ : C} (α : X ≅ X₁) (β : Y ≅ Y₁) (f : X ⟶ Y) :
     F.map (Iso.homCongr α β f) = Iso.homCongr (F.mapIso α) (F.mapIso β) (F.map f) := by simp
-#align category_theory.functor.map_hom_congr CategoryTheory.Functor.map_hom_congr
+#align category_theory.functor.map_hom_congr CategoryTheory.Functor.map_homCongr
 
 theorem map_conj {X Y : C} (α : X ≅ Y) (f : EndCat X) :
     F.map (α.conj f) = (F.mapIso α).conj (F.map f) :=
-  map_hom_congr F α α f
+  map_homCongr F α α f
 #align category_theory.functor.map_conj CategoryTheory.Functor.map_conj
 
-theorem map_conj_Aut (F : C ⥤ D) {X Y : C} (α : X ≅ Y) (f : AutCat X) :
+theorem map_conjAut (F : C ⥤ D) {X Y : C} (α : X ≅ Y) (f : AutCat X) :
     F.mapIso (α.conjAut f) = (F.mapIso α).conjAut (F.mapIso f) := by
   ext <;> simp only [map_iso_hom, iso.conj_Aut_hom, F.map_conj]
-#align category_theory.functor.map_conj_Aut CategoryTheory.Functor.map_conj_Aut
+#align category_theory.functor.map_conj_Aut CategoryTheory.Functor.map_conjAut
 
 -- alternative proof: by simp only [iso.conj_Aut_apply, F.map_iso_trans, F.map_iso_symm]
 end Functor

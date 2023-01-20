@@ -221,7 +221,7 @@ theorem map_tensor {X Y X' Y' : C} (f : X ⟶ Y) (g : X' ⟶ Y') :
 #align category_theory.monoidal_functor.map_tensor CategoryTheory.MonoidalFunctor.map_tensor
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem map_left_unitor (X : C) :
+theorem map_leftUnitor (X : C) :
     F.map (λ_ X).Hom = inv (F.μ (𝟙_ C) X) ≫ (inv F.ε ⊗ 𝟙 (F.obj X)) ≫ (λ_ (F.obj X)).Hom :=
   by
   simp only [lax_monoidal_functor.left_unitality]
@@ -229,10 +229,10 @@ theorem map_left_unitor (X : C) :
     rw [← comp_tensor_id]
     simp
   simp
-#align category_theory.monoidal_functor.map_left_unitor CategoryTheory.MonoidalFunctor.map_left_unitor
+#align category_theory.monoidal_functor.map_left_unitor CategoryTheory.MonoidalFunctor.map_leftUnitor
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem map_right_unitor (X : C) :
+theorem map_rightUnitor (X : C) :
     F.map (ρ_ X).Hom = inv (F.μ X (𝟙_ C)) ≫ (𝟙 (F.obj X) ⊗ inv F.ε) ≫ (ρ_ (F.obj X)).Hom :=
   by
   simp only [lax_monoidal_functor.right_unitality]
@@ -240,7 +240,7 @@ theorem map_right_unitor (X : C) :
     rw [← id_tensor_comp]
     simp
   simp
-#align category_theory.monoidal_functor.map_right_unitor CategoryTheory.MonoidalFunctor.map_right_unitor
+#align category_theory.monoidal_functor.map_right_unitor CategoryTheory.MonoidalFunctor.map_rightUnitor
 
 /-- The tensorator as a natural isomorphism. -/
 noncomputable def μNatIso :
@@ -255,9 +255,9 @@ noncomputable def μNatIso :
 #align category_theory.monoidal_functor.μ_nat_iso CategoryTheory.MonoidalFunctor.μNatIso
 
 @[simp]
-theorem μ_iso_hom (X Y : C) : (F.μIso X Y).Hom = F.μ X Y :=
+theorem μIso_hom (X Y : C) : (F.μIso X Y).Hom = F.μ X Y :=
   rfl
-#align category_theory.monoidal_functor.μ_iso_hom CategoryTheory.MonoidalFunctor.μ_iso_hom
+#align category_theory.monoidal_functor.μ_iso_hom CategoryTheory.MonoidalFunctor.μIso_hom
 
 @[simp, reassoc.1]
 theorem μ_inv_hom_id (X Y : C) : (F.μIso X Y).inv ≫ F.μ X Y = 𝟙 _ :=
@@ -270,9 +270,9 @@ theorem μ_hom_inv_id (X Y : C) : F.μ X Y ≫ (F.μIso X Y).inv = 𝟙 _ :=
 #align category_theory.monoidal_functor.μ_hom_inv_id CategoryTheory.MonoidalFunctor.μ_hom_inv_id
 
 @[simp]
-theorem ε_iso_hom : F.εIso.Hom = F.ε :=
+theorem εIso_hom : F.εIso.Hom = F.ε :=
   rfl
-#align category_theory.monoidal_functor.ε_iso_hom CategoryTheory.MonoidalFunctor.ε_iso_hom
+#align category_theory.monoidal_functor.ε_iso_hom CategoryTheory.MonoidalFunctor.εIso_hom
 
 @[simp, reassoc.1]
 theorem ε_inv_hom_id : F.εIso.inv ≫ F.ε = 𝟙 _ :=
@@ -421,9 +421,9 @@ def prod' : LaxMonoidalFunctor C (D × E) :=
 #align category_theory.lax_monoidal_functor.prod' CategoryTheory.LaxMonoidalFunctor.prod'
 
 @[simp]
-theorem prod'_to_functor : (F.prod' G).toFunctor = F.toFunctor.prod' G.toFunctor :=
+theorem prod'_toFunctor : (F.prod' G).toFunctor = F.toFunctor.prod' G.toFunctor :=
   rfl
-#align category_theory.lax_monoidal_functor.prod'_to_functor CategoryTheory.LaxMonoidalFunctor.prod'_to_functor
+#align category_theory.lax_monoidal_functor.prod'_to_functor CategoryTheory.LaxMonoidalFunctor.prod'_toFunctor
 
 @[simp]
 theorem prod'_ε : (F.prod' G).ε = (F.ε, G.ε) :=
@@ -480,8 +480,8 @@ def prod : MonoidalFunctor (B × D) (C × E) :=
   {
     F.toLaxMonoidalFunctor.Prod
       G.toLaxMonoidalFunctor with
-    ε_is_iso := (is_iso_prod_iff C E).mpr ⟨ε_is_iso F, ε_is_iso G⟩
-    μ_is_iso := fun X Y => (is_iso_prod_iff C E).mpr ⟨μ_is_iso F X.1 Y.1, μ_is_iso G X.2 Y.2⟩ }
+    ε_is_iso := (isIso_prod_iff C E).mpr ⟨ε_isIso F, ε_isIso G⟩
+    μ_is_iso := fun X Y => (isIso_prod_iff C E).mpr ⟨μ_isIso F X.1 Y.1, μ_isIso G X.2 Y.2⟩ }
 #align category_theory.monoidal_functor.prod CategoryTheory.MonoidalFunctor.prod
 
 end MonoidalFunctor
@@ -498,10 +498,10 @@ def prod' : MonoidalFunctor C (D × E) :=
 #align category_theory.monoidal_functor.prod' CategoryTheory.MonoidalFunctor.prod'
 
 @[simp]
-theorem prod'_to_lax_monoidal_functor :
+theorem prod'_toLaxMonoidalFunctor :
     (F.prod' G).toLaxMonoidalFunctor = F.toLaxMonoidalFunctor.prod' G.toLaxMonoidalFunctor :=
   rfl
-#align category_theory.monoidal_functor.prod'_to_lax_monoidal_functor CategoryTheory.MonoidalFunctor.prod'_to_lax_monoidal_functor
+#align category_theory.monoidal_functor.prod'_to_lax_monoidal_functor CategoryTheory.MonoidalFunctor.prod'_toLaxMonoidalFunctor
 
 end MonoidalFunctor
 

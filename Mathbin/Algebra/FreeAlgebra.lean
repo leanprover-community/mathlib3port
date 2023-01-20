@@ -325,11 +325,11 @@ irreducible_def lift : (X → A) ≃ (FreeAlgebra R X →ₐ[R] A) :=
 #align free_algebra.lift FreeAlgebra.lift
 
 @[simp]
-theorem lift_aux_eq (f : X → A) : liftAux R f = lift R f :=
+theorem liftAux_eq (f : X → A) : liftAux R f = lift R f :=
   by
   rw [lift]
   rfl
-#align free_algebra.lift_aux_eq FreeAlgebra.lift_aux_eq
+#align free_algebra.lift_aux_eq FreeAlgebra.liftAux_eq
 
 @[simp]
 theorem lift_symm_apply (F : FreeAlgebra R X →ₐ[R] A) : (lift R).symm F = F ∘ ι R :=
@@ -398,7 +398,7 @@ noncomputable def equivMonoidAlgebraFreeMonoid :
   AlgEquiv.ofAlgHom (lift R fun x => (MonoidAlgebra.of R (FreeMonoid X)) (FreeMonoid.of x))
     ((MonoidAlgebra.lift R (FreeMonoid X) (FreeAlgebra R X)) (FreeMonoid.lift (ι R)))
     (by
-      apply MonoidAlgebra.alg_hom_ext; intro x
+      apply MonoidAlgebra.algHom_ext; intro x
       apply FreeMonoid.recOn x
       · simp
         rfl
@@ -420,26 +420,26 @@ def algebraMapInv : FreeAlgebra R X →ₐ[R] R :=
   lift R (0 : X → R)
 #align free_algebra.algebra_map_inv FreeAlgebra.algebraMapInv
 
-theorem algebra_map_left_inverse :
+theorem algebraMap_leftInverse :
     Function.LeftInverse algebraMapInv (algebraMap R <| FreeAlgebra R X) := fun x => by
   simp [algebra_map_inv]
-#align free_algebra.algebra_map_left_inverse FreeAlgebra.algebra_map_left_inverse
+#align free_algebra.algebra_map_left_inverse FreeAlgebra.algebraMap_leftInverse
 
 @[simp]
-theorem algebra_map_inj (x y : R) :
+theorem algebraMap_inj (x y : R) :
     algebraMap R (FreeAlgebra R X) x = algebraMap R (FreeAlgebra R X) y ↔ x = y :=
-  algebra_map_left_inverse.Injective.eq_iff
-#align free_algebra.algebra_map_inj FreeAlgebra.algebra_map_inj
+  algebraMap_leftInverse.Injective.eq_iff
+#align free_algebra.algebra_map_inj FreeAlgebra.algebraMap_inj
 
 @[simp]
-theorem algebra_map_eq_zero_iff (x : R) : algebraMap R (FreeAlgebra R X) x = 0 ↔ x = 0 :=
-  map_eq_zero_iff (algebraMap _ _) algebra_map_left_inverse.Injective
-#align free_algebra.algebra_map_eq_zero_iff FreeAlgebra.algebra_map_eq_zero_iff
+theorem algebraMap_eq_zero_iff (x : R) : algebraMap R (FreeAlgebra R X) x = 0 ↔ x = 0 :=
+  map_eq_zero_iff (algebraMap _ _) algebraMap_leftInverse.Injective
+#align free_algebra.algebra_map_eq_zero_iff FreeAlgebra.algebraMap_eq_zero_iff
 
 @[simp]
-theorem algebra_map_eq_one_iff (x : R) : algebraMap R (FreeAlgebra R X) x = 1 ↔ x = 1 :=
-  map_eq_one_iff (algebraMap _ _) algebra_map_left_inverse.Injective
-#align free_algebra.algebra_map_eq_one_iff FreeAlgebra.algebra_map_eq_one_iff
+theorem algebraMap_eq_one_iff (x : R) : algebraMap R (FreeAlgebra R X) x = 1 ↔ x = 1 :=
+  map_eq_one_iff (algebraMap _ _) algebraMap_leftInverse.Injective
+#align free_algebra.algebra_map_eq_one_iff FreeAlgebra.algebraMap_eq_one_iff
 
 -- this proof is copied from the approach in `free_abelian_group.of_injective`
 theorem ι_injective [Nontrivial R] : Function.Injective (ι R : X → FreeAlgebra R X) :=
@@ -450,7 +450,7 @@ theorem ι_injective [Nontrivial R] : Function.Injective (ι R : X → FreeAlgeb
     have hfx1 : f (ι R x) = 1 := (lift_ι_apply _ _).trans <| if_pos rfl
     have hfy1 : f (ι R y) = 1 := hoxy ▸ hfx1
     have hfy0 : f (ι R y) = 0 := (lift_ι_apply _ _).trans <| if_neg hxy
-    one_ne_zero <| hfy1.symm.trans hfy0
+    one_neZero <| hfy1.symm.trans hfy0
 #align free_algebra.ι_injective FreeAlgebra.ι_injective
 
 @[simp]
@@ -459,7 +459,7 @@ theorem ι_inj [Nontrivial R] (x y : X) : ι R x = ι R y ↔ x = y :=
 #align free_algebra.ι_inj FreeAlgebra.ι_inj
 
 @[simp]
-theorem ι_ne_algebra_map [Nontrivial R] (x : X) (r : R) : ι R x ≠ algebraMap R _ r := fun h =>
+theorem ι_ne_algebraMap [Nontrivial R] (x : X) (r : R) : ι R x ≠ algebraMap R _ r := fun h =>
   by
   let f0 : FreeAlgebra R X →ₐ[R] R := lift R 0
   let f1 : FreeAlgebra R X →ₐ[R] R := lift R 1
@@ -468,16 +468,16 @@ theorem ι_ne_algebra_map [Nontrivial R] (x : X) (r : R) : ι R x ≠ algebraMap
   rw [h, f0.commutes, Algebra.id.map_eq_self] at hf0
   rw [h, f1.commutes, Algebra.id.map_eq_self] at hf1
   exact zero_ne_one (hf0.symm.trans hf1)
-#align free_algebra.ι_ne_algebra_map FreeAlgebra.ι_ne_algebra_map
+#align free_algebra.ι_ne_algebra_map FreeAlgebra.ι_ne_algebraMap
 
 @[simp]
 theorem ι_ne_zero [Nontrivial R] (x : X) : ι R x ≠ 0 :=
-  ι_ne_algebra_map x 0
+  ι_ne_algebraMap x 0
 #align free_algebra.ι_ne_zero FreeAlgebra.ι_ne_zero
 
 @[simp]
 theorem ι_ne_one [Nontrivial R] (x : X) : ι R x ≠ 1 :=
-  ι_ne_algebra_map x 1
+  ι_ne_algebraMap x 1
 #align free_algebra.ι_ne_one FreeAlgebra.ι_ne_one
 
 end

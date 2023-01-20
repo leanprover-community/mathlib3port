@@ -112,27 +112,27 @@ def homeoOfIso {X Y : TopCat.{u}} (f : X ≅ Y) : X ≃ₜ Y
 #align Top.homeo_of_iso TopCat.homeoOfIso
 
 @[simp]
-theorem of_iso_of_homeo {X Y : TopCat.{u}} (f : X ≃ₜ Y) : homeoOfIso (isoOfHomeo f) = f :=
+theorem of_isoOfHomeo {X Y : TopCat.{u}} (f : X ≃ₜ Y) : homeoOfIso (isoOfHomeo f) = f :=
   by
   ext
   rfl
-#align Top.of_iso_of_homeo TopCat.of_iso_of_homeo
+#align Top.of_iso_of_homeo TopCat.of_isoOfHomeo
 
 @[simp]
-theorem of_homeo_of_iso {X Y : TopCat.{u}} (f : X ≅ Y) : isoOfHomeo (homeoOfIso f) = f :=
+theorem of_homeoOfIso {X Y : TopCat.{u}} (f : X ≅ Y) : isoOfHomeo (homeoOfIso f) = f :=
   by
   ext
   rfl
-#align Top.of_homeo_of_iso TopCat.of_homeo_of_iso
+#align Top.of_homeo_of_iso TopCat.of_homeoOfIso
 
 @[simp]
-theorem open_embedding_iff_comp_is_iso {X Y Z : TopCat} (f : X ⟶ Y) (g : Y ⟶ Z) [IsIso g] :
+theorem openEmbedding_iff_comp_isIso {X Y Z : TopCat} (f : X ⟶ Y) (g : Y ⟶ Z) [IsIso g] :
     OpenEmbedding (f ≫ g) ↔ OpenEmbedding f :=
   (TopCat.homeoOfIso (asIso g)).OpenEmbedding.of_comp_iff f
-#align Top.open_embedding_iff_comp_is_iso TopCat.open_embedding_iff_comp_is_iso
+#align Top.open_embedding_iff_comp_is_iso TopCat.openEmbedding_iff_comp_isIso
 
 @[simp]
-theorem open_embedding_iff_is_iso_comp {X Y Z : TopCat} (f : X ⟶ Y) (g : Y ⟶ Z) [IsIso f] :
+theorem openEmbedding_iff_isIso_comp {X Y Z : TopCat} (f : X ⟶ Y) (g : Y ⟶ Z) [IsIso f] :
     OpenEmbedding (f ≫ g) ↔ OpenEmbedding g :=
   by
   constructor
@@ -140,7 +140,7 @@ theorem open_embedding_iff_is_iso_comp {X Y Z : TopCat} (f : X ⟶ Y) (g : Y ⟶
     convert h.comp (TopCat.homeoOfIso (as_iso f).symm).OpenEmbedding
     exact congr_arg _ (is_iso.inv_hom_id_assoc f g).symm
   · exact fun h => h.comp (TopCat.homeoOfIso (as_iso f)).OpenEmbedding
-#align Top.open_embedding_iff_is_iso_comp TopCat.open_embedding_iff_is_iso_comp
+#align Top.open_embedding_iff_is_iso_comp TopCat.openEmbedding_iff_isIso_comp
 
 end TopCat
 

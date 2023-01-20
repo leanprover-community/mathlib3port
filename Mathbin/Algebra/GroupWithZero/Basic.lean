@@ -236,7 +236,7 @@ but is expected to have type
   forall {M₀ : Type.{u1}} [_inst_1 : MulZeroOneClass.{u1} M₀] [_inst_2 : Nontrivial.{u1} M₀] {a : M₀} {b : M₀}, (Eq.{succ u1} M₀ (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toMul.{u1} M₀ (MulZeroOneClass.toMulZeroClass.{u1} M₀ _inst_1))) a b) (OfNat.ofNat.{u1} M₀ 1 (One.toOfNat1.{u1} M₀ (MulOneClass.toOne.{u1} M₀ (MulZeroOneClass.toMulOneClass.{u1} M₀ _inst_1))))) -> (Ne.{succ u1} M₀ a (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MulZeroOneClass.toZero.{u1} M₀ _inst_1))))
 Case conversion may be inaccurate. Consider using '#align left_ne_zero_of_mul_eq_one left_ne_zero_of_mul_eq_oneₓ'. -/
 theorem left_ne_zero_of_mul_eq_one (h : a * b = 1) : a ≠ 0 :=
-  left_ne_zero_of_mul <| ne_zero_of_eq_one h
+  left_ne_zero_of_mul <| neZero_of_eq_one h
 #align left_ne_zero_of_mul_eq_one left_ne_zero_of_mul_eq_one
 
 /- warning: right_ne_zero_of_mul_eq_one -> right_ne_zero_of_mul_eq_one is a dubious translation:
@@ -246,7 +246,7 @@ but is expected to have type
   forall {M₀ : Type.{u1}} [_inst_1 : MulZeroOneClass.{u1} M₀] [_inst_2 : Nontrivial.{u1} M₀] {a : M₀} {b : M₀}, (Eq.{succ u1} M₀ (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toMul.{u1} M₀ (MulZeroOneClass.toMulZeroClass.{u1} M₀ _inst_1))) a b) (OfNat.ofNat.{u1} M₀ 1 (One.toOfNat1.{u1} M₀ (MulOneClass.toOne.{u1} M₀ (MulZeroOneClass.toMulOneClass.{u1} M₀ _inst_1))))) -> (Ne.{succ u1} M₀ b (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MulZeroOneClass.toZero.{u1} M₀ _inst_1))))
 Case conversion may be inaccurate. Consider using '#align right_ne_zero_of_mul_eq_one right_ne_zero_of_mul_eq_oneₓ'. -/
 theorem right_ne_zero_of_mul_eq_one (h : a * b = 1) : b ≠ 0 :=
-  right_ne_zero_of_mul <| ne_zero_of_eq_one h
+  right_ne_zero_of_mul <| neZero_of_eq_one h
 #align right_ne_zero_of_mul_eq_one right_ne_zero_of_mul_eq_one
 
 end

@@ -54,8 +54,8 @@ def uniformSpaceCore : UniformSpace.Core R
       le_infᵢ fun ε_pos =>
         principal_mono.2 fun ⟨x, y⟩ h => by simpa [show x = y from h, abv_zero abv]
   symm :=
-    tendsto_infi.2 fun ε =>
-      tendsto_infi.2 fun h =>
+    tendsto_infᵢ.2 fun ε =>
+      tendsto_infᵢ.2 fun h =>
         tendsto_infi' ε <|
           tendsto_infi' h <|
             tendsto_principal_principal.2 fun ⟨x, y⟩ h =>
@@ -66,7 +66,7 @@ def uniformSpaceCore : UniformSpace.Core R
     le_infᵢ fun ε =>
       le_infᵢ fun h =>
         lift'_le
-            (mem_infi_of_mem (ε / 2) <| mem_infi_of_mem (div_pos h zero_lt_two) (Subset.refl _)) <|
+            (mem_infᵢ_of_mem (ε / 2) <| mem_infᵢ_of_mem (div_pos h zero_lt_two) (Subset.refl _)) <|
           by
           have : ∀ a b c : R, abv (c - a) < ε / 2 → abv (b - c) < ε / 2 → abv (b - a) < ε :=
             fun a b c hac hcb =>

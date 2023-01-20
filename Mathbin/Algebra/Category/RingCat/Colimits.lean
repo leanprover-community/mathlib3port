@@ -469,14 +469,14 @@ def colimitIsColimit : IsColimit (colimitCocone F)
     rfl
 #align CommRing.colimits.colimit_is_colimit CommRingCat.Colimits.colimitIsColimit
 
-instance has_colimits_CommRing : HasColimits CommRingCat
+instance hasColimits_commRingCat : HasColimits CommRingCat
     where HasColimitsOfShape J 𝒥 :=
     {
       HasColimit := fun F =>
         has_colimit.mk
           { Cocone := colimit_cocone F
             IsColimit := colimit_is_colimit F } }
-#align CommRing.colimits.has_colimits_CommRing CommRingCat.Colimits.has_colimits_CommRing
+#align CommRing.colimits.has_colimits_CommRing CommRingCat.Colimits.hasColimits_commRingCat
 
 end CommRingCat.Colimits
 

@@ -67,21 +67,21 @@ variable {C} [MonoidalPreadditive C]
 
 attribute [local simp] monoidal_preadditive.tensor_add monoidal_preadditive.add_tensor
 
-instance tensor_left_additive (X : C) : (tensorLeft X).Additive where
-#align category_theory.tensor_left_additive CategoryTheory.tensor_left_additive
+instance tensorLeft_additive (X : C) : (tensorLeft X).Additive where
+#align category_theory.tensor_left_additive CategoryTheory.tensorLeft_additive
 
-instance tensor_right_additive (X : C) : (tensorRight X).Additive where
-#align category_theory.tensor_right_additive CategoryTheory.tensor_right_additive
+instance tensorRight_additive (X : C) : (tensorRight X).Additive where
+#align category_theory.tensor_right_additive CategoryTheory.tensorRight_additive
 
-instance tensoring_left_additive (X : C) : ((tensoringLeft C).obj X).Additive where
-#align category_theory.tensoring_left_additive CategoryTheory.tensoring_left_additive
+instance tensoringLeft_additive (X : C) : ((tensoringLeft C).obj X).Additive where
+#align category_theory.tensoring_left_additive CategoryTheory.tensoringLeft_additive
 
-instance tensoring_right_additive (X : C) : ((tensoringRight C).obj X).Additive where
-#align category_theory.tensoring_right_additive CategoryTheory.tensoring_right_additive
+instance tensoringRight_additive (X : C) : ((tensoringRight C).obj X).Additive where
+#align category_theory.tensoring_right_additive CategoryTheory.tensoringRight_additive
 
 /-- A faithful additive monoidal functor to a monoidal preadditive category
 ensures that the domain is monoidal preadditive. -/
-theorem monoidal_preadditive_of_faithful {D} [Category D] [Preadditive D] [MonoidalCategory D]
+theorem monoidalPreadditive_of_faithful {D} [Category D] [Preadditive D] [MonoidalCategory D]
     (F : MonoidalFunctor D C) [Faithful F.toFunctor] [F.toFunctor.Additive] :
     MonoidalPreadditive D :=
   { tensor_zero' := by
@@ -102,7 +102,7 @@ theorem monoidal_preadditive_of_faithful {D} [Category D] [Preadditive D] [Monoi
       apply F.to_functor.map_injective
       simp only [F.map_tensor, F.to_functor.map_add, preadditive.comp_add, preadditive.add_comp,
         monoidal_preadditive.add_tensor] }
-#align category_theory.monoidal_preadditive_of_faithful CategoryTheory.monoidal_preadditive_of_faithful
+#align category_theory.monoidal_preadditive_of_faithful CategoryTheory.monoidalPreadditive_of_faithful
 
 open BigOperators
 
@@ -172,25 +172,25 @@ def leftDistributor {J : Type} [Fintype J] (X : C) (f : J → C) : X ⊗ ⨁ f �
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem left_distributor_hom {J : Type} [Fintype J] (X : C) (f : J → C) :
+theorem leftDistributor_hom {J : Type} [Fintype J] (X : C) (f : J → C) :
     (leftDistributor X f).Hom = ∑ j : J, (𝟙 X ⊗ biproduct.π f j) ≫ biproduct.ι _ j :=
   by
   ext; dsimp [tensor_left, left_distributor]
   simp [preadditive.sum_comp, biproduct.ι_π, comp_dite]
-#align category_theory.left_distributor_hom CategoryTheory.left_distributor_hom
+#align category_theory.left_distributor_hom CategoryTheory.leftDistributor_hom
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem left_distributor_inv {J : Type} [Fintype J] (X : C) (f : J → C) :
+theorem leftDistributor_inv {J : Type} [Fintype J] (X : C) (f : J → C) :
     (leftDistributor X f).inv = ∑ j : J, biproduct.π _ j ≫ (𝟙 X ⊗ biproduct.ι f j) :=
   by
   ext; dsimp [tensor_left, left_distributor]
   simp [preadditive.comp_sum, biproduct.ι_π_assoc, dite_comp]
-#align category_theory.left_distributor_inv CategoryTheory.left_distributor_inv
+#align category_theory.left_distributor_inv CategoryTheory.leftDistributor_inv
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem left_distributor_assoc {J : Type} [Fintype J] (X Y : C) (f : J → C) :
+theorem leftDistributor_assoc {J : Type} [Fintype J] (X Y : C) (f : J → C) :
     (asIso (𝟙 X) ⊗ leftDistributor Y f) ≪≫ leftDistributor X _ =
       (α_ X Y (⨁ f)).symm ≪≫ leftDistributor (X ⊗ Y) f ≪≫ biproduct.mapIso fun j => α_ X Y _ :=
   by
@@ -204,7 +204,7 @@ theorem left_distributor_assoc {J : Type} [Fintype J] (X Y : C) (f : J → C) :
   simp only [category.comp_id, comp_zero, monoidal_preadditive.tensor_zero, eq_to_hom_refl,
     tensor_id, if_true, dif_ctx_congr, Finset.sum_congr, Finset.mem_univ, Finset.sum_dite_eq']
   simp only [← tensor_id, associator_naturality, iso.inv_hom_id_assoc]
-#align category_theory.left_distributor_assoc CategoryTheory.left_distributor_assoc
+#align category_theory.left_distributor_assoc CategoryTheory.leftDistributor_assoc
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -215,25 +215,25 @@ def rightDistributor {J : Type} [Fintype J] (X : C) (f : J → C) : (⨁ f) ⊗ 
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem right_distributor_hom {J : Type} [Fintype J] (X : C) (f : J → C) :
+theorem rightDistributor_hom {J : Type} [Fintype J] (X : C) (f : J → C) :
     (rightDistributor X f).Hom = ∑ j : J, (biproduct.π f j ⊗ 𝟙 X) ≫ biproduct.ι _ j :=
   by
   ext; dsimp [tensor_right, right_distributor]
   simp [preadditive.sum_comp, biproduct.ι_π, comp_dite]
-#align category_theory.right_distributor_hom CategoryTheory.right_distributor_hom
+#align category_theory.right_distributor_hom CategoryTheory.rightDistributor_hom
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem right_distributor_inv {J : Type} [Fintype J] (X : C) (f : J → C) :
+theorem rightDistributor_inv {J : Type} [Fintype J] (X : C) (f : J → C) :
     (rightDistributor X f).inv = ∑ j : J, biproduct.π _ j ≫ (biproduct.ι f j ⊗ 𝟙 X) :=
   by
   ext; dsimp [tensor_right, right_distributor]
   simp [preadditive.comp_sum, biproduct.ι_π_assoc, dite_comp]
-#align category_theory.right_distributor_inv CategoryTheory.right_distributor_inv
+#align category_theory.right_distributor_inv CategoryTheory.rightDistributor_inv
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem right_distributor_assoc {J : Type} [Fintype J] (X Y : C) (f : J → C) :
+theorem rightDistributor_assoc {J : Type} [Fintype J] (X Y : C) (f : J → C) :
     (rightDistributor X f ⊗ asIso (𝟙 Y)) ≪≫ rightDistributor Y _ =
       α_ (⨁ f) X Y ≪≫ rightDistributor (X ⊗ Y) f ≪≫ biproduct.mapIso fun j => (α_ _ X Y).symm :=
   by
@@ -248,11 +248,11 @@ theorem right_distributor_assoc {J : Type} [Fintype J] (X Y : C) (f : J → C) :
     monoidal_preadditive.zero_tensor, if_true, dif_ctx_congr, Finset.mem_univ, Finset.sum_congr,
     Finset.sum_dite_eq']
   simp only [← tensor_id, associator_inv_naturality, iso.hom_inv_id_assoc]
-#align category_theory.right_distributor_assoc CategoryTheory.right_distributor_assoc
+#align category_theory.right_distributor_assoc CategoryTheory.rightDistributor_assoc
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem left_distributor_right_distributor_assoc {J : Type _} [Fintype J] (X Y : C) (f : J → C) :
+theorem leftDistributor_rightDistributor_assoc {J : Type _} [Fintype J] (X Y : C) (f : J → C) :
     (leftDistributor X f ⊗ asIso (𝟙 Y)) ≪≫ rightDistributor Y _ =
       α_ X (⨁ f) Y ≪≫
         (asIso (𝟙 X) ⊗ rightDistributor Y _) ≪≫
@@ -271,7 +271,7 @@ theorem left_distributor_right_distributor_assoc {J : Type _} [Fintype J] (X Y :
     eq_to_hom_refl, tensor_id, if_true, dif_ctx_congr, Finset.sum_congr, Finset.mem_univ,
     Finset.sum_dite_eq']
   simp only [associator_inv_naturality, iso.hom_inv_id_assoc]
-#align category_theory.left_distributor_right_distributor_assoc CategoryTheory.left_distributor_right_distributor_assoc
+#align category_theory.left_distributor_right_distributor_assoc CategoryTheory.leftDistributor_rightDistributor_assoc
 
 end CategoryTheory
 

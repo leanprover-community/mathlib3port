@@ -56,7 +56,7 @@ def splitCenterBox (I : Box ι) (s : Set ι) : Box ι
     split_ifs <;> simp only [left_lt_add_div_two, add_div_two_lt_right, I.lower_lt_upper]
 #align box_integral.box.split_center_box BoxIntegral.Box.splitCenterBox
 
-theorem mem_split_center_box {s : Set ι} {y : ι → ℝ} :
+theorem mem_splitCenterBox {s : Set ι} {y : ι → ℝ} :
     y ∈ I.splitCenterBox s ↔ y ∈ I ∧ ∀ i, (I.lower i + I.upper i) / 2 < y i ↔ i ∈ s :=
   by
   simp only [split_center_box, mem_def, ← forall_and]
@@ -67,13 +67,13 @@ theorem mem_split_center_box {s : Set ι} {y : ι → ℝ} :
       ⟨H.2, H.1.2⟩⟩,
     ⟨fun H => ⟨⟨H.1, H.2.trans (add_div_two_lt_right.2 (I.lower_lt_upper i)).le⟩, H.2⟩, fun H =>
       ⟨H.1.1, H.2⟩⟩]
-#align box_integral.box.mem_split_center_box BoxIntegral.Box.mem_split_center_box
+#align box_integral.box.mem_split_center_box BoxIntegral.Box.mem_splitCenterBox
 
-theorem split_center_box_le (I : Box ι) (s : Set ι) : I.splitCenterBox s ≤ I := fun x hx =>
-  (mem_split_center_box.1 hx).1
-#align box_integral.box.split_center_box_le BoxIntegral.Box.split_center_box_le
+theorem splitCenterBox_le (I : Box ι) (s : Set ι) : I.splitCenterBox s ≤ I := fun x hx =>
+  (mem_splitCenterBox.1 hx).1
+#align box_integral.box.split_center_box_le BoxIntegral.Box.splitCenterBox_le
 
-theorem disjoint_split_center_box (I : Box ι) {s t : Set ι} (h : s ≠ t) :
+theorem disjoint_splitCenterBox (I : Box ι) {s t : Set ι} (h : s ≠ t) :
     Disjoint (I.splitCenterBox s : Set (ι → ℝ)) (I.splitCenterBox t) :=
   by
   rw [disjoint_iff_inf_le]
@@ -81,37 +81,36 @@ theorem disjoint_split_center_box (I : Box ι) {s t : Set ι} (h : s ≠ t) :
   ext i
   rw [mem_coe, mem_split_center_box] at hs ht
   rw [← hs.2, ← ht.2]
-#align box_integral.box.disjoint_split_center_box BoxIntegral.Box.disjoint_split_center_box
+#align box_integral.box.disjoint_split_center_box BoxIntegral.Box.disjoint_splitCenterBox
 
-theorem injective_split_center_box (I : Box ι) : Injective I.splitCenterBox := fun s t H =>
+theorem injective_splitCenterBox (I : Box ι) : Injective I.splitCenterBox := fun s t H =>
   by_contra fun Hne => (I.disjoint_split_center_box Hne).Ne (nonempty_coe _).ne_empty (H ▸ rfl)
-#align box_integral.box.injective_split_center_box BoxIntegral.Box.injective_split_center_box
+#align box_integral.box.injective_split_center_box BoxIntegral.Box.injective_splitCenterBox
 
 @[simp]
-theorem exists_mem_split_center_box {I : Box ι} {x : ι → ℝ} :
-    (∃ s, x ∈ I.splitCenterBox s) ↔ x ∈ I :=
+theorem exists_mem_splitCenterBox {I : Box ι} {x : ι → ℝ} : (∃ s, x ∈ I.splitCenterBox s) ↔ x ∈ I :=
   ⟨fun ⟨s, hs⟩ => I.split_center_box_le s hs, fun hx =>
-    ⟨{ i | (I.lower i + I.upper i) / 2 < x i }, mem_split_center_box.2 ⟨hx, fun i => Iff.rfl⟩⟩⟩
-#align box_integral.box.exists_mem_split_center_box BoxIntegral.Box.exists_mem_split_center_box
+    ⟨{ i | (I.lower i + I.upper i) / 2 < x i }, mem_splitCenterBox.2 ⟨hx, fun i => Iff.rfl⟩⟩⟩
+#align box_integral.box.exists_mem_split_center_box BoxIntegral.Box.exists_mem_splitCenterBox
 
 /-- `box_integral.box.split_center_box` bundled as a `function.embedding`. -/
 @[simps]
 def splitCenterBoxEmb (I : Box ι) : Set ι ↪ Box ι :=
-  ⟨splitCenterBox I, injective_split_center_box I⟩
+  ⟨splitCenterBox I, injective_splitCenterBox I⟩
 #align box_integral.box.split_center_box_emb BoxIntegral.Box.splitCenterBoxEmb
 
 @[simp]
-theorem Union_coe_split_center_box (I : Box ι) : (⋃ s, (I.splitCenterBox s : Set (ι → ℝ))) = I :=
+theorem unionᵢ_coe_splitCenterBox (I : Box ι) : (⋃ s, (I.splitCenterBox s : Set (ι → ℝ))) = I :=
   by
   ext x
   simp
-#align box_integral.box.Union_coe_split_center_box BoxIntegral.Box.Union_coe_split_center_box
+#align box_integral.box.Union_coe_split_center_box BoxIntegral.Box.unionᵢ_coe_splitCenterBox
 
 @[simp]
-theorem upper_sub_lower_split_center_box (I : Box ι) (s : Set ι) (i : ι) :
+theorem upper_sub_lower_splitCenterBox (I : Box ι) (s : Set ι) (i : ι) :
     (I.splitCenterBox s).upper i - (I.splitCenterBox s).lower i = (I.upper i - I.lower i) / 2 := by
   by_cases hs : i ∈ s <;> field_simp [split_center_box, hs, mul_two, two_mul]
-#align box_integral.box.upper_sub_lower_split_center_box BoxIntegral.Box.upper_sub_lower_split_center_box
+#align box_integral.box.upper_sub_lower_split_center_box BoxIntegral.Box.upper_sub_lower_splitCenterBox
 
 /-- Let `p` be a predicate on `box ι`, let `I` be a box. Suppose that the following two properties
 hold true.
@@ -174,19 +173,18 @@ theorem subbox_induction_on' {p : Box ι → Prop} (I : Box ι)
   have hJl_mem : ∀ m, (J m).lower ∈ I.Icc := fun m => le_iff_Icc.1 (hJle m) (J m).lower_mem_Icc
   have hJu_mem : ∀ m, (J m).upper ∈ I.Icc := fun m => le_iff_Icc.1 (hJle m) (J m).upper_mem_Icc
   have hJlz : tendsto (fun m => (J m).lower) at_top (𝓝 z) :=
-    tendsto_at_top_csupr (antitone_lower.comp hJmono) ⟨I.upper, fun x ⟨m, hm⟩ => hm ▸ (hJl_mem m).2⟩
+    tendsto_atTop_csupr (antitone_lower.comp hJmono) ⟨I.upper, fun x ⟨m, hm⟩ => hm ▸ (hJl_mem m).2⟩
   have hJuz : tendsto (fun m => (J m).upper) at_top (𝓝 z) :=
     by
     suffices tendsto (fun m => (J m).upper - (J m).lower) at_top (𝓝 0) by simpa using hJlz.add this
     refine' tendsto_pi_nhds.2 fun i => _
-    simpa [hJsub] using
-      tendsto_const_nhds.div_at_top (tendsto_pow_at_top_at_top_of_one_lt one_lt_two)
+    simpa [hJsub] using tendsto_const_nhds.div_at_top (tendsto_pow_atTop_atTop_of_one_lt one_lt_two)
   replace hJlz : tendsto (fun m => (J m).lower) at_top (𝓝[Icc I.lower I.upper] z)
   exact
-    tendsto_nhds_within_of_tendsto_nhds_of_eventually_within _ hJlz (eventually_of_forall hJl_mem)
+    tendsto_nhdsWithin_of_tendsto_nhds_of_eventually_within _ hJlz (eventually_of_forall hJl_mem)
   replace hJuz : tendsto (fun m => (J m).upper) at_top (𝓝[Icc I.lower I.upper] z)
   exact
-    tendsto_nhds_within_of_tendsto_nhds_of_eventually_within _ hJuz (eventually_of_forall hJu_mem)
+    tendsto_nhdsWithin_of_tendsto_nhds_of_eventually_within _ hJuz (eventually_of_forall hJu_mem)
   rcases H_nhds z (h0 ▸ hzJ 0) with ⟨U, hUz, hU⟩
   rcases(tendsto_lift'.1 (hJlz.Icc hJuz) U hUz).exists with ⟨m, hUm⟩
   exact hJp m (hU (J m) (hJle m) m (hzJ m) hUm (hJsub m))

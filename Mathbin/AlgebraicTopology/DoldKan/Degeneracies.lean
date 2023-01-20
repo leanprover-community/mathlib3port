@@ -56,7 +56,7 @@ theorem HigherFacesVanish.comp_σ {Y : C} {X : SimplicialObject C} {n b q : ℕ}
     linarith
 #align algebraic_topology.dold_kan.higher_faces_vanish.comp_σ AlgebraicTopology.DoldKan.HigherFacesVanish.comp_σ
 
-theorem σ_comp_P_eq_zero (X : SimplicialObject C) {n q : ℕ} (i : Fin (n + 1)) (hi : n + 1 ≤ i + q) :
+theorem σ_comp_p_eq_zero (X : SimplicialObject C) {n q : ℕ} (i : Fin (n + 1)) (hi : n + 1 ≤ i + q) :
     X.σ i ≫ (p q).f (n + 1) = 0 :=
   by
   induction' q with q hq generalizing i hi
@@ -78,7 +78,7 @@ theorem σ_comp_P_eq_zero (X : SimplicialObject C) {n q : ℕ} (i : Fin (n + 1))
         rw [show q = 0 by linarith]
         unfold P
         simp only [id_comp, HomologicalComplex.add_f_apply, comp_add, HomologicalComplex.id_f, Hσ,
-          Homotopy.null_homotopic_map'_f (c_mk 2 1 rfl) (c_mk 1 0 rfl),
+          Homotopy.nullHomotopicMap'_f (c_mk 2 1 rfl) (c_mk 1 0 rfl),
           alternating_face_map_complex.obj_d_eq]
         erw [hσ'_eq' (zero_add 0).symm, hσ'_eq' (add_zero 1).symm, comp_id, Fin.sum_univ_two,
           Fin.sum_univ_succ, Fin.sum_univ_two]
@@ -120,18 +120,18 @@ theorem σ_comp_P_eq_zero (X : SimplicialObject C) {n q : ℕ} (i : Fin (n + 1))
             comp_zero]
           simp only [Fin.rev_eq j hk.symm, Fin.le_iff_val_le_val, Fin.val_mk]
           linarith
-#align algebraic_topology.dold_kan.σ_comp_P_eq_zero AlgebraicTopology.DoldKan.σ_comp_P_eq_zero
+#align algebraic_topology.dold_kan.σ_comp_P_eq_zero AlgebraicTopology.DoldKan.σ_comp_p_eq_zero
 
 @[simp, reassoc.1]
-theorem σ_comp_P_infty (X : SimplicialObject C) {n : ℕ} (i : Fin (n + 1)) :
+theorem σ_comp_pInfty (X : SimplicialObject C) {n : ℕ} (i : Fin (n + 1)) :
     X.σ i ≫ pInfty.f (n + 1) = 0 :=
   by
   rw [P_infty_f, σ_comp_P_eq_zero X i]
   simp only [le_add_iff_nonneg_left, zero_le]
-#align algebraic_topology.dold_kan.σ_comp_P_infty AlgebraicTopology.DoldKan.σ_comp_P_infty
+#align algebraic_topology.dold_kan.σ_comp_P_infty AlgebraicTopology.DoldKan.σ_comp_pInfty
 
 @[reassoc.1]
-theorem degeneracy_comp_P_infty (X : SimplicialObject C) (n : ℕ) {Δ' : SimplexCategory}
+theorem degeneracy_comp_pInfty (X : SimplicialObject C) (n : ℕ) {Δ' : SimplexCategory}
     (θ : [n] ⟶ Δ') (hθ : ¬Mono θ) : X.map θ.op ≫ pInfty.f n = 0 :=
   by
   rw [SimplexCategory.mono_iff_injective] at hθ
@@ -144,7 +144,7 @@ theorem degeneracy_comp_P_infty (X : SimplicialObject C) (n : ℕ) {Δ' : Simple
   · obtain ⟨i, α, h⟩ := SimplexCategory.eq_σ_comp_of_not_injective θ hθ
     rw [h, op_comp, X.map_comp, assoc, show X.map (SimplexCategory.σ i).op = X.σ i by rfl,
       σ_comp_P_infty, comp_zero]
-#align algebraic_topology.dold_kan.degeneracy_comp_P_infty AlgebraicTopology.DoldKan.degeneracy_comp_P_infty
+#align algebraic_topology.dold_kan.degeneracy_comp_P_infty AlgebraicTopology.DoldKan.degeneracy_comp_pInfty
 
 end DoldKan
 

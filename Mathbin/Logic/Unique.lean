@@ -65,23 +65,19 @@ structure Unique (α : Sort u) extends Inhabited α where
 
 attribute [class] Unique
 
-#print unique_iff_exists_unique /-
-theorem unique_iff_exists_unique (α : Sort u) : Nonempty (Unique α) ↔ ∃! a : α, True :=
+theorem unique_iff_existsUnique (α : Sort u) : Nonempty (Unique α) ↔ ∃! a : α, True :=
   ⟨fun ⟨u⟩ => ⟨u.default, trivial, fun a _ => u.uniq a⟩, fun ⟨a, _, h⟩ =>
     ⟨⟨⟨a⟩, fun _ => h _ trivial⟩⟩⟩
-#align unique_iff_exists_unique unique_iff_exists_unique
--/
+#align unique_iff_exists_unique unique_iff_existsUnique
 
-#print unique_subtype_iff_exists_unique /-
-theorem unique_subtype_iff_exists_unique {α} (p : α → Prop) :
+theorem unique_subtype_iff_existsUnique {α} (p : α → Prop) :
     Nonempty (Unique (Subtype p)) ↔ ∃! a, p a :=
   ⟨fun ⟨u⟩ => ⟨u.default.1, u.default.2, fun a h => congr_arg Subtype.val (u.uniq ⟨a, h⟩)⟩,
     fun ⟨a, ha, he⟩ =>
     ⟨⟨⟨⟨a, ha⟩⟩, fun ⟨b, hb⟩ => by
         congr
         exact he b hb⟩⟩⟩
-#align unique_subtype_iff_exists_unique unique_subtype_iff_exists_unique
--/
+#align unique_subtype_iff_exists_unique unique_subtype_iff_existsUnique
 
 #print uniqueOfSubsingleton /-
 /-- Given an explicit `a : α` with `[subsingleton α]`, we can construct
@@ -280,12 +276,10 @@ theorem eq_const_of_unique [Unique α] (f : α → β) : f = Function.const α (
   rw [Subsingleton.elim x default]
 #align eq_const_of_unique eq_const_of_unique
 
-#print heq_const_of_unique /-
-theorem heq_const_of_unique [Unique α] {β : α → Sort v} (f : ∀ a, β a) :
+theorem hEq_const_of_unique [Unique α] {β : α → Sort v} (f : ∀ a, β a) :
     HEq f (Function.const α (f default)) :=
   Function.hfunext rfl fun i _ _ => by rw [Subsingleton.elim i default]
-#align heq_const_of_unique heq_const_of_unique
--/
+#align heq_const_of_unique hEq_const_of_unique
 
 namespace Function
 

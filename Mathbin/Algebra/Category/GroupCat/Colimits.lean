@@ -315,14 +315,14 @@ def colimitCoconeIsColimit : IsColimit (colimitCocone F)
     rfl
 #align AddCommGroup.colimits.colimit_cocone_is_colimit AddCommGroupCat.Colimits.colimitCoconeIsColimit
 
-instance has_colimits_AddCommGroup : HasColimits AddCommGroupCat
+instance hasColimits_addCommGroupCat : HasColimits AddCommGroupCat
     where HasColimitsOfShape J 𝒥 :=
     {
       HasColimit := fun F =>
         has_colimit.mk
           { Cocone := colimit_cocone F
             IsColimit := colimit_cocone_is_colimit F } }
-#align AddCommGroup.colimits.has_colimits_AddCommGroup AddCommGroupCat.Colimits.has_colimits_AddCommGroup
+#align AddCommGroup.colimits.has_colimits_AddCommGroup AddCommGroupCat.Colimits.hasColimits_addCommGroupCat
 
 end AddCommGroupCat.Colimits
 

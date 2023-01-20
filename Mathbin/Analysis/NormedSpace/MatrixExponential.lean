@@ -72,10 +72,10 @@ open Matrix BigOperators
 section HacksForPiInstanceSearch
 
 /-- A special case of `pi.topological_ring` for when `R` is not dependently typed. -/
-instance Function.topological_ring (I : Type _) (R : Type _) [NonUnitalRing R] [TopologicalSpace R]
+instance Function.topologicalRing (I : Type _) (R : Type _) [NonUnitalRing R] [TopologicalSpace R]
     [TopologicalRing R] : TopologicalRing (I → R) :=
-  Pi.topological_ring
-#align function.topological_ring Function.topological_ring
+  Pi.topologicalRing
+#align function.topological_ring Function.topologicalRing
 
 /-- A special case of `function.algebra` for when A is a `ring` not a `semiring` -/
 instance Function.algebraRing (I : Type _) {R : Type _} (A : Type _) [CommSemiring R] [Ring A]
@@ -91,10 +91,10 @@ instance Pi.matrixAlgebra (I R A : Type _) (m : I → Type _) [CommSemiring R] [
 #align pi.matrix_algebra Pi.matrixAlgebra
 
 /-- A special case of `pi.topological_ring` for when `f = λ i, matrix (m i) (m i) A`. -/
-instance Pi.matrix_topological_ring (I A : Type _) (m : I → Type _) [Ring A] [TopologicalSpace A]
+instance Pi.matrix_topologicalRing (I A : Type _) (m : I → Type _) [Ring A] [TopologicalSpace A]
     [TopologicalRing A] [∀ i, Fintype (m i)] : TopologicalRing (∀ i, Matrix (m i) (m i) A) :=
-  @Pi.topological_ring _ (fun i => Matrix (m i) (m i) A) _ _ fun i => Matrix.topological_ring
-#align pi.matrix_topological_ring Pi.matrix_topological_ring
+  @Pi.topologicalRing _ (fun i => Matrix (m i) (m i) A) _ _ fun i => Matrix.topologicalRing
+#align pi.matrix_topological_ring Pi.matrix_topologicalRing
 
 end HacksForPiInstanceSearch
 
@@ -114,20 +114,20 @@ theorem exp_diagonal (v : m → 𝔸) : exp 𝕂 (diagonal v) = diagonal (exp �
   simp_rw [exp_eq_tsum, diagonal_pow, ← diagonal_smul, ← diagonal_tsum]
 #align matrix.exp_diagonal Matrix.exp_diagonal
 
-theorem exp_block_diagonal (v : m → Matrix n n 𝔸) :
+theorem exp_blockDiagonal (v : m → Matrix n n 𝔸) :
     exp 𝕂 (blockDiagonal v) = blockDiagonal (exp 𝕂 v) := by
   simp_rw [exp_eq_tsum, ← block_diagonal_pow, ← block_diagonal_smul, ← block_diagonal_tsum]
-#align matrix.exp_block_diagonal Matrix.exp_block_diagonal
+#align matrix.exp_block_diagonal Matrix.exp_blockDiagonal
 
-theorem exp_block_diagonal' (v : ∀ i, Matrix (n' i) (n' i) 𝔸) :
+theorem exp_blockDiagonal' (v : ∀ i, Matrix (n' i) (n' i) 𝔸) :
     exp 𝕂 (blockDiagonal' v) = blockDiagonal' (exp 𝕂 v) := by
   simp_rw [exp_eq_tsum, ← block_diagonal'_pow, ← block_diagonal'_smul, ← block_diagonal'_tsum]
-#align matrix.exp_block_diagonal' Matrix.exp_block_diagonal'
+#align matrix.exp_block_diagonal' Matrix.exp_blockDiagonal'
 
-theorem exp_conj_transpose [StarRing 𝔸] [HasContinuousStar 𝔸] (A : Matrix m m 𝔸) :
+theorem exp_conjTranspose [StarRing 𝔸] [HasContinuousStar 𝔸] (A : Matrix m m 𝔸) :
     exp 𝕂 Aᴴ = (exp 𝕂 A)ᴴ :=
   (star_exp A).symm
-#align matrix.exp_conj_transpose Matrix.exp_conj_transpose
+#align matrix.exp_conj_transpose Matrix.exp_conjTranspose
 
 end Ring
 
@@ -177,13 +177,13 @@ theorem exp_nsmul (n : ℕ) (A : Matrix m m 𝔸) : exp 𝕂 (n • A) = exp �
   exact exp_nsmul n A
 #align matrix.exp_nsmul Matrix.exp_nsmul
 
-theorem is_unit_exp (A : Matrix m m 𝔸) : IsUnit (exp 𝕂 A) :=
+theorem isUnit_exp (A : Matrix m m 𝔸) : IsUnit (exp 𝕂 A) :=
   by
   letI : SemiNormedRing (Matrix m m 𝔸) := Matrix.linftyOpSemiNormedRing
   letI : NormedRing (Matrix m m 𝔸) := Matrix.linftyOpNormedRing
   letI : NormedAlgebra 𝕂 (Matrix m m 𝔸) := Matrix.linftyOpNormedAlgebra
-  exact is_unit_exp _ A
-#align matrix.is_unit_exp Matrix.is_unit_exp
+  exact isUnit_exp _ A
+#align matrix.is_unit_exp Matrix.isUnit_exp
 
 theorem exp_units_conj (U : (Matrix m m 𝔸)ˣ) (A : Matrix m m 𝔸) :
     exp 𝕂 (↑U ⬝ A ⬝ ↑U⁻¹ : Matrix m m 𝔸) = ↑U ⬝ exp 𝕂 A ⬝ ↑U⁻¹ :=
@@ -219,7 +219,7 @@ theorem exp_zsmul (z : ℤ) (A : Matrix m m 𝔸) : exp 𝕂 (z • A) = exp �
   by
   obtain ⟨n, rfl | rfl⟩ := z.eq_coe_or_neg
   · rw [zpow_ofNat, coe_nat_zsmul, exp_nsmul]
-  · have : IsUnit (exp 𝕂 A).det := (Matrix.is_unit_iff_is_unit_det _).mp (is_unit_exp _ _)
+  · have : IsUnit (exp 𝕂 A).det := (Matrix.isUnit_iff_isUnit_det _).mp (isUnit_exp _ _)
     rw [Matrix.zpow_neg this, zpow_ofNat, neg_smul, exp_neg, coe_nat_zsmul, exp_nsmul]
 #align matrix.exp_zsmul Matrix.exp_zsmul
 

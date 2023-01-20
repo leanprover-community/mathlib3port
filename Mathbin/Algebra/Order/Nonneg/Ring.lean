@@ -58,9 +58,9 @@ theorem bot_eq [Preorder α] {a : α} : (⊥ : { x : α // a ≤ x }) = ⟨a, le
   rfl
 #align nonneg.bot_eq Nonneg.bot_eq
 
-instance no_max_order [PartialOrder α] [NoMaxOrder α] {a : α} : NoMaxOrder { x : α // a ≤ x } :=
-  Set.Ici.no_max_order
-#align nonneg.no_max_order Nonneg.no_max_order
+instance noMaxOrder [PartialOrder α] [NoMaxOrder α] {a : α} : NoMaxOrder { x : α // a ≤ x } :=
+  Set.Ici.noMaxOrder
+#align nonneg.no_max_order Nonneg.noMaxOrder
 
 instance semilatticeSup [SemilatticeSup α] {a : α} : SemilatticeSup { x : α // a ≤ x } :=
   Set.Ici.semilatticeSup
@@ -74,10 +74,10 @@ instance distribLattice [DistribLattice α] {a : α} : DistribLattice { x : α /
   Set.Ici.distribLattice
 #align nonneg.distrib_lattice Nonneg.distribLattice
 
-instance densely_ordered [Preorder α] [DenselyOrdered α] {a : α} :
+instance denselyOrdered [Preorder α] [DenselyOrdered α] {a : α} :
     DenselyOrdered { x : α // a ≤ x } :=
-  show DenselyOrdered (Ici a) from Set.densely_ordered
-#align nonneg.densely_ordered Nonneg.densely_ordered
+  show DenselyOrdered (Ici a) from Set.denselyOrdered
+#align nonneg.densely_ordered Nonneg.denselyOrdered
 
 /-- If `Sup ∅ ≤ a` then `{x : α // a ≤ x}` is a `conditionally_complete_linear_order`. -/
 @[reducible]
@@ -347,34 +347,34 @@ def toNonneg (a : α) : { x : α // 0 ≤ x } :=
 #align nonneg.to_nonneg Nonneg.toNonneg
 
 @[simp]
-theorem coe_to_nonneg {a : α} : (toNonneg a : α) = max a 0 :=
+theorem coe_toNonneg {a : α} : (toNonneg a : α) = max a 0 :=
   rfl
-#align nonneg.coe_to_nonneg Nonneg.coe_to_nonneg
+#align nonneg.coe_to_nonneg Nonneg.coe_toNonneg
 
 @[simp]
-theorem to_nonneg_of_nonneg {a : α} (h : 0 ≤ a) : toNonneg a = ⟨a, h⟩ := by simp [to_nonneg, h]
-#align nonneg.to_nonneg_of_nonneg Nonneg.to_nonneg_of_nonneg
+theorem toNonneg_of_nonneg {a : α} (h : 0 ≤ a) : toNonneg a = ⟨a, h⟩ := by simp [to_nonneg, h]
+#align nonneg.to_nonneg_of_nonneg Nonneg.toNonneg_of_nonneg
 
 @[simp]
-theorem to_nonneg_coe {a : { x : α // 0 ≤ x }} : toNonneg (a : α) = a :=
+theorem toNonneg_coe {a : { x : α // 0 ≤ x }} : toNonneg (a : α) = a :=
   by
   cases' a with a ha
   exact to_nonneg_of_nonneg ha
-#align nonneg.to_nonneg_coe Nonneg.to_nonneg_coe
+#align nonneg.to_nonneg_coe Nonneg.toNonneg_coe
 
 @[simp]
-theorem to_nonneg_le {a : α} {b : { x : α // 0 ≤ x }} : toNonneg a ≤ b ↔ a ≤ b :=
+theorem toNonneg_le {a : α} {b : { x : α // 0 ≤ x }} : toNonneg a ≤ b ↔ a ≤ b :=
   by
   cases' b with b hb
   simp [to_nonneg, hb]
-#align nonneg.to_nonneg_le Nonneg.to_nonneg_le
+#align nonneg.to_nonneg_le Nonneg.toNonneg_le
 
 @[simp]
-theorem to_nonneg_lt {a : { x : α // 0 ≤ x }} {b : α} : a < toNonneg b ↔ ↑a < b :=
+theorem toNonneg_lt {a : { x : α // 0 ≤ x }} {b : α} : a < toNonneg b ↔ ↑a < b :=
   by
   cases' a with a ha
   simp [to_nonneg, ha.not_lt]
-#align nonneg.to_nonneg_lt Nonneg.to_nonneg_lt
+#align nonneg.to_nonneg_lt Nonneg.toNonneg_lt
 
 instance hasSub [Sub α] : Sub { x : α // 0 ≤ x } :=
   ⟨fun x y => toNonneg (x - y)⟩

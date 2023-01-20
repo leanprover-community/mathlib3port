@@ -177,9 +177,9 @@ def toAddMonoid : (⨁ i, β i) →+ γ :=
 #align direct_sum.to_add_monoid DirectSum.toAddMonoid
 
 @[simp]
-theorem to_add_monoid_of (i) (x : β i) : toAddMonoid φ (of β i x) = φ i x :=
-  Dfinsupp.lift_add_hom_apply_single φ i x
-#align direct_sum.to_add_monoid_of DirectSum.to_add_monoid_of
+theorem toAddMonoid_of (i) (x : β i) : toAddMonoid φ (of β i x) = φ i x :=
+  Dfinsupp.liftAddHom_apply_single φ i x
+#align direct_sum.to_add_monoid_of DirectSum.toAddMonoid_of
 
 theorem toAddMonoid.unique (f : ⨁ i, β i) : ψ f = toAddMonoid (fun i => ψ.comp (of β i)) f :=
   by
@@ -201,15 +201,15 @@ def fromAddMonoid : (⨁ i, γ →+ β i) →+ γ →+ ⨁ i, β i :=
 #align direct_sum.from_add_monoid DirectSum.fromAddMonoid
 
 @[simp]
-theorem from_add_monoid_of (i : ι) (f : γ →+ β i) : fromAddMonoid (of _ i f) = (of _ i).comp f :=
+theorem fromAddMonoid_of (i : ι) (f : γ →+ β i) : fromAddMonoid (of _ i f) = (of _ i).comp f :=
   by
   rw [from_add_monoid, to_add_monoid_of]
   rfl
-#align direct_sum.from_add_monoid_of DirectSum.from_add_monoid_of
+#align direct_sum.from_add_monoid_of DirectSum.fromAddMonoid_of
 
-theorem from_add_monoid_of_apply (i : ι) (f : γ →+ β i) (x : γ) :
+theorem fromAddMonoid_of_apply (i : ι) (f : γ →+ β i) (x : γ) :
     fromAddMonoid (of _ i f) x = of _ i (f x) := by rw [from_add_monoid_of, AddMonoidHom.coe_comp]
-#align direct_sum.from_add_monoid_of_apply DirectSum.from_add_monoid_of_apply
+#align direct_sum.from_add_monoid_of_apply DirectSum.fromAddMonoid_of_apply
 
 end FromAddMonoid
 
@@ -248,7 +248,7 @@ protected def id (M : Type v) (ι : Type _ := PUnit) [AddCommMonoid M] [Unique �
       DirectSum.induction_on x (by rw [AddMonoidHom.map_zero, AddMonoidHom.map_zero])
         (fun p x => by rw [Unique.default_eq p, to_add_monoid_of] <;> rfl) fun x y ihx ihy => by
         rw [AddMonoidHom.map_add, AddMonoidHom.map_add, ihx, ihy]
-    right_inv := fun x => to_add_monoid_of _ _ _ }
+    right_inv := fun x => toAddMonoid_of _ _ _ }
 #align direct_sum.id DirectSum.id
 
 section CongrLeft
@@ -257,14 +257,14 @@ variable {κ : Type _}
 
 /-- Reindexing terms of a direct sum.-/
 def equivCongrLeft (h : ι ≃ κ) : (⨁ i, β i) ≃+ ⨁ k, β (h.symm k) :=
-  { Dfinsupp.equivCongrLeft h with map_add' := Dfinsupp.comap_domain'_add _ _ }
+  { Dfinsupp.equivCongrLeft h with map_add' := Dfinsupp.comapDomain'_add _ _ }
 #align direct_sum.equiv_congr_left DirectSum.equivCongrLeft
 
 @[simp]
-theorem equiv_congr_left_apply (h : ι ≃ κ) (f : ⨁ i, β i) (k : κ) :
+theorem equivCongrLeft_apply (h : ι ≃ κ) (f : ⨁ i, β i) (k : κ) :
     equivCongrLeft h f k = f (h.symm k) :=
-  Dfinsupp.comap_domain'_apply _ _ _ _
-#align direct_sum.equiv_congr_left_apply DirectSum.equiv_congr_left_apply
+  Dfinsupp.comapDomain'_apply _ _ _ _
+#align direct_sum.equiv_congr_left_apply DirectSum.equivCongrLeft_apply
 
 end CongrLeft
 
@@ -277,7 +277,7 @@ include dec_ι
 /-- Isomorphism obtained by separating the term of index `none` of a direct sum over `option ι`.-/
 @[simps]
 noncomputable def addEquivProdDirectSum : (⨁ i, α i) ≃+ α none × ⨁ i, α (some i) :=
-  { Dfinsupp.equivProdDfinsupp with map_add' := Dfinsupp.equiv_prod_dfinsupp_add }
+  { Dfinsupp.equivProdDfinsupp with map_add' := Dfinsupp.equivProdDfinsupp_add }
 #align direct_sum.add_equiv_prod_direct_sum DirectSum.addEquivProdDirectSum
 
 end Option
@@ -291,15 +291,15 @@ variable {α : ι → Type u} {δ : ∀ i, α i → Type w} [∀ i j, AddCommMon
 noncomputable def sigmaCurry : (⨁ i : Σi, _, δ i.1 i.2) →+ ⨁ (i) (j), δ i j
     where
   toFun := @Dfinsupp.sigmaCurry _ _ δ _
-  map_zero' := Dfinsupp.sigma_curry_zero
-  map_add' f g := @Dfinsupp.sigma_curry_add _ _ δ _ f g
+  map_zero' := Dfinsupp.sigmaCurry_zero
+  map_add' f g := @Dfinsupp.sigmaCurry_add _ _ δ _ f g
 #align direct_sum.sigma_curry DirectSum.sigmaCurry
 
 @[simp]
-theorem sigma_curry_apply (f : ⨁ i : Σi, _, δ i.1 i.2) (i : ι) (j : α i) :
+theorem sigmaCurry_apply (f : ⨁ i : Σi, _, δ i.1 i.2) (i : ι) (j : α i) :
     sigmaCurry f i j = f ⟨i, j⟩ :=
-  @Dfinsupp.sigma_curry_apply _ _ δ _ f i j
-#align direct_sum.sigma_curry_apply DirectSum.sigma_curry_apply
+  @Dfinsupp.sigmaCurry_apply _ _ δ _ f i j
+#align direct_sum.sigma_curry_apply DirectSum.sigmaCurry_apply
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /-- The natural map between `⨁ i (j : α i), δ i j` and `Π₀ (i : Σ i, α i), δ i.1 i.2`, inverse of
@@ -307,16 +307,16 @@ theorem sigma_curry_apply (f : ⨁ i : Σi, _, δ i.1 i.2) (i : ι) (j : α i) :
 noncomputable def sigmaUncurry : (⨁ (i) (j), δ i j) →+ ⨁ i : Σi, _, δ i.1 i.2
     where
   toFun := Dfinsupp.sigmaUncurry
-  map_zero' := Dfinsupp.sigma_uncurry_zero
-  map_add' := Dfinsupp.sigma_uncurry_add
+  map_zero' := Dfinsupp.sigmaUncurry_zero
+  map_add' := Dfinsupp.sigmaUncurry_add
 #align direct_sum.sigma_uncurry DirectSum.sigmaUncurry
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp]
-theorem sigma_uncurry_apply (f : ⨁ (i) (j), δ i j) (i : ι) (j : α i) :
+theorem sigmaUncurry_apply (f : ⨁ (i) (j), δ i j) (i : ι) (j : α i) :
     sigmaUncurry f ⟨i, j⟩ = f i j :=
-  Dfinsupp.sigma_uncurry_apply f i j
-#align direct_sum.sigma_uncurry_apply DirectSum.sigma_uncurry_apply
+  Dfinsupp.sigmaUncurry_apply f i j
+#align direct_sum.sigma_uncurry_apply DirectSum.sigmaUncurry_apply
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /-- The natural map between `⨁ (i : Σ i, α i), δ i.1 i.2` and `⨁ i (j : α i), δ i j`.-/
@@ -336,11 +336,11 @@ protected def coeAddMonoidHom {M S : Type _} [DecidableEq ι] [AddCommMonoid M] 
 #align direct_sum.coe_add_monoid_hom DirectSum.coeAddMonoidHom
 
 @[simp]
-theorem coe_add_monoid_hom_of {M S : Type _} [DecidableEq ι] [AddCommMonoid M] [SetLike S M]
+theorem coeAddMonoidHom_of {M S : Type _} [DecidableEq ι] [AddCommMonoid M] [SetLike S M]
     [AddSubmonoidClass S M] (A : ι → S) (i : ι) (x : A i) :
     DirectSum.coeAddMonoidHom A (of (fun i => A i) i x) = x :=
-  to_add_monoid_of _ _ _
-#align direct_sum.coe_add_monoid_hom_of DirectSum.coe_add_monoid_hom_of
+  toAddMonoid_of _ _ _
+#align direct_sum.coe_add_monoid_hom_of DirectSum.coeAddMonoidHom_of
 
 theorem coe_of_apply {M S : Type _} [DecidableEq ι] [AddCommMonoid M] [SetLike S M]
     [AddSubmonoidClass S M] {A : ι → S} (i j : ι) (x : A i) :
@@ -362,12 +362,12 @@ def IsInternal {M S : Type _} [DecidableEq ι] [AddCommMonoid M] [SetLike S M]
   Function.Bijective (DirectSum.coeAddMonoidHom A)
 #align direct_sum.is_internal DirectSum.IsInternal
 
-theorem IsInternal.add_submonoid_supr_eq_top {M : Type _} [DecidableEq ι] [AddCommMonoid M]
+theorem IsInternal.addSubmonoid_supᵢ_eq_top {M : Type _} [DecidableEq ι] [AddCommMonoid M]
     (A : ι → AddSubmonoid M) (h : IsInternal A) : supᵢ A = ⊤ :=
   by
-  rw [AddSubmonoid.supr_eq_mrange_dfinsupp_sum_add_hom, AddMonoidHom.mrange_top_iff_surjective]
+  rw [AddSubmonoid.supᵢ_eq_mrange_dfinsupp_sumAddHom, AddMonoidHom.mrange_top_iff_surjective]
   exact Function.Bijective.surjective h
-#align direct_sum.is_internal.add_submonoid_supr_eq_top DirectSum.IsInternal.add_submonoid_supr_eq_top
+#align direct_sum.is_internal.add_submonoid_supr_eq_top DirectSum.IsInternal.addSubmonoid_supᵢ_eq_top
 
 end DirectSum
 

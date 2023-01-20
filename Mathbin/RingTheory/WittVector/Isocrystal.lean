@@ -211,7 +211,7 @@ theorem isocrystal_classification (k : Type _) [Field k] [IsAlgClosed k] [CharP 
     intro ha'
     apply this
     simp only [← ha, ha', zero_smul]
-  obtain ⟨b, hb, m, hmb⟩ := WittVector.exists_frobenius_solution_fraction_ring p ha
+  obtain ⟨b, hb, m, hmb⟩ := WittVector.exists_frobenius_solution_fractionRing p ha
   replace hmb : φ(p, k) b * a = p ^ m * b := by convert hmb
   use m
   let F₀ : standard_one_dim_isocrystal p k m →ₗ[K(p, k)] V := LinearMap.toSpanSingleton K(p, k) V x
@@ -219,15 +219,15 @@ theorem isocrystal_classification (k : Type _) [Field k] [IsAlgClosed k] [CharP 
     by
     refine' LinearEquiv.ofBijective F₀ ⟨_, _⟩
     · rw [← LinearMap.ker_eq_bot]
-      exact LinearMap.ker_to_span_singleton K(p, k) V hx
+      exact LinearMap.ker_toSpanSingleton K(p, k) V hx
     · rw [← LinearMap.range_eq_top]
       rw [← (finrank_eq_one_iff_of_nonzero x hx).mp h_dim]
       rw [LinearMap.span_singleton_eq_range]
   refine' ⟨⟨(LinearEquiv.smulOfNeZero K(p, k) _ _ hb).trans F, _⟩⟩
   intro c
-  rw [LinearEquiv.trans_apply, LinearEquiv.trans_apply, LinearEquiv.smul_of_ne_zero_apply,
-    LinearEquiv.smul_of_ne_zero_apply, LinearEquiv.map_smul, LinearEquiv.map_smul]
-  simp only [hax, LinearEquiv.of_bijective_apply, LinearMap.to_span_singleton_apply,
+  rw [LinearEquiv.trans_apply, LinearEquiv.trans_apply, LinearEquiv.smulOfNeZero_apply,
+    LinearEquiv.smulOfNeZero_apply, LinearEquiv.map_smul, LinearEquiv.map_smul]
+  simp only [hax, LinearEquiv.ofBijective_apply, LinearMap.toSpanSingleton_apply,
     LinearEquiv.map_smulₛₗ, standard_one_dim_isocrystal.frobenius_apply, Algebra.id.smul_eq_mul]
   simp only [← mul_smul]
   congr 1

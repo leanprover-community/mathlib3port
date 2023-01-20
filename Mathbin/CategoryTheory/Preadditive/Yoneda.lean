@@ -126,23 +126,23 @@ instance additive_coyoneda_obj' (X : Cᵒᵖ) : Functor.Additive (preadditiveCoy
 Yoneda embedding.
 -/
 @[simp]
-theorem whiskering_preadditive_yoneda :
+theorem whiskering_preadditiveYoneda :
     preadditive_yoneda ⋙
         (whiskeringRight Cᵒᵖ AddCommGroupCat (Type v)).obj (forget AddCommGroupCat) =
       yoneda :=
   rfl
-#align category_theory.whiskering_preadditive_yoneda CategoryTheory.whiskering_preadditive_yoneda
+#align category_theory.whiskering_preadditive_yoneda CategoryTheory.whiskering_preadditiveYoneda
 
 /-- Composing the preadditive yoneda embedding with the forgetful functor yields the regular
 Yoneda embedding.
 -/
 @[simp]
-theorem whiskering_preadditive_coyoneda :
+theorem whiskering_preadditiveCoyoneda :
     preadditive_coyoneda ⋙
         (whiskeringRight C AddCommGroupCat (Type v)).obj (forget AddCommGroupCat) =
       coyoneda :=
   rfl
-#align category_theory.whiskering_preadditive_coyoneda CategoryTheory.whiskering_preadditive_coyoneda
+#align category_theory.whiskering_preadditive_coyoneda CategoryTheory.whiskering_preadditiveCoyoneda
 
 instance preadditiveYonedaFull : Full (preadditiveYoneda : C ⥤ Cᵒᵖ ⥤ AddCommGroupCat) :=
   let yoneda_full :
@@ -164,14 +164,14 @@ instance preadditiveCoyonedaFull : Full (preadditiveCoyoneda : Cᵒᵖ ⥤ C ⥤
     ((whiskering_right C AddCommGroupCat (Type v)).obj (forget AddCommGroupCat))
 #align category_theory.preadditive_coyoneda_full CategoryTheory.preadditiveCoyonedaFull
 
-instance preadditive_yoneda_faithful : Faithful (preadditiveYoneda : C ⥤ Cᵒᵖ ⥤ AddCommGroupCat) :=
-  Faithful.of_comp_eq whiskering_preadditive_yoneda
-#align category_theory.preadditive_yoneda_faithful CategoryTheory.preadditive_yoneda_faithful
+instance preadditiveYoneda_faithful : Faithful (preadditiveYoneda : C ⥤ Cᵒᵖ ⥤ AddCommGroupCat) :=
+  Faithful.of_comp_eq whiskering_preadditiveYoneda
+#align category_theory.preadditive_yoneda_faithful CategoryTheory.preadditiveYoneda_faithful
 
-instance preadditive_coyoneda_faithful :
+instance preadditiveCoyoneda_faithful :
     Faithful (preadditiveCoyoneda : Cᵒᵖ ⥤ C ⥤ AddCommGroupCat) :=
-  Faithful.of_comp_eq whiskering_preadditive_coyoneda
-#align category_theory.preadditive_coyoneda_faithful CategoryTheory.preadditive_coyoneda_faithful
+  Faithful.of_comp_eq whiskering_preadditiveCoyoneda
+#align category_theory.preadditive_coyoneda_faithful CategoryTheory.preadditiveCoyoneda_faithful
 
 instance preservesLimitsPreadditiveYonedaObj (X : C) : PreservesLimits (preadditiveYonedaObj X) :=
   have : PreservesLimits (preadditiveYonedaObj X ⋙ forget _) :=

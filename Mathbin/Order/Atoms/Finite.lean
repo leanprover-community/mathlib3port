@@ -77,7 +77,7 @@ section Fintype
 open Finset
 
 -- see Note [lower instance priority]
-instance (priority := 100) Finite.to_is_coatomic [PartialOrder α] [OrderTop α] [Finite α] :
+instance (priority := 100) Finite.to_isCoatomic [PartialOrder α] [OrderTop α] [Finite α] :
     IsCoatomic α :=
   by
   refine' IsCoatomic.mk fun b => or_iff_not_imp_left.2 fun ht => _
@@ -87,13 +87,13 @@ instance (priority := 100) Finite.to_is_coatomic [PartialOrder α] [OrderTop α]
   by_contra hyt
   obtain rfl : c = y := hmax y ⟨hc.1.trans hcy.le, hyt⟩ hcy.le
   exact (lt_self_iff_false _).mp hcy
-#align finite.to_is_coatomic Finite.to_is_coatomic
+#align finite.to_is_coatomic Finite.to_isCoatomic
 
 -- see Note [lower instance priority]
-instance (priority := 100) Finite.to_is_atomic [PartialOrder α] [OrderBot α] [Finite α] :
+instance (priority := 100) Finite.to_isAtomic [PartialOrder α] [OrderBot α] [Finite α] :
     IsAtomic α :=
-  isCoatomic_dual_iff_isAtomic.mp Finite.to_is_coatomic
-#align finite.to_is_atomic Finite.to_is_atomic
+  isCoatomic_dual_iff_isAtomic.mp Finite.to_isCoatomic
+#align finite.to_is_atomic Finite.to_isAtomic
 
 end Fintype
 

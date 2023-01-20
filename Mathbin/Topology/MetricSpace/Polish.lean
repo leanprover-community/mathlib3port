@@ -81,31 +81,31 @@ class UpgradedPolishSpace (α : Type _) extends MetricSpace α, SecondCountableT
   CompleteSpace α
 #align upgraded_polish_space UpgradedPolishSpace
 
-instance (priority := 100) polish_space_of_complete_second_countable [m : MetricSpace α]
+instance (priority := 100) polishSpace_of_complete_second_countable [m : MetricSpace α]
     [h : SecondCountableTopology α] [h' : CompleteSpace α] : PolishSpace α
     where
   second_countable := h
   complete := ⟨m, rfl, h'⟩
-#align polish_space_of_complete_second_countable polish_space_of_complete_second_countable
+#align polish_space_of_complete_second_countable polishSpace_of_complete_second_countable
 
 /-- Construct on a Polish space a metric (compatible with the topology) which is complete. -/
 def polishSpaceMetric (α : Type _) [ht : TopologicalSpace α] [h : PolishSpace α] : MetricSpace α :=
   h.complete.some.replaceTopology h.complete.some_spec.1.symm
 #align polish_space_metric polishSpaceMetric
 
-theorem complete_polish_space_metric (α : Type _) [ht : TopologicalSpace α] [h : PolishSpace α] :
+theorem complete_polishSpaceMetric (α : Type _) [ht : TopologicalSpace α] [h : PolishSpace α] :
     @CompleteSpace α (polishSpaceMetric α).toUniformSpace :=
   by
   convert h.complete.some_spec.2
-  exact MetricSpace.replace_topology_eq _ _
-#align complete_polish_space_metric complete_polish_space_metric
+  exact MetricSpace.replaceTopology_eq _ _
+#align complete_polish_space_metric complete_polishSpaceMetric
 
 /-- This definition endows a Polish space with a complete metric. Use it as:
 `letI := upgrade_polish_space α`. -/
 def upgradePolishSpace (α : Type _) [ht : TopologicalSpace α] [h : PolishSpace α] :
     UpgradedPolishSpace α :=
   letI := polishSpaceMetric α
-  { complete_polish_space_metric α, PolishSpace.second_countable α with }
+  { complete_polishSpaceMetric α, PolishSpace.second_countable α with }
 #align upgrade_polish_space upgradePolishSpace
 
 namespace PolishSpace
@@ -153,11 +153,11 @@ instance sum [TopologicalSpace α] [PolishSpace α] [TopologicalSpace β] [Polis
 theorem exists_nat_nat_continuous_surjective (α : Type _) [TopologicalSpace α] [PolishSpace α]
     [Nonempty α] : ∃ f : (ℕ → ℕ) → α, Continuous f ∧ Surjective f :=
   letI := upgradePolishSpace α
-  exists_nat_nat_continuous_surjective_of_complete_space α
+  exists_nat_nat_continuous_surjective_of_completeSpace α
 #align polish_space.exists_nat_nat_continuous_surjective PolishSpace.exists_nat_nat_continuous_surjective
 
 /-- Given a closed embedding into a Polish space, the source space is also Polish. -/
-theorem ClosedEmbedding.polish_space [TopologicalSpace α] [TopologicalSpace β] [PolishSpace β]
+theorem ClosedEmbedding.polishSpace [TopologicalSpace α] [TopologicalSpace β] [PolishSpace β]
     {f : α → β} (hf : ClosedEmbedding f) : PolishSpace α :=
   by
   letI := upgradePolishSpace β
@@ -165,24 +165,24 @@ theorem ClosedEmbedding.polish_space [TopologicalSpace α] [TopologicalSpace β]
   haveI : second_countable_topology α := hf.to_embedding.second_countable_topology
   have : CompleteSpace α :=
     by
-    rw [complete_space_iff_is_complete_range hf.to_embedding.to_isometry.uniform_inducing]
-    apply IsClosed.is_complete
+    rw [completeSpace_iff_isComplete_range hf.to_embedding.to_isometry.uniform_inducing]
+    apply IsClosed.isComplete
     exact hf.closed_range
   infer_instance
-#align closed_embedding.polish_space ClosedEmbedding.polish_space
+#align closed_embedding.polish_space ClosedEmbedding.polishSpace
 
 /-- Pulling back a Polish topology under an equiv gives again a Polish topology. -/
-theorem Equiv.polish_space_induced [t : TopologicalSpace β] [PolishSpace β] (f : α ≃ β) :
+theorem Equiv.polishSpace_induced [t : TopologicalSpace β] [PolishSpace β] (f : α ≃ β) :
     @PolishSpace α (t.induced f) :=
   letI : TopologicalSpace α := t.induced f
   (f.to_homeomorph_of_inducing ⟨rfl⟩).ClosedEmbedding.PolishSpace
-#align equiv.polish_space_induced Equiv.polish_space_induced
+#align equiv.polish_space_induced Equiv.polishSpace_induced
 
 /-- A closed subset of a Polish space is also Polish. -/
-theorem IsClosed.polish_space {α : Type _} [TopologicalSpace α] [PolishSpace α] {s : Set α}
+theorem IsClosed.polishSpace {α : Type _} [TopologicalSpace α] [PolishSpace α] {s : Set α}
     (hs : IsClosed s) : PolishSpace s :=
-  (IsClosed.closed_embedding_subtype_coe hs).PolishSpace
-#align is_closed.polish_space IsClosed.polish_space
+  (IsClosed.closedEmbedding_subtype_coe hs).PolishSpace
+#align is_closed.polish_space IsClosed.polishSpace
 
 /-- A sequence of type synonyms of a given type `α`, useful in the proof of
 `exists_polish_space_forall_le` to endow each copy with a different topology. -/
@@ -193,7 +193,7 @@ def AuxCopy (α : Type _) {ι : Type _} (i : ι) : Type _ :=
 
 /-- Given a Polish space, and countably many finer Polish topologies, there exists another Polish
 topology which is finer than all of them. -/
-theorem exists_polish_space_forall_le {ι : Type _} [Countable ι] [t : TopologicalSpace α]
+theorem exists_polishSpace_forall_le {ι : Type _} [Countable ι] [t : TopologicalSpace α]
     [p : PolishSpace α] (m : ι → TopologicalSpace α) (hm : ∀ n, m n ≤ t)
     (h'm : ∀ n, @PolishSpace α (m n)) :
     ∃ t' : TopologicalSpace α, (∀ n, t' ≤ m n) ∧ t' ≤ t ∧ @PolishSpace α t' :=
@@ -212,7 +212,7 @@ theorem exists_polish_space_forall_le {ι : Type _} [Countable ι] [t : Topologi
   have T_le_m : ∀ n, T.induced f ≤ m n := by
     intro n s hs
     refine' ⟨Set.pi ({n} : Set ι) fun i => s, _, _⟩
-    · apply is_open_set_pi (finite_singleton _)
+    · apply isOpen_set_pi (finite_singleton _)
       intro a ha
       rw [mem_singleton_iff.1 ha]
       exact hs
@@ -234,14 +234,14 @@ theorem exists_polish_space_forall_le {ι : Type _} [Countable ι] [t : Topologi
       exact (mem_Inter.1 hx n : _)
   have f_closed : IsClosed (range f) := by
     rw [A]
-    apply is_closed_Inter fun n => _
+    apply isClosed_interᵢ fun n => _
     have C : ∀ i : ι, Continuous fun x : ∀ n, aux_copy α n => (id (x i) : α) :=
       by
       intro i
       apply Continuous.comp _ (continuous_apply i)
       apply continuous_def.2 fun s hs => _
       exact hm i s hs
-    apply is_closed_eq (C n) (C default)
+    apply isClosed_eq (C n) (C default)
   have K : @_root_.embedding _ _ (T.induced f) T f :=
     by
     apply Function.Injective.embedding_induced
@@ -253,8 +253,8 @@ theorem exists_polish_space_forall_le {ι : Type _} [Countable ι] [t : Topologi
     constructor
     · exact K
     · exact f_closed
-  exact @ClosedEmbedding.polish_space _ _ (T.induced f) T (by infer_instance) _ L
-#align polish_space.exists_polish_space_forall_le PolishSpace.exists_polish_space_forall_le
+  exact @ClosedEmbedding.polishSpace _ _ (T.induced f) T (by infer_instance) _ L
+#align polish_space.exists_polish_space_forall_le PolishSpace.exists_polishSpace_forall_le
 
 /-!
 ### An open subset of a Polish space is Polish
@@ -287,14 +287,14 @@ def hasDistCompleteCopy (s : Set α) : HasDist (CompleteCopy s) :=
 
 attribute [local instance] has_dist_complete_copy
 
-theorem dist_complete_copy_eq (x y : CompleteCopy s) :
+theorem dist_completeCopy_eq (x y : CompleteCopy s) :
     dist x y = dist x.1 y.1 + abs (1 / infDist x.1 (sᶜ) - 1 / infDist y.1 (sᶜ)) :=
   rfl
-#align polish_space.dist_complete_copy_eq PolishSpace.dist_complete_copy_eq
+#align polish_space.dist_complete_copy_eq PolishSpace.dist_completeCopy_eq
 
-theorem dist_le_dist_complete_copy (x y : CompleteCopy s) : dist x.1 y.1 ≤ dist x y :=
+theorem dist_le_dist_completeCopy (x y : CompleteCopy s) : dist x.1 y.1 ≤ dist x y :=
   (le_add_iff_nonneg_right _).2 (abs_nonneg _)
-#align polish_space.dist_le_dist_complete_copy PolishSpace.dist_le_dist_complete_copy
+#align polish_space.dist_le_dist_complete_copy PolishSpace.dist_le_dist_completeCopy
 
 /-- A metric space structure on a subset `s` of a metric space, designed to make it complete
 if `s` is open. It is given by `dist' x y = dist x y + |1 / dist x sᶜ - 1 / dist y sᶜ|`, where the
@@ -344,7 +344,7 @@ def completeCopyIdHomeo (hs : IsOpen s) (h's : sᶜ.Nonempty) : CompleteCopy s �
       exact dist_le_dist_complete_copy
     this.continuous
   continuous_inv_fun := by
-    apply continuous_iff_continuous_at.2 fun x => _
+    apply continuous_iff_continuousAt.2 fun x => _
     suffices H :
       tendsto (fun b : s => dist b.1 x.1 + |1 / inf_dist b.1 (sᶜ) - 1 / inf_dist x.1 (sᶜ)|) (𝓝 x)
         (𝓝 (dist x.1 x.1 + abs (1 / inf_dist x.1 (sᶜ) - 1 / inf_dist x.1 (sᶜ))))
@@ -362,16 +362,16 @@ def completeCopyIdHomeo (hs : IsOpen s) (h's : sᶜ.Nonempty) : CompleteCopy s �
       exact ((continuous_inf_dist_pt _).comp continuous_subtype_coe).Tendsto _
 #align polish_space.complete_copy_id_homeo PolishSpace.completeCopyIdHomeo
 
-theorem complete_space_complete_copy [CompleteSpace α] (hs : IsOpen s) (h's : sᶜ.Nonempty) :
+theorem completeSpace_completeCopy [CompleteSpace α] (hs : IsOpen s) (h's : sᶜ.Nonempty) :
     CompleteSpace (CompleteCopy s) :=
   by
   refine' Metric.complete_of_convergent_controlled_sequences (fun n => (1 / 2) ^ n) (by simp) _
   intro u hu
   have A : CauchySeq fun n => (u n).1 :=
     by
-    apply cauchy_seq_of_le_tendsto_0 (fun n : ℕ => (1 / 2) ^ n) (fun n m N hNn hNm => _) _
+    apply cauchySeq_of_le_tendsto_0 (fun n : ℕ => (1 / 2) ^ n) (fun n m N hNn hNm => _) _
     · exact (dist_le_dist_complete_copy (u n) (u m)).trans (hu N n m hNn hNm).le
-    · exact tendsto_pow_at_top_nhds_0_of_lt_1 (by norm_num) (by norm_num)
+    · exact tendsto_pow_atTop_nhds_0_of_lt_1 (by norm_num) (by norm_num)
   obtain ⟨x, xlim⟩ : ∃ x, tendsto (fun n => (u n).1) at_top (𝓝 x) :=
     haveI : Nonempty α := ⟨(u 0).1⟩
     ⟨_, A.tendsto_lim⟩
@@ -423,23 +423,23 @@ theorem complete_space_complete_copy [CompleteSpace α] (hs : IsOpen s) (h's : s
   suffices x ∉ sᶜ by simpa
   apply (hs.is_closed_compl.not_mem_iff_inf_dist_pos h's).2 (lt_of_lt_of_le _ I')
   simp [Cpos]
-#align polish_space.complete_space_complete_copy PolishSpace.complete_space_complete_copy
+#align polish_space.complete_space_complete_copy PolishSpace.completeSpace_completeCopy
 
 /-- An open subset of a Polish space is also Polish. -/
-theorem IsOpen.polish_space {α : Type _} [TopologicalSpace α] [PolishSpace α] {s : Set α}
+theorem IsOpen.polishSpace {α : Type _} [TopologicalSpace α] [PolishSpace α] {s : Set α}
     (hs : IsOpen s) : PolishSpace s :=
   by
   rcases eq_empty_or_nonempty (sᶜ) with (h's | h's)
   · simp at h's
-    apply IsClosed.polish_space
+    apply IsClosed.polishSpace
     rw [h's]
-    exact is_closed_univ
+    exact isClosed_univ
   · letI := upgradePolishSpace α
     haveI : CompleteSpace (complete_copy s) := complete_space_complete_copy hs h's
     haveI : second_countable_topology (complete_copy s) :=
       (complete_copy_id_homeo hs h's).Embedding.SecondCountableTopology
     exact (complete_copy_id_homeo hs h's).symm.ClosedEmbedding.PolishSpace
-#align is_open.polish_space IsOpen.polish_space
+#align is_open.polish_space IsOpen.polishSpace
 
 end CompleteCopy
 
@@ -455,7 +455,7 @@ def IsClopenable [t : TopologicalSpace α] (s : Set α) : Prop :=
 
 /-- Given a closed set `s` in a Polish space, one can construct a finer Polish topology for
 which `s` is both open and closed. -/
-theorem IsClosed.is_clopenable [TopologicalSpace α] [PolishSpace α] {s : Set α} (hs : IsClosed s) :
+theorem IsClosed.isClopenable [TopologicalSpace α] [PolishSpace α] {s : Set α} (hs : IsClosed s) :
     IsClopenable s :=
   by
   /- Both sets `s` and `sᶜ` admit a Polish topology. So does their disjoint union `s ⊕ sᶜ`.
@@ -474,15 +474,15 @@ theorem IsClosed.is_clopenable [TopologicalSpace α] [PolishSpace α] {s : Set �
     by_cases h : x ∈ s
     ·
       simp only [Equiv.Set.sumCompl_symm_apply_of_mem, h, mem_preimage, Equiv.toFun_as_coe,
-        mem_range_self, Equiv.to_homeomorph_of_inducing_apply]
+        mem_range_self, Equiv.toHomeomorphOfInducing_apply]
     ·
       simp only [Equiv.Set.sumCompl_symm_apply_of_not_mem, h, not_false_iff, mem_preimage,
-        Equiv.to_homeomorph_of_inducing_apply, Equiv.toFun_as_coe, mem_range, exists_false]
+        Equiv.toHomeomorphOfInducing_apply, Equiv.toFun_as_coe, mem_range, exists_false]
   refine' ⟨t', _, f.polish_space_induced, _, _⟩
   · intro u hu
     change ∃ s' : Set (Sum (↥s) ↥t), T.is_open s' ∧ f ⁻¹' s' = u
     refine' ⟨f.symm ⁻¹' u, _, by simp only [Equiv.symm_symm, Equiv.symm_preimage_preimage]⟩
-    refine' is_open_sum_iff.2 ⟨_, _⟩
+    refine' isOpen_sum_iff.2 ⟨_, _⟩
     · have : IsOpen ((coe : s → α) ⁻¹' u) := IsOpen.preimage continuous_subtype_coe hu
       have : Sum.inl ⁻¹' (⇑f.symm ⁻¹' u) = (coe : s → α) ⁻¹' u :=
         by
@@ -499,29 +499,29 @@ theorem IsClosed.is_clopenable [TopologicalSpace α] [PolishSpace α] {s : Set �
       by
       apply IsClosed.preimage
       · exact @Homeomorph.continuous _ _ t' _ g
-      · exact is_closed_range_inl
+      · exact isClosed_range_inl
     convert this
     exact A.symm
   · have : @IsOpen α t' (g ⁻¹' range (Sum.inl : s → Sum s t)) :=
       by
       apply IsOpen.preimage
       · exact @Homeomorph.continuous _ _ t' _ g
-      · exact is_open_range_inl
+      · exact isOpen_range_inl
     convert this
     exact A.symm
-#align is_closed.is_clopenable IsClosed.is_clopenable
+#align is_closed.is_clopenable IsClosed.isClopenable
 
 theorem IsClopenable.compl [TopologicalSpace α] {s : Set α} (hs : IsClopenable s) :
     IsClopenable (sᶜ) := by
   rcases hs with ⟨t, t_le, t_polish, h, h'⟩
-  exact ⟨t, t_le, t_polish, @IsOpen.is_closed_compl α t s h', @IsClosed.is_open_compl α t s h⟩
+  exact ⟨t, t_le, t_polish, @IsOpen.isClosed_compl α t s h', @IsClosed.isOpen_compl α t s h⟩
 #align polish_space.is_clopenable.compl PolishSpace.IsClopenable.compl
 
-theorem IsOpen.is_clopenable [TopologicalSpace α] [PolishSpace α] {s : Set α} (hs : IsOpen s) :
+theorem IsOpen.isClopenable [TopologicalSpace α] [PolishSpace α] {s : Set α} (hs : IsOpen s) :
     IsClopenable s := by simpa using hs.is_closed_compl.is_clopenable.compl
-#align is_open.is_clopenable IsOpen.is_clopenable
+#align is_open.is_clopenable IsOpen.isClopenable
 
-theorem IsClopenable.Union [t : TopologicalSpace α] [PolishSpace α] {s : ℕ → Set α}
+theorem IsClopenable.unionᵢ [t : TopologicalSpace α] [PolishSpace α] {s : ℕ → Set α}
     (hs : ∀ n, IsClopenable (s n)) : IsClopenable (⋃ n, s n) :=
   by
   choose m mt m_polish m_closed m_open using hs
@@ -529,16 +529,16 @@ theorem IsClopenable.Union [t : TopologicalSpace α] [PolishSpace α] {s : ℕ �
     ∃ t' : TopologicalSpace α, (∀ n : ℕ, t' ≤ m n) ∧ t' ≤ t ∧ @PolishSpace α t' :=
     exists_polish_space_forall_le m mt m_polish
   have A : @IsOpen α t' (⋃ n, s n) := by
-    apply is_open_Union
+    apply isOpen_unionᵢ
     intro n
     apply t'm n
     exact m_open n
   obtain ⟨t'', t''_le, t''_polish, h1, h2⟩ :
     ∃ t'' : TopologicalSpace α,
       t'' ≤ t' ∧ @PolishSpace α t'' ∧ @IsClosed α t'' (⋃ n, s n) ∧ @IsOpen α t'' (⋃ n, s n) :=
-    @IsOpen.is_clopenable α t' t'_polish _ A
+    @IsOpen.isClopenable α t' t'_polish _ A
   exact ⟨t'', t''_le.trans ((t'm 0).trans (mt 0)), t''_polish, h1, h2⟩
-#align polish_space.is_clopenable.Union PolishSpace.IsClopenable.Union
+#align polish_space.is_clopenable.Union PolishSpace.IsClopenable.unionᵢ
 
 end PolishSpace
 

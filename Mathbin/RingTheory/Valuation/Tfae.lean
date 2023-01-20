@@ -38,7 +38,7 @@ open LocalRing
 
 open BigOperators
 
-theorem exists_maximal_ideal_pow_eq_of_principal [IsNoetherianRing R] [LocalRing R] [IsDomain R]
+theorem exists_maximalIdeal_pow_eq_of_principal [IsNoetherianRing R] [LocalRing R] [IsDomain R]
     (h : ¬IsField R) (h' : (maximalIdeal R).IsPrincipal) (I : Ideal R) (hI : I ≠ ⊥) :
     ∃ n : ℕ, I = maximalIdeal R ^ n := by
   classical
@@ -50,9 +50,9 @@ theorem exists_maximal_ideal_pow_eq_of_principal [IsNoetherianRing R] [LocalRing
       (set_like.ext_iff.mp hx r).trans Ideal.mem_span_singleton
     have : x ≠ 0 := by
       rintro rfl
-      apply Ring.ne_bot_of_is_maximal_of_not_is_field (maximal_ideal.is_maximal R) h
+      apply Ring.ne_bot_of_isMaximal_of_not_isField (maximal_ideal.is_maximal R) h
       simp [hx]
-    have hx' := DiscreteValuationRing.irreducible_of_span_eq_maximal_ideal x this hx
+    have hx' := DiscreteValuationRing.irreducible_of_span_eq_maximalIdeal x this hx
     have H' : ∀ r : R, r ≠ 0 → r ∈ nonunits R → ∃ n : ℕ, Associated (x ^ n) r :=
       by
       intro r hr₁ hr₂
@@ -100,7 +100,7 @@ theorem exists_maximal_ideal_pow_eq_of_principal [IsNoetherianRing R] [LocalRing
       exact (H _).mpr (dvd_refl _)
     · rw [hx, Ideal.span_singleton_pow, Ideal.span_le, Set.singleton_subset_iff]
       exact Nat.find_spec this
-#align exists_maximal_ideal_pow_eq_of_principal exists_maximal_ideal_pow_eq_of_principal
+#align exists_maximal_ideal_pow_eq_of_principal exists_maximalIdeal_pow_eq_of_principal
 
 theorem maximalIdealIsPrincipalOfIsDedekindDomain [LocalRing R] [IsDomain R] [IsDedekindDomain R] :
     (maximalIdeal R).IsPrincipal := by
@@ -117,12 +117,12 @@ theorem maximalIdealIsPrincipalOfIsDedekindDomain [LocalRing R] [IsDomain R] [Is
     have hle : Ideal.span {a} ≤ maximal_ideal R := by rwa [Ideal.span_le, Set.singleton_subset_iff]
     have : (Ideal.span {a}).radical = maximal_ideal R :=
       by
-      rw [Ideal.radical_eq_Inf]
+      rw [Ideal.radical_eq_infₛ]
       apply le_antisymm
       · exact infₛ_le ⟨hle, inferInstance⟩
       · refine'
           le_infₛ fun I hI =>
-            (eq_maximal_ideal <| IsDedekindDomain.dimension_le_one _ (fun e => ha₂ _) hI.2).ge
+            (eq_maximal_ideal <| IsDedekindDomain.dimensionLeOne _ (fun e => ha₂ _) hI.2).ge
         rw [← Ideal.span_singleton_eq_bot, eq_bot_iff, ← e]
         exact hI.1
     have : ∃ n, maximal_ideal R ^ n ≤ Ideal.span {a} :=
@@ -156,8 +156,8 @@ theorem maximalIdealIsPrincipalOfIsDedekindDomain [LocalRing R] [IsDomain R] [Is
     let M := Submodule.map (Algebra.ofId R K).toLinearMap (maximal_ideal R)
     have ha₃ : algebraMap R K a ≠ 0 := is_fraction_ring.to_map_eq_zero_iff.not.mpr ha₂
     by_cases hx : ∀ y ∈ M, x * y ∈ M
-    · have := is_integral_of_smul_mem_submodule M _ _ x hx
-      · obtain ⟨y, e⟩ := IsIntegrallyClosed.algebra_map_eq_of_integral this
+    · have := isIntegral_of_smul_mem_submodule M _ _ x hx
+      · obtain ⟨y, e⟩ := IsIntegrallyClosed.algebraMap_eq_of_integral this
         refine' (hb₂ (ideal.mem_span_singleton'.mpr ⟨y, _⟩)).elim
         apply IsFractionRing.injective R K
         rw [map_mul, e, div_mul_cancel _ ha₃]
@@ -198,7 +198,7 @@ theorem maximalIdealIsPrincipalOfIsDedekindDomain [LocalRing R] [IsDomain R] [Is
      (Command.declModifiers [] [] [] [] [] [])
      (Command.theorem
       "theorem"
-      (Command.declId `DiscreteValuationRing.tfae [])
+      (Command.declId `DiscreteValuationRing.tFAE [])
       (Command.declSig
        [(Term.instBinder "[" [] (Term.app `IsNoetherianRing [`R]) "]")
         (Term.instBinder "[" [] (Term.app `LocalRing [`R]) "]")
@@ -272,7 +272,7 @@ theorem maximalIdealIsPrincipalOfIsDedekindDomain [LocalRing R] [IsDomain R] [Is
               []
               ":="
               (Term.app
-               `Ring.ne_bot_of_is_maximal_of_not_is_field
+               `Ring.ne_bot_of_isMaximal_of_not_isField
                [(Term.app `maximal_ideal.is_maximal [`R]) `h]))))
            []
            (Mathlib.Tactic.tacticClassical_
@@ -309,7 +309,7 @@ theorem maximalIdealIsPrincipalOfIsDedekindDomain [LocalRing R] [IsDomain R] [Is
                     []
                     [(Term.typeSpec ":" (Term.app `UniqueFactorizationMonoid [`R]))]
                     ":="
-                    `ufm_of_gcd_of_wf_dvd_monoid)))
+                    `ufm_of_gcd_of_wfDvdMonoid)))
                  []
                  (Tactic.apply "apply" `DiscreteValuationRing.ofUfdOfUniqueIrreducible)
                  []
@@ -333,7 +333,7 @@ theorem maximalIdealIsPrincipalOfIsDedekindDomain [LocalRing R] [IsDomain R] [Is
                           [])]
                         "⟩")])]
                     []
-                    [":=" [(Term.app `Ring.exists_not_is_unit_of_not_is_field [`h])]])
+                    [":=" [(Term.app `Ring.exists_not_isUnit_of_not_isField [`h])]])
                    []
                    (Std.Tactic.obtain
                     "obtain"
@@ -504,7 +504,7 @@ theorem maximalIdealIsPrincipalOfIsDedekindDomain [LocalRing R] [IsDomain R] [Is
                    (Tactic.apply
                     "apply"
                     (Term.app
-                     `Ring.ne_bot_of_is_maximal_of_not_is_field
+                     `Ring.ne_bot_of_isMaximal_of_not_isField
                      [(Term.app `maximal_ideal.is_maximal [`R]) `h]))
                    []
                    (Tactic.apply
@@ -567,7 +567,7 @@ theorem maximalIdealIsPrincipalOfIsDedekindDomain [LocalRing R] [IsDomain R] [Is
                        [(Tactic.rwRule
                          []
                          (Term.app
-                          `LocalRing.jacobson_eq_maximal_ideal
+                          `LocalRing.jacobson_eq_maximalIdeal
                           [(Term.typeAscription
                             "("
                             (Order.BoundedOrder.«term⊥» "⊥")
@@ -834,7 +834,7 @@ theorem maximalIdealIsPrincipalOfIsDedekindDomain [LocalRing R] [IsDomain R] [Is
                          []
                          (Tactic.rwRuleSeq
                           "["
-                          [(Tactic.rwRule [] `LocalRing.jacobson_eq_maximal_ideal)]
+                          [(Tactic.rwRule [] `LocalRing.jacobson_eq_maximalIdeal)]
                           "]")
                          [])
                         []
@@ -887,7 +887,7 @@ theorem maximalIdealIsPrincipalOfIsDedekindDomain [LocalRing R] [IsDomain R] [Is
                 (cdotTk (patternIgnore (token.«· » "·")))
                 [(Tactic.exact
                   "exact"
-                  (Term.app `exists_maximal_ideal_pow_eq_of_principal [`R `h]))])
+                  (Term.app `exists_maximalIdeal_pow_eq_of_principal [`R `h]))])
                []
                (Tactic.tfaeHave "tfae_have" [] (num "7") "→" (num "2"))
                []
@@ -1000,7 +1000,7 @@ theorem maximalIdealIsPrincipalOfIsDedekindDomain [LocalRing R] [IsDomain R] [Is
              []
              ":="
              (Term.app
-              `Ring.ne_bot_of_is_maximal_of_not_is_field
+              `Ring.ne_bot_of_isMaximal_of_not_isField
               [(Term.app `maximal_ideal.is_maximal [`R]) `h]))))
           []
           (Mathlib.Tactic.tacticClassical_
@@ -1036,7 +1036,7 @@ theorem maximalIdealIsPrincipalOfIsDedekindDomain [LocalRing R] [IsDomain R] [Is
                    []
                    [(Term.typeSpec ":" (Term.app `UniqueFactorizationMonoid [`R]))]
                    ":="
-                   `ufm_of_gcd_of_wf_dvd_monoid)))
+                   `ufm_of_gcd_of_wfDvdMonoid)))
                 []
                 (Tactic.apply "apply" `DiscreteValuationRing.ofUfdOfUniqueIrreducible)
                 []
@@ -1060,7 +1060,7 @@ theorem maximalIdealIsPrincipalOfIsDedekindDomain [LocalRing R] [IsDomain R] [Is
                          [])]
                        "⟩")])]
                    []
-                   [":=" [(Term.app `Ring.exists_not_is_unit_of_not_is_field [`h])]])
+                   [":=" [(Term.app `Ring.exists_not_isUnit_of_not_isField [`h])]])
                   []
                   (Std.Tactic.obtain
                    "obtain"
@@ -1227,7 +1227,7 @@ theorem maximalIdealIsPrincipalOfIsDedekindDomain [LocalRing R] [IsDomain R] [Is
                   (Tactic.apply
                    "apply"
                    (Term.app
-                    `Ring.ne_bot_of_is_maximal_of_not_is_field
+                    `Ring.ne_bot_of_isMaximal_of_not_isField
                     [(Term.app `maximal_ideal.is_maximal [`R]) `h]))
                   []
                   (Tactic.apply
@@ -1290,7 +1290,7 @@ theorem maximalIdealIsPrincipalOfIsDedekindDomain [LocalRing R] [IsDomain R] [Is
                       [(Tactic.rwRule
                         []
                         (Term.app
-                         `LocalRing.jacobson_eq_maximal_ideal
+                         `LocalRing.jacobson_eq_maximalIdeal
                          [(Term.typeAscription
                            "("
                            (Order.BoundedOrder.«term⊥» "⊥")
@@ -1554,7 +1554,7 @@ theorem maximalIdealIsPrincipalOfIsDedekindDomain [LocalRing R] [IsDomain R] [Is
                         []
                         (Tactic.rwRuleSeq
                          "["
-                         [(Tactic.rwRule [] `LocalRing.jacobson_eq_maximal_ideal)]
+                         [(Tactic.rwRule [] `LocalRing.jacobson_eq_maximalIdeal)]
                          "]")
                         [])
                        []
@@ -1605,9 +1605,7 @@ theorem maximalIdealIsPrincipalOfIsDedekindDomain [LocalRing R] [IsDomain R] [Is
               []
               (tactic__
                (cdotTk (patternIgnore (token.«· » "·")))
-               [(Tactic.exact
-                 "exact"
-                 (Term.app `exists_maximal_ideal_pow_eq_of_principal [`R `h]))])
+               [(Tactic.exact "exact" (Term.app `exists_maximalIdeal_pow_eq_of_principal [`R `h]))])
               []
               (Tactic.tfaeHave "tfae_have" [] (num "7") "→" (num "2"))
               []
@@ -1737,7 +1735,7 @@ theorem maximalIdealIsPrincipalOfIsDedekindDomain [LocalRing R] [IsDomain R] [Is
                []
                [(Term.typeSpec ":" (Term.app `UniqueFactorizationMonoid [`R]))]
                ":="
-               `ufm_of_gcd_of_wf_dvd_monoid)))
+               `ufm_of_gcd_of_wfDvdMonoid)))
             []
             (Tactic.apply "apply" `DiscreteValuationRing.ofUfdOfUniqueIrreducible)
             []
@@ -1761,7 +1759,7 @@ theorem maximalIdealIsPrincipalOfIsDedekindDomain [LocalRing R] [IsDomain R] [Is
                      [])]
                    "⟩")])]
                []
-               [":=" [(Term.app `Ring.exists_not_is_unit_of_not_is_field [`h])]])
+               [":=" [(Term.app `Ring.exists_not_isUnit_of_not_isField [`h])]])
               []
               (Std.Tactic.obtain
                "obtain"
@@ -1926,7 +1924,7 @@ theorem maximalIdealIsPrincipalOfIsDedekindDomain [LocalRing R] [IsDomain R] [Is
               (Tactic.apply
                "apply"
                (Term.app
-                `Ring.ne_bot_of_is_maximal_of_not_is_field
+                `Ring.ne_bot_of_isMaximal_of_not_isField
                 [(Term.app `maximal_ideal.is_maximal [`R]) `h]))
               []
               (Tactic.apply
@@ -1989,7 +1987,7 @@ theorem maximalIdealIsPrincipalOfIsDedekindDomain [LocalRing R] [IsDomain R] [Is
                   [(Tactic.rwRule
                     []
                     (Term.app
-                     `LocalRing.jacobson_eq_maximal_ideal
+                     `LocalRing.jacobson_eq_maximalIdeal
                      [(Term.typeAscription
                        "("
                        (Order.BoundedOrder.«term⊥» "⊥")
@@ -2248,7 +2246,7 @@ theorem maximalIdealIsPrincipalOfIsDedekindDomain [LocalRing R] [IsDomain R] [Is
                     []
                     (Tactic.rwRuleSeq
                      "["
-                     [(Tactic.rwRule [] `LocalRing.jacobson_eq_maximal_ideal)]
+                     [(Tactic.rwRule [] `LocalRing.jacobson_eq_maximalIdeal)]
                      "]")
                     [])
                    []
@@ -2299,7 +2297,7 @@ theorem maximalIdealIsPrincipalOfIsDedekindDomain [LocalRing R] [IsDomain R] [Is
           []
           (tactic__
            (cdotTk (patternIgnore (token.«· » "·")))
-           [(Tactic.exact "exact" (Term.app `exists_maximal_ideal_pow_eq_of_principal [`R `h]))])
+           [(Tactic.exact "exact" (Term.app `exists_maximalIdeal_pow_eq_of_principal [`R `h]))])
           []
           (Tactic.tfaeHave "tfae_have" [] (num "7") "→" (num "2"))
           []
@@ -2770,7 +2768,7 @@ theorem maximalIdealIsPrincipalOfIsDedekindDomain [LocalRing R] [IsDomain R] [Is
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 theorem
-  DiscreteValuationRing.tfae
+  DiscreteValuationRing.tFAE
   [ IsNoetherianRing R ] [ LocalRing R ] [ IsDomain R ] ( h : ¬ IsField R )
     :
       TFAE
@@ -2791,7 +2789,7 @@ theorem
           ]
   :=
     by
-      have ne_bot := Ring.ne_bot_of_is_maximal_of_not_is_field maximal_ideal.is_maximal R h
+      have ne_bot := Ring.ne_bot_of_isMaximal_of_not_isField maximal_ideal.is_maximal R h
         classical
           rw [ finrank_eq_one_iff' ]
             tfae_have 1 → 2
@@ -2800,10 +2798,10 @@ theorem
             ·
               intro
                 haveI := IsBezout.toGcdDomain R
-                haveI : UniqueFactorizationMonoid R := ufm_of_gcd_of_wf_dvd_monoid
+                haveI : UniqueFactorizationMonoid R := ufm_of_gcd_of_wfDvdMonoid
                 apply DiscreteValuationRing.ofUfdOfUniqueIrreducible
                 ·
-                  obtain ⟨ x , hx₁ , hx₂ ⟩ := Ring.exists_not_is_unit_of_not_is_field h
+                  obtain ⟨ x , hx₁ , hx₂ ⟩ := Ring.exists_not_isUnit_of_not_isField h
                     obtain ⟨ p , hp₁ , hp₂ ⟩ := WfDvdMonoid.exists_irreducible_factor hx₂ hx₁
                     exact ⟨ p , hp₁ ⟩
                 · exact ValuationRing.unique_irreducible
@@ -2847,7 +2845,7 @@ theorem
                 ·
                   intro e
                     rw [ Submodule.Quotient.mk_eq_zero ] at e
-                    apply Ring.ne_bot_of_is_maximal_of_not_is_field maximal_ideal.is_maximal R h
+                    apply Ring.ne_bot_of_isMaximal_of_not_isField maximal_ideal.is_maximal R h
                     apply Submodule.eq_bot_of_le_smul_of_le_jacobson_bot maximal_ideal R
                     · exact ⟨ { x } , Finset.coe_singleton x . symm ▸ hx.symm ⟩
                     ·
@@ -2855,7 +2853,7 @@ theorem
                         rw [ Submodule.mem_smul_top_iff ] at e
                         rwa [ Submodule.span_le , Set.singleton_subset_iff ]
                     ·
-                      rw [ LocalRing.jacobson_eq_maximal_ideal ( ⊥ : Ideal R ) bot_ne_top ]
+                      rw [ LocalRing.jacobson_eq_maximalIdeal ( ⊥ : Ideal R ) bot_ne_top ]
                         exact le_refl _
                 ·
                   refine' fun w => Quotient.inductionOn' w fun y => _
@@ -2895,7 +2893,7 @@ theorem
                   h₂
                     : maximal_ideal R ≤ ( ⊥ : Ideal R ) . jacobson
                     :=
-                    by rw [ LocalRing.jacobson_eq_maximal_ideal ] exacts [ le_refl _ , bot_ne_top ]
+                    by rw [ LocalRing.jacobson_eq_maximalIdeal ] exacts [ le_refl _ , bot_ne_top ]
                 have
                   :=
                     Submodule.smul_sup_eq_smul_sup_of_le_smul_of_le_jacobson
@@ -2904,7 +2902,7 @@ theorem
                 rw [ ← sup_eq_left , eq_comm ]
                 exact le_sup_left.antisymm h₁.trans <| le_of_eq this
             tfae_have 5 → 7
-            · exact exists_maximal_ideal_pow_eq_of_principal R h
+            · exact exists_maximalIdeal_pow_eq_of_principal R h
             tfae_have 7 → 2
             ·
               rw [ ValuationRing.iff_ideal_total ]
@@ -2921,5 +2919,5 @@ theorem
                 · left exact Ideal.pow_le_pow h'
                 · right exact Ideal.pow_le_pow h'
             tfae_finish
-#align discrete_valuation_ring.tfae DiscreteValuationRing.tfae
+#align discrete_valuation_ring.tfae DiscreteValuationRing.tFAE
 

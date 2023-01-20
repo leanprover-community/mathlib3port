@@ -60,9 +60,9 @@ theorem even_iff_not_odd : Even n ↔ ¬Odd n := by rw [not_odd_iff, even_iff]
 theorem odd_iff_not_even : Odd n ↔ ¬Even n := by rw [not_even_iff, odd_iff]
 #align nat.odd_iff_not_even Nat.odd_iff_not_even
 
-theorem is_compl_even_odd : IsCompl { n : ℕ | Even n } { n | Odd n } := by
+theorem isCompl_even_odd : IsCompl { n : ℕ | Even n } { n | Odd n } := by
   simp only [← Set.compl_setOf, isCompl_compl, odd_iff_not_even]
-#align nat.is_compl_even_odd Nat.is_compl_even_odd
+#align nat.is_compl_even_odd Nat.isCompl_even_odd
 
 theorem even_or_odd (n : ℕ) : Even n ∨ Odd n :=
   Or.imp_right odd_iff_not_even.2 <| em <| Even n
@@ -72,14 +72,14 @@ theorem even_or_odd' (n : ℕ) : ∃ k, n = 2 * k ∨ n = 2 * k + 1 := by
   simpa only [← two_mul, exists_or, ← Odd, ← Even] using even_or_odd n
 #align nat.even_or_odd' Nat.even_or_odd'
 
-theorem even_xor_odd (n : ℕ) : Xor' (Even n) (Odd n) :=
+theorem even_xor'_odd (n : ℕ) : Xor' (Even n) (Odd n) :=
   by
   cases' even_or_odd n with h
   · exact Or.inl ⟨h, even_iff_not_odd.mp h⟩
   · exact Or.inr ⟨h, odd_iff_not_even.mp h⟩
-#align nat.even_xor_odd Nat.even_xor_odd
+#align nat.even_xor_odd Nat.even_xor'_odd
 
-theorem even_xor_odd' (n : ℕ) : ∃ k, Xor' (n = 2 * k) (n = 2 * k + 1) :=
+theorem even_xor'_odd' (n : ℕ) : ∃ k, Xor' (n = 2 * k) (n = 2 * k + 1) :=
   by
   rcases even_or_odd n with (⟨k, rfl⟩ | ⟨k, rfl⟩) <;> use k
   ·
@@ -87,8 +87,8 @@ theorem even_xor_odd' (n : ℕ) : ∃ k, Xor' (n = 2 * k) (n = 2 * k + 1) :=
       and_false_iff] using (succ_ne_self (2 * k)).symm
   ·
     simp only [Xor', add_right_eq_self, false_or_iff, eq_self_iff_true, not_true, not_false_iff,
-      one_ne_zero, and_self_iff]
-#align nat.even_xor_odd' Nat.even_xor_odd'
+      one_neZero, and_self_iff]
+#align nat.even_xor_odd' Nat.even_xor'_odd'
 
 @[simp]
 theorem two_dvd_ne_zero : ¬2 ∣ n ↔ n % 2 = 1 :=

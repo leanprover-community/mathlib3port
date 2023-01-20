@@ -109,23 +109,19 @@ instance : EquivLike (α ≃ β) α β where
 instance : CoeFun (α ≃ β) fun _ => α → β :=
   ⟨toFun⟩
 
-#print Equiv.coe_fn_mk /-
 @[simp]
-theorem coe_fn_mk (f : α → β) (g l r) : (Equiv.mk f g l r : α → β) = f :=
+theorem coeFn_mk (f : α → β) (g l r) : (Equiv.mk f g l r : α → β) = f :=
   rfl
-#align equiv.coe_fn_mk Equiv.coe_fn_mk
--/
+#align equiv.coe_fn_mk Equiv.coeFn_mk
 
-#print Equiv.coe_fn_injective /-
 /-- The map `coe_fn : (r ≃ s) → (r → s)` is injective. -/
-theorem coe_fn_injective : @Function.Injective (α ≃ β) (α → β) coeFn :=
+theorem coeFn_injective : @Function.Injective (α ≃ β) (α → β) coeFn :=
   FunLike.coe_injective
-#align equiv.coe_fn_injective Equiv.coe_fn_injective
--/
+#align equiv.coe_fn_injective Equiv.coeFn_injective
 
 #print Equiv.coe_inj /-
 protected theorem coe_inj {e₁ e₂ : α ≃ β} : (e₁ : α → β) = e₂ ↔ e₁ = e₂ :=
-  FunLike.coe_fn_eq
+  FunLike.coeFn_eq
 #align equiv.coe_inj Equiv.coe_inj
 -/
 
@@ -350,12 +346,10 @@ protected def cast {α β : Sort _} (h : α = β) : α ≃ β :=
 #align equiv.cast Equiv.cast
 -/
 
-#print Equiv.coe_fn_symm_mk /-
 @[simp]
-theorem coe_fn_symm_mk (f : α → β) (g l r) : ((Equiv.mk f g l r).symm : β → α) = g :=
+theorem coeFn_symm_mk (f : α → β) (g l r) : ((Equiv.mk f g l r).symm : β → α) = g :=
   rfl
-#align equiv.coe_fn_symm_mk Equiv.coe_fn_symm_mk
--/
+#align equiv.coe_fn_symm_mk Equiv.coeFn_symm_mk
 
 #print Equiv.coe_refl /-
 @[simp]
@@ -484,13 +478,11 @@ theorem cast_trans {α β γ} (h : α = β) (h2 : β = γ) :
 #align equiv.cast_trans Equiv.cast_trans
 -/
 
-#print Equiv.cast_eq_iff_heq /-
-theorem cast_eq_iff_heq {α β} (h : α = β) {a : α} {b : β} : Equiv.cast h a = b ↔ HEq a b :=
+theorem cast_eq_iff_hEq {α β} (h : α = β) {a : α} {b : β} : Equiv.cast h a = b ↔ HEq a b :=
   by
   subst h
   simp
-#align equiv.cast_eq_iff_heq Equiv.cast_eq_iff_heq
--/
+#align equiv.cast_eq_iff_heq Equiv.cast_eq_iff_hEq
 
 /- warning: equiv.symm_apply_eq -> Equiv.symm_apply_eq is a dubious translation:
 lean 3 declaration is
@@ -583,13 +575,17 @@ theorem trans_assoc {δ} (ab : α ≃ β) (bc : β ≃ γ) (cd : γ ≃ δ) :
   Equiv.ext fun a => rfl
 #align equiv.trans_assoc Equiv.trans_assoc
 
-theorem left_inverse_symm (f : Equiv α β) : LeftInverse f.symm f :=
+#print Equiv.leftInverse_symm /-
+theorem leftInverse_symm (f : Equiv α β) : LeftInverse f.symm f :=
   f.left_inv
-#align equiv.left_inverse_symm Equiv.left_inverse_symm
+#align equiv.left_inverse_symm Equiv.leftInverse_symm
+-/
 
-theorem right_inverse_symm (f : Equiv α β) : Function.RightInverse f.symm f :=
+#print Equiv.rightInverse_symm /-
+theorem rightInverse_symm (f : Equiv α β) : Function.RightInverse f.symm f :=
   f.right_inv
-#align equiv.right_inverse_symm Equiv.right_inverse_symm
+#align equiv.right_inverse_symm Equiv.rightInverse_symm
+-/
 
 #print Equiv.injective_comp /-
 theorem injective_comp (e : α ≃ β) (f : β → γ) : Injective (f ∘ e) ↔ Injective f :=
@@ -1279,15 +1275,22 @@ def sigmaCongrRight {α} {β₁ β₂ : α → Type _} (F : ∀ a, β₁ a ≃ �
 #align equiv.sigma_congr_right Equiv.sigmaCongrRight
 -/
 
+/- warning: equiv.sigma_congr_right_trans clashes with equiv.sigmaCongrRight -> Equiv.sigmaCongrRight_trans
+warning: equiv.sigma_congr_right_trans -> Equiv.sigmaCongrRight_trans is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β₁ : α -> Type.{u2}} {β₂ : α -> Type.{u3}} {β₃ : α -> Type.{u4}} (F : forall (a : α), Equiv.{succ u2, succ u3} (β₁ a) (β₂ a)) (G : forall (a : α), Equiv.{succ u3, succ u4} (β₂ a) (β₃ a)), Eq.{max 1 (max (max (succ u1) (succ u2)) (succ u1) (succ u4)) (max (succ u1) (succ u4)) (succ u1) (succ u2)} (Equiv.{max (succ u1) (succ u2), max (succ u1) (succ u4)} (Sigma.{u1, u2} α (fun (a : α) => β₁ a)) (Sigma.{u1, u4} α (fun (a : α) => β₃ a))) (Equiv.trans.{max (succ u1) (succ u2), max (succ u1) (succ u3), max (succ u1) (succ u4)} (Sigma.{u1, u2} α (fun (a : α) => β₁ a)) (Sigma.{u1, u3} α (fun (a : α) => β₂ a)) (Sigma.{u1, u4} α (fun (a : α) => β₃ a)) (Equiv.sigmaCongrRight.{u1, u2, u3} α (fun (a : α) => β₁ a) (fun (a : α) => β₂ a) F) (Equiv.sigmaCongrRight.{u1, u3, u4} α (fun (a : α) => β₂ a) (fun (a : α) => β₃ a) G)) (Equiv.sigmaCongrRight.{u1, u2, u4} α (fun (a : α) => β₁ a) (fun (a : α) => β₃ a) (fun (a : α) => Equiv.trans.{succ u2, succ u3, succ u4} (β₁ a) (β₂ a) (β₃ a) (F a) (G a)))
+but is expected to have type
+  forall {α : Type.{u4}} {β₁ : α -> Type.{u3}} {β₂ : α -> Type.{u2}} {β₃ : α -> Type.{u1}} (F : forall (a : α), Equiv.{succ u3, succ u2} (β₁ a) (β₂ a)) (G : forall (a : α), Equiv.{succ u2, succ u1} (β₂ a) (β₃ a)), Eq.{max (max (succ u3) (succ u1)) (succ u4)} (Equiv.{max (succ u3) (succ u4), max (succ u4) (succ u1)} (Sigma.{u4, u3} α (fun (a : α) => β₁ a)) (Sigma.{u4, u1} α (fun (a : α) => β₃ a))) (Equiv.trans.{max (succ u3) (succ u4), max (succ u2) (succ u4), max (succ u4) (succ u1)} (Sigma.{u4, u3} α (fun (a : α) => β₁ a)) (Sigma.{u4, u2} α (fun (a : α) => β₂ a)) (Sigma.{u4, u1} α (fun (a : α) => β₃ a)) (Equiv.sigmaCongrRight.{u4, u3, u2} α (fun (a : α) => β₁ a) (fun (a : α) => β₂ a) F) (Equiv.sigmaCongrRight.{u4, u2, u1} α (fun (a : α) => β₂ a) (fun (a : α) => β₃ a) G)) (Equiv.sigmaCongrRight.{u4, u3, u1} α (fun (a : α) => β₁ a) (fun (a : α) => β₃ a) (fun (a : α) => Equiv.trans.{succ u3, succ u2, succ u1} (β₁ a) (β₂ a) (β₃ a) (F a) (G a)))
+Case conversion may be inaccurate. Consider using '#align equiv.sigma_congr_right_trans Equiv.sigmaCongrRight_transₓ'. -/
 @[simp]
-theorem sigma_congr_right_trans {α} {β₁ β₂ β₃ : α → Type _} (F : ∀ a, β₁ a ≃ β₂ a)
+theorem sigmaCongrRight_trans {α} {β₁ β₂ β₃ : α → Type _} (F : ∀ a, β₁ a ≃ β₂ a)
     (G : ∀ a, β₂ a ≃ β₃ a) :
     (sigmaCongrRight F).trans (sigmaCongrRight G) = sigmaCongrRight fun a => (F a).trans (G a) :=
   by
   ext1 x
   cases x
   rfl
-#align equiv.sigma_congr_right_trans Equiv.sigma_congr_right_trans
+#align equiv.sigma_congr_right_trans Equiv.sigmaCongrRight_trans
 
 /- warning: equiv.sigma_congr_right_symm -> Equiv.sigmaCongrRight_symm is a dubious translation:
 lean 3 declaration is
@@ -1371,7 +1374,7 @@ Case conversion may be inaccurate. Consider using '#align equiv.perm.sigma_congr
 @[simp]
 theorem sigmaCongrRight_trans {α} {β : α → Sort _} (F : ∀ a, Perm (β a)) (G : ∀ a, Perm (β a)) :
     (sigmaCongrRight F).trans (sigmaCongrRight G) = sigmaCongrRight fun a => (F a).trans (G a) :=
-  Equiv.sigma_congr_right_trans F G
+  Equiv.sigmaCongrRight_trans F G
 #align equiv.perm.sigma_congr_right_trans Equiv.Perm.sigmaCongrRight_trans
 
 /- warning: equiv.perm.sigma_congr_right_symm -> Equiv.Perm.sigmaCongrRight_symm is a dubious translation:
@@ -1468,8 +1471,7 @@ def sigmaAssoc {α : Type _} {β : α → Type _} (γ : ∀ a : α, β a → Typ
 
 end
 
-#print Equiv.exists_unique_congr /-
-protected theorem exists_unique_congr {p : α → Prop} {q : β → Prop} (f : α ≃ β)
+protected theorem existsUnique_congr {p : α → Prop} {q : β → Prop} (f : α ≃ β)
     (h : ∀ {x}, p x ↔ q (f x)) : (∃! x, p x) ↔ ∃! y, q y :=
   by
   constructor
@@ -1477,22 +1479,17 @@ protected theorem exists_unique_congr {p : α → Prop} {q : β → Prop} (f : �
     exact ⟨f a, h.1 ha₁, fun b hb => f.symm_apply_eq.1 (ha₂ (f.symm b) (h.2 (by simpa using hb)))⟩
   · rintro ⟨b, hb₁, hb₂⟩
     exact ⟨f.symm b, h.2 (by simpa using hb₁), fun y hy => (eq_symm_apply f).2 (hb₂ _ (h.1 hy))⟩
-#align equiv.exists_unique_congr Equiv.exists_unique_congr
--/
+#align equiv.exists_unique_congr Equiv.existsUnique_congr
 
-#print Equiv.exists_unique_congr_left' /-
-protected theorem exists_unique_congr_left' {p : α → Prop} (f : α ≃ β) :
+protected theorem existsUnique_congr_left' {p : α → Prop} (f : α ≃ β) :
     (∃! x, p x) ↔ ∃! y, p (f.symm y) :=
-  Equiv.exists_unique_congr f fun x => by simp
-#align equiv.exists_unique_congr_left' Equiv.exists_unique_congr_left'
--/
+  Equiv.existsUnique_congr f fun x => by simp
+#align equiv.exists_unique_congr_left' Equiv.existsUnique_congr_left'
 
-#print Equiv.exists_unique_congr_left /-
-protected theorem exists_unique_congr_left {p : β → Prop} (f : α ≃ β) :
+protected theorem existsUnique_congr_left {p : β → Prop} (f : α ≃ β) :
     (∃! x, p (f x)) ↔ ∃! y, p y :=
-  (Equiv.exists_unique_congr_left' f.symm).symm
-#align equiv.exists_unique_congr_left Equiv.exists_unique_congr_left
--/
+  (Equiv.existsUnique_congr_left' f.symm).symm
+#align equiv.exists_unique_congr_left Equiv.existsUnique_congr_left
 
 #print Equiv.forall_congr /-
 protected theorem forall_congr {p : α → Prop} {q : β → Prop} (f : α ≃ β)
@@ -1672,14 +1669,12 @@ protected def congr {ra : Setoid α} {rb : Setoid β} (e : α ≃ β)
 #align quotient.congr Quotient.congr
 -/
 
-#print Quotient.congr_mk /-
 @[simp]
-theorem congr_mk {ra : Setoid α} {rb : Setoid β} (e : α ≃ β)
+theorem congr_mk'' {ra : Setoid α} {rb : Setoid β} (e : α ≃ β)
     (eq : ∀ a₁ a₂ : α, Setoid.r a₁ a₂ ↔ Setoid.r (e a₁) (e a₂)) (a : α) :
     Quotient.congr e Eq (Quotient.mk'' a) = Quotient.mk'' (e a) :=
   rfl
-#align quotient.congr_mk Quotient.congr_mk
--/
+#align quotient.congr_mk Quotient.congr_mk''
 
 #print Quotient.congrRight /-
 /-- Quotients are congruent on equivalences under equality of their relation.

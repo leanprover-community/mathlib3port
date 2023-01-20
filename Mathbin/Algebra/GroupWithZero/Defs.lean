@@ -124,23 +124,47 @@ section CommSemigroupWithZero
 
 variable [CommSemigroup M₀] [Zero M₀]
 
-theorem IsLeftCancelMulZero.to_is_right_cancel_mul_zero [IsLeftCancelMulZero M₀] :
+/- warning: is_left_cancel_mul_zero.to_is_right_cancel_mul_zero -> IsLeftCancelMulZero.to_isRightCancelMulZero is a dubious translation:
+lean 3 declaration is
+  forall {M₀ : Type.{u1}} [_inst_1 : CommSemigroup.{u1} M₀] [_inst_2 : Zero.{u1} M₀] [_inst_3 : IsLeftCancelMulZero.{u1} M₀ (Semigroup.toHasMul.{u1} M₀ (CommSemigroup.toSemigroup.{u1} M₀ _inst_1)) _inst_2], IsRightCancelMulZero.{u1} M₀ (Semigroup.toHasMul.{u1} M₀ (CommSemigroup.toSemigroup.{u1} M₀ _inst_1)) _inst_2
+but is expected to have type
+  forall {M₀ : Type.{u1}} [_inst_1 : CommSemigroup.{u1} M₀] [_inst_2 : Zero.{u1} M₀] [_inst_3 : IsLeftCancelMulZero.{u1} M₀ (Semigroup.toMul.{u1} M₀ (CommSemigroup.toSemigroup.{u1} M₀ _inst_1)) _inst_2], IsRightCancelMulZero.{u1} M₀ (Semigroup.toMul.{u1} M₀ (CommSemigroup.toSemigroup.{u1} M₀ _inst_1)) _inst_2
+Case conversion may be inaccurate. Consider using '#align is_left_cancel_mul_zero.to_is_right_cancel_mul_zero IsLeftCancelMulZero.to_isRightCancelMulZeroₓ'. -/
+theorem IsLeftCancelMulZero.to_isRightCancelMulZero [IsLeftCancelMulZero M₀] :
     IsRightCancelMulZero M₀ :=
   ⟨fun a b c ha h => mul_left_cancel₀ ha <| (mul_comm _ _).trans <| h.trans (mul_comm _ _)⟩
-#align is_left_cancel_mul_zero.to_is_right_cancel_mul_zero IsLeftCancelMulZero.to_is_right_cancel_mul_zero
+#align is_left_cancel_mul_zero.to_is_right_cancel_mul_zero IsLeftCancelMulZero.to_isRightCancelMulZero
 
-theorem IsRightCancelMulZero.to_is_left_cancel_mul_zero [IsRightCancelMulZero M₀] :
+/- warning: is_right_cancel_mul_zero.to_is_left_cancel_mul_zero -> IsRightCancelMulZero.to_isLeftCancelMulZero is a dubious translation:
+lean 3 declaration is
+  forall {M₀ : Type.{u1}} [_inst_1 : CommSemigroup.{u1} M₀] [_inst_2 : Zero.{u1} M₀] [_inst_3 : IsRightCancelMulZero.{u1} M₀ (Semigroup.toHasMul.{u1} M₀ (CommSemigroup.toSemigroup.{u1} M₀ _inst_1)) _inst_2], IsLeftCancelMulZero.{u1} M₀ (Semigroup.toHasMul.{u1} M₀ (CommSemigroup.toSemigroup.{u1} M₀ _inst_1)) _inst_2
+but is expected to have type
+  forall {M₀ : Type.{u1}} [_inst_1 : CommSemigroup.{u1} M₀] [_inst_2 : Zero.{u1} M₀] [_inst_3 : IsRightCancelMulZero.{u1} M₀ (Semigroup.toMul.{u1} M₀ (CommSemigroup.toSemigroup.{u1} M₀ _inst_1)) _inst_2], IsLeftCancelMulZero.{u1} M₀ (Semigroup.toMul.{u1} M₀ (CommSemigroup.toSemigroup.{u1} M₀ _inst_1)) _inst_2
+Case conversion may be inaccurate. Consider using '#align is_right_cancel_mul_zero.to_is_left_cancel_mul_zero IsRightCancelMulZero.to_isLeftCancelMulZeroₓ'. -/
+theorem IsRightCancelMulZero.to_isLeftCancelMulZero [IsRightCancelMulZero M₀] :
     IsLeftCancelMulZero M₀ :=
   ⟨fun a b c ha h => mul_right_cancel₀ ha <| (mul_comm _ _).trans <| h.trans (mul_comm _ _)⟩
-#align is_right_cancel_mul_zero.to_is_left_cancel_mul_zero IsRightCancelMulZero.to_is_left_cancel_mul_zero
+#align is_right_cancel_mul_zero.to_is_left_cancel_mul_zero IsRightCancelMulZero.to_isLeftCancelMulZero
 
-theorem IsLeftCancelMulZero.to_is_cancel_mul_zero [IsLeftCancelMulZero M₀] : IsCancelMulZero M₀ :=
-  { ‹IsLeftCancelMulZero M₀›, IsLeftCancelMulZero.to_is_right_cancel_mul_zero with }
-#align is_left_cancel_mul_zero.to_is_cancel_mul_zero IsLeftCancelMulZero.to_is_cancel_mul_zero
+/- warning: is_left_cancel_mul_zero.to_is_cancel_mul_zero -> IsLeftCancelMulZero.to_isCancelMulZero is a dubious translation:
+lean 3 declaration is
+  forall {M₀ : Type.{u1}} [_inst_1 : CommSemigroup.{u1} M₀] [_inst_2 : Zero.{u1} M₀] [_inst_3 : IsLeftCancelMulZero.{u1} M₀ (Semigroup.toHasMul.{u1} M₀ (CommSemigroup.toSemigroup.{u1} M₀ _inst_1)) _inst_2], IsCancelMulZero.{u1} M₀ (Semigroup.toHasMul.{u1} M₀ (CommSemigroup.toSemigroup.{u1} M₀ _inst_1)) _inst_2
+but is expected to have type
+  forall {M₀ : Type.{u1}} [_inst_1 : CommSemigroup.{u1} M₀] [_inst_2 : Zero.{u1} M₀] [_inst_3 : IsLeftCancelMulZero.{u1} M₀ (Semigroup.toMul.{u1} M₀ (CommSemigroup.toSemigroup.{u1} M₀ _inst_1)) _inst_2], IsCancelMulZero.{u1} M₀ (Semigroup.toMul.{u1} M₀ (CommSemigroup.toSemigroup.{u1} M₀ _inst_1)) _inst_2
+Case conversion may be inaccurate. Consider using '#align is_left_cancel_mul_zero.to_is_cancel_mul_zero IsLeftCancelMulZero.to_isCancelMulZeroₓ'. -/
+theorem IsLeftCancelMulZero.to_isCancelMulZero [IsLeftCancelMulZero M₀] : IsCancelMulZero M₀ :=
+  { ‹IsLeftCancelMulZero M₀›, IsLeftCancelMulZero.to_isRightCancelMulZero with }
+#align is_left_cancel_mul_zero.to_is_cancel_mul_zero IsLeftCancelMulZero.to_isCancelMulZero
 
-theorem IsRightCancelMulZero.to_is_cancel_mul_zero [IsRightCancelMulZero M₀] : IsCancelMulZero M₀ :=
-  { ‹IsRightCancelMulZero M₀›, IsRightCancelMulZero.to_is_left_cancel_mul_zero with }
-#align is_right_cancel_mul_zero.to_is_cancel_mul_zero IsRightCancelMulZero.to_is_cancel_mul_zero
+/- warning: is_right_cancel_mul_zero.to_is_cancel_mul_zero -> IsRightCancelMulZero.to_isCancelMulZero is a dubious translation:
+lean 3 declaration is
+  forall {M₀ : Type.{u1}} [_inst_1 : CommSemigroup.{u1} M₀] [_inst_2 : Zero.{u1} M₀] [_inst_3 : IsRightCancelMulZero.{u1} M₀ (Semigroup.toHasMul.{u1} M₀ (CommSemigroup.toSemigroup.{u1} M₀ _inst_1)) _inst_2], IsCancelMulZero.{u1} M₀ (Semigroup.toHasMul.{u1} M₀ (CommSemigroup.toSemigroup.{u1} M₀ _inst_1)) _inst_2
+but is expected to have type
+  forall {M₀ : Type.{u1}} [_inst_1 : CommSemigroup.{u1} M₀] [_inst_2 : Zero.{u1} M₀] [_inst_3 : IsRightCancelMulZero.{u1} M₀ (Semigroup.toMul.{u1} M₀ (CommSemigroup.toSemigroup.{u1} M₀ _inst_1)) _inst_2], IsCancelMulZero.{u1} M₀ (Semigroup.toMul.{u1} M₀ (CommSemigroup.toSemigroup.{u1} M₀ _inst_1)) _inst_2
+Case conversion may be inaccurate. Consider using '#align is_right_cancel_mul_zero.to_is_cancel_mul_zero IsRightCancelMulZero.to_isCancelMulZeroₓ'. -/
+theorem IsRightCancelMulZero.to_isCancelMulZero [IsRightCancelMulZero M₀] : IsCancelMulZero M₀ :=
+  { ‹IsRightCancelMulZero M₀›, IsRightCancelMulZero.to_isLeftCancelMulZero with }
+#align is_right_cancel_mul_zero.to_is_cancel_mul_zero IsRightCancelMulZero.to_isCancelMulZero
 
 end CommSemigroupWithZero
 
@@ -198,10 +222,10 @@ class CancelMonoidWithZero (M₀ : Type _) extends MonoidWithZero M₀ where
 -/
 
 /-- A `cancel_monoid_with_zero` satisfies `is_cancel_mul_zero`. -/
-instance (priority := 100) CancelMonoidWithZero.to_is_cancel_mul_zero [CancelMonoidWithZero M₀] :
+instance (priority := 100) CancelMonoidWithZero.to_isCancelMulZero [CancelMonoidWithZero M₀] :
     IsCancelMulZero M₀ :=
   { ‹CancelMonoidWithZero M₀› with }
-#align cancel_monoid_with_zero.to_is_cancel_mul_zero CancelMonoidWithZero.to_is_cancel_mul_zero
+#align cancel_monoid_with_zero.to_is_cancel_mul_zero CancelMonoidWithZero.to_isCancelMulZero
 
 #print CommMonoidWithZero /-
 /-- A type `M` is a commutative “monoid with zero” if it is a commutative monoid with zero
@@ -224,7 +248,7 @@ class CancelCommMonoidWithZero (M₀ : Type _) extends CommMonoidWithZero M₀ w
 #print CancelCommMonoidWithZero.toCancelMonoidWithZero /-
 instance (priority := 100) CancelCommMonoidWithZero.toCancelMonoidWithZero
     [h : CancelCommMonoidWithZero M₀] : CancelMonoidWithZero M₀ :=
-  { h, @IsLeftCancelMulZero.to_is_right_cancel_mul_zero M₀ _ _ { h with } with }
+  { h, @IsLeftCancelMulZero.to_isRightCancelMulZero M₀ _ _ { h with } with }
 #align cancel_comm_monoid_with_zero.to_cancel_monoid_with_zero CancelCommMonoidWithZero.toCancelMonoidWithZero
 -/
 
@@ -276,7 +300,7 @@ class CommGroupWithZero (G₀ : Type _) extends CommMonoidWithZero G₀, GroupWi
 
 section NeZero
 
-attribute [field_simps] two_ne_zero three_ne_zero four_ne_zero
+attribute [field_simps] two_neZero three_neZero four_neZero
 
 variable [MulZeroOneClass M₀] [Nontrivial M₀] {a b : M₀}
 

@@ -93,7 +93,7 @@ theorem measurable_lintegral {f : α → ℝ≥0∞} (hf : Measurable f) :
     Measurable fun μ : Measure α => ∫⁻ x, f x ∂μ :=
   by
   simp only [lintegral_eq_supr_eapprox_lintegral, hf, simple_func.lintegral]
-  refine' measurable_supr fun n => Finset.measurable_sum _ fun i _ => _
+  refine' measurable_supᵢ fun n => Finset.measurable_sum _ fun i _ => _
   refine' Measurable.const_mul _ _
   exact measurable_coe ((simple_func.eapprox f n).measurable_set_preimage _)
 #align measure_theory.measure.measurable_lintegral MeasureTheory.Measure.measurable_lintegral
@@ -113,7 +113,7 @@ def join (m : Measure (Measure α)) : Measure α :=
 @[simp]
 theorem join_apply {m : Measure (Measure α)} {s : Set α} (hs : MeasurableSet s) :
     join m s = ∫⁻ μ, μ s ∂m :=
-  Measure.of_measurable_apply s hs
+  Measure.ofMeasurable_apply s hs
 #align measure_theory.measure.join_apply MeasureTheory.Measure.join_apply
 
 @[simp]

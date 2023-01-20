@@ -77,14 +77,14 @@ theorem orbit_nonempty (b : β) : Set.Nonempty (orbit α b) :=
 #align add_action.orbit_nonempty AddAction.orbit_nonempty
 
 @[to_additive]
-theorem maps_to_smul_orbit (a : α) (b : β) : Set.MapsTo ((· • ·) a) (orbit α b) (orbit α b) :=
+theorem mapsTo_smul_orbit (a : α) (b : β) : Set.MapsTo ((· • ·) a) (orbit α b) (orbit α b) :=
   Set.range_subset_iff.2 fun a' => ⟨a * a', mul_smul _ _ _⟩
-#align mul_action.maps_to_smul_orbit MulAction.maps_to_smul_orbit
-#align add_action.maps_to_vadd_orbit AddAction.maps_to_vadd_orbit
+#align mul_action.maps_to_smul_orbit MulAction.mapsTo_smul_orbit
+#align add_action.maps_to_vadd_orbit AddAction.mapsTo_vadd_orbit
 
 @[to_additive]
 theorem smul_orbit_subset (a : α) (b : β) : a • orbit α b ⊆ orbit α b :=
-  (maps_to_smul_orbit a b).image_subset
+  (mapsTo_smul_orbit a b).image_subset
 #align mul_action.smul_orbit_subset MulAction.smul_orbit_subset
 #align add_action.vadd_orbit_subset AddAction.vadd_orbit_subset
 
@@ -97,7 +97,7 @@ theorem orbit_smul_subset (a : α) (b : β) : orbit α (a • b) ⊆ orbit α b 
 @[to_additive]
 instance {b : β} : MulAction α (orbit α b)
     where
-  smul a := (maps_to_smul_orbit a b).restrict _ _ _
+  smul a := (mapsTo_smul_orbit a b).restrict _ _ _
   one_smul a := Subtype.ext (one_smul α a)
   mul_smul a a' b' := Subtype.ext (mul_smul a a' b')
 
@@ -124,25 +124,25 @@ def fixedBy (g : α) : Set β :=
 #align add_action.fixed_by AddAction.fixedBy
 
 @[to_additive]
-theorem fixed_eq_Inter_fixed_by : fixedPoints α β = ⋂ g : α, fixedBy α β g :=
+theorem fixed_eq_interᵢ_fixedBy : fixedPoints α β = ⋂ g : α, fixedBy α β g :=
   Set.ext fun x =>
     ⟨fun hx => Set.mem_interᵢ.2 fun g => hx g, fun hx g => (Set.mem_interᵢ.1 hx g : _)⟩
-#align mul_action.fixed_eq_Inter_fixed_by MulAction.fixed_eq_Inter_fixed_by
-#align add_action.fixed_eq_Inter_fixed_by AddAction.fixed_eq_Inter_fixed_by
+#align mul_action.fixed_eq_Inter_fixed_by MulAction.fixed_eq_interᵢ_fixedBy
+#align add_action.fixed_eq_Inter_fixed_by AddAction.fixed_eq_interᵢ_fixedBy
 
 variable {α} (β)
 
 @[simp, to_additive]
-theorem mem_fixed_points {b : β} : b ∈ fixedPoints α β ↔ ∀ x : α, x • b = b :=
+theorem mem_fixedPoints {b : β} : b ∈ fixedPoints α β ↔ ∀ x : α, x • b = b :=
   Iff.rfl
-#align mul_action.mem_fixed_points MulAction.mem_fixed_points
-#align add_action.mem_fixed_points AddAction.mem_fixed_points
+#align mul_action.mem_fixed_points MulAction.mem_fixedPoints
+#align add_action.mem_fixed_points AddAction.mem_fixedPoints
 
 @[simp, to_additive]
-theorem mem_fixed_by {g : α} {b : β} : b ∈ fixedBy α β g ↔ g • b = b :=
+theorem mem_fixedBy {g : α} {b : β} : b ∈ fixedBy α β g ↔ g • b = b :=
   Iff.rfl
-#align mul_action.mem_fixed_by MulAction.mem_fixed_by
-#align add_action.mem_fixed_by AddAction.mem_fixed_by
+#align mul_action.mem_fixed_by MulAction.mem_fixedBy
+#align add_action.mem_fixed_by AddAction.mem_fixedBy
 
 @[to_additive]
 theorem mem_fixed_points' {b : β} : b ∈ fixedPoints α β ↔ ∀ b', b' ∈ orbit α b → b' = b :=
@@ -181,7 +181,7 @@ theorem orbit_eq_univ [IsPretransitive α β] (x : β) : orbit α x = Set.univ :
 variable {α} {β}
 
 @[to_additive]
-theorem mem_fixed_points_iff_card_orbit_eq_one {a : β} [Fintype (orbit α a)] :
+theorem mem_fixedPoints_iff_card_orbit_eq_one {a : β} [Fintype (orbit α a)] :
     a ∈ fixedPoints α β ↔ Fintype.card (orbit α a) = 1 :=
   by
   rw [Fintype.card_eq_one_iff, mem_fixed_points]
@@ -193,8 +193,8 @@ theorem mem_fixed_points_iff_card_orbit_eq_one {a : β} [Fintype (orbit α a)] :
       x • a = z := Subtype.mk.inj (hz₁ ⟨x • a, mem_orbit _ _⟩)
       _ = a := (Subtype.mk.inj (hz₁ ⟨a, mem_orbit_self _⟩)).symm
       
-#align mul_action.mem_fixed_points_iff_card_orbit_eq_one MulAction.mem_fixed_points_iff_card_orbit_eq_one
-#align add_action.mem_fixed_points_iff_card_orbit_eq_zero AddAction.mem_fixed_points_iff_card_orbit_eq_zero
+#align mul_action.mem_fixed_points_iff_card_orbit_eq_one MulAction.mem_fixedPoints_iff_card_orbit_eq_one
+#align add_action.mem_fixed_points_iff_card_orbit_eq_zero AddAction.mem_fixedPoints_iff_card_orbit_eq_zero
 
 end MulAction
 

@@ -110,7 +110,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : OrderedCancelCommMonoid.{u1} α], ContravariantClass.{u1, u1} (OrderDual.{u1} α) (OrderDual.{u1} α) (Mul.mul.{u1} (OrderDual.{u1} α) (instMulOrderDual.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (RightCancelMonoid.toMonoid.{u1} α (CancelMonoid.toRightCancelMonoid.{u1} α (CancelCommMonoid.toCancelMonoid.{u1} α (OrderedCancelCommMonoid.toCancelCommMonoid.{u1} α _inst_1)))))))) (LE.le.{u1} (OrderDual.{u1} α) (OrderDual.instLEOrderDual.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCancelCommMonoid.toPartialOrder.{u1} α _inst_1)))))
 Case conversion may be inaccurate. Consider using '#align order_dual.ordered_cancel_comm_monoid.to_contravariant_class OrderDual.OrderedCancelCommMonoid.to_contravariantClassₓ'. -/
-@[to_additive OrderedCancelAddCommMonoid.to_contravariant_class]
+@[to_additive OrderedCancelAddCommMonoid.to_contravariantClass]
 instance OrderedCancelCommMonoid.to_contravariantClass [OrderedCancelCommMonoid α] :
     ContravariantClass αᵒᵈ αᵒᵈ Mul.mul LE.le
     where elim a b c := OrderedCancelCommMonoid.le_of_mul_le_mul_left a c b

@@ -199,10 +199,9 @@ noncomputable def dualTensorIsoLinHom : FdRep.of ρV.dual ⊗ W ≅ FdRep.of (li
 #align fdRep.dual_tensor_iso_lin_hom FdRep.dualTensorIsoLinHom
 
 @[simp]
-theorem dual_tensor_iso_lin_hom_hom_hom :
-    (dualTensorIsoLinHom ρV W).hom.hom = dualTensorHom k V W :=
+theorem dualTensorIsoLinHom_hom_hom : (dualTensorIsoLinHom ρV W).hom.hom = dualTensorHom k V W :=
   rfl
-#align fdRep.dual_tensor_iso_lin_hom_hom_hom FdRep.dual_tensor_iso_lin_hom_hom_hom
+#align fdRep.dual_tensor_iso_lin_hom_hom_hom FdRep.dualTensorIsoLinHom_hom_hom
 
 end FdRep
 

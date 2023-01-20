@@ -71,14 +71,14 @@ See `matrix.aeval_self_charpoly` for the equivalent statement about matrices. -/
 theorem aeval_self_charpoly : aeval f f.charpoly = 0 :=
   by
   apply (LinearEquiv.map_eq_zero_iff (algEquivMatrix (choose_basis R M)).toLinearEquiv).1
-  rw [AlgEquiv.to_linear_equiv_apply, ← AlgEquiv.coe_alg_hom, ←
-    Polynomial.aeval_alg_hom_apply _ _ _, charpoly_def]
+  rw [AlgEquiv.toLinearEquiv_apply, ← AlgEquiv.coe_algHom, ← Polynomial.aeval_algHom_apply _ _ _,
+    charpoly_def]
   exact aeval_self_charpoly _
 #align linear_map.aeval_self_charpoly LinearMap.aeval_self_charpoly
 
-theorem is_integral : IsIntegral R f :=
+theorem isIntegral : IsIntegral R f :=
   ⟨f.charpoly, ⟨charpoly_monic f, aeval_self_charpoly f⟩⟩
-#align linear_map.is_integral LinearMap.is_integral
+#align linear_map.is_integral LinearMap.isIntegral
 
 theorem minpoly_dvd_charpoly {K : Type u} {M : Type v} [Field K] [AddCommGroup M] [Module K M]
     [FiniteDimensional K M] (f : M →ₗ[K] M) : minpoly K f ∣ f.charpoly :=
@@ -88,7 +88,7 @@ theorem minpoly_dvd_charpoly {K : Type u} {M : Type v} [Field K] [AddCommGroup M
 /-- Any endomorphism polynomial `p` is equivalent under evaluation to `p %ₘ f.charpoly`; that is,
 `p` is equivalent to a polynomial with degree less than the dimension of the module. -/
 theorem aeval_eq_aeval_mod_charpoly (p : R[X]) : aeval f p = aeval f (p %ₘ f.charpoly) :=
-  (aeval_mod_by_monic_eq_self_of_root f.charpoly_monic f.aeval_self_charpoly).symm
+  (aeval_modByMonic_eq_self_of_root f.charpoly_monic f.aeval_self_charpoly).symm
 #align linear_map.aeval_eq_aeval_mod_charpoly LinearMap.aeval_eq_aeval_mod_charpoly
 
 /-- Any endomorphism power can be computed as the sum of endomorphism powers less than the

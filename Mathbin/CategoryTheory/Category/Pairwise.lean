@@ -158,7 +158,7 @@ def coconeIsColimit : IsColimit (cocone U)
     where desc s :=
     homOfLe
       (by
-        apply CompleteLattice.Sup_le
+        apply CompleteLattice.sup_le
         rintro _ ⟨j, rfl⟩
         exact (s.ι.app (single j)).le)
 #align category_theory.pairwise.cocone_is_colimit CategoryTheory.Pairwise.coconeIsColimit

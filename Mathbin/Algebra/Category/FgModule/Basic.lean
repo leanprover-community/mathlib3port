@@ -115,12 +115,12 @@ variable (R : Type u) [CommRing R]
 
 instance : Linear R (FgModule R) := by dsimp_result => dsimp [FgModule]; infer_instance
 
-instance monoidal_predicate_module_finite :
+instance monoidalPredicate_module_finite :
     MonoidalCategory.MonoidalPredicate fun V : ModuleCat.{u} R => Module.Finite R V
     where
   prop_id' := Module.Finite.self R
   prop_tensor' X Y hX hY := Module.Finite.tensorProduct R X Y
-#align fgModule.monoidal_predicate_module_finite FgModule.monoidal_predicate_module_finite
+#align fgModule.monoidal_predicate_module_finite FgModule.monoidalPredicate_module_finite
 
 instance : MonoidalCategory (FgModule R) := by dsimp_result => dsimp [FgModule]; infer_instance
 
@@ -135,17 +135,17 @@ def forget₂Monoidal : MonoidalFunctor (FgModule R) (ModuleCat.{u} R) :=
   MonoidalCategory.fullMonoidalSubcategoryInclusion _
 #align fgModule.forget₂_monoidal FgModule.forget₂Monoidal
 
-instance forget₂_monoidal_faithful : Faithful (forget₂Monoidal R).toFunctor :=
+instance forget₂Monoidal_faithful : Faithful (forget₂Monoidal R).toFunctor :=
   by
   dsimp [forget₂_monoidal]
   infer_instance
-#align fgModule.forget₂_monoidal_faithful FgModule.forget₂_monoidal_faithful
+#align fgModule.forget₂_monoidal_faithful FgModule.forget₂Monoidal_faithful
 
-instance forget₂_monoidal_additive : (forget₂Monoidal R).toFunctor.Additive :=
+instance forget₂Monoidal_additive : (forget₂Monoidal R).toFunctor.Additive :=
   by
   dsimp [forget₂_monoidal]
   infer_instance
-#align fgModule.forget₂_monoidal_additive FgModule.forget₂_monoidal_additive
+#align fgModule.forget₂_monoidal_additive FgModule.forget₂Monoidal_additive
 
 instance forget₂MonoidalLinear : (forget₂Monoidal R).toFunctor.Linear R :=
   by
@@ -169,7 +169,7 @@ instance (V W : FgModule K) : Module.Finite K (V ⟶ W) :=
 
 instance closedPredicateModuleFinite :
     MonoidalCategory.ClosedPredicate fun V : ModuleCat.{u} K => Module.Finite K V
-    where prop_ihom' X Y hX hY := @LinearMap.finite_dimensional K _ X _ _ hX Y _ _ hY
+    where prop_ihom' X Y hX hY := @LinearMap.finiteDimensional K _ X _ _ hX Y _ _ hY
 #align fgModule.closed_predicate_module_finite FgModule.closedPredicateModuleFinite
 
 instance : MonoidalClosed (FgModule K) := by dsimp_result => dsimp [FgModule]; infer_instance
@@ -183,7 +183,7 @@ theorem ihom_obj : (ihom V).obj W = FgModule.of K (V.obj →ₗ[K] W.obj) :=
 
 /-- The dual module is the dual in the rigid monoidal category `fgModule K`. -/
 def fgModuleDual : FgModule K :=
-  ⟨ModuleCat.of K (Module.Dual K V.obj), Subspace.Module.Dual.finite_dimensional⟩
+  ⟨ModuleCat.of K (Module.Dual K V.obj), Subspace.Module.Dual.finiteDimensional⟩
 #align fgModule.fgModule_dual FgModule.fgModuleDual
 
 open CategoryTheory.MonoidalCategory
@@ -193,12 +193,12 @@ open CategoryTheory.MonoidalCategory
 def fgModuleCoevaluation : 𝟙_ (FgModule K) ⟶ V ⊗ fgModuleDual K V := by apply coevaluation K V.obj
 #align fgModule.fgModule_coevaluation FgModule.fgModuleCoevaluation
 
-theorem fgModule_coevaluation_apply_one :
+theorem fgModuleCoevaluation_apply_one :
     fgModuleCoevaluation K V (1 : K) =
       ∑ i : Basis.ofVectorSpaceIndex K V.obj,
         (Basis.ofVectorSpace K V.obj) i ⊗ₜ[K] (Basis.ofVectorSpace K V.obj).Coord i :=
   by apply coevaluation_apply_one K V.obj
-#align fgModule.fgModule_coevaluation_apply_one FgModule.fgModule_coevaluation_apply_one
+#align fgModule.fgModule_coevaluation_apply_one FgModule.fgModuleCoevaluation_apply_one
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The evaluation morphism is given by the contraction map. -/
@@ -206,9 +206,9 @@ def fgModuleEvaluation : fgModuleDual K V ⊗ V ⟶ 𝟙_ (FgModule K) := by app
 #align fgModule.fgModule_evaluation FgModule.fgModuleEvaluation
 
 @[simp]
-theorem fgModule_evaluation_apply (f : (fgModuleDual K V).obj) (x : V.obj) :
-    (fgModuleEvaluation K V) (f ⊗ₜ x) = f.toFun x := by apply contract_left_apply f x
-#align fgModule.fgModule_evaluation_apply FgModule.fgModule_evaluation_apply
+theorem fgModuleEvaluation_apply (f : (fgModuleDual K V).obj) (x : V.obj) :
+    (fgModuleEvaluation K V) (f ⊗ₜ x) = f.toFun x := by apply contractLeft_apply f x
+#align fgModule.fgModule_evaluation_apply FgModule.fgModuleEvaluation_apply
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -216,7 +216,7 @@ private theorem coevaluation_evaluation :
     let V' : FgModule K := fgModuleDual K V
     (𝟙 V' ⊗ fgModuleCoevaluation K V) ≫ (α_ V' V V').inv ≫ (fgModuleEvaluation K V ⊗ 𝟙 V') =
       (ρ_ V').Hom ≫ (λ_ V').inv :=
-  by apply contract_left_assoc_coevaluation K V.obj
+  by apply contractLeft_assoc_coevaluation K V.obj
 #align fgModule.coevaluation_evaluation fgModule.coevaluation_evaluation
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -225,7 +225,7 @@ private theorem evaluation_coevaluation :
     (fgModuleCoevaluation K V ⊗ 𝟙 V) ≫
         (α_ V (fgModuleDual K V) V).Hom ≫ (𝟙 V ⊗ fgModuleEvaluation K V) =
       (λ_ V).Hom ≫ (ρ_ V).inv :=
-  by apply contract_left_assoc_coevaluation' K V.obj
+  by apply contractLeft_assoc_coevaluation' K V.obj
 #align fgModule.evaluation_coevaluation fgModule.evaluation_coevaluation
 
 instance exactPairing : ExactPairing V (fgModuleDual K V)

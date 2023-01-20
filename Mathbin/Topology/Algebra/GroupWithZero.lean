@@ -65,7 +65,7 @@ variable [TopologicalSpace α]
 
 theorem ContinuousAt.div_const {a : α} (hf : ContinuousAt f a) {y : G₀} :
     ContinuousAt (fun x => f x / y) a := by
-  simpa only [div_eq_mul_inv] using hf.mul continuous_at_const
+  simpa only [div_eq_mul_inv] using hf.mul continuousAt_const
 #align continuous_at.div_const ContinuousAt.div_const
 
 theorem ContinuousWithinAt.div_const {a} (hf : ContinuousWithinAt f s a) {y : G₀} :
@@ -75,7 +75,7 @@ theorem ContinuousWithinAt.div_const {a} (hf : ContinuousWithinAt f s a) {y : G�
 
 theorem ContinuousOn.div_const (hf : ContinuousOn f s) {y : G₀} :
     ContinuousOn (fun x => f x / y) s := by
-  simpa only [div_eq_mul_inv] using hf.mul continuous_on_const
+  simpa only [div_eq_mul_inv] using hf.mul continuousOn_const
 #align continuous_on.div_const ContinuousOn.div_const
 
 @[continuity]
@@ -108,12 +108,12 @@ is continuous at all nonzero points. In this section we prove dot-style `*.inv'`
 
 
 theorem tendsto_inv₀ {x : G₀} (hx : x ≠ 0) : Tendsto Inv.inv (𝓝 x) (𝓝 x⁻¹) :=
-  continuous_at_inv₀ hx
+  continuousAt_inv₀ hx
 #align tendsto_inv₀ tendsto_inv₀
 
-theorem continuous_on_inv₀ : ContinuousOn (Inv.inv : G₀ → G₀) ({0}ᶜ) := fun x hx =>
-  (continuous_at_inv₀ hx).ContinuousWithinAt
-#align continuous_on_inv₀ continuous_on_inv₀
+theorem continuousOn_inv₀ : ContinuousOn (Inv.inv : G₀ → G₀) ({0}ᶜ) := fun x hx =>
+  (continuousAt_inv₀ hx).ContinuousWithinAt
+#align continuous_on_inv₀ continuousOn_inv₀
 
 /-- If a function converges to a nonzero value, its inverse converges to the inverse of this value.
 We use the name `tendsto.inv₀` as `tendsto.inv` is already used in multiplicative topological
@@ -137,7 +137,7 @@ theorem ContinuousAt.inv₀ (hf : ContinuousAt f a) (ha : f a ≠ 0) :
 
 @[continuity]
 theorem Continuous.inv₀ (hf : Continuous f) (h0 : ∀ x, f x ≠ 0) : Continuous fun x => (f x)⁻¹ :=
-  continuous_iff_continuous_at.2 fun x => (hf.Tendsto x).inv₀ (h0 x)
+  continuous_iff_continuousAt.2 fun x => (hf.Tendsto x).inv₀ (h0 x)
 #align continuous.inv₀ Continuous.inv₀
 
 theorem ContinuousOn.inv₀ (hf : ContinuousOn f s) (h0 : ∀ x ∈ s, f x ≠ 0) :
@@ -187,9 +187,9 @@ theorem Continuous.div (hf : Continuous f) (hg : Continuous g) (h₀ : ∀ x, g 
     Continuous (f / g) := by simpa only [div_eq_mul_inv] using hf.mul (hg.inv₀ h₀)
 #align continuous.div Continuous.div
 
-theorem continuous_on_div : ContinuousOn (fun p : G₀ × G₀ => p.1 / p.2) { p | p.2 ≠ 0 } :=
-  continuous_on_fst.div continuous_on_snd fun _ => id
-#align continuous_on_div continuous_on_div
+theorem continuousOn_div : ContinuousOn (fun p : G₀ × G₀ => p.1 / p.2) { p | p.2 ≠ 0 } :=
+  continuousOn_fst.div continuousOn_snd fun _ => id
+#align continuous_on_div continuousOn_div
 
 /-- The function `f x / g x` is discontinuous when `g x = 0`.
 However, under appropriate conditions, `h x (f x / g x)` is still continuous.
@@ -216,7 +216,7 @@ theorem Continuous.comp_div_cases {f g : α → G₀} (h : α → G₀ → β) (
     (hg : Continuous g) (hh : ∀ a, g a ≠ 0 → ContinuousAt (↿h) (a, f a / g a))
     (h2h : ∀ a, g a = 0 → Tendsto (↿h) (𝓝 a ×ᶠ ⊤) (𝓝 (h a 0))) :
     Continuous fun x => h x (f x / g x) :=
-  continuous_iff_continuous_at.mpr fun a =>
+  continuous_iff_continuousAt.mpr fun a =>
     hf.ContinuousAt.comp_div_cases _ hg.ContinuousAt (hh a) (h2h a)
 #align continuous.comp_div_cases Continuous.comp_div_cases
 
@@ -246,26 +246,26 @@ protected def mulRight₀ (c : α) (hc : c ≠ 0) : α ≃ₜ α :=
 #align homeomorph.mul_right₀ Homeomorph.mulRight₀
 
 @[simp]
-theorem coe_mul_left₀ (c : α) (hc : c ≠ 0) : ⇑(Homeomorph.mulLeft₀ c hc) = (· * ·) c :=
+theorem coe_mulLeft₀ (c : α) (hc : c ≠ 0) : ⇑(Homeomorph.mulLeft₀ c hc) = (· * ·) c :=
   rfl
-#align homeomorph.coe_mul_left₀ Homeomorph.coe_mul_left₀
+#align homeomorph.coe_mul_left₀ Homeomorph.coe_mulLeft₀
 
 @[simp]
-theorem mul_left₀_symm_apply (c : α) (hc : c ≠ 0) :
+theorem mulLeft₀_symm_apply (c : α) (hc : c ≠ 0) :
     ((Homeomorph.mulLeft₀ c hc).symm : α → α) = (· * ·) c⁻¹ :=
   rfl
-#align homeomorph.mul_left₀_symm_apply Homeomorph.mul_left₀_symm_apply
+#align homeomorph.mul_left₀_symm_apply Homeomorph.mulLeft₀_symm_apply
 
 @[simp]
-theorem coe_mul_right₀ (c : α) (hc : c ≠ 0) : ⇑(Homeomorph.mulRight₀ c hc) = fun x => x * c :=
+theorem coe_mulRight₀ (c : α) (hc : c ≠ 0) : ⇑(Homeomorph.mulRight₀ c hc) = fun x => x * c :=
   rfl
-#align homeomorph.coe_mul_right₀ Homeomorph.coe_mul_right₀
+#align homeomorph.coe_mul_right₀ Homeomorph.coe_mulRight₀
 
 @[simp]
-theorem mul_right₀_symm_apply (c : α) (hc : c ≠ 0) :
+theorem mulRight₀_symm_apply (c : α) (hc : c ≠ 0) :
     ((Homeomorph.mulRight₀ c hc).symm : α → α) = fun x => x * c⁻¹ :=
   rfl
-#align homeomorph.mul_right₀_symm_apply Homeomorph.mul_right₀_symm_apply
+#align homeomorph.mul_right₀_symm_apply Homeomorph.mulRight₀_symm_apply
 
 end Homeomorph
 
@@ -273,22 +273,22 @@ section Zpow
 
 variable [GroupWithZero G₀] [TopologicalSpace G₀] [HasContinuousInv₀ G₀] [HasContinuousMul G₀]
 
-theorem continuous_at_zpow₀ (x : G₀) (m : ℤ) (h : x ≠ 0 ∨ 0 ≤ m) :
-    ContinuousAt (fun x => x ^ m) x := by
+theorem continuousAt_zpow₀ (x : G₀) (m : ℤ) (h : x ≠ 0 ∨ 0 ≤ m) : ContinuousAt (fun x => x ^ m) x :=
+  by
   cases m
-  · simpa only [zpow_ofNat] using continuous_at_pow x m
+  · simpa only [zpow_ofNat] using continuousAt_pow x m
   · simp only [zpow_negSucc]
-    have hx : x ≠ 0 := h.resolve_right (Int.neg_succ_of_nat_lt_zero m).not_le
-    exact (continuous_at_pow x (m + 1)).inv₀ (pow_ne_zero _ hx)
-#align continuous_at_zpow₀ continuous_at_zpow₀
+    have hx : x ≠ 0 := h.resolve_right (Int.negSucc_lt_zero m).not_le
+    exact (continuousAt_pow x (m + 1)).inv₀ (pow_ne_zero _ hx)
+#align continuous_at_zpow₀ continuousAt_zpow₀
 
-theorem continuous_on_zpow₀ (m : ℤ) : ContinuousOn (fun x : G₀ => x ^ m) ({0}ᶜ) := fun x hx =>
-  (continuous_at_zpow₀ _ _ (Or.inl hx)).ContinuousWithinAt
-#align continuous_on_zpow₀ continuous_on_zpow₀
+theorem continuousOn_zpow₀ (m : ℤ) : ContinuousOn (fun x : G₀ => x ^ m) ({0}ᶜ) := fun x hx =>
+  (continuousAt_zpow₀ _ _ (Or.inl hx)).ContinuousWithinAt
+#align continuous_on_zpow₀ continuousOn_zpow₀
 
 theorem Filter.Tendsto.zpow₀ {f : α → G₀} {l : Filter α} {a : G₀} (hf : Tendsto f l (𝓝 a)) (m : ℤ)
     (h : a ≠ 0 ∨ 0 ≤ m) : Tendsto (fun x => f x ^ m) l (𝓝 (a ^ m)) :=
-  (continuous_at_zpow₀ _ m h).Tendsto.comp hf
+  (continuousAt_zpow₀ _ m h).Tendsto.comp hf
 #align filter.tendsto.zpow₀ Filter.Tendsto.zpow₀
 
 variable {X : Type _} [TopologicalSpace X] {a : X} {s : Set X} {f : X → G₀}
@@ -310,7 +310,7 @@ theorem ContinuousOn.zpow₀ (hf : ContinuousOn f s) (m : ℤ) (h : ∀ a ∈ s,
 @[continuity]
 theorem Continuous.zpow₀ (hf : Continuous f) (m : ℤ) (h0 : ∀ a, f a ≠ 0 ∨ 0 ≤ m) :
     Continuous fun x => f x ^ m :=
-  continuous_iff_continuous_at.2 fun x => (hf.Tendsto x).zpow₀ m (h0 x)
+  continuous_iff_continuousAt.2 fun x => (hf.Tendsto x).zpow₀ m (h0 x)
 #align continuous.zpow₀ Continuous.zpow₀
 
 end Zpow

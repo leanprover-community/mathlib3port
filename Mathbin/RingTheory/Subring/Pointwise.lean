@@ -64,16 +64,16 @@ theorem coe_pointwise_smul (m : M) (S : Subring R) : ↑(m • S) = m • (S : S
 #align subring.coe_pointwise_smul Subring.coe_pointwise_smul
 
 @[simp]
-theorem pointwise_smul_to_add_subgroup (m : M) (S : Subring R) :
+theorem pointwise_smul_toAddSubgroup (m : M) (S : Subring R) :
     (m • S).toAddSubgroup = m • S.toAddSubgroup :=
   rfl
-#align subring.pointwise_smul_to_add_subgroup Subring.pointwise_smul_to_add_subgroup
+#align subring.pointwise_smul_to_add_subgroup Subring.pointwise_smul_toAddSubgroup
 
 @[simp]
-theorem pointwise_smul_to_subsemiring (m : M) (S : Subring R) :
+theorem pointwise_smul_toSubsemiring (m : M) (S : Subring R) :
     (m • S).toSubsemiring = m • S.toSubsemiring :=
   rfl
-#align subring.pointwise_smul_to_subsemiring Subring.pointwise_smul_to_subsemiring
+#align subring.pointwise_smul_to_subsemiring Subring.pointwise_smul_toSubsemiring
 
 theorem smul_mem_pointwise_smul (m : M) (r : R) (S : Subring R) : r ∈ S → m • r ∈ m • S :=
   (Set.smul_mem_smul_set : _ → _ ∈ m • (S : Set R))

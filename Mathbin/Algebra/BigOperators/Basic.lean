@@ -2753,7 +2753,7 @@ Case conversion may be inaccurate. Consider using '#align finset.prod_eq_zero_if
 theorem prod_eq_zero_iff : (∏ x in s, f x) = 0 ↔ ∃ a ∈ s, f a = 0 := by
   classical
     apply Finset.induction_on s
-    exact ⟨Not.elim one_ne_zero, fun ⟨_, H, _⟩ => H.elim⟩
+    exact ⟨Not.elim one_neZero, fun ⟨_, H, _⟩ => H.elim⟩
     intro a s ha ih
     rw [prod_insert ha, mul_eq_zero, bex_def, exists_mem_insert, ih, ← bex_def]
 #align finset.prod_eq_zero_iff Finset.prod_eq_zero_iff

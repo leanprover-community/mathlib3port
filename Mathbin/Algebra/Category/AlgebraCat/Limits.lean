@@ -100,7 +100,7 @@ def limitCone (F : J ⥤ AlgebraCat.{max v w} R) : Cone F
   π :=
     { app := limitπAlgHom F
       naturality' := fun j j' f =>
-        AlgHom.coe_fn_injective ((Types.limitCone (F ⋙ forget _)).π.naturality f) }
+        AlgHom.coeFn_injective ((Types.limitCone (F ⋙ forget _)).π.naturality f) }
 #align Algebra.has_limits.limit_cone AlgebraCat.HasLimits.limitCone
 
 /-- Witness that the limit cone in `Algebra R` is a limit cone.
@@ -142,9 +142,9 @@ irreducible_def hasLimitsOfSize : HasLimitsOfSize.{v, v} (AlgebraCat.{max v w} R
               IsLimit := limit_cone_is_limit F } } }
 #align Algebra.has_limits_of_size AlgebraCat.hasLimitsOfSize
 
-instance has_limits : HasLimits (AlgebraCat.{w} R) :=
+instance hasLimits : HasLimits (AlgebraCat.{w} R) :=
   AlgebraCat.hasLimitsOfSize.{w, w, u}
-#align Algebra.has_limits AlgebraCat.has_limits
+#align Algebra.has_limits AlgebraCat.hasLimits
 
 /-- The forgetful functor from R-algebras to rings preserves all limits.
 -/

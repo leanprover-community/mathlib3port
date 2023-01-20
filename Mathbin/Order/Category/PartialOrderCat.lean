@@ -89,11 +89,11 @@ def dualEquiv : PartialOrderCat ≌ PartialOrderCat :=
 
 end PartialOrderCat
 
-theorem PartialOrder_dual_comp_forget_to_Preorder :
+theorem partialOrderCat_dual_comp_forget_to_preorderCat :
     PartialOrderCat.dual ⋙ forget₂ PartialOrderCat PreorderCat =
       forget₂ PartialOrderCat PreorderCat ⋙ PreorderCat.dual :=
   rfl
-#align PartialOrder_dual_comp_forget_to_Preorder PartialOrder_dual_comp_forget_to_Preorder
+#align PartialOrder_dual_comp_forget_to_Preorder partialOrderCat_dual_comp_forget_to_preorderCat
 
 /-- `antisymmetrization` as a functor. It is the free functor. -/
 def preorderToPartialOrder : PreorderCat.{u} ⥤ PartialOrderCat

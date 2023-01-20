@@ -47,10 +47,9 @@ open Function
 open Classical BigOperators
 
 /-- `ℤ` with its usual ring structure is not a field. -/
-theorem Int.not_is_field : ¬IsField ℤ := fun h =>
-  Int.not_even_one <|
-    (h.mul_inv_cancel two_ne_zero).imp fun a => by rw [← two_mul] <;> exact Eq.symm
-#align int.not_is_field Int.not_is_field
+theorem Int.not_isField : ¬IsField ℤ := fun h =>
+  Int.not_even_one <| (h.mul_inv_cancel two_neZero).imp fun a => by rw [← two_mul] <;> exact Eq.symm
+#align int.not_is_field Int.not_isField
 
 namespace NumberField
 
@@ -59,11 +58,11 @@ variable (K L : Type _) [Field K] [Field L] [nf : NumberField K]
 include nf
 
 -- See note [lower instance priority]
-attribute [instance] NumberField.to_char_zero NumberField.to_finite_dimensional
+attribute [instance] NumberField.to_charZero NumberField.to_finiteDimensional
 
-protected theorem is_algebraic : Algebra.IsAlgebraic ℚ K :=
-  Algebra.is_algebraic_of_finite _ _
-#align number_field.is_algebraic NumberField.is_algebraic
+protected theorem isAlgebraic : Algebra.IsAlgebraic ℚ K :=
+  Algebra.isAlgebraic_of_finite _ _
+#align number_field.is_algebraic NumberField.isAlgebraic
 
 omit nf
 
@@ -76,17 +75,17 @@ def ringOfIntegers :=
 -- mathport name: ring_of_integers
 scoped notation "𝓞" => NumberField.ringOfIntegers
 
-theorem mem_ring_of_integers (x : K) : x ∈ 𝓞 K ↔ IsIntegral ℤ x :=
+theorem mem_ringOfIntegers (x : K) : x ∈ 𝓞 K ↔ IsIntegral ℤ x :=
   Iff.rfl
-#align number_field.mem_ring_of_integers NumberField.mem_ring_of_integers
+#align number_field.mem_ring_of_integers NumberField.mem_ringOfIntegers
 
-theorem is_integral_of_mem_ring_of_integers {K : Type _} [Field K] {x : K} (hx : x ∈ 𝓞 K) :
+theorem isIntegral_of_mem_ringOfIntegers {K : Type _} [Field K] {x : K} (hx : x ∈ 𝓞 K) :
     IsIntegral ℤ (⟨x, hx⟩ : 𝓞 K) := by
   obtain ⟨P, hPm, hP⟩ := hx
   refine' ⟨P, hPm, _⟩
   rw [← Polynomial.aeval_def, ← Subalgebra.coe_eq_zero, Polynomial.aeval_subalgebra_coe,
     Polynomial.aeval_def, Subtype.coe_mk, hP]
-#align number_field.is_integral_of_mem_ring_of_integers NumberField.is_integral_of_mem_ring_of_integers
+#align number_field.is_integral_of_mem_ring_of_integers NumberField.isIntegral_of_mem_ringOfIntegers
 
 /-- Given an algebra between two fields, create an algebra between their two rings of integers.
 
@@ -95,7 +94,7 @@ For now, this is not an instance by default as it creates an equal-but-not-defeq
 will likely change in Lean 4. -/
 def ringOfIntegersAlgebra [Algebra K L] : Algebra (𝓞 K) (𝓞 L) :=
   RingHom.toAlgebra
-    { toFun := fun k => ⟨algebraMap K L k, IsIntegral.algebra_map k.2⟩
+    { toFun := fun k => ⟨algebraMap K L k, IsIntegral.algebraMap k.2⟩
       map_zero' := Subtype.ext <| by simp only [Subtype.coe_mk, Subalgebra.coe_zero, map_zero]
       map_one' := Subtype.ext <| by simp only [Subtype.coe_mk, Subalgebra.coe_one, map_one]
       map_add' := fun x y =>
@@ -109,21 +108,21 @@ namespace RingOfIntegers
 variable {K}
 
 instance [NumberField K] : IsFractionRing (𝓞 K) K :=
-  integralClosure.is_fraction_ring_of_finite_extension ℚ _
+  integralClosure.isFractionRing_of_finite_extension ℚ _
 
 instance : IsIntegralClosure (𝓞 K) ℤ K :=
-  integralClosure.is_integral_closure _ _
+  integralClosure.isIntegralClosure _ _
 
 instance [NumberField K] : IsIntegrallyClosed (𝓞 K) :=
   integralClosure.isIntegrallyClosedOfFiniteExtension ℚ
 
-theorem is_integral_coe (x : 𝓞 K) : IsIntegral ℤ (x : K) :=
+theorem isIntegral_coe (x : 𝓞 K) : IsIntegral ℤ (x : K) :=
   x.2
-#align number_field.ring_of_integers.is_integral_coe NumberField.ringOfIntegers.is_integral_coe
+#align number_field.ring_of_integers.is_integral_coe NumberField.ringOfIntegers.isIntegral_coe
 
 theorem map_mem {F L : Type _} [Field L] [CharZero K] [CharZero L] [AlgHomClass F ℚ K L] (f : F)
     (x : 𝓞 K) : f x ∈ 𝓞 L :=
-  (mem_ring_of_integers _ _).2 <| map_is_integral_int f <| ringOfIntegers.is_integral_coe x
+  (mem_ringOfIntegers _ _).2 <| map_isIntegral_int f <| ringOfIntegers.isIntegral_coe x
 #align number_field.ring_of_integers.map_mem NumberField.ringOfIntegers.map_mem
 
 /-- The ring of integers of `K` are equivalent to any integral closure of `ℤ` in `K` -/
@@ -141,15 +140,15 @@ instance [NumberField K] : IsNoetherian ℤ (𝓞 K) :=
   IsIntegralClosure.isNoetherian _ ℚ K _
 
 /-- The ring of integers of a number field is not a field. -/
-theorem not_is_field [NumberField K] : ¬IsField (𝓞 K) :=
+theorem not_isField [NumberField K] : ¬IsField (𝓞 K) :=
   by
   have h_inj : Function.Injective ⇑(algebraMap ℤ (𝓞 K)) :=
     RingHom.injective_int (algebraMap ℤ (𝓞 K))
   intro hf
   exact
-    Int.not_is_field
-      (((IsIntegralClosure.is_integral_algebra ℤ K).is_field_iff_is_field h_inj).mpr hf)
-#align number_field.ring_of_integers.not_is_field NumberField.ringOfIntegers.not_is_field
+    Int.not_isField
+      (((IsIntegralClosure.isIntegral_algebra ℤ K).is_field_iff_is_field h_inj).mpr hf)
+#align number_field.ring_of_integers.not_is_field NumberField.ringOfIntegers.not_isField
 
 instance [NumberField K] : IsDedekindDomain (𝓞 K) :=
   IsIntegralClosure.isDedekindDomain ℤ ℚ K _
@@ -162,7 +161,7 @@ namespace Rat
 
 open NumberField
 
-instance number_field : NumberField ℚ
+instance numberField : NumberField ℚ
     where
   to_char_zero := inferInstance
   to_finite_dimensional :=-- The vector space structure of `ℚ` over itself can arise in multiple ways:
@@ -170,7 +169,7 @@ instance number_field : NumberField ℚ
   -- all char 0 fields have a canonical embedding of `ℚ` (used in `number_field`).
   -- Show that these coincide:
   by convert (inferInstance : FiniteDimensional ℚ ℚ)
-#align rat.number_field Rat.number_field
+#align rat.number_field Rat.numberField
 
 /-- The ring of integers of `ℚ` as a number field is just `ℤ`. -/
 noncomputable def ringOfIntegersEquiv : ringOfIntegers ℚ ≃+* ℤ :=
@@ -191,7 +190,7 @@ attribute [-instance] algebraRat
 is a number field. -/
 instance {f : ℚ[X]} [hf : Fact (Irreducible f)] : NumberField (AdjoinRoot f)
     where
-  to_char_zero := char_zero_of_injective_algebra_map (algebraMap ℚ _).Injective
+  to_char_zero := charZero_of_injective_algebraMap (algebraMap ℚ _).Injective
   to_finite_dimensional := by convert (AdjoinRoot.powerBasis hf.out.ne_zero).FiniteDimensional
 
 end

@@ -56,7 +56,7 @@ theorem map'_as_map {F : C → D} [Functorial.{v₁, v₂} F] {X Y : C} {f : X �
 #print CategoryTheory.Functorial.map_id /-
 @[simp]
 theorem Functorial.map_id {F : C → D} [Functorial.{v₁, v₂} F] {X : C} : map F (𝟙 X) = 𝟙 (F X) :=
-  Functorial.map_id' X
+  Functorial.map'_id' X
 #align category_theory.functorial.map_id CategoryTheory.Functorial.map_id
 -/
 
@@ -64,7 +64,7 @@ theorem Functorial.map_id {F : C → D} [Functorial.{v₁, v₂} F] {X : C} : ma
 @[simp]
 theorem Functorial.map_comp {F : C → D} [Functorial.{v₁, v₂} F] {X Y Z : C} {f : X ⟶ Y}
     {g : Y ⟶ Z} : map F (f ≫ g) = map F f ≫ map F g :=
-  Functorial.map_comp' f g
+  Functorial.map'_comp' f g
 #align category_theory.functorial.map_comp CategoryTheory.Functorial.map_comp
 -/
 

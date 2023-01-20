@@ -107,12 +107,12 @@ local notation "Proj.T" => Proj.1.1.1
 
 -- mathport name: «exprProj| »
 -- the underlying topological space of `Proj`
-local notation "Proj| " U => Proj.restrict (Opens.open_embedding (U : Opens Proj.T))
+local notation "Proj| " U => Proj.restrict (Opens.openEmbedding (U : Opens Proj.T))
 
 -- mathport name: «exprProj.T| »
 -- `Proj` restrict to some open set
 local notation "Proj.T| " U =>
-  (Proj.restrict (Opens.open_embedding (U : Opens Proj.T))).toSheafedSpace.toPresheafedSpace.1
+  (Proj.restrict (Opens.openEmbedding (U : Opens Proj.T))).toSheafedSpace.toPresheafedSpace.1
 
 -- mathport name: «exprpbo »
 -- the underlying topological space of `Proj` restricted to some open set
@@ -293,8 +293,8 @@ theorem preimage_eq (a b : A) (k : ℕ) (a_mem : a ∈ 𝒜 k) (b_mem1 : b ∈ �
     ext1 y
     constructor <;> intro hy
     · refine' ⟨y.2, _⟩
-      rw [Set.mem_preimage, opens.mem_coe, PrimeSpectrum.mem_basic_open] at hy
-      rw [ProjectiveSpectrum.mem_coe_basic_open]
+      rw [Set.mem_preimage, opens.mem_coe, PrimeSpectrum.mem_basicOpen] at hy
+      rw [ProjectiveSpectrum.mem_coe_basicOpen]
       intro a_mem_y
       apply hy
       rw [to_fun, mem_carrier_iff, HomogeneousLocalization.val_mk', Subtype.coe_mk]
@@ -308,8 +308,8 @@ theorem preimage_eq (a b : A) (k : ℕ) (a_mem : a ∈ 𝒜 k) (b_mem1 : b ∈ �
       exact Ideal.mul_mem_left _ _ (Ideal.subset_span ⟨_, a_mem_y, rfl⟩)
     · change y.1 ∈ _ at hy
       rcases hy with ⟨hy1, hy2⟩
-      rw [ProjectiveSpectrum.mem_coe_basic_open] at hy1 hy2
-      rw [Set.mem_preimage, to_fun, opens.mem_coe, PrimeSpectrum.mem_basic_open]
+      rw [ProjectiveSpectrum.mem_coe_basicOpen] at hy1 hy2
+      rw [Set.mem_preimage, to_fun, opens.mem_coe, PrimeSpectrum.mem_basicOpen]
       intro rid
       dsimp at rid
       rcases mem_carrier.clear_denominator 𝒜 _ rid with ⟨c, N, acd, eq1⟩
@@ -344,7 +344,7 @@ def toSpec {f : A} : (Proj.T| pbo f) ⟶ Spec.T A⁰_ f
   toFun := ToSpec.toFun 𝒜 f
   continuous_to_fun :=
     by
-    apply is_topological_basis.continuous PrimeSpectrum.is_topological_basis_basic_opens
+    apply is_topological_basis.continuous PrimeSpectrum.isTopologicalBasis_basic_opens
     rintro _ ⟨⟨k, ⟨a, ha⟩, ⟨b, hb1⟩, ⟨k', hb2⟩⟩, rfl⟩; dsimp
     erw [to_Spec.preimage_eq f a b k ha hb1 ⟨k', hb2⟩]
     refine' is_open_induced_iff.mpr ⟨(pbo f).1 ⊓ (pbo a).1, IsOpen.inter (pbo f).2 (pbo a).2, _⟩
@@ -645,7 +645,7 @@ variable (f_deg)
 def toFun : (Spec.T A⁰_ f) → Proj.T| pbo f := fun q =>
   ⟨⟨carrier.asHomogeneousIdeal f_deg hm q, carrier.asIdeal.prime f_deg hm q,
       carrier.relevant f_deg hm q⟩,
-    (ProjectiveSpectrum.mem_basic_open _ f _).mp <| carrier.denom_not_mem f_deg hm q⟩
+    (ProjectiveSpectrum.mem_basicOpen _ f _).mp <| carrier.denom_not_mem f_deg hm q⟩
 #align algebraic_geometry.Proj_iso_Spec_Top_component.from_Spec.to_fun AlgebraicGeometry.ProjIsoSpecTopComponent.FromSpec.toFun
 
 end FromSpec

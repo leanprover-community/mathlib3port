@@ -34,9 +34,9 @@ namespace UpperHalfPlane
 instance : TopologicalSpace ℍ :=
   Subtype.topologicalSpace
 
-theorem open_embedding_coe : OpenEmbedding (coe : ℍ → ℂ) :=
-  IsOpen.open_embedding_subtype_coe <| is_open_lt continuous_const Complex.continuous_im
-#align upper_half_plane.open_embedding_coe UpperHalfPlane.open_embedding_coe
+theorem openEmbedding_coe : OpenEmbedding (coe : ℍ → ℂ) :=
+  IsOpen.openEmbedding_subtype_coe <| isOpen_lt continuous_const Complex.continuous_im
+#align upper_half_plane.open_embedding_coe UpperHalfPlane.openEmbedding_coe
 
 theorem embedding_coe : Embedding (coe : ℍ → ℂ) :=
   embedding_subtype_coe
@@ -55,7 +55,7 @@ theorem continuous_im : Continuous im :=
 #align upper_half_plane.continuous_im UpperHalfPlane.continuous_im
 
 instance : TopologicalSpace.SecondCountableTopology ℍ :=
-  TopologicalSpace.Subtype.second_countable_topology _ _
+  TopologicalSpace.Subtype.secondCountableTopology _ _
 
 instance : T3Space ℍ :=
   Subtype.t3Space
@@ -64,20 +64,20 @@ instance : NormalSpace ℍ :=
   normalSpaceOfT3SecondCountable ℍ
 
 instance : ContractibleSpace ℍ :=
-  (convex_halfspace_im_gt 0).ContractibleSpace ⟨i, one_pos.trans_eq I_im.symm⟩
+  (convex_halfspace_im_gt 0).ContractibleSpace ⟨i, one_pos.trans_eq i_im.symm⟩
 
 instance : LocPathConnectedSpace ℍ :=
-  loc_path_connected_of_is_open <| is_open_lt continuous_const Complex.continuous_im
+  loc_path_connected_of_isOpen <| isOpen_lt continuous_const Complex.continuous_im
 
 instance : NoncompactSpace ℍ := by
   refine' ⟨fun h => _⟩
-  have : IsCompact (Complex.im ⁻¹' Ioi 0) := is_compact_iff_is_compact_univ.2 h
+  have : IsCompact (Complex.im ⁻¹' Ioi 0) := isCompact_iff_isCompact_univ.2 h
   replace := this.is_closed.closure_eq
-  rw [closure_preimage_im, closure_Ioi, Set.ext_iff] at this
+  rw [closure_preimage_im, closure_ioi, Set.ext_iff] at this
   exact absurd ((this 0).1 left_mem_Ici) (lt_irrefl _)
 
 instance : LocallyCompactSpace ℍ :=
-  open_embedding_coe.LocallyCompactSpace
+  openEmbedding_coe.LocallyCompactSpace
 
 end UpperHalfPlane
 

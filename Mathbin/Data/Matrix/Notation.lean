@@ -171,26 +171,26 @@ section DotProduct
 variable [AddCommMonoid α] [Mul α]
 
 @[simp]
-theorem dot_product_empty (v w : Fin 0 → α) : dotProduct v w = 0 :=
+theorem dotProduct_empty (v w : Fin 0 → α) : dotProduct v w = 0 :=
   Finset.sum_empty
-#align matrix.dot_product_empty Matrix.dot_product_empty
+#align matrix.dot_product_empty Matrix.dotProduct_empty
 
 @[simp]
-theorem cons_dot_product (x : α) (v : Fin n → α) (w : Fin n.succ → α) :
+theorem cons_dotProduct (x : α) (v : Fin n → α) (w : Fin n.succ → α) :
     dotProduct (vecCons x v) w = x * vecHead w + dotProduct v (vecTail w) := by
   simp [dot_product, Fin.sum_univ_succ, vec_head, vec_tail]
-#align matrix.cons_dot_product Matrix.cons_dot_product
+#align matrix.cons_dot_product Matrix.cons_dotProduct
 
 @[simp]
-theorem dot_product_cons (v : Fin n.succ → α) (x : α) (w : Fin n → α) :
+theorem dotProduct_cons (v : Fin n.succ → α) (x : α) (w : Fin n → α) :
     dotProduct v (vecCons x w) = vecHead v * x + dotProduct (vecTail v) w := by
   simp [dot_product, Fin.sum_univ_succ, vec_head, vec_tail]
-#align matrix.dot_product_cons Matrix.dot_product_cons
+#align matrix.dot_product_cons Matrix.dotProduct_cons
 
 @[simp]
-theorem cons_dot_product_cons (x : α) (v : Fin n → α) (y : α) (w : Fin n → α) :
+theorem cons_dotProduct_cons (x : α) (v : Fin n → α) (y : α) (w : Fin n → α) :
     dotProduct (vecCons x v) (vecCons y w) = x * y + dotProduct v w := by simp
-#align matrix.cons_dot_product_cons Matrix.cons_dot_product_cons
+#align matrix.cons_dot_product_cons Matrix.cons_dotProduct_cons
 
 end DotProduct
 
@@ -301,35 +301,35 @@ section VecMul
 variable [Semiring α]
 
 @[simp]
-theorem empty_vec_mul (v : Fin 0 → α) (B : Matrix (Fin 0) o' α) : vecMul v B = 0 :=
+theorem empty_vecMul (v : Fin 0 → α) (B : Matrix (Fin 0) o' α) : vecMul v B = 0 :=
   rfl
-#align matrix.empty_vec_mul Matrix.empty_vec_mul
+#align matrix.empty_vec_mul Matrix.empty_vecMul
 
 @[simp]
-theorem vec_mul_empty [Fintype n'] (v : n' → α) (B : Matrix n' (Fin 0) α) : vecMul v B = ![] :=
+theorem vecMul_empty [Fintype n'] (v : n' → α) (B : Matrix n' (Fin 0) α) : vecMul v B = ![] :=
   empty_eq _
-#align matrix.vec_mul_empty Matrix.vec_mul_empty
+#align matrix.vec_mul_empty Matrix.vecMul_empty
 
 @[simp]
-theorem cons_vec_mul (x : α) (v : Fin n → α) (B : Fin n.succ → o' → α) :
+theorem cons_vecMul (x : α) (v : Fin n → α) (B : Fin n.succ → o' → α) :
     vecMul (vecCons x v) (of B) = x • vecHead B + vecMul v (of <| vecTail B) :=
   by
   ext i
   simp [vec_mul]
-#align matrix.cons_vec_mul Matrix.cons_vec_mul
+#align matrix.cons_vec_mul Matrix.cons_vecMul
 
 @[simp]
-theorem vec_mul_cons (v : Fin n.succ → α) (w : o' → α) (B : Fin n → o' → α) :
+theorem vecMul_cons (v : Fin n.succ → α) (w : o' → α) (B : Fin n → o' → α) :
     vecMul v (of <| vecCons w B) = vecHead v • w + vecMul (vecTail v) (of B) :=
   by
   ext i
   simp [vec_mul]
-#align matrix.vec_mul_cons Matrix.vec_mul_cons
+#align matrix.vec_mul_cons Matrix.vecMul_cons
 
 @[simp]
-theorem cons_vec_mul_cons (x : α) (v : Fin n → α) (w : o' → α) (B : Fin n → o' → α) :
+theorem cons_vecMul_cons (x : α) (v : Fin n → α) (w : o' → α) (B : Fin n → o' → α) :
     vecMul (vecCons x v) (of <| vecCons w B) = x • w + vecMul v (of B) := by simp
-#align matrix.cons_vec_mul_cons Matrix.cons_vec_mul_cons
+#align matrix.cons_vec_mul_cons Matrix.cons_vecMul_cons
 
 end VecMul
 
@@ -338,30 +338,30 @@ section MulVec
 variable [Semiring α]
 
 @[simp]
-theorem empty_mul_vec [Fintype n'] (A : Matrix (Fin 0) n' α) (v : n' → α) : mulVec A v = ![] :=
+theorem empty_mulVec [Fintype n'] (A : Matrix (Fin 0) n' α) (v : n' → α) : mulVec A v = ![] :=
   empty_eq _
-#align matrix.empty_mul_vec Matrix.empty_mul_vec
+#align matrix.empty_mul_vec Matrix.empty_mulVec
 
 @[simp]
-theorem mul_vec_empty (A : Matrix m' (Fin 0) α) (v : Fin 0 → α) : mulVec A v = 0 :=
+theorem mulVec_empty (A : Matrix m' (Fin 0) α) (v : Fin 0 → α) : mulVec A v = 0 :=
   rfl
-#align matrix.mul_vec_empty Matrix.mul_vec_empty
+#align matrix.mul_vec_empty Matrix.mulVec_empty
 
 @[simp]
-theorem cons_mul_vec [Fintype n'] (v : n' → α) (A : Fin m → n' → α) (w : n' → α) :
+theorem cons_mulVec [Fintype n'] (v : n' → α) (A : Fin m → n' → α) (w : n' → α) :
     mulVec (of <| vecCons v A) w = vecCons (dotProduct v w) (mulVec (of A) w) :=
   by
   ext i
   refine' Fin.cases _ _ i <;> simp [mul_vec]
-#align matrix.cons_mul_vec Matrix.cons_mul_vec
+#align matrix.cons_mul_vec Matrix.cons_mulVec
 
 @[simp]
-theorem mul_vec_cons {α} [CommSemiring α] (A : m' → Fin n.succ → α) (x : α) (v : Fin n → α) :
+theorem mulVec_cons {α} [CommSemiring α] (A : m' → Fin n.succ → α) (x : α) (v : Fin n → α) :
     mulVec (of A) (vecCons x v) = x • vec_head ∘ A + mulVec (of (vec_tail ∘ A)) v :=
   by
   ext i
   simp [mul_vec, mul_comm]
-#align matrix.mul_vec_cons Matrix.mul_vec_cons
+#align matrix.mul_vec_cons Matrix.mulVec_cons
 
 end MulVec
 
@@ -370,30 +370,30 @@ section VecMulVec
 variable [Semiring α]
 
 @[simp]
-theorem empty_vec_mul_vec (v : Fin 0 → α) (w : n' → α) : vecMulVec v w = ![] :=
+theorem empty_vecMulVec (v : Fin 0 → α) (w : n' → α) : vecMulVec v w = ![] :=
   empty_eq _
-#align matrix.empty_vec_mul_vec Matrix.empty_vec_mul_vec
+#align matrix.empty_vec_mul_vec Matrix.empty_vecMulVec
 
 @[simp]
-theorem vec_mul_vec_empty (v : m' → α) (w : Fin 0 → α) : vecMulVec v w = fun _ => ![] :=
+theorem vecMulVec_empty (v : m' → α) (w : Fin 0 → α) : vecMulVec v w = fun _ => ![] :=
   funext fun i => empty_eq _
-#align matrix.vec_mul_vec_empty Matrix.vec_mul_vec_empty
+#align matrix.vec_mul_vec_empty Matrix.vecMulVec_empty
 
 @[simp]
-theorem cons_vec_mul_vec (x : α) (v : Fin m → α) (w : n' → α) :
+theorem cons_vecMulVec (x : α) (v : Fin m → α) (w : n' → α) :
     vecMulVec (vecCons x v) w = vecCons (x • w) (vecMulVec v w) :=
   by
   ext i
   refine' Fin.cases _ _ i <;> simp [vec_mul_vec]
-#align matrix.cons_vec_mul_vec Matrix.cons_vec_mul_vec
+#align matrix.cons_vec_mul_vec Matrix.cons_vecMulVec
 
 @[simp]
-theorem vec_mul_vec_cons (v : m' → α) (x : α) (w : Fin n → α) :
+theorem vecMulVec_cons (v : m' → α) (x : α) (w : Fin n → α) :
     vecMulVec v (vecCons x w) = fun i => v i • vecCons x w :=
   by
   ext (i j)
   rw [vec_mul_vec, Pi.smul_apply, smul_eq_mul]
-#align matrix.vec_mul_vec_cons Matrix.vec_mul_vec_cons
+#align matrix.vec_mul_vec_cons Matrix.vecMulVec_cons
 
 end VecMulVec
 
@@ -556,9 +556,9 @@ theorem vec2_dot_product' {a₀ a₁ b₀ b₁ : α} : ![a₀, a₁] ⬝ᵥ ![b�
 #align matrix.vec2_dot_product' Matrix.vec2_dot_product'
 
 @[simp]
-theorem vec2_dot_product (v w : Fin 2 → α) : v ⬝ᵥ w = v 0 * w 0 + v 1 * w 1 :=
+theorem vec2_dotProduct (v w : Fin 2 → α) : v ⬝ᵥ w = v 0 * w 0 + v 1 * w 1 :=
   vec2_dot_product'
-#align matrix.vec2_dot_product Matrix.vec2_dot_product
+#align matrix.vec2_dot_product Matrix.vec2_dotProduct
 
 theorem vec3_dot_product' {a₀ a₁ a₂ b₀ b₁ b₂ : α} :
     ![a₀, a₁, a₂] ⬝ᵥ ![b₀, b₁, b₂] = a₀ * b₀ + a₁ * b₁ + a₂ * b₂ := by
@@ -567,9 +567,9 @@ theorem vec3_dot_product' {a₀ a₁ a₂ b₀ b₁ b₂ : α} :
 #align matrix.vec3_dot_product' Matrix.vec3_dot_product'
 
 @[simp]
-theorem vec3_dot_product (v w : Fin 3 → α) : v ⬝ᵥ w = v 0 * w 0 + v 1 * w 1 + v 2 * w 2 :=
+theorem vec3_dotProduct (v w : Fin 3 → α) : v ⬝ᵥ w = v 0 * w 0 + v 1 * w 1 + v 2 * w 2 :=
   vec3_dot_product'
-#align matrix.vec3_dot_product Matrix.vec3_dot_product
+#align matrix.vec3_dot_product Matrix.vec3_dotProduct
 
 end Vec2AndVec3
 

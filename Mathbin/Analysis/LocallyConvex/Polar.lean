@@ -71,11 +71,11 @@ theorem zero_mem_polar (s : Set E) : (0 : F) ∈ B.polar s := fun _ _ => by
   simp only [map_zero, norm_zero, zero_le_one]
 #align linear_map.zero_mem_polar LinearMap.zero_mem_polar
 
-theorem polar_eq_Inter {s : Set E} : B.polar s = ⋂ x ∈ s, { y : F | ‖B x y‖ ≤ 1 } :=
+theorem polar_eq_interᵢ {s : Set E} : B.polar s = ⋂ x ∈ s, { y : F | ‖B x y‖ ≤ 1 } :=
   by
   ext
   simp only [polar_mem_iff, Set.mem_interᵢ, Set.mem_setOf_eq]
-#align linear_map.polar_eq_Inter LinearMap.polar_eq_Inter
+#align linear_map.polar_eq_Inter LinearMap.polar_eq_interᵢ
 
 /-- The map `B.polar : set E → set F` forms an order-reversing Galois connection with
 `B.flip.polar : set F → set E`. We use `order_dual.to_dual` and `order_dual.of_dual` to express
@@ -86,9 +86,9 @@ theorem polar_gc :
 #align linear_map.polar_gc LinearMap.polar_gc
 
 @[simp]
-theorem polar_Union {ι} {s : ι → Set E} : B.polar (⋃ i, s i) = ⋂ i, B.polar (s i) :=
+theorem polar_unionᵢ {ι} {s : ι → Set E} : B.polar (⋃ i, s i) = ⋂ i, B.polar (s i) :=
   B.polar_gc.l_supr
-#align linear_map.polar_Union LinearMap.polar_Union
+#align linear_map.polar_Union LinearMap.polar_unionᵢ
 
 @[simp]
 theorem polar_union {s t : Set E} : B.polar (s ∪ t) = B.polar s ∩ B.polar t :=
@@ -131,8 +131,8 @@ theorem polar_weak_closed (s : Set E) :
     @IsClosed _ (WeakBilin.topologicalSpace B.flip) (B.polar s) :=
   by
   rw [polar_eq_Inter]
-  refine' is_closed_Inter fun x => is_closed_Inter fun _ => _
-  exact is_closed_le (WeakBilin.eval_continuous B.flip x).norm continuous_const
+  refine' isClosed_interᵢ fun x => isClosed_interᵢ fun _ => _
+  exact isClosed_le (WeakBilin.eval_continuous B.flip x).norm continuous_const
 #align linear_map.polar_weak_closed LinearMap.polar_weak_closed
 
 end NormedRing

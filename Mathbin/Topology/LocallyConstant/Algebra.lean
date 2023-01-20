@@ -128,23 +128,22 @@ noncomputable def charFn (hU : IsClopen U) : LocallyConstant X Y :=
   indicator 1 hU
 #align locally_constant.char_fn LocallyConstant.charFn
 
-theorem coe_char_fn (hU : IsClopen U) : (charFn Y hU : X → Y) = Set.indicator U 1 :=
+theorem coe_charFn (hU : IsClopen U) : (charFn Y hU : X → Y) = Set.indicator U 1 :=
   rfl
-#align locally_constant.coe_char_fn LocallyConstant.coe_char_fn
+#align locally_constant.coe_char_fn LocallyConstant.coe_charFn
 
-theorem char_fn_eq_one [Nontrivial Y] (x : X) (hU : IsClopen U) : charFn Y hU x = (1 : Y) ↔ x ∈ U :=
+theorem charFn_eq_one [Nontrivial Y] (x : X) (hU : IsClopen U) : charFn Y hU x = (1 : Y) ↔ x ∈ U :=
   Set.indicator_eq_one_iff_mem _
-#align locally_constant.char_fn_eq_one LocallyConstant.char_fn_eq_one
+#align locally_constant.char_fn_eq_one LocallyConstant.charFn_eq_one
 
-theorem char_fn_eq_zero [Nontrivial Y] (x : X) (hU : IsClopen U) :
-    charFn Y hU x = (0 : Y) ↔ x ∉ U :=
+theorem charFn_eq_zero [Nontrivial Y] (x : X) (hU : IsClopen U) : charFn Y hU x = (0 : Y) ↔ x ∉ U :=
   Set.indicator_eq_zero_iff_not_mem _
-#align locally_constant.char_fn_eq_zero LocallyConstant.char_fn_eq_zero
+#align locally_constant.char_fn_eq_zero LocallyConstant.charFn_eq_zero
 
-theorem char_fn_inj [Nontrivial Y] (hU : IsClopen U) (hV : IsClopen V)
+theorem charFn_inj [Nontrivial Y] (hU : IsClopen U) (hV : IsClopen V)
     (h : charFn Y hU = charFn Y hV) : U = V :=
   Set.indicator_one_inj Y <| coe_inj.mpr h
-#align locally_constant.char_fn_inj LocallyConstant.char_fn_inj
+#align locally_constant.char_fn_inj LocallyConstant.charFn_inj
 
 end CharFn
 
@@ -277,7 +276,7 @@ variable {R : Type _}
 instance [SMul R Y] : SMul R (LocallyConstant X Y)
     where smul r f :=
     { toFun := r • f
-      IsLocallyConstant := ((is_locally_constant f).comp ((· • ·) r) : _) }
+      IsLocallyConstant := ((isLocallyConstant f).comp ((· • ·) r) : _) }
 
 @[simp]
 theorem coe_smul [SMul R Y] (r : R) (f : LocallyConstant X Y) : ⇑(r • f) = r • f :=
@@ -315,10 +314,9 @@ instance : Algebra R (LocallyConstant X Y)
     exact Algebra.smul_def' _ _
 
 @[simp]
-theorem coe_algebra_map (r : R) :
-    ⇑(algebraMap R (LocallyConstant X Y) r) = algebraMap R (X → Y) r :=
+theorem coe_algebraMap (r : R) : ⇑(algebraMap R (LocallyConstant X Y) r) = algebraMap R (X → Y) r :=
   rfl
-#align locally_constant.coe_algebra_map LocallyConstant.coe_algebra_map
+#align locally_constant.coe_algebra_map LocallyConstant.coe_algebraMap
 
 end Algebra
 

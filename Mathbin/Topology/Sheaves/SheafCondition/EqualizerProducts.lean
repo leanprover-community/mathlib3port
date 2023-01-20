@@ -114,9 +114,9 @@ def fork : Fork.{v} (leftRes F U) (rightRes F U) :=
 #align Top.presheaf.sheaf_condition_equalizer_products.fork TopCat.Presheaf.SheafConditionEqualizerProducts.fork
 
 @[simp]
-theorem fork_X : (fork F U).x = F.obj (op (supᵢ U)) :=
+theorem fork_x : (fork F U).x = F.obj (op (supᵢ U)) :=
   rfl
-#align Top.presheaf.sheaf_condition_equalizer_products.fork_X TopCat.Presheaf.SheafConditionEqualizerProducts.fork_X
+#align Top.presheaf.sheaf_condition_equalizer_products.fork_X TopCat.Presheaf.SheafConditionEqualizerProducts.fork_x
 
 @[simp]
 theorem fork_ι : (fork F U).ι = res F U :=
@@ -124,16 +124,15 @@ theorem fork_ι : (fork F U).ι = res F U :=
 #align Top.presheaf.sheaf_condition_equalizer_products.fork_ι TopCat.Presheaf.SheafConditionEqualizerProducts.fork_ι
 
 @[simp]
-theorem fork_π_app_walking_parallel_pair_zero :
-    (fork F U).π.app WalkingParallelPair.zero = res F U :=
+theorem fork_π_app_walkingParallelPair_zero : (fork F U).π.app WalkingParallelPair.zero = res F U :=
   rfl
-#align Top.presheaf.sheaf_condition_equalizer_products.fork_π_app_walking_parallel_pair_zero TopCat.Presheaf.SheafConditionEqualizerProducts.fork_π_app_walking_parallel_pair_zero
+#align Top.presheaf.sheaf_condition_equalizer_products.fork_π_app_walking_parallel_pair_zero TopCat.Presheaf.SheafConditionEqualizerProducts.fork_π_app_walkingParallelPair_zero
 
 @[simp]
-theorem fork_π_app_walking_parallel_pair_one :
+theorem fork_π_app_walkingParallelPair_one :
     (fork F U).π.app WalkingParallelPair.one = res F U ≫ leftRes F U :=
   rfl
-#align Top.presheaf.sheaf_condition_equalizer_products.fork_π_app_walking_parallel_pair_one TopCat.Presheaf.SheafConditionEqualizerProducts.fork_π_app_walking_parallel_pair_one
+#align Top.presheaf.sheaf_condition_equalizer_products.fork_π_app_walking_parallel_pair_one TopCat.Presheaf.SheafConditionEqualizerProducts.fork_π_app_walkingParallelPair_one
 
 variable {F} {G : Presheaf C X}
 
@@ -508,12 +507,12 @@ open SheafConditionPairwiseIntersections
 /-- The sheaf condition in terms of an equalizer diagram is equivalent
 to the default sheaf condition.
 -/
-theorem is_sheaf_iff_is_sheaf_equalizer_products (F : Presheaf C X) :
+theorem isSheaf_iff_isSheafEqualizerProducts (F : Presheaf C X) :
     F.IsSheaf ↔ F.IsSheafEqualizerProducts :=
-  (is_sheaf_iff_is_sheaf_pairwise_intersections F).trans <|
+  (isSheaf_iff_isSheafPairwiseIntersections F).trans <|
     Iff.intro (fun h ι U => ⟨isLimitSheafConditionForkOfIsLimitMapCone F U (h U).some⟩) fun h ι U =>
       ⟨isLimitMapConeOfIsLimitSheafConditionFork F U (h U).some⟩
-#align Top.presheaf.is_sheaf_iff_is_sheaf_equalizer_products TopCat.Presheaf.is_sheaf_iff_is_sheaf_equalizer_products
+#align Top.presheaf.is_sheaf_iff_is_sheaf_equalizer_products TopCat.Presheaf.isSheaf_iff_isSheafEqualizerProducts
 
 end Presheaf
 

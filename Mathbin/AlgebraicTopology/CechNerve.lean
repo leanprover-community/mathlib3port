@@ -538,13 +538,13 @@ def wideCospan.limitCone [Fintype ι] (X : C) : LimitCone (wideCospan ι X)
         rfl }
 #align category_theory.cech_nerve_terminal_from.wide_cospan.limit_cone CategoryTheory.cechNerveTerminalFrom.wideCospan.limitCone
 
-instance has_wide_pullback [Finite ι] (X : C) :
+instance hasWidePullback [Finite ι] (X : C) :
     HasWidePullback (Arrow.mk (terminal.from X)).right
       (fun i : ι => (Arrow.mk (terminal.from X)).left) fun i => (Arrow.mk (terminal.from X)).Hom :=
   by
   cases nonempty_fintype ι
   exact ⟨⟨wide_cospan.limit_cone ι X⟩⟩
-#align category_theory.cech_nerve_terminal_from.has_wide_pullback CategoryTheory.cechNerveTerminalFrom.has_wide_pullback
+#align category_theory.cech_nerve_terminal_from.has_wide_pullback CategoryTheory.cechNerveTerminalFrom.hasWidePullback
 
 /-- Given an object `X : C`, the Čech nerve of the hom to the terminal object `X ⟶ ⊤_ C` is
 naturally isomorphic to a simplicial object sending `[n]` to `Xⁿ⁺¹` (when `C` is `G-Set`, this is

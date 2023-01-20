@@ -125,17 +125,17 @@ def BinaryFan.assocInv {X Y Z : C} {sXY : BinaryFan X Y} (P : IsLimit sXY) {sYZ 
 #align category_theory.limits.binary_fan.assoc_inv CategoryTheory.Limits.BinaryFan.assocInv
 
 @[simp]
-theorem BinaryFan.assoc_inv_fst {X Y Z : C} {sXY : BinaryFan X Y} (P : IsLimit sXY)
+theorem BinaryFan.assocInv_fst {X Y Z : C} {sXY : BinaryFan X Y} (P : IsLimit sXY)
     {sYZ : BinaryFan Y Z} (s : BinaryFan X sYZ.x) :
     (s.assocInv P).fst = P.lift (BinaryFan.mk s.fst (s.snd ≫ sYZ.fst)) :=
   rfl
-#align category_theory.limits.binary_fan.assoc_inv_fst CategoryTheory.Limits.BinaryFan.assoc_inv_fst
+#align category_theory.limits.binary_fan.assoc_inv_fst CategoryTheory.Limits.BinaryFan.assocInv_fst
 
 @[simp]
-theorem BinaryFan.assoc_inv_snd {X Y Z : C} {sXY : BinaryFan X Y} (P : IsLimit sXY)
+theorem BinaryFan.assocInv_snd {X Y Z : C} {sXY : BinaryFan X Y} (P : IsLimit sXY)
     {sYZ : BinaryFan Y Z} (s : BinaryFan X sYZ.x) : (s.assocInv P).snd = s.snd ≫ sYZ.snd :=
   rfl
-#align category_theory.limits.binary_fan.assoc_inv_snd CategoryTheory.Limits.BinaryFan.assoc_inv_snd
+#align category_theory.limits.binary_fan.assoc_inv_snd CategoryTheory.Limits.BinaryFan.assocInv_snd
 
 /-- If all the binary fans involved a limit cones, `binary_fan.assoc` produces another limit cone.
 -/
@@ -303,21 +303,21 @@ theorem triangle (X Y : C) :
   apply is_limit.hom_ext (ℬ _ _).IsLimit; rintro ⟨⟨⟩⟩ <;> simp
 #align category_theory.monoidal_of_chosen_finite_products.triangle CategoryTheory.MonoidalOfChosenFiniteProducts.triangle
 
-theorem left_unitor_naturality {X₁ X₂ : C} (f : X₁ ⟶ X₂) :
+theorem leftUnitor_naturality {X₁ X₂ : C} (f : X₁ ⟶ X₂) :
     tensorHom ℬ (𝟙 𝒯.Cone.x) f ≫ (BinaryFan.leftUnitor 𝒯.IsLimit (ℬ 𝒯.Cone.x X₂).IsLimit).Hom =
       (BinaryFan.leftUnitor 𝒯.IsLimit (ℬ 𝒯.Cone.x X₁).IsLimit).Hom ≫ f :=
   by
   dsimp [tensor_hom]
   simp
-#align category_theory.monoidal_of_chosen_finite_products.left_unitor_naturality CategoryTheory.MonoidalOfChosenFiniteProducts.left_unitor_naturality
+#align category_theory.monoidal_of_chosen_finite_products.left_unitor_naturality CategoryTheory.MonoidalOfChosenFiniteProducts.leftUnitor_naturality
 
-theorem right_unitor_naturality {X₁ X₂ : C} (f : X₁ ⟶ X₂) :
+theorem rightUnitor_naturality {X₁ X₂ : C} (f : X₁ ⟶ X₂) :
     tensorHom ℬ f (𝟙 𝒯.Cone.x) ≫ (BinaryFan.rightUnitor 𝒯.IsLimit (ℬ X₂ 𝒯.Cone.x).IsLimit).Hom =
       (BinaryFan.rightUnitor 𝒯.IsLimit (ℬ X₁ 𝒯.Cone.x).IsLimit).Hom ≫ f :=
   by
   dsimp [tensor_hom]
   simp
-#align category_theory.monoidal_of_chosen_finite_products.right_unitor_naturality CategoryTheory.MonoidalOfChosenFiniteProducts.right_unitor_naturality
+#align category_theory.monoidal_of_chosen_finite_products.right_unitor_naturality CategoryTheory.MonoidalOfChosenFiniteProducts.rightUnitor_naturality
 
 theorem associator_naturality {X₁ X₂ X₃ Y₁ Y₂ Y₃ : C} (f₁ : X₁ ⟶ Y₁) (f₂ : X₂ ⟶ Y₂) (f₃ : X₃ ⟶ Y₃) :
     tensorHom ℬ (tensorHom ℬ f₁ f₂) f₃ ≫ (BinaryFan.associatorOfLimitCone ℬ Y₁ Y₂ Y₃).Hom =
@@ -349,8 +349,8 @@ def monoidalOfChosenFiniteProducts : MonoidalCategory C
   rightUnitor X := BinaryFan.rightUnitor 𝒯.IsLimit (ℬ X 𝒯.Cone.x).IsLimit
   pentagon' := pentagon ℬ
   triangle' := triangle 𝒯 ℬ
-  left_unitor_naturality' _ _ f := left_unitor_naturality 𝒯 ℬ f
-  right_unitor_naturality' _ _ f := right_unitor_naturality 𝒯 ℬ f
+  left_unitor_naturality' _ _ f := leftUnitor_naturality 𝒯 ℬ f
+  right_unitor_naturality' _ _ f := rightUnitor_naturality 𝒯 ℬ f
   associator_naturality' _ _ _ _ _ _ f₁ f₂ f₃ := associator_naturality ℬ f₁ f₂ f₃
 #align category_theory.monoidal_of_chosen_finite_products CategoryTheory.monoidalOfChosenFiniteProducts
 

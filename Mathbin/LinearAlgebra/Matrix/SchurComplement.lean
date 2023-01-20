@@ -92,7 +92,7 @@ theorem IsHermitian.from_blocks₂₂ [Fintype n] [DecidableEq n] (A : Matrix m 
     {D : Matrix n n 𝕜} (hD : D.IsHermitian) :
     (fromBlocks A B Bᴴ D).IsHermitian ↔ (A - B ⬝ D⁻¹ ⬝ Bᴴ).IsHermitian :=
   by
-  rw [← is_hermitian_submatrix_equiv (Equiv.sumComm n m), Equiv.sum_comm_apply,
+  rw [← is_hermitian_submatrix_equiv (Equiv.sumComm n m), Equiv.sumComm_apply,
     from_blocks_submatrix_sum_swap_sum_swap]
   convert is_hermitian.from_blocks₁₁ _ _ hD <;> simp
 #align matrix.is_hermitian.from_blocks₂₂ Matrix.IsHermitian.from_blocks₂₂
@@ -122,7 +122,7 @@ theorem PosSemidef.from_blocks₂₂ [Fintype m] [Fintype n] [DecidableEq n] (A 
     (B : Matrix m n 𝕜) {D : Matrix n n 𝕜} (hD : D.PosDef) [Invertible D] :
     (fromBlocks A B Bᴴ D).PosSemidef ↔ (A - B ⬝ D⁻¹ ⬝ Bᴴ).PosSemidef :=
   by
-  rw [← pos_semidef_submatrix_equiv (Equiv.sumComm n m), Equiv.sum_comm_apply,
+  rw [← pos_semidef_submatrix_equiv (Equiv.sumComm n m), Equiv.sumComm_apply,
     from_blocks_submatrix_sum_swap_sum_swap]
   convert pos_semidef.from_blocks₁₁ _ _ hD <;> first |infer_instance|simp
 #align matrix.pos_semidef.from_blocks₂₂ Matrix.PosSemidef.from_blocks₂₂

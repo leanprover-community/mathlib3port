@@ -105,18 +105,18 @@ theorem integrableOnEmpty : IntegrableOn f ∅ μ := by simp [integrable_on, int
 #align measure_theory.integrable_on_empty MeasureTheory.integrableOnEmpty
 
 @[simp]
-theorem integrable_on_univ : IntegrableOn f univ μ ↔ Integrable f μ := by
+theorem integrableOn_univ : IntegrableOn f univ μ ↔ Integrable f μ := by
   rw [integrable_on, measure.restrict_univ]
-#align measure_theory.integrable_on_univ MeasureTheory.integrable_on_univ
+#align measure_theory.integrable_on_univ MeasureTheory.integrableOn_univ
 
 theorem integrableOnZero : IntegrableOn (fun _ => (0 : E)) s μ :=
   integrableZero _ _ _
 #align measure_theory.integrable_on_zero MeasureTheory.integrableOnZero
 
 @[simp]
-theorem integrable_on_const {C : E} : IntegrableOn (fun _ => C) s μ ↔ C = 0 ∨ μ s < ∞ :=
+theorem integrableOn_const {C : E} : IntegrableOn (fun _ => C) s μ ↔ C = 0 ∨ μ s < ∞ :=
   integrable_const_iff.trans <| by rw [measure.restrict_apply_univ]
-#align measure_theory.integrable_on_const MeasureTheory.integrable_on_const
+#align measure_theory.integrable_on_const MeasureTheory.integrableOn_const
 
 theorem IntegrableOn.mono (h : IntegrableOn f t ν) (hs : s ⊆ t) (hμ : μ ≤ ν) : IntegrableOn f s μ :=
   h.monoMeasure <| Measure.restrict_mono hs hμ
@@ -177,12 +177,12 @@ theorem IntegrableOn.union (hs : IntegrableOn f s μ) (ht : IntegrableOn f t μ)
 #align measure_theory.integrable_on.union MeasureTheory.IntegrableOn.union
 
 @[simp]
-theorem integrable_on_union : IntegrableOn f (s ∪ t) μ ↔ IntegrableOn f s μ ∧ IntegrableOn f t μ :=
+theorem integrableOn_union : IntegrableOn f (s ∪ t) μ ↔ IntegrableOn f s μ ∧ IntegrableOn f t μ :=
   ⟨fun h => ⟨h.leftOfUnion, h.rightOfUnion⟩, fun h => h.1.union h.2⟩
-#align measure_theory.integrable_on_union MeasureTheory.integrable_on_union
+#align measure_theory.integrable_on_union MeasureTheory.integrableOn_union
 
 @[simp]
-theorem integrable_on_singleton_iff {x : α} [MeasurableSingletonClass α] :
+theorem integrableOn_singleton_iff {x : α} [MeasurableSingletonClass α] :
     IntegrableOn f {x} μ ↔ f x = 0 ∨ μ {x} < ∞ :=
   by
   have : f =ᵐ[μ.restrict {x}] fun y => f x :=
@@ -191,31 +191,31 @@ theorem integrable_on_singleton_iff {x : α} [MeasurableSingletonClass α] :
     simp only [mem_singleton_iff.1 ha]
   rw [integrable_on, integrable_congr this, integrable_const_iff]
   simp
-#align measure_theory.integrable_on_singleton_iff MeasureTheory.integrable_on_singleton_iff
+#align measure_theory.integrable_on_singleton_iff MeasureTheory.integrableOn_singleton_iff
 
 @[simp]
-theorem integrable_on_finite_bUnion {s : Set β} (hs : s.Finite) {t : β → Set α} :
+theorem integrableOn_finite_bUnion {s : Set β} (hs : s.Finite) {t : β → Set α} :
     IntegrableOn f (⋃ i ∈ s, t i) μ ↔ ∀ i ∈ s, IntegrableOn f (t i) μ :=
   by
   apply hs.induction_on
   · simp
   · intro a s ha hs hf
     simp [hf, or_imp, forall_and]
-#align measure_theory.integrable_on_finite_bUnion MeasureTheory.integrable_on_finite_bUnion
+#align measure_theory.integrable_on_finite_bUnion MeasureTheory.integrableOn_finite_bUnion
 
 @[simp]
-theorem integrable_on_finset_Union {s : Finset β} {t : β → Set α} :
+theorem integrableOn_finset_unionᵢ {s : Finset β} {t : β → Set α} :
     IntegrableOn f (⋃ i ∈ s, t i) μ ↔ ∀ i ∈ s, IntegrableOn f (t i) μ :=
-  integrable_on_finite_bUnion s.finite_to_set
-#align measure_theory.integrable_on_finset_Union MeasureTheory.integrable_on_finset_Union
+  integrableOn_finite_bUnion s.finite_to_set
+#align measure_theory.integrable_on_finset_Union MeasureTheory.integrableOn_finset_unionᵢ
 
 @[simp]
-theorem integrable_on_finite_Union [Finite β] {t : β → Set α} :
+theorem integrableOn_finite_unionᵢ [Finite β] {t : β → Set α} :
     IntegrableOn f (⋃ i, t i) μ ↔ ∀ i, IntegrableOn f (t i) μ :=
   by
   cases nonempty_fintype β
   simpa using @integrable_on_finset_Union _ _ _ _ _ f μ Finset.univ t
-#align measure_theory.integrable_on_finite_Union MeasureTheory.integrable_on_finite_Union
+#align measure_theory.integrable_on_finite_Union MeasureTheory.integrableOn_finite_unionᵢ
 
 theorem IntegrableOn.addMeasure (hμ : IntegrableOn f s μ) (hν : IntegrableOn f s ν) :
     IntegrableOn f s (μ + ν) := by
@@ -225,40 +225,40 @@ theorem IntegrableOn.addMeasure (hμ : IntegrableOn f s μ) (hν : IntegrableOn 
 #align measure_theory.integrable_on.add_measure MeasureTheory.IntegrableOn.addMeasure
 
 @[simp]
-theorem integrable_on_add_measure :
+theorem integrableOn_add_measure :
     IntegrableOn f s (μ + ν) ↔ IntegrableOn f s μ ∧ IntegrableOn f s ν :=
   ⟨fun h =>
     ⟨h.monoMeasure (Measure.le_add_right le_rfl), h.monoMeasure (Measure.le_add_left le_rfl)⟩,
     fun h => h.1.addMeasure h.2⟩
-#align measure_theory.integrable_on_add_measure MeasureTheory.integrable_on_add_measure
+#align measure_theory.integrable_on_add_measure MeasureTheory.integrableOn_add_measure
 
-theorem MeasurableEmbedding.integrable_on_map_iff [MeasurableSpace β] {e : α → β}
+theorem MeasurableEmbedding.integrableOn_map_iff [MeasurableSpace β] {e : α → β}
     (he : MeasurableEmbedding e) {f : β → E} {μ : Measure α} {s : Set β} :
     IntegrableOn f s (Measure.map e μ) ↔ IntegrableOn (f ∘ e) (e ⁻¹' s) μ := by
   simp only [integrable_on, he.restrict_map, he.integrable_map_iff]
-#align measurable_embedding.integrable_on_map_iff MeasurableEmbedding.integrable_on_map_iff
+#align measurable_embedding.integrable_on_map_iff MeasurableEmbedding.integrableOn_map_iff
 
-theorem integrable_on_map_equiv [MeasurableSpace β] (e : α ≃ᵐ β) {f : β → E} {μ : Measure α}
+theorem integrableOn_map_equiv [MeasurableSpace β] (e : α ≃ᵐ β) {f : β → E} {μ : Measure α}
     {s : Set β} : IntegrableOn f s (Measure.map e μ) ↔ IntegrableOn (f ∘ e) (e ⁻¹' s) μ := by
   simp only [integrable_on, e.restrict_map, integrable_map_equiv e]
-#align measure_theory.integrable_on_map_equiv MeasureTheory.integrable_on_map_equiv
+#align measure_theory.integrable_on_map_equiv MeasureTheory.integrableOn_map_equiv
 
-theorem MeasurePreserving.integrable_on_comp_preimage [MeasurableSpace β] {e : α → β} {ν}
+theorem MeasurePreserving.integrableOn_comp_preimage [MeasurableSpace β] {e : α → β} {ν}
     (h₁ : MeasurePreserving e μ ν) (h₂ : MeasurableEmbedding e) {f : β → E} {s : Set β} :
     IntegrableOn (f ∘ e) (e ⁻¹' s) μ ↔ IntegrableOn f s ν :=
   (h₁.restrictPreimageEmb h₂ s).integrable_comp_emb h₂
-#align measure_theory.measure_preserving.integrable_on_comp_preimage MeasureTheory.MeasurePreserving.integrable_on_comp_preimage
+#align measure_theory.measure_preserving.integrable_on_comp_preimage MeasureTheory.MeasurePreserving.integrableOn_comp_preimage
 
-theorem MeasurePreserving.integrable_on_image [MeasurableSpace β] {e : α → β} {ν}
+theorem MeasurePreserving.integrableOn_image [MeasurableSpace β] {e : α → β} {ν}
     (h₁ : MeasurePreserving e μ ν) (h₂ : MeasurableEmbedding e) {f : β → E} {s : Set α} :
     IntegrableOn f (e '' s) ν ↔ IntegrableOn (f ∘ e) s μ :=
   ((h₁.restrictImageEmb h₂ s).integrable_comp_emb h₂).symm
-#align measure_theory.measure_preserving.integrable_on_image MeasureTheory.MeasurePreserving.integrable_on_image
+#align measure_theory.measure_preserving.integrable_on_image MeasureTheory.MeasurePreserving.integrableOn_image
 
 theorem integrable_indicator_iff (hs : MeasurableSet s) :
     Integrable (indicator s f) μ ↔ IntegrableOn f s μ := by
   simp [integrable_on, integrable, has_finite_integral, nnnorm_indicator_eq_indicator_nnnorm,
-    Ennreal.coe_indicator, lintegral_indicator _ hs, ae_strongly_measurable_indicator_iff hs]
+    Ennreal.coe_indicator, lintegral_indicator _ hs, aeStronglyMeasurable_indicator_iff hs]
 #align measure_theory.integrable_indicator_iff MeasureTheory.integrable_indicator_iff
 
 theorem IntegrableOn.integrableIndicator (h : IntegrableOn f s μ) (hs : MeasurableSet s) :
@@ -285,12 +285,12 @@ theorem integrableIndicatorConstLp {E} [NormedAddCommGroup E] {p : ℝ≥0∞} {
   simpa only [Set.univ_inter, MeasurableSet.univ, measure.restrict_apply] using hμs
 #align measure_theory.integrable_indicator_const_Lp MeasureTheory.integrableIndicatorConstLp
 
-theorem integrable_on_iff_integrable_of_support_subset {f : α → E} {s : Set α} (h1s : support f ⊆ s)
+theorem integrableOn_iff_integrable_of_support_subset {f : α → E} {s : Set α} (h1s : support f ⊆ s)
     (h2s : MeasurableSet s) : IntegrableOn f s μ ↔ Integrable f μ :=
   by
   refine' ⟨fun h => _, fun h => h.IntegrableOn⟩
   rwa [← indicator_eq_self.2 h1s, integrable_indicator_iff h2s]
-#align measure_theory.integrable_on_iff_integrable_of_support_subset MeasureTheory.integrable_on_iff_integrable_of_support_subset
+#align measure_theory.integrable_on_iff_integrable_of_support_subset MeasureTheory.integrableOn_iff_integrable_of_support_subset
 
 theorem integrableOnLpOfMeasureNeTop {E} [NormedAddCommGroup E] {p : ℝ≥0∞} {s : Set α}
     (f : lp E p μ) (hp : 1 ≤ p) (hμs : μ s ≠ ∞) : IntegrableOn f s μ :=
@@ -305,7 +305,7 @@ theorem integrableOnLpOfMeasureNeTop {E} [NormedAddCommGroup E] {p : ℝ≥0∞}
 theorem Integrable.lintegral_lt_top {f : α → ℝ} (hf : Integrable f μ) :
     (∫⁻ x, Ennreal.ofReal (f x) ∂μ) < ∞ :=
   calc
-    (∫⁻ x, Ennreal.ofReal (f x) ∂μ) ≤ ∫⁻ x, ↑‖f x‖₊ ∂μ := lintegral_of_real_le_lintegral_nnnorm f
+    (∫⁻ x, Ennreal.ofReal (f x) ∂μ) ≤ ∫⁻ x, ↑‖f x‖₊ ∂μ := lintegral_ofReal_le_lintegral_nnnorm f
     _ < ∞ := hf.2
     
 #align measure_theory.integrable.lintegral_lt_top MeasureTheory.Integrable.lintegral_lt_top
@@ -326,7 +326,7 @@ variable {l l' : Filter α}
 
 theorem Integrable.integrableAtFilter (h : Integrable f μ) (l : Filter α) :
     IntegrableAtFilter f l μ :=
-  ⟨univ, Filter.univ_mem, integrable_on_univ.2 h⟩
+  ⟨univ, Filter.univ_mem, integrableOn_univ.2 h⟩
 #align measure_theory.integrable.integrable_at_filter MeasureTheory.Integrable.integrableAtFilter
 
 protected theorem IntegrableAtFilter.eventually (h : IntegrableAtFilter f l μ) :
@@ -431,7 +431,7 @@ theorem ContinuousOn.aeMeasurable [TopologicalSpace α] [OpensMeasurableSpace α
   nontriviality α; inhabit α
   have : (piecewise s f fun _ => f default) =ᵐ[μ.restrict s] f := piecewise_ae_eq_restrict hs
   refine' ⟨piecewise s f fun _ => f default, _, this.symm⟩
-  apply measurable_of_is_open
+  apply measurable_of_isOpen
   intro t ht
   obtain ⟨u, u_open, hu⟩ : ∃ u : Set α, IsOpen u ∧ f ⁻¹' t ∩ s = u ∩ s :=
     _root_.continuous_on_iff'.1 hf t ht
@@ -449,7 +449,7 @@ theorem ContinuousOn.aeStronglyMeasurableOfIsSeparable [TopologicalSpace α]
   by
   letI := pseudo_metrizable_space_pseudo_metric α
   borelize β
-  rw [ae_strongly_measurable_iff_ae_measurable_separable]
+  rw [aeStronglyMeasurable_iff_aeMeasurable_separable]
   refine' ⟨hf.ae_measurable hs, f '' s, hf.is_separable_image h's, _⟩
   exact mem_of_superset (self_mem_ae_restrict hs) (subset_preimage_image _ _)
 #align continuous_on.ae_strongly_measurable_of_is_separable ContinuousOn.aeStronglyMeasurableOfIsSeparable
@@ -463,12 +463,12 @@ theorem ContinuousOn.aeStronglyMeasurable [TopologicalSpace α] [TopologicalSpac
   by
   borelize β
   refine'
-    ae_strongly_measurable_iff_ae_measurable_separable.2
+    aeStronglyMeasurable_iff_aeMeasurable_separable.2
       ⟨hf.ae_measurable hs, f '' s, _,
         mem_of_superset (self_mem_ae_restrict hs) (subset_preimage_image _ _)⟩
   cases h.out
   · let f' : s → β := s.restrict f
-    have A : Continuous f' := continuous_on_iff_continuous_restrict.1 hf
+    have A : Continuous f' := continuousOn_iff_continuous_restrict.1 hf
     have B : is_separable (univ : Set s) := is_separable_of_separable_space _
     convert is_separable.image B A using 1
     ext x
@@ -485,7 +485,7 @@ theorem ContinuousOn.aeStronglyMeasurableOfIsCompact [TopologicalSpace α] [Open
   by
   letI := pseudo_metrizable_space_pseudo_metric β
   borelize β
-  rw [ae_strongly_measurable_iff_ae_measurable_separable]
+  rw [aeStronglyMeasurable_iff_aeMeasurable_separable]
   refine' ⟨hf.ae_measurable h's, f '' s, _, _⟩
   · exact (hs.image_of_continuous_on hf).IsSeparable
   · exact mem_of_superset (self_mem_ae_restrict h's) (subset_preimage_image _ _)
@@ -497,7 +497,7 @@ theorem ContinuousOn.integrableAtNhdsWithinOfIsSeparable [TopologicalSpace α]
     (h't : TopologicalSpace.IsSeparable t) (ha : a ∈ t) : IntegrableAtFilter f (𝓝[t] a) μ :=
   haveI : (𝓝[t] a).IsMeasurablyGenerated := ht.nhds_within_is_measurably_generated _
   (hft a ha).IntegrableAtFilter
-    ⟨_, self_mem_nhds_within, hft.ae_strongly_measurable_of_is_separable ht h't⟩
+    ⟨_, self_mem_nhdsWithin, hft.ae_strongly_measurable_of_is_separable ht h't⟩
     (μ.finite_at_nhds_within _ _)
 #align continuous_on.integrable_at_nhds_within_of_is_separable ContinuousOn.integrableAtNhdsWithinOfIsSeparable
 
@@ -506,7 +506,7 @@ theorem ContinuousOn.integrableAtNhdsWithin [TopologicalSpace α] [SecondCountab
     {f : α → E} (hft : ContinuousOn f t) (ht : MeasurableSet t) (ha : a ∈ t) :
     IntegrableAtFilter f (𝓝[t] a) μ :=
   haveI : (𝓝[t] a).IsMeasurablyGenerated := ht.nhds_within_is_measurably_generated _
-  (hft a ha).IntegrableAtFilter ⟨_, self_mem_nhds_within, hft.ae_strongly_measurable ht⟩
+  (hft a ha).IntegrableAtFilter ⟨_, self_mem_nhdsWithin, hft.ae_strongly_measurable ht⟩
     (μ.finite_at_nhds_within _ _)
 #align continuous_on.integrable_at_nhds_within ContinuousOn.integrableAtNhdsWithin
 
@@ -514,7 +514,7 @@ theorem Continuous.integrableAtNhds [TopologicalSpace α] [SecondCountableTopolo
     [OpensMeasurableSpace α] {μ : Measure α} [IsLocallyFiniteMeasure μ] {f : α → E}
     (hf : Continuous f) (a : α) : IntegrableAtFilter f (𝓝 a) μ :=
   by
-  rw [← nhds_within_univ]
+  rw [← nhdsWithin_univ]
   exact hf.continuous_on.integrable_at_nhds_within MeasurableSet.univ (mem_univ a)
 #align continuous.integrable_at_nhds Continuous.integrableAtNhds
 
@@ -530,7 +530,7 @@ theorem ContinuousOn.stronglyMeasurableAtFilter [TopologicalSpace α] [OpensMeas
 theorem ContinuousAt.stronglyMeasurableAtFilter [TopologicalSpace α] [OpensMeasurableSpace α]
     [SecondCountableTopologyEither α E] {f : α → E} {s : Set α} {μ : Measure α} (hs : IsOpen s)
     (hf : ∀ x ∈ s, ContinuousAt f x) : ∀ x ∈ s, StronglyMeasurableAtFilter f (𝓝 x) μ :=
-  ContinuousOn.stronglyMeasurableAtFilter hs <| ContinuousAt.continuous_on hf
+  ContinuousOn.stronglyMeasurableAtFilter hs <| ContinuousAt.continuousOn hf
 #align continuous_at.strongly_measurable_at_filter ContinuousAt.stronglyMeasurableAtFilter
 
 theorem Continuous.stronglyMeasurableAtFilter [TopologicalSpace α] [OpensMeasurableSpace α]
@@ -546,6 +546,6 @@ theorem ContinuousOn.stronglyMeasurableAtFilterNhdsWithin {α β : Type _} [Meas
     [SecondCountableTopologyEither α β] {f : α → β} {s : Set α} {μ : Measure α}
     (hf : ContinuousOn f s) (hs : MeasurableSet s) (x : α) :
     StronglyMeasurableAtFilter f (𝓝[s] x) μ :=
-  ⟨s, self_mem_nhds_within, hf.AeStronglyMeasurable hs⟩
+  ⟨s, self_mem_nhdsWithin, hf.AeStronglyMeasurable hs⟩
 #align continuous_on.strongly_measurable_at_filter_nhds_within ContinuousOn.stronglyMeasurableAtFilterNhdsWithin
 

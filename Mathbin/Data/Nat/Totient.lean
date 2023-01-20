@@ -77,14 +77,14 @@ theorem totient_pos : ∀ {n : ℕ}, 0 < n → 0 < φ n
   | n + 2 => fun h => card_pos.2 ⟨1, mem_filter.2 ⟨mem_range.2 (by decide), coprime_one_right _⟩⟩
 #align nat.totient_pos Nat.totient_pos
 
-theorem filter_coprime_Ico_eq_totient (a n : ℕ) :
+theorem filter_coprime_ico_eq_totient (a n : ℕ) :
     ((ico n (n + a)).filter (Coprime a)).card = totient a :=
   by
   rw [totient, filter_Ico_card_eq_of_periodic, count_eq_card_filter_range]
   exact periodic_coprime a
-#align nat.filter_coprime_Ico_eq_totient Nat.filter_coprime_Ico_eq_totient
+#align nat.filter_coprime_Ico_eq_totient Nat.filter_coprime_ico_eq_totient
 
-theorem Ico_filter_coprime_le {a : ℕ} (k n : ℕ) (a_pos : 0 < a) :
+theorem ico_filter_coprime_le {a : ℕ} (k n : ℕ) (a_pos : 0 < a) :
     ((ico k (k + n)).filter (Coprime a)).card ≤ totient a * (n / a + 1) :=
   by
   conv_lhs => rw [← Nat.mod_add_div n a]
@@ -113,7 +113,7 @@ theorem Ico_filter_coprime_le {a : ℕ} (k n : ℕ) (a_pos : 0 < a) :
       apply card_union_le
     _ ≤ a.totient * i + a.totient + a.totient := add_le_add_right ih (totient a)
     
-#align nat.Ico_filter_coprime_le Nat.Ico_filter_coprime_le
+#align nat.Ico_filter_coprime_le Nat.ico_filter_coprime_le
 
 open Zmod
 
@@ -140,8 +140,8 @@ theorem totient_even {n : ℕ} (hn : 2 < n) : Even n.totient :=
   suffices 2 = orderOf (-1 : (Zmod n)ˣ)
     by
     rw [← Zmod.card_units_eq_totient, even_iff_two_dvd, this]
-    exact order_of_dvd_card_univ
-  rw [← order_of_units, Units.coe_neg_one, order_of_neg_one, ringChar.eq (Zmod n) n, if_neg hn.ne']
+    exact orderOf_dvd_card_univ
+  rw [← orderOf_units, Units.coe_neg_one, orderOf_neg_one, ringChar.eq (Zmod n) n, if_neg hn.ne']
 #align nat.totient_even Nat.totient_even
 
 theorem totient_mul {m n : ℕ} (h : m.Coprime n) : φ (m * n) = φ m * φ n :=
@@ -250,9 +250,9 @@ theorem totient_eq_iff_prime {p : ℕ} (hp : 0 < p) : p.totient = p - 1 ↔ p.Pr
     · rwa [succ_le_iff]
     · rintro rfl
       rw [totient_one, tsub_self] at h
-      exact one_ne_zero h
+      exact one_neZero h
   rw [totient_eq_card_coprime, range_eq_Ico, ← Ico_insert_succ_left hp.le, Finset.filter_insert,
-    if_neg (not_coprime_of_dvd_of_dvd hp (dvd_refl p) (dvd_zero p)), ← Nat.card_Ico 1 p] at h
+    if_neg (not_coprime_of_dvd_of_dvd hp (dvd_refl p) (dvd_zero p)), ← Nat.card_ico 1 p] at h
   refine'
     p.prime_of_coprime hp fun n hn hnz => Finset.filter_card_eq h n <| finset.mem_Ico.mpr ⟨_, hn⟩
   rwa [succ_le_iff, pos_iff_ne_zero]

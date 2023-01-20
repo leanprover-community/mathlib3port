@@ -149,9 +149,9 @@ theorem AeMeasurable.sup (hf : AeMeasurable f μ) (hg : AeMeasurable g μ) :
 
 omit m
 
-instance (priority := 100) HasMeasurableSup₂.to_has_measurable_sup : HasMeasurableSup M :=
+instance (priority := 100) HasMeasurableSup₂.to_hasMeasurableSup : HasMeasurableSup M :=
   ⟨fun c => measurable_const.sup measurable_id, fun c => measurable_id.sup measurable_const⟩
-#align has_measurable_sup₂.to_has_measurable_sup HasMeasurableSup₂.to_has_measurable_sup
+#align has_measurable_sup₂.to_has_measurable_sup HasMeasurableSup₂.to_hasMeasurableSup
 
 include m
 
@@ -217,9 +217,9 @@ theorem AeMeasurable.inf (hf : AeMeasurable f μ) (hg : AeMeasurable g μ) :
 
 omit m
 
-instance (priority := 100) HasMeasurableInf₂.to_has_measurable_inf : HasMeasurableInf M :=
+instance (priority := 100) HasMeasurableInf₂.to_hasMeasurableInf : HasMeasurableInf M :=
   ⟨fun c => measurable_const.inf measurable_id, fun c => measurable_id.inf measurable_const⟩
-#align has_measurable_inf₂.to_has_measurable_inf HasMeasurableInf₂.to_has_measurable_inf
+#align has_measurable_inf₂.to_has_measurable_inf HasMeasurableInf₂.to_hasMeasurableInf
 
 include m
 

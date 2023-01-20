@@ -74,7 +74,7 @@ theorem const_lt [Preorder β] {x y : β} : x ≤ y → (↑x : β*) ≤ ↑y :=
 #align filter.germ.const_lt Filter.Germ.const_lt
 
 theorem const_lt_iff [Preorder β] {x y : β} : (↑x : β*) < ↑y ↔ x < y :=
-  coe_lt.trans lift_rel_const_iff
+  coe_lt.trans liftRel_const_iff
 #align filter.germ.const_lt_iff Filter.Germ.const_lt_iff
 
 theorem lt_def [Preorder β] : ((· < ·) : β* → β* → Prop) = LiftRel (· < ·) :=

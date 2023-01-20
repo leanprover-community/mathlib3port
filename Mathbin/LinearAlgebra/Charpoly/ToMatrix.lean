@@ -41,7 +41,7 @@ section Basic
 
 /-- `charpoly f` is the characteristic polynomial of the matrix of `f` in any basis. -/
 @[simp]
-theorem charpoly_to_matrix {ι : Type w} [Fintype ι] (b : Basis ι R M) :
+theorem charpoly_toMatrix {ι : Type w} [Fintype ι] (b : Basis ι R M) :
     (toMatrix b b f).charpoly = f.charpoly :=
   by
   set A := to_matrix b b f
@@ -56,14 +56,14 @@ theorem charpoly_to_matrix {ι : Type w} [Fintype ι] (b : Basis ι R M) :
   set P := b.to_matrix b'
   set Q := b'.to_matrix b
   have hPQ : C.map_matrix (φ₁ P) ⬝ C.map_matrix (φ₃ Q) = 1 := by
-    rw [RingHom.map_matrix_apply, RingHom.map_matrix_apply, ← Matrix.map_mul,
-      @reindex_linear_equiv_mul _ ι' _ _ _ _ R R, Basis.to_matrix_mul_to_matrix_flip,
-      reindex_linear_equiv_one, ← RingHom.map_matrix_apply, RingHom.map_one]
+    rw [RingHom.mapMatrix_apply, RingHom.mapMatrix_apply, ← Matrix.map_mul,
+      @reindex_linear_equiv_mul _ ι' _ _ _ _ R R, Basis.toMatrix_mul_toMatrix_flip,
+      reindex_linear_equiv_one, ← RingHom.mapMatrix_apply, RingHom.map_one]
   calc
     A.charpoly = (reindex e e A).charpoly := (charpoly_reindex _ _).symm
     _ = (scalar ι' X - C.map_matrix (φ A)).det := rfl
     _ = (scalar ι' X - C.map_matrix (φ (P ⬝ A' ⬝ Q))).det := by
-      rw [basis_to_matrix_mul_linear_map_to_matrix_mul_basis_to_matrix]
+      rw [basis_toMatrix_mul_linearMap_toMatrix_mul_basis_toMatrix]
     _ = (scalar ι' X - C.map_matrix (φ₁ P ⬝ φ₂ A' ⬝ φ₃ Q)).det := by
       rw [reindex_linear_equiv_mul, reindex_linear_equiv_mul]
     _ = (scalar ι' X - C.map_matrix (φ₁ P) ⬝ C.map_matrix A' ⬝ C.map_matrix (φ₃ Q)).det := by simp
@@ -88,7 +88,7 @@ theorem charpoly_to_matrix {ι : Type w} [Fintype ι] (b : Basis ι R M) :
     _ = (scalar ι' X - C.map_matrix A').det := by rw [← det_mul, hPQ, det_one, one_mul]
     _ = f.charpoly := rfl
     
-#align linear_map.charpoly_to_matrix LinearMap.charpoly_to_matrix
+#align linear_map.charpoly_to_matrix LinearMap.charpoly_toMatrix
 
 end Basic
 

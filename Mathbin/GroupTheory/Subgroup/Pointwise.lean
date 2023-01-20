@@ -55,7 +55,7 @@ theorem inv_subset_closure (S : Set G) : S⁻¹ ⊆ closure S := fun s hs =>
 #align add_subgroup.neg_subset_closure AddSubgroup.neg_subset_closure
 
 @[to_additive]
-theorem closure_to_submonoid (S : Set G) : (closure S).toSubmonoid = Submonoid.closure (S ∪ S⁻¹) :=
+theorem closure_toSubmonoid (S : Set G) : (closure S).toSubmonoid = Submonoid.closure (S ∪ S⁻¹) :=
   by
   refine' le_antisymm (fun x hx => _) (Submonoid.closure_le.2 _)
   · refine'
@@ -64,13 +64,13 @@ theorem closure_to_submonoid (S : Set G) : (closure S).toSubmonoid = Submonoid.c
         (Submonoid.one_mem _) (fun x y hx hy => Submonoid.mul_mem _ hx hy) fun x hx => _
     rwa [← Submonoid.mem_closure_inv, Set.union_inv, inv_inv, Set.union_comm]
   · simp only [true_and_iff, coe_to_submonoid, union_subset_iff, subset_closure, inv_subset_closure]
-#align subgroup.closure_to_submonoid Subgroup.closure_to_submonoid
+#align subgroup.closure_to_submonoid Subgroup.closure_toSubmonoid
 #align add_subgroup.closure_to_add_submonoid AddSubgroup.closure_to_add_submonoid
 
 @[to_additive]
 theorem closure_induction_left {p : G → Prop} {x : G} (h : x ∈ closure s) (H1 : p 1)
     (Hmul : ∀ x ∈ s, ∀ (y), p y → p (x * y)) (Hinv : ∀ x ∈ s, ∀ (y), p y → p (x⁻¹ * y)) : p x :=
-  let key := (closure_to_submonoid s).le
+  let key := (closure_toSubmonoid s).le
   Submonoid.closure_induction_left (key h) H1 fun x hx =>
     hx.elim (Hmul x) fun hx y hy => (congr_arg _ <| inv_inv x).mp <| Hinv x⁻¹ hx y hy
 #align subgroup.closure_induction_left Subgroup.closure_induction_left
@@ -79,7 +79,7 @@ theorem closure_induction_left {p : G → Prop} {x : G} (h : x ∈ closure s) (H
 @[to_additive]
 theorem closure_induction_right {p : G → Prop} {x : G} (h : x ∈ closure s) (H1 : p 1)
     (Hmul : ∀ (x), ∀ y ∈ s, p x → p (x * y)) (Hinv : ∀ (x), ∀ y ∈ s, p x → p (x * y⁻¹)) : p x :=
-  let key := (closure_to_submonoid s).le
+  let key := (closure_toSubmonoid s).le
   Submonoid.closure_induction_right (key h) H1 fun x y hy =>
     hy.elim (Hmul x y) fun hy hx => (congr_arg _ <| inv_inv y).mp <| Hinv x y⁻¹ hy hx
 #align subgroup.closure_induction_right Subgroup.closure_induction_right
@@ -109,7 +109,7 @@ then it holds for all elements of the supremum of `S`. -/
 @[elab_as_elim,
   to_additive
       " An induction principle for elements of `⨆ i, S i`.\nIf `C` holds for `0` and all elements of `S i` for all `i`, and is preserved under addition,\nthen it holds for all elements of the supremum of `S`. "]
-theorem supr_induction {ι : Sort _} (S : ι → Subgroup G) {C : G → Prop} {x : G} (hx : x ∈ ⨆ i, S i)
+theorem supᵢ_induction {ι : Sort _} (S : ι → Subgroup G) {C : G → Prop} {x : G} (hx : x ∈ ⨆ i, S i)
     (hp : ∀ (i), ∀ x ∈ S i, C x) (h1 : C 1) (hmul : ∀ x y, C x → C y → C (x * y)) : C x :=
   by
   rw [supr_eq_closure] at hx
@@ -118,13 +118,13 @@ theorem supr_induction {ι : Sort _} (S : ι → Subgroup G) {C : G → Prop} {x
     exact hp _ _ hi
   · obtain ⟨i, hi⟩ := set.mem_Union.mp hx
     exact hp _ _ (inv_mem hi)
-#align subgroup.supr_induction Subgroup.supr_induction
-#align add_subgroup.supr_induction AddSubgroup.supr_induction
+#align subgroup.supr_induction Subgroup.supᵢ_induction
+#align add_subgroup.supr_induction AddSubgroup.supᵢ_induction
 
 /-- A dependent version of `subgroup.supr_induction`. -/
 @[elab_as_elim, to_additive "A dependent version of `add_subgroup.supr_induction`. "]
-theorem supr_induction' {ι : Sort _} (S : ι → Subgroup G) {C : ∀ x, (x ∈ ⨆ i, S i) → Prop}
-    (hp : ∀ (i), ∀ x ∈ S i, C x (mem_supr_of_mem i ‹_›)) (h1 : C 1 (one_mem _))
+theorem supᵢ_induction' {ι : Sort _} (S : ι → Subgroup G) {C : ∀ x, (x ∈ ⨆ i, S i) → Prop}
+    (hp : ∀ (i), ∀ x ∈ S i, C x (mem_supᵢ_of_mem i ‹_›)) (h1 : C 1 (one_mem _))
     (hmul : ∀ x y hx hy, C x hx → C y hy → C (x * y) (mul_mem ‹_› ‹_›)) {x : G}
     (hx : x ∈ ⨆ i, S i) : C x hx :=
   by
@@ -134,7 +134,7 @@ theorem supr_induction' {ι : Sort _} (S : ι → Subgroup G) {C : ∀ x, (x ∈
   · exact ⟨_, h1⟩
   · rintro ⟨_, Cx⟩ ⟨_, Cy⟩
     refine' ⟨_, hmul _ _ _ _ Cx Cy⟩
-#align subgroup.supr_induction' Subgroup.supr_induction'
+#align subgroup.supr_induction' Subgroup.supᵢ_induction'
 #align add_subgroup.supr_induction' AddSubgroup.supr_induction'
 
 @[to_additive]
@@ -295,10 +295,10 @@ theorem coe_pointwise_smul (a : α) (S : Subgroup G) : ↑(a • S) = a • (S :
 #align subgroup.coe_pointwise_smul Subgroup.coe_pointwise_smul
 
 @[simp]
-theorem pointwise_smul_to_submonoid (a : α) (S : Subgroup G) :
+theorem pointwise_smul_toSubmonoid (a : α) (S : Subgroup G) :
     (a • S).toSubmonoid = a • S.toSubmonoid :=
   rfl
-#align subgroup.pointwise_smul_to_submonoid Subgroup.pointwise_smul_to_submonoid
+#align subgroup.pointwise_smul_to_submonoid Subgroup.pointwise_smul_toSubmonoid
 
 theorem smul_mem_pointwise_smul (m : G) (a : α) (S : Subgroup G) : m ∈ S → a • m ∈ a • S :=
   (Set.smul_mem_smul_set : _ → _ ∈ a • (S : Set G))
@@ -333,7 +333,7 @@ theorem conj_smul_le_of_le {P H : Subgroup G} (hP : P ≤ H) (h : H) : MulAut.co
   exact H.mul_mem (H.mul_mem h.2 (hP hg)) (H.inv_mem h.2)
 #align subgroup.conj_smul_le_of_le Subgroup.conj_smul_le_of_le
 
-theorem conj_smul_subgroup_of {P H : Subgroup G} (hP : P ≤ H) (h : H) :
+theorem conj_smul_subgroupOf {P H : Subgroup G} (hP : P ≤ H) (h : H) :
     MulAut.conj h • P.subgroupOf H = (MulAut.conj (h : G) • P).subgroupOf H :=
   by
   refine' le_antisymm _ _
@@ -341,7 +341,7 @@ theorem conj_smul_subgroup_of {P H : Subgroup G} (hP : P ≤ H) (h : H) :
     exact ⟨g, hg, rfl⟩
   · rintro p ⟨g, hg, hp⟩
     exact ⟨⟨g, hP hg⟩, hg, Subtype.ext hp⟩
-#align subgroup.conj_smul_subgroup_of Subgroup.conj_smul_subgroup_of
+#align subgroup.conj_smul_subgroup_of Subgroup.conj_smul_subgroupOf
 
 end Monoid
 
@@ -407,7 +407,7 @@ theorem singleton_mul_subgroup {H : Subgroup G} {h : G} (hh : h ∈ H) : {h} * (
   exact H.mul_mem hh hh'
 #align subgroup.singleton_mul_subgroup Subgroup.singleton_mul_subgroup
 
-theorem Normal.conj_act {G : Type _} [Group G] {H : Subgroup G} (hH : H.Normal) (g : ConjAct G) :
+theorem Normal.conjAct {G : Type _} [Group G] {H : Subgroup G} (hH : H.Normal) (g : ConjAct G) :
     g • H = H := by
   ext
   constructor
@@ -416,7 +416,7 @@ theorem Normal.conj_act {G : Type _} [Group G] {H : Subgroup G} (hH : H.Normal) 
     rw [Subgroup.mem_pointwise_smul_iff_inv_smul_mem] at h
     dsimp at *
     rw [ConjAct.smul_def] at *
-    simp only [ConjAct.of_conj_act_inv, ConjAct.of_conj_act_to_conj_act, inv_inv] at *
+    simp only [ConjAct.ofConjAct_inv, ConjAct.ofConjAct_toConjAct, inv_inv] at *
     convert this
     simp only [← mul_assoc, mul_right_inv, one_mul, mul_inv_cancel_right]
     rw [Subgroup.mem_pointwise_smul_iff_inv_smul_mem] at h
@@ -425,7 +425,7 @@ theorem Normal.conj_act {G : Type _} [Group G] {H : Subgroup G} (hH : H.Normal) 
     rw [Subgroup.mem_pointwise_smul_iff_inv_smul_mem, ConjAct.smul_def]
     apply hH.conj_mem
     exact h
-#align subgroup.normal.conj_act Subgroup.Normal.conj_act
+#align subgroup.normal.conj_act Subgroup.Normal.conjAct
 
 @[simp]
 theorem smul_normal (g : G) (H : Subgroup G) [h : Normal H] : MulAut.conj g • H = H :=
@@ -501,10 +501,10 @@ theorem coe_pointwise_smul (a : α) (S : AddSubgroup A) : ↑(a • S) = a • (
 #align add_subgroup.coe_pointwise_smul AddSubgroup.coe_pointwise_smul
 
 @[simp]
-theorem pointwise_smul_to_add_submonoid (a : α) (S : AddSubgroup A) :
+theorem pointwise_smul_toAddSubmonoid (a : α) (S : AddSubgroup A) :
     (a • S).toAddSubmonoid = a • S.toAddSubmonoid :=
   rfl
-#align add_subgroup.pointwise_smul_to_add_submonoid AddSubgroup.pointwise_smul_to_add_submonoid
+#align add_subgroup.pointwise_smul_to_add_submonoid AddSubgroup.pointwise_smul_toAddSubmonoid
 
 theorem smul_mem_pointwise_smul (m : A) (a : α) (S : AddSubgroup A) : m ∈ S → a • m ∈ a • S :=
   (Set.smul_mem_smul_set : _ → _ ∈ a • (S : Set A))

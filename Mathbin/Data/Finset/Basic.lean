@@ -359,22 +359,22 @@ instance : PartialOrder (Finset α) where
   le_antisymm s t hst hts := ext fun a => ⟨@hst _, @hts _⟩
 
 instance : IsRefl (Finset α) (· ⊆ ·) :=
-  LE.le.is_refl
+  LE.le.isRefl
 
 instance : IsTrans (Finset α) (· ⊆ ·) :=
-  LE.le.is_trans
+  LE.le.isTrans
 
 instance : IsAntisymm (Finset α) (· ⊆ ·) :=
-  LE.le.is_antisymm
+  LE.le.isAntisymm
 
 instance : IsIrrefl (Finset α) (· ⊂ ·) :=
-  LT.lt.is_irrefl
+  LT.lt.isIrrefl
 
 instance : IsTrans (Finset α) (· ⊂ ·) :=
-  LT.lt.is_trans
+  LT.lt.isTrans
 
 instance : IsAsymm (Finset α) (· ⊂ ·) :=
-  LT.lt.is_asymm
+  LT.lt.isAsymm
 
 instance : IsNonstrictStrictOrder (Finset α) (· ⊆ ·) (· ⊂ ·) :=
   ⟨fun _ _ => Iff.rfl⟩
@@ -569,7 +569,7 @@ theorem exists_of_ssubset {s₁ s₂ : Finset α} (h : s₁ ⊂ s₂) : ∃ x �
 
 #print Finset.isWellFounded_ssubset /-
 instance isWellFounded_ssubset : IsWellFounded (Finset α) (· ⊂ ·) :=
-  Subrelation.is_well_founded (InvImage _ _) fun _ _ => val_lt_iff.2
+  Subrelation.isWellFounded (InvImage _ _) fun _ _ => val_lt_iff.2
 #align finset.is_well_founded_ssubset Finset.isWellFounded_ssubset
 -/
 
@@ -1172,7 +1172,7 @@ theorem cons_subset_cons {hs ht} : s.cons a hs ⊆ t.cons a ht ↔ s ⊆ t := by
 #print Finset.ssubset_iff_exists_cons_subset /-
 theorem ssubset_iff_exists_cons_subset : s ⊂ t ↔ ∃ (a : _)(h : a ∉ s), s.cons a h ⊆ t :=
   by
-  refine' ⟨fun h => _, fun ⟨a, ha, h⟩ => ssubset_of_ssubset_of_subset (ssubset_cons _) h⟩
+  refine' ⟨fun h => _, fun ⟨a, ha, h⟩ => sSubset_of_sSubset_of_subset (ssubset_cons _) h⟩
   obtain ⟨a, hs, ht⟩ := not_subset.1 h.2
   exact ⟨a, ht, cons_subset.2 ⟨hs, h.subset⟩⟩
 #align finset.ssubset_iff_exists_cons_subset Finset.ssubset_iff_exists_cons_subset
@@ -2807,7 +2807,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.ssubset_iff_exists_subset_erase Finset.ssubset_iff_exists_subset_eraseₓ'. -/
 theorem ssubset_iff_exists_subset_erase {s t : Finset α} : s ⊂ t ↔ ∃ a ∈ t, s ⊆ t.erase a :=
   by
-  refine' ⟨fun h => _, fun ⟨a, ha, h⟩ => ssubset_of_subset_of_ssubset h <| erase_ssubset ha⟩
+  refine' ⟨fun h => _, fun ⟨a, ha, h⟩ => sSubset_of_subset_of_sSubset h <| erase_ssubset ha⟩
   obtain ⟨a, ht, hs⟩ := not_subset.1 h.2
   exact ⟨a, ht, subset_erase.2 ⟨h.1, hs⟩⟩
 #align finset.ssubset_iff_exists_subset_erase Finset.ssubset_iff_exists_subset_erase
@@ -4493,7 +4493,7 @@ theorem toFinset_cons (a : α) (s : Multiset α) : toFinset (a ::ₘ s) = insert
 #print Multiset.toFinset_singleton /-
 @[simp]
 theorem toFinset_singleton (a : α) : toFinset ({a} : Multiset α) = {a} := by
-  rw [← cons_zero, to_finset_cons, to_finset_zero, IsLawfulSingleton.insert_emptyc_eq]
+  rw [← cons_zero, to_finset_cons, to_finset_zero, IsLawfulSingleton.insert_emptyCollection_eq]
 #align multiset.to_finset_singleton Multiset.toFinset_singleton
 -/
 
@@ -4572,7 +4572,7 @@ theorem toFinset_bind_dedup [DecidableEq β] (m : Multiset α) (f : α → Multi
 
 #print Multiset.isWellFounded_ssubset /-
 instance isWellFounded_ssubset : IsWellFounded (Multiset β) (· ⊂ ·) :=
-  Subrelation.is_well_founded (InvImage _ _) fun _ _ => by classical exact to_finset_ssubset.2
+  Subrelation.isWellFounded (InvImage _ _) fun _ _ => by classical exact to_finset_ssubset.2
 #align multiset.is_well_founded_ssubset Multiset.isWellFounded_ssubset
 -/
 

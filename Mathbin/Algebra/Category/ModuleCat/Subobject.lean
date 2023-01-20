@@ -50,10 +50,10 @@ noncomputable def subobjectModule : Subobject M ≃o Submodule R M :=
               apply LinearEquiv.ofBijective (LinearMap.codRestrict S.arrow.range S.arrow _)
               constructor
               ·
-                simpa only [← LinearMap.ker_eq_bot, LinearMap.ker_cod_restrict] using
+                simpa only [← LinearMap.ker_eq_bot, LinearMap.ker_codRestrict] using
                   ker_eq_bot_of_mono _
               ·
-                rw [← LinearMap.range_eq_top, LinearMap.range_cod_restrict,
+                rw [← LinearMap.range_eq_top, LinearMap.range_codRestrict,
                   Submodule.comap_subtype_self]
               · exact LinearMap.mem_range_self _
             · apply LinearMap.ext
@@ -83,9 +83,9 @@ noncomputable def subobjectModule : Subobject M ≃o Submodule R M :=
         · exact (Submodule.range_subtype _).symm }
 #align Module.subobject_Module ModuleCat.subobjectModule
 
-instance well_powered_Module : WellPowered (ModuleCat.{v} R) :=
+instance wellPowered_moduleCat : WellPowered (ModuleCat.{v} R) :=
   ⟨fun M => ⟨⟨_, ⟨(subobjectModule M).toEquiv⟩⟩⟩⟩
-#align Module.well_powered_Module ModuleCat.well_powered_Module
+#align Module.well_powered_Module ModuleCat.wellPowered_moduleCat
 
 attribute [local instance] has_kernels_Module
 
@@ -96,9 +96,9 @@ noncomputable def toKernelSubobject {M N : ModuleCat R} {f : M ⟶ N} :
 #align Module.to_kernel_subobject ModuleCat.toKernelSubobject
 
 @[simp]
-theorem to_kernel_subobject_arrow {M N : ModuleCat R} {f : M ⟶ N} (x : LinearMap.ker f) :
+theorem toKernelSubobject_arrow {M N : ModuleCat R} {f : M ⟶ N} (x : LinearMap.ker f) :
     (kernelSubobject f).arrow (toKernelSubobject x) = x.1 := by simp [to_kernel_subobject]
-#align Module.to_kernel_subobject_arrow ModuleCat.to_kernel_subobject_arrow
+#align Module.to_kernel_subobject_arrow ModuleCat.toKernelSubobject_arrow
 
 /-- An extensionality lemma showing that two elements of a cokernel by an image
 are equal if they differ by an element of the image.
@@ -107,13 +107,13 @@ The application is for homology:
 two elements in homology are equal if they differ by a boundary.
 -/
 @[ext]
-theorem cokernel_π_image_subobject_ext {L M N : ModuleCat.{v} R} (f : L ⟶ M) [HasImage f]
+theorem cokernel_π_imageSubobject_ext {L M N : ModuleCat.{v} R} (f : L ⟶ M) [HasImage f]
     (g : (imageSubobject f : ModuleCat.{v} R) ⟶ N) [HasCokernel g] {x y : N} (l : L)
     (w : x = y + g (factorThruImageSubobject f l)) : cokernel.π g x = cokernel.π g y :=
   by
   subst w
   simp
-#align Module.cokernel_π_image_subobject_ext ModuleCat.cokernel_π_image_subobject_ext
+#align Module.cokernel_π_image_subobject_ext ModuleCat.cokernel_π_imageSubobject_ext
 
 end ModuleCat
 

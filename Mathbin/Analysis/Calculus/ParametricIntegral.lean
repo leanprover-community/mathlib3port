@@ -72,8 +72,8 @@ integrable, `‖F x a - F x₀ a‖ ≤ bound a * ‖x - x₀‖` for `x` in a b
 integrable Lipschitz bound `bound` (with a ball radius independent of `a`), and `F x` is
 ae-measurable for `x` in the same ball. See `has_fderiv_at_integral_of_dominated_loc_of_lip` for a
 slightly less general but usually more useful version. -/
-theorem has_fderiv_at_integral_of_dominated_loc_of_lip' {F : H → α → E} {F' : α → H →L[𝕜] E}
-    {x₀ : H} {bound : α → ℝ} {ε : ℝ} (ε_pos : 0 < ε)
+theorem hasFderivAt_integral_of_dominated_loc_of_lip' {F : H → α → E} {F' : α → H →L[𝕜] E} {x₀ : H}
+    {bound : α → ℝ} {ε : ℝ} (ε_pos : 0 < ε)
     (hF_meas : ∀ x ∈ ball x₀ ε, AeStronglyMeasurable (F x) μ) (hF_int : Integrable (F x₀) μ)
     (hF'_meas : AeStronglyMeasurable F' μ)
     (h_lipsch : ∀ᵐ a ∂μ, ∀ x ∈ ball x₀ ε, ‖F x a - F x₀ a‖ ≤ bound a * ‖x - x₀‖)
@@ -123,7 +123,7 @@ theorem has_fderiv_at_integral_of_dominated_loc_of_lip' {F : H → α → E} {F'
       ← ContinuousLinearMap.integral_apply hF'_int]
     exacts[hF_int' x x_in, hF_int, (hF_int' x x_in).sub hF_int,
       hF'_int.apply_continuous_linear_map _]
-  rw [has_fderiv_at_iff_tendsto, tendsto_congr' this, ← tendsto_zero_iff_norm_tendsto_zero, ←
+  rw [hasFderivAt_iff_tendsto, tendsto_congr' this, ← tendsto_zero_iff_norm_tendsto_zero, ←
     show (∫ a : α, ‖x₀ - x₀‖⁻¹ • (F x₀ a - F x₀ a - (F' a) (x₀ - x₀)) ∂μ) = 0 by simp]
   apply tendsto_integral_filter_of_dominated_convergence
   · filter_upwards [h_ball] with _ x_in
@@ -161,14 +161,14 @@ theorem has_fderiv_at_integral_of_dominated_loc_of_lip' {F : H → α → E} {F'
       by
       ext x
       rw [norm_smul_of_nonneg (nneg _)]
-    rwa [has_fderiv_at_iff_tendsto, this] at ha
-#align has_fderiv_at_integral_of_dominated_loc_of_lip' has_fderiv_at_integral_of_dominated_loc_of_lip'
+    rwa [hasFderivAt_iff_tendsto, this] at ha
+#align has_fderiv_at_integral_of_dominated_loc_of_lip' hasFderivAt_integral_of_dominated_loc_of_lip'
 
 /-- Differentiation under integral of `x ↦ ∫ F x a` at a given point `x₀`, assuming
 `F x₀` is integrable, `x ↦ F x a` is locally Lipschitz on a ball around `x₀` for ae `a`
 (with a ball radius independent of `a`) with integrable Lipschitz bound, and `F x` is ae-measurable
 for `x` in a possibly smaller neighborhood of `x₀`. -/
-theorem has_fderiv_at_integral_of_dominated_loc_of_lip {F : H → α → E} {F' : α → H →L[𝕜] E} {x₀ : H}
+theorem hasFderivAt_integral_of_dominated_loc_of_lip {F : H → α → E} {F' : α → H →L[𝕜] E} {x₀ : H}
     {bound : α → ℝ} {ε : ℝ} (ε_pos : 0 < ε) (hF_meas : ∀ᶠ x in 𝓝 x₀, AeStronglyMeasurable (F x) μ)
     (hF_int : Integrable (F x₀) μ) (hF'_meas : AeStronglyMeasurable F' μ)
     (h_lip : ∀ᵐ a ∂μ, LipschitzOnWith (Real.nnabs <| bound a) (fun x => F x a) (ball x₀ ε))
@@ -182,8 +182,8 @@ theorem has_fderiv_at_integral_of_dominated_loc_of_lip {F : H → α → E} {F' 
   replace h_lip : ∀ᵐ a : α ∂μ, ∀ x ∈ ball x₀ δ, ‖F x a - F x₀ a‖ ≤ |bound a| * ‖x - x₀‖
   exact h_lip.mono fun a lip x hx => lip.norm_sub_le (hδε x hx) (mem_ball_self ε_pos)
   replace bound_integrable := bound_integrable.norm
-  apply has_fderiv_at_integral_of_dominated_loc_of_lip' δ_pos <;> assumption
-#align has_fderiv_at_integral_of_dominated_loc_of_lip has_fderiv_at_integral_of_dominated_loc_of_lip
+  apply hasFderivAt_integral_of_dominated_loc_of_lip' δ_pos <;> assumption
+#align has_fderiv_at_integral_of_dominated_loc_of_lip hasFderivAt_integral_of_dominated_loc_of_lip
 
 /-- Differentiation under integral of `x ↦ ∫ F x a` at a given point `x₀`, assuming
 `F x₀` is integrable, `x ↦ F x a` is differentiable on a ball around `x₀` for ae `a` with
@@ -211,7 +211,7 @@ theorem hasFderivAtIntegralOfDominatedOfFderivLe {F : H → α → E} {F' : H �
     rw [← Nnreal.coe_le_coe, coe_nnnorm, Real.coe_nnabs]
     exact (ha_bound x x_in).trans (le_abs_self _)
   exact
-    (has_fderiv_at_integral_of_dominated_loc_of_lip ε_pos hF_meas hF_int hF'_meas this
+    (hasFderivAt_integral_of_dominated_loc_of_lip ε_pos hF_meas hF_int hF'_meas this
         bound_integrable diff_x₀).2
 #align has_fderiv_at_integral_of_dominated_of_fderiv_le hasFderivAtIntegralOfDominatedOfFderivLe
 
@@ -219,7 +219,7 @@ theorem hasFderivAtIntegralOfDominatedOfFderivLe {F : H → α → E} {F' : H �
 assuming `F x₀` is integrable, `x ↦ F x a` is locally Lipschitz on a ball around `x₀` for ae `a`
 (with ball radius independent of `a`) with integrable Lipschitz bound, and `F x` is
 ae-measurable for `x` in a possibly smaller neighborhood of `x₀`. -/
-theorem has_deriv_at_integral_of_dominated_loc_of_lip {F : 𝕜 → α → E} {F' : α → E} {x₀ : 𝕜} {ε : ℝ}
+theorem hasDerivAt_integral_of_dominated_loc_of_lip {F : 𝕜 → α → E} {F' : α → E} {x₀ : 𝕜} {ε : ℝ}
     (ε_pos : 0 < ε) (hF_meas : ∀ᶠ x in 𝓝 x₀, AeStronglyMeasurable (F x) μ)
     (hF_int : Integrable (F x₀) μ) (hF'_meas : AeStronglyMeasurable F' μ) {bound : α → ℝ}
     (h_lipsch : ∀ᵐ a ∂μ, LipschitzOnWith (Real.nnabs <| bound a) (fun x => F x a) (ball x₀ ε))
@@ -232,26 +232,26 @@ theorem has_deriv_at_integral_of_dominated_loc_of_lip {F : 𝕜 → α → E} {F
     h_diff.mono fun x hx => hx.HasFderivAt
   have hm : ae_strongly_measurable (L ∘ F') μ := L.continuous.comp_ae_strongly_measurable hF'_meas
   cases'
-    has_fderiv_at_integral_of_dominated_loc_of_lip ε_pos hF_meas hF_int hm h_lipsch bound_integrable
+    hasFderivAt_integral_of_dominated_loc_of_lip ε_pos hF_meas hF_int hm h_lipsch bound_integrable
       h_diff with
     hF'_int key
   replace hF'_int : integrable F' μ
   · rw [← integrable_norm_iff hm] at hF'_int
     simpa only [L, (· ∘ ·), integrable_norm_iff, hF'_meas, one_mul, norm_one,
       ContinuousLinearMap.comp_apply, ContinuousLinearMap.coe_restrict_scalarsL',
-      ContinuousLinearMap.norm_restrict_scalars, ContinuousLinearMap.norm_smul_rightL_apply] using
+      ContinuousLinearMap.norm_restrictScalars, ContinuousLinearMap.norm_smulRightL_apply] using
       hF'_int
   refine' ⟨hF'_int, _⟩
-  simp_rw [has_deriv_at_iff_has_fderiv_at] at h_diff⊢
+  simp_rw [hasDerivAt_iff_hasFderivAt] at h_diff⊢
   rwa [ContinuousLinearMap.integral_comp_comm _ hF'_int] at key
   all_goals infer_instance
-#align has_deriv_at_integral_of_dominated_loc_of_lip has_deriv_at_integral_of_dominated_loc_of_lip
+#align has_deriv_at_integral_of_dominated_loc_of_lip hasDerivAt_integral_of_dominated_loc_of_lip
 
 /-- Derivative under integral of `x ↦ ∫ F x a` at a given point `x₀ : ℝ`, assuming
 `F x₀` is integrable, `x ↦ F x a` is differentiable on an interval around `x₀` for ae `a`
 (with interval radius independent of `a`) with derivative uniformly bounded by an integrable
 function, and `F x` is ae-measurable for `x` in a possibly smaller neighborhood of `x₀`. -/
-theorem has_deriv_at_integral_of_dominated_loc_of_deriv_le {F : 𝕜 → α → E} {F' : 𝕜 → α → E} {x₀ : 𝕜}
+theorem hasDerivAt_integral_of_dominated_loc_of_deriv_le {F : 𝕜 → α → E} {F' : 𝕜 → α → E} {x₀ : 𝕜}
     {ε : ℝ} (ε_pos : 0 < ε) (hF_meas : ∀ᶠ x in 𝓝 x₀, AeStronglyMeasurable (F x) μ)
     (hF_int : Integrable (F x₀) μ) (hF'_meas : AeStronglyMeasurable (F' x₀) μ) {bound : α → ℝ}
     (h_bound : ∀ᵐ a ∂μ, ∀ x ∈ ball x₀ ε, ‖F' x a‖ ≤ bound a) (bound_integrable : Integrable bound μ)
@@ -271,7 +271,7 @@ theorem has_deriv_at_integral_of_dominated_loc_of_deriv_le {F : 𝕜 → α → 
     rw [← Nnreal.coe_le_coe, coe_nnnorm, Real.coe_nnabs]
     exact (ha_bound x x_in).trans (le_abs_self _)
   exact
-    has_deriv_at_integral_of_dominated_loc_of_lip ε_pos hF_meas hF_int hF'_meas this
-      bound_integrable diff_x₀
-#align has_deriv_at_integral_of_dominated_loc_of_deriv_le has_deriv_at_integral_of_dominated_loc_of_deriv_le
+    hasDerivAt_integral_of_dominated_loc_of_lip ε_pos hF_meas hF_int hF'_meas this bound_integrable
+      diff_x₀
+#align has_deriv_at_integral_of_dominated_loc_of_deriv_le hasDerivAt_integral_of_dominated_loc_of_deriv_le
 

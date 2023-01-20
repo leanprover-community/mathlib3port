@@ -166,12 +166,12 @@ def IsNontrivial (ψ : AddChar R R') : Prop :=
 #align add_char.is_nontrivial AddChar.IsNontrivial
 
 /-- An additive character is nontrivial iff it is not the trivial character. -/
-theorem is_nontrivial_iff_ne_trivial (ψ : AddChar R R') : IsNontrivial ψ ↔ ψ ≠ 1 :=
+theorem isNontrivial_iff_ne_trivial (ψ : AddChar R R') : IsNontrivial ψ ↔ ψ ≠ 1 :=
   by
   refine' not_forall.symm.trans (Iff.not _)
   rw [FunLike.ext_iff]
   rfl
-#align add_char.is_nontrivial_iff_ne_trivial AddChar.is_nontrivial_iff_ne_trivial
+#align add_char.is_nontrivial_iff_ne_trivial AddChar.isNontrivial_iff_ne_trivial
 
 /-- Define the multiplicative shift of an additive character.
 This satisfies `mul_shift ψ a x = ψ (a * x)`. -/
@@ -180,44 +180,44 @@ def mulShift (ψ : AddChar R R') (a : R) : AddChar R R' :=
 #align add_char.mul_shift AddChar.mulShift
 
 @[simp]
-theorem mul_shift_apply {ψ : AddChar R R'} {a : R} {x : R} : mulShift ψ a x = ψ (a * x) :=
+theorem mulShift_apply {ψ : AddChar R R'} {a : R} {x : R} : mulShift ψ a x = ψ (a * x) :=
   rfl
-#align add_char.mul_shift_apply AddChar.mul_shift_apply
+#align add_char.mul_shift_apply AddChar.mulShift_apply
 
 /-- `ψ⁻¹ = mul_shift ψ (-1))`. -/
-theorem inv_mul_shift (ψ : AddChar R R') : ψ⁻¹ = mulShift ψ (-1) :=
+theorem inv_mulShift (ψ : AddChar R R') : ψ⁻¹ = mulShift ψ (-1) :=
   by
   ext
   rw [inv_apply, mul_shift_apply, neg_mul, one_mul]
-#align add_char.inv_mul_shift AddChar.inv_mul_shift
+#align add_char.inv_mul_shift AddChar.inv_mulShift
 
 /-- If `n` is a natural number, then `mul_shift ψ n x = (ψ x) ^ n`. -/
-theorem mul_shift_spec' (ψ : AddChar R R') (n : ℕ) (x : R) : mulShift ψ n x = ψ x ^ n := by
+theorem mulShift_spec' (ψ : AddChar R R') (n : ℕ) (x : R) : mulShift ψ n x = ψ x ^ n := by
   rw [mul_shift_apply, ← nsmul_eq_mul, map_nsmul_pow]
-#align add_char.mul_shift_spec' AddChar.mul_shift_spec'
+#align add_char.mul_shift_spec' AddChar.mulShift_spec'
 
 /-- If `n` is a natural number, then `ψ ^ n = mul_shift ψ n`. -/
-theorem pow_mul_shift (ψ : AddChar R R') (n : ℕ) : ψ ^ n = mulShift ψ n :=
+theorem pow_mulShift (ψ : AddChar R R') (n : ℕ) : ψ ^ n = mulShift ψ n :=
   by
   ext x
   rw [show (ψ ^ n) x = ψ x ^ n from rfl, ← mul_shift_spec']
-#align add_char.pow_mul_shift AddChar.pow_mul_shift
+#align add_char.pow_mul_shift AddChar.pow_mulShift
 
 /-- The product of `mul_shift ψ a` and `mul_shift ψ b` is `mul_shift ψ (a + b)`. -/
-theorem mul_shift_mul (ψ : AddChar R R') (a b : R) :
+theorem mulShift_mul (ψ : AddChar R R') (a b : R) :
     mulShift ψ a * mulShift ψ b = mulShift ψ (a + b) :=
   by
   ext
   simp only [right_distrib, MonoidHom.mul_apply, mul_shift_apply, map_add_mul]
-#align add_char.mul_shift_mul AddChar.mul_shift_mul
+#align add_char.mul_shift_mul AddChar.mulShift_mul
 
 /-- `mul_shift ψ 0` is the trivial character. -/
 @[simp]
-theorem mul_shift_zero (ψ : AddChar R R') : mulShift ψ 0 = 1 :=
+theorem mulShift_zero (ψ : AddChar R R') : mulShift ψ 0 = 1 :=
   by
   ext
   simp only [mul_shift_apply, zero_mul, map_zero_one, MonoidHom.one_apply]
-#align add_char.mul_shift_zero AddChar.mul_shift_zero
+#align add_char.mul_shift_zero AddChar.mulShift_zero
 
 /-- An additive character is *primitive* iff all its multiplicative shifts by nonzero
 elements are nontrivial. -/
@@ -227,7 +227,7 @@ def IsPrimitive (ψ : AddChar R R') : Prop :=
 
 /-- The map associating to `a : R` the multiplicative shift of `ψ` by `a`
 is injective when `ψ` is primitive. -/
-theorem to_mul_shift_inj_of_is_primitive {ψ : AddChar R R'} (hψ : IsPrimitive ψ) :
+theorem to_mulShift_inj_of_isPrimitive {ψ : AddChar R R'} (hψ : IsPrimitive ψ) :
     Function.Injective ψ.mulShift := by
   intro a b h
   apply_fun fun x => x * mul_shift ψ (-b)  at h
@@ -235,20 +235,20 @@ theorem to_mul_shift_inj_of_is_primitive {ψ : AddChar R R'} (hψ : IsPrimitive 
   have h₂ := hψ (a + -b)
   rw [h, is_nontrivial_iff_ne_trivial, ← sub_eq_add_neg, sub_ne_zero] at h₂
   exact not_not.mp fun h => h₂ h rfl
-#align add_char.to_mul_shift_inj_of_is_primitive AddChar.to_mul_shift_inj_of_is_primitive
+#align add_char.to_mul_shift_inj_of_is_primitive AddChar.to_mulShift_inj_of_isPrimitive
 
 -- `add_comm_group.equiv_direct_sum_zmod_of_fintype`
 -- gives the structure theorem for finite abelian groups.
 -- This could be used to show that the map above is a bijection.
 -- We leave this for a later occasion.
 /-- When `R` is a field `F`, then a nontrivial additive character is primitive -/
-theorem IsNontrivial.is_primitive {F : Type u} [Field F] {ψ : AddChar F R'} (hψ : IsNontrivial ψ) :
+theorem IsNontrivial.isPrimitive {F : Type u} [Field F] {ψ : AddChar F R'} (hψ : IsNontrivial ψ) :
     IsPrimitive ψ := by
   intro a ha
   cases' hψ with x h
   use a⁻¹ * x
   rwa [mul_shift_apply, mul_inv_cancel_left₀ ha]
-#align add_char.is_nontrivial.is_primitive AddChar.IsNontrivial.is_primitive
+#align add_char.is_nontrivial.is_primitive AddChar.IsNontrivial.isPrimitive
 
 -- can't prove that they always exist
 /-- Structure for a primitive additive character on a finite ring `R` into a cyclotomic extension
@@ -283,19 +283,19 @@ def zmodChar (n : ℕ+) {ζ : C} (hζ : ζ ^ ↑n = 1) : AddChar (Zmod n) C
 #align add_char.zmod_char AddChar.zmodChar
 
 /-- The additive character on `zmod n` defined using `ζ` sends `a` to `ζ^a`. -/
-theorem zmod_char_apply {n : ℕ+} {ζ : C} (hζ : ζ ^ ↑n = 1) (a : Zmod n) :
+theorem zmodChar_apply {n : ℕ+} {ζ : C} (hζ : ζ ^ ↑n = 1) (a : Zmod n) :
     zmodChar n hζ a = ζ ^ a.val :=
   rfl
-#align add_char.zmod_char_apply AddChar.zmod_char_apply
+#align add_char.zmod_char_apply AddChar.zmodChar_apply
 
-theorem zmod_char_apply' {n : ℕ+} {ζ : C} (hζ : ζ ^ ↑n = 1) (a : ℕ) : zmodChar n hζ a = ζ ^ a := by
+theorem zmodChar_apply' {n : ℕ+} {ζ : C} (hζ : ζ ^ ↑n = 1) (a : ℕ) : zmodChar n hζ a = ζ ^ a := by
   rw [pow_eq_pow_mod a hζ, zmod_char_apply, Zmod.val_nat_cast a]
-#align add_char.zmod_char_apply' AddChar.zmod_char_apply'
+#align add_char.zmod_char_apply' AddChar.zmodChar_apply'
 
 end ZmodCharDef
 
 /-- An additive character on `zmod n` is nontrivial iff it takes a value `≠ 1` on `1`. -/
-theorem zmod_char_is_nontrivial_iff (n : ℕ+) (ψ : AddChar (Zmod n) C) : IsNontrivial ψ ↔ ψ 1 ≠ 1 :=
+theorem zmod_char_isNontrivial_iff (n : ℕ+) (ψ : AddChar (Zmod n) C) : IsNontrivial ψ ↔ ψ 1 ≠ 1 :=
   by
   refine' ⟨_, fun h => ⟨1, h⟩⟩
   contrapose!
@@ -305,7 +305,7 @@ theorem zmod_char_is_nontrivial_iff (n : ℕ+) (ψ : AddChar (Zmod n) C) : IsNon
     exact (Zmod.nat_cast_zmod_val a).symm
   rw [ha₁, map_nsmul_pow, h₁, one_pow] at ha
   exact ha rfl
-#align add_char.zmod_char_is_nontrivial_iff AddChar.zmod_char_is_nontrivial_iff
+#align add_char.zmod_char_is_nontrivial_iff AddChar.zmod_char_isNontrivial_iff
 
 /-- A primitive additive character on `zmod n` takes the value `1` only at `0`. -/
 theorem IsPrimitive.zmod_char_eq_one_iff (n : ℕ+) {ψ : AddChar (Zmod n) C} (hψ : IsPrimitive ψ)
@@ -329,14 +329,14 @@ theorem zmod_char_primitive_of_eq_one_only_at_zero (n : ℕ) (ψ : AddChar (Zmod
 
 /-- The additive character on `zmod n` associated to a primitive `n`th root of unity
 is primitive -/
-theorem zmod_char_primitive_of_primitive_root (n : ℕ+) {ζ : C} (h : IsPrimitiveRoot ζ n) :
+theorem zmodChar_primitive_of_primitive_root (n : ℕ+) {ζ : C} (h : IsPrimitiveRoot ζ n) :
     IsPrimitive (zmodChar n ((IsPrimitiveRoot.iff_def ζ n).mp h).left) :=
   by
   apply zmod_char_primitive_of_eq_one_only_at_zero
   intro a ha
   rw [zmod_char_apply, ← pow_zero ζ] at ha
   exact (Zmod.val_eq_zero a).mp (IsPrimitiveRoot.pow_inj h (Zmod.val_lt a) n.pos ha)
-#align add_char.zmod_char_primitive_of_primitive_root AddChar.zmod_char_primitive_of_primitive_root
+#align add_char.zmod_char_primitive_of_primitive_root AddChar.zmodChar_primitive_of_primitive_root
 
 /-- There is a primitive additive character on `zmod n` if the characteristic of the target
 does not divide `n` -/
@@ -373,7 +373,7 @@ noncomputable def primitiveCharFiniteField (F F' : Type _) [Field F] [Fintype F]
   let ψ' := ψ.char.comp (Algebra.trace (Zmod p) F).toAddMonoidHom.toMultiplicative
   have hψ' : is_nontrivial ψ' :=
     by
-    obtain ⟨a, ha⟩ := FiniteField.trace_to_zmod_nondegenerate F one_ne_zero
+    obtain ⟨a, ha⟩ := FiniteField.trace_to_zmod_nondegenerate F one_neZero
     rw [one_mul] at ha
     exact ⟨a, fun hf => ha <| (ψ.prim.zmod_char_eq_one_iff pp <| Algebra.trace (Zmod p) F a).mp hf⟩
   exact
@@ -393,7 +393,7 @@ variable [Fintype R]
 
 /-- The sum over the values of a nontrivial additive character vanishes if the target ring
 is a domain. -/
-theorem sum_eq_zero_of_is_nontrivial [IsDomain R'] {ψ : AddChar R R'} (hψ : IsNontrivial ψ) :
+theorem sum_eq_zero_of_isNontrivial [IsDomain R'] {ψ : AddChar R R'} (hψ : IsNontrivial ψ) :
     (∑ a, ψ a) = 0 := by
   rcases hψ with ⟨b, hb⟩
   have h₁ : (∑ a : R, ψ (b + a)) = ∑ a : R, ψ a :=
@@ -402,7 +402,7 @@ theorem sum_eq_zero_of_is_nontrivial [IsDomain R'] {ψ : AddChar R R'} (hψ : Is
   have h₂ : (∑ a : R, ψ a) = finset.univ.sum ⇑ψ := rfl
   rw [← Finset.mul_sum, h₂] at h₁
   exact eq_zero_of_mul_eq_self_left hb h₁
-#align add_char.sum_eq_zero_of_is_nontrivial AddChar.sum_eq_zero_of_is_nontrivial
+#align add_char.sum_eq_zero_of_is_nontrivial AddChar.sum_eq_zero_of_isNontrivial
 
 /-- The sum over the values of the trivial additive character is the cardinality of the source. -/
 theorem sum_eq_card_of_is_trivial {ψ : AddChar R R'} (hψ : ¬IsNontrivial ψ) :

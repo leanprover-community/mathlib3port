@@ -111,7 +111,7 @@ theorem blimsup_cthickening_ae_le_of_eventually_mul_le_aux (p : ℕ → Prop) {s
             (lt_two_mul_self hrp') (hf₀ j))
   choose w hw hw' using hf₀
   let C := IsDoublingMeasure.scalingConstantOf μ M⁻¹
-  have hC : 0 < C := lt_of_lt_of_le zero_lt_one (IsDoublingMeasure.one_le_scaling_constant_of μ M⁻¹)
+  have hC : 0 < C := lt_of_lt_of_le zero_lt_one (IsDoublingMeasure.one_le_scalingConstantOf μ M⁻¹)
   suffices
     ∃ η < (1 : ℝ≥0),
       ∀ᶠ j in at_top, μ (W ∩ closed_ball (w j) (r₁ (f j))) / μ (closed_ball (w j) (r₁ (f j))) ≤ η
@@ -160,7 +160,7 @@ theorem blimsup_cthickening_ae_le_of_eventually_mul_le_aux (p : ℕ → Prop) {s
   have hj₃ : ↑C⁻¹ * μ (B j) + μ (W ∩ B j) ≤ μ (B j) :=
     by
     refine' le_trans (add_le_add_right hj₂ _) _
-    rw [← measure_union' hj₁ measurable_set_closed_ball]
+    rw [← measure_union' hj₁ measurableSet_closedBall]
     exact measure_mono (union_subset (h₁ j) (h₂ j))
   replace hj₃ := tsub_le_tsub_right hj₃ (↑C⁻¹ * μ (B j))
   rwa [Ennreal.add_sub_cancel_left hB] at hj₃
@@ -184,12 +184,12 @@ theorem blimsup_cthickening_ae_le_of_eventually_mul_le (p : ℕ → Prop) {s : �
     exact max_le_max (le_refl 0) hi
   simp_rw [← cthickening_max_zero (r₁ _), ← cthickening_max_zero (r₂ _)]
   cases' le_or_lt 1 M with hM' hM'
-  · apply HasSubset.Subset.eventually_le
+  · apply HasSubset.Subset.eventuallyLe
     change _ ≤ _
     refine' mono_blimsup' (hMr.mono fun i hi hp => cthickening_mono _ (s i))
     exact (le_mul_of_one_le_left (hRp i) hM').trans hi
   · simp only [← @cthickening_closure _ _ _ (s _)]
-    have hs : ∀ i, IsClosed (closure (s i)) := fun i => is_closed_closure
+    have hs : ∀ i, IsClosed (closure (s i)) := fun i => isClosed_closure
     exact
       blimsup_cthickening_ae_le_of_eventually_mul_le_aux μ p hs (tendsto_nhds_max_right hr) hRp hM
         hM' hMr
@@ -234,7 +234,7 @@ theorem blimsup_cthickening_mul_ae_eq (p : ℕ → Prop) (s : ℕ → Set α) {M
     by
     refine'
       tendsto_nhds_within_iff.mpr
-        ⟨tendsto.if' hr tendsto_one_div_add_at_top_nhds_0_nat, eventually_of_forall fun i => _⟩
+        ⟨tendsto.if' hr tendsto_one_div_add_atTop_nhds_0_nat, eventually_of_forall fun i => _⟩
     by_cases hi : 0 < r i
     · simp [hi, r']
     · simp only [hi, r', one_div, mem_Ioi, if_false, inv_pos]
@@ -269,10 +269,10 @@ theorem blimsup_cthickening_ae_eq_blimsup_thickening {p : ℕ → Prop} {s : ℕ
     (blimsup (fun i => cthickening (r i) (s i)) atTop p : Set α) =ᵐ[μ]
       (blimsup (fun i => thickening (r i) (s i)) atTop p : Set α) :=
   by
-  refine' eventually_le_antisymm_iff.mpr ⟨_, HasSubset.Subset.eventually_le (_ : _ ≤ _)⟩
+  refine' eventually_le_antisymm_iff.mpr ⟨_, HasSubset.Subset.eventuallyLe (_ : _ ≤ _)⟩
   · rw [eventually_le_congr (blimsup_cthickening_mul_ae_eq μ p s (@one_half_pos ℝ _) r hr).symm
         eventually_eq.rfl]
-    apply HasSubset.Subset.eventually_le
+    apply HasSubset.Subset.eventuallyLe
     change _ ≤ _
     refine' mono_blimsup' (hr'.mono fun i hi pi => cthickening_subset_thickening' (hi pi) _ (s i))
     nlinarith [hi pi]

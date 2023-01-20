@@ -128,10 +128,10 @@ theorem ext_iff : U = V ↔ ∀ x, x ∈ U ↔ x ∈ V :=
 variable (U)
 
 @[to_additive]
-protected theorem is_open : IsOpen (U : Set G) :=
+protected theorem isOpen : IsOpen (U : Set G) :=
   U.is_open'
-#align open_subgroup.is_open OpenSubgroup.is_open
-#align open_add_subgroup.is_open OpenAddSubgroup.is_open
+#align open_subgroup.is_open OpenSubgroup.isOpen
+#align open_add_subgroup.is_open OpenAddSubgroup.isOpen
 
 @[to_additive]
 protected theorem one_mem : (1 : G) ∈ U :=
@@ -161,17 +161,17 @@ variable {U}
 
 @[to_additive]
 instance : Top (OpenSubgroup G) :=
-  ⟨{ (⊤ : Subgroup G) with is_open' := is_open_univ }⟩
+  ⟨{ (⊤ : Subgroup G) with is_open' := isOpen_univ }⟩
 
 @[to_additive]
 instance : Inhabited (OpenSubgroup G) :=
   ⟨⊤⟩
 
 @[to_additive]
-theorem is_closed [HasContinuousMul G] (U : OpenSubgroup G) : IsClosed (U : Set G) :=
+theorem isClosed [HasContinuousMul G] (U : OpenSubgroup G) : IsClosed (U : Set G) :=
   by
-  apply is_open_compl_iff.1
-  refine' is_open_iff_forall_mem_open.2 fun x hx => ⟨(fun y => y * x⁻¹) ⁻¹' U, _, _, _⟩
+  apply isOpen_compl_iff.1
+  refine' isOpen_iff_forall_mem_open.2 fun x hx => ⟨(fun y => y * x⁻¹) ⁻¹' U, _, _, _⟩
   · intro u hux
     simp only [Set.mem_preimage, Set.mem_compl_iff, mem_coe] at hux hx⊢
     refine' mt (fun hu => _) hx
@@ -179,8 +179,8 @@ theorem is_closed [HasContinuousMul G] (U : OpenSubgroup G) : IsClosed (U : Set 
     simp
   · exact U.is_open.preimage (continuous_mul_right _)
   · simp [U.one_mem]
-#align open_subgroup.is_closed OpenSubgroup.is_closed
-#align open_add_subgroup.is_closed OpenAddSubgroup.is_closed
+#align open_subgroup.is_closed OpenSubgroup.isClosed
+#align open_add_subgroup.is_closed OpenAddSubgroup.isClosed
 
 section
 
@@ -277,9 +277,9 @@ namespace Subgroup
 variable {G : Type _} [Group G] [TopologicalSpace G] [HasContinuousMul G] (H : Subgroup G)
 
 @[to_additive]
-theorem is_open_of_mem_nhds {g : G} (hg : (H : Set G) ∈ 𝓝 g) : IsOpen (H : Set G) :=
+theorem isOpen_of_mem_nhds {g : G} (hg : (H : Set G) ∈ 𝓝 g) : IsOpen (H : Set G) :=
   by
-  simp only [is_open_iff_mem_nhds, SetLike.mem_coe] at hg⊢
+  simp only [isOpen_iff_mem_nhds, SetLike.mem_coe] at hg⊢
   intro x hx
   have : Filter.Tendsto (fun y => y * (x⁻¹ * g)) (𝓝 x) (𝓝 <| x * (x⁻¹ * g)) :=
     (continuous_id.mul continuous_const).Tendsto _
@@ -288,40 +288,40 @@ theorem is_open_of_mem_nhds {g : G} (hg : (H : Set G) ∈ 𝓝 g) : IsOpen (H : 
   replace hg : g ∈ H := SetLike.mem_coe.1 (mem_of_mem_nhds hg)
   simp only [SetLike.mem_coe, H.mul_mem_cancel_right (H.mul_mem (H.inv_mem hx) hg)] at this
   exact this
-#align subgroup.is_open_of_mem_nhds Subgroup.is_open_of_mem_nhds
-#align add_subgroup.is_open_of_mem_nhds AddSubgroup.is_open_of_mem_nhds
+#align subgroup.is_open_of_mem_nhds Subgroup.isOpen_of_mem_nhds
+#align add_subgroup.is_open_of_mem_nhds AddSubgroup.isOpen_of_mem_nhds
 
 @[to_additive]
-theorem is_open_of_open_subgroup {U : OpenSubgroup G} (h : U.1 ≤ H) : IsOpen (H : Set G) :=
+theorem isOpen_of_openSubgroup {U : OpenSubgroup G} (h : U.1 ≤ H) : IsOpen (H : Set G) :=
   H.is_open_of_mem_nhds (Filter.mem_of_superset U.mem_nhds_one h)
-#align subgroup.is_open_of_open_subgroup Subgroup.is_open_of_open_subgroup
-#align add_subgroup.is_open_of_open_add_subgroup AddSubgroup.is_open_of_open_add_subgroup
+#align subgroup.is_open_of_open_subgroup Subgroup.isOpen_of_openSubgroup
+#align add_subgroup.is_open_of_open_add_subgroup AddSubgroup.isOpen_of_open_add_subgroup
 
 /-- If a subgroup of a topological group has `1` in its interior, then it is open. -/
 @[to_additive
       "If a subgroup of an additive topological group has `0` in its interior, then it is\nopen."]
-theorem is_open_of_one_mem_interior {G : Type _} [Group G] [TopologicalSpace G] [TopologicalGroup G]
+theorem isOpen_of_one_mem_interior {G : Type _} [Group G] [TopologicalSpace G] [TopologicalGroup G]
     {H : Subgroup G} (h_1_int : (1 : G) ∈ interior (H : Set G)) : IsOpen (H : Set G) :=
   by
   have h : 𝓝 1 ≤ Filter.principal (H : Set G) :=
-    nhds_le_of_le h_1_int is_open_interior (Filter.principal_mono.2 interior_subset)
-  rw [is_open_iff_nhds]
+    nhds_le_of_le h_1_int isOpen_interior (Filter.principal_mono.2 interior_subset)
+  rw [isOpen_iff_nhds]
   intro g hg
   rw [show 𝓝 g = Filter.map (⇑(Homeomorph.mulLeft g)) (𝓝 1) by simp]
   convert Filter.map_mono h
-  simp only [Homeomorph.coe_mul_left, Filter.map_principal, Set.image_mul_left,
+  simp only [Homeomorph.coe_mulLeft, Filter.map_principal, Set.image_mul_left,
     Filter.principal_eq_iff_eq]
   ext
   simp [H.mul_mem_cancel_left (H.inv_mem hg)]
-#align subgroup.is_open_of_one_mem_interior Subgroup.is_open_of_one_mem_interior
-#align add_subgroup.is_open_of_zero_mem_interior AddSubgroup.is_open_of_zero_mem_interior
+#align subgroup.is_open_of_one_mem_interior Subgroup.isOpen_of_one_mem_interior
+#align add_subgroup.is_open_of_zero_mem_interior AddSubgroup.isOpen_of_zero_mem_interior
 
 @[to_additive]
-theorem is_open_mono {H₁ H₂ : Subgroup G} (h : H₁ ≤ H₂) (h₁ : IsOpen (H₁ : Set G)) :
+theorem isOpen_mono {H₁ H₂ : Subgroup G} (h : H₁ ≤ H₂) (h₁ : IsOpen (H₁ : Set G)) :
     IsOpen (H₂ : Set G) :=
-  @is_open_of_open_subgroup _ _ _ _ H₂ { H₁ with is_open' := h₁ } h
-#align subgroup.is_open_mono Subgroup.is_open_mono
-#align add_subgroup.is_open_mono AddSubgroup.is_open_mono
+  @isOpen_of_openSubgroup _ _ _ _ H₂ { H₁ with is_open' := h₁ } h
+#align subgroup.is_open_mono Subgroup.isOpen_mono
+#align add_subgroup.is_open_mono AddSubgroup.isOpen_mono
 
 end Subgroup
 
@@ -337,7 +337,7 @@ instance : SemilatticeSup (OpenSubgroup G) :=
       { (U : Subgroup G) ⊔ V with
         is_open' :=
           show IsOpen (((U : Subgroup G) ⊔ V : Subgroup G) : Set G) from
-            Subgroup.is_open_mono le_sup_left U.IsOpen }
+            Subgroup.isOpen_mono le_sup_left U.IsOpen }
     le_sup_left := fun U V => coe_subgroup_le.1 le_sup_left
     le_sup_right := fun U V => coe_subgroup_le.1 le_sup_right
     sup_le := fun U V W hU hV => coe_subgroup_le.1 (sup_le hU hV) }
@@ -356,10 +356,10 @@ variable {R : Type _} {M : Type _} [CommRing R]
 
 variable [AddCommGroup M] [TopologicalSpace M] [TopologicalAddGroup M] [Module R M]
 
-theorem is_open_mono {U P : Submodule R M} (h : U ≤ P) (hU : IsOpen (U : Set M)) :
+theorem isOpen_mono {U P : Submodule R M} (h : U ≤ P) (hU : IsOpen (U : Set M)) :
     IsOpen (P : Set M) :=
-  @AddSubgroup.is_open_mono M _ _ _ U.toAddSubgroup P.toAddSubgroup h hU
-#align submodule.is_open_mono Submodule.is_open_mono
+  @AddSubgroup.isOpen_mono M _ _ _ U.toAddSubgroup P.toAddSubgroup h hU
+#align submodule.is_open_mono Submodule.isOpen_mono
 
 end Submodule
 
@@ -369,10 +369,10 @@ variable {R : Type _} [CommRing R]
 
 variable [TopologicalSpace R] [TopologicalRing R]
 
-theorem is_open_of_open_subideal {U I : Ideal R} (h : U ≤ I) (hU : IsOpen (U : Set R)) :
+theorem isOpen_of_open_subideal {U I : Ideal R} (h : U ≤ I) (hU : IsOpen (U : Set R)) :
     IsOpen (I : Set R) :=
-  Submodule.is_open_mono h hU
-#align ideal.is_open_of_open_subideal Ideal.is_open_of_open_subideal
+  Submodule.isOpen_mono h hU
+#align ideal.is_open_of_open_subideal Ideal.isOpen_of_open_subideal
 
 end Ideal
 

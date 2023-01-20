@@ -36,7 +36,7 @@ theorem wilsons_lemma : ((p - 1)! : Zmod p) = -1 :=
   refine'
     calc
       ((p - 1)! : Zmod p) = ∏ x in Ico 1 (succ (p - 1)), x := by
-        rw [← Finset.prod_Ico_id_eq_factorial, prod_nat_cast]
+        rw [← Finset.prod_ico_id_eq_factorial, prod_nat_cast]
       _ = ∏ x : (Zmod p)ˣ, x := _
       _ = -1 := by
         simp_rw [← Units.coeHom_apply, ← (Units.coeHom (Zmod p)).map_prod,
@@ -69,11 +69,11 @@ theorem wilsons_lemma : ((p - 1)! : Zmod p) = -1 :=
 #align zmod.wilsons_lemma Zmod.wilsons_lemma
 
 @[simp]
-theorem prod_Ico_one_prime : (∏ x in ico 1 p, (x : Zmod p)) = -1 :=
+theorem prod_ico_one_prime : (∏ x in ico 1 p, (x : Zmod p)) = -1 :=
   by
   conv in Ico 1 p => rw [← succ_sub_one p, succ_sub (Fact.out p.prime).Pos]
-  rw [← prod_nat_cast, Finset.prod_Ico_id_eq_factorial, wilsons_lemma]
-#align zmod.prod_Ico_one_prime Zmod.prod_Ico_one_prime
+  rw [← prod_nat_cast, Finset.prod_ico_id_eq_factorial, wilsons_lemma]
+#align zmod.prod_Ico_one_prime Zmod.prod_ico_one_prime
 
 end Wilson
 
@@ -86,7 +86,7 @@ namespace Zmod
 /-- The image of the map sending a non zero natural number `x ≤ p / 2` to the absolute value
   of the element of interger in the interval `(-p/2, p/2]` congruent to `a * x` mod p is the set
   of non zero natural numbers `x` such that `x ≤ p / 2` -/
-theorem Ico_map_val_min_abs_nat_abs_eq_Ico_map_id (p : ℕ) [hp : Fact p.Prime] (a : Zmod p)
+theorem ico_map_valMinAbs_natAbs_eq_ico_map_id (p : ℕ) [hp : Fact p.Prime] (a : Zmod p)
     (hap : a ≠ 0) :
     ((ico 1 (p / 2).succ).1.map fun x => (a * x).valMinAbs.natAbs) =
       (ico 1 (p / 2).succ).1.map fun a => a :=
@@ -127,7 +127,7 @@ theorem Ico_map_val_min_abs_nat_abs_eq_Ico_map_id (p : ℕ) [hp : Fact p.Prime] 
     Multiset.map_eq_map_of_bij_of_nodup _ _ (Finset.nodup _) (Finset.nodup _)
       (fun x _ => (a * x : Zmod p).valMinAbs.natAbs) hmem (fun _ _ => rfl)
       (inj_on_of_surj_on_of_card_le _ hmem hsurj le_rfl) hsurj
-#align zmod.Ico_map_val_min_abs_nat_abs_eq_Ico_map_id Zmod.Ico_map_val_min_abs_nat_abs_eq_Ico_map_id
+#align zmod.Ico_map_val_min_abs_nat_abs_eq_Ico_map_id Zmod.ico_map_valMinAbs_natAbs_eq_ico_map_id
 
 private theorem gauss_lemma_aux₁ (p : ℕ) [Fact p.Prime] [Fact (p % 2 = 1)] {a : ℤ}
     (hap : (a : Zmod p) ≠ 0) :
@@ -195,7 +195,7 @@ theorem gauss_lemma {p : ℕ} [Fact p.Prime] {a : ℤ} (hp : p ≠ 2) (ha0 : (a 
       cases
         neg_one_pow_eq_or ℤ
           ((Ico 1 (p / 2).succ).filter fun x : ℕ => p / 2 < (a * x : Zmod p).val).card <;>
-    simp_all [ne_neg_self p one_ne_zero, (ne_neg_self p one_ne_zero).symm]
+    simp_all [ne_neg_self p one_neZero, (ne_neg_self p one_neZero).symm]
 #align zmod.gauss_lemma Zmod.gauss_lemma
 
 private theorem eisenstein_lemma_aux₁ (p : ℕ) [Fact p.Prime] [hp2 : Fact (p % 2 = 1)] {a : ℕ}
@@ -204,7 +204,7 @@ private theorem eisenstein_lemma_aux₁ (p : ℕ) [Fact p.Prime] [hp2 : Fact (p 
       (((ico 1 (p / 2).succ).filter fun x : ℕ => p / 2 < (a * x : Zmod p).val).card +
           ∑ x in ico 1 (p / 2).succ, x) +
         (∑ x in ico 1 (p / 2).succ, a * x / p : ℕ) :=
-  have hp2 : (p : Zmod 2) = (1 : ℕ) := (eq_iff_modeq_nat _).2 hp2.1
+  have hp2 : (p : Zmod 2) = (1 : ℕ) := (eq_iff_modEq_nat _).2 hp2.1
   calc
     ((∑ x in ico 1 (p / 2).succ, a * x : ℕ) : Zmod 2) =
         ((∑ x in ico 1 (p / 2).succ, a * x % p + p * (a * x / p) : ℕ) : Zmod 2) :=
@@ -240,8 +240,8 @@ theorem eisenstein_lemma_aux (p : ℕ) [Fact p.Prime] [Fact (p % 2 = 1)] {a : �
     (hap : (a : Zmod p) ≠ 0) :
     ((ico 1 (p / 2).succ).filter fun x : ℕ => p / 2 < (a * x : Zmod p).val).card ≡
       ∑ x in ico 1 (p / 2).succ, x * a / p [MOD 2] :=
-  have ha2 : (a : Zmod 2) = (1 : ℕ) := (eq_iff_modeq_nat _).2 ha2
-  (eq_iff_modeq_nat 2).1 <|
+  have ha2 : (a : Zmod 2) = (1 : ℕ) := (eq_iff_modEq_nat _).2 ha2
+  (eq_iff_modEq_nat 2).1 <|
     sub_eq_zero.1 <| by
       simpa [add_left_comm, sub_eq_add_neg, finset.mul_sum.symm, mul_comm, ha2, Nat.cast_sum,
         add_neg_eq_iff_eq_add.symm, neg_eq_self_mod_two, add_assoc] using
@@ -277,7 +277,7 @@ private theorem sum_Ico_eq_card_lt {p q : ℕ} :
             (calc
               x * q / p ≤ p / 2 * q / p :=
                 Nat.div_le_div_right
-                  (mul_le_mul_of_nonneg_right (le_of_lt_succ <| (mem_Ico.mp hx).2) (Nat.zero_le _))
+                  (mul_le_mul_of_nonneg_right (le_of_lt_succ <| (mem_ico.mp hx).2) (Nat.zero_le _))
               _ ≤ _ := Nat.div_mul_div_le_div _ _ _
               )
       _ = _ := by
@@ -289,7 +289,7 @@ private theorem sum_Ico_eq_card_lt {p q : ℕ} :
                   forall_true_iff, mem_product])
               (fun ⟨_, _⟩ ⟨_, _⟩ => by
                 simp (config := { contextual := true }) only [Prod.mk.inj_iff, eq_self_iff_true,
-                  and_self_iff, heq_iff_eq, forall_true_iff])
+                  and_self_iff, hEq_iff_eq, forall_true_iff])
               fun ⟨b₁, b₂⟩ h =>
               ⟨⟨b₁, b₂⟩, by
                 revert h <;>
@@ -340,7 +340,7 @@ theorem sum_mul_div_add_sum_mul_div_eq_mul (p q : ℕ) [hp : Fact p.Prime] (hq0 
       simpa [hq0] using congr_arg (coe : ℕ → Zmod p) (le_antisymm hpq hqp)
     apply_fun Zmod.val  at this
     rw [val_cast_of_lt hxp, val_zero] at this
-    simpa only [this, nonpos_iff_eq_zero, mem_Ico, one_ne_zero, false_and_iff, mem_product] using hx
+    simpa only [this, nonpos_iff_eq_zero, mem_Ico, one_neZero, false_and_iff, mem_product] using hx
   have hunion :
     (((Ico 1 (p / 2).succ ×ˢ Ico 1 (q / 2).succ).filter fun x : ℕ × ℕ => x.2 * p ≤ x.1 * q) ∪
         (Ico 1 (p / 2).succ ×ˢ Ico 1 (q / 2).succ).filter fun x : ℕ × ℕ => x.1 * q ≤ x.2 * p) =

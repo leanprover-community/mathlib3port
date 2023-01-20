@@ -30,69 +30,69 @@ open Classical TopologicalSpace Nat BigOperators uniformity Nnreal Ennreal
 
 variable {α : Type _} {β : Type _} {ι : Type _}
 
-theorem tendsto_inverse_at_top_nhds_0_nat : Tendsto (fun n : ℕ => (n : ℝ)⁻¹) atTop (𝓝 0) :=
-  tendsto_inv_at_top_zero.comp tendsto_coe_nat_at_top_at_top
-#align tendsto_inverse_at_top_nhds_0_nat tendsto_inverse_at_top_nhds_0_nat
+theorem tendsto_inverse_atTop_nhds_0_nat : Tendsto (fun n : ℕ => (n : ℝ)⁻¹) atTop (𝓝 0) :=
+  tendsto_inv_atTop_zero.comp tendsto_coe_nat_atTop_atTop
+#align tendsto_inverse_at_top_nhds_0_nat tendsto_inverse_atTop_nhds_0_nat
 
-theorem tendsto_const_div_at_top_nhds_0_nat (C : ℝ) : Tendsto (fun n : ℕ => C / n) atTop (𝓝 0) := by
-  simpa only [mul_zero] using tendsto_const_nhds.mul tendsto_inverse_at_top_nhds_0_nat
-#align tendsto_const_div_at_top_nhds_0_nat tendsto_const_div_at_top_nhds_0_nat
+theorem tendsto_const_div_atTop_nhds_0_nat (C : ℝ) : Tendsto (fun n : ℕ => C / n) atTop (𝓝 0) := by
+  simpa only [mul_zero] using tendsto_const_nhds.mul tendsto_inverse_atTop_nhds_0_nat
+#align tendsto_const_div_at_top_nhds_0_nat tendsto_const_div_atTop_nhds_0_nat
 
-theorem Nnreal.tendsto_inverse_at_top_nhds_0_nat : Tendsto (fun n : ℕ => (n : ℝ≥0)⁻¹) atTop (𝓝 0) :=
+theorem Nnreal.tendsto_inverse_atTop_nhds_0_nat : Tendsto (fun n : ℕ => (n : ℝ≥0)⁻¹) atTop (𝓝 0) :=
   by
   rw [← Nnreal.tendsto_coe]
-  exact tendsto_inverse_at_top_nhds_0_nat
-#align nnreal.tendsto_inverse_at_top_nhds_0_nat Nnreal.tendsto_inverse_at_top_nhds_0_nat
+  exact tendsto_inverse_atTop_nhds_0_nat
+#align nnreal.tendsto_inverse_at_top_nhds_0_nat Nnreal.tendsto_inverse_atTop_nhds_0_nat
 
-theorem Nnreal.tendsto_const_div_at_top_nhds_0_nat (C : ℝ≥0) :
+theorem Nnreal.tendsto_const_div_atTop_nhds_0_nat (C : ℝ≥0) :
     Tendsto (fun n : ℕ => C / n) atTop (𝓝 0) := by
-  simpa using tendsto_const_nhds.mul Nnreal.tendsto_inverse_at_top_nhds_0_nat
-#align nnreal.tendsto_const_div_at_top_nhds_0_nat Nnreal.tendsto_const_div_at_top_nhds_0_nat
+  simpa using tendsto_const_nhds.mul Nnreal.tendsto_inverse_atTop_nhds_0_nat
+#align nnreal.tendsto_const_div_at_top_nhds_0_nat Nnreal.tendsto_const_div_atTop_nhds_0_nat
 
-theorem tendsto_one_div_add_at_top_nhds_0_nat :
+theorem tendsto_one_div_add_atTop_nhds_0_nat :
     Tendsto (fun n : ℕ => 1 / ((n : ℝ) + 1)) atTop (𝓝 0) :=
   suffices Tendsto (fun n : ℕ => 1 / (↑(n + 1) : ℝ)) atTop (𝓝 0) by simpa
-  (tendsto_add_at_top_iff_nat 1).2 (tendsto_const_div_at_top_nhds_0_nat 1)
-#align tendsto_one_div_add_at_top_nhds_0_nat tendsto_one_div_add_at_top_nhds_0_nat
+  (tendsto_add_atTop_iff_nat 1).2 (tendsto_const_div_atTop_nhds_0_nat 1)
+#align tendsto_one_div_add_at_top_nhds_0_nat tendsto_one_div_add_atTop_nhds_0_nat
 
 /-! ### Powers -/
 
 
-theorem tendsto_add_one_pow_at_top_at_top_of_pos [LinearOrderedSemiring α] [Archimedean α] {r : α}
+theorem tendsto_add_one_pow_atTop_atTop_of_pos [LinearOrderedSemiring α] [Archimedean α] {r : α}
     (h : 0 < r) : Tendsto (fun n : ℕ => (r + 1) ^ n) atTop atTop :=
-  (tendsto_at_top_at_top_of_monotone' fun n m => pow_le_pow (le_add_of_nonneg_left (le_of_lt h))) <|
+  (tendsto_atTop_atTop_of_monotone' fun n m => pow_le_pow (le_add_of_nonneg_left (le_of_lt h))) <|
     not_bddAbove_iff.2 fun x => Set.exists_range_iff.2 <| add_one_pow_unbounded_of_pos _ h
-#align tendsto_add_one_pow_at_top_at_top_of_pos tendsto_add_one_pow_at_top_at_top_of_pos
+#align tendsto_add_one_pow_at_top_at_top_of_pos tendsto_add_one_pow_atTop_atTop_of_pos
 
-theorem tendsto_pow_at_top_at_top_of_one_lt [LinearOrderedRing α] [Archimedean α] {r : α}
+theorem tendsto_pow_atTop_atTop_of_one_lt [LinearOrderedRing α] [Archimedean α] {r : α}
     (h : 1 < r) : Tendsto (fun n : ℕ => r ^ n) atTop atTop :=
-  sub_add_cancel r 1 ▸ tendsto_add_one_pow_at_top_at_top_of_pos (sub_pos.2 h)
-#align tendsto_pow_at_top_at_top_of_one_lt tendsto_pow_at_top_at_top_of_one_lt
+  sub_add_cancel r 1 ▸ tendsto_add_one_pow_atTop_atTop_of_pos (sub_pos.2 h)
+#align tendsto_pow_at_top_at_top_of_one_lt tendsto_pow_atTop_atTop_of_one_lt
 
-theorem Nat.tendsto_pow_at_top_at_top_of_one_lt {m : ℕ} (h : 1 < m) :
+theorem Nat.tendsto_pow_atTop_atTop_of_one_lt {m : ℕ} (h : 1 < m) :
     Tendsto (fun n : ℕ => m ^ n) atTop atTop :=
-  tsub_add_cancel_of_le (le_of_lt h) ▸ tendsto_add_one_pow_at_top_at_top_of_pos (tsub_pos_of_lt h)
-#align nat.tendsto_pow_at_top_at_top_of_one_lt Nat.tendsto_pow_at_top_at_top_of_one_lt
+  tsub_add_cancel_of_le (le_of_lt h) ▸ tendsto_add_one_pow_atTop_atTop_of_pos (tsub_pos_of_lt h)
+#align nat.tendsto_pow_at_top_at_top_of_one_lt Nat.tendsto_pow_atTop_atTop_of_one_lt
 
-theorem tendsto_pow_at_top_nhds_0_of_lt_1 {𝕜 : Type _} [LinearOrderedField 𝕜] [Archimedean 𝕜]
+theorem tendsto_pow_atTop_nhds_0_of_lt_1 {𝕜 : Type _} [LinearOrderedField 𝕜] [Archimedean 𝕜]
     [TopologicalSpace 𝕜] [OrderTopology 𝕜] {r : 𝕜} (h₁ : 0 ≤ r) (h₂ : r < 1) :
     Tendsto (fun n : ℕ => r ^ n) atTop (𝓝 0) :=
   h₁.eq_or_lt.elim
     (fun this : 0 = r =>
-      (tendsto_add_at_top_iff_nat 1).mp <| by simp [pow_succ, ← this, tendsto_const_nhds])
+      (tendsto_add_atTop_iff_nat 1).mp <| by simp [pow_succ, ← this, tendsto_const_nhds])
     fun this : 0 < r =>
     have : Tendsto (fun n => (r⁻¹ ^ n)⁻¹) atTop (𝓝 0) :=
-      tendsto_inv_at_top_zero.comp (tendsto_pow_at_top_at_top_of_one_lt <| one_lt_inv this h₂)
+      tendsto_inv_atTop_zero.comp (tendsto_pow_atTop_atTop_of_one_lt <| one_lt_inv this h₂)
     this.congr fun n => by simp
-#align tendsto_pow_at_top_nhds_0_of_lt_1 tendsto_pow_at_top_nhds_0_of_lt_1
+#align tendsto_pow_at_top_nhds_0_of_lt_1 tendsto_pow_atTop_nhds_0_of_lt_1
 
-theorem tendsto_pow_at_top_nhds_within_0_of_lt_1 {𝕜 : Type _} [LinearOrderedField 𝕜] [Archimedean 𝕜]
+theorem tendsto_pow_atTop_nhdsWithin_0_of_lt_1 {𝕜 : Type _} [LinearOrderedField 𝕜] [Archimedean 𝕜]
     [TopologicalSpace 𝕜] [OrderTopology 𝕜] {r : 𝕜} (h₁ : 0 < r) (h₂ : r < 1) :
     Tendsto (fun n : ℕ => r ^ n) atTop (𝓝[>] 0) :=
   tendsto_inf.2
-    ⟨tendsto_pow_at_top_nhds_0_of_lt_1 h₁.le h₂,
+    ⟨tendsto_pow_atTop_nhds_0_of_lt_1 h₁.le h₂,
       tendsto_principal.2 <| eventually_of_forall fun n => pow_pos h₁ _⟩
-#align tendsto_pow_at_top_nhds_within_0_of_lt_1 tendsto_pow_at_top_nhds_within_0_of_lt_1
+#align tendsto_pow_at_top_nhds_within_0_of_lt_1 tendsto_pow_atTop_nhdsWithin_0_of_lt_1
 
 theorem uniformity_basis_dist_pow_of_lt_1 {α : Type _} [PseudoMetricSpace α] {r : ℝ} (h₀ : 0 < r)
     (h₁ : r < 1) :
@@ -131,56 +131,56 @@ theorem le_geom {u : ℕ → ℝ} {c : ℝ} (hc : 0 ≤ c) (n : ℕ) (h : ∀ k 
 
 /-- If a sequence `v` of real numbers satisfies `k * v n ≤ v (n+1)` with `1 < k`,
 then it goes to +∞. -/
-theorem tendsto_at_top_of_geom_le {v : ℕ → ℝ} {c : ℝ} (h₀ : 0 < v 0) (hc : 1 < c)
+theorem tendsto_atTop_of_geom_le {v : ℕ → ℝ} {c : ℝ} (h₀ : 0 < v 0) (hc : 1 < c)
     (hu : ∀ n, c * v n ≤ v (n + 1)) : Tendsto v atTop atTop :=
-  (tendsto_at_top_mono fun n => geom_le (zero_le_one.trans hc.le) n fun k hk => hu k) <|
-    (tendsto_pow_at_top_at_top_of_one_lt hc).at_top_mul_const h₀
-#align tendsto_at_top_of_geom_le tendsto_at_top_of_geom_le
+  (tendsto_atTop_mono fun n => geom_le (zero_le_one.trans hc.le) n fun k hk => hu k) <|
+    (tendsto_pow_atTop_atTop_of_one_lt hc).at_top_mul_const h₀
+#align tendsto_at_top_of_geom_le tendsto_atTop_of_geom_le
 
-theorem Nnreal.tendsto_pow_at_top_nhds_0_of_lt_1 {r : ℝ≥0} (hr : r < 1) :
+theorem Nnreal.tendsto_pow_atTop_nhds_0_of_lt_1 {r : ℝ≥0} (hr : r < 1) :
     Tendsto (fun n : ℕ => r ^ n) atTop (𝓝 0) :=
   Nnreal.tendsto_coe.1 <| by
-    simp only [Nnreal.coe_pow, Nnreal.coe_zero, tendsto_pow_at_top_nhds_0_of_lt_1 r.coe_nonneg hr]
-#align nnreal.tendsto_pow_at_top_nhds_0_of_lt_1 Nnreal.tendsto_pow_at_top_nhds_0_of_lt_1
+    simp only [Nnreal.coe_pow, Nnreal.coe_zero, tendsto_pow_atTop_nhds_0_of_lt_1 r.coe_nonneg hr]
+#align nnreal.tendsto_pow_at_top_nhds_0_of_lt_1 Nnreal.tendsto_pow_atTop_nhds_0_of_lt_1
 
-theorem Ennreal.tendsto_pow_at_top_nhds_0_of_lt_1 {r : ℝ≥0∞} (hr : r < 1) :
+theorem Ennreal.tendsto_pow_atTop_nhds_0_of_lt_1 {r : ℝ≥0∞} (hr : r < 1) :
     Tendsto (fun n : ℕ => r ^ n) atTop (𝓝 0) :=
   by
   rcases Ennreal.lt_iff_exists_coe.1 hr with ⟨r, rfl, hr'⟩
   rw [← Ennreal.coe_zero]
   norm_cast  at *
-  apply Nnreal.tendsto_pow_at_top_nhds_0_of_lt_1 hr
-#align ennreal.tendsto_pow_at_top_nhds_0_of_lt_1 Ennreal.tendsto_pow_at_top_nhds_0_of_lt_1
+  apply Nnreal.tendsto_pow_atTop_nhds_0_of_lt_1 hr
+#align ennreal.tendsto_pow_at_top_nhds_0_of_lt_1 Ennreal.tendsto_pow_atTop_nhds_0_of_lt_1
 
 /-! ### Geometric series-/
 
 
 section Geometric
 
-theorem has_sum_geometric_of_lt_1 {r : ℝ} (h₁ : 0 ≤ r) (h₂ : r < 1) :
+theorem hasSum_geometric_of_lt_1 {r : ℝ} (h₁ : 0 ≤ r) (h₂ : r < 1) :
     HasSum (fun n : ℕ => r ^ n) (1 - r)⁻¹ :=
   have : r ≠ 1 := ne_of_lt h₂
   have : Tendsto (fun n => (r ^ n - 1) * (r - 1)⁻¹) atTop (𝓝 ((0 - 1) * (r - 1)⁻¹)) :=
-    ((tendsto_pow_at_top_nhds_0_of_lt_1 h₁ h₂).sub tendsto_const_nhds).mul tendsto_const_nhds
-  (has_sum_iff_tendsto_nat_of_nonneg (pow_nonneg h₁) _).mpr <| by
+    ((tendsto_pow_atTop_nhds_0_of_lt_1 h₁ h₂).sub tendsto_const_nhds).mul tendsto_const_nhds
+  (hasSum_iff_tendsto_nat_of_nonneg (pow_nonneg h₁) _).mpr <| by
     simp_all [neg_inv, geom_sum_eq, div_eq_mul_inv]
-#align has_sum_geometric_of_lt_1 has_sum_geometric_of_lt_1
+#align has_sum_geometric_of_lt_1 hasSum_geometric_of_lt_1
 
 theorem summable_geometric_of_lt_1 {r : ℝ} (h₁ : 0 ≤ r) (h₂ : r < 1) :
     Summable fun n : ℕ => r ^ n :=
-  ⟨_, has_sum_geometric_of_lt_1 h₁ h₂⟩
+  ⟨_, hasSum_geometric_of_lt_1 h₁ h₂⟩
 #align summable_geometric_of_lt_1 summable_geometric_of_lt_1
 
 theorem tsum_geometric_of_lt_1 {r : ℝ} (h₁ : 0 ≤ r) (h₂ : r < 1) : (∑' n : ℕ, r ^ n) = (1 - r)⁻¹ :=
-  (has_sum_geometric_of_lt_1 h₁ h₂).tsum_eq
+  (hasSum_geometric_of_lt_1 h₁ h₂).tsum_eq
 #align tsum_geometric_of_lt_1 tsum_geometric_of_lt_1
 
-theorem has_sum_geometric_two : HasSum (fun n : ℕ => ((1 : ℝ) / 2) ^ n) 2 := by
-  convert has_sum_geometric_of_lt_1 _ _ <;> norm_num
-#align has_sum_geometric_two has_sum_geometric_two
+theorem hasSum_geometric_two : HasSum (fun n : ℕ => ((1 : ℝ) / 2) ^ n) 2 := by
+  convert hasSum_geometric_of_lt_1 _ _ <;> norm_num
+#align has_sum_geometric_two hasSum_geometric_two
 
 theorem summable_geometric_two : Summable fun n : ℕ => ((1 : ℝ) / 2) ^ n :=
-  ⟨_, has_sum_geometric_two⟩
+  ⟨_, hasSum_geometric_two⟩
 #align summable_geometric_two summable_geometric_two
 
 theorem summable_geometric_two_encode {ι : Type _} [Encodable ι] :
@@ -189,7 +189,7 @@ theorem summable_geometric_two_encode {ι : Type _} [Encodable ι] :
 #align summable_geometric_two_encode summable_geometric_two_encode
 
 theorem tsum_geometric_two : (∑' n : ℕ, ((1 : ℝ) / 2) ^ n) = 2 :=
-  has_sum_geometric_two.tsum_eq
+  hasSum_geometric_two.tsum_eq
 #align tsum_geometric_two tsum_geometric_two
 
 theorem sum_geometric_two_le (n : ℕ) : (∑ i : ℕ in range n, (1 / (2 : ℝ)) ^ i) ≤ 2 :=
@@ -220,39 +220,38 @@ theorem tsum_geometric_inv_two_ge (n : ℕ) : (∑' i, ite (n ≤ i) ((2 : ℝ)�
     pow_add, tsum_mul_right, tsum_geometric_inv_two]
 #align tsum_geometric_inv_two_ge tsum_geometric_inv_two_ge
 
-theorem has_sum_geometric_two' (a : ℝ) : HasSum (fun n : ℕ => a / 2 / 2 ^ n) a :=
+theorem hasSum_geometric_two' (a : ℝ) : HasSum (fun n : ℕ => a / 2 / 2 ^ n) a :=
   by
-  convert
-    HasSum.mul_left (a / 2) (has_sum_geometric_of_lt_1 (le_of_lt one_half_pos) one_half_lt_one)
+  convert HasSum.mul_left (a / 2) (hasSum_geometric_of_lt_1 (le_of_lt one_half_pos) one_half_lt_one)
   · funext n
     simp
     rfl
   · norm_num
-#align has_sum_geometric_two' has_sum_geometric_two'
+#align has_sum_geometric_two' hasSum_geometric_two'
 
 theorem summable_geometric_two' (a : ℝ) : Summable fun n : ℕ => a / 2 / 2 ^ n :=
-  ⟨a, has_sum_geometric_two' a⟩
+  ⟨a, hasSum_geometric_two' a⟩
 #align summable_geometric_two' summable_geometric_two'
 
 theorem tsum_geometric_two' (a : ℝ) : (∑' n : ℕ, a / 2 / 2 ^ n) = a :=
-  (has_sum_geometric_two' a).tsum_eq
+  (hasSum_geometric_two' a).tsum_eq
 #align tsum_geometric_two' tsum_geometric_two'
 
 /-- **Sum of a Geometric Series** -/
-theorem Nnreal.has_sum_geometric {r : ℝ≥0} (hr : r < 1) : HasSum (fun n : ℕ => r ^ n) (1 - r)⁻¹ :=
+theorem Nnreal.hasSum_geometric {r : ℝ≥0} (hr : r < 1) : HasSum (fun n : ℕ => r ^ n) (1 - r)⁻¹ :=
   by
-  apply Nnreal.has_sum_coe.1
+  apply Nnreal.hasSum_coe.1
   push_cast
   rw [Nnreal.coe_sub (le_of_lt hr)]
-  exact has_sum_geometric_of_lt_1 r.coe_nonneg hr
-#align nnreal.has_sum_geometric Nnreal.has_sum_geometric
+  exact hasSum_geometric_of_lt_1 r.coe_nonneg hr
+#align nnreal.has_sum_geometric Nnreal.hasSum_geometric
 
 theorem Nnreal.summable_geometric {r : ℝ≥0} (hr : r < 1) : Summable fun n : ℕ => r ^ n :=
-  ⟨_, Nnreal.has_sum_geometric hr⟩
+  ⟨_, Nnreal.hasSum_geometric hr⟩
 #align nnreal.summable_geometric Nnreal.summable_geometric
 
 theorem tsum_geometric_nnreal {r : ℝ≥0} (hr : r < 1) : (∑' n : ℕ, r ^ n) = (1 - r)⁻¹ :=
-  (Nnreal.has_sum_geometric hr).tsum_eq
+  (Nnreal.hasSum_geometric hr).tsum_eq
 #align tsum_geometric_nnreal tsum_geometric_nnreal
 
 /-- The series `pow r` converges to `(1-r)⁻¹`. For `r < 1` the RHS is a finite number,
@@ -263,9 +262,9 @@ theorem Ennreal.tsum_geometric (r : ℝ≥0∞) : (∑' n : ℕ, r ^ n) = (1 - r
   cases' lt_or_le r 1 with hr hr
   · rcases Ennreal.lt_iff_exists_coe.1 hr with ⟨r, rfl, hr'⟩
     norm_cast  at *
-    convert Ennreal.tsum_coe_eq (Nnreal.has_sum_geometric hr)
+    convert Ennreal.tsum_coe_eq (Nnreal.hasSum_geometric hr)
     rw [Ennreal.coe_inv <| ne_of_gt <| tsub_pos_iff_lt.2 hr]
-  · rw [tsub_eq_zero_iff_le.mpr hr, Ennreal.inv_zero, Ennreal.tsum_eq_supr_nat, supᵢ_eq_top]
+  · rw [tsub_eq_zero_iff_le.mpr hr, Ennreal.inv_zero, Ennreal.tsum_eq_supᵢ_nat, supᵢ_eq_top]
     refine' fun a ha =>
       (Ennreal.exists_nat_gt (lt_top_iff_ne_top.1 ha)).imp fun n hn => lt_of_lt_of_le hn _
     calc
@@ -295,13 +294,13 @@ include hr hC hu
 
 /-- If `edist (f n) (f (n+1))` is bounded by `C * r^n`, `C ≠ ∞`, `r < 1`,
 then `f` is a Cauchy sequence.-/
-theorem cauchy_seq_of_edist_le_geometric : CauchySeq f :=
+theorem cauchySeq_of_edist_le_geometric : CauchySeq f :=
   by
-  refine' cauchy_seq_of_edist_le_of_tsum_ne_top _ hu _
+  refine' cauchySeq_of_edist_le_of_tsum_ne_top _ hu _
   rw [Ennreal.tsum_mul_left, Ennreal.tsum_geometric]
   refine' Ennreal.mul_ne_top hC (Ennreal.inv_ne_top.2 _)
   exact (tsub_pos_iff_lt.2 hr).ne'
-#align cauchy_seq_of_edist_le_geometric cauchy_seq_of_edist_le_geometric
+#align cauchy_seq_of_edist_le_geometric cauchySeq_of_edist_le_geometric
 
 omit hr hC
 
@@ -331,12 +330,12 @@ variable [PseudoEmetricSpace α] (C : ℝ≥0∞) (hC : C ≠ ⊤) {f : ℕ → 
 include hC hu
 
 /-- If `edist (f n) (f (n+1))` is bounded by `C * 2^-n`, then `f` is a Cauchy sequence.-/
-theorem cauchy_seq_of_edist_le_geometric_two : CauchySeq f :=
+theorem cauchySeq_of_edist_le_geometric_two : CauchySeq f :=
   by
   simp only [div_eq_mul_inv, Ennreal.inv_pow] at hu
-  refine' cauchy_seq_of_edist_le_geometric 2⁻¹ C _ hC hu
+  refine' cauchySeq_of_edist_le_geometric 2⁻¹ C _ hC hu
   simp [Ennreal.one_lt_two]
-#align cauchy_seq_of_edist_le_geometric_two cauchy_seq_of_edist_le_geometric_two
+#align cauchy_seq_of_edist_le_geometric_two cauchySeq_of_edist_le_geometric_two
 
 omit hC
 
@@ -368,28 +367,28 @@ variable [PseudoMetricSpace α] {r C : ℝ} (hr : r < 1) {f : ℕ → α}
 
 include hr hu
 
-theorem aux_has_sum_of_le_geometric : HasSum (fun n : ℕ => C * r ^ n) (C / (1 - r)) :=
+theorem aux_hasSum_of_le_geometric : HasSum (fun n : ℕ => C * r ^ n) (C / (1 - r)) :=
   by
   rcases sign_cases_of_C_mul_pow_nonneg fun n => dist_nonneg.trans (hu n) with (rfl | ⟨C₀, r₀⟩)
-  · simp [has_sum_zero]
+  · simp [hasSum_zero]
   · refine' HasSum.mul_left C _
-    simpa using has_sum_geometric_of_lt_1 r₀ hr
-#align aux_has_sum_of_le_geometric aux_has_sum_of_le_geometric
+    simpa using hasSum_geometric_of_lt_1 r₀ hr
+#align aux_has_sum_of_le_geometric aux_hasSum_of_le_geometric
 
 variable (r C)
 
 /-- If `dist (f n) (f (n+1))` is bounded by `C * r^n`, `r < 1`, then `f` is a Cauchy sequence.
 Note that this lemma does not assume `0 ≤ C` or `0 ≤ r`. -/
-theorem cauchy_seq_of_le_geometric : CauchySeq f :=
-  cauchy_seq_of_dist_le_of_summable _ hu ⟨_, aux_has_sum_of_le_geometric hr hu⟩
-#align cauchy_seq_of_le_geometric cauchy_seq_of_le_geometric
+theorem cauchySeq_of_le_geometric : CauchySeq f :=
+  cauchySeq_of_dist_le_of_summable _ hu ⟨_, aux_hasSum_of_le_geometric hr hu⟩
+#align cauchy_seq_of_le_geometric cauchySeq_of_le_geometric
 
 /-- If `dist (f n) (f (n+1))` is bounded by `C * r^n`, `r < 1`, then the distance from
 `f n` to the limit of `f` is bounded above by `C * r^n / (1 - r)`. -/
 theorem dist_le_of_le_geometric_of_tendsto₀ {a : α} (ha : Tendsto f atTop (𝓝 a)) :
     dist (f 0) a ≤ C / (1 - r) :=
-  (aux_has_sum_of_le_geometric hr hu).tsum_eq ▸
-    dist_le_tsum_of_dist_le_of_tendsto₀ _ hu ⟨_, aux_has_sum_of_le_geometric hr hu⟩ ha
+  (aux_hasSum_of_le_geometric hr hu).tsum_eq ▸
+    dist_le_tsum_of_dist_le_of_tendsto₀ _ hu ⟨_, aux_hasSum_of_le_geometric hr hu⟩ ha
 #align dist_le_of_le_geometric_of_tendsto₀ dist_le_of_le_geometric_of_tendsto₀
 
 /-- If `dist (f n) (f (n+1))` is bounded by `C * r^n`, `r < 1`, then the distance from
@@ -397,7 +396,7 @@ theorem dist_le_of_le_geometric_of_tendsto₀ {a : α} (ha : Tendsto f atTop (�
 theorem dist_le_of_le_geometric_of_tendsto {a : α} (ha : Tendsto f atTop (𝓝 a)) (n : ℕ) :
     dist (f n) a ≤ C * r ^ n / (1 - r) :=
   by
-  have := aux_has_sum_of_le_geometric hr hu
+  have := aux_hasSum_of_le_geometric hr hu
   convert dist_le_tsum_of_dist_le_of_tendsto _ hu ⟨_, this⟩ ha n
   simp only [pow_add, mul_left_comm C, mul_div_right_comm]
   rw [mul_comm]
@@ -409,9 +408,9 @@ omit hr hu
 variable (hu₂ : ∀ n, dist (f n) (f (n + 1)) ≤ C / 2 / 2 ^ n)
 
 /-- If `dist (f n) (f (n+1))` is bounded by `(C / 2) / 2^n`, then `f` is a Cauchy sequence. -/
-theorem cauchy_seq_of_le_geometric_two : CauchySeq f :=
-  cauchy_seq_of_dist_le_of_summable _ hu₂ <| ⟨_, has_sum_geometric_two' C⟩
-#align cauchy_seq_of_le_geometric_two cauchy_seq_of_le_geometric_two
+theorem cauchySeq_of_le_geometric_two : CauchySeq f :=
+  cauchySeq_of_dist_le_of_summable _ hu₂ <| ⟨_, hasSum_geometric_two' C⟩
+#align cauchy_seq_of_le_geometric_two cauchySeq_of_le_geometric_two
 
 /-- If `dist (f n) (f (n+1))` is bounded by `(C / 2) / 2^n`, then the distance from
 `f 0` to the limit of `f` is bounded above by `C`. -/
@@ -430,7 +429,7 @@ theorem dist_le_of_le_geometric_two_of_tendsto {a : α} (ha : Tendsto f atTop (�
   convert dist_le_tsum_of_dist_le_of_tendsto _ hu₂ (summable_geometric_two' C) ha n
   simp only [add_comm n, pow_add, ← div_div]
   symm
-  exact ((has_sum_geometric_two' C).div_const _).tsum_eq
+  exact ((hasSum_geometric_two' C).div_const _).tsum_eq
 #align dist_le_of_le_geometric_two_of_tendsto dist_le_of_le_geometric_two_of_tendsto
 
 end LeGeometric
@@ -460,18 +459,18 @@ def posSumOfEncodable {ε : ℝ} (hε : 0 < ε) (ι) [Encodable ι] :
     { ε' : ι → ℝ // (∀ i, 0 < ε' i) ∧ ∃ c, HasSum ε' c ∧ c ≤ ε } :=
   by
   let f n := ε / 2 / 2 ^ n
-  have hf : HasSum f ε := has_sum_geometric_two' _
+  have hf : HasSum f ε := hasSum_geometric_two' _
   have f0 : ∀ n, 0 < f n := fun n => div_pos (half_pos hε) (pow_pos zero_lt_two _)
   refine' ⟨f ∘ Encodable.encode, fun i => f0 _, _⟩
   rcases hf.summable.comp_injective (@Encodable.encode_injective ι _) with ⟨c, hg⟩
-  refine' ⟨c, hg, has_sum_le_inj _ (@Encodable.encode_injective ι _) _ _ hg hf⟩
+  refine' ⟨c, hg, hasSum_le_inj _ (@Encodable.encode_injective ι _) _ _ hg hf⟩
   · intro i _
     exact le_of_lt (f0 _)
   · intro n
     exact le_rfl
 #align pos_sum_of_encodable posSumOfEncodable
 
-theorem Set.Countable.exists_pos_has_sum_le {ι : Type _} {s : Set ι} (hs : s.Countable) {ε : ℝ}
+theorem Set.Countable.exists_pos_hasSum_le {ι : Type _} {s : Set ι} (hs : s.Countable) {ε : ℝ}
     (hε : 0 < ε) : ∃ ε' : ι → ℝ, (∀ i, 0 < ε' i) ∧ ∃ c, HasSum (fun i : s => ε' i) c ∧ c ≤ ε :=
   by
   haveI := hs.to_encodable
@@ -480,7 +479,7 @@ theorem Set.Countable.exists_pos_has_sum_le {ι : Type _} {s : Set ι} (hs : s.C
   · split_ifs
     exacts[hf0 _, zero_lt_one]
   · simpa only [Subtype.coe_prop, dif_pos, Subtype.coe_eta]
-#align set.countable.exists_pos_has_sum_le Set.Countable.exists_pos_has_sum_le
+#align set.countable.exists_pos_has_sum_le Set.Countable.exists_pos_hasSum_le
 
 theorem Set.Countable.exists_pos_forall_sum_le {ι : Type _} {s : Set ι} (hs : s.Countable) {ε : ℝ}
     (hε : 0 < ε) : ∃ ε' : ι → ℝ, (∀ i, 0 < ε' i) ∧ ∀ t : Finset ι, ↑t ⊆ s → (∑ i in t, ε' i) ≤ ε :=
@@ -488,7 +487,7 @@ theorem Set.Countable.exists_pos_forall_sum_le {ι : Type _} {s : Set ι} (hs : 
   rcases hs.exists_pos_has_sum_le hε with ⟨ε', hpos, c, hε'c, hcε⟩
   refine' ⟨ε', hpos, fun t ht => _⟩
   rw [← sum_subtype_of_mem _ ht]
-  refine' (sum_le_has_sum _ _ hε'c).trans hcε
+  refine' (sum_le_hasSum _ _ hε'c).trans hcε
   exact fun _ _ => (hpos _).le
 #align set.countable.exists_pos_forall_sum_le Set.Countable.exists_pos_forall_sum_le
 
@@ -502,7 +501,7 @@ theorem exists_pos_sum_of_countable {ε : ℝ≥0} (hε : ε ≠ 0) (ι) [Counta
   obtain ⟨ε', hε', c, hc, hcε⟩ := posSumOfEncodable a0 ι
   exact
     ⟨fun i => ⟨ε' i, (hε' i).le⟩, fun i => Nnreal.coe_lt_coe.1 <| hε' i,
-      ⟨c, has_sum_le (fun i => (hε' i).le) has_sum_zero hc⟩, Nnreal.has_sum_coe.1 hc,
+      ⟨c, hasSum_le (fun i => (hε' i).le) hasSum_zero hc⟩, Nnreal.hasSum_coe.1 hc,
       aε.trans_le' <| Nnreal.coe_le_coe.1 hcε⟩
 #align nnreal.exists_pos_sum_of_countable Nnreal.exists_pos_sum_of_countable
 
@@ -545,14 +544,13 @@ end Ennreal
 -/
 
 
-theorem factorial_tendsto_at_top : Tendsto Nat.factorial atTop atTop :=
-  tendsto_at_top_at_top_of_monotone Nat.monotone_factorial fun n => ⟨n, n.self_le_factorial⟩
-#align factorial_tendsto_at_top factorial_tendsto_at_top
+theorem factorial_tendsto_atTop : Tendsto Nat.factorial atTop atTop :=
+  tendsto_atTop_atTop_of_monotone Nat.monotone_factorial fun n => ⟨n, n.self_le_factorial⟩
+#align factorial_tendsto_at_top factorial_tendsto_atTop
 
-theorem tendsto_factorial_div_pow_self_at_top :
-    Tendsto (fun n => n ! / n ^ n : ℕ → ℝ) atTop (𝓝 0) :=
+theorem tendsto_factorial_div_pow_self_atTop : Tendsto (fun n => n ! / n ^ n : ℕ → ℝ) atTop (𝓝 0) :=
   tendsto_of_tendsto_of_tendsto_of_le_of_le' tendsto_const_nhds
-    (tendsto_const_div_at_top_nhds_0_nat 1)
+    (tendsto_const_div_atTop_nhds_0_nat 1)
     (eventually_of_forall fun n =>
       div_nonneg (by exact_mod_cast n.factorial_pos.le)
         (pow_nonneg (by exact_mod_cast n.zero_le) _))
@@ -571,7 +569,7 @@ theorem tendsto_factorial_div_pow_self_at_top :
       · refine' (div_le_one <| by exact_mod_cast hn).mpr _
         norm_cast
         linarith)
-#align tendsto_factorial_div_pow_self_at_top tendsto_factorial_div_pow_self_at_top
+#align tendsto_factorial_div_pow_self_at_top tendsto_factorial_div_pow_self_atTop
 
 /-!
 ### Ceil and floor
@@ -580,18 +578,18 @@ theorem tendsto_factorial_div_pow_self_at_top :
 
 section
 
-theorem tendsto_nat_floor_at_top {α : Type _} [LinearOrderedSemiring α] [FloorSemiring α] :
+theorem tendsto_nat_floor_atTop {α : Type _} [LinearOrderedSemiring α] [FloorSemiring α] :
     Tendsto (fun x : α => ⌊x⌋₊) atTop atTop :=
   Nat.floor_mono.tendsto_at_top_at_top fun x => ⟨max 0 (x + 1), by simp [Nat.le_floor_iff]⟩
-#align tendsto_nat_floor_at_top tendsto_nat_floor_at_top
+#align tendsto_nat_floor_at_top tendsto_nat_floor_atTop
 
 variable {R : Type _} [TopologicalSpace R] [LinearOrderedField R] [OrderTopology R] [FloorRing R]
 
-theorem tendsto_nat_floor_mul_div_at_top {a : R} (ha : 0 ≤ a) :
+theorem tendsto_nat_floor_mul_div_atTop {a : R} (ha : 0 ≤ a) :
     Tendsto (fun x => (⌊a * x⌋₊ : R) / x) atTop (𝓝 a) :=
   by
   have A : tendsto (fun x : R => a - x⁻¹) at_top (𝓝 (a - 0)) :=
-    tendsto_const_nhds.sub tendsto_inv_at_top_zero
+    tendsto_const_nhds.sub tendsto_inv_atTop_zero
   rw [sub_zero] at A
   apply tendsto_of_tendsto_of_tendsto_of_le_of_le' A tendsto_const_nhds
   · refine' eventually_at_top.2 ⟨1, fun x hx => _⟩
@@ -602,17 +600,17 @@ theorem tendsto_nat_floor_mul_div_at_top {a : R} (ha : 0 ≤ a) :
   · refine' eventually_at_top.2 ⟨1, fun x hx => _⟩
     rw [div_le_iff (zero_lt_one.trans_le hx)]
     simp [Nat.floor_le (mul_nonneg ha (zero_le_one.trans hx))]
-#align tendsto_nat_floor_mul_div_at_top tendsto_nat_floor_mul_div_at_top
+#align tendsto_nat_floor_mul_div_at_top tendsto_nat_floor_mul_div_atTop
 
-theorem tendsto_nat_floor_div_at_top : Tendsto (fun x => (⌊x⌋₊ : R) / x) atTop (𝓝 1) := by
-  simpa using tendsto_nat_floor_mul_div_at_top (zero_le_one' R)
-#align tendsto_nat_floor_div_at_top tendsto_nat_floor_div_at_top
+theorem tendsto_nat_floor_div_atTop : Tendsto (fun x => (⌊x⌋₊ : R) / x) atTop (𝓝 1) := by
+  simpa using tendsto_nat_floor_mul_div_atTop (zero_le_one' R)
+#align tendsto_nat_floor_div_at_top tendsto_nat_floor_div_atTop
 
-theorem tendsto_nat_ceil_mul_div_at_top {a : R} (ha : 0 ≤ a) :
+theorem tendsto_nat_ceil_mul_div_atTop {a : R} (ha : 0 ≤ a) :
     Tendsto (fun x => (⌈a * x⌉₊ : R) / x) atTop (𝓝 a) :=
   by
   have A : tendsto (fun x : R => a + x⁻¹) at_top (𝓝 (a + 0)) :=
-    tendsto_const_nhds.add tendsto_inv_at_top_zero
+    tendsto_const_nhds.add tendsto_inv_atTop_zero
   rw [add_zero] at A
   apply tendsto_of_tendsto_of_tendsto_of_le_of_le' tendsto_const_nhds A
   · refine' eventually_at_top.2 ⟨1, fun x hx => _⟩
@@ -621,11 +619,11 @@ theorem tendsto_nat_ceil_mul_div_at_top {a : R} (ha : 0 ≤ a) :
   · refine' eventually_at_top.2 ⟨1, fun x hx => _⟩
     simp [div_le_iff (zero_lt_one.trans_le hx), inv_mul_cancel (zero_lt_one.trans_le hx).ne',
       (Nat.ceil_lt_add_one (mul_nonneg ha (zero_le_one.trans hx))).le, add_mul]
-#align tendsto_nat_ceil_mul_div_at_top tendsto_nat_ceil_mul_div_at_top
+#align tendsto_nat_ceil_mul_div_at_top tendsto_nat_ceil_mul_div_atTop
 
-theorem tendsto_nat_ceil_div_at_top : Tendsto (fun x => (⌈x⌉₊ : R) / x) atTop (𝓝 1) := by
-  simpa using tendsto_nat_ceil_mul_div_at_top (zero_le_one' R)
-#align tendsto_nat_ceil_div_at_top tendsto_nat_ceil_div_at_top
+theorem tendsto_nat_ceil_div_atTop : Tendsto (fun x => (⌈x⌉₊ : R) / x) atTop (𝓝 1) := by
+  simpa using tendsto_nat_ceil_mul_div_atTop (zero_le_one' R)
+#align tendsto_nat_ceil_div_at_top tendsto_nat_ceil_div_atTop
 
 end
 

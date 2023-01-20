@@ -180,44 +180,44 @@ def toLin' : SpecialLinearGroup n R →* (n → R) ≃ₗ[R] n → R
     LinearEquiv.ofLinear (Matrix.toLin' ↑ₘA) (Matrix.toLin' ↑ₘA⁻¹)
       (by rw [← to_lin'_mul, ← coe_mul, mul_right_inv, coe_one, to_lin'_one])
       (by rw [← to_lin'_mul, ← coe_mul, mul_left_inv, coe_one, to_lin'_one])
-  map_one' := LinearEquiv.to_linear_map_injective Matrix.to_lin'_one
-  map_mul' A B := LinearEquiv.to_linear_map_injective <| Matrix.to_lin'_mul A B
+  map_one' := LinearEquiv.to_linearMap_injective Matrix.toLin'_one
+  map_mul' A B := LinearEquiv.to_linearMap_injective <| Matrix.toLin'_mul A B
 #align matrix.special_linear_group.to_lin' Matrix.SpecialLinearGroup.toLin'
 
-theorem to_lin'_apply (A : SpecialLinearGroup n R) (v : n → R) :
+theorem toLin'_apply (A : SpecialLinearGroup n R) (v : n → R) :
     SpecialLinearGroup.toLin' A v = Matrix.toLin' (↑ₘA) v :=
   rfl
-#align matrix.special_linear_group.to_lin'_apply Matrix.SpecialLinearGroup.to_lin'_apply
+#align matrix.special_linear_group.to_lin'_apply Matrix.SpecialLinearGroup.toLin'_apply
 
-theorem to_lin'_to_linear_map (A : SpecialLinearGroup n R) :
+theorem toLin'_to_linearMap (A : SpecialLinearGroup n R) :
     ↑(SpecialLinearGroup.toLin' A) = Matrix.toLin' ↑ₘA :=
   rfl
-#align matrix.special_linear_group.to_lin'_to_linear_map Matrix.SpecialLinearGroup.to_lin'_to_linear_map
+#align matrix.special_linear_group.to_lin'_to_linear_map Matrix.SpecialLinearGroup.toLin'_to_linearMap
 
-theorem to_lin'_symm_apply (A : SpecialLinearGroup n R) (v : n → R) :
+theorem toLin'_symm_apply (A : SpecialLinearGroup n R) (v : n → R) :
     A.toLin'.symm v = Matrix.toLin' (↑ₘA⁻¹) v :=
   rfl
-#align matrix.special_linear_group.to_lin'_symm_apply Matrix.SpecialLinearGroup.to_lin'_symm_apply
+#align matrix.special_linear_group.to_lin'_symm_apply Matrix.SpecialLinearGroup.toLin'_symm_apply
 
-theorem to_lin'_symm_to_linear_map (A : SpecialLinearGroup n R) :
+theorem toLin'_symm_to_linearMap (A : SpecialLinearGroup n R) :
     ↑A.toLin'.symm = Matrix.toLin' ↑ₘA⁻¹ :=
   rfl
-#align matrix.special_linear_group.to_lin'_symm_to_linear_map Matrix.SpecialLinearGroup.to_lin'_symm_to_linear_map
+#align matrix.special_linear_group.to_lin'_symm_to_linear_map Matrix.SpecialLinearGroup.toLin'_symm_to_linearMap
 
-theorem to_lin'_injective :
+theorem toLin'_injective :
     Function.Injective ⇑(toLin' : SpecialLinearGroup n R →* (n → R) ≃ₗ[R] n → R) := fun A B h =>
   Subtype.coe_injective <|
-    Matrix.toLin'.Injective <| LinearEquiv.to_linear_map_injective.eq_iff.mpr h
-#align matrix.special_linear_group.to_lin'_injective Matrix.SpecialLinearGroup.to_lin'_injective
+    Matrix.toLin'.Injective <| LinearEquiv.to_linearMap_injective.eq_iff.mpr h
+#align matrix.special_linear_group.to_lin'_injective Matrix.SpecialLinearGroup.toLin'_injective
 
 /-- `to_GL` is the map from the special linear group to the general linear group -/
 def toGL : SpecialLinearGroup n R →* GeneralLinearGroup R (n → R) :=
   (GeneralLinearGroup.generalLinearEquiv _ _).symm.toMonoidHom.comp toLin'
 #align matrix.special_linear_group.to_GL Matrix.SpecialLinearGroup.toGL
 
-theorem coe_to_GL (A : SpecialLinearGroup n R) : ↑A.toGL = A.toLin'.toLinearMap :=
+theorem coe_toGL (A : SpecialLinearGroup n R) : ↑A.toGL = A.toLin'.toLinearMap :=
   rfl
-#align matrix.special_linear_group.coe_to_GL Matrix.SpecialLinearGroup.coe_to_GL
+#align matrix.special_linear_group.coe_to_GL Matrix.SpecialLinearGroup.coe_toGL
 
 variable {S : Type _} [CommRing S]
 
@@ -305,9 +305,9 @@ section CoeFnInstance
 instance : CoeFun (SpecialLinearGroup n R) fun _ => n → n → R where coe A := A.val
 
 @[simp]
-theorem coe_fn_eq_coe (s : SpecialLinearGroup n R) : ⇑s = ↑ₘs :=
+theorem coeFn_eq_coe (s : SpecialLinearGroup n R) : ⇑s = ↑ₘs :=
   rfl
-#align matrix.special_linear_group.coe_fn_eq_coe Matrix.SpecialLinearGroup.coe_fn_eq_coe
+#align matrix.special_linear_group.coe_fn_eq_coe Matrix.SpecialLinearGroup.coeFn_eq_coe
 
 end CoeFnInstance
 

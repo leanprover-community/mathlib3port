@@ -216,7 +216,7 @@ def isLimitOpensLeEquivGenerate₂ (R : Presieve Y)
     it satisfies the `is_sheaf_opens_le_cover` sheaf condition. The latter is not the
     official definition of sheaves on spaces, but has the advantage that it does not
     require `has_products C`. -/
-theorem is_sheaf_iff_is_sheaf_opens_le_cover : F.IsSheaf ↔ F.IsSheafOpensLeCover :=
+theorem isSheaf_iff_isSheafOpensLeCover : F.IsSheaf ↔ F.IsSheafOpensLeCover :=
   by
   refine' (presheaf.is_sheaf_iff_is_limit _ _).trans _
   constructor
@@ -229,7 +229,7 @@ theorem is_sheaf_iff_is_sheaf_opens_le_cover : F.IsSheaf ↔ F.IsSheafOpensLeCov
     intro hS
     rw [← (is_limit_opens_le_equiv_generate₂ F S hS).nonempty_congr]
     apply h
-#align Top.presheaf.is_sheaf_iff_is_sheaf_opens_le_cover TopCat.Presheaf.is_sheaf_iff_is_sheaf_opens_le_cover
+#align Top.presheaf.is_sheaf_iff_is_sheaf_opens_le_cover TopCat.Presheaf.isSheaf_iff_isSheafOpensLeCover
 
 end
 

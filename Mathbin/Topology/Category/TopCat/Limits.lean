@@ -113,9 +113,9 @@ instance topHasLimitsOfSize : HasLimitsOfSize.{v} TopCat.{max v u}
             IsLimit := limit_cone_is_limit F } }
 #align Top.Top_has_limits_of_size TopCat.topHasLimitsOfSize
 
-instance Top_has_limits : HasLimits TopCat.{u} :=
+instance topCat_hasLimits : HasLimits TopCat.{u} :=
   TopCat.topHasLimitsOfSize.{u, u}
-#align Top.Top_has_limits TopCat.Top_has_limits
+#align Top.Top_has_limits TopCat.topCat_hasLimits
 
 instance forgetPreservesLimitsOfSize :
     PreservesLimitsOfSize.{v, v} (forget : TopCat.{max v u} ⥤ Type max v u)
@@ -170,9 +170,9 @@ instance topHasColimitsOfSize : HasColimitsOfSize.{v} TopCat.{max v u}
             IsColimit := colimit_cocone_is_colimit F } }
 #align Top.Top_has_colimits_of_size TopCat.topHasColimitsOfSize
 
-instance Top_has_colimits : HasColimits TopCat.{u} :=
+instance topCat_hasColimits : HasColimits TopCat.{u} :=
   TopCat.topHasColimitsOfSize.{u, u}
-#align Top.Top_has_colimits TopCat.Top_has_colimits
+#align Top.Top_has_colimits TopCat.topCat_hasColimits
 
 instance forgetPreservesColimitsOfSize :
     PreservesColimitsOfSize.{v, v} (forget : TopCat.{max v u} ⥤ Type max v u)
@@ -219,24 +219,24 @@ def piIsoPi {ι : Type v} (α : ι → TopCat.{max v u}) : ∏ α ≅ TopCat.of 
 #align Top.pi_iso_pi TopCat.piIsoPi
 
 @[simp, reassoc.1]
-theorem pi_iso_pi_inv_π {ι : Type v} (α : ι → TopCat.{max v u}) (i : ι) :
+theorem piIsoPi_inv_π {ι : Type v} (α : ι → TopCat.{max v u}) (i : ι) :
     (piIsoPi α).inv ≫ Pi.π α i = piπ α i := by simp [pi_iso_pi]
-#align Top.pi_iso_pi_inv_π TopCat.pi_iso_pi_inv_π
+#align Top.pi_iso_pi_inv_π TopCat.piIsoPi_inv_π
 
 @[simp]
-theorem pi_iso_pi_inv_π_apply {ι : Type v} (α : ι → TopCat.{max v u}) (i : ι) (x : ∀ i, α i) :
+theorem piIsoPi_inv_π_apply {ι : Type v} (α : ι → TopCat.{max v u}) (i : ι) (x : ∀ i, α i) :
     (Pi.π α i : _) ((piIsoPi α).inv x) = x i :=
-  ConcreteCategory.congr_hom (pi_iso_pi_inv_π α i) x
-#align Top.pi_iso_pi_inv_π_apply TopCat.pi_iso_pi_inv_π_apply
+  ConcreteCategory.congr_hom (piIsoPi_inv_π α i) x
+#align Top.pi_iso_pi_inv_π_apply TopCat.piIsoPi_inv_π_apply
 
 @[simp]
-theorem pi_iso_pi_hom_apply {ι : Type v} (α : ι → TopCat.{max v u}) (i : ι) (x : ∏ α) :
+theorem piIsoPi_hom_apply {ι : Type v} (α : ι → TopCat.{max v u}) (i : ι) (x : ∏ α) :
     (piIsoPi α).Hom x i = (Pi.π α i : _) x :=
   by
   have := pi_iso_pi_inv_π α i
   rw [iso.inv_comp_eq] at this
   exact concrete_category.congr_hom this x
-#align Top.pi_iso_pi_hom_apply TopCat.pi_iso_pi_hom_apply
+#align Top.pi_iso_pi_hom_apply TopCat.piIsoPi_hom_apply
 
 /-- The inclusion to the coproduct as a bundled continous map. -/
 abbrev sigmaι {ι : Type v} (α : ι → TopCat.{max v u}) (i : ι) : α i ⟶ TopCat.of (Σi, α i) :=
@@ -271,36 +271,36 @@ def sigmaIsoSigma {ι : Type v} (α : ι → TopCat.{max v u}) : ∐ α ≅ TopC
 #align Top.sigma_iso_sigma TopCat.sigmaIsoSigma
 
 @[simp, reassoc.1]
-theorem sigma_iso_sigma_hom_ι {ι : Type v} (α : ι → TopCat.{max v u}) (i : ι) :
+theorem sigmaIsoSigma_hom_ι {ι : Type v} (α : ι → TopCat.{max v u}) (i : ι) :
     Sigma.ι α i ≫ (sigmaIsoSigma α).Hom = sigmaι α i := by simp [sigma_iso_sigma]
-#align Top.sigma_iso_sigma_hom_ι TopCat.sigma_iso_sigma_hom_ι
+#align Top.sigma_iso_sigma_hom_ι TopCat.sigmaIsoSigma_hom_ι
 
 @[simp]
-theorem sigma_iso_sigma_hom_ι_apply {ι : Type v} (α : ι → TopCat.{max v u}) (i : ι) (x : α i) :
+theorem sigmaIsoSigma_hom_ι_apply {ι : Type v} (α : ι → TopCat.{max v u}) (i : ι) (x : α i) :
     (sigmaIsoSigma α).Hom ((Sigma.ι α i : _) x) = Sigma.mk i x :=
-  ConcreteCategory.congr_hom (sigma_iso_sigma_hom_ι α i) x
-#align Top.sigma_iso_sigma_hom_ι_apply TopCat.sigma_iso_sigma_hom_ι_apply
+  ConcreteCategory.congr_hom (sigmaIsoSigma_hom_ι α i) x
+#align Top.sigma_iso_sigma_hom_ι_apply TopCat.sigmaIsoSigma_hom_ι_apply
 
 @[simp]
-theorem sigma_iso_sigma_inv_apply {ι : Type v} (α : ι → TopCat.{max v u}) (i : ι) (x : α i) :
+theorem sigmaIsoSigma_inv_apply {ι : Type v} (α : ι → TopCat.{max v u}) (i : ι) (x : α i) :
     (sigmaIsoSigma α).inv ⟨i, x⟩ = (Sigma.ι α i : _) x :=
   by
   rw [← sigma_iso_sigma_hom_ι_apply, ← comp_app]
   simp
-#align Top.sigma_iso_sigma_inv_apply TopCat.sigma_iso_sigma_inv_apply
+#align Top.sigma_iso_sigma_inv_apply TopCat.sigmaIsoSigma_inv_apply
 
-theorem induced_of_is_limit {F : J ⥤ TopCat.{max v u}} (C : Cone F) (hC : IsLimit C) :
+theorem induced_of_isLimit {F : J ⥤ TopCat.{max v u}} (C : Cone F) (hC : IsLimit C) :
     C.x.TopologicalSpace = ⨅ j, (F.obj j).TopologicalSpace.induced (C.π.app j) :=
   by
   let homeo := homeo_of_iso (hC.cone_point_unique_up_to_iso (limit_cone_infi_is_limit F))
   refine' homeo.inducing.induced.trans _
   change induced homeo (⨅ j : J, _) = _
-  simpa [induced_infi, induced_compose]
-#align Top.induced_of_is_limit TopCat.induced_of_is_limit
+  simpa [induced_infᵢ, induced_compose]
+#align Top.induced_of_is_limit TopCat.induced_of_isLimit
 
 theorem limit_topology (F : J ⥤ TopCat.{max v u}) :
     (limit F).TopologicalSpace = ⨅ j, (F.obj j).TopologicalSpace.induced (limit.π F j) :=
-  induced_of_is_limit _ (limit.isLimit F)
+  induced_of_isLimit _ (limit.isLimit F)
 #align Top.limit_topology TopCat.limit_topology
 
 section Prod
@@ -346,35 +346,35 @@ def prodIsoProd (X Y : TopCat.{u}) : X ⨯ Y ≅ TopCat.of (X × Y) :=
 #align Top.prod_iso_prod TopCat.prodIsoProd
 
 @[simp, reassoc.1]
-theorem prod_iso_prod_hom_fst (X Y : TopCat.{u}) :
+theorem prodIsoProd_hom_fst (X Y : TopCat.{u}) :
     (prodIsoProd X Y).Hom ≫ prod_fst = limits.prod.fst := by
   simpa [← iso.eq_inv_comp, prod_iso_prod]
-#align Top.prod_iso_prod_hom_fst TopCat.prod_iso_prod_hom_fst
+#align Top.prod_iso_prod_hom_fst TopCat.prodIsoProd_hom_fst
 
 @[simp, reassoc.1]
-theorem prod_iso_prod_hom_snd (X Y : TopCat.{u}) :
+theorem prodIsoProd_hom_snd (X Y : TopCat.{u}) :
     (prodIsoProd X Y).Hom ≫ prod_snd = limits.prod.snd := by
   simpa [← iso.eq_inv_comp, prod_iso_prod]
-#align Top.prod_iso_prod_hom_snd TopCat.prod_iso_prod_hom_snd
+#align Top.prod_iso_prod_hom_snd TopCat.prodIsoProd_hom_snd
 
 @[simp]
-theorem prod_iso_prod_hom_apply {X Y : TopCat.{u}} (x : X ⨯ Y) :
+theorem prodIsoProd_hom_apply {X Y : TopCat.{u}} (x : X ⨯ Y) :
     (prodIsoProd X Y).Hom x = ((Limits.prod.fst : X ⨯ Y ⟶ _) x, (Limits.prod.snd : X ⨯ Y ⟶ _) x) :=
   by
   ext
   · exact concrete_category.congr_hom (prod_iso_prod_hom_fst X Y) x
   · exact concrete_category.congr_hom (prod_iso_prod_hom_snd X Y) x
-#align Top.prod_iso_prod_hom_apply TopCat.prod_iso_prod_hom_apply
+#align Top.prod_iso_prod_hom_apply TopCat.prodIsoProd_hom_apply
 
 @[simp, reassoc.1, elementwise]
-theorem prod_iso_prod_inv_fst (X Y : TopCat.{u}) :
+theorem prodIsoProd_inv_fst (X Y : TopCat.{u}) :
     (prodIsoProd X Y).inv ≫ limits.prod.fst = prod_fst := by simp [iso.inv_comp_eq]
-#align Top.prod_iso_prod_inv_fst TopCat.prod_iso_prod_inv_fst
+#align Top.prod_iso_prod_inv_fst TopCat.prodIsoProd_inv_fst
 
 @[simp, reassoc.1, elementwise]
-theorem prod_iso_prod_inv_snd (X Y : TopCat.{u}) :
+theorem prodIsoProd_inv_snd (X Y : TopCat.{u}) :
     (prodIsoProd X Y).inv ≫ limits.prod.snd = prod_snd := by simp [iso.inv_comp_eq]
-#align Top.prod_iso_prod_inv_snd TopCat.prod_iso_prod_inv_snd
+#align Top.prod_iso_prod_inv_snd TopCat.prodIsoProd_inv_snd
 
 theorem prod_topology {X Y : TopCat} :
     (X ⨯ Y).TopologicalSpace =
@@ -483,43 +483,43 @@ def pullbackIsoProdSubtype (f : X ⟶ Z) (g : Y ⟶ Z) :
 #align Top.pullback_iso_prod_subtype TopCat.pullbackIsoProdSubtype
 
 @[simp, reassoc.1]
-theorem pullback_iso_prod_subtype_inv_fst (f : X ⟶ Z) (g : Y ⟶ Z) :
+theorem pullbackIsoProdSubtype_inv_fst (f : X ⟶ Z) (g : Y ⟶ Z) :
     (pullbackIsoProdSubtype f g).inv ≫ pullback.fst = pullbackFst f g := by
   simpa [pullback_iso_prod_subtype]
-#align Top.pullback_iso_prod_subtype_inv_fst TopCat.pullback_iso_prod_subtype_inv_fst
+#align Top.pullback_iso_prod_subtype_inv_fst TopCat.pullbackIsoProdSubtype_inv_fst
 
 @[simp]
-theorem pullback_iso_prod_subtype_inv_fst_apply (f : X ⟶ Z) (g : Y ⟶ Z)
+theorem pullbackIsoProdSubtype_inv_fst_apply (f : X ⟶ Z) (g : Y ⟶ Z)
     (x : { p : X × Y // f p.1 = g p.2 }) :
     (pullback.fst : pullback f g ⟶ _) ((pullbackIsoProdSubtype f g).inv x) = (x : X × Y).fst :=
-  ConcreteCategory.congr_hom (pullback_iso_prod_subtype_inv_fst f g) x
-#align Top.pullback_iso_prod_subtype_inv_fst_apply TopCat.pullback_iso_prod_subtype_inv_fst_apply
+  ConcreteCategory.congr_hom (pullbackIsoProdSubtype_inv_fst f g) x
+#align Top.pullback_iso_prod_subtype_inv_fst_apply TopCat.pullbackIsoProdSubtype_inv_fst_apply
 
 @[simp, reassoc.1]
-theorem pullback_iso_prod_subtype_inv_snd (f : X ⟶ Z) (g : Y ⟶ Z) :
+theorem pullbackIsoProdSubtype_inv_snd (f : X ⟶ Z) (g : Y ⟶ Z) :
     (pullbackIsoProdSubtype f g).inv ≫ pullback.snd = pullbackSnd f g := by
   simpa [pullback_iso_prod_subtype]
-#align Top.pullback_iso_prod_subtype_inv_snd TopCat.pullback_iso_prod_subtype_inv_snd
+#align Top.pullback_iso_prod_subtype_inv_snd TopCat.pullbackIsoProdSubtype_inv_snd
 
 @[simp]
-theorem pullback_iso_prod_subtype_inv_snd_apply (f : X ⟶ Z) (g : Y ⟶ Z)
+theorem pullbackIsoProdSubtype_inv_snd_apply (f : X ⟶ Z) (g : Y ⟶ Z)
     (x : { p : X × Y // f p.1 = g p.2 }) :
     (pullback.snd : pullback f g ⟶ _) ((pullbackIsoProdSubtype f g).inv x) = (x : X × Y).snd :=
-  ConcreteCategory.congr_hom (pullback_iso_prod_subtype_inv_snd f g) x
-#align Top.pullback_iso_prod_subtype_inv_snd_apply TopCat.pullback_iso_prod_subtype_inv_snd_apply
+  ConcreteCategory.congr_hom (pullbackIsoProdSubtype_inv_snd f g) x
+#align Top.pullback_iso_prod_subtype_inv_snd_apply TopCat.pullbackIsoProdSubtype_inv_snd_apply
 
-theorem pullback_iso_prod_subtype_hom_fst (f : X ⟶ Z) (g : Y ⟶ Z) :
+theorem pullbackIsoProdSubtype_hom_fst (f : X ⟶ Z) (g : Y ⟶ Z) :
     (pullbackIsoProdSubtype f g).Hom ≫ pullbackFst f g = pullback.fst := by
   rw [← iso.eq_inv_comp, pullback_iso_prod_subtype_inv_fst]
-#align Top.pullback_iso_prod_subtype_hom_fst TopCat.pullback_iso_prod_subtype_hom_fst
+#align Top.pullback_iso_prod_subtype_hom_fst TopCat.pullbackIsoProdSubtype_hom_fst
 
-theorem pullback_iso_prod_subtype_hom_snd (f : X ⟶ Z) (g : Y ⟶ Z) :
+theorem pullbackIsoProdSubtype_hom_snd (f : X ⟶ Z) (g : Y ⟶ Z) :
     (pullbackIsoProdSubtype f g).Hom ≫ pullbackSnd f g = pullback.snd := by
   rw [← iso.eq_inv_comp, pullback_iso_prod_subtype_inv_snd]
-#align Top.pullback_iso_prod_subtype_hom_snd TopCat.pullback_iso_prod_subtype_hom_snd
+#align Top.pullback_iso_prod_subtype_hom_snd TopCat.pullbackIsoProdSubtype_hom_snd
 
 @[simp]
-theorem pullback_iso_prod_subtype_hom_apply {f : X ⟶ Z} {g : Y ⟶ Z} (x : pullback f g) :
+theorem pullbackIsoProdSubtype_hom_apply {f : X ⟶ Z} {g : Y ⟶ Z} (x : pullback f g) :
     (pullbackIsoProdSubtype f g).Hom x =
       ⟨⟨(pullback.fst : pullback f g ⟶ _) x, (pullback.snd : pullback f g ⟶ _) x⟩, by
         simpa using concrete_category.congr_hom pullback.condition x⟩ :=
@@ -527,7 +527,7 @@ theorem pullback_iso_prod_subtype_hom_apply {f : X ⟶ Z} {g : Y ⟶ Z} (x : pul
   ext
   exacts[concrete_category.congr_hom (pullback_iso_prod_subtype_hom_fst f g) x,
     concrete_category.congr_hom (pullback_iso_prod_subtype_hom_snd f g) x]
-#align Top.pullback_iso_prod_subtype_hom_apply TopCat.pullback_iso_prod_subtype_hom_apply
+#align Top.pullback_iso_prod_subtype_hom_apply TopCat.pullbackIsoProdSubtype_hom_apply
 
 theorem pullback_topology {X Y Z : TopCat.{u}} (f : X ⟶ Z) (g : Y ⟶ Z) :
     (pullback f g).TopologicalSpace =
@@ -637,9 +637,9 @@ theorem pullback_map_embedding_of_embeddings {W X Y Z S T : TopCat} (f₁ : W �
     Embedding (pullback.map f₁ f₂ g₁ g₂ i₁ i₂ i₃ eq₁ eq₂) :=
   by
   refine'
-    embedding_of_embedding_compose (ContinuousMap.continuous_to_fun _)
+    embedding_of_embedding_compose (ContinuousMap.continuous_toFun _)
       (show Continuous (prod.lift pullback.fst pullback.snd : pullback g₁ g₂ ⟶ Y ⨯ Z) from
-        ContinuousMap.continuous_to_fun _)
+        ContinuousMap.continuous_toFun _)
       _
   suffices
     Embedding (prod.lift pullback.fst pullback.snd ≫ limits.prod.map i₁ i₂ : pullback f₁ f₂ ⟶ _) by
@@ -656,7 +656,7 @@ is mono, then the induced morphism `W ×ₛ X ⟶ Y ×ₜ Z` is also an open emb
     ↗       ↗
   X  ⟶  Z
 -/
-theorem pullback_map_open_embedding_of_open_embeddings {W X Y Z S T : TopCat} (f₁ : W ⟶ S)
+theorem pullback_map_openEmbedding_of_open_embeddings {W X Y Z S T : TopCat} (f₁ : W ⟶ S)
     (f₂ : X ⟶ S) (g₁ : Y ⟶ T) (g₂ : Z ⟶ T) {i₁ : W ⟶ Y} {i₂ : X ⟶ Z} (H₁ : OpenEmbedding i₁)
     (H₂ : OpenEmbedding i₂) (i₃ : S ⟶ T) [H₃ : Mono i₃] (eq₁ : f₁ ≫ i₃ = i₁ ≫ g₁)
     (eq₂ : f₂ ≫ i₃ = i₂ ≫ g₂) : OpenEmbedding (pullback.map f₁ f₂ g₁ g₂ i₁ i₂ i₃ eq₁ eq₂) :=
@@ -666,10 +666,10 @@ theorem pullback_map_open_embedding_of_open_embeddings {W X Y Z S T : TopCat} (f
     apply
       pullback_map_embedding_of_embeddings f₁ f₂ g₁ g₂ H₁.to_embedding H₂.to_embedding i₃ eq₁ eq₂
   · rw [range_pullback_map]
-    apply IsOpen.inter <;> apply Continuous.is_open_preimage
+    apply IsOpen.inter <;> apply Continuous.isOpen_preimage
     continuity
     exacts[H₁.open_range, H₂.open_range]
-#align Top.pullback_map_open_embedding_of_open_embeddings TopCat.pullback_map_open_embedding_of_open_embeddings
+#align Top.pullback_map_open_embedding_of_open_embeddings TopCat.pullback_map_openEmbedding_of_open_embeddings
 
 theorem snd_embedding_of_left_embedding {X Y S : TopCat} {f : X ⟶ S} (H : Embedding f) (g : Y ⟶ S) :
     Embedding ⇑(pullback.snd : pullback f g ⟶ Y) :=
@@ -702,7 +702,7 @@ theorem embedding_of_pullback_embeddings {X Y S : TopCat} {f : X ⟶ S} {g : Y �
   exact (limit.w _ walking_cospan.hom.inr).symm
 #align Top.embedding_of_pullback_embeddings TopCat.embedding_of_pullback_embeddings
 
-theorem snd_open_embedding_of_left_open_embedding {X Y S : TopCat} {f : X ⟶ S} (H : OpenEmbedding f)
+theorem snd_openEmbedding_of_left_openEmbedding {X Y S : TopCat} {f : X ⟶ S} (H : OpenEmbedding f)
     (g : Y ⟶ S) : OpenEmbedding ⇑(pullback.snd : pullback f g ⟶ Y) :=
   by
   convert
@@ -711,9 +711,9 @@ theorem snd_open_embedding_of_left_open_embedding {X Y S : TopCat} {f : X ⟶ S}
         (homeo_of_iso (iso.refl _)).OpenEmbedding (𝟙 _) rfl (by simp))
   erw [← coe_comp]
   simp
-#align Top.snd_open_embedding_of_left_open_embedding TopCat.snd_open_embedding_of_left_open_embedding
+#align Top.snd_open_embedding_of_left_open_embedding TopCat.snd_openEmbedding_of_left_openEmbedding
 
-theorem fst_open_embedding_of_right_open_embedding {X Y S : TopCat} (f : X ⟶ S) {g : Y ⟶ S}
+theorem fst_openEmbedding_of_right_openEmbedding {X Y S : TopCat} (f : X ⟶ S) {g : Y ⟶ S}
     (H : OpenEmbedding g) : OpenEmbedding ⇑(pullback.fst : pullback f g ⟶ X) :=
   by
   convert
@@ -722,10 +722,10 @@ theorem fst_open_embedding_of_right_open_embedding {X Y S : TopCat} (f : X ⟶ S
         (homeo_of_iso (iso.refl _)).OpenEmbedding H (𝟙 _) rfl (by simp))
   erw [← coe_comp]
   simp
-#align Top.fst_open_embedding_of_right_open_embedding TopCat.fst_open_embedding_of_right_open_embedding
+#align Top.fst_open_embedding_of_right_open_embedding TopCat.fst_openEmbedding_of_right_openEmbedding
 
 /-- If `X ⟶ S`, `Y ⟶ S` are open embeddings, then so is `X ×ₛ Y ⟶ S`. -/
-theorem open_embedding_of_pullback_open_embeddings {X Y S : TopCat} {f : X ⟶ S} {g : Y ⟶ S}
+theorem openEmbedding_of_pullback_open_embeddings {X Y S : TopCat} {f : X ⟶ S} {g : Y ⟶ S}
     (H₁ : OpenEmbedding f) (H₂ : OpenEmbedding g) :
     OpenEmbedding (limit.π (cospan f g) WalkingCospan.one) :=
   by
@@ -733,7 +733,7 @@ theorem open_embedding_of_pullback_open_embeddings {X Y S : TopCat} {f : X ⟶ S
   erw [← coe_comp]
   congr
   exact (limit.w _ walking_cospan.hom.inr).symm
-#align Top.open_embedding_of_pullback_open_embeddings TopCat.open_embedding_of_pullback_open_embeddings
+#align Top.open_embedding_of_pullback_open_embeddings TopCat.openEmbedding_of_pullback_open_embeddings
 
 theorem fst_iso_of_right_embedding_range_subset {X Y S : TopCat} (f : X ⟶ S) {g : Y ⟶ S}
     (hg : Embedding g) (H : Set.range f ⊆ Set.range g) : IsIso (pullback.fst : pullback f g ⟶ X) :=
@@ -842,7 +842,7 @@ def binaryCofanIsColimit (X Y : TopCat.{u}) : IsColimit (TopCat.binaryCofan X Y)
     exacts[(concrete_category.congr_hom h₁ x : _), (concrete_category.congr_hom h₂ x : _)]
 #align Top.binary_cofan_is_colimit TopCat.binaryCofanIsColimit
 
-theorem binary_cofan_is_colimit_iff {X Y : TopCat} (c : BinaryCofan X Y) :
+theorem binaryCofan_isColimit_iff {X Y : TopCat} (c : BinaryCofan X Y) :
     Nonempty (IsColimit c) ↔
       OpenEmbedding c.inl ∧ OpenEmbedding c.inr ∧ IsCompl (Set.range c.inl) (Set.range c.inr) :=
   by
@@ -862,11 +862,11 @@ theorem binary_cofan_is_colimit_iff {X Y : TopCat} (c : BinaryCofan X Y) :
         ⟨(homeo_of_iso <|
                     h.cocone_point_unique_up_to_iso
                       (binary_cofan_is_colimit X Y)).symm.OpenEmbedding.comp
-            open_embedding_inl,
+            openEmbedding_inl,
           (homeo_of_iso <|
                     h.cocone_point_unique_up_to_iso
                       (binary_cofan_is_colimit X Y)).symm.OpenEmbedding.comp
-            open_embedding_inr,
+            openEmbedding_inr,
           _⟩
       erw [Set.range_comp, ← eq_compl_iff_isCompl, Set.range_comp _ Sum.inr, ←
         Set.image_compl_eq
@@ -886,20 +886,20 @@ theorem binary_cofan_is_colimit_iff {X Y : TopCat} (c : BinaryCofan X Y) :
           exact fun x =>
             if h : x ∈ Set.range c.inl then f ((Equiv.ofInjective _ h₁.inj).symm ⟨x, h⟩)
             else g ((Equiv.ofInjective _ h₂.inj).symm ⟨x, (this x).resolve_left h⟩)
-        rw [continuous_iff_continuous_at]
+        rw [continuous_iff_continuousAt]
         intro x
         by_cases x ∈ Set.range c.inl
         · revert h x
-          apply (IsOpen.continuous_on_iff _).mp
-          · rw [continuous_on_iff_continuous_restrict]
+          apply (IsOpen.continuousOn_iff _).mp
+          · rw [continuousOn_iff_continuous_restrict]
             convert_to Continuous (f ∘ (Homeomorph.ofEmbedding _ h₁.to_embedding).symm)
             · ext ⟨x, hx⟩
               exact dif_pos hx
             continuity
           · exact h₁.open_range
         · revert h x
-          apply (IsOpen.continuous_on_iff _).mp
-          · rw [continuous_on_iff_continuous_restrict]
+          apply (IsOpen.continuousOn_iff _).mp
+          · rw [continuousOn_iff_continuous_restrict]
             have : ∀ a, a ∉ Set.range c.inl → a ∈ Set.range c.inr :=
               by
               rintro a (h : a ∈ Set.range c.inlᶜ)
@@ -930,35 +930,35 @@ theorem binary_cofan_is_colimit_iff {X Y : TopCat} (c : BinaryCofan X Y) :
         ext x
         change m x = dite _ _ _
         split_ifs <;> exact congr_arg _ (Equiv.apply_ofInjective_symm _ ⟨_, _⟩).symm
-#align Top.binary_cofan_is_colimit_iff TopCat.binary_cofan_is_colimit_iff
+#align Top.binary_cofan_is_colimit_iff TopCat.binaryCofan_isColimit_iff
 
 --TODO: Add analogous constructions for `pushout`.
-theorem coinduced_of_is_colimit {F : J ⥤ TopCat.{max v u}} (c : Cocone F) (hc : IsColimit c) :
+theorem coinduced_of_isColimit {F : J ⥤ TopCat.{max v u}} (c : Cocone F) (hc : IsColimit c) :
     c.x.TopologicalSpace = ⨆ j, (F.obj j).TopologicalSpace.coinduced (c.ι.app j) :=
   by
   let homeo := homeo_of_iso (hc.cocone_point_unique_up_to_iso (colimit_cocone_is_colimit F))
   ext
   refine' homeo.symm.is_open_preimage.symm.trans (Iff.trans _ is_open_supr_iff.symm)
-  exact is_open_supr_iff
-#align Top.coinduced_of_is_colimit TopCat.coinduced_of_is_colimit
+  exact isOpen_supᵢ_iff
+#align Top.coinduced_of_is_colimit TopCat.coinduced_of_isColimit
 
 theorem colimit_topology (F : J ⥤ TopCat.{max v u}) :
     (colimit F).TopologicalSpace = ⨆ j, (F.obj j).TopologicalSpace.coinduced (colimit.ι F j) :=
-  coinduced_of_is_colimit _ (colimit.isColimit F)
+  coinduced_of_isColimit _ (colimit.isColimit F)
 #align Top.colimit_topology TopCat.colimit_topology
 
-theorem colimit_is_open_iff (F : J ⥤ TopCat.{max v u}) (U : Set ((colimit F : _) : Type max v u)) :
+theorem colimit_isOpen_iff (F : J ⥤ TopCat.{max v u}) (U : Set ((colimit F : _) : Type max v u)) :
     IsOpen U ↔ ∀ j, IsOpen (colimit.ι F j ⁻¹' U) :=
   by
   conv_lhs => rw [colimit_topology F]
-  exact is_open_supr_iff
-#align Top.colimit_is_open_iff TopCat.colimit_is_open_iff
+  exact isOpen_supᵢ_iff
+#align Top.colimit_is_open_iff TopCat.colimit_isOpen_iff
 
-theorem coequalizer_is_open_iff (F : walking_parallel_pair ⥤ TopCat.{u})
+theorem coequalizer_isOpen_iff (F : walking_parallel_pair ⥤ TopCat.{u})
     (U : Set ((colimit F : _) : Type u)) :
     IsOpen U ↔ IsOpen (colimit.ι F WalkingParallelPair.one ⁻¹' U) :=
   by
-  rw [colimit_is_open_iff.{u}]
+  rw [colimit_isOpen_iff.{u}]
   constructor
   · intro H
     exact H _
@@ -967,7 +967,7 @@ theorem coequalizer_is_open_iff (F : walking_parallel_pair ⥤ TopCat.{u})
     · rw [← colimit.w F walking_parallel_pair_hom.left]
       exact (F.map walking_parallel_pair_hom.left).continuous_to_fun.is_open_preimage _ H
     · exact H
-#align Top.coequalizer_is_open_iff TopCat.coequalizer_is_open_iff
+#align Top.coequalizer_is_open_iff TopCat.coequalizer_isOpen_iff
 
 end TopCat
 
@@ -984,7 +984,7 @@ include hC
 which contain `set.univ` and are closed under intersections, the induced *naive* collection
 of sets in the limit is, in fact, a topological basis.
 -/
-theorem is_topological_basis_cofiltered_limit (T : ∀ j, Set (Set (F.obj j)))
+theorem isTopologicalBasis_cofiltered_limit (T : ∀ j, Set (Set (F.obj j)))
     (hT : ∀ j, IsTopologicalBasis (T j)) (univ : ∀ i : J, Set.univ ∈ T i)
     (inter : ∀ (i) (U1 U2 : Set (F.obj i)), U1 ∈ T i → U2 ∈ T i → U1 ∩ U2 ∈ T i)
     (compat : ∀ (i j : J) (f : i ⟶ j) (V : Set (F.obj j)) (hV : V ∈ T j), F.map f ⁻¹' V ∈ T i) :
@@ -1011,7 +1011,7 @@ theorem is_topological_basis_cofiltered_limit (T : ∀ j, Set (Set (F.obj j)))
         refine' ⟨j, V, hV, rfl⟩
     -- Using `D`, we can apply the characterization of the topological basis of a
     -- topology defined as an infimum...
-    convert is_topological_basis_infi hT fun j (x : D.X) => D.π.app j x
+    convert isTopologicalBasis_infᵢ hT fun j (x : D.X) => D.π.app j x
     ext U0
     constructor
     · rintro ⟨j, V, hV, rfl⟩
@@ -1070,7 +1070,7 @@ theorem is_topological_basis_cofiltered_limit (T : ∀ j, Set (Set (F.obj j)))
         congr 1
         change _ = ⇑(D.π.app j ≫ F.map (g e he))
         rw [D.w]
-#align Top.is_topological_basis_cofiltered_limit TopCat.is_topological_basis_cofiltered_limit
+#align Top.is_topological_basis_cofiltered_limit TopCat.isTopologicalBasis_cofiltered_limit
 
 end CofilteredLimit
 
@@ -1167,22 +1167,22 @@ theorem partialSections.closed [∀ j : J, T2Space (F.obj j)] {G : Finset J}
     simp only [Set.mem_interᵢ, Set.mem_setOf_eq]
     rfl
   rw [this]
-  apply is_closed_bInter
+  apply isClosed_bInter
   intro f hf
-  apply is_closed_eq
+  apply isClosed_eq
   continuity
 #align Top.partial_sections.closed TopCat.partialSections.closed
 
 /-- Cofiltered limits of nonempty compact Hausdorff spaces are nonempty topological spaces.
 -/
-theorem nonempty_limit_cone_of_compact_t2_cofiltered_system [IsCofiltered J]
+theorem nonempty_limitCone_of_compact_t2_cofiltered_system [IsCofiltered J]
     [∀ j : J, Nonempty (F.obj j)] [∀ j : J, CompactSpace (F.obj j)] [∀ j : J, T2Space (F.obj j)] :
     Nonempty (TopCat.limitCone.{u} F).x := by
   classical
     obtain ⟨u, hu⟩ :=
-      IsCompact.nonempty_Inter_of_directed_nonempty_compact_closed (fun G => partial_sections F _)
+      IsCompact.nonempty_interᵢ_of_directed_nonempty_compact_closed (fun G => partial_sections F _)
         (partial_sections.directed F) (fun G => partial_sections.nonempty F _)
-        (fun G => IsClosed.is_compact (partial_sections.closed F _)) fun G =>
+        (fun G => IsClosed.isCompact (partial_sections.closed F _)) fun G =>
         partial_sections.closed F _
     use u
     intro X Y f
@@ -1191,7 +1191,7 @@ theorem nonempty_limit_cone_of_compact_t2_cofiltered_system [IsCofiltered J]
         {⟨X, Y, by simp only [true_or_iff, eq_self_iff_true, Finset.mem_insert], by
             simp only [eq_self_iff_true, or_true_iff, Finset.mem_insert, Finset.mem_singleton], f⟩}⟩
     exact hu _ ⟨G, rfl⟩ (Finset.mem_singleton_self _)
-#align Top.nonempty_limit_cone_of_compact_t2_cofiltered_system TopCat.nonempty_limit_cone_of_compact_t2_cofiltered_system
+#align Top.nonempty_limit_cone_of_compact_t2_cofiltered_system TopCat.nonempty_limitCone_of_compact_t2_cofiltered_system
 
 end TopologicalKonig
 
@@ -1209,7 +1209,7 @@ theorem NonemptySectionsOfFintypeCofilteredSystem.init {J : Type u} [SmallCatego
   let F' : J ⥤ TopCat := F ⋙ TopCat.discrete
   haveI : ∀ j : J, Fintype (F'.obj j) := hf
   haveI : ∀ j : J, Nonempty (F'.obj j) := hne
-  obtain ⟨⟨u, hu⟩⟩ := TopCat.nonempty_limit_cone_of_compact_t2_cofiltered_system F'
+  obtain ⟨⟨u, hu⟩⟩ := TopCat.nonempty_limitCone_of_compact_t2_cofiltered_system F'
   exact ⟨u, fun _ _ f => hu f⟩
 #align nonempty_sections_of_fintype_cofiltered_system.init NonemptySectionsOfFintypeCofilteredSystem.init
 

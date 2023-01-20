@@ -56,53 +56,53 @@ noncomputable def p : ℕ → (K[X] ⟶ K[X])
 
 /-- All the `P q` coincide with `𝟙 _` in degree 0. -/
 @[simp]
-theorem P_f_0_eq (q : ℕ) : ((p q).f 0 : X _[0] ⟶ X _[0]) = 𝟙 _ :=
+theorem p_f_0_eq (q : ℕ) : ((p q).f 0 : X _[0] ⟶ X _[0]) = 𝟙 _ :=
   by
   induction' q with q hq
   · rfl
   · unfold P
     simp only [HomologicalComplex.add_f_apply, HomologicalComplex.comp_f, HomologicalComplex.id_f,
       id_comp, hq, Hσ_eq_zero, add_zero]
-#align algebraic_topology.dold_kan.P_f_0_eq AlgebraicTopology.DoldKan.P_f_0_eq
+#align algebraic_topology.dold_kan.P_f_0_eq AlgebraicTopology.DoldKan.p_f_0_eq
 
 /-- `Q q` is the complement projection associated to `P q` -/
 def q (q : ℕ) : K[X] ⟶ K[X] :=
   𝟙 _ - p q
 #align algebraic_topology.dold_kan.Q AlgebraicTopology.DoldKan.q
 
-theorem P_add_Q (q : ℕ) : p q + q q = 𝟙 K[X] :=
+theorem p_add_q (q : ℕ) : p q + q q = 𝟙 K[X] :=
   by
   rw [Q]
   abel
-#align algebraic_topology.dold_kan.P_add_Q AlgebraicTopology.DoldKan.P_add_Q
+#align algebraic_topology.dold_kan.P_add_Q AlgebraicTopology.DoldKan.p_add_q
 
-theorem P_add_Q_f (q n : ℕ) : (p q).f n + (q q).f n = 𝟙 (X _[n]) :=
-  HomologicalComplex.congr_hom (P_add_Q q) n
-#align algebraic_topology.dold_kan.P_add_Q_f AlgebraicTopology.DoldKan.P_add_Q_f
+theorem p_add_q_f (q n : ℕ) : (p q).f n + (q q).f n = 𝟙 (X _[n]) :=
+  HomologicalComplex.congr_hom (p_add_q q) n
+#align algebraic_topology.dold_kan.P_add_Q_f AlgebraicTopology.DoldKan.p_add_q_f
 
 @[simp]
-theorem Q_eq_zero : (q 0 : K[X] ⟶ _) = 0 :=
+theorem q_eq_zero : (q 0 : K[X] ⟶ _) = 0 :=
   sub_self _
-#align algebraic_topology.dold_kan.Q_eq_zero AlgebraicTopology.DoldKan.Q_eq_zero
+#align algebraic_topology.dold_kan.Q_eq_zero AlgebraicTopology.DoldKan.q_eq_zero
 
-theorem Q_eq (q : ℕ) : (q (q + 1) : K[X] ⟶ _) = q q - p q ≫ hσ q :=
+theorem q_eq (q : ℕ) : (q (q + 1) : K[X] ⟶ _) = q q - p q ≫ hσ q :=
   by
   unfold Q P
   simp only [comp_add, comp_id]
   abel
-#align algebraic_topology.dold_kan.Q_eq AlgebraicTopology.DoldKan.Q_eq
+#align algebraic_topology.dold_kan.Q_eq AlgebraicTopology.DoldKan.q_eq
 
 /-- All the `Q q` coincide with `0` in degree 0. -/
 @[simp]
-theorem Q_f_0_eq (q : ℕ) : ((q q).f 0 : X _[0] ⟶ X _[0]) = 0 := by
+theorem q_f_0_eq (q : ℕ) : ((q q).f 0 : X _[0] ⟶ X _[0]) = 0 := by
   simp only [HomologicalComplex.sub_f_apply, HomologicalComplex.id_f, Q, P_f_0_eq, sub_self]
-#align algebraic_topology.dold_kan.Q_f_0_eq AlgebraicTopology.DoldKan.Q_f_0_eq
+#align algebraic_topology.dold_kan.Q_f_0_eq AlgebraicTopology.DoldKan.q_f_0_eq
 
 namespace HigherFacesVanish
 
 /-- This lemma expresses the vanishing of
 `(P q).f (n+1) ≫ X.δ k : X _[n+1] ⟶ X _[n]` when `k≠0` and `k≥n-q+2` -/
-theorem of_P : ∀ q n : ℕ, HigherFacesVanish q ((p q).f (n + 1) : X _[n + 1] ⟶ X _[n + 1])
+theorem of_p : ∀ q n : ℕ, HigherFacesVanish q ((p q).f (n + 1) : X _[n + 1] ⟶ X _[n + 1])
   | 0 => fun n j hj₁ => by
     exfalso
     have hj₂ := Fin.is_lt j
@@ -110,10 +110,10 @@ theorem of_P : ∀ q n : ℕ, HigherFacesVanish q ((p q).f (n + 1) : X _[n + 1] 
   | q + 1 => fun n => by
     unfold P
     exact (of_P q n).induction
-#align algebraic_topology.dold_kan.higher_faces_vanish.of_P AlgebraicTopology.DoldKan.HigherFacesVanish.of_P
+#align algebraic_topology.dold_kan.higher_faces_vanish.of_P AlgebraicTopology.DoldKan.HigherFacesVanish.of_p
 
 @[reassoc.1]
-theorem comp_P_eq_self {Y : C} {n q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFacesVanish q φ) :
+theorem comp_p_eq_self {Y : C} {n q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFacesVanish q φ) :
     φ ≫ (p q).f (n + 1) = φ := by
   induction' q with q hq
   · unfold P
@@ -130,11 +130,11 @@ theorem comp_P_eq_self {Y : C} {n q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFa
         v ⟨a, by linarith⟩ (by simp only [hnaq, Fin.val_mk, Nat.succ_eq_add_one, add_assoc])
       simp only [Fin.succ_mk] at eq
       simp only [Eq, zero_comp]
-#align algebraic_topology.dold_kan.higher_faces_vanish.comp_P_eq_self AlgebraicTopology.DoldKan.HigherFacesVanish.comp_P_eq_self
+#align algebraic_topology.dold_kan.higher_faces_vanish.comp_P_eq_self AlgebraicTopology.DoldKan.HigherFacesVanish.comp_p_eq_self
 
 end HigherFacesVanish
 
-theorem comp_P_eq_self_iff {Y : C} {n q : ℕ} {φ : Y ⟶ X _[n + 1]} :
+theorem comp_p_eq_self_iff {Y : C} {n q : ℕ} {φ : Y ⟶ X _[n + 1]} :
     φ ≫ (p q).f (n + 1) = φ ↔ HigherFacesVanish q φ :=
   by
   constructor
@@ -143,34 +143,34 @@ theorem comp_P_eq_self_iff {Y : C} {n q : ℕ} {φ : Y ⟶ X _[n + 1]} :
     apply higher_faces_vanish.of_comp
     apply higher_faces_vanish.of_P
   · exact higher_faces_vanish.comp_P_eq_self
-#align algebraic_topology.dold_kan.comp_P_eq_self_iff AlgebraicTopology.DoldKan.comp_P_eq_self_iff
+#align algebraic_topology.dold_kan.comp_P_eq_self_iff AlgebraicTopology.DoldKan.comp_p_eq_self_iff
 
 @[simp, reassoc.1]
-theorem P_f_idem (q n : ℕ) : ((p q).f n : X _[n] ⟶ _) ≫ (p q).f n = (p q).f n :=
+theorem p_f_idem (q n : ℕ) : ((p q).f n : X _[n] ⟶ _) ≫ (p q).f n = (p q).f n :=
   by
   cases n
   · rw [P_f_0_eq q, comp_id]
   · exact (higher_faces_vanish.of_P q n).comp_P_eq_self
-#align algebraic_topology.dold_kan.P_f_idem AlgebraicTopology.DoldKan.P_f_idem
+#align algebraic_topology.dold_kan.P_f_idem AlgebraicTopology.DoldKan.p_f_idem
 
 @[simp, reassoc.1]
-theorem Q_f_idem (q n : ℕ) : ((q q).f n : X _[n] ⟶ _) ≫ (q q).f n = (q q).f n :=
-  idem_of_id_sub_idem _ (P_f_idem q n)
-#align algebraic_topology.dold_kan.Q_f_idem AlgebraicTopology.DoldKan.Q_f_idem
+theorem q_f_idem (q n : ℕ) : ((q q).f n : X _[n] ⟶ _) ≫ (q q).f n = (q q).f n :=
+  idem_of_id_sub_idem _ (p_f_idem q n)
+#align algebraic_topology.dold_kan.Q_f_idem AlgebraicTopology.DoldKan.q_f_idem
 
 @[simp, reassoc.1]
-theorem P_idem (q : ℕ) : (p q : K[X] ⟶ K[X]) ≫ p q = p q :=
+theorem p_idem (q : ℕ) : (p q : K[X] ⟶ K[X]) ≫ p q = p q :=
   by
   ext n
   exact P_f_idem q n
-#align algebraic_topology.dold_kan.P_idem AlgebraicTopology.DoldKan.P_idem
+#align algebraic_topology.dold_kan.P_idem AlgebraicTopology.DoldKan.p_idem
 
 @[simp, reassoc.1]
-theorem Q_idem (q : ℕ) : (q q : K[X] ⟶ K[X]) ≫ q q = q q :=
+theorem q_idem (q : ℕ) : (q q : K[X] ⟶ K[X]) ≫ q q = q q :=
   by
   ext n
   exact Q_f_idem q n
-#align algebraic_topology.dold_kan.Q_idem AlgebraicTopology.DoldKan.Q_idem
+#align algebraic_topology.dold_kan.Q_idem AlgebraicTopology.DoldKan.q_idem
 
 /-- For each `q`, `P q` is a natural transformation. -/
 @[simps]
@@ -191,27 +191,27 @@ def natTransP (q : ℕ) : alternatingFaceMapComplex C ⟶ alternatingFaceMapComp
 #align algebraic_topology.dold_kan.nat_trans_P AlgebraicTopology.DoldKan.natTransP
 
 @[simp, reassoc.1]
-theorem P_f_naturality (q n : ℕ) {X Y : SimplicialObject C} (f : X ⟶ Y) :
+theorem p_f_naturality (q n : ℕ) {X Y : SimplicialObject C} (f : X ⟶ Y) :
     f.app (op [n]) ≫ (p q).f n = (p q).f n ≫ f.app (op [n]) :=
   HomologicalComplex.congr_hom ((natTransP q).naturality f) n
-#align algebraic_topology.dold_kan.P_f_naturality AlgebraicTopology.DoldKan.P_f_naturality
+#align algebraic_topology.dold_kan.P_f_naturality AlgebraicTopology.DoldKan.p_f_naturality
 
 @[simp, reassoc.1]
-theorem Q_f_naturality (q n : ℕ) {X Y : SimplicialObject C} (f : X ⟶ Y) :
+theorem q_f_naturality (q n : ℕ) {X Y : SimplicialObject C} (f : X ⟶ Y) :
     f.app (op [n]) ≫ (q q).f n = (q q).f n ≫ f.app (op [n]) :=
   by
   simp only [Q, HomologicalComplex.sub_f_apply, HomologicalComplex.id_f, comp_sub, P_f_naturality,
     sub_comp, sub_left_inj]
   dsimp
   simp only [comp_id, id_comp]
-#align algebraic_topology.dold_kan.Q_f_naturality AlgebraicTopology.DoldKan.Q_f_naturality
+#align algebraic_topology.dold_kan.Q_f_naturality AlgebraicTopology.DoldKan.q_f_naturality
 
 /-- For each `q`, `Q q` is a natural transformation. -/
 @[simps]
 def natTransQ (q : ℕ) : alternatingFaceMapComplex C ⟶ alternatingFaceMapComplex C where app X := q q
 #align algebraic_topology.dold_kan.nat_trans_Q AlgebraicTopology.DoldKan.natTransQ
 
-theorem map_P {D : Type _} [Category D] [Preadditive D] (G : C ⥤ D) [G.Additive]
+theorem map_p {D : Type _} [Category D] [Preadditive D] (G : C ⥤ D) [G.Additive]
     (X : SimplicialObject C) (q n : ℕ) :
     G.map ((p q : K[X] ⟶ _).f n) = (p q : K[((whiskering C D).obj G).obj X] ⟶ _).f n :=
   by
@@ -221,16 +221,16 @@ theorem map_P {D : Type _} [Category D] [Preadditive D] (G : C ⥤ D) [G.Additiv
   · unfold P
     simp only [comp_add, HomologicalComplex.comp_f, HomologicalComplex.add_f_apply, comp_id,
       functor.map_add, functor.map_comp, hq, map_Hσ]
-#align algebraic_topology.dold_kan.map_P AlgebraicTopology.DoldKan.map_P
+#align algebraic_topology.dold_kan.map_P AlgebraicTopology.DoldKan.map_p
 
-theorem map_Q {D : Type _} [Category D] [Preadditive D] (G : C ⥤ D) [G.Additive]
+theorem map_q {D : Type _} [Category D] [Preadditive D] (G : C ⥤ D) [G.Additive]
     (X : SimplicialObject C) (q n : ℕ) :
     G.map ((q q : K[X] ⟶ _).f n) = (q q : K[((whiskering C D).obj G).obj X] ⟶ _).f n :=
   by
   rw [← add_right_inj (G.map ((P q : K[X] ⟶ _).f n)), ← G.map_add, map_P G X q n, P_add_Q_f,
     P_add_Q_f]
   apply G.map_id
-#align algebraic_topology.dold_kan.map_Q AlgebraicTopology.DoldKan.map_Q
+#align algebraic_topology.dold_kan.map_Q AlgebraicTopology.DoldKan.map_q
 
 end DoldKan
 

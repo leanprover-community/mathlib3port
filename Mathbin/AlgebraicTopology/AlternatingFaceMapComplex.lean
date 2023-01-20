@@ -145,9 +145,9 @@ def obj : ChainComplex C ℕ :=
 #align algebraic_topology.alternating_face_map_complex.obj AlgebraicTopology.AlternatingFaceMapComplex.obj
 
 @[simp]
-theorem obj_X (X : SimplicialObject C) (n : ℕ) : (AlternatingFaceMapComplex.obj X).x n = X _[n] :=
+theorem obj_x (X : SimplicialObject C) (n : ℕ) : (AlternatingFaceMapComplex.obj X).x n = X _[n] :=
   rfl
-#align algebraic_topology.alternating_face_map_complex.obj_X AlgebraicTopology.AlternatingFaceMapComplex.obj_X
+#align algebraic_topology.alternating_face_map_complex.obj_X AlgebraicTopology.AlternatingFaceMapComplex.obj_x
 
 @[simp]
 theorem obj_d_eq (X : SimplicialObject C) (n : ℕ) :
@@ -189,24 +189,24 @@ def alternatingFaceMapComplex : SimplicialObject C ⥤ ChainComplex C ℕ
 variable {C}
 
 @[simp]
-theorem alternating_face_map_complex_obj_X (X : SimplicialObject C) (n : ℕ) :
+theorem alternatingFaceMapComplex_obj_x (X : SimplicialObject C) (n : ℕ) :
     ((alternatingFaceMapComplex C).obj X).x n = X _[n] :=
   rfl
-#align algebraic_topology.alternating_face_map_complex_obj_X AlgebraicTopology.alternating_face_map_complex_obj_X
+#align algebraic_topology.alternating_face_map_complex_obj_X AlgebraicTopology.alternatingFaceMapComplex_obj_x
 
 @[simp]
-theorem alternating_face_map_complex_obj_d (X : SimplicialObject C) (n : ℕ) :
+theorem alternatingFaceMapComplex_objD (X : SimplicialObject C) (n : ℕ) :
     ((alternatingFaceMapComplex C).obj X).d (n + 1) n = AlternatingFaceMapComplex.objD X n := by
   apply ChainComplex.of_d
-#align algebraic_topology.alternating_face_map_complex_obj_d AlgebraicTopology.alternating_face_map_complex_obj_d
+#align algebraic_topology.alternating_face_map_complex_obj_d AlgebraicTopology.alternatingFaceMapComplex_objD
 
 @[simp]
-theorem alternating_face_map_complex_map_f {X Y : SimplicialObject C} (f : X ⟶ Y) (n : ℕ) :
+theorem alternatingFaceMapComplex_map_f {X Y : SimplicialObject C} (f : X ⟶ Y) (n : ℕ) :
     ((alternatingFaceMapComplex C).map f).f n = f.app (op [n]) :=
   rfl
-#align algebraic_topology.alternating_face_map_complex_map_f AlgebraicTopology.alternating_face_map_complex_map_f
+#align algebraic_topology.alternating_face_map_complex_map_f AlgebraicTopology.alternatingFaceMapComplex_map_f
 
-theorem map_alternating_face_map_complex {D : Type _} [Category D] [Preadditive D] (F : C ⥤ D)
+theorem map_alternatingFaceMapComplex {D : Type _} [Category D] [Preadditive D] (F : C ⥤ D)
     [F.Additive] :
     alternatingFaceMapComplex C ⋙ F.mapHomologicalComplex _ =
       (SimplicialObject.whiskering C D).obj F ⋙ alternatingFaceMapComplex D :=
@@ -215,8 +215,8 @@ theorem map_alternating_face_map_complex {D : Type _} [Category D] [Preadditive 
   · intro X Y f
     ext n
     simp only [functor.comp_map, HomologicalComplex.comp_f, alternating_face_map_complex_map_f,
-      functor.map_homological_complex_map_f, HomologicalComplex.eq_to_hom_f, eq_to_hom_refl,
-      comp_id, id_comp, simplicial_object.whiskering_obj_map_app]
+      functor.map_homological_complex_map_f, HomologicalComplex.eqToHom_f, eq_to_hom_refl, comp_id,
+      id_comp, simplicial_object.whiskering_obj_map_app]
   · intro X
     apply HomologicalComplex.ext
     · rintro i j (rfl : j + 1 = i)
@@ -226,7 +226,7 @@ theorem map_alternating_face_map_complex {D : Type _} [Category D] [Preadditive 
         functor.map_zsmul]
     · ext n
       rfl
-#align algebraic_topology.map_alternating_face_map_complex AlgebraicTopology.map_alternating_face_map_complex
+#align algebraic_topology.map_alternating_face_map_complex AlgebraicTopology.map_alternatingFaceMapComplex
 
 theorem karoubi_alternating_face_map_complex_d (P : Karoubi (SimplicialObject C)) (n : ℕ) :
     ((AlternatingFaceMapComplex.obj (KaroubiFunctorCategoryEmbedding.obj P)).d (n + 1) n).f =
@@ -309,10 +309,10 @@ def inclusionOfMooreComplexMap (X : SimplicialObject A) :
 #align algebraic_topology.inclusion_of_Moore_complex_map AlgebraicTopology.inclusionOfMooreComplexMap
 
 @[simp]
-theorem inclusion_of_Moore_complex_map_f (X : SimplicialObject A) (n : ℕ) :
+theorem inclusionOfMooreComplexMap_f (X : SimplicialObject A) (n : ℕ) :
     (inclusionOfMooreComplexMap X).f n = (NormalizedMooreComplex.objX X n).arrow :=
-  ChainComplex.of_hom_f _ _ _ _ _ _ _ _ n
-#align algebraic_topology.inclusion_of_Moore_complex_map_f AlgebraicTopology.inclusion_of_Moore_complex_map_f
+  ChainComplex.ofHom_f _ _ _ _ _ _ _ _ n
+#align algebraic_topology.inclusion_of_Moore_complex_map_f AlgebraicTopology.inclusionOfMooreComplexMap_f
 
 variable (A)
 

@@ -79,23 +79,23 @@ theorem dist_left_midpoint_eq_dist_right_midpoint (p1 p2 : P) :
 
 /-- The inner product of two vectors given with `weighted_vsub`, in
 terms of the pairwise distances. -/
-theorem inner_weighted_vsub {ι₁ : Type _} {s₁ : Finset ι₁} {w₁ : ι₁ → ℝ} (p₁ : ι₁ → P)
+theorem inner_weightedVsub {ι₁ : Type _} {s₁ : Finset ι₁} {w₁ : ι₁ → ℝ} (p₁ : ι₁ → P)
     (h₁ : (∑ i in s₁, w₁ i) = 0) {ι₂ : Type _} {s₂ : Finset ι₂} {w₂ : ι₂ → ℝ} (p₂ : ι₂ → P)
     (h₂ : (∑ i in s₂, w₂ i) = 0) :
     ⟪s₁.weightedVsub p₁ w₁, s₂.weightedVsub p₂ w₂⟫ =
       (-∑ i₁ in s₁, ∑ i₂ in s₂, w₁ i₁ * w₂ i₂ * (dist (p₁ i₁) (p₂ i₂) * dist (p₁ i₁) (p₂ i₂))) /
         2 :=
   by
-  rw [Finset.weighted_vsub_apply, Finset.weighted_vsub_apply,
+  rw [Finset.weightedVsub_apply, Finset.weightedVsub_apply,
     inner_sum_smul_sum_smul_of_sum_eq_zero _ h₁ _ h₂]
   simp_rw [vsub_sub_vsub_cancel_right]
   rcongr (i₁ i₂) <;> rw [dist_eq_norm_vsub V (p₁ i₁) (p₂ i₂)]
-#align euclidean_geometry.inner_weighted_vsub EuclideanGeometry.inner_weighted_vsub
+#align euclidean_geometry.inner_weighted_vsub EuclideanGeometry.inner_weightedVsub
 
 /-- The distance between two points given with `affine_combination`,
 in terms of the pairwise distances between the points in that
 combination. -/
-theorem dist_affine_combination {ι : Type _} {s : Finset ι} {w₁ w₂ : ι → ℝ} (p : ι → P)
+theorem dist_affineCombination {ι : Type _} {s : Finset ι} {w₁ w₂ : ι → ℝ} (p : ι → P)
     (h₁ : (∑ i in s, w₁ i) = 1) (h₂ : (∑ i in s, w₂ i) = 1) : by
     have a₁ := s.affine_combination p w₁ <;> have a₂ := s.affine_combination p w₂ <;>
       exact
@@ -106,11 +106,11 @@ theorem dist_affine_combination {ι : Type _} {s : Finset ι} {w₁ w₂ : ι �
             2 :=
   by
   rw [dist_eq_norm_vsub V (s.affine_combination p w₁) (s.affine_combination p w₂), ←
-    inner_self_eq_norm_mul_norm, Finset.affine_combination_vsub]
+    inner_self_eq_norm_mul_norm, Finset.affineCombination_vsub]
   have h : (∑ i in s, (w₁ - w₂) i) = 0 := by
     simp_rw [Pi.sub_apply, Finset.sum_sub_distrib, h₁, h₂, sub_self]
   exact inner_weighted_vsub p h p h
-#align euclidean_geometry.dist_affine_combination EuclideanGeometry.dist_affine_combination
+#align euclidean_geometry.dist_affine_combination EuclideanGeometry.dist_affineCombination
 
 /-- Suppose that `c₁` is equidistant from `p₁` and `p₂`, and the same
 applies to `c₂`.  Then the vector between `c₁` and `c₂` is orthogonal
@@ -190,7 +190,7 @@ theorem eq_of_dist_eq_of_dist_eq_of_mem_of_finrank_eq_two {s : AffineSubspace �
   let b : Fin 2 → V := ![c₂ -ᵥ c₁, p₂ -ᵥ p₁]
   have hb : LinearIndependent ℝ b :=
     by
-    refine' linear_independent_of_ne_zero_of_inner_eq_zero _ _
+    refine' linearIndependent_of_ne_zero_of_inner_eq_zero _ _
     · intro i
       fin_cases i <;> simp [b, hc.symm, hp.symm]
     · intro i j hij
@@ -229,7 +229,7 @@ theorem eq_of_dist_eq_of_dist_eq_of_mem_of_finrank_eq_two {s : AffineSubspace �
   have hp' : (p₂ -ᵥ p₁ : V) ≠ 0 := by simp [hp.symm]
   have hp₂ : dist ((1 : ℝ) • (p₂ -ᵥ p₁) +ᵥ p₁) c₁ = r₁ := by simp [hp₂c₁]
   rw [← hp₁c₁, dist_smul_vadd_eq_dist _ _ hp'] at hpc₁ hp₂
-  simp only [one_ne_zero, false_or_iff] at hp₂
+  simp only [one_neZero, false_or_iff] at hp₂
   rw [hp₂.symm] at hpc₁
   cases hpc₁ <;> simp [hpc₁]
 #align euclidean_geometry.eq_of_dist_eq_of_dist_eq_of_mem_of_finrank_eq_two EuclideanGeometry.eq_of_dist_eq_of_dist_eq_of_mem_of_finrank_eq_two
@@ -259,11 +259,11 @@ defined. -/
 def orthogonalProjectionFn (s : AffineSubspace ℝ P) [Nonempty s] [CompleteSpace s.direction]
     (p : P) : P :=
   Classical.choose <|
-    inter_eq_singleton_of_nonempty_of_is_compl (nonempty_subtype.mp ‹_›)
+    inter_eq_singleton_of_nonempty_of_isCompl (nonempty_subtype.mp ‹_›)
       (mk'_nonempty p s.directionᗮ)
       (by
         rw [direction_mk' p s.directionᗮ]
-        exact Submodule.is_compl_orthogonal_of_complete_space)
+        exact Submodule.isCompl_orthogonal_of_completeSpace)
 #align euclidean_geometry.orthogonal_projection_fn EuclideanGeometry.orthogonalProjectionFn
 
 /-- The intersection of the subspace and the orthogonal subspace
@@ -271,46 +271,46 @@ through the given point is the `orthogonal_projection_fn` of that
 point onto the subspace.  This lemma is only intended for use in
 setting up the bundled version and should not be used once that is
 defined. -/
-theorem inter_eq_singleton_orthogonal_projection_fn {s : AffineSubspace ℝ P} [Nonempty s]
+theorem inter_eq_singleton_orthogonalProjectionFn {s : AffineSubspace ℝ P} [Nonempty s]
     [CompleteSpace s.direction] (p : P) :
     (s : Set P) ∩ mk' p s.directionᗮ = {orthogonalProjectionFn s p} :=
   Classical.choose_spec <|
-    inter_eq_singleton_of_nonempty_of_is_compl (nonempty_subtype.mp ‹_›)
+    inter_eq_singleton_of_nonempty_of_isCompl (nonempty_subtype.mp ‹_›)
       (mk'_nonempty p s.directionᗮ)
       (by
         rw [direction_mk' p s.directionᗮ]
-        exact Submodule.is_compl_orthogonal_of_complete_space)
-#align euclidean_geometry.inter_eq_singleton_orthogonal_projection_fn EuclideanGeometry.inter_eq_singleton_orthogonal_projection_fn
+        exact Submodule.isCompl_orthogonal_of_completeSpace)
+#align euclidean_geometry.inter_eq_singleton_orthogonal_projection_fn EuclideanGeometry.inter_eq_singleton_orthogonalProjectionFn
 
 /-- The `orthogonal_projection_fn` lies in the given subspace.  This
 lemma is only intended for use in setting up the bundled version and
 should not be used once that is defined. -/
-theorem orthogonal_projection_fn_mem {s : AffineSubspace ℝ P} [Nonempty s]
-    [CompleteSpace s.direction] (p : P) : orthogonalProjectionFn s p ∈ s :=
+theorem orthogonalProjectionFn_mem {s : AffineSubspace ℝ P} [Nonempty s] [CompleteSpace s.direction]
+    (p : P) : orthogonalProjectionFn s p ∈ s :=
   by
   rw [← mem_coe, ← Set.singleton_subset_iff, ← inter_eq_singleton_orthogonal_projection_fn]
   exact Set.inter_subset_left _ _
-#align euclidean_geometry.orthogonal_projection_fn_mem EuclideanGeometry.orthogonal_projection_fn_mem
+#align euclidean_geometry.orthogonal_projection_fn_mem EuclideanGeometry.orthogonalProjectionFn_mem
 
 /-- The `orthogonal_projection_fn` lies in the orthogonal
 subspace.  This lemma is only intended for use in setting up the
 bundled version and should not be used once that is defined. -/
-theorem orthogonal_projection_fn_mem_orthogonal {s : AffineSubspace ℝ P} [Nonempty s]
+theorem orthogonalProjectionFn_mem_orthogonal {s : AffineSubspace ℝ P} [Nonempty s]
     [CompleteSpace s.direction] (p : P) : orthogonalProjectionFn s p ∈ mk' p s.directionᗮ :=
   by
   rw [← mem_coe, ← Set.singleton_subset_iff, ← inter_eq_singleton_orthogonal_projection_fn]
   exact Set.inter_subset_right _ _
-#align euclidean_geometry.orthogonal_projection_fn_mem_orthogonal EuclideanGeometry.orthogonal_projection_fn_mem_orthogonal
+#align euclidean_geometry.orthogonal_projection_fn_mem_orthogonal EuclideanGeometry.orthogonalProjectionFn_mem_orthogonal
 
 /-- Subtracting `p` from its `orthogonal_projection_fn` produces a
 result in the orthogonal direction.  This lemma is only intended for
 use in setting up the bundled version and should not be used once that
 is defined. -/
-theorem orthogonal_projection_fn_vsub_mem_direction_orthogonal {s : AffineSubspace ℝ P} [Nonempty s]
+theorem orthogonalProjectionFn_vsub_mem_direction_orthogonal {s : AffineSubspace ℝ P} [Nonempty s]
     [CompleteSpace s.direction] (p : P) : orthogonalProjectionFn s p -ᵥ p ∈ s.directionᗮ :=
   direction_mk' p s.directionᗮ ▸
-    vsub_mem_direction (orthogonal_projection_fn_mem_orthogonal p) (self_mem_mk' _ _)
-#align euclidean_geometry.orthogonal_projection_fn_vsub_mem_direction_orthogonal EuclideanGeometry.orthogonal_projection_fn_vsub_mem_direction_orthogonal
+    vsub_mem_direction (orthogonalProjectionFn_mem_orthogonal p) (self_mem_mk' _ _)
+#align euclidean_geometry.orthogonal_projection_fn_vsub_mem_direction_orthogonal EuclideanGeometry.orthogonalProjectionFn_vsub_mem_direction_orthogonal
 
 attribute [local instance] AffineSubspace.toAddTorsor
 
@@ -323,13 +323,13 @@ subspace being projected onto. -/
 def orthogonalProjection (s : AffineSubspace ℝ P) [Nonempty s] [CompleteSpace s.direction] :
     P →ᵃ[ℝ] s
     where
-  toFun p := ⟨orthogonalProjectionFn s p, orthogonal_projection_fn_mem p⟩
+  toFun p := ⟨orthogonalProjectionFn s p, orthogonalProjectionFn_mem p⟩
   linear := orthogonalProjection s.direction
   map_vadd' p v :=
     by
     have hs : ((orthogonalProjection s.direction) v : V) +ᵥ orthogonalProjectionFn s p ∈ s :=
       vadd_mem_of_mem_direction (orthogonalProjection s.direction v).2
-        (orthogonal_projection_fn_mem p)
+        (orthogonalProjectionFn_mem p)
     have ho :
       ((orthogonalProjection s.direction) v : V) +ᵥ orthogonalProjectionFn s p ∈
         mk' (v +ᵥ p) s.directionᗮ :=
@@ -339,7 +339,7 @@ def orthogonalProjection (s : AffineSubspace ℝ P) [Nonempty s] [CompleteSpace 
       refine' Submodule.add_mem _ (orthogonal_projection_fn_vsub_mem_direction_orthogonal p) _
       rw [Submodule.mem_orthogonal']
       intro w hw
-      rw [← neg_sub, inner_neg_left, orthogonal_projection_inner_eq_zero _ w hw, neg_zero]
+      rw [← neg_sub, inner_neg_left, orthogonalProjection_inner_eq_zero _ w hw, neg_zero]
     have hm :
       ((orthogonalProjection s.direction) v : V) +ᵥ orthogonalProjectionFn s p ∈
         ({orthogonalProjectionFn s (v +ᵥ p)} : Set P) :=
@@ -352,62 +352,62 @@ def orthogonalProjection (s : AffineSubspace ℝ P) [Nonempty s] [CompleteSpace 
 #align euclidean_geometry.orthogonal_projection EuclideanGeometry.orthogonalProjection
 
 @[simp]
-theorem orthogonal_projection_fn_eq {s : AffineSubspace ℝ P} [Nonempty s]
-    [CompleteSpace s.direction] (p : P) : orthogonalProjectionFn s p = orthogonalProjection s p :=
+theorem orthogonalProjectionFn_eq {s : AffineSubspace ℝ P} [Nonempty s] [CompleteSpace s.direction]
+    (p : P) : orthogonalProjectionFn s p = orthogonalProjection s p :=
   rfl
-#align euclidean_geometry.orthogonal_projection_fn_eq EuclideanGeometry.orthogonal_projection_fn_eq
+#align euclidean_geometry.orthogonal_projection_fn_eq EuclideanGeometry.orthogonalProjectionFn_eq
 
 /-- The linear map corresponding to `orthogonal_projection`. -/
 @[simp]
-theorem orthogonal_projection_linear {s : AffineSubspace ℝ P} [Nonempty s]
+theorem orthogonalProjection_linear {s : AffineSubspace ℝ P} [Nonempty s]
     [CompleteSpace s.direction] :
     (orthogonalProjection s).linear = orthogonalProjection s.direction :=
   rfl
-#align euclidean_geometry.orthogonal_projection_linear EuclideanGeometry.orthogonal_projection_linear
+#align euclidean_geometry.orthogonal_projection_linear EuclideanGeometry.orthogonalProjection_linear
 
 /-- The intersection of the subspace and the orthogonal subspace
 through the given point is the `orthogonal_projection` of that point
 onto the subspace. -/
-theorem inter_eq_singleton_orthogonal_projection {s : AffineSubspace ℝ P} [Nonempty s]
+theorem inter_eq_singleton_orthogonalProjection {s : AffineSubspace ℝ P} [Nonempty s]
     [CompleteSpace s.direction] (p : P) :
     (s : Set P) ∩ mk' p s.directionᗮ = {orthogonalProjection s p} :=
   by
-  rw [← orthogonal_projection_fn_eq]
+  rw [← orthogonalProjectionFn_eq]
   exact inter_eq_singleton_orthogonal_projection_fn p
-#align euclidean_geometry.inter_eq_singleton_orthogonal_projection EuclideanGeometry.inter_eq_singleton_orthogonal_projection
+#align euclidean_geometry.inter_eq_singleton_orthogonal_projection EuclideanGeometry.inter_eq_singleton_orthogonalProjection
 
 /-- The `orthogonal_projection` lies in the given subspace. -/
-theorem orthogonal_projection_mem {s : AffineSubspace ℝ P} [Nonempty s] [CompleteSpace s.direction]
+theorem orthogonalProjection_mem {s : AffineSubspace ℝ P} [Nonempty s] [CompleteSpace s.direction]
     (p : P) : ↑(orthogonalProjection s p) ∈ s :=
   (orthogonalProjection s p).2
-#align euclidean_geometry.orthogonal_projection_mem EuclideanGeometry.orthogonal_projection_mem
+#align euclidean_geometry.orthogonal_projection_mem EuclideanGeometry.orthogonalProjection_mem
 
 /-- The `orthogonal_projection` lies in the orthogonal subspace. -/
-theorem orthogonal_projection_mem_orthogonal (s : AffineSubspace ℝ P) [Nonempty s]
+theorem orthogonalProjection_mem_orthogonal (s : AffineSubspace ℝ P) [Nonempty s]
     [CompleteSpace s.direction] (p : P) : ↑(orthogonalProjection s p) ∈ mk' p s.directionᗮ :=
-  orthogonal_projection_fn_mem_orthogonal p
-#align euclidean_geometry.orthogonal_projection_mem_orthogonal EuclideanGeometry.orthogonal_projection_mem_orthogonal
+  orthogonalProjectionFn_mem_orthogonal p
+#align euclidean_geometry.orthogonal_projection_mem_orthogonal EuclideanGeometry.orthogonalProjection_mem_orthogonal
 
 /-- Subtracting a point in the given subspace from the
 `orthogonal_projection` produces a result in the direction of the
 given subspace. -/
-theorem orthogonal_projection_vsub_mem_direction {s : AffineSubspace ℝ P} [Nonempty s]
+theorem orthogonalProjection_vsub_mem_direction {s : AffineSubspace ℝ P} [Nonempty s]
     [CompleteSpace s.direction] {p1 : P} (p2 : P) (hp1 : p1 ∈ s) :
     ↑(orthogonalProjection s p2 -ᵥ ⟨p1, hp1⟩ : s.direction) ∈ s.direction :=
   (orthogonalProjection s p2 -ᵥ ⟨p1, hp1⟩ : s.direction).2
-#align euclidean_geometry.orthogonal_projection_vsub_mem_direction EuclideanGeometry.orthogonal_projection_vsub_mem_direction
+#align euclidean_geometry.orthogonal_projection_vsub_mem_direction EuclideanGeometry.orthogonalProjection_vsub_mem_direction
 
 /-- Subtracting the `orthogonal_projection` from a point in the given
 subspace produces a result in the direction of the given subspace. -/
-theorem vsub_orthogonal_projection_mem_direction {s : AffineSubspace ℝ P} [Nonempty s]
+theorem vsub_orthogonalProjection_mem_direction {s : AffineSubspace ℝ P} [Nonempty s]
     [CompleteSpace s.direction] {p1 : P} (p2 : P) (hp1 : p1 ∈ s) :
     ↑((⟨p1, hp1⟩ : s) -ᵥ orthogonalProjection s p2 : s.direction) ∈ s.direction :=
   ((⟨p1, hp1⟩ : s) -ᵥ orthogonalProjection s p2 : s.direction).2
-#align euclidean_geometry.vsub_orthogonal_projection_mem_direction EuclideanGeometry.vsub_orthogonal_projection_mem_direction
+#align euclidean_geometry.vsub_orthogonal_projection_mem_direction EuclideanGeometry.vsub_orthogonalProjection_mem_direction
 
 /-- A point equals its orthogonal projection if and only if it lies in
 the subspace. -/
-theorem orthogonal_projection_eq_self_iff {s : AffineSubspace ℝ P} [Nonempty s]
+theorem orthogonalProjection_eq_self_iff {s : AffineSubspace ℝ P} [Nonempty s]
     [CompleteSpace s.direction] {p : P} : ↑(orthogonalProjection s p) = p ↔ p ∈ s :=
   by
   constructor
@@ -417,81 +417,81 @@ theorem orthogonal_projection_eq_self_iff {s : AffineSubspace ℝ P} [Nonempty s
     rw [inter_eq_singleton_orthogonal_projection p] at hp
     symm
     exact hp
-#align euclidean_geometry.orthogonal_projection_eq_self_iff EuclideanGeometry.orthogonal_projection_eq_self_iff
+#align euclidean_geometry.orthogonal_projection_eq_self_iff EuclideanGeometry.orthogonalProjection_eq_self_iff
 
 @[simp]
-theorem orthogonal_projection_mem_subspace_eq_self {s : AffineSubspace ℝ P} [Nonempty s]
+theorem orthogonalProjection_mem_subspace_eq_self {s : AffineSubspace ℝ P} [Nonempty s]
     [CompleteSpace s.direction] (p : s) : orthogonalProjection s p = p :=
   by
   ext
-  rw [orthogonal_projection_eq_self_iff]
+  rw [orthogonalProjection_eq_self_iff]
   exact p.2
-#align euclidean_geometry.orthogonal_projection_mem_subspace_eq_self EuclideanGeometry.orthogonal_projection_mem_subspace_eq_self
+#align euclidean_geometry.orthogonal_projection_mem_subspace_eq_self EuclideanGeometry.orthogonalProjection_mem_subspace_eq_self
 
 /-- Orthogonal projection is idempotent. -/
 @[simp]
-theorem orthogonal_projection_orthogonal_projection (s : AffineSubspace ℝ P) [Nonempty s]
+theorem orthogonalProjection_orthogonalProjection (s : AffineSubspace ℝ P) [Nonempty s]
     [CompleteSpace s.direction] (p : P) :
     orthogonalProjection s (orthogonalProjection s p) = orthogonalProjection s p :=
   by
   ext
-  rw [orthogonal_projection_eq_self_iff]
+  rw [orthogonalProjection_eq_self_iff]
   exact orthogonal_projection_mem p
-#align euclidean_geometry.orthogonal_projection_orthogonal_projection EuclideanGeometry.orthogonal_projection_orthogonal_projection
+#align euclidean_geometry.orthogonal_projection_orthogonal_projection EuclideanGeometry.orthogonalProjection_orthogonalProjection
 
-theorem eq_orthogonal_projection_of_eq_subspace {s s' : AffineSubspace ℝ P} [Nonempty s]
+theorem eq_orthogonalProjection_of_eq_subspace {s s' : AffineSubspace ℝ P} [Nonempty s]
     [Nonempty s'] [CompleteSpace s.direction] [CompleteSpace s'.direction] (h : s = s') (p : P) :
     (orthogonalProjection s p : P) = (orthogonalProjection s' p : P) :=
   by
   change orthogonalProjectionFn s p = orthogonalProjectionFn s' p
   congr
   exact h
-#align euclidean_geometry.eq_orthogonal_projection_of_eq_subspace EuclideanGeometry.eq_orthogonal_projection_of_eq_subspace
+#align euclidean_geometry.eq_orthogonal_projection_of_eq_subspace EuclideanGeometry.eq_orthogonalProjection_of_eq_subspace
 
 /-- The distance to a point's orthogonal projection is 0 iff it lies in the subspace. -/
-theorem dist_orthogonal_projection_eq_zero_iff {s : AffineSubspace ℝ P} [Nonempty s]
+theorem dist_orthogonalProjection_eq_zero_iff {s : AffineSubspace ℝ P} [Nonempty s]
     [CompleteSpace s.direction] {p : P} : dist p (orthogonalProjection s p) = 0 ↔ p ∈ s := by
-  rw [dist_comm, dist_eq_zero, orthogonal_projection_eq_self_iff]
-#align euclidean_geometry.dist_orthogonal_projection_eq_zero_iff EuclideanGeometry.dist_orthogonal_projection_eq_zero_iff
+  rw [dist_comm, dist_eq_zero, orthogonalProjection_eq_self_iff]
+#align euclidean_geometry.dist_orthogonal_projection_eq_zero_iff EuclideanGeometry.dist_orthogonalProjection_eq_zero_iff
 
 /-- The distance between a point and its orthogonal projection is
 nonzero if it does not lie in the subspace. -/
-theorem dist_orthogonal_projection_ne_zero_of_not_mem {s : AffineSubspace ℝ P} [Nonempty s]
+theorem dist_orthogonalProjection_ne_zero_of_not_mem {s : AffineSubspace ℝ P} [Nonempty s]
     [CompleteSpace s.direction] {p : P} (hp : p ∉ s) : dist p (orthogonalProjection s p) ≠ 0 :=
-  mt dist_orthogonal_projection_eq_zero_iff.mp hp
-#align euclidean_geometry.dist_orthogonal_projection_ne_zero_of_not_mem EuclideanGeometry.dist_orthogonal_projection_ne_zero_of_not_mem
+  mt dist_orthogonalProjection_eq_zero_iff.mp hp
+#align euclidean_geometry.dist_orthogonal_projection_ne_zero_of_not_mem EuclideanGeometry.dist_orthogonalProjection_ne_zero_of_not_mem
 
 /-- Subtracting `p` from its `orthogonal_projection` produces a result
 in the orthogonal direction. -/
-theorem orthogonal_projection_vsub_mem_direction_orthogonal (s : AffineSubspace ℝ P) [Nonempty s]
+theorem orthogonalProjection_vsub_mem_direction_orthogonal (s : AffineSubspace ℝ P) [Nonempty s]
     [CompleteSpace s.direction] (p : P) : (orthogonalProjection s p : P) -ᵥ p ∈ s.directionᗮ :=
-  orthogonal_projection_fn_vsub_mem_direction_orthogonal p
-#align euclidean_geometry.orthogonal_projection_vsub_mem_direction_orthogonal EuclideanGeometry.orthogonal_projection_vsub_mem_direction_orthogonal
+  orthogonalProjectionFn_vsub_mem_direction_orthogonal p
+#align euclidean_geometry.orthogonal_projection_vsub_mem_direction_orthogonal EuclideanGeometry.orthogonalProjection_vsub_mem_direction_orthogonal
 
 /-- Subtracting the `orthogonal_projection` from `p` produces a result
 in the orthogonal direction. -/
-theorem vsub_orthogonal_projection_mem_direction_orthogonal (s : AffineSubspace ℝ P) [Nonempty s]
+theorem vsub_orthogonalProjection_mem_direction_orthogonal (s : AffineSubspace ℝ P) [Nonempty s]
     [CompleteSpace s.direction] (p : P) : p -ᵥ orthogonalProjection s p ∈ s.directionᗮ :=
   direction_mk' p s.directionᗮ ▸
-    vsub_mem_direction (self_mem_mk' _ _) (orthogonal_projection_mem_orthogonal s p)
-#align euclidean_geometry.vsub_orthogonal_projection_mem_direction_orthogonal EuclideanGeometry.vsub_orthogonal_projection_mem_direction_orthogonal
+    vsub_mem_direction (self_mem_mk' _ _) (orthogonalProjection_mem_orthogonal s p)
+#align euclidean_geometry.vsub_orthogonal_projection_mem_direction_orthogonal EuclideanGeometry.vsub_orthogonalProjection_mem_direction_orthogonal
 
 /-- Subtracting the `orthogonal_projection` from `p` produces a result in the kernel of the linear
 part of the orthogonal projection. -/
-theorem orthogonal_projection_vsub_orthogonal_projection (s : AffineSubspace ℝ P) [Nonempty s]
+theorem orthogonalProjection_vsub_orthogonalProjection (s : AffineSubspace ℝ P) [Nonempty s]
     [CompleteSpace s.direction] (p : P) :
     orthogonalProjection s.direction (p -ᵥ orthogonalProjection s p) = 0 :=
   by
-  apply orthogonal_projection_mem_subspace_orthogonal_complement_eq_zero
+  apply orthogonalProjection_mem_subspace_orthogonal_complement_eq_zero
   intro c hc
   rw [← neg_vsub_eq_vsub_rev, inner_neg_right,
     orthogonal_projection_vsub_mem_direction_orthogonal s p c hc, neg_zero]
-#align euclidean_geometry.orthogonal_projection_vsub_orthogonal_projection EuclideanGeometry.orthogonal_projection_vsub_orthogonal_projection
+#align euclidean_geometry.orthogonal_projection_vsub_orthogonal_projection EuclideanGeometry.orthogonalProjection_vsub_orthogonalProjection
 
 /-- Adding a vector to a point in the given subspace, then taking the
 orthogonal projection, produces the original point if the vector was
 in the orthogonal direction. -/
-theorem orthogonal_projection_vadd_eq_self {s : AffineSubspace ℝ P} [Nonempty s]
+theorem orthogonalProjection_vadd_eq_self {s : AffineSubspace ℝ P} [Nonempty s]
     [CompleteSpace s.direction] {p : P} (hp : p ∈ s) {v : V} (hv : v ∈ s.directionᗮ) :
     orthogonalProjection s (v +ᵥ p) = ⟨p, hp⟩ :=
   by
@@ -501,23 +501,23 @@ theorem orthogonal_projection_vadd_eq_self {s : AffineSubspace ℝ P} [Nonempty 
   ext
   refine' Submodule.disjoint_def.1 s.direction.orthogonal_disjoint _ _ h
   exact (_ : s.direction).2
-#align euclidean_geometry.orthogonal_projection_vadd_eq_self EuclideanGeometry.orthogonal_projection_vadd_eq_self
+#align euclidean_geometry.orthogonal_projection_vadd_eq_self EuclideanGeometry.orthogonalProjection_vadd_eq_self
 
 /-- Adding a vector to a point in the given subspace, then taking the
 orthogonal projection, produces the original point if the vector is a
 multiple of the result of subtracting a point's orthogonal projection
 from that point. -/
-theorem orthogonal_projection_vadd_smul_vsub_orthogonal_projection {s : AffineSubspace ℝ P}
+theorem orthogonalProjection_vadd_smul_vsub_orthogonalProjection {s : AffineSubspace ℝ P}
     [Nonempty s] [CompleteSpace s.direction] {p1 : P} (p2 : P) (r : ℝ) (hp : p1 ∈ s) :
     orthogonalProjection s (r • (p2 -ᵥ orthogonalProjection s p2 : V) +ᵥ p1) = ⟨p1, hp⟩ :=
-  orthogonal_projection_vadd_eq_self hp
-    (Submodule.smul_mem _ _ (vsub_orthogonal_projection_mem_direction_orthogonal s _))
-#align euclidean_geometry.orthogonal_projection_vadd_smul_vsub_orthogonal_projection EuclideanGeometry.orthogonal_projection_vadd_smul_vsub_orthogonal_projection
+  orthogonalProjection_vadd_eq_self hp
+    (Submodule.smul_mem _ _ (vsub_orthogonalProjection_mem_direction_orthogonal s _))
+#align euclidean_geometry.orthogonal_projection_vadd_smul_vsub_orthogonal_projection EuclideanGeometry.orthogonalProjection_vadd_smul_vsub_orthogonalProjection
 
 /-- The square of the distance from a point in `s` to `p2` equals the
 sum of the squares of the distances of the two points to the
 `orthogonal_projection`. -/
-theorem dist_sq_eq_dist_orthogonal_projection_sq_add_dist_orthogonal_projection_sq
+theorem dist_sq_eq_dist_orthogonalProjection_sq_add_dist_orthogonalProjection_sq
     {s : AffineSubspace ℝ P} [Nonempty s] [CompleteSpace s.direction] {p1 : P} (p2 : P)
     (hp1 : p1 ∈ s) :
     dist p1 p2 * dist p1 p2 =
@@ -530,7 +530,7 @@ theorem dist_sq_eq_dist_orthogonal_projection_sq_add_dist_orthogonal_projection_
   exact
     Submodule.inner_right_of_mem_orthogonal (vsub_orthogonal_projection_mem_direction p2 hp1)
       (orthogonal_projection_vsub_mem_direction_orthogonal s p2)
-#align euclidean_geometry.dist_sq_eq_dist_orthogonal_projection_sq_add_dist_orthogonal_projection_sq EuclideanGeometry.dist_sq_eq_dist_orthogonal_projection_sq_add_dist_orthogonal_projection_sq
+#align euclidean_geometry.dist_sq_eq_dist_orthogonal_projection_sq_add_dist_orthogonal_projection_sq EuclideanGeometry.dist_sq_eq_dist_orthogonalProjection_sq_add_dist_orthogonalProjection_sq
 
 /-- The square of the distance between two points constructed by
 adding multiples of the same orthogonal vector to points in the same
@@ -579,7 +579,7 @@ def reflection (s : AffineSubspace ℝ P) [Nonempty s] [CompleteSpace s.directio
         abel
       have : p = v +ᵥ ↑(Classical.arbitrary s) := (vsub_vadd p ↑(Classical.arbitrary s)).symm
       simpa only [coe_vadd, reflection_apply, AffineMap.map_vadd, orthogonal_projection_linear,
-        orthogonal_projection_mem_subspace_eq_self, vadd_vsub, ContinuousLinearMap.coe_coe,
+        orthogonalProjection_mem_subspace_eq_self, vadd_vsub, ContinuousLinearMap.coe_coe,
         ContinuousLinearEquiv.coe_coe, this] using key)
 #align euclidean_geometry.reflection EuclideanGeometry.reflection
 
@@ -632,7 +632,7 @@ subspace. -/
 theorem reflection_eq_self_iff {s : AffineSubspace ℝ P} [Nonempty s] [CompleteSpace s.direction]
     (p : P) : reflection s p = p ↔ p ∈ s :=
   by
-  rw [← orthogonal_projection_eq_self_iff, reflection_apply]
+  rw [← orthogonalProjection_eq_self_iff, reflection_apply]
   constructor
   · intro h
     rw [← @vsub_eq_zero_iff_eq V, vadd_vsub_assoc, ← two_smul ℝ (↑(orthogonalProjection s p) -ᵥ p),
@@ -646,7 +646,7 @@ theorem reflection_eq_self_iff {s : AffineSubspace ℝ P} [Nonempty s] [Complete
 /-- Reflecting a point in two subspaces produces the same result if
 and only if the point has the same orthogonal projection in each of
 those subspaces. -/
-theorem reflection_eq_iff_orthogonal_projection_eq (s₁ s₂ : AffineSubspace ℝ P) [Nonempty s₁]
+theorem reflection_eq_iff_orthogonalProjection_eq (s₁ s₂ : AffineSubspace ℝ P) [Nonempty s₁]
     [Nonempty s₂] [CompleteSpace s₁.direction] [CompleteSpace s₂.direction] (p : P) :
     reflection s₁ p = reflection s₂ p ↔
       (orthogonalProjection s₁ p : P) = orthogonalProjection s₂ p :=
@@ -661,7 +661,7 @@ theorem reflection_eq_iff_orthogonal_projection_eq (s₁ s₂ : AffineSubspace �
     exact h
   · intro h
     rw [h]
-#align euclidean_geometry.reflection_eq_iff_orthogonal_projection_eq EuclideanGeometry.reflection_eq_iff_orthogonal_projection_eq
+#align euclidean_geometry.reflection_eq_iff_orthogonal_projection_eq EuclideanGeometry.reflection_eq_iff_orthogonalProjection_eq
 
 /-- The distance between `p₁` and the reflection of `p₂` equals that
 between the reflection of `p₁` and `p₂`. -/
@@ -705,13 +705,13 @@ theorem reflection_orthogonal_vadd {s : AffineSubspace ℝ P} [Nonempty s] [Comp
 negation of that vector plus the point if the vector is a multiple of
 the result of subtracting a point's orthogonal projection from that
 point. -/
-theorem reflection_vadd_smul_vsub_orthogonal_projection {s : AffineSubspace ℝ P} [Nonempty s]
+theorem reflection_vadd_smul_vsub_orthogonalProjection {s : AffineSubspace ℝ P} [Nonempty s]
     [CompleteSpace s.direction] {p₁ : P} (p₂ : P) (r : ℝ) (hp₁ : p₁ ∈ s) :
     reflection s (r • (p₂ -ᵥ orthogonalProjection s p₂) +ᵥ p₁) =
       -(r • (p₂ -ᵥ orthogonalProjection s p₂)) +ᵥ p₁ :=
   reflection_orthogonal_vadd hp₁
-    (Submodule.smul_mem _ _ (vsub_orthogonal_projection_mem_direction_orthogonal s _))
-#align euclidean_geometry.reflection_vadd_smul_vsub_orthogonal_projection EuclideanGeometry.reflection_vadd_smul_vsub_orthogonal_projection
+    (Submodule.smul_mem _ _ (vsub_orthogonalProjection_mem_direction_orthogonal s _))
+#align euclidean_geometry.reflection_vadd_smul_vsub_orthogonal_projection EuclideanGeometry.reflection_vadd_smul_vsub_orthogonalProjection
 
 omit V
 
@@ -889,10 +889,10 @@ theorem cospherical_pair (p₁ p₂ : P) : Cospherical ({p₁, p₂} : Set P) :=
 #align euclidean_geometry.cospherical_pair EuclideanGeometry.cospherical_pair
 
 /-- Any three points in a cospherical set are affinely independent. -/
-theorem Cospherical.affine_independent {s : Set P} (hs : Cospherical s) {p : Fin 3 → P}
+theorem Cospherical.affineIndependent {s : Set P} (hs : Cospherical s) {p : Fin 3 → P}
     (hps : Set.range p ⊆ s) (hpi : Function.Injective p) : AffineIndependent ℝ p :=
   by
-  rw [affine_independent_iff_not_collinear]
+  rw [affineIndependent_iff_not_collinear]
   intro hc
   rw [collinear_iff_of_mem (Set.mem_range_self (0 : Fin 3))] at hc
   rcases hc with ⟨v, hv⟩
@@ -927,10 +927,10 @@ theorem Cospherical.affine_independent {s : Set P} (hs : Cospherical s) {p : Fin
     simpa [hfn0, hi] using hsdi
   have hf12 : f 1 = f 2 := by rw [hfn0' 1 (by decide), hfn0' 2 (by decide)]
   exact (by decide : (1 : Fin 3) ≠ 2) (hfi hf12)
-#align euclidean_geometry.cospherical.affine_independent EuclideanGeometry.Cospherical.affine_independent
+#align euclidean_geometry.cospherical.affine_independent EuclideanGeometry.Cospherical.affineIndependent
 
 /-- Any three points in a cospherical set are affinely independent. -/
-theorem Cospherical.affine_independent_of_mem_of_ne {s : Set P} (hs : Cospherical s) {p₁ p₂ p₃ : P}
+theorem Cospherical.affineIndependent_of_mem_of_ne {s : Set P} (hs : Cospherical s) {p₁ p₂ p₃ : P}
     (h₁ : p₁ ∈ s) (h₂ : p₂ ∈ s) (h₃ : p₃ ∈ s) (h₁₂ : p₁ ≠ p₂) (h₁₃ : p₁ ≠ p₃) (h₂₃ : p₂ ≠ p₃) :
     AffineIndependent ℝ ![p₁, p₂, p₃] :=
   by
@@ -938,16 +938,15 @@ theorem Cospherical.affine_independent_of_mem_of_ne {s : Set P} (hs : Cospherica
   · simp [h₁, h₂, h₃, Set.insert_subset]
   · erw [Fin.cons_injective_iff, Fin.cons_injective_iff]
     simp [h₁₂, h₁₃, h₂₃, Function.Injective]
-#align euclidean_geometry.cospherical.affine_independent_of_mem_of_ne EuclideanGeometry.Cospherical.affine_independent_of_mem_of_ne
+#align euclidean_geometry.cospherical.affine_independent_of_mem_of_ne EuclideanGeometry.Cospherical.affineIndependent_of_mem_of_ne
 
 /-- The three points of a cospherical set are affinely independent. -/
-theorem Cospherical.affine_independent_of_ne {p₁ p₂ p₃ : P}
-    (hs : Cospherical ({p₁, p₂, p₃} : Set P)) (h₁₂ : p₁ ≠ p₂) (h₁₃ : p₁ ≠ p₃) (h₂₃ : p₂ ≠ p₃) :
-    AffineIndependent ℝ ![p₁, p₂, p₃] :=
+theorem Cospherical.affineIndependent_of_ne {p₁ p₂ p₃ : P} (hs : Cospherical ({p₁, p₂, p₃} : Set P))
+    (h₁₂ : p₁ ≠ p₂) (h₁₃ : p₁ ≠ p₃) (h₂₃ : p₂ ≠ p₃) : AffineIndependent ℝ ![p₁, p₂, p₃] :=
   hs.affine_independent_of_mem_of_ne (Set.mem_insert _ _)
     (Set.mem_insert_of_mem _ (Set.mem_insert _ _))
     (Set.mem_insert_of_mem _ (Set.mem_insert_of_mem _ (Set.mem_singleton _))) h₁₂ h₁₃ h₂₃
-#align euclidean_geometry.cospherical.affine_independent_of_ne EuclideanGeometry.Cospherical.affine_independent_of_ne
+#align euclidean_geometry.cospherical.affine_independent_of_ne EuclideanGeometry.Cospherical.affineIndependent_of_ne
 
 /-- Suppose that `p₁` and `p₂` lie in spheres `s₁` and `s₂`.  Then the vector between the centers
 of those spheres is orthogonal to that between `p₁` and `p₂`; this is a version of
@@ -1062,34 +1061,34 @@ def Sphere.secondInter (s : Sphere P) (p : P) (v : V) : P :=
 /-- The distance between `second_inter` and the center equals the distance between the original
 point and the center. -/
 @[simp]
-theorem Sphere.second_inter_dist (s : Sphere P) (p : P) (v : V) :
+theorem Sphere.secondInter_dist (s : Sphere P) (p : P) (v : V) :
     dist (s.secondInter p v) s.center = dist p s.center :=
   by
   rw [sphere.second_inter]
   by_cases hv : v = 0; · simp [hv]
   rw [dist_smul_vadd_eq_dist _ _ hv]
   exact Or.inr rfl
-#align euclidean_geometry.sphere.second_inter_dist EuclideanGeometry.Sphere.second_inter_dist
+#align euclidean_geometry.sphere.second_inter_dist EuclideanGeometry.Sphere.secondInter_dist
 
 /-- The point given by `second_inter` lies on the sphere. -/
 @[simp]
-theorem Sphere.second_inter_mem {s : Sphere P} {p : P} (v : V) : s.secondInter p v ∈ s ↔ p ∈ s := by
+theorem Sphere.secondInter_mem {s : Sphere P} {p : P} (v : V) : s.secondInter p v ∈ s ↔ p ∈ s := by
   simp_rw [mem_sphere, sphere.second_inter_dist]
-#align euclidean_geometry.sphere.second_inter_mem EuclideanGeometry.Sphere.second_inter_mem
+#align euclidean_geometry.sphere.second_inter_mem EuclideanGeometry.Sphere.secondInter_mem
 
 variable (V)
 
 /-- If the vector is zero, `second_inter` gives the original point. -/
 @[simp]
-theorem Sphere.second_inter_zero (s : Sphere P) (p : P) : s.secondInter p (0 : V) = p := by
+theorem Sphere.secondInter_zero (s : Sphere P) (p : P) : s.secondInter p (0 : V) = p := by
   simp [sphere.second_inter]
-#align euclidean_geometry.sphere.second_inter_zero EuclideanGeometry.Sphere.second_inter_zero
+#align euclidean_geometry.sphere.second_inter_zero EuclideanGeometry.Sphere.secondInter_zero
 
 variable {V}
 
 /-- The point given by `second_inter` equals the original point if and only if the line is
 orthogonal to the radius vector. -/
-theorem Sphere.second_inter_eq_self_iff {s : Sphere P} {p : P} {v : V} :
+theorem Sphere.secondInter_eq_self_iff {s : Sphere P} {p : P} {v : V} :
     s.secondInter p v = p ↔ ⟪v, p -ᵥ s.center⟫ = 0 :=
   by
   refine' ⟨fun hp => _, fun hp => _⟩
@@ -1099,10 +1098,10 @@ theorem Sphere.second_inter_eq_self_iff {s : Sphere P} {p : P} {v : V} :
       or_iff_left hv, div_eq_zero_iff, inner_self_eq_zero, or_iff_left hv, mul_eq_zero,
       or_iff_right (by norm_num : (-2 : ℝ) ≠ 0)] at hp
   · rw [sphere.second_inter, hp, mul_zero, zero_div, zero_smul, zero_vadd]
-#align euclidean_geometry.sphere.second_inter_eq_self_iff EuclideanGeometry.Sphere.second_inter_eq_self_iff
+#align euclidean_geometry.sphere.second_inter_eq_self_iff EuclideanGeometry.Sphere.secondInter_eq_self_iff
 
 /-- A point on a line through a point on a sphere equals that point or `second_inter`. -/
-theorem Sphere.eq_or_eq_second_inter_of_mem_mk'_span_singleton_iff_mem {s : Sphere P} {p : P}
+theorem Sphere.eq_or_eq_secondInter_of_mem_mk'_span_singleton_iff_mem {s : Sphere P} {p : P}
     (hp : p ∈ s) {v : V} {p' : P} (hp' : p' ∈ AffineSubspace.mk' p (ℝ ∙ v)) :
     p' = p ∨ p' = s.secondInter p v ↔ p' ∈ s :=
   by
@@ -1120,29 +1119,29 @@ theorem Sphere.eq_or_eq_second_inter_of_mem_mk'_span_singleton_iff_mem {s : Sphe
     rw [mem_sphere] at h hp
     rw [← hp, dist_smul_vadd_eq_dist _ _ hv] at h
     rcases h with (h | h) <;> simp [h]
-#align euclidean_geometry.sphere.eq_or_eq_second_inter_of_mem_mk'_span_singleton_iff_mem EuclideanGeometry.Sphere.eq_or_eq_second_inter_of_mem_mk'_span_singleton_iff_mem
+#align euclidean_geometry.sphere.eq_or_eq_second_inter_of_mem_mk'_span_singleton_iff_mem EuclideanGeometry.Sphere.eq_or_eq_secondInter_of_mem_mk'_span_singleton_iff_mem
 
 /-- `second_inter` is unchanged by multiplying the vector by a nonzero real. -/
 @[simp]
-theorem Sphere.second_inter_smul (s : Sphere P) (p : P) (v : V) {r : ℝ} (hr : r ≠ 0) :
+theorem Sphere.secondInter_smul (s : Sphere P) (p : P) (v : V) {r : ℝ} (hr : r ≠ 0) :
     s.secondInter p (r • v) = s.secondInter p v :=
   by
   simp_rw [sphere.second_inter, real_inner_smul_left, inner_smul_right, smul_smul,
     div_mul_eq_div_div]
   rw [mul_comm, ← mul_div_assoc, ← mul_div_assoc, mul_div_cancel_left _ hr, mul_comm, mul_assoc,
     mul_div_cancel_left _ hr, mul_comm]
-#align euclidean_geometry.sphere.second_inter_smul EuclideanGeometry.Sphere.second_inter_smul
+#align euclidean_geometry.sphere.second_inter_smul EuclideanGeometry.Sphere.secondInter_smul
 
 /-- `second_inter` is unchanged by negating the vector. -/
 @[simp]
-theorem Sphere.second_inter_neg (s : Sphere P) (p : P) (v : V) :
+theorem Sphere.secondInter_neg (s : Sphere P) (p : P) (v : V) :
     s.secondInter p (-v) = s.secondInter p v := by
   rw [← neg_one_smul ℝ v, s.second_inter_smul p v (by norm_num : (-1 : ℝ) ≠ 0)]
-#align euclidean_geometry.sphere.second_inter_neg EuclideanGeometry.Sphere.second_inter_neg
+#align euclidean_geometry.sphere.second_inter_neg EuclideanGeometry.Sphere.secondInter_neg
 
 /-- Applying `second_inter` twice returns the original point. -/
 @[simp]
-theorem Sphere.second_inter_second_inter (s : Sphere P) (p : P) (v : V) :
+theorem Sphere.secondInter_secondInter (s : Sphere P) (p : P) (v : V) :
     s.secondInter (s.secondInter p v) v = p :=
   by
   by_cases hv : v = 0; · simp [hv]
@@ -1153,38 +1152,38 @@ theorem Sphere.second_inter_second_inter (s : Sphere P) (p : P) (v : V) :
   convert zero_smul ℝ _
   convert zero_div _
   ring
-#align euclidean_geometry.sphere.second_inter_second_inter EuclideanGeometry.Sphere.second_inter_second_inter
+#align euclidean_geometry.sphere.second_inter_second_inter EuclideanGeometry.Sphere.secondInter_secondInter
 
 /-- If the vector passed to `second_inter` is given by a subtraction involving the point in
 `second_inter`, the result of `second_inter` may be expressed using `line_map`. -/
-theorem Sphere.second_inter_eq_line_map (s : Sphere P) (p p' : P) :
+theorem Sphere.secondInter_eq_lineMap (s : Sphere P) (p p' : P) :
     s.secondInter p (p' -ᵥ p) =
       AffineMap.lineMap p p' (-2 * ⟪p' -ᵥ p, p -ᵥ s.center⟫ / ⟪p' -ᵥ p, p' -ᵥ p⟫) :=
   rfl
-#align euclidean_geometry.sphere.second_inter_eq_line_map EuclideanGeometry.Sphere.second_inter_eq_line_map
+#align euclidean_geometry.sphere.second_inter_eq_line_map EuclideanGeometry.Sphere.secondInter_eq_lineMap
 
 /-- If the vector passed to `second_inter` is given by a subtraction involving the point in
 `second_inter`, the result lies in the span of the two points. -/
-theorem Sphere.second_inter_vsub_mem_affine_span (s : Sphere P) (p₁ p₂ : P) :
+theorem Sphere.secondInter_vsub_mem_affineSpan (s : Sphere P) (p₁ p₂ : P) :
     s.secondInter p₁ (p₂ -ᵥ p₁) ∈ line[ℝ, p₁, p₂] :=
-  smul_vsub_vadd_mem_affine_span_pair _ _ _
-#align euclidean_geometry.sphere.second_inter_vsub_mem_affine_span EuclideanGeometry.Sphere.second_inter_vsub_mem_affine_span
+  smul_vsub_vadd_mem_affineSpan_pair _ _ _
+#align euclidean_geometry.sphere.second_inter_vsub_mem_affine_span EuclideanGeometry.Sphere.secondInter_vsub_mem_affineSpan
 
 /-- If the vector passed to `second_inter` is given by a subtraction involving the point in
 `second_inter`, the three points are collinear. -/
-theorem Sphere.second_inter_collinear (s : Sphere P) (p p' : P) :
+theorem Sphere.secondInter_collinear (s : Sphere P) (p p' : P) :
     Collinear ℝ ({p, p', s.secondInter p (p' -ᵥ p)} : Set P) :=
   by
   rw [Set.pair_comm, Set.insert_comm]
   exact
-    (collinear_insert_iff_of_mem_affine_span (s.second_inter_vsub_mem_affine_span _ _)).2
+    (collinear_insert_iff_of_mem_affineSpan (s.second_inter_vsub_mem_affine_span _ _)).2
       (collinear_pair ℝ _ _)
-#align euclidean_geometry.sphere.second_inter_collinear EuclideanGeometry.Sphere.second_inter_collinear
+#align euclidean_geometry.sphere.second_inter_collinear EuclideanGeometry.Sphere.secondInter_collinear
 
 /-- If the vector passed to `second_inter` is given by a subtraction involving the point in
 `second_inter`, and the second point is not outside the sphere, the second point is weakly
 between the first point and the result of `second_inter`. -/
-theorem Sphere.wbtw_second_inter {s : Sphere P} {p p' : P} (hp : p ∈ s)
+theorem Sphere.wbtw_secondInter {s : Sphere P} {p p' : P} (hp : p ∈ s)
     (hp' : dist p' s.center ≤ s.radius) : Wbtw ℝ p p' (s.secondInter p (p' -ᵥ p)) :=
   by
   by_cases h : p' = p; · simp [h]
@@ -1195,12 +1194,12 @@ theorem Sphere.wbtw_second_inter {s : Sphere P} {p p' : P} (hp : p ∈ s)
   rw [eq_comm, sphere.second_inter_eq_self_iff, ← neg_neg (p' -ᵥ p), inner_neg_left,
     neg_vsub_eq_vsub_rev, neg_eq_zero, eq_comm] at he
   exact ((inner_pos_or_eq_of_dist_le_radius hp hp').resolve_right (Ne.symm h)).Ne he
-#align euclidean_geometry.sphere.wbtw_second_inter EuclideanGeometry.Sphere.wbtw_second_inter
+#align euclidean_geometry.sphere.wbtw_second_inter EuclideanGeometry.Sphere.wbtw_secondInter
 
 /-- If the vector passed to `second_inter` is given by a subtraction involving the point in
 `second_inter`, and the second point is inside the sphere, the second point is strictly between
 the first point and the result of `second_inter`. -/
-theorem Sphere.sbtw_second_inter {s : Sphere P} {p p' : P} (hp : p ∈ s)
+theorem Sphere.sbtw_secondInter {s : Sphere P} {p p' : P} (hp : p ∈ s)
     (hp' : dist p' s.center < s.radius) : Sbtw ℝ p p' (s.secondInter p (p' -ᵥ p)) :=
   by
   refine' ⟨sphere.wbtw_second_inter hp hp'.le, _, _⟩
@@ -1210,7 +1209,7 @@ theorem Sphere.sbtw_second_inter {s : Sphere P} {p p' : P} (hp : p ∈ s)
   · rintro h
     rw [h, mem_sphere.1 ((sphere.second_inter_mem _).2 hp)] at hp'
     exact lt_irrefl _ hp'
-#align euclidean_geometry.sphere.sbtw_second_inter EuclideanGeometry.Sphere.sbtw_second_inter
+#align euclidean_geometry.sphere.sbtw_second_inter EuclideanGeometry.Sphere.sbtw_secondInter
 
 /-- A set of points is concyclic if it is cospherical and coplanar. (Most results are stated
 directly in terms of `cospherical` instead of using `concyclic`.) -/

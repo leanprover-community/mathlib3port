@@ -37,9 +37,9 @@ def IsωSup {α : Type u} [Preorder α] (c : Chain α) (x : α) : Prop :=
   (∀ i, c i ≤ x) ∧ ∀ y, (∀ i, c i ≤ y) → x ≤ y
 #align Scott.is_ωSup ScottCat.IsωSup
 
-theorem is_ωSup_iff_is_lub {α : Type u} [Preorder α] {c : Chain α} {x : α} :
+theorem isωSup_iff_isLUB {α : Type u} [Preorder α] {c : Chain α} {x : α} :
     IsωSup c x ↔ IsLUB (range c) x := by simp [is_ωSup, IsLUB, IsLeast, upperBounds, lowerBounds]
-#align Scott.is_ωSup_iff_is_lub ScottCat.is_ωSup_iff_is_lub
+#align Scott.is_ωSup_iff_is_lub ScottCat.isωSup_iff_isLUB
 
 variable (α : Type u) [OmegaCompletePartialOrder α]
 
@@ -49,24 +49,24 @@ def IsOpen (s : Set α) : Prop :=
   Continuous' fun x => x ∈ s
 #align Scott.is_open ScottCat.IsOpen
 
-theorem is_open_univ : IsOpen α univ :=
+theorem isOpen_univ : IsOpen α univ :=
   ⟨fun x y h hx => mem_univ _, @CompleteLattice.top_continuous α Prop _ _⟩
-#align Scott.is_open_univ ScottCat.is_open_univ
+#align Scott.is_open_univ ScottCat.isOpen_univ
 
 theorem IsOpen.inter (s t : Set α) : IsOpen α s → IsOpen α t → IsOpen α (s ∩ t) :=
   CompleteLattice.inf_continuous'
 #align Scott.is_open.inter ScottCat.IsOpen.inter
 
-theorem is_open_sUnion (s : Set (Set α)) (hs : ∀ t ∈ s, IsOpen α t) : IsOpen α (⋃₀ s) :=
+theorem isOpen_unionₛ (s : Set (Set α)) (hs : ∀ t ∈ s, IsOpen α t) : IsOpen α (⋃₀ s) :=
   by
   simp only [IsOpen] at hs⊢
-  convert CompleteLattice.Sup_continuous' (setOf ⁻¹' s) _
+  convert CompleteLattice.supₛ_continuous' (setOf ⁻¹' s) _
   · ext1 x
     simp only [supₛ_apply, set_of_bijective.surjective.exists, exists_prop, mem_preimage,
       SetCoe.exists, supᵢ_Prop_eq, mem_set_of_eq, Subtype.coe_mk, mem_sUnion]
   · intro p hp
     exact hs (setOf p) (mem_preimage.1 hp)
-#align Scott.is_open_sUnion ScottCat.is_open_sUnion
+#align Scott.is_open_sUnion ScottCat.isOpen_unionₛ
 
 end ScottCat
 
@@ -82,9 +82,9 @@ instance ScottCat.topologicalSpace (α : Type u) [OmegaCompletePartialOrder α] 
     TopologicalSpace (ScottCat α)
     where
   IsOpen := ScottCat.IsOpen α
-  is_open_univ := ScottCat.is_open_univ α
+  is_open_univ := ScottCat.isOpen_univ α
   is_open_inter := ScottCat.IsOpen.inter α
-  is_open_sUnion := ScottCat.is_open_sUnion α
+  is_open_sUnion := ScottCat.isOpen_unionₛ α
 #align Scott.topological_space ScottCat.topologicalSpace
 
 section notBelow
@@ -97,7 +97,7 @@ def notBelow :=
   { x | ¬x ≤ y }
 #align not_below notBelow
 
-theorem not_below_is_open : IsOpen (notBelow y) :=
+theorem notBelow_isOpen : IsOpen (notBelow y) :=
   by
   have h : Monotone (notBelow y) := by
     intro x y' h
@@ -111,7 +111,7 @@ theorem not_below_is_open : IsOpen (notBelow y) :=
   rw [ωSup_le_iff]
   simp only [ωSup_le_iff, notBelow, mem_set_of_eq, le_Prop_eq, OrderHom.coe_fun_mk, chain.map_coe,
     Function.comp_apply, exists_imp, not_forall]
-#align not_below_is_open not_below_is_open
+#align not_below_is_open notBelow_isOpen
 
 end notBelow
 
@@ -119,22 +119,22 @@ open ScottCat hiding IsOpen
 
 open OmegaCompletePartialOrder
 
-theorem is_ωSup_ωSup {α} [OmegaCompletePartialOrder α] (c : Chain α) : IsωSup c (ωSup c) :=
+theorem isωSup_ωSup {α} [OmegaCompletePartialOrder α] (c : Chain α) : IsωSup c (ωSup c) :=
   by
   constructor
   · apply le_ωSup
   · apply ωSup_le
-#align is_ωSup_ωSup is_ωSup_ωSup
+#align is_ωSup_ωSup isωSup_ωSup
 
 /- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:565:11: unsupported: specialize non-hyp -/
-theorem Scott_continuous_of_continuous {α β} [OmegaCompletePartialOrder α]
+theorem scottCat_continuous_of_continuous {α β} [OmegaCompletePartialOrder α]
     [OmegaCompletePartialOrder β] (f : ScottCat α → ScottCat β) (hf : Continuous f) :
     OmegaCompletePartialOrder.Continuous' f :=
   by
   simp only [continuous_def, (· ⁻¹' ·)] at hf
   have h : Monotone f := by
     intro x y h
-    cases' hf { x | ¬x ≤ f y } (not_below_is_open _) with hf hf'
+    cases' hf { x | ¬x ≤ f y } (notBelow_isOpen _) with hf hf'
     clear hf'
     specialize hf h
     simp only [preimage, mem_set_of_eq, le_Prop_eq] at hf
@@ -154,9 +154,9 @@ theorem Scott_continuous_of_continuous {α β} [OmegaCompletePartialOrder α]
     exists_prop, mem_range, OrderHom.coe_fun_mk, chain.map_coe, Function.comp_apply, eq_iff_iff,
     not_forall]
   tauto
-#align Scott_continuous_of_continuous Scott_continuous_of_continuous
+#align Scott_continuous_of_continuous scottCat_continuous_of_continuous
 
-theorem continuous_of_Scott_continuous {α β} [OmegaCompletePartialOrder α]
+theorem continuous_of_scottCat_continuous {α β} [OmegaCompletePartialOrder α]
     [OmegaCompletePartialOrder β] (f : ScottCat α → ScottCat β)
     (hf : OmegaCompletePartialOrder.Continuous' f) : Continuous f :=
   by
@@ -167,5 +167,5 @@ theorem continuous_of_Scott_continuous {α β} [OmegaCompletePartialOrder α]
   cases' hf with hf hf'
   apply continuous.of_bundled
   apply continuous_comp _ _ hf' hs'
-#align continuous_of_Scott_continuous continuous_of_Scott_continuous
+#align continuous_of_Scott_continuous continuous_of_scottCat_continuous
 

@@ -36,7 +36,7 @@ include _i
 /-- The volume form coming from an orientation in an inner product space gives measure `1` to the
 parallelepiped associated to any orthonormal basis. This is a rephrasing of
 `abs_volume_form_apply_of_orthonormal` in terms of measures. -/
-theorem Orientation.measure_orthonormal_basis (o : Orientation ℝ F (Fin n))
+theorem Orientation.measure_orthonormalBasis (o : Orientation ℝ F (Fin n))
     (b : OrthonormalBasis ι ℝ F) : o.volumeForm.Measure (parallelepiped b) = 1 :=
   by
   have e : ι ≃ Fin n := by
@@ -46,8 +46,8 @@ theorem Orientation.measure_orthonormal_basis (o : Orientation ℝ F (Fin n))
     ext x
     simp only [OrthonormalBasis.coe_reindex, Function.comp_apply, Equiv.symm_apply_apply]
   rw [A, parallelepiped_comp_equiv, AlternatingMap.measure_parallelepiped,
-    o.abs_volume_form_apply_of_orthonormal, Ennreal.of_real_one]
-#align orientation.measure_orthonormal_basis Orientation.measure_orthonormal_basis
+    o.abs_volume_form_apply_of_orthonormal, Ennreal.ofReal_one]
+#align orientation.measure_orthonormal_basis Orientation.measure_orthonormalBasis
 
 /-- In an oriented inner product space, the measure coming from the canonical volume form
 associated to an orientation coincides with the volume. -/
@@ -55,7 +55,7 @@ theorem Orientation.measure_eq_volume (o : Orientation ℝ F (Fin n)) :
     o.volumeForm.Measure = volume :=
   by
   have A : o.volume_form.measure (stdOrthonormalBasis ℝ F).toBasis.parallelepiped = 1 :=
-    Orientation.measure_orthonormal_basis o (stdOrthonormalBasis ℝ F)
+    Orientation.measure_orthonormalBasis o (stdOrthonormalBasis ℝ F)
   rw [add_haar_measure_unique o.volume_form.measure
       (stdOrthonormalBasis ℝ F).toBasis.parallelepiped,
     A, one_smul]

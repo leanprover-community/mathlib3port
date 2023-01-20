@@ -107,18 +107,18 @@ theorem Finset.trop_inf [LinearOrder R] [OrderTop R] (s : Finset S) (f : S → R
   simp
 #align finset.trop_inf Finset.trop_inf
 
-theorem trop_Inf_image [ConditionallyCompleteLinearOrder R] (s : Finset S) (f : S → WithTop R) :
+theorem trop_infₛ_image [ConditionallyCompleteLinearOrder R] (s : Finset S) (f : S → WithTop R) :
     trop (infₛ (f '' s)) = ∑ i in s, trop (f i) :=
   by
   rcases s.eq_empty_or_nonempty with (rfl | h)
   · simp only [Set.image_empty, coe_empty, sum_empty, WithTop.infₛ_empty, trop_top]
   rw [← inf'_eq_cInf_image _ h, inf'_eq_inf, s.trop_inf]
-#align trop_Inf_image trop_Inf_image
+#align trop_Inf_image trop_infₛ_image
 
-theorem trop_infi [ConditionallyCompleteLinearOrder R] [Fintype S] (f : S → WithTop R) :
+theorem trop_infᵢ [ConditionallyCompleteLinearOrder R] [Fintype S] (f : S → WithTop R) :
     trop (⨅ i : S, f i) = ∑ i : S, trop (f i) := by
-  rw [infᵢ, ← Set.image_univ, ← coe_univ, trop_Inf_image]
-#align trop_infi trop_infi
+  rw [infᵢ, ← Set.image_univ, ← coe_univ, trop_infₛ_image]
+#align trop_infi trop_infᵢ
 
 theorem Multiset.untrop_sum [LinearOrder R] [OrderTop R] (s : Multiset (Tropical R)) :
     untrop s.Sum = Multiset.inf (s.map untrop) :=
@@ -136,17 +136,17 @@ theorem Finset.untrop_sum' [LinearOrder R] [OrderTop R] (s : Finset S) (f : S �
   simpa
 #align finset.untrop_sum' Finset.untrop_sum'
 
-theorem untrop_sum_eq_Inf_image [ConditionallyCompleteLinearOrder R] (s : Finset S)
+theorem untrop_sum_eq_infₛ_image [ConditionallyCompleteLinearOrder R] (s : Finset S)
     (f : S → Tropical (WithTop R)) : untrop (∑ i in s, f i) = infₛ (untrop ∘ f '' s) :=
   by
   rcases s.eq_empty_or_nonempty with (rfl | h)
   · simp only [Set.image_empty, coe_empty, sum_empty, WithTop.infₛ_empty, untrop_zero]
   rw [← inf'_eq_cInf_image _ h, inf'_eq_inf, Finset.untrop_sum']
-#align untrop_sum_eq_Inf_image untrop_sum_eq_Inf_image
+#align untrop_sum_eq_Inf_image untrop_sum_eq_infₛ_image
 
 theorem untrop_sum [ConditionallyCompleteLinearOrder R] [Fintype S] (f : S → Tropical (WithTop R)) :
     untrop (∑ i : S, f i) = ⨅ i : S, untrop (f i) := by
-  rw [infᵢ, ← Set.image_univ, ← coe_univ, untrop_sum_eq_Inf_image]
+  rw [infᵢ, ← Set.image_univ, ← coe_univ, untrop_sum_eq_infₛ_image]
 #align untrop_sum untrop_sum
 
 /-- Note we cannot use `i ∈ s` instead of `i : s` here

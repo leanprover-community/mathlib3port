@@ -82,13 +82,13 @@ def sectionΓ'Bool : Γ' → Bool
   | _ => Inhabited.default Bool
 #align computability.section_Γ'_bool Computability.sectionΓ'Bool
 
-theorem left_inverse_section_inclusion : Function.LeftInverse sectionΓ'Bool inclusionBoolΓ' :=
+theorem leftInverse_section_inclusion : Function.LeftInverse sectionΓ'Bool inclusionBoolΓ' :=
   fun x => Bool.casesOn x rfl rfl
-#align computability.left_inverse_section_inclusion Computability.left_inverse_section_inclusion
+#align computability.left_inverse_section_inclusion Computability.leftInverse_section_inclusion
 
-theorem inclusion_bool_Γ'_injective : Function.Injective inclusionBoolΓ' :=
-  Function.HasLeftInverse.injective (Exists.intro sectionΓ'Bool left_inverse_section_inclusion)
-#align computability.inclusion_bool_Γ'_injective Computability.inclusion_bool_Γ'_injective
+theorem inclusionBoolΓ'_injective : Function.Injective inclusionBoolΓ' :=
+  Function.HasLeftInverse.injective (Exists.intro sectionΓ'Bool leftInverse_section_inclusion)
+#align computability.inclusion_bool_Γ'_injective Computability.inclusionBoolΓ'_injective
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -127,12 +127,12 @@ def decodeNum : List Bool → Num := fun l => ite (l = []) Num.zero <| decodePos
 def decodeNat : List Bool → Nat := fun l => decodeNum l
 #align computability.decode_nat Computability.decodeNat
 
-theorem encode_pos_num_nonempty (n : PosNum) : encodePosNum n ≠ [] :=
+theorem encodePosNum_nonempty (n : PosNum) : encodePosNum n ≠ [] :=
   PosNum.casesOn n (List.cons_ne_nil _ _) (fun m => List.cons_ne_nil _ _) fun m =>
     List.cons_ne_nil _ _
-#align computability.encode_pos_num_nonempty Computability.encode_pos_num_nonempty
+#align computability.encode_pos_num_nonempty Computability.encodePosNum_nonempty
 
-theorem decode_encode_pos_num : ∀ n, decodePosNum (encodePosNum n) = n :=
+theorem decode_encodePosNum : ∀ n, decodePosNum (encodePosNum n) = n :=
   by
   intro n
   induction' n with m hm m hm <;> unfold encode_pos_num decode_pos_num
@@ -140,9 +140,9 @@ theorem decode_encode_pos_num : ∀ n, decodePosNum (encodePosNum n) = n :=
   · rw [hm]
     exact if_neg (encode_pos_num_nonempty m)
   · exact congr_arg PosNum.bit0 hm
-#align computability.decode_encode_pos_num Computability.decode_encode_pos_num
+#align computability.decode_encode_pos_num Computability.decode_encodePosNum
 
-theorem decode_encode_num : ∀ n, decodeNum (encodeNum n) = n :=
+theorem decode_encodeNum : ∀ n, decodeNum (encodeNum n) = n :=
   by
   intro n
   cases n <;> unfold encode_num decode_num
@@ -150,21 +150,21 @@ theorem decode_encode_num : ∀ n, decodeNum (encodeNum n) = n :=
   rw [decode_encode_pos_num n]
   rw [PosNum.cast_to_num]
   exact if_neg (encode_pos_num_nonempty n)
-#align computability.decode_encode_num Computability.decode_encode_num
+#align computability.decode_encode_num Computability.decode_encodeNum
 
-theorem decode_encode_nat : ∀ n, decodeNat (encodeNat n) = n :=
+theorem decode_encodeNat : ∀ n, decodeNat (encodeNat n) = n :=
   by
   intro n
   conv_rhs => rw [← Num.to_of_nat n]
   exact congr_arg coe (decode_encode_num ↑n)
-#align computability.decode_encode_nat Computability.decode_encode_nat
+#align computability.decode_encode_nat Computability.decode_encodeNat
 
 /-- A binary encoding of ℕ in bool. -/
 def encodingNatBool : Encoding ℕ where
   Γ := Bool
   encode := encodeNat
   decode n := some (decodeNat n)
-  decode_encode n := congr_arg _ (decode_encode_nat n)
+  decode_encode n := congr_arg _ (decode_encodeNat n)
 #align computability.encoding_nat_bool Computability.encodingNatBool
 
 /-- A binary fin_encoding of ℕ in bool. -/
@@ -224,8 +224,8 @@ def decodeBool : List Bool → Bool
   | _ => Inhabited.default Bool
 #align computability.decode_bool Computability.decodeBool
 
-theorem decode_encode_bool : ∀ b, decodeBool (encodeBool b) = b := fun b => Bool.casesOn b rfl rfl
-#align computability.decode_encode_bool Computability.decode_encode_bool
+theorem decode_encodeBool : ∀ b, decodeBool (encodeBool b) = b := fun b => Bool.casesOn b rfl rfl
+#align computability.decode_encode_bool Computability.decode_encodeBool
 
 /-- A fin_encoding of bool in bool. -/
 def finEncodingBoolBool : FinEncoding Bool
@@ -233,7 +233,7 @@ def finEncodingBoolBool : FinEncoding Bool
   Γ := Bool
   encode := encodeBool
   decode x := some (decodeBool x)
-  decode_encode x := congr_arg _ (decode_encode_bool x)
+  decode_encode x := congr_arg _ (decode_encodeBool x)
   ΓFin := Bool.fintype
 #align computability.fin_encoding_bool_bool Computability.finEncodingBoolBool
 
@@ -250,19 +250,19 @@ theorem Encoding.card_le_card_list {α : Type u} (e : Encoding.{u, v} α) :
   Cardinal.lift_mk_le'.2 ⟨⟨e.encode, e.encode_injective⟩⟩
 #align computability.encoding.card_le_card_list Computability.Encoding.card_le_card_list
 
-theorem Encoding.card_le_aleph_0 {α : Type u} (e : Encoding.{u, v} α) [Encodable e.Γ] : (#α) ≤ ℵ₀ :=
+theorem Encoding.card_le_aleph0 {α : Type u} (e : Encoding.{u, v} α) [Encodable e.Γ] : (#α) ≤ ℵ₀ :=
   by
   refine' Cardinal.lift_le.1 (e.card_le_card_list.trans _)
-  simp only [Cardinal.lift_aleph_0, Cardinal.lift_le_aleph_0]
+  simp only [Cardinal.lift_aleph0, Cardinal.lift_le_aleph0]
   cases' isEmpty_or_nonempty e.Γ with h h
-  · simp only [Cardinal.mk_le_aleph_0]
-  · rw [Cardinal.mk_list_eq_aleph_0]
-#align computability.encoding.card_le_aleph_0 Computability.Encoding.card_le_aleph_0
+  · simp only [Cardinal.mk_le_aleph0]
+  · rw [Cardinal.mk_list_eq_aleph0]
+#align computability.encoding.card_le_aleph_0 Computability.Encoding.card_le_aleph0
 
-theorem FinEncoding.card_le_aleph_0 {α : Type u} (e : FinEncoding α) : (#α) ≤ ℵ₀ :=
+theorem FinEncoding.card_le_aleph0 {α : Type u} (e : FinEncoding α) : (#α) ≤ ℵ₀ :=
   haveI : Encodable e.Γ := Fintype.toEncodable _
   e.to_encoding.card_le_aleph_0
-#align computability.fin_encoding.card_le_aleph_0 Computability.FinEncoding.card_le_aleph_0
+#align computability.fin_encoding.card_le_aleph_0 Computability.FinEncoding.card_le_aleph0
 
 end Computability
 

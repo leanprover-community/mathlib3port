@@ -168,39 +168,39 @@ section IsSupported
 
 variable {x y : FreeCommRing α} {s t : Set α}
 
-theorem is_supported_upwards (hs : IsSupported x s) (hst : s ⊆ t) : IsSupported x t :=
+theorem isSupported_upwards (hs : IsSupported x s) (hst : s ⊆ t) : IsSupported x t :=
   Subring.closure_mono (Set.monotone_image hst) hs
-#align free_comm_ring.is_supported_upwards FreeCommRing.is_supported_upwards
+#align free_comm_ring.is_supported_upwards FreeCommRing.isSupported_upwards
 
-theorem is_supported_add (hxs : IsSupported x s) (hys : IsSupported y s) : IsSupported (x + y) s :=
+theorem isSupported_add (hxs : IsSupported x s) (hys : IsSupported y s) : IsSupported (x + y) s :=
   Subring.add_mem _ hxs hys
-#align free_comm_ring.is_supported_add FreeCommRing.is_supported_add
+#align free_comm_ring.is_supported_add FreeCommRing.isSupported_add
 
-theorem is_supported_neg (hxs : IsSupported x s) : IsSupported (-x) s :=
+theorem isSupported_neg (hxs : IsSupported x s) : IsSupported (-x) s :=
   Subring.neg_mem _ hxs
-#align free_comm_ring.is_supported_neg FreeCommRing.is_supported_neg
+#align free_comm_ring.is_supported_neg FreeCommRing.isSupported_neg
 
-theorem is_supported_sub (hxs : IsSupported x s) (hys : IsSupported y s) : IsSupported (x - y) s :=
+theorem isSupported_sub (hxs : IsSupported x s) (hys : IsSupported y s) : IsSupported (x - y) s :=
   Subring.sub_mem _ hxs hys
-#align free_comm_ring.is_supported_sub FreeCommRing.is_supported_sub
+#align free_comm_ring.is_supported_sub FreeCommRing.isSupported_sub
 
-theorem is_supported_mul (hxs : IsSupported x s) (hys : IsSupported y s) : IsSupported (x * y) s :=
+theorem isSupported_mul (hxs : IsSupported x s) (hys : IsSupported y s) : IsSupported (x * y) s :=
   Subring.mul_mem _ hxs hys
-#align free_comm_ring.is_supported_mul FreeCommRing.is_supported_mul
+#align free_comm_ring.is_supported_mul FreeCommRing.isSupported_mul
 
-theorem is_supported_zero : IsSupported 0 s :=
+theorem isSupported_zero : IsSupported 0 s :=
   Subring.zero_mem _
-#align free_comm_ring.is_supported_zero FreeCommRing.is_supported_zero
+#align free_comm_ring.is_supported_zero FreeCommRing.isSupported_zero
 
-theorem is_supported_one : IsSupported 1 s :=
+theorem isSupported_one : IsSupported 1 s :=
   Subring.one_mem _
-#align free_comm_ring.is_supported_one FreeCommRing.is_supported_one
+#align free_comm_ring.is_supported_one FreeCommRing.isSupported_one
 
-theorem is_supported_int {i : ℤ} {s : Set α} : IsSupported (↑i) s :=
-  Int.induction_on i is_supported_zero
+theorem isSupported_int {i : ℤ} {s : Set α} : IsSupported (↑i) s :=
+  Int.induction_on i isSupported_zero
     (fun i hi => by rw [Int.cast_add, Int.cast_one] <;> exact is_supported_add hi is_supported_one)
     fun i hi => by rw [Int.cast_sub, Int.cast_one] <;> exact is_supported_sub hi is_supported_one
-#align free_comm_ring.is_supported_int FreeCommRing.is_supported_int
+#align free_comm_ring.is_supported_int FreeCommRing.isSupported_int
 
 end IsSupported
 
@@ -221,7 +221,7 @@ theorem restriction_of (p) : restriction s (of p) = if H : p ∈ s then of ⟨p,
 
 end Restriction
 
-theorem is_supported_of {p} {s : Set α} : IsSupported (of p) s ↔ p ∈ s :=
+theorem isSupported_of {p} {s : Set α} : IsSupported (of p) s ↔ p ∈ s :=
   suffices IsSupported (of p) s → p ∈ s from ⟨this, fun hps => Subring.subset_closure ⟨p, hps, rfl⟩⟩
   fun hps : IsSupported (of p) s =>
   by
@@ -253,10 +253,10 @@ theorem is_supported_of {p} {s : Set α} : IsSupported (of p) s ↔ p ∈ s :=
   exfalso
   apply Ne.symm Int.zero_ne_one
   rcases this with ⟨w, H⟩
-  rw [← Polynomial.C_eq_int_cast] at H
+  rw [← Polynomial.c_eq_int_cast] at H
   have : polynomial.X.coeff 1 = (Polynomial.c ↑w).coeff 1 := by rw [H]
-  rwa [Polynomial.coeff_C, if_neg (one_ne_zero : 1 ≠ 0), Polynomial.coeff_X, if_pos rfl] at this
-#align free_comm_ring.is_supported_of FreeCommRing.is_supported_of
+  rwa [Polynomial.coeff_c, if_neg (one_neZero : 1 ≠ 0), Polynomial.coeff_x, if_pos rfl] at this
+#align free_comm_ring.is_supported_of FreeCommRing.isSupported_of
 
 theorem map_subtype_val_restriction {x} (s : Set α) [DecidablePred (· ∈ s)]
     (hxs : IsSupported x s) : map (Subtype.val : s → α) (restriction s x) = x :=
@@ -273,21 +273,21 @@ theorem map_subtype_val_restriction {x} (s : Set α) [DecidablePred (· ∈ s)]
 #align free_comm_ring.map_subtype_val_restriction FreeCommRing.map_subtype_val_restriction
 
 theorem exists_finite_support (x : FreeCommRing α) : ∃ s : Set α, Set.Finite s ∧ IsSupported x s :=
-  FreeCommRing.induction_on x ⟨∅, Set.finite_empty, is_supported_neg is_supported_one⟩
-    (fun p => ⟨{p}, Set.finite_singleton p, is_supported_of.2 <| Set.mem_singleton _⟩)
+  FreeCommRing.induction_on x ⟨∅, Set.finite_empty, isSupported_neg isSupported_one⟩
+    (fun p => ⟨{p}, Set.finite_singleton p, isSupported_of.2 <| Set.mem_singleton _⟩)
     (fun x y ⟨s, hfs, hxs⟩ ⟨t, hft, hxt⟩ =>
       ⟨s ∪ t, hfs.union hft,
-        is_supported_add (is_supported_upwards hxs <| Set.subset_union_left s t)
-          (is_supported_upwards hxt <| Set.subset_union_right s t)⟩)
+        isSupported_add (isSupported_upwards hxs <| Set.subset_union_left s t)
+          (isSupported_upwards hxt <| Set.subset_union_right s t)⟩)
     fun x y ⟨s, hfs, hxs⟩ ⟨t, hft, hxt⟩ =>
     ⟨s ∪ t, hfs.union hft,
-      is_supported_mul (is_supported_upwards hxs <| Set.subset_union_left s t)
-        (is_supported_upwards hxt <| Set.subset_union_right s t)⟩
+      isSupported_mul (isSupported_upwards hxs <| Set.subset_union_left s t)
+        (isSupported_upwards hxt <| Set.subset_union_right s t)⟩
 #align free_comm_ring.exists_finite_support FreeCommRing.exists_finite_support
 
 theorem exists_finset_support (x : FreeCommRing α) : ∃ s : Finset α, IsSupported x ↑s :=
   let ⟨s, hfs, hxs⟩ := exists_finite_support x
-  ⟨hfs.toFinset, by rwa [Set.Finite.coe_to_finset]⟩
+  ⟨hfs.toFinset, by rwa [Set.Finite.coe_toFinset]⟩
 #align free_comm_ring.exists_finset_support FreeCommRing.exists_finset_support
 
 end FreeCommRing

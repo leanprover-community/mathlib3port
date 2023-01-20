@@ -105,44 +105,44 @@ theorem to_mul_symm_eq : (@toConjAct G _).symm = of_conj_act :=
 #align conj_act.to_mul_symm_eq ConjAct.to_mul_symm_eq
 
 @[simp]
-theorem to_conj_act_of_conj_act (x : ConjAct G) : toConjAct (ofConjAct x) = x :=
+theorem toConjAct_ofConjAct (x : ConjAct G) : toConjAct (ofConjAct x) = x :=
   rfl
-#align conj_act.to_conj_act_of_conj_act ConjAct.to_conj_act_of_conj_act
+#align conj_act.to_conj_act_of_conj_act ConjAct.toConjAct_ofConjAct
 
 @[simp]
-theorem of_conj_act_to_conj_act (x : G) : ofConjAct (toConjAct x) = x :=
+theorem ofConjAct_toConjAct (x : G) : ofConjAct (toConjAct x) = x :=
   rfl
-#align conj_act.of_conj_act_to_conj_act ConjAct.of_conj_act_to_conj_act
+#align conj_act.of_conj_act_to_conj_act ConjAct.ofConjAct_toConjAct
 
 @[simp]
-theorem of_conj_act_one : ofConjAct (1 : ConjAct G) = 1 :=
+theorem ofConjAct_one : ofConjAct (1 : ConjAct G) = 1 :=
   rfl
-#align conj_act.of_conj_act_one ConjAct.of_conj_act_one
+#align conj_act.of_conj_act_one ConjAct.ofConjAct_one
 
 @[simp]
-theorem to_conj_act_one : toConjAct (1 : G) = 1 :=
+theorem toConjAct_one : toConjAct (1 : G) = 1 :=
   rfl
-#align conj_act.to_conj_act_one ConjAct.to_conj_act_one
+#align conj_act.to_conj_act_one ConjAct.toConjAct_one
 
 @[simp]
-theorem of_conj_act_inv (x : ConjAct G) : ofConjAct x⁻¹ = (ofConjAct x)⁻¹ :=
+theorem ofConjAct_inv (x : ConjAct G) : ofConjAct x⁻¹ = (ofConjAct x)⁻¹ :=
   rfl
-#align conj_act.of_conj_act_inv ConjAct.of_conj_act_inv
+#align conj_act.of_conj_act_inv ConjAct.ofConjAct_inv
 
 @[simp]
-theorem to_conj_act_inv (x : G) : toConjAct x⁻¹ = (toConjAct x)⁻¹ :=
+theorem toConjAct_inv (x : G) : toConjAct x⁻¹ = (toConjAct x)⁻¹ :=
   rfl
-#align conj_act.to_conj_act_inv ConjAct.to_conj_act_inv
+#align conj_act.to_conj_act_inv ConjAct.toConjAct_inv
 
 @[simp]
-theorem of_conj_act_mul (x y : ConjAct G) : ofConjAct (x * y) = ofConjAct x * ofConjAct y :=
+theorem ofConjAct_mul (x y : ConjAct G) : ofConjAct (x * y) = ofConjAct x * ofConjAct y :=
   rfl
-#align conj_act.of_conj_act_mul ConjAct.of_conj_act_mul
+#align conj_act.of_conj_act_mul ConjAct.ofConjAct_mul
 
 @[simp]
-theorem to_conj_act_mul (x y : G) : toConjAct (x * y) = toConjAct x * toConjAct y :=
+theorem toConjAct_mul (x y : G) : toConjAct (x * y) = toConjAct x * toConjAct y :=
   rfl
-#align conj_act.to_conj_act_mul ConjAct.to_conj_act_mul
+#align conj_act.to_conj_act_mul ConjAct.toConjAct_mul
 
 instance : SMul (ConjAct G) G where smul g h := ofConjAct g * h * (ofConjAct g)⁻¹
 
@@ -174,10 +174,10 @@ instance unitsMulDistribMulAction : MulDistribMulAction (ConjAct Mˣ) M
   smul_one := by simp [units_smul_def]
 #align conj_act.units_mul_distrib_mul_action ConjAct.unitsMulDistribMulAction
 
-instance units_smul_comm_class [SMul α M] [SMulCommClass α M M] [IsScalarTower α M M] :
+instance units_sMulCommClass [SMul α M] [SMulCommClass α M M] [IsScalarTower α M M] :
     SMulCommClass α (ConjAct Mˣ) M
     where smul_comm a um m := by rw [units_smul_def, units_smul_def, mul_smul_comm, smul_mul_assoc]
-#align conj_act.units_smul_comm_class ConjAct.units_smul_comm_class
+#align conj_act.units_smul_comm_class ConjAct.units_sMulCommClass
 
 instance units_smul_comm_class' [SMul α M] [SMulCommClass M α M] [IsScalarTower α M M] :
     SMulCommClass (ConjAct Mˣ) α M :=
@@ -207,14 +207,14 @@ section GroupWithZero
 variable [GroupWithZero G₀]
 
 @[simp]
-theorem of_conj_act_zero : ofConjAct (0 : ConjAct G₀) = 0 :=
+theorem ofConjAct_zero : ofConjAct (0 : ConjAct G₀) = 0 :=
   rfl
-#align conj_act.of_conj_act_zero ConjAct.of_conj_act_zero
+#align conj_act.of_conj_act_zero ConjAct.ofConjAct_zero
 
 @[simp]
-theorem to_conj_act_zero : toConjAct (0 : G₀) = 0 :=
+theorem toConjAct_zero : toConjAct (0 : G₀) = 0 :=
   rfl
-#align conj_act.to_conj_act_zero ConjAct.to_conj_act_zero
+#align conj_act.to_conj_act_zero ConjAct.toConjAct_zero
 
 instance mulAction₀ : MulAction (ConjAct G₀) G₀
     where
@@ -259,10 +259,10 @@ instance : MulDistribMulAction (ConjAct G) G
   one_smul := by simp [smul_def]
   mul_smul := by simp [smul_def, mul_assoc]
 
-instance smul_comm_class [SMul α G] [SMulCommClass α G G] [IsScalarTower α G G] :
+instance sMulCommClass [SMul α G] [SMulCommClass α G G] [IsScalarTower α G G] :
     SMulCommClass α (ConjAct G) G
     where smul_comm a ug g := by rw [smul_def, smul_def, mul_smul_comm, smul_mul_assoc]
-#align conj_act.smul_comm_class ConjAct.smul_comm_class
+#align conj_act.smul_comm_class ConjAct.sMulCommClass
 
 instance smul_comm_class' [SMul α G] [SMulCommClass G α G] [IsScalarTower α G G] :
     SMulCommClass (ConjAct G) α G :=
@@ -270,16 +270,16 @@ instance smul_comm_class' [SMul α G] [SMulCommClass G α G] [IsScalarTower α G
   SMulCommClass.symm _ _ _
 #align conj_act.smul_comm_class' ConjAct.smul_comm_class'
 
-theorem smul_eq_mul_aut_conj (g : ConjAct G) (h : G) : g • h = MulAut.conj (ofConjAct g) h :=
+theorem smul_eq_mulAut_conj (g : ConjAct G) (h : G) : g • h = MulAut.conj (ofConjAct g) h :=
   rfl
-#align conj_act.smul_eq_mul_aut_conj ConjAct.smul_eq_mul_aut_conj
+#align conj_act.smul_eq_mul_aut_conj ConjAct.smul_eq_mulAut_conj
 
 /-- The set of fixed points of the conjugation action of `G` on itself is the center of `G`. -/
-theorem fixed_points_eq_center : fixedPoints (ConjAct G) G = center G :=
+theorem fixedPoints_eq_center : fixedPoints (ConjAct G) G = center G :=
   by
   ext x
   simp [mem_center_iff, smul_def, mul_inv_eq_iff_eq_mul]
-#align conj_act.fixed_points_eq_center ConjAct.fixed_points_eq_center
+#align conj_act.fixed_points_eq_center ConjAct.fixedPoints_eq_center
 
 theorem stabilizer_eq_centralizer (g : G) : stabilizer (ConjAct G) g = (zpowers g).centralizer :=
   le_antisymm (le_centralizer_iff.mp (zpowers_le.mpr fun x => mul_inv_eq_iff_eq_mul.mp)) fun x h =>
@@ -308,30 +308,30 @@ def MulAut.conjNormal {H : Subgroup G} [hH : H.Normal] : G →* MulAut H :=
 #align mul_aut.conj_normal MulAut.conjNormal
 
 @[simp]
-theorem MulAut.conj_normal_apply {H : Subgroup G} [H.Normal] (g : G) (h : H) :
+theorem MulAut.conjNormal_apply {H : Subgroup G} [H.Normal] (g : G) (h : H) :
     ↑(MulAut.conjNormal g h) = g * h * g⁻¹ :=
   rfl
-#align mul_aut.conj_normal_apply MulAut.conj_normal_apply
+#align mul_aut.conj_normal_apply MulAut.conjNormal_apply
 
 @[simp]
-theorem MulAut.conj_normal_symm_apply {H : Subgroup G} [H.Normal] (g : G) (h : H) :
+theorem MulAut.conjNormal_symm_apply {H : Subgroup G} [H.Normal] (g : G) (h : H) :
     ↑((MulAut.conjNormal g).symm h) = g⁻¹ * h * g :=
   by
   change _ * _⁻¹⁻¹ = _
   rw [inv_inv]
   rfl
-#align mul_aut.conj_normal_symm_apply MulAut.conj_normal_symm_apply
+#align mul_aut.conj_normal_symm_apply MulAut.conjNormal_symm_apply
 
 @[simp]
-theorem MulAut.conj_normal_inv_apply {H : Subgroup G} [H.Normal] (g : G) (h : H) :
+theorem MulAut.conjNormal_inv_apply {H : Subgroup G} [H.Normal] (g : G) (h : H) :
     ↑((MulAut.conjNormal g)⁻¹ h) = g⁻¹ * h * g :=
-  MulAut.conj_normal_symm_apply g h
-#align mul_aut.conj_normal_inv_apply MulAut.conj_normal_inv_apply
+  MulAut.conjNormal_symm_apply g h
+#align mul_aut.conj_normal_inv_apply MulAut.conjNormal_inv_apply
 
-theorem MulAut.conj_normal_coe {H : Subgroup G} [H.Normal] {h : H} :
+theorem MulAut.conjNormal_coe {H : Subgroup G} [H.Normal] {h : H} :
     MulAut.conjNormal ↑h = MulAut.conj h :=
   MulEquiv.ext fun x => rfl
-#align mul_aut.conj_normal_coe MulAut.conj_normal_coe
+#align mul_aut.conj_normal_coe MulAut.conjNormal_coe
 
 instance normal_of_characteristic_of_normal {H : Subgroup G} [hH : H.Normal] {K : Subgroup H}
     [h : K.Characteristic] : (K.map H.Subtype).Normal :=

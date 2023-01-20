@@ -45,10 +45,10 @@ theorem smul_def [SMul R M] (s : ULift R) (x : M) : s • x = s.down • x :=
 #align ulift.smul_def ULift.smul_def
 #align ulift.vadd_def ULift.vadd_def
 
-instance is_scalar_tower [SMul R M] [SMul M N] [SMul R N] [IsScalarTower R M N] :
+instance isScalarTower [SMul R M] [SMul M N] [SMul R N] [IsScalarTower R M N] :
     IsScalarTower (ULift R) M N :=
   ⟨fun x y z => show (x.down • y) • z = x.down • y • z from smul_assoc _ _ _⟩
-#align ulift.is_scalar_tower ULift.is_scalar_tower
+#align ulift.is_scalar_tower ULift.isScalarTower
 
 instance is_scalar_tower' [SMul R M] [SMul M N] [SMul R N] [IsScalarTower R M N] :
     IsScalarTower R (ULift M) N :=

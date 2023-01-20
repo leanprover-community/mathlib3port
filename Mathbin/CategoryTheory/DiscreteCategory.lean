@@ -228,9 +228,9 @@ def natIso {I : Type u₁} {F G : Discrete I ⥤ C} (f : ∀ i : Discrete I, F.o
 #align category_theory.discrete.nat_iso CategoryTheory.Discrete.natIso
 
 @[simp]
-theorem nat_iso_app {I : Type u₁} {F G : Discrete I ⥤ C} (f : ∀ i : Discrete I, F.obj i ≅ G.obj i)
+theorem natIso_app {I : Type u₁} {F G : Discrete I ⥤ C} (f : ∀ i : Discrete I, F.obj i ≅ G.obj i)
     (i : Discrete I) : (Discrete.natIso f).app i = f i := by tidy
-#align category_theory.discrete.nat_iso_app CategoryTheory.Discrete.nat_iso_app
+#align category_theory.discrete.nat_iso_app CategoryTheory.Discrete.natIso_app
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[] -/
 /-- Every functor `F` from a discrete category is naturally isomorphic (actually, equal) to

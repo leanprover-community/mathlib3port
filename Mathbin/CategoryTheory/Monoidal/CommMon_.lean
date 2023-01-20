@@ -95,7 +95,7 @@ instance uniqueHomFromTrivial (A : CommMon_ C) : Unique (trivial C ⟶ A) :=
 open CategoryTheory.Limits
 
 instance : HasInitial (CommMon_ C) :=
-  has_initial_of_unique (trivial C)
+  hasInitial_of_unique (trivial C)
 
 end CommMon_
 

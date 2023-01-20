@@ -61,7 +61,7 @@ theorem app_p_comm : P.p.app X ≫ f.f.app X = f.f.app X ≫ Q.p.app X :=
 
 variable (J C)
 
-instance functor_category_is_idempotent_complete [IsIdempotentComplete C] :
+instance functor_category_isIdempotentComplete [IsIdempotentComplete C] :
     IsIdempotentComplete (J ⥤ C) := by
   refine' ⟨_⟩
   intro F p hp
@@ -98,7 +98,7 @@ instance functor_category_is_idempotent_complete [IsIdempotentComplete C] :
     simp only [nat_trans.comp_app, assoc, equalizer.lift_ι, nat_trans.id_app, id_comp, ←
       equalizer.condition, comp_id]
   · simp only [nat_trans.comp_app, equalizer.lift_ι]
-#align category_theory.idempotents.functor_category_is_idempotent_complete CategoryTheory.Idempotents.functor_category_is_idempotent_complete
+#align category_theory.idempotents.functor_category_is_idempotent_complete CategoryTheory.Idempotents.functor_category_isIdempotentComplete
 
 namespace KaroubiFunctorCategoryEmbedding
 
@@ -164,7 +164,7 @@ instance : Faithful (karoubiFunctorCategoryEmbedding J C)
 /-- The composition of `(J ⥤ C) ⥤ karoubi (J ⥤ C)` and `karoubi (J ⥤ C) ⥤ (J ⥤ karoubi C)`
 equals the functor `(J ⥤ C) ⥤ (J ⥤ karoubi C)` given by the composition with
 `to_karoubi C : C ⥤ karoubi C`. -/
-theorem to_karoubi_comp_karoubi_functor_category_embedding :
+theorem toKaroubi_comp_karoubiFunctorCategoryEmbedding :
     toKaroubi _ ⋙ karoubiFunctorCategoryEmbedding J C = (whiskeringRight J _ _).obj (toKaroubi C) :=
   by
   apply Functor.ext
@@ -181,7 +181,7 @@ theorem to_karoubi_comp_karoubi_functor_category_embedding :
       simpa only [comp_id, id_comp]
     · intro j
       rfl
-#align category_theory.idempotents.to_karoubi_comp_karoubi_functor_category_embedding CategoryTheory.Idempotents.to_karoubi_comp_karoubi_functor_category_embedding
+#align category_theory.idempotents.to_karoubi_comp_karoubi_functor_category_embedding CategoryTheory.Idempotents.toKaroubi_comp_karoubiFunctorCategoryEmbedding
 
 end Idempotents
 

@@ -68,7 +68,7 @@ theorem rank_le_width {m n : ℕ} (A : Matrix (Fin m) (Fin n) K) : A.rank ≤ n 
 
 theorem rank_mul_le (B : Matrix n o K) : (A ⬝ B).rank ≤ A.rank :=
   by
-  refine' LinearMap.finrank_le_finrank_of_injective (Submodule.of_le_injective _)
+  refine' LinearMap.finrank_le_finrank_of_injective (Submodule.ofLe_injective _)
   rw [to_lin'_mul]
   exact LinearMap.range_comp_le_range _ _
 #align matrix.rank_mul_le Matrix.rank_mul_le
@@ -80,15 +80,15 @@ theorem rank_unit (A : (Matrix n n K)ˣ) : (A : Matrix n n K).rank = Fintype.car
   rwa [← mul_eq_mul, ← Units.val_mul, mul_inv_self, Units.val_one, rank_one] at this
 #align matrix.rank_unit Matrix.rank_unit
 
-theorem rank_of_is_unit (A : Matrix n n K) (h : IsUnit A) : A.rank = Fintype.card n :=
+theorem rank_of_isUnit (A : Matrix n n K) (h : IsUnit A) : A.rank = Fintype.card n :=
   by
   obtain ⟨A, rfl⟩ := h
   exact rank_unit A
-#align matrix.rank_of_is_unit Matrix.rank_of_is_unit
+#align matrix.rank_of_is_unit Matrix.rank_of_isUnit
 
 include m_fin
 
-theorem rank_eq_finrank_range_to_lin {M₁ M₂ : Type _} [AddCommGroup M₁] [AddCommGroup M₂]
+theorem rank_eq_finrank_range_toLin {M₁ M₂ : Type _} [AddCommGroup M₁] [AddCommGroup M₂]
     [Module K M₁] [Module K M₂] (v₁ : Basis m K M₁) (v₂ : Basis n K M₂) :
     A.rank = finrank K (toLin v₂ v₁ A).range :=
   by
@@ -107,10 +107,10 @@ theorem rank_eq_finrank_range_to_lin {M₁ M₂ : Type _} [AddCommGroup M₁] [A
   have aux₁ := to_lin_self (Pi.basisFun K n) (Pi.basisFun K m) A i
   have aux₂ := Basis.equiv_apply (Pi.basisFun K n) i v₂
   rw [to_lin_eq_to_lin'] at aux₁
-  rw [Pi.basis_fun_apply, LinearMap.coe_std_basis] at aux₁ aux₂
+  rw [Pi.basisFun_apply, LinearMap.coe_stdBasis] at aux₁ aux₂
   simp only [LinearMap.comp_apply, e₁, e₂, LinearEquiv.coe_coe, Equiv.refl_apply, aux₁, aux₂,
     LinearMap.coe_single, to_lin_self, LinearEquiv.map_sum, LinearEquiv.map_smul, Basis.equiv_apply]
-#align matrix.rank_eq_finrank_range_to_lin Matrix.rank_eq_finrank_range_to_lin
+#align matrix.rank_eq_finrank_range_to_lin Matrix.rank_eq_finrank_range_toLin
 
 theorem rank_le_card_height : A.rank ≤ Fintype.card m :=
   (Submodule.finrank_le _).trans (Module.Free.finrank_pi K).le

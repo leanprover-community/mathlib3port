@@ -88,13 +88,13 @@ theorem comp_map {α β γ : Type _} (f : α → β) (g : β → γ) (x : F α) 
   rfl
 #align qpf.comp_map Qpf.comp_map
 
-theorem is_lawful_functor
+theorem lawfulFunctor
     (h : ∀ α β : Type u, @Functor.mapConst F _ α _ = Functor.map ∘ Function.const β) :
     LawfulFunctor F :=
   { map_const_eq := h
     id_map := @id_map F _ _
     comp_map := @comp_map F _ _ }
-#align qpf.is_lawful_functor Qpf.is_lawful_functor
+#align qpf.is_lawful_functor Qpf.lawfulFunctor
 
 /-
 Lifting predicates and relations
@@ -192,7 +192,7 @@ inductive WequivCat : q.p.W → q.p.W → Prop
 #align qpf.Wequiv Qpf.WequivCat
 
 /-- recF is insensitive to the representation -/
-theorem recF_eq_of_Wequiv {α : Type u} (u : F α → α) (x y : q.p.W) :
+theorem recF_eq_of_wequivCat {α : Type u} (u : F α → α) (x y : q.p.W) :
     WequivCat x y → recF u x = recF u y :=
   by
   cases' x with a f; cases' y with b g
@@ -200,7 +200,7 @@ theorem recF_eq_of_Wequiv {α : Type u} (u : F α → α) (x y : q.p.W) :
   case ind a f f' h ih => simp only [recF_eq', Pfunctor.map_eq, Function.comp, ih]
   case abs a f a' f' h => simp only [recF_eq', abs_map, h]
   case trans x y z e₁ e₂ ih₁ ih₂ => exact Eq.trans ih₁ ih₂
-#align qpf.recF_eq_of_Wequiv Qpf.recF_eq_of_Wequiv
+#align qpf.recF_eq_of_Wequiv Qpf.recF_eq_of_wequivCat
 
 theorem WequivCat.abs' (x y : q.p.W) (h : abs x.dest = abs y.dest) : WequivCat x y :=
   by
@@ -228,7 +228,7 @@ def wrepr : q.p.W → q.p.W :=
   recF (Pfunctor.W.mk ∘ repr)
 #align qpf.Wrepr Qpf.wrepr
 
-theorem Wrepr_equiv (x : q.p.W) : WequivCat (wrepr x) x :=
+theorem wrepr_equiv (x : q.p.W) : WequivCat (wrepr x) x :=
   by
   induction' x with a f ih
   apply Wequiv.trans
@@ -238,7 +238,7 @@ theorem Wrepr_equiv (x : q.p.W) : WequivCat (wrepr x) x :=
     rw [this, Pfunctor.W.dest_mk, abs_repr]
     rfl
   apply Wequiv.ind; exact ih
-#align qpf.Wrepr_equiv Qpf.Wrepr_equiv
+#align qpf.Wrepr_equiv Qpf.wrepr_equiv
 
 /-- Define the fixed point as the quotient of trees under the equivalence relation `Wequiv`.
 -/
@@ -256,12 +256,12 @@ def Fix (F : Type u → Type u) [Functor F] [q : Qpf F] :=
 
 /-- recursor of a type defined by a qpf -/
 def Fix.rec {α : Type _} (g : F α → α) : Fix F → α :=
-  Quot.lift (recF g) (recF_eq_of_Wequiv g)
+  Quot.lift (recF g) (recF_eq_of_wequivCat g)
 #align qpf.fix.rec Qpf.Fix.rec
 
 /-- access the underlying W-type of a fixpoint data type -/
 def fixToW : Fix F → q.p.W :=
-  Quotient.lift wrepr (recF_eq_of_Wequiv fun x => @Pfunctor.W.mk q.p (repr x))
+  Quotient.lift wrepr (recF_eq_of_wequivCat fun x => @Pfunctor.W.mk q.p (repr x))
 #align qpf.fix_to_W Qpf.fixToW
 
 /-- constructor of a type defined by a qpf -/
@@ -696,16 +696,16 @@ def SuppPreservation : Prop :=
 
 variable (q)
 
-theorem supp_eq_of_is_uniform (h : q.IsUniform) {α : Type u} (a : q.p.A) (f : q.p.B a → α) :
+theorem supp_eq_of_isUniform (h : q.IsUniform) {α : Type u} (a : q.p.A) (f : q.p.B a → α) :
     supp (abs ⟨a, f⟩) = f '' univ := by
   ext u; rw [mem_supp]; constructor
   · intro h'
     apply h' _ _ rfl
   intro h' a' f' e
   rw [← h _ _ _ _ e.symm]; apply h'
-#align qpf.supp_eq_of_is_uniform Qpf.supp_eq_of_is_uniform
+#align qpf.supp_eq_of_is_uniform Qpf.supp_eq_of_isUniform
 
-theorem liftp_iff_of_is_uniform (h : q.IsUniform) {α : Type u} (x : F α) (p : α → Prop) :
+theorem liftp_iff_of_isUniform (h : q.IsUniform) {α : Type u} (x : F α) (p : α → Prop) :
     Liftp p x ↔ ∀ u ∈ supp x, p u :=
   by
   rw [liftp_iff, ← abs_repr x]
@@ -719,7 +719,7 @@ theorem liftp_iff_of_is_uniform (h : q.IsUniform) {α : Type u} (x : F α) (p : 
   refine' ⟨a, f, rfl, fun i => h' _ _⟩
   rw [supp_eq_of_is_uniform h]
   exact ⟨i, mem_univ i, rfl⟩
-#align qpf.liftp_iff_of_is_uniform Qpf.liftp_iff_of_is_uniform
+#align qpf.liftp_iff_of_is_uniform Qpf.liftp_iff_of_isUniform
 
 theorem supp_map (h : q.IsUniform) {α β : Type u} (g : α → β) (x : F α) :
     supp (g <$> x) = g '' supp x := by
@@ -727,16 +727,16 @@ theorem supp_map (h : q.IsUniform) {α β : Type u} (g : α → β) (x : F α) :
   rw [supp_eq_of_is_uniform h, supp_eq_of_is_uniform h, image_comp]
 #align qpf.supp_map Qpf.supp_map
 
-theorem supp_preservation_iff_uniform : q.SuppPreservation ↔ q.IsUniform :=
+theorem suppPreservation_iff_uniform : q.SuppPreservation ↔ q.IsUniform :=
   by
   constructor
   · intro h α a a' f f' h'
     rw [← Pfunctor.supp_eq, ← Pfunctor.supp_eq, ← h, h', h]
   · rintro h α ⟨a, f⟩
     rwa [supp_eq_of_is_uniform, Pfunctor.supp_eq]
-#align qpf.supp_preservation_iff_uniform Qpf.supp_preservation_iff_uniform
+#align qpf.supp_preservation_iff_uniform Qpf.suppPreservation_iff_uniform
 
-theorem supp_preservation_iff_liftp_preservation : q.SuppPreservation ↔ q.LiftpPreservation :=
+theorem suppPreservation_iff_liftpPreservation : q.SuppPreservation ↔ q.LiftpPreservation :=
   by
   constructor <;> intro h
   · rintro α p ⟨a, f⟩
@@ -749,11 +749,11 @@ theorem supp_preservation_iff_liftp_preservation : q.SuppPreservation ↔ q.Lift
   · rintro α ⟨a, f⟩
     simp only [liftp_preservation] at h
     simp only [supp, h]
-#align qpf.supp_preservation_iff_liftp_preservation Qpf.supp_preservation_iff_liftp_preservation
+#align qpf.supp_preservation_iff_liftp_preservation Qpf.suppPreservation_iff_liftpPreservation
 
-theorem liftp_preservation_iff_uniform : q.LiftpPreservation ↔ q.IsUniform := by
+theorem liftpPreservation_iff_uniform : q.LiftpPreservation ↔ q.IsUniform := by
   rw [← supp_preservation_iff_liftp_preservation, supp_preservation_iff_uniform]
-#align qpf.liftp_preservation_iff_uniform Qpf.liftp_preservation_iff_uniform
+#align qpf.liftp_preservation_iff_uniform Qpf.liftpPreservation_iff_uniform
 
 end Qpf
 

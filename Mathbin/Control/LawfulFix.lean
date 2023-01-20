@@ -135,9 +135,9 @@ theorem le_f_of_mem_approx {x} : x ∈ approxChain f → x ≤ f x :=
   apply approx_mono'
 #align part.fix.le_f_of_mem_approx Part.fix.le_f_of_mem_approx
 
-theorem approx_mem_approx_chain {i} : approx f i ∈ approxChain f :=
+theorem approx_mem_approxChain {i} : approx f i ∈ approxChain f :=
   Stream'.mem_of_nth_eq rfl
-#align part.fix.approx_mem_approx_chain Part.fix.approx_mem_approx_chain
+#align part.fix.approx_mem_approx_chain Part.fix.approx_mem_approxChain
 
 end Fix
 

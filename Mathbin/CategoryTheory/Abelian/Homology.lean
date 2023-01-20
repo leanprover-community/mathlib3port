@@ -107,7 +107,7 @@ instance : Epi (homologyCToK f g w) :=
   simp only [pseudoelement.comp_apply, hd, hc]
 
 instance (w : f ≫ g = 0) : IsIso (homologyCToK f g w) :=
-  is_iso_of_mono_of_epi _
+  isIso_of_mono_of_epi _
 
 end CategoryTheory.Abelian
 
@@ -346,7 +346,7 @@ noncomputable def homologyIso (C : HomologicalComplex A c) (j : ι) :
       (by
         dsimp
         ext
-        simp only [category.assoc, image_to_kernel_arrow]
+        simp only [category.assoc, imageToKernel_arrow]
         erw [kernel_subobject_arrow', kernel_comparison_comp_ι, image_subobject_arrow']
         simp [← F.map_comp]))
 #align category_theory.functor.homology_iso CategoryTheory.Functor.homologyIso
@@ -365,7 +365,7 @@ noncomputable def homologyFunctorIso (i : ι) :
       simp only [category.assoc, cokernel_comparison_map_desc, cokernel.π_desc,
         π_comp_cokernel_comparison, ← F.map_comp]
       erw [← kernel_subobject_iso_comp_kernel_map_assoc]
-      simp only [HomologicalComplex.Hom.sq_from_right, HomologicalComplex.Hom.sq_from_left,
+      simp only [HomologicalComplex.Hom.sqFrom_right, HomologicalComplex.Hom.sqFrom_left,
         F.map_homological_complex_map_f, F.map_comp]
       dsimp only [HomologicalComplex.dFrom, HomologicalComplex.Hom.next]
       dsimp

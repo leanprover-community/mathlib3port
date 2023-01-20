@@ -134,28 +134,28 @@ def opOpEquivalence : Cᵒᵖᵒᵖ ≌ C where
 end
 
 /-- If `f` is an isomorphism, so is `f.op` -/
-instance is_iso_op {X Y : C} (f : X ⟶ Y) [IsIso f] : IsIso f.op :=
+instance isIso_op {X Y : C} (f : X ⟶ Y) [IsIso f] : IsIso f.op :=
   ⟨⟨(inv f).op, ⟨Quiver.Hom.unop_inj (by tidy), Quiver.Hom.unop_inj (by tidy)⟩⟩⟩
-#align category_theory.is_iso_op CategoryTheory.is_iso_op
+#align category_theory.is_iso_op CategoryTheory.isIso_op
 
 /-- If `f.op` is an isomorphism `f` must be too.
 (This cannot be an instance as it would immediately loop!)
 -/
-theorem is_iso_of_op {X Y : C} (f : X ⟶ Y) [IsIso f.op] : IsIso f :=
+theorem isIso_of_op {X Y : C} (f : X ⟶ Y) [IsIso f.op] : IsIso f :=
   ⟨⟨(inv f.op).unop, ⟨Quiver.Hom.op_inj (by simp), Quiver.Hom.op_inj (by simp)⟩⟩⟩
-#align category_theory.is_iso_of_op CategoryTheory.is_iso_of_op
+#align category_theory.is_iso_of_op CategoryTheory.isIso_of_op
 
-theorem is_iso_op_iff {X Y : C} (f : X ⟶ Y) : IsIso f.op ↔ IsIso f :=
+theorem isIso_op_iff {X Y : C} (f : X ⟶ Y) : IsIso f.op ↔ IsIso f :=
   ⟨fun hf => is_iso_of_op _, fun hf => inferInstance⟩
-#align category_theory.is_iso_op_iff CategoryTheory.is_iso_op_iff
+#align category_theory.is_iso_op_iff CategoryTheory.isIso_op_iff
 
-theorem is_iso_unop_iff {X Y : Cᵒᵖ} (f : X ⟶ Y) : IsIso f.unop ↔ IsIso f := by
+theorem isIso_unop_iff {X Y : Cᵒᵖ} (f : X ⟶ Y) : IsIso f.unop ↔ IsIso f := by
   rw [← is_iso_op_iff f.unop, Quiver.Hom.op_unop]
-#align category_theory.is_iso_unop_iff CategoryTheory.is_iso_unop_iff
+#align category_theory.is_iso_unop_iff CategoryTheory.isIso_unop_iff
 
-instance is_iso_unop {X Y : Cᵒᵖ} (f : X ⟶ Y) [IsIso f] : IsIso f.unop :=
-  (is_iso_unop_iff _).2 inferInstance
-#align category_theory.is_iso_unop CategoryTheory.is_iso_unop
+instance isIso_unop {X Y : Cᵒᵖ} (f : X ⟶ Y) [IsIso f] : IsIso f.unop :=
+  (isIso_unop_iff _).2 inferInstance
+#align category_theory.is_iso_unop CategoryTheory.isIso_unop
 
 @[simp]
 theorem op_inv {X Y : C} (f : X ⟶ Y) [IsIso f] : (inv f).op = inv f.op :=
@@ -265,14 +265,14 @@ instance {F : C ⥤ D} [Faithful F] : Faithful F.op
     Quiver.Hom.unop_inj <| by simpa using map_injective F (Quiver.Hom.op_inj h)
 
 /-- If F is faithful then the right_op of F is also faithful. -/
-instance right_op_faithful {F : Cᵒᵖ ⥤ D} [Faithful F] : Faithful F.rightOp
+instance rightOp_faithful {F : Cᵒᵖ ⥤ D} [Faithful F] : Faithful F.rightOp
     where map_injective' X Y f g h := Quiver.Hom.op_inj (map_injective F (Quiver.Hom.op_inj h))
-#align category_theory.functor.right_op_faithful CategoryTheory.Functor.right_op_faithful
+#align category_theory.functor.right_op_faithful CategoryTheory.Functor.rightOp_faithful
 
 /-- If F is faithful then the left_op of F is also faithful. -/
-instance left_op_faithful {F : C ⥤ Dᵒᵖ} [Faithful F] : Faithful F.leftOp
+instance leftOp_faithful {F : C ⥤ Dᵒᵖ} [Faithful F] : Faithful F.leftOp
     where map_injective' X Y f g h := Quiver.Hom.unop_inj (map_injective F (Quiver.Hom.unop_inj h))
-#align category_theory.functor.left_op_faithful CategoryTheory.Functor.left_op_faithful
+#align category_theory.functor.left_op_faithful CategoryTheory.Functor.leftOp_faithful
 
 /-- The isomorphism between `F.left_op.right_op` and `F`. -/
 @[simps]
@@ -288,11 +288,11 @@ def rightOpLeftOpIso (F : Cᵒᵖ ⥤ D) : F.rightOp.leftOp ≅ F :=
 
 /-- Whenever possible, it is advisable to use the isomorphism `right_op_left_op_iso`
 instead of this equality of functors. -/
-theorem right_op_left_op_eq (F : Cᵒᵖ ⥤ D) : F.rightOp.leftOp = F :=
+theorem rightOp_leftOp_eq (F : Cᵒᵖ ⥤ D) : F.rightOp.leftOp = F :=
   by
   cases F
   rfl
-#align category_theory.functor.right_op_left_op_eq CategoryTheory.Functor.right_op_left_op_eq
+#align category_theory.functor.right_op_left_op_eq CategoryTheory.Functor.rightOp_leftOp_eq
 
 end
 
@@ -344,9 +344,9 @@ protected def removeOp (α : F.op ⟶ G.op) : G ⟶ F
 #align category_theory.nat_trans.remove_op CategoryTheory.NatTrans.removeOp
 
 @[simp]
-theorem remove_op_id (F : C ⥤ D) : NatTrans.removeOp (𝟙 F.op) = 𝟙 F :=
+theorem removeOp_id (F : C ⥤ D) : NatTrans.removeOp (𝟙 F.op) = 𝟙 F :=
   rfl
-#align category_theory.nat_trans.remove_op_id CategoryTheory.NatTrans.remove_op_id
+#align category_theory.nat_trans.remove_op_id CategoryTheory.NatTrans.removeOp_id
 
 /-- Given a natural transformation `α : F.unop ⟶ G.unop`, we can take the opposite of each
 component obtaining a natural transformation `G ⟶ F`. -/
@@ -359,9 +359,9 @@ protected def removeUnop {F G : Cᵒᵖ ⥤ Dᵒᵖ} (α : F.unop ⟶ G.unop) : 
 #align category_theory.nat_trans.remove_unop CategoryTheory.NatTrans.removeUnop
 
 @[simp]
-theorem remove_unop_id (F : Cᵒᵖ ⥤ Dᵒᵖ) : NatTrans.removeUnop (𝟙 F.unop) = 𝟙 F :=
+theorem removeUnop_id (F : Cᵒᵖ ⥤ Dᵒᵖ) : NatTrans.removeUnop (𝟙 F.unop) = 𝟙 F :=
   rfl
-#align category_theory.nat_trans.remove_unop_id CategoryTheory.NatTrans.remove_unop_id
+#align category_theory.nat_trans.remove_unop_id CategoryTheory.NatTrans.removeUnop_id
 
 end
 
@@ -380,14 +380,14 @@ protected def leftOp (α : F ⟶ G) : G.leftOp ⟶ F.leftOp
 #align category_theory.nat_trans.left_op CategoryTheory.NatTrans.leftOp
 
 @[simp]
-theorem left_op_id : (𝟙 F : F ⟶ F).leftOp = 𝟙 F.leftOp :=
+theorem leftOp_id : (𝟙 F : F ⟶ F).leftOp = 𝟙 F.leftOp :=
   rfl
-#align category_theory.nat_trans.left_op_id CategoryTheory.NatTrans.left_op_id
+#align category_theory.nat_trans.left_op_id CategoryTheory.NatTrans.leftOp_id
 
 @[simp]
-theorem left_op_comp (α : F ⟶ G) (β : G ⟶ H) : (α ≫ β).leftOp = β.leftOp ≫ α.leftOp :=
+theorem leftOp_comp (α : F ⟶ G) (β : G ⟶ H) : (α ≫ β).leftOp = β.leftOp ≫ α.leftOp :=
   rfl
-#align category_theory.nat_trans.left_op_comp CategoryTheory.NatTrans.left_op_comp
+#align category_theory.nat_trans.left_op_comp CategoryTheory.NatTrans.leftOp_comp
 
 /-- Given a natural transformation `α : F.left_op ⟶ G.left_op`, for `F G : C ⥤ Dᵒᵖ`,
 taking `op` of each component gives a natural transformation `G ⟶ F`.
@@ -401,9 +401,9 @@ protected def removeLeftOp (α : F.leftOp ⟶ G.leftOp) : G ⟶ F
 #align category_theory.nat_trans.remove_left_op CategoryTheory.NatTrans.removeLeftOp
 
 @[simp]
-theorem remove_left_op_id : NatTrans.removeLeftOp (𝟙 F.leftOp) = 𝟙 F :=
+theorem removeLeftOp_id : NatTrans.removeLeftOp (𝟙 F.leftOp) = 𝟙 F :=
   rfl
-#align category_theory.nat_trans.remove_left_op_id CategoryTheory.NatTrans.remove_left_op_id
+#align category_theory.nat_trans.remove_left_op_id CategoryTheory.NatTrans.removeLeftOp_id
 
 end
 
@@ -422,14 +422,14 @@ protected def rightOp (α : F ⟶ G) : G.rightOp ⟶ F.rightOp
 #align category_theory.nat_trans.right_op CategoryTheory.NatTrans.rightOp
 
 @[simp]
-theorem right_op_id : (𝟙 F : F ⟶ F).rightOp = 𝟙 F.rightOp :=
+theorem rightOp_id : (𝟙 F : F ⟶ F).rightOp = 𝟙 F.rightOp :=
   rfl
-#align category_theory.nat_trans.right_op_id CategoryTheory.NatTrans.right_op_id
+#align category_theory.nat_trans.right_op_id CategoryTheory.NatTrans.rightOp_id
 
 @[simp]
-theorem right_op_comp (α : F ⟶ G) (β : G ⟶ H) : (α ≫ β).rightOp = β.rightOp ≫ α.rightOp :=
+theorem rightOp_comp (α : F ⟶ G) (β : G ⟶ H) : (α ≫ β).rightOp = β.rightOp ≫ α.rightOp :=
   rfl
-#align category_theory.nat_trans.right_op_comp CategoryTheory.NatTrans.right_op_comp
+#align category_theory.nat_trans.right_op_comp CategoryTheory.NatTrans.rightOp_comp
 
 /-- Given a natural transformation `α : F.right_op ⟶ G.right_op`, for `F G : Cᵒᵖ ⥤ D`,
 taking `unop` of each component gives a natural transformation `G ⟶ F`.
@@ -443,9 +443,9 @@ protected def removeRightOp (α : F.rightOp ⟶ G.rightOp) : G ⟶ F
 #align category_theory.nat_trans.remove_right_op CategoryTheory.NatTrans.removeRightOp
 
 @[simp]
-theorem remove_right_op_id : NatTrans.removeRightOp (𝟙 F.rightOp) = 𝟙 F :=
+theorem removeRightOp_id : NatTrans.removeRightOp (𝟙 F.rightOp) = 𝟙 F :=
   rfl
-#align category_theory.nat_trans.remove_right_op_id CategoryTheory.NatTrans.remove_right_op_id
+#align category_theory.nat_trans.remove_right_op_id CategoryTheory.NatTrans.removeRightOp_id
 
 end
 

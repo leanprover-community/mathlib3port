@@ -202,10 +202,10 @@ instance : CoeFun (GroupSeminorm E) fun _ => E → ℝ :=
   ⟨GroupSeminorm.toFun⟩
 
 @[simp, to_additive]
-theorem to_fun_eq_coe : p.toFun = p :=
+theorem toFun_eq_coe : p.toFun = p :=
   rfl
-#align group_seminorm.to_fun_eq_coe GroupSeminorm.to_fun_eq_coe
-#align add_group_seminorm.to_fun_eq_coe AddGroupSeminorm.to_fun_eq_coe
+#align group_seminorm.to_fun_eq_coe GroupSeminorm.toFun_eq_coe
+#align add_group_seminorm.to_fun_eq_coe AddGroupSeminorm.toFun_eq_coe
 
 @[ext, to_additive]
 theorem ext : (∀ x, p x = q x) → p = q :=
@@ -391,14 +391,14 @@ theorem comp_mul_le (f g : F →* E) : p.comp (f * g) ≤ p.comp f + p.comp g :=
 #align add_group_seminorm.comp_add_le AddGroupSeminorm.comp_add_le
 
 @[to_additive]
-theorem mul_bdd_below_range_add {p q : GroupSeminorm E} {x : E} :
+theorem mul_bddBelow_range_add {p q : GroupSeminorm E} {x : E} :
     BddBelow (range fun y => p y + q (x / y)) :=
   ⟨0, by
     rintro _ ⟨x, rfl⟩
     dsimp
     positivity⟩
-#align group_seminorm.mul_bdd_below_range_add GroupSeminorm.mul_bdd_below_range_add
-#align add_group_seminorm.add_bdd_below_range_add AddGroupSeminorm.add_bdd_below_range_add
+#align group_seminorm.mul_bdd_below_range_add GroupSeminorm.mul_bddBelow_range_add
+#align add_group_seminorm.add_bdd_below_range_add AddGroupSeminorm.add_bddBelow_range_add
 
 @[to_additive]
 noncomputable instance : HasInf (GroupSeminorm E) :=
@@ -428,9 +428,9 @@ noncomputable instance : Lattice (GroupSeminorm E) :=
   { GroupSeminorm.semilatticeSup with
     inf := (· ⊓ ·)
     inf_le_left := fun p q x =>
-      cinfᵢ_le_of_le mul_bdd_below_range_add x <| by rw [div_self', map_one_eq_zero q, add_zero]
+      cinfᵢ_le_of_le mul_bddBelow_range_add x <| by rw [div_self', map_one_eq_zero q, add_zero]
     inf_le_right := fun p q x =>
-      cinfᵢ_le_of_le mul_bdd_below_range_add (1 : E) <| by
+      cinfᵢ_le_of_le mul_bddBelow_range_add (1 : E) <| by
         simp only [div_one, map_one_eq_zero p, zero_add]
     le_inf := fun a b c hb hc x =>
       le_cinfᵢ fun u => (le_map_add_map_div a _ _).trans <| add_le_add (hb _) (hc _) }
@@ -517,9 +517,9 @@ instance : CoeFun (NonarchAddGroupSeminorm E) fun _ => E → ℝ :=
   ⟨NonarchAddGroupSeminorm.toFun⟩
 
 @[simp]
-theorem to_fun_eq_coe : p.toFun = p :=
+theorem toFun_eq_coe : p.toFun = p :=
   rfl
-#align nonarch_add_group_seminorm.to_fun_eq_coe NonarchAddGroupSeminorm.to_fun_eq_coe
+#align nonarch_add_group_seminorm.to_fun_eq_coe NonarchAddGroupSeminorm.toFun_eq_coe
 
 @[ext]
 theorem ext : (∀ x, p x = q x) → p = q :=
@@ -598,13 +598,13 @@ section AddCommGroup
 
 variable [AddCommGroup E] [AddCommGroup F] (p q : NonarchAddGroupSeminorm E) (x y : E)
 
-theorem add_bdd_below_range_add {p q : NonarchAddGroupSeminorm E} {x : E} :
+theorem add_bddBelow_range_add {p q : NonarchAddGroupSeminorm E} {x : E} :
     BddBelow (range fun y => p y + q (x - y)) :=
   ⟨0, by
     rintro _ ⟨x, rfl⟩
     dsimp
     positivity⟩
-#align nonarch_add_group_seminorm.add_bdd_below_range_add NonarchAddGroupSeminorm.add_bdd_below_range_add
+#align nonarch_add_group_seminorm.add_bdd_below_range_add NonarchAddGroupSeminorm.add_bddBelow_range_add
 
 end AddCommGroup
 
@@ -647,7 +647,7 @@ instance : SMul R (GroupSeminorm E) :=
             (mul_add _ _ _)
       inv' := fun x => by rw [map_inv_eq_map p] }⟩
 
-@[to_additive AddGroupSeminorm.is_scalar_tower]
+@[to_additive AddGroupSeminorm.isScalarTower]
 instance [SMul R' ℝ] [SMul R' ℝ≥0] [IsScalarTower R' ℝ≥0 ℝ] [SMul R R'] [IsScalarTower R R' ℝ] :
     IsScalarTower R R' (GroupSeminorm E) :=
   ⟨fun r a p => ext fun x => smul_assoc r a <| p x⟩
@@ -762,10 +762,10 @@ instance : CoeFun (GroupNorm E) fun _ => E → ℝ :=
   FunLike.hasCoeToFun
 
 @[simp, to_additive]
-theorem to_fun_eq_coe : p.toFun = p :=
+theorem toFun_eq_coe : p.toFun = p :=
   rfl
-#align group_norm.to_fun_eq_coe GroupNorm.to_fun_eq_coe
-#align add_group_norm.to_fun_eq_coe AddGroupNorm.to_fun_eq_coe
+#align group_norm.to_fun_eq_coe GroupNorm.toFun_eq_coe
+#align add_group_norm.to_fun_eq_coe AddGroupNorm.toFun_eq_coe
 
 @[ext, to_additive]
 theorem ext : (∀ x, p x = q x) → p = q :=
@@ -909,9 +909,9 @@ noncomputable instance : CoeFun (NonarchAddGroupNorm E) fun _ => E → ℝ :=
   FunLike.hasCoeToFun
 
 @[simp]
-theorem to_fun_eq_coe : p.toFun = p :=
+theorem toFun_eq_coe : p.toFun = p :=
   rfl
-#align nonarch_add_group_norm.to_fun_eq_coe NonarchAddGroupNorm.to_fun_eq_coe
+#align nonarch_add_group_norm.to_fun_eq_coe NonarchAddGroupNorm.toFun_eq_coe
 
 @[ext]
 theorem ext : (∀ x, p x = q x) → p = q :=

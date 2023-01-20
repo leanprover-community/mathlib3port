@@ -167,10 +167,10 @@ instance {X : CompactumCat} : TopologicalSpace X
   is_open_sUnion := fun S h1 F ⟨T, hT, h2⟩ =>
     mem_of_superset (h1 T hT _ h2) (Set.subset_unionₛ_of_mem hT)
 
-theorem is_closed_iff {X : CompactumCat} (S : Set X) :
+theorem isClosed_iff {X : CompactumCat} (S : Set X) :
     IsClosed S ↔ ∀ F : Ultrafilter X, S ∈ F → X.str F ∈ S :=
   by
-  rw [← is_open_compl_iff]
+  rw [← isOpen_compl_iff]
   constructor
   · intro cond F h
     by_contra c
@@ -181,12 +181,12 @@ theorem is_closed_iff {X : CompactumCat} (S : Set X) :
     specialize h1 F
     cases F.mem_or_compl_mem S
     exacts[absurd (h1 h) h2, h]
-#align Compactum.is_closed_iff CompactumCat.is_closed_iff
+#align Compactum.is_closed_iff CompactumCat.isClosed_iff
 
 instance {X : CompactumCat} : CompactSpace X :=
   by
   constructor
-  rw [is_compact_iff_ultrafilter_le_nhds]
+  rw [isCompact_iff_ultrafilter_le_nhds]
   intro F h
   refine' ⟨X.str F, by tauto, _⟩
   rw [le_nhds_iff]
@@ -286,12 +286,12 @@ private theorem cl_cl {X : CompactumCat} (A : Set X) : cl (cl A) ⊆ cl A :=
   exact finite_inter_closure.basic (@hT t ht)
 #align Compactum.cl_cl Compactum.cl_cl
 
-theorem is_closed_cl {X : CompactumCat} (A : Set X) : IsClosed (cl A) :=
+theorem isClosed_cl {X : CompactumCat} (A : Set X) : IsClosed (cl A) :=
   by
   rw [is_closed_iff]
   intro F hF
   exact cl_cl _ ⟨F, hF, rfl⟩
-#align Compactum.is_closed_cl CompactumCat.is_closed_cl
+#align Compactum.is_closed_cl CompactumCat.isClosed_cl
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (S1 S2 «expr ∈ » T0) -/
 theorem str_eq_of_le_nhds {X : CompactumCat} (F : Ultrafilter X) (x : X) : ↑F ≤ 𝓝 x → X.str F = x :=
@@ -387,11 +387,11 @@ instance {X : CompactumCat} : T2Space X :=
   rw [← str_eq_of_le_nhds _ _ hx, ← str_eq_of_le_nhds _ _ hy]
 
 /-- The structure map of a compactum actually computes limits. -/
-theorem Lim_eq_str {X : CompactumCat} (F : Ultrafilter X) : F.lim = X.str F :=
+theorem lim_eq_str {X : CompactumCat} (F : Ultrafilter X) : F.lim = X.str F :=
   by
-  rw [Ultrafilter.Lim_eq_iff_le_nhds, le_nhds_iff]
+  rw [Ultrafilter.lim_eq_iff_le_nhds, le_nhds_iff]
   tauto
-#align Compactum.Lim_eq_str CompactumCat.Lim_eq_str
+#align Compactum.Lim_eq_str CompactumCat.lim_eq_str
 
 theorem cl_eq_closure {X : CompactumCat} (A : Set X) : cl A = closure A :=
   by
@@ -421,7 +421,7 @@ noncomputable def ofTopologicalSpace (X : Type _) [TopologicalSpace X] [CompactS
   a := Ultrafilter.lim
   unit' := by
     ext x
-    exact Lim_eq (pure_le_nhds _)
+    exact lim_eq (pure_le_nhds _)
   assoc' := by
     ext FF
     change Ultrafilter (Ultrafilter X) at FF
@@ -429,7 +429,7 @@ noncomputable def ofTopologicalSpace (X : Type _) [TopologicalSpace X] [CompactS
     have c2 : ∀ (U : Set X) (F : Ultrafilter X), F.lim ∈ U → IsOpen U → U ∈ F :=
       by
       intro U F h1 hU
-      exact c1 ▸ is_open_iff_ultrafilter.mp hU _ h1 _ (Ultrafilter.le_nhds_Lim _)
+      exact c1 ▸ is_open_iff_ultrafilter.mp hU _ h1 _ (Ultrafilter.le_nhds_lim _)
     have c3 : ↑(Ultrafilter.map Ultrafilter.lim FF) ≤ 𝓝 x :=
       by
       rw [le_nhds_iff]
@@ -444,7 +444,7 @@ noncomputable def ofTopologicalSpace (X : Type _) [TopologicalSpace X] [CompactS
         intro P hP
         exact c2 U P hP hU
       exact @c3 U (IsOpen.mem_nhds hU hx)
-    apply Lim_eq
+    apply lim_eq
     rw [le_nhds_iff]
     exact c4
 #align Compactum.of_topological_space CompactumCat.ofTopologicalSpace
@@ -490,21 +490,21 @@ def isoOfTopologicalSpace {D : CompHausCat} :
     { toFun := id
       continuous_to_fun :=
         continuous_def.2 fun _ h => by
-          rw [is_open_iff_ultrafilter'] at h
+          rw [isOpen_iff_ultrafilter'] at h
           exact h }
   inv :=
     { toFun := id
       continuous_to_fun :=
         continuous_def.2 fun _ h1 => by
-          rw [is_open_iff_ultrafilter']
+          rw [isOpen_iff_ultrafilter']
           intro _ h2
           exact h1 _ h2 }
 #align Compactum_to_CompHaus.iso_of_topological_space compactumToCompHaus.isoOfTopologicalSpace
 
 /-- The functor Compactum_to_CompHaus is essentially surjective. -/
-theorem ess_surj : EssSurj compactumToCompHaus :=
+theorem essSurj : EssSurj compactumToCompHaus :=
   { mem_ess_image := fun X => ⟨CompactumCat.ofTopologicalSpace X, ⟨isoOfTopologicalSpace⟩⟩ }
-#align Compactum_to_CompHaus.ess_surj compactumToCompHaus.ess_surj
+#align Compactum_to_CompHaus.ess_surj compactumToCompHaus.essSurj
 
 /-- The functor Compactum_to_CompHaus is an equivalence of categories. -/
 noncomputable instance isEquivalence : IsEquivalence compactumToCompHaus :=
@@ -512,7 +512,7 @@ noncomputable instance isEquivalence : IsEquivalence compactumToCompHaus :=
   apply equivalence.of_fully_faithfully_ess_surj _
   exact compactumToCompHaus.full
   exact compactumToCompHaus.faithful
-  exact compactumToCompHaus.ess_surj
+  exact compactumToCompHaus.essSurj
 #align Compactum_to_CompHaus.is_equivalence compactumToCompHaus.isEquivalence
 
 end compactumToCompHaus

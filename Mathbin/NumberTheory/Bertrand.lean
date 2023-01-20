@@ -72,12 +72,12 @@ theorem real_main_inequality {x : ℝ} (n_large : (512 : ℝ) ≤ x) :
     mul_one_div, ← log_nonpos_iff (hf' x h5), ← hf x h5]
   have h : ConcaveOn ℝ (Set.Ioi 0.5) f := by
     refine'
-        ((strict_concave_on_log_Ioi.concave_on.subset (Set.Ioi_subset_Ioi _) (convex_Ioi 0.5)).add
+        ((strict_concave_on_log_Ioi.concave_on.subset (Set.Ioi_subset_Ioi _) (convex_ioi 0.5)).add
               ((strict_concave_on_sqrt_mul_log_Ioi.concave_on.comp_linear_map
                     ((2 : ℝ) • LinearMap.id)).Subset
                 (fun a ha => lt_of_eq_of_lt _ ((mul_lt_mul_left two_pos).mpr ha))
-                (convex_Ioi 0.5))).sub
-          ((convex_on_id (convex_Ioi (0.5 : ℝ))).smul (div_nonneg (log_nonneg _) _)) <;>
+                (convex_ioi 0.5))).sub
+          ((convexOn_id (convex_ioi (0.5 : ℝ))).smul (div_nonneg (log_nonneg _) _)) <;>
       norm_num1
   suffices ∃ x1 x2, 0.5 < x1 ∧ x1 < x2 ∧ x2 ≤ x ∧ 0 ≤ f x1 ∧ f x2 ≤ 0
     by
@@ -122,7 +122,7 @@ theorem bertrand_main_inequality {n : ℕ} (n_large : 512 ≤ n) :
 /-- A lemma that tells us that, in the case where Bertrand's postulate does not hold, the prime
 factorization of the central binomial coefficent only has factors at most `2 * n / 3 + 1`.
 -/
-theorem central_binom_factorization_small (n : ℕ) (n_large : 2 < n)
+theorem centralBinom_factorization_small (n : ℕ) (n_large : 2 < n)
     (no_prime : ¬∃ p : ℕ, p.Prime ∧ n < p ∧ p ≤ 2 * n) :
     centralBinom n = ∏ p in Finset.range (2 * n / 3 + 1), p ^ (centralBinom n).factorization p :=
   by
@@ -137,7 +137,7 @@ theorem central_binom_factorization_small (n : ℕ) (n_large : 2 < n)
   cases' no_prime hx with h h
   · rw [factorization_eq_zero_of_non_prime n.central_binom h, pow_zero]
   · rw [factorization_central_binom_of_two_mul_self_lt_three_mul n_large h h2x, pow_zero]
-#align central_binom_factorization_small central_binom_factorization_small
+#align central_binom_factorization_small centralBinom_factorization_small
 
 /-- An upper bound on the central binomial coefficient used in the proof of Bertrand's postulate.
 The bound splits the prime factors of `central_binom n` into those
@@ -147,7 +147,7 @@ The bound splits the prime factors of `central_binom n` into those
 4. Between `n` and `2 * n`, which would not exist in the case where Bertrand's postulate is false.
 5. Above `2 * n`, which do not exist.
 -/
-theorem central_binom_le_of_no_bertrand_prime (n : ℕ) (n_big : 2 < n)
+theorem centralBinom_le_of_no_bertrand_prime (n : ℕ) (n_big : 2 < n)
     (no_prime : ¬∃ p : ℕ, Nat.Prime p ∧ n < p ∧ p ≤ 2 * n) :
     centralBinom n ≤ (2 * n) ^ sqrt (2 * n) * 4 ^ (2 * n / 3) :=
   by
@@ -161,7 +161,7 @@ theorem central_binom_le_of_no_bertrand_prime (n : ℕ) (n_big : 2 < n)
     contrapose! h
     dsimp only [f]
     rw [factorization_eq_zero_of_non_prime n.central_binom h, pow_zero]
-  rw [central_binom_factorization_small n n_big no_prime, ← this, ←
+  rw [centralBinom_factorization_small n n_big no_prime, ← this, ←
     Finset.prod_filter_mul_prod_filter_not S (· ≤ sqrt (2 * n))]
   apply mul_le_mul'
   · refine' (Finset.prod_le_prod'' fun p hp => (_ : f p ≤ 2 * n)).trans _
@@ -178,7 +178,7 @@ theorem central_binom_le_of_no_bertrand_prime (n : ℕ) (n_big : 2 < n)
       exact Nat.factorization_choose_le_one (sqrt_lt'.mp <| not_le.1 h2)
     refine' Finset.prod_le_prod_of_subset_of_one_le' (Finset.filter_subset _ _) _
     exact fun p hp _ => (Finset.mem_filter.1 hp).2.one_lt.le
-#align central_binom_le_of_no_bertrand_prime central_binom_le_of_no_bertrand_prime
+#align central_binom_le_of_no_bertrand_prime centralBinom_le_of_no_bertrand_prime
 
 namespace Nat
 
@@ -194,9 +194,9 @@ theorem exists_prime_lt_and_le_two_mul_eventually (n : ℕ) (n_big : 512 ≤ n) 
   -- yielding an inequality which we have seen is false for large enough n.
   have H1 : n * (2 * n) ^ sqrt (2 * n) * 4 ^ (2 * n / 3) ≤ 4 ^ n := bertrand_main_inequality n_big
   have H2 : 4 ^ n < n * n.central_binom :=
-    Nat.four_pow_lt_mul_central_binom n (le_trans (by norm_num1) n_big)
+    Nat.four_pow_lt_mul_centralBinom n (le_trans (by norm_num1) n_big)
   have H3 : n.central_binom ≤ (2 * n) ^ sqrt (2 * n) * 4 ^ (2 * n / 3) :=
-    central_binom_le_of_no_bertrand_prime n (lt_of_lt_of_le (by norm_num1) n_big) no_prime
+    centralBinom_le_of_no_bertrand_prime n (lt_of_lt_of_le (by norm_num1) n_big) no_prime
   rw [mul_assoc] at H1; exact not_le.2 H2 ((mul_le_mul_left' H3 n).trans H1)
 #align nat.exists_prime_lt_and_le_two_mul_eventually Nat.exists_prime_lt_and_le_two_mul_eventually
 

@@ -84,10 +84,10 @@ def ofHom {X Y : Type u} [Mul X] [Mul Y] (f : X →ₙ* Y) : of X ⟶ of Y :=
 add_decl_doc AddMagmaCat.ofHom
 
 @[simp, to_additive]
-theorem of_hom_apply {X Y : Type u} [Mul X] [Mul Y] (f : X →ₙ* Y) (x : X) : ofHom f x = f x :=
+theorem ofHom_apply {X Y : Type u} [Mul X] [Mul Y] (f : X →ₙ* Y) (x : X) : ofHom f x = f x :=
   rfl
-#align Magma.of_hom_apply MagmaCat.of_hom_apply
-#align AddMagma.of_hom_apply AddMagmaCat.of_hom_apply
+#align Magma.of_hom_apply MagmaCat.ofHom_apply
+#align AddMagma.of_hom_apply AddMagmaCat.ofHom_apply
 
 @[to_additive]
 instance : Inhabited MagmaCat :=
@@ -150,11 +150,11 @@ def ofHom {X Y : Type u} [Semigroup X] [Semigroup Y] (f : X →ₙ* Y) : of X �
 add_decl_doc AddSemigroupCat.ofHom
 
 @[simp, to_additive]
-theorem of_hom_apply {X Y : Type u} [Semigroup X] [Semigroup Y] (f : X →ₙ* Y) (x : X) :
+theorem ofHom_apply {X Y : Type u} [Semigroup X] [Semigroup Y] (f : X →ₙ* Y) (x : X) :
     ofHom f x = f x :=
   rfl
-#align Semigroup.of_hom_apply SemigroupCat.of_hom_apply
-#align AddSemigroup.of_hom_apply AddSemigroupCat.of_hom_apply
+#align Semigroup.of_hom_apply SemigroupCat.ofHom_apply
+#align AddSemigroup.of_hom_apply AddSemigroupCat.ofHom_apply
 
 @[to_additive]
 instance : Inhabited SemigroupCat :=

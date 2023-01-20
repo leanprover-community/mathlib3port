@@ -68,9 +68,9 @@ def NatTrans.Equifibered {F G : J ⥤ C} (α : F ⟶ G) : Prop :=
   ∀ ⦃i j : J⦄ (f : i ⟶ j), IsPullback (F.map f) (α.app i) (α.app j) (G.map f)
 #align category_theory.nat_trans.equifibered CategoryTheory.NatTrans.Equifibered
 
-theorem NatTrans.equifibered_of_is_iso {F G : J ⥤ C} (α : F ⟶ G) [IsIso α] : α.Equifibered :=
+theorem NatTrans.equifibered_of_isIso {F G : J ⥤ C} (α : F ⟶ G) [IsIso α] : α.Equifibered :=
   fun _ _ f => IsPullback.ofVertIsIso ⟨NatTrans.naturality _ f⟩
-#align category_theory.nat_trans.equifibered_of_is_iso CategoryTheory.NatTrans.equifibered_of_is_iso
+#align category_theory.nat_trans.equifibered_of_is_iso CategoryTheory.NatTrans.equifibered_of_isIso
 
 theorem NatTrans.Equifibered.comp {F G H : J ⥤ C} {α : F ⟶ G} {β : G ⟶ H} (hα : α.Equifibered)
     (hβ : β.Equifibered) : (α ≫ β).Equifibered := fun i j f => (hα f).pasteVert (hβ f)
@@ -111,7 +111,7 @@ noncomputable def IsVanKampenColimit.isColimit {F : J ⥤ C} {c : Cocone F}
   exact is_pullback.of_vert_is_iso ⟨by erw [nat_trans.id_app, category.comp_id, category.id_comp]⟩
 #align category_theory.is_van_kampen_colimit.is_colimit CategoryTheory.IsVanKampenColimit.isColimit
 
-theorem IsInitial.is_van_kampen_colimit [HasStrictInitialObjects C] {X : C} (h : IsInitial X) :
+theorem IsInitial.isVanKampenColimit [HasStrictInitialObjects C] {X : C} (h : IsInitial X) :
     IsVanKampenColimit (asEmptyCocone X) :=
   by
   intro F' c' α f hf hα
@@ -121,7 +121,7 @@ theorem IsInitial.is_van_kampen_colimit [HasStrictInitialObjects C] {X : C} (h :
   refine'
     ⟨by rintro _ ⟨⟨⟩⟩, fun _ =>
       ⟨is_colimit.of_iso_colimit h (cocones.ext (as_iso f).symm <| by rintro ⟨⟨⟩⟩)⟩⟩
-#align category_theory.is_initial.is_van_kampen_colimit CategoryTheory.IsInitial.is_van_kampen_colimit
+#align category_theory.is_initial.is_van_kampen_colimit CategoryTheory.IsInitial.isVanKampenColimit
 
 section Extensive
 
@@ -254,21 +254,21 @@ theorem BinaryCofan.mono_inr_of_is_van_kampen [HasInitial C] {X Y : C} {c : Bina
             infer_instance)).some
 #align category_theory.binary_cofan.mono_inr_of_is_van_kampen CategoryTheory.BinaryCofan.mono_inr_of_is_van_kampen
 
-theorem FinitaryExtensive.mono_inr_of_is_colimit [FinitaryExtensive C] {c : BinaryCofan X Y}
+theorem FinitaryExtensive.mono_inr_of_isColimit [FinitaryExtensive C] {c : BinaryCofan X Y}
     (hc : IsColimit c) : Mono c.inr :=
   BinaryCofan.mono_inr_of_is_van_kampen (FinitaryExtensive.van_kampen c hc)
-#align category_theory.finitary_extensive.mono_inr_of_is_colimit CategoryTheory.FinitaryExtensive.mono_inr_of_is_colimit
+#align category_theory.finitary_extensive.mono_inr_of_is_colimit CategoryTheory.FinitaryExtensive.mono_inr_of_isColimit
 
-theorem FinitaryExtensive.mono_inl_of_is_colimit [FinitaryExtensive C] {c : BinaryCofan X Y}
+theorem FinitaryExtensive.mono_inl_of_isColimit [FinitaryExtensive C] {c : BinaryCofan X Y}
     (hc : IsColimit c) : Mono c.inl :=
-  FinitaryExtensive.mono_inr_of_is_colimit (BinaryCofan.isColimitFlip hc)
-#align category_theory.finitary_extensive.mono_inl_of_is_colimit CategoryTheory.FinitaryExtensive.mono_inl_of_is_colimit
+  FinitaryExtensive.mono_inr_of_isColimit (BinaryCofan.isColimitFlip hc)
+#align category_theory.finitary_extensive.mono_inl_of_is_colimit CategoryTheory.FinitaryExtensive.mono_inl_of_isColimit
 
 instance [FinitaryExtensive C] (X Y : C) : Mono (coprod.inl : X ⟶ X ⨿ Y) :=
-  (FinitaryExtensive.mono_inl_of_is_colimit (coprodIsCoprod X Y) : _)
+  (FinitaryExtensive.mono_inl_of_isColimit (coprodIsCoprod X Y) : _)
 
 instance [FinitaryExtensive C] (X Y : C) : Mono (coprod.inr : Y ⟶ X ⨿ Y) :=
-  (FinitaryExtensive.mono_inr_of_is_colimit (coprodIsCoprod X Y) : _)
+  (FinitaryExtensive.mono_inr_of_isColimit (coprodIsCoprod X Y) : _)
 
 theorem BinaryCofan.isPullbackInitialToOfIsVanKampen [HasInitial C] {c : BinaryCofan X Y}
     (h : IsVanKampenColimit c) : IsPullback (initial.to _) (initial.to _) c.inl c.inr :=
@@ -293,7 +293,7 @@ theorem FinitaryExtensive.isPullbackInitialToBinaryCofan [FinitaryExtensive C] {
 
 theorem has_strict_initial_of_is_universal [HasInitial C]
     (H : IsUniversalColimit (BinaryCofan.mk (𝟙 (⊥_ C)) (𝟙 (⊥_ C)))) : HasStrictInitialObjects C :=
-  has_strict_initial_objects_of_initial_is_strict
+  hasStrictInitialObjects_of_initial_is_strict
     (by
       intro A f
       suffices is_colimit (binary_cofan.mk (𝟙 A) (𝟙 A))
@@ -308,17 +308,17 @@ theorem has_strict_initial_of_is_universal [HasInitial C]
         exact is_pullback.of_horiz_is_iso ⟨(category.id_comp _).trans (category.comp_id _).symm⟩)
 #align category_theory.has_strict_initial_of_is_universal CategoryTheory.has_strict_initial_of_is_universal
 
-instance (priority := 100) has_strict_initial_objects_of_finitary_extensive [FinitaryExtensive C] :
+instance (priority := 100) hasStrictInitialObjects_of_finitaryExtensive [FinitaryExtensive C] :
     HasStrictInitialObjects C :=
   has_strict_initial_of_is_universal
     (FinitaryExtensive.van_kampen _
-        ((BinaryCofan.is_colimit_iff_is_iso_inr initialIsInitial _).mpr
+        ((BinaryCofan.isColimit_iff_isIso_inr initialIsInitial _).mpr
             (by
               dsimp
               infer_instance)).some).is_universal
-#align category_theory.has_strict_initial_objects_of_finitary_extensive CategoryTheory.has_strict_initial_objects_of_finitary_extensive
+#align category_theory.has_strict_initial_objects_of_finitary_extensive CategoryTheory.hasStrictInitialObjects_of_finitaryExtensive
 
-theorem finitary_extensive_iff_of_is_terminal (C : Type u) [Category.{v} C] [HasFiniteCoproducts C]
+theorem finitaryExtensive_iff_of_isTerminal (C : Type u) [Category.{v} C] [HasFiniteCoproducts C]
     (T : C) (HT : IsTerminal T) (c₀ : BinaryCofan T T) (hc₀ : IsColimit c₀) :
     FinitaryExtensive C ↔ IsVanKampenColimit c₀ :=
   by
@@ -332,7 +332,7 @@ theorem finitary_extensive_iff_of_is_terminal (C : Type u) [Category.{v} C] [Has
       (by rw [← reassoc_of hY, hd', category.assoc])]
   obtain ⟨hl, hr⟩ := (H c (HT.from _) (HT.from _) d hd.symm hd'.symm).mp ⟨hc⟩
   rw [hl.paste_vert_iff hX.symm, hr.paste_vert_iff hY.symm]
-#align category_theory.finitary_extensive_iff_of_is_terminal CategoryTheory.finitary_extensive_iff_of_is_terminal
+#align category_theory.finitary_extensive_iff_of_is_terminal CategoryTheory.finitaryExtensive_iff_of_isTerminal
 
 instance types.finitaryExtensive : FinitaryExtensive (Type u) :=
   by
@@ -349,7 +349,7 @@ instance types.finitaryExtensive : FinitaryExtensive (Type u) :=
         intro x
         cases h : s.fst x
         · simp_rw [sum.inl_injective.eq_iff]
-          exact exists_unique_eq'
+          exact existsUnique_eq'
         · apply_fun f  at h
           cases ((congr_fun s.condition x).symm.trans h).trans (congr_fun hαY val : _).symm
       delta ExistsUnique at this
@@ -366,7 +366,7 @@ instance types.finitaryExtensive : FinitaryExtensive (Type u) :=
         · apply_fun f  at h
           cases ((congr_fun s.condition x).symm.trans h).trans (congr_fun hαX val : _).symm
         · simp_rw [sum.inr_injective.eq_iff]
-          exact exists_unique_eq'
+          exact existsUnique_eq'
       delta ExistsUnique at this
       choose l hl hl'
       exact
@@ -436,32 +436,32 @@ def finitaryExtensiveTopAux (Z : TopCat.{u}) (f : Z ⟶ TopCat.of (Sum PUnit.{u 
         dite _ (fun h => s.inl <| eX.symm ⟨x, h⟩) fun h =>
           s.inr <| eY.symm ⟨x, (this x).resolve_left h⟩,
         _⟩
-    rw [continuous_iff_continuous_at]
+    rw [continuous_iff_continuousAt]
     intro x
     by_cases f x = Sum.inl PUnit.unit
     · revert h x
-      apply (IsOpen.continuous_on_iff _).mp
-      · rw [continuous_on_iff_continuous_restrict]
+      apply (IsOpen.continuousOn_iff _).mp
+      · rw [continuousOn_iff_continuous_restrict]
         convert_to
           Continuous fun x : { x | f x = Sum.inl PUnit.unit } => s.inl ⟨(x, PUnit.unit), x.2⟩
         · ext ⟨x, hx⟩
           exact dif_pos hx
         continuity
-      · convert f.2.1 _ open_embedding_inl.open_range
+      · convert f.2.1 _ openEmbedding_inl.open_range
         ext x
         exact
           ⟨fun h => ⟨_, h.symm⟩, fun ⟨e, h⟩ =>
             h.symm.trans (congr_arg Sum.inl <| Subsingleton.elim _ _)⟩
     · revert h x
-      apply (IsOpen.continuous_on_iff _).mp
-      · rw [continuous_on_iff_continuous_restrict]
+      apply (IsOpen.continuousOn_iff _).mp
+      · rw [continuousOn_iff_continuous_restrict]
         convert_to
           Continuous fun x : { x | f x ≠ Sum.inl PUnit.unit } =>
             s.inr ⟨(x, PUnit.unit), (this _).resolve_left x.2⟩
         · ext ⟨x, hx⟩
           exact dif_neg hx
         continuity
-      · convert f.2.1 _ open_embedding_inr.open_range
+      · convert f.2.1 _ openEmbedding_inr.open_range
         ext x
         change f x ≠ Sum.inl PUnit.unit ↔ f x ∈ Set.range Sum.inr
         trans f x = Sum.inr PUnit.unit
@@ -507,7 +507,7 @@ instance : FinitaryExtensive TopCat.{u} :=
         intro x
         cases h : s.fst x
         · simp_rw [sum.inl_injective.eq_iff]
-          exact exists_unique_eq'
+          exact existsUnique_eq'
         · apply_fun f  at h
           cases
             ((concrete_category.congr_hom s.condition x).symm.trans h).trans
@@ -532,7 +532,7 @@ instance : FinitaryExtensive TopCat.{u} :=
             ((concrete_category.congr_hom s.condition x).symm.trans h).trans
               (concrete_category.congr_hom hαX val : _).symm
         · simp_rw [sum.inr_injective.eq_iff]
-          exact exists_unique_eq'
+          exact existsUnique_eq'
       delta ExistsUnique at this
       choose l hl hl'
       refine'
@@ -553,10 +553,10 @@ universe v'' u''
 
 variable {D : Type u''} [Category.{v''} D]
 
-theorem NatTrans.Equifibered.whisker_right {F G : J ⥤ C} {α : F ⟶ G} (hα : α.Equifibered)
-    (H : C ⥤ D) [PreservesLimitsOfShape WalkingCospan H] : (whiskerRight α H).Equifibered :=
-  fun i j f => (hα f).map H
-#align category_theory.nat_trans.equifibered.whisker_right CategoryTheory.NatTrans.Equifibered.whisker_right
+theorem NatTrans.Equifibered.whiskerRight {F G : J ⥤ C} {α : F ⟶ G} (hα : α.Equifibered) (H : C ⥤ D)
+    [PreservesLimitsOfShape WalkingCospan H] : (whiskerRight α H).Equifibered := fun i j f =>
+  (hα f).map H
+#align category_theory.nat_trans.equifibered.whisker_right CategoryTheory.NatTrans.Equifibered.whiskerRight
 
 theorem IsVanKampenColimit.of_iso {F : J ⥤ C} {c c' : Cocone F} (H : IsVanKampenColimit c)
     (e : c ≅ c') : IsVanKampenColimit c' :=
@@ -592,9 +592,8 @@ theorem IsVanKampenColimit.of_map {D : Type _} [Category D] (G : C ⥤ D) {F : J
   · exact is_pullback.map_iff G (nat_trans.congr_app h.symm j)
 #align category_theory.is_van_kampen_colimit.of_map CategoryTheory.IsVanKampenColimit.of_map
 
-theorem is_van_kampen_colimit_of_evaluation [HasPullbacks D] [HasColimitsOfShape J D]
-    (F : J ⥤ C ⥤ D) (c : Cocone F)
-    (hc : ∀ x : C, IsVanKampenColimit (((evaluation C D).obj x).mapCocone c)) :
+theorem isVanKampenColimit_of_evaluation [HasPullbacks D] [HasColimitsOfShape J D] (F : J ⥤ C ⥤ D)
+    (c : Cocone F) (hc : ∀ x : C, IsVanKampenColimit (((evaluation C D).obj x).mapCocone c)) :
     IsVanKampenColimit c := by
   intro F' c' α f e hα
   have := fun x =>
@@ -614,7 +613,7 @@ theorem is_van_kampen_colimit_of_evaluation [HasPullbacks D] [HasColimitsOfShape
     exact fun H =>
       ⟨evaluation_jointly_reflects_colimits _ fun x =>
           ((this x).mpr fun j => (H j).map ((evaluation C D).obj x)).some⟩
-#align category_theory.is_van_kampen_colimit_of_evaluation CategoryTheory.is_van_kampen_colimit_of_evaluation
+#align category_theory.is_van_kampen_colimit_of_evaluation CategoryTheory.isVanKampenColimit_of_evaluation
 
 instance [HasPullbacks C] [FinitaryExtensive C] : FinitaryExtensive (D ⥤ C) :=
   haveI : has_finite_coproducts (D ⥤ C) := ⟨fun n => limits.functor_category_has_colimits_of_shape⟩

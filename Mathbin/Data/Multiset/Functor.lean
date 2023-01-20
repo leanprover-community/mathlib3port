@@ -93,7 +93,7 @@ open Traversable IsLawfulTraversable
 @[simp]
 theorem lift_coe {α β : Type _} (x : List α) (f : List α → β)
     (h : ∀ a b : List α, a ≈ b → f a = f b) : Quotient.lift f h (x : Multiset α) = f x :=
-  Quotient.lift_mk _ _ _
+  Quotient.lift_mk'' _ _ _
 #align multiset.lift_coe Multiset.lift_coe
 
 @[simp]

@@ -49,7 +49,7 @@ theorem riesz_lemma {F : Subspace 𝕜 E} (hFc : IsClosed (F : Set E)) (hF : ∃
     let d := Metric.infDist x F
     have hFn : (F : Set E).Nonempty := ⟨_, F.zero_mem⟩
     have hdp : 0 < d :=
-      lt_of_le_of_ne Metric.inf_dist_nonneg fun heq =>
+      lt_of_le_of_ne Metric.infDist_nonneg fun heq =>
         hx ((hFc.mem_iff_inf_dist_zero hFn).2 HEq.symm)
     let r' := max r 2⁻¹
     have hr' : r' < 1 := by
@@ -57,7 +57,7 @@ theorem riesz_lemma {F : Subspace 𝕜 E} (hFc : IsClosed (F : Set E)) (hF : ∃
       norm_num
     have hlt : 0 < r' := lt_of_lt_of_le (by norm_num) (le_max_right r 2⁻¹)
     have hdlt : d < d / r' := (lt_div_iff hlt).mpr ((mul_lt_iff_lt_one_right hdp).2 hr')
-    obtain ⟨y₀, hy₀F, hxy₀⟩ : ∃ y ∈ F, dist x y < d / r' := (Metric.inf_dist_lt_iff hFn).mp hdlt
+    obtain ⟨y₀, hy₀F, hxy₀⟩ : ∃ y ∈ F, dist x y < d / r' := (Metric.infDist_lt_iff hFn).mp hdlt
     have x_ne_y₀ : x - y₀ ∉ F := by
       by_contra h
       have : x - y₀ + y₀ ∈ F := F.add_mem h hy₀F
@@ -70,7 +70,7 @@ theorem riesz_lemma {F : Subspace 𝕜 E} (hFc : IsClosed (F : Set E)) (hF : ∃
       _ < d := by
         rw [← dist_eq_norm]
         exact (lt_div_iff' hlt).1 hxy₀
-      _ ≤ dist x (y₀ + y) := Metric.inf_dist_le_dist_of_mem hy₀y
+      _ ≤ dist x (y₀ + y) := Metric.infDist_le_dist_of_mem hy₀y
       _ = ‖x - y₀ - y‖ := by rw [sub_sub, dist_eq_norm]
       
 #align riesz_lemma riesz_lemma
@@ -114,7 +114,7 @@ theorem riesz_lemma_of_norm_lt {c : 𝕜} (hc : 1 < ‖c‖) {R : ℝ} (hR : ‖
     
 #align riesz_lemma_of_norm_lt riesz_lemma_of_norm_lt
 
-theorem Metric.closed_ball_inf_dist_compl_subset_closure {x : F} {s : Set F} (hx : x ∈ s) :
+theorem Metric.closedBall_infDist_compl_subset_closure {x : F} {s : Set F} (hx : x ∈ s) :
     closedBall x (infDist x (sᶜ)) ⊆ closure s :=
   by
   cases' eq_or_ne (inf_dist x (sᶜ)) 0 with h₀ h₀
@@ -122,5 +122,5 @@ theorem Metric.closed_ball_inf_dist_compl_subset_closure {x : F} {s : Set F} (hx
     exact closure_mono (singleton_subset_iff.2 hx)
   · rw [← closure_ball x h₀]
     exact closure_mono ball_inf_dist_compl_subset
-#align metric.closed_ball_inf_dist_compl_subset_closure Metric.closed_ball_inf_dist_compl_subset_closure
+#align metric.closed_ball_inf_dist_compl_subset_closure Metric.closedBall_infDist_compl_subset_closure
 

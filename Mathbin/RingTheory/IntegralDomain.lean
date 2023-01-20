@@ -115,17 +115,17 @@ def Fintype.fieldOfDomain (R) [CommRing R] [IsDomain R] [DecidableEq R] [Fintype
   { Fintype.groupWithZeroOfCancel R, ‹CommRing R› with }
 #align fintype.field_of_domain Fintype.fieldOfDomain
 
-theorem Finite.is_field_of_domain (R) [CommRing R] [IsDomain R] [Finite R] : IsField R :=
+theorem Finite.isField_of_domain (R) [CommRing R] [IsDomain R] [Finite R] : IsField R :=
   by
   cases nonempty_fintype R
   exact @Field.toIsField R (@Fintype.fieldOfDomain R _ _ (Classical.decEq R) _)
-#align finite.is_field_of_domain Finite.is_field_of_domain
+#align finite.is_field_of_domain Finite.isField_of_domain
 
 end Ring
 
 variable [CommRing R] [IsDomain R] [Group G]
 
-theorem card_nth_roots_subgroup_units [Fintype G] (f : G →* R) (hf : Injective f) {n : ℕ}
+theorem card_nthRoots_subgroup_units [Fintype G] (f : G →* R) (hf : Injective f) {n : ℕ}
     (hn : 0 < n) (g₀ : G) :
     ({ g ∈ univ | g ^ n = g₀ } : Finset G).card ≤ (nthRoots n (f g₀)).card :=
   by
@@ -138,24 +138,23 @@ theorem card_nth_roots_subgroup_units [Fintype G] (f : G →* R) (hf : Injective
   · intros
     apply hf
     assumption
-#align card_nth_roots_subgroup_units card_nth_roots_subgroup_units
+#align card_nth_roots_subgroup_units card_nthRoots_subgroup_units
 
 /-- A finite subgroup of the unit group of an integral domain is cyclic. -/
-theorem is_cyclic_of_subgroup_is_domain [Finite G] (f : G →* R) (hf : Injective f) : IsCyclic G :=
-  by
+theorem isCyclic_of_subgroup_isDomain [Finite G] (f : G →* R) (hf : Injective f) : IsCyclic G := by
   classical
     cases nonempty_fintype G
-    apply is_cyclic_of_card_pow_eq_one_le
+    apply isCyclic_of_card_pow_eq_one_le
     intro n hn
-    convert le_trans (card_nth_roots_subgroup_units f hf hn 1) (card_nth_roots n (f 1))
-#align is_cyclic_of_subgroup_is_domain is_cyclic_of_subgroup_is_domain
+    convert le_trans (card_nthRoots_subgroup_units f hf hn 1) (card_nth_roots n (f 1))
+#align is_cyclic_of_subgroup_is_domain isCyclic_of_subgroup_isDomain
 
 /-- The unit group of a finite integral domain is cyclic.
 
 To support `ℤˣ` and other infinite monoids with finite groups of units, this requires only
 `finite Rˣ` rather than deducing it from `finite R`. -/
 instance [Finite Rˣ] : IsCyclic Rˣ :=
-  is_cyclic_of_subgroup_is_domain (Units.coeHom R) <| Units.ext
+  isCyclic_of_subgroup_isDomain (Units.coeHom R) <| Units.ext
 
 section
 
@@ -164,8 +163,7 @@ variable (S : Subgroup Rˣ) [Finite S]
 /-- A finite subgroup of the units of an integral domain is cyclic. -/
 instance subgroup_units_cyclic : IsCyclic S :=
   by
-  refine'
-    is_cyclic_of_subgroup_is_domain ⟨(coe : S → R), _, _⟩ (units.ext.comp Subtype.val_injective)
+  refine' isCyclic_of_subgroup_isDomain ⟨(coe : S → R), _, _⟩ (units.ext.comp Subtype.val_injective)
   · simp
   · intros
     simp
@@ -268,17 +266,17 @@ theorem sum_hom_units_eq_zero (f : G →* R) (hf : f ≠ 1) : (∑ g : G, f g) =
               simp only [imp_true_iff, eq_self_iff_true, Subgroup.coe_pow, Units.val_pow_eq_pow_val,
                 coe_coe])
             (fun m n hm hn =>
-              pow_injective_of_lt_order_of _ (by simpa only [mem_range] using hm)
+              pow_injective_of_lt_orderOf _ (by simpa only [mem_range] using hm)
                 (by simpa only [mem_range] using hn))
             fun b hb =>
             let ⟨n, hn⟩ := hx b
-            ⟨n % orderOf x, mem_range.2 (Nat.mod_lt _ (order_of_pos _)), by
-              rw [← pow_eq_mod_order_of, hn]⟩
+            ⟨n % orderOf x, mem_range.2 (Nat.mod_lt _ (orderOf_pos _)), by
+              rw [← pow_eq_mod_orderOf, hn]⟩
       _ = 0 := _
       
     rw [← mul_left_inj' hx1, zero_mul, geom_sum_mul, coe_coe]
     norm_cast
-    simp [pow_order_of_eq_one]
+    simp [pow_orderOf_eq_one]
 #align sum_hom_units_eq_zero sum_hom_units_eq_zero
 
 /-- In an integral domain, a sum indexed by a homomorphism from a finite group is zero,

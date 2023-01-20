@@ -153,7 +153,7 @@ instance commRing (n : ℕ) : CommRing (Zmod n)
   nat_cast_zero := Nat.casesOn n (@Nat.cast_zero Int _) fun n => @Nat.cast_zero (Fin n.succ) _
   nat_cast_succ := Nat.casesOn n (@Nat.cast_succ Int _) fun n => @Nat.cast_succ (Fin n.succ) _
   intCast := Nat.casesOn n (coe : ℤ → ℤ) fun n => (coe : ℤ → Fin n.succ)
-  int_cast_of_nat := Nat.casesOn n (@Int.cast_of_nat Int _) fun n => @Int.cast_of_nat (Fin n.succ) _
+  int_cast_of_nat := Nat.casesOn n (@Int.cast_ofNat Int _) fun n => @Int.cast_ofNat (Fin n.succ) _
   int_cast_neg_succ_of_nat :=
     Nat.casesOn n (@Int.cast_negSucc Int _) fun n => @Int.cast_negSucc (Fin n.succ) _
   left_distrib := Nat.casesOn n (@left_distrib Int _ _ _) fun n => @left_distrib (Fin n.succ) _ _ _

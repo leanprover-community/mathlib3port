@@ -81,45 +81,45 @@ def toNat : MonoidWithZeroHom ℕ∞ ℕ
 #align enat.to_nat Enat.toNat
 
 @[simp]
-theorem to_nat_coe (n : ℕ) : toNat n = n :=
+theorem toNat_coe (n : ℕ) : toNat n = n :=
   rfl
-#align enat.to_nat_coe Enat.to_nat_coe
+#align enat.to_nat_coe Enat.toNat_coe
 
 @[simp]
-theorem to_nat_top : toNat ⊤ = 0 :=
+theorem toNat_top : toNat ⊤ = 0 :=
   rfl
-#align enat.to_nat_top Enat.to_nat_top
+#align enat.to_nat_top Enat.toNat_top
 
 @[simp]
-theorem coe_to_nat_eq_self : ↑n.toNat = n ↔ n ≠ ⊤ :=
+theorem coe_toNat_eq_self : ↑n.toNat = n ↔ n ≠ ⊤ :=
   WithTop.recTopCoe (by simp) (by simp) n
-#align enat.coe_to_nat_eq_self Enat.coe_to_nat_eq_self
+#align enat.coe_to_nat_eq_self Enat.coe_toNat_eq_self
 
 alias coe_to_nat_eq_self ↔ _ coe_to_nat
-#align enat.coe_to_nat Enat.coe_to_nat
+#align enat.coe_to_nat Enat.coe_toNat
 
-theorem coe_to_nat_le_self (n : ℕ∞) : ↑(toNat n) ≤ n :=
+theorem coe_toNat_le_self (n : ℕ∞) : ↑(toNat n) ≤ n :=
   WithTop.recTopCoe le_top (fun k => le_rfl) n
-#align enat.coe_to_nat_le_self Enat.coe_to_nat_le_self
+#align enat.coe_to_nat_le_self Enat.coe_toNat_le_self
 
-theorem to_nat_add {m n : ℕ∞} (hm : m ≠ ⊤) (hn : n ≠ ⊤) : toNat (m + n) = toNat m + toNat n :=
+theorem toNat_add {m n : ℕ∞} (hm : m ≠ ⊤) (hn : n ≠ ⊤) : toNat (m + n) = toNat m + toNat n :=
   by
   lift m to ℕ using hm
   lift n to ℕ using hn
   rfl
-#align enat.to_nat_add Enat.to_nat_add
+#align enat.to_nat_add Enat.toNat_add
 
-theorem to_nat_sub {n : ℕ∞} (hn : n ≠ ⊤) (m : ℕ∞) : toNat (m - n) = toNat m - toNat n :=
+theorem toNat_sub {n : ℕ∞} (hn : n ≠ ⊤) (m : ℕ∞) : toNat (m - n) = toNat m - toNat n :=
   by
   lift n to ℕ using hn
   induction m using WithTop.recTopCoe
   · rw [WithTop.top_sub_coe, to_nat_top, zero_tsub]
   · rw [← coe_sub, to_nat_coe, to_nat_coe, to_nat_coe]
-#align enat.to_nat_sub Enat.to_nat_sub
+#align enat.to_nat_sub Enat.toNat_sub
 
-theorem to_nat_eq_iff {m : ℕ∞} {n : ℕ} (hn : n ≠ 0) : m.toNat = n ↔ m = n := by
+theorem toNat_eq_iff {m : ℕ∞} {n : ℕ} (hn : n ≠ 0) : m.toNat = n ↔ m = n := by
   induction m using WithTop.recTopCoe <;> simp [hn.symm]
-#align enat.to_nat_eq_iff Enat.to_nat_eq_iff
+#align enat.to_nat_eq_iff Enat.toNat_eq_iff
 
 @[simp]
 theorem succ_def (m : ℕ∞) : Order.succ m = m + 1 := by cases m <;> rfl

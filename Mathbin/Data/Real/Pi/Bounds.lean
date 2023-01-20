@@ -26,7 +26,7 @@ open Real
 
 namespace Real
 
-theorem pi_gt_sqrt_two_add_series (n : ℕ) : 2 ^ (n + 1) * sqrt (2 - sqrtTwoAddSeries 0 n) < π :=
+theorem pi_gt_sqrtTwoAddSeries (n : ℕ) : 2 ^ (n + 1) * sqrt (2 - sqrtTwoAddSeries 0 n) < π :=
   by
   have : sqrt (2 - sqrt_two_add_series 0 n) / 2 * 2 ^ (n + 2) < π :=
     by
@@ -37,9 +37,9 @@ theorem pi_gt_sqrt_two_add_series (n : ℕ) : 2 ^ (n + 1) * sqrt (2 - sqrtTwoAdd
   apply lt_of_le_of_lt (le_of_eq _) this
   rw [pow_succ _ (n + 1), ← mul_assoc, div_mul_cancel, mul_comm]
   norm_num
-#align real.pi_gt_sqrt_two_add_series Real.pi_gt_sqrt_two_add_series
+#align real.pi_gt_sqrt_two_add_series Real.pi_gt_sqrtTwoAddSeries
 
-theorem pi_lt_sqrt_two_add_series (n : ℕ) :
+theorem pi_lt_sqrtTwoAddSeries (n : ℕ) :
     π < 2 ^ (n + 1) * sqrt (2 - sqrtTwoAddSeries 0 n) + 1 / 4 ^ n :=
   by
   have : π < (sqrt (2 - sqrt_two_add_series 0 n) / 2 + 1 / (2 ^ n) ^ 3 / 4) * 2 ^ (n + 2) :=
@@ -88,7 +88,7 @@ theorem pi_lt_sqrt_two_add_series (n : ℕ) :
   apply pow_ne_zero
   norm_num
   norm_num
-#align real.pi_lt_sqrt_two_add_series Real.pi_lt_sqrt_two_add_series
+#align real.pi_lt_sqrt_two_add_series Real.pi_lt_sqrtTwoAddSeries
 
 /-- From an upper bound on `sqrt_two_add_series 0 n = 2 cos (π / 2 ^ (n+1))` of the form
 `sqrt_two_add_series 0 n ≤ 2 - (a / 2 ^ (n + 1)) ^ 2)`, one can deduce the lower bound `a < π`
@@ -101,9 +101,9 @@ theorem pi_lower_bound_start (n : ℕ) {a}
   rwa [le_sub_comm, show (0 : ℝ) = (0 : ℕ) / (1 : ℕ) by rw [Nat.cast_zero, zero_div]]
 #align real.pi_lower_bound_start Real.pi_lower_bound_start
 
-theorem sqrt_two_add_series_step_up (c d : ℕ) {a b n : ℕ} {z : ℝ}
-    (hz : sqrtTwoAddSeries (c / d) n ≤ z) (hb : 0 < b) (hd : 0 < d)
-    (h : (2 * b + a) * d ^ 2 ≤ c ^ 2 * b) : sqrtTwoAddSeries (a / b) (n + 1) ≤ z :=
+theorem sqrtTwoAddSeries_step_up (c d : ℕ) {a b n : ℕ} {z : ℝ} (hz : sqrtTwoAddSeries (c / d) n ≤ z)
+    (hb : 0 < b) (hd : 0 < d) (h : (2 * b + a) * d ^ 2 ≤ c ^ 2 * b) :
+    sqrtTwoAddSeries (a / b) (n + 1) ≤ z :=
   by
   refine' le_trans _ hz; rw [sqrt_two_add_series_succ]; apply sqrt_two_add_series_monotone_left
   have hb' : 0 < (b : ℝ) := Nat.cast_pos.2 hb
@@ -111,7 +111,7 @@ theorem sqrt_two_add_series_step_up (c d : ℕ) {a b n : ℕ} {z : ℝ}
   rw [sqrt_le_left (div_nonneg c.cast_nonneg d.cast_nonneg), div_pow,
     add_div_eq_mul_add_div _ _ (ne_of_gt hb'), div_le_div_iff hb' (pow_pos hd' _)]
   exact_mod_cast h
-#align real.sqrt_two_add_series_step_up Real.sqrt_two_add_series_step_up
+#align real.sqrt_two_add_series_step_up Real.sqrtTwoAddSeries_step_up
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
@@ -127,7 +127,7 @@ unsafe def pi_lower_bound (l : List ℚ) : tactic Unit := do
   l fun r => do
       let a := r
       let b := r
-      andthen (() <$ tactic.apply q(@sqrt_two_add_series_step_up $(reflect a) $(reflect b)))
+      andthen (() <$ tactic.apply q(@sqrtTwoAddSeries_step_up $(reflect a) $(reflect b)))
           [tactic.skip, sorry, sorry, sorry]
   sorry
   sorry
@@ -147,7 +147,7 @@ theorem pi_upper_bound_start (n : ℕ) {a}
   · exact pow_pos zero_lt_two _
 #align real.pi_upper_bound_start Real.pi_upper_bound_start
 
-theorem sqrt_two_add_series_step_down (a b : ℕ) {c d n : ℕ} {z : ℝ}
+theorem sqrtTwoAddSeries_step_down (a b : ℕ) {c d n : ℕ} {z : ℝ}
     (hz : z ≤ sqrtTwoAddSeries (a / b) n) (hb : 0 < b) (hd : 0 < d)
     (h : a ^ 2 * d ≤ (2 * d + c) * b ^ 2) : z ≤ sqrtTwoAddSeries (c / d) (n + 1) :=
   by
@@ -157,7 +157,7 @@ theorem sqrt_two_add_series_step_down (a b : ℕ) {c d n : ℕ} {z : ℝ}
   have hd' : 0 < (d : ℝ) := Nat.cast_pos.2 hd
   rw [div_pow, add_div_eq_mul_add_div _ _ (ne_of_gt hd'), div_le_div_iff (pow_pos hb' _) hd']
   exact_mod_cast h
-#align real.sqrt_two_add_series_step_down Real.sqrt_two_add_series_step_down
+#align real.sqrt_two_add_series_step_down Real.sqrtTwoAddSeries_step_down
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
@@ -174,7 +174,7 @@ unsafe def pi_upper_bound (l : List ℚ) : tactic Unit := do
   l fun r => do
       let a := r
       let b := r
-      andthen (() <$ tactic.apply q(@sqrt_two_add_series_step_down $(reflect a) $(reflect b)))
+      andthen (() <$ tactic.apply q(@sqrtTwoAddSeries_step_down $(reflect a) $(reflect b)))
           [pure (), sorry, sorry, sorry]
   sorry
   sorry

@@ -188,13 +188,13 @@ theorem eq_top_iff {a b : α} : multiplicity a b = ⊤ ↔ ∀ n : ℕ, a ^ n �
 #align multiplicity.eq_top_iff multiplicity.eq_top_iff
 
 @[simp]
-theorem is_unit_left {a : α} (b : α) (ha : IsUnit a) : multiplicity a b = ⊤ :=
+theorem isUnit_left {a : α} (b : α) (ha : IsUnit a) : multiplicity a b = ⊤ :=
   eq_top_iff.2 fun _ => IsUnit.dvd (ha.pow _)
-#align multiplicity.is_unit_left multiplicity.is_unit_left
+#align multiplicity.is_unit_left multiplicity.isUnit_left
 
 @[simp]
 theorem one_left (b : α) : multiplicity 1 b = ⊤ :=
-  is_unit_left b isUnit_one
+  isUnit_left b isUnit_one
 #align multiplicity.one_left multiplicity.one_left
 
 @[simp]
@@ -206,7 +206,7 @@ theorem get_one_right {a : α} (ha : Finite a 1) : get (multiplicity a 1) ha = 0
 
 @[simp]
 theorem unit_left (a : α) (u : αˣ) : multiplicity (u : α) a = ⊤ :=
-  is_unit_left a u.IsUnit
+  isUnit_left a u.IsUnit
 #align multiplicity.unit_left multiplicity.unit_left
 
 theorem multiplicity_eq_zero {a b : α} : multiplicity a b = 0 ↔ ¬a ∣ b :=
@@ -319,20 +319,20 @@ theorem finite_of_finite_mul_left {a b c : α} : Finite a (b * c) → Finite a c
 
 variable [DecidableRel ((· ∣ ·) : α → α → Prop)]
 
-theorem is_unit_right {a b : α} (ha : ¬IsUnit a) (hb : IsUnit b) : multiplicity a b = 0 :=
+theorem isUnit_right {a b : α} (ha : ¬IsUnit a) (hb : IsUnit b) : multiplicity a b = 0 :=
   eq_coe_iff.2
     ⟨show a ^ 0 ∣ b by simp only [pow_zero, one_dvd],
       by
       rw [pow_one]
       exact fun h => mt (isUnit_of_dvd_unit h) ha hb⟩
-#align multiplicity.is_unit_right multiplicity.is_unit_right
+#align multiplicity.is_unit_right multiplicity.isUnit_right
 
 theorem one_right {a : α} (ha : ¬IsUnit a) : multiplicity a 1 = 0 :=
-  is_unit_right ha isUnit_one
+  isUnit_right ha isUnit_one
 #align multiplicity.one_right multiplicity.one_right
 
 theorem unit_right {a : α} (ha : ¬IsUnit a) (u : αˣ) : multiplicity a u = 0 :=
-  is_unit_right ha u.IsUnit
+  isUnit_right ha u.IsUnit
 #align multiplicity.unit_right multiplicity.unit_right
 
 open Classical
@@ -443,12 +443,12 @@ protected theorem neg (a b : α) : multiplicity a (-b) = multiplicity a b :=
                 (mt (dvd_neg _ _).1 (is_greatest' _ (lt_succ_self _)))))
 #align multiplicity.neg multiplicity.neg
 
-theorem Int.nat_abs (a : ℕ) (b : ℤ) : multiplicity a b.natAbs = multiplicity (a : ℤ) b :=
+theorem Int.natAbs (a : ℕ) (b : ℤ) : multiplicity a b.natAbs = multiplicity (a : ℤ) b :=
   by
   cases' Int.natAbs_eq b with h h <;> conv_rhs => rw [h]
   · rw [int.coe_nat_multiplicity]
   · rw [multiplicity.neg, int.coe_nat_multiplicity]
-#align multiplicity.int.nat_abs multiplicity.Int.nat_abs
+#align multiplicity.int.nat_abs multiplicity.Int.natAbs
 
 theorem multiplicity_add_of_gt {p a b : α} (h : multiplicity p b < multiplicity p a) :
     multiplicity p (a + b) = multiplicity p b :=
@@ -673,9 +673,9 @@ noncomputable def addValuation (hp : Prime p) : AddValuation R PartEnat :=
 #align multiplicity.add_valuation multiplicity.addValuation
 
 @[simp]
-theorem add_valuation_apply {hp : Prime p} {r : R} : addValuation hp r = multiplicity p r :=
+theorem addValuation_apply {hp : Prime p} {r : R} : addValuation hp r = multiplicity p r :=
   rfl
-#align multiplicity.add_valuation_apply multiplicity.add_valuation_apply
+#align multiplicity.add_valuation_apply multiplicity.addValuation_apply
 
 end Valuation
 

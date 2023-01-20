@@ -108,9 +108,9 @@ theorem inclusion_obj (x : X) (U) (p) : (inclusion x).obj ⟨U, p⟩ = U :=
   rfl
 #align topological_space.open_nhds.inclusion_obj TopologicalSpace.OpenNhds.inclusion_obj
 
-theorem open_embedding {x : X} (U : OpenNhds x) : OpenEmbedding U.1.inclusion :=
+theorem openEmbedding {x : X} (U : OpenNhds x) : OpenEmbedding U.1.inclusion :=
   U.1.OpenEmbedding
-#align topological_space.open_nhds.open_embedding TopologicalSpace.OpenNhds.open_embedding
+#align topological_space.open_nhds.open_embedding TopologicalSpace.OpenNhds.openEmbedding
 
 /-- The preimage functor from neighborhoods of `f x` to neighborhoods of `x`. -/
 def map (x : X) : OpenNhds (f x) ⥤ OpenNhds x
@@ -149,14 +149,14 @@ def inclusionMapIso (x : X) : inclusion (f x) ⋙ Opens.map f ≅ map f x ⋙ in
 #align topological_space.open_nhds.inclusion_map_iso TopologicalSpace.OpenNhds.inclusionMapIso
 
 @[simp]
-theorem inclusion_map_iso_hom (x : X) : (inclusionMapIso f x).Hom = 𝟙 _ :=
+theorem inclusionMapIso_hom (x : X) : (inclusionMapIso f x).Hom = 𝟙 _ :=
   rfl
-#align topological_space.open_nhds.inclusion_map_iso_hom TopologicalSpace.OpenNhds.inclusion_map_iso_hom
+#align topological_space.open_nhds.inclusion_map_iso_hom TopologicalSpace.OpenNhds.inclusionMapIso_hom
 
 @[simp]
-theorem inclusion_map_iso_inv (x : X) : (inclusionMapIso f x).inv = 𝟙 _ :=
+theorem inclusionMapIso_inv (x : X) : (inclusionMapIso f x).inv = 𝟙 _ :=
   rfl
-#align topological_space.open_nhds.inclusion_map_iso_inv TopologicalSpace.OpenNhds.inclusion_map_iso_inv
+#align topological_space.open_nhds.inclusion_map_iso_inv TopologicalSpace.OpenNhds.inclusionMapIso_inv
 
 end OpenNhds
 

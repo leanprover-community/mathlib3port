@@ -266,8 +266,8 @@ theorem cseval_atom {α} [CommSemiring α] (t : Tree α) (n : PosNum) :
   ⟨⟨⟨1, rfl⟩, ⟨0, rfl⟩⟩, (Tactic.Ring.horner_atom _).symm⟩
 #align tactic.ring2.horner_expr.cseval_atom Tactic.Ring2.HornerExpr.cseval_atom
 
-theorem cseval_add_const {α} [CommSemiring α] (t : Tree α) (k : Num) {e : HornerExpr}
-    (cs : e.IsCs) : (addConst k.toZnum e).IsCs ∧ cseval t (addConst k.toZnum e) = k + cseval t e :=
+theorem cseval_addConst {α} [CommSemiring α] (t : Tree α) (k : Num) {e : HornerExpr} (cs : e.IsCs) :
+    (addConst k.toZnum e).IsCs ∧ cseval t (addConst k.toZnum e) = k + cseval t e :=
   by
   simp [add_const]
   cases k <;> simp! [*]
@@ -280,7 +280,7 @@ theorem cseval_add_const {α} [CommSemiring α] (t : Tree α) (k : Num) {e : Hor
     simp! [*, cs.1]
     rw [← Tactic.Ring.horner_add_const, add_comm]
     rw [add_comm]
-#align tactic.ring2.horner_expr.cseval_add_const Tactic.Ring2.HornerExpr.cseval_add_const
+#align tactic.ring2.horner_expr.cseval_add_const Tactic.Ring2.HornerExpr.cseval_addConst
 
 theorem cseval_horner' {α} [CommSemiring α] (t : Tree α) (a x n b) (h₁ : IsCs a) (h₂ : IsCs b) :
     (horner' a x n b).IsCs ∧
@@ -355,14 +355,14 @@ theorem cseval_add {α} [CommSemiring α] (t : Tree α) {e₁ e₂ : HornerExpr}
     simp [h]
 #align tactic.ring2.horner_expr.cseval_add Tactic.Ring2.HornerExpr.cseval_add
 
-theorem cseval_mul_const {α} [CommSemiring α] (t : Tree α) (k : Num) {e : HornerExpr}
-    (cs : e.IsCs) : (mulConst k.toZnum e).IsCs ∧ cseval t (mulConst k.toZnum e) = cseval t e * k :=
+theorem cseval_mulConst {α} [CommSemiring α] (t : Tree α) (k : Num) {e : HornerExpr} (cs : e.IsCs) :
+    (mulConst k.toZnum e).IsCs ∧ cseval t (mulConst k.toZnum e) = cseval t e * k :=
   by
   simp [mul_const]
   split_ifs with h h
-  · cases (Num.to_znum_inj.1 h : k = 0)
+  · cases (Num.toZNum_inj.1 h : k = 0)
     exact ⟨⟨0, rfl⟩, (mul_zero _).symm⟩
-  · cases (Num.to_znum_inj.1 h : k = 1)
+  · cases (Num.toZNum_inj.1 h : k = 1)
     exact ⟨cs, (mul_one _).symm⟩
   induction' e with n a x n b A B <;> simp [*]
   · rcases cs with ⟨n, rfl⟩
@@ -376,7 +376,7 @@ theorem cseval_mul_const {α} [CommSemiring α] (t : Tree α) (k : Num) {e : Hor
     simp! [*]
     symm
     apply Tactic.Ring.horner_mul_const <;> rfl
-#align tactic.ring2.horner_expr.cseval_mul_const Tactic.Ring2.HornerExpr.cseval_mul_const
+#align tactic.ring2.horner_expr.cseval_mul_const Tactic.Ring2.HornerExpr.cseval_mulConst
 
 theorem cseval_mul {α} [CommSemiring α] (t : Tree α) {e₁ e₂ : HornerExpr} (cs₁ : e₁.IsCs)
     (cs₂ : e₂.IsCs) : (mul e₁ e₂).IsCs ∧ cseval t (mul e₁ e₂) = cseval t e₁ * cseval t e₂ :=
@@ -432,7 +432,7 @@ theorem cseval_pow {α} [CommSemiring α] (t : Tree α) {x : HornerExpr} (cs : x
 /-- For any given tree `t` of atoms and any reflected expression `r`,
 the Horner form of `r` is a valid csring expression, and under `t`,
 the Horner form evaluates to the same thing as `r`. -/
-theorem cseval_of_csexpr {α} [CommSemiring α] (t : Tree α) :
+theorem cseval_ofCsexpr {α} [CommSemiring α] (t : Tree α) :
     ∀ r : CsringExpr, (ofCsexpr r).IsCs ∧ cseval t (ofCsexpr r) = r.eval t
   | csring_expr.atom n => cseval_atom _ _
   | csring_expr.const n => ⟨⟨n, rfl⟩, by cases n <;> rfl⟩
@@ -450,7 +450,7 @@ theorem cseval_of_csexpr {α} [CommSemiring α] (t : Tree α) :
     let ⟨cs, h⟩ := cseval_of_csexpr x
     let ⟨cs, h⟩ := cseval_pow t cs n
     ⟨cs, by simp! [h, *]⟩
-#align tactic.ring2.horner_expr.cseval_of_csexpr Tactic.Ring2.HornerExpr.cseval_of_csexpr
+#align tactic.ring2.horner_expr.cseval_of_csexpr Tactic.Ring2.HornerExpr.cseval_ofCsexpr
 
 end HornerExpr
 

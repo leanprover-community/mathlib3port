@@ -121,9 +121,9 @@ instance : CoeFun (A →ₙₐ[R] B) fun _ => A → B :=
   ⟨toFun⟩
 
 @[simp]
-theorem to_fun_eq_coe (f : A →ₙₐ[R] B) : f.toFun = ⇑f :=
+theorem toFun_eq_coe (f : A →ₙₐ[R] B) : f.toFun = ⇑f :=
   rfl
-#align non_unital_alg_hom.to_fun_eq_coe NonUnitalAlgHom.to_fun_eq_coe
+#align non_unital_alg_hom.to_fun_eq_coe NonUnitalAlgHom.toFun_eq_coe
 
 initialize_simps_projections NonUnitalAlgHom (toFun → apply)
 
@@ -179,53 +179,53 @@ instance : Coe (A →ₙₐ[R] B) (A →ₙ* B) :=
   ⟨toMulHom⟩
 
 @[simp]
-theorem to_distrib_mul_action_hom_eq_coe (f : A →ₙₐ[R] B) : f.toDistribMulActionHom = ↑f :=
+theorem toDistribMulActionHom_eq_coe (f : A →ₙₐ[R] B) : f.toDistribMulActionHom = ↑f :=
   rfl
-#align non_unital_alg_hom.to_distrib_mul_action_hom_eq_coe NonUnitalAlgHom.to_distrib_mul_action_hom_eq_coe
+#align non_unital_alg_hom.to_distrib_mul_action_hom_eq_coe NonUnitalAlgHom.toDistribMulActionHom_eq_coe
 
 @[simp]
-theorem to_mul_hom_eq_coe (f : A →ₙₐ[R] B) : f.toMulHom = ↑f :=
+theorem toMulHom_eq_coe (f : A →ₙₐ[R] B) : f.toMulHom = ↑f :=
   rfl
-#align non_unital_alg_hom.to_mul_hom_eq_coe NonUnitalAlgHom.to_mul_hom_eq_coe
+#align non_unital_alg_hom.to_mul_hom_eq_coe NonUnitalAlgHom.toMulHom_eq_coe
 
 @[simp, norm_cast]
-theorem coe_to_distrib_mul_action_hom (f : A →ₙₐ[R] B) : ((f : A →+[R] B) : A → B) = f :=
+theorem coe_to_distribMulActionHom (f : A →ₙₐ[R] B) : ((f : A →+[R] B) : A → B) = f :=
   rfl
-#align non_unital_alg_hom.coe_to_distrib_mul_action_hom NonUnitalAlgHom.coe_to_distrib_mul_action_hom
+#align non_unital_alg_hom.coe_to_distrib_mul_action_hom NonUnitalAlgHom.coe_to_distribMulActionHom
 
 @[simp, norm_cast]
-theorem coe_to_mul_hom (f : A →ₙₐ[R] B) : ((f : A →ₙ* B) : A → B) = f :=
+theorem coe_to_mulHom (f : A →ₙₐ[R] B) : ((f : A →ₙ* B) : A → B) = f :=
   rfl
-#align non_unital_alg_hom.coe_to_mul_hom NonUnitalAlgHom.coe_to_mul_hom
+#align non_unital_alg_hom.coe_to_mul_hom NonUnitalAlgHom.coe_to_mulHom
 
-theorem to_distrib_mul_action_hom_injective {f g : A →ₙₐ[R] B}
+theorem to_distribMulActionHom_injective {f g : A →ₙₐ[R] B}
     (h : (f : A →+[R] B) = (g : A →+[R] B)) : f = g :=
   by
   ext a
   exact DistribMulActionHom.congr_fun h a
-#align non_unital_alg_hom.to_distrib_mul_action_hom_injective NonUnitalAlgHom.to_distrib_mul_action_hom_injective
+#align non_unital_alg_hom.to_distrib_mul_action_hom_injective NonUnitalAlgHom.to_distribMulActionHom_injective
 
-theorem to_mul_hom_injective {f g : A →ₙₐ[R] B} (h : (f : A →ₙ* B) = (g : A →ₙ* B)) : f = g :=
+theorem to_mulHom_injective {f g : A →ₙₐ[R] B} (h : (f : A →ₙ* B) = (g : A →ₙ* B)) : f = g :=
   by
   ext a
   exact MulHom.congr_fun h a
-#align non_unital_alg_hom.to_mul_hom_injective NonUnitalAlgHom.to_mul_hom_injective
+#align non_unital_alg_hom.to_mul_hom_injective NonUnitalAlgHom.to_mulHom_injective
 
 @[norm_cast]
-theorem coe_distrib_mul_action_hom_mk (f : A →ₙₐ[R] B) (h₁ h₂ h₃ h₄) :
+theorem coe_distribMulActionHom_mk (f : A →ₙₐ[R] B) (h₁ h₂ h₃ h₄) :
     ((⟨f, h₁, h₂, h₃, h₄⟩ : A →ₙₐ[R] B) : A →+[R] B) = ⟨f, h₁, h₂, h₃⟩ :=
   by
   ext
   rfl
-#align non_unital_alg_hom.coe_distrib_mul_action_hom_mk NonUnitalAlgHom.coe_distrib_mul_action_hom_mk
+#align non_unital_alg_hom.coe_distrib_mul_action_hom_mk NonUnitalAlgHom.coe_distribMulActionHom_mk
 
 @[norm_cast]
-theorem coe_mul_hom_mk (f : A →ₙₐ[R] B) (h₁ h₂ h₃ h₄) :
+theorem coe_mulHom_mk (f : A →ₙₐ[R] B) (h₁ h₂ h₃ h₄) :
     ((⟨f, h₁, h₂, h₃, h₄⟩ : A →ₙₐ[R] B) : A →ₙ* B) = ⟨f, h₄⟩ :=
   by
   ext
   rfl
-#align non_unital_alg_hom.coe_mul_hom_mk NonUnitalAlgHom.coe_mul_hom_mk
+#align non_unital_alg_hom.coe_mul_hom_mk NonUnitalAlgHom.coe_mulHom_mk
 
 @[simp]
 protected theorem map_smul (f : A →ₙₐ[R] B) (c : R) (x : A) : f (c • x) = c • f x :=
@@ -430,14 +430,14 @@ instance NonUnitalAlgHom.hasCoe : Coe (A →ₐ[R] B) (A →ₙₐ[R] B) :=
 #align alg_hom.non_unital_alg_hom.has_coe AlgHom.NonUnitalAlgHom.hasCoe
 
 @[simp]
-theorem to_non_unital_alg_hom_eq_coe (f : A →ₐ[R] B) : f.toNonUnitalAlgHom = f :=
+theorem toNonUnitalAlgHom_eq_coe (f : A →ₐ[R] B) : f.toNonUnitalAlgHom = f :=
   rfl
-#align alg_hom.to_non_unital_alg_hom_eq_coe AlgHom.to_non_unital_alg_hom_eq_coe
+#align alg_hom.to_non_unital_alg_hom_eq_coe AlgHom.toNonUnitalAlgHom_eq_coe
 
 @[simp, norm_cast]
-theorem coe_to_non_unital_alg_hom (f : A →ₐ[R] B) : ((f : A →ₙₐ[R] B) : A → B) = f :=
+theorem coe_to_nonUnitalAlgHom (f : A →ₐ[R] B) : ((f : A →ₙₐ[R] B) : A → B) = f :=
   rfl
-#align alg_hom.coe_to_non_unital_alg_hom AlgHom.coe_to_non_unital_alg_hom
+#align alg_hom.coe_to_non_unital_alg_hom AlgHom.coe_to_nonUnitalAlgHom
 
 end AlgHom
 

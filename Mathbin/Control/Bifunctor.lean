@@ -137,9 +137,9 @@ open Bifunctor Functor
 instance (priority := 10) Bifunctor.functor {α} : Functor (F α) where map _ _ := snd
 #align bifunctor.functor Bifunctor.functor
 
-instance (priority := 10) Bifunctor.is_lawful_functor [IsLawfulBifunctor F] {α} :
-    LawfulFunctor (F α) := by refine' { .. } <;> intros <;> simp [Functor.map, functor_norm]
-#align bifunctor.is_lawful_functor Bifunctor.is_lawful_functor
+instance (priority := 10) Bifunctor.lawfulFunctor [IsLawfulBifunctor F] {α} : LawfulFunctor (F α) :=
+  by refine' { .. } <;> intros <;> simp [Functor.map, functor_norm]
+#align bifunctor.is_lawful_functor Bifunctor.lawfulFunctor
 
 section Bicompl
 

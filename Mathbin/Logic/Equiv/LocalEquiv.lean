@@ -99,7 +99,7 @@ then it should use `e.source ∩ s` or `e.target ∩ t`, not `s ∩ e.source` or
 -- register in the simpset `mfld_simps` several lemmas that are often useful when dealing
 -- with manifolds
 attribute [mfld_simps]
-  id.def Function.comp.left_id Set.mem_setOf_eq Set.image_eq_empty Set.univ_inter Set.preimage_univ Set.prod_mk_mem_set_prod_eq and_true_iff Set.mem_univ Set.mem_image_of_mem true_and_iff Set.mem_inter_iff Set.mem_preimage Function.comp_apply Set.inter_subset_left Set.mem_prod Set.range_id Set.range_prod_map and_self_iff Set.mem_range_self eq_self_iff_true forall_const forall_true_iff Set.inter_univ Set.preimage_id Function.comp.right_id not_false_iff and_imp Set.prod_inter_prod Set.univ_prod_univ true_or_iff or_true_iff Prod.map_mk Set.preimage_inter heq_iff_eq Equiv.sigma_equiv_prod_apply Equiv.sigma_equiv_prod_symm_apply Subtype.coe_mk Equiv.toFun_as_coe Equiv.invFun_as_coe
+  id.def Function.comp.left_id Set.mem_setOf_eq Set.image_eq_empty Set.univ_inter Set.preimage_univ Set.prod_mk_mem_set_prod_eq and_true_iff Set.mem_univ Set.mem_image_of_mem true_and_iff Set.mem_inter_iff Set.mem_preimage Function.comp_apply Set.inter_subset_left Set.mem_prod Set.range_id Set.range_prod_map and_self_iff Set.mem_range_self eq_self_iff_true forall_const forall_true_iff Set.inter_univ Set.preimage_id Function.comp.right_id not_false_iff and_imp Set.prod_inter_prod Set.univ_prod_univ true_or_iff or_true_iff Prod.map_mk Set.preimage_inter hEq_iff_eq Equiv.sigmaEquivProd_apply Equiv.sigmaEquivProd_symm_apply Subtype.coe_mk Equiv.toFun_as_coe Equiv.invFun_as_coe
 
 /- warning: mfld_cfg -> mfld_cfg is a dubious translation:
 lean 3 declaration is

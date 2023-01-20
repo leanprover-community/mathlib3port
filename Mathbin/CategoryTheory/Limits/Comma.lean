@@ -152,9 +152,9 @@ instance hasLimitsOfShape [HasLimitsOfShape J A] [HasLimitsOfShape J B]
     [PreservesLimitsOfShape J R] : HasLimitsOfShape J (Comma L R) where
 #align category_theory.comma.has_limits_of_shape CategoryTheory.Comma.hasLimitsOfShape
 
-instance has_limits [HasLimits A] [HasLimits B] [PreservesLimits R] : HasLimits (Comma L R) :=
+instance hasLimits [HasLimits A] [HasLimits B] [PreservesLimits R] : HasLimits (Comma L R) :=
   ⟨inferInstance⟩
-#align category_theory.comma.has_limits CategoryTheory.Comma.has_limits
+#align category_theory.comma.has_limits CategoryTheory.Comma.hasLimits
 
 instance hasColimit (F : J ⥤ Comma L R) [HasColimit (F ⋙ fst L R)] [HasColimit (F ⋙ snd L R)]
     [PreservesColimit (F ⋙ fst L R) L] : HasColimit F :=
@@ -165,10 +165,10 @@ instance hasColimitsOfShape [HasColimitsOfShape J A] [HasColimitsOfShape J B]
     [PreservesColimitsOfShape J L] : HasColimitsOfShape J (Comma L R) where
 #align category_theory.comma.has_colimits_of_shape CategoryTheory.Comma.hasColimitsOfShape
 
-instance has_colimits [HasColimits A] [HasColimits B] [PreservesColimits L] :
+instance hasColimits [HasColimits A] [HasColimits B] [PreservesColimits L] :
     HasColimits (Comma L R) :=
   ⟨inferInstance⟩
-#align category_theory.comma.has_colimits CategoryTheory.Comma.has_colimits
+#align category_theory.comma.has_colimits CategoryTheory.Comma.hasColimits
 
 end Comma
 
@@ -182,9 +182,9 @@ instance hasLimit (F : J ⥤ Arrow T) [i₁ : HasLimit (F ⋙ left_func)]
 instance hasLimitsOfShape [HasLimitsOfShape J T] : HasLimitsOfShape J (Arrow T) where
 #align category_theory.arrow.has_limits_of_shape CategoryTheory.Arrow.hasLimitsOfShape
 
-instance has_limits [HasLimits T] : HasLimits (Arrow T) :=
+instance hasLimits [HasLimits T] : HasLimits (Arrow T) :=
   ⟨inferInstance⟩
-#align category_theory.arrow.has_limits CategoryTheory.Arrow.has_limits
+#align category_theory.arrow.has_limits CategoryTheory.Arrow.hasLimits
 
 instance hasColimit (F : J ⥤ Arrow T) [i₁ : HasColimit (F ⋙ left_func)]
     [i₂ : HasColimit (F ⋙ right_func)] : HasColimit F :=
@@ -194,9 +194,9 @@ instance hasColimit (F : J ⥤ Arrow T) [i₁ : HasColimit (F ⋙ left_func)]
 instance hasColimitsOfShape [HasColimitsOfShape J T] : HasColimitsOfShape J (Arrow T) where
 #align category_theory.arrow.has_colimits_of_shape CategoryTheory.Arrow.hasColimitsOfShape
 
-instance has_colimits [HasColimits T] : HasColimits (Arrow T) :=
+instance hasColimits [HasColimits T] : HasColimits (Arrow T) :=
   ⟨inferInstance⟩
-#align category_theory.arrow.has_colimits CategoryTheory.Arrow.has_colimits
+#align category_theory.arrow.has_colimits CategoryTheory.Arrow.hasColimits
 
 end Arrow
 
@@ -213,9 +213,9 @@ instance hasLimitsOfShape [HasLimitsOfShape J A] [PreservesLimitsOfShape J G] :
     HasLimitsOfShape J (StructuredArrow X G) where
 #align category_theory.structured_arrow.has_limits_of_shape CategoryTheory.StructuredArrow.hasLimitsOfShape
 
-instance has_limits [HasLimits A] [PreservesLimits G] : HasLimits (StructuredArrow X G) :=
+instance hasLimits [HasLimits A] [PreservesLimits G] : HasLimits (StructuredArrow X G) :=
   ⟨inferInstance⟩
-#align category_theory.structured_arrow.has_limits CategoryTheory.StructuredArrow.has_limits
+#align category_theory.structured_arrow.has_limits CategoryTheory.StructuredArrow.hasLimits
 
 noncomputable instance createsLimit [i : PreservesLimit (F ⋙ proj X G) G] :
     CreatesLimit F (proj X G) :=
@@ -258,9 +258,9 @@ instance hasColimitsOfShape [HasColimitsOfShape J A] [PreservesColimitsOfShape J
     HasColimitsOfShape J (CostructuredArrow G X) where
 #align category_theory.costructured_arrow.has_colimits_of_shape CategoryTheory.CostructuredArrow.hasColimitsOfShape
 
-instance has_colimits [HasColimits A] [PreservesColimits G] : HasColimits (CostructuredArrow G X) :=
+instance hasColimits [HasColimits A] [PreservesColimits G] : HasColimits (CostructuredArrow G X) :=
   ⟨inferInstance⟩
-#align category_theory.costructured_arrow.has_colimits CategoryTheory.CostructuredArrow.has_colimits
+#align category_theory.costructured_arrow.has_colimits CategoryTheory.CostructuredArrow.hasColimits
 
 noncomputable instance createsColimit [i : PreservesColimit (F ⋙ proj G X) G] :
     CreatesColimit F (proj G X) :=

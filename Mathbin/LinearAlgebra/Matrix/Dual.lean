@@ -32,22 +32,22 @@ variable {K V₁ V₂ ι₁ ι₂ : Type _} [Field K] [AddCommGroup V₁] [Modul
   {B₂ : Basis ι₂ K V₂}
 
 @[simp]
-theorem LinearMap.to_matrix_transpose (u : V₁ →ₗ[K] V₂) :
+theorem LinearMap.toMatrix_transpose (u : V₁ →ₗ[K] V₂) :
     LinearMap.toMatrix B₂.dualBasis B₁.dualBasis (Module.Dual.transpose u) =
       (LinearMap.toMatrix B₁ B₂ u)ᵀ :=
   by
   ext (i j)
-  simp only [LinearMap.to_matrix_apply, Module.Dual.transpose_apply, B₁.dual_basis_repr,
+  simp only [LinearMap.toMatrix_apply, Module.Dual.transpose_apply, B₁.dual_basis_repr,
     B₂.dual_basis_apply, Matrix.transpose_apply, LinearMap.comp_apply]
-#align linear_map.to_matrix_transpose LinearMap.to_matrix_transpose
+#align linear_map.to_matrix_transpose LinearMap.toMatrix_transpose
 
 @[simp]
-theorem Matrix.to_lin_transpose (M : Matrix ι₁ ι₂ K) :
+theorem Matrix.toLin_transpose (M : Matrix ι₁ ι₂ K) :
     Matrix.toLin B₁.dualBasis B₂.dualBasis Mᵀ = Module.Dual.transpose (Matrix.toLin B₂ B₁ M) :=
   by
   apply (LinearMap.toMatrix B₁.dual_basis B₂.dual_basis).Injective
-  rw [LinearMap.to_matrix_to_lin, LinearMap.to_matrix_transpose, LinearMap.to_matrix_to_lin]
-#align matrix.to_lin_transpose Matrix.to_lin_transpose
+  rw [LinearMap.toMatrix_toLin, LinearMap.toMatrix_transpose, LinearMap.toMatrix_toLin]
+#align matrix.to_lin_transpose Matrix.toLin_transpose
 
 end Transpose
 

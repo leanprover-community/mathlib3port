@@ -41,7 +41,7 @@ theorem add_haar_frontier (hs : Convex ℝ s) : μ (frontier s) = 0 :=
   · refine' measure_mono_null _ (add_haar_affine_subspace _ _ hspan)
     exact
       frontier_subset_closure.trans
-        (closure_minimal (subset_affine_span _ _) (affineSpan ℝ s).closed_of_finite_dimensional)
+        (closure_minimal (subset_affineSpan _ _) (affineSpan ℝ s).closed_of_finite_dimensional)
   rw [← hs.interior_nonempty_iff_affine_span_eq_top] at hspan
   rcases hspan with ⟨x, hx⟩
   /- Without loss of generality, `s` is bounded. Indeed, `∂s ⊆ ⋃ n, ∂(s ∩ ball x (n + 1))`, hence it
@@ -85,16 +85,16 @@ theorem add_haar_frontier (hs : Convex ℝ s) : μ (frontier s) = 0 :=
     intro r hr
     refine'
       (measure_mono <| hs.closure_subset_image_homothety_interior_of_one_lt hx r hr).trans_eq _
-    rw [add_haar_image_homothety, ← Nnreal.coe_pow, Nnreal.abs_eq, Ennreal.of_real_coe_nnreal]
+    rw [add_haar_image_homothety, ← Nnreal.coe_pow, Nnreal.abs_eq, Ennreal.ofReal_coe_nnreal]
   have : ∀ᶠ r in 𝓝[>] (1 : ℝ≥0), μ (closure s) ≤ ↑(r ^ d) * μ (interior s) :=
-    mem_of_superset self_mem_nhds_within this
+    mem_of_superset self_mem_nhdsWithin this
   -- Taking the limit as `r → 1`, we get `μ (closure s) ≤ μ (interior s)`.
   refine' ge_of_tendsto _ this
   refine'
     (((Ennreal.continuous_mul_const hb).comp
               (ennreal.continuous_coe.comp (continuous_pow d))).tendsto'
           _ _ _).mono_left
-      nhds_within_le_nhds
+      nhdsWithin_le_nhds
   simp
 #align convex.add_haar_frontier Convex.add_haar_frontier
 

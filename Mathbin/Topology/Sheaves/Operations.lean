@@ -55,7 +55,7 @@ protected noncomputable def SubmonoidPresheaf.localizationPresheaf : X.Presheaf 
   obj U := CommRingCat.of <| Localization (G.obj U)
   map U V i := CommRingCat.ofHom <| IsLocalization.map _ (F.map i) (G.map i)
   map_id' U := by
-    apply IsLocalization.ring_hom_ext (G.obj U)
+    apply IsLocalization.ringHom_ext (G.obj U)
     any_goals dsimp; infer_instance
     refine' (IsLocalization.map_comp _).trans _
     rw [F.map_id]
@@ -117,7 +117,7 @@ instance (F : X.Sheaf CommRingCat.{w}) : Mono F.Presheaf.toTotalQuotientPresheaf
   intro U
   apply concrete_category.mono_of_injective
   apply IsLocalization.injective _
-  pick_goal 3; · exact Localization.is_localization
+  pick_goal 3; · exact Localization.isLocalization
   intro s hs t e
   apply section_ext F (unop U)
   intro x

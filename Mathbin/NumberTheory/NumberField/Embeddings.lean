@@ -68,12 +68,12 @@ variable (K A : Type _) [Field K] [NumberField K] [Field A] [Algebra ℚ A] [IsA
 /-- Let `A` be an algebraically closed field and let `x ∈ K`, with `K` a number field.
 The images of `x` by the embeddings of `K` in `A` are exactly the roots in `A` of
 the minimal polynomial of `x` over `ℚ`. -/
-theorem range_eval_eq_root_set_minpoly : (range fun φ : K →+* A => φ x) = (minpoly ℚ x).rootSet A :=
+theorem range_eval_eq_rootSet_minpoly : (range fun φ : K →+* A => φ x) = (minpoly ℚ x).rootSet A :=
   by
-  convert (NumberField.is_algebraic K).range_eval_eq_root_set_minpoly A x using 1
+  convert (NumberField.isAlgebraic K).range_eval_eq_root_set_minpoly A x using 1
   ext a
   exact ⟨fun ⟨φ, hφ⟩ => ⟨φ.toRatAlgHom, hφ⟩, fun ⟨φ, hφ⟩ => ⟨φ.toRingHom, hφ⟩⟩
-#align number_field.embeddings.range_eval_eq_root_set_minpoly NumberField.Embeddings.range_eval_eq_root_set_minpoly
+#align number_field.embeddings.range_eval_eq_root_set_minpoly NumberField.Embeddings.range_eval_eq_rootSet_minpoly
 
 end Roots
 
@@ -88,11 +88,11 @@ variable {A : Type _} [NormedField A] [IsAlgClosed A] [NormedAlgebra ℚ A]
 theorem coeff_bdd_of_norm_le {B : ℝ} {x : K} (h : ∀ φ : K →+* A, ‖φ x‖ ≤ B) (i : ℕ) :
     ‖(minpoly ℚ x).coeff i‖ ≤ max B 1 ^ finrank ℚ K * (finrank ℚ K).choose (finrank ℚ K / 2) :=
   by
-  have hx := IsSeparable.is_integral ℚ x
+  have hx := IsSeparable.isIntegral ℚ x
   rw [← norm_algebra_map' A, ← coeff_map (algebraMap ℚ A)]
   refine'
     coeff_bdd_of_roots_le _ (minpoly.monic hx) (IsAlgClosed.splits_codomain _)
-      (minpoly.nat_degree_le hx) (fun z hz => _) i
+      (minpoly.natDegree_le hx) (fun z hz => _) i
   classical
     rw [← Multiset.mem_toFinset] at hz
     obtain ⟨φ, rfl⟩ := (range_eval_eq_root_set_minpoly K A x).symm.Subset hz
@@ -111,7 +111,7 @@ theorem finite_of_norm_le (B : ℝ) : { x : K | IsIntegral ℤ x ∧ ∀ φ : K 
   have h_map_ℚ_minpoly := minpoly.gcd_domain_eq_field_fractions' ℚ hx.1
   refine' ⟨_, ⟨_, fun i => _⟩, mem_root_set.2 ⟨minpoly.ne_zero hx.1, minpoly.aeval ℤ x⟩⟩
   · rw [← (minpoly.monic hx.1).nat_degree_map (algebraMap ℤ ℚ), ← h_map_ℚ_minpoly]
-    exact minpoly.nat_degree_le (is_integral_of_is_scalar_tower hx.1)
+    exact minpoly.natDegree_le (isIntegral_of_isScalarTower hx.1)
   rw [mem_Icc, ← abs_le, ← @Int.cast_le ℝ]
   refine' (Eq.trans_le _ <| coeff_bdd_of_norm_le hx.2 i).trans (Nat.le_ceil _)
   rw [h_map_ℚ_minpoly, coeff_map, eq_intCast, Int.norm_cast_rat, Int.norm_eq_abs, Int.cast_abs]
@@ -122,7 +122,7 @@ theorem pow_eq_one_of_norm_eq_one {x : K} (hxi : IsIntegral ℤ x) (hx : ∀ φ 
     ∃ (n : ℕ)(hn : 0 < n), x ^ n = 1 :=
   by
   obtain ⟨a, -, b, -, habne, h⟩ :=
-    @Set.Infinite.exists_ne_map_eq_of_maps_to _ _ _ _ ((· ^ ·) x : ℕ → K) Set.infinite_univ _
+    @Set.Infinite.exists_ne_map_eq_of_mapsTo _ _ _ _ ((· ^ ·) x : ℕ → K) Set.infinite_univ _
       (finite_of_norm_le K A (1 : ℝ))
   · replace habne := habne.lt_or_lt
     have : _
@@ -135,7 +135,7 @@ theorem pow_eq_one_of_norm_eq_one {x : K} (hxi : IsIntegral ℤ x) (hx : ∀ φ 
     refine' fun a b h hlt => ⟨a - b, tsub_pos_of_lt hlt, _⟩
     rw [← Nat.sub_add_cancel hlt.le, pow_add, mul_left_eq_self₀] at h
     refine' h.resolve_right fun hp => _
-    specialize hx (IsAlgClosed.lift (NumberField.is_algebraic K)).toRingHom
+    specialize hx (IsAlgClosed.lift (NumberField.isAlgebraic K)).toRingHom
     rw [pow_eq_zero hp, map_zero, norm_zero] at hx
     norm_num at hx
   · exact fun a _ => ⟨hxi.pow a, fun φ => by simp only [hx φ, norm_pow, one_pow, map_pow]⟩
@@ -192,9 +192,9 @@ def IsReal (φ : K →+* ℂ) : Prop :=
   IsSelfAdjoint φ
 #align number_field.complex_embedding.is_real NumberField.ComplexEmbedding.IsReal
 
-theorem is_real_iff {φ : K →+* ℂ} : IsReal φ ↔ conjugate φ = φ :=
-  is_self_adjoint_iff
-#align number_field.complex_embedding.is_real_iff NumberField.ComplexEmbedding.is_real_iff
+theorem isReal_iff {φ : K →+* ℂ} : IsReal φ ↔ conjugate φ = φ :=
+  isSelfAdjoint_iff
+#align number_field.complex_embedding.is_real_iff NumberField.ComplexEmbedding.isReal_iff
 
 /-- A real embedding as a ring homomorphism from `K` to `ℝ` . -/
 def IsReal.embedding {φ : K →+* ℂ} (hφ : IsReal φ) : K →+* ℝ
@@ -223,9 +223,9 @@ theorem IsReal.place_embedding {φ : K →+* ℂ} (hφ : IsReal φ) : place hφ.
   simp only [place_apply, Real.norm_eq_abs, ← abs_of_real, norm_eq_abs, hφ.coe_embedding_apply x]
 #align number_field.complex_embedding.is_real.place_embedding NumberField.ComplexEmbedding.IsReal.place_embedding
 
-theorem is_real_conjugate_iff {φ : K →+* ℂ} : IsReal (conjugate φ) ↔ IsReal φ :=
+theorem isReal_conjugate_iff {φ : K →+* ℂ} : IsReal (conjugate φ) ↔ IsReal φ :=
   IsSelfAdjoint.star_iff
-#align number_field.complex_embedding.is_real_conjugate_iff NumberField.ComplexEmbedding.is_real_conjugate_iff
+#align number_field.complex_embedding.is_real_conjugate_iff NumberField.ComplexEmbedding.isReal_conjugate_iff
 
 end NumberField.ComplexEmbedding
 

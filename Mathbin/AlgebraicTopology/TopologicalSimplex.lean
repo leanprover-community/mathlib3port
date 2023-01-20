@@ -65,18 +65,18 @@ def toTopMap {x y : SimplexCategory} (f : x ⟶ y) : x.toTopObj → y.toTopObj :
 #align simplex_category.to_Top_map SimplexCategory.toTopMap
 
 @[simp]
-theorem coe_to_Top_map {x y : SimplexCategory} (f : x ⟶ y) (g : x.toTopObj) (i : y) :
+theorem coe_toTopMap {x y : SimplexCategory} (f : x ⟶ y) (g : x.toTopObj) (i : y) :
     toTopMap f g i = ∑ j in Finset.univ.filter fun k => f k = i, g j :=
   rfl
-#align simplex_category.coe_to_Top_map SimplexCategory.coe_to_Top_map
+#align simplex_category.coe_to_Top_map SimplexCategory.coe_toTopMap
 
 @[continuity]
-theorem continuous_to_Top_map {x y : SimplexCategory} (f : x ⟶ y) : Continuous (toTopMap f) :=
+theorem continuous_toTopMap {x y : SimplexCategory} (f : x ⟶ y) : Continuous (toTopMap f) :=
   Continuous.subtype_mk
     (continuous_pi fun i =>
       continuous_finset_sum _ fun j hj => (continuous_apply _).comp continuous_subtype_val)
     _
-#align simplex_category.continuous_to_Top_map SimplexCategory.continuous_to_Top_map
+#align simplex_category.continuous_to_Top_map SimplexCategory.continuous_toTopMap
 
 /-- The functor associating the topological `n`-simplex to `[n] : simplex_category`. -/
 @[simps]

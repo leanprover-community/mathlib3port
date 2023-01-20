@@ -215,14 +215,14 @@ instance : IsRightAdjoint T.forget :=
   ⟨T.free, T.adj⟩
 
 @[simp]
-theorem left_adjoint_forget : leftAdjoint T.forget = T.free :=
+theorem leftAdjoint_forget : leftAdjoint T.forget = T.free :=
   rfl
-#align category_theory.monad.left_adjoint_forget CategoryTheory.Monad.left_adjoint_forget
+#align category_theory.monad.left_adjoint_forget CategoryTheory.Monad.leftAdjoint_forget
 
 @[simp]
-theorem of_right_adjoint_forget : Adjunction.ofRightAdjoint T.forget = T.adj :=
+theorem ofRightAdjoint_forget : Adjunction.ofRightAdjoint T.forget = T.adj :=
   rfl
-#align category_theory.monad.of_right_adjoint_forget CategoryTheory.Monad.of_right_adjoint_forget
+#align category_theory.monad.of_right_adjoint_forget CategoryTheory.Monad.ofRightAdjoint_forget
 
 /--
 Given a monad morphism from `T₂` to `T₁`, we get a functor from the algebras of `T₁` to algebras of
@@ -495,14 +495,14 @@ instance : IsLeftAdjoint G.forget :=
   ⟨_, G.adj⟩
 
 @[simp]
-theorem right_adjoint_forget : rightAdjoint G.forget = G.cofree :=
+theorem rightAdjoint_forget : rightAdjoint G.forget = G.cofree :=
   rfl
-#align category_theory.comonad.right_adjoint_forget CategoryTheory.Comonad.right_adjoint_forget
+#align category_theory.comonad.right_adjoint_forget CategoryTheory.Comonad.rightAdjoint_forget
 
 @[simp]
-theorem of_left_adjoint_forget : Adjunction.ofLeftAdjoint G.forget = G.adj :=
+theorem ofLeftAdjoint_forget : Adjunction.ofLeftAdjoint G.forget = G.adj :=
   rfl
-#align category_theory.comonad.of_left_adjoint_forget CategoryTheory.Comonad.of_left_adjoint_forget
+#align category_theory.comonad.of_left_adjoint_forget CategoryTheory.Comonad.ofLeftAdjoint_forget
 
 end Comonad
 

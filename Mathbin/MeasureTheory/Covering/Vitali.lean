@@ -172,7 +172,7 @@ theorem exists_disjoint_subfamily_covering_enlargment (B : ι → Set α) (t : S
 /-- Vitali covering theorem, closed balls version: given a family `t` of closed balls, one can
 extract a disjoint subfamily `u ⊆ t` so that all balls in `t` are covered by the 5-times
 dilations of balls in `u`. -/
-theorem exists_disjoint_subfamily_covering_enlargment_closed_ball [MetricSpace α] (t : Set ι)
+theorem exists_disjoint_subfamily_covering_enlargment_closedBall [MetricSpace α] (t : Set ι)
     (x : ι → α) (r : ι → ℝ) (R : ℝ) (hr : ∀ a ∈ t, r a ≤ R) :
     ∃ (u : _)(_ : u ⊆ t),
       (u.PairwiseDisjoint fun a => closedBall (x a) (r a)) ∧
@@ -206,7 +206,7 @@ theorem exists_disjoint_subfamily_covering_enlargment_closed_ball [MetricSpace �
   · rcases ht with ⟨b, rb⟩
     rcases A b ⟨rb.1, rb.2⟩ with ⟨c, cu, hc⟩
     refine' ⟨c, cu, by simp only [closed_ball_eq_empty.2 h'a, empty_subset]⟩
-#align vitali.exists_disjoint_subfamily_covering_enlargment_closed_ball Vitali.exists_disjoint_subfamily_covering_enlargment_closed_ball
+#align vitali.exists_disjoint_subfamily_covering_enlargment_closed_ball Vitali.exists_disjoint_subfamily_covering_enlargment_closedBall
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (u «expr ⊆ » t') -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (u «expr ⊆ » t) -/
@@ -335,7 +335,7 @@ theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [Opens
         linarith [Idist_v b ⟨bu, hbx⟩]
   -- we will show that, in `ball x (R x)`, almost all `s` is covered by the family `u`.
   refine'
-    ⟨_ ∩ ball x (R x), inter_mem_nhds_within _ (ball_mem_nhds _ (hR0 _)),
+    ⟨_ ∩ ball x (R x), inter_mem_nhdsWithin _ (ball_mem_nhds _ (hR0 _)),
       nonpos_iff_eq_zero.mp (le_of_forall_le_of_dense fun ε εpos => _)⟩
   -- the elements of `v` are disjoint and all contained in a finite volume ball, hence the sum
   -- of their measures is finite.
@@ -354,14 +354,14 @@ theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [Opens
     haveI : 0 < ε / C := by
       simp only [Ennreal.div_pos_iff, εpos.ne', Ennreal.coe_ne_top, Ne.def, not_false_iff,
         and_self_iff]
-    ((tendsto_order.1 (Ennreal.tendsto_tsum_compl_at_top_zero I.ne)).2 _ this).exists
+    ((tendsto_order.1 (Ennreal.tendsto_tsum_compl_atTop_zero I.ne)).2 _ this).exists
   -- main property: the points `z` of `s` which are not covered by `u` are contained in the
   -- enlargements of the elements not in `w`.
   have M : (s \ ⋃ a ∈ u, B a) ∩ ball x (R x) ⊆ ⋃ a : { a // a ∉ w }, closed_ball (c a) (3 * r a) :=
     by
     intro z hz
     set k := ⋃ (a : v) (ha : a ∈ w), B a with hk
-    have k_closed : IsClosed k := is_closed_bUnion w.finite_to_set fun i hi => h't _ (ut (vu i.2))
+    have k_closed : IsClosed k := isClosed_bUnion w.finite_to_set fun i hi => h't _ (ut (vu i.2))
     have z_notmem_k : z ∉ k :=
       by
       simp only [not_exists, exists_prop, mem_Union, mem_sep_iff, forall_exists_index,
@@ -449,7 +449,7 @@ protected def vitaliFamily [MetricSpace α] [MeasurableSpace α] [OpensMeasurabl
     by
     obtain ⟨r, μr, rpos, rε⟩ :
       ∃ r, μ (closed_ball x (3 * r)) ≤ C * μ (closed_ball x r) ∧ r ∈ Ioc (0 : ℝ) ε :=
-      ((h x).and_eventually (Ioc_mem_nhds_within_Ioi ⟨le_rfl, εpos⟩)).exists
+      ((h x).and_eventually (ioc_mem_nhdsWithin_ioi ⟨le_rfl, εpos⟩)).exists
     refine'
       ⟨closed_ball x r, ⟨is_closed_ball, _, ⟨r, subset.rfl, μr⟩⟩, closed_ball_subset_closed_ball rε⟩
     exact (nonempty_ball.2 rpos).mono ball_subset_interior_closed_ball

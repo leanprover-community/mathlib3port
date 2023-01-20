@@ -43,11 +43,11 @@ variable {R : Type _} {M : Type _} {ι : Type _}
 
 variable [Ring R] [AddCommGroup M] [Module R M]
 
-theorem linear_independent_single {φ : ι → Type _} {f : ∀ ι, φ ι → M}
+theorem linearIndependent_single {φ : ι → Type _} {f : ∀ ι, φ ι → M}
     (hf : ∀ i, LinearIndependent R (f i)) :
     LinearIndependent R fun ix : Σi, φ i => single ix.1 (f ix.1 ix.2) :=
   by
-  apply @linear_independent_Union_finite R _ _ _ _ ι φ fun i x => single i (f i x)
+  apply @linearIndependent_Union_finite R _ _ _ _ ι φ fun i x => single i (f i x)
   · intro i
     have h_disjoint : Disjoint (span R (range (f i))) (ker (lsingle i)) :=
       by
@@ -63,7 +63,7 @@ theorem linear_independent_single {φ : ι → Type _} {f : ∀ ι, φ ι → M}
     · refine' supᵢ₂_mono fun i hi => _
       rw [span_le, range_coe]
       apply range_comp_subset_range
-#align finsupp.linear_independent_single Finsupp.linear_independent_single
+#align finsupp.linear_independent_single Finsupp.linearIndependent_single
 
 end Ring
 
@@ -139,10 +139,9 @@ protected def basisSingleOne : Basis ι R (ι →₀ R) :=
 #align finsupp.basis_single_one Finsupp.basisSingleOne
 
 @[simp]
-theorem coe_basis_single_one :
-    (Finsupp.basisSingleOne : ι → ι →₀ R) = fun i => Finsupp.single i 1 :=
+theorem coe_basisSingleOne : (Finsupp.basisSingleOne : ι → ι →₀ R) = fun i => Finsupp.single i 1 :=
   funext fun i => Basis.apply_eq_iff.mpr rfl
-#align finsupp.coe_basis_single_one Finsupp.coe_basis_single_one
+#align finsupp.coe_basis_single_one Finsupp.coe_basisSingleOne
 
 end Semiring
 
@@ -234,7 +233,7 @@ theorem Finset.sum_single_ite (a : R) (i : n) :
 #align finset.sum_single_ite Finset.sum_single_ite
 
 @[simp]
-theorem equiv_fun_symm_std_basis (b : Basis n R M) (i : n) :
+theorem equivFun_symm_stdBasis (b : Basis n R M) (i : n) :
     b.equivFun.symm (LinearMap.stdBasis R (fun _ => R) i 1) = b i :=
   by
   have := EquivLike.injective b.repr
@@ -242,7 +241,7 @@ theorem equiv_fun_symm_std_basis (b : Basis n R M) (i : n) :
   simp only [equiv_fun_symm_apply, std_basis_apply', LinearEquiv.map_sum, LinearEquiv.map_smulₛₗ,
     RingHom.id_apply, repr_self, Finsupp.smul_single', boole_mul]
   exact Finset.sum_single_ite 1 i
-#align basis.equiv_fun_symm_std_basis Basis.equiv_fun_symm_std_basis
+#align basis.equiv_fun_symm_std_basis Basis.equivFun_symm_stdBasis
 
 end Basis
 

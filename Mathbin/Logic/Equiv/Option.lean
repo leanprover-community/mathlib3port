@@ -80,7 +80,7 @@ theorem optionCongr_trans (e₁ : α ≃ β) (e₂ : β ≃ γ) :
 
 /- warning: equiv.option_congr_eq_equiv_function_map_equiv -> Equiv.optionCongr_eq_equivFunctor_mapEquiv is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u1}} (e : Equiv.{succ u1, succ u1} α β), Eq.{succ u1} (Equiv.{succ u1, succ u1} (Option.{u1} α) (Option.{u1} β)) (Equiv.optionCongr.{u1, u1} α β e) (EquivFunctor.mapEquiv.{u1, u1} Option.{u1} (EquivFunctor.ofLawfulFunctor.{u1, u1} Option.{u1} (Applicative.toFunctor.{u1, u1} Option.{u1} (Monad.toApplicative.{u1, u1} Option.{u1} Option.monad.{u1})) (LawfulApplicative.to_is_lawful_functor.{u1, u1} Option.{u1} (Monad.toApplicative.{u1, u1} Option.{u1} Option.monad.{u1}) (LawfulMonad.to_is_lawful_applicative.{u1, u1} Option.{u1} Option.monad.{u1} Option.is_lawful_monad.{u1}))) α β e)
+  forall {α : Type.{u1}} {β : Type.{u1}} (e : Equiv.{succ u1, succ u1} α β), Eq.{succ u1} (Equiv.{succ u1, succ u1} (Option.{u1} α) (Option.{u1} β)) (Equiv.optionCongr.{u1, u1} α β e) (EquivFunctor.mapEquiv.{u1, u1} Option.{u1} (EquivFunctor.ofLawfulFunctor.{u1, u1} Option.{u1} (Applicative.toFunctor.{u1, u1} Option.{u1} (Monad.toApplicative.{u1, u1} Option.{u1} Option.monad.{u1})) (LawfulApplicative.to_lawfulFunctor.{u1, u1} Option.{u1} (Monad.toApplicative.{u1, u1} Option.{u1} Option.monad.{u1}) (LawfulMonad.to_lawfulApplicative.{u1, u1} Option.{u1} Option.monad.{u1} Option.lawfulMonad.{u1}))) α β e)
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u1}} (e : Equiv.{succ u1, succ u1} α β), Eq.{succ u1} (Equiv.{succ u1, succ u1} (Option.{u1} α) (Option.{u1} β)) (Equiv.optionCongr.{u1, u1} α β e) (EquivFunctor.mapEquiv.{u1, u1} Option.{u1} (EquivFunctor.ofLawfulFunctor.{u1, u1} Option.{u1} instFunctorOption.{u1} instLawfulFunctorOptionInstFunctorOption.{u1}) α β e)
 Case conversion may be inaccurate. Consider using '#align equiv.option_congr_eq_equiv_function_map_equiv Equiv.optionCongr_eq_equivFunctor_mapEquivₓ'. -/
@@ -147,8 +147,8 @@ mapping `e.symm none` to `e none`. -/
 def removeNone : α ≃ β where
   toFun := removeNoneAux e
   invFun := removeNoneAux e.symm
-  left_inv := remove_none_aux_inv e
-  right_inv := remove_none_aux_inv e.symm
+  left_inv := removeNoneAux_inv e
+  right_inv := removeNoneAux_inv e.symm
 #align equiv.remove_none Equiv.removeNone
 -/
 
@@ -166,13 +166,13 @@ theorem removeNone_symm : (removeNone e).symm = removeNone e.symm :=
 #print Equiv.removeNone_some /-
 theorem removeNone_some {x : α} (h : ∃ x', e (some x) = some x') :
     some (removeNone e x) = e (some x) :=
-  remove_none_aux_some e h
+  removeNoneAux_some e h
 #align equiv.remove_none_some Equiv.removeNone_some
 -/
 
 #print Equiv.removeNone_none /-
 theorem removeNone_none {x : α} (h : e (some x) = none) : some (removeNone e x) = e none :=
-  remove_none_aux_none e h
+  removeNoneAux_none e h
 #align equiv.remove_none_none Equiv.removeNone_none
 -/
 

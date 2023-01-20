@@ -311,7 +311,7 @@ theorem inclusion_faithful {S T : Subgroupoid C} (h : S ≤ T) (s t : S.objs) :
 #align category_theory.subgroupoid.inclusion_faithful CategoryTheory.Subgroupoid.inclusion_faithful
 
 theorem inclusion_refl {S : Subgroupoid C} : inclusion (le_refl S) = 𝟭 S.objs :=
-  Functor.hext (fun ⟨s, hs⟩ => rfl) fun ⟨s, hs⟩ ⟨t, ht⟩ ⟨f, hf⟩ => heq_of_eq rfl
+  Functor.hext (fun ⟨s, hs⟩ => rfl) fun ⟨s, hs⟩ ⟨t, ht⟩ ⟨f, hf⟩ => hEq_of_eq rfl
 #align category_theory.subgroupoid.inclusion_refl CategoryTheory.Subgroupoid.inclusion_refl
 
 theorem inclusion_trans {R S T : Subgroupoid C} (k : R ≤ S) (h : S ≤ T) :
@@ -355,7 +355,7 @@ structure IsWide : Prop where
   wide : ∀ c, 𝟙 c ∈ S.arrows c c
 #align category_theory.subgroupoid.is_wide CategoryTheory.Subgroupoid.IsWide
 
-theorem is_wide_iff_objs_eq_univ : S.IsWide ↔ S.objs = Set.univ :=
+theorem isWide_iff_objs_eq_univ : S.IsWide ↔ S.objs = Set.univ :=
   by
   constructor
   · rintro h
@@ -366,18 +366,18 @@ theorem is_wide_iff_objs_eq_univ : S.IsWide ↔ S.objs = Set.univ :=
     refine' ⟨fun c => _⟩
     obtain ⟨γ, γS⟩ := (le_of_eq h.symm : ⊤ ⊆ S.objs) (Set.mem_univ c)
     exact id_mem_of_src S γS
-#align category_theory.subgroupoid.is_wide_iff_objs_eq_univ CategoryTheory.Subgroupoid.is_wide_iff_objs_eq_univ
+#align category_theory.subgroupoid.is_wide_iff_objs_eq_univ CategoryTheory.Subgroupoid.isWide_iff_objs_eq_univ
 
 theorem IsWide.id_mem {S : Subgroupoid C} (Sw : S.IsWide) (c : C) : 𝟙 c ∈ S.arrows c c :=
   Sw.wide c
 #align category_theory.subgroupoid.is_wide.id_mem CategoryTheory.Subgroupoid.IsWide.id_mem
 
-theorem IsWide.eq_to_hom_mem {S : Subgroupoid C} (Sw : S.IsWide) {c d : C} (h : c = d) :
+theorem IsWide.eqToHom_mem {S : Subgroupoid C} (Sw : S.IsWide) {c d : C} (h : c = d) :
     eqToHom h ∈ S.arrows c d := by
   cases h
   simp only [eq_to_hom_refl]
   apply Sw.id_mem c
-#align category_theory.subgroupoid.is_wide.eq_to_hom_mem CategoryTheory.Subgroupoid.IsWide.eq_to_hom_mem
+#align category_theory.subgroupoid.is_wide.eq_to_hom_mem CategoryTheory.Subgroupoid.IsWide.eqToHom_mem
 
 /-- A subgroupoid is normal if it is wide and satisfies the expected stability under conjugacy. -/
 structure IsNormal extends IsWide S : Prop where
@@ -405,35 +405,35 @@ theorem IsNormal.conjugation_bij (Sn : IsNormal S) {c d} (p : c ⟶ d) :
       is_iso.inv_hom_id_assoc]
 #align category_theory.subgroupoid.is_normal.conjugation_bij CategoryTheory.Subgroupoid.IsNormal.conjugation_bij
 
-theorem top_is_normal : IsNormal (⊤ : Subgroupoid C) :=
+theorem top_isNormal : IsNormal (⊤ : Subgroupoid C) :=
   { wide := fun c => trivial
     conj := fun a b c d e => trivial }
-#align category_theory.subgroupoid.top_is_normal CategoryTheory.Subgroupoid.top_is_normal
+#align category_theory.subgroupoid.top_is_normal CategoryTheory.Subgroupoid.top_isNormal
 
-theorem Inf_is_normal (s : Set <| Subgroupoid C) (sn : ∀ S ∈ s, IsNormal S) : IsNormal (infₛ s) :=
+theorem infₛ_isNormal (s : Set <| Subgroupoid C) (sn : ∀ S ∈ s, IsNormal S) : IsNormal (infₛ s) :=
   { wide := by
       simp_rw [Inf, mem_Inter₂]
       exact fun c S Ss => (sn S Ss).wide c
     conj := by
       simp_rw [Inf, mem_Inter₂]
       exact fun c d p γ hγ S Ss => (sn S Ss).conj p (hγ S Ss) }
-#align category_theory.subgroupoid.Inf_is_normal CategoryTheory.Subgroupoid.Inf_is_normal
+#align category_theory.subgroupoid.Inf_is_normal CategoryTheory.Subgroupoid.infₛ_isNormal
 
-theorem discrete_is_normal : (@discrete C _).IsNormal :=
+theorem discrete_isNormal : (@discrete C _).IsNormal :=
   { wide := fun c => by constructor
     conj := fun c d f γ hγ => by
       cases hγ
       simp only [inv_eq_inv, category.id_comp, is_iso.inv_hom_id]
       constructor }
-#align category_theory.subgroupoid.discrete_is_normal CategoryTheory.Subgroupoid.discrete_is_normal
+#align category_theory.subgroupoid.discrete_is_normal CategoryTheory.Subgroupoid.discrete_isNormal
 
-theorem IsNormal.vertex_subgroup (Sn : IsNormal S) (c : C) (cS : c ∈ S.objs) :
+theorem IsNormal.vertexSubgroup (Sn : IsNormal S) (c : C) (cS : c ∈ S.objs) :
     (S.vertexSubgroup cS).Normal :=
   {
     conj_mem := fun x hx y => by
       rw [mul_assoc]
       exact Sn.conj' y hx }
-#align category_theory.subgroupoid.is_normal.vertex_subgroup CategoryTheory.Subgroupoid.IsNormal.vertex_subgroup
+#align category_theory.subgroupoid.is_normal.vertex_subgroup CategoryTheory.Subgroupoid.IsNormal.vertexSubgroup
 
 section GeneratedSubgroupoid
 
@@ -457,17 +457,17 @@ def generatedNormal : Subgroupoid C :=
   infₛ { S : Subgroupoid C | (∀ c d, X c d ⊆ S.arrows c d) ∧ S.IsNormal }
 #align category_theory.subgroupoid.generated_normal CategoryTheory.Subgroupoid.generatedNormal
 
-theorem generated_le_generated_normal : generated X ≤ generatedNormal X :=
+theorem generated_le_generatedNormal : generated X ≤ generatedNormal X :=
   by
   apply @infₛ_le_infₛ (subgroupoid C) _
   exact fun S ⟨h, _⟩ => h
-#align category_theory.subgroupoid.generated_le_generated_normal CategoryTheory.Subgroupoid.generated_le_generated_normal
+#align category_theory.subgroupoid.generated_le_generated_normal CategoryTheory.Subgroupoid.generated_le_generatedNormal
 
-theorem generated_normal_is_normal : (generatedNormal X).IsNormal :=
-  Inf_is_normal _ fun S h => h.right
-#align category_theory.subgroupoid.generated_normal_is_normal CategoryTheory.Subgroupoid.generated_normal_is_normal
+theorem generatedNormal_isNormal : (generatedNormal X).IsNormal :=
+  infₛ_isNormal _ fun S h => h.right
+#align category_theory.subgroupoid.generated_normal_is_normal CategoryTheory.Subgroupoid.generatedNormal_isNormal
 
-theorem IsNormal.generated_normal_le {S : Subgroupoid C} (Sn : S.IsNormal) :
+theorem IsNormal.generatedNormal_le {S : Subgroupoid C} (Sn : S.IsNormal) :
     generatedNormal X ≤ S ↔ ∀ c d, X c d ⊆ S.arrows c d :=
   by
   constructor
@@ -478,7 +478,7 @@ theorem IsNormal.generated_normal_le {S : Subgroupoid C} (Sn : S.IsNormal) :
   · rintro h
     apply @infₛ_le (subgroupoid C) _
     exact ⟨h, Sn⟩
-#align category_theory.subgroupoid.is_normal.generated_normal_le CategoryTheory.Subgroupoid.IsNormal.generated_normal_le
+#align category_theory.subgroupoid.is_normal.generated_normal_le CategoryTheory.Subgroupoid.IsNormal.generatedNormal_le
 
 end GeneratedSubgroupoid
 
@@ -505,7 +505,7 @@ theorem comap_mono (S T : Subgroupoid D) : S ≤ T → comap φ S ≤ comap φ T
   @ST ⟨_, _, _⟩
 #align category_theory.subgroupoid.comap_mono CategoryTheory.Subgroupoid.comap_mono
 
-theorem is_normal_comap {S : Subgroupoid D} (Sn : IsNormal S) : IsNormal (comap φ S) :=
+theorem isNormal_comap {S : Subgroupoid D} (Sn : IsNormal S) : IsNormal (comap φ S) :=
   { wide := fun c => by
       rw [comap, mem_set_of, Functor.map_id]
       apply Sn.wide
@@ -513,7 +513,7 @@ theorem is_normal_comap {S : Subgroupoid D} (Sn : IsNormal S) : IsNormal (comap 
       by
       simp_rw [inv_eq_inv f, comap, mem_set_of, functor.map_comp, functor.map_inv, ← inv_eq_inv]
       exact Sn.conj _ hγ }
-#align category_theory.subgroupoid.is_normal_comap CategoryTheory.Subgroupoid.is_normal_comap
+#align category_theory.subgroupoid.is_normal_comap CategoryTheory.Subgroupoid.isNormal_comap
 
 @[simp]
 theorem comap_comp {E : Type _} [Groupoid E] (ψ : D ⥤ E) : comap (φ ⋙ ψ) = comap φ ∘ comap ψ :=
@@ -530,9 +530,9 @@ theorem mem_ker_iff {c d : C} (f : c ⟶ d) :
   mem_discrete_iff (φ.map f)
 #align category_theory.subgroupoid.mem_ker_iff CategoryTheory.Subgroupoid.mem_ker_iff
 
-theorem ker_is_normal : (ker φ).IsNormal :=
-  is_normal_comap φ discrete_is_normal
-#align category_theory.subgroupoid.ker_is_normal CategoryTheory.Subgroupoid.ker_is_normal
+theorem ker_isNormal : (ker φ).IsNormal :=
+  isNormal_comap φ discrete_isNormal
+#align category_theory.subgroupoid.ker_is_normal CategoryTheory.Subgroupoid.ker_isNormal
 
 @[simp]
 theorem ker_comp {E : Type _} [Groupoid E] (ψ : D ⥤ E) : ker (φ ⋙ ψ) = comap φ (ker ψ) :=
@@ -580,32 +580,32 @@ theorem mem_map_iff (hφ : Function.Injective φ.obj) (S : Subgroupoid C) {c d :
   Map.arrows_iff φ hφ S f
 #align category_theory.subgroupoid.mem_map_iff CategoryTheory.Subgroupoid.mem_map_iff
 
-theorem galois_connection_map_comap (hφ : Function.Injective φ.obj) :
+theorem galoisConnection_map_comap (hφ : Function.Injective φ.obj) :
     GaloisConnection (map φ hφ) (comap φ) :=
   by
   rintro S T; simp_rw [le_iff]; constructor
   · exact fun h c d f fS => h (map.arrows.im f fS)
   · rintro h _ _ g ⟨a, gφS⟩
     exact h gφS
-#align category_theory.subgroupoid.galois_connection_map_comap CategoryTheory.Subgroupoid.galois_connection_map_comap
+#align category_theory.subgroupoid.galois_connection_map_comap CategoryTheory.Subgroupoid.galoisConnection_map_comap
 
 theorem map_mono (hφ : Function.Injective φ.obj) (S T : Subgroupoid C) :
-    S ≤ T → map φ hφ S ≤ map φ hφ T := fun h => (galois_connection_map_comap φ hφ).monotone_l h
+    S ≤ T → map φ hφ S ≤ map φ hφ T := fun h => (galoisConnection_map_comap φ hφ).monotone_l h
 #align category_theory.subgroupoid.map_mono CategoryTheory.Subgroupoid.map_mono
 
 theorem le_comap_map (hφ : Function.Injective φ.obj) (S : Subgroupoid C) :
     S ≤ comap φ (map φ hφ S) :=
-  (galois_connection_map_comap φ hφ).le_u_l S
+  (galoisConnection_map_comap φ hφ).le_u_l S
 #align category_theory.subgroupoid.le_comap_map CategoryTheory.Subgroupoid.le_comap_map
 
 theorem map_comap_le (hφ : Function.Injective φ.obj) (T : Subgroupoid D) :
     map φ hφ (comap φ T) ≤ T :=
-  (galois_connection_map_comap φ hφ).l_u_le T
+  (galoisConnection_map_comap φ hφ).l_u_le T
 #align category_theory.subgroupoid.map_comap_le CategoryTheory.Subgroupoid.map_comap_le
 
 theorem map_le_iff_le_comap (hφ : Function.Injective φ.obj) (S : Subgroupoid C)
     (T : Subgroupoid D) : map φ hφ S ≤ T ↔ S ≤ comap φ T :=
-  (galois_connection_map_comap φ hφ).le_iff_le
+  (galoisConnection_map_comap φ hφ).le_iff_le
 #align category_theory.subgroupoid.map_le_iff_le_comap CategoryTheory.Subgroupoid.map_le_iff_le_comap
 
 theorem mem_map_objs_iff (hφ : Function.Injective φ.obj) (d : D) :
@@ -656,7 +656,7 @@ theorem obj_surjective_of_im_eq_top (hφ : Function.Injective φ.obj) (hφ' : im
   apply mem_top_objs
 #align category_theory.subgroupoid.obj_surjective_of_im_eq_top CategoryTheory.Subgroupoid.obj_surjective_of_im_eq_top
 
-theorem is_normal_map (hφ : Function.Injective φ.obj) (hφ' : im φ hφ = ⊤) (Sn : S.IsNormal) :
+theorem isNormal_map (hφ : Function.Injective φ.obj) (hφ' : im φ hφ = ⊤) (Sn : S.IsNormal) :
     (map φ hφ S).IsNormal :=
   { wide := fun d => by
       obtain ⟨c, rfl⟩ := obj_surjective_of_im_eq_top φ hφ hφ' d
@@ -691,7 +691,7 @@ theorem is_normal_map (hφ : Function.Injective φ.obj) (hφ' : im φ hφ = ⊤)
         exact this
       · constructor
         apply Sn.conj f γS }
-#align category_theory.subgroupoid.is_normal_map CategoryTheory.Subgroupoid.is_normal_map
+#align category_theory.subgroupoid.is_normal_map CategoryTheory.Subgroupoid.isNormal_map
 
 end Hom
 
@@ -702,8 +702,8 @@ abbrev IsThin :=
   Quiver.IsThin S.objs
 #align category_theory.subgroupoid.is_thin CategoryTheory.Subgroupoid.IsThin
 
-theorem is_thin_iff : S.IsThin ↔ ∀ c : S.objs, Subsingleton (S.arrows c c) := by apply is_thin_iff
-#align category_theory.subgroupoid.is_thin_iff CategoryTheory.Subgroupoid.is_thin_iff
+theorem isThin_iff : S.IsThin ↔ ∀ c : S.objs, Subsingleton (S.arrows c c) := by apply is_thin_iff
+#align category_theory.subgroupoid.is_thin_iff CategoryTheory.Subgroupoid.isThin_iff
 
 end Thin
 
@@ -714,7 +714,7 @@ abbrev IsTotallyDisconnected :=
   IsTotallyDisconnected S.objs
 #align category_theory.subgroupoid.is_totally_disconnected CategoryTheory.Subgroupoid.IsTotallyDisconnected
 
-theorem is_totally_disconnected_iff :
+theorem isTotallyDisconnected_iff :
     S.IsTotallyDisconnected ↔ ∀ c d, (S.arrows c d).Nonempty → c = d :=
   by
   constructor
@@ -724,7 +724,7 @@ theorem is_totally_disconnected_iff :
   · rintro h ⟨c, hc⟩ ⟨d, hd⟩ ⟨f, fS⟩
     simp only [Subtype.mk_eq_mk]
     exact h c d ⟨f, fS⟩
-#align category_theory.subgroupoid.is_totally_disconnected_iff CategoryTheory.Subgroupoid.is_totally_disconnected_iff
+#align category_theory.subgroupoid.is_totally_disconnected_iff CategoryTheory.Subgroupoid.isTotallyDisconnected_iff
 
 /-- The isotropy subgroupoid of `S` -/
 def disconnect : Subgroupoid C
@@ -760,11 +760,11 @@ theorem disconnect_objs : S.disconnect.objs = S.objs :=
   apply mem_disconnect_objs_iff
 #align category_theory.subgroupoid.disconnect_objs CategoryTheory.Subgroupoid.disconnect_objs
 
-theorem disconnect_is_totally_disconnected : S.disconnect.IsTotallyDisconnected :=
+theorem disconnect_isTotallyDisconnected : S.disconnect.IsTotallyDisconnected :=
   by
   rw [is_totally_disconnected_iff]
   exact fun c d ⟨f, h, fS⟩ => h
-#align category_theory.subgroupoid.disconnect_is_totally_disconnected CategoryTheory.Subgroupoid.disconnect_is_totally_disconnected
+#align category_theory.subgroupoid.disconnect_is_totally_disconnected CategoryTheory.Subgroupoid.disconnect_isTotallyDisconnected
 
 end Disconnected
 

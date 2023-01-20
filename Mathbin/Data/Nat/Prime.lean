@@ -437,9 +437,13 @@ theorem minFac_le_of_dvd {n : ℕ} : ∀ {m : ℕ}, 2 ≤ m → m ∣ n → minF
 #align nat.min_fac_le_of_dvd Nat.minFac_le_of_dvd
 -/
 
-theorem min_fac_pos (n : ℕ) : 0 < minFac n := by
+/- warning: nat.min_fac_pos clashes with nat.minFac_pos -> Nat.minFac_pos
+Case conversion may be inaccurate. Consider using '#align nat.min_fac_pos Nat.minFac_posₓ'. -/
+#print Nat.minFac_pos /-
+theorem minFac_pos (n : ℕ) : 0 < minFac n := by
   by_cases n1 : n = 1 <;> [exact n1.symm ▸ by decide, exact (min_fac_prime n1).Pos]
-#align nat.min_fac_pos Nat.min_fac_pos
+#align nat.min_fac_pos Nat.minFac_pos
+-/
 
 #print Nat.minFac_le /-
 theorem minFac_le {n : ℕ} (H : 0 < n) : minFac n ≤ n :=
@@ -607,7 +611,7 @@ theorem exists_infinite_primes (n : ℕ) : ∃ p, n ≤ p ∧ Prime p :=
   have pp : Prime p := minFac_prime f1
   have np : n ≤ p :=
     le_of_not_ge fun h =>
-      have h₁ : p ∣ n ! := dvd_factorial (min_fac_pos _) h
+      have h₁ : p ∣ n ! := dvd_factorial (minFac_pos _) h
       have h₂ : p ∣ 1 := (Nat.dvd_add_iff_right h₁).2 (minFac_dvd _)
       pp.not_dvd_one h₂
   ⟨p, np, pp⟩

@@ -46,20 +46,20 @@ noncomputable def acounit : MvPolynomial B A →ₐ[A] B :=
 variable {B}
 
 @[simp]
-theorem acounit_X (b : B) : acounit A B (x b) = b :=
-  aeval_X _ b
-#align mv_polynomial.acounit_X MvPolynomial.acounit_X
+theorem acounit_x (b : B) : acounit A B (x b) = b :=
+  aeval_x _ b
+#align mv_polynomial.acounit_X MvPolynomial.acounit_x
 
 variable {A} (B)
 
 @[simp]
-theorem acounit_C (a : A) : acounit A B (c a) = algebraMap A B a :=
-  aeval_C _ a
-#align mv_polynomial.acounit_C MvPolynomial.acounit_C
+theorem acounit_c (a : A) : acounit A B (c a) = algebraMap A B a :=
+  aeval_c _ a
+#align mv_polynomial.acounit_C MvPolynomial.acounit_c
 
 variable (A)
 
-theorem acounit_surjective : Surjective (acounit A B) := fun b => ⟨x b, acounit_X A b⟩
+theorem acounit_surjective : Surjective (acounit A B) := fun b => ⟨x b, acounit_x A b⟩
 #align mv_polynomial.acounit_surjective MvPolynomial.acounit_surjective
 
 /-- `mv_polynomial.counit R` is the natural surjective ring homomorphism
@@ -84,29 +84,29 @@ theorem counit_surjective : Surjective (counit R) :=
   acounit_surjective ℤ R
 #align mv_polynomial.counit_surjective MvPolynomial.counit_surjective
 
-theorem counit_nat_surjective : Surjective (counitNat A) :=
+theorem counitNat_surjective : Surjective (counitNat A) :=
   acounit_surjective ℕ A
-#align mv_polynomial.counit_nat_surjective MvPolynomial.counit_nat_surjective
+#align mv_polynomial.counit_nat_surjective MvPolynomial.counitNat_surjective
 
-theorem counit_C (n : ℤ) : counit R (c n) = n :=
-  acounit_C _ _
-#align mv_polynomial.counit_C MvPolynomial.counit_C
+theorem counit_c (n : ℤ) : counit R (c n) = n :=
+  acounit_c _ _
+#align mv_polynomial.counit_C MvPolynomial.counit_c
 
-theorem counit_nat_C (n : ℕ) : counitNat A (c n) = n :=
-  acounit_C _ _
-#align mv_polynomial.counit_nat_C MvPolynomial.counit_nat_C
+theorem counitNat_c (n : ℕ) : counitNat A (c n) = n :=
+  acounit_c _ _
+#align mv_polynomial.counit_nat_C MvPolynomial.counitNat_c
 
 variable {R A}
 
 @[simp]
-theorem counit_X (r : R) : counit R (x r) = r :=
-  acounit_X _ _
-#align mv_polynomial.counit_X MvPolynomial.counit_X
+theorem counit_x (r : R) : counit R (x r) = r :=
+  acounit_x _ _
+#align mv_polynomial.counit_X MvPolynomial.counit_x
 
 @[simp]
-theorem counit_nat_X (a : A) : counitNat A (x a) = a :=
-  acounit_X _ _
-#align mv_polynomial.counit_nat_X MvPolynomial.counit_nat_X
+theorem counitNat_x (a : A) : counitNat A (x a) = a :=
+  acounit_x _ _
+#align mv_polynomial.counit_nat_X MvPolynomial.counitNat_x
 
 end MvPolynomial
 

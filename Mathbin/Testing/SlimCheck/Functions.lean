@@ -293,11 +293,12 @@ def List.applyId [DecidableEq α] (xs : List (α × α)) (x : α) : α :=
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem List.apply_id_cons [DecidableEq α] (xs : List (α × α)) (x y z : α) :
+theorem List.applyId_cons [DecidableEq α] (xs : List (α × α)) (x y z : α) :
     List.applyId ((y, z)::xs) x = if y = x then z else List.applyId xs x := by
-  simp only [list.apply_id, List.dlookup, eq_rec_constant, Prod.toSigma, List.map] <;> split_ifs <;>
+  simp only [list.apply_id, List.dlookup, eq_ndrec_constant, Prod.toSigma, List.map] <;>
+      split_ifs <;>
     rfl
-#align slim_check.injective_function.list.apply_id_cons SlimCheck.InjectiveFunction.List.apply_id_cons
+#align slim_check.injective_function.list.apply_id_cons SlimCheck.InjectiveFunction.List.applyId_cons
 
 open Function _Root_.List
 
@@ -305,7 +306,7 @@ open _Root_.Prod (toSigma)
 
 open _Root_.Nat
 
-theorem List.apply_id_zip_eq [DecidableEq α] {xs ys : List α} (h₀ : List.Nodup xs)
+theorem List.applyId_zip_eq [DecidableEq α] {xs ys : List α} (h₀ : List.Nodup xs)
     (h₁ : xs.length = ys.length) (x y : α) (i : ℕ) (h₂ : xs.nth i = some x) :
     List.applyId.{u} (xs.zip ys) x = y ↔ ys.nth i = some y :=
   by
@@ -318,8 +319,8 @@ theorem List.apply_id_zip_eq [DecidableEq α] {xs ys : List α} (h₀ : List.Nod
       cases ys
       · cases h₁
       ·
-        simp only [list.apply_id, to_sigma, Option.get_or_else_some, nth, lookup_cons_eq,
-          zip_cons_cons, List.map]
+        simp only [list.apply_id, to_sigma, Option.getD_some, nth, lookup_cons_eq, zip_cons_cons,
+          List.map]
     · cases ys
       · cases h₁
       · cases' h₀ with _ _ h₀ h₁
@@ -328,10 +329,10 @@ theorem List.apply_id_zip_eq [DecidableEq α] {xs ys : List α} (h₀ : List.Nod
         · apply xs_ih <;> solve_by_elim [succ.inj]
         · apply h₀
           apply nth_mem h₂
-#align slim_check.injective_function.list.apply_id_zip_eq SlimCheck.InjectiveFunction.List.apply_id_zip_eq
+#align slim_check.injective_function.list.apply_id_zip_eq SlimCheck.InjectiveFunction.List.applyId_zip_eq
 
 /- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:564:6: unsupported: specialize @hyp -/
-theorem apply_id_mem_iff [DecidableEq α] {xs ys : List α} (h₀ : List.Nodup xs) (h₁ : xs ~ ys)
+theorem applyId_mem_iff [DecidableEq α] {xs ys : List α} (h₀ : List.Nodup xs) (h₁ : xs ~ ys)
     (x : α) : List.applyId.{u} (xs.zip ys) x ∈ ys ↔ x ∈ xs :=
   by
   simp only [list.apply_id]
@@ -358,16 +359,16 @@ theorem apply_id_mem_iff [DecidableEq α] {xs ys : List α} (h₀ : List.Nodup x
         suffices : val ∈ ys
         tauto
         erw [← Option.mem_def, mem_lookup_iff] at h₃
-        simp only [to_sigma, mem_map, heq_iff_eq, Prod.exists] at h₃
+        simp only [to_sigma, mem_map, hEq_iff_eq, Prod.exists] at h₃
         rcases h₃ with ⟨a, b, h₃, h₄, h₅⟩
         subst a
         subst b
         apply (mem_zip h₃).2
         simp only [nodupkeys, keys, comp, Prod.fst_toSigma, map_map]
         rwa [map_fst_zip _ _ (le_of_eq h₆)]
-#align slim_check.injective_function.apply_id_mem_iff SlimCheck.InjectiveFunction.apply_id_mem_iff
+#align slim_check.injective_function.apply_id_mem_iff SlimCheck.InjectiveFunction.applyId_mem_iff
 
-theorem List.apply_id_eq_self [DecidableEq α] {xs ys : List α} (x : α) :
+theorem List.applyId_eq_self [DecidableEq α] {xs ys : List α} (x : α) :
     x ∉ xs → List.applyId.{u} (xs.zip ys) x = x :=
   by
   intro h
@@ -377,9 +378,9 @@ theorem List.apply_id_eq_self [DecidableEq α] {xs ys : List α} (x : α) :
     map_map, Prod.exists]
   intro y hy
   exact h (mem_zip hy).1
-#align slim_check.injective_function.list.apply_id_eq_self SlimCheck.InjectiveFunction.List.apply_id_eq_self
+#align slim_check.injective_function.list.apply_id_eq_self SlimCheck.InjectiveFunction.List.applyId_eq_self
 
-theorem apply_id_injective [DecidableEq α] {xs ys : List α} (h₀ : List.Nodup xs) (h₁ : xs ~ ys) :
+theorem applyId_injective [DecidableEq α] {xs ys : List α} (h₀ : List.Nodup xs) (h₁ : xs ~ ys) :
     Injective.{u + 1, u + 1} (List.applyId (xs.zip ys)) :=
   by
   intro x y h
@@ -407,7 +408,7 @@ theorem apply_id_injective [DecidableEq α] {xs ys : List α} (h₀ : List.Nodup
     rw [h] at hx
     contradiction
   · rwa [list.apply_id_eq_self, list.apply_id_eq_self] at h <;> assumption
-#align slim_check.injective_function.apply_id_injective SlimCheck.InjectiveFunction.apply_id_injective
+#align slim_check.injective_function.apply_id_injective SlimCheck.InjectiveFunction.applyId_injective
 
 open TotalFunction (list.to_finmap')
 

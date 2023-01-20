@@ -144,9 +144,9 @@ theorem norm_sup_le_add (x y : α) : ‖x ⊔ y‖ ≤ ‖x‖ + ‖y‖ :=
 -- see Note [lower instance priority]
 /-- Let `α` be a normed lattice ordered group. Then the infimum is jointly continuous.
 -/
-instance (priority := 100) normed_lattice_add_comm_group_has_continuous_inf : HasContinuousInf α :=
+instance (priority := 100) normedLatticeAddCommGroup_hasContinuousInf : HasContinuousInf α :=
   by
-  refine' ⟨continuous_iff_continuous_at.2 fun q => tendsto_iff_norm_tendsto_zero.2 <| _⟩
+  refine' ⟨continuous_iff_continuousAt.2 fun q => tendsto_iff_norm_tendsto_zero.2 <| _⟩
   have : ∀ p : α × α, ‖p.1 ⊓ p.2 - q.1 ⊓ q.2‖ ≤ ‖p.1 - q.1‖ + ‖p.2 - q.2‖ := fun _ =>
     norm_inf_sub_inf_le_add_norm _ _ _ _
   refine' squeeze_zero (fun e => norm_nonneg _) this _
@@ -154,13 +154,13 @@ instance (priority := 100) normed_lattice_add_comm_group_has_continuous_inf : Ha
     ((continuous_fst.tendsto q).sub tendsto_const_nhds).norm.add
       ((continuous_snd.tendsto q).sub tendsto_const_nhds).norm
   simp
-#align normed_lattice_add_comm_group_has_continuous_inf normed_lattice_add_comm_group_has_continuous_inf
+#align normed_lattice_add_comm_group_has_continuous_inf normedLatticeAddCommGroup_hasContinuousInf
 
 -- see Note [lower instance priority]
-instance (priority := 100) normed_lattice_add_comm_group_has_continuous_sup {α : Type _}
+instance (priority := 100) normedLatticeAddCommGroup_hasContinuousSup {α : Type _}
     [NormedLatticeAddCommGroup α] : HasContinuousSup α :=
-  OrderDual.has_continuous_sup αᵒᵈ
-#align normed_lattice_add_comm_group_has_continuous_sup normed_lattice_add_comm_group_has_continuous_sup
+  OrderDual.hasContinuousSup αᵒᵈ
+#align normed_lattice_add_comm_group_has_continuous_sup normedLatticeAddCommGroup_hasContinuousSup
 
 -- see Note [lower instance priority]
 /--
@@ -182,36 +182,36 @@ theorem norm_inf_sub_inf_le_norm (x y z : α) : ‖x ⊓ z - y ⊓ z‖ ≤ ‖x
   solid (abs_inf_sub_inf_le_abs x y z)
 #align norm_inf_sub_inf_le_norm norm_inf_sub_inf_le_norm
 
-theorem lipschitz_with_sup_right (z : α) : LipschitzWith 1 fun x => x ⊔ z :=
+theorem lipschitzWith_sup_right (z : α) : LipschitzWith 1 fun x => x ⊔ z :=
   LipschitzWith.of_dist_le_mul fun x y =>
     by
     rw [Nonneg.coe_one, one_mul, dist_eq_norm, dist_eq_norm]
     exact norm_sup_sub_sup_le_norm x y z
-#align lipschitz_with_sup_right lipschitz_with_sup_right
+#align lipschitz_with_sup_right lipschitzWith_sup_right
 
-theorem lipschitz_with_pos : LipschitzWith 1 (PosPart.pos : α → α) :=
-  lipschitz_with_sup_right 0
-#align lipschitz_with_pos lipschitz_with_pos
+theorem lipschitzWith_pos : LipschitzWith 1 (PosPart.pos : α → α) :=
+  lipschitzWith_sup_right 0
+#align lipschitz_with_pos lipschitzWith_pos
 
 theorem continuous_pos : Continuous (PosPart.pos : α → α) :=
-  LipschitzWith.continuous lipschitz_with_pos
+  LipschitzWith.continuous lipschitzWith_pos
 #align continuous_pos continuous_pos
 
 theorem continuous_neg' : Continuous (NegPart.neg : α → α) :=
   continuous_pos.comp continuous_neg
 #align continuous_neg' continuous_neg'
 
-theorem is_closed_nonneg {E} [NormedLatticeAddCommGroup E] : IsClosed { x : E | 0 ≤ x } :=
+theorem isClosed_nonneg {E} [NormedLatticeAddCommGroup E] : IsClosed { x : E | 0 ≤ x } :=
   by
   suffices { x : E | 0 ≤ x } = NegPart.neg ⁻¹' {(0 : E)}
     by
     rw [this]
-    exact IsClosed.preimage continuous_neg' is_closed_singleton
+    exact IsClosed.preimage continuous_neg' isClosed_singleton
   ext1 x
   simp only [Set.mem_preimage, Set.mem_singleton_iff, Set.mem_setOf_eq, neg_eq_zero_iff]
-#align is_closed_nonneg is_closed_nonneg
+#align is_closed_nonneg isClosed_nonneg
 
-theorem is_closed_le_of_is_closed_nonneg {G} [OrderedAddCommGroup G] [TopologicalSpace G]
+theorem isClosed_le_of_isClosed_nonneg {G} [OrderedAddCommGroup G] [TopologicalSpace G]
     [HasContinuousSub G] (h : IsClosed { x : G | 0 ≤ x }) :
     IsClosed { p : G × G | p.fst ≤ p.snd } :=
   by
@@ -221,11 +221,11 @@ theorem is_closed_le_of_is_closed_nonneg {G} [OrderedAddCommGroup G] [Topologica
     simp only [sub_nonneg, Set.preimage_setOf_eq]
   rw [this]
   exact IsClosed.preimage (continuous_snd.sub continuous_fst) h
-#align is_closed_le_of_is_closed_nonneg is_closed_le_of_is_closed_nonneg
+#align is_closed_le_of_is_closed_nonneg isClosed_le_of_isClosed_nonneg
 
 -- See note [lower instance priority]
-instance (priority := 100) NormedLatticeAddCommGroup.order_closed_topology {E}
+instance (priority := 100) NormedLatticeAddCommGroup.orderClosedTopology {E}
     [NormedLatticeAddCommGroup E] : OrderClosedTopology E :=
-  ⟨is_closed_le_of_is_closed_nonneg is_closed_nonneg⟩
-#align normed_lattice_add_comm_group.order_closed_topology NormedLatticeAddCommGroup.order_closed_topology
+  ⟨isClosed_le_of_isClosed_nonneg isClosed_nonneg⟩
+#align normed_lattice_add_comm_group.order_closed_topology NormedLatticeAddCommGroup.orderClosedTopology
 

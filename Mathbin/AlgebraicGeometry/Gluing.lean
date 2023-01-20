@@ -151,16 +151,16 @@ abbrev isoLocallyRingedSpace :
   𝖣.gluedIso forgetToLocallyRingedSpace
 #align algebraic_geometry.Scheme.glue_data.iso_LocallyRingedSpace AlgebraicGeometry.SchemeCat.GlueData.isoLocallyRingedSpace
 
-theorem ι_iso_LocallyRingedSpace_inv (i : D.J) :
+theorem ι_isoLocallyRingedSpace_inv (i : D.J) :
     D.toLocallyRingedSpaceGlueData.toGlueData.ι i ≫ D.isoLocallyRingedSpace.inv = 𝖣.ι i :=
   𝖣.ι_glued_iso_inv forgetToLocallyRingedSpace i
-#align algebraic_geometry.Scheme.glue_data.ι_iso_LocallyRingedSpace_inv AlgebraicGeometry.SchemeCat.GlueData.ι_iso_LocallyRingedSpace_inv
+#align algebraic_geometry.Scheme.glue_data.ι_iso_LocallyRingedSpace_inv AlgebraicGeometry.SchemeCat.GlueData.ι_isoLocallyRingedSpace_inv
 
-instance ι_is_open_immersion (i : D.J) : IsOpenImmersion (𝖣.ι i) :=
+instance ι_isOpenImmersion (i : D.J) : IsOpenImmersion (𝖣.ι i) :=
   by
   rw [← D.ι_iso_LocallyRingedSpace_inv]
   infer_instance
-#align algebraic_geometry.Scheme.glue_data.ι_is_open_immersion AlgebraicGeometry.SchemeCat.GlueData.ι_is_open_immersion
+#align algebraic_geometry.Scheme.glue_data.ι_is_open_immersion AlgebraicGeometry.SchemeCat.GlueData.ι_isOpenImmersion
 
 theorem ι_jointly_surjective (x : 𝖣.glued.carrier) :
     ∃ (i : D.J)(y : (D.U i).carrier), (D.ι i).1.base y = x :=
@@ -206,7 +206,7 @@ def isoCarrier :
 #align algebraic_geometry.Scheme.glue_data.iso_carrier AlgebraicGeometry.SchemeCat.GlueData.isoCarrier
 
 @[simp]
-theorem ι_iso_carrier_inv (i : D.J) :
+theorem ι_isoCarrier_inv (i : D.J) :
     D.toLocallyRingedSpaceGlueData.toSheafedSpaceGlueData.toPresheafedSpaceGlueData.toTopGlueData.toGlueData.ι
           i ≫
         D.isoCarrier.inv =
@@ -221,7 +221,7 @@ theorem ι_iso_carrier_inv (i : D.J) :
   erw [D.to_LocallyRingedSpace_glue_data.ι_iso_SheafedSpace_inv i]
   change (_ ≫ D.iso_LocallyRingedSpace.inv).1.base = _
   rw [D.ι_iso_LocallyRingedSpace_inv i]
-#align algebraic_geometry.Scheme.glue_data.ι_iso_carrier_inv AlgebraicGeometry.SchemeCat.GlueData.ι_iso_carrier_inv
+#align algebraic_geometry.Scheme.glue_data.ι_iso_carrier_inv AlgebraicGeometry.SchemeCat.GlueData.ι_isoCarrier_inv
 
 /-- An equivalence relation on `Σ i, D.U i` that holds iff `𝖣 .ι i x = 𝖣 .ι j y`.
 See `Scheme.gluing_data.ι_eq_iff`. -/
@@ -241,14 +241,14 @@ theorem ι_eq_iff (i j : D.J) (x : (D.U i).carrier) (y : (D.U j).carrier) :
   simp_rw [← comp_apply, D.ι_iso_carrier_inv]
 #align algebraic_geometry.Scheme.glue_data.ι_eq_iff AlgebraicGeometry.SchemeCat.GlueData.ι_eq_iff
 
-theorem is_open_iff (U : Set D.glued.carrier) : IsOpen U ↔ ∀ i, IsOpen ((D.ι i).1.base ⁻¹' U) :=
+theorem isOpen_iff (U : Set D.glued.carrier) : IsOpen U ↔ ∀ i, IsOpen ((D.ι i).1.base ⁻¹' U) :=
   by
   rw [← (TopCat.homeoOfIso D.iso_carrier.symm).is_open_preimage]
-  rw [TopCat.GlueData.is_open_iff]
+  rw [TopCat.GlueData.isOpen_iff]
   apply forall_congr'
   intro i
   erw [← Set.preimage_comp, ← coe_comp, ι_iso_carrier_inv]
-#align algebraic_geometry.Scheme.glue_data.is_open_iff AlgebraicGeometry.SchemeCat.GlueData.is_open_iff
+#align algebraic_geometry.Scheme.glue_data.is_open_iff AlgebraicGeometry.SchemeCat.GlueData.isOpen_iff
 
 /-- The open cover of the glued space given by the glue data. -/
 def openCover (D : SchemeCat.GlueData) : OpenCover D.glued
@@ -282,36 +282,36 @@ def gluedCoverT' (x y z : 𝒰.J) :
 #align algebraic_geometry.Scheme.open_cover.glued_cover_t' AlgebraicGeometry.SchemeCat.OpenCover.gluedCoverT'
 
 @[simp, reassoc.1]
-theorem glued_cover_t'_fst_fst (x y z : 𝒰.J) :
+theorem gluedCoverT'_fst_fst (x y z : 𝒰.J) :
     𝒰.gluedCoverT' x y z ≫ pullback.fst ≫ pullback.fst = pullback.fst ≫ pullback.snd :=
   by
   delta glued_cover_t'
   simp
-#align algebraic_geometry.Scheme.open_cover.glued_cover_t'_fst_fst AlgebraicGeometry.SchemeCat.OpenCover.glued_cover_t'_fst_fst
+#align algebraic_geometry.Scheme.open_cover.glued_cover_t'_fst_fst AlgebraicGeometry.SchemeCat.OpenCover.gluedCoverT'_fst_fst
 
 @[simp, reassoc.1]
-theorem glued_cover_t'_fst_snd (x y z : 𝒰.J) :
+theorem gluedCoverT'_fst_snd (x y z : 𝒰.J) :
     gluedCoverT' 𝒰 x y z ≫ pullback.fst ≫ pullback.snd = pullback.snd ≫ pullback.snd :=
   by
   delta glued_cover_t'
   simp
-#align algebraic_geometry.Scheme.open_cover.glued_cover_t'_fst_snd AlgebraicGeometry.SchemeCat.OpenCover.glued_cover_t'_fst_snd
+#align algebraic_geometry.Scheme.open_cover.glued_cover_t'_fst_snd AlgebraicGeometry.SchemeCat.OpenCover.gluedCoverT'_fst_snd
 
 @[simp, reassoc.1]
-theorem glued_cover_t'_snd_fst (x y z : 𝒰.J) :
+theorem gluedCoverT'_snd_fst (x y z : 𝒰.J) :
     gluedCoverT' 𝒰 x y z ≫ pullback.snd ≫ pullback.fst = pullback.fst ≫ pullback.snd :=
   by
   delta glued_cover_t'
   simp
-#align algebraic_geometry.Scheme.open_cover.glued_cover_t'_snd_fst AlgebraicGeometry.SchemeCat.OpenCover.glued_cover_t'_snd_fst
+#align algebraic_geometry.Scheme.open_cover.glued_cover_t'_snd_fst AlgebraicGeometry.SchemeCat.OpenCover.gluedCoverT'_snd_fst
 
 @[simp, reassoc.1]
-theorem glued_cover_t'_snd_snd (x y z : 𝒰.J) :
+theorem gluedCoverT'_snd_snd (x y z : 𝒰.J) :
     gluedCoverT' 𝒰 x y z ≫ pullback.snd ≫ pullback.snd = pullback.fst ≫ pullback.fst :=
   by
   delta glued_cover_t'
   simp
-#align algebraic_geometry.Scheme.open_cover.glued_cover_t'_snd_snd AlgebraicGeometry.SchemeCat.OpenCover.glued_cover_t'_snd_snd
+#align algebraic_geometry.Scheme.open_cover.glued_cover_t'_snd_snd AlgebraicGeometry.SchemeCat.OpenCover.gluedCoverT'_snd_snd
 
 theorem glued_cover_cocycle_fst (x y z : 𝒰.J) :
     gluedCoverT' 𝒰 x y z ≫ gluedCoverT' 𝒰 y z x ≫ gluedCoverT' 𝒰 z x y ≫ pullback.fst =
@@ -363,11 +363,11 @@ def fromGlued : 𝒰.gluedCover.glued ⟶ X :=
 #align algebraic_geometry.Scheme.open_cover.from_glued AlgebraicGeometry.SchemeCat.OpenCover.fromGlued
 
 @[simp, reassoc.1]
-theorem ι_from_glued (x : 𝒰.J) : 𝒰.gluedCover.ι x ≫ 𝒰.fromGlued = 𝒰.map x :=
+theorem ι_fromGlued (x : 𝒰.J) : 𝒰.gluedCover.ι x ≫ 𝒰.fromGlued = 𝒰.map x :=
   multicoequalizer.π_desc _ _ _ _ _
-#align algebraic_geometry.Scheme.open_cover.ι_from_glued AlgebraicGeometry.SchemeCat.OpenCover.ι_from_glued
+#align algebraic_geometry.Scheme.open_cover.ι_from_glued AlgebraicGeometry.SchemeCat.OpenCover.ι_fromGlued
 
-theorem from_glued_injective : Function.Injective 𝒰.fromGlued.1.base :=
+theorem fromGlued_injective : Function.Injective 𝒰.fromGlued.1.base :=
   by
   intro x y h
   obtain ⟨i, x, rfl⟩ := 𝒰.glued_cover.ι_jointly_surjective x
@@ -387,9 +387,9 @@ theorem from_glued_injective : Function.Injective 𝒰.fromGlued.1.base :=
   · erw [pullback_symmetry_hom_comp_fst,
       is_limit.cone_point_unique_up_to_iso_hom_comp _ _ walking_cospan.right]
     rfl
-#align algebraic_geometry.Scheme.open_cover.from_glued_injective AlgebraicGeometry.SchemeCat.OpenCover.from_glued_injective
+#align algebraic_geometry.Scheme.open_cover.from_glued_injective AlgebraicGeometry.SchemeCat.OpenCover.fromGlued_injective
 
-instance from_glued_stalk_iso (x : 𝒰.gluedCover.glued.carrier) :
+instance fromGlued_stalk_iso (x : 𝒰.gluedCover.glued.carrier) :
     IsIso (PresheafedSpaceCat.stalkMap 𝒰.fromGlued.val x) :=
   by
   obtain ⟨i, x, rfl⟩ := 𝒰.glued_cover.ι_jointly_surjective x
@@ -400,12 +400,12 @@ instance from_glued_stalk_iso (x : 𝒰.gluedCover.glued.carrier) :
   rw [← is_iso.eq_comp_inv] at this
   rw [this]
   infer_instance
-#align algebraic_geometry.Scheme.open_cover.from_glued_stalk_iso AlgebraicGeometry.SchemeCat.OpenCover.from_glued_stalk_iso
+#align algebraic_geometry.Scheme.open_cover.from_glued_stalk_iso AlgebraicGeometry.SchemeCat.OpenCover.fromGlued_stalk_iso
 
-theorem from_glued_open_map : IsOpenMap 𝒰.fromGlued.1.base :=
+theorem fromGlued_open_map : IsOpenMap 𝒰.fromGlued.1.base :=
   by
   intro U hU
-  rw [is_open_iff_forall_mem_open]
+  rw [isOpen_iff_forall_mem_open]
   intro x hx
   rw [𝒰.glued_cover.is_open_iff] at hU
   use 𝒰.from_glued.val.base '' U ∩ Set.range (𝒰.map (𝒰.f x)).1.base
@@ -420,12 +420,12 @@ theorem from_glued_open_map : IsOpenMap 𝒰.fromGlued.1.base :=
     congr 1
     refine' Set.preimage_image_eq _ 𝒰.from_glued_injective
   · exact ⟨hx, 𝒰.covers x⟩
-#align algebraic_geometry.Scheme.open_cover.from_glued_open_map AlgebraicGeometry.SchemeCat.OpenCover.from_glued_open_map
+#align algebraic_geometry.Scheme.open_cover.from_glued_open_map AlgebraicGeometry.SchemeCat.OpenCover.fromGlued_open_map
 
-theorem from_glued_open_embedding : OpenEmbedding 𝒰.fromGlued.1.base :=
-  open_embedding_of_continuous_injective_open (by continuity) 𝒰.from_glued_injective
+theorem fromGlued_openEmbedding : OpenEmbedding 𝒰.fromGlued.1.base :=
+  openEmbedding_of_continuous_injective_open (by continuity) 𝒰.from_glued_injective
     𝒰.from_glued_open_map
-#align algebraic_geometry.Scheme.open_cover.from_glued_open_embedding AlgebraicGeometry.SchemeCat.OpenCover.from_glued_open_embedding
+#align algebraic_geometry.Scheme.open_cover.from_glued_open_embedding AlgebraicGeometry.SchemeCat.OpenCover.fromGlued_openEmbedding
 
 instance : Epi 𝒰.fromGlued.val.base :=
   by
@@ -437,9 +437,9 @@ instance : Epi 𝒰.fromGlued.val.base :=
   rw [← 𝒰.ι_from_glued (𝒰.f x)] at h
   exact h
 
-instance from_glued_open_immersion : IsOpenImmersion 𝒰.fromGlued :=
+instance fromGlued_open_immersion : IsOpenImmersion 𝒰.fromGlued :=
   SheafedSpaceCat.IsOpenImmersion.of_stalk_iso _ 𝒰.from_glued_open_embedding
-#align algebraic_geometry.Scheme.open_cover.from_glued_open_immersion AlgebraicGeometry.SchemeCat.OpenCover.from_glued_open_immersion
+#align algebraic_geometry.Scheme.open_cover.from_glued_open_immersion AlgebraicGeometry.SchemeCat.OpenCover.fromGlued_open_immersion
 
 instance : IsIso 𝒰.fromGlued :=
   by
@@ -470,13 +470,13 @@ def glueMorphisms {Y : SchemeCat} (f : ∀ x, 𝒰.obj x ⟶ Y)
 #align algebraic_geometry.Scheme.open_cover.glue_morphisms AlgebraicGeometry.SchemeCat.OpenCover.glueMorphisms
 
 @[simp, reassoc.1]
-theorem ι_glue_morphisms {Y : SchemeCat} (f : ∀ x, 𝒰.obj x ⟶ Y)
+theorem ι_glueMorphisms {Y : SchemeCat} (f : ∀ x, 𝒰.obj x ⟶ Y)
     (hf : ∀ x y, (pullback.fst : pullback (𝒰.map x) (𝒰.map y) ⟶ _) ≫ f x = pullback.snd ≫ f y)
     (x : 𝒰.J) : 𝒰.map x ≫ 𝒰.glueMorphisms f hf = f x :=
   by
   rw [← ι_from_glued, category.assoc]
   erw [is_iso.hom_inv_id_assoc, multicoequalizer.π_desc]
-#align algebraic_geometry.Scheme.open_cover.ι_glue_morphisms AlgebraicGeometry.SchemeCat.OpenCover.ι_glue_morphisms
+#align algebraic_geometry.Scheme.open_cover.ι_glue_morphisms AlgebraicGeometry.SchemeCat.OpenCover.ι_glueMorphisms
 
 theorem hom_ext {Y : SchemeCat} (f₁ f₂ : X ⟶ Y) (h : ∀ x, 𝒰.map x ≫ f₁ = 𝒰.map x ≫ f₂) : f₁ = f₂ :=
   by

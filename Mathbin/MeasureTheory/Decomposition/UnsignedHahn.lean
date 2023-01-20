@@ -51,8 +51,8 @@ theorem hahn_decomposition [IsFiniteMeasure μ] [IsFiniteMeasure ν] :
   let γ : ℝ := Sup c
   have hμ : ∀ s, μ s ≠ ∞ := measure_ne_top μ
   have hν : ∀ s, ν s ≠ ∞ := measure_ne_top ν
-  have to_nnreal_μ : ∀ s, ((μ s).toNnreal : ℝ≥0∞) = μ s := fun s => Ennreal.coe_to_nnreal <| hμ _
-  have to_nnreal_ν : ∀ s, ((ν s).toNnreal : ℝ≥0∞) = ν s := fun s => Ennreal.coe_to_nnreal <| hν _
+  have to_nnreal_μ : ∀ s, ((μ s).toNnreal : ℝ≥0∞) = μ s := fun s => Ennreal.coe_toNnreal <| hμ _
+  have to_nnreal_ν : ∀ s, ((ν s).toNnreal : ℝ≥0∞) = ν s := fun s => Ennreal.coe_toNnreal <| hν _
   have d_empty : d ∅ = 0 := by
     change _ - _ = _
     rw [measure_empty, measure_empty, sub_self]
@@ -61,7 +61,7 @@ theorem hahn_decomposition [IsFiniteMeasure μ] [IsFiniteMeasure ν] :
     intro s t hs ht
     simp only [d]
     rw [← measure_inter_add_diff s ht, ← measure_inter_add_diff s ht,
-      Ennreal.to_nnreal_add (hμ _) (hμ _), Ennreal.to_nnreal_add (hν _) (hν _), Nnreal.coe_add,
+      Ennreal.toNnreal_add (hμ _) (hμ _), Ennreal.toNnreal_add (hν _) (hν _), Nnreal.coe_add,
       Nnreal.coe_add]
     simp only [sub_eq_add_neg, neg_add]
     ac_rfl
@@ -70,7 +70,7 @@ theorem hahn_decomposition [IsFiniteMeasure μ] [IsFiniteMeasure ν] :
     by
     intro s hm
     refine' tendsto.sub _ _ <;>
-      refine' Nnreal.tendsto_coe.2 <| (Ennreal.tendsto_to_nnreal _).comp <| tendsto_measure_Union hm
+      refine' Nnreal.tendsto_coe.2 <| (Ennreal.tendsto_toNnreal _).comp <| tendsto_measure_Union hm
     exact hμ _
     exact hν _
   have d_Inter :
@@ -82,7 +82,7 @@ theorem hahn_decomposition [IsFiniteMeasure μ] [IsFiniteMeasure ν] :
     refine' tendsto.sub _ _ <;>
       refine'
         Nnreal.tendsto_coe.2 <|
-          (Ennreal.tendsto_to_nnreal <| _).comp <| tendsto_measure_Inter hs hm _
+          (Ennreal.tendsto_toNnreal <| _).comp <| tendsto_measure_Inter hs hm _
     exacts[hμ _, ⟨0, hμ _⟩, hν _, ⟨0, hν _⟩]
   have bdd_c : BddAbove c := by
     use (μ univ).toNnreal
@@ -112,13 +112,13 @@ theorem hahn_decomposition [IsFiniteMeasure μ] [IsFiniteMeasure ν] :
     intro a b c d hab hcd
     dsimp only [f]
     rw [Finset.inf_eq_infᵢ, Finset.inf_eq_infᵢ]
-    exact bInter_subset_bInter_left (Finset.Ico_subset_Ico hab <| Nat.succ_le_succ hcd)
+    exact bInter_subset_bInter_left (Finset.ico_subset_ico hab <| Nat.succ_le_succ hcd)
   have f_succ : ∀ n m, n ≤ m → f n (m + 1) = f n m ∩ e (m + 1) :=
     by
     intro n m hnm
     have : n ≤ m + 1 := le_of_lt (Nat.succ_le_succ hnm)
     simp only [f]
-    rw [Nat.Ico_succ_right_eq_insert_Ico this, Finset.inf_insert, Set.inter_comm]
+    rw [Nat.ico_succ_right_eq_insert_ico this, Finset.inf_insert, Set.inter_comm]
     rfl
   have le_d_f : ∀ n m, m ≤ n → γ - 2 * (1 / 2) ^ m + (1 / 2) ^ n ≤ d (f m n) :=
     by
@@ -126,7 +126,7 @@ theorem hahn_decomposition [IsFiniteMeasure μ] [IsFiniteMeasure ν] :
     refine' Nat.le_induction _ _ n h
     · have := he₂ m
       simp only [f]
-      rw [Nat.Ico_succ_singleton, Finset.inf_singleton]
+      rw [Nat.ico_succ_singleton, Finset.inf_singleton]
       exact aux this
     · intro n(hmn : m ≤ n)ih
       have : γ + (γ - 2 * (1 / 2) ^ m + (1 / 2) ^ (n + 1)) ≤ γ + d (f m (n + 1)) := by
@@ -160,7 +160,7 @@ theorem hahn_decomposition [IsFiniteMeasure μ] [IsFiniteMeasure ν] :
       exact
         tendsto_const_nhds.sub <|
           tendsto_const_nhds.mul <|
-            tendsto_pow_at_top_nhds_0_of_lt_1 (le_of_lt <| half_pos <| zero_lt_one)
+            tendsto_pow_atTop_nhds_0_of_lt_1 (le_of_lt <| half_pos <| zero_lt_one)
               (half_lt_self zero_lt_one)
     have hd : tendsto (fun m => d (⋂ n, f m n)) at_top (𝓝 (d (⋃ m, ⋂ n, f m n))) :=
       by
@@ -179,7 +179,7 @@ theorem hahn_decomposition [IsFiniteMeasure μ] [IsFiniteMeasure ν] :
     change γ - 2 * (1 / 2) ^ m ≤ d (f m n)
     refine' le_trans _ (le_d_f _ _ hmn)
     exact le_add_of_le_of_nonneg le_rfl (pow_nonneg (le_of_lt <| half_pos <| zero_lt_one) _)
-  have hs : MeasurableSet s := MeasurableSet.Union fun n => MeasurableSet.Inter fun m => hf _ _
+  have hs : MeasurableSet s := MeasurableSet.unionᵢ fun n => MeasurableSet.interᵢ fun m => hf _ _
   refine' ⟨s, hs, _, _⟩
   · intro t ht hts
     have : 0 ≤ d t :=

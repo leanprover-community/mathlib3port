@@ -60,7 +60,7 @@ open Finset
 variable {α : Type _}
 
 /-- UV-compression is injective on the elements it moves. See `uv.compress`. -/
-theorem sup_sdiff_inj_on [GeneralizedBooleanAlgebra α] (u v : α) :
+theorem sup_sdiff_injOn [GeneralizedBooleanAlgebra α] (u v : α) :
     { x | Disjoint u x ∧ v ≤ x }.InjOn fun x => (x ⊔ u) \ v :=
   by
   rintro a ha b hb hab
@@ -70,7 +70,7 @@ theorem sup_sdiff_inj_on [GeneralizedBooleanAlgebra α] (u v : α) :
     rw [hab]
   rwa [sdiff_sdiff_comm, ha.1.symm.sup_sdiff_cancel_right, sdiff_sdiff_comm,
     hb.1.symm.sup_sdiff_cancel_right, sdiff_sup_cancel ha.2, sdiff_sup_cancel hb.2] at h
-#align sup_sdiff_inj_on sup_sdiff_inj_on
+#align sup_sdiff_inj_on sup_sdiff_injOn
 
 -- The namespace is here to distinguish from other compressions.
 namespace Uv
@@ -140,9 +140,9 @@ theorem compression_self (u : α) (s : Finset α) : 𝓒 u u s = s :=
 #align uv.compression_self Uv.compression_self
 
 /-- Any family is compressed along two identical elements. -/
-theorem is_compressed_self (u : α) (s : Finset α) : IsCompressed u u s :=
+theorem isCompressed_self (u : α) (s : Finset α) : IsCompressed u u s :=
   compression_self u s
-#align uv.is_compressed_self Uv.is_compressed_self
+#align uv.is_compressed_self Uv.isCompressed_self
 
 theorem compress_disjoint (u v : α) :
     Disjoint (s.filter fun a => compress u v a ∈ s)
@@ -204,7 +204,7 @@ theorem card_compression (u v : α) (s : Finset α) : (𝓒 u v s).card = s.card
   split_ifs  at ha hab with has
   · rw [compress] at hb hab
     split_ifs  at hb hab with hbs
-    · exact sup_sdiff_inj_on u v has hbs hab
+    · exact sup_sdiff_injOn u v has hbs hab
     · exact (hb.2 hb.1).elim
   · exact (ha.2 ha.1).elim
 #align uv.card_compression Uv.card_compression

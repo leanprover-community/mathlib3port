@@ -60,9 +60,9 @@ variable {M R}
 variable [MulSemiringAction M R]
 
 @[simp]
-theorem smul_X (m : M) : (m • X : R[X]) = X :=
-  (smul_eq_map R m).symm ▸ map_X _
-#align polynomial.smul_X Polynomial.smul_X
+theorem smul_x (m : M) : (m • X : R[X]) = X :=
+  (smul_eq_map R m).symm ▸ map_x _
+#align polynomial.smul_X Polynomial.smul_x
 
 variable (S : Type _) [CommSemiring S] [MulSemiringAction M S]
 
@@ -102,7 +102,7 @@ noncomputable def prodXSubSmul (x : R) : R[X] :=
 #align prod_X_sub_smul prodXSubSmul
 
 theorem prodXSubSmul.monic (x : R) : (prodXSubSmul G R x).Monic :=
-  Polynomial.monic_prod_of_monic _ _ fun g _ => Polynomial.monic_X_sub_C _
+  Polynomial.monic_prod_of_monic _ _ fun g _ => Polynomial.monic_x_sub_c _
 #align prod_X_sub_smul.monic prodXSubSmul.monic
 
 theorem prodXSubSmul.eval (x : R) : (prodXSubSmul G R x).eval x = 0 :=
@@ -113,7 +113,7 @@ theorem prodXSubSmul.eval (x : R) : (prodXSubSmul G R x).eval x = 0 :=
 theorem prodXSubSmul.smul (x : R) (g : G) : g • prodXSubSmul G R x = prodXSubSmul G R x :=
   Finset.smul_prod.trans <|
     Fintype.prod_bijective _ (MulAction.bijective g) _ _ fun g' => by
-      rw [of_quotient_stabilizer_smul, smul_sub, Polynomial.smul_X, Polynomial.smul_C]
+      rw [of_quotient_stabilizer_smul, smul_sub, Polynomial.smul_x, Polynomial.smul_c]
 #align prod_X_sub_smul.smul prodXSubSmul.smul
 
 theorem prodXSubSmul.coeff (x : R) (g : G) (n : ℕ) :

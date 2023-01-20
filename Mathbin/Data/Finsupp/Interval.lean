@@ -55,9 +55,9 @@ def rangeSingleton (f : ι →₀ α) : ι →₀ Finset α
     exact singleton_injective.eq_iff.symm
 #align finsupp.range_singleton Finsupp.rangeSingleton
 
-theorem mem_range_singleton_apply_iff : a ∈ f.rangeSingleton i ↔ a = f i :=
+theorem mem_rangeSingleton_apply_iff : a ∈ f.rangeSingleton i ↔ a = f i :=
   mem_singleton
-#align finsupp.mem_range_singleton_apply_iff Finsupp.mem_range_singleton_apply_iff
+#align finsupp.mem_range_singleton_apply_iff Finsupp.mem_rangeSingleton_apply_iff
 
 end RangeSingleton
 
@@ -78,13 +78,13 @@ def rangeIcc (f g : ι →₀ α) : ι →₀ Finset α
 #align finsupp.range_Icc Finsupp.rangeIcc
 
 @[simp]
-theorem range_Icc_support [DecidableEq ι] (f g : ι →₀ α) :
+theorem rangeIcc_support [DecidableEq ι] (f g : ι →₀ α) :
     (rangeIcc f g).support = f.support ∪ g.support := by convert rfl
-#align finsupp.range_Icc_support Finsupp.range_Icc_support
+#align finsupp.range_Icc_support Finsupp.rangeIcc_support
 
-theorem mem_range_Icc_apply_iff : a ∈ f.rangeIcc g i ↔ f i ≤ a ∧ a ≤ g i :=
+theorem mem_rangeIcc_apply_iff : a ∈ f.rangeIcc g i ↔ f i ≤ a ∧ a ≤ g i :=
   mem_Icc
-#align finsupp.mem_range_Icc_apply_iff Finsupp.mem_range_Icc_apply_iff
+#align finsupp.mem_range_Icc_apply_iff Finsupp.mem_rangeIcc_apply_iff
 
 end RangeIcc
 
@@ -101,29 +101,29 @@ instance : LocallyFiniteOrder (ι →₀ α) :=
     simp_rw [mem_range_Icc_apply_iff]
     exact forall_and
 
-theorem Icc_eq [DecidableEq ι] : icc f g = (f.support ∪ g.support).Finsupp (f.rangeIcc g) := by
+theorem icc_eq [DecidableEq ι] : icc f g = (f.support ∪ g.support).Finsupp (f.rangeIcc g) := by
   convert rfl
-#align finsupp.Icc_eq Finsupp.Icc_eq
+#align finsupp.Icc_eq Finsupp.icc_eq
 
-theorem card_Icc [DecidableEq ι] :
+theorem card_icc [DecidableEq ι] :
     (icc f g).card = ∏ i in f.support ∪ g.support, (icc (f i) (g i)).card := by
   simp_rw [Icc_eq, card_finsupp, range_Icc_to_fun]
-#align finsupp.card_Icc Finsupp.card_Icc
+#align finsupp.card_Icc Finsupp.card_icc
 
-theorem card_Ico [DecidableEq ι] :
+theorem card_ico [DecidableEq ι] :
     (ico f g).card = (∏ i in f.support ∪ g.support, (icc (f i) (g i)).card) - 1 := by
   rw [card_Ico_eq_card_Icc_sub_one, card_Icc]
-#align finsupp.card_Ico Finsupp.card_Ico
+#align finsupp.card_Ico Finsupp.card_ico
 
-theorem card_Ioc [DecidableEq ι] :
+theorem card_ioc [DecidableEq ι] :
     (ioc f g).card = (∏ i in f.support ∪ g.support, (icc (f i) (g i)).card) - 1 := by
   rw [card_Ioc_eq_card_Icc_sub_one, card_Icc]
-#align finsupp.card_Ioc Finsupp.card_Ioc
+#align finsupp.card_Ioc Finsupp.card_ioc
 
-theorem card_Ioo [DecidableEq ι] :
+theorem card_ioo [DecidableEq ι] :
     (ioo f g).card = (∏ i in f.support ∪ g.support, (icc (f i) (g i)).card) - 2 := by
   rw [card_Ioo_eq_card_Icc_sub_two, card_Icc]
-#align finsupp.card_Ioo Finsupp.card_Ioo
+#align finsupp.card_Ioo Finsupp.card_ioo
 
 end PartialOrder
 
@@ -133,14 +133,14 @@ variable [CanonicallyOrderedAddMonoid α] [LocallyFiniteOrder α]
 
 variable (f : ι →₀ α)
 
-theorem card_Iic : (iic f).card = ∏ i in f.support, (iic (f i)).card := by
+theorem card_iic : (iic f).card = ∏ i in f.support, (iic (f i)).card := by
   simp_rw [Iic_eq_Icc, card_Icc, Finsupp.bot_eq_zero, support_zero, empty_union, zero_apply,
     bot_eq_zero]
-#align finsupp.card_Iic Finsupp.card_Iic
+#align finsupp.card_Iic Finsupp.card_iic
 
-theorem card_Iio : (iio f).card = (∏ i in f.support, (iic (f i)).card) - 1 := by
+theorem card_iio : (iio f).card = (∏ i in f.support, (iic (f i)).card) - 1 := by
   rw [card_Iio_eq_card_Iic_sub_one, card_Iic]
-#align finsupp.card_Iio Finsupp.card_Iio
+#align finsupp.card_Iio Finsupp.card_iio
 
 end CanonicallyOrdered
 

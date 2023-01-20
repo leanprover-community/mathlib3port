@@ -116,13 +116,13 @@ theorem map_ofFn {β : Type _} {n : ℕ} (f : Fin n → α) (g : α → β) : ma
 #align list.map_of_fn List.map_ofFn
 
 /-- Arrays converted to lists are the same as `of_fn` on the indexing function of the array. -/
-theorem array_eq_of_fn {n} (a : Array' n α) : a.toList = ofFn a.read :=
+theorem array'_eq_ofFn {n} (a : Array' n α) : a.toList = ofFn a.read :=
   by
   suffices ∀ {m h l}, DArray.revIterateAux a (fun i => cons) m h l = ofFnAux (DArray.read a) m h l
     from this
   intros ; induction' m with m IH generalizing l; · rfl
   simp only [DArray.revIterateAux, of_fn_aux, IH]
-#align list.array_eq_of_fn List.array_eq_of_fn
+#align list.array_eq_of_fn List.array'_eq_ofFn
 
 /- warning: list.of_fn_congr -> List.ofFn_congr is a dubious translation:
 lean 3 declaration is
@@ -220,10 +220,10 @@ theorem ofFn_add {m n} (f : Fin (m + n) → α) :
 #align list.of_fn_add List.ofFn_add
 
 @[simp]
-theorem of_fn_fin_append {m n} (a : Fin m → α) (b : Fin n → α) :
+theorem ofFn_fin_append {m n} (a : Fin m → α) (b : Fin n → α) :
     List.ofFn (Fin.append a b) = List.ofFn a ++ List.ofFn b := by
   simp_rw [of_fn_add, Fin.append_left, Fin.append_right]
-#align list.of_fn_fin_append List.of_fn_fin_append
+#align list.of_fn_fin_append List.ofFn_fin_append
 
 #print List.ofFn_mul /-
 /-- This breaks a list of `m*n` items into `m` groups each containing `n` elements. -/
@@ -302,11 +302,11 @@ theorem ofFn_const (n : ℕ) (c : α) : (ofFn fun i : Fin n => c) = replicate n 
 -/
 
 @[simp]
-theorem of_fn_fin_repeat {m} (a : Fin m → α) (n : ℕ) :
+theorem ofFn_fin_repeat {m} (a : Fin m → α) (n : ℕ) :
     List.ofFn (Fin.repeat n a) = (List.replicate n (List.ofFn a)).join := by
   simp_rw [of_fn_mul, ← of_fn_const, Fin.repeat, Fin.modNat, Fin.val_mk, add_comm,
     Nat.add_mul_mod_self_right, Nat.mod_eq_of_lt (Fin.is_lt _), Fin.eta]
-#align list.of_fn_fin_repeat List.of_fn_fin_repeat
+#align list.of_fn_fin_repeat List.ofFn_fin_repeat
 
 #print List.equivSigmaTuple /-
 /-- Lists are equivalent to the sigma type of tuples of a given length. -/
@@ -368,7 +368,7 @@ theorem ofFn_inj' {m n : ℕ} {f : Fin m → α} {g : Fin n → α} :
 #print List.ofFn_injective /-
 /-- Note we can only state this when the two functions are indexed by defeq `n`. -/
 theorem ofFn_injective {n : ℕ} : Function.Injective (ofFn : (Fin n → α) → List α) := fun f g h =>
-  eq_of_heq <| by injection of_fn_inj'.mp h
+  eq_of_hEq <| by injection of_fn_inj'.mp h
 #align list.of_fn_injective List.ofFn_injective
 -/
 

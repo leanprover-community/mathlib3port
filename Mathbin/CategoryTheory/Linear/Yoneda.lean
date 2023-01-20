@@ -94,17 +94,17 @@ def linearCoyoneda : Cᵒᵖ ⥤ C ⥤ ModuleCat R
             linear.left_comp_apply, unop_comp, nat_trans.comp_app]
 #align category_theory.linear_coyoneda CategoryTheory.linearCoyoneda
 
-instance linear_yoneda_obj_additive (X : C) : ((linearYoneda R C).obj X).Additive where
-#align category_theory.linear_yoneda_obj_additive CategoryTheory.linear_yoneda_obj_additive
+instance linearYoneda_obj_additive (X : C) : ((linearYoneda R C).obj X).Additive where
+#align category_theory.linear_yoneda_obj_additive CategoryTheory.linearYoneda_obj_additive
 
-instance linear_coyoneda_obj_additive (Y : Cᵒᵖ) : ((linearCoyoneda R C).obj Y).Additive where
-#align category_theory.linear_coyoneda_obj_additive CategoryTheory.linear_coyoneda_obj_additive
+instance linearCoyoneda_obj_additive (Y : Cᵒᵖ) : ((linearCoyoneda R C).obj Y).Additive where
+#align category_theory.linear_coyoneda_obj_additive CategoryTheory.linearCoyoneda_obj_additive
 
 @[simp]
-theorem whiskering_linear_yoneda :
+theorem whiskering_linearYoneda :
     linearYoneda R C ⋙ (whiskeringRight _ _ _).obj (forget (ModuleCat.{v} R)) = yoneda :=
   rfl
-#align category_theory.whiskering_linear_yoneda CategoryTheory.whiskering_linear_yoneda
+#align category_theory.whiskering_linear_yoneda CategoryTheory.whiskering_linearYoneda
 
 @[simp]
 theorem whiskering_linear_yoneda₂ :
@@ -114,10 +114,10 @@ theorem whiskering_linear_yoneda₂ :
 #align category_theory.whiskering_linear_yoneda₂ CategoryTheory.whiskering_linear_yoneda₂
 
 @[simp]
-theorem whiskering_linear_coyoneda :
+theorem whiskering_linearCoyoneda :
     linearCoyoneda R C ⋙ (whiskeringRight _ _ _).obj (forget (ModuleCat.{v} R)) = coyoneda :=
   rfl
-#align category_theory.whiskering_linear_coyoneda CategoryTheory.whiskering_linear_coyoneda
+#align category_theory.whiskering_linear_coyoneda CategoryTheory.whiskering_linearCoyoneda
 
 @[simp]
 theorem whiskering_linear_coyoneda₂ :
@@ -143,13 +143,13 @@ instance linearCoyonedaFull : Full (linearCoyoneda R C) :=
     ((whiskering_right _ _ _).obj (forget (ModuleCat.{v} R)))
 #align category_theory.linear_coyoneda_full CategoryTheory.linearCoyonedaFull
 
-instance linear_yoneda_faithful : Faithful (linearYoneda R C) :=
-  Faithful.of_comp_eq (whiskering_linear_yoneda R C)
-#align category_theory.linear_yoneda_faithful CategoryTheory.linear_yoneda_faithful
+instance linearYoneda_faithful : Faithful (linearYoneda R C) :=
+  Faithful.of_comp_eq (whiskering_linearYoneda R C)
+#align category_theory.linear_yoneda_faithful CategoryTheory.linearYoneda_faithful
 
-instance linear_coyoneda_faithful : Faithful (linearCoyoneda R C) :=
-  Faithful.of_comp_eq (whiskering_linear_coyoneda R C)
-#align category_theory.linear_coyoneda_faithful CategoryTheory.linear_coyoneda_faithful
+instance linearCoyoneda_faithful : Faithful (linearCoyoneda R C) :=
+  Faithful.of_comp_eq (whiskering_linearCoyoneda R C)
+#align category_theory.linear_coyoneda_faithful CategoryTheory.linearCoyoneda_faithful
 
 end CategoryTheory
 

@@ -41,7 +41,7 @@ def ringEquivEndForget₂ (R : Type u) [Ring R] :
     simp
   right_inv := by
     intro φ; ext (M x)
-    simp only [DistribMulAction.to_add_monoid_hom_apply]
+    simp only [DistribMulAction.toAddMonoidHom_apply]
     have w :=
       AddMonoidHom.congr_fun (φ.naturality (ModuleCat.asHomRight (LinearMap.toSpanSingleton R M x)))
         (1 : R)

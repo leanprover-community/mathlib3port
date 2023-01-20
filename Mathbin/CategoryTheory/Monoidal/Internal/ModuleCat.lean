@@ -79,9 +79,9 @@ instance (A : Mon_ (ModuleCat.{u} R)) : Algebra R A.x :=
     smul_def' := fun r a => (LinearMap.congr_fun A.one_mul (r ⊗ₜ a)).symm }
 
 @[simp]
-theorem algebra_map (A : Mon_ (ModuleCat.{u} R)) (r : R) : algebraMap R A.x r = A.one r :=
+theorem algebraMap (A : Mon_ (ModuleCat.{u} R)) (r : R) : algebraMap R A.x r = A.one r :=
   rfl
-#align Module.Mon_Module_equivalence_Algebra.algebra_map ModuleCat.MonModuleEquivalenceAlgebra.algebra_map
+#align Module.Mon_Module_equivalence_Algebra.algebra_map ModuleCat.MonModuleEquivalenceAlgebra.algebraMap
 
 /-- Converting a monoid object in `Module R` to a bundled algebra.
 -/
@@ -107,17 +107,17 @@ def inverseObj (A : AlgebraCat.{u} R) : Mon_ (ModuleCat.{u} R)
   mul := LinearMap.mul' R A
   one_mul' := by
     ext x
-    dsimp only [AlgebraCat.id_apply, TensorProduct.mk_apply, Algebra.linear_map_apply,
+    dsimp only [AlgebraCat.id_apply, TensorProduct.mk_apply, Algebra.linearMap_apply,
       LinearMap.compr₂_apply, Function.comp_apply, RingHom.map_one,
       ModuleCat.monoidalCategory.hom_apply, AlgebraCat.coe_comp,
-      ModuleCat.monoidalCategory.left_unitor_hom_apply]
+      ModuleCat.monoidalCategory.leftUnitor_hom_apply]
     rw [LinearMap.mul'_apply, monoidal_category.left_unitor_hom_apply, ← Algebra.smul_def]
   mul_one' := by
     ext x
-    dsimp only [AlgebraCat.id_apply, TensorProduct.mk_apply, Algebra.linear_map_apply,
+    dsimp only [AlgebraCat.id_apply, TensorProduct.mk_apply, Algebra.linearMap_apply,
       LinearMap.compr₂_apply, Function.comp_apply, ModuleCat.monoidalCategory.hom_apply,
       AlgebraCat.coe_comp]
-    rw [LinearMap.mul'_apply, ModuleCat.monoidalCategory.right_unitor_hom_apply, ← Algebra.commutes,
+    rw [LinearMap.mul'_apply, ModuleCat.monoidalCategory.rightUnitor_hom_apply, ← Algebra.commutes,
       ← Algebra.smul_def]
   mul_assoc' := by
     ext (x y z)

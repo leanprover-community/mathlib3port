@@ -243,10 +243,10 @@ def setElems {α} [DecidableEq α] (s : Set α) [Fintype s] : Finset α :=
 #align tactic.interval_cases.set_elems Tactic.IntervalCases.setElems
 
 /-- Each element of `s` is a member of `set_elems s`. -/
-theorem mem_set_elems {α} [DecidableEq α] (s : Set α) [Fintype s] {a : α} (h : a ∈ s) :
+theorem mem_setElems {α} [DecidableEq α] (s : Set α) [Fintype s] {a : α} (h : a ∈ s) :
     a ∈ setElems s :=
   Finset.mem_image.2 ⟨⟨a, h⟩, Fintype.complete _, rfl⟩
-#align tactic.interval_cases.mem_set_elems Tactic.IntervalCases.mem_set_elems
+#align tactic.interval_cases.mem_set_elems Tactic.IntervalCases.mem_setElems
 
 end IntervalCases
 
@@ -262,7 +262,7 @@ By default `interval_cases_using` automatically generates a name for the new hyp
 can be specified via the optional argument `n`.
 -/
 unsafe def interval_cases_using (hl hu : expr) (n : Option Name) : tactic Unit :=
-  (to_expr ``(mem_set_elems (Ico _ _) ⟨$(hl), $(hu)⟩) >>=
+  (to_expr ``(mem_setElems (Ico _ _) ⟨$(hl), $(hu)⟩) >>=
       if hn : n.isSome then note (Option.get hn) else note_anon none) >>=
     fin_cases_at none none
 #align tactic.interval_cases_using tactic.interval_cases_using

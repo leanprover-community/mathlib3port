@@ -125,7 +125,7 @@ Case conversion may be inaccurate. Consider using '#align multiset.lcm_eq_zero_i
 theorem lcm_eq_zero_iff [Nontrivial α] (s : Multiset α) : s.lcm = 0 ↔ (0 : α) ∈ s :=
   by
   induction' s using Multiset.induction_on with a s ihs
-  · simp only [lcm_zero, one_ne_zero, not_mem_zero]
+  · simp only [lcm_zero, one_neZero, not_mem_zero]
   · simp only [mem_cons, lcm_cons, lcm_eq_zero_iff, ihs, @eq_comm _ a]
 #align multiset.lcm_eq_zero_iff Multiset.lcm_eq_zero_iff
 

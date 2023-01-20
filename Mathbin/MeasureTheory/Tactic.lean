@@ -44,7 +44,7 @@ unsafe def measurability : user_attribute
 /- Mark some measurability lemmas already defined in `measure_theory.measurable_space_def` and
 `measure_theory.measure_space_def` -/
 attribute [measurability]
-  measurable_id measurable_id' aeMeasurableId aeMeasurableId' measurable_const aeMeasurableConst AeMeasurable.measurable_mk MeasurableSet.empty MeasurableSet.univ MeasurableSet.compl Subsingleton.measurable_set MeasurableSet.Union MeasurableSet.Inter MeasurableSet.union MeasurableSet.inter MeasurableSet.diff MeasurableSet.symm_diff MeasurableSet.ite MeasurableSet.cond MeasurableSet.disjointed MeasurableSet.const MeasurableSet.insert measurable_set_eq Finset.measurable_set MeasurableSpace.measurable_set_top
+  measurable_id measurable_id' aeMeasurableId aeMeasurableId' measurable_const aeMeasurableConst AeMeasurable.measurable_mk MeasurableSet.empty MeasurableSet.univ MeasurableSet.compl Subsingleton.measurableSet MeasurableSet.unionᵢ MeasurableSet.interᵢ MeasurableSet.union MeasurableSet.inter MeasurableSet.diff MeasurableSet.symmDiff MeasurableSet.ite MeasurableSet.cond MeasurableSet.disjointed MeasurableSet.const MeasurableSet.insert measurableSet_eq Finset.measurableSet MeasurableSpace.measurableSet_top
 
 namespace Tactic
 

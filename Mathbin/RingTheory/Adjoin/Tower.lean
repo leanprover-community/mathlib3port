@@ -30,14 +30,14 @@ variable (R : Type u) (S : Type v) (A : Type w) (B : Type u₁)
 
 namespace Algebra
 
-theorem adjoin_algebra_map (R : Type u) (S : Type v) (A : Type w) [CommSemiring R] [CommSemiring S]
+theorem adjoin_algebraMap (R : Type u) (S : Type v) (A : Type w) [CommSemiring R] [CommSemiring S]
     [Semiring A] [Algebra R S] [Algebra S A] [Algebra R A] [IsScalarTower R S A] (s : Set S) :
     adjoin R (algebraMap S A '' s) = (adjoin R s).map (IsScalarTower.toAlgHom R S A) :=
   le_antisymm (adjoin_le <| Set.image_subset_iff.2 fun y hy => ⟨y, subset_adjoin hy, rfl⟩)
     (Subalgebra.map_le.2 <| adjoin_le fun y hy => subset_adjoin ⟨y, hy, rfl⟩)
-#align algebra.adjoin_algebra_map Algebra.adjoin_algebra_map
+#align algebra.adjoin_algebra_map Algebra.adjoin_algebraMap
 
-theorem adjoin_restrict_scalars (C D E : Type _) [CommSemiring C] [CommSemiring D] [CommSemiring E]
+theorem adjoin_restrictScalars (C D E : Type _) [CommSemiring C] [CommSemiring D] [CommSemiring E]
     [Algebra C D] [Algebra C E] [Algebra D E] [IsScalarTower C D E] (S : Set E) :
     (Algebra.adjoin D S).restrictScalars C =
       (Algebra.adjoin ((⊤ : Subalgebra C D).map (IsScalarTower.toAlgHom C D E)) S).restrictScalars
@@ -56,7 +56,7 @@ theorem adjoin_restrict_scalars (C D E : Type _) [CommSemiring C] [CommSemiring 
     exact ⟨⟨algebraMap D E y, ⟨y, ⟨Algebra.mem_top, rfl⟩⟩⟩, hy⟩
   · rintro ⟨⟨y, ⟨z, ⟨h0, h1⟩⟩⟩, h2⟩
     exact ⟨z, Eq.trans h1 h2⟩
-#align algebra.adjoin_restrict_scalars Algebra.adjoin_restrict_scalars
+#align algebra.adjoin_restrict_scalars Algebra.adjoin_restrictScalars
 
 theorem adjoin_res_eq_adjoin_res (C D E F : Type _) [CommSemiring C] [CommSemiring D]
     [CommSemiring E] [CommSemiring F] [Algebra C D] [Algebra C E] [Algebra C F] [Algebra D F]
@@ -66,8 +66,8 @@ theorem adjoin_res_eq_adjoin_res (C D E F : Type _) [CommSemiring C] [CommSemiri
       (Algebra.adjoin D (algebraMap E F '' T)).restrictScalars C :=
   by
   rw [adjoin_restrict_scalars C E, adjoin_restrict_scalars C D, ← hS, ← hT, ← Algebra.adjoin_image,
-    ← Algebra.adjoin_image, ← AlgHom.coe_to_ring_hom, ← AlgHom.coe_to_ring_hom,
-    IsScalarTower.coe_to_alg_hom, IsScalarTower.coe_to_alg_hom, ← adjoin_union_eq_adjoin_adjoin, ←
+    ← Algebra.adjoin_image, ← AlgHom.coe_to_ringHom, ← AlgHom.coe_to_ringHom,
+    IsScalarTower.coe_toAlgHom, IsScalarTower.coe_toAlgHom, ← adjoin_union_eq_adjoin_adjoin, ←
     adjoin_union_eq_adjoin_adjoin, Set.union_comm]
 #align algebra.adjoin_res_eq_adjoin_res Algebra.adjoin_res_eq_adjoin_res
 
@@ -84,8 +84,8 @@ theorem Algebra.fg_trans' {R S A : Type _} [CommSemiring R] [CommSemiring S] [Co
   let ⟨t, ht⟩ := hSA
   ⟨s.image (algebraMap S A) ∪ t, by
     rw [Finset.coe_union, Finset.coe_image, Algebra.adjoin_union_eq_adjoin_adjoin,
-      Algebra.adjoin_algebra_map, hs, Algebra.map_top, IsScalarTower.adjoin_range_to_alg_hom, ht,
-      Subalgebra.restrict_scalars_top]⟩
+      Algebra.adjoin_algebraMap, hs, Algebra.map_top, IsScalarTower.adjoin_range_toAlgHom, ht,
+      Subalgebra.restrictScalars_top]⟩
 #align algebra.fg_trans' Algebra.fg_trans'
 
 end
@@ -145,7 +145,7 @@ theorem exists_subalgebra_of_fg (hAC : (⊤ : Subalgebra A C).Fg) (hBC : (⊤ : 
               (subset_span <| Set.mem_insert_of_mem _ hyk : yk ∈ _))
   refine' ⟨Algebra.adjoin A (↑s : Set B), Subalgebra.fg_adjoin_finset _, insert 1 y, _⟩
   refine' restrict_scalars_injective A _ _ _
-  rw [restrict_scalars_top, eq_top_iff, ← Algebra.top_to_submodule, ← hx, Algebra.adjoin_eq_span,
+  rw [restrict_scalars_top, eq_top_iff, ← Algebra.top_toSubmodule, ← hx, Algebra.adjoin_eq_span,
     span_le]
   refine' fun r hr =>
     Submonoid.closure_induction hr (fun c hc => hxy c hc) (subset_span <| mem_insert_self _ _)
@@ -171,7 +171,7 @@ theorem fg_of_fg_of_fg [IsNoetherianRing A] (hAC : (⊤ : Subalgebra A C).Fg)
   let ⟨B₀, hAB₀, hB₀C⟩ := exists_subalgebra_of_fg A B C hAC hBC
   Algebra.fg_trans' (B₀.fg_top.2 hAB₀) <|
     Subalgebra.fg_of_submodule_fg <|
-      have : IsNoetherianRing B₀ := is_noetherian_ring_of_fg hAB₀
+      have : IsNoetherianRing B₀ := isNoetherianRing_of_fg hAB₀
       have : IsNoetherian B₀ C := isNoetherianOfFgOfNoetherian' hB₀C
       fgOfInjective (IsScalarTower.toAlgHom B₀ B C).toLinearMap hBCi
 #align fg_of_fg_of_fg fg_of_fg_of_fg

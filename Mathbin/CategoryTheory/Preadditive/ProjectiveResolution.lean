@@ -171,13 +171,13 @@ def liftFOne {Y Z : C} (f : Y ⟶ Z) (P : ProjectiveResolutionCat Y) (Q : Projec
 
 /-- Auxiliary lemma for `lift`. -/
 @[simp]
-theorem lift_f_one_zero_comm {Y Z : C} (f : Y ⟶ Z) (P : ProjectiveResolutionCat Y)
+theorem liftFOne_zero_comm {Y Z : C} (f : Y ⟶ Z) (P : ProjectiveResolutionCat Y)
     (Q : ProjectiveResolutionCat Z) :
     liftFOne f P Q ≫ Q.complex.d 1 0 = P.complex.d 1 0 ≫ liftFZero f P Q :=
   by
   dsimp [lift_f_zero, lift_f_one]
   simp
-#align category_theory.ProjectiveResolution.lift_f_one_zero_comm CategoryTheory.ProjectiveResolutionCat.lift_f_one_zero_comm
+#align category_theory.ProjectiveResolution.lift_f_one_zero_comm CategoryTheory.ProjectiveResolutionCat.liftFOne_zero_comm
 
 /-- Auxiliary construction for `lift`. -/
 def liftFSucc {Y Z : C} (P : ProjectiveResolutionCat Y) (Q : ProjectiveResolutionCat Z) (n : ℕ)
@@ -193,7 +193,7 @@ def liftFSucc {Y Z : C} (P : ProjectiveResolutionCat Y) (Q : ProjectiveResolutio
 /-- A morphism in `C` lifts to a chain map between projective resolutions. -/
 def lift {Y Z : C} (f : Y ⟶ Z) (P : ProjectiveResolutionCat Y) (Q : ProjectiveResolutionCat Z) :
     P.complex ⟶ Q.complex :=
-  ChainComplex.mkHom _ _ (liftFZero f _ _) (liftFOne f _ _) (lift_f_one_zero_comm f _ _)
+  ChainComplex.mkHom _ _ (liftFZero f _ _) (liftFOne f _ _) (liftFOne_zero_comm f _ _)
     fun n ⟨g, g', w⟩ => liftFSucc P Q n g g' w
 #align category_theory.ProjectiveResolution.lift CategoryTheory.ProjectiveResolutionCat.lift
 
@@ -287,14 +287,14 @@ def homotopyEquiv {X : C} (P Q : ProjectiveResolutionCat X) : HomotopyEquiv P.co
 #align category_theory.ProjectiveResolution.homotopy_equiv CategoryTheory.ProjectiveResolutionCat.homotopyEquiv
 
 @[simp, reassoc.1]
-theorem homotopy_equiv_hom_π {X : C} (P Q : ProjectiveResolutionCat X) :
+theorem homotopyEquiv_hom_π {X : C} (P Q : ProjectiveResolutionCat X) :
     (homotopyEquiv P Q).Hom ≫ Q.π = P.π := by simp [HomotopyEquiv]
-#align category_theory.ProjectiveResolution.homotopy_equiv_hom_π CategoryTheory.ProjectiveResolutionCat.homotopy_equiv_hom_π
+#align category_theory.ProjectiveResolution.homotopy_equiv_hom_π CategoryTheory.ProjectiveResolutionCat.homotopyEquiv_hom_π
 
 @[simp, reassoc.1]
-theorem homotopy_equiv_inv_π {X : C} (P Q : ProjectiveResolutionCat X) :
+theorem homotopyEquiv_inv_π {X : C} (P Q : ProjectiveResolutionCat X) :
     (homotopyEquiv P Q).inv ≫ P.π = Q.π := by simp [HomotopyEquiv]
-#align category_theory.ProjectiveResolution.homotopy_equiv_inv_π CategoryTheory.ProjectiveResolutionCat.homotopy_equiv_inv_π
+#align category_theory.ProjectiveResolution.homotopy_equiv_inv_π CategoryTheory.ProjectiveResolutionCat.homotopyEquiv_inv_π
 
 end ProjectiveResolutionCat
 

@@ -71,16 +71,16 @@ theorem star_isometry : Isometry (star : E → E) :=
     AddMonoidHomClass.isometry_of_norm starAddEquiv (show ∀ x, ‖x⋆‖ = ‖x‖ from norm_star)
 #align star_isometry star_isometry
 
-instance (priority := 100) NormedStarGroup.to_has_continuous_star : HasContinuousStar E :=
+instance (priority := 100) NormedStarGroup.to_hasContinuousStar : HasContinuousStar E :=
   ⟨star_isometry.Continuous⟩
-#align normed_star_group.to_has_continuous_star NormedStarGroup.to_has_continuous_star
+#align normed_star_group.to_has_continuous_star NormedStarGroup.to_hasContinuousStar
 
 end NormedStarGroup
 
-instance RingHomIsometric.star_ring_end [NormedCommRing E] [StarRing E] [NormedStarGroup E] :
+instance RingHomIsometric.starRingEnd [NormedCommRing E] [StarRing E] [NormedStarGroup E] :
     RingHomIsometric (starRingEnd E) :=
   ⟨norm_star⟩
-#align ring_hom_isometric.star_ring_end RingHomIsometric.star_ring_end
+#align ring_hom_isometric.star_ring_end RingHomIsometric.starRingEnd
 
 /-- A C*-ring is a normed star ring that satifies the stronger condition `‖x⋆ * x‖ = ‖x‖^2`
 for every `x`. -/
@@ -98,7 +98,7 @@ variable [NonUnitalNormedRing E] [StarRing E] [CstarRing E]
 
 -- see Note [lower instance priority]
 /-- In a C*-ring, star preserves the norm. -/
-instance (priority := 100) to_normed_star_group : NormedStarGroup E :=
+instance (priority := 100) to_normedStarGroup : NormedStarGroup E :=
   ⟨by
     intro x
     by_cases htriv : x = 0
@@ -117,7 +117,7 @@ instance (priority := 100) to_normed_star_group : NormedStarGroup E :=
           _ ≤ ‖x‖ * ‖x⋆‖ := norm_mul_le _ _
           
       exact le_antisymm (le_of_mul_le_mul_right h₂ hnt_star) (le_of_mul_le_mul_right h₁ hnt)⟩
-#align cstar_ring.to_normed_star_group CstarRing.to_normed_star_group
+#align cstar_ring.to_normed_star_group CstarRing.to_normedStarGroup
 
 theorem norm_self_mul_star {x : E} : ‖x * x⋆‖ = ‖x‖ * ‖x‖ :=
   by
@@ -176,7 +176,7 @@ instance Pi.starRing' : StarRing (∀ i, R i) :=
 
 variable [Fintype ι] [∀ i, CstarRing (R i)]
 
-instance Prod.cstar_ring : CstarRing (R₁ × R₂)
+instance Prod.cstarRing : CstarRing (R₁ × R₂)
     where norm_star_mul_self x := by
     unfold norm
     simp only [Prod.fst_mul, Prod.fst_star, Prod.snd_mul, Prod.snd_star, norm_star_mul_self, ← sq]
@@ -186,9 +186,9 @@ instance Prod.cstar_ring : CstarRing (R₁ × R₂)
       exact (le_max_right _ _).trans (le_abs_self _)
     · rw [le_sup_iff]
       rcases le_total ‖x.fst‖ ‖x.snd‖ with (h | h) <;> simp [h]
-#align prod.cstar_ring Prod.cstar_ring
+#align prod.cstar_ring Prod.cstarRing
 
-instance Pi.cstar_ring : CstarRing (∀ i, R i)
+instance Pi.cstarRing : CstarRing (∀ i, R i)
     where norm_star_mul_self x :=
     by
     simp only [norm, Pi.mul_apply, Pi.star_apply, nnnorm_star_mul_self, ← sq]
@@ -196,10 +196,10 @@ instance Pi.cstar_ring : CstarRing (∀ i, R i)
     exact
       (Finset.comp_sup_eq_sup_comp_of_is_total (fun x : Nnreal => x ^ 2)
           (fun x y h => by simpa only [sq] using mul_le_mul' h h) (by simp)).symm
-#align pi.cstar_ring Pi.cstar_ring
+#align pi.cstar_ring Pi.cstarRing
 
 instance Pi.cstar_ring' : CstarRing (ι → R₁) :=
-  Pi.cstar_ring
+  Pi.cstarRing
 #align pi.cstar_ring' Pi.cstar_ring'
 
 end ProdPi
@@ -211,7 +211,7 @@ variable [NormedRing E] [StarRing E] [CstarRing E]
 @[simp]
 theorem norm_one [Nontrivial E] : ‖(1 : E)‖ = 1 :=
   by
-  have : 0 < ‖(1 : E)‖ := norm_pos_iff.mpr one_ne_zero
+  have : 0 < ‖(1 : E)‖ := norm_pos_iff.mpr one_neZero
   rw [← mul_left_inj' this.ne', ← norm_star_mul_self, mul_one, star_one, one_mul]
 #align cstar_ring.norm_one CstarRing.norm_one
 

@@ -77,7 +77,7 @@ instance decidablePsp (n b : ℕ) : Decidable (FermatPsp n b) :=
 /-- If `n` passes the Fermat primality test to base `b`, then `n` is coprime with `b`, assuming that
 `n` and `b` are both positive.
 -/
-theorem coprime_of_probable_prime {n b : ℕ} (h : ProbablePrime n b) (h₁ : 1 ≤ n) (h₂ : 1 ≤ b) :
+theorem coprime_of_probablePrime {n b : ℕ} (h : ProbablePrime n b) (h₁ : 1 ≤ n) (h₂ : 1 ≤ b) :
     Nat.Coprime n b := by
   by_cases h₃ : 2 ≤ n
   · -- To prove that `n` is coprime with `b`, we we need to show that for all prime factors of `n`,
@@ -102,9 +102,9 @@ theorem coprime_of_probable_prime {n b : ℕ} (h : ProbablePrime n b) (h₁ : 1 
   -- If `n = 1`, then it follows trivially that `n` is coprime with `b`.
   · rw [show n = 1 by linarith]
     norm_num
-#align fermat_psp.coprime_of_probable_prime FermatPsp.coprime_of_probable_prime
+#align fermat_psp.coprime_of_probable_prime FermatPsp.coprime_of_probablePrime
 
-theorem probable_prime_iff_modeq (n : ℕ) {b : ℕ} (h : 1 ≤ b) :
+theorem probablePrime_iff_modEq (n : ℕ) {b : ℕ} (h : 1 ≤ b) :
     ProbablePrime n b ↔ b ^ (n - 1) ≡ 1 [MOD n] :=
   by
   have : 1 ≤ b ^ (n - 1) := one_le_pow_of_one_le h (n - 1)
@@ -116,18 +116,18 @@ theorem probable_prime_iff_modeq (n : ℕ) {b : ℕ} (h : 1 ≤ b) :
     exact_mod_cast h₁
   · intro h₁
     exact_mod_cast Nat.ModEq.dvd h₁
-#align fermat_psp.probable_prime_iff_modeq FermatPsp.probable_prime_iff_modeq
+#align fermat_psp.probable_prime_iff_modeq FermatPsp.probablePrime_iff_modEq
 
 /-- If `n` is a Fermat pseudoprime to base `b`, then `n` is coprime with `b`, assuming that `b` is
 positive.
 
 This lemma is a small wrapper based on `coprime_of_probable_prime`
 -/
-theorem coprime_of_fermat_psp {n b : ℕ} (h : FermatPsp n b) (h₁ : 1 ≤ b) : Nat.Coprime n b :=
+theorem coprime_of_fermatPsp {n b : ℕ} (h : FermatPsp n b) (h₁ : 1 ≤ b) : Nat.Coprime n b :=
   by
   rcases h with ⟨hp, hn₁, hn₂⟩
   exact coprime_of_probable_prime hp (by linarith) h₁
-#align fermat_psp.coprime_of_fermat_psp FermatPsp.coprime_of_fermat_psp
+#align fermat_psp.coprime_of_fermat_psp FermatPsp.coprime_of_fermatPsp
 
 /-- All composite numbers are Fermat pseudoprimes to base 1.
 -/
@@ -404,20 +404,20 @@ theorem exists_infinite_pseudoprimes {b : ℕ} (h : 1 ≤ b) (m : ℕ) : ∃ n :
     exact ⟨base_one (by linarith) this, by linarith⟩
 #align fermat_psp.exists_infinite_pseudoprimes FermatPsp.exists_infinite_pseudoprimes
 
-theorem frequently_at_top_fermat_psp {b : ℕ} (h : 1 ≤ b) : ∃ᶠ n in Filter.atTop, FermatPsp n b :=
+theorem frequently_atTop_fermatPsp {b : ℕ} (h : 1 ≤ b) : ∃ᶠ n in Filter.atTop, FermatPsp n b :=
   by
   -- Based on the proof of `nat.frequently_at_top_modeq_one`
-  refine' Filter.frequently_at_top.2 fun n => _
+  refine' Filter.frequently_atTop.2 fun n => _
   obtain ⟨p, hp⟩ := exists_infinite_pseudoprimes h n
   exact ⟨p, hp.2, hp.1⟩
-#align fermat_psp.frequently_at_top_fermat_psp FermatPsp.frequently_at_top_fermat_psp
+#align fermat_psp.frequently_at_top_fermat_psp FermatPsp.frequently_atTop_fermatPsp
 
 /-- Infinite set variant of `exists_infinite_pseudoprimes`
 -/
-theorem infinite_set_of_prime_modeq_one {b : ℕ} (h : 1 ≤ b) :
+theorem infinite_setOf_prime_modeq_one {b : ℕ} (h : 1 ≤ b) :
     Set.Infinite { n : ℕ | FermatPsp n b } :=
-  Nat.frequently_at_top_iff_infinite.mp (frequently_at_top_fermat_psp h)
-#align fermat_psp.infinite_set_of_prime_modeq_one FermatPsp.infinite_set_of_prime_modeq_one
+  Nat.frequently_atTop_iff_infinite.mp (frequently_atTop_fermatPsp h)
+#align fermat_psp.infinite_set_of_prime_modeq_one FermatPsp.infinite_setOf_prime_modeq_one
 
 end FermatPsp
 

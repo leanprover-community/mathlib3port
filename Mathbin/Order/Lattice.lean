@@ -289,18 +289,18 @@ theorem sup_idem : a ⊔ a = a := by apply le_antisymm <;> simp
 #align sup_idem sup_idem
 -/
 
-instance sup_is_idempotent : IsIdempotent α (· ⊔ ·) :=
+instance sup_isIdempotent : IsIdempotent α (· ⊔ ·) :=
   ⟨@sup_idem _ _⟩
-#align sup_is_idempotent sup_is_idempotent
+#align sup_is_idempotent sup_isIdempotent
 
 #print sup_comm /-
 theorem sup_comm : a ⊔ b = b ⊔ a := by apply le_antisymm <;> simp
 #align sup_comm sup_comm
 -/
 
-instance sup_is_commutative : IsCommutative α (· ⊔ ·) :=
+instance sup_isCommutative : IsCommutative α (· ⊔ ·) :=
   ⟨@sup_comm _ _⟩
-#align sup_is_commutative sup_is_commutative
+#align sup_is_commutative sup_isCommutative
 
 #print sup_assoc /-
 theorem sup_assoc : a ⊔ b ⊔ c = a ⊔ (b ⊔ c) :=
@@ -308,9 +308,9 @@ theorem sup_assoc : a ⊔ b ⊔ c = a ⊔ (b ⊔ c) :=
 #align sup_assoc sup_assoc
 -/
 
-instance sup_is_associative : IsAssociative α (· ⊔ ·) :=
+instance sup_isAssociative : IsAssociative α (· ⊔ ·) :=
   ⟨@sup_assoc _ _⟩
-#align sup_is_associative sup_is_associative
+#align sup_is_associative sup_isAssociative
 
 #print sup_left_right_swap /-
 theorem sup_left_right_swap (a b c : α) : a ⊔ b ⊔ c = c ⊔ b ⊔ a := by
@@ -633,9 +633,9 @@ theorem inf_idem : a ⊓ a = a :=
 #align inf_idem inf_idem
 -/
 
-instance inf_is_idempotent : IsIdempotent α (· ⊓ ·) :=
+instance inf_isIdempotent : IsIdempotent α (· ⊓ ·) :=
   ⟨@inf_idem _ _⟩
-#align inf_is_idempotent inf_is_idempotent
+#align inf_is_idempotent inf_isIdempotent
 
 #print inf_comm /-
 theorem inf_comm : a ⊓ b = b ⊓ a :=
@@ -643,9 +643,9 @@ theorem inf_comm : a ⊓ b = b ⊓ a :=
 #align inf_comm inf_comm
 -/
 
-instance inf_is_commutative : IsCommutative α (· ⊓ ·) :=
+instance inf_isCommutative : IsCommutative α (· ⊓ ·) :=
   ⟨@inf_comm _ _⟩
-#align inf_is_commutative inf_is_commutative
+#align inf_is_commutative inf_isCommutative
 
 #print inf_assoc /-
 theorem inf_assoc : a ⊓ b ⊓ c = a ⊓ (b ⊓ c) :=
@@ -653,9 +653,9 @@ theorem inf_assoc : a ⊓ b ⊓ c = a ⊓ (b ⊓ c) :=
 #align inf_assoc inf_assoc
 -/
 
-instance inf_is_associative : IsAssociative α (· ⊓ ·) :=
+instance inf_isAssociative : IsAssociative α (· ⊓ ·) :=
   ⟨@inf_assoc _ _⟩
-#align inf_is_associative inf_is_associative
+#align inf_is_associative inf_isAssociative
 
 #print inf_left_right_swap /-
 theorem inf_left_right_swap (a b c : α) : a ⊓ b ⊓ c = c ⊓ b ⊓ a :=

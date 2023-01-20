@@ -353,15 +353,15 @@ def BinaryBicone.ofLimitCone {X Y : C} {t : Cone (pair X Y)} (ht : IsLimit t) : 
   inr := ht.lift (BinaryFan.mk 0 (𝟙 Y))
 #align category_theory.limits.binary_bicone.of_limit_cone CategoryTheory.Limits.BinaryBicone.ofLimitCone
 
-theorem inl_of_is_limit {X Y : C} {t : BinaryBicone X Y} (ht : IsLimit t.toCone) :
+theorem inl_of_isLimit {X Y : C} {t : BinaryBicone X Y} (ht : IsLimit t.toCone) :
     t.inl = ht.lift (BinaryFan.mk (𝟙 X) 0) := by
   apply ht.uniq (binary_fan.mk (𝟙 X) 0) <;> rintro ⟨⟨⟩⟩ <;> dsimp <;> simp
-#align category_theory.limits.inl_of_is_limit CategoryTheory.Limits.inl_of_is_limit
+#align category_theory.limits.inl_of_is_limit CategoryTheory.Limits.inl_of_isLimit
 
-theorem inr_of_is_limit {X Y : C} {t : BinaryBicone X Y} (ht : IsLimit t.toCone) :
+theorem inr_of_isLimit {X Y : C} {t : BinaryBicone X Y} (ht : IsLimit t.toCone) :
     t.inr = ht.lift (BinaryFan.mk 0 (𝟙 Y)) := by
   apply ht.uniq (binary_fan.mk 0 (𝟙 Y)) <;> rintro ⟨⟨⟩⟩ <;> dsimp <;> simp
-#align category_theory.limits.inr_of_is_limit CategoryTheory.Limits.inr_of_is_limit
+#align category_theory.limits.inr_of_is_limit CategoryTheory.Limits.inr_of_isLimit
 
 /-- In a preadditive category, any binary bicone which is a limit cone is in fact a bilimit
     bicone. -/
@@ -401,19 +401,19 @@ def BinaryBicone.ofColimitCocone {X Y : C} {t : Cocone (pair X Y)} (ht : IsColim
   inr := t.ι.app ⟨WalkingPair.right⟩
 #align category_theory.limits.binary_bicone.of_colimit_cocone CategoryTheory.Limits.BinaryBicone.ofColimitCocone
 
-theorem fst_of_is_colimit {X Y : C} {t : BinaryBicone X Y} (ht : IsColimit t.toCocone) :
+theorem fst_of_isColimit {X Y : C} {t : BinaryBicone X Y} (ht : IsColimit t.toCocone) :
     t.fst = ht.desc (BinaryCofan.mk (𝟙 X) 0) :=
   by
   apply ht.uniq (binary_cofan.mk (𝟙 X) 0)
   rintro ⟨⟨⟩⟩ <;> dsimp <;> simp
-#align category_theory.limits.fst_of_is_colimit CategoryTheory.Limits.fst_of_is_colimit
+#align category_theory.limits.fst_of_is_colimit CategoryTheory.Limits.fst_of_isColimit
 
-theorem snd_of_is_colimit {X Y : C} {t : BinaryBicone X Y} (ht : IsColimit t.toCocone) :
+theorem snd_of_isColimit {X Y : C} {t : BinaryBicone X Y} (ht : IsColimit t.toCocone) :
     t.snd = ht.desc (BinaryCofan.mk 0 (𝟙 Y)) :=
   by
   apply ht.uniq (binary_cofan.mk 0 (𝟙 Y))
   rintro ⟨⟨⟩⟩ <;> dsimp <;> simp
-#align category_theory.limits.snd_of_is_colimit CategoryTheory.Limits.snd_of_is_colimit
+#align category_theory.limits.snd_of_is_colimit CategoryTheory.Limits.snd_of_isColimit
 
 /-- In a preadditive category, any binary bicone which is a colimit cocone is in fact a
     bilimit bicone. -/
@@ -657,7 +657,7 @@ section
 attribute [local ext] preadditive
 
 /-- The existence of binary biproducts implies that there is at most one preadditive structure. -/
-instance subsingleton_preadditive_of_has_binary_biproducts {C : Type u} [Category.{v} C]
+instance subsingleton_preadditive_of_hasBinaryBiproducts {C : Type u} [Category.{v} C]
     [HasZeroMorphisms C] [HasBinaryBiproducts C] : Subsingleton (Preadditive C) :=
   Subsingleton.intro fun a b => by
     ext (X Y f g)
@@ -669,7 +669,7 @@ instance subsingleton_preadditive_of_has_binary_biproducts {C : Type u} [Categor
         (by convert (inferInstance : has_binary_biproduct X X))
     refine' h₁.trans (Eq.trans _ h₂.symm)
     congr 2 <;> exact Subsingleton.elim _ _
-#align category_theory.subsingleton_preadditive_of_has_binary_biproducts CategoryTheory.subsingleton_preadditive_of_has_binary_biproducts
+#align category_theory.subsingleton_preadditive_of_has_binary_biproducts CategoryTheory.subsingleton_preadditive_of_hasBinaryBiproducts
 
 end
 
@@ -689,31 +689,31 @@ def Biprod.ofComponents : X₁ ⊞ X₂ ⟶ Y₁ ⊞ Y₂ :=
 #align category_theory.biprod.of_components CategoryTheory.Biprod.ofComponents
 
 @[simp]
-theorem Biprod.inl_of_components :
+theorem Biprod.inl_ofComponents :
     biprod.inl ≫ Biprod.ofComponents f₁₁ f₁₂ f₂₁ f₂₂ = f₁₁ ≫ biprod.inl + f₁₂ ≫ biprod.inr := by
   simp [biprod.of_components]
-#align category_theory.biprod.inl_of_components CategoryTheory.Biprod.inl_of_components
+#align category_theory.biprod.inl_of_components CategoryTheory.Biprod.inl_ofComponents
 
 @[simp]
-theorem Biprod.inr_of_components :
+theorem Biprod.inr_ofComponents :
     biprod.inr ≫ Biprod.ofComponents f₁₁ f₁₂ f₂₁ f₂₂ = f₂₁ ≫ biprod.inl + f₂₂ ≫ biprod.inr := by
   simp [biprod.of_components]
-#align category_theory.biprod.inr_of_components CategoryTheory.Biprod.inr_of_components
+#align category_theory.biprod.inr_of_components CategoryTheory.Biprod.inr_ofComponents
 
 @[simp]
-theorem Biprod.of_components_fst :
+theorem Biprod.ofComponents_fst :
     Biprod.ofComponents f₁₁ f₁₂ f₂₁ f₂₂ ≫ biprod.fst = biprod.fst ≫ f₁₁ + biprod.snd ≫ f₂₁ := by
   simp [biprod.of_components]
-#align category_theory.biprod.of_components_fst CategoryTheory.Biprod.of_components_fst
+#align category_theory.biprod.of_components_fst CategoryTheory.Biprod.ofComponents_fst
 
 @[simp]
-theorem Biprod.of_components_snd :
+theorem Biprod.ofComponents_snd :
     Biprod.ofComponents f₁₁ f₁₂ f₂₁ f₂₂ ≫ biprod.snd = biprod.fst ≫ f₁₂ + biprod.snd ≫ f₂₂ := by
   simp [biprod.of_components]
-#align category_theory.biprod.of_components_snd CategoryTheory.Biprod.of_components_snd
+#align category_theory.biprod.of_components_snd CategoryTheory.Biprod.ofComponents_snd
 
 @[simp]
-theorem Biprod.of_components_eq (f : X₁ ⊞ X₂ ⟶ Y₁ ⊞ Y₂) :
+theorem Biprod.ofComponents_eq (f : X₁ ⊞ X₂ ⟶ Y₁ ⊞ Y₂) :
     Biprod.ofComponents (biprod.inl ≫ f ≫ biprod.fst) (biprod.inl ≫ f ≫ biprod.snd)
         (biprod.inr ≫ f ≫ biprod.fst) (biprod.inr ≫ f ≫ biprod.snd) =
       f :=
@@ -722,10 +722,10 @@ theorem Biprod.of_components_eq (f : X₁ ⊞ X₂ ⟶ Y₁ ⊞ Y₂) :
     simp only [category.comp_id, biprod.inr_fst, biprod.inr_snd, biprod.inl_snd, add_zero, zero_add,
       biprod.inl_of_components, biprod.inr_of_components, eq_self_iff_true, category.assoc,
       comp_zero, biprod.inl_fst, preadditive.add_comp]
-#align category_theory.biprod.of_components_eq CategoryTheory.Biprod.of_components_eq
+#align category_theory.biprod.of_components_eq CategoryTheory.Biprod.ofComponents_eq
 
 @[simp]
-theorem Biprod.of_components_comp {X₁ X₂ Y₁ Y₂ Z₁ Z₂ : C} (f₁₁ : X₁ ⟶ Y₁) (f₁₂ : X₁ ⟶ Y₂)
+theorem Biprod.ofComponents_comp {X₁ X₂ Y₁ Y₂ Z₁ Z₂ : C} (f₁₁ : X₁ ⟶ Y₁) (f₁₂ : X₁ ⟶ Y₂)
     (f₂₁ : X₂ ⟶ Y₁) (f₂₂ : X₂ ⟶ Y₂) (g₁₁ : Y₁ ⟶ Z₁) (g₁₂ : Y₁ ⟶ Z₂) (g₂₁ : Y₂ ⟶ Z₁)
     (g₂₂ : Y₂ ⟶ Z₂) :
     Biprod.ofComponents f₁₁ f₁₂ f₂₁ f₂₂ ≫ Biprod.ofComponents g₁₁ g₁₂ g₂₁ g₂₂ =
@@ -738,7 +738,7 @@ theorem Biprod.of_components_comp {X₁ X₂ Y₁ Y₂ Z₁ Z₂ : C} (f₁₁ :
       biprod.inl_snd, biprod.inr_fst, biprod.inr_snd, biprod.inl_fst_assoc, biprod.inl_snd_assoc,
       biprod.inr_fst_assoc, biprod.inr_snd_assoc, comp_zero, zero_comp, category.comp_id,
       category.assoc]
-#align category_theory.biprod.of_components_comp CategoryTheory.Biprod.of_components_comp
+#align category_theory.biprod.of_components_comp CategoryTheory.Biprod.ofComponents_comp
 
 /-- The unipotent upper triangular matrix
 ```

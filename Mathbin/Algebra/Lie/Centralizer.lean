@@ -113,10 +113,10 @@ theorem gc_top_lie_centralizer :
 
 variable (R L M)
 
-theorem centralizer_bot_eq_max_triv_submodule :
+theorem centralizer_bot_eq_maxTrivSubmodule :
     (⊥ : LieSubmodule R L M).centralizer = LieModule.maxTrivSubmodule R L M :=
   rfl
-#align lie_submodule.centralizer_bot_eq_max_triv_submodule LieSubmodule.centralizer_bot_eq_max_triv_submodule
+#align lie_submodule.centralizer_bot_eq_max_triv_submodule LieSubmodule.centralizer_bot_eq_maxTrivSubmodule
 
 end LieSubmodule
 
@@ -182,12 +182,12 @@ theorem ideal_in_normalizer {x y : L} (hx : x ∈ H.normalizer) (hy : y ∈ H) :
 
 /-- A Lie subalgebra `H` is an ideal of any Lie subalgebra `K` containing `H` and contained in the
 normalizer of `H`. -/
-theorem exists_nested_lie_ideal_of_le_normalizer {K : LieSubalgebra R L} (h₁ : H ≤ K)
+theorem exists_nested_lieIdeal_ofLe_normalizer {K : LieSubalgebra R L} (h₁ : H ≤ K)
     (h₂ : K ≤ H.normalizer) : ∃ I : LieIdeal R K, (I : LieSubalgebra R K) = ofLe h₁ :=
   by
   rw [exists_nested_lie_ideal_coe_eq_iff]
   exact fun x y hx hy => ideal_in_normalizer (h₂ hx) hy
-#align lie_subalgebra.exists_nested_lie_ideal_of_le_normalizer LieSubalgebra.exists_nested_lie_ideal_of_le_normalizer
+#align lie_subalgebra.exists_nested_lie_ideal_of_le_normalizer LieSubalgebra.exists_nested_lieIdeal_ofLe_normalizer
 
 variable (H)
 

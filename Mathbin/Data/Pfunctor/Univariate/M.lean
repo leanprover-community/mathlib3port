@@ -48,9 +48,9 @@ protected def CofixA.default [Inhabited F.A] : ∀ n, CofixA F n
 instance [Inhabited F.A] {n} : Inhabited (CofixA F n) :=
   ⟨CofixA.default F n⟩
 
-theorem cofix_a_eq_zero : ∀ x y : CofixA F 0, x = y
+theorem cofixA_eq_zero : ∀ x y : CofixA F 0, x = y
   | cofix_a.continue, cofix_a.continue => rfl
-#align pfunctor.approx.cofix_a_eq_zero Pfunctor.Approx.cofix_a_eq_zero
+#align pfunctor.approx.cofix_a_eq_zero Pfunctor.Approx.cofixA_eq_zero
 
 variable {F}
 
@@ -109,7 +109,7 @@ theorem truncate_eq_of_agree {n : ℕ} (x : CofixA F n) (y : CofixA F (succ n)) 
   · rfl
   · cases' h with _ _ _ _ _ h₀ h₁
     cases h
-    simp only [truncate, Function.comp, true_and_iff, eq_self_iff_true, heq_iff_eq]
+    simp only [truncate, Function.comp, true_and_iff, eq_self_iff_true, hEq_iff_eq]
     ext y
     apply n_ih
     apply h₁
@@ -249,9 +249,9 @@ def children (x : M F) (i : F.B (head x)) : M F :=
       have P' := x.2 (succ n)
       apply agree_children _ _ _ P'
       trans i
-      apply cast_heq
+      apply cast_hEq
       symm
-      apply cast_heq }
+      apply cast_hEq }
 #align pfunctor.M.children Pfunctor.M.children
 
 /-- select a subtree using a `i : F.Idx` or return an arbitrary tree if
@@ -349,7 +349,7 @@ theorem mk_dest (x : M F) : M.mk (dest x) = x :=
   · ext a
     dsimp only [children]
     generalize hh : cast _ a = a''
-    rw [cast_eq_iff_heq] at hh
+    rw [cast_eq_iff_hEq] at hh
     revert a''
     rw [h]
     intros
@@ -430,18 +430,18 @@ theorem cases_mk {r : M F → Sort _} (x : F.Obj <| M F) (f : ∀ x : F.Obj <| M
   by
   dsimp only [M.mk, Pfunctor.M.cases, dest, head, approx.s_mk, head']
   cases x; dsimp only [approx.s_mk]
-  apply eq_of_heq
-  apply rec_heq_of_heq; congr with x
+  apply eq_of_hEq
+  apply ndrec_hEq_of_hEq; congr with x
   dsimp only [children, approx.s_mk, children']
   cases h : x_snd x; dsimp only [head]
   congr with n; change (x_snd x).approx n = _; rw [h]
 #align pfunctor.M.cases_mk Pfunctor.M.cases_mk
 
 @[simp]
-theorem cases_on_mk {r : M F → Sort _} (x : F.Obj <| M F) (f : ∀ x : F.Obj <| M F, r (M.mk x)) :
+theorem casesOn_mk {r : M F → Sort _} (x : F.Obj <| M F) (f : ∀ x : F.Obj <| M F, r (M.mk x)) :
     Pfunctor.M.casesOn (M.mk x) f = f x :=
   cases_mk x f
-#align pfunctor.M.cases_on_mk Pfunctor.M.cases_on_mk
+#align pfunctor.M.cases_on_mk Pfunctor.M.casesOn_mk
 
 @[simp]
 theorem cases_on_mk' {r : M F → Sort _} {a} (x : F.B a → M F)
@@ -457,23 +457,23 @@ inductive IsPath : Path F → M F → Prop
     x = M.mk ⟨a, f⟩ → is_path xs (f i) → is_path (⟨a, i⟩ :: xs) x
 #align pfunctor.M.is_path Pfunctor.M.IsPath
 
-theorem is_path_cons {xs : Path F} {a a'} {f : F.B a → M F} {i : F.B a'} :
+theorem isPath_cons {xs : Path F} {a a'} {f : F.B a → M F} {i : F.B a'} :
     IsPath (⟨a', i⟩ :: xs) (M.mk ⟨a, f⟩) → a = a' :=
   by
   generalize h : M.mk ⟨a, f⟩ = x
   rintro (_ | ⟨_, _, _, _, rfl, _⟩)
   cases mk_inj h
   rfl
-#align pfunctor.M.is_path_cons Pfunctor.M.is_path_cons
+#align pfunctor.M.is_path_cons Pfunctor.M.isPath_cons
 
-theorem is_path_cons' {xs : Path F} {a} {f : F.B a → M F} {i : F.B a} :
+theorem isPath_cons' {xs : Path F} {a} {f : F.B a → M F} {i : F.B a} :
     IsPath (⟨a, i⟩ :: xs) (M.mk ⟨a, f⟩) → IsPath xs (f i) :=
   by
   generalize h : M.mk ⟨a, f⟩ = x
   rintro (_ | ⟨_, _, _, _, rfl, hp⟩)
   cases mk_inj h
   exact hp
-#align pfunctor.M.is_path_cons' Pfunctor.M.is_path_cons'
+#align pfunctor.M.is_path_cons' Pfunctor.M.isPath_cons'
 
 /-- follow a path through a value of `M F` and return the subtree
 found at the end of the path if it is a valid path for that value and
@@ -577,7 +577,7 @@ theorem ext_aux [Inhabited (M F)] [DecidableEq F.A] {n : ℕ} (x y z : M F) (hx 
     induction y using Pfunctor.M.casesOn'
     simp only [iselect_nil] at hrec
     subst hrec
-    simp only [approx_mk, true_and_iff, eq_self_iff_true, heq_iff_eq]
+    simp only [approx_mk, true_and_iff, eq_self_iff_true, hEq_iff_eq]
     apply Subsingleton.elim
   · cases hx
     cases hy
@@ -585,7 +585,7 @@ theorem ext_aux [Inhabited (M F)] [DecidableEq F.A] {n : ℕ} (x y z : M F) (hx 
     induction y using Pfunctor.M.casesOn'
     subst z
     iterate 3 have := mk_inj ‹_›; repeat' cases this
-    simp only [approx_mk, true_and_iff, eq_self_iff_true, heq_iff_eq]
+    simp only [approx_mk, true_and_iff, eq_self_iff_true, hEq_iff_eq]
     ext i
     apply n_ih
     · solve_by_elim

@@ -57,7 +57,7 @@ variable {G}
 
 protected theorem Reachable.exists_walk_of_dist {u v : V} (hr : G.Reachable u v) :
     ∃ p : G.Walk u v, p.length = G.dist u v :=
-  Nat.Inf_mem (Set.range_nonempty_iff_nonempty.mpr hr)
+  Nat.infₛ_mem (Set.range_nonempty_iff_nonempty.mpr hr)
 #align simple_graph.reachable.exists_walk_of_dist SimpleGraph.Reachable.exists_walk_of_dist
 
 protected theorem Connected.exists_walk_of_dist (hconn : G.Connected) (u v : V) :
@@ -66,12 +66,12 @@ protected theorem Connected.exists_walk_of_dist (hconn : G.Connected) (u v : V) 
 #align simple_graph.connected.exists_walk_of_dist SimpleGraph.Connected.exists_walk_of_dist
 
 theorem dist_le {u v : V} (p : G.Walk u v) : G.dist u v ≤ p.length :=
-  Nat.Inf_le ⟨p, rfl⟩
+  Nat.infₛ_le ⟨p, rfl⟩
 #align simple_graph.dist_le SimpleGraph.dist_le
 
 @[simp]
 theorem dist_eq_zero_iff_eq_or_not_reachable {u v : V} :
-    G.dist u v = 0 ↔ u = v ∨ ¬G.Reachable u v := by simp [dist, Nat.Inf_eq_zero, reachable]
+    G.dist u v = 0 ↔ u = v ∨ ¬G.Reachable u v := by simp [dist, Nat.infₛ_eq_zero, reachable]
 #align simple_graph.dist_eq_zero_iff_eq_or_not_reachable SimpleGraph.dist_eq_zero_iff_eq_or_not_reachable
 
 theorem dist_self {v : V} : dist G v v = 0 := by simp
@@ -102,7 +102,7 @@ theorem dist_eq_zero_of_not_reachable {u v : V} (h : ¬G.Reachable u v) : G.dist
 theorem nonempty_of_pos_dist {u v : V} (h : 0 < G.dist u v) :
     (Set.univ : Set (G.Walk u v)).Nonempty := by
   simpa [Set.range_nonempty_iff_nonempty, Set.nonempty_iff_univ_nonempty] using
-    Nat.nonempty_of_pos_Inf h
+    Nat.nonempty_of_pos_infₛ h
 #align simple_graph.nonempty_of_pos_dist SimpleGraph.nonempty_of_pos_dist
 
 protected theorem Connected.dist_triangle (hconn : G.Connected) {u v w : V} :

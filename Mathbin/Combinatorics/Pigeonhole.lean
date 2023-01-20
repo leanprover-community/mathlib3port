@@ -473,11 +473,11 @@ open Set
 
 /-- If `s` is an infinite set of natural numbers and `k > 0`, then `s` contains two elements `m < n`
 that are equal mod `k`. -/
-theorem exists_lt_modeq_of_infinite {s : Set ℕ} (hs : s.Infinite) {k : ℕ} (hk : 0 < k) :
+theorem exists_lt_modEq_of_infinite {s : Set ℕ} (hs : s.Infinite) {k : ℕ} (hk : 0 < k) :
     ∃ m ∈ s, ∃ n ∈ s, m < n ∧ m ≡ n [MOD k] :=
   (hs.exists_lt_map_eq_of_maps_to fun n _ => show n % k ∈ Iio k from Nat.mod_lt n hk) <|
     finite_lt_nat k
-#align nat.exists_lt_modeq_of_infinite Nat.exists_lt_modeq_of_infinite
+#align nat.exists_lt_modeq_of_infinite Nat.exists_lt_modEq_of_infinite
 
 end Nat
 

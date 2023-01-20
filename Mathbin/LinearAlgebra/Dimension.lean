@@ -134,9 +134,9 @@ theorem LinearMap.lift_dim_le_of_injective (f : M →ₗ[R] M') (i : Injective f
     Cardinal.lift.{v'} (Module.rank R M) ≤ Cardinal.lift.{v} (Module.rank R M') :=
   by
   dsimp [Module.rank]
-  rw [Cardinal.lift_supr (Cardinal.bdd_above_range.{v', v'} _),
-    Cardinal.lift_supr (Cardinal.bdd_above_range.{v, v} _)]
-  apply csupᵢ_mono' (Cardinal.bdd_above_range.{v', v} _)
+  rw [Cardinal.lift_supᵢ (Cardinal.bddAbove_range.{v', v'} _),
+    Cardinal.lift_supᵢ (Cardinal.bddAbove_range.{v, v} _)]
+  apply csupᵢ_mono' (Cardinal.bddAbove_range.{v', v} _)
   rintro ⟨s, li⟩
   refine' ⟨⟨f '' s, _⟩, cardinal.lift_mk_le'.mpr ⟨(Equiv.Set.image f s i).toEmbedding⟩⟩
   exact (li.map' _ <| linear_map.ker_eq_bot.mpr i).image
@@ -153,20 +153,20 @@ theorem dim_le {n : ℕ}
   rw [Module.rank]
   apply csupᵢ_le'
   rintro ⟨s, li⟩
-  exact linear_independent_bounded_of_finset_linear_independent_bounded H _ li
+  exact linearIndependent_bounded_of_finset_linearIndependent_bounded H _ li
 #align dim_le dim_le
 
 theorem lift_dim_range_le (f : M →ₗ[R] M') :
     Cardinal.lift.{v} (Module.rank R f.range) ≤ Cardinal.lift.{v'} (Module.rank R M) :=
   by
   dsimp [Module.rank]
-  rw [Cardinal.lift_supr (Cardinal.bdd_above_range.{v', v'} _)]
+  rw [Cardinal.lift_supᵢ (Cardinal.bddAbove_range.{v', v'} _)]
   apply csupᵢ_le'
   rintro ⟨s, li⟩
   apply le_trans
   swap
   apply cardinal.lift_le.mpr
-  refine' le_csupᵢ (Cardinal.bdd_above_range.{v, v} _) ⟨range_splitting f '' s, _⟩
+  refine' le_csupᵢ (Cardinal.bddAbove_range.{v, v} _) ⟨range_splitting f '' s, _⟩
   · apply LinearIndependent.of_comp f.range_restrict
     convert li.comp (Equiv.Set.rangeSplittingImageEquiv f s) (Equiv.injective _) using 1
   · exact (cardinal.lift_mk_eq'.mpr ⟨Equiv.Set.rangeSplittingImageEquiv f s⟩).ge
@@ -252,7 +252,7 @@ theorem dim_quotient_le (p : Submodule R M) : Module.rank R (M ⧸ p) ≤ Module
 
 variable [Nontrivial R]
 
-theorem cardinal_lift_le_dim_of_linear_independent.{m} {ι : Type w} {v : ι → M}
+theorem cardinal_lift_le_dim_of_linearIndependent.{m} {ι : Type w} {v : ι → M}
     (hv : LinearIndependent R v) :
     Cardinal.lift.{max v m} (#ι) ≤ Cardinal.lift.{max w m} (Module.rank R M) :=
   by
@@ -261,29 +261,28 @@ theorem cardinal_lift_le_dim_of_linear_independent.{m} {ι : Type w} {v : ι →
   · simp only [Cardinal.lift_le, Module.rank]
     apply le_trans
     swap
-    exact le_csupᵢ (Cardinal.bdd_above_range.{v, v} _) ⟨range v, hv.coe_range⟩
+    exact le_csupᵢ (Cardinal.bddAbove_range.{v, v} _) ⟨range v, hv.coe_range⟩
     exact le_rfl
-#align cardinal_lift_le_dim_of_linear_independent cardinal_lift_le_dim_of_linear_independent
+#align cardinal_lift_le_dim_of_linear_independent cardinal_lift_le_dim_of_linearIndependent
 
 theorem cardinal_lift_le_dim_of_linear_independent' {ι : Type w} {v : ι → M}
     (hv : LinearIndependent R v) : Cardinal.lift.{v} (#ι) ≤ Cardinal.lift.{w} (Module.rank R M) :=
-  cardinal_lift_le_dim_of_linear_independent.{u, v, w, 0} hv
+  cardinal_lift_le_dim_of_linearIndependent.{u, v, w, 0} hv
 #align cardinal_lift_le_dim_of_linear_independent' cardinal_lift_le_dim_of_linear_independent'
 
-theorem cardinal_le_dim_of_linear_independent {ι : Type v} {v : ι → M}
-    (hv : LinearIndependent R v) : (#ι) ≤ Module.rank R M := by
-  simpa using cardinal_lift_le_dim_of_linear_independent hv
-#align cardinal_le_dim_of_linear_independent cardinal_le_dim_of_linear_independent
+theorem cardinal_le_dim_of_linearIndependent {ι : Type v} {v : ι → M} (hv : LinearIndependent R v) :
+    (#ι) ≤ Module.rank R M := by simpa using cardinal_lift_le_dim_of_linearIndependent hv
+#align cardinal_le_dim_of_linear_independent cardinal_le_dim_of_linearIndependent
 
 theorem cardinal_le_dim_of_linear_independent' {s : Set M}
     (hs : LinearIndependent R (fun x => x : s → M)) : (#s) ≤ Module.rank R M :=
-  cardinal_le_dim_of_linear_independent hs
+  cardinal_le_dim_of_linearIndependent hs
 #align cardinal_le_dim_of_linear_independent' cardinal_le_dim_of_linear_independent'
 
 variable (R M)
 
 @[simp]
-theorem dim_punit : Module.rank R PUnit = 0 :=
+theorem dim_pUnit : Module.rank R PUnit = 0 :=
   by
   apply le_bot_iff.mp
   rw [Module.rank]
@@ -295,20 +294,20 @@ theorem dim_punit : Module.rank R PUnit = 0 :=
   by_contra h
   obtain ⟨a, ha⟩ := nonempty_iff_ne_empty.2 h
   simpa using LinearIndependent.ne_zero (⟨a, ha⟩ : s) li
-#align dim_punit dim_punit
+#align dim_punit dim_pUnit
 
 @[simp]
 theorem dim_bot : Module.rank R (⊥ : Submodule R M) = 0 :=
   by
   have : (⊥ : Submodule R M) ≃ₗ[R] PUnit := bot_equiv_punit
-  rw [this.dim_eq, dim_punit]
+  rw [this.dim_eq, dim_pUnit]
 #align dim_bot dim_bot
 
 variable {R M}
 
 /-- A linearly-independent family of vectors in a module over a non-trivial ring must be finite if
 the module is Noetherian. -/
-theorem LinearIndependent.finite_of_is_noetherian [IsNoetherian R M] {v : ι → M}
+theorem LinearIndependent.finite_of_isNoetherian [IsNoetherian R M] {v : ι → M}
     (hv : LinearIndependent R v) : Finite ι :=
   by
   have hwf := is_noetherian_iff_well_founded.mp (by infer_instance : IsNoetherian R M)
@@ -318,12 +317,12 @@ theorem LinearIndependent.finite_of_is_noetherian [IsNoetherian R M] {v : ι →
   apply hv.ne_zero i
   have : v i ∈ R ∙ v i := Submodule.mem_span_singleton_self (v i)
   rwa [contra, Submodule.mem_bot] at this
-#align linear_independent.finite_of_is_noetherian LinearIndependent.finite_of_is_noetherian
+#align linear_independent.finite_of_is_noetherian LinearIndependent.finite_of_isNoetherian
 
-theorem LinearIndependent.set_finite_of_is_noetherian [IsNoetherian R M] {s : Set M}
+theorem LinearIndependent.set_finite_of_isNoetherian [IsNoetherian R M] {s : Set M}
     (hi : LinearIndependent R (coe : s → M)) : s.Finite :=
   @Set.to_finite _ _ hi.finite_of_is_noetherian
-#align linear_independent.set_finite_of_is_noetherian LinearIndependent.set_finite_of_is_noetherian
+#align linear_independent.set_finite_of_is_noetherian LinearIndependent.set_finite_of_isNoetherian
 
 -- One might hope that a finite spanning set implies that any linearly independent set is finite.
 -- While this is true over a division ring
@@ -368,7 +367,7 @@ def basisFintypeOfFiniteSpans (w : Set M) [Fintype w] (s : span R w = ⊤) {ι :
 and `s` is a maximal linearly independent set,
 then the union of the supports of `x ∈ s` (when written out in the basis `b`) is all of `b`.
 -/
-theorem union_support_maximal_linear_independent_eq_range_basis {ι : Type w} (b : Basis ι R M)
+theorem union_support_maximal_linearIndependent_eq_range_basis {ι : Type w} (b : Basis ι R M)
     {κ : Type w'} (v : κ → M) (i : LinearIndependent R v) (m : i.Maximal) :
     (⋃ k, ((b.repr (v k)).support : Set ι)) = univ :=
   by
@@ -407,7 +406,7 @@ theorem union_support_maximal_linear_independent_eq_range_basis {ι : Type w} (b
   -- The key step in the proof is checking that this strictly larger family is linearly independent.
   have i' : LinearIndependent R (coe : range v' → M) :=
     by
-    rw [linear_independent_subtype_range inj', linear_independent_iff]
+    rw [linearIndependent_subtype_range inj', linearIndependent_iff]
     intro l z
     rw [Finsupp.total_option] at z
     simp only [v', Option.elim'] at z
@@ -435,7 +434,7 @@ theorem union_support_maximal_linear_independent_eq_range_basis {ι : Type w} (b
   dsimp [LinearIndependent.Maximal] at m
   specialize m (range v') i' r
   exact r'' m
-#align union_support_maximal_linear_independent_eq_range_basis union_support_maximal_linear_independent_eq_range_basis
+#align union_support_maximal_linear_independent_eq_range_basis union_support_maximal_linearIndependent_eq_range_basis
 
 /-- Over any ring `R`, if `b` is an infinite basis for a module `M`,
 and `s` is a maximal linearly independent set,
@@ -449,7 +448,7 @@ theorem infinite_basis_le_maximal_linear_independent' {ι : Type w} (b : Basis �
   have w₁ : (#ι) ≤ (#Set.range Φ) :=
     by
     apply Cardinal.le_range_of_union_finset_eq_top
-    exact union_support_maximal_linear_independent_eq_range_basis b v i m
+    exact union_support_maximal_linearIndependent_eq_range_basis b v i m
   have w₂ : Cardinal.lift.{w'} (#Set.range Φ) ≤ Cardinal.lift.{w} (#κ) := Cardinal.mk_range_le_lift
   exact (cardinal.lift_le.mpr w₁).trans w₂
 #align infinite_basis_le_maximal_linear_independent' infinite_basis_le_maximal_linear_independent'
@@ -460,10 +459,10 @@ theorem infinite_basis_le_maximal_linear_independent' {ι : Type w} (b : Basis �
 and `s` is a maximal linearly independent set,
 then the cardinality of `b` is bounded by the cardinality of `s`.
 -/
-theorem infinite_basis_le_maximal_linear_independent {ι : Type w} (b : Basis ι R M) [Infinite ι]
+theorem infinite_basis_le_maximal_linearIndependent {ι : Type w} (b : Basis ι R M) [Infinite ι]
     {κ : Type w} (v : κ → M) (i : LinearIndependent R v) (m : i.Maximal) : (#ι) ≤ (#κ) :=
   Cardinal.lift_le.mp (infinite_basis_le_maximal_linear_independent' b v i m)
-#align infinite_basis_le_maximal_linear_independent infinite_basis_le_maximal_linear_independent
+#align infinite_basis_le_maximal_linear_independent infinite_basis_le_maximal_linearIndependent
 
 theorem CompleteLattice.Independent.subtype_ne_bot_le_rank [NoZeroSMulDivisors R M]
     {V : ι → Submodule R M} (hV : CompleteLattice.Independent V) :
@@ -496,8 +495,8 @@ theorem dim_zero_iff_forall_zero : Module.rank R M = 0 ↔ ∀ x : M, x = 0 :=
       intro h
       exact this.not_lt (h.symm ▸ zero_lt_one)
     suffices LinearIndependent R fun y : ({x} : Set M) => ↑y by
-      simpa using cardinal_le_dim_of_linear_independent this
-    exact linear_independent_singleton hx
+      simpa using cardinal_le_dim_of_linearIndependent this
+    exact linearIndependent_singleton hx
   · have : (⊤ : Submodule R M) = ⊥ := by
       ext x
       simp [h x]
@@ -535,7 +534,7 @@ have the same cardinalities. -/
 theorem mk_eq_mk_of_basis (v : Basis ι R M) (v' : Basis ι' R M) :
     Cardinal.lift.{w'} (#ι) = Cardinal.lift.{w} (#ι') :=
   by
-  haveI := nontrivial_of_invariant_basis_number R
+  haveI := nontrivial_of_invariantBasisNumber R
   cases fintypeOrInfinite ι
   · -- `v` is a finite basis, so by `basis_fintype_of_finite_spans` so is `v'`.
     haveI : Fintype (range v) := Set.fintypeRange v
@@ -604,7 +603,7 @@ but still assumes we have a finite spanning set.
 theorem basis_le_span' {ι : Type _} (b : Basis ι R M) {w : Set M} [Fintype w] (s : span R w = ⊤) :
     (#ι) ≤ Fintype.card w :=
   by
-  haveI := nontrivial_of_invariant_basis_number R
+  haveI := nontrivial_of_invariantBasisNumber R
   haveI := basisFintypeOfFiniteSpans w s b
   rw [Cardinal.mk_fintype ι]
   simp only [Cardinal.nat_cast_le]
@@ -618,7 +617,7 @@ then the cardinality of any basis is bounded by the cardinality of any spanning 
 -/
 theorem Basis.le_span {J : Set M} (v : Basis ι R M) (hJ : span R J = ⊤) : (#range v) ≤ (#J) :=
   by
-  haveI := nontrivial_of_invariant_basis_number R
+  haveI := nontrivial_of_invariantBasisNumber R
   cases fintypeOrInfinite J
   · rw [← Cardinal.lift_le, Cardinal.mk_range_eq_of_injective v.injective, Cardinal.mk_fintype J]
     convert Cardinal.lift_le.{w, v}.2 (basis_le_span' v hJ)
@@ -633,7 +632,7 @@ theorem Basis.le_span {J : Set M} (v : Basis ι R M) (hJ : span R J = ⊤) : (#r
         span_le.2 fun j hj x hx => ⟨_, ⟨⟨j, hj⟩, rfl⟩, hx⟩
       rw [hJ] at this
       replace : v.repr (v i) ∈ Finsupp.supported R R (⋃ j, S j) := this trivial
-      rw [v.repr_self, Finsupp.mem_supported, Finsupp.support_single_ne_zero _ one_ne_zero] at this
+      rw [v.repr_self, Finsupp.mem_supported, Finsupp.support_single_ne_zero _ one_neZero] at this
       · subst b
         rcases mem_Union.1 (this (Finset.mem_singleton_self _)) with ⟨j, hj⟩
         exact mem_Union.2 ⟨j, (mem_image _ _ _).2 ⟨i, hj, rfl⟩⟩
@@ -641,9 +640,9 @@ theorem Basis.le_span {J : Set M} (v : Basis ι R M) (hJ : span R J = ⊤) : (#r
     refine' le_of_not_lt fun IJ => _
     suffices (#⋃ j, S' j) < (#range v) by exact not_le_of_lt this ⟨Set.embeddingOfSubset _ _ hs⟩
     refine'
-      lt_of_le_of_lt (le_trans Cardinal.mk_Union_le_sum_mk (Cardinal.sum_le_sum _ (fun _ => ℵ₀) _))
+      lt_of_le_of_lt (le_trans Cardinal.mk_unionᵢ_le_sum_mk (Cardinal.sum_le_sum _ (fun _ => ℵ₀) _))
         _
-    · exact fun j => (Cardinal.lt_aleph_0_of_finite _).le
+    · exact fun j => (Cardinal.lt_aleph0_of_finite _).le
     · simpa
 #align basis.le_span Basis.le_span
 
@@ -659,7 +658,7 @@ open Submodule
 
 -- An auxiliary lemma for `linear_independent_le_span'`,
 -- with the additional assumption that the linearly independent family is finite.
-theorem linear_independent_le_span_aux' {ι : Type _} [Fintype ι] (v : ι → M)
+theorem linearIndependent_le_span_aux' {ι : Type _} [Fintype ι] (v : ι → M)
     (i : LinearIndependent R v) (w : Set M) [Fintype w] (s : range v ≤ span R w) :
     Fintype.card ι ≤ Fintype.card w :=
   by
@@ -675,7 +674,7 @@ theorem linear_independent_le_span_aux' {ι : Type _} [Fintype ι] (v : ι → M
     simp only [Finsupp.total_total, Submodule.coe_mk, Span.finsupp_total_repr] at h
     rw [← sub_eq_zero, ← LinearMap.map_sub] at h
     exact sub_eq_zero.mp (linear_independent_iff.mp i _ h)
-#align linear_independent_le_span_aux' linear_independent_le_span_aux'
+#align linear_independent_le_span_aux' linearIndependent_le_span_aux'
 
 /-- If `R` satisfies the strong rank condition,
 then any linearly independent family `v : ι → M`
@@ -689,7 +688,7 @@ def linearIndependentFintypeOfLeSpanFintype {ι : Type _} (v : ι → M) (i : Li
     let v' := fun x : (t : Set ι) => v x
     have i' : LinearIndependent R v' := i.comp _ Subtype.val_injective
     have s' : range v' ≤ span R w := (range_comp_subset_range _ _).trans s
-    simpa using linear_independent_le_span_aux' v' i' w s'
+    simpa using linearIndependent_le_span_aux' v' i' w s'
 #align linear_independent_fintype_of_le_span_fintype linearIndependentFintypeOfLeSpanFintype
 
 /-- If `R` satisfies the strong rank condition,
@@ -697,33 +696,33 @@ then for any linearly independent family `v : ι → M`
 contained in the span of some finite `w : set M`,
 the cardinality of `ι` is bounded by the cardinality of `w`.
 -/
-theorem linear_independent_le_span' {ι : Type _} (v : ι → M) (i : LinearIndependent R v) (w : Set M)
+theorem linearIndependent_le_span' {ι : Type _} (v : ι → M) (i : LinearIndependent R v) (w : Set M)
     [Fintype w] (s : range v ≤ span R w) : (#ι) ≤ Fintype.card w :=
   by
   haveI : Fintype ι := linearIndependentFintypeOfLeSpanFintype v i w s
   rw [Cardinal.mk_fintype]
   simp only [Cardinal.nat_cast_le]
-  exact linear_independent_le_span_aux' v i w s
-#align linear_independent_le_span' linear_independent_le_span'
+  exact linearIndependent_le_span_aux' v i w s
+#align linear_independent_le_span' linearIndependent_le_span'
 
 /-- If `R` satisfies the strong rank condition,
 then for any linearly independent family `v : ι → M`
 and any finite spanning set `w : set M`,
 the cardinality of `ι` is bounded by the cardinality of `w`.
 -/
-theorem linear_independent_le_span {ι : Type _} (v : ι → M) (i : LinearIndependent R v) (w : Set M)
+theorem linearIndependent_le_span {ι : Type _} (v : ι → M) (i : LinearIndependent R v) (w : Set M)
     [Fintype w] (s : span R w = ⊤) : (#ι) ≤ Fintype.card w :=
   by
-  apply linear_independent_le_span' v i w
+  apply linearIndependent_le_span' v i w
   rw [s]
   exact le_top
-#align linear_independent_le_span linear_independent_le_span
+#align linear_independent_le_span linearIndependent_le_span
 
 /-- An auxiliary lemma for `linear_independent_le_basis`:
 we handle the case where the basis `b` is infinite.
 -/
-theorem linear_independent_le_infinite_basis {ι : Type _} (b : Basis ι R M) [Infinite ι]
-    {κ : Type _} (v : κ → M) (i : LinearIndependent R v) : (#κ) ≤ (#ι) :=
+theorem linearIndependent_le_infinite_basis {ι : Type _} (b : Basis ι R M) [Infinite ι] {κ : Type _}
+    (v : κ → M) (i : LinearIndependent R v) : (#κ) ≤ (#ι) :=
   by
   by_contra
   rw [not_le, ← Cardinal.mk_finset_of_infinite ι] at h
@@ -738,14 +737,14 @@ theorem linear_independent_le_infinite_basis {ι : Type _} (b : Basis ι R M) [I
     simp only [SetLike.mem_coe, Subtype.coe_mk, Finset.coe_image]
     apply Basis.mem_span_repr_support
   exact w.false
-#align linear_independent_le_infinite_basis linear_independent_le_infinite_basis
+#align linear_independent_le_infinite_basis linearIndependent_le_infinite_basis
 
 /-- Over any ring `R` satisfying the strong rank condition,
 if `b` is a basis for a module `M`,
 and `s` is a linearly independent set,
 then the cardinality of `s` is bounded by the cardinality of `b`.
 -/
-theorem linear_independent_le_basis {ι : Type _} (b : Basis ι R M) {κ : Type _} (v : κ → M)
+theorem linearIndependent_le_basis {ι : Type _} (b : Basis ι R M) {κ : Type _} (v : κ → M)
     (i : LinearIndependent R v) : (#κ) ≤ (#ι) :=
   by
   -- We split into cases depending on whether `ι` is infinite.
@@ -753,18 +752,18 @@ theorem linear_independent_le_basis {ι : Type _} (b : Basis ι R M) {κ : Type 
     skip
   · -- When `ι` is finite, we have `linear_independent_le_span`,
     rw [Cardinal.mk_fintype ι]
-    haveI : Nontrivial R := nontrivial_of_invariant_basis_number R
+    haveI : Nontrivial R := nontrivial_of_invariantBasisNumber R
     rw [Fintype.card_congr (Equiv.ofInjective b b.injective)]
-    exact linear_independent_le_span v i (range b) b.span_eq
+    exact linearIndependent_le_span v i (range b) b.span_eq
   ·-- and otherwise we have `linear_indepedent_le_infinite_basis`.
-    exact linear_independent_le_infinite_basis b v i
-#align linear_independent_le_basis linear_independent_le_basis
+    exact linearIndependent_le_infinite_basis b v i
+#align linear_independent_le_basis linearIndependent_le_basis
 
 /-- In an `n`-dimensional space, the rank is at most `m`. -/
-theorem Basis.card_le_card_of_linear_independent_aux {R : Type _} [Ring R] [StrongRankCondition R]
+theorem Basis.card_le_card_of_linearIndependent_aux {R : Type _} [Ring R] [StrongRankCondition R]
     (n : ℕ) {m : ℕ} (v : Fin m → Fin n → R) : LinearIndependent R v → m ≤ n := fun h => by
-  simpa using linear_independent_le_basis (Pi.basisFun R (Fin n)) v h
-#align basis.card_le_card_of_linear_independent_aux Basis.card_le_card_of_linear_independent_aux
+  simpa using linearIndependent_le_basis (Pi.basisFun R (Fin n)) v h
+#align basis.card_le_card_of_linear_independent_aux Basis.card_le_card_of_linearIndependent_aux
 
 -- When the basis is not infinite this need not be true!
 /-- Over any ring `R` satisfying the strong rank condition,
@@ -774,23 +773,23 @@ then every maximal linearly independent set has the same cardinality as `b`.
 This proof (along with some of the lemmas above) comes from
 [Les familles libres maximales d'un module ont-elles le meme cardinal?][lazarus1973]
 -/
-theorem maximal_linear_independent_eq_infinite_basis {ι : Type _} (b : Basis ι R M) [Infinite ι]
+theorem maximal_linearIndependent_eq_infinite_basis {ι : Type _} (b : Basis ι R M) [Infinite ι]
     {κ : Type _} (v : κ → M) (i : LinearIndependent R v) (m : i.Maximal) : (#κ) = (#ι) :=
   by
   apply le_antisymm
-  · exact linear_independent_le_basis b v i
-  · haveI : Nontrivial R := nontrivial_of_invariant_basis_number R
-    exact infinite_basis_le_maximal_linear_independent b v i m
-#align maximal_linear_independent_eq_infinite_basis maximal_linear_independent_eq_infinite_basis
+  · exact linearIndependent_le_basis b v i
+  · haveI : Nontrivial R := nontrivial_of_invariantBasisNumber R
+    exact infinite_basis_le_maximal_linearIndependent b v i m
+#align maximal_linear_independent_eq_infinite_basis maximal_linearIndependent_eq_infinite_basis
 
 theorem Basis.mk_eq_dim'' {ι : Type v} (v : Basis ι R M) : (#ι) = Module.rank R M :=
   by
-  haveI := nontrivial_of_invariant_basis_number R
+  haveI := nontrivial_of_invariantBasisNumber R
   rw [Module.rank]
   apply le_antisymm
   · trans
     swap
-    apply le_csupᵢ (Cardinal.bdd_above_range.{v, v} _)
+    apply le_csupᵢ (Cardinal.bddAbove_range.{v, v} _)
     exact
       ⟨Set.range v, by
         convert v.reindex_range.linear_independent
@@ -799,7 +798,7 @@ theorem Basis.mk_eq_dim'' {ι : Type v} (v : Basis ι R M) : (#ι) = Module.rank
     exact (Cardinal.mk_range_eq v v.injective).ge
   · apply csupᵢ_le'
     rintro ⟨s, li⟩
-    apply linear_independent_le_basis v _ li
+    apply linearIndependent_le_basis v _ li
 #align basis.mk_eq_dim'' Basis.mk_eq_dim''
 
 theorem Basis.mk_range_eq_dim (v : Basis ι R M) : (#range v) = Module.rank R M :=
@@ -811,18 +810,18 @@ cardinality of the basis. -/
 theorem dim_eq_card_basis {ι : Type w} [Fintype ι] (h : Basis ι R M) :
     Module.rank R M = Fintype.card ι :=
   by
-  haveI := nontrivial_of_invariant_basis_number R
+  haveI := nontrivial_of_invariantBasisNumber R
   rw [← h.mk_range_eq_dim, Cardinal.mk_fintype, Set.card_range_of_injective h.injective]
 #align dim_eq_card_basis dim_eq_card_basis
 
-theorem Basis.card_le_card_of_linear_independent {ι : Type _} [Fintype ι] (b : Basis ι R M)
+theorem Basis.card_le_card_of_linearIndependent {ι : Type _} [Fintype ι] (b : Basis ι R M)
     {ι' : Type _} [Fintype ι'] {v : ι' → M} (hv : LinearIndependent R v) :
     Fintype.card ι' ≤ Fintype.card ι :=
   by
-  letI := nontrivial_of_invariant_basis_number R
+  letI := nontrivial_of_invariantBasisNumber R
   simpa [dim_eq_card_basis b, Cardinal.mk_fintype] using
     cardinal_lift_le_dim_of_linear_independent' hv
-#align basis.card_le_card_of_linear_independent Basis.card_le_card_of_linear_independent
+#align basis.card_le_card_of_linear_independent Basis.card_le_card_of_linearIndependent
 
 theorem Basis.card_le_card_of_submodule (N : Submodule R M) [Fintype ι] (b : Basis ι R M)
     [Fintype ι'] (b' : Basis ι' R N) : Fintype.card ι' ≤ Fintype.card ι :=
@@ -838,7 +837,7 @@ theorem Basis.card_le_card_of_le {N O : Submodule R M} (hNO : N ≤ O) [Fintype 
 theorem Basis.mk_eq_dim (v : Basis ι R M) :
     Cardinal.lift.{v} (#ι) = Cardinal.lift.{w} (Module.rank R M) :=
   by
-  haveI := nontrivial_of_invariant_basis_number R
+  haveI := nontrivial_of_invariantBasisNumber R
   rw [← v.mk_range_eq_dim, Cardinal.mk_range_eq_of_injective v.injective]
 #align basis.mk_eq_dim Basis.mk_eq_dim
 
@@ -848,13 +847,13 @@ theorem Basis.mk_eq_dim'.{m} (v : Basis ι R M) :
 #align basis.mk_eq_dim' Basis.mk_eq_dim'
 
 /-- If a module has a finite dimension, all bases are indexed by a finite type. -/
-theorem Basis.nonempty_fintype_index_of_dim_lt_aleph_0 {ι : Type _} (b : Basis ι R M)
+theorem Basis.nonempty_fintype_index_of_dim_lt_aleph0 {ι : Type _} (b : Basis ι R M)
     (h : Module.rank R M < ℵ₀) : Nonempty (Fintype ι) := by
   rwa [← Cardinal.lift_lt, ←
     b.mk_eq_dim,-- ensure `aleph_0` has the correct universe
-    Cardinal.lift_aleph_0,
-    ← Cardinal.lift_aleph_0.{u_1, v}, Cardinal.lift_lt, Cardinal.lt_aleph_0_iff_fintype] at h
-#align basis.nonempty_fintype_index_of_dim_lt_aleph_0 Basis.nonempty_fintype_index_of_dim_lt_aleph_0
+    Cardinal.lift_aleph0,
+    ← Cardinal.lift_aleph0.{u_1, v}, Cardinal.lift_lt, Cardinal.lt_aleph0_iff_fintype] at h
+#align basis.nonempty_fintype_index_of_dim_lt_aleph_0 Basis.nonempty_fintype_index_of_dim_lt_aleph0
 
 /-- If a module has a finite dimension, all bases are indexed by a finite type. -/
 noncomputable def Basis.fintypeIndexOfDimLtAleph0 {ι : Type _} (b : Basis ι R M)
@@ -863,15 +862,15 @@ noncomputable def Basis.fintypeIndexOfDimLtAleph0 {ι : Type _} (b : Basis ι R 
 #align basis.fintype_index_of_dim_lt_aleph_0 Basis.fintypeIndexOfDimLtAleph0
 
 /-- If a module has a finite dimension, all bases are indexed by a finite set. -/
-theorem Basis.finite_index_of_dim_lt_aleph_0 {ι : Type _} {s : Set ι} (b : Basis s R M)
+theorem Basis.finite_index_of_dim_lt_aleph0 {ι : Type _} {s : Set ι} (b : Basis s R M)
     (h : Module.rank R M < ℵ₀) : s.Finite :=
   finite_def.2 (b.nonempty_fintype_index_of_dim_lt_aleph_0 h)
-#align basis.finite_index_of_dim_lt_aleph_0 Basis.finite_index_of_dim_lt_aleph_0
+#align basis.finite_index_of_dim_lt_aleph_0 Basis.finite_index_of_dim_lt_aleph0
 
 theorem dim_span {v : ι → M} (hv : LinearIndependent R v) :
     Module.rank R ↥(span R (range v)) = (#range v) :=
   by
-  haveI := nontrivial_of_invariant_basis_number R
+  haveI := nontrivial_of_invariantBasisNumber R
   rw [← Cardinal.lift_inj, ← (Basis.span hv).mk_eq_dim,
     Cardinal.mk_range_eq_of_injective (@LinearIndependent.injective ι R M v _ _ _ _ hv)]
 #align dim_span dim_span
@@ -906,7 +905,7 @@ theorem Ideal.rank_eq {R S : Type _} [CommRing R] [StrongRankCondition R] [Ring 
   have : LinearIndependent R fun i => b i • a :=
     by
     have hb := b.linear_independent
-    rw [Fintype.linear_independent_iff] at hb⊢
+    rw [Fintype.linearIndependent_iff] at hb⊢
     intro g hg
     apply hb g
     simp only [← smul_assoc, ← Finset.sum_smul, smul_eq_zero] at hg
@@ -923,7 +922,7 @@ variable (R)
 
 @[simp]
 theorem dim_self : Module.rank R R = 1 := by
-  rw [← Cardinal.lift_inj, ← (Basis.singleton PUnit R).mk_eq_dim, Cardinal.mk_punit]
+  rw [← Cardinal.lift_inj, ← (Basis.singleton PUnit R).mk_eq_dim, Cardinal.mk_pUnit]
 #align dim_self dim_self
 
 end StrongRankCondition
@@ -935,15 +934,15 @@ variable [DivisionRing K] [AddCommGroup V] [Module K V] [AddCommGroup V₁] [Mod
 variable {K V}
 
 /-- If a vector space has a finite dimension, the index set of `basis.of_vector_space` is finite. -/
-theorem Basis.finite_of_vector_space_index_of_dim_lt_aleph_0 (h : Module.rank K V < ℵ₀) :
+theorem Basis.finite_ofVectorSpaceIndex_of_dim_lt_aleph0 (h : Module.rank K V < ℵ₀) :
     (Basis.ofVectorSpaceIndex K V).Finite :=
   finite_def.2 <| (Basis.ofVectorSpace K V).nonempty_fintype_index_of_dim_lt_aleph_0 h
-#align basis.finite_of_vector_space_index_of_dim_lt_aleph_0 Basis.finite_of_vector_space_index_of_dim_lt_aleph_0
+#align basis.finite_of_vector_space_index_of_dim_lt_aleph_0 Basis.finite_ofVectorSpaceIndex_of_dim_lt_aleph0
 
 variable [AddCommGroup V'] [Module K V']
 
 /-- Two vector spaces are isomorphic if they have the same dimension. -/
-theorem nonempty_linear_equiv_of_lift_dim_eq
+theorem nonempty_linearEquiv_of_lift_dim_eq
     (cond : Cardinal.lift.{v'} (Module.rank K V) = Cardinal.lift.{v} (Module.rank K V')) :
     Nonempty (V ≃ₗ[K] V') := by
   let B := Basis.ofVectorSpace K V
@@ -951,13 +950,13 @@ theorem nonempty_linear_equiv_of_lift_dim_eq
   have : Cardinal.lift.{v', v} (#_) = Cardinal.lift.{v, v'} (#_) := by
     rw [B.mk_eq_dim'', cond, B'.mk_eq_dim'']
   exact (Cardinal.lift_mk_eq.{v, v', 0}.1 this).map (B.equiv B')
-#align nonempty_linear_equiv_of_lift_dim_eq nonempty_linear_equiv_of_lift_dim_eq
+#align nonempty_linear_equiv_of_lift_dim_eq nonempty_linearEquiv_of_lift_dim_eq
 
 /-- Two vector spaces are isomorphic if they have the same dimension. -/
-theorem nonempty_linear_equiv_of_dim_eq (cond : Module.rank K V = Module.rank K V₁) :
+theorem nonempty_linearEquiv_of_dim_eq (cond : Module.rank K V = Module.rank K V₁) :
     Nonempty (V ≃ₗ[K] V₁) :=
-  nonempty_linear_equiv_of_lift_dim_eq <| congr_arg _ cond
-#align nonempty_linear_equiv_of_dim_eq nonempty_linear_equiv_of_dim_eq
+  nonempty_linearEquiv_of_lift_dim_eq <| congr_arg _ cond
+#align nonempty_linear_equiv_of_dim_eq nonempty_linearEquiv_of_dim_eq
 
 section
 
@@ -967,12 +966,12 @@ variable (V V' V₁)
 def LinearEquiv.ofLiftDimEq
     (cond : Cardinal.lift.{v'} (Module.rank K V) = Cardinal.lift.{v} (Module.rank K V')) :
     V ≃ₗ[K] V' :=
-  Classical.choice (nonempty_linear_equiv_of_lift_dim_eq cond)
+  Classical.choice (nonempty_linearEquiv_of_lift_dim_eq cond)
 #align linear_equiv.of_lift_dim_eq LinearEquiv.ofLiftDimEq
 
 /-- Two vector spaces are isomorphic if they have the same dimension. -/
 def LinearEquiv.ofDimEq (cond : Module.rank K V = Module.rank K V₁) : V ≃ₗ[K] V₁ :=
-  Classical.choice (nonempty_linear_equiv_of_dim_eq cond)
+  Classical.choice (nonempty_linearEquiv_of_dim_eq cond)
 #align linear_equiv.of_dim_eq LinearEquiv.ofDimEq
 
 end
@@ -981,13 +980,13 @@ end
 theorem LinearEquiv.nonempty_equiv_iff_lift_dim_eq :
     Nonempty (V ≃ₗ[K] V') ↔
       Cardinal.lift.{v'} (Module.rank K V) = Cardinal.lift.{v} (Module.rank K V') :=
-  ⟨fun ⟨h⟩ => LinearEquiv.lift_dim_eq h, fun h => nonempty_linear_equiv_of_lift_dim_eq h⟩
+  ⟨fun ⟨h⟩ => LinearEquiv.lift_dim_eq h, fun h => nonempty_linearEquiv_of_lift_dim_eq h⟩
 #align linear_equiv.nonempty_equiv_iff_lift_dim_eq LinearEquiv.nonempty_equiv_iff_lift_dim_eq
 
 /-- Two vector spaces are isomorphic if and only if they have the same dimension. -/
 theorem LinearEquiv.nonempty_equiv_iff_dim_eq :
     Nonempty (V ≃ₗ[K] V₁) ↔ Module.rank K V = Module.rank K V₁ :=
-  ⟨fun ⟨h⟩ => LinearEquiv.dim_eq h, fun h => nonempty_linear_equiv_of_dim_eq h⟩
+  ⟨fun ⟨h⟩ => LinearEquiv.dim_eq h, fun h => nonempty_linearEquiv_of_dim_eq h⟩
 #align linear_equiv.nonempty_equiv_iff_dim_eq LinearEquiv.nonempty_equiv_iff_dim_eq
 
 -- TODO how far can we generalise this?
@@ -995,7 +994,7 @@ theorem LinearEquiv.nonempty_equiv_iff_dim_eq :
 -- using `linear_independent_le_span'`
 theorem dim_span_le (s : Set V) : Module.rank K (span K s) ≤ (#s) :=
   by
-  obtain ⟨b, hb, hsab, hlib⟩ := exists_linear_independent K s
+  obtain ⟨b, hb, hsab, hlib⟩ := exists_linearIndependent K s
   convert Cardinal.mk_le_mk_of_subset hb
   rw [← hsab, dim_span_set hlib]
 #align dim_span_le dim_span_le
@@ -1004,7 +1003,7 @@ theorem dim_span_of_finset (s : Finset V) : Module.rank K (span K (↑s : Set V)
   calc
     Module.rank K (span K (↑s : Set V)) ≤ (#(↑s : Set V)) := dim_span_le ↑s
     _ = s.card := by rw [Finset.coe_sort_coe, Cardinal.mk_coe_finset]
-    _ < ℵ₀ := Cardinal.nat_lt_aleph_0 _
+    _ < ℵ₀ := Cardinal.nat_lt_aleph0 _
     
 #align dim_span_of_finset dim_span_of_finset
 
@@ -1012,8 +1011,8 @@ theorem dim_prod : Module.rank K (V × V₁) = Module.rank K V + Module.rank K V
   by
   let b := Basis.ofVectorSpace K V
   let c := Basis.ofVectorSpace K V₁
-  rw [← Cardinal.lift_inj, ← (Basis.prod b c).mk_eq_dim, Cardinal.lift_add, ← Cardinal.mk_ulift, ←
-    b.mk_eq_dim, ← c.mk_eq_dim, ← Cardinal.mk_ulift, ← Cardinal.mk_ulift,
+  rw [← Cardinal.lift_inj, ← (Basis.prod b c).mk_eq_dim, Cardinal.lift_add, ← Cardinal.mk_uLift, ←
+    b.mk_eq_dim, ← c.mk_eq_dim, ← Cardinal.mk_uLift, ← Cardinal.mk_uLift,
     Cardinal.add_def (ULift _)]
   exact
     Cardinal.lift_inj.1
@@ -1060,7 +1059,7 @@ end Fintype
 theorem dim_quotient_add_dim (p : Submodule K V) :
     Module.rank K (V ⧸ p) + Module.rank K p = Module.rank K V := by
   classical exact
-      let ⟨f⟩ := quotient_prod_linear_equiv p
+      let ⟨f⟩ := quotient_prod_linearEquiv p
       dim_prod.symm.trans f.dim_eq
 #align dim_quotient_add_dim dim_quotient_add_dim
 
@@ -1125,7 +1124,7 @@ theorem dim_sup_add_dim_inf_eq (s t : Submodule K V) :
         LinearMap.range_comp, subtype_comp_of_le, subtype_comp_of_le, range_subtype, range_subtype,
         range_subtype]
       exact le_rfl)
-    (ker_of_le _ _ _) (by ext ⟨x, hx⟩; rfl)
+    (ker_ofLe _ _ _) (by ext ⟨x, hx⟩; rfl)
     (by
       rintro ⟨b₁, hb₁⟩ ⟨b₂, hb₂⟩ eq
       obtain rfl : b₁ = b₂ := congr_arg Subtype.val Eq
@@ -1231,12 +1230,12 @@ def Basis.ofDimEqZero {ι : Type _} [IsEmpty ι] (hV : Module.rank K V = 0) : Ba
 #align basis.of_dim_eq_zero Basis.ofDimEqZero
 
 @[simp]
-theorem Basis.of_dim_eq_zero_apply {ι : Type _} [IsEmpty ι] (hV : Module.rank K V = 0) (i : ι) :
+theorem Basis.ofDimEqZero_apply {ι : Type _} [IsEmpty ι] (hV : Module.rank K V = 0) (i : ι) :
     Basis.ofDimEqZero hV i = 0 :=
   rfl
-#align basis.of_dim_eq_zero_apply Basis.of_dim_eq_zero_apply
+#align basis.of_dim_eq_zero_apply Basis.ofDimEqZero_apply
 
-theorem le_dim_iff_exists_linear_independent {c : Cardinal} :
+theorem le_dim_iff_exists_linearIndependent {c : Cardinal} :
     c ≤ Module.rank K V ↔ ∃ s : Set V, (#s) = c ∧ LinearIndependent K (coe : s → V) :=
   by
   constructor
@@ -1246,20 +1245,20 @@ theorem le_dim_iff_exists_linear_independent {c : Cardinal} :
     rcases h with ⟨s, hst, hsc⟩
     exact ⟨s, hsc, (of_vector_space_index.linear_independent K V).mono hst⟩
   · rintro ⟨s, rfl, si⟩
-    exact cardinal_le_dim_of_linear_independent si
-#align le_dim_iff_exists_linear_independent le_dim_iff_exists_linear_independent
+    exact cardinal_le_dim_of_linearIndependent si
+#align le_dim_iff_exists_linear_independent le_dim_iff_exists_linearIndependent
 
-theorem le_dim_iff_exists_linear_independent_finset {n : ℕ} :
+theorem le_dim_iff_exists_linearIndependent_finset {n : ℕ} :
     ↑n ≤ Module.rank K V ↔
       ∃ s : Finset V, s.card = n ∧ LinearIndependent K (coe : (s : Set V) → V) :=
   by
-  simp only [le_dim_iff_exists_linear_independent, Cardinal.mk_set_eq_nat_iff_finset]
+  simp only [le_dim_iff_exists_linearIndependent, Cardinal.mk_set_eq_nat_iff_finset]
   constructor
   · rintro ⟨s, ⟨t, rfl, rfl⟩, si⟩
     exact ⟨t, rfl, si⟩
   · rintro ⟨s, rfl, si⟩
     exact ⟨s, ⟨s, rfl, rfl⟩, si⟩
-#align le_dim_iff_exists_linear_independent_finset le_dim_iff_exists_linear_independent_finset
+#align le_dim_iff_exists_linear_independent_finset le_dim_iff_exists_linearIndependent_finset
 
 /-- A vector space has dimension at most `1` if and only if there is a
 single vector of which all vectors are multiples. -/
@@ -1334,10 +1333,10 @@ theorem dim_submodule_le_one_iff' (s : Submodule K V) : Module.rank K s ≤ 1 �
       simp [hw]
 #align dim_submodule_le_one_iff' dim_submodule_le_one_iff'
 
-theorem Submodule.rank_le_one_iff_is_principal (W : Submodule K V) :
+theorem Submodule.rank_le_one_iff_isPrincipal (W : Submodule K V) :
     Module.rank K W ≤ 1 ↔ W.IsPrincipal :=
   by
-  simp only [dim_le_one_iff, Submodule.is_principal_iff, le_antisymm_iff, le_span_singleton_iff,
+  simp only [dim_le_one_iff, Submodule.isPrincipal_iff, le_antisymm_iff, le_span_singleton_iff,
     span_singleton_le_iff_mem]
   constructor
   · rintro ⟨⟨m, hm⟩, hm'⟩
@@ -1346,14 +1345,14 @@ theorem Submodule.rank_le_one_iff_is_principal (W : Submodule K V) :
   · rintro ⟨a, ⟨h, ha⟩⟩
     choose f hf using h
     exact ⟨⟨a, ha⟩, fun v => ⟨f v.1 v.2, Subtype.ext (hf v.1 v.2)⟩⟩
-#align submodule.rank_le_one_iff_is_principal Submodule.rank_le_one_iff_is_principal
+#align submodule.rank_le_one_iff_is_principal Submodule.rank_le_one_iff_isPrincipal
 
-theorem Module.rank_le_one_iff_top_is_principal :
+theorem Module.rank_le_one_iff_top_isPrincipal :
     Module.rank K V ≤ 1 ↔ (⊤ : Submodule K V).IsPrincipal := by
-  rw [← Submodule.rank_le_one_iff_is_principal, dim_top]
-#align module.rank_le_one_iff_top_is_principal Module.rank_le_one_iff_top_is_principal
+  rw [← Submodule.rank_le_one_iff_isPrincipal, dim_top]
+#align module.rank_le_one_iff_top_is_principal Module.rank_le_one_iff_top_isPrincipal
 
-theorem le_rank_iff_exists_linear_independent {c : Cardinal} {f : V →ₗ[K] V'} :
+theorem le_rank_iff_exists_linearIndependent {c : Cardinal} {f : V →ₗ[K] V'} :
     c ≤ rank f ↔
       ∃ s : Set V,
         Cardinal.lift.{v'} (#s) = Cardinal.lift.{v} c ∧ LinearIndependent K fun x : s => f x :=
@@ -1361,7 +1360,7 @@ theorem le_rank_iff_exists_linear_independent {c : Cardinal} {f : V →ₗ[K] V'
   rcases f.range_restrict.exists_right_inverse_of_surjective f.range_range_restrict with ⟨g, hg⟩
   have fg : left_inverse f.range_restrict g := LinearMap.congr_fun hg
   refine' ⟨fun h => _, _⟩
-  · rcases le_dim_iff_exists_linear_independent.1 h with ⟨s, rfl, si⟩
+  · rcases le_dim_iff_exists_linearIndependent.1 h with ⟨s, rfl, si⟩
     refine' ⟨g '' s, Cardinal.mk_image_eq_lift _ _ fg.injective, _⟩
     replace fg : ∀ x, f (g x) = x
     · intro x
@@ -1372,22 +1371,22 @@ theorem le_rank_iff_exists_linear_independent {c : Cardinal} {f : V →ₗ[K] V'
   · rintro ⟨s, hsc, si⟩
     have : LinearIndependent K fun x : s => f.range_restrict x :=
       LinearIndependent.of_comp f.range.subtype (by convert si)
-    convert cardinal_le_dim_of_linear_independent this.image
-    rw [← Cardinal.lift_inj, ← hsc, Cardinal.mk_image_eq_of_inj_on_lift]
+    convert cardinal_le_dim_of_linearIndependent this.image
+    rw [← Cardinal.lift_inj, ← hsc, Cardinal.mk_image_eq_of_injOn_lift]
     exact inj_on_iff_injective.2 this.injective
-#align le_rank_iff_exists_linear_independent le_rank_iff_exists_linear_independent
+#align le_rank_iff_exists_linear_independent le_rank_iff_exists_linearIndependent
 
-theorem le_rank_iff_exists_linear_independent_finset {n : ℕ} {f : V →ₗ[K] V'} :
+theorem le_rank_iff_exists_linearIndependent_finset {n : ℕ} {f : V →ₗ[K] V'} :
     ↑n ≤ rank f ↔ ∃ s : Finset V, s.card = n ∧ LinearIndependent K fun x : (s : Set V) => f x :=
   by
-  simp only [le_rank_iff_exists_linear_independent, Cardinal.lift_nat_cast,
-    Cardinal.lift_eq_nat_iff, Cardinal.mk_set_eq_nat_iff_finset]
+  simp only [le_rank_iff_exists_linearIndependent, Cardinal.lift_nat_cast, Cardinal.lift_eq_nat_iff,
+    Cardinal.mk_set_eq_nat_iff_finset]
   constructor
   · rintro ⟨s, ⟨t, rfl, rfl⟩, si⟩
     exact ⟨t, rfl, si⟩
   · rintro ⟨s, rfl, si⟩
     exact ⟨s, ⟨s, rfl, rfl⟩, si⟩
-#align le_rank_iff_exists_linear_independent_finset le_rank_iff_exists_linear_independent_finset
+#align le_rank_iff_exists_linear_independent_finset le_rank_iff_exists_linearIndependent_finset
 
 end DivisionRing
 

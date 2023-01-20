@@ -103,26 +103,26 @@ instance : TopologicalSpace Mˣ :=
   Prod.topologicalSpace.induced (embedProduct M)
 
 @[to_additive]
-theorem inducing_embed_product : Inducing (embedProduct M) :=
+theorem inducing_embedProduct : Inducing (embedProduct M) :=
   ⟨rfl⟩
-#align units.inducing_embed_product Units.inducing_embed_product
+#align units.inducing_embed_product Units.inducing_embedProduct
 #align add_units.inducing_embed_product AddUnits.inducing_embed_product
 
 @[to_additive]
-theorem embedding_embed_product : Embedding (embedProduct M) :=
-  ⟨inducing_embed_product, embedProduct_injective M⟩
-#align units.embedding_embed_product Units.embedding_embed_product
+theorem embedding_embedProduct : Embedding (embedProduct M) :=
+  ⟨inducing_embedProduct, embedProduct_injective M⟩
+#align units.embedding_embed_product Units.embedding_embedProduct
 #align add_units.embedding_embed_product AddUnits.embedding_embed_product
 
 @[to_additive]
-theorem continuous_embed_product : Continuous (embedProduct M) :=
+theorem continuous_embedProduct : Continuous (embedProduct M) :=
   continuous_induced_dom
-#align units.continuous_embed_product Units.continuous_embed_product
+#align units.continuous_embed_product Units.continuous_embedProduct
 #align add_units.continuous_embed_product AddUnits.continuous_embed_product
 
 @[to_additive]
 theorem continuous_coe : Continuous (coe : Mˣ → M) :=
-  (@continuous_embed_product M _ _).fst
+  (@continuous_embedProduct M _ _).fst
 #align units.continuous_coe Units.continuous_coe
 #align add_units.continuous_coe AddUnits.continuous_coe
 

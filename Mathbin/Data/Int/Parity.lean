@@ -65,9 +65,9 @@ theorem even_iff_not_odd : Even n ↔ ¬Odd n := by rw [not_odd_iff, even_iff]
 theorem odd_iff_not_even : Odd n ↔ ¬Even n := by rw [not_even_iff, odd_iff]
 #align int.odd_iff_not_even Int.odd_iff_not_even
 
-theorem is_compl_even_odd : IsCompl { n : ℤ | Even n } { n | Odd n } := by
+theorem isCompl_even_odd : IsCompl { n : ℤ | Even n } { n | Odd n } := by
   simp [← Set.compl_setOf, isCompl_compl]
-#align int.is_compl_even_odd Int.is_compl_even_odd
+#align int.is_compl_even_odd Int.isCompl_even_odd
 
 theorem even_or_odd (n : ℤ) : Even n ∨ Odd n :=
   Or.imp_right odd_iff_not_even.2 <| em <| Even n
@@ -77,14 +77,14 @@ theorem even_or_odd' (n : ℤ) : ∃ k, n = 2 * k ∨ n = 2 * k + 1 := by
   simpa only [← two_mul, exists_or, ← Odd, ← Even] using even_or_odd n
 #align int.even_or_odd' Int.even_or_odd'
 
-theorem even_xor_odd (n : ℤ) : Xor' (Even n) (Odd n) :=
+theorem even_xor'_odd (n : ℤ) : Xor' (Even n) (Odd n) :=
   by
   cases' even_or_odd n with h
   · exact Or.inl ⟨h, even_iff_not_odd.mp h⟩
   · exact Or.inr ⟨h, odd_iff_not_even.mp h⟩
-#align int.even_xor_odd Int.even_xor_odd
+#align int.even_xor_odd Int.even_xor'_odd
 
-theorem even_xor_odd' (n : ℤ) : ∃ k, Xor' (n = 2 * k) (n = 2 * k + 1) :=
+theorem even_xor'_odd' (n : ℤ) : ∃ k, Xor' (n = 2 * k) (n = 2 * k + 1) :=
   by
   rcases even_or_odd n with (⟨k, rfl⟩ | ⟨k, rfl⟩) <;> use k
   ·
@@ -92,8 +92,8 @@ theorem even_xor_odd' (n : ℤ) : ∃ k, Xor' (n = 2 * k) (n = 2 * k + 1) :=
       and_false_iff] using (succ_ne_self (2 * k)).symm
   ·
     simp only [Xor', add_right_eq_self, false_or_iff, eq_self_iff_true, not_true, not_false_iff,
-      one_ne_zero, and_self_iff]
-#align int.even_xor_odd' Int.even_xor_odd'
+      one_neZero, and_self_iff]
+#align int.even_xor_odd' Int.even_xor'_odd'
 
 @[simp]
 theorem two_dvd_ne_zero : ¬2 ∣ n ↔ n % 2 = 1 :=
@@ -207,22 +207,22 @@ theorem odd_coe_nat (n : ℕ) : Odd (n : ℤ) ↔ Odd n := by
 #align int.odd_coe_nat Int.odd_coe_nat
 
 @[simp]
-theorem nat_abs_even : Even n.natAbs ↔ Even n := by
+theorem natAbs_even : Even n.natAbs ↔ Even n := by
   simp [even_iff_two_dvd, dvd_nat_abs, coe_nat_dvd_left.symm]
-#align int.nat_abs_even Int.nat_abs_even
+#align int.nat_abs_even Int.natAbs_even
 
 @[simp]
-theorem nat_abs_odd : Odd n.natAbs ↔ Odd n := by
+theorem natAbs_odd : Odd n.natAbs ↔ Odd n := by
   rw [odd_iff_not_even, Nat.odd_iff_not_even, nat_abs_even]
-#align int.nat_abs_odd Int.nat_abs_odd
+#align int.nat_abs_odd Int.natAbs_odd
 
 alias nat_abs_even ↔ _ _root_.even.nat_abs
-#align even.nat_abs Even.nat_abs
+#align even.nat_abs Even.natAbs
 
 alias nat_abs_odd ↔ _ _root_.odd.nat_abs
-#align odd.nat_abs Odd.nat_abs
+#align odd.nat_abs Odd.natAbs
 
-attribute [protected] Even.nat_abs Odd.nat_abs
+attribute [protected] Even.natAbs Odd.natAbs
 
 theorem four_dvd_add_or_sub_of_odd {a b : ℤ} (ha : Odd a) (hb : Odd b) : 4 ∣ a + b ∨ 4 ∣ a - b :=
   by

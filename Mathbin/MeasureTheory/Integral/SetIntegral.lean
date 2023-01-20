@@ -113,17 +113,17 @@ theorem integral_finset_bUnion {ι : Type _} (t : Finset ι) {s : ι → Set α}
     · rw [Finset.sum_insert hat, IH hs.2 h's.1 hf.2]
     · simp only [disjoint_Union_right]
       exact fun i hi => (h's.2 i hi (ne_of_mem_of_not_mem hi hat).symm).1
-    · exact Finset.measurable_set_bUnion _ hs.2
+    · exact Finset.measurableSet_bUnion _ hs.2
 #align measure_theory.integral_finset_bUnion MeasureTheory.integral_finset_bUnion
 
-theorem integral_fintype_Union {ι : Type _} [Fintype ι] {s : ι → Set α}
+theorem integral_fintype_unionᵢ {ι : Type _} [Fintype ι] {s : ι → Set α}
     (hs : ∀ i, MeasurableSet (s i)) (h's : Pairwise (Disjoint on s))
     (hf : ∀ i, IntegrableOn f (s i) μ) : (∫ x in ⋃ i, s i, f x ∂μ) = ∑ i, ∫ x in s i, f x ∂μ :=
   by
   convert integral_finset_bUnion Finset.univ (fun i hi => hs i) _ fun i _ => hf i
   · simp
   · simp [pairwise_univ, h's]
-#align measure_theory.integral_fintype_Union MeasureTheory.integral_fintype_Union
+#align measure_theory.integral_fintype_Union MeasureTheory.integral_fintype_unionᵢ
 
 theorem integral_empty : (∫ x in ∅, f x ∂μ) = 0 := by
   rw [measure.restrict_empty, integral_zero_measure]
@@ -161,7 +161,7 @@ theorem set_integral_indicator (ht : MeasurableSet t) :
   rw [integral_indicator ht, measure.restrict_restrict ht, Set.inter_comm]
 #align measure_theory.set_integral_indicator MeasureTheory.set_integral_indicator
 
-theorem of_real_set_integral_one_of_measure_ne_top {α : Type _} {m : MeasurableSpace α}
+theorem ofReal_set_integral_one_of_measure_ne_top {α : Type _} {m : MeasurableSpace α}
     {μ : Measure α} {s : Set α} (hs : μ s ≠ ∞) : Ennreal.ofReal (∫ x in s, (1 : ℝ) ∂μ) = μ s :=
   calc
     Ennreal.ofReal (∫ x in s, (1 : ℝ) ∂μ) = Ennreal.ofReal (∫ x in s, ‖(1 : ℝ)‖ ∂μ) := by
@@ -172,12 +172,12 @@ theorem of_real_set_integral_one_of_measure_ne_top {α : Type _} {m : Measurable
       simp only [nnnorm_one, Ennreal.coe_one]
     _ = μ s := set_lintegral_one _
     
-#align measure_theory.of_real_set_integral_one_of_measure_ne_top MeasureTheory.of_real_set_integral_one_of_measure_ne_top
+#align measure_theory.of_real_set_integral_one_of_measure_ne_top MeasureTheory.ofReal_set_integral_one_of_measure_ne_top
 
-theorem of_real_set_integral_one {α : Type _} {m : MeasurableSpace α} (μ : Measure α)
+theorem ofReal_set_integral_one {α : Type _} {m : MeasurableSpace α} (μ : Measure α)
     [IsFiniteMeasure μ] (s : Set α) : Ennreal.ofReal (∫ x in s, (1 : ℝ) ∂μ) = μ s :=
-  of_real_set_integral_one_of_measure_ne_top (measure_ne_top μ s)
-#align measure_theory.of_real_set_integral_one MeasureTheory.of_real_set_integral_one
+  ofReal_set_integral_one_of_measure_ne_top (measure_ne_top μ s)
+#align measure_theory.of_real_set_integral_one MeasureTheory.ofReal_set_integral_one
 
 theorem integral_piecewise [DecidablePred (· ∈ s)] (hs : MeasurableSet s) {f g : α → E}
     (hf : IntegrableOn f s μ) (hg : IntegrableOn g (sᶜ) μ) :
@@ -194,16 +194,16 @@ theorem tendsto_set_integral_of_monotone {ι : Type _} [Countable ι] [Semilatti
   by
   have hfi' : (∫⁻ x in ⋃ n, s n, ‖f x‖₊ ∂μ) < ∞ := hfi.2
   set S := ⋃ i, s i
-  have hSm : MeasurableSet S := MeasurableSet.Union hsm
+  have hSm : MeasurableSet S := MeasurableSet.unionᵢ hsm
   have hsub : ∀ {i}, s i ⊆ S := subset_Union s
   rw [← with_density_apply _ hSm] at hfi'
   set ν := μ.with_density fun x => ‖f x‖₊ with hν
   refine' metric.nhds_basis_closed_ball.tendsto_right_iff.2 fun ε ε0 => _
   lift ε to ℝ≥0 using ε0.le
   have : ∀ᶠ i in at_top, ν (s i) ∈ Icc (ν S - ε) (ν S + ε) :=
-    tendsto_measure_Union h_mono (Ennreal.Icc_mem_nhds hfi'.ne (Ennreal.coe_pos.2 ε0).ne')
+    tendsto_measure_Union h_mono (Ennreal.icc_mem_nhds hfi'.ne (Ennreal.coe_pos.2 ε0).ne')
   refine' this.mono fun i hi => _
-  rw [mem_closed_ball_iff_norm', ← integral_diff (hsm i) hfi (hfi.mono_set hsub) hsub, ← coe_nnnorm,
+  rw [mem_closedBall_iff_norm', ← integral_diff (hsm i) hfi (hfi.mono_set hsub) hsub, ← coe_nnnorm,
     Nnreal.coe_le_coe, ← Ennreal.coe_le_coe]
   refine' (ennnorm_integral_le_lintegral_ennnorm _).trans _
   rw [← with_density_apply _ (hSm.diff (hsm _)), ← hν, measure_diff hsub (hsm _)]
@@ -211,34 +211,34 @@ theorem tendsto_set_integral_of_monotone {ι : Type _} [Countable ι] [Semilatti
     (hi.2.trans_lt <| Ennreal.add_lt_top.2 ⟨hfi', Ennreal.coe_lt_top⟩).Ne]
 #align measure_theory.tendsto_set_integral_of_monotone MeasureTheory.tendsto_set_integral_of_monotone
 
-theorem has_sum_integral_Union_ae {ι : Type _} [Countable ι] {s : ι → Set α} {f : α → E}
+theorem hasSum_integral_unionᵢ_ae {ι : Type _} [Countable ι] {s : ι → Set α} {f : α → E}
     (hm : ∀ i, NullMeasurableSet (s i) μ) (hd : Pairwise (AeDisjoint μ on s))
     (hfi : IntegrableOn f (⋃ i, s i) μ) :
     HasSum (fun n => ∫ a in s n, f a ∂μ) (∫ a in ⋃ n, s n, f a ∂μ) :=
   by
   simp only [integrable_on, measure.restrict_Union_ae hd hm] at hfi⊢
   exact has_sum_integral_measure hfi
-#align measure_theory.has_sum_integral_Union_ae MeasureTheory.has_sum_integral_Union_ae
+#align measure_theory.has_sum_integral_Union_ae MeasureTheory.hasSum_integral_unionᵢ_ae
 
-theorem has_sum_integral_Union {ι : Type _} [Countable ι] {s : ι → Set α} {f : α → E}
+theorem hasSum_integral_unionᵢ {ι : Type _} [Countable ι] {s : ι → Set α} {f : α → E}
     (hm : ∀ i, MeasurableSet (s i)) (hd : Pairwise (Disjoint on s))
     (hfi : IntegrableOn f (⋃ i, s i) μ) :
     HasSum (fun n => ∫ a in s n, f a ∂μ) (∫ a in ⋃ n, s n, f a ∂μ) :=
-  has_sum_integral_Union_ae (fun i => (hm i).NullMeasurableSet) (hd.mono fun i j h => h.AeDisjoint)
+  hasSum_integral_unionᵢ_ae (fun i => (hm i).NullMeasurableSet) (hd.mono fun i j h => h.AeDisjoint)
     hfi
-#align measure_theory.has_sum_integral_Union MeasureTheory.has_sum_integral_Union
+#align measure_theory.has_sum_integral_Union MeasureTheory.hasSum_integral_unionᵢ
 
-theorem integral_Union {ι : Type _} [Countable ι] {s : ι → Set α} {f : α → E}
+theorem integral_unionᵢ {ι : Type _} [Countable ι] {s : ι → Set α} {f : α → E}
     (hm : ∀ i, MeasurableSet (s i)) (hd : Pairwise (Disjoint on s))
     (hfi : IntegrableOn f (⋃ i, s i) μ) : (∫ a in ⋃ n, s n, f a ∂μ) = ∑' n, ∫ a in s n, f a ∂μ :=
-  (HasSum.tsum_eq (has_sum_integral_Union hm hd hfi)).symm
-#align measure_theory.integral_Union MeasureTheory.integral_Union
+  (HasSum.tsum_eq (hasSum_integral_unionᵢ hm hd hfi)).symm
+#align measure_theory.integral_Union MeasureTheory.integral_unionᵢ
 
-theorem integral_Union_ae {ι : Type _} [Countable ι] {s : ι → Set α} {f : α → E}
+theorem integral_unionᵢ_ae {ι : Type _} [Countable ι] {s : ι → Set α} {f : α → E}
     (hm : ∀ i, NullMeasurableSet (s i) μ) (hd : Pairwise (AeDisjoint μ on s))
     (hfi : IntegrableOn f (⋃ i, s i) μ) : (∫ a in ⋃ n, s n, f a ∂μ) = ∑' n, ∫ a in s n, f a ∂μ :=
-  (HasSum.tsum_eq (has_sum_integral_Union_ae hm hd hfi)).symm
-#align measure_theory.integral_Union_ae MeasureTheory.integral_Union_ae
+  (HasSum.tsum_eq (hasSum_integral_unionᵢ_ae hm hd hfi)).symm
+#align measure_theory.integral_Union_ae MeasureTheory.integral_unionᵢ_ae
 
 theorem set_integral_eq_zero_of_forall_eq_zero {f : α → E} (hf : StronglyMeasurable f)
     (ht_eq : ∀ x ∈ t, f x = 0) : (∫ x in t, f x ∂μ) = 0 :=
@@ -276,7 +276,7 @@ theorem set_integral_neg_eq_set_integral_nonpos [LinearOrder E] [OrderClosedTopo
 theorem integral_norm_eq_pos_sub_neg {f : α → ℝ} (hf : StronglyMeasurable f)
     (hfi : Integrable f μ) :
     (∫ x, ‖f x‖ ∂μ) = (∫ x in { x | 0 ≤ f x }, f x ∂μ) - ∫ x in { x | f x ≤ 0 }, f x ∂μ :=
-  have h_meas : MeasurableSet { x | 0 ≤ f x } := strongly_measurable_const.measurable_set_le hf
+  have h_meas : MeasurableSet { x | 0 ≤ f x } := stronglyMeasurable_const.measurable_set_le hf
   calc
     (∫ x, ‖f x‖ ∂μ) = (∫ x in { x | 0 ≤ f x }, ‖f x‖ ∂μ) + ∫ x in { x | 0 ≤ f x }ᶜ, ‖f x‖ ∂μ := by
       rw [← integral_add_compl h_meas hfi.norm]
@@ -321,7 +321,7 @@ theorem integral_indicator_one ⦃s : Set α⦄ (hs : MeasurableSet s) :
   (integral_indicator_const 1 hs).trans ((smul_eq_mul _).trans (mul_one _))
 #align measure_theory.integral_indicator_one MeasureTheory.integral_indicator_one
 
-theorem set_integral_indicator_const_Lp {p : ℝ≥0∞} (hs : MeasurableSet s) (ht : MeasurableSet t)
+theorem set_integral_indicatorConstLp {p : ℝ≥0∞} (hs : MeasurableSet s) (ht : MeasurableSet t)
     (hμt : μ t ≠ ∞) (x : E) :
     (∫ a in s, indicatorConstLp p ht hμt x a ∂μ) = (μ (t ∩ s)).toReal • x :=
   calc
@@ -329,17 +329,17 @@ theorem set_integral_indicator_const_Lp {p : ℝ≥0∞} (hs : MeasurableSet s) 
       rw [set_integral_congr_ae hs (indicator_const_Lp_coe_fn.mono fun x hx hxs => hx)]
     _ = (μ (t ∩ s)).toReal • x := by rw [integral_indicator_const _ ht, measure.restrict_apply ht]
     
-#align measure_theory.set_integral_indicator_const_Lp MeasureTheory.set_integral_indicator_const_Lp
+#align measure_theory.set_integral_indicator_const_Lp MeasureTheory.set_integral_indicatorConstLp
 
-theorem integral_indicator_const_Lp {p : ℝ≥0∞} (ht : MeasurableSet t) (hμt : μ t ≠ ∞) (x : E) :
+theorem integral_indicatorConstLp {p : ℝ≥0∞} (ht : MeasurableSet t) (hμt : μ t ≠ ∞) (x : E) :
     (∫ a, indicatorConstLp p ht hμt x a ∂μ) = (μ t).toReal • x :=
   calc
     (∫ a, indicatorConstLp p ht hμt x a ∂μ) = ∫ a in univ, indicatorConstLp p ht hμt x a ∂μ := by
       rw [integral_univ]
-    _ = (μ (t ∩ univ)).toReal • x := set_integral_indicator_const_Lp MeasurableSet.univ ht hμt x
+    _ = (μ (t ∩ univ)).toReal • x := set_integral_indicatorConstLp MeasurableSet.univ ht hμt x
     _ = (μ t).toReal • x := by rw [inter_univ]
     
-#align measure_theory.integral_indicator_const_Lp MeasureTheory.integral_indicator_const_Lp
+#align measure_theory.integral_indicator_const_Lp MeasureTheory.integral_indicatorConstLp
 
 theorem set_integral_map {β} [MeasurableSpace β] {g : α → β} {f : β → E} {s : Set β}
     (hs : MeasurableSet s) (hf : AeStronglyMeasurable f (Measure.map g μ)) (hg : AeMeasurable g μ) :
@@ -398,7 +398,7 @@ theorem norm_set_integral_le_of_norm_le_const_ae' {C : ℝ} (hs : μ s < ∞)
     rw [← h2 h3]
     exact h1 h3
   have B : MeasurableSet { x | ‖(hfm.mk f) x‖ ≤ C } :=
-    hfm.strongly_measurable_mk.norm.measurable measurable_set_Iic
+    hfm.strongly_measurable_mk.norm.measurable measurableSet_iic
   filter_upwards [hfm.ae_eq_mk, (ae_restrict_iff B).2 A] with _ h1 _
   rwa [h1]
 #align measure_theory.norm_set_integral_le_of_norm_le_const_ae' MeasureTheory.norm_set_integral_le_of_norm_le_const_ae'
@@ -454,7 +454,7 @@ theorem set_integral_gt_gt {R : ℝ} {f : α → ℝ} (hR : 0 ≤ R) (hfm : Meas
   · change ∀ᵐ x ∂μ.restrict _, _
     rw [ae_restrict_iff]
     · exact eventually_of_forall fun x hx => sub_nonneg.2 <| le_of_lt hx
-    · exact measurable_set_le measurable_zero (hfm.sub measurable_const)
+    · exact measurableSet_le measurable_zero (hfm.sub measurable_const)
   · exact integrable.sub hfint this
 #align measure_theory.set_integral_gt_gt MeasureTheory.set_integral_gt_gt
 
@@ -464,25 +464,25 @@ theorem set_integral_trim {α} {m m0 : MeasurableSpace α} {μ : Measure α} (hm
   rwa [integral_trim hm hf_meas, restrict_trim hm μ]
 #align measure_theory.set_integral_trim MeasureTheory.set_integral_trim
 
-theorem integral_Icc_eq_integral_Ioc' [PartialOrder α] {f : α → E} {a b : α} (ha : μ {a} = 0) :
+theorem integral_icc_eq_integral_Ioc' [PartialOrder α] {f : α → E} {a b : α} (ha : μ {a} = 0) :
     (∫ t in Icc a b, f t ∂μ) = ∫ t in Ioc a b, f t ∂μ :=
-  set_integral_congr_set_ae (Ioc_ae_eq_Icc' ha).symm
-#align measure_theory.integral_Icc_eq_integral_Ioc' MeasureTheory.integral_Icc_eq_integral_Ioc'
+  set_integral_congr_set_ae (ioc_ae_eq_Icc' ha).symm
+#align measure_theory.integral_Icc_eq_integral_Ioc' MeasureTheory.integral_icc_eq_integral_Ioc'
 
-theorem integral_Ioc_eq_integral_Ioo' [PartialOrder α] {f : α → E} {a b : α} (hb : μ {b} = 0) :
+theorem integral_ioc_eq_integral_Ioo' [PartialOrder α] {f : α → E} {a b : α} (hb : μ {b} = 0) :
     (∫ t in Ioc a b, f t ∂μ) = ∫ t in Ioo a b, f t ∂μ :=
-  set_integral_congr_set_ae (Ioo_ae_eq_Ioc' hb).symm
-#align measure_theory.integral_Ioc_eq_integral_Ioo' MeasureTheory.integral_Ioc_eq_integral_Ioo'
+  set_integral_congr_set_ae (ioo_ae_eq_Ioc' hb).symm
+#align measure_theory.integral_Ioc_eq_integral_Ioo' MeasureTheory.integral_ioc_eq_integral_Ioo'
 
-theorem integral_Icc_eq_integral_Ioc [PartialOrder α] {f : α → E} {a b : α} [HasNoAtoms μ] :
+theorem integral_icc_eq_integral_ioc [PartialOrder α] {f : α → E} {a b : α} [HasNoAtoms μ] :
     (∫ t in Icc a b, f t ∂μ) = ∫ t in Ioc a b, f t ∂μ :=
   integral_Icc_eq_integral_Ioc' <| measure_singleton a
-#align measure_theory.integral_Icc_eq_integral_Ioc MeasureTheory.integral_Icc_eq_integral_Ioc
+#align measure_theory.integral_Icc_eq_integral_Ioc MeasureTheory.integral_icc_eq_integral_ioc
 
-theorem integral_Ioc_eq_integral_Ioo [PartialOrder α] {f : α → E} {a b : α} [HasNoAtoms μ] :
+theorem integral_ioc_eq_integral_ioo [PartialOrder α] {f : α → E} {a b : α} [HasNoAtoms μ] :
     (∫ t in Ioc a b, f t ∂μ) = ∫ t in Ioo a b, f t ∂μ :=
   integral_Ioc_eq_integral_Ioo' <| measure_singleton b
-#align measure_theory.integral_Ioc_eq_integral_Ioo MeasureTheory.integral_Ioc_eq_integral_Ioo
+#align measure_theory.integral_Ioc_eq_integral_Ioo MeasureTheory.integral_ioc_eq_integral_ioo
 
 end NormedAddCommGroup
 
@@ -614,10 +614,10 @@ theorem Antitone.tendsto_set_integral (hsm : ∀ i, MeasurableSet (s i)) (h_anti
   have h_int_eq : (fun i => ∫ a in s i, f a ∂μ) = fun i => ∫ a, (s i).indicator f a ∂μ :=
     funext fun i => (integral_indicator (hsm i)).symm
   rw [h_int_eq]
-  rw [← integral_indicator (MeasurableSet.Inter hsm)]
+  rw [← integral_indicator (MeasurableSet.interᵢ hsm)]
   refine' tendsto_integral_of_dominated_convergence bound _ _ _ _
   · intro n
-    rw [ae_strongly_measurable_indicator_iff (hsm n)]
+    rw [aeStronglyMeasurable_indicator_iff (hsm n)]
     exact (integrable_on.mono_set hfi (h_anti (zero_le n))).1
   · rw [integrable_indicator_iff (hsm 0)]
     exact hfi.norm
@@ -643,7 +643,7 @@ variable [NormedAddCommGroup E] {𝕜 : Type _} [NormedField 𝕜] [NormedAddCom
 
 /-- For `f : Lp E p μ`, we can define an element of `Lp E p (μ.restrict s)` by
 `(Lp.mem_ℒp f).restrict s).to_Lp f`. This map is additive. -/
-theorem Lp_to_Lp_restrict_add (f g : lp E p μ) (s : Set α) :
+theorem lp_toLp_restrict_add (f g : lp E p μ) (s : Set α) :
     ((lp.memℒp (f + g)).restrict s).toLp ⇑(f + g) =
       ((lp.memℒp f).restrict s).toLp f + ((lp.memℒp g).restrict s).toLp g :=
   by
@@ -657,11 +657,11 @@ theorem Lp_to_Lp_restrict_add (f g : lp E p μ) (s : Set α) :
   refine' (mem_ℒp.coe_fn_to_Lp ((Lp.mem_ℒp g).restrict s)).mp _
   refine' (mem_ℒp.coe_fn_to_Lp ((Lp.mem_ℒp (f + g)).restrict s)).mono fun x hx1 hx2 hx3 hx4 hx5 => _
   rw [hx4, hx1, Pi.add_apply, hx2, hx3, hx5, Pi.add_apply]
-#align measure_theory.Lp_to_Lp_restrict_add MeasureTheory.Lp_to_Lp_restrict_add
+#align measure_theory.Lp_to_Lp_restrict_add MeasureTheory.lp_toLp_restrict_add
 
 /-- For `f : Lp E p μ`, we can define an element of `Lp E p (μ.restrict s)` by
 `(Lp.mem_ℒp f).restrict s).to_Lp f`. This map commutes with scalar multiplication. -/
-theorem Lp_to_Lp_restrict_smul (c : 𝕜) (f : lp F p μ) (s : Set α) :
+theorem lp_toLp_restrict_smul (c : 𝕜) (f : lp F p μ) (s : Set α) :
     ((lp.memℒp (c • f)).restrict s).toLp ⇑(c • f) = c • ((lp.memℒp f).restrict s).toLp f :=
   by
   ext1
@@ -671,18 +671,18 @@ theorem Lp_to_Lp_restrict_smul (c : 𝕜) (f : lp F p μ) (s : Set α) :
   refine'
     (Lp.coe_fn_smul c (mem_ℒp.to_Lp f ((Lp.mem_ℒp f).restrict s))).mono fun x hx1 hx2 hx3 hx4 => _
   rw [hx2, hx1, Pi.smul_apply, hx3, hx4, Pi.smul_apply]
-#align measure_theory.Lp_to_Lp_restrict_smul MeasureTheory.Lp_to_Lp_restrict_smul
+#align measure_theory.Lp_to_Lp_restrict_smul MeasureTheory.lp_toLp_restrict_smul
 
 /-- For `f : Lp E p μ`, we can define an element of `Lp E p (μ.restrict s)` by
 `(Lp.mem_ℒp f).restrict s).to_Lp f`. This map is non-expansive. -/
-theorem norm_Lp_to_Lp_restrict_le (s : Set α) (f : lp E p μ) :
+theorem norm_lp_toLp_restrict_le (s : Set α) (f : lp E p μ) :
     ‖((lp.memℒp f).restrict s).toLp f‖ ≤ ‖f‖ :=
   by
-  rw [Lp.norm_def, Lp.norm_def, Ennreal.to_real_le_to_real (Lp.snorm_ne_top _) (Lp.snorm_ne_top _)]
+  rw [Lp.norm_def, Lp.norm_def, Ennreal.toReal_le_toReal (Lp.snorm_ne_top _) (Lp.snorm_ne_top _)]
   refine' (le_of_eq _).trans (snorm_mono_measure _ measure.restrict_le_self)
   · exact s
   exact snorm_congr_ae (mem_ℒp.coe_fn_to_Lp _)
-#align measure_theory.norm_Lp_to_Lp_restrict_le MeasureTheory.norm_Lp_to_Lp_restrict_le
+#align measure_theory.norm_Lp_to_Lp_restrict_le MeasureTheory.norm_lp_toLp_restrict_le
 
 variable (α F 𝕜)
 
@@ -691,8 +691,8 @@ variable (α F 𝕜)
 def lpToLpRestrictClm (μ : Measure α) (p : ℝ≥0∞) [hp : Fact (1 ≤ p)] (s : Set α) :
     lp F p μ →L[𝕜] lp F p (μ.restrict s) :=
   @LinearMap.mkContinuous 𝕜 𝕜 (lp F p μ) (lp F p (μ.restrict s)) _ _ _ _ _ _ (RingHom.id 𝕜)
-    ⟨fun f => Memℒp.toLp f ((lp.memℒp f).restrict s), fun f g => Lp_to_Lp_restrict_add f g s,
-      fun c f => Lp_to_Lp_restrict_smul c f s⟩
+    ⟨fun f => Memℒp.toLp f ((lp.memℒp f).restrict s), fun f g => lp_toLp_restrict_add f g s,
+      fun c f => lp_toLp_restrict_smul c f s⟩
     1
     (by
       intro f
@@ -704,10 +704,10 @@ variable {α F 𝕜}
 
 variable (𝕜)
 
-theorem Lp_to_Lp_restrict_clm_coe_fn [hp : Fact (1 ≤ p)] (s : Set α) (f : lp F p μ) :
+theorem lpToLpRestrictClm_coeFn [hp : Fact (1 ≤ p)] (s : Set α) (f : lp F p μ) :
     lpToLpRestrictClm α F 𝕜 μ p s f =ᵐ[μ.restrict s] f :=
-  Memℒp.coe_fn_to_Lp ((lp.memℒp f).restrict s)
-#align measure_theory.Lp_to_Lp_restrict_clm_coe_fn MeasureTheory.Lp_to_Lp_restrict_clm_coe_fn
+  Memℒp.coeFn_toLp ((lp.memℒp f).restrict s)
+#align measure_theory.Lp_to_Lp_restrict_clm_coe_fn MeasureTheory.lpToLpRestrictClm_coeFn
 
 variable {𝕜}
 
@@ -742,7 +742,7 @@ along `li`. Since `μ (s i)` is an `ℝ≥0∞` number, we use `(μ (s i)).to_re
 Often there is a good formula for `(μ (s i)).to_real`, so the formalization can take an optional
 argument `m` with this formula and a proof `of `(λ i, (μ (s i)).to_real) =ᶠ[li] m`. Without these
 arguments, `m i = (μ (s i)).to_real` is used in the output. -/
-theorem Filter.Tendsto.integral_sub_linear_is_o_ae [NormedSpace ℝ E] [CompleteSpace E]
+theorem Filter.Tendsto.integral_sub_linear_isO_ae [NormedSpace ℝ E] [CompleteSpace E]
     {μ : Measure α} {l : Filter α} [l.IsMeasurablyGenerated] {f : α → E} {b : E}
     (h : Tendsto f (l ⊓ μ.ae) (𝓝 b)) (hfm : StronglyMeasurableAtFilter f l μ)
     (hμ : μ.FiniteAtFilter l) {s : ι → Set α} {li : Filter ι} (hs : Tendsto s li l.smallSets)
@@ -760,9 +760,9 @@ theorem Filter.Tendsto.integral_sub_linear_is_o_ae [NormedSpace ℝ E] [Complete
   simp only [mem_closed_ball, dist_eq_norm]
   intro s hμs h_integrable hfm h_norm
   rw [← set_integral_const, ← integral_sub h_integrable (integrable_on_const.2 <| Or.inr hμs),
-    Real.norm_eq_abs, abs_of_nonneg Ennreal.to_real_nonneg]
+    Real.norm_eq_abs, abs_of_nonneg Ennreal.toReal_nonneg]
   exact norm_set_integral_le_of_norm_le_const_ae' hμs h_norm (hfm.sub ae_strongly_measurable_const)
-#align filter.tendsto.integral_sub_linear_is_o_ae Filter.Tendsto.integral_sub_linear_is_o_ae
+#align filter.tendsto.integral_sub_linear_is_o_ae Filter.Tendsto.integral_sub_linear_isO_ae
 
 /-- Fundamental theorem of calculus for set integrals, `nhds_within` version: if `μ` is a locally
 finite measure and `f` is an almost everywhere measurable function that is continuous at a point `a`
@@ -773,7 +773,7 @@ number, we use `(μ (s i)).to_real` in the actual statement.
 Often there is a good formula for `(μ (s i)).to_real`, so the formalization can take an optional
 argument `m` with this formula and a proof `of `(λ i, (μ (s i)).to_real) =ᶠ[li] m`. Without these
 arguments, `m i = (μ (s i)).to_real` is used in the output. -/
-theorem ContinuousWithinAt.integral_sub_linear_is_o_ae [TopologicalSpace α] [OpensMeasurableSpace α]
+theorem ContinuousWithinAt.integral_sub_linear_isO_ae [TopologicalSpace α] [OpensMeasurableSpace α]
     [NormedSpace ℝ E] [CompleteSpace E] {μ : Measure α} [IsLocallyFiniteMeasure μ] {a : α}
     {t : Set α} {f : α → E} (ha : ContinuousWithinAt f t a) (ht : MeasurableSet t)
     (hfm : StronglyMeasurableAtFilter f (𝓝[t] a) μ) {s : ι → Set α} {li : Filter ι}
@@ -782,7 +782,7 @@ theorem ContinuousWithinAt.integral_sub_linear_is_o_ae [TopologicalSpace α] [Op
     (fun i => (∫ x in s i, f x ∂μ) - m i • f a) =o[li] m :=
   haveI : (𝓝[t] a).IsMeasurablyGenerated := ht.nhds_within_is_measurably_generated _
   (ha.mono_left inf_le_left).integral_sub_linear_is_o_ae hfm (μ.finite_at_nhds_within a t) hs m hsμ
-#align continuous_within_at.integral_sub_linear_is_o_ae ContinuousWithinAt.integral_sub_linear_is_o_ae
+#align continuous_within_at.integral_sub_linear_is_o_ae ContinuousWithinAt.integral_sub_linear_isO_ae
 
 /-- Fundamental theorem of calculus for set integrals, `nhds` version: if `μ` is a locally finite
 measure and `f` is an almost everywhere measurable function that is continuous at a point `a`, then
@@ -793,14 +793,14 @@ the actual statement.
 Often there is a good formula for `(μ (s i)).to_real`, so the formalization can take an optional
 argument `m` with this formula and a proof `of `(λ i, (μ (s i)).to_real) =ᶠ[li] m`. Without these
 arguments, `m i = (μ (s i)).to_real` is used in the output. -/
-theorem ContinuousAt.integral_sub_linear_is_o_ae [TopologicalSpace α] [OpensMeasurableSpace α]
+theorem ContinuousAt.integral_sub_linear_isO_ae [TopologicalSpace α] [OpensMeasurableSpace α]
     [NormedSpace ℝ E] [CompleteSpace E] {μ : Measure α} [IsLocallyFiniteMeasure μ] {a : α}
     {f : α → E} (ha : ContinuousAt f a) (hfm : StronglyMeasurableAtFilter f (𝓝 a) μ) {s : ι → Set α}
     {li : Filter ι} (hs : Tendsto s li (𝓝 a).smallSets) (m : ι → ℝ := fun i => (μ (s i)).toReal)
     (hsμ : (fun i => (μ (s i)).toReal) =ᶠ[li] m := by rfl) :
     (fun i => (∫ x in s i, f x ∂μ) - m i • f a) =o[li] m :=
   (ha.mono_left inf_le_left).integral_sub_linear_is_o_ae hfm (μ.finiteAtNhds a) hs m hsμ
-#align continuous_at.integral_sub_linear_is_o_ae ContinuousAt.integral_sub_linear_is_o_ae
+#align continuous_at.integral_sub_linear_is_o_ae ContinuousAt.integral_sub_linear_isO_ae
 
 /-- Fundamental theorem of calculus for set integrals, `nhds_within` version: if `μ` is a locally
 finite measure, `f` is continuous on a measurable set `t`, and `a ∈ t`, then `∫ x in (s i), f x ∂μ =
@@ -810,16 +810,16 @@ Since `μ (s i)` is an `ℝ≥0∞` number, we use `(μ (s i)).to_real` in the a
 Often there is a good formula for `(μ (s i)).to_real`, so the formalization can take an optional
 argument `m` with this formula and a proof `of `(λ i, (μ (s i)).to_real) =ᶠ[li] m`. Without these
 arguments, `m i = (μ (s i)).to_real` is used in the output. -/
-theorem ContinuousOn.integral_sub_linear_is_o_ae [TopologicalSpace α] [OpensMeasurableSpace α]
+theorem ContinuousOn.integral_sub_linear_isO_ae [TopologicalSpace α] [OpensMeasurableSpace α]
     [NormedSpace ℝ E] [CompleteSpace E] [SecondCountableTopologyEither α E] {μ : Measure α}
     [IsLocallyFiniteMeasure μ] {a : α} {t : Set α} {f : α → E} (hft : ContinuousOn f t) (ha : a ∈ t)
     (ht : MeasurableSet t) {s : ι → Set α} {li : Filter ι} (hs : Tendsto s li (𝓝[t] a).smallSets)
     (m : ι → ℝ := fun i => (μ (s i)).toReal)
     (hsμ : (fun i => (μ (s i)).toReal) =ᶠ[li] m := by rfl) :
     (fun i => (∫ x in s i, f x ∂μ) - m i • f a) =o[li] m :=
-  (hft a ha).integral_sub_linear_is_o_ae ht ⟨t, self_mem_nhds_within, hft.AeStronglyMeasurable ht⟩
-    hs m hsμ
-#align continuous_on.integral_sub_linear_is_o_ae ContinuousOn.integral_sub_linear_is_o_ae
+  (hft a ha).integral_sub_linear_is_o_ae ht ⟨t, self_mem_nhdsWithin, hft.AeStronglyMeasurable ht⟩ hs
+    m hsμ
+#align continuous_on.integral_sub_linear_is_o_ae ContinuousOn.integral_sub_linear_isO_ae
 
 section
 
@@ -842,15 +842,15 @@ namespace ContinuousLinearMap
 
 variable [CompleteSpace F] [NormedSpace ℝ F]
 
-theorem integral_comp_Lp (L : E →L[𝕜] F) (φ : lp E p μ) :
+theorem integral_compLp (L : E →L[𝕜] F) (φ : lp E p μ) :
     (∫ a, (L.compLp φ) a ∂μ) = ∫ a, L (φ a) ∂μ :=
-  integral_congr_ae <| coe_fn_comp_Lp _ _
-#align continuous_linear_map.integral_comp_Lp ContinuousLinearMap.integral_comp_Lp
+  integral_congr_ae <| coeFn_compLp _ _
+#align continuous_linear_map.integral_comp_Lp ContinuousLinearMap.integral_compLp
 
-theorem set_integral_comp_Lp (L : E →L[𝕜] F) (φ : lp E p μ) {s : Set α} (hs : MeasurableSet s) :
+theorem set_integral_compLp (L : E →L[𝕜] F) (φ : lp E p μ) {s : Set α} (hs : MeasurableSet s) :
     (∫ a in s, (L.compLp φ) a ∂μ) = ∫ a in s, L (φ a) ∂μ :=
   set_integral_congr_ae hs ((L.coe_fn_comp_Lp φ).mono fun x hx hx2 => hx)
-#align continuous_linear_map.set_integral_comp_Lp ContinuousLinearMap.set_integral_comp_Lp
+#align continuous_linear_map.set_integral_comp_Lp ContinuousLinearMap.set_integral_compLp
 
 theorem continuous_integral_comp_L1 (L : E →L[𝕜] F) :
     Continuous fun φ : α →₁[μ] E => ∫ a : α, L (φ a) ∂μ :=
@@ -874,7 +874,7 @@ theorem integral_comp_comm (L : E →L[𝕜] F) {φ : α → E} (φ_int : Integr
   · intro f g H f_int g_int hf hg
     simp [L.map_add, integral_add f_int g_int,
       integral_add (L.integrable_comp f_int) (L.integrable_comp g_int), hf, hg]
-  · exact is_closed_eq L.continuous_integral_comp_L1 (L.continuous.comp continuous_integral)
+  · exact isClosed_eq L.continuous_integral_comp_L1 (L.continuous.comp continuous_integral)
   · intro f g hfg f_int hf
     convert hf using 1 <;> clear hf
     · exact integral_congr_ae (hfg.fun_comp L).symm
@@ -1013,7 +1013,7 @@ theorem integral_eq_zero_of_forall_integral_inner_eq_zero (f : α → E') (hf : 
 
 end Inner
 
-theorem integral_with_density_eq_integral_smul {f : α → ℝ≥0} (f_meas : Measurable f) (g : α → E) :
+theorem integral_withDensity_eq_integral_smul {f : α → ℝ≥0} (f_meas : Measurable f) (g : α → E) :
     (∫ a, g a ∂μ.withDensity fun x => f x) = ∫ a, f a • g a ∂μ :=
   by
   by_cases hg : integrable g (μ.with_density fun x => f x); swap
@@ -1024,7 +1024,7 @@ theorem integral_with_density_eq_integral_smul {f : α → ℝ≥0} (f_meas : Me
     rw [integral_indicator s_meas]
     simp_rw [← indicator_smul_apply, integral_indicator s_meas]
     simp only [s_meas, integral_const, measure.restrict_apply', univ_inter, with_density_apply]
-    rw [lintegral_coe_eq_integral, Ennreal.to_real_of_real, ← integral_smul_const]
+    rw [lintegral_coe_eq_integral, Ennreal.toReal_ofReal, ← integral_smul_const]
     · rfl
     · exact integral_nonneg fun x => Nnreal.coe_nonneg _
     · refine' ⟨f_meas.coe_nnreal_real.AeMeasurable.AeStronglyMeasurable, _⟩
@@ -1052,7 +1052,7 @@ theorem integral_with_density_eq_integral_smul {f : α → ℝ≥0} (f_meas : Me
       ext1 u
       simp only [Function.comp_apply, with_density_smul_li_apply]
       exact integral_congr_ae (mem_ℒ1_smul_of_L1_with_density f_meas u).coe_fn_to_Lp.symm
-    exact is_closed_eq C1 C2
+    exact isClosed_eq C1 C2
   · intro u v huv u_int hu
     rw [← integral_congr_ae huv, hu]
     apply integral_congr_ae
@@ -1061,9 +1061,9 @@ theorem integral_with_density_eq_integral_smul {f : α → ℝ≥0} (f_meas : Me
     · simp only [h'x, zero_smul]
     · rw [hx _]
       simpa only [Ne.def, Ennreal.coe_eq_zero] using h'x
-#align integral_with_density_eq_integral_smul integral_with_density_eq_integral_smul
+#align integral_with_density_eq_integral_smul integral_withDensity_eq_integral_smul
 
-theorem integral_with_density_eq_integral_smul₀ {f : α → ℝ≥0} (hf : AeMeasurable f μ) (g : α → E) :
+theorem integral_withDensity_eq_integral_smul₀ {f : α → ℝ≥0} (hf : AeMeasurable f μ) (g : α → E) :
     (∫ a, g a ∂μ.withDensity fun x => f x) = ∫ a, f a • g a ∂μ :=
   by
   let f' := hf.mk _
@@ -1074,25 +1074,25 @@ theorem integral_with_density_eq_integral_smul₀ {f : α → ℝ≥0} (hf : AeM
       apply with_density_congr_ae
       filter_upwards [hf.ae_eq_mk] with x hx
       rw [hx]
-    _ = ∫ a, f' a • g a ∂μ := integral_with_density_eq_integral_smul hf.measurable_mk _
+    _ = ∫ a, f' a • g a ∂μ := integral_withDensity_eq_integral_smul hf.measurable_mk _
     _ = ∫ a, f a • g a ∂μ := by
       apply integral_congr_ae
       filter_upwards [hf.ae_eq_mk] with x hx
       rw [hx]
     
-#align integral_with_density_eq_integral_smul₀ integral_with_density_eq_integral_smul₀
+#align integral_with_density_eq_integral_smul₀ integral_withDensity_eq_integral_smul₀
 
-theorem set_integral_with_density_eq_set_integral_smul {f : α → ℝ≥0} (f_meas : Measurable f)
+theorem set_integral_withDensity_eq_set_integral_smul {f : α → ℝ≥0} (f_meas : Measurable f)
     (g : α → E) {s : Set α} (hs : MeasurableSet s) :
     (∫ a in s, g a ∂μ.withDensity fun x => f x) = ∫ a in s, f a • g a ∂μ := by
-  rw [restrict_with_density hs, integral_with_density_eq_integral_smul f_meas]
-#align set_integral_with_density_eq_set_integral_smul set_integral_with_density_eq_set_integral_smul
+  rw [restrict_with_density hs, integral_withDensity_eq_integral_smul f_meas]
+#align set_integral_with_density_eq_set_integral_smul set_integral_withDensity_eq_set_integral_smul
 
-theorem set_integral_with_density_eq_set_integral_smul₀ {f : α → ℝ≥0} {s : Set α}
+theorem set_integral_withDensity_eq_set_integral_smul₀ {f : α → ℝ≥0} {s : Set α}
     (hf : AeMeasurable f (μ.restrict s)) (g : α → E) (hs : MeasurableSet s) :
     (∫ a in s, g a ∂μ.withDensity fun x => f x) = ∫ a in s, f a • g a ∂μ := by
-  rw [restrict_with_density hs, integral_with_density_eq_integral_smul₀ hf]
-#align set_integral_with_density_eq_set_integral_smul₀ set_integral_with_density_eq_set_integral_smul₀
+  rw [restrict_with_density hs, integral_withDensity_eq_integral_smul₀ hf]
+#align set_integral_with_density_eq_set_integral_smul₀ set_integral_withDensity_eq_set_integral_smul₀
 
 end
 
@@ -1100,24 +1100,24 @@ section thickenedIndicator
 
 variable [PseudoEmetricSpace α]
 
-theorem measure_le_lintegral_thickened_indicator_aux (μ : Measure α) {E : Set α}
+theorem measure_le_lintegral_thickenedIndicatorAux (μ : Measure α) {E : Set α}
     (E_mble : MeasurableSet E) (δ : ℝ) : μ E ≤ ∫⁻ a, (thickenedIndicatorAux δ E a : ℝ≥0∞) ∂μ :=
   by
   convert_to lintegral μ (E.indicator fun _ => (1 : ℝ≥0∞)) ≤ lintegral μ (thickenedIndicatorAux δ E)
   · rw [lintegral_indicator _ E_mble]
     simp only [lintegral_one, measure.restrict_apply, MeasurableSet.univ, univ_inter]
   · apply lintegral_mono
-    apply indicator_le_thickened_indicator_aux
-#align measure_le_lintegral_thickened_indicator_aux measure_le_lintegral_thickened_indicator_aux
+    apply indicator_le_thickenedIndicatorAux
+#align measure_le_lintegral_thickened_indicator_aux measure_le_lintegral_thickenedIndicatorAux
 
-theorem measure_le_lintegral_thickened_indicator (μ : Measure α) {E : Set α}
+theorem measure_le_lintegral_thickenedIndicator (μ : Measure α) {E : Set α}
     (E_mble : MeasurableSet E) {δ : ℝ} (δ_pos : 0 < δ) :
     μ E ≤ ∫⁻ a, (thickenedIndicator δ_pos E a : ℝ≥0∞) ∂μ :=
   by
-  convert measure_le_lintegral_thickened_indicator_aux μ E_mble δ
+  convert measure_le_lintegral_thickenedIndicatorAux μ E_mble δ
   dsimp
-  simp only [thickened_indicator_aux_lt_top.ne, Ennreal.coe_to_nnreal, Ne.def, not_false_iff]
-#align measure_le_lintegral_thickened_indicator measure_le_lintegral_thickened_indicator
+  simp only [thickened_indicator_aux_lt_top.ne, Ennreal.coe_toNnreal, Ne.def, not_false_iff]
+#align measure_le_lintegral_thickened_indicator measure_le_lintegral_thickenedIndicator
 
 end thickenedIndicator
 

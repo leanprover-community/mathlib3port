@@ -278,7 +278,7 @@ theorem le_floor_iff' (hn : n ≠ 0) : n ≤ ⌊a⌋₊ ↔ (n : α) ≤ a :=
 #print Nat.one_le_floor_iff /-
 @[simp]
 theorem one_le_floor_iff (x : α) : 1 ≤ ⌊x⌋₊ ↔ 1 ≤ x := by
-  exact_mod_cast @le_floor_iff' α _ _ x 1 one_ne_zero
+  exact_mod_cast @le_floor_iff' α _ _ x 1 one_neZero
 #align nat.one_le_floor_iff Nat.one_le_floor_iff
 -/
 

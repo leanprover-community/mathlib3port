@@ -198,10 +198,10 @@ def domRestrict₂ (f : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P) (q : Subm
     LinearMap.ext fun _ => by simp only [f.map_smulₛₗ, dom_restrict_apply, smul_apply]
 #align linear_map.dom_restrict₂ LinearMap.domRestrict₂
 
-theorem dom_restrict₂_apply (f : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P) (q : Submodule S N) (x : M) (y : q) :
+theorem domRestrict₂_apply (f : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P) (q : Submodule S N) (x : M) (y : q) :
     f.domRestrict₂ q x y = f x y :=
   rfl
-#align linear_map.dom_restrict₂_apply LinearMap.dom_restrict₂_apply
+#align linear_map.dom_restrict₂_apply LinearMap.domRestrict₂_apply
 
 /-- Restricting a bilinear map in both components -/
 def domRestrict₁₂ (f : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P) (p : Submodule R M) (q : Submodule S N) :
@@ -209,10 +209,10 @@ def domRestrict₁₂ (f : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P) (p : S
   (f.domRestrict p).domRestrict₂ q
 #align linear_map.dom_restrict₁₂ LinearMap.domRestrict₁₂
 
-theorem dom_restrict₁₂_apply (f : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P) (p : Submodule R M) (q : Submodule S N)
+theorem domRestrict₁₂_apply (f : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P) (p : Submodule R M) (q : Submodule S N)
     (x : p) (y : q) : f.domRestrict₁₂ p q x y = f x y :=
   rfl
-#align linear_map.dom_restrict₁₂_apply LinearMap.dom_restrict₁₂_apply
+#align linear_map.dom_restrict₁₂_apply LinearMap.domRestrict₁₂_apply
 
 end Semiring
 

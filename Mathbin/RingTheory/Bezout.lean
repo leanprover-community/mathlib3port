@@ -43,7 +43,7 @@ instance spanPairIsPrincipal [IsBezout R] (x y : R) : (Ideal.span {x, y} : Ideal
   by classical exact is_principal_of_fg (Ideal.span {x, y}) ⟨{x, y}, by simp⟩
 #align is_bezout.span_pair_is_principal IsBezout.spanPairIsPrincipal
 
-theorem iff_span_pair_is_principal :
+theorem iff_span_pair_isPrincipal :
     IsBezout R ↔ ∀ x y : R, (Ideal.span {x, y} : Ideal R).IsPrincipal := by
   classical
     constructor
@@ -56,7 +56,7 @@ theorem iff_span_pair_is_principal :
       · rintro _ _ ⟨⟨x, rfl⟩⟩ ⟨⟨y, rfl⟩⟩
         rw [← Submodule.span_insert]
         exact H _ _
-#align is_bezout.iff_span_pair_is_principal IsBezout.iff_span_pair_is_principal
+#align is_bezout.iff_span_pair_is_principal IsBezout.iff_span_pair_isPrincipal
 
 section Gcd
 
@@ -133,7 +133,7 @@ instance (priority := 100) ofIsPrincipalIdealRing [IsPrincipalIdealRing R] : IsB
      (Command.declModifiers [] [] [] [] [] [])
      (Command.theorem
       "theorem"
-      (Command.declId `tfae [])
+      (Command.declId `tFAE [])
       (Command.declSig
        [(Term.instBinder "[" [] (Term.app `IsBezout [`R]) "]")
         (Term.instBinder "[" [] (Term.app `IsDomain [`R]) "]")]
@@ -214,9 +214,9 @@ instance (priority := 100) ofIsPrincipalIdealRing [IsPrincipalIdealRing R] : IsB
                   []
                   (Tactic.rwRuleSeq
                    "["
-                   [(Tactic.rwRule [] `is_noetherian_ring_iff)
+                   [(Tactic.rwRule [] `isNoetherianRing_iff)
                     ","
-                    (Tactic.rwRule [] `is_noetherian_iff_fg_well_founded)]
+                    (Tactic.rwRule [] `isNoetherian_iff_fg_wellFounded)]
                    "]")
                   [])
                  []
@@ -407,9 +407,9 @@ instance (priority := 100) ofIsPrincipalIdealRing [IsPrincipalIdealRing R] : IsB
                  []
                  (Tactic.rwRuleSeq
                   "["
-                  [(Tactic.rwRule [] `is_noetherian_ring_iff)
+                  [(Tactic.rwRule [] `isNoetherianRing_iff)
                    ","
-                   (Tactic.rwRule [] `is_noetherian_iff_fg_well_founded)]
+                   (Tactic.rwRule [] `isNoetherian_iff_fg_wellFounded)]
                   "]")
                  [])
                 []
@@ -592,9 +592,9 @@ instance (priority := 100) ofIsPrincipalIdealRing [IsPrincipalIdealRing R] : IsB
              []
              (Tactic.rwRuleSeq
               "["
-              [(Tactic.rwRule [] `is_noetherian_ring_iff)
+              [(Tactic.rwRule [] `isNoetherianRing_iff)
                ","
-               (Tactic.rwRule [] `is_noetherian_iff_fg_well_founded)]
+               (Tactic.rwRule [] `isNoetherian_iff_fg_wellFounded)]
               "]")
              [])
             []
@@ -738,9 +738,9 @@ instance (priority := 100) ofIsPrincipalIdealRing [IsPrincipalIdealRing R] : IsB
          []
          (Tactic.rwRuleSeq
           "["
-          [(Tactic.rwRule [] `is_noetherian_ring_iff)
+          [(Tactic.rwRule [] `isNoetherianRing_iff)
            ","
-           (Tactic.rwRule [] `is_noetherian_iff_fg_well_founded)]
+           (Tactic.rwRule [] `isNoetherian_iff_fg_wellFounded)]
           "]")
          [])
         []
@@ -1392,17 +1392,17 @@ instance (priority := 100) ofIsPrincipalIdealRing [IsPrincipalIdealRing R] : IsB
        []
        (Tactic.rwRuleSeq
         "["
-        [(Tactic.rwRule [] `is_noetherian_ring_iff)
+        [(Tactic.rwRule [] `isNoetherianRing_iff)
          ","
-         (Tactic.rwRule [] `is_noetherian_iff_fg_well_founded)]
+         (Tactic.rwRule [] `isNoetherian_iff_fg_wellFounded)]
         "]")
        [])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `is_noetherian_iff_fg_well_founded
+      `isNoetherian_iff_fg_wellFounded
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
      [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `is_noetherian_ring_iff
+      `isNoetherianRing_iff
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
      [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
@@ -1434,7 +1434,7 @@ instance (priority := 100) ofIsPrincipalIdealRing [IsPrincipalIdealRing R] : IsB
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 theorem
-  tfae
+  tFAE
   [ IsBezout R ] [ IsDomain R ]
     :
       TFAE
@@ -1453,7 +1453,7 @@ theorem
           tfae_have 4 → 1
           ·
             rintro ⟨ h ⟩
-              rw [ is_noetherian_ring_iff , is_noetherian_iff_fg_well_founded ]
+              rw [ isNoetherianRing_iff , isNoetherian_iff_fg_wellFounded ]
               apply RelEmbedding.wellFounded _ h
               have
                 : ∀ I : { J : Ideal R // J . Fg } , ∃ x : R , ( I : Ideal R ) = Ideal.span { x }
@@ -1472,7 +1472,7 @@ theorem
                           by dsimp rw [ ← Ideal.span_singleton_lt_span_singleton , ← hf , ← hf ] rfl
                   }
           tfae_finish
-#align is_bezout.tfae IsBezout.tfae
+#align is_bezout.tfae IsBezout.tFAE
 
 end IsBezout
 

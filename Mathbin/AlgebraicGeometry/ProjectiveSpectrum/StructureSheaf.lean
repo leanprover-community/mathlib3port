@@ -237,9 +237,9 @@ open TopCat.Presheaf ProjectiveSpectrum.StructureSheaf Opens
 def ProjCat.structureSheaf : Sheaf CommRingCat (ProjectiveSpectrum.top 𝒜) :=
   ⟨structurePresheafInCommRing 𝒜,
     (-- We check the sheaf condition under `forget CommRing`.
-          is_sheaf_iff_is_sheaf_comp
+          isSheaf_iff_isSheaf_comp
           _ _).mpr
-      (is_sheaf_of_iso (structurePresheafCompForget 𝒜).symm (structureSheafInType 𝒜).cond)⟩
+      (isSheaf_of_iso (structurePresheafCompForget 𝒜).symm (structureSheafInType 𝒜).cond)⟩
 #align algebraic_geometry.projective_spectrum.Proj.structure_sheaf AlgebraicGeometry.ProjectiveSpectrum.ProjCat.structureSheaf
 
 end ProjectiveSpectrum
@@ -290,35 +290,35 @@ def stalkToFiberRingHom (x : ProjectiveSpectrum.top 𝒜) :
 #align algebraic_geometry.stalk_to_fiber_ring_hom AlgebraicGeometry.stalkToFiberRingHom
 
 @[simp]
-theorem germ_comp_stalk_to_fiber_ring_hom (U : Opens (ProjectiveSpectrum.top 𝒜)) (x : U) :
+theorem germ_comp_stalkToFiberRingHom (U : Opens (ProjectiveSpectrum.top 𝒜)) (x : U) :
     (ProjCat.structureSheaf 𝒜).Presheaf.germ x ≫ stalkToFiberRingHom 𝒜 x =
       openToLocalization 𝒜 U x x.2 :=
   Limits.colimit.ι_desc _ _
-#align algebraic_geometry.germ_comp_stalk_to_fiber_ring_hom AlgebraicGeometry.germ_comp_stalk_to_fiber_ring_hom
+#align algebraic_geometry.germ_comp_stalk_to_fiber_ring_hom AlgebraicGeometry.germ_comp_stalkToFiberRingHom
 
 @[simp]
-theorem stalk_to_fiber_ring_hom_germ' (U : Opens (ProjectiveSpectrum.top 𝒜))
+theorem stalkToFiberRingHom_germ' (U : Opens (ProjectiveSpectrum.top 𝒜))
     (x : ProjectiveSpectrum.top 𝒜) (hx : x ∈ U) (s : (ProjCat.structureSheaf 𝒜).1.obj (op U)) :
     stalkToFiberRingHom 𝒜 x ((ProjCat.structureSheaf 𝒜).Presheaf.germ ⟨x, hx⟩ s) =
       (s.1 ⟨x, hx⟩ : _) :=
-  RingHom.ext_iff.1 (germ_comp_stalk_to_fiber_ring_hom 𝒜 U ⟨x, hx⟩ : _) s
-#align algebraic_geometry.stalk_to_fiber_ring_hom_germ' AlgebraicGeometry.stalk_to_fiber_ring_hom_germ'
+  RingHom.ext_iff.1 (germ_comp_stalkToFiberRingHom 𝒜 U ⟨x, hx⟩ : _) s
+#align algebraic_geometry.stalk_to_fiber_ring_hom_germ' AlgebraicGeometry.stalkToFiberRingHom_germ'
 
 @[simp]
-theorem stalk_to_fiber_ring_hom_germ (U : Opens (ProjectiveSpectrum.top 𝒜)) (x : U)
+theorem stalkToFiberRingHom_germ (U : Opens (ProjectiveSpectrum.top 𝒜)) (x : U)
     (s : (ProjCat.structureSheaf 𝒜).1.obj (op U)) :
     stalkToFiberRingHom 𝒜 x ((ProjCat.structureSheaf 𝒜).Presheaf.germ x s) = s.1 x :=
   by
   cases x
   exact stalk_to_fiber_ring_hom_germ' 𝒜 U _ _ _
-#align algebraic_geometry.stalk_to_fiber_ring_hom_germ AlgebraicGeometry.stalk_to_fiber_ring_hom_germ
+#align algebraic_geometry.stalk_to_fiber_ring_hom_germ AlgebraicGeometry.stalkToFiberRingHom_germ
 
-theorem HomogeneousLocalization.mem_basic_open (x : ProjectiveSpectrum.top 𝒜) (f : at x) :
+theorem HomogeneousLocalization.mem_basicOpen (x : ProjectiveSpectrum.top 𝒜) (f : at x) :
     x ∈ ProjectiveSpectrum.basicOpen 𝒜 f.denom :=
   by
-  rw [ProjectiveSpectrum.mem_basic_open]
+  rw [ProjectiveSpectrum.mem_basicOpen]
   exact f.denom_mem
-#align algebraic_geometry.homogeneous_localization.mem_basic_open AlgebraicGeometry.HomogeneousLocalization.mem_basic_open
+#align algebraic_geometry.homogeneous_localization.mem_basic_open AlgebraicGeometry.HomogeneousLocalization.mem_basicOpen
 
 variable (𝒜)
 
@@ -339,7 +339,7 @@ stalk at `x` obtained by `section_in_basic_open`. This is the inverse of `stalk_
 def homogeneousLocalizationToStalk (x : ProjectiveSpectrum.top 𝒜) :
     (at x) → (ProjCat.structureSheaf 𝒜).Presheaf.stalk x := fun f =>
   (ProjCat.structureSheaf 𝒜).Presheaf.germ
-    (⟨x, HomogeneousLocalization.mem_basic_open _ x f⟩ : ProjectiveSpectrum.basicOpen _ f.denom)
+    (⟨x, HomogeneousLocalization.mem_basicOpen _ x f⟩ : ProjectiveSpectrum.basicOpen _ f.denom)
     (sectionInBasicOpen _ x f)
 #align algebraic_geometry.homogeneous_localization_to_stalk AlgebraicGeometry.homogeneousLocalizationToStalk
 
@@ -374,13 +374,13 @@ def ProjCat.stalkIso' (x : ProjectiveSpectrum.top 𝒜) :
           (Localization.mk a1
                 ⟨b1,
                   show b1 ∉ y.asHomogeneousIdeal by
-                    rw [← ProjectiveSpectrum.mem_basic_open] <;>
+                    rw [← ProjectiveSpectrum.mem_basicOpen] <;>
                       exact le_of_hom (opens.inf_le_left _ _ ≫ opens.inf_le_left _ _) hy⟩ :
               Localization.AtPrime y.1.toIdeal) =
             Localization.mk a2
               ⟨b2,
                 show b2 ∉ y.asHomogeneousIdeal by
-                  rw [← ProjectiveSpectrum.mem_basic_open] <;>
+                  rw [← ProjectiveSpectrum.mem_basicOpen] <;>
                     exact le_of_hom (opens.inf_le_left _ _ ≫ opens.inf_le_right _ _) hy⟩ :=
         by
         intro y hy
@@ -388,7 +388,7 @@ def ProjCat.stalkIso' (x : ProjectiveSpectrum.top 𝒜) :
         exact
           ⟨⟨c,
               show c ∉ y.as_homogeneous_ideal by
-                rw [← ProjectiveSpectrum.mem_basic_open] <;>
+                rw [← ProjectiveSpectrum.mem_basicOpen] <;>
                   exact le_of_hom (opens.inf_le_right _ _) hy⟩,
             eq3⟩
       refine'
@@ -435,7 +435,7 @@ def ProjCat.stalkIso' (x : ProjectiveSpectrum.top 𝒜) :
 def ProjCat.toLocallyRingedSpace : LocallyRingedSpaceCat :=
   { ProjCat.toSheafedSpace 𝒜 with
     LocalRing := fun x =>
-      @RingEquiv.local_ring _ (show LocalRing (at x) from inferInstance) _
+      @RingEquiv.localRing _ (show LocalRing (at x) from inferInstance) _
         (ProjCat.stalkIso' 𝒜 x).symm }
 #align algebraic_geometry.Proj.to_LocallyRingedSpace AlgebraicGeometry.ProjCat.toLocallyRingedSpace
 

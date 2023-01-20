@@ -178,7 +178,7 @@ theorem multiplicity_factorial_le_div_pred {p : ℕ} (hp : p.Prime) (n : ℕ) :
     multiplicity p n ! ≤ (n / (p - 1) : ℕ) :=
   by
   rw [hp.multiplicity_factorial (lt_succ_self _), PartEnat.coe_le_coe]
-  exact Nat.geom_sum_Ico_le hp.two_le _ _
+  exact Nat.geom_sum_ico_le hp.two_le _ _
 #align nat.prime.multiplicity_factorial_le_div_pred Nat.Prime.multiplicity_factorial_le_div_pred
 
 theorem multiplicity_choose_aux {p n b k : ℕ} (hp : p.Prime) (hkn : k ≤ n) :

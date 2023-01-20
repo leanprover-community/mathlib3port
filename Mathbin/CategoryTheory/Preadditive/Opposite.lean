@@ -111,11 +111,11 @@ variable {D : Type _} [Category D] [Preadditive D]
 instance Functor.op_additive (F : C ⥤ D) [F.Additive] : F.op.Additive where
 #align category_theory.functor.op_additive CategoryTheory.Functor.op_additive
 
-instance Functor.right_op_additive (F : Cᵒᵖ ⥤ D) [F.Additive] : F.rightOp.Additive where
-#align category_theory.functor.right_op_additive CategoryTheory.Functor.right_op_additive
+instance Functor.rightOp_additive (F : Cᵒᵖ ⥤ D) [F.Additive] : F.rightOp.Additive where
+#align category_theory.functor.right_op_additive CategoryTheory.Functor.rightOp_additive
 
-instance Functor.left_op_additive (F : C ⥤ Dᵒᵖ) [F.Additive] : F.leftOp.Additive where
-#align category_theory.functor.left_op_additive CategoryTheory.Functor.left_op_additive
+instance Functor.leftOp_additive (F : C ⥤ Dᵒᵖ) [F.Additive] : F.leftOp.Additive where
+#align category_theory.functor.left_op_additive CategoryTheory.Functor.leftOp_additive
 
 instance Functor.unop_additive (F : Cᵒᵖ ⥤ Dᵒᵖ) [F.Additive] : F.unop.Additive where
 #align category_theory.functor.unop_additive CategoryTheory.Functor.unop_additive

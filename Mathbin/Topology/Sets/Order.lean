@@ -71,10 +71,10 @@ instance : HasInf (ClopenUpperSet α) :=
   ⟨fun s t => ⟨s.toClopens ⊓ t.toClopens, s.upper.inter t.upper⟩⟩
 
 instance : Top (ClopenUpperSet α) :=
-  ⟨⟨⊤, is_upper_set_univ⟩⟩
+  ⟨⟨⊤, isUpperSet_univ⟩⟩
 
 instance : Bot (ClopenUpperSet α) :=
-  ⟨⟨⊥, is_upper_set_empty⟩⟩
+  ⟨⟨⊥, isUpperSet_empty⟩⟩
 
 instance : Lattice (ClopenUpperSet α) :=
   SetLike.coe_injective.Lattice _ (fun _ _ => rfl) fun _ _ => rfl

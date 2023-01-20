@@ -227,11 +227,11 @@ theorem xa_pow_four (i : Zmod (2 * n)) : xa i ^ 4 = 1 :=
 /-- If `0 < n`, then `xa i` has order 4.
 -/
 @[simp]
-theorem order_of_xa [NeZero n] (i : Zmod (2 * n)) : orderOf (xa i) = 4 :=
+theorem orderOf_xa [NeZero n] (i : Zmod (2 * n)) : orderOf (xa i) = 4 :=
   by
   change _ = 2 ^ 2
   haveI : Fact (Nat.Prime 2) := Fact.mk Nat.prime_two
-  apply order_of_eq_prime_pow
+  apply orderOf_eq_prime_pow
   · intro h
     simp only [pow_one, xa_sq] at h
     injection h with h'
@@ -241,47 +241,47 @@ theorem order_of_xa [NeZero n] (i : Zmod (2 * n)) : orderOf (xa i) = 4 :=
       Nat.div_self (NeZero.pos n)] at h'
     norm_num at h'
   · norm_num
-#align quaternion_group.order_of_xa QuaternionGroup.order_of_xa
+#align quaternion_group.order_of_xa QuaternionGroup.orderOf_xa
 
 /-- In the special case `n = 1`, `quaternion 1` is a cyclic group (of order `4`). -/
-theorem quaternion_group_one_is_cyclic : IsCyclic (QuaternionGroup 1) :=
+theorem quaternionGroup_one_isCyclic : IsCyclic (QuaternionGroup 1) :=
   by
-  apply is_cyclic_of_order_of_eq_card
+  apply isCyclic_of_orderOf_eq_card
   rw [card, mul_one]
   exact order_of_xa 0
-#align quaternion_group.quaternion_group_one_is_cyclic QuaternionGroup.quaternion_group_one_is_cyclic
+#align quaternion_group.quaternion_group_one_is_cyclic QuaternionGroup.quaternionGroup_one_isCyclic
 
 /-- If `0 < n`, then `a 1` has order `2 * n`.
 -/
 @[simp]
-theorem order_of_a_one : orderOf (a 1 : QuaternionGroup n) = 2 * n :=
+theorem orderOf_a_one : orderOf (a 1 : QuaternionGroup n) = 2 * n :=
   by
   cases' eq_zero_or_neZero n with hn hn
   · subst hn
-    simp_rw [mul_zero, order_of_eq_zero_iff']
+    simp_rw [mul_zero, orderOf_eq_zero_iff']
     intro n h
     rw [one_def, a_one_pow]
     apply mt a.inj
-    haveI : CharZero (Zmod (2 * 0)) := Zmod.char_zero
+    haveI : CharZero (Zmod (2 * 0)) := Zmod.charZero
     simpa using h.ne'
   apply
     (Nat.le_of_dvd (NeZero.pos _)
-          (order_of_dvd_of_pow_eq_one (@a_one_pow_n n))).lt_or_eq.resolve_left
+          (orderOf_dvd_of_pow_eq_one (@a_one_pow_n n))).lt_or_eq.resolve_left
   intro h
-  have h1 : (a 1 : QuaternionGroup n) ^ orderOf (a 1) = 1 := pow_order_of_eq_one _
+  have h1 : (a 1 : QuaternionGroup n) ^ orderOf (a 1) = 1 := pow_orderOf_eq_one _
   rw [a_one_pow] at h1
   injection h1 with h2
   rw [← Zmod.val_eq_zero, Zmod.val_nat_cast, Nat.mod_eq_of_lt h] at h2
-  exact absurd h2.symm (order_of_pos _).Ne
-#align quaternion_group.order_of_a_one QuaternionGroup.order_of_a_one
+  exact absurd h2.symm (orderOf_pos _).Ne
+#align quaternion_group.order_of_a_one QuaternionGroup.orderOf_a_one
 
 /-- If `0 < n`, then `a i` has order `(2 * n) / gcd (2 * n) i`.
 -/
-theorem order_of_a [NeZero n] (i : Zmod (2 * n)) : orderOf (a i) = 2 * n / Nat.gcd (2 * n) i.val :=
+theorem orderOf_a [NeZero n] (i : Zmod (2 * n)) : orderOf (a i) = 2 * n / Nat.gcd (2 * n) i.val :=
   by
   conv_lhs => rw [← Zmod.nat_cast_zmod_val i]
-  rw [← a_one_pow, order_of_pow, order_of_a_one]
-#align quaternion_group.order_of_a QuaternionGroup.order_of_a
+  rw [← a_one_pow, orderOf_pow, order_of_a_one]
+#align quaternion_group.order_of_a QuaternionGroup.orderOf_a
 
 theorem exponent : Monoid.exponent (QuaternionGroup n) = 2 * lcm n 2 :=
   by
@@ -294,10 +294,10 @@ theorem exponent : Monoid.exponent (QuaternionGroup n) = 2 * lcm n 2 :=
   apply Nat.dvd_antisymm
   · apply Monoid.exponent_dvd_of_forall_pow_eq_one
     rintro (m | m)
-    · rw [← order_of_dvd_iff_pow_eq_one, order_of_a]
+    · rw [← orderOf_dvd_iff_pow_eq_one, order_of_a]
       refine' Nat.dvd_trans ⟨gcd (2 * n) m.val, _⟩ (dvd_lcm_left (2 * n) 4)
       exact (Nat.div_mul_cancel (Nat.gcd_dvd_left (2 * n) m.val)).symm
-    · rw [← order_of_dvd_iff_pow_eq_one, order_of_xa]
+    · rw [← orderOf_dvd_iff_pow_eq_one, order_of_xa]
       exact dvd_lcm_right (2 * n) 4
   · apply lcm_dvd
     · convert Monoid.order_dvd_exponent (a 1)

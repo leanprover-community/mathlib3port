@@ -31,43 +31,43 @@ variable {x y : ℂ}
 
 namespace Complex
 
-theorem same_ray_iff : SameRay ℝ x y ↔ x = 0 ∨ y = 0 ∨ x.arg = y.arg :=
+theorem sameRay_iff : SameRay ℝ x y ↔ x = 0 ∨ y = 0 ∨ x.arg = y.arg :=
   by
   rcases eq_or_ne x 0 with (rfl | hx)
   · simp
   rcases eq_or_ne y 0 with (rfl | hy)
   · simp
-  simp only [hx, hy, false_or_iff, same_ray_iff_norm_smul_eq, arg_eq_arg_iff hx hy]
+  simp only [hx, hy, false_or_iff, sameRay_iff_norm_smul_eq, arg_eq_arg_iff hx hy]
   field_simp [hx, hy]
   rw [mul_comm, eq_comm]
-#align complex.same_ray_iff Complex.same_ray_iff
+#align complex.same_ray_iff Complex.sameRay_iff
 
-theorem same_ray_iff_arg_div_eq_zero : SameRay ℝ x y ↔ arg (x / y) = 0 :=
+theorem sameRay_iff_arg_div_eq_zero : SameRay ℝ x y ↔ arg (x / y) = 0 :=
   by
-  rw [← Real.Angle.to_real_zero, ← arg_coe_angle_eq_iff_eq_to_real, same_ray_iff]
+  rw [← Real.Angle.toReal_zero, ← arg_coe_angle_eq_iff_eq_to_real, same_ray_iff]
   by_cases hx : x = 0; · simp [hx]
   by_cases hy : y = 0; · simp [hy]
   simp [hx, hy, arg_div_coe_angle, sub_eq_zero]
-#align complex.same_ray_iff_arg_div_eq_zero Complex.same_ray_iff_arg_div_eq_zero
+#align complex.same_ray_iff_arg_div_eq_zero Complex.sameRay_iff_arg_div_eq_zero
 
 theorem abs_add_eq_iff : (x + y).abs = x.abs + y.abs ↔ x = 0 ∨ y = 0 ∨ x.arg = y.arg :=
-  same_ray_iff_norm_add.symm.trans same_ray_iff
+  sameRay_iff_norm_add.symm.trans sameRay_iff
 #align complex.abs_add_eq_iff Complex.abs_add_eq_iff
 
 theorem abs_sub_eq_iff : (x - y).abs = |x.abs - y.abs| ↔ x = 0 ∨ y = 0 ∨ x.arg = y.arg :=
-  same_ray_iff_norm_sub.symm.trans same_ray_iff
+  sameRay_iff_norm_sub.symm.trans sameRay_iff
 #align complex.abs_sub_eq_iff Complex.abs_sub_eq_iff
 
-theorem same_ray_of_arg_eq (h : x.arg = y.arg) : SameRay ℝ x y :=
-  same_ray_iff.mpr <| Or.inr <| Or.inr h
-#align complex.same_ray_of_arg_eq Complex.same_ray_of_arg_eq
+theorem sameRay_of_arg_eq (h : x.arg = y.arg) : SameRay ℝ x y :=
+  sameRay_iff.mpr <| Or.inr <| Or.inr h
+#align complex.same_ray_of_arg_eq Complex.sameRay_of_arg_eq
 
 theorem abs_add_eq (h : x.arg = y.arg) : (x + y).abs = x.abs + y.abs :=
-  (same_ray_of_arg_eq h).norm_add
+  (sameRay_of_arg_eq h).norm_add
 #align complex.abs_add_eq Complex.abs_add_eq
 
 theorem abs_sub_eq (h : x.arg = y.arg) : (x - y).abs = ‖x.abs - y.abs‖ :=
-  (same_ray_of_arg_eq h).norm_sub
+  (sameRay_of_arg_eq h).norm_sub
 #align complex.abs_sub_eq Complex.abs_sub_eq
 
 end Complex

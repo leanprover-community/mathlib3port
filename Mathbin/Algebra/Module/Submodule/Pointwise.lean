@@ -69,9 +69,9 @@ theorem coe_set_neg (S : Submodule R M) : ↑(-S) = -(S : Set M) :=
 #align submodule.coe_set_neg Submodule.coe_set_neg
 
 @[simp]
-theorem neg_to_add_submonoid (S : Submodule R M) : (-S).toAddSubmonoid = -S.toAddSubmonoid :=
+theorem neg_toAddSubmonoid (S : Submodule R M) : (-S).toAddSubmonoid = -S.toAddSubmonoid :=
   rfl
-#align submodule.neg_to_add_submonoid Submodule.neg_to_add_submonoid
+#align submodule.neg_to_add_submonoid Submodule.neg_toAddSubmonoid
 
 @[simp]
 theorem mem_neg {g : M} {S : Submodule R M} : g ∈ -S ↔ -g ∈ S :=
@@ -135,14 +135,14 @@ theorem neg_top : -(⊤ : Submodule R M) = ⊤ :=
 #align submodule.neg_top Submodule.neg_top
 
 @[simp]
-theorem neg_infi {ι : Sort _} (S : ι → Submodule R M) : (-⨅ i, S i) = ⨅ i, -S i :=
+theorem neg_infᵢ {ι : Sort _} (S : ι → Submodule R M) : (-⨅ i, S i) = ⨅ i, -S i :=
   (negOrderIso : Submodule R M ≃o Submodule R M).map_infi _
-#align submodule.neg_infi Submodule.neg_infi
+#align submodule.neg_infi Submodule.neg_infᵢ
 
 @[simp]
-theorem neg_supr {ι : Sort _} (S : ι → Submodule R M) : (-⨆ i, S i) = ⨆ i, -S i :=
+theorem neg_supᵢ {ι : Sort _} (S : ι → Submodule R M) : (-⨆ i, S i) = ⨆ i, -S i :=
   (negOrderIso : Submodule R M ≃o Submodule R M).map_supr _
-#align submodule.neg_supr Submodule.neg_supr
+#align submodule.neg_supr Submodule.neg_supᵢ
 
 end Semiring
 
@@ -216,17 +216,17 @@ theorem coe_pointwise_smul (a : α) (S : Submodule R M) : ↑(a • S) = a • (
 #align submodule.coe_pointwise_smul Submodule.coe_pointwise_smul
 
 @[simp]
-theorem pointwise_smul_to_add_submonoid (a : α) (S : Submodule R M) :
+theorem pointwise_smul_toAddSubmonoid (a : α) (S : Submodule R M) :
     (a • S).toAddSubmonoid = a • S.toAddSubmonoid :=
   rfl
-#align submodule.pointwise_smul_to_add_submonoid Submodule.pointwise_smul_to_add_submonoid
+#align submodule.pointwise_smul_to_add_submonoid Submodule.pointwise_smul_toAddSubmonoid
 
 @[simp]
-theorem pointwise_smul_to_add_subgroup {R M : Type _} [Ring R] [AddCommGroup M]
-    [DistribMulAction α M] [Module R M] [SMulCommClass α R M] (a : α) (S : Submodule R M) :
+theorem pointwise_smul_toAddSubgroup {R M : Type _} [Ring R] [AddCommGroup M] [DistribMulAction α M]
+    [Module R M] [SMulCommClass α R M] (a : α) (S : Submodule R M) :
     (a • S).toAddSubgroup = a • S.toAddSubgroup :=
   rfl
-#align submodule.pointwise_smul_to_add_subgroup Submodule.pointwise_smul_to_add_subgroup
+#align submodule.pointwise_smul_to_add_subgroup Submodule.pointwise_smul_toAddSubgroup
 
 theorem smul_mem_pointwise_smul (m : M) (a : α) (S : Submodule R M) : m ∈ S → a • m ∈ a • S :=
   (Set.smul_mem_smul_set : _ → _ ∈ a • (S : Set M))

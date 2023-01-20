@@ -65,6 +65,7 @@ instance OrderedCommGroup.to_covariantClass_left_le (α : Type u) [OrderedCommGr
     CovariantClass α α (· * ·) (· ≤ ·)
     where elim a b c bc := OrderedCommGroup.mul_le_mul_left b c bc a
 #align ordered_comm_group.to_covariant_class_left_le OrderedCommGroup.to_covariantClass_left_le
+#align ordered_add_comm_group.to_covariant_class_left_le OrderedAddCommGroup.to_covariantClass_left_le
 
 #print OrderedCommGroup.toOrderedCancelCommMonoid /-
 -- See note [lower instance priority]
@@ -91,6 +92,7 @@ instance OrderedCommGroup.to_contravariantClass_left_le (α : Type u) [OrderedCo
     ContravariantClass α α (· * ·) (· ≤ ·)
     where elim a b c bc := by simpa using mul_le_mul_left' bc a⁻¹
 #align ordered_comm_group.to_contravariant_class_left_le OrderedCommGroup.to_contravariantClass_left_le
+#align ordered_add_comm_group.to_contravariant_class_left_le OrderedAddCommGroup.to_contravariantClass_left_le
 
 /- warning: ordered_comm_group.to_contravariant_class_right_le -> OrderedCommGroup.to_contravariantClass_right_le is a dubious translation:
 lean 3 declaration is
@@ -104,6 +106,7 @@ instance OrderedCommGroup.to_contravariantClass_right_le (α : Type u) [OrderedC
     ContravariantClass α α (swap (· * ·)) (· ≤ ·)
     where elim a b c bc := by simpa using mul_le_mul_right' bc a⁻¹
 #align ordered_comm_group.to_contravariant_class_right_le OrderedCommGroup.to_contravariantClass_right_le
+#align ordered_add_comm_group.to_contravariant_class_right_le OrderedAddCommGroup.to_contravariantClass_right_le
 
 section Group
 
@@ -2032,6 +2035,7 @@ instance (priority := 100) LinearOrderedCommGroup.to_noMaxOrder [Nontrivial α] 
     obtain ⟨y, hy⟩ : ∃ a : α, 1 < a := exists_one_lt'
     exact fun a => ⟨a * y, lt_mul_of_one_lt_right' a hy⟩⟩
 #align linear_ordered_comm_group.to_no_max_order LinearOrderedCommGroup.to_noMaxOrder
+#align linear_ordered_add_comm_group.to_no_max_order LinearOrderedAddCommGroup.to_noMaxOrder
 -/
 
 #print LinearOrderedCommGroup.to_noMinOrder /-
@@ -2042,6 +2046,7 @@ instance (priority := 100) LinearOrderedCommGroup.to_noMinOrder [Nontrivial α] 
     obtain ⟨y, hy⟩ : ∃ a : α, 1 < a := exists_one_lt'
     exact fun a => ⟨a / y, (div_lt_self_iff a).mpr hy⟩⟩
 #align linear_ordered_comm_group.to_no_min_order LinearOrderedCommGroup.to_noMinOrder
+#align linear_ordered_add_comm_group.to_no_min_order LinearOrderedAddCommGroup.to_noMinOrder
 -/
 
 #print LinearOrderedCommGroup.toLinearOrderedCancelCommMonoid /-

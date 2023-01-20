@@ -254,12 +254,12 @@ def unionUpTo (i : Ordinal.{u}) : Set α :=
   ⋃ j : { j // j < i }, ball (p.c (p.index j)) (p.R (p.index j))
 #align besicovitch.tau_package.Union_up_to Besicovitch.TauPackage.unionUpTo
 
-theorem monotone_Union_up_to : Monotone p.unionUpTo :=
+theorem monotone_unionUpTo : Monotone p.unionUpTo :=
   by
   intro i j hij
   simp only [Union_up_to]
   exact Union_mono' fun r => ⟨⟨r, r.2.trans_le hij⟩, subset.rfl⟩
-#align besicovitch.tau_package.monotone_Union_up_to Besicovitch.TauPackage.monotone_Union_up_to
+#align besicovitch.tau_package.monotone_Union_up_to Besicovitch.TauPackage.monotone_unionUpTo
 
 /-- Supremum of the radii of balls whose centers are not yet covered at step `i`. -/
 def r (i : Ordinal.{u}) : ℝ :=
@@ -315,7 +315,7 @@ theorem last_step_nonempty :
 #align besicovitch.tau_package.last_step_nonempty Besicovitch.TauPackage.last_step_nonempty
 
 /-- Every point is covered by chosen balls, before `p.last_step`. -/
-theorem mem_Union_up_to_last_step (x : β) : p.c x ∈ p.unionUpTo p.lastStep :=
+theorem mem_unionUpTo_lastStep (x : β) : p.c x ∈ p.unionUpTo p.lastStep :=
   by
   have A : ∀ z : β, p.c z ∈ p.Union_up_to p.last_step ∨ p.τ * p.r z < p.R p.last_step :=
     by
@@ -343,7 +343,7 @@ theorem mem_Union_up_to_last_step (x : β) : p.c x ∈ p.unionUpTo p.lastStep :=
   · rw [← div_eq_inv_mul] at hy2
     have := (div_le_iff' (_root_.zero_lt_one.trans p.one_lt_tau)).1 hy2.le
     exact lt_irrefl _ (Hy.trans_le this)
-#align besicovitch.tau_package.mem_Union_up_to_last_step Besicovitch.TauPackage.mem_Union_up_to_last_step
+#align besicovitch.tau_package.mem_Union_up_to_last_step Besicovitch.TauPackage.mem_unionUpTo_lastStep
 
 /-- If there are no configurations of satellites with `N+1` points, one never uses more than `N`
 distinct families in the Besicovitch inductive construction. -/
@@ -387,7 +387,7 @@ theorem color_lt {i : Ordinal.{u}} (hi : i < p.lastStep) {N : ℕ}
     intro k hk
     rw [← Inf_eq_N] at hk
     have : k ∈ A := by
-      simpa only [true_and_iff, mem_univ, not_not, mem_diff] using Nat.not_mem_of_lt_Inf hk
+      simpa only [true_and_iff, mem_univ, not_not, mem_diff] using Nat.not_mem_of_lt_infₛ hk
     simp at this
     simpa only [exists_prop, mem_Union, mem_singleton_iff, mem_closed_ball, Subtype.exists,
       Subtype.coe_mk]
@@ -622,7 +622,7 @@ theorem exist_finset_disjoint_balls_large_measure (μ : Measure α) [IsFiniteMea
     exact this.mono ball_subset_interior_closed_ball
   let v : Fin N → Set α := fun i => ⋃ (x : s) (hx : x ∈ u i), closed_ball x (r x)
   have : ∀ i, MeasurableSet (v i) := fun i =>
-    MeasurableSet.bUnion (u_count i) fun b hb => measurable_set_closed_ball
+    MeasurableSet.bUnion (u_count i) fun b hb => measurableSet_closedBall
   have A : s = ⋃ i : Fin N, s ∩ v i :=
     by
     refine' subset.antisymm _ (Union_subset fun i => inter_subset_left _ _)
@@ -663,7 +663,7 @@ theorem exist_finset_disjoint_balls_large_measure (μ : Measure α) [IsFiniteMea
     rw [this, measure_bUnion (u_count i)]
     · rfl
     · exact (hu i).mono fun k => inter_subset_right _ _
-    · exact fun b hb => omeas.inter measurable_set_closed_ball
+    · exact fun b hb => omeas.inter measurableSet_closedBall
   -- A large enough finite subfamily of `u i` will also cover a proportion `> 1/(N+1)` of `s`.
   -- Since `s` might not be measurable, we express this in terms of the measurable superset `o`.
   obtain ⟨w, hw⟩ :
@@ -692,7 +692,7 @@ theorem exist_finset_disjoint_balls_large_measure (μ : Measure α) [IsFiniteMea
     swap
     · apply MeasurableSet.inter _ omeas
       haveI : Encodable (u i) := (u_count i).toEncodable
-      exact MeasurableSet.Union fun b => MeasurableSet.Union fun hb => measurable_set_closed_ball
+      exact MeasurableSet.unionᵢ fun b => MeasurableSet.unionᵢ fun hb => measurableSet_closedBall
     calc
       μ o = 1 / (N + 1) * μ s + N / (N + 1) * μ s := by
         rw [μo, ← add_mul, Ennreal.div_add_div_same, add_comm, Ennreal.div_self, one_mul] <;> simp
@@ -709,7 +709,7 @@ theorem exist_finset_disjoint_balls_large_measure (μ : Measure α) [IsFiniteMea
             exact hu i k.2 l.2 (subtype.coe_injective.ne hkl)
           exact this.mono fun k => inter_subset_right _ _
         · intro b hb
-          apply omeas.inter measurable_set_closed_ball
+          apply omeas.inter measurableSet_closedBall
       
   -- show that the balls are disjoint
   · intro k hk l hl hkl
@@ -737,7 +737,7 @@ For a version assuming that the measure is sigma-finite,
 see `exists_disjoint_closed_ball_covering_ae_aux`.
 For a version giving the conclusion in a nicer form, see `exists_disjoint_closed_ball_covering_ae`.
 -/
-theorem exists_disjoint_closed_ball_covering_ae_of_finite_measure_aux (μ : Measure α)
+theorem exists_disjoint_closedBall_covering_ae_of_finite_measure_aux (μ : Measure α)
     [IsFiniteMeasure μ] (f : α → Set ℝ) (s : Set α)
     (hf : ∀ x ∈ s, ∀ δ > 0, (f x ∩ Ioo 0 δ).Nonempty) :
     ∃ t : Set (α × ℝ),
@@ -747,7 +747,7 @@ theorem exists_disjoint_closed_ball_covering_ae_of_finite_measure_aux (μ : Meas
             μ (s \ ⋃ (p : α × ℝ) (hp : p ∈ t), closedBall p.1 p.2) = 0 ∧
               t.PairwiseDisjoint fun p => closedBall p.1 p.2 :=
   by
-  rcases HasBesicovitchCovering.no_satellite_config α with ⟨N, τ, hτ, hN⟩
+  rcases HasBesicovitchCovering.no_satelliteConfig α with ⟨N, τ, hτ, hN⟩
   /- Introduce a property `P` on finsets saying that we have a nice disjoint covering of a
       subset of `s` by admissible balls. -/
   let P : Finset (α × ℝ) → Prop := fun t =>
@@ -769,7 +769,7 @@ theorem exists_disjoint_closed_ball_covering_ae_of_finite_measure_aux (μ : Meas
     intro t ht
     set B := ⋃ (p : α × ℝ) (hp : p ∈ t), closed_ball p.1 p.2 with hB
     have B_closed : IsClosed B :=
-      is_closed_bUnion (Finset.finite_to_set _) fun i hi => is_closed_ball
+      isClosed_bUnion (Finset.finite_to_set _) fun i hi => is_closed_ball
     set s' := s \ B with hs'
     have : ∀ x ∈ s', ∃ r ∈ f x ∩ Ioo 0 1, Disjoint B (closed_ball x r) :=
       by
@@ -873,11 +873,11 @@ theorem exists_disjoint_closed_ball_covering_ae_of_finite_measure_aux (μ : Meas
     have C : tendsto (fun n : ℕ => ((N : ℝ≥0∞) / (N + 1)) ^ n * μ s) at_top (𝓝 (0 * μ s)) :=
       by
       apply Ennreal.Tendsto.mul_const _ (Or.inr (measure_lt_top μ s).Ne)
-      apply Ennreal.tendsto_pow_at_top_nhds_0_of_lt_1
+      apply Ennreal.tendsto_pow_atTop_nhds_0_of_lt_1
       rw [Ennreal.div_lt_iff, one_mul]
       · conv_lhs => rw [← add_zero (N : ℝ≥0∞)]
         exact Ennreal.add_lt_add_left (Ennreal.nat_ne_top N) Ennreal.zero_lt_one
-      · simp only [true_or_iff, add_eq_zero_iff, Ne.def, not_false_iff, one_ne_zero, and_false_iff]
+      · simp only [true_or_iff, add_eq_zero_iff, Ne.def, not_false_iff, one_neZero, and_false_iff]
       · simp only [Ennreal.nat_ne_top, Ne.def, not_false_iff, or_true_iff]
     rw [zero_mul] at C
     apply le_bot_iff.1
@@ -886,7 +886,7 @@ theorem exists_disjoint_closed_ball_covering_ae_of_finite_measure_aux (μ : Meas
     apply (monotone_nat_of_le_succ fun n => _).directed_le
     rw [u_succ]
     exact (hF (u n) (Pu n)).1
-#align besicovitch.exists_disjoint_closed_ball_covering_ae_of_finite_measure_aux Besicovitch.exists_disjoint_closed_ball_covering_ae_of_finite_measure_aux
+#align besicovitch.exists_disjoint_closed_ball_covering_ae_of_finite_measure_aux Besicovitch.exists_disjoint_closedBall_covering_ae_of_finite_measure_aux
 
 /-- The measurable Besicovitch covering theorem. Assume that, for any `x` in a set `s`,
 one is given a set of admissible closed balls centered at `x`, with arbitrarily small radii.
@@ -898,7 +898,7 @@ It expresses the conclusion in a slightly awkward form (with a subset of `α × 
 proof technique.
 For a version giving the conclusion in a nicer form, see `exists_disjoint_closed_ball_covering_ae`.
 -/
-theorem exists_disjoint_closed_ball_covering_ae_aux (μ : Measure α) [SigmaFinite μ] (f : α → Set ℝ)
+theorem exists_disjoint_closedBall_covering_ae_aux (μ : Measure α) [SigmaFinite μ] (f : α → Set ℝ)
     (s : Set α) (hf : ∀ x ∈ s, ∀ δ > 0, (f x ∩ Ioo 0 δ).Nonempty) :
     ∃ t : Set (α × ℝ),
       t.Countable ∧
@@ -913,7 +913,7 @@ theorem exists_disjoint_closed_ball_covering_ae_aux (μ : Measure α) [SigmaFini
   rcases exists_disjoint_closed_ball_covering_ae_of_finite_measure_aux ν f s hf with
     ⟨t, t_count, ts, tr, tν, tdisj⟩
   exact ⟨t, t_count, ts, tr, hμν tν, tdisj⟩
-#align besicovitch.exists_disjoint_closed_ball_covering_ae_aux Besicovitch.exists_disjoint_closed_ball_covering_ae_aux
+#align besicovitch.exists_disjoint_closed_ball_covering_ae_aux Besicovitch.exists_disjoint_closedBall_covering_ae_aux
 
 /-- The measurable Besicovitch covering theorem. Assume that, for any `x` in a set `s`,
 one is given a set of admissible closed balls centered at `x`, with arbitrarily small radii.
@@ -923,7 +923,7 @@ points of `s`. We can even require that the radius at `x` is bounded by a given 
 This version requires that the underlying measure is sigma-finite, and that the space has the
 Besicovitch covering property (which is satisfied for instance by normed real vector spaces).
 -/
-theorem exists_disjoint_closed_ball_covering_ae (μ : Measure α) [SigmaFinite μ] (f : α → Set ℝ)
+theorem exists_disjoint_closedBall_covering_ae (μ : Measure α) [SigmaFinite μ] (f : α → Set ℝ)
     (s : Set α) (hf : ∀ x ∈ s, ∀ δ > 0, (f x ∩ Ioo 0 δ).Nonempty) (R : α → ℝ)
     (hR : ∀ x ∈ s, 0 < R x) :
     ∃ (t : Set α)(r : α → ℝ),
@@ -987,14 +987,14 @@ theorem exists_disjoint_closed_ball_covering_ae (μ : Measure α) [SigmaFinite �
       simp (config := { contextual := true }) only [inj_on, Prod.mk.inj_iff, imp_true_iff,
         eq_self_iff_true]
     rwa [← im_t, A.pairwise_disjoint_image] at v_disj
-#align besicovitch.exists_disjoint_closed_ball_covering_ae Besicovitch.exists_disjoint_closed_ball_covering_ae
+#align besicovitch.exists_disjoint_closed_ball_covering_ae Besicovitch.exists_disjoint_closedBall_covering_ae
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (U «expr ⊇ » s) -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (v «expr ⊇ » s') -/
 /-- In a space with the Besicovitch property, any set `s` can be covered with balls whose measures
 add up to at most `μ s + ε`, for any positive `ε`. This works even if one restricts the set of
 allowed radii around a point `x` to a set `f x` which accumulates at `0`. -/
-theorem exists_closed_ball_covering_tsum_measure_le (μ : Measure α) [SigmaFinite μ]
+theorem exists_closedBall_covering_tsum_measure_le (μ : Measure α) [SigmaFinite μ]
     [Measure.OuterRegular μ] {ε : ℝ≥0∞} (hε : ε ≠ 0) (f : α → Set ℝ) (s : Set α)
     (hf : ∀ x ∈ s, ∀ δ > 0, (f x ∩ Ioo 0 δ).Nonempty) :
     ∃ (t : Set α)(r : α → ℝ),
@@ -1010,7 +1010,7 @@ theorem exists_closed_ball_covering_tsum_measure_le (μ : Measure α) [SigmaFini
     subfamilies. Making sure that they are all included in a neighborhood `v` of `s'` of measure at
     most `ε / (2 N)`, the sum of their measures is at most `ε / 2`, completing the proof. -/
   obtain ⟨u, su, u_open, μu⟩ : ∃ (U : _)(_ : U ⊇ s), IsOpen U ∧ μ U ≤ μ s + ε / 2 :=
-    Set.exists_is_open_le_add _ _
+    Set.exists_isOpen_le_add _ _
       (by
         simpa only [or_false_iff, Ne.def, Ennreal.div_zero_iff, Ennreal.one_ne_top,
           Ennreal.bit0_eq_top_iff] using hε)
@@ -1030,9 +1030,9 @@ theorem exists_closed_ball_covering_tsum_measure_le (μ : Measure α) [SigmaFini
   let s' := s \ ⋃ x ∈ t0, closed_ball x (r0 x)
   have s's : s' ⊆ s := diff_subset _ _
   obtain ⟨N, τ, hτ, H⟩ : ∃ N τ, 1 < τ ∧ IsEmpty (Besicovitch.SatelliteConfig α N τ) :=
-    HasBesicovitchCovering.no_satellite_config α
+    HasBesicovitchCovering.no_satelliteConfig α
   obtain ⟨v, s'v, v_open, μv⟩ : ∃ (v : _)(_ : v ⊇ s'), IsOpen v ∧ μ v ≤ μ s' + ε / 2 / N :=
-    Set.exists_is_open_le_add _ _
+    Set.exists_isOpen_le_add _ _
       (by
         simp only [hε, Ennreal.nat_ne_top, WithTop.mul_eq_top_iff, Ne.def, Ennreal.div_zero_iff,
           Ennreal.one_ne_top, not_false_iff, and_false_iff, false_and_iff, or_self_iff,
@@ -1125,7 +1125,7 @@ theorem exists_closed_ball_covering_tsum_measure_le (μ : Measure α) [SigmaFini
           haveI : Encodable t0 := t0_count.to_encodable
           rw [measure_Union]
           · exact (pairwise_subtype_iff_pairwise_set _ _).2 t0_disj
-          · exact fun i => measurable_set_closed_ball
+          · exact fun i => measurableSet_closedBall
         _ ≤ μ u := by
           apply measure_mono
           simp only [SetCoe.forall, Subtype.coe_mk, Union_subset_iff]
@@ -1154,7 +1154,7 @@ theorem exists_closed_ball_covering_tsum_measure_le (μ : Measure α) [SigmaFini
           haveI : Encodable (S i) := (S_count i).toEncodable
           rw [measure_Union]
           · exact (pairwise_subtype_iff_pairwise_set _ _).2 (S_disj i)
-          · exact fun i => measurable_set_closed_ball
+          · exact fun i => measurableSet_closedBall
         _ ≤ μ v := by
           apply measure_mono
           simp only [SetCoe.forall, Subtype.coe_mk, Union_subset_iff]
@@ -1173,7 +1173,7 @@ theorem exists_closed_ball_covering_tsum_measure_le (μ : Measure α) [SigmaFini
       _ ≤
           (∑' x : t0, μ (closed_ball x (r x))) +
             ∑ i : Fin N, ∑' x : (coe : s' → α) '' S i, μ (closed_ball x (r x)) :=
-        add_le_add le_rfl (Ennreal.tsum_Union_le (fun x => μ (closed_ball x (r x))) _)
+        add_le_add le_rfl (Ennreal.tsum_unionᵢ_le (fun x => μ (closed_ball x (r x))) _)
       _ ≤ μ s + ε / 2 + ∑ i : Fin N, ε / 2 / N :=
         by
         refine' add_le_add A _
@@ -1185,7 +1185,7 @@ theorem exists_closed_ball_covering_tsum_measure_le (μ : Measure α) [SigmaFini
         simp only [Finset.card_fin, Finset.sum_const, nsmul_eq_mul, Ennreal.mul_div_le]
       _ = μ s + ε := by rw [add_assoc, Ennreal.add_halves]
       
-#align besicovitch.exists_closed_ball_covering_tsum_measure_le Besicovitch.exists_closed_ball_covering_tsum_measure_le
+#align besicovitch.exists_closed_ball_covering_tsum_measure_le Besicovitch.exists_closedBall_covering_tsum_measure_le
 
 /-! ### Consequences on differentiation of measures -/
 
@@ -1244,7 +1244,7 @@ protected def vitaliFamily (μ : Measure α) [SigmaFinite μ] : VitaliFamily μ
 to convergence along closed balls. We record one of the two implications here, which will enable us
 to deduce specific statements on differentiation of measures in this context from the general
 versions. -/
-theorem tendsto_filter_at (μ : Measure α) [SigmaFinite μ] (x : α) :
+theorem tendsto_filterAt (μ : Measure α) [SigmaFinite μ] (x : α) :
     Tendsto (fun r => closedBall x r) (𝓝[>] 0) ((Besicovitch.vitaliFamily μ).filterAt x) :=
   by
   intro s hs
@@ -1252,44 +1252,43 @@ theorem tendsto_filter_at (μ : Measure α) [SigmaFinite μ] (x : α) :
   obtain ⟨ε, εpos, hε⟩ :
     ∃ (ε : ℝ)(H : ε > 0),
       ∀ a : Set α, a ∈ (Besicovitch.vitaliFamily μ).setsAt x → a ⊆ closed_ball x ε → a ∈ s :=
-    (VitaliFamily.mem_filter_at_iff _).1 hs
-  have : Ioc (0 : ℝ) ε ∈ 𝓝[>] (0 : ℝ) := Ioc_mem_nhds_within_Ioi ⟨le_rfl, εpos⟩
+    (VitaliFamily.mem_filterAt_iff _).1 hs
+  have : Ioc (0 : ℝ) ε ∈ 𝓝[>] (0 : ℝ) := ioc_mem_nhdsWithin_ioi ⟨le_rfl, εpos⟩
   filter_upwards [this] with _ hr
   apply hε
   · exact mem_image_of_mem _ hr.1
   · exact closed_ball_subset_closed_ball hr.2
-#align besicovitch.tendsto_filter_at Besicovitch.tendsto_filter_at
+#align besicovitch.tendsto_filter_at Besicovitch.tendsto_filterAt
 
 variable [MetricSpace β] [MeasurableSpace β] [BorelSpace β] [SecondCountableTopology β]
   [HasBesicovitchCovering β]
 
 /-- In a space with the Besicovitch covering property, the ratio of the measure of balls converges
 almost surely to to the Radon-Nikodym derivative. -/
-theorem ae_tendsto_rn_deriv (ρ μ : Measure β) [IsLocallyFiniteMeasure μ]
-    [IsLocallyFiniteMeasure ρ] :
+theorem ae_tendsto_rnDeriv (ρ μ : Measure β) [IsLocallyFiniteMeasure μ] [IsLocallyFiniteMeasure ρ] :
     ∀ᵐ x ∂μ,
       Tendsto (fun r => ρ (closedBall x r) / μ (closedBall x r)) (𝓝[>] 0) (𝓝 (ρ.rnDeriv μ x)) :=
   by
-  filter_upwards [VitaliFamily.ae_tendsto_rn_deriv (Besicovitch.vitaliFamily μ) ρ] with x hx
+  filter_upwards [VitaliFamily.ae_tendsto_rnDeriv (Besicovitch.vitaliFamily μ) ρ] with x hx
   exact hx.comp (tendsto_filter_at μ x)
-#align besicovitch.ae_tendsto_rn_deriv Besicovitch.ae_tendsto_rn_deriv
+#align besicovitch.ae_tendsto_rn_deriv Besicovitch.ae_tendsto_rnDeriv
 
 /-- Given a measurable set `s`, then `μ (s ∩ closed_ball x r) / μ (closed_ball x r)` converges when
 `r` tends to `0`, for almost every `x`. The limit is `1` for `x ∈ s` and `0` for `x ∉ s`.
 This shows that almost every point of `s` is a Lebesgue density point for `s`.
 A version for non-measurable sets holds, but it only gives the first conclusion,
 see `ae_tendsto_measure_inter_div`. -/
-theorem ae_tendsto_measure_inter_div_of_measurable_set (μ : Measure β) [IsLocallyFiniteMeasure μ]
+theorem ae_tendsto_measure_inter_div_of_measurableSet (μ : Measure β) [IsLocallyFiniteMeasure μ]
     {s : Set β} (hs : MeasurableSet s) :
     ∀ᵐ x ∂μ,
       Tendsto (fun r => μ (s ∩ closedBall x r) / μ (closedBall x r)) (𝓝[>] 0)
         (𝓝 (s.indicator 1 x)) :=
   by
-  filter_upwards [VitaliFamily.ae_tendsto_measure_inter_div_of_measurable_set
+  filter_upwards [VitaliFamily.ae_tendsto_measure_inter_div_of_measurableSet
       (Besicovitch.vitaliFamily μ) hs]
   intro x hx
   exact hx.comp (tendsto_filter_at μ x)
-#align besicovitch.ae_tendsto_measure_inter_div_of_measurable_set Besicovitch.ae_tendsto_measure_inter_div_of_measurable_set
+#align besicovitch.ae_tendsto_measure_inter_div_of_measurable_set Besicovitch.ae_tendsto_measure_inter_div_of_measurableSet
 
 /-- Given an arbitrary set `s`, then `μ (s ∩ closed_ball x r) / μ (closed_ball x r)` converges
 to `1` when `r` tends to `0`, for almost every `x` in `s`.

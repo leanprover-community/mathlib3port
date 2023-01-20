@@ -52,9 +52,9 @@ theorem Memℓp.all [Finite α] (f : ∀ i, E i) : Memℓp f p :=
   by
   rcases p.trichotomy with (rfl | rfl | h)
   · exact mem_ℓp_zero_iff.mpr { i : α | f i ≠ 0 }.to_finite
-  · exact mem_ℓp_infty_iff.mpr (Set.Finite.bdd_above (Set.range fun i : α => ‖f i‖).to_finite)
+  · exact mem_ℓp_infty_iff.mpr (Set.Finite.bddAbove (Set.range fun i : α => ‖f i‖).to_finite)
   · cases nonempty_fintype α
-    exact mem_ℓp_gen ⟨finset.univ.sum _, has_sum_fintype _⟩
+    exact memℓp_gen ⟨finset.univ.sum _, hasSum_fintype _⟩
 #align mem_ℓp.all Memℓp.all
 
 variable [Fintype α]
@@ -67,15 +67,15 @@ def Equiv.lpPiLp : lp E p ≃ PiLp p E where
   right_inv f := funext fun x => rfl
 #align equiv.lp_pi_Lp Equiv.lpPiLp
 
-theorem coe_equiv_lp_pi_Lp (f : lp E p) : Equiv.lpPiLp f = f :=
+theorem coe_equiv_lpPiLp (f : lp E p) : Equiv.lpPiLp f = f :=
   rfl
-#align coe_equiv_lp_pi_Lp coe_equiv_lp_pi_Lp
+#align coe_equiv_lp_pi_Lp coe_equiv_lpPiLp
 
-theorem coe_equiv_lp_pi_Lp_symm (f : PiLp p E) : (Equiv.lpPiLp.symm f : ∀ i, E i) = f :=
+theorem coe_equiv_lpPiLp_symm (f : PiLp p E) : (Equiv.lpPiLp.symm f : ∀ i, E i) = f :=
   rfl
-#align coe_equiv_lp_pi_Lp_symm coe_equiv_lp_pi_Lp_symm
+#align coe_equiv_lp_pi_Lp_symm coe_equiv_lpPiLp_symm
 
-theorem equiv_lp_pi_Lp_norm (f : lp E p) : ‖Equiv.lpPiLp f‖ = ‖f‖ :=
+theorem equiv_lpPiLp_norm (f : lp E p) : ‖Equiv.lpPiLp f‖ = ‖f‖ :=
   by
   rcases p.trichotomy with (rfl | rfl | h)
   · rw [PiLp.norm_eq_card, lp.norm_eq_card_dsupport]
@@ -84,7 +84,7 @@ theorem equiv_lp_pi_Lp_norm (f : lp E p) : ‖Equiv.lpPiLp f‖ = ‖f‖ :=
     rfl
   · rw [PiLp.norm_eq_sum h, lp.norm_eq_tsum_rpow h, tsum_fintype]
     rfl
-#align equiv_lp_pi_Lp_norm equiv_lp_pi_Lp_norm
+#align equiv_lp_pi_Lp_norm equiv_lpPiLp_norm
 
 /-- The canonical `add_equiv` between `lp E p` and `pi_Lp p E` when `E : α → Type u` with
 `[fintype α]` and `[fact (1 ≤ p)]`. -/
@@ -92,14 +92,14 @@ def AddEquiv.lpPiLp [Fact (1 ≤ p)] : lp E p ≃+ PiLp p E :=
   { Equiv.lpPiLp with map_add' := fun f g => rfl }
 #align add_equiv.lp_pi_Lp AddEquiv.lpPiLp
 
-theorem coe_add_equiv_lp_pi_Lp [Fact (1 ≤ p)] (f : lp E p) : AddEquiv.lpPiLp f = f :=
+theorem coe_addEquiv_lpPiLp [Fact (1 ≤ p)] (f : lp E p) : AddEquiv.lpPiLp f = f :=
   rfl
-#align coe_add_equiv_lp_pi_Lp coe_add_equiv_lp_pi_Lp
+#align coe_add_equiv_lp_pi_Lp coe_addEquiv_lpPiLp
 
-theorem coe_add_equiv_lp_pi_Lp_symm [Fact (1 ≤ p)] (f : PiLp p E) :
+theorem coe_addEquiv_lpPiLp_symm [Fact (1 ≤ p)] (f : PiLp p E) :
     (AddEquiv.lpPiLp.symm f : ∀ i, E i) = f :=
   rfl
-#align coe_add_equiv_lp_pi_Lp_symm coe_add_equiv_lp_pi_Lp_symm
+#align coe_add_equiv_lp_pi_Lp_symm coe_addEquiv_lpPiLp_symm
 
 section Equivₗᵢ
 
@@ -110,18 +110,18 @@ with `[fintype α]` and `[fact (1 ≤ p)]`. -/
 noncomputable def lpPiLpₗᵢ [Fact (1 ≤ p)] : lp E p ≃ₗᵢ[𝕜] PiLp p E :=
   { AddEquiv.lpPiLp with
     map_smul' := fun k f => rfl
-    norm_map' := equiv_lp_pi_Lp_norm }
+    norm_map' := equiv_lpPiLp_norm }
 #align lp_pi_Lpₗᵢ lpPiLpₗᵢ
 
 variable {𝕜}
 
-theorem coe_lp_pi_Lpₗᵢ [Fact (1 ≤ p)] (f : lp E p) : lpPiLpₗᵢ 𝕜 f = f :=
+theorem coe_lpPiLpₗᵢ [Fact (1 ≤ p)] (f : lp E p) : lpPiLpₗᵢ 𝕜 f = f :=
   rfl
-#align coe_lp_pi_Lpₗᵢ coe_lp_pi_Lpₗᵢ
+#align coe_lp_pi_Lpₗᵢ coe_lpPiLpₗᵢ
 
-theorem coe_lp_pi_Lpₗᵢ_symm [Fact (1 ≤ p)] (f : PiLp p E) : ((lpPiLpₗᵢ 𝕜).symm f : ∀ i, E i) = f :=
+theorem coe_lpPiLpₗᵢ_symm [Fact (1 ≤ p)] (f : PiLp p E) : ((lpPiLpₗᵢ 𝕜).symm f : ∀ i, E i) = f :=
   rfl
-#align coe_lp_pi_Lpₗᵢ_symm coe_lp_pi_Lpₗᵢ_symm
+#align coe_lp_pi_Lpₗᵢ_symm coe_lpPiLpₗᵢ_symm
 
 end Equivₗᵢ
 
@@ -145,20 +145,20 @@ section NormedAddCommGroup
 /-- The canonical map between `lp (λ (_ : α), E) ∞` and `α →ᵇ E` as an `add_equiv`. -/
 noncomputable def AddEquiv.lpBcf : lp (fun _ : α => E) ∞ ≃+ (α →ᵇ E)
     where
-  toFun f := ofNormedAddCommGroupDiscrete f ‖f‖ <| le_csupᵢ (mem_ℓp_infty_iff.mp f.Prop)
+  toFun f := ofNormedAddCommGroupDiscrete f ‖f‖ <| le_csupᵢ (memℓp_infty_iff.mp f.Prop)
   invFun f := ⟨f, f.bdd_above_range_norm_comp⟩
   left_inv f := lp.ext rfl
   right_inv f := ext fun x => rfl
   map_add' f g := ext fun x => rfl
 #align add_equiv.lp_bcf AddEquiv.lpBcf
 
-theorem coe_add_equiv_lp_bcf (f : lp (fun _ : α => E) ∞) : (AddEquiv.lpBcf f : α → E) = f :=
+theorem coe_addEquiv_lpBcf (f : lp (fun _ : α => E) ∞) : (AddEquiv.lpBcf f : α → E) = f :=
   rfl
-#align coe_add_equiv_lp_bcf coe_add_equiv_lp_bcf
+#align coe_add_equiv_lp_bcf coe_addEquiv_lpBcf
 
-theorem coe_add_equiv_lp_bcf_symm (f : α →ᵇ E) : (AddEquiv.lpBcf.symm f : α → E) = f :=
+theorem coe_addEquiv_lpBcf_symm (f : α →ᵇ E) : (AddEquiv.lpBcf.symm f : α → E) = f :=
   rfl
-#align coe_add_equiv_lp_bcf_symm coe_add_equiv_lp_bcf_symm
+#align coe_add_equiv_lp_bcf_symm coe_addEquiv_lpBcf_symm
 
 /-- The canonical map between `lp (λ (_ : α), E) ∞` and `α →ᵇ E` as a `linear_isometry_equiv`. -/
 noncomputable def lpBcfₗᵢ : lp (fun _ : α => E) ∞ ≃ₗᵢ[𝕜] α →ᵇ E :=
@@ -171,13 +171,13 @@ noncomputable def lpBcfₗᵢ : lp (fun _ : α => E) ∞ ≃ₗᵢ[𝕜] α →�
 
 variable {𝕜}
 
-theorem coe_lp_bcfₗᵢ (f : lp (fun _ : α => E) ∞) : (lpBcfₗᵢ 𝕜 f : α → E) = f :=
+theorem coe_lpBcfₗᵢ (f : lp (fun _ : α => E) ∞) : (lpBcfₗᵢ 𝕜 f : α → E) = f :=
   rfl
-#align coe_lp_bcfₗᵢ coe_lp_bcfₗᵢ
+#align coe_lp_bcfₗᵢ coe_lpBcfₗᵢ
 
-theorem coe_lp_bcfₗᵢ_symm (f : α →ᵇ E) : ((lpBcfₗᵢ 𝕜).symm f : α → E) = f :=
+theorem coe_lpBcfₗᵢ_symm (f : α →ᵇ E) : ((lpBcfₗᵢ 𝕜).symm f : α → E) = f :=
   rfl
-#align coe_lp_bcfₗᵢ_symm coe_lp_bcfₗᵢ_symm
+#align coe_lp_bcfₗᵢ_symm coe_lpBcfₗᵢ_symm
 
 end NormedAddCommGroup
 
@@ -190,13 +190,13 @@ noncomputable def RingEquiv.lpBcf : lp (fun _ : α => R) ∞ ≃+* (α →ᵇ R)
 
 variable {R}
 
-theorem coe_ring_equiv_lp_bcf (f : lp (fun _ : α => R) ∞) : (RingEquiv.lpBcf R f : α → R) = f :=
+theorem coe_ringEquiv_lpBcf (f : lp (fun _ : α => R) ∞) : (RingEquiv.lpBcf R f : α → R) = f :=
   rfl
-#align coe_ring_equiv_lp_bcf coe_ring_equiv_lp_bcf
+#align coe_ring_equiv_lp_bcf coe_ringEquiv_lpBcf
 
-theorem coe_ring_equiv_lp_bcf_symm (f : α →ᵇ R) : ((RingEquiv.lpBcf R).symm f : α → R) = f :=
+theorem coe_ringEquiv_lpBcf_symm (f : α →ᵇ R) : ((RingEquiv.lpBcf R).symm f : α → R) = f :=
   rfl
-#align coe_ring_equiv_lp_bcf_symm coe_ring_equiv_lp_bcf_symm
+#align coe_ring_equiv_lp_bcf_symm coe_ringEquiv_lpBcf_symm
 
 variable (α)
 
@@ -210,13 +210,13 @@ noncomputable def AlgEquiv.lpBcf : lp (fun _ : α => A) ∞ ≃ₐ[𝕜] α →�
 
 variable {α A 𝕜}
 
-theorem coe_alg_equiv_lp_bcf (f : lp (fun _ : α => A) ∞) : (AlgEquiv.lpBcf α A 𝕜 f : α → A) = f :=
+theorem coe_algEquiv_lpBcf (f : lp (fun _ : α => A) ∞) : (AlgEquiv.lpBcf α A 𝕜 f : α → A) = f :=
   rfl
-#align coe_alg_equiv_lp_bcf coe_alg_equiv_lp_bcf
+#align coe_alg_equiv_lp_bcf coe_algEquiv_lpBcf
 
-theorem coe_alg_equiv_lp_bcf_symm (f : α →ᵇ A) : ((AlgEquiv.lpBcf α A 𝕜).symm f : α → A) = f :=
+theorem coe_algEquiv_lpBcf_symm (f : α →ᵇ A) : ((AlgEquiv.lpBcf α A 𝕜).symm f : α → A) = f :=
   rfl
-#align coe_alg_equiv_lp_bcf_symm coe_alg_equiv_lp_bcf_symm
+#align coe_alg_equiv_lp_bcf_symm coe_algEquiv_lpBcf_symm
 
 end RingAlgebra
 

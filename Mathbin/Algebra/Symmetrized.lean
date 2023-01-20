@@ -286,10 +286,10 @@ instance [Mul α] [Add α] [One α] [Invertible (2 : α)] (a : α) [Invertible a
     rw [sym_mul_sym, mul_invOf_self, invOf_mul_self, ← bit0, invOf_mul_self, sym_one]
 
 @[simp]
-theorem inv_of_sym [Mul α] [Add α] [One α] [Invertible (2 : α)] (a : α) [Invertible a] :
+theorem invOf_sym [Mul α] [Add α] [One α] [Invertible (2 : α)] (a : α) [Invertible a] :
     ⅟ (sym a) = sym (⅟ a) :=
   rfl
-#align sym_alg.inv_of_sym SymAlg.inv_of_sym
+#align sym_alg.inv_of_sym SymAlg.invOf_sym
 
 instance [Semiring α] [Invertible (2 : α)] : NonAssocSemiring αˢʸᵐ :=
   { SymAlg.addCommMonoid with

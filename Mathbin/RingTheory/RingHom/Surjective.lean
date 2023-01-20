@@ -27,20 +27,20 @@ open TensorProduct Algebra.TensorProduct
 local notation "surjective" => fun {X Y : Type _} [CommRing X] [CommRing Y] => fun f : X →+* Y =>
   Function.Surjective f
 
-theorem surjective_stable_under_composition : StableUnderComposition surjective :=
+theorem surjective_stableUnderComposition : StableUnderComposition surjective :=
   by
   introv R hf hg
   exact hg.comp hf
-#align ring_hom.surjective_stable_under_composition RingHom.surjective_stable_under_composition
+#align ring_hom.surjective_stable_under_composition RingHom.surjective_stableUnderComposition
 
-theorem surjective_respects_iso : RespectsIso surjective :=
+theorem surjective_respectsIso : RespectsIso surjective :=
   by
   apply surjective_stable_under_composition.respects_iso
   intros
   exact e.surjective
-#align ring_hom.surjective_respects_iso RingHom.surjective_respects_iso
+#align ring_hom.surjective_respects_iso RingHom.surjective_respectsIso
 
-theorem surjective_stable_under_base_change : StableUnderBaseChange surjective :=
+theorem surjective_stableUnderBaseChange : StableUnderBaseChange surjective :=
   by
   refine' stable_under_base_change.mk _ surjective_respects_iso _
   classical
@@ -51,14 +51,14 @@ theorem surjective_stable_under_base_change : StableUnderBaseChange surjective :
     · obtain ⟨y, rfl⟩ := h y
       use y • x
       dsimp
-      rw [TensorProduct.smul_tmul, Algebra.algebra_map_eq_smul_one]
+      rw [TensorProduct.smul_tmul, Algebra.algebraMap_eq_smul_one]
     · obtain ⟨⟨x, rfl⟩, ⟨y, rfl⟩⟩ := ex, ey
       exact ⟨x + y, map_add _ x y⟩
-#align ring_hom.surjective_stable_under_base_change RingHom.surjective_stable_under_base_change
+#align ring_hom.surjective_stable_under_base_change RingHom.surjective_stableUnderBaseChange
 
 open BigOperators
 
-theorem surjective_of_localization_span : OfLocalizationSpan surjective :=
+theorem surjective_ofLocalizationSpan : OfLocalizationSpan surjective :=
   by
   introv R hs H
   skip
@@ -88,7 +88,7 @@ theorem surjective_of_localization_span : OfLocalizationSpan surjective :=
     simp_rw [_root_.mul_assoc, _root_.one_mul, ← map_pow, ← f.map_mul, ← pow_add, mul_comm x] at hm
     rw [map_pow] at hm
     refine' ⟨n + m, _, hm⟩
-#align ring_hom.surjective_of_localization_span RingHom.surjective_of_localization_span
+#align ring_hom.surjective_of_localization_span RingHom.surjective_ofLocalizationSpan
 
 end RingHom
 

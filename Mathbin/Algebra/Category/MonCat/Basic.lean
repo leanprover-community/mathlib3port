@@ -86,9 +86,9 @@ def ofHom {X Y : Type u} [Monoid X] [Monoid Y] (f : X →* Y) : of X ⟶ of Y :=
 add_decl_doc AddMonCat.ofHom
 
 @[simp]
-theorem of_hom_apply {X Y : Type u} [Monoid X] [Monoid Y] (f : X →* Y) (x : X) : ofHom f x = f x :=
+theorem ofHom_apply {X Y : Type u} [Monoid X] [Monoid Y] (f : X →* Y) (x : X) : ofHom f x = f x :=
   rfl
-#align Mon.of_hom_apply MonCat.of_hom_apply
+#align Mon.of_hom_apply MonCat.ofHom_apply
 
 @[to_additive]
 instance : Inhabited MonCat :=

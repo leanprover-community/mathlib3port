@@ -73,9 +73,9 @@ theorem coe_ennreal_mono : Monotone (coe : ℕ∞ → ℝ≥0∞) :=
 #align enat.coe_ennreal_mono Enat.coe_ennreal_mono
 
 @[mono]
-theorem coe_ennreal_strict_mono : StrictMono (coe : ℕ∞ → ℝ≥0∞) :=
+theorem coe_ennreal_strictMono : StrictMono (coe : ℕ∞ → ℝ≥0∞) :=
   toEnnrealOrderEmbedding.StrictMono
-#align enat.coe_ennreal_strict_mono Enat.coe_ennreal_strict_mono
+#align enat.coe_ennreal_strict_mono Enat.coe_ennreal_strictMono
 
 @[simp, norm_cast]
 theorem coe_ennreal_zero : ((0 : ℕ∞) : ℝ≥0∞) = 0 :=

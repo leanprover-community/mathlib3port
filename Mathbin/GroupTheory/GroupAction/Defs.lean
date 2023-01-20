@@ -202,6 +202,7 @@ Case conversion may be inaccurate. Consider using '#align mul_action.regular.is_
 instance Regular.isPretransitive [Group G] : IsPretransitive G G :=
   ⟨fun x y => ⟨y * x⁻¹, inv_mul_cancel_right _ _⟩⟩
 #align mul_action.regular.is_pretransitive MulAction.Regular.isPretransitive
+#align add_action.regular.is_pretransitive AddAction.Regular.isPretransitive
 
 end MulAction
 
@@ -757,6 +758,7 @@ variable {M α}
 theorem toFun_apply (x : M) (y : α) : MulAction.toFun M α y x = x • y :=
   rfl
 #align mul_action.to_fun_apply MulAction.toFun_apply
+#align add_action.to_fun_apply AddAction.toFun_apply
 -/
 
 variable (α)

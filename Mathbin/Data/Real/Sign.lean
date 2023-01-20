@@ -121,10 +121,10 @@ theorem sign_eq_zero_iff {r : ℝ} : sign r = 0 ↔ r = 0 :=
   refine' ⟨fun h => _, fun h => h.symm ▸ sign_zero⟩
   obtain hn | rfl | hp := lt_trichotomy r (0 : ℝ)
   · rw [sign_of_neg hn, neg_eq_zero] at h
-    exact (one_ne_zero h).elim
+    exact (one_neZero h).elim
   · rfl
   · rw [sign_of_pos hp] at h
-    exact (one_ne_zero h).elim
+    exact (one_neZero h).elim
 #align real.sign_eq_zero_iff Real.sign_eq_zero_iff
 
 /- warning: real.sign_int_cast -> Real.sign_int_cast is a dubious translation:

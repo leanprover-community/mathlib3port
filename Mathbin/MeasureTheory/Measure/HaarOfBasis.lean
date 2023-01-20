@@ -72,7 +72,7 @@ theorem parallelepiped_comp_equiv (v : ι → E) (e : ι' ≃ ι) :
     by
     rw [← Equiv.preimage_eq_iff_eq_image]
     ext x
-    simp only [mem_preimage, mem_Icc, Pi.le_def, Pi.zero_apply, Equiv.Pi_congr_left'_apply,
+    simp only [mem_preimage, mem_Icc, Pi.le_def, Pi.zero_apply, Equiv.piCongrLeft'_apply,
       Pi.one_apply]
     refine'
       ⟨fun h => ⟨fun i => _, fun i => _⟩, fun h =>
@@ -82,12 +82,12 @@ theorem parallelepiped_comp_equiv (v : ι → E) (e : ι' ≃ ι) :
   rw [this, ← image_comp]
   congr 1 with x
   simpa only [OrthonormalBasis.coe_reindex, Function.comp_apply, Equiv.symm_apply_apply,
-    Equiv.Pi_congr_left'_apply, Equiv.apply_symm_apply] using
+    Equiv.piCongrLeft'_apply, Equiv.apply_symm_apply] using
     (e.symm.sum_comp fun i : ι' => x i • v (e i)).symm
 #align parallelepiped_comp_equiv parallelepiped_comp_equiv
 
 -- The parallelepiped associated to an orthonormal basis of `ℝ` is either `[0, 1]` or `[-1, 0]`.
-theorem parallelepiped_orthonormal_basis_one_dim (b : OrthonormalBasis ι ℝ ℝ) :
+theorem parallelepiped_orthonormalBasis_one_dim (b : OrthonormalBasis ι ℝ ℝ) :
     parallelepiped b = Icc 0 1 ∨ parallelepiped b = Icc (-1) 0 :=
   by
   have e : ι ≃ Fin 1 := by
@@ -109,7 +109,7 @@ theorem parallelepiped_orthonormal_basis_one_dim (b : OrthonormalBasis ι ℝ �
       simp only [Subsingleton.elim j 0]
     · rintro x ⟨y, hy, rfl⟩
       exact ⟨fun j => hy.1, fun j => hy.2⟩
-  rcases orthonormal_basis_one_dim (b.reindex e) with (H | H)
+  rcases orthonormalBasis_one_dim (b.reindex e) with (H | H)
   · left
     simp only [H, parallelepiped, Algebra.id.smul_eq_mul, mul_one, A, Finset.sum_singleton, ←
       image_comp, image_id', Finset.univ_unique]
@@ -118,7 +118,7 @@ theorem parallelepiped_orthonormal_basis_one_dim (b : OrthonormalBasis ι ℝ �
     rw [A]
     simp only [← image_comp, mul_neg, mul_one, Finset.sum_singleton, image_neg, preimage_neg_Icc,
       neg_zero, Finset.univ_unique]
-#align parallelepiped_orthonormal_basis_one_dim parallelepiped_orthonormal_basis_one_dim
+#align parallelepiped_orthonormal_basis_one_dim parallelepiped_orthonormalBasis_one_dim
 
 end AddCommGroup
 
@@ -131,7 +131,7 @@ def Basis.parallelepiped (b : Basis ι ℝ E) : PositiveCompacts E
     where
   carrier := parallelepiped b
   is_compact' :=
-    is_compact_Icc.image
+    isCompact_icc.image
       (continuous_finset_sum Finset.univ fun (i : ι) (H : i ∈ Finset.univ) =>
         (continuous_apply i).smul continuous_const)
   interior_nonempty' :=
@@ -144,7 +144,7 @@ def Basis.parallelepiped (b : Basis ι ℝ E) : PositiveCompacts E
     have A : Set.Nonempty (interior (Icc (0 : ι → ℝ) 1)) :=
       by
       rw [← pi_univ_Icc, interior_pi_set (@finite_univ ι _)]
-      simp only [univ_pi_nonempty_iff, Pi.zero_apply, Pi.one_apply, interior_Icc, nonempty_Ioo,
+      simp only [univ_pi_nonempty_iff, Pi.zero_apply, Pi.one_apply, interior_icc, nonempty_Ioo,
         zero_lt_one, imp_true_iff]
     rwa [← Homeomorph.image_interior, nonempty_image_iff]
 #align basis.parallelepiped Basis.parallelepiped
@@ -163,11 +163,11 @@ instance isAddHaarMeasureBasisAddHaar (b : Basis ι ℝ E) : IsAddHaarMeasure b.
   exact measure.is_add_haar_measure_add_haar_measure _
 #align is_add_haar_measure_basis_add_haar isAddHaarMeasureBasisAddHaar
 
-theorem Basis.add_haar_self (b : Basis ι ℝ E) : b.add_haar (parallelepiped b) = 1 :=
+theorem Basis.addHaar_self (b : Basis ι ℝ E) : b.add_haar (parallelepiped b) = 1 :=
   by
   rw [Basis.addHaar]
   exact add_haar_measure_self
-#align basis.add_haar_self Basis.add_haar_self
+#align basis.add_haar_self Basis.addHaar_self
 
 end NormedSpace
 

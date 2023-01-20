@@ -51,30 +51,30 @@ basic open sets, see `filter.is_open_iff`. -/
 instance : TopologicalSpace (Filter α) :=
   generate_from <| range <| Iic ∘ 𝓟
 
-theorem is_open_Iic_principal {s : Set α} : IsOpen (Iic (𝓟 s)) :=
+theorem isOpen_iic_principal {s : Set α} : IsOpen (Iic (𝓟 s)) :=
   GenerateOpen.basic _ (mem_range_self _)
-#align filter.is_open_Iic_principal Filter.is_open_Iic_principal
+#align filter.is_open_Iic_principal Filter.isOpen_iic_principal
 
-theorem is_open_set_of_mem {s : Set α} : IsOpen { l : Filter α | s ∈ l } := by
+theorem isOpen_setOf_mem {s : Set α} : IsOpen { l : Filter α | s ∈ l } := by
   simpa only [Iic_principal] using is_open_Iic_principal
-#align filter.is_open_set_of_mem Filter.is_open_set_of_mem
+#align filter.is_open_set_of_mem Filter.isOpen_setOf_mem
 
-theorem is_topological_basis_Iic_principal :
+theorem isTopologicalBasis_iic_principal :
     IsTopologicalBasis (range (Iic ∘ 𝓟 : Set α → Set (Filter α))) :=
   { exists_subset_inter := by
       rintro _ ⟨s, rfl⟩ _ ⟨t, rfl⟩ l hl
       exact ⟨Iic (𝓟 s) ∩ Iic (𝓟 t), ⟨s ∩ t, by simp⟩, hl, subset.rfl⟩
     sUnion_eq := unionₛ_eq_univ_iff.2 fun l => ⟨Iic ⊤, ⟨univ, congr_arg Iic principal_univ⟩, le_top⟩
     eq_generate_from := rfl }
-#align filter.is_topological_basis_Iic_principal Filter.is_topological_basis_Iic_principal
+#align filter.is_topological_basis_Iic_principal Filter.isTopologicalBasis_iic_principal
 
-theorem is_open_iff {s : Set (Filter α)} : IsOpen s ↔ ∃ T : Set (Set α), s = ⋃ t ∈ T, Iic (𝓟 t) :=
-  is_topological_basis_Iic_principal.open_iff_eq_sUnion.trans <| by
+theorem isOpen_iff {s : Set (Filter α)} : IsOpen s ↔ ∃ T : Set (Set α), s = ⋃ t ∈ T, Iic (𝓟 t) :=
+  isTopologicalBasis_iic_principal.open_iff_eq_sUnion.trans <| by
     simp only [exists_subset_range_iff, sUnion_image]
-#align filter.is_open_iff Filter.is_open_iff
+#align filter.is_open_iff Filter.isOpen_iff
 
 theorem nhds_eq (l : Filter α) : 𝓝 l = l.lift' (Iic ∘ 𝓟) :=
-  nhds_generate_from.trans <| by
+  nhds_generateFrom.trans <| by
     simp only [mem_set_of_eq, and_comm' (l ∈ _), infᵢ_and, infᵢ_range, Filter.lift', Filter.lift,
       (· ∘ ·), mem_Iic, le_principal_iff]
 #align filter.nhds_eq Filter.nhds_eq
@@ -123,7 +123,7 @@ theorem nhds_top : 𝓝 (⊤ : Filter α) = ⊤ := by simp [nhds_eq]
 
 @[simp]
 theorem nhds_principal (s : Set α) : 𝓝 (𝓟 s) = 𝓟 (Iic (𝓟 s)) :=
-  (has_basis_principal s).nhds.eq_of_same_basis (has_basis_principal _)
+  (hasBasis_principal s).nhds.eq_of_same_basis (hasBasis_principal _)
 #align filter.nhds_principal Filter.nhds_principal
 
 @[simp]
@@ -132,15 +132,15 @@ theorem nhds_pure (x : α) : 𝓝 (pure x : Filter α) = 𝓟 {⊥, pure x} := b
 #align filter.nhds_pure Filter.nhds_pure
 
 @[simp]
-theorem nhds_infi (f : ι → Filter α) : 𝓝 (⨅ i, f i) = ⨅ i, 𝓝 (f i) :=
+theorem nhds_infᵢ (f : ι → Filter α) : 𝓝 (⨅ i, f i) = ⨅ i, 𝓝 (f i) :=
   by
   simp only [nhds_eq]
   apply lift'_infi_of_map_univ <;> simp
-#align filter.nhds_infi Filter.nhds_infi
+#align filter.nhds_infi Filter.nhds_infᵢ
 
 @[simp]
 theorem nhds_inf (l₁ l₂ : Filter α) : 𝓝 (l₁ ⊓ l₂) = 𝓝 l₁ ⊓ 𝓝 l₂ := by
-  simpa only [infᵢ_bool_eq] using nhds_infi fun b => cond b l₁ l₂
+  simpa only [infᵢ_bool_eq] using nhds_infᵢ fun b => cond b l₁ l₂
 #align filter.nhds_inf Filter.nhds_inf
 
 theorem monotone_nhds : Monotone (𝓝 : Filter α → Filter (Filter α)) :=
@@ -186,23 +186,23 @@ instance : T0Space (Filter α) :=
   ⟨fun x y h =>
     (specializes_iff_le.1 h.Specializes).antisymm (specializes_iff_le.1 h.symm.Specializes)⟩
 
-theorem nhds_at_top [Preorder α] : 𝓝 atTop = ⨅ x : α, 𝓟 (Iic (𝓟 (Ici x))) := by
-  simp only [at_top, nhds_infi, nhds_principal]
-#align filter.nhds_at_top Filter.nhds_at_top
+theorem nhds_atTop [Preorder α] : 𝓝 atTop = ⨅ x : α, 𝓟 (Iic (𝓟 (Ici x))) := by
+  simp only [at_top, nhds_infᵢ, nhds_principal]
+#align filter.nhds_at_top Filter.nhds_atTop
 
-protected theorem tendsto_nhds_at_top_iff [Preorder β] {l : Filter α} {f : α → Filter β} :
+protected theorem tendsto_nhds_atTop_iff [Preorder β] {l : Filter α} {f : α → Filter β} :
     Tendsto f l (𝓝 atTop) ↔ ∀ y, ∀ᶠ a in l, Ici y ∈ f a := by
   simp only [nhds_at_top, tendsto_infi, tendsto_principal, mem_Iic, le_principal_iff]
-#align filter.tendsto_nhds_at_top_iff Filter.tendsto_nhds_at_top_iff
+#align filter.tendsto_nhds_at_top_iff Filter.tendsto_nhds_atTop_iff
 
-theorem nhds_at_bot [Preorder α] : 𝓝 atBot = ⨅ x : α, 𝓟 (Iic (𝓟 (Iic x))) :=
-  @nhds_at_top αᵒᵈ _
-#align filter.nhds_at_bot Filter.nhds_at_bot
+theorem nhds_atBot [Preorder α] : 𝓝 atBot = ⨅ x : α, 𝓟 (Iic (𝓟 (Iic x))) :=
+  @nhds_atTop αᵒᵈ _
+#align filter.nhds_at_bot Filter.nhds_atBot
 
-protected theorem tendsto_nhds_at_bot_iff [Preorder β] {l : Filter α} {f : α → Filter β} :
+protected theorem tendsto_nhds_atBot_iff [Preorder β] {l : Filter α} {f : α → Filter β} :
     Tendsto f l (𝓝 atBot) ↔ ∀ y, ∀ᶠ a in l, Iic y ∈ f a :=
-  @Filter.tendsto_nhds_at_top_iff α βᵒᵈ _ _ _
-#align filter.tendsto_nhds_at_bot_iff Filter.tendsto_nhds_at_bot_iff
+  @Filter.tendsto_nhds_atTop_iff α βᵒᵈ _ _ _
+#align filter.tendsto_nhds_at_bot_iff Filter.tendsto_nhds_atBot_iff
 
 variable [TopologicalSpace X]
 

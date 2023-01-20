@@ -95,7 +95,7 @@ instance inhabited₂ [h : Inhabited a₂] : Inhabited (Sequence₂ a₀ a₁ a�
 #align first_order.sequence₂.inhabited₂ FirstOrder.Sequence₂.inhabited₂
 
 instance {n : ℕ} : IsEmpty (Sequence₂ a₀ a₁ a₂ (n + 3)) :=
-  PEmpty.is_empty
+  PEmpty.isEmpty
 
 @[simp]
 theorem lift_mk {i : ℕ} :
@@ -185,43 +185,43 @@ instance [L.IsRelational] {n : ℕ} : IsEmpty (L.Functions n) :=
 instance [L.IsAlgebraic] {n : ℕ} : IsEmpty (L.Relations n) :=
   IsAlgebraic.empty_relations n
 
-instance is_relational_of_empty_functions {symb : ℕ → Type _} :
+instance isRelational_of_empty_functions {symb : ℕ → Type _} :
     IsRelational ⟨fun _ => Empty, symb⟩ :=
-  ⟨fun _ => Empty.is_empty⟩
-#align first_order.language.is_relational_of_empty_functions FirstOrder.Language.is_relational_of_empty_functions
+  ⟨fun _ => Empty.isEmpty⟩
+#align first_order.language.is_relational_of_empty_functions FirstOrder.Language.isRelational_of_empty_functions
 
-instance is_algebraic_of_empty_relations {symb : ℕ → Type _} : IsAlgebraic ⟨symb, fun _ => Empty⟩ :=
-  ⟨fun _ => Empty.is_empty⟩
-#align first_order.language.is_algebraic_of_empty_relations FirstOrder.Language.is_algebraic_of_empty_relations
+instance isAlgebraic_of_empty_relations {symb : ℕ → Type _} : IsAlgebraic ⟨symb, fun _ => Empty⟩ :=
+  ⟨fun _ => Empty.isEmpty⟩
+#align first_order.language.is_algebraic_of_empty_relations FirstOrder.Language.isAlgebraic_of_empty_relations
 
-instance is_relational_empty : IsRelational Language.empty :=
+instance isRelational_empty : IsRelational Language.empty :=
   language.is_relational_of_empty_functions
-#align first_order.language.is_relational_empty FirstOrder.Language.is_relational_empty
+#align first_order.language.is_relational_empty FirstOrder.Language.isRelational_empty
 
-instance is_algebraic_empty : IsAlgebraic Language.empty :=
+instance isAlgebraic_empty : IsAlgebraic Language.empty :=
   language.is_algebraic_of_empty_relations
-#align first_order.language.is_algebraic_empty FirstOrder.Language.is_algebraic_empty
+#align first_order.language.is_algebraic_empty FirstOrder.Language.isAlgebraic_empty
 
-instance is_relational_sum [L.IsRelational] [L'.IsRelational] : IsRelational (L.Sum L') :=
-  ⟨fun n => Sum.is_empty⟩
-#align first_order.language.is_relational_sum FirstOrder.Language.is_relational_sum
+instance isRelational_sum [L.IsRelational] [L'.IsRelational] : IsRelational (L.Sum L') :=
+  ⟨fun n => Sum.isEmpty⟩
+#align first_order.language.is_relational_sum FirstOrder.Language.isRelational_sum
 
-instance is_algebraic_sum [L.IsAlgebraic] [L'.IsAlgebraic] : IsAlgebraic (L.Sum L') :=
-  ⟨fun n => Sum.is_empty⟩
-#align first_order.language.is_algebraic_sum FirstOrder.Language.is_algebraic_sum
+instance isAlgebraic_sum [L.IsAlgebraic] [L'.IsAlgebraic] : IsAlgebraic (L.Sum L') :=
+  ⟨fun n => Sum.isEmpty⟩
+#align first_order.language.is_algebraic_sum FirstOrder.Language.isAlgebraic_sum
 
-instance is_relational_mk₂ {c f₁ f₂ : Type u} {r₁ r₂ : Type v} [h0 : IsEmpty c] [h1 : IsEmpty f₁]
+instance isRelational_mk₂ {c f₁ f₂ : Type u} {r₁ r₂ : Type v} [h0 : IsEmpty c] [h1 : IsEmpty f₁]
     [h2 : IsEmpty f₂] : IsRelational (Language.mk₂ c f₁ f₂ r₁ r₂) :=
   ⟨fun n =>
-    Nat.casesOn n h0 fun n => Nat.casesOn n h1 fun n => Nat.casesOn n h2 fun _ => PEmpty.is_empty⟩
-#align first_order.language.is_relational_mk₂ FirstOrder.Language.is_relational_mk₂
+    Nat.casesOn n h0 fun n => Nat.casesOn n h1 fun n => Nat.casesOn n h2 fun _ => PEmpty.isEmpty⟩
+#align first_order.language.is_relational_mk₂ FirstOrder.Language.isRelational_mk₂
 
-instance is_algebraic_mk₂ {c f₁ f₂ : Type u} {r₁ r₂ : Type v} [h1 : IsEmpty r₁] [h2 : IsEmpty r₂] :
+instance isAlgebraic_mk₂ {c f₁ f₂ : Type u} {r₁ r₂ : Type v} [h1 : IsEmpty r₁] [h2 : IsEmpty r₂] :
     IsAlgebraic (Language.mk₂ c f₁ f₂ r₁ r₂) :=
   ⟨fun n =>
-    Nat.casesOn n PEmpty.is_empty fun n =>
-      Nat.casesOn n h1 fun n => Nat.casesOn n h2 fun _ => PEmpty.is_empty⟩
-#align first_order.language.is_algebraic_mk₂ FirstOrder.Language.is_algebraic_mk₂
+    Nat.casesOn n PEmpty.isEmpty fun n =>
+      Nat.casesOn n h1 fun n => Nat.casesOn n h2 fun _ => PEmpty.isEmpty⟩
+#align first_order.language.is_algebraic_mk₂ FirstOrder.Language.isAlgebraic_mk₂
 
 instance subsingleton_mk₂_functions {c f₁ f₂ : Type u} {r₁ r₂ : Type v} [h0 : Subsingleton c]
     [h1 : Subsingleton f₁] [h2 : Subsingleton f₂] {n : ℕ} :
@@ -240,11 +240,11 @@ instance subsingleton_mk₂_relations {c f₁ f₂ : Type u} {r₁ r₂ : Type v
 theorem empty_card : Language.empty.card = 0 := by simp [card_eq_card_functions_add_card_relations]
 #align first_order.language.empty_card FirstOrder.Language.empty_card
 
-instance is_empty_empty : IsEmpty Language.empty.Symbols :=
+instance isEmpty_empty : IsEmpty Language.empty.Symbols :=
   by
   simp only [language.symbols, isEmpty_sum, isEmpty_sigma]
   exact ⟨fun _ => inferInstance, fun _ => inferInstance⟩
-#align first_order.language.is_empty_empty FirstOrder.Language.is_empty_empty
+#align first_order.language.is_empty_empty FirstOrder.Language.isEmpty_empty
 
 instance Countable.countable_functions [h : Countable L.Symbols] : Countable (Σl, L.Functions l) :=
   @Function.Injective.countable _ _ h _ Sum.inl_injective
@@ -345,9 +345,9 @@ variable {L M N} {P : Type _} [L.StructureCat P] {Q : Type _} [L.StructureCat Q]
 instance : CoeTC L.Constants M :=
   ⟨fun c => funMap c default⟩
 
-theorem fun_map_eq_coe_constants {c : L.Constants} {x : Fin 0 → M} : funMap c x = c :=
+theorem funMap_eq_coe_constants {c : L.Constants} {x : Fin 0 → M} : funMap c x = c :=
   congr rfl (funext Fin.elim0)
-#align first_order.language.fun_map_eq_coe_constants FirstOrder.Language.fun_map_eq_coe_constants
+#align first_order.language.fun_map_eq_coe_constants FirstOrder.Language.funMap_eq_coe_constants
 
 /-- Given a language with a nonempty type of constants, any structure will be nonempty. This cannot
   be a global instance, because `L` becomes a metavariable. -/
@@ -389,34 +389,34 @@ variable {c' : c → M} {f₁' : f₁ → M → M} {f₂' : f₂ → M → M →
 variable {r₁' : r₁ → Set M} {r₂' : r₂ → M → M → Prop}
 
 @[simp]
-theorem fun_map_apply₀ (c₀ : c) {x : Fin 0 → M} :
+theorem funMap_apply₀ (c₀ : c) {x : Fin 0 → M} :
     @StructureCat.funMap _ M (StructureCat.mk₂ c' f₁' f₂' r₁' r₂') 0 c₀ x = c' c₀ :=
   rfl
-#align first_order.language.Structure.fun_map_apply₀ FirstOrder.Language.StructureCat.fun_map_apply₀
+#align first_order.language.Structure.fun_map_apply₀ FirstOrder.Language.StructureCat.funMap_apply₀
 
 @[simp]
-theorem fun_map_apply₁ (f : f₁) (x : M) :
+theorem funMap_apply₁ (f : f₁) (x : M) :
     @StructureCat.funMap _ M (StructureCat.mk₂ c' f₁' f₂' r₁' r₂') 1 f ![x] = f₁' f x :=
   rfl
-#align first_order.language.Structure.fun_map_apply₁ FirstOrder.Language.StructureCat.fun_map_apply₁
+#align first_order.language.Structure.fun_map_apply₁ FirstOrder.Language.StructureCat.funMap_apply₁
 
 @[simp]
-theorem fun_map_apply₂ (f : f₂) (x y : M) :
+theorem funMap_apply₂ (f : f₂) (x y : M) :
     @StructureCat.funMap _ M (StructureCat.mk₂ c' f₁' f₂' r₁' r₂') 2 f ![x, y] = f₂' f x y :=
   rfl
-#align first_order.language.Structure.fun_map_apply₂ FirstOrder.Language.StructureCat.fun_map_apply₂
+#align first_order.language.Structure.fun_map_apply₂ FirstOrder.Language.StructureCat.funMap_apply₂
 
 @[simp]
-theorem rel_map_apply₁ (r : r₁) (x : M) :
+theorem relMap_apply₁ (r : r₁) (x : M) :
     @StructureCat.RelMap _ M (StructureCat.mk₂ c' f₁' f₂' r₁' r₂') 1 r ![x] = (x ∈ r₁' r) :=
   rfl
-#align first_order.language.Structure.rel_map_apply₁ FirstOrder.Language.StructureCat.rel_map_apply₁
+#align first_order.language.Structure.rel_map_apply₁ FirstOrder.Language.StructureCat.relMap_apply₁
 
 @[simp]
-theorem rel_map_apply₂ (r : r₂) (x y : M) :
+theorem relMap_apply₂ (r : r₂) (x y : M) :
     @StructureCat.RelMap _ M (StructureCat.mk₂ c' f₁' f₂' r₁' r₂') 2 r ![x, y] = r₂' r x y :=
   rfl
-#align first_order.language.Structure.rel_map_apply₂ FirstOrder.Language.StructureCat.rel_map_apply₂
+#align first_order.language.Structure.rel_map_apply₂ FirstOrder.Language.StructureCat.relMap_apply₂
 
 end StructureCat
 
@@ -482,9 +482,9 @@ instance hasCoeToFun : CoeFun (M →[L] N) fun _ => M → N :=
 #align first_order.language.hom.has_coe_to_fun FirstOrder.Language.Hom.hasCoeToFun
 
 @[simp]
-theorem to_fun_eq_coe {f : M →[L] N} : f.toFun = (f : M → N) :=
+theorem toFun_eq_coe {f : M →[L] N} : f.toFun = (f : M → N) :=
   rfl
-#align first_order.language.hom.to_fun_eq_coe FirstOrder.Language.Hom.to_fun_eq_coe
+#align first_order.language.hom.to_fun_eq_coe FirstOrder.Language.Hom.toFun_eq_coe
 
 @[ext]
 theorem ext ⦃f g : M →[L] N⦄ (h : ∀ x, f x = g x) : f = g :=
@@ -603,9 +603,9 @@ def toHom : (M ↪[L] N) → M →[L] N :=
 #align first_order.language.embedding.to_hom FirstOrder.Language.Embedding.toHom
 
 @[simp]
-theorem coe_to_hom {f : M ↪[L] N} : (f.toHom : M → N) = f :=
+theorem coe_toHom {f : M ↪[L] N} : (f.toHom : M → N) = f :=
   rfl
-#align first_order.language.embedding.coe_to_hom FirstOrder.Language.Embedding.coe_to_hom
+#align first_order.language.embedding.coe_to_hom FirstOrder.Language.Embedding.coe_toHom
 
 theorem coe_injective : @Function.Injective (M ↪[L] N) (M → N) coeFn
   | f, g, h => by
@@ -638,17 +638,17 @@ def ofInjective [L.IsAlgebraic] {f : M →[L] N} (hf : Function.Injective f) : M
 #align first_order.language.embedding.of_injective FirstOrder.Language.Embedding.ofInjective
 
 @[simp]
-theorem coe_fn_of_injective [L.IsAlgebraic] {f : M →[L] N} (hf : Function.Injective f) :
+theorem coeFn_ofInjective [L.IsAlgebraic] {f : M →[L] N} (hf : Function.Injective f) :
     (ofInjective hf : M → N) = f :=
   rfl
-#align first_order.language.embedding.coe_fn_of_injective FirstOrder.Language.Embedding.coe_fn_of_injective
+#align first_order.language.embedding.coe_fn_of_injective FirstOrder.Language.Embedding.coeFn_ofInjective
 
 @[simp]
-theorem of_injective_to_hom [L.IsAlgebraic] {f : M →[L] N} (hf : Function.Injective f) :
+theorem ofInjective_toHom [L.IsAlgebraic] {f : M →[L] N} (hf : Function.Injective f) :
     (ofInjective hf).toHom = f := by
   ext
   simp
-#align first_order.language.embedding.of_injective_to_hom FirstOrder.Language.Embedding.of_injective_to_hom
+#align first_order.language.embedding.of_injective_to_hom FirstOrder.Language.Embedding.ofInjective_toHom
 
 variable (L) (M)
 
@@ -687,12 +687,12 @@ theorem comp_assoc (f : M ↪[L] N) (g : N ↪[L] P) (h : P ↪[L] Q) :
 #align first_order.language.embedding.comp_assoc FirstOrder.Language.Embedding.comp_assoc
 
 @[simp]
-theorem comp_to_hom (hnp : N ↪[L] P) (hmn : M ↪[L] N) :
+theorem comp_toHom (hnp : N ↪[L] P) (hmn : M ↪[L] N) :
     (hnp.comp hmn).toHom = hnp.toHom.comp hmn.toHom :=
   by
   ext
   simp only [coe_to_hom, comp_apply, hom.comp_apply]
-#align first_order.language.embedding.comp_to_hom FirstOrder.Language.Embedding.comp_to_hom
+#align first_order.language.embedding.comp_to_hom FirstOrder.Language.Embedding.comp_toHom
 
 end Embedding
 
@@ -780,19 +780,19 @@ def toHom : (M ≃[L] N) → M →[L] N :=
 #align first_order.language.equiv.to_hom FirstOrder.Language.Equiv.toHom
 
 @[simp]
-theorem to_embedding_to_hom (f : M ≃[L] N) : f.toEmbedding.toHom = f.toHom :=
+theorem toEmbedding_toHom (f : M ≃[L] N) : f.toEmbedding.toHom = f.toHom :=
   rfl
-#align first_order.language.equiv.to_embedding_to_hom FirstOrder.Language.Equiv.to_embedding_to_hom
+#align first_order.language.equiv.to_embedding_to_hom FirstOrder.Language.Equiv.toEmbedding_toHom
 
 @[simp]
-theorem coe_to_hom {f : M ≃[L] N} : (f.toHom : M → N) = (f : M → N) :=
+theorem coe_toHom {f : M ≃[L] N} : (f.toHom : M → N) = (f : M → N) :=
   rfl
-#align first_order.language.equiv.coe_to_hom FirstOrder.Language.Equiv.coe_to_hom
+#align first_order.language.equiv.coe_to_hom FirstOrder.Language.Equiv.coe_toHom
 
 @[simp]
-theorem coe_to_embedding (f : M ≃[L] N) : (f.toEmbedding : M → N) = (f : M → N) :=
+theorem coe_toEmbedding (f : M ≃[L] N) : (f.toEmbedding : M → N) = (f : M → N) :=
   rfl
-#align first_order.language.equiv.coe_to_embedding FirstOrder.Language.Equiv.coe_to_embedding
+#align first_order.language.equiv.coe_to_embedding FirstOrder.Language.Equiv.coe_toEmbedding
 
 theorem coe_injective : @Function.Injective (M ≃[L] N) (M → N) coeFn :=
   FunLike.coe_injective
@@ -875,28 +875,28 @@ instance sumStructure : (L₁.Sum L₂).StructureCat S
 variable {L₁ L₂ S}
 
 @[simp]
-theorem fun_map_sum_inl {n : ℕ} (f : L₁.Functions n) :
+theorem funMap_sum_inl {n : ℕ} (f : L₁.Functions n) :
     @funMap (L₁.Sum L₂) S _ n (Sum.inl f) = funMap f :=
   rfl
-#align first_order.language.fun_map_sum_inl FirstOrder.Language.fun_map_sum_inl
+#align first_order.language.fun_map_sum_inl FirstOrder.Language.funMap_sum_inl
 
 @[simp]
-theorem fun_map_sum_inr {n : ℕ} (f : L₂.Functions n) :
+theorem funMap_sum_inr {n : ℕ} (f : L₂.Functions n) :
     @funMap (L₁.Sum L₂) S _ n (Sum.inr f) = funMap f :=
   rfl
-#align first_order.language.fun_map_sum_inr FirstOrder.Language.fun_map_sum_inr
+#align first_order.language.fun_map_sum_inr FirstOrder.Language.funMap_sum_inr
 
 @[simp]
-theorem rel_map_sum_inl {n : ℕ} (R : L₁.Relations n) :
+theorem relMap_sum_inl {n : ℕ} (R : L₁.Relations n) :
     @RelMap (L₁.Sum L₂) S _ n (Sum.inl R) = RelMap R :=
   rfl
-#align first_order.language.rel_map_sum_inl FirstOrder.Language.rel_map_sum_inl
+#align first_order.language.rel_map_sum_inl FirstOrder.Language.relMap_sum_inl
 
 @[simp]
-theorem rel_map_sum_inr {n : ℕ} (R : L₂.Relations n) :
+theorem relMap_sum_inr {n : ℕ} (R : L₂.Relations n) :
     @RelMap (L₁.Sum L₂) S _ n (Sum.inr R) = RelMap R :=
   rfl
-#align first_order.language.rel_map_sum_inr FirstOrder.Language.rel_map_sum_inr
+#align first_order.language.rel_map_sum_inr FirstOrder.Language.relMap_sum_inr
 
 end SumStructure
 

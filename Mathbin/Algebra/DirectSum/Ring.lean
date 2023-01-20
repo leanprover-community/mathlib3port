@@ -132,11 +132,11 @@ class GcommRing [AddCommMonoid ι] [∀ i, AddCommGroup (A i)] extends Gring A, 
 
 end Defs
 
-theorem of_eq_of_graded_monoid_eq {A : ι → Type _} [∀ i : ι, AddCommMonoid (A i)] {i j : ι}
-    {a : A i} {b : A j} (h : GradedMonoid.mk i a = GradedMonoid.mk j b) :
+theorem of_eq_of_gradedMonoid_eq {A : ι → Type _} [∀ i : ι, AddCommMonoid (A i)] {i j : ι} {a : A i}
+    {b : A j} (h : GradedMonoid.mk i a = GradedMonoid.mk j b) :
     DirectSum.of A i a = DirectSum.of A j b :=
   Dfinsupp.single_eq_of_sigma_eq h
-#align direct_sum.of_eq_of_graded_monoid_eq DirectSum.of_eq_of_graded_monoid_eq
+#align direct_sum.of_eq_of_graded_monoid_eq DirectSum.of_eq_of_gradedMonoid_eq
 
 variable (A : ι → Type _)
 
@@ -189,17 +189,17 @@ instance : NonUnitalNonAssocSemiring (⨁ i, A i) :=
 
 variable {A}
 
-theorem mul_hom_of_of {i j} (a : A i) (b : A j) :
+theorem mulHom_of_of {i j} (a : A i) (b : A j) :
     mulHom A (of _ i a) (of _ j b) = of _ (i + j) (GradedMonoid.GhasMul.mul a b) :=
   by
   unfold MulHom
   rw [to_add_monoid_of, flip_apply, to_add_monoid_of, flip_apply, coe_comp, Function.comp_apply,
     comp_hom_apply_apply, coe_comp, Function.comp_apply, gmul_hom_apply_apply]
-#align direct_sum.mul_hom_of_of DirectSum.mul_hom_of_of
+#align direct_sum.mul_hom_of_of DirectSum.mulHom_of_of
 
 theorem of_mul_of {i j} (a : A i) (b : A j) :
     of _ i a * of _ j b = of _ (i + j) (GradedMonoid.GhasMul.mul a b) :=
-  mul_hom_of_of a b
+  mulHom_of_of a b
 #align direct_sum.of_mul_of DirectSum.of_mul_of
 
 end Mul
@@ -283,10 +283,10 @@ theorem of_list_dprod {α} (l : List α) (fι : α → ι) (fA : ∀ a, A (fι a
     rfl
 #align direct_sum.of_list_dprod DirectSum.of_list_dprod
 
-theorem list_prod_of_fn_of_eq_dprod (n : ℕ) (fι : Fin n → ι) (fA : ∀ a, A (fι a)) :
+theorem list_prod_ofFn_of_eq_dprod (n : ℕ) (fι : Fin n → ι) (fA : ∀ a, A (fι a)) :
     (List.ofFn fun a => of A (fι a) (fA a)).Prod = of A _ ((List.finRange n).dprod fι fA) := by
   rw [List.ofFn_eq_map, of_list_dprod]
-#align direct_sum.list_prod_of_fn_of_eq_dprod DirectSum.list_prod_of_fn_of_eq_dprod
+#align direct_sum.list_prod_of_fn_of_eq_dprod DirectSum.list_prod_ofFn_of_eq_dprod
 
 open BigOperators
 
@@ -295,8 +295,8 @@ theorem mul_eq_dfinsupp_sum [∀ (i : ι) (x : A i), Decidable (x ≠ 0)] (a a' 
       a.Sum fun i ai => a'.Sum fun j aj => DirectSum.of _ _ <| GradedMonoid.GhasMul.mul ai aj :=
   by
   change MulHom _ a a' = _
-  simpa only [MulHom, to_add_monoid, Dfinsupp.lift_add_hom_apply, Dfinsupp.sum_add_hom_apply,
-    AddMonoidHom.dfinsupp_sum_apply, flip_apply, AddMonoidHom.dfinsupp_sum_add_hom_apply]
+  simpa only [MulHom, to_add_monoid, Dfinsupp.liftAddHom_apply, Dfinsupp.sumAddHom_apply,
+    AddMonoidHom.dfinsupp_sum_apply, flip_apply, AddMonoidHom.dfinsupp_sumAddHom_apply]
 #align direct_sum.mul_eq_dfinsupp_sum DirectSum.mul_eq_dfinsupp_sum
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -364,9 +364,9 @@ instance ring : Ring (⨁ i, A i) :=
     add := (· + ·)
     neg := Neg.neg
     intCast := fun z => of _ _ (Gring.intCast z)
-    int_cast_of_nat := fun z => congr_arg _ <| Gring.int_cast_of_nat _
+    int_cast_of_nat := fun z => congr_arg _ <| Gring.intCast_of_nat _
     int_cast_neg_succ_of_nat := fun z =>
-      (congr_arg _ <| Gring.int_cast_neg_succ_of_nat _).trans (map_neg _ _) }
+      (congr_arg _ <| Gring.intCast_neg_succ_of_nat _).trans (map_neg _ _) }
 #align direct_sum.ring DirectSum.ring
 
 end Ring
@@ -414,7 +414,7 @@ variable [AddZeroClass ι] [∀ i, AddCommMonoid (A i)] [GnonUnitalNonAssocSemir
 
 @[simp]
 theorem of_zero_smul {i} (a : A 0) (b : A i) : of _ _ (a • b) = of _ _ a * of _ _ b :=
-  (of_eq_of_graded_monoid_eq (GradedMonoid.mk_zero_smul a b)).trans (of_mul_of _ _).symm
+  (of_eq_of_gradedMonoid_eq (GradedMonoid.mk_zero_smul a b)).trans (of_mul_of _ _).symm
 #align direct_sum.of_zero_smul DirectSum.of_zero_smul
 
 @[simp]
@@ -567,15 +567,15 @@ then they are equal.
 
 See note [partially-applied ext lemmas]. -/
 @[ext]
-theorem ring_hom_ext' ⦃F G : (⨁ i, A i) →+* R⦄
+theorem ringHom_ext' ⦃F G : (⨁ i, A i) →+* R⦄
     (h : ∀ i, (↑F : _ →+ R).comp (of A i) = (↑G : _ →+ R).comp (of A i)) : F = G :=
   RingHom.coe_addMonoidHom_injective <| DirectSum.add_hom_ext' h
-#align direct_sum.ring_hom_ext' DirectSum.ring_hom_ext'
+#align direct_sum.ring_hom_ext' DirectSum.ringHom_ext'
 
 /-- Two `ring_hom`s out of a direct sum are equal if they agree on the generators. -/
-theorem ring_hom_ext ⦃f g : (⨁ i, A i) →+* R⦄ (h : ∀ i x, f (of A i x) = g (of A i x)) : f = g :=
+theorem ringHom_ext ⦃f g : (⨁ i, A i) →+* R⦄ (h : ∀ i x, f (of A i x) = g (of A i x)) : f = g :=
   ring_hom_ext' fun i => AddMonoidHom.ext <| h i
-#align direct_sum.ring_hom_ext DirectSum.ring_hom_ext
+#align direct_sum.ring_hom_ext DirectSum.ringHom_ext
 
 /-- A family of `add_monoid_hom`s preserving `direct_sum.ghas_one.one` and `direct_sum.ghas_mul.mul`
 describes a `ring_hom`s on `⨁ i, A i`. This is a stronger version of `direct_sum.to_monoid`.
@@ -605,16 +605,16 @@ def toSemiring (f : ∀ i, A i →+ R) (hone : f _ GradedMonoid.GhasOne.one = 1)
 #align direct_sum.to_semiring DirectSum.toSemiring
 
 @[simp]
-theorem to_semiring_of (f : ∀ i, A i →+ R) (hone hmul) (i : ι) (x : A i) :
+theorem toSemiring_of (f : ∀ i, A i →+ R) (hone hmul) (i : ι) (x : A i) :
     toSemiring f hone hmul (of _ i x) = f _ x :=
-  to_add_monoid_of f i x
-#align direct_sum.to_semiring_of DirectSum.to_semiring_of
+  toAddMonoid_of f i x
+#align direct_sum.to_semiring_of DirectSum.toSemiring_of
 
 @[simp]
-theorem to_semiring_coe_add_monoid_hom (f : ∀ i, A i →+ R) (hone hmul) :
+theorem toSemiring_coe_addMonoidHom (f : ∀ i, A i →+ R) (hone hmul) :
     (toSemiring f hone hmul : (⨁ i, A i) →+ R) = toAddMonoid f :=
   rfl
-#align direct_sum.to_semiring_coe_add_monoid_hom DirectSum.to_semiring_coe_add_monoid_hom
+#align direct_sum.to_semiring_coe_add_monoid_hom DirectSum.toSemiring_coe_addMonoidHom
 
 /-- Families of `add_monoid_hom`s preserving `direct_sum.ghas_one.one` and `direct_sum.ghas_mul.mul`
 are isomorphic to `ring_hom`s on `⨁ i, A i`. This is a stronger version of `dfinsupp.lift_add_hom`.
@@ -642,7 +642,7 @@ def liftRingHom :
   right_inv F := by
     apply RingHom.coe_addMonoidHom_injective
     ext (xi xv)
-    simp only [RingHom.coe_addMonoidHom_mk, DirectSum.to_add_monoid_of, AddMonoidHom.mk_coe,
+    simp only [RingHom.coe_addMonoidHom_mk, DirectSum.toAddMonoid_of, AddMonoidHom.mk_coe,
       AddMonoidHom.comp_apply, to_semiring_coe_add_monoid_hom]
 #align direct_sum.lift_ring_hom DirectSum.liftRingHom
 
@@ -682,7 +682,7 @@ open DirectSum
 -- To check `has_mul.ghas_mul_mul` matches
 example {R : Type _} [AddMonoid ι] [Semiring R] (i j : ι) (a b : R) :
     (DirectSum.of _ i a * DirectSum.of _ j b : ⨁ i, R) = DirectSum.of _ (i + j) (a * b) := by
-  rw [DirectSum.of_mul_of, Mul.ghas_mul_mul]
+  rw [DirectSum.of_mul_of, Mul.ghasMul_mul]
 
 /-- A direct sum of copies of a `comm_semiring` inherits the commutative multiplication structure.
 -/

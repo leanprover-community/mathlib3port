@@ -88,11 +88,11 @@ theorem restrictScalars.smul_def' {R : Type u₁} {S : Type u₂} [Ring R] [Ring
   rfl
 #align category_theory.Module.restrict_scalars.smul_def' CategoryTheory.ModuleCat.restrictScalars.smul_def'
 
-instance (priority := 100) smul_comm_class_mk {R : Type u₁} {S : Type u₂} [Ring R] [CommRing S]
+instance (priority := 100) sMulCommClass_mk {R : Type u₁} {S : Type u₂} [Ring R] [CommRing S]
     (f : R →+* S) (M : Type v) [AddCommGroup M] [Module S M] :
     @SMulCommClass R S M (RestrictScalars.obj' f (ModuleCat.mk M)).isModule.toHasSmul _
     where smul_comm r s m := (by simp [← mul_smul, mul_comm] : f r • s • m = s • f r • m)
-#align category_theory.Module.smul_comm_class_mk CategoryTheory.ModuleCat.smul_comm_class_mk
+#align category_theory.Module.smul_comm_class_mk CategoryTheory.ModuleCat.sMulCommClass_mk
 
 namespace ExtendScalars
 
@@ -136,7 +136,7 @@ theorem map'_id {M : ModuleCat.{v} R} : map' f (𝟙 M) = 𝟙 _ :=
     dsimp only [map', ModuleCat.id_apply]
     induction' x using TensorProduct.induction_on with _ _ m s ihx ihy
     · simp only [map_zero]
-    · rw [LinearMap.base_change_tmul, ModuleCat.id_apply]
+    · rw [LinearMap.baseChange_tmul, ModuleCat.id_apply]
     · rw [map_add, ihx, ihy]
 #align category_theory.Module.extend_scalars.map'_id CategoryTheory.ModuleCat.ExtendScalars.map'_id
 

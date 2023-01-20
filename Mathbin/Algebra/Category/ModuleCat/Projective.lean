@@ -57,7 +57,7 @@ theorem projective_of_free {ι : Type _} (b : Basis ι R M) : Projective M :=
 
 /-- The category of modules has enough projectives, since every module is a quotient of a free
     module. -/
-instance Module_enough_projectives : EnoughProjectives (ModuleCat.{max u v} R)
+instance moduleCat_enoughProjectives : EnoughProjectives (ModuleCat.{max u v} R)
     where presentation M :=
     ⟨{  P := ModuleCat.of R (M →₀ R)
         Projective := projective_of_free Finsupp.basisSingleOne
@@ -65,7 +65,7 @@ instance Module_enough_projectives : EnoughProjectives (ModuleCat.{max u v} R)
         Epi :=
           (epi_iff_range_eq_top _).mpr
             (range_eq_top.2 fun m => ⟨Finsupp.single m (1 : R), by simp [Basis.constr]⟩) }⟩
-#align Module.Module_enough_projectives ModuleCat.Module_enough_projectives
+#align Module.Module_enough_projectives ModuleCat.moduleCat_enoughProjectives
 
 end ModuleCat
 

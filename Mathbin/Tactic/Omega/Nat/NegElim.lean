@@ -32,14 +32,14 @@ def pushNeg : Preform → Preform
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic omega.nat.preform.induce -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
-theorem push_neg_equiv : ∀ {p : Preform}, Preform.Equiv (pushNeg p) (¬* p) :=
+theorem pushNeg_equiv : ∀ {p : Preform}, Preform.Equiv (pushNeg p) (¬* p) :=
   by
   run_tac
     preform.induce sorry
   · simp only [not_not, preform.holds, push_neg]
   · simp only [preform.holds, push_neg, not_or, ihp v, ihq v]
   · simp only [preform.holds, push_neg, not_and_or, ihp v, ihq v]
-#align omega.nat.push_neg_equiv Omega.Nat.push_neg_equiv
+#align omega.nat.push_neg_equiv Omega.Nat.pushNeg_equiv
 
 /-- NNF transformation -/
 def nnf : Preform → Preform
@@ -62,7 +62,7 @@ def IsNnf : Preform → Prop
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic omega.nat.preform.induce -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
-theorem is_nnf_push_neg : ∀ p : Preform, IsNnf p → IsNnf (pushNeg p) :=
+theorem isNnf_pushNeg : ∀ p : Preform, IsNnf p → IsNnf (pushNeg p) :=
   by
   run_tac
     preform.induce sorry
@@ -71,18 +71,18 @@ theorem is_nnf_push_neg : ∀ p : Preform, IsNnf p → IsNnf (pushNeg p) :=
     constructor <;> [· apply ihp, · apply ihq] <;> assumption
   · cases h1
     constructor <;> [· apply ihp, · apply ihq] <;> assumption
-#align omega.nat.is_nnf_push_neg Omega.Nat.is_nnf_push_neg
+#align omega.nat.is_nnf_push_neg Omega.Nat.isNnf_pushNeg
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic omega.nat.preform.induce -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
-theorem is_nnf_nnf : ∀ p : Preform, IsNnf (nnf p) :=
+theorem isNnf_nnf : ∀ p : Preform, IsNnf (nnf p) :=
   by
   run_tac
     preform.induce sorry
   · apply is_nnf_push_neg _ ih
   · constructor <;> assumption
   · constructor <;> assumption
-#align omega.nat.is_nnf_nnf Omega.Nat.is_nnf_nnf
+#align omega.nat.is_nnf_nnf Omega.Nat.isNnf_nnf
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic omega.nat.preform.induce -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
@@ -108,7 +108,7 @@ def negElimCore : Preform → Preform
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic omega.nat.preform.induce -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
-theorem neg_free_neg_elim_core : ∀ p, IsNnf p → (negElimCore p).NegFree :=
+theorem negFree_negElimCore : ∀ p, IsNnf p → (negElimCore p).NegFree :=
   by
   run_tac
     preform.induce sorry
@@ -118,7 +118,7 @@ theorem neg_free_neg_elim_core : ∀ p, IsNnf p → (negElimCore p).NegFree :=
     constructor <;> [· apply ihp, · apply ihq] <;> assumption
   · cases h1
     constructor <;> [· apply ihp, · apply ihq] <;> assumption
-#align omega.nat.neg_free_neg_elim_core Omega.Nat.neg_free_neg_elim_core
+#align omega.nat.neg_free_neg_elim_core Omega.Nat.negFree_negElimCore
 
 theorem le_and_le_iff_eq {α : Type} [PartialOrder α] {a b : α} : a ≤ b ∧ b ≤ a ↔ a = b :=
   by
@@ -130,7 +130,7 @@ theorem le_and_le_iff_eq {α : Type} [PartialOrder α] {a b : α} : a ≤ b ∧ 
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic omega.nat.preform.induce -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
-theorem implies_neg_elim_core : ∀ {p : Preform}, Preform.Implies p (negElimCore p) :=
+theorem implies_negElimCore : ∀ {p : Preform}, Preform.Implies p (negElimCore p) :=
   by
   run_tac
     preform.induce sorry
@@ -147,22 +147,22 @@ theorem implies_neg_elim_core : ∀ {p : Preform}, Preform.Implies p (negElimCor
           apply ihq] <;>
       assumption
   apply And.imp (ihp _) (ihq _) h
-#align omega.nat.implies_neg_elim_core Omega.Nat.implies_neg_elim_core
+#align omega.nat.implies_neg_elim_core Omega.Nat.implies_negElimCore
 
 /-- Eliminate all negations in a preform -/
 def negElim : Preform → Preform :=
   neg_elim_core ∘ nnf
 #align omega.nat.neg_elim Omega.Nat.negElim
 
-theorem neg_free_neg_elim {p : Preform} : (negElim p).NegFree :=
-  neg_free_neg_elim_core _ (is_nnf_nnf _)
-#align omega.nat.neg_free_neg_elim Omega.Nat.neg_free_neg_elim
+theorem negFree_negElim {p : Preform} : (negElim p).NegFree :=
+  negFree_negElimCore _ (isNnf_nnf _)
+#align omega.nat.neg_free_neg_elim Omega.Nat.negFree_negElim
 
-theorem implies_neg_elim {p : Preform} : Preform.Implies p (negElim p) :=
+theorem implies_negElim {p : Preform} : Preform.Implies p (negElim p) :=
   by
   intro v h1; apply implies_neg_elim_core
   apply (nnf_equiv v).elimRight h1
-#align omega.nat.implies_neg_elim Omega.Nat.implies_neg_elim
+#align omega.nat.implies_neg_elim Omega.Nat.implies_negElim
 
 end Nat
 

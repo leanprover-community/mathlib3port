@@ -67,7 +67,7 @@ theorem gcd_domain_eq_field_fractions [IsDomain S] {s : S} (hs : IsIntegral R s)
   ·
     exact
       (Polynomial.IsPrimitive.irreducible_iff_irreducible_map_fraction_map
-            (Polynomial.Monic.is_primitive (monic hs))).1
+            (Polynomial.Monic.isPrimitive (monic hs))).1
         (Irreducible hs)
   · rw [aeval_map_algebra_map, aeval_algebra_map_apply, aeval, map_zero]
   · exact (monic hs).map _
@@ -82,8 +82,7 @@ theorem gcd_domain_eq_field_fractions' [IsDomain S] [Algebra K S] [IsScalarTower
   let L := FractionRing S
   rw [← gcd_domain_eq_field_fractions K L hs]
   refine'
-    minpoly.eq_of_algebra_map_eq (IsFractionRing.injective S L) (is_integral_of_is_scalar_tower hs)
-      rfl
+    minpoly.eq_of_algebraMap_eq (IsFractionRing.injective S L) (isIntegral_of_isScalarTower hs) rfl
 #align minpoly.gcd_domain_eq_field_fractions' minpoly.gcd_domain_eq_field_fractions'
 
 end GcdDomain
@@ -93,7 +92,7 @@ variable [IsIntegrallyClosed R]
 /-- For integrally closed domains, the minimal polynomial over the ring is the same as the minimal
 polynomial over the fraction field. See `minpoly.is_integrally_closed_eq_field_fractions'` if
 `S` is already a `K`-algebra. -/
-theorem is_integrally_closed_eq_field_fractions [IsDomain S] {s : S} (hs : IsIntegral R s) :
+theorem isIntegrallyClosed_eq_field_fractions [IsDomain S] {s : S} (hs : IsIntegral R s) :
     minpoly K (algebraMap S L s) = (minpoly R s).map (algebraMap R K) :=
   by
   refine' (eq_of_irreducible_of_monic _ _ _).symm
@@ -102,25 +101,24 @@ theorem is_integrally_closed_eq_field_fractions [IsDomain S] {s : S} (hs : IsInt
       (Polynomial.Monic.irreducible_iff_irreducible_map_fraction_map (monic hs)).1 (Irreducible hs)
   · rw [aeval_map_algebra_map, aeval_algebra_map_apply, aeval, map_zero]
   · exact (monic hs).map _
-#align minpoly.is_integrally_closed_eq_field_fractions minpoly.is_integrally_closed_eq_field_fractions
+#align minpoly.is_integrally_closed_eq_field_fractions minpoly.isIntegrallyClosed_eq_field_fractions
 
 /-- For integrally closed domains, the minimal polynomial over the ring is the same as the minimal
 polynomial over the fraction field. Compared to `minpoly.is_integrally_closed_eq_field_fractions`,
 this version is useful if the element is in a ring that is already a `K`-algebra. -/
-theorem is_integrally_closed_eq_field_fractions' [IsDomain S] [Algebra K S] [IsScalarTower R K S]
+theorem isIntegrallyClosed_eq_field_fractions' [IsDomain S] [Algebra K S] [IsScalarTower R K S]
     {s : S} (hs : IsIntegral R s) : minpoly K s = (minpoly R s).map (algebraMap R K) :=
   by
   let L := FractionRing S
   rw [← is_integrally_closed_eq_field_fractions K L hs]
   refine'
-    minpoly.eq_of_algebra_map_eq (IsFractionRing.injective S L) (is_integral_of_is_scalar_tower hs)
-      rfl
-#align minpoly.is_integrally_closed_eq_field_fractions' minpoly.is_integrally_closed_eq_field_fractions'
+    minpoly.eq_of_algebraMap_eq (IsFractionRing.injective S L) (isIntegral_of_isScalarTower hs) rfl
+#align minpoly.is_integrally_closed_eq_field_fractions' minpoly.isIntegrallyClosed_eq_field_fractions'
 
 /-- For GCD domains, the minimal polynomial over the ring is the same as the minimal polynomial
 over the fraction field. Compared to `minpoly.is_integrally_closed_eq_field_fractions`, this
 version is useful if the element is in a ring that is not a domain -/
-theorem is_integrally_closed_eq_field_fractions'' [NoZeroSMulDivisors S L] {s : S}
+theorem isIntegrallyClosed_eq_field_fractions'' [NoZeroSMulDivisors S L] {s : S}
     (hs : IsIntegral R s) : minpoly K (algebraMap S L s) = map (algebraMap R K) (minpoly R s) :=
   by
   --the idea of the proof is the following: since the minpoly of `a` over `Frac(R)` divides the
@@ -132,26 +130,26 @@ theorem is_integrally_closed_eq_field_fractions'' [NoZeroSMulDivisors S L] {s : 
     dvd_map_of_is_scalar_tower' R K L s
   have lem1 : IsIntegral K (algebraMap S L s) :=
     by
-    refine' is_integral_map_of_comp_eq_of_is_integral (algebraMap R K) _ _ hs
-    rw [← IsScalarTower.algebra_map_eq, ← IsScalarTower.algebra_map_eq]
-  obtain ⟨g, hg⟩ := IsIntegrallyClosed.eq_map_mul_C_of_dvd K (minpoly.monic hs) lem0
+    refine' isIntegral_map_of_comp_eq_of_isIntegral (algebraMap R K) _ _ hs
+    rw [← IsScalarTower.algebraMap_eq, ← IsScalarTower.algebraMap_eq]
+  obtain ⟨g, hg⟩ := IsIntegrallyClosed.eq_map_mul_c_of_dvd K (minpoly.monic hs) lem0
   rw [(minpoly.monic lem1).leadingCoeff, C_1, mul_one] at hg
   have lem2 : Polynomial.aeval s g = 0 :=
     by
     have := minpoly.aeval K (algebraMap S L s)
     rw [← hg, ← map_aeval_eq_aeval_map, ← map_zero (algebraMap S L)] at this
-    · exact NoZeroSMulDivisors.algebra_map_injective S L this
-    · rw [← IsScalarTower.algebra_map_eq, ← IsScalarTower.algebra_map_eq]
+    · exact NoZeroSMulDivisors.algebraMap_injective S L this
+    · rw [← IsScalarTower.algebraMap_eq, ← IsScalarTower.algebraMap_eq]
   have lem3 : g.monic := by
     simpa only [Function.Injective.monic_map_iff (IsFractionRing.injective R K), hg] using
       minpoly.monic lem1
   rw [← hg]
   refine'
     congr_arg _
-      (Eq.symm (Polynomial.eq_of_monic_of_dvd_of_nat_degree_le lem3 (minpoly.monic hs) _ _))
+      (Eq.symm (Polynomial.eq_of_monic_of_dvd_of_natDegree_le lem3 (minpoly.monic hs) _ _))
   · rwa [← map_dvd_map _ (IsFractionRing.injective R K) lem3, hg]
   · exact nat_degree_le_nat_degree (minpoly.min R s lem3 lem2)
-#align minpoly.is_integrally_closed_eq_field_fractions'' minpoly.is_integrally_closed_eq_field_fractions''
+#align minpoly.is_integrally_closed_eq_field_fractions'' minpoly.isIntegrallyClosed_eq_field_fractions''
 
 end
 
@@ -179,7 +177,7 @@ variable [IsIntegrallyClosed R]
 /-- For integrally closed rings, the minimal polynomial divides any polynomial that has the
   integral element as root. See also `minpoly.dvd` which relaxes the assumptions on `S`
   in exchange for stronger assumptions on `R`. -/
-theorem is_integrally_closed_dvd [Nontrivial R] (p : R[X]) {s : S} (hs : IsIntegral R s) :
+theorem isIntegrallyClosed_dvd [Nontrivial R] (p : R[X]) {s : S} (hs : IsIntegral R s) :
     Polynomial.aeval s p = 0 ↔ minpoly R s ∣ p :=
   by
   refine' ⟨fun hp => _, fun hp => _⟩
@@ -190,7 +188,7 @@ theorem is_integrally_closed_dvd [Nontrivial R] (p : R[X]) {s : S} (hs : IsInteg
       rw [map_mod_by_monic _ (minpoly.monic hs), mod_by_monic_eq_sub_mul_div]
       refine' dvd_sub (minpoly.dvd K (algebraMap S L s) _) _
       rw [← map_aeval_eq_aeval_map, hp, map_zero]
-      rw [← IsScalarTower.algebra_map_eq, ← IsScalarTower.algebra_map_eq]
+      rw [← IsScalarTower.algebraMap_eq, ← IsScalarTower.algebraMap_eq]
       apply dvd_mul_of_dvd_left
       rw [is_integrally_closed_eq_field_fractions'' K L hs]
       exact monic.map _ (minpoly.monic hs)
@@ -204,17 +202,17 @@ theorem is_integrally_closed_dvd [Nontrivial R] (p : R[X]) {s : S} (hs : IsInteg
     simpa only [RingHom.mem_ker, RingHom.coe_comp, coe_eval_ring_hom, coe_map_ring_hom,
       Function.comp_apply, eval_map, ← aeval_def] using
       aeval_eq_zero_of_dvd_aeval_eq_zero hp (minpoly.aeval R s)
-#align minpoly.is_integrally_closed_dvd minpoly.is_integrally_closed_dvd
+#align minpoly.is_integrally_closed_dvd minpoly.isIntegrallyClosed_dvd
 
 theorem ker_eval {s : S} (hs : IsIntegral R s) :
     ((Polynomial.aeval s).toRingHom : R[X] →+* S).ker = Ideal.span ({minpoly R s} : Set R[X]) :=
   by
   apply le_antisymm <;> intro p hp
   ·
-    rwa [RingHom.mem_ker, AlgHom.to_ring_hom_eq_coe, AlgHom.coe_to_ring_hom,
+    rwa [RingHom.mem_ker, AlgHom.toRingHom_eq_coe, AlgHom.coe_to_ringHom,
       is_integrally_closed_dvd p hs, ← Ideal.mem_span_singleton] at hp
   ·
-    rwa [RingHom.mem_ker, AlgHom.to_ring_hom_eq_coe, AlgHom.coe_to_ring_hom,
+    rwa [RingHom.mem_ker, AlgHom.toRingHom_eq_coe, AlgHom.coe_to_ringHom,
       is_integrally_closed_dvd p hs, ← Ideal.mem_span_singleton]
 #align minpoly.ker_eval minpoly.ker_eval
 

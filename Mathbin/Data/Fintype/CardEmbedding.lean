@@ -43,9 +43,9 @@ theorem card_embedding_eq {α β} [Fintype α] [Fintype β] [Fintype (α ↪ β)
     induction' ‹Fintype α› using Fintype.induction_empty_option with α₁ α₂ h₂ e ih α h ih
     · letI := Fintype.ofEquiv _ e.symm
       rw [← card_congr (Equiv.embeddingCongr e (Equiv.refl β)), ih, card_congr e]
-    · rw [card_pempty, Nat.desc_factorial_zero, card_eq_one_iff]
+    · rw [card_pempty, Nat.descFactorial_zero, card_eq_one_iff]
       exact ⟨embedding.of_is_empty, fun x => FunLike.ext _ _ isEmptyElim⟩
-    · rw [card_option, Nat.desc_factorial_succ, card_congr (embedding.option_embedding_equiv α β),
+    · rw [card_option, Nat.descFactorial_succ, card_congr (embedding.option_embedding_equiv α β),
         card_sigma, ← ih]
       simp only [Fintype.card_compl_set, Fintype.card_range, Finset.sum_const, Finset.card_univ,
         smul_eq_mul, mul_comm]

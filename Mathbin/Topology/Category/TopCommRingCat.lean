@@ -82,10 +82,10 @@ instance forgetCommRing (R : TopCommRingCat) : CommRing ((forget TopCommRingCat)
   R.isCommRing
 #align TopCommRing.forget_comm_ring TopCommRingCat.forgetCommRing
 
-instance forget_topological_ring (R : TopCommRingCat) :
+instance forget_topologicalRing (R : TopCommRingCat) :
     TopologicalRing ((forget TopCommRingCat).obj R) :=
   R.is_topological_ring
-#align TopCommRing.forget_topological_ring TopCommRingCat.forget_topological_ring
+#align TopCommRing.forget_topological_ring TopCommRingCat.forget_topologicalRing
 
 instance hasForgetToCommRing : HasForget₂ TopCommRingCat CommRingCat :=
   HasForget₂.mk' (fun R => CommRingCat.of R) (fun x => rfl) (fun R S f => f.val) fun R S f =>
@@ -108,10 +108,10 @@ instance forgetToTopCommRing (R : TopCommRingCat) :
   R.isCommRing
 #align TopCommRing.forget_to_Top_comm_ring TopCommRingCat.forgetToTopCommRing
 
-instance forget_to_Top_topological_ring (R : TopCommRingCat) :
+instance forget_to_topCat_topologicalRing (R : TopCommRingCat) :
     TopologicalRing ((forget₂ TopCommRingCat TopCat).obj R) :=
   R.is_topological_ring
-#align TopCommRing.forget_to_Top_topological_ring TopCommRingCat.forget_to_Top_topological_ring
+#align TopCommRing.forget_to_Top_topological_ring TopCommRingCat.forget_to_topCat_topologicalRing
 
 /-- The forgetful functors to `Type` do not reflect isomorphisms,
 but the forgetful functor from `TopCommRing` to `Top` does.

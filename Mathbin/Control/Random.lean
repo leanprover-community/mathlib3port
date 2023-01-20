@@ -299,7 +299,7 @@ instance intBoundedRandom : BoundedRandom ℤ
         ⟨z + x, Int.le_add_of_nonneg_left (Int.coe_nat_nonneg _),
           Int.add_le_of_le_sub_right <|
             le_trans (Int.ofNat_le_ofNat_of_le h₁)
-              (le_of_eq <| Int.of_nat_nat_abs_eq_of_nonneg (Int.sub_nonneg_of_le hxy))⟩
+              (le_of_eq <| Int.ofNat_natAbs_eq_of_nonneg (Int.sub_nonneg_of_le hxy))⟩
 #align int_bounded_random intBoundedRandom
 
 instance finRandom (n : ℕ) [NeZero n] : Random (Fin n) where Random g inst := @Fin.random g inst _ _
@@ -318,14 +318,14 @@ def randomFinOfPos : ∀ {n : ℕ} (h : 0 < n), Random (Fin n)
   | 0, h => False.elim (Nat.not_lt_zero _ h)
 #align random_fin_of_pos randomFinOfPos
 
-theorem bool_of_nat_mem_Icc_of_mem_Icc_to_nat (x y : Bool) (n : ℕ) :
+theorem bool_ofNat_mem_icc_of_mem_icc_toNat (x y : Bool) (n : ℕ) :
     n ∈ (x.toNat .. y.toNat) → Bool.ofNat n ∈ (x .. y) :=
   by
   simp only [and_imp, Set.mem_Icc]; intro h₀ h₁
-  constructor <;> [have h₂ := Bool.of_nat_le_of_nat h₀, have h₂ := Bool.of_nat_le_of_nat h₁] <;>
-      rw [Bool.of_nat_to_nat] at h₂ <;>
+  constructor <;> [have h₂ := Bool.ofNat_le_ofNat h₀, have h₂ := Bool.ofNat_le_ofNat h₁] <;>
+      rw [Bool.ofNat_toNat] at h₂ <;>
     exact h₂
-#align bool_of_nat_mem_Icc_of_mem_Icc_to_nat bool_of_nat_mem_Icc_of_mem_Icc_to_nat
+#align bool_of_nat_mem_Icc_of_mem_Icc_to_nat bool_ofNat_mem_icc_of_mem_icc_toNat
 
 instance : Random Bool
     where Random g inst :=
@@ -333,8 +333,8 @@ instance : Random Bool
 
 instance : BoundedRandom Bool
     where randomR g _inst x y p :=
-    Subtype.map Bool.ofNat (bool_of_nat_mem_Icc_of_mem_Icc_to_nat x y) <$>
-      @BoundedRandom.randomR ℕ _ _ g _inst x.toNat y.toNat (Bool.to_nat_le_to_nat p)
+    Subtype.map Bool.ofNat (bool_ofNat_mem_icc_of_mem_icc_toNat x y) <$>
+      @BoundedRandom.randomR ℕ _ _ g _inst x.toNat y.toNat (Bool.toNat_le_toNat p)
 
 /-- generate a random bit vector of length `n` -/
 def Bitvec.random (n : ℕ) : RandG g (Bitvec n) :=
@@ -346,10 +346,10 @@ def Bitvec.randomR {n : ℕ} (x y : Bitvec n) (h : x ≤ y) : RandG g (x .. y) :
   have h' : ∀ a : Fin (2 ^ n), a ∈ (x.toFin .. y.toFin) → Bitvec.ofFin a ∈ (x .. y) :=
     by
     simp only [and_imp, Set.mem_Icc]; intro z h₀ h₁
-    replace h₀ := Bitvec.of_fin_le_of_fin_of_le h₀
-    replace h₁ := Bitvec.of_fin_le_of_fin_of_le h₁
-    rw [Bitvec.of_fin_to_fin] at h₀ h₁; constructor <;> assumption
-  Subtype.map Bitvec.ofFin h' <$> Rand.randomR x.toFin y.toFin (Bitvec.to_fin_le_to_fin_of_le h)
+    replace h₀ := Bitvec.ofFin_le_ofFin_of_le h₀
+    replace h₁ := Bitvec.ofFin_le_ofFin_of_le h₁
+    rw [Bitvec.ofFin_toFin] at h₀ h₁; constructor <;> assumption
+  Subtype.map Bitvec.ofFin h' <$> Rand.randomR x.toFin y.toFin (Bitvec.toFin_le_toFin_of_le h)
 #align bitvec.random_r Bitvec.randomR
 
 open Nat

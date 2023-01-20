@@ -138,14 +138,14 @@ theorem getRight_eq_none_iff : x.getRight = none ↔ x.isLeft := by
 -/
 
 @[simp]
-theorem get_left_eq_some_iff {a} : x.getLeft = some a ↔ x = inl a := by
+theorem getLeft_eq_some_iff {a} : x.getLeft = some a ↔ x = inl a := by
   cases x <;> simp only [get_left]
-#align sum.get_left_eq_some_iff Sum.get_left_eq_some_iff
+#align sum.get_left_eq_some_iff Sum.getLeft_eq_some_iff
 
 @[simp]
-theorem get_right_eq_some_iff {b} : x.getRight = some b ↔ x = inr b := by
+theorem getRight_eq_some_iff {b} : x.getRight = some b ↔ x = inr b := by
   cases x <;> simp only [get_right]
-#align sum.get_right_eq_some_iff Sum.get_right_eq_some_iff
+#align sum.get_right_eq_some_iff Sum.getRight_eq_some_iff
 
 #print Sum.not_isLeft /-
 @[simp]
@@ -575,15 +575,19 @@ theorem swap_swap_eq : swap ∘ swap = @id (Sum α β) :=
 #align sum.swap_swap_eq Sum.swap_swap_eq
 -/
 
+#print Sum.swap_leftInverse /-
 @[simp]
-theorem swap_left_inverse : Function.LeftInverse (@swap α β) swap :=
+theorem swap_leftInverse : Function.LeftInverse (@swap α β) swap :=
   swap_swap
-#align sum.swap_left_inverse Sum.swap_left_inverse
+#align sum.swap_left_inverse Sum.swap_leftInverse
+-/
 
+#print Sum.swap_rightInverse /-
 @[simp]
-theorem swap_right_inverse : Function.RightInverse (@swap α β) swap :=
+theorem swap_rightInverse : Function.RightInverse (@swap α β) swap :=
   swap_swap
-#align sum.swap_right_inverse Sum.swap_right_inverse
+#align sum.swap_right_inverse Sum.swap_rightInverse
+-/
 
 #print Sum.isLeft_swap /-
 @[simp]

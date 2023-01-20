@@ -47,12 +47,12 @@ theorem taylor_apply : taylor r f = f.comp (X + c r) :=
 #align polynomial.taylor_apply Polynomial.taylor_apply
 
 @[simp]
-theorem taylor_X : taylor r x = X + c r := by simp only [taylor_apply, X_comp]
-#align polynomial.taylor_X Polynomial.taylor_X
+theorem taylor_x : taylor r x = X + c r := by simp only [taylor_apply, X_comp]
+#align polynomial.taylor_X Polynomial.taylor_x
 
 @[simp]
-theorem taylor_C (x : R) : taylor r (c x) = c x := by simp only [taylor_apply, C_comp]
-#align polynomial.taylor_C Polynomial.taylor_C
+theorem taylor_c (x : R) : taylor r (c x) = c x := by simp only [taylor_apply, C_comp]
+#align polynomial.taylor_C Polynomial.taylor_c
 
 @[simp]
 theorem taylor_zero' : taylor (0 : R) = LinearMap.id :=
@@ -99,13 +99,13 @@ theorem taylor_coeff_one : (taylor r f).coeff 1 = f.derivative.eval r := by
 #align polynomial.taylor_coeff_one Polynomial.taylor_coeff_one
 
 @[simp]
-theorem nat_degree_taylor (p : R[X]) (r : R) : natDegree (taylor r p) = natDegree p :=
+theorem natDegree_taylor (p : R[X]) (r : R) : natDegree (taylor r p) = natDegree p :=
   by
   refine' map_nat_degree_eq_nat_degree _ _
   nontriviality R
   intro n c c0
   simp [taylor_monomial, nat_degree_C_mul_eq_of_mul_ne_zero, nat_degree_pow_X_add_C, c0]
-#align polynomial.nat_degree_taylor Polynomial.nat_degree_taylor
+#align polynomial.nat_degree_taylor Polynomial.natDegree_taylor
 
 @[simp]
 theorem taylor_mul {R} [CommSemiring R] (r : R) (p q : R[X]) :
@@ -140,14 +140,14 @@ theorem taylor_injective {R} [CommRing R] (r : R) : Function.Injective (taylor r
     comp_X] using h
 #align polynomial.taylor_injective Polynomial.taylor_injective
 
-theorem eq_zero_of_hasse_deriv_eq_zero {R} [CommRing R] (f : R[X]) (r : R)
+theorem eq_zero_of_hasseDeriv_eq_zero {R} [CommRing R] (f : R[X]) (r : R)
     (h : ∀ k, (hasseDeriv k f).eval r = 0) : f = 0 :=
   by
   apply taylor_injective r
   rw [LinearMap.map_zero]
   ext k
   simp only [taylor_coeff, h, coeff_zero]
-#align polynomial.eq_zero_of_hasse_deriv_eq_zero Polynomial.eq_zero_of_hasse_deriv_eq_zero
+#align polynomial.eq_zero_of_hasse_deriv_eq_zero Polynomial.eq_zero_of_hasseDeriv_eq_zero
 
 /-- Taylor's formula. -/
 theorem sum_taylor_eq {R} [CommRing R] (f : R[X]) (r : R) :

@@ -806,14 +806,14 @@ theorem snoc_update : snoc (update p i y) x = update (snoc p x) i.cast_succ y :=
         have : update (snoc p x) j (_root_.cast C1 y) j = _root_.cast C1 y := by simp
         convert this
         · exact h'.symm
-        · exact heq_of_cast_eq (congr_arg α (Eq.symm h')) rfl
+        · exact hEq_of_cast_eq (congr_arg α (Eq.symm h')) rfl
       have C2 : α i.cast_succ = α (cast_succ (cast_lt j h)) := by rw [cast_succ_cast_lt, h']
       have E2 : update p i y (cast_lt j h) = _root_.cast C2 y :=
         by
         have : update p (cast_lt j h) (_root_.cast C2 y) (cast_lt j h) = _root_.cast C2 y := by simp
         convert this
         · simp [h, h']
-        · exact heq_of_cast_eq C2 rfl
+        · exact hEq_of_cast_eq C2 rfl
       rw [E1, E2]
       exact eq_rec_compose _ _ _
     · have : ¬cast_lt j h = i := by
@@ -1026,10 +1026,10 @@ theorem insertNth_apply_succAbove (i : Fin (n + 1)) (x : α i) (p : ∀ j, α (i
   simp only [insert_nth, succ_above_cases, dif_neg (succ_above_ne _ _)]
   by_cases hlt : j.cast_succ < i
   · rw [dif_pos ((succ_above_lt_iff _ _).2 hlt)]
-    apply eq_of_heq ((eq_rec_heq _ _).trans _)
+    apply eq_of_hEq ((eq_rec_hEq _ _).trans _)
     rw [cast_lt_succ_above hlt]
   · rw [dif_neg (mt (succ_above_lt_iff _ _).1 hlt)]
-    apply eq_of_heq ((eq_rec_heq _ _).trans _)
+    apply eq_of_hEq ((eq_rec_hEq _ _).trans _)
     rw [pred_succ_above (le_of_not_lt hlt)]
 #align fin.insert_nth_apply_succ_above Fin.insertNth_apply_succAbove
 
@@ -1138,11 +1138,11 @@ theorem insertNth_last (x : α (last n)) (p : ∀ j : Fin n, α ((last n).succAb
   by
   refine' insert_nth_eq_iff.2 ⟨by simp, _⟩
   ext j
-  apply eq_of_heq
+  apply eq_of_hEq
   trans snoc (fun j => _root_.cast (congr_arg α (succ_above_last_apply j)) (p j)) x j.cast_succ
   · rw [snoc_cast_succ]
-    exact (cast_heq _ _).symm
-  · apply congr_arg_heq
+    exact (cast_hEq _ _).symm
+  · apply congr_arg_hEq
     rw [succ_above_last]
 #align fin.insert_nth_last Fin.insertNth_last
 

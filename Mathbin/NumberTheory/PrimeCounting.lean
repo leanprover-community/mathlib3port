@@ -62,26 +62,26 @@ scoped notation "π" => Nat.primeCounting
 -- mathport name: prime_counting'
 scoped notation "π'" => Nat.primeCounting'
 
-theorem monotone_prime_counting' : Monotone primeCounting' :=
+theorem monotone_primeCounting' : Monotone primeCounting' :=
   count_monotone Prime
-#align nat.monotone_prime_counting' Nat.monotone_prime_counting'
+#align nat.monotone_prime_counting' Nat.monotone_primeCounting'
 
-theorem monotone_prime_counting : Monotone primeCounting :=
-  monotone_prime_counting'.comp (monotone_id.AddConst _)
-#align nat.monotone_prime_counting Nat.monotone_prime_counting
+theorem monotone_primeCounting : Monotone primeCounting :=
+  monotone_primeCounting'.comp (monotone_id.AddConst _)
+#align nat.monotone_prime_counting Nat.monotone_primeCounting
 
 @[simp]
-theorem prime_counting'_nth_eq (n : ℕ) : π' (nth Prime n) = n :=
-  count_nth_of_infinite _ infinite_set_of_prime _
-#align nat.prime_counting'_nth_eq Nat.prime_counting'_nth_eq
+theorem primeCounting'_nth_eq (n : ℕ) : π' (nth Prime n) = n :=
+  count_nth_of_infinite _ infinite_setOf_prime _
+#align nat.prime_counting'_nth_eq Nat.primeCounting'_nth_eq
 
 @[simp]
 theorem prime_nth_prime (n : ℕ) : Prime (nth Prime n) :=
-  nth_mem_of_infinite _ infinite_set_of_prime _
+  nth_mem_of_infinite _ infinite_setOf_prime _
 #align nat.prime_nth_prime Nat.prime_nth_prime
 
 /-- A linear upper bound on the size of the `prime_counting'` function -/
-theorem prime_counting'_add_le {a k : ℕ} (h0 : 0 < a) (h1 : a < k) (n : ℕ) :
+theorem primeCounting'_add_le {a k : ℕ} (h0 : 0 < a) (h1 : a < k) (n : ℕ) :
     π' (k + n) ≤ π' k + Nat.totient a * (n / a + 1) :=
   calc
     π' (k + n) ≤ ((range k).filter Prime).card + ((ico k (k + n)).filter Prime).card :=
@@ -105,7 +105,7 @@ theorem prime_counting'_add_le {a k : ℕ} (h0 : 0 < a) (h1 : a < k) (n : ℕ) :
       rw [add_le_add_iff_left]
       exact Ico_filter_coprime_le k n h0
     
-#align nat.prime_counting'_add_le Nat.prime_counting'_add_le
+#align nat.prime_counting'_add_le Nat.primeCounting'_add_le
 
 end Nat
 

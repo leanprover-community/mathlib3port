@@ -262,6 +262,7 @@ Case conversion may be inaccurate. Consider using '#align set.Inter_inv Set.inte
 theorem interᵢ_inv (s : ι → Set α) : (⋂ i, s i)⁻¹ = ⋂ i, (s i)⁻¹ :=
   preimage_Inter
 #align set.Inter_inv Set.interᵢ_inv
+#align set.Inter_neg Set.interᵢ_neg
 
 /- warning: set.Union_inv -> Set.unionᵢ_inv is a dubious translation:
 lean 3 declaration is
@@ -273,6 +274,7 @@ Case conversion may be inaccurate. Consider using '#align set.Union_inv Set.unio
 theorem unionᵢ_inv (s : ι → Set α) : (⋃ i, s i)⁻¹ = ⋃ i, (s i)⁻¹ :=
   preimage_Union
 #align set.Union_inv Set.unionᵢ_inv
+#align set.Union_neg Set.unionᵢ_neg
 
 /- warning: set.compl_inv -> Set.compl_inv is a dubious translation:
 lean 3 declaration is
@@ -643,6 +645,7 @@ theorem mul_inter_subset : s * (t₁ ∩ t₂) ⊆ s * t₁ ∩ (s * t₂) :=
 theorem unionᵢ_mul_left_image : (⋃ a ∈ s, (· * ·) a '' t) = s * t :=
   unionᵢ_image_left _
 #align set.Union_mul_left_image Set.unionᵢ_mul_left_image
+#align set.Union_add_left_image Set.unionᵢ_add_left_image
 -/
 
 #print Set.unionᵢ_mul_right_image /-
@@ -650,6 +653,7 @@ theorem unionᵢ_mul_left_image : (⋃ a ∈ s, (· * ·) a '' t) = s * t :=
 theorem unionᵢ_mul_right_image : (⋃ a ∈ t, (· * a) '' s) = s * t :=
   unionᵢ_image_right _
 #align set.Union_mul_right_image Set.unionᵢ_mul_right_image
+#align set.Union_add_right_image Set.unionᵢ_add_right_image
 -/
 
 /- warning: set.Union_mul -> Set.unionᵢ_mul is a dubious translation:
@@ -662,6 +666,7 @@ Case conversion may be inaccurate. Consider using '#align set.Union_mul Set.unio
 theorem unionᵢ_mul (s : ι → Set α) (t : Set α) : (⋃ i, s i) * t = ⋃ i, s i * t :=
   image2_unionᵢ_left _ _ _
 #align set.Union_mul Set.unionᵢ_mul
+#align set.Union_add Set.unionᵢ_add
 
 /- warning: set.mul_Union -> Set.mul_unionᵢ is a dubious translation:
 lean 3 declaration is
@@ -673,6 +678,7 @@ Case conversion may be inaccurate. Consider using '#align set.mul_Union Set.mul_
 theorem mul_unionᵢ (s : Set α) (t : ι → Set α) : (s * ⋃ i, t i) = ⋃ i, s * t i :=
   image2_unionᵢ_right _ _ _
 #align set.mul_Union Set.mul_unionᵢ
+#align set.add_Union Set.add_unionᵢ
 
 /- warning: set.Union₂_mul -> Set.unionᵢ₂_mul is a dubious translation:
 lean 3 declaration is
@@ -712,6 +718,7 @@ Case conversion may be inaccurate. Consider using '#align set.Inter_mul_subset S
 theorem interᵢ_mul_subset (s : ι → Set α) (t : Set α) : (⋂ i, s i) * t ⊆ ⋂ i, s i * t :=
   image2_interᵢ_subset_left _ _ _
 #align set.Inter_mul_subset Set.interᵢ_mul_subset
+#align set.Inter_add_subset Set.interᵢ_add_subset
 
 /- warning: set.mul_Inter_subset -> Set.mul_interᵢ_subset is a dubious translation:
 lean 3 declaration is
@@ -723,6 +730,7 @@ Case conversion may be inaccurate. Consider using '#align set.mul_Inter_subset S
 theorem mul_interᵢ_subset (s : Set α) (t : ι → Set α) : (s * ⋂ i, t i) ⊆ ⋂ i, s * t i :=
   image2_interᵢ_subset_right _ _ _
 #align set.mul_Inter_subset Set.mul_interᵢ_subset
+#align set.add_Inter_subset Set.add_interᵢ_subset
 
 /- warning: set.Inter₂_mul_subset -> Set.interᵢ₂_mul_subset is a dubious translation:
 lean 3 declaration is
@@ -1006,6 +1014,7 @@ theorem div_inter_subset : s / (t₁ ∩ t₂) ⊆ s / t₁ ∩ (s / t₂) :=
 theorem unionᵢ_div_left_image : (⋃ a ∈ s, (· / ·) a '' t) = s / t :=
   unionᵢ_image_left _
 #align set.Union_div_left_image Set.unionᵢ_div_left_image
+#align set.Union_sub_left_image Set.unionᵢ_sub_left_image
 -/
 
 #print Set.unionᵢ_div_right_image /-
@@ -1013,6 +1022,7 @@ theorem unionᵢ_div_left_image : (⋃ a ∈ s, (· / ·) a '' t) = s / t :=
 theorem unionᵢ_div_right_image : (⋃ a ∈ t, (· / a) '' s) = s / t :=
   unionᵢ_image_right _
 #align set.Union_div_right_image Set.unionᵢ_div_right_image
+#align set.Union_sub_right_image Set.unionᵢ_sub_right_image
 -/
 
 /- warning: set.Union_div -> Set.unionᵢ_div is a dubious translation:
@@ -1025,6 +1035,7 @@ Case conversion may be inaccurate. Consider using '#align set.Union_div Set.unio
 theorem unionᵢ_div (s : ι → Set α) (t : Set α) : (⋃ i, s i) / t = ⋃ i, s i / t :=
   image2_unionᵢ_left _ _ _
 #align set.Union_div Set.unionᵢ_div
+#align set.Union_sub Set.unionᵢ_sub
 
 /- warning: set.div_Union -> Set.div_unionᵢ is a dubious translation:
 lean 3 declaration is
@@ -1036,6 +1047,7 @@ Case conversion may be inaccurate. Consider using '#align set.div_Union Set.div_
 theorem div_unionᵢ (s : Set α) (t : ι → Set α) : (s / ⋃ i, t i) = ⋃ i, s / t i :=
   image2_unionᵢ_right _ _ _
 #align set.div_Union Set.div_unionᵢ
+#align set.sub_Union Set.sub_unionᵢ
 
 /- warning: set.Union₂_div -> Set.unionᵢ₂_div is a dubious translation:
 lean 3 declaration is
@@ -1075,6 +1087,7 @@ Case conversion may be inaccurate. Consider using '#align set.Inter_div_subset S
 theorem interᵢ_div_subset (s : ι → Set α) (t : Set α) : (⋂ i, s i) / t ⊆ ⋂ i, s i / t :=
   image2_interᵢ_subset_left _ _ _
 #align set.Inter_div_subset Set.interᵢ_div_subset
+#align set.Inter_sub_subset Set.interᵢ_sub_subset
 
 /- warning: set.div_Inter_subset -> Set.div_interᵢ_subset is a dubious translation:
 lean 3 declaration is
@@ -1086,6 +1099,7 @@ Case conversion may be inaccurate. Consider using '#align set.div_Inter_subset S
 theorem div_interᵢ_subset (s : Set α) (t : ι → Set α) : (s / ⋂ i, t i) ⊆ ⋂ i, s / t i :=
   image2_interᵢ_subset_right _ _ _
 #align set.div_Inter_subset Set.div_interᵢ_subset
+#align set.sub_Inter_subset Set.sub_interᵢ_subset
 
 /- warning: set.Inter₂_div_subset -> Set.interᵢ₂_div_subset is a dubious translation:
 lean 3 declaration is
@@ -1919,6 +1933,7 @@ theorem bddAbove_mul [OrderedCommMonoid α] {A B : Set α} :
   rintro x ⟨xa, xb, hxa, hxb, rfl⟩
   exact mul_le_mul' (hbA hxa) (hbB hxb)
 #align set.bdd_above_mul Set.bddAbove_mul
+#align set.bdd_above_add Set.bddAbove_add
 
 end Set
 

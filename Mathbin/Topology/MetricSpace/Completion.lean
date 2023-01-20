@@ -40,21 +40,21 @@ instance : HasDist (Completion α) :=
   ⟨Completion.extension₂ dist⟩
 
 /-- The new distance is uniformly continuous. -/
-protected theorem uniform_continuous_dist :
+protected theorem uniformContinuous_dist :
     UniformContinuous fun p : Completion α × Completion α => dist p.1 p.2 :=
   uniform_continuous_extension₂ dist
-#align uniform_space.completion.uniform_continuous_dist UniformSpace.Completion.uniform_continuous_dist
+#align uniform_space.completion.uniform_continuous_dist UniformSpace.Completion.uniformContinuous_dist
 
 /-- The new distance is continuous. -/
 protected theorem continuous_dist [TopologicalSpace β] {f g : β → Completion α} (hf : Continuous f)
     (hg : Continuous g) : Continuous fun x => dist (f x) (g x) :=
-  Completion.uniform_continuous_dist.Continuous.comp (hf.prod_mk hg : _)
+  Completion.uniformContinuous_dist.Continuous.comp (hf.prod_mk hg : _)
 #align uniform_space.completion.continuous_dist UniformSpace.Completion.continuous_dist
 
 /-- The new distance is an extension of the original distance. -/
 @[simp]
 protected theorem dist_eq (x y : α) : dist (x : Completion α) y = dist x y :=
-  Completion.extension₂_coe_coe uniform_continuous_dist _ _
+  Completion.extension₂_coe_coe uniformContinuous_dist _ _
 #align uniform_space.completion.dist_eq UniformSpace.Completion.dist_eq
 
 /- Let us check that the new distance satisfies the axioms of a distance, by starting from the
@@ -62,7 +62,7 @@ properties on α and extending them to `completion α` by continuity. -/
 protected theorem dist_self (x : Completion α) : dist x x = 0 :=
   by
   apply induction_on x
-  · refine' is_closed_eq _ continuous_const
+  · refine' isClosed_eq _ continuous_const
     exact completion.continuous_dist continuous_id continuous_id
   · intro a
     rw [completion.dist_eq, dist_self]
@@ -73,7 +73,7 @@ protected theorem dist_comm (x y : Completion α) : dist x y = dist y x :=
   apply induction_on₂ x y
   ·
     exact
-      is_closed_eq (completion.continuous_dist continuous_fst continuous_snd)
+      isClosed_eq (completion.continuous_dist continuous_fst continuous_snd)
         (completion.continuous_dist continuous_snd continuous_fst)
   · intro a b
     rw [completion.dist_eq, completion.dist_eq, dist_comm]
@@ -85,7 +85,7 @@ protected theorem dist_triangle (x y z : Completion α) : dist x z ≤ dist x y 
   by
   apply induction_on₃ x y z
   ·
-    refine' is_closed_le _ (Continuous.add _ _) <;>
+    refine' isClosed_le _ (Continuous.add _ _) <;>
       trace
         "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr completion.continuous_dist, \",\", expr continuous.fst, \",\", expr continuous.snd, \",\", expr continuous_id, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
   · intro a b c
@@ -105,9 +105,9 @@ protected theorem mem_uniformity_dist (s : Set (Completion α × Completion α))
         in metric spaces. Then `t` contains an `ε`-neighborhood of the diagonal in `completion α`, as
         closed properties pass to the completion. -/
     intro hs
-    rcases mem_uniformity_is_closed hs with ⟨t, ht, ⟨tclosed, ts⟩⟩
+    rcases mem_uniformity_isClosed hs with ⟨t, ht, ⟨tclosed, ts⟩⟩
     have A : { x : α × α | (coe x.1, coe x.2) ∈ t } ∈ uniformity α :=
-      uniform_continuous_def.1 (uniform_continuous_coe α) t ht
+      uniformContinuous_def.1 (uniform_continuous_coe α) t ht
     rcases mem_uniformity_dist.1 A with ⟨ε, εpos, hε⟩
     refine' ⟨ε, εpos, fun x y hxy => _⟩
     have : ε ≤ dist x y ∨ (x, y) ∈ t := by
@@ -118,7 +118,7 @@ protected theorem mem_uniformity_dist (s : Set (Completion α × Completion α))
           by ext <;> simp
         rw [this]
         apply IsClosed.union _ tclosed
-        exact is_closed_le continuous_const completion.uniform_continuous_dist.continuous
+        exact isClosed_le continuous_const completion.uniform_continuous_dist.continuous
       · intro x y
         rw [completion.dist_eq]
         by_cases h : ε ≤ dist x y
@@ -138,7 +138,7 @@ protected theorem mem_uniformity_dist (s : Set (Completion α × Completion α))
     rintro ⟨ε, εpos, hε⟩
     let r : Set (ℝ × ℝ) := { p | dist p.1 p.2 < ε }
     have : r ∈ uniformity ℝ := Metric.dist_mem_uniformity εpos
-    have T := uniform_continuous_def.1 (@completion.uniform_continuous_dist α _) r this
+    have T := uniformContinuous_def.1 (@completion.uniform_continuous_dist α _) r this
     simp only [uniformity_prod_eq_prod, mem_prod_iff, exists_prop, Filter.mem_map,
       Set.mem_setOf_eq] at T
     rcases T with ⟨t1, ht1, t2, ht2, ht⟩

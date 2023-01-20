@@ -31,12 +31,12 @@ For example with three ideals : `I ⊔ J = I ⊔ K = J ⊔ K = ⊤ ↔ (I ⊓ J)
 
 When ideals are all of the form `I i = R ∙ s i`, this is equivalent to the
 `exists_sum_eq_one_iff_pairwise_coprime` lemma.-/
-theorem supr_infi_eq_top_iff_pairwise {t : Finset ι} (h : t.Nonempty) (I : ι → Ideal R) :
+theorem supᵢ_infᵢ_eq_top_iff_pairwise {t : Finset ι} (h : t.Nonempty) (I : ι → Ideal R) :
     (⨆ i ∈ t, ⨅ (j) (hj : j ∈ t) (ij : j ≠ i), I j) = ⊤ ↔
       (t : Set ι).Pairwise fun i j => I i ⊔ I j = ⊤ :=
   by
   haveI : DecidableEq ι := Classical.decEq ι
-  rw [eq_top_iff_one, Submodule.mem_supr_finset_iff_exists_sum]
+  rw [eq_top_iff_one, Submodule.mem_supᵢ_finset_iff_exists_sum]
   refine' h.cons_induction _ _ <;> clear t h
   · simp only [Finset.sum_singleton, Finset.coe_singleton, Set.pairwise_singleton, iff_true_iff]
     refine' fun a => ⟨fun i => if h : i = a then ⟨1, _⟩ else 0, _⟩
@@ -115,7 +115,7 @@ theorem supr_infi_eq_top_iff_pairwise {t : Finset ι} (h : t.Nonempty) (I : ι �
       rfl
       rintro rfl
       exact hat hj
-#align ideal.supr_infi_eq_top_iff_pairwise Ideal.supr_infi_eq_top_iff_pairwise
+#align ideal.supr_infi_eq_top_iff_pairwise Ideal.supᵢ_infᵢ_eq_top_iff_pairwise
 
 end Ideal
 

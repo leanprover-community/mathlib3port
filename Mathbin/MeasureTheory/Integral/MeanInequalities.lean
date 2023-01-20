@@ -81,29 +81,29 @@ def funMulInvSnorm (f : α → ℝ≥0∞) (p : ℝ) (μ : Measure α) : α → 
   f a * ((∫⁻ c, f c ^ p ∂μ) ^ (1 / p))⁻¹
 #align ennreal.fun_mul_inv_snorm Ennreal.funMulInvSnorm
 
-theorem fun_eq_fun_mul_inv_snorm_mul_snorm {p : ℝ} (f : α → ℝ≥0∞)
-    (hf_nonzero : (∫⁻ a, f a ^ p ∂μ) ≠ 0) (hf_top : (∫⁻ a, f a ^ p ∂μ) ≠ ⊤) {a : α} :
+theorem fun_eq_funMulInvSnorm_mul_snorm {p : ℝ} (f : α → ℝ≥0∞) (hf_nonzero : (∫⁻ a, f a ^ p ∂μ) ≠ 0)
+    (hf_top : (∫⁻ a, f a ^ p ∂μ) ≠ ⊤) {a : α} :
     f a = funMulInvSnorm f p μ a * (∫⁻ c, f c ^ p ∂μ) ^ (1 / p) := by
   simp [fun_mul_inv_snorm, mul_assoc, Ennreal.inv_mul_cancel, hf_nonzero, hf_top]
-#align ennreal.fun_eq_fun_mul_inv_snorm_mul_snorm Ennreal.fun_eq_fun_mul_inv_snorm_mul_snorm
+#align ennreal.fun_eq_fun_mul_inv_snorm_mul_snorm Ennreal.fun_eq_funMulInvSnorm_mul_snorm
 
-theorem fun_mul_inv_snorm_rpow {p : ℝ} (hp0 : 0 < p) {f : α → ℝ≥0∞} {a : α} :
+theorem funMulInvSnorm_rpow {p : ℝ} (hp0 : 0 < p) {f : α → ℝ≥0∞} {a : α} :
     funMulInvSnorm f p μ a ^ p = f a ^ p * (∫⁻ c, f c ^ p ∂μ)⁻¹ :=
   by
   rw [fun_mul_inv_snorm, mul_rpow_of_nonneg _ _ (le_of_lt hp0)]
   suffices h_inv_rpow : ((∫⁻ c : α, f c ^ p ∂μ) ^ (1 / p))⁻¹ ^ p = (∫⁻ c : α, f c ^ p ∂μ)⁻¹
   · rw [h_inv_rpow]
   rw [inv_rpow, ← rpow_mul, one_div_mul_cancel hp0.ne', rpow_one]
-#align ennreal.fun_mul_inv_snorm_rpow Ennreal.fun_mul_inv_snorm_rpow
+#align ennreal.fun_mul_inv_snorm_rpow Ennreal.funMulInvSnorm_rpow
 
-theorem lintegral_rpow_fun_mul_inv_snorm_eq_one {p : ℝ} (hp0_lt : 0 < p) {f : α → ℝ≥0∞}
+theorem lintegral_rpow_funMulInvSnorm_eq_one {p : ℝ} (hp0_lt : 0 < p) {f : α → ℝ≥0∞}
     (hf_nonzero : (∫⁻ a, f a ^ p ∂μ) ≠ 0) (hf_top : (∫⁻ a, f a ^ p ∂μ) ≠ ⊤) :
     (∫⁻ c, funMulInvSnorm f p μ c ^ p ∂μ) = 1 :=
   by
   simp_rw [fun_mul_inv_snorm_rpow hp0_lt]
   rw [lintegral_mul_const', Ennreal.mul_inv_cancel hf_nonzero hf_top]
   rwa [inv_ne_top]
-#align ennreal.lintegral_rpow_fun_mul_inv_snorm_eq_one Ennreal.lintegral_rpow_fun_mul_inv_snorm_eq_one
+#align ennreal.lintegral_rpow_fun_mul_inv_snorm_eq_one Ennreal.lintegral_rpow_funMulInvSnorm_eq_one
 
 /-- Hölder's inequality in case of finite non-zero integrals -/
 theorem lintegral_mul_le_Lp_mul_Lq_of_ne_zero_of_ne_top {p q : ℝ} (hpq : p.IsConjugateExponent q)
@@ -250,7 +250,7 @@ theorem lintegral_Lp_mul_le_Lq_mul_Lr {α} [MeasurableSpace α] {p q r : ℝ} (h
   let p2 := q / p
   let q2 := p2.conjugate_exponent
   have hp2q2 : p2.is_conjugate_exponent q2 :=
-    Real.is_conjugate_exponent_conjugate_exponent (by simp [lt_div_iff, hpq, hp0_lt])
+    Real.isConjugateExponent_conjugateExponent (by simp [lt_div_iff, hpq, hp0_lt])
   calc
     (∫⁻ a : α, (f * g) a ^ p ∂μ) ^ (1 / p) = (∫⁻ a : α, f a ^ p * g a ^ p ∂μ) ^ (1 / p) := by
       simp_rw [Pi.mul_apply, Ennreal.mul_rpow_of_nonneg _ _ hp0]
@@ -394,7 +394,7 @@ theorem lintegral_Lp_add_le {p : ℝ} {f g : α → ℝ≥0∞} (hf : AeMeasurab
     refine' lt_of_le_of_ne hp1 _
     symm
     exact h1
-  have hpq := Real.is_conjugate_exponent_conjugate_exponent hp1_lt
+  have hpq := Real.isConjugateExponent_conjugateExponent hp1_lt
   by_cases h0 : (∫⁻ a, (f + g) a ^ p ∂μ) = 0
   · rw [h0, @Ennreal.zero_rpow_of_pos (1 / p) (by simp [lt_of_lt_of_le zero_lt_one hp1])]
     exact zero_le _

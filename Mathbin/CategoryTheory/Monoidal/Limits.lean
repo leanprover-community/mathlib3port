@@ -42,10 +42,10 @@ instance limitFunctorial : Functorial fun F : J ⥤ C => limit F :=
 #align category_theory.limits.limit_functorial CategoryTheory.Limits.limitFunctorial
 
 @[simp]
-theorem limit_functorial_map {F G : J ⥤ C} (α : F ⟶ G) :
+theorem limitFunctorial_map {F G : J ⥤ C} (α : F ⟶ G) :
     map (fun F : J ⥤ C => limit F) α = Limits.lim.map α :=
   rfl
-#align category_theory.limits.limit_functorial_map CategoryTheory.Limits.limit_functorial_map
+#align category_theory.limits.limit_functorial_map CategoryTheory.Limits.limitFunctorial_map
 
 variable [MonoidalCategory.{v} C]
 
@@ -115,33 +115,33 @@ def limLax : LaxMonoidalFunctor (J ⥤ C) C :=
 #align category_theory.limits.lim_lax CategoryTheory.Limits.limLax
 
 @[simp]
-theorem lim_lax_obj (F : J ⥤ C) : limLax.obj F = limit F :=
+theorem limLax_obj (F : J ⥤ C) : limLax.obj F = limit F :=
   rfl
-#align category_theory.limits.lim_lax_obj CategoryTheory.Limits.lim_lax_obj
+#align category_theory.limits.lim_lax_obj CategoryTheory.Limits.limLax_obj
 
-theorem lim_lax_obj' (F : J ⥤ C) : limLax.obj F = lim.obj F :=
+theorem limLax_obj' (F : J ⥤ C) : limLax.obj F = lim.obj F :=
   rfl
-#align category_theory.limits.lim_lax_obj' CategoryTheory.Limits.lim_lax_obj'
-
-@[simp]
-theorem lim_lax_map {F G : J ⥤ C} (α : F ⟶ G) : limLax.map α = lim.map α :=
-  rfl
-#align category_theory.limits.lim_lax_map CategoryTheory.Limits.lim_lax_map
+#align category_theory.limits.lim_lax_obj' CategoryTheory.Limits.limLax_obj'
 
 @[simp]
-theorem lim_lax_ε :
+theorem limLax_map {F G : J ⥤ C} (α : F ⟶ G) : limLax.map α = lim.map α :=
+  rfl
+#align category_theory.limits.lim_lax_map CategoryTheory.Limits.limLax_map
+
+@[simp]
+theorem limLax_ε :
     (@limLax J _ C _ _ _).ε =
       limit.lift _
         { x := _
           π := { app := fun j => 𝟙 _ } } :=
   rfl
-#align category_theory.limits.lim_lax_ε CategoryTheory.Limits.lim_lax_ε
+#align category_theory.limits.lim_lax_ε CategoryTheory.Limits.limLax_ε
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem lim_lax_μ (F G : J ⥤ C) :
+theorem limLax_μ (F G : J ⥤ C) :
     (@limLax J _ C _ _ _).μ F G =
       limit.lift (F ⊗ G)
         { x := limit F ⊗ limit G
@@ -151,7 +151,7 @@ theorem lim_lax_μ (F G : J ⥤ C) :
                 dsimp
                 simp only [category.id_comp, ← tensor_comp, limit.w] } } :=
   rfl
-#align category_theory.limits.lim_lax_μ CategoryTheory.Limits.lim_lax_μ
+#align category_theory.limits.lim_lax_μ CategoryTheory.Limits.limLax_μ
 
 end CategoryTheory.Limits
 

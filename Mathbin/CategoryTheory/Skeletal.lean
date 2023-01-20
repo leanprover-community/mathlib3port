@@ -89,7 +89,7 @@ noncomputable def fromSkeleton : Skeleton C ⥤ C :=
   inducedFunctor _ deriving Full, Faithful
 #align category_theory.from_skeleton CategoryTheory.fromSkeleton
 
-instance : EssSurj (fromSkeleton C) where mem_ess_image X := ⟨Quotient.mk'' X, Quotient.mk_out X⟩
+instance : EssSurj (fromSkeleton C) where mem_ess_image X := ⟨Quotient.mk'' X, Quotient.mk''_out X⟩
 
 noncomputable instance : IsEquivalence (fromSkeleton C) :=
   Equivalence.ofFullyFaithfullyEssSurj (fromSkeleton C)
@@ -189,9 +189,9 @@ def map (F : C ⥤ D) : ThinSkeleton C ⥤ ThinSkeleton D
   map X Y := Quotient.recOnSubsingleton₂ X Y fun x y k => homOfLe (k.le.elim fun t => ⟨F.map t⟩)
 #align category_theory.thin_skeleton.map CategoryTheory.ThinSkeleton.map
 
-theorem comp_to_thin_skeleton (F : C ⥤ D) : F ⋙ toThinSkeleton D = toThinSkeleton C ⋙ map F :=
+theorem comp_toThinSkeleton (F : C ⥤ D) : F ⋙ toThinSkeleton D = toThinSkeleton C ⋙ map F :=
   rfl
-#align category_theory.thin_skeleton.comp_to_thin_skeleton CategoryTheory.ThinSkeleton.comp_to_thin_skeleton
+#align category_theory.thin_skeleton.comp_to_thin_skeleton CategoryTheory.ThinSkeleton.comp_toThinSkeleton
 
 /-- Given a natural transformation `F₁ ⟶ F₂`, induce a natural transformation `map F₁ ⟶ map F₂`.-/
 def mapNatTrans {F₁ F₂ : C ⥤ D} (k : F₁ ⟶ F₂) : map F₁ ⟶ map F₂
@@ -225,8 +225,8 @@ section
 
 variable [Quiver.IsThin C]
 
-instance to_thin_skeleton_faithful : Faithful (toThinSkeleton C) where
-#align category_theory.thin_skeleton.to_thin_skeleton_faithful CategoryTheory.ThinSkeleton.to_thin_skeleton_faithful
+instance toThinSkeleton_faithful : Faithful (toThinSkeleton C) where
+#align category_theory.thin_skeleton.to_thin_skeleton_faithful CategoryTheory.ThinSkeleton.toThinSkeleton_faithful
 
 /-- Use `quotient.out` to create a functor out of the thin skeleton. -/
 @[simps]
@@ -235,18 +235,19 @@ noncomputable def fromThinSkeleton : ThinSkeleton C ⥤ C
   obj := Quotient.out
   map x y :=
     Quotient.recOnSubsingleton₂ x y fun X Y f =>
-      (Nonempty.some (Quotient.mk_out X)).Hom ≫ f.le.some ≫ (Nonempty.some (Quotient.mk_out Y)).inv
+      (Nonempty.some (Quotient.mk''_out X)).Hom ≫
+        f.le.some ≫ (Nonempty.some (Quotient.mk''_out Y)).inv
 #align category_theory.thin_skeleton.from_thin_skeleton CategoryTheory.ThinSkeleton.fromThinSkeleton
 
 noncomputable instance fromThinSkeletonEquivalence : IsEquivalence (fromThinSkeleton C)
     where
   inverse := toThinSkeleton C
-  counitIso := NatIso.ofComponents (fun X => Nonempty.some (Quotient.mk_out X)) (by tidy)
+  counitIso := NatIso.ofComponents (fun X => Nonempty.some (Quotient.mk''_out X)) (by tidy)
   unitIso :=
     NatIso.ofComponents
       (fun x =>
         Quotient.recOnSubsingleton x fun X =>
-          eqToIso (Quotient.sound ⟨(Nonempty.some (Quotient.mk_out X)).symm⟩))
+          eqToIso (Quotient.sound ⟨(Nonempty.some (Quotient.mk''_out X)).symm⟩))
       (by tidy)
 #align category_theory.thin_skeleton.from_thin_skeleton_equivalence CategoryTheory.ThinSkeleton.fromThinSkeletonEquivalence
 

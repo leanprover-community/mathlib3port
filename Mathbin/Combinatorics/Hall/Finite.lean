@@ -266,7 +266,7 @@ if every union of `k` of the sets has at least `k` elements.
 See `finset.all_card_le_bUnion_card_iff_exists_injective` for a version
 where the `finite ι` constraint is removed.
 -/
-theorem Finset.all_card_le_bUnion_card_iff_exists_injective' {ι α : Type _} [Finite ι]
+theorem Finset.all_card_le_bunionᵢ_card_iff_exists_injective' {ι α : Type _} [Finite ι]
     [DecidableEq α] (t : ι → Finset α) :
     (∀ s : Finset ι, s.card ≤ (s.bUnion t).card) ↔
       ∃ f : ι → α, Function.Injective f ∧ ∀ x, f x ∈ t x :=
@@ -280,5 +280,5 @@ theorem Finset.all_card_le_bUnion_card_iff_exists_injective' {ι α : Type _} [F
     rw [mem_image, mem_bUnion]
     rintro ⟨x, hx, rfl⟩
     exact ⟨x, hx, hf₂ x⟩
-#align finset.all_card_le_bUnion_card_iff_exists_injective' Finset.all_card_le_bUnion_card_iff_exists_injective'
+#align finset.all_card_le_bUnion_card_iff_exists_injective' Finset.all_card_le_bunionᵢ_card_iff_exists_injective'
 

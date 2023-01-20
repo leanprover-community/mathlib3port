@@ -82,7 +82,7 @@ theorem zero_apply {V W : SemiNormedGroupCat} (x : V) : (0 : V ⟶ W) x = 0 :=
   rfl
 #align SemiNormedGroup.zero_apply SemiNormedGroupCat.zero_apply
 
-theorem is_zero_of_subsingleton (V : SemiNormedGroupCat) [Subsingleton V] : Limits.IsZero V :=
+theorem isZero_of_subsingleton (V : SemiNormedGroupCat) [Subsingleton V] : Limits.IsZero V :=
   by
   refine' ⟨fun X => ⟨⟨⟨0⟩, fun f => _⟩⟩, fun X => ⟨⟨⟨0⟩, fun f => _⟩⟩⟩
   · ext
@@ -90,13 +90,13 @@ theorem is_zero_of_subsingleton (V : SemiNormedGroupCat) [Subsingleton V] : Limi
     simp only [this, map_zero]
   · ext
     apply Subsingleton.elim
-#align SemiNormedGroup.is_zero_of_subsingleton SemiNormedGroupCat.is_zero_of_subsingleton
+#align SemiNormedGroup.is_zero_of_subsingleton SemiNormedGroupCat.isZero_of_subsingleton
 
-instance has_zero_object : Limits.HasZeroObject SemiNormedGroupCat.{u} :=
-  ⟨⟨of PUnit, is_zero_of_subsingleton _⟩⟩
-#align SemiNormedGroup.has_zero_object SemiNormedGroupCat.has_zero_object
+instance hasZeroObject : Limits.HasZeroObject SemiNormedGroupCat.{u} :=
+  ⟨⟨of PUnit, isZero_of_subsingleton _⟩⟩
+#align SemiNormedGroup.has_zero_object SemiNormedGroupCat.hasZeroObject
 
-theorem iso_isometry_of_norm_noninc {V W : SemiNormedGroupCat} (i : V ≅ W) (h1 : i.hom.NormNoninc)
+theorem iso_isometry_of_normNoninc {V W : SemiNormedGroupCat} (i : V ≅ W) (h1 : i.hom.NormNoninc)
     (h2 : i.inv.NormNoninc) : Isometry i.hom :=
   by
   apply AddMonoidHomClass.isometry_of_norm
@@ -106,7 +106,7 @@ theorem iso_isometry_of_norm_noninc {V W : SemiNormedGroupCat} (i : V ≅ W) (h1
     ‖v‖ = ‖i.inv (i.hom v)‖ := by rw [iso.hom_inv_id_apply]
     _ ≤ ‖i.hom v‖ := h2 _
     
-#align SemiNormedGroup.iso_isometry_of_norm_noninc SemiNormedGroupCat.iso_isometry_of_norm_noninc
+#align SemiNormedGroup.iso_isometry_of_norm_noninc SemiNormedGroupCat.iso_isometry_of_normNoninc
 
 end SemiNormedGroupCat
 
@@ -155,10 +155,10 @@ def mkHom {M N : SemiNormedGroupCat} (f : M ⟶ N) (i : f.NormNoninc) :
 #align SemiNormedGroup₁.mk_hom SemiNormedGroup₁Cat.mkHom
 
 @[simp]
-theorem mk_hom_apply {M N : SemiNormedGroupCat} (f : M ⟶ N) (i : f.NormNoninc) (x) :
+theorem mkHom_apply {M N : SemiNormedGroupCat} (f : M ⟶ N) (i : f.NormNoninc) (x) :
     mkHom f i x = f x :=
   rfl
-#align SemiNormedGroup₁.mk_hom_apply SemiNormedGroup₁Cat.mk_hom_apply
+#align SemiNormedGroup₁.mk_hom_apply SemiNormedGroup₁Cat.mkHom_apply
 
 /-- Promote an isomorphism in `SemiNormedGroup` to an isomorphism in `SemiNormedGroup₁`. -/
 @[simps]
@@ -218,14 +218,14 @@ instance : Limits.HasZeroMorphisms.{u, u + 1} SemiNormedGroup₁Cat
     rfl
   zero_comp' X Y Z f := by
     ext
-    simp [coe_fn_coe_base']
+    simp [coeFn_coe_base']
 
 @[simp]
 theorem zero_apply {V W : SemiNormedGroup₁Cat} (x : V) : (0 : V ⟶ W) x = 0 :=
   rfl
 #align SemiNormedGroup₁.zero_apply SemiNormedGroup₁Cat.zero_apply
 
-theorem is_zero_of_subsingleton (V : SemiNormedGroup₁Cat) [Subsingleton V] : Limits.IsZero V :=
+theorem isZero_of_subsingleton (V : SemiNormedGroup₁Cat) [Subsingleton V] : Limits.IsZero V :=
   by
   refine' ⟨fun X => ⟨⟨⟨0⟩, fun f => _⟩⟩, fun X => ⟨⟨⟨0⟩, fun f => _⟩⟩⟩
   · ext
@@ -234,11 +234,11 @@ theorem is_zero_of_subsingleton (V : SemiNormedGroup₁Cat) [Subsingleton V] : L
     exact map_zero f.1
   · ext
     apply Subsingleton.elim
-#align SemiNormedGroup₁.is_zero_of_subsingleton SemiNormedGroup₁Cat.is_zero_of_subsingleton
+#align SemiNormedGroup₁.is_zero_of_subsingleton SemiNormedGroup₁Cat.isZero_of_subsingleton
 
-instance has_zero_object : Limits.HasZeroObject SemiNormedGroup₁Cat.{u} :=
-  ⟨⟨of PUnit, is_zero_of_subsingleton _⟩⟩
-#align SemiNormedGroup₁.has_zero_object SemiNormedGroup₁Cat.has_zero_object
+instance hasZeroObject : Limits.HasZeroObject SemiNormedGroup₁Cat.{u} :=
+  ⟨⟨of PUnit, isZero_of_subsingleton _⟩⟩
+#align SemiNormedGroup₁.has_zero_object SemiNormedGroup₁Cat.hasZeroObject
 
 theorem iso_isometry {V W : SemiNormedGroup₁Cat} (i : V ≅ W) : Isometry i.hom :=
   by

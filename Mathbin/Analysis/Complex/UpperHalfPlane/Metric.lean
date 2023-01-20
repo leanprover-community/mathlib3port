@@ -47,7 +47,7 @@ theorem dist_eq (z w : ℍ) : dist z w = 2 * arsinh (dist (z : ℂ) w / (2 * sqr
 
 theorem sinh_half_dist (z w : ℍ) :
     sinh (dist z w / 2) = dist (z : ℂ) w / (2 * sqrt (z.im * w.im)) := by
-  rw [dist_eq, mul_div_cancel_left (arsinh _) two_ne_zero, sinh_arsinh]
+  rw [dist_eq, mul_div_cancel_left (arsinh _) two_neZero, sinh_arsinh]
 #align upper_half_plane.sinh_half_dist UpperHalfPlane.sinh_half_dist
 
 theorem cosh_half_dist (z w : ℍ) :
@@ -59,7 +59,7 @@ theorem cosh_half_dist (z w : ℍ) :
   rw [← sq_eq_sq (cosh_pos _).le (div_nonneg dist_nonneg H₃.le), cosh_sq', sinh_half_dist, div_pow,
     div_pow, one_add_div (pow_ne_zero 2 H₃.ne'), mul_pow, sq_sqrt H₂.le, H₁]
   congr 1
-  simp only [Complex.dist_eq, Complex.sq_abs, Complex.norm_sq_sub, Complex.norm_sq_conj,
+  simp only [Complex.dist_eq, Complex.sq_abs, Complex.normSq_sub, Complex.normSq_conj,
     Complex.conj_conj, Complex.mul_re, Complex.conj_re, Complex.conj_im, coe_im]
   ring
 #align upper_half_plane.cosh_half_dist UpperHalfPlane.cosh_half_dist
@@ -319,7 +319,7 @@ instance : MetricSpace ℍ :=
     refine' le_antisymm (continuous_id_iff_le.1 _) _
     · refine' (@continuous_iff_continuous_dist _ _ metric_space_aux.to_pseudo_metric_space _ _).2 _
       have : ∀ x : ℍ × ℍ, 2 * Real.sqrt (x.1.im * x.2.im) ≠ 0 := fun x =>
-        mul_ne_zero two_ne_zero (Real.sqrt_pos.2 <| mul_pos x.1.im_pos x.2.im_pos).ne'
+        mul_ne_zero two_neZero (Real.sqrt_pos.2 <| mul_pos x.1.im_pos x.2.im_pos).ne'
       trace
         "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr continuous.div, \",\", expr continuous.mul, \",\", expr continuous_const, \",\", expr continuous.arsinh, \",\", expr continuous.dist, \",\", expr continuous_coe.comp, \",\", expr continuous_fst, \",\", expr continuous_snd, \",\", expr real.continuous_sqrt.comp, \",\", expr continuous_im.comp, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
     · letI : MetricSpace ℍ := metric_space_aux
@@ -342,7 +342,7 @@ theorem im_pos_of_dist_center_le {z : ℍ} {r : ℝ} {w : ℂ} (h : dist w (cent
     
 #align upper_half_plane.im_pos_of_dist_center_le UpperHalfPlane.im_pos_of_dist_center_le
 
-theorem image_coe_closed_ball (z : ℍ) (r : ℝ) :
+theorem image_coe_closedBall (z : ℍ) (r : ℝ) :
     (coe : ℍ → ℂ) '' closedBall z r = closedBall (z.center r) (z.im * sinh r) :=
   by
   ext w; constructor
@@ -351,7 +351,7 @@ theorem image_coe_closed_ball (z : ℍ) (r : ℝ) :
   · intro hw
     lift w to ℍ using im_pos_of_dist_center_le hw
     exact mem_image_of_mem _ (dist_le_iff_dist_coe_center_le.2 hw)
-#align upper_half_plane.image_coe_closed_ball UpperHalfPlane.image_coe_closed_ball
+#align upper_half_plane.image_coe_closed_ball UpperHalfPlane.image_coe_closedBall
 
 theorem image_coe_ball (z : ℍ) (r : ℝ) :
     (coe : ℍ → ℂ) '' ball z r = ball (z.center r) (z.im * sinh r) :=

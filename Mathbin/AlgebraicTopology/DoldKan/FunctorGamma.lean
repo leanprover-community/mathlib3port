@@ -105,40 +105,40 @@ def mapMono (K : ChainComplex C ℕ) {Δ' Δ : SimplexCategory} (i : Δ' ⟶ Δ)
 
 variable (Δ)
 
-theorem map_mono_id : mapMono K (𝟙 Δ) = 𝟙 _ :=
+theorem mapMono_id : mapMono K (𝟙 Δ) = 𝟙 _ :=
   by
   unfold map_mono
   simp only [eq_self_iff_true, eq_to_hom_refl, dite_eq_ite, if_true]
-#align algebraic_topology.dold_kan.Γ₀.obj.termwise.map_mono_id AlgebraicTopology.DoldKan.Γ₀.Obj.Termwise.map_mono_id
+#align algebraic_topology.dold_kan.Γ₀.obj.termwise.map_mono_id AlgebraicTopology.DoldKan.Γ₀.Obj.Termwise.mapMono_id
 
 variable {Δ}
 
-theorem map_mono_δ₀' (hi : Isδ₀ i) : mapMono K i = K.d Δ.len Δ'.len :=
+theorem mapMono_δ₀' (hi : Isδ₀ i) : mapMono K i = K.d Δ.len Δ'.len :=
   by
   unfold map_mono
   classical
     rw [dif_neg, dif_pos hi]
     rintro rfl
     simpa only [self_eq_add_right, Nat.one_ne_zero] using hi.1
-#align algebraic_topology.dold_kan.Γ₀.obj.termwise.map_mono_δ₀' AlgebraicTopology.DoldKan.Γ₀.Obj.Termwise.map_mono_δ₀'
+#align algebraic_topology.dold_kan.Γ₀.obj.termwise.map_mono_δ₀' AlgebraicTopology.DoldKan.Γ₀.Obj.Termwise.mapMono_δ₀'
 
 @[simp]
-theorem map_mono_δ₀ {n : ℕ} : mapMono K (δ (0 : Fin (n + 2))) = K.d (n + 1) n :=
-  map_mono_δ₀' K _ (by rw [is_δ₀.iff])
-#align algebraic_topology.dold_kan.Γ₀.obj.termwise.map_mono_δ₀ AlgebraicTopology.DoldKan.Γ₀.Obj.Termwise.map_mono_δ₀
+theorem mapMono_δ₀ {n : ℕ} : mapMono K (δ (0 : Fin (n + 2))) = K.d (n + 1) n :=
+  mapMono_δ₀' K _ (by rw [is_δ₀.iff])
+#align algebraic_topology.dold_kan.Γ₀.obj.termwise.map_mono_δ₀ AlgebraicTopology.DoldKan.Γ₀.Obj.Termwise.mapMono_δ₀
 
-theorem map_mono_eq_zero (h₁ : Δ ≠ Δ') (h₂ : ¬Isδ₀ i) : mapMono K i = 0 :=
+theorem mapMono_eq_zero (h₁ : Δ ≠ Δ') (h₂ : ¬Isδ₀ i) : mapMono K i = 0 :=
   by
   unfold map_mono
   rw [Ne.def] at h₁
   split_ifs
   rfl
-#align algebraic_topology.dold_kan.Γ₀.obj.termwise.map_mono_eq_zero AlgebraicTopology.DoldKan.Γ₀.Obj.Termwise.map_mono_eq_zero
+#align algebraic_topology.dold_kan.Γ₀.obj.termwise.map_mono_eq_zero AlgebraicTopology.DoldKan.Γ₀.Obj.Termwise.mapMono_eq_zero
 
 variable {K K'}
 
 @[simp, reassoc.1]
-theorem map_mono_naturality : mapMono K i ≫ f.f Δ'.len = f.f Δ.len ≫ mapMono K' i :=
+theorem mapMono_naturality : mapMono K i ≫ f.f Δ'.len = f.f Δ.len ≫ mapMono K' i :=
   by
   unfold map_mono
   split_ifs
@@ -146,12 +146,12 @@ theorem map_mono_naturality : mapMono K i ≫ f.f Δ'.len = f.f Δ.len ≫ mapMo
     simp only [id_comp, eq_to_hom_refl, comp_id]
   · rw [HomologicalComplex.Hom.comm]
   · rw [zero_comp, comp_zero]
-#align algebraic_topology.dold_kan.Γ₀.obj.termwise.map_mono_naturality AlgebraicTopology.DoldKan.Γ₀.Obj.Termwise.map_mono_naturality
+#align algebraic_topology.dold_kan.Γ₀.obj.termwise.map_mono_naturality AlgebraicTopology.DoldKan.Γ₀.Obj.Termwise.mapMono_naturality
 
 variable (K)
 
 @[simp, reassoc.1]
-theorem map_mono_comp : mapMono K i ≫ mapMono K i' = mapMono K (i' ≫ i) :=
+theorem mapMono_comp : mapMono K i ≫ mapMono K i' = mapMono K (i' ≫ i) :=
   by
   -- case where i : Δ' ⟶ Δ is the identity
   by_cases h₁ : Δ = Δ'
@@ -177,7 +177,7 @@ theorem map_mono_comp : mapMono K i ≫ mapMono K i' = mapMono K (i' ≫ i) :=
     · rw [map_mono_δ₀' K i h₃, map_mono_δ₀' K i' h₄, HomologicalComplex.d_comp_d]
     · simp only [map_mono_eq_zero K i' h₂ h₄, comp_zero]
   · simp only [map_mono_eq_zero K i h₁ h₃, zero_comp]
-#align algebraic_topology.dold_kan.Γ₀.obj.termwise.map_mono_comp AlgebraicTopology.DoldKan.Γ₀.Obj.Termwise.map_mono_comp
+#align algebraic_topology.dold_kan.Γ₀.obj.termwise.map_mono_comp AlgebraicTopology.DoldKan.Γ₀.Obj.Termwise.mapMono_comp
 
 end Termwise
 
@@ -206,7 +206,7 @@ theorem map_on_summand₀ {Δ Δ' : SimplexCategoryᵒᵖ} (A : Splitting.IndexS
   · exact SimplexCategory.image_ι_eq fac
   · dsimp only [SimplicialObject.Splitting.IndexSet.pull]
     congr
-    exact SimplexCategory.factor_thru_image_eq fac
+    exact SimplexCategory.factorThruImage_eq fac
 #align algebraic_topology.dold_kan.Γ₀.obj.map_on_summand₀ AlgebraicTopology.DoldKan.Γ₀.Obj.map_on_summand₀
 
 @[reassoc.1]
@@ -299,11 +299,11 @@ theorem obj.map_on_summand' {Δ Δ' : SimplexCategoryᵒᵖ} (A : Splitting.Inde
 #align algebraic_topology.dold_kan.Γ₀.obj.map_on_summand' AlgebraicTopology.DoldKan.Γ₀.obj.map_on_summand'
 
 @[reassoc.1]
-theorem obj.map_mono_on_summand_id {Δ Δ' : SimplexCategory} (i : Δ' ⟶ Δ) [Mono i] :
+theorem obj.mapMono_on_summand_id {Δ Δ' : SimplexCategory} (i : Δ' ⟶ Δ) [Mono i] :
     (splitting K).ιSummand (Splitting.IndexSet.id (op Δ)) ≫ (obj K).map i.op =
       Obj.Termwise.mapMono K i ≫ (splitting K).ιSummand (Splitting.IndexSet.id (op Δ')) :=
   obj.map_on_summand K (Splitting.IndexSet.id (op Δ)) i.op (rfl : 𝟙 _ ≫ i = i ≫ 𝟙 _)
-#align algebraic_topology.dold_kan.Γ₀.obj.map_mono_on_summand_id AlgebraicTopology.DoldKan.Γ₀.obj.map_mono_on_summand_id
+#align algebraic_topology.dold_kan.Γ₀.obj.map_mono_on_summand_id AlgebraicTopology.DoldKan.Γ₀.obj.mapMono_on_summand_id
 
 @[reassoc.1]
 theorem obj.map_epi_on_summand_id {Δ Δ' : SimplexCategory} (e : Δ' ⟶ Δ) [Epi e] :
@@ -377,7 +377,7 @@ theorem HigherFacesVanish.on_Γ₀_summand_id (K : ChainComplex C ℕ) (n : ℕ)
 #align algebraic_topology.dold_kan.higher_faces_vanish.on_Γ₀_summand_id AlgebraicTopology.DoldKan.HigherFacesVanish.on_Γ₀_summand_id
 
 @[simp, reassoc.1]
-theorem P_infty_on_Γ₀_splitting_summand_eq_self (K : ChainComplex C ℕ) {n : ℕ} :
+theorem pInfty_on_Γ₀_splitting_summand_eq_self (K : ChainComplex C ℕ) {n : ℕ} :
     (Γ₀.splitting K).ιSummand (Splitting.IndexSet.id (op [n])) ≫ (pInfty : K[Γ₀.obj K] ⟶ _).f n =
       (Γ₀.splitting K).ιSummand (Splitting.IndexSet.id (op [n])) :=
   by
@@ -385,7 +385,7 @@ theorem P_infty_on_Γ₀_splitting_summand_eq_self (K : ChainComplex C ℕ) {n :
   cases n
   · simpa only [P_f_0_eq] using comp_id _
   · exact (higher_faces_vanish.on_Γ₀_summand_id K n).comp_P_eq_self
-#align algebraic_topology.dold_kan.P_infty_on_Γ₀_splitting_summand_eq_self AlgebraicTopology.DoldKan.P_infty_on_Γ₀_splitting_summand_eq_self
+#align algebraic_topology.dold_kan.P_infty_on_Γ₀_splitting_summand_eq_self AlgebraicTopology.DoldKan.pInfty_on_Γ₀_splitting_summand_eq_self
 
 end DoldKan
 

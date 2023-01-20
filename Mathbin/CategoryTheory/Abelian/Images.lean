@@ -64,9 +64,9 @@ protected theorem image.fac : Abelian.factorThruImage f ≫ image.ι f = f :=
   kernel.lift_ι _ _ _
 #align category_theory.abelian.image.fac CategoryTheory.Abelian.image.fac
 
-instance mono_factor_thru_image [Mono f] : Mono (Abelian.factorThruImage f) :=
+instance mono_factorThruImage [Mono f] : Mono (Abelian.factorThruImage f) :=
   mono_of_mono_fac <| image.fac f
-#align category_theory.abelian.mono_factor_thru_image CategoryTheory.Abelian.mono_factor_thru_image
+#align category_theory.abelian.mono_factor_thru_image CategoryTheory.Abelian.mono_factorThruImage
 
 end Image
 
@@ -92,9 +92,9 @@ protected theorem coimage.fac : coimage.π f ≫ Abelian.factorThruCoimage f = f
   cokernel.π_desc _ _ _
 #align category_theory.abelian.coimage.fac CategoryTheory.Abelian.coimage.fac
 
-instance epi_factor_thru_coimage [Epi f] : Epi (Abelian.factorThruCoimage f) :=
+instance epi_factorThruCoimage [Epi f] : Epi (Abelian.factorThruCoimage f) :=
   epi_of_epi_fac <| coimage.fac f
-#align category_theory.abelian.epi_factor_thru_coimage CategoryTheory.Abelian.epi_factor_thru_coimage
+#align category_theory.abelian.epi_factor_thru_coimage CategoryTheory.Abelian.epi_factorThruCoimage
 
 end Coimage
 
@@ -122,12 +122,12 @@ def coimageImageComparison' : Abelian.coimage f ⟶ Abelian.image f :=
       simp)
 #align category_theory.abelian.coimage_image_comparison' CategoryTheory.Abelian.coimageImageComparison'
 
-theorem coimage_image_comparison_eq_coimage_image_comparison' :
+theorem coimageImageComparison_eq_coimageImageComparison' :
     coimageImageComparison f = coimageImageComparison' f :=
   by
   ext
   simp [coimage_image_comparison, coimage_image_comparison']
-#align category_theory.abelian.coimage_image_comparison_eq_coimage_image_comparison' CategoryTheory.Abelian.coimage_image_comparison_eq_coimage_image_comparison'
+#align category_theory.abelian.coimage_image_comparison_eq_coimage_image_comparison' CategoryTheory.Abelian.coimageImageComparison_eq_coimageImageComparison'
 
 @[simp, reassoc.1]
 theorem coimage_image_factorisation : coimage.π f ≫ coimageImageComparison f ≫ image.ι f = f := by

@@ -45,9 +45,9 @@ namespace Box
 
 variable (I : Box ι)
 
-theorem measure_Icc_lt_top (μ : Measure (ι → ℝ)) [IsLocallyFiniteMeasure μ] : μ I.IccCat < ∞ :=
+theorem measure_icc_lt_top (μ : Measure (ι → ℝ)) [IsLocallyFiniteMeasure μ] : μ I.IccCat < ∞ :=
   show μ (Icc I.lower I.upper) < ∞ from I.is_compact_Icc.measure_lt_top
-#align box_integral.box.measure_Icc_lt_top BoxIntegral.Box.measure_Icc_lt_top
+#align box_integral.box.measure_Icc_lt_top BoxIntegral.Box.measure_icc_lt_top
 
 theorem measure_coe_lt_top (μ : Measure (ι → ℝ)) [IsLocallyFiniteMeasure μ] : μ I < ∞ :=
   (measure_mono <| coe_subset_Icc).trans_lt (I.measure_Icc_lt_top μ)
@@ -57,43 +57,43 @@ section Countable
 
 variable [Countable ι]
 
-theorem measurable_set_coe : MeasurableSet (I : Set (ι → ℝ)) :=
+theorem measurableSet_coe : MeasurableSet (I : Set (ι → ℝ)) :=
   by
   rw [coe_eq_pi]
-  exact MeasurableSet.univ_pi fun i => measurable_set_Ioc
-#align box_integral.box.measurable_set_coe BoxIntegral.Box.measurable_set_coe
+  exact MeasurableSet.univ_pi fun i => measurableSet_ioc
+#align box_integral.box.measurable_set_coe BoxIntegral.Box.measurableSet_coe
 
-theorem measurable_set_Icc : MeasurableSet I.IccCat :=
-  measurable_set_Icc
-#align box_integral.box.measurable_set_Icc BoxIntegral.Box.measurable_set_Icc
+theorem measurableSet_icc : MeasurableSet I.IccCat :=
+  measurableSet_icc
+#align box_integral.box.measurable_set_Icc BoxIntegral.Box.measurableSet_icc
 
-theorem measurable_set_Ioo : MeasurableSet I.IooCat :=
-  MeasurableSet.univ_pi fun i => measurable_set_Ioo
-#align box_integral.box.measurable_set_Ioo BoxIntegral.Box.measurable_set_Ioo
+theorem measurableSet_ioo : MeasurableSet I.IooCat :=
+  MeasurableSet.univ_pi fun i => measurableSet_ioo
+#align box_integral.box.measurable_set_Ioo BoxIntegral.Box.measurableSet_ioo
 
 end Countable
 
 variable [Fintype ι]
 
-theorem coe_ae_eq_Icc : (I : Set (ι → ℝ)) =ᵐ[volume] I.IccCat :=
+theorem coe_ae_eq_icc : (I : Set (ι → ℝ)) =ᵐ[volume] I.IccCat :=
   by
   rw [coe_eq_pi]
   exact measure.univ_pi_Ioc_ae_eq_Icc
-#align box_integral.box.coe_ae_eq_Icc BoxIntegral.Box.coe_ae_eq_Icc
+#align box_integral.box.coe_ae_eq_Icc BoxIntegral.Box.coe_ae_eq_icc
 
-theorem Ioo_ae_eq_Icc : I.IooCat =ᵐ[volume] I.IccCat :=
+theorem ioo_ae_eq_icc : I.IooCat =ᵐ[volume] I.IccCat :=
   measure.univ_pi_Ioo_ae_eq_Icc
-#align box_integral.box.Ioo_ae_eq_Icc BoxIntegral.Box.Ioo_ae_eq_Icc
+#align box_integral.box.Ioo_ae_eq_Icc BoxIntegral.Box.ioo_ae_eq_icc
 
 end Box
 
-theorem Prepartition.measure_Union_to_real [Finite ι] {I : Box ι} (π : Prepartition I)
+theorem Prepartition.measure_union_toReal [Finite ι] {I : Box ι} (π : Prepartition I)
     (μ : Measure (ι → ℝ)) [IsLocallyFiniteMeasure μ] :
     (μ π.union).toReal = ∑ J in π.boxes, (μ J).toReal :=
   by
-  erw [← Ennreal.to_real_sum, π.Union_def, measure_bUnion_finset π.pairwise_disjoint]
+  erw [← Ennreal.toReal_sum, π.Union_def, measure_bUnion_finset π.pairwise_disjoint]
   exacts[fun J hJ => J.measurable_set_coe, fun J hJ => (J.measure_coe_lt_top μ).Ne]
-#align box_integral.prepartition.measure_Union_to_real BoxIntegral.Prepartition.measure_Union_to_real
+#align box_integral.prepartition.measure_Union_to_real BoxIntegral.Prepartition.measure_union_toReal
 
 end BoxIntegral
 
@@ -127,13 +127,13 @@ namespace Box
 @[simp]
 theorem volume_apply (I : Box ι) :
     (volume : Measure (ι → ℝ)).toBoxAdditive I = ∏ i, I.upper i - I.lower i := by
-  rw [measure.to_box_additive_apply, coe_eq_pi, Real.volume_pi_Ioc_to_real I.lower_le_upper]
+  rw [measure.to_box_additive_apply, coe_eq_pi, Real.volume_pi_ioc_toReal I.lower_le_upper]
 #align box_integral.box.volume_apply BoxIntegral.Box.volume_apply
 
 theorem volume_face_mul {n} (i : Fin (n + 1)) (I : Box (Fin (n + 1))) :
     (∏ j, (I.face i).upper j - (I.face i).lower j) * (I.upper i - I.lower i) =
       ∏ j, I.upper j - I.lower j :=
-  by simp only [face_lower, face_upper, (· ∘ ·), Fin.prod_univ_succ_above _ i, mul_comm]
+  by simp only [face_lower, face_upper, (· ∘ ·), Fin.prod_univ_succAbove _ i, mul_comm]
 #align box_integral.box.volume_face_mul BoxIntegral.Box.volume_face_mul
 
 end Box

@@ -19,7 +19,7 @@ namespace Rbnode
 
 variable {α : Type u} {lt : α → α → Prop}
 
-theorem is_searchable_of_well_formed {t : Rbnode α} [IsStrictWeakOrder α lt] :
+theorem isSearchable_of_wellFormed {t : Rbnode α} [IsStrictWeakOrder α lt] :
     t.WellFormed lt → IsSearchable lt t none none :=
   by
   intro h; induction h
@@ -28,11 +28,11 @@ theorem is_searchable_of_well_formed {t : Rbnode α} [IsStrictWeakOrder α lt] :
   · subst h_n'
     apply is_searchable_insert
     assumption
-#align rbnode.is_searchable_of_well_formed Rbnode.is_searchable_of_well_formed
+#align rbnode.is_searchable_of_well_formed Rbnode.isSearchable_of_wellFormed
 
 open Color
 
-theorem is_red_black_of_well_formed {t : Rbnode α} : t.WellFormed lt → ∃ c n, IsRedBlack t c n :=
+theorem isRedBlack_of_wellFormed {t : Rbnode α} : t.WellFormed lt → ∃ c n, IsRedBlack t c n :=
   by
   intro h; induction h
   · exists black
@@ -43,7 +43,7 @@ theorem is_red_black_of_well_formed {t : Rbnode α} : t.WellFormed lt → ∃ c 
     subst h_n'
     apply insert_is_red_black
     assumption
-#align rbnode.is_red_black_of_well_formed Rbnode.is_red_black_of_well_formed
+#align rbnode.is_red_black_of_well_formed Rbnode.isRedBlack_of_wellFormed
 
 end Rbnode
 
@@ -54,14 +54,14 @@ variable {α : Type u} {lt : α → α → Prop}
 theorem balanced (t : Rbtree α lt) : t.depth max ≤ 2 * t.depth min + 1 :=
   by
   cases' t with n p; simp only [depth]
-  have := Rbnode.is_red_black_of_well_formed p
+  have := Rbnode.isRedBlack_of_wellFormed p
   cases' this with _ this; cases' this with _ this
   apply Rbnode.balanced; assumption
 #align rbtree.balanced Rbtree.balanced
 
-theorem not_mem_mk_rbtree : ∀ a : α, a ∉ mkRbtree α lt := by
+theorem not_mem_mkRbtree : ∀ a : α, a ∉ mkRbtree α lt := by
   simp [Membership.Mem, Rbtree.Mem, Rbnode.Mem, mkRbtree]
-#align rbtree.not_mem_mk_rbtree Rbtree.not_mem_mk_rbtree
+#align rbtree.not_mem_mk_rbtree Rbtree.not_mem_mkRbtree
 
 theorem not_mem_of_empty {t : Rbtree α lt} (a : α) : t.Empty = tt → a ∉ t := by
   cases' t with n p <;> cases n <;>
@@ -88,15 +88,15 @@ section Dec
 
 variable [DecidableRel lt]
 
-theorem insert_ne_mk_rbtree (t : Rbtree α lt) (a : α) : t.insert a ≠ mkRbtree α lt :=
+theorem insert_ne_mkRbtree (t : Rbtree α lt) (a : α) : t.insert a ≠ mkRbtree α lt :=
   by
   cases' t with n p
   simpa [insert, mkRbtree] using Rbnode.insert_ne_leaf lt n a
-#align rbtree.insert_ne_mk_rbtree Rbtree.insert_ne_mk_rbtree
+#align rbtree.insert_ne_mk_rbtree Rbtree.insert_ne_mkRbtree
 
 theorem find_correct [IsStrictWeakOrder α lt] (a : α) (t : Rbtree α lt) :
     a ∈ t ↔ ∃ b, t.find a = some b ∧ a ≈[lt]b := by cases t; apply Rbnode.find_correct;
-  apply Rbnode.is_searchable_of_well_formed; assumption
+  apply Rbnode.isSearchable_of_wellFormed; assumption
 #align rbtree.find_correct Rbtree.find_correct
 
 theorem find_correct_of_total [IsStrictTotalOrder α lt] (a : α) (t : Rbtree α lt) :
@@ -110,13 +110,13 @@ theorem find_correct_of_total [IsStrictTotalOrder α lt] (a : α) (t : Rbtree α
 
 theorem find_correct_exact [IsStrictTotalOrder α lt] (a : α) (t : Rbtree α lt) :
     MemExact a t ↔ t.find a = some a := by cases t; apply Rbnode.find_correct_exact;
-  apply Rbnode.is_searchable_of_well_formed; assumption
+  apply Rbnode.isSearchable_of_wellFormed; assumption
 #align rbtree.find_correct_exact Rbtree.find_correct_exact
 
 theorem find_insert_of_eqv [IsStrictWeakOrder α lt] (t : Rbtree α lt) {x y} :
     x ≈[lt]y → (t.insert x).find y = some x :=
   by
-  cases t; intro h; apply Rbnode.find_insert_of_eqv lt h; apply Rbnode.is_searchable_of_well_formed
+  cases t; intro h; apply Rbnode.find_insert_of_eqv lt h; apply Rbnode.isSearchable_of_wellFormed
   assumption
 #align rbtree.find_insert_of_eqv Rbtree.find_insert_of_eqv
 
@@ -128,7 +128,7 @@ theorem find_insert_of_disj [IsStrictWeakOrder α lt] {x y : α} (t : Rbtree α 
     lt x y ∨ lt y x → (t.insert x).find y = t.find y :=
   by
   cases t; intro h; apply Rbnode.find_insert_of_disj lt h
-  apply Rbnode.is_searchable_of_well_formed
+  apply Rbnode.isSearchable_of_wellFormed
   assumption
 #align rbtree.find_insert_of_disj Rbtree.find_insert_of_disj
 
@@ -136,7 +136,7 @@ theorem find_insert_of_not_eqv [IsStrictWeakOrder α lt] {x y : α} (t : Rbtree 
     ¬x ≈[lt]y → (t.insert x).find y = t.find y :=
   by
   cases t; intro h; apply Rbnode.find_insert_of_not_eqv lt h
-  apply Rbnode.is_searchable_of_well_formed; assumption
+  apply Rbnode.isSearchable_of_wellFormed; assumption
 #align rbtree.find_insert_of_not_eqv Rbtree.find_insert_of_not_eqv
 
 theorem find_insert_of_ne [IsStrictTotalOrder α lt] {x y : α} (t : Rbtree α lt) :
@@ -145,7 +145,7 @@ theorem find_insert_of_ne [IsStrictTotalOrder α lt] {x y : α} (t : Rbtree α l
   cases t; intro h
   have : ¬x ≈[lt]y := fun h' => h (eq_of_eqv_lt h')
   apply Rbnode.find_insert_of_not_eqv lt this
-  apply Rbnode.is_searchable_of_well_formed; assumption
+  apply Rbnode.isSearchable_of_wellFormed; assumption
 #align rbtree.find_insert_of_ne Rbtree.find_insert_of_ne
 
 theorem not_mem_of_find_none [IsStrictWeakOrder α lt] {a : α} {t : Rbtree α lt} :
@@ -158,7 +158,7 @@ theorem not_mem_of_find_none [IsStrictWeakOrder α lt] {a : α} {t : Rbtree α l
 
 theorem eqv_of_find_some [IsStrictWeakOrder α lt] {a b : α} {t : Rbtree α lt} :
     t.find a = some b → a ≈[lt]b := by cases t; apply Rbnode.eqv_of_find_some;
-  apply Rbnode.is_searchable_of_well_formed; assumption
+  apply Rbnode.isSearchable_of_wellFormed; assumption
 #align rbtree.eqv_of_find_some Rbtree.eqv_of_find_some
 
 theorem eq_of_find_some [IsStrictTotalOrder α lt] {a b : α} {t : Rbtree α lt} :
@@ -174,7 +174,7 @@ theorem mem_of_find_some [IsStrictWeakOrder α lt] {a b : α} {t : Rbtree α lt}
 theorem find_eq_find_of_eqv [IsStrictWeakOrder α lt] {a b : α} (t : Rbtree α lt) :
     a ≈[lt]b → t.find a = t.find b := by
   cases t; apply Rbnode.find_eq_find_of_eqv
-  apply Rbnode.is_searchable_of_well_formed; assumption
+  apply Rbnode.isSearchable_of_wellFormed; assumption
 #align rbtree.find_eq_find_of_eqv Rbtree.find_eq_find_of_eqv
 
 theorem contains_correct [IsStrictWeakOrder α lt] (a : α) (t : Rbtree α lt) :
@@ -249,7 +249,7 @@ theorem min_is_minimal [IsStrictWeakOrder α lt] {a : α} {t : Rbtree α lt} :
   classical
     cases t
     apply Rbnode.min_is_minimal
-    apply Rbnode.is_searchable_of_well_formed
+    apply Rbnode.isSearchable_of_wellFormed
     assumption
 #align rbtree.min_is_minimal Rbtree.min_is_minimal
 
@@ -258,7 +258,7 @@ theorem max_is_maximal [IsStrictWeakOrder α lt] {a : α} {t : Rbtree α lt} :
   by
   cases t
   apply Rbnode.max_is_maximal
-  apply Rbnode.is_searchable_of_well_formed
+  apply Rbnode.isSearchable_of_wellFormed
   assumption
 #align rbtree.max_is_maximal Rbtree.max_is_maximal
 

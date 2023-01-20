@@ -69,9 +69,9 @@ theorem lifts_iff_set_range (p : S[X]) : p ∈ lifts f ↔ p ∈ Set.range (map 
   simp only [coe_map_ring_hom, lifts, Set.mem_range, RingHom.mem_srange]
 #align polynomial.lifts_iff_set_range Polynomial.lifts_iff_set_range
 
-theorem lifts_iff_ring_hom_srange (p : S[X]) : p ∈ lifts f ↔ p ∈ (mapRingHom f).srange := by
+theorem lifts_iff_ringHom_srange (p : S[X]) : p ∈ lifts f ↔ p ∈ (mapRingHom f).srange := by
   simp only [coe_map_ring_hom, lifts, Set.mem_range, RingHom.mem_srange]
-#align polynomial.lifts_iff_ring_hom_srange Polynomial.lifts_iff_ring_hom_srange
+#align polynomial.lifts_iff_ring_hom_srange Polynomial.lifts_iff_ringHom_srange
 
 theorem lifts_iff_coeff_lifts (p : S[X]) : p ∈ lifts f ↔ ∀ n : ℕ, p.coeff n ∈ Set.range f :=
   by
@@ -80,11 +80,11 @@ theorem lifts_iff_coeff_lifts (p : S[X]) : p ∈ lifts f ↔ ∀ n : ℕ, p.coef
 #align polynomial.lifts_iff_coeff_lifts Polynomial.lifts_iff_coeff_lifts
 
 /-- If `(r : R)`, then `C (f r)` lifts. -/
-theorem C_mem_lifts (f : R →+* S) (r : R) : c (f r) ∈ lifts f :=
+theorem c_mem_lifts (f : R →+* S) (r : R) : c (f r) ∈ lifts f :=
   ⟨c r, by
     simp only [coe_map_ring_hom, map_C, Set.mem_univ, Subsemiring.coe_top, eq_self_iff_true,
       and_self_iff]⟩
-#align polynomial.C_mem_lifts Polynomial.C_mem_lifts
+#align polynomial.C_mem_lifts Polynomial.c_mem_lifts
 
 /-- If `(s : S)` is in the image of `f`, then `C s` lifts. -/
 theorem C'_mem_lifts {f : R →+* S} {s : S} (h : s ∈ Set.range f) : c s ∈ lifts f :=
@@ -96,18 +96,18 @@ theorem C'_mem_lifts {f : R →+* S} {s : S} (h : s ∈ Set.range f) : c s ∈ l
 #align polynomial.C'_mem_lifts Polynomial.C'_mem_lifts
 
 /-- The polynomial `X` lifts. -/
-theorem X_mem_lifts (f : R →+* S) : (x : S[X]) ∈ lifts f :=
+theorem x_mem_lifts (f : R →+* S) : (x : S[X]) ∈ lifts f :=
   ⟨x, by
     simp only [coe_map_ring_hom, Set.mem_univ, Subsemiring.coe_top, eq_self_iff_true, map_X,
       and_self_iff]⟩
-#align polynomial.X_mem_lifts Polynomial.X_mem_lifts
+#align polynomial.X_mem_lifts Polynomial.x_mem_lifts
 
 /-- The polynomial `X ^ n` lifts. -/
-theorem X_pow_mem_lifts (f : R →+* S) (n : ℕ) : (X ^ n : S[X]) ∈ lifts f :=
+theorem x_pow_mem_lifts (f : R →+* S) (n : ℕ) : (X ^ n : S[X]) ∈ lifts f :=
   ⟨X ^ n, by
     simp only [coe_map_ring_hom, map_pow, Set.mem_univ, Subsemiring.coe_top, eq_self_iff_true,
       map_X, and_self_iff]⟩
-#align polynomial.X_pow_mem_lifts Polynomial.X_pow_mem_lifts
+#align polynomial.X_pow_mem_lifts Polynomial.x_pow_mem_lifts
 
 /-- If `p` lifts and `(r : R)` then `r * p` lifts. -/
 theorem base_mul_mem_lifts {p : S[X]} (r : R) (hp : p ∈ lifts f) : c (f r) * p ∈ lifts f :=
@@ -235,7 +235,7 @@ theorem lifts_and_degree_eq_and_monic [Nontrivial S] {p : S[X]} (hlifts : p ∈ 
   · rw [degree_add_eq_right_of_degree_lt hdeg, degree_X_pow, degree_eq_nat_degree hp.ne_zero]
 #align polynomial.lifts_and_degree_eq_and_monic Polynomial.lifts_and_degree_eq_and_monic
 
-theorem lifts_and_nat_degree_eq_and_monic {p : S[X]} (hlifts : p ∈ lifts f) (hp : p.Monic) :
+theorem lifts_and_natDegree_eq_and_monic {p : S[X]} (hlifts : p ∈ lifts f) (hp : p.Monic) :
     ∃ q : R[X], map f q = p ∧ q.natDegree = p.natDegree ∧ q.Monic :=
   by
   cases' subsingleton_or_nontrivial S with hR hR
@@ -243,7 +243,7 @@ theorem lifts_and_nat_degree_eq_and_monic {p : S[X]} (hlifts : p ∈ lifts f) (h
     refine' ⟨1, Subsingleton.elim _ _, by simp, by simp⟩
   obtain ⟨p', h₁, h₂, h₃⟩ := lifts_and_degree_eq_and_monic hlifts hp
   exact ⟨p', h₁, nat_degree_eq_of_degree_eq h₂, h₃⟩
-#align polynomial.lifts_and_nat_degree_eq_and_monic Polynomial.lifts_and_nat_degree_eq_and_monic
+#align polynomial.lifts_and_nat_degree_eq_and_monic Polynomial.lifts_and_natDegree_eq_and_monic
 
 end Monic
 
@@ -260,9 +260,9 @@ def liftsRing (f : R →+* S) : Subring S[X] :=
 
 /-- If `R` and `S` are rings, `p` is in the subring of polynomials that lift if and only if it is in
 the subsemiring of polynomials that lift. -/
-theorem lifts_iff_lifts_ring (p : S[X]) : p ∈ lifts f ↔ p ∈ liftsRing f := by
+theorem lifts_iff_liftsRing (p : S[X]) : p ∈ lifts f ↔ p ∈ liftsRing f := by
   simp only [lifts, lifts_ring, RingHom.mem_range, RingHom.mem_srange]
-#align polynomial.lifts_iff_lifts_ring Polynomial.lifts_iff_lifts_ring
+#align polynomial.lifts_iff_lifts_ring Polynomial.lifts_iff_liftsRing
 
 end Ring
 
@@ -277,9 +277,9 @@ def mapAlg (R : Type u) [CommSemiring R] (S : Type v) [Semiring S] [Algebra R S]
 #align polynomial.map_alg Polynomial.mapAlg
 
 /-- `map_alg` is the morphism induced by `R → S`. -/
-theorem map_alg_eq_map (p : R[X]) : mapAlg R S p = map (algebraMap R S) p := by
+theorem mapAlg_eq_map (p : R[X]) : mapAlg R S p = map (algebraMap R S) p := by
   simp only [map_alg, aeval_def, eval₂, map, algebra_map_apply, RingHom.coe_comp]
-#align polynomial.map_alg_eq_map Polynomial.map_alg_eq_map
+#align polynomial.map_alg_eq_map Polynomial.mapAlg_eq_map
 
 /-- A polynomial `p` lifts if and only if it is in the image of `map_alg`. -/
 theorem mem_lifts_iff_mem_alg (R : Type u) [CommSemiring R] {S : Type v} [Semiring S] [Algebra R S]

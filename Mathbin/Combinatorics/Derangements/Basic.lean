@@ -39,10 +39,10 @@ def derangements (α : Type _) : Set (Perm α) :=
 
 variable {α β : Type _}
 
-theorem mem_derangements_iff_fixed_points_eq_empty {f : Perm α} :
+theorem mem_derangements_iff_fixedPoints_eq_empty {f : Perm α} :
     f ∈ derangements α ↔ fixedPoints f = ∅ :=
   Set.eq_empty_iff_forall_not_mem.symm
-#align mem_derangements_iff_fixed_points_eq_empty mem_derangements_iff_fixed_points_eq_empty
+#align mem_derangements_iff_fixed_points_eq_empty mem_derangements_iff_fixedPoints_eq_empty
 
 /-- If `α` is equivalent to `β`, then `derangements α` is equivalent to `derangements β`. -/
 def Equiv.derangementsCongr (e : α ≃ β) : derangements α ≃ derangements β :=
@@ -61,8 +61,8 @@ protected def subtypeEquiv (p : α → Prop) [DecidablePred p] :
       by
       refine' (perm.subtype_equiv_subtype_perm p).subtypeEquiv fun f => ⟨fun hf a hfa ha => _, _⟩
       · refine' hf ⟨a, ha⟩ (Subtype.ext _)
-        rwa [mem_fixed_points, is_fixed_pt, perm.subtype_equiv_subtype_perm, @coe_fn_coe_base',
-          Equiv.coe_fn_mk, Subtype.coe_mk, Equiv.Perm.ofSubtype_apply_of_mem] at hfa
+        rwa [mem_fixed_points, is_fixed_pt, perm.subtype_equiv_subtype_perm, @coeFn_coe_base',
+          Equiv.coeFn_mk, Subtype.coe_mk, Equiv.Perm.ofSubtype_apply_of_mem] at hfa
       rintro hf ⟨a, ha⟩ hfa
       refine' hf _ _ ha
       change perm.subtype_equiv_subtype_perm p f a = a
@@ -159,7 +159,7 @@ theorem RemoveNone.fiber_some (a : α) :
       simp only [perm.decompose_option_symm_apply, swap_apply_self, perm.coe_mul]
       cases x
       · simp
-      simp only [Equiv.option_congr_apply, Option.map_some']
+      simp only [Equiv.optionCongr_apply, Option.map_some']
       by_cases x_vs_a : x = a
       · rw [x_vs_a, swap_apply_right]
         apply Option.some_ne_none

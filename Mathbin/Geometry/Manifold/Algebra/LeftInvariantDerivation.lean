@@ -46,7 +46,7 @@ an arbitrary element of `G`.
 structure LeftInvariantDerivation extends Derivation 𝕜 C^∞⟮I, G; 𝕜⟯ C^∞⟮I, G; 𝕜⟯ where
   left_invariant'' :
     ∀ g,
-      𝒅ₕ (smooth_left_mul_one I g) (Derivation.evalAt 1 to_derivation) =
+      𝒅ₕ (smoothLeftMul_one I g) (Derivation.evalAt 1 to_derivation) =
         Derivation.evalAt g to_derivation
 #align left_invariant_derivation LeftInvariantDerivation
 
@@ -63,18 +63,18 @@ instance : CoeFun (LeftInvariantDerivation I G) fun _ => C^∞⟮I, G; 𝕜⟯ �
 variable {M : Type _} [TopologicalSpace M] [ChartedSpace H M] {x : M} {r : 𝕜}
   {X Y : LeftInvariantDerivation I G} {f f' : C^∞⟮I, G; 𝕜⟯}
 
-theorem to_fun_eq_coe : X.toFun = ⇑X :=
+theorem toFun_eq_coe : X.toFun = ⇑X :=
   rfl
-#align left_invariant_derivation.to_fun_eq_coe LeftInvariantDerivation.to_fun_eq_coe
+#align left_invariant_derivation.to_fun_eq_coe LeftInvariantDerivation.toFun_eq_coe
 
-theorem coe_to_linear_map : ⇑(X : C^∞⟮I, G; 𝕜⟯ →ₗ[𝕜] C^∞⟮I, G; 𝕜⟯) = X :=
+theorem coe_to_linearMap : ⇑(X : C^∞⟮I, G; 𝕜⟯ →ₗ[𝕜] C^∞⟮I, G; 𝕜⟯) = X :=
   rfl
-#align left_invariant_derivation.coe_to_linear_map LeftInvariantDerivation.coe_to_linear_map
+#align left_invariant_derivation.coe_to_linear_map LeftInvariantDerivation.coe_to_linearMap
 
 @[simp]
-theorem to_derivation_eq_coe : X.toDerivation = X :=
+theorem toDerivation_eq_coe : X.toDerivation = X :=
   rfl
-#align left_invariant_derivation.to_derivation_eq_coe LeftInvariantDerivation.to_derivation_eq_coe
+#align left_invariant_derivation.to_derivation_eq_coe LeftInvariantDerivation.toDerivation_eq_coe
 
 theorem coe_injective :
     @Function.Injective (LeftInvariantDerivation I G) (_ → C^⊤⟮I, G; 𝕜⟯) coeFn := fun X Y h =>
@@ -109,7 +109,7 @@ theorem coe_derivation_injective :
 
 /-- Premature version of the lemma. Prefer using `left_invariant` instead. -/
 theorem left_invariant' :
-    𝒅ₕ (smooth_left_mul_one I g) (Derivation.evalAt (1 : G) ↑X) = Derivation.evalAt g ↑X :=
+    𝒅ₕ (smoothLeftMul_one I g) (Derivation.evalAt (1 : G) ↑X) = Derivation.evalAt g ↑X :=
   left_invariant'' X g
 #align left_invariant_derivation.left_invariant' LeftInvariantDerivation.left_invariant'
 
@@ -238,26 +238,26 @@ def evalAt : LeftInvariantDerivation I G →ₗ[𝕜] PointDerivation I g
   map_smul' k X := rfl
 #align left_invariant_derivation.eval_at LeftInvariantDerivation.evalAt
 
-theorem eval_at_apply : evalAt g X f = (X f) g :=
+theorem evalAt_apply : evalAt g X f = (X f) g :=
   rfl
-#align left_invariant_derivation.eval_at_apply LeftInvariantDerivation.eval_at_apply
+#align left_invariant_derivation.eval_at_apply LeftInvariantDerivation.evalAt_apply
 
 @[simp]
-theorem eval_at_coe : Derivation.evalAt g ↑X = evalAt g X :=
+theorem evalAt_coe : Derivation.evalAt g ↑X = evalAt g X :=
   rfl
-#align left_invariant_derivation.eval_at_coe LeftInvariantDerivation.eval_at_coe
+#align left_invariant_derivation.eval_at_coe LeftInvariantDerivation.evalAt_coe
 
-theorem left_invariant : 𝒅ₕ (smooth_left_mul_one I g) (evalAt (1 : G) X) = evalAt g X :=
+theorem left_invariant : 𝒅ₕ (smoothLeftMul_one I g) (evalAt (1 : G) X) = evalAt g X :=
   X.left_invariant'' g
 #align left_invariant_derivation.left_invariant LeftInvariantDerivation.left_invariant
 
-theorem eval_at_mul : evalAt (g * h) X = 𝒅ₕ (L_apply I g h) (evalAt h X) :=
+theorem evalAt_mul : evalAt (g * h) X = 𝒅ₕ (L_apply I g h) (evalAt h X) :=
   by
   ext f
   rw [← left_invariant, apply_hfdifferential, apply_hfdifferential, L_mul, fdifferential_comp,
     apply_fdifferential, LinearMap.comp_apply, apply_fdifferential, ← apply_hfdifferential,
     left_invariant]
-#align left_invariant_derivation.eval_at_mul LeftInvariantDerivation.eval_at_mul
+#align left_invariant_derivation.eval_at_mul LeftInvariantDerivation.evalAt_mul
 
 theorem comp_L : (X f).comp (𝑳 I g) = X (f.comp (𝑳 I g)) := by
   ext h <;>
@@ -272,7 +272,7 @@ instance : Bracket (LeftInvariantDerivation I G) (LeftInvariantDerivation I G)
       ext f
       have hX := Derivation.congr_fun (left_invariant' g X) (Y f)
       have hY := Derivation.congr_fun (left_invariant' g Y) (X f)
-      rw [apply_hfdifferential, apply_fdifferential, Derivation.eval_at_apply] at hX hY⊢
+      rw [apply_hfdifferential, apply_fdifferential, Derivation.evalAt_apply] at hX hY⊢
       rw [comp_L] at hX hY
       rw [Derivation.commutator_apply, SmoothMap.coe_sub, Pi.sub_apply, coe_derivation]
       rw [coe_derivation] at hX hY⊢

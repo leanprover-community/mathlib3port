@@ -550,7 +550,7 @@ theorem eq_num_div_denom (f : HomogeneousLocalization 𝒜 x) :
   apply_fun HomogeneousLocalization.val  at this
   rw [← this]
   unfold HomogeneousLocalization.val
-  simp only [Quotient.lift_on'_mk']
+  simp only [Quotient.liftOn'_mk']
   rfl
 #align homogeneous_localization.eq_num_div_denom HomogeneousLocalization.eq_num_div_denom
 
@@ -573,8 +573,7 @@ abbrev AtPrime :=
   HomogeneousLocalization 𝒜 𝔭.primeCompl
 #align homogeneous_localization.at_prime HomogeneousLocalization.AtPrime
 
-theorem is_unit_iff_is_unit_val (f : HomogeneousLocalization.AtPrime 𝒜 𝔭) :
-    IsUnit f.val ↔ IsUnit f :=
+theorem isUnit_iff_isUnit_val (f : HomogeneousLocalization.AtPrime 𝒜 𝔭) : IsUnit f.val ↔ IsUnit f :=
   ⟨fun h1 => by
     rcases h1 with ⟨⟨a, b, eq0, eq1⟩, eq2 : a = f.val⟩
     rw [eq2] at eq0 eq1
@@ -610,13 +609,13 @@ theorem is_unit_iff_is_unit_val (f : HomogeneousLocalization.AtPrime 𝒜 𝔭) 
     by
     simp only [ext_iff_val, mul_val, one_val] at eq1 eq2
     exact ⟨⟨f.val, b.val, eq1, eq2⟩, rfl⟩⟩
-#align homogeneous_localization.is_unit_iff_is_unit_val HomogeneousLocalization.is_unit_iff_is_unit_val
+#align homogeneous_localization.is_unit_iff_is_unit_val HomogeneousLocalization.isUnit_iff_isUnit_val
 
 instance : Nontrivial (HomogeneousLocalization.AtPrime 𝒜 𝔭) :=
   ⟨⟨0, 1, fun r => by simpa [ext_iff_val, zero_val, one_val, zero_ne_one] using r⟩⟩
 
 instance : LocalRing (HomogeneousLocalization.AtPrime 𝒜 𝔭) :=
-  LocalRing.of_is_unit_or_is_unit_one_sub_self fun a =>
+  LocalRing.of_isUnit_or_isUnit_one_sub_self fun a =>
     by
     simp only [← is_unit_iff_is_unit_val, sub_val, one_val]
     induction a using Quotient.inductionOn'

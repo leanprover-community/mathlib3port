@@ -43,7 +43,7 @@ def minFacAux (n : PosNum) : ℕ → PosNum → PosNum
     if h : n < k.bit1 * k.bit1 then n else if k.bit1 ∣ n then k.bit1 else min_fac_aux fuel k.succ
 #align pos_num.min_fac_aux PosNum.minFacAux
 
-theorem min_fac_aux_to_nat {fuel : ℕ} {n k : PosNum} (h : Nat.sqrt n < fuel + k.bit1) :
+theorem minFacAux_to_nat {fuel : ℕ} {n k : PosNum} (h : Nat.sqrt n < fuel + k.bit1) :
     (minFacAux n fuel k : ℕ) = Nat.minFacAux n k.bit1 :=
   by
   induction' fuel with fuel ih generalizing k <;> rw [min_fac_aux, Nat.minFacAux]
@@ -54,7 +54,7 @@ theorem min_fac_aux_to_nat {fuel : ℕ} {n k : PosNum} (h : Nat.sqrt n < fuel + 
   rw [ih] <;> [congr , convert Nat.lt_succ_of_lt h using 1] <;>
     simp only [_root_.bit1, _root_.bit0, cast_bit1, cast_succ, Nat.succ_eq_add_one, add_assoc,
       add_left_comm]
-#align pos_num.min_fac_aux_to_nat PosNum.min_fac_aux_to_nat
+#align pos_num.min_fac_aux_to_nat PosNum.minFacAux_to_nat
 
 /-- Returns the smallest prime factor of `n ≠ 1`. -/
 def minFac : PosNum → PosNum
@@ -64,7 +64,7 @@ def minFac : PosNum → PosNum
 #align pos_num.min_fac PosNum.minFac
 
 @[simp]
-theorem min_fac_to_nat (n : PosNum) : (minFac n : ℕ) = Nat.minFac n :=
+theorem minFac_to_nat (n : PosNum) : (minFac n : ℕ) = Nat.minFac n :=
   by
   cases n; · rfl
   · rw [min_fac, Nat.minFac_eq, if_neg]
@@ -80,7 +80,7 @@ theorem min_fac_to_nat (n : PosNum) : (minFac n : ℕ) = Nat.minFac n :=
   · rw [min_fac, Nat.minFac_eq, if_pos]
     · rfl
     simp
-#align pos_num.min_fac_to_nat PosNum.min_fac_to_nat
+#align pos_num.min_fac_to_nat PosNum.minFac_to_nat
 
 /-- Primality predicate for a `pos_num`. -/
 @[simp]
@@ -116,10 +116,10 @@ def minFac : Num → PosNum
 #align num.min_fac Num.minFac
 
 @[simp]
-theorem min_fac_to_nat : ∀ n : Num, (minFac n : ℕ) = Nat.minFac n
+theorem minFac_to_nat : ∀ n : Num, (minFac n : ℕ) = Nat.minFac n
   | 0 => rfl
-  | Pos n => PosNum.min_fac_to_nat _
-#align num.min_fac_to_nat Num.min_fac_to_nat
+  | Pos n => PosNum.minFac_to_nat _
+#align num.min_fac_to_nat Num.minFac_to_nat
 
 /-- Primality predicate for a `num`. -/
 @[simp]

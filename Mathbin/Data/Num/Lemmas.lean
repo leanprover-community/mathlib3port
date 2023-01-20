@@ -227,23 +227,23 @@ theorem bit1_of_bit1 : ∀ n : Num, bit1 n = n.bit1
 #align num.bit1_of_bit1 Num.bit1_of_bit1
 
 @[simp]
-theorem of_nat'_zero : Num.ofNat' 0 = 0 := by simp [Num.ofNat']
-#align num.of_nat'_zero Num.of_nat'_zero
+theorem ofNat'_zero : Num.ofNat' 0 = 0 := by simp [Num.ofNat']
+#align num.of_nat'_zero Num.ofNat'_zero
 
-theorem of_nat'_bit (b n) : ofNat' (Nat.bit b n) = cond b Num.bit1 Num.bit0 (ofNat' n) :=
+theorem ofNat'_bit (b n) : ofNat' (Nat.bit b n) = cond b Num.bit1 Num.bit0 (ofNat' n) :=
   Nat.binaryRec_eq rfl _ _
-#align num.of_nat'_bit Num.of_nat'_bit
+#align num.of_nat'_bit Num.ofNat'_bit
 
 @[simp]
-theorem of_nat'_one : Num.ofNat' 1 = 1 := by erw [of_nat'_bit tt 0, cond, of_nat'_zero] <;> rfl
-#align num.of_nat'_one Num.of_nat'_one
+theorem ofNat'_one : Num.ofNat' 1 = 1 := by erw [of_nat'_bit tt 0, cond, of_nat'_zero] <;> rfl
+#align num.of_nat'_one Num.ofNat'_one
 
 theorem bit1_succ : ∀ n : Num, n.bit1.succ = n.succ.bit0
   | 0 => rfl
   | Pos n => rfl
 #align num.bit1_succ Num.bit1_succ
 
-theorem of_nat'_succ : ∀ {n}, ofNat' (n + 1) = ofNat' n + 1 :=
+theorem ofNat'_succ : ∀ {n}, ofNat' (n + 1) = ofNat' n + 1 :=
   Nat.binaryRec (by simp <;> rfl) fun b n ih =>
     by
     cases b
@@ -252,12 +252,12 @@ theorem of_nat'_succ : ∀ {n}, ofNat' (n + 1) = ofNat' n + 1 :=
     · erw [show n.bit tt + 1 = (n + 1).bit ff by simp [Nat.bit, _root_.bit1, _root_.bit0] <;> cc,
         of_nat'_bit, of_nat'_bit, ih]
       simp only [cond, add_one, bit1_succ]
-#align num.of_nat'_succ Num.of_nat'_succ
+#align num.of_nat'_succ Num.ofNat'_succ
 
 @[simp]
-theorem add_of_nat' (m n) : Num.ofNat' (m + n) = Num.ofNat' m + Num.ofNat' n := by
+theorem add_ofNat' (m n) : Num.ofNat' (m + n) = Num.ofNat' m + Num.ofNat' n := by
   induction n <;> simp [Nat.add_zero, of_nat'_succ, add_zero, Nat.add_succ, add_one, add_succ, *]
-#align num.add_of_nat' Num.add_of_nat'
+#align num.add_of_nat' Num.add_ofNat'
 
 @[simp, norm_cast]
 theorem cast_zero [Zero α] [One α] [Add α] : ((0 : Num) : α) = 0 :=
@@ -340,9 +340,9 @@ namespace PosNum
 
 @[simp]
 theorem of_to_nat' : ∀ n : PosNum, Num.ofNat' (n : ℕ) = Num.pos n
-  | 1 => by erw [@Num.of_nat'_bit tt 0, Num.of_nat'_zero] <;> rfl
-  | bit0 p => by erw [@Num.of_nat'_bit ff, of_to_nat'] <;> rfl
-  | bit1 p => by erw [@Num.of_nat'_bit tt, of_to_nat'] <;> rfl
+  | 1 => by erw [@Num.ofNat'_bit tt 0, Num.ofNat'_zero] <;> rfl
+  | bit0 p => by erw [@Num.ofNat'_bit ff, of_to_nat'] <;> rfl
+  | bit1 p => by erw [@Num.ofNat'_bit tt, of_to_nat'] <;> rfl
 #align pos_num.of_to_nat' PosNum.of_to_nat'
 
 end PosNum
@@ -351,7 +351,7 @@ namespace Num
 
 @[simp, norm_cast]
 theorem of_to_nat' : ∀ n : Num, Num.ofNat' (n : ℕ) = n
-  | 0 => of_nat'_zero
+  | 0 => ofNat'_zero
   | Pos p => p.of_to_nat'
 #align num.of_to_nat' Num.of_to_nat'
 
@@ -400,8 +400,8 @@ instance : AddMonoidWithOne Num :=
   { Num.addMonoid with
     natCast := Num.ofNat'
     one := 1
-    nat_cast_zero := of_nat'_zero
-    nat_cast_succ := fun _ => of_nat'_succ }
+    nat_cast_zero := ofNat'_zero
+    nat_cast_succ := fun _ => ofNat'_succ }
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic num.transfer -/
 instance : CommSemiring Num := by
@@ -488,7 +488,7 @@ instance : LinearOrderedSemiring Num :=
 
 @[simp, norm_cast]
 theorem add_of_nat (m n) : ((m + n : ℕ) : Num) = m + n :=
-  add_of_nat' _ _
+  add_ofNat' _ _
 #align num.add_of_nat Num.add_of_nat
 
 @[simp, norm_cast]
@@ -583,17 +583,17 @@ theorem size_to_nat : ∀ n, (size n : ℕ) = Nat.size n
   | bit1 n => by rw [size, succ_to_nat, size_to_nat, cast_bit1, Nat.size_bit1]
 #align pos_num.size_to_nat PosNum.size_to_nat
 
-theorem size_eq_nat_size : ∀ n, (size n : ℕ) = natSize n
+theorem size_eq_natSize : ∀ n, (size n : ℕ) = natSize n
   | 1 => rfl
   | bit0 n => by rw [size, succ_to_nat, nat_size, size_eq_nat_size]
   | bit1 n => by rw [size, succ_to_nat, nat_size, size_eq_nat_size]
-#align pos_num.size_eq_nat_size PosNum.size_eq_nat_size
+#align pos_num.size_eq_nat_size PosNum.size_eq_natSize
 
-theorem nat_size_to_nat (n) : natSize n = Nat.size n := by rw [← size_eq_nat_size, size_to_nat]
-#align pos_num.nat_size_to_nat PosNum.nat_size_to_nat
+theorem natSize_to_nat (n) : natSize n = Nat.size n := by rw [← size_eq_nat_size, size_to_nat]
+#align pos_num.nat_size_to_nat PosNum.natSize_to_nat
 
-theorem nat_size_pos (n) : 0 < natSize n := by cases n <;> apply Nat.succ_pos
-#align pos_num.nat_size_pos PosNum.nat_size_pos
+theorem natSize_pos (n) : 0 < natSize n := by cases n <;> apply Nat.succ_pos
+#align pos_num.nat_size_pos PosNum.natSize_pos
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
 /-- This tactic tries to turn an (in)equality about `pos_num`s to one about `nat`s by rewriting.
@@ -784,49 +784,49 @@ theorem size_to_nat : ∀ n, (size n : ℕ) = Nat.size n
   | Pos p => p.size_to_nat
 #align num.size_to_nat Num.size_to_nat
 
-theorem size_eq_nat_size : ∀ n, (size n : ℕ) = natSize n
+theorem size_eq_natSize : ∀ n, (size n : ℕ) = natSize n
   | 0 => rfl
   | Pos p => p.size_eq_nat_size
-#align num.size_eq_nat_size Num.size_eq_nat_size
+#align num.size_eq_nat_size Num.size_eq_natSize
 
-theorem nat_size_to_nat (n) : natSize n = Nat.size n := by rw [← size_eq_nat_size, size_to_nat]
-#align num.nat_size_to_nat Num.nat_size_to_nat
+theorem natSize_to_nat (n) : natSize n = Nat.size n := by rw [← size_eq_nat_size, size_to_nat]
+#align num.nat_size_to_nat Num.natSize_to_nat
 
 @[simp]
-theorem of_nat'_eq : ∀ n, Num.ofNat' n = n :=
+theorem ofNat'_eq : ∀ n, Num.ofNat' n = n :=
   Nat.binaryRec (by simp) fun b n IH => by
     rw [of_nat'] at IH⊢
     rw [Nat.binaryRec_eq, IH]
     · cases b <;> simp [Nat.bit, bit0_of_bit0, bit1_of_bit1]
     · rfl
-#align num.of_nat'_eq Num.of_nat'_eq
+#align num.of_nat'_eq Num.ofNat'_eq
 
-theorem zneg_to_znum (n : Num) : -n.toZnum = n.toZnumNeg := by cases n <;> rfl
-#align num.zneg_to_znum Num.zneg_to_znum
+theorem zneg_toZNum (n : Num) : -n.toZnum = n.toZnumNeg := by cases n <;> rfl
+#align num.zneg_to_znum Num.zneg_toZNum
 
-theorem zneg_to_znum_neg (n : Num) : -n.toZnumNeg = n.toZnum := by cases n <;> rfl
-#align num.zneg_to_znum_neg Num.zneg_to_znum_neg
+theorem zneg_toZNumNeg (n : Num) : -n.toZnumNeg = n.toZnum := by cases n <;> rfl
+#align num.zneg_to_znum_neg Num.zneg_toZNumNeg
 
-theorem to_znum_inj {m n : Num} : m.toZnum = n.toZnum ↔ m = n :=
+theorem toZNum_inj {m n : Num} : m.toZnum = n.toZnum ↔ m = n :=
   ⟨fun h => by cases m <;> cases n <;> cases h <;> rfl, congr_arg _⟩
-#align num.to_znum_inj Num.to_znum_inj
+#align num.to_znum_inj Num.toZNum_inj
 
 @[simp, norm_cast squash]
-theorem cast_to_znum [Zero α] [One α] [Add α] [Neg α] : ∀ n : Num, (n.toZnum : α) = n
+theorem cast_toZNum [Zero α] [One α] [Add α] [Neg α] : ∀ n : Num, (n.toZnum : α) = n
   | 0 => rfl
   | Num.pos p => rfl
-#align num.cast_to_znum Num.cast_to_znum
+#align num.cast_to_znum Num.cast_toZNum
 
 @[simp]
-theorem cast_to_znum_neg [AddGroup α] [One α] : ∀ n : Num, (n.toZnumNeg : α) = -n
+theorem cast_toZNumNeg [AddGroup α] [One α] : ∀ n : Num, (n.toZnumNeg : α) = -n
   | 0 => neg_zero.symm
   | Num.pos p => rfl
-#align num.cast_to_znum_neg Num.cast_to_znum_neg
+#align num.cast_to_znum_neg Num.cast_toZNumNeg
 
 @[simp]
-theorem add_to_znum (m n : Num) : Num.toZNum (m + n) = m.toZnum + n.toZnum := by
+theorem add_toZNum (m n : Num) : Num.toZNum (m + n) = m.toZnum + n.toZnum := by
   cases m <;> cases n <;> rfl
-#align num.add_to_znum Num.add_to_znum
+#align num.add_to_znum Num.add_toZNum
 
 end Num
 
@@ -1025,7 +1025,7 @@ theorem shiftr_to_nat (m n) : (shiftr m n : ℕ) = Nat.shiftr m n :=
 #align num.shiftr_to_nat Num.shiftr_to_nat
 
 @[simp]
-theorem test_bit_to_nat (m n) : testBit m n = Nat.testBit m n :=
+theorem testBit_to_nat (m n) : testBit m n = Nat.testBit m n :=
   by
   cases' m with m <;> unfold test_bit Nat.testBit
   · change (zero : Nat) with 0
@@ -1049,7 +1049,7 @@ theorem test_bit_to_nat (m n) : testBit m n = Nat.testBit m n :=
     unfold Nat.shiftr
     rw [Nat.div2_bit]
     apply IH
-#align num.test_bit_to_nat Num.test_bit_to_nat
+#align num.test_bit_to_nat Num.testBit_to_nat
 
 end Num
 
@@ -1113,7 +1113,7 @@ theorem zneg_bitm1 (n : ZNum) : -n.bitm1 = (-n).bit1 := by cases n <;> rfl
 #align znum.zneg_bitm1 ZNum.zneg_bitm1
 
 theorem zneg_succ (n : ZNum) : -n.succ = (-n).pred := by
-  cases n <;> try rfl <;> rw [succ, Num.zneg_to_znum_neg] <;> rfl
+  cases n <;> try rfl <;> rw [succ, Num.zneg_toZNumNeg] <;> rfl
 #align znum.zneg_succ ZNum.zneg_succ
 
 theorem zneg_pred (n : ZNum) : -n.pred = (-n).succ := by
@@ -1128,10 +1128,10 @@ theorem abs_to_nat : ∀ n, (abs n : ℕ) = Int.natAbs n
 #align znum.abs_to_nat ZNum.abs_to_nat
 
 @[simp]
-theorem abs_to_znum : ∀ n : Num, abs n.toZnum = n
+theorem abs_toZNum : ∀ n : Num, abs n.toZnum = n
   | 0 => rfl
   | Num.pos p => rfl
-#align znum.abs_to_znum ZNum.abs_to_znum
+#align znum.abs_to_znum ZNum.abs_toZNum
 
 @[simp, norm_cast]
 theorem cast_to_int [AddGroupWithOne α] : ∀ n : ZNum, ((n : ℤ) : α) = n
@@ -1205,20 +1205,20 @@ namespace PosNum
 
 variable {α : Type _}
 
-theorem cast_to_znum : ∀ n : PosNum, (n : ZNum) = ZNum.pos n
+theorem cast_to_zNum : ∀ n : PosNum, (n : ZNum) = ZNum.pos n
   | 1 => rfl
   | bit0 p => (ZNum.bit0_of_bit0 p).trans <| congr_arg _ (cast_to_znum p)
   | bit1 p => (ZNum.bit1_of_bit1 p).trans <| congr_arg _ (cast_to_znum p)
-#align pos_num.cast_to_znum PosNum.cast_to_znum
+#align pos_num.cast_to_znum PosNum.cast_to_zNum
 
 attribute [-simp] Int.add_neg_one
 
 theorem cast_sub' [AddGroupWithOne α] : ∀ m n : PosNum, (sub' m n : α) = m - n
   | a, 1 => by
-    rw [sub'_one, Num.cast_to_znum, ← Num.cast_to_nat, pred'_to_nat, ← Nat.sub_one] <;>
+    rw [sub'_one, Num.cast_toZNum, ← Num.cast_to_nat, pred'_to_nat, ← Nat.sub_one] <;>
       simp [PosNum.cast_pos]
   | 1, b => by
-    rw [one_sub', Num.cast_to_znum_neg, ← neg_sub, neg_inj, ← Num.cast_to_nat, pred'_to_nat, ←
+    rw [one_sub', Num.cast_toZNumNeg, ← neg_sub, neg_inj, ← Num.cast_to_nat, pred'_to_nat, ←
         Nat.sub_one] <;>
       simp [PosNum.cast_pos]
   | bit0 a, bit0 b => by
@@ -1263,15 +1263,15 @@ theorem cast_sub' [AddGroupWithOne α] : ∀ m n : Num, (sub' m n : α) = m - n
   | Pos a, Pos b => PosNum.cast_sub' _ _
 #align num.cast_sub' Num.cast_sub'
 
-theorem to_znum_succ : ∀ n : Num, n.succ.toZnum = n.toZnum.succ
+theorem toZNum_succ : ∀ n : Num, n.succ.toZnum = n.toZnum.succ
   | 0 => rfl
   | Pos n => rfl
-#align num.to_znum_succ Num.to_znum_succ
+#align num.to_znum_succ Num.toZNum_succ
 
-theorem to_znum_neg_succ : ∀ n : Num, n.succ.toZnumNeg = n.toZnumNeg.pred
+theorem toZNumNeg_succ : ∀ n : Num, n.succ.toZnumNeg = n.toZnumNeg.pred
   | 0 => rfl
   | Pos n => rfl
-#align num.to_znum_neg_succ Num.to_znum_neg_succ
+#align num.to_znum_neg_succ Num.toZNumNeg_succ
 
 @[simp]
 theorem pred_succ : ∀ n : ZNum, n.pred.succ = n
@@ -1280,51 +1280,51 @@ theorem pred_succ : ∀ n : ZNum, n.pred.succ = n
   | ZNum.pos p => by rw [ZNum.pred, ← to_znum_succ, Num.succ, PosNum.succ'_pred', to_znum]
 #align num.pred_succ Num.pred_succ
 
-theorem succ_of_int' : ∀ n, ZNum.ofInt' (n + 1) = ZNum.ofInt' n + 1
+theorem succ_ofInt' : ∀ n, ZNum.ofInt' (n + 1) = ZNum.ofInt' n + 1
   | (n : ℕ) => by
-    erw [ZNum.ofInt', ZNum.ofInt', Num.of_nat'_succ, Num.add_one, to_znum_succ, ZNum.add_one]
+    erw [ZNum.ofInt', ZNum.ofInt', Num.ofNat'_succ, Num.add_one, to_znum_succ, ZNum.add_one]
   | -[0+1] => by erw [ZNum.ofInt', ZNum.ofInt', of_nat'_succ, of_nat'_zero] <;> rfl
   | -[n + 1+1] => by
-    erw [ZNum.ofInt', ZNum.ofInt', @Num.of_nat'_succ (n + 1), Num.add_one, to_znum_neg_succ,
+    erw [ZNum.ofInt', ZNum.ofInt', @Num.ofNat'_succ (n + 1), Num.add_one, to_znum_neg_succ,
       @of_nat'_succ n, Num.add_one, ZNum.add_one, pred_succ]
-#align num.succ_of_int' Num.succ_of_int'
+#align num.succ_of_int' Num.succ_ofInt'
 
-theorem of_int'_to_znum : ∀ n : ℕ, toZNum n = ZNum.ofInt' n
+theorem ofInt'_toZNum : ∀ n : ℕ, toZNum n = ZNum.ofInt' n
   | 0 => rfl
   | n + 1 => by
     rw [Nat.cast_succ, Num.add_one, to_znum_succ, of_int'_to_znum, Nat.cast_succ, succ_of_int',
       ZNum.add_one]
-#align num.of_int'_to_znum Num.of_int'_to_znum
+#align num.of_int'_to_znum Num.ofInt'_toZNum
 
-theorem mem_of_znum' : ∀ {m : Num} {n : ZNum}, m ∈ ofZNum' n ↔ n = toZNum m
+theorem mem_ofZNum' : ∀ {m : Num} {n : ZNum}, m ∈ ofZNum' n ↔ n = toZNum m
   | 0, 0 => ⟨fun _ => rfl, fun _ => rfl⟩
   | Pos m, 0 => ⟨fun h => by cases h, fun h => by cases h⟩
   | m, ZNum.pos p =>
     Option.some_inj.trans <| by cases m <;> constructor <;> intro h <;> try cases h <;> rfl
   | m, ZNum.neg p => ⟨fun h => by cases h, fun h => by cases m <;> cases h⟩
-#align num.mem_of_znum' Num.mem_of_znum'
+#align num.mem_of_znum' Num.mem_ofZNum'
 
-theorem of_znum'_to_nat : ∀ n : ZNum, coe <$> ofZNum' n = Int.toNat' n
+theorem ofZNum'_to_nat : ∀ n : ZNum, coe <$> ofZNum' n = Int.toNat' n
   | 0 => rfl
   | ZNum.pos p => show _ = Int.toNat' p by rw [← PosNum.to_nat_to_int p] <;> rfl
   | ZNum.neg p =>
     (congr_arg fun x => Int.toNat' (-x)) <|
       show ((p.pred' + 1 : ℕ) : ℤ) = p by rw [← succ'_to_nat] <;> simp
-#align num.of_znum'_to_nat Num.of_znum'_to_nat
+#align num.of_znum'_to_nat Num.ofZNum'_to_nat
 
 @[simp]
-theorem of_znum_to_nat : ∀ n : ZNum, (ofZNum n : ℕ) = Int.toNat n
+theorem ofZNum_toNat : ∀ n : ZNum, (ofZNum n : ℕ) = Int.toNat n
   | 0 => rfl
   | ZNum.pos p => show _ = Int.toNat p by rw [← PosNum.to_nat_to_int p] <;> rfl
   | ZNum.neg p =>
     (congr_arg fun x => Int.toNat (-x)) <|
       show ((p.pred' + 1 : ℕ) : ℤ) = p by rw [← succ'_to_nat] <;> simp
-#align num.of_znum_to_nat Num.of_znum_to_nat
+#align num.of_znum_to_nat Num.ofZNum_toNat
 
 @[simp]
-theorem cast_of_znum [AddGroupWithOne α] (n : ZNum) : (ofZNum n : α) = Int.toNat n := by
+theorem cast_ofZNum [AddGroupWithOne α] (n : ZNum) : (ofZNum n : α) = Int.toNat n := by
   rw [← cast_to_nat, of_znum_to_nat]
-#align num.cast_of_znum Num.cast_of_znum
+#align num.cast_of_znum Num.cast_ofZNum
 
 @[simp, norm_cast]
 theorem sub_to_nat (m n) : ((m - n : Num) : ℕ) = m - n :=
@@ -1375,18 +1375,17 @@ theorem cast_mul [Ring α] (m n) : ((m * n : ZNum) : α) = m * n := by
   rw [← cast_to_int, mul_to_int, Int.cast_mul, cast_to_int, cast_to_int]
 #align znum.cast_mul ZNum.cast_mul
 
-theorem of_int'_neg : ∀ n : ℤ, ofInt' (-n) = -ofInt' n
-  | -[n+1] => show ofInt' (n + 1 : ℕ) = _ by simp only [of_int', Num.zneg_to_znum_neg]
-  | 0 => show Num.toZNum _ = -Num.toZNum _ by rw [Num.of_nat'_zero] <;> rfl
-  | (n + 1 : ℕ) => show Num.toZNumNeg _ = -Num.toZNum _ by rw [Num.zneg_to_znum] <;> rfl
-#align znum.of_int'_neg ZNum.of_int'_neg
+theorem ofInt'_neg : ∀ n : ℤ, ofInt' (-n) = -ofInt' n
+  | -[n+1] => show ofInt' (n + 1 : ℕ) = _ by simp only [of_int', Num.zneg_toZNumNeg]
+  | 0 => show Num.toZNum _ = -Num.toZNum _ by rw [Num.ofNat'_zero] <;> rfl
+  | (n + 1 : ℕ) => show Num.toZNumNeg _ = -Num.toZNum _ by rw [Num.zneg_toZNum] <;> rfl
+#align znum.of_int'_neg ZNum.ofInt'_neg
 
 theorem of_to_int' : ∀ n : ZNum, ZNum.ofInt' n = n
-  | 0 => by erw [of_int', Num.of_nat'_zero, Num.toZNum]
-  | Pos a => by rw [cast_pos, ← PosNum.cast_to_nat, ← Num.of_int'_to_znum, PosNum.of_to_nat] <;> rfl
+  | 0 => by erw [of_int', Num.ofNat'_zero, Num.toZNum]
+  | Pos a => by rw [cast_pos, ← PosNum.cast_to_nat, ← Num.ofInt'_toZNum, PosNum.of_to_nat] <;> rfl
   | neg a => by
-    rw [cast_neg, of_int'_neg, ← PosNum.cast_to_nat, ← Num.of_int'_to_znum, PosNum.of_to_nat] <;>
-      rfl
+    rw [cast_neg, of_int'_neg, ← PosNum.cast_to_nat, ← Num.ofInt'_toZNum, PosNum.of_to_nat] <;> rfl
 #align znum.of_to_int' ZNum.of_to_int'
 
 theorem to_int_inj {m n : ZNum} : (m : ℤ) = n ↔ m = n :=
@@ -1527,10 +1526,10 @@ instance : AddMonoidWithOne ZNum :=
   { ZNum.addCommGroup with
     one := 1
     natCast := fun n => ZNum.ofInt' n
-    nat_cast_zero := show (Num.ofNat' 0).toZnum = 0 by rw [Num.of_nat'_zero] <;> rfl
+    nat_cast_zero := show (Num.ofNat' 0).toZnum = 0 by rw [Num.ofNat'_zero] <;> rfl
     nat_cast_succ := fun n =>
       show (Num.ofNat' (n + 1)).toZnum = (Num.ofNat' n).toZnum + 1 by
-        rw [Num.of_nat'_succ, Num.add_one, Num.to_znum_succ, ZNum.add_one] }
+        rw [Num.ofNat'_succ, Num.add_one, Num.toZNum_succ, ZNum.add_one] }
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic znum.transfer -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic znum.transfer -/
@@ -1594,19 +1593,19 @@ theorem neg_of_int : ∀ n, ((-n : ℤ) : ZNum) = -n
 #align znum.neg_of_int ZNum.neg_of_int
 
 @[simp]
-theorem of_int'_eq : ∀ n : ℤ, ZNum.ofInt' n = n
+theorem ofInt'_eq : ∀ n : ℤ, ZNum.ofInt' n = n
   | (n : ℕ) => rfl
   | -[n+1] => by
     show Num.toZNumNeg (n + 1 : ℕ) = -(n + 1 : ℕ)
-    rw [← neg_inj, neg_neg, Nat.cast_succ, Num.add_one, Num.zneg_to_znum_neg, Num.to_znum_succ,
+    rw [← neg_inj, neg_neg, Nat.cast_succ, Num.add_one, Num.zneg_toZNumNeg, Num.toZNum_succ,
       Nat.cast_succ, ZNum.add_one]
     rfl
-#align znum.of_int'_eq ZNum.of_int'_eq
+#align znum.of_int'_eq ZNum.ofInt'_eq
 
 @[simp]
-theorem of_nat_to_znum (n : ℕ) : Num.toZNum n = n :=
+theorem of_nat_toZNum (n : ℕ) : Num.toZNum n = n :=
   rfl
-#align znum.of_nat_to_znum ZNum.of_nat_to_znum
+#align znum.of_nat_to_znum ZNum.of_nat_toZNum
 
 @[simp, norm_cast]
 theorem of_to_int (n : ZNum) : ((n : ℤ) : ZNum) = n := by rw [← of_int'_eq, of_to_int']
@@ -1617,9 +1616,8 @@ theorem to_of_int (n : ℤ) : ((n : ZNum) : ℤ) = n :=
 #align znum.to_of_int ZNum.to_of_int
 
 @[simp]
-theorem of_nat_to_znum_neg (n : ℕ) : Num.toZNumNeg n = -n := by
-  rw [← of_nat_to_znum, Num.zneg_to_znum]
-#align znum.of_nat_to_znum_neg ZNum.of_nat_to_znum_neg
+theorem of_nat_toZNumNeg (n : ℕ) : Num.toZNumNeg n = -n := by rw [← of_nat_to_znum, Num.zneg_toZNum]
+#align znum.of_nat_to_znum_neg ZNum.of_nat_toZNumNeg
 
 @[simp, norm_cast]
 theorem of_int_cast [AddGroupWithOne α] (n : ℤ) : ((n : ZNum) : α) = n := by
@@ -1649,7 +1647,7 @@ theorem divmod_to_nat_aux {n d : PosNum} {q r : Num} (h₁ : (r : ℕ) + d * bit
     by
     intro r₂
     apply num.mem_of_znum'.trans
-    rw [← ZNum.to_int_inj, Num.cast_to_znum, Num.cast_sub', sub_eq_iff_eq_add, ← Int.coe_nat_inj']
+    rw [← ZNum.to_int_inj, Num.cast_toZNum, Num.cast_sub', sub_eq_iff_eq_add, ← Int.coe_nat_inj']
     simp
   cases' e : Num.ofZNum' (Num.sub' r (Num.pos d)) with r₂ <;> simp [divmod_aux]
   · refine' ⟨h₁, lt_of_not_ge fun h => _⟩
@@ -1662,7 +1660,7 @@ theorem divmod_to_nat_aux {n d : PosNum} {q r : Num} (h₁ : (r : ℕ) + d * bit
     · rwa [this, two_mul, add_lt_add_iff_right] at h₂
 #align pos_num.divmod_to_nat_aux PosNum.divmod_to_nat_aux
 
-theorem divmod_to_nat (d n : PosNum) :
+theorem divMod_to_nat (d n : PosNum) :
     (n / d : ℕ) = (divMod d n).1 ∧ (n % d : ℕ) = (divMod d n).2 :=
   by
   rw [Nat.div_mod_unique (PosNum.cast_pos _)]
@@ -1688,16 +1686,16 @@ theorem divmod_to_nat (d n : PosNum) :
         bit0_eq_two_mul]
     · rw [← bit0_eq_two_mul]
       exact Nat.bit0_lt IH.2
-#align pos_num.divmod_to_nat PosNum.divmod_to_nat
+#align pos_num.divmod_to_nat PosNum.divMod_to_nat
 
 @[simp]
 theorem div'_to_nat (n d) : (div' n d : ℕ) = n / d :=
-  (divmod_to_nat _ _).1.symm
+  (divMod_to_nat _ _).1.symm
 #align pos_num.div'_to_nat PosNum.div'_to_nat
 
 @[simp]
 theorem mod'_to_nat (n d) : (mod' n d : ℕ) = n % d :=
-  (divmod_to_nat _ _).2.symm
+  (divMod_to_nat _ _).2.symm
 #align pos_num.mod'_to_nat PosNum.mod'_to_nat
 
 end PosNum
@@ -1740,7 +1738,7 @@ theorem gcd_to_nat_aux :
     ∀ {n} {a b : Num}, a ≤ b → (a * b).natSize ≤ n → (gcdAux n a b : ℕ) = Nat.gcd a b
   | 0, 0, b, ab, h => (Nat.gcd_zero_left _).symm
   | 0, Pos a, 0, ab, h => (not_lt_of_ge ab).elim rfl
-  | 0, Pos a, Pos b, ab, h => (not_lt_of_le h).elim <| PosNum.nat_size_pos _
+  | 0, Pos a, Pos b, ab, h => (not_lt_of_le h).elim <| PosNum.natSize_pos _
   | Nat.succ n, 0, b, ab, h => (Nat.gcd_zero_left _).symm
   | Nat.succ n, Pos a, b, ab, h => by
     simp [gcd_aux]
@@ -1805,8 +1803,8 @@ theorem div_to_int : ∀ n d, ((n / d : ZNum) : ℤ) = n / d
   | 0, neg d => (Int.zero_div _).symm
   | Pos n, 0 => (Int.div_zero _).symm
   | neg n, 0 => (Int.div_zero _).symm
-  | Pos n, Pos d => (Num.cast_to_znum _).trans <| by rw [← Num.to_nat_to_int] <;> simp
-  | Pos n, neg d => (Num.cast_to_znum_neg _).trans <| by rw [← Num.to_nat_to_int] <;> simp
+  | Pos n, Pos d => (Num.cast_toZNum _).trans <| by rw [← Num.to_nat_to_int] <;> simp
+  | Pos n, neg d => (Num.cast_toZNumNeg _).trans <| by rw [← Num.to_nat_to_int] <;> simp
   | neg n, Pos d =>
     show -_ = -_ / ↑d
       by
@@ -1827,7 +1825,7 @@ theorem div_to_int : ∀ n d, ((n / d : ZNum) : ℤ) = n / d
 theorem mod_to_int : ∀ n d, ((n % d : ZNum) : ℤ) = n % d
   | 0, d => (Int.zero_mod _).symm
   | Pos n, d =>
-    (Num.cast_to_znum _).trans <| by
+    (Num.cast_toZNum _).trans <| by
       rw [← Num.to_nat_to_int, cast_pos, Num.mod_to_nat, ← PosNum.to_nat_to_int, abs_to_nat] <;> rfl
   | neg n, d =>
     (Num.cast_sub' _ _).trans <| by

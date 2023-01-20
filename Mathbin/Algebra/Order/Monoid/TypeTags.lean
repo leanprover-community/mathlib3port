@@ -99,11 +99,11 @@ instance [Mul α] [LE α] [ExistsMulOfLE α] : ExistsAddOfLE (Additive α) :=
   ⟨@exists_mul_of_le α _ _ _⟩
 
 instance [CanonicallyOrderedAddMonoid α] : CanonicallyOrderedMonoid (Multiplicative α) :=
-  { Multiplicative.orderedCommMonoid, Multiplicative.orderBot,
-    Multiplicative.has_exists_mul_of_le with le_self_mul := @le_self_add α _ }
+  { Multiplicative.orderedCommMonoid, Multiplicative.orderBot, Multiplicative.existsMulOfLE with
+    le_self_mul := @le_self_add α _ }
 
 instance [CanonicallyOrderedMonoid α] : CanonicallyOrderedAddMonoid (Additive α) :=
-  { Additive.orderedAddCommMonoid, Additive.orderBot, Additive.has_exists_add_of_le with
+  { Additive.orderedAddCommMonoid, Additive.orderBot, Additive.existsAddOfLE with
     le_self_add := @le_self_mul α _ }
 
 instance [CanonicallyLinearOrderedAddMonoid α] :

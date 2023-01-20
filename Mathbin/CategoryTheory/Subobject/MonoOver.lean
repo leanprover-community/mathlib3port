@@ -112,12 +112,12 @@ instance mono (f : MonoOver X) : Mono f.arrow :=
 
 /-- The category of monomorphisms over X is a thin category,
 which makes defining its skeleton easy. -/
-instance is_thin {X : C} : Quiver.IsThin (MonoOver X) := fun f g =>
+instance isThin {X : C} : Quiver.IsThin (MonoOver X) := fun f g =>
   ⟨by
     intro h₁ h₂
     ext1
     erw [← cancel_mono g.arrow, over.w h₁, over.w h₂]⟩
-#align category_theory.mono_over.is_thin CategoryTheory.MonoOver.is_thin
+#align category_theory.mono_over.is_thin CategoryTheory.MonoOver.isThin
 
 @[reassoc.1]
 theorem w {f g : MonoOver X} (k : f ⟶ g) : k.left ≫ g.arrow = f.arrow :=
@@ -346,9 +346,9 @@ def imageMonoOver (f : X ⟶ Y) [HasImage f] : MonoOver Y :=
 #align category_theory.mono_over.image_mono_over CategoryTheory.MonoOver.imageMonoOver
 
 @[simp]
-theorem image_mono_over_arrow (f : X ⟶ Y) [HasImage f] : (imageMonoOver f).arrow = image.ι f :=
+theorem imageMonoOver_arrow (f : X ⟶ Y) [HasImage f] : (imageMonoOver f).arrow = image.ι f :=
   rfl
-#align category_theory.mono_over.image_mono_over_arrow CategoryTheory.MonoOver.image_mono_over_arrow
+#align category_theory.mono_over.image_mono_over_arrow CategoryTheory.MonoOver.imageMonoOver_arrow
 
 end Image
 

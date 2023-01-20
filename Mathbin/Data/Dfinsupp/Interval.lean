@@ -130,15 +130,15 @@ def rangeIcc (f g : Π₀ i, α i) : Π₀ i, Finset (α i)
 #align dfinsupp.range_Icc Dfinsupp.rangeIcc
 
 @[simp]
-theorem range_Icc_apply (f g : Π₀ i, α i) (i : ι) : f.rangeIcc g i = icc (f i) (g i) :=
+theorem rangeIcc_apply (f g : Π₀ i, α i) (i : ι) : f.rangeIcc g i = icc (f i) (g i) :=
   rfl
-#align dfinsupp.range_Icc_apply Dfinsupp.range_Icc_apply
+#align dfinsupp.range_Icc_apply Dfinsupp.rangeIcc_apply
 
-theorem mem_range_Icc_apply_iff : a ∈ f.rangeIcc g i ↔ f i ≤ a ∧ a ≤ g i :=
+theorem mem_rangeIcc_apply_iff : a ∈ f.rangeIcc g i ↔ f i ≤ a ∧ a ≤ g i :=
   mem_Icc
-#align dfinsupp.mem_range_Icc_apply_iff Dfinsupp.mem_range_Icc_apply_iff
+#align dfinsupp.mem_range_Icc_apply_iff Dfinsupp.mem_rangeIcc_apply_iff
 
-theorem support_range_Icc_subset [DecidableEq ι] [∀ i, DecidableEq (α i)] :
+theorem support_rangeIcc_subset [DecidableEq ι] [∀ i, DecidableEq (α i)] :
     (f.rangeIcc g).support ⊆ f.support ∪ g.support :=
   by
   refine' fun x hx => _
@@ -147,7 +147,7 @@ theorem support_range_Icc_subset [DecidableEq ι] [∀ i, DecidableEq (α i)] :
   rw [range_Icc_apply, not_mem_support_iff.1 (not_mem_mono (subset_union_left _ _) h),
     not_mem_support_iff.1 (not_mem_mono (subset_union_right _ _) h)]
   exact Icc_self _
-#align dfinsupp.support_range_Icc_subset Dfinsupp.support_range_Icc_subset
+#align dfinsupp.support_range_Icc_subset Dfinsupp.support_rangeIcc_subset
 
 end BundledIcc
 
@@ -191,25 +191,25 @@ instance : LocallyFiniteOrder (Π₀ i, α i) :=
 
 variable (f g : Π₀ i, α i)
 
-theorem Icc_eq : icc f g = (f.support ∪ g.support).Dfinsupp (f.rangeIcc g) :=
+theorem icc_eq : icc f g = (f.support ∪ g.support).Dfinsupp (f.rangeIcc g) :=
   rfl
-#align dfinsupp.Icc_eq Dfinsupp.Icc_eq
+#align dfinsupp.Icc_eq Dfinsupp.icc_eq
 
-theorem card_Icc : (icc f g).card = ∏ i in f.support ∪ g.support, (icc (f i) (g i)).card :=
+theorem card_icc : (icc f g).card = ∏ i in f.support ∪ g.support, (icc (f i) (g i)).card :=
   card_dfinsupp _ _
-#align dfinsupp.card_Icc Dfinsupp.card_Icc
+#align dfinsupp.card_Icc Dfinsupp.card_icc
 
-theorem card_Ico : (ico f g).card = (∏ i in f.support ∪ g.support, (icc (f i) (g i)).card) - 1 := by
+theorem card_ico : (ico f g).card = (∏ i in f.support ∪ g.support, (icc (f i) (g i)).card) - 1 := by
   rw [card_Ico_eq_card_Icc_sub_one, card_Icc]
-#align dfinsupp.card_Ico Dfinsupp.card_Ico
+#align dfinsupp.card_Ico Dfinsupp.card_ico
 
-theorem card_Ioc : (ioc f g).card = (∏ i in f.support ∪ g.support, (icc (f i) (g i)).card) - 1 := by
+theorem card_ioc : (ioc f g).card = (∏ i in f.support ∪ g.support, (icc (f i) (g i)).card) - 1 := by
   rw [card_Ioc_eq_card_Icc_sub_one, card_Icc]
-#align dfinsupp.card_Ioc Dfinsupp.card_Ioc
+#align dfinsupp.card_Ioc Dfinsupp.card_ioc
 
-theorem card_Ioo : (ioo f g).card = (∏ i in f.support ∪ g.support, (icc (f i) (g i)).card) - 2 := by
+theorem card_ioo : (ioo f g).card = (∏ i in f.support ∪ g.support, (icc (f i) (g i)).card) - 2 := by
   rw [card_Ioo_eq_card_Icc_sub_two, card_Icc]
-#align dfinsupp.card_Ioo Dfinsupp.card_Ioo
+#align dfinsupp.card_Ioo Dfinsupp.card_ioo
 
 end LocallyFinite
 
@@ -221,14 +221,14 @@ variable [∀ i, CanonicallyOrderedAddMonoid (α i)] [∀ i, LocallyFiniteOrder 
 
 variable (f : Π₀ i, α i)
 
-theorem card_Iic : (iic f).card = ∏ i in f.support, (iic (f i)).card := by
+theorem card_iic : (iic f).card = ∏ i in f.support, (iic (f i)).card := by
   simp_rw [Iic_eq_Icc, card_Icc, Dfinsupp.bot_eq_zero, support_zero, empty_union, zero_apply,
     bot_eq_zero]
-#align dfinsupp.card_Iic Dfinsupp.card_Iic
+#align dfinsupp.card_Iic Dfinsupp.card_iic
 
-theorem card_Iio : (iio f).card = (∏ i in f.support, (iic (f i)).card) - 1 := by
+theorem card_iio : (iio f).card = (∏ i in f.support, (iic (f i)).card) - 1 := by
   rw [card_Iio_eq_card_Iic_sub_one, card_Iic]
-#align dfinsupp.card_Iio Dfinsupp.card_Iio
+#align dfinsupp.card_Iio Dfinsupp.card_iio
 
 end CanonicallyOrdered
 

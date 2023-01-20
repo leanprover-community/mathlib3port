@@ -53,9 +53,9 @@ instance algebra : Algebra R (A × B) :=
 variable {R A B}
 
 @[simp]
-theorem algebra_map_apply (r : R) : algebraMap R (A × B) r = (algebraMap R A r, algebraMap R B r) :=
+theorem algebraMap_apply (r : R) : algebraMap R (A × B) r = (algebraMap R A r, algebraMap R B r) :=
   rfl
-#align prod.algebra_map_apply Prod.algebra_map_apply
+#align prod.algebra_map_apply Prod.algebraMap_apply
 
 end Prod
 
@@ -81,7 +81,7 @@ def prod (f : A →ₐ[R] B) (g : A →ₐ[R] C) : A →ₐ[R] B × C :=
   { f.toRingHom.Prod g.toRingHom with
     commutes' := fun r => by
       simp only [to_ring_hom_eq_coe, RingHom.toFun_eq_coe, RingHom.prod_apply, coe_to_ring_hom,
-        commutes, Prod.algebra_map_apply] }
+        commutes, Prod.algebraMap_apply] }
 #align alg_hom.prod AlgHom.prod
 
 theorem coe_prod (f : A →ₐ[R] B) (g : A →ₐ[R] C) : ⇑(f.Prod g) = Pi.prod f g :=

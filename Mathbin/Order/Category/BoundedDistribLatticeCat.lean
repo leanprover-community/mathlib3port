@@ -60,9 +60,9 @@ def toBoundedLattice (X : BoundedDistribLatticeCat) : BoundedLatticeCat :=
 #align BoundedDistribLattice.to_BoundedLattice BoundedDistribLatticeCat.toBoundedLattice
 
 @[simp]
-theorem coe_to_BoundedLattice (X : BoundedDistribLatticeCat) : ↥X.toBoundedLattice = ↥X :=
+theorem coe_toBoundedLattice (X : BoundedDistribLatticeCat) : ↥X.toBoundedLattice = ↥X :=
   rfl
-#align BoundedDistribLattice.coe_to_BoundedLattice BoundedDistribLatticeCat.coe_to_BoundedLattice
+#align BoundedDistribLattice.coe_to_BoundedLattice BoundedDistribLatticeCat.coe_toBoundedLattice
 
 instance : LargeCategory.{u} BoundedDistribLatticeCat :=
   InducedCategory.category toBoundedLattice
@@ -80,11 +80,11 @@ instance hasForgetToBoundedLattice : HasForget₂ BoundedDistribLatticeCat Bound
   InducedCategory.hasForget₂ toBoundedLattice
 #align BoundedDistribLattice.has_forget_to_BoundedLattice BoundedDistribLatticeCat.hasForgetToBoundedLattice
 
-theorem forget_BoundedLattice_Lattice_eq_forget_DistribLattice_Lattice :
+theorem forget_boundedLatticeCat_latticeCat_eq_forget_distribLatticeCat_latticeCat :
     forget₂ BoundedDistribLatticeCat BoundedLatticeCat ⋙ forget₂ BoundedLatticeCat LatticeCat =
       forget₂ BoundedDistribLatticeCat DistribLatticeCat ⋙ forget₂ DistribLatticeCat LatticeCat :=
   rfl
-#align BoundedDistribLattice.forget_BoundedLattice_Lattice_eq_forget_DistribLattice_Lattice BoundedDistribLatticeCat.forget_BoundedLattice_Lattice_eq_forget_DistribLattice_Lattice
+#align BoundedDistribLattice.forget_BoundedLattice_Lattice_eq_forget_DistribLattice_Lattice BoundedDistribLatticeCat.forget_boundedLatticeCat_latticeCat_eq_forget_distribLatticeCat_latticeCat
 
 /-- Constructs an equivalence between bounded distributive lattices from an order isomorphism
 between them. -/
@@ -119,9 +119,9 @@ def dualEquiv : BoundedDistribLatticeCat ≌ BoundedDistribLatticeCat :=
 
 end BoundedDistribLatticeCat
 
-theorem BoundedDistribLattice_dual_comp_forget_to_DistribLattice :
+theorem boundedDistribLatticeCat_dual_comp_forget_to_distribLatticeCat :
     BoundedDistribLatticeCat.dual ⋙ forget₂ BoundedDistribLatticeCat DistribLatticeCat =
       forget₂ BoundedDistribLatticeCat DistribLatticeCat ⋙ DistribLatticeCat.dual :=
   rfl
-#align BoundedDistribLattice_dual_comp_forget_to_DistribLattice BoundedDistribLattice_dual_comp_forget_to_DistribLattice
+#align BoundedDistribLattice_dual_comp_forget_to_DistribLattice boundedDistribLatticeCat_dual_comp_forget_to_distribLatticeCat
 

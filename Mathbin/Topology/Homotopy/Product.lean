@@ -247,27 +247,27 @@ def projRight (p : Path.Homotopic.Quotient c₁ c₂) : Path.Homotopic.Quotient 
 
 /-- Lemmas showing projection is the inverse of product -/
 @[simp]
-theorem proj_left_prod : projLeft (prod q₁ q₂) = q₁ :=
+theorem projLeft_prod : projLeft (prod q₁ q₂) = q₁ :=
   by
   apply Quotient.induction_on₂ q₁ q₂
   intro p₁ p₂
   unfold proj_left
   rw [prod_lift, ← Path.Homotopic.map_lift]
   congr ; ext; rfl
-#align path.homotopic.proj_left_prod Path.Homotopic.proj_left_prod
+#align path.homotopic.proj_left_prod Path.Homotopic.projLeft_prod
 
 @[simp]
-theorem proj_right_prod : projRight (prod q₁ q₂) = q₂ :=
+theorem projRight_prod : projRight (prod q₁ q₂) = q₂ :=
   by
   apply Quotient.induction_on₂ q₁ q₂
   intro p₁ p₂
   unfold proj_right
   rw [prod_lift, ← Path.Homotopic.map_lift]
   congr ; ext; rfl
-#align path.homotopic.proj_right_prod Path.Homotopic.proj_right_prod
+#align path.homotopic.proj_right_prod Path.Homotopic.projRight_prod
 
 @[simp]
-theorem prod_proj_left_proj_right (p : Path.Homotopic.Quotient (a₁, b₁) (a₂, b₂)) :
+theorem prod_projLeft_projRight (p : Path.Homotopic.Quotient (a₁, b₁) (a₂, b₂)) :
     prod (projLeft p) (projRight p) = p :=
   by
   apply Quotient.inductionOn p
@@ -275,7 +275,7 @@ theorem prod_proj_left_proj_right (p : Path.Homotopic.Quotient (a₁, b₁) (a�
   unfold proj_left; unfold proj_right
   simp only [← Path.Homotopic.map_lift, prod_lift]
   congr ; ext <;> rfl
-#align path.homotopic.prod_proj_left_proj_right Path.Homotopic.prod_proj_left_proj_right
+#align path.homotopic.prod_proj_left_proj_right Path.Homotopic.prod_projLeft_projRight
 
 end Prod
 

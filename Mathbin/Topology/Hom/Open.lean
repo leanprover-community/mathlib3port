@@ -82,9 +82,9 @@ instance : CoeFun (α →CO β) fun _ => α → β :=
   FunLike.hasCoeToFun
 
 @[simp]
-theorem to_fun_eq_coe {f : α →CO β} : f.toFun = (f : α → β) :=
+theorem toFun_eq_coe {f : α →CO β} : f.toFun = (f : α → β) :=
   rfl
-#align continuous_open_map.to_fun_eq_coe ContinuousOpenMap.to_fun_eq_coe
+#align continuous_open_map.to_fun_eq_coe ContinuousOpenMap.toFun_eq_coe
 
 @[ext]
 theorem ext {f g : α →CO β} (h : ∀ a, f a = g a) : f = g :=

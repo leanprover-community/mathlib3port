@@ -49,15 +49,15 @@ noncomputable def isometrySumSquares [DecidableEq ι] (w' : ι → ℂ) :
     (∑ i : ι, v i • ((isUnit_iff_ne_zero.2 <| hw' i).Unit : ℂ) • (Pi.basisFun ℂ ι) i) j =
       v j • w j ^ (-(1 / 2 : ℂ)) :=
     by
-    rw [Finset.sum_apply, sum_eq_single j, Pi.basis_fun_apply, IsUnit.unit_spec,
-      LinearMap.std_basis_apply, Pi.smul_apply, Pi.smul_apply, Function.update_same, smul_eq_mul,
+    rw [Finset.sum_apply, sum_eq_single j, Pi.basisFun_apply, IsUnit.unit_spec,
+      LinearMap.stdBasis_apply, Pi.smul_apply, Pi.smul_apply, Function.update_same, smul_eq_mul,
       smul_eq_mul, smul_eq_mul, mul_one]
     intro i _ hij
-    rw [Pi.basis_fun_apply, LinearMap.std_basis_apply, Pi.smul_apply, Pi.smul_apply,
+    rw [Pi.basisFun_apply, LinearMap.stdBasis_apply, Pi.smul_apply, Pi.smul_apply,
       Function.update_noteq hij.symm, Pi.zero_apply, smul_eq_mul, smul_eq_mul, mul_zero, mul_zero]
     intro hj'
     exact False.elim (hj' hj)
-  simp_rw [Basis.units_smul_apply]
+  simp_rw [Basis.unitsSmul_apply]
   erw [hsum, smul_eq_mul]
   split_ifs
   · simp only [h, zero_smul, zero_mul]

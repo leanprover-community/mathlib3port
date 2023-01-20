@@ -28,7 +28,7 @@ universe u
 namespace GroupCat
 
 @[to_additive]
-theorem is_zero_of_subsingleton (G : GroupCat) [Subsingleton G] : IsZero G :=
+theorem isZero_of_subsingleton (G : GroupCat) [Subsingleton G] : IsZero G :=
   by
   refine' ⟨fun X => ⟨⟨⟨1⟩, fun f => _⟩⟩, fun X => ⟨⟨⟨1⟩, fun f => _⟩⟩⟩
   · ext
@@ -36,19 +36,19 @@ theorem is_zero_of_subsingleton (G : GroupCat) [Subsingleton G] : IsZero G :=
     rw [this, map_one, map_one]
   · ext
     apply Subsingleton.elim
-#align Group.is_zero_of_subsingleton GroupCat.is_zero_of_subsingleton
-#align AddGroup.is_zero_of_subsingleton AddGroupCat.is_zero_of_subsingleton
+#align Group.is_zero_of_subsingleton GroupCat.isZero_of_subsingleton
+#align AddGroup.is_zero_of_subsingleton AddGroupCat.isZero_of_subsingleton
 
-@[to_additive AddGroupCat.has_zero_object]
+@[to_additive AddGroupCat.hasZeroObject]
 instance : HasZeroObject GroupCat :=
-  ⟨⟨of PUnit, is_zero_of_subsingleton _⟩⟩
+  ⟨⟨of PUnit, isZero_of_subsingleton _⟩⟩
 
 end GroupCat
 
 namespace CommGroupCat
 
 @[to_additive]
-theorem is_zero_of_subsingleton (G : CommGroupCat) [Subsingleton G] : IsZero G :=
+theorem isZero_of_subsingleton (G : CommGroupCat) [Subsingleton G] : IsZero G :=
   by
   refine' ⟨fun X => ⟨⟨⟨1⟩, fun f => _⟩⟩, fun X => ⟨⟨⟨1⟩, fun f => _⟩⟩⟩
   · ext
@@ -56,12 +56,12 @@ theorem is_zero_of_subsingleton (G : CommGroupCat) [Subsingleton G] : IsZero G :
     rw [this, map_one, map_one]
   · ext
     apply Subsingleton.elim
-#align CommGroup.is_zero_of_subsingleton CommGroupCat.is_zero_of_subsingleton
-#align AddCommGroup.is_zero_of_subsingleton AddCommGroupCat.is_zero_of_subsingleton
+#align CommGroup.is_zero_of_subsingleton CommGroupCat.isZero_of_subsingleton
+#align AddCommGroup.is_zero_of_subsingleton AddCommGroupCat.isZero_of_subsingleton
 
-@[to_additive AddCommGroupCat.has_zero_object]
+@[to_additive AddCommGroupCat.hasZeroObject]
 instance : HasZeroObject CommGroupCat :=
-  ⟨⟨of PUnit, is_zero_of_subsingleton _⟩⟩
+  ⟨⟨of PUnit, isZero_of_subsingleton _⟩⟩
 
 end CommGroupCat
 

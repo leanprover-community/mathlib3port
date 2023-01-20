@@ -128,10 +128,10 @@ def natTrans {F G : (Σi, C i) ⥤ D} (h : ∀ i : I, incl i ⋙ F ⟶ incl i �
 #align category_theory.sigma.nat_trans CategoryTheory.Sigma.natTrans
 
 @[simp]
-theorem nat_trans_app {F G : (Σi, C i) ⥤ D} (h : ∀ i : I, incl i ⋙ F ⟶ incl i ⋙ G) (i : I)
+theorem natTrans_app {F G : (Σi, C i) ⥤ D} (h : ∀ i : I, incl i ⋙ F ⟶ incl i ⋙ G) (i : I)
     (X : C i) : (natTrans h).app ⟨i, X⟩ = (h i).app X :=
   rfl
-#align category_theory.sigma.nat_trans_app CategoryTheory.Sigma.nat_trans_app
+#align category_theory.sigma.nat_trans_app CategoryTheory.Sigma.natTrans_app
 
 /- warning: category_theory.sigma.desc_map -> CategoryTheory.Sigma.descMap is a dubious translation:
 lean 3 declaration is
@@ -178,14 +178,14 @@ def inclDesc (i : I) : incl i ⋙ desc F ≅ F i :=
 #align category_theory.sigma.incl_desc CategoryTheory.Sigma.inclDesc
 
 @[simp]
-theorem incl_desc_hom_app (i : I) (X : C i) : (inclDesc F i).Hom.app X = 𝟙 ((F i).obj X) :=
+theorem inclDesc_hom_app (i : I) (X : C i) : (inclDesc F i).Hom.app X = 𝟙 ((F i).obj X) :=
   rfl
-#align category_theory.sigma.incl_desc_hom_app CategoryTheory.Sigma.incl_desc_hom_app
+#align category_theory.sigma.incl_desc_hom_app CategoryTheory.Sigma.inclDesc_hom_app
 
 @[simp]
-theorem incl_desc_inv_app (i : I) (X : C i) : (inclDesc F i).inv.app X = 𝟙 ((F i).obj X) :=
+theorem inclDesc_inv_app (i : I) (X : C i) : (inclDesc F i).inv.app X = 𝟙 ((F i).obj X) :=
   rfl
-#align category_theory.sigma.incl_desc_inv_app CategoryTheory.Sigma.incl_desc_inv_app
+#align category_theory.sigma.incl_desc_inv_app CategoryTheory.Sigma.inclDesc_inv_app
 
 /-- If `q` when restricted to each subcategory `C i` agrees with `F i`, then `q` is isomorphic to
 `desc F`.
@@ -198,16 +198,16 @@ def descUniq (q : (Σi, C i) ⥤ D) (h : ∀ i, incl i ⋙ q ≅ F i) : q ≅ de
 #align category_theory.sigma.desc_uniq CategoryTheory.Sigma.descUniq
 
 @[simp]
-theorem desc_uniq_hom_app (q : (Σi, C i) ⥤ D) (h : ∀ i, incl i ⋙ q ≅ F i) (i : I) (X : C i) :
+theorem descUniq_hom_app (q : (Σi, C i) ⥤ D) (h : ∀ i, incl i ⋙ q ≅ F i) (i : I) (X : C i) :
     (descUniq F q h).Hom.app ⟨i, X⟩ = (h i).Hom.app X :=
   rfl
-#align category_theory.sigma.desc_uniq_hom_app CategoryTheory.Sigma.desc_uniq_hom_app
+#align category_theory.sigma.desc_uniq_hom_app CategoryTheory.Sigma.descUniq_hom_app
 
 @[simp]
-theorem desc_uniq_inv_app (q : (Σi, C i) ⥤ D) (h : ∀ i, incl i ⋙ q ≅ F i) (i : I) (X : C i) :
+theorem descUniq_inv_app (q : (Σi, C i) ⥤ D) (h : ∀ i, incl i ⋙ q ≅ F i) (i : I) (X : C i) :
     (descUniq F q h).inv.app ⟨i, X⟩ = (h i).inv.app X :=
   rfl
-#align category_theory.sigma.desc_uniq_inv_app CategoryTheory.Sigma.desc_uniq_inv_app
+#align category_theory.sigma.desc_uniq_inv_app CategoryTheory.Sigma.descUniq_inv_app
 
 /--
 If `q₁` and `q₂` when restricted to each subcategory `C i` agree, then `q₁` and `q₂` are isomorphic.

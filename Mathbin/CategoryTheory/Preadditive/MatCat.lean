@@ -205,9 +205,9 @@ instance hasFiniteBiproducts : HasFiniteBiproducts (Mat_ C)
                 Finset.sum_const_zero, Finset.sum_congr, Finset.sum_dite_eq']
               split_ifs with h h'
               · substs h h'
-                simp only [CategoryTheory.eq_to_hom_refl, CategoryTheory.Mat_.id_apply_self]
+                simp only [CategoryTheory.eqToHom_refl, CategoryTheory.Mat_.id_apply_self]
               · subst h
-                simp only [id_apply_of_ne _ _ _ h', CategoryTheory.eq_to_hom_refl]
+                simp only [id_apply_of_ne _ _ _ h', CategoryTheory.eqToHom_refl]
               · rfl }
           (by
             dsimp
@@ -217,7 +217,7 @@ instance hasFiniteBiproducts : HasFiniteBiproducts (Mat_ C)
             -- I'm not sure why we can't just `simp` by `finset.sum_apply`: something doesn't quite match
             convert Finset.sum_apply _ _ _ using 1
             · rfl
-            · apply heq_of_eq
+            · apply hEq_of_eq
               symm
               funext i₂
               rcases i₂ with ⟨j₂, i₂⟩
@@ -336,7 +336,7 @@ def isoBiproductEmbedding (M : Mat_ C) : M ≅ ⨁ fun i => (embedding C).obj (M
     convert Finset.sum_apply _ _ _
     · dsimp
       rfl
-    · apply heq_of_eq
+    · apply hEq_of_eq
       symm
       funext j
       simp only [Finset.sum_apply]
@@ -369,7 +369,7 @@ def additiveObjIsoBiproduct (F : Mat_ C ⥤ D) [Functor.Additive F] (M : Mat_ C)
 variable [HasFiniteBiproducts D]
 
 @[reassoc.1]
-theorem additive_obj_iso_biproduct_naturality (F : Mat_ C ⥤ D) [Functor.Additive F] {M N : Mat_ C}
+theorem additiveObjIsoBiproduct_naturality (F : Mat_ C ⥤ D) [Functor.Additive F] {M N : Mat_ C}
     (f : M ⟶ N) :
     F.map f ≫ (additiveObjIsoBiproduct F N).hom =
       (additiveObjIsoBiproduct F M).hom ≫
@@ -392,16 +392,16 @@ theorem additive_obj_iso_biproduct_naturality (F : Mat_ C ⥤ D) [Functor.Additi
   simp only [Finset.sum_fn, Finset.sum_dite_eq]
   ext
   simp
-#align category_theory.Mat_.additive_obj_iso_biproduct_naturality CategoryTheory.Mat_.additive_obj_iso_biproduct_naturality
+#align category_theory.Mat_.additive_obj_iso_biproduct_naturality CategoryTheory.Mat_.additiveObjIsoBiproduct_naturality
 
 @[reassoc.1]
-theorem additive_obj_iso_biproduct_naturality' (F : Mat_ C ⥤ D) [Functor.Additive F] {M N : Mat_ C}
+theorem additiveObjIsoBiproduct_naturality' (F : Mat_ C ⥤ D) [Functor.Additive F] {M N : Mat_ C}
     (f : M ⟶ N) :
     (additiveObjIsoBiproduct F M).inv ≫ F.map f =
       biproduct.matrix (fun i j => F.map ((embedding C).map (f i j)) : _) ≫
         (additiveObjIsoBiproduct F N).inv :=
   by rw [iso.inv_comp_eq, ← category.assoc, iso.eq_comp_inv, additive_obj_iso_biproduct_naturality]
-#align category_theory.Mat_.additive_obj_iso_biproduct_naturality' CategoryTheory.Mat_.additive_obj_iso_biproduct_naturality'
+#align category_theory.Mat_.additive_obj_iso_biproduct_naturality' CategoryTheory.Mat_.additiveObjIsoBiproduct_naturality'
 
 /-- Any additive functor `C ⥤ D` to a category `D` with finite biproducts extends to
 a functor `Mat_ C ⥤ D`. -/
@@ -496,18 +496,18 @@ def equivalenceSelfOfHasFiniteBiproducts (C : Type (u₁ + 1)) [LargeCategory C]
 #align category_theory.Mat_.equivalence_self_of_has_finite_biproducts CategoryTheory.Mat_.equivalenceSelfOfHasFiniteBiproducts
 
 @[simp]
-theorem equivalence_self_of_has_finite_biproducts_functor {C : Type (u₁ + 1)} [LargeCategory C]
+theorem equivalenceSelfOfHasFiniteBiproducts_functor {C : Type (u₁ + 1)} [LargeCategory C]
     [Preadditive C] [HasFiniteBiproducts C] :
     (equivalenceSelfOfHasFiniteBiproducts C).Functor = lift (𝟭 C) :=
   rfl
-#align category_theory.Mat_.equivalence_self_of_has_finite_biproducts_functor CategoryTheory.Mat_.equivalence_self_of_has_finite_biproducts_functor
+#align category_theory.Mat_.equivalence_self_of_has_finite_biproducts_functor CategoryTheory.Mat_.equivalenceSelfOfHasFiniteBiproducts_functor
 
 @[simp]
-theorem equivalence_self_of_has_finite_biproducts_inverse {C : Type (u₁ + 1)} [LargeCategory C]
+theorem equivalenceSelfOfHasFiniteBiproducts_inverse {C : Type (u₁ + 1)} [LargeCategory C]
     [Preadditive C] [HasFiniteBiproducts C] :
     (equivalenceSelfOfHasFiniteBiproducts C).inverse = embedding C :=
   rfl
-#align category_theory.Mat_.equivalence_self_of_has_finite_biproducts_inverse CategoryTheory.Mat_.equivalence_self_of_has_finite_biproducts_inverse
+#align category_theory.Mat_.equivalence_self_of_has_finite_biproducts_inverse CategoryTheory.Mat_.equivalenceSelfOfHasFiniteBiproducts_inverse
 
 end Mat_
 

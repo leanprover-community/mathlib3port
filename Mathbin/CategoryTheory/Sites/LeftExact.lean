@@ -151,7 +151,7 @@ def liftToPlusObjLimitObj {K : Type max v u} [SmallCategory K] [FinCategory K]
 -- This lemma should not be used directly. Instead, one should use the fact that
 -- `J.plus_functor D` preserves finite limits, along with the fact that
 -- evaluation preserves limits.
-theorem lift_to_plus_obj_limit_obj_fac {K : Type max v u} [SmallCategory K] [FinCategory K]
+theorem liftToPlusObjLimitObj_fac {K : Type max v u} [SmallCategory K] [FinCategory K]
     [HasLimitsOfShape K D] [PreservesLimitsOfShape K (forget D)]
     [ReflectsLimitsOfShape K (forget D)] (F : K ⥤ Cᵒᵖ ⥤ D) (X : C)
     (S : Cone (F ⋙ J.plusFunctor D ⋙ (evaluation Cᵒᵖ D).obj (op X))) (k) :
@@ -177,7 +177,7 @@ theorem lift_to_plus_obj_limit_obj_fac {K : Type max v u} [SmallCategory K] [Fin
   rw [← iso.comp_inv_eq]
   erw [colimit.ι_desc]
   rfl
-#align category_theory.grothendieck_topology.lift_to_plus_obj_limit_obj_fac CategoryTheory.GrothendieckTopology.lift_to_plus_obj_limit_obj_fac
+#align category_theory.grothendieck_topology.lift_to_plus_obj_limit_obj_fac CategoryTheory.GrothendieckTopology.liftToPlusObjLimitObj_fac
 
 instance (K : Type max v u) [SmallCategory K] [FinCategory K] [HasLimitsOfShape K D]
     [PreservesLimitsOfShape K (forget D)] [ReflectsLimitsOfShape K (forget D)] :

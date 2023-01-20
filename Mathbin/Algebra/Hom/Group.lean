@@ -733,30 +733,30 @@ elsewhere in Mathlib may choose `↑f` as their simp-normal form instead. -/
 
 
 @[simp, to_additive]
-theorem MonoidHom.coe_eq_to_one_hom {mM : MulOneClass M} {mN : MulOneClass N} (f : M →* N) :
+theorem MonoidHom.coe_eq_toOneHom {mM : MulOneClass M} {mN : MulOneClass N} (f : M →* N) :
     (f : OneHom M N) = f.toOneHom :=
   rfl
-#align monoid_hom.coe_eq_to_one_hom MonoidHom.coe_eq_to_one_hom
+#align monoid_hom.coe_eq_to_one_hom MonoidHom.coe_eq_toOneHom
 #align add_monoid_hom.coe_eq_to_zero_hom AddMonoidHom.coe_eq_to_zero_hom
 
 @[simp, to_additive]
-theorem MonoidHom.coe_eq_to_mul_hom {mM : MulOneClass M} {mN : MulOneClass N} (f : M →* N) :
+theorem MonoidHom.coe_eq_toMulHom {mM : MulOneClass M} {mN : MulOneClass N} (f : M →* N) :
     (f : M →ₙ* N) = f.toMulHom :=
   rfl
-#align monoid_hom.coe_eq_to_mul_hom MonoidHom.coe_eq_to_mul_hom
+#align monoid_hom.coe_eq_to_mul_hom MonoidHom.coe_eq_toMulHom
 #align add_monoid_hom.coe_eq_to_add_hom AddMonoidHom.coe_eq_to_add_hom
 
 @[simp]
-theorem MonoidWithZeroHom.coe_eq_to_monoid_hom {mM : MulZeroOneClass M} {mN : MulZeroOneClass N}
+theorem MonoidWithZeroHom.coe_eq_toMonoidHom {mM : MulZeroOneClass M} {mN : MulZeroOneClass N}
     (f : M →*₀ N) : (f : M →* N) = f.toMonoidHom :=
   rfl
-#align monoid_with_zero_hom.coe_eq_to_monoid_hom MonoidWithZeroHom.coe_eq_to_monoid_hom
+#align monoid_with_zero_hom.coe_eq_to_monoid_hom MonoidWithZeroHom.coe_eq_toMonoidHom
 
 @[simp]
-theorem MonoidWithZeroHom.coe_eq_to_zero_hom {mM : MulZeroOneClass M} {mN : MulZeroOneClass N}
+theorem MonoidWithZeroHom.coe_eq_toZeroHom {mM : MulZeroOneClass M} {mN : MulZeroOneClass N}
     (f : M →*₀ N) : (f : ZeroHom M N) = f.toZeroHom :=
   rfl
-#align monoid_with_zero_hom.coe_eq_to_zero_hom MonoidWithZeroHom.coe_eq_to_zero_hom
+#align monoid_with_zero_hom.coe_eq_to_zero_hom MonoidWithZeroHom.coe_eq_toZeroHom
 
 -- Fallback `has_coe_to_fun` instances to help the elaborator
 @[to_additive]
@@ -790,28 +790,28 @@ initialize_simps_projections MonoidHom (toFun → apply)
 initialize_simps_projections MonoidWithZeroHom (toFun → apply)
 
 @[simp, to_additive]
-theorem OneHom.to_fun_eq_coe [One M] [One N] (f : OneHom M N) : f.toFun = f :=
+theorem OneHom.toFun_eq_coe [One M] [One N] (f : OneHom M N) : f.toFun = f :=
   rfl
-#align one_hom.to_fun_eq_coe OneHom.to_fun_eq_coe
-#align zero_hom.to_fun_eq_coe ZeroHom.to_fun_eq_coe
+#align one_hom.to_fun_eq_coe OneHom.toFun_eq_coe
+#align zero_hom.to_fun_eq_coe ZeroHom.toFun_eq_coe
 
 @[simp, to_additive]
-theorem MulHom.to_fun_eq_coe [Mul M] [Mul N] (f : M →ₙ* N) : f.toFun = f :=
+theorem MulHom.toFun_eq_coe [Mul M] [Mul N] (f : M →ₙ* N) : f.toFun = f :=
   rfl
-#align mul_hom.to_fun_eq_coe MulHom.to_fun_eq_coe
-#align add_hom.to_fun_eq_coe AddHom.to_fun_eq_coe
+#align mul_hom.to_fun_eq_coe MulHom.toFun_eq_coe
+#align add_hom.to_fun_eq_coe AddHom.toFun_eq_coe
 
 @[simp, to_additive]
-theorem MonoidHom.to_fun_eq_coe [MulOneClass M] [MulOneClass N] (f : M →* N) : f.toFun = f :=
+theorem MonoidHom.toFun_eq_coe [MulOneClass M] [MulOneClass N] (f : M →* N) : f.toFun = f :=
   rfl
-#align monoid_hom.to_fun_eq_coe MonoidHom.to_fun_eq_coe
-#align add_monoid_hom.to_fun_eq_coe AddMonoidHom.to_fun_eq_coe
+#align monoid_hom.to_fun_eq_coe MonoidHom.toFun_eq_coe
+#align add_monoid_hom.to_fun_eq_coe AddMonoidHom.toFun_eq_coe
 
 @[simp]
-theorem MonoidWithZeroHom.to_fun_eq_coe [MulZeroOneClass M] [MulZeroOneClass N] (f : M →*₀ N) :
+theorem MonoidWithZeroHom.toFun_eq_coe [MulZeroOneClass M] [MulZeroOneClass N] (f : M →*₀ N) :
     f.toFun = f :=
   rfl
-#align monoid_with_zero_hom.to_fun_eq_coe MonoidWithZeroHom.to_fun_eq_coe
+#align monoid_with_zero_hom.to_fun_eq_coe MonoidWithZeroHom.toFun_eq_coe
 
 /- warning: one_hom.coe_mk -> OneHom.coe_mk is a dubious translation:
 lean 3 declaration is

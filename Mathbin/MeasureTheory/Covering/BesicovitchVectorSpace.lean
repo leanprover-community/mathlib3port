@@ -114,14 +114,14 @@ def centerAndRescale : SatelliteConfig E N τ
     abel
 #align besicovitch.satellite_config.center_and_rescale Besicovitch.SatelliteConfig.centerAndRescale
 
-theorem center_and_rescale_center : a.centerAndRescale.c (last N) = 0 := by
+theorem centerAndRescale_center : a.centerAndRescale.c (last N) = 0 := by
   simp [satellite_config.center_and_rescale]
-#align besicovitch.satellite_config.center_and_rescale_center Besicovitch.SatelliteConfig.center_and_rescale_center
+#align besicovitch.satellite_config.center_and_rescale_center Besicovitch.SatelliteConfig.centerAndRescale_center
 
-theorem center_and_rescale_radius {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ) :
+theorem centerAndRescale_radius {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ) :
     a.centerAndRescale.R (last N) = 1 := by
   simp [satellite_config.center_and_rescale, inv_mul_cancel (a.rpos _).ne']
-#align besicovitch.satellite_config.center_and_rescale_radius Besicovitch.SatelliteConfig.center_and_rescale_radius
+#align besicovitch.satellite_config.center_and_rescale_radius Besicovitch.SatelliteConfig.centerAndRescale_radius
 
 end SatelliteConfig
 
@@ -177,7 +177,7 @@ theorem card_le_of_separated (s : Finset E) (hs : ∀ c ∈ s, ‖c‖ ≤ 2)
     calc
       (s.card : ℝ≥0∞) * Ennreal.ofReal (δ ^ finrank ℝ E) * μ (ball 0 1) = μ A :=
         by
-        rw [hA, measure_bUnion_finset D fun c hc => measurable_set_ball]
+        rw [hA, measure_bUnion_finset D fun c hc => measurableSet_ball]
         have I : 0 < δ := by norm_num [δ]
         simp only [μ.add_haar_ball_of_pos _ I, one_div, one_pow, Finset.sum_const, nsmul_eq_mul,
           div_pow, mul_assoc]
@@ -188,8 +188,8 @@ theorem card_le_of_separated (s : Finset E) (hs : ∀ c ∈ s, ‖c‖ ≤ 2)
   have J : (s.card : ℝ≥0∞) * Ennreal.ofReal (δ ^ finrank ℝ E) ≤ Ennreal.ofReal (ρ ^ finrank ℝ E) :=
     (Ennreal.mul_le_mul_right (measure_ball_pos _ _ zero_lt_one).ne' measure_ball_lt_top.ne).1 I
   have K : (s.card : ℝ) ≤ (5 : ℝ) ^ finrank ℝ E := by
-    simpa [Ennreal.to_real_mul, div_eq_mul_inv] using
-      Ennreal.to_real_le_of_le_of_real (pow_nonneg ρpos.le _) J
+    simpa [Ennreal.toReal_mul, div_eq_mul_inv] using
+      Ennreal.toReal_le_of_le_ofReal (pow_nonneg ρpos.le _) J
   exact_mod_cast K
 #align besicovitch.card_le_of_separated Besicovitch.card_le_of_separated
 
@@ -262,7 +262,7 @@ theorem exists_good_δ :
         ∃ u : ℕ → ℝ,
           (∀ m n : ℕ, m < n → u n < u m) ∧
             (∀ n : ℕ, 0 < u n) ∧ Filter.Tendsto u Filter.atTop (𝓝 0) :=
-        exists_seq_strict_anti_tendsto (0 : ℝ)
+        exists_seq_strictAnti_tendsto (0 : ℝ)
       have A : ∀ n, F (u n) ∈ closed_ball (0 : Fin N → E) 2 :=
         by
         intro n
@@ -317,9 +317,9 @@ def goodδ : ℝ :=
   (exists_good_δ E).some
 #align besicovitch.good_δ Besicovitch.goodδ
 
-theorem good_δ_lt_one : goodδ E < 1 :=
+theorem goodδ_lt_one : goodδ E < 1 :=
   (exists_good_δ E).some_spec.2.1
-#align besicovitch.good_δ_lt_one Besicovitch.good_δ_lt_one
+#align besicovitch.good_δ_lt_one Besicovitch.goodδ_lt_one
 
 /-- A number `τ > 1`, but chosen close enough to `1` so that the construction in the Besicovitch
 covering theorem using this parameter `τ` will give the smallest possible number of covering
@@ -328,11 +328,10 @@ def goodτ : ℝ :=
   1 + goodδ E / 4
 #align besicovitch.good_τ Besicovitch.goodτ
 
-theorem one_lt_good_τ : 1 < goodτ E :=
-  by
+theorem one_lt_goodτ : 1 < goodτ E := by
   dsimp [good_τ, good_δ]
   linarith [(exists_good_δ E).some_spec.1]
-#align besicovitch.one_lt_good_τ Besicovitch.one_lt_good_τ
+#align besicovitch.one_lt_good_τ Besicovitch.one_lt_goodτ
 
 variable {E}
 
@@ -616,7 +615,7 @@ variable (E) [NormedSpace ℝ E] [FiniteDimensional ℝ E]
 points and the parameter `good_τ E`. This will ensure that in the inductive construction to get
 the Besicovitch covering families, there will never be more than `multiplicity E` nonempty
 families. -/
-theorem is_empty_satellite_config_multiplicity :
+theorem isEmpty_satelliteConfig_multiplicity :
     IsEmpty (SatelliteConfig E (multiplicity E) (goodτ E)) :=
   ⟨by
     intro a
@@ -626,10 +625,10 @@ theorem is_empty_satellite_config_multiplicity :
       ⟨c', c'_le_two, hc'⟩
     exact
       lt_irrefl _ ((Nat.lt_succ_self _).trans_le (le_multiplicity_of_δ_of_fin c' c'_le_two hc'))⟩
-#align besicovitch.is_empty_satellite_config_multiplicity Besicovitch.is_empty_satellite_config_multiplicity
+#align besicovitch.is_empty_satellite_config_multiplicity Besicovitch.isEmpty_satelliteConfig_multiplicity
 
 instance (priority := 100) : HasBesicovitchCovering E :=
-  ⟨⟨multiplicity E, goodτ E, one_lt_good_τ E, is_empty_satellite_config_multiplicity E⟩⟩
+  ⟨⟨multiplicity E, goodτ E, one_lt_goodτ E, isEmpty_satelliteConfig_multiplicity E⟩⟩
 
 end Besicovitch
 

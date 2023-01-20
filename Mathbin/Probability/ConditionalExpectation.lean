@@ -56,7 +56,7 @@ theorem condexp_indep_eq (hle₁ : m₁ ≤ m) (hle₂ : m₂ ≤ m) [SigmaFinit
   rw [← mem_ℒp_one_iff_integrable] at hfint
   refine' hfint.induction_strongly_measurable hle₁ Ennreal.one_ne_top _ _ _ _ _ _
   · intro c t hmt ht
-    rw [integral_indicator (hle₁ _ hmt), set_integral_const, smul_smul, ← Ennreal.to_real_mul,
+    rw [integral_indicator (hle₁ _ hmt), set_integral_const, smul_smul, ← Ennreal.toReal_mul,
       mul_comm, ← hindp _ _ hmt hms, set_integral_indicator (hle₁ _ hmt), set_integral_const,
       Set.inter_comm]
   · intro u v hdisj huint hvint hu hv hu_eq hv_eq
@@ -68,15 +68,15 @@ theorem condexp_indep_eq (hle₁ : m₁ ≤ m) (hle₂ : m₂ ≤ m) [SigmaFinit
         (fun f : Lp E 1 μ => ∫ x, f x ∂μ) ∘ Submodule.subtypeL _ :=
       by
       refine' funext fun f => integral_congr_ae _
-      simp_rw [Submodule.coe_subtypeL', Submodule.coe_subtype, ← coe_fn_coe_base]
+      simp_rw [Submodule.coe_subtypeL', Submodule.coeSubtype, ← coeFn_coeBase]
     have heq₂ :
       (fun f : Lp_meas E ℝ m₁ 1 μ => ∫ x in s, f x ∂μ) =
         (fun f : Lp E 1 μ => ∫ x in s, f x ∂μ) ∘ Submodule.subtypeL _ :=
       by
       refine' funext fun f => integral_congr_ae (ae_restrict_of_ae _)
-      simp_rw [Submodule.coe_subtypeL', Submodule.coe_subtype, ← coe_fn_coe_base]
+      simp_rw [Submodule.coe_subtypeL', Submodule.coeSubtype, ← coeFn_coeBase]
       exact eventually_of_forall fun _ => rfl
-    refine' is_closed_eq (Continuous.const_smul _ _) _
+    refine' isClosed_eq (Continuous.const_smul _ _) _
     · rw [heq₁]
       exact continuous_integral.comp (ContinuousLinearMap.continuous _)
     · rw [heq₂]

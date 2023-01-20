@@ -117,16 +117,16 @@ topological_semiring.topological_space_units topological_division_ring.units_top
 
 attribute [local instance] TopologicalRing.topologicalSpaceUnits
 
-instance (priority := 100) induced_units : TopologicalRing.InducedUnits K :=
+instance (priority := 100) inducedUnits : TopologicalRing.InducedUnits K :=
   ⟨rfl⟩
-#align topological_division_ring.induced_units TopologicalDivisionRing.induced_units
+#align topological_division_ring.induced_units TopologicalDivisionRing.inducedUnits
 
 variable [TopologicalDivisionRing K]
 
 theorem units_top_group : TopologicalGroup Kˣ :=
   { TopologicalRing.top_monoid_units K with
     continuous_inv := by
-      rw [continuous_iff_continuous_at]
+      rw [continuous_iff_continuousAt]
       intro x
       rw [ContinuousAt, nhds_induced, nhds_induced, tendsto_iff_comap, ←
         Function.Semiconj.filter_comap Units.val_inv_eq_inv_val _]
@@ -165,19 +165,19 @@ def Subfield.topologicalClosure (K : Subfield α) : Subfield α :=
           exact K.inv_mem hy }
 #align subfield.topological_closure Subfield.topologicalClosure
 
-theorem Subfield.le_topological_closure (s : Subfield α) : s ≤ s.topologicalClosure :=
+theorem Subfield.le_topologicalClosure (s : Subfield α) : s ≤ s.topologicalClosure :=
   subset_closure
-#align subfield.le_topological_closure Subfield.le_topological_closure
+#align subfield.le_topological_closure Subfield.le_topologicalClosure
 
-theorem Subfield.is_closed_topological_closure (s : Subfield α) :
+theorem Subfield.isClosed_topologicalClosure (s : Subfield α) :
     IsClosed (s.topologicalClosure : Set α) :=
-  is_closed_closure
-#align subfield.is_closed_topological_closure Subfield.is_closed_topological_closure
+  isClosed_closure
+#align subfield.is_closed_topological_closure Subfield.isClosed_topologicalClosure
 
-theorem Subfield.topological_closure_minimal (s : Subfield α) {t : Subfield α} (h : s ≤ t)
+theorem Subfield.topologicalClosure_minimal (s : Subfield α) {t : Subfield α} (h : s ≤ t)
     (ht : IsClosed (t : Set α)) : s.topologicalClosure ≤ t :=
   closure_minimal h ht
-#align subfield.topological_closure_minimal Subfield.topological_closure_minimal
+#align subfield.topological_closure_minimal Subfield.topologicalClosure_minimal
 
 end Subfield
 

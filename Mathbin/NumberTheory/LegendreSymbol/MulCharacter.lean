@@ -133,9 +133,9 @@ theorem coe_coe (χ : MulChar R R') : (χ.toMonoidHom : R → R') = χ :=
 #align mul_char.coe_coe MulChar.coe_coe
 
 @[simp]
-theorem to_fun_eq_coe (χ : MulChar R R') : χ.toFun = χ :=
+theorem toFun_eq_coe (χ : MulChar R R') : χ.toFun = χ :=
   rfl
-#align mul_char.to_fun_eq_coe MulChar.to_fun_eq_coe
+#align mul_char.to_fun_eq_coe MulChar.toFun_eq_coe
 
 @[simp]
 theorem coe_mk (f : R →* R') (hf) : (MulChar.mk f hf : R → R') = f :=
@@ -194,9 +194,9 @@ def toUnitHom (χ : MulChar R R') : Rˣ →* R'ˣ :=
   Units.map χ
 #align mul_char.to_unit_hom MulChar.toUnitHom
 
-theorem coe_to_unit_hom (χ : MulChar R R') (a : Rˣ) : ↑(χ.toUnitHom a) = χ a :=
+theorem coe_toUnitHom (χ : MulChar R R') (a : Rˣ) : ↑(χ.toUnitHom a) = χ a :=
   rfl
-#align mul_char.coe_to_unit_hom MulChar.coe_to_unit_hom
+#align mul_char.coe_to_unit_hom MulChar.coe_toUnitHom
 
 /-- Turn a homomorphism between unit groups into a `mul_char`. -/
 noncomputable def ofUnitHom (f : Rˣ →* R'ˣ) : MulChar R R'
@@ -221,8 +221,8 @@ noncomputable def ofUnitHom (f : Rˣ →* R'ˣ) : MulChar R R'
     simp only [ha, not_false_iff, dif_neg]
 #align mul_char.of_unit_hom MulChar.ofUnitHom
 
-theorem of_unit_hom_coe (f : Rˣ →* R'ˣ) (a : Rˣ) : of_unit_hom f ↑a = f a := by simp [of_unit_hom]
-#align mul_char.of_unit_hom_coe MulChar.of_unit_hom_coe
+theorem ofUnitHom_coe (f : Rˣ →* R'ˣ) (a : Rˣ) : of_unit_hom f ↑a = f a := by simp [of_unit_hom]
+#align mul_char.of_unit_hom_coe MulChar.ofUnitHom_coe
 
 /-- The equivalence between multiplicative characters and homomorphisms of unit groups. -/
 noncomputable def equivToUnitHom : MulChar R R' ≃ (Rˣ →* R'ˣ)
@@ -240,19 +240,19 @@ noncomputable def equivToUnitHom : MulChar R R' ≃ (Rˣ →* R'ˣ)
 #align mul_char.equiv_to_unit_hom MulChar.equivToUnitHom
 
 @[simp]
-theorem to_unit_hom_eq (χ : MulChar R R') : to_unit_hom χ = equiv_to_unit_hom χ :=
+theorem toUnitHom_eq (χ : MulChar R R') : to_unit_hom χ = equiv_to_unit_hom χ :=
   rfl
-#align mul_char.to_unit_hom_eq MulChar.to_unit_hom_eq
+#align mul_char.to_unit_hom_eq MulChar.toUnitHom_eq
 
 @[simp]
-theorem of_unit_hom_eq (χ : Rˣ →* R'ˣ) : of_unit_hom χ = equiv_to_unit_hom.symm χ :=
+theorem ofUnitHom_eq (χ : Rˣ →* R'ˣ) : of_unit_hom χ = equiv_to_unit_hom.symm χ :=
   rfl
-#align mul_char.of_unit_hom_eq MulChar.of_unit_hom_eq
+#align mul_char.of_unit_hom_eq MulChar.ofUnitHom_eq
 
 @[simp]
-theorem coe_equiv_to_unit_hom (χ : MulChar R R') (a : Rˣ) : ↑(equiv_to_unit_hom χ a) = χ a :=
+theorem coe_equivToUnitHom (χ : MulChar R R') (a : Rˣ) : ↑(equiv_to_unit_hom χ a) = χ a :=
   coe_to_unit_hom χ a
-#align mul_char.coe_equiv_to_unit_hom MulChar.coe_equiv_to_unit_hom
+#align mul_char.coe_equiv_to_unit_hom MulChar.coe_equivToUnitHom
 
 @[simp]
 theorem equiv_unit_hom_symm_coe (f : Rˣ →* R'ˣ) (a : Rˣ) : equiv_to_unit_hom.symm f ↑a = f a :=
@@ -276,9 +276,9 @@ protected theorem map_zero {R : Type u} [CommMonoidWithZero R] [Nontrivial R] (�
 #align mul_char.map_zero MulChar.map_zero
 
 /-- If the domain is a ring `R`, then `χ (ring_char R) = 0`. -/
-theorem map_ring_char {R : Type u} [CommRing R] [Nontrivial R] (χ : MulChar R R') :
-    χ (ringChar R) = 0 := by rw [ringChar.Nat.cast_ring_char, χ.map_zero]
-#align mul_char.map_ring_char MulChar.map_ring_char
+theorem map_ringChar {R : Type u} [CommRing R] [Nontrivial R] (χ : MulChar R R') :
+    χ (ringChar R) = 0 := by rw [ringChar.Nat.cast_ringChar, χ.map_zero]
+#align mul_char.map_ring_char MulChar.map_ringChar
 
 noncomputable instance hasOne : One (MulChar R R') :=
   ⟨trivial R R'⟩
@@ -310,9 +310,9 @@ theorem mul_apply (χ χ' : MulChar R R') (a : R) : (χ * χ') a = χ a * χ' a 
 #align mul_char.mul_apply MulChar.mul_apply
 
 @[simp]
-theorem coe_to_fun_mul (χ χ' : MulChar R R') : ⇑(χ * χ') = χ * χ' :=
+theorem coeToFun_mul (χ χ' : MulChar R R') : ⇑(χ * χ') = χ * χ' :=
   rfl
-#align mul_char.coe_to_fun_mul MulChar.coe_to_fun_mul
+#align mul_char.coe_to_fun_mul MulChar.coeToFun_mul
 
 protected theorem one_mul (χ : MulChar R R') : (1 : MulChar R R') * χ = χ :=
   by
@@ -445,9 +445,9 @@ def IsNontrivial (χ : MulChar R R') : Prop :=
 #align mul_char.is_nontrivial MulChar.IsNontrivial
 
 /-- A multiplicative character is nontrivial iff it is not the trivial character. -/
-theorem is_nontrivial_iff (χ : MulChar R R') : χ.IsNontrivial ↔ χ ≠ 1 := by
+theorem isNontrivial_iff (χ : MulChar R R') : χ.IsNontrivial ↔ χ ≠ 1 := by
   simp only [is_nontrivial, Ne.def, ext_iff, not_forall, one_apply_coe]
-#align mul_char.is_nontrivial_iff MulChar.is_nontrivial_iff
+#align mul_char.is_nontrivial_iff MulChar.isNontrivial_iff
 
 /-- A multiplicative character is *quadratic* if it takes only the values `0`, `1`, `-1`. -/
 def IsQuadratic (χ : MulChar R R') : Prop :=
@@ -459,7 +459,7 @@ of characteristic not `2`, then they agree in `ℤ`. -/
 theorem IsQuadratic.eq_of_eq_coe {χ : MulChar R ℤ} (hχ : IsQuadratic χ) {χ' : MulChar R' ℤ}
     (hχ' : IsQuadratic χ') [Nontrivial R''] (hR'' : ringChar R'' ≠ 2) {a : R} {a' : R'}
     (h : (χ a : R'') = χ' a') : χ a = χ' a' :=
-  Int.cast_inj_on_of_ring_char_ne_two hR'' (hχ a) (hχ' a') h
+  Int.cast_injOn_of_ringChar_ne_two hR'' (hχ a) (hχ' a') h
 #align mul_char.is_quadratic.eq_of_eq_coe MulChar.IsQuadratic.eq_of_eq_coe
 
 /-- We can post-compose a multiplicative character with a ring homomorphism. -/

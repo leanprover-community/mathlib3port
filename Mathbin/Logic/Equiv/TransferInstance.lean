@@ -139,17 +139,17 @@ def mulEquiv (e : α ≃ β) [Mul β] :
 #align equiv.add_equiv Equiv.addEquiv
 
 @[simp, to_additive]
-theorem mul_equiv_apply (e : α ≃ β) [Mul β] (a : α) : (mulEquiv e) a = e a :=
+theorem mulEquiv_apply (e : α ≃ β) [Mul β] (a : α) : (mulEquiv e) a = e a :=
   rfl
-#align equiv.mul_equiv_apply Equiv.mul_equiv_apply
+#align equiv.mul_equiv_apply Equiv.mulEquiv_apply
 #align equiv.add_equiv_apply Equiv.add_equiv_apply
 
 @[to_additive]
-theorem mul_equiv_symm_apply (e : α ≃ β) [Mul β] (b : β) :
+theorem mulEquiv_symm_apply (e : α ≃ β) [Mul β] (b : β) :
     letI := Equiv.hasMul e
     (MulEquiv e).symm b = e.symm b :=
   by intros ; rfl
-#align equiv.mul_equiv_symm_apply Equiv.mul_equiv_symm_apply
+#align equiv.mul_equiv_symm_apply Equiv.mulEquiv_symm_apply
 #align equiv.add_equiv_symm_apply Equiv.add_equiv_symm_apply
 
 /-- An equivalence `e : α ≃ β` gives a ring equivalence `α ≃+* β`
@@ -174,16 +174,16 @@ def ringEquiv (e : α ≃ β) [Add β] [Mul β] :
 #align equiv.ring_equiv Equiv.ringEquiv
 
 @[simp]
-theorem ring_equiv_apply (e : α ≃ β) [Add β] [Mul β] (a : α) : (ringEquiv e) a = e a :=
+theorem ringEquiv_apply (e : α ≃ β) [Add β] [Mul β] (a : α) : (ringEquiv e) a = e a :=
   rfl
-#align equiv.ring_equiv_apply Equiv.ring_equiv_apply
+#align equiv.ring_equiv_apply Equiv.ringEquiv_apply
 
-theorem ring_equiv_symm_apply (e : α ≃ β) [Add β] [Mul β] (b : β) :
+theorem ringEquiv_symm_apply (e : α ≃ β) [Add β] [Mul β] (b : β) :
     by
     letI := Equiv.hasAdd e
     letI := Equiv.hasMul e
     exact (RingEquiv e).symm b = e.symm b := by intros ; rfl
-#align equiv.ring_equiv_symm_apply Equiv.ring_equiv_symm_apply
+#align equiv.ring_equiv_symm_apply Equiv.ringEquiv_symm_apply
 
 /-- Transfer `semigroup` across an `equiv` -/
 @[reducible, to_additive "Transfer `add_semigroup` across an `equiv`"]
@@ -452,9 +452,9 @@ protected theorem nontrivial [Nontrivial β] : Nontrivial α :=
 
 /-- Transfer `is_domain` across an `equiv` -/
 @[reducible]
-protected theorem is_domain [Ring α] [Ring β] [IsDomain β] (e : α ≃+* β) : IsDomain α :=
+protected theorem isDomain [Ring α] [Ring β] [IsDomain β] (e : α ≃+* β) : IsDomain α :=
   Function.Injective.isDomain e.toRingHom e.Injective
-#align equiv.is_domain Equiv.is_domain
+#align equiv.is_domain Equiv.isDomain
 
 /-- Transfer `has_rat_cast` across an `equiv` -/
 @[reducible]
@@ -622,11 +622,11 @@ end Equiv
 namespace RingEquiv
 
 @[reducible]
-protected theorem local_ring {A B : Type _} [CommSemiring A] [LocalRing A] [CommSemiring B]
+protected theorem localRing {A B : Type _} [CommSemiring A] [LocalRing A] [CommSemiring B]
     (e : A ≃+* B) : LocalRing B :=
   haveI := e.symm.to_equiv.nontrivial
   LocalRing.of_surjective (e : A →+* B) e.surjective
-#align ring_equiv.local_ring RingEquiv.local_ring
+#align ring_equiv.local_ring RingEquiv.localRing
 
 end RingEquiv
 

@@ -71,14 +71,14 @@ instance : CoeFun (SlashInvariantForm Γ k) fun _ => ℍ → ℂ :=
   FunLike.hasCoeToFun
 
 @[simp]
-theorem slash_invariant_form_to_fun_eq_coe {f : SlashInvariantForm Γ k} : f.toFun = (f : ℍ → ℂ) :=
+theorem slashInvariantForm_toFun_eq_coe {f : SlashInvariantForm Γ k} : f.toFun = (f : ℍ → ℂ) :=
   rfl
-#align slash_invariant_form_to_fun_eq_coe slash_invariant_form_to_fun_eq_coe
+#align slash_invariant_form_to_fun_eq_coe slashInvariantForm_toFun_eq_coe
 
 @[ext]
-theorem slash_invariant_form_ext {f g : SlashInvariantForm Γ k} (h : ∀ x, f x = g x) : f = g :=
+theorem slashInvariantForm_ext {f g : SlashInvariantForm Γ k} (h : ∀ x, f x = g x) : f = g :=
   FunLike.ext f g h
-#align slash_invariant_form_ext slash_invariant_form_ext
+#align slash_invariant_form_ext slashInvariantForm_ext
 
 /-- Copy of a `slash_invariant_form` with a new `to_fun` equal to the old one.
 Useful to fix definitional equalities. -/
@@ -217,12 +217,12 @@ def coeHom : SlashInvariantForm Γ k →+ ℍ → ℂ
   map_add' _ _ := rfl
 #align slash_invariant_form.coe_hom SlashInvariantForm.coeHom
 
-theorem coe_hom_injective : Function.Injective (@coeHom Γ k) :=
+theorem coeHom_injective : Function.Injective (@coeHom Γ k) :=
   FunLike.coe_injective
-#align slash_invariant_form.coe_hom_injective SlashInvariantForm.coe_hom_injective
+#align slash_invariant_form.coe_hom_injective SlashInvariantForm.coeHom_injective
 
 instance : Module ℂ (SlashInvariantForm Γ k) :=
-  coe_hom_injective.Module ℂ coeHom fun _ _ => rfl
+  coeHom_injective.Module ℂ coeHom fun _ _ => rfl
 
 instance : One (SlashInvariantForm Γ 0) :=
   ⟨{  toFun := 1

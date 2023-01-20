@@ -110,7 +110,7 @@ end
 /-- We can compute a left derived functor on a morphism using a lift of that morphism
 to a chain map between chosen projective resolutions.
 -/
-theorem Functor.left_derived_map_eq (F : C ⥤ D) [F.Additive] (n : ℕ) {X Y : C} (f : X ⟶ Y)
+theorem Functor.leftDerived_map_eq (F : C ⥤ D) [F.Additive] (n : ℕ) {X Y : C} (f : X ⟶ Y)
     {P : ProjectiveResolutionCat X} {Q : ProjectiveResolutionCat Y} (g : P.complex ⟶ Q.complex)
     (w : g ≫ Q.π = P.π ≫ (ChainComplex.single₀ C).map f) :
     (F.leftDerived n).map f =
@@ -120,7 +120,7 @@ theorem Functor.left_derived_map_eq (F : C ⥤ D) [F.Additive] (n : ℕ) {X Y : 
   by
   dsimp only [functor.left_derived, functor.left_derived_obj_iso]
   dsimp; simp only [category.comp_id, category.id_comp]
-  rw [← homology_functor_map, HomotopyCategory.homology_functor_map_factors]
+  rw [← homologyFunctor_map, HomotopyCategory.homologyFunctor_map_factors]
   simp only [← functor.map_comp]
   congr 1
   apply HomotopyCategory.eq_of_homotopy
@@ -130,7 +130,7 @@ theorem Functor.left_derived_map_eq (F : C ⥤ D) [F.Additive] (n : ℕ) {X Y : 
   apply ProjectiveResolution.lift_homotopy f
   · simp
   · simp [w]
-#align category_theory.functor.left_derived_map_eq CategoryTheory.Functor.left_derived_map_eq
+#align category_theory.functor.left_derived_map_eq CategoryTheory.Functor.leftDerived_map_eq
 
 /-- The natural transformation between left-derived functors induced by a natural transformation. -/
 @[simps]
@@ -141,25 +141,25 @@ def NatTrans.leftDerived {F G : C ⥤ D} [F.Additive] [G.Additive] (α : F ⟶ G
 #align category_theory.nat_trans.left_derived CategoryTheory.NatTrans.leftDerived
 
 @[simp]
-theorem NatTrans.left_derived_id (F : C ⥤ D) [F.Additive] (n : ℕ) :
+theorem NatTrans.leftDerived_id (F : C ⥤ D) [F.Additive] (n : ℕ) :
     NatTrans.leftDerived (𝟙 F) n = 𝟙 (F.leftDerived n) :=
   by
   simp [nat_trans.left_derived]
   rfl
-#align category_theory.nat_trans.left_derived_id CategoryTheory.NatTrans.left_derived_id
+#align category_theory.nat_trans.left_derived_id CategoryTheory.NatTrans.leftDerived_id
 
 -- The `simp_nf` linter times out here, so we disable it.
 @[simp, nolint simp_nf]
-theorem NatTrans.left_derived_comp {F G H : C ⥤ D} [F.Additive] [G.Additive] [H.Additive]
-    (α : F ⟶ G) (β : G ⟶ H) (n : ℕ) :
+theorem NatTrans.leftDerived_comp {F G H : C ⥤ D} [F.Additive] [G.Additive] [H.Additive] (α : F ⟶ G)
+    (β : G ⟶ H) (n : ℕ) :
     NatTrans.leftDerived (α ≫ β) n = NatTrans.leftDerived α n ≫ NatTrans.leftDerived β n := by
   simp [nat_trans.left_derived]
-#align category_theory.nat_trans.left_derived_comp CategoryTheory.NatTrans.left_derived_comp
+#align category_theory.nat_trans.left_derived_comp CategoryTheory.NatTrans.leftDerived_comp
 
 /-- A component of the natural transformation between left-derived functors can be computed
 using a chosen projective resolution.
 -/
-theorem NatTrans.left_derived_eq {F G : C ⥤ D} [F.Additive] [G.Additive] (α : F ⟶ G) (n : ℕ) {X : C}
+theorem NatTrans.leftDerived_eq {F G : C ⥤ D} [F.Additive] [G.Additive] (α : F ⟶ G) (n : ℕ) {X : C}
     (P : ProjectiveResolutionCat X) :
     (NatTrans.leftDerived α n).app X =
       (F.leftDerivedObjIso n P).Hom ≫
@@ -169,7 +169,7 @@ theorem NatTrans.left_derived_eq {F G : C ⥤ D} [F.Additive] [G.Additive] (α :
   symm
   dsimp [nat_trans.left_derived, functor.left_derived_obj_iso]
   simp only [category.comp_id, category.id_comp]
-  rw [← homology_functor_map, HomotopyCategory.homology_functor_map_factors]
+  rw [← homologyFunctor_map, HomotopyCategory.homologyFunctor_map_factors]
   simp only [← functor.map_comp]
   congr 1
   apply HomotopyCategory.eq_of_homotopy
@@ -178,7 +178,7 @@ theorem NatTrans.left_derived_eq {F G : C ⥤ D} [F.Additive] [G.Additive] (α :
   rw [← Functor.map_id]
   apply functor.map_homotopy
   apply HomotopyEquiv.homotopyHomInvId
-#align category_theory.nat_trans.left_derived_eq CategoryTheory.NatTrans.left_derived_eq
+#align category_theory.nat_trans.left_derived_eq CategoryTheory.NatTrans.leftDerived_eq
 
 -- TODO:
 -- lemma nat_trans.left_derived_projective_zero {F G : C ⥤ D} [F.additive] [G.additive] (α : F ⟶ G)

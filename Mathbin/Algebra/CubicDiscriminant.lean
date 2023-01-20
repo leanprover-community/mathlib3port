@@ -67,19 +67,19 @@ def toPoly (P : Cubic R) : R[X] :=
   c P.a * X ^ 3 + c P.b * X ^ 2 + c P.c * X + c P.d
 #align cubic.to_poly Cubic.toPoly
 
-theorem C_mul_prod_X_sub_C_eq [CommRing S] {w x y z : S} :
+theorem c_mul_prod_x_sub_c_eq [CommRing S] {w x y z : S} :
     c w * (X - c x) * (X - c y) * (X - c z) =
       toPoly ⟨w, w * -(x + y + z), w * (x * y + x * z + y * z), w * -(x * y * z)⟩ :=
   by
   simp only [to_poly, C_neg, C_add, C_mul]
   ring1
-#align cubic.C_mul_prod_X_sub_C_eq Cubic.C_mul_prod_X_sub_C_eq
+#align cubic.C_mul_prod_X_sub_C_eq Cubic.c_mul_prod_x_sub_c_eq
 
-theorem prod_X_sub_C_eq [CommRing S] {x y z : S} :
+theorem prod_x_sub_c_eq [CommRing S] {x y z : S} :
     (X - c x) * (X - c y) * (X - c z) =
       toPoly ⟨1, -(x + y + z), x * y + x * z + y * z, -(x * y * z)⟩ :=
   by rw [← one_mul <| X - C x, ← C_1, C_mul_prod_X_sub_C_eq, one_mul, one_mul, one_mul]
-#align cubic.prod_X_sub_C_eq Cubic.prod_X_sub_C_eq
+#align cubic.prod_X_sub_C_eq Cubic.prod_x_sub_c_eq
 
 /-! ### Coefficients -/
 
@@ -136,9 +136,9 @@ theorem c_of_eq (h : P.toPoly = Q.toPoly) : P.c = Q.c := by rw [← coeff_eq_c, 
 theorem d_of_eq (h : P.toPoly = Q.toPoly) : P.d = Q.d := by rw [← coeff_eq_d, h, coeff_eq_d]
 #align cubic.d_of_eq Cubic.d_of_eq
 
-theorem to_poly_injective (P Q : Cubic R) : P.toPoly = Q.toPoly ↔ P = Q :=
+theorem toPoly_injective (P Q : Cubic R) : P.toPoly = Q.toPoly ↔ P = Q :=
   ⟨fun h => ext P Q (a_of_eq h) (b_of_eq h) (c_of_eq h) (d_of_eq h), congr_arg toPoly⟩
-#align cubic.to_poly_injective Cubic.to_poly_injective
+#align cubic.to_poly_injective Cubic.toPoly_injective
 
 theorem of_a_eq_zero (ha : P.a = 0) : P.toPoly = c P.b * X ^ 2 + c P.c * X + c P.d := by
   rw [to_poly, ha, C_0, zero_mul, zero_add]
@@ -176,9 +176,8 @@ theorem zero : (0 : Cubic R).toPoly = 0 :=
   of_d_eq_zero'
 #align cubic.zero Cubic.zero
 
-theorem to_poly_eq_zero_iff (P : Cubic R) : P.toPoly = 0 ↔ P = 0 := by
-  rw [← zero, to_poly_injective]
-#align cubic.to_poly_eq_zero_iff Cubic.to_poly_eq_zero_iff
+theorem toPoly_eq_zero_iff (P : Cubic R) : P.toPoly = 0 ↔ P = 0 := by rw [← zero, to_poly_injective]
+#align cubic.to_poly_eq_zero_iff Cubic.toPoly_eq_zero_iff
 
 private theorem ne_zero (h0 : P.a ≠ 0 ∨ P.b ≠ 0 ∨ P.c ≠ 0 ∨ P.d ≠ 0) : P.toPoly ≠ 0 :=
   by
@@ -204,44 +203,44 @@ theorem ne_zero_of_d_ne_zero (hd : P.d ≠ 0) : P.toPoly ≠ 0 :=
 #align cubic.ne_zero_of_d_ne_zero Cubic.ne_zero_of_d_ne_zero
 
 @[simp]
-theorem leading_coeff_of_a_ne_zero (ha : P.a ≠ 0) : P.toPoly.leadingCoeff = P.a :=
-  leading_coeff_cubic ha
-#align cubic.leading_coeff_of_a_ne_zero Cubic.leading_coeff_of_a_ne_zero
+theorem leadingCoeff_of_a_ne_zero (ha : P.a ≠ 0) : P.toPoly.leadingCoeff = P.a :=
+  leadingCoeff_cubic ha
+#align cubic.leading_coeff_of_a_ne_zero Cubic.leadingCoeff_of_a_ne_zero
 
 @[simp]
-theorem leading_coeff_of_a_ne_zero' (ha : a ≠ 0) : (toPoly ⟨a, b, c, d⟩).leadingCoeff = a :=
-  leading_coeff_of_a_ne_zero ha
-#align cubic.leading_coeff_of_a_ne_zero' Cubic.leading_coeff_of_a_ne_zero'
+theorem leadingCoeff_of_a_ne_zero' (ha : a ≠ 0) : (toPoly ⟨a, b, c, d⟩).leadingCoeff = a :=
+  leadingCoeff_of_a_ne_zero ha
+#align cubic.leading_coeff_of_a_ne_zero' Cubic.leadingCoeff_of_a_ne_zero'
 
 @[simp]
-theorem leading_coeff_of_b_ne_zero (ha : P.a = 0) (hb : P.b ≠ 0) : P.toPoly.leadingCoeff = P.b := by
+theorem leadingCoeff_of_b_ne_zero (ha : P.a = 0) (hb : P.b ≠ 0) : P.toPoly.leadingCoeff = P.b := by
   rw [of_a_eq_zero ha, leading_coeff_quadratic hb]
-#align cubic.leading_coeff_of_b_ne_zero Cubic.leading_coeff_of_b_ne_zero
+#align cubic.leading_coeff_of_b_ne_zero Cubic.leadingCoeff_of_b_ne_zero
 
 @[simp]
-theorem leading_coeff_of_b_ne_zero' (hb : b ≠ 0) : (toPoly ⟨0, b, c, d⟩).leadingCoeff = b :=
-  leading_coeff_of_b_ne_zero rfl hb
-#align cubic.leading_coeff_of_b_ne_zero' Cubic.leading_coeff_of_b_ne_zero'
+theorem leadingCoeff_of_b_ne_zero' (hb : b ≠ 0) : (toPoly ⟨0, b, c, d⟩).leadingCoeff = b :=
+  leadingCoeff_of_b_ne_zero rfl hb
+#align cubic.leading_coeff_of_b_ne_zero' Cubic.leadingCoeff_of_b_ne_zero'
 
 @[simp]
-theorem leading_coeff_of_c_ne_zero (ha : P.a = 0) (hb : P.b = 0) (hc : P.c ≠ 0) :
+theorem leadingCoeff_of_c_ne_zero (ha : P.a = 0) (hb : P.b = 0) (hc : P.c ≠ 0) :
     P.toPoly.leadingCoeff = P.c := by rw [of_b_eq_zero ha hb, leading_coeff_linear hc]
-#align cubic.leading_coeff_of_c_ne_zero Cubic.leading_coeff_of_c_ne_zero
+#align cubic.leading_coeff_of_c_ne_zero Cubic.leadingCoeff_of_c_ne_zero
 
 @[simp]
-theorem leading_coeff_of_c_ne_zero' (hc : c ≠ 0) : (toPoly ⟨0, 0, c, d⟩).leadingCoeff = c :=
-  leading_coeff_of_c_ne_zero rfl rfl hc
-#align cubic.leading_coeff_of_c_ne_zero' Cubic.leading_coeff_of_c_ne_zero'
+theorem leadingCoeff_of_c_ne_zero' (hc : c ≠ 0) : (toPoly ⟨0, 0, c, d⟩).leadingCoeff = c :=
+  leadingCoeff_of_c_ne_zero rfl rfl hc
+#align cubic.leading_coeff_of_c_ne_zero' Cubic.leadingCoeff_of_c_ne_zero'
 
 @[simp]
-theorem leading_coeff_of_c_eq_zero (ha : P.a = 0) (hb : P.b = 0) (hc : P.c = 0) :
+theorem leadingCoeff_of_c_eq_zero (ha : P.a = 0) (hb : P.b = 0) (hc : P.c = 0) :
     P.toPoly.leadingCoeff = P.d := by rw [of_c_eq_zero ha hb hc, leading_coeff_C]
-#align cubic.leading_coeff_of_c_eq_zero Cubic.leading_coeff_of_c_eq_zero
+#align cubic.leading_coeff_of_c_eq_zero Cubic.leadingCoeff_of_c_eq_zero
 
 @[simp]
-theorem leading_coeff_of_c_eq_zero' : (toPoly ⟨0, 0, 0, d⟩).leadingCoeff = d :=
-  leading_coeff_of_c_eq_zero rfl rfl rfl
-#align cubic.leading_coeff_of_c_eq_zero' Cubic.leading_coeff_of_c_eq_zero'
+theorem leadingCoeff_of_c_eq_zero' : (toPoly ⟨0, 0, 0, d⟩).leadingCoeff = d :=
+  leadingCoeff_of_c_eq_zero rfl rfl rfl
+#align cubic.leading_coeff_of_c_eq_zero' Cubic.leadingCoeff_of_c_eq_zero'
 
 theorem monic_of_a_eq_one (ha : P.a = 1) : P.toPoly.Monic :=
   by
@@ -249,7 +248,7 @@ theorem monic_of_a_eq_one (ha : P.a = 1) : P.toPoly.Monic :=
   rw [monic,
     leading_coeff_of_a_ne_zero <| by
       rw [ha]
-      exact one_ne_zero,
+      exact one_neZero,
     ha]
 #align cubic.monic_of_a_eq_one Cubic.monic_of_a_eq_one
 
@@ -263,7 +262,7 @@ theorem monic_of_b_eq_one (ha : P.a = 0) (hb : P.b = 1) : P.toPoly.Monic :=
   rw [monic,
     leading_coeff_of_b_ne_zero ha <| by
       rw [hb]
-      exact one_ne_zero,
+      exact one_neZero,
     hb]
 #align cubic.monic_of_b_eq_one Cubic.monic_of_b_eq_one
 
@@ -277,7 +276,7 @@ theorem monic_of_c_eq_one (ha : P.a = 0) (hb : P.b = 0) (hc : P.c = 1) : P.toPol
   rw [monic,
     leading_coeff_of_c_ne_zero ha hb <| by
       rw [hc]
-      exact one_ne_zero,
+      exact one_neZero,
     hc]
 #align cubic.monic_of_c_eq_one Cubic.monic_of_c_eq_one
 
@@ -394,65 +393,65 @@ theorem degree_of_zero : (0 : Cubic R).toPoly.degree = ⊥ :=
 #align cubic.degree_of_zero Cubic.degree_of_zero
 
 @[simp]
-theorem nat_degree_of_a_ne_zero (ha : P.a ≠ 0) : P.toPoly.natDegree = 3 :=
-  nat_degree_cubic ha
-#align cubic.nat_degree_of_a_ne_zero Cubic.nat_degree_of_a_ne_zero
+theorem natDegree_of_a_ne_zero (ha : P.a ≠ 0) : P.toPoly.natDegree = 3 :=
+  natDegree_cubic ha
+#align cubic.nat_degree_of_a_ne_zero Cubic.natDegree_of_a_ne_zero
 
 @[simp]
-theorem nat_degree_of_a_ne_zero' (ha : a ≠ 0) : (toPoly ⟨a, b, c, d⟩).natDegree = 3 :=
-  nat_degree_of_a_ne_zero ha
-#align cubic.nat_degree_of_a_ne_zero' Cubic.nat_degree_of_a_ne_zero'
+theorem natDegree_of_a_ne_zero' (ha : a ≠ 0) : (toPoly ⟨a, b, c, d⟩).natDegree = 3 :=
+  natDegree_of_a_ne_zero ha
+#align cubic.nat_degree_of_a_ne_zero' Cubic.natDegree_of_a_ne_zero'
 
-theorem nat_degree_of_a_eq_zero (ha : P.a = 0) : P.toPoly.natDegree ≤ 2 := by
+theorem natDegree_of_a_eq_zero (ha : P.a = 0) : P.toPoly.natDegree ≤ 2 := by
   simpa only [of_a_eq_zero ha] using nat_degree_quadratic_le
-#align cubic.nat_degree_of_a_eq_zero Cubic.nat_degree_of_a_eq_zero
+#align cubic.nat_degree_of_a_eq_zero Cubic.natDegree_of_a_eq_zero
 
-theorem nat_degree_of_a_eq_zero' : (toPoly ⟨0, b, c, d⟩).natDegree ≤ 2 :=
-  nat_degree_of_a_eq_zero rfl
-#align cubic.nat_degree_of_a_eq_zero' Cubic.nat_degree_of_a_eq_zero'
+theorem natDegree_of_a_eq_zero' : (toPoly ⟨0, b, c, d⟩).natDegree ≤ 2 :=
+  natDegree_of_a_eq_zero rfl
+#align cubic.nat_degree_of_a_eq_zero' Cubic.natDegree_of_a_eq_zero'
 
 @[simp]
-theorem nat_degree_of_b_ne_zero (ha : P.a = 0) (hb : P.b ≠ 0) : P.toPoly.natDegree = 2 := by
+theorem natDegree_of_b_ne_zero (ha : P.a = 0) (hb : P.b ≠ 0) : P.toPoly.natDegree = 2 := by
   rw [of_a_eq_zero ha, nat_degree_quadratic hb]
-#align cubic.nat_degree_of_b_ne_zero Cubic.nat_degree_of_b_ne_zero
+#align cubic.nat_degree_of_b_ne_zero Cubic.natDegree_of_b_ne_zero
 
 @[simp]
-theorem nat_degree_of_b_ne_zero' (hb : b ≠ 0) : (toPoly ⟨0, b, c, d⟩).natDegree = 2 :=
-  nat_degree_of_b_ne_zero rfl hb
-#align cubic.nat_degree_of_b_ne_zero' Cubic.nat_degree_of_b_ne_zero'
+theorem natDegree_of_b_ne_zero' (hb : b ≠ 0) : (toPoly ⟨0, b, c, d⟩).natDegree = 2 :=
+  natDegree_of_b_ne_zero rfl hb
+#align cubic.nat_degree_of_b_ne_zero' Cubic.natDegree_of_b_ne_zero'
 
-theorem nat_degree_of_b_eq_zero (ha : P.a = 0) (hb : P.b = 0) : P.toPoly.natDegree ≤ 1 := by
+theorem natDegree_of_b_eq_zero (ha : P.a = 0) (hb : P.b = 0) : P.toPoly.natDegree ≤ 1 := by
   simpa only [of_b_eq_zero ha hb] using nat_degree_linear_le
-#align cubic.nat_degree_of_b_eq_zero Cubic.nat_degree_of_b_eq_zero
+#align cubic.nat_degree_of_b_eq_zero Cubic.natDegree_of_b_eq_zero
 
-theorem nat_degree_of_b_eq_zero' : (toPoly ⟨0, 0, c, d⟩).natDegree ≤ 1 :=
-  nat_degree_of_b_eq_zero rfl rfl
-#align cubic.nat_degree_of_b_eq_zero' Cubic.nat_degree_of_b_eq_zero'
+theorem natDegree_of_b_eq_zero' : (toPoly ⟨0, 0, c, d⟩).natDegree ≤ 1 :=
+  natDegree_of_b_eq_zero rfl rfl
+#align cubic.nat_degree_of_b_eq_zero' Cubic.natDegree_of_b_eq_zero'
 
 @[simp]
-theorem nat_degree_of_c_ne_zero (ha : P.a = 0) (hb : P.b = 0) (hc : P.c ≠ 0) :
+theorem natDegree_of_c_ne_zero (ha : P.a = 0) (hb : P.b = 0) (hc : P.c ≠ 0) :
     P.toPoly.natDegree = 1 := by rw [of_b_eq_zero ha hb, nat_degree_linear hc]
-#align cubic.nat_degree_of_c_ne_zero Cubic.nat_degree_of_c_ne_zero
+#align cubic.nat_degree_of_c_ne_zero Cubic.natDegree_of_c_ne_zero
 
 @[simp]
-theorem nat_degree_of_c_ne_zero' (hc : c ≠ 0) : (toPoly ⟨0, 0, c, d⟩).natDegree = 1 :=
-  nat_degree_of_c_ne_zero rfl rfl hc
-#align cubic.nat_degree_of_c_ne_zero' Cubic.nat_degree_of_c_ne_zero'
+theorem natDegree_of_c_ne_zero' (hc : c ≠ 0) : (toPoly ⟨0, 0, c, d⟩).natDegree = 1 :=
+  natDegree_of_c_ne_zero rfl rfl hc
+#align cubic.nat_degree_of_c_ne_zero' Cubic.natDegree_of_c_ne_zero'
 
 @[simp]
-theorem nat_degree_of_c_eq_zero (ha : P.a = 0) (hb : P.b = 0) (hc : P.c = 0) :
+theorem natDegree_of_c_eq_zero (ha : P.a = 0) (hb : P.b = 0) (hc : P.c = 0) :
     P.toPoly.natDegree = 0 := by rw [of_c_eq_zero ha hb hc, nat_degree_C]
-#align cubic.nat_degree_of_c_eq_zero Cubic.nat_degree_of_c_eq_zero
+#align cubic.nat_degree_of_c_eq_zero Cubic.natDegree_of_c_eq_zero
 
 @[simp]
-theorem nat_degree_of_c_eq_zero' : (toPoly ⟨0, 0, 0, d⟩).natDegree = 0 :=
-  nat_degree_of_c_eq_zero rfl rfl rfl
-#align cubic.nat_degree_of_c_eq_zero' Cubic.nat_degree_of_c_eq_zero'
+theorem natDegree_of_c_eq_zero' : (toPoly ⟨0, 0, 0, d⟩).natDegree = 0 :=
+  natDegree_of_c_eq_zero rfl rfl rfl
+#align cubic.nat_degree_of_c_eq_zero' Cubic.natDegree_of_c_eq_zero'
 
 @[simp]
-theorem nat_degree_of_zero : (0 : Cubic R).toPoly.natDegree = 0 :=
+theorem natDegree_of_zero : (0 : Cubic R).toPoly.natDegree = 0 :=
   nat_degree_of_c_eq_zero'
-#align cubic.nat_degree_of_zero Cubic.nat_degree_of_zero
+#align cubic.nat_degree_of_zero Cubic.natDegree_of_zero
 
 end Degree
 
@@ -468,9 +467,9 @@ def map (φ : R →+* S) (P : Cubic R) : Cubic S :=
   ⟨φ P.a, φ P.b, φ P.c, φ P.d⟩
 #align cubic.map Cubic.map
 
-theorem map_to_poly : (map φ P).toPoly = Polynomial.map φ P.toPoly := by
+theorem map_toPoly : (map φ P).toPoly = Polynomial.map φ P.toPoly := by
   simp only [map, to_poly, map_C, map_X, Polynomial.map_add, Polynomial.map_mul, Polynomial.map_pow]
-#align cubic.map_to_poly Cubic.map_to_poly
+#align cubic.map_to_poly Cubic.map_toPoly
 
 end Map
 

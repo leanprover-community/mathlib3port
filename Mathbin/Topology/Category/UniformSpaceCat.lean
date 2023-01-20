@@ -37,7 +37,7 @@ namespace UniformSpaceCat
 
 /-- The information required to build morphisms for `UniformSpace`. -/
 instance : UnbundledHom @UniformContinuous :=
-  ⟨@uniform_continuous_id, @UniformContinuous.comp⟩
+  ⟨@uniformContinuous_id, @UniformContinuous.comp⟩
 
 deriving instance LargeCategory, ConcreteCategory for UniformSpaceCat
 
@@ -114,13 +114,13 @@ def toUniformSpace (X : CpltSepUniformSpaceCat) : UniformSpaceCat :=
   UniformSpaceCat.of X
 #align CpltSepUniformSpace.to_UniformSpace CpltSepUniformSpaceCat.toUniformSpace
 
-instance complete_space (X : CpltSepUniformSpaceCat) : CompleteSpace (toUniformSpace X).α :=
-  CpltSepUniformSpaceCat.is_complete_space X
-#align CpltSepUniformSpace.complete_space CpltSepUniformSpaceCat.complete_space
+instance completeSpace (X : CpltSepUniformSpaceCat) : CompleteSpace (toUniformSpace X).α :=
+  CpltSepUniformSpaceCat.is_completeSpace X
+#align CpltSepUniformSpace.complete_space CpltSepUniformSpaceCat.completeSpace
 
-instance separated_space (X : CpltSepUniformSpaceCat) : SeparatedSpace (toUniformSpace X).α :=
+instance separatedSpace (X : CpltSepUniformSpaceCat) : SeparatedSpace (toUniformSpace X).α :=
   CpltSepUniformSpaceCat.is_separated X
-#align CpltSepUniformSpace.separated_space CpltSepUniformSpaceCat.separated_space
+#align CpltSepUniformSpace.separated_space CpltSepUniformSpaceCat.separatedSpace
 
 /-- Construct a bundled `UniformSpace` from the underlying type and the appropriate typeclasses. -/
 def of (X : Type u) [UniformSpace X] [CompleteSpace X] [SeparatedSpace X] :
@@ -164,7 +164,7 @@ open CpltSepUniformSpaceCat
 noncomputable def completionFunctor : UniformSpaceCat ⥤ CpltSepUniformSpaceCat
     where
   obj X := CpltSepUniformSpaceCat.of (Completion X)
-  map X Y f := ⟨Completion.map f.1, Completion.uniform_continuous_map⟩
+  map X Y f := ⟨Completion.map f.1, Completion.uniformContinuous_map⟩
   map_id' X := Subtype.eq Completion.map_id
   map_comp' X Y Z f g := Subtype.eq (Completion.map_comp g.property f.property).symm
 #align UniformSpace.completion_functor UniformSpaceCat.completionFunctor
@@ -174,27 +174,27 @@ def completionHom (X : UniformSpaceCat) :
     X ⟶ (forget₂ CpltSepUniformSpaceCat UniformSpaceCat).obj (completionFunctor.obj X)
     where
   val := (coe : X → Completion X)
-  property := Completion.uniform_continuous_coe X
+  property := Completion.uniformContinuous_coe X
 #align UniformSpace.completion_hom UniformSpaceCat.completionHom
 
 @[simp]
-theorem completion_hom_val (X : UniformSpaceCat) (x) : (completionHom X) x = (x : Completion X) :=
+theorem completionHom_val (X : UniformSpaceCat) (x) : (completionHom X) x = (x : Completion X) :=
   rfl
-#align UniformSpace.completion_hom_val UniformSpaceCat.completion_hom_val
+#align UniformSpace.completion_hom_val UniformSpaceCat.completionHom_val
 
 /-- The mate of a morphism from a `UniformSpace` to a `CpltSepUniformSpace`. -/
 noncomputable def extensionHom {X : UniformSpaceCat} {Y : CpltSepUniformSpaceCat}
     (f : X ⟶ (forget₂ CpltSepUniformSpaceCat UniformSpaceCat).obj Y) : completionFunctor.obj X ⟶ Y
     where
   val := Completion.extension f
-  property := Completion.uniform_continuous_extension
+  property := Completion.uniformContinuous_extension
 #align UniformSpace.extension_hom UniformSpaceCat.extensionHom
 
 @[simp]
-theorem extension_hom_val {X : UniformSpaceCat} {Y : CpltSepUniformSpaceCat}
+theorem extensionHom_val {X : UniformSpaceCat} {Y : CpltSepUniformSpaceCat}
     (f : X ⟶ (forget₂ _ _).obj Y) (x) : (extensionHom f) x = Completion.extension f x :=
   rfl
-#align UniformSpace.extension_hom_val UniformSpaceCat.extension_hom_val
+#align UniformSpace.extension_hom_val UniformSpaceCat.extensionHom_val
 
 @[simp]
 theorem extension_comp_coe {X : UniformSpaceCat} {Y : CpltSepUniformSpaceCat}
@@ -218,7 +218,7 @@ noncomputable def adj : completion_functor ⊣ forget₂ CpltSepUniformSpaceCat 
           right_inv := fun f => by
             apply Subtype.eq; funext x; cases f
             exact
-              @completion.extension_coe _ _ _ _ _ (CpltSepUniformSpaceCat.separated_space _)
+              @completion.extension_coe _ _ _ _ _ (CpltSepUniformSpaceCat.separatedSpace _)
                 f_property _ }
       hom_equiv_naturality_left_symm' := fun X X' Y f g =>
         by

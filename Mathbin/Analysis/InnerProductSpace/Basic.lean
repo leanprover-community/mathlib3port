@@ -221,11 +221,11 @@ theorem inner_add_right {x y z : F} : ⟪x, y + z⟫ = ⟪x, y⟫ + ⟪x, z⟫ :
   rw [← inner_conj_sym, inner_add_left, RingHom.map_add] <;> simp only [inner_conj_sym]
 #align inner_product_space.of_core.inner_add_right InnerProductSpace.OfCore.inner_add_right
 
-theorem inner_norm_sq_eq_inner_self (x : F) : (norm_sqF x : 𝕜) = ⟪x, x⟫ :=
+theorem inner_normSq_eq_inner_self (x : F) : (norm_sqF x : 𝕜) = ⟪x, x⟫ :=
   by
   rw [ext_iff]
   exact ⟨by simp only [of_real_re] <;> rfl, by simp only [inner_self_nonneg_im, of_real_im]⟩
-#align inner_product_space.of_core.inner_norm_sq_eq_inner_self InnerProductSpace.OfCore.inner_norm_sq_eq_inner_self
+#align inner_product_space.of_core.inner_norm_sq_eq_inner_self InnerProductSpace.OfCore.inner_normSq_eq_inner_self
 
 theorem inner_re_symm {x y : F} : re ⟪x, y⟫ = re ⟪y, x⟫ := by rw [← inner_conj_sym, conj_re]
 #align inner_product_space.of_core.inner_re_symm InnerProductSpace.OfCore.inner_re_symm
@@ -362,9 +362,9 @@ theorem inner_self_eq_norm_mul_norm (x : F) : re ⟪x, x⟫ = ‖x‖ * ‖x‖ 
   rw [norm_eq_sqrt_inner, ← sqrt_mul inner_self_nonneg (re ⟪x, x⟫), sqrt_mul_self inner_self_nonneg]
 #align inner_product_space.of_core.inner_self_eq_norm_mul_norm InnerProductSpace.OfCore.inner_self_eq_norm_mul_norm
 
-theorem sqrt_norm_sq_eq_norm {x : F} : sqrt (norm_sqF x) = ‖x‖ :=
+theorem sqrt_normSq_eq_norm {x : F} : sqrt (norm_sqF x) = ‖x‖ :=
   rfl
-#align inner_product_space.of_core.sqrt_norm_sq_eq_norm InnerProductSpace.OfCore.sqrt_norm_sq_eq_norm
+#align inner_product_space.of_core.sqrt_norm_sq_eq_norm InnerProductSpace.OfCore.sqrt_normSq_eq_norm
 
 /-- Cauchy–Schwarz inequality with norm -/
 theorem abs_inner_le_norm (x y : F) : abs ⟪x, y⟫ ≤ ‖x‖ * ‖y‖ :=
@@ -416,7 +416,7 @@ def toNormedSpace : NormedSpace 𝕜 F
     rw [norm_eq_sqrt_inner, inner_smul_left, inner_smul_right, ← mul_assoc]
     rw [conj_mul_eq_norm_sq_left, of_real_mul_re, sqrt_mul, ← inner_norm_sq_eq_inner_self,
       of_real_re]
-    · simp [sqrt_norm_sq_eq_norm, IsROrC.sqrt_norm_sq_eq_norm]
+    · simp [sqrt_norm_sq_eq_norm, IsROrC.sqrt_normSq_eq_norm]
     · exact norm_sq_nonneg r
 #align inner_product_space.of_core.to_normed_space InnerProductSpace.OfCore.toNormedSpace
 
@@ -826,10 +826,10 @@ theorem real_inner_mul_inner_self_le (x y : F) : ⟪x, y⟫_ℝ * ⟪x, y⟫_ℝ
 
 /-- A family of vectors is linearly independent if they are nonzero
 and orthogonal. -/
-theorem linear_independent_of_ne_zero_of_inner_eq_zero {ι : Type _} {v : ι → E} (hz : ∀ i, v i ≠ 0)
+theorem linearIndependent_of_ne_zero_of_inner_eq_zero {ι : Type _} {v : ι → E} (hz : ∀ i, v i ≠ 0)
     (ho : ∀ i j, i ≠ j → ⟪v i, v j⟫ = 0) : LinearIndependent 𝕜 v :=
   by
-  rw [linear_independent_iff']
+  rw [linearIndependent_iff']
   intro s g hg i hi
   have h' : g i * inner (v i) (v i) = inner (v i) (∑ j in s, g j • v j) :=
     by
@@ -841,7 +841,7 @@ theorem linear_independent_of_ne_zero_of_inner_eq_zero {ι : Type _} {v : ι →
       rw [inner_smul_right, ho i j hji.symm, mul_zero]
     · exact fun h => False.elim (h hi)
   simpa [hg, hz] using h'
-#align linear_independent_of_ne_zero_of_inner_eq_zero linear_independent_of_ne_zero_of_inner_eq_zero
+#align linear_independent_of_ne_zero_of_inner_eq_zero linearIndependent_of_ne_zero_of_inner_eq_zero
 
 end BasicProperties
 
@@ -980,14 +980,14 @@ theorem Orthonormal.inner_left_right_finset {s : Finset ι} {v : ι → E} (hv :
 #align orthonormal.inner_left_right_finset Orthonormal.inner_left_right_finset
 
 /-- An orthonormal set is linearly independent. -/
-theorem Orthonormal.linear_independent {v : ι → E} (hv : Orthonormal 𝕜 v) : LinearIndependent 𝕜 v :=
+theorem Orthonormal.linearIndependent {v : ι → E} (hv : Orthonormal 𝕜 v) : LinearIndependent 𝕜 v :=
   by
-  rw [linear_independent_iff]
+  rw [linearIndependent_iff]
   intro l hl
   ext i
   have key : ⟪v i, Finsupp.total ι E 𝕜 v l⟫ = ⟪v i, 0⟫ := by rw [hl]
   simpa only [hv.inner_right_finsupp, inner_zero_right] using key
-#align orthonormal.linear_independent Orthonormal.linear_independent
+#align orthonormal.linear_independent Orthonormal.linearIndependent
 
 /-- A subfamily of an orthonormal family (i.e., a composition with an injective map) is an
 orthonormal family. -/
@@ -1102,11 +1102,11 @@ def basisOfOrthonormalOfCardEqFinrank [Fintype ι] [Nonempty ι] {v : ι → E} 
 #align basis_of_orthonormal_of_card_eq_finrank basisOfOrthonormalOfCardEqFinrank
 
 @[simp]
-theorem coe_basis_of_orthonormal_of_card_eq_finrank [Fintype ι] [Nonempty ι] {v : ι → E}
+theorem coe_basisOfOrthonormalOfCardEqFinrank [Fintype ι] [Nonempty ι] {v : ι → E}
     (hv : Orthonormal 𝕜 v) (card_eq : Fintype.card ι = finrank 𝕜 E) :
     (basisOfOrthonormalOfCardEqFinrank hv card_eq : ι → E) = v :=
-  coe_basis_of_linear_independent_of_card_eq_finrank _ _
-#align coe_basis_of_orthonormal_of_card_eq_finrank coe_basis_of_orthonormal_of_card_eq_finrank
+  coe_basisOfLinearIndependentOfCardEqFinrank _ _
+#align coe_basis_of_orthonormal_of_card_eq_finrank coe_basisOfOrthonormalOfCardEqFinrank
 
 end OrthonormalSets
 
@@ -1301,19 +1301,19 @@ theorem re_inner_eq_norm_add_mul_self_sub_norm_sub_mul_self_div_four (x y : E) :
 #align re_inner_eq_norm_add_mul_self_sub_norm_sub_mul_self_div_four re_inner_eq_norm_add_mul_self_sub_norm_sub_mul_self_div_four
 
 /-- Polarization identity: The imaginary part of the inner product, in terms of the norm. -/
-theorem im_inner_eq_norm_sub_I_smul_mul_self_sub_norm_add_I_smul_mul_self_div_four (x y : E) :
+theorem im_inner_eq_norm_sub_i_smul_mul_self_sub_norm_add_i_smul_mul_self_div_four (x y : E) :
     im ⟪x, y⟫ = (‖x - IK • y‖ * ‖x - IK • y‖ - ‖x + IK • y‖ * ‖x + IK • y‖) / 4 :=
   by
   simp only [norm_add_mul_self, norm_sub_mul_self, inner_smul_right, I_mul_re]
   ring
-#align im_inner_eq_norm_sub_I_smul_mul_self_sub_norm_add_I_smul_mul_self_div_four im_inner_eq_norm_sub_I_smul_mul_self_sub_norm_add_I_smul_mul_self_div_four
+#align im_inner_eq_norm_sub_I_smul_mul_self_sub_norm_add_I_smul_mul_self_div_four im_inner_eq_norm_sub_i_smul_mul_self_sub_norm_add_i_smul_mul_self_div_four
 
 /-- Polarization identity: The inner product, in terms of the norm. -/
 theorem inner_eq_sum_norm_sq_div_four (x y : E) :
     ⟪x, y⟫ = (‖x + y‖ ^ 2 - ‖x - y‖ ^ 2 + (‖x - IK • y‖ ^ 2 - ‖x + IK • y‖ ^ 2) * IK) / 4 :=
   by
   rw [← re_add_im ⟪x, y⟫, re_inner_eq_norm_add_mul_self_sub_norm_sub_mul_self_div_four,
-    im_inner_eq_norm_sub_I_smul_mul_self_sub_norm_add_I_smul_mul_self_div_four]
+    im_inner_eq_norm_sub_i_smul_mul_self_sub_norm_add_i_smul_mul_self_div_four]
   push_cast
   simp only [sq, ← mul_div_right_comm, ← add_div]
 #align inner_eq_sum_norm_sq_div_four inner_eq_sum_norm_sq_div_four
@@ -1343,7 +1343,7 @@ theorem dist_div_norm_sq_smul {x y : F} (hx : x ≠ 0) (hy : y ≠ 0) (R : ℝ) 
 #align dist_div_norm_sq_smul dist_div_norm_sq_smul
 
 -- See note [lower instance priority]
-instance (priority := 100) InnerProductSpace.to_uniform_convex_space : UniformConvexSpace F :=
+instance (priority := 100) InnerProductSpace.to_uniformConvexSpace : UniformConvexSpace F :=
   ⟨fun ε hε =>
     by
     refine'
@@ -1355,7 +1355,7 @@ instance (priority := 100) InnerProductSpace.to_uniform_convex_space : UniformCo
     rw [sq, eq_sub_iff_add_eq.2 (parallelogram_law_with_norm x y), ← sq ‖x - y‖, hx, hy]
     norm_num
     exact pow_le_pow_of_le_left hε.le hxy _⟩
-#align inner_product_space.to_uniform_convex_space InnerProductSpace.to_uniform_convex_space
+#align inner_product_space.to_uniform_convex_space InnerProductSpace.to_uniformConvexSpace
 
 section Complex
 
@@ -1371,7 +1371,7 @@ theorem inner_map_polarization (T : V →ₗ[ℂ] V) (x y : V) :
         4 :=
   by
   simp only [map_add, map_sub, inner_add_left, inner_add_right, LinearMap.map_smul, inner_smul_left,
-    inner_smul_right, Complex.conj_I, ← pow_two, Complex.I_sq, inner_sub_left, inner_sub_right,
+    inner_smul_right, Complex.conj_i, ← pow_two, Complex.i_sq, inner_sub_left, inner_sub_right,
     mul_add, ← mul_assoc, mul_neg, neg_neg, sub_neg_eq_add, one_mul, neg_one_mul, mul_sub, sub_sub]
   ring
 #align inner_map_polarization inner_map_polarization
@@ -1384,7 +1384,7 @@ theorem inner_map_polarization' (T : V →ₗ[ℂ] V) (x y : V) :
         4 :=
   by
   simp only [map_add, map_sub, inner_add_left, inner_add_right, LinearMap.map_smul, inner_smul_left,
-    inner_smul_right, Complex.conj_I, ← pow_two, Complex.I_sq, inner_sub_left, inner_sub_right,
+    inner_smul_right, Complex.conj_i, ← pow_two, Complex.i_sq, inner_sub_left, inner_sub_right,
     mul_add, ← mul_assoc, mul_neg, neg_neg, sub_neg_eq_add, one_mul, neg_one_mul, mul_sub, sub_sub]
   ring
 #align inner_map_polarization' inner_map_polarization'
@@ -1441,15 +1441,15 @@ def LinearMap.isometryOfInner (f : E →ₗ[𝕜] E') (h : ∀ x y, ⟪f x, f y�
 #align linear_map.isometry_of_inner LinearMap.isometryOfInner
 
 @[simp]
-theorem LinearMap.coe_isometry_of_inner (f : E →ₗ[𝕜] E') (h) : ⇑(f.isometryOfInner h) = f :=
+theorem LinearMap.coe_isometryOfInner (f : E →ₗ[𝕜] E') (h) : ⇑(f.isometryOfInner h) = f :=
   rfl
-#align linear_map.coe_isometry_of_inner LinearMap.coe_isometry_of_inner
+#align linear_map.coe_isometry_of_inner LinearMap.coe_isometryOfInner
 
 @[simp]
-theorem LinearMap.isometry_of_inner_to_linear_map (f : E →ₗ[𝕜] E') (h) :
+theorem LinearMap.isometryOfInner_toLinearMap (f : E →ₗ[𝕜] E') (h) :
     (f.isometryOfInner h).toLinearMap = f :=
   rfl
-#align linear_map.isometry_of_inner_to_linear_map LinearMap.isometry_of_inner_to_linear_map
+#align linear_map.isometry_of_inner_to_linear_map LinearMap.isometryOfInner_toLinearMap
 
 /-- A linear equivalence that preserves the inner product is a linear isometric equivalence. -/
 def LinearEquiv.isometryOfInner (f : E ≃ₗ[𝕜] E') (h : ∀ x y, ⟪f x, f y⟫ = ⟪x, y⟫) : E ≃ₗᵢ[𝕜] E' :=
@@ -1457,15 +1457,15 @@ def LinearEquiv.isometryOfInner (f : E ≃ₗ[𝕜] E') (h : ∀ x y, ⟪f x, f 
 #align linear_equiv.isometry_of_inner LinearEquiv.isometryOfInner
 
 @[simp]
-theorem LinearEquiv.coe_isometry_of_inner (f : E ≃ₗ[𝕜] E') (h) : ⇑(f.isometryOfInner h) = f :=
+theorem LinearEquiv.coe_isometryOfInner (f : E ≃ₗ[𝕜] E') (h) : ⇑(f.isometryOfInner h) = f :=
   rfl
-#align linear_equiv.coe_isometry_of_inner LinearEquiv.coe_isometry_of_inner
+#align linear_equiv.coe_isometry_of_inner LinearEquiv.coe_isometryOfInner
 
 @[simp]
-theorem LinearEquiv.isometry_of_inner_to_linear_equiv (f : E ≃ₗ[𝕜] E') (h) :
+theorem LinearEquiv.isometryOfInner_toLinearEquiv (f : E ≃ₗ[𝕜] E') (h) :
     (f.isometryOfInner h).toLinearEquiv = f :=
   rfl
-#align linear_equiv.isometry_of_inner_to_linear_equiv LinearEquiv.isometry_of_inner_to_linear_equiv
+#align linear_equiv.isometry_of_inner_to_linear_equiv LinearEquiv.isometryOfInner_toLinearEquiv
 
 /-- A linear isometry preserves the property of being orthonormal. -/
 theorem LinearIsometry.orthonormal_comp_iff {v : ι → E} (f : E →ₗᵢ[𝕜] E') :
@@ -1500,17 +1500,17 @@ def LinearMap.isometryOfOrthonormal (f : E →ₗ[𝕜] E') {v : Basis ι 𝕜 E
 #align linear_map.isometry_of_orthonormal LinearMap.isometryOfOrthonormal
 
 @[simp]
-theorem LinearMap.coe_isometry_of_orthonormal (f : E →ₗ[𝕜] E') {v : Basis ι 𝕜 E}
+theorem LinearMap.coe_isometryOfOrthonormal (f : E →ₗ[𝕜] E') {v : Basis ι 𝕜 E}
     (hv : Orthonormal 𝕜 v) (hf : Orthonormal 𝕜 (f ∘ v)) : ⇑(f.isometryOfOrthonormal hv hf) = f :=
   rfl
-#align linear_map.coe_isometry_of_orthonormal LinearMap.coe_isometry_of_orthonormal
+#align linear_map.coe_isometry_of_orthonormal LinearMap.coe_isometryOfOrthonormal
 
 @[simp]
-theorem LinearMap.isometry_of_orthonormal_to_linear_map (f : E →ₗ[𝕜] E') {v : Basis ι 𝕜 E}
+theorem LinearMap.isometryOfOrthonormal_toLinearMap (f : E →ₗ[𝕜] E') {v : Basis ι 𝕜 E}
     (hv : Orthonormal 𝕜 v) (hf : Orthonormal 𝕜 (f ∘ v)) :
     (f.isometryOfOrthonormal hv hf).toLinearMap = f :=
   rfl
-#align linear_map.isometry_of_orthonormal_to_linear_map LinearMap.isometry_of_orthonormal_to_linear_map
+#align linear_map.isometry_of_orthonormal_to_linear_map LinearMap.isometryOfOrthonormal_toLinearMap
 
 /-- A linear equivalence that sends an orthonormal basis to orthonormal vectors is a linear
 isometric equivalence. -/
@@ -1523,17 +1523,17 @@ def LinearEquiv.isometryOfOrthonormal (f : E ≃ₗ[𝕜] E') {v : Basis ι 𝕜
 #align linear_equiv.isometry_of_orthonormal LinearEquiv.isometryOfOrthonormal
 
 @[simp]
-theorem LinearEquiv.coe_isometry_of_orthonormal (f : E ≃ₗ[𝕜] E') {v : Basis ι 𝕜 E}
+theorem LinearEquiv.coe_isometryOfOrthonormal (f : E ≃ₗ[𝕜] E') {v : Basis ι 𝕜 E}
     (hv : Orthonormal 𝕜 v) (hf : Orthonormal 𝕜 (f ∘ v)) : ⇑(f.isometryOfOrthonormal hv hf) = f :=
   rfl
-#align linear_equiv.coe_isometry_of_orthonormal LinearEquiv.coe_isometry_of_orthonormal
+#align linear_equiv.coe_isometry_of_orthonormal LinearEquiv.coe_isometryOfOrthonormal
 
 @[simp]
-theorem LinearEquiv.isometry_of_orthonormal_to_linear_equiv (f : E ≃ₗ[𝕜] E') {v : Basis ι 𝕜 E}
+theorem LinearEquiv.isometryOfOrthonormal_toLinearEquiv (f : E ≃ₗ[𝕜] E') {v : Basis ι 𝕜 E}
     (hv : Orthonormal 𝕜 v) (hf : Orthonormal 𝕜 (f ∘ v)) :
     (f.isometryOfOrthonormal hv hf).toLinearEquiv = f :=
   rfl
-#align linear_equiv.isometry_of_orthonormal_to_linear_equiv LinearEquiv.isometry_of_orthonormal_to_linear_equiv
+#align linear_equiv.isometry_of_orthonormal_to_linear_equiv LinearEquiv.isometryOfOrthonormal_toLinearEquiv
 
 /-- A linear isometric equivalence that sends an orthonormal basis to a given orthonormal basis. -/
 def Orthonormal.equiv {v : Basis ι 𝕜 E} (hv : Orthonormal 𝕜 v) {v' : Basis ι' 𝕜 E'}
@@ -1548,11 +1548,11 @@ def Orthonormal.equiv {v : Basis ι 𝕜 E} (hv : Orthonormal 𝕜 v) {v' : Basi
 #align orthonormal.equiv Orthonormal.equiv
 
 @[simp]
-theorem Orthonormal.equiv_to_linear_equiv {v : Basis ι 𝕜 E} (hv : Orthonormal 𝕜 v)
+theorem Orthonormal.equiv_toLinearEquiv {v : Basis ι 𝕜 E} (hv : Orthonormal 𝕜 v)
     {v' : Basis ι' 𝕜 E'} (hv' : Orthonormal 𝕜 v') (e : ι ≃ ι') :
     (hv.Equiv hv' e).toLinearEquiv = v.Equiv v' e :=
   rfl
-#align orthonormal.equiv_to_linear_equiv Orthonormal.equiv_to_linear_equiv
+#align orthonormal.equiv_to_linear_equiv Orthonormal.equiv_toLinearEquiv
 
 @[simp]
 theorem Orthonormal.equiv_apply {ι' : Type _} {v : Basis ι 𝕜 E} (hv : Orthonormal 𝕜 v)
@@ -2028,9 +2028,9 @@ def innerSLFlip : E →L[𝕜] E →L⋆[𝕜] 𝕜 :=
 #align innerSL_flip innerSLFlip
 
 @[simp]
-theorem innerSL_flip_apply {x y : E} : innerSLFlip x y = ⟪y, x⟫ :=
+theorem innerSLFlip_apply {x y : E} : innerSLFlip x y = ⟪y, x⟫ :=
   rfl
-#align innerSL_flip_apply innerSL_flip_apply
+#align innerSL_flip_apply innerSLFlip_apply
 
 namespace ContinuousLinearMap
 
@@ -2044,11 +2044,11 @@ def toSesqForm : (E →L[𝕜] E') →L[𝕜] E' →L⋆[𝕜] E →L[𝕜] 𝕜
 #align continuous_linear_map.to_sesq_form ContinuousLinearMap.toSesqForm
 
 @[simp]
-theorem to_sesq_form_apply_coe (f : E →L[𝕜] E') (x : E') : toSesqForm f x = (innerSL x).comp f :=
+theorem toSesqForm_apply_coe (f : E →L[𝕜] E') (x : E') : toSesqForm f x = (innerSL x).comp f :=
   rfl
-#align continuous_linear_map.to_sesq_form_apply_coe ContinuousLinearMap.to_sesq_form_apply_coe
+#align continuous_linear_map.to_sesq_form_apply_coe ContinuousLinearMap.toSesqForm_apply_coe
 
-theorem to_sesq_form_apply_norm_le {f : E →L[𝕜] E'} {v : E'} : ‖toSesqForm f v‖ ≤ ‖f‖ * ‖v‖ :=
+theorem toSesqForm_apply_norm_le {f : E →L[𝕜] E'} {v : E'} : ‖toSesqForm f v‖ ≤ ‖f‖ * ‖v‖ :=
   by
   refine' op_norm_le_bound _ (mul_nonneg (norm_nonneg _) (norm_nonneg _)) _
   intro x
@@ -2059,7 +2059,7 @@ theorem to_sesq_form_apply_norm_le {f : E →L[𝕜] E'} {v : E'} : ‖toSesqFor
     _ ≤ ‖v‖ * (‖f‖ * ‖x‖) := mul_le_mul_of_nonneg_left h₁ (norm_nonneg v)
     _ = ‖f‖ * ‖v‖ * ‖x‖ := by ring
     
-#align continuous_linear_map.to_sesq_form_apply_norm_le ContinuousLinearMap.to_sesq_form_apply_norm_le
+#align continuous_linear_map.to_sesq_form_apply_norm_le ContinuousLinearMap.toSesqForm_apply_norm_le
 
 end ContinuousLinearMap
 
@@ -2075,10 +2075,10 @@ theorem isBoundedBilinearMapInner [NormedSpace ℝ E] :
     IsBoundedBilinearMap ℝ fun p : E × E => ⟪p.1, p.2⟫ :=
   { add_left := fun _ _ _ => inner_add_left
     smul_left := fun r x y => by
-      simp only [← algebra_map_smul 𝕜 r x, algebra_map_eq_of_real, inner_smul_real_left]
+      simp only [← algebraMap_smul 𝕜 r x, algebra_map_eq_of_real, inner_smul_real_left]
     add_right := fun _ _ _ => inner_add_right
     smul_right := fun r x y => by
-      simp only [← algebra_map_smul 𝕜 r y, algebra_map_eq_of_real, inner_smul_real_right]
+      simp only [← algebraMap_smul 𝕜 r y, algebra_map_eq_of_real, inner_smul_real_right]
     bound :=
       ⟨1, zero_lt_one, fun x y => by
         rw [one_mul]
@@ -2126,7 +2126,7 @@ theorem Orthonormal.inner_products_summable (hv : Orthonormal 𝕜 v) :
     Summable fun i => ‖⟪v i, x⟫‖ ^ 2 :=
   by
   use ⨆ s : Finset ι, ∑ i in s, ‖⟪v i, x⟫‖ ^ 2
-  apply has_sum_of_is_lub_of_nonneg
+  apply hasSum_of_isLUB_of_nonneg
   · intro b
     simp only [norm_nonneg, pow_nonneg]
   · refine' isLUB_csupᵢ _
@@ -2349,7 +2349,7 @@ omit dec_ι
 theorem OrthogonalFamily.summable_iff_norm_sq_summable [CompleteSpace E] (f : ∀ i, G i) :
     (Summable fun i => V i (f i)) ↔ Summable fun i => ‖f i‖ ^ 2 := by
   classical
-    simp only [summable_iff_cauchy_seq_finset, NormedAddCommGroup.cauchy_seq_iff, Real.norm_eq_abs]
+    simp only [summable_iff_cauchySeq_finset, NormedAddCommGroup.cauchySeq_iff, Real.norm_eq_abs]
     constructor
     · intro hf ε hε
       obtain ⟨a, H⟩ := hf _ (sqrt_pos.mpr hε)
@@ -2409,7 +2409,7 @@ theorem OrthogonalFamily.independent {V : ι → Submodule 𝕜 E}
     suffices ⟪(v i : E), v i⟫ = 0 by simpa only [inner_self_eq_zero] using this
     calc
       ⟪(v i : E), v i⟫ = ⟪(v i : E), Dfinsupp.lsum ℕ (fun i => (V i).Subtype) v⟫ := by
-        simpa only [Dfinsupp.sum_add_hom_apply, Dfinsupp.lsum_apply_apply] using
+        simpa only [Dfinsupp.sumAddHom_apply, Dfinsupp.lsum_apply_apply] using
           (hV.inner_right_dfinsupp v i (v i)).symm
       _ = 0 := by simp only [hv, inner_zero_right]
       
@@ -2466,10 +2466,10 @@ theorem real_inner_eq_re_inner (x y : E) :
   rfl
 #align real_inner_eq_re_inner real_inner_eq_re_inner
 
-theorem real_inner_I_smul_self (x : E) :
+theorem real_inner_i_smul_self (x : E) :
     @HasInner.inner ℝ E (HasInner.isROrCToReal 𝕜 E) x ((i : 𝕜) • x) = 0 := by
   simp [real_inner_eq_re_inner, inner_smul_right]
-#align real_inner_I_smul_self real_inner_I_smul_self
+#align real_inner_I_smul_self real_inner_i_smul_self
 
 omit 𝕜
 
@@ -2530,7 +2530,7 @@ theorem ContinuousOn.inner (hf : ContinuousOn f s) (hg : ContinuousOn g s) :
 
 @[continuity]
 theorem Continuous.inner (hf : Continuous f) (hg : Continuous g) : Continuous fun t => ⟪f t, g t⟫ :=
-  continuous_iff_continuous_at.2 fun x => hf.ContinuousAt.inner hg.ContinuousAt
+  continuous_iff_continuousAt.2 fun x => hf.ContinuousAt.inner hg.ContinuousAt
 #align continuous.inner Continuous.inner
 
 end Continuous
@@ -2542,22 +2542,22 @@ def ContinuousLinearMap.reApplyInnerSelf (T : E →L[𝕜] E) (x : E) : ℝ :=
   re ⟪T x, x⟫
 #align continuous_linear_map.re_apply_inner_self ContinuousLinearMap.reApplyInnerSelf
 
-theorem ContinuousLinearMap.re_apply_inner_self_apply (T : E →L[𝕜] E) (x : E) :
+theorem ContinuousLinearMap.reApplyInnerSelf_apply (T : E →L[𝕜] E) (x : E) :
     T.reApplyInnerSelf x = re ⟪T x, x⟫ :=
   rfl
-#align continuous_linear_map.re_apply_inner_self_apply ContinuousLinearMap.re_apply_inner_self_apply
+#align continuous_linear_map.re_apply_inner_self_apply ContinuousLinearMap.reApplyInnerSelf_apply
 
-theorem ContinuousLinearMap.re_apply_inner_self_continuous (T : E →L[𝕜] E) :
+theorem ContinuousLinearMap.reApplyInnerSelf_continuous (T : E →L[𝕜] E) :
     Continuous T.reApplyInnerSelf :=
   reClm.Continuous.comp <| T.Continuous.inner continuous_id
-#align continuous_linear_map.re_apply_inner_self_continuous ContinuousLinearMap.re_apply_inner_self_continuous
+#align continuous_linear_map.re_apply_inner_self_continuous ContinuousLinearMap.reApplyInnerSelf_continuous
 
-theorem ContinuousLinearMap.re_apply_inner_self_smul (T : E →L[𝕜] E) (x : E) {c : 𝕜} :
+theorem ContinuousLinearMap.reApplyInnerSelf_smul (T : E →L[𝕜] E) (x : E) {c : 𝕜} :
     T.reApplyInnerSelf (c • x) = ‖c‖ ^ 2 * T.reApplyInnerSelf x := by
-  simp only [ContinuousLinearMap.map_smul, ContinuousLinearMap.re_apply_inner_self_apply,
+  simp only [ContinuousLinearMap.map_smul, ContinuousLinearMap.reApplyInnerSelf_apply,
     inner_smul_left, inner_smul_right, ← mul_assoc, mul_conj, norm_sq_eq_def', ← smul_re,
     Algebra.smul_def (‖c‖ ^ 2) ⟪T x, x⟫, algebra_map_eq_of_real]
-#align continuous_linear_map.re_apply_inner_self_smul ContinuousLinearMap.re_apply_inner_self_smul
+#align continuous_linear_map.re_apply_inner_self_smul ContinuousLinearMap.reApplyInnerSelf_smul
 
 end ReApplyInnerSelf
 
@@ -2659,18 +2659,18 @@ theorem orthogonal_eq_inter : Kᗮ = ⨅ v : K, LinearMap.ker (innerSL (v : E) :
     rintro ⟨v, hv⟩ w hw
     simpa using hw _ hv
   · intro v hv w hw
-    simp only [Submodule.mem_infi] at hv
+    simp only [Submodule.mem_infᵢ] at hv
     exact hv ⟨w, hw⟩
 #align orthogonal_eq_inter orthogonal_eq_inter
 
 /-- The orthogonal complement of any submodule `K` is closed. -/
-theorem Submodule.is_closed_orthogonal : IsClosed (Kᗮ : Set E) :=
+theorem Submodule.isClosed_orthogonal : IsClosed (Kᗮ : Set E) :=
   by
   rw [orthogonal_eq_inter K]
-  have := fun v : K => ContinuousLinearMap.is_closed_ker (innerSL (v : E) : E →L[𝕜] 𝕜)
-  convert is_closed_Inter this
-  simp only [Submodule.infi_coe]
-#align submodule.is_closed_orthogonal Submodule.is_closed_orthogonal
+  have := fun v : K => ContinuousLinearMap.isClosed_ker (innerSL (v : E) : E →L[𝕜] 𝕜)
+  convert isClosed_interᵢ this
+  simp only [Submodule.infᵢ_coe]
+#align submodule.is_closed_orthogonal Submodule.isClosed_orthogonal
 
 /-- In a complete space, the orthogonal complement of any submodule `K` is complete. -/
 instance [CompleteSpace E] : CompleteSpace Kᗮ :=
@@ -2716,10 +2716,10 @@ theorem Submodule.inf_orthogonal (K₁ K₂ : Submodule 𝕜 E) : K₁ᗮ ⊓ K�
 
 /-- The inf of an indexed family of orthogonal subspaces equals the
 subspace orthogonal to the sup. -/
-theorem Submodule.infi_orthogonal {ι : Type _} (K : ι → Submodule 𝕜 E) :
+theorem Submodule.infᵢ_orthogonal {ι : Type _} (K : ι → Submodule 𝕜 E) :
     (⨅ i, (K i)ᗮ) = (supᵢ K)ᗮ :=
   (Submodule.orthogonal_gc 𝕜 E).l_supr.symm
-#align submodule.infi_orthogonal Submodule.infi_orthogonal
+#align submodule.infi_orthogonal Submodule.infᵢ_orthogonal
 
 /-- The inf of a set of orthogonal subspaces equals the subspace orthogonal to the sup. -/
 theorem Submodule.Inf_orthogonal (s : Set <| Submodule 𝕜 E) : (⨅ K ∈ s, Kᗮ) = (supₛ s)ᗮ :=
@@ -2774,11 +2774,11 @@ open UniformSpace Function
 
 instance {𝕜' E' : Type _} [TopologicalSpace 𝕜'] [UniformSpace E'] [HasInner 𝕜' E'] :
     HasInner 𝕜' (Completion E')
-    where inner := curry <| (dense_inducing_coe.Prod dense_inducing_coe).extend (uncurry inner)
+    where inner := curry <| (denseInducing_coe.Prod denseInducing_coe).extend (uncurry inner)
 
 @[simp]
 theorem inner_coe (a b : E) : inner (a : Completion E) (b : Completion E) = (inner a b : 𝕜) :=
-  (dense_inducing_coe.Prod dense_inducing_coe).extend_eq
+  (denseInducing_coe.Prod denseInducing_coe).extend_eq
     (continuous_inner : Continuous (uncurry inner : E × E → 𝕜)) (a, b)
 #align uniform_space.completion.inner_coe UniformSpace.Completion.inner_coe
 
@@ -2807,17 +2807,17 @@ instance : InnerProductSpace 𝕜 (Completion E)
   toNormedAddCommGroup := inferInstance
   norm_sq_eq_inner x :=
     Completion.induction_on x
-      (is_closed_eq (continuous_norm.pow 2)
+      (isClosed_eq (continuous_norm.pow 2)
         (continuous_re.comp (Continuous.inner continuous_id' continuous_id')))
       fun a => by simp only [norm_coe, inner_coe, inner_self_eq_norm_sq]
   conj_sym x y :=
     Completion.induction_on₂ x y
-      (is_closed_eq (continuous_conj.comp (Continuous.inner continuous_snd continuous_fst))
+      (isClosed_eq (continuous_conj.comp (Continuous.inner continuous_snd continuous_fst))
         (Continuous.inner continuous_fst continuous_snd))
       fun a b => by simp only [inner_coe, inner_conj_sym]
   add_left x y z :=
     Completion.induction_on₃ x y z
-      (is_closed_eq
+      (isClosed_eq
         (Continuous.inner (continuous_fst.add (continuous_fst.comp continuous_snd))
           (continuous_snd.comp continuous_snd))
         ((Continuous.inner continuous_fst (continuous_snd.comp continuous_snd)).add
@@ -2826,7 +2826,7 @@ instance : InnerProductSpace 𝕜 (Completion E)
       fun a b c => by simp only [← coe_add, inner_coe, inner_add_left]
   smul_left x y c :=
     Completion.induction_on₂ x y
-      (is_closed_eq (Continuous.inner (continuous_fst.const_smul c) continuous_snd)
+      (isClosed_eq (Continuous.inner (continuous_fst.const_smul c) continuous_snd)
         ((continuous_mul_left _).comp (Continuous.inner continuous_fst continuous_snd)))
       fun a b => by simp only [← coe_smul c a, inner_coe, inner_smul_left]
 

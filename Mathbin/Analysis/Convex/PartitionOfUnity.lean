@@ -57,12 +57,11 @@ theorem exists_continuous_forall_mem_convex_of_local (ht : ∀ x, Convex ℝ (t 
   by
   choose U hU g hgc hgt using H
   obtain ⟨f, hf⟩ :=
-    PartitionOfUnity.exists_is_subordinate is_closed_univ (fun x => interior (U x))
-      (fun x => is_open_interior) fun x hx => mem_Union.2 ⟨x, mem_interior_iff_mem_nhds.2 (hU x)⟩
+    PartitionOfUnity.exists_isSubordinate isClosed_univ (fun x => interior (U x))
+      (fun x => isOpen_interior) fun x hx => mem_Union.2 ⟨x, mem_interior_iff_mem_nhds.2 (hU x)⟩
   refine'
     ⟨⟨fun x => ∑ᶠ i, f i x • g i x,
-        hf.continuous_finsum_smul (fun i => is_open_interior) fun i =>
-          (hgc i).mono interior_subset⟩,
+        hf.continuous_finsum_smul (fun i => isOpen_interior) fun i => (hgc i).mono interior_subset⟩,
       fun x => f.finsum_smul_mem_convex (mem_univ x) (fun i hi => hgt _ _ _) (ht _)⟩
   exact interior_subset (hf _ <| subset_closure hi)
 #align exists_continuous_forall_mem_convex_of_local exists_continuous_forall_mem_convex_of_local
@@ -76,6 +75,6 @@ theorem exists_continuous_forall_mem_convex_of_local_const (ht : ∀ x, Convex �
     (H : ∀ x : X, ∃ c : E, ∀ᶠ y in 𝓝 x, c ∈ t y) : ∃ g : C(X, E), ∀ x, g x ∈ t x :=
   exists_continuous_forall_mem_convex_of_local ht fun x =>
     let ⟨c, hc⟩ := H x
-    ⟨_, hc, fun _ => c, continuous_on_const, fun y => id⟩
+    ⟨_, hc, fun _ => c, continuousOn_const, fun y => id⟩
 #align exists_continuous_forall_mem_convex_of_local_const exists_continuous_forall_mem_convex_of_local_const
 

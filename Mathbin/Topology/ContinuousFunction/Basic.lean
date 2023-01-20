@@ -60,13 +60,13 @@ variable {F α β : Type _} [TopologicalSpace α] [TopologicalSpace β] [Continu
 
 include β
 
-theorem map_continuous_at (f : F) (a : α) : ContinuousAt f a :=
+theorem map_continuousAt (f : F) (a : α) : ContinuousAt f a :=
   (map_continuous f).ContinuousAt
-#align map_continuous_at map_continuous_at
+#align map_continuous_at map_continuousAt
 
-theorem map_continuous_within_at (f : F) (s : Set α) (a : α) : ContinuousWithinAt f s a :=
+theorem map_continuousWithinAt (f : F) (s : Set α) (a : α) : ContinuousWithinAt f s a :=
   (map_continuous f).ContinuousWithinAt
-#align map_continuous_within_at map_continuous_within_at
+#align map_continuous_within_at map_continuousWithinAt
 
 instance : CoeTC F C(α, β) :=
   ⟨fun f =>
@@ -87,7 +87,7 @@ instance : ContinuousMapClass C(α, β) α β
     where
   coe := ContinuousMap.toFun
   coe_injective' f g h := by cases f <;> cases g <;> congr
-  map_continuous := ContinuousMap.continuous_to_fun
+  map_continuous := ContinuousMap.continuous_toFun
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
@@ -95,9 +95,9 @@ instance : CoeFun C(α, β) fun _ => α → β :=
   FunLike.hasCoeToFun
 
 @[simp]
-theorem to_fun_eq_coe {f : C(α, β)} : f.toFun = (f : α → β) :=
+theorem toFun_eq_coe {f : C(α, β)} : f.toFun = (f : α → β) :=
   rfl
-#align continuous_map.to_fun_eq_coe ContinuousMap.to_fun_eq_coe
+#align continuous_map.to_fun_eq_coe ContinuousMap.toFun_eq_coe
 
 -- this must come after the coe_to_fun definition
 initialize_simps_projections ContinuousMap (toFun → apply)
@@ -142,9 +142,9 @@ theorem continuous_set_coe (s : Set C(α, β)) (f : s) : Continuous f :=
 #align continuous_map.continuous_set_coe ContinuousMap.continuous_set_coe
 
 /-- Deprecated. Use `map_continuous_at` instead. -/
-protected theorem continuous_at (f : C(α, β)) (x : α) : ContinuousAt f x :=
+protected theorem continuousAt (f : C(α, β)) (x : α) : ContinuousAt f x :=
   f.Continuous.ContinuousAt
-#align continuous_map.continuous_at ContinuousMap.continuous_at
+#align continuous_map.continuous_at ContinuousMap.continuousAt
 
 /-- Deprecated. Use `fun_like.congr_fun` instead. -/
 protected theorem congr_fun {f g : C(α, β)} (H : f = g) (x : α) : f x = g x :=
@@ -178,7 +178,7 @@ The continuous functions from `α` to `β` are the same as the plain functions w
 -/
 @[simps]
 def equivFnOfDiscrete [DiscreteTopology α] : C(α, β) ≃ (α → β) :=
-  ⟨fun f => f, fun f => ⟨f, continuous_of_discrete_topology⟩, fun f =>
+  ⟨fun f => f, fun f => ⟨f, continuous_of_discreteTopology⟩, fun f =>
     by
     ext
     rfl, fun f => by
@@ -339,8 +339,7 @@ theorem coe_restrict (f : C(α, β)) : ⇑(f.restrict s) = f ∘ coe :=
 /-- The restriction of a continuous map onto the preimage of a set. -/
 @[simps]
 def restrictPreimage (f : C(α, β)) (s : Set β) : C(f ⁻¹' s, s) :=
-  ⟨s.restrictPreimage f,
-    continuous_iff_continuous_at.mpr fun x => f.2.ContinuousAt.restrictPreimage⟩
+  ⟨s.restrictPreimage f, continuous_iff_continuousAt.mpr fun x => f.2.ContinuousAt.restrictPreimage⟩
 #align continuous_map.restrict_preimage ContinuousMap.restrictPreimage
 
 end Restrict
@@ -374,14 +373,14 @@ noncomputable def liftCover : C(α, β) :=
 variable {S φ hφ hS}
 
 @[simp]
-theorem lift_cover_coe {i : ι} (x : S i) : liftCover S φ hφ hS x = φ i x :=
+theorem liftCover_coe {i : ι} (x : S i) : liftCover S φ hφ hS x = φ i x :=
   Set.liftCover_coe _
-#align continuous_map.lift_cover_coe ContinuousMap.lift_cover_coe
+#align continuous_map.lift_cover_coe ContinuousMap.liftCover_coe
 
 @[simp]
-theorem lift_cover_restrict {i : ι} : (liftCover S φ hφ hS).restrict (S i) = φ i :=
+theorem liftCover_restrict {i : ι} : (liftCover S φ hφ hS).restrict (S i) = φ i :=
   ext <| lift_cover_coe
-#align continuous_map.lift_cover_restrict ContinuousMap.lift_cover_restrict
+#align continuous_map.lift_cover_restrict ContinuousMap.liftCover_restrict
 
 omit hφ hS
 
@@ -411,7 +410,7 @@ variable {A F hF hA}
 @[simp]
 theorem lift_cover_coe' {s : Set α} {hs : s ∈ A} (x : s) : liftCover' A F hF hA x = F s hs x :=
   let x' : (coe : A → Set α) ⟨s, hs⟩ := x
-  lift_cover_coe x'
+  liftCover_coe x'
 #align continuous_map.lift_cover_coe' ContinuousMap.lift_cover_coe'
 
 @[simp]
@@ -440,9 +439,9 @@ def toContinuousMap (e : α ≃ₜ β) : C(α, β) :=
 instance : Coe (α ≃ₜ β) C(α, β) :=
   ⟨Homeomorph.toContinuousMap⟩
 
-theorem to_continuous_map_as_coe : f.toContinuousMap = f :=
+theorem toContinuousMap_as_coe : f.toContinuousMap = f :=
   rfl
-#align homeomorph.to_continuous_map_as_coe Homeomorph.to_continuous_map_as_coe
+#align homeomorph.to_continuous_map_as_coe Homeomorph.toContinuousMap_as_coe
 
 @[simp]
 theorem coe_refl : (Homeomorph.refl α : C(α, α)) = ContinuousMap.id α :=
@@ -456,15 +455,15 @@ theorem coe_trans : (f.trans g : C(α, γ)) = (g : C(β, γ)).comp f :=
 
 /-- Left inverse to a continuous map from a homeomorphism, mirroring `equiv.symm_comp_self`. -/
 @[simp]
-theorem symm_comp_to_continuous_map : (f.symm : C(β, α)).comp (f : C(α, β)) = ContinuousMap.id α :=
+theorem symm_comp_to_continuousMap : (f.symm : C(β, α)).comp (f : C(α, β)) = ContinuousMap.id α :=
   by rw [← coeTrans, self_trans_symm, coe_refl]
-#align homeomorph.symm_comp_to_continuous_map Homeomorph.symm_comp_to_continuous_map
+#align homeomorph.symm_comp_to_continuous_map Homeomorph.symm_comp_to_continuousMap
 
 /-- Right inverse to a continuous map from a homeomorphism, mirroring `equiv.self_comp_symm`. -/
 @[simp]
-theorem to_continuous_map_comp_symm : (f : C(α, β)).comp (f.symm : C(β, α)) = ContinuousMap.id β :=
+theorem to_continuousMap_comp_symm : (f : C(α, β)).comp (f.symm : C(β, α)) = ContinuousMap.id β :=
   by rw [← coeTrans, symm_trans_self, coe_refl]
-#align homeomorph.to_continuous_map_comp_symm Homeomorph.to_continuous_map_comp_symm
+#align homeomorph.to_continuous_map_comp_symm Homeomorph.to_continuousMap_comp_symm
 
 end Homeomorph
 

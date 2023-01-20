@@ -129,13 +129,13 @@ def rfindOpt {α} (f : ℕ → Option α) : Part α :=
   (rfind fun n => (f n).isSome).bind fun n => f n
 #align nat.rfind_opt Nat.rfindOpt
 
-theorem rfind_opt_spec {α} {f : ℕ → Option α} {a} (h : a ∈ rfindOpt f) : ∃ n, a ∈ f n :=
+theorem rfindOpt_spec {α} {f : ℕ → Option α} {a} (h : a ∈ rfindOpt f) : ∃ n, a ∈ f n :=
   let ⟨n, h₁, h₂⟩ := mem_bind_iff.1 h
   ⟨n, mem_coe.1 h₂⟩
-#align nat.rfind_opt_spec Nat.rfind_opt_spec
+#align nat.rfind_opt_spec Nat.rfindOpt_spec
 
-theorem rfind_opt_dom {α} {f : ℕ → Option α} : (rfindOpt f).Dom ↔ ∃ n a, a ∈ f n :=
-  ⟨fun h => (rfind_opt_spec ⟨h, rfl⟩).imp fun n h => ⟨_, h⟩, fun h =>
+theorem rfindOpt_dom {α} {f : ℕ → Option α} : (rfindOpt f).Dom ↔ ∃ n a, a ∈ f n :=
+  ⟨fun h => (rfindOpt_spec ⟨h, rfl⟩).imp fun n h => ⟨_, h⟩, fun h =>
     by
     have h' : ∃ n, (f n).isSome := h.imp fun n => Option.isSome_iff_exists.2
     have s := Nat.find_spec h'
@@ -146,17 +146,16 @@ theorem rfind_opt_dom {α} {f : ℕ → Option α} : (rfindOpt f).Dom ↔ ∃ n 
     simp at this⊢
     cases' Option.isSome_iff_exists.1 this.symm with a e
     rw [e]; trivial⟩
-#align nat.rfind_opt_dom Nat.rfind_opt_dom
+#align nat.rfind_opt_dom Nat.rfindOpt_dom
 
-theorem rfind_opt_mono {α} {f : ℕ → Option α} (H : ∀ {a m n}, m ≤ n → a ∈ f m → a ∈ f n) {a} :
+theorem rfindOpt_mono {α} {f : ℕ → Option α} (H : ∀ {a m n}, m ≤ n → a ∈ f m → a ∈ f n) {a} :
     a ∈ rfindOpt f ↔ ∃ n, a ∈ f n :=
-  ⟨rfind_opt_spec, fun ⟨n, h⟩ =>
-    by
+  ⟨rfindOpt_spec, fun ⟨n, h⟩ => by
     have h' := rfind_opt_dom.2 ⟨_, _, h⟩
     cases' rfind_opt_spec ⟨h', rfl⟩ with k hk
     have := (H (le_max_left _ _) h).symm.trans (H (le_max_right _ _) hk)
     simp at this; simp [this, get_mem]⟩
-#align nat.rfind_opt_mono Nat.rfind_opt_mono
+#align nat.rfind_opt_mono Nat.rfindOpt_mono
 
 inductive Partrec : (ℕ →. ℕ) → Prop
   | zero : Partrec (pure 0)
@@ -367,9 +366,9 @@ theorem list_reverse : Computable (@List.reverse α) :=
   Primrec.list_reverse.to_comp
 #align computable.list_reverse Computable.list_reverse
 
-theorem list_nth : Computable₂ (@List.get? α) :=
-  Primrec.list_nth.to_comp
-#align computable.list_nth Computable.list_nth
+theorem list_get? : Computable₂ (@List.get? α) :=
+  Primrec.list_get?.to_comp
+#align computable.list_nth Computable.list_get?
 
 theorem list_append : Computable₂ ((· ++ ·) : List α → List α → List α) :=
   Primrec.list_append.to_comp
@@ -387,9 +386,9 @@ theorem vector_cons {n} : Computable₂ (@Vector.cons α n) :=
   Primrec.vector_cons.to_comp
 #align computable.vector_cons Computable.vector_cons
 
-theorem vector_to_list {n} : Computable (@Vector.toList α n) :=
-  Primrec.vector_to_list.to_comp
-#align computable.vector_to_list Computable.vector_to_list
+theorem vector_toList {n} : Computable (@Vector.toList α n) :=
+  Primrec.vector_toList.to_comp
+#align computable.vector_to_list Computable.vector_toList
 
 theorem vector_length {n} : Computable (@Vector.length α n) :=
   Primrec.vector_length.to_comp
@@ -403,9 +402,9 @@ theorem vector_tail {n} : Computable (@Vector.tail α n) :=
   Primrec.vector_tail.to_comp
 #align computable.vector_tail Computable.vector_tail
 
-theorem vector_nth {n} : Computable₂ (@Vector.get α n) :=
-  Primrec.vector_nth.to_comp
-#align computable.vector_nth Computable.vector_nth
+theorem vector_get {n} : Computable₂ (@Vector.get α n) :=
+  Primrec.vector_get.to_comp
+#align computable.vector_nth Computable.vector_get
 
 theorem vector_nth' {n} : Computable (@Vector.get α n) :=
   Primrec.vector_nth'.to_comp
@@ -427,9 +426,9 @@ protected theorem decode : Computable (decode α) :=
   Primrec.decode.to_comp
 #align computable.decode Computable.decode
 
-protected theorem of_nat (α) [Denumerable α] : Computable (ofNat α) :=
-  (Primrec.of_nat _).to_comp
-#align computable.of_nat Computable.of_nat
+protected theorem ofNat (α) [Denumerable α] : Computable (ofNat α) :=
+  (Primrec.ofNat _).to_comp
+#align computable.of_nat Computable.ofNat
 
 theorem encode_iff {f : α → σ} : (Computable fun a => encode (f a)) ↔ Computable f :=
   Iff.rfl
@@ -595,10 +594,10 @@ theorem rfind {p : α → ℕ →. Bool} (hp : Partrec₂ p) : Partrec fun a => 
     cases b <;> rfl
 #align partrec.rfind Partrec.rfind
 
-theorem rfind_opt {f : α → ℕ → Option σ} (hf : Computable₂ f) :
+theorem rfindOpt {f : α → ℕ → Option σ} (hf : Computable₂ f) :
     Partrec fun a => Nat.rfindOpt (f a) :=
-  (rfind (Primrec.option_is_some.to_comp.comp hf).Partrec.to₂).bind (of_option hf)
-#align partrec.rfind_opt Partrec.rfind_opt
+  (rfind (Primrec.option_isSome.to_comp.comp hf).Partrec.to₂).bind (of_option hf)
+#align partrec.rfind_opt Partrec.rfindOpt
 
 theorem nat_cases_right {f : α → ℕ} {g : α → σ} {h : α → ℕ →. σ} (hf : Computable f)
     (hg : Computable g) (hh : Partrec₂ h) : Partrec fun a => (f a).cases (some (g a)) (h a) :=
@@ -625,7 +624,7 @@ theorem bind_decode₂_iff {f : α →. σ} :
     map_encode_iff.1 <| by simpa [encodek₂] using (nat_iff.2 h).comp (@Computable.encode α _)⟩
 #align partrec.bind_decode₂_iff Partrec.bind_decode₂_iff
 
-theorem vector_m_of_fn :
+theorem vector_mOfFn :
     ∀ {n} {f : Fin n → α →. σ},
       (∀ i, Partrec (f i)) → Partrec fun a : α => Vector.mOfFn fun i => f i a
   | 0, f, hf => const _
@@ -635,15 +634,15 @@ theorem vector_m_of_fn :
         (hf 0).bind
           (Partrec.bind ((vector_m_of_fn fun i => hf i.succ).comp fst)
             (primrec.vector_cons.to_comp.comp (snd.comp fst) snd))
-#align partrec.vector_m_of_fn Partrec.vector_m_of_fn
+#align partrec.vector_m_of_fn Partrec.vector_mOfFn
 
 end Partrec
 
 @[simp]
-theorem Vector.m_of_fn_part_some {α n} :
+theorem Vector.mOfFn_part_some {α n} :
     ∀ f : Fin n → α, (Vector.mOfFn fun i => Part.some (f i)) = Part.some (Vector.ofFn f) :=
   Vector.mOfFn_pure
-#align vector.m_of_fn_part_some Vector.m_of_fn_part_some
+#align vector.m_of_fn_part_some Vector.mOfFn_part_some
 
 namespace Computable
 
@@ -714,11 +713,11 @@ theorem option_map {f : α → Option β} {g : α → β → σ} (hf : Computabl
   option_bind hf (option_some.comp₂ hg)
 #align computable.option_map Computable.option_map
 
-theorem option_get_or_else {f : α → Option β} {g : α → β} (hf : Computable f) (hg : Computable g) :
+theorem option_getD {f : α → Option β} {g : α → β} (hf : Computable f) (hg : Computable g) :
     Computable fun a => (f a).getOrElse (g a) :=
   (Computable.option_cases hf hg (show Computable₂ fun a b => b from Computable.snd)).of_eq fun a =>
     by cases f a <;> rfl
-#align computable.option_get_or_else Computable.option_get_or_else
+#align computable.option_get_or_else Computable.option_getD
 
 theorem subtype_mk {f : α → β} {p : β → Prop} [DecidablePred p] {h : ∀ a, p (f a)}
     (hp : PrimrecPred p) (hf : Computable f) :
@@ -740,7 +739,7 @@ theorem nat_strong_rec (f : α → ℕ → σ) {g : α → List σ → Option σ
     (H : ∀ a n, g a ((List.range n).map (f a)) = some (f a n)) : Computable₂ f :=
   suffices Computable₂ fun a n => (List.range n).map (f a) from
     option_some_iff.1 <|
-      (list_nth.comp (this.comp fst (succ.comp snd)) snd).to₂.of_eq fun a => by
+      (list_get?.comp (this.comp fst (succ.comp snd)) snd).to₂.of_eq fun a => by
         simp [List.nth_range (Nat.lt_succ_self a.2)] <;> rfl
   option_some_iff.1 <|
     (nat_elim snd (const (Option.some []))
@@ -754,18 +753,18 @@ theorem nat_strong_rec (f : α → ℕ → σ) {g : α → List σ → Option σ
       simp [IH, H, List.range_succ]
 #align computable.nat_strong_rec Computable.nat_strong_rec
 
-theorem list_of_fn :
+theorem list_ofFn :
     ∀ {n} {f : Fin n → α → σ},
       (∀ i, Computable (f i)) → Computable fun a => List.ofFn fun i => f i a
   | 0, f, hf => const []
   | n + 1, f, hf => by
     simp [List.ofFn_succ] <;> exact list_cons.comp (hf 0) (list_of_fn fun i => hf i.succ)
-#align computable.list_of_fn Computable.list_of_fn
+#align computable.list_of_fn Computable.list_ofFn
 
-theorem vector_of_fn {n} {f : Fin n → α → σ} (hf : ∀ i, Computable (f i)) :
+theorem vector_ofFn {n} {f : Fin n → α → σ} (hf : ∀ i, Computable (f i)) :
     Computable fun a => Vector.ofFn fun i => f i a :=
-  (Partrec.vector_m_of_fn hf).of_eq fun a => by simp
-#align computable.vector_of_fn Computable.vector_of_fn
+  (Partrec.vector_mOfFn hf).of_eq fun a => by simp
+#align computable.vector_of_fn Computable.vector_ofFn
 
 end Computable
 

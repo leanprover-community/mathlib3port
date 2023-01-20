@@ -717,21 +717,21 @@ theorem mem_of_mem_drop (h : a ∈ l.drop n) : a ∈ l :=
   drop_subset n l h
 #align list.mem_of_mem_drop List.mem_of_mem_drop
 
-theorem slice_sublist (n m : ℕ) (l : List α) : l.slice n m <+ l :=
+theorem dropSlice_sublist (n m : ℕ) (l : List α) : l.slice n m <+ l :=
   by
   rw [List.dropSlice_eq]
   conv_rhs => rw [← List.take_append_drop n l]
   rw [List.append_sublist_append_left, add_comm, List.drop_add]
   exact List.drop_sublist _ _
-#align list.slice_sublist List.slice_sublist
+#align list.slice_sublist List.dropSlice_sublist
 
-theorem slice_subset (n m : ℕ) (l : List α) : l.slice n m ⊆ l :=
-  (slice_sublist n m l).Subset
-#align list.slice_subset List.slice_subset
+theorem dropSlice_subset (n m : ℕ) (l : List α) : l.slice n m ⊆ l :=
+  (dropSlice_sublist n m l).Subset
+#align list.slice_subset List.dropSlice_subset
 
-theorem mem_of_mem_slice {n m : ℕ} {l : List α} {a : α} (h : a ∈ l.slice n m) : a ∈ l :=
-  slice_subset n m l h
-#align list.mem_of_mem_slice List.mem_of_mem_slice
+theorem mem_of_mem_dropSlice {n m : ℕ} {l : List α} {a : α} (h : a ∈ l.slice n m) : a ∈ l :=
+  dropSlice_subset n m l h
+#align list.mem_of_mem_slice List.mem_of_mem_dropSlice
 
 /- warning: list.take_while_prefix -> List.takeWhile_prefix is a dubious translation:
 lean 3 declaration is

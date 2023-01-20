@@ -78,7 +78,7 @@ def recF {α : TypeVec n} {β : Type _} (g : F (α.append1 β) → β) : q.p.W �
 theorem recF_eq {α : TypeVec n} {β : Type _} (g : F (α.append1 β) → β) (a : q.p.A)
     (f' : q.p.drop.B a ⟹ α) (f : q.p.last.B a → q.p.W α) :
     recF g (q.p.wMk a f' f) = g (abs ⟨a, splitFun f' (recF g ∘ f)⟩) := by
-  rw [recF, Mvpfunctor.W_rec_eq] <;> rfl
+  rw [recF, Mvpfunctor.wRec_eq] <;> rfl
 #align mvqpf.recF_eq Mvqpf.recF_eq
 
 theorem recF_eq' {α : TypeVec n} {β : Type _} (g : F (α.append1 β) → β) (x : q.p.W α) :
@@ -103,8 +103,8 @@ inductive WequivCat {α : TypeVec n} : q.p.W α → q.p.W α → Prop
   | trans (u v w : q.p.W α) : Wequiv u v → Wequiv v w → Wequiv u w
 #align mvqpf.Wequiv Mvqpf.WequivCat
 
-theorem recF_eq_of_Wequiv (α : TypeVec n) {β : Type _} (u : F (α.append1 β) → β) (x y : q.p.W α) :
-    WequivCat x y → recF u x = recF u y :=
+theorem recF_eq_of_wequivCat (α : TypeVec n) {β : Type _} (u : F (α.append1 β) → β)
+    (x y : q.p.W α) : WequivCat x y → recF u x = recF u y :=
   by
   apply q.P.W_cases _ x
   intro a₀ f'₀ f₀
@@ -112,9 +112,9 @@ theorem recF_eq_of_Wequiv (α : TypeVec n) {β : Type _} (u : F (α.append1 β) 
   intro a₁ f'₁ f₁
   intro h; induction h
   case ind a f' f₀ f₁ h ih => simp only [recF_eq, Function.comp, ih]
-  case abs a₀ f'₀ f₀ a₁ f'₁ f₁ h => simp only [recF_eq', abs_map, Mvpfunctor.W_dest'_W_mk, h]
+  case abs a₀ f'₀ f₀ a₁ f'₁ f₁ h => simp only [recF_eq', abs_map, Mvpfunctor.wDest'_wMk, h]
   case trans x y z e₁ e₂ ih₁ ih₂ => exact Eq.trans ih₁ ih₂
-#align mvqpf.recF_eq_of_Wequiv Mvqpf.recF_eq_of_Wequiv
+#align mvqpf.recF_eq_of_Wequiv Mvqpf.recF_eq_of_wequivCat
 
 theorem WequivCat.abs' {α : TypeVec n} (x y : q.p.W α)
     (h : abs (q.p.wDest' x) = abs (q.p.wDest' y)) : WequivCat x y :=
@@ -144,14 +144,13 @@ def wrepr {α : TypeVec n} : q.p.W α → q.p.W α :=
   recF (q.p.wMk' ∘ repr)
 #align mvqpf.Wrepr Mvqpf.wrepr
 
-theorem Wrepr_W_mk {α : TypeVec n} (a : q.p.A) (f' : q.p.drop.B a ⟹ α)
-    (f : q.p.last.B a → q.p.W α) :
+theorem wrepr_wMk {α : TypeVec n} (a : q.p.A) (f' : q.p.drop.B a ⟹ α) (f : q.p.last.B a → q.p.W α) :
     wrepr (q.p.wMk a f' f) =
       q.p.wMk' (repr (abs (appendFun id wrepr <$$> ⟨a, q.p.appendContents f' f⟩))) :=
   by rw [Wrepr, recF_eq', q.P.W_dest'_W_mk] <;> rfl
-#align mvqpf.Wrepr_W_mk Mvqpf.Wrepr_W_mk
+#align mvqpf.Wrepr_W_mk Mvqpf.wrepr_wMk
 
-theorem Wrepr_equiv {α : TypeVec n} (x : q.p.W α) : WequivCat (wrepr x) x :=
+theorem wrepr_equiv {α : TypeVec n} (x : q.p.W α) : WequivCat (wrepr x) x :=
   by
   apply q.P.W_ind _ x; intro a f' f ih
   apply Wequiv.trans _ (q.P.W_mk' (append_fun id Wrepr <$$> ⟨a, q.P.append_contents f' f⟩))
@@ -159,9 +158,9 @@ theorem Wrepr_equiv {α : TypeVec n} (x : q.p.W α) : WequivCat (wrepr x) x :=
     rw [Wrepr_W_mk, q.P.W_dest'_W_mk', q.P.W_dest'_W_mk', abs_repr]
   rw [q.P.map_eq, Mvpfunctor.wMk', append_fun_comp_split_fun, id_comp]
   apply Wequiv.ind; exact ih
-#align mvqpf.Wrepr_equiv Mvqpf.Wrepr_equiv
+#align mvqpf.Wrepr_equiv Mvqpf.wrepr_equiv
 
-theorem Wequiv_map {α β : TypeVec n} (g : α ⟹ β) (x y : q.p.W α) :
+theorem wequivCat_map {α β : TypeVec n} (g : α ⟹ β) (x y : q.p.W α) :
     WequivCat x y → WequivCat (g <$$> x) (g <$$> y) :=
   by
   intro h; induction h
@@ -174,7 +173,7 @@ theorem Wequiv_map {α β : TypeVec n} (g : α ⟹ β) (x y : q.p.W α) :
         abs (q.P.obj_append1 a₁ (g ⊚ f'₁) fun x => q.P.W_map g (f₁ x))
     rw [← q.P.map_obj_append1, ← q.P.map_obj_append1, abs_map, abs_map, h]
   case trans x y z e₁ e₂ ih₁ ih₂ => apply Mvqpf.WequivCat.trans; apply ih₁; apply ih₂
-#align mvqpf.Wequiv_map Mvqpf.Wequiv_map
+#align mvqpf.Wequiv_map Mvqpf.wequivCat_map
 
 /-- Define the fixed point as the quotient of trees under the equivalence relation.
 -/
@@ -199,7 +198,7 @@ attribute [nolint has_nonempty_instance] fix
 
 /-- `fix F` is a functor -/
 def Fix.map {α β : TypeVec n} (g : α ⟹ β) : Fix F α → Fix F β :=
-  Quotient.lift (fun x : q.p.W α => ⟦q.p.wMap g x⟧) fun a b h => Quot.sound (Wequiv_map _ _ _ h)
+  Quotient.lift (fun x : q.p.W α => ⟦q.p.wMap g x⟧) fun a b h => Quot.sound (wequivCat_map _ _ _ h)
 #align mvqpf.fix.map Mvqpf.Fix.map
 
 instance Fix.mvfunctor : Mvfunctor (Fix F) where map := @Fix.map _ _ _ _
@@ -210,12 +209,12 @@ variable {α : TypeVec.{u} n}
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Recursor for `fix F` -/
 def Fix.rec {β : Type u} (g : F (α ::: β) → β) : Fix F α → β :=
-  Quot.lift (recF g) (recF_eq_of_Wequiv α g)
+  Quot.lift (recF g) (recF_eq_of_wequivCat α g)
 #align mvqpf.fix.rec Mvqpf.Fix.rec
 
 /-- Access W-type underlying `fix F`  -/
 def fixToW : Fix F α → q.p.W α :=
-  Quotient.lift wrepr (recF_eq_of_Wequiv α fun x => q.p.wMk' (repr x))
+  Quotient.lift wrepr (recF_eq_of_wequivCat α fun x => q.p.wMk' (repr x))
 #align mvqpf.fix_to_W Mvqpf.fixToW
 
 /-- Constructor for `fix F` -/
@@ -242,7 +241,7 @@ theorem Fix.rec_eq {β : Type u} (g : F (append1 α β) → β) (x : F (append1 
     rw [fix.rec, fix.mk]
     dsimp
   cases' h : repr x with a f
-  rw [Mvpfunctor.map_eq, recF_eq', ← Mvpfunctor.map_eq, Mvpfunctor.W_dest'_W_mk']
+  rw [Mvpfunctor.map_eq, recF_eq', ← Mvpfunctor.map_eq, Mvpfunctor.wDest'_wMk']
   rw [← Mvpfunctor.comp_map, abs_map, ← h, abs_repr, ← append_fun_comp, id_comp, this]
 #align mvqpf.fix.rec_eq Mvqpf.Fix.rec_eq
 
@@ -252,7 +251,7 @@ theorem Fix.ind_aux (a : q.p.A) (f' : q.p.drop.B a ⟹ α) (f : q.p.last.B a →
   have : Fix.mk (abs ⟨a, q.p.appendContents f' fun x => ⟦f x⟧⟩) = ⟦wrepr (q.p.wMk a f' f)⟧ :=
     by
     apply Quot.sound; apply Wequiv.abs'
-    rw [Mvpfunctor.W_dest'_W_mk', abs_map, abs_repr, ← abs_map, Mvpfunctor.map_eq]
+    rw [Mvpfunctor.wDest'_wMk', abs_map, abs_repr, ← abs_map, Mvpfunctor.map_eq]
     conv =>
       rhs
       rw [Wrepr_W_mk, q.P.W_dest'_W_mk', abs_repr, Mvpfunctor.map_eq]

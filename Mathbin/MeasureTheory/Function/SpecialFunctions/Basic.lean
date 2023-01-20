@@ -36,7 +36,7 @@ theorem measurable_exp : Measurable exp :=
 @[measurability]
 theorem measurable_log : Measurable log :=
   measurable_of_measurable_on_compl_singleton 0 <|
-    Continuous.measurable <| continuous_on_iff_continuous_restrict.1 continuous_on_log
+    Continuous.measurable <| continuousOn_iff_continuous_restrict.1 continuousOn_log
 #align real.measurable_log Real.measurable_log
 
 @[measurability]
@@ -119,8 +119,8 @@ theorem measurable_arg : Measurable arg :=
     Real.measurable_arcsin.comp (measurable_im.div measurable_norm)
   have B : Measurable fun x : ℂ => Real.arcsin ((-x).im / x.abs) :=
     Real.measurable_arcsin.comp ((measurable_im.comp measurable_neg).div measurable_norm)
-  Measurable.ite (is_closed_le continuous_const continuous_re).MeasurableSet A <|
-    Measurable.ite (is_closed_le continuous_const continuous_im).MeasurableSet (B.AddConst _)
+  Measurable.ite (isClosed_le continuous_const continuous_re).MeasurableSet A <|
+    Measurable.ite (isClosed_le continuous_const continuous_im).MeasurableSet (B.AddConst _)
       (B.sub_const _)
 #align complex.measurable_arg Complex.measurable_arg
 
@@ -300,8 +300,8 @@ end
 section PowInstances
 
 instance Complex.hasMeasurablePow : HasMeasurablePow ℂ ℂ :=
-  ⟨Measurable.ite (measurable_fst (measurable_set_singleton 0))
-      (Measurable.ite (measurable_snd (measurable_set_singleton 0)) measurable_one measurable_zero)
+  ⟨Measurable.ite (measurable_fst (measurableSet_singleton 0))
+      (Measurable.ite (measurable_snd (measurableSet_singleton 0)) measurable_one measurable_zero)
       (measurable_fst.clog.mul measurable_snd).cexp⟩
 #align complex.has_measurable_pow Complex.hasMeasurablePow
 
@@ -322,9 +322,9 @@ instance Ennreal.hasMeasurablePow : HasMeasurablePow ℝ≥0∞ ℝ :=
     refine' Measurable.ite _ measurable_const (measurable_fst.pow measurable_snd).coe_nnreal_ennreal
     exact
       MeasurableSet.inter (measurable_fst (measurable_set_singleton 0))
-        (measurable_snd measurable_set_Iio)
+        (measurable_snd measurableSet_iio)
   · simp_rw [Ennreal.top_rpow_def]
-    refine' Measurable.ite measurable_set_Ioi measurable_const _
+    refine' Measurable.ite measurableSet_ioi measurable_const _
     exact Measurable.ite (measurable_set_singleton 0) measurable_const measurable_const
 #align ennreal.has_measurable_pow Ennreal.hasMeasurablePow
 

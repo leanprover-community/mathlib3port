@@ -49,9 +49,9 @@ instance (X : FinBoolAlgCat) : BooleanAlgebra X :=
 attribute [instance] FinBoolAlgCat.isFintype
 
 @[simp]
-theorem coe_to_BoolAlg (X : FinBoolAlgCat) : ↥X.toBoolAlg = ↥X :=
+theorem coe_toBoolAlg (X : FinBoolAlgCat) : ↥X.toBoolAlg = ↥X :=
   rfl
-#align FinBoolAlg.coe_to_BoolAlg FinBoolAlgCat.coe_to_BoolAlg
+#align FinBoolAlg.coe_to_BoolAlg FinBoolAlgCat.coe_toBoolAlg
 
 /-- Construct a bundled `FinBoolAlg` from `boolean_algebra` + `fintype`. -/
 def of (α : Type _) [BooleanAlgebra α] [Fintype α] : FinBoolAlgCat :=
@@ -82,9 +82,9 @@ instance forgetToBoolAlgFull : Full (forget₂ FinBoolAlgCat BoolAlgCat) :=
   InducedCategory.full _
 #align FinBoolAlg.forget_to_BoolAlg_full FinBoolAlgCat.forgetToBoolAlgFull
 
-instance forget_to_BoolAlg_faithful : Faithful (forget₂ FinBoolAlgCat BoolAlgCat) :=
+instance forget_to_boolAlgCat_faithful : Faithful (forget₂ FinBoolAlgCat BoolAlgCat) :=
   InducedCategory.faithful _
-#align FinBoolAlg.forget_to_BoolAlg_faithful FinBoolAlgCat.forget_to_BoolAlg_faithful
+#align FinBoolAlg.forget_to_BoolAlg_faithful FinBoolAlgCat.forget_to_boolAlgCat_faithful
 
 @[simps]
 instance hasForgetToFinPartialOrder : HasForget₂ FinBoolAlgCat FinPartialOrderCat
@@ -93,11 +93,12 @@ instance hasForgetToFinPartialOrder : HasForget₂ FinBoolAlgCat FinPartialOrder
       map := fun X Y f => show OrderHom X Y from ↑(show BoundedLatticeHom X Y from f) }
 #align FinBoolAlg.has_forget_to_FinPartialOrder FinBoolAlgCat.hasForgetToFinPartialOrder
 
-instance forget_to_FinPartialOrder_faithful : Faithful (forget₂ FinBoolAlgCat FinPartialOrderCat) :=
+instance forget_to_finPartialOrderCat_faithful :
+    Faithful (forget₂ FinBoolAlgCat FinPartialOrderCat) :=
   ⟨fun X Y f g h =>
     haveI := congr_arg (coeFn : _ → X → Y) h
     FunLike.coe_injective this⟩
-#align FinBoolAlg.forget_to_FinPartialOrder_faithful FinBoolAlgCat.forget_to_FinPartialOrder_faithful
+#align FinBoolAlg.forget_to_FinPartialOrder_faithful FinBoolAlgCat.forget_to_finPartialOrderCat_faithful
 
 /-- Constructs an equivalence between finite Boolean algebras from an order isomorphism between
 them. -/

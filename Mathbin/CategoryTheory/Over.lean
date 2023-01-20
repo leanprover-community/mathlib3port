@@ -249,7 +249,7 @@ def iteratedSliceForward : Over f ⥤ Over f.left
   map α β κ :=
     Over.homMk κ.left.left
       (by
-        rw [auto_param_eq]
+        rw [autoParam_eq]
         rw [← over.w κ]
         rfl)
 #align category_theory.over.iterated_slice_forward CategoryTheory.Over.iteratedSliceForward
@@ -282,15 +282,15 @@ def iteratedSliceEquiv : Over f ≌ Over f.left
       simp
 #align category_theory.over.iterated_slice_equiv CategoryTheory.Over.iteratedSliceEquiv
 
-theorem iterated_slice_forward_forget :
+theorem iteratedSliceForward_forget :
     iteratedSliceForward f ⋙ forget f.left = forget f ⋙ forget X :=
   rfl
-#align category_theory.over.iterated_slice_forward_forget CategoryTheory.Over.iterated_slice_forward_forget
+#align category_theory.over.iterated_slice_forward_forget CategoryTheory.Over.iteratedSliceForward_forget
 
-theorem iterated_slice_backward_forget_forget :
+theorem iteratedSliceBackward_forget_forget :
     iteratedSliceBackward f ⋙ forget f ⋙ forget X = forget f.left :=
   rfl
-#align category_theory.over.iterated_slice_backward_forget_forget CategoryTheory.Over.iterated_slice_backward_forget_forget
+#align category_theory.over.iterated_slice_backward_forget_forget CategoryTheory.Over.iteratedSliceBackward_forget_forget
 
 end IteratedSlice
 
@@ -373,16 +373,16 @@ def isoMk {f g : Under X} (hr : f.right ≅ g.right) (hw : f.Hom ≫ hr.Hom = g.
 #align category_theory.under.iso_mk CategoryTheory.Under.isoMk
 
 @[simp]
-theorem iso_mk_hom_right {f g : Under X} (hr : f.right ≅ g.right) (hw : f.Hom ≫ hr.Hom = g.Hom) :
+theorem isoMk_hom_right {f g : Under X} (hr : f.right ≅ g.right) (hw : f.Hom ≫ hr.Hom = g.Hom) :
     (isoMk hr hw).Hom.right = hr.Hom :=
   rfl
-#align category_theory.under.iso_mk_hom_right CategoryTheory.Under.iso_mk_hom_right
+#align category_theory.under.iso_mk_hom_right CategoryTheory.Under.isoMk_hom_right
 
 @[simp]
-theorem iso_mk_inv_right {f g : Under X} (hr : f.right ≅ g.right) (hw : f.Hom ≫ hr.Hom = g.Hom) :
+theorem isoMk_inv_right {f g : Under X} (hr : f.right ≅ g.right) (hw : f.Hom ≫ hr.Hom = g.Hom) :
     (isoMk hr hw).inv.right = hr.inv :=
   rfl
-#align category_theory.under.iso_mk_inv_right CategoryTheory.Under.iso_mk_inv_right
+#align category_theory.under.iso_mk_inv_right CategoryTheory.Under.isoMk_inv_right
 
 section
 

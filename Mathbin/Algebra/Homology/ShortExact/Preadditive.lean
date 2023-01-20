@@ -56,7 +56,7 @@ structure LeftSplit : Prop where
   exact : Exact f g
 #align category_theory.left_split CategoryTheory.LeftSplit
 
-theorem LeftSplit.short_exact {f : A ⟶ B} {g : B ⟶ C} (h : LeftSplit f g) : ShortExact f g :=
+theorem LeftSplit.shortExact {f : A ⟶ B} {g : B ⟶ C} (h : LeftSplit f g) : ShortExact f g :=
   { Mono := by
       obtain ⟨φ, hφ⟩ := h.left_split
       haveI : mono (f ≫ φ) := by
@@ -65,7 +65,7 @@ theorem LeftSplit.short_exact {f : A ⟶ B} {g : B ⟶ C} (h : LeftSplit f g) : 
       exact mono_of_mono f φ
     Epi := h.Epi
     exact := h.exact }
-#align category_theory.left_split.short_exact CategoryTheory.LeftSplit.short_exact
+#align category_theory.left_split.short_exact CategoryTheory.LeftSplit.shortExact
 
 /-- An exact sequence `A -f⟶ B -g⟶ C` is *right split*
 if there exists a morphism `φ : C ⟶ B` such that `f ≫ φ = 𝟙 A` and `f` is mono.
@@ -77,7 +77,7 @@ structure RightSplit : Prop where
   exact : Exact f g
 #align category_theory.right_split CategoryTheory.RightSplit
 
-theorem RightSplit.short_exact {f : A ⟶ B} {g : B ⟶ C} (h : RightSplit f g) : ShortExact f g :=
+theorem RightSplit.shortExact {f : A ⟶ B} {g : B ⟶ C} (h : RightSplit f g) : ShortExact f g :=
   { Epi := by
       obtain ⟨χ, hχ⟩ := h.right_split
       haveI : epi (χ ≫ g) := by
@@ -86,7 +86,7 @@ theorem RightSplit.short_exact {f : A ⟶ B} {g : B ⟶ C} (h : RightSplit f g) 
       exact epi_of_epi χ g
     Mono := h.Mono
     exact := h.exact }
-#align category_theory.right_split.short_exact CategoryTheory.RightSplit.short_exact
+#align category_theory.right_split.short_exact CategoryTheory.RightSplit.shortExact
 
 end HasZeroMorphisms
 
@@ -126,8 +126,7 @@ theorem exact_of_split {A B C : 𝒜} {f : A ⟶ B} {g : B ⟶ C} {χ : C ⟶ B}
       rw [← cancel_mono (subobject.arrow _)]
       swap
       · infer_instance
-      simp only [image_to_kernel_arrow, image_subobject_arrow_comp, category.id_comp,
-        category.assoc]
+      simp only [imageToKernel_arrow, image_subobject_arrow_comp, category.id_comp, category.assoc]
       calc
         (kernel_subobject g).arrow ≫ φ ≫ f = (kernel_subobject g).arrow ≫ 𝟙 B := _
         _ = (kernel_subobject g).arrow := category.comp_id _
@@ -146,7 +145,7 @@ theorem Split.exact (h : Split f g) : Exact f g :=
   exact exact_of_split h1 h2
 #align category_theory.split.exact CategoryTheory.Split.exact
 
-theorem Split.left_split (h : Split f g) : LeftSplit f g :=
+theorem Split.leftSplit (h : Split f g) : LeftSplit f g :=
   { LeftSplit := by
       obtain ⟨φ, χ, h1, -⟩ := h
       exact ⟨φ, h1⟩
@@ -157,9 +156,9 @@ theorem Split.left_split (h : Split f g) : LeftSplit f g :=
         infer_instance
       exact epi_of_epi χ g
     exact := h.exact }
-#align category_theory.split.left_split CategoryTheory.Split.left_split
+#align category_theory.split.left_split CategoryTheory.Split.leftSplit
 
-theorem Split.right_split (h : Split f g) : RightSplit f g :=
+theorem Split.rightSplit (h : Split f g) : RightSplit f g :=
   { RightSplit := by
       obtain ⟨φ, χ, -, h1, -⟩ := h
       exact ⟨χ, h1⟩
@@ -170,11 +169,11 @@ theorem Split.right_split (h : Split f g) : RightSplit f g :=
         infer_instance
       exact mono_of_mono f φ
     exact := h.exact }
-#align category_theory.split.right_split CategoryTheory.Split.right_split
+#align category_theory.split.right_split CategoryTheory.Split.rightSplit
 
-theorem Split.short_exact (h : Split f g) : ShortExact f g :=
+theorem Split.shortExact (h : Split f g) : ShortExact f g :=
   h.LeftSplit.ShortExact
-#align category_theory.split.short_exact CategoryTheory.Split.short_exact
+#align category_theory.split.short_exact CategoryTheory.Split.shortExact
 
 end
 
@@ -379,11 +378,11 @@ protected theorem exact : Exact f g :=
   · rfl
 #align category_theory.splitting.exact CategoryTheory.Splitting.exact
 
-protected theorem short_exact : ShortExact f g :=
+protected theorem shortExact : ShortExact f g :=
   { Mono := h.Mono
     Epi := h.Epi
     exact := h.exact }
-#align category_theory.splitting.short_exact CategoryTheory.Splitting.short_exact
+#align category_theory.splitting.short_exact CategoryTheory.Splitting.shortExact
 
 end Preadditive
 

@@ -206,7 +206,7 @@ denominators `Bₙ` are bounded from below by the fibonacci sequence `nat.fib`. 
 -- open `nat` as we will make use of fibonacci numbers.
 open Nat
 
-theorem fib_le_of_continuants_aux_b :
+theorem fib_le_of_continuantsAux_b :
     n ≤ 1 ∨ ¬(of v).TerminatedAt (n - 2) → (fib n : K) ≤ ((of v).continuantsAux n).b :=
   Nat.strong_induction_on n
     (by
@@ -250,7 +250,7 @@ theorem fib_le_of_continuants_aux_b :
         have : (0 : K) ≤ fib (n + 1) := by exact_mod_cast (fib (n + 1)).zero_le
         have : (0 : K) ≤ gp.b := le_trans zero_le_one one_le_gp_b
         mono)
-#align generalized_continued_fraction.fib_le_of_continuants_aux_b GeneralizedContinuedFraction.fib_le_of_continuants_aux_b
+#align generalized_continued_fraction.fib_le_of_continuants_aux_b GeneralizedContinuedFraction.fib_le_of_continuantsAux_b
 
 /-- Shows that the `n`th denominator is greater than or equal to the `n + 1`th fibonacci number,
 that is `nat.fib (n + 1) ≤ Bₙ`. -/
@@ -269,7 +269,7 @@ theorem succ_nth_fib_le_of_nth_denom (hyp : n = 0 ∨ ¬(of v).TerminatedAt (n -
 /-! As a simple consequence, we can now derive that all denominators are nonnegative. -/
 
 
-theorem zero_le_of_continuants_aux_b : 0 ≤ ((of v).continuantsAux n).b :=
+theorem zero_le_of_continuantsAux_b : 0 ≤ ((of v).continuantsAux n).b :=
   by
   let g := of v
   induction' n with n IH
@@ -290,7 +290,7 @@ theorem zero_le_of_continuants_aux_b : 0 ≤ ((of v).continuantsAux n).b :=
           by exact_mod_cast (n + 1).fib.zero_le
         _ ≤ ((of v).continuantsAux (n + 1)).b := fib_le_of_continuants_aux_b (Or.inr not_terminated)
         
-#align generalized_continued_fraction.zero_le_of_continuants_aux_b GeneralizedContinuedFraction.zero_le_of_continuants_aux_b
+#align generalized_continued_fraction.zero_le_of_continuants_aux_b GeneralizedContinuedFraction.zero_le_of_continuantsAux_b
 
 /-- Shows that all denominators are nonnegative. -/
 theorem zero_le_of_denom : 0 ≤ (of v).denominators n :=
@@ -299,15 +299,15 @@ theorem zero_le_of_denom : 0 ≤ (of v).denominators n :=
   exact zero_le_of_continuants_aux_b
 #align generalized_continued_fraction.zero_le_of_denom GeneralizedContinuedFraction.zero_le_of_denom
 
-theorem le_of_succ_succ_nth_continuants_aux_b {b : K}
+theorem le_of_succ_succ_nth_continuantsAux_b {b : K}
     (nth_part_denom_eq : (of v).partialDenominators.nth n = some b) :
     b * ((of v).continuantsAux <| n + 1).b ≤ ((of v).continuantsAux <| n + 2).b :=
   by
   obtain ⟨gp_n, nth_s_eq, rfl⟩ : ∃ gp_n, (of v).s.nth n = some gp_n ∧ gp_n.b = b
   exact exists_s_b_of_part_denom nth_part_denom_eq
   simp [of_part_num_eq_one (part_num_eq_s_a nth_s_eq), zero_le_of_continuants_aux_b,
-    GeneralizedContinuedFraction.continuants_aux_recurrence nth_s_eq rfl rfl]
-#align generalized_continued_fraction.le_of_succ_succ_nth_continuants_aux_b GeneralizedContinuedFraction.le_of_succ_succ_nth_continuants_aux_b
+    GeneralizedContinuedFraction.continuantsAux_recurrence nth_s_eq rfl rfl]
+#align generalized_continued_fraction.le_of_succ_succ_nth_continuants_aux_b GeneralizedContinuedFraction.le_of_succ_succ_nth_continuantsAux_b
 
 /-- Shows that `bₙ * Bₙ ≤ Bₙ₊₁`, where `bₙ` is the `n`th partial denominator and `Bₙ₊₁` and `Bₙ` are
 the `n + 1`th and `n`th denominator of the continued fraction. -/

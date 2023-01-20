@@ -54,30 +54,30 @@ theorem IsSubfield.pow_mem {a : F} {n : ℤ} {s : Set F} (hs : IsSubfield s) (h 
     exact hs.inv_mem (hs.to_is_subring.to_is_submonoid.pow_mem h)
 #align is_subfield.pow_mem IsSubfield.pow_mem
 
-theorem Univ.is_subfield : IsSubfield (@Set.univ F) :=
-  { Univ.is_submonoid, IsAddSubgroup.univ_add_subgroup with inv_mem := by intros <;> trivial }
-#align univ.is_subfield Univ.is_subfield
+theorem Univ.isSubfield : IsSubfield (@Set.univ F) :=
+  { Univ.isSubmonoid, IsAddSubgroup.univ_add_subgroup with inv_mem := by intros <;> trivial }
+#align univ.is_subfield Univ.isSubfield
 
-theorem Preimage.is_subfield {K : Type _} [Field K] (f : F →+* K) {s : Set K} (hs : IsSubfield s) :
+theorem Preimage.isSubfield {K : Type _} [Field K] (f : F →+* K) {s : Set K} (hs : IsSubfield s) :
     IsSubfield (f ⁻¹' s) :=
   { f.is_subring_preimage hs.to_is_subring with
     inv_mem := fun a (ha : f a ∈ s) =>
       show f a⁻¹ ∈ s by
         rw [map_inv₀]
         exact hs.inv_mem ha }
-#align preimage.is_subfield Preimage.is_subfield
+#align preimage.is_subfield Preimage.isSubfield
 
-theorem Image.is_subfield {K : Type _} [Field K] (f : F →+* K) {s : Set F} (hs : IsSubfield s) :
+theorem Image.isSubfield {K : Type _} [Field K] (f : F →+* K) {s : Set F} (hs : IsSubfield s) :
     IsSubfield (f '' s) :=
   { f.is_subring_image hs.to_is_subring with
     inv_mem := fun a ⟨x, xmem, ha⟩ => ⟨x⁻¹, hs.inv_mem xmem, ha ▸ map_inv₀ f _⟩ }
-#align image.is_subfield Image.is_subfield
+#align image.is_subfield Image.isSubfield
 
-theorem Range.is_subfield {K : Type _} [Field K] (f : F →+* K) : IsSubfield (Set.range f) :=
+theorem Range.isSubfield {K : Type _} [Field K] (f : F →+* K) : IsSubfield (Set.range f) :=
   by
   rw [← Set.image_univ]
-  apply Image.is_subfield _ Univ.is_subfield
-#align range.is_subfield Range.is_subfield
+  apply Image.isSubfield _ Univ.isSubfield
+#align range.is_subfield Range.isSubfield
 
 namespace Field
 
@@ -89,24 +89,24 @@ def closure : Set F :=
 variable {S}
 
 theorem ring_closure_subset : Ring.closure S ⊆ closure S := fun x hx =>
-  ⟨x, hx, 1, Ring.closure.is_subring.to_is_submonoid.one_mem, div_one x⟩
+  ⟨x, hx, 1, Ring.closure.isSubring.to_is_submonoid.one_mem, div_one x⟩
 #align field.ring_closure_subset Field.ring_closure_subset
 
-theorem closure.is_submonoid : IsSubmonoid (closure S) :=
+theorem closure.isSubmonoid : IsSubmonoid (closure S) :=
   { mul_mem := by
       rintro _ _ ⟨p, hp, q, hq, hq0, rfl⟩ ⟨r, hr, s, hs, hs0, rfl⟩ <;>
         exact
           ⟨p * r, IsSubmonoid.mul_mem ring.closure.is_subring.to_is_submonoid hp hr, q * s,
             IsSubmonoid.mul_mem ring.closure.is_subring.to_is_submonoid hq hs,
             (div_mul_div_comm _ _ _ _).symm⟩
-    one_mem := ring_closure_subset <| IsSubmonoid.one_mem Ring.closure.is_subring.to_is_submonoid }
-#align field.closure.is_submonoid Field.closure.is_submonoid
+    one_mem := ring_closure_subset <| IsSubmonoid.one_mem Ring.closure.isSubring.to_is_submonoid }
+#align field.closure.is_submonoid Field.closure.isSubmonoid
 
-theorem closure.is_subfield : IsSubfield (closure S) :=
+theorem closure.isSubfield : IsSubfield (closure S) :=
   have h0 : (0 : F) ∈ closure S :=
-    ring_closure_subset <| Ring.closure.is_subring.to_is_add_subgroup.to_is_add_submonoid.zero_mem
+    ring_closure_subset <| Ring.closure.isSubring.to_is_add_subgroup.to_is_add_submonoid.zero_mem
   {
-    closure.is_submonoid with
+    closure.isSubmonoid with
     add_mem := by
       intro a b ha hb
       rcases id ha with ⟨p, hp, q, hq, rfl⟩
@@ -130,7 +130,7 @@ theorem closure.is_subfield : IsSubfield (closure S) :=
     inv_mem := by
       rintro _ ⟨p, hp, q, hq, rfl⟩
       exact ⟨q, hq, p, hp, (inv_div _ _).symm⟩ }
-#align field.closure.is_subfield Field.closure.is_subfield
+#align field.closure.is_subfield Field.closure.isSubfield
 
 theorem mem_closure {a : F} (ha : a ∈ S) : a ∈ closure S :=
   ring_closure_subset <| Ring.mem_closure ha
@@ -151,19 +151,19 @@ theorem closure_subset_iff {s t : Set F} (ht : IsSubfield t) : closure s ⊆ t �
 #align field.closure_subset_iff Field.closure_subset_iff
 
 theorem closure_mono {s t : Set F} (H : s ⊆ t) : closure s ⊆ closure t :=
-  closure_subset closure.is_subfield <| Set.Subset.trans H subset_closure
+  closure_subset closure.isSubfield <| Set.Subset.trans H subset_closure
 #align field.closure_mono Field.closure_mono
 
 end Field
 
-theorem is_subfield_Union_of_directed {ι : Type _} [hι : Nonempty ι] {s : ι → Set F}
+theorem isSubfield_unionᵢ_of_directed {ι : Type _} [hι : Nonempty ι] {s : ι → Set F}
     (hs : ∀ i, IsSubfield (s i)) (directed : ∀ i j, ∃ k, s i ⊆ s k ∧ s j ⊆ s k) :
     IsSubfield (⋃ i, s i) :=
   { inv_mem := fun x hx =>
       let ⟨i, hi⟩ := Set.mem_unionᵢ.1 hx
       Set.mem_unionᵢ.2 ⟨i, (hs i).inv_mem hi⟩
-    to_is_subring := is_subring_Union_of_directed (fun i => (hs i).to_is_subring) Directed }
-#align is_subfield_Union_of_directed is_subfield_Union_of_directed
+    to_is_subring := isSubring_unionᵢ_of_directed (fun i => (hs i).to_is_subring) Directed }
+#align is_subfield_Union_of_directed isSubfield_unionᵢ_of_directed
 
 theorem IsSubfield.inter {S₁ S₂ : Set F} (hS₁ : IsSubfield S₁) (hS₂ : IsSubfield S₂) :
     IsSubfield (S₁ ∩ S₂) :=
@@ -171,9 +171,9 @@ theorem IsSubfield.inter {S₁ S₂ : Set F} (hS₁ : IsSubfield S₁) (hS₂ : 
     inv_mem := fun x hx => ⟨hS₁.inv_mem hx.1, hS₂.inv_mem hx.2⟩ }
 #align is_subfield.inter IsSubfield.inter
 
-theorem IsSubfield.Inter {ι : Sort _} {S : ι → Set F} (h : ∀ y : ι, IsSubfield (S y)) :
+theorem IsSubfield.interᵢ {ι : Sort _} {S : ι → Set F} (h : ∀ y : ι, IsSubfield (S y)) :
     IsSubfield (Set.interᵢ S) :=
-  { IsSubring.Inter fun y => (h y).to_is_subring with
+  { IsSubring.interᵢ fun y => (h y).to_is_subring with
     inv_mem := fun x hx => Set.mem_interᵢ.2 fun y => (h y).inv_mem <| Set.mem_interᵢ.1 hx y }
-#align is_subfield.Inter IsSubfield.Inter
+#align is_subfield.Inter IsSubfield.interᵢ
 

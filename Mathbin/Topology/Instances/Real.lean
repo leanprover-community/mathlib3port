@@ -36,26 +36,26 @@ universe u v w
 variable {α : Type u} {β : Type v} {γ : Type w}
 
 instance : NoncompactSpace ℝ :=
-  Int.closed_embedding_coe_real.NoncompactSpace
+  Int.closedEmbedding_coe_real.NoncompactSpace
 
-theorem Real.uniform_continuous_add : UniformContinuous fun p : ℝ × ℝ => p.1 + p.2 :=
-  Metric.uniform_continuous_iff.2 fun ε ε0 =>
+theorem Real.uniformContinuous_add : UniformContinuous fun p : ℝ × ℝ => p.1 + p.2 :=
+  Metric.uniformContinuous_iff.2 fun ε ε0 =>
     let ⟨δ, δ0, Hδ⟩ := rat_add_continuous_lemma abs ε0
     ⟨δ, δ0, fun a b h =>
       let ⟨h₁, h₂⟩ := max_lt_iff.1 h
       Hδ h₁ h₂⟩
-#align real.uniform_continuous_add Real.uniform_continuous_add
+#align real.uniform_continuous_add Real.uniformContinuous_add
 
-theorem Real.uniform_continuous_neg : UniformContinuous (@Neg.neg ℝ _) :=
-  Metric.uniform_continuous_iff.2 fun ε ε0 =>
+theorem Real.uniformContinuous_neg : UniformContinuous (@Neg.neg ℝ _) :=
+  Metric.uniformContinuous_iff.2 fun ε ε0 =>
     ⟨_, ε0, fun a b h => by rw [dist_comm] at h <;> simpa [Real.dist_eq] using h⟩
-#align real.uniform_continuous_neg Real.uniform_continuous_neg
+#align real.uniform_continuous_neg Real.uniformContinuous_neg
 
 instance : HasContinuousStar ℝ :=
   ⟨continuous_id⟩
 
 instance : UniformAddGroup ℝ :=
-  UniformAddGroup.mk' Real.uniform_continuous_add Real.uniform_continuous_neg
+  UniformAddGroup.mk' Real.uniformContinuous_add Real.uniformContinuous_neg
 
 -- short-circuit type class inference
 instance : TopologicalAddGroup ℝ := by infer_instance
@@ -63,29 +63,29 @@ instance : TopologicalAddGroup ℝ := by infer_instance
 instance : ProperSpace ℝ
     where is_compact_closed_ball x r :=
     by
-    rw [Real.closed_ball_eq_Icc]
+    rw [Real.closedBall_eq_icc]
     apply is_compact_Icc
 
 instance : SecondCountableTopology ℝ :=
   second_countable_of_proper
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
-theorem Real.is_topological_basis_Ioo_rat :
+theorem Real.isTopologicalBasis_ioo_rat :
     @IsTopologicalBasis ℝ _ (⋃ (a : ℚ) (b : ℚ) (h : a < b), {Ioo a b}) :=
-  is_topological_basis_of_open_of_nhds (by simp (config := { contextual := true }) [is_open_Ioo])
+  isTopologicalBasis_of_open_of_nhds (by simp (config := { contextual := true }) [isOpen_ioo])
     fun a v hav hv =>
-    let ⟨l, u, ⟨hl, hu⟩, h⟩ := mem_nhds_iff_exists_Ioo_subset.mp (IsOpen.mem_nhds hv hav)
+    let ⟨l, u, ⟨hl, hu⟩, h⟩ := mem_nhds_iff_exists_ioo_subset.mp (IsOpen.mem_nhds hv hav)
     let ⟨q, hlq, hqa⟩ := exists_rat_btwn hl
     let ⟨p, hap, hpu⟩ := exists_rat_btwn hu
     ⟨Ioo q p, by
       simp only [mem_Union]
       exact ⟨q, p, Rat.cast_lt.1 <| hqa.trans hap, rfl⟩, ⟨hqa, hap⟩, fun a' ⟨hqa', ha'p⟩ =>
       h ⟨hlq.trans hqa', ha'p.trans hpu⟩⟩
-#align real.is_topological_basis_Ioo_rat Real.is_topological_basis_Ioo_rat
+#align real.is_topological_basis_Ioo_rat Real.isTopologicalBasis_ioo_rat
 
 @[simp]
 theorem Real.cocompact_eq : cocompact ℝ = at_bot ⊔ at_top := by
-  simp only [← comap_dist_right_at_top_eq_cocompact (0 : ℝ), Real.dist_eq, sub_zero,
+  simp only [← comap_dist_right_atTop_eq_cocompact (0 : ℝ), Real.dist_eq, sub_zero,
     comap_abs_at_top]
 #align real.cocompact_eq Real.cocompact_eq
 
@@ -99,29 +99,29 @@ theorem Real.mem_closure_iff {s : Set ℝ} {x : ℝ} : x ∈ closure s ↔ ∀ �
   by simp [mem_closure_iff_nhds_basis nhds_basis_ball, Real.dist_eq]
 #align real.mem_closure_iff Real.mem_closure_iff
 
-theorem Real.uniform_continuous_inv (s : Set ℝ) {r : ℝ} (r0 : 0 < r) (H : ∀ x ∈ s, r ≤ |x|) :
+theorem Real.uniformContinuous_inv (s : Set ℝ) {r : ℝ} (r0 : 0 < r) (H : ∀ x ∈ s, r ≤ |x|) :
     UniformContinuous fun p : s => p.1⁻¹ :=
-  Metric.uniform_continuous_iff.2 fun ε ε0 =>
+  Metric.uniformContinuous_iff.2 fun ε ε0 =>
     let ⟨δ, δ0, Hδ⟩ := rat_inv_continuous_lemma abs ε0 r0
     ⟨δ, δ0, fun a b h => Hδ (H _ a.2) (H _ b.2) h⟩
-#align real.uniform_continuous_inv Real.uniform_continuous_inv
+#align real.uniform_continuous_inv Real.uniformContinuous_inv
 
-theorem Real.uniform_continuous_abs : UniformContinuous (abs : ℝ → ℝ) :=
-  Metric.uniform_continuous_iff.2 fun ε ε0 =>
+theorem Real.uniformContinuous_abs : UniformContinuous (abs : ℝ → ℝ) :=
+  Metric.uniformContinuous_iff.2 fun ε ε0 =>
     ⟨ε, ε0, fun a b => lt_of_le_of_lt (abs_abs_sub_abs_le_abs_sub _ _)⟩
-#align real.uniform_continuous_abs Real.uniform_continuous_abs
+#align real.uniform_continuous_abs Real.uniformContinuous_abs
 
 theorem Real.tendsto_inv {r : ℝ} (r0 : r ≠ 0) : Tendsto (fun q => q⁻¹) (𝓝 r) (𝓝 r⁻¹) := by
   rw [← abs_pos] at r0 <;>
     exact
-      tendsto_of_uniform_continuous_subtype
-        (Real.uniform_continuous_inv { x | |r| / 2 < |x| } (half_pos r0) fun x h => le_of_lt h)
-        (IsOpen.mem_nhds ((is_open_lt' (|r| / 2)).Preimage continuous_abs) (half_lt_self r0))
+      tendsto_of_uniformContinuous_subtype
+        (Real.uniformContinuous_inv { x | |r| / 2 < |x| } (half_pos r0) fun x h => le_of_lt h)
+        (IsOpen.mem_nhds ((isOpen_lt' (|r| / 2)).Preimage continuous_abs) (half_lt_self r0))
 #align real.tendsto_inv Real.tendsto_inv
 
 theorem Real.continuous_inv : Continuous fun a : { r : ℝ // r ≠ 0 } => a.val⁻¹ :=
-  continuous_iff_continuous_at.mpr fun ⟨r, hr⟩ =>
-    Tendsto.comp (Real.tendsto_inv hr) (continuous_iff_continuous_at.mp continuous_subtype_val _)
+  continuous_iff_continuousAt.mpr fun ⟨r, hr⟩ =>
+    Tendsto.comp (Real.tendsto_inv hr) (continuous_iff_continuousAt.mp continuous_subtype_val _)
 #align real.continuous_inv Real.continuous_inv
 
 theorem Real.Continuous.inv [TopologicalSpace α] {f : α → ℝ} (h : ∀ a, f a ≠ 0)
@@ -130,54 +130,54 @@ theorem Real.Continuous.inv [TopologicalSpace α] {f : α → ℝ} (h : ∀ a, f
     Real.continuous_inv.comp (hf.subtype_mk _)
 #align real.continuous.inv Real.Continuous.inv
 
-theorem Real.uniform_continuous_const_mul {x : ℝ} : UniformContinuous ((· * ·) x) :=
-  uniform_continuous_const_smul x
-#align real.uniform_continuous_const_mul Real.uniform_continuous_const_mul
+theorem Real.uniformContinuous_const_mul {x : ℝ} : UniformContinuous ((· * ·) x) :=
+  uniformContinuous_const_smul x
+#align real.uniform_continuous_const_mul Real.uniformContinuous_const_mul
 
-theorem Real.uniform_continuous_mul (s : Set (ℝ × ℝ)) {r₁ r₂ : ℝ}
+theorem Real.uniformContinuous_mul (s : Set (ℝ × ℝ)) {r₁ r₂ : ℝ}
     (H : ∀ x ∈ s, |(x : ℝ × ℝ).1| < r₁ ∧ |x.2| < r₂) :
     UniformContinuous fun p : s => p.1.1 * p.1.2 :=
-  Metric.uniform_continuous_iff.2 fun ε ε0 =>
+  Metric.uniformContinuous_iff.2 fun ε ε0 =>
     let ⟨δ, δ0, Hδ⟩ := rat_mul_continuous_lemma abs ε0
     ⟨δ, δ0, fun a b h =>
       let ⟨h₁, h₂⟩ := max_lt_iff.1 h
       Hδ (H _ a.2).1 (H _ b.2).2 h₁ h₂⟩
-#align real.uniform_continuous_mul Real.uniform_continuous_mul
+#align real.uniform_continuous_mul Real.uniformContinuous_mul
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 protected theorem Real.continuous_mul : Continuous fun p : ℝ × ℝ => p.1 * p.2 :=
-  continuous_iff_continuous_at.2 fun ⟨a₁, a₂⟩ =>
-    tendsto_of_uniform_continuous_subtype
-      (Real.uniform_continuous_mul ({ x | |x| < |a₁| + 1 } ×ˢ { x | |x| < |a₂| + 1 }) fun x => id)
+  continuous_iff_continuousAt.2 fun ⟨a₁, a₂⟩ =>
+    tendsto_of_uniformContinuous_subtype
+      (Real.uniformContinuous_mul ({ x | |x| < |a₁| + 1 } ×ˢ { x | |x| < |a₂| + 1 }) fun x => id)
       (IsOpen.mem_nhds
-        (((is_open_gt' (|a₁| + 1)).Preimage continuous_abs).Prod
-          ((is_open_gt' (|a₂| + 1)).Preimage continuous_abs))
+        (((isOpen_gt' (|a₁| + 1)).Preimage continuous_abs).Prod
+          ((isOpen_gt' (|a₂| + 1)).Preimage continuous_abs))
         ⟨lt_add_one (|a₁|), lt_add_one (|a₂|)⟩)
 #align real.continuous_mul Real.continuous_mul
 
 instance : TopologicalRing ℝ :=
-  { Real.topological_add_group with continuous_mul := Real.continuous_mul }
+  { Real.topologicalAddGroup with continuous_mul := Real.continuous_mul }
 
 instance : CompleteSpace ℝ := by
   apply complete_of_cauchy_seq_tendsto
   intro u hu
-  let c : CauSeq ℝ abs := ⟨u, Metric.cauchy_seq_iff'.1 hu⟩
+  let c : CauSeq ℝ abs := ⟨u, Metric.cauchySeq_iff'.1 hu⟩
   refine' ⟨c.lim, fun s h => _⟩
   rcases Metric.mem_nhds_iff.1 h with ⟨ε, ε0, hε⟩
   have := c.equiv_lim ε ε0
   simp only [mem_map, mem_at_top_sets, mem_set_of_eq]
   refine' this.imp fun N hN n hn => hε (hN n hn)
 
-theorem Real.totally_bounded_ball (x ε : ℝ) : TotallyBounded (ball x ε) := by
-  rw [Real.ball_eq_Ioo] <;> apply totally_bounded_Ioo
-#align real.totally_bounded_ball Real.totally_bounded_ball
+theorem Real.totallyBounded_ball (x ε : ℝ) : TotallyBounded (ball x ε) := by
+  rw [Real.ball_eq_ioo] <;> apply totallyBounded_ioo
+#align real.totally_bounded_ball Real.totallyBounded_ball
 
 section
 
 theorem closure_of_rat_image_lt {q : ℚ} :
     closure ((coe : ℚ → ℝ) '' { x | q < x }) = { r | ↑q ≤ r } :=
   Subset.antisymm
-    ((is_closed_ge' _).closure_subset_iff.2
+    ((isClosed_ge' _).closure_subset_iff.2
       (image_subset_iff.2 fun p h => le_of_lt <| (@Rat.cast_lt ℝ _ _ _).2 h))
     fun x hx =>
     mem_closure_iff_nhds.2 fun t ht =>
@@ -194,22 +194,22 @@ _
 lemma closure_of_rat_image_le_le_eq {a b : ℚ} (hab : a ≤ b) :
   closure (of_rat '' {q:ℚ | a ≤ q ∧ q ≤ b}) = {r:ℝ | of_rat a ≤ r ∧ r ≤ of_rat b} :=
 _-/
-theorem Real.bounded_iff_bdd_below_bdd_above {s : Set ℝ} : Bounded s ↔ BddBelow s ∧ BddAbove s :=
+theorem Real.bounded_iff_bddBelow_bddAbove {s : Set ℝ} : Bounded s ↔ BddBelow s ∧ BddAbove s :=
   ⟨by
     intro bdd
     rcases(bounded_iff_subset_ball 0).1 bdd with ⟨r, hr⟩
     -- hr : s ⊆ closed_ball 0 r
-    rw [Real.closed_ball_eq_Icc] at hr
+    rw [Real.closedBall_eq_icc] at hr
     -- hr : s ⊆ Icc (0 - r) (0 + r)
     exact ⟨bdd_below_Icc.mono hr, bdd_above_Icc.mono hr⟩,
-    fun h => bounded_of_bdd_above_of_bdd_below h.2 h.1⟩
-#align real.bounded_iff_bdd_below_bdd_above Real.bounded_iff_bdd_below_bdd_above
+    fun h => bounded_of_bddAbove_of_bddBelow h.2 h.1⟩
+#align real.bounded_iff_bdd_below_bdd_above Real.bounded_iff_bddBelow_bddAbove
 
-theorem Real.subset_Icc_Inf_Sup_of_bounded {s : Set ℝ} (h : Bounded s) :
+theorem Real.subset_icc_infₛ_supₛ_of_bounded {s : Set ℝ} (h : Bounded s) :
     s ⊆ Icc (infₛ s) (supₛ s) :=
-  subset_Icc_cinfₛ_csupₛ (Real.bounded_iff_bdd_below_bdd_above.1 h).1
-    (Real.bounded_iff_bdd_below_bdd_above.1 h).2
-#align real.subset_Icc_Inf_Sup_of_bounded Real.subset_Icc_Inf_Sup_of_bounded
+  subset_Icc_cinfₛ_csupₛ (Real.bounded_iff_bddBelow_bddAbove.1 h).1
+    (Real.bounded_iff_bddBelow_bddAbove.1 h).2
+#align real.subset_Icc_Inf_Sup_of_bounded Real.subset_icc_infₛ_supₛ_of_bounded
 
 end
 
@@ -255,21 +255,21 @@ open Metric
 /-- Under the coercion from `ℤ` to `ℝ`, inverse images of compact sets are finite. -/
 theorem tendsto_coe_cofinite : Tendsto (coe : ℤ → ℝ) cofinite (cocompact ℝ) :=
   by
-  refine' tendsto_cocompact_of_tendsto_dist_comp_at_top (0 : ℝ) _
-  simp only [Filter.tendsto_at_top, eventually_cofinite, not_le, ← mem_ball]
+  refine' tendsto_cocompact_of_tendsto_dist_comp_atTop (0 : ℝ) _
+  simp only [Filter.tendsto_atTop, eventually_cofinite, not_le, ← mem_ball]
   change ∀ r : ℝ, (coe ⁻¹' ball (0 : ℝ) r).Finite
-  simp [Real.ball_eq_Ioo, Set.finite_Ioo]
+  simp [Real.ball_eq_ioo, Set.finite_ioo]
 #align int.tendsto_coe_cofinite Int.tendsto_coe_cofinite
 
 /-- For nonzero `a`, the "multiples of `a`" map `zmultiples_hom` from `ℤ` to `ℝ` is discrete, i.e.
 inverse images of compact sets are finite. -/
-theorem tendsto_zmultiples_hom_cofinite {a : ℝ} (ha : a ≠ 0) :
+theorem tendsto_zmultiplesHom_cofinite {a : ℝ} (ha : a ≠ 0) :
     Tendsto (zmultiplesHom ℝ a) cofinite (cocompact ℝ) :=
   by
   convert (tendsto_cocompact_mul_right₀ ha).comp Int.tendsto_coe_cofinite
   ext n
   simp
-#align int.tendsto_zmultiples_hom_cofinite Int.tendsto_zmultiples_hom_cofinite
+#align int.tendsto_zmultiples_hom_cofinite Int.tendsto_zmultiplesHom_cofinite
 
 end Int
 
@@ -286,11 +286,11 @@ theorem tendsto_zmultiples_subtype_cofinite (a : ℝ) :
     rw [Filter.mem_map, mem_cofinite]
     apply Set.to_finite
   intro K hK
-  have H := Int.tendsto_zmultiples_hom_cofinite ha hK
+  have H := Int.tendsto_zmultiplesHom_cofinite ha hK
   simp only [Filter.mem_map, mem_cofinite, ← preimage_compl] at H⊢
   rw [←
     (zmultiplesHom ℝ a).range_restrict_surjective.image_preimage ((zmultiples a).Subtype ⁻¹' Kᶜ), ←
-    preimage_comp, ← AddMonoidHom.coe_comp_range_restrict]
+    preimage_comp, ← AddMonoidHom.coe_comp_rangeRestrict]
   exact finite.image _ H
 #align add_subgroup.tendsto_zmultiples_subtype_cofinite AddSubgroup.tendsto_zmultiples_subtype_cofinite
 

@@ -291,8 +291,14 @@ theorem injective_codRestrict {f : ι → α} {s : Set α} (h : ∀ x, f x ∈ s
   simp only [injective, Subtype.ext_iff, coe_cod_restrict_apply]
 #align set.injective_cod_restrict Set.injective_codRestrict
 
+/- warning: function.injective.cod_restrict -> Function.Injective.codRestrict is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {ι : Sort.{u2}} {f : ι -> α} {s : Set.{u1} α} (h : forall (x : ι), Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) (f x) s), (Function.Injective.{u2, succ u1} ι α f) -> (Function.Injective.{u2, succ u1} ι (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) (Set.codRestrict.{u1, u2} α ι f s h))
+but is expected to have type
+  forall {α : Type.{u2}} {ι : Sort.{u1}} {f : ι -> α} {s : Set.{u2} α} (h : forall (x : ι), Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) (f x) s), (Function.Injective.{u1, succ u2} ι α f) -> (Function.Injective.{u1, succ u2} ι (Set.Elem.{u2} α s) (Set.codRestrict.{u2, u1} α ι f s h))
+Case conversion may be inaccurate. Consider using '#align function.injective.cod_restrict Function.Injective.codRestrictₓ'. -/
 alias injective_cod_restrict ↔ _ _root_.function.injective.cod_restrict
-#align function.injective.cod_restrict Function.Injective.cod_restrict
+#align function.injective.cod_restrict Function.Injective.codRestrict
 
 variable {s s₁ s₂ : Set α} {t t₁ t₂ : Set β} {p : Set γ} {f f₁ f₂ f₃ : α → β} {g g₁ g₂ : β → γ}
   {f' f₁' f₂' : β → α} {g' : γ → β} {a : α} {b : β}
@@ -319,8 +325,8 @@ theorem eqOn_empty (f₁ f₂ : α → β) : EqOn f₁ f₂ ∅ := fun x => Fals
 #align set.eq_on_empty Set.eqOn_empty
 
 @[simp]
-theorem eq_on_singleton : EqOn f₁ f₂ {a} ↔ f₁ a = f₂ a := by simp [Set.EqOn]
-#align set.eq_on_singleton Set.eq_on_singleton
+theorem eqOn_singleton : EqOn f₁ f₂ {a} ↔ f₁ a = f₂ a := by simp [Set.EqOn]
+#align set.eq_on_singleton Set.eqOn_singleton
 
 /- warning: set.restrict_eq_restrict_iff -> Set.restrict_eq_restrict_iff is a dubious translation:
 lean 3 declaration is
@@ -1102,14 +1108,32 @@ theorem restrictPreimage_bijective (hf : Bijective f) : Bijective (t.restrictPre
   ⟨t.restrict_preimage_injective hf.1, t.restrict_preimage_surjective hf.2⟩
 #align set.restrict_preimage_bijective Set.restrictPreimage_bijective
 
+/- warning: function.injective.restrict_preimage -> Function.Injective.restrictPreimage is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} (t : Set.{u2} β) {f : α -> β}, (Function.Injective.{succ u1, succ u2} α β f) -> (Function.Injective.{succ u1, succ u2} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.preimage.{u1, u2} α β f t)) (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t) (Set.restrictPreimage.{u1, u2} α β t f))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} (t : Set.{u1} β) {f : α -> β}, (Function.Injective.{succ u2, succ u1} α β f) -> (Function.Injective.{succ u2, succ u1} (Set.Elem.{u2} α (Set.preimage.{u2, u1} α β f t)) (Set.Elem.{u1} β t) (Set.restrictPreimage.{u2, u1} α β t f))
+Case conversion may be inaccurate. Consider using '#align function.injective.restrict_preimage Function.Injective.restrictPreimageₓ'. -/
 alias Set.restrictPreimage_injective ← _root_.function.injective.restrict_preimage
-#align function.injective.restrict_preimage Function.Injective.restrict_preimage
+#align function.injective.restrict_preimage Function.Injective.restrictPreimage
 
+/- warning: function.surjective.restrict_preimage -> Function.Surjective.restrictPreimage is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} (t : Set.{u2} β) {f : α -> β}, (Function.Surjective.{succ u1, succ u2} α β f) -> (Function.Surjective.{succ u1, succ u2} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.preimage.{u1, u2} α β f t)) (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t) (Set.restrictPreimage.{u1, u2} α β t f))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} (t : Set.{u1} β) {f : α -> β}, (Function.Surjective.{succ u2, succ u1} α β f) -> (Function.Surjective.{succ u2, succ u1} (Set.Elem.{u2} α (Set.preimage.{u2, u1} α β f t)) (Set.Elem.{u1} β t) (Set.restrictPreimage.{u2, u1} α β t f))
+Case conversion may be inaccurate. Consider using '#align function.surjective.restrict_preimage Function.Surjective.restrictPreimageₓ'. -/
 alias Set.restrictPreimage_surjective ← _root_.function.surjective.restrict_preimage
-#align function.surjective.restrict_preimage Function.Surjective.restrict_preimage
+#align function.surjective.restrict_preimage Function.Surjective.restrictPreimage
 
+/- warning: function.bijective.restrict_preimage -> Function.Bijective.restrictPreimage is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} (t : Set.{u2} β) {f : α -> β}, (Function.Bijective.{succ u1, succ u2} α β f) -> (Function.Bijective.{succ u1, succ u2} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.preimage.{u1, u2} α β f t)) (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t) (Set.restrictPreimage.{u1, u2} α β t f))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} (t : Set.{u1} β) {f : α -> β}, (Function.Bijective.{succ u2, succ u1} α β f) -> (Function.Bijective.{succ u2, succ u1} (Set.Elem.{u2} α (Set.preimage.{u2, u1} α β f t)) (Set.Elem.{u1} β t) (Set.restrictPreimage.{u2, u1} α β t f))
+Case conversion may be inaccurate. Consider using '#align function.bijective.restrict_preimage Function.Bijective.restrictPreimageₓ'. -/
 alias Set.restrictPreimage_bijective ← _root_.function.bijective.restrict_preimage
-#align function.bijective.restrict_preimage Function.Bijective.restrict_preimage
+#align function.bijective.restrict_preimage Function.Bijective.restrictPreimage
 
 end
 
@@ -1266,8 +1290,14 @@ Case conversion may be inaccurate. Consider using '#align set.inj_on_of_injectiv
 theorem injOn_of_injective (h : Injective f) (s : Set α) : InjOn f s := fun x hx y hy hxy => h hxy
 #align set.inj_on_of_injective Set.injOn_of_injective
 
+/- warning: function.injective.inj_on -> Function.Injective.injOn is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β}, (Function.Injective.{succ u1, succ u2} α β f) -> (forall (s : Set.{u1} α), Set.InjOn.{u1, u2} α β f s)
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β}, (Function.Injective.{succ u2, succ u1} α β f) -> (forall (s : Set.{u2} α), Set.InjOn.{u2, u1} α β f s)
+Case conversion may be inaccurate. Consider using '#align function.injective.inj_on Function.Injective.injOnₓ'. -/
 alias inj_on_of_injective ← _root_.function.injective.inj_on
-#align function.injective.inj_on Function.Injective.inj_on
+#align function.injective.inj_on Function.Injective.injOn
 
 #print Set.injOn_id /-
 theorem injOn_id (s : Set α) : InjOn id s :=
@@ -1992,8 +2022,14 @@ theorem bijective_iff_bijOn_univ : Bijective f ↔ BijOn f univ univ :=
     ⟨Iff.mpr injective_iff_injOn_univ inj, Iff.mpr surjective_iff_surjOn_univ surj⟩
 #align set.bijective_iff_bij_on_univ Set.bijective_iff_bijOn_univ
 
+/- warning: function.bijective.bij_on_univ -> Function.Bijective.bijOn_univ is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β}, (Function.Bijective.{succ u1, succ u2} α β f) -> (Set.BijOn.{u1, u2} α β f (Set.univ.{u1} α) (Set.univ.{u2} β))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β}, (Function.Bijective.{succ u2, succ u1} α β f) -> (Set.BijOn.{u2, u1} α β f (Set.univ.{u2} α) (Set.univ.{u1} β))
+Case conversion may be inaccurate. Consider using '#align function.bijective.bij_on_univ Function.Bijective.bijOn_univₓ'. -/
 alias bijective_iff_bij_on_univ ↔ _root_.function.bijective.bij_on_univ _
-#align function.bijective.bij_on_univ Function.Bijective.bij_on_univ
+#align function.bijective.bij_on_univ Function.Bijective.bijOn_univ
 
 /- warning: set.bij_on.compl -> Set.BijOn.compl is a dubious translation:
 lean 3 declaration is
@@ -2016,14 +2052,14 @@ def LeftInvOn (f' : β → α) (f : α → β) (s : Set α) : Prop :=
 -/
 
 @[simp]
-theorem left_inv_on_empty (f' : β → α) (f : α → β) : LeftInvOn f' f ∅ :=
+theorem leftInvOn_empty (f' : β → α) (f : α → β) : LeftInvOn f' f ∅ :=
   empty_subset _
-#align set.left_inv_on_empty Set.left_inv_on_empty
+#align set.left_inv_on_empty Set.leftInvOn_empty
 
 @[simp]
-theorem left_inv_on_singleton : LeftInvOn f' f {a} ↔ f' (f a) = a :=
+theorem leftInvOn_singleton : LeftInvOn f' f {a} ↔ f' (f a) = a :=
   singleton_subset_iff
-#align set.left_inv_on_singleton Set.left_inv_on_singleton
+#align set.left_inv_on_singleton Set.leftInvOn_singleton
 
 /- warning: set.left_inv_on.eq_on -> Set.LeftInvOn.eqOn is a dubious translation:
 lean 3 declaration is
@@ -2190,14 +2226,14 @@ def RightInvOn (f' : β → α) (f : α → β) (t : Set β) : Prop :=
 -/
 
 @[simp]
-theorem right_inv_on_empty (f' : β → α) (f : α → β) : RightInvOn f' f ∅ :=
+theorem rightInvOn_empty (f' : β → α) (f : α → β) : RightInvOn f' f ∅ :=
   empty_subset _
-#align set.right_inv_on_empty Set.right_inv_on_empty
+#align set.right_inv_on_empty Set.rightInvOn_empty
 
 @[simp]
-theorem right_inv_on_singleton : RightInvOn f' f {b} ↔ f (f' b) = b :=
+theorem rightInvOn_singleton : RightInvOn f' f {b} ↔ f (f' b) = b :=
   singleton_subset_iff
-#align set.right_inv_on_singleton Set.right_inv_on_singleton
+#align set.right_inv_on_singleton Set.rightInvOn_singleton
 
 /- warning: set.right_inv_on.eq_on -> Set.RightInvOn.eqOn is a dubious translation:
 lean 3 declaration is
@@ -2344,12 +2380,12 @@ def InvOn (g : β → α) (f : α → β) (s : Set α) (t : Set β) : Prop :=
 -/
 
 @[simp]
-theorem inv_on_empty (f' : β → α) (f : α → β) : InvOn f' f ∅ ∅ := by simp [inv_on]
-#align set.inv_on_empty Set.inv_on_empty
+theorem invOn_empty (f' : β → α) (f : α → β) : InvOn f' f ∅ ∅ := by simp [inv_on]
+#align set.inv_on_empty Set.invOn_empty
 
 @[simp]
-theorem inv_on_singleton : InvOn f' f {a} {b} ↔ f' (f a) = a ∧ f (f' b) = b := by simp [inv_on]
-#align set.inv_on_singleton Set.inv_on_singleton
+theorem invOn_singleton : InvOn f' f {a} {b} ↔ f' (f a) = a ∧ f (f' b) = b := by simp [inv_on]
+#align set.inv_on_singleton Set.invOn_singleton
 
 /- warning: set.inv_on.symm -> Set.InvOn.symm is a dubious translation:
 lean 3 declaration is
@@ -3160,9 +3196,16 @@ open Set
 
 variable {fa : α → α} {fb : β → β} {f : α → β} {g : β → γ} {s t : Set α}
 
-theorem Injective.comp_inj_on (hg : Injective g) (hf : s.InjOn f) : s.InjOn (g ∘ f) :=
+/- warning: function.injective.comp_inj_on clashes with function.injective.comp_injOn -> Function.Injective.comp_injOn
+warning: function.injective.comp_inj_on -> Function.Injective.comp_injOn is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {f : α -> β} {g : β -> γ} {s : Set.{u1} α}, (Function.Injective.{succ u2, succ u3} β γ g) -> (Set.InjOn.{u1, u2} α β f s) -> (Set.InjOn.{u1, u3} α γ (Function.comp.{succ u1, succ u2, succ u3} α β γ g f) s)
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u3}} {γ : Type.{u2}} {f : α -> β} {g : β -> γ} {s : Set.{u1} α}, (Function.Injective.{succ u3, succ u2} β γ g) -> (Set.InjOn.{u1, u3} α β f s) -> (Set.InjOn.{u1, u2} α γ (Function.comp.{succ u1, succ u3, succ u2} α β γ g f) s)
+Case conversion may be inaccurate. Consider using '#align function.injective.comp_inj_on Function.Injective.comp_injOnₓ'. -/
+theorem Injective.comp_injOn (hg : Injective g) (hf : s.InjOn f) : s.InjOn (g ∘ f) :=
   (hg.InjOn univ).comp hf (mapsTo_univ _ _)
-#align function.injective.comp_inj_on Function.Injective.comp_inj_on
+#align function.injective.comp_inj_on Function.Injective.comp_injOn
 
 /- warning: function.surjective.surj_on -> Function.Surjective.surjOn is a dubious translation:
 lean 3 declaration is

@@ -66,9 +66,9 @@ instance ghasOne : GradedMonoid.GhasOne fun i => (⨂[R]^i) M where one := tprod
 -- mathport name: exprₜ1
 local notation "ₜ1" => @GradedMonoid.GhasOne.one ℕ (fun i => (⨂[R]^i) M) _ _
 
-theorem ghas_one_def : ₜ1 = tprod R Fin.elim0 :=
+theorem ghasOne_def : ₜ1 = tprod R Fin.elim0 :=
   rfl
-#align tensor_power.ghas_one_def TensorPower.ghas_one_def
+#align tensor_power.ghas_one_def TensorPower.ghasOne_def
 
 /-- A variant of `pi_tensor_prod.tmul_equiv` with the result indexed by `fin (n + m)`. -/
 def mulEquiv {n m : ℕ} : (⨂[R]^n) M ⊗[R] (⨂[R]^m) M ≃ₗ[R] (⨂[R]^(n + m)) M :=
@@ -82,9 +82,9 @@ instance ghasMul : GradedMonoid.GhasMul fun i => (⨂[R]^i) M where mul i j a b 
 -- mathport name: «expr ₜ* »
 local infixl:70 " ₜ* " => @GradedMonoid.GhasMul.mul ℕ (fun i => (⨂[R]^i) M) _ _ _ _
 
-theorem ghas_mul_def {i j} (a : (⨂[R]^i) M) (b : (⨂[R]^j) M) : a ₜ* b = mulEquiv (a ⊗ₜ b) :=
+theorem ghasMul_def {i j} (a : (⨂[R]^i) M) (b : (⨂[R]^j) M) : a ₜ* b = mulEquiv (a ⊗ₜ b) :=
   rfl
-#align tensor_power.ghas_mul_def TensorPower.ghas_mul_def
+#align tensor_power.ghas_mul_def TensorPower.ghasMul_def
 
 end TensorPower
 

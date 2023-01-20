@@ -131,7 +131,7 @@ private theorem sqrt_aux_is_sqrt_lemma (m r n : ℕ) (h₁ : r * r ≤ n) (m')
         IsSqrt n ([anonymous] m' ((r + 2 ^ m) * 2 ^ m) (n - (r + 2 ^ m) * (r + 2 ^ m)))) :
     IsSqrt n ([anonymous] (2 ^ m * 2 ^ m) (2 * r * 2 ^ m) (n - r * r)) :=
   by
-  have b0 : 2 ^ m * 2 ^ m ≠ 0 := mul_self_ne_zero.2 (pow_ne_zero m two_ne_zero)
+  have b0 : 2 ^ m * 2 ^ m ≠ 0 := mul_self_ne_zero.2 (pow_ne_zero m two_neZero)
   have lb : n - r * r < 2 * r * 2 ^ m + 2 ^ m * 2 ^ m ↔ n < (r + 2 ^ m) * (r + 2 ^ m) :=
     by
     rw [tsub_lt_iff_right h₁]
@@ -200,7 +200,7 @@ private theorem sqrt_is_sqrt (n : ℕ) : IsSqrt n (sqrt n) :=
 
 #print Nat.sqrt_le /-
 theorem sqrt_le (n : ℕ) : sqrt n * sqrt n ≤ n :=
-  (sqrt_is_sqrt n).left
+  (sqrt_isSqrt n).left
 #align nat.sqrt_le Nat.sqrt_le
 -/
 
@@ -212,7 +212,7 @@ theorem sqrt_le' (n : ℕ) : sqrt n ^ 2 ≤ n :=
 
 #print Nat.lt_succ_sqrt /-
 theorem lt_succ_sqrt (n : ℕ) : n < succ (sqrt n) * succ (sqrt n) :=
-  (sqrt_is_sqrt n).right
+  (sqrt_isSqrt n).right
 #align nat.lt_succ_sqrt Nat.lt_succ_sqrt
 -/
 
@@ -282,7 +282,7 @@ theorem sqrt_eq_zero {n : ℕ} : sqrt n = 0 ↔ n = 0 :=
 
 #print Nat.eq_sqrt /-
 theorem eq_sqrt {n q} : q = sqrt n ↔ q * q ≤ n ∧ n < (q + 1) * (q + 1) :=
-  ⟨fun e => e.symm ▸ sqrt_is_sqrt n, fun ⟨h₁, h₂⟩ =>
+  ⟨fun e => e.symm ▸ sqrt_isSqrt n, fun ⟨h₁, h₂⟩ =>
     le_antisymm (le_sqrt.2 h₁) (le_of_lt_succ <| sqrt_lt.2 h₂)⟩
 #align nat.eq_sqrt Nat.eq_sqrt
 -/

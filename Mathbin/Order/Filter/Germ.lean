@@ -65,9 +65,9 @@ theorem const_eventually_eq' [NeBot l] {a b : β} : (∀ᶠ x in l, a = b) ↔ a
   eventually_const
 #align filter.const_eventually_eq' Filter.const_eventually_eq'
 
-theorem const_eventually_eq [NeBot l] {a b : β} : ((fun _ => a) =ᶠ[l] fun _ => b) ↔ a = b :=
+theorem const_eventuallyEq [NeBot l] {a b : β} : ((fun _ => a) =ᶠ[l] fun _ => b) ↔ a = b :=
   @const_eventually_eq' _ _ _ _ a b
-#align filter.const_eventually_eq Filter.const_eventually_eq
+#align filter.const_eventually_eq Filter.const_eventuallyEq
 
 theorem EventuallyEq.comp_tendsto {f' : α → β} (H : f =ᶠ[l] f') {g : γ → α} {lc : Filter γ}
     (hg : Tendsto g lc l) : f ∘ g =ᶠ[lc] f' ∘ g :=
@@ -235,10 +235,10 @@ def compTendsto' (f : Germ l β) {lc : Filter γ} (g : Germ lc α) (hg : g.Tends
 #align filter.germ.comp_tendsto' Filter.Germ.compTendsto'
 
 @[simp]
-theorem coe_comp_tendsto' (f : α → β) {lc : Filter γ} {g : Germ lc α} (hg : g.Tendsto l) :
+theorem coe_compTendsto' (f : α → β) {lc : Filter γ} {g : Germ lc α} (hg : g.Tendsto l) :
     (f : Germ l β).compTendsto' g hg = g.map f :=
   rfl
-#align filter.germ.coe_comp_tendsto' Filter.Germ.coe_comp_tendsto'
+#align filter.germ.coe_comp_tendsto' Filter.Germ.coe_compTendsto'
 
 /-- Given a germ `f : germ l β` and a function `g : γ → α`, where `l : filter α`, if `g` tends
 to `l` along `lc : filter γ`, then the composition `f ∘ g` is well-defined as a germ at `lc`. -/
@@ -247,16 +247,16 @@ def compTendsto (f : Germ l β) {lc : Filter γ} (g : γ → α) (hg : Tendsto g
 #align filter.germ.comp_tendsto Filter.Germ.compTendsto
 
 @[simp]
-theorem coe_comp_tendsto (f : α → β) {lc : Filter γ} {g : γ → α} (hg : Tendsto g lc l) :
+theorem coe_compTendsto (f : α → β) {lc : Filter γ} {g : γ → α} (hg : Tendsto g lc l) :
     (f : Germ l β).comp_tendsto g hg = f ∘ g :=
   rfl
-#align filter.germ.coe_comp_tendsto Filter.Germ.coe_comp_tendsto
+#align filter.germ.coe_comp_tendsto Filter.Germ.coe_compTendsto
 
 @[simp]
-theorem comp_tendsto'_coe (f : Germ l β) {lc : Filter γ} {g : γ → α} (hg : Tendsto g lc l) :
+theorem compTendsto'_coe (f : Germ l β) {lc : Filter γ} {g : γ → α} (hg : Tendsto g lc l) :
     f.compTendsto' _ hg.germ_tendsto = f.comp_tendsto g hg :=
   rfl
-#align filter.germ.comp_tendsto'_coe Filter.Germ.comp_tendsto'_coe
+#align filter.germ.comp_tendsto'_coe Filter.Germ.compTendsto'_coe
 
 @[simp, norm_cast]
 theorem const_inj [NeBot l] {a b : β} : (↑a : Germ l β) = ↑b ↔ a = b :=
@@ -275,16 +275,16 @@ theorem map₂_const (l : Filter α) (b : β) (c : γ) (f : β → γ → δ) :
 #align filter.germ.map₂_const Filter.Germ.map₂_const
 
 @[simp]
-theorem const_comp_tendsto {l : Filter α} (b : β) {lc : Filter γ} {g : γ → α}
-    (hg : Tendsto g lc l) : (↑b : Germ l β).comp_tendsto g hg = ↑b :=
+theorem const_compTendsto {l : Filter α} (b : β) {lc : Filter γ} {g : γ → α} (hg : Tendsto g lc l) :
+    (↑b : Germ l β).comp_tendsto g hg = ↑b :=
   rfl
-#align filter.germ.const_comp_tendsto Filter.Germ.const_comp_tendsto
+#align filter.germ.const_comp_tendsto Filter.Germ.const_compTendsto
 
 @[simp]
-theorem const_comp_tendsto' {l : Filter α} (b : β) {lc : Filter γ} {g : Germ lc α}
+theorem const_compTendsto' {l : Filter α} (b : β) {lc : Filter γ} {g : Germ lc α}
     (hg : g.Tendsto l) : (↑b : Germ l β).compTendsto' g hg = ↑b :=
   induction_on g (fun _ _ => rfl) hg
-#align filter.germ.const_comp_tendsto' Filter.Germ.const_comp_tendsto'
+#align filter.germ.const_comp_tendsto' Filter.Germ.const_compTendsto'
 
 /-- Lift a predicate on `β` to `germ l β`. -/
 def LiftPred (p : β → Prop) (f : Germ l β) : Prop :=
@@ -293,18 +293,18 @@ def LiftPred (p : β → Prop) (f : Germ l β) : Prop :=
 #align filter.germ.lift_pred Filter.Germ.LiftPred
 
 @[simp]
-theorem lift_pred_coe {p : β → Prop} {f : α → β} : LiftPred p (f : Germ l β) ↔ ∀ᶠ x in l, p (f x) :=
+theorem liftPred_coe {p : β → Prop} {f : α → β} : LiftPred p (f : Germ l β) ↔ ∀ᶠ x in l, p (f x) :=
   Iff.rfl
-#align filter.germ.lift_pred_coe Filter.Germ.lift_pred_coe
+#align filter.germ.lift_pred_coe Filter.Germ.liftPred_coe
 
-theorem lift_pred_const {p : β → Prop} {x : β} (hx : p x) : LiftPred p (↑x : Germ l β) :=
+theorem liftPred_const {p : β → Prop} {x : β} (hx : p x) : LiftPred p (↑x : Germ l β) :=
   eventually_of_forall fun y => hx
-#align filter.germ.lift_pred_const Filter.Germ.lift_pred_const
+#align filter.germ.lift_pred_const Filter.Germ.liftPred_const
 
 @[simp]
-theorem lift_pred_const_iff [NeBot l] {p : β → Prop} {x : β} : LiftPred p (↑x : Germ l β) ↔ p x :=
+theorem liftPred_const_iff [NeBot l] {p : β → Prop} {x : β} : LiftPred p (↑x : Germ l β) ↔ p x :=
   @eventually_const _ _ _ (p x)
-#align filter.germ.lift_pred_const_iff Filter.Germ.lift_pred_const_iff
+#align filter.germ.lift_pred_const_iff Filter.Germ.liftPred_const_iff
 
 /-- Lift a relation `r : β → γ → Prop` to `germ l β → germ l γ → Prop`. -/
 def LiftRel (r : β → γ → Prop) (f : Germ l β) (g : Germ l γ) : Prop :=
@@ -313,21 +313,21 @@ def LiftRel (r : β → γ → Prop) (f : Germ l β) (g : Germ l γ) : Prop :=
 #align filter.germ.lift_rel Filter.Germ.LiftRel
 
 @[simp]
-theorem lift_rel_coe {r : β → γ → Prop} {f : α → β} {g : α → γ} :
+theorem liftRel_coe {r : β → γ → Prop} {f : α → β} {g : α → γ} :
     LiftRel r (f : Germ l β) g ↔ ∀ᶠ x in l, r (f x) (g x) :=
   Iff.rfl
-#align filter.germ.lift_rel_coe Filter.Germ.lift_rel_coe
+#align filter.germ.lift_rel_coe Filter.Germ.liftRel_coe
 
-theorem lift_rel_const {r : β → γ → Prop} {x : β} {y : γ} (h : r x y) :
+theorem liftRel_const {r : β → γ → Prop} {x : β} {y : γ} (h : r x y) :
     LiftRel r (↑x : Germ l β) ↑y :=
   eventually_of_forall fun _ => h
-#align filter.germ.lift_rel_const Filter.Germ.lift_rel_const
+#align filter.germ.lift_rel_const Filter.Germ.liftRel_const
 
 @[simp]
-theorem lift_rel_const_iff [NeBot l] {r : β → γ → Prop} {x : β} {y : γ} :
+theorem liftRel_const_iff [NeBot l] {r : β → γ → Prop} {x : β} {y : γ} :
     LiftRel r (↑x : Germ l β) ↑y ↔ r x y :=
   @eventually_const _ _ _ (r x y)
-#align filter.germ.lift_rel_const_iff Filter.Germ.lift_rel_const_iff
+#align filter.germ.lift_rel_const_iff Filter.Germ.liftRel_const_iff
 
 instance [Inhabited β] : Inhabited (Germ l β) :=
   ⟨↑(default : β)⟩
@@ -427,9 +427,9 @@ def coeMulHom [Monoid M] (l : Filter α) : (α → M) →* Germ l M :=
 #align filter.germ.coe_add_hom Filter.Germ.coeAddHom
 
 @[simp, to_additive]
-theorem coe_coe_mul_hom [Monoid M] : (coeMulHom l : (α → M) → Germ l M) = coe :=
+theorem coe_coeMulHom [Monoid M] : (coeMulHom l : (α → M) → Germ l M) = coe :=
   rfl
-#align filter.germ.coe_coe_mul_hom Filter.Germ.coe_coe_mul_hom
+#align filter.germ.coe_coe_mul_hom Filter.Germ.coe_coeMulHom
 #align filter.germ.coe_coe_add_hom Filter.Germ.coe_coe_add_hom
 
 @[to_additive]
@@ -543,9 +543,9 @@ def coeRingHom [Semiring R] (l : Filter α) : (α → R) →+* Germ l R :=
 #align filter.germ.coe_ring_hom Filter.Germ.coeRingHom
 
 @[simp]
-theorem coe_coe_ring_hom [Semiring R] : (coeRingHom l : (α → R) → Germ l R) = coe :=
+theorem coe_coeRingHom [Semiring R] : (coeRingHom l : (α → R) → Germ l R) = coe :=
   rfl
-#align filter.germ.coe_coe_ring_hom Filter.Germ.coe_coe_ring_hom
+#align filter.germ.coe_coe_ring_hom Filter.Germ.coe_coeRingHom
 
 instance [Ring R] : Ring (Germ l R) :=
   { Germ.addCommGroup, Germ.semiring with }

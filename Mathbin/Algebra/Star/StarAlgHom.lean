@@ -132,9 +132,9 @@ theorem coe_coe {F : Type _} [NonUnitalStarAlgHomClass F R A B] (f : F) : ⇑(f 
 #align non_unital_star_alg_hom.coe_coe NonUnitalStarAlgHom.coe_coe
 
 @[simp]
-theorem coe_to_non_unital_alg_hom {f : A →⋆ₙₐ[R] B} : (f.toNonUnitalAlgHom : A → B) = f :=
+theorem coe_toNonUnitalAlgHom {f : A →⋆ₙₐ[R] B} : (f.toNonUnitalAlgHom : A → B) = f :=
   rfl
-#align non_unital_star_alg_hom.coe_to_non_unital_alg_hom NonUnitalStarAlgHom.coe_to_non_unital_alg_hom
+#align non_unital_star_alg_hom.coe_to_non_unital_alg_hom NonUnitalStarAlgHom.coe_toNonUnitalAlgHom
 
 @[ext]
 theorem ext {f g : A →⋆ₙₐ[R] B} (h : ∀ x, f x = g x) : f = g :=
@@ -196,8 +196,8 @@ homomorphism. -/
 def comp (f : B →⋆ₙₐ[R] C) (g : A →⋆ₙₐ[R] B) : A →⋆ₙₐ[R] C :=
   { f.toNonUnitalAlgHom.comp g.toNonUnitalAlgHom with
     map_star' := by
-      simp only [map_star, NonUnitalAlgHom.to_fun_eq_coe, eq_self_iff_true,
-        NonUnitalAlgHom.coe_comp, coe_to_non_unital_alg_hom, Function.comp_apply, forall_const] }
+      simp only [map_star, NonUnitalAlgHom.toFun_eq_coe, eq_self_iff_true, NonUnitalAlgHom.coe_comp,
+        coe_to_non_unital_alg_hom, Function.comp_apply, forall_const] }
 #align non_unital_star_alg_hom.comp NonUnitalStarAlgHom.comp
 
 @[simp]
@@ -363,9 +363,9 @@ theorem coe_coe {F : Type} [StarAlgHomClass F R A B] (f : F) : ⇑(f : A →⋆�
 initialize_simps_projections StarAlgHom (toFun → apply)
 
 @[simp]
-theorem coe_to_alg_hom {f : A →⋆ₐ[R] B} : (f.toAlgHom : A → B) = f :=
+theorem coe_toAlgHom {f : A →⋆ₐ[R] B} : (f.toAlgHom : A → B) = f :=
   rfl
-#align star_alg_hom.coe_to_alg_hom StarAlgHom.coe_to_alg_hom
+#align star_alg_hom.coe_to_alg_hom StarAlgHom.coe_toAlgHom
 
 @[ext]
 theorem ext {f g : A →⋆ₐ[R] B} (h : ∀ x, f x = g x) : f = g :=
@@ -431,7 +431,7 @@ instance : Inhabited (A →⋆ₐ[R] A) :=
 def comp (f : B →⋆ₐ[R] C) (g : A →⋆ₐ[R] B) : A →⋆ₐ[R] C :=
   { f.toAlgHom.comp g.toAlgHom with
     map_star' := by
-      simp only [map_star, AlgHom.to_fun_eq_coe, AlgHom.coe_comp, coe_to_alg_hom,
+      simp only [map_star, AlgHom.toFun_eq_coe, AlgHom.coe_comp, coe_to_alg_hom,
         Function.comp_apply, eq_self_iff_true, forall_const] }
 #align star_alg_hom.comp StarAlgHom.comp
 
@@ -474,9 +474,9 @@ def toNonUnitalStarAlgHom (f : A →⋆ₐ[R] B) : A →⋆ₙₐ[R] B :=
 #align star_alg_hom.to_non_unital_star_alg_hom StarAlgHom.toNonUnitalStarAlgHom
 
 @[simp]
-theorem coe_to_non_unital_star_alg_hom (f : A →⋆ₐ[R] B) : (f.toNonUnitalStarAlgHom : A → B) = f :=
+theorem coe_toNonUnitalStarAlgHom (f : A →⋆ₐ[R] B) : (f.toNonUnitalStarAlgHom : A → B) = f :=
   rfl
-#align star_alg_hom.coe_to_non_unital_star_alg_hom StarAlgHom.coe_to_non_unital_star_alg_hom
+#align star_alg_hom.coe_to_non_unital_star_alg_hom StarAlgHom.coe_toNonUnitalStarAlgHom
 
 end StarAlgHom
 
@@ -722,7 +722,7 @@ instance (priority := 100) (F R A B : Type _) [CommSemiring R] [Semiring A] [Alg
     coe_injective' := FunLike.coe_injective
     map_one := map_one
     map_zero := map_zero
-    commutes := fun f r => by simp only [Algebra.algebra_map_eq_smul_one, map_smul, map_one] }
+    commutes := fun f r => by simp only [Algebra.algebraMap_eq_smul_one, map_smul, map_one] }
 
 end StarAlgEquivClass
 
@@ -799,9 +799,9 @@ def Simps.symmApply (e : A ≃⋆ₐ[R] B) : B → A :=
 initialize_simps_projections StarAlgEquiv (toFun → apply, invFun → simps.symm_apply)
 
 @[simp]
-theorem inv_fun_eq_symm {e : A ≃⋆ₐ[R] B} : e.invFun = e.symm :=
+theorem invFun_eq_symm {e : A ≃⋆ₐ[R] B} : e.invFun = e.symm :=
   rfl
-#align star_alg_equiv.inv_fun_eq_symm StarAlgEquiv.inv_fun_eq_symm
+#align star_alg_equiv.inv_fun_eq_symm StarAlgEquiv.invFun_eq_symm
 
 @[simp]
 theorem symm_symm (e : A ≃⋆ₐ[R] B) : e.symm.symm = e :=
@@ -837,14 +837,14 @@ theorem refl_symm : (StarAlgEquiv.refl : A ≃⋆ₐ[R] A).symm = StarAlgEquiv.r
 #align star_alg_equiv.refl_symm StarAlgEquiv.refl_symm
 
 -- should be a `simp` lemma, but causes a linter timeout
-theorem to_ring_equiv_symm (f : A ≃⋆ₐ[R] B) : (f : A ≃+* B).symm = f.symm :=
+theorem to_ringEquiv_symm (f : A ≃⋆ₐ[R] B) : (f : A ≃+* B).symm = f.symm :=
   rfl
-#align star_alg_equiv.to_ring_equiv_symm StarAlgEquiv.to_ring_equiv_symm
+#align star_alg_equiv.to_ring_equiv_symm StarAlgEquiv.to_ringEquiv_symm
 
 @[simp]
-theorem symm_to_ring_equiv (e : A ≃⋆ₐ[R] B) : (e.symm : B ≃+* A) = (e : A ≃+* B).symm :=
+theorem symm_to_ringEquiv (e : A ≃⋆ₐ[R] B) : (e.symm : B ≃+* A) = (e : A ≃+* B).symm :=
   rfl
-#align star_alg_equiv.symm_to_ring_equiv StarAlgEquiv.symm_to_ring_equiv
+#align star_alg_equiv.symm_to_ring_equiv StarAlgEquiv.symm_to_ringEquiv
 
 /-- Star algebra equivalences are transitive. -/
 @[trans]
@@ -886,13 +886,13 @@ theorem trans_apply (e₁ : A ≃⋆ₐ[R] B) (e₂ : B ≃⋆ₐ[R] C) (x : A) 
   rfl
 #align star_alg_equiv.trans_apply StarAlgEquiv.trans_apply
 
-theorem left_inverse_symm (e : A ≃⋆ₐ[R] B) : Function.LeftInverse e.symm e :=
+theorem leftInverse_symm (e : A ≃⋆ₐ[R] B) : Function.LeftInverse e.symm e :=
   e.left_inv
-#align star_alg_equiv.left_inverse_symm StarAlgEquiv.left_inverse_symm
+#align star_alg_equiv.left_inverse_symm StarAlgEquiv.leftInverse_symm
 
-theorem right_inverse_symm (e : A ≃⋆ₐ[R] B) : Function.RightInverse e.symm e :=
+theorem rightInverse_symm (e : A ≃⋆ₐ[R] B) : Function.RightInverse e.symm e :=
   e.right_inv
-#align star_alg_equiv.right_inverse_symm StarAlgEquiv.right_inverse_symm
+#align star_alg_equiv.right_inverse_symm StarAlgEquiv.rightInverse_symm
 
 end Basic
 
@@ -934,15 +934,15 @@ noncomputable def ofBijective (f : F) (hf : Function.Bijective f) : A ≃⋆ₐ[
 #align star_alg_equiv.of_bijective StarAlgEquiv.ofBijective
 
 @[simp]
-theorem coe_of_bijective {f : F} (hf : Function.Bijective f) :
+theorem coe_ofBijective {f : F} (hf : Function.Bijective f) :
     (StarAlgEquiv.ofBijective f hf : A → B) = f :=
   rfl
-#align star_alg_equiv.coe_of_bijective StarAlgEquiv.coe_of_bijective
+#align star_alg_equiv.coe_of_bijective StarAlgEquiv.coe_ofBijective
 
-theorem of_bijective_apply {f : F} (hf : Function.Bijective f) (a : A) :
+theorem ofBijective_apply {f : F} (hf : Function.Bijective f) (a : A) :
     (StarAlgEquiv.ofBijective f hf) a = f a :=
   rfl
-#align star_alg_equiv.of_bijective_apply StarAlgEquiv.of_bijective_apply
+#align star_alg_equiv.of_bijective_apply StarAlgEquiv.ofBijective_apply
 
 end Bijective
 

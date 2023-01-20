@@ -40,7 +40,7 @@ section
 variable {A B C : V} (f : A ⟶ B) [HasImage f] (g : B ⟶ C) [HasKernel g]
 
 theorem image_le_kernel (w : f ≫ g = 0) : imageSubobject f ≤ kernelSubobject g :=
-  image_subobject_le_mk _ _ (kernel.lift _ _ w) (by simp)
+  imageSubobject_le_mk _ _ (kernel.lift _ _ w) (by simp)
 #align image_le_kernel image_le_kernel
 
 /-- The canonical morphism `image_subobject f ⟶ kernel_subobject g` when `f ≫ g = 0`.
@@ -51,25 +51,25 @@ def imageToKernel (w : f ≫ g = 0) : (imageSubobject f : V) ⟶ (kernelSubobjec
 
 /-- Prefer `image_to_kernel`. -/
 @[simp]
-theorem subobject_of_le_as_image_to_kernel (w : f ≫ g = 0) (h) :
+theorem subobject_ofLe_as_imageToKernel (w : f ≫ g = 0) (h) :
     Subobject.ofLe (imageSubobject f) (kernelSubobject g) h = imageToKernel f g w :=
   rfl
-#align subobject_of_le_as_image_to_kernel subobject_of_le_as_image_to_kernel
+#align subobject_of_le_as_image_to_kernel subobject_ofLe_as_imageToKernel
 
 @[simp, reassoc.1, elementwise]
-theorem image_to_kernel_arrow (w : f ≫ g = 0) :
+theorem imageToKernel_arrow (w : f ≫ g = 0) :
     imageToKernel f g w ≫ (kernelSubobject g).arrow = (imageSubobject f).arrow := by
   simp [imageToKernel]
-#align image_to_kernel_arrow image_to_kernel_arrow
+#align image_to_kernel_arrow imageToKernel_arrow
 
 -- This is less useful as a `simp` lemma than it initially appears,
 -- as it "loses" the information the morphism factors through the image.
-theorem factor_thru_image_subobject_comp_image_to_kernel (w : f ≫ g = 0) :
+theorem factorThruImageSubobject_comp_imageToKernel (w : f ≫ g = 0) :
     factorThruImageSubobject f ≫ imageToKernel f g w = factorThruKernelSubobject g f w :=
   by
   ext
   simp
-#align factor_thru_image_subobject_comp_image_to_kernel factor_thru_image_subobject_comp_image_to_kernel
+#align factor_thru_image_subobject_comp_image_to_kernel factorThruImageSubobject_comp_imageToKernel
 
 end
 
@@ -78,93 +78,93 @@ section
 variable {A B C : V} (f : A ⟶ B) (g : B ⟶ C)
 
 @[simp]
-theorem image_to_kernel_zero_left [HasKernels V] [HasZeroObject V] {w} :
+theorem imageToKernel_zero_left [HasKernels V] [HasZeroObject V] {w} :
     imageToKernel (0 : A ⟶ B) g w = 0 := by
   ext
   simp
-#align image_to_kernel_zero_left image_to_kernel_zero_left
+#align image_to_kernel_zero_left imageToKernel_zero_left
 
-theorem image_to_kernel_zero_right [HasImages V] {w} :
+theorem imageToKernel_zero_right [HasImages V] {w} :
     imageToKernel f (0 : B ⟶ C) w =
       (imageSubobject f).arrow ≫ inv (kernelSubobject (0 : B ⟶ C)).arrow :=
   by
   ext
   simp
-#align image_to_kernel_zero_right image_to_kernel_zero_right
+#align image_to_kernel_zero_right imageToKernel_zero_right
 
 section
 
 variable [HasKernels V] [HasImages V]
 
-theorem image_to_kernel_comp_right {D : V} (h : C ⟶ D) (w : f ≫ g = 0) :
+theorem imageToKernel_comp_right {D : V} (h : C ⟶ D) (w : f ≫ g = 0) :
     imageToKernel f (g ≫ h) (by simp [reassoc_of w]) =
-      imageToKernel f g w ≫ Subobject.ofLe _ _ (kernel_subobject_comp_le g h) :=
+      imageToKernel f g w ≫ Subobject.ofLe _ _ (kernelSubobject_comp_le g h) :=
   by
   ext
   simp
-#align image_to_kernel_comp_right image_to_kernel_comp_right
+#align image_to_kernel_comp_right imageToKernel_comp_right
 
-theorem image_to_kernel_comp_left {Z : V} (h : Z ⟶ A) (w : f ≫ g = 0) :
+theorem imageToKernel_comp_left {Z : V} (h : Z ⟶ A) (w : f ≫ g = 0) :
     imageToKernel (h ≫ f) g (by simp [w]) =
-      Subobject.ofLe _ _ (image_subobject_comp_le h f) ≫ imageToKernel f g w :=
+      Subobject.ofLe _ _ (imageSubobject_comp_le h f) ≫ imageToKernel f g w :=
   by
   ext
   simp
-#align image_to_kernel_comp_left image_to_kernel_comp_left
+#align image_to_kernel_comp_left imageToKernel_comp_left
 
 @[simp]
-theorem image_to_kernel_comp_mono {D : V} (h : C ⟶ D) [Mono h] (w) :
+theorem imageToKernel_comp_mono {D : V} (h : C ⟶ D) [Mono h] (w) :
     imageToKernel f (g ≫ h) w =
       imageToKernel f g ((cancel_mono h).mp (by simpa using w : (f ≫ g) ≫ h = 0 ≫ h)) ≫
-        (Subobject.isoOfEq _ _ (kernel_subobject_comp_mono g h)).inv :=
+        (Subobject.isoOfEq _ _ (kernelSubobject_comp_mono g h)).inv :=
   by
   ext
   simp
-#align image_to_kernel_comp_mono image_to_kernel_comp_mono
+#align image_to_kernel_comp_mono imageToKernel_comp_mono
 
 @[simp]
-theorem image_to_kernel_epi_comp {Z : V} (h : Z ⟶ A) [Epi h] (w) :
+theorem imageToKernel_epi_comp {Z : V} (h : Z ⟶ A) [Epi h] (w) :
     imageToKernel (h ≫ f) g w =
-      Subobject.ofLe _ _ (image_subobject_comp_le h f) ≫
+      Subobject.ofLe _ _ (imageSubobject_comp_le h f) ≫
         imageToKernel f g ((cancel_epi h).mp (by simpa using w : h ≫ f ≫ g = h ≫ 0)) :=
   by
   ext
   simp
-#align image_to_kernel_epi_comp image_to_kernel_epi_comp
+#align image_to_kernel_epi_comp imageToKernel_epi_comp
 
 end
 
 @[simp]
-theorem image_to_kernel_comp_hom_inv_comp [HasEqualizers V] [HasImages V] {Z : V} {i : B ≅ Z} (w) :
+theorem imageToKernel_comp_hom_inv_comp [HasEqualizers V] [HasImages V] {Z : V} {i : B ≅ Z} (w) :
     imageToKernel (f ≫ i.Hom) (i.inv ≫ g) w =
       (imageSubobjectCompIso _ _).Hom ≫
         imageToKernel f g (by simpa using w) ≫ (kernelSubobjectIsoComp i.inv g).inv :=
   by
   ext
   simp
-#align image_to_kernel_comp_hom_inv_comp image_to_kernel_comp_hom_inv_comp
+#align image_to_kernel_comp_hom_inv_comp imageToKernel_comp_hom_inv_comp
 
 open ZeroObject
 
 /-- `image_to_kernel` for `A --0--> B --g--> C`, where `g` is a mono is itself an epi
 (i.e. the sequence is exact at `B`).
 -/
-instance image_to_kernel_epi_of_zero_of_mono [HasKernels V] [HasZeroObject V] [Mono g] :
+instance imageToKernel_epi_of_zero_of_mono [HasKernels V] [HasZeroObject V] [Mono g] :
     Epi (imageToKernel (0 : A ⟶ B) g (by simp)) :=
   epi_of_target_iso_zero _ (kernelSubobjectIso g ≪≫ kernel.ofMono g)
-#align image_to_kernel_epi_of_zero_of_mono image_to_kernel_epi_of_zero_of_mono
+#align image_to_kernel_epi_of_zero_of_mono imageToKernel_epi_of_zero_of_mono
 
 /-- `image_to_kernel` for `A --f--> B --0--> C`, where `g` is an epi is itself an epi
 (i.e. the sequence is exact at `B`).
 -/
-instance image_to_kernel_epi_of_epi_of_zero [HasImages V] [Epi f] :
+instance imageToKernel_epi_of_epi_of_zero [HasImages V] [Epi f] :
     Epi (imageToKernel f (0 : B ⟶ C) (by simp)) :=
   by
-  simp only [image_to_kernel_zero_right]
+  simp only [imageToKernel_zero_right]
   haveI := epi_image_of_epi f
   rw [← image_subobject_arrow]
   refine' @epi_comp _ _ _ _ _ _ (epi_comp _ _) _ _
-#align image_to_kernel_epi_of_epi_of_zero image_to_kernel_epi_of_epi_of_zero
+#align image_to_kernel_epi_of_epi_of_zero imageToKernel_epi_of_epi_of_zero
 
 end
 
@@ -230,7 +230,7 @@ def homologyOfZeroRight [HasCokernel (imageToKernel f (0 : B ⟶ C) comp_zero)] 
 def homologyOfZeroLeft [HasZeroObject V] [HasKernels V] [HasImage (0 : A ⟶ B)]
     [HasCokernel (imageToKernel (0 : A ⟶ B) g zero_comp)] :
     homology (0 : A ⟶ B) g zero_comp ≅ kernel g :=
-  ((cokernel_iso_of_eq <| image_to_kernel_zero_left _).trans cokernelZeroIsoTarget).trans
+  ((cokernel_iso_of_eq <| imageToKernel_zero_left _).trans cokernelZeroIsoTarget).trans
     (kernelSubobjectIso _)
 #align homology_of_zero_left homologyOfZeroLeft
 
@@ -262,12 +262,12 @@ a pair `f g` and a pair `f' g'` satisfying `f ≫ g = 0` and `f' ≫ g' = 0`,
 the `image_to_kernel` morphisms intertwine the induced map on kernels and the induced map on images.
 -/
 @[reassoc.1]
-theorem image_subobject_map_comp_image_to_kernel (p : α.right = β.left) :
+theorem imageSubobjectMap_comp_imageToKernel (p : α.right = β.left) :
     imageToKernel f g w ≫ kernelSubobjectMap β = imageSubobjectMap α ≫ imageToKernel f' g' w' :=
   by
   ext
   simp [p]
-#align image_subobject_map_comp_image_to_kernel image_subobject_map_comp_image_to_kernel
+#align image_subobject_map_comp_image_to_kernel imageSubobjectMap_comp_imageToKernel
 
 variable [HasCokernel (imageToKernel f g w)] [HasCokernel (imageToKernel f' g' w')]
 
@@ -284,7 +284,7 @@ we get a morphism on homology.
 def homology.map (p : α.right = β.left) : homology f g w ⟶ homology f' g' w' :=
   cokernel.desc _ (kernelSubobjectMap β ≫ cokernel.π _)
     (by
-      rw [image_subobject_map_comp_image_to_kernel_assoc w w' α β p]
+      rw [imageSubobjectMap_comp_imageToKernel_assoc w w' α β p]
       simp only [cokernel.condition, comp_zero])
 #align homology.map homology.map
 
@@ -299,7 +299,7 @@ theorem homology.map_desc (p : α.right = β.left) {D : V} (k : (kernelSubobject
     (z : imageToKernel f' g' w' ≫ k = 0) :
     homology.map w w' α β p ≫ homology.desc f' g' w' k z =
       homology.desc f g w (kernelSubobjectMap β ≫ k)
-        (by simp only [image_subobject_map_comp_image_to_kernel_assoc w w' α β p, z, comp_zero]) :=
+        (by simp only [imageSubobjectMap_comp_imageToKernel_assoc w w' α β p, z, comp_zero]) :=
   by ext <;> simp only [homology.π_desc, homology.π_map_assoc]
 #align homology.map_desc homology.map_desc
 
@@ -423,22 +423,22 @@ def imageToKernel' (w : f ≫ g = 0) : image f ⟶ kernel g :=
 #align image_to_kernel' imageToKernel'
 
 @[simp]
-theorem image_subobject_iso_image_to_kernel' (w : f ≫ g = 0) :
+theorem imageSubobjectIso_imageToKernel' (w : f ≫ g = 0) :
     (imageSubobjectIso f).Hom ≫ imageToKernel' f g w =
       imageToKernel f g w ≫ (kernelSubobjectIso g).Hom :=
   by
   ext
   simp [imageToKernel']
-#align image_subobject_iso_image_to_kernel' image_subobject_iso_image_to_kernel'
+#align image_subobject_iso_image_to_kernel' imageSubobjectIso_imageToKernel'
 
 @[simp]
-theorem image_to_kernel'_kernel_subobject_iso (w : f ≫ g = 0) :
+theorem imageToKernel'_kernelSubobjectIso (w : f ≫ g = 0) :
     imageToKernel' f g w ≫ (kernelSubobjectIso g).inv =
       (imageSubobjectIso f).inv ≫ imageToKernel f g w :=
   by
   ext
   simp [imageToKernel']
-#align image_to_kernel'_kernel_subobject_iso image_to_kernel'_kernel_subobject_iso
+#align image_to_kernel'_kernel_subobject_iso imageToKernel'_kernelSubobjectIso
 
 variable [HasCokernels V]
 
@@ -449,10 +449,10 @@ def homologyIsoCokernelImageToKernel' (w : f ≫ g = 0) :
     where
   Hom :=
     cokernel.map _ _ (imageSubobjectIso f).Hom (kernelSubobjectIso g).Hom
-      (by simp only [image_subobject_iso_image_to_kernel'])
+      (by simp only [imageSubobjectIso_imageToKernel'])
   inv :=
     cokernel.map _ _ (imageSubobjectIso f).inv (kernelSubobjectIso g).inv
-      (by simp only [image_to_kernel'_kernel_subobject_iso])
+      (by simp only [imageToKernel'_kernelSubobjectIso])
   hom_inv_id' := by
     apply coequalizer.hom_ext
     simp only [iso.hom_inv_id_assoc, cokernel.π_desc, cokernel.π_desc_assoc, category.assoc,

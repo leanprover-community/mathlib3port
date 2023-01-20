@@ -44,22 +44,22 @@ theorem mono_of_nonzero_from_simple [HasKernels C] {X Y : C} [Simple X] {f : X �
 /-- The part of **Schur's lemma** that holds in any preadditive category with kernels:
 that a nonzero morphism between simple objects is an isomorphism.
 -/
-theorem is_iso_of_hom_simple [HasKernels C] {X Y : C} [Simple X] [Simple Y] {f : X ⟶ Y}
-    (w : f ≠ 0) : IsIso f :=
+theorem isIso_of_hom_simple [HasKernels C] {X Y : C} [Simple X] [Simple Y] {f : X ⟶ Y} (w : f ≠ 0) :
+    IsIso f :=
   haveI := mono_of_nonzero_from_simple w
   is_iso_of_mono_of_nonzero w
-#align category_theory.is_iso_of_hom_simple CategoryTheory.is_iso_of_hom_simple
+#align category_theory.is_iso_of_hom_simple CategoryTheory.isIso_of_hom_simple
 
 /-- As a corollary of Schur's lemma for preadditive categories,
 any morphism between simple objects is (exclusively) either an isomorphism or zero.
 -/
-theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X ⟶ Y) :
+theorem isIso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X ⟶ Y) :
     IsIso f ↔ f ≠ 0 :=
   ⟨fun I => by
     intro h
     apply id_nonzero X
-    simp only [← is_iso.hom_inv_id f, h, zero_comp], fun w => is_iso_of_hom_simple w⟩
-#align category_theory.is_iso_iff_nonzero CategoryTheory.is_iso_iff_nonzero
+    simp only [← is_iso.hom_inv_id f, h, zero_comp], fun w => isIso_of_hom_simple w⟩
+#align category_theory.is_iso_iff_nonzero CategoryTheory.isIso_iff_nonzero
 
 /-- In any preadditive category with kernels,
 the endomorphisms of a simple object form a division ring.
@@ -131,7 +131,7 @@ theorem finrank_endomorphism_eq_one {X : C} (is_iso_iff_nonzero : ∀ f : X ⟶ 
   · intro f
     haveI : Nontrivial (End X) := nontrivial_of_ne _ _ id_nonzero
     obtain ⟨c, nu⟩ :=
-      @spectrum.nonempty_of_is_alg_closed_of_finite_dimensional 𝕜 (End X) _ _ _ _ _
+      @spectrum.nonempty_of_isAlgClosed_of_finiteDimensional 𝕜 (End X) _ _ _ _ _
         (by
           convert I
           ext
@@ -141,7 +141,7 @@ theorem finrank_endomorphism_eq_one {X : C} (is_iso_iff_nonzero : ∀ f : X ⟶ 
         (End.of f)
     use c
     rw [spectrum.mem_iff, IsUnit.sub_iff, is_unit_iff_is_iso, is_iso_iff_nonzero, Ne.def, not_not,
-      sub_eq_zero, Algebra.algebra_map_eq_smul_one] at nu
+      sub_eq_zero, Algebra.algebraMap_eq_smul_one] at nu
     exact nu.symm
 #align category_theory.finrank_endomorphism_eq_one CategoryTheory.finrank_endomorphism_eq_one
 
@@ -151,7 +151,7 @@ variable [HasKernels C]
 -/
 theorem finrank_endomorphism_simple_eq_one (X : C) [Simple X] [I : FiniteDimensional 𝕜 (X ⟶ X)] :
     finrank 𝕜 (X ⟶ X) = 1 :=
-  finrank_endomorphism_eq_one 𝕜 is_iso_iff_nonzero
+  finrank_endomorphism_eq_one 𝕜 isIso_iff_nonzero
 #align category_theory.finrank_endomorphism_simple_eq_one CategoryTheory.finrank_endomorphism_simple_eq_one
 
 theorem endomorphism_simple_eq_smul_id {X : C} [Simple X] [I : FiniteDimensional 𝕜 (X ⟶ X)]

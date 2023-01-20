@@ -451,7 +451,7 @@ theorem matches_map (f : α → β) :
   | R * S => by simp only [matches_map, map, matches_mul, map_mul]
   | star R => by
     simp_rw [map, matches, matches_map]
-    rw [Language.star_eq_supr_pow, Language.star_eq_supr_pow]
+    rw [Language.star_eq_supᵢ_pow, Language.star_eq_supᵢ_pow]
     simp_rw [← map_pow]
     exact image_Union.symm
 #align regular_expression.matches_map RegularExpression.matches_map

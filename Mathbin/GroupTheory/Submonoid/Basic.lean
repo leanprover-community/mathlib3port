@@ -437,6 +437,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.coe_Inf Subm
 theorem coe_infₛ (S : Set (Submonoid M)) : ((infₛ S : Submonoid M) : Set M) = ⋂ s ∈ S, ↑s :=
   rfl
 #align submonoid.coe_Inf Submonoid.coe_infₛ
+#align add_submonoid.coe_Inf AddSubmonoid.coe_infₛ
 
 /- warning: submonoid.mem_Inf -> Submonoid.mem_infₛ is a dubious translation:
 lean 3 declaration is
@@ -448,6 +449,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.mem_Inf Subm
 theorem mem_infₛ {S : Set (Submonoid M)} {x : M} : x ∈ infₛ S ↔ ∀ p ∈ S, x ∈ p :=
   Set.mem_interᵢ₂
 #align submonoid.mem_Inf Submonoid.mem_infₛ
+#align add_submonoid.mem_Inf AddSubmonoid.mem_infₛ
 
 /- warning: submonoid.mem_infi -> Submonoid.mem_infᵢ is a dubious translation:
 lean 3 declaration is
@@ -459,6 +461,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.mem_infi Sub
 theorem mem_infᵢ {ι : Sort _} {S : ι → Submonoid M} {x : M} : (x ∈ ⨅ i, S i) ↔ ∀ i, x ∈ S i := by
   simp only [infᵢ, mem_Inf, Set.forall_range_iff]
 #align submonoid.mem_infi Submonoid.mem_infᵢ
+#align add_submonoid.mem_infi AddSubmonoid.mem_infᵢ
 
 /- warning: submonoid.coe_infi -> Submonoid.coe_infᵢ is a dubious translation:
 lean 3 declaration is
@@ -470,6 +473,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.coe_infi Sub
 theorem coe_infᵢ {ι : Sort _} {S : ι → Submonoid M} : (↑(⨅ i, S i) : Set M) = ⋂ i, S i := by
   simp only [infᵢ, coe_Inf, Set.binterᵢ_range]
 #align submonoid.coe_infi Submonoid.coe_infᵢ
+#align add_submonoid.coe_infi AddSubmonoid.coe_infᵢ
 
 /-- Submonoids of a monoid form a complete lattice. -/
 @[to_additive "The `add_submonoid`s of an `add_monoid` form a complete lattice."]
@@ -632,7 +636,7 @@ theorem closure_induction {p : M → Prop} {x} (h : x ∈ closure s) (Hs : ∀ x
 
 /- warning: submonoid.closure_induction' -> Submonoid.closure_induction' is a dubious translation:
 lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_1 : MulOneClass.{u1} M] (s : Set.{u1} M) {p : forall (x : M), (Membership.Mem.{u1, u1} M (Submonoid.{u1} M _inst_1) (SetLike.hasMem.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.setLike.{u1} M _inst_1)) x (Submonoid.closure.{u1} M _inst_1 s)) -> Prop}, (forall (x : M) (h : Membership.Mem.{u1, u1} M (Set.{u1} M) (Set.hasMem.{u1} M) x s), p x (Submonoid.subset_closure.{u1} M _inst_1 s x h)) -> (p (OfNat.ofNat.{u1} M 1 (OfNat.mk.{u1} M 1 (One.one.{u1} M (MulOneClass.toHasOne.{u1} M _inst_1)))) (OneMemClass.one_mem.{u1, u1} (Submonoid.{u1} M _inst_1) M (MulOneClass.toHasOne.{u1} M _inst_1) (Submonoid.setLike.{u1} M _inst_1) (SubmonoidClass.to_one_mem_class.{u1, u1} (Submonoid.{u1} M _inst_1) M _inst_1 (Submonoid.setLike.{u1} M _inst_1) (Submonoid.submonoid_class.{u1} M _inst_1)) (Submonoid.closure.{u1} M _inst_1 s))) -> (forall (x : M) (hx : Membership.Mem.{u1, u1} M (Submonoid.{u1} M _inst_1) (SetLike.hasMem.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.setLike.{u1} M _inst_1)) x (Submonoid.closure.{u1} M _inst_1 s)) (y : M) (hy : Membership.Mem.{u1, u1} M (Submonoid.{u1} M _inst_1) (SetLike.hasMem.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.setLike.{u1} M _inst_1)) y (Submonoid.closure.{u1} M _inst_1 s)), (p x hx) -> (p y hy) -> (p (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toHasMul.{u1} M _inst_1)) x y) (MulMemClass.mul_mem.{u1, u1} (Submonoid.{u1} M _inst_1) M (MulOneClass.toHasMul.{u1} M _inst_1) (Submonoid.setLike.{u1} M _inst_1) (SubmonoidClass.to_mul_mem_class.{u1, u1} (Submonoid.{u1} M _inst_1) M _inst_1 (Submonoid.setLike.{u1} M _inst_1) (Submonoid.submonoid_class.{u1} M _inst_1)) (Submonoid.closure.{u1} M _inst_1 s) x y hx hy))) -> (forall {x : M} (hx : Membership.Mem.{u1, u1} M (Submonoid.{u1} M _inst_1) (SetLike.hasMem.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.setLike.{u1} M _inst_1)) x (Submonoid.closure.{u1} M _inst_1 s)), p x hx)
+  forall {M : Type.{u1}} [_inst_1 : MulOneClass.{u1} M] (s : Set.{u1} M) {p : forall (x : M), (Membership.Mem.{u1, u1} M (Submonoid.{u1} M _inst_1) (SetLike.hasMem.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.setLike.{u1} M _inst_1)) x (Submonoid.closure.{u1} M _inst_1 s)) -> Prop}, (forall (x : M) (h : Membership.Mem.{u1, u1} M (Set.{u1} M) (Set.hasMem.{u1} M) x s), p x (Submonoid.subset_closure.{u1} M _inst_1 s x h)) -> (p (OfNat.ofNat.{u1} M 1 (OfNat.mk.{u1} M 1 (One.one.{u1} M (MulOneClass.toHasOne.{u1} M _inst_1)))) (OneMemClass.one_mem.{u1, u1} (Submonoid.{u1} M _inst_1) M (MulOneClass.toHasOne.{u1} M _inst_1) (Submonoid.setLike.{u1} M _inst_1) (SubmonoidClass.to_oneMemClass.{u1, u1} (Submonoid.{u1} M _inst_1) M _inst_1 (Submonoid.setLike.{u1} M _inst_1) (Submonoid.submonoidClass.{u1} M _inst_1)) (Submonoid.closure.{u1} M _inst_1 s))) -> (forall (x : M) (hx : Membership.Mem.{u1, u1} M (Submonoid.{u1} M _inst_1) (SetLike.hasMem.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.setLike.{u1} M _inst_1)) x (Submonoid.closure.{u1} M _inst_1 s)) (y : M) (hy : Membership.Mem.{u1, u1} M (Submonoid.{u1} M _inst_1) (SetLike.hasMem.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.setLike.{u1} M _inst_1)) y (Submonoid.closure.{u1} M _inst_1 s)), (p x hx) -> (p y hy) -> (p (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toHasMul.{u1} M _inst_1)) x y) (MulMemClass.mul_mem.{u1, u1} (Submonoid.{u1} M _inst_1) M (MulOneClass.toHasMul.{u1} M _inst_1) (Submonoid.setLike.{u1} M _inst_1) (SubmonoidClass.to_mulMemClass.{u1, u1} (Submonoid.{u1} M _inst_1) M _inst_1 (Submonoid.setLike.{u1} M _inst_1) (Submonoid.submonoidClass.{u1} M _inst_1)) (Submonoid.closure.{u1} M _inst_1 s) x y hx hy))) -> (forall {x : M} (hx : Membership.Mem.{u1, u1} M (Submonoid.{u1} M _inst_1) (SetLike.hasMem.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.setLike.{u1} M _inst_1)) x (Submonoid.closure.{u1} M _inst_1 s)), p x hx)
 but is expected to have type
   forall {M : Type.{u1}} [_inst_1 : MulOneClass.{u1} M] (s : Set.{u1} M) {p : forall (x : M), (Membership.mem.{u1, u1} M (Submonoid.{u1} M _inst_1) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.instSetLikeSubmonoid.{u1} M _inst_1)) x (Submonoid.closure.{u1} M _inst_1 s)) -> Prop}, (forall (x : M) (h : Membership.mem.{u1, u1} M (Set.{u1} M) (Set.instMembershipSet.{u1} M) x s), p x (Submonoid.subset_closure.{u1} M _inst_1 s x h)) -> (p (OfNat.ofNat.{u1} M 1 (One.toOfNat1.{u1} M (MulOneClass.toOne.{u1} M _inst_1))) (OneMemClass.one_mem.{u1, u1} (Submonoid.{u1} M _inst_1) M (MulOneClass.toOne.{u1} M _inst_1) (Submonoid.instSetLikeSubmonoid.{u1} M _inst_1) (SubmonoidClass.toOneMemClass.{u1, u1} (Submonoid.{u1} M _inst_1) M _inst_1 (Submonoid.instSetLikeSubmonoid.{u1} M _inst_1) (Submonoid.instSubmonoidClassSubmonoidInstSetLikeSubmonoid.{u1} M _inst_1)) (Submonoid.closure.{u1} M _inst_1 s))) -> (forall (x : M) (hx : Membership.mem.{u1, u1} M (Submonoid.{u1} M _inst_1) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.instSetLikeSubmonoid.{u1} M _inst_1)) x (Submonoid.closure.{u1} M _inst_1 s)) (y : M) (hy : Membership.mem.{u1, u1} M (Submonoid.{u1} M _inst_1) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.instSetLikeSubmonoid.{u1} M _inst_1)) y (Submonoid.closure.{u1} M _inst_1 s)), (p x hx) -> (p y hy) -> (p (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toMul.{u1} M _inst_1)) x y) (MulMemClass.mul_mem.{u1, u1} (Submonoid.{u1} M _inst_1) M (MulOneClass.toMul.{u1} M _inst_1) (Submonoid.instSetLikeSubmonoid.{u1} M _inst_1) (SubmonoidClass.toMulMemClass.{u1, u1} (Submonoid.{u1} M _inst_1) M _inst_1 (Submonoid.instSetLikeSubmonoid.{u1} M _inst_1) (Submonoid.instSubmonoidClassSubmonoidInstSetLikeSubmonoid.{u1} M _inst_1)) (Submonoid.closure.{u1} M _inst_1 s) x y hx hy))) -> (forall {x : M} (hx : Membership.mem.{u1, u1} M (Submonoid.{u1} M _inst_1) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.instSetLikeSubmonoid.{u1} M _inst_1)) x (Submonoid.closure.{u1} M _inst_1 s)), p x hx)
 Case conversion may be inaccurate. Consider using '#align submonoid.closure_induction' Submonoid.closure_induction'ₓ'. -/
@@ -770,6 +774,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.closure_Unio
 theorem closure_unionᵢ {ι} (s : ι → Set M) : closure (⋃ i, s i) = ⨆ i, closure (s i) :=
   (Submonoid.gi M).gc.l_supr
 #align submonoid.closure_Union Submonoid.closure_unionᵢ
+#align add_submonoid.closure_Union AddSubmonoid.closure_unionᵢ
 
 /- warning: submonoid.closure_singleton_le_iff_mem -> Submonoid.closure_singleton_le_iff_mem is a dubious translation:
 lean 3 declaration is
@@ -796,6 +801,7 @@ theorem mem_supᵢ {ι : Sort _} (p : ι → Submonoid M) {m : M} :
   rw [← closure_singleton_le_iff_mem, le_supᵢ_iff]
   simp only [closure_singleton_le_iff_mem]
 #align submonoid.mem_supr Submonoid.mem_supᵢ
+#align add_submonoid.mem_supr AddSubmonoid.mem_supᵢ
 
 /- warning: submonoid.supr_eq_closure -> Submonoid.supᵢ_eq_closure is a dubious translation:
 lean 3 declaration is
@@ -808,6 +814,7 @@ theorem supᵢ_eq_closure {ι : Sort _} (p : ι → Submonoid M) :
     (⨆ i, p i) = Submonoid.closure (⋃ i, (p i : Set M)) := by
   simp_rw [Submonoid.closure_unionᵢ, Submonoid.closure_eq]
 #align submonoid.supr_eq_closure Submonoid.supᵢ_eq_closure
+#align add_submonoid.supr_eq_closure AddSubmonoid.supᵢ_eq_closure
 
 /- warning: submonoid.disjoint_def -> Submonoid.disjoint_def is a dubious translation:
 lean 3 declaration is
@@ -863,6 +870,7 @@ Case conversion may be inaccurate. Consider using '#align monoid_hom.eq_mlocus_s
 theorem eqLocusM_same (f : M →* N) : f.eqMlocus f = ⊤ :=
   SetLike.ext fun _ => eq_self_iff_true _
 #align monoid_hom.eq_mlocus_same MonoidHom.eqLocusM_same
+#align add_monoid_hom.eq_mlocus_same AddMonoidHom.eqLocusM_same
 
 /- warning: monoid_hom.eq_on_mclosure -> MonoidHom.eqOn_closureM is a dubious translation:
 lean 3 declaration is
@@ -977,6 +985,7 @@ theorem coe_ofClosureMEqTopLeft (f : M → N) (hs : closure s = ⊤) (h1 hmul) :
     ⇑(ofClosureMEqTopLeft f hs h1 hmul) = f :=
   rfl
 #align monoid_hom.coe_of_mclosure_eq_top_left MonoidHom.coe_ofClosureMEqTopLeft
+#align add_monoid_hom.coe_of_mclosure_eq_top_left AddMonoidHom.coe_ofClosureMEqTopLeft
 
 /- warning: monoid_hom.of_mclosure_eq_top_right -> MonoidHom.ofClosureMEqTopRight is a dubious translation:
 lean 3 declaration is
@@ -1010,6 +1019,7 @@ theorem coe_ofClosureMEqTopRight (f : M → N) (hs : closure s = ⊤) (h1 hmul) 
     ⇑(ofClosureMEqTopRight f hs h1 hmul) = f :=
   rfl
 #align monoid_hom.coe_of_mclosure_eq_top_right MonoidHom.coe_ofClosureMEqTopRight
+#align add_monoid_hom.coe_of_mclosure_eq_top_right AddMonoidHom.coe_ofClosureMEqTopRight
 
 end MonoidHom
 

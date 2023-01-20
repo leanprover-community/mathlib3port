@@ -40,14 +40,14 @@ noncomputable def adjoin.powerBasisAux {x : S} (hx : IsIntegral K x) :
     _root_.is_integral K
       (show adjoin K ({x} : Set S) from ⟨x, subset_adjoin (Set.mem_singleton x)⟩) :=
     by
-    apply (is_integral_algebra_map_iff hST).mp
+    apply (isIntegral_algebraMap_iff hST).mp
     convert hx
     infer_instance
-  have minpoly_eq := minpoly.eq_of_algebra_map_eq hST hx' rfl
+  have minpoly_eq := minpoly.eq_of_algebraMap_eq hST hx' rfl
   apply
     @Basis.mk (Fin (minpoly K x).natDegree) _ (adjoin K {x}) fun i =>
       ⟨x, subset_adjoin (Set.mem_singleton x)⟩ ^ (i : ℕ)
-  · have := linear_independent_pow _
+  · have := linearIndependent_pow _
     rwa [minpoly_eq] at this
   · rintro ⟨y, hy⟩ _
     have := hx'.mem_span_pow
@@ -107,7 +107,7 @@ include hB
 `is_integral R (B.basis.repr (B.gen ^ n) i)` for all `i` if
 `minpoly S B.gen = (minpoly R B.gen).map (algebra_map R S)`. This is the case if `R` is a GCD domain
 and `S` is its fraction ring. -/
-theorem repr_gen_pow_is_integral [IsDomain S]
+theorem repr_gen_pow_isIntegral [IsDomain S]
     (hmin : minpoly S B.gen = (minpoly R B.gen).map (algebraMap R S)) (n : ℕ) :
     ∀ i, IsIntegral R (B.Basis.repr (B.gen ^ n) i) :=
   by
@@ -118,7 +118,7 @@ theorem repr_gen_pow_is_integral [IsDomain S]
     rw [← @aeval_X_pow R _ _ _ _ B.gen, ← mod_by_monic_add_div (X ^ n) (minpoly.monic hB)]
     simp
   by_cases hQ : Q = 0
-  · simp [this, hQ, is_integral_zero]
+  · simp [this, hQ, isIntegral_zero]
   have hlt : Q.nat_degree < B.dim :=
     by
     rw [← B.nat_degree_minpoly, hmin, (minpoly.monic hB).nat_degree_map,
@@ -130,15 +130,15 @@ theorem repr_gen_pow_is_integral [IsDomain S]
   simp only [LinearEquiv.map_sum, LinearEquiv.map_smulₛₗ, RingHom.id_apply, Finset.sum_apply']
   refine' IsIntegral.sum _ fun j hj => _
   replace hj := Finset.mem_range.1 hj
-  rw [← Fin.val_mk hj, ← B.basis_eq_pow, Algebra.smul_def, IsScalarTower.algebra_map_apply R S A, ←
+  rw [← Fin.val_mk hj, ← B.basis_eq_pow, Algebra.smul_def, IsScalarTower.algebraMap_apply R S A, ←
     Algebra.smul_def, LinearEquiv.map_smul]
-  simp only [algebra_map_smul, Finsupp.coe_smul, Pi.smul_apply, B.basis.repr_self_apply]
+  simp only [algebraMap_smul, Finsupp.coe_smul, Pi.smul_apply, B.basis.repr_self_apply]
   by_cases hij : (⟨j, hj⟩ : Fin _) = i
   · simp only [hij, eq_self_iff_true, if_true]
     rw [Algebra.smul_def, mul_one]
-    exact is_integral_algebra_map
-  · simp [hij, is_integral_zero]
-#align power_basis.repr_gen_pow_is_integral PowerBasis.repr_gen_pow_is_integral
+    exact isIntegral_algebraMap
+  · simp [hij, isIntegral_zero]
+#align power_basis.repr_gen_pow_is_integral PowerBasis.repr_gen_pow_isIntegral
 
 variable {B}
 
@@ -146,7 +146,7 @@ variable {B}
 integral coordinates in the base `B.basis`. Then `is_integral R ((B.basis.repr (x * y) i)` for all
 `i` if `minpoly S B.gen = (minpoly R B.gen).map (algebra_map R S)`. This is the case if `R` is a GCD
 domain and `S` is its fraction ring. -/
-theorem repr_mul_is_integral [IsDomain S] {x y : A} (hx : ∀ i, IsIntegral R (B.Basis.repr x i))
+theorem repr_mul_isIntegral [IsDomain S] {x y : A} (hx : ∀ i, IsIntegral R (B.Basis.repr x i))
     (hy : ∀ i, IsIntegral R (B.Basis.repr y i))
     (hmin : minpoly S B.gen = (minpoly R B.gen).map (algebraMap R S)) :
     ∀ i, IsIntegral R (B.Basis.repr (x * y) i) :=
@@ -157,38 +157,38 @@ theorem repr_mul_is_integral [IsDomain S] {x y : A} (hx : ∀ i, IsIntegral R (B
   refine' IsIntegral.sum _ fun I hI => _
   simp only [Algebra.smul_mul_assoc, Algebra.mul_smul_comm, LinearEquiv.map_smulₛₗ,
     RingHom.id_apply, Finsupp.coe_smul, Pi.smul_apply, id.smul_eq_mul]
-  refine' is_integral_mul (hy _) (is_integral_mul (hx _) _)
+  refine' isIntegral_mul (hy _) (isIntegral_mul (hx _) _)
   simp only [coe_basis, ← pow_add]
   refine' repr_gen_pow_is_integral hB hmin _ _
-#align power_basis.repr_mul_is_integral PowerBasis.repr_mul_is_integral
+#align power_basis.repr_mul_is_integral PowerBasis.repr_mul_isIntegral
 
 /-- Let `B : power_basis S A` be such that `is_integral R B.gen`, and let `x : A` be and element
 with integral coordinates in the base `B.basis`. Then `is_integral R ((B.basis.repr (x ^ n) i)` for
 all `i` and all `n` if `minpoly S B.gen = (minpoly R B.gen).map (algebra_map R S)`. This is the case
 if `R` is a GCD domain and `S` is its fraction ring. -/
-theorem repr_pow_is_integral [IsDomain S] {x : A} (hx : ∀ i, IsIntegral R (B.Basis.repr x i))
+theorem repr_pow_isIntegral [IsDomain S] {x : A} (hx : ∀ i, IsIntegral R (B.Basis.repr x i))
     (hmin : minpoly S B.gen = (minpoly R B.gen).map (algebraMap R S)) (n : ℕ) :
     ∀ i, IsIntegral R (B.Basis.repr (x ^ n) i) :=
   by
-  nontriviality A using Subsingleton.elim (x ^ n) 0, is_integral_zero
+  nontriviality A using Subsingleton.elim (x ^ n) 0, isIntegral_zero
   revert hx
   refine' Nat.case_strong_induction_on n _ fun n hn => _
   · intro hx i
     rw [pow_zero, ← pow_zero B.gen, ← Fin.val_mk B.dim_pos, ← B.basis_eq_pow,
       B.basis.repr_self_apply]
     split_ifs
-    · exact is_integral_one
-    · exact is_integral_zero
+    · exact isIntegral_one
+    · exact isIntegral_zero
   · intro hx
     rw [pow_succ]
     exact repr_mul_is_integral hB hx (fun _ => hn _ le_rfl (fun _ => hx _) _) hmin
-#align power_basis.repr_pow_is_integral PowerBasis.repr_pow_is_integral
+#align power_basis.repr_pow_is_integral PowerBasis.repr_pow_isIntegral
 
 /-- Let `B B' : power_basis K S` be such that `is_integral R B.gen`, and let `P : R[X]` be such that
 `aeval B.gen P = B'.gen`. Then `is_integral R (B.basis.to_matrix B'.basis i j)` for all `i` and `j`
 if `minpoly K B.gen = (minpoly R B.gen).map (algebra_map R L)`. This is the case
 if `R` is a GCD domain and `K` is its fraction ring. -/
-theorem to_matrix_is_integral {B B' : PowerBasis K S} {P : R[X]} (h : aeval B.gen P = B'.gen)
+theorem toMatrix_isIntegral {B B' : PowerBasis K S} {P : R[X]} (h : aeval B.gen P = B'.gen)
     (hB : IsIntegral R B.gen) (hmin : minpoly K B.gen = (minpoly R B.gen).map (algebraMap R K)) :
     ∀ i j, IsIntegral R (B.Basis.toMatrix B'.Basis i j) :=
   by
@@ -197,10 +197,10 @@ theorem to_matrix_is_integral {B B' : PowerBasis K S} {P : R[X]} (h : aeval B.ge
   refine' repr_pow_is_integral hB (fun i => _) hmin _ _
   rw [← h, aeval_eq_sum_range, LinearEquiv.map_sum, Finset.sum_apply']
   refine' IsIntegral.sum _ fun n hn => _
-  rw [Algebra.smul_def, IsScalarTower.algebra_map_apply R K S, ← Algebra.smul_def,
-    LinearEquiv.map_smul, algebra_map_smul]
-  exact is_integral_smul _ (repr_gen_pow_is_integral hB hmin _ _)
-#align power_basis.to_matrix_is_integral PowerBasis.to_matrix_is_integral
+  rw [Algebra.smul_def, IsScalarTower.algebraMap_apply R K S, ← Algebra.smul_def,
+    LinearEquiv.map_smul, algebraMap_smul]
+  exact isIntegral_smul _ (repr_gen_pow_is_integral hB hmin _ _)
+#align power_basis.to_matrix_is_integral PowerBasis.toMatrix_isIntegral
 
 end PowerBasis
 

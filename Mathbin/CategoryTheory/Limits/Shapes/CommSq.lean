@@ -281,30 +281,30 @@ noncomputable def isoPullback (h : IsPullback fst snd f g) [HasPullback f g] : P
 #align category_theory.is_pullback.iso_pullback CategoryTheory.IsPullback.isoPullback
 
 @[simp]
-theorem iso_pullback_hom_fst (h : IsPullback fst snd f g) [HasPullback f g] :
+theorem isoPullback_hom_fst (h : IsPullback fst snd f g) [HasPullback f g] :
     h.isoPullback.Hom ≫ pullback.fst = fst :=
   by
   dsimp [iso_pullback, cone, comm_sq.cone]
   simp
-#align category_theory.is_pullback.iso_pullback_hom_fst CategoryTheory.IsPullback.iso_pullback_hom_fst
+#align category_theory.is_pullback.iso_pullback_hom_fst CategoryTheory.IsPullback.isoPullback_hom_fst
 
 @[simp]
-theorem iso_pullback_hom_snd (h : IsPullback fst snd f g) [HasPullback f g] :
+theorem isoPullback_hom_snd (h : IsPullback fst snd f g) [HasPullback f g] :
     h.isoPullback.Hom ≫ pullback.snd = snd :=
   by
   dsimp [iso_pullback, cone, comm_sq.cone]
   simp
-#align category_theory.is_pullback.iso_pullback_hom_snd CategoryTheory.IsPullback.iso_pullback_hom_snd
+#align category_theory.is_pullback.iso_pullback_hom_snd CategoryTheory.IsPullback.isoPullback_hom_snd
 
 @[simp]
-theorem iso_pullback_inv_fst (h : IsPullback fst snd f g) [HasPullback f g] :
+theorem isoPullback_inv_fst (h : IsPullback fst snd f g) [HasPullback f g] :
     h.isoPullback.inv ≫ fst = pullback.fst := by simp [iso.inv_comp_eq]
-#align category_theory.is_pullback.iso_pullback_inv_fst CategoryTheory.IsPullback.iso_pullback_inv_fst
+#align category_theory.is_pullback.iso_pullback_inv_fst CategoryTheory.IsPullback.isoPullback_inv_fst
 
 @[simp]
-theorem iso_pullback_inv_snd (h : IsPullback fst snd f g) [HasPullback f g] :
+theorem isoPullback_inv_snd (h : IsPullback fst snd f g) [HasPullback f g] :
     h.isoPullback.inv ≫ snd = pullback.snd := by simp [iso.inv_comp_eq]
-#align category_theory.is_pullback.iso_pullback_inv_snd CategoryTheory.IsPullback.iso_pullback_inv_snd
+#align category_theory.is_pullback.iso_pullback_inv_snd CategoryTheory.IsPullback.isoPullback_inv_snd
 
 theorem ofIsoPullback (h : CommSq fst snd f g) [HasPullback f g] (i : P ≅ pullback f g)
     (w₁ : i.Hom ≫ pullback.fst = fst) (w₂ : i.Hom ≫ pullback.snd = snd) : IsPullback fst snd f g :=
@@ -413,30 +413,30 @@ noncomputable def isoPushout (h : IsPushout f g inl inr) [HasPushout f g] : P �
 #align category_theory.is_pushout.iso_pushout CategoryTheory.IsPushout.isoPushout
 
 @[simp]
-theorem inl_iso_pushout_inv (h : IsPushout f g inl inr) [HasPushout f g] :
+theorem inl_isoPushout_inv (h : IsPushout f g inl inr) [HasPushout f g] :
     pushout.inl ≫ h.isoPushout.inv = inl :=
   by
   dsimp [iso_pushout, cocone, comm_sq.cocone]
   simp
-#align category_theory.is_pushout.inl_iso_pushout_inv CategoryTheory.IsPushout.inl_iso_pushout_inv
+#align category_theory.is_pushout.inl_iso_pushout_inv CategoryTheory.IsPushout.inl_isoPushout_inv
 
 @[simp]
-theorem inr_iso_pushout_inv (h : IsPushout f g inl inr) [HasPushout f g] :
+theorem inr_isoPushout_inv (h : IsPushout f g inl inr) [HasPushout f g] :
     pushout.inr ≫ h.isoPushout.inv = inr :=
   by
   dsimp [iso_pushout, cocone, comm_sq.cocone]
   simp
-#align category_theory.is_pushout.inr_iso_pushout_inv CategoryTheory.IsPushout.inr_iso_pushout_inv
+#align category_theory.is_pushout.inr_iso_pushout_inv CategoryTheory.IsPushout.inr_isoPushout_inv
 
 @[simp]
-theorem inl_iso_pushout_hom (h : IsPushout f g inl inr) [HasPushout f g] :
+theorem inl_isoPushout_hom (h : IsPushout f g inl inr) [HasPushout f g] :
     inl ≫ h.isoPushout.Hom = pushout.inl := by simp [← iso.eq_comp_inv]
-#align category_theory.is_pushout.inl_iso_pushout_hom CategoryTheory.IsPushout.inl_iso_pushout_hom
+#align category_theory.is_pushout.inl_iso_pushout_hom CategoryTheory.IsPushout.inl_isoPushout_hom
 
 @[simp]
-theorem inr_iso_pushout_hom (h : IsPushout f g inl inr) [HasPushout f g] :
+theorem inr_isoPushout_hom (h : IsPushout f g inl inr) [HasPushout f g] :
     inr ≫ h.isoPushout.Hom = pushout.inr := by simp [← iso.eq_comp_inv]
-#align category_theory.is_pushout.inr_iso_pushout_hom CategoryTheory.IsPushout.inr_iso_pushout_hom
+#align category_theory.is_pushout.inr_iso_pushout_hom CategoryTheory.IsPushout.inr_isoPushout_hom
 
 theorem ofIsoPushout (h : CommSq f g inl inr) [HasPushout f g] (i : P ≅ pushout f g)
     (w₁ : inl ≫ i.Hom = pushout.inl) (w₂ : inr ≫ i.Hom = pushout.inr) : IsPushout f g inl inr :=
@@ -627,10 +627,10 @@ theorem ofHasBinaryBiproduct (X Y : C) [HasBinaryBiproduct X Y] :
   ofIsBilimit' (BinaryBiproduct.isBilimit X Y)
 #align category_theory.is_pullback.of_has_binary_biproduct CategoryTheory.IsPullback.ofHasBinaryBiproduct
 
-instance has_pullback_biprod_fst_biprod_snd [HasBinaryBiproduct X Y] :
+instance hasPullback_biprod_fst_biprod_snd [HasBinaryBiproduct X Y] :
     HasPullback (biprod.inl : X ⟶ _) (biprod.inr : Y ⟶ _) :=
   HasLimit.mk ⟨_, (ofHasBinaryBiproduct X Y).IsLimit⟩
-#align category_theory.is_pullback.has_pullback_biprod_fst_biprod_snd CategoryTheory.IsPullback.has_pullback_biprod_fst_biprod_snd
+#align category_theory.is_pullback.has_pullback_biprod_fst_biprod_snd CategoryTheory.IsPullback.hasPullback_biprod_fst_biprod_snd
 
 /-- The pullback of `biprod.inl` and `biprod.inr` is the zero object. -/
 def pullbackBiprodInlBiprodInr [HasBinaryBiproduct X Y] :
@@ -841,10 +841,10 @@ theorem ofHasBinaryBiproduct (X Y : C) [HasBinaryBiproduct X Y] :
   ofIsBilimit' (BinaryBiproduct.isBilimit X Y)
 #align category_theory.is_pushout.of_has_binary_biproduct CategoryTheory.IsPushout.ofHasBinaryBiproduct
 
-instance has_pushout_biprod_fst_biprod_snd [HasBinaryBiproduct X Y] :
+instance hasPushout_biprod_fst_biprod_snd [HasBinaryBiproduct X Y] :
     HasPushout (biprod.fst : _ ⟶ X) (biprod.snd : _ ⟶ Y) :=
   HasColimit.mk ⟨_, (ofHasBinaryBiproduct X Y).IsColimit⟩
-#align category_theory.is_pushout.has_pushout_biprod_fst_biprod_snd CategoryTheory.IsPushout.has_pushout_biprod_fst_biprod_snd
+#align category_theory.is_pushout.has_pushout_biprod_fst_biprod_snd CategoryTheory.IsPushout.hasPushout_biprod_fst_biprod_snd
 
 /-- The pushout of `biprod.fst` and `biprod.snd` is the zero object. -/
 def pushoutBiprodFstBiprodSnd [HasBinaryBiproduct X Y] :

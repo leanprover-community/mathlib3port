@@ -166,7 +166,7 @@ def homotopyHσToZero (q : ℕ) : Homotopy (hσ q : K[X] ⟶ K[X]) 0 :=
 #align algebraic_topology.dold_kan.homotopy_Hσ_to_zero AlgebraicTopology.DoldKan.homotopyHσToZero
 
 /-- In degree `0`, the null homotopic map `Hσ` is zero. -/
-theorem Hσ_eq_zero (q : ℕ) : (hσ q : K[X] ⟶ K[X]).f 0 = 0 :=
+theorem hσ_eq_zero (q : ℕ) : (hσ q : K[X] ⟶ K[X]).f 0 = 0 :=
   by
   unfold Hσ
   rw [null_homotopic_map'_f_of_not_rel_left (c_mk 1 0 rfl) cs_down_0_not_rel_left]
@@ -178,7 +178,7 @@ theorem Hσ_eq_zero (q : ℕ) : (hσ q : K[X] ⟶ K[X]).f 0 = 0 :=
       one_zsmul, Fin.val_one, pow_one, comp_add, neg_smul, one_zsmul, comp_neg, add_neg_eq_zero]
     erw [δ_comp_σ_self, δ_comp_σ_succ]
   · rw [hσ'_eq_zero (Nat.succ_pos q) (c_mk 1 0 rfl), zero_comp]
-#align algebraic_topology.dold_kan.Hσ_eq_zero AlgebraicTopology.DoldKan.Hσ_eq_zero
+#align algebraic_topology.dold_kan.Hσ_eq_zero AlgebraicTopology.DoldKan.hσ_eq_zero
 
 /-- The maps `hσ' q n m hnm` are natural on the simplicial object -/
 theorem hσ'_naturality (q : ℕ) (n m : ℕ) (hnm : c.Rel m n) {X Y : SimplicialObject C} (f : X ⟶ Y) :
@@ -220,7 +220,7 @@ theorem map_hσ' {D : Type _} [Category D] [Preadditive D] (G : C ⥤ D) [G.Addi
 #align algebraic_topology.dold_kan.map_hσ' AlgebraicTopology.DoldKan.map_hσ'
 
 /-- The null homotopic maps `Hσ` are compatible with the application of additive functors. -/
-theorem map_Hσ {D : Type _} [Category D] [Preadditive D] (G : C ⥤ D) [G.Additive]
+theorem map_hσ {D : Type _} [Category D] [Preadditive D] (G : C ⥤ D) [G.Additive]
     (X : SimplicialObject C) (q n : ℕ) :
     (hσ q : K[((whiskering C D).obj G).obj X] ⟶ _).f n = G.map ((hσ q : K[X] ⟶ _).f n) :=
   by
@@ -230,7 +230,7 @@ theorem map_Hσ {D : Type _} [Category D] [Preadditive D] (G : C ⥤ D) [G.Addit
   rw [Eq]
   let h := (functor.congr_obj (map_alternating_face_map_complex G) X).symm
   congr
-#align algebraic_topology.dold_kan.map_Hσ AlgebraicTopology.DoldKan.map_Hσ
+#align algebraic_topology.dold_kan.map_Hσ AlgebraicTopology.DoldKan.map_hσ
 
 end DoldKan
 

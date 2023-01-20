@@ -208,8 +208,8 @@ theorem map_hnot (a : α) : f (￢a) = ￢f a := by rw [← top_sdiff', ← top_
 #align map_hnot map_hnot
 
 @[simp]
-theorem map_symm_diff (a b : α) : f (a ∆ b) = f a ∆ f b := by simp_rw [symmDiff, map_sup, map_sdiff]
-#align map_symm_diff map_symm_diff
+theorem map_symmDiff (a b : α) : f (a ∆ b) = f a ∆ f b := by simp_rw [symmDiff, map_sup, map_sdiff]
+#align map_symm_diff map_symmDiff
 
 end CoheytingAlgebra
 
@@ -258,9 +258,9 @@ instance : CoeFun (HeytingHom α β) fun _ => α → β :=
   FunLike.hasCoeToFun
 
 @[simp]
-theorem to_fun_eq_coe {f : HeytingHom α β} : f.toFun = (f : α → β) :=
+theorem toFun_eq_coe {f : HeytingHom α β} : f.toFun = (f : α → β) :=
   rfl
-#align heyting_hom.to_fun_eq_coe HeytingHom.to_fun_eq_coe
+#align heyting_hom.to_fun_eq_coe HeytingHom.toFun_eq_coe
 
 @[ext]
 theorem ext {f g : HeytingHom α β} (h : ∀ a, f a = g a) : f = g :=
@@ -379,9 +379,9 @@ instance : CoeFun (CoheytingHom α β) fun _ => α → β :=
   FunLike.hasCoeToFun
 
 @[simp]
-theorem to_fun_eq_coe {f : CoheytingHom α β} : f.toFun = (f : α → β) :=
+theorem toFun_eq_coe {f : CoheytingHom α β} : f.toFun = (f : α → β) :=
   rfl
-#align coheyting_hom.to_fun_eq_coe CoheytingHom.to_fun_eq_coe
+#align coheyting_hom.to_fun_eq_coe CoheytingHom.toFun_eq_coe
 
 @[ext]
 theorem ext {f g : CoheytingHom α β} (h : ∀ a, f a = g a) : f = g :=
@@ -500,9 +500,9 @@ instance : CoeFun (BiheytingHom α β) fun _ => α → β :=
   FunLike.hasCoeToFun
 
 @[simp]
-theorem to_fun_eq_coe {f : BiheytingHom α β} : f.toFun = (f : α → β) :=
+theorem toFun_eq_coe {f : BiheytingHom α β} : f.toFun = (f : α → β) :=
   rfl
-#align biheyting_hom.to_fun_eq_coe BiheytingHom.to_fun_eq_coe
+#align biheyting_hom.to_fun_eq_coe BiheytingHom.toFun_eq_coe
 
 @[ext]
 theorem ext {f g : BiheytingHom α β} (h : ∀ a, f a = g a) : f = g :=

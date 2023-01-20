@@ -120,26 +120,26 @@ theorem Step.length : ∀ {L₁ L₂ : List (α × Bool)}, Step L₁ L₂ → L�
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp, to_additive]
-theorem Step.bnot_rev {x b} : Step (L₁ ++ (x, not b)::(x, b)::L₂) (L₁ ++ L₂) := by
+theorem Step.not_rev {x b} : Step (L₁ ++ (x, not b)::(x, b)::L₂) (L₁ ++ L₂) := by
   cases b <;> exact step.bnot
-#align free_group.red.step.bnot_rev FreeGroup.Red.Step.bnot_rev
-#align free_add_group.red.step.bnot_rev freeAddGroup.Red.Step.bnot_rev
+#align free_group.red.step.bnot_rev FreeGroup.Red.Step.not_rev
+#align free_add_group.red.step.bnot_rev freeAddGroup.Red.Step.not_rev
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp, to_additive]
-theorem Step.cons_bnot {x b} : Red.Step ((x, b)::(x, not b)::L) L :=
+theorem Step.cons_not {x b} : Red.Step ((x, b)::(x, not b)::L) L :=
   @Step.bnot _ [] _ _ _
-#align free_group.red.step.cons_bnot FreeGroup.Red.Step.cons_bnot
-#align free_add_group.red.step.cons_bnot freeAddGroup.Red.Step.cons_bnot
+#align free_group.red.step.cons_bnot FreeGroup.Red.Step.cons_not
+#align free_add_group.red.step.cons_bnot freeAddGroup.Red.Step.cons_not
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp, to_additive]
-theorem Step.cons_bnot_rev {x b} : Red.Step ((x, not b)::(x, b)::L) L :=
-  @Red.Step.bnot_rev _ [] _ _ _
-#align free_group.red.step.cons_bnot_rev FreeGroup.Red.Step.cons_bnot_rev
-#align free_add_group.red.step.cons_bnot_rev freeAddGroup.Red.Step.cons_bnot_rev
+theorem Step.cons_not_rev {x b} : Red.Step ((x, not b)::(x, b)::L) L :=
+  @Red.Step.not_rev _ [] _ _ _
+#align free_group.red.step.cons_bnot_rev FreeGroup.Red.Step.cons_not_rev
+#align free_add_group.red.step.cons_bnot_rev freeAddGroup.Red.Step.cons_not_rev
 
 @[to_additive]
 theorem Step.append_left : ∀ {L₁ L₂ L₃ : List (α × Bool)}, Step L₂ L₃ → Step (L₁ ++ L₂) (L₁ ++ L₃)
@@ -376,10 +376,10 @@ theorem cons_nil_iff_singleton {x b} : Red ((x, b)::L) [] ↔ Red L [(x, not b)]
   Iff.intro
     (fun h => by
       have h₁ : Red ((x, not b)::(x, b)::L) [(x, not b)] := cons_cons h
-      have h₂ : Red ((x, not b)::(x, b)::L) L := ReflTransGen.single Step.cons_bnot_rev
+      have h₂ : Red ((x, not b)::(x, b)::L) L := ReflTransGen.single Step.cons_not_rev
       let ⟨L', h₁, h₂⟩ := church_rosser h₁ h₂
       rw [singleton_iff] at h₁ <;> subst L' <;> assumption)
-    fun h => (cons_cons h).tail Step.cons_bnot
+    fun h => (cons_cons h).tail Step.cons_not
 #align free_group.red.cons_nil_iff_singleton FreeGroup.Red.cons_nil_iff_singleton
 #align free_add_group.red.cons_nil_iff_singleton freeAddGroup.Red.cons_nil_iff_singleton
 
@@ -503,15 +503,15 @@ theorem join_red_of_step (h : Red.Step L₁ L₂) : Join Red L₁ L₂ :=
 #align free_add_group.join_red_of_step freeAddGroup.join_red_of_step
 
 @[to_additive]
-theorem eqv_gen_step_iff_join_red : EqvGen Red.Step L₁ L₂ ↔ Join Red L₁ L₂ :=
+theorem eqvGen_step_iff_join_red : EqvGen Red.Step L₁ L₂ ↔ Join Red L₁ L₂ :=
   Iff.intro
     (fun h =>
       have : EqvGen (Join Red) L₁ L₂ := h.mono fun a b => join_red_of_step
       equivalence_join_red.eqv_gen_iff.1 this)
     (join_of_equivalence (EqvGen.is_equivalence _) fun a b =>
       reflTransGen_of_equivalence (EqvGen.is_equivalence _) EqvGen.rel)
-#align free_group.eqv_gen_step_iff_join_red FreeGroup.eqv_gen_step_iff_join_red
-#align free_add_group.eqv_gen_step_iff_join_red freeAddGroup.eqv_gen_step_iff_join_red
+#align free_group.eqv_gen_step_iff_join_red FreeGroup.eqvGen_step_iff_join_red
+#align free_add_group.eqv_gen_step_iff_join_red freeAddGroup.eqvGen_step_iff_join_red
 
 end FreeGroup
 
@@ -549,11 +549,11 @@ theorem quot_lift_mk (β : Type v) (f : List (α × Bool) → β)
 #align free_add_group.quot_lift_mk freeAddGroup.quot_lift_mk
 
 @[simp, to_additive]
-theorem quot_lift_on_mk (β : Type v) (f : List (α × Bool) → β)
+theorem quot_liftOn_mk (β : Type v) (f : List (α × Bool) → β)
     (H : ∀ L₁ L₂, Red.Step L₁ L₂ → f L₁ = f L₂) : Quot.liftOn (mk L) f H = f L :=
   rfl
-#align free_group.quot_lift_on_mk FreeGroup.quot_lift_on_mk
-#align free_add_group.quot_lift_on_mk freeAddGroup.quot_lift_on_mk
+#align free_group.quot_lift_on_mk FreeGroup.quot_liftOn_mk
+#align free_add_group.quot_lift_on_mk freeAddGroup.quot_liftOn_mk
 
 @[simp, to_additive]
 theorem quot_map_mk (β : Type v) (f : List (α × Bool) → List (β × Bool))
@@ -600,42 +600,42 @@ def invRev (w : List (α × Bool)) : List (α × Bool) :=
 #align free_add_group.neg_rev freeAddGroup.negRev
 
 @[simp, to_additive]
-theorem inv_rev_length : (invRev L₁).length = L₁.length := by simp [inv_rev]
-#align free_group.inv_rev_length FreeGroup.inv_rev_length
+theorem invRev_length : (invRev L₁).length = L₁.length := by simp [inv_rev]
+#align free_group.inv_rev_length FreeGroup.invRev_length
 #align free_add_group.neg_rev_length freeAddGroup.neg_rev_length
 
 @[simp, to_additive]
-theorem inv_rev_inv_rev : invRev (invRev L₁) = L₁ := by simp [inv_rev, (· ∘ ·)]
-#align free_group.inv_rev_inv_rev FreeGroup.inv_rev_inv_rev
+theorem invRev_invRev : invRev (invRev L₁) = L₁ := by simp [inv_rev, (· ∘ ·)]
+#align free_group.inv_rev_inv_rev FreeGroup.invRev_invRev
 #align free_add_group.neg_rev_neg_rev freeAddGroup.neg_rev_neg_rev
 
 @[simp, to_additive]
-theorem inv_rev_empty : invRev ([] : List (α × Bool)) = [] :=
+theorem invRev_empty : invRev ([] : List (α × Bool)) = [] :=
   rfl
-#align free_group.inv_rev_empty FreeGroup.inv_rev_empty
+#align free_group.inv_rev_empty FreeGroup.invRev_empty
 #align free_add_group.neg_rev_empty freeAddGroup.neg_rev_empty
 
 @[to_additive]
-theorem inv_rev_involutive : Function.Involutive (@invRev α) := fun _ => inv_rev_inv_rev
-#align free_group.inv_rev_involutive FreeGroup.inv_rev_involutive
+theorem invRev_involutive : Function.Involutive (@invRev α) := fun _ => invRev_invRev
+#align free_group.inv_rev_involutive FreeGroup.invRev_involutive
 #align free_add_group.neg_rev_involutive freeAddGroup.neg_rev_involutive
 
 @[to_additive]
-theorem inv_rev_injective : Function.Injective (@invRev α) :=
-  inv_rev_involutive.Injective
-#align free_group.inv_rev_injective FreeGroup.inv_rev_injective
+theorem invRev_injective : Function.Injective (@invRev α) :=
+  invRev_involutive.Injective
+#align free_group.inv_rev_injective FreeGroup.invRev_injective
 #align free_add_group.neg_rev_injective freeAddGroup.neg_rev_injective
 
 @[to_additive]
-theorem inv_rev_surjective : Function.Surjective (@invRev α) :=
-  inv_rev_involutive.Surjective
-#align free_group.inv_rev_surjective FreeGroup.inv_rev_surjective
+theorem invRev_surjective : Function.Surjective (@invRev α) :=
+  invRev_involutive.Surjective
+#align free_group.inv_rev_surjective FreeGroup.invRev_surjective
 #align free_add_group.neg_rev_surjective freeAddGroup.neg_rev_surjective
 
 @[to_additive]
-theorem inv_rev_bijective : Function.Bijective (@invRev α) :=
-  inv_rev_involutive.Bijective
-#align free_group.inv_rev_bijective FreeGroup.inv_rev_bijective
+theorem invRev_bijective : Function.Bijective (@invRev α) :=
+  invRev_involutive.Bijective
+#align free_group.inv_rev_bijective FreeGroup.invRev_bijective
 #align free_add_group.neg_rev_bijective freeAddGroup.neg_rev_bijective
 
 @[to_additive]
@@ -653,30 +653,30 @@ theorem inv_mk : (mk L)⁻¹ = mk (invRev L) :=
 #align free_add_group.neg_mk freeAddGroup.neg_mk
 
 @[to_additive]
-theorem Red.Step.inv_rev {L₁ L₂ : List (α × Bool)} (h : Red.Step L₁ L₂) :
+theorem Red.Step.invRev {L₁ L₂ : List (α × Bool)} (h : Red.Step L₁ L₂) :
     Red.Step (invRev L₁) (invRev L₂) :=
   by
   cases' h with a b x y
   simp [inv_rev]
-#align free_group.red.step.inv_rev FreeGroup.Red.Step.inv_rev
+#align free_group.red.step.inv_rev FreeGroup.Red.Step.invRev
 #align free_add_group.red.step.neg_rev freeAddGroup.Red.Step.neg_rev
 
 @[to_additive]
-theorem Red.inv_rev {L₁ L₂ : List (α × Bool)} (h : Red L₁ L₂) : Red (invRev L₁) (invRev L₂) :=
-  Relation.ReflTransGen.lift _ (fun a b => Red.Step.inv_rev) h
-#align free_group.red.inv_rev FreeGroup.Red.inv_rev
+theorem Red.invRev {L₁ L₂ : List (α × Bool)} (h : Red L₁ L₂) : Red (invRev L₁) (invRev L₂) :=
+  Relation.ReflTransGen.lift _ (fun a b => Red.Step.invRev) h
+#align free_group.red.inv_rev FreeGroup.Red.invRev
 #align free_add_group.red.neg_rev freeAddGroup.Red.neg_rev
 
 @[simp, to_additive]
-theorem Red.step_inv_rev_iff : Red.Step (invRev L₁) (invRev L₂) ↔ Red.Step L₁ L₂ :=
+theorem Red.step_invRev_iff : Red.Step (invRev L₁) (invRev L₂) ↔ Red.Step L₁ L₂ :=
   ⟨fun h => by simpa only [inv_rev_inv_rev] using h.inv_rev, fun h => h.invRev⟩
-#align free_group.red.step_inv_rev_iff FreeGroup.Red.step_inv_rev_iff
+#align free_group.red.step_inv_rev_iff FreeGroup.Red.step_invRev_iff
 #align free_add_group.red.step_neg_rev_iff freeAddGroup.Red.step_neg_rev_iff
 
 @[simp, to_additive]
-theorem red_inv_rev_iff : Red (invRev L₁) (invRev L₂) ↔ Red L₁ L₂ :=
+theorem red_invRev_iff : Red (invRev L₁) (invRev L₂) ↔ Red L₁ L₂ :=
   ⟨fun h => by simpa only [inv_rev_inv_rev] using h.inv_rev, fun h => h.invRev⟩
-#align free_group.red_inv_rev_iff FreeGroup.red_inv_rev_iff
+#align free_group.red_inv_rev_iff FreeGroup.red_invRev_iff
 #align free_add_group.red_neg_rev_iff freeAddGroup.red_neg_rev_iff
 
 @[to_additive]
@@ -706,7 +706,7 @@ def of (x : α) : FreeGroup α :=
 theorem Red.exact : mk L₁ = mk L₂ ↔ Join Red L₁ L₂ :=
   calc
     mk L₁ = mk L₂ ↔ EqvGen Red.Step L₁ L₂ := Iff.intro (Quot.exact _) Quot.EqvGen_sound
-    _ ↔ Join Red L₁ L₂ := eqv_gen_step_iff_join_red
+    _ ↔ Join Red L₁ L₂ := eqvGen_step_iff_join_red
     
 #align free_group.red.exact FreeGroup.Red.exact
 #align free_add_group.red.exact freeAddGroup.Red.exact
@@ -909,22 +909,22 @@ def freeGroupCongr {α β} (e : α ≃ β) : FreeGroup α ≃* FreeGroup β
 #align free_add_group.free_add_group_congr freeAddGroup.freeAddGroupCongr
 
 @[simp, to_additive]
-theorem free_group_congr_refl : freeGroupCongr (Equiv.refl α) = MulEquiv.refl _ :=
+theorem freeGroupCongr_refl : freeGroupCongr (Equiv.refl α) = MulEquiv.refl _ :=
   MulEquiv.ext map.id
-#align free_group.free_group_congr_refl FreeGroup.free_group_congr_refl
+#align free_group.free_group_congr_refl FreeGroup.freeGroupCongr_refl
 #align free_add_group.free_add_group_congr_refl freeAddGroup.free_add_group_congr_refl
 
 @[simp, to_additive]
-theorem free_group_congr_symm {α β} (e : α ≃ β) : (freeGroupCongr e).symm = freeGroupCongr e.symm :=
+theorem freeGroupCongr_symm {α β} (e : α ≃ β) : (freeGroupCongr e).symm = freeGroupCongr e.symm :=
   rfl
-#align free_group.free_group_congr_symm FreeGroup.free_group_congr_symm
+#align free_group.free_group_congr_symm FreeGroup.freeGroupCongr_symm
 #align free_add_group.free_add_group_congr_symm freeAddGroup.free_add_group_congr_symm
 
 @[to_additive]
-theorem free_group_congr_trans {α β γ} (e : α ≃ β) (f : β ≃ γ) :
+theorem freeGroupCongr_trans {α β γ} (e : α ≃ β) (f : β ≃ γ) :
     (freeGroupCongr e).trans (freeGroupCongr f) = freeGroupCongr (e.trans f) :=
   MulEquiv.ext <| map.comp _ _
-#align free_group.free_group_congr_trans FreeGroup.free_group_congr_trans
+#align free_group.free_group_congr_trans FreeGroup.freeGroupCongr_trans
 #align free_add_group.free_add_group_congr_trans freeAddGroup.free_add_group_congr_trans
 
 end Map
@@ -1713,66 +1713,66 @@ def toWord : FreeGroup α → List (α × Bool) :=
 #align free_add_group.to_word freeAddGroup.toWord
 
 @[to_additive]
-theorem mk_to_word : ∀ {x : FreeGroup α}, mk (toWord x) = x := by rintro ⟨L⟩ <;> exact reduce.self
-#align free_group.mk_to_word FreeGroup.mk_to_word
-#align free_add_group.mk_to_word freeAddGroup.mk_to_word
+theorem mk_toWord : ∀ {x : FreeGroup α}, mk (toWord x) = x := by rintro ⟨L⟩ <;> exact reduce.self
+#align free_group.mk_to_word FreeGroup.mk_toWord
+#align free_add_group.mk_to_word freeAddGroup.mk_toWord
 
 @[to_additive]
-theorem to_word_injective : Function.Injective (toWord : FreeGroup α → List (α × Bool)) := by
+theorem toWord_injective : Function.Injective (toWord : FreeGroup α → List (α × Bool)) := by
   rintro ⟨L₁⟩ ⟨L₂⟩ <;> exact reduce.exact
-#align free_group.to_word_injective FreeGroup.to_word_injective
-#align free_add_group.to_word_injective freeAddGroup.to_word_injective
+#align free_group.to_word_injective FreeGroup.toWord_injective
+#align free_add_group.to_word_injective freeAddGroup.toWord_injective
 
 @[simp, to_additive]
-theorem to_word_inj {x y : FreeGroup α} : toWord x = toWord y ↔ x = y :=
-  to_word_injective.eq_iff
-#align free_group.to_word_inj FreeGroup.to_word_inj
-#align free_add_group.to_word_inj freeAddGroup.to_word_inj
+theorem toWord_inj {x y : FreeGroup α} : toWord x = toWord y ↔ x = y :=
+  toWord_injective.eq_iff
+#align free_group.to_word_inj FreeGroup.toWord_inj
+#align free_add_group.to_word_inj freeAddGroup.toWord_inj
 
 @[simp, to_additive]
-theorem to_word_mk : (mk L₁).toWord = reduce L₁ :=
+theorem toWord_mk : (mk L₁).toWord = reduce L₁ :=
   rfl
-#align free_group.to_word_mk FreeGroup.to_word_mk
-#align free_add_group.to_word_mk freeAddGroup.to_word_mk
+#align free_group.to_word_mk FreeGroup.toWord_mk
+#align free_add_group.to_word_mk freeAddGroup.toWord_mk
 
 @[simp, to_additive]
-theorem reduce_to_word : ∀ x : FreeGroup α, reduce (toWord x) = toWord x :=
+theorem reduce_toWord : ∀ x : FreeGroup α, reduce (toWord x) = toWord x :=
   by
   rintro ⟨L⟩
   exact reduce.idem
-#align free_group.reduce_to_word FreeGroup.reduce_to_word
-#align free_add_group.reduce_to_word freeAddGroup.reduce_to_word
+#align free_group.reduce_to_word FreeGroup.reduce_toWord
+#align free_add_group.reduce_to_word freeAddGroup.reduce_toWord
 
 @[simp, to_additive]
-theorem to_word_one : (1 : FreeGroup α).toWord = [] :=
+theorem toWord_one : (1 : FreeGroup α).toWord = [] :=
   rfl
-#align free_group.to_word_one FreeGroup.to_word_one
-#align free_add_group.to_word_zero freeAddGroup.to_word_zero
+#align free_group.to_word_one FreeGroup.toWord_one
+#align free_add_group.to_word_zero freeAddGroup.toWord_zero
 
 @[simp, to_additive]
-theorem to_word_eq_nil_iff {x : FreeGroup α} : x.toWord = [] ↔ x = 1 :=
-  to_word_injective.eq_iff' to_word_one
-#align free_group.to_word_eq_nil_iff FreeGroup.to_word_eq_nil_iff
-#align free_add_group.to_word_eq_nil_iff freeAddGroup.to_word_eq_nil_iff
+theorem toWord_eq_nil_iff {x : FreeGroup α} : x.toWord = [] ↔ x = 1 :=
+  toWord_injective.eq_iff' toWord_one
+#align free_group.to_word_eq_nil_iff FreeGroup.toWord_eq_nil_iff
+#align free_add_group.to_word_eq_nil_iff freeAddGroup.toWord_eq_nil_iff
 
 @[to_additive]
-theorem reduce_inv_rev {w : List (α × Bool)} : reduce (invRev w) = invRev (reduce w) :=
+theorem reduce_invRev {w : List (α × Bool)} : reduce (invRev w) = invRev (reduce w) :=
   by
   apply reduce.min
   rw [← red_inv_rev_iff, inv_rev_inv_rev]
   apply red.reduce_left
   have : red (inv_rev (inv_rev w)) (inv_rev (reduce (inv_rev w))) := reduce.red.inv_rev
   rwa [inv_rev_inv_rev] at this
-#align free_group.reduce_inv_rev FreeGroup.reduce_inv_rev
+#align free_group.reduce_inv_rev FreeGroup.reduce_invRev
 #align free_add_group.reduce_neg_rev freeAddGroup.reduce_neg_rev
 
 @[to_additive]
-theorem to_word_inv {x : FreeGroup α} : x⁻¹.toWord = invRev x.toWord :=
+theorem toWord_inv {x : FreeGroup α} : x⁻¹.toWord = invRev x.toWord :=
   by
   rcases x with ⟨L⟩
   rw [quot_mk_eq_mk, inv_mk, to_word_mk, to_word_mk, reduce_inv_rev]
-#align free_group.to_word_inv FreeGroup.to_word_inv
-#align free_add_group.to_word_neg freeAddGroup.to_word_neg
+#align free_group.to_word_inv FreeGroup.toWord_inv
+#align free_add_group.to_word_neg freeAddGroup.toWord_neg
 
 /-- Constructive Church-Rosser theorem (compare `church_rosser`). -/
 @[to_additive "Constructive Church-Rosser theorem (compare `church_rosser`)."]
@@ -1783,7 +1783,7 @@ def reduce.churchRosser (H12 : Red L₁ L₂) (H13 : Red L₁ L₃) : { L₄ // 
 
 @[to_additive]
 instance : DecidableEq (FreeGroup α) :=
-  to_word_injective.DecidableEq
+  toWord_injective.DecidableEq
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -1806,7 +1806,7 @@ instance Red.decidableRel : DecidableRel (@Red α)
       | is_false H => is_false fun H2 => H <| h ▸ (Red.cons_cons_iff _).1 <| H2
     else
       match red.decidable_rel tl1 ((x1, not b1)::(x2, b2)::tl2) with
-      | is_true H => is_true <| (Red.cons_cons H).tail Red.Step.cons_bnot
+      | is_true H => is_true <| (Red.cons_cons H).tail Red.Step.cons_not
       | is_false H => is_false fun H2 => H <| Red.inv_of_red_of_ne h H2
 #align free_group.red.decidable_rel FreeGroup.Red.decidableRel
 

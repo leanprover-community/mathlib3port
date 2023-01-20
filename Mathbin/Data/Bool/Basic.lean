@@ -33,14 +33,14 @@ prefix:90 "!" => not
 namespace Bool
 
 -- TODO: duplicate of a lemma in core
-theorem coe_sort_tt : coeSort.{1, 1} true = True :=
+theorem coeSort_true : coeSort.{1, 1} true = True :=
   Bool.coe_sort_true
-#align bool.coe_sort_tt Bool.coe_sort_tt
+#align bool.coe_sort_tt Bool.coeSort_true
 
 -- TODO: duplicate of a lemma in core
-theorem coe_sort_ff : coeSort.{1, 1} false = False :=
+theorem coeSort_false : coeSort.{1, 1} false = False :=
   Bool.coe_sort_false
-#align bool.coe_sort_ff Bool.coe_sort_ff
+#align bool.coe_sort_ff Bool.coeSort_false
 
 #print Bool.decide_True /-
 -- TODO: duplicate of a lemma in core
@@ -238,8 +238,12 @@ theorem or_inl {a b : Bool} (H : a) : a || b := by simp [H]
 #align bool.bor_inl Bool.or_inl
 -/
 
-theorem bor_inr {a b : Bool} (H : b) : a || b := by simp [H]
-#align bool.bor_inr Bool.bor_inr
+/- warning: bool.bor_inr clashes with bool.bot_inr -> Bool.or_inr
+Case conversion may be inaccurate. Consider using '#align bool.bor_inr Bool.or_inrₓ'. -/
+#print Bool.or_inr /-
+theorem or_inr {a b : Bool} (H : b) : a || b := by simp [H]
+#align bool.bor_inr Bool.or_inr
+-/
 
 #print Bool.and_comm /-
 theorem and_comm : ∀ a b, (a && b) = (b && a) := by decide
@@ -604,7 +608,8 @@ def ofNat (n : ℕ) : Bool :=
 #align bool.of_nat Bool.ofNat
 -/
 
-theorem of_nat_le_of_nat {n m : ℕ} (h : n ≤ m) : ofNat n ≤ ofNat m :=
+#print Bool.ofNat_le_ofNat /-
+theorem ofNat_le_ofNat {n m : ℕ} (h : n ≤ m) : ofNat n ≤ ofNat m :=
   by
   simp [of_nat] <;> cases Nat.decidableEq n 0 <;> cases Nat.decidableEq m 0 <;> simp only [to_bool]
   · subst m
@@ -612,20 +617,25 @@ theorem of_nat_le_of_nat {n m : ℕ} (h : n ≤ m) : ofNat n ≤ ofNat m :=
     contradiction
   · left
     rfl
-#align bool.of_nat_le_of_nat Bool.of_nat_le_of_nat
+#align bool.of_nat_le_of_nat Bool.ofNat_le_ofNat
+-/
 
-theorem to_nat_le_to_nat {b₀ b₁ : Bool} (h : b₀ ≤ b₁) : toNat b₀ ≤ toNat b₁ := by
+#print Bool.toNat_le_toNat /-
+theorem toNat_le_toNat {b₀ b₁ : Bool} (h : b₀ ≤ b₁) : toNat b₀ ≤ toNat b₁ := by
   cases h <;> subst h <;> [cases b₁, cases b₀] <;> simp [to_nat, Nat.zero_le]
-#align bool.to_nat_le_to_nat Bool.to_nat_le_to_nat
+#align bool.to_nat_le_to_nat Bool.toNat_le_toNat
+-/
 
-theorem of_nat_to_nat (b : Bool) : ofNat (toNat b) = b := by
+#print Bool.ofNat_toNat /-
+theorem ofNat_toNat (b : Bool) : ofNat (toNat b) = b := by
   cases b <;> simp only [of_nat, to_nat] <;> exact by decide
-#align bool.of_nat_to_nat Bool.of_nat_to_nat
+#align bool.of_nat_to_nat Bool.ofNat_toNat
+-/
 
 #print Bool.injective_iff /-
 @[simp]
 theorem injective_iff {α : Sort _} {f : Bool → α} : Function.Injective f ↔ f false ≠ f true :=
-  ⟨fun Hinj Heq => ff_ne_tt (Hinj Heq), fun H x y hxy =>
+  ⟨fun Hinj Heq => false_ne_true (Hinj Heq), fun H x y hxy =>
     by
     cases x <;> cases y
     exacts[rfl, (H hxy).elim, (H hxy.symm).elim, rfl]⟩

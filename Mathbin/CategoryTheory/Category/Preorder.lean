@@ -177,15 +177,15 @@ def Equivalence.toOrderIso (e : X ≌ Y) : X ≃o Y
 -- `@[simps]` on `equivalence.to_order_iso` produces lemmas that fail the `simp_nf` linter,
 -- so we provide them by hand:
 @[simp]
-theorem Equivalence.to_order_iso_apply (e : X ≌ Y) (x : X) : e.toOrderIso x = e.Functor.obj x :=
+theorem Equivalence.toOrderIso_apply (e : X ≌ Y) (x : X) : e.toOrderIso x = e.Functor.obj x :=
   rfl
-#align category_theory.equivalence.to_order_iso_apply CategoryTheory.Equivalence.to_order_iso_apply
+#align category_theory.equivalence.to_order_iso_apply CategoryTheory.Equivalence.toOrderIso_apply
 
 @[simp]
-theorem Equivalence.to_order_iso_symm_apply (e : X ≌ Y) (y : Y) :
+theorem Equivalence.toOrderIso_symm_apply (e : X ≌ Y) (y : Y) :
     e.toOrderIso.symm y = e.inverse.obj y :=
   rfl
-#align category_theory.equivalence.to_order_iso_symm_apply CategoryTheory.Equivalence.to_order_iso_symm_apply
+#align category_theory.equivalence.to_order_iso_symm_apply CategoryTheory.Equivalence.toOrderIso_symm_apply
 
 end PartialOrder
 

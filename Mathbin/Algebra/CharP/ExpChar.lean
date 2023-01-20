@@ -46,56 +46,56 @@ class inductive ExpChar (R : Type u) [Semiring R] : ℕ → Prop
 #align exp_char ExpChar
 
 /-- The exponential characteristic is one if the characteristic is zero. -/
-theorem exp_char_one_of_char_zero (q : ℕ) [hp : CharP R 0] [hq : ExpChar R q] : q = 1 :=
+theorem expChar_one_of_char_zero (q : ℕ) [hp : CharP R 0] [hq : ExpChar R q] : q = 1 :=
   by
   cases' hq with q hq_one hq_prime
   · rfl
   · exact False.elim (lt_irrefl _ ((hp.eq R hq_hchar).symm ▸ hq_prime : (0 : ℕ).Prime).Pos)
-#align exp_char_one_of_char_zero exp_char_one_of_char_zero
+#align exp_char_one_of_char_zero expChar_one_of_char_zero
 
 /-- The characteristic equals the exponential characteristic iff the former is prime. -/
-theorem char_eq_exp_char_iff (p q : ℕ) [hp : CharP R p] [hq : ExpChar R q] : p = q ↔ p.Prime :=
+theorem char_eq_expChar_iff (p q : ℕ) [hp : CharP R p] [hq : ExpChar R q] : p = q ↔ p.Prime :=
   by
   cases' hq with q hq_one hq_prime
   · apply iff_of_false
     · rintro rfl
-      exact one_ne_zero (hp.eq R (CharP.of_char_zero R))
+      exact one_neZero (hp.eq R (CharP.of_charZero R))
     · intro pprime
       rw [(CharP.eq R hp inferInstance : p = 0)] at pprime
       exact Nat.not_prime_zero pprime
   · exact ⟨fun hpq => hpq.symm ▸ hq_prime, fun _ => CharP.eq R hp hq_hchar⟩
-#align char_eq_exp_char_iff char_eq_exp_char_iff
+#align char_eq_exp_char_iff char_eq_expChar_iff
 
 section Nontrivial
 
 variable [Nontrivial R]
 
 /-- The exponential characteristic is one if the characteristic is zero. -/
-theorem char_zero_of_exp_char_one (p : ℕ) [hp : CharP R p] [hq : ExpChar R 1] : p = 0 :=
+theorem char_zero_of_expChar_one (p : ℕ) [hp : CharP R p] [hq : ExpChar R 1] : p = 0 :=
   by
   cases hq
   · exact CharP.eq R hp inferInstance
   · exact False.elim (CharP.char_ne_one R 1 rfl)
-#align char_zero_of_exp_char_one char_zero_of_exp_char_one
+#align char_zero_of_exp_char_one char_zero_of_expChar_one
 
 -- see Note [lower instance priority]
 /-- The characteristic is zero if the exponential characteristic is one. -/
-instance (priority := 100) char_zero_of_exp_char_one' [hq : ExpChar R 1] : CharZero R :=
+instance (priority := 100) charZero_of_expChar_one' [hq : ExpChar R 1] : CharZero R :=
   by
   cases hq
   · assumption
   · exact False.elim (CharP.char_ne_one R 1 rfl)
-#align char_zero_of_exp_char_one' char_zero_of_exp_char_one'
+#align char_zero_of_exp_char_one' charZero_of_expChar_one'
 
 /-- The exponential characteristic is one iff the characteristic is zero. -/
-theorem exp_char_one_iff_char_zero (p q : ℕ) [CharP R p] [ExpChar R q] : q = 1 ↔ p = 0 :=
+theorem expChar_one_iff_char_zero (p q : ℕ) [CharP R p] [ExpChar R q] : q = 1 ↔ p = 0 :=
   by
   constructor
   · rintro rfl
-    exact char_zero_of_exp_char_one R p
+    exact char_zero_of_expChar_one R p
   · rintro rfl
-    exact exp_char_one_of_char_zero R q
-#align exp_char_one_iff_char_zero exp_char_one_iff_char_zero
+    exact expChar_one_of_char_zero R q
+#align exp_char_one_iff_char_zero expChar_one_iff_char_zero
 
 section NoZeroDivisors
 
@@ -110,20 +110,20 @@ theorem char_prime_of_ne_zero {p : ℕ} [hp : CharP R p] (p_ne_zero : p ≠ 0) :
 #align char_prime_of_ne_zero char_prime_of_ne_zero
 
 /-- The exponential characteristic is a prime number or one. -/
-theorem exp_char_is_prime_or_one (q : ℕ) [hq : ExpChar R q] : Nat.Prime q ∨ q = 1 :=
+theorem expChar_is_prime_or_one (q : ℕ) [hq : ExpChar R q] : Nat.Prime q ∨ q = 1 :=
   or_iff_not_imp_right.mpr fun h =>
     by
     cases' CharP.exists R with p hp
     have p_ne_zero : p ≠ 0 := by
       intro p_zero
       have : CharP R 0 := by rwa [← p_zero]
-      have : q = 1 := exp_char_one_of_char_zero R q
+      have : q = 1 := expChar_one_of_char_zero R q
       contradiction
-    have p_eq_q : p = q := (char_eq_exp_char_iff R p q).mpr (char_prime_of_ne_zero R p_ne_zero)
+    have p_eq_q : p = q := (char_eq_expChar_iff R p q).mpr (char_prime_of_ne_zero R p_ne_zero)
     cases' CharP.char_is_prime_or_zero R p with pprime
     · rwa [p_eq_q] at pprime
     · contradiction
-#align exp_char_is_prime_or_one exp_char_is_prime_or_one
+#align exp_char_is_prime_or_one expChar_is_prime_or_one
 
 end NoZeroDivisors
 

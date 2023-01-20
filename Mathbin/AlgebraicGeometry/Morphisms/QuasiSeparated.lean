@@ -56,10 +56,10 @@ def QuasiSeparated.affineProperty : AffineTargetMorphismProperty := fun X Y f _ 
   QuasiSeparatedSpace X.carrier
 #align algebraic_geometry.quasi_separated.affine_property AlgebraicGeometry.QuasiSeparated.affineProperty
 
-theorem quasi_separated_space_iff_affine (X : SchemeCat) :
+theorem quasiSeparatedSpace_iff_affine (X : SchemeCat) :
     QuasiSeparatedSpace X.carrier ↔ ∀ U V : X.affineOpens, IsCompact (U ∩ V : Set X.carrier) :=
   by
-  rw [quasi_separated_space_iff]
+  rw [quasiSeparatedSpace_iff]
   constructor
   · intro H U V
     exact H U V U.1.2 U.2.IsCompact V.1.2 V.2.IsCompact
@@ -85,9 +85,9 @@ theorem quasi_separated_space_iff_affine (X : SchemeCat) :
         rw [Set.union_inter_distrib_right]
         apply hW.union
         apply H
-#align algebraic_geometry.quasi_separated_space_iff_affine AlgebraicGeometry.quasi_separated_space_iff_affine
+#align algebraic_geometry.quasi_separated_space_iff_affine AlgebraicGeometry.quasiSeparatedSpace_iff_affine
 
-theorem quasi_compact_affine_property_iff_quasi_separated_space {X Y : SchemeCat} [IsAffine Y]
+theorem quasi_compact_affineProperty_iff_quasiSeparatedSpace {X Y : SchemeCat} [IsAffine Y]
     (f : X ⟶ Y) : QuasiCompact.affineProperty.diagonal f ↔ QuasiSeparatedSpace X.carrier :=
   by
   delta affine_target_morphism_property.diagonal
@@ -102,49 +102,49 @@ theorem quasi_compact_affine_property_iff_quasi_separated_space {X Y : SchemeCat
     have e := Homeomorph.ofEmbedding _ this.base_open.to_embedding
     rw [is_open_immersion.range_pullback_to_base_of_left] at e
     erw [Subtype.range_coe, Subtype.range_coe] at e
-    rw [is_compact_iff_compact_space]
-    exact @Homeomorph.compact_space _ _ (H _ _) e
+    rw [isCompact_iff_compactSpace]
+    exact @Homeomorph.compactSpace _ _ (H _ _) e
   · introv H h₁ h₂
     skip
     let g : pullback f₁ f₂ ⟶ X := pullback.fst ≫ f₁
     have : is_open_immersion g := inferInstance
     have e := Homeomorph.ofEmbedding _ this.base_open.to_embedding
     rw [is_open_immersion.range_pullback_to_base_of_left] at e
-    simp_rw [is_compact_iff_compact_space] at H
+    simp_rw [isCompact_iff_compactSpace] at H
     exact
-      @Homeomorph.compact_space _ _
+      @Homeomorph.compactSpace _ _
         (H ⟨⟨_, h₁.base_open.open_range⟩, range_is_affine_open_of_open_immersion _⟩
           ⟨⟨_, h₂.base_open.open_range⟩, range_is_affine_open_of_open_immersion _⟩)
         e.symm
-#align algebraic_geometry.quasi_compact_affine_property_iff_quasi_separated_space AlgebraicGeometry.quasi_compact_affine_property_iff_quasi_separated_space
+#align algebraic_geometry.quasi_compact_affine_property_iff_quasi_separated_space AlgebraicGeometry.quasi_compact_affineProperty_iff_quasiSeparatedSpace
 
-theorem quasi_separated_eq_diagonal_is_quasi_compact :
+theorem quasiSeparated_eq_diagonal_is_quasiCompact :
     @QuasiSeparated = MorphismProperty.diagonal @QuasiCompact :=
   by
   ext
   exact quasi_separated_iff _
-#align algebraic_geometry.quasi_separated_eq_diagonal_is_quasi_compact AlgebraicGeometry.quasi_separated_eq_diagonal_is_quasi_compact
+#align algebraic_geometry.quasi_separated_eq_diagonal_is_quasi_compact AlgebraicGeometry.quasiSeparated_eq_diagonal_is_quasiCompact
 
-theorem quasi_compact_affine_property_diagonal_eq :
+theorem quasi_compact_affineProperty_diagonal_eq :
     QuasiCompact.affineProperty.diagonal = quasi_separated.affine_property :=
   by
   ext
   rw [quasi_compact_affine_property_iff_quasi_separated_space]
   rfl
-#align algebraic_geometry.quasi_compact_affine_property_diagonal_eq AlgebraicGeometry.quasi_compact_affine_property_diagonal_eq
+#align algebraic_geometry.quasi_compact_affine_property_diagonal_eq AlgebraicGeometry.quasi_compact_affineProperty_diagonal_eq
 
-theorem quasi_separated_eq_affine_property_diagonal :
+theorem quasiSeparated_eq_affineProperty_diagonal :
     @QuasiSeparated = targetAffineLocally QuasiCompact.affineProperty.diagonal :=
   by
   rw [quasi_separated_eq_diagonal_is_quasi_compact, quasi_compact_eq_affine_property]
   exact
     diagonal_target_affine_locally_eq_target_affine_locally _ quasi_compact.affine_property_is_local
-#align algebraic_geometry.quasi_separated_eq_affine_property_diagonal AlgebraicGeometry.quasi_separated_eq_affine_property_diagonal
+#align algebraic_geometry.quasi_separated_eq_affine_property_diagonal AlgebraicGeometry.quasiSeparated_eq_affineProperty_diagonal
 
-theorem quasi_separated_eq_affine_property :
+theorem quasiSeparated_eq_affineProperty :
     @QuasiSeparated = targetAffineLocally QuasiSeparated.affineProperty := by
   rw [quasi_separated_eq_affine_property_diagonal, quasi_compact_affine_property_diagonal_eq]
-#align algebraic_geometry.quasi_separated_eq_affine_property AlgebraicGeometry.quasi_separated_eq_affine_property
+#align algebraic_geometry.quasi_separated_eq_affine_property AlgebraicGeometry.quasiSeparated_eq_affineProperty
 
 theorem QuasiSeparated.affinePropertyIsLocal : QuasiSeparated.affineProperty.IsLocal :=
   quasi_compact_affine_property_diagonal_eq ▸ QuasiCompact.affinePropertyIsLocal.diagonal
@@ -155,29 +155,29 @@ instance (priority := 900) quasiSeparatedOfMono {X Y : SchemeCat} (f : X ⟶ Y) 
   ⟨inferInstance⟩
 #align algebraic_geometry.quasi_separated_of_mono AlgebraicGeometry.quasiSeparatedOfMono
 
-theorem quasi_separated_stable_under_composition :
+theorem quasiSeparated_stableUnderComposition :
     MorphismProperty.StableUnderComposition @QuasiSeparated :=
-  quasi_separated_eq_diagonal_is_quasi_compact.symm ▸
-    quasi_compact_stable_under_composition.diagonal quasi_compact_respects_iso
-      quasi_compact_stable_under_base_change
-#align algebraic_geometry.quasi_separated_stable_under_composition AlgebraicGeometry.quasi_separated_stable_under_composition
+  quasiSeparated_eq_diagonal_is_quasiCompact.symm ▸
+    quasiCompact_stableUnderComposition.diagonal quasiCompact_respectsIso
+      quasiCompact_stableUnderBaseChange
+#align algebraic_geometry.quasi_separated_stable_under_composition AlgebraicGeometry.quasiSeparated_stableUnderComposition
 
-theorem quasi_separated_stable_under_base_change :
+theorem quasiSeparated_stableUnderBaseChange :
     MorphismProperty.StableUnderBaseChange @QuasiSeparated :=
-  quasi_separated_eq_diagonal_is_quasi_compact.symm ▸
-    quasi_compact_stable_under_base_change.diagonal quasi_compact_respects_iso
-#align algebraic_geometry.quasi_separated_stable_under_base_change AlgebraicGeometry.quasi_separated_stable_under_base_change
+  quasiSeparated_eq_diagonal_is_quasiCompact.symm ▸
+    quasiCompact_stableUnderBaseChange.diagonal quasiCompact_respectsIso
+#align algebraic_geometry.quasi_separated_stable_under_base_change AlgebraicGeometry.quasiSeparated_stableUnderBaseChange
 
 instance quasiSeparatedComp {X Y Z : SchemeCat} (f : X ⟶ Y) (g : Y ⟶ Z) [QuasiSeparated f]
     [QuasiSeparated g] : QuasiSeparated (f ≫ g) :=
-  quasi_separated_stable_under_composition f g inferInstance inferInstance
+  quasiSeparated_stableUnderComposition f g inferInstance inferInstance
 #align algebraic_geometry.quasi_separated_comp AlgebraicGeometry.quasiSeparatedComp
 
-theorem quasi_separated_respects_iso : MorphismProperty.RespectsIso @QuasiSeparated :=
-  quasi_separated_eq_diagonal_is_quasi_compact.symm ▸ quasi_compact_respects_iso.diagonal
-#align algebraic_geometry.quasi_separated_respects_iso AlgebraicGeometry.quasi_separated_respects_iso
+theorem quasiSeparated_respectsIso : MorphismProperty.RespectsIso @QuasiSeparated :=
+  quasiSeparated_eq_diagonal_is_quasiCompact.symm ▸ quasiCompact_respectsIso.diagonal
+#align algebraic_geometry.quasi_separated_respects_iso AlgebraicGeometry.quasiSeparated_respectsIso
 
-theorem QuasiSeparated.affine_open_cover_tfae {X Y : SchemeCat.{u}} (f : X ⟶ Y) :
+theorem QuasiSeparated.affine_openCover_tFAE {X Y : SchemeCat.{u}} (f : X ⟶ Y) :
     TFAE
       [QuasiSeparated f,
         ∃ (𝒰 : SchemeCat.OpenCover.{u} Y)(_ : ∀ i, IsAffine (𝒰.obj i)),
@@ -196,14 +196,14 @@ theorem QuasiSeparated.affine_open_cover_tfae {X Y : SchemeCat.{u}} (f : X ⟶ Y
   simp_rw [← quasi_compact_eq_affine_property, ← quasi_separated_eq_diagonal_is_quasi_compact,
     quasi_compact_affine_property_diagonal_eq] at this
   exact this
-#align algebraic_geometry.quasi_separated.affine_open_cover_tfae AlgebraicGeometry.QuasiSeparated.affine_open_cover_tfae
+#align algebraic_geometry.quasi_separated.affine_open_cover_tfae AlgebraicGeometry.QuasiSeparated.affine_openCover_tFAE
 
 theorem QuasiSeparated.isLocalAtTarget : PropertyIsLocalAtTarget @QuasiSeparated :=
-  quasi_separated_eq_affine_property_diagonal.symm ▸
+  quasiSeparated_eq_affineProperty_diagonal.symm ▸
     QuasiCompact.affinePropertyIsLocal.diagonal.targetAffineLocallyIsLocal
 #align algebraic_geometry.quasi_separated.is_local_at_target AlgebraicGeometry.QuasiSeparated.isLocalAtTarget
 
-theorem QuasiSeparated.open_cover_tfae {X Y : SchemeCat.{u}} (f : X ⟶ Y) :
+theorem QuasiSeparated.openCover_tFAE {X Y : SchemeCat.{u}} (f : X ⟶ Y) :
     TFAE
       [QuasiSeparated f,
         ∃ 𝒰 : SchemeCat.OpenCover.{u} Y,
@@ -215,56 +215,56 @@ theorem QuasiSeparated.open_cover_tfae {X Y : SchemeCat.{u}} (f : X ⟶ Y) :
           QuasiSeparated (pullback.snd : pullback f g ⟶ _),
         ∃ (ι : Type u)(U : ι → Opens Y.carrier)(hU : supᵢ U = ⊤), ∀ i, QuasiSeparated (f ∣_ U i)] :=
   QuasiSeparated.isLocalAtTarget.open_cover_tfae f
-#align algebraic_geometry.quasi_separated.open_cover_tfae AlgebraicGeometry.QuasiSeparated.open_cover_tfae
+#align algebraic_geometry.quasi_separated.open_cover_tfae AlgebraicGeometry.QuasiSeparated.openCover_tFAE
 
-theorem quasi_separated_over_affine_iff {X Y : SchemeCat} (f : X ⟶ Y) [IsAffine Y] :
+theorem quasiSeparated_over_affine_iff {X Y : SchemeCat} (f : X ⟶ Y) [IsAffine Y] :
     QuasiSeparated f ↔ QuasiSeparatedSpace X.carrier := by
   rw [quasi_separated_eq_affine_property,
     quasi_separated.affine_property_is_local.affine_target_iff f, quasi_separated.affine_property]
-#align algebraic_geometry.quasi_separated_over_affine_iff AlgebraicGeometry.quasi_separated_over_affine_iff
+#align algebraic_geometry.quasi_separated_over_affine_iff AlgebraicGeometry.quasiSeparated_over_affine_iff
 
-theorem quasi_separated_space_iff_quasi_separated (X : SchemeCat) :
+theorem quasiSeparatedSpace_iff_quasiSeparated (X : SchemeCat) :
     QuasiSeparatedSpace X.carrier ↔ QuasiSeparated (terminal.from X) :=
-  (quasi_separated_over_affine_iff _).symm
-#align algebraic_geometry.quasi_separated_space_iff_quasi_separated AlgebraicGeometry.quasi_separated_space_iff_quasi_separated
+  (quasiSeparated_over_affine_iff _).symm
+#align algebraic_geometry.quasi_separated_space_iff_quasi_separated AlgebraicGeometry.quasiSeparatedSpace_iff_quasiSeparated
 
-theorem QuasiSeparated.affine_open_cover_iff {X Y : SchemeCat.{u}} (𝒰 : SchemeCat.OpenCover.{u} Y)
+theorem QuasiSeparated.affine_openCover_iff {X Y : SchemeCat.{u}} (𝒰 : SchemeCat.OpenCover.{u} Y)
     [∀ i, IsAffine (𝒰.obj i)] (f : X ⟶ Y) :
     QuasiSeparated f ↔ ∀ i, QuasiSeparatedSpace (pullback f (𝒰.map i)).carrier :=
   by
   rw [quasi_separated_eq_affine_property,
     quasi_separated.affine_property_is_local.affine_open_cover_iff f 𝒰]
   rfl
-#align algebraic_geometry.quasi_separated.affine_open_cover_iff AlgebraicGeometry.QuasiSeparated.affine_open_cover_iff
+#align algebraic_geometry.quasi_separated.affine_open_cover_iff AlgebraicGeometry.QuasiSeparated.affine_openCover_iff
 
-theorem QuasiSeparated.open_cover_iff {X Y : SchemeCat.{u}} (𝒰 : SchemeCat.OpenCover.{u} Y)
+theorem QuasiSeparated.openCover_iff {X Y : SchemeCat.{u}} (𝒰 : SchemeCat.OpenCover.{u} Y)
     (f : X ⟶ Y) :
     QuasiSeparated f ↔ ∀ i, QuasiSeparated (pullback.snd : pullback f (𝒰.map i) ⟶ _) :=
   QuasiSeparated.isLocalAtTarget.open_cover_iff f 𝒰
-#align algebraic_geometry.quasi_separated.open_cover_iff AlgebraicGeometry.QuasiSeparated.open_cover_iff
+#align algebraic_geometry.quasi_separated.open_cover_iff AlgebraicGeometry.QuasiSeparated.openCover_iff
 
 instance {X Y S : SchemeCat} (f : X ⟶ S) (g : Y ⟶ S) [QuasiSeparated g] :
     QuasiSeparated (pullback.fst : pullback f g ⟶ X) :=
-  quasi_separated_stable_under_base_change.fst f g inferInstance
+  quasiSeparated_stableUnderBaseChange.fst f g inferInstance
 
 instance {X Y S : SchemeCat} (f : X ⟶ S) (g : Y ⟶ S) [QuasiSeparated f] :
     QuasiSeparated (pullback.snd : pullback f g ⟶ Y) :=
-  quasi_separated_stable_under_base_change.snd f g inferInstance
+  quasiSeparated_stableUnderBaseChange.snd f g inferInstance
 
 instance {X Y Z : SchemeCat} (f : X ⟶ Y) (g : Y ⟶ Z) [QuasiSeparated f] [QuasiSeparated g] :
     QuasiSeparated (f ≫ g) :=
-  quasi_separated_stable_under_composition f g inferInstance inferInstance
+  quasiSeparated_stableUnderComposition f g inferInstance inferInstance
 
-theorem quasi_separated_space_of_quasi_separated {X Y : SchemeCat} (f : X ⟶ Y)
+theorem quasiSeparatedSpace_of_quasiSeparated {X Y : SchemeCat} (f : X ⟶ Y)
     [hY : QuasiSeparatedSpace Y.carrier] [QuasiSeparated f] : QuasiSeparatedSpace X.carrier :=
   by
   rw [quasi_separated_space_iff_quasi_separated] at hY⊢
   have : f ≫ terminal.from Y = terminal.from X := terminal_is_terminal.hom_ext _ _
   rw [← this]
   skip; infer_instance
-#align algebraic_geometry.quasi_separated_space_of_quasi_separated AlgebraicGeometry.quasi_separated_space_of_quasi_separated
+#align algebraic_geometry.quasi_separated_space_of_quasi_separated AlgebraicGeometry.quasiSeparatedSpace_of_quasiSeparated
 
-instance quasi_separated_space_of_is_affine (X : SchemeCat) [IsAffine X] :
+instance quasiSeparatedSpace_of_isAffine (X : SchemeCat) [IsAffine X] :
     QuasiSeparatedSpace X.carrier := by
   constructor
   intro U V hU hU' hV hV'
@@ -279,14 +279,14 @@ instance quasi_separated_space_of_is_affine (X : SchemeCat) [IsAffine X] :
     change IsCompact (X.basic_open i ⊓ X.basic_open i').1
     rw [← Scheme.basic_open_mul]
     exact ((top_is_affine_open _).basic_open_is_affine _).IsCompact
-#align algebraic_geometry.quasi_separated_space_of_is_affine AlgebraicGeometry.quasi_separated_space_of_is_affine
+#align algebraic_geometry.quasi_separated_space_of_is_affine AlgebraicGeometry.quasiSeparatedSpace_of_isAffine
 
-theorem IsAffineOpen.is_quasi_separated {X : SchemeCat} {U : Opens X.carrier}
-    (hU : IsAffineOpen U) : IsQuasiSeparated (U : Set X.carrier) :=
+theorem IsAffineOpen.isQuasiSeparated {X : SchemeCat} {U : Opens X.carrier} (hU : IsAffineOpen U) :
+    IsQuasiSeparated (U : Set X.carrier) :=
   by
-  rw [is_quasi_separated_iff_quasi_separated_space]
-  exacts[@AlgebraicGeometry.quasi_separated_space_of_is_affine _ hU, U.prop]
-#align algebraic_geometry.is_affine_open.is_quasi_separated AlgebraicGeometry.IsAffineOpen.is_quasi_separated
+  rw [isQuasiSeparated_iff_quasiSeparatedSpace]
+  exacts[@AlgebraicGeometry.quasiSeparatedSpace_of_isAffine _ hU, U.prop]
+#align algebraic_geometry.is_affine_open.is_quasi_separated AlgebraicGeometry.IsAffineOpen.isQuasiSeparated
 
 theorem quasiSeparatedOfComp {X Y Z : SchemeCat} (f : X ⟶ Y) (g : Y ⟶ Z)
     [H : QuasiSeparated (f ≫ g)] : QuasiSeparated f :=
@@ -308,7 +308,7 @@ theorem quasiSeparatedOfComp {X Y Z : SchemeCat} (f : X ⟶ Y) (g : Y ⟶ Z)
   · apply AlgebraicGeometry.quasiSeparatedOfMono
 #align algebraic_geometry.quasi_separated_of_comp AlgebraicGeometry.quasiSeparatedOfComp
 
-theorem exists_eq_pow_mul_of_is_affine_open (X : SchemeCat) (U : Opens X.carrier)
+theorem exists_eq_pow_mul_of_isAffineOpen (X : SchemeCat) (U : Opens X.carrier)
     (hU : IsAffineOpen U) (f : X.Presheaf.obj (op U)) (x : X.Presheaf.obj (op <| X.basicOpen f)) :
     ∃ (n : ℕ)(y : X.Presheaf.obj (op U)), y |_ X.basicOpen f = (f |_ X.basicOpen f) ^ n * x :=
   by
@@ -317,7 +317,7 @@ theorem exists_eq_pow_mul_of_is_affine_open (X : SchemeCat) (U : Opens X.carrier
   use n, y
   delta TopCat.Presheaf.restrictOpen TopCat.Presheaf.restrict
   simpa [mul_comm x] using d.symm
-#align algebraic_geometry.exists_eq_pow_mul_of_is_affine_open AlgebraicGeometry.exists_eq_pow_mul_of_is_affine_open
+#align algebraic_geometry.exists_eq_pow_mul_of_is_affine_open AlgebraicGeometry.exists_eq_pow_mul_of_isAffineOpen
 
 theorem exists_eq_pow_mul_of_is_compact_of_quasi_separated_space_aux (X : SchemeCat)
     (S : X.affineOpens) (U₁ U₂ : Opens X.carrier) {n₁ n₂ : ℕ} {y₁ : X.Presheaf.obj (op U₁)}
@@ -373,7 +373,7 @@ theorem exists_eq_pow_mul_of_is_compact_of_quasi_separated_space_aux (X : Scheme
             (X.presheaf.map (hom_of_le le_sup_right).op f ^ n₁ * y₂))).mp
       _
   swap
-  · simp only [map_pow, RingHom.algebra_map_to_algebra, map_mul, ← comp_apply, ← functor.map_comp, ←
+  · simp only [map_pow, RingHom.algebraMap_toAlgebra, map_mul, ← comp_apply, ← functor.map_comp, ←
       op_comp, hom_of_le_comp]
     have h₃ : X.basic_open ((X.presheaf.map (hom_of_le (h₁.trans le_sup_left)).op) f) ≤ S.val := by
       simpa only [X.basic_open_res] using inf_le_left
@@ -408,7 +408,7 @@ theorem exists_eq_pow_mul_of_is_compact_of_quasi_separated_space_aux (X : Scheme
   convert e
 #align algebraic_geometry.exists_eq_pow_mul_of_is_compact_of_quasi_separated_space_aux AlgebraicGeometry.exists_eq_pow_mul_of_is_compact_of_quasi_separated_space_aux
 
-theorem exists_eq_pow_mul_of_is_compact_of_is_quasi_separated (X : SchemeCat) (U : Opens X.carrier)
+theorem exists_eq_pow_mul_of_isCompact_of_isQuasiSeparated (X : SchemeCat) (U : Opens X.carrier)
     (hU : IsCompact U.1) (hU' : IsQuasiSeparated U.1) (f : X.Presheaf.obj (op U))
     (x : X.Presheaf.obj (op <| X.basicOpen f)) :
     ∃ (n : ℕ)(y : X.Presheaf.obj (op U)), y |_ X.basicOpen f = (f |_ X.basicOpen f) ^ n * x :=
@@ -420,7 +420,7 @@ theorem exists_eq_pow_mul_of_is_compact_of_is_quasi_separated (X : SchemeCat) (U
     use 0, f
     refine'
       @Subsingleton.elim
-        (CommRingCat.subsingleton_of_is_terminal (X.sheaf.is_terminal_of_eq_empty _)) _ _
+        (CommRingCat.subsingleton_of_isTerminal (X.sheaf.is_terminal_of_eq_empty _)) _ _
     erw [eq_bot_iff]
     exact X.basic_open_le f
   · -- Given `f : 𝒪(S ∪ U), x : 𝒪(X_f)`, we need to show that `f ^ n * x` is the restriction of
@@ -557,24 +557,24 @@ theorem exists_eq_pow_mul_of_is_compact_of_is_quasi_separated (X : SchemeCat) (U
         erw [hy₂]
         rw [← comp_apply, ← functor.map_comp]
         congr
-#align algebraic_geometry.exists_eq_pow_mul_of_is_compact_of_is_quasi_separated AlgebraicGeometry.exists_eq_pow_mul_of_is_compact_of_is_quasi_separated
+#align algebraic_geometry.exists_eq_pow_mul_of_is_compact_of_is_quasi_separated AlgebraicGeometry.exists_eq_pow_mul_of_isCompact_of_isQuasiSeparated
 
 /-- If `U` is qcqs, then `Γ(X, D(f)) ≃ Γ(X, U)_f` for every `f : Γ(X, U)`.
 This is known as the **Qcqs lemma** in [R. Vakil, *The rising sea*][RisingSea]. -/
-theorem is_localization_basic_open_of_qcqs {X : SchemeCat} {U : Opens X.carrier}
-    (hU : IsCompact U.1) (hU' : IsQuasiSeparated U.1) (f : X.Presheaf.obj (op U)) :
+theorem is_localization_basicOpen_of_qcqs {X : SchemeCat} {U : Opens X.carrier} (hU : IsCompact U.1)
+    (hU' : IsQuasiSeparated U.1) (f : X.Presheaf.obj (op U)) :
     IsLocalization.Away f (X.Presheaf.obj (op <| X.basicOpen f)) :=
   by
   constructor
   · rintro ⟨_, n, rfl⟩
-    simp only [map_pow, Subtype.coe_mk, RingHom.algebra_map_to_algebra]
+    simp only [map_pow, Subtype.coe_mk, RingHom.algebraMap_toAlgebra]
     exact IsUnit.pow _ (RingedSpace.is_unit_res_basic_open _ f)
   · intro z
     obtain ⟨n, y, e⟩ := exists_eq_pow_mul_of_is_compact_of_is_quasi_separated X U hU hU' f z
     refine' ⟨⟨y, _, n, rfl⟩, _⟩
-    simpa only [map_pow, Subtype.coe_mk, RingHom.algebra_map_to_algebra, mul_comm z] using e.symm
+    simpa only [map_pow, Subtype.coe_mk, RingHom.algebraMap_toAlgebra, mul_comm z] using e.symm
   · intro x y
-    rw [← sub_eq_zero, ← map_sub, RingHom.algebra_map_to_algebra]
+    rw [← sub_eq_zero, ← map_sub, RingHom.algebraMap_toAlgebra]
     simp_rw [← @sub_eq_zero _ _ (x * _) (y * _), ← sub_mul]
     generalize x - y = z
     constructor
@@ -585,7 +585,7 @@ theorem is_localization_basic_open_of_qcqs {X : SchemeCat} {U : Opens X.carrier}
     · rintro ⟨⟨_, n, rfl⟩, e : z * f ^ n = 0⟩
       rw [← ((RingedSpace.is_unit_res_basic_open _ f).pow n).mul_left_inj, zero_mul, ← map_pow, ←
         map_mul, e, map_zero]
-#align algebraic_geometry.is_localization_basic_open_of_qcqs AlgebraicGeometry.is_localization_basic_open_of_qcqs
+#align algebraic_geometry.is_localization_basic_open_of_qcqs AlgebraicGeometry.is_localization_basicOpen_of_qcqs
 
 end AlgebraicGeometry
 

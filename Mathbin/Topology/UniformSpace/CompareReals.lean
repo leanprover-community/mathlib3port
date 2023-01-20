@@ -60,7 +60,7 @@ open Set Function Filter CauSeq UniformSpace
 
 /-- The metric space uniform structure on ℚ (which presupposes the existence
 of real numbers) agrees with the one coming directly from (abs : ℚ → ℚ). -/
-theorem Rat.uniform_space_eq :
+theorem Rat.uniformSpace_eq :
     IsAbsoluteValue.uniformSpace (abs : ℚ → ℚ) = PseudoMetricSpace.toUniformSpace :=
   by
   ext s
@@ -79,7 +79,7 @@ theorem Rat.uniform_space_eq :
     rw [Rat.dist_eq, abs_sub_comm]
     refine' lt_trans _ h''
     exact_mod_cast hab
-#align rat.uniform_space_eq Rat.uniform_space_eq
+#align rat.uniform_space_eq Rat.uniformSpace_eq
 
 /-- Cauchy reals packaged as a completion of ℚ using the absolute value route. -/
 def rationalCauSeqPkg : @AbstractCompletion ℚ <| IsAbsoluteValue.uniformSpace (abs : ℚ → ℚ)
@@ -90,9 +90,9 @@ def rationalCauSeqPkg : @AbstractCompletion ℚ <| IsAbsoluteValue.uniformSpace 
   complete := by infer_instance
   separation := by infer_instance
   UniformInducing := by
-    rw [Rat.uniform_space_eq]
+    rw [Rat.uniformSpace_eq]
     exact rat.uniform_embedding_coe_real.to_uniform_inducing
-  dense := Rat.dense_embedding_coe_real.dense
+  dense := Rat.denseEmbedding_coe_real.dense
 #align rational_cau_seq_pkg rationalCauSeqPkg
 
 namespace CompareReals

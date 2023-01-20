@@ -201,14 +201,14 @@ def ssubsets (s : Finset α) : Finset (Finset α) :=
 #print Finset.mem_ssubsets /-
 @[simp]
 theorem mem_ssubsets {s t : Finset α} : t ∈ s.ssubsets ↔ t ⊂ s := by
-  rw [ssubsets, mem_erase, mem_powerset, ssubset_iff_subset_ne, and_comm]
+  rw [ssubsets, mem_erase, mem_powerset, sSubset_iff_subset_ne, and_comm]
 #align finset.mem_ssubsets Finset.mem_ssubsets
 -/
 
 #print Finset.empty_mem_ssubsets /-
 theorem empty_mem_ssubsets {s : Finset α} (h : s.Nonempty) : ∅ ∈ s.ssubsets :=
   by
-  rw [mem_ssubsets, ssubset_iff_subset_ne]
+  rw [mem_ssubsets, sSubset_iff_subset_ne]
   exact ⟨empty_subset s, h.ne_empty.symm⟩
 #align finset.empty_mem_ssubsets Finset.empty_mem_ssubsets
 -/
@@ -445,7 +445,7 @@ theorem powersetLen_map {β : Type _} (f : α ↪ β) (n : ℕ) (s : Finset α) 
   eq_of_veq <|
     Multiset.map_injective (@eq_of_veq _) <| by
       simp_rw [map_val_val_powerset_len, map_val, Multiset.map_map, Function.comp,
-        RelEmbedding.coe_fn_to_embedding, map_embedding_apply, map_val, ← Multiset.map_map _ val,
+        RelEmbedding.coeFn_toEmbedding, map_embedding_apply, map_val, ← Multiset.map_map _ val,
         map_val_val_powerset_len, Multiset.powersetLen_map]
 #align finset.powerset_len_map Finset.powersetLen_map
 -/

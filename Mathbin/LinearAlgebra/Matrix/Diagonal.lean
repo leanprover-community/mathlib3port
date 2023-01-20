@@ -39,19 +39,19 @@ section CommRing
 variable {n : Type _} [Fintype n] [DecidableEq n] {R : Type v} [CommRing R]
 
 theorem proj_diagonal (i : n) (w : n → R) : (proj i).comp (toLin' (diagonal w)) = w i • proj i :=
-  LinearMap.ext fun j => mul_vec_diagonal _ _ _
+  LinearMap.ext fun j => mulVec_diagonal _ _ _
 #align matrix.proj_diagonal Matrix.proj_diagonal
 
-theorem diagonal_comp_std_basis (w : n → R) (i : n) :
+theorem diagonal_comp_stdBasis (w : n → R) (i : n) :
     (diagonal w).toLin'.comp (LinearMap.stdBasis R (fun _ : n => R) i) =
       w i • LinearMap.stdBasis R (fun _ : n => R) i :=
-  LinearMap.ext fun x => (diagonal_mul_vec_single w _ _).trans (Pi.single_smul' i (w i) x)
-#align matrix.diagonal_comp_std_basis Matrix.diagonal_comp_std_basis
+  LinearMap.ext fun x => (diagonal_mulVec_single w _ _).trans (Pi.single_smul' i (w i) x)
+#align matrix.diagonal_comp_std_basis Matrix.diagonal_comp_stdBasis
 
-theorem diagonal_to_lin' (w : n → R) :
+theorem diagonal_toLin' (w : n → R) :
     (diagonal w).toLin' = LinearMap.pi fun i => w i • LinearMap.proj i :=
-  LinearMap.ext fun v => funext fun i => mul_vec_diagonal _ _ _
-#align matrix.diagonal_to_lin' Matrix.diagonal_to_lin'
+  LinearMap.ext fun v => funext fun i => mulVec_diagonal _ _ _
+#align matrix.diagonal_to_lin' Matrix.diagonal_toLin'
 
 end CommRing
 
@@ -62,7 +62,7 @@ variable {m n : Type _} [Fintype m] [Fintype n]
 variable {K : Type u} [Field K]
 
 -- maybe try to relax the universe constraint
-theorem ker_diagonal_to_lin' [DecidableEq m] (w : m → K) :
+theorem ker_diagonal_toLin' [DecidableEq m] (w : m → K) :
     ker (diagonal w).toLin' = ⨆ i ∈ { i | w i = 0 }, range (LinearMap.stdBasis K (fun i => K) i) :=
   by
   rw [← comap_bot, ← infi_ker_proj, comap_infi]
@@ -72,7 +72,7 @@ theorem ker_diagonal_to_lin' [DecidableEq m] (w : m → K) :
   exact
     (supr_range_std_basis_eq_infi_ker_proj K (fun i : m => K) disjoint_compl_right this
         (Set.to_finite _)).symm
-#align matrix.ker_diagonal_to_lin' Matrix.ker_diagonal_to_lin'
+#align matrix.ker_diagonal_to_lin' Matrix.ker_diagonal_toLin'
 
 theorem range_diagonal [DecidableEq m] (w : m → K) :
     (diagonal w).toLin'.range =

@@ -184,13 +184,13 @@ theorem subset_sups {s t : Set α} :
 
 variable (s t u)
 
-theorem bUnion_image_sup_left : (s.bUnion fun a => t.image <| (· ⊔ ·) a) = s ⊻ t :=
+theorem bunionᵢ_image_sup_left : (s.bUnion fun a => t.image <| (· ⊔ ·) a) = s ⊻ t :=
   bUnion_image_left
-#align finset.bUnion_image_sup_left Finset.bUnion_image_sup_left
+#align finset.bUnion_image_sup_left Finset.bunionᵢ_image_sup_left
 
-theorem bUnion_image_sup_right : (t.bUnion fun b => s.image fun a => a ⊔ b) = s ⊻ t :=
+theorem bunionᵢ_image_sup_right : (t.bUnion fun b => s.image fun a => a ⊔ b) = s ⊻ t :=
   bUnion_image_right
-#align finset.bUnion_image_sup_right Finset.bUnion_image_sup_right
+#align finset.bUnion_image_sup_right Finset.bunionᵢ_image_sup_right
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
@@ -359,13 +359,13 @@ theorem subset_infs {s t : Set α} :
 
 variable (s t u)
 
-theorem bUnion_image_inf_left : (s.bUnion fun a => t.image <| (· ⊓ ·) a) = s ⊼ t :=
+theorem bunionᵢ_image_inf_left : (s.bUnion fun a => t.image <| (· ⊓ ·) a) = s ⊼ t :=
   bUnion_image_left
-#align finset.bUnion_image_inf_left Finset.bUnion_image_inf_left
+#align finset.bUnion_image_inf_left Finset.bunionᵢ_image_inf_left
 
-theorem bUnion_image_inf_right : (t.bUnion fun b => s.image fun a => a ⊓ b) = s ⊼ t :=
+theorem bunionᵢ_image_inf_right : (t.bUnion fun b => s.image fun a => a ⊓ b) = s ⊼ t :=
   bUnion_image_right
-#align finset.bUnion_image_inf_right Finset.bUnion_image_inf_right
+#align finset.bUnion_image_inf_right Finset.bunionᵢ_image_inf_right
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
@@ -410,97 +410,97 @@ scoped[FinsetFamily] infixl:74 " ○ " => Finset.disjSups
 variable {s t u} {a b c : α}
 
 @[simp]
-theorem mem_disj_sups : c ∈ s ○ t ↔ ∃ a ∈ s, ∃ b ∈ t, Disjoint a b ∧ a ⊔ b = c := by
+theorem mem_disjSups : c ∈ s ○ t ↔ ∃ a ∈ s, ∃ b ∈ t, Disjoint a b ∧ a ⊔ b = c := by
   simp [disj_sups, and_assoc']
-#align finset.mem_disj_sups Finset.mem_disj_sups
+#align finset.mem_disj_sups Finset.mem_disjSups
 
-theorem disj_sups_subset_sups : s ○ t ⊆ s ⊻ t :=
+theorem disjSups_subset_sups : s ○ t ⊆ s ⊻ t :=
   by
   simp_rw [subset_iff, mem_sups, mem_disj_sups]
   exact fun c ⟨a, b, ha, hb, h, hc⟩ => ⟨a, b, ha, hb, hc⟩
-#align finset.disj_sups_subset_sups Finset.disj_sups_subset_sups
+#align finset.disj_sups_subset_sups Finset.disjSups_subset_sups
 
 variable (s t)
 
-theorem card_disj_sups_le : (s ○ t).card ≤ s.card * t.card :=
-  (card_le_of_subset disj_sups_subset_sups).trans <| card_sups_le _ _
-#align finset.card_disj_sups_le Finset.card_disj_sups_le
+theorem card_disjSups_le : (s ○ t).card ≤ s.card * t.card :=
+  (card_le_of_subset disjSups_subset_sups).trans <| card_sups_le _ _
+#align finset.card_disj_sups_le Finset.card_disjSups_le
 
 variable {s s₁ s₂ t t₁ t₂ u}
 
-theorem disj_sups_subset (hs : s₁ ⊆ s₂) (ht : t₁ ⊆ t₂) : s₁ ○ t₁ ⊆ s₂ ○ t₂ :=
+theorem disjSups_subset (hs : s₁ ⊆ s₂) (ht : t₁ ⊆ t₂) : s₁ ○ t₁ ⊆ s₂ ○ t₂ :=
   image_subset_image <| filter_subset_filter _ <| product_subset_product hs ht
-#align finset.disj_sups_subset Finset.disj_sups_subset
+#align finset.disj_sups_subset Finset.disjSups_subset
 
-theorem disj_sups_subset_left (ht : t₁ ⊆ t₂) : s ○ t₁ ⊆ s ○ t₂ :=
-  disj_sups_subset Subset.rfl ht
-#align finset.disj_sups_subset_left Finset.disj_sups_subset_left
+theorem disjSups_subset_left (ht : t₁ ⊆ t₂) : s ○ t₁ ⊆ s ○ t₂ :=
+  disjSups_subset Subset.rfl ht
+#align finset.disj_sups_subset_left Finset.disjSups_subset_left
 
-theorem disj_sups_subset_right (hs : s₁ ⊆ s₂) : s₁ ○ t ⊆ s₂ ○ t :=
-  disj_sups_subset hs Subset.rfl
-#align finset.disj_sups_subset_right Finset.disj_sups_subset_right
+theorem disjSups_subset_right (hs : s₁ ⊆ s₂) : s₁ ○ t ⊆ s₂ ○ t :=
+  disjSups_subset hs Subset.rfl
+#align finset.disj_sups_subset_right Finset.disjSups_subset_right
 
-theorem forall_disj_sups_iff {p : α → Prop} :
+theorem forall_disjSups_iff {p : α → Prop} :
     (∀ c ∈ s ○ t, p c) ↔ ∀ a ∈ s, ∀ b ∈ t, Disjoint a b → p (a ⊔ b) :=
   by
   simp_rw [mem_disj_sups]
   refine' ⟨fun h a ha b hb hab => h _ ⟨_, ha, _, hb, hab, rfl⟩, _⟩
   rintro h _ ⟨a, ha, b, hb, hab, rfl⟩
   exact h _ ha _ hb hab
-#align finset.forall_disj_sups_iff Finset.forall_disj_sups_iff
+#align finset.forall_disj_sups_iff Finset.forall_disjSups_iff
 
 @[simp]
-theorem disj_sups_subset_iff : s ○ t ⊆ u ↔ ∀ a ∈ s, ∀ b ∈ t, Disjoint a b → a ⊔ b ∈ u :=
+theorem disjSups_subset_iff : s ○ t ⊆ u ↔ ∀ a ∈ s, ∀ b ∈ t, Disjoint a b → a ⊔ b ∈ u :=
   forall_disj_sups_iff
-#align finset.disj_sups_subset_iff Finset.disj_sups_subset_iff
+#align finset.disj_sups_subset_iff Finset.disjSups_subset_iff
 
-theorem Nonempty.of_disj_sups_left : (s ○ t).Nonempty → s.Nonempty :=
+theorem Nonempty.of_disjSups_left : (s ○ t).Nonempty → s.Nonempty :=
   by
   simp_rw [Finset.Nonempty, mem_disj_sups]
   exact fun ⟨_, a, ha, _⟩ => ⟨a, ha⟩
-#align finset.nonempty.of_disj_sups_left Finset.Nonempty.of_disj_sups_left
+#align finset.nonempty.of_disj_sups_left Finset.Nonempty.of_disjSups_left
 
-theorem Nonempty.of_disj_sups_right : (s ○ t).Nonempty → t.Nonempty :=
+theorem Nonempty.of_disjSups_right : (s ○ t).Nonempty → t.Nonempty :=
   by
   simp_rw [Finset.Nonempty, mem_disj_sups]
   exact fun ⟨_, _, _, b, hb, _⟩ => ⟨b, hb⟩
-#align finset.nonempty.of_disj_sups_right Finset.Nonempty.of_disj_sups_right
+#align finset.nonempty.of_disj_sups_right Finset.Nonempty.of_disjSups_right
 
 @[simp]
-theorem disj_sups_empty_left : ∅ ○ t = ∅ := by simp [disj_sups]
-#align finset.disj_sups_empty_left Finset.disj_sups_empty_left
+theorem disjSups_empty_left : ∅ ○ t = ∅ := by simp [disj_sups]
+#align finset.disj_sups_empty_left Finset.disjSups_empty_left
 
 @[simp]
-theorem disj_sups_empty_right : s ○ ∅ = ∅ := by simp [disj_sups]
-#align finset.disj_sups_empty_right Finset.disj_sups_empty_right
+theorem disjSups_empty_right : s ○ ∅ = ∅ := by simp [disj_sups]
+#align finset.disj_sups_empty_right Finset.disjSups_empty_right
 
-theorem disj_sups_singleton : ({a} ○ {b} : Finset α) = if Disjoint a b then {a ⊔ b} else ∅ := by
+theorem disjSups_singleton : ({a} ○ {b} : Finset α) = if Disjoint a b then {a ⊔ b} else ∅ := by
   split_ifs <;> simp [disj_sups, filter_singleton, h]
-#align finset.disj_sups_singleton Finset.disj_sups_singleton
+#align finset.disj_sups_singleton Finset.disjSups_singleton
 
-theorem disj_sups_union_left : (s₁ ∪ s₂) ○ t = s₁ ○ t ∪ s₂ ○ t := by
+theorem disjSups_union_left : (s₁ ∪ s₂) ○ t = s₁ ○ t ∪ s₂ ○ t := by
   simp [disj_sups, filter_union, image_union]
-#align finset.disj_sups_union_left Finset.disj_sups_union_left
+#align finset.disj_sups_union_left Finset.disjSups_union_left
 
-theorem disj_sups_union_right : s ○ (t₁ ∪ t₂) = s ○ t₁ ∪ s ○ t₂ := by
+theorem disjSups_union_right : s ○ (t₁ ∪ t₂) = s ○ t₁ ∪ s ○ t₂ := by
   simp [disj_sups, filter_union, image_union]
-#align finset.disj_sups_union_right Finset.disj_sups_union_right
+#align finset.disj_sups_union_right Finset.disjSups_union_right
 
-theorem disj_sups_inter_subset_left : (s₁ ∩ s₂) ○ t ⊆ s₁ ○ t ∩ s₂ ○ t := by
+theorem disjSups_inter_subset_left : (s₁ ∩ s₂) ○ t ⊆ s₁ ○ t ∩ s₂ ○ t := by
   simpa only [disj_sups, inter_product, filter_inter_distrib] using image_inter_subset _ _ _
-#align finset.disj_sups_inter_subset_left Finset.disj_sups_inter_subset_left
+#align finset.disj_sups_inter_subset_left Finset.disjSups_inter_subset_left
 
-theorem disj_sups_inter_subset_right : s ○ (t₁ ∩ t₂) ⊆ s ○ t₁ ∩ s ○ t₂ := by
+theorem disjSups_inter_subset_right : s ○ (t₁ ∩ t₂) ⊆ s ○ t₁ ∩ s ○ t₂ := by
   simpa only [disj_sups, product_inter, filter_inter_distrib] using image_inter_subset _ _ _
-#align finset.disj_sups_inter_subset_right Finset.disj_sups_inter_subset_right
+#align finset.disj_sups_inter_subset_right Finset.disjSups_inter_subset_right
 
 variable (s t)
 
-theorem disj_sups_comm : s ○ t = t ○ s := by
+theorem disjSups_comm : s ○ t = t ○ s := by
   ext
   rw [mem_disj_sups, exists₂_comm]
   simp [sup_comm, disjoint_comm]
-#align finset.disj_sups_comm Finset.disj_sups_comm
+#align finset.disj_sups_comm Finset.disjSups_comm
 
 end DisjSups
 
@@ -510,21 +510,21 @@ section DistribLattice
 
 variable [DistribLattice α] [OrderBot α] [@DecidableRel α Disjoint] (s t u : Finset α)
 
-theorem disj_sups_assoc : ∀ s t u : Finset α, s ○ t ○ u = s ○ (t ○ u) :=
+theorem disjSups_assoc : ∀ s t u : Finset α, s ○ t ○ u = s ○ (t ○ u) :=
   by
   refine' associative_of_commutative_of_le disj_sups_comm _
   simp only [le_eq_subset, disj_sups_subset_iff, mem_disj_sups]
   rintro s t u _ ⟨a, ha, b, hb, hab, rfl⟩ c hc habc
   rw [disjoint_sup_left] at habc
   exact ⟨a, ha, _, ⟨b, hb, c, hc, habc.2, rfl⟩, hab.sup_right habc.1, sup_assoc.symm⟩
-#align finset.disj_sups_assoc Finset.disj_sups_assoc
+#align finset.disj_sups_assoc Finset.disjSups_assoc
 
-theorem disj_sups_left_comm : s ○ (t ○ u) = t ○ (s ○ u) := by
+theorem disjSups_left_comm : s ○ (t ○ u) = t ○ (s ○ u) := by
   simp_rw [← disj_sups_assoc, disj_sups_comm s]
-#align finset.disj_sups_left_comm Finset.disj_sups_left_comm
+#align finset.disj_sups_left_comm Finset.disjSups_left_comm
 
-theorem disj_sups_right_comm : s ○ t ○ u = s ○ u ○ t := by simp_rw [disj_sups_assoc, disj_sups_comm]
-#align finset.disj_sups_right_comm Finset.disj_sups_right_comm
+theorem disjSups_right_comm : s ○ t ○ u = s ○ u ○ t := by simp_rw [disj_sups_assoc, disj_sups_comm]
+#align finset.disj_sups_right_comm Finset.disjSups_right_comm
 
 end DistribLattice
 

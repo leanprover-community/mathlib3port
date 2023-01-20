@@ -99,40 +99,40 @@ theorem continuous_of_linear_of_bound {f : E → G} (h_add : ∀ x y, f (x + y) 
 #align continuous_of_linear_of_bound continuous_of_linear_of_bound
 
 @[simp, norm_cast]
-theorem LinearMap.mk_continuous_coe (C : ℝ) (h : ∀ x, ‖f x‖ ≤ C * ‖x‖) :
+theorem LinearMap.mkContinuous_coe (C : ℝ) (h : ∀ x, ‖f x‖ ≤ C * ‖x‖) :
     (f.mkContinuous C h : E →ₛₗ[σ] F) = f :=
   rfl
-#align linear_map.mk_continuous_coe LinearMap.mk_continuous_coe
+#align linear_map.mk_continuous_coe LinearMap.mkContinuous_coe
 
 @[simp]
-theorem LinearMap.mk_continuous_apply (C : ℝ) (h : ∀ x, ‖f x‖ ≤ C * ‖x‖) (x : E) :
+theorem LinearMap.mkContinuous_apply (C : ℝ) (h : ∀ x, ‖f x‖ ≤ C * ‖x‖) (x : E) :
     f.mkContinuous C h x = f x :=
   rfl
-#align linear_map.mk_continuous_apply LinearMap.mk_continuous_apply
+#align linear_map.mk_continuous_apply LinearMap.mkContinuous_apply
 
 @[simp, norm_cast]
-theorem LinearMap.mk_continuous_of_exists_bound_coe (h : ∃ C, ∀ x, ‖f x‖ ≤ C * ‖x‖) :
+theorem LinearMap.mkContinuousOfExistsBound_coe (h : ∃ C, ∀ x, ‖f x‖ ≤ C * ‖x‖) :
     (f.mkContinuousOfExistsBound h : E →ₛₗ[σ] F) = f :=
   rfl
-#align linear_map.mk_continuous_of_exists_bound_coe LinearMap.mk_continuous_of_exists_bound_coe
+#align linear_map.mk_continuous_of_exists_bound_coe LinearMap.mkContinuousOfExistsBound_coe
 
 @[simp]
-theorem LinearMap.mk_continuous_of_exists_bound_apply (h : ∃ C, ∀ x, ‖f x‖ ≤ C * ‖x‖) (x : E) :
+theorem LinearMap.mkContinuousOfExistsBound_apply (h : ∃ C, ∀ x, ‖f x‖ ≤ C * ‖x‖) (x : E) :
     f.mkContinuousOfExistsBound h x = f x :=
   rfl
-#align linear_map.mk_continuous_of_exists_bound_apply LinearMap.mk_continuous_of_exists_bound_apply
+#align linear_map.mk_continuous_of_exists_bound_apply LinearMap.mkContinuousOfExistsBound_apply
 
 @[simp]
-theorem LinearMap.to_continuous_linear_map₁_coe (f : 𝕜 →ₗ[𝕜] E) :
+theorem LinearMap.toContinuousLinearMap₁_coe (f : 𝕜 →ₗ[𝕜] E) :
     (f.toContinuousLinearMap₁ : 𝕜 →ₗ[𝕜] E) = f :=
   rfl
-#align linear_map.to_continuous_linear_map₁_coe LinearMap.to_continuous_linear_map₁_coe
+#align linear_map.to_continuous_linear_map₁_coe LinearMap.toContinuousLinearMap₁_coe
 
 @[simp]
-theorem LinearMap.to_continuous_linear_map₁_apply (f : 𝕜 →ₗ[𝕜] E) (x) :
+theorem LinearMap.toContinuousLinearMap₁_apply (f : 𝕜 →ₗ[𝕜] E) (x) :
     f.toContinuousLinearMap₁ x = f x :=
   rfl
-#align linear_map.to_continuous_linear_map₁_apply LinearMap.to_continuous_linear_map₁_apply
+#align linear_map.to_continuous_linear_map₁_apply LinearMap.toContinuousLinearMap₁_apply
 
 namespace ContinuousLinearMap
 
@@ -174,10 +174,10 @@ variable [NormedAddCommGroup E] [NormedAddCommGroup F] [NormedSpace 𝕜 E] [Nor
 
 variable {σ : 𝕜 →+* 𝕜₂} (f g : E →SL[σ] F) (x y z : E)
 
-theorem ContinuousLinearMap.uniform_embedding_of_bound {K : ℝ≥0} (hf : ∀ x, ‖x‖ ≤ K * ‖f x‖) :
+theorem ContinuousLinearMap.uniformEmbedding_of_bound {K : ℝ≥0} (hf : ∀ x, ‖x‖ ≤ K * ‖f x‖) :
     UniformEmbedding f :=
   (AddMonoidHomClass.antilipschitz_of_bound f hf).UniformEmbedding f.UniformContinuous
-#align continuous_linear_map.uniform_embedding_of_bound ContinuousLinearMap.uniform_embedding_of_bound
+#align continuous_linear_map.uniform_embedding_of_bound ContinuousLinearMap.uniformEmbedding_of_bound
 
 end Normed
 
@@ -238,41 +238,41 @@ namespace ContinuousLinearMap
 
 variable (𝕜)
 
-theorem to_span_singleton_homothety (x : E) (c : 𝕜) :
+theorem toSpanSingleton_homothety (x : E) (c : 𝕜) :
     ‖LinearMap.toSpanSingleton 𝕜 E x c‖ = ‖x‖ * ‖c‖ :=
   by
   rw [mul_comm]
   exact norm_smul _ _
-#align continuous_linear_map.to_span_singleton_homothety ContinuousLinearMap.to_span_singleton_homothety
+#align continuous_linear_map.to_span_singleton_homothety ContinuousLinearMap.toSpanSingleton_homothety
 
 /-- Given an element `x` of a normed space `E` over a field `𝕜`, the natural continuous
     linear map from `𝕜` to `E` by taking multiples of `x`.-/
 def toSpanSingleton (x : E) : 𝕜 →L[𝕜] E :=
-  ofHomothety (LinearMap.toSpanSingleton 𝕜 E x) ‖x‖ (to_span_singleton_homothety 𝕜 x)
+  ofHomothety (LinearMap.toSpanSingleton 𝕜 E x) ‖x‖ (toSpanSingleton_homothety 𝕜 x)
 #align continuous_linear_map.to_span_singleton ContinuousLinearMap.toSpanSingleton
 
-theorem to_span_singleton_apply (x : E) (r : 𝕜) : toSpanSingleton 𝕜 x r = r • x := by
+theorem toSpanSingleton_apply (x : E) (r : 𝕜) : toSpanSingleton 𝕜 x r = r • x := by
   simp [to_span_singleton, of_homothety, LinearMap.toSpanSingleton]
-#align continuous_linear_map.to_span_singleton_apply ContinuousLinearMap.to_span_singleton_apply
+#align continuous_linear_map.to_span_singleton_apply ContinuousLinearMap.toSpanSingleton_apply
 
-theorem to_span_singleton_add (x y : E) :
+theorem toSpanSingleton_add (x y : E) :
     toSpanSingleton 𝕜 (x + y) = toSpanSingleton 𝕜 x + toSpanSingleton 𝕜 y :=
   by
   ext1
   simp [to_span_singleton_apply]
-#align continuous_linear_map.to_span_singleton_add ContinuousLinearMap.to_span_singleton_add
+#align continuous_linear_map.to_span_singleton_add ContinuousLinearMap.toSpanSingleton_add
 
-theorem to_span_singleton_smul' (𝕜') [NormedField 𝕜'] [NormedSpace 𝕜' E] [SMulCommClass 𝕜 𝕜' E]
+theorem toSpanSingleton_smul' (𝕜') [NormedField 𝕜'] [NormedSpace 𝕜' E] [SMulCommClass 𝕜 𝕜' E]
     (c : 𝕜') (x : E) : toSpanSingleton 𝕜 (c • x) = c • toSpanSingleton 𝕜 x :=
   by
   ext1
   rw [to_span_singleton_apply, smul_apply, to_span_singleton_apply, smul_comm]
-#align continuous_linear_map.to_span_singleton_smul' ContinuousLinearMap.to_span_singleton_smul'
+#align continuous_linear_map.to_span_singleton_smul' ContinuousLinearMap.toSpanSingleton_smul'
 
-theorem to_span_singleton_smul (c : 𝕜) (x : E) :
+theorem toSpanSingleton_smul (c : 𝕜) (x : E) :
     toSpanSingleton 𝕜 (c • x) = c • toSpanSingleton 𝕜 x :=
-  to_span_singleton_smul' 𝕜 𝕜 c x
-#align continuous_linear_map.to_span_singleton_smul ContinuousLinearMap.to_span_singleton_smul
+  toSpanSingleton_smul' 𝕜 𝕜 c x
+#align continuous_linear_map.to_span_singleton_smul ContinuousLinearMap.toSpanSingleton_smul
 
 end ContinuousLinearMap
 
@@ -282,10 +282,10 @@ namespace ContinuousLinearEquiv
 
 variable (𝕜)
 
-theorem to_span_nonzero_singleton_homothety (x : E) (h : x ≠ 0) (c : 𝕜) :
+theorem toSpanNonzeroSingleton_homothety (x : E) (h : x ≠ 0) (c : 𝕜) :
     ‖LinearEquiv.toSpanNonzeroSingleton 𝕜 E x h c‖ = ‖x‖ * ‖c‖ :=
-  ContinuousLinearMap.to_span_singleton_homothety _ _ _
-#align continuous_linear_equiv.to_span_nonzero_singleton_homothety ContinuousLinearEquiv.to_span_nonzero_singleton_homothety
+  ContinuousLinearMap.toSpanSingleton_homothety _ _ _
+#align continuous_linear_equiv.to_span_nonzero_singleton_homothety ContinuousLinearEquiv.toSpanNonzeroSingleton_homothety
 
 end ContinuousLinearEquiv
 
@@ -305,7 +305,7 @@ variable (𝕜)
     continuous linear equivalence from `E₁` to the span of `x`.-/
 noncomputable def toSpanNonzeroSingleton (x : E) (h : x ≠ 0) : 𝕜 ≃L[𝕜] 𝕜 ∙ x :=
   ofHomothety (LinearEquiv.toSpanNonzeroSingleton 𝕜 E x h) ‖x‖ (norm_pos_iff.mpr h)
-    (to_span_nonzero_singleton_homothety 𝕜 x h)
+    (toSpanNonzeroSingleton_homothety 𝕜 x h)
 #align continuous_linear_equiv.to_span_nonzero_singleton ContinuousLinearEquiv.toSpanNonzeroSingleton
 
 /-- Given a nonzero element `x` of a normed space `E₁` over a field `𝕜`, the natural continuous
@@ -315,22 +315,22 @@ noncomputable def coord (x : E) (h : x ≠ 0) : (𝕜 ∙ x) →L[𝕜] 𝕜 :=
 #align continuous_linear_equiv.coord ContinuousLinearEquiv.coord
 
 @[simp]
-theorem coe_to_span_nonzero_singleton_symm {x : E} (h : x ≠ 0) :
+theorem coe_toSpanNonzeroSingleton_symm {x : E} (h : x ≠ 0) :
     ⇑(toSpanNonzeroSingleton 𝕜 x h).symm = coord 𝕜 x h :=
   rfl
-#align continuous_linear_equiv.coe_to_span_nonzero_singleton_symm ContinuousLinearEquiv.coe_to_span_nonzero_singleton_symm
+#align continuous_linear_equiv.coe_to_span_nonzero_singleton_symm ContinuousLinearEquiv.coe_toSpanNonzeroSingleton_symm
 
 @[simp]
-theorem coord_to_span_nonzero_singleton {x : E} (h : x ≠ 0) (c : 𝕜) :
+theorem coord_toSpanNonzeroSingleton {x : E} (h : x ≠ 0) (c : 𝕜) :
     coord 𝕜 x h (toSpanNonzeroSingleton 𝕜 x h c) = c :=
   (toSpanNonzeroSingleton 𝕜 x h).symm_apply_apply c
-#align continuous_linear_equiv.coord_to_span_nonzero_singleton ContinuousLinearEquiv.coord_to_span_nonzero_singleton
+#align continuous_linear_equiv.coord_to_span_nonzero_singleton ContinuousLinearEquiv.coord_toSpanNonzeroSingleton
 
 @[simp]
-theorem to_span_nonzero_singleton_coord {x : E} (h : x ≠ 0) (y : 𝕜 ∙ x) :
+theorem toSpanNonzeroSingleton_coord {x : E} (h : x ≠ 0) (y : 𝕜 ∙ x) :
     toSpanNonzeroSingleton 𝕜 x h (coord 𝕜 x h y) = y :=
   (toSpanNonzeroSingleton 𝕜 x h).apply_symm_apply y
-#align continuous_linear_equiv.to_span_nonzero_singleton_coord ContinuousLinearEquiv.to_span_nonzero_singleton_coord
+#align continuous_linear_equiv.to_span_nonzero_singleton_coord ContinuousLinearEquiv.toSpanNonzeroSingleton_coord
 
 @[simp]
 theorem coord_self (x : E) (h : x ≠ 0) :

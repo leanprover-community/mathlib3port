@@ -105,7 +105,7 @@ theorem nonneg_prod_iff {R} [OrderedRing R] [Module R M₁] [Module R M₂] {Q�
     exact add_nonneg (h₁ x₁) (h₂ x₂)
 #align quadratic_form.nonneg_prod_iff QuadraticForm.nonneg_prod_iff
 
-theorem pos_def_prod_iff {R} [OrderedRing R] [Module R M₁] [Module R M₂] {Q₁ : QuadraticForm R M₁}
+theorem posDef_prod_iff {R} [OrderedRing R] [Module R M₁] [Module R M₂] {Q₁ : QuadraticForm R M₁}
     {Q₂ : QuadraticForm R M₂} : (Q₁.Prod Q₂).PosDef ↔ Q₁.PosDef ∧ Q₂.PosDef :=
   by
   simp_rw [pos_def_iff_nonneg, nonneg_prod_iff]
@@ -118,11 +118,11 @@ theorem pos_def_prod_iff {R} [OrderedRing R] [Module R M₁] [Module R M₂] {Q�
     rintro ⟨x₁, x₂⟩ (hx : Q₁ x₁ + Q₂ x₂ = 0)
     rw [add_eq_zero_iff' (hle₁ x₁) (hle₂ x₂), ha₁.eq_zero_iff, ha₂.eq_zero_iff] at hx
     rwa [Prod.mk_eq_zero]
-#align quadratic_form.pos_def_prod_iff QuadraticForm.pos_def_prod_iff
+#align quadratic_form.pos_def_prod_iff QuadraticForm.posDef_prod_iff
 
 theorem PosDef.prod {R} [OrderedRing R] [Module R M₁] [Module R M₂] {Q₁ : QuadraticForm R M₁}
     {Q₂ : QuadraticForm R M₂} (h₁ : Q₁.PosDef) (h₂ : Q₂.PosDef) : (Q₁.Prod Q₂).PosDef :=
-  pos_def_prod_iff.mpr ⟨h₁, h₂⟩
+  posDef_prod_iff.mpr ⟨h₁, h₂⟩
 #align quadratic_form.pos_def.prod QuadraticForm.PosDef.prod
 
 open BigOperators
@@ -145,7 +145,7 @@ def Isometry.pi [Fintype ι] {Q : ∀ i, QuadraticForm R (Mᵢ i)} {Q' : ∀ i, 
     (e : ∀ i, (Q i).Isometry (Q' i)) : (pi Q).Isometry (pi Q')
     where
   map_app' x := by
-    simp only [pi_apply, LinearEquiv.Pi_congr_right_apply, LinearEquiv.to_fun_eq_coe,
+    simp only [pi_apply, LinearEquiv.piCongrRight_apply, LinearEquiv.toFun_eq_coe,
       isometry.coe_to_linear_equiv, isometry.map_app]
   toLinearEquiv := LinearEquiv.piCongrRight fun i => (e i : Mᵢ i ≃ₗ[R] Nᵢ i)
 #align quadratic_form.isometry.pi QuadraticForm.Isometry.pi
@@ -190,7 +190,7 @@ theorem nonneg_pi_iff [Fintype ι] {R} [OrderedRing R] [∀ i, Module R (Mᵢ i)
     exact Finset.sum_nonneg fun i hi => h i (x i)
 #align quadratic_form.nonneg_pi_iff QuadraticForm.nonneg_pi_iff
 
-theorem pos_def_pi_iff [Fintype ι] {R} [OrderedRing R] [∀ i, Module R (Mᵢ i)]
+theorem posDef_pi_iff [Fintype ι] {R} [OrderedRing R] [∀ i, Module R (Mᵢ i)]
     {Q : ∀ i, QuadraticForm R (Mᵢ i)} : (pi Q).PosDef ↔ ∀ i, (Q i).PosDef :=
   by
   simp_rw [pos_def_iff_nonneg, nonneg_pi_iff]
@@ -203,7 +203,7 @@ theorem pos_def_pi_iff [Fintype ι] {R} [OrderedRing R] [∀ i, Module R (Mᵢ i
     rw [pi_apply, Finset.sum_eq_zero_iff_of_nonneg fun j hj => _] at hx
     · exact hx _ (Finset.mem_univ _)
     exact (h j).1 _
-#align quadratic_form.pos_def_pi_iff QuadraticForm.pos_def_pi_iff
+#align quadratic_form.pos_def_pi_iff QuadraticForm.posDef_pi_iff
 
 end QuadraticForm
 

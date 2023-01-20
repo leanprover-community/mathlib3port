@@ -109,10 +109,9 @@ theorem one_right (a : ℤ) : J(a | 1) = 1 := by
 
 /-- The Legendre symbol `legendre_sym p a` with an integer `a` and a prime number `p`
 is the same as the Jacobi symbol `J(a | p)`. -/
-theorem legendreSym.to_jacobi_sym (p : ℕ) [fp : Fact p.Prime] (a : ℤ) :
-    legendreSym p a = J(a | p) := by
-  simp only [jacobiSym, factors_prime fp.1, List.prod_cons, List.prod_nil, mul_one, List.pmap]
-#align legendre_sym.to_jacobi_sym legendreSym.to_jacobi_sym
+theorem legendreSym.to_jacobiSym (p : ℕ) [fp : Fact p.Prime] (a : ℤ) : legendreSym p a = J(a | p) :=
+  by simp only [jacobiSym, factors_prime fp.1, List.prod_cons, List.prod_nil, mul_one, List.pmap]
+#align legendre_sym.to_jacobi_sym legendreSym.to_jacobiSym
 
 /-- The Jacobi symbol is multiplicative in its second argument. -/
 theorem mul_right' (a : ℤ) {b₁ b₂ : ℕ} (hb₁ : b₁ ≠ 0) (hb₂ : b₂ ≠ 0) :
@@ -138,7 +137,7 @@ theorem trichotomy (a : ℤ) (b : ℕ) : J(a | b) = 0 ∨ J(a | b) = 1 ∨ J(a |
       intro _ ha'
       rcases list.mem_pmap.mp ha' with ⟨p, hp, rfl⟩
       haveI : Fact p.prime := ⟨prime_of_mem_factors hp⟩
-      exact quadratic_char_is_quadratic (Zmod p) a)
+      exact quadraticChar_isQuadratic (Zmod p) a)
 #align jacobi_sym.trichotomy jacobiSym.trichotomy
 
 /-- The symbol `J(1 | b)` has the value `1`. -/
@@ -160,7 +159,7 @@ theorem mul_left (a₁ a₂ : ℤ) (b : ℕ) : J(a₁ * a₂ | b) = J(a₁ | b) 
 theorem eq_zero_iff_not_coprime {a : ℤ} {b : ℕ} [NeZero b] : J(a | b) = 0 ↔ a.gcd b ≠ 1 :=
   List.prod_eq_zero_iff.trans
     (by
-      rw [List.mem_pmap, Int.gcd_eq_nat_abs, Ne, prime.not_coprime_iff_dvd]
+      rw [List.mem_pmap, Int.gcd_eq_natAbs, Ne, prime.not_coprime_iff_dvd]
       simp_rw [legendreSym.eq_zero_iff, int_coe_zmod_eq_zero_iff_dvd, mem_factors (NeZero.ne b), ←
         Int.coe_nat_dvd_left, Int.coe_nat_dvd, exists_prop, and_assoc', and_comm'])
 #align jacobi_sym.eq_zero_iff_not_coprime jacobiSym.eq_zero_iff_not_coprime
@@ -170,7 +169,7 @@ protected theorem ne_zero {a : ℤ} {b : ℕ} (h : a.gcd b = 1) : J(a | b) ≠ 0
   by
   cases' eq_zero_or_neZero b with hb
   · rw [hb, zero_right]
-    exact one_ne_zero
+    exact one_neZero
   · contrapose! h
     exact eq_zero_iff_not_coprime.1 h
 #align jacobi_sym.ne_zero jacobiSym.ne_zero
@@ -248,30 +247,30 @@ namespace Zmod
 open jacobiSym
 
 /-- If `J(a | b)` is `-1`, then `a` is not a square modulo `b`. -/
-theorem nonsquare_of_jacobi_sym_eq_neg_one {a : ℤ} {b : ℕ} (h : J(a | b) = -1) :
+theorem nonsquare_of_jacobiSym_eq_neg_one {a : ℤ} {b : ℕ} (h : J(a | b) = -1) :
     ¬IsSquare (a : Zmod b) := fun ⟨r, ha⟩ =>
   by
   rw [← r.coe_val_min_abs, ← Int.cast_mul, int_coe_eq_int_coe_iff', ← sq] at ha
   apply (by norm_num : ¬(0 : ℤ) ≤ -1)
   rw [← h, mod_left, ha, ← mod_left, pow_left]
   apply sq_nonneg
-#align zmod.nonsquare_of_jacobi_sym_eq_neg_one Zmod.nonsquare_of_jacobi_sym_eq_neg_one
+#align zmod.nonsquare_of_jacobi_sym_eq_neg_one Zmod.nonsquare_of_jacobiSym_eq_neg_one
 
 /-- If `p` is prime, then `J(a | p)` is `-1` iff `a` is not a square modulo `p`. -/
-theorem nonsquare_iff_jacobi_sym_eq_neg_one {a : ℤ} {p : ℕ} [Fact p.Prime] :
+theorem nonsquare_iff_jacobiSym_eq_neg_one {a : ℤ} {p : ℕ} [Fact p.Prime] :
     J(a | p) = -1 ↔ ¬IsSquare (a : Zmod p) :=
   by
-  rw [← legendreSym.to_jacobi_sym]
+  rw [← legendreSym.to_jacobiSym]
   exact legendreSym.eq_neg_one_iff p
-#align zmod.nonsquare_iff_jacobi_sym_eq_neg_one Zmod.nonsquare_iff_jacobi_sym_eq_neg_one
+#align zmod.nonsquare_iff_jacobi_sym_eq_neg_one Zmod.nonsquare_iff_jacobiSym_eq_neg_one
 
 /-- If `p` is prime and `J(a | p) = 1`, then `a` is q square mod `p`. -/
-theorem is_square_of_jacobi_sym_eq_one {a : ℤ} {p : ℕ} [Fact p.Prime] (h : J(a | p) = 1) :
+theorem isSquare_of_jacobiSym_eq_one {a : ℤ} {p : ℕ} [Fact p.Prime] (h : J(a | p) = 1) :
     IsSquare (a : Zmod p) :=
   not_not.mp <| by
     rw [← nonsquare_iff_jacobi_sym_eq_neg_one, h]
     decide
-#align zmod.is_square_of_jacobi_sym_eq_one Zmod.is_square_of_jacobi_sym_eq_one
+#align zmod.is_square_of_jacobi_sym_eq_one Zmod.isSquare_of_jacobiSym_eq_one
 
 end Zmod
 
@@ -388,11 +387,11 @@ theorem quadratic_reciprocity' {a b : ℕ} (ha : Odd a) (hb : Odd b) :
   have rhs_apply : ∀ a b : ℕ, rhs a b = qrSign b a * J(b | a) := fun a b => rfl
   refine' value_at a (rhs a) (fun p pp hp => Eq.symm _) hb
   have hpo := pp.eq_two_or_odd'.resolve_left hp
-  rw [@legendreSym.to_jacobi_sym p ⟨pp⟩, rhs_apply, Nat.cast_id, qrSign.eq_iff_eq hpo ha,
+  rw [@legendreSym.to_jacobiSym p ⟨pp⟩, rhs_apply, Nat.cast_id, qrSign.eq_iff_eq hpo ha,
     qrSign.symm hpo ha]
   refine' value_at p (rhs p) (fun q pq hq => _) ha
   have hqo := pq.eq_two_or_odd'.resolve_left hq
-  rw [rhs_apply, Nat.cast_id, ← @legendreSym.to_jacobi_sym p ⟨pp⟩, qrSign.symm hqo hpo,
+  rw [rhs_apply, Nat.cast_id, ← @legendreSym.to_jacobiSym p ⟨pp⟩, qrSign.symm hqo hpo,
     qrSign.neg_one_pow hpo hqo, @legendreSym.quadratic_reciprocity' p q ⟨pp⟩ ⟨pq⟩ hp hq]
 #align jacobi_sym.quadratic_reciprocity' jacobiSym.quadratic_reciprocity'
 

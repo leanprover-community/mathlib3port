@@ -63,8 +63,8 @@ variable [Finite J]
 /-- This follows this proof from
 * Borceux, Handbook of categorical algebra 1, Theorem 2.13.4
 -/
-theorem colimit_limit_to_limit_colimit_injective :
-    Function.Injective (colimitLimitToLimitColimit F) := by
+theorem colimitLimitToLimitColimit_injective : Function.Injective (colimitLimitToLimitColimit F) :=
+  by
   classical
     cases nonempty_fintype J
     -- Suppose we have two terms `x y` in the colimit (over `K`) of the limits (over `J`),
@@ -107,9 +107,9 @@ theorem colimit_limit_to_limit_colimit_injective :
         (Or.inl
           (by
             simp only [true_and_iff, Finset.mem_univ, eq_self_iff_true, exists_prop_of_true,
-              Finset.mem_image, heq_iff_eq]
+              Finset.mem_image, hEq_iff_eq]
             refine' ⟨j, rfl, _⟩
-            simp only [heq_iff_eq]
+            simp only [hEq_iff_eq]
             exact ⟨rfl, rfl, rfl⟩))
     have gH : ∀ j, (⟨ky, k j, kyO, kjO j, g j⟩ : Σ'(X Y : K)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) ∈ H :=
       fun j =>
@@ -117,9 +117,9 @@ theorem colimit_limit_to_limit_colimit_injective :
         (Or.inr
           (by
             simp only [true_and_iff, Finset.mem_univ, eq_self_iff_true, exists_prop_of_true,
-              Finset.mem_image, heq_iff_eq]
+              Finset.mem_image, hEq_iff_eq]
             refine' ⟨j, rfl, _⟩
-            simp only [heq_iff_eq]
+            simp only [hEq_iff_eq]
             exact ⟨rfl, rfl, rfl⟩))
     -- Our goal is now an equation between equivalence classes of representatives of a colimit,
     -- and so it suffices to show those representative become equal somewhere, in particular at `S`.
@@ -131,7 +131,7 @@ theorem colimit_limit_to_limit_colimit_injective :
     rw [← W _ _ (fH j)]
     rw [← W _ _ (gH j)]
     simp [w]
-#align category_theory.limits.colimit_limit_to_limit_colimit_injective CategoryTheory.Limits.colimit_limit_to_limit_colimit_injective
+#align category_theory.limits.colimit_limit_to_limit_colimit_injective CategoryTheory.Limits.colimitLimitToLimitColimit_injective
 
 end
 
@@ -141,7 +141,7 @@ variable [FinCategory J]
 * Borceux, Handbook of categorical algebra 1, Theorem 2.13.4
 although with different names.
 -/
-theorem colimit_limit_to_limit_colimit_surjective :
+theorem colimitLimitToLimitColimit_surjective :
     Function.Surjective (colimitLimitToLimitColimit F) := by
   classical
     -- We begin with some element `x` in the limit (over J) over the colimits (over K),
@@ -247,7 +247,7 @@ theorem colimit_limit_to_limit_colimit_surjective :
         refine' ⟨j₂, Finset.mem_univ _, _⟩
         rw [Finset.mem_bunionᵢ]
         refine' ⟨f, Finset.mem_univ _, _⟩
-        simp only [true_or_iff, eq_self_iff_true, and_self_iff, Finset.mem_insert, heq_iff_eq]
+        simp only [true_or_iff, eq_self_iff_true, and_self_iff, Finset.mem_insert, hEq_iff_eq]
       · rw [Finset.mem_bunionᵢ]
         refine' ⟨j₃, Finset.mem_univ _, _⟩
         rw [Finset.mem_bunionᵢ]
@@ -255,7 +255,7 @@ theorem colimit_limit_to_limit_colimit_surjective :
         rw [Finset.mem_bunionᵢ]
         refine' ⟨f', Finset.mem_univ _, _⟩
         simp only [eq_self_iff_true, or_true_iff, and_self_iff, Finset.mem_insert,
-          Finset.mem_singleton, heq_iff_eq]
+          Finset.mem_singleton, hEq_iff_eq]
     clear_value i
     clear s' i' H kfO k'O O
     -- We're finally ready to construct the pre-image, and verify it really maps to `x`.
@@ -302,14 +302,14 @@ theorem colimit_limit_to_limit_colimit_surjective :
         id.def, types_comp_apply, limits.ι_colimit_limit_to_limit_colimit_π_apply]
       refine' ⟨k'', 𝟙 k'', g j ≫ gf (𝟙 j) ≫ i (𝟙 j), _⟩
       simp only [bifunctor.map_id_comp, types_comp_apply, bifunctor.map_id, types_id_apply]
-#align category_theory.limits.colimit_limit_to_limit_colimit_surjective CategoryTheory.Limits.colimit_limit_to_limit_colimit_surjective
+#align category_theory.limits.colimit_limit_to_limit_colimit_surjective CategoryTheory.Limits.colimitLimitToLimitColimit_surjective
 
-instance colimit_limit_to_limit_colimit_is_iso : IsIso (colimitLimitToLimitColimit F) :=
-  (is_iso_iff_bijective _).mpr
-    ⟨colimit_limit_to_limit_colimit_injective F, colimit_limit_to_limit_colimit_surjective F⟩
-#align category_theory.limits.colimit_limit_to_limit_colimit_is_iso CategoryTheory.Limits.colimit_limit_to_limit_colimit_is_iso
+instance colimitLimitToLimitColimit_isIso : IsIso (colimitLimitToLimitColimit F) :=
+  (isIso_iff_bijective _).mpr
+    ⟨colimitLimitToLimitColimit_injective F, colimitLimitToLimitColimit_surjective F⟩
+#align category_theory.limits.colimit_limit_to_limit_colimit_is_iso CategoryTheory.Limits.colimitLimitToLimitColimit_isIso
 
-instance colimit_limit_to_limit_colimit_cone_iso (F : J ⥤ K ⥤ Type v) :
+instance colimitLimitToLimitColimitCone_iso (F : J ⥤ K ⥤ Type v) :
     IsIso (colimitLimitToLimitColimitCone F) :=
   by
   have : is_iso (colimit_limit_to_limit_colimit_cone F).Hom :=
@@ -317,7 +317,7 @@ instance colimit_limit_to_limit_colimit_cone_iso (F : J ⥤ K ⥤ Type v) :
     dsimp only [colimit_limit_to_limit_colimit_cone]
     infer_instance
   apply cones.cone_iso_of_hom_iso
-#align category_theory.limits.colimit_limit_to_limit_colimit_cone_iso CategoryTheory.Limits.colimit_limit_to_limit_colimit_cone_iso
+#align category_theory.limits.colimit_limit_to_limit_colimit_cone_iso CategoryTheory.Limits.colimitLimitToLimitColimitCone_iso
 
 noncomputable instance filteredColimPreservesFiniteLimitsOfTypes :
     PreservesFiniteLimits (colim : (K ⥤ Type v) ⥤ _) :=
@@ -375,7 +375,7 @@ noncomputable def colimitLimitIso (F : J ⥤ K ⥤ C) : colimit (limit F) ≅ li
 #align category_theory.limits.colimit_limit_iso CategoryTheory.Limits.colimitLimitIso
 
 @[simp, reassoc.1]
-theorem ι_colimit_limit_iso_limit_π (F : J ⥤ K ⥤ C) (a) (b) :
+theorem ι_colimitLimitIso_limit_π (F : J ⥤ K ⥤ C) (a) (b) :
     colimit.ι (limit F) a ≫ (colimitLimitIso F).Hom ≫ limit.π (colimit F.flip) b =
       (limit.π F b).app a ≫ (colimit.ι F.flip a).app b :=
   by
@@ -390,7 +390,7 @@ theorem ι_colimit_limit_iso_limit_π (F : J ⥤ K ⥤ C) (a) (b) :
     limits.has_colimit.iso_of_nat_iso_ι_hom, nat_iso.of_components_hom_app]
   dsimp
   simp
-#align category_theory.limits.ι_colimit_limit_iso_limit_π CategoryTheory.Limits.ι_colimit_limit_iso_limit_π
+#align category_theory.limits.ι_colimit_limit_iso_limit_π CategoryTheory.Limits.ι_colimitLimitIso_limit_π
 
 end
 

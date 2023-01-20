@@ -36,14 +36,14 @@ variable {𝕜 : Type _} [NormedField 𝕜] [NormedSpace 𝕜 V] [NormedSpace �
 
 open AffineMap
 
-theorem AffineSubspace.is_closed_direction_iff (s : AffineSubspace 𝕜 Q) :
+theorem AffineSubspace.isClosed_direction_iff (s : AffineSubspace 𝕜 Q) :
     IsClosed (s.direction : Set W) ↔ IsClosed (s : Set Q) :=
   by
-  rcases s.eq_bot_or_nonempty with (rfl | ⟨x, hx⟩); · simp [is_closed_singleton]
+  rcases s.eq_bot_or_nonempty with (rfl | ⟨x, hx⟩); · simp [isClosed_singleton]
   rw [← (IsometryEquiv.vaddConst x).toHomeomorph.symm.is_closed_image,
     AffineSubspace.coe_direction_eq_vsub_set_right hx]
   rfl
-#align affine_subspace.is_closed_direction_iff AffineSubspace.is_closed_direction_iff
+#align affine_subspace.is_closed_direction_iff AffineSubspace.isClosed_direction_iff
 
 include V
 
@@ -59,46 +59,43 @@ theorem dist_homothety_center (p₁ p₂ : P) (c : 𝕜) :
 #align dist_homothety_center dist_homothety_center
 
 @[simp]
-theorem dist_line_map_line_map (p₁ p₂ : P) (c₁ c₂ : 𝕜) :
+theorem dist_lineMap_lineMap (p₁ p₂ : P) (c₁ c₂ : 𝕜) :
     dist (lineMap p₁ p₂ c₁) (lineMap p₁ p₂ c₂) = dist c₁ c₂ * dist p₁ p₂ :=
   by
   rw [dist_comm p₁ p₂]
   simp only [line_map_apply, dist_eq_norm_vsub, vadd_vsub_vadd_cancel_right, ← sub_smul, norm_smul,
     vsub_eq_sub]
-#align dist_line_map_line_map dist_line_map_line_map
+#align dist_line_map_line_map dist_lineMap_lineMap
 
-theorem lipschitz_with_line_map (p₁ p₂ : P) :
-    LipschitzWith (nndist p₁ p₂) (lineMap p₁ p₂ : 𝕜 → P) :=
+theorem lipschitzWith_lineMap (p₁ p₂ : P) : LipschitzWith (nndist p₁ p₂) (lineMap p₁ p₂ : 𝕜 → P) :=
   LipschitzWith.of_dist_le_mul fun c₁ c₂ =>
-    ((dist_line_map_line_map p₁ p₂ c₁ c₂).trans (mul_comm _ _)).le
-#align lipschitz_with_line_map lipschitz_with_line_map
+    ((dist_lineMap_lineMap p₁ p₂ c₁ c₂).trans (mul_comm _ _)).le
+#align lipschitz_with_line_map lipschitzWith_lineMap
 
 @[simp]
-theorem dist_line_map_left (p₁ p₂ : P) (c : 𝕜) : dist (lineMap p₁ p₂ c) p₁ = ‖c‖ * dist p₁ p₂ := by
-  simpa only [line_map_apply_zero, dist_zero_right] using dist_line_map_line_map p₁ p₂ c 0
-#align dist_line_map_left dist_line_map_left
+theorem dist_lineMap_left (p₁ p₂ : P) (c : 𝕜) : dist (lineMap p₁ p₂ c) p₁ = ‖c‖ * dist p₁ p₂ := by
+  simpa only [line_map_apply_zero, dist_zero_right] using dist_lineMap_lineMap p₁ p₂ c 0
+#align dist_line_map_left dist_lineMap_left
 
 @[simp]
-theorem dist_left_line_map (p₁ p₂ : P) (c : 𝕜) : dist p₁ (lineMap p₁ p₂ c) = ‖c‖ * dist p₁ p₂ :=
-  (dist_comm _ _).trans (dist_line_map_left _ _ _)
-#align dist_left_line_map dist_left_line_map
+theorem dist_left_lineMap (p₁ p₂ : P) (c : 𝕜) : dist p₁ (lineMap p₁ p₂ c) = ‖c‖ * dist p₁ p₂ :=
+  (dist_comm _ _).trans (dist_lineMap_left _ _ _)
+#align dist_left_line_map dist_left_lineMap
 
 @[simp]
-theorem dist_line_map_right (p₁ p₂ : P) (c : 𝕜) :
-    dist (lineMap p₁ p₂ c) p₂ = ‖1 - c‖ * dist p₁ p₂ := by
-  simpa only [line_map_apply_one, dist_eq_norm'] using dist_line_map_line_map p₁ p₂ c 1
-#align dist_line_map_right dist_line_map_right
+theorem dist_lineMap_right (p₁ p₂ : P) (c : 𝕜) : dist (lineMap p₁ p₂ c) p₂ = ‖1 - c‖ * dist p₁ p₂ :=
+  by simpa only [line_map_apply_one, dist_eq_norm'] using dist_lineMap_lineMap p₁ p₂ c 1
+#align dist_line_map_right dist_lineMap_right
 
 @[simp]
-theorem dist_right_line_map (p₁ p₂ : P) (c : 𝕜) :
-    dist p₂ (lineMap p₁ p₂ c) = ‖1 - c‖ * dist p₁ p₂ :=
-  (dist_comm _ _).trans (dist_line_map_right _ _ _)
-#align dist_right_line_map dist_right_line_map
+theorem dist_right_lineMap (p₁ p₂ : P) (c : 𝕜) : dist p₂ (lineMap p₁ p₂ c) = ‖1 - c‖ * dist p₁ p₂ :=
+  (dist_comm _ _).trans (dist_lineMap_right _ _ _)
+#align dist_right_line_map dist_right_lineMap
 
 @[simp]
 theorem dist_homothety_self (p₁ p₂ : P) (c : 𝕜) :
     dist (homothety p₁ c p₂) p₂ = ‖1 - c‖ * dist p₁ p₂ := by
-  rw [homothety_eq_line_map, dist_line_map_right]
+  rw [homothety_eq_line_map, dist_lineMap_right]
 #align dist_homothety_self dist_homothety_self
 
 @[simp]
@@ -112,7 +109,7 @@ variable [Invertible (2 : 𝕜)]
 
 @[simp]
 theorem dist_left_midpoint (p₁ p₂ : P) : dist p₁ (midpoint 𝕜 p₁ p₂) = ‖(2 : 𝕜)‖⁻¹ * dist p₁ p₂ := by
-  rw [midpoint, dist_comm, dist_line_map_left, invOf_eq_inv, ← norm_inv]
+  rw [midpoint, dist_comm, dist_lineMap_left, invOf_eq_inv, ← norm_inv]
 #align dist_left_midpoint dist_left_midpoint
 
 @[simp]
@@ -145,12 +142,12 @@ omit V
 
 include W
 
-theorem antilipschitz_with_line_map {p₁ p₂ : Q} (h : p₁ ≠ p₂) :
+theorem antilipschitzWith_lineMap {p₁ p₂ : Q} (h : p₁ ≠ p₂) :
     AntilipschitzWith (nndist p₁ p₂)⁻¹ (lineMap p₁ p₂ : 𝕜 → Q) :=
   AntilipschitzWith.of_le_mul_dist fun c₁ c₂ => by
-    rw [dist_line_map_line_map, Nnreal.coe_inv, ← dist_nndist, mul_left_comm,
+    rw [dist_lineMap_lineMap, Nnreal.coe_inv, ← dist_nndist, mul_left_comm,
       inv_mul_cancel (dist_ne_zero.2 h), mul_one]
-#align antilipschitz_with_line_map antilipschitz_with_line_map
+#align antilipschitz_with_line_map antilipschitzWith_lineMap
 
 variable (𝕜)
 

@@ -32,9 +32,9 @@ namespace AnalyticOn
 /-- If an analytic function vanishes around a point, then it is uniformly zero along
 a connected set. Superseded by `eq_on_zero_of_preconnected_of_locally_zero` which does not assume
 completeness of the target space. -/
-theorem eq_on_zero_of_preconnected_of_eventually_eq_zero_aux [CompleteSpace F] {f : E → F}
-    {U : Set E} (hf : AnalyticOn 𝕜 f U) (hU : IsPreconnected U) {z₀ : E} (h₀ : z₀ ∈ U)
-    (hfz₀ : f =ᶠ[𝓝 z₀] 0) : EqOn f 0 U :=
+theorem eqOn_zero_of_preconnected_of_eventuallyEq_zero_aux [CompleteSpace F] {f : E → F} {U : Set E}
+    (hf : AnalyticOn 𝕜 f U) (hU : IsPreconnected U) {z₀ : E} (h₀ : z₀ ∈ U) (hfz₀ : f =ᶠ[𝓝 z₀] 0) :
+    EqOn f 0 U :=
   by
   /- Let `u` be the set of points around which `f` vanishes. It is clearly open. We have to show
     that its limit points in `U` still belong to it, from which the inclusion `U ⊆ u` will follow
@@ -42,7 +42,7 @@ theorem eq_on_zero_of_preconnected_of_eventually_eq_zero_aux [CompleteSpace F] {
   let u := { x | f =ᶠ[𝓝 x] 0 }
   suffices main : closure u ∩ U ⊆ u
   · have Uu : U ⊆ u :=
-      hU.subset_of_closure_inter_subset is_open_set_of_eventually_nhds ⟨z₀, h₀, hfz₀⟩ main
+      hU.subset_of_closure_inter_subset isOpen_setOf_eventually_nhds ⟨z₀, h₀, hfz₀⟩ main
     intro z hz
     simpa using mem_of_mem_nhds (Uu hz)
   /- Take a limit point `x`, then a ball `B (x, r)` on which it has a power series expansion, and
@@ -70,17 +70,17 @@ theorem eq_on_zero_of_preconnected_of_eventually_eq_zero_aux [CompleteSpace F] {
   have B : HasSum (fun n : ℕ => q n fun i : Fin n => z - y) 0 :=
     by
     have : HasFpowerSeriesAt 0 q y := has_series.has_fpower_series_at.congr yu
-    convert has_sum_zero
+    convert hasSum_zero
     ext n
     exact this.apply_eq_zero n _
   exact HasSum.unique A B
-#align analytic_on.eq_on_zero_of_preconnected_of_eventually_eq_zero_aux AnalyticOn.eq_on_zero_of_preconnected_of_eventually_eq_zero_aux
+#align analytic_on.eq_on_zero_of_preconnected_of_eventually_eq_zero_aux AnalyticOn.eqOn_zero_of_preconnected_of_eventuallyEq_zero_aux
 
 /-- The *identity principle* for analytic functions: If an analytic function vanishes in a whole
 neighborhood of a point `z₀`, then it is uniformly zero along a connected set. For a one-dimensional
 version assuming only that the function vanishes at some points arbitrarily close to `z₀`, see
 `eq_on_zero_of_preconnected_of_frequently_eq_zero`. -/
-theorem eq_on_zero_of_preconnected_of_eventually_eq_zero {f : E → F} {U : Set E}
+theorem eqOn_zero_of_preconnected_of_eventuallyEq_zero {f : E → F} {U : Set E}
     (hf : AnalyticOn 𝕜 f U) (hU : IsPreconnected U) {z₀ : E} (h₀ : z₀ ∈ U) (hfz₀ : f =ᶠ[𝓝 z₀] 0) :
     EqOn f 0 U := by
   let F' := UniformSpace.Completion F
@@ -94,19 +94,19 @@ theorem eq_on_zero_of_preconnected_of_eventually_eq_zero {f : E → F} {U : Set 
   intro z hz
   have : e (f z) = e 0 := by simpa only using A hz
   exact UniformSpace.Completion.coe_injective F this
-#align analytic_on.eq_on_zero_of_preconnected_of_eventually_eq_zero AnalyticOn.eq_on_zero_of_preconnected_of_eventually_eq_zero
+#align analytic_on.eq_on_zero_of_preconnected_of_eventually_eq_zero AnalyticOn.eqOn_zero_of_preconnected_of_eventuallyEq_zero
 
 /-- The *identity principle* for analytic functions: If two analytic function coincide in a whole
 neighborhood of a point `z₀`, then they coincide globally along a connected set.
 For a one-dimensional version assuming only that the functions coincide at some points
 arbitrarily close to `z₀`, see `eq_on_of_preconnected_of_frequently_eq`. -/
-theorem eq_on_of_preconnected_of_eventually_eq {f g : E → F} {U : Set E} (hf : AnalyticOn 𝕜 f U)
+theorem eqOn_of_preconnected_of_eventuallyEq {f g : E → F} {U : Set E} (hf : AnalyticOn 𝕜 f U)
     (hg : AnalyticOn 𝕜 g U) (hU : IsPreconnected U) {z₀ : E} (h₀ : z₀ ∈ U) (hfg : f =ᶠ[𝓝 z₀] g) :
     EqOn f g U := by
   have hfg' : f - g =ᶠ[𝓝 z₀] 0 := hfg.mono fun z h => by simp [h]
   simpa [sub_eq_zero] using fun z hz =>
     (hf.sub hg).eq_on_zero_of_preconnected_of_eventually_eq_zero hU h₀ hfg' hz
-#align analytic_on.eq_on_of_preconnected_of_eventually_eq AnalyticOn.eq_on_of_preconnected_of_eventually_eq
+#align analytic_on.eq_on_of_preconnected_of_eventually_eq AnalyticOn.eqOn_of_preconnected_of_eventuallyEq
 
 end AnalyticOn
 

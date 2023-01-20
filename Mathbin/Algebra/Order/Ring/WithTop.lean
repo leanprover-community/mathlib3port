@@ -174,11 +174,11 @@ instance [MulZeroOneClass α] [Nontrivial α] : MulZeroOneClass (WithTop α) :=
     zero := 0
     one_mul := fun a =>
       match a with
-      | ⊤ => mul_top (mt coe_eq_coe.1 one_ne_zero)
+      | ⊤ => mul_top (mt coe_eq_coe.1 one_neZero)
       | (a : α) => by rw [← coe_one, ← coe_mul, one_mul]
     mul_one := fun a =>
       match a with
-      | ⊤ => top_mul (mt coe_eq_coe.1 one_ne_zero)
+      | ⊤ => top_mul (mt coe_eq_coe.1 one_neZero)
       | (a : α) => by rw [← coe_one, ← coe_mul, mul_one] }
 
 /- warning: monoid_with_zero_hom.with_top_map -> WithTop.MonoidWithZeroHom.withTopMap is a dubious translation:
@@ -261,7 +261,7 @@ instance [Nontrivial α] : CommSemiring (WithTop α) :=
       rfl }
 
 instance [Nontrivial α] : CanonicallyOrderedCommSemiring (WithTop α) :=
-  { WithTop.commSemiring, WithTop.canonicallyOrderedAddMonoid, WithTop.no_zero_divisors with }
+  { WithTop.commSemiring, WithTop.canonicallyOrderedAddMonoid, WithTop.noZeroDivisors with }
 
 /- warning: ring_hom.with_top_map -> WithTop.RingHom.withTopMap is a dubious translation:
 lean 3 declaration is
@@ -395,7 +395,7 @@ instance [MulZeroOneClass α] [Nontrivial α] : MulZeroOneClass (WithBot α) :=
   WithTop.mulZeroOneClass
 
 instance [MulZeroClass α] [NoZeroDivisors α] : NoZeroDivisors (WithBot α) :=
-  WithTop.no_zero_divisors
+  WithTop.noZeroDivisors
 
 instance [SemigroupWithZero α] [NoZeroDivisors α] : SemigroupWithZero (WithBot α) :=
   WithTop.semigroupWithZero

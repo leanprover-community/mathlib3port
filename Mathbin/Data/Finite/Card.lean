@@ -73,7 +73,7 @@ theorem Finite.card_pos [Finite α] [h : Nonempty α] : 0 < Nat.card α :=
 namespace Finite
 
 theorem cast_card_eq_mk {α : Type _} [Finite α] : ↑(Nat.card α) = Cardinal.mk α :=
-  Cardinal.cast_to_nat_of_lt_aleph_0 (Cardinal.lt_aleph_0_of_finite α)
+  Cardinal.cast_toNat_of_lt_aleph0 (Cardinal.lt_aleph0_of_finite α)
 #align finite.cast_card_eq_mk Finite.cast_card_eq_mk
 
 theorem card_eq [Finite α] [Finite β] : Nat.card α = Nat.card β ↔ Nonempty (α ≃ β) :=
@@ -159,7 +159,7 @@ theorem card_eq_zero_of_surjective {f : α → β} (hf : Function.Surjective f) 
   cases finite_or_infinite β
   · haveI := card_eq_zero_iff.mp h
     haveI := Function.isEmpty f
-    exact Nat.card_of_is_empty
+    exact Nat.card_of_isEmpty
   · haveI := Infinite.of_surjective f hf
     exact Nat.card_eq_zero_of_infinite
 #align finite.card_eq_zero_of_surjective Finite.card_eq_zero_of_surjective

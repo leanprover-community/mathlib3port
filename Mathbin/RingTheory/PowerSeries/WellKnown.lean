@@ -37,34 +37,34 @@ def invUnitsSub (u : Rˣ) : PowerSeries R :=
 #align power_series.inv_units_sub PowerSeries.invUnitsSub
 
 @[simp]
-theorem coeff_inv_units_sub (u : Rˣ) (n : ℕ) : coeff R n (invUnitsSub u) = 1 /ₚ u ^ (n + 1) :=
+theorem coeff_invUnitsSub (u : Rˣ) (n : ℕ) : coeff R n (invUnitsSub u) = 1 /ₚ u ^ (n + 1) :=
   coeff_mk _ _
-#align power_series.coeff_inv_units_sub PowerSeries.coeff_inv_units_sub
+#align power_series.coeff_inv_units_sub PowerSeries.coeff_invUnitsSub
 
 @[simp]
-theorem constant_coeff_inv_units_sub (u : Rˣ) : constantCoeff R (invUnitsSub u) = 1 /ₚ u := by
+theorem constantCoeff_invUnitsSub (u : Rˣ) : constantCoeff R (invUnitsSub u) = 1 /ₚ u := by
   rw [← coeff_zero_eq_constant_coeff_apply, coeff_inv_units_sub, zero_add, pow_one]
-#align power_series.constant_coeff_inv_units_sub PowerSeries.constant_coeff_inv_units_sub
+#align power_series.constant_coeff_inv_units_sub PowerSeries.constantCoeff_invUnitsSub
 
 @[simp]
-theorem inv_units_sub_mul_X (u : Rˣ) : invUnitsSub u * X = invUnitsSub u * c R u - 1 :=
+theorem invUnitsSub_mul_x (u : Rˣ) : invUnitsSub u * X = invUnitsSub u * c R u - 1 :=
   by
   ext (_ | n)
   · simp
   · simp [n.succ_ne_zero, pow_succ]
-#align power_series.inv_units_sub_mul_X PowerSeries.inv_units_sub_mul_X
+#align power_series.inv_units_sub_mul_X PowerSeries.invUnitsSub_mul_x
 
 @[simp]
-theorem inv_units_sub_mul_sub (u : Rˣ) : invUnitsSub u * (c R u - X) = 1 := by
+theorem invUnitsSub_mul_sub (u : Rˣ) : invUnitsSub u * (c R u - X) = 1 := by
   simp [mul_sub, sub_sub_cancel]
-#align power_series.inv_units_sub_mul_sub PowerSeries.inv_units_sub_mul_sub
+#align power_series.inv_units_sub_mul_sub PowerSeries.invUnitsSub_mul_sub
 
-theorem map_inv_units_sub (f : R →+* S) (u : Rˣ) :
+theorem map_invUnitsSub (f : R →+* S) (u : Rˣ) :
     map f (invUnitsSub u) = invUnitsSub (Units.map (f : R →* S) u) :=
   by
   ext
   simp [← map_pow]
-#align power_series.map_inv_units_sub PowerSeries.map_inv_units_sub
+#align power_series.map_inv_units_sub PowerSeries.map_invUnitsSub
 
 end Ring
 
@@ -97,11 +97,11 @@ theorem coeff_exp : coeff A n (exp A) = algebraMap ℚ A (1 / n !) :=
 #align power_series.coeff_exp PowerSeries.coeff_exp
 
 @[simp]
-theorem constant_coeff_exp : constantCoeff A (exp A) = 1 :=
+theorem constantCoeff_exp : constantCoeff A (exp A) = 1 :=
   by
   rw [← coeff_zero_eq_constant_coeff_apply, coeff_exp]
   simp
-#align power_series.constant_coeff_exp PowerSeries.constant_coeff_exp
+#align power_series.constant_coeff_exp PowerSeries.constantCoeff_exp
 
 @[simp]
 theorem coeff_sin_bit0 : coeff A (bit0 n) (sin A) = 0 := by rw [sin, coeff_mk, if_pos (even_bit0 n)]

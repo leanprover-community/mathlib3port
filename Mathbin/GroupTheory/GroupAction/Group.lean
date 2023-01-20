@@ -87,6 +87,7 @@ theorem MulAction.toPerm_injective [FaithfulSMul α β] :
     Function.Injective (MulAction.toPerm : α → Equiv.Perm β) :=
   (show Function.Injective (Equiv.toFun ∘ MulAction.toPerm) from smul_left_injective').of_comp
 #align mul_action.to_perm_injective MulAction.toPerm_injective
+#align add_action.to_perm_injective AddAction.toPerm_injective
 -/
 
 variable (α) (β)
@@ -266,7 +267,7 @@ Case conversion may be inaccurate. Consider using '#align cancel_monoid_with_zer
 /-- `monoid.to_mul_action` is faithful on nontrivial cancellative monoids with zero. -/
 instance CancelMonoidWithZero.faithfulSMul [CancelMonoidWithZero α] [Nontrivial α] :
     FaithfulSMul α α :=
-  ⟨fun x y h => mul_left_injective₀ one_ne_zero (h 1)⟩
+  ⟨fun x y h => mul_left_injective₀ one_neZero (h 1)⟩
 #align cancel_monoid_with_zero.to_has_faithful_smul CancelMonoidWithZero.faithfulSMul
 
 section Gwz

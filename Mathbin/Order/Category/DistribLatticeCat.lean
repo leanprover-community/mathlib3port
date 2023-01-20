@@ -93,9 +93,9 @@ def dualEquiv : DistribLatticeCat ≌ DistribLatticeCat :=
 
 end DistribLatticeCat
 
-theorem DistribLattice_dual_comp_forget_to_Lattice :
+theorem distribLatticeCat_dual_comp_forget_to_latticeCat :
     DistribLatticeCat.dual ⋙ forget₂ DistribLatticeCat LatticeCat =
       forget₂ DistribLatticeCat LatticeCat ⋙ LatticeCat.dual :=
   rfl
-#align DistribLattice_dual_comp_forget_to_Lattice DistribLattice_dual_comp_forget_to_Lattice
+#align DistribLattice_dual_comp_forget_to_Lattice distribLatticeCat_dual_comp_forget_to_latticeCat
 

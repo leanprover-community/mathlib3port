@@ -65,13 +65,13 @@ attribute [to_additive_ignore_args 21]
 variable {f g : C^n⟮I, M; I', M'⟯}
 
 @[simp]
-theorem coe_fn_mk (f : M → M') (hf : ContMdiff I I' n f) : (mk f hf : M → M') = f :=
+theorem coeFn_mk (f : M → M') (hf : ContMdiff I I' n f) : (mk f hf : M → M') = f :=
   rfl
-#align cont_mdiff_map.coe_fn_mk ContMdiffMap.coe_fn_mk
+#align cont_mdiff_map.coe_fn_mk ContMdiffMap.coeFn_mk
 
-protected theorem cont_mdiff (f : C^n⟮I, M; I', M'⟯) : ContMdiff I I' n f :=
+protected theorem contMdiff (f : C^n⟮I, M; I', M'⟯) : ContMdiff I I' n f :=
   f.cont_mdiff_to_fun
-#align cont_mdiff_map.cont_mdiff ContMdiffMap.cont_mdiff
+#align cont_mdiff_map.cont_mdiff ContMdiffMap.contMdiff
 
 protected theorem smooth (f : C^∞⟮I, M; I', M'⟯) : Smooth I I' f :=
   f.cont_mdiff_to_fun
@@ -85,9 +85,9 @@ protected theorem mdifferentiable (f : C^∞⟮I, M; I', M'⟯) : Mdifferentiabl
   f.ContMdiff.Mdifferentiable le_top
 #align cont_mdiff_map.mdifferentiable ContMdiffMap.mdifferentiable
 
-protected theorem mdifferentiable_at (f : C^∞⟮I, M; I', M'⟯) {x} : MdifferentiableAt I I' f x :=
+protected theorem mdifferentiableAt (f : C^∞⟮I, M; I', M'⟯) {x} : MdifferentiableAt I I' f x :=
   f.Mdifferentiable x
-#align cont_mdiff_map.mdifferentiable_at ContMdiffMap.mdifferentiable_at
+#align cont_mdiff_map.mdifferentiable_at ContMdiffMap.mdifferentiableAt
 
 theorem coe_inj ⦃f g : C^n⟮I, M; I', M'⟯⦄ (h : (f : M → M') = g) : f = g := by
   cases f <;> cases g <;> cases h <;> rfl
@@ -99,7 +99,7 @@ theorem ext (h : ∀ x, f x = g x) : f = g := by cases f <;> cases g <;> congr <
 
 /-- The identity as a smooth map. -/
 def id : C^n⟮I, M; I, M⟯ :=
-  ⟨id, cont_mdiff_id⟩
+  ⟨id, contMdiff_id⟩
 #align cont_mdiff_map.id ContMdiffMap.id
 
 /-- The composition of smooth maps, as a smooth map. -/
@@ -116,11 +116,11 @@ theorem comp_apply (f : C^n⟮I', M'; I'', M''⟯) (g : C^n⟮I, M; I', M'⟯) (
 #align cont_mdiff_map.comp_apply ContMdiffMap.comp_apply
 
 instance [Inhabited M'] : Inhabited C^n⟮I, M; I', M'⟯ :=
-  ⟨⟨fun _ => default, cont_mdiff_const⟩⟩
+  ⟨⟨fun _ => default, contMdiff_const⟩⟩
 
 /-- Constant map as a smooth map -/
 def const (y : M') : C^n⟮I, M; I', M'⟯ :=
-  ⟨fun x => y, cont_mdiff_const⟩
+  ⟨fun x => y, contMdiff_const⟩
 #align cont_mdiff_map.const ContMdiffMap.const
 
 end ContMdiffMap

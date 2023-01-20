@@ -62,7 +62,7 @@ def equivalence : Karoubi (SimplicialObject C) ≌ Karoubi (ChainComplex C ℕ)
     symm
     change 𝟙 _ = α.hom ≫ β.hom
     rw [← iso.inv_comp_eq, comp_id, ← comp_id β.hom, ← iso.inv_comp_eq]
-    exact AlgebraicTopology.DoldKan.identity_N₂_objectwise P
+    exact AlgebraicTopology.DoldKan.identity_n₂_objectwise P
 #align category_theory.preadditive.dold_kan.equivalence CategoryTheory.Preadditive.DoldKan.equivalence
 
 end DoldKan

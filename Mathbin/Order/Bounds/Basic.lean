@@ -1210,9 +1210,9 @@ theorem bddBelow_bddAbove_iff_subset_Icc : BddBelow s ∧ BddAbove s ↔ ∃ a b
 
 
 @[simp]
-theorem is_greatest_univ_iff : IsGreatest univ a ↔ IsTop a := by
+theorem isGreatest_univ_iff : IsGreatest univ a ↔ IsTop a := by
   simp [IsGreatest, mem_upperBounds, IsTop]
-#align is_greatest_univ_iff is_greatest_univ_iff
+#align is_greatest_univ_iff isGreatest_univ_iff
 
 /- warning: is_greatest_univ -> isGreatest_univ is a dubious translation:
 lean 3 declaration is
@@ -1221,7 +1221,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_3 : OrderTop.{u1} α (Preorder.toLE.{u1} α _inst_1)], IsGreatest.{u1} α _inst_1 (Set.univ.{u1} α) (Top.top.{u1} α (OrderTop.toTop.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_3))
 Case conversion may be inaccurate. Consider using '#align is_greatest_univ isGreatest_univₓ'. -/
 theorem isGreatest_univ [OrderTop α] : IsGreatest (univ : Set α) ⊤ :=
-  is_greatest_univ_iff.2 isTop_top
+  isGreatest_univ_iff.2 isTop_top
 #align is_greatest_univ isGreatest_univ
 
 /- warning: order_top.upper_bounds_univ -> OrderTop.upperBounds_univ is a dubious translation:
@@ -1258,9 +1258,9 @@ theorem OrderBot.lowerBounds_univ [PartialOrder γ] [OrderBot γ] :
 #align order_bot.lower_bounds_univ OrderBot.lowerBounds_univ
 
 @[simp]
-theorem is_least_univ_iff : IsLeast univ a ↔ IsBot a :=
-  @is_greatest_univ_iff αᵒᵈ _ _
-#align is_least_univ_iff is_least_univ_iff
+theorem isLeast_univ_iff : IsLeast univ a ↔ IsBot a :=
+  @isGreatest_univ_iff αᵒᵈ _ _
+#align is_least_univ_iff isLeast_univ_iff
 
 /- warning: is_least_univ -> isLeast_univ is a dubious translation:
 lean 3 declaration is
@@ -1345,13 +1345,13 @@ theorem bddBelow_empty [Nonempty α] : BddBelow (∅ : Set α) := by
 -/
 
 @[simp]
-theorem is_glb_empty_iff : IsGLB ∅ a ↔ IsTop a := by simp [IsGLB]
-#align is_glb_empty_iff is_glb_empty_iff
+theorem isGLB_empty_iff : IsGLB ∅ a ↔ IsTop a := by simp [IsGLB]
+#align is_glb_empty_iff isGLB_empty_iff
 
 @[simp]
-theorem is_lub_empty_iff : IsLUB ∅ a ↔ IsBot a :=
-  @is_glb_empty_iff αᵒᵈ _ _
-#align is_lub_empty_iff is_lub_empty_iff
+theorem isLUB_empty_iff : IsLUB ∅ a ↔ IsBot a :=
+  @isGLB_empty_iff αᵒᵈ _ _
+#align is_lub_empty_iff isLUB_empty_iff
 
 /- warning: is_glb_empty -> isGLB_empty is a dubious translation:
 lean 3 declaration is
@@ -1360,7 +1360,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_3 : OrderTop.{u1} α (Preorder.toLE.{u1} α _inst_1)], IsGLB.{u1} α _inst_1 (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.instEmptyCollectionSet.{u1} α)) (Top.top.{u1} α (OrderTop.toTop.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_3))
 Case conversion may be inaccurate. Consider using '#align is_glb_empty isGLB_emptyₓ'. -/
 theorem isGLB_empty [OrderTop α] : IsGLB ∅ (⊤ : α) :=
-  is_glb_empty_iff.2 isTop_top
+  isGLB_empty_iff.2 isTop_top
 #align is_glb_empty isGLB_empty
 
 /- warning: is_lub_empty -> isLUB_empty is a dubious translation:
@@ -1793,17 +1793,31 @@ theorem mem_lowerBounds_image_self : a ∈ lowerBounds t → a ∈ t → f a ∈
 #align monotone_on.mem_lower_bounds_image_self MonotoneOn.mem_lowerBounds_image_self
 -/
 
-theorem image_upper_bounds_subset_upper_bounds_image (Hst : s ⊆ t) :
+/- warning: monotone_on.image_upper_bounds_subset_upper_bounds_image clashes with monotone_on.image_upperBounds_subset_upperBounds_image -> MonotoneOn.image_upperBounds_subset_upperBounds_image
+warning: monotone_on.image_upper_bounds_subset_upper_bounds_image -> MonotoneOn.image_upperBounds_subset_upperBounds_image is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β} {s : Set.{u1} α} {t : Set.{u1} α}, (MonotoneOn.{u1, u2} α β _inst_1 _inst_2 f t) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s t) -> (HasSubset.Subset.{u2} (Set.{u2} β) (Set.hasSubset.{u2} β) (Set.image.{u1, u2} α β f (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (upperBounds.{u1} α _inst_1 s) t)) (upperBounds.{u2} β _inst_2 (Set.image.{u1, u2} α β f s)))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β} {s : Set.{u1} α} {t : Set.{u1} α}, (MonotoneOn.{u1, u2} α β _inst_1 _inst_2 f t) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s t) -> (HasSubset.Subset.{u2} (Set.{u2} β) (Set.instHasSubsetSet.{u2} β) (Set.image.{u1, u2} α β f (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) (upperBounds.{u1} α _inst_1 s) t)) (upperBounds.{u2} β _inst_2 (Set.image.{u1, u2} α β f s)))
+Case conversion may be inaccurate. Consider using '#align monotone_on.image_upper_bounds_subset_upper_bounds_image MonotoneOn.image_upperBounds_subset_upperBounds_imageₓ'. -/
+theorem image_upperBounds_subset_upperBounds_image (Hst : s ⊆ t) :
     f '' (upperBounds s ∩ t) ⊆ upperBounds (f '' s) :=
   by
   rintro _ ⟨a, ha, rfl⟩
   exact Hf.mem_upper_bounds_image Hst ha.1 ha.2
-#align monotone_on.image_upper_bounds_subset_upper_bounds_image MonotoneOn.image_upper_bounds_subset_upper_bounds_image
+#align monotone_on.image_upper_bounds_subset_upper_bounds_image MonotoneOn.image_upperBounds_subset_upperBounds_image
 
-theorem image_lower_bounds_subset_lower_bounds_image :
+/- warning: monotone_on.image_lower_bounds_subset_lower_bounds_image clashes with monotone_on.image_lowerBounds_subset_lowerBounds_image -> MonotoneOn.image_lowerBounds_subset_lowerBounds_image
+warning: monotone_on.image_lower_bounds_subset_lower_bounds_image -> MonotoneOn.image_lowerBounds_subset_lowerBounds_image is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β} {s : Set.{u1} α} {t : Set.{u1} α}, (MonotoneOn.{u1, u2} α β _inst_1 _inst_2 f t) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s t) -> (HasSubset.Subset.{u2} (Set.{u2} β) (Set.hasSubset.{u2} β) (Set.image.{u1, u2} α β f (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (lowerBounds.{u1} α _inst_1 s) t)) (lowerBounds.{u2} β _inst_2 (Set.image.{u1, u2} α β f s)))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β} {s : Set.{u1} α} {t : Set.{u1} α}, (MonotoneOn.{u1, u2} α β _inst_1 _inst_2 f t) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s t) -> (HasSubset.Subset.{u2} (Set.{u2} β) (Set.instHasSubsetSet.{u2} β) (Set.image.{u1, u2} α β f (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) (lowerBounds.{u1} α _inst_1 s) t)) (lowerBounds.{u2} β _inst_2 (Set.image.{u1, u2} α β f s)))
+Case conversion may be inaccurate. Consider using '#align monotone_on.image_lower_bounds_subset_lower_bounds_image MonotoneOn.image_lowerBounds_subset_lowerBounds_imageₓ'. -/
+theorem image_lowerBounds_subset_lowerBounds_image :
     f '' (lowerBounds s ∩ t) ⊆ lowerBounds (f '' s) :=
   Hf.dual.image_upper_bounds_subset_upper_bounds_image Hst
-#align monotone_on.image_lower_bounds_subset_lower_bounds_image MonotoneOn.image_lower_bounds_subset_lower_bounds_image
+#align monotone_on.image_lower_bounds_subset_lower_bounds_image MonotoneOn.image_lowerBounds_subset_lowerBounds_image
 
 /- warning: monotone_on.map_bdd_above -> MonotoneOn.map_bddAbove is a dubious translation:
 lean 3 declaration is
@@ -2154,12 +2168,16 @@ theorem mem_lowerBounds_image2_of_mem_lowerBounds_of_mem_upperBounds (ha : a ∈
 #align mem_lower_bounds_image2_of_mem_lower_bounds_of_mem_upper_bounds mem_lowerBounds_image2_of_mem_lowerBounds_of_mem_upperBounds
 -/
 
-theorem image2_upper_bounds_lower_bounds_subset_upper_bounds_image2 :
+/- warning: image2_upper_bounds_lower_bounds_subset_upper_bounds_image2 clashes with image2_upperBounds_lowerBounds_subset_upperBounds_image2 -> image2_upperBounds_lowerBounds_subset_upperBounds_image2
+Case conversion may be inaccurate. Consider using '#align image2_upper_bounds_lower_bounds_subset_upper_bounds_image2 image2_upperBounds_lowerBounds_subset_upperBounds_image2ₓ'. -/
+#print image2_upperBounds_lowerBounds_subset_upperBounds_image2 /-
+theorem image2_upperBounds_lowerBounds_subset_upperBounds_image2 :
     image2 f (upperBounds s) (lowerBounds t) ⊆ upperBounds (image2 f s t) :=
   by
   rintro _ ⟨a, b, ha, hb, rfl⟩
   exact mem_upperBounds_image2_of_mem_upperBounds_of_mem_lowerBounds h₀ h₁ ha hb
-#align image2_upper_bounds_lower_bounds_subset_upper_bounds_image2 image2_upper_bounds_lower_bounds_subset_upper_bounds_image2
+#align image2_upper_bounds_lower_bounds_subset_upper_bounds_image2 image2_upperBounds_lowerBounds_subset_upperBounds_image2
+-/
 
 #print image2_lowerBounds_upperBounds_subset_lowerBounds_image2 /-
 theorem image2_lowerBounds_upperBounds_subset_lowerBounds_image2 :

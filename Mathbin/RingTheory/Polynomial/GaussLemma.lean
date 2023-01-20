@@ -51,7 +51,7 @@ variable {φ : R →+* S} (hinj : Function.Injective φ) {f : R[X]} (hf : f.IsPr
 
 include hinj hf
 
-theorem IsPrimitive.is_unit_iff_is_unit_map_of_injective : IsUnit f ↔ IsUnit (map φ f) :=
+theorem IsPrimitive.isUnit_iff_isUnit_map_of_injective : IsUnit f ↔ IsUnit (map φ f) :=
   by
   refine' ⟨(map_ring_hom φ).is_unit_map, fun h => _⟩
   rcases is_unit_iff.1 h with ⟨_, ⟨u, rfl⟩, hu⟩
@@ -59,7 +59,7 @@ theorem IsPrimitive.is_unit_iff_is_unit_map_of_injective : IsUnit f ↔ IsUnit (
   rw [hu, degree_map_eq_of_injective hinj] at hdeg
   rw [eq_C_of_degree_eq_zero hdeg] at hf⊢
   exact is_unit_C.mpr (is_primitive_iff_is_unit_of_C_dvd.mp hf (f.coeff 0) dvd_rfl)
-#align polynomial.is_primitive.is_unit_iff_is_unit_map_of_injective Polynomial.IsPrimitive.is_unit_iff_is_unit_map_of_injective
+#align polynomial.is_primitive.is_unit_iff_is_unit_map_of_injective Polynomial.IsPrimitive.isUnit_iff_isUnit_map_of_injective
 
 theorem IsPrimitive.irreducible_of_irreducible_map_of_injective (h_irr : Irreducible (map φ f)) :
     Irreducible f :=
@@ -77,10 +77,10 @@ section FractionMap
 
 variable {K : Type _} [Field K] [Algebra R K] [IsFractionRing R K]
 
-theorem IsPrimitive.is_unit_iff_is_unit_map {p : R[X]} (hp : p.IsPrimitive) :
+theorem IsPrimitive.isUnit_iff_isUnit_map {p : R[X]} (hp : p.IsPrimitive) :
     IsUnit p ↔ IsUnit (p.map (algebraMap R K)) :=
   hp.is_unit_iff_is_unit_map_of_injective (IsFractionRing.injective _ _)
-#align polynomial.is_primitive.is_unit_iff_is_unit_map Polynomial.IsPrimitive.is_unit_iff_is_unit_map
+#align polynomial.is_primitive.is_unit_iff_is_unit_map Polynomial.IsPrimitive.isUnit_iff_isUnit_map
 
 variable [IsDomain R]
 
@@ -109,7 +109,7 @@ theorem Monic.irreducible_iff_irreducible_map_fraction_map [IsIntegrallyClosed R
     rw [← leading_coeff_mul, ← H, monic.leading_coeff (h.map <| algebraMap R K)]
   rw [← ha, ← hb, mul_comm _ (C b.leading_coeff), mul_assoc, ← mul_assoc (C a.leading_coeff), ←
     C_mul, this, C_1, one_mul, ← Polynomial.map_mul] at H
-  rw [← hb, ← Polynomial.coe_map_ring_hom]
+  rw [← hb, ← Polynomial.coe_mapRingHom]
   refine'
     IsUnit.mul (IsUnit.map _ (Or.resolve_left (hp.is_unit_or_is_unit _) (show ¬IsUnit a' from _)))
       (is_unit_iff_exists_inv'.mpr
@@ -117,7 +117,7 @@ theorem Monic.irreducible_iff_irreducible_map_fraction_map [IsIntegrallyClosed R
   · exact Polynomial.map_injective _ (IsFractionRing.injective R K) H
   · by_contra h_contra
     refine' hₐ _
-    rw [← ha, ← Polynomial.coe_map_ring_hom]
+    rw [← ha, ← Polynomial.coe_mapRingHom]
     exact
       IsUnit.mul (IsUnit.map _ h_contra)
         (is_unit_iff_exists_inv.mpr
@@ -126,7 +126,7 @@ theorem Monic.irreducible_iff_irreducible_map_fraction_map [IsIntegrallyClosed R
 
 /-- Integrally closed domains are precisely the domains for in which Gauss's lemma holds
     for monic polynomials -/
-theorem is_integrally_closed_iff' :
+theorem isIntegrallyClosed_iff' :
     IsIntegrallyClosed R ↔
       ∀ p : R[X], p.Monic → (Irreducible p ↔ Irreducible (p.map <| algebraMap R K)) :=
   by
@@ -136,19 +136,19 @@ theorem is_integrally_closed_iff' :
     exact monic.irreducible_iff_irreducible_map_fraction_map hp
   · intro H
     refine'
-      (is_integrally_closed_iff K).mpr fun x hx =>
+      (isIntegrallyClosed_iff K).mpr fun x hx =>
         ring_hom.mem_range.mp <| minpoly.mem_range_of_degree_eq_one R x _
     rw [← monic.degree_map (minpoly.monic hx) (algebraMap R K)]
     apply
       degree_eq_one_of_irreducible_of_root ((H _ <| minpoly.monic hx).mp (minpoly.irreducible hx))
     rw [is_root, eval_map, ← aeval_def, minpoly.aeval R x]
-#align polynomial.is_integrally_closed_iff' Polynomial.is_integrally_closed_iff'
+#align polynomial.is_integrally_closed_iff' Polynomial.isIntegrallyClosed_iff'
 
 theorem Monic.dvd_of_fraction_map_dvd_fraction_map [IsIntegrallyClosed R] {p q : R[X]}
     (hp : p.Monic) (hq : q.Monic) (h : q.map (algebraMap R K) ∣ p.map (algebraMap R K)) : q ∣ p :=
   by
   obtain ⟨r, hr⟩ := h
-  obtain ⟨d', hr'⟩ := IsIntegrallyClosed.eq_map_mul_C_of_dvd K hp (dvd_of_mul_left_eq _ hr.symm)
+  obtain ⟨d', hr'⟩ := IsIntegrallyClosed.eq_map_mul_c_of_dvd K hp (dvd_of_mul_left_eq _ hr.symm)
   rw [monic.leading_coeff, C_1, mul_one] at hr'
   rw [← hr', ← Polynomial.map_mul] at hr
   exact dvd_of_mul_right_eq _ (Polynomial.map_injective _ (IsFractionRing.injective R K) hr.symm)
@@ -169,7 +169,7 @@ section NormalizedGCDMonoid
 
 variable [NormalizedGCDMonoid R]
 
-theorem is_unit_or_eq_zero_of_is_unit_integer_normalization_prim_part {p : K[X]} (h0 : p ≠ 0)
+theorem isUnit_or_eq_zero_of_isUnit_integerNormalization_primPart {p : K[X]} (h0 : p ≠ 0)
     (h : IsUnit (integerNormalization R⁰ p).primPart) : IsUnit p :=
   by
   rcases is_unit_iff.1 h with ⟨_, ⟨u, rfl⟩, hu⟩
@@ -182,11 +182,11 @@ theorem is_unit_or_eq_zero_of_is_unit_integer_normalization_prim_part {p : K[X]}
     ⟨algebraMap R K ((integer_normalization R⁰ p).content * ↑u), isUnit_iff_ne_zero.2 fun con => _,
       by simp⟩
   replace con := (injective_iff_map_eq_zero (algebraMap R K)).1 (IsFractionRing.injective _ _) _ Con
-  rw [mul_eq_zero, content_eq_zero_iff, IsFractionRing.integer_normalization_eq_zero_iff] at con
+  rw [mul_eq_zero, content_eq_zero_iff, IsFractionRing.integerNormalization_eq_zero_iff] at con
   rcases Con with (con | con)
   · apply h0 Con
   · apply Units.ne_zero _ Con
-#align polynomial.is_unit_or_eq_zero_of_is_unit_integer_normalization_prim_part Polynomial.is_unit_or_eq_zero_of_is_unit_integer_normalization_prim_part
+#align polynomial.is_unit_or_eq_zero_of_is_unit_integer_normalization_prim_part Polynomial.isUnit_or_eq_zero_of_isUnit_integerNormalization_primPart
 
 /-- **Gauss's Lemma** for GCD domains states that a primitive polynomial is irreducible iff it is
   irreducible in the fraction field. -/
@@ -199,7 +199,7 @@ theorem IsPrimitive.irreducible_iff_irreducible_map_fraction_map {p : R[X]} (hp 
   obtain ⟨⟨c, c0⟩, hc⟩ := integer_normalization_map_to_map R⁰ a
   obtain ⟨⟨d, d0⟩, hd⟩ := integer_normalization_map_to_map R⁰ b
   rw [Algebra.smul_def, algebra_map_apply, Subtype.coe_mk] at hc hd
-  rw [mem_non_zero_divisors_iff_ne_zero] at c0 d0
+  rw [mem_nonZeroDivisors_iff_ne_zero] at c0 d0
   have hcd0 : c * d ≠ 0 := mul_ne_zero c0 d0
   rw [Ne.def, ← C_eq_zero] at hcd0
   have h1 : C c * C d * p = integer_normalization R⁰ a * integer_normalization R⁰ b :=
@@ -255,7 +255,7 @@ theorem IsPrimitive.dvd_of_fraction_map_dvd_fraction_map {p q : R[X]} (hp : p.Is
     apply mul_ne_zero hq.ne_zero
     rw [Ne.def, C_eq_zero]
     contrapose! s0
-    simp [s0, mem_non_zero_divisors_iff_ne_zero]
+    simp [s0, mem_nonZeroDivisors_iff_ne_zero]
 #align polynomial.is_primitive.dvd_of_fraction_map_dvd_fraction_map Polynomial.IsPrimitive.dvd_of_fraction_map_dvd_fraction_map
 
 variable (K)

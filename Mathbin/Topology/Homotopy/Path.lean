@@ -62,9 +62,9 @@ variable {p₀ p₁ : Path x₀ x₁}
 instance : CoeFun (Homotopy p₀ p₁) fun _ => I × I → X :=
   ⟨fun F => F.toFun⟩
 
-theorem coe_fn_injective : @Function.Injective (Homotopy p₀ p₁) (I × I → X) coeFn :=
-  ContinuousMap.HomotopyWith.coe_fn_injective
-#align path.homotopy.coe_fn_injective Path.Homotopy.coe_fn_injective
+theorem coeFn_injective : @Function.Injective (Homotopy p₀ p₁) (I × I → X) coeFn :=
+  ContinuousMap.HomotopyWith.coeFn_injective
+#align path.homotopy.coe_fn_injective Path.Homotopy.coeFn_injective
 
 @[simp]
 theorem source (F : Homotopy p₀ p₁) (t : I) : F (t, 0) = x₀ :=
@@ -221,7 +221,7 @@ def reparam (p : Path x₀ x₁) (f : I → I) (hf : Continuous f) (hf₀ : f 0 
     p
       ⟨σ x.1 * x.2 + x.1 * f x.2,
         show (σ x.1 : ℝ) • (x.2 : ℝ) + (x.1 : ℝ) • (f x.2 : ℝ) ∈ I from
-          convex_Icc _ _ x.2.2 (f x.2).2 (by unit_interval) (by unit_interval) (by simp)⟩
+          convex_icc _ _ x.2.2 (f x.2).2 (by unit_interval) (by unit_interval) (by simp)⟩
   map_zero_left' x := by norm_num
   map_one_left' x := by norm_num
   prop' t x hx := by
@@ -354,7 +354,7 @@ theorem hpath_hext {p₁ : Path x₀ x₁} {p₂ : Path x₂ x₃} (hp : ∀ t, 
   by
   obtain rfl : x₀ = x₂ := by convert hp 0 <;> simp
   obtain rfl : x₁ = x₃ := by convert hp 1 <;> simp
-  rw [heq_iff_eq]; congr ; ext t; exact hp t
+  rw [hEq_iff_eq]; congr ; ext t; exact hp t
 #align path.homotopic.hpath_hext Path.Homotopic.hpath_hext
 
 end Homotopic

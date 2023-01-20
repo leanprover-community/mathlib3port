@@ -45,31 +45,31 @@ theorem tensor_apply {W X Y Z : Type u} (f : W ⟶ X) (g : Y ⟶ Z) (p : W ⊗ Y
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem left_unitor_hom_apply {X : Type u} {x : X} {p : PUnit} :
+theorem leftUnitor_hom_apply {X : Type u} {x : X} {p : PUnit} :
     ((λ_ X).Hom : 𝟙_ (Type u) ⊗ X → X) (p, x) = x :=
   rfl
-#align category_theory.left_unitor_hom_apply CategoryTheory.left_unitor_hom_apply
+#align category_theory.left_unitor_hom_apply CategoryTheory.leftUnitor_hom_apply
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem left_unitor_inv_apply {X : Type u} {x : X} :
+theorem leftUnitor_inv_apply {X : Type u} {x : X} :
     ((λ_ X).inv : X ⟶ 𝟙_ (Type u) ⊗ X) x = (PUnit.unit, x) :=
   rfl
-#align category_theory.left_unitor_inv_apply CategoryTheory.left_unitor_inv_apply
+#align category_theory.left_unitor_inv_apply CategoryTheory.leftUnitor_inv_apply
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem right_unitor_hom_apply {X : Type u} {x : X} {p : PUnit} :
+theorem rightUnitor_hom_apply {X : Type u} {x : X} {p : PUnit} :
     ((ρ_ X).Hom : X ⊗ 𝟙_ (Type u) → X) (x, p) = x :=
   rfl
-#align category_theory.right_unitor_hom_apply CategoryTheory.right_unitor_hom_apply
+#align category_theory.right_unitor_hom_apply CategoryTheory.rightUnitor_hom_apply
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem right_unitor_inv_apply {X : Type u} {x : X} :
+theorem rightUnitor_inv_apply {X : Type u} {x : X} :
     ((ρ_ X).inv : X ⟶ X ⊗ 𝟙_ (Type u)) x = (x, PUnit.unit) :=
   rfl
-#align category_theory.right_unitor_inv_apply CategoryTheory.right_unitor_inv_apply
+#align category_theory.right_unitor_inv_apply CategoryTheory.rightUnitor_inv_apply
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/

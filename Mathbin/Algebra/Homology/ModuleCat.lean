@@ -67,12 +67,12 @@ theorem cycles_ext {C : HomologicalComplex (ModuleCat.{u} R) c} {i : ι} {x y : 
 attribute [local instance] concrete_category.has_coe_to_sort
 
 @[simp]
-theorem cycles_map_to_cycles (f : C ⟶ D) {i : ι} (x : LinearMap.ker (C.dFrom i)) :
+theorem cyclesMap_toCycles (f : C ⟶ D) {i : ι} (x : LinearMap.ker (C.dFrom i)) :
     (cyclesMap f i) (toCycles x) = toCycles ⟨f.f i x.1, by simp [x.2]⟩ :=
   by
   ext
   simp
-#align Module.cycles_map_to_cycles ModuleCat.cycles_map_to_cycles
+#align Module.cycles_map_to_cycles ModuleCat.cyclesMap_toCycles
 
 /-- Build a term of `C.homology i` from an element `C.X i` such that `C.d_from i x = 0`. -/
 abbrev toHomology {C : HomologicalComplex (ModuleCat.{u} R) c} {i : ι}
@@ -94,18 +94,17 @@ example (f g : C ⟶ D) (h : Homotopy f g) (i : ι) :
   by
   -- To check that two morphisms out of a homology group agree, it suffices to check on cycles:
   ext
-  simp only [homology_functor_map, homology.π_map_apply]
+  simp only [homologyFunctor_map, homology.π_map_apply]
   -- To check that two elements are equal mod boundaries, it suffices to exhibit a boundary:
   ext1
   swap; exact (toPrev i h.hom) x.1
   -- Moreover, to check that two cycles are equal, it suffices to check their underlying elements:
   ext1
-  simp only [map_add, image_to_kernel_arrow_apply, HomologicalComplex.Hom.sq_from_left,
-    ModuleCat.to_kernel_subobject_arrow, CategoryTheory.Limits.kernel_subobject_map_arrow_apply,
-    d_next_eq_d_from_from_next, Function.comp_apply, zero_add, ModuleCat.coe_comp,
-    LinearMap.add_apply, map_zero, Subtype.val_eq_coe,
-    CategoryTheory.Limits.image_subobject_arrow_comp_apply, LinearMap.map_coe_ker,
-    prev_d_eq_to_prev_d_to, h.comm i, x.2]
+  simp only [map_add, imageToKernel_arrow_apply, HomologicalComplex.Hom.sqFrom_left,
+    ModuleCat.toKernelSubobject_arrow, CategoryTheory.Limits.kernelSubobjectMap_arrow_apply,
+    dNext_eq_dFrom_fromNext, Function.comp_apply, zero_add, ModuleCat.coe_comp, LinearMap.add_apply,
+    map_zero, Subtype.val_eq_coe, CategoryTheory.Limits.imageSubobject_arrow_comp_apply,
+    LinearMap.map_coe_ker, prevD_eq_toPrev_dTo, h.comm i, x.2]
   abel
 
 end ModuleCat

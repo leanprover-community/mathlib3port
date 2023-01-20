@@ -243,7 +243,7 @@ theorem IsChain.superChain_succChain (hs₁ : IsChain r s) (hs₂ : ¬IsMaxChain
   by
   simp [IsMaxChain, not_and_or, not_forall_not] at hs₂
   obtain ⟨t, ht, hst⟩ := hs₂.neg_resolve_left hs₁
-  exact succChain_spec ⟨t, hs₁, ht, ssubset_iff_subset_ne.2 hst⟩
+  exact succChain_spec ⟨t, hs₁, ht, sSubset_iff_subset_ne.2 hst⟩
 #align is_chain.super_chain_succ_chain IsChain.superChain_succChain
 -/
 
@@ -323,7 +323,7 @@ private theorem chain_closure_succ_total (hc₁ : ChainClosure r c₁) (hc₂ : 
 #print ChainClosure.total /-
 theorem ChainClosure.total (hc₁ : ChainClosure r c₁) (hc₂ : ChainClosure r c₂) :
     c₁ ⊆ c₂ ∨ c₂ ⊆ c₁ :=
-  (chain_closure_succ_total_aux hc₂ hc₁ fun c₃ hc₃ => chain_closure_succ_total hc₃ hc₁).imp_left
+  (chainClosure_succ_total_aux hc₂ hc₁ fun c₃ hc₃ => chainClosure_succ_total hc₃ hc₁).imp_left
     subset_succChain.trans
 #align chain_closure.total ChainClosure.total
 -/

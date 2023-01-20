@@ -54,9 +54,9 @@ def completion : SemiNormedGroupCat.{u} ⥤ SemiNormedGroupCat.{u}
   map_comp' U V W f g := (completion_comp f g).symm
 #align SemiNormedGroup.Completion SemiNormedGroupCat.completion
 
-instance Completion_complete_space {V : SemiNormedGroupCat} : CompleteSpace (completion.obj V) :=
-  Completion.complete_space _
-#align SemiNormedGroup.Completion_complete_space SemiNormedGroupCat.Completion_complete_space
+instance completion_completeSpace {V : SemiNormedGroupCat} : CompleteSpace (completion.obj V) :=
+  Completion.completeSpace _
+#align SemiNormedGroup.Completion_complete_space SemiNormedGroupCat.completion_completeSpace
 
 /-- The canonical morphism from a seminormed group `V` to its completion. -/
 @[simps]
@@ -71,12 +71,12 @@ theorem completion.norm_incl_eq {V : SemiNormedGroupCat} {v : V} : ‖completion
   simp
 #align SemiNormedGroup.Completion.norm_incl_eq SemiNormedGroupCat.completion.norm_incl_eq
 
-theorem completion.map_norm_noninc {V W : SemiNormedGroupCat} {f : V ⟶ W} (hf : f.NormNoninc) :
+theorem completion.map_normNoninc {V W : SemiNormedGroupCat} {f : V ⟶ W} (hf : f.NormNoninc) :
     (completion.map f).NormNoninc :=
-  NormedAddGroupHom.NormNoninc.norm_noninc_iff_norm_le_one.2 <|
+  NormedAddGroupHom.NormNoninc.normNoninc_iff_norm_le_one.2 <|
     (NormedAddGroupHom.norm_completion f).le.trans <|
-      NormedAddGroupHom.NormNoninc.norm_noninc_iff_norm_le_one.1 hf
-#align SemiNormedGroup.Completion.map_norm_noninc SemiNormedGroupCat.completion.map_norm_noninc
+      NormedAddGroupHom.NormNoninc.normNoninc_iff_norm_le_one.1 hf
+#align SemiNormedGroup.Completion.map_norm_noninc SemiNormedGroupCat.completion.map_normNoninc
 
 /-- Given a normed group hom `V ⟶ W`, this defines the associated morphism
 from the completion of `V` to the completion of `W`.

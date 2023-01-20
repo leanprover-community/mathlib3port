@@ -431,7 +431,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align sub_div' sub_div'ₓ'. -/
 @[field_simps]
 theorem sub_div' (a b c : K) (hc : c ≠ 0) : b - a / c = (b * c - a) / c := by
-  simpa using div_sub_div b a one_ne_zero hc
+  simpa using div_sub_div b a one_neZero hc
 #align sub_div' sub_div'
 
 /- warning: div_sub' -> div_sub' is a dubious translation:
@@ -442,7 +442,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align div_sub' div_sub'ₓ'. -/
 @[field_simps]
 theorem div_sub' (a b c : K) (hc : c ≠ 0) : a / c - b = (a - c * b) / c := by
-  simpa using div_sub_div a b hc one_ne_zero
+  simpa using div_sub_div a b hc one_neZero
 #align div_sub' div_sub'
 
 #print Field.isDomain /-
@@ -622,15 +622,19 @@ instance [h : Semifield α] : Semifield αᵒᵈ :=
 instance [h : Field α] : Field αᵒᵈ :=
   h
 
+#print toDual_rat_cast /-
 @[simp]
-theorem to_dual_rat_cast [RatCast α] (n : ℚ) : toDual (n : α) = n :=
+theorem toDual_rat_cast [RatCast α] (n : ℚ) : toDual (n : α) = n :=
   rfl
-#align to_dual_rat_cast to_dual_rat_cast
+#align to_dual_rat_cast toDual_rat_cast
+-/
 
+#print ofDual_rat_cast /-
 @[simp]
-theorem of_dual_rat_cast [RatCast α] (n : ℚ) : (ofDual n : α) = n :=
+theorem ofDual_rat_cast [RatCast α] (n : ℚ) : (ofDual n : α) = n :=
   rfl
-#align of_dual_rat_cast of_dual_rat_cast
+#align of_dual_rat_cast ofDual_rat_cast
+-/
 
 /-! ### Lexicographic order -/
 
@@ -650,13 +654,17 @@ instance [h : Semifield α] : Semifield (Lex α) :=
 instance [h : Field α] : Field (Lex α) :=
   h
 
+#print toLex_rat_cast /-
 @[simp]
-theorem to_lex_rat_cast [RatCast α] (n : ℚ) : toLex (n : α) = n :=
+theorem toLex_rat_cast [RatCast α] (n : ℚ) : toLex (n : α) = n :=
   rfl
-#align to_lex_rat_cast to_lex_rat_cast
+#align to_lex_rat_cast toLex_rat_cast
+-/
 
+#print ofLex_rat_cast /-
 @[simp]
-theorem of_lex_rat_cast [RatCast α] (n : ℚ) : (ofLex n : α) = n :=
+theorem ofLex_rat_cast [RatCast α] (n : ℚ) : (ofLex n : α) = n :=
   rfl
-#align of_lex_rat_cast of_lex_rat_cast
+#align of_lex_rat_cast ofLex_rat_cast
+-/
 

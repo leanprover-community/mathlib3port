@@ -122,7 +122,7 @@ inductive ofArrows {ι : Type _} (Y : ι → C) (f : ∀ i, Y i ⟶ X) : Presiev
   | mk (i : ι) : of_arrows (f i)
 #align category_theory.presieve.of_arrows CategoryTheory.Presieve.ofArrows
 
-theorem of_arrows_punit : (ofArrows _ fun _ : PUnit => f) = singleton f :=
+theorem ofArrows_pUnit : (ofArrows _ fun _ : PUnit => f) = singleton f :=
   by
   ext (Y g)
   constructor
@@ -130,9 +130,9 @@ theorem of_arrows_punit : (ofArrows _ fun _ : PUnit => f) = singleton f :=
     apply singleton.mk
   · rintro ⟨_⟩
     exact of_arrows.mk PUnit.unit
-#align category_theory.presieve.of_arrows_punit CategoryTheory.Presieve.of_arrows_punit
+#align category_theory.presieve.of_arrows_punit CategoryTheory.Presieve.ofArrows_pUnit
 
-theorem of_arrows_pullback [HasPullbacks C] {ι : Type _} (Z : ι → C) (g : ∀ i : ι, Z i ⟶ X) :
+theorem ofArrows_pullback [HasPullbacks C] {ι : Type _} (Z : ι → C) (g : ∀ i : ι, Z i ⟶ X) :
     (ofArrows (fun i => pullback (g i) f) fun i => pullback.snd) =
       pullbackArrows f (ofArrows Z g) :=
   by
@@ -143,9 +143,9 @@ theorem of_arrows_pullback [HasPullbacks C] {ι : Type _} (Z : ι → C) (g : �
   · rintro ⟨W, k, hk₁⟩
     cases' hk₁ with i hi
     apply of_arrows.mk
-#align category_theory.presieve.of_arrows_pullback CategoryTheory.Presieve.of_arrows_pullback
+#align category_theory.presieve.of_arrows_pullback CategoryTheory.Presieve.ofArrows_pullback
 
-theorem of_arrows_bind {ι : Type _} (Z : ι → C) (g : ∀ i : ι, Z i ⟶ X)
+theorem ofArrows_bind {ι : Type _} (Z : ι → C) (g : ∀ i : ι, Z i ⟶ X)
     (j : ∀ ⦃Y⦄ (f : Y ⟶ X), ofArrows Z g f → Type _) (W : ∀ ⦃Y⦄ (f : Y ⟶ X) (H), j f H → C)
     (k : ∀ ⦃Y⦄ (f : Y ⟶ X) (H i), W f H i ⟶ Y) :
     ((ofArrows Z g).bind fun Y f H => ofArrows (W f H) (k f H)) =
@@ -158,22 +158,22 @@ theorem of_arrows_bind {ι : Type _} (Z : ι → C) (g : ∀ i : ι, Z i ⟶ X)
     exact of_arrows.mk (Sigma.mk _ _)
   · rintro ⟨i⟩
     exact bind_comp _ (of_arrows.mk _) (of_arrows.mk _)
-#align category_theory.presieve.of_arrows_bind CategoryTheory.Presieve.of_arrows_bind
+#align category_theory.presieve.of_arrows_bind CategoryTheory.Presieve.ofArrows_bind
 
 /-- Given a presieve on `F(X)`, we can define a presieve on `X` by taking the preimage via `F`. -/
 def functorPullback (R : Presieve (F.obj X)) : Presieve X := fun _ f => R (F.map f)
 #align category_theory.presieve.functor_pullback CategoryTheory.Presieve.functorPullback
 
 @[simp]
-theorem functor_pullback_mem (R : Presieve (F.obj X)) {Y} (f : Y ⟶ X) :
+theorem functorPullback_mem (R : Presieve (F.obj X)) {Y} (f : Y ⟶ X) :
     R.functorPullback F f ↔ R (F.map f) :=
   Iff.rfl
-#align category_theory.presieve.functor_pullback_mem CategoryTheory.Presieve.functor_pullback_mem
+#align category_theory.presieve.functor_pullback_mem CategoryTheory.Presieve.functorPullback_mem
 
 @[simp]
-theorem functor_pullback_id (R : Presieve X) : R.functorPullback (𝟭 _) = R :=
+theorem functorPullback_id (R : Presieve X) : R.functorPullback (𝟭 _) = R :=
   rfl
-#align category_theory.presieve.functor_pullback_id CategoryTheory.Presieve.functor_pullback_id
+#align category_theory.presieve.functor_pullback_id CategoryTheory.Presieve.functorPullback_id
 
 section FunctorPushforward
 
@@ -205,7 +205,7 @@ noncomputable def getFunctorPushforwardStructure {F : C ⥤ D} {S : Presieve X} 
   exact ⟨Z, f', g, h₁, h⟩
 #align category_theory.presieve.get_functor_pushforward_structure CategoryTheory.Presieve.getFunctorPushforwardStructure
 
-theorem functor_pushforward_comp (R : Presieve X) :
+theorem functorPushforward_comp (R : Presieve X) :
     R.functorPushforward (F ⋙ G) = (R.functorPushforward F).functorPushforward G :=
   by
   ext (x f)
@@ -214,12 +214,12 @@ theorem functor_pushforward_comp (R : Presieve X) :
     exact ⟨F.obj X, F.map f₁, g₁, ⟨X, f₁, 𝟙 _, h₁, by simp⟩, rfl⟩
   · rintro ⟨X, f₁, g₁, ⟨X', f₂, g₂, h₁, rfl⟩, rfl⟩
     use ⟨X', f₂, g₁ ≫ G.map g₂, h₁, by simp⟩
-#align category_theory.presieve.functor_pushforward_comp CategoryTheory.Presieve.functor_pushforward_comp
+#align category_theory.presieve.functor_pushforward_comp CategoryTheory.Presieve.functorPushforward_comp
 
-theorem image_mem_functor_pushforward (R : Presieve X) {f : Y ⟶ X} (h : R f) :
+theorem image_mem_functorPushforward (R : Presieve X) {f : Y ⟶ X} (h : R f) :
     R.functorPushforward F (F.map f) :=
   ⟨Y, f, 𝟙 _, h, by simp⟩
-#align category_theory.presieve.image_mem_functor_pushforward CategoryTheory.Presieve.image_mem_functor_pushforward
+#align category_theory.presieve.image_mem_functor_pushforward CategoryTheory.Presieve.image_mem_functorPushforward
 
 end FunctorPushforward
 
@@ -335,16 +335,16 @@ instance sieveInhabited : Inhabited (Sieve X) :=
 #align category_theory.sieve.sieve_inhabited CategoryTheory.Sieve.sieveInhabited
 
 @[simp]
-theorem Inf_apply {Ss : Set (Sieve X)} {Y} (f : Y ⟶ X) :
+theorem infₛ_apply {Ss : Set (Sieve X)} {Y} (f : Y ⟶ X) :
     infₛ Ss f ↔ ∀ (S : Sieve X) (H : S ∈ Ss), S f :=
   Iff.rfl
-#align category_theory.sieve.Inf_apply CategoryTheory.Sieve.Inf_apply
+#align category_theory.sieve.Inf_apply CategoryTheory.Sieve.infₛ_apply
 
 @[simp]
-theorem Sup_apply {Ss : Set (Sieve X)} {Y} (f : Y ⟶ X) :
+theorem supₛ_apply {Ss : Set (Sieve X)} {Y} (f : Y ⟶ X) :
     supₛ Ss f ↔ ∃ (S : Sieve X)(H : S ∈ Ss), S f :=
   Iff.rfl
-#align category_theory.sieve.Sup_apply CategoryTheory.Sieve.Sup_apply
+#align category_theory.sieve.Sup_apply CategoryTheory.Sieve.supₛ_apply
 
 @[simp]
 theorem inter_apply {R S : Sieve X} {Y} (f : Y ⟶ X) : (R ⊓ S) f ↔ R f ∧ S f :=
@@ -416,21 +416,21 @@ theorem id_mem_iff_eq_top : S (𝟙 X) ↔ S = ⊤ :=
 #align category_theory.sieve.id_mem_iff_eq_top CategoryTheory.Sieve.id_mem_iff_eq_top
 
 /-- If an arrow set contains a split epi, it generates the maximal sieve. -/
-theorem generate_of_contains_is_split_epi {R : Presieve X} (f : Y ⟶ X) [IsSplitEpi f] (hf : R f) :
+theorem generate_of_contains_isSplitEpi {R : Presieve X} (f : Y ⟶ X) [IsSplitEpi f] (hf : R f) :
     generate R = ⊤ := by
   rw [← id_mem_iff_eq_top]
   exact ⟨_, section_ f, f, hf, by simp⟩
-#align category_theory.sieve.generate_of_contains_is_split_epi CategoryTheory.Sieve.generate_of_contains_is_split_epi
+#align category_theory.sieve.generate_of_contains_is_split_epi CategoryTheory.Sieve.generate_of_contains_isSplitEpi
 
 @[simp]
-theorem generate_of_singleton_is_split_epi (f : Y ⟶ X) [IsSplitEpi f] :
+theorem generate_of_singleton_isSplitEpi (f : Y ⟶ X) [IsSplitEpi f] :
     generate (Presieve.singleton f) = ⊤ :=
-  generate_of_contains_is_split_epi f (Presieve.singleton_self _)
-#align category_theory.sieve.generate_of_singleton_is_split_epi CategoryTheory.Sieve.generate_of_singleton_is_split_epi
+  generate_of_contains_isSplitEpi f (Presieve.singleton_self _)
+#align category_theory.sieve.generate_of_singleton_is_split_epi CategoryTheory.Sieve.generate_of_singleton_isSplitEpi
 
 @[simp]
 theorem generate_top : generate (⊤ : Presieve X) = ⊤ :=
-  generate_of_contains_is_split_epi (𝟙 _) ⟨⟩
+  generate_of_contains_isSplitEpi (𝟙 _) ⟨⟩
 #align category_theory.sieve.generate_top CategoryTheory.Sieve.generate_top
 
 /-- Given a morphism `h : Y ⟶ X`, send a sieve S on X to a sieve on Y
@@ -491,29 +491,29 @@ theorem pushforward_comp {f : Y ⟶ X} {g : Z ⟶ Y} (R : Sieve Z) :
       ⟨z, by rwa [reassoc_of hR], hz⟩⟩
 #align category_theory.sieve.pushforward_comp CategoryTheory.Sieve.pushforward_comp
 
-theorem galois_connection (f : Y ⟶ X) : GaloisConnection (Sieve.pushforward f) (Sieve.pullback f) :=
+theorem galoisConnection (f : Y ⟶ X) : GaloisConnection (Sieve.pushforward f) (Sieve.pullback f) :=
   fun S R => ⟨fun hR Z g hg => hR _ ⟨g, rfl, hg⟩, fun hS Z g ⟨h, hg, hh⟩ => hg ▸ hS h hh⟩
-#align category_theory.sieve.galois_connection CategoryTheory.Sieve.galois_connection
+#align category_theory.sieve.galois_connection CategoryTheory.Sieve.galoisConnection
 
 theorem pullback_monotone (f : Y ⟶ X) : Monotone (Sieve.pullback f) :=
-  (galois_connection f).monotone_u
+  (galoisConnection f).monotone_u
 #align category_theory.sieve.pullback_monotone CategoryTheory.Sieve.pullback_monotone
 
 theorem pushforward_monotone (f : Y ⟶ X) : Monotone (Sieve.pushforward f) :=
-  (galois_connection f).monotone_l
+  (galoisConnection f).monotone_l
 #align category_theory.sieve.pushforward_monotone CategoryTheory.Sieve.pushforward_monotone
 
 theorem le_pushforward_pullback (f : Y ⟶ X) (R : Sieve Y) : R ≤ (R.pushforward f).pullback f :=
-  (galois_connection f).le_u_l _
+  (galoisConnection f).le_u_l _
 #align category_theory.sieve.le_pushforward_pullback CategoryTheory.Sieve.le_pushforward_pullback
 
 theorem pullback_pushforward_le (f : Y ⟶ X) (R : Sieve X) : (R.pullback f).pushforward f ≤ R :=
-  (galois_connection f).l_u_le _
+  (galoisConnection f).l_u_le _
 #align category_theory.sieve.pullback_pushforward_le CategoryTheory.Sieve.pullback_pushforward_le
 
 theorem pushforward_union {f : Y ⟶ X} (S R : Sieve Y) :
     (S ⊔ R).pushforward f = S.pushforward f ⊔ R.pushforward f :=
-  (galois_connection f).l_sup
+  (galoisConnection f).l_sup
 #align category_theory.sieve.pushforward_union CategoryTheory.Sieve.pushforward_union
 
 theorem pushforward_le_bind_of_mem (S : Presieve X) (R : ∀ ⦃Y : C⦄ ⦃f : Y ⟶ X⦄, S f → Sieve Y)
@@ -549,7 +549,7 @@ def galoisInsertionOfIsSplitEpi (f : Y ⟶ X) [IsSplitEpi f] :
   refine' ⟨g ≫ section_ f, by simpa⟩
 #align category_theory.sieve.galois_insertion_of_is_split_epi CategoryTheory.Sieve.galoisInsertionOfIsSplitEpi
 
-theorem pullback_arrows_comm [HasPullbacks C] {X Y : C} (f : Y ⟶ X) (R : Presieve X) :
+theorem pullbackArrows_comm [HasPullbacks C] {X Y : C} (f : Y ⟶ X) (R : Presieve X) :
     Sieve.generate (R.pullbackArrows f) = (Sieve.generate R).pullback f :=
   by
   ext (Z g)
@@ -561,7 +561,7 @@ theorem pullback_arrows_comm [HasPullbacks C] {X Y : C} (f : Y ⟶ X) (R : Presi
     exact sieve.downward_closed _ (sieve.le_generate R W hg) (h ≫ pullback.fst)
   · rintro ⟨W, h, k, hk, comm⟩
     exact ⟨_, _, _, presieve.pullback_arrows.mk _ _ hk, pullback.lift_snd _ _ comm⟩
-#align category_theory.sieve.pullback_arrows_comm CategoryTheory.Sieve.pullback_arrows_comm
+#align category_theory.sieve.pullback_arrows_comm CategoryTheory.Sieve.pullbackArrows_comm
 
 section Functor
 
@@ -581,26 +581,26 @@ def functorPullback (R : Sieve (F.obj X)) : Sieve X
 #align category_theory.sieve.functor_pullback CategoryTheory.Sieve.functorPullback
 
 @[simp]
-theorem functor_pullback_arrows (R : Sieve (F.obj X)) :
+theorem functorPullback_arrows (R : Sieve (F.obj X)) :
     (R.functorPullback F).arrows = R.arrows.functorPullback F :=
   rfl
-#align category_theory.sieve.functor_pullback_arrows CategoryTheory.Sieve.functor_pullback_arrows
+#align category_theory.sieve.functor_pullback_arrows CategoryTheory.Sieve.functorPullback_arrows
 
 @[simp]
-theorem functor_pullback_id (R : Sieve X) : R.functorPullback (𝟭 _) = R :=
+theorem functorPullback_id (R : Sieve X) : R.functorPullback (𝟭 _) = R :=
   by
   ext
   rfl
-#align category_theory.sieve.functor_pullback_id CategoryTheory.Sieve.functor_pullback_id
+#align category_theory.sieve.functor_pullback_id CategoryTheory.Sieve.functorPullback_id
 
-theorem functor_pullback_comp (R : Sieve ((F ⋙ G).obj X)) :
+theorem functorPullback_comp (R : Sieve ((F ⋙ G).obj X)) :
     R.functorPullback (F ⋙ G) = (R.functorPullback G).functorPullback F :=
   by
   ext
   rfl
-#align category_theory.sieve.functor_pullback_comp CategoryTheory.Sieve.functor_pullback_comp
+#align category_theory.sieve.functor_pullback_comp CategoryTheory.Sieve.functorPullback_comp
 
-theorem functor_pushforward_extend_eq {R : Presieve X} :
+theorem functorPushforward_extend_eq {R : Presieve X} :
     (generate R).arrows.functorPushforward F = R.functorPushforward F :=
   by
   ext (Y f); constructor
@@ -608,7 +608,7 @@ theorem functor_pushforward_extend_eq {R : Presieve X} :
     exact ⟨X'', f'', f' ≫ F.map g', h₁, by simp⟩
   · rintro ⟨X', g, f', h₁, h₂⟩
     exact ⟨X', g, f', le_generate R _ h₁, h₂⟩
-#align category_theory.sieve.functor_pushforward_extend_eq CategoryTheory.Sieve.functor_pushforward_extend_eq
+#align category_theory.sieve.functor_pushforward_extend_eq CategoryTheory.Sieve.functorPushforward_extend_eq
 
 /-- The sieve generated by the image of `R` under `F`. -/
 @[simps]
@@ -621,7 +621,7 @@ def functorPushforward (R : Sieve X) : Sieve (F.obj X)
 #align category_theory.sieve.functor_pushforward CategoryTheory.Sieve.functorPushforward
 
 @[simp]
-theorem functor_pushforward_id (R : Sieve X) : R.functorPushforward (𝟭 _) = R :=
+theorem functorPushforward_id (R : Sieve X) : R.functorPushforward (𝟭 _) = R :=
   by
   ext (X f)
   constructor
@@ -630,16 +630,16 @@ theorem functor_pushforward_id (R : Sieve X) : R.functorPushforward (𝟭 _) = R
     exact R.downward_closed hg h
   · intro hf
     exact ⟨X, f, 𝟙 _, hf, by simp⟩
-#align category_theory.sieve.functor_pushforward_id CategoryTheory.Sieve.functor_pushforward_id
+#align category_theory.sieve.functor_pushforward_id CategoryTheory.Sieve.functorPushforward_id
 
-theorem functor_pushforward_comp (R : Sieve X) :
+theorem functorPushforward_comp (R : Sieve X) :
     R.functorPushforward (F ⋙ G) = (R.functorPushforward F).functorPushforward G :=
   by
   ext
   simpa [R.arrows.functor_pushforward_comp F G]
-#align category_theory.sieve.functor_pushforward_comp CategoryTheory.Sieve.functor_pushforward_comp
+#align category_theory.sieve.functor_pushforward_comp CategoryTheory.Sieve.functorPushforward_comp
 
-theorem functor_galois_connection (X : C) :
+theorem functor_galoisConnection (X : C) :
     GaloisConnection (Sieve.functorPushforward F : Sieve X → Sieve (F.obj X))
       (Sieve.functorPullback F) :=
   by
@@ -652,70 +652,70 @@ theorem functor_galois_connection (X : C) :
   · rintro hle Y f ⟨X, g, h, hg, rfl⟩
     apply sieve.downward_closed S
     exact hle g hg
-#align category_theory.sieve.functor_galois_connection CategoryTheory.Sieve.functor_galois_connection
+#align category_theory.sieve.functor_galois_connection CategoryTheory.Sieve.functor_galoisConnection
 
-theorem functor_pullback_monotone (X : C) :
+theorem functorPullback_monotone (X : C) :
     Monotone (Sieve.functorPullback F : Sieve (F.obj X) → Sieve X) :=
-  (functor_galois_connection F X).monotone_u
-#align category_theory.sieve.functor_pullback_monotone CategoryTheory.Sieve.functor_pullback_monotone
+  (functor_galoisConnection F X).monotone_u
+#align category_theory.sieve.functor_pullback_monotone CategoryTheory.Sieve.functorPullback_monotone
 
-theorem functor_pushforward_monotone (X : C) :
+theorem functorPushforward_monotone (X : C) :
     Monotone (Sieve.functorPushforward F : Sieve X → Sieve (F.obj X)) :=
-  (functor_galois_connection F X).monotone_l
-#align category_theory.sieve.functor_pushforward_monotone CategoryTheory.Sieve.functor_pushforward_monotone
+  (functor_galoisConnection F X).monotone_l
+#align category_theory.sieve.functor_pushforward_monotone CategoryTheory.Sieve.functorPushforward_monotone
 
-theorem le_functor_pushforward_pullback (R : Sieve X) :
+theorem le_functorPushforward_pullback (R : Sieve X) :
     R ≤ (R.functorPushforward F).functorPullback F :=
-  (functor_galois_connection F X).le_u_l _
-#align category_theory.sieve.le_functor_pushforward_pullback CategoryTheory.Sieve.le_functor_pushforward_pullback
+  (functor_galoisConnection F X).le_u_l _
+#align category_theory.sieve.le_functor_pushforward_pullback CategoryTheory.Sieve.le_functorPushforward_pullback
 
-theorem functor_pullback_pushforward_le (R : Sieve (F.obj X)) :
+theorem functorPullback_pushforward_le (R : Sieve (F.obj X)) :
     (R.functorPullback F).functorPushforward F ≤ R :=
-  (functor_galois_connection F X).l_u_le _
-#align category_theory.sieve.functor_pullback_pushforward_le CategoryTheory.Sieve.functor_pullback_pushforward_le
+  (functor_galoisConnection F X).l_u_le _
+#align category_theory.sieve.functor_pullback_pushforward_le CategoryTheory.Sieve.functorPullback_pushforward_le
 
-theorem functor_pushforward_union (S R : Sieve X) :
+theorem functorPushforward_union (S R : Sieve X) :
     (S ⊔ R).functorPushforward F = S.functorPushforward F ⊔ R.functorPushforward F :=
-  (functor_galois_connection F X).l_sup
-#align category_theory.sieve.functor_pushforward_union CategoryTheory.Sieve.functor_pushforward_union
+  (functor_galoisConnection F X).l_sup
+#align category_theory.sieve.functor_pushforward_union CategoryTheory.Sieve.functorPushforward_union
 
-theorem functor_pullback_union (S R : Sieve (F.obj X)) :
+theorem functorPullback_union (S R : Sieve (F.obj X)) :
     (S ⊔ R).functorPullback F = S.functorPullback F ⊔ R.functorPullback F :=
   rfl
-#align category_theory.sieve.functor_pullback_union CategoryTheory.Sieve.functor_pullback_union
+#align category_theory.sieve.functor_pullback_union CategoryTheory.Sieve.functorPullback_union
 
-theorem functor_pullback_inter (S R : Sieve (F.obj X)) :
+theorem functorPullback_inter (S R : Sieve (F.obj X)) :
     (S ⊓ R).functorPullback F = S.functorPullback F ⊓ R.functorPullback F :=
   rfl
-#align category_theory.sieve.functor_pullback_inter CategoryTheory.Sieve.functor_pullback_inter
+#align category_theory.sieve.functor_pullback_inter CategoryTheory.Sieve.functorPullback_inter
 
 @[simp]
-theorem functor_pushforward_bot (F : C ⥤ D) (X : C) : (⊥ : Sieve X).functorPushforward F = ⊥ :=
-  (functor_galois_connection F X).l_bot
-#align category_theory.sieve.functor_pushforward_bot CategoryTheory.Sieve.functor_pushforward_bot
+theorem functorPushforward_bot (F : C ⥤ D) (X : C) : (⊥ : Sieve X).functorPushforward F = ⊥ :=
+  (functor_galoisConnection F X).l_bot
+#align category_theory.sieve.functor_pushforward_bot CategoryTheory.Sieve.functorPushforward_bot
 
 @[simp]
-theorem functor_pushforward_top (F : C ⥤ D) (X : C) : (⊤ : Sieve X).functorPushforward F = ⊤ :=
+theorem functorPushforward_top (F : C ⥤ D) (X : C) : (⊤ : Sieve X).functorPushforward F = ⊤ :=
   by
   refine' (generate_sieve _).symm.trans _
   apply generate_of_contains_is_split_epi (𝟙 (F.obj X))
   refine' ⟨X, 𝟙 _, 𝟙 _, trivial, by simp⟩
-#align category_theory.sieve.functor_pushforward_top CategoryTheory.Sieve.functor_pushforward_top
+#align category_theory.sieve.functor_pushforward_top CategoryTheory.Sieve.functorPushforward_top
 
 @[simp]
-theorem functor_pullback_bot (F : C ⥤ D) (X : C) : (⊥ : Sieve (F.obj X)).functorPullback F = ⊥ :=
+theorem functorPullback_bot (F : C ⥤ D) (X : C) : (⊥ : Sieve (F.obj X)).functorPullback F = ⊥ :=
   rfl
-#align category_theory.sieve.functor_pullback_bot CategoryTheory.Sieve.functor_pullback_bot
+#align category_theory.sieve.functor_pullback_bot CategoryTheory.Sieve.functorPullback_bot
 
 @[simp]
-theorem functor_pullback_top (F : C ⥤ D) (X : C) : (⊤ : Sieve (F.obj X)).functorPullback F = ⊤ :=
+theorem functorPullback_top (F : C ⥤ D) (X : C) : (⊤ : Sieve (F.obj X)).functorPullback F = ⊤ :=
   rfl
-#align category_theory.sieve.functor_pullback_top CategoryTheory.Sieve.functor_pullback_top
+#align category_theory.sieve.functor_pullback_top CategoryTheory.Sieve.functorPullback_top
 
-theorem image_mem_functor_pushforward (R : Sieve X) {V} {f : V ⟶ X} (h : R f) :
+theorem image_mem_functorPushforward (R : Sieve X) {V} {f : V ⟶ X} (h : R f) :
     R.functorPushforward F (F.map f) :=
   ⟨V, f, 𝟙 _, h, by simp⟩
-#align category_theory.sieve.image_mem_functor_pushforward CategoryTheory.Sieve.image_mem_functor_pushforward
+#align category_theory.sieve.image_mem_functor_pushforward CategoryTheory.Sieve.image_mem_functorPushforward
 
 /-- When `F` is essentially surjective and full, the galois connection is a galois insertion. -/
 def essSurjFullFunctorGaloisInsertion [EssSurj F] [Full F] (X : C) :
@@ -762,17 +762,17 @@ def natTransOfLe {S T : Sieve X} (h : S ≤ T) : S.Functor ⟶ T.Functor where a
 def functorInclusion (S : Sieve X) : S.Functor ⟶ yoneda.obj X where app Y f := f.1
 #align category_theory.sieve.functor_inclusion CategoryTheory.Sieve.functorInclusion
 
-theorem nat_trans_of_le_comm {S T : Sieve X} (h : S ≤ T) :
+theorem natTransOfLe_comm {S T : Sieve X} (h : S ≤ T) :
     natTransOfLe h ≫ functorInclusion _ = functorInclusion _ :=
   rfl
-#align category_theory.sieve.nat_trans_of_le_comm CategoryTheory.Sieve.nat_trans_of_le_comm
+#align category_theory.sieve.nat_trans_of_le_comm CategoryTheory.Sieve.natTransOfLe_comm
 
 /-- The presheaf induced by a sieve is a subobject of the yoneda embedding. -/
-instance functor_inclusion_is_mono : Mono S.functorInclusion :=
+instance functorInclusion_is_mono : Mono S.functorInclusion :=
   ⟨fun Z f g h => by
     ext (Y y)
     apply congr_fun (nat_trans.congr_app h Y) y⟩
-#align category_theory.sieve.functor_inclusion_is_mono CategoryTheory.Sieve.functor_inclusion_is_mono
+#align category_theory.sieve.functor_inclusion_is_mono CategoryTheory.Sieve.functorInclusion_is_mono
 
 -- TODO: Show that when `f` is mono, this is right inverse to `functor_inclusion` up to isomorphism.
 /-- A natural transformation to a representable functor induces a sieve. This is the left inverse of
@@ -789,7 +789,7 @@ def sieveOfSubfunctor {R} (f : R ⟶ yoneda.obj X) : Sieve X
     simp
 #align category_theory.sieve.sieve_of_subfunctor CategoryTheory.Sieve.sieveOfSubfunctor
 
-theorem sieve_of_subfunctor_functor_inclusion : sieveOfSubfunctor S.functorInclusion = S :=
+theorem sieveOfSubfunctor_functorInclusion : sieveOfSubfunctor S.functorInclusion = S :=
   by
   ext
   simp only [functor_inclusion_app, sieve_of_subfunctor_apply, Subtype.val_eq_coe]
@@ -798,11 +798,11 @@ theorem sieve_of_subfunctor_functor_inclusion : sieveOfSubfunctor S.functorInclu
     exact hf
   · intro hf
     exact ⟨⟨_, hf⟩, rfl⟩
-#align category_theory.sieve.sieve_of_subfunctor_functor_inclusion CategoryTheory.Sieve.sieve_of_subfunctor_functor_inclusion
+#align category_theory.sieve.sieve_of_subfunctor_functor_inclusion CategoryTheory.Sieve.sieveOfSubfunctor_functorInclusion
 
-instance functor_inclusion_top_is_iso : IsIso (⊤ : Sieve X).functorInclusion :=
+instance functorInclusion_top_isIso : IsIso (⊤ : Sieve X).functorInclusion :=
   ⟨⟨{ app := fun Y a => ⟨a, ⟨⟩⟩ }, by tidy⟩⟩
-#align category_theory.sieve.functor_inclusion_top_is_iso CategoryTheory.Sieve.functor_inclusion_top_is_iso
+#align category_theory.sieve.functor_inclusion_top_is_iso CategoryTheory.Sieve.functorInclusion_top_isIso
 
 end Sieve
 

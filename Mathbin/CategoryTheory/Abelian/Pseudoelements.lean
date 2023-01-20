@@ -110,13 +110,13 @@ def PseudoEqual (P : C) (f g : Over P) : Prop :=
   ∃ (R : C)(p : R ⟶ f.1)(q : R ⟶ g.1)(_ : Epi p)(_ : Epi q), p ≫ f.Hom = q ≫ g.Hom
 #align category_theory.abelian.pseudo_equal CategoryTheory.Abelian.PseudoEqual
 
-theorem pseudo_equal_refl {P : C} : Reflexive (PseudoEqual P) := fun f =>
+theorem pseudoEqual_refl {P : C} : Reflexive (PseudoEqual P) := fun f =>
   ⟨f.1, 𝟙 f.1, 𝟙 f.1, by infer_instance, by infer_instance, by simp⟩
-#align category_theory.abelian.pseudo_equal_refl CategoryTheory.Abelian.pseudo_equal_refl
+#align category_theory.abelian.pseudo_equal_refl CategoryTheory.Abelian.pseudoEqual_refl
 
-theorem pseudo_equal_symm {P : C} : Symmetric (PseudoEqual P) := fun f g ⟨R, p, q, ep, Eq, comm⟩ =>
+theorem pseudoEqual_symm {P : C} : Symmetric (PseudoEqual P) := fun f g ⟨R, p, q, ep, Eq, comm⟩ =>
   ⟨R, q, p, Eq, ep, comm.symm⟩
-#align category_theory.abelian.pseudo_equal_symm CategoryTheory.Abelian.pseudo_equal_symm
+#align category_theory.abelian.pseudo_equal_symm CategoryTheory.Abelian.pseudoEqual_symm
 
 variable [Abelian.{v} C]
 
@@ -124,7 +124,7 @@ section
 
 /-- Pseudoequality is transitive: Just take the pullback. The pullback morphisms will
     be epimorphisms since in an abelian category, pullbacks of epimorphisms are epimorphisms. -/
-theorem pseudo_equal_trans {P : C} : Transitive (PseudoEqual P) :=
+theorem pseudoEqual_trans {P : C} : Transitive (PseudoEqual P) :=
   fun f g h ⟨R, p, q, ep, Eq, comm⟩ ⟨R', p', q', ep', eq', comm'⟩ =>
   by
   refine' ⟨pullback q p', pullback.fst ≫ p, pullback.snd ≫ q', _, _, _⟩
@@ -135,13 +135,13 @@ theorem pseudo_equal_trans {P : C} : Transitive (PseudoEqual P) :=
   ·
     rw [category.assoc, comm, ← category.assoc, pullback.condition, category.assoc, comm',
       category.assoc]
-#align category_theory.abelian.pseudo_equal_trans CategoryTheory.Abelian.pseudo_equal_trans
+#align category_theory.abelian.pseudo_equal_trans CategoryTheory.Abelian.pseudoEqual_trans
 
 end
 
 /-- The arrows with codomain `P` equipped with the equivalence relation of being pseudo-equal. -/
 def Pseudoelement.setoid (P : C) : Setoid (Over P) :=
-  ⟨_, ⟨pseudo_equal_refl, pseudo_equal_symm, pseudo_equal_trans⟩⟩
+  ⟨_, ⟨pseudoEqual_refl, pseudoEqual_symm, pseudoEqual_trans⟩⟩
 #align category_theory.abelian.pseudoelement.setoid CategoryTheory.Abelian.Pseudoelement.setoid
 
 attribute [local instance] pseudoelement.setoid
@@ -194,9 +194,9 @@ attribute [local instance] hom_to_fun
 
 scoped[Pseudoelement] attribute [instance] CategoryTheory.Abelian.Pseudoelement.homToFun
 
-theorem pseudo_apply_mk {P Q : C} (f : P ⟶ Q) (a : Over P) : f ⟦a⟧ = ⟦a.Hom ≫ f⟧ :=
+theorem pseudo_apply_mk'' {P Q : C} (f : P ⟶ Q) (a : Over P) : f ⟦a⟧ = ⟦a.Hom ≫ f⟧ :=
   rfl
-#align category_theory.abelian.pseudoelement.pseudo_apply_mk CategoryTheory.Abelian.Pseudoelement.pseudo_apply_mk
+#align category_theory.abelian.pseudoelement.pseudo_apply_mk CategoryTheory.Abelian.Pseudoelement.pseudo_apply_mk''
 
 /-- Applying a pseudoelement to a composition of morphisms is the same as composing
     with each morphism. Sadly, this is not a definitional equality, but at least it is

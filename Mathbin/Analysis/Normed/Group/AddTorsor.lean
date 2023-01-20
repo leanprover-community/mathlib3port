@@ -153,10 +153,10 @@ theorem vadd_ball (x : V) (y : P) (r : ℝ) : x +ᵥ Metric.ball y r = Metric.ba
 #align vadd_ball vadd_ball
 
 @[simp]
-theorem vadd_closed_ball (x : V) (y : P) (r : ℝ) :
+theorem vadd_closedBall (x : V) (y : P) (r : ℝ) :
     x +ᵥ Metric.closedBall y r = Metric.closedBall (x +ᵥ y) r :=
   (IsometryEquiv.constVadd P x).image_closed_ball y r
-#align vadd_closed_ball vadd_closed_ball
+#align vadd_closed_ball vadd_closedBall
 
 @[simp]
 theorem vadd_sphere (x : V) (y : P) (r : ℝ) : x +ᵥ Metric.sphere y r = Metric.sphere (x +ᵥ y) r :=
@@ -260,20 +260,20 @@ theorem LipschitzWith.vsub [PseudoEmetricSpace α] {f g : α → P} {Kf Kg : ℝ
     
 #align lipschitz_with.vsub LipschitzWith.vsub
 
-theorem uniform_continuous_vadd : UniformContinuous fun x : V × P => x.1 +ᵥ x.2 :=
+theorem uniformContinuous_vadd : UniformContinuous fun x : V × P => x.1 +ᵥ x.2 :=
   (LipschitzWith.prod_fst.vadd LipschitzWith.prod_snd).UniformContinuous
-#align uniform_continuous_vadd uniform_continuous_vadd
+#align uniform_continuous_vadd uniformContinuous_vadd
 
-theorem uniform_continuous_vsub : UniformContinuous fun x : P × P => x.1 -ᵥ x.2 :=
+theorem uniformContinuous_vsub : UniformContinuous fun x : P × P => x.1 -ᵥ x.2 :=
   (LipschitzWith.prod_fst.vsub LipschitzWith.prod_snd).UniformContinuous
-#align uniform_continuous_vsub uniform_continuous_vsub
+#align uniform_continuous_vsub uniformContinuous_vsub
 
-instance (priority := 100) NormedAddTorsor.to_has_continuous_vadd : HasContinuousVadd V P
-    where continuous_vadd := uniform_continuous_vadd.Continuous
-#align normed_add_torsor.to_has_continuous_vadd NormedAddTorsor.to_has_continuous_vadd
+instance (priority := 100) NormedAddTorsor.to_hasContinuousVadd : HasContinuousVadd V P
+    where continuous_vadd := uniformContinuous_vadd.Continuous
+#align normed_add_torsor.to_has_continuous_vadd NormedAddTorsor.to_hasContinuousVadd
 
 theorem continuous_vsub : Continuous fun x : P × P => x.1 -ᵥ x.2 :=
-  uniform_continuous_vsub.Continuous
+  uniformContinuous_vsub.Continuous
 #align continuous_vsub continuous_vsub
 
 theorem Filter.Tendsto.vsub {l : Filter α} {f g : α → P} {x y : P} (hf : Tendsto f l (𝓝 x))
@@ -306,11 +306,11 @@ section
 
 variable {R : Type _} [Ring R] [TopologicalSpace R] [Module R V] [HasContinuousSmul R V]
 
-theorem Filter.Tendsto.line_map {l : Filter α} {f₁ f₂ : α → P} {g : α → R} {p₁ p₂ : P} {c : R}
+theorem Filter.Tendsto.lineMap {l : Filter α} {f₁ f₂ : α → P} {g : α → R} {p₁ p₂ : P} {c : R}
     (h₁ : Tendsto f₁ l (𝓝 p₁)) (h₂ : Tendsto f₂ l (𝓝 p₂)) (hg : Tendsto g l (𝓝 c)) :
     Tendsto (fun x => AffineMap.lineMap (f₁ x) (f₂ x) (g x)) l (𝓝 <| AffineMap.lineMap p₁ p₂ c) :=
   (hg.smul (h₂.vsub h₁)).vadd h₁
-#align filter.tendsto.line_map Filter.Tendsto.line_map
+#align filter.tendsto.line_map Filter.Tendsto.lineMap
 
 theorem Filter.Tendsto.midpoint [Invertible (2 : R)] {l : Filter α} {f₁ f₂ : α → P} {p₁ p₂ : P}
     (h₁ : Tendsto f₁ l (𝓝 p₁)) (h₂ : Tendsto f₂ l (𝓝 p₂)) :

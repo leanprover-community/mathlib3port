@@ -135,7 +135,7 @@ Case conversion may be inaccurate. Consider using '#align units.pow_of_pow_eq_on
 @[simp, to_additive]
 theorem Units.pow_ofPowEqOne {x : M} {n : ℕ} (hx : x ^ n = 1) (hn : n ≠ 0) :
     Units.ofPowEqOne x n hx hn ^ n = 1 :=
-  Units.ext <| by rwa [Units.val_pow_eq_pow_val, Units.coe_of_pow_eq_one, Units.val_one]
+  Units.ext <| by rwa [Units.val_pow_eq_pow_val, Units.coe_ofPowEqOne, Units.val_one]
 #align units.pow_of_pow_eq_one Units.pow_ofPowEqOne
 #align add_units.smul_of_smul_eq_zero AddUnits.smul_ofSMulEqZero
 
@@ -977,7 +977,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : StrictOrderedSemiring.{u1} R] {a : R}, (LE.le.{u1} R (Preorder.toLE.{u1} R (PartialOrder.toPreorder.{u1} R (StrictOrderedSemiring.toPartialOrder.{u1} R _inst_1))) (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R (StrictOrderedSemiring.toSemiring.{u1} R _inst_1))))) a) -> (LE.le.{u1} R (Preorder.toLE.{u1} R (PartialOrder.toPreorder.{u1} R (StrictOrderedSemiring.toPartialOrder.{u1} R _inst_1))) a (OfNat.ofNat.{u1} R 1 (One.toOfNat1.{u1} R (Semiring.toOne.{u1} R (StrictOrderedSemiring.toSemiring.{u1} R _inst_1))))) -> (LE.le.{u1} R (Preorder.toLE.{u1} R (PartialOrder.toPreorder.{u1} R (StrictOrderedSemiring.toPartialOrder.{u1} R _inst_1))) (HPow.hPow.{u1, 0, u1} R Nat R (instHPow.{u1, 0} R Nat (Monoid.Pow.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (StrictOrderedSemiring.toSemiring.{u1} R _inst_1))))) a (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) a)
 Case conversion may be inaccurate. Consider using '#align sq_le sq_leₓ'. -/
 theorem sq_le (h₀ : 0 ≤ a) (h₁ : a ≤ 1) : a ^ 2 ≤ a :=
-  pow_le_of_le_one h₀ h₁ two_ne_zero
+  pow_le_of_le_one h₀ h₁ two_neZero
 #align sq_le sq_le
 
 end StrictOrderedSemiring
@@ -1116,8 +1116,14 @@ Case conversion may be inaccurate. Consider using '#align int.nat_abs_sq Int.nat
 theorem natAbs_sq (x : ℤ) : (x.natAbs ^ 2 : ℤ) = x ^ 2 := by rw [sq, Int.natAbs_mul_self', sq]
 #align int.nat_abs_sq Int.natAbs_sq
 
+/- warning: int.nat_abs_pow_two -> Int.natAbs_pow_two is a dubious translation:
+lean 3 declaration is
+  forall (x : Int), Eq.{1} Int (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.monoid)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (Int.natAbs x)) (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.monoid)) x (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))))
+but is expected to have type
+  forall (x : Int), Eq.{1} Int (Nat.cast.{0} Int Int.instNatCastInt (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) (Int.natAbs x) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))) (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.instMonoidInt)) x (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))
+Case conversion may be inaccurate. Consider using '#align int.nat_abs_pow_two Int.natAbs_pow_twoₓ'. -/
 alias nat_abs_sq ← nat_abs_pow_two
-#align int.nat_abs_pow_two Int.nat_abs_pow_two
+#align int.nat_abs_pow_two Int.natAbs_pow_two
 
 /- warning: int.abs_le_self_sq -> Int.natAbs_le_self_sq is a dubious translation:
 lean 3 declaration is

@@ -545,33 +545,33 @@ theorem isOpenPosMeasureOfMulLeftInvariantOfRegular [Regular μ] (h₀ : μ ≠ 
 #align measure_theory.is_open_pos_measure_of_add_left_invariant_of_regular MeasureTheory.is_open_pos_measure_of_add_left_invariant_of_regular
 
 @[to_additive]
-theorem null_iff_of_is_mul_left_invariant [Regular μ] {s : Set G} (hs : IsOpen s) :
+theorem null_iff_of_isMulLeftInvariant [Regular μ] {s : Set G} (hs : IsOpen s) :
     μ s = 0 ↔ s = ∅ ∨ μ = 0 := by
   by_cases h3μ : μ = 0; · simp [h3μ]
   · haveI := is_open_pos_measure_of_mul_left_invariant_of_regular h3μ
     simp only [h3μ, or_false_iff, hs.measure_eq_zero_iff μ]
-#align measure_theory.null_iff_of_is_mul_left_invariant MeasureTheory.null_iff_of_is_mul_left_invariant
+#align measure_theory.null_iff_of_is_mul_left_invariant MeasureTheory.null_iff_of_isMulLeftInvariant
 #align measure_theory.null_iff_of_is_add_left_invariant MeasureTheory.null_iff_of_is_add_left_invariant
 
 @[to_additive]
-theorem measure_ne_zero_iff_nonempty_of_is_mul_left_invariant [Regular μ] (hμ : μ ≠ 0) {s : Set G}
+theorem measure_ne_zero_iff_nonempty_of_isMulLeftInvariant [Regular μ] (hμ : μ ≠ 0) {s : Set G}
     (hs : IsOpen s) : μ s ≠ 0 ↔ s.Nonempty := by
   simpa [null_iff_of_is_mul_left_invariant hs, hμ] using nonempty_iff_ne_empty.symm
-#align measure_theory.measure_ne_zero_iff_nonempty_of_is_mul_left_invariant MeasureTheory.measure_ne_zero_iff_nonempty_of_is_mul_left_invariant
+#align measure_theory.measure_ne_zero_iff_nonempty_of_is_mul_left_invariant MeasureTheory.measure_ne_zero_iff_nonempty_of_isMulLeftInvariant
 #align measure_theory.measure_ne_zero_iff_nonempty_of_is_add_left_invariant MeasureTheory.measure_ne_zero_iff_nonempty_of_is_add_left_invariant
 
 @[to_additive]
-theorem measure_pos_iff_nonempty_of_is_mul_left_invariant [Regular μ] (h3μ : μ ≠ 0) {s : Set G}
+theorem measure_pos_iff_nonempty_of_isMulLeftInvariant [Regular μ] (h3μ : μ ≠ 0) {s : Set G}
     (hs : IsOpen s) : 0 < μ s ↔ s.Nonempty :=
-  pos_iff_ne_zero.trans <| measure_ne_zero_iff_nonempty_of_is_mul_left_invariant h3μ hs
-#align measure_theory.measure_pos_iff_nonempty_of_is_mul_left_invariant MeasureTheory.measure_pos_iff_nonempty_of_is_mul_left_invariant
+  pos_iff_ne_zero.trans <| measure_ne_zero_iff_nonempty_of_isMulLeftInvariant h3μ hs
+#align measure_theory.measure_pos_iff_nonempty_of_is_mul_left_invariant MeasureTheory.measure_pos_iff_nonempty_of_isMulLeftInvariant
 #align measure_theory.measure_pos_iff_nonempty_of_is_add_left_invariant MeasureTheory.measure_pos_iff_nonempty_of_is_add_left_invariant
 
 /-- If a left-invariant measure gives finite mass to a nonempty open set, then it gives finite mass
 to any compact set. -/
 @[to_additive
       "If a left-invariant measure gives finite mass to a nonempty open set, then it gives\nfinite mass to any compact set."]
-theorem measure_lt_top_of_is_compact_of_is_mul_left_invariant (U : Set G) (hU : IsOpen U)
+theorem measure_lt_top_of_isCompact_of_isMulLeftInvariant (U : Set G) (hU : IsOpen U)
     (h'U : U.Nonempty) (h : μ U ≠ ∞) {K : Set G} (hK : IsCompact K) : μ K < ∞ :=
   by
   rw [← hU.interior_eq] at h'U
@@ -583,18 +583,18 @@ theorem measure_lt_top_of_is_compact_of_is_mul_left_invariant (U : Set G) (hU : 
     _ = Finset.card t * μ U := by simp only [measure_preimage_mul, Finset.sum_const, nsmul_eq_mul]
     _ < ∞ := Ennreal.mul_lt_top (Ennreal.nat_ne_top _) h
     
-#align measure_theory.measure_lt_top_of_is_compact_of_is_mul_left_invariant MeasureTheory.measure_lt_top_of_is_compact_of_is_mul_left_invariant
+#align measure_theory.measure_lt_top_of_is_compact_of_is_mul_left_invariant MeasureTheory.measure_lt_top_of_isCompact_of_isMulLeftInvariant
 #align measure_theory.measure_lt_top_of_is_compact_of_is_add_left_invariant MeasureTheory.measure_lt_top_of_is_compact_of_is_add_left_invariant
 
 /-- If a left-invariant measure gives finite mass to a set with nonempty interior, then
 it gives finite mass to any compact set. -/
 @[to_additive
       "If a left-invariant measure gives finite mass to a set with nonempty interior, then\nit gives finite mass to any compact set."]
-theorem measure_lt_top_of_is_compact_of_is_mul_left_invariant' {U : Set G}
+theorem measure_lt_top_of_isCompact_of_is_mul_left_invariant' {U : Set G}
     (hU : (interior U).Nonempty) (h : μ U ≠ ∞) {K : Set G} (hK : IsCompact K) : μ K < ∞ :=
-  measure_lt_top_of_is_compact_of_is_mul_left_invariant (interior U) is_open_interior hU
+  measure_lt_top_of_isCompact_of_isMulLeftInvariant (interior U) isOpen_interior hU
     ((measure_mono interior_subset).trans_lt (lt_top_iff_ne_top.2 h)).Ne hK
-#align measure_theory.measure_lt_top_of_is_compact_of_is_mul_left_invariant' MeasureTheory.measure_lt_top_of_is_compact_of_is_mul_left_invariant'
+#align measure_theory.measure_lt_top_of_is_compact_of_is_mul_left_invariant' MeasureTheory.measure_lt_top_of_isCompact_of_is_mul_left_invariant'
 #align measure_theory.measure_lt_top_of_is_compact_of_is_add_left_invariant' MeasureTheory.measure_lt_top_of_is_compact_of_is_add_left_invariant'
 
 /-- In a noncompact locally compact group, a left-invariant measure which is positive
@@ -602,7 +602,7 @@ on open sets has infinite mass. -/
 @[simp,
   to_additive
       "In a noncompact locally compact additive group, a left-invariant measure which\nis positive on open sets has infinite mass."]
-theorem measure_univ_of_is_mul_left_invariant [LocallyCompactSpace G] [NoncompactSpace G]
+theorem measure_univ_of_isMulLeftInvariant [LocallyCompactSpace G] [NoncompactSpace G]
     (μ : Measure G) [IsOpenPosMeasure μ] [μ.IsMulLeftInvariant] : μ univ = ∞ :=
   by
   /- Consider a closed compact set `K` with nonempty interior. For any compact set `L`, one may
@@ -611,12 +611,12 @@ theorem measure_univ_of_is_mul_left_invariant [LocallyCompactSpace G] [Noncompac
     same positive mass, it follows that the space has infinite measure. -/
   obtain ⟨K, hK, Kclosed, Kint⟩ : ∃ K : Set G, IsCompact K ∧ IsClosed K ∧ (1 : G) ∈ interior K :=
     by
-    rcases local_is_compact_is_closed_nhds_of_group (is_open_univ.mem_nhds (mem_univ (1 : G))) with
+    rcases local_isCompact_isClosed_nhds_of_group (is_open_univ.mem_nhds (mem_univ (1 : G))) with
       ⟨K, hK⟩
     exact ⟨K, hK.1, hK.2.1, hK.2.2.2⟩
   have K_pos : 0 < μ K := measure_pos_of_nonempty_interior _ ⟨_, Kint⟩
   have A : ∀ L : Set G, IsCompact L → ∃ g : G, Disjoint L (g • K) := fun L hL =>
-    exists_disjoint_smul_of_is_compact hL hK
+    exists_disjoint_smul_of_isCompact hL hK
   choose! g hg using A
   set L : ℕ → Set G := fun n => ((fun T => T ∪ g T • K)^[n]) K with hL
   have Lcompact : ∀ n, IsCompact (L n) := by
@@ -652,7 +652,7 @@ theorem measure_univ_of_is_mul_left_invariant [LocallyCompactSpace G] [Noncompac
   simp only [Ennreal.top_mul, K_pos.ne', if_false] at N
   apply top_le_iff.1
   exact le_of_tendsto' N fun n => measure_mono (subset_univ _)
-#align measure_theory.measure_univ_of_is_mul_left_invariant MeasureTheory.measure_univ_of_is_mul_left_invariant
+#align measure_theory.measure_univ_of_is_mul_left_invariant MeasureTheory.measure_univ_of_isMulLeftInvariant
 #align measure_theory.measure_univ_of_is_add_left_invariant MeasureTheory.measure_univ_of_is_add_left_invariant
 
 end TopologicalGroup
@@ -735,7 +735,7 @@ theorem isHaarMeasureOfIsCompactNonemptyInterior [TopologicalGroup G] [BorelSpac
     [IsMulLeftInvariant μ] (K : Set G) (hK : IsCompact K) (h'K : (interior K).Nonempty)
     (h : μ K ≠ 0) (h' : μ K ≠ ∞) : IsHaarMeasure μ :=
   { lt_top_of_is_compact := fun L hL =>
-      measure_lt_top_of_is_compact_of_is_mul_left_invariant' h'K h' hL
+      measure_lt_top_of_isCompact_of_is_mul_left_invariant' h'K h' hL
     toIsOpenPosMeasure := isOpenPosMeasureOfMulLeftInvariantOfCompact K hK h }
 #align measure_theory.measure.is_haar_measure_of_is_compact_nonempty_interior MeasureTheory.Measure.isHaarMeasureOfIsCompactNonemptyInterior
 #align measure_theory.measure.is_add_haar_measure_of_is_compact_nonempty_interior MeasureTheory.Measure.is_add_haar_measure_of_is_compact_nonempty_interior
@@ -776,8 +776,8 @@ See Note [lower instance priority] -/
 instance (priority := 100) IsHaarMeasure.sigmaFinite [SigmaCompactSpace G] : SigmaFinite μ :=
   ⟨⟨{   Set := compactCovering G
         set_mem := fun n => mem_univ _
-        Finite := fun n => IsCompact.measure_lt_top <| is_compact_compact_covering G n
-        spanning := Union_compact_covering G }⟩⟩
+        Finite := fun n => IsCompact.measure_lt_top <| isCompact_compactCovering G n
+        spanning := unionᵢ_compactCovering G }⟩⟩
 #align measure_theory.measure.is_haar_measure.sigma_finite MeasureTheory.Measure.IsHaarMeasure.sigmaFinite
 #align measure_theory.measure.is_add_haar_measure.sigma_finite MeasureTheory.Measure.IsAddHaarMeasure.sigma_finite
 
@@ -802,7 +802,7 @@ instance (priority := 100) IsHaarMeasure.hasNoAtoms [TopologicalGroup G] [BorelS
     simp [le_bot_iff.1 H]
   obtain ⟨K, K_compact, K_int⟩ : ∃ K : Set G, IsCompact K ∧ (1 : G) ∈ interior K :=
     by
-    rcases exists_compact_subset is_open_univ (mem_univ (1 : G)) with ⟨K, hK⟩
+    rcases exists_compact_subset isOpen_univ (mem_univ (1 : G)) with ⟨K, hK⟩
     exact ⟨K, hK.1, hK.2.1⟩
   have K_inf : Set.Infinite K := infinite_of_mem_nhds (1 : G) (mem_interior_iff_mem_nhds.1 K_int)
   have μKlt : μ K ≠ ∞ := K_compact.measure_lt_top.ne

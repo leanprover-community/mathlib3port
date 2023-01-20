@@ -86,13 +86,13 @@ theorem find_correct {t : Rbnode α} {lt x} [DecidableRel lt] [IsStrictWeakOrder
         exact Iff.mpr (ih hs_hs₂) hc
 #align rbnode.find_correct Rbnode.find_correct
 
-theorem mem_of_mem_exact {lt} [IsIrrefl α lt] {x t} : MemExact x t → Mem lt x t :=
+theorem mem_of_memExact {lt} [IsIrrefl α lt] {x t} : MemExact x t → Mem lt x t :=
   by
   induction t <;> simp [mem_exact, mem, false_imp_iff] <;> intro h
   all_goals
     cases_type*or.1; simp [t_ih_lchild h]; simp [h, irrefl_of lt t_val]
     simp [t_ih_rchild h]
-#align rbnode.mem_of_mem_exact Rbnode.mem_of_mem_exact
+#align rbnode.mem_of_mem_exact Rbnode.mem_of_memExact
 
 theorem find_correct_exact {t : Rbnode α} {lt x} [DecidableRel lt] [IsStrictWeakOrder α lt] :
     ∀ {lo hi} (hs : IsSearchable lt t lo hi), MemExact x t ↔ find lt t x = some x :=

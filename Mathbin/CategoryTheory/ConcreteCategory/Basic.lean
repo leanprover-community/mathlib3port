@@ -182,17 +182,17 @@ theorem ConcreteCategory.epi_iff_surjective_of_preserves_pushout {X Y : C} (f : 
   ((forget C).epi_map_iff_epi _).symm.trans (epi_iff_surjective _)
 #align category_theory.concrete_category.epi_iff_surjective_of_preserves_pushout CategoryTheory.ConcreteCategory.epi_iff_surjective_of_preserves_pushout
 
-theorem ConcreteCategory.bijective_of_is_iso {X Y : C} (f : X ⟶ Y) [IsIso f] :
+theorem ConcreteCategory.bijective_of_isIso {X Y : C} (f : X ⟶ Y) [IsIso f] :
     Function.Bijective ((forget C).map f) :=
   by
   rw [← is_iso_iff_bijective]
   infer_instance
-#align category_theory.concrete_category.bijective_of_is_iso CategoryTheory.ConcreteCategory.bijective_of_is_iso
+#align category_theory.concrete_category.bijective_of_is_iso CategoryTheory.ConcreteCategory.bijective_of_isIso
 
 @[simp]
-theorem ConcreteCategory.has_coe_to_fun_Type {X Y : Type u} (f : X ⟶ Y) : coeFn f = f :=
+theorem ConcreteCategory.hasCoeToFun_Type {X Y : Type u} (f : X ⟶ Y) : coeFn f = f :=
   rfl
-#align category_theory.concrete_category.has_coe_to_fun_Type CategoryTheory.ConcreteCategory.has_coe_to_fun_Type
+#align category_theory.concrete_category.has_coe_to_fun_Type CategoryTheory.ConcreteCategory.hasCoeToFun_Type
 
 end
 
@@ -218,17 +218,17 @@ instance forget₂_faithful (C : Type v) (D : Type v') [Category C] [ConcreteCat
   HasForget₂.forget_comp.faithful_of_comp
 #align category_theory.forget₂_faithful CategoryTheory.forget₂_faithful
 
-instance forget₂_preserves_monomorphisms (C : Type v) (D : Type v') [Category C]
-    [ConcreteCategory C] [Category D] [ConcreteCategory D] [HasForget₂ C D]
-    [(forget C).PreservesMonomorphisms] : (forget₂ C D).PreservesMonomorphisms :=
+instance forget₂_preservesMonomorphisms (C : Type v) (D : Type v') [Category C] [ConcreteCategory C]
+    [Category D] [ConcreteCategory D] [HasForget₂ C D] [(forget C).PreservesMonomorphisms] :
+    (forget₂ C D).PreservesMonomorphisms :=
   have : (forget₂ C D ⋙ forget D).PreservesMonomorphisms :=
     by
     simp only [has_forget₂.forget_comp]
     infer_instance
   functor.preserves_monomorphisms_of_preserves_of_reflects _ (forget D)
-#align category_theory.forget₂_preserves_monomorphisms CategoryTheory.forget₂_preserves_monomorphisms
+#align category_theory.forget₂_preserves_monomorphisms CategoryTheory.forget₂_preservesMonomorphisms
 
-instance forget₂_preserves_epimorphisms (C : Type v) (D : Type v') [Category C] [ConcreteCategory C]
+instance forget₂_preservesEpimorphisms (C : Type v) (D : Type v') [Category C] [ConcreteCategory C]
     [Category D] [ConcreteCategory D] [HasForget₂ C D] [(forget C).PreservesEpimorphisms] :
     (forget₂ C D).PreservesEpimorphisms :=
   have : (forget₂ C D ⋙ forget D).PreservesEpimorphisms :=
@@ -236,7 +236,7 @@ instance forget₂_preserves_epimorphisms (C : Type v) (D : Type v') [Category C
     simp only [has_forget₂.forget_comp]
     infer_instance
   functor.preserves_epimorphisms_of_preserves_of_reflects _ (forget D)
-#align category_theory.forget₂_preserves_epimorphisms CategoryTheory.forget₂_preserves_epimorphisms
+#align category_theory.forget₂_preserves_epimorphisms CategoryTheory.forget₂_preservesEpimorphisms
 
 instance InducedCategory.concreteCategory {C : Type v} {D : Type v'} [Category D]
     [ConcreteCategory D] (f : C → D) : ConcreteCategory (InducedCategory D f)

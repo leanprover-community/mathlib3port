@@ -44,9 +44,9 @@ section LE
 
 variable [LE α] {s t : NonemptyInterval α}
 
-theorem to_prod_injective : Injective (toProd : NonemptyInterval α → α × α) := fun s t =>
+theorem toProd_injective : Injective (toProd : NonemptyInterval α → α × α) := fun s t =>
   (ext_iff _ _).2
-#align nonempty_interval.to_prod_injective NonemptyInterval.to_prod_injective
+#align nonempty_interval.to_prod_injective NonemptyInterval.toProd_injective
 
 /-- The injection that induces the order on intervals. -/
 def toDualProd : NonemptyInterval α → αᵒᵈ × α :=
@@ -54,19 +54,19 @@ def toDualProd : NonemptyInterval α → αᵒᵈ × α :=
 #align nonempty_interval.to_dual_prod NonemptyInterval.toDualProd
 
 @[simp]
-theorem to_dual_prod_apply (s : NonemptyInterval α) : s.toDualProd = (toDual s.fst, s.snd) :=
+theorem toDualProd_apply (s : NonemptyInterval α) : s.toDualProd = (toDual s.fst, s.snd) :=
   Prod.mk.eta.symm
-#align nonempty_interval.to_dual_prod_apply NonemptyInterval.to_dual_prod_apply
+#align nonempty_interval.to_dual_prod_apply NonemptyInterval.toDualProd_apply
 
-theorem to_dual_prod_injective : Injective (toDualProd : NonemptyInterval α → αᵒᵈ × α) :=
+theorem toDualProd_injective : Injective (toDualProd : NonemptyInterval α → αᵒᵈ × α) :=
   to_prod_injective
-#align nonempty_interval.to_dual_prod_injective NonemptyInterval.to_dual_prod_injective
+#align nonempty_interval.to_dual_prod_injective NonemptyInterval.toDualProd_injective
 
 instance [IsEmpty α] : IsEmpty (NonemptyInterval α) :=
   ⟨fun s => isEmptyElim s.fst⟩
 
 instance [Subsingleton α] : Subsingleton (NonemptyInterval α) :=
-  to_dual_prod_injective.Subsingleton
+  toDualProd_injective.Subsingleton
 
 instance : LE (NonemptyInterval α) :=
   ⟨fun s t => t.fst ≤ s.fst ∧ s.snd ≤ t.snd⟩
@@ -80,7 +80,7 @@ theorem le_def : s ≤ t ↔ t.fst ≤ s.fst ∧ s.snd ≤ t.snd :=
 def toDualProdHom : NonemptyInterval α ↪o αᵒᵈ × α
     where
   toFun := toDualProd
-  inj' := to_dual_prod_injective
+  inj' := toDualProd_injective
   map_rel_iff' _ _ := Iff.rfl
 #align nonempty_interval.to_dual_prod_hom NonemptyInterval.toDualProdHom
 
@@ -223,7 +223,7 @@ section PartialOrder
 variable [PartialOrder α] [PartialOrder β] {s t : NonemptyInterval α} {x : α × α} {a b : α}
 
 instance : PartialOrder (NonemptyInterval α) :=
-  PartialOrder.lift _ to_dual_prod_injective
+  PartialOrder.lift _ toDualProd_injective
 
 /-- Consider a nonempty interval `[a, b]` as the set `[a, b]`. -/
 def coeHom : NonemptyInterval α ↪o Set α :=
@@ -241,14 +241,14 @@ theorem coe_subset_coe : (s : Set α) ⊆ t ↔ s ≤ t :=
 #align nonempty_interval.coe_subset_coe NonemptyInterval.coe_subset_coe
 
 @[simp, norm_cast]
-theorem coe_ssubset_coe : (s : Set α) ⊂ t ↔ s < t :=
+theorem coe_sSubset_coe : (s : Set α) ⊂ t ↔ s < t :=
   (@coeHom α _).lt_iff_lt
-#align nonempty_interval.coe_ssubset_coe NonemptyInterval.coe_ssubset_coe
+#align nonempty_interval.coe_ssubset_coe NonemptyInterval.coe_sSubset_coe
 
 @[simp]
-theorem coe_coe_hom : (coeHom : NonemptyInterval α → Set α) = coe :=
+theorem coe_coeHom : (coeHom : NonemptyInterval α → Set α) = coe :=
   rfl
-#align nonempty_interval.coe_coe_hom NonemptyInterval.coe_coe_hom
+#align nonempty_interval.coe_coe_hom NonemptyInterval.coe_coeHom
 
 @[simp, norm_cast]
 theorem coe_pure (a : α) : (pure a : Set α) = {a} :=
@@ -283,7 +283,7 @@ instance : HasSup (NonemptyInterval α) :=
   ⟨fun s t => ⟨⟨s.fst ⊓ t.fst, s.snd ⊔ t.snd⟩, inf_le_left.trans <| s.fst_le_snd.trans le_sup_left⟩⟩
 
 instance : SemilatticeSup (NonemptyInterval α) :=
-  to_dual_prod_injective.SemilatticeSup _ fun _ _ => rfl
+  toDualProd_injective.SemilatticeSup _ fun _ _ => rfl
 
 @[simp]
 theorem fst_sup (s t : NonemptyInterval α) : (s ⊔ t).fst = s.fst ⊓ t.fst :=
@@ -456,9 +456,9 @@ theorem coe_subset_coe : (s : Set α) ⊆ t ↔ s ≤ t :=
 #align interval.coe_subset_coe Interval.coe_subset_coe
 
 @[simp, norm_cast]
-theorem coe_ssubset_coe : (s : Set α) ⊂ t ↔ s < t :=
+theorem coe_sSubset_coe : (s : Set α) ⊂ t ↔ s < t :=
   (@coeHom α _).lt_iff_lt
-#align interval.coe_ssubset_coe Interval.coe_ssubset_coe
+#align interval.coe_ssubset_coe Interval.coe_sSubset_coe
 
 @[simp, norm_cast]
 theorem coe_pure (a : α) : (pure a : Set α) = {a} :=
@@ -697,7 +697,7 @@ noncomputable instance [@DecidableRel α (· ≤ ·)] : CompleteLattice (Interva
                 s.fst_le_snd.trans (WithBot.coe_le_coe.1 <| ha _ hc).2 }
 
 @[simp, norm_cast]
-theorem coe_Inf (S : Set (Interval α)) : ↑(infₛ S) = ⋂ s ∈ S, (s : Set α) :=
+theorem coe_infₛ (S : Set (Interval α)) : ↑(infₛ S) = ⋂ s ∈ S, (s : Set α) :=
   by
   change coe (dite _ _ _) = _
   split_ifs
@@ -711,11 +711,11 @@ theorem coe_Inf (S : Set (Interval α)) : ↑(infₛ S) = ⋂ s ∈ S, (s : Set 
     rintro ⟨x, hx⟩
     rw [mem_Inter₂] at hx
     exact h fun s ha t hb => (hx _ ha).1.trans (hx _ hb).2
-#align interval.coe_Inf Interval.coe_Inf
+#align interval.coe_Inf Interval.coe_infₛ
 
 @[simp, norm_cast]
-theorem coe_infi (f : ι → Interval α) : ↑(⨅ i, f i) = ⋂ i, (f i : Set α) := by simp [infᵢ]
-#align interval.coe_infi Interval.coe_infi
+theorem coe_infᵢ (f : ι → Interval α) : ↑(⨅ i, f i) = ⋂ i, (f i : Set α) := by simp [infᵢ]
+#align interval.coe_infi Interval.coe_infᵢ
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/

@@ -50,13 +50,13 @@ theorem exists_clopen_of_cofiltered {U : Set C.x} (hU : IsClopen U) :
   -- First, we have the topological basis of the cofiltered limit obtained by pulling back
   -- clopen sets from the factors in the limit. By continuity, all such sets are again clopen.
   have hB :=
-    TopCat.is_topological_basis_cofiltered_limit.{u} (F ⋙ ProfiniteCat.toTop)
+    TopCat.isTopologicalBasis_cofiltered_limit.{u} (F ⋙ ProfiniteCat.toTop)
       (Profinite.to_Top.map_cone C) (is_limit_of_preserves _ hC) (fun j => { W | IsClopen W }) _
-      (fun i => is_clopen_univ) (fun i U1 U2 hU1 hU2 => hU1.inter hU2) _
+      (fun i => isClopen_univ) (fun i U1 U2 hU1 hU2 => hU1.inter hU2) _
   rotate_left
   · intro i
     change TopologicalSpace.IsTopologicalBasis { W : Set (F.obj i) | IsClopen W }
-    apply is_topological_basis_clopen
+    apply isTopologicalBasis_clopen
   · rintro i j f V (hV : IsClopen _)
     refine' ⟨hV.1.preimage _, hV.2.preimage _⟩ <;> continuity
   -- Using this, since `U` is open, we can write `U` as a union of clopen sets all of which
@@ -92,7 +92,7 @@ theorem exists_clopen_of_cofiltered {U : Set C.x} (hU : IsClopen U) :
   let W : S → Set (F.obj j0) := fun s => if hs : s ∈ G then F.map (f s hs) ⁻¹' V s else Set.univ
   -- Conclude, using the `j0` and the clopen set of `F.obj j0` obtained above.
   refine' ⟨j0, ⋃ (s : S) (hs : s ∈ G), W s, _, _⟩
-  · apply is_clopen_bUnion_finset
+  · apply isClopen_bUnion_finset
     intro s hs
     dsimp only [W]
     rw [dif_pos hs]
@@ -115,20 +115,20 @@ theorem exists_clopen_of_cofiltered {U : Set C.x} (hU : IsClopen U) :
       rwa [dif_pos hs, ← Set.preimage_comp, ← ProfiniteCat.coe_comp, C.w] at hx
 #align Profinite.exists_clopen_of_cofiltered ProfiniteCat.exists_clopen_of_cofiltered
 
-theorem exists_locally_constant_fin_two (f : LocallyConstant C.x (Fin 2)) :
+theorem exists_locallyConstant_fin_two (f : LocallyConstant C.x (Fin 2)) :
     ∃ (j : J)(g : LocallyConstant (F.obj j) (Fin 2)), f = g.comap (C.π.app _) :=
   by
   let U := f ⁻¹' {0}
   have hU : IsClopen U := f.is_locally_constant.is_clopen_fiber _
   obtain ⟨j, V, hV, h⟩ := exists_clopen_of_cofiltered C hC hU
   use j, LocallyConstant.ofClopen hV
-  apply LocallyConstant.locally_constant_eq_of_fiber_zero_eq
+  apply LocallyConstant.locallyConstant_eq_of_fiber_zero_eq
   rw [LocallyConstant.coe_comap _ _ (C.π.app j).Continuous]
   conv_rhs => rw [Set.preimage_comp]
-  rw [LocallyConstant.of_clopen_fiber_zero hV, ← h]
-#align Profinite.exists_locally_constant_fin_two ProfiniteCat.exists_locally_constant_fin_two
+  rw [LocallyConstant.ofClopen_fiber_zero hV, ← h]
+#align Profinite.exists_locally_constant_fin_two ProfiniteCat.exists_locallyConstant_fin_two
 
-theorem exists_locally_constant_finite_aux {α : Type _} [Finite α] (f : LocallyConstant C.x α) :
+theorem exists_locallyConstant_finite_aux {α : Type _} [Finite α] (f : LocallyConstant C.x α) :
     ∃ (j : J)(g : LocallyConstant (F.obj j) (α → Fin 2)),
       (f.map fun a b => if a = b then (0 : Fin 2) else 1) = g.comap (C.π.app _) :=
   by
@@ -168,9 +168,9 @@ theorem exists_locally_constant_finite_aux {α : Type _} [Finite α] (f : Locall
     change _ = (C.π.app j0 ≫ F.map (fs a)) x
     rw [C.w]
   all_goals continuity
-#align Profinite.exists_locally_constant_finite_aux ProfiniteCat.exists_locally_constant_finite_aux
+#align Profinite.exists_locally_constant_finite_aux ProfiniteCat.exists_locallyConstant_finite_aux
 
-theorem exists_locally_constant_finite_nonempty {α : Type _} [Finite α] [Nonempty α]
+theorem exists_locallyConstant_finite_nonempty {α : Type _} [Finite α] [Nonempty α]
     (f : LocallyConstant C.x α) :
     ∃ (j : J)(g : LocallyConstant (F.obj j) α), f = g.comap (C.π.app _) :=
   by
@@ -198,11 +198,11 @@ theorem exists_locally_constant_finite_nonempty {α : Type _} [Finite α] [Nonem
     split_ifs  at hh with hh1 hh1
     · exact hh1.symm
     · exact False.elim (bot_ne_top hh)
-#align Profinite.exists_locally_constant_finite_nonempty ProfiniteCat.exists_locally_constant_finite_nonempty
+#align Profinite.exists_locally_constant_finite_nonempty ProfiniteCat.exists_locallyConstant_finite_nonempty
 
 /-- Any locally constant function from a cofiltered limit of profinite sets factors through
 one of the components. -/
-theorem exists_locally_constant {α : Type _} (f : LocallyConstant C.x α) :
+theorem exists_locallyConstant {α : Type _} (f : LocallyConstant C.x α) :
     ∃ (j : J)(g : LocallyConstant (F.obj j) α), f = g.comap (C.π.app _) :=
   by
   let S := f.discrete_quotient
@@ -211,7 +211,7 @@ theorem exists_locally_constant {α : Type _} (f : LocallyConstant C.x α) :
   · suffices ∃ j, IsEmpty (F.obj j) by
       refine' this.imp fun j hj => _
       refine' ⟨⟨hj.elim, fun A => _⟩, _⟩
-      · convert is_open_empty
+      · convert isOpen_empty
         exact @Set.eq_empty_of_isEmpty _ hj _
       · ext x
         exact hj.elim' (C.π.app j x)
@@ -222,7 +222,7 @@ theorem exists_locally_constant {α : Type _} (f : LocallyConstant C.x α) :
       (inferInstance : T2Space (F.obj j))
     haveI : ∀ j : J, CompactSpace ((F ⋙ ProfiniteCat.toTop).obj j) := fun j =>
       (inferInstance : CompactSpace (F.obj j))
-    have cond := TopCat.nonempty_limit_cone_of_compact_t2_cofiltered_system (F ⋙ ProfiniteCat.toTop)
+    have cond := TopCat.nonempty_limitCone_of_compact_t2_cofiltered_system (F ⋙ ProfiniteCat.toTop)
     suffices : Nonempty C.X
     exact IsEmpty.false (S.proj this.some)
     let D := Profinite.to_Top.map_cone C
@@ -238,7 +238,7 @@ theorem exists_locally_constant {α : Type _} (f : LocallyConstant C.x α) :
     dsimp at hj⊢
     rw [← hj]
     rfl
-#align Profinite.exists_locally_constant ProfiniteCat.exists_locally_constant
+#align Profinite.exists_locally_constant ProfiniteCat.exists_locallyConstant
 
 end ProfiniteCat
 

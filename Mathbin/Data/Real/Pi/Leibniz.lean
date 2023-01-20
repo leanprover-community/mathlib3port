@@ -56,8 +56,8 @@ theorem tendsto_sum_pi_div_four :
     by
     convert
       (((tendsto_rpow_div_mul_add (-1) 2 1 two_ne_zero.symm).neg.const_add 1).add
-            tendsto_inv_at_top_zero).comp
-        tendsto_coe_nat_at_top_at_top
+            tendsto_inv_atTop_zero).comp
+        tendsto_coe_nat_atTop_atTop
     · ext k
       simp only [Nnreal.coe_nat_cast, Function.comp_apply, Nnreal.coe_rpow]
       rw [← rpow_mul (Nat.cast_nonneg k) (-1 / (2 * (k : ℝ) + 1)) (2 * (k : ℝ) + 1),
@@ -106,7 +106,7 @@ theorem tendsto_sum_pi_div_four :
       intro i hi
       convert
         HasDerivAt.const_mul ((-1 : ℝ) ^ i / (2 * i + 1))
-          (@HasDerivAt.pow _ _ _ _ _ (2 * i + 1) (has_deriv_at_id x))
+          (@HasDerivAt.pow _ _ _ _ _ (2 * i + 1) (hasDerivAt_id x))
       · ext y
         simp only [b, id.def]
         ring

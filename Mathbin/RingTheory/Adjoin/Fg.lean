@@ -111,7 +111,7 @@ theorem fg_bot : (⊥ : Subalgebra R A).Fg :=
   ⟨∅, Algebra.adjoin_empty R A⟩
 #align subalgebra.fg_bot Subalgebra.fg_bot
 
-theorem fg_of_fg_to_submodule {S : Subalgebra R A} : S.toSubmodule.Fg → S.Fg := fun ⟨t, ht⟩ =>
+theorem fg_of_fg_toSubmodule {S : Subalgebra R A} : S.toSubmodule.Fg → S.Fg := fun ⟨t, ht⟩ =>
   ⟨t,
     le_antisymm (Algebra.adjoin_le fun x hx => show x ∈ S.toSubmodule from ht ▸ subset_span hx) <|
       show S.toSubmodule ≤ (Algebra.adjoin R ↑t).toSubmodule from fun x hx =>
@@ -119,10 +119,10 @@ theorem fg_of_fg_to_submodule {S : Subalgebra R A} : S.toSubmodule.Fg → S.Fg :
           (show x ∈ span R ↑t by
             rw [ht]
             exact hx)⟩
-#align subalgebra.fg_of_fg_to_submodule Subalgebra.fg_of_fg_to_submodule
+#align subalgebra.fg_of_fg_to_submodule Subalgebra.fg_of_fg_toSubmodule
 
 theorem fg_of_noetherian [IsNoetherian R A] (S : Subalgebra R A) : S.Fg :=
-  fg_of_fg_to_submodule (IsNoetherian.noetherian S.toSubmodule)
+  fg_of_fg_toSubmodule (IsNoetherian.noetherian S.toSubmodule)
 #align subalgebra.fg_of_noetherian Subalgebra.fg_of_noetherian
 
 theorem fg_of_submodule_fg (h : (⊤ : Submodule R A).Fg) : (⊤ : Subalgebra R A).Fg :=
@@ -130,7 +130,7 @@ theorem fg_of_submodule_fg (h : (⊤ : Submodule R A).Fg) : (⊤ : Subalgebra R 
   ⟨s,
     toSubmodule.Injective <|
       by
-      rw [Algebra.top_to_submodule, eq_top_iff, ← hs, span_le]
+      rw [Algebra.top_toSubmodule, eq_top_iff, ← hs, span_le]
       exact Algebra.subset_adjoin⟩
 #align subalgebra.fg_of_submodule_fg Subalgebra.fg_of_submodule_fg
 
@@ -200,10 +200,10 @@ variable {R : Type u} {A : Type v} {B : Type w}
 variable [CommSemiring R] [CommRing A] [CommRing B] [Algebra R A] [Algebra R B]
 
 /-- The image of a Noetherian R-algebra under an R-algebra map is a Noetherian ring. -/
-instance AlgHom.is_noetherian_ring_range (f : A →ₐ[R] B) [IsNoetherianRing A] :
+instance AlgHom.isNoetherianRing_range (f : A →ₐ[R] B) [IsNoetherianRing A] :
     IsNoetherianRing f.range :=
-  is_noetherian_ring_range f.toRingHom
-#align alg_hom.is_noetherian_ring_range AlgHom.is_noetherian_ring_range
+  isNoetherianRing_range f.toRingHom
+#align alg_hom.is_noetherian_ring_range AlgHom.isNoetherianRing_range
 
 end Semiring
 
@@ -213,20 +213,20 @@ variable {R : Type u} {A : Type v} {B : Type w}
 
 variable [CommRing R] [CommRing A] [CommRing B] [Algebra R A] [Algebra R B]
 
-theorem is_noetherian_ring_of_fg {S : Subalgebra R A} (HS : S.Fg) [IsNoetherianRing R] :
+theorem isNoetherianRing_of_fg {S : Subalgebra R A} (HS : S.Fg) [IsNoetherianRing R] :
     IsNoetherianRing S :=
   let ⟨t, ht⟩ := HS
   ht ▸
     (Algebra.adjoin_eq_range R (↑t : Set A)).symm ▸ by
-      haveI : IsNoetherianRing (MvPolynomial (↑t : Set A) R) := MvPolynomial.is_noetherian_ring <;>
-          convert AlgHom.is_noetherian_ring_range _ <;>
+      haveI : IsNoetherianRing (MvPolynomial (↑t : Set A) R) := MvPolynomial.isNoetherianRing <;>
+          convert AlgHom.isNoetherianRing_range _ <;>
         infer_instance
-#align is_noetherian_ring_of_fg is_noetherian_ring_of_fg
+#align is_noetherian_ring_of_fg isNoetherianRing_of_fg
 
 theorem is_noetherian_subring_closure (s : Set R) (hs : s.Finite) :
     IsNoetherianRing (Subring.closure s) :=
   show IsNoetherianRing (subalgebraOfSubring (Subring.closure s)) from
-    Algebra.adjoin_int s ▸ is_noetherian_ring_of_fg (Subalgebra.fg_def.2 ⟨s, hs, rfl⟩)
+    Algebra.adjoin_int s ▸ isNoetherianRing_of_fg (Subalgebra.fg_def.2 ⟨s, hs, rfl⟩)
 #align is_noetherian_subring_closure is_noetherian_subring_closure
 
 end Ring

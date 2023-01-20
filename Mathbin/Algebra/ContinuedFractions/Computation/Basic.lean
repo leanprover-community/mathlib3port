@@ -114,10 +114,10 @@ instance hasCoeToIntFractPair : Coe (IntFractPair K) (IntFractPair β) :=
 #align generalized_continued_fraction.int_fract_pair.has_coe_to_int_fract_pair GeneralizedContinuedFraction.IntFractPair.hasCoeToIntFractPair
 
 @[simp, norm_cast]
-theorem coe_to_int_fract_pair {b : ℤ} {fr : K} :
+theorem coe_to_intFractPair {b : ℤ} {fr : K} :
     (↑(IntFractPair.mk b fr) : IntFractPair β) = IntFractPair.mk b (↑fr : β) :=
   rfl
-#align generalized_continued_fraction.int_fract_pair.coe_to_int_fract_pair GeneralizedContinuedFraction.IntFractPair.coe_to_int_fract_pair
+#align generalized_continued_fraction.int_fract_pair.coe_to_int_fract_pair GeneralizedContinuedFraction.IntFractPair.coe_to_intFractPair
 
 end coe
 
@@ -154,11 +154,11 @@ protected def stream (v : K) : Stream' <| Option (IntFractPair K)
 /-- Shows that `int_fract_pair.stream` has the sequence property, that is once we return `none` at
 position `n`, we also return `none` at `n + 1`.
 -/
-theorem stream_is_seq (v : K) : (IntFractPair.stream v).IsSeq :=
+theorem stream_isSeq (v : K) : (IntFractPair.stream v).IsSeq :=
   by
   intro _ hyp
   simp [int_fract_pair.stream, hyp]
-#align generalized_continued_fraction.int_fract_pair.stream_is_seq GeneralizedContinuedFraction.IntFractPair.stream_is_seq
+#align generalized_continued_fraction.int_fract_pair.stream_is_seq GeneralizedContinuedFraction.IntFractPair.stream_isSeq
 
 /--
 Uses `int_fract_pair.stream` to create a sequence with head (i.e. `seq1`) of integer and fractional
@@ -174,7 +174,7 @@ protected def seq1 (v : K) : Seq1 <| IntFractPair K :=
       Seq.tail-- take the tail of `int_fract_pair.stream` since the first element is already in the
       -- head create a sequence from `int_fract_pair.stream`
       ⟨IntFractPair.stream v,-- the underlying stream
-          @stream_is_seq
+          @stream_isSeq
           _ _ _ v⟩⟩
 #align generalized_continued_fraction.int_fract_pair.seq1 GeneralizedContinuedFraction.IntFractPair.seq1
 

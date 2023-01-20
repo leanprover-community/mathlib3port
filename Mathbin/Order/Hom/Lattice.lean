@@ -338,9 +338,9 @@ instance : CoeFun (SupHom α β) fun _ => α → β :=
   ⟨fun f => f.toFun⟩
 
 @[simp]
-theorem to_fun_eq_coe {f : SupHom α β} : f.toFun = (f : α → β) :=
+theorem toFun_eq_coe {f : SupHom α β} : f.toFun = (f : α → β) :=
   rfl
-#align sup_hom.to_fun_eq_coe SupHom.to_fun_eq_coe
+#align sup_hom.to_fun_eq_coe SupHom.toFun_eq_coe
 
 @[ext]
 theorem ext {f g : SupHom α β} (h : ∀ a, f a = g a) : f = g :=
@@ -530,9 +530,9 @@ instance : CoeFun (InfHom α β) fun _ => α → β :=
   ⟨fun f => f.toFun⟩
 
 @[simp]
-theorem to_fun_eq_coe {f : InfHom α β} : f.toFun = (f : α → β) :=
+theorem toFun_eq_coe {f : InfHom α β} : f.toFun = (f : α → β) :=
   rfl
-#align inf_hom.to_fun_eq_coe InfHom.to_fun_eq_coe
+#align inf_hom.to_fun_eq_coe InfHom.toFun_eq_coe
 
 @[ext]
 theorem ext {f g : InfHom α β} (h : ∀ a, f a = g a) : f = g :=
@@ -731,9 +731,9 @@ instance : CoeFun (SupBotHom α β) fun _ => α → β :=
   FunLike.hasCoeToFun
 
 @[simp]
-theorem to_fun_eq_coe {f : SupBotHom α β} : f.toFun = (f : α → β) :=
+theorem toFun_eq_coe {f : SupBotHom α β} : f.toFun = (f : α → β) :=
   rfl
-#align sup_bot_hom.to_fun_eq_coe SupBotHom.to_fun_eq_coe
+#align sup_bot_hom.to_fun_eq_coe SupBotHom.toFun_eq_coe
 
 @[ext]
 theorem ext {f g : SupBotHom α β} (h : ∀ a, f a = g a) : f = g :=
@@ -887,9 +887,9 @@ instance : CoeFun (InfTopHom α β) fun _ => α → β :=
   FunLike.hasCoeToFun
 
 @[simp]
-theorem to_fun_eq_coe {f : InfTopHom α β} : f.toFun = (f : α → β) :=
+theorem toFun_eq_coe {f : InfTopHom α β} : f.toFun = (f : α → β) :=
   rfl
-#align inf_top_hom.to_fun_eq_coe InfTopHom.to_fun_eq_coe
+#align inf_top_hom.to_fun_eq_coe InfTopHom.toFun_eq_coe
 
 @[ext]
 theorem ext {f g : InfTopHom α β} (h : ∀ a, f a = g a) : f = g :=
@@ -1036,9 +1036,9 @@ instance : CoeFun (LatticeHom α β) fun _ => α → β :=
   ⟨fun f => f.toFun⟩
 
 @[simp]
-theorem to_fun_eq_coe {f : LatticeHom α β} : f.toFun = (f : α → β) :=
+theorem toFun_eq_coe {f : LatticeHom α β} : f.toFun = (f : α → β) :=
   rfl
-#align lattice_hom.to_fun_eq_coe LatticeHom.to_fun_eq_coe
+#align lattice_hom.to_fun_eq_coe LatticeHom.toFun_eq_coe
 
 @[ext]
 theorem ext {f g : LatticeHom α β} (h : ∀ a, f a = g a) : f = g :=
@@ -1100,16 +1100,16 @@ theorem comp_apply (f : LatticeHom β γ) (g : LatticeHom α β) (a : α) : (f.c
 #align lattice_hom.comp_apply LatticeHom.comp_apply
 
 @[simp]
-theorem coe_comp_sup_hom (f : LatticeHom β γ) (g : LatticeHom α β) :
+theorem coe_comp_supHom (f : LatticeHom β γ) (g : LatticeHom α β) :
     (f.comp g : SupHom α γ) = (f : SupHom β γ).comp g :=
   rfl
-#align lattice_hom.coe_comp_sup_hom LatticeHom.coe_comp_sup_hom
+#align lattice_hom.coe_comp_sup_hom LatticeHom.coe_comp_supHom
 
 @[simp]
-theorem coe_comp_inf_hom (f : LatticeHom β γ) (g : LatticeHom α β) :
+theorem coe_comp_infHom (f : LatticeHom β γ) (g : LatticeHom α β) :
     (f.comp g : InfHom α γ) = (f : InfHom β γ).comp g :=
   rfl
-#align lattice_hom.coe_comp_inf_hom LatticeHom.coe_comp_inf_hom
+#align lattice_hom.coe_comp_inf_hom LatticeHom.coe_comp_infHom
 
 @[simp]
 theorem comp_assoc (f : LatticeHom γ δ) (g : LatticeHom β γ) (h : LatticeHom α β) :
@@ -1167,14 +1167,14 @@ def toLatticeHom (f : F) : LatticeHom α β :=
 #align order_hom_class.to_lattice_hom OrderHomClass.toLatticeHom
 
 @[simp]
-theorem coe_to_lattice_hom (f : F) : ⇑(toLatticeHom α β f) = f :=
+theorem coe_toLatticeHom (f : F) : ⇑(toLatticeHom α β f) = f :=
   rfl
-#align order_hom_class.coe_to_lattice_hom OrderHomClass.coe_to_lattice_hom
+#align order_hom_class.coe_to_lattice_hom OrderHomClass.coe_toLatticeHom
 
 @[simp]
-theorem to_lattice_hom_apply (f : F) (a : α) : toLatticeHom α β f a = f a :=
+theorem toLatticeHom_apply (f : F) (a : α) : toLatticeHom α β f a = f a :=
   rfl
-#align order_hom_class.to_lattice_hom_apply OrderHomClass.to_lattice_hom_apply
+#align order_hom_class.to_lattice_hom_apply OrderHomClass.toLatticeHom_apply
 
 end OrderHomClass
 
@@ -1216,9 +1216,9 @@ instance : CoeFun (BoundedLatticeHom α β) fun _ => α → β :=
   ⟨fun f => f.toFun⟩
 
 @[simp]
-theorem to_fun_eq_coe {f : BoundedLatticeHom α β} : f.toFun = (f : α → β) :=
+theorem toFun_eq_coe {f : BoundedLatticeHom α β} : f.toFun = (f : α → β) :=
   rfl
-#align bounded_lattice_hom.to_fun_eq_coe BoundedLatticeHom.to_fun_eq_coe
+#align bounded_lattice_hom.to_fun_eq_coe BoundedLatticeHom.toFun_eq_coe
 
 @[ext]
 theorem ext {f g : BoundedLatticeHom α β} (h : ∀ a, f a = g a) : f = g :=
@@ -1280,22 +1280,22 @@ theorem comp_apply (f : BoundedLatticeHom β γ) (g : BoundedLatticeHom α β) (
 #align bounded_lattice_hom.comp_apply BoundedLatticeHom.comp_apply
 
 @[simp]
-theorem coe_comp_lattice_hom (f : BoundedLatticeHom β γ) (g : BoundedLatticeHom α β) :
+theorem coe_comp_latticeHom (f : BoundedLatticeHom β γ) (g : BoundedLatticeHom α β) :
     (f.comp g : LatticeHom α γ) = (f : LatticeHom β γ).comp g :=
   rfl
-#align bounded_lattice_hom.coe_comp_lattice_hom BoundedLatticeHom.coe_comp_lattice_hom
+#align bounded_lattice_hom.coe_comp_lattice_hom BoundedLatticeHom.coe_comp_latticeHom
 
 @[simp]
-theorem coe_comp_sup_hom (f : BoundedLatticeHom β γ) (g : BoundedLatticeHom α β) :
+theorem coe_comp_supHom (f : BoundedLatticeHom β γ) (g : BoundedLatticeHom α β) :
     (f.comp g : SupHom α γ) = (f : SupHom β γ).comp g :=
   rfl
-#align bounded_lattice_hom.coe_comp_sup_hom BoundedLatticeHom.coe_comp_sup_hom
+#align bounded_lattice_hom.coe_comp_sup_hom BoundedLatticeHom.coe_comp_supHom
 
 @[simp]
-theorem coe_comp_inf_hom (f : BoundedLatticeHom β γ) (g : BoundedLatticeHom α β) :
+theorem coe_comp_infHom (f : BoundedLatticeHom β γ) (g : BoundedLatticeHom α β) :
     (f.comp g : InfHom α γ) = (f : InfHom β γ).comp g :=
   rfl
-#align bounded_lattice_hom.coe_comp_inf_hom BoundedLatticeHom.coe_comp_inf_hom
+#align bounded_lattice_hom.coe_comp_inf_hom BoundedLatticeHom.coe_comp_infHom
 
 @[simp]
 theorem comp_assoc (f : BoundedLatticeHom γ δ) (g : BoundedLatticeHom β γ)

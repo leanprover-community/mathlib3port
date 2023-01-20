@@ -34,7 +34,7 @@ variable (M : Type u)
 theorem finite_of_fg_torsion [AddCommGroup M] [Module ℤ M] [Module.Finite ℤ M]
     (hM : Module.IsTorsion ℤ M) : Finite M :=
   by
-  rcases Module.equiv_direct_sum_of_is_torsion hM with ⟨ι, _, p, h, e, ⟨l⟩⟩
+  rcases Module.equiv_directSum_of_isTorsion hM with ⟨ι, _, p, h, e, ⟨l⟩⟩
   haveI : ∀ i : ι, NeZero (p i ^ e i).natAbs := fun i =>
     ⟨Int.natAbs_ne_zero_of_ne_zero <| pow_ne_zero (e i) (h i).NeZero⟩
   haveI : ∀ i : ι, _root_.finite <| ℤ ⧸ Submodule.span ℤ {p i ^ e i} := fun i =>
@@ -55,14 +55,14 @@ variable [AddCommGroup G]
 /-- **Structure theorem of finitely generated abelian groups** : Any finitely generated abelian
 group is the product of a power of `ℤ` and a direct sum of some `zmod (p i ^ e i)` for some
 prime powers `p i ^ e i`. -/
-theorem equiv_free_prod_direct_sum_zmod [hG : AddGroup.Fg G] :
+theorem equiv_free_prod_directSum_zmod [hG : AddGroup.Fg G] :
     ∃ (n : ℕ)(ι : Type)(_ : Fintype ι)(p : ι → ℕ)(_ : ∀ i, Nat.Prime <| p i)(e : ι → ℕ),
       Nonempty <| G ≃+ (Fin n →₀ ℤ) × ⨁ i : ι, Zmod (p i ^ e i) :=
   by
   obtain ⟨n, ι, fι, p, hp, e, ⟨f⟩⟩ :=
-    @Module.equiv_free_prod_direct_sum _ _ _ _ _ _ _ (module.finite.iff_add_group_fg.mpr hG)
+    @Module.equiv_free_prod_directSum _ _ _ _ _ _ _ (module.finite.iff_add_group_fg.mpr hG)
   refine' ⟨n, ι, fι, fun i => (p i).natAbs, fun i => _, e, ⟨_⟩⟩
-  · rw [← Int.prime_iff_nat_abs_prime, ← GCDMonoid.irreducible_iff_prime]
+  · rw [← Int.prime_iff_natAbs_prime, ← GCDMonoid.irreducible_iff_prime]
     exact hp i
   exact
     f.to_add_equiv.trans
@@ -70,11 +70,11 @@ theorem equiv_free_prod_direct_sum_zmod [hG : AddGroup.Fg G] :
         Dfinsupp.mapRange.addEquiv fun i =>
           ((Int.quotientSpanEquivZmod _).trans <|
               Zmod.ringEquivCongr <| (p i).nat_abs_pow _).toAddEquiv)
-#align add_comm_group.equiv_free_prod_direct_sum_zmod AddCommGroup.equiv_free_prod_direct_sum_zmod
+#align add_comm_group.equiv_free_prod_direct_sum_zmod AddCommGroup.equiv_free_prod_directSum_zmod
 
 /-- **Structure theorem of finite abelian groups** : Any finite abelian group is a direct sum of
 some `zmod (p i ^ e i)` for some prime powers `p i ^ e i`. -/
-theorem equiv_direct_sum_zmod_of_fintype [Finite G] :
+theorem equiv_directSum_zmod_of_fintype [Finite G] :
     ∃ (ι : Type)(_ : Fintype ι)(p : ι → ℕ)(_ : ∀ i, Nat.Prime <| p i)(e : ι → ℕ),
       Nonempty <| G ≃+ ⨁ i : ι, Zmod (p i ^ e i) :=
   by
@@ -86,11 +86,11 @@ theorem equiv_direct_sum_zmod_of_fintype [Finite G] :
     exact
       (Fintype.ofSurjective (fun f : Fin n.succ →₀ ℤ => f 0) fun a =>
             ⟨Finsupp.single 0 a, Finsupp.single_eq_same⟩).False.elim
-#align add_comm_group.equiv_direct_sum_zmod_of_fintype AddCommGroup.equiv_direct_sum_zmod_of_fintype
+#align add_comm_group.equiv_direct_sum_zmod_of_fintype AddCommGroup.equiv_directSum_zmod_of_fintype
 
 theorem finite_of_fg_torsion [hG' : AddGroup.Fg G] (hG : AddMonoid.IsTorsion G) : Finite G :=
   @Module.finite_of_fg_torsion _ _ _ (Module.Finite.iff_add_group_fg.mpr hG') <|
-    AddMonoid.is_torsion_iff_is_torsion_int.mp hG
+    AddMonoid.isTorsion_iff_isTorsion_int.mp hG
 #align add_comm_group.finite_of_fg_torsion AddCommGroup.finite_of_fg_torsion
 
 end AddCommGroup

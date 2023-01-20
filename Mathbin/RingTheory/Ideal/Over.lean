@@ -146,7 +146,7 @@ theorem comap_eq_of_scalar_tower_quotient [Algebra R S] [Algebra (R ⧸ p) (S �
   ext x;
   constructor <;>
     rw [mem_comap, ← quotient.eq_zero_iff_mem, ← quotient.eq_zero_iff_mem, quotient.mk_algebra_map,
-      IsScalarTower.algebra_map_apply _ (R ⧸ p), quotient.algebra_map_eq]
+      IsScalarTower.algebraMap_apply _ (R ⧸ p), quotient.algebra_map_eq]
   · intro hx
     exact (injective_iff_map_eq_zero (algebraMap (R ⧸ p) (S ⧸ P))).mp h _ hx
   · intro hx
@@ -164,10 +164,10 @@ instance Quotient.algebraQuotientMapQuotient : Algebra (R ⧸ p) (S ⧸ map f p)
 #align ideal.quotient.algebra_quotient_map_quotient Ideal.Quotient.algebraQuotientMapQuotient
 
 @[simp]
-theorem Quotient.algebra_map_quotient_map_quotient (x : R) :
+theorem Quotient.algebraMap_quotient_map_quotient (x : R) :
     algebraMap (R ⧸ p) (S ⧸ map f p) (Quotient.mk p x) = Quotient.mk _ (f x) :=
   rfl
-#align ideal.quotient.algebra_map_quotient_map_quotient Ideal.Quotient.algebra_map_quotient_map_quotient
+#align ideal.quotient.algebra_map_quotient_map_quotient Ideal.Quotient.algebraMap_quotient_map_quotient
 
 @[simp]
 theorem Quotient.mk_smul_mk_quotient_map_quotient (x : R) (y : S) :
@@ -177,7 +177,7 @@ theorem Quotient.mk_smul_mk_quotient_map_quotient (x : R) (y : S) :
 
 instance Quotient.tower_quotient_map_quotient [Algebra R S] :
     IsScalarTower R (R ⧸ p) (S ⧸ map (algebraMap R S) p) :=
-  IsScalarTower.of_algebra_map_eq fun x => by
+  IsScalarTower.of_algebraMap_eq fun x => by
     rw [quotient.algebra_map_eq, quotient.algebra_map_quotient_map_quotient,
       quotient.mk_algebra_map]
 #align ideal.quotient.tower_quotient_map_quotient Ideal.Quotient.tower_quotient_map_quotient
@@ -298,7 +298,7 @@ theorem isMaximalComapOfIsIntegralOfIsMaximal (hRS : Algebra.IsIntegral R S) (I 
   refine' quotient.maximal_of_is_field _ _
   haveI : is_prime (I.comap (algebraMap R S)) := comap_is_prime _ _
   exact
-    is_field_of_is_integral_of_is_field (is_integral_quotient_of_is_integral hRS)
+    isField_of_isIntegral_of_isField (isIntegral_quotient_of_isIntegral hRS)
       algebra_map_quotient_injective (by rwa [← quotient.maximal_ideal_iff_is_field_quotient])
 #align ideal.is_maximal_comap_of_is_integral_of_is_maximal Ideal.isMaximalComapOfIsIntegralOfIsMaximal
 
@@ -316,12 +316,12 @@ variable [Algebra R A] [Algebra A S] [IsScalarTower R A S] [IsIntegralClosure A 
 theorem IsIntegralClosure.comap_lt_comap {I J : Ideal A} [I.IsPrime] (I_lt_J : I < J) :
     I.comap (algebraMap R A) < J.comap (algebraMap R A) :=
   let ⟨I_le_J, x, hxJ, hxI⟩ := SetLike.lt_iff_le_and_exists.mp I_lt_J
-  comap_lt_comap_of_integral_mem_sdiff I_le_J ⟨hxJ, hxI⟩ (IsIntegralClosure.is_integral R S x)
+  comap_lt_comap_of_integral_mem_sdiff I_le_J ⟨hxJ, hxI⟩ (IsIntegralClosure.isIntegral R S x)
 #align ideal.is_integral_closure.comap_lt_comap Ideal.IsIntegralClosure.comap_lt_comap
 
 theorem IsIntegralClosure.isMaximalOfIsMaximalComap (I : Ideal A) [I.IsPrime]
     (hI : IsMaximal (I.comap (algebraMap R A))) : IsMaximal I :=
-  isMaximalOfIsIntegralOfIsMaximalComap (fun x => IsIntegralClosure.is_integral R S x) I hI
+  isMaximalOfIsIntegralOfIsMaximalComap (fun x => IsIntegralClosure.isIntegral R S x) I hI
 #align ideal.is_integral_closure.is_maximal_of_is_maximal_comap Ideal.IsIntegralClosure.isMaximalOfIsMaximalComap
 
 variable [IsDomain A]
@@ -329,7 +329,7 @@ variable [IsDomain A]
 theorem IsIntegralClosure.comap_ne_bot [Nontrivial R] {I : Ideal A} (I_ne_bot : I ≠ ⊥) :
     I.comap (algebraMap R A) ≠ ⊥ :=
   let ⟨x, x_mem, x_ne_zero⟩ := I.ne_bot_iff.mp I_ne_bot
-  comap_ne_bot_of_integral_mem x_ne_zero x_mem (IsIntegralClosure.is_integral R S x)
+  comap_ne_bot_of_integral_mem x_ne_zero x_mem (IsIntegralClosure.isIntegral R S x)
 #align ideal.is_integral_closure.comap_ne_bot Ideal.IsIntegralClosure.comap_ne_bot
 
 theorem IsIntegralClosure.eq_bot_of_comap_eq_bot [Nontrivial R] {I : Ideal A} :
@@ -377,14 +377,14 @@ theorem exists_ideal_over_prime_of_is_integral' (H : Algebra.IsIntegral R S) (P 
   let Rₚ := Localization P.prime_compl
   let Sₚ := Localization (Algebra.algebraMapSubmonoid S P.prime_compl)
   letI : IsDomain (Localization (Algebra.algebraMapSubmonoid S P.prime_compl)) :=
-    IsLocalization.is_domain_localization (le_non_zero_divisors_of_no_zero_divisors hP0)
+    IsLocalization.isDomain_localization (le_nonZeroDivisors_of_noZeroDivisors hP0)
   obtain ⟨Qₚ : Ideal Sₚ, Qₚ_maximal⟩ := exists_maximal Sₚ
   haveI Qₚ_max : is_maximal (comap _ Qₚ) :=
     @is_maximal_comap_of_is_integral_of_is_maximal Rₚ _ Sₚ _ (localizationAlgebra P.prime_compl S)
-      (is_integral_localization H) _ Qₚ_maximal
+      (isIntegral_localization H) _ Qₚ_maximal
   refine' ⟨comap (algebraMap S Sₚ) Qₚ, ⟨comap_is_prime _ Qₚ, _⟩⟩
-  convert Localization.AtPrime.comap_maximal_ideal
-  rw [comap_comap, ← LocalRing.eq_maximal_ideal Qₚ_max, ← IsLocalization.map_comp _]
+  convert Localization.AtPrime.comap_maximalIdeal
+  rw [comap_comap, ← LocalRing.eq_maximalIdeal Qₚ_max, ← IsLocalization.map_comp _]
   rfl
 #align ideal.exists_ideal_over_prime_of_is_integral' Ideal.exists_ideal_over_prime_of_is_integral'
 
@@ -393,14 +393,14 @@ end
 /-- More general going-up theorem than `exists_ideal_over_prime_of_is_integral'`.
 TODO: Version of going-up theorem with arbitrary length chains (by induction on this)?
   Not sure how best to write an ascending chain in Lean -/
-theorem exists_ideal_over_prime_of_is_integral (H : Algebra.IsIntegral R S) (P : Ideal R)
-    [IsPrime P] (I : Ideal S) [IsPrime I] (hIP : I.comap (algebraMap R S) ≤ P) :
+theorem exists_ideal_over_prime_of_isIntegral (H : Algebra.IsIntegral R S) (P : Ideal R) [IsPrime P]
+    (I : Ideal S) [IsPrime I] (hIP : I.comap (algebraMap R S) ≤ P) :
     ∃ Q ≥ I, IsPrime Q ∧ Q.comap (algebraMap R S) = P :=
   by
   let quot := R ⧸ I.comap (algebraMap R S)
   obtain ⟨Q' : Ideal (S ⧸ I), ⟨Q'_prime, hQ'⟩⟩ :=
     @exists_ideal_over_prime_of_is_integral' Quot _ (S ⧸ I) _ Ideal.quotientAlgebra _
-      (is_integral_quotient_of_is_integral H) (map (Quotient.mk'' (I.comap (algebraMap R S))) P)
+      (isIntegral_quotient_of_isIntegral H) (map (Quotient.mk'' (I.comap (algebraMap R S))) P)
       (map_is_prime_of_surjective quotient.mk_surjective (by simp [hIP]))
       (le_trans (le_of_eq ((RingHom.injective_iff_ker_eq_bot _).1 algebra_map_quotient_injective))
         bot_le)
@@ -411,18 +411,18 @@ theorem exists_ideal_over_prime_of_is_integral (H : Algebra.IsIntegral R S) (P :
   · simpa [comap_comap]
   · refine' trans (comap_map_of_surjective _ quotient.mk_surjective _) (sup_eq_left.2 _)
     simpa [← RingHom.ker_eq_comap_bot] using hIP
-#align ideal.exists_ideal_over_prime_of_is_integral Ideal.exists_ideal_over_prime_of_is_integral
+#align ideal.exists_ideal_over_prime_of_is_integral Ideal.exists_ideal_over_prime_of_isIntegral
 
 /-- `comap (algebra_map R S)` is a surjection from the max spec of `S` to max spec of `R`.
 `hP : (algebra_map R S).ker ≤ P` is a slight generalization of the extension being injective -/
-theorem exists_ideal_over_maximal_of_is_integral [IsDomain S] (H : Algebra.IsIntegral R S)
+theorem exists_ideal_over_maximal_of_isIntegral [IsDomain S] (H : Algebra.IsIntegral R S)
     (P : Ideal R) [P_max : IsMaximal P] (hP : (algebraMap R S).ker ≤ P) :
     ∃ Q : Ideal S, IsMaximal Q ∧ Q.comap (algebraMap R S) = P :=
   by
   obtain ⟨Q, ⟨Q_prime, hQ⟩⟩ := exists_ideal_over_prime_of_is_integral' H P hP
   haveI : Q.is_prime := Q_prime
   exact ⟨Q, is_maximal_of_is_integral_of_is_maximal_comap H _ (hQ.symm ▸ P_max), hQ⟩
-#align ideal.exists_ideal_over_maximal_of_is_integral Ideal.exists_ideal_over_maximal_of_is_integral
+#align ideal.exists_ideal_over_maximal_of_is_integral Ideal.exists_ideal_over_maximal_of_isIntegral
 
 end IsDomain
 

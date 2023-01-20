@@ -273,60 +273,92 @@ def ascFactorial (n : ℕ) : ℕ → ℕ
 #align nat.asc_factorial Nat.ascFactorial
 -/
 
+/- warning: nat.asc_factorial_zero clashes with nat.ascFactorial_zero -> Nat.ascFactorial_zero
+Case conversion may be inaccurate. Consider using '#align nat.asc_factorial_zero Nat.ascFactorial_zeroₓ'. -/
+#print Nat.ascFactorial_zero /-
 @[simp]
-theorem asc_factorial_zero (n : ℕ) : n.ascFactorial 0 = 1 :=
+theorem ascFactorial_zero (n : ℕ) : n.ascFactorial 0 = 1 :=
   rfl
-#align nat.asc_factorial_zero Nat.asc_factorial_zero
+#align nat.asc_factorial_zero Nat.ascFactorial_zero
+-/
 
+/- warning: nat.zero_asc_factorial clashes with nat.zero_ascFactorial -> Nat.zero_ascFactorial
+Case conversion may be inaccurate. Consider using '#align nat.zero_asc_factorial Nat.zero_ascFactorialₓ'. -/
+#print Nat.zero_ascFactorial /-
 @[simp]
-theorem zero_asc_factorial (k : ℕ) : (0 : ℕ).ascFactorial k = k ! :=
+theorem zero_ascFactorial (k : ℕ) : (0 : ℕ).ascFactorial k = k ! :=
   by
   induction' k with t ht
   · rfl
   rw [asc_factorial, ht, zero_add, Nat.factorial_succ]
-#align nat.zero_asc_factorial Nat.zero_asc_factorial
+#align nat.zero_asc_factorial Nat.zero_ascFactorial
+-/
 
-theorem asc_factorial_succ {n k : ℕ} : n.ascFactorial k.succ = (n + k + 1) * n.ascFactorial k :=
+/- warning: nat.asc_factorial_succ clashes with nat.ascFactorial_succ -> Nat.ascFactorial_succ
+Case conversion may be inaccurate. Consider using '#align nat.asc_factorial_succ Nat.ascFactorial_succₓ'. -/
+#print Nat.ascFactorial_succ /-
+theorem ascFactorial_succ {n k : ℕ} : n.ascFactorial k.succ = (n + k + 1) * n.ascFactorial k :=
   rfl
-#align nat.asc_factorial_succ Nat.asc_factorial_succ
+#align nat.asc_factorial_succ Nat.ascFactorial_succ
+-/
 
-theorem succ_asc_factorial (n : ℕ) :
+/- warning: nat.succ_asc_factorial clashes with nat.succ_ascFactorial -> Nat.succ_ascFactorial
+Case conversion may be inaccurate. Consider using '#align nat.succ_asc_factorial Nat.succ_ascFactorialₓ'. -/
+#print Nat.succ_ascFactorial /-
+theorem succ_ascFactorial (n : ℕ) :
     ∀ k, (n + 1) * n.succ.ascFactorial k = (n + k + 1) * n.ascFactorial k
   | 0 => by rw [add_zero, asc_factorial_zero, asc_factorial_zero]
   | k + 1 => by
     rw [asc_factorial, mul_left_comm, succ_asc_factorial, asc_factorial, succ_add, ← add_assoc]
-#align nat.succ_asc_factorial Nat.succ_asc_factorial
+#align nat.succ_asc_factorial Nat.succ_ascFactorial
+-/
 
+/- warning: nat.factorial_mul_asc_factorial clashes with nat.factorial_mul_ascFactorial -> Nat.factorial_mul_ascFactorial
+Case conversion may be inaccurate. Consider using '#align nat.factorial_mul_asc_factorial Nat.factorial_mul_ascFactorialₓ'. -/
+#print Nat.factorial_mul_ascFactorial /-
 /-- `n.asc_factorial k = (n + k)! / n!` but without ℕ-division. See `nat.asc_factorial_eq_div` for
 the version with ℕ-division. -/
-theorem factorial_mul_asc_factorial (n : ℕ) : ∀ k, n ! * n.ascFactorial k = (n + k)!
+theorem factorial_mul_ascFactorial (n : ℕ) : ∀ k, n ! * n.ascFactorial k = (n + k)!
   | 0 => by rw [asc_factorial, add_zero, mul_one]
   | k + 1 => by
     rw [asc_factorial_succ, mul_left_comm, factorial_mul_asc_factorial, ← add_assoc, factorial]
-#align nat.factorial_mul_asc_factorial Nat.factorial_mul_asc_factorial
+#align nat.factorial_mul_asc_factorial Nat.factorial_mul_ascFactorial
+-/
 
+/- warning: nat.asc_factorial_eq_div clashes with nat.ascFactorial_eq_div -> Nat.ascFactorial_eq_div
+Case conversion may be inaccurate. Consider using '#align nat.asc_factorial_eq_div Nat.ascFactorial_eq_divₓ'. -/
+#print Nat.ascFactorial_eq_div /-
 /-- Avoid in favor of `nat.factorial_mul_asc_factorial` if you can. ℕ-division isn't worth it. -/
-theorem asc_factorial_eq_div (n k : ℕ) : n.ascFactorial k = (n + k)! / n ! :=
+theorem ascFactorial_eq_div (n k : ℕ) : n.ascFactorial k = (n + k)! / n ! :=
   by
   apply mul_left_cancel₀ n.factorial_ne_zero
   rw [factorial_mul_asc_factorial]
   exact (Nat.mul_div_cancel' <| factorial_dvd_factorial <| le.intro rfl).symm
-#align nat.asc_factorial_eq_div Nat.asc_factorial_eq_div
+#align nat.asc_factorial_eq_div Nat.ascFactorial_eq_div
+-/
 
-theorem asc_factorial_of_sub {n k : ℕ} (h : k < n) :
+/- warning: nat.asc_factorial_of_sub clashes with nat.ascFactorial_of_sub -> Nat.ascFactorial_of_sub
+Case conversion may be inaccurate. Consider using '#align nat.asc_factorial_of_sub Nat.ascFactorial_of_subₓ'. -/
+#print Nat.ascFactorial_of_sub /-
+theorem ascFactorial_of_sub {n k : ℕ} (h : k < n) :
     (n - k) * (n - k).ascFactorial k = (n - (k + 1)).ascFactorial (k + 1) :=
   by
   set t := n - k.succ with ht
   suffices h' : n - k = t.succ; · rw [← ht, h', succ_asc_factorial, asc_factorial_succ]
   rw [ht, succ_eq_add_one, ← tsub_tsub_assoc (succ_le_of_lt h) (succ_pos _), succ_sub_one]
-#align nat.asc_factorial_of_sub Nat.asc_factorial_of_sub
+#align nat.asc_factorial_of_sub Nat.ascFactorial_of_sub
+-/
 
-theorem pow_succ_le_asc_factorial (n : ℕ) : ∀ k : ℕ, (n + 1) ^ k ≤ n.ascFactorial k
+/- warning: nat.pow_succ_le_asc_factorial clashes with nat.pow_succ_le_ascFactorial -> Nat.pow_succ_le_ascFactorial
+Case conversion may be inaccurate. Consider using '#align nat.pow_succ_le_asc_factorial Nat.pow_succ_le_ascFactorialₓ'. -/
+#print Nat.pow_succ_le_ascFactorial /-
+theorem pow_succ_le_ascFactorial (n : ℕ) : ∀ k : ℕ, (n + 1) ^ k ≤ n.ascFactorial k
   | 0 => by rw [asc_factorial_zero, pow_zero]
   | k + 1 => by
     rw [pow_succ]
     exact Nat.mul_le_mul (Nat.add_le_add_right le_self_add _) (pow_succ_le_asc_factorial k)
-#align nat.pow_succ_le_asc_factorial Nat.pow_succ_le_asc_factorial
+#align nat.pow_succ_le_asc_factorial Nat.pow_succ_le_ascFactorial
+-/
 
 theorem pow_lt_asc_factorial' (n k : ℕ) : (n + 1) ^ (k + 2) < n.ascFactorial (k + 2) :=
   by
@@ -336,22 +368,33 @@ theorem pow_lt_asc_factorial' (n k : ℕ) : (n + 1) ^ (k + 2) < n.ascFactorial (
       (pow_succ_le_asc_factorial n _) (pow_pos succ_pos' _)
 #align nat.pow_lt_asc_factorial' Nat.pow_lt_asc_factorial'
 
-theorem pow_lt_asc_factorial (n : ℕ) : ∀ {k : ℕ}, 2 ≤ k → (n + 1) ^ k < n.ascFactorial k
+/- warning: nat.pow_lt_asc_factorial clashes with nat.pow_lt_ascFactorial -> Nat.pow_lt_ascFactorial
+Case conversion may be inaccurate. Consider using '#align nat.pow_lt_asc_factorial Nat.pow_lt_ascFactorialₓ'. -/
+#print Nat.pow_lt_ascFactorial /-
+theorem pow_lt_ascFactorial (n : ℕ) : ∀ {k : ℕ}, 2 ≤ k → (n + 1) ^ k < n.ascFactorial k
   | 0 => by rintro ⟨⟩
   | 1 => by rintro (_ | ⟨⟨⟩⟩)
   | k + 2 => fun _ => pow_lt_asc_factorial' n k
-#align nat.pow_lt_asc_factorial Nat.pow_lt_asc_factorial
+#align nat.pow_lt_asc_factorial Nat.pow_lt_ascFactorial
+-/
 
-theorem asc_factorial_le_pow_add (n : ℕ) : ∀ k : ℕ, n.ascFactorial k ≤ (n + k) ^ k
+/- warning: nat.asc_factorial_le_pow_add clashes with nat.ascFactorial_le_pow_add -> Nat.ascFactorial_le_pow_add
+Case conversion may be inaccurate. Consider using '#align nat.asc_factorial_le_pow_add Nat.ascFactorial_le_pow_addₓ'. -/
+#print Nat.ascFactorial_le_pow_add /-
+theorem ascFactorial_le_pow_add (n : ℕ) : ∀ k : ℕ, n.ascFactorial k ≤ (n + k) ^ k
   | 0 => by rw [asc_factorial_zero, pow_zero]
   | k + 1 => by
     rw [asc_factorial_succ, pow_succ]
     exact
       Nat.mul_le_mul_of_nonneg_left
         ((asc_factorial_le_pow_add k).trans (Nat.pow_le_pow_of_le_left (le_succ _) _))
-#align nat.asc_factorial_le_pow_add Nat.asc_factorial_le_pow_add
+#align nat.asc_factorial_le_pow_add Nat.ascFactorial_le_pow_add
+-/
 
-theorem asc_factorial_lt_pow_add (n : ℕ) : ∀ {k : ℕ}, 2 ≤ k → n.ascFactorial k < (n + k) ^ k
+/- warning: nat.asc_factorial_lt_pow_add clashes with nat.ascFactorial_lt_pow_add -> Nat.ascFactorial_lt_pow_add
+Case conversion may be inaccurate. Consider using '#align nat.asc_factorial_lt_pow_add Nat.ascFactorial_lt_pow_addₓ'. -/
+#print Nat.ascFactorial_lt_pow_add /-
+theorem ascFactorial_lt_pow_add (n : ℕ) : ∀ {k : ℕ}, 2 ≤ k → n.ascFactorial k < (n + k) ^ k
   | 0 => by rintro ⟨⟩
   | 1 => by rintro (_ | ⟨⟨⟩⟩)
   | k + 2 => fun _ => by
@@ -361,11 +404,16 @@ theorem asc_factorial_lt_pow_add (n : ℕ) : ∀ {k : ℕ}, 2 ≤ k → n.ascFac
         ((asc_factorial_le_pow_add n _).trans_lt
           (pow_lt_pow_of_lt_left (lt_add_one _) (succ_pos _)))
         (succ_pos _)
-#align nat.asc_factorial_lt_pow_add Nat.asc_factorial_lt_pow_add
+#align nat.asc_factorial_lt_pow_add Nat.ascFactorial_lt_pow_add
+-/
 
-theorem asc_factorial_pos (n k : ℕ) : 0 < n.ascFactorial k :=
-  (pow_pos (succ_pos n) k).trans_le (pow_succ_le_asc_factorial n k)
-#align nat.asc_factorial_pos Nat.asc_factorial_pos
+/- warning: nat.asc_factorial_pos clashes with nat.ascFactorial_pos -> Nat.ascFactorial_pos
+Case conversion may be inaccurate. Consider using '#align nat.asc_factorial_pos Nat.ascFactorial_posₓ'. -/
+#print Nat.ascFactorial_pos /-
+theorem ascFactorial_pos (n k : ℕ) : 0 < n.ascFactorial k :=
+  (pow_pos (succ_pos n) k).trans_le (pow_succ_le_ascFactorial n k)
+#align nat.asc_factorial_pos Nat.ascFactorial_pos
+-/
 
 end AscFactorial
 
@@ -383,70 +431,109 @@ def descFactorial (n : ℕ) : ℕ → ℕ
 #align nat.desc_factorial Nat.descFactorial
 -/
 
+/- warning: nat.desc_factorial_zero clashes with nat.descFactorial_zero -> Nat.descFactorial_zero
+Case conversion may be inaccurate. Consider using '#align nat.desc_factorial_zero Nat.descFactorial_zeroₓ'. -/
+#print Nat.descFactorial_zero /-
 @[simp]
-theorem desc_factorial_zero (n : ℕ) : n.descFactorial 0 = 1 :=
+theorem descFactorial_zero (n : ℕ) : n.descFactorial 0 = 1 :=
   rfl
-#align nat.desc_factorial_zero Nat.desc_factorial_zero
+#align nat.desc_factorial_zero Nat.descFactorial_zero
+-/
 
+/- warning: nat.desc_factorial_succ clashes with nat.descFactorial_succ -> Nat.descFactorial_succ
+Case conversion may be inaccurate. Consider using '#align nat.desc_factorial_succ Nat.descFactorial_succₓ'. -/
+#print Nat.descFactorial_succ /-
 @[simp]
-theorem desc_factorial_succ (n k : ℕ) : n.descFactorial k.succ = (n - k) * n.descFactorial k :=
+theorem descFactorial_succ (n k : ℕ) : n.descFactorial k.succ = (n - k) * n.descFactorial k :=
   rfl
-#align nat.desc_factorial_succ Nat.desc_factorial_succ
+#align nat.desc_factorial_succ Nat.descFactorial_succ
+-/
 
-theorem zero_desc_factorial_succ (k : ℕ) : (0 : ℕ).descFactorial k.succ = 0 := by
+/- warning: nat.zero_desc_factorial_succ clashes with nat.zero_descFactorial_succ -> Nat.zero_descFactorial_succ
+Case conversion may be inaccurate. Consider using '#align nat.zero_desc_factorial_succ Nat.zero_descFactorial_succₓ'. -/
+#print Nat.zero_descFactorial_succ /-
+theorem zero_descFactorial_succ (k : ℕ) : (0 : ℕ).descFactorial k.succ = 0 := by
   rw [desc_factorial_succ, zero_tsub, zero_mul]
-#align nat.zero_desc_factorial_succ Nat.zero_desc_factorial_succ
+#align nat.zero_desc_factorial_succ Nat.zero_descFactorial_succ
+-/
 
+/- warning: nat.desc_factorial_one clashes with nat.descFactorial_one -> Nat.descFactorial_one
+Case conversion may be inaccurate. Consider using '#align nat.desc_factorial_one Nat.descFactorial_oneₓ'. -/
+#print Nat.descFactorial_one /-
 @[simp]
-theorem desc_factorial_one (n : ℕ) : n.descFactorial 1 = n := by
+theorem descFactorial_one (n : ℕ) : n.descFactorial 1 = n := by
   rw [desc_factorial_succ, desc_factorial_zero, mul_one, tsub_zero]
-#align nat.desc_factorial_one Nat.desc_factorial_one
+#align nat.desc_factorial_one Nat.descFactorial_one
+-/
 
+/- warning: nat.succ_desc_factorial_succ clashes with nat.succ_descFactorial_succ -> Nat.succ_descFactorial_succ
+Case conversion may be inaccurate. Consider using '#align nat.succ_desc_factorial_succ Nat.succ_descFactorial_succₓ'. -/
+#print Nat.succ_descFactorial_succ /-
 @[simp]
-theorem succ_desc_factorial_succ (n : ℕ) :
+theorem succ_descFactorial_succ (n : ℕ) :
     ∀ k : ℕ, (n + 1).descFactorial (k + 1) = (n + 1) * n.descFactorial k
   | 0 => by rw [desc_factorial_zero, desc_factorial_one, mul_one]
   | succ k => by
     rw [desc_factorial_succ, succ_desc_factorial_succ, desc_factorial_succ, succ_sub_succ,
       mul_left_comm]
-#align nat.succ_desc_factorial_succ Nat.succ_desc_factorial_succ
+#align nat.succ_desc_factorial_succ Nat.succ_descFactorial_succ
+-/
 
-theorem succ_desc_factorial (n : ℕ) :
+/- warning: nat.succ_desc_factorial clashes with nat.succ_descFactorial -> Nat.succ_descFactorial
+Case conversion may be inaccurate. Consider using '#align nat.succ_desc_factorial Nat.succ_descFactorialₓ'. -/
+#print Nat.succ_descFactorial /-
+theorem succ_descFactorial (n : ℕ) :
     ∀ k, (n + 1 - k) * (n + 1).descFactorial k = (n + 1) * n.descFactorial k
   | 0 => by rw [tsub_zero, desc_factorial_zero, desc_factorial_zero]
   | k + 1 => by
     rw [desc_factorial, succ_desc_factorial, desc_factorial_succ, succ_sub_succ, mul_left_comm]
-#align nat.succ_desc_factorial Nat.succ_desc_factorial
+#align nat.succ_desc_factorial Nat.succ_descFactorial
+-/
 
-theorem desc_factorial_self : ∀ n : ℕ, n.descFactorial n = n !
+/- warning: nat.desc_factorial_self clashes with nat.descFactorial_self -> Nat.descFactorial_self
+Case conversion may be inaccurate. Consider using '#align nat.desc_factorial_self Nat.descFactorial_selfₓ'. -/
+#print Nat.descFactorial_self /-
+theorem descFactorial_self : ∀ n : ℕ, n.descFactorial n = n !
   | 0 => by rw [desc_factorial_zero, factorial_zero]
   | succ n => by rw [succ_desc_factorial_succ, desc_factorial_self, factorial_succ]
-#align nat.desc_factorial_self Nat.desc_factorial_self
+#align nat.desc_factorial_self Nat.descFactorial_self
+-/
 
+/- warning: nat.desc_factorial_eq_zero_iff_lt clashes with nat.descFactorial_eq_zero_iff_lt -> Nat.descFactorial_eq_zero_iff_lt
+Case conversion may be inaccurate. Consider using '#align nat.desc_factorial_eq_zero_iff_lt Nat.descFactorial_eq_zero_iff_ltₓ'. -/
+#print Nat.descFactorial_eq_zero_iff_lt /-
 @[simp]
-theorem desc_factorial_eq_zero_iff_lt {n : ℕ} : ∀ {k : ℕ}, n.descFactorial k = 0 ↔ n < k
+theorem descFactorial_eq_zero_iff_lt {n : ℕ} : ∀ {k : ℕ}, n.descFactorial k = 0 ↔ n < k
   | 0 => by simp only [desc_factorial_zero, Nat.one_ne_zero, Nat.not_lt_zero]
   | succ k =>
     by
     rw [desc_factorial_succ, mul_eq_zero, desc_factorial_eq_zero_iff_lt, lt_succ_iff,
       tsub_eq_zero_iff_le, lt_iff_le_and_ne, or_iff_left_iff_imp, and_imp]
     exact fun h _ => h
-#align nat.desc_factorial_eq_zero_iff_lt Nat.desc_factorial_eq_zero_iff_lt
+#align nat.desc_factorial_eq_zero_iff_lt Nat.descFactorial_eq_zero_iff_lt
+-/
 
 alias desc_factorial_eq_zero_iff_lt ↔ _ desc_factorial_of_lt
-#align nat.desc_factorial_of_lt Nat.desc_factorial_of_lt
+#align nat.desc_factorial_of_lt Nat.descFactorial_of_lt
 
-theorem add_desc_factorial_eq_asc_factorial (n : ℕ) :
+/- warning: nat.add_desc_factorial_eq_asc_factorial clashes with nat.add_descFactorial_eq_ascFactorial -> Nat.add_descFactorial_eq_ascFactorial
+Case conversion may be inaccurate. Consider using '#align nat.add_desc_factorial_eq_asc_factorial Nat.add_descFactorial_eq_ascFactorialₓ'. -/
+#print Nat.add_descFactorial_eq_ascFactorial /-
+theorem add_descFactorial_eq_ascFactorial (n : ℕ) :
     ∀ k : ℕ, (n + k).descFactorial k = n.ascFactorial k
   | 0 => by rw [asc_factorial_zero, desc_factorial_zero]
   | succ k => by
     rw [Nat.add_succ, succ_desc_factorial_succ, asc_factorial_succ,
       add_desc_factorial_eq_asc_factorial]
-#align nat.add_desc_factorial_eq_asc_factorial Nat.add_desc_factorial_eq_asc_factorial
+#align nat.add_desc_factorial_eq_asc_factorial Nat.add_descFactorial_eq_ascFactorial
+-/
 
+/- warning: nat.factorial_mul_desc_factorial clashes with nat.factorial_mul_descFactorial -> Nat.factorial_mul_descFactorial
+Case conversion may be inaccurate. Consider using '#align nat.factorial_mul_desc_factorial Nat.factorial_mul_descFactorialₓ'. -/
+#print Nat.factorial_mul_descFactorial /-
 /-- `n.desc_factorial k = n! / (n - k)!` but without ℕ-division. See `nat.desc_factorial_eq_div`
 for the version using ℕ-division. -/
-theorem factorial_mul_desc_factorial : ∀ {n k : ℕ}, k ≤ n → (n - k)! * n.descFactorial k = n !
+theorem factorial_mul_descFactorial : ∀ {n k : ℕ}, k ≤ n → (n - k)! * n.descFactorial k = n !
   | n, 0 => fun _ => by rw [desc_factorial_zero, mul_one, tsub_zero]
   | 0, succ k => fun h => by
     exfalso
@@ -454,17 +541,25 @@ theorem factorial_mul_desc_factorial : ∀ {n k : ℕ}, k ≤ n → (n - k)! * n
   | succ n, succ k => fun h => by
     rw [succ_desc_factorial_succ, succ_sub_succ, ← mul_assoc, mul_comm (n - k)!, mul_assoc,
       factorial_mul_desc_factorial (Nat.succ_le_succ_iff.1 h), factorial_succ]
-#align nat.factorial_mul_desc_factorial Nat.factorial_mul_desc_factorial
+#align nat.factorial_mul_desc_factorial Nat.factorial_mul_descFactorial
+-/
 
+/- warning: nat.desc_factorial_eq_div clashes with nat.descFactorial_eq_div -> Nat.descFactorial_eq_div
+Case conversion may be inaccurate. Consider using '#align nat.desc_factorial_eq_div Nat.descFactorial_eq_divₓ'. -/
+#print Nat.descFactorial_eq_div /-
 /-- Avoid in favor of `nat.factorial_mul_desc_factorial` if you can. ℕ-division isn't worth it. -/
-theorem desc_factorial_eq_div {n k : ℕ} (h : k ≤ n) : n.descFactorial k = n ! / (n - k)! :=
+theorem descFactorial_eq_div {n k : ℕ} (h : k ≤ n) : n.descFactorial k = n ! / (n - k)! :=
   by
   apply mul_left_cancel₀ (factorial_ne_zero (n - k))
   rw [factorial_mul_desc_factorial h]
   exact (Nat.mul_div_cancel' <| factorial_dvd_factorial <| Nat.sub_le n k).symm
-#align nat.desc_factorial_eq_div Nat.desc_factorial_eq_div
+#align nat.desc_factorial_eq_div Nat.descFactorial_eq_div
+-/
 
-theorem pow_sub_le_desc_factorial (n : ℕ) : ∀ k : ℕ, (n + 1 - k) ^ k ≤ n.descFactorial k
+/- warning: nat.pow_sub_le_desc_factorial clashes with nat.pow_sub_le_descFactorial -> Nat.pow_sub_le_descFactorial
+Case conversion may be inaccurate. Consider using '#align nat.pow_sub_le_desc_factorial Nat.pow_sub_le_descFactorialₓ'. -/
+#print Nat.pow_sub_le_descFactorial /-
+theorem pow_sub_le_descFactorial (n : ℕ) : ∀ k : ℕ, (n + 1 - k) ^ k ≤ n.descFactorial k
   | 0 => by rw [desc_factorial_zero, pow_zero]
   | k + 1 => by
     rw [desc_factorial_succ, pow_succ, succ_sub_succ]
@@ -472,7 +567,8 @@ theorem pow_sub_le_desc_factorial (n : ℕ) : ∀ k : ℕ, (n + 1 - k) ^ k ≤ n
       Nat.mul_le_mul_of_nonneg_left
         (le_trans (Nat.pow_le_pow_of_le_left (tsub_le_tsub_right (le_succ _) _) k)
           (pow_sub_le_desc_factorial k))
-#align nat.pow_sub_le_desc_factorial Nat.pow_sub_le_desc_factorial
+#align nat.pow_sub_le_desc_factorial Nat.pow_sub_le_descFactorial
+-/
 
 theorem pow_sub_lt_desc_factorial' {n : ℕ} :
     ∀ {k : ℕ}, k + 2 ≤ n → (n - (k + 1)) ^ (k + 2) < n.descFactorial (k + 2)
@@ -491,30 +587,42 @@ theorem pow_sub_lt_desc_factorial' {n : ℕ} :
     exact pow_sub_lt_desc_factorial' ((le_succ _).trans h)
 #align nat.pow_sub_lt_desc_factorial' Nat.pow_sub_lt_desc_factorial'
 
-theorem pow_sub_lt_desc_factorial {n : ℕ} :
+/- warning: nat.pow_sub_lt_desc_factorial clashes with nat.pow_sub_lt_descFactorial -> Nat.pow_sub_lt_descFactorial
+Case conversion may be inaccurate. Consider using '#align nat.pow_sub_lt_desc_factorial Nat.pow_sub_lt_descFactorialₓ'. -/
+#print Nat.pow_sub_lt_descFactorial /-
+theorem pow_sub_lt_descFactorial {n : ℕ} :
     ∀ {k : ℕ}, 2 ≤ k → k ≤ n → (n + 1 - k) ^ k < n.descFactorial k
   | 0 => by rintro ⟨⟩
   | 1 => by rintro (_ | ⟨⟨⟩⟩)
   | k + 2 => fun _ h => by
     rw [succ_sub_succ]
     exact pow_sub_lt_desc_factorial' h
-#align nat.pow_sub_lt_desc_factorial Nat.pow_sub_lt_desc_factorial
+#align nat.pow_sub_lt_desc_factorial Nat.pow_sub_lt_descFactorial
+-/
 
-theorem desc_factorial_le_pow (n : ℕ) : ∀ k : ℕ, n.descFactorial k ≤ n ^ k
+/- warning: nat.desc_factorial_le_pow clashes with nat.descFactorial_le_pow -> Nat.descFactorial_le_pow
+Case conversion may be inaccurate. Consider using '#align nat.desc_factorial_le_pow Nat.descFactorial_le_powₓ'. -/
+#print Nat.descFactorial_le_pow /-
+theorem descFactorial_le_pow (n : ℕ) : ∀ k : ℕ, n.descFactorial k ≤ n ^ k
   | 0 => by rw [desc_factorial_zero, pow_zero]
   | k + 1 => by
     rw [desc_factorial_succ, pow_succ]
     exact Nat.mul_le_mul (Nat.sub_le _ _) (desc_factorial_le_pow k)
-#align nat.desc_factorial_le_pow Nat.desc_factorial_le_pow
+#align nat.desc_factorial_le_pow Nat.descFactorial_le_pow
+-/
 
-theorem desc_factorial_lt_pow {n : ℕ} (hn : 1 ≤ n) : ∀ {k : ℕ}, 2 ≤ k → n.descFactorial k < n ^ k
+/- warning: nat.desc_factorial_lt_pow clashes with nat.descFactorial_lt_pow -> Nat.descFactorial_lt_pow
+Case conversion may be inaccurate. Consider using '#align nat.desc_factorial_lt_pow Nat.descFactorial_lt_powₓ'. -/
+#print Nat.descFactorial_lt_pow /-
+theorem descFactorial_lt_pow {n : ℕ} (hn : 1 ≤ n) : ∀ {k : ℕ}, 2 ≤ k → n.descFactorial k < n ^ k
   | 0 => by rintro ⟨⟩
   | 1 => by rintro (_ | ⟨⟨⟩⟩)
   | k + 2 => fun _ => by
     rw [desc_factorial_succ, pow_succ', mul_comm]
     exact
       Nat.mul_lt_mul' (desc_factorial_le_pow _ _) (tsub_lt_self hn k.zero_lt_succ) (pow_pos hn _)
-#align nat.desc_factorial_lt_pow Nat.desc_factorial_lt_pow
+#align nat.desc_factorial_lt_pow Nat.descFactorial_lt_pow
+-/
 
 end DescFactorial
 

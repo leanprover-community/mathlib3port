@@ -68,8 +68,8 @@ noncomputable def Ideal.quotientEquivPiSpan (I : Ideal S) (b : Basis ι R S) (hI
     by
     ext x
     simp only [Submodule.mem_map, Submodule.mem_pi, Ideal.mem_span_singleton, Set.mem_univ,
-      Submodule.restrict_scalars_mem, mem_I_iff, smul_eq_mul, forall_true_left, LinearEquiv.coe_coe,
-      Basis.equiv_fun_apply]
+      Submodule.restrictScalars_mem, mem_I_iff, smul_eq_mul, forall_true_left, LinearEquiv.coe_coe,
+      Basis.equivFun_apply]
     constructor
     · rintro ⟨y, hy, rfl⟩ i
       exact hy i
@@ -110,7 +110,7 @@ noncomputable def Ideal.fintypeQuotientOfFreeOfNeBot [Module.Free ℤ S] [Module
   let a := I.smithCoeffs b hI
   let e := I.quotientEquivPiZmod b hI
   haveI : ∀ i, NeZero (a i).natAbs := fun i =>
-    ⟨Int.natAbs_ne_zero_of_ne_zero (Ideal.smith_coeffs_ne_zero b I hI i)⟩
+    ⟨Int.natAbs_ne_zero_of_ne_zero (Ideal.smithCoeffs_ne_zero b I hI i)⟩
   Fintype.ofEquiv (∀ i, Zmod (a i).natAbs) e.symm
 #align ideal.fintype_quotient_of_free_of_ne_bot Ideal.fintypeQuotientOfFreeOfNeBot
 

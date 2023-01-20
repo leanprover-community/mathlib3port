@@ -60,9 +60,9 @@ instance {r : ℝ} : InvolutiveNeg (closedBall (0 : E) r)
   neg_neg x := Subtype.ext <| neg_neg x
 
 @[simp]
-theorem coe_neg_closed_ball {r : ℝ} (v : closedBall (0 : E) r) : ↑(-v) = (-v : E) :=
+theorem coe_neg_closedBall {r : ℝ} (v : closedBall (0 : E) r) : ↑(-v) = (-v : E) :=
   rfl
-#align coe_neg_closed_ball coe_neg_closed_ball
+#align coe_neg_closed_ball coe_neg_closedBall
 
 instance : HasContinuousNeg (closedBall (0 : E) r) :=
   ⟨continuous_neg.subtypeMap _⟩

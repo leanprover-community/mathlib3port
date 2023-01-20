@@ -70,9 +70,9 @@ def ofEquiv (E : σ ≃ τ) : Cfilter α σ → Cfilter α τ
 #align cfilter.of_equiv Cfilter.ofEquiv
 
 @[simp]
-theorem of_equiv_val (E : σ ≃ τ) (F : Cfilter α σ) (a : τ) : F.of_equiv E a = F (E.symm a) := by
+theorem ofEquiv_val (E : σ ≃ τ) (F : Cfilter α σ) (a : τ) : F.of_equiv E a = F (E.symm a) := by
   cases F <;> rfl
-#align cfilter.of_equiv_val Cfilter.of_equiv_val
+#align cfilter.of_equiv_val Cfilter.ofEquiv_val
 
 end
 
@@ -89,9 +89,9 @@ def toFilter (F : Cfilter (Set α) σ) : Filter α
 #align cfilter.to_filter Cfilter.toFilter
 
 @[simp]
-theorem mem_to_filter_sets (F : Cfilter (Set α) σ) {a : Set α} : a ∈ F.toFilter ↔ ∃ b, F b ⊆ a :=
+theorem mem_toFilter_sets (F : Cfilter (Set α) σ) {a : Set α} : a ∈ F.toFilter ↔ ∃ b, F b ⊆ a :=
   Iff.rfl
-#align cfilter.mem_to_filter_sets Cfilter.mem_to_filter_sets
+#align cfilter.mem_to_filter_sets Cfilter.mem_toFilter_sets
 
 end Cfilter
 
@@ -141,14 +141,14 @@ def ofEquiv {f : Filter α} (F : f.Realizer) (E : F.σ ≃ τ) : f.Realizer :=
 #align filter.realizer.of_equiv Filter.Realizer.ofEquiv
 
 @[simp]
-theorem of_equiv_σ {f : Filter α} (F : f.Realizer) (E : F.σ ≃ τ) : (F.of_equiv E).σ = τ :=
+theorem ofEquiv_σ {f : Filter α} (F : f.Realizer) (E : F.σ ≃ τ) : (F.of_equiv E).σ = τ :=
   rfl
-#align filter.realizer.of_equiv_σ Filter.Realizer.of_equiv_σ
+#align filter.realizer.of_equiv_σ Filter.Realizer.ofEquiv_σ
 
 @[simp]
-theorem of_equiv_F {f : Filter α} (F : f.Realizer) (E : F.σ ≃ τ) (s : τ) :
+theorem ofEquiv_f {f : Filter α} (F : f.Realizer) (E : F.σ ≃ τ) (s : τ) :
     (F.of_equiv E).f s = F.f (E.symm s) := by delta of_equiv <;> simp
-#align filter.realizer.of_equiv_F Filter.Realizer.of_equiv_F
+#align filter.realizer.of_equiv_F Filter.Realizer.ofEquiv_f
 
 /-- `unit` is a realizer for the principal filter -/
 protected def principal (s : Set α) : (principal s).Realizer :=
@@ -167,9 +167,9 @@ theorem principal_σ (s : Set α) : (Realizer.principal s).σ = Unit :=
 #align filter.realizer.principal_σ Filter.Realizer.principal_σ
 
 @[simp]
-theorem principal_F (s : Set α) (u : Unit) : (Realizer.principal s).f u = s :=
+theorem principal_f (s : Set α) (u : Unit) : (Realizer.principal s).f u = s :=
   rfl
-#align filter.realizer.principal_F Filter.Realizer.principal_F
+#align filter.realizer.principal_F Filter.Realizer.principal_f
 
 instance (s : Set α) : Inhabited (principal s).Realizer :=
   ⟨Realizer.principal s⟩
@@ -185,9 +185,9 @@ theorem top_σ : (@Realizer.top α).σ = Unit :=
 #align filter.realizer.top_σ Filter.Realizer.top_σ
 
 @[simp]
-theorem top_F (u : Unit) : (@Realizer.top α).f u = univ :=
+theorem top_f (u : Unit) : (@Realizer.top α).f u = univ :=
   rfl
-#align filter.realizer.top_F Filter.Realizer.top_F
+#align filter.realizer.top_F Filter.Realizer.top_f
 
 /-- `unit` is a realizer for the bottom filter -/
 protected def bot : (⊥ : Filter α).Realizer :=
@@ -200,9 +200,9 @@ theorem bot_σ : (@Realizer.bot α).σ = Unit :=
 #align filter.realizer.bot_σ Filter.Realizer.bot_σ
 
 @[simp]
-theorem bot_F (u : Unit) : (@Realizer.bot α).f u = ∅ :=
+theorem bot_f (u : Unit) : (@Realizer.bot α).f u = ∅ :=
   rfl
-#align filter.realizer.bot_F Filter.Realizer.bot_F
+#align filter.realizer.bot_F Filter.Realizer.bot_f
 
 /-- Construct a realizer for `map m f` given a realizer for `f` -/
 protected def map (m : α → β) {f : Filter α} (F : f.Realizer) : (map m f).Realizer :=
@@ -221,9 +221,9 @@ theorem map_σ (m : α → β) {f : Filter α} (F : f.Realizer) : (F.map m).σ =
 #align filter.realizer.map_σ Filter.Realizer.map_σ
 
 @[simp]
-theorem map_F (m : α → β) {f : Filter α} (F : f.Realizer) (s) : (F.map m).f s = image m (F.f s) :=
+theorem map_f (m : α → β) {f : Filter α} (F : f.Realizer) (s) : (F.map m).f s = image m (F.f s) :=
   rfl
-#align filter.realizer.map_F Filter.Realizer.map_F
+#align filter.realizer.map_F Filter.Realizer.map_f
 
 /-- Construct a realizer for `comap m f` given a realizer for `f` -/
 protected def comap (m : α → β) {f : Filter β} (F : f.Realizer) : (comap m f).Realizer :=

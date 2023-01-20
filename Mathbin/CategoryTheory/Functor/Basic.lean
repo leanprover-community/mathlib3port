@@ -174,14 +174,14 @@ theorem map_dite (F : C ⥤ D) {X Y : C} {P : Prop} [Decidable P] (f : P → (X 
 #align category_theory.functor.map_dite CategoryTheory.Functor.map_dite
 
 @[simp]
-theorem to_prefunctor_obj (F : C ⥤ D) (X : C) : F.toPrefunctor.obj X = F.obj X :=
+theorem toPrefunctor_obj (F : C ⥤ D) (X : C) : F.toPrefunctor.obj X = F.obj X :=
   rfl
-#align category_theory.functor.to_prefunctor_obj CategoryTheory.Functor.to_prefunctor_obj
+#align category_theory.functor.to_prefunctor_obj CategoryTheory.Functor.toPrefunctor_obj
 
 @[simp]
-theorem to_prefunctor_map (F : C ⥤ D) {X Y : C} (f : X ⟶ Y) : F.toPrefunctor.map f = F.map f :=
+theorem toPrefunctor_map (F : C ⥤ D) {X Y : C} (f : X ⟶ Y) : F.toPrefunctor.map f = F.map f :=
   rfl
-#align category_theory.functor.to_prefunctor_map CategoryTheory.Functor.to_prefunctor_map
+#align category_theory.functor.to_prefunctor_map CategoryTheory.Functor.toPrefunctor_map
 
 #print CategoryTheory.Functor.toPrefunctor_comp /-
 @[simp]

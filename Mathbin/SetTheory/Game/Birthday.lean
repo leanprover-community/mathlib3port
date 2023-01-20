@@ -55,19 +55,19 @@ theorem birthday_def (x : Pgame) :
   rfl
 #align pgame.birthday_def Pgame.birthday_def
 
-theorem birthday_move_left_lt {x : Pgame} (i : x.LeftMoves) :
-    (x.moveLeft i).birthday < x.birthday := by
+theorem birthday_moveLeft_lt {x : Pgame} (i : x.LeftMoves) : (x.moveLeft i).birthday < x.birthday :=
+  by
   cases x
   rw [birthday]
   exact lt_max_of_lt_left (lt_lsub _ i)
-#align pgame.birthday_move_left_lt Pgame.birthday_move_left_lt
+#align pgame.birthday_move_left_lt Pgame.birthday_moveLeft_lt
 
-theorem birthday_move_right_lt {x : Pgame} (i : x.RightMoves) :
+theorem birthday_moveRight_lt {x : Pgame} (i : x.RightMoves) :
     (x.moveRight i).birthday < x.birthday := by
   cases x
   rw [birthday]
   exact lt_max_of_lt_right (lt_lsub _ i)
-#align pgame.birthday_move_right_lt Pgame.birthday_move_right_lt
+#align pgame.birthday_move_right_lt Pgame.birthday_moveRight_lt
 
 theorem lt_birthday_iff {x : Pgame} {o : Ordinal} :
     o < x.birthday ↔
@@ -109,7 +109,7 @@ theorem birthday_eq_zero {x : Pgame} :
 #align pgame.birthday_eq_zero Pgame.birthday_eq_zero
 
 @[simp]
-theorem birthday_zero : birthday 0 = 0 := by simp [PEmpty.is_empty]
+theorem birthday_zero : birthday 0 = 0 := by simp [PEmpty.isEmpty]
 #align pgame.birthday_zero Pgame.birthday_zero
 
 @[simp]
@@ -133,7 +133,7 @@ theorem neg_birthday : ∀ x : Pgame, (-x).birthday = x.birthday
 #align pgame.neg_birthday Pgame.neg_birthday
 
 @[simp]
-theorem to_pgame_birthday (o : Ordinal) : o.toPgame.birthday = o :=
+theorem toPgame_birthday (o : Ordinal) : o.toPgame.birthday = o :=
   by
   induction' o using Ordinal.induction with o IH
   rw [to_pgame_def, Pgame.birthday]
@@ -141,13 +141,13 @@ theorem to_pgame_birthday (o : Ordinal) : o.toPgame.birthday = o :=
   nth_rw 1 [← lsub_typein o]
   congr with x
   exact IH _ (typein_lt_self x)
-#align pgame.to_pgame_birthday Pgame.to_pgame_birthday
+#align pgame.to_pgame_birthday Pgame.toPgame_birthday
 
 theorem le_birthday : ∀ x : Pgame, x ≤ x.birthday.toPgame
   | ⟨xl, _, xL, _⟩ =>
     le_def.2
       ⟨fun i =>
-        Or.inl ⟨toLeftMovesToPgame ⟨_, birthday_move_left_lt i⟩, by simp [le_birthday (xL i)]⟩,
+        Or.inl ⟨toLeftMovesToPgame ⟨_, birthday_moveLeft_lt i⟩, by simp [le_birthday (xL i)]⟩,
         isEmptyElim⟩
 #align pgame.le_birthday Pgame.le_birthday
 

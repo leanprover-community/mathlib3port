@@ -55,20 +55,20 @@ noncomputable def LDL.lowerInv : Matrix n n 𝕜 :=
     Pi.basisFun 𝕜 n k
 #align LDL.lower_inv LDL.lowerInv
 
-theorem LDL.lower_inv_eq_gram_schmidt_basis :
+theorem LDL.lowerInv_eq_gramSchmidtBasis :
     LDL.lowerInv hS =
       ((Pi.basisFun 𝕜 n).toMatrix
           (@gramSchmidtBasis 𝕜 (n → 𝕜) _ (InnerProductSpace.ofMatrix hS.transpose) n _ _ _
             (Pi.basisFun 𝕜 n)))ᵀ :=
   by
   ext (i j)
-  rw [LDL.lowerInv, Basis.CoePiBasisFun.to_matrix_eq_transpose, coe_gram_schmidt_basis]
+  rw [LDL.lowerInv, Basis.CoePiBasisFun.toMatrix_eq_transpose, coe_gramSchmidtBasis]
   rfl
-#align LDL.lower_inv_eq_gram_schmidt_basis LDL.lower_inv_eq_gram_schmidt_basis
+#align LDL.lower_inv_eq_gram_schmidt_basis LDL.lowerInv_eq_gramSchmidtBasis
 
 noncomputable instance LDL.invertibleLowerInv : Invertible (LDL.lowerInv hS) :=
   by
-  rw [LDL.lower_inv_eq_gram_schmidt_basis]
+  rw [LDL.lowerInv_eq_gramSchmidtBasis]
   haveI :=
     Basis.invertibleToMatrix (Pi.basisFun 𝕜 n)
       (@gramSchmidtBasis 𝕜 (n → 𝕜) _ (inner_product_space.of_matrix hS.transpose) n _ _ _
@@ -76,14 +76,14 @@ noncomputable instance LDL.invertibleLowerInv : Invertible (LDL.lowerInv hS) :=
   infer_instance
 #align LDL.invertible_lower_inv LDL.invertibleLowerInv
 
-theorem LDL.lower_inv_orthogonal {i j : n} (h₀ : i ≠ j) :
+theorem LDL.lowerInv_orthogonal {i j : n} (h₀ : i ≠ j) :
     ⟪LDL.lowerInv hS i, Sᵀ.mulVec (LDL.lowerInv hS j)⟫ = 0 :=
   show
     @inner 𝕜 (n → 𝕜) (InnerProductSpace.ofMatrix hS.transpose).toHasInner (LDL.lowerInv hS i)
         (LDL.lowerInv hS j) =
       0
-    by apply gram_schmidt_orthogonal _ _ h₀
-#align LDL.lower_inv_orthogonal LDL.lower_inv_orthogonal
+    by apply gramSchmidt_orthogonal _ _ h₀
+#align LDL.lower_inv_orthogonal LDL.lowerInv_orthogonal
 
 /-- The entries of the diagonal matrix `D` of the LDL decomposition. -/
 noncomputable def LDL.diagEntries : n → 𝕜 := fun i =>
@@ -95,16 +95,16 @@ noncomputable def LDL.diag : Matrix n n 𝕜 :=
   Matrix.diagonal (LDL.diagEntries hS)
 #align LDL.diag LDL.diag
 
-theorem LDL.lower_inv_triangular {i j : n} (hij : i < j) : LDL.lowerInv hS i j = 0 := by
+theorem LDL.lowerInv_triangular {i j : n} (hij : i < j) : LDL.lowerInv hS i j = 0 := by
   rw [←
-    @gram_schmidt_triangular 𝕜 (n → 𝕜) _ (inner_product_space.of_matrix hS.transpose) n _ _ _ i j
-      hij (Pi.basisFun 𝕜 n),
-    Pi.basis_fun_repr, LDL.lowerInv]
-#align LDL.lower_inv_triangular LDL.lower_inv_triangular
+    @gramSchmidt_triangular 𝕜 (n → 𝕜) _ (inner_product_space.of_matrix hS.transpose) n _ _ _ i j hij
+      (Pi.basisFun 𝕜 n),
+    Pi.basisFun_repr, LDL.lowerInv]
+#align LDL.lower_inv_triangular LDL.lowerInv_triangular
 
 /-- Inverse statement of **LDL decomposition**: we can conjugate a positive definite matrix
 by some lower triangular matrix and get a diagonal matrix. -/
-theorem LDL.diag_eq_lower_inv_conj : LDL.diag hS = LDL.lowerInv hS ⬝ S ⬝ (LDL.lowerInv hS)ᴴ :=
+theorem LDL.diag_eq_lowerInv_conj : LDL.diag hS = LDL.lowerInv hS ⬝ S ⬝ (LDL.lowerInv hS)ᴴ :=
   by
   ext (i j)
   by_cases hij : i = j
@@ -113,11 +113,11 @@ theorem LDL.diag_eq_lower_inv_conj : LDL.diag hS = LDL.lowerInv hS ⬝ S ⬝ (LD
       Pi.star_apply, IsROrC.star_def, starRingEnd_self_apply]
   · simp only [LDL.diag, hij, diagonal_apply_ne, Ne.def, not_false_iff, mul_mul_apply]
     rw [conj_transpose, transpose_map, transpose_transpose, dot_product_mul_vec,
-      (LDL.lower_inv_orthogonal hS fun h : j = i => hij h.symm).symm, ← inner_conj_sym,
-      mul_vec_transpose, EuclideanSpace.inner_eq_star_dot_product, ← IsROrC.star_def, ←
+      (LDL.lowerInv_orthogonal hS fun h : j = i => hij h.symm).symm, ← inner_conj_sym,
+      mul_vec_transpose, EuclideanSpace.inner_eq_star_dotProduct, ← IsROrC.star_def, ←
       star_dot_product_star, dot_product_comm, star_star]
     rfl
-#align LDL.diag_eq_lower_inv_conj LDL.diag_eq_lower_inv_conj
+#align LDL.diag_eq_lower_inv_conj LDL.diag_eq_lowerInv_conj
 
 /-- The lower triangular matrix `L` of the LDL decomposition. -/
 noncomputable def LDL.lower :=
@@ -131,6 +131,6 @@ theorem LDL.lower_conj_diag : LDL.lower hS ⬝ LDL.diag hS ⬝ (LDL.lower hS)ᴴ
   rw [LDL.lower, conj_transpose_nonsing_inv, Matrix.mul_assoc,
     Matrix.inv_mul_eq_iff_eq_mul_of_invertible (LDL.lowerInv hS),
     Matrix.mul_inv_eq_iff_eq_mul_of_invertible]
-  exact LDL.diag_eq_lower_inv_conj hS
+  exact LDL.diag_eq_lowerInv_conj hS
 #align LDL.lower_conj_diag LDL.lower_conj_diag
 

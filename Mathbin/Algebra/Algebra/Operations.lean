@@ -56,9 +56,9 @@ namespace SubMulAction
 
 variable {R : Type u} {A : Type v} [CommSemiring R] [Semiring A] [Algebra R A]
 
-theorem algebra_map_mem (r : R) : algebraMap R A r ∈ (1 : SubMulAction R A) :=
-  ⟨r, (algebra_map_eq_smul_one r).symm⟩
-#align sub_mul_action.algebra_map_mem SubMulAction.algebra_map_mem
+theorem algebraMap_mem (r : R) : algebraMap R A r ∈ (1 : SubMulAction R A) :=
+  ⟨r, (algebraMap_eq_smul_one r).symm⟩
+#align sub_mul_action.algebra_map_mem SubMulAction.algebraMap_mem
 
 theorem mem_one' {x : A} : x ∈ (1 : SubMulAction R A) ↔ ∃ y, algebraMap R A y = x :=
   exists_congr fun r => by rw [algebra_map_eq_smul_one]
@@ -86,15 +86,15 @@ theorem one_eq_range : (1 : Submodule R A) = (Algebra.linearMap R A).range :=
   rfl
 #align submodule.one_eq_range Submodule.one_eq_range
 
-theorem le_one_to_add_submonoid : 1 ≤ (1 : Submodule R A).toAddSubmonoid :=
+theorem le_one_toAddSubmonoid : 1 ≤ (1 : Submodule R A).toAddSubmonoid :=
   by
   rintro x ⟨n, rfl⟩
   exact ⟨n, map_nat_cast (algebraMap R A) n⟩
-#align submodule.le_one_to_add_submonoid Submodule.le_one_to_add_submonoid
+#align submodule.le_one_to_add_submonoid Submodule.le_one_toAddSubmonoid
 
-theorem algebra_map_mem (r : R) : algebraMap R A r ∈ (1 : Submodule R A) :=
+theorem algebraMap_mem (r : R) : algebraMap R A r ∈ (1 : Submodule R A) :=
   LinearMap.mem_range_self _ _
-#align submodule.algebra_map_mem Submodule.algebra_map_mem
+#align submodule.algebra_map_mem Submodule.algebraMap_mem
 
 @[simp]
 theorem mem_one {x : A} : x ∈ (1 : Submodule R A) ↔ ∃ y, algebraMap R A y = x :=
@@ -102,9 +102,9 @@ theorem mem_one {x : A} : x ∈ (1 : Submodule R A) ↔ ∃ y, algebraMap R A y 
 #align submodule.mem_one Submodule.mem_one
 
 @[simp]
-theorem to_sub_mul_action_one : (1 : Submodule R A).toSubMulAction = 1 :=
+theorem toSubMulAction_one : (1 : Submodule R A).toSubMulAction = 1 :=
   SetLike.ext fun x => mem_one.trans SubMulAction.mem_one'.symm
-#align submodule.to_sub_mul_action_one Submodule.to_sub_mul_action_one
+#align submodule.to_sub_mul_action_one Submodule.toSubMulAction_one
 
 theorem one_eq_span : (1 : Submodule R A) = R ∙ 1 :=
   by
@@ -170,15 +170,15 @@ theorem mul_le : M * N ≤ P ↔ ∀ m ∈ M, ∀ n ∈ N, m * n ∈ P :=
   map₂_le
 #align submodule.mul_le Submodule.mul_le
 
-theorem mul_to_add_submonoid (M N : Submodule R A) :
+theorem mul_toAddSubmonoid (M N : Submodule R A) :
     (M * N).toAddSubmonoid = M.toAddSubmonoid * N.toAddSubmonoid :=
   by
   dsimp [Mul.mul]
-  simp_rw [← LinearMap.mul_left_to_add_monoid_hom R, LinearMap.mulLeft, ← map_to_add_submonoid _ N,
+  simp_rw [← LinearMap.mulLeft_toAddMonoid_hom R, LinearMap.mulLeft, ← map_to_add_submonoid _ N,
     map₂]
   rw [supr_to_add_submonoid]
   rfl
-#align submodule.mul_to_add_submonoid Submodule.mul_to_add_submonoid
+#align submodule.mul_to_add_submonoid Submodule.mul_toAddSubmonoid
 
 @[elab_as_elim]
 protected theorem mulInductionOn {C : A → Prop} {r : A} (hr : r ∈ M * N)
@@ -267,7 +267,7 @@ protected theorem map_mul {A'} [Semiring A'] [Algebra R A'] (f : A →ₐ[R] A')
     map f.toLinearMap (M * N) = map f.toLinearMap M * map f.toLinearMap N :=
   calc
     map f.toLinearMap (M * N) = ⨆ i : M, (N.map (LinearMap.mul R A i)).map f.toLinearMap :=
-      map_supr _ _
+      map_supᵢ _ _
     _ = map f.toLinearMap M * map f.toLinearMap N :=
       by
       apply congr_arg Sup
@@ -317,7 +317,7 @@ theorem map_unop_mul (M N : Submodule R Aᵐᵒᵖ) :
     LinearEquiv.injective _
   map_injective_of_injective this <| by
     rw [← map_comp, map_op_mul, ← map_comp, ← map_comp, LinearEquiv.comp_coe,
-      LinearEquiv.symm_trans_self, LinearEquiv.refl_to_linear_map, map_id, map_id, map_id]
+      LinearEquiv.symm_trans_self, LinearEquiv.refl_to_linearMap, map_id, map_id, map_id]
 #align submodule.map_unop_mul Submodule.map_unop_mul
 
 theorem comap_op_mul (M N : Submodule R Aᵐᵒᵖ) :
@@ -335,7 +335,7 @@ open Pointwise
 
 This is available as an instance in the `pointwise` locale. -/
 protected def hasDistribPointwiseNeg {A} [Ring A] [Algebra R A] : HasDistribNeg (Submodule R A) :=
-  to_add_submonoid_injective.HasDistribNeg _ neg_to_add_submonoid mul_to_add_submonoid
+  toAddSubmonoid_injective.HasDistribNeg _ neg_toAddSubmonoid mul_toAddSubmonoid
 #align submodule.has_distrib_pointwise_neg Submodule.hasDistribPointwiseNeg
 
 scoped[Pointwise] attribute [instance] Submodule.hasDistribPointwiseNeg
@@ -364,13 +364,13 @@ theorem mul_eq_span_mul_set (s t : Submodule R A) : s * t = span R ((s : Set A) 
   map₂_eq_span_image2 _ s t
 #align submodule.mul_eq_span_mul_set Submodule.mul_eq_span_mul_set
 
-theorem supr_mul (s : ι → Submodule R A) (t : Submodule R A) : (⨆ i, s i) * t = ⨆ i, s i * t :=
-  map₂_supr_left _ s t
-#align submodule.supr_mul Submodule.supr_mul
+theorem supᵢ_mul (s : ι → Submodule R A) (t : Submodule R A) : (⨆ i, s i) * t = ⨆ i, s i * t :=
+  map₂_supᵢ_left _ s t
+#align submodule.supr_mul Submodule.supᵢ_mul
 
-theorem mul_supr (t : Submodule R A) (s : ι → Submodule R A) : (t * ⨆ i, s i) = ⨆ i, t * s i :=
-  map₂_supr_right _ t s
-#align submodule.mul_supr Submodule.mul_supr
+theorem mul_supᵢ (t : Submodule R A) (s : ι → Submodule R A) : (t * ⨆ i, s i) = ⨆ i, t * s i :=
+  map₂_supᵢ_right _ t s
+#align submodule.mul_supr Submodule.mul_supᵢ
 
 theorem mem_span_mul_finite_of_mem_mul {P Q : Submodule R A} {x : A} (hx : x ∈ P * Q) :
     ∃ T T' : Finset A, (T : Set A) ⊆ P ∧ (T' : Set A) ⊆ Q ∧ x ∈ span R (T * T' : Set A) :=
@@ -382,7 +382,7 @@ variable {M N P}
 
 /-- Sub-R-modules of an R-algebra form a semiring. -/
 instance : Semiring (Submodule R A) :=
-  { to_add_submonoid_injective.Semigroup _ fun m n : Submodule R A => mul_to_add_submonoid m n,
+  { toAddSubmonoid_injective.Semigroup _ fun m n : Submodule R A => mul_toAddSubmonoid m n,
     AddMonoidWithOne.unary, Submodule.pointwiseAddCommMonoid, Submodule.hasOne,
     Submodule.hasMul with
     one_mul := Submodule.one_mul
@@ -411,7 +411,7 @@ theorem pow_mem_pow {x : A} (hx : x ∈ M) (n : ℕ) : x ^ n ∈ M ^ n :=
   pow_subset_pow _ <| Set.pow_mem_pow hx _
 #align submodule.pow_mem_pow Submodule.pow_mem_pow
 
-theorem pow_to_add_submonoid {n : ℕ} (h : n ≠ 0) : (M ^ n).toAddSubmonoid = M.toAddSubmonoid ^ n :=
+theorem pow_toAddSubmonoid {n : ℕ} (h : n ≠ 0) : (M ^ n).toAddSubmonoid = M.toAddSubmonoid ^ n :=
   by
   induction' n with n ih
   · exact (h rfl).elim
@@ -419,20 +419,20 @@ theorem pow_to_add_submonoid {n : ℕ} (h : n ≠ 0) : (M ^ n).toAddSubmonoid = 
     cases n
     · rw [pow_zero, pow_zero, mul_one, ← mul_to_add_submonoid, mul_one]
     · rw [ih n.succ_ne_zero]
-#align submodule.pow_to_add_submonoid Submodule.pow_to_add_submonoid
+#align submodule.pow_to_add_submonoid Submodule.pow_toAddSubmonoid
 
-theorem le_pow_to_add_submonoid {n : ℕ} : M.toAddSubmonoid ^ n ≤ (M ^ n).toAddSubmonoid :=
+theorem le_pow_toAddSubmonoid {n : ℕ} : M.toAddSubmonoid ^ n ≤ (M ^ n).toAddSubmonoid :=
   by
   obtain rfl | hn := Decidable.eq_or_ne n 0
   · rw [pow_zero, pow_zero]
     exact le_one_to_add_submonoid
   · exact (pow_to_add_submonoid M hn).ge
-#align submodule.le_pow_to_add_submonoid Submodule.le_pow_to_add_submonoid
+#align submodule.le_pow_to_add_submonoid Submodule.le_pow_toAddSubmonoid
 
 /-- Dependent version of `submodule.pow_induction_on_left`. -/
 @[elab_as_elim]
 protected theorem powInductionOnLeft' {C : ∀ (n : ℕ) (x), x ∈ M ^ n → Prop}
-    (hr : ∀ r : R, C 0 (algebraMap _ _ r) (algebra_map_mem r))
+    (hr : ∀ r : R, C 0 (algebraMap _ _ r) (algebraMap_mem r))
     (hadd : ∀ x y i hx hy, C i x hx → C i y hy → C i (x + y) (add_mem ‹_› ‹_›))
     (hmul : ∀ m ∈ M, ∀ (i x hx), C i x hx → C i.succ (m * x) (mul_mem_mul H hx)) {x : A} {n : ℕ}
     (hx : x ∈ M ^ n) : C n x hx :=
@@ -449,7 +449,7 @@ protected theorem powInductionOnLeft' {C : ∀ (n : ℕ) (x), x ∈ M ^ n → Pr
 /-- Dependent version of `submodule.pow_induction_on_right`. -/
 @[elab_as_elim]
 protected theorem powInductionOnRight' {C : ∀ (n : ℕ) (x), x ∈ M ^ n → Prop}
-    (hr : ∀ r : R, C 0 (algebraMap _ _ r) (algebra_map_mem r))
+    (hr : ∀ r : R, C 0 (algebraMap _ _ r) (algebraMap_mem r))
     (hadd : ∀ x y i hx hy, C i x hx → C i y hy → C i (x + y) (add_mem ‹_› ‹_›))
     (hmul :
       ∀ i x hx, C i x hx → ∀ m ∈ M, C i.succ (x * m) ((pow_succ' M i).symm ▸ mul_mem_mul hx H))

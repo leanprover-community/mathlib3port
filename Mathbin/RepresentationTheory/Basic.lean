@@ -84,21 +84,21 @@ noncomputable def asAlgebraHom : MonoidAlgebra k G →ₐ[k] Module.EndCat k V :
   (lift k G _) ρ
 #align representation.as_algebra_hom Representation.asAlgebraHom
 
-theorem as_algebra_hom_def : asAlgebraHom ρ = (lift k G _) ρ :=
+theorem asAlgebraHom_def : asAlgebraHom ρ = (lift k G _) ρ :=
   rfl
-#align representation.as_algebra_hom_def Representation.as_algebra_hom_def
+#align representation.as_algebra_hom_def Representation.asAlgebraHom_def
 
 @[simp]
-theorem as_algebra_hom_single (g : G) (r : k) : asAlgebraHom ρ (Finsupp.single g r) = r • ρ g := by
+theorem asAlgebraHom_single (g : G) (r : k) : asAlgebraHom ρ (Finsupp.single g r) = r • ρ g := by
   simp only [as_algebra_hom_def, MonoidAlgebra.lift_single]
-#align representation.as_algebra_hom_single Representation.as_algebra_hom_single
+#align representation.as_algebra_hom_single Representation.asAlgebraHom_single
 
-theorem as_algebra_hom_single_one (g : G) : asAlgebraHom ρ (Finsupp.single g 1) = ρ g := by simp
-#align representation.as_algebra_hom_single_one Representation.as_algebra_hom_single_one
+theorem asAlgebraHom_single_one (g : G) : asAlgebraHom ρ (Finsupp.single g 1) = ρ g := by simp
+#align representation.as_algebra_hom_single_one Representation.asAlgebraHom_single_one
 
-theorem as_algebra_hom_of (g : G) : asAlgebraHom ρ (of k G g) = ρ g := by
+theorem asAlgebraHom_of (g : G) : asAlgebraHom ρ (of k G g) = ρ g := by
   simp only [MonoidAlgebra.of_apply, as_algebra_hom_single, one_smul]
-#align representation.as_algebra_hom_of Representation.as_algebra_hom_of
+#align representation.as_algebra_hom_of Representation.asAlgebraHom_of
 
 /- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] (module.End[module.End] k V) -/
 /-- If `ρ : representation k G V`, then `ρ.as_module` is a type synonym for `V`,
@@ -132,26 +132,26 @@ def asModuleEquiv : ρ.AsModule ≃+ V :=
 #align representation.as_module_equiv Representation.asModuleEquiv
 
 @[simp]
-theorem as_module_equiv_map_smul (r : MonoidAlgebra k G) (x : ρ.AsModule) :
+theorem asModuleEquiv_map_smul (r : MonoidAlgebra k G) (x : ρ.AsModule) :
     ρ.asModuleEquiv (r • x) = ρ.asAlgebraHom r (ρ.asModuleEquiv x) :=
   rfl
-#align representation.as_module_equiv_map_smul Representation.as_module_equiv_map_smul
+#align representation.as_module_equiv_map_smul Representation.asModuleEquiv_map_smul
 
 @[simp]
-theorem as_module_equiv_symm_map_smul (r : k) (x : V) :
+theorem asModuleEquiv_symm_map_smul (r : k) (x : V) :
     ρ.asModuleEquiv.symm (r • x) = algebraMap k (MonoidAlgebra k G) r • ρ.asModuleEquiv.symm x :=
   by
   apply_fun ρ.as_module_equiv
   simp
-#align representation.as_module_equiv_symm_map_smul Representation.as_module_equiv_symm_map_smul
+#align representation.as_module_equiv_symm_map_smul Representation.asModuleEquiv_symm_map_smul
 
 @[simp]
-theorem as_module_equiv_symm_map_rho (g : G) (x : V) :
+theorem asModuleEquiv_symm_map_rho (g : G) (x : V) :
     ρ.asModuleEquiv.symm (ρ g x) = MonoidAlgebra.of k G g • ρ.asModuleEquiv.symm x :=
   by
   apply_fun ρ.as_module_equiv
   simp
-#align representation.as_module_equiv_symm_map_rho Representation.as_module_equiv_symm_map_rho
+#align representation.as_module_equiv_symm_map_rho Representation.asModuleEquiv_symm_map_rho
 
 /-- Build a `representation k G M` from a `[module (monoid_algebra k G) M]`.
 
@@ -202,7 +202,7 @@ we have `module (monoid_algebra k G) (restrict_scalars k (monoid_algebra k G) M)
 
 
 @[simp]
-theorem of_module_as_algebra_hom_apply_apply (r : MonoidAlgebra k G)
+theorem ofModule_asAlgebraHom_apply_apply (r : MonoidAlgebra k G)
     (m : RestrictScalars k (MonoidAlgebra k G) M) :
     ((ofModule k G M).asAlgebraHom r) m =
       (RestrictScalars.addEquiv _ _ _).symm (r • RestrictScalars.addEquiv _ _ _ m) :=
@@ -210,17 +210,17 @@ theorem of_module_as_algebra_hom_apply_apply (r : MonoidAlgebra k G)
   apply MonoidAlgebra.induction_on r
   · intro g
     simp only [one_smul, MonoidAlgebra.lift_symm_apply, MonoidAlgebra.of_apply,
-      Representation.as_algebra_hom_single, Representation.ofModule, AddEquiv.apply_eq_iff_eq,
+      Representation.asAlgebraHom_single, Representation.ofModule, AddEquiv.apply_eq_iff_eq,
       RestrictScalars.lsmul_apply_apply]
   · intro f g fw gw
     simp only [fw, gw, map_add, add_smul, LinearMap.add_apply]
   · intro r f w
     simp only [w, AlgHom.map_smul, LinearMap.smul_apply,
-      RestrictScalars.add_equiv_symm_map_smul_smul]
-#align representation.of_module_as_algebra_hom_apply_apply Representation.of_module_as_algebra_hom_apply_apply
+      RestrictScalars.addEquiv_symm_map_smul_smul]
+#align representation.of_module_as_algebra_hom_apply_apply Representation.ofModule_asAlgebraHom_apply_apply
 
 @[simp]
-theorem of_module_as_module_act (g : G) (x : RestrictScalars k (MonoidAlgebra k G) ρ.AsModule) :
+theorem ofModule_asModule_act (g : G) (x : RestrictScalars k (MonoidAlgebra k G) ρ.AsModule) :
     ofModule k G ρ.AsModule g x =
       (RestrictScalars.addEquiv _ _ _).symm
         (ρ.asModuleEquiv.symm (ρ g (ρ.asModuleEquiv (RestrictScalars.addEquiv _ _ _ x)))) :=
@@ -229,15 +229,15 @@ theorem of_module_as_module_act (g : G) (x : RestrictScalars k (MonoidAlgebra k 
     (RestrictScalars.addEquiv _ _ _).Injective
   dsimp [of_module, RestrictScalars.lsmul_apply_apply]
   simp
-#align representation.of_module_as_module_act Representation.of_module_as_module_act
+#align representation.of_module_as_module_act Representation.ofModule_asModule_act
 
-theorem smul_of_module_as_module (r : MonoidAlgebra k G) (m : (ofModule k G M).AsModule) :
+theorem smul_ofModule_asModule (r : MonoidAlgebra k G) (m : (ofModule k G M).AsModule) :
     (RestrictScalars.addEquiv _ _ _) ((ofModule k G M).asModuleEquiv (r • m)) =
       r • (RestrictScalars.addEquiv _ _ _) ((ofModule k G M).asModuleEquiv m) :=
   by
   dsimp
   simp only [AddEquiv.apply_symm_apply, of_module_as_algebra_hom_apply_apply]
-#align representation.smul_of_module_as_module Representation.smul_of_module_as_module
+#align representation.smul_of_module_as_module Representation.smul_ofModule_asModule
 
 end
 
@@ -273,9 +273,9 @@ noncomputable def ofMulAction : Representation k G (H →₀ k)
 
 variable {k G H}
 
-theorem of_mul_action_def (g : G) : ofMulAction k G H g = Finsupp.lmapDomain k k ((· • ·) g) :=
+theorem ofMulAction_def (g : G) : ofMulAction k G H g = Finsupp.lmapDomain k k ((· • ·) g) :=
   rfl
-#align representation.of_mul_action_def Representation.of_mul_action_def
+#align representation.of_mul_action_def Representation.ofMulAction_def
 
 end MulAction
 
@@ -286,7 +286,7 @@ variable {k G V : Type _} [CommSemiring k] [Group G] [AddCommMonoid V] [Module k
 variable (ρ : Representation k G V)
 
 @[simp]
-theorem of_mul_action_apply {H : Type _} [MulAction G H] (g : G) (f : H →₀ k) (h : H) :
+theorem ofMulAction_apply {H : Type _} [MulAction G H] (g : G) (f : H →₀ k) (h : H) :
     ofMulAction k G H g f h = f (g⁻¹ • h) :=
   by
   conv_lhs => rw [← smul_inv_smul g h]
@@ -296,15 +296,15 @@ theorem of_mul_action_apply {H : Type _} [MulAction G H] (g : G) (f : H →₀ k
     by
     intro h₁ h₂
     simp
-  simp only [of_mul_action_def, Finsupp.lmap_domain_apply, Finsupp.map_domain_apply, hg]
-#align representation.of_mul_action_apply Representation.of_mul_action_apply
+  simp only [of_mul_action_def, Finsupp.lmapDomain_apply, Finsupp.mapDomain_apply, hg]
+#align representation.of_mul_action_apply Representation.ofMulAction_apply
 
-theorem of_mul_action_self_smul_eq_mul (x : MonoidAlgebra k G) (y : (ofMulAction k G G).AsModule) :
+theorem ofMulAction_self_smul_eq_mul (x : MonoidAlgebra k G) (y : (ofMulAction k G G).AsModule) :
     x • y = (x * y : MonoidAlgebra k G) :=
   x.inductionOn (fun g => by show as_algebra_hom _ _ _ = _ <;> ext <;> simp)
     (fun x y hx hy => by simp only [hx, hy, add_mul, add_smul]) fun r x hx => by
     show as_algebra_hom _ _ _ = _ <;> simpa [← hx]
-#align representation.of_mul_action_self_smul_eq_mul Representation.of_mul_action_self_smul_eq_mul
+#align representation.of_mul_action_self_smul_eq_mul Representation.ofMulAction_self_smul_eq_mul
 
 /-- If we equip `k[G]` with the `k`-linear `G`-representation induced by the left regular action of
 `G` on itself, the resulting object is isomorphic as a `k[G]`-module to `k[G]` with its natural
@@ -312,7 +312,7 @@ theorem of_mul_action_self_smul_eq_mul (x : MonoidAlgebra k G) (y : (ofMulAction
 @[simps]
 noncomputable def ofMulActionSelfAsModuleEquiv :
     (ofMulAction k G G).AsModule ≃ₗ[MonoidAlgebra k G] MonoidAlgebra k G :=
-  { asModuleEquiv _ with map_smul' := of_mul_action_self_smul_eq_mul }
+  { asModuleEquiv _ with map_smul' := ofMulAction_self_smul_eq_mul }
 #align representation.of_mul_action_self_as_module_equiv Representation.ofMulActionSelfAsModuleEquiv
 
 /-- When `G` is a group, a `k`-linear representation of `G` on `V` can be thought of as
@@ -322,9 +322,9 @@ def asGroupHom : G →* Units (V →ₗ[k] V) :=
   MonoidHom.toHomUnits ρ
 #align representation.as_group_hom Representation.asGroupHom
 
-theorem as_group_hom_apply (g : G) : ↑(asGroupHom ρ g) = ρ g := by
+theorem asGroupHom_apply (g : G) : ↑(asGroupHom ρ g) = ρ g := by
   simp only [as_group_hom, MonoidHom.coe_toHomUnits]
-#align representation.as_group_hom_apply Representation.as_group_hom_apply
+#align representation.as_group_hom_apply Representation.asGroupHom_apply
 
 end Group
 
@@ -356,7 +356,7 @@ theorem tprod_apply (g : G) : (ρV ⊗ ρW) g = TensorProduct.map (ρV g) (ρW g
   rfl
 #align representation.tprod_apply Representation.tprod_apply
 
-theorem smul_tprod_one_as_module (r : MonoidAlgebra k G) (x : V) (y : W) :
+theorem smul_tprod_one_asModule (r : MonoidAlgebra k G) (x : V) (y : W) :
     (r • x ⊗ₜ y : (ρV.tprod 1).AsModule) = (r • x : ρV.AsModule) ⊗ₜ y :=
   by
   show as_algebra_hom _ _ _ = as_algebra_hom _ _ _ ⊗ₜ _
@@ -364,16 +364,16 @@ theorem smul_tprod_one_as_module (r : MonoidAlgebra k G) (x : V) (y : W) :
     LinearMap.finsupp_sum_apply, LinearMap.smul_apply, TensorProduct.map_tmul, LinearMap.one_apply]
   simp only [Finsupp.sum, TensorProduct.sum_tmul]
   rfl
-#align representation.smul_tprod_one_as_module Representation.smul_tprod_one_as_module
+#align representation.smul_tprod_one_as_module Representation.smul_tprod_one_asModule
 
-theorem smul_one_tprod_as_module (r : MonoidAlgebra k G) (x : V) (y : W) :
+theorem smul_one_tprod_asModule (r : MonoidAlgebra k G) (x : V) (y : W) :
     (r • x ⊗ₜ y : ((1 : Representation k G V).tprod ρW).AsModule) = x ⊗ₜ (r • y : ρW.AsModule) :=
   by
   show as_algebra_hom _ _ _ = _ ⊗ₜ as_algebra_hom _ _ _
   simp only [as_algebra_hom_def, MonoidAlgebra.lift_apply, tprod_apply, MonoidHom.one_apply,
     LinearMap.finsupp_sum_apply, LinearMap.smul_apply, TensorProduct.map_tmul, LinearMap.one_apply]
   simp only [Finsupp.sum, TensorProduct.tmul_sum, TensorProduct.tmul_smul]
-#align representation.smul_one_tprod_as_module Representation.smul_one_tprod_as_module
+#align representation.smul_one_tprod_as_module Representation.smul_one_tprod_asModule
 
 end TensorProduct
 
@@ -403,9 +403,9 @@ def linHom : Representation k G (V →ₗ[k] W)
 #align representation.lin_hom Representation.linHom
 
 @[simp]
-theorem lin_hom_apply (g : G) (f : V →ₗ[k] W) : (linHom ρV ρW) g f = ρW g ∘ₗ f ∘ₗ ρV g⁻¹ :=
+theorem linHom_apply (g : G) (f : V →ₗ[k] W) : (linHom ρV ρW) g f = ρW g ∘ₗ f ∘ₗ ρV g⁻¹ :=
   rfl
-#align representation.lin_hom_apply Representation.lin_hom_apply
+#align representation.lin_hom_apply Representation.linHom_apply
 
 /-- The dual of a representation `ρ` of `G` on a module `V`, given by `(dual ρ) g f = f ∘ₗ (ρ g⁻¹)`,
 where `f : module.dual k V`.
@@ -431,11 +431,11 @@ theorem dual_apply (g : G) : (dual ρV) g = Module.Dual.transpose (ρV g⁻¹) :
   rfl
 #align representation.dual_apply Representation.dual_apply
 
-theorem dual_tensor_hom_comm (g : G) :
+theorem dualTensorHom_comm (g : G) :
     dualTensorHom k V W ∘ₗ TensorProduct.map (ρV.dual g) (ρW g) =
       (linHom ρV ρW) g ∘ₗ dualTensorHom k V W :=
   by ext; simp [Module.Dual.transpose_apply]
-#align representation.dual_tensor_hom_comm Representation.dual_tensor_hom_comm
+#align representation.dual_tensor_hom_comm Representation.dualTensorHom_comm
 
 end LinearHom
 

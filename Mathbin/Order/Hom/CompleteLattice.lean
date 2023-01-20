@@ -142,24 +142,24 @@ export InfHomClass (map_Inf)
 
 attribute [simp] map_Sup map_Inf
 
-theorem map_supr [SupSet α] [SupSet β] [SupHomClass F α β] (f : F) (g : ι → α) :
+theorem map_supᵢ [SupSet α] [SupSet β] [SupHomClass F α β] (f : F) (g : ι → α) :
     f (⨆ i, g i) = ⨆ i, f (g i) := by rw [supᵢ, supᵢ, map_Sup, Set.range_comp]
-#align map_supr map_supr
+#align map_supr map_supᵢ
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 theorem map_supr₂ [SupSet α] [SupSet β] [SupHomClass F α β] (f : F) (g : ∀ i, κ i → α) :
-    f (⨆ (i) (j), g i j) = ⨆ (i) (j), f (g i j) := by simp_rw [map_supr]
+    f (⨆ (i) (j), g i j) = ⨆ (i) (j), f (g i j) := by simp_rw [map_supᵢ]
 #align map_supr₂ map_supr₂
 
-theorem map_infi [InfSet α] [InfSet β] [InfHomClass F α β] (f : F) (g : ι → α) :
+theorem map_infᵢ [InfSet α] [InfSet β] [InfHomClass F α β] (f : F) (g : ι → α) :
     f (⨅ i, g i) = ⨅ i, f (g i) := by rw [infᵢ, infᵢ, map_Inf, Set.range_comp]
-#align map_infi map_infi
+#align map_infi map_infᵢ
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 theorem map_infi₂ [InfSet α] [InfSet β] [InfHomClass F α β] (f : F) (g : ∀ i, κ i → α) :
-    f (⨅ (i) (j), g i j) = ⨅ (i) (j), f (g i j) := by simp_rw [map_infi]
+    f (⨅ (i) (j), g i j) = ⨅ (i) (j), f (g i j) := by simp_rw [map_infᵢ]
 #align map_infi₂ map_infi₂
 
 -- See note [lower instance priority]
@@ -246,17 +246,17 @@ instance (priority := 100) OrderIsoClass.toCompleteLatticeHomClass [CompleteLatt
 #align order_iso_class.to_complete_lattice_hom_class OrderIsoClass.toCompleteLatticeHomClass
 
 instance [SupSet α] [SupSet β] [SupHomClass F α β] : CoeTC F (SupHom α β) :=
-  ⟨fun f => ⟨f, map_Sup f⟩⟩
+  ⟨fun f => ⟨f, map_supₛ f⟩⟩
 
 instance [InfSet α] [InfSet β] [InfHomClass F α β] : CoeTC F (InfHom α β) :=
-  ⟨fun f => ⟨f, map_Inf f⟩⟩
+  ⟨fun f => ⟨f, map_infₛ f⟩⟩
 
 instance [CompleteLattice α] [CompleteLattice β] [FrameHomClass F α β] : CoeTC F (FrameHom α β) :=
-  ⟨fun f => ⟨f, map_Sup f⟩⟩
+  ⟨fun f => ⟨f, map_supₛ f⟩⟩
 
 instance [CompleteLattice α] [CompleteLattice β] [CompleteLatticeHomClass F α β] :
     CoeTC F (CompleteLatticeHom α β) :=
-  ⟨fun f => ⟨f, map_Sup f⟩⟩
+  ⟨fun f => ⟨f, map_supₛ f⟩⟩
 
 /-! ### Supremum homomorphisms -/
 
@@ -280,17 +280,17 @@ directly. -/
 instance : CoeFun (SupHom α β) fun _ => α → β :=
   FunLike.hasCoeToFun
 
-/- warning: Sup_hom.to_fun_eq_coe clashes with sup_hom.to_fun_eq_coe -> SupHom.to_fun_eq_coe
-warning: Sup_hom.to_fun_eq_coe -> SupHom.to_fun_eq_coe is a dubious translation:
+/- warning: Sup_hom.to_fun_eq_coe clashes with sup_hom.to_fun_eq_coe -> SupHom.toFun_eq_coe
+warning: Sup_hom.to_fun_eq_coe -> SupHom.toFun_eq_coe is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SupSet.{u1} α] [_inst_2 : SupSet.{u2} β] {f : SupHom.{u1, u2} α β _inst_1 _inst_2}, Eq.{max (succ u1) (succ u2)} (α -> β) (SupHom.toFun.{u1, u2} α β _inst_1 _inst_2 f) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (SupHom.{u1, u2} α β _inst_1 _inst_2) (fun (_x : SupHom.{u1, u2} α β _inst_1 _inst_2) => α -> β) (SupHom.hasCoeToFun.{u1, u2} α β _inst_1 _inst_2) f)
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : HasSup.{u1} α] [_inst_2 : HasSup.{u2} β] {f : SupHom.{u1, u2} α β _inst_1 _inst_2}, Eq.{max (succ u1) (succ u2)} (α -> β) (SupHom.toFun.{u1, u2} α β _inst_1 _inst_2 f) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (SupHom.{u1, u2} α β _inst_1 _inst_2) (fun (_x : SupHom.{u1, u2} α β _inst_1 _inst_2) => α -> β) (SupHom.hasCoeToFun.{u1, u2} α β _inst_1 _inst_2) f)
-Case conversion may be inaccurate. Consider using '#align Sup_hom.to_fun_eq_coe SupHom.to_fun_eq_coeₓ'. -/
+Case conversion may be inaccurate. Consider using '#align Sup_hom.to_fun_eq_coe SupHom.toFun_eq_coeₓ'. -/
 @[simp]
-theorem to_fun_eq_coe {f : SupHom α β} : f.toFun = (f : α → β) :=
+theorem toFun_eq_coe {f : SupHom α β} : f.toFun = (f : α → β) :=
   rfl
-#align Sup_hom.to_fun_eq_coe SupHom.to_fun_eq_coe
+#align Sup_hom.to_fun_eq_coe SupHom.toFun_eq_coe
 
 /- warning: Sup_hom.ext clashes with sup_hom.ext -> SupHom.ext
 warning: Sup_hom.ext -> SupHom.ext is a dubious translation:
@@ -548,17 +548,17 @@ directly. -/
 instance : CoeFun (InfHom α β) fun _ => α → β :=
   FunLike.hasCoeToFun
 
-/- warning: Inf_hom.to_fun_eq_coe clashes with inf_hom.to_fun_eq_coe -> InfHom.to_fun_eq_coe
-warning: Inf_hom.to_fun_eq_coe -> InfHom.to_fun_eq_coe is a dubious translation:
+/- warning: Inf_hom.to_fun_eq_coe clashes with inf_hom.to_fun_eq_coe -> InfHom.toFun_eq_coe
+warning: Inf_hom.to_fun_eq_coe -> InfHom.toFun_eq_coe is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : InfSet.{u1} α] [_inst_2 : InfSet.{u2} β] {f : InfHom.{u1, u2} α β _inst_1 _inst_2}, Eq.{max (succ u1) (succ u2)} (α -> β) (InfHom.toFun.{u1, u2} α β _inst_1 _inst_2 f) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (InfHom.{u1, u2} α β _inst_1 _inst_2) (fun (_x : InfHom.{u1, u2} α β _inst_1 _inst_2) => α -> β) (InfHom.hasCoeToFun.{u1, u2} α β _inst_1 _inst_2) f)
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : HasInf.{u1} α] [_inst_2 : HasInf.{u2} β] {f : InfHom.{u1, u2} α β _inst_1 _inst_2}, Eq.{max (succ u1) (succ u2)} (α -> β) (InfHom.toFun.{u1, u2} α β _inst_1 _inst_2 f) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (InfHom.{u1, u2} α β _inst_1 _inst_2) (fun (_x : InfHom.{u1, u2} α β _inst_1 _inst_2) => α -> β) (InfHom.hasCoeToFun.{u1, u2} α β _inst_1 _inst_2) f)
-Case conversion may be inaccurate. Consider using '#align Inf_hom.to_fun_eq_coe InfHom.to_fun_eq_coeₓ'. -/
+Case conversion may be inaccurate. Consider using '#align Inf_hom.to_fun_eq_coe InfHom.toFun_eq_coeₓ'. -/
 @[simp]
-theorem to_fun_eq_coe {f : InfHom α β} : f.toFun = (f : α → β) :=
+theorem toFun_eq_coe {f : InfHom α β} : f.toFun = (f : α → β) :=
   rfl
-#align Inf_hom.to_fun_eq_coe InfHom.to_fun_eq_coe
+#align Inf_hom.to_fun_eq_coe InfHom.toFun_eq_coe
 
 /- warning: Inf_hom.ext clashes with inf_hom.ext -> InfHom.ext
 warning: Inf_hom.ext -> InfHom.ext is a dubious translation:
@@ -823,9 +823,9 @@ def toLatticeHom (f : FrameHom α β) : LatticeHom α β :=
 #align frame_hom.to_lattice_hom FrameHom.toLatticeHom
 
 @[simp]
-theorem to_fun_eq_coe {f : FrameHom α β} : f.toFun = (f : α → β) :=
+theorem toFun_eq_coe {f : FrameHom α β} : f.toFun = (f : α → β) :=
   rfl
-#align frame_hom.to_fun_eq_coe FrameHom.to_fun_eq_coe
+#align frame_hom.to_fun_eq_coe FrameHom.toFun_eq_coe
 
 @[ext]
 theorem ext {f g : FrameHom α β} (h : ∀ a, f a = g a) : f = g :=
@@ -945,9 +945,9 @@ instance : CoeFun (CompleteLatticeHom α β) fun _ => α → β :=
   FunLike.hasCoeToFun
 
 @[simp]
-theorem to_fun_eq_coe {f : CompleteLatticeHom α β} : f.toFun = (f : α → β) :=
+theorem toFun_eq_coe {f : CompleteLatticeHom α β} : f.toFun = (f : α → β) :=
   rfl
-#align complete_lattice_hom.to_fun_eq_coe CompleteLatticeHom.to_fun_eq_coe
+#align complete_lattice_hom.to_fun_eq_coe CompleteLatticeHom.toFun_eq_coe
 
 @[ext]
 theorem ext {f g : CompleteLatticeHom α β} (h : ∀ a, f a = g a) : f = g :=
@@ -1128,10 +1128,10 @@ protected def dual : InfHom α β ≃ SupHom αᵒᵈ βᵒᵈ
     where
   toFun f :=
     { toFun := to_dual ∘ f ∘ of_dual
-      map_Sup' := fun _ => congr_arg toDual (map_Inf f _) }
+      map_Sup' := fun _ => congr_arg toDual (map_infₛ f _) }
   invFun f :=
     { toFun := of_dual ∘ f ∘ to_dual
-      map_Inf' := fun _ => congr_arg ofDual (map_Sup f _) }
+      map_Inf' := fun _ => congr_arg ofDual (map_supₛ f _) }
   left_inv f := InfHom.ext fun a => rfl
   right_inv f := SupHom.ext fun a => rfl
 #align Inf_hom.dual InfHom.dual
@@ -1244,29 +1244,29 @@ def setPreimage (f : α → β) : CompleteLatticeHom (Set β) (Set α)
 #align complete_lattice_hom.set_preimage CompleteLatticeHom.setPreimage
 
 @[simp]
-theorem coe_set_preimage (f : α → β) : ⇑(setPreimage f) = preimage f :=
+theorem coe_setPreimage (f : α → β) : ⇑(setPreimage f) = preimage f :=
   rfl
-#align complete_lattice_hom.coe_set_preimage CompleteLatticeHom.coe_set_preimage
+#align complete_lattice_hom.coe_set_preimage CompleteLatticeHom.coe_setPreimage
 
 @[simp]
-theorem set_preimage_apply (f : α → β) (s : Set β) : setPreimage f s = s.Preimage f :=
+theorem setPreimage_apply (f : α → β) (s : Set β) : setPreimage f s = s.Preimage f :=
   rfl
-#align complete_lattice_hom.set_preimage_apply CompleteLatticeHom.set_preimage_apply
+#align complete_lattice_hom.set_preimage_apply CompleteLatticeHom.setPreimage_apply
 
 @[simp]
-theorem set_preimage_id : setPreimage (id : α → α) = CompleteLatticeHom.id _ :=
+theorem setPreimage_id : setPreimage (id : α → α) = CompleteLatticeHom.id _ :=
   rfl
-#align complete_lattice_hom.set_preimage_id CompleteLatticeHom.set_preimage_id
+#align complete_lattice_hom.set_preimage_id CompleteLatticeHom.setPreimage_id
 
 -- This lemma can't be `simp` because `g ∘ f` matches anything (`id ∘ f = f` synctatically)
-theorem set_preimage_comp (g : β → γ) (f : α → β) :
+theorem setPreimage_comp (g : β → γ) (f : α → β) :
     setPreimage (g ∘ f) = (setPreimage f).comp (setPreimage g) :=
   rfl
-#align complete_lattice_hom.set_preimage_comp CompleteLatticeHom.set_preimage_comp
+#align complete_lattice_hom.set_preimage_comp CompleteLatticeHom.setPreimage_comp
 
 end CompleteLatticeHom
 
-theorem Set.image_Sup {f : α → β} (s : Set (Set α)) : f '' supₛ s = supₛ (image f '' s) :=
+theorem Set.image_supₛ {f : α → β} (s : Set (Set α)) : f '' supₛ s = supₛ (image f '' s) :=
   by
   ext b
   simp only [Sup_eq_sUnion, mem_image, mem_sUnion, exists_prop, sUnion_image, mem_Union]
@@ -1275,7 +1275,7 @@ theorem Set.image_Sup {f : α → β} (s : Set (Set α)) : f '' supₛ s = sup�
     exact ⟨t, ht₁, a, ht₂, rfl⟩
   · rintro ⟨t, ht₁, a, ht₂, rfl⟩
     exact ⟨a, ⟨t, ht₁, ht₂⟩, rfl⟩
-#align set.image_Sup Set.image_Sup
+#align set.image_Sup Set.image_supₛ
 
 /-- Using `set.image`, a function between types yields a `Sup_hom` between their lattices of
 subsets.
@@ -1285,7 +1285,7 @@ See also `complete_lattice_hom.set_preimage`. -/
 def SupHom.setImage (f : α → β) : SupHom (Set α) (Set β)
     where
   toFun := image f
-  map_Sup' := Set.image_Sup
+  map_Sup' := Set.image_supₛ
 #align Sup_hom.set_image SupHom.setImage
 
 /-- An equivalence of types yields an order isomorphism between their lattices of subsets. -/
@@ -1308,7 +1308,7 @@ variable (α) [CompleteLattice α]
 @[simps]
 def infInfHom : InfHom (α × α) α where
   toFun x := x.1 ⊓ x.2
-  map_Inf' s := by simp_rw [Prod.fst_Inf, Prod.snd_Inf, infₛ_image, infᵢ_inf_eq]
+  map_Inf' s := by simp_rw [Prod.fst_infₛ, Prod.snd_infₛ, infₛ_image, infᵢ_inf_eq]
 #align inf_Inf_hom infInfHom
 
 /-- The map `(a, b) ↦ a ⊔ b` as a `Sup_hom`. -/

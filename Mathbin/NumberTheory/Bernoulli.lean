@@ -170,8 +170,7 @@ def bernoulli'PowerSeries :=
   mk fun n => algebraMap ℚ A (bernoulli' n / n !)
 #align bernoulli'_power_series bernoulli'PowerSeries
 
-theorem bernoulli'_power_series_mul_exp_sub_one :
-    bernoulli'PowerSeries A * (exp A - 1) = X * exp A :=
+theorem bernoulli'PowerSeries_mul_exp_sub_one : bernoulli'PowerSeries A * (exp A - 1) = X * exp A :=
   by
   ext n
   -- constant coefficient is a special case
@@ -194,7 +193,7 @@ theorem bernoulli'_power_series_mul_exp_sub_one :
   rw [cast_mul, cast_mul, mul_div_mul_right, cast_div_char_zero, cast_mul]
   assumption
   rwa [Nat.cast_succ]
-#align bernoulli'_power_series_mul_exp_sub_one bernoulli'_power_series_mul_exp_sub_one
+#align bernoulli'_power_series_mul_exp_sub_one bernoulli'PowerSeries_mul_exp_sub_one
 
 /-- Odd Bernoulli numbers (greater than 1) are zero. -/
 theorem bernoulli'_odd_eq_zero {n : ℕ} (h_odd : Odd n) (hlt : 1 < n) : bernoulli' n = 0 :=
@@ -209,7 +208,7 @@ theorem bernoulli'_odd_eq_zero {n : ℕ} (h_odd : Odd n) (hlt : 1 < n) : bernoul
       split_ifs  at h <;> simp_all [h_odd.neg_one_pow, factorial_ne_zero]
     · simpa using h 1
   have h : B * (exp ℚ - 1) = X * exp ℚ := by
-    simpa [bernoulli'PowerSeries] using bernoulli'_power_series_mul_exp_sub_one ℚ
+    simpa [bernoulli'PowerSeries] using bernoulli'PowerSeries_mul_exp_sub_one ℚ
   rw [sub_mul, h, mul_sub X, sub_right_inj, ← neg_sub, mul_neg, neg_eq_iff_neg_eq]
   suffices eval_neg_hom (B * (exp ℚ - 1)) * exp ℚ = eval_neg_hom (X * exp ℚ) * exp ℚ by
     simpa [mul_assoc, sub_mul, mul_comm (eval_neg_hom (exp ℚ)), exp_mul_exp_neg_eq_one, eq_comm]
@@ -291,7 +290,7 @@ def bernoulliPowerSeries :=
   mk fun n => algebraMap ℚ A (bernoulli n / n !)
 #align bernoulli_power_series bernoulliPowerSeries
 
-theorem bernoulli_power_series_mul_exp_sub_one : bernoulliPowerSeries A * (exp A - 1) = X :=
+theorem bernoulliPowerSeries_mul_exp_sub_one : bernoulliPowerSeries A * (exp A - 1) = X :=
   by
   ext n
   -- constant coefficient is a special case
@@ -299,7 +298,7 @@ theorem bernoulli_power_series_mul_exp_sub_one : bernoulliPowerSeries A * (exp A
   · simp
   simp only [bernoulliPowerSeries, coeff_mul, coeff_X, sum_antidiagonal_succ', one_div, coeff_mk,
     coeff_one, coeff_exp, LinearMap.map_sub, factorial, if_pos, cast_succ, cast_one, cast_mul,
-    sub_zero, RingHom.map_one, add_eq_zero_iff, if_false, _root_.inv_one, zero_add, one_ne_zero,
+    sub_zero, RingHom.map_one, add_eq_zero_iff, if_false, _root_.inv_one, zero_add, one_neZero,
     mul_zero, and_false_iff, sub_self, ← RingHom.map_mul, ← RingHom.map_sum]
   cases n; · simp
   rw [if_neg n.succ_succ_ne_one]
@@ -313,7 +312,7 @@ theorem bernoulli_power_series_mul_exp_sub_one : bernoulliPowerSeries A * (exp A
     add_choose, cast_div_char_zero (factorial_mul_factorial_dvd_factorial_add _ _),
     Nat.factorial_ne_zero, hj]
   cc
-#align bernoulli_power_series_mul_exp_sub_one bernoulli_power_series_mul_exp_sub_one
+#align bernoulli_power_series_mul_exp_sub_one bernoulliPowerSeries_mul_exp_sub_one
 
 section Faulhaber
 
@@ -339,7 +338,7 @@ theorem sum_range_pow (n p : ℕ) :
     apply sum_congr rfl
     simp_intro m h only [Finset.mem_range]
     simp only [f, exp_pow_eq_rescale_exp, rescale, one_div, coeff_mk, RingHom.coe_mk, coeff_exp,
-      RingHom.id_apply, cast_mul, algebra_map_rat_rat]
+      RingHom.id_apply, cast_mul, algebraMap_rat_rat]
     -- manipulate factorials and binomial coefficients
     rw [choose_eq_factorial_div_factorial h.le, eq_comm, div_eq_iff (hne q.succ), succ_eq_add_one,
       mul_assoc _ _ ↑q.succ !, mul_comm _ ↑q.succ !, ← mul_assoc, div_mul_eq_mul_div,
@@ -373,7 +372,7 @@ theorem sum_range_pow (n p : ℕ) :
       rw [← h_const, sub_const_eq_X_mul_shift]
     -- key step: a chain of equalities of power series
     rw [← mul_right_inj' hexp, mul_comm, ← exp_pow_sum, geom_sum_mul, h_r, ←
-      bernoulli_power_series_mul_exp_sub_one, bernoulliPowerSeries, mul_right_comm]
+      bernoulliPowerSeries_mul_exp_sub_one, bernoulliPowerSeries, mul_right_comm]
     simp [h_cauchy, mul_comm]
   -- massage `hps` into our goal
   rw [hps, sum_mul]
@@ -384,7 +383,7 @@ theorem sum_range_pow (n p : ℕ) :
 /-- Alternate form of **Faulhaber's theorem**, relating the sum of p-th powers to the Bernoulli
 numbers: $$\sum_{k=1}^{n} k^p = \sum_{i=0}^p (-1)^iB_i\binom{p+1}{i}\frac{n^{p+1-i}}{p+1}.$$
 Deduced from `sum_range_pow`. -/
-theorem sum_Ico_pow (n p : ℕ) :
+theorem sum_ico_pow (n p : ℕ) :
     (∑ k in ico 1 (n + 1), (k : ℚ) ^ p) =
       ∑ i in range (p + 1), bernoulli' i * (p + 1).choose i * n ^ (p + 1 - i) / (p + 1) :=
   by
@@ -438,7 +437,7 @@ theorem sum_Ico_pow (n p : ℕ) :
         ∑ i in range p.succ.succ, f' i :=
       by simp_rw [sum_range_succ']
     
-#align sum_Ico_pow sum_Ico_pow
+#align sum_Ico_pow sum_ico_pow
 
 end Faulhaber
 

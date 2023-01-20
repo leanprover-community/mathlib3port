@@ -56,10 +56,10 @@ variable {M : Type _} [TopologicalSpace M] [CompactSpace M] [ChartedSpace E M]
   [SmoothManifoldWithCorners 𝓘(ℂ, E) M]
 
 /-- A holomorphic function on a compact complex manifold is locally constant. -/
-protected theorem is_locally_constant {f : M → F} (hf : Mdifferentiable 𝓘(ℂ, E) 𝓘(ℂ, F) f) :
+protected theorem isLocallyConstant {f : M → F} (hf : Mdifferentiable 𝓘(ℂ, E) 𝓘(ℂ, F) f) :
     IsLocallyConstant f :=
   by
-  haveI : LocallyConnectedSpace M := ChartedSpace.locally_connected_space E M
+  haveI : LocallyConnectedSpace M := ChartedSpace.locallyConnectedSpace E M
   apply IsLocallyConstant.of_constant_on_preconnected_clopens
   intro s hs₂ hs₃ a ha b hb
   have hs₁ : IsCompact s := hs₃.2.IsCompact
@@ -75,7 +75,7 @@ protected theorem is_locally_constant {f : M → F} (hf : Mdifferentiable 𝓘(�
   -- closedness of the set of points sent to `f p₀`
   refine' ⟨_, (is_closed_singleton.preimage hf.continuous).inter hs₃.2⟩
   -- we will show this set is open by showing it is a neighbourhood of each of its members
-  rw [is_open_iff_mem_nhds]
+  rw [isOpen_iff_mem_nhds]
   rintro p ⟨hp : f p = _, hps⟩
   -- let `p` be  in this set
   have hps' : s ∈ 𝓝 p := hs₃.1.mem_nhds hps
@@ -91,8 +91,8 @@ protected theorem is_locally_constant {f : M → F} (hf : Mdifferentiable 𝓘(�
     refine' Filter.eventually_of_mem key₂ fun z hz => _
     have H₁ : (chart_at E p).symm z ∈ (chart_at E p).source := (chart_at E p).map_target hz
     have H₂ : f ((chart_at E p).symm z) ∈ (chart_at F (0 : F)).source := trivial
-    have H := (mdifferentiable_at_iff_of_mem_source H₁ H₂).mp (hf ((chart_at E p).symm z))
-    simp only [differentiable_within_at_univ, mfld_simps] at H
+    have H := (mdifferentiableAt_iff_of_mem_source H₁ H₂).mp (hf ((chart_at E p).symm z))
+    simp only [differentiableWithinAt_univ, mfld_simps] at H
     simpa [LocalHomeomorph.right_inv _ hz] using H.2
   -- `f` pulled back by the chart at `p` has a local max at `chart_at E p p`
   have hf'' : IsLocalMax (norm ∘ f ∘ (chart_at E p).symm) (chart_at E p p) :=
@@ -101,7 +101,7 @@ protected theorem is_locally_constant {f : M → F} (hf : Mdifferentiable 𝓘(�
     refine' (hp₀ ((chart_at E p).symm z) hz).trans (_ : ‖f p₀‖ ≤ ‖f _‖)
     rw [← hp, LocalHomeomorph.left_inv _ (mem_chart_source E p)]
   -- so by the maximum principle `f` is equal to `f p` near `p`
-  obtain ⟨U, hU, hUf⟩ := (Complex.eventually_eq_of_is_local_max_norm hf' hf'').exists_mem
+  obtain ⟨U, hU, hUf⟩ := (Complex.eventually_eq_of_isLocalMax_norm hf' hf'').exists_mem
   have H₁ : chart_at E p ⁻¹' U ∈ 𝓝 p := (chart_at E p).ContinuousAt (mem_chart_source E p) hU
   have H₂ : (chart_at E p).source ∈ 𝓝 p :=
     (LocalHomeomorph.open_source _).mem_nhds (mem_chart_source E p)
@@ -109,20 +109,20 @@ protected theorem is_locally_constant {f : M → F} (hf : Mdifferentiable 𝓘(�
   rintro q ⟨hqs, hq : chart_at E p q ∈ _, hq'⟩
   refine' ⟨_, hqs⟩
   simpa [LocalHomeomorph.left_inv _ hq', hp, -norm_eq_abs] using hUf (chart_at E p q) hq
-#align mdifferentiable.is_locally_constant Mdifferentiable.is_locally_constant
+#align mdifferentiable.is_locally_constant Mdifferentiable.isLocallyConstant
 
 /-- A holomorphic function on a compact connected complex manifold is constant. -/
-theorem apply_eq_of_compact_space [PreconnectedSpace M] {f : M → F}
+theorem apply_eq_of_compactSpace [PreconnectedSpace M] {f : M → F}
     (hf : Mdifferentiable 𝓘(ℂ, E) 𝓘(ℂ, F) f) (a b : M) : f a = f b :=
   hf.IsLocallyConstant.apply_eq_of_preconnected_space _ _
-#align mdifferentiable.apply_eq_of_compact_space Mdifferentiable.apply_eq_of_compact_space
+#align mdifferentiable.apply_eq_of_compact_space Mdifferentiable.apply_eq_of_compactSpace
 
 /-- A holomorphic function on a compact connected complex manifold is the constant function `f ≡ v`,
 for some value `v`. -/
-theorem exists_eq_const_of_compact_space [PreconnectedSpace M] {f : M → F}
+theorem exists_eq_const_of_compactSpace [PreconnectedSpace M] {f : M → F}
     (hf : Mdifferentiable 𝓘(ℂ, E) 𝓘(ℂ, F) f) : ∃ v : F, f = Function.const M v :=
   hf.IsLocallyConstant.exists_eq_const
-#align mdifferentiable.exists_eq_const_of_compact_space Mdifferentiable.exists_eq_const_of_compact_space
+#align mdifferentiable.exists_eq_const_of_compact_space Mdifferentiable.exists_eq_const_of_compactSpace
 
 end Mdifferentiable
 

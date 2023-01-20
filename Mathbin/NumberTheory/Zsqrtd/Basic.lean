@@ -58,13 +58,13 @@ def ofInt (n : ℤ) : ℤ√d :=
   ⟨n, 0⟩
 #align zsqrtd.of_int Zsqrtd.ofInt
 
-theorem of_int_re (n : ℤ) : (of_int n).re = n :=
+theorem ofInt_re (n : ℤ) : (of_int n).re = n :=
   rfl
-#align zsqrtd.of_int_re Zsqrtd.of_int_re
+#align zsqrtd.of_int_re Zsqrtd.ofInt_re
 
-theorem of_int_im (n : ℤ) : (of_int n).im = 0 :=
+theorem ofInt_im (n : ℤ) : (of_int n).im = 0 :=
   rfl
-#align zsqrtd.of_int_im Zsqrtd.of_int_im
+#align zsqrtd.of_int_im Zsqrtd.ofInt_im
 
 /-- The zero of the ring -/
 instance : Zero (ℤ√d) :=
@@ -314,8 +314,8 @@ theorem coe_int_val (n : ℤ) : (n : ℤ√d) = ⟨n, 0⟩ := by simp [ext]
 instance : CharZero (ℤ√d) where cast_injective m n := by simp [ext]
 
 @[simp]
-theorem of_int_eq_coe (n : ℤ) : (of_int n : ℤ√d) = n := by simp [ext, of_int_re, of_int_im]
-#align zsqrtd.of_int_eq_coe Zsqrtd.of_int_eq_coe
+theorem ofInt_eq_coe (n : ℤ) : (of_int n : ℤ√d) = n := by simp [ext, of_int_re, of_int_im]
+#align zsqrtd.of_int_eq_coe Zsqrtd.ofInt_eq_coe
 
 @[simp]
 theorem smul_val (n x y : ℤ) : (n : ℤ√d) * ⟨x, y⟩ = ⟨n * x, n * y⟩ := by simp [ext]
@@ -409,7 +409,7 @@ theorem gcd_pos_iff (a : ℤ√d) : 0 < Int.gcd a.re a.im ↔ a ≠ 0 :=
 
 theorem coprime_of_dvd_coprime {a b : ℤ√d} (hcoprime : IsCoprime a.re a.im) (hdvd : b ∣ a) :
     IsCoprime b.re b.im := by
-  apply is_coprime_of_dvd
+  apply isCoprime_of_dvd
   · rintro ⟨hre, him⟩
     obtain rfl : b = 0 := by
       simp only [ext, hre, eq_self_iff_true, zero_im, him, and_self_iff, zero_re]
@@ -444,26 +444,25 @@ def SqLe (a c b d : ℕ) : Prop :=
   c * a * a ≤ d * b * b
 #align zsqrtd.sq_le Zsqrtd.SqLe
 
-theorem sq_le_of_le {c d x y z w : ℕ} (xz : z ≤ x) (yw : y ≤ w) (xy : SqLe x c y d) :
-    SqLe z c w d :=
+theorem sqLe_of_le {c d x y z w : ℕ} (xz : z ≤ x) (yw : y ≤ w) (xy : SqLe x c y d) : SqLe z c w d :=
   le_trans (mul_le_mul (Nat.mul_le_mul_left _ xz) xz (Nat.zero_le _) (Nat.zero_le _)) <|
     le_trans xy (mul_le_mul (Nat.mul_le_mul_left _ yw) yw (Nat.zero_le _) (Nat.zero_le _))
-#align zsqrtd.sq_le_of_le Zsqrtd.sq_le_of_le
+#align zsqrtd.sq_le_of_le Zsqrtd.sqLe_of_le
 
-theorem sq_le_add_mixed {c d x y z w : ℕ} (xy : SqLe x c y d) (zw : SqLe z c w d) :
+theorem sqLe_add_mixed {c d x y z w : ℕ} (xy : SqLe x c y d) (zw : SqLe z c w d) :
     c * (x * z) ≤ d * (y * w) :=
   Nat.mul_self_le_mul_self_iff.2 <| by
     simpa [mul_comm, mul_left_comm] using mul_le_mul xy zw (Nat.zero_le _) (Nat.zero_le _)
-#align zsqrtd.sq_le_add_mixed Zsqrtd.sq_le_add_mixed
+#align zsqrtd.sq_le_add_mixed Zsqrtd.sqLe_add_mixed
 
-theorem sq_le_add {c d x y z w : ℕ} (xy : SqLe x c y d) (zw : SqLe z c w d) :
+theorem sqLe_add {c d x y z w : ℕ} (xy : SqLe x c y d) (zw : SqLe z c w d) :
     SqLe (x + z) c (y + w) d := by
   have xz := sq_le_add_mixed xy zw
   simp [sq_le, mul_assoc] at xy zw
   simp [sq_le, mul_add, mul_comm, mul_left_comm, add_le_add, *]
-#align zsqrtd.sq_le_add Zsqrtd.sq_le_add
+#align zsqrtd.sq_le_add Zsqrtd.sqLe_add
 
-theorem sq_le_cancel {c d x y z w : ℕ} (zw : SqLe y d x c) (h : SqLe (x + z) c (y + w) d) :
+theorem sqLe_cancel {c d x y z w : ℕ} (zw : SqLe y d x c) (h : SqLe (x + z) c (y + w) d) :
     SqLe z c w d := by
   apply le_of_not_gt
   intro l
@@ -474,13 +473,13 @@ theorem sq_le_cancel {c d x y z w : ℕ} (zw : SqLe y d x c) (h : SqLe (x + z) c
   exact
     lt_of_le_of_lt (add_le_add_right zw _)
       (add_lt_add_left (add_lt_add_of_le_of_lt hm (add_lt_add_of_le_of_lt hm l)) _)
-#align zsqrtd.sq_le_cancel Zsqrtd.sq_le_cancel
+#align zsqrtd.sq_le_cancel Zsqrtd.sqLe_cancel
 
-theorem sq_le_smul {c d x y : ℕ} (n : ℕ) (xy : SqLe x c y d) : SqLe (n * x) c (n * y) d := by
+theorem sqLe_smul {c d x y : ℕ} (n : ℕ) (xy : SqLe x c y d) : SqLe (n * x) c (n * y) d := by
   simpa [sq_le, mul_left_comm, mul_assoc] using Nat.mul_le_mul_left (n * n) xy
-#align zsqrtd.sq_le_smul Zsqrtd.sq_le_smul
+#align zsqrtd.sq_le_smul Zsqrtd.sqLe_smul
 
-theorem sq_le_mul {d x y z w : ℕ} :
+theorem sqLe_mul {d x y z w : ℕ} :
     (SqLe x 1 y d → SqLe z 1 w d → SqLe (x * w + y * z) d (x * z + d * y * w) 1) ∧
       (SqLe x 1 y d → SqLe w d z 1 → SqLe (x * z + d * y * w) 1 (x * w + y * z) d) ∧
         (SqLe y d x 1 → SqLe z 1 w d → SqLe (x * z + d * y * w) 1 (x * w + y * z) d) ∧
@@ -495,7 +494,7 @@ theorem sq_le_mul {d x y z w : ℕ} :
       convert this
       simp only [one_mul, Int.ofNat_add, Int.ofNat_mul]
       ring
-#align zsqrtd.sq_le_mul Zsqrtd.sq_le_mul
+#align zsqrtd.sq_le_mul Zsqrtd.sqLe_mul
 
 /-- "Generalized" `nonneg`. `nonnegg c d x y` means `a √c + b √d ≥ 0`;
   we are interested in the case `c = 1` but this is more symmetric -/
@@ -614,9 +613,9 @@ theorem norm_eq_one_iff {x : ℤ√d} : x.norm.natAbs = 1 ↔ IsUnit x :=
     exact this.1⟩
 #align zsqrtd.norm_eq_one_iff Zsqrtd.norm_eq_one_iff
 
-theorem is_unit_iff_norm_is_unit {d : ℤ} (z : ℤ√d) : IsUnit z ↔ IsUnit z.norm := by
+theorem isUnit_iff_norm_isUnit {d : ℤ} (z : ℤ√d) : IsUnit z ↔ IsUnit z.norm := by
   rw [Int.isUnit_iff_natAbs_eq, norm_eq_one_iff]
-#align zsqrtd.is_unit_iff_norm_is_unit Zsqrtd.is_unit_iff_norm_is_unit
+#align zsqrtd.is_unit_iff_norm_is_unit Zsqrtd.isUnit_iff_norm_isUnit
 
 theorem norm_eq_one_iff' {d : ℤ} (hd : d ≤ 0) (z : ℤ√d) : z.norm = 1 ↔ IsUnit z := by
   rw [← norm_eq_one_iff, ← Int.coe_nat_inj', Int.natAbs_of_nonneg (norm_nonneg hd z), Int.ofNat_one]
@@ -690,12 +689,12 @@ theorem nonneg_add_lem {x y z w : ℕ} (xy : nonneg ⟨x, -y⟩) (zw : nonneg �
       (fun j k =>
         Int.subNatNat_elim w y
           (fun m n i => SqLe n d (k + j) 1 → SqLe k 1 m d → nonneg ⟨Int.ofNat j, i⟩)
-          (fun m n xy zw => trivial) fun m n xy zw => sq_le_cancel zw xy)
+          (fun m n xy zw => trivial) fun m n xy zw => sqLe_cancel zw xy)
       (fun j k =>
         Int.subNatNat_elim w y
           (fun m n i => SqLe n d k 1 → SqLe (k + j + 1) 1 m d → nonneg ⟨-[j+1], i⟩)
-          (fun m n xy zw => sq_le_cancel xy zw) fun m n xy zw =>
-          let t := Nat.le_trans zw (sq_le_of_le (Nat.le_add_right n (m + 1)) le_rfl xy)
+          (fun m n xy zw => sqLe_cancel xy zw) fun m n xy zw =>
+          let t := Nat.le_trans zw (sqLe_of_le (Nat.le_add_right n (m + 1)) le_rfl xy)
           have : k + j + 1 ≤ k :=
             Nat.mul_self_le_mul_self_iff.2 (by repeat' rw [one_mul] at t <;> exact t)
           absurd this (not_le_of_gt <| Nat.succ_le_succ <| Nat.le_add_right _ _))
@@ -868,9 +867,9 @@ protected theorem mul_nonneg (a b : ℤ√d) : 0 ≤ a → 0 ≤ b → 0 ≤ a *
   repeat' rw [← nonneg_iff_zero_le] <;> exact nonneg_mul
 #align zsqrtd.mul_nonneg Zsqrtd.mul_nonneg
 
-theorem not_sq_le_succ (c d y) (h : 0 < c) : ¬SqLe (y + 1) c 0 d :=
+theorem not_sqLe_succ (c d y) (h : 0 < c) : ¬SqLe (y + 1) c 0 d :=
   not_le_of_gt <| mul_pos (mul_pos h <| Nat.succ_pos _) <| Nat.succ_pos _
-#align zsqrtd.not_sq_le_succ Zsqrtd.not_sq_le_succ
+#align zsqrtd.not_sq_le_succ Zsqrtd.not_sqLe_succ
 
 /- ./././Mathport/Syntax/Translate/Command.lean:388:30: infer kinds are unsupported in Lean 4: #[`ns] [] -/
 /-- A nonsquare is a natural number that is not equal to the square of an
@@ -923,10 +922,10 @@ theorem nonneg_antisymm : ∀ {a : ℤ√d}, nonneg a → nonneg (-a) → a = 0
   | ⟨0, 0⟩, xy, yx => rfl
   | ⟨-[x+1], -[y+1]⟩, xy, yx => False.elim xy
   | ⟨(x + 1 : Nat), (y + 1 : Nat)⟩, xy, yx => False.elim yx
-  | ⟨-[x+1], 0⟩, xy, yx => absurd xy (not_sq_le_succ _ _ _ (by decide))
-  | ⟨(x + 1 : Nat), 0⟩, xy, yx => absurd yx (not_sq_le_succ _ _ _ (by decide))
-  | ⟨0, -[y+1]⟩, xy, yx => absurd xy (not_sq_le_succ _ _ _ d_pos)
-  | ⟨0, (y + 1 : Nat)⟩, _, yx => absurd yx (not_sq_le_succ _ _ _ d_pos)
+  | ⟨-[x+1], 0⟩, xy, yx => absurd xy (not_sqLe_succ _ _ _ (by decide))
+  | ⟨(x + 1 : Nat), 0⟩, xy, yx => absurd yx (not_sqLe_succ _ _ _ (by decide))
+  | ⟨0, -[y+1]⟩, xy, yx => absurd xy (not_sqLe_succ _ _ _ d_pos)
+  | ⟨0, (y + 1 : Nat)⟩, _, yx => absurd yx (not_sqLe_succ _ _ _ d_pos)
   | ⟨(x + 1 : Nat), -[y+1]⟩, (xy : sq_le _ _ _ _), (yx : sq_le _ _ _ _) =>
     by
     let t := le_antisymm yx xy

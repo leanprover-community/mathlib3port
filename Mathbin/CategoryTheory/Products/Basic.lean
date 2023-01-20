@@ -64,7 +64,7 @@ theorem prod_comp {P Q R : C} {S T U : D} (f : (P, S) ⟶ (Q, T)) (g : (Q, T) �
   rfl
 #align category_theory.prod_comp CategoryTheory.prod_comp
 
-theorem is_iso_prod_iff {P Q : C} {S T : D} {f : (P, S) ⟶ (Q, T)} :
+theorem isIso_prod_iff {P Q : C} {S T : D} {f : (P, S) ⟶ (Q, T)} :
     IsIso f ↔ IsIso f.1 ∧ IsIso f.2 := by
   constructor
   · rintro ⟨g, hfg, hgf⟩
@@ -75,7 +75,7 @@ theorem is_iso_prod_iff {P Q : C} {S T : D} {f : (P, S) ⟶ (Q, T)} :
   · rintro ⟨⟨g₁, hfg₁, hgf₁⟩, ⟨g₂, hfg₂, hgf₂⟩⟩
     dsimp at hfg₁ hgf₁ hfg₂ hgf₂
     refine' ⟨⟨(g₁, g₂), _, _⟩⟩ <;> · simp <;> constructor <;> assumption
-#align category_theory.is_iso_prod_iff CategoryTheory.is_iso_prod_iff
+#align category_theory.is_iso_prod_iff CategoryTheory.isIso_prod_iff
 
 section
 

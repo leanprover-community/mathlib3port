@@ -166,17 +166,17 @@ def n (B : GroupFilterBasis G) : G → Filter G := fun x =>
 #align add_group_filter_basis.N AddGroupFilterBasis.n
 
 @[simp, to_additive]
-theorem N_one (B : GroupFilterBasis G) : B.n 1 = B.toFilterBasis.filter := by
+theorem n_one (B : GroupFilterBasis G) : B.n 1 = B.toFilterBasis.filter := by
   simp only [N, one_mul, map_id']
-#align group_filter_basis.N_one GroupFilterBasis.N_one
-#align add_group_filter_basis.N_zero AddGroupFilterBasis.N_zero
+#align group_filter_basis.N_one GroupFilterBasis.n_one
+#align add_group_filter_basis.N_zero AddGroupFilterBasis.n_zero
 
 @[to_additive]
-protected theorem has_basis (B : GroupFilterBasis G) (x : G) :
+protected theorem hasBasis (B : GroupFilterBasis G) (x : G) :
     HasBasis (B.n x) (fun V : Set G => V ∈ B) fun V => (fun y => x * y) '' V :=
   HasBasis.map (fun y => x * y) toFilterBasis.HasBasis
-#align group_filter_basis.has_basis GroupFilterBasis.has_basis
-#align add_group_filter_basis.has_basis AddGroupFilterBasis.has_basis
+#align group_filter_basis.has_basis GroupFilterBasis.hasBasis
+#align add_group_filter_basis.has_basis AddGroupFilterBasis.hasBasis
 
 /-- The topological space structure coming from a group filter basis. -/
 @[to_additive "The topological space structure coming from an additive group filter basis."]
@@ -188,7 +188,7 @@ def topology (B : GroupFilterBasis G) : TopologicalSpace G :=
 @[to_additive]
 theorem nhds_eq (B : GroupFilterBasis G) {x₀ : G} : @nhds G B.topology x₀ = B.n x₀ :=
   by
-  rw [TopologicalSpace.nhds_mk_of_nhds]
+  rw [TopologicalSpace.nhds_mkOfNhds]
   · intro x U U_in
     rw [(B.has_basis x).mem_iff] at U_in
     rcases U_in with ⟨V, V_in, H⟩
@@ -222,22 +222,22 @@ theorem nhds_one_eq (B : GroupFilterBasis G) :
 #align add_group_filter_basis.nhds_zero_eq AddGroupFilterBasis.nhds_zero_eq
 
 @[to_additive]
-theorem nhds_has_basis (B : GroupFilterBasis G) (x₀ : G) :
+theorem nhds_hasBasis (B : GroupFilterBasis G) (x₀ : G) :
     HasBasis (@nhds G B.topology x₀) (fun V : Set G => V ∈ B) fun V => (fun y => x₀ * y) '' V :=
   by
   rw [B.nhds_eq]
   apply B.has_basis
-#align group_filter_basis.nhds_has_basis GroupFilterBasis.nhds_has_basis
-#align add_group_filter_basis.nhds_has_basis AddGroupFilterBasis.nhds_has_basis
+#align group_filter_basis.nhds_has_basis GroupFilterBasis.nhds_hasBasis
+#align add_group_filter_basis.nhds_has_basis AddGroupFilterBasis.nhds_hasBasis
 
 @[to_additive]
-theorem nhds_one_has_basis (B : GroupFilterBasis G) :
+theorem nhds_one_hasBasis (B : GroupFilterBasis G) :
     HasBasis (@nhds G B.topology 1) (fun V : Set G => V ∈ B) id :=
   by
   rw [B.nhds_one_eq]
   exact B.to_filter_basis.has_basis
-#align group_filter_basis.nhds_one_has_basis GroupFilterBasis.nhds_one_has_basis
-#align add_group_filter_basis.nhds_zero_has_basis AddGroupFilterBasis.nhds_zero_has_basis
+#align group_filter_basis.nhds_one_has_basis GroupFilterBasis.nhds_one_hasBasis
+#align add_group_filter_basis.nhds_zero_has_basis AddGroupFilterBasis.nhds_zero_hasBasis
 
 @[to_additive]
 theorem mem_nhds_one (B : GroupFilterBasis G) {U : Set G} (hU : U ∈ B) : U ∈ @nhds G B.topology 1 :=
@@ -252,7 +252,7 @@ theorem mem_nhds_one (B : GroupFilterBasis G) {U : Set G} (hU : U ∈ B) : U ∈
 topological group. -/
 @[to_additive
       "If a group is endowed with a topological structure coming from a group filter basis\nthen it's a topological group."]
-instance (priority := 100) is_topological_group (B : GroupFilterBasis G) :
+instance (priority := 100) is_topologicalGroup (B : GroupFilterBasis G) :
     @TopologicalGroup G B.topology _ := by
   letI := B.topology
   have basis := B.nhds_one_has_basis
@@ -275,7 +275,7 @@ instance (priority := 100) is_topological_group (B : GroupFilterBasis G) :
     rw [basis.tendsto_iff basis]
     intro U U_in
     exact conj x₀ U_in
-#align group_filter_basis.is_topological_group GroupFilterBasis.is_topological_group
+#align group_filter_basis.is_topological_group GroupFilterBasis.is_topologicalGroup
 #align add_group_filter_basis.is_topological_add_group AddGroupFilterBasis.is_topological_add_group
 
 end GroupFilterBasis
@@ -317,7 +317,7 @@ def topology : TopologicalSpace R :=
 
 /-- If a ring is endowed with a topological structure coming from
 a ring filter basis then it's a topological ring. -/
-instance (priority := 100) is_topological_ring {R : Type u} [Ring R] (B : RingFilterBasis R) :
+instance (priority := 100) is_topologicalRing {R : Type u} [Ring R] (B : RingFilterBasis R) :
     @TopologicalRing R B.topology _ :=
   by
   let B' := B.to_add_group_filter_basis
@@ -341,7 +341,7 @@ instance (priority := 100) is_topological_ring {R : Type u} [Ring R] (B : RingFi
     rw [basis.tendsto_iff basis]
     intro U
     simpa using B.mul_right x₀
-#align ring_filter_basis.is_topological_ring RingFilterBasis.is_topological_ring
+#align ring_filter_basis.is_topological_ring RingFilterBasis.is_topologicalRing
 
 end RingFilterBasis
 
@@ -448,7 +448,7 @@ theorem HasContinuousSmul.of_basis_zero {ι : Type _} [TopologicalRing R] [Topol
 
 /-- If a module is endowed with a topological structure coming from
 a module filter basis then it's a topological module. -/
-instance (priority := 100) has_continuous_smul [TopologicalRing R] :
+instance (priority := 100) hasContinuousSmul [TopologicalRing R] :
     @HasContinuousSmul R M _ _ B.topology :=
   by
   let B' := B.to_add_group_filter_basis
@@ -457,7 +457,7 @@ instance (priority := 100) has_continuous_smul [TopologicalRing R] :
   exact
     HasContinuousSmul.of_basis_zero B'.nhds_zero_has_basis (fun _ => B.smul) B.smul_left
       B.smul_right
-#align module_filter_basis.has_continuous_smul ModuleFilterBasis.has_continuous_smul
+#align module_filter_basis.has_continuous_smul ModuleFilterBasis.hasContinuousSmul
 
 /-- Build a module filter basis from compatible ring and additive group filter bases. -/
 def ofBases {R M : Type _} [CommRing R] [AddCommGroup M] [Module R M] (BR : RingFilterBasis R)

@@ -97,7 +97,7 @@ theorem absorbs_union : Absorbs 𝕜 s (u ∪ v) ↔ Absorbs 𝕜 s u ∧ Absorb
     fun h => h.1.union h.2⟩
 #align absorbs_union absorbs_union
 
-theorem absorbs_Union_finset {ι : Type _} {t : Finset ι} {f : ι → Set E} :
+theorem absorbs_unionᵢ_finset {ι : Type _} {t : Finset ι} {f : ι → Set E} :
     Absorbs 𝕜 s (⋃ i ∈ t, f i) ↔ ∀ i ∈ t, Absorbs 𝕜 s (f i) := by
   classical
     induction' t using Finset.induction_on with i t ht hi
@@ -111,15 +111,15 @@ theorem absorbs_Union_finset {ι : Type _} {t : Finset ι} {f : ι → Set E} :
         rw [hi'']
         exact h.1
     exact ⟨h i (Finset.mem_insert_self i t), fun i' hi' => h i' (Finset.mem_insert_of_mem hi')⟩
-#align absorbs_Union_finset absorbs_Union_finset
+#align absorbs_Union_finset absorbs_unionᵢ_finset
 
-theorem Set.Finite.absorbs_Union {ι : Type _} {s : Set E} {t : Set ι} {f : ι → Set E}
+theorem Set.Finite.absorbs_unionᵢ {ι : Type _} {s : Set E} {t : Set ι} {f : ι → Set E}
     (hi : t.Finite) : Absorbs 𝕜 s (⋃ i ∈ t, f i) ↔ ∀ i ∈ t, Absorbs 𝕜 s (f i) :=
   by
   lift t to Finset ι using hi
   simp only [Finset.mem_coe]
-  exact absorbs_Union_finset
-#align set.finite.absorbs_Union Set.Finite.absorbs_Union
+  exact absorbs_unionᵢ_finset
+#align set.finite.absorbs_Union Set.Finite.absorbs_unionᵢ
 
 variable (𝕜)
 
@@ -190,24 +190,24 @@ theorem Balanced.inter (hA : Balanced 𝕜 A) (hB : Balanced 𝕜 B) : Balanced 
   smul_set_inter_subset.trans <| inter_subset_inter (hA _ ha) <| hB _ ha
 #align balanced.inter Balanced.inter
 
-theorem balanced_Union {f : ι → Set E} (h : ∀ i, Balanced 𝕜 (f i)) : Balanced 𝕜 (⋃ i, f i) :=
+theorem balanced_unionᵢ {f : ι → Set E} (h : ∀ i, Balanced 𝕜 (f i)) : Balanced 𝕜 (⋃ i, f i) :=
   fun a ha => (smul_set_Union _ _).Subset.trans <| Union_mono fun _ => h _ _ ha
-#align balanced_Union balanced_Union
+#align balanced_Union balanced_unionᵢ
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 theorem balanced_Union₂ {f : ∀ i, κ i → Set E} (h : ∀ i j, Balanced 𝕜 (f i j)) :
     Balanced 𝕜 (⋃ (i) (j), f i j) :=
-  balanced_Union fun _ => balanced_Union <| h _
+  balanced_unionᵢ fun _ => balanced_unionᵢ <| h _
 #align balanced_Union₂ balanced_Union₂
 
-theorem balanced_Inter {f : ι → Set E} (h : ∀ i, Balanced 𝕜 (f i)) : Balanced 𝕜 (⋂ i, f i) :=
+theorem balanced_interᵢ {f : ι → Set E} (h : ∀ i, Balanced 𝕜 (f i)) : Balanced 𝕜 (⋂ i, f i) :=
   fun a ha => (smul_set_interᵢ_subset _ _).trans <| Inter_mono fun _ => h _ _ ha
-#align balanced_Inter balanced_Inter
+#align balanced_Inter balanced_interᵢ
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 theorem balanced_Inter₂ {f : ∀ i, κ i → Set E} (h : ∀ i j, Balanced 𝕜 (f i j)) :
     Balanced 𝕜 (⋂ (i) (j), f i j) :=
-  balanced_Inter fun _ => balanced_Inter <| h _
+  balanced_interᵢ fun _ => balanced_interᵢ <| h _
 #align balanced_Inter₂ balanced_Inter₂
 
 variable [SMul 𝕝 E] [SMulCommClass 𝕜 𝕝 E]
@@ -381,7 +381,7 @@ theorem balanced_zero_union_interior (hA : Balanced 𝕜 A) : Balanced 𝕜 ((0 
       rfl
     ·
       calc
-        a • interior A ⊆ interior (a • A) := (is_open_map_smul₀ h).image_interior_subset A
+        a • interior A ⊆ interior (a • A) := (isOpenMap_smul₀ h).image_interior_subset A
         _ ⊆ interior A := interior_mono (hA _ ha)
         
 #align balanced_zero_union_interior balanced_zero_union_interior
@@ -421,17 +421,17 @@ theorem Absorbent.zero_mem (hs : Absorbent 𝕜 s) : (0 : E) ∈ s :=
 
 variable [Module ℝ E] [SMulCommClass ℝ 𝕜 E]
 
-theorem balanced_convex_hull_of_balanced (hs : Balanced 𝕜 s) : Balanced 𝕜 (convexHull ℝ s) :=
+theorem balanced_convexHull_of_balanced (hs : Balanced 𝕜 s) : Balanced 𝕜 (convexHull ℝ s) :=
   by
   suffices Convex ℝ { x | ∀ a : 𝕜, ‖a‖ ≤ 1 → a • x ∈ convexHull ℝ s }
     by
     rw [balanced_iff_smul_mem] at hs⊢
-    refine' fun a ha x hx => convex_hull_min _ this hx a ha
-    exact fun y hy a ha => subset_convex_hull ℝ s (hs ha hy)
+    refine' fun a ha x hx => convexHull_min _ this hx a ha
+    exact fun y hy a ha => subset_convexHull ℝ s (hs ha hy)
   intro x hx y hy u v hu hv huv a ha
   simp only [smul_add, ← smul_comm]
-  exact convex_convex_hull ℝ s (hx a ha) (hy a ha) hu hv huv
-#align balanced_convex_hull_of_balanced balanced_convex_hull_of_balanced
+  exact convex_convexHull ℝ s (hx a ha) (hy a ha) hu hv huv
+#align balanced_convex_hull_of_balanced balanced_convexHull_of_balanced
 
 end NontriviallyNormedField
 

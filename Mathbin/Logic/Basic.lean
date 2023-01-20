@@ -40,7 +40,7 @@ section Miscellany
 attribute [inline]
   And.decidable Or.decidable Decidable.false Xor'.decidable Iff.decidable Decidable.true Implies.decidable Not.decidable Ne.decidable Bool.decidableEq Decidable.decide
 
-attribute [simp] cast_eq cast_heq
+attribute [simp] cast_eq cast_hEq
 
 variable {α : Type _} {β : Type _}
 
@@ -132,36 +132,36 @@ theorem coe_coe {α β γ} [Coe α β] [CoeTC β γ] (a : α) : (a : γ) = (a : 
   rfl
 #align coe_coe coe_coe
 
-theorem coe_fn_coe_trans {α β γ δ} [Coe α β] [HasCoeTAux β γ] [CoeFun γ δ] (x : α) :
+theorem coeFn_coe_trans {α β γ δ} [Coe α β] [HasCoeTAux β γ] [CoeFun γ δ] (x : α) :
     @coeFn α _ _ x = @coeFn β _ _ x :=
   rfl
-#align coe_fn_coe_trans coe_fn_coe_trans
+#align coe_fn_coe_trans coeFn_coe_trans
 
 /-- Non-dependent version of `coe_fn_coe_trans`, helps `rw` figure out the argument. -/
-theorem coe_fn_coe_trans' {α β γ} {δ : outParam <| _} [Coe α β] [HasCoeTAux β γ]
+theorem coeFn_coe_trans' {α β γ} {δ : outParam <| _} [Coe α β] [HasCoeTAux β γ]
     [CoeFun γ fun _ => δ] (x : α) : @coeFn α _ _ x = @coeFn β _ _ x :=
   rfl
-#align coe_fn_coe_trans' coe_fn_coe_trans'
+#align coe_fn_coe_trans' coeFn_coe_trans'
 
 @[simp]
-theorem coe_fn_coe_base {α β γ} [Coe α β] [CoeFun β γ] (x : α) : @coeFn α _ _ x = @coeFn β _ _ x :=
+theorem coeFn_coeBase {α β γ} [Coe α β] [CoeFun β γ] (x : α) : @coeFn α _ _ x = @coeFn β _ _ x :=
   rfl
-#align coe_fn_coe_base coe_fn_coe_base
+#align coe_fn_coe_base coeFn_coeBase
 
 /-- Non-dependent version of `coe_fn_coe_base`, helps `rw` figure out the argument. -/
-theorem coe_fn_coe_base' {α β} {γ : outParam <| _} [Coe α β] [CoeFun β fun _ => γ] (x : α) :
+theorem coeFn_coe_base' {α β} {γ : outParam <| _} [Coe α β] [CoeFun β fun _ => γ] (x : α) :
     @coeFn α _ _ x = @coeFn β _ _ x :=
   rfl
-#align coe_fn_coe_base' coe_fn_coe_base'
+#align coe_fn_coe_base' coeFn_coe_base'
 
 -- This instance should have low priority, to ensure we follow the chain
 -- `set_like → has_coe_to_sort`
 attribute [instance] coeSortTrans
 
-theorem coe_sort_coe_trans {α β γ δ} [Coe α β] [HasCoeTAux β γ] [CoeSort γ δ] (x : α) :
+theorem coeSort_coe_trans {α β γ δ} [Coe α β] [HasCoeTAux β γ] [CoeSort γ δ] (x : α) :
     @coeSort α _ _ x = @coeSort β _ _ x :=
   rfl
-#align coe_sort_coe_trans coe_sort_coe_trans
+#align coe_sort_coe_trans coeSort_coe_trans
 
 library_note "function coercion"/--
 Many structures such as bundled morphisms coerce to functions so that you can
@@ -191,10 +191,10 @@ often causes loops in the simplifier.)
 
 
 @[simp]
-theorem coe_sort_coe_base {α β γ} [Coe α β] [CoeSort β γ] (x : α) :
+theorem coeSort_coeBase {α β γ} [Coe α β] [CoeSort β γ] (x : α) :
     @coeSort α _ _ x = @coeSort β _ _ x :=
   rfl
-#align coe_sort_coe_base coe_sort_coe_base
+#align coe_sort_coe_base coeSort_coeBase
 
 #print PEmpty /-
 /-- `pempty` is the universe-polymorphic analogue of `empty`. -/
@@ -210,39 +210,25 @@ def PEmpty.elim {C : Sort _} : PEmpty → C :=
 #align pempty.elim PEmpty.elim
 -/
 
-instance subsingleton_pempty : Subsingleton PEmpty :=
+instance subsingleton_pEmpty : Subsingleton PEmpty :=
   ⟨fun a => a.elim⟩
-#align subsingleton_pempty subsingleton_pempty
+#align subsingleton_pempty subsingleton_pEmpty
 
-#print not_nonempty_pempty /-
 @[simp]
-theorem not_nonempty_pempty : ¬Nonempty PEmpty := fun ⟨h⟩ => h.elim
-#align not_nonempty_pempty not_nonempty_pempty
--/
+theorem not_nonempty_pEmpty : ¬Nonempty PEmpty := fun ⟨h⟩ => h.elim
+#align not_nonempty_pempty not_nonempty_pEmpty
 
-/- warning: congr_heq -> congr_heq is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β : Sort.{u1}} {γ : Sort.{u2}} {f : α -> γ} {g : β -> γ} {x : α} {y : β}, (HEq.{imax u1 u2} (α -> γ) f (β -> γ) g) -> (HEq.{u1} α x β y) -> (Eq.{u2} γ (f x) (g y))
-but is expected to have type
-  forall {α : Sort.{u2}} {β : Sort.{u2}} {γ : Sort.{u1}} {f : α -> γ} {g : β -> γ} {x : α} {y : β}, (HEq.{imax u2 u1} (α -> γ) f (β -> γ) g) -> (HEq.{u2} α x β y) -> (Eq.{u1} γ (f x) (g y))
-Case conversion may be inaccurate. Consider using '#align congr_heq congr_heqₓ'. -/
-theorem congr_heq {α β γ : Sort _} {f : α → γ} {g : β → γ} {x : α} {y : β} (h₁ : HEq f g)
+theorem congr_hEq {α β γ : Sort _} {f : α → γ} {g : β → γ} {x : α} {y : β} (h₁ : HEq f g)
     (h₂ : HEq x y) : f x = g y := by
   cases h₂
   cases h₁
   rfl
-#align congr_heq congr_heq
+#align congr_heq congr_hEq
 
-/- warning: congr_arg_heq -> congr_arg_heq is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β : α -> Sort.{u2}} (f : forall (a : α), β a) {a₁ : α} {a₂ : α}, (Eq.{u1} α a₁ a₂) -> (HEq.{u2} (β a₁) (f a₁) (β a₂) (f a₂))
-but is expected to have type
-  forall {α : Sort.{u2}} {β : α -> Sort.{u1}} (f : forall (a : α), β a) {a₁ : α} {a₂ : α}, (Eq.{u2} α a₁ a₂) -> (HEq.{u1} (β a₁) (f a₁) (β a₂) (f a₂))
-Case conversion may be inaccurate. Consider using '#align congr_arg_heq congr_arg_heqₓ'. -/
-theorem congr_arg_heq {α} {β : α → Sort _} (f : ∀ a, β a) :
+theorem congr_arg_hEq {α} {β : α → Sort _} (f : ∀ a, β a) :
     ∀ {a₁ a₂ : α}, a₁ = a₂ → HEq (f a₁) (f a₂)
   | a, _, rfl => HEq.rfl
-#align congr_arg_heq congr_arg_heq
+#align congr_arg_heq congr_arg_hEq
 
 /- warning: ulift.down_injective -> ULift.down_injective is a dubious translation:
 lean 3 declaration is
@@ -794,55 +780,37 @@ theorem Iff.not_right (h : ¬a ↔ b) : a ↔ ¬b :=
 /-! ### Declarations about `xor` -/
 
 
-#print xor_true /-
 @[simp]
-theorem xor_true : Xor' True = Not :=
+theorem xor'_true : Xor' True = Not :=
   funext fun a => by simp [Xor']
-#align xor_true xor_true
--/
+#align xor_true xor'_true
 
-#print xor_false /-
 @[simp]
-theorem xor_false : Xor' False = id :=
+theorem xor'_false : Xor' False = id :=
   funext fun a => by simp [Xor']
-#align xor_false xor_false
--/
+#align xor_false xor'_false
 
-/- warning: xor_comm -> xor_comm is a dubious translation:
-lean 3 declaration is
-  forall (a : Prop) (b : Prop), Iff (Xor' a b) (Xor' b a)
-but is expected to have type
-  forall (a : Prop) (b : Prop), Eq.{1} Prop (Xor' a b) (Xor' b a)
-Case conversion may be inaccurate. Consider using '#align xor_comm xor_commₓ'. -/
-theorem xor_comm (a b) : Xor' a b ↔ Xor' b a :=
+theorem xor'_comm (a b) : Xor' a b ↔ Xor' b a :=
   or_comm' _ _
-#align xor_comm xor_comm
+#align xor_comm xor'_comm
 
 instance : IsCommutative Prop Xor' :=
-  ⟨fun a b => propext <| xor_comm a b⟩
+  ⟨fun a b => propext <| xor'_comm a b⟩
 
-#print xor_self /-
 @[simp]
-theorem xor_self (a : Prop) : Xor' a a = False := by simp [Xor']
-#align xor_self xor_self
--/
+theorem xor'_self (a : Prop) : Xor' a a = False := by simp [Xor']
+#align xor_self xor'_self
 
-#print xor_not_left /-
 @[simp]
-theorem xor_not_left : Xor' (¬a) b ↔ (a ↔ b) := by by_cases a <;> simp [*]
-#align xor_not_left xor_not_left
--/
+theorem xor'_not_left : Xor' (¬a) b ↔ (a ↔ b) := by by_cases a <;> simp [*]
+#align xor_not_left xor'_not_left
 
-#print xor_not_right /-
 @[simp]
-theorem xor_not_right : Xor' a ¬b ↔ (a ↔ b) := by by_cases a <;> simp [*]
-#align xor_not_right xor_not_right
--/
+theorem xor'_not_right : Xor' a ¬b ↔ (a ↔ b) := by by_cases a <;> simp [*]
+#align xor_not_right xor'_not_right
 
-#print xor_not_not /-
-theorem xor_not_not : Xor' (¬a) ¬b ↔ Xor' a b := by simp [Xor', or_comm', and_comm']
-#align xor_not_not xor_not_not
--/
+theorem xor'_not_not : Xor' (¬a) ¬b ↔ Xor' a b := by simp [Xor', or_comm', and_comm']
+#align xor_not_not xor'_not_not
 
 protected theorem Xor'.or (h : Xor' a b) : a ∨ b :=
   h.imp And.left And.left
@@ -1581,7 +1549,7 @@ def decidable_of_iff' (b : Prop) (h : a ↔ b) [D : Decidable b] : Decidable a :
 (This is sometimes taken as an alternate definition of decidability.) -/
 def decidable_of_bool : ∀ (b : Bool) (h : b ↔ a), Decidable a
   | tt, h => isTrue (h.1 rfl)
-  | ff, h => isFalse (mt h.2 Bool.ff_ne_tt)
+  | ff, h => isFalse (mt h.2 Bool.false_ne_true)
 #align decidable_of_bool decidable_of_bool
 -/
 
@@ -1659,28 +1627,20 @@ theorem and_iff_not_or_not : a ∧ b ↔ ¬(¬a ∨ ¬b) :=
 #align and_iff_not_or_not and_iff_not_or_not
 -/
 
-#print not_xor /-
 @[simp]
-theorem not_xor (P Q : Prop) : ¬Xor' P Q ↔ (P ↔ Q) := by
+theorem not_xor' (P Q : Prop) : ¬Xor' P Q ↔ (P ↔ Q) := by
   simp only [not_and, Xor', not_or, not_not, ← iff_iff_implies_and_implies]
-#align not_xor not_xor
--/
+#align not_xor not_xor'
 
-#print xor_iff_not_iff /-
-theorem xor_iff_not_iff (P Q : Prop) : Xor' P Q ↔ ¬(P ↔ Q) :=
-  (not_xor P Q).not_right
-#align xor_iff_not_iff xor_iff_not_iff
--/
+theorem xor'_iff_not_iff (P Q : Prop) : Xor' P Q ↔ ¬(P ↔ Q) :=
+  (not_xor' P Q).not_right
+#align xor_iff_not_iff xor'_iff_not_iff
 
-#print xor_iff_iff_not /-
-theorem xor_iff_iff_not : Xor' a b ↔ (a ↔ ¬b) := by simp only [← @xor_not_right a, not_not]
-#align xor_iff_iff_not xor_iff_iff_not
--/
+theorem xor'_iff_iff_not : Xor' a b ↔ (a ↔ ¬b) := by simp only [← @xor'_not_right a, not_not]
+#align xor_iff_iff_not xor'_iff_iff_not
 
-#print xor_iff_not_iff' /-
-theorem xor_iff_not_iff' : Xor' a b ↔ (¬a ↔ b) := by simp only [← @xor_not_left _ b, not_not]
-#align xor_iff_not_iff' xor_iff_not_iff'
--/
+theorem xor'_iff_not_iff' : Xor' a b ↔ (¬a ↔ b) := by simp only [← @xor'_not_left _ b, not_not]
+#align xor_iff_not_iff' xor'_iff_not_iff'
 
 end Propositional
 
@@ -1739,20 +1699,16 @@ section Equality
 
 variable {α : Sort _} {a b : α}
 
-#print heq_iff_eq /-
 @[simp]
-theorem heq_iff_eq : HEq a b ↔ a = b :=
-  ⟨eq_of_heq, heq_of_eq⟩
-#align heq_iff_eq heq_iff_eq
--/
+theorem hEq_iff_eq : HEq a b ↔ a = b :=
+  ⟨eq_of_hEq, hEq_of_eq⟩
+#align heq_iff_eq hEq_iff_eq
 
-#print proof_irrel_heq /-
-theorem proof_irrel_heq {p q : Prop} (hp : p) (hq : q) : HEq hp hq :=
+theorem proof_irrel_hEq {p q : Prop} (hp : p) (hq : q) : HEq hp hq :=
   by
   have : p = q := propext ⟨fun _ => hq, fun _ => hp⟩
   subst q <;> rfl
-#align proof_irrel_heq proof_irrel_heq
--/
+#align proof_irrel_heq proof_irrel_hEq
 
 #print ball_cond_comm /-
 -- todo: change name
@@ -1790,19 +1746,13 @@ theorem eq_equivalence : Equivalence (@Eq α) :=
 #align eq_equivalence eq_equivalence
 -/
 
-/- warning: eq_rec_constant -> eq_rec_constant is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {a : α} {a' : α} {β : Sort.{u2}} (y : β) (h : Eq.{u1} α a a'), Eq.{u2} ((fun (a : α) => β) a') (Eq.ndrec.{u2, u1} α a (fun (a : α) => β) y a' h) y
-but is expected to have type
-  forall {α : Sort.{u2}} {a : α} {a' : α} {β : Sort.{u1}} (y : β) (h : Eq.{u2} α a a'), Eq.{u1} β (Eq.rec.{u1, u2} α a (fun (a_1 : α) (x._@.Std.Logic._hyg.12208 : Eq.{u2} α a a_1) => β) y a' h) y
-Case conversion may be inaccurate. Consider using '#align eq_rec_constant eq_rec_constantₓ'. -/
 /-- Transport through trivial families is the identity. -/
 @[simp]
-theorem eq_rec_constant {α : Sort _} {a a' : α} {β : Sort _} (y : β) (h : a = a') :
+theorem eq_ndrec_constant {α : Sort _} {a a' : α} {β : Sort _} (y : β) (h : a = a') :
     @Eq.ndrec α a (fun a => β) y a' h = y := by
   cases h
   rfl
-#align eq_rec_constant eq_rec_constant
+#align eq_rec_constant eq_ndrec_constant
 
 #print eq_mp_eq_cast /-
 @[simp]
@@ -1886,32 +1836,18 @@ theorem congr_fun_congr_arg {α β γ : Sort _} (f : α → β → γ) {a a' : �
   rfl
 #align congr_fun_congr_arg congr_fun_congr_arg
 
-#print heq_of_cast_eq /-
-theorem heq_of_cast_eq :
+theorem hEq_of_cast_eq :
     ∀ {α β : Sort _} {a : α} {a' : β} (e : α = β) (h₂ : cast e a = a'), HEq a a'
   | α, _, a, a', rfl, h => Eq.recOn h (HEq.refl _)
-#align heq_of_cast_eq heq_of_cast_eq
--/
+#align heq_of_cast_eq hEq_of_cast_eq
 
-/- warning: cast_eq_iff_heq -> cast_eq_iff_heq is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β : Sort.{u1}} {a : α} {a' : β} {e : Eq.{succ u1} Sort.{u1} α β}, Iff (Eq.{u1} β (cast.{u1} α β e a) a') (HEq.{u1} α a β a')
-but is expected to have type
-  forall {α : Sort.{u1}} {β : Sort.{u1}} {a : Eq.{succ u1} Sort.{u1} α β} {a' : α} {e : β}, Iff (Eq.{u1} β (cast.{u1} α β a a') e) (HEq.{u1} α a' β e)
-Case conversion may be inaccurate. Consider using '#align cast_eq_iff_heq cast_eq_iff_heqₓ'. -/
-theorem cast_eq_iff_heq {α β : Sort _} {a : α} {a' : β} {e : α = β} : cast e a = a' ↔ HEq a a' :=
-  ⟨heq_of_cast_eq _, fun h => by cases h <;> rfl⟩
-#align cast_eq_iff_heq cast_eq_iff_heq
+theorem cast_eq_iff_hEq {α β : Sort _} {a : α} {a' : β} {e : α = β} : cast e a = a' ↔ HEq a a' :=
+  ⟨hEq_of_cast_eq _, fun h => by cases h <;> rfl⟩
+#align cast_eq_iff_heq cast_eq_iff_hEq
 
-/- warning: rec_heq_of_heq -> rec_heq_of_heq is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {a : α} {b : α} {β : Sort.{u2}} {C : α -> Sort.{u2}} {x : C a} {y : β} (eq : Eq.{u1} α a b), (HEq.{u2} (C a) x β y) -> (HEq.{u2} (C b) (Eq.ndrec.{u2, u1} α a C x b eq) β y)
-but is expected to have type
-  forall {α : Sort.{u2}} {a : α} {b : Sort.{u1}} {β : α} {C : α -> Sort.{u1}} {x : C a} {y : b} (eq : Eq.{u2} α a β), (HEq.{u1} (C a) x b y) -> (HEq.{u1} (C β) (Eq.ndrec.{u1, u2} α a C x β eq) b y)
-Case conversion may be inaccurate. Consider using '#align rec_heq_of_heq rec_heq_of_heqₓ'. -/
-theorem rec_heq_of_heq {β} {C : α → Sort _} {x : C a} {y : β} (eq : a = b) (h : HEq x y) :
+theorem ndrec_hEq_of_hEq {β} {C : α → Sort _} {x : C a} {y : β} (eq : a = b) (h : HEq x y) :
     HEq (@Eq.ndrec α a C x b Eq) y := by subst Eq <;> exact h
-#align rec_heq_of_heq rec_heq_of_heq
+#align rec_heq_of_heq ndrec_hEq_of_hEq
 
 /- warning: eq.congr -> Eq.congr is a dubious translation:
 lean 3 declaration is
@@ -2326,13 +2262,11 @@ theorem ExistsUnique.exists {α : Sort _} {p : α → Prop} (h : ∃! x, p x) : 
 #align exists_unique.exists ExistsUnique.exists
 -/
 
-#print exists_unique_iff_exists /-
 @[simp]
-theorem exists_unique_iff_exists {α : Sort _} [Subsingleton α] {p : α → Prop} :
+theorem existsUnique_iff_exists {α : Sort _} [Subsingleton α] {p : α → Prop} :
     (∃! x, p x) ↔ ∃ x, p x :=
   ⟨fun h => h.exists, Exists.imp fun x hx => ⟨hx, fun y _ => Subsingleton.elim y x⟩⟩
-#align exists_unique_iff_exists exists_unique_iff_exists
--/
+#align exists_unique_iff_exists existsUnique_iff_exists
 
 #print forall_const /-
 @[simp]
@@ -2355,11 +2289,9 @@ theorem exists_const (α : Sort _) [i : Nonempty α] : (∃ x : α, b) ↔ b :=
 #align exists_const exists_const
 -/
 
-#print exists_unique_const /-
-theorem exists_unique_const (α : Sort _) [i : Nonempty α] [Subsingleton α] : (∃! x : α, b) ↔ b := by
+theorem existsUnique_const (α : Sort _) [i : Nonempty α] [Subsingleton α] : (∃! x : α, b) ↔ b := by
   simp
-#align exists_unique_const exists_unique_const
--/
+#align exists_unique_const existsUnique_const
 
 #print forall_and /-
 theorem forall_and : (∀ x, p x ∧ q x) ↔ (∀ x, p x) ∧ ∀ x, q x :=
@@ -2449,19 +2381,15 @@ theorem exists_eq' {a' : α} : ∃ a, a' = a :=
 #align exists_eq' exists_eq'
 -/
 
-#print exists_unique_eq /-
 @[simp]
-theorem exists_unique_eq {a' : α} : ∃! a, a = a' := by
+theorem existsUnique_eq {a' : α} : ∃! a, a = a' := by
   simp only [eq_comm, ExistsUnique, and_self_iff, forall_eq', exists_eq']
-#align exists_unique_eq exists_unique_eq
--/
+#align exists_unique_eq existsUnique_eq
 
-#print exists_unique_eq' /-
 @[simp]
-theorem exists_unique_eq' {a' : α} : ∃! a, a' = a := by
+theorem existsUnique_eq' {a' : α} : ∃! a, a' = a := by
   simp only [ExistsUnique, and_self_iff, forall_eq', exists_eq']
-#align exists_unique_eq' exists_unique_eq'
--/
+#align exists_unique_eq' existsUnique_eq'
 
 #print exists_eq_left /-
 @[simp]
@@ -2701,10 +2629,8 @@ theorem exists_prop {p q : Prop} : (∃ h : p, q) ↔ p ∧ q :=
   ⟨fun ⟨h₁, h₂⟩ => ⟨h₁, h₂⟩, fun ⟨h₁, h₂⟩ => ⟨h₁, h₂⟩⟩
 #align exists_prop exists_prop
 
-#print exists_unique_prop /-
-theorem exists_unique_prop {p q : Prop} : (∃! h : p, q) ↔ p ∧ q := by simp
-#align exists_unique_prop exists_unique_prop
--/
+theorem existsUnique_prop {p q : Prop} : (∃! h : p, q) ↔ p ∧ q := by simp
+#align exists_unique_prop existsUnique_prop
 
 #print exists_false /-
 @[simp]
@@ -2712,11 +2638,9 @@ theorem exists_false : ¬∃ a : α, False := fun ⟨a, h⟩ => h
 #align exists_false exists_false
 -/
 
-#print exists_unique_false /-
 @[simp]
-theorem exists_unique_false : ¬∃! a : α, False := fun ⟨a, h, h'⟩ => h
-#align exists_unique_false exists_unique_false
--/
+theorem existsUnique_false : ¬∃! a : α, False := fun ⟨a, h, h'⟩ => h
+#align exists_unique_false existsUnique_false
 
 #print Exists.fst /-
 theorem Exists.fst {p : b → Prop} : Exists p → b
@@ -2748,11 +2672,9 @@ theorem exists_iff_of_forall {p : Prop} {q : p → Prop} (h : ∀ h, q h) : (∃
 #align exists_iff_of_forall exists_iff_of_forall
 -/
 
-#print exists_unique_prop_of_true /-
-theorem exists_unique_prop_of_true {p : Prop} {q : p → Prop} (h : p) : (∃! h' : p, q h') ↔ q h :=
-  @exists_unique_const (q h) p ⟨h⟩ _
-#align exists_unique_prop_of_true exists_unique_prop_of_true
--/
+theorem existsUnique_prop_of_true {p : Prop} {q : p → Prop} (h : p) : (∃! h' : p, q h') ↔ q h :=
+  @existsUnique_const (q h) p ⟨h⟩ _
+#align exists_unique_prop_of_true existsUnique_prop_of_true
 
 #print forall_prop_of_false /-
 theorem forall_prop_of_false {p : Prop} {q : p → Prop} (hn : ¬p) : (∀ h' : p, q h') ↔ True :=
@@ -2833,7 +2755,7 @@ theorem ExistsUnique.elim₂ {α : Sort _} {p : α → Sort _} [∀ x, Subsingle
     {q : ∀ (x) (h : p x), Prop} {b : Prop} (h₂ : ∃! (x : _)(h : p x), q x h)
     (h₁ : ∀ (x) (h : p x), q x h → (∀ (y) (hy : p y), q y hy → y = x) → b) : b :=
   by
-  simp only [exists_unique_iff_exists] at h₂
+  simp only [existsUnique_iff_exists] at h₂
   apply h₂.elim
   exact fun x ⟨hxp, hxq⟩ H => h₁ x hxp hxq fun y hyp hyq => H y ⟨hyp, hyq⟩
 #align exists_unique.elim2 ExistsUnique.elim₂
@@ -2848,7 +2770,7 @@ theorem ExistsUnique.intro₂ {α : Sort _} {p : α → Sort _} [∀ x, Subsingl
     {q : ∀ (x : α) (h : p x), Prop} (w : α) (hp : p w) (hq : q w hp)
     (H : ∀ (y) (hy : p y), q y hy → y = w) : ∃! (x : _)(hx : p x), q x hx :=
   by
-  simp only [exists_unique_iff_exists]
+  simp only [existsUnique_iff_exists]
   exact ExistsUnique.intro w ⟨hp, hq⟩ fun y ⟨hyp, hyq⟩ => H y hyp hyq
 #align exists_unique.intro2 ExistsUnique.intro₂
 
@@ -2873,7 +2795,7 @@ theorem ExistsUnique.unique₂ {α : Sort _} {p : α → Sort _} [∀ x, Subsing
     {q : ∀ (x : α) (hx : p x), Prop} (h : ∃! (x : _)(hx : p x), q x hx) {y₁ y₂ : α} (hpy₁ : p y₁)
     (hqy₁ : q y₁ hpy₁) (hpy₂ : p y₂) (hqy₂ : q y₂ hpy₂) : y₁ = y₂ :=
   by
-  simp only [exists_unique_iff_exists] at h
+  simp only [existsUnique_iff_exists] at h
   exact h.unique ⟨hpy₁, hqy₁⟩ ⟨hpy₂, hqy₂⟩
 #align exists_unique.unique2 ExistsUnique.unique₂
 

@@ -29,10 +29,10 @@ namespace Idempotents
 variable {C : Type _} [Category C] [IsIdempotentComplete C]
 
 instance : IsIdempotentComplete (SimplicialObject C) :=
-  Idempotents.functor_category_is_idempotent_complete _ _
+  Idempotents.functor_category_isIdempotentComplete _ _
 
 instance : IsIdempotentComplete (CosimplicialObject C) :=
-  Idempotents.functor_category_is_idempotent_complete _ _
+  Idempotents.functor_category_isIdempotentComplete _ _
 
 end Idempotents
 

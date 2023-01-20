@@ -53,7 +53,7 @@ def πSummand [HasZeroMorphisms C] {Δ : SimplexCategoryᵒᵖ} (A : IndexSet Δ
 #align simplicial_object.splitting.π_summand SimplicialObject.Splitting.πSummand
 
 @[simp, reassoc.1]
-theorem ι_π_summand_eq_id [HasZeroMorphisms C] {Δ : SimplexCategoryᵒᵖ} (A : IndexSet Δ) :
+theorem ι_πSummand_eq_id [HasZeroMorphisms C] {Δ : SimplexCategoryᵒᵖ} (A : IndexSet Δ) :
     s.ιSummand A ≫ s.πSummand A = 𝟙 _ :=
   by
   dsimp [ι_summand, π_summand]
@@ -61,10 +61,10 @@ theorem ι_π_summand_eq_id [HasZeroMorphisms C] {Δ : SimplexCategoryᵒᵖ} (A
   erw [colimit.ι_desc, cofan.mk_ι_app]
   dsimp
   simp only [eq_self_iff_true, if_true]
-#align simplicial_object.splitting.ι_π_summand_eq_id SimplicialObject.Splitting.ι_π_summand_eq_id
+#align simplicial_object.splitting.ι_π_summand_eq_id SimplicialObject.Splitting.ι_πSummand_eq_id
 
 @[simp, reassoc.1]
-theorem ι_π_summand_eq_zero [HasZeroMorphisms C] {Δ : SimplexCategoryᵒᵖ} (A B : IndexSet Δ)
+theorem ι_πSummand_eq_zero [HasZeroMorphisms C] {Δ : SimplexCategoryᵒᵖ} (A B : IndexSet Δ)
     (h : B ≠ A) : s.ιSummand A ≫ s.πSummand B = 0 :=
   by
   dsimp [ι_summand, π_summand]
@@ -72,7 +72,7 @@ theorem ι_π_summand_eq_zero [HasZeroMorphisms C] {Δ : SimplexCategoryᵒᵖ} 
   erw [colimit.ι_desc, cofan.mk_ι_app]
   apply dif_neg
   exact h.symm
-#align simplicial_object.splitting.ι_π_summand_eq_zero SimplicialObject.Splitting.ι_π_summand_eq_zero
+#align simplicial_object.splitting.ι_π_summand_eq_zero SimplicialObject.Splitting.ι_πSummand_eq_zero
 
 variable [Preadditive C]
 
@@ -88,7 +88,7 @@ theorem decomposition_id (Δ : SimplexCategoryᵒᵖ) :
 #align simplicial_object.splitting.decomposition_id SimplicialObject.Splitting.decomposition_id
 
 @[simp, reassoc.1]
-theorem σ_comp_π_summand_id_eq_zero {n : ℕ} (i : Fin (n + 1)) :
+theorem σ_comp_πSummand_id_eq_zero {n : ℕ} (i : Fin (n + 1)) :
     X.σ i ≫ s.πSummand (IndexSet.id (op [n + 1])) = 0 :=
   by
   apply s.hom_ext'
@@ -101,20 +101,20 @@ theorem σ_comp_π_summand_id_eq_zero {n : ℕ} (i : Fin (n + 1)) :
   have h := SimplexCategory.len_le_of_epi (inferInstance : epi A.e)
   dsimp at h⊢
   linarith
-#align simplicial_object.splitting.σ_comp_π_summand_id_eq_zero SimplicialObject.Splitting.σ_comp_π_summand_id_eq_zero
+#align simplicial_object.splitting.σ_comp_π_summand_id_eq_zero SimplicialObject.Splitting.σ_comp_πSummand_id_eq_zero
 
 /-- If a simplicial object `X` in an additive category is split,
 then `P_infty` vanishes on all the summands of `X _[n]` which do
 not correspond to the identity of `[n]`. -/
-theorem ι_summand_comp_P_infty_eq_zero {X : SimplicialObject C} (s : SimplicialObject.Splitting X)
+theorem ιSummand_comp_pInfty_eq_zero {X : SimplicialObject C} (s : SimplicialObject.Splitting X)
     {n : ℕ} (A : SimplicialObject.Splitting.IndexSet (op [n])) (hA : ¬A.EqId) :
     s.ιSummand A ≫ pInfty.f n = 0 :=
   by
-  rw [SimplicialObject.Splitting.IndexSet.eq_id_iff_mono] at hA
-  rw [SimplicialObject.Splitting.ι_summand_eq, assoc, degeneracy_comp_P_infty X n A.e hA, comp_zero]
-#align simplicial_object.splitting.ι_summand_comp_P_infty_eq_zero SimplicialObject.Splitting.ι_summand_comp_P_infty_eq_zero
+  rw [SimplicialObject.Splitting.IndexSet.eqId_iff_mono] at hA
+  rw [SimplicialObject.Splitting.ιSummand_eq, assoc, degeneracy_comp_P_infty X n A.e hA, comp_zero]
+#align simplicial_object.splitting.ι_summand_comp_P_infty_eq_zero SimplicialObject.Splitting.ιSummand_comp_pInfty_eq_zero
 
-theorem comp_P_infty_eq_zero_iff {Z : C} {n : ℕ} (f : Z ⟶ X _[n]) :
+theorem comp_pInfty_eq_zero_iff {Z : C} {n : ℕ} (f : Z ⟶ X _[n]) :
     f ≫ pInfty.f n = 0 ↔ f ≫ s.πSummand (IndexSet.id (op [n])) = 0 :=
   by
   constructor
@@ -139,20 +139,20 @@ theorem comp_P_infty_eq_zero_iff {Z : C} {n : ℕ} (f : Z ⟶ X _[n]) :
       subst hA
       rw [assoc, reassoc_of h, zero_comp]
     · simp only [assoc, s.ι_summand_comp_P_infty_eq_zero A hA, comp_zero]
-#align simplicial_object.splitting.comp_P_infty_eq_zero_iff SimplicialObject.Splitting.comp_P_infty_eq_zero_iff
+#align simplicial_object.splitting.comp_P_infty_eq_zero_iff SimplicialObject.Splitting.comp_pInfty_eq_zero_iff
 
 @[simp, reassoc.1]
-theorem P_infty_comp_π_summand_id (n : ℕ) :
+theorem pInfty_comp_πSummand_id (n : ℕ) :
     pInfty.f n ≫ s.πSummand (IndexSet.id (op [n])) = s.πSummand (IndexSet.id (op [n])) :=
   by
   conv_rhs => rw [← id_comp (s.π_summand _)]
   symm
   rw [← sub_eq_zero, ← sub_comp, ← comp_P_infty_eq_zero_iff, sub_comp, id_comp, P_infty_f_idem,
     sub_self]
-#align simplicial_object.splitting.P_infty_comp_π_summand_id SimplicialObject.Splitting.P_infty_comp_π_summand_id
+#align simplicial_object.splitting.P_infty_comp_π_summand_id SimplicialObject.Splitting.pInfty_comp_πSummand_id
 
 @[simp, reassoc.1]
-theorem π_summand_comp_ι_summand_comp_P_infty_eq_P_infty (n : ℕ) :
+theorem πSummand_comp_ιSummand_comp_pInfty_eq_pInfty (n : ℕ) :
     s.πSummand (IndexSet.id (op [n])) ≫ s.ιSummand (IndexSet.id (op [n])) ≫ pInfty.f n =
       pInfty.f n :=
   by
@@ -161,7 +161,7 @@ theorem π_summand_comp_ι_summand_comp_P_infty_eq_P_infty (n : ℕ) :
   rw [Fintype.sum_eq_single (index_set.id (op [n])), assoc]
   rintro A (hA : ¬A.eq_id)
   rw [assoc, s.ι_summand_comp_P_infty_eq_zero A hA, comp_zero]
-#align simplicial_object.splitting.π_summand_comp_ι_summand_comp_P_infty_eq_P_infty SimplicialObject.Splitting.π_summand_comp_ι_summand_comp_P_infty_eq_P_infty
+#align simplicial_object.splitting.π_summand_comp_ι_summand_comp_P_infty_eq_P_infty SimplicialObject.Splitting.πSummand_comp_ιSummand_comp_pInfty_eq_pInfty
 
 /-- The differentials `s.d i j : s.N i ⟶ s.N j` on nondegenerate simplices of a split
 simplicial object are induced by the differentials on the alternating face map complex. -/
@@ -170,13 +170,13 @@ def d (i j : ℕ) : s.n i ⟶ s.n j :=
   s.ιSummand (IndexSet.id (op [i])) ≫ K[X].d i j ≫ s.πSummand (IndexSet.id (op [j]))
 #align simplicial_object.splitting.d SimplicialObject.Splitting.d
 
-theorem ι_summand_comp_d_comp_π_summand_eq_zero (j k : ℕ) (A : IndexSet (op [j])) (hA : ¬A.EqId) :
+theorem ιSummand_comp_d_comp_πSummand_eq_zero (j k : ℕ) (A : IndexSet (op [j])) (hA : ¬A.EqId) :
     s.ιSummand A ≫ K[X].d j k ≫ s.πSummand (IndexSet.id (op [k])) = 0 :=
   by
   rw [A.eq_id_iff_mono] at hA
   rw [← assoc, ← s.comp_P_infty_eq_zero_iff, assoc, ← P_infty.comm j k, s.ι_summand_eq, assoc,
     degeneracy_comp_P_infty_assoc X j A.e hA, zero_comp, comp_zero]
-#align simplicial_object.splitting.ι_summand_comp_d_comp_π_summand_eq_zero SimplicialObject.Splitting.ι_summand_comp_d_comp_π_summand_eq_zero
+#align simplicial_object.splitting.ι_summand_comp_d_comp_π_summand_eq_zero SimplicialObject.Splitting.ιSummand_comp_d_comp_πSummand_eq_zero
 
 /-- If `s` is a splitting of a simplicial object `X` in a preadditive category,
 `s.nondeg_complex` is a chain complex which is given in degree `n` by

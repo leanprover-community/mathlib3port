@@ -60,25 +60,25 @@ theorem IsSimpleModule.congr (l : M ≃ₗ[R] N) [IsSimpleModule R N] : IsSimple
   (Submodule.orderIsoMapComap l).IsSimpleOrder
 #align is_simple_module.congr IsSimpleModule.congr
 
-theorem is_simple_module_iff_is_atom : IsSimpleModule R m ↔ IsAtom m :=
+theorem isSimpleModule_iff_isAtom : IsSimpleModule R m ↔ IsAtom m :=
   by
   rw [← Set.isSimpleOrder_Iic_iff_isAtom]
   apply OrderIso.isSimpleOrder_iff
   exact Submodule.MapSubtype.relIso m
-#align is_simple_module_iff_is_atom is_simple_module_iff_is_atom
+#align is_simple_module_iff_is_atom isSimpleModule_iff_isAtom
 
-theorem is_simple_module_iff_is_coatom : IsSimpleModule R (M ⧸ m) ↔ IsCoatom m :=
+theorem isSimpleModule_iff_isCoatom : IsSimpleModule R (M ⧸ m) ↔ IsCoatom m :=
   by
   rw [← Set.isSimpleOrder_Ici_iff_isCoatom]
   apply OrderIso.isSimpleOrder_iff
   exact Submodule.ComapMkq.relIso m
-#align is_simple_module_iff_is_coatom is_simple_module_iff_is_coatom
+#align is_simple_module_iff_is_coatom isSimpleModule_iff_isCoatom
 
 theorem covby_iff_quot_is_simple {A B : Submodule R M} (hAB : A ≤ B) :
     A ⋖ B ↔ IsSimpleModule R (B ⧸ Submodule.comap B.Subtype A) :=
   by
   set f : Submodule R B ≃o Set.Iic B := Submodule.MapSubtype.relIso B with hf
-  rw [covby_iff_coatom_Iic hAB, is_simple_module_iff_is_coatom, ← OrderIso.isCoatom_iff f, hf]
+  rw [covby_iff_coatom_Iic hAB, isSimpleModule_iff_isCoatom, ← OrderIso.isCoatom_iff f, hf]
   simp [-OrderIso.isCoatom_iff, Submodule.MapSubtype.relIso, Submodule.map_comap_subtype,
     inf_eq_right.2 hAB]
 #align covby_iff_quot_is_simple covby_iff_quot_is_simple
@@ -88,26 +88,26 @@ namespace IsSimpleModule
 variable [hm : IsSimpleModule R m]
 
 @[simp]
-theorem is_atom : IsAtom m :=
-  is_simple_module_iff_is_atom.1 hm
-#align is_simple_module.is_atom IsSimpleModule.is_atom
+theorem isAtom : IsAtom m :=
+  isSimpleModule_iff_isAtom.1 hm
+#align is_simple_module.is_atom IsSimpleModule.isAtom
 
 end IsSimpleModule
 
-theorem is_semisimple_of_Sup_simples_eq_top
+theorem is_semisimple_of_supₛ_simples_eq_top
     (h : supₛ { m : Submodule R M | IsSimpleModule R m } = ⊤) : IsSemisimpleModule R M :=
-  complemented_lattice_of_Sup_atoms_eq_top (by simp_rw [← h, is_simple_module_iff_is_atom])
-#align is_semisimple_of_Sup_simples_eq_top is_semisimple_of_Sup_simples_eq_top
+  complementedLattice_of_supₛ_atoms_eq_top (by simp_rw [← h, isSimpleModule_iff_isAtom])
+#align is_semisimple_of_Sup_simples_eq_top is_semisimple_of_supₛ_simples_eq_top
 
 namespace IsSemisimpleModule
 
 variable [IsSemisimpleModule R M]
 
-theorem Sup_simples_eq_top : supₛ { m : Submodule R M | IsSimpleModule R m } = ⊤ :=
+theorem supₛ_simples_eq_top : supₛ { m : Submodule R M | IsSimpleModule R m } = ⊤ :=
   by
-  simp_rw [is_simple_module_iff_is_atom]
+  simp_rw [isSimpleModule_iff_isAtom]
   exact supₛ_atoms_eq_top
-#align is_semisimple_module.Sup_simples_eq_top IsSemisimpleModule.Sup_simples_eq_top
+#align is_semisimple_module.Sup_simples_eq_top IsSemisimpleModule.supₛ_simples_eq_top
 
 instance is_semisimple_submodule {m : Submodule R M} : IsSemisimpleModule R m :=
   haveI f : Submodule R m ≃o Set.Iic m := Submodule.MapSubtype.relIso m
@@ -116,12 +116,12 @@ instance is_semisimple_submodule {m : Submodule R M} : IsSemisimpleModule R m :=
 
 end IsSemisimpleModule
 
-theorem is_semisimple_iff_top_eq_Sup_simples :
+theorem is_semisimple_iff_top_eq_supₛ_simples :
     supₛ { m : Submodule R M | IsSimpleModule R m } = ⊤ ↔ IsSemisimpleModule R M :=
-  ⟨is_semisimple_of_Sup_simples_eq_top, by
+  ⟨is_semisimple_of_supₛ_simples_eq_top, by
     intro
-    exact IsSemisimpleModule.Sup_simples_eq_top⟩
-#align is_semisimple_iff_top_eq_Sup_simples is_semisimple_iff_top_eq_Sup_simples
+    exact IsSemisimpleModule.supₛ_simples_eq_top⟩
+#align is_semisimple_iff_top_eq_Sup_simples is_semisimple_iff_top_eq_supₛ_simples
 
 namespace LinearMap
 
@@ -162,12 +162,12 @@ theorem bijective_of_ne_zero [IsSimpleModule R M] [IsSimpleModule R N] {f : M �
   f.bijective_or_eq_zero.resolve_right h
 #align linear_map.bijective_of_ne_zero LinearMap.bijective_of_ne_zero
 
-theorem is_coatom_ker_of_surjective [IsSimpleModule R N] {f : M →ₗ[R] N}
+theorem isCoatom_ker_of_surjective [IsSimpleModule R N] {f : M →ₗ[R] N}
     (hf : Function.Surjective f) : IsCoatom f.ker :=
   by
-  rw [← is_simple_module_iff_is_coatom]
+  rw [← isSimpleModule_iff_isCoatom]
   exact IsSimpleModule.congr (f.quot_ker_equiv_of_surjective hf)
-#align linear_map.is_coatom_ker_of_surjective LinearMap.is_coatom_ker_of_surjective
+#align linear_map.is_coatom_ker_of_surjective LinearMap.isCoatom_ker_of_surjective
 
 /-- Schur's Lemma makes the endomorphism ring of a simple module a division ring. -/
 noncomputable instance Module.EndCat.divisionRing [DecidableEq (Module.EndCat R M)]

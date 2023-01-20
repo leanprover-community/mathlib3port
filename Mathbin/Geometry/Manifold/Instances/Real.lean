@@ -115,7 +115,7 @@ def modelWithCornersEuclideanHalfSpace (n : ℕ) [Zero (Fin n)] :
     by
     have this : UniqueDiffOn ℝ _ :=
       UniqueDiffOn.pi (Fin n) (fun _ => ℝ) _ _ fun i (_ : i ∈ ({0} : Set (Fin n))) =>
-        unique_diff_on_Ici 0
+        uniqueDiffOn_ici 0
     simpa only [singleton_pi] using this
   continuous_to_fun := continuous_subtype_val
   continuous_inv_fun :=
@@ -144,7 +144,7 @@ def modelWithCornersEuclideanQuadrant (n : ℕ) :
   unique_diff' :=
     by
     have this : UniqueDiffOn ℝ _ :=
-      UniqueDiffOn.univ_pi (Fin n) (fun _ => ℝ) _ fun i => unique_diff_on_Ici 0
+      UniqueDiffOn.univ_pi (Fin n) (fun _ => ℝ) _ fun i => uniqueDiffOn_ici 0
     simpa only [pi_univ_Ici] using this
   continuous_to_fun := continuous_subtype_val
   continuous_inv_fun :=
@@ -193,21 +193,21 @@ def iccLeftChart (x y : ℝ) [Fact (x < y)] : LocalHomeomorph (Icc x y) (Euclide
     rw [Subsingleton.elim i 0]
     simp only [A, add_comm, add_sub_cancel', min_eq_left]
   open_source :=
-    haveI : IsOpen { z : ℝ | z < y } := is_open_Iio
+    haveI : IsOpen { z : ℝ | z < y } := isOpen_iio
     this.preimage continuous_subtype_val
   open_target := by
-    have : IsOpen { z : ℝ | z < y - x } := is_open_Iio
+    have : IsOpen { z : ℝ | z < y - x } := isOpen_iio
     have : IsOpen { z : EuclideanSpace ℝ (Fin 1) | z 0 < y - x } :=
       this.preimage (@continuous_apply (Fin 1) (fun _ => ℝ) _ 0)
     exact this.preimage continuous_subtype_val
   continuous_to_fun := by
-    apply Continuous.continuous_on
+    apply Continuous.continuousOn
     apply Continuous.subtype_mk
     have : Continuous fun (z : ℝ) (i : Fin 1) => z - x :=
       Continuous.sub (continuous_pi fun i => continuous_id) continuous_const
     exact this.comp continuous_subtype_val
   continuous_inv_fun := by
-    apply Continuous.continuous_on
+    apply Continuous.continuousOn
     apply Continuous.subtype_mk
     have A : Continuous fun z : ℝ => min (z + x) y :=
       (continuous_id.add continuous_const).min continuous_const
@@ -245,21 +245,21 @@ def iccRightChart (x y : ℝ) [Fact (x < y)] : LocalHomeomorph (Icc x y) (Euclid
     rw [Subsingleton.elim i 0]
     simp only [A, sub_sub_cancel, max_eq_left]
   open_source :=
-    haveI : IsOpen { z : ℝ | x < z } := is_open_Ioi
+    haveI : IsOpen { z : ℝ | x < z } := isOpen_ioi
     this.preimage continuous_subtype_val
   open_target := by
-    have : IsOpen { z : ℝ | z < y - x } := is_open_Iio
+    have : IsOpen { z : ℝ | z < y - x } := isOpen_iio
     have : IsOpen { z : EuclideanSpace ℝ (Fin 1) | z 0 < y - x } :=
       this.preimage (@continuous_apply (Fin 1) (fun _ => ℝ) _ 0)
     exact this.preimage continuous_subtype_val
   continuous_to_fun := by
-    apply Continuous.continuous_on
+    apply Continuous.continuousOn
     apply Continuous.subtype_mk
     have : Continuous fun (z : ℝ) (i : Fin 1) => y - z :=
       continuous_const.sub (continuous_pi fun i => continuous_id)
     exact this.comp continuous_subtype_val
   continuous_inv_fun := by
-    apply Continuous.continuous_on
+    apply Continuous.continuousOn
     apply Continuous.subtype_mk
     have A : Continuous fun z : ℝ => max (y - z) x :=
       (continuous_const.sub continuous_id).max continuous_const
@@ -286,14 +286,14 @@ instance iccManifold (x y : ℝ) [Fact (x < y)] : ChartedSpace (EuclideanHalfSpa
 
 /-- The manifold structure on `[x, y]` is smooth.
 -/
-instance Icc_smooth_manifold (x y : ℝ) [Fact (x < y)] :
+instance icc_smooth_manifold (x y : ℝ) [Fact (x < y)] :
     SmoothManifoldWithCorners (𝓡∂ 1) (Icc x y) :=
   by
   have M : ContDiffOn ℝ ∞ (fun z : EuclideanSpace ℝ (Fin 1) => -z + fun i => y - x) univ :=
     by
-    rw [cont_diff_on_univ]
-    exact cont_diff_id.neg.add cont_diff_const
-  apply smooth_manifold_with_corners_of_cont_diff_on
+    rw [contDiffOn_univ]
+    exact cont_diff_id.neg.add contDiff_const
+  apply smoothManifoldWithCorners_of_contDiffOn
   intro e e' he he'
   simp only [atlas, mem_singleton_iff, mem_insert_iff] at he he'
   /- We need to check that any composition of two charts gives a `C^∞` function. Each chart can be
@@ -302,7 +302,7 @@ instance Icc_smooth_manifold (x y : ℝ) [Fact (x < y)] :
     rcases he with (rfl | rfl) <;>
     rcases he' with (rfl | rfl)
   ·-- `e = left chart`, `e' = left chart`
-    exact (mem_groupoid_of_pregroupoid.mpr (symm_trans_mem_cont_diff_groupoid _ _ _)).1
+    exact (mem_groupoid_of_pregroupoid.mpr (symm_trans_mem_contDiffGroupoid _ _ _)).1
   · -- `e = left chart`, `e' = right chart`
     apply M.congr_mono _ (subset_univ _)
     rintro _ ⟨⟨hz₁, hz₂⟩, ⟨⟨z, hz₀⟩, rfl⟩⟩
@@ -326,8 +326,8 @@ instance Icc_smooth_manifold (x y : ℝ) [Fact (x < y)] :
       PiLp.neg_apply, update_same, max_eq_left, hz₀, hz₁.le, mfld_simps]
     abel
   ·-- `e = right chart`, `e' = right chart`
-    exact (mem_groupoid_of_pregroupoid.mpr (symm_trans_mem_cont_diff_groupoid _ _ _)).1
-#align Icc_smooth_manifold Icc_smooth_manifold
+    exact (mem_groupoid_of_pregroupoid.mpr (symm_trans_mem_contDiffGroupoid _ _ _)).1
+#align Icc_smooth_manifold icc_smooth_manifold
 
 /-! Register the manifold structure on `Icc 0 1`, and also its zero and one. -/
 

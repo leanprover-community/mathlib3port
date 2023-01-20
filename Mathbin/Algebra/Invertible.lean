@@ -86,14 +86,14 @@ notation:1034
 #print invOf_mul_self /-
 @[simp]
 theorem invOf_mul_self [Mul α] [One α] (a : α) [Invertible a] : ⅟ a * a = 1 :=
-  Invertible.inv_of_mul_self
+  Invertible.invOf_mul_self
 #align inv_of_mul_self invOf_mul_self
 -/
 
 #print mul_invOf_self /-
 @[simp]
 theorem mul_invOf_self [Mul α] [One α] (a : α) [Invertible a] : a * ⅟ a = 1 :=
-  Invertible.mul_inv_of_self
+  Invertible.mul_invOf_self
 #align mul_inv_of_self mul_invOf_self
 -/
 

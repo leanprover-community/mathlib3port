@@ -514,10 +514,10 @@ theorem Lex.refl_left (r : α → α → Prop) (s : β → β → Prop) [IsRefl 
   | (x₁, x₂) => Lex.left _ _ (refl _)
 #align prod.lex.refl_left Prod.Lex.refl_left
 
-instance is_refl_left {r : α → α → Prop} {s : β → β → Prop} [IsRefl α r] :
+instance isRefl_left {r : α → α → Prop} {s : β → β → Prop} [IsRefl α r] :
     IsRefl (α × β) (Lex r s) :=
   ⟨Lex.refl_left _ _⟩
-#align prod.is_refl_left Prod.is_refl_left
+#align prod.is_refl_left Prod.isRefl_left
 
 #print Prod.Lex.refl_right /-
 @[refl]
@@ -526,14 +526,16 @@ theorem Lex.refl_right (r : α → α → Prop) (s : β → β → Prop) [IsRefl
 #align prod.lex.refl_right Prod.Lex.refl_right
 -/
 
-instance is_refl_right {r : α → α → Prop} {s : β → β → Prop} [IsRefl β s] :
+instance isRefl_right {r : α → α → Prop} {s : β → β → Prop} [IsRefl β s] :
     IsRefl (α × β) (Lex r s) :=
   ⟨Lex.refl_right _ _⟩
-#align prod.is_refl_right Prod.is_refl_right
+#align prod.is_refl_right Prod.isRefl_right
 
-instance is_irrefl [IsIrrefl α r] [IsIrrefl β s] : IsIrrefl (α × β) (Lex r s) :=
+#print Prod.isIrrefl /-
+instance isIrrefl [IsIrrefl α r] [IsIrrefl β s] : IsIrrefl (α × β) (Lex r s) :=
   ⟨by rintro ⟨i, a⟩ (⟨_, _, h⟩ | ⟨_, h⟩) <;> exact irrefl _ h⟩
-#align prod.is_irrefl Prod.is_irrefl
+#align prod.is_irrefl Prod.isIrrefl
+-/
 
 /- warning: prod.lex.trans -> Prod.Lex.trans is a dubious translation:
 lean 3 declaration is
@@ -583,14 +585,14 @@ instance isTotal_right {r : α → α → Prop} {s : β → β → Prop} [IsTric
 #align prod.is_total_right Prod.isTotal_right
 -/
 
-instance is_trichotomous [IsTrichotomous α r] [IsTrichotomous β s] :
+instance isTrichotomous [IsTrichotomous α r] [IsTrichotomous β s] :
     IsTrichotomous (α × β) (Lex r s) :=
   ⟨fun ⟨i, a⟩ ⟨j, b⟩ => by
     obtain hij | rfl | hji := trichotomous_of r i j
     · exact Or.inl (lex.left _ _ hij)
     · exact (trichotomous_of s a b).imp3 (lex.right _) (congr_arg _) (lex.right _)
     · exact Or.inr (Or.inr <| lex.left _ _ hji)⟩
-#align prod.is_trichotomous Prod.is_trichotomous
+#align prod.is_trichotomous Prod.isTrichotomous
 
 end Prod
 

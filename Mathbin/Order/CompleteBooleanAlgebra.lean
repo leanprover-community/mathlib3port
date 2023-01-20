@@ -90,7 +90,7 @@ variable [Frame α] {s t : Set α} {a b : α}
 
 #print OrderDual.coframe /-
 instance OrderDual.coframe : Coframe αᵒᵈ :=
-  { OrderDual.completeLattice α with infi_sup_le_sup_Inf := Frame.inf_Sup_le_supr_inf }
+  { OrderDual.completeLattice α with infi_sup_le_sup_Inf := Frame.inf_sup_le_supᵢ_inf }
 #align order_dual.coframe OrderDual.coframe
 -/
 
@@ -101,7 +101,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Order.Frame.{u1} α] {s : Set.{u1} α} {a : α}, Eq.{succ u1} α (HasInf.inf.{u1} α (Lattice.toHasInf.{u1} α (CompleteLattice.toLattice.{u1} α (Order.Frame.toCompleteLattice.{u1} α _inst_1))) a (SupSet.supₛ.{u1} α (CompleteLattice.toSupSet.{u1} α (Order.Frame.toCompleteLattice.{u1} α _inst_1)) s)) (supᵢ.{u1, succ u1} α (CompleteLattice.toSupSet.{u1} α (Order.Frame.toCompleteLattice.{u1} α _inst_1)) α (fun (b : α) => supᵢ.{u1, 0} α (CompleteLattice.toSupSet.{u1} α (Order.Frame.toCompleteLattice.{u1} α _inst_1)) (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) b s) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) b s) => HasInf.inf.{u1} α (Lattice.toHasInf.{u1} α (CompleteLattice.toLattice.{u1} α (Order.Frame.toCompleteLattice.{u1} α _inst_1))) a b)))
 Case conversion may be inaccurate. Consider using '#align inf_Sup_eq inf_supₛ_eqₓ'. -/
 theorem inf_supₛ_eq : a ⊓ supₛ s = ⨆ b ∈ s, a ⊓ b :=
-  (Frame.inf_Sup_le_supr_inf _ _).antisymm supᵢ_inf_le_inf_supₛ
+  (Frame.inf_sup_le_supᵢ_inf _ _).antisymm supᵢ_inf_le_inf_supₛ
 #align inf_Sup_eq inf_supₛ_eq
 
 /- warning: Sup_inf_eq -> supₛ_inf_eq is a dubious translation:
@@ -308,7 +308,7 @@ variable [Coframe α] {s t : Set α} {a b : α}
 
 #print OrderDual.frame /-
 instance OrderDual.frame : Frame αᵒᵈ :=
-  { OrderDual.completeLattice α with inf_Sup_le_supr_inf := Coframe.infi_sup_le_sup_Inf }
+  { OrderDual.completeLattice α with inf_Sup_le_supr_inf := Coframe.infᵢ_sup_le_sup_inf }
 #align order_dual.frame OrderDual.frame
 -/
 

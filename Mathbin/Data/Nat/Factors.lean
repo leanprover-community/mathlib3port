@@ -74,7 +74,7 @@ theorem prod_factors : ∀ {n}, n ≠ 0 → List.prod (factors n) = n
       by
       have h₁ : n / m ≠ 0 := fun h =>
         by
-        have : n = 0 * m := (Nat.div_eq_iff_eq_mul_left (min_fac_pos _) (minFac_dvd _)).1 h
+        have : n = 0 * m := (Nat.div_eq_iff_eq_mul_left (minFac_pos _) (minFac_dvd _)).1 h
         rw [zero_mul] at this <;> exact (show k + 2 ≠ 0 by decide) this
       rw [factors, List.prod_cons, prod_factors h₁, Nat.mul_div_cancel' (min_fac_dvd _)]
 #align nat.prod_factors Nat.prod_factors

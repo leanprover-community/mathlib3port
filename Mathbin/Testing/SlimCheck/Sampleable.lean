@@ -479,7 +479,7 @@ section ListShrink
 variable [SizeOf α] (shr : ∀ x : α, LazyList { y : α // SizeofLt y x })
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem List.sizeof_drop_lt_sizeof_of_lt_length {xs : List α} {k} (hk : 0 < k)
+theorem List.sizeOf_drop_lt_sizeOf_of_lt_length {xs : List α} {k} (hk : 0 < k)
     (hk' : k < xs.length) : SizeOf.sizeOf (List.drop k xs) < SizeOf.sizeOf xs :=
   by
   induction' xs with x xs generalizing k
@@ -493,22 +493,22 @@ theorem List.sizeof_drop_lt_sizeof_of_lt_length {xs : List α} {k} (hk : 0 < k)
     trans
     · solve_by_elim [xs_ih, lt_of_succ_lt_succ hk', zero_lt_succ]
     · assumption
-#align slim_check.list.sizeof_drop_lt_sizeof_of_lt_length SlimCheck.List.sizeof_drop_lt_sizeof_of_lt_length
+#align slim_check.list.sizeof_drop_lt_sizeof_of_lt_length SlimCheck.List.sizeOf_drop_lt_sizeOf_of_lt_length
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem List.sizeof_cons_lt_right (a b : α) {xs : List α} (h : SizeOf.sizeOf a < SizeOf.sizeOf b) :
+theorem List.sizeOf_cons_lt_right (a b : α) {xs : List α} (h : SizeOf.sizeOf a < SizeOf.sizeOf b) :
     SizeOf.sizeOf (a::xs) < SizeOf.sizeOf (b::xs) := by unfold_wf <;> assumption
-#align slim_check.list.sizeof_cons_lt_right SlimCheck.List.sizeof_cons_lt_right
+#align slim_check.list.sizeof_cons_lt_right SlimCheck.List.sizeOf_cons_lt_right
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem List.sizeof_cons_lt_left (x : α) {xs xs' : List α}
+theorem List.sizeOf_cons_lt_left (x : α) {xs xs' : List α}
     (h : SizeOf.sizeOf xs < SizeOf.sizeOf xs') : SizeOf.sizeOf (x::xs) < SizeOf.sizeOf (x::xs') :=
   by unfold_wf <;> assumption
-#align slim_check.list.sizeof_cons_lt_left SlimCheck.List.sizeof_cons_lt_left
+#align slim_check.list.sizeof_cons_lt_left SlimCheck.List.sizeOf_cons_lt_left
 
-theorem List.sizeof_append_lt_left {xs ys ys' : List α} (h : SizeOf.sizeOf ys < SizeOf.sizeOf ys') :
+theorem List.sizeOf_append_lt_left {xs ys ys' : List α} (h : SizeOf.sizeOf ys < SizeOf.sizeOf ys') :
     SizeOf.sizeOf (xs ++ ys) < SizeOf.sizeOf (xs ++ ys') :=
   by
   induction xs
@@ -516,11 +516,11 @@ theorem List.sizeof_append_lt_left {xs ys ys' : List α} (h : SizeOf.sizeOf ys <
   · unfold_wf
     simp only [List.sizeof, add_lt_add_iff_left]
     exact xs_ih
-#align slim_check.list.sizeof_append_lt_left SlimCheck.List.sizeof_append_lt_left
+#align slim_check.list.sizeof_append_lt_left SlimCheck.List.sizeOf_append_lt_left
 
-theorem List.one_le_sizeof (xs : List α) : 1 ≤ SizeOf.sizeOf xs := by
+theorem List.one_le_sizeOf (xs : List α) : 1 ≤ SizeOf.sizeOf xs := by
   cases xs <;> unfold_wf <;> linarith
-#align slim_check.list.one_le_sizeof SlimCheck.List.one_le_sizeof
+#align slim_check.list.one_le_sizeof SlimCheck.List.one_le_sizeOf
 
 /-- `list.shrink_removes` shrinks a list by removing chunks of size `k` in
 the middle of the list.
@@ -570,8 +570,8 @@ def List.shrinkOne : ShrinkFn (List α)
   | [] => LazyList.nil
   | x::xs =>
     LazyList.append
-      ((Subtype.map (fun x' => x'::xs) fun a => List.sizeof_cons_lt_right _ _) <$> shr x)
-      ((Subtype.map ((·::·) x) fun _ => List.sizeof_cons_lt_left _) <$> list.shrink_one xs)
+      ((Subtype.map (fun x' => x'::xs) fun a => List.sizeOf_cons_lt_right _ _) <$> shr x)
+      ((Subtype.map ((·::·) x) fun _ => List.sizeOf_cons_lt_left _) <$> list.shrink_one xs)
 #align slim_check.list.shrink_one SlimCheck.List.shrinkOne
 
 /-- `list.shrink_with shrink_f xs` shrinks `xs` by first
@@ -669,9 +669,9 @@ def recShrink {α : Type _} [SizeOf α] (t : α)
       sh t' ht'
 #align slim_check.rec_shrink SlimCheck.recShrink
 
-theorem Tree.one_le_sizeof {α} [SizeOf α] (t : Tree α) : 1 ≤ SizeOf.sizeOf t := by
+theorem Tree.one_le_sizeOf {α} [SizeOf α] (t : Tree α) : 1 ≤ SizeOf.sizeOf t := by
   cases t <;> unfold_wf <;> linarith
-#align slim_check.tree.one_le_sizeof SlimCheck.Tree.one_le_sizeof
+#align slim_check.tree.one_le_sizeof SlimCheck.Tree.one_le_sizeOf
 
 instance : Functor Tree where map := @Tree.map
 
@@ -681,11 +681,11 @@ def recShrinkWith [SizeOf α]
     (shrink_a :
       ∀ x : α, ShrinkFn { y : α // SizeofLt y x } → List (LazyList { y : α // SizeofLt y x })) :
     ShrinkFn α :=
-  WellFounded.fix (sizeof_measure_wf _) fun t f_rec =>
+  WellFounded.fix (sizeofMeasure_wf _) fun t f_rec =>
     LazyList.join (LazyList.ofList <| shrink_a t fun ⟨t', h⟩ => recShrink _ f_rec _)
 #align slim_check.rec_shrink_with SlimCheck.recShrinkWith
 
-theorem rec_shrink_with_eq [SizeOf α]
+theorem recShrinkWith_eq [SizeOf α]
     (shrink_a :
       ∀ x : α, ShrinkFn { y : α // SizeofLt y x } → List (LazyList { y : α // SizeofLt y x }))
     (x : α) :
@@ -696,7 +696,7 @@ theorem rec_shrink_with_eq [SizeOf α]
   by
   conv_lhs => rw [rec_shrink_with, WellFounded.fix_eq]
   congr ; ext ⟨y, h⟩; rfl
-#align slim_check.rec_shrink_with_eq SlimCheck.rec_shrink_with_eq
+#align slim_check.rec_shrink_with_eq SlimCheck.recShrinkWith_eq
 
 /-- `tree.shrink_with shrink_f t` shrinks `xs` by using the empty tree,
 each subtrees, and by shrinking the subtree to recombine them.

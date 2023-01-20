@@ -1064,7 +1064,7 @@ unsafe def positivity_factorial : expr → tactic strictness
 /-- Extension for the `positivity` tactic: `nat.asc_factorial` is always positive. -/
 @[positivity]
 unsafe def positivity_asc_factorial : expr → tactic strictness
-  | q(Nat.ascFactorial $(a) $(b)) => positive <$> mk_app `` Nat.asc_factorial_pos [a, b]
+  | q(Nat.ascFactorial $(a) $(b)) => positive <$> mk_app `` Nat.ascFactorial_pos [a, b]
   | e =>
     pp e >>= fail ∘ format.bracket "The expression `" "` isn't of the form `nat.asc_factorial n k`"
 #align tactic.positivity_asc_factorial tactic.positivity_asc_factorial

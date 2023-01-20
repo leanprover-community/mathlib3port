@@ -84,14 +84,14 @@ def toOption (o : Part α) [Decidable o.Dom] : Option α :=
 -/
 
 @[simp]
-theorem to_option_is_some (o : Part α) [Decidable o.Dom] : o.toOption.isSome ↔ o.Dom := by
+theorem toOption_isSome (o : Part α) [Decidable o.Dom] : o.toOption.isSome ↔ o.Dom := by
   by_cases o.dom <;> simp [h, Part.toOption]
-#align part.to_option_is_some Part.to_option_is_some
+#align part.to_option_is_some Part.toOption_isSome
 
 @[simp]
-theorem to_option_is_none (o : Part α) [Decidable o.Dom] : o.toOption.isNone ↔ ¬o.Dom := by
+theorem toOption_isNone (o : Part α) [Decidable o.Dom] : o.toOption.isNone ↔ ¬o.Dom := by
   by_cases o.dom <;> simp [h, Part.toOption]
-#align part.to_option_is_none Part.to_option_is_none
+#align part.to_option_is_none Part.toOption_isNone
 
 #print Part.ext' /-
 /-- `part` extensionality -/
@@ -291,7 +291,7 @@ theorem eq_none_or_eq_some (o : Part α) : o = none ∨ ∃ x, o = some x :=
 
 #print Part.some_injective /-
 theorem some_injective : Injective (@Part.some α) := fun a b h =>
-  congr_fun (eq_of_heq (Part.mk.inj h).2) trivial
+  congr_fun (eq_of_hEq (Part.mk.inj h).2) trivial
 #align part.some_injective Part.some_injective
 -/
 

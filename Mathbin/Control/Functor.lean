@@ -185,7 +185,7 @@ instance AddConst.functor {γ} : Functor (AddConst γ) :=
 
 #print Functor.AddConst.lawfulFunctor /-
 instance AddConst.lawfulFunctor {γ} : LawfulFunctor (AddConst γ) :=
-  @Const.is_lawful_functor γ
+  @Const.lawfulFunctor γ
 #align functor.add_const.is_lawful_functor Functor.AddConst.lawfulFunctor
 -/
 
@@ -285,7 +285,7 @@ but is expected to have type
   forall {F : Type.{u2} -> Type.{u1}} [AF : Functor.{u2, u1} F] [_inst_5 : LawfulFunctor.{u2, u1} F AF], Eq.{max (succ u1) (succ (succ u2))} (Functor.{u2, u1} (Functor.Comp.{u2, u2, u1} F Id.{u2})) (Functor.Comp.functor.{u2, u2, u1} F Id.{u2} AF (Applicative.toFunctor.{u2, u2} Id.{u2} (Monad.toApplicative.{u2, u2} Id.{u2} Id.instMonadId.{u2}))) AF
 Case conversion may be inaccurate. Consider using '#align functor.comp.functor_comp_id Functor.Comp.functor_comp_idₓ'. -/
 theorem functor_comp_id {F} [AF : Functor F] [LawfulFunctor F] : @Comp.functor F id _ _ = AF :=
-  @Functor.ext F _ AF (@Comp.is_lawful_functor F id _ _ _ _) _ fun α β f x => rfl
+  @Functor.ext F _ AF (@Comp.lawfulFunctor F id _ _ _ _) _ fun α β f x => rfl
 #align functor.comp.functor_comp_id Functor.Comp.functor_comp_id
 
 /- warning: functor.comp.functor_id_comp -> Functor.Comp.functor_id_comp is a dubious translation:
@@ -295,7 +295,7 @@ but is expected to have type
   forall {F : Type.{u2} -> Type.{u1}} [AF : Functor.{u2, u1} F] [_inst_5 : LawfulFunctor.{u2, u1} F AF], Eq.{max (succ u1) (succ (succ u2))} (Functor.{u2, u1} (Functor.Comp.{u1, u2, u1} Id.{u1} F)) (Functor.Comp.functor.{u1, u2, u1} Id.{u1} F (Applicative.toFunctor.{u1, u1} Id.{u1} (Monad.toApplicative.{u1, u1} Id.{u1} Id.instMonadId.{u1})) AF) AF
 Case conversion may be inaccurate. Consider using '#align functor.comp.functor_id_comp Functor.Comp.functor_id_compₓ'. -/
 theorem functor_id_comp {F} [AF : Functor F] [LawfulFunctor F] : @Comp.functor id F _ _ = AF :=
-  @Functor.ext F _ AF (@Comp.is_lawful_functor id F _ _ _ _) _ fun α β f x => rfl
+  @Functor.ext F _ AF (@Comp.lawfulFunctor id F _ _ _ _) _ fun α β f x => rfl
 #align functor.comp.functor_id_comp Functor.Comp.functor_id_comp
 
 end Comp

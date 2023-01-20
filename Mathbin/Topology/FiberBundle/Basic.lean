@@ -226,7 +226,7 @@ variable (F) {E} [FiberBundle F E]
 
 theorem map_proj_nhds (x : TotalSpace E) : map (π E) (𝓝 x) = 𝓝 x.proj :=
   (trivializationAt F E x.proj).map_proj_nhds <|
-    (trivializationAt F E x.proj).mem_source.2 <| mem_base_set_trivialization_at F E x.proj
+    (trivializationAt F E x.proj).mem_source.2 <| mem_baseSet_trivializationAt F E x.proj
 #align fiber_bundle.map_proj_nhds FiberBundle.map_proj_nhds
 
 variable (E)
@@ -234,31 +234,31 @@ variable (E)
 /-- The projection from a fiber bundle to its base is continuous. -/
 @[continuity]
 theorem continuous_proj : Continuous (π E) :=
-  continuous_iff_continuous_at.2 fun x => (map_proj_nhds F x).le
+  continuous_iff_continuousAt.2 fun x => (map_proj_nhds F x).le
 #align fiber_bundle.continuous_proj FiberBundle.continuous_proj
 
 /-- The projection from a fiber bundle to its base is an open map. -/
-theorem is_open_map_proj : IsOpenMap (π E) :=
+theorem isOpenMap_proj : IsOpenMap (π E) :=
   IsOpenMap.of_nhds_le fun x => (map_proj_nhds F x).ge
-#align fiber_bundle.is_open_map_proj FiberBundle.is_open_map_proj
+#align fiber_bundle.is_open_map_proj FiberBundle.isOpenMap_proj
 
 /-- The projection from a fiber bundle with a nonempty fiber to its base is a surjective
 map. -/
 theorem surjective_proj [Nonempty F] : Function.Surjective (π E) := fun b =>
   let ⟨p, _, hpb⟩ :=
-    (trivializationAt F E b).proj_surj_on_base_set (mem_base_set_trivialization_at F E b)
+    (trivializationAt F E b).proj_surj_on_base_set (mem_baseSet_trivializationAt F E b)
   ⟨p, hpb⟩
 #align fiber_bundle.surjective_proj FiberBundle.surjective_proj
 
 /-- The projection from a fiber bundle with a nonempty fiber to its base is a quotient
 map. -/
-theorem quotient_map_proj [Nonempty F] : QuotientMap (π E) :=
-  (is_open_map_proj F E).to_quotient_map (continuous_proj F E) (surjective_proj F E)
-#align fiber_bundle.quotient_map_proj FiberBundle.quotient_map_proj
+theorem quotientMap_proj [Nonempty F] : QuotientMap (π E) :=
+  (isOpenMap_proj F E).to_quotient_map (continuous_proj F E) (surjective_proj F E)
+#align fiber_bundle.quotient_map_proj FiberBundle.quotientMap_proj
 
-theorem continuous_total_space_mk (x : B) : Continuous (@totalSpaceMk B E x) :=
-  (total_space_mk_inducing F E x).Continuous
-#align fiber_bundle.continuous_total_space_mk FiberBundle.continuous_total_space_mk
+theorem continuous_totalSpaceMk (x : B) : Continuous (@totalSpaceMk B E x) :=
+  (totalSpaceMk_inducing F E x).Continuous
+#align fiber_bundle.continuous_total_space_mk FiberBundle.continuous_totalSpaceMk
 
 end FiberBundle
 
@@ -266,7 +266,7 @@ variable (F E)
 
 /-- If `E` is a fiber bundle over a conditionally complete linear order,
 then it is trivial over any closed interval. -/
-theorem FiberBundle.exists_trivialization_Icc_subset [ConditionallyCompleteLinearOrder B]
+theorem FiberBundle.exists_trivialization_icc_subset [ConditionallyCompleteLinearOrder B]
     [OrderTopology B] [FiberBundle F E] (a b : B) :
     ∃ e : Trivialization F (π E), Icc a b ⊆ e.baseSet := by
   classical
@@ -295,8 +295,8 @@ theorem FiberBundle.exists_trivialization_Icc_subset [ConditionallyCompleteLinea
       obtain ⟨ec, hc⟩ : ∃ ec : Trivialization F (π E), c ∈ ec.baseSet :=
         ⟨trivialization_at F E c, mem_base_set_trivialization_at F E c⟩
       obtain ⟨c', hc', hc'e⟩ : ∃ c' ∈ Ico a c, Ioc c' c ⊆ ec.base_set :=
-        (mem_nhds_within_Iic_iff_exists_mem_Ico_Ioc_subset hlt).1
-          (mem_nhds_within_of_mem_nhds <| IsOpen.mem_nhds ec.open_base_set hc)
+        (mem_nhdsWithin_iic_iff_exists_mem_ico_ioc_subset hlt).1
+          (mem_nhdsWithin_of_mem_nhds <| IsOpen.mem_nhds ec.open_base_set hc)
       /- Since `c' < c = Sup s`, there exists `d ∈ s ∩ (c', c]`. Let `ead` be a trivialization of
           `proj` over `[a, d]`. Then we can glue `ead` and `ec` into a trivialization over `[a, c]`. -/
       obtain ⟨d, ⟨hdab, ead, had⟩, hd⟩ : ∃ d ∈ s, d ∈ Ioc c' c := hsc.exists_between hc'.2
@@ -313,8 +313,8 @@ theorem FiberBundle.exists_trivialization_Icc_subset [ConditionallyCompleteLinea
     /- Since the base set of `ec` is open, it includes `[c, d)` (hence, `[a, d)`) for some
       `d ∈ (c, b]`. -/
     obtain ⟨d, hdcb, hd⟩ : ∃ d ∈ Ioc c b, Ico c d ⊆ ec.base_set :=
-      (mem_nhds_within_Ici_iff_exists_mem_Ioc_Ico_subset hlt).1
-        (mem_nhds_within_of_mem_nhds <| IsOpen.mem_nhds ec.open_base_set (hec ⟨hc.1, le_rfl⟩))
+      (mem_nhdsWithin_ici_iff_exists_mem_ioc_ico_subset hlt).1
+        (mem_nhdsWithin_of_mem_nhds <| IsOpen.mem_nhds ec.open_base_set (hec ⟨hc.1, le_rfl⟩))
     have had : Ico a d ⊆ ec.base_set := Ico_subset_Icc_union_Ico.trans (union_subset hec hd)
     by_cases he : Disjoint (Iio d) (Ioi c)
     · /- If `(c, d) = ∅`, then let `ed` be a trivialization of `proj` over a neighborhood of `d`.
@@ -324,7 +324,7 @@ theorem FiberBundle.exists_trivialization_Icc_subset [ConditionallyCompleteLinea
         ⟨trivialization_at F E d, mem_base_set_trivialization_at F E d⟩
       refine'
         ⟨d, hdcb,
-          (ec.restr_open (Iio d) is_open_Iio).disjointUnion (ed.restr_open (Ioi c) is_open_Ioi)
+          (ec.restr_open (Iio d) isOpen_iio).disjointUnion (ed.restr_open (Ioi c) isOpen_ioi)
             (he.mono (inter_subset_right _ _) (inter_subset_right _ _)),
           fun x hx => _⟩
       rcases hx.2.eq_or_lt with (rfl | hxd)
@@ -335,7 +335,7 @@ theorem FiberBundle.exists_trivialization_Icc_subset [ConditionallyCompleteLinea
       push_neg  at he
       rcases he with ⟨d', hdd' : d' < d, hd'c⟩
       exact ⟨d', ⟨hd'c, hdd'.le.trans hdcb.2⟩, ec, (Icc_subset_Ico_right hdd').trans had⟩
-#align fiber_bundle.exists_trivialization_Icc_subset FiberBundle.exists_trivialization_Icc_subset
+#align fiber_bundle.exists_trivialization_Icc_subset FiberBundle.exists_trivialization_icc_subset
 
 end FiberBundle
 
@@ -440,8 +440,8 @@ def trivChange (i j : ι) : LocalHomeomorph (B × F) (B × F)
     rw [Z.coord_change_comp, Z.coord_change_self]
     · exact hx.2
     · simp [hx]
-  open_source := (IsOpen.inter (Z.is_open_base_set i) (Z.is_open_base_set j)).Prod is_open_univ
-  open_target := (IsOpen.inter (Z.is_open_base_set i) (Z.is_open_base_set j)).Prod is_open_univ
+  open_source := (IsOpen.inter (Z.is_open_base_set i) (Z.is_open_base_set j)).Prod isOpen_univ
+  open_target := (IsOpen.inter (Z.is_open_base_set i) (Z.is_open_base_set j)).Prod isOpen_univ
   continuous_to_fun :=
     ContinuousOn.prod continuous_fst.ContinuousOn (Z.continuous_on_coord_change i j)
   continuous_inv_fun := by
@@ -450,12 +450,12 @@ def trivChange (i j : ι) : LocalHomeomorph (B × F) (B × F)
 #align fiber_bundle_core.triv_change FiberBundleCore.trivChange
 
 @[simp, mfld_simps]
-theorem mem_triv_change_source (i j : ι) (p : B × F) :
+theorem mem_trivChange_source (i j : ι) (p : B × F) :
     p ∈ (Z.trivChange i j).source ↔ p.1 ∈ Z.baseSet i ∩ Z.baseSet j :=
   by
   erw [mem_prod]
   simp
-#align fiber_bundle_core.mem_triv_change_source FiberBundleCore.mem_triv_change_source
+#align fiber_bundle_core.mem_triv_change_source FiberBundleCore.mem_trivChange_source
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Associate to a trivialization index `i : ι` the corresponding trivialization, i.e., a bijection
@@ -493,25 +493,25 @@ def localTrivAsLocalEquiv (i : ι) : LocalEquiv Z.TotalSpace (B × F)
 
 variable (i : ι)
 
-theorem mem_local_triv_as_local_equiv_source (p : Z.TotalSpace) :
+theorem mem_localTrivAsLocalEquiv_source (p : Z.TotalSpace) :
     p ∈ (Z.localTrivAsLocalEquiv i).source ↔ p.1 ∈ Z.baseSet i :=
   Iff.rfl
-#align fiber_bundle_core.mem_local_triv_as_local_equiv_source FiberBundleCore.mem_local_triv_as_local_equiv_source
+#align fiber_bundle_core.mem_local_triv_as_local_equiv_source FiberBundleCore.mem_localTrivAsLocalEquiv_source
 
-theorem mem_local_triv_as_local_equiv_target (p : B × F) :
+theorem mem_localTrivAsLocalEquiv_target (p : B × F) :
     p ∈ (Z.localTrivAsLocalEquiv i).target ↔ p.1 ∈ Z.baseSet i :=
   by
   erw [mem_prod]
   simp only [and_true_iff, mem_univ]
-#align fiber_bundle_core.mem_local_triv_as_local_equiv_target FiberBundleCore.mem_local_triv_as_local_equiv_target
+#align fiber_bundle_core.mem_local_triv_as_local_equiv_target FiberBundleCore.mem_localTrivAsLocalEquiv_target
 
-theorem local_triv_as_local_equiv_apply (p : Z.TotalSpace) :
+theorem localTrivAsLocalEquiv_apply (p : Z.TotalSpace) :
     (Z.localTrivAsLocalEquiv i) p = ⟨p.1, Z.coordChange (Z.indexAt p.1) i p.1 p.2⟩ :=
   rfl
-#align fiber_bundle_core.local_triv_as_local_equiv_apply FiberBundleCore.local_triv_as_local_equiv_apply
+#align fiber_bundle_core.local_triv_as_local_equiv_apply FiberBundleCore.localTrivAsLocalEquiv_apply
 
 /-- The composition of two local trivializations is the trivialization change Z.triv_change i j. -/
-theorem local_triv_as_local_equiv_trans (i j : ι) :
+theorem localTrivAsLocalEquiv_trans (i j : ι) :
     (Z.localTrivAsLocalEquiv i).symm.trans (Z.localTrivAsLocalEquiv j) ≈
       (Z.trivChange i j).toLocalEquiv :=
   by
@@ -525,7 +525,7 @@ theorem local_triv_as_local_equiv_trans (i j : ι) :
       and_true_iff, mem_preimage, proj, mem_univ, [anonymous], eq_self_iff_true,
       LocalEquiv.coe_trans, total_space.proj] at hx⊢
     simp only [Z.coord_change_comp, hx, mem_inter_iff, and_self_iff, mem_base_set_at]
-#align fiber_bundle_core.local_triv_as_local_equiv_trans FiberBundleCore.local_triv_as_local_equiv_trans
+#align fiber_bundle_core.local_triv_as_local_equiv_trans FiberBundleCore.localTrivAsLocalEquiv_trans
 
 /-- Topological structure on the total space of a fiber bundle created from core, designed so
 that all the local trivialization are continuous. -/
@@ -541,7 +541,7 @@ theorem open_source' (i : ι) : IsOpen (Z.localTrivAsLocalEquiv i).source :=
   by
   apply TopologicalSpace.GenerateOpen.basic
   simp only [exists_prop, mem_Union, mem_singleton_iff]
-  refine' ⟨i, Z.base_set i ×ˢ univ, (Z.is_open_base_set i).Prod is_open_univ, _⟩
+  refine' ⟨i, Z.base_set i ×ˢ univ, (Z.is_open_base_set i).Prod isOpen_univ, _⟩
   ext p
   simp only [local_triv_as_local_equiv_apply, prod_mk_mem_set_prod_eq, mem_inter_iff, and_self_iff,
     mem_local_triv_as_local_equiv_source, and_true_iff, mem_univ, mem_preimage]
@@ -559,16 +559,16 @@ def localTriv (i : ι) : Trivialization F Z.proj
     simp only [mfld_simps]
     rfl
   open_source := Z.open_source' i
-  open_target := (Z.is_open_base_set i).Prod is_open_univ
+  open_target := (Z.is_open_base_set i).Prod isOpen_univ
   continuous_to_fun := by
-    rw [continuous_on_open_iff (Z.open_source' i)]
+    rw [continuousOn_open_iff (Z.open_source' i)]
     intro s s_open
     apply TopologicalSpace.GenerateOpen.basic
     simp only [exists_prop, mem_Union, mem_singleton_iff]
     exact ⟨i, s, s_open, rfl⟩
   continuous_inv_fun :=
     by
-    apply continuous_on_open_of_generate_from ((Z.is_open_base_set i).Prod is_open_univ)
+    apply continuousOn_open_of_generateFrom ((Z.is_open_base_set i).Prod isOpen_univ)
     intro t ht
     simp only [exists_prop, mem_Union, mem_singleton_iff] at ht
     obtain ⟨j, s, s_open, ts⟩ :
@@ -585,8 +585,8 @@ def localTriv (i : ι) : Trivialization F Z.proj
       by
       rw [(Z.local_triv_as_local_equiv_trans i j).source_inter_preimage_eq]
       exact
-        (continuous_on_open_iff (Z.triv_change i j).open_source).1 (Z.triv_change i j).ContinuousOn
-          _ s_open
+        (continuousOn_open_iff (Z.triv_change i j).open_source).1 (Z.triv_change i j).ContinuousOn _
+          s_open
     convert this using 1
     dsimp [LocalEquiv.trans_source]
     rw [← preimage_comp, inter_assoc]
@@ -601,9 +601,9 @@ def localTrivAt (b : B) : Trivialization F (π Z.Fiber) :=
 #align fiber_bundle_core.local_triv_at FiberBundleCore.localTrivAt
 
 @[simp, mfld_simps]
-theorem local_triv_at_def (b : B) : Z.localTriv (Z.indexAt b) = Z.localTrivAt b :=
+theorem localTrivAt_def (b : B) : Z.localTriv (Z.indexAt b) = Z.localTrivAt b :=
   rfl
-#align fiber_bundle_core.local_triv_at_def FiberBundleCore.local_triv_at_def
+#align fiber_bundle_core.local_triv_at_def FiberBundleCore.localTrivAt_def
 
 /-- If an element of `F` is invariant under all coordinate changes, then one can define a
 corresponding section of the fiber bundle, which is continuous. This applies in particular to the
@@ -613,13 +613,13 @@ theorem continuous_const_section (v : F)
     (h : ∀ i j, ∀ x ∈ Z.baseSet i ∩ Z.baseSet j, Z.coordChange i j x v = v) :
     Continuous (show B → Z.TotalSpace from fun x => ⟨x, v⟩) :=
   by
-  apply continuous_iff_continuous_at.2 fun x => _
+  apply continuous_iff_continuousAt.2 fun x => _
   have A : Z.base_set (Z.index_at x) ∈ 𝓝 x :=
     IsOpen.mem_nhds (Z.is_open_base_set (Z.index_at x)) (Z.mem_base_set_at x)
   apply ((Z.local_triv_at x).toLocalHomeomorph.continuous_at_iff_continuous_at_comp_left _).2
   · simp only [(· ∘ ·), mfld_simps]
     apply continuous_at_id.prod
-    have : ContinuousOn (fun y : B => v) (Z.base_set (Z.index_at x)) := continuous_on_const
+    have : ContinuousOn (fun y : B => v) (Z.base_set (Z.index_at x)) := continuousOn_const
     apply (this.congr _).ContinuousAt A
     intro y hy
     simp only [h, hy, mem_base_set_at, mfld_simps]
@@ -627,62 +627,62 @@ theorem continuous_const_section (v : F)
 #align fiber_bundle_core.continuous_const_section FiberBundleCore.continuous_const_section
 
 @[simp, mfld_simps]
-theorem local_triv_as_local_equiv_coe : ⇑(Z.localTrivAsLocalEquiv i) = Z.localTriv i :=
+theorem localTrivAsLocalEquiv_coe : ⇑(Z.localTrivAsLocalEquiv i) = Z.localTriv i :=
   rfl
-#align fiber_bundle_core.local_triv_as_local_equiv_coe FiberBundleCore.local_triv_as_local_equiv_coe
+#align fiber_bundle_core.local_triv_as_local_equiv_coe FiberBundleCore.localTrivAsLocalEquiv_coe
 
 @[simp, mfld_simps]
-theorem local_triv_as_local_equiv_source :
+theorem localTrivAsLocalEquiv_source :
     (Z.localTrivAsLocalEquiv i).source = (Z.localTriv i).source :=
   rfl
-#align fiber_bundle_core.local_triv_as_local_equiv_source FiberBundleCore.local_triv_as_local_equiv_source
+#align fiber_bundle_core.local_triv_as_local_equiv_source FiberBundleCore.localTrivAsLocalEquiv_source
 
 @[simp, mfld_simps]
-theorem local_triv_as_local_equiv_target :
+theorem localTrivAsLocalEquiv_target :
     (Z.localTrivAsLocalEquiv i).target = (Z.localTriv i).target :=
   rfl
-#align fiber_bundle_core.local_triv_as_local_equiv_target FiberBundleCore.local_triv_as_local_equiv_target
+#align fiber_bundle_core.local_triv_as_local_equiv_target FiberBundleCore.localTrivAsLocalEquiv_target
 
 @[simp, mfld_simps]
-theorem local_triv_as_local_equiv_symm :
+theorem localTrivAsLocalEquiv_symm :
     (Z.localTrivAsLocalEquiv i).symm = (Z.localTriv i).toLocalEquiv.symm :=
   rfl
-#align fiber_bundle_core.local_triv_as_local_equiv_symm FiberBundleCore.local_triv_as_local_equiv_symm
+#align fiber_bundle_core.local_triv_as_local_equiv_symm FiberBundleCore.localTrivAsLocalEquiv_symm
 
 @[simp, mfld_simps]
-theorem base_set_at : Z.baseSet i = (Z.localTriv i).baseSet :=
+theorem baseSet_at : Z.baseSet i = (Z.localTriv i).baseSet :=
   rfl
-#align fiber_bundle_core.base_set_at FiberBundleCore.base_set_at
+#align fiber_bundle_core.base_set_at FiberBundleCore.baseSet_at
 
 @[simp, mfld_simps]
-theorem local_triv_apply (p : Z.TotalSpace) :
+theorem localTriv_apply (p : Z.TotalSpace) :
     (Z.localTriv i) p = ⟨p.1, Z.coordChange (Z.indexAt p.1) i p.1 p.2⟩ :=
   rfl
-#align fiber_bundle_core.local_triv_apply FiberBundleCore.local_triv_apply
+#align fiber_bundle_core.local_triv_apply FiberBundleCore.localTriv_apply
 
 @[simp, mfld_simps]
-theorem local_triv_at_apply (p : Z.TotalSpace) : (Z.localTrivAt p.1) p = ⟨p.1, p.2⟩ :=
+theorem localTrivAt_apply (p : Z.TotalSpace) : (Z.localTrivAt p.1) p = ⟨p.1, p.2⟩ :=
   by
   rw [local_triv_at, local_triv_apply, coord_change_self]
   exact Z.mem_base_set_at p.1
-#align fiber_bundle_core.local_triv_at_apply FiberBundleCore.local_triv_at_apply
+#align fiber_bundle_core.local_triv_at_apply FiberBundleCore.localTrivAt_apply
 
 @[simp, mfld_simps]
-theorem local_triv_at_apply_mk (b : B) (a : F) : (Z.localTrivAt b) ⟨b, a⟩ = ⟨b, a⟩ :=
+theorem localTrivAt_apply_mk (b : B) (a : F) : (Z.localTrivAt b) ⟨b, a⟩ = ⟨b, a⟩ :=
   Z.local_triv_at_apply _
-#align fiber_bundle_core.local_triv_at_apply_mk FiberBundleCore.local_triv_at_apply_mk
+#align fiber_bundle_core.local_triv_at_apply_mk FiberBundleCore.localTrivAt_apply_mk
 
 @[simp, mfld_simps]
-theorem mem_local_triv_source (p : Z.TotalSpace) :
+theorem mem_localTriv_source (p : Z.TotalSpace) :
     p ∈ (Z.localTriv i).source ↔ p.1 ∈ (Z.localTriv i).baseSet :=
   Iff.rfl
-#align fiber_bundle_core.mem_local_triv_source FiberBundleCore.mem_local_triv_source
+#align fiber_bundle_core.mem_local_triv_source FiberBundleCore.mem_localTriv_source
 
 @[simp, mfld_simps]
-theorem mem_local_triv_at_source (p : Z.TotalSpace) (b : B) :
+theorem mem_localTrivAt_source (p : Z.TotalSpace) (b : B) :
     p ∈ (Z.localTrivAt b).source ↔ p.1 ∈ (Z.localTrivAt b).baseSet :=
   Iff.rfl
-#align fiber_bundle_core.mem_local_triv_at_source FiberBundleCore.mem_local_triv_at_source
+#align fiber_bundle_core.mem_local_triv_at_source FiberBundleCore.mem_localTrivAt_source
 
 @[simp, mfld_simps]
 theorem mem_source_at : (⟨b, a⟩ : Z.TotalSpace) ∈ (Z.localTrivAt b).source :=
@@ -692,37 +692,37 @@ theorem mem_source_at : (⟨b, a⟩ : Z.TotalSpace) ∈ (Z.localTrivAt b).source
 #align fiber_bundle_core.mem_source_at FiberBundleCore.mem_source_at
 
 @[simp, mfld_simps]
-theorem mem_local_triv_target (p : B × F) :
+theorem mem_localTriv_target (p : B × F) :
     p ∈ (Z.localTriv i).target ↔ p.1 ∈ (Z.localTriv i).baseSet :=
   Trivialization.mem_target _
-#align fiber_bundle_core.mem_local_triv_target FiberBundleCore.mem_local_triv_target
+#align fiber_bundle_core.mem_local_triv_target FiberBundleCore.mem_localTriv_target
 
 @[simp, mfld_simps]
-theorem mem_local_triv_at_target (p : B × F) (b : B) :
+theorem mem_localTrivAt_target (p : B × F) (b : B) :
     p ∈ (Z.localTrivAt b).target ↔ p.1 ∈ (Z.localTrivAt b).baseSet :=
   Trivialization.mem_target _
-#align fiber_bundle_core.mem_local_triv_at_target FiberBundleCore.mem_local_triv_at_target
+#align fiber_bundle_core.mem_local_triv_at_target FiberBundleCore.mem_localTrivAt_target
 
 @[simp, mfld_simps]
-theorem local_triv_symm_apply (p : B × F) :
+theorem localTriv_symm_apply (p : B × F) :
     (Z.localTriv i).toLocalHomeomorph.symm p = ⟨p.1, Z.coordChange i (Z.indexAt p.1) p.1 p.2⟩ :=
   rfl
-#align fiber_bundle_core.local_triv_symm_apply FiberBundleCore.local_triv_symm_apply
+#align fiber_bundle_core.local_triv_symm_apply FiberBundleCore.localTriv_symm_apply
 
 @[simp, mfld_simps]
-theorem mem_local_triv_at_base_set (b : B) : b ∈ (Z.localTrivAt b).baseSet :=
+theorem mem_localTrivAt_baseSet (b : B) : b ∈ (Z.localTrivAt b).baseSet :=
   by
   rw [local_triv_at, ← base_set_at]
   exact Z.mem_base_set_at b
-#align fiber_bundle_core.mem_local_triv_at_base_set FiberBundleCore.mem_local_triv_at_base_set
+#align fiber_bundle_core.mem_local_triv_at_base_set FiberBundleCore.mem_localTrivAt_baseSet
 
 /-- The inclusion of a fiber into the total space is a continuous map. -/
 @[continuity]
-theorem continuous_total_space_mk (b : B) :
+theorem continuous_totalSpaceMk (b : B) :
     Continuous (totalSpaceMk b : Z.Fiber b → Bundle.TotalSpace Z.Fiber) :=
   by
   rw [continuous_iff_le_induced, FiberBundleCore.toTopologicalSpace]
-  apply le_induced_generate_from
+  apply le_induced_generateFrom
   simp only [total_space_mk, mem_Union, mem_singleton_iff, local_triv_as_local_equiv_source,
     local_triv_as_local_equiv_coe]
   rintro s ⟨i, t, ht, rfl⟩
@@ -732,9 +732,9 @@ theorem continuous_total_space_mk (b : B) :
   · simp only [total_space.proj, proj, ← preimage_comp]
     by_cases b ∈ (Z.local_triv i).baseSet
     · rw [preimage_const_of_mem h]
-      exact is_open_univ
+      exact isOpen_univ
     · rw [preimage_const_of_not_mem h]
-      exact is_open_empty
+      exact isOpen_empty
   · simp only [Function.comp, local_triv_apply]
     rw [preimage_inter, preimage_comp]
     by_cases b ∈ Z.base_set i
@@ -744,8 +744,8 @@ theorem continuous_total_space_mk (b : B) :
       exact (((Z.local_triv i).open_target.inter ht).Preimage (Continuous.Prod.mk b)).Preimage hc
     · rw [(Z.local_triv i).target_eq, ← base_set_at, mk_preimage_prod_right_eq_empty h,
         preimage_empty, empty_inter]
-      exact is_open_empty
-#align fiber_bundle_core.continuous_total_space_mk FiberBundleCore.continuous_total_space_mk
+      exact isOpen_empty
+#align fiber_bundle_core.continuous_total_space_mk FiberBundleCore.continuous_totalSpaceMk
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- A fiber bundle constructed from core is indeed a fiber bundle. -/
@@ -759,7 +759,7 @@ instance fiberBundle : FiberBundle F Z.Fiber
       · refine'
           is_open_induced_iff.mpr
             ⟨(Z.local_triv_at b).source ∩ Z.local_triv_at b ⁻¹' (Z.local_triv_at b).baseSet ×ˢ s,
-              (continuous_on_open_iff (Z.local_triv_at b).open_source).mp
+              (continuousOn_open_iff (Z.local_triv_at b).open_source).mp
                 (Z.local_triv_at b).continuous_to_fun _ ((Z.local_triv_at b).open_base_set.Prod h),
               _⟩
         rw [preimage_inter, ← preimage_comp, Function.comp]
@@ -781,9 +781,9 @@ theorem continuous_proj : Continuous Z.proj :=
 #align fiber_bundle_core.continuous_proj FiberBundleCore.continuous_proj
 
 /-- The projection on the base of a fiber bundle created from core is an open map -/
-theorem is_open_map_proj : IsOpenMap Z.proj :=
-  is_open_map_proj F Z.Fiber
-#align fiber_bundle_core.is_open_map_proj FiberBundleCore.is_open_map_proj
+theorem isOpenMap_proj : IsOpenMap Z.proj :=
+  isOpenMap_proj F Z.Fiber
+#align fiber_bundle_core.is_open_map_proj FiberBundleCore.isOpenMap_proj
 
 end FiberBundleCore
 
@@ -818,16 +818,16 @@ def totalSpaceTopology (a : FiberPrebundle F E) : TopologicalSpace (TotalSpace E
     coinduced e.setSymm Subtype.topologicalSpace
 #align fiber_prebundle.total_space_topology FiberPrebundle.totalSpaceTopology
 
-theorem continuous_symm_of_mem_pretrivialization_atlas (he : e ∈ a.pretrivializationAtlas) :
+theorem continuous_symm_of_mem_pretrivializationAtlas (he : e ∈ a.pretrivializationAtlas) :
     @ContinuousOn _ _ _ a.totalSpaceTopology e.toLocalEquiv.symm e.target :=
   by
   refine'
     id fun z H =>
-      id fun U h => preimage_nhds_within_coinduced' H e.open_target (le_def.1 (nhds_mono _) U h)
+      id fun U h => preimage_nhdsWithin_coinduced' H e.open_target (le_def.1 (nhds_mono _) U h)
   exact le_supᵢ₂ e he
-#align fiber_prebundle.continuous_symm_of_mem_pretrivialization_atlas FiberPrebundle.continuous_symm_of_mem_pretrivialization_atlas
+#align fiber_prebundle.continuous_symm_of_mem_pretrivialization_atlas FiberPrebundle.continuous_symm_of_mem_pretrivializationAtlas
 
-theorem is_open_source (e : Pretrivialization F (π E)) : @IsOpen _ a.totalSpaceTopology e.source :=
+theorem isOpen_source (e : Pretrivialization F (π E)) : @IsOpen _ a.totalSpaceTopology e.source :=
   by
   letI := a.total_space_topology
   refine' is_open_supr_iff.mpr fun e' => _
@@ -836,9 +836,9 @@ theorem is_open_source (e : Pretrivialization F (π E)) : @IsOpen _ a.totalSpace
   rw [Pretrivialization.setSymm, restrict, e.target_eq, e.source_eq, preimage_comp,
     Subtype.preimage_coe_eq_preimage_coe_iff, e'.target_eq, prod_inter_prod, inter_univ,
     Pretrivialization.preimage_symm_proj_inter]
-#align fiber_prebundle.is_open_source FiberPrebundle.is_open_source
+#align fiber_prebundle.is_open_source FiberPrebundle.isOpen_source
 
-theorem is_open_target_of_mem_pretrivialization_atlas_inter (e e' : Pretrivialization F (π E))
+theorem isOpen_target_of_mem_pretrivializationAtlas_inter (e e' : Pretrivialization F (π E))
     (he' : e' ∈ a.pretrivializationAtlas) :
     IsOpen (e'.toLocalEquiv.target ∩ e'.toLocalEquiv.symm ⁻¹' e.source) :=
   by
@@ -848,7 +848,7 @@ theorem is_open_target_of_mem_pretrivialization_atlas_inter (e e' : Pretrivializ
       (a.is_open_source e)
   rw [inter_comm, hu2]
   exact hu1.inter e'.open_target
-#align fiber_prebundle.is_open_target_of_mem_pretrivialization_atlas_inter FiberPrebundle.is_open_target_of_mem_pretrivialization_atlas_inter
+#align fiber_prebundle.is_open_target_of_mem_pretrivialization_atlas_inter FiberPrebundle.isOpen_target_of_mem_pretrivializationAtlas_inter
 
 /-- Promotion from a `pretrivialization` to a `trivialization`. -/
 def trivializationOfMemPretrivializationAtlas (he : e ∈ a.pretrivializationAtlas) :
@@ -864,7 +864,7 @@ def trivializationOfMemPretrivializationAtlas (he : e ∈ a.pretrivializationAtl
             rw [inter_assoc, inter_self]
             rfl⟩
       refine' is_open_supr_iff.mpr fun he' => _
-      rw [is_open_coinduced, is_open_induced_iff]
+      rw [isOpen_coinduced, isOpen_induced_iff]
       obtain ⟨u, hu1, hu2⟩ := continuous_on_iff'.mp (a.continuous_triv_change _ he _ he') s hs
       have hu3 := congr_arg (fun s => (fun x : e'.target => (x : B × F)) ⁻¹' s) hu2
       simp only [Subtype.coe_preimage_self, preimage_inter, univ_inter] at hu3
@@ -886,7 +886,7 @@ theorem mem_trivialization_at_source (b : B) (x : E b) :
 #align fiber_prebundle.mem_trivialization_at_source FiberPrebundle.mem_trivialization_at_source
 
 @[simp]
-theorem total_space_mk_preimage_source (b : B) :
+theorem totalSpaceMk_preimage_source (b : B) :
     totalSpaceMk b ⁻¹' (a.pretrivializationAt b).source = univ :=
   by
   apply eq_univ_of_univ_subset
@@ -894,7 +894,7 @@ theorem total_space_mk_preimage_source (b : B) :
   simp only [total_space.proj]
   rw [preimage_const_of_mem _]
   exact a.mem_base_pretrivialization_at b
-#align fiber_prebundle.total_space_mk_preimage_source FiberPrebundle.total_space_mk_preimage_source
+#align fiber_prebundle.total_space_mk_preimage_source FiberPrebundle.totalSpaceMk_preimage_source
 
 /-- Topology on the fibers `E b` induced by the map `E b → E.total_space`. -/
 def fiberTopology (b : B) : TopologicalSpace (E b) :=
@@ -902,21 +902,21 @@ def fiberTopology (b : B) : TopologicalSpace (E b) :=
 #align fiber_prebundle.fiber_topology FiberPrebundle.fiberTopology
 
 @[continuity]
-theorem inducing_total_space_mk (b : B) :
+theorem inducing_totalSpaceMk (b : B) :
     @Inducing _ _ (a.fiberTopology b) a.totalSpaceTopology (totalSpaceMk b) :=
   by
   letI := a.total_space_topology
   letI := a.fiber_topology b
   exact ⟨rfl⟩
-#align fiber_prebundle.inducing_total_space_mk FiberPrebundle.inducing_total_space_mk
+#align fiber_prebundle.inducing_total_space_mk FiberPrebundle.inducing_totalSpaceMk
 
 @[continuity]
-theorem continuous_total_space_mk (b : B) :
+theorem continuous_totalSpaceMk (b : B) :
     @Continuous _ _ (a.fiberTopology b) a.totalSpaceTopology (totalSpaceMk b) :=
   by
   letI := a.total_space_topology; letI := a.fiber_topology b
   exact (a.inducing_total_space_mk b).Continuous
-#align fiber_prebundle.continuous_total_space_mk FiberPrebundle.continuous_total_space_mk
+#align fiber_prebundle.continuous_total_space_mk FiberPrebundle.continuous_totalSpaceMk
 
 /-- Make a `fiber_bundle` from a `fiber_prebundle`.  Concretely this means
 that, given a `fiber_prebundle` structure for a sigma-type `E` -- which consists of a
@@ -949,7 +949,7 @@ theorem continuous_proj : @Continuous _ _ a.totalSpaceTopology _ (π E) :=
 /-- For a fiber bundle `E` over `B` constructed using the `fiber_prebundle` mechanism,
 continuity of a function `total_space E → X` on an open set `s` can be checked by precomposing at
 each point with the pretrivialization used for the construction at that point. -/
-theorem continuous_on_of_comp_right {X : Type _} [TopologicalSpace X] {f : TotalSpace E → X}
+theorem continuousOn_of_comp_right {X : Type _} [TopologicalSpace X] {f : TotalSpace E → X}
     {s : Set B} (hs : IsOpen s)
     (hf :
       ∀ b ∈ s,
@@ -965,13 +965,13 @@ theorem continuous_on_of_comp_right {X : Type _} [TopologicalSpace X] {f : Total
     (e.continuous_at_of_comp_right _
         ((hf z.proj hz).ContinuousAt (IsOpen.mem_nhds _ _))).ContinuousWithinAt
   · exact a.mem_base_pretrivialization_at z.proj
-  · exact (hs.inter (a.pretrivialization_at z.proj).open_base_set).Prod is_open_univ
+  · exact (hs.inter (a.pretrivialization_at z.proj).open_base_set).Prod isOpen_univ
   refine' ⟨_, mem_univ _⟩
   rw [e.coe_fst]
   · exact ⟨hz, a.mem_base_pretrivialization_at z.proj⟩
   · rw [e.mem_source]
     exact a.mem_base_pretrivialization_at z.proj
-#align fiber_prebundle.continuous_on_of_comp_right FiberPrebundle.continuous_on_of_comp_right
+#align fiber_prebundle.continuous_on_of_comp_right FiberPrebundle.continuousOn_of_comp_right
 
 end FiberPrebundle
 

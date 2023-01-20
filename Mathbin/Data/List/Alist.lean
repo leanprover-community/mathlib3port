@@ -425,7 +425,7 @@ theorem insert_insert_of_ne {a a'} {b : β a} {b' : β a'} (s : AList β) (h : a
 theorem insert_singleton_eq {a : α} {b b' : β a} : insert a b (singleton a b') = singleton a b :=
   ext <| by
     simp only [AList.insert_entries, List.kerase_cons_eq, and_self_iff, AList.singleton_entries,
-      heq_iff_eq, eq_self_iff_true]
+      hEq_iff_eq, eq_self_iff_true]
 #align alist.insert_singleton_eq AList.insert_singleton_eq
 -/
 
@@ -556,7 +556,7 @@ theorem insert_union {a} {b : β a} {s₁ s₂ : AList β} : insert a b (s₁ �
 
 #print AList.union_assoc /-
 theorem union_assoc {s₁ s₂ s₃ : AList β} : (s₁ ∪ s₂ ∪ s₃).entries ~ (s₁ ∪ (s₂ ∪ s₃)).entries :=
-  lookup_ext (AList.nodupkeys _) (AList.nodupkeys _)
+  lookup_ext (AList.nodupKeys _) (AList.nodupKeys _)
     (by simp [Decidable.not_or_iff_and_not, or_assoc', and_or_left, and_assoc'])
 #align alist.union_assoc AList.union_assoc
 -/
@@ -578,7 +578,7 @@ variable [DecidableEq α]
 #print AList.union_comm_of_disjoint /-
 theorem union_comm_of_disjoint {s₁ s₂ : AList β} (h : Disjoint s₁ s₂) :
     (s₁ ∪ s₂).entries ~ (s₂ ∪ s₁).entries :=
-  lookup_ext (AList.nodupkeys _) (AList.nodupkeys _)
+  lookup_ext (AList.nodupKeys _) (AList.nodupKeys _)
     (by
       intros ; simp
       constructor <;> intro h'

@@ -84,10 +84,10 @@ def sort (f : Fin n → α) : Equiv.Perm (Fin n) :=
   (graphEquiv₂ f).toEquiv.trans (graphEquiv₁ f).symm
 #align tuple.sort Tuple.sort
 
-theorem graph_equiv₂_apply (f : Fin n → α) (i : Fin n) :
+theorem graphEquiv₂_apply (f : Fin n → α) (i : Fin n) :
     graphEquiv₂ f i = graphEquiv₁ f (sort f i) :=
   ((graphEquiv₁ f).apply_symm_apply _).symm
-#align tuple.graph_equiv₂_apply Tuple.graph_equiv₂_apply
+#align tuple.graph_equiv₂_apply Tuple.graphEquiv₂_apply
 
 theorem self_comp_sort (f : Fin n → α) : f ∘ sort f = graph.proj ∘ graphEquiv₂ f :=
   show graph.proj ∘ (graphEquiv₁ f ∘ (graphEquiv₁ f).symm) ∘ (graphEquiv₂ f).toEquiv = _ by simp

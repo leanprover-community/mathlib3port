@@ -571,7 +571,7 @@ section BundledHoms
 
 #print Fintype.decidableEqEquivFintype /-
 instance decidableEqEquivFintype [DecidableEq β] [Fintype α] : DecidableEq (α ≃ β) := fun a b =>
-  decidable_of_iff (a.1 = b.1) Equiv.coe_fn_injective.eq_iff
+  decidable_of_iff (a.1 = b.1) Equiv.coeFn_injective.eq_iff
 #align fintype.decidable_eq_equiv_fintype Fintype.decidableEqEquivFintype
 -/
 
@@ -757,7 +757,7 @@ This function computes by checking all terms `a : α` to find the `f a = b`, so 
 -/
 def invOfMemRange : Set.range f → α := fun b =>
   Finset.choose (fun a => f a = b) Finset.univ
-    ((exists_unique_congr (by simp)).mp (hf.exists_unique_of_mem_range b.property))
+    ((existsUnique_congr (by simp)).mp (hf.exists_unique_of_mem_range b.property))
 #align function.injective.inv_of_mem_range Function.Injective.invOfMemRange
 -/
 
@@ -1711,7 +1711,7 @@ def Quotient.finChoice {ι : Type _} [DecidableEq ι] [Fintype ι] {α : ι → 
       simp [Quotient.out_eq] at this
       simp [this]
       let g := fun a : Multiset ι => ⟦fun (i : ι) (h : i ∈ a) => Quotient.out (f i)⟧
-      refine' eq_of_heq ((eq_rec_heq _ _).trans (_ : HEq (g a) (g b)))
+      refine' eq_of_hEq ((eq_rec_hEq _ _).trans (_ : HEq (g a) (g b)))
       congr 1; exact Quotient.sound h)
     (fun f => ⟦fun i => f i (Finset.mem_univ _)⟧) fun a b h => Quotient.sound fun i => h _ _
 #align quotient.fin_choice Quotient.finChoice

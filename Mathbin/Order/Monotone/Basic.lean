@@ -451,13 +451,17 @@ theorem StrictAnti.imp (hf : StrictAnti f) (h : a < b) : f b < f a :=
 #align strict_anti.imp StrictAnti.imp
 -/
 
-protected theorem Monotone.monotone_on (hf : Monotone f) (s : Set α) : MonotoneOn f s :=
+#print Monotone.monotoneOn /-
+protected theorem Monotone.monotoneOn (hf : Monotone f) (s : Set α) : MonotoneOn f s :=
   fun a _ b _ => hf.imp
-#align monotone.monotone_on Monotone.monotone_on
+#align monotone.monotone_on Monotone.monotoneOn
+-/
 
-protected theorem Antitone.antitone_on (hf : Antitone f) (s : Set α) : AntitoneOn f s :=
+#print Antitone.antitoneOn /-
+protected theorem Antitone.antitoneOn (hf : Antitone f) (s : Set α) : AntitoneOn f s :=
   fun a _ b _ => hf.imp
-#align antitone.antitone_on Antitone.antitone_on
+#align antitone.antitone_on Antitone.antitoneOn
+-/
 
 #print monotoneOn_univ /-
 @[simp]
@@ -1277,9 +1281,11 @@ theorem strictMono_nat_of_lt_succ {f : ℕ → α} (hf : ∀ n, f n < f (n + 1))
 #align strict_mono_nat_of_lt_succ strictMono_nat_of_lt_succ
 -/
 
-theorem strict_anti_nat_of_succ_lt {f : ℕ → α} (hf : ∀ n, f (n + 1) < f n) : StrictAnti f :=
+#print strictAnti_nat_of_succ_lt /-
+theorem strictAnti_nat_of_succ_lt {f : ℕ → α} (hf : ∀ n, f (n + 1) < f n) : StrictAnti f :=
   @strictMono_nat_of_lt_succ αᵒᵈ _ f hf
-#align strict_anti_nat_of_succ_lt strict_anti_nat_of_succ_lt
+#align strict_anti_nat_of_succ_lt strictAnti_nat_of_succ_lt
+-/
 
 namespace Nat
 

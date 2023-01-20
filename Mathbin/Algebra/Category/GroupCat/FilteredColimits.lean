@@ -69,7 +69,7 @@ abbrev g.mk : (Σj, F.obj j) → G :=
 @[to_additive]
 theorem g.mk_eq (x y : Σj, F.obj j)
     (h : ∃ (k : J)(f : x.1 ⟶ k)(g : y.1 ⟶ k), F.map f x.2 = F.map g y.2) : G.mk x = G.mk y :=
-  Quot.EqvGen_sound (Types.FilteredColimit.eqv_gen_quot_rel_of_rel (F ⋙ forget GroupCat) x y h)
+  Quot.EqvGen_sound (Types.FilteredColimit.eqvGen_quot_rel_of_rel (F ⋙ forget GroupCat) x y h)
 #align Group.filtered_colimits.G.mk_eq GroupCat.FilteredColimits.g.mk_eq
 #align AddGroup.filtered_colimits.G.mk_eq AddGroupCat.FilteredColimits.g.mk_eq
 
@@ -81,7 +81,7 @@ def colimitInvAux (x : Σj, F.obj j) : G :=
 #align AddGroup.filtered_colimits.colimit_neg_aux AddGroupCat.FilteredColimits.colimitNegAux
 
 @[to_additive]
-theorem colimit_inv_aux_eq_of_rel (x y : Σj, F.obj j)
+theorem colimitInvAux_eq_of_rel (x y : Σj, F.obj j)
     (h : Types.FilteredColimit.Rel (F ⋙ forget GroupCat) x y) :
     colimit_inv_aux x = colimit_inv_aux y :=
   by
@@ -90,7 +90,7 @@ theorem colimit_inv_aux_eq_of_rel (x y : Σj, F.obj j)
   use k, f, g
   rw [MonoidHom.map_inv, MonoidHom.map_inv, inv_inj]
   exact hfg
-#align Group.filtered_colimits.colimit_inv_aux_eq_of_rel GroupCat.FilteredColimits.colimit_inv_aux_eq_of_rel
+#align Group.filtered_colimits.colimit_inv_aux_eq_of_rel GroupCat.FilteredColimits.colimitInvAux_eq_of_rel
 #align AddGroup.filtered_colimits.colimit_neg_aux_eq_of_rel AddGroupCat.FilteredColimits.colimit_neg_aux_eq_of_rel
 
 /-- Taking inverses in the colimit. See also `colimit_inv_aux`. -/

@@ -128,21 +128,21 @@ theorem sub_div_sub_smul_slope_add_sub_div_sub_smul_slope (f : k → PE) (a b c 
 
 /-- `slope f a c` is an affine combination of `slope f a b` and `slope f b c`. This version uses
 `line_map` to express this property. -/
-theorem line_map_slope_slope_sub_div_sub (f : k → PE) (a b c : k) (h : a ≠ c) :
+theorem lineMap_slope_slope_sub_div_sub (f : k → PE) (a b c : k) (h : a ≠ c) :
     lineMap (slope f a b) (slope f b c) ((c - b) / (c - a)) = slope f a c := by
   field_simp [sub_ne_zero.2 h.symm, ← sub_div_sub_smul_slope_add_sub_div_sub_smul_slope f a b c,
     line_map_apply_module]
-#align line_map_slope_slope_sub_div_sub line_map_slope_slope_sub_div_sub
+#align line_map_slope_slope_sub_div_sub lineMap_slope_slope_sub_div_sub
 
 /-- `slope f a b` is an affine combination of `slope f a (line_map a b r)` and
 `slope f (line_map a b r) b`. We use `line_map` to express this property. -/
-theorem line_map_slope_line_map_slope_line_map (f : k → PE) (a b r : k) :
+theorem lineMap_slope_lineMap_slope_lineMap (f : k → PE) (a b r : k) :
     lineMap (slope f (lineMap a b r) b) (slope f a (lineMap a b r)) r = slope f a b :=
   by
   obtain rfl | hab : a = b ∨ a ≠ b := Classical.em _; · simp
   rw [slope_comm _ a, slope_comm _ a, slope_comm _ _ b]
-  convert line_map_slope_slope_sub_div_sub f b (line_map a b r) a hab.symm using 2
+  convert lineMap_slope_slope_sub_div_sub f b (line_map a b r) a hab.symm using 2
   rw [line_map_apply_ring, eq_div_iff (sub_ne_zero.2 hab), sub_mul, one_mul, mul_sub, ← sub_sub,
     sub_sub_cancel]
-#align line_map_slope_line_map_slope_line_map line_map_slope_line_map_slope_line_map
+#align line_map_slope_line_map_slope_line_map lineMap_slope_lineMap_slope_lineMap
 

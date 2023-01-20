@@ -175,11 +175,11 @@ instance hasCoeToGeneralizedContinuedFraction :
 #align generalized_continued_fraction.has_coe_to_generalized_continued_fraction GeneralizedContinuedFraction.hasCoeToGeneralizedContinuedFraction
 
 @[simp, norm_cast]
-theorem coe_to_generalized_continued_fraction {g : GeneralizedContinuedFraction α} :
+theorem coe_to_generalizedContinuedFraction {g : GeneralizedContinuedFraction α} :
     (↑(g : GeneralizedContinuedFraction α) : GeneralizedContinuedFraction β) =
       ⟨(g.h : β), (g.s.map coe : Seq <| Pair β)⟩ :=
   rfl
-#align generalized_continued_fraction.coe_to_generalized_continued_fraction GeneralizedContinuedFraction.coe_to_generalized_continued_fraction
+#align generalized_continued_fraction.coe_to_generalized_continued_fraction GeneralizedContinuedFraction.coe_to_generalizedContinuedFraction
 
 end coe
 
@@ -250,10 +250,10 @@ instance hasCoeToGeneralizedContinuedFraction :
   infer_instance
 #align simple_continued_fraction.has_coe_to_generalized_continued_fraction SimpleContinuedFraction.hasCoeToGeneralizedContinuedFraction
 
-theorem coe_to_generalized_continued_fraction {s : SimpleContinuedFraction α} :
+theorem coe_to_generalizedContinuedFraction {s : SimpleContinuedFraction α} :
     (↑s : GeneralizedContinuedFraction α) = s.val :=
   rfl
-#align simple_continued_fraction.coe_to_generalized_continued_fraction SimpleContinuedFraction.coe_to_generalized_continued_fraction
+#align simple_continued_fraction.coe_to_generalized_continued_fraction SimpleContinuedFraction.coe_to_generalizedContinuedFraction
 
 end SimpleContinuedFraction
 
@@ -301,10 +301,10 @@ instance hasCoeToSimpleContinuedFraction : Coe (ContinuedFraction α) (SimpleCon
   infer_instance
 #align continued_fraction.has_coe_to_simple_continued_fraction ContinuedFraction.hasCoeToSimpleContinuedFraction
 
-theorem coe_to_simple_continued_fraction {c : ContinuedFraction α} :
+theorem coe_to_simpleContinuedFraction {c : ContinuedFraction α} :
     (↑c : SimpleContinuedFraction α) = c.val :=
   rfl
-#align continued_fraction.coe_to_simple_continued_fraction ContinuedFraction.coe_to_simple_continued_fraction
+#align continued_fraction.coe_to_simple_continued_fraction ContinuedFraction.coe_to_simpleContinuedFraction
 
 /-- Lift a cf to a scf using the inclusion map. -/
 instance hasCoeToGeneralizedContinuedFraction :
@@ -312,10 +312,10 @@ instance hasCoeToGeneralizedContinuedFraction :
   ⟨fun c => ↑(↑c : SimpleContinuedFraction α)⟩
 #align continued_fraction.has_coe_to_generalized_continued_fraction ContinuedFraction.hasCoeToGeneralizedContinuedFraction
 
-theorem coe_to_generalized_continued_fraction {c : ContinuedFraction α} :
+theorem coe_to_generalizedContinuedFraction {c : ContinuedFraction α} :
     (↑c : GeneralizedContinuedFraction α) = c.val :=
   rfl
-#align continued_fraction.coe_to_generalized_continued_fraction ContinuedFraction.coe_to_generalized_continued_fraction
+#align continued_fraction.coe_to_generalized_continued_fraction ContinuedFraction.coe_to_generalizedContinuedFraction
 
 end ContinuedFraction
 

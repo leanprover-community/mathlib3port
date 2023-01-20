@@ -26,18 +26,18 @@ namespace Vector
 variable {α β : Type _} {n : ℕ} (a a' : α)
 
 @[simp]
-theorem nth_mem (i : Fin n) (v : Vector α n) : v.nth i ∈ v.toList :=
+theorem get_mem (i : Fin n) (v : Vector α n) : v.nth i ∈ v.toList :=
   by
   rw [nth_eq_nth_le]
   exact List.nthLe_mem _ _ _
-#align vector.nth_mem Vector.nth_mem
+#align vector.nth_mem Vector.get_mem
 
-theorem mem_iff_nth (v : Vector α n) : a ∈ v.toList ↔ ∃ i, v.nth i = a := by
+theorem mem_iff_get (v : Vector α n) : a ∈ v.toList ↔ ∃ i, v.nth i = a := by
   simp only [List.mem_iff_nthLe, Fin.exists_iff, Vector.get_eq_get] <;>
     exact
       ⟨fun ⟨i, hi, h⟩ => ⟨i, by rwa [to_list_length] at hi, h⟩, fun ⟨i, hi, h⟩ =>
         ⟨i, by rwa [to_list_length], h⟩⟩
-#align vector.mem_iff_nth Vector.mem_iff_nth
+#align vector.mem_iff_nth Vector.mem_iff_get
 
 theorem not_mem_nil : a ∉ (Vector.nil : Vector α 0).toList :=
   id
@@ -58,12 +58,12 @@ theorem mem_succ_iff (v : Vector α (n + 1)) : a ∈ v.toList ↔ a = v.head ∨
 #align vector.mem_succ_iff Vector.mem_succ_iff
 
 theorem mem_cons_self (v : Vector α n) : a ∈ (a ::ᵥ v).toList :=
-  (Vector.mem_iff_nth a (a ::ᵥ v)).2 ⟨0, Vector.get_cons_zero a v⟩
+  (Vector.mem_iff_get a (a ::ᵥ v)).2 ⟨0, Vector.get_cons_zero a v⟩
 #align vector.mem_cons_self Vector.mem_cons_self
 
 @[simp]
 theorem head_mem (v : Vector α (n + 1)) : v.head ∈ v.toList :=
-  (Vector.mem_iff_nth v.head v).2 ⟨0, Vector.get_zero v⟩
+  (Vector.mem_iff_get v.head v).2 ⟨0, Vector.get_zero v⟩
 #align vector.head_mem Vector.head_mem
 
 theorem mem_cons_of_mem (v : Vector α n) (ha' : a' ∈ v.toList) : a' ∈ (a ::ᵥ v).toList :=

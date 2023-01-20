@@ -88,7 +88,7 @@ theorem support_mul_single [RightCancelSemigroup G] (f : MonoidAlgebra k G) (r :
   classical
     ext
     simp only [support_mul_single_eq_image f hr (isRightRegular_of_rightCancelSemigroup x),
-      mem_image, mem_map, mul_right_embedding_apply]
+      mem_image, mem_map, mulRightEmbedding_apply]
 #align monoid_algebra.support_mul_single MonoidAlgebra.support_mul_single
 
 theorem support_single_mul [LeftCancelSemigroup G] (f : MonoidAlgebra k G) (r : k)
@@ -97,7 +97,7 @@ theorem support_single_mul [LeftCancelSemigroup G] (f : MonoidAlgebra k G) (r : 
   classical
     ext
     simp only [support_single_mul_eq_image f hr (isLeftRegular_of_leftCancelSemigroup x), mem_image,
-      mem_map, mul_left_embedding_apply]
+      mem_map, mulLeftEmbedding_apply]
 #align monoid_algebra.support_single_mul MonoidAlgebra.support_single_mul
 
 section Span

@@ -52,7 +52,7 @@ noncomputable def diff : A :=
   (@Finset.univ (G ⧸ H) H.fintypeQuotientOfFiniteIndex).Prod fun q =>
     ϕ
       ⟨(α q)⁻¹ * β q,
-        QuotientGroup.left_rel_apply.mp <|
+        QuotientGroup.leftRel_apply.mp <|
           Quotient.exact' ((α.symm_apply_apply q).trans (β.symm_apply_apply q).symm)⟩
 #align subgroup.left_transversals.diff Subgroup.leftTransversals.diff
 #align add_subgroup.left_transversals.diff AddSubgroup.leftTransversals.diff
@@ -122,13 +122,13 @@ theorem transfer_def [FiniteIndex H] (g : G) : transfer ϕ g = diff ϕ T (g • 
 #align add_monoid_hom.transfer_def AddMonoidHom.transfer_def
 
 /-- Explicit computation of the transfer homomorphism. -/
-theorem transfer_eq_prod_quotient_orbit_rel_zpowers_quot [FiniteIndex H] (g : G)
+theorem transfer_eq_prod_quotient_orbitRel_zpowers_quot [FiniteIndex H] (g : G)
     [Fintype (Quotient (orbitRel (zpowers g) (G ⧸ H)))] :
     transfer ϕ g =
       ∏ q : Quotient (orbitRel (zpowers g) (G ⧸ H)),
         ϕ
           ⟨q.out'.out'⁻¹ * g ^ Function.minimalPeriod ((· • ·) g) q.out' * q.out'.out',
-            QuotientGroup.out'_conj_pow_minimal_period_mem H g q.out'⟩ :=
+            QuotientGroup.out'_conj_pow_minimalPeriod_mem H g q.out'⟩ :=
   by
   classical
     letI := H.fintype_quotient_of_finite_index
@@ -144,7 +144,7 @@ theorem transfer_eq_prod_quotient_orbit_rel_zpowers_quot [FiniteIndex H] (g : G)
     · simp only [if_pos, Zmod.cast_zero, zpow_zero, one_mul, mul_assoc]
     · simp only [if_neg hk, inv_mul_self]
       exact map_one ϕ
-#align monoid_hom.transfer_eq_prod_quotient_orbit_rel_zpowers_quot MonoidHom.transfer_eq_prod_quotient_orbit_rel_zpowers_quot
+#align monoid_hom.transfer_eq_prod_quotient_orbit_rel_zpowers_quot MonoidHom.transfer_eq_prod_quotient_orbitRel_zpowers_quot
 
 /-- Auxillary lemma in order to state `transfer_eq_pow`. -/
 theorem transfer_eq_pow_aux (g : G)
@@ -159,7 +159,7 @@ theorem transfer_eq_pow_aux (g : G)
       (_root_.congr_arg (· ∈ H) (key k g₀ hk)).mp hk
     replace key : ∀ q : G ⧸ H, g ^ Function.minimalPeriod ((· • ·) g) q ∈ H := fun q =>
       key (Function.minimalPeriod ((· • ·) g) q) q.out'
-        (QuotientGroup.out'_conj_pow_minimal_period_mem H g q)
+        (QuotientGroup.out'_conj_pow_minimalPeriod_mem H g q)
     let f : Quotient (orbit_rel (zpowers g) (G ⧸ H)) → zpowers g := fun q =>
       (⟨g, mem_zpowers g⟩ : zpowers g) ^ Function.minimalPeriod ((· • ·) g) q.out'
     have hf : ∀ q, f q ∈ H.subgroup_of (zpowers g) := fun q => key q.out'
@@ -204,10 +204,10 @@ noncomputable def transferCenterPow [FiniteIndex (center G)] : G →* center G
 variable {G}
 
 @[simp]
-theorem transfer_center_pow_apply [FiniteIndex (center G)] (g : G) :
+theorem transferCenterPow_apply [FiniteIndex (center G)] (g : G) :
     ↑(transferCenterPow G g) = g ^ (center G).index :=
   rfl
-#align monoid_hom.transfer_center_pow_apply MonoidHom.transfer_center_pow_apply
+#align monoid_hom.transfer_center_pow_apply MonoidHom.transferCenterPow_apply
 
 section BurnsideTransfer
 
@@ -238,19 +238,19 @@ theorem transfer_sylow_eq_pow_aux (g : G) (hg : g ∈ P) (k : ℕ) (g₀ : G)
 
 variable [FiniteIndex (P : Subgroup G)]
 
-theorem transfer_sylow_eq_pow (g : G) (hg : g ∈ P) :
+theorem transferSylow_eq_pow (g : G) (hg : g ∈ P) :
     transferSylow P hP g =
       ⟨g ^ (P : Subgroup G).index, transfer_eq_pow_aux g (transfer_sylow_eq_pow_aux P hP g hg)⟩ :=
   by apply transfer_eq_pow
-#align monoid_hom.transfer_sylow_eq_pow MonoidHom.transfer_sylow_eq_pow
+#align monoid_hom.transfer_sylow_eq_pow MonoidHom.transferSylow_eq_pow
 
-theorem transfer_sylow_restrict_eq_pow :
+theorem transferSylow_restrict_eq_pow :
     ⇑((transferSylow P hP).restrict (P : Subgroup G)) = (· ^ (P : Subgroup G).index) :=
-  funext fun g => transfer_sylow_eq_pow P hP g g.2
-#align monoid_hom.transfer_sylow_restrict_eq_pow MonoidHom.transfer_sylow_restrict_eq_pow
+  funext fun g => transferSylow_eq_pow P hP g g.2
+#align monoid_hom.transfer_sylow_restrict_eq_pow MonoidHom.transferSylow_restrict_eq_pow
 
 /-- Burnside's normal p-complement theorem: If `N(P) ≤ C(P)`, then `P` has a normal complement. -/
-theorem ker_transfer_sylow_is_complement' : IsComplement' (transferSylow P hP).ker P :=
+theorem ker_transferSylow_isComplement' : IsComplement' (transferSylow P hP).ker P :=
   by
   have hf : Function.Bijective ((transfer_sylow P hP).restrict (P : Subgroup G)) :=
     (transfer_sylow_restrict_eq_pow P hP).symm ▸
@@ -263,20 +263,20 @@ theorem ker_transfer_sylow_is_complement' : IsComplement' (transferSylow P hP).k
     normal_mul, ← ker_eq_bot_iff, ← (map_injective (P : Subgroup G).subtype_injective).eq_iff,
     ker_restrict, subgroup_of_map_subtype, Subgroup.map_bot, coe_top] at hf
   exact is_complement'_of_disjoint_and_mul_eq_univ (disjoint_iff.2 hf.1) hf.2
-#align monoid_hom.ker_transfer_sylow_is_complement' MonoidHom.ker_transfer_sylow_is_complement'
+#align monoid_hom.ker_transfer_sylow_is_complement' MonoidHom.ker_transferSylow_isComplement'
 
-theorem not_dvd_card_ker_transfer_sylow : ¬p ∣ Nat.card (transferSylow P hP).ker :=
-  (ker_transfer_sylow_is_complement' P hP).index_eq_card ▸ not_dvd_index_sylow P <|
+theorem not_dvd_card_ker_transferSylow : ¬p ∣ Nat.card (transferSylow P hP).ker :=
+  (ker_transferSylow_isComplement' P hP).index_eq_card ▸ not_dvd_index_sylow P <|
     mt index_eq_zero_of_relindex_eq_zero index_ne_zero_of_finite
-#align monoid_hom.not_dvd_card_ker_transfer_sylow MonoidHom.not_dvd_card_ker_transfer_sylow
+#align monoid_hom.not_dvd_card_ker_transfer_sylow MonoidHom.not_dvd_card_ker_transferSylow
 
-theorem ker_transfer_sylow_disjoint (Q : Subgroup G) (hQ : IsPGroup p Q) :
+theorem ker_transferSylow_disjoint (Q : Subgroup G) (hQ : IsPGroup p Q) :
     Disjoint (transferSylow P hP).ker Q :=
   disjoint_iff.mpr <|
     card_eq_one.mp <|
       (hQ.to_le inf_le_right).card_eq_or_dvd.resolve_right fun h =>
-        not_dvd_card_ker_transfer_sylow P hP <| h.trans <| nat_card_dvd_of_le _ _ inf_le_left
-#align monoid_hom.ker_transfer_sylow_disjoint MonoidHom.ker_transfer_sylow_disjoint
+        not_dvd_card_ker_transferSylow P hP <| h.trans <| nat_card_dvd_of_le _ _ inf_le_left
+#align monoid_hom.ker_transfer_sylow_disjoint MonoidHom.ker_transferSylow_disjoint
 
 end BurnsideTransfer
 

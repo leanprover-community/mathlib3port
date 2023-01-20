@@ -172,16 +172,16 @@ def treeHom (a : G) : root' T ⟶ a :=
 #align is_free_groupoid.spanning_tree.tree_hom IsFreeGroupoid.SpanningTree.treeHom
 
 /-- Any path to `a` gives `tree_hom T a`, since paths in the tree are unique. -/
-theorem tree_hom_eq {a : G} (p : Path (root T) a) : treeHom T a = homOfPath T p := by
+theorem treeHom_eq {a : G} (p : Path (root T) a) : treeHom T a = homOfPath T p := by
   rw [tree_hom, Unique.default_eq]
-#align is_free_groupoid.spanning_tree.tree_hom_eq IsFreeGroupoid.SpanningTree.tree_hom_eq
+#align is_free_groupoid.spanning_tree.tree_hom_eq IsFreeGroupoid.SpanningTree.treeHom_eq
 
 @[simp]
-theorem tree_hom_root : treeHom T (root' T) = 𝟙 _ :=
+theorem treeHom_root : treeHom T (root' T) = 𝟙 _ :=
   -- this should just be `tree_hom_eq T path.nil`, but Lean treats `hom_of_path` with suspicion.
     trans
-    (tree_hom_eq T Path.nil) rfl
-#align is_free_groupoid.spanning_tree.tree_hom_root IsFreeGroupoid.SpanningTree.tree_hom_root
+    (treeHom_eq T Path.nil) rfl
+#align is_free_groupoid.spanning_tree.tree_hom_root IsFreeGroupoid.SpanningTree.treeHom_root
 
 /-- Any hom in `G` can be made into a loop, by conjugating with `tree_hom`s. -/
 def loopOfHom {a b : G} (p : a ⟶ b) : EndCat (root' T) :=
@@ -190,7 +190,7 @@ def loopOfHom {a b : G} (p : a ⟶ b) : EndCat (root' T) :=
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (e «expr ∈ » wide_subquiver_symmetrify[quiver.wide_subquiver_symmetrify] T a b) -/
 /-- Turning an edge in the spanning tree into a loop gives the indentity loop. -/
-theorem loop_of_hom_eq_id {a b : Generators G} (e) (_ : e ∈ wideSubquiverSymmetrify T a b) :
+theorem loopOfHom_eq_id {a b : Generators G} (e) (_ : e ∈ wideSubquiverSymmetrify T a b) :
     loopOfHom T (of e) = 𝟙 (root' T) :=
   by
   rw [loop_of_hom, ← category.assoc, is_iso.comp_inv_eq, category.id_comp]
@@ -199,7 +199,7 @@ theorem loop_of_hom_eq_id {a b : Generators G} (e) (_ : e ∈ wideSubquiverSymme
     rfl
   · rw [tree_hom_eq T (path.cons default ⟨Sum.inr e, H⟩), hom_of_path]
     simp only [is_iso.inv_hom_id, category.comp_id, category.assoc, tree_hom]
-#align is_free_groupoid.spanning_tree.loop_of_hom_eq_id IsFreeGroupoid.SpanningTree.loop_of_hom_eq_id
+#align is_free_groupoid.spanning_tree.loop_of_hom_eq_id IsFreeGroupoid.SpanningTree.loopOfHom_eq_id
 
 /-- Since a hom gives a loop, any homomorphism from the vertex group at the root
     extends to a functor on the whole groupoid. -/

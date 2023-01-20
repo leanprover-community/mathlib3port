@@ -64,13 +64,13 @@ theorem exists_smooth_tsupport_subset {s : Set E} {x : E} (hs : s ∈ 𝓝 x) :
     rw [tsupport, ← Euclidean.closure_ball _ d_pos.ne']
     exact closure_mono f_supp
   refine' ⟨f, f_tsupp.trans hd, _, _, _, _⟩
-  · refine' is_compact_of_is_closed_bounded is_closed_closure _
+  · refine' is_compact_of_is_closed_bounded isClosed_closure _
     have : bounded (Euclidean.closedBall x d) := euclidean.is_compact_closed_ball.bounded
     apply this.mono _
-    refine' (IsClosed.closure_subset_iff Euclidean.is_closed_closed_ball).2 _
-    exact f_supp.trans Euclidean.ball_subset_closed_ball
+    refine' (IsClosed.closure_subset_iff Euclidean.isClosed_closedBall).2 _
+    exact f_supp.trans Euclidean.ball_subset_closedBall
   · apply c.cont_diff.comp
-    exact ContinuousLinearEquiv.cont_diff _
+    exact ContinuousLinearEquiv.contDiff _
   · rintro t ⟨y, rfl⟩
     exact ⟨c.nonneg, c.le_one⟩
   · apply c.one_of_mem_closed_ball
@@ -93,7 +93,7 @@ theorem IsOpen.exists_smooth_support_eq {s : Set E} (hs : IsOpen s) :
   rcases eq_empty_or_nonempty s with (rfl | h's)
   ·
     exact
-      ⟨fun x => 0, Function.support_zero, cont_diff_const, by
+      ⟨fun x => 0, Function.support_zero, contDiff_const, by
         simp only [range_const, singleton_subset_iff, left_mem_Icc, zero_le_one]⟩
   let ι := { f : E → ℝ // f.support ⊆ s ∧ HasCompactSupport f ∧ ContDiff ℝ ⊤ f ∧ range f ⊆ Icc 0 1 }
   obtain ⟨T, T_count, hT⟩ : ∃ T : Set ι, T.Countable ∧ (⋃ f ∈ T, support (f : E → ℝ)) = s :=
@@ -105,7 +105,7 @@ theorem IsOpen.exists_smooth_support_eq {s : Set E} (hs : IsOpen s) :
       rcases exists_smooth_tsupport_subset (hs.mem_nhds hx) with ⟨f, hf⟩
       let g : ι := ⟨f, (subset_tsupport f).trans hf.1, hf.2.1, hf.2.2.1, hf.2.2.2.1⟩
       have : x ∈ support (g : E → ℝ) := by
-        simp only [hf.2.2.2.2, Subtype.coe_mk, mem_support, Ne.def, one_ne_zero, not_false_iff]
+        simp only [hf.2.2.2.2, Subtype.coe_mk, mem_support, Ne.def, one_neZero, not_false_iff]
       exact mem_Union_of_mem _ this
     simp_rw [← this]
     apply is_open_Union_countable
@@ -136,7 +136,7 @@ theorem IsOpen.exists_smooth_support_eq {s : Set E} (hs : IsOpen s) :
   have g_nonneg : ∀ n x, 0 ≤ g n x := fun n x => ((g0 n).2.2.2.2 (mem_range_self x)).1
   obtain ⟨δ, δpos, c, δc, c_lt⟩ :
     ∃ δ : ℕ → ℝ≥0, (∀ i : ℕ, 0 < δ i) ∧ ∃ c : Nnreal, HasSum δ c ∧ c < 1
-  exact Nnreal.exists_pos_sum_of_countable one_ne_zero ℕ
+  exact Nnreal.exists_pos_sum_of_countable one_neZero ℕ
   have : ∀ n : ℕ, ∃ r : ℝ, 0 < r ∧ ∀ i ≤ n, ∀ x, ‖iteratedFderiv ℝ i (r • g n) x‖ ≤ δ n :=
     by
     intro n
@@ -167,7 +167,7 @@ theorem IsOpen.exists_smooth_support_eq {s : Set E} (hs : IsOpen s) :
     calc
       ‖iteratedFderiv ℝ i ((M⁻¹ * δ n) • g n) x‖ = ‖(M⁻¹ * δ n) • iteratedFderiv ℝ i (g n) x‖ :=
         by
-        rw [iterated_fderiv_const_smul_apply]
+        rw [iteratedFderiv_const_smul_apply]
         exact (g_smooth n).of_le le_top
       _ = M⁻¹ * δ n * ‖iteratedFderiv ℝ i (g n) x‖ :=
         by
@@ -182,7 +182,7 @@ theorem IsOpen.exists_smooth_support_eq {s : Set E} (hs : IsOpen s) :
     intro x
     refine' summable_of_nnnorm_bounded _ δc.summable fun n => _
     rw [← Nnreal.coe_le_coe, coe_nnnorm]
-    simpa only [norm_iterated_fderiv_zero] using hr n 0 (zero_le n) x
+    simpa only [norm_iteratedFderiv_zero] using hr n 0 (zero_le n) x
   refine' ⟨fun x => ∑' n, (r n • g n) x, _, _, _⟩
   · apply subset.antisymm
     · intro x hx
@@ -199,20 +199,20 @@ theorem IsOpen.exists_smooth_support_eq {s : Set E} (hs : IsOpen s) :
       have I : 0 < r n * g n x := mul_pos (rpos n) (lt_of_le_of_ne (g_nonneg n x) (Ne.symm hn))
       exact ne_of_gt (tsum_pos (S x) (fun i => mul_nonneg (rpos i).le (g_nonneg i x)) n I)
   · refine'
-      cont_diff_tsum_of_eventually (fun n => (g_smooth n).const_smul _)
-        (fun k hk => (Nnreal.has_sum_coe.2 δc).Summable) _
+      contDiff_tsum_of_eventually (fun n => (g_smooth n).const_smul _)
+        (fun k hk => (Nnreal.hasSum_coe.2 δc).Summable) _
     intro i hi
-    simp only [Nat.cofinite_eq_at_top, Pi.smul_apply, Algebra.id.smul_eq_mul,
-      Filter.eventually_at_top, ge_iff_le]
+    simp only [Nat.cofinite_eq_atTop, Pi.smul_apply, Algebra.id.smul_eq_mul,
+      Filter.eventually_atTop, ge_iff_le]
     exact ⟨i, fun n hn x => hr _ _ hn _⟩
   · rintro - ⟨y, rfl⟩
     refine' ⟨tsum_nonneg fun n => mul_nonneg (rpos n).le (g_nonneg n y), le_trans _ c_lt.le⟩
-    have A : HasSum (fun n => (δ n : ℝ)) c := Nnreal.has_sum_coe.2 δc
+    have A : HasSum (fun n => (δ n : ℝ)) c := Nnreal.hasSum_coe.2 δc
     rw [← A.tsum_eq]
     apply tsum_le_tsum _ (S y) A.summable
     intro n
     apply (le_abs_self _).trans
-    simpa only [norm_iterated_fderiv_zero] using hr n 0 (zero_le n) y
+    simpa only [norm_iteratedFderiv_zero] using hr n 0 (zero_le n) y
 #align is_open.exists_smooth_support_eq IsOpen.exists_smooth_support_eq
 
 end

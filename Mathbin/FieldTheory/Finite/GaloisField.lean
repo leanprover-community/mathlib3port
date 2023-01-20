@@ -65,10 +65,10 @@ instance : Algebra (Zmod p) (GaloisField p n) :=
   SplittingField.algebra _
 
 instance : IsSplittingField (Zmod p) (GaloisField p n) (X ^ p ^ n - X) :=
-  Polynomial.IsSplittingField.splitting_field _
+  Polynomial.IsSplittingField.splittingField _
 
 instance : CharP (GaloisField p n) p :=
-  (Algebra.char_p_iff (Zmod p) (GaloisField p n) p).mp (by infer_instance)
+  (Algebra.charP_iff (Zmod p) (GaloisField p n) p).mp (by infer_instance)
 
 instance : Fintype (GaloisField p n) :=
   by
@@ -79,12 +79,12 @@ theorem finrank {n} (h : n ≠ 0) : FiniteDimensional.finrank (Zmod p) (GaloisFi
   by
   set g_poly := (X ^ p ^ n - X : (Zmod p)[X])
   have hp : 1 < p := (Fact.out (Nat.Prime p)).one_lt
-  have aux : g_poly ≠ 0 := FiniteField.X_pow_card_pow_sub_X_ne_zero _ h hp
+  have aux : g_poly ≠ 0 := FiniteField.x_pow_card_pow_sub_x_ne_zero _ h hp
   have key : Fintype.card (g_poly.rootSet (GaloisField p n)) = g_poly.natDegree :=
     card_root_set_eq_nat_degree (galois_poly_separable p _ (dvd_pow (dvd_refl p) h))
       (splitting_field.splits g_poly)
   have nat_degree_eq : g_poly.natDegree = p ^ n :=
-    FiniteField.X_pow_card_pow_sub_X_nat_degree_eq _ h hp
+    FiniteField.x_pow_card_pow_sub_x_natDegree_eq _ h hp
   rw [nat_degree_eq] at key
   suffices g_poly.rootSet (GaloisField p n) = Set.univ
     by
@@ -112,7 +112,7 @@ theorem finrank {n} (h : n ≠ 0) : FiniteDimensional.finrank (Zmod p) (GaloisFi
   · dsimp only [g_poly]
     rw [← coeff_zero_eq_aeval_zero']
     simp only [coeff_X_pow, coeff_X_zero, sub_zero, _root_.map_eq_zero, ite_eq_right_iff,
-      one_ne_zero, coeff_sub]
+      one_neZero, coeff_sub]
     intro hn
     exact Nat.not_lt_zero 1 (pow_eq_zero hn.symm ▸ hp)
   · simp
@@ -134,19 +134,19 @@ theorem card (h : n ≠ 0) : Fintype.card (GaloisField p n) = p ^ n :=
   rw [Module.card_fintype b, ← FiniteDimensional.finrank_eq_card_basis b, Zmod.card, finrank p h]
 #align galois_field.card GaloisField.card
 
-theorem splits_zmod_X_pow_sub_X : Splits (RingHom.id (Zmod p)) (X ^ p - X) :=
+theorem splits_zmod_x_pow_sub_x : Splits (RingHom.id (Zmod p)) (X ^ p - X) :=
   by
   have hp : 1 < p := (Fact.out (Nat.Prime p)).one_lt
   have h1 : roots (X ^ p - X : (Zmod p)[X]) = finset.univ.val :=
     by
-    convert FiniteField.roots_X_pow_card_sub_X _
+    convert FiniteField.roots_x_pow_card_sub_x _
     exact (Zmod.card p).symm
-  have h2 := FiniteField.X_pow_card_sub_X_nat_degree_eq (Zmod p) hp
+  have h2 := FiniteField.x_pow_card_sub_x_natDegree_eq (Zmod p) hp
   -- We discharge the `p = 0` separately, to avoid typeclass issues on `zmod p`.
   cases p
   cases hp
   rw [splits_iff_card_roots, h1, ← Finset.card_def, Finset.card_univ, h2, Zmod.card]
-#align galois_field.splits_zmod_X_pow_sub_X GaloisField.splits_zmod_X_pow_sub_X
+#align galois_field.splits_zmod_X_pow_sub_X GaloisField.splits_zmod_x_pow_sub_x
 
 /-- A Galois field with exponent 1 is equivalent to `zmod` -/
 def equivZmodP : GaloisField p 1 ≃ₐ[Zmod p] Zmod p :=
@@ -160,21 +160,21 @@ def equivZmodP : GaloisField p 1 ≃ₐ[Zmod p] Zmod p :=
 
 variable {K : Type _} [Field K] [Fintype K] [Algebra (Zmod p) K]
 
-theorem splits_X_pow_card_sub_X : Splits (algebraMap (Zmod p) K) (X ^ Fintype.card K - X) :=
-  (FiniteField.HasSub.Sub.Polynomial.is_splitting_field K (Zmod p)).Splits
-#align galois_field.splits_X_pow_card_sub_X GaloisField.splits_X_pow_card_sub_X
+theorem splits_x_pow_card_sub_x : Splits (algebraMap (Zmod p) K) (X ^ Fintype.card K - X) :=
+  (FiniteField.HasSub.Sub.Polynomial.isSplittingField K (Zmod p)).Splits
+#align galois_field.splits_X_pow_card_sub_X GaloisField.splits_x_pow_card_sub_x
 
-theorem is_splitting_field_of_card_eq (h : Fintype.card K = p ^ n) :
+theorem isSplittingField_of_card_eq (h : Fintype.card K = p ^ n) :
     IsSplittingField (Zmod p) K (X ^ p ^ n - X) :=
-  h ▸ FiniteField.HasSub.Sub.Polynomial.is_splitting_field K (Zmod p)
-#align galois_field.is_splitting_field_of_card_eq GaloisField.is_splitting_field_of_card_eq
+  h ▸ FiniteField.HasSub.Sub.Polynomial.isSplittingField K (Zmod p)
+#align galois_field.is_splitting_field_of_card_eq GaloisField.isSplittingField_of_card_eq
 
 instance (priority := 100) {K K' : Type _} [Field K] [Field K'] [Finite K'] [Algebra K K'] :
     IsGalois K K' := by
   cases nonempty_fintype K'
   obtain ⟨p, hp⟩ := CharP.exists K
   haveI : CharP K p := hp
-  haveI : CharP K' p := char_p_of_injective_algebra_map' K K' p
+  haveI : CharP K' p := charP_of_injective_algebra_map' K K' p
   exact
     IsGalois.of_separable_splitting_field
       (galois_poly_separable p (Fintype.card K')
@@ -199,11 +199,11 @@ def algEquivOfCardEq (p : ℕ) [Fact p.Prime] [Algebra (Zmod p) K] [Algebra (Zmo
     (hKK' : Fintype.card K = Fintype.card K') : K ≃ₐ[Zmod p] K' :=
   by
   have : CharP K p := by
-    rw [← Algebra.char_p_iff (Zmod p) K p]
-    exact Zmod.char_p p
+    rw [← Algebra.charP_iff (Zmod p) K p]
+    exact Zmod.charP p
   have : CharP K' p := by
-    rw [← Algebra.char_p_iff (Zmod p) K' p]
-    exact Zmod.char_p p
+    rw [← Algebra.charP_iff (Zmod p) K' p]
+    exact Zmod.charP p
   choose n a hK using FiniteField.card K p
   choose n' a' hK' using FiniteField.card K' p
   rw [hK, hK'] at hKK'

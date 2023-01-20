@@ -301,6 +301,7 @@ theorem smul_inter_subset : s • (t₁ ∩ t₂) ⊆ s • t₁ ∩ s • t₂ 
 theorem unionᵢ_smul_left_image : (⋃ a ∈ s, a • t) = s • t :=
   unionᵢ_image_left _
 #align set.Union_smul_left_image Set.unionᵢ_smul_left_image
+#align set.Union_vadd_left_image Set.unionᵢ_vadd_left_image
 -/
 
 #print Set.unionᵢ_smul_right_image /-
@@ -308,6 +309,7 @@ theorem unionᵢ_smul_left_image : (⋃ a ∈ s, a • t) = s • t :=
 theorem unionᵢ_smul_right_image : (⋃ a ∈ t, (· • a) '' s) = s • t :=
   unionᵢ_image_right _
 #align set.Union_smul_right_image Set.unionᵢ_smul_right_image
+#align set.Union_vadd_right_image Set.unionᵢ_vadd_right_image
 -/
 
 /- warning: set.Union_smul -> Set.unionᵢ_smul is a dubious translation:
@@ -320,6 +322,7 @@ Case conversion may be inaccurate. Consider using '#align set.Union_smul Set.uni
 theorem unionᵢ_smul (s : ι → Set α) (t : Set β) : (⋃ i, s i) • t = ⋃ i, s i • t :=
   image2_unionᵢ_left _ _ _
 #align set.Union_smul Set.unionᵢ_smul
+#align set.Union_vadd Set.unionᵢ_vadd
 
 /- warning: set.smul_Union -> Set.smul_unionᵢ is a dubious translation:
 lean 3 declaration is
@@ -331,6 +334,7 @@ Case conversion may be inaccurate. Consider using '#align set.smul_Union Set.smu
 theorem smul_unionᵢ (s : Set α) (t : ι → Set β) : (s • ⋃ i, t i) = ⋃ i, s • t i :=
   image2_unionᵢ_right _ _ _
 #align set.smul_Union Set.smul_unionᵢ
+#align set.vadd_Union Set.vadd_unionᵢ
 
 /- warning: set.Union₂_smul -> Set.unionᵢ₂_smul is a dubious translation:
 lean 3 declaration is
@@ -370,6 +374,7 @@ Case conversion may be inaccurate. Consider using '#align set.Inter_smul_subset 
 theorem interᵢ_smul_subset (s : ι → Set α) (t : Set β) : (⋂ i, s i) • t ⊆ ⋂ i, s i • t :=
   image2_interᵢ_subset_left _ _ _
 #align set.Inter_smul_subset Set.interᵢ_smul_subset
+#align set.Inter_vadd_subset Set.interᵢ_vadd_subset
 
 /- warning: set.smul_Inter_subset -> Set.smul_interᵢ_subset is a dubious translation:
 lean 3 declaration is
@@ -381,6 +386,7 @@ Case conversion may be inaccurate. Consider using '#align set.smul_Inter_subset 
 theorem smul_interᵢ_subset (s : Set α) (t : ι → Set β) : (s • ⋂ i, t i) ⊆ ⋂ i, s • t i :=
   image2_interᵢ_subset_right _ _ _
 #align set.smul_Inter_subset Set.smul_interᵢ_subset
+#align set.vadd_Inter_subset Set.vadd_interᵢ_subset
 
 /- warning: set.Inter₂_smul_subset -> Set.interᵢ₂_smul_subset is a dubious translation:
 lean 3 declaration is
@@ -533,7 +539,6 @@ Case conversion may be inaccurate. Consider using '#align set.smul_set_Union Set
 theorem smul_set_Union (a : α) (s : ι → Set β) : (a • ⋃ i, s i) = ⋃ i, a • s i :=
   image_Union
 #align set.smul_set_Union Set.smul_set_Union
-#align set.vadd_set_Union Set.vadd_set_Union
 
 /- warning: set.smul_set_Union₂ -> Set.smul_set_unionᵢ₂ is a dubious translation:
 lean 3 declaration is
@@ -559,6 +564,7 @@ Case conversion may be inaccurate. Consider using '#align set.smul_set_Inter_sub
 theorem smul_set_interᵢ_subset (a : α) (t : ι → Set β) : (a • ⋂ i, t i) ⊆ ⋂ i, a • t i :=
   image_interᵢ_subset _ _
 #align set.smul_set_Inter_subset Set.smul_set_interᵢ_subset
+#align set.vadd_set_Inter_subset Set.vadd_set_interᵢ_subset
 
 /- warning: set.smul_set_Inter₂_subset -> Set.smul_set_interᵢ₂_subset is a dubious translation:
 lean 3 declaration is
@@ -1210,6 +1216,7 @@ theorem pairwiseDisjoint_smul_iff :
     s.PairwiseDisjoint (· • t) ↔ (s ×ˢ t).InjOn fun p => p.1 * p.2 :=
   pairwise_disjoint_image_right_iff fun _ _ => mul_right_injective _
 #align set.pairwise_disjoint_smul_iff Set.pairwiseDisjoint_smul_iff
+#align set.pairwise_disjoint_vadd_iff Set.pairwiseDisjoint_vadd_iff
 
 end LeftCancelSemigroup
 
@@ -1342,7 +1349,6 @@ Case conversion may be inaccurate. Consider using '#align set.smul_set_symm_diff
 theorem smul_set_symm_diff : a • s ∆ t = (a • s) ∆ (a • t) :=
   image_symm_diff (MulAction.injective a) _ _
 #align set.smul_set_symm_diff Set.smul_set_symm_diff
-#align set.vadd_set_symm_diff Set.vadd_set_symm_diff
 
 #print Set.smul_set_univ /-
 @[simp, to_additive]
@@ -1429,12 +1435,14 @@ Case conversion may be inaccurate. Consider using '#align set.Union_inv_smul Set
 theorem unionᵢ_inv_smul : (⋃ g : α, g⁻¹ • s) = ⋃ g : α, g • s :=
   Function.Surjective.supᵢ_congr _ inv_surjective fun g => rfl
 #align set.Union_inv_smul Set.unionᵢ_inv_smul
+#align set.Union_neg_vadd Set.unionᵢ_neg_vadd
 
 #print Set.unionᵢ_smul_eq_setOf_exists /-
 @[to_additive]
 theorem unionᵢ_smul_eq_setOf_exists {s : Set β} : (⋃ g : α, g • s) = { a | ∃ g : α, g • a ∈ s } :=
   by simp_rw [← Union_set_of, ← Union_inv_smul, ← preimage_smul, preimage]
 #align set.Union_smul_eq_set_of_exists Set.unionᵢ_smul_eq_setOf_exists
+#align set.Union_vadd_eq_set_of_exists Set.unionᵢ_vadd_eq_setOf_exists
 -/
 
 end Group

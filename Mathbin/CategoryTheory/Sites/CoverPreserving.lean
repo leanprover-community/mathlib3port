@@ -82,9 +82,9 @@ structure CoverPreserving (G : C ⥤ D) : Prop where
 #align category_theory.cover_preserving CategoryTheory.CoverPreserving
 
 /-- The identity functor on a site is cover-preserving. -/
-theorem id_cover_preserving : CoverPreserving J J (𝟭 _) :=
+theorem id_coverPreserving : CoverPreserving J J (𝟭 _) :=
   ⟨fun U S hS => by simpa using hS⟩
-#align category_theory.id_cover_preserving CategoryTheory.id_cover_preserving
+#align category_theory.id_cover_preserving CategoryTheory.id_coverPreserving
 
 variable (J) (K)
 
@@ -118,7 +118,7 @@ variable {T : Presieve Z} {x : FamilyOfElements (G.op ⋙ ℱ.val) T} (h : x.Com
 include h hG
 
 /-- `compatible_preserving` functors indeed preserve compatible families. -/
-theorem Presieve.FamilyOfElements.Compatible.functor_pushforward :
+theorem Presieve.FamilyOfElements.Compatible.functorPushforward :
     (x.functorPushforward G).Compatible :=
   by
   rintro Z₁ Z₂ W g₁ g₂ f₁' f₂' H₁ H₂ eq
@@ -129,11 +129,11 @@ theorem Presieve.FamilyOfElements.Compatible.functor_pushforward :
   simpa using this
   apply hG.compatible ℱ h _ _ hf₁ hf₂
   simpa using Eq
-#align category_theory.presieve.family_of_elements.compatible.functor_pushforward CategoryTheory.Presieve.FamilyOfElements.Compatible.functor_pushforward
+#align category_theory.presieve.family_of_elements.compatible.functor_pushforward CategoryTheory.Presieve.FamilyOfElements.Compatible.functorPushforward
 
 @[simp]
 theorem CompatiblePreserving.apply_map {Y : C} {f : Y ⟶ Z} (hf : T f) :
-    x.functorPushforward G (G.map f) (image_mem_functor_pushforward G T hf) = x f hf :=
+    x.functorPushforward G (G.map f) (image_mem_functorPushforward G T hf) = x f hf :=
   by
   unfold family_of_elements.functor_pushforward
   rcases e₁ : get_functor_pushforward_structure (image_mem_functor_pushforward G T hf) with
@@ -745,7 +745,7 @@ then `G.op ⋙ _` pulls sheaves back to sheaves.
 
 This result is basically <https://stacks.math.columbia.edu/tag/00WW>.
 -/
-theorem pullback_is_sheaf_of_cover_preserving {G : C ⥤ D} (hG₁ : CompatiblePreserving.{v₃} K G)
+theorem pullback_isSheaf_of_coverPreserving {G : C ⥤ D} (hG₁ : CompatiblePreserving.{v₃} K G)
     (hG₂ : CoverPreserving J K G) (ℱ : SheafCat K A) : Presheaf.IsSheaf J (G.op ⋙ ℱ.val) :=
   by
   intro X U S hS x hx
@@ -767,12 +767,12 @@ theorem pullback_is_sheaf_of_cover_preserving {G : C ⥤ D} (hG₁ : CompatibleP
         (image_mem_functor_pushforward G S h) g']
     dsimp
     simp [hG₁.apply_map (sheaf_over ℱ X) hx h, ← hy f' h]
-#align category_theory.pullback_is_sheaf_of_cover_preserving CategoryTheory.pullback_is_sheaf_of_cover_preserving
+#align category_theory.pullback_is_sheaf_of_cover_preserving CategoryTheory.pullback_isSheaf_of_coverPreserving
 
 /-- The pullback of a sheaf along a cover-preserving and compatible-preserving functor. -/
 def pullbackSheaf {G : C ⥤ D} (hG₁ : CompatiblePreserving K G) (hG₂ : CoverPreserving J K G)
     (ℱ : SheafCat K A) : SheafCat J A :=
-  ⟨G.op ⋙ ℱ.val, pullback_is_sheaf_of_cover_preserving hG₁ hG₂ ℱ⟩
+  ⟨G.op ⋙ ℱ.val, pullback_isSheaf_of_coverPreserving hG₁ hG₂ ℱ⟩
 #align category_theory.pullback_sheaf CategoryTheory.pullbackSheaf
 
 variable (A)

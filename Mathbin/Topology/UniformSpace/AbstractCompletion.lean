@@ -84,20 +84,20 @@ local notation "ι" => pkg.coe
 
 /-- If `α` is complete, then it is an abstract completion of itself. -/
 def ofComplete [SeparatedSpace α] [CompleteSpace α] : AbstractCompletion α :=
-  mk α id inferInstance inferInstance inferInstance uniform_inducing_id dense_range_id
+  mk α id inferInstance inferInstance inferInstance uniformInducing_id denseRange_id
 #align abstract_completion.of_complete AbstractCompletion.ofComplete
 
 theorem closure_range : closure (range ι) = univ :=
   pkg.dense.closure_range
 #align abstract_completion.closure_range AbstractCompletion.closure_range
 
-theorem dense_inducing : DenseInducing ι :=
+theorem denseInducing : DenseInducing ι :=
   ⟨pkg.UniformInducing.Inducing, pkg.dense⟩
-#align abstract_completion.dense_inducing AbstractCompletion.dense_inducing
+#align abstract_completion.dense_inducing AbstractCompletion.denseInducing
 
-theorem uniform_continuous_coe : UniformContinuous ι :=
-  UniformInducing.uniform_continuous pkg.UniformInducing
-#align abstract_completion.uniform_continuous_coe AbstractCompletion.uniform_continuous_coe
+theorem uniformContinuous_coe : UniformContinuous ι :=
+  UniformInducing.uniformContinuous pkg.UniformInducing
+#align abstract_completion.uniform_continuous_coe AbstractCompletion.uniformContinuous_coe
 
 theorem continuous_coe : Continuous ι :=
   pkg.uniform_continuous_coe.Continuous
@@ -106,14 +106,14 @@ theorem continuous_coe : Continuous ι :=
 @[elab_as_elim]
 theorem induction_on {p : hatα → Prop} (a : hatα) (hp : IsClosed { a | p a }) (ih : ∀ a, p (ι a)) :
     p a :=
-  is_closed_property pkg.dense hp ih a
+  isClosed_property pkg.dense hp ih a
 #align abstract_completion.induction_on AbstractCompletion.induction_on
 
 variable {β : Type _}
 
 protected theorem funext [TopologicalSpace β] [T2Space β] {f g : hatα → β} (hf : Continuous f)
     (hg : Continuous g) (h : ∀ a, f (ι a) = g (ι a)) : f = g :=
-  funext fun a => pkg.inductionOn a (is_closed_eq hf hg) h
+  funext fun a => pkg.inductionOn a (isClosed_eq hf hg) h
 #align abstract_completion.funext AbstractCompletion.funext
 
 variable [UniformSpace β]
@@ -139,15 +139,15 @@ theorem extend_coe [T2Space β] (hf : UniformContinuous f) (a : α) : (pkg.exten
 
 variable [CompleteSpace β]
 
-theorem uniform_continuous_extend : UniformContinuous (pkg.extend f) :=
+theorem uniformContinuous_extend : UniformContinuous (pkg.extend f) :=
   by
   by_cases hf : UniformContinuous f
   · rw [pkg.extend_def hf]
-    exact uniform_continuous_uniformly_extend pkg.uniform_inducing pkg.dense hf
+    exact uniformContinuous_uniformly_extend pkg.uniform_inducing pkg.dense hf
   · change UniformContinuous (ite _ _ _)
     rw [if_neg hf]
-    exact uniform_continuous_of_const fun a b => by congr
-#align abstract_completion.uniform_continuous_extend AbstractCompletion.uniform_continuous_extend
+    exact uniformContinuous_of_const fun a b => by congr
+#align abstract_completion.uniform_continuous_extend AbstractCompletion.uniformContinuous_extend
 
 theorem continuous_extend : Continuous (pkg.extend f) :=
   pkg.uniform_continuous_extend.Continuous
@@ -165,7 +165,7 @@ theorem extend_unique (hf : UniformContinuous f) {g : hatα → β} (hg : Unifor
 @[simp]
 theorem extend_comp_coe {f : hatα → β} (hf : UniformContinuous f) : pkg.extend (f ∘ ι) = f :=
   funext fun x =>
-    pkg.inductionOn x (is_closed_eq pkg.continuous_extend hf.Continuous) fun y =>
+    pkg.inductionOn x (isClosed_eq pkg.continuous_extend hf.Continuous) fun y =>
       pkg.extend_coe (hf.comp <| pkg.uniform_continuous_coe) y
 #align abstract_completion.extend_comp_coe AbstractCompletion.extend_comp_coe
 
@@ -191,9 +191,9 @@ local notation "map" => pkg.map pkg'
 
 variable (f : α → β)
 
-theorem uniform_continuous_map : UniformContinuous (map f) :=
+theorem uniformContinuous_map : UniformContinuous (map f) :=
   pkg.uniform_continuous_extend
-#align abstract_completion.uniform_continuous_map AbstractCompletion.uniform_continuous_map
+#align abstract_completion.uniform_continuous_map AbstractCompletion.uniformContinuous_map
 
 theorem continuous_map : Continuous (map f) :=
   pkg.continuous_extend
@@ -218,7 +218,7 @@ theorem map_unique {f : α → β} {g : hatα → hatβ} (hg : UniformContinuous
 
 @[simp]
 theorem map_id : pkg.map pkg id = id :=
-  pkg.map_unique pkg uniform_continuous_id fun a => rfl
+  pkg.map_unique pkg uniformContinuous_id fun a => rfl
 #align abstract_completion.map_id AbstractCompletion.map_id
 
 variable {γ : Type _} [UniformSpace γ]
@@ -249,9 +249,9 @@ def compare : pkg.Space → pkg'.Space :=
   pkg.extend pkg'.coe
 #align abstract_completion.compare AbstractCompletion.compare
 
-theorem uniform_continuous_compare : UniformContinuous (pkg.compare pkg') :=
+theorem uniformContinuous_compare : UniformContinuous (pkg.compare pkg') :=
   pkg.uniform_continuous_extend
-#align abstract_completion.uniform_continuous_compare AbstractCompletion.uniform_continuous_compare
+#align abstract_completion.uniform_continuous_compare AbstractCompletion.uniformContinuous_compare
 
 theorem compare_coe (a : α) : pkg.compare pkg' (pkg.coe a) = pkg'.coe a :=
   pkg.extend_coe pkg'.uniform_continuous_coe a
@@ -274,17 +274,17 @@ def compareEquiv : pkg.Space ≃ᵤ pkg'.Space
   invFun := pkg'.compare pkg
   left_inv := congr_fun (pkg'.inverse_compare pkg)
   right_inv := congr_fun (pkg.inverse_compare pkg')
-  uniform_continuous_to_fun := uniform_continuous_compare _ _
-  uniform_continuous_inv_fun := uniform_continuous_compare _ _
+  uniform_continuous_to_fun := uniformContinuous_compare _ _
+  uniform_continuous_inv_fun := uniformContinuous_compare _ _
 #align abstract_completion.compare_equiv AbstractCompletion.compareEquiv
 
-theorem uniform_continuous_compare_equiv : UniformContinuous (pkg.compareEquiv pkg') :=
+theorem uniformContinuous_compareEquiv : UniformContinuous (pkg.compareEquiv pkg') :=
   pkg.uniform_continuous_compare pkg'
-#align abstract_completion.uniform_continuous_compare_equiv AbstractCompletion.uniform_continuous_compare_equiv
+#align abstract_completion.uniform_continuous_compare_equiv AbstractCompletion.uniformContinuous_compareEquiv
 
-theorem uniform_continuous_compare_equiv_symm : UniformContinuous (pkg.compareEquiv pkg').symm :=
+theorem uniformContinuous_compareEquiv_symm : UniformContinuous (pkg.compareEquiv pkg').symm :=
   pkg'.uniform_continuous_compare pkg
-#align abstract_completion.uniform_continuous_compare_equiv_symm AbstractCompletion.uniform_continuous_compare_equiv_symm
+#align abstract_completion.uniform_continuous_compare_equiv_symm AbstractCompletion.uniformContinuous_compareEquiv_symm
 
 end Compare
 
@@ -349,7 +349,7 @@ variable [CompleteSpace γ] (f)
 
 theorem uniform_continuous_extension₂ : UniformContinuous₂ (pkg.extend₂ pkg' f) :=
   by
-  rw [uniform_continuous₂_def, AbstractCompletion.extend₂, uncurry_curry]
+  rw [uniformContinuous₂_def, AbstractCompletion.extend₂, uncurry_curry]
   apply uniform_continuous_extend
 #align abstract_completion.uniform_continuous_extension₂ AbstractCompletion.uniform_continuous_extension₂
 

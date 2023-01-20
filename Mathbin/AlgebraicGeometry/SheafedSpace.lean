@@ -77,7 +77,7 @@ instance (X : SheafedSpaceCat.{v} C) : TopologicalSpace X :=
 
 /-- The trivial `unit` valued sheaf on any topological space. -/
 def unit (X : TopCat) : SheafedSpaceCat (discrete Unit) :=
-  { @PresheafedSpaceCat.const (discrete Unit) _ X ⟨⟨⟩⟩ with IsSheaf := Presheaf.is_sheaf_unit _ }
+  { @PresheafedSpaceCat.const (discrete Unit) _ X ⟨⟨⟩⟩ with IsSheaf := Presheaf.isSheaf_unit _ }
 #align algebraic_geometry.SheafedSpace.unit AlgebraicGeometry.SheafedSpaceCat.unit
 
 instance : Inhabited (SheafedSpaceCat (discrete Unit)) :=
@@ -92,10 +92,10 @@ def forgetToPresheafedSpace : SheafedSpaceCat.{v} C ⥤ PresheafedSpaceCat.{v} C
   inducedFunctor _ deriving Full, Faithful
 #align algebraic_geometry.SheafedSpace.forget_to_PresheafedSpace AlgebraicGeometry.SheafedSpaceCat.forgetToPresheafedSpace
 
-instance is_PresheafedSpace_iso {X Y : SheafedSpaceCat.{v} C} (f : X ⟶ Y) [IsIso f] :
+instance is_presheafedSpaceCat_iso {X Y : SheafedSpaceCat.{v} C} (f : X ⟶ Y) [IsIso f] :
     @IsIso (PresheafedSpaceCat C) _ _ _ f :=
   SheafedSpaceCat.forgetToPresheafedSpace.map_is_iso f
-#align algebraic_geometry.SheafedSpace.is_PresheafedSpace_iso AlgebraicGeometry.SheafedSpaceCat.is_PresheafedSpace_iso
+#align algebraic_geometry.SheafedSpace.is_PresheafedSpace_iso AlgebraicGeometry.SheafedSpaceCat.is_presheafedSpaceCat_iso
 
 variable {C}
 
@@ -168,12 +168,12 @@ open TopCat.Presheaf
 -/
 def restrict {U : TopCat} (X : SheafedSpaceCat C) {f : U ⟶ (X : TopCat.{v})} (h : OpenEmbedding f) :
     SheafedSpaceCat C :=
-  { X.toPresheafedSpace.restrict h with IsSheaf := is_sheaf_of_open_embedding h X.IsSheaf }
+  { X.toPresheafedSpace.restrict h with IsSheaf := isSheaf_of_openEmbedding h X.IsSheaf }
 #align algebraic_geometry.SheafedSpace.restrict AlgebraicGeometry.SheafedSpaceCat.restrict
 
 /-- The restriction of a sheafed space `X` to the top subspace is isomorphic to `X` itself.
 -/
-def restrictTopIso (X : SheafedSpaceCat C) : X.restrict (Opens.open_embedding ⊤) ≅ X :=
+def restrictTopIso (X : SheafedSpaceCat C) : X.restrict (Opens.openEmbedding ⊤) ≅ X :=
   forgetToPresheafedSpace.preimageIso X.toPresheafedSpace.restrictTopIso
 #align algebraic_geometry.SheafedSpace.restrict_top_iso AlgebraicGeometry.SheafedSpaceCat.restrictTopIso
 

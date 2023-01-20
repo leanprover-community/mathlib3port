@@ -90,10 +90,10 @@ theorem char_dual (V : FdRep k G) (g : G) : (of (dual V.ρ)).character g = V.cha
 #align fdRep.char_dual FdRep.char_dual
 
 @[simp]
-theorem char_lin_hom (V W : FdRep k G) (g : G) :
+theorem char_linHom (V W : FdRep k G) (g : G) :
     (of (linHom V.ρ W.ρ)).character g = V.character g⁻¹ * W.character g := by
   rw [← char_iso (dual_tensor_iso_lin_hom _ _), char_tensor, Pi.mul_apply, char_dual]
-#align fdRep.char_lin_hom FdRep.char_lin_hom
+#align fdRep.char_lin_hom FdRep.char_linHom
 
 variable [Fintype G] [Invertible (Fintype.card G : k)]
 

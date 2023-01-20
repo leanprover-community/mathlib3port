@@ -53,12 +53,12 @@ instance : SetLike (Compacts α) α where
     cases t
     congr
 
-protected theorem is_compact (s : Compacts α) : IsCompact (s : Set α) :=
+protected theorem isCompact (s : Compacts α) : IsCompact (s : Set α) :=
   s.is_compact'
-#align topological_space.compacts.is_compact TopologicalSpace.Compacts.is_compact
+#align topological_space.compacts.is_compact TopologicalSpace.Compacts.isCompact
 
 instance (K : Compacts α) : CompactSpace K :=
-  is_compact_iff_compact_space.1 K.IsCompact
+  isCompact_iff_compactSpace.1 K.IsCompact
 
 instance : CanLift (Set α) (Compacts α) coe IsCompact where prf K hK := ⟨⟨K, hK⟩, rfl⟩
 
@@ -84,10 +84,10 @@ instance [T2Space α] : HasInf (Compacts α) :=
   ⟨fun s t => ⟨s ∩ t, s.IsCompact.inter t.IsCompact⟩⟩
 
 instance [CompactSpace α] : Top (Compacts α) :=
-  ⟨⟨univ, is_compact_univ⟩⟩
+  ⟨⟨univ, isCompact_univ⟩⟩
 
 instance : Bot (Compacts α) :=
-  ⟨⟨∅, is_compact_empty⟩⟩
+  ⟨⟨∅, isCompact_empty⟩⟩
 
 instance : SemilatticeSup (Compacts α) :=
   SetLike.coe_injective.SemilatticeSup _ fun _ _ => rfl
@@ -197,9 +197,9 @@ instance : SetLike (NonemptyCompacts α) α
     obtain ⟨⟨_, _⟩, _⟩ := t
     congr
 
-protected theorem is_compact (s : NonemptyCompacts α) : IsCompact (s : Set α) :=
+protected theorem isCompact (s : NonemptyCompacts α) : IsCompact (s : Set α) :=
   s.is_compact'
-#align topological_space.nonempty_compacts.is_compact TopologicalSpace.NonemptyCompacts.is_compact
+#align topological_space.nonempty_compacts.is_compact TopologicalSpace.NonemptyCompacts.isCompact
 
 protected theorem nonempty (s : NonemptyCompacts α) : (s : Set α).Nonempty :=
   s.nonempty'
@@ -251,12 +251,12 @@ theorem coe_top [CompactSpace α] [Nonempty α] : (↑(⊤ : NonemptyCompacts α
 default element the singleton set containing the default element. -/
 instance [Inhabited α] : Inhabited (NonemptyCompacts α) :=
   ⟨{  carrier := {default}
-      is_compact' := is_compact_singleton
+      is_compact' := isCompact_singleton
       nonempty' := singleton_nonempty _ }⟩
 
-instance to_compact_space {s : NonemptyCompacts α} : CompactSpace s :=
-  is_compact_iff_compact_space.1 s.IsCompact
-#align topological_space.nonempty_compacts.to_compact_space TopologicalSpace.NonemptyCompacts.to_compact_space
+instance to_compactSpace {s : NonemptyCompacts α} : CompactSpace s :=
+  isCompact_iff_compactSpace.1 s.IsCompact
+#align topological_space.nonempty_compacts.to_compact_space TopologicalSpace.NonemptyCompacts.to_compactSpace
 
 instance to_nonempty {s : NonemptyCompacts α} : Nonempty s :=
   s.Nonempty.to_subtype
@@ -295,9 +295,9 @@ instance : SetLike (PositiveCompacts α) α
     obtain ⟨⟨_, _⟩, _⟩ := t
     congr
 
-protected theorem is_compact (s : PositiveCompacts α) : IsCompact (s : Set α) :=
+protected theorem isCompact (s : PositiveCompacts α) : IsCompact (s : Set α) :=
   s.is_compact'
-#align topological_space.positive_compacts.is_compact TopologicalSpace.PositiveCompacts.is_compact
+#align topological_space.positive_compacts.is_compact TopologicalSpace.PositiveCompacts.isCompact
 
 theorem interior_nonempty (s : PositiveCompacts α) : (interior (s : Set α)).Nonempty :=
   s.interior_nonempty'
@@ -351,19 +351,19 @@ theorem coe_top [CompactSpace α] [Nonempty α] : (↑(⊤ : PositiveCompacts α
   rfl
 #align topological_space.positive_compacts.coe_top TopologicalSpace.PositiveCompacts.coe_top
 
-theorem exists_positive_compacts_subset [LocallyCompactSpace α] {U : Set α} (ho : IsOpen U)
+theorem exists_positiveCompacts_subset [LocallyCompactSpace α] {U : Set α} (ho : IsOpen U)
     (hn : U.Nonempty) : ∃ K : PositiveCompacts α, ↑K ⊆ U :=
   let ⟨x, hx⟩ := hn
   let ⟨K, hKc, hxK, hKU⟩ := exists_compact_subset ho hx
   ⟨⟨⟨K, hKc⟩, ⟨x, hxK⟩⟩, hKU⟩
-#align exists_positive_compacts_subset exists_positive_compacts_subset
+#align exists_positive_compacts_subset exists_positiveCompacts_subset
 
 instance [CompactSpace α] [Nonempty α] : Inhabited (PositiveCompacts α) :=
   ⟨⊤⟩
 
 /-- In a nonempty locally compact space, there exists a compact set with nonempty interior. -/
 instance nonempty' [LocallyCompactSpace α] [Nonempty α] : Nonempty (PositiveCompacts α) :=
-  nonempty_of_exists <| exists_positive_compacts_subset is_open_univ univ_nonempty
+  nonempty_of_exists <| exists_positiveCompacts_subset isOpen_univ univ_nonempty
 #align topological_space.positive_compacts.nonempty' TopologicalSpace.PositiveCompacts.nonempty'
 
 /-- The product of two `positive_compacts`, as a `positive_compacts` in the product space. -/
@@ -403,13 +403,13 @@ instance : SetLike (CompactOpens α) α
     obtain ⟨⟨_, _⟩, _⟩ := t
     congr
 
-protected theorem is_compact (s : CompactOpens α) : IsCompact (s : Set α) :=
+protected theorem isCompact (s : CompactOpens α) : IsCompact (s : Set α) :=
   s.is_compact'
-#align topological_space.compact_opens.is_compact TopologicalSpace.CompactOpens.is_compact
+#align topological_space.compact_opens.is_compact TopologicalSpace.CompactOpens.isCompact
 
-protected theorem is_open (s : CompactOpens α) : IsOpen (s : Set α) :=
+protected theorem isOpen (s : CompactOpens α) : IsOpen (s : Set α) :=
   s.is_open'
-#align topological_space.compact_opens.is_open TopologicalSpace.CompactOpens.is_open
+#align topological_space.compact_opens.is_open TopologicalSpace.CompactOpens.isOpen
 
 /-- Reinterpret a compact open as an open. -/
 @[simps]
@@ -439,17 +439,17 @@ instance : HasSup (CompactOpens α) :=
 instance [QuasiSeparatedSpace α] : HasInf (CompactOpens α) :=
   ⟨fun U V =>
     ⟨⟨(U : Set α) ∩ (V : Set α),
-        QuasiSeparatedSpace.inter_is_compact U.1.1 V.1.1 U.2 U.1.2 V.2 V.1.2⟩,
+        QuasiSeparatedSpace.inter_isCompact U.1.1 V.1.1 U.2 U.1.2 V.2 V.1.2⟩,
       U.2.inter V.2⟩⟩
 
 instance [QuasiSeparatedSpace α] : SemilatticeInf (CompactOpens α) :=
   SetLike.coe_injective.SemilatticeInf _ fun _ _ => rfl
 
 instance [CompactSpace α] : Top (CompactOpens α) :=
-  ⟨⟨⊤, is_open_univ⟩⟩
+  ⟨⟨⊤, isOpen_univ⟩⟩
 
 instance : Bot (CompactOpens α) :=
-  ⟨⟨⊥, is_open_empty⟩⟩
+  ⟨⟨⊥, isOpen_empty⟩⟩
 
 instance [T2Space α] : SDiff (CompactOpens α) :=
   ⟨fun s t => ⟨⟨s \ t, s.IsCompact.diff t.IsOpen⟩, s.IsOpen.sdiff t.IsCompact.IsClosed⟩⟩

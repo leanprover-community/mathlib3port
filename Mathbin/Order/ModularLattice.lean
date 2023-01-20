@@ -364,7 +364,7 @@ def infIccOrderIsoIccSup (a b : α) : Set.Icc (a ⊓ b) a ≃o Set.Icc b (a ⊔ 
         rw [inf_comm, inf_sup_assoc_of_le _ x.prop.1, inf_eq_left.2 x.prop.2])
   map_rel_iff' x y :=
     by
-    simp only [Subtype.mk_le_mk, Equiv.coe_fn_mk, and_true_iff, le_sup_right]
+    simp only [Subtype.mk_le_mk, Equiv.coeFn_mk, and_true_iff, le_sup_right]
     rw [← Subtype.coe_le_coe]
     refine' ⟨fun h => _, fun h => sup_le_sup_right h _⟩
     rw [← sup_eq_right.2 x.prop.1, inf_sup_assoc_of_le _ x.prop.2, sup_comm, ←
@@ -521,7 +521,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_modular_lattice.complemented_lattice_Iic IsModularLattice.complementedLattice_Iicₓ'. -/
 instance complementedLattice_Iic : ComplementedLattice (Set.Iic a) :=
   ⟨fun ⟨x, hx⟩ =>
-    let ⟨y, hy⟩ := exists_is_compl x
+    let ⟨y, hy⟩ := exists_isCompl x
     ⟨⟨y ⊓ a, Set.mem_Iic.2 inf_le_right⟩, by
       constructor
       · rw [disjoint_iff_inf_le]
@@ -538,7 +538,7 @@ instance complementedLattice_Iic : ComplementedLattice (Set.Iic a) :=
 #print IsModularLattice.complementedLattice_Ici /-
 instance complementedLattice_Ici : ComplementedLattice (Set.Ici a) :=
   ⟨fun ⟨x, hx⟩ =>
-    let ⟨y, hy⟩ := exists_is_compl x
+    let ⟨y, hy⟩ := exists_isCompl x
     ⟨⟨y ⊔ a, Set.mem_Ici.2 le_sup_right⟩, by
       constructor
       · rw [disjoint_iff_inf_le]

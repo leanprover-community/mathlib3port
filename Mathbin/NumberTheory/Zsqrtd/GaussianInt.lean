@@ -170,14 +170,14 @@ theorem abs_coe_nat_norm (x : ℤ[i]) : (x.norm.natAbs : ℤ) = x.norm :=
 #align gaussian_int.abs_coe_nat_norm GaussianInt.abs_coe_nat_norm
 
 @[simp]
-theorem nat_cast_nat_abs_norm {α : Type _} [Ring α] (x : ℤ[i]) : (x.norm.natAbs : α) = x.norm := by
+theorem nat_cast_natAbs_norm {α : Type _} [Ring α] (x : ℤ[i]) : (x.norm.natAbs : α) = x.norm := by
   rw [← Int.cast_ofNat, abs_coe_nat_norm]
-#align gaussian_int.nat_cast_nat_abs_norm GaussianInt.nat_cast_nat_abs_norm
+#align gaussian_int.nat_cast_nat_abs_norm GaussianInt.nat_cast_natAbs_norm
 
-theorem nat_abs_norm_eq (x : ℤ[i]) :
+theorem natAbs_norm_eq (x : ℤ[i]) :
     x.norm.natAbs = x.re.natAbs * x.re.natAbs + x.im.natAbs * x.im.natAbs :=
   Int.ofNat.inj <| by simp; simp [Zsqrtd.norm]
-#align gaussian_int.nat_abs_norm_eq GaussianInt.nat_abs_norm_eq
+#align gaussian_int.nat_abs_norm_eq GaussianInt.natAbs_norm_eq
 
 instance : Div ℤ[i] :=
   ⟨fun x y =>
@@ -200,16 +200,16 @@ theorem to_complex_div_im (x y : ℤ[i]) : ((x / y : ℤ[i]) : ℂ).im = round (
     simp [-Rat.round_cast, mul_assoc, div_eq_mul_inv, mul_add, add_mul]
 #align gaussian_int.to_complex_div_im GaussianInt.to_complex_div_im
 
-theorem norm_sq_le_norm_sq_of_re_le_of_im_le {x y : ℂ} (hre : |x.re| ≤ |y.re|)
+theorem normSq_le_normSq_of_re_le_of_im_le {x y : ℂ} (hre : |x.re| ≤ |y.re|)
     (him : |x.im| ≤ |y.im|) : x.normSq ≤ y.normSq := by
   rw [norm_sq_apply, norm_sq_apply, ← _root_.abs_mul_self, _root_.abs_mul, ←
       _root_.abs_mul_self y.re, _root_.abs_mul y.re, ← _root_.abs_mul_self x.im,
       _root_.abs_mul x.im, ← _root_.abs_mul_self y.im, _root_.abs_mul y.im] <;>
     exact
       add_le_add (mul_self_le_mul_self (abs_nonneg _) hre) (mul_self_le_mul_self (abs_nonneg _) him)
-#align gaussian_int.norm_sq_le_norm_sq_of_re_le_of_im_le GaussianInt.norm_sq_le_norm_sq_of_re_le_of_im_le
+#align gaussian_int.norm_sq_le_norm_sq_of_re_le_of_im_le GaussianInt.normSq_le_normSq_of_re_le_of_im_le
 
-theorem norm_sq_div_sub_div_lt_one (x y : ℤ[i]) : ((x / y : ℂ) - ((x / y : ℤ[i]) : ℂ)).normSq < 1 :=
+theorem normSq_div_sub_div_lt_one (x y : ℤ[i]) : ((x / y : ℂ) - ((x / y : ℤ[i]) : ℂ)).normSq < 1 :=
   calc
     ((x / y : ℂ) - ((x / y : ℤ[i]) : ℂ)).normSq =
         ((x / y : ℂ).re - ((x / y : ℤ[i]) : ℂ).re + ((x / y : ℂ).im - ((x / y : ℤ[i]) : ℂ).im) * I :
@@ -217,7 +217,7 @@ theorem norm_sq_div_sub_div_lt_one (x y : ℤ[i]) : ((x / y : ℂ) - ((x / y : �
       congr_arg _ <| by apply Complex.ext <;> simp
     _ ≤ (1 / 2 + 1 / 2 * I).normSq :=
       have : |(2⁻¹ : ℝ)| = 2⁻¹ := abs_of_nonneg (by norm_num)
-      norm_sq_le_norm_sq_of_re_le_of_im_le
+      normSq_le_normSq_of_re_le_of_im_le
         (by
           rw [to_complex_div_re] <;> simp [norm_sq, this] <;>
             simpa using abs_sub_round (x / y : ℂ).re)
@@ -226,7 +226,7 @@ theorem norm_sq_div_sub_div_lt_one (x y : ℤ[i]) : ((x / y : ℂ) - ((x / y : �
             simpa using abs_sub_round (x / y : ℂ).im)
     _ < 1 := by simp [norm_sq] <;> norm_num
     
-#align gaussian_int.norm_sq_div_sub_div_lt_one GaussianInt.norm_sq_div_sub_div_lt_one
+#align gaussian_int.norm_sq_div_sub_div_lt_one GaussianInt.normSq_div_sub_div_lt_one
 
 instance : Mod ℤ[i] :=
   ⟨fun x y => x - y * (x / y)⟩
@@ -243,15 +243,15 @@ theorem norm_mod_lt (x : ℤ[i]) {y : ℤ[i]} (hy : y ≠ 0) : (x % y).norm < y.
       _ = (y : ℂ).normSq * (x / y - (x / y : ℤ[i]) : ℂ).normSq := by
         rw [← norm_sq_mul, mul_sub, mul_div_cancel' _ this]
       _ < (y : ℂ).normSq * 1 :=
-        mul_lt_mul_of_pos_left (norm_sq_div_sub_div_lt_one _ _) (norm_sq_pos.2 this)
+        mul_lt_mul_of_pos_left (normSq_div_sub_div_lt_one _ _) (normSq_pos.2 this)
       _ = Zsqrtd.norm y := by simp
       
 #align gaussian_int.norm_mod_lt GaussianInt.norm_mod_lt
 
-theorem nat_abs_norm_mod_lt (x : ℤ[i]) {y : ℤ[i]} (hy : y ≠ 0) :
+theorem natAbs_norm_mod_lt (x : ℤ[i]) {y : ℤ[i]} (hy : y ≠ 0) :
     (x % y).norm.natAbs < y.norm.natAbs :=
   Int.ofNat_lt.1 (by simp [-Int.ofNat_lt, norm_mod_lt x hy])
-#align gaussian_int.nat_abs_norm_mod_lt GaussianInt.nat_abs_norm_mod_lt
+#align gaussian_int.nat_abs_norm_mod_lt GaussianInt.natAbs_norm_mod_lt
 
 theorem norm_le_norm_mul_left (x : ℤ[i]) {y : ℤ[i]} (hy : y ≠ 0) :
     (norm x).natAbs ≤ (norm (x * y)).natAbs := by
@@ -275,7 +275,7 @@ instance : EuclideanDomain ℤ[i] :=
     quotient_mul_add_remainder_eq := fun _ _ => by simp [mod_def]
     R := _
     r_well_founded := measure_wf (Int.natAbs ∘ norm)
-    remainder_lt := nat_abs_norm_mod_lt
+    remainder_lt := natAbs_norm_mod_lt
     mul_left_not_lt := fun a b hb0 => not_lt_of_ge <| norm_le_norm_mul_left a hb0 }
 
 open PrincipalIdealRing

@@ -71,9 +71,9 @@ theorem trace_transpose (A : Matrix n n R) : trace Aᵀ = trace A :=
 #align matrix.trace_transpose Matrix.trace_transpose
 
 @[simp]
-theorem trace_conj_transpose [StarAddMonoid R] (A : Matrix n n R) : trace Aᴴ = star (trace A) :=
+theorem trace_conjTranspose [StarAddMonoid R] (A : Matrix n n R) : trace Aᴴ = star (trace A) :=
   (star_sum _ _).symm
-#align matrix.trace_conj_transpose Matrix.trace_conj_transpose
+#align matrix.trace_conj_transpose Matrix.trace_conjTranspose
 
 variable (n α R)
 

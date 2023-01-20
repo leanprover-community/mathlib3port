@@ -69,8 +69,8 @@ theorem exists_sq_add_sq_add_one_eq_k (p : ℕ) [hp : Fact p.Prime] :
               Int.natAbs_of_nonneg hk0]
           _ ≤ (p / 2) ^ 2 + (p / 2) ^ 2 + 1 :=
             add_le_add
-              (add_le_add (Nat.pow_le_pow_of_le_left (Zmod.nat_abs_val_min_abs_le _) _)
-                (Nat.pow_le_pow_of_le_left (Zmod.nat_abs_val_min_abs_le _) _))
+              (add_le_add (Nat.pow_le_pow_of_le_left (Zmod.natAbs_valMinAbs_le _) _)
+                (Nat.pow_le_pow_of_le_left (Zmod.natAbs_valMinAbs_le _) _))
               le_rfl
           _ < (p / 2) ^ 2 + (p / 2) ^ 2 + (p % 2) ^ 2 + (2 * (p / 2) ^ 2 + 4 * (p / 2) * (p % 2)) :=
             by
@@ -180,10 +180,10 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] :
             Int.ofNat_le.2 <|
               add_le_add
                 (add_le_add
-                  (add_le_add (Nat.pow_le_pow_of_le_left (Zmod.nat_abs_val_min_abs_le _) _)
-                    (Nat.pow_le_pow_of_le_left (Zmod.nat_abs_val_min_abs_le _) _))
-                  (Nat.pow_le_pow_of_le_left (Zmod.nat_abs_val_min_abs_le _) _))
-                (Nat.pow_le_pow_of_le_left (Zmod.nat_abs_val_min_abs_le _) _)
+                  (add_le_add (Nat.pow_le_pow_of_le_left (Zmod.natAbs_valMinAbs_le _) _)
+                    (Nat.pow_le_pow_of_le_left (Zmod.natAbs_valMinAbs_le _) _))
+                  (Nat.pow_le_pow_of_le_left (Zmod.natAbs_valMinAbs_le _) _))
+                (Nat.pow_le_pow_of_le_left (Zmod.natAbs_valMinAbs_le _) _)
           _ = 4 * (m / 2 : ℕ) ^ 2 := by simp [sq, bit0, bit1, mul_add, add_mul, add_assoc]
           _ < 4 * (m / 2 : ℕ) ^ 2 + ((4 * (m / 2) : ℕ) * (m % 2 : ℕ) + (m % 2 : ℕ) ^ 2) :=
             (lt_add_iff_pos_right _).2

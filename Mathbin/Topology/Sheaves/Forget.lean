@@ -148,7 +148,7 @@ Another useful example is the forgetful functor `TopCommRing ⥤ Top`.
 See <https://stacks.math.columbia.edu/tag/0073>.
 In fact we prove a stronger version with arbitrary complete target category.
 -/
-theorem is_sheaf_iff_is_sheaf_comp : Presheaf.IsSheaf F ↔ Presheaf.IsSheaf (F ⋙ G) :=
+theorem isSheaf_iff_isSheaf_comp : Presheaf.IsSheaf F ↔ Presheaf.IsSheaf (F ⋙ G) :=
   by
   rw [presheaf.is_sheaf_iff_is_sheaf_equalizer_products,
     presheaf.is_sheaf_iff_is_sheaf_equalizer_products]
@@ -220,7 +220,7 @@ theorem is_sheaf_iff_is_sheaf_comp : Presheaf.IsSheaf F ↔ Presheaf.IsSheaf (F 
       -- A cone morphism is an isomorphism exactly if the morphism between the cone points is,
       -- so we're done!
       exact is_iso.of_iso ((cones.forget _).mapIso (as_iso f'))
-#align Top.presheaf.is_sheaf_iff_is_sheaf_comp TopCat.Presheaf.is_sheaf_iff_is_sheaf_comp
+#align Top.presheaf.is_sheaf_iff_is_sheaf_comp TopCat.Presheaf.isSheaf_iff_isSheaf_comp
 
 /-!
 As an example, we now have everything we need to check the sheaf condition

@@ -184,7 +184,7 @@ noncomputable section
 -/
 
 
-theorem poly_eq_of_witt_polynomial_bind_eq' (f g : ℕ → MvPolynomial (idx × ℕ) ℤ)
+theorem poly_eq_of_wittPolynomial_bind_eq' (f g : ℕ → MvPolynomial (idx × ℕ) ℤ)
     (h : ∀ n, bind₁ f (wittPolynomial p _ n) = bind₁ g (wittPolynomial p _ n)) : f = g :=
   by
   ext1 n
@@ -192,11 +192,11 @@ theorem poly_eq_of_witt_polynomial_bind_eq' (f g : ℕ → MvPolynomial (idx × 
   rw [← Function.funext_iff] at h
   replace h :=
     congr_arg (fun fam => bind₁ (MvPolynomial.map (Int.castRingHom ℚ) ∘ fam) (xInTermsOfW p ℚ n)) h
-  simpa only [Function.comp, map_bind₁, map_witt_polynomial, ← bind₁_bind₁,
-    bind₁_witt_polynomial_X_in_terms_of_W, bind₁_X_right] using h
-#align witt_vector.poly_eq_of_witt_polynomial_bind_eq' WittVector.poly_eq_of_witt_polynomial_bind_eq'
+  simpa only [Function.comp, map_bind₁, map_wittPolynomial, ← bind₁_bind₁,
+    bind₁_wittPolynomial_xInTermsOfW, bind₁_X_right] using h
+#align witt_vector.poly_eq_of_witt_polynomial_bind_eq' WittVector.poly_eq_of_wittPolynomial_bind_eq'
 
-theorem poly_eq_of_witt_polynomial_bind_eq (f g : ℕ → MvPolynomial ℕ ℤ)
+theorem poly_eq_of_wittPolynomial_bind_eq (f g : ℕ → MvPolynomial ℕ ℤ)
     (h : ∀ n, bind₁ f (wittPolynomial p _ n) = bind₁ g (wittPolynomial p _ n)) : f = g :=
   by
   ext1 n
@@ -204,9 +204,9 @@ theorem poly_eq_of_witt_polynomial_bind_eq (f g : ℕ → MvPolynomial ℕ ℤ)
   rw [← Function.funext_iff] at h
   replace h :=
     congr_arg (fun fam => bind₁ (MvPolynomial.map (Int.castRingHom ℚ) ∘ fam) (xInTermsOfW p ℚ n)) h
-  simpa only [Function.comp, map_bind₁, map_witt_polynomial, ← bind₁_bind₁,
-    bind₁_witt_polynomial_X_in_terms_of_W, bind₁_X_right] using h
-#align witt_vector.poly_eq_of_witt_polynomial_bind_eq WittVector.poly_eq_of_witt_polynomial_bind_eq
+  simpa only [Function.comp, map_bind₁, map_wittPolynomial, ← bind₁_bind₁,
+    bind₁_wittPolynomial_xInTermsOfW, bind₁_X_right] using h
+#align witt_vector.poly_eq_of_witt_polynomial_bind_eq WittVector.poly_eq_of_wittPolynomial_bind_eq
 
 omit hp
 
@@ -230,20 +230,20 @@ class IsPoly (f : ∀ ⦃R⦄ [CommRing R], WittVector p R → 𝕎 R) : Prop wh
 #align witt_vector.is_poly WittVector.IsPoly
 
 /-- The identity function on Witt vectors is a polynomial function. -/
-instance id_is_poly : IsPoly p fun _ _ => id :=
+instance id_isPoly : IsPoly p fun _ _ => id :=
   ⟨⟨x, by
       intros
       simp only [aeval_X, id]⟩⟩
-#align witt_vector.id_is_poly WittVector.id_is_poly
+#align witt_vector.id_is_poly WittVector.id_isPoly
 
-instance id_is_poly_i' : IsPoly p fun _ _ a => a :=
-  WittVector.id_is_poly _
-#align witt_vector.id_is_poly_i' WittVector.id_is_poly_i'
+instance id_isPoly_i' : IsPoly p fun _ _ a => a :=
+  WittVector.id_isPoly _
+#align witt_vector.id_is_poly_i' WittVector.id_isPoly_i'
 
 namespace IsPoly
 
 instance : Inhabited (IsPoly p fun _ _ => id) :=
-  ⟨WittVector.id_is_poly p⟩
+  ⟨WittVector.id_isPoly p⟩
 
 variable {p}
 
@@ -481,31 +481,31 @@ Users are expected to use the non-instance versions manually.
 
 /-- The additive negation is a polynomial function on Witt vectors. -/
 @[is_poly]
-theorem neg_is_poly : IsPoly p fun R _ => @Neg.neg (𝕎 R) _ :=
+theorem neg_isPoly : IsPoly p fun R _ => @Neg.neg (𝕎 R) _ :=
   ⟨⟨fun n => rename Prod.snd (wittNeg p n), by
       intros ; funext n
       rw [neg_coeff, aeval_eq_eval₂_hom, eval₂_hom_rename]
       apply eval₂_hom_congr rfl _ rfl
       ext ⟨i, k⟩; fin_cases i; rfl⟩⟩
-#align witt_vector.neg_is_poly WittVector.neg_is_poly
+#align witt_vector.neg_is_poly WittVector.neg_isPoly
 
 section ZeroOne
 
 /- To avoid a theory of 0-ary functions (a.k.a. constants)
 we model them as constant unary functions. -/
 /-- The function that is constantly zero on Witt vectors is a polynomial function. -/
-instance zero_is_poly : IsPoly p fun _ _ _ => 0 :=
+instance zero_isPoly : IsPoly p fun _ _ _ => 0 :=
   ⟨⟨0, by
       intros
       funext n
       simp only [Pi.zero_apply, AlgHom.map_zero, zero_coeff]⟩⟩
-#align witt_vector.zero_is_poly WittVector.zero_is_poly
+#align witt_vector.zero_is_poly WittVector.zero_isPoly
 
 @[simp]
-theorem bind₁_zero_witt_polynomial (n : ℕ) :
+theorem bind₁_zero_wittPolynomial (n : ℕ) :
     bind₁ (0 : ℕ → MvPolynomial ℕ R) (wittPolynomial p R n) = 0 := by
-  rw [← aeval_eq_bind₁, aeval_zero, constant_coeff_witt_polynomial, RingHom.map_zero]
-#align witt_vector.bind₁_zero_witt_polynomial WittVector.bind₁_zero_witt_polynomial
+  rw [← aeval_eq_bind₁, aeval_zero, constantCoeff_wittPolynomial, RingHom.map_zero]
+#align witt_vector.bind₁_zero_witt_polynomial WittVector.bind₁_zero_wittPolynomial
 
 omit hp
 
@@ -517,9 +517,9 @@ def onePoly (n : ℕ) : MvPolynomial ℕ ℤ :=
 include hp
 
 @[simp]
-theorem bind₁_one_poly_witt_polynomial (n : ℕ) : bind₁ onePoly (wittPolynomial p ℤ n) = 1 :=
+theorem bind₁_onePoly_wittPolynomial (n : ℕ) : bind₁ onePoly (wittPolynomial p ℤ n) = 1 :=
   by
-  rw [witt_polynomial_eq_sum_C_mul_X_pow, AlgHom.map_sum, Finset.sum_eq_single 0]
+  rw [wittPolynomial_eq_sum_c_mul_x_pow, AlgHom.map_sum, Finset.sum_eq_single 0]
   ·
     simp only [one_poly, one_pow, one_mul, AlgHom.map_pow, C_1, pow_zero, bind₁_X_right, if_true,
       eq_self_iff_true]
@@ -528,17 +528,17 @@ theorem bind₁_one_poly_witt_polynomial (n : ℕ) : bind₁ onePoly (wittPolyno
       bind₁_X_right, AlgHom.map_mul]
   · rw [Finset.mem_range]
     decide
-#align witt_vector.bind₁_one_poly_witt_polynomial WittVector.bind₁_one_poly_witt_polynomial
+#align witt_vector.bind₁_one_poly_witt_polynomial WittVector.bind₁_onePoly_wittPolynomial
 
 /-- The function that is constantly one on Witt vectors is a polynomial function. -/
-instance one_is_poly : IsPoly p fun _ _ _ => 1 :=
+instance one_isPoly : IsPoly p fun _ _ _ => 1 :=
   ⟨⟨onePoly, by
       intros ; funext n; cases n
       · simp only [one_poly, if_true, eq_self_iff_true, one_coeff_zero, AlgHom.map_one]
       ·
         simp only [one_poly, Nat.succ_pos', one_coeff_eq_of_pos, if_neg n.succ_ne_zero,
           AlgHom.map_zero]⟩⟩
-#align witt_vector.one_is_poly WittVector.one_is_poly
+#align witt_vector.one_is_poly WittVector.one_isPoly
 
 end ZeroOne
 
@@ -546,21 +546,21 @@ omit hp
 
 /-- Addition of Witt vectors is a polynomial function. -/
 @[is_poly]
-theorem add_is_poly₂ [Fact p.Prime] : IsPoly₂ p fun _ _ => (· + ·) :=
+theorem add_isPoly₂ [Fact p.Prime] : IsPoly₂ p fun _ _ => (· + ·) :=
   ⟨⟨wittAdd p, by
       intros
       dsimp only [WittVector.hasAdd]
       simp [eval]⟩⟩
-#align witt_vector.add_is_poly₂ WittVector.add_is_poly₂
+#align witt_vector.add_is_poly₂ WittVector.add_isPoly₂
 
 /-- Multiplication of Witt vectors is a polynomial function. -/
 @[is_poly]
-theorem mul_is_poly₂ [Fact p.Prime] : IsPoly₂ p fun _ _ => (· * ·) :=
+theorem mul_isPoly₂ [Fact p.Prime] : IsPoly₂ p fun _ _ => (· * ·) :=
   ⟨⟨wittMul p, by
       intros
       dsimp only [WittVector.hasMul]
       simp [eval]⟩⟩
-#align witt_vector.mul_is_poly₂ WittVector.mul_is_poly₂
+#align witt_vector.mul_is_poly₂ WittVector.mul_isPoly₂
 
 include hp
 
@@ -582,7 +582,7 @@ namespace IsPoly₂
 omit hp
 
 instance [Fact p.Prime] : Inhabited (IsPoly₂ p _) :=
-  ⟨add_is_poly₂⟩
+  ⟨add_isPoly₂⟩
 
 variable {p}
 
@@ -590,14 +590,14 @@ variable {p}
  with a unary polynomial function in the first argument is polynomial. -/
 theorem comp_left {g f} (hg : IsPoly₂ p g) (hf : IsPoly p f) :
     IsPoly₂ p fun R _Rcr x y => g (f x) y :=
-  hg.comp hf (WittVector.id_is_poly _)
+  hg.comp hf (WittVector.id_isPoly _)
 #align witt_vector.is_poly₂.comp_left WittVector.IsPoly₂.comp_left
 
 /-- The composition of a binary polynomial function
  with a unary polynomial function in the second argument is polynomial. -/
 theorem comp_right {g f} (hg : IsPoly₂ p g) (hf : IsPoly p f) :
     IsPoly₂ p fun R _Rcr x y => g x (f y) :=
-  hg.comp (WittVector.id_is_poly p) hf
+  hg.comp (WittVector.id_isPoly p) hf
 #align witt_vector.is_poly₂.comp_right WittVector.IsPoly₂.comp_right
 
 include hp

@@ -46,7 +46,7 @@ universe v
 
 variable {A : Type _} [Category A] [Abelian A] {X : SimplicialObject A}
 
-theorem HigherFacesVanish.inclusion_of_Moore_complex_map (n : ℕ) :
+theorem HigherFacesVanish.inclusionOfMooreComplexMap (n : ℕ) :
     HigherFacesVanish (n + 1) ((inclusionOfMooreComplexMap X).f (n + 1)) := fun j hj =>
   by
   dsimp [inclusion_of_Moore_complex_map]
@@ -54,9 +54,9 @@ theorem HigherFacesVanish.inclusion_of_Moore_complex_map (n : ℕ) :
     factor_thru_arrow _ _
       (finset_inf_arrow_factors Finset.univ _ j (by simp only [Finset.mem_univ])),
     assoc, kernel_subobject_arrow_comp, comp_zero]
-#align algebraic_topology.dold_kan.higher_faces_vanish.inclusion_of_Moore_complex_map AlgebraicTopology.DoldKan.HigherFacesVanish.inclusion_of_Moore_complex_map
+#align algebraic_topology.dold_kan.higher_faces_vanish.inclusion_of_Moore_complex_map AlgebraicTopology.DoldKan.HigherFacesVanish.inclusionOfMooreComplexMap
 
-theorem factors_normalized_Moore_complex_P_infty (n : ℕ) :
+theorem factors_normalized_Moore_complex_pInfty (n : ℕ) :
     Subobject.Factors (NormalizedMooreComplex.objX X n) (pInfty.f n) :=
   by
   cases n
@@ -65,13 +65,13 @@ theorem factors_normalized_Moore_complex_P_infty (n : ℕ) :
     intro i hi
     apply kernel_subobject_factors
     exact (higher_faces_vanish.of_P (n + 1) n) i le_add_self
-#align algebraic_topology.dold_kan.factors_normalized_Moore_complex_P_infty AlgebraicTopology.DoldKan.factors_normalized_Moore_complex_P_infty
+#align algebraic_topology.dold_kan.factors_normalized_Moore_complex_P_infty AlgebraicTopology.DoldKan.factors_normalized_Moore_complex_pInfty
 
 /-- P_infty factors through the normalized Moore complex -/
 @[simps]
 def pInftyToNormalizedMooreComplex (X : SimplicialObject A) : K[X] ⟶ N[X] :=
   ChainComplex.ofHom _ _ _ _ _ _
-    (fun n => factorThru _ _ (factors_normalized_Moore_complex_P_infty n)) fun n =>
+    (fun n => factorThru _ _ (factors_normalized_Moore_complex_pInfty n)) fun n =>
     by
     rw [← cancel_mono (normalized_Moore_complex.obj_X X n).arrow, assoc, assoc, factor_thru_arrow, ←
       inclusion_of_Moore_complex_map_f, ← normalized_Moore_complex_obj_d, ←
@@ -81,25 +81,24 @@ def pInftyToNormalizedMooreComplex (X : SimplicialObject A) : K[X] ⟶ N[X] :=
 #align algebraic_topology.dold_kan.P_infty_to_normalized_Moore_complex AlgebraicTopology.DoldKan.pInftyToNormalizedMooreComplex
 
 @[simp, reassoc.1]
-theorem P_infty_to_normalized_Moore_complex_comp_inclusion_of_Moore_complex_map
-    (X : SimplicialObject A) :
+theorem pInftyToNormalizedMooreComplex_comp_inclusionOfMooreComplexMap (X : SimplicialObject A) :
     pInftyToNormalizedMooreComplex X ≫ inclusionOfMooreComplexMap X = P_infty := by tidy
-#align algebraic_topology.dold_kan.P_infty_to_normalized_Moore_complex_comp_inclusion_of_Moore_complex_map AlgebraicTopology.DoldKan.P_infty_to_normalized_Moore_complex_comp_inclusion_of_Moore_complex_map
+#align algebraic_topology.dold_kan.P_infty_to_normalized_Moore_complex_comp_inclusion_of_Moore_complex_map AlgebraicTopology.DoldKan.pInftyToNormalizedMooreComplex_comp_inclusionOfMooreComplexMap
 
 @[simp, reassoc.1]
-theorem P_infty_to_normalized_Moore_complex_naturality {X Y : SimplicialObject A} (f : X ⟶ Y) :
+theorem pInftyToNormalizedMooreComplex_naturality {X Y : SimplicialObject A} (f : X ⟶ Y) :
     AlternatingFaceMapComplex.map f ≫ pInftyToNormalizedMooreComplex Y =
       pInftyToNormalizedMooreComplex X ≫ NormalizedMooreComplex.map f :=
   by tidy
-#align algebraic_topology.dold_kan.P_infty_to_normalized_Moore_complex_naturality AlgebraicTopology.DoldKan.P_infty_to_normalized_Moore_complex_naturality
+#align algebraic_topology.dold_kan.P_infty_to_normalized_Moore_complex_naturality AlgebraicTopology.DoldKan.pInftyToNormalizedMooreComplex_naturality
 
 @[simp, reassoc.1]
-theorem P_infty_comp_P_infty_to_normalized_Moore_complex (X : SimplicialObject A) :
+theorem pInfty_comp_pInftyToNormalizedMooreComplex (X : SimplicialObject A) :
     P_infty ≫ pInftyToNormalizedMooreComplex X = pInftyToNormalizedMooreComplex X := by tidy
-#align algebraic_topology.dold_kan.P_infty_comp_P_infty_to_normalized_Moore_complex AlgebraicTopology.DoldKan.P_infty_comp_P_infty_to_normalized_Moore_complex
+#align algebraic_topology.dold_kan.P_infty_comp_P_infty_to_normalized_Moore_complex AlgebraicTopology.DoldKan.pInfty_comp_pInftyToNormalizedMooreComplex
 
 @[simp, reassoc.1]
-theorem inclusion_of_Moore_complex_map_comp_P_infty (X : SimplicialObject A) :
+theorem inclusionOfMooreComplexMap_comp_pInfty (X : SimplicialObject A) :
     inclusionOfMooreComplexMap X ≫ P_infty = inclusionOfMooreComplexMap X :=
   by
   ext n
@@ -107,7 +106,7 @@ theorem inclusion_of_Moore_complex_map_comp_P_infty (X : SimplicialObject A) :
   · dsimp
     simp only [comp_id]
   · exact (higher_faces_vanish.inclusion_of_Moore_complex_map n).comp_P_eq_self
-#align algebraic_topology.dold_kan.inclusion_of_Moore_complex_map_comp_P_infty AlgebraicTopology.DoldKan.inclusion_of_Moore_complex_map_comp_P_infty
+#align algebraic_topology.dold_kan.inclusion_of_Moore_complex_map_comp_P_infty AlgebraicTopology.DoldKan.inclusionOfMooreComplexMap_comp_pInfty
 
 instance : Mono (inclusionOfMooreComplexMap X) :=
   ⟨fun Y f₁ f₂ hf => by

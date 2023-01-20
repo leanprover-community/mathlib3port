@@ -94,9 +94,15 @@ instance (priority := 900) castCoe {R} [IntCast R] : CoeTC ℤ R :=
   ⟨Int.cast⟩
 #align int.cast_coe Int.castCoe
 
-theorem cast_of_nat (n : ℕ) : (ofNat n : R) = n :=
+/- warning: int.cast_of_nat -> Int.cast_ofNat is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u1}} [_inst_1 : AddGroupWithOne.{u1} R] (n : Nat), Eq.{succ u1} R ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Int R (HasLiftT.mk.{1, succ u1} Int R (CoeTCₓ.coe.{1, succ u1} Int R (Int.castCoe.{u1} R (AddGroupWithOne.toHasIntCast.{u1} R _inst_1)))) (Int.ofNat n)) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Nat R (HasLiftT.mk.{1, succ u1} Nat R (CoeTCₓ.coe.{1, succ u1} Nat R (Nat.castCoe.{u1} R (AddMonoidWithOne.toNatCast.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R _inst_1))))) n)
+but is expected to have type
+  forall {R : Type.{u1}} [_inst_1 : AddGroupWithOne.{u1} R] (n : Nat), Eq.{succ u1} R (Int.cast.{u1} R (AddGroupWithOne.toIntCast.{u1} R _inst_1) (Nat.cast.{0} Int Int.instNatCastInt n)) (Nat.cast.{u1} R (AddMonoidWithOne.toNatCast.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R _inst_1)) n)
+Case conversion may be inaccurate. Consider using '#align int.cast_of_nat Int.cast_ofNatₓ'. -/
+theorem cast_ofNat (n : ℕ) : (ofNat n : R) = n :=
   AddGroupWithOne.intCast_ofNat n
-#align int.cast_of_nat Int.cast_of_nat
+#align int.cast_of_nat Int.cast_ofNat
 
 end Int
 

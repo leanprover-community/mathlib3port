@@ -51,9 +51,9 @@ theorem discr_zeta_eq_discr_zeta_sub_one (hζ : IsPrimitiveRoot ζ n) :
       fun i j => to_matrix_is_integral H₂ _ _ _ _
   · exact hζ.is_integral n.pos
   · refine' minpoly.gcd_domain_eq_field_fractions' _ (hζ.is_integral n.pos)
-  · exact is_integral_sub (hζ.is_integral n.pos) is_integral_one
+  · exact isIntegral_sub (hζ.is_integral n.pos) isIntegral_one
   · refine' minpoly.gcd_domain_eq_field_fractions' _ _
-    exact is_integral_sub (hζ.is_integral n.pos) is_integral_one
+    exact isIntegral_sub (hζ.is_integral n.pos) isIntegral_one
 #align is_primitive_root.discr_zeta_eq_discr_zeta_sub_one IsPrimitiveRoot.discr_zeta_eq_discr_zeta_sub_one
 
 end IsPrimitiveRoot
@@ -124,7 +124,7 @@ theorem discr_prime_pow_ne_two [IsCyclotomicExtension {p ^ (k + 1)} K L] [hp : F
       · exact hζ.pow_sub_one_norm_prime_pow_of_one_le hirr rfl.le (hp2 hp)
       · exact hζ.pow_sub_one_norm_prime_ne_two hirr rfl.le hp
     rw [MonoidHom.map_mul, hnorm, MonoidHom.map_mul, ← map_nat_cast (algebraMap K L),
-      Algebra.norm_algebra_map, finrank _ hirr, PNat.pow_coe, totient_prime_pow hp.out (succ_pos k),
+      Algebra.norm_algebraMap, finrank _ hirr, PNat.pow_coe, totient_prime_pow hp.out (succ_pos k),
       Nat.sub_one, Nat.pred_succ, ← hζ.minpoly_eq_cyclotomic_of_irreducible hirr, map_pow,
       hζ.norm_eq_one hk hirr, one_pow, mul_one, cast_pow, ← coe_coe, ← pow_mul, ← mul_assoc,
       mul_comm (k + 1), mul_assoc] at H
@@ -165,7 +165,7 @@ theorem discr_prime_pow [hcycl : IsCyclotomicExtension {p ^ k} K L] [hp : Fact (
       show 1 / 2 = 0 by rfl, discr, trace_matrix]
     have hζone : ζ = 1 := by simpa using hζ
     rw [hζ.power_basis_dim _, hζone, ← (algebraMap K L).map_one,
-      minpoly.eq_X_sub_C_of_algebra_map_inj _ (algebraMap K L).Injective, nat_degree_X_sub_C]
+      minpoly.eq_x_sub_c_of_algebraMap_inj _ (algebraMap K L).Injective, nat_degree_X_sub_C]
     simp only [trace_matrix, map_one, one_pow, Matrix.det_unique, trace_form_apply, mul_one]
     rw [← (algebraMap K L).map_one, trace_algebra_map, finrank _ hirr]
     · simp
@@ -186,7 +186,7 @@ theorem discr_prime_pow [hcycl : IsCyclotomicExtension {p ^ k} K L] [hp : Fact (
       simp only [hp, hk, show 1 / 2 = 0 by rfl, coe_basis, pow_one, power_basis_gen, PNat.coe_bit0,
         PNat.one_coe, totient_two, pow_zero, mul_one, mul_zero]
       rw [power_basis_dim, hζ.eq_neg_one_of_two_right, show (-1 : L) = algebraMap K L (-1) by simp,
-        minpoly.eq_X_sub_C_of_algebra_map_inj _ (algebraMap K L).Injective, nat_degree_X_sub_C]
+        minpoly.eq_x_sub_c_of_algebraMap_inj _ (algebraMap K L).Injective, nat_degree_X_sub_C]
       simp only [discr, trace_matrix, Matrix.det_unique, Fin.default_eq_zero, Fin.val_zero,
         pow_zero, trace_form_apply, mul_one]
       rw [← (algebraMap K L).map_one, trace_algebra_map, finrank _ hirr, hp, hk]

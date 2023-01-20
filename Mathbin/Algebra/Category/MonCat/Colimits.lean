@@ -273,14 +273,14 @@ def colimitIsColimit : IsColimit (colimitCocone F)
     rfl
 #align Mon.colimits.colimit_is_colimit MonCat.Colimits.colimitIsColimit
 
-instance has_colimits_Mon : HasColimits MonCat
+instance hasColimits_monCat : HasColimits MonCat
     where HasColimitsOfShape J 𝒥 :=
     {
       HasColimit := fun F =>
         has_colimit.mk
           { Cocone := colimit_cocone F
             IsColimit := colimit_is_colimit F } }
-#align Mon.colimits.has_colimits_Mon MonCat.Colimits.has_colimits_Mon
+#align Mon.colimits.has_colimits_Mon MonCat.Colimits.hasColimits_monCat
 
 end MonCat.Colimits
 

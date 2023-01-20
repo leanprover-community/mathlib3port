@@ -150,20 +150,20 @@ end
 variable {n}
 
 @[simp]
-theorem coeff_truncate_fun (x : 𝕎 R) (i : Fin n) : (truncateFun n x).coeff i = x.coeff i := by
+theorem coeff_truncateFun (x : 𝕎 R) (i : Fin n) : (truncateFun n x).coeff i = x.coeff i := by
   rw [truncate_fun, TruncatedWittVector.coeff_mk]
-#align witt_vector.coeff_truncate_fun WittVector.coeff_truncate_fun
+#align witt_vector.coeff_truncate_fun WittVector.coeff_truncateFun
 
 variable [CommRing R]
 
 @[simp]
-theorem out_truncate_fun (x : 𝕎 R) : (truncateFun n x).out = init n x :=
+theorem out_truncateFun (x : 𝕎 R) : (truncateFun n x).out = init n x :=
   by
   ext i
   dsimp [TruncatedWittVector.out, init, select]
   split_ifs with hi; swap; · rfl
   rw [coeff_truncate_fun, Fin.val_mk]
-#align witt_vector.out_truncate_fun WittVector.out_truncate_fun
+#align witt_vector.out_truncate_fun WittVector.out_truncateFun
 
 end WittVector
 
@@ -172,9 +172,9 @@ namespace TruncatedWittVector
 variable [CommRing R]
 
 @[simp]
-theorem truncate_fun_out (x : TruncatedWittVector p n R) : x.out.truncateFun n = x := by
+theorem truncateFun_out (x : TruncatedWittVector p n R) : x.out.truncateFun n = x := by
   simp only [WittVector.truncateFun, coeff_out, mk_coeff]
-#align truncated_witt_vector.truncate_fun_out TruncatedWittVector.truncate_fun_out
+#align truncated_witt_vector.truncate_fun_out TruncatedWittVector.truncateFun_out
 
 open WittVector
 
@@ -239,75 +239,75 @@ variable (p n R)
 
 variable [CommRing R]
 
-theorem truncate_fun_surjective : Surjective (@truncateFun p n R) :=
-  Function.RightInverse.surjective TruncatedWittVector.truncate_fun_out
-#align witt_vector.truncate_fun_surjective WittVector.truncate_fun_surjective
+theorem truncateFun_surjective : Surjective (@truncateFun p n R) :=
+  Function.RightInverse.surjective TruncatedWittVector.truncateFun_out
+#align witt_vector.truncate_fun_surjective WittVector.truncateFun_surjective
 
 include hp
 
 @[simp]
-theorem truncate_fun_zero : truncateFun n (0 : 𝕎 R) = 0 :=
+theorem truncateFun_zero : truncateFun n (0 : 𝕎 R) = 0 :=
   rfl
-#align witt_vector.truncate_fun_zero WittVector.truncate_fun_zero
+#align witt_vector.truncate_fun_zero WittVector.truncateFun_zero
 
 @[simp]
-theorem truncate_fun_one : truncateFun n (1 : 𝕎 R) = 1 :=
+theorem truncateFun_one : truncateFun n (1 : 𝕎 R) = 1 :=
   rfl
-#align witt_vector.truncate_fun_one WittVector.truncate_fun_one
+#align witt_vector.truncate_fun_one WittVector.truncateFun_one
 
 variable {p R}
 
 @[simp]
-theorem truncate_fun_add (x y : 𝕎 R) : truncateFun n (x + y) = truncateFun n x + truncateFun n y :=
+theorem truncateFun_add (x y : 𝕎 R) : truncateFun n (x + y) = truncateFun n x + truncateFun n y :=
   by
   witt_truncate_fun_tac
   rw [init_add]
-#align witt_vector.truncate_fun_add WittVector.truncate_fun_add
+#align witt_vector.truncate_fun_add WittVector.truncateFun_add
 
 @[simp]
-theorem truncate_fun_mul (x y : 𝕎 R) : truncateFun n (x * y) = truncateFun n x * truncateFun n y :=
+theorem truncateFun_mul (x y : 𝕎 R) : truncateFun n (x * y) = truncateFun n x * truncateFun n y :=
   by
   witt_truncate_fun_tac
   rw [init_mul]
-#align witt_vector.truncate_fun_mul WittVector.truncate_fun_mul
+#align witt_vector.truncate_fun_mul WittVector.truncateFun_mul
 
-theorem truncate_fun_neg (x : 𝕎 R) : truncateFun n (-x) = -truncateFun n x :=
+theorem truncateFun_neg (x : 𝕎 R) : truncateFun n (-x) = -truncateFun n x :=
   by
   witt_truncate_fun_tac
   rw [init_neg]
-#align witt_vector.truncate_fun_neg WittVector.truncate_fun_neg
+#align witt_vector.truncate_fun_neg WittVector.truncateFun_neg
 
-theorem truncate_fun_sub (x y : 𝕎 R) : truncateFun n (x - y) = truncateFun n x - truncateFun n y :=
+theorem truncateFun_sub (x y : 𝕎 R) : truncateFun n (x - y) = truncateFun n x - truncateFun n y :=
   by
   witt_truncate_fun_tac
   rw [init_sub]
-#align witt_vector.truncate_fun_sub WittVector.truncate_fun_sub
+#align witt_vector.truncate_fun_sub WittVector.truncateFun_sub
 
-theorem truncate_fun_nsmul (x : 𝕎 R) (m : ℕ) : truncateFun n (m • x) = m • truncateFun n x :=
+theorem truncateFun_nsmul (x : 𝕎 R) (m : ℕ) : truncateFun n (m • x) = m • truncateFun n x :=
   by
   witt_truncate_fun_tac
   rw [init_nsmul]
-#align witt_vector.truncate_fun_nsmul WittVector.truncate_fun_nsmul
+#align witt_vector.truncate_fun_nsmul WittVector.truncateFun_nsmul
 
-theorem truncate_fun_zsmul (x : 𝕎 R) (m : ℤ) : truncateFun n (m • x) = m • truncateFun n x :=
+theorem truncateFun_zsmul (x : 𝕎 R) (m : ℤ) : truncateFun n (m • x) = m • truncateFun n x :=
   by
   witt_truncate_fun_tac
   rw [init_zsmul]
-#align witt_vector.truncate_fun_zsmul WittVector.truncate_fun_zsmul
+#align witt_vector.truncate_fun_zsmul WittVector.truncateFun_zsmul
 
-theorem truncate_fun_pow (x : 𝕎 R) (m : ℕ) : truncateFun n (x ^ m) = truncateFun n x ^ m :=
+theorem truncateFun_pow (x : 𝕎 R) (m : ℕ) : truncateFun n (x ^ m) = truncateFun n x ^ m :=
   by
   witt_truncate_fun_tac
   rw [init_pow]
-#align witt_vector.truncate_fun_pow WittVector.truncate_fun_pow
+#align witt_vector.truncate_fun_pow WittVector.truncateFun_pow
 
-theorem truncate_fun_nat_cast (m : ℕ) : truncateFun n (m : 𝕎 R) = m :=
+theorem truncateFun_nat_cast (m : ℕ) : truncateFun n (m : 𝕎 R) = m :=
   rfl
-#align witt_vector.truncate_fun_nat_cast WittVector.truncate_fun_nat_cast
+#align witt_vector.truncate_fun_nat_cast WittVector.truncateFun_nat_cast
 
-theorem truncate_fun_int_cast (m : ℤ) : truncateFun n (m : 𝕎 R) = m :=
+theorem truncateFun_int_cast (m : ℤ) : truncateFun n (m : 𝕎 R) = m :=
   rfl
-#align witt_vector.truncate_fun_int_cast WittVector.truncate_fun_int_cast
+#align witt_vector.truncate_fun_int_cast WittVector.truncateFun_int_cast
 
 end WittVector
 
@@ -322,10 +322,10 @@ variable [CommRing R]
 include hp
 
 instance : CommRing (TruncatedWittVector p n R) :=
-  (truncate_fun_surjective p n R).CommRing _ (truncate_fun_zero p n R) (truncate_fun_one p n R)
-    (truncate_fun_add n) (truncate_fun_mul n) (truncate_fun_neg n) (truncate_fun_sub n)
-    (truncate_fun_nsmul n) (truncate_fun_zsmul n) (truncate_fun_pow n) (truncate_fun_nat_cast n)
-    (truncate_fun_int_cast n)
+  (truncateFun_surjective p n R).CommRing _ (truncateFun_zero p n R) (truncateFun_one p n R)
+    (truncateFun_add n) (truncateFun_mul n) (truncateFun_neg n) (truncateFun_sub n)
+    (truncateFun_nsmul n) (truncateFun_zsmul n) (truncateFun_pow n) (truncateFun_nat_cast n)
+    (truncateFun_int_cast n)
 
 end TruncatedWittVector
 
@@ -344,23 +344,23 @@ to obtain a `truncated_witt_vector`, which has the same base `p` as `x`. -/
 noncomputable def truncate : 𝕎 R →+* TruncatedWittVector p n R
     where
   toFun := truncateFun n
-  map_zero' := truncate_fun_zero p n R
-  map_add' := truncate_fun_add n
-  map_one' := truncate_fun_one p n R
-  map_mul' := truncate_fun_mul n
+  map_zero' := truncateFun_zero p n R
+  map_add' := truncateFun_add n
+  map_one' := truncateFun_one p n R
+  map_mul' := truncateFun_mul n
 #align witt_vector.truncate WittVector.truncate
 
 variable (p n R)
 
 theorem truncate_surjective : Surjective (truncate n : 𝕎 R → TruncatedWittVector p n R) :=
-  truncate_fun_surjective p n R
+  truncateFun_surjective p n R
 #align witt_vector.truncate_surjective WittVector.truncate_surjective
 
 variable {p n R}
 
 @[simp]
 theorem coeff_truncate (x : 𝕎 R) (i : Fin n) : (truncate n x).coeff i = x.coeff i :=
-  coeff_truncate_fun _ _
+  coeff_truncateFun _ _
 #align witt_vector.coeff_truncate WittVector.coeff_truncate
 
 variable (n)
@@ -393,7 +393,7 @@ include hp
 a truncated Witt vector of length `n`, for `n ≤ m`.
 -/
 def truncate {m : ℕ} (hm : n ≤ m) : TruncatedWittVector p m R →+* TruncatedWittVector p n R :=
-  RingHom.liftOfRightInverse (WittVector.truncate m) out truncate_fun_out
+  RingHom.liftOfRightInverse (WittVector.truncate m) out truncateFun_out
     ⟨WittVector.truncate n, by
       intro x
       simp only [WittVector.mem_ker_truncate]
@@ -402,16 +402,16 @@ def truncate {m : ℕ} (hm : n ≤ m) : TruncatedWittVector p m R →+* Truncate
 #align truncated_witt_vector.truncate TruncatedWittVector.truncate
 
 @[simp]
-theorem truncate_comp_witt_vector_truncate {m : ℕ} (hm : n ≤ m) :
+theorem truncate_comp_wittVector_truncate {m : ℕ} (hm : n ≤ m) :
     (@truncate p _ n R _ m hm).comp (WittVector.truncate m) = WittVector.truncate n :=
-  RingHom.lift_of_right_inverse_comp _ _ _ _
-#align truncated_witt_vector.truncate_comp_witt_vector_truncate TruncatedWittVector.truncate_comp_witt_vector_truncate
+  RingHom.liftOfRightInverse_comp _ _ _ _
+#align truncated_witt_vector.truncate_comp_witt_vector_truncate TruncatedWittVector.truncate_comp_wittVector_truncate
 
 @[simp]
-theorem truncate_witt_vector_truncate {m : ℕ} (hm : n ≤ m) (x : 𝕎 R) :
+theorem truncate_wittVector_truncate {m : ℕ} (hm : n ≤ m) (x : 𝕎 R) :
     truncate hm (WittVector.truncate m x) = WittVector.truncate n x :=
-  RingHom.lift_of_right_inverse_comp_apply _ _ _ _ _
-#align truncated_witt_vector.truncate_witt_vector_truncate TruncatedWittVector.truncate_witt_vector_truncate
+  RingHom.liftOfRightInverse_comp_apply _ _ _ _ _
+#align truncated_witt_vector.truncate_witt_vector_truncate TruncatedWittVector.truncate_wittVector_truncate
 
 @[simp]
 theorem truncate_truncate {n₁ n₂ n₃ : ℕ} (h1 : n₁ ≤ n₂) (h2 : n₂ ≤ n₃)
@@ -458,14 +458,14 @@ theorem card {R : Type _} [Fintype R] :
 
 end Fintype
 
-theorem infi_ker_truncate : (⨅ i : ℕ, (@WittVector.truncate p _ i R _).ker) = ⊥ :=
+theorem infᵢ_ker_truncate : (⨅ i : ℕ, (@WittVector.truncate p _ i R _).ker) = ⊥ :=
   by
   rw [Submodule.eq_bot_iff]
   intro x hx
   ext
-  simp only [WittVector.mem_ker_truncate, Ideal.mem_infi, WittVector.zero_coeff] at hx⊢
+  simp only [WittVector.mem_ker_truncate, Ideal.mem_infᵢ, WittVector.zero_coeff] at hx⊢
   exact hx _ _ (Nat.lt_succ_self _)
-#align truncated_witt_vector.infi_ker_truncate TruncatedWittVector.infi_ker_truncate
+#align truncated_witt_vector.infi_ker_truncate TruncatedWittVector.infᵢ_ker_truncate
 
 end TruncatedWittVector
 
@@ -500,7 +500,7 @@ variable {f}
 include f_compat
 
 @[simp]
-theorem truncate_lift_fun (s : S) : WittVector.truncate n (liftFun f s) = f n s :=
+theorem truncate_liftFun (s : S) : WittVector.truncate n (liftFun f s) = f n s :=
   by
   ext i
   simp only [lift_fun, TruncatedWittVector.coeff_mk, WittVector.truncate_mk]
@@ -508,7 +508,7 @@ theorem truncate_lift_fun (s : S) : WittVector.truncate n (liftFun f s) = f n s 
   -- this is a bit unfortunate
   congr with _
   simp only [Fin.val_last, Fin.coe_castLe]
-#align witt_vector.truncate_lift_fun WittVector.truncate_lift_fun
+#align witt_vector.truncate_lift_fun WittVector.truncate_liftFun
 
 variable (f)
 
@@ -521,7 +521,7 @@ to a ring hom `S → 𝕎 R`.
 def lift : S →+* 𝕎 R := by
   refine_struct { toFun := lift_fun f } <;>
     · intros
-      rw [← sub_eq_zero, ← Ideal.mem_bot, ← infi_ker_truncate, Ideal.mem_infi]
+      rw [← sub_eq_zero, ← Ideal.mem_bot, ← infi_ker_truncate, Ideal.mem_infᵢ]
       simp [RingHom.mem_ker, f_compat]
 #align witt_vector.lift WittVector.lift
 
@@ -529,7 +529,7 @@ variable {f}
 
 @[simp]
 theorem truncate_lift (s : S) : WittVector.truncate n (lift _ f_compat s) = f n s :=
-  truncate_lift_fun _ f_compat s
+  truncate_liftFun _ f_compat s
 #align witt_vector.truncate_lift WittVector.truncate_lift
 
 @[simp]
@@ -543,7 +543,7 @@ theorem truncate_comp_lift : (WittVector.truncate n).comp (lift _ f_compat) = f 
 theorem lift_unique (g : S →+* 𝕎 R) (g_compat : ∀ k, (WittVector.truncate k).comp g = f k) :
     lift _ f_compat = g := by
   ext1 x
-  rw [← sub_eq_zero, ← Ideal.mem_bot, ← infi_ker_truncate, Ideal.mem_infi]
+  rw [← sub_eq_zero, ← Ideal.mem_bot, ← infi_ker_truncate, Ideal.mem_infᵢ]
   intro i
   simp only [RingHom.mem_ker, g_compat, ← RingHom.comp_apply, truncate_comp_lift, RingHom.map_sub,
     sub_self]

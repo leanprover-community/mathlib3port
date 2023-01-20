@@ -673,8 +673,8 @@ unsafe def h_generalize (rev : parse (parser.optional (tk "!")))
       try (rewrite_target h')
       tactic.clear h'
   when h do
-      ((to_expr ``(heq_of_eq_rec_left $(eq_h) $(asm)) <|>
-              to_expr ``(heq_of_cast_eq $(eq_h) $(asm))) >>=
+      ((to_expr ``(hEq_of_eq_rec_left $(eq_h) $(asm)) <|>
+              to_expr ``(hEq_of_cast_eq $(eq_h) $(asm))) >>=
             note h' none) >>
           pure ()
   tactic.clear asm

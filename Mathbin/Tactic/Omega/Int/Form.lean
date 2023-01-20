@@ -138,10 +138,10 @@ unsafe instance has_to_format : has_to_format Preform :=
 
 end Preform
 
-theorem univ_close_of_valid {p : Preform} : ∀ {m v}, p.valid → UnivClose p v m
+theorem univClose_of_valid {p : Preform} : ∀ {m v}, p.valid → UnivClose p v m
   | 0, v, h1 => h1 _
   | m + 1, v, h1 => fun i => univ_close_of_valid h1
-#align omega.int.univ_close_of_valid Omega.Int.univ_close_of_valid
+#align omega.int.univ_close_of_valid Omega.Int.univClose_of_valid
 
 theorem valid_of_unsat_not {p : Preform} : (¬* p).Unsat → p.valid :=
   by

@@ -66,17 +66,17 @@ variable {n : Type u} [DecidableEq n] [Fintype n]
 
 variable {α : Type v} [CommRing α] [StarRing α]
 
-theorem mem_unitary_group_iff {A : Matrix n n α} : A ∈ Matrix.unitaryGroup n α ↔ A * star A = 1 :=
+theorem mem_unitaryGroup_iff {A : Matrix n n α} : A ∈ Matrix.unitaryGroup n α ↔ A * star A = 1 :=
   by
   refine' ⟨And.right, fun hA => ⟨_, hA⟩⟩
   simpa only [mul_eq_mul, mul_eq_one_comm] using hA
-#align matrix.mem_unitary_group_iff Matrix.mem_unitary_group_iff
+#align matrix.mem_unitary_group_iff Matrix.mem_unitaryGroup_iff
 
-theorem mem_unitary_group_iff' {A : Matrix n n α} : A ∈ Matrix.unitaryGroup n α ↔ star A * A = 1 :=
+theorem mem_unitaryGroup_iff' {A : Matrix n n α} : A ∈ Matrix.unitaryGroup n α ↔ star A * A = 1 :=
   by
   refine' ⟨And.left, fun hA => ⟨hA, _⟩⟩
   rwa [mul_eq_mul, mul_eq_one_comm] at hA
-#align matrix.mem_unitary_group_iff' Matrix.mem_unitary_group_iff'
+#align matrix.mem_unitary_group_iff' Matrix.mem_unitaryGroup_iff'
 
 theorem det_of_mem_unitary {A : Matrix n n α} (hA : A ∈ Matrix.unitaryGroup n α) :
     A.det ∈ unitary α := by
@@ -152,14 +152,14 @@ theorem one_apply : ⇑(1 : unitaryGroup n α) = (1 : Matrix n n α) :=
 #align matrix.unitary_group.one_apply Matrix.unitaryGroup.one_apply
 
 @[simp]
-theorem to_lin'_mul : toLin' (A * B) = (toLin' A).comp (toLin' B) :=
-  Matrix.to_lin'_mul A B
-#align matrix.unitary_group.to_lin'_mul Matrix.unitaryGroup.to_lin'_mul
+theorem toLin'_mul : toLin' (A * B) = (toLin' A).comp (toLin' B) :=
+  Matrix.toLin'_mul A B
+#align matrix.unitary_group.to_lin'_mul Matrix.unitaryGroup.toLin'_mul
 
 @[simp]
-theorem to_lin'_one : toLin' (1 : unitaryGroup n α) = LinearMap.id :=
-  Matrix.to_lin'_one
-#align matrix.unitary_group.to_lin'_one Matrix.unitaryGroup.to_lin'_one
+theorem toLin'_one : toLin' (1 : unitaryGroup n α) = LinearMap.id :=
+  Matrix.toLin'_one
+#align matrix.unitary_group.to_lin'_one Matrix.unitaryGroup.toLin'_one
 
 end CoeLemmas
 
@@ -184,25 +184,25 @@ def toGL (A : unitaryGroup n α) : GeneralLinearGroup α (n → α) :=
   GeneralLinearGroup.ofLinearEquiv (toLinearEquiv A)
 #align matrix.unitary_group.to_GL Matrix.unitaryGroup.toGL
 
-theorem coe_to_GL (A : unitaryGroup n α) : ↑(toGL A) = toLin' A :=
+theorem coe_toGL (A : unitaryGroup n α) : ↑(toGL A) = toLin' A :=
   rfl
-#align matrix.unitary_group.coe_to_GL Matrix.unitaryGroup.coe_to_GL
+#align matrix.unitary_group.coe_to_GL Matrix.unitaryGroup.coe_toGL
 
 @[simp]
-theorem to_GL_one : toGL (1 : unitaryGroup n α) = 1 :=
+theorem toGL_one : toGL (1 : unitaryGroup n α) = 1 :=
   by
   ext1 v i
   rw [coe_to_GL, to_lin'_one]
   rfl
-#align matrix.unitary_group.to_GL_one Matrix.unitaryGroup.to_GL_one
+#align matrix.unitary_group.to_GL_one Matrix.unitaryGroup.toGL_one
 
 @[simp]
-theorem to_GL_mul (A B : unitaryGroup n α) : toGL (A * B) = toGL A * toGL B :=
+theorem toGL_mul (A B : unitaryGroup n α) : toGL (A * B) = toGL A * toGL B :=
   by
   ext1 v i
   rw [coe_to_GL, to_lin'_mul]
   rfl
-#align matrix.unitary_group.to_GL_mul Matrix.unitaryGroup.to_GL_mul
+#align matrix.unitary_group.to_GL_mul Matrix.unitaryGroup.toGL_mul
 
 /-- `unitary_group.embedding_GL` is the embedding from `unitary_group n α`
 to `general_linear_group n α`. -/
@@ -224,19 +224,19 @@ abbrev orthogonalGroup :=
   unitaryGroup n β
 #align matrix.orthogonal_group Matrix.orthogonalGroup
 
-theorem mem_orthogonal_group_iff {A : Matrix n n β} :
+theorem mem_orthogonalGroup_iff {A : Matrix n n β} :
     A ∈ Matrix.orthogonalGroup n β ↔ A * star A = 1 :=
   by
   refine' ⟨And.right, fun hA => ⟨_, hA⟩⟩
   simpa only [mul_eq_mul, mul_eq_one_comm] using hA
-#align matrix.mem_orthogonal_group_iff Matrix.mem_orthogonal_group_iff
+#align matrix.mem_orthogonal_group_iff Matrix.mem_orthogonalGroup_iff
 
-theorem mem_orthogonal_group_iff' {A : Matrix n n β} :
+theorem mem_orthogonalGroup_iff' {A : Matrix n n β} :
     A ∈ Matrix.orthogonalGroup n β ↔ star A * A = 1 :=
   by
   refine' ⟨And.left, fun hA => ⟨hA, _⟩⟩
   rwa [mul_eq_mul, mul_eq_one_comm] at hA
-#align matrix.mem_orthogonal_group_iff' Matrix.mem_orthogonal_group_iff'
+#align matrix.mem_orthogonal_group_iff' Matrix.mem_orthogonalGroup_iff'
 
 end OrthogonalGroup
 

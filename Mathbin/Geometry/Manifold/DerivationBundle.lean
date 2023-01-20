@@ -120,9 +120,9 @@ def evalAt (x : M) : Derivation 𝕜 C^∞⟮I, M; 𝕜⟯ C^∞⟮I, M; 𝕜⟯
   (SmoothFunction.evalAt I x).compDer
 #align derivation.eval_at Derivation.evalAt
 
-theorem eval_at_apply (x : M) : evalAt x X f = (X f) x :=
+theorem evalAt_apply (x : M) : evalAt x X f = (X f) x :=
   rfl
-#align derivation.eval_at_apply Derivation.eval_at_apply
+#align derivation.eval_at_apply Derivation.evalAt_apply
 
 end Derivation
 

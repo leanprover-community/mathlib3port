@@ -158,7 +158,7 @@ theorem map_eq_iff {x₁ x₂ : Fin n.succ → ℕ} (hx₁ : ∀ i, x₁ i < d) 
   exact ⟨this, h.resolve_right (pos_of_gt (hx₁ 0)).ne'⟩
 #align behrend.map_eq_iff Behrend.map_eq_iff
 
-theorem map_inj_on : { x : Fin n → ℕ | ∀ i, x i < d }.InjOn (map d) :=
+theorem map_injOn : { x : Fin n → ℕ | ∀ i, x i < d }.InjOn (map d) :=
   by
   intro x₁ hx₁ x₂ hx₂ h
   induction' n with n ih
@@ -168,14 +168,14 @@ theorem map_inj_on : { x : Fin n → ℕ | ∀ i, x i < d }.InjOn (map d) :=
   refine' Fin.cases x.1 (congr_fun <| ih (fun _ => _) (fun _ => _) x.2) i
   · exact hx₁ _
   · exact hx₂ _
-#align behrend.map_inj_on Behrend.map_inj_on
+#align behrend.map_inj_on Behrend.map_injOn
 
 theorem map_le_of_mem_box (hx : x ∈ box n d) :
     map (2 * d - 1) x ≤ ∑ i : Fin n, (d - 1) * (2 * d - 1) ^ (i : ℕ) :=
   map_monotone (2 * d - 1) fun _ => Nat.le_pred_of_lt <| mem_box.1 hx _
 #align behrend.map_le_of_mem_box Behrend.map_le_of_mem_box
 
-theorem add_salem_spencer_sphere : AddSalemSpencer (sphere n d k : Set (Fin n → ℕ)) :=
+theorem addSalemSpencer_sphere : AddSalemSpencer (sphere n d k : Set (Fin n → ℕ)) :=
   by
   set f : (Fin n → ℕ) →+ EuclideanSpace ℝ (Fin n) :=
     { toFun := fun f => (coe : ℕ → ℝ) ∘ f
@@ -183,25 +183,25 @@ theorem add_salem_spencer_sphere : AddSalemSpencer (sphere n d k : Set (Fin n �
       map_add' := fun _ _ => funext fun _ => cast_add _ _ }
   refine' AddSalemSpencer.of_image (f.to_add_freiman_hom (sphere n d k) 2) _ _
   · exact cast_injective.comp_left.inj_on _
-  refine' (add_salem_spencer_sphere 0 <| sqrt k).mono (Set.image_subset_iff.2 fun x => _)
+  refine' (addSalemSpencer_sphere 0 <| sqrt k).mono (Set.image_subset_iff.2 fun x => _)
   rw [Set.mem_preimage, mem_sphere_zero_iff_norm]
   exact norm_of_mem_sphere
-#align behrend.add_salem_spencer_sphere Behrend.add_salem_spencer_sphere
+#align behrend.add_salem_spencer_sphere Behrend.addSalemSpencer_sphere
 
-theorem add_salem_spencer_image_sphere :
+theorem addSalemSpencer_image_sphere :
     AddSalemSpencer ((sphere n d k).image (map (2 * d - 1)) : Set ℕ) :=
   by
   rw [coe_image]
   refine'
     @AddSalemSpencer.image _ (Fin n → ℕ) ℕ _ _ (sphere n d k) _ (map (2 * d - 1))
-      (map_inj_on.mono _) add_salem_spencer_sphere
+      (map_inj_on.mono _) addSalemSpencer_sphere
   rw [Set.add_subset_iff]
   rintro a ha b hb i
   have hai := mem_box.1 (sphere_subset_box ha) i
   have hbi := mem_box.1 (sphere_subset_box hb) i
   rw [lt_tsub_iff_right, ← succ_le_iff, two_mul]
   exact (add_add_add_comm _ _ 1 1).trans_le (add_le_add hai hbi)
-#align behrend.add_salem_spencer_image_sphere Behrend.add_salem_spencer_image_sphere
+#align behrend.add_salem_spencer_image_sphere Behrend.addSalemSpencer_image_sphere
 
 theorem sum_sq_le_of_mem_box (hx : x ∈ box n d) : (∑ i : Fin n, x i ^ 2) ≤ n * (d - 1) ^ 2 :=
   by
@@ -222,7 +222,7 @@ theorem sum_lt : (∑ i : Fin n, d * (2 * d + 1) ^ (i : ℕ)) < (2 * d + 1) ^ n 
   sum_eq.trans_lt <| (Nat.div_le_self _ 2).trans_lt <| pred_lt (pow_pos (succ_pos _) _).ne'
 #align behrend.sum_lt Behrend.sum_lt
 
-theorem card_sphere_le_roth_number_nat (n d k : ℕ) :
+theorem card_sphere_le_rothNumberNat (n d k : ℕ) :
     (sphere n d k).card ≤ rothNumberNat ((2 * d - 1) ^ n) :=
   by
   cases n
@@ -239,7 +239,7 @@ theorem card_sphere_le_roth_number_nat (n d k : ℕ) :
   refine' map_inj_on.mono fun x => _
   simp only [mem_coe, sphere, mem_filter, mem_box, and_imp, two_mul]
   exact fun h _ i => (h i).trans_le le_self_add
-#align behrend.card_sphere_le_roth_number_nat Behrend.card_sphere_le_roth_number_nat
+#align behrend.card_sphere_le_roth_number_nat Behrend.card_sphere_le_rothNumberNat
 
 /-!
 ### Optimization
@@ -286,7 +286,7 @@ theorem exists_large_sphere (n d : ℕ) : ∃ k, (d ^ n / ↑(n * d ^ 2) : ℝ) 
 
 theorem bound_aux' (n d : ℕ) : (d ^ n / ↑(n * d ^ 2) : ℝ) ≤ rothNumberNat ((2 * d - 1) ^ n) :=
   let ⟨k, h⟩ := exists_large_sphere n d
-  h.trans <| cast_le.2 <| card_sphere_le_roth_number_nat _ _ _
+  h.trans <| cast_le.2 <| card_sphere_le_rothNumberNat _ _ _
 #align behrend.bound_aux' Behrend.bound_aux'
 
 theorem bound_aux (hd : d ≠ 0) (hn : 2 ≤ n) :
@@ -384,7 +384,7 @@ theorem div_lt_floor {x : ℝ} (hx : 2 / (1 - 2 / exp 1) ≤ x) : x / exp 1 < (�
   rwa [le_sub_comm, div_eq_mul_one_div x, div_eq_mul_one_div x, ← mul_sub, div_sub', ←
     div_eq_mul_one_div, mul_div_assoc', one_le_div, ← div_le_iff this]
   · exact zero_lt_two
-  · exact two_ne_zero
+  · exact two_neZero
 #align behrend.div_lt_floor Behrend.div_lt_floor
 
 theorem ceil_lt_mul {x : ℝ} (hx : 50 / 19 ≤ x) : (⌈x⌉₊ : ℝ) < 1.38 * x :=
@@ -407,11 +407,11 @@ noncomputable def dValue (N : ℕ) : ℕ :=
   ⌊(N : ℝ) ^ (1 / nValue N : ℝ) / 2⌋₊
 #align behrend.d_value Behrend.dValue
 
-theorem n_value_pos (hN : 2 ≤ N) : 0 < nValue N :=
+theorem nValue_pos (hN : 2 ≤ N) : 0 < nValue N :=
   ceil_pos.2 <| Real.sqrt_pos.2 <| log_pos <| one_lt_cast.2 <| hN
-#align behrend.n_value_pos Behrend.n_value_pos
+#align behrend.n_value_pos Behrend.nValue_pos
 
-theorem two_le_n_value (hN : 3 ≤ N) : 2 ≤ nValue N :=
+theorem two_le_nValue (hN : 3 ≤ N) : 2 ≤ nValue N :=
   by
   refine' succ_le_of_lt (lt_ceil.2 <| lt_sqrt_of_sq_lt _)
   rw [cast_one, one_pow, lt_log_iff_exp_lt]
@@ -419,9 +419,9 @@ theorem two_le_n_value (hN : 3 ≤ N) : 2 ≤ nValue N :=
   · exact exp_one_lt_d9.trans_le (by norm_num)
   rw [cast_pos]
   exact (zero_lt_succ _).trans_le hN
-#align behrend.two_le_n_value Behrend.two_le_n_value
+#align behrend.two_le_n_value Behrend.two_le_nValue
 
-theorem three_le_n_value (hN : 64 ≤ N) : 3 ≤ nValue N :=
+theorem three_le_nValue (hN : 64 ≤ N) : 3 ≤ nValue N :=
   by
   rw [n_value, ← lt_iff_add_one_le, lt_ceil, cast_two]
   apply lt_sqrt_of_sq_lt
@@ -434,12 +434,12 @@ theorem three_le_n_value (hN : 64 ≤ N) : 3 ≤ nValue N :=
   · norm_num1
   rw [cast_pos]
   exact hN.trans_lt' (by norm_num1)
-#align behrend.three_le_n_value Behrend.three_le_n_value
+#align behrend.three_le_n_value Behrend.three_le_nValue
 
-theorem d_value_pos (hN₃ : 8 ≤ N) : 0 < dValue N :=
+theorem dValue_pos (hN₃ : 8 ≤ N) : 0 < dValue N :=
   by
   have hN₀ : 0 < (N : ℝ) := cast_pos.2 (succ_pos'.trans_le hN₃)
-  rw [d_value, floor_pos, ← log_le_log zero_lt_one, log_one, log_div _ two_ne_zero, log_rpow hN₀,
+  rw [d_value, floor_pos, ← log_le_log zero_lt_one, log_one, log_div _ two_neZero, log_rpow hN₀,
     div_mul_eq_mul_div, one_mul, sub_nonneg, le_div_iff]
   · have : (n_value N : ℝ) ≤ 2 * sqrt (log N) :=
       by
@@ -459,7 +459,7 @@ theorem d_value_pos (hN₃ : 8 ≤ N) : 0 < dValue N :=
   · exact cast_pos.2 (n_value_pos <| hN₃.trans' <| by norm_num)
   · exact (rpow_pos_of_pos hN₀ _).ne'
   · exact div_pos (rpow_pos_of_pos hN₀ _) zero_lt_two
-#align behrend.d_value_pos Behrend.d_value_pos
+#align behrend.d_value_pos Behrend.dValue_pos
 
 theorem le_N (hN : 2 ≤ N) : (2 * dValue N - 1) ^ nValue N ≤ N :=
   by

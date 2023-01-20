@@ -94,7 +94,7 @@ def mkHasForget₂ {d : Type u → Type u} {hom_d : ∀ ⦃α β : Type u⦄ (I�
     (h_map : ∀ {X Y : Bundled c} (f : X ⟶ Y), (map f : X → Y) = f) :
     HasForget₂ (Bundled c) (Bundled d) :=
   HasForget₂.mk' (Bundled.map @obj) (fun _ => rfl) (@map)
-    (by intros <;> apply heq_of_eq <;> apply h_map)
+    (by intros <;> apply hEq_of_eq <;> apply h_map)
 #align category_theory.bundled_hom.mk_has_forget₂ CategoryTheory.BundledHom.mkHasForget₂
 
 variable {d : Type u → Type u}

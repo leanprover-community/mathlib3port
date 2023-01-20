@@ -110,11 +110,11 @@ def stationaryPoint {f : PadicSeq p} (hf : ¬f ≈ 0) : ℕ :=
   Classical.choose <| stationary hf
 #align padic_seq.stationary_point PadicSeq.stationaryPoint
 
-theorem stationary_point_spec {f : PadicSeq p} (hf : ¬f ≈ 0) :
+theorem stationaryPoint_spec {f : PadicSeq p} (hf : ¬f ≈ 0) :
     ∀ {m n},
       stationaryPoint hf ≤ m → stationaryPoint hf ≤ n → padicNorm p (f n) = padicNorm p (f m) :=
   Classical.choose_spec <| stationary hf
-#align padic_seq.stationary_point_spec PadicSeq.stationary_point_spec
+#align padic_seq.stationary_point_spec PadicSeq.stationaryPoint_spec
 
 /-- Since the norm of the entries of a Cauchy sequence is eventually stationary,
 we can lift the norm to sequences. -/
@@ -164,13 +164,12 @@ theorem norm_eq_norm_app_of_nonzero {f : PadicSeq p} (hf : ¬f ≈ 0) :
     norm_nonzero_of_not_equiv_zero hf (by simpa [h] using HEq)⟩
 #align padic_seq.norm_eq_norm_app_of_nonzero PadicSeq.norm_eq_norm_app_of_nonzero
 
-theorem not_lim_zero_const_of_nonzero {q : ℚ} (hq : q ≠ 0) : ¬LimZero (const (padicNorm p) q) :=
+theorem not_limZero_const_of_nonzero {q : ℚ} (hq : q ≠ 0) : ¬LimZero (const (padicNorm p) q) :=
   fun h' => hq <| const_limZero.1 h'
-#align padic_seq.not_lim_zero_const_of_nonzero PadicSeq.not_lim_zero_const_of_nonzero
+#align padic_seq.not_lim_zero_const_of_nonzero PadicSeq.not_limZero_const_of_nonzero
 
 theorem not_equiv_zero_const_of_nonzero {q : ℚ} (hq : q ≠ 0) : ¬const (padicNorm p) q ≈ 0 :=
-  fun h : LimZero (const (padicNorm p) q - 0) =>
-  not_lim_zero_const_of_nonzero hq <| by simpa using h
+  fun h : LimZero (const (padicNorm p) q - 0) => not_limZero_const_of_nonzero hq <| by simpa using h
 #align padic_seq.not_equiv_zero_const_of_nonzero PadicSeq.not_equiv_zero_const_of_nonzero
 
 theorem norm_nonneg (f : PadicSeq p) : 0 ≤ f.norm :=
@@ -807,13 +806,13 @@ instance : NormedField ℚ_[p] :=
     norm_mul' := by simp [HasNorm.norm, map_mul]
     norm := norm }
 
-instance is_absolute_value : IsAbsoluteValue fun a : ℚ_[p] => ‖a‖
+instance isAbsoluteValue : IsAbsoluteValue fun a : ℚ_[p] => ‖a‖
     where
   abv_nonneg := norm_nonneg
   abv_eq_zero _ := norm_eq_zero
   abv_add := norm_add_le
   abv_mul := by simp [HasNorm.norm, map_mul]
-#align padic.is_absolute_value Padic.is_absolute_value
+#align padic.is_absolute_value Padic.isAbsoluteValue
 
 theorem rat_dense (q : ℚ_[p]) {ε : ℝ} (hε : 0 < ε) : ∃ r : ℚ, ‖q - r‖ < ε :=
   let ⟨ε', hε'l, hε'r⟩ := exists_rat_btwn hε
@@ -858,11 +857,11 @@ theorem add_eq_max_of_ne {q r : ℚ_[p]} (h : ‖q‖ ≠ ‖r‖) : ‖q + r‖
 #align padic_norm_e.add_eq_max_of_ne padicNormE.add_eq_max_of_ne
 
 @[simp]
-theorem eq_padic_norm (q : ℚ) : ‖(q : ℚ_[p])‖ = padicNorm p q :=
+theorem eq_padicNorm (q : ℚ) : ‖(q : ℚ_[p])‖ = padicNorm p q :=
   by
   unfold HasNorm.norm
   rw [← padicNormE.eq_padic_norm']
-#align padic_norm_e.eq_padic_norm padicNormE.eq_padic_norm
+#align padic_norm_e.eq_padic_norm padicNormE.eq_padicNorm
 
 @[simp]
 theorem norm_p : ‖(p : ℚ_[p])‖ = p⁻¹ :=
@@ -918,9 +917,9 @@ def ratNorm (q : ℚ_[p]) : ℚ :=
   Classical.choose (padicNormE.is_rat q)
 #align padic_norm_e.rat_norm padicNormE.ratNorm
 
-theorem eq_rat_norm (q : ℚ_[p]) : ‖q‖ = ratNorm q :=
+theorem eq_ratNorm (q : ℚ_[p]) : ‖q‖ = ratNorm q :=
   Classical.choose_spec (padicNormE.is_rat q)
-#align padic_norm_e.eq_rat_norm padicNormE.eq_rat_norm
+#align padic_norm_e.eq_rat_norm padicNormE.eq_ratNorm
 
 theorem norm_rat_le_one : ∀ {q : ℚ} (hq : ¬p ∣ q.denom), ‖(q : ℚ_[p])‖ ≤ 1
   | ⟨n, d, hn, hd⟩ => fun hq : ¬p ∣ d =>
@@ -935,7 +934,7 @@ theorem norm_rat_le_one : ∀ {q : ℚ} (hq : ¬p ∣ q.denom), ‖(q : ℚ_[p])
             denom := d
             Pos := hn
             cop := hd } ≠ 0 := mt Rat.zero_iff_num_zero.1 hnz
-      rw [padicNormE.eq_padic_norm]
+      rw [padicNormE.eq_padicNorm]
       norm_cast
       rw [padicNorm.eq_zpow_of_nonzero hnz', padicValRat, neg_sub,
         padicValNat.eq_zero_of_not_dvd hq]
@@ -961,7 +960,7 @@ theorem norm_int_lt_one_iff_dvd (k : ℤ) : ‖(k : ℚ_[p])‖ < 1 ↔ ↑p ∣
     rw [eq_comm]
     calc
       ‖(k : ℚ_[p])‖ = ‖((k : ℚ) : ℚ_[p])‖ := by norm_cast
-      _ = padicNorm p k := padicNormE.eq_padic_norm _
+      _ = padicNorm p k := padicNormE.eq_padicNorm _
       _ = 1 := _
       
     rw [padicNorm]
@@ -1096,7 +1095,7 @@ theorem valuation_one : valuation (1 : ℚ_[p]) = 0 :=
     by
     intro H
     erw [const_equiv p] at H
-    exact one_ne_zero H
+    exact one_neZero H
   rw [dif_neg h]
   simp
 #align padic.valuation_one Padic.valuation_one
@@ -1169,7 +1168,7 @@ theorem AddValuation.map_zero : addValuationDef (0 : ℚ_[p]) = ⊤ := by
 
 @[simp]
 theorem AddValuation.map_one : addValuationDef (1 : ℚ_[p]) = 0 := by
-  simp only [add_valuation_def, if_neg one_ne_zero, valuation_one, WithTop.coe_zero]
+  simp only [add_valuation_def, if_neg one_neZero, valuation_one, WithTop.coe_zero]
 #align padic.add_valuation.map_one Padic.AddValuation.map_one
 
 theorem AddValuation.map_mul (x y : ℚ_[p]) :

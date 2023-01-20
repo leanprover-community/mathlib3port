@@ -141,7 +141,7 @@ theorem exists_nat_abs_mul_sub_round_le (ξ : ℝ) {n : ℕ} (n_pos : 0 < n) :
 /-- *Dirichlet's approximation theorem:*
 For any real number `ξ` and positive natural `n`, there is a fraction `q`
 such that `q.denom ≤ n` and `|ξ - q| ≤ 1/((n+1)*q.denom)`. -/
-theorem exists_rat_abs_sub_le_and_denom_le (ξ : ℝ) {n : ℕ} (n_pos : 0 < n) :
+theorem exists_rat_abs_sub_le_and_den_le (ξ : ℝ) {n : ℕ} (n_pos : 0 < n) :
     ∃ q : ℚ, |ξ - q| ≤ 1 / ((n + 1) * q.denom) ∧ q.denom ≤ n :=
   by
   obtain ⟨j, k, hk₀, hk₁, h⟩ := exists_int_int_abs_mul_sub_le ξ n_pos
@@ -155,7 +155,7 @@ theorem exists_rat_abs_sub_le_and_denom_le (ξ : ℝ) {n : ℕ} (n_pos : 0 < n) 
   refine' (mul_le_mul_of_nonneg_left (int.cast_le.mpr hden : _ ≤ (k : ℝ)) (abs_nonneg _)).trans _
   rwa [← abs_of_pos hk₀', Rat.cast_div, Rat.cast_coe_int, Rat.cast_coe_int, ← abs_mul, sub_mul,
     div_mul_cancel _ hk₀'.ne', mul_comm]
-#align real.exists_rat_abs_sub_le_and_denom_le Real.exists_rat_abs_sub_le_and_denom_le
+#align real.exists_rat_abs_sub_le_and_denom_le Real.exists_rat_abs_sub_le_and_den_le
 
 end Dirichlet
 
@@ -196,7 +196,7 @@ theorem exists_rat_abs_sub_lt_and_lt_of_irrational {ξ : ℝ} (hξ : Irrational 
 
 /-- If `ξ` is an irrational real number, then there are infinitely many good
 rational approximations to `ξ`. -/
-theorem infinite_rat_abs_sub_lt_one_div_denom_sq_of_irrational {ξ : ℝ} (hξ : Irrational ξ) :
+theorem infinite_rat_abs_sub_lt_one_div_den_sq_of_irrational {ξ : ℝ} (hξ : Irrational ξ) :
     { q : ℚ | |ξ - q| < 1 / q.denom ^ 2 }.Infinite :=
   by
   refine' Or.resolve_left (Set.finite_or_infinite _) fun h => _
@@ -205,7 +205,7 @@ theorem infinite_rat_abs_sub_lt_one_div_denom_sq_of_irrational {ξ : ℝ} (hξ :
       ⟨⌊ξ⌋, by simp [abs_of_nonneg, Int.fract_lt_one]⟩
   obtain ⟨q', hmem, hbetter⟩ := exists_rat_abs_sub_lt_and_lt_of_irrational hξ q
   exact lt_irrefl _ (lt_of_le_of_lt (hq q' hmem) hbetter)
-#align real.infinite_rat_abs_sub_lt_one_div_denom_sq_of_irrational Real.infinite_rat_abs_sub_lt_one_div_denom_sq_of_irrational
+#align real.infinite_rat_abs_sub_lt_one_div_denom_sq_of_irrational Real.infinite_rat_abs_sub_lt_one_div_den_sq_of_irrational
 
 end RatApprox
 
@@ -225,8 +225,7 @@ open Set
 
 /-- If `ξ` is rational, then the good rational approximations to `ξ` have bounded
 numerator and denominator. -/
-theorem denom_le_and_le_num_le_of_sub_lt_one_div_denom_sq {ξ q : ℚ}
-    (h : |ξ - q| < 1 / q.denom ^ 2) :
+theorem den_le_and_le_num_le_of_sub_lt_one_div_den_sq {ξ q : ℚ} (h : |ξ - q| < 1 / q.denom ^ 2) :
     q.denom ≤ ξ.denom ∧ ⌈ξ * q.denom⌉ - 1 ≤ q.num ∧ q.num ≤ ⌊ξ * q.denom⌋ + 1 :=
   by
   have hq₀ : (0 : ℚ) < q.denom := nat.cast_pos.mpr q.pos
@@ -253,11 +252,11 @@ theorem denom_le_and_le_num_le_of_sub_lt_one_div_denom_sq {ξ q : ℚ}
     norm_cast  at h₁ h₂
     exact
       ⟨sub_le_iff_le_add.mpr (int.ceil_le.mpr h₁.le), sub_le_iff_le_add.mp (int.le_floor.mpr h₂.le)⟩
-#align rat.denom_le_and_le_num_le_of_sub_lt_one_div_denom_sq Rat.denom_le_and_le_num_le_of_sub_lt_one_div_denom_sq
+#align rat.denom_le_and_le_num_le_of_sub_lt_one_div_denom_sq Rat.den_le_and_le_num_le_of_sub_lt_one_div_den_sq
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- A rational number has only finitely many good rational approximations. -/
-theorem finite_rat_abs_sub_lt_one_div_denom_sq (ξ : ℚ) :
+theorem finite_rat_abs_sub_lt_one_div_den_sq (ξ : ℚ) :
     { q : ℚ | |ξ - q| < 1 / q.denom ^ 2 }.Finite :=
   by
   let f : ℚ → ℤ × ℕ := fun q => (q.num, q.denom)
@@ -278,21 +277,21 @@ theorem finite_rat_abs_sub_lt_one_div_denom_sq (ξ : ℚ) :
     exact ⟨q.num, hn, hq₂⟩
   refine' finite.of_finite_image (finite.subset _ H) (inj_on_of_injective hinj s)
   exact finite.bUnion (finite_Ioc _ _) fun x hx => finite.prod (finite_Icc _ _) (finite_singleton _)
-#align rat.finite_rat_abs_sub_lt_one_div_denom_sq Rat.finite_rat_abs_sub_lt_one_div_denom_sq
+#align rat.finite_rat_abs_sub_lt_one_div_denom_sq Rat.finite_rat_abs_sub_lt_one_div_den_sq
 
 end Rat
 
 /-- The set of good rational approximations to a real number `ξ` is infinite if and only if
 `ξ` is irrational. -/
-theorem Real.infinite_rat_abs_sub_lt_one_div_denom_sq_iff_irrational (ξ : ℝ) :
+theorem Real.infinite_rat_abs_sub_lt_one_div_den_sq_iff_irrational (ξ : ℝ) :
     { q : ℚ | |ξ - q| < 1 / q.denom ^ 2 }.Infinite ↔ Irrational ξ :=
   by
   refine'
     ⟨fun h => (irrational_iff_ne_rational ξ).mpr fun a b H => set.not_infinite.mpr _ h,
-      Real.infinite_rat_abs_sub_lt_one_div_denom_sq_of_irrational⟩
-  convert Rat.finite_rat_abs_sub_lt_one_div_denom_sq ((a : ℚ) / b)
+      Real.infinite_rat_abs_sub_lt_one_div_den_sq_of_irrational⟩
+  convert Rat.finite_rat_abs_sub_lt_one_div_den_sq ((a : ℚ) / b)
   ext q
   rw [H, (by push_cast : (1 : ℝ) / q.denom ^ 2 = (1 / q.denom ^ 2 : ℚ))]
   norm_cast
-#align real.infinite_rat_abs_sub_lt_one_div_denom_sq_iff_irrational Real.infinite_rat_abs_sub_lt_one_div_denom_sq_iff_irrational
+#align real.infinite_rat_abs_sub_lt_one_div_denom_sq_iff_irrational Real.infinite_rat_abs_sub_lt_one_div_den_sq_iff_irrational
 

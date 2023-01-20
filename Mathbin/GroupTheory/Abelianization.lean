@@ -49,9 +49,9 @@ theorem commutator_eq_closure : commutator G = Subgroup.closure (commutatorSet G
   simp [commutator, Subgroup.commutator_def, commutatorSet]
 #align commutator_eq_closure commutator_eq_closure
 
-theorem commutator_eq_normal_closure : commutator G = Subgroup.normalClosure (commutatorSet G) := by
+theorem commutator_eq_normalClosure : commutator G = Subgroup.normalClosure (commutatorSet G) := by
   simp [commutator, Subgroup.commutator_def', commutatorSet]
-#align commutator_eq_normal_closure commutator_eq_normal_closure
+#align commutator_eq_normal_closure commutator_eq_normalClosure
 
 instance commutatorCharacteristic : (commutator G).Characteristic :=
   Subgroup.commutatorCharacteristic ⊤ ⊤
@@ -95,7 +95,7 @@ instance : CommGroup (Abelianization G) :=
     mul_comm := fun x y =>
       Quotient.inductionOn₂' x y fun a b =>
         Quotient.sound' <|
-          QuotientGroup.left_rel_apply.mpr <|
+          QuotientGroup.leftRel_apply.mpr <|
             Subgroup.subset_closure
               ⟨b⁻¹, Subgroup.mem_top b⁻¹, a⁻¹, Subgroup.mem_top a⁻¹, by group⟩ }
 
@@ -226,27 +226,27 @@ def MulEquiv.abelianizationCongr : Abelianization G ≃* Abelianization H
 #align mul_equiv.abelianization_congr MulEquiv.abelianizationCongr
 
 @[simp]
-theorem abelianization_congr_of (x : G) :
+theorem abelianizationCongr_of (x : G) :
     e.abelianizationCongr (Abelianization.of x) = Abelianization.of (e x) :=
   rfl
-#align abelianization_congr_of abelianization_congr_of
+#align abelianization_congr_of abelianizationCongr_of
 
 @[simp]
-theorem abelianization_congr_refl :
+theorem abelianizationCongr_refl :
     (MulEquiv.refl G).abelianizationCongr = MulEquiv.refl (Abelianization G) :=
   MulEquiv.toMonoidHom_injective Abelianization.lift_of
-#align abelianization_congr_refl abelianization_congr_refl
+#align abelianization_congr_refl abelianizationCongr_refl
 
 @[simp]
-theorem abelianization_congr_symm : e.abelianizationCongr.symm = e.symm.abelianizationCongr :=
+theorem abelianizationCongr_symm : e.abelianizationCongr.symm = e.symm.abelianizationCongr :=
   rfl
-#align abelianization_congr_symm abelianization_congr_symm
+#align abelianization_congr_symm abelianizationCongr_symm
 
 @[simp]
-theorem abelianization_congr_trans {I : Type v} [Group I] (e₂ : H ≃* I) :
+theorem abelianizationCongr_trans {I : Type v} [Group I] (e₂ : H ≃* I) :
     e.abelianizationCongr.trans e₂.abelianizationCongr = (e.trans e₂).abelianizationCongr :=
   MulEquiv.toMonoidHom_injective (Abelianization.hom_ext _ _ rfl)
-#align abelianization_congr_trans abelianization_congr_trans
+#align abelianization_congr_trans abelianizationCongr_trans
 
 end AbelianizationCongr
 
@@ -279,10 +279,10 @@ def closureCommutatorRepresentatives : Subgroup G :=
   closure (Prod.fst '' commutatorRepresentatives G ∪ Prod.snd '' commutatorRepresentatives G)
 #align closure_commutator_representatives closureCommutatorRepresentatives
 
-instance closure_commutator_representatives_fg [Finite (commutatorSet G)] :
+instance closureCommutatorRepresentatives_fg [Finite (commutatorSet G)] :
     Group.Fg (closureCommutatorRepresentatives G) :=
   Group.closure_finite_fg _
-#align closure_commutator_representatives_fg closure_commutator_representatives_fg
+#align closure_commutator_representatives_fg closureCommutatorRepresentatives_fg
 
 theorem rank_closure_commutator_representations_le [Finite (commutatorSet G)] :
     Group.rank (closureCommutatorRepresentatives G) ≤ 2 * Nat.card (commutatorSet G) :=
@@ -295,7 +295,7 @@ theorem rank_closure_commutator_representations_le [Finite (commutatorSet G)] :
           ((Finite.card_image_le _).trans (Finite.card_range_le _))))
 #align rank_closure_commutator_representations_le rank_closure_commutator_representations_le
 
-theorem image_commutator_set_closure_commutator_representatives :
+theorem image_commutatorSet_closureCommutatorRepresentatives :
     (closureCommutatorRepresentatives G).Subtype ''
         commutatorSet (closureCommutatorRepresentatives G) =
       commutatorSet G :=
@@ -309,27 +309,27 @@ theorem image_commutator_set_closure_commutator_representatives :
         ⟨⟨_, subset_closure (Or.inl ⟨_, ⟨⟨g, hg⟩, rfl⟩, rfl⟩)⟩,
           ⟨_, subset_closure (Or.inr ⟨_, ⟨⟨g, hg⟩, rfl⟩, rfl⟩)⟩, rfl⟩,
         hg.some_spec.some_spec⟩
-#align image_commutator_set_closure_commutator_representatives image_commutator_set_closure_commutator_representatives
+#align image_commutator_set_closure_commutator_representatives image_commutatorSet_closureCommutatorRepresentatives
 
-theorem card_commutator_set_closure_commutator_representatives :
+theorem card_commutatorSet_closureCommutatorRepresentatives :
     Nat.card (commutatorSet (closureCommutatorRepresentatives G)) = Nat.card (commutatorSet G) :=
   by
-  rw [← image_commutator_set_closure_commutator_representatives G]
+  rw [← image_commutatorSet_closureCommutatorRepresentatives G]
   exact Nat.card_congr (Equiv.Set.image _ _ (subtype_injective _))
-#align card_commutator_set_closure_commutator_representatives card_commutator_set_closure_commutator_representatives
+#align card_commutator_set_closure_commutator_representatives card_commutatorSet_closureCommutatorRepresentatives
 
-theorem card_commutator_closure_commutator_representatives :
+theorem card_commutator_closureCommutatorRepresentatives :
     Nat.card (commutator (closureCommutatorRepresentatives G)) = Nat.card (commutator G) :=
   by
-  rw [commutator_eq_closure G, ← image_commutator_set_closure_commutator_representatives, ←
+  rw [commutator_eq_closure G, ← image_commutatorSet_closureCommutatorRepresentatives, ←
     MonoidHom.map_closure, ← commutator_eq_closure]
   exact Nat.card_congr (Equiv.Set.image _ _ (subtype_injective _))
-#align card_commutator_closure_commutator_representatives card_commutator_closure_commutator_representatives
+#align card_commutator_closure_commutator_representatives card_commutator_closureCommutatorRepresentatives
 
 instance [Finite (commutatorSet G)] : Finite (commutatorSet (closureCommutatorRepresentatives G)) :=
   by
   apply Nat.finite_of_card_ne_zero
-  rw [card_commutator_set_closure_commutator_representatives]
+  rw [card_commutatorSet_closureCommutatorRepresentatives]
   exact finite.card_pos.ne'
 
 end commutatorRepresentatives

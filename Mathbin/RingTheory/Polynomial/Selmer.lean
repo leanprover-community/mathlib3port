@@ -46,11 +46,11 @@ theorem X_pow_sub_X_sub_one_irreducible_aux (z : ℂ) : ¬(z ^ n = z + 1 ∧ z ^
     zero_ne_one ((zero_pow zero_lt_three).symm.trans (show (0 : ℂ) ^ 3 = 1 from h ▸ h3))
   rcases key with (key | key | key)
   · exact z_ne_zero (by rwa [key, self_eq_add_left] at h1)
-  · exact one_ne_zero (by rwa [key, self_eq_add_right] at h1)
+  · exact one_neZero (by rwa [key, self_eq_add_right] at h1)
   · exact z_ne_zero (pow_eq_zero (by rwa [key, add_self_eq_zero] at h2))
 #align polynomial.X_pow_sub_X_sub_one_irreducible_aux Polynomial.X_pow_sub_X_sub_one_irreducible_aux
 
-theorem X_pow_sub_X_sub_one_irreducible (hn1 : n ≠ 1) : Irreducible (X ^ n - X - 1 : ℤ[X]) :=
+theorem x_pow_sub_x_sub_one_irreducible (hn1 : n ≠ 1) : Irreducible (X ^ n - X - 1 : ℤ[X]) :=
   by
   by_cases hn0 : n = 0
   · rw [hn0, pow_zero, sub_sub, add_comm, ← sub_sub, sub_self, zero_sub]
@@ -70,9 +70,9 @@ theorem X_pow_sub_X_sub_one_irreducible (hn1 : n ≠ 1) : Irreducible (X ^ n - X
   rw [add_mul, add_mul, add_zero, mul_assoc (-1 : ℂ), ← pow_succ', Nat.sub_add_cancel hn.le] at h2
   rw [h1] at h2⊢
   exact ⟨rfl, by linear_combination -h2⟩
-#align polynomial.X_pow_sub_X_sub_one_irreducible Polynomial.X_pow_sub_X_sub_one_irreducible
+#align polynomial.X_pow_sub_X_sub_one_irreducible Polynomial.x_pow_sub_x_sub_one_irreducible
 
-theorem X_pow_sub_X_sub_one_irreducible_rat (hn1 : n ≠ 1) : Irreducible (X ^ n - X - 1 : ℚ[X]) :=
+theorem x_pow_sub_x_sub_one_irreducible_rat (hn1 : n ≠ 1) : Irreducible (X ^ n - X - 1 : ℚ[X]) :=
   by
   by_cases hn0 : n = 0
   · rw [hn0, pow_zero, sub_sub, add_comm, ← sub_sub, sub_self, zero_sub]
@@ -85,9 +85,9 @@ theorem X_pow_sub_X_sub_one_irreducible_rat (hn1 : n ≠ 1) : Irreducible (X ^ n
       (X_pow_sub_X_sub_one_irreducible hn1)
   ·
     rwa [Polynomial.map_sub, Polynomial.map_sub, Polynomial.map_pow, Polynomial.map_one,
-      Polynomial.map_X] at h
+      Polynomial.map_x] at h
   · exact hp.symm ▸ (trinomial_monic zero_lt_one hn).IsPrimitive
-#align polynomial.X_pow_sub_X_sub_one_irreducible_rat Polynomial.X_pow_sub_X_sub_one_irreducible_rat
+#align polynomial.X_pow_sub_X_sub_one_irreducible_rat Polynomial.x_pow_sub_x_sub_one_irreducible_rat
 
 end Polynomial
 

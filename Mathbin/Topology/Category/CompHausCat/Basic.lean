@@ -66,9 +66,9 @@ instance concreteCategory : ConcreteCategory CompHausCat :=
 #align CompHaus.concrete_category CompHausCat.concreteCategory
 
 @[simp]
-theorem coe_to_Top {X : CompHausCat} : (X.toTop : Type _) = X :=
+theorem coe_toTop {X : CompHausCat} : (X.toTop : Type _) = X :=
   rfl
-#align CompHaus.coe_to_Top CompHausCat.coe_to_Top
+#align CompHaus.coe_to_Top CompHausCat.coe_toTop
 
 variable (X : Type _) [TopologicalSpace X] [CompactSpace X] [T2Space X]
 
@@ -87,16 +87,16 @@ theorem coe_of : (CompHausCat.of X : Type _) = X :=
 #align CompHaus.coe_of CompHausCat.coe_of
 
 /-- Any continuous function on compact Hausdorff spaces is a closed map. -/
-theorem is_closed_map {X Y : CompHausCat.{u}} (f : X ⟶ Y) : IsClosedMap f := fun C hC =>
+theorem isClosedMap {X Y : CompHausCat.{u}} (f : X ⟶ Y) : IsClosedMap f := fun C hC =>
   (hC.IsCompact.image f.Continuous).IsClosed
-#align CompHaus.is_closed_map CompHausCat.is_closed_map
+#align CompHaus.is_closed_map CompHausCat.isClosedMap
 
 /-- Any continuous bijection of compact Hausdorff spaces is an isomorphism. -/
-theorem is_iso_of_bijective {X Y : CompHausCat.{u}} (f : X ⟶ Y) (bij : Function.Bijective f) :
+theorem isIso_of_bijective {X Y : CompHausCat.{u}} (f : X ⟶ Y) (bij : Function.Bijective f) :
     IsIso f := by
   let E := Equiv.ofBijective _ bij
   have hE : Continuous E.symm := by
-    rw [continuous_iff_is_closed]
+    rw [continuous_iff_isClosed]
     intro S hS
     rw [← E.image_eq_preimage]
     exact IsClosedMap f S hS
@@ -105,7 +105,7 @@ theorem is_iso_of_bijective {X Y : CompHausCat.{u}} (f : X ⟶ Y) (bij : Functio
     apply E.symm_apply_apply
   · ext x
     apply E.apply_symm_apply
-#align CompHaus.is_iso_of_bijective CompHausCat.is_iso_of_bijective
+#align CompHaus.is_iso_of_bijective CompHausCat.isIso_of_bijective
 
 /-- Any continuous bijection of compact Hausdorff spaces induces an isomorphism. -/
 noncomputable def isoOfBijective {X Y : CompHausCat.{u}} (f : X ⟶ Y) (bij : Function.Bijective f) :
@@ -122,9 +122,9 @@ def compHausToTop : CompHausCat.{u} ⥤ TopCat.{u} :=
   inducedFunctor _ deriving Full, Faithful
 #align CompHaus_to_Top compHausToTop
 
-instance CompHausCat.forget_reflects_isomorphisms : ReflectsIsomorphisms (forget CompHausCat.{u}) :=
-  ⟨by intro A B f hf <;> exact CompHausCat.is_iso_of_bijective _ ((is_iso_iff_bijective f).mp hf)⟩
-#align CompHaus.forget_reflects_isomorphisms CompHausCat.forget_reflects_isomorphisms
+instance CompHausCat.forget_reflectsIsomorphisms : ReflectsIsomorphisms (forget CompHausCat.{u}) :=
+  ⟨by intro A B f hf <;> exact CompHausCat.isIso_of_bijective _ ((is_iso_iff_bijective f).mp hf)⟩
+#align CompHaus.forget_reflects_isomorphisms CompHausCat.forget_reflectsIsomorphisms
 
 /-- (Implementation) The object part of the compactification functor from topological spaces to
 compact Hausdorff spaces.
@@ -142,21 +142,21 @@ noncomputable def stoneCechEquivalence (X : TopCat.{u}) (Y : CompHausCat.{u}) :
     where
   toFun f :=
     { toFun := f ∘ stoneCechUnit
-      continuous_to_fun := f.2.comp (@continuous_stone_cech_unit X _) }
+      continuous_to_fun := f.2.comp (@continuous_stoneCechUnit X _) }
   invFun f :=
     { toFun := stoneCechExtend f.2
-      continuous_to_fun := continuous_stone_cech_extend f.2 }
+      continuous_to_fun := continuous_stoneCechExtend f.2 }
   left_inv := by
     rintro ⟨f : StoneCech X ⟶ Y, hf : Continuous f⟩
     ext (x : StoneCech X)
     refine' congr_fun _ x
-    apply Continuous.ext_on dense_range_stone_cech_unit (continuous_stone_cech_extend _) hf
+    apply Continuous.ext_on denseRange_stoneCechUnit (continuous_stoneCechExtend _) hf
     rintro _ ⟨y, rfl⟩
-    apply congr_fun (stone_cech_extend_extends (hf.comp _)) y
+    apply congr_fun (stoneCechExtend_extends (hf.comp _)) y
   right_inv := by
     rintro ⟨f : (X : Type _) ⟶ Y, hf : Continuous f⟩
     ext
-    exact congr_fun (stone_cech_extend_extends hf) _
+    exact congr_fun (stoneCechExtend_extends hf) _
 #align stone_cech_equivalence stoneCechEquivalence
 
 /-- The Stone-Cech compactification functor from topological spaces to compact Hausdorff spaces,
@@ -166,9 +166,9 @@ noncomputable def topToCompHaus : TopCat.{u} ⥤ CompHausCat.{u} :=
   Adjunction.leftAdjointOfEquiv stoneCechEquivalence.{u} fun _ _ _ _ _ => rfl
 #align Top_to_CompHaus topToCompHaus
 
-theorem Top_to_CompHaus_obj (X : TopCat) : ↥(topToCompHaus.obj X) = StoneCech X :=
+theorem topToCompHaus_obj (X : TopCat) : ↥(topToCompHaus.obj X) = StoneCech X :=
   rfl
-#align Top_to_CompHaus_obj Top_to_CompHaus_obj
+#align Top_to_CompHaus_obj topToCompHaus_obj
 
 /-- The category of compact Hausdorff spaces is reflective in the category of topological spaces.
 -/
@@ -180,13 +180,13 @@ noncomputable instance compHausToTop.createsLimits : CreatesLimits compHausToTop
   monadicCreatesLimits _
 #align CompHaus_to_Top.creates_limits compHausToTop.createsLimits
 
-instance CompHausCat.has_limits : Limits.HasLimits CompHausCat :=
+instance CompHausCat.hasLimits : Limits.HasLimits CompHausCat :=
   hasLimitsOfHasLimitsCreatesLimits compHausToTop
-#align CompHaus.has_limits CompHausCat.has_limits
+#align CompHaus.has_limits CompHausCat.hasLimits
 
-instance CompHausCat.has_colimits : Limits.HasColimits CompHausCat :=
+instance CompHausCat.hasColimits : Limits.HasColimits CompHausCat :=
   hasColimitsOfReflective compHausToTop
-#align CompHaus.has_colimits CompHausCat.has_colimits
+#align CompHaus.has_colimits CompHausCat.hasColimits
 
 namespace CompHausCat
 
@@ -200,8 +200,8 @@ def limitCone {J : Type v} [SmallCategory J] (F : J ⥤ CompHausCat.{max v u}) :
       IsCompact :=
         by
         show CompactSpace ↥{ u : ∀ j, F.obj j | ∀ {i j : J} (f : i ⟶ j), (F.map f) (u i) = u j }
-        rw [← is_compact_iff_compact_space]
-        apply IsClosed.is_compact
+        rw [← isCompact_iff_compactSpace]
+        apply IsClosed.isCompact
         have :
           { u : ∀ j, F.obj j | ∀ {i j : J} (f : i ⟶ j), F.map f (u i) = u j } =
             ⋂ (i : J) (j : J) (f : i ⟶ j), { u | F.map f (u i) = u j } :=
@@ -209,13 +209,13 @@ def limitCone {J : Type v} [SmallCategory J] (F : J ⥤ CompHausCat.{max v u}) :
           ext1
           simp only [Set.mem_interᵢ, Set.mem_setOf_eq]
         rw [this]
-        apply is_closed_Inter
+        apply isClosed_interᵢ
         intro i
-        apply is_closed_Inter
+        apply isClosed_interᵢ
         intro j
-        apply is_closed_Inter
+        apply isClosed_interᵢ
         intro f
-        apply is_closed_eq
+        apply isClosed_eq
         · exact (ContinuousMap.continuous (F.map f)).comp (continuous_apply i)
         · exact continuous_apply j
       isHausdorff :=
@@ -244,9 +244,9 @@ theorem epi_iff_surjective {X Y : CompHausCat.{u}} (f : X ⟶ Y) : Epi f ↔ Fun
   · contrapose!
     rintro ⟨y, hy⟩ hf
     let C := Set.range f
-    have hC : IsClosed C := (is_compact_range f.continuous).IsClosed
+    have hC : IsClosed C := (isCompact_range f.continuous).IsClosed
     let D := {y}
-    have hD : IsClosed D := is_closed_singleton
+    have hD : IsClosed D := isClosed_singleton
     have hCD : Disjoint C D := by
       rw [Set.disjoint_singleton_right]
       rintro ⟨y', hy'⟩
@@ -278,8 +278,8 @@ theorem mono_iff_injective {X Y : CompHausCat.{u}} (f : X ⟶ Y) : Mono f ↔ Fu
   by
   constructor
   · intro hf x₁ x₂ h
-    let g₁ : of PUnit ⟶ X := ⟨fun _ => x₁, continuous_of_discrete_topology⟩
-    let g₂ : of PUnit ⟶ X := ⟨fun _ => x₂, continuous_of_discrete_topology⟩
+    let g₁ : of PUnit ⟶ X := ⟨fun _ => x₁, continuous_of_discreteTopology⟩
+    let g₂ : of PUnit ⟶ X := ⟨fun _ => x₂, continuous_of_discreteTopology⟩
     have : g₁ ≫ f = g₂ ≫ f := by
       ext
       exact h

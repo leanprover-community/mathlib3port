@@ -150,10 +150,10 @@ def highestWeight (μ : YoungDiagram) : Ssyt μ
 #align ssyt.highest_weight Ssyt.highestWeight
 
 @[simp]
-theorem highest_weight_apply {μ : YoungDiagram} {i j : ℕ} :
+theorem highestWeight_apply {μ : YoungDiagram} {i j : ℕ} :
     highestWeight μ i j = if (i, j) ∈ μ then i else 0 :=
   rfl
-#align ssyt.highest_weight_apply Ssyt.highest_weight_apply
+#align ssyt.highest_weight_apply Ssyt.highestWeight_apply
 
 instance {μ : YoungDiagram} : Inhabited (Ssyt μ) :=
   ⟨Ssyt.highestWeight μ⟩

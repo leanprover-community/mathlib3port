@@ -42,121 +42,120 @@ def eraseLead (f : R[X]) : R[X] :=
 
 section EraseLead
 
-theorem erase_lead_support (f : R[X]) : f.eraseLead.support = f.support.erase f.natDegree := by
+theorem eraseLead_support (f : R[X]) : f.eraseLead.support = f.support.erase f.natDegree := by
   simp only [erase_lead, support_erase]
-#align polynomial.erase_lead_support Polynomial.erase_lead_support
+#align polynomial.erase_lead_support Polynomial.eraseLead_support
 
-theorem erase_lead_coeff (i : ℕ) : f.eraseLead.coeff i = if i = f.natDegree then 0 else f.coeff i :=
+theorem eraseLead_coeff (i : ℕ) : f.eraseLead.coeff i = if i = f.natDegree then 0 else f.coeff i :=
   by simp only [erase_lead, coeff_erase]
-#align polynomial.erase_lead_coeff Polynomial.erase_lead_coeff
+#align polynomial.erase_lead_coeff Polynomial.eraseLead_coeff
 
 @[simp]
-theorem erase_lead_coeff_nat_degree : f.eraseLead.coeff f.natDegree = 0 := by
-  simp [erase_lead_coeff]
-#align polynomial.erase_lead_coeff_nat_degree Polynomial.erase_lead_coeff_nat_degree
+theorem eraseLead_coeff_natDegree : f.eraseLead.coeff f.natDegree = 0 := by simp [erase_lead_coeff]
+#align polynomial.erase_lead_coeff_nat_degree Polynomial.eraseLead_coeff_natDegree
 
-theorem erase_lead_coeff_of_ne (i : ℕ) (hi : i ≠ f.natDegree) : f.eraseLead.coeff i = f.coeff i :=
-  by simp [erase_lead_coeff, hi]
-#align polynomial.erase_lead_coeff_of_ne Polynomial.erase_lead_coeff_of_ne
-
-@[simp]
-theorem erase_lead_zero : eraseLead (0 : R[X]) = 0 := by simp only [erase_lead, erase_zero]
-#align polynomial.erase_lead_zero Polynomial.erase_lead_zero
+theorem eraseLead_coeff_of_ne (i : ℕ) (hi : i ≠ f.natDegree) : f.eraseLead.coeff i = f.coeff i := by
+  simp [erase_lead_coeff, hi]
+#align polynomial.erase_lead_coeff_of_ne Polynomial.eraseLead_coeff_of_ne
 
 @[simp]
-theorem erase_lead_add_monomial_nat_degree_leading_coeff (f : R[X]) :
+theorem eraseLead_zero : eraseLead (0 : R[X]) = 0 := by simp only [erase_lead, erase_zero]
+#align polynomial.erase_lead_zero Polynomial.eraseLead_zero
+
+@[simp]
+theorem eraseLead_add_monomial_natDegree_leadingCoeff (f : R[X]) :
     f.eraseLead + monomial f.natDegree f.leadingCoeff = f :=
   (add_comm _ _).trans (f.monomial_add_erase _)
-#align polynomial.erase_lead_add_monomial_nat_degree_leading_coeff Polynomial.erase_lead_add_monomial_nat_degree_leading_coeff
+#align polynomial.erase_lead_add_monomial_nat_degree_leading_coeff Polynomial.eraseLead_add_monomial_natDegree_leadingCoeff
 
 @[simp]
-theorem erase_lead_add_C_mul_X_pow (f : R[X]) :
+theorem eraseLead_add_c_mul_x_pow (f : R[X]) :
     f.eraseLead + c f.leadingCoeff * X ^ f.natDegree = f := by
   rw [C_mul_X_pow_eq_monomial, erase_lead_add_monomial_nat_degree_leading_coeff]
-#align polynomial.erase_lead_add_C_mul_X_pow Polynomial.erase_lead_add_C_mul_X_pow
+#align polynomial.erase_lead_add_C_mul_X_pow Polynomial.eraseLead_add_c_mul_x_pow
 
 @[simp]
-theorem self_sub_monomial_nat_degree_leading_coeff {R : Type _} [Ring R] (f : R[X]) :
+theorem self_sub_monomial_natDegree_leadingCoeff {R : Type _} [Ring R] (f : R[X]) :
     f - monomial f.natDegree f.leadingCoeff = f.eraseLead :=
-  (eq_sub_iff_add_eq.mpr (erase_lead_add_monomial_nat_degree_leading_coeff f)).symm
-#align polynomial.self_sub_monomial_nat_degree_leading_coeff Polynomial.self_sub_monomial_nat_degree_leading_coeff
+  (eq_sub_iff_add_eq.mpr (eraseLead_add_monomial_natDegree_leadingCoeff f)).symm
+#align polynomial.self_sub_monomial_nat_degree_leading_coeff Polynomial.self_sub_monomial_natDegree_leadingCoeff
 
 @[simp]
-theorem self_sub_C_mul_X_pow {R : Type _} [Ring R] (f : R[X]) :
+theorem self_sub_c_mul_x_pow {R : Type _} [Ring R] (f : R[X]) :
     f - c f.leadingCoeff * X ^ f.natDegree = f.eraseLead := by
   rw [C_mul_X_pow_eq_monomial, self_sub_monomial_nat_degree_leading_coeff]
-#align polynomial.self_sub_C_mul_X_pow Polynomial.self_sub_C_mul_X_pow
+#align polynomial.self_sub_C_mul_X_pow Polynomial.self_sub_c_mul_x_pow
 
-theorem erase_lead_ne_zero (f0 : 2 ≤ f.support.card) : eraseLead f ≠ 0 :=
+theorem eraseLead_ne_zero (f0 : 2 ≤ f.support.card) : eraseLead f ≠ 0 :=
   by
   rw [Ne, ← card_support_eq_zero, erase_lead_support]
   exact
     (zero_lt_one.trans_le <| (tsub_le_tsub_right f0 1).trans Finset.pred_card_le_card_erase).Ne.symm
-#align polynomial.erase_lead_ne_zero Polynomial.erase_lead_ne_zero
+#align polynomial.erase_lead_ne_zero Polynomial.eraseLead_ne_zero
 
-theorem lt_nat_degree_of_mem_erase_lead_support {a : ℕ} (h : a ∈ (eraseLead f).support) :
+theorem lt_natDegree_of_mem_eraseLead_support {a : ℕ} (h : a ∈ (eraseLead f).support) :
     a < f.natDegree := by
   rw [erase_lead_support, mem_erase] at h
   exact (le_nat_degree_of_mem_supp a h.2).lt_of_ne h.1
-#align polynomial.lt_nat_degree_of_mem_erase_lead_support Polynomial.lt_nat_degree_of_mem_erase_lead_support
+#align polynomial.lt_nat_degree_of_mem_erase_lead_support Polynomial.lt_natDegree_of_mem_eraseLead_support
 
-theorem ne_nat_degree_of_mem_erase_lead_support {a : ℕ} (h : a ∈ (eraseLead f).support) :
+theorem ne_natDegree_of_mem_eraseLead_support {a : ℕ} (h : a ∈ (eraseLead f).support) :
     a ≠ f.natDegree :=
-  (lt_nat_degree_of_mem_erase_lead_support h).Ne
-#align polynomial.ne_nat_degree_of_mem_erase_lead_support Polynomial.ne_nat_degree_of_mem_erase_lead_support
+  (lt_natDegree_of_mem_eraseLead_support h).Ne
+#align polynomial.ne_nat_degree_of_mem_erase_lead_support Polynomial.ne_natDegree_of_mem_eraseLead_support
 
-theorem nat_degree_not_mem_erase_lead_support : f.natDegree ∉ (eraseLead f).support := fun h =>
-  ne_nat_degree_of_mem_erase_lead_support h rfl
-#align polynomial.nat_degree_not_mem_erase_lead_support Polynomial.nat_degree_not_mem_erase_lead_support
+theorem natDegree_not_mem_eraseLead_support : f.natDegree ∉ (eraseLead f).support := fun h =>
+  ne_natDegree_of_mem_eraseLead_support h rfl
+#align polynomial.nat_degree_not_mem_erase_lead_support Polynomial.natDegree_not_mem_eraseLead_support
 
-theorem erase_lead_support_card_lt (h : f ≠ 0) : (eraseLead f).support.card < f.support.card :=
+theorem eraseLead_support_card_lt (h : f ≠ 0) : (eraseLead f).support.card < f.support.card :=
   by
   rw [erase_lead_support]
   exact card_lt_card (erase_ssubset <| nat_degree_mem_support_of_nonzero h)
-#align polynomial.erase_lead_support_card_lt Polynomial.erase_lead_support_card_lt
+#align polynomial.erase_lead_support_card_lt Polynomial.eraseLead_support_card_lt
 
-theorem erase_lead_card_support {c : ℕ} (fc : f.support.card = c) :
+theorem eraseLead_card_support {c : ℕ} (fc : f.support.card = c) :
     f.eraseLead.support.card = c - 1 := by
   by_cases f0 : f = 0
   · rw [← fc, f0, erase_lead_zero, support_zero, card_empty]
   · rw [erase_lead_support, card_erase_of_mem (nat_degree_mem_support_of_nonzero f0), fc]
-#align polynomial.erase_lead_card_support Polynomial.erase_lead_card_support
+#align polynomial.erase_lead_card_support Polynomial.eraseLead_card_support
 
-theorem erase_lead_card_support' {c : ℕ} (fc : f.support.card = c + 1) :
+theorem eraseLead_card_support' {c : ℕ} (fc : f.support.card = c + 1) :
     f.eraseLead.support.card = c :=
-  erase_lead_card_support fc
-#align polynomial.erase_lead_card_support' Polynomial.erase_lead_card_support'
+  eraseLead_card_support fc
+#align polynomial.erase_lead_card_support' Polynomial.eraseLead_card_support'
 
 @[simp]
-theorem erase_lead_monomial (i : ℕ) (r : R) : eraseLead (monomial i r) = 0 :=
+theorem eraseLead_monomial (i : ℕ) (r : R) : eraseLead (monomial i r) = 0 :=
   by
   by_cases hr : r = 0
   · subst r
     simp only [monomial_zero_right, erase_lead_zero]
   · rw [erase_lead, nat_degree_monomial, if_neg hr, erase_monomial]
-#align polynomial.erase_lead_monomial Polynomial.erase_lead_monomial
+#align polynomial.erase_lead_monomial Polynomial.eraseLead_monomial
 
 @[simp]
-theorem erase_lead_C (r : R) : eraseLead (c r) = 0 :=
-  erase_lead_monomial _ _
-#align polynomial.erase_lead_C Polynomial.erase_lead_C
+theorem eraseLead_c (r : R) : eraseLead (c r) = 0 :=
+  eraseLead_monomial _ _
+#align polynomial.erase_lead_C Polynomial.eraseLead_c
 
 @[simp]
-theorem erase_lead_X : eraseLead (x : R[X]) = 0 :=
-  erase_lead_monomial _ _
-#align polynomial.erase_lead_X Polynomial.erase_lead_X
+theorem eraseLead_x : eraseLead (x : R[X]) = 0 :=
+  eraseLead_monomial _ _
+#align polynomial.erase_lead_X Polynomial.eraseLead_x
 
 @[simp]
-theorem erase_lead_X_pow (n : ℕ) : eraseLead (X ^ n : R[X]) = 0 := by
+theorem eraseLead_x_pow (n : ℕ) : eraseLead (X ^ n : R[X]) = 0 := by
   rw [X_pow_eq_monomial, erase_lead_monomial]
-#align polynomial.erase_lead_X_pow Polynomial.erase_lead_X_pow
+#align polynomial.erase_lead_X_pow Polynomial.eraseLead_x_pow
 
 @[simp]
-theorem erase_lead_C_mul_X_pow (r : R) (n : ℕ) : eraseLead (c r * X ^ n) = 0 := by
+theorem eraseLead_c_mul_x_pow (r : R) (n : ℕ) : eraseLead (c r * X ^ n) = 0 := by
   rw [C_mul_X_pow_eq_monomial, erase_lead_monomial]
-#align polynomial.erase_lead_C_mul_X_pow Polynomial.erase_lead_C_mul_X_pow
+#align polynomial.erase_lead_C_mul_X_pow Polynomial.eraseLead_c_mul_x_pow
 
-theorem erase_lead_add_of_nat_degree_lt_left {p q : R[X]} (pq : q.natDegree < p.natDegree) :
+theorem eraseLead_add_of_natDegree_lt_left {p q : R[X]} (pq : q.natDegree < p.natDegree) :
     (p + q).eraseLead = p.eraseLead + q := by
   ext n
   by_cases nd : n = p.nat_degree
@@ -165,9 +164,9 @@ theorem erase_lead_add_of_nat_degree_lt_left {p q : R[X]} (pq : q.natDegree < p.
   · rw [erase_lead_coeff, coeff_add, coeff_add, erase_lead_coeff, if_neg, if_neg nd]
     rintro rfl
     exact nd (nat_degree_add_eq_left_of_nat_degree_lt pq)
-#align polynomial.erase_lead_add_of_nat_degree_lt_left Polynomial.erase_lead_add_of_nat_degree_lt_left
+#align polynomial.erase_lead_add_of_nat_degree_lt_left Polynomial.eraseLead_add_of_natDegree_lt_left
 
-theorem erase_lead_add_of_nat_degree_lt_right {p q : R[X]} (pq : p.natDegree < q.natDegree) :
+theorem eraseLead_add_of_natDegree_lt_right {p q : R[X]} (pq : p.natDegree < q.natDegree) :
     (p + q).eraseLead = p + q.eraseLead := by
   ext n
   by_cases nd : n = q.nat_degree
@@ -176,24 +175,23 @@ theorem erase_lead_add_of_nat_degree_lt_right {p q : R[X]} (pq : p.natDegree < q
   · rw [erase_lead_coeff, coeff_add, coeff_add, erase_lead_coeff, if_neg, if_neg nd]
     rintro rfl
     exact nd (nat_degree_add_eq_right_of_nat_degree_lt pq)
-#align polynomial.erase_lead_add_of_nat_degree_lt_right Polynomial.erase_lead_add_of_nat_degree_lt_right
+#align polynomial.erase_lead_add_of_nat_degree_lt_right Polynomial.eraseLead_add_of_natDegree_lt_right
 
-theorem erase_lead_degree_le : (eraseLead f).degree ≤ f.degree :=
+theorem eraseLead_degree_le : (eraseLead f).degree ≤ f.degree :=
   f.degree_erase_le _
-#align polynomial.erase_lead_degree_le Polynomial.erase_lead_degree_le
+#align polynomial.erase_lead_degree_le Polynomial.eraseLead_degree_le
 
-theorem erase_lead_nat_degree_le_aux : (eraseLead f).natDegree ≤ f.natDegree :=
-  nat_degree_le_nat_degree erase_lead_degree_le
-#align polynomial.erase_lead_nat_degree_le_aux Polynomial.erase_lead_nat_degree_le_aux
+theorem eraseLead_natDegree_le_aux : (eraseLead f).natDegree ≤ f.natDegree :=
+  natDegree_le_natDegree eraseLead_degree_le
+#align polynomial.erase_lead_nat_degree_le_aux Polynomial.eraseLead_natDegree_le_aux
 
-theorem erase_lead_nat_degree_lt (f0 : 2 ≤ f.support.card) :
-    (eraseLead f).natDegree < f.natDegree :=
-  lt_of_le_of_ne erase_lead_nat_degree_le_aux <|
+theorem eraseLead_natDegree_lt (f0 : 2 ≤ f.support.card) : (eraseLead f).natDegree < f.natDegree :=
+  lt_of_le_of_ne eraseLead_natDegree_le_aux <|
     ne_nat_degree_of_mem_erase_lead_support <|
-      nat_degree_mem_support_of_nonzero <| erase_lead_ne_zero f0
-#align polynomial.erase_lead_nat_degree_lt Polynomial.erase_lead_nat_degree_lt
+      nat_degree_mem_support_of_nonzero <| eraseLead_ne_zero f0
+#align polynomial.erase_lead_nat_degree_lt Polynomial.eraseLead_natDegree_lt
 
-theorem erase_lead_nat_degree_lt_or_erase_lead_eq_zero (f : R[X]) :
+theorem eraseLead_natDegree_lt_or_eraseLead_eq_zero (f : R[X]) :
     (eraseLead f).natDegree < f.natDegree ∨ f.eraseLead = 0 :=
   by
   by_cases h : f.support.card ≤ 1
@@ -202,14 +200,14 @@ theorem erase_lead_nat_degree_lt_or_erase_lead_eq_zero (f : R[X]) :
     simp
   · left
     apply erase_lead_nat_degree_lt (lt_of_not_ge h)
-#align polynomial.erase_lead_nat_degree_lt_or_erase_lead_eq_zero Polynomial.erase_lead_nat_degree_lt_or_erase_lead_eq_zero
+#align polynomial.erase_lead_nat_degree_lt_or_erase_lead_eq_zero Polynomial.eraseLead_natDegree_lt_or_eraseLead_eq_zero
 
-theorem erase_lead_nat_degree_le (f : R[X]) : (eraseLead f).natDegree ≤ f.natDegree - 1 :=
+theorem eraseLead_natDegree_le (f : R[X]) : (eraseLead f).natDegree ≤ f.natDegree - 1 :=
   by
   rcases f.erase_lead_nat_degree_lt_or_erase_lead_eq_zero with (h | h)
   · exact Nat.le_pred_of_lt h
   · simp only [h, nat_degree_zero, zero_le]
-#align polynomial.erase_lead_nat_degree_le Polynomial.erase_lead_nat_degree_le
+#align polynomial.erase_lead_nat_degree_le Polynomial.eraseLead_natDegree_le
 
 end EraseLead
 
@@ -217,7 +215,7 @@ end EraseLead
 required to be at least as big as the `nat_degree` of the polynomial.  This is useful to prove
 results where you want to change each term in a polynomial to something else depending on the
 `nat_degree` of the polynomial itself and not on the specific `nat_degree` of each term. -/
-theorem induction_with_nat_degree_le (P : R[X] → Prop) (N : ℕ) (P_0 : P 0)
+theorem induction_with_natDegree_le (P : R[X] → Prop) (N : ℕ) (P_0 : P 0)
     (P_C_mul_pow : ∀ n : ℕ, ∀ r : R, r ≠ 0 → n ≤ N → P (c r * X ^ n))
     (P_C_add : ∀ f g : R[X], f.natDegree < g.natDegree → g.natDegree ≤ N → P f → P g → P (f + g)) :
     ∀ f : R[X], f.natDegree ≤ N → P f := by
@@ -247,14 +245,14 @@ theorem induction_with_nat_degree_le (P : R[X] → Prop) (N : ℕ) (P_0 : P 0)
     · refine' P_C_mul_pow _ _ _ df
       rw [Ne.def, leading_coeff_eq_zero, ← card_support_eq_zero, f0]
       exact Nat.succ_ne_zero _
-#align polynomial.induction_with_nat_degree_le Polynomial.induction_with_nat_degree_le
+#align polynomial.induction_with_nat_degree_le Polynomial.induction_with_natDegree_le
 
 /-- Let `φ : R[x] → S[x]` be an additive map, `k : ℕ` a bound, and `fu : ℕ → ℕ` a
 "sufficiently monotone" map.  Assume also that
 * `φ` maps to `0` all monomials of degree less than `k`,
 * `φ` maps each monomial `m` in `R[x]` to a polynomial `φ m` of degree `fu (deg m)`.
 Then, `φ` maps each polynomial `p` in `R[x]` to a polynomial of degree `fu (deg p)`. -/
-theorem mono_map_nat_degree_eq {S F : Type _} [Semiring S] [AddMonoidHomClass F R[X] S[X]] {φ : F}
+theorem mono_map_natDegree_eq {S F : Type _} [Semiring S] [AddMonoidHomClass F R[X] S[X]] {φ : F}
     {p : R[X]} (k : ℕ) (fu : ℕ → ℕ) (fu0 : ∀ {n}, n ≤ k → fu n = 0)
     (fc : ∀ {n m}, k ≤ n → n < m → fu n < fu m) (φ_k : ∀ {f : R[X]}, f.natDegree < k → φ f = 0)
     (φ_mon_nat : ∀ n c, c ≠ 0 → (φ (monomial n c)).natDegree = fu n) :
@@ -272,22 +270,22 @@ theorem mono_map_nat_degree_eq {S F : Type _} [Semiring S] [AddMonoidHomClass F 
     · cases k
       · exact (FG (Nat.zero_le _)).elim
       · rwa [φ_k (not_le.mp FG), zero_add]
-#align polynomial.mono_map_nat_degree_eq Polynomial.mono_map_nat_degree_eq
+#align polynomial.mono_map_nat_degree_eq Polynomial.mono_map_natDegree_eq
 
-theorem map_nat_degree_eq_sub {S F : Type _} [Semiring S] [AddMonoidHomClass F R[X] S[X]] {φ : F}
+theorem map_natDegree_eq_sub {S F : Type _} [Semiring S] [AddMonoidHomClass F R[X] S[X]] {φ : F}
     {p : R[X]} {k : ℕ} (φ_k : ∀ f : R[X], f.natDegree < k → φ f = 0)
     (φ_mon : ∀ n c, c ≠ 0 → (φ (monomial n c)).natDegree = n - k) :
     (φ p).natDegree = p.natDegree - k :=
-  mono_map_nat_degree_eq k (fun j => j - k) (by simp) (fun m n h => (tsub_lt_tsub_iff_right h).mpr)
+  mono_map_natDegree_eq k (fun j => j - k) (by simp) (fun m n h => (tsub_lt_tsub_iff_right h).mpr)
     φ_k φ_mon
-#align polynomial.map_nat_degree_eq_sub Polynomial.map_nat_degree_eq_sub
+#align polynomial.map_nat_degree_eq_sub Polynomial.map_natDegree_eq_sub
 
-theorem map_nat_degree_eq_nat_degree {S F : Type _} [Semiring S] [AddMonoidHomClass F R[X] S[X]]
+theorem map_natDegree_eq_natDegree {S F : Type _} [Semiring S] [AddMonoidHomClass F R[X] S[X]]
     {φ : F} (p) (φ_mon_nat : ∀ n c, c ≠ 0 → (φ (monomial n c)).natDegree = n) :
     (φ p).natDegree = p.natDegree :=
-  (map_nat_degree_eq_sub (fun f h => (Nat.not_lt_zero _ h).elim) (by simpa)).trans
+  (map_natDegree_eq_sub (fun f h => (Nat.not_lt_zero _ h).elim) (by simpa)).trans
     p.natDegree.sub_zero
-#align polynomial.map_nat_degree_eq_nat_degree Polynomial.map_nat_degree_eq_nat_degree
+#align polynomial.map_nat_degree_eq_nat_degree Polynomial.map_natDegree_eq_natDegree
 
 open BigOperators
 
@@ -349,7 +347,7 @@ theorem card_support_eq {n : ℕ} :
         exact hx i
       · rw [Function.extend_apply' _ _ _ hi, Ne, leading_coeff_eq_zero, ← card_support_eq_zero, h]
         exact n.succ_ne_zero
-    · rw [Fin.sum_univ_cast_succ]
+    · rw [Fin.sum_univ_castSucc]
       simp only [fin.cast_succ.injective.extend_apply]
       rw [← hf, Function.extend_apply', Function.extend_apply', erase_lead_add_C_mul_X_pow]
       all_goals exact H
@@ -371,7 +369,7 @@ theorem card_support_eq_two :
   refine' ⟨fun h => _, _⟩
   · obtain ⟨k, x, hk, hx, rfl⟩ := card_support_eq.mp h
     refine' ⟨k 0, k 1, hk Nat.zero_lt_one, x 0, x 1, hx 0, hx 1, _⟩
-    rw [Fin.sum_univ_cast_succ, Fin.sum_univ_one]
+    rw [Fin.sum_univ_castSucc, Fin.sum_univ_one]
     rfl
   · rintro ⟨k, m, hkm, x, y, hx, hy, rfl⟩
     exact card_support_binomial hkm.ne hx hy
@@ -387,7 +385,7 @@ theorem card_support_eq_three :
     refine'
       ⟨k 0, k 1, k 2, hk Nat.zero_lt_one, hk (Nat.lt_succ_self 1), x 0, x 1, x 2, hx 0, hx 1, hx 2,
         _⟩
-    rw [Fin.sum_univ_cast_succ, Fin.sum_univ_cast_succ, Fin.sum_univ_one]
+    rw [Fin.sum_univ_castSucc, Fin.sum_univ_castSucc, Fin.sum_univ_one]
     rfl
   · rintro ⟨k, m, n, hkm, hmn, x, y, z, hx, hy, hz, rfl⟩
     exact card_support_trinomial hkm hmn hx hy hz

@@ -202,7 +202,7 @@ instance : LawfulFunctor ULift where
 
 instance : LawfulApplicative ULift
     where
-  to_is_lawful_functor := ULift.is_lawful_functor
+  to_is_lawful_functor := ULift.lawfulFunctor
   pure_seq_eq_map := fun α β g ⟨x⟩ => rfl
   map_pure α β g x := rfl
   seq_pure := fun α β ⟨g⟩ x => rfl

@@ -50,31 +50,31 @@ open StateM
 
 variable {S : Type u} [State S]
 
-theorem turn_bound_ne_zero_of_left_move {s t : S} (m : t ∈ l s) : turnBound s ≠ 0 :=
+theorem turnBound_ne_zero_of_left_move {s t : S} (m : t ∈ l s) : turnBound s ≠ 0 :=
   by
   intro h
   have t := state.left_bound m
   rw [h] at t
   exact Nat.not_succ_le_zero _ t
-#align pgame.turn_bound_ne_zero_of_left_move Pgame.turn_bound_ne_zero_of_left_move
+#align pgame.turn_bound_ne_zero_of_left_move Pgame.turnBound_ne_zero_of_left_move
 
-theorem turn_bound_ne_zero_of_right_move {s t : S} (m : t ∈ r s) : turnBound s ≠ 0 :=
+theorem turnBound_ne_zero_of_right_move {s t : S} (m : t ∈ r s) : turnBound s ≠ 0 :=
   by
   intro h
   have t := state.right_bound m
   rw [h] at t
   exact Nat.not_succ_le_zero _ t
-#align pgame.turn_bound_ne_zero_of_right_move Pgame.turn_bound_ne_zero_of_right_move
+#align pgame.turn_bound_ne_zero_of_right_move Pgame.turnBound_ne_zero_of_right_move
 
-theorem turn_bound_of_left {s t : S} (m : t ∈ l s) (n : ℕ) (h : turnBound s ≤ n + 1) :
+theorem turnBound_of_left {s t : S} (m : t ∈ l s) (n : ℕ) (h : turnBound s ≤ n + 1) :
     turnBound t ≤ n :=
   Nat.le_of_lt_succ (Nat.lt_of_lt_of_le (left_bound m) h)
-#align pgame.turn_bound_of_left Pgame.turn_bound_of_left
+#align pgame.turn_bound_of_left Pgame.turnBound_of_left
 
-theorem turn_bound_of_right {s t : S} (m : t ∈ r s) (n : ℕ) (h : turnBound s ≤ n + 1) :
+theorem turnBound_of_right {s t : S} (m : t ∈ r s) (n : ℕ) (h : turnBound s ≤ n + 1) :
     turnBound t ≤ n :=
   Nat.le_of_lt_succ (Nat.lt_of_lt_of_le (right_bound m) h)
-#align pgame.turn_bound_of_right Pgame.turn_bound_of_right
+#align pgame.turn_bound_of_right Pgame.turnBound_of_right
 
 /-- Construct a `pgame` from a state and a (not necessarily optimal) bound on the number of
 turns remaining.
@@ -86,8 +86,8 @@ def ofStateAux : ∀ (n : ℕ) (s : S) (h : turnBound s ≤ n), Pgame
       fun t => by exfalso; exact turn_bound_ne_zero_of_right_move t.2 (nonpos_iff_eq_zero.mp h)
   | n + 1, s, h =>
     Pgame.mk { t // t ∈ l s } { t // t ∈ r s }
-      (fun t => of_state_aux n t (turn_bound_of_left t.2 n h)) fun t =>
-      of_state_aux n t (turn_bound_of_right t.2 n h)
+      (fun t => of_state_aux n t (turnBound_of_left t.2 n h)) fun t =>
+      of_state_aux n t (turnBound_of_right t.2 n h)
 #align pgame.of_state_aux Pgame.ofStateAux
 
 /-- Two different (valid) turn bounds give equivalent games. -/
@@ -171,8 +171,7 @@ def relabellingMoveLeftAux (n : ℕ) {s : S} (h : turnBound s ≤ n)
     (t : LeftMoves (ofStateAux n s h)) :
     Relabelling (moveLeft (ofStateAux n s h) t)
       (ofStateAux (n - 1) ((leftMovesOfStateAux n h) t : S)
-        (turn_bound_of_left ((leftMovesOfStateAux n h) t).2 (n - 1)
-          (Nat.le_trans h le_tsub_add))) :=
+        (turnBound_of_left ((leftMovesOfStateAux n h) t).2 (n - 1) (Nat.le_trans h le_tsub_add))) :=
   by
   induction n
   · have t' := (left_moves_of_state_aux 0 h) t
@@ -199,7 +198,7 @@ def relabellingMoveRightAux (n : ℕ) {s : S} (h : turnBound s ≤ n)
     (t : RightMoves (ofStateAux n s h)) :
     Relabelling (moveRight (ofStateAux n s h) t)
       (ofStateAux (n - 1) ((rightMovesOfStateAux n h) t : S)
-        (turn_bound_of_right ((rightMovesOfStateAux n h) t).2 (n - 1)
+        (turnBound_of_right ((rightMovesOfStateAux n h) t).2 (n - 1)
           (Nat.le_trans h le_tsub_add))) :=
   by
   induction n

@@ -83,18 +83,18 @@ irreducible_def ι : M →ₗ[R] TensorAlgebra R M :=
   { toFun := fun m => RingQuot.mkAlgHom R _ (FreeAlgebra.ι R m)
     map_add' := fun x y => by
       rw [← AlgHom.map_add]
-      exact RingQuot.mk_alg_hom_rel R rel.add
+      exact RingQuot.mkAlgHom_rel R rel.add
     map_smul' := fun r x => by
       rw [← AlgHom.map_smul]
-      exact RingQuot.mk_alg_hom_rel R rel.smul }
+      exact RingQuot.mkAlgHom_rel R rel.smul }
 #align tensor_algebra.ι TensorAlgebra.ι
 
-theorem ring_quot_mk_alg_hom_free_algebra_ι_eq_ι (m : M) :
+theorem ringQuot_mkAlgHom_freeAlgebra_ι_eq_ι (m : M) :
     RingQuot.mkAlgHom R (Rel R M) (FreeAlgebra.ι R m) = ι R m :=
   by
   rw [ι]
   rfl
-#align tensor_algebra.ring_quot_mk_alg_hom_free_algebra_ι_eq_ι TensorAlgebra.ring_quot_mk_alg_hom_free_algebra_ι_eq_ι
+#align tensor_algebra.ring_quot_mk_alg_hom_free_algebra_ι_eq_ι TensorAlgebra.ringQuot_mkAlgHom_freeAlgebra_ι_eq_ι
 
 /-- Given a linear map `f : M → A` where `A` is an `R`-algebra, `lift R f` is the unique lift
 of `f` to a morphism of `R`-algebras `tensor_algebra R M → A`.
@@ -112,15 +112,14 @@ irreducible_def lift {A : Type _} [Semiring A] [Algebra R A] :
     left_inv := fun f => by
       rw [ι]
       ext1 x
-      exact (RingQuot.lift_alg_hom_mk_alg_hom_apply _ _ _ _).trans (FreeAlgebra.lift_ι_apply f x)
+      exact (RingQuot.liftAlgHom_mkAlgHom_apply _ _ _ _).trans (FreeAlgebra.lift_ι_apply f x)
     right_inv := fun F =>
-      RingQuot.ring_quot_ext' _ _ _ <|
+      RingQuot.ringQuot_ext' _ _ _ <|
         FreeAlgebra.hom_ext <|
           funext fun x => by
             rw [ι]
             exact
-              (RingQuot.lift_alg_hom_mk_alg_hom_apply _ _ _ _).trans
-                (FreeAlgebra.lift_ι_apply _ _) }
+              (RingQuot.liftAlgHom_mkAlgHom_apply _ _ _ _).trans (FreeAlgebra.lift_ι_apply _ _) }
 #align tensor_algebra.lift TensorAlgebra.lift
 
 variable {R}
@@ -130,7 +129,7 @@ theorem ι_comp_lift {A : Type _} [Semiring A] [Algebra R A] (f : M →ₗ[R] A)
     (lift R f).toLinearMap.comp (ι R) = f :=
   by
   convert (lift R).symm_apply_apply f
-  simp only [lift, Equiv.coe_fn_symm_mk]
+  simp only [lift, Equiv.coeFn_symm_mk]
 #align tensor_algebra.ι_comp_lift TensorAlgebra.ι_comp_lift
 
 @[simp]
@@ -145,7 +144,7 @@ theorem lift_unique {A : Type _} [Semiring A] [Algebra R A] (f : M →ₗ[R] A)
     (g : TensorAlgebra R M →ₐ[R] A) : g.toLinearMap.comp (ι R) = f ↔ g = lift R f :=
   by
   rw [← (lift R).symm_apply_eq]
-  simp only [lift, Equiv.coe_fn_symm_mk]
+  simp only [lift, Equiv.coeFn_symm_mk]
 #align tensor_algebra.lift_unique TensorAlgebra.lift_unique
 
 -- Marking `tensor_algebra` irreducible makes `ring` instances inaccessible on quotients.
@@ -202,26 +201,26 @@ def algebraMapInv : TensorAlgebra R M →ₐ[R] R :=
 
 variable (M)
 
-theorem algebra_map_left_inverse :
+theorem algebraMap_leftInverse :
     Function.LeftInverse algebraMapInv (algebraMap R <| TensorAlgebra R M) := fun x => by
   simp [algebra_map_inv]
-#align tensor_algebra.algebra_map_left_inverse TensorAlgebra.algebra_map_left_inverse
+#align tensor_algebra.algebra_map_left_inverse TensorAlgebra.algebraMap_leftInverse
 
 @[simp]
-theorem algebra_map_inj (x y : R) :
+theorem algebraMap_inj (x y : R) :
     algebraMap R (TensorAlgebra R M) x = algebraMap R (TensorAlgebra R M) y ↔ x = y :=
-  (algebra_map_left_inverse M).Injective.eq_iff
-#align tensor_algebra.algebra_map_inj TensorAlgebra.algebra_map_inj
+  (algebraMap_leftInverse M).Injective.eq_iff
+#align tensor_algebra.algebra_map_inj TensorAlgebra.algebraMap_inj
 
 @[simp]
-theorem algebra_map_eq_zero_iff (x : R) : algebraMap R (TensorAlgebra R M) x = 0 ↔ x = 0 :=
-  map_eq_zero_iff (algebraMap _ _) (algebra_map_left_inverse _).Injective
-#align tensor_algebra.algebra_map_eq_zero_iff TensorAlgebra.algebra_map_eq_zero_iff
+theorem algebraMap_eq_zero_iff (x : R) : algebraMap R (TensorAlgebra R M) x = 0 ↔ x = 0 :=
+  map_eq_zero_iff (algebraMap _ _) (algebraMap_leftInverse _).Injective
+#align tensor_algebra.algebra_map_eq_zero_iff TensorAlgebra.algebraMap_eq_zero_iff
 
 @[simp]
-theorem algebra_map_eq_one_iff (x : R) : algebraMap R (TensorAlgebra R M) x = 1 ↔ x = 1 :=
-  map_eq_one_iff (algebraMap _ _) (algebra_map_left_inverse _).Injective
-#align tensor_algebra.algebra_map_eq_one_iff TensorAlgebra.algebra_map_eq_one_iff
+theorem algebraMap_eq_one_iff (x : R) : algebraMap R (TensorAlgebra R M) x = 1 ↔ x = 1 :=
+  map_eq_one_iff (algebraMap _ _) (algebraMap_leftInverse _).Injective
+#align tensor_algebra.algebra_map_eq_one_iff TensorAlgebra.algebraMap_eq_one_iff
 
 variable {M}
 
@@ -232,9 +231,9 @@ def toTrivSqZeroExt : TensorAlgebra R M →ₐ[R] TrivSqZeroExt R M :=
 #align tensor_algebra.to_triv_sq_zero_ext TensorAlgebra.toTrivSqZeroExt
 
 @[simp]
-theorem to_triv_sq_zero_ext_ι (x : M) : toTrivSqZeroExt (ι R x) = TrivSqZeroExt.inr x :=
+theorem toTrivSqZeroExt_ι (x : M) : toTrivSqZeroExt (ι R x) = TrivSqZeroExt.inr x :=
   lift_ι_apply _ _
-#align tensor_algebra.to_triv_sq_zero_ext_ι TensorAlgebra.to_triv_sq_zero_ext_ι
+#align tensor_algebra.to_triv_sq_zero_ext_ι TensorAlgebra.toTrivSqZeroExt_ι
 
 /-- The left-inverse of `ι`.
 
@@ -244,15 +243,15 @@ def ιInv : TensorAlgebra R M →ₗ[R] M :=
   (TrivSqZeroExt.sndHom R M).comp toTrivSqZeroExt.toLinearMap
 #align tensor_algebra.ι_inv TensorAlgebra.ιInv
 
-theorem ι_left_inverse : Function.LeftInverse ιInv (ι R : M → TensorAlgebra R M) := fun x => by
+theorem ι_leftInverse : Function.LeftInverse ιInv (ι R : M → TensorAlgebra R M) := fun x => by
   simp [ι_inv]
-#align tensor_algebra.ι_left_inverse TensorAlgebra.ι_left_inverse
+#align tensor_algebra.ι_left_inverse TensorAlgebra.ι_leftInverse
 
 variable (R)
 
 @[simp]
 theorem ι_inj (x y : M) : ι R x = ι R y ↔ x = y :=
-  ι_left_inverse.Injective.eq_iff
+  ι_leftInverse.Injective.eq_iff
 #align tensor_algebra.ι_inj TensorAlgebra.ι_inj
 
 @[simp]
@@ -262,7 +261,7 @@ theorem ι_eq_zero_iff (x : M) : ι R x = 0 ↔ x = 0 := by rw [← ι_inj R x 0
 variable {R}
 
 @[simp]
-theorem ι_eq_algebra_map_iff (x : M) (r : R) : ι R x = algebraMap R _ r ↔ x = 0 ∧ r = 0 :=
+theorem ι_eq_algebraMap_iff (x : M) (r : R) : ι R x = algebraMap R _ r ↔ x = 0 ∧ r = 0 :=
   by
   refine' ⟨fun h => _, _⟩
   · have hf0 : to_triv_sq_zero_ext (ι R x) = (0, x) := lift_ι_apply _ _
@@ -271,13 +270,13 @@ theorem ι_eq_algebra_map_iff (x : M) (r : R) : ι R x = algebraMap R _ r ↔ x 
     exact this.symm.imp_left Eq.symm
   · rintro ⟨rfl, rfl⟩
     rw [LinearMap.map_zero, RingHom.map_zero]
-#align tensor_algebra.ι_eq_algebra_map_iff TensorAlgebra.ι_eq_algebra_map_iff
+#align tensor_algebra.ι_eq_algebra_map_iff TensorAlgebra.ι_eq_algebraMap_iff
 
 @[simp]
 theorem ι_ne_one [Nontrivial R] (x : M) : ι R x ≠ 1 :=
   by
   rw [← (algebraMap R (TensorAlgebra R M)).map_one, Ne.def, ι_eq_algebra_map_iff]
-  exact one_ne_zero ∘ And.right
+  exact one_neZero ∘ And.right
 #align tensor_algebra.ι_ne_one TensorAlgebra.ι_ne_one
 
 /-- The generators of the tensor algebra are disjoint from its scalars. -/
@@ -320,9 +319,9 @@ def toTensor : FreeAlgebra R M →ₐ[R] TensorAlgebra R M :=
 #align free_algebra.to_tensor FreeAlgebra.toTensor
 
 @[simp]
-theorem to_tensor_ι (m : M) : (FreeAlgebra.ι R m).toTensor = TensorAlgebra.ι R m := by
+theorem toTensor_ι (m : M) : (FreeAlgebra.ι R m).toTensor = TensorAlgebra.ι R m := by
   simp [to_tensor]
-#align free_algebra.to_tensor_ι FreeAlgebra.to_tensor_ι
+#align free_algebra.to_tensor_ι FreeAlgebra.toTensor_ι
 
 end FreeAlgebra
 

@@ -180,7 +180,7 @@ unsafe def tactic.interactive.ghost_fun_tac (φ fn : parse parser.pexpr) : tacti
   let q(Fin $(k) → _ → _) ← infer_type fn
   sorry
   sorry
-  to_expr `(congr_fun (congr_arg (@peval R _ $(k)) (witt_structure_int_prop p $(φ) n)) $(fn)) >>=
+  to_expr `(congr_fun (congr_arg (@peval R _ $(k)) (wittStructureInt_prop p $(φ) n)) $(fn)) >>=
       note `this none
   sorry
 #align tactic.interactive.ghost_fun_tac tactic.interactive.ghost_fun_tac
@@ -207,10 +207,10 @@ variable (x y : 𝕎 R)
 omit hp
 
 @[local simp]
-theorem matrix_vec_empty_coeff {R} (i j) :
+theorem matrix_vecEmpty_coeff {R} (i j) :
     @coeff p R (Matrix.vecEmpty i) j = (Matrix.vecEmpty i : ℕ → R) j := by
   rcases i with ⟨_ | _ | _ | _ | i_val, ⟨⟩⟩
-#align witt_vector.matrix_vec_empty_coeff WittVector.matrix_vec_empty_coeff
+#align witt_vector.matrix_vec_empty_coeff WittVector.matrix_vecEmpty_coeff
 
 include hp
 
@@ -271,15 +271,15 @@ private def ghost_equiv' [Invertible (p : R)] : 𝕎 R ≃ (ℕ → R)
   left_inv := by
     intro x
     ext n
-    have := bind₁_witt_polynomial_X_in_terms_of_W p R n
+    have := bind₁_wittPolynomial_xInTermsOfW p R n
     apply_fun aeval x.coeff  at this
-    simpa only [aeval_bind₁, aeval_X, ghost_fun, aeval_witt_polynomial]
+    simpa only [aeval_bind₁, aeval_X, ghost_fun, aeval_wittPolynomial]
   right_inv := by
     intro x
     ext n
-    have := bind₁_X_in_terms_of_W_witt_polynomial p R n
+    have := bind₁_xInTermsOfW_wittPolynomial p R n
     apply_fun aeval x  at this
-    simpa only [aeval_bind₁, aeval_X, ghost_fun, aeval_witt_polynomial]
+    simpa only [aeval_bind₁, aeval_X, ghost_fun, aeval_wittPolynomial]
 #align witt_vector.ghost_equiv' witt_vector.ghost_equiv'
 
 include hp
@@ -337,10 +337,10 @@ theorem map_coeff (f : R →+* S) (x : 𝕎 R) (n : ℕ) : (map f x).coeff n = f
 to the sequence of its ghost components. -/
 def ghostMap : 𝕎 R →+* ℕ → R where
   toFun := ghostFun
-  map_zero' := ghost_fun_zero
-  map_one' := ghost_fun_one
-  map_add' := ghost_fun_add
-  map_mul' := ghost_fun_mul
+  map_zero' := ghostFun_zero
+  map_one' := ghostFun_one
+  map_add' := ghostFun_add
+  map_mul' := ghostFun_mul
 #align witt_vector.ghost_map WittVector.ghostMap
 
 /-- Evaluates the `n`th Witt polynomial on the first `n` coefficients of `x`,
@@ -349,14 +349,14 @@ def ghostComponent (n : ℕ) : 𝕎 R →+* R :=
   (Pi.evalRingHom _ n).comp ghostMap
 #align witt_vector.ghost_component WittVector.ghostComponent
 
-theorem ghost_component_apply (n : ℕ) (x : 𝕎 R) : ghostComponent n x = aeval x.coeff (W_ ℤ n) :=
+theorem ghostComponent_apply (n : ℕ) (x : 𝕎 R) : ghostComponent n x = aeval x.coeff (W_ ℤ n) :=
   rfl
-#align witt_vector.ghost_component_apply WittVector.ghost_component_apply
+#align witt_vector.ghost_component_apply WittVector.ghostComponent_apply
 
 @[simp]
-theorem ghost_map_apply (x : 𝕎 R) (n : ℕ) : ghostMap x n = ghostComponent n x :=
+theorem ghostMap_apply (x : 𝕎 R) (n : ℕ) : ghostMap x n = ghostComponent n x :=
   rfl
-#align witt_vector.ghost_map_apply WittVector.ghost_map_apply
+#align witt_vector.ghost_map_apply WittVector.ghostMap_apply
 
 section Invertible
 
@@ -368,9 +368,9 @@ def ghostEquiv : 𝕎 R ≃+* (ℕ → R) :=
 #align witt_vector.ghost_equiv WittVector.ghostEquiv
 
 @[simp]
-theorem ghost_equiv_coe : (ghostEquiv p R : 𝕎 R →+* ℕ → R) = ghost_map :=
+theorem ghostEquiv_coe : (ghostEquiv p R : 𝕎 R →+* ℕ → R) = ghost_map :=
   rfl
-#align witt_vector.ghost_equiv_coe WittVector.ghost_equiv_coe
+#align witt_vector.ghost_equiv_coe WittVector.ghostEquiv_coe
 
 theorem ghostMap.bijective_of_invertible : Function.Bijective (ghostMap : 𝕎 R → ℕ → R) :=
   (ghostEquiv p R).Bijective

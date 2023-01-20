@@ -39,13 +39,13 @@ class Balanced : Prop where
 
 end
 
-theorem is_iso_of_mono_of_epi [Balanced C] {X Y : C} (f : X ⟶ Y) [Mono f] [Epi f] : IsIso f :=
-  Balanced.is_iso_of_mono_of_epi _
-#align category_theory.is_iso_of_mono_of_epi CategoryTheory.is_iso_of_mono_of_epi
+theorem isIso_of_mono_of_epi [Balanced C] {X Y : C} (f : X ⟶ Y) [Mono f] [Epi f] : IsIso f :=
+  Balanced.isIso_of_mono_of_epi _
+#align category_theory.is_iso_of_mono_of_epi CategoryTheory.isIso_of_mono_of_epi
 
-theorem is_iso_iff_mono_and_epi [Balanced C] {X Y : C} (f : X ⟶ Y) : IsIso f ↔ Mono f ∧ Epi f :=
+theorem isIso_iff_mono_and_epi [Balanced C] {X Y : C} (f : X ⟶ Y) : IsIso f ↔ Mono f ∧ Epi f :=
   ⟨fun _ => ⟨inferInstance, inferInstance⟩, fun ⟨_, _⟩ => is_iso_of_mono_of_epi _⟩
-#align category_theory.is_iso_iff_mono_and_epi CategoryTheory.is_iso_iff_mono_and_epi
+#align category_theory.is_iso_iff_mono_and_epi CategoryTheory.isIso_iff_mono_and_epi
 
 section
 

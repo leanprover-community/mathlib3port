@@ -39,13 +39,13 @@ def quotientRel : Setoid M :=
   quotientAddGroup.leftRel p.toAddSubgroup
 #align submodule.quotient_rel Submodule.quotientRel
 
-theorem quotient_rel_r_def {x y : M} : @Setoid.r _ p.quotientRel x y ↔ x - y ∈ p :=
+theorem quotientRel_r_def {x y : M} : @Setoid.r _ p.quotientRel x y ↔ x - y ∈ p :=
   Iff.trans
     (by
       rw [left_rel_apply, sub_eq_add_neg, neg_add, neg_neg]
       rfl)
     neg_mem_iff
-#align submodule.quotient_rel_r_def Submodule.quotient_rel_r_def
+#align submodule.quotient_rel_r_def Submodule.quotientRel_r_def
 
 /-- The quotient of a module `M` by a submodule `p ⊆ M`. -/
 instance hasQuotient : HasQuotient M (Submodule R M) :=
@@ -61,9 +61,9 @@ def mk {p : Submodule R M} : M → M ⧸ p :=
 #align submodule.quotient.mk Submodule.Quotient.mk
 
 @[simp]
-theorem mk_eq_mk {p : Submodule R M} (x : M) : @Quotient.mk'' _ (quotientRel p) x = mk x :=
+theorem mk''_eq_mk'' {p : Submodule R M} (x : M) : @Quotient.mk'' _ (quotientRel p) x = mk x :=
   rfl
-#align submodule.quotient.mk_eq_mk Submodule.Quotient.mk_eq_mk
+#align submodule.quotient.mk_eq_mk Submodule.Quotient.mk''_eq_mk''
 
 @[simp]
 theorem mk'_eq_mk {p : Submodule R M} (x : M) : (Quotient.mk' x : M ⧸ p) = mk x :=
@@ -80,7 +80,7 @@ protected theorem eq' {x y : M} : (mk x : M ⧸ p) = mk y ↔ -x + y ∈ p :=
 #align submodule.quotient.eq' Submodule.Quotient.eq'
 
 protected theorem eq {x y : M} : (mk x : M ⧸ p) = mk y ↔ x - y ∈ p :=
-  p.trans (left_rel_apply.symm.trans p.quotient_rel_r_def)
+  p.trans (leftRel_apply.symm.trans p.quotient_rel_r_def)
 #align submodule.quotient.eq Submodule.Quotient.eq
 
 instance : Zero (M ⧸ p) :=
@@ -124,7 +124,7 @@ variable {S : Type _} [SMul S R] [SMul S M] [IsScalarTower S R M] (P : Submodule
 instance hasSmul' : SMul S (M ⧸ P) :=
   ⟨fun a =>
     Quotient.map' ((· • ·) a) fun x y h =>
-      left_rel_apply.mpr <| by simpa [smul_sub] using P.smul_mem (a • 1 : R) (left_rel_apply.mp h)⟩
+      leftRel_apply.mpr <| by simpa [smul_sub] using P.smul_mem (a • 1 : R) (left_rel_apply.mp h)⟩
 #align submodule.quotient.has_smul' Submodule.Quotient.hasSmul'
 
 /-- Shortcut to help the elaborator in the common case. -/
@@ -137,20 +137,20 @@ theorem mk_smul (r : S) (x : M) : (mk (r • x) : M ⧸ p) = r • mk x :=
   rfl
 #align submodule.quotient.mk_smul Submodule.Quotient.mk_smul
 
-instance smul_comm_class (T : Type _) [SMul T R] [SMul T M] [IsScalarTower T R M]
+instance sMulCommClass (T : Type _) [SMul T R] [SMul T M] [IsScalarTower T R M]
     [SMulCommClass S T M] : SMulCommClass S T (M ⧸ P)
     where smul_comm x y := Quotient.ind' fun z => congr_arg mk (smul_comm _ _ _)
-#align submodule.quotient.smul_comm_class Submodule.Quotient.smul_comm_class
+#align submodule.quotient.smul_comm_class Submodule.Quotient.sMulCommClass
 
-instance is_scalar_tower (T : Type _) [SMul T R] [SMul T M] [IsScalarTower T R M] [SMul S T]
+instance isScalarTower (T : Type _) [SMul T R] [SMul T M] [IsScalarTower T R M] [SMul S T]
     [IsScalarTower S T M] : IsScalarTower S T (M ⧸ P)
     where smul_assoc x y := Quotient.ind' fun z => congr_arg mk (smul_assoc _ _ _)
-#align submodule.quotient.is_scalar_tower Submodule.Quotient.is_scalar_tower
+#align submodule.quotient.is_scalar_tower Submodule.Quotient.isScalarTower
 
-instance is_central_scalar [SMul Sᵐᵒᵖ R] [SMul Sᵐᵒᵖ M] [IsScalarTower Sᵐᵒᵖ R M]
+instance isCentralScalar [SMul Sᵐᵒᵖ R] [SMul Sᵐᵒᵖ M] [IsScalarTower Sᵐᵒᵖ R M]
     [IsCentralScalar S M] : IsCentralScalar S (M ⧸ P)
     where op_smul_eq_smul x := Quotient.ind' fun z => congr_arg mk <| op_smul_eq_smul _ _
-#align submodule.quotient.is_central_scalar Submodule.Quotient.is_central_scalar
+#align submodule.quotient.is_central_scalar Submodule.Quotient.isCentralScalar
 
 end SMul
 
@@ -218,16 +218,16 @@ def restrictScalarsEquiv [Ring S] [SMul S R] [Module S M] [IsScalarTower S R M]
 #align submodule.quotient.restrict_scalars_equiv Submodule.Quotient.restrictScalarsEquiv
 
 @[simp]
-theorem restrict_scalars_equiv_mk [Ring S] [SMul S R] [Module S M] [IsScalarTower S R M]
+theorem restrictScalarsEquiv_mk [Ring S] [SMul S R] [Module S M] [IsScalarTower S R M]
     (P : Submodule R M) (x : M) : restrictScalarsEquiv S P (mk x) = mk x :=
   rfl
-#align submodule.quotient.restrict_scalars_equiv_mk Submodule.Quotient.restrict_scalars_equiv_mk
+#align submodule.quotient.restrict_scalars_equiv_mk Submodule.Quotient.restrictScalarsEquiv_mk
 
 @[simp]
-theorem restrict_scalars_equiv_symm_mk [Ring S] [SMul S R] [Module S M] [IsScalarTower S R M]
+theorem restrictScalarsEquiv_symm_mk [Ring S] [SMul S R] [Module S M] [IsScalarTower S R M]
     (P : Submodule R M) (x : M) : (restrictScalarsEquiv S P).symm (mk x) = mk x :=
   rfl
-#align submodule.quotient.restrict_scalars_equiv_symm_mk Submodule.Quotient.restrict_scalars_equiv_symm_mk
+#align submodule.quotient.restrict_scalars_equiv_symm_mk Submodule.Quotient.restrictScalarsEquiv_symm_mk
 
 end Module
 
@@ -328,9 +328,9 @@ variable {R₂ M₂ : Type _} [Ring R₂] [AddCommGroup M₂] [Module R₂ M₂]
 
 See note [partially-applied ext lemmas]. -/
 @[ext]
-theorem linear_map_qext ⦃f g : M ⧸ p →ₛₗ[τ₁₂] M₂⦄ (h : f.comp p.mkq = g.comp p.mkq) : f = g :=
+theorem linearMap_qext ⦃f g : M ⧸ p →ₛₗ[τ₁₂] M₂⦄ (h : f.comp p.mkq = g.comp p.mkq) : f = g :=
   LinearMap.ext fun x => Quotient.inductionOn' x <| (LinearMap.congr_fun h : _)
-#align submodule.linear_map_qext Submodule.linear_map_qext
+#align submodule.linear_map_qext Submodule.linearMap_qext
 
 /-- The map from the quotient of `M` by a submodule `p` to `M₂` induced by a linear map `f : M → M₂`
 vanishing on `p`, as a linear map. -/
@@ -355,10 +355,10 @@ def liftqSpanSingleton (x : M) (f : M →ₛₗ[τ₁₂] M₂) (h : f x = 0) : 
 #align submodule.liftq_span_singleton Submodule.liftqSpanSingleton
 
 @[simp]
-theorem liftq_span_singleton_apply (x : M) (f : M →ₛₗ[τ₁₂] M₂) (h : f x = 0) (y : M) :
+theorem liftqSpanSingleton_apply (x : M) (f : M →ₛₗ[τ₁₂] M₂) (h : f x = 0) (y : M) :
     liftqSpanSingleton x f h (Quotient.mk y) = f y :=
   rfl
-#align submodule.liftq_span_singleton_apply Submodule.liftq_span_singleton_apply
+#align submodule.liftq_span_singleton_apply Submodule.liftqSpanSingleton_apply
 
 @[simp]
 theorem range_mkq : p.mkq.range = ⊤ :=
@@ -611,22 +611,22 @@ def quotEquivOfEqBot (hp : p = ⊥) : (M ⧸ p) ≃ₗ[R] M :=
 #align submodule.quot_equiv_of_eq_bot Submodule.quotEquivOfEqBot
 
 @[simp]
-theorem quot_equiv_of_eq_bot_apply_mk (hp : p = ⊥) (x : M) :
+theorem quotEquivOfEqBot_apply_mk (hp : p = ⊥) (x : M) :
     p.quotEquivOfEqBot hp (Quotient.mk x) = x :=
   rfl
-#align submodule.quot_equiv_of_eq_bot_apply_mk Submodule.quot_equiv_of_eq_bot_apply_mk
+#align submodule.quot_equiv_of_eq_bot_apply_mk Submodule.quotEquivOfEqBot_apply_mk
 
 @[simp]
-theorem quot_equiv_of_eq_bot_symm_apply (hp : p = ⊥) (x : M) :
+theorem quotEquivOfEqBot_symm_apply (hp : p = ⊥) (x : M) :
     (p.quotEquivOfEqBot hp).symm x = Quotient.mk x :=
   rfl
-#align submodule.quot_equiv_of_eq_bot_symm_apply Submodule.quot_equiv_of_eq_bot_symm_apply
+#align submodule.quot_equiv_of_eq_bot_symm_apply Submodule.quotEquivOfEqBot_symm_apply
 
 @[simp]
-theorem coe_quot_equiv_of_eq_bot_symm (hp : p = ⊥) :
+theorem coe_quotEquivOfEqBot_symm (hp : p = ⊥) :
     ((p.quotEquivOfEqBot hp).symm : M →ₗ[R] M ⧸ p) = p.mkq :=
   rfl
-#align submodule.coe_quot_equiv_of_eq_bot_symm Submodule.coe_quot_equiv_of_eq_bot_symm
+#align submodule.coe_quot_equiv_of_eq_bot_symm Submodule.coe_quotEquivOfEqBot_symm
 
 /-- Quotienting by equal submodules gives linearly equivalent quotients. -/
 def quotEquivOfEq (h : p = p') : (M ⧸ p) ≃ₗ[R] M ⧸ p' :=
@@ -644,10 +644,10 @@ def quotEquivOfEq (h : p = p') : (M ⧸ p) ≃ₗ[R] M ⧸ p' :=
 #align submodule.quot_equiv_of_eq Submodule.quotEquivOfEq
 
 @[simp]
-theorem quot_equiv_of_eq_mk (h : p = p') (x : M) :
+theorem quotEquivOfEq_mk (h : p = p') (x : M) :
     Submodule.quotEquivOfEq p p' h (Submodule.Quotient.mk x) = Submodule.Quotient.mk x :=
   rfl
-#align submodule.quot_equiv_of_eq_mk Submodule.quot_equiv_of_eq_mk
+#align submodule.quot_equiv_of_eq_mk Submodule.quotEquivOfEq_mk
 
 @[simp]
 theorem Quotient.equiv_refl (P : Submodule R M) (Q : Submodule R M)

@@ -91,17 +91,17 @@ theorem left_lt_right {x : Pgame} (o : Numeric x) (i : x.LeftMoves) (j : x.Right
   exact o.1 i j
 #align pgame.numeric.left_lt_right Pgame.Numeric.left_lt_right
 
-theorem move_left {x : Pgame} (o : Numeric x) (i : x.LeftMoves) : Numeric (x.moveLeft i) :=
+theorem moveLeft {x : Pgame} (o : Numeric x) (i : x.LeftMoves) : Numeric (x.moveLeft i) :=
   by
   cases x
   exact o.2.1 i
-#align pgame.numeric.move_left Pgame.Numeric.move_left
+#align pgame.numeric.move_left Pgame.Numeric.moveLeft
 
-theorem move_right {x : Pgame} (o : Numeric x) (j : x.RightMoves) : Numeric (x.moveRight j) :=
+theorem moveRight {x : Pgame} (o : Numeric x) (j : x.RightMoves) : Numeric (x.moveRight j) :=
   by
   cases x
   exact o.2.2 j
-#align pgame.numeric.move_right Pgame.Numeric.move_right
+#align pgame.numeric.move_right Pgame.Numeric.moveRight
 
 end Numeric
 
@@ -205,26 +205,26 @@ theorem lt_or_equiv_or_gt {x y : Pgame} (ox : Numeric x) (oy : Numeric y) :
   ((lf_or_equiv_or_gf x y).imp fun h => h.lt ox oy) <| Or.imp_right fun h => h.lt oy ox
 #align pgame.lt_or_equiv_or_gt Pgame.lt_or_equiv_or_gt
 
-theorem numeric_of_is_empty (x : Pgame) [IsEmpty x.LeftMoves] [IsEmpty x.RightMoves] : Numeric x :=
+theorem numeric_of_isEmpty (x : Pgame) [IsEmpty x.LeftMoves] [IsEmpty x.RightMoves] : Numeric x :=
   Numeric.mk isEmptyElim isEmptyElim isEmptyElim
-#align pgame.numeric_of_is_empty Pgame.numeric_of_is_empty
+#align pgame.numeric_of_is_empty Pgame.numeric_of_isEmpty
 
-theorem numeric_of_is_empty_left_moves (x : Pgame) [IsEmpty x.LeftMoves] :
+theorem numeric_of_isEmpty_leftMoves (x : Pgame) [IsEmpty x.LeftMoves] :
     (∀ j, Numeric (x.moveRight j)) → Numeric x :=
   Numeric.mk isEmptyElim isEmptyElim
-#align pgame.numeric_of_is_empty_left_moves Pgame.numeric_of_is_empty_left_moves
+#align pgame.numeric_of_is_empty_left_moves Pgame.numeric_of_isEmpty_leftMoves
 
-theorem numeric_of_is_empty_right_moves (x : Pgame) [IsEmpty x.RightMoves]
+theorem numeric_of_isEmpty_rightMoves (x : Pgame) [IsEmpty x.RightMoves]
     (H : ∀ i, Numeric (x.moveLeft i)) : Numeric x :=
   Numeric.mk (fun _ => isEmptyElim) H isEmptyElim
-#align pgame.numeric_of_is_empty_right_moves Pgame.numeric_of_is_empty_right_moves
+#align pgame.numeric_of_is_empty_right_moves Pgame.numeric_of_isEmpty_rightMoves
 
 theorem numeric_zero : Numeric 0 :=
-  numeric_of_is_empty 0
+  numeric_of_isEmpty 0
 #align pgame.numeric_zero Pgame.numeric_zero
 
 theorem numeric_one : Numeric 1 :=
-  numeric_of_is_empty_right_moves 1 fun _ => numeric_zero
+  numeric_of_isEmpty_rightMoves 1 fun _ => numeric_zero
 #align pgame.numeric_one Pgame.numeric_one
 
 theorem Numeric.neg : ∀ {x : Pgame} (o : Numeric x), Numeric (-x)
@@ -234,21 +234,21 @@ theorem Numeric.neg : ∀ {x : Pgame} (o : Numeric x), Numeric (-x)
 
 namespace Numeric
 
-theorem move_left_lt {x : Pgame} (o : Numeric x) (i) : x.moveLeft i < x :=
-  (move_left_lf i).lt (o.moveLeft i) o
-#align pgame.numeric.move_left_lt Pgame.Numeric.move_left_lt
+theorem moveLeft_lt {x : Pgame} (o : Numeric x) (i) : x.moveLeft i < x :=
+  (moveLeft_lf i).lt (o.moveLeft i) o
+#align pgame.numeric.move_left_lt Pgame.Numeric.moveLeft_lt
 
-theorem move_left_le {x : Pgame} (o : Numeric x) (i) : x.moveLeft i ≤ x :=
+theorem moveLeft_le {x : Pgame} (o : Numeric x) (i) : x.moveLeft i ≤ x :=
   (o.move_left_lt i).le
-#align pgame.numeric.move_left_le Pgame.Numeric.move_left_le
+#align pgame.numeric.move_left_le Pgame.Numeric.moveLeft_le
 
-theorem lt_move_right {x : Pgame} (o : Numeric x) (j) : x < x.moveRight j :=
-  (lf_move_right j).lt o (o.moveRight j)
-#align pgame.numeric.lt_move_right Pgame.Numeric.lt_move_right
+theorem lt_moveRight {x : Pgame} (o : Numeric x) (j) : x < x.moveRight j :=
+  (lf_moveRight j).lt o (o.moveRight j)
+#align pgame.numeric.lt_move_right Pgame.Numeric.lt_moveRight
 
-theorem le_move_right {x : Pgame} (o : Numeric x) (j) : x ≤ x.moveRight j :=
+theorem le_moveRight {x : Pgame} (o : Numeric x) (j) : x ≤ x.moveRight j :=
   (o.lt_move_right j).le
-#align pgame.numeric.le_move_right Pgame.Numeric.le_move_right
+#align pgame.numeric.le_move_right Pgame.Numeric.le_moveRight
 
 theorem add : ∀ {x y : Pgame} (ox : Numeric x) (oy : Numeric y), Numeric (x + y)
   | ⟨xl, xr, xL, xR⟩, ⟨yl, yr, yL, yR⟩, ox, oy =>
@@ -288,12 +288,12 @@ theorem numeric_nat : ∀ n : ℕ, Numeric n
 #align pgame.numeric_nat Pgame.numeric_nat
 
 /-- Ordinal games are numeric. -/
-theorem numeric_to_pgame (o : Ordinal) : o.toPgame.Numeric :=
+theorem numeric_toPgame (o : Ordinal) : o.toPgame.Numeric :=
   by
   induction' o using Ordinal.induction with o IH
   apply numeric_of_is_empty_right_moves
-  simpa using fun i => IH _ (Ordinal.to_left_moves_to_pgame_symm_lt i)
-#align pgame.numeric_to_pgame Pgame.numeric_to_pgame
+  simpa using fun i => IH _ (Ordinal.toLeftMovesToPgame_symm_lt i)
+#align pgame.numeric_to_pgame Pgame.numeric_toPgame
 
 end Pgame
 
@@ -417,19 +417,19 @@ def toGame : Surreal →+o Game
     exact id
 #align surreal.to_game Surreal.toGame
 
-theorem zero_to_game : toGame 0 = 0 :=
+theorem zero_toGame : toGame 0 = 0 :=
   rfl
-#align surreal.zero_to_game Surreal.zero_to_game
+#align surreal.zero_to_game Surreal.zero_toGame
 
 @[simp]
-theorem one_to_game : toGame 1 = 1 :=
+theorem one_toGame : toGame 1 = 1 :=
   rfl
-#align surreal.one_to_game Surreal.one_to_game
+#align surreal.one_to_game Surreal.one_toGame
 
 @[simp]
-theorem nat_to_game : ∀ n : ℕ, toGame n = n :=
-  map_nat_cast' _ one_to_game
-#align surreal.nat_to_game Surreal.nat_to_game
+theorem nat_toGame : ∀ n : ℕ, toGame n = n :=
+  map_nat_cast' _ one_toGame
+#align surreal.nat_to_game Surreal.nat_toGame
 
 end Surreal
 
@@ -440,9 +440,9 @@ namespace Ordinal
 /-- Converts an ordinal into the corresponding surreal. -/
 noncomputable def toSurreal : Ordinal ↪o Surreal
     where
-  toFun o := mk _ (numeric_to_pgame o)
-  inj' a b h := to_pgame_equiv_iff.1 (Quotient.exact h)
-  map_rel_iff' := @to_pgame_le_iff
+  toFun o := mk _ (numeric_toPgame o)
+  inj' a b h := toPgame_equiv_iff.1 (Quotient.exact h)
+  map_rel_iff' := @toPgame_le_iff
 #align ordinal.to_surreal Ordinal.toSurreal
 
 end Ordinal

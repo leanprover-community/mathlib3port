@@ -149,7 +149,7 @@ instance {X Y : ωCPO.{v}} (f g : X ⟶ Y) : HasLimit (parallelPair f g) :=
   HasLimit.mk ⟨_, HasEqualizers.isEqualizer f g⟩
 
 instance : HasEqualizers ωCPO.{v} :=
-  has_equalizers_of_has_limit_parallel_pair _
+  hasEqualizers_of_hasLimit_parallelPair _
 
 instance : HasLimits ωCPO.{v} :=
   has_limits_of_has_equalizers_and_products

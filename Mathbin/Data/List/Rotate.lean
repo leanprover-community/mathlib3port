@@ -298,7 +298,7 @@ theorem zipWith_rotate_distrib {α β γ : Type _} (f : α → β → γ) (l : L
   by
   rw [rotate_eq_drop_append_take_mod, rotate_eq_drop_append_take_mod,
     rotate_eq_drop_append_take_mod, h, zip_with_append, ← zip_with_distrib_drop, ←
-    zip_with_distrib_take, List.length_zip_with, h, min_self]
+    zip_with_distrib_take, List.length_zipWith, h, min_self]
   rw [length_drop, length_drop, h]
 #align list.zip_with_rotate_distrib List.zipWith_rotate_distrib
 
@@ -364,16 +364,16 @@ theorem nthLe_rotate' (l : List α) (n k : ℕ) (hk : k < l.length) :
 #align list.nth_le_rotate' List.nthLe_rotate'
 -/
 
-theorem nth_rotate {l : List α} {n m : ℕ} (hml : m < l.length) :
+theorem get?_rotate {l : List α} {n m : ℕ} (hml : m < l.length) :
     (l.rotate n).nth m = l.nth ((m + n) % l.length) :=
   by
   rw [nth_le_nth, nth_le_nth (Nat.mod_lt _ _), nth_le_rotate]
   rwa [length_rotate]
-#align list.nth_rotate List.nth_rotate
+#align list.nth_rotate List.get?_rotate
 
-theorem head'_rotate {l : List α} {n : ℕ} (h : n < l.length) : head? (l.rotate n) = l.nth n := by
+theorem head?_rotate {l : List α} {n : ℕ} (h : n < l.length) : head? (l.rotate n) = l.nth n := by
   rw [← nth_zero, nth_rotate (n.zero_le.trans_lt h), zero_add, Nat.mod_eq_of_lt h]
-#align list.head'_rotate List.head'_rotate
+#align list.head'_rotate List.head?_rotate
 
 theorem rotate_eq_self_iff_eq_replicate [hα : Nonempty α] :
     ∀ {l : List α}, (∀ n, l.rotate n = l) ↔ ∃ a, l = replicate l.length a

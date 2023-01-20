@@ -122,12 +122,12 @@ theorem image_norm_nonempty {S : AddSubgroup M} :
   rfl
 #align image_norm_nonempty image_norm_nonempty
 
-theorem bdd_below_image_norm (s : Set M) : BddBelow (norm '' s) :=
+theorem bddBelow_image_norm (s : Set M) : BddBelow (norm '' s) :=
   by
   use 0
   rintro _ ⟨x, hx, rfl⟩
   apply norm_nonneg
-#align bdd_below_image_norm bdd_below_image_norm
+#align bdd_below_image_norm bddBelow_image_norm
 
 /-- The norm on the quotient satisfies `‖-x‖ = ‖x‖`. -/
 theorem quotient_norm_neg {S : AddSubgroup M} (x : M ⧸ S) : ‖-x‖ = ‖x‖ :=
@@ -299,7 +299,7 @@ theorem quotient_nhd_basis (S : AddSubgroup M) :
       apply IsOpen.mem_nhds
       · change IsOpen (mk' S ⁻¹' _)
         erw [quotientAddGroup.preimage_image_coe]
-        apply is_open_Union
+        apply isOpen_unionᵢ
         rintro ⟨s, s_in⟩
         exact (continuous_add_right s).is_open_preimage _ is_open_ball
       · exact ⟨(0 : M), mem_ball_self ε_pos, (mk' S).map_zero⟩⟩
@@ -332,7 +332,7 @@ noncomputable instance AddSubgroup.seminormedAddCommGroupQuotient (S : AddSubgro
       dsimp
       rw [quotient_norm_sub_rev]
     rw [funext this]
-    refine' Filter.has_basis_binfi_principal _ Set.nonempty_Ioi
+    refine' Filter.hasBasis_binfi_principal _ Set.nonempty_Ioi
     rintro ε (ε_pos : 0 < ε) η (η_pos : 0 < η)
     refine' ⟨min ε η, lt_min ε_pos η_pos, _, _⟩
     · suffices ∀ a b : M ⧸ S, ‖a - b‖ < ε → ‖a - b‖ < η → ‖a - b‖ < ε by simpa
@@ -381,22 +381,22 @@ theorem normedMk.apply (S : AddSubgroup M) (m : M) : normedMk S m = quotientAddG
 #align add_subgroup.normed_mk.apply AddSubgroup.normedMk.apply
 
 /-- `S.normed_mk` is surjective. -/
-theorem surjective_normed_mk (S : AddSubgroup M) : Function.Surjective (normedMk S) :=
+theorem surjective_normedMk (S : AddSubgroup M) : Function.Surjective (normedMk S) :=
   surjective_quot_mk _
-#align add_subgroup.surjective_normed_mk AddSubgroup.surjective_normed_mk
+#align add_subgroup.surjective_normed_mk AddSubgroup.surjective_normedMk
 
 /-- The kernel of `S.normed_mk` is `S`. -/
-theorem ker_normed_mk (S : AddSubgroup M) : S.normedMk.ker = S :=
+theorem ker_normedMk (S : AddSubgroup M) : S.normedMk.ker = S :=
   quotientAddGroup.ker_mk _
-#align add_subgroup.ker_normed_mk AddSubgroup.ker_normed_mk
+#align add_subgroup.ker_normed_mk AddSubgroup.ker_normedMk
 
 /-- The operator norm of the projection is at most `1`. -/
-theorem norm_normed_mk_le (S : AddSubgroup M) : ‖S.normedMk‖ ≤ 1 :=
+theorem norm_normedMk_le (S : AddSubgroup M) : ‖S.normedMk‖ ≤ 1 :=
   NormedAddGroupHom.op_norm_le_bound _ zero_le_one fun m => by simp [quotient_norm_mk_le']
-#align add_subgroup.norm_normed_mk_le AddSubgroup.norm_normed_mk_le
+#align add_subgroup.norm_normed_mk_le AddSubgroup.norm_normedMk_le
 
 /-- The operator norm of the projection is `1` if the subspace is not dense. -/
-theorem norm_normed_mk (S : AddSubgroup M) (h : (S.topologicalClosure : Set M) ≠ univ) :
+theorem norm_normedMk (S : AddSubgroup M) (h : (S.topologicalClosure : Set M) ≠ univ) :
     ‖S.normedMk‖ = 1 := by
   obtain ⟨x, hx⟩ := Set.nonempty_compl.2 h
   let y := S.normed_mk x
@@ -436,7 +436,7 @@ theorem norm_normed_mk (S : AddSubgroup M) (h : (S.topologicalClosure : Set M) �
     _ ≥ (1 + min ε (1 / 2) / (1 - min ε (1 / 2)))⁻¹ := le_of_lt hlt
     _ = 1 - min ε (1 / 2) := by field_simp [(ne_of_lt hδ).symm]
     
-#align add_subgroup.norm_normed_mk AddSubgroup.norm_normed_mk
+#align add_subgroup.norm_normed_mk AddSubgroup.norm_normedMk
 
 /-- The operator norm of the projection is `0` if the subspace is dense. -/
 theorem norm_trivial_quotient_mk (S : AddSubgroup M)
@@ -491,7 +491,7 @@ theorem lift_unique {N : Type _} [SeminormedAddCommGroup N] (S : AddSubgroup M)
   by
   intro h
   ext
-  rcases AddSubgroup.surjective_normed_mk _ x with ⟨x, rfl⟩
+  rcases AddSubgroup.surjective_normedMk _ x with ⟨x, rfl⟩
   change g.comp S.normed_mk x = _
   simpa only [h]
 #align normed_add_group_hom.lift_unique NormedAddGroupHom.lift_unique
@@ -555,13 +555,13 @@ theorem lift_norm_le {N : Type _} [SeminormedAddCommGroup N] (S : AddSubgroup M)
       exact_mod_cast hc.ne'
 #align normed_add_group_hom.lift_norm_le NormedAddGroupHom.lift_norm_le
 
-theorem lift_norm_noninc {N : Type _} [SeminormedAddCommGroup N] (S : AddSubgroup M)
+theorem lift_normNoninc {N : Type _} [SeminormedAddCommGroup N] (S : AddSubgroup M)
     (f : NormedAddGroupHom M N) (hf : ∀ s ∈ S, f s = 0) (fb : f.NormNoninc) :
     (lift S f hf).NormNoninc := fun x =>
   by
   have fb' : ‖f‖ ≤ (1 : ℝ≥0) := norm_noninc.norm_noninc_iff_norm_le_one.mp fb
   simpa using le_of_op_norm_le _ (f.lift_norm_le _ _ fb') _
-#align normed_add_group_hom.lift_norm_noninc NormedAddGroupHom.lift_norm_noninc
+#align normed_add_group_hom.lift_norm_noninc NormedAddGroupHom.lift_normNoninc
 
 end NormedAddGroupHom
 
@@ -593,9 +593,9 @@ instance Submodule.Quotient.normedAddCommGroup [hS : IsClosed (S : Set M)] :
   @AddSubgroup.normedAddCommGroupQuotient _ _ S.toAddSubgroup hS
 #align submodule.quotient.normed_add_comm_group Submodule.Quotient.normedAddCommGroup
 
-instance Submodule.Quotient.complete_space [CompleteSpace M] : CompleteSpace (M ⧸ S) :=
-  quotientAddGroup.complete_space M S.toAddSubgroup
-#align submodule.quotient.complete_space Submodule.Quotient.complete_space
+instance Submodule.Quotient.completeSpace [CompleteSpace M] : CompleteSpace (M ⧸ S) :=
+  quotientAddGroup.completeSpace M S.toAddSubgroup
+#align submodule.quotient.complete_space Submodule.Quotient.completeSpace
 
 /-- For any `x : M ⧸ S` and any `0 < ε`, there is `m : M` such that `submodule.quotient.mk m = x`
 and `‖m‖ < ‖x‖ + ε`. -/
@@ -616,7 +616,7 @@ instance Submodule.Quotient.normedSpace (𝕜 : Type _) [NormedField 𝕜] [Norm
         by
         have :=
           (nhds_basis_ball.tendsto_iff nhds_basis_ball).mp
-            ((@Real.uniform_continuous_const_mul ‖k‖).Continuous.Tendsto ‖x‖) ε hε
+            ((@Real.uniformContinuous_const_mul ‖k‖).Continuous.Tendsto ‖x‖) ε hε
         simp only [mem_ball, exists_prop, dist, abs_sub_lt_iff] at this
         rcases this with ⟨δ, hδ, h⟩
         obtain ⟨a, rfl, ha⟩ := Submodule.Quotient.norm_mk_lt x hδ

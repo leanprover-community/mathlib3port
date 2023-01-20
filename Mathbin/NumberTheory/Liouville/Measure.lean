@@ -35,7 +35,7 @@ open Filter BigOperators Ennreal TopologicalSpace Nnreal
 
 open Filter Set Metric MeasureTheory Real
 
-theorem set_of_liouville_with_subset_aux :
+theorem setOf_liouvilleWith_subset_aux :
     { x : ℝ | ∃ p > 2, LiouvilleWith p x } ⊆
       ⋃ m : ℤ,
         (fun x : ℝ => x + m) ⁻¹'
@@ -77,7 +77,7 @@ theorem set_of_liouville_with_subset_aux :
     simpa using n.cast_add_one_pos.le
   rw [sub_div' _ _ _ hb0.ne', abs_div, abs_of_pos hb0, div_lt_div_right hb0, abs_sub_lt_iff,
     sub_lt_iff_lt_add, sub_lt_iff_lt_add, ← sub_lt_iff_lt_add'] at hlt
-  rw [Finset.mem_Icc, ← Int.lt_add_one_iff, ← Int.lt_add_one_iff, ← neg_lt_iff_pos_add, add_comm, ←
+  rw [Finset.mem_icc, ← Int.lt_add_one_iff, ← Int.lt_add_one_iff, ← neg_lt_iff_pos_add, add_comm, ←
     @Int.cast_lt ℝ, ← @Int.cast_lt ℝ]
   push_cast
   refine' ⟨lt_of_le_of_lt _ hlt.1, hlt.2.trans_le _⟩
@@ -87,16 +87,16 @@ theorem set_of_liouville_with_subset_aux :
       x * b ≤ 1 * b := mul_le_mul_of_nonneg_right hx01.2.le hb0.le
       _ = b := one_mul b
       
-#align set_of_liouville_with_subset_aux set_of_liouville_with_subset_aux
+#align set_of_liouville_with_subset_aux setOf_liouvilleWith_subset_aux
 
 /-- The set of numbers satisfying the Liouville condition with some exponent `p > 2` has Lebesgue
 measure zero. -/
 @[simp]
-theorem volume_Union_set_of_liouville_with :
+theorem volume_unionᵢ_setOf_liouvilleWith :
     volume (⋃ (p : ℝ) (hp : 2 < p), { x : ℝ | LiouvilleWith p x }) = 0 :=
   by
   simp only [← set_of_exists]
-  refine' measure_mono_null set_of_liouville_with_subset_aux _
+  refine' measure_mono_null setOf_liouvilleWith_subset_aux _
   rw [measure_Union_null_iff]
   intro m
   rw [measure_preimage_add_right]
@@ -113,7 +113,7 @@ theorem volume_Union_set_of_liouville_with :
     by
     intro a b
     rw [Real.volume_ball, mul_one_div, ← Nnreal.coe_two, ← Nnreal.coe_nat_cast, ← Nnreal.coe_rpow, ←
-      Nnreal.coe_div, Ennreal.of_real_coe_nnreal]
+      Nnreal.coe_div, Ennreal.ofReal_coe_nnreal]
   have :
     ∀ b : ℕ, volume (⋃ a ∈ Finset.icc (0 : ℤ) b, B a b) ≤ (2 * (b ^ (1 - r) + b ^ (-r)) : ℝ≥0) :=
     by
@@ -122,7 +122,7 @@ theorem volume_Union_set_of_liouville_with :
       volume (⋃ a ∈ Finset.icc (0 : ℤ) b, B a b) ≤ ∑ a in Finset.icc (0 : ℤ) b, volume (B a b) :=
         measure_bUnion_finset_le _ _
       _ = ((b + 1) * (2 / b ^ r) : ℝ≥0) := by
-        simp only [hB, Int.card_Icc, Finset.sum_const, nsmul_eq_mul, sub_zero, ← Int.ofNat_succ,
+        simp only [hB, Int.card_icc, Finset.sum_const, nsmul_eq_mul, sub_zero, ← Int.ofNat_succ,
           Int.toNat_coe_nat, ← Nat.cast_succ, Ennreal.coe_mul, Ennreal.coe_nat]
       _ = _ := _
       
@@ -131,21 +131,21 @@ theorem volume_Union_set_of_liouville_with :
     simp [add_mul, div_eq_mul_inv, Nnreal.rpow_neg, Nnreal.rpow_sub' _ this, mul_add, mul_left_comm]
   refine' ne_top_of_le_ne_top (Ennreal.tsum_coe_ne_top_iff_summable.2 _) (Ennreal.tsum_le_tsum this)
   refine' (Summable.add _ _).mul_left _ <;> simp only [Nnreal.summable_rpow] <;> linarith
-#align volume_Union_set_of_liouville_with volume_Union_set_of_liouville_with
+#align volume_Union_set_of_liouville_with volume_unionᵢ_setOf_liouvilleWith
 
-theorem ae_not_liouville_with : ∀ᵐ x, ∀ p > (2 : ℝ), ¬LiouvilleWith p x := by
-  simpa only [ae_iff, not_forall, not_not, set_of_exists] using volume_Union_set_of_liouville_with
-#align ae_not_liouville_with ae_not_liouville_with
+theorem ae_not_liouvilleWith : ∀ᵐ x, ∀ p > (2 : ℝ), ¬LiouvilleWith p x := by
+  simpa only [ae_iff, not_forall, not_not, set_of_exists] using volume_unionᵢ_setOf_liouvilleWith
+#align ae_not_liouville_with ae_not_liouvilleWith
 
 theorem ae_not_liouville : ∀ᵐ x, ¬Liouville x :=
-  ae_not_liouville_with.mono fun x h₁ h₂ => h₁ 3 (by norm_num) (h₂.LiouvilleWith 3)
+  ae_not_liouvilleWith.mono fun x h₁ h₂ => h₁ 3 (by norm_num) (h₂.LiouvilleWith 3)
 #align ae_not_liouville ae_not_liouville
 
 /-- The set of Liouville numbers has Lebesgue measure zero. -/
 @[simp]
-theorem volume_set_of_liouville : volume { x : ℝ | Liouville x } = 0 := by
+theorem volume_setOf_liouville : volume { x : ℝ | Liouville x } = 0 := by
   simpa only [ae_iff, not_not] using ae_not_liouville
-#align volume_set_of_liouville volume_set_of_liouville
+#align volume_set_of_liouville volume_setOf_liouville
 
 /-- The filters `residual ℝ` and `volume.ae` are disjoint. This means that there exists a residual
 set of Lebesgue measure zero (e.g., the set of Liouville numbers). -/

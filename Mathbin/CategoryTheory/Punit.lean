@@ -46,9 +46,9 @@ def punitExt (F G : C ⥤ Discrete PUnit) : F ≅ G :=
 /-- Any two functors to `discrete punit` are *equal*.
 You probably want to use `punit_ext` instead of this.
 -/
-theorem punit_ext' (F G : C ⥤ Discrete PUnit) : F = G :=
+theorem pUnit_ext' (F G : C ⥤ Discrete PUnit) : F = G :=
   Functor.ext (fun _ => by decide) fun _ _ _ => by decide
-#align category_theory.functor.punit_ext' CategoryTheory.Functor.punit_ext'
+#align category_theory.functor.punit_ext' CategoryTheory.Functor.pUnit_ext'
 
 /-- The functor from `discrete punit` sending everything to the given object. -/
 abbrev fromPunit (X : C) : Discrete PUnit.{v + 1} ⥤ C :=
@@ -83,7 +83,7 @@ end Functor
 
 /-- A category being equivalent to `punit` is equivalent to it having a unique morphism between
   any two objects. (In fact, such a category is also a groupoid; see `groupoid.of_hom_unique`) -/
-theorem equiv_punit_iff_unique :
+theorem equiv_pUnit_iff_unique :
     Nonempty (C ≌ Discrete PUnit) ↔ Nonempty C ∧ ∀ x y : C, Nonempty <| Unique (x ⟶ y) :=
   by
   constructor
@@ -115,7 +115,7 @@ theorem equiv_punit_iff_unique :
           { Hom := default
             inv := default })
         fun _ _ _ => by tidy
-#align category_theory.equiv_punit_iff_unique CategoryTheory.equiv_punit_iff_unique
+#align category_theory.equiv_punit_iff_unique CategoryTheory.equiv_pUnit_iff_unique
 
 end CategoryTheory
 

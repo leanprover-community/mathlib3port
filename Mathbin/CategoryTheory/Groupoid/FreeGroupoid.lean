@@ -214,19 +214,19 @@ def CategoryTheory.freeGroupoidFunctor (φ : V ⥤q V') : FreeGroupoid V ⥤ Fre
   lift (φ ⋙q of V')
 #align category_theory.free_groupoid_functor CategoryTheory.freeGroupoidFunctor
 
-theorem free_groupoid_functor_id :
+theorem freeGroupoidFunctor_id :
     freeGroupoidFunctor (Prefunctor.id V) = Functor.id (FreeGroupoid V) :=
   by
   dsimp only [free_groupoid_functor]; symm
   apply lift_unique; rfl
-#align category_theory.groupoid.free.free_groupoid_functor_id CategoryTheory.Groupoid.Free.free_groupoid_functor_id
+#align category_theory.groupoid.free.free_groupoid_functor_id CategoryTheory.Groupoid.Free.freeGroupoidFunctor_id
 
-theorem free_groupoid_functor_comp (φ : V ⥤q V') (φ' : V' ⥤q V'') :
+theorem freeGroupoidFunctor_comp (φ : V ⥤q V') (φ' : V' ⥤q V'') :
     freeGroupoidFunctor (φ ⋙q φ') = freeGroupoidFunctor φ ⋙ freeGroupoidFunctor φ' :=
   by
   dsimp only [free_groupoid_functor]; symm
   apply lift_unique; rfl
-#align category_theory.groupoid.free.free_groupoid_functor_comp CategoryTheory.Groupoid.Free.free_groupoid_functor_comp
+#align category_theory.groupoid.free.free_groupoid_functor_comp CategoryTheory.Groupoid.Free.freeGroupoidFunctor_comp
 
 end Functoriality
 

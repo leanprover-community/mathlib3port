@@ -40,23 +40,23 @@ variable {M : Submonoid A} [Algebra A S] [IsLocalization M S] [Algebra A K] [IsF
 
 open Finsupp IsFractionRing IsLocalization Polynomial
 
-theorem scale_roots_aeval_eq_zero_of_aeval_mk'_eq_zero {p : A[X]} {r : A} {s : M}
+theorem scaleRoots_aeval_eq_zero_of_aeval_mk'_eq_zero {p : A[X]} {r : A} {s : M}
     (hr : aeval (mk' S r s) p = 0) : aeval (algebraMap A S r) (scaleRoots p s) = 0 :=
   by
   convert scale_roots_eval₂_eq_zero (algebraMap A S) hr
   rw [aeval_def, mk'_spec' _ r s]
-#align scale_roots_aeval_eq_zero_of_aeval_mk'_eq_zero scale_roots_aeval_eq_zero_of_aeval_mk'_eq_zero
+#align scale_roots_aeval_eq_zero_of_aeval_mk'_eq_zero scaleRoots_aeval_eq_zero_of_aeval_mk'_eq_zero
 
 variable [IsDomain A]
 
-theorem num_is_root_scale_roots_of_aeval_eq_zero [UniqueFactorizationMonoid A] {p : A[X]} {x : K}
+theorem num_isRoot_scaleRoots_of_aeval_eq_zero [UniqueFactorizationMonoid A] {p : A[X]} {x : K}
     (hr : aeval x p = 0) : IsRoot (scaleRoots p (denom A x)) (Num A x) :=
   by
   apply is_root_of_eval₂_map_eq_zero (IsFractionRing.injective A K)
-  refine' scale_roots_aeval_eq_zero_of_aeval_mk'_eq_zero _
+  refine' scaleRoots_aeval_eq_zero_of_aeval_mk'_eq_zero _
   rw [mk'_num_denom]
   exact hr
-#align num_is_root_scale_roots_of_aeval_eq_zero num_is_root_scale_roots_of_aeval_eq_zero
+#align num_is_root_scale_roots_of_aeval_eq_zero num_isRoot_scaleRoots_of_aeval_eq_zero
 
 end ScaleRoots
 
@@ -85,7 +85,7 @@ theorem num_dvd_of_is_root {p : A[X]} {r : K} (hr : aeval r p = 0) : Num A r ∣
       intro q dvd_num dvd_denom_pow hq
       apply hq.not_unit
       exact num_denom_reduced A r dvd_num (hq.dvd_of_dvd_pow dvd_denom_pow)
-  convert dvd_term_of_is_root_of_dvd_terms 0 (num_is_root_scale_roots_of_aeval_eq_zero hr) _
+  convert dvd_term_of_is_root_of_dvd_terms 0 (num_isRoot_scaleRoots_of_aeval_eq_zero hr) _
   · rw [pow_zero, mul_one]
   intro j hj
   apply dvd_mul_of_dvd_right
@@ -108,7 +108,7 @@ theorem denom_dvd_of_is_root {p : A[X]} {r : K} (hr : aeval r p = 0) :
     apply hq.not_unit
     exact num_denom_reduced A r (hq.dvd_of_dvd_pow dvd_num_pow) dvd_denom
   rw [← coeff_scale_roots_nat_degree]
-  apply dvd_term_of_is_root_of_dvd_terms _ (num_is_root_scale_roots_of_aeval_eq_zero hr)
+  apply dvd_term_of_is_root_of_dvd_terms _ (num_isRoot_scaleRoots_of_aeval_eq_zero hr)
   intro j hj
   by_cases h : j < p.nat_degree
   · rw [coeff_scale_roots]
@@ -124,15 +124,15 @@ theorem denom_dvd_of_is_root {p : A[X]} {r : K} (hr : aeval r p = 0) :
 /-- Integral root theorem:
 if `r : f.codomain` is a root of a monic polynomial over the ufd `A`,
 then `r` is an integer -/
-theorem is_integer_of_is_root_of_monic {p : A[X]} (hp : Monic p) {r : K} (hr : aeval r p = 0) :
+theorem isInteger_of_is_root_of_monic {p : A[X]} (hp : Monic p) {r : K} (hr : aeval r p = 0) :
     IsInteger A r :=
-  is_integer_of_is_unit_denom (isUnit_of_dvd_one _ (hp ▸ denom_dvd_of_is_root hr))
-#align is_integer_of_is_root_of_monic is_integer_of_is_root_of_monic
+  isInteger_of_isUnit_denom (isUnit_of_dvd_one _ (hp ▸ denom_dvd_of_is_root hr))
+#align is_integer_of_is_root_of_monic isInteger_of_is_root_of_monic
 
 namespace UniqueFactorizationMonoid
 
 theorem integer_of_integral {x : K} : IsIntegral A x → IsInteger A x := fun ⟨p, hp, hx⟩ =>
-  is_integer_of_is_root_of_monic hp hx
+  isInteger_of_is_root_of_monic hp hx
 #align unique_factorization_monoid.integer_of_integral UniqueFactorizationMonoid.integer_of_integral
 
 -- See library note [lower instance priority]

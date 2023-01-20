@@ -76,7 +76,7 @@ theorem sin_gt_sub_cube {x : ℝ} (h : 0 < x) (h' : x ≤ 1) : x - x ^ 3 / 4 < s
 /-- The derivative of `tan x - x` is `1/(cos x)^2 - 1` away from the zeroes of cos. -/
 theorem deriv_tan_sub_id (x : ℝ) (h : cos x ≠ 0) :
     deriv (fun y : ℝ => tan y - y) x = 1 / cos x ^ 2 - 1 :=
-  HasDerivAt.deriv <| by simpa using (has_deriv_at_tan h).add (has_deriv_at_id x).neg
+  HasDerivAt.deriv <| by simpa using (has_deriv_at_tan h).add (hasDerivAt_id x).neg
 #align real.deriv_tan_sub_id Real.deriv_tan_sub_id
 
 /-- For all `0 ≤ x < π/2` we have `x < tan x`.
@@ -86,7 +86,7 @@ at zero and has non-negative derivative. -/
 theorem lt_tan (x : ℝ) (h1 : 0 < x) (h2 : x < π / 2) : x < tan x :=
   by
   let U := Ico 0 (π / 2)
-  have intU : interior U = Ioo 0 (π / 2) := interior_Ico
+  have intU : interior U = Ioo 0 (π / 2) := interior_ico
   have half_pi_pos : 0 < π / 2 := div_pos pi_pos two_pos
   have cos_pos : ∀ {y : ℝ}, y ∈ U → 0 < cos y :=
     by
@@ -103,7 +103,7 @@ theorem lt_tan (x : ℝ) (h1 : 0 < x) (h2 : x < π / 2) : x < tan x :=
     intro z hz
     simp only [mem_set_of_eq]
     exact (cos_pos hz).ne'
-  have tan_minus_id_cts : ContinuousOn (fun y : ℝ => tan y - y) U := tan_cts_U.sub continuous_on_id
+  have tan_minus_id_cts : ContinuousOn (fun y : ℝ => tan y - y) U := tan_cts_U.sub continuousOn_id
   have deriv_pos : ∀ y : ℝ, y ∈ interior U → 0 < deriv (fun y' : ℝ => tan y' - y') y :=
     by
     intro y hy
@@ -116,7 +116,7 @@ theorem lt_tan (x : ℝ) (h1 : 0 < x) (h2 : x < π / 2) : x < tan x :=
     rwa [lt_inv, inv_one]
     · exact zero_lt_one
     simpa only [sq, mul_self_pos] using this.ne'
-  have mono := Convex.strict_mono_on_of_deriv_pos (convex_Ico 0 (π / 2)) tan_minus_id_cts deriv_pos
+  have mono := Convex.strictMonoOn_of_deriv_pos (convex_ico 0 (π / 2)) tan_minus_id_cts deriv_pos
   have zero_in_U : (0 : ℝ) ∈ U := by rwa [left_mem_Ico]
   have x_in_U : x ∈ U := ⟨h1.le, h2⟩
   simpa only [tan_zero, sub_zero, sub_pos] using mono zero_in_U x_in_U h1

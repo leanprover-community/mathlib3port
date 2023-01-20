@@ -1067,7 +1067,7 @@ Case conversion may be inaccurate. Consider using '#align add_halves add_halves�
 /- TODO: Unify `add_halves` and `add_halves'` into a single lemma about
 `division_semiring` + `char_zero` -/
 theorem add_halves (a : α) : a / 2 + a / 2 = a := by
-  rw [div_add_div_same, ← two_mul, mul_div_cancel_left a two_ne_zero]
+  rw [div_add_div_same, ← two_mul, mul_div_cancel_left a two_neZero]
 #align add_halves add_halves
 
 /- warning: add_self_div_two -> add_self_div_two is a dubious translation:
@@ -1077,8 +1077,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedSemifield.{u1} α] (a : α), Eq.{succ u1} α (HDiv.hDiv.{u1, u1, u1} α α α (instHDiv.{u1} α (LinearOrderedSemifield.toDiv.{u1} α _inst_1)) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α (LinearOrderedCommSemiring.toLinearOrderedSemiring.{u1} α (LinearOrderedSemifield.toLinearOrderedCommSemiring.{u1} α _inst_1))))))))) a a) (OfNat.ofNat.{u1} α 2 (instOfNat.{u1} α 2 (Semiring.toNatCast.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α (LinearOrderedCommSemiring.toLinearOrderedSemiring.{u1} α (LinearOrderedSemifield.toLinearOrderedCommSemiring.{u1} α _inst_1))))) (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))))) a
 Case conversion may be inaccurate. Consider using '#align add_self_div_two add_self_div_twoₓ'. -/
 -- TODO: Generalize to `division_semiring`
-theorem add_self_div_two (a : α) : (a + a) / 2 = a := by
-  rw [← mul_two, mul_div_cancel a two_ne_zero]
+theorem add_self_div_two (a : α) : (a + a) / 2 = a := by rw [← mul_two, mul_div_cancel a two_neZero]
 #align add_self_div_two add_self_div_two
 
 /- warning: half_pos -> half_pos is a dubious translation:
@@ -1985,7 +1984,7 @@ theorem sub_one_div_inv_le_two (a2 : 2 ≤ a) : (1 - 1 / a)⁻¹ ≤ 2 :=
   -- move `1 / a` to the left and `1 - 1 / 2 = 1 / 2` to the right to obtain `1 / a ≤ ⅟ 2`
   refine' (le_sub_iff_add_le.2 (_ : _ + 2⁻¹ = _).le).trans ((sub_le_sub_iff_left 1).2 _)
   ·-- show 2⁻¹ + 2⁻¹ = 1
-    exact (two_mul _).symm.trans (mul_inv_cancel two_ne_zero)
+    exact (two_mul _).symm.trans (mul_inv_cancel two_neZero)
   ·-- take inverses on both sides and use the assumption `2 ≤ a`.
     exact (one_div a).le.trans (inv_le_inv_of_le zero_lt_two a2)
 #align sub_one_div_inv_le_two sub_one_div_inv_le_two

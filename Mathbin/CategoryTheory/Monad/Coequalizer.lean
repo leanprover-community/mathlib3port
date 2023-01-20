@@ -123,9 +123,9 @@ def beckCofork : Cofork (T.map X.a) (T.μ.app _) :=
 #align category_theory.monad.beck_cofork CategoryTheory.Monad.beckCofork
 
 @[simp]
-theorem beck_cofork_π : (beckCofork X).π = X.a :=
+theorem beckCofork_π : (beckCofork X).π = X.a :=
   rfl
-#align category_theory.monad.beck_cofork_π CategoryTheory.Monad.beck_cofork_π
+#align category_theory.monad.beck_cofork_π CategoryTheory.Monad.beckCofork_π
 
 /-- The Beck cofork is a coequalizer. -/
 def beckCoequalizer : IsColimit (beckCofork X) :=
@@ -133,10 +133,10 @@ def beckCoequalizer : IsColimit (beckCofork X) :=
 #align category_theory.monad.beck_coequalizer CategoryTheory.Monad.beckCoequalizer
 
 @[simp]
-theorem beck_coequalizer_desc (s : Cofork (T.toFunctor.map X.a) (T.μ.app X.A)) :
+theorem beckCoequalizer_desc (s : Cofork (T.toFunctor.map X.a) (T.μ.app X.A)) :
     (beckCoequalizer X).desc s = T.η.app _ ≫ s.π :=
   rfl
-#align category_theory.monad.beck_coequalizer_desc CategoryTheory.Monad.beck_coequalizer_desc
+#align category_theory.monad.beck_coequalizer_desc CategoryTheory.Monad.beckCoequalizer_desc
 
 end Monad
 

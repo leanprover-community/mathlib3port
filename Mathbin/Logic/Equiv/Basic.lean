@@ -469,7 +469,7 @@ Case conversion may be inaccurate. Consider using '#align equiv.perm.sum_congr_a
 @[simp]
 theorem sumCongr_apply {α β : Type _} (ea : Equiv.Perm α) (eb : Equiv.Perm β) (x : Sum α β) :
     sumCongr ea eb x = Sum.map (⇑ea) (⇑eb) x :=
-  Equiv.sum_congr_apply ea eb x
+  Equiv.sumCongr_apply ea eb x
 #align equiv.perm.sum_congr_apply Equiv.Perm.sumCongr_apply
 
 /- warning: equiv.perm.sum_congr_trans -> Equiv.Perm.sumCongr_trans is a dubious translation:
@@ -1852,7 +1852,7 @@ def piEquivSubtypeSigma (ι : Type _) (π : ι → Type _) :
     funext fun i => rfl, fun ⟨f, hf⟩ =>
     Subtype.eq <|
       funext fun i =>
-        Sigma.eq (hf i).symm <| eq_of_heq <| rec_heq_of_heq _ <| rec_heq_of_heq _ <| HEq.refl _⟩
+        Sigma.eq (hf i).symm <| eq_of_hEq <| ndrec_hEq_of_hEq _ <| ndrec_hEq_of_hEq _ <| HEq.refl _⟩
 #align equiv.pi_equiv_subtype_sigma Equiv.piEquivSubtypeSigma
 -/
 
@@ -2062,7 +2062,7 @@ noncomputable def ofBijective (f : α → β) (hf : Bijective f) : α ≃ β
   toFun := f
   invFun := Function.surjInv hf.Surjective
   left_inv := Function.leftInverse_surjInv hf
-  right_inv := Function.right_inverse_surj_inv _
+  right_inv := Function.rightInverse_surjInv _
 #align equiv.of_bijective Equiv.ofBijective
 -/
 
@@ -2167,7 +2167,7 @@ def subtypeQuotientEquivQuotientSubtype (p₁ : α → Prop) [s₁ : Setoid α] 
     Quotient.hrecOn a.1 (fun a h => ⟦⟨a, (hp₂ _).2 h⟩⟧)
       (fun a b hab =>
         hfunext (by rw [Quotient.sound hab]) fun h₁ h₂ _ =>
-          heq_of_eq (Quotient.sound ((h _ _).2 hab)))
+          hEq_of_eq (Quotient.sound ((h _ _).2 hab)))
       a.2
   invFun a :=
     Quotient.liftOn a (fun a => (⟨⟦a.1⟧, (hp₂ _).1 a.2⟩ : { x // p₂ x })) fun a b hab =>
@@ -2418,8 +2418,15 @@ theorem sumCongr_swap_refl {α β : Sort _} [DecidableEq α] [DecidableEq β] (i
   · simp [Sum.map, swap_apply_of_ne_of_ne]
 #align equiv.perm.sum_congr_swap_refl Equiv.Perm.sumCongr_swap_refl
 
+/- warning: equiv.perm.sum_congr_refl_swap clashes with equiv.perm.sumCongr_refl_swap -> Equiv.Perm.sumCongr_refl_swap
+warning: equiv.perm.sum_congr_refl_swap -> Equiv.Perm.sumCongr_refl_swap is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_2 : DecidableEq.{succ u1} α] [_inst_3 : DecidableEq.{succ u2} β] (i : β) (j : β), Eq.{max 1 (succ u1) (succ u2)} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β)) (Equiv.Perm.sumCongr.{u1, u2} α β (Equiv.refl.{succ u1} α) (Equiv.swap.{succ u2} β (fun (a : β) (b : β) => _inst_3 a b) i j)) (Equiv.swap.{max (succ u1) (succ u2)} (Sum.{u1, u2} α β) (fun (a : Sum.{u1, u2} α β) (b : Sum.{u1, u2} α β) => Sum.decidableEq.{u1, u2} α (fun (a : α) (b : α) => _inst_2 a b) β (fun (a : β) (b : β) => _inst_3 a b) a b) (Sum.inr.{u1, u2} α β i) (Sum.inr.{u1, u2} α β j))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_2 : DecidableEq.{succ u2} α] [_inst_3 : DecidableEq.{succ u1} β] (i : β) (j : β), Eq.{max (succ u1) (succ u2)} (Equiv.Perm.{max (succ u1) (succ u2)} (Sum.{u2, u1} α β)) (Equiv.Perm.sumCongr.{u2, u1} α β (Equiv.refl.{succ u2} α) (Equiv.swap.{succ u1} β (fun (a : β) (b : β) => _inst_3 a b) i j)) (Equiv.swap.{max (succ u1) (succ u2)} (Sum.{u2, u1} α β) (fun (a : Sum.{u2, u1} α β) (b : Sum.{u2, u1} α β) => Sum.instDecidableEqSum.{u2, u1} α β (fun (a : α) (b : α) => _inst_2 a b) (fun (a : β) (b : β) => _inst_3 a b) a b) (Sum.inr.{u2, u1} α β i) (Sum.inr.{u2, u1} α β j))
+Case conversion may be inaccurate. Consider using '#align equiv.perm.sum_congr_refl_swap Equiv.Perm.sumCongr_refl_swapₓ'. -/
 @[simp]
-theorem sum_congr_refl_swap {α β : Sort _} [DecidableEq α] [DecidableEq β] (i j : β) :
+theorem sumCongr_refl_swap {α β : Sort _} [DecidableEq α] [DecidableEq β] (i j : β) :
     Equiv.Perm.sumCongr (Equiv.refl α) (Equiv.swap i j) = Equiv.swap (Sum.inr i) (Sum.inr j) :=
   by
   ext x
@@ -2427,7 +2434,7 @@ theorem sum_congr_refl_swap {α β : Sort _} [DecidableEq α] [DecidableEq β] (
   · simp [Sum.map, swap_apply_of_ne_of_ne]
   · simp [Sum.map, swap_apply_def]
     split_ifs <;> rfl
-#align equiv.perm.sum_congr_refl_swap Equiv.Perm.sum_congr_refl_swap
+#align equiv.perm.sum_congr_refl_swap Equiv.Perm.sumCongr_refl_swap
 
 end Perm
 
@@ -2528,12 +2535,12 @@ def piCongrLeft' : (∀ a, P a) ≃ ∀ b, P (e.symm b)
   invFun f x := by rw [← e.symm_apply_apply x]; exact f (e x)
   left_inv f :=
     funext fun x =>
-      eq_of_heq
-        ((eq_rec_heq _ _).trans
+      eq_of_hEq
+        ((eq_rec_hEq _ _).trans
           (by
             dsimp
             rw [e.symm_apply_apply]))
-  right_inv f := funext fun x => eq_of_heq ((eq_rec_heq _ _).trans (by rw [e.apply_symm_apply]))
+  right_inv f := funext fun x => eq_of_hEq ((eq_rec_hEq _ _).trans (by rw [e.apply_symm_apply]))
 #align equiv.Pi_congr_left' Equiv.piCongrLeft'
 -/
 

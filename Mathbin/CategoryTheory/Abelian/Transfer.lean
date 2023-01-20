@@ -59,7 +59,7 @@ variable (i : F ⋙ G ≅ 𝟭 C) (adj : G ⊣ F)
 include i
 
 /-- No point making this an instance, as it requires `i`. -/
-theorem has_kernels [PreservesFiniteLimits G] : HasKernels C :=
+theorem hasKernels [PreservesFiniteLimits G] : HasKernels C :=
   {
     HasLimit := fun X Y f => by
       have := nat_iso.naturality_1 i f
@@ -67,12 +67,12 @@ theorem has_kernels [PreservesFiniteLimits G] : HasKernels C :=
       rw [← this]
       haveI : has_kernel (G.map (F.map f) ≫ i.hom.app _) := limits.has_kernel_comp_mono _ _
       apply limits.has_kernel_iso_comp }
-#align category_theory.abelian_of_adjunction.has_kernels CategoryTheory.AbelianOfAdjunction.has_kernels
+#align category_theory.abelian_of_adjunction.has_kernels CategoryTheory.AbelianOfAdjunction.hasKernels
 
 include adj
 
 /-- No point making this an instance, as it requires `i` and `adj`. -/
-theorem has_cokernels : HasCokernels C :=
+theorem hasCokernels : HasCokernels C :=
   {
     HasColimit := fun X Y f =>
       by
@@ -82,7 +82,7 @@ theorem has_cokernels : HasCokernels C :=
       rw [← this]
       haveI : has_cokernel (G.map (F.map f) ≫ i.hom.app _) := limits.has_cokernel_comp_iso _ _
       apply limits.has_cokernel_epi_comp }
-#align category_theory.abelian_of_adjunction.has_cokernels CategoryTheory.AbelianOfAdjunction.has_cokernels
+#align category_theory.abelian_of_adjunction.has_cokernels CategoryTheory.AbelianOfAdjunction.hasCokernels
 
 variable [Limits.HasCokernels C]
 
@@ -156,7 +156,7 @@ def coimageIsoImage {X Y : C} (f : X ⟶ Y) : Abelian.coimage f ≅ Abelian.imag
 attribute [local simp] cokernel_iso coimage_iso_image coimage_iso_image_aux
 
 -- The account of this proof in the Stacks project omits this calculation.
-theorem coimage_iso_image_hom {X Y : C} (f : X ⟶ Y) :
+theorem coimageIsoImage_hom {X Y : C} (f : X ⟶ Y) :
     (coimageIsoImage F G i adj f).Hom = Abelian.coimageImageComparison f :=
   by
   ext
@@ -169,7 +169,7 @@ theorem coimage_iso_image_hom {X Y : C} (f : X ⟶ Y) :
     kernel.lift_ι, kernel.lift_ι_assoc, kernel_iso_of_eq_hom_comp_ι_assoc,
     kernel_comparison_comp_ι_assoc, abelian.coimage_image_factorisation] using
     nat_iso.naturality_1 i f
-#align category_theory.abelian_of_adjunction.coimage_iso_image_hom CategoryTheory.AbelianOfAdjunction.coimage_iso_image_hom
+#align category_theory.abelian_of_adjunction.coimage_iso_image_hom CategoryTheory.AbelianOfAdjunction.coimageIsoImage_hom
 
 end AbelianOfAdjunction
 

@@ -141,38 +141,38 @@ def uncurry : (Y ⟶ A ⟹ X) → (A ⨯ Y ⟶ X) :=
 #align category_theory.cartesian_closed.uncurry CategoryTheory.CartesianClosed.uncurry
 
 @[simp]
-theorem hom_equiv_apply_eq (f : A ⨯ Y ⟶ X) : (exp.adjunction A).homEquiv _ _ f = curry f :=
+theorem homEquiv_apply_eq (f : A ⨯ Y ⟶ X) : (exp.adjunction A).homEquiv _ _ f = curry f :=
   rfl
-#align category_theory.cartesian_closed.hom_equiv_apply_eq CategoryTheory.CartesianClosed.hom_equiv_apply_eq
+#align category_theory.cartesian_closed.hom_equiv_apply_eq CategoryTheory.CartesianClosed.homEquiv_apply_eq
 
 @[simp]
-theorem hom_equiv_symm_apply_eq (f : Y ⟶ A ⟹ X) :
+theorem homEquiv_symm_apply_eq (f : Y ⟶ A ⟹ X) :
     ((exp.adjunction A).homEquiv _ _).symm f = uncurry f :=
   rfl
-#align category_theory.cartesian_closed.hom_equiv_symm_apply_eq CategoryTheory.CartesianClosed.hom_equiv_symm_apply_eq
+#align category_theory.cartesian_closed.hom_equiv_symm_apply_eq CategoryTheory.CartesianClosed.homEquiv_symm_apply_eq
 
 @[reassoc.1]
 theorem curry_natural_left (f : X ⟶ X') (g : A ⨯ X' ⟶ Y) :
     curry (Limits.prod.map (𝟙 _) f ≫ g) = f ≫ curry g :=
-  Adjunction.hom_equiv_naturality_left _ _ _
+  Adjunction.homEquiv_naturality_left _ _ _
 #align category_theory.cartesian_closed.curry_natural_left CategoryTheory.CartesianClosed.curry_natural_left
 
 @[reassoc.1]
 theorem curry_natural_right (f : A ⨯ X ⟶ Y) (g : Y ⟶ Y') :
     curry (f ≫ g) = curry f ≫ (exp _).map g :=
-  Adjunction.hom_equiv_naturality_right _ _ _
+  Adjunction.homEquiv_naturality_right _ _ _
 #align category_theory.cartesian_closed.curry_natural_right CategoryTheory.CartesianClosed.curry_natural_right
 
 @[reassoc.1]
 theorem uncurry_natural_right (f : X ⟶ A ⟹ Y) (g : Y ⟶ Y') :
     uncurry (f ≫ (exp _).map g) = uncurry f ≫ g :=
-  Adjunction.hom_equiv_naturality_right_symm _ _ _
+  Adjunction.homEquiv_naturality_right_symm _ _ _
 #align category_theory.cartesian_closed.uncurry_natural_right CategoryTheory.CartesianClosed.uncurry_natural_right
 
 @[reassoc.1]
 theorem uncurry_natural_left (f : X ⟶ X') (g : X' ⟶ A ⟹ Y) :
     uncurry (f ≫ g) = Limits.prod.map (𝟙 _) f ≫ uncurry g :=
-  Adjunction.hom_equiv_naturality_left_symm _ _ _
+  Adjunction.homEquiv_naturality_left_symm _ _ _
 #align category_theory.cartesian_closed.uncurry_natural_left CategoryTheory.CartesianClosed.uncurry_natural_left
 
 @[simp]
@@ -186,20 +186,20 @@ theorem curry_uncurry (f : X ⟶ A ⟹ Y) : curry (uncurry f) = f :=
 #align category_theory.cartesian_closed.curry_uncurry CategoryTheory.CartesianClosed.curry_uncurry
 
 theorem curry_eq_iff (f : A ⨯ Y ⟶ X) (g : Y ⟶ A ⟹ X) : curry f = g ↔ f = uncurry g :=
-  Adjunction.hom_equiv_apply_eq _ f g
+  Adjunction.homEquiv_apply_eq _ f g
 #align category_theory.cartesian_closed.curry_eq_iff CategoryTheory.CartesianClosed.curry_eq_iff
 
 theorem eq_curry_iff (f : A ⨯ Y ⟶ X) (g : Y ⟶ A ⟹ X) : g = curry f ↔ uncurry g = f :=
-  Adjunction.eq_hom_equiv_apply _ f g
+  Adjunction.eq_homEquiv_apply _ f g
 #align category_theory.cartesian_closed.eq_curry_iff CategoryTheory.CartesianClosed.eq_curry_iff
 
 -- I don't think these two should be simp.
 theorem uncurry_eq (g : Y ⟶ A ⟹ X) : uncurry g = Limits.prod.map (𝟙 A) g ≫ (exp.ev A).app X :=
-  Adjunction.hom_equiv_counit _
+  Adjunction.homEquiv_counit _
 #align category_theory.cartesian_closed.uncurry_eq CategoryTheory.CartesianClosed.uncurry_eq
 
 theorem curry_eq (g : A ⨯ Y ⟶ X) : curry g = (exp.coev A).app Y ≫ (exp A).map g :=
-  Adjunction.hom_equiv_unit _
+  Adjunction.homEquiv_unit _
 #align category_theory.cartesian_closed.curry_eq CategoryTheory.CartesianClosed.curry_eq
 
 theorem uncurry_id_eq_ev (A X : C) [Exponentiable A] : uncurry (𝟙 (A ⟹ X)) = (exp.ev A).app X := by
@@ -252,7 +252,7 @@ def pre (f : B ⟶ A) [Exponentiable B] : exp A ⟶ exp B :=
 theorem prod_map_pre_app_comp_ev (f : B ⟶ A) [Exponentiable B] (X : C) :
     Limits.prod.map (𝟙 B) ((pre f).app X) ≫ (exp.ev B).app X =
       Limits.prod.map f (𝟙 (A ⟹ X)) ≫ (exp.ev A).app X :=
-  transfer_nat_trans_self_counit _ _ (prod.functor.map f) X
+  transferNatTransSelf_counit _ _ (prod.functor.map f) X
 #align category_theory.prod_map_pre_app_comp_ev CategoryTheory.prod_map_pre_app_comp_ev
 
 theorem uncurry_pre (f : B ⟶ A) [Exponentiable B] (X : C) :
@@ -263,7 +263,7 @@ theorem uncurry_pre (f : B ⟶ A) [Exponentiable B] (X : C) :
 theorem coev_app_comp_pre_app (f : B ⟶ A) [Exponentiable B] :
     (exp.coev A).app X ≫ (pre f).app (A ⨯ X) =
       (exp.coev B).app X ≫ (exp B).map (Limits.prod.map f (𝟙 _)) :=
-  unit_transfer_nat_trans_self _ _ (prod.functor.map f) X
+  unit_transferNatTransSelf _ _ (prod.functor.map f) X
 #align category_theory.coev_app_comp_pre_app CategoryTheory.coev_app_comp_pre_app
 
 @[simp]
@@ -355,9 +355,9 @@ theorem strict_initial {I : C} (t : IsInitial I) (f : A ⟶ I) : IsIso f :=
   apply is_iso_of_mono_of_is_split_epi
 #align category_theory.strict_initial CategoryTheory.strict_initial
 
-instance to_initial_is_iso [HasInitial C] (f : A ⟶ ⊥_ C) : IsIso f :=
+instance to_initial_isIso [HasInitial C] (f : A ⟶ ⊥_ C) : IsIso f :=
   strict_initial initialIsInitial _
-#align category_theory.to_initial_is_iso CategoryTheory.to_initial_is_iso
+#align category_theory.to_initial_is_iso CategoryTheory.to_initial_isIso
 
 /-- If an initial object `0` exists in a CCC then every morphism from it is monic. -/
 theorem initial_mono {I : C} (B : C) (t : IsInitial I) [CartesianClosed C] : Mono (t.to B) :=

@@ -133,10 +133,10 @@ noncomputable def limitSubobjectProduct [HasLimitsOfSize.{w, w} C] (F : J ⥤ C)
   (limit.isoLimitCone (limitConeOfEqualizerAndProduct F)).hom ≫ equalizer.ι _ _
 #align category_theory.limits.limit_subobject_product CategoryTheory.Limits.limitSubobjectProduct
 
-instance limit_subobject_product_mono [HasLimitsOfSize.{w, w} C] (F : J ⥤ C) :
+instance limitSubobjectProduct_mono [HasLimitsOfSize.{w, w} C] (F : J ⥤ C) :
     Mono (limitSubobjectProduct F) :=
   mono_comp _ _
-#align category_theory.limits.limit_subobject_product_mono CategoryTheory.Limits.limit_subobject_product_mono
+#align category_theory.limits.limit_subobject_product_mono CategoryTheory.Limits.limitSubobjectProduct_mono
 
 /-- Any category with products and equalizers has all limits.
 
@@ -225,10 +225,10 @@ def preservesLimitsOfPreservesEqualizersAndProducts [HasEqualizers C] [HasProduc
 theorem hasFiniteLimitsOfHasTerminalAndPullbacks [HasTerminal C] [HasPullbacks C] :
     HasFiniteLimits C :=
   @hasFiniteLimitsOfHasEqualizersAndFiniteProducts _
-    (@hasFiniteProductsOfHasBinaryAndTerminal _
-      (has_binary_products_of_has_terminal_and_pullbacks C) inferInstance)
-    (@has_equalizers_of_has_pullbacks_and_binary_products _
-      (has_binary_products_of_has_terminal_and_pullbacks C) inferInstance)
+    (@hasFiniteProductsOfHasBinaryAndTerminal _ (hasBinaryProducts_of_hasTerminal_and_pullbacks C)
+      inferInstance)
+    (@hasEqualizers_of_hasPullbacks_and_binary_products _
+      (hasBinaryProducts_of_hasTerminal_and_pullbacks C) inferInstance)
 #align category_theory.limits.has_finite_limits_of_has_terminal_and_pullbacks CategoryTheory.Limits.hasFiniteLimitsOfHasTerminalAndPullbacks
 
 /-- If G preserves terminal objects and pullbacks, it preserves all finite limits. -/
@@ -335,10 +335,10 @@ noncomputable def colimitQuotientCoproduct [HasColimitsOfSize.{w, w} C] (F : J �
   coequalizer.π _ _ ≫ (colimit.isoColimitCocone (colimitCoconeOfCoequalizerAndCoproduct F)).inv
 #align category_theory.limits.colimit_quotient_coproduct CategoryTheory.Limits.colimitQuotientCoproduct
 
-instance colimit_quotient_coproduct_epi [HasColimitsOfSize.{w, w} C] (F : J ⥤ C) :
+instance colimitQuotientCoproduct_epi [HasColimitsOfSize.{w, w} C] (F : J ⥤ C) :
     Epi (colimitQuotientCoproduct F) :=
   epi_comp _ _
-#align category_theory.limits.colimit_quotient_coproduct_epi CategoryTheory.Limits.colimit_quotient_coproduct_epi
+#align category_theory.limits.colimit_quotient_coproduct_epi CategoryTheory.Limits.colimitQuotientCoproduct_epi
 
 /-- Any category with coproducts and coequalizers has all colimits.
 
@@ -428,10 +428,10 @@ def preservesColimitsOfPreservesCoequalizersAndCoproducts [HasCoequalizers C] [H
 theorem hasFiniteColimitsOfHasInitialAndPushouts [HasInitial C] [HasPushouts C] :
     HasFiniteColimits C :=
   @hasFiniteColimitsOfHasCoequalizersAndFiniteCoproducts _
-    (@hasFiniteCoproductsOfHasBinaryAndInitial _
-      (has_binary_coproducts_of_has_initial_and_pushouts C) inferInstance)
-    (@has_coequalizers_of_has_pushouts_and_binary_coproducts _
-      (has_binary_coproducts_of_has_initial_and_pushouts C) inferInstance)
+    (@hasFiniteCoproductsOfHasBinaryAndInitial _ (hasBinaryCoproducts_of_hasInitial_and_pushouts C)
+      inferInstance)
+    (@hasCoequalizers_of_hasPushouts_and_binary_coproducts _
+      (hasBinaryCoproducts_of_hasInitial_and_pushouts C) inferInstance)
 #align category_theory.limits.has_finite_colimits_of_has_initial_and_pushouts CategoryTheory.Limits.hasFiniteColimitsOfHasInitialAndPushouts
 
 /-- If G preserves initial objects and pushouts, it preserves all finite colimits. -/

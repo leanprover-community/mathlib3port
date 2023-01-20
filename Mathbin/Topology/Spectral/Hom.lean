@@ -42,18 +42,18 @@ structure IsSpectralMap (f : α → β) extends Continuous f : Prop where
   is_compact_preimage_of_is_open ⦃s : Set β⦄ : IsOpen s → IsCompact s → IsCompact (f ⁻¹' s)
 #align is_spectral_map IsSpectralMap
 
-theorem IsCompact.preimage_of_is_open (hf : IsSpectralMap f) (h₀ : IsCompact s) (h₁ : IsOpen s) :
+theorem IsCompact.preimage_of_isOpen (hf : IsSpectralMap f) (h₀ : IsCompact s) (h₁ : IsOpen s) :
     IsCompact (f ⁻¹' s) :=
   hf.is_compact_preimage_of_is_open h₁ h₀
-#align is_compact.preimage_of_is_open IsCompact.preimage_of_is_open
+#align is_compact.preimage_of_is_open IsCompact.preimage_of_isOpen
 
 theorem IsSpectralMap.continuous {f : α → β} (hf : IsSpectralMap f) : Continuous f :=
   hf.to_continuous
 #align is_spectral_map.continuous IsSpectralMap.continuous
 
-theorem is_spectral_map_id : IsSpectralMap (@id α) :=
+theorem isSpectralMap_id : IsSpectralMap (@id α) :=
   ⟨continuous_id, fun s _ => id⟩
-#align is_spectral_map_id is_spectral_map_id
+#align is_spectral_map_id isSpectralMap_id
 
 theorem IsSpectralMap.comp {f : β → γ} {g : α → β} (hf : IsSpectralMap f) (hg : IsSpectralMap g) :
     IsSpectralMap (f ∘ g) :=
@@ -122,9 +122,9 @@ instance : CoeFun (SpectralMap α β) fun _ => α → β :=
   FunLike.hasCoeToFun
 
 @[simp]
-theorem to_fun_eq_coe {f : SpectralMap α β} : f.toFun = (f : α → β) :=
+theorem toFun_eq_coe {f : SpectralMap α β} : f.toFun = (f : α → β) :=
   rfl
-#align spectral_map.to_fun_eq_coe SpectralMap.to_fun_eq_coe
+#align spectral_map.to_fun_eq_coe SpectralMap.toFun_eq_coe
 
 @[ext]
 theorem ext {f g : SpectralMap α β} (h : ∀ a, f a = g a) : f = g :=
@@ -150,7 +150,7 @@ variable (α)
 
 /-- `id` as a `spectral_map`. -/
 protected def id : SpectralMap α α :=
-  ⟨id, is_spectral_map_id⟩
+  ⟨id, isSpectralMap_id⟩
 #align spectral_map.id SpectralMap.id
 
 instance : Inhabited (SpectralMap α α) :=
@@ -184,10 +184,10 @@ theorem comp_apply (f : SpectralMap β γ) (g : SpectralMap α β) (a : α) : (f
 #align spectral_map.comp_apply SpectralMap.comp_apply
 
 @[simp]
-theorem coe_comp_continuous_map (f : SpectralMap β γ) (g : SpectralMap α β) :
+theorem coe_comp_continuousMap (f : SpectralMap β γ) (g : SpectralMap α β) :
     (f.comp g : ContinuousMap α γ) = (f : ContinuousMap β γ).comp g :=
   rfl
-#align spectral_map.coe_comp_continuous_map SpectralMap.coe_comp_continuous_map
+#align spectral_map.coe_comp_continuous_map SpectralMap.coe_comp_continuousMap
 
 @[simp]
 theorem comp_assoc (f : SpectralMap γ δ) (g : SpectralMap β γ) (h : SpectralMap α β) :

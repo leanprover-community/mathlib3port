@@ -310,7 +310,7 @@ theorem mul_map_seq (x y : FreeMagma α) :
 @[to_additive]
 instance : IsLawfulTraversable FreeMagma.{u} :=
   {
-    FreeMagma.is_lawful_monad with
+    FreeMagma.lawfulMonad with
     id_traverse := fun α x =>
       FreeMagma.recOnPure x (fun x => rfl) fun x y ih1 ih2 => by
         rw [traverse_mul, ih1, ih2, mul_map_seq]
@@ -802,7 +802,7 @@ theorem mul_map_seq (x y : FreeSemigroup α) :
 @[to_additive]
 instance : IsLawfulTraversable FreeSemigroup.{u} :=
   {
-    FreeSemigroup.is_lawful_monad with
+    FreeSemigroup.lawfulMonad with
     id_traverse := fun α x =>
       FreeSemigroup.recOnMul x (fun x => rfl) fun x y ih1 ih2 => by
         rw [traverse_mul, ih1, ih2, mul_map_seq]
@@ -838,38 +838,38 @@ def toFreeSemigroup : FreeMagma α →ₙ* FreeSemigroup α :=
 #align free_add_magma.to_free_add_semigroup FreeAddMagma.toFreeAddSemigroup
 
 @[simp, to_additive]
-theorem to_free_semigroup_of (x : α) : toFreeSemigroup (of x) = FreeSemigroup.of x :=
+theorem toFreeSemigroup_of (x : α) : toFreeSemigroup (of x) = FreeSemigroup.of x :=
   rfl
-#align free_magma.to_free_semigroup_of FreeMagma.to_free_semigroup_of
+#align free_magma.to_free_semigroup_of FreeMagma.toFreeSemigroup_of
 #align free_add_magma.to_free_add_semigroup_of FreeAddMagma.to_free_add_semigroup_of
 
 @[simp, to_additive]
-theorem to_free_semigroup_comp_of : @toFreeSemigroup α ∘ of = FreeSemigroup.of :=
+theorem toFreeSemigroup_comp_of : @toFreeSemigroup α ∘ of = FreeSemigroup.of :=
   rfl
-#align free_magma.to_free_semigroup_comp_of FreeMagma.to_free_semigroup_comp_of
+#align free_magma.to_free_semigroup_comp_of FreeMagma.toFreeSemigroup_comp_of
 #align free_add_magma.to_free_add_semigroup_comp_of FreeAddMagma.to_free_add_semigroup_comp_of
 
 @[to_additive]
-theorem to_free_semigroup_comp_map (f : α → β) :
+theorem toFreeSemigroup_comp_map (f : α → β) :
     toFreeSemigroup.comp (map f) = (FreeSemigroup.map f).comp toFreeSemigroup :=
   by
   ext1
   rfl
-#align free_magma.to_free_semigroup_comp_map FreeMagma.to_free_semigroup_comp_map
+#align free_magma.to_free_semigroup_comp_map FreeMagma.toFreeSemigroup_comp_map
 #align free_add_magma.to_free_add_semigroup_comp_map FreeAddMagma.to_free_add_semigroup_comp_map
 
 @[to_additive]
-theorem to_free_semigroup_map (f : α → β) (x : FreeMagma α) :
+theorem toFreeSemigroup_map (f : α → β) (x : FreeMagma α) :
     (map f x).toFreeSemigroup = FreeSemigroup.map f x.toFreeSemigroup :=
-  FunLike.congr_fun (to_free_semigroup_comp_map f) x
-#align free_magma.to_free_semigroup_map FreeMagma.to_free_semigroup_map
+  FunLike.congr_fun (toFreeSemigroup_comp_map f) x
+#align free_magma.to_free_semigroup_map FreeMagma.toFreeSemigroup_map
 #align free_add_magma.to_free_add_semigroup_map FreeAddMagma.to_free_add_semigroup_map
 
 @[simp, to_additive]
-theorem length_to_free_semigroup (x : FreeMagma α) : x.toFreeSemigroup.length = x.length :=
+theorem length_toFreeSemigroup (x : FreeMagma α) : x.toFreeSemigroup.length = x.length :=
   FreeMagma.recOnMul x (fun x => rfl) fun x y hx hy => by
     rw [map_mul, FreeSemigroup.length_mul, length, hx, hy]
-#align free_magma.length_to_free_semigroup FreeMagma.length_to_free_semigroup
+#align free_magma.length_to_free_semigroup FreeMagma.length_toFreeSemigroup
 #align free_add_magma.length_to_free_add_semigroup FreeAddMagma.length_to_free_add_semigroup
 
 end FreeMagma

@@ -35,23 +35,23 @@ namespace CategoryTheory
 
 section Examples
 
-instance wide_pullback_shape_connected (J : Type v₁) : IsConnected (WidePullbackShape J) :=
+instance widePullbackShape_connected (J : Type v₁) : IsConnected (WidePullbackShape J) :=
   by
   apply is_connected.of_induct
   introv hp t
   cases j
   · exact hp
   · rwa [t (wide_pullback_shape.hom.term j)]
-#align category_theory.wide_pullback_shape_connected CategoryTheory.wide_pullback_shape_connected
+#align category_theory.wide_pullback_shape_connected CategoryTheory.widePullbackShape_connected
 
-instance wide_pushout_shape_connected (J : Type v₁) : IsConnected (WidePushoutShape J) :=
+instance widePushoutShape_connected (J : Type v₁) : IsConnected (WidePushoutShape J) :=
   by
   apply is_connected.of_induct
   introv hp t
   cases j
   · exact hp
   · rwa [← t (wide_pushout_shape.hom.init j)]
-#align category_theory.wide_pushout_shape_connected CategoryTheory.wide_pushout_shape_connected
+#align category_theory.wide_pushout_shape_connected CategoryTheory.widePushoutShape_connected
 
 instance parallelPairInhabited : Inhabited WalkingParallelPair :=
   ⟨WalkingParallelPair.one⟩

@@ -355,6 +355,7 @@ theorem prod_set :
   | x :: xs, i + 1, a => by simp [update_nth, prod_update_nth xs i a, mul_assoc]
   | [], _, _ => by simp [update_nth, (Nat.zero_le _).not_lt, Nat.zero_le]
 #align list.prod_update_nth List.prod_set
+#align list.sum_update_nth List.sum_set
 
 open MulOpposite
 
@@ -373,6 +374,7 @@ Instead, we write the statement in terms of `(L.nth 0).get_or_else 1`.
 theorem get?_zero_mul_tail_prod (l : List M) : (l.nth 0).getOrElse 1 * l.tail.Prod = l.Prod := by
   cases l <;> simp
 #align list.nth_zero_mul_tail_prod List.get?_zero_mul_tail_prod
+#align list.nth_zero_add_tail_sum List.get?_zero_add_tail_sum
 
 /- warning: list.head_mul_tail_prod_of_ne_nil -> List.headI_mul_tail_prod_of_ne_nil is a dubious translation:
 lean 3 declaration is
@@ -387,6 +389,7 @@ the list to be nonempty. -/
 theorem headI_mul_tail_prod_of_ne_nil [Inhabited M] (l : List M) (h : l ≠ []) :
     l.head * l.tail.Prod = l.Prod := by cases l <;> [contradiction, simp]
 #align list.head_mul_tail_prod_of_ne_nil List.headI_mul_tail_prod_of_ne_nil
+#align list.head_add_tail_sum_of_ne_nil List.headI_add_tail_sum_of_ne_nil
 
 /- warning: commute.list_prod_right -> Commute.list_prod_right is a dubious translation:
 lean 3 declaration is

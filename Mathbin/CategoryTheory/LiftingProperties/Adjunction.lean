@@ -69,11 +69,11 @@ def rightAdjointLiftStructEquiv : sq.LiftStruct ≃ (sq.rightAdjoint adj).LiftSt
 #align category_theory.comm_sq.right_adjoint_lift_struct_equiv CategoryTheory.CommSq.rightAdjointLiftStructEquiv
 
 /-- A square has a lifting if and only if its (right) adjoint square has a lifting. -/
-theorem right_adjoint_has_lift_iff : HasLift (sq.rightAdjoint adj) ↔ HasLift sq :=
+theorem right_adjoint_hasLift_iff : HasLift (sq.rightAdjoint adj) ↔ HasLift sq :=
   by
   simp only [has_lift.iff]
   exact Equiv.nonempty_congr (sq.right_adjoint_lift_struct_equiv adj).symm
-#align category_theory.comm_sq.right_adjoint_has_lift_iff CategoryTheory.CommSq.right_adjoint_has_lift_iff
+#align category_theory.comm_sq.right_adjoint_has_lift_iff CategoryTheory.CommSq.right_adjoint_hasLift_iff
 
 instance [HasLift sq] : HasLift (sq.rightAdjoint adj) :=
   by
@@ -119,11 +119,11 @@ def leftAdjointLiftStructEquiv : sq.LiftStruct ≃ (sq.leftAdjoint adj).LiftStru
 #align category_theory.comm_sq.left_adjoint_lift_struct_equiv CategoryTheory.CommSq.leftAdjointLiftStructEquiv
 
 /-- A (left) adjoint square has a lifting if and only if the original square has a lifting. -/
-theorem left_adjoint_has_lift_iff : HasLift (sq.leftAdjoint adj) ↔ HasLift sq :=
+theorem left_adjoint_hasLift_iff : HasLift (sq.leftAdjoint adj) ↔ HasLift sq :=
   by
   simp only [has_lift.iff]
   exact Equiv.nonempty_congr (sq.left_adjoint_lift_struct_equiv adj).symm
-#align category_theory.comm_sq.left_adjoint_has_lift_iff CategoryTheory.CommSq.left_adjoint_has_lift_iff
+#align category_theory.comm_sq.left_adjoint_has_lift_iff CategoryTheory.CommSq.left_adjoint_hasLift_iff
 
 instance [HasLift sq] : HasLift (sq.leftAdjoint adj) :=
   by
@@ -136,7 +136,7 @@ end CommSq
 
 namespace Adjunction
 
-theorem has_lifting_property_iff (adj : G ⊣ F) {A B : C} {X Y : D} (i : A ⟶ B) (p : X ⟶ Y) :
+theorem hasLiftingProperty_iff (adj : G ⊣ F) {A B : C} {X Y : D} (i : A ⟶ B) (p : X ⟶ Y) :
     HasLiftingProperty (G.map i) p ↔ HasLiftingProperty i (F.map p) :=
   by
   constructor <;> intro <;> constructor <;> intro f g sq
@@ -144,7 +144,7 @@ theorem has_lifting_property_iff (adj : G ⊣ F) {A B : C} {X Y : D} (i : A ⟶ 
     infer_instance
   · rw [← sq.right_adjoint_has_lift_iff adj]
     infer_instance
-#align category_theory.adjunction.has_lifting_property_iff CategoryTheory.Adjunction.has_lifting_property_iff
+#align category_theory.adjunction.has_lifting_property_iff CategoryTheory.Adjunction.hasLiftingProperty_iff
 
 end Adjunction
 

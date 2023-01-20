@@ -133,7 +133,7 @@ Case conversion may be inaccurate. Consider using '#align function.no_zero_smul_
 synthesize this instance by itself elsewhere in the library. -/
 instance Function.noZeroSMulDivisors {ι α β : Type _} {r : Semiring α} {m : AddCommMonoid β}
     [Module α β] [NoZeroSMulDivisors α β] : NoZeroSMulDivisors α (ι → β) :=
-  Pi.no_zero_smul_divisors _
+  Pi.noZeroSMulDivisors _
 #align function.no_zero_smul_divisors Function.noZeroSMulDivisors
 
 end Pi

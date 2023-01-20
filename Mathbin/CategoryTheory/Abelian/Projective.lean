@@ -53,12 +53,12 @@ def preservesFiniteColimitsPreadditiveCoyonedaObjOfProjective (P : C) [hP : Proj
 #align category_theory.preserves_finite_colimits_preadditive_coyoneda_obj_of_projective CategoryTheory.preservesFiniteColimitsPreadditiveCoyonedaObjOfProjective
 
 /-- An object is projective if its preadditive Co-Yoneda functor preserves finite colimits. -/
-theorem projective_of_preserves_finite_colimits_preadditive_coyoneda_obj (P : C)
+theorem projective_of_preservesFiniteColimits_preadditiveCoyonedaObj (P : C)
     [hP : PreservesFiniteColimits (preadditiveCoyonedaObj (op P))] : Projective P :=
   by
   rw [projective_iff_preserves_epimorphisms_preadditive_coyoneda_obj']
   infer_instance
-#align category_theory.projective_of_preserves_finite_colimits_preadditive_coyoneda_obj CategoryTheory.projective_of_preserves_finite_colimits_preadditive_coyoneda_obj
+#align category_theory.projective_of_preserves_finite_colimits_preadditive_coyoneda_obj CategoryTheory.projective_of_preservesFiniteColimits_preadditiveCoyonedaObj
 
 namespace ProjectiveResolutionCat
 

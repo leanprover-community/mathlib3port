@@ -112,22 +112,21 @@ noncomputable def linearEquivFunOnFinite : (α →₀ M) ≃ₗ[R] α → M :=
 #align finsupp.linear_equiv_fun_on_finite Finsupp.linearEquivFunOnFinite
 
 @[simp]
-theorem linear_equiv_fun_on_finite_single [DecidableEq α] (x : α) (m : M) :
+theorem linearEquivFunOnFinite_single [DecidableEq α] (x : α) (m : M) :
     (linearEquivFunOnFinite R M α) (single x m) = Pi.single x m :=
-  equiv_fun_on_finite_single x m
-#align finsupp.linear_equiv_fun_on_finite_single Finsupp.linear_equiv_fun_on_finite_single
+  equivFunOnFinite_single x m
+#align finsupp.linear_equiv_fun_on_finite_single Finsupp.linearEquivFunOnFinite_single
 
 @[simp]
-theorem linear_equiv_fun_on_finite_symm_single [DecidableEq α] (x : α) (m : M) :
+theorem linearEquivFunOnFinite_symm_single [DecidableEq α] (x : α) (m : M) :
     (linearEquivFunOnFinite R M α).symm (Pi.single x m) = single x m :=
-  equiv_fun_on_finite_symm_single x m
-#align finsupp.linear_equiv_fun_on_finite_symm_single Finsupp.linear_equiv_fun_on_finite_symm_single
+  equivFunOnFinite_symm_single x m
+#align finsupp.linear_equiv_fun_on_finite_symm_single Finsupp.linearEquivFunOnFinite_symm_single
 
 @[simp]
-theorem linear_equiv_fun_on_finite_symm_coe (f : α →₀ M) :
-    (linearEquivFunOnFinite R M α).symm f = f :=
+theorem linearEquivFunOnFinite_symm_coe (f : α →₀ M) : (linearEquivFunOnFinite R M α).symm f = f :=
   (linearEquivFunOnFinite R M α).symm_apply_apply f
-#align finsupp.linear_equiv_fun_on_finite_symm_coe Finsupp.linear_equiv_fun_on_finite_symm_coe
+#align finsupp.linear_equiv_fun_on_finite_symm_coe Finsupp.linearEquivFunOnFinite_symm_coe
 
 /-- If `α` has a unique term, then the type of finitely supported functions `α →₀ M` is
 `R`-linearly equivalent to `M`. -/
@@ -142,16 +141,16 @@ noncomputable def LinearEquiv.finsuppUnique (α : Type _) [Unique α] : (α →�
 variable {R M α}
 
 @[simp]
-theorem LinearEquiv.finsupp_unique_apply (α : Type _) [Unique α] (f : α →₀ M) :
+theorem LinearEquiv.finsuppUnique_apply (α : Type _) [Unique α] (f : α →₀ M) :
     LinearEquiv.finsuppUnique R M α f = f default :=
   rfl
-#align finsupp.linear_equiv.finsupp_unique_apply Finsupp.LinearEquiv.finsupp_unique_apply
+#align finsupp.linear_equiv.finsupp_unique_apply Finsupp.LinearEquiv.finsuppUnique_apply
 
 @[simp]
-theorem LinearEquiv.finsupp_unique_symm_apply {α : Type _} [Unique α] (m : M) :
+theorem LinearEquiv.finsuppUnique_symm_apply {α : Type _} [Unique α] (m : M) :
     (LinearEquiv.finsuppUnique R M α).symm m = Finsupp.single default m := by
   ext <;> simp [linear_equiv.finsupp_unique]
-#align finsupp.linear_equiv.finsupp_unique_symm_apply Finsupp.LinearEquiv.finsupp_unique_symm_apply
+#align finsupp.linear_equiv.finsupp_unique_symm_apply Finsupp.LinearEquiv.finsuppUnique_symm_apply
 
 end Finsupp
 
@@ -209,10 +208,10 @@ def domRestrict (f : M →ₛₗ[σ₁₂] M₂) (p : Submodule R M) : p →ₛ�
 #align linear_map.dom_restrict LinearMap.domRestrict
 
 @[simp]
-theorem dom_restrict_apply (f : M →ₛₗ[σ₁₂] M₂) (p : Submodule R M) (x : p) :
+theorem domRestrict_apply (f : M →ₛₗ[σ₁₂] M₂) (p : Submodule R M) (x : p) :
     f.domRestrict p x = f x :=
   rfl
-#align linear_map.dom_restrict_apply LinearMap.dom_restrict_apply
+#align linear_map.dom_restrict_apply LinearMap.domRestrict_apply
 
 /-- A linear map `f : M₂ → M` whose values lie in a submodule `p ⊆ M` can be restricted to a
 linear map M₂ → p. -/
@@ -221,22 +220,22 @@ def codRestrict (p : Submodule R₂ M₂) (f : M →ₛₗ[σ₁₂] M₂) (h : 
 #align linear_map.cod_restrict LinearMap.codRestrict
 
 @[simp]
-theorem cod_restrict_apply (p : Submodule R₂ M₂) (f : M →ₛₗ[σ₁₂] M₂) {h} (x : M) :
+theorem codRestrict_apply (p : Submodule R₂ M₂) (f : M →ₛₗ[σ₁₂] M₂) {h} (x : M) :
     (codRestrict p f h x : M₂) = f x :=
   rfl
-#align linear_map.cod_restrict_apply LinearMap.cod_restrict_apply
+#align linear_map.cod_restrict_apply LinearMap.codRestrict_apply
 
 @[simp]
-theorem comp_cod_restrict (p : Submodule R₃ M₃) (h : ∀ b, g b ∈ p) :
+theorem comp_codRestrict (p : Submodule R₃ M₃) (h : ∀ b, g b ∈ p) :
     ((codRestrict p g h).comp f : M →ₛₗ[σ₁₃] p) = codRestrict p (g.comp f) fun b => h _ :=
   ext fun b => rfl
-#align linear_map.comp_cod_restrict LinearMap.comp_cod_restrict
+#align linear_map.comp_cod_restrict LinearMap.comp_codRestrict
 
 @[simp]
-theorem subtype_comp_cod_restrict (p : Submodule R₂ M₂) (h : ∀ b, f b ∈ p) :
+theorem subtype_comp_codRestrict (p : Submodule R₂ M₂) (h : ∀ b, f b ∈ p) :
     p.Subtype.comp (codRestrict p f h) = f :=
   ext fun b => rfl
-#align linear_map.subtype_comp_cod_restrict LinearMap.subtype_comp_cod_restrict
+#align linear_map.subtype_comp_cod_restrict LinearMap.subtype_comp_codRestrict
 
 /-- Restrict domain and codomain of a linear map. -/
 def restrict (f : M →ₗ[R] M₁) {p : Submodule R M} {q : Submodule R M₁} (hf : ∀ x ∈ p, f x ∈ q) :
@@ -260,17 +259,17 @@ theorem subtype_comp_restrict {f : M →ₗ[R] M₁} {p : Submodule R M} {q : Su
   rfl
 #align linear_map.subtype_comp_restrict LinearMap.subtype_comp_restrict
 
-theorem restrict_eq_cod_restrict_dom_restrict {f : M →ₗ[R] M₁} {p : Submodule R M}
+theorem restrict_eq_codRestrict_domRestrict {f : M →ₗ[R] M₁} {p : Submodule R M}
     {q : Submodule R M₁} (hf : ∀ x ∈ p, f x ∈ q) :
     f.restrict hf = (f.domRestrict p).codRestrict q fun x => hf x.1 x.2 :=
   rfl
-#align linear_map.restrict_eq_cod_restrict_dom_restrict LinearMap.restrict_eq_cod_restrict_dom_restrict
+#align linear_map.restrict_eq_cod_restrict_dom_restrict LinearMap.restrict_eq_codRestrict_domRestrict
 
-theorem restrict_eq_dom_restrict_cod_restrict {f : M →ₗ[R] M₁} {p : Submodule R M}
+theorem restrict_eq_domRestrict_codRestrict {f : M →ₗ[R] M₁} {p : Submodule R M}
     {q : Submodule R M₁} (hf : ∀ x, f x ∈ q) :
     (f.restrict fun x _ => hf x) = (f.codRestrict q hf).domRestrict p :=
   rfl
-#align linear_map.restrict_eq_dom_restrict_cod_restrict LinearMap.restrict_eq_dom_restrict_cod_restrict
+#align linear_map.restrict_eq_dom_restrict_cod_restrict LinearMap.restrict_eq_domRestrict_codRestrict
 
 instance uniqueOfLeft [Subsingleton M] : Unique (M →ₛₗ[σ₁₂] M₂) :=
   { LinearMap.inhabited with
@@ -315,13 +314,13 @@ def smulRight (f : M₁ →ₗ[R] S) (x : M) : M₁ →ₗ[R] M
 #align linear_map.smul_right LinearMap.smulRight
 
 @[simp]
-theorem coe_smul_right (f : M₁ →ₗ[R] S) (x : M) : (smulRight f x : M₁ → M) = fun c => f c • x :=
+theorem coe_smulRight (f : M₁ →ₗ[R] S) (x : M) : (smulRight f x : M₁ → M) = fun c => f c • x :=
   rfl
-#align linear_map.coe_smul_right LinearMap.coe_smul_right
+#align linear_map.coe_smul_right LinearMap.coe_smulRight
 
-theorem smul_right_apply (f : M₁ →ₗ[R] S) (x : M) (c : M₁) : smulRight f x c = f c • x :=
+theorem smulRight_apply (f : M₁ →ₗ[R] S) (x : M) (c : M₁) : smulRight f x c = f c • x :=
   rfl
-#align linear_map.smul_right_apply LinearMap.smul_right_apply
+#align linear_map.smul_right_apply LinearMap.smulRight_apply
 
 end SmulRight
 
@@ -331,10 +330,10 @@ instance [Nontrivial M] : Nontrivial (Module.EndCat R M) :=
   exact nontrivial_of_ne 1 0 fun p => Ne (LinearMap.congr_fun p m)
 
 @[simp, norm_cast]
-theorem coe_fn_sum {ι : Type _} (t : Finset ι) (f : ι → M →ₛₗ[σ₁₂] M₂) :
+theorem coeFn_sum {ι : Type _} (t : Finset ι) (f : ι → M →ₛₗ[σ₁₂] M₂) :
     ⇑(∑ i in t, f i) = ∑ i in t, (f i : M → M₂) :=
   AddMonoidHom.map_sum ⟨@toFun R R₂ _ _ σ₁₂ M M₂ _ _ _ _, rfl, fun x y => rfl⟩ _ _
-#align linear_map.coe_fn_sum LinearMap.coe_fn_sum
+#align linear_map.coe_fn_sum LinearMap.coeFn_sum
 
 @[simp]
 theorem pow_apply (f : M →ₗ[R] M) (n : ℕ) (m : M) : (f ^ n) m = (f^[n]) m :=
@@ -523,9 +522,9 @@ def compRight (f : M₂ →ₗ[R] M₃) : (M →ₗ[R] M₂) →ₗ[R] M →ₗ[
 #align linear_map.comp_right LinearMap.compRight
 
 @[simp]
-theorem comp_right_apply (f : M₂ →ₗ[R] M₃) (g : M →ₗ[R] M₂) : compRight f g = f.comp g :=
+theorem compRight_apply (f : M₂ →ₗ[R] M₃) (g : M →ₗ[R] M₂) : compRight f g = f.comp g :=
   rfl
-#align linear_map.comp_right_apply LinearMap.comp_right_apply
+#align linear_map.comp_right_apply LinearMap.compRight_apply
 
 /-- Applying a linear map at `v : M`, seen as a linear map from `M →ₗ[R] M₂` to `M₂`.
 See also `linear_map.applyₗ'` for a version that works with two different semirings.
@@ -547,10 +546,10 @@ def domRestrict' (p : Submodule R M) : (M →ₗ[R] M₂) →ₗ[R] p →ₗ[R] 
 #align linear_map.dom_restrict' LinearMap.domRestrict'
 
 @[simp]
-theorem dom_restrict'_apply (f : M →ₗ[R] M₂) (p : Submodule R M) (x : p) :
+theorem domRestrict'_apply (f : M →ₗ[R] M₂) (p : Submodule R M) (x : p) :
     domRestrict' p f x = f x :=
   rfl
-#align linear_map.dom_restrict'_apply LinearMap.dom_restrict'_apply
+#align linear_map.dom_restrict'_apply LinearMap.domRestrict'_apply
 
 /--
 The family of linear maps `M₂ → M` parameterised by `f ∈ M₂ → R`, `x ∈ M`, is linear in `f`, `x`.
@@ -574,10 +573,10 @@ def smulRightₗ : (M₂ →ₗ[R] R) →ₗ[R] M →ₗ[R] M₂ →ₗ[R] M
 #align linear_map.smul_rightₗ LinearMap.smulRightₗ
 
 @[simp]
-theorem smul_rightₗ_apply (f : M₂ →ₗ[R] R) (x : M) (c : M₂) :
+theorem smulRightₗ_apply (f : M₂ →ₗ[R] R) (x : M) (c : M₂) :
     (smulRightₗ : (M₂ →ₗ[R] R) →ₗ[R] M →ₗ[R] M₂ →ₗ[R] M) f x c = f c • x :=
   rfl
-#align linear_map.smul_rightₗ_apply LinearMap.smul_rightₗ_apply
+#align linear_map.smul_rightₗ_apply LinearMap.smulRightₗ_apply
 
 end CommSemiring
 
@@ -675,25 +674,25 @@ def ofLe (h : p ≤ p') : p →ₗ[R] p' :=
 #align submodule.of_le Submodule.ofLe
 
 @[simp]
-theorem coe_of_le (h : p ≤ p') (x : p) : (ofLe h x : M) = x :=
+theorem coe_ofLe (h : p ≤ p') (x : p) : (ofLe h x : M) = x :=
   rfl
-#align submodule.coe_of_le Submodule.coe_of_le
+#align submodule.coe_of_le Submodule.coe_ofLe
 
-theorem of_le_apply (h : p ≤ p') (x : p) : ofLe h x = ⟨x, h x.2⟩ :=
+theorem ofLe_apply (h : p ≤ p') (x : p) : ofLe h x = ⟨x, h x.2⟩ :=
   rfl
-#align submodule.of_le_apply Submodule.of_le_apply
+#align submodule.of_le_apply Submodule.ofLe_apply
 
-theorem of_le_injective (h : p ≤ p') : Function.Injective (ofLe h) := fun x y h =>
+theorem ofLe_injective (h : p ≤ p') : Function.Injective (ofLe h) := fun x y h =>
   Subtype.val_injective (Subtype.mk.inj h)
-#align submodule.of_le_injective Submodule.of_le_injective
+#align submodule.of_le_injective Submodule.ofLe_injective
 
 variable (p p')
 
-theorem subtype_comp_of_le (p q : Submodule R M) (h : p ≤ q) :
-    q.Subtype.comp (ofLe h) = p.Subtype := by
+theorem subtype_comp_ofLe (p q : Submodule R M) (h : p ≤ q) : q.Subtype.comp (ofLe h) = p.Subtype :=
+  by
   ext ⟨b, hb⟩
   rfl
-#align submodule.subtype_comp_of_le Submodule.subtype_comp_of_le
+#align submodule.subtype_comp_of_le Submodule.subtype_comp_ofLe
 
 variable (R)
 
@@ -758,10 +757,10 @@ theorem map_coe (f : F) (p : Submodule R M) : (map f p : Set M₂) = f '' p :=
 
 omit sc
 
-theorem map_to_add_submonoid (f : M →ₛₗ[σ₁₂] M₂) (p : Submodule R M) :
+theorem map_toAddSubmonoid (f : M →ₛₗ[σ₁₂] M₂) (p : Submodule R M) :
     (p.map f).toAddSubmonoid = p.toAddSubmonoid.map (f : M →+ M₂) :=
   SetLike.coe_injective rfl
-#align submodule.map_to_add_submonoid Submodule.map_to_add_submonoid
+#align submodule.map_to_add_submonoid Submodule.map_toAddSubmonoid
 
 theorem map_to_add_submonoid' (f : M →ₛₗ[σ₁₂] M₂) (p : Submodule R M) :
     (p.map f).toAddSubmonoid = p.toAddSubmonoid.map f :=
@@ -845,10 +844,10 @@ noncomputable def equivMapOfInjective (f : F) (i : Injective f) (p : Submodule R
 #align submodule.equiv_map_of_injective Submodule.equivMapOfInjective
 
 @[simp]
-theorem coe_equiv_map_of_injective_apply (f : F) (i : Injective f) (p : Submodule R M) (x : p) :
+theorem coe_equivMapOfInjective_apply (f : F) (i : Injective f) (p : Submodule R M) (x : p) :
     (equivMapOfInjective f i p x : M₂) = f x :=
   rfl
-#align submodule.coe_equiv_map_of_injective_apply Submodule.coe_equiv_map_of_injective_apply
+#align submodule.coe_equiv_map_of_injective_apply Submodule.coe_equivMapOfInjective_apply
 
 omit σ₂₁
 
@@ -922,10 +921,10 @@ theorem map_sup (f : F) : map f (p ⊔ p') = map f p ⊔ map f p' :=
 #align submodule.map_sup Submodule.map_sup
 
 @[simp]
-theorem map_supr {ι : Sort _} (f : F) (p : ι → Submodule R M) :
+theorem map_supᵢ {ι : Sort _} (f : F) (p : ι → Submodule R M) :
     map f (⨆ i, p i) = ⨆ i, map f (p i) :=
   (gc_map_comap f : GaloisConnection (map f) (comap f)).l_supr
-#align submodule.map_supr Submodule.map_supr
+#align submodule.map_supr Submodule.map_supᵢ
 
 end
 
@@ -942,10 +941,10 @@ theorem comap_inf (f : F) : comap f (q ⊓ q') = comap f q ⊓ comap f q' :=
 #align submodule.comap_inf Submodule.comap_inf
 
 @[simp]
-theorem comap_infi [RingHomSurjective σ₁₂] {ι : Sort _} (f : F) (p : ι → Submodule R₂ M₂) :
+theorem comap_infᵢ [RingHomSurjective σ₁₂] {ι : Sort _} (f : F) (p : ι → Submodule R₂ M₂) :
     comap f (⨅ i, p i) = ⨅ i, comap f (p i) :=
   (gc_map_comap f : GaloisConnection (map f) (comap f)).u_infi
-#align submodule.comap_infi Submodule.comap_infi
+#align submodule.comap_infi Submodule.comap_infᵢ
 
 omit sc
 
@@ -999,28 +998,28 @@ theorem map_sup_comap_of_surjective (p q : Submodule R₂ M₂) :
   (giMapComap hf).l_sup_u _ _
 #align submodule.map_sup_comap_of_surjective Submodule.map_sup_comap_of_surjective
 
-theorem map_supr_comap_of_sujective {ι : Sort _} (S : ι → Submodule R₂ M₂) :
+theorem map_supᵢ_comap_of_sujective {ι : Sort _} (S : ι → Submodule R₂ M₂) :
     (⨆ i, (S i).comap f).map f = supᵢ S :=
   (giMapComap hf).l_supr_u _
-#align submodule.map_supr_comap_of_sujective Submodule.map_supr_comap_of_sujective
+#align submodule.map_supr_comap_of_sujective Submodule.map_supᵢ_comap_of_sujective
 
 theorem map_inf_comap_of_surjective (p q : Submodule R₂ M₂) :
     (p.comap f ⊓ q.comap f).map f = p ⊓ q :=
   (giMapComap hf).l_inf_u _ _
 #align submodule.map_inf_comap_of_surjective Submodule.map_inf_comap_of_surjective
 
-theorem map_infi_comap_of_surjective {ι : Sort _} (S : ι → Submodule R₂ M₂) :
+theorem map_infᵢ_comap_of_surjective {ι : Sort _} (S : ι → Submodule R₂ M₂) :
     (⨅ i, (S i).comap f).map f = infᵢ S :=
   (giMapComap hf).l_infi_u _
-#align submodule.map_infi_comap_of_surjective Submodule.map_infi_comap_of_surjective
+#align submodule.map_infi_comap_of_surjective Submodule.map_infᵢ_comap_of_surjective
 
 theorem comap_le_comap_iff_of_surjective (p q : Submodule R₂ M₂) : p.comap f ≤ q.comap f ↔ p ≤ q :=
   (giMapComap hf).u_le_u_iff
 #align submodule.comap_le_comap_iff_of_surjective Submodule.comap_le_comap_iff_of_surjective
 
-theorem comap_strict_mono_of_surjective : StrictMono (comap f) :=
+theorem comap_strictMono_of_surjective : StrictMono (comap f) :=
   (giMapComap hf).strict_mono_u
-#align submodule.comap_strict_mono_of_surjective Submodule.comap_strict_mono_of_surjective
+#align submodule.comap_strict_mono_of_surjective Submodule.comap_strictMono_of_surjective
 
 end GaloisInsertion
 
@@ -1051,27 +1050,27 @@ theorem comap_inf_map_of_injective (p q : Submodule R M) : (p.map f ⊓ q.map f)
   (gciMapComap hf).u_inf_l _ _
 #align submodule.comap_inf_map_of_injective Submodule.comap_inf_map_of_injective
 
-theorem comap_infi_map_of_injective {ι : Sort _} (S : ι → Submodule R M) :
+theorem comap_infᵢ_map_of_injective {ι : Sort _} (S : ι → Submodule R M) :
     (⨅ i, (S i).map f).comap f = infᵢ S :=
   (gciMapComap hf).u_infi_l _
-#align submodule.comap_infi_map_of_injective Submodule.comap_infi_map_of_injective
+#align submodule.comap_infi_map_of_injective Submodule.comap_infᵢ_map_of_injective
 
 theorem comap_sup_map_of_injective (p q : Submodule R M) : (p.map f ⊔ q.map f).comap f = p ⊔ q :=
   (gciMapComap hf).u_sup_l _ _
 #align submodule.comap_sup_map_of_injective Submodule.comap_sup_map_of_injective
 
-theorem comap_supr_map_of_injective {ι : Sort _} (S : ι → Submodule R M) :
+theorem comap_supᵢ_map_of_injective {ι : Sort _} (S : ι → Submodule R M) :
     (⨆ i, (S i).map f).comap f = supᵢ S :=
   (gciMapComap hf).u_supr_l _
-#align submodule.comap_supr_map_of_injective Submodule.comap_supr_map_of_injective
+#align submodule.comap_supr_map_of_injective Submodule.comap_supᵢ_map_of_injective
 
 theorem map_le_map_iff_of_injective (p q : Submodule R M) : p.map f ≤ q.map f ↔ p ≤ q :=
   (gciMapComap hf).l_le_l_iff
 #align submodule.map_le_map_iff_of_injective Submodule.map_le_map_iff_of_injective
 
-theorem map_strict_mono_of_injective : StrictMono (map f) :=
+theorem map_strictMono_of_injective : StrictMono (map f) :=
   (gciMapComap hf).strict_mono_l
-#align submodule.map_strict_mono_of_injective Submodule.map_strict_mono_of_injective
+#align submodule.map_strict_mono_of_injective Submodule.map_strictMono_of_injective
 
 end GaloisCoinsertion
 
@@ -1115,7 +1114,7 @@ theorem eq_zero_of_bot_submodule : ∀ b : (⊥ : Submodule R M), b = 0
 
 /-- The infimum of a family of invariant submodule of an endomorphism is also an invariant
 submodule. -/
-theorem LinearMap.infi_invariant {σ : R →+* R} [RingHomSurjective σ] {ι : Sort _} (f : M →ₛₗ[σ] M)
+theorem LinearMap.infᵢ_invariant {σ : R →+* R} [RingHomSurjective σ] {ι : Sort _} (f : M →ₛₗ[σ] M)
     {p : ι → Submodule R M} (hf : ∀ i, ∀ v ∈ p i, f v ∈ p i) : ∀ v ∈ infᵢ p, f v ∈ infᵢ p :=
   by
   have : ∀ i, (p i).map f ≤ p i := by
@@ -1123,7 +1122,7 @@ theorem LinearMap.infi_invariant {σ : R →+* R} [RingHomSurjective σ] {ι : S
     exact hf i v hv
   suffices (infᵢ p).map f ≤ infᵢ p by exact fun v hv => this ⟨v, hv, rfl⟩
   exact le_infᵢ fun i => (Submodule.map_mono (infᵢ_le p i)).trans (this i)
-#align linear_map.infi_invariant LinearMap.infi_invariant
+#align linear_map.infi_invariant LinearMap.infᵢ_invariant
 
 end AddCommMonoid
 
@@ -1211,7 +1210,7 @@ theorem map_finsupp_sum (f : M →ₛₗ[σ₁₂] M₂) {t : ι →₀ γ} {g :
 
 theorem coe_finsupp_sum (t : ι →₀ γ) (g : ι → γ → M →ₛₗ[σ₁₂] M₂) :
     ⇑(t.Sum g) = t.Sum fun i d => g i d :=
-  coe_fn_sum _ _
+  coeFn_sum _ _
 #align linear_map.coe_finsupp_sum LinearMap.coe_finsupp_sum
 
 @[simp]
@@ -1240,7 +1239,7 @@ theorem map_dfinsupp_sum (f : M →ₛₗ[σ₁₂] M₂) {t : Π₀ i, γ i} {g
 
 theorem coe_dfinsupp_sum (t : Π₀ i, γ i) (g : ∀ i, γ i → M →ₛₗ[σ₁₂] M₂) :
     ⇑(t.Sum g) = t.Sum fun i d => g i d :=
-  coe_fn_sum _ _
+  coeFn_sum _ _
 #align linear_map.coe_dfinsupp_sum LinearMap.coe_dfinsupp_sum
 
 @[simp]
@@ -1256,10 +1255,10 @@ section SumAddHom
 variable [∀ i, AddZeroClass (γ i)]
 
 @[simp]
-theorem map_dfinsupp_sum_add_hom (f : M →ₛₗ[σ₁₂] M₂) {t : Π₀ i, γ i} {g : ∀ i, γ i →+ M} :
+theorem map_dfinsupp_sumAddHom (f : M →ₛₗ[σ₁₂] M₂) {t : Π₀ i, γ i} {g : ∀ i, γ i →+ M} :
     f (sumAddHom g t) = sumAddHom (fun i => f.toAddMonoidHom.comp (g i)) t :=
   f.toAddMonoidHom.map_dfinsupp_sum_add_hom _ _
-#align linear_map.map_dfinsupp_sum_add_hom LinearMap.map_dfinsupp_sum_add_hom
+#align linear_map.map_dfinsupp_sum_add_hom LinearMap.map_dfinsupp_sumAddHom
 
 end SumAddHom
 
@@ -1269,15 +1268,15 @@ variable {σ₂₁ : R₂ →+* R} {τ₁₂ : R →+* R₂} {τ₂₃ : R₂ �
 
 variable [RingHomCompTriple τ₁₂ τ₂₃ τ₁₃]
 
-theorem map_cod_restrict [RingHomSurjective σ₂₁] (p : Submodule R M) (f : M₂ →ₛₗ[σ₂₁] M) (h p') :
+theorem map_codRestrict [RingHomSurjective σ₂₁] (p : Submodule R M) (f : M₂ →ₛₗ[σ₂₁] M) (h p') :
     Submodule.map (codRestrict p f h) p' = comap p.Subtype (p'.map f) :=
   Submodule.ext fun ⟨x, hx⟩ => by simp [Subtype.ext_iff_val]
-#align linear_map.map_cod_restrict LinearMap.map_cod_restrict
+#align linear_map.map_cod_restrict LinearMap.map_codRestrict
 
-theorem comap_cod_restrict (p : Submodule R M) (f : M₂ →ₛₗ[σ₂₁] M) (hf p') :
+theorem comap_codRestrict (p : Submodule R M) (f : M₂ →ₛₗ[σ₂₁] M) (hf p') :
     Submodule.comap (codRestrict p f hf) p' = Submodule.comap f (map p.Subtype p') :=
   Submodule.ext fun x => ⟨fun h => ⟨⟨_, hf x⟩, h, rfl⟩, by rintro ⟨⟨_, _⟩, h, ⟨⟩⟩ <;> exact h⟩
-#align linear_map.comap_cod_restrict LinearMap.comap_cod_restrict
+#align linear_map.comap_cod_restrict LinearMap.comap_codRestrict
 
 section
 
@@ -1297,10 +1296,10 @@ theorem range_coe [RingHomSurjective τ₁₂] (f : F) : (range f : Set M₂) = 
 
 omit sc
 
-theorem range_to_add_submonoid [RingHomSurjective τ₁₂] (f : M →ₛₗ[τ₁₂] M₂) :
+theorem range_toAddSubmonoid [RingHomSurjective τ₁₂] (f : M →ₛₗ[τ₁₂] M₂) :
     f.range.toAddSubmonoid = f.toAddMonoidHom.mrange :=
   rfl
-#align linear_map.range_to_add_submonoid LinearMap.range_to_add_submonoid
+#align linear_map.range_to_add_submonoid LinearMap.range_toAddSubmonoid
 
 include sc
 
@@ -1372,19 +1371,19 @@ def eqLocus (f g : M →ₛₗ[τ₁₂] M₂) : Submodule R M :=
 #align linear_map.eq_locus LinearMap.eqLocus
 
 @[simp]
-theorem mem_eq_locus {x : M} {f g : M →ₛₗ[τ₁₂] M₂} : x ∈ f.eqLocus g ↔ f x = g x :=
+theorem mem_eqLocus {x : M} {f g : M →ₛₗ[τ₁₂] M₂} : x ∈ f.eqLocus g ↔ f x = g x :=
   Iff.rfl
-#align linear_map.mem_eq_locus LinearMap.mem_eq_locus
+#align linear_map.mem_eq_locus LinearMap.mem_eqLocus
 
-theorem eq_locus_to_add_submonoid (f g : M →ₛₗ[τ₁₂] M₂) :
+theorem eqLocus_toAddSubmonoid (f g : M →ₛₗ[τ₁₂] M₂) :
     (f.eqLocus g).toAddSubmonoid = (f : M →+ M₂).eqMlocus g :=
   rfl
-#align linear_map.eq_locus_to_add_submonoid LinearMap.eq_locus_to_add_submonoid
+#align linear_map.eq_locus_to_add_submonoid LinearMap.eqLocus_toAddSubmonoid
 
 @[simp]
-theorem eq_locus_same (f : M →ₛₗ[τ₁₂] M₂) : f.eqLocus f = ⊤ :=
+theorem eqLocus_same (f : M →ₛₗ[τ₁₂] M₂) : f.eqLocus f = ⊤ :=
   SetLike.ext fun _ => eq_self_iff_true _
-#align linear_map.eq_locus_same LinearMap.eq_locus_same
+#align linear_map.eq_locus_same LinearMap.eqLocus_same
 
 end
 
@@ -1449,9 +1448,9 @@ theorem map_coe_ker (f : F) (x : ker f) : f x = 0 :=
 
 omit sc
 
-theorem ker_to_add_submonoid (f : M →ₛₗ[τ₁₂] M₂) : f.ker.toAddSubmonoid = f.toAddMonoidHom.mker :=
+theorem ker_toAddSubmonoid (f : M →ₛₗ[τ₁₂] M₂) : f.ker.toAddSubmonoid = f.toAddMonoidHom.mker :=
   rfl
-#align linear_map.ker_to_add_submonoid LinearMap.ker_to_add_submonoid
+#align linear_map.ker_to_add_submonoid LinearMap.ker_toAddSubmonoid
 
 theorem comp_ker_subtype (f : M →ₛₗ[τ₁₂] M₂) : f.comp f.ker.Subtype = 0 :=
   LinearMap.ext fun x =>
@@ -1493,14 +1492,14 @@ theorem le_ker_iff_map [RingHomSurjective τ₁₂] {f : F} {p : Submodule R M} 
 
 omit sc
 
-theorem ker_cod_restrict {τ₂₁ : R₂ →+* R} (p : Submodule R M) (f : M₂ →ₛₗ[τ₂₁] M) (hf) :
+theorem ker_codRestrict {τ₂₁ : R₂ →+* R} (p : Submodule R M) (f : M₂ →ₛₗ[τ₂₁] M) (hf) :
     ker (codRestrict p f hf) = ker f := by rw [ker, comap_cod_restrict, map_bot] <;> rfl
-#align linear_map.ker_cod_restrict LinearMap.ker_cod_restrict
+#align linear_map.ker_cod_restrict LinearMap.ker_codRestrict
 
-theorem range_cod_restrict {τ₂₁ : R₂ →+* R} [RingHomSurjective τ₂₁] (p : Submodule R M)
+theorem range_codRestrict {τ₂₁ : R₂ →+* R} [RingHomSurjective τ₂₁] (p : Submodule R M)
     (f : M₂ →ₛₗ[τ₂₁] M) (hf) : range (codRestrict p f hf) = comap p.Subtype f.range := by
   simpa only [range_eq_map] using map_cod_restrict _ _ _ _
-#align linear_map.range_cod_restrict LinearMap.range_cod_restrict
+#align linear_map.range_cod_restrict LinearMap.range_codRestrict
 
 theorem ker_restrict [AddCommMonoid M₁] [Module R M₁] {p : Submodule R M} {q : Submodule R M₁}
     {f : M →ₗ[R] M₁} (hf : ∀ x : M, x ∈ p → f x ∈ q) :
@@ -1611,18 +1610,18 @@ include R
 
 open Submodule
 
-theorem range_to_add_subgroup [RingHomSurjective τ₁₂] (f : M →ₛₗ[τ₁₂] M₂) :
+theorem range_toAddSubgroup [RingHomSurjective τ₁₂] (f : M →ₛₗ[τ₁₂] M₂) :
     f.range.toAddSubgroup = f.toAddMonoidHom.range :=
   rfl
-#align linear_map.range_to_add_subgroup LinearMap.range_to_add_subgroup
+#align linear_map.range_to_add_subgroup LinearMap.range_toAddSubgroup
 
-theorem ker_to_add_subgroup (f : M →ₛₗ[τ₁₂] M₂) : f.ker.toAddSubgroup = f.toAddMonoidHom.ker :=
+theorem ker_toAddSubgroup (f : M →ₛₗ[τ₁₂] M₂) : f.ker.toAddSubgroup = f.toAddMonoidHom.ker :=
   rfl
-#align linear_map.ker_to_add_subgroup LinearMap.ker_to_add_subgroup
+#align linear_map.ker_to_add_subgroup LinearMap.ker_toAddSubgroup
 
-theorem eq_locus_eq_ker_sub (f g : M →ₛₗ[τ₁₂] M₂) : f.eqLocus g = (f - g).ker :=
+theorem eqLocus_eq_ker_sub (f g : M →ₛₗ[τ₁₂] M₂) : f.eqLocus g = (f - g).ker :=
   SetLike.ext fun v => sub_eq_zero.symm
-#align linear_map.eq_locus_eq_ker_sub LinearMap.eq_locus_eq_ker_sub
+#align linear_map.eq_locus_eq_ker_sub LinearMap.eqLocus_eq_ker_sub
 
 include sc
 
@@ -1637,10 +1636,10 @@ theorem disjoint_ker' {p : Submodule R M} :
       H x h₁ 0 (zero_mem _) (by simpa using h₂)⟩
 #align linear_map.disjoint_ker' LinearMap.disjoint_ker'
 
-theorem inj_on_of_disjoint_ker {p : Submodule R M} {s : Set M} (h : s ⊆ p)
+theorem injOn_of_disjoint_ker {p : Submodule R M} {s : Set M} (h : s ⊆ p)
     (hd : Disjoint p (ker f)) : Set.InjOn f s := fun x hx y hy =>
   disjoint_ker'.1 hd _ (h hx) _ (h hy)
-#align linear_map.inj_on_of_disjoint_ker LinearMap.inj_on_of_disjoint_ker
+#align linear_map.inj_on_of_disjoint_ker LinearMap.injOn_of_disjoint_ker
 
 variable (F)
 
@@ -1797,18 +1796,18 @@ theorem comap_subtype_self : comap p.Subtype p = ⊤ :=
 #align submodule.comap_subtype_self Submodule.comap_subtype_self
 
 @[simp]
-theorem ker_of_le (p p' : Submodule R M) (h : p ≤ p') : (ofLe h).ker = ⊥ := by
+theorem ker_ofLe (p p' : Submodule R M) (h : p ≤ p') : (ofLe h).ker = ⊥ := by
   rw [of_le, ker_cod_restrict, ker_subtype]
-#align submodule.ker_of_le Submodule.ker_of_le
+#align submodule.ker_of_le Submodule.ker_ofLe
 
-theorem range_of_le (p q : Submodule R M) (h : p ≤ q) : (ofLe h).range = comap q.Subtype p := by
-  rw [← map_top, of_le, LinearMap.map_cod_restrict, map_top, range_subtype]
-#align submodule.range_of_le Submodule.range_of_le
+theorem range_ofLe (p q : Submodule R M) (h : p ≤ q) : (ofLe h).range = comap q.Subtype p := by
+  rw [← map_top, of_le, LinearMap.map_codRestrict, map_top, range_subtype]
+#align submodule.range_of_le Submodule.range_ofLe
 
 @[simp]
-theorem map_subtype_range_of_le {p p' : Submodule R M} (h : p ≤ p') :
+theorem map_subtype_range_ofLe {p p' : Submodule R M} (h : p ≤ p') :
     map p'.Subtype (ofLe h).range = p := by simp [range_of_le, map_comap_eq, h]
-#align submodule.map_subtype_range_of_le Submodule.map_subtype_range_of_le
+#align submodule.map_subtype_range_of_le Submodule.map_subtype_range_ofLe
 
 theorem disjoint_iff_comap_eq_bot {p q : Submodule R M} : Disjoint p q ↔ comap p.Subtype q = ⊥ := by
   rw [← (map_injective_of_injective (show injective p.subtype from Subtype.coe_injective)).eq_iff,
@@ -1888,7 +1887,7 @@ def submoduleImage {M' : Type _} [AddCommMonoid M'] [Module R M'] {O : Submodule
 #align linear_map.submodule_image LinearMap.submoduleImage
 
 @[simp]
-theorem mem_submodule_image {M' : Type _} [AddCommMonoid M'] [Module R M'] {O : Submodule R M}
+theorem mem_submoduleImage {M' : Type _} [AddCommMonoid M'] [Module R M'] {O : Submodule R M}
     {ϕ : O →ₗ[R] M'} {N : Submodule R M} {x : M'} :
     x ∈ ϕ.submoduleImage N ↔ ∃ (y : _)(yO : y ∈ O)(yN : y ∈ N), ϕ ⟨y, yO⟩ = x :=
   by
@@ -1897,9 +1896,9 @@ theorem mem_submodule_image {M' : Type _} [AddCommMonoid M'] [Module R M'] {O : 
     exact ⟨y, yO, yN, h⟩
   · rintro ⟨y, yO, yN, h⟩
     exact ⟨⟨y, yO⟩, yN, h⟩
-#align linear_map.mem_submodule_image LinearMap.mem_submodule_image
+#align linear_map.mem_submodule_image LinearMap.mem_submoduleImage
 
-theorem mem_submodule_image_of_le {M' : Type _} [AddCommMonoid M'] [Module R M'] {O : Submodule R M}
+theorem mem_submoduleImage_of_le {M' : Type _} [AddCommMonoid M'] [Module R M'] {O : Submodule R M}
     {ϕ : O →ₗ[R] M'} {N : Submodule R M} (hNO : N ≤ O) {x : M'} :
     x ∈ ϕ.submoduleImage N ↔ ∃ (y : _)(yN : y ∈ N), ϕ ⟨y, hNO yN⟩ = x :=
   by
@@ -1908,13 +1907,13 @@ theorem mem_submodule_image_of_le {M' : Type _} [AddCommMonoid M'] [Module R M']
     exact ⟨y, yN, h⟩
   · rintro ⟨y, yN, h⟩
     exact ⟨y, hNO yN, yN, h⟩
-#align linear_map.mem_submodule_image_of_le LinearMap.mem_submodule_image_of_le
+#align linear_map.mem_submodule_image_of_le LinearMap.mem_submoduleImage_of_le
 
-theorem submodule_image_apply_of_le {M' : Type _} [AddCommGroup M'] [Module R M']
-    {O : Submodule R M} (ϕ : O →ₗ[R] M') (N : Submodule R M) (hNO : N ≤ O) :
+theorem submoduleImage_apply_ofLe {M' : Type _} [AddCommGroup M'] [Module R M'] {O : Submodule R M}
+    (ϕ : O →ₗ[R] M') (N : Submodule R M) (hNO : N ≤ O) :
     ϕ.submoduleImage N = (ϕ.comp (Submodule.ofLe hNO)).range := by
-  rw [submodule_image, range_comp, Submodule.range_of_le]
-#align linear_map.submodule_image_apply_of_le LinearMap.submodule_image_apply_of_le
+  rw [submodule_image, range_comp, Submodule.range_ofLe]
+#align linear_map.submodule_image_apply_of_le LinearMap.submoduleImage_apply_ofLe
 
 end Image
 
@@ -1923,10 +1922,9 @@ end Semiring
 end LinearMap
 
 @[simp]
-theorem LinearMap.range_range_restrict [Semiring R] [AddCommMonoid M] [AddCommMonoid M₂]
-    [Module R M] [Module R M₂] (f : M →ₗ[R] M₂) : f.range_restrict.range = ⊤ := by
-  simp [f.range_cod_restrict _]
-#align linear_map.range_range_restrict LinearMap.range_range_restrict
+theorem LinearMap.range_rangeRestrict [Semiring R] [AddCommMonoid M] [AddCommMonoid M₂] [Module R M]
+    [Module R M₂] (f : M →ₗ[R] M₂) : f.range_restrict.range = ⊤ := by simp [f.range_cod_restrict _]
+#align linear_map.range_range_restrict LinearMap.range_rangeRestrict
 
 /-! ### Linear equivalences -/
 
@@ -1984,7 +1982,7 @@ theorem zero_apply (x : M) : (0 : M ≃ₛₗ[σ₁₂] M₂) x = 0 :=
 /-- Between two zero modules, the zero map is the only equivalence. -/
 instance : Unique (M ≃ₛₗ[σ₁₂] M₂)
     where
-  uniq f := to_linear_map_injective (Subsingleton.elim _ _)
+  uniq f := to_linearMap_injective (Subsingleton.elim _ _)
   default := 0
 
 omit σ₂₁
@@ -2034,7 +2032,7 @@ def submoduleMap (p : Submodule R M) : p ≃ₛₗ[σ₁₂] ↥(p.map (e : M �
   {
     ((e : M →ₛₗ[σ₁₂] M₂).domRestrict p).codRestrict (p.map (e : M →ₛₗ[σ₁₂] M₂)) fun x =>
       ⟨x, by
-        simp only [LinearMap.dom_restrict_apply, eq_self_iff_true, and_true_iff, SetLike.coe_mem,
+        simp only [LinearMap.domRestrict_apply, eq_self_iff_true, and_true_iff, SetLike.coe_mem,
           SetLike.mem_coe]⟩ with
     invFun := fun y =>
       ⟨(e.symm : M₂ →ₛₗ[σ₂₁] M) y, by
@@ -2044,26 +2042,26 @@ def submoduleMap (p : Submodule R M) : p ≃ₛₗ[σ₁₂] ↥(p.map (e : M �
         subst hxy
         simp only [symm_apply_apply, Submodule.coe_mk, coe_coe, hx]⟩
     left_inv := fun x => by
-      simp only [LinearMap.dom_restrict_apply, LinearMap.cod_restrict_apply,
-        LinearMap.to_fun_eq_coe, LinearEquiv.coe_coe, LinearEquiv.symm_apply_apply, SetLike.eta]
+      simp only [LinearMap.domRestrict_apply, LinearMap.codRestrict_apply, LinearMap.toFun_eq_coe,
+        LinearEquiv.coe_coe, LinearEquiv.symm_apply_apply, SetLike.eta]
     right_inv := fun y => by
       apply SetCoe.ext
-      simp only [LinearMap.dom_restrict_apply, LinearMap.cod_restrict_apply,
-        LinearMap.to_fun_eq_coe, LinearEquiv.coe_coe, [anonymous], LinearEquiv.apply_symm_apply] }
+      simp only [LinearMap.domRestrict_apply, LinearMap.codRestrict_apply, LinearMap.toFun_eq_coe,
+        LinearEquiv.coe_coe, [anonymous], LinearEquiv.apply_symm_apply] }
 #align linear_equiv.submodule_map LinearEquiv.submoduleMap
 
 include σ₂₁
 
 @[simp]
-theorem submodule_map_apply (p : Submodule R M) (x : p) : ↑(e.submoduleMap p x) = e x :=
+theorem submoduleMap_apply (p : Submodule R M) (x : p) : ↑(e.submoduleMap p x) = e x :=
   rfl
-#align linear_equiv.submodule_map_apply LinearEquiv.submodule_map_apply
+#align linear_equiv.submodule_map_apply LinearEquiv.submoduleMap_apply
 
 @[simp]
-theorem submodule_map_symm_apply (p : Submodule R M)
+theorem submoduleMap_symm_apply (p : Submodule R M)
     (x : (p.map (e : M →ₛₗ[σ₁₂] M₂) : Submodule R₂ M₂)) : ↑((e.submoduleMap p).symm x) = e.symm x :=
   rfl
-#align linear_equiv.submodule_map_symm_apply LinearEquiv.submodule_map_symm_apply
+#align linear_equiv.submodule_map_symm_apply LinearEquiv.submoduleMap_symm_apply
 
 omit σ₂₁
 
@@ -2120,11 +2118,11 @@ theorem map_dfinsupp_sum [∀ i, Zero (γ i)] [∀ (i) (x : γ i), Decidable (x 
 #align linear_equiv.map_dfinsupp_sum LinearEquiv.map_dfinsupp_sum
 
 @[simp]
-theorem map_dfinsupp_sum_add_hom [∀ i, AddZeroClass (γ i)] (f : M ≃ₛₗ[τ₁₂] M₂) (t : Π₀ i, γ i)
+theorem map_dfinsupp_sumAddHom [∀ i, AddZeroClass (γ i)] (f : M ≃ₛₗ[τ₁₂] M₂) (t : Π₀ i, γ i)
     (g : ∀ i, γ i →+ M) :
     f (sumAddHom g t) = sumAddHom (fun i => f.toAddEquiv.toAddMonoidHom.comp (g i)) t :=
   f.toAddEquiv.map_dfinsupp_sum_add_hom _ _
-#align linear_equiv.map_dfinsupp_sum_add_hom LinearEquiv.map_dfinsupp_sum_add_hom
+#align linear_equiv.map_dfinsupp_sum_add_hom LinearEquiv.map_dfinsupp_sumAddHom
 
 end Dfinsupp
 
@@ -2196,18 +2194,18 @@ def ofEq (h : p = q) : p ≃ₗ[R] q :=
 variable {p q}
 
 @[simp]
-theorem coe_of_eq_apply (h : p = q) (x : p) : (ofEq p q h x : M) = x :=
+theorem coe_ofEq_apply (h : p = q) (x : p) : (ofEq p q h x : M) = x :=
   rfl
-#align linear_equiv.coe_of_eq_apply LinearEquiv.coe_of_eq_apply
+#align linear_equiv.coe_of_eq_apply LinearEquiv.coe_ofEq_apply
 
 @[simp]
-theorem of_eq_symm (h : p = q) : (ofEq p q h).symm = ofEq q p h.symm :=
+theorem ofEq_symm (h : p = q) : (ofEq p q h).symm = ofEq q p h.symm :=
   rfl
-#align linear_equiv.of_eq_symm LinearEquiv.of_eq_symm
+#align linear_equiv.of_eq_symm LinearEquiv.ofEq_symm
 
 @[simp]
-theorem of_eq_rfl : ofEq p p rfl = LinearEquiv.refl R p := by ext <;> rfl
-#align linear_equiv.of_eq_rfl LinearEquiv.of_eq_rfl
+theorem ofEq_rfl : ofEq p p rfl = LinearEquiv.refl R p := by ext <;> rfl
+#align linear_equiv.of_eq_rfl LinearEquiv.ofEq_rfl
 
 include σ₂₁
 
@@ -2219,16 +2217,16 @@ def ofSubmodules (p : Submodule R M) (q : Submodule R₂ M₂) (h : p.map (e : M
 #align linear_equiv.of_submodules LinearEquiv.ofSubmodules
 
 @[simp]
-theorem of_submodules_apply {p : Submodule R M} {q : Submodule R₂ M₂} (h : p.map ↑e = q) (x : p) :
+theorem ofSubmodules_apply {p : Submodule R M} {q : Submodule R₂ M₂} (h : p.map ↑e = q) (x : p) :
     ↑(e.ofSubmodules p q h x) = e x :=
   rfl
-#align linear_equiv.of_submodules_apply LinearEquiv.of_submodules_apply
+#align linear_equiv.of_submodules_apply LinearEquiv.ofSubmodules_apply
 
 @[simp]
-theorem of_submodules_symm_apply {p : Submodule R M} {q : Submodule R₂ M₂} (h : p.map ↑e = q)
+theorem ofSubmodules_symm_apply {p : Submodule R M} {q : Submodule R₂ M₂} (h : p.map ↑e = q)
     (x : q) : ↑((e.ofSubmodules p q h).symm x) = e.symm x :=
   rfl
-#align linear_equiv.of_submodules_symm_apply LinearEquiv.of_submodules_symm_apply
+#align linear_equiv.of_submodules_symm_apply LinearEquiv.ofSubmodules_symm_apply
 
 include re₁₂ re₂₁
 
@@ -2241,25 +2239,25 @@ def ofSubmodule' [Module R M] [Module R₂ M₂] (f : M ≃ₛₗ[σ₁₂] M₂
   (f.symm.ofSubmodules _ _ f.symm.map_eq_comap).symm
 #align linear_equiv.of_submodule' LinearEquiv.ofSubmodule'
 
-theorem of_submodule'_to_linear_map [Module R M] [Module R₂ M₂] (f : M ≃ₛₗ[σ₁₂] M₂)
+theorem ofSubmodule'_toLinearMap [Module R M] [Module R₂ M₂] (f : M ≃ₛₗ[σ₁₂] M₂)
     (U : Submodule R₂ M₂) :
     (f.ofSubmodule' U).toLinearMap = (f.toLinearMap.domRestrict _).codRestrict _ Subtype.prop :=
   by
   ext
   rfl
-#align linear_equiv.of_submodule'_to_linear_map LinearEquiv.of_submodule'_to_linear_map
+#align linear_equiv.of_submodule'_to_linear_map LinearEquiv.ofSubmodule'_toLinearMap
 
 @[simp]
-theorem of_submodule'_apply [Module R M] [Module R₂ M₂] (f : M ≃ₛₗ[σ₁₂] M₂) (U : Submodule R₂ M₂)
+theorem ofSubmodule'_apply [Module R M] [Module R₂ M₂] (f : M ≃ₛₗ[σ₁₂] M₂) (U : Submodule R₂ M₂)
     (x : U.comap (f : M →ₛₗ[σ₁₂] M₂)) : (f.ofSubmodule' U x : M₂) = f (x : M) :=
   rfl
-#align linear_equiv.of_submodule'_apply LinearEquiv.of_submodule'_apply
+#align linear_equiv.of_submodule'_apply LinearEquiv.ofSubmodule'_apply
 
 @[simp]
-theorem of_submodule'_symm_apply [Module R M] [Module R₂ M₂] (f : M ≃ₛₗ[σ₁₂] M₂)
+theorem ofSubmodule'_symm_apply [Module R M] [Module R₂ M₂] (f : M ≃ₛₗ[σ₁₂] M₂)
     (U : Submodule R₂ M₂) (x : U) : ((f.ofSubmodule' U).symm x : M) = f.symm (x : M₂) :=
   rfl
-#align linear_equiv.of_submodule'_symm_apply LinearEquiv.of_submodule'_symm_apply
+#align linear_equiv.of_submodule'_symm_apply LinearEquiv.ofSubmodule'_symm_apply
 
 variable (p)
 
@@ -2274,18 +2272,18 @@ def ofTop (h : p = ⊤) : p ≃ₗ[R] M :=
 #align linear_equiv.of_top LinearEquiv.ofTop
 
 @[simp]
-theorem of_top_apply {h} (x : p) : ofTop p h x = x :=
+theorem ofTop_apply {h} (x : p) : ofTop p h x = x :=
   rfl
-#align linear_equiv.of_top_apply LinearEquiv.of_top_apply
+#align linear_equiv.of_top_apply LinearEquiv.ofTop_apply
 
 @[simp]
-theorem coe_of_top_symm_apply {h} (x : M) : ((ofTop p h).symm x : M) = x :=
+theorem coe_ofTop_symm_apply {h} (x : M) : ((ofTop p h).symm x : M) = x :=
   rfl
-#align linear_equiv.coe_of_top_symm_apply LinearEquiv.coe_of_top_symm_apply
+#align linear_equiv.coe_of_top_symm_apply LinearEquiv.coe_ofTop_symm_apply
 
-theorem of_top_symm_apply {h} (x : M) : (ofTop p h).symm x = ⟨x, h.symm ▸ trivial⟩ :=
+theorem ofTop_symm_apply {h} (x : M) : (ofTop p h).symm x = ⟨x, h.symm ▸ trivial⟩ :=
   rfl
-#align linear_equiv.of_top_symm_apply LinearEquiv.of_top_symm_apply
+#align linear_equiv.of_top_symm_apply LinearEquiv.ofTop_symm_apply
 
 include σ₂₁ re₁₂ re₂₁
 
@@ -2302,18 +2300,18 @@ omit σ₂₁ re₁₂ re₂₁
 include σ₂₁ re₁₂ re₂₁
 
 @[simp]
-theorem of_linear_apply {h₁ h₂} (x : M) : ofLinear f g h₁ h₂ x = f x :=
+theorem ofLinear_apply {h₁ h₂} (x : M) : ofLinear f g h₁ h₂ x = f x :=
   rfl
-#align linear_equiv.of_linear_apply LinearEquiv.of_linear_apply
+#align linear_equiv.of_linear_apply LinearEquiv.ofLinear_apply
 
 omit σ₂₁ re₁₂ re₂₁
 
 include σ₂₁ re₁₂ re₂₁
 
 @[simp]
-theorem of_linear_symm_apply {h₁ h₂} (x : M₂) : (ofLinear f g h₁ h₂).symm x = g x :=
+theorem ofLinear_symm_apply {h₁ h₂} (x : M₂) : (ofLinear f g h₁ h₂).symm x = g x :=
   rfl
-#align linear_equiv.of_linear_symm_apply LinearEquiv.of_linear_symm_apply
+#align linear_equiv.of_linear_symm_apply LinearEquiv.ofLinear_symm_apply
 
 omit σ₂₁ re₁₂ re₂₁
 
@@ -2384,18 +2382,18 @@ def ofLeftInverse [RingHomInvPair σ₁₂ σ₂₁] [RingHomInvPair σ₂₁ σ
 omit σ₂₁
 
 @[simp]
-theorem of_left_inverse_apply [RingHomInvPair σ₁₂ σ₂₁] [RingHomInvPair σ₂₁ σ₁₂]
+theorem ofLeftInverse_apply [RingHomInvPair σ₁₂ σ₂₁] [RingHomInvPair σ₂₁ σ₁₂]
     (h : Function.LeftInverse g f) (x : M) : ↑(ofLeftInverse h x) = f x :=
   rfl
-#align linear_equiv.of_left_inverse_apply LinearEquiv.of_left_inverse_apply
+#align linear_equiv.of_left_inverse_apply LinearEquiv.ofLeftInverse_apply
 
 include σ₂₁
 
 @[simp]
-theorem of_left_inverse_symm_apply [RingHomInvPair σ₁₂ σ₂₁] [RingHomInvPair σ₂₁ σ₁₂]
+theorem ofLeftInverse_symm_apply [RingHomInvPair σ₁₂ σ₂₁] [RingHomInvPair σ₂₁ σ₁₂]
     (h : Function.LeftInverse g f) (x : f.range) : (ofLeftInverse h).symm x = g x :=
   rfl
-#align linear_equiv.of_left_inverse_symm_apply LinearEquiv.of_left_inverse_symm_apply
+#align linear_equiv.of_left_inverse_symm_apply LinearEquiv.ofLeftInverse_symm_apply
 
 omit σ₂₁
 
@@ -2409,10 +2407,10 @@ noncomputable def ofInjective [RingHomInvPair σ₁₂ σ₂₁] [RingHomInvPair
 #align linear_equiv.of_injective LinearEquiv.ofInjective
 
 @[simp]
-theorem of_injective_apply [RingHomInvPair σ₁₂ σ₂₁] [RingHomInvPair σ₂₁ σ₁₂] {h : Injective f}
+theorem ofInjective_apply [RingHomInvPair σ₁₂ σ₂₁] [RingHomInvPair σ₂₁ σ₁₂] {h : Injective f}
     (x : M) : ↑(ofInjective f h x) = f x :=
   rfl
-#align linear_equiv.of_injective_apply LinearEquiv.of_injective_apply
+#align linear_equiv.of_injective_apply LinearEquiv.ofInjective_apply
 
 /-- A bijective linear map is a linear equivalence. -/
 noncomputable def ofBijective [RingHomInvPair σ₁₂ σ₂₁] [RingHomInvPair σ₂₁ σ₁₂] (hf : Bijective f) :
@@ -2421,10 +2419,10 @@ noncomputable def ofBijective [RingHomInvPair σ₁₂ σ₂₁] [RingHomInvPair
 #align linear_equiv.of_bijective LinearEquiv.ofBijective
 
 @[simp]
-theorem of_bijective_apply [RingHomInvPair σ₁₂ σ₂₁] [RingHomInvPair σ₂₁ σ₁₂] {hf} (x : M) :
+theorem ofBijective_apply [RingHomInvPair σ₁₂ σ₂₁] [RingHomInvPair σ₂₁ σ₁₂] {hf} (x : M) :
     ofBijective f hf x = f x :=
   rfl
-#align linear_equiv.of_bijective_apply LinearEquiv.of_bijective_apply
+#align linear_equiv.of_bijective_apply LinearEquiv.ofBijective_apply
 
 end
 
@@ -2524,37 +2522,37 @@ def arrowCongr {R M₁ M₂ M₂₁ M₂₂ : Sort _} [CommSemiring R] [AddCommM
 #align linear_equiv.arrow_congr LinearEquiv.arrowCongr
 
 @[simp]
-theorem arrow_congr_apply {R M₁ M₂ M₂₁ M₂₂ : Sort _} [CommSemiring R] [AddCommMonoid M₁]
+theorem arrowCongr_apply {R M₁ M₂ M₂₁ M₂₂ : Sort _} [CommSemiring R] [AddCommMonoid M₁]
     [AddCommMonoid M₂] [AddCommMonoid M₂₁] [AddCommMonoid M₂₂] [Module R M₁] [Module R M₂]
     [Module R M₂₁] [Module R M₂₂] (e₁ : M₁ ≃ₗ[R] M₂) (e₂ : M₂₁ ≃ₗ[R] M₂₂) (f : M₁ →ₗ[R] M₂₁)
     (x : M₂) : arrowCongr e₁ e₂ f x = e₂ (f (e₁.symm x)) :=
   rfl
-#align linear_equiv.arrow_congr_apply LinearEquiv.arrow_congr_apply
+#align linear_equiv.arrow_congr_apply LinearEquiv.arrowCongr_apply
 
 @[simp]
-theorem arrow_congr_symm_apply {R M₁ M₂ M₂₁ M₂₂ : Sort _} [CommSemiring R] [AddCommMonoid M₁]
+theorem arrowCongr_symm_apply {R M₁ M₂ M₂₁ M₂₂ : Sort _} [CommSemiring R] [AddCommMonoid M₁]
     [AddCommMonoid M₂] [AddCommMonoid M₂₁] [AddCommMonoid M₂₂] [Module R M₁] [Module R M₂]
     [Module R M₂₁] [Module R M₂₂] (e₁ : M₁ ≃ₗ[R] M₂) (e₂ : M₂₁ ≃ₗ[R] M₂₂) (f : M₂ →ₗ[R] M₂₂)
     (x : M₁) : (arrowCongr e₁ e₂).symm f x = e₂.symm (f (e₁ x)) :=
   rfl
-#align linear_equiv.arrow_congr_symm_apply LinearEquiv.arrow_congr_symm_apply
+#align linear_equiv.arrow_congr_symm_apply LinearEquiv.arrowCongr_symm_apply
 
-theorem arrow_congr_comp {N N₂ N₃ : Sort _} [AddCommMonoid N] [AddCommMonoid N₂] [AddCommMonoid N₃]
+theorem arrowCongr_comp {N N₂ N₃ : Sort _} [AddCommMonoid N] [AddCommMonoid N₂] [AddCommMonoid N₃]
     [Module R N] [Module R N₂] [Module R N₃] (e₁ : M ≃ₗ[R] N) (e₂ : M₂ ≃ₗ[R] N₂) (e₃ : M₃ ≃ₗ[R] N₃)
     (f : M →ₗ[R] M₂) (g : M₂ →ₗ[R] M₃) :
     arrowCongr e₁ e₃ (g.comp f) = (arrowCongr e₂ e₃ g).comp (arrowCongr e₁ e₂ f) :=
   by
   ext
   simp only [symm_apply_apply, arrow_congr_apply, LinearMap.comp_apply]
-#align linear_equiv.arrow_congr_comp LinearEquiv.arrow_congr_comp
+#align linear_equiv.arrow_congr_comp LinearEquiv.arrowCongr_comp
 
-theorem arrow_congr_trans {M₁ M₂ M₃ N₁ N₂ N₃ : Sort _} [AddCommMonoid M₁] [Module R M₁]
+theorem arrowCongr_trans {M₁ M₂ M₃ N₁ N₂ N₃ : Sort _} [AddCommMonoid M₁] [Module R M₁]
     [AddCommMonoid M₂] [Module R M₂] [AddCommMonoid M₃] [Module R M₃] [AddCommMonoid N₁]
     [Module R N₁] [AddCommMonoid N₂] [Module R N₂] [AddCommMonoid N₃] [Module R N₃]
     (e₁ : M₁ ≃ₗ[R] M₂) (e₂ : N₁ ≃ₗ[R] N₂) (e₃ : M₂ ≃ₗ[R] M₃) (e₄ : N₂ ≃ₗ[R] N₃) :
     (arrowCongr e₁ e₂).trans (arrowCongr e₃ e₄) = arrowCongr (e₁.trans e₃) (e₂.trans e₄) :=
   rfl
-#align linear_equiv.arrow_congr_trans LinearEquiv.arrow_congr_trans
+#align linear_equiv.arrow_congr_trans LinearEquiv.arrowCongr_trans
 
 /-- If `M₂` and `M₃` are linearly isomorphic then the two spaces of linear maps from `M` into `M₂`
 and `M` into `M₃` are linearly isomorphic. -/
@@ -2585,7 +2583,7 @@ theorem symm_conj_apply (e : M ≃ₗ[R] M₂) (f : Module.EndCat R M₂) :
 
 theorem conj_comp (e : M ≃ₗ[R] M₂) (f g : Module.EndCat R M) :
     e.conj (g.comp f) = (e.conj g).comp (e.conj f) :=
-  arrow_congr_comp e e e f g
+  arrowCongr_comp e e e f g
 #align linear_equiv.conj_comp LinearEquiv.conj_comp
 
 theorem conj_trans (e₁ : M ≃ₗ[R] M₂) (e₂ : M₂ ≃ₗ[R] M₃) :
@@ -2648,17 +2646,17 @@ def equivSubtypeMap (p : Submodule R M) (q : Submodule R p) : q ≃ₗ[R] q.map 
 #align submodule.equiv_subtype_map Submodule.equivSubtypeMap
 
 @[simp]
-theorem equiv_subtype_map_apply {p : Submodule R M} {q : Submodule R p} (x : q) :
+theorem equivSubtypeMap_apply {p : Submodule R M} {q : Submodule R p} (x : q) :
     (p.equivSubtypeMap q x : M) = p.Subtype.domRestrict q x :=
   rfl
-#align submodule.equiv_subtype_map_apply Submodule.equiv_subtype_map_apply
+#align submodule.equiv_subtype_map_apply Submodule.equivSubtypeMap_apply
 
 @[simp]
-theorem equiv_subtype_map_symm_apply {p : Submodule R M} {q : Submodule R p} (x : q.map p.Subtype) :
+theorem equivSubtypeMap_symm_apply {p : Submodule R M} {q : Submodule R p} (x : q.map p.Subtype) :
     ((p.equivSubtypeMap q).symm x : M) = x := by
   cases x
   rfl
-#align submodule.equiv_subtype_map_symm_apply Submodule.equiv_subtype_map_symm_apply
+#align submodule.equiv_subtype_map_symm_apply Submodule.equivSubtypeMap_symm_apply
 
 /-- If `s ≤ t`, then we can view `s` as a submodule of `t` by taking the comap
 of `t.subtype`. -/
@@ -2737,15 +2735,15 @@ theorem map_symm_eq_iff (e : M ≃ₛₗ[τ₁₂] M₂) {K : Submodule R₂ M�
       
 #align submodule.map_symm_eq_iff Submodule.map_symm_eq_iff
 
-theorem order_iso_map_comap_apply' (e : M ≃ₛₗ[τ₁₂] M₂) (p : Submodule R M) :
+theorem orderIsoMapComap_apply' (e : M ≃ₛₗ[τ₁₂] M₂) (p : Submodule R M) :
     orderIsoMapComap e p = comap e.symm p :=
   p.map_equiv_eq_comap_symm _
-#align submodule.order_iso_map_comap_apply' Submodule.order_iso_map_comap_apply'
+#align submodule.order_iso_map_comap_apply' Submodule.orderIsoMapComap_apply'
 
-theorem order_iso_map_comap_symm_apply' (e : M ≃ₛₗ[τ₁₂] M₂) (p : Submodule R₂ M₂) :
+theorem orderIsoMapComap_symm_apply' (e : M ≃ₛₗ[τ₁₂] M₂) (p : Submodule R₂ M₂) :
     (orderIsoMapComap e).symm p = map e.symm p :=
   p.comap_equiv_eq_map_symm _
-#align submodule.order_iso_map_comap_symm_apply' Submodule.order_iso_map_comap_symm_apply'
+#align submodule.order_iso_map_comap_symm_apply' Submodule.orderIsoMapComap_symm_apply'
 
 omit τ₂₁
 
@@ -2816,21 +2814,21 @@ def funLeft (f : m → n) : (n → M) →ₗ[R] m → M
 #align linear_map.fun_left LinearMap.funLeft
 
 @[simp]
-theorem fun_left_apply (f : m → n) (g : n → M) (i : m) : funLeft R M f g i = g (f i) :=
+theorem funLeft_apply (f : m → n) (g : n → M) (i : m) : funLeft R M f g i = g (f i) :=
   rfl
-#align linear_map.fun_left_apply LinearMap.fun_left_apply
+#align linear_map.fun_left_apply LinearMap.funLeft_apply
 
 @[simp]
-theorem fun_left_id (g : n → M) : funLeft R M id g = g :=
+theorem funLeft_id (g : n → M) : funLeft R M id g = g :=
   rfl
-#align linear_map.fun_left_id LinearMap.fun_left_id
+#align linear_map.fun_left_id LinearMap.funLeft_id
 
-theorem fun_left_comp (f₁ : n → p) (f₂ : m → n) :
+theorem funLeft_comp (f₁ : n → p) (f₂ : m → n) :
     funLeft R M (f₁ ∘ f₂) = (funLeft R M f₂).comp (funLeft R M f₁) :=
   rfl
-#align linear_map.fun_left_comp LinearMap.fun_left_comp
+#align linear_map.fun_left_comp LinearMap.funLeft_comp
 
-theorem fun_left_surjective_of_injective (f : m → n) (hf : Injective f) :
+theorem funLeft_surjective_of_injective (f : m → n) (hf : Injective f) :
     Surjective (funLeft R M f) := by
   classical
     intro g
@@ -2841,16 +2839,16 @@ theorem fun_left_surjective_of_injective (f : m → n) (hf : Injective f) :
       · congr
         exact hf w.some_spec
       · simpa only [not_true, exists_apply_eq_apply] using w
-#align linear_map.fun_left_surjective_of_injective LinearMap.fun_left_surjective_of_injective
+#align linear_map.fun_left_surjective_of_injective LinearMap.funLeft_surjective_of_injective
 
-theorem fun_left_injective_of_surjective (f : m → n) (hf : Surjective f) :
+theorem funLeft_injective_of_surjective (f : m → n) (hf : Surjective f) :
     Injective (funLeft R M f) :=
   by
   obtain ⟨g, hg⟩ := hf.has_right_inverse
   suffices left_inverse (fun_left R M g) (fun_left R M f) by exact this.injective
   intro x
   rw [← LinearMap.comp_apply, ← fun_left_comp, hg.id, fun_left_id]
-#align linear_map.fun_left_injective_of_surjective LinearMap.fun_left_injective_of_surjective
+#align linear_map.fun_left_injective_of_surjective LinearMap.funLeft_injective_of_surjective
 
 end LinearMap
 
@@ -2869,26 +2867,26 @@ def funCongrLeft (e : m ≃ n) : (n → M) ≃ₗ[R] m → M :=
 #align linear_equiv.fun_congr_left LinearEquiv.funCongrLeft
 
 @[simp]
-theorem fun_congr_left_apply (e : m ≃ n) (x : n → M) : funCongrLeft R M e x = funLeft R M e x :=
+theorem funCongrLeft_apply (e : m ≃ n) (x : n → M) : funCongrLeft R M e x = funLeft R M e x :=
   rfl
-#align linear_equiv.fun_congr_left_apply LinearEquiv.fun_congr_left_apply
+#align linear_equiv.fun_congr_left_apply LinearEquiv.funCongrLeft_apply
 
 @[simp]
-theorem fun_congr_left_id : funCongrLeft R M (Equiv.refl n) = LinearEquiv.refl R (n → M) :=
+theorem funCongrLeft_id : funCongrLeft R M (Equiv.refl n) = LinearEquiv.refl R (n → M) :=
   rfl
-#align linear_equiv.fun_congr_left_id LinearEquiv.fun_congr_left_id
+#align linear_equiv.fun_congr_left_id LinearEquiv.funCongrLeft_id
 
 @[simp]
-theorem fun_congr_left_comp (e₁ : m ≃ n) (e₂ : n ≃ p) :
+theorem funCongrLeft_comp (e₁ : m ≃ n) (e₂ : n ≃ p) :
     funCongrLeft R M (Equiv.trans e₁ e₂) =
       LinearEquiv.trans (funCongrLeft R M e₂) (funCongrLeft R M e₁) :=
   rfl
-#align linear_equiv.fun_congr_left_comp LinearEquiv.fun_congr_left_comp
+#align linear_equiv.fun_congr_left_comp LinearEquiv.funCongrLeft_comp
 
 @[simp]
-theorem fun_congr_left_symm (e : m ≃ n) : (funCongrLeft R M e).symm = funCongrLeft R M e.symm :=
+theorem funCongrLeft_symm (e : m ≃ n) : (funCongrLeft R M e).symm = funCongrLeft R M e.symm :=
   rfl
-#align linear_equiv.fun_congr_left_symm LinearEquiv.fun_congr_left_symm
+#align linear_equiv.fun_congr_left_symm LinearEquiv.funCongrLeft_symm
 
 end LinearEquiv
 
@@ -2949,18 +2947,18 @@ def generalLinearEquiv : GeneralLinearGroup R M ≃* M ≃ₗ[R] M
 #align linear_map.general_linear_group.general_linear_equiv LinearMap.GeneralLinearGroup.generalLinearEquiv
 
 @[simp]
-theorem general_linear_equiv_to_linear_map (f : GeneralLinearGroup R M) :
+theorem generalLinearEquiv_to_linearMap (f : GeneralLinearGroup R M) :
     (generalLinearEquiv R M f : M →ₗ[R] M) = f :=
   by
   ext
   rfl
-#align linear_map.general_linear_group.general_linear_equiv_to_linear_map LinearMap.GeneralLinearGroup.general_linear_equiv_to_linear_map
+#align linear_map.general_linear_group.general_linear_equiv_to_linear_map LinearMap.GeneralLinearGroup.generalLinearEquiv_to_linearMap
 
 @[simp]
-theorem coe_fn_general_linear_equiv (f : GeneralLinearGroup R M) :
+theorem coeFn_generalLinearEquiv (f : GeneralLinearGroup R M) :
     ⇑(generalLinearEquiv R M f) = (f : M → M) :=
   rfl
-#align linear_map.general_linear_group.coe_fn_general_linear_equiv LinearMap.GeneralLinearGroup.coe_fn_general_linear_equiv
+#align linear_map.general_linear_group.coe_fn_general_linear_equiv LinearMap.GeneralLinearGroup.coeFn_generalLinearEquiv
 
 end GeneralLinearGroup
 

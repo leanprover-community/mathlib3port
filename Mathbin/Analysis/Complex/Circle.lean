@@ -62,12 +62,12 @@ theorem abs_coe_circle (z : circle) : abs z = 1 :=
   mem_circle_iff_abs.mp z.2
 #align abs_coe_circle abs_coe_circle
 
-theorem mem_circle_iff_norm_sq {z : ℂ} : z ∈ circle ↔ normSq z = 1 := by simp [Complex.abs]
-#align mem_circle_iff_norm_sq mem_circle_iff_norm_sq
+theorem mem_circle_iff_normSq {z : ℂ} : z ∈ circle ↔ normSq z = 1 := by simp [Complex.abs]
+#align mem_circle_iff_norm_sq mem_circle_iff_normSq
 
 @[simp]
-theorem norm_sq_eq_of_mem_circle (z : circle) : normSq z = 1 := by simp [norm_sq_eq_abs]
-#align norm_sq_eq_of_mem_circle norm_sq_eq_of_mem_circle
+theorem normSq_eq_of_mem_circle (z : circle) : normSq z = 1 := by simp [norm_sq_eq_abs]
+#align norm_sq_eq_of_mem_circle normSq_eq_of_mem_circle
 
 theorem ne_zero_of_mem_circle (z : circle) : (z : ℂ) ≠ 0 :=
   ne_zero_of_mem_unit_sphere z
@@ -82,7 +82,7 @@ theorem coe_inv_circle (z : circle) : ↑z⁻¹ = (z : ℂ)⁻¹ :=
 #align coe_inv_circle coe_inv_circle
 
 theorem coe_inv_circle_eq_conj (z : circle) : ↑z⁻¹ = conj (z : ℂ) := by
-  rw [coe_inv_circle, inv_def, norm_sq_eq_of_mem_circle, inv_one, of_real_one, mul_one]
+  rw [coe_inv_circle, inv_def, normSq_eq_of_mem_circle, inv_one, of_real_one, mul_one]
 #align coe_inv_circle_eq_conj coe_inv_circle_eq_conj
 
 @[simp]
@@ -97,16 +97,16 @@ def circle.toUnits : circle →* Units ℂ :=
 
 -- written manually because `@[simps]` was slow and generated the wrong lemma
 @[simp]
-theorem circle.to_units_apply (z : circle) :
+theorem circle.toUnits_apply (z : circle) :
     circle.toUnits z = Units.mk0 z (ne_zero_of_mem_circle z) :=
   rfl
-#align circle.to_units_apply circle.to_units_apply
+#align circle.to_units_apply circle.toUnits_apply
 
 instance : CompactSpace circle :=
-  Metric.sphere.compact_space _ _
+  Metric.sphere.compactSpace _ _
 
 instance : TopologicalGroup circle :=
-  Metric.sphere.topological_group
+  Metric.sphere.topologicalGroup
 
 /-- If `z` is a nonzero complex number, then `conj z / z` belongs to the unit circle. -/
 @[simps]
@@ -121,20 +121,20 @@ def expMapCircle : C(ℝ, circle)
 #align exp_map_circle expMapCircle
 
 @[simp]
-theorem exp_map_circle_apply (t : ℝ) : ↑(expMapCircle t) = Complex.exp (t * Complex.i) :=
+theorem expMapCircle_apply (t : ℝ) : ↑(expMapCircle t) = Complex.exp (t * Complex.i) :=
   rfl
-#align exp_map_circle_apply exp_map_circle_apply
+#align exp_map_circle_apply expMapCircle_apply
 
 @[simp]
-theorem exp_map_circle_zero : expMapCircle 0 = 1 :=
-  Subtype.ext <| by rw [exp_map_circle_apply, of_real_zero, zero_mul, exp_zero, Submonoid.coe_one]
-#align exp_map_circle_zero exp_map_circle_zero
+theorem expMapCircle_zero : expMapCircle 0 = 1 :=
+  Subtype.ext <| by rw [expMapCircle_apply, of_real_zero, zero_mul, exp_zero, Submonoid.coe_one]
+#align exp_map_circle_zero expMapCircle_zero
 
 @[simp]
-theorem exp_map_circle_add (x y : ℝ) : expMapCircle (x + y) = expMapCircle x * expMapCircle y :=
+theorem expMapCircle_add (x y : ℝ) : expMapCircle (x + y) = expMapCircle x * expMapCircle y :=
   Subtype.ext <| by
-    simp only [exp_map_circle_apply, Submonoid.coe_mul, of_real_add, add_mul, Complex.exp_add]
-#align exp_map_circle_add exp_map_circle_add
+    simp only [expMapCircle_apply, Submonoid.coe_mul, of_real_add, add_mul, Complex.exp_add]
+#align exp_map_circle_add expMapCircle_add
 
 /-- The map `λ t, exp (t * I)` from `ℝ` to the unit circle in `ℂ`, considered as a homomorphism of
 groups. -/
@@ -142,17 +142,17 @@ groups. -/
 def expMapCircleHom : ℝ →+ Additive circle
     where
   toFun := Additive.ofMul ∘ expMapCircle
-  map_zero' := exp_map_circle_zero
-  map_add' := exp_map_circle_add
+  map_zero' := expMapCircle_zero
+  map_add' := expMapCircle_add
 #align exp_map_circle_hom expMapCircleHom
 
 @[simp]
-theorem exp_map_circle_sub (x y : ℝ) : expMapCircle (x - y) = expMapCircle x / expMapCircle y :=
+theorem expMapCircle_sub (x y : ℝ) : expMapCircle (x - y) = expMapCircle x / expMapCircle y :=
   expMapCircleHom.map_sub x y
-#align exp_map_circle_sub exp_map_circle_sub
+#align exp_map_circle_sub expMapCircle_sub
 
 @[simp]
-theorem exp_map_circle_neg (x : ℝ) : expMapCircle (-x) = (expMapCircle x)⁻¹ :=
+theorem expMapCircle_neg (x : ℝ) : expMapCircle (-x) = (expMapCircle x)⁻¹ :=
   expMapCircleHom.map_neg x
-#align exp_map_circle_neg exp_map_circle_neg
+#align exp_map_circle_neg expMapCircle_neg
 

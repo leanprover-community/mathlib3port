@@ -66,7 +66,7 @@ variable {E : Type _} [NormedAddCommGroup E]
 
 /-- An auxiliary lemma that combines two double exponential estimates into a similar estimate
 on the difference of the functions. -/
-theorem is_O_sub_exp_exp {a : ℝ} {f g : ℂ → E} {l : Filter ℂ} {u : ℂ → ℝ}
+theorem isO_sub_exp_exp {a : ℝ} {f g : ℂ → E} {l : Filter ℂ} {u : ℂ → ℝ}
     (hBf : ∃ c < a, ∃ B, f =O[l] fun z => expR (B * expR (c * |u z|)))
     (hBg : ∃ c < a, ∃ B, g =O[l] fun z => expR (B * expR (c * |u z|))) :
     ∃ c < a, ∃ B, (f - g) =O[l] fun z => expR (B * expR (c * |u z|)) :=
@@ -87,11 +87,11 @@ theorem is_O_sub_exp_exp {a : ℝ} {f g : ℂ → E} {l : Filter ℂ} {u : ℂ �
   refine' (hOf.trans_le <| this _ _ _).sub (hOg.trans_le <| this _ _ _)
   exacts[le_max_left _ _, le_max_left _ _, (le_max_left _ _).trans (le_max_right _ _),
     le_max_right _ _, le_max_left _ _, (le_max_right _ _).trans (le_max_right _ _)]
-#align phragmen_lindelof.is_O_sub_exp_exp PhragmenLindelof.is_O_sub_exp_exp
+#align phragmen_lindelof.is_O_sub_exp_exp PhragmenLindelof.isO_sub_exp_exp
 
 /-- An auxiliary lemma that combines two “exponential of a power” estimates into a similar estimate
 on the difference of the functions. -/
-theorem is_O_sub_exp_rpow {a : ℝ} {f g : ℂ → E} {l : Filter ℂ}
+theorem isO_sub_exp_rpow {a : ℝ} {f g : ℂ → E} {l : Filter ℂ}
     (hBf : ∃ c < a, ∃ B, f =O[comap Complex.abs atTop ⊓ l] fun z => expR (B * abs z ^ c))
     (hBg : ∃ c < a, ∃ B, g =O[comap Complex.abs atTop ⊓ l] fun z => expR (B * abs z ^ c)) :
     ∃ c < a, ∃ B, (f - g) =O[comap Complex.abs atTop ⊓ l] fun z => expR (B * abs z ^ c) :=
@@ -117,7 +117,7 @@ theorem is_O_sub_exp_rpow {a : ℝ} {f g : ℂ → E} {l : Filter ℂ}
   refine' (hOf.trans <| this _ _ _).sub (hOg.trans <| this _ _ _)
   exacts[le_max_left _ _, le_max_left _ _, (le_max_left _ _).trans (le_max_right _ _),
     le_max_right _ _, le_max_left _ _, (le_max_right _ _).trans (le_max_right _ _)]
-#align phragmen_lindelof.is_O_sub_exp_rpow PhragmenLindelof.is_O_sub_exp_rpow
+#align phragmen_lindelof.is_O_sub_exp_rpow PhragmenLindelof.isO_sub_exp_rpow
 
 variable [NormedSpace ℂ E] {a b C : ℝ} {f g : ℂ → E} {z : ℂ}
 
@@ -182,11 +182,11 @@ theorem horizontal_strip (hfd : DiffContOnCl ℂ f (im ⁻¹' Ioo a b))
     for all negative `ε`. -/
   suffices ∀ᶠ ε : ℝ in 𝓝[<] 0, ‖g ε z • f z‖ ≤ C
     by
-    refine' le_of_tendsto (tendsto.mono_left _ nhds_within_le_nhds) this
+    refine' le_of_tendsto (tendsto.mono_left _ nhdsWithin_le_nhds) this
     apply ((continuous_of_real.mul continuous_const).cexp.smul continuous_const).norm.tendsto'
     simp
     infer_instance
-  filter_upwards [self_mem_nhds_within] with ε ε₀
+  filter_upwards [self_mem_nhdsWithin] with ε ε₀
   change ε < 0 at ε₀
   -- An upper estimate on `‖g ε w‖` that will be used in two branches of the proof.
   obtain ⟨δ, δ₀, hδ⟩ :
@@ -196,10 +196,10 @@ theorem horizontal_strip (hfd : DiffContOnCl ℂ f (im ⁻¹' Ioo a b))
     refine'
       ⟨ε * Real.cos (d * b),
         mul_neg_of_neg_of_pos ε₀
-          (Real.cos_pos_of_mem_Ioo <| abs_lt.1 <| (abs_of_pos (mul_pos hd₀ hb)).symm ▸ hb'),
+          (Real.cos_pos_of_mem_ioo <| abs_lt.1 <| (abs_of_pos (mul_pos hd₀ hb)).symm ▸ hb'),
         fun w hw => _⟩
     replace hw : |im (aff w)| ≤ d * b
-    · rw [← Real.closed_ball_eq_Icc] at hw
+    · rw [← Real.closedBall_eq_icc] at hw
       rwa [of_real_mul_im, sub_im, mul_I_im, of_real_re, _root_.abs_mul, abs_of_pos hd₀,
         mul_le_mul_left hd₀]
     simpa only [of_real_mul_re, _root_.abs_mul, abs_of_pos hd₀, sub_re, mul_I_re, of_real_im,
@@ -257,10 +257,10 @@ theorem horizontal_strip (hfd : DiffContOnCl ℂ f (im ⁻¹' Ioo a b))
     norm_le_of_forall_mem_frontier_norm_le ((bounded_Ioo _ _).reProdIm (bounded_Ioo _ _)) hd
       (fun w hw => _) _
   · have hwc := frontier_subset_closure hw
-    rw [frontier_re_prod_im, closure_Ioo (neg_lt_self hR₀).Ne, frontier_Ioo hab, closure_Ioo hab.ne,
-      frontier_Ioo (neg_lt_self hR₀)] at hw
+    rw [frontier_re_prod_im, closure_ioo (neg_lt_self hR₀).Ne, frontier_ioo hab, closure_ioo hab.ne,
+      frontier_ioo (neg_lt_self hR₀)] at hw
     by_cases him : w.im = a - b ∨ w.im = a + b
-    · rw [closure_re_prod_im, closure_Ioo (neg_lt_self hR₀).Ne] at hwc
+    · rw [closure_re_prod_im, closure_ioo (neg_lt_self hR₀).Ne] at hwc
       rw [norm_smul, ← one_mul C]
       exact mul_le_mul (hg₁ _ him) (him.by_cases (hle_a _) (hle_b _)) (norm_nonneg _) zero_le_one
     · replace hw : w ∈ {-R, R} ×ℂ Icc (a - b) (a + b)
@@ -268,7 +268,7 @@ theorem horizontal_strip (hfd : DiffContOnCl ℂ f (im ⁻¹' Ioo a b))
       have hw' := eq_endpoints_or_mem_Ioo_of_mem_Icc hw.2
       rw [← or_assoc] at hw'
       exact hR _ ((abs_eq hR₀.le).2 hw.1.symm) (hw'.resolve_left him)
-  · rw [closure_re_prod_im, closure_Ioo hab.ne, closure_Ioo (neg_lt_self hR₀).Ne]
+  · rw [closure_re_prod_im, closure_ioo hab.ne, closure_ioo (neg_lt_self hR₀).Ne]
     exact ⟨abs_le.1 hzR.le, ⟨hza.le, hzb.le⟩⟩
 #align phragmen_lindelof.horizontal_strip PhragmenLindelof.horizontal_strip
 
@@ -304,7 +304,7 @@ Let `f g : ℂ → E` be functions such that
 
 Then `f` is equal to `g` on the closed strip `{z : ℂ | a ≤ im z ≤ b}`.
 -/
-theorem eq_on_horizontal_strip {g : ℂ → E} (hdf : DiffContOnCl ℂ f (im ⁻¹' Ioo a b))
+theorem eqOn_horizontal_strip {g : ℂ → E} (hdf : DiffContOnCl ℂ f (im ⁻¹' Ioo a b))
     (hBf :
       ∃ c < π / (b - a),
         ∃ B,
@@ -319,9 +319,9 @@ theorem eq_on_horizontal_strip {g : ℂ → E} (hdf : DiffContOnCl ℂ f (im ⁻
     (ha : ∀ z : ℂ, z.im = a → f z = g z) (hb : ∀ z : ℂ, z.im = b → f z = g z) :
     EqOn f g (im ⁻¹' Icc a b) := fun z hz =>
   sub_eq_zero.1
-    (eq_zero_on_horizontal_strip (hdf.sub hdg) (is_O_sub_exp_exp hBf hBg)
+    (eq_zero_on_horizontal_strip (hdf.sub hdg) (isO_sub_exp_exp hBf hBg)
       (fun w hw => sub_eq_zero.2 (ha w hw)) (fun w hw => sub_eq_zero.2 (hb w hw)) hz)
-#align phragmen_lindelof.eq_on_horizontal_strip PhragmenLindelof.eq_on_horizontal_strip
+#align phragmen_lindelof.eq_on_horizontal_strip PhragmenLindelof.eqOn_horizontal_strip
 
 /-!
 ### Phragmen-Lindelöf principle in a vertical strip
@@ -399,7 +399,7 @@ Let `f g : ℂ → E` be functions such that
 
 Then `f` is equal to `g` on the closed strip `{z : ℂ | a ≤ re z ≤ b}`.
 -/
-theorem eq_on_vertical_strip {g : ℂ → E} (hdf : DiffContOnCl ℂ f (re ⁻¹' Ioo a b))
+theorem eqOn_vertical_strip {g : ℂ → E} (hdf : DiffContOnCl ℂ f (re ⁻¹' Ioo a b))
     (hBf :
       ∃ c < π / (b - a),
         ∃ B,
@@ -414,9 +414,9 @@ theorem eq_on_vertical_strip {g : ℂ → E} (hdf : DiffContOnCl ℂ f (re ⁻¹
     (ha : ∀ z : ℂ, re z = a → f z = g z) (hb : ∀ z : ℂ, re z = b → f z = g z) :
     EqOn f g (re ⁻¹' Icc a b) := fun z hz =>
   sub_eq_zero.1
-    (eq_zero_on_vertical_strip (hdf.sub hdg) (is_O_sub_exp_exp hBf hBg)
+    (eq_zero_on_vertical_strip (hdf.sub hdg) (isO_sub_exp_exp hBf hBg)
       (fun w hw => sub_eq_zero.2 (ha w hw)) (fun w hw => sub_eq_zero.2 (hb w hw)) hz)
-#align phragmen_lindelof.eq_on_vertical_strip PhragmenLindelof.eq_on_vertical_strip
+#align phragmen_lindelof.eq_on_vertical_strip PhragmenLindelof.eqOn_vertical_strip
 
 /-!
 ### Phragmen-Lindelöf principle in coordinate quadrants
@@ -431,7 +431,7 @@ theorem eq_on_vertical_strip {g : ℂ → E} (hdf : DiffContOnCl ℂ f (re ⁻¹
 * `‖f z‖` is bounded from above by a constant `C` on the boundary of the first quadrant.
 
 Then `‖f z‖` is bounded from above by the same constant on the closed first quadrant. -/
-theorem quadrant_I (hd : DiffContOnCl ℂ f (Ioi 0 ×ℂ Ioi 0))
+theorem quadrant_i (hd : DiffContOnCl ℂ f (Ioi 0 ×ℂ Ioi 0))
     (hB :
       ∃ c < (2 : ℝ),
         ∃ B, f =O[comap Complex.abs atTop ⊓ 𝓟 (Ioi 0 ×ℂ Ioi 0)] fun z => expR (B * abs z ^ c))
@@ -456,10 +456,10 @@ theorem quadrant_I (hd : DiffContOnCl ℂ f (Ioi 0 ×ℂ Ioi 0))
     rw [mem_re_prod_im, exp_re, exp_im, mem_Ioi, mem_Ioi]
     refine'
       ⟨mul_pos (Real.exp_pos _)
-          (Real.cos_pos_of_mem_Ioo
+          (Real.cos_pos_of_mem_ioo
             ⟨(neg_lt_zero.2 <| div_pos Real.pi_pos two_pos).trans hz.1, hz.2⟩),
         mul_pos (Real.exp_pos _)
-          (Real.sin_pos_of_mem_Ioo ⟨hz.1, hz.2.trans (half_lt_self Real.pi_pos)⟩)⟩
+          (Real.sin_pos_of_mem_ioo ⟨hz.1, hz.2.trans (half_lt_self Real.pi_pos)⟩)⟩
   refine' horizontal_strip (hd.comp differentiable_exp.diff_cont_on_cl H) _ _ _ hζ.1 hζ.2 <;>
     clear hζ ζ
   · -- The estimate `hB` on `f` implies the required estimate on
@@ -500,7 +500,7 @@ theorem quadrant_I (hd : DiffContOnCl ℂ f (Ioi 0 ×ℂ Ioi 0))
       Real.cos_pi_div_two, Real.sin_pi_div_two, of_real_zero, of_real_one, one_mul, zero_add, ←
       of_real_exp]
     exact him _ (Real.exp_pos _).le
-#align phragmen_lindelof.quadrant_I PhragmenLindelof.quadrant_I
+#align phragmen_lindelof.quadrant_I PhragmenLindelof.quadrant_i
 
 /-- **Phragmen-Lindelöf principle** in the first quadrant. Let `f : ℂ → E` be a function such that
 
@@ -510,16 +510,16 @@ theorem quadrant_I (hd : DiffContOnCl ℂ f (Ioi 0 ×ℂ Ioi 0))
 * `f` is equal to zero on the boundary of the first quadrant.
 
 Then `f` is equal to zero on the closed first quadrant. -/
-theorem eq_zero_on_quadrant_I (hd : DiffContOnCl ℂ f (Ioi 0 ×ℂ Ioi 0))
+theorem eq_zero_on_quadrant_i (hd : DiffContOnCl ℂ f (Ioi 0 ×ℂ Ioi 0))
     (hB :
       ∃ c < (2 : ℝ),
         ∃ B, f =O[comap Complex.abs atTop ⊓ 𝓟 (Ioi 0 ×ℂ Ioi 0)] fun z => expR (B * abs z ^ c))
     (hre : ∀ x : ℝ, 0 ≤ x → f x = 0) (him : ∀ x : ℝ, 0 ≤ x → f (x * I) = 0) :
     EqOn f 0 { z | 0 ≤ z.re ∧ 0 ≤ z.im } := fun z hz =>
   norm_le_zero_iff.1 <|
-    quadrant_I hd hB (fun x hx => norm_le_zero_iff.2 <| hre x hx)
+    quadrant_i hd hB (fun x hx => norm_le_zero_iff.2 <| hre x hx)
       (fun x hx => norm_le_zero_iff.2 <| him x hx) hz.1 hz.2
-#align phragmen_lindelof.eq_zero_on_quadrant_I PhragmenLindelof.eq_zero_on_quadrant_I
+#align phragmen_lindelof.eq_zero_on_quadrant_I PhragmenLindelof.eq_zero_on_quadrant_i
 
 /-- **Phragmen-Lindelöf principle** in the first quadrant. Let `f g : ℂ → E` be functions such that
 
@@ -529,7 +529,7 @@ theorem eq_zero_on_quadrant_I (hd : DiffContOnCl ℂ f (Ioi 0 ×ℂ Ioi 0))
 * `f` is equal to `g` on the boundary of the first quadrant.
 
 Then `f` is equal to `g` on the closed first quadrant. -/
-theorem eq_on_quadrant_I (hdf : DiffContOnCl ℂ f (Ioi 0 ×ℂ Ioi 0))
+theorem eqOn_quadrant_i (hdf : DiffContOnCl ℂ f (Ioi 0 ×ℂ Ioi 0))
     (hBf :
       ∃ c < (2 : ℝ),
         ∃ B, f =O[comap Complex.abs atTop ⊓ 𝓟 (Ioi 0 ×ℂ Ioi 0)] fun z => expR (B * abs z ^ c))
@@ -540,9 +540,9 @@ theorem eq_on_quadrant_I (hdf : DiffContOnCl ℂ f (Ioi 0 ×ℂ Ioi 0))
     (hre : ∀ x : ℝ, 0 ≤ x → f x = g x) (him : ∀ x : ℝ, 0 ≤ x → f (x * I) = g (x * I)) :
     EqOn f g { z | 0 ≤ z.re ∧ 0 ≤ z.im } := fun z hz =>
   sub_eq_zero.1 <|
-    eq_zero_on_quadrant_I (hdf.sub hdg) (is_O_sub_exp_rpow hBf hBg)
+    eq_zero_on_quadrant_i (hdf.sub hdg) (isO_sub_exp_rpow hBf hBg)
       (fun x hx => sub_eq_zero.2 <| hre x hx) (fun x hx => sub_eq_zero.2 <| him x hx) hz
-#align phragmen_lindelof.eq_on_quadrant_I PhragmenLindelof.eq_on_quadrant_I
+#align phragmen_lindelof.eq_on_quadrant_I PhragmenLindelof.eqOn_quadrant_i
 
 /-- **Phragmen-Lindelöf principle** in the second quadrant. Let `f : ℂ → E` be a function such that
 
@@ -604,7 +604,7 @@ theorem eq_zero_on_quadrant_II (hd : DiffContOnCl ℂ f (Iio 0 ×ℂ Ioi 0))
 * `f` is equal to `g` on the boundary of the second quadrant.
 
 Then `f` is equal to `g` on the closed second quadrant. -/
-theorem eq_on_quadrant_II (hdf : DiffContOnCl ℂ f (Iio 0 ×ℂ Ioi 0))
+theorem eqOn_quadrant_II (hdf : DiffContOnCl ℂ f (Iio 0 ×ℂ Ioi 0))
     (hBf :
       ∃ c < (2 : ℝ),
         ∃ B, f =O[comap Complex.abs atTop ⊓ 𝓟 (Iio 0 ×ℂ Ioi 0)] fun z => expR (B * abs z ^ c))
@@ -615,9 +615,9 @@ theorem eq_on_quadrant_II (hdf : DiffContOnCl ℂ f (Iio 0 ×ℂ Ioi 0))
     (hre : ∀ x : ℝ, x ≤ 0 → f x = g x) (him : ∀ x : ℝ, 0 ≤ x → f (x * I) = g (x * I)) :
     EqOn f g { z | z.re ≤ 0 ∧ 0 ≤ z.im } := fun z hz =>
   sub_eq_zero.1 <|
-    eq_zero_on_quadrant_II (hdf.sub hdg) (is_O_sub_exp_rpow hBf hBg)
+    eq_zero_on_quadrant_II (hdf.sub hdg) (isO_sub_exp_rpow hBf hBg)
       (fun x hx => sub_eq_zero.2 <| hre x hx) (fun x hx => sub_eq_zero.2 <| him x hx) hz
-#align phragmen_lindelof.eq_on_quadrant_II PhragmenLindelof.eq_on_quadrant_II
+#align phragmen_lindelof.eq_on_quadrant_II PhragmenLindelof.eqOn_quadrant_II
 
 /-- **Phragmen-Lindelöf principle** in the third quadrant. Let `f : ℂ → E` be a function such that
 
@@ -681,7 +681,7 @@ theorem eq_zero_on_quadrant_III (hd : DiffContOnCl ℂ f (Iio 0 ×ℂ Iio 0))
 * `f` is equal to `g` on the boundary of the third quadrant.
 
 Then `f` is equal to `g` on the closed third quadrant. -/
-theorem eq_on_quadrant_III (hdf : DiffContOnCl ℂ f (Iio 0 ×ℂ Iio 0))
+theorem eqOn_quadrant_III (hdf : DiffContOnCl ℂ f (Iio 0 ×ℂ Iio 0))
     (hBf :
       ∃ c < (2 : ℝ),
         ∃ B, f =O[comap Complex.abs atTop ⊓ 𝓟 (Iio 0 ×ℂ Iio 0)] fun z => expR (B * abs z ^ c))
@@ -692,9 +692,9 @@ theorem eq_on_quadrant_III (hdf : DiffContOnCl ℂ f (Iio 0 ×ℂ Iio 0))
     (hre : ∀ x : ℝ, x ≤ 0 → f x = g x) (him : ∀ x : ℝ, x ≤ 0 → f (x * I) = g (x * I)) :
     EqOn f g { z | z.re ≤ 0 ∧ z.im ≤ 0 } := fun z hz =>
   sub_eq_zero.1 <|
-    eq_zero_on_quadrant_III (hdf.sub hdg) (is_O_sub_exp_rpow hBf hBg)
+    eq_zero_on_quadrant_III (hdf.sub hdg) (isO_sub_exp_rpow hBf hBg)
       (fun x hx => sub_eq_zero.2 <| hre x hx) (fun x hx => sub_eq_zero.2 <| him x hx) hz
-#align phragmen_lindelof.eq_on_quadrant_III PhragmenLindelof.eq_on_quadrant_III
+#align phragmen_lindelof.eq_on_quadrant_III PhragmenLindelof.eqOn_quadrant_III
 
 /-- **Phragmen-Lindelöf principle** in the fourth quadrant. Let `f : ℂ → E` be a function such that
 
@@ -758,7 +758,7 @@ theorem eq_zero_on_quadrant_IV (hd : DiffContOnCl ℂ f (Ioi 0 ×ℂ Iio 0))
 * `f` is equal to `g` on the boundary of the fourth quadrant.
 
 Then `f` is equal to `g` on the closed fourth quadrant. -/
-theorem eq_on_quadrant_IV (hdf : DiffContOnCl ℂ f (Ioi 0 ×ℂ Iio 0))
+theorem eqOn_quadrant_IV (hdf : DiffContOnCl ℂ f (Ioi 0 ×ℂ Iio 0))
     (hBf :
       ∃ c < (2 : ℝ),
         ∃ B, f =O[comap Complex.abs atTop ⊓ 𝓟 (Ioi 0 ×ℂ Iio 0)] fun z => expR (B * abs z ^ c))
@@ -769,9 +769,9 @@ theorem eq_on_quadrant_IV (hdf : DiffContOnCl ℂ f (Ioi 0 ×ℂ Iio 0))
     (hre : ∀ x : ℝ, 0 ≤ x → f x = g x) (him : ∀ x : ℝ, x ≤ 0 → f (x * I) = g (x * I)) :
     EqOn f g { z | 0 ≤ z.re ∧ z.im ≤ 0 } := fun z hz =>
   sub_eq_zero.1 <|
-    eq_zero_on_quadrant_IV (hdf.sub hdg) (is_O_sub_exp_rpow hBf hBg)
+    eq_zero_on_quadrant_IV (hdf.sub hdg) (isO_sub_exp_rpow hBf hBg)
       (fun x hx => sub_eq_zero.2 <| hre x hx) (fun x hx => sub_eq_zero.2 <| him x hx) hz
-#align phragmen_lindelof.eq_on_quadrant_IV PhragmenLindelof.eq_on_quadrant_IV
+#align phragmen_lindelof.eq_on_quadrant_IV PhragmenLindelof.eqOn_quadrant_IV
 
 /-!
 ### Phragmen-Lindelöf principle in the right half-plane
@@ -828,7 +828,7 @@ theorem right_half_plane_of_tendsto_zero_on_real (hd : DiffContOnCl ℂ f { z | 
     rcases h₀ with ⟨x₀, hx₀, hne⟩
     have hlt : ‖(0 : E)‖ < ‖f x₀‖ := by rwa [norm_zero, norm_pos_iff]
     suffices ∀ᶠ x : ℝ in cocompact ℝ ⊓ 𝓟 (Ici 0), ‖f x‖ ≤ ‖f x₀‖ by
-      simpa only [exists_prop] using hfc.norm.exists_forall_ge' is_closed_Ici hx₀ this
+      simpa only [exists_prop] using hfc.norm.exists_forall_ge' isClosed_ici hx₀ this
     rw [Real.cocompact_eq, inf_sup_right, (disjoint_at_bot_principal_Ici (0 : ℝ)).eq_bot,
       bot_sup_eq]
     exact (hre.norm.eventually <| ge_mem_nhds hlt).filter_mono inf_le_left
@@ -882,11 +882,11 @@ theorem right_half_plane_of_bounded_on_real (hd : DiffContOnCl ℂ f { z | 0 < z
   -- Taking the limit as `ε → 0`, we obtain the required inequality.
   suffices ∀ᶠ ε : ℝ in 𝓝[<] 0, ‖exp (ε * z) • f z‖ ≤ C
     by
-    refine' le_of_tendsto (tendsto.mono_left _ nhds_within_le_nhds) this
+    refine' le_of_tendsto (tendsto.mono_left _ nhdsWithin_le_nhds) this
     apply ((continuous_of_real.mul continuous_const).cexp.smul continuous_const).norm.tendsto'
     simp
     infer_instance
-  filter_upwards [self_mem_nhds_within] with ε ε₀
+  filter_upwards [self_mem_nhdsWithin] with ε ε₀
   change ε < 0 at ε₀
   set g : ℂ → E := fun z => exp (ε * z) • f z
   change ‖g z‖ ≤ C
@@ -931,7 +931,7 @@ theorem eq_zero_on_right_half_plane_of_superexponential_decay
   -- Due to continuity, it suffices to prove the equality on the open right half-plane.
   suffices ∀ z : ℂ, 0 < z.re → f z = 0 by
     simpa only [closure_set_of_lt_re] using
-      eq_on.of_subset_closure this hd.continuous_on continuous_on_const subset_closure subset.rfl
+      eq_on.of_subset_closure this hd.continuous_on continuousOn_const subset_closure subset.rfl
   -- Consider $g_n(z)=e^{nz}f(z)$.
   set g : ℕ → ℂ → E := fun n z => exp z ^ n • f z
   have hg : ∀ n z, ‖g n z‖ = expR z.re ^ n * ‖f z‖ :=
@@ -944,8 +944,8 @@ theorem eq_zero_on_right_half_plane_of_superexponential_decay
   · contrapose! H
     simp only [hg]
     exact
-      (((tendsto_pow_at_top_at_top_of_one_lt (Real.one_lt_exp_iff.2 hz)).at_top_mul
-              (norm_pos_iff.2 H) tendsto_const_nhds).Eventually
+      (((tendsto_pow_atTop_atTop_of_one_lt (Real.one_lt_exp_iff.2 hz)).at_top_mul (norm_pos_iff.2 H)
+              tendsto_const_nhds).Eventually
           (eventually_gt_at_top C)).exists
   intro n
   -- This estimate follows from the Phragmen-Lindelöf principle in the right half-plane.
@@ -989,7 +989,7 @@ that
   for any natural `n`, `exp (n * x) * ‖f x - g x‖` tends to zero as `x → ∞`.
 
 Then `f` is equal to `g` on the closed right half-plane. -/
-theorem eq_on_right_half_plane_of_superexponential_decay {g : ℂ → E}
+theorem eqOn_right_half_plane_of_superexponential_decay {g : ℂ → E}
     (hfd : DiffContOnCl ℂ f { z | 0 < z.re }) (hgd : DiffContOnCl ℂ g { z | 0 < z.re })
     (hfexp :
       ∃ c < (2 : ℝ),
@@ -1024,7 +1024,7 @@ theorem eq_on_right_half_plane_of_superexponential_decay {g : ℂ → E}
   · rcases hfim with ⟨Cf, hCf⟩
     rcases hgim with ⟨Cg, hCg⟩
     exact ⟨Cf + Cg, fun x => norm_sub_le_of_le (hCf x) (hCg x)⟩
-#align phragmen_lindelof.eq_on_right_half_plane_of_superexponential_decay PhragmenLindelof.eq_on_right_half_plane_of_superexponential_decay
+#align phragmen_lindelof.eq_on_right_half_plane_of_superexponential_decay PhragmenLindelof.eqOn_right_half_plane_of_superexponential_decay
 
 end PhragmenLindelof
 

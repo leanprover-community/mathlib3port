@@ -74,9 +74,9 @@ section SMul
 variable [SMul M X] [HasContinuousSmul M X]
 
 @[to_additive]
-instance (priority := 100) HasContinuousSmul.has_continuous_const_smul : HasContinuousConstSmul M X
+instance (priority := 100) HasContinuousSmul.hasContinuousConstSmul : HasContinuousConstSmul M X
     where continuous_const_smul _ := continuous_smul.comp (continuous_const.prod_mk continuous_id)
-#align has_continuous_smul.has_continuous_const_smul HasContinuousSmul.has_continuous_const_smul
+#align has_continuous_smul.has_continuous_const_smul HasContinuousSmul.hasContinuousConstSmul
 #align has_continuous_vadd.has_continuous_const_vadd HasContinuousVadd.has_continuous_const_vadd
 
 @[to_additive]
@@ -134,10 +134,10 @@ instance HasContinuousSmul.op [SMul Mᵐᵒᵖ X] [IsCentralScalar M X] : HasCon
 #align has_continuous_vadd.op HasContinuousVadd.op
 
 @[to_additive]
-instance MulOpposite.has_continuous_smul : HasContinuousSmul M Xᵐᵒᵖ :=
+instance MulOpposite.hasContinuousSmul : HasContinuousSmul M Xᵐᵒᵖ :=
   ⟨MulOpposite.continuous_op.comp <|
       continuous_smul.comp <| continuous_id.prod_map MulOpposite.continuous_unop⟩
-#align mul_opposite.has_continuous_smul MulOpposite.has_continuous_smul
+#align mul_opposite.has_continuous_smul MulOpposite.hasContinuousSmul
 #align add_opposite.has_continuous_vadd AddOpposite.has_continuous_vadd
 
 end SMul
@@ -147,11 +147,11 @@ section Monoid
 variable [Monoid M] [MulAction M X] [HasContinuousSmul M X]
 
 @[to_additive]
-instance Units.has_continuous_smul : HasContinuousSmul Mˣ X
+instance Units.hasContinuousSmul : HasContinuousSmul Mˣ X
     where continuous_smul :=
     show Continuous ((fun p : M × X => p.fst • p.snd) ∘ fun p : Mˣ × X => (p.1, p.2)) from
       continuous_smul.comp ((Units.continuous_coe.comp continuous_fst).prod_mk continuous_snd)
-#align units.has_continuous_smul Units.has_continuous_smul
+#align units.has_continuous_smul Units.hasContinuousSmul
 #align add_units.has_continuous_vadd AddUnits.has_continuous_vadd
 
 end Monoid
@@ -176,33 +176,33 @@ section LatticeOps
 variable {ι : Sort _} {M X : Type _} [TopologicalSpace M] [SMul M X]
 
 @[to_additive]
-theorem has_continuous_smul_Inf {ts : Set (TopologicalSpace X)}
+theorem hasContinuousSmul_infₛ {ts : Set (TopologicalSpace X)}
     (h : ∀ t ∈ ts, @HasContinuousSmul M X _ _ t) : @HasContinuousSmul M X _ _ (infₛ ts) :=
   {
     continuous_smul := by
       rw [← @infₛ_singleton _ _ ‹TopologicalSpace M›]
       exact
-        continuous_Inf_rng.2 fun t ht =>
-          continuous_Inf_dom₂ (Eq.refl _) ht
+        continuous_infₛ_rng.2 fun t ht =>
+          continuous_infₛ_dom₂ (Eq.refl _) ht
             (@HasContinuousSmul.continuous_smul _ _ _ _ t (h t ht)) }
-#align has_continuous_smul_Inf has_continuous_smul_Inf
-#align has_continuous_vadd_Inf has_continuous_vadd_Inf
+#align has_continuous_smul_Inf hasContinuousSmul_infₛ
+#align has_continuous_vadd_Inf has_continuous_vadd_infₛ
 
 @[to_additive]
-theorem has_continuous_smul_infi {ts' : ι → TopologicalSpace X}
+theorem hasContinuousSmul_infᵢ {ts' : ι → TopologicalSpace X}
     (h : ∀ i, @HasContinuousSmul M X _ _ (ts' i)) : @HasContinuousSmul M X _ _ (⨅ i, ts' i) :=
-  has_continuous_smul_Inf <| Set.forall_range_iff.mpr h
-#align has_continuous_smul_infi has_continuous_smul_infi
-#align has_continuous_vadd_infi has_continuous_vadd_infi
+  hasContinuousSmul_infₛ <| Set.forall_range_iff.mpr h
+#align has_continuous_smul_infi hasContinuousSmul_infᵢ
+#align has_continuous_vadd_infi has_continuous_vadd_infᵢ
 
 @[to_additive]
-theorem has_continuous_smul_inf {t₁ t₂ : TopologicalSpace X} [@HasContinuousSmul M X _ _ t₁]
+theorem hasContinuousSmul_inf {t₁ t₂ : TopologicalSpace X} [@HasContinuousSmul M X _ _ t₁]
     [@HasContinuousSmul M X _ _ t₂] : @HasContinuousSmul M X _ _ (t₁ ⊓ t₂) :=
   by
   rw [inf_eq_infᵢ]
-  refine' has_continuous_smul_infi fun b => _
+  refine' hasContinuousSmul_infᵢ fun b => _
   cases b <;> assumption
-#align has_continuous_smul_inf has_continuous_smul_inf
+#align has_continuous_smul_inf hasContinuousSmul_inf
 #align has_continuous_vadd_inf has_continuous_vadd_inf
 
 end LatticeOps
@@ -217,7 +217,7 @@ include G
 
 /-- An `add_torsor` for a connected space is a connected space. This is not an instance because
 it loops for a group as a torsor over itself. -/
-protected theorem AddTorsor.connected_space : ConnectedSpace P :=
+protected theorem AddTorsor.connectedSpace : ConnectedSpace P :=
   { is_preconnected_univ :=
       by
       convert
@@ -225,7 +225,7 @@ protected theorem AddTorsor.connected_space : ConnectedSpace P :=
           (continuous_id.vadd continuous_const).ContinuousOn
       rw [Set.image_univ, Equiv.range_eq_univ]
     to_nonempty := inferInstance }
-#align add_torsor.connected_space AddTorsor.connected_space
+#align add_torsor.connected_space AddTorsor.connectedSpace
 
 end AddTorsor
 

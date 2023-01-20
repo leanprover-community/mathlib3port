@@ -36,27 +36,27 @@ open BigOperators
 
 variable {α : Type _} [DecidableEq α] {𝒜 ℬ : Finset (Finset α)} {s : Finset α} {a : α}
 
-theorem IsLowerSet.non_member_subfamily (h : IsLowerSet (𝒜 : Set (Finset α))) :
+theorem IsLowerSet.nonMemberSubfamily (h : IsLowerSet (𝒜 : Set (Finset α))) :
     IsLowerSet (𝒜.nonMemberSubfamily a : Set (Finset α)) := fun s t hts =>
   by
   simp_rw [mem_coe, mem_non_member_subfamily]
   exact And.imp (h hts) (mt <| @hts _)
-#align is_lower_set.non_member_subfamily IsLowerSet.non_member_subfamily
+#align is_lower_set.non_member_subfamily IsLowerSet.nonMemberSubfamily
 
-theorem IsLowerSet.member_subfamily (h : IsLowerSet (𝒜 : Set (Finset α))) :
+theorem IsLowerSet.memberSubfamily (h : IsLowerSet (𝒜 : Set (Finset α))) :
     IsLowerSet (𝒜.memberSubfamily a : Set (Finset α)) :=
   by
   rintro s t hts
   simp_rw [mem_coe, mem_member_subfamily]
   exact And.imp (h <| insert_subset_insert _ hts) (mt <| @hts _)
-#align is_lower_set.member_subfamily IsLowerSet.member_subfamily
+#align is_lower_set.member_subfamily IsLowerSet.memberSubfamily
 
-theorem IsLowerSet.member_subfamily_subset_non_member_subfamily
-    (h : IsLowerSet (𝒜 : Set (Finset α))) : 𝒜.memberSubfamily a ⊆ 𝒜.nonMemberSubfamily a := fun s =>
+theorem IsLowerSet.memberSubfamily_subset_nonMemberSubfamily (h : IsLowerSet (𝒜 : Set (Finset α))) :
+    𝒜.memberSubfamily a ⊆ 𝒜.nonMemberSubfamily a := fun s =>
   by
   rw [mem_member_subfamily, mem_non_member_subfamily]
   exact And.imp_left (h <| subset_insert _ _)
-#align is_lower_set.member_subfamily_subset_non_member_subfamily IsLowerSet.member_subfamily_subset_non_member_subfamily
+#align is_lower_set.member_subfamily_subset_non_member_subfamily IsLowerSet.memberSubfamily_subset_nonMemberSubfamily
 
 /-- **Harris-Kleitman inequality**: Any two lower sets of finsets correlate. -/
 theorem IsLowerSet.le_card_inter_finset' (h𝒜 : IsLowerSet (𝒜 : Set (Finset α)))
@@ -113,7 +113,7 @@ theorem IsLowerSet.le_card_inter_finset (h𝒜 : IsLowerSet (𝒜 : Set (Finset 
 theorem IsUpperSet.card_inter_le_finset (h𝒜 : IsUpperSet (𝒜 : Set (Finset α)))
     (hℬ : IsLowerSet (ℬ : Set (Finset α))) : 2 ^ Fintype.card α * (𝒜 ∩ ℬ).card ≤ 𝒜.card * ℬ.card :=
   by
-  rw [← is_lower_set_compl, ← coe_compl] at h𝒜
+  rw [← isLowerSet_compl, ← coe_compl] at h𝒜
   have := h𝒜.le_card_inter_finset hℬ
   rwa [card_compl, Fintype.card_finset, tsub_mul, tsub_le_iff_tsub_le, ← mul_tsub, ←
     card_sdiff (inter_subset_right _ _), sdiff_inter_self_right, sdiff_compl, _root_.inf_comm] at
@@ -132,7 +132,7 @@ theorem IsLowerSet.card_inter_le_finset (h𝒜 : IsLowerSet (𝒜 : Set (Finset 
 theorem IsUpperSet.le_card_inter_finset (h𝒜 : IsUpperSet (𝒜 : Set (Finset α)))
     (hℬ : IsUpperSet (ℬ : Set (Finset α))) : 𝒜.card * ℬ.card ≤ 2 ^ Fintype.card α * (𝒜 ∩ ℬ).card :=
   by
-  rw [← is_lower_set_compl, ← coe_compl] at h𝒜
+  rw [← isLowerSet_compl, ← coe_compl] at h𝒜
   have := h𝒜.card_inter_le_finset hℬ
   rwa [card_compl, Fintype.card_finset, tsub_mul, le_tsub_iff_le_tsub, ← mul_tsub, ←
     card_sdiff (inter_subset_right _ _), sdiff_inter_self_right, sdiff_compl, _root_.inf_comm] at

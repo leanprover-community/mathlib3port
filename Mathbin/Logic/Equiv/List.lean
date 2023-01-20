@@ -206,25 +206,25 @@ def sortedUniv (α) [Fintype α] [Encodable α] : List α :=
 #align encodable.sorted_univ Encodable.sortedUniv
 
 @[simp]
-theorem mem_sorted_univ {α} [Fintype α] [Encodable α] (x : α) : x ∈ sortedUniv α :=
+theorem mem_sortedUniv {α} [Fintype α] [Encodable α] (x : α) : x ∈ sortedUniv α :=
   (Finset.mem_sort _).2 (Finset.mem_univ _)
-#align encodable.mem_sorted_univ Encodable.mem_sorted_univ
+#align encodable.mem_sorted_univ Encodable.mem_sortedUniv
 
 @[simp]
-theorem length_sorted_univ (α) [Fintype α] [Encodable α] : (sortedUniv α).length = Fintype.card α :=
+theorem length_sortedUniv (α) [Fintype α] [Encodable α] : (sortedUniv α).length = Fintype.card α :=
   Finset.length_sort _
-#align encodable.length_sorted_univ Encodable.length_sorted_univ
+#align encodable.length_sorted_univ Encodable.length_sortedUniv
 
 @[simp]
-theorem sorted_univ_nodup (α) [Fintype α] [Encodable α] : (sortedUniv α).Nodup :=
+theorem sortedUniv_nodup (α) [Fintype α] [Encodable α] : (sortedUniv α).Nodup :=
   Finset.sort_nodup _ _
-#align encodable.sorted_univ_nodup Encodable.sorted_univ_nodup
+#align encodable.sorted_univ_nodup Encodable.sortedUniv_nodup
 
 @[simp]
-theorem sorted_univ_to_finset (α) [Fintype α] [Encodable α] [DecidableEq α] :
+theorem sortedUniv_toFinset (α) [Fintype α] [Encodable α] [DecidableEq α] :
     (sortedUniv α).toFinset = Finset.univ :=
   Finset.sort_toFinset _ _
-#align encodable.sorted_univ_to_finset Encodable.sorted_univ_to_finset
+#align encodable.sorted_univ_to_finset Encodable.sortedUniv_toFinset
 
 /-- An encodable `fintype` is equivalent to the same size `fin`. -/
 def fintypeEquivFin {α} [Fintype α] [Encodable α] : α ≃ Fin (Fintype.card α) :=
@@ -271,18 +271,18 @@ instance denumerableList : Denumerable (List α) :=
 #align denumerable.denumerable_list Denumerable.denumerableList
 
 @[simp]
-theorem list_of_nat_zero : ofNat (List α) 0 = [] := by rw [← @encode_list_nil α, of_nat_encode]
-#align denumerable.list_of_nat_zero Denumerable.list_of_nat_zero
+theorem list_ofNat_zero : ofNat (List α) 0 = [] := by rw [← @encode_list_nil α, of_nat_encode]
+#align denumerable.list_of_nat_zero Denumerable.list_ofNat_zero
 
 @[simp]
-theorem list_of_nat_succ (v : ℕ) :
+theorem list_ofNat_succ (v : ℕ) :
     ofNat (List α) (succ v) = ofNat α v.unpair.1 :: ofNat (List α) v.unpair.2 :=
   of_nat_of_decode <|
     show decodeList (succ v) = _ by
       cases' e : unpair v with v₁ v₂
       simp [decode_list, e]
       rw [show decode_list v₂ = decode (List α) v₂ from rfl, decode_eq_of_nat] <;> rfl
-#align denumerable.list_of_nat_succ Denumerable.list_of_nat_succ
+#align denumerable.list_of_nat_succ Denumerable.list_ofNat_succ
 
 end List
 

@@ -57,12 +57,12 @@ noncomputable def invSelf : S :=
 #align is_localization.away.inv_self IsLocalization.Away.invSelf
 
 @[simp]
-theorem mul_inv_self : algebraMap R S x * invSelf x = 1 :=
+theorem mul_invSelf : algebraMap R S x * invSelf x = 1 :=
   by
   convert IsLocalization.mk'_mul_mk'_eq_one _ 1
   symm
   apply IsLocalization.mk'_one
-#align is_localization.away.mul_inv_self IsLocalization.Away.mul_inv_self
+#align is_localization.away.mul_inv_self IsLocalization.Away.mul_invSelf
 
 variable {g : R →+* P}
 
@@ -152,7 +152,7 @@ noncomputable def atOne [IsLocalization.Away (1 : R) S] : R ≃ₐ[R] S :=
   @atUnit R _ S _ _ (1 : R) isUnit_one _
 #align is_localization.at_one IsLocalization.atOne
 
-theorem away_of_is_unit_of_bijective {R : Type _} (S : Type _) [CommRing R] [CommRing S]
+theorem away_of_isUnit_of_bijective {R : Type _} (S : Type _) [CommRing R] [CommRing S]
     [Algebra R S] {r : R} (hr : IsUnit r) (H : Function.Bijective (algebraMap R S)) :
     IsLocalization.Away r S :=
   { map_units := by
@@ -168,7 +168,7 @@ theorem away_of_is_unit_of_bijective {R : Type _} (S : Type _) [CommRing R] [Com
         exact ⟨1, rfl⟩
       · rintro ⟨⟨_, n, rfl⟩, e⟩
         exact (hr.pow _).mul_left_inj.mp e }
-#align is_localization.away_of_is_unit_of_bijective IsLocalization.away_of_is_unit_of_bijective
+#align is_localization.away_of_is_unit_of_bijective IsLocalization.away_of_isUnit_of_bijective
 
 end AtUnits
 
@@ -201,7 +201,7 @@ open Polynomial AdjoinRoot Localization
 
 variable {R : Type _} [CommRing R]
 
-attribute [local instance] IsLocalization.alg_hom_subsingleton AdjoinRoot.alg_hom_subsingleton
+attribute [local instance] IsLocalization.algHom_subsingleton AdjoinRoot.algHom_subsingleton
 
 /-- The `R`-`alg_equiv` between the localization of `R` away from `r` and
     `R` with an inverse of `r` adjoined. -/
@@ -211,18 +211,18 @@ noncomputable def Localization.awayEquivAdjoin (r : R) : Away r ≃ₐ[R] Adjoin
       commutes' :=
         IsLocalization.Away.AwayMap.lift_eq r (isUnit_of_mul_eq_one _ _ <| root_is_inv r) }
     (liftHom _ (IsLocalization.Away.invSelf r) <| by
-      simp only [map_sub, map_mul, aeval_C, aeval_X, IsLocalization.Away.mul_inv_self, aeval_one,
+      simp only [map_sub, map_mul, aeval_C, aeval_X, IsLocalization.Away.mul_invSelf, aeval_one,
         sub_self])
     (Subsingleton.elim _ _) (Subsingleton.elim _ _)
 #align localization.away_equiv_adjoin Localization.awayEquivAdjoin
 
 theorem IsLocalization.adjoin_inv (r : R) : IsLocalization.Away r (AdjoinRoot <| c r * X - 1) :=
-  IsLocalization.is_localization_of_alg_equiv _ (Localization.awayEquivAdjoin r)
+  IsLocalization.isLocalization_of_algEquiv _ (Localization.awayEquivAdjoin r)
 #align is_localization.adjoin_inv IsLocalization.adjoin_inv
 
-theorem IsLocalization.Away.finite_presentation (r : R) {S} [CommRing S] [Algebra R S]
+theorem IsLocalization.Away.finitePresentation (r : R) {S} [CommRing S] [Algebra R S]
     [IsLocalization.Away r S] : Algebra.FinitePresentation R S :=
-  (AdjoinRoot.finite_presentation _).Equiv <|
+  (AdjoinRoot.finitePresentation _).Equiv <|
     (Localization.awayEquivAdjoin r).symm.trans <| IsLocalization.algEquiv (Submonoid.powers r) _ _
-#align is_localization.away.finite_presentation IsLocalization.Away.finite_presentation
+#align is_localization.away.finite_presentation IsLocalization.Away.finitePresentation
 

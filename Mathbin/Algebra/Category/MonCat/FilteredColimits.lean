@@ -68,7 +68,7 @@ abbrev M.mk : (Σj, F.obj j) → M :=
 @[to_additive]
 theorem M.mk_eq (x y : Σj, F.obj j)
     (h : ∃ (k : J)(f : x.1 ⟶ k)(g : y.1 ⟶ k), F.map f x.2 = F.map g y.2) : M.mk x = M.mk y :=
-  Quot.EqvGen_sound (Types.FilteredColimit.eqv_gen_quot_rel_of_rel (F ⋙ forget MonCat) x y h)
+  Quot.EqvGen_sound (Types.FilteredColimit.eqvGen_quot_rel_of_rel (F ⋙ forget MonCat) x y h)
 #align Mon.filtered_colimits.M.mk_eq MonCat.FilteredColimits.M.mk_eq
 #align AddMon.filtered_colimits.M.mk_eq AddMonCat.FilteredColimits.M.mk_eq
 
@@ -110,7 +110,7 @@ def colimitMulAux (x y : Σj, F.obj j) : M :=
 
 /-- Multiplication in the colimit is well-defined in the left argument. -/
 @[to_additive "Addition in the colimit is well-defined in the left argument."]
-theorem colimit_mul_aux_eq_of_rel_left {x x' y : Σj, F.obj j}
+theorem colimitMulAux_eq_of_rel_left {x x' y : Σj, F.obj j}
     (hxx' : Types.FilteredColimit.Rel (F ⋙ forget MonCat) x x') :
     colimit_mul_aux x y = colimit_mul_aux x' y :=
   by
@@ -123,12 +123,12 @@ theorem colimit_mul_aux_eq_of_rel_left {x x' y : Σj, F.obj j}
   use s, α, γ
   dsimp
   simp_rw [MonoidHom.map_mul, ← comp_apply, ← F.map_comp, h₁, h₂, h₃, F.map_comp, comp_apply, hfg]
-#align Mon.filtered_colimits.colimit_mul_aux_eq_of_rel_left MonCat.FilteredColimits.colimit_mul_aux_eq_of_rel_left
+#align Mon.filtered_colimits.colimit_mul_aux_eq_of_rel_left MonCat.FilteredColimits.colimitMulAux_eq_of_rel_left
 #align AddMon.filtered_colimits.colimit_add_aux_eq_of_rel_left AddMonCat.FilteredColimits.colimit_add_aux_eq_of_rel_left
 
 /-- Multiplication in the colimit is well-defined in the right argument. -/
 @[to_additive "Addition in the colimit is well-defined in the right argument."]
-theorem colimit_mul_aux_eq_of_rel_right {x y y' : Σj, F.obj j}
+theorem colimitMulAux_eq_of_rel_right {x y y' : Σj, F.obj j}
     (hyy' : Types.FilteredColimit.Rel (F ⋙ forget MonCat) y y') :
     colimit_mul_aux x y = colimit_mul_aux x y' :=
   by
@@ -141,7 +141,7 @@ theorem colimit_mul_aux_eq_of_rel_right {x y y' : Σj, F.obj j}
   use s, α, γ
   dsimp
   simp_rw [MonoidHom.map_mul, ← comp_apply, ← F.map_comp, h₁, h₂, h₃, F.map_comp, comp_apply, hfg]
-#align Mon.filtered_colimits.colimit_mul_aux_eq_of_rel_right MonCat.FilteredColimits.colimit_mul_aux_eq_of_rel_right
+#align Mon.filtered_colimits.colimit_mul_aux_eq_of_rel_right MonCat.FilteredColimits.colimitMulAux_eq_of_rel_right
 #align AddMon.filtered_colimits.colimit_add_aux_eq_of_rel_right AddMonCat.FilteredColimits.colimit_add_aux_eq_of_rel_right
 
 /-- Multiplication in the colimit. See also `colimit_mul_aux`. -/

@@ -161,10 +161,10 @@ def iccExtend (f : C(Set.Icc a b, β)) : C(α, β) :=
 #align continuous_map.Icc_extend ContinuousMap.iccExtend
 
 @[simp]
-theorem coe_Icc_extend (f : C(Set.Icc a b, β)) :
+theorem coe_iccExtend (f : C(Set.Icc a b, β)) :
     ((iccExtend h f : C(α, β)) : α → β) = Set.IccExtend h f :=
   rfl
-#align continuous_map.coe_Icc_extend ContinuousMap.coe_Icc_extend
+#align continuous_map.coe_Icc_extend ContinuousMap.coe_iccExtend
 
 end Extend
 

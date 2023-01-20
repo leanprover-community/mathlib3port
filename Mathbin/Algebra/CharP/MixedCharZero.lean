@@ -161,10 +161,10 @@ section EqualCharZero
 /-- `ℚ`-algebra implies equal characteristic.
 -/
 @[nolint unused_arguments]
-theorem Q_algebra_to_equal_char_zero [Nontrivial R] [Algebra ℚ R] :
+theorem Q_algebra_to_equal_charZero [Nontrivial R] [Algebra ℚ R] :
     ∀ I : Ideal R, I ≠ ⊤ → CharZero (R ⧸ I) :=
   by
-  haveI : CharZero R := algebraRat.char_zero R
+  haveI : CharZero R := algebraRat.charZero R
   intro I hI
   constructor
   intro a b h_ab
@@ -173,12 +173,12 @@ theorem Q_algebra_to_equal_char_zero [Nontrivial R] [Algebra ℚ R] :
   refine' I.eq_top_of_is_unit_mem _ (IsUnit.map (algebraMap ℚ R) (IsUnit.mk0 (a - b : ℚ) _))
   · simpa only [← Ideal.Quotient.eq_zero_iff_mem, map_sub, sub_eq_zero, map_nat_cast]
   simpa only [Ne.def, sub_eq_zero] using (@Nat.cast_injective ℚ _ _).Ne hI
-#align Q_algebra_to_equal_char_zero Q_algebra_to_equal_char_zero
+#align Q_algebra_to_equal_char_zero Q_algebra_to_equal_charZero
 
 section ConstructionOfQAlgebra
 
 /-- Internal: Not intended to be used outside this local construction. -/
-theorem EqualCharZero.pnat_coe_is_unit [h : Fact (∀ I : Ideal R, I ≠ ⊤ → CharZero (R ⧸ I))]
+theorem EqualCharZero.pNat_coe_isUnit [h : Fact (∀ I : Ideal R, I ≠ ⊤ → CharZero (R ⧸ I))]
     (n : ℕ+) : IsUnit (n : R) :=
   by
   -- `n : R` is a unit iff `(n)` is not a proper ideal in `R`.
@@ -191,31 +191,31 @@ theorem EqualCharZero.pnat_coe_is_unit [h : Fact (∀ I : Ideal R, I ≠ ⊤ →
   -- But `n` generates the ideal, so its image is clearly zero.
   rw [← map_nat_cast (Ideal.Quotient.mk _), Nat.cast_zero, Ideal.Quotient.eq_zero_iff_mem]
   exact Ideal.subset_span (Set.mem_singleton _)
-#align equal_char_zero.pnat_coe_is_unit EqualCharZero.pnat_coe_is_unit
+#align equal_char_zero.pnat_coe_is_unit EqualCharZero.pNat_coe_isUnit
 
 /-- Internal: Not intended to be used outside this local construction. -/
 noncomputable instance EqualCharZero.pnatHasCoeUnits
     [Fact (∀ I : Ideal R, I ≠ ⊤ → CharZero (R ⧸ I))] : CoeTC ℕ+ Rˣ :=
-  ⟨fun n => (EqualCharZero.pnat_coe_is_unit R n).Unit⟩
+  ⟨fun n => (EqualCharZero.pNat_coe_isUnit R n).Unit⟩
 #align equal_char_zero.pnat_has_coe_units EqualCharZero.pnatHasCoeUnits
 
 /-- Internal: Not intended to be used outside this local construction. -/
-theorem EqualCharZero.pnat_coe_units_eq_one [Fact (∀ I : Ideal R, I ≠ ⊤ → CharZero (R ⧸ I))] :
+theorem EqualCharZero.pNat_coe_units_eq_one [Fact (∀ I : Ideal R, I ≠ ⊤ → CharZero (R ⧸ I))] :
     ((1 : ℕ+) : Rˣ) = 1 := by
   apply Units.ext
   rw [Units.val_one]
-  change ((EqualCharZero.pnat_coe_is_unit R 1).Unit : R) = 1
-  rw [IsUnit.unit_spec (EqualCharZero.pnat_coe_is_unit R 1)]
+  change ((EqualCharZero.pNat_coe_isUnit R 1).Unit : R) = 1
+  rw [IsUnit.unit_spec (EqualCharZero.pNat_coe_isUnit R 1)]
   rw [coe_coe, PNat.one_coe, Nat.cast_one]
-#align equal_char_zero.pnat_coe_units_eq_one EqualCharZero.pnat_coe_units_eq_one
+#align equal_char_zero.pnat_coe_units_eq_one EqualCharZero.pNat_coe_units_eq_one
 
 /-- Internal: Not intended to be used outside this local construction. -/
-theorem EqualCharZero.pnat_coe_units_coe_eq_coe [Fact (∀ I : Ideal R, I ≠ ⊤ → CharZero (R ⧸ I))]
+theorem EqualCharZero.pNat_coe_units_coe_eq_coe [Fact (∀ I : Ideal R, I ≠ ⊤ → CharZero (R ⧸ I))]
     (n : ℕ+) : ((n : Rˣ) : R) = ↑n :=
   by
-  change ((EqualCharZero.pnat_coe_is_unit R n).Unit : R) = ↑n
+  change ((EqualCharZero.pNat_coe_isUnit R n).Unit : R) = ↑n
   simp only [IsUnit.unit_spec]
-#align equal_char_zero.pnat_coe_units_coe_eq_coe EqualCharZero.pnat_coe_units_coe_eq_coe
+#align equal_char_zero.pnat_coe_units_coe_eq_coe EqualCharZero.pNat_coe_units_coe_eq_coe
 
 /-- Equal characteristic implies `ℚ`-algebra.
 -/
@@ -225,11 +225,11 @@ noncomputable def equalCharZeroToQAlgebra (h : ∀ I : Ideal R, I ≠ ⊤ → Ch
   RingHom.toAlgebra
     { toFun := fun x => x.num /ₚ ↑x.pnatDenom
       map_zero' := by simp [divp]
-      map_one' := by simp [EqualCharZero.pnat_coe_units_eq_one]
+      map_one' := by simp [EqualCharZero.pNat_coe_units_eq_one]
       map_mul' := by
         intro a b
         field_simp
-        repeat' rw [EqualCharZero.pnat_coe_units_coe_eq_coe R]
+        repeat' rw [EqualCharZero.pNat_coe_units_coe_eq_coe R]
         trans (↑((a * b).num * a.denom * b.denom) : R)
         · simp_rw [Int.cast_mul, Int.cast_ofNat, coe_coe, Rat.coe_pnatDen]
           ring
@@ -238,7 +238,7 @@ noncomputable def equalCharZeroToQAlgebra (h : ∀ I : Ideal R, I ≠ ⊤ → Ch
       map_add' := by
         intro a b
         field_simp
-        repeat' rw [EqualCharZero.pnat_coe_units_coe_eq_coe R]
+        repeat' rw [EqualCharZero.pNat_coe_units_coe_eq_coe R]
         trans (↑((a + b).num * a.denom * b.denom) : R)
         · simp_rw [Int.cast_mul, Int.cast_ofNat, coe_coe, Rat.coe_pnatDen]
           ring
@@ -252,61 +252,61 @@ end EqualCharZero
 
 /-- Not mixed characteristic implies equal characteristic.
 -/
-theorem not_mixed_char_to_equal_char_zero [CharZero R] (h : ∀ p > 0, ¬MixedCharZero R p) :
+theorem not_mixed_char_to_equal_charZero [CharZero R] (h : ∀ p > 0, ¬MixedCharZero R p) :
     ∀ I : Ideal R, I ≠ ⊤ → CharZero (R ⧸ I) :=
   by
   intro I hI_ne_top
-  apply CharP.char_p_to_char_zero _
+  apply CharP.charP_to_charZero _
   cases' CharP.exists (R ⧸ I) with p hp
   cases p
   · exact hp
   · have h_mixed : MixedCharZero R p.succ := ⟨⟨I, ⟨hI_ne_top, hp⟩⟩⟩
     exact absurd h_mixed (h p.succ p.succ_pos)
-#align not_mixed_char_to_equal_char_zero not_mixed_char_to_equal_char_zero
+#align not_mixed_char_to_equal_char_zero not_mixed_char_to_equal_charZero
 
 /-- Equal characteristic implies not mixed characteristic.
 -/
-theorem equal_char_zero_to_not_mixed_char (h : ∀ I : Ideal R, I ≠ ⊤ → CharZero (R ⧸ I)) :
+theorem equal_charZero_to_not_mixed_char (h : ∀ I : Ideal R, I ≠ ⊤ → CharZero (R ⧸ I)) :
     ∀ p > 0, ¬MixedCharZero R p := by
   intro p p_pos
   by_contra hp_mixed_char
   rcases hp_mixed_char.char_p_quotient with ⟨I, hI_ne_top, hI_p⟩
-  replace hI_zero : CharP (R ⧸ I) 0 := @CharP.of_char_zero _ _ (h I hI_ne_top)
+  replace hI_zero : CharP (R ⧸ I) 0 := @CharP.of_charZero _ _ (h I hI_ne_top)
   exact absurd (CharP.eq (R ⧸ I) hI_p hI_zero) (ne_of_gt p_pos)
-#align equal_char_zero_to_not_mixed_char equal_char_zero_to_not_mixed_char
+#align equal_char_zero_to_not_mixed_char equal_charZero_to_not_mixed_char
 
 /-- A ring of characteristic zero has equal characteristic iff it does not
 have mixed characteristic for any `p`.
 -/
-theorem equal_char_zero_iff_not_mixed_char [CharZero R] :
+theorem equal_charZero_iff_not_mixed_char [CharZero R] :
     (∀ I : Ideal R, I ≠ ⊤ → CharZero (R ⧸ I)) ↔ ∀ p > 0, ¬MixedCharZero R p :=
-  ⟨equal_char_zero_to_not_mixed_char R, not_mixed_char_to_equal_char_zero R⟩
-#align equal_char_zero_iff_not_mixed_char equal_char_zero_iff_not_mixed_char
+  ⟨equal_charZero_to_not_mixed_char R, not_mixed_char_to_equal_charZero R⟩
+#align equal_char_zero_iff_not_mixed_char equal_charZero_iff_not_mixed_char
 
 /-- A ring is a `ℚ`-algebra iff it has equal characteristic zero.
 -/
-theorem Q_algebra_iff_equal_char_zero [Nontrivial R] :
+theorem Q_algebra_iff_equal_charZero [Nontrivial R] :
     Nonempty (Algebra ℚ R) ↔ ∀ I : Ideal R, I ≠ ⊤ → CharZero (R ⧸ I) :=
   by
   constructor
   · intro h_alg
     haveI h_alg' : Algebra ℚ R := h_alg.some
-    apply Q_algebra_to_equal_char_zero
+    apply Q_algebra_to_equal_charZero
   · intro h
     apply Nonempty.intro
     exact equalCharZeroToQAlgebra R h
-#align Q_algebra_iff_equal_char_zero Q_algebra_iff_equal_char_zero
+#align Q_algebra_iff_equal_char_zero Q_algebra_iff_equal_charZero
 
 /-- A ring of characteristic zero is not a `ℚ`-algebra iff it has mixed characteristic for some `p`.
 -/
-theorem not_Q_algebra_iff_not_equal_char_zero [CharZero R] :
+theorem not_Q_algebra_iff_not_equal_charZero [CharZero R] :
     IsEmpty (Algebra ℚ R) ↔ ∃ p > 0, MixedCharZero R p :=
   by
   rw [← not_iff_not]
   push_neg
-  rw [not_isEmpty_iff, ← equal_char_zero_iff_not_mixed_char]
-  apply Q_algebra_iff_equal_char_zero
-#align not_Q_algebra_iff_not_equal_char_zero not_Q_algebra_iff_not_equal_char_zero
+  rw [not_isEmpty_iff, ← equal_charZero_iff_not_mixed_char]
+  apply Q_algebra_iff_equal_charZero
+#align not_Q_algebra_iff_not_equal_char_zero not_Q_algebra_iff_not_equal_charZero
 
 /-!
 # Splitting statements into different characteristic
@@ -333,7 +333,7 @@ theorem splitEqualMixedChar [CharZero R] (h_equal : Algebra ℚ R → P)
     rw [← MixedCharZero.reduce_to_p_prime] at h_mixed
     exact h_mixed p H hp
   · apply h_equal
-    rw [← not_Q_algebra_iff_not_equal_char_zero, not_isEmpty_iff] at h
+    rw [← not_Q_algebra_iff_not_equal_charZero, not_isEmpty_iff] at h
     exact h.some
 #align split_equal_mixed_char splitEqualMixedChar
 
@@ -353,7 +353,7 @@ theorem splitByCharacteristic (h_pos : ∀ p : ℕ, p ≠ 0 → CharP R p → P)
   · rw [h] at p_char
     skip
     -- make `p_char : char_p R 0` an instance.
-    haveI h0 : CharZero R := CharP.char_p_to_char_zero R
+    haveI h0 : CharZero R := CharP.charP_to_charZero R
     exact splitEqualMixedChar R h_equal h_mixed
   exact h_pos p h p_char
 #align split_by_characteristic splitByCharacteristic
@@ -382,7 +382,7 @@ theorem splitByCharacteristicLocalRing [LocalRing R] (h_pos : ∀ p : ℕ, IsPri
   by
   refine' splitByCharacteristic R _ h_equal h_mixed
   intro p p_pos p_char
-  have p_ppow : IsPrimePow (p : ℕ) := or_iff_not_imp_left.mp (char_p_zero_or_prime_power R p) p_pos
+  have p_ppow : IsPrimePow (p : ℕ) := or_iff_not_imp_left.mp (charP_zero_or_prime_power R p) p_pos
   exact h_pos p p_ppow p_char
 #align split_by_characteristic_local_ring splitByCharacteristicLocalRing
 

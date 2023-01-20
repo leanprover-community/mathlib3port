@@ -171,8 +171,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align functor.comp.applicative_id_comp Functor.Comp.applicative_id_compₓ'. -/
 theorem applicative_id_comp {F} [AF : Applicative F] [LF : LawfulApplicative F] :
     @Comp.applicative id F _ _ = AF :=
-  @Applicative.ext F _ _ (@Comp.is_lawful_applicative id F _ _ _ _) _ (fun α x => rfl)
-    fun α β f x => rfl
+  @Applicative.ext F _ _ (@Comp.lawfulApplicative id F _ _ _ _) _ (fun α x => rfl) fun α β f x =>
+    rfl
 #align functor.comp.applicative_id_comp Functor.Comp.applicative_id_comp
 
 /- warning: functor.comp.applicative_comp_id -> Functor.Comp.applicative_comp_id is a dubious translation:
@@ -183,8 +183,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align functor.comp.applicative_comp_id Functor.Comp.applicative_comp_idₓ'. -/
 theorem applicative_comp_id {F} [AF : Applicative F] [LF : LawfulApplicative F] :
     @Comp.applicative F id _ _ = AF :=
-  @Applicative.ext F _ _ (@Comp.is_lawful_applicative F id _ _ _ _) _ (fun α x => rfl)
-    fun α β f x => show id <$> f <*> x = f <*> x by rw [id_map]
+  @Applicative.ext F _ _ (@Comp.lawfulApplicative F id _ _ _ _) _ (fun α x => rfl) fun α β f x =>
+    show id <$> f <*> x = f <*> x by rw [id_map]
 #align functor.comp.applicative_comp_id Functor.Comp.applicative_comp_id
 
 open CommApplicative

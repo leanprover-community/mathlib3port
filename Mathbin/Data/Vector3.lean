@@ -116,9 +116,9 @@ def consElim {C : Vector3 α (succ n) → Sort u} (H : ∀ (a : α) (t : Vector3
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem cons_elim_cons {C H a t} : @consElim α n C H (a::t) = H a t :=
+theorem consElim_cons {C H a t} : @consElim α n C H (a::t) = H a t :=
   rfl
-#align vector3.cons_elim_cons Vector3.cons_elim_cons
+#align vector3.cons_elim_cons Vector3.consElim_cons
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Recursion principle with the vector as first argument. -/
@@ -129,16 +129,16 @@ protected def recOn {C : ∀ {n}, Vector3 α n → Sort u} {n} (v : Vector3 α n
 #align vector3.rec_on Vector3.recOn
 
 @[simp]
-theorem rec_on_nil {C H0 Hs} : @Vector3.recOn α (@C) 0 [] H0 @Hs = H0 :=
+theorem recOn_nil {C H0 Hs} : @Vector3.recOn α (@C) 0 [] H0 @Hs = H0 :=
   rfl
-#align vector3.rec_on_nil Vector3.rec_on_nil
+#align vector3.rec_on_nil Vector3.recOn_nil
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem rec_on_cons {C H0 Hs n a v} :
+theorem recOn_cons {C H0 Hs n a v} :
     @Vector3.recOn α (@C) (succ n) (a::v) H0 @Hs = Hs a v (@Vector3.recOn α (@C) n v H0 @Hs) :=
   rfl
-#align vector3.rec_on_cons Vector3.rec_on_cons
+#align vector3.rec_on_cons Vector3.recOn_cons
 
 /-- Append two vectors -/
 def append (v : Vector3 α m) (w : Vector3 α n) : Vector3 α (n + m) :=
@@ -246,20 +246,19 @@ theorem exists_vector_succ (f : Vector3 α (succ n) → Prop) : Exists f ↔ ∃
   ⟨fun ⟨v, fv⟩ => ⟨_, _, by rw [cons_head_tail v] <;> exact fv⟩, fun ⟨x, v, fxv⟩ => ⟨_, fxv⟩⟩
 #align exists_vector_succ exists_vector_succ
 
-theorem vector_ex_iff_exists : ∀ {n} (f : Vector3 α n → Prop), VectorEx n f ↔ Exists f
+theorem vectorEx_iff_exists : ∀ {n} (f : Vector3 α n → Prop), VectorEx n f ↔ Exists f
   | 0, f => (exists_vector_zero f).symm
-  | succ n, f =>
-    Iff.trans (exists_congr fun x => vector_ex_iff_exists _) (exists_vector_succ f).symm
-#align vector_ex_iff_exists vector_ex_iff_exists
+  | succ n, f => Iff.trans (exists_congr fun x => vectorEx_iff_exists _) (exists_vector_succ f).symm
+#align vector_ex_iff_exists vectorEx_iff_exists
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem vector_all_iff_forall : ∀ {n} (f : Vector3 α n → Prop), VectorAll n f ↔ ∀ v, f v
+theorem vectorAll_iff_forall : ∀ {n} (f : Vector3 α n → Prop), VectorAll n f ↔ ∀ v, f v
   | 0, f => ⟨fun f0 v => v.nilElim f0, fun al => al []⟩
   | succ n, f =>
-    (forall_congr' fun x => vector_all_iff_forall fun v => f (x::v)).trans
+    (forall_congr' fun x => vectorAll_iff_forall fun v => f (x::v)).trans
       ⟨fun al v => v.consElim al, fun al x v => al (x::v)⟩
-#align vector_all_iff_forall vector_all_iff_forall
+#align vector_all_iff_forall vectorAll_iff_forall
 
 /-- `vector_allp p v` is equivalent to `∀ i, p (v i)`, but unfolds directly to a conjunction,
   i.e. `vector_allp p [0, 1, 2] = p 0 ∧ p 1 ∧ p 2`. -/
@@ -269,23 +268,23 @@ def VectorAllp (p : α → Prop) (v : Vector3 α n) : Prop :=
 #align vector_allp VectorAllp
 
 @[simp]
-theorem vector_allp_nil (p : α → Prop) : VectorAllp p [] = True :=
+theorem vectorAllp_nil (p : α → Prop) : VectorAllp p [] = True :=
   rfl
-#align vector_allp_nil vector_allp_nil
+#align vector_allp_nil vectorAllp_nil
 
 @[simp]
-theorem vector_allp_singleton (p : α → Prop) (x : α) : VectorAllp p [x] = p x :=
+theorem vectorAllp_singleton (p : α → Prop) (x : α) : VectorAllp p [x] = p x :=
   rfl
-#align vector_allp_singleton vector_allp_singleton
+#align vector_allp_singleton vectorAllp_singleton
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem vector_allp_cons (p : α → Prop) (x : α) (v : Vector3 α n) :
+theorem vectorAllp_cons (p : α → Prop) (x : α) (v : Vector3 α n) :
     VectorAllp p (x::v) ↔ p x ∧ VectorAllp p v :=
   Vector3.recOn v (and_true_iff _).symm fun n a v IH => Iff.rfl
-#align vector_allp_cons vector_allp_cons
+#align vector_allp_cons vectorAllp_cons
 
-theorem vector_allp_iff_forall (p : α → Prop) (v : Vector3 α n) : VectorAllp p v ↔ ∀ i, p (v i) :=
+theorem vectorAllp_iff_forall (p : α → Prop) (v : Vector3 α n) : VectorAllp p v ↔ ∀ i, p (v i) :=
   by
   refine' v.rec_on _ _
   · exact ⟨fun _ => Fin2.elim0, fun _ => trivial⟩
@@ -301,11 +300,11 @@ theorem vector_allp_iff_forall (p : α → Prop) (v : Vector3 α n) : VectorAllp
     · have hs := h (fs i)
       simp at hs
       exact hs
-#align vector_allp_iff_forall vector_allp_iff_forall
+#align vector_allp_iff_forall vectorAllp_iff_forall
 
 theorem VectorAllp.imp {p q : α → Prop} (h : ∀ x, p x → q x) {v : Vector3 α n}
     (al : VectorAllp p v) : VectorAllp q v :=
-  (vector_allp_iff_forall _ _).2 fun i => h _ <| (vector_allp_iff_forall _ _).1 al _
+  (vectorAllp_iff_forall _ _).2 fun i => h _ <| (vectorAllp_iff_forall _ _).1 al _
 #align vector_allp.imp VectorAllp.imp
 
 end Vector3

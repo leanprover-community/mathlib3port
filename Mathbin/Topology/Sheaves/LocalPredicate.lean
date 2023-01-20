@@ -80,7 +80,7 @@ variable (X)
 def continuousPrelocal (T : TopCat.{v}) : PrelocalPredicate fun x : X => T
     where
   pred U f := Continuous f
-  res U V i f h := Continuous.comp h (Opens.open_embedding_of_le i.le).Continuous
+  res U V i f h := Continuous.comp h (Opens.openEmbedding_of_le i.le).Continuous
 #align Top.continuous_prelocal TopCat.continuousPrelocal
 
 /-- Satisfying the inhabited linter. -/
@@ -114,12 +114,12 @@ variable (X)
 def continuousLocal (T : TopCat.{v}) : LocalPredicate fun x : X => T :=
   { continuousPrelocal X T with
     locality := fun U f w => by
-      apply continuous_iff_continuous_at.2
+      apply continuous_iff_continuousAt.2
       intro x
       specialize w x
       rcases w with ⟨V, m, i, w⟩
       dsimp at w
-      rw [continuous_iff_continuous_at] at w
+      rw [continuous_iff_continuousAt] at w
       specialize w ⟨x, m⟩
       simpa using (opens.open_embedding_of_le i.le).continuous_at_iff.1 w }
 #align Top.continuous_local TopCat.continuousLocal
@@ -181,8 +181,8 @@ open TopCat.Presheaf
 
 /-- The functions satisfying a local predicate satisfy the sheaf condition.
 -/
-theorem is_sheaf (P : LocalPredicate T) : (subpresheafToTypes P.toPrelocalPredicate).IsSheaf :=
-  Presheaf.is_sheaf_of_is_sheaf_unique_gluing_types _ fun ι U sf sf_comp =>
+theorem isSheaf (P : LocalPredicate T) : (subpresheafToTypes P.toPrelocalPredicate).IsSheaf :=
+  Presheaf.isSheaf_of_isSheafUniqueGluing_types _ fun ι U sf sf_comp =>
     by
     -- We show the sheaf condition in terms of unique gluing.
     -- First we obtain a family of sections for the underlying sheaf of functions,
@@ -214,7 +214,7 @@ theorem is_sheaf (P : LocalPredicate T) : (subpresheafToTypes P.toPrelocalPredic
     · intro gl' hgl'
       ext1
       exact gl_uniq gl'.1 fun i => congr_arg Subtype.val (hgl' i)
-#align Top.subpresheaf_to_Types.is_sheaf TopCat.subpresheafToTypes.is_sheaf
+#align Top.subpresheaf_to_Types.is_sheaf TopCat.subpresheafToTypes.isSheaf
 
 end SubpresheafToTypes
 
@@ -222,7 +222,7 @@ end SubpresheafToTypes
 -/
 @[simps]
 def subsheafToTypes (P : LocalPredicate T) : Sheaf (Type v) X :=
-  ⟨subpresheafToTypes P.toPrelocalPredicate, subpresheafToTypes.is_sheaf P⟩
+  ⟨subpresheafToTypes P.toPrelocalPredicate, subpresheafToTypes.isSheaf P⟩
 #align Top.subsheaf_to_Types TopCat.subsheafToTypes
 
 /-- There is a canonical map from the stalk to the original fiber, given by evaluating sections.
@@ -240,19 +240,19 @@ def stalkToFiber (P : LocalPredicate T) (x : X) : (subsheafToTypes P).Presheaf.s
 #align Top.stalk_to_fiber TopCat.stalkToFiber
 
 @[simp]
-theorem stalk_to_fiber_germ (P : LocalPredicate T) (U : Opens X) (x : U) (f) :
+theorem stalkToFiber_germ (P : LocalPredicate T) (U : Opens X) (x : U) (f) :
     stalkToFiber P x ((subsheafToTypes P).Presheaf.germ x f) = f.1 x :=
   by
   dsimp [presheaf.germ, stalk_to_fiber]
   cases x
   simp
   rfl
-#align Top.stalk_to_fiber_germ TopCat.stalk_to_fiber_germ
+#align Top.stalk_to_fiber_germ TopCat.stalkToFiber_germ
 
 /-- The `stalk_to_fiber` map is surjective at `x` if
 every point in the fiber `T x` has an allowed section passing through it.
 -/
-theorem stalk_to_fiber_surjective (P : LocalPredicate T) (x : X)
+theorem stalkToFiber_surjective (P : LocalPredicate T) (x : X)
     (w : ∀ t : T x, ∃ (U : OpenNhds x)(f : ∀ y : U.1, T y)(h : P.pred f), f ⟨x, U.2⟩ = t) :
     Function.Surjective (stalkToFiber P x) := fun t =>
   by
@@ -260,12 +260,12 @@ theorem stalk_to_fiber_surjective (P : LocalPredicate T) (x : X)
   fconstructor
   · exact (subsheaf_to_Types P).Presheaf.germ ⟨x, U.2⟩ ⟨f, h⟩
   · exact stalk_to_fiber_germ _ U.1 ⟨x, U.2⟩ ⟨f, h⟩
-#align Top.stalk_to_fiber_surjective TopCat.stalk_to_fiber_surjective
+#align Top.stalk_to_fiber_surjective TopCat.stalkToFiber_surjective
 
 /-- The `stalk_to_fiber` map is injective at `x` if any two allowed sections which agree at `x`
 agree on some neighborhood of `x`.
 -/
-theorem stalk_to_fiber_injective (P : LocalPredicate T) (x : X)
+theorem stalkToFiber_injective (P : LocalPredicate T) (x : X)
     (w :
       ∀ (U V : OpenNhds x) (fU : ∀ y : U.1, T y) (hU : P.pred fU) (fV : ∀ y : V.1, T y)
         (hV : P.pred fV) (e : fU ⟨x, U.2⟩ = fV ⟨x, V.2⟩),
@@ -292,7 +292,7 @@ theorem stalk_to_fiber_injective (P : LocalPredicate T) (x : X)
     refine' ⟨op W, fun w => fU (iU w : (unop U).1), P.res _ _ hU, _⟩
     rcases W with ⟨W, m⟩
     exact ⟨colimit_sound iU.op (Subtype.eq rfl), colimit_sound iV.op (Subtype.eq (funext w).symm)⟩
-#align Top.stalk_to_fiber_injective TopCat.stalk_to_fiber_injective
+#align Top.stalk_to_fiber_injective TopCat.stalkToFiber_injective
 
 /-- Some repackaging:
 the presheaf of functions satisfying `continuous_prelocal` is just the same thing as
@@ -321,8 +321,8 @@ def subpresheafContinuousPrelocalIsoPresheafToTop (T : TopCat.{v}) :
 -/
 def sheafToTop (T : TopCat.{v}) : Sheaf (Type v) X :=
   ⟨presheafToTop X T,
-    Presheaf.is_sheaf_of_iso (subpresheafContinuousPrelocalIsoPresheafToTop T)
-      (subpresheafToTypes.is_sheaf (continuousLocal X T))⟩
+    Presheaf.isSheaf_of_iso (subpresheafContinuousPrelocalIsoPresheafToTop T)
+      (subpresheafToTypes.isSheaf (continuousLocal X T))⟩
 #align Top.sheaf_to_Top TopCat.sheafToTop
 
 end TopCat

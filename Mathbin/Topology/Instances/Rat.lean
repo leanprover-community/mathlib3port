@@ -38,24 +38,24 @@ theorem dist_cast (x y : ℚ) : dist (x : ℝ) y = dist x y :=
   rfl
 #align rat.dist_cast Rat.dist_cast
 
-theorem uniform_continuous_coe_real : UniformContinuous (coe : ℚ → ℝ) :=
-  uniform_continuous_comap
-#align rat.uniform_continuous_coe_real Rat.uniform_continuous_coe_real
+theorem uniformContinuous_coe_real : UniformContinuous (coe : ℚ → ℝ) :=
+  uniformContinuous_comap
+#align rat.uniform_continuous_coe_real Rat.uniformContinuous_coe_real
 
-theorem uniform_embedding_coe_real : UniformEmbedding (coe : ℚ → ℝ) :=
-  uniform_embedding_comap Rat.cast_injective
-#align rat.uniform_embedding_coe_real Rat.uniform_embedding_coe_real
+theorem uniformEmbedding_coe_real : UniformEmbedding (coe : ℚ → ℝ) :=
+  uniformEmbedding_comap Rat.cast_injective
+#align rat.uniform_embedding_coe_real Rat.uniformEmbedding_coe_real
 
-theorem dense_embedding_coe_real : DenseEmbedding (coe : ℚ → ℝ) :=
-  uniform_embedding_coe_real.DenseEmbedding Rat.dense_range_cast
-#align rat.dense_embedding_coe_real Rat.dense_embedding_coe_real
+theorem denseEmbedding_coe_real : DenseEmbedding (coe : ℚ → ℝ) :=
+  uniformEmbedding_coe_real.DenseEmbedding Rat.denseRange_cast
+#align rat.dense_embedding_coe_real Rat.denseEmbedding_coe_real
 
 theorem embedding_coe_real : Embedding (coe : ℚ → ℝ) :=
-  dense_embedding_coe_real.toEmbedding
+  denseEmbedding_coe_real.toEmbedding
 #align rat.embedding_coe_real Rat.embedding_coe_real
 
 theorem continuous_coe_real : Continuous (coe : ℚ → ℝ) :=
-  uniform_continuous_coe_real.Continuous
+  uniformContinuous_coe_real.Continuous
 #align rat.continuous_coe_real Rat.continuous_coe_real
 
 end Rat
@@ -65,59 +65,59 @@ theorem Nat.dist_cast_rat (x y : ℕ) : dist (x : ℚ) y = dist x y := by
   rw [← Nat.dist_cast_real, ← Rat.dist_cast] <;> congr 1 <;> norm_cast
 #align nat.dist_cast_rat Nat.dist_cast_rat
 
-theorem Nat.uniform_embedding_coe_rat : UniformEmbedding (coe : ℕ → ℚ) :=
-  uniform_embedding_bot_of_pairwise_le_dist zero_lt_one <| by simpa using Nat.pairwise_one_le_dist
-#align nat.uniform_embedding_coe_rat Nat.uniform_embedding_coe_rat
+theorem Nat.uniformEmbedding_coe_rat : UniformEmbedding (coe : ℕ → ℚ) :=
+  uniformEmbedding_bot_of_pairwise_le_dist zero_lt_one <| by simpa using Nat.pairwise_one_le_dist
+#align nat.uniform_embedding_coe_rat Nat.uniformEmbedding_coe_rat
 
-theorem Nat.closed_embedding_coe_rat : ClosedEmbedding (coe : ℕ → ℚ) :=
-  closed_embedding_of_pairwise_le_dist zero_lt_one <| by simpa using Nat.pairwise_one_le_dist
-#align nat.closed_embedding_coe_rat Nat.closed_embedding_coe_rat
+theorem Nat.closedEmbedding_coe_rat : ClosedEmbedding (coe : ℕ → ℚ) :=
+  closedEmbedding_of_pairwise_le_dist zero_lt_one <| by simpa using Nat.pairwise_one_le_dist
+#align nat.closed_embedding_coe_rat Nat.closedEmbedding_coe_rat
 
 @[norm_cast, simp]
 theorem Int.dist_cast_rat (x y : ℤ) : dist (x : ℚ) y = dist x y := by
   rw [← Int.dist_cast_real, ← Rat.dist_cast] <;> congr 1 <;> norm_cast
 #align int.dist_cast_rat Int.dist_cast_rat
 
-theorem Int.uniform_embedding_coe_rat : UniformEmbedding (coe : ℤ → ℚ) :=
-  uniform_embedding_bot_of_pairwise_le_dist zero_lt_one <| by simpa using Int.pairwise_one_le_dist
-#align int.uniform_embedding_coe_rat Int.uniform_embedding_coe_rat
+theorem Int.uniformEmbedding_coe_rat : UniformEmbedding (coe : ℤ → ℚ) :=
+  uniformEmbedding_bot_of_pairwise_le_dist zero_lt_one <| by simpa using Int.pairwise_one_le_dist
+#align int.uniform_embedding_coe_rat Int.uniformEmbedding_coe_rat
 
-theorem Int.closed_embedding_coe_rat : ClosedEmbedding (coe : ℤ → ℚ) :=
-  closed_embedding_of_pairwise_le_dist zero_lt_one <| by simpa using Int.pairwise_one_le_dist
-#align int.closed_embedding_coe_rat Int.closed_embedding_coe_rat
+theorem Int.closedEmbedding_coe_rat : ClosedEmbedding (coe : ℤ → ℚ) :=
+  closedEmbedding_of_pairwise_le_dist zero_lt_one <| by simpa using Int.pairwise_one_le_dist
+#align int.closed_embedding_coe_rat Int.closedEmbedding_coe_rat
 
 namespace Rat
 
 instance : NoncompactSpace ℚ :=
-  Int.closed_embedding_coe_rat.NoncompactSpace
+  Int.closedEmbedding_coe_rat.NoncompactSpace
 
 -- TODO(Mario): Find a way to use rat_add_continuous_lemma
-theorem uniform_continuous_add : UniformContinuous fun p : ℚ × ℚ => p.1 + p.2 :=
-  Rat.uniform_embedding_coe_real.to_uniform_inducing.uniform_continuous_iff.2 <| by
+theorem uniformContinuous_add : UniformContinuous fun p : ℚ × ℚ => p.1 + p.2 :=
+  Rat.uniformEmbedding_coe_real.to_uniform_inducing.uniform_continuous_iff.2 <| by
     simp only [(· ∘ ·), Rat.cast_add] <;>
       exact
         real.uniform_continuous_add.comp
-          (rat.uniform_continuous_coe_real.prod_map Rat.uniform_continuous_coe_real)
-#align rat.uniform_continuous_add Rat.uniform_continuous_add
+          (rat.uniform_continuous_coe_real.prod_map Rat.uniformContinuous_coe_real)
+#align rat.uniform_continuous_add Rat.uniformContinuous_add
 
-theorem uniform_continuous_neg : UniformContinuous (@Neg.neg ℚ _) :=
-  Metric.uniform_continuous_iff.2 fun ε ε0 =>
+theorem uniformContinuous_neg : UniformContinuous (@Neg.neg ℚ _) :=
+  Metric.uniformContinuous_iff.2 fun ε ε0 =>
     ⟨_, ε0, fun a b h => by rw [dist_comm] at h <;> simpa [Rat.dist_eq] using h⟩
-#align rat.uniform_continuous_neg Rat.uniform_continuous_neg
+#align rat.uniform_continuous_neg Rat.uniformContinuous_neg
 
 instance : UniformAddGroup ℚ :=
-  UniformAddGroup.mk' Rat.uniform_continuous_add Rat.uniform_continuous_neg
+  UniformAddGroup.mk' Rat.uniformContinuous_add Rat.uniformContinuous_neg
 
 instance : TopologicalAddGroup ℚ := by infer_instance
 
 instance : OrderTopology ℚ :=
-  induced_order_topology _ (fun x y => Rat.cast_lt) (@exists_rat_btwn _ _ _)
+  induced_orderTopology _ (fun x y => Rat.cast_lt) (@exists_rat_btwn _ _ _)
 
-theorem uniform_continuous_abs : UniformContinuous (abs : ℚ → ℚ) :=
-  Metric.uniform_continuous_iff.2 fun ε ε0 =>
+theorem uniformContinuous_abs : UniformContinuous (abs : ℚ → ℚ) :=
+  Metric.uniformContinuous_iff.2 fun ε ε0 =>
     ⟨ε, ε0, fun a b h =>
       lt_of_le_of_lt (by simpa [Rat.dist_eq] using abs_abs_sub_abs_le_abs_sub _ _) h⟩
-#align rat.uniform_continuous_abs Rat.uniform_continuous_abs
+#align rat.uniform_continuous_abs Rat.uniformContinuous_abs
 
 theorem continuous_mul : Continuous fun p : ℚ × ℚ => p.1 * p.2 :=
   Rat.embedding_coe_real.continuous_iff.2 <| by
@@ -126,12 +126,12 @@ theorem continuous_mul : Continuous fun p : ℚ × ℚ => p.1 * p.2 :=
 #align rat.continuous_mul Rat.continuous_mul
 
 instance : TopologicalRing ℚ :=
-  { Rat.topological_add_group with continuous_mul := Rat.continuous_mul }
+  { Rat.topologicalAddGroup with continuous_mul := Rat.continuous_mul }
 
-theorem totally_bounded_Icc (a b : ℚ) : TotallyBounded (Icc a b) := by
+theorem totallyBounded_icc (a b : ℚ) : TotallyBounded (Icc a b) := by
   simpa only [preimage_cast_Icc] using
-    totally_bounded_preimage Rat.uniform_embedding_coe_real (totally_bounded_Icc a b)
-#align rat.totally_bounded_Icc Rat.totally_bounded_Icc
+    totallyBounded_preimage Rat.uniformEmbedding_coe_real (totallyBounded_icc a b)
+#align rat.totally_bounded_Icc Rat.totallyBounded_icc
 
 end Rat
 

@@ -64,9 +64,9 @@ def orderEmbeddingToFun : (ι →₀ α) ↪o (ι → α)
 #align finsupp.order_embedding_to_fun Finsupp.orderEmbeddingToFun
 
 @[simp]
-theorem order_embedding_to_fun_apply {f : ι →₀ α} {i : ι} : orderEmbeddingToFun f i = f i :=
+theorem orderEmbeddingToFun_apply {f : ι →₀ α} {i : ι} : orderEmbeddingToFun f i = f i :=
   rfl
-#align finsupp.order_embedding_to_fun_apply Finsupp.order_embedding_to_fun_apply
+#align finsupp.order_embedding_to_fun_apply Finsupp.orderEmbeddingToFun_apply
 
 end LE
 
@@ -79,8 +79,8 @@ instance : Preorder (ι →₀ α) :=
     le_refl := fun f i => le_rfl
     le_trans := fun f g h hfg hgh i => (hfg i).trans (hgh i) }
 
-theorem monotone_to_fun : Monotone (Finsupp.toFun : (ι →₀ α) → ι → α) := fun f g h a => le_def.1 h a
-#align finsupp.monotone_to_fun Finsupp.monotone_to_fun
+theorem monotone_toFun : Monotone (Finsupp.toFun : (ι →₀ α) → ι → α) := fun f g h a => le_def.1 h a
+#align finsupp.monotone_to_fun Finsupp.monotone_toFun
 
 end Preorder
 

@@ -455,7 +455,7 @@ instance [LE α] [Add α] [ExistsAddOfLE α] : ExistsAddOfLE (WithTop α) :=
     | ⊤, (b : α) => fun h => (not_top_le_coe _ h).elim⟩
 
 instance [CanonicallyOrderedAddMonoid α] : CanonicallyOrderedAddMonoid (WithTop α) :=
-  { WithTop.orderBot, WithTop.orderedAddCommMonoid, WithTop.has_exists_add_of_le with
+  { WithTop.orderBot, WithTop.orderedAddCommMonoid, WithTop.existsAddOfLE with
     le_self_add := fun a b =>
       match a, b with
       | ⊤, ⊤ => le_rfl
@@ -495,9 +495,9 @@ def addHom [AddMonoid α] : α →+ WithTop α :=
 -/
 
 @[simp]
-theorem coe_coe_add_hom [AddMonoid α] : ⇑(addHom : α →+ WithTop α) = coe :=
+theorem coe_addHom [AddMonoid α] : ⇑(addHom : α →+ WithTop α) = coe :=
   rfl
-#align with_top.coe_coe_add_hom WithTop.coe_coe_add_hom
+#align with_top.coe_coe_add_hom WithTop.coe_addHom
 
 /- warning: with_top.zero_lt_top -> WithTop.zero_lt_top is a dubious translation:
 lean 3 declaration is

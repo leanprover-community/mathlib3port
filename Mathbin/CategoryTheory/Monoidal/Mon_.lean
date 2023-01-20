@@ -215,7 +215,7 @@ instance uniqueHomFromTrivial (A : Mon_ C) : Unique (trivial C ⟶ A)
 open CategoryTheory.Limits
 
 instance : HasInitial (Mon_ C) :=
-  has_initial_of_unique (trivial C)
+  hasInitial_of_unique (trivial C)
 
 end Mon_
 
@@ -421,20 +421,20 @@ theorem one_associator {M N P : Mon_ C} :
 #align Mon_.one_associator Mon_.one_associator
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem one_left_unitor {M : Mon_ C} :
+theorem one_leftUnitor {M : Mon_ C} :
     ((λ_ (𝟙_ C)).inv ≫ (𝟙 (𝟙_ C) ⊗ M.one)) ≫ (λ_ M.x).Hom = M.one :=
   by
   slice_lhs 2 3 => rw [left_unitor_naturality]
   simp
-#align Mon_.one_left_unitor Mon_.one_left_unitor
+#align Mon_.one_left_unitor Mon_.one_leftUnitor
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem one_right_unitor {M : Mon_ C} :
+theorem one_rightUnitor {M : Mon_ C} :
     ((λ_ (𝟙_ C)).inv ≫ (M.one ⊗ 𝟙 (𝟙_ C))) ≫ (ρ_ M.x).Hom = M.one :=
   by
   slice_lhs 2 3 => rw [right_unitor_naturality, ← unitors_equal]
   simp
-#align Mon_.one_right_unitor Mon_.one_right_unitor
+#align Mon_.one_right_unitor Mon_.one_rightUnitor
 
 variable [BraidedCategory C]
 
@@ -529,7 +529,7 @@ theorem mul_associator {M N P : Mon_ C} :
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem mul_left_unitor {M : Mon_ C} :
+theorem mul_leftUnitor {M : Mon_ C} :
     (tensorμ C (𝟙_ C, M.x) (𝟙_ C, M.x) ≫ ((λ_ (𝟙_ C)).Hom ⊗ M.mul)) ≫ (λ_ M.x).Hom =
       ((λ_ M.x).Hom ⊗ (λ_ M.x).Hom) ≫ M.mul :=
   by
@@ -537,11 +537,11 @@ theorem mul_left_unitor {M : Mon_ C} :
   slice_lhs 3 4 => rw [left_unitor_naturality]
   slice_lhs 1 3 => rw [← left_unitor_monoidal]
   simp only [category.assoc, category.id_comp]
-#align Mon_.mul_left_unitor Mon_.mul_left_unitor
+#align Mon_.mul_left_unitor Mon_.mul_leftUnitor
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem mul_right_unitor {M : Mon_ C} :
+theorem mul_rightUnitor {M : Mon_ C} :
     (tensorμ C (M.x, 𝟙_ C) (M.x, 𝟙_ C) ≫ (M.mul ⊗ (λ_ (𝟙_ C)).Hom)) ≫ (ρ_ M.x).Hom =
       ((ρ_ M.x).Hom ⊗ (ρ_ M.x).Hom) ≫ M.mul :=
   by
@@ -549,7 +549,7 @@ theorem mul_right_unitor {M : Mon_ C} :
   slice_lhs 3 4 => rw [right_unitor_naturality]
   slice_lhs 1 3 => rw [← right_unitor_monoidal]
   simp only [category.assoc, category.id_comp]
-#align Mon_.mul_right_unitor Mon_.mul_right_unitor
+#align Mon_.mul_right_unitor Mon_.mul_rightUnitor
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -589,13 +589,13 @@ instance monMonoidal : MonoidalCategory (Mon_ C)
     ext
     dsimp
     apply associator_naturality
-  leftUnitor M := isoOfIso (λ_ M.x) one_left_unitor mul_left_unitor
+  leftUnitor M := isoOfIso (λ_ M.x) one_leftUnitor mul_leftUnitor
   left_unitor_naturality' := by
     intros
     ext
     dsimp
     apply left_unitor_naturality
-  rightUnitor M := isoOfIso (ρ_ M.x) one_right_unitor mul_right_unitor
+  rightUnitor M := isoOfIso (ρ_ M.x) one_rightUnitor mul_rightUnitor
   right_unitor_naturality' := by
     intros
     ext

@@ -155,19 +155,19 @@ variable (M)
 
 theorem age.nonempty : (L.age M).Nonempty :=
   ⟨Bundled.of (Substructure.closure L (∅ : Set M)),
-    (fg_iff_Structure_fg _).1 (fg_closure Set.finite_empty), ⟨Substructure.subtype _⟩⟩
+    (fg_iff_structureCat_fg _).1 (fg_closure Set.finite_empty), ⟨Substructure.subtype _⟩⟩
 #align first_order.language.age.nonempty FirstOrder.Language.age.nonempty
 
 theorem age.hereditary : Hereditary (L.age M) := fun N hN P hP => hN.2.some.age_subset_age hP
 #align first_order.language.age.hereditary FirstOrder.Language.age.hereditary
 
-theorem age.joint_embedding : JointEmbedding (L.age M) := fun N hN P hP =>
+theorem age.jointEmbedding : JointEmbedding (L.age M) := fun N hN P hP =>
   ⟨Bundled.of ↥(hN.2.some.toHom.range ⊔ hP.2.some.toHom.range),
-    ⟨(fg_iff_Structure_fg _).1 ((hN.1.range hN.2.some.toHom).sup (hP.1.range hP.2.some.toHom)),
+    ⟨(fg_iff_structureCat_fg _).1 ((hN.1.range hN.2.some.toHom).sup (hP.1.range hP.2.some.toHom)),
       ⟨Subtype _⟩⟩,
     ⟨Embedding.comp (inclusion le_sup_left) hN.2.some.equivRange.toEmbedding⟩,
     ⟨Embedding.comp (inclusion le_sup_right) hP.2.some.equivRange.toEmbedding⟩⟩
-#align first_order.language.age.joint_embedding FirstOrder.Language.age.joint_embedding
+#align first_order.language.age.joint_embedding FirstOrder.Language.age.jointEmbedding
 
 /-- The age of a countable structure is essentially countable (has countably many isomorphism
 classes). -/
@@ -189,7 +189,7 @@ theorem age.countable_quotient [h : Countable M] : (Quotient.mk'' '' L.age M).Co
 
 /-- The age of a direct limit of structures is the union of the ages of the structures. -/
 @[simp]
-theorem age_direct_limit {ι : Type w} [Preorder ι] [IsDirected ι (· ≤ ·)] [Nonempty ι]
+theorem age_directLimit {ι : Type w} [Preorder ι] [IsDirected ι (· ≤ ·)] [Nonempty ι]
     (G : ι → Type max w w') [∀ i, L.StructureCat (G i)] (f : ∀ i j, i ≤ j → G i ↪[L] G j)
     [DirectedSystem G fun i j h => f i j h] : L.age (DirectLimit G f) = ⋃ i : ι, L.age (G i) := by
   classical
@@ -205,13 +205,13 @@ theorem age_direct_limit {ι : Type w} [Preorder ι] [IsDirected ι (· ≤ ·)]
       rw [← hs, closure_le]
       intro x hx
       refine' ⟨f (out x).1 i (hi (out x).1 (Finset.mem_image_of_mem _ hx)) (out x).2, _⟩
-      rw [embedding.coe_to_hom, direct_limit.of_apply, Quotient.mk_eq_iff_out,
+      rw [embedding.coe_to_hom, direct_limit.of_apply, Quotient.mk''_eq_iff_out,
         direct_limit.equiv_iff G f _ (hi (out x).1 (Finset.mem_image_of_mem _ hx)),
         DirectedSystem.map_self]
       rfl
     · rintro ⟨i, Mfg, ⟨e⟩⟩
       exact ⟨Mfg, ⟨embedding.comp (direct_limit.of L ι G f i) e⟩⟩
-#align first_order.language.age_direct_limit FirstOrder.Language.age_direct_limit
+#align first_order.language.age_direct_limit FirstOrder.Language.age_directLimit
 
 /-- Sufficient conditions for a class to be the age of a countably-generated structure. -/
 theorem exists_cg_is_age_of (hn : K.Nonempty)
@@ -223,7 +223,7 @@ theorem exists_cg_is_age_of (hn : K.Nonempty)
   by
   obtain ⟨F, hF⟩ := hc.exists_eq_range (hn.image _)
   simp only [Set.ext_iff, forall_quotient_iff, mem_image, mem_range, Quotient.eq] at hF
-  simp_rw [Quotient.eq_mk_iff_out] at hF
+  simp_rw [Quotient.eq_mk''_iff_out] at hF
   have hF' : ∀ n : ℕ, (F n).out ∈ K := by
     intro n
     obtain ⟨P, hP1, hP2⟩ := (hF (F n).out).2 ⟨n, Setoid.refl _⟩
@@ -303,19 +303,19 @@ theorem IsUltrahomogeneous.amalgamation_age (h : L.IsUltrahomogeneous M) : Amalg
     Set.coe_inclusion, embedding.equiv_range_apply, hgn]
 #align first_order.language.is_ultrahomogeneous.amalgamation_age FirstOrder.Language.IsUltrahomogeneous.amalgamation_age
 
-theorem IsUltrahomogeneous.age_is_fraisse [Countable M] (h : L.IsUltrahomogeneous M) :
+theorem IsUltrahomogeneous.age_isFraisse [Countable M] (h : L.IsUltrahomogeneous M) :
     IsFraisse (L.age M) :=
   ⟨age.nonempty M, fun _ hN => hN.1, age.is_equiv_invariant L M, age.countable_quotient M,
-    age.hereditary M, age.joint_embedding M, h.amalgamation_age⟩
-#align first_order.language.is_ultrahomogeneous.age_is_fraisse FirstOrder.Language.IsUltrahomogeneous.age_is_fraisse
+    age.hereditary M, age.jointEmbedding M, h.amalgamation_age⟩
+#align first_order.language.is_ultrahomogeneous.age_is_fraisse FirstOrder.Language.IsUltrahomogeneous.age_isFraisse
 
 namespace IsFraisseLimit
 
 /-- If a class has a Fraïssé limit, it must be Fraïssé. -/
-theorem is_fraisse [Countable (Σl, L.Functions l)] [Countable M] (h : IsFraisseLimit K M) :
+theorem isFraisse [Countable (Σl, L.Functions l)] [Countable M] (h : IsFraisseLimit K M) :
     IsFraisse K :=
   (congr rfl h.age).mp h.ultrahomogeneous.age_is_fraisse
-#align first_order.language.is_fraisse_limit.is_fraisse FirstOrder.Language.IsFraisseLimit.is_fraisse
+#align first_order.language.is_fraisse_limit.is_fraisse FirstOrder.Language.IsFraisseLimit.isFraisse
 
 end IsFraisseLimit
 

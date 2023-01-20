@@ -109,10 +109,10 @@ noncomputable def constr {S : Type z} [Semiring S] [Module S N] [SMulCommClass R
   Basis.constr (chooseBasis R M) S
 #align module.free.constr Module.Free.constr
 
-instance (priority := 100) no_zero_smul_divisors [NoZeroDivisors R] : NoZeroSMulDivisors R M :=
+instance (priority := 100) noZeroSMulDivisors [NoZeroDivisors R] : NoZeroSMulDivisors R M :=
   let ⟨⟨_, b⟩⟩ := exists_basis R M
   b.NoZeroSmulDivisors
-#align module.free.no_zero_smul_divisors Module.Free.no_zero_smul_divisors
+#align module.free.no_zero_smul_divisors Module.Free.noZeroSMulDivisors
 
 variable {R M N}
 

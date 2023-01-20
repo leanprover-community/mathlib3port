@@ -313,6 +313,7 @@ Case conversion may be inaccurate. Consider using '#align semigroup.to_is_associ
 instance Semigroup.to_isAssociative : IsAssociative G (· * ·) :=
   ⟨mul_assoc⟩
 #align semigroup.to_is_associative Semigroup.to_isAssociative
+#align add_semigroup.to_is_associative AddSemigroup.to_isAssociative
 
 end Semigroup
 
@@ -360,6 +361,7 @@ Case conversion may be inaccurate. Consider using '#align comm_semigroup.to_is_c
 instance CommSemigroup.to_isCommutative : IsCommutative G (· * ·) :=
   ⟨mul_comm⟩
 #align comm_semigroup.to_is_commutative CommSemigroup.to_isCommutative
+#align add_comm_semigroup.to_is_commutative AddCommSemigroup.to_isCommutative
 
 /- warning: comm_semigroup.is_right_cancel_mul.to_is_left_cancel_mul -> CommSemigroup.IsRightCancelMul.toIsLeftCancelMul is a dubious translation:
 lean 3 declaration is
@@ -551,16 +553,16 @@ theorem mul_one : ∀ a : M, a * 1 = a :=
 #align add_zero add_zero
 
 @[to_additive]
-instance MulOneClass.to_is_left_id : IsLeftId M (· * ·) 1 :=
+instance MulOneClass.to_isLeftId : IsLeftId M (· * ·) 1 :=
   ⟨MulOneClass.one_mul⟩
-#align mul_one_class.to_is_left_id MulOneClass.to_is_left_id
-#align add_zero_class.to_is_left_id AddZeroClass.to_is_left_id
+#align mul_one_class.to_is_left_id MulOneClass.to_isLeftId
+#align add_zero_class.to_is_left_id AddZeroClass.to_isLeftId
 
 @[to_additive]
-instance MulOneClass.to_is_right_id : IsRightId M (· * ·) 1 :=
+instance MulOneClass.to_isRightId : IsRightId M (· * ·) 1 :=
   ⟨MulOneClass.mul_one⟩
-#align mul_one_class.to_is_right_id MulOneClass.to_is_right_id
-#align add_zero_class.to_is_right_id AddZeroClass.to_is_right_id
+#align mul_one_class.to_is_right_id MulOneClass.to_isRightId
+#align add_zero_class.to_is_right_id AddZeroClass.to_isRightId
 
 end MulOneClass
 

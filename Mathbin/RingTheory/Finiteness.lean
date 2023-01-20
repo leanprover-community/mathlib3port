@@ -157,7 +157,7 @@ theorem fgBot : (⊥ : Submodule R M).Fg :=
 
 theorem Subalgebra.fgBotToSubmodule {R A : Type _} [CommSemiring R] [Semiring A] [Algebra R A] :
     (⊥ : Subalgebra R A).toSubmodule.Fg :=
-  ⟨{1}, by simp [Algebra.to_submodule_bot]⟩
+  ⟨{1}, by simp [Algebra.toSubmodule_bot]⟩
 #align subalgebra.fg_bot_to_submodule Subalgebra.fgBotToSubmodule
 
 theorem fgSpan {s : Set M} (hs : s.Finite) : Fg (span R s) :=
@@ -242,8 +242,8 @@ theorem fgPi {ι : Type _} {M : ι → Type _} [Finite ι] [∀ i, AddCommMonoid
     simp_rw [fg_def] at hsb⊢
     choose t htf hts using hsb
     refine'
-      ⟨⋃ i, (LinearMap.single i : _ →ₗ[R] _) '' t i, Set.finite_Union fun i => (htf i).image _, _⟩
-    simp_rw [span_Union, span_image, hts, Submodule.supr_map_single]
+      ⟨⋃ i, (LinearMap.single i : _ →ₗ[R] _) '' t i, Set.finite_unionᵢ fun i => (htf i).image _, _⟩
+    simp_rw [span_Union, span_image, hts, Submodule.supᵢ_map_single]
 #align submodule.fg_pi Submodule.fgPi
 
 /-- If 0 → M' → M → M'' → 0 is exact and M' and M'' are
@@ -299,21 +299,21 @@ theorem fgOfFgMapOfFgInfKer {R M P : Type _} [Ring R] [AddCommGroup M] [Module R
   · rw [← Set.image_id (g '' ↑t1), Finsupp.mem_span_image_iff_total]
     refine' ⟨_, _, rfl⟩
     haveI : Inhabited P := ⟨0⟩
-    rw [← Finsupp.lmap_domain_supported _ _ g, mem_map]
+    rw [← Finsupp.lmapDomain_supported _ _ g, mem_map]
     refine' ⟨l, hl1, _⟩
     rfl
   rw [ht2, mem_inf]
   constructor
   · apply s.sub_mem hx
-    rw [Finsupp.total_apply, Finsupp.lmap_domain_apply, Finsupp.sum_map_domain_index]
+    rw [Finsupp.total_apply, Finsupp.lmapDomain_apply, Finsupp.sum_mapDomain_index]
     refine' s.sum_mem _
     · intro y hy
       exact s.smul_mem _ (hg y (hl1 hy)).1
     · exact zero_smul _
     · exact fun _ _ _ => add_smul _ _ _
   · rw [LinearMap.mem_ker, f.map_sub, ← hl2]
-    rw [Finsupp.total_apply, Finsupp.total_apply, Finsupp.lmap_domain_apply]
-    rw [Finsupp.sum_map_domain_index, Finsupp.sum, Finsupp.sum, f.map_sum]
+    rw [Finsupp.total_apply, Finsupp.total_apply, Finsupp.lmapDomain_apply]
+    rw [Finsupp.sum_mapDomain_index, Finsupp.sum, Finsupp.sum, f.map_sum]
     rw [sub_eq_zero]
     refine' Finset.sum_congr rfl fun y hy => _
     unfold id
@@ -352,15 +352,15 @@ theorem fgRestrictScalars {R S M : Type _} [CommSemiring R] [Semiring S] [Algebr
   by
   obtain ⟨X, rfl⟩ := hfin
   use X
-  exact Submodule.span_eq_restrict_scalars R S M X h
+  exact Submodule.span_eq_restrictScalars R S M X h
 #align submodule.fg_restrict_scalars Submodule.fgRestrictScalars
 
-theorem Fg.stablizes_of_supr_eq {M' : Submodule R M} (hM' : M'.Fg) (N : ℕ →o Submodule R M)
+theorem Fg.stablizes_of_supᵢ_eq {M' : Submodule R M} (hM' : M'.Fg) (N : ℕ →o Submodule R M)
     (H : supᵢ N = M') : ∃ n, M' = N n :=
   by
   obtain ⟨S, hS⟩ := hM'
   have : ∀ s : S, ∃ n, (s : M) ∈ N n := fun s =>
-    (Submodule.mem_supr_of_chain N s).mp
+    (Submodule.mem_supᵢ_of_chain N s).mp
       (by
         rw [H, ← hS]
         exact Submodule.subset_span s.2)
@@ -373,7 +373,7 @@ theorem Fg.stablizes_of_supr_eq {M' : Submodule R M} (hM' : M'.Fg) (N : ℕ →o
     exact N.2 (Finset.le_sup <| S.mem_attach ⟨s, hs⟩) (hf _)
   · rw [← H]
     exact le_supᵢ _ _
-#align submodule.fg.stablizes_of_supr_eq Submodule.Fg.stablizes_of_supr_eq
+#align submodule.fg.stablizes_of_supr_eq Submodule.Fg.stablizes_of_supᵢ_eq
 
 /-- Finitely generated submodules are precisely compact elements in the submodule lattice. -/
 theorem fg_iff_compact (s : Submodule R M) : s.Fg ↔ CompleteLattice.IsCompactElement s := by
@@ -473,7 +473,7 @@ theorem fg_ker_comp {R S A : Type _} [CommRing R] [CommRing S] [CommRing A] (f :
   letI : Algebra R S := RingHom.toAlgebra f
   letI : Algebra R A := RingHom.toAlgebra (g.comp f)
   letI : Algebra S A := RingHom.toAlgebra g
-  letI : IsScalarTower R S A := IsScalarTower.of_algebra_map_eq fun _ => rfl
+  letI : IsScalarTower R S A := IsScalarTower.of_algebraMap_eq fun _ => rfl
   let f₁ := Algebra.linearMap R S
   let g₁ := (IsScalarTower.toAlgHom R S A).toLinearMap
   exact Submodule.fgKerComp f₁ g₁ hf (Submodule.fgRestrictScalars g.ker hg hsur) hsur
@@ -559,7 +559,7 @@ theorem ofRestrictScalarsFinite (R A M : Type _) [CommSemiring R] [Semiring A] [
   rw [finite_def, fg_def] at hM⊢
   obtain ⟨S, hSfin, hSgen⟩ := hM
   refine' ⟨S, hSfin, eq_top_iff.2 _⟩
-  have := Submodule.span_le_restrict_scalars R A S
+  have := Submodule.span_le_restrictScalars R A S
   rw [hSgen] at this
   exact this
 #align module.finite.of_restrict_scalars_finite Module.Finite.ofRestrictScalarsFinite
@@ -593,7 +593,7 @@ theorem trans {R : Type _} (A B : Type _) [CommSemiring R] [CommSemiring A] [Alg
         ⟨Set.image2 (· • ·) (↑s : Set A) (↑t : Set B),
           Set.Finite.image2 _ s.finite_to_set t.finite_to_set, by
           rw [Set.image2_smul, Submodule.span_smul_of_span_eq_top hs (↑t : Set B), ht,
-            Submodule.restrict_scalars_top]⟩⟩
+            Submodule.restrictScalars_top]⟩⟩
 #align module.finite.trans Module.Finite.trans
 
 end Algebra
@@ -676,7 +676,7 @@ theorem of_comp_finite {f : A →+* B} {g : B →+* C} (h : (g.comp f).Finite) :
   letI := f.to_algebra
   letI := g.to_algebra
   letI := (g.comp f).toAlgebra
-  letI : IsScalarTower A B C := RestrictScalars.is_scalar_tower A B C
+  letI : IsScalarTower A B C := RestrictScalars.isScalarTower A B C
   letI : Module.Finite A C := h
   exact Module.Finite.ofRestrictScalarsFinite A B C
 #align ring_hom.finite.of_comp_finite RingHom.Finite.of_comp_finite

@@ -153,7 +153,7 @@ theorem Ideal.IsHomogeneous.isPrimeOfHomogeneousMemOrMem {I : Ideal A} (hI : I.I
       exact not_mem_I mem_I⟩
 #align ideal.is_homogeneous.is_prime_of_homogeneous_mem_or_mem Ideal.IsHomogeneous.isPrimeOfHomogeneousMemOrMem
 
-theorem Ideal.IsHomogeneous.is_prime_iff {I : Ideal A} (h : I.IsHomogeneous 𝒜) :
+theorem Ideal.IsHomogeneous.isPrime_iff {I : Ideal A} (h : I.IsHomogeneous 𝒜) :
     I.IsPrime ↔
       I ≠ ⊤ ∧
         ∀ {x y : A},
@@ -161,37 +161,37 @@ theorem Ideal.IsHomogeneous.is_prime_iff {I : Ideal A} (h : I.IsHomogeneous 𝒜
   ⟨fun HI => ⟨ne_of_apply_ne _ HI.ne_top, fun x y hx hy hxy => Ideal.IsPrime.mem_or_mem HI hxy⟩,
     fun ⟨I_ne_top, homogeneous_mem_or_mem⟩ =>
     h.isPrimeOfHomogeneousMemOrMem I_ne_top @homogeneous_mem_or_mem⟩
-#align ideal.is_homogeneous.is_prime_iff Ideal.IsHomogeneous.is_prime_iff
+#align ideal.is_homogeneous.is_prime_iff Ideal.IsHomogeneous.isPrime_iff
 
 theorem Ideal.IsPrime.homogeneousCore {I : Ideal A} (h : I.IsPrime) :
     (I.homogeneousCore 𝒜).toIdeal.IsPrime :=
   by
   apply (Ideal.homogeneousCore 𝒜 I).IsHomogeneous.isPrimeOfHomogeneousMemOrMem
-  · exact ne_top_of_le_ne_top h.ne_top (Ideal.to_ideal_homogeneous_core_le 𝒜 I)
+  · exact ne_top_of_le_ne_top h.ne_top (Ideal.toIdeal_homogeneousCore_le 𝒜 I)
   rintro x y hx hy hxy
-  have H := h.mem_or_mem (Ideal.to_ideal_homogeneous_core_le 𝒜 I hxy)
+  have H := h.mem_or_mem (Ideal.toIdeal_homogeneousCore_le 𝒜 I hxy)
   refine' H.imp _ _
-  · exact Ideal.mem_homogeneous_core_of_is_homogeneous_of_mem hx
-  · exact Ideal.mem_homogeneous_core_of_is_homogeneous_of_mem hy
+  · exact Ideal.mem_homogeneousCore_of_isHomogeneous_of_mem hx
+  · exact Ideal.mem_homogeneousCore_of_isHomogeneous_of_mem hy
 #align ideal.is_prime.homogeneous_core Ideal.IsPrime.homogeneousCore
 
 theorem Ideal.IsHomogeneous.radical_eq {I : Ideal A} (hI : I.IsHomogeneous 𝒜) :
     I.radical = infₛ { J | J.IsHomogeneous 𝒜 ∧ I ≤ J ∧ J.IsPrime } :=
   by
-  rw [Ideal.radical_eq_Inf]
+  rw [Ideal.radical_eq_infₛ]
   apply le_antisymm
   · exact infₛ_le_infₛ fun J => And.right
   · refine' infₛ_le_infₛ_of_forall_exists_le _
     rintro J ⟨HJ₁, HJ₂⟩
     refine' ⟨(J.homogeneous_core 𝒜).toIdeal, _, J.to_ideal_homogeneous_core_le _⟩
-    refine' ⟨HomogeneousIdeal.is_homogeneous _, _, HJ₂.homogeneous_core⟩
-    refine' hI.to_ideal_homogeneous_core_eq_self.symm.trans_le (Ideal.homogeneous_core_mono _ HJ₁)
+    refine' ⟨HomogeneousIdeal.isHomogeneous _, _, HJ₂.homogeneous_core⟩
+    refine' hI.to_ideal_homogeneous_core_eq_self.symm.trans_le (Ideal.homogeneousCore_mono _ HJ₁)
 #align ideal.is_homogeneous.radical_eq Ideal.IsHomogeneous.radical_eq
 
 theorem Ideal.IsHomogeneous.radical {I : Ideal A} (h : I.IsHomogeneous 𝒜) :
     I.radical.IsHomogeneous 𝒜 := by
   rw [h.radical_eq]
-  exact Ideal.IsHomogeneous.Inf fun _ => And.left
+  exact Ideal.IsHomogeneous.infₛ fun _ => And.left
 #align ideal.is_homogeneous.radical Ideal.IsHomogeneous.radical
 
 /-- The radical of a homogenous ideal, as another homogenous ideal. -/

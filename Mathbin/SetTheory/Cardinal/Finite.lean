@@ -54,7 +54,7 @@ theorem finite_of_card_ne_zero (h : Nat.card α ≠ 0) : Finite α :=
 #align nat.finite_of_card_ne_zero Nat.finite_of_card_ne_zero
 
 theorem card_congr (f : α ≃ β) : Nat.card α = Nat.card β :=
-  Cardinal.to_nat_congr f
+  Cardinal.toNat_congr f
 #align nat.card_congr Nat.card_congr
 
 theorem card_eq_of_bijective (f : α → β) (hf : Function.Bijective f) : Nat.card α = Nat.card β :=
@@ -86,19 +86,19 @@ theorem card_unique [Unique α] : Nat.card α = 1 :=
 #align nat.card_unique Nat.card_unique
 
 theorem card_eq_one_iff_unique : Nat.card α = 1 ↔ Subsingleton α ∧ Nonempty α :=
-  Cardinal.to_nat_eq_one_iff_unique
+  Cardinal.toNat_eq_one_iff_unique
 #align nat.card_eq_one_iff_unique Nat.card_eq_one_iff_unique
 
 theorem card_eq_two_iff : Nat.card α = 2 ↔ ∃ x y : α, x ≠ y ∧ {x, y} = @Set.univ α :=
-  (to_nat_eq_iff two_ne_zero).trans <| Iff.trans (by rw [Nat.cast_two]) mk_eq_two_iff
+  (toNat_eq_iff two_neZero).trans <| Iff.trans (by rw [Nat.cast_two]) mk_eq_two_iff
 #align nat.card_eq_two_iff Nat.card_eq_two_iff
 
 theorem card_eq_two_iff' (x : α) : Nat.card α = 2 ↔ ∃! y, y ≠ x :=
-  (to_nat_eq_iff two_ne_zero).trans <| Iff.trans (by rw [Nat.cast_two]) (mk_eq_two_iff' x)
+  (toNat_eq_iff two_neZero).trans <| Iff.trans (by rw [Nat.cast_two]) (mk_eq_two_iff' x)
 #align nat.card_eq_two_iff' Nat.card_eq_two_iff'
 
-theorem card_of_is_empty [IsEmpty α] : Nat.card α = 0 := by simp
-#align nat.card_of_is_empty Nat.card_of_is_empty
+theorem card_of_isEmpty [IsEmpty α] : Nat.card α = 0 := by simp
+#align nat.card_of_is_empty Nat.card_of_isEmpty
 
 @[simp]
 theorem card_prod (α β : Type _) : Nat.card (α × β) = Nat.card α * Nat.card β := by
@@ -106,14 +106,14 @@ theorem card_prod (α β : Type _) : Nat.card (α × β) = Nat.card α * Nat.car
 #align nat.card_prod Nat.card_prod
 
 @[simp]
-theorem card_ulift (α : Type _) : Nat.card (ULift α) = Nat.card α :=
+theorem card_uLift (α : Type _) : Nat.card (ULift α) = Nat.card α :=
   card_congr Equiv.ulift
-#align nat.card_ulift Nat.card_ulift
+#align nat.card_ulift Nat.card_uLift
 
 @[simp]
-theorem card_plift (α : Type _) : Nat.card (PLift α) = Nat.card α :=
+theorem card_pLift (α : Type _) : Nat.card (PLift α) = Nat.card α :=
   card_congr Equiv.plift
-#align nat.card_plift Nat.card_plift
+#align nat.card_plift Nat.card_pLift
 
 theorem card_pi {β : α → Type _} [Fintype α] : Nat.card (∀ a, β a) = ∏ a, Nat.card (β a) := by
   simp_rw [Nat.card, mk_pi, prod_eq_of_fintype, to_nat_lift, to_nat_finset_prod]

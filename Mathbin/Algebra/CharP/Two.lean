@@ -128,18 +128,18 @@ theorem neg_one_eq_one_iff [Nontrivial R] : (-1 : R) = 1 ↔ ringChar R = 2 :=
   by
   refine' ⟨fun h => _, fun h => @CharTwo.neg_eq _ (ringChar.of_eq h) 1⟩
   rw [eq_comm, ← sub_eq_zero, sub_neg_eq_add, ← Nat.cast_one, ← Nat.cast_add] at h
-  exact ((Nat.dvd_prime Nat.prime_two).mp (ringChar.dvd h)).resolve_left CharP.ring_char_ne_one
+  exact ((Nat.dvd_prime Nat.prime_two).mp (ringChar.dvd h)).resolve_left CharP.ringChar_ne_one
 #align neg_one_eq_one_iff neg_one_eq_one_iff
 
 @[simp]
-theorem order_of_neg_one [Nontrivial R] : orderOf (-1 : R) = if ringChar R = 2 then 1 else 2 :=
+theorem orderOf_neg_one [Nontrivial R] : orderOf (-1 : R) = if ringChar R = 2 then 1 else 2 :=
   by
   split_ifs
-  · rw [neg_one_eq_one_iff.2 h, order_of_one]
-  apply order_of_eq_prime
+  · rw [neg_one_eq_one_iff.2 h, orderOf_one]
+  apply orderOf_eq_prime
   · simp
   simpa [neg_one_eq_one_iff] using h
-#align order_of_neg_one order_of_neg_one
+#align order_of_neg_one orderOf_neg_one
 
 end ringChar
 

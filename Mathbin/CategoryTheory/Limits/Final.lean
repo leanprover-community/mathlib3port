@@ -101,25 +101,25 @@ class Initial (F : C ⥤ D) : Prop where
 attribute [instance] initial.out
 
 instance final_op_of_initial (F : C ⥤ D) [Initial F] : Final F.op
-    where out d := is_connected_of_equivalent (costructuredArrowOpEquivalence F (unop d))
+    where out d := isConnected_of_equivalent (costructuredArrowOpEquivalence F (unop d))
 #align category_theory.functor.final_op_of_initial CategoryTheory.Functor.final_op_of_initial
 
 instance initial_op_of_final (F : C ⥤ D) [Final F] : Initial F.op
-    where out d := is_connected_of_equivalent (structuredArrowOpEquivalence F (unop d))
+    where out d := isConnected_of_equivalent (structuredArrowOpEquivalence F (unop d))
 #align category_theory.functor.initial_op_of_final CategoryTheory.Functor.initial_op_of_final
 
 theorem final_of_initial_op (F : C ⥤ D) [Initial F.op] : Final F :=
   {
     out := fun d =>
-      @is_connected_of_is_connected_op _ _
-        (is_connected_of_equivalent (structuredArrowOpEquivalence F d).symm) }
+      @isConnected_of_isConnected_op _ _
+        (isConnected_of_equivalent (structuredArrowOpEquivalence F d).symm) }
 #align category_theory.functor.final_of_initial_op CategoryTheory.Functor.final_of_initial_op
 
 theorem initial_of_final_op (F : C ⥤ D) [Final F.op] : Initial F :=
   {
     out := fun d =>
-      @is_connected_of_is_connected_op _ _
-        (is_connected_of_equivalent (costructuredArrowOpEquivalence F d).symm) }
+      @isConnected_of_isConnected_op _ _
+        (isConnected_of_equivalent (costructuredArrowOpEquivalence F d).symm) }
 #align category_theory.functor.initial_of_final_op CategoryTheory.Functor.initial_of_final_op
 
 /-- If a functor `R : D ⥤ C` is a right adjoint, it is final. -/
@@ -127,7 +127,7 @@ theorem final_of_adjunction {L : C ⥤ D} {R : D ⥤ C} (adj : L ⊣ R) : Final 
   {
     out := fun c =>
       let u : StructuredArrow c R := StructuredArrow.mk (adj.Unit.app c)
-      @zigzag_is_connected _ _ ⟨u⟩ fun f g =>
+      @zigzag_isConnected _ _ ⟨u⟩ fun f g =>
         Relation.ReflTransGen.trans
           (Relation.ReflTransGen.single
             (show Zag f u from
@@ -142,7 +142,7 @@ theorem initial_of_adjunction {L : C ⥤ D} {R : D ⥤ C} (adj : L ⊣ R) : Init
   {
     out := fun d =>
       let u : CostructuredArrow L d := CostructuredArrow.mk (adj.counit.app d)
-      @zigzag_is_connected _ _ ⟨u⟩ fun f g =>
+      @zigzag_isConnected _ _ ⟨u⟩ fun f g =>
         Relation.ReflTransGen.trans
           (Relation.ReflTransGen.single
             (show Zag f u from
@@ -152,14 +152,13 @@ theorem initial_of_adjunction {L : C ⥤ D} {R : D ⥤ C} (adj : L ⊣ R) : Init
               Or.inr ⟨CostructuredArrow.homMk (adj.homEquiv g.left d g.Hom) (by simp)⟩)) }
 #align category_theory.functor.initial_of_adjunction CategoryTheory.Functor.initial_of_adjunction
 
-instance (priority := 100) final_of_is_right_adjoint (F : C ⥤ D) [h : IsRightAdjoint F] : Final F :=
+instance (priority := 100) final_of_isRightAdjoint (F : C ⥤ D) [h : IsRightAdjoint F] : Final F :=
   final_of_adjunction h.adj
-#align category_theory.functor.final_of_is_right_adjoint CategoryTheory.Functor.final_of_is_right_adjoint
+#align category_theory.functor.final_of_is_right_adjoint CategoryTheory.Functor.final_of_isRightAdjoint
 
-instance (priority := 100) initial_of_is_left_adjoint (F : C ⥤ D) [h : IsLeftAdjoint F] :
-    Initial F :=
+instance (priority := 100) initial_of_isLeftAdjoint (F : C ⥤ D) [h : IsLeftAdjoint F] : Initial F :=
   initial_of_adjunction h.adj
-#align category_theory.functor.initial_of_is_left_adjoint CategoryTheory.Functor.initial_of_is_left_adjoint
+#align category_theory.functor.initial_of_is_left_adjoint CategoryTheory.Functor.initial_of_isLeftAdjoint
 
 namespace Final
 
@@ -317,13 +316,13 @@ theorem colimit_pre_is_iso_aux {t : Cocone G} (P : IsColimit t) :
   dsimp; simp
 #align category_theory.functor.final.colimit_pre_is_iso_aux CategoryTheory.Functor.Final.colimit_pre_is_iso_aux
 
-instance colimit_pre_is_iso [HasColimit G] : IsIso (colimit.pre G F) :=
+instance colimit_pre_isIso [HasColimit G] : IsIso (colimit.pre G F) :=
   by
   rw [colimit.pre_eq (colimit_cocone_comp F (get_colimit_cocone G)) (get_colimit_cocone G)]
   erw [colimit_pre_is_iso_aux]
   dsimp
   infer_instance
-#align category_theory.functor.final.colimit_pre_is_iso CategoryTheory.Functor.Final.colimit_pre_is_iso
+#align category_theory.functor.final.colimit_pre_is_iso CategoryTheory.Functor.Final.colimit_pre_isIso
 
 section
 
@@ -390,7 +389,7 @@ def colimitCompCoyonedaIso (d : D) [IsIso (colimit.pre (coyoneda.obj (op d)) F)]
   asIso (colimit.pre (coyoneda.obj (op d)) F) ≪≫ coyoneda.colimitCoyonedaIso (op d)
 #align category_theory.functor.final.colimit_comp_coyoneda_iso CategoryTheory.Functor.Final.colimitCompCoyonedaIso
 
-theorem zigzag_of_eqv_gen_quot_rel {F : C ⥤ D} {d : D} {f₁ f₂ : ΣX, d ⟶ F.obj X}
+theorem zigzag_of_eqvGen_quot_rel {F : C ⥤ D} {d : D} {f₁ f₂ : ΣX, d ⟶ F.obj X}
     (t : EqvGen (Types.Quot.Rel.{v, v} (F ⋙ coyoneda.obj (op d))) f₁ f₂) :
     Zigzag (StructuredArrow.mk f₁.2) (StructuredArrow.mk f₂.2) :=
   by
@@ -408,11 +407,11 @@ theorem zigzag_of_eqv_gen_quot_rel {F : C ⥤ D} {d : D} {f₁ f₂ : ΣX, d ⟶
   case trans x y z h₁ h₂ ih₁ ih₂ =>
     apply Relation.ReflTransGen.trans
     exact ih₁; exact ih₂
-#align category_theory.functor.final.zigzag_of_eqv_gen_quot_rel CategoryTheory.Functor.Final.zigzag_of_eqv_gen_quot_rel
+#align category_theory.functor.final.zigzag_of_eqv_gen_quot_rel CategoryTheory.Functor.Final.zigzag_of_eqvGen_quot_rel
 
 /-- If `colimit (F ⋙ coyoneda.obj (op d)) ≅ punit` for all `d : D`, then `F` is cofinal.
 -/
-theorem cofinal_of_colimit_comp_coyoneda_iso_punit
+theorem cofinal_of_colimit_comp_coyoneda_iso_pUnit
     (I : ∀ d, colimit (F ⋙ coyoneda.obj (op d)) ≅ PUnit) : Final F :=
   ⟨fun d =>
     by
@@ -432,7 +431,7 @@ theorem cofinal_of_colimit_comp_coyoneda_iso_punit
     have t := Types.colimit_eq.{v, v} e
     clear e y₁ y₂
     exact zigzag_of_eqv_gen_quot_rel t⟩
-#align category_theory.functor.final.cofinal_of_colimit_comp_coyoneda_iso_punit CategoryTheory.Functor.Final.cofinal_of_colimit_comp_coyoneda_iso_punit
+#align category_theory.functor.final.cofinal_of_colimit_comp_coyoneda_iso_punit CategoryTheory.Functor.Final.cofinal_of_colimit_comp_coyoneda_iso_pUnit
 
 end Final
 
@@ -594,13 +593,13 @@ theorem limit_pre_is_iso_aux {t : Cone G} (P : IsLimit t) :
   simp
 #align category_theory.functor.initial.limit_pre_is_iso_aux CategoryTheory.Functor.Initial.limit_pre_is_iso_aux
 
-instance limit_pre_is_iso [HasLimit G] : IsIso (limit.pre G F) :=
+instance limit_pre_isIso [HasLimit G] : IsIso (limit.pre G F) :=
   by
   rw [limit.pre_eq (limit_cone_comp F (get_limit_cone G)) (get_limit_cone G)]
   erw [limit_pre_is_iso_aux]
   dsimp
   infer_instance
-#align category_theory.functor.initial.limit_pre_is_iso CategoryTheory.Functor.Initial.limit_pre_is_iso
+#align category_theory.functor.initial.limit_pre_is_iso CategoryTheory.Functor.Initial.limit_pre_isIso
 
 section
 

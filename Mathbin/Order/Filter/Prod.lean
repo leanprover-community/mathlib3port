@@ -222,19 +222,19 @@ theorem tendsto_diag : Tendsto (fun i => (i, i)) f (f ×ᶠ f) :=
   tendsto_iff_eventually.mpr fun _ hpr => hpr.diag_of_prod
 #align filter.tendsto_diag Filter.tendsto_diag
 
-theorem prod_infi_left [Nonempty ι] {f : ι → Filter α} {g : Filter β} :
+theorem prod_infᵢ_left [Nonempty ι] {f : ι → Filter α} {g : Filter β} :
     (⨅ i, f i) ×ᶠ g = ⨅ i, f i ×ᶠ g :=
   by
   rw [Filter.prod, comap_infi, infᵢ_inf]
   simp only [Filter.prod, eq_self_iff_true]
-#align filter.prod_infi_left Filter.prod_infi_left
+#align filter.prod_infi_left Filter.prod_infᵢ_left
 
-theorem prod_infi_right [Nonempty ι] {f : Filter α} {g : ι → Filter β} :
+theorem prod_infᵢ_right [Nonempty ι] {f : Filter α} {g : ι → Filter β} :
     (f ×ᶠ ⨅ i, g i) = ⨅ i, f ×ᶠ g i :=
   by
   rw [Filter.prod, comap_infi, inf_infᵢ]
   simp only [Filter.prod, eq_self_iff_true]
-#align filter.prod_infi_right Filter.prod_infi_right
+#align filter.prod_infi_right Filter.prod_infᵢ_right
 
 @[mono]
 theorem prod_mono {f₁ f₂ : Filter α} {g₁ g₂ : Filter β} (hf : f₁ ≤ f₂) (hg : g₁ ≤ g₂) :
@@ -307,27 +307,27 @@ theorem eventually_swap_iff {p : α × β → Prop} :
   simpa
 #align filter.eventually_swap_iff Filter.eventually_swap_iff
 
-theorem prod_assoc (f : Filter α) (g : Filter β) (h : Filter γ) :
+theorem prodAssoc (f : Filter α) (g : Filter β) (h : Filter γ) :
     map (Equiv.prodAssoc α β γ) (f ×ᶠ g ×ᶠ h) = f ×ᶠ (g ×ᶠ h) := by
   simp_rw [← comap_equiv_symm, Filter.prod, comap_inf, comap_comap, inf_assoc, Function.comp,
-    Equiv.prod_assoc_symm_apply]
-#align filter.prod_assoc Filter.prod_assoc
+    Equiv.prodAssoc_symm_apply]
+#align filter.prod_assoc Filter.prodAssoc
 
-theorem prod_assoc_symm (f : Filter α) (g : Filter β) (h : Filter γ) :
+theorem prodAssoc_symm (f : Filter α) (g : Filter β) (h : Filter γ) :
     map (Equiv.prodAssoc α β γ).symm (f ×ᶠ (g ×ᶠ h)) = f ×ᶠ g ×ᶠ h := by
   simp_rw [map_equiv_symm, Filter.prod, comap_inf, comap_comap, inf_assoc, Function.comp,
-    Equiv.prod_assoc_apply]
-#align filter.prod_assoc_symm Filter.prod_assoc_symm
+    Equiv.prodAssoc_apply]
+#align filter.prod_assoc_symm Filter.prodAssoc_symm
 
-theorem tendsto_prod_assoc {f : Filter α} {g : Filter β} {h : Filter γ} :
+theorem tendsto_prodAssoc {f : Filter α} {g : Filter β} {h : Filter γ} :
     Tendsto (Equiv.prodAssoc α β γ) (f ×ᶠ g ×ᶠ h) (f ×ᶠ (g ×ᶠ h)) :=
-  (prod_assoc f g h).le
-#align filter.tendsto_prod_assoc Filter.tendsto_prod_assoc
+  (prodAssoc f g h).le
+#align filter.tendsto_prod_assoc Filter.tendsto_prodAssoc
 
-theorem tendsto_prod_assoc_symm {f : Filter α} {g : Filter β} {h : Filter γ} :
+theorem tendsto_prodAssoc_symm {f : Filter α} {g : Filter β} {h : Filter γ} :
     Tendsto (Equiv.prodAssoc α β γ).symm (f ×ᶠ (g ×ᶠ h)) (f ×ᶠ g ×ᶠ h) :=
-  (prod_assoc_symm f g h).le
-#align filter.tendsto_prod_assoc_symm Filter.tendsto_prod_assoc_symm
+  (prodAssoc_symm f g h).le
+#align filter.tendsto_prod_assoc_symm Filter.tendsto_prodAssoc_symm
 
 /-- A useful lemma when dealing with uniformities. -/
 theorem map_swap4_prod {f : Filter α} {g : Filter β} {h : Filter γ} {k : Filter δ} :
@@ -449,12 +449,12 @@ theorem prod_eq_bot {f : Filter α} {g : Filter β} : f ×ᶠ g = ⊥ ↔ f = �
     exact prod_bot
 #align filter.prod_eq_bot Filter.prod_eq_bot
 
-theorem prod_ne_bot {f : Filter α} {g : Filter β} : NeBot (f ×ᶠ g) ↔ NeBot f ∧ NeBot g := by
+theorem prod_neBot {f : Filter α} {g : Filter β} : NeBot (f ×ᶠ g) ↔ NeBot f ∧ NeBot g := by
   simp only [ne_bot_iff, Ne, prod_eq_bot, not_or]
-#align filter.prod_ne_bot Filter.prod_ne_bot
+#align filter.prod_ne_bot Filter.prod_neBot
 
 theorem NeBot.prod {f : Filter α} {g : Filter β} (hf : NeBot f) (hg : NeBot g) : NeBot (f ×ᶠ g) :=
-  prod_ne_bot.2 ⟨hf, hg⟩
+  prod_neBot.2 ⟨hf, hg⟩
 #align filter.ne_bot.prod Filter.NeBot.prod
 
 instance prod_ne_bot' {f : Filter α} {g : Filter β} [hf : NeBot f] [hg : NeBot g] :
@@ -517,19 +517,19 @@ theorem coprod_mono {f₁ f₂ : Filter α} {g₁ g₂ : Filter β} (hf : f₁ �
   sup_le_sup (comap_mono hf) (comap_mono hg)
 #align filter.coprod_mono Filter.coprod_mono
 
-theorem coprod_ne_bot_iff : (f.coprod g).ne_bot ↔ f.ne_bot ∧ Nonempty β ∨ Nonempty α ∧ g.ne_bot :=
-  by simp [Filter.coprod]
-#align filter.coprod_ne_bot_iff Filter.coprod_ne_bot_iff
+theorem coprod_neBot_iff : (f.coprod g).ne_bot ↔ f.ne_bot ∧ Nonempty β ∨ Nonempty α ∧ g.ne_bot := by
+  simp [Filter.coprod]
+#align filter.coprod_ne_bot_iff Filter.coprod_neBot_iff
 
 @[instance]
-theorem coprod_ne_bot_left [NeBot f] [Nonempty β] : (f.coprod g).ne_bot :=
-  coprod_ne_bot_iff.2 (Or.inl ⟨‹_›, ‹_›⟩)
-#align filter.coprod_ne_bot_left Filter.coprod_ne_bot_left
+theorem coprod_neBot_left [NeBot f] [Nonempty β] : (f.coprod g).ne_bot :=
+  coprod_neBot_iff.2 (Or.inl ⟨‹_›, ‹_›⟩)
+#align filter.coprod_ne_bot_left Filter.coprod_neBot_left
 
 @[instance]
-theorem coprod_ne_bot_right [NeBot g] [Nonempty α] : (f.coprod g).ne_bot :=
-  coprod_ne_bot_iff.2 (Or.inr ⟨‹_›, ‹_›⟩)
-#align filter.coprod_ne_bot_right Filter.coprod_ne_bot_right
+theorem coprod_neBot_right [NeBot g] [Nonempty α] : (f.coprod g).ne_bot :=
+  coprod_neBot_iff.2 (Or.inr ⟨‹_›, ‹_›⟩)
+#align filter.coprod_ne_bot_right Filter.coprod_neBot_right
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem principal_coprod_principal (s : Set α) (t : Set β) : (𝓟 s).coprod (𝓟 t) = 𝓟 ((sᶜ ×ˢ tᶜ)ᶜ) :=

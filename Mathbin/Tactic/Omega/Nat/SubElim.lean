@@ -39,7 +39,7 @@ def subSubst (t s : Preterm) (k : Nat) : Preterm → Preterm
   | x -* y => if x = t ∧ y = s then 1 ** k else x.subSubst -* y.subSubst
 #align omega.nat.preterm.sub_subst Omega.Nat.Preterm.subSubst
 
-theorem val_sub_subst {k : Nat} {x y : Preterm} {v : Nat → Nat} :
+theorem val_subSubst {k : Nat} {x y : Preterm} {v : Nat → Nat} :
     ∀ {t : Preterm},
       t.freshIndex ≤ k → (subSubst x y k t).val (update k (x.val v - y.val v) v) = t.val v
   | &m, h1 => rfl
@@ -61,7 +61,7 @@ theorem val_sub_subst {k : Nat} {x y : Preterm} {v : Nat → Nat} :
       apply fun_mono_2 <;> apply val_sub_subst (le_trans _ h1)
       apply le_max_left
       apply le_max_right
-#align omega.nat.preterm.val_sub_subst Omega.Nat.Preterm.val_sub_subst
+#align omega.nat.preterm.val_sub_subst Omega.Nat.Preterm.val_subSubst
 
 end Preterm
 
@@ -94,7 +94,7 @@ def isDiff (t s : Preterm) (k : Nat) : Preform :=
   (t =* s +* 1 ** k) ∨* (t ≤* s) ∧* (1 ** k) =* &0
 #align omega.nat.is_diff Omega.Nat.isDiff
 
-theorem holds_is_diff {t s : Preterm} {k : Nat} {v : Nat → Nat} :
+theorem holds_isDiff {t s : Preterm} {k : Nat} {v : Nat → Nat} :
     v k = t.val v - s.val v → (isDiff t s k).Holds v :=
   by
   intro h1
@@ -107,7 +107,7 @@ theorem holds_is_diff {t s : Preterm} {k : Nat} {v : Nat → Nat} :
     exact h2
   · left
     rw [h1, one_mul, add_comm, tsub_add_cancel_of_le h2]
-#align omega.nat.holds_is_diff Omega.Nat.holds_is_diff
+#align omega.nat.holds_is_diff Omega.Nat.holds_isDiff
 
 /-- Helper function for sub_elim -/
 def subElimCore (t s : Preterm) (k : Nat) (p : Preform) : Preform :=
@@ -125,7 +125,7 @@ def subElim (t s : Preterm) (p : Preform) : Preform :=
   subElimCore t s (subFreshIndex t s p) p
 #align omega.nat.sub_elim Omega.Nat.subElim
 
-theorem sub_subst_equiv {k : Nat} {x y : Preterm} {v : Nat → Nat} :
+theorem subSubst_equiv {k : Nat} {x y : Preterm} {v : Nat → Nat} :
     ∀ p : Preform,
       p.freshIndex ≤ k →
         ((Preform.subSubst x y k p).Holds (update k (x.val v - y.val v) v) ↔ p.Holds v)
@@ -148,9 +148,9 @@ theorem sub_subst_equiv {k : Nat} {x y : Preterm} {v : Nat → Nat} :
     simp only [preform.holds, preform.sub_subst]
     apply pred_mono_2 <;> apply propext <;> apply sub_subst_equiv _ (le_trans _ h1)
     apply le_max_left; apply le_max_right
-#align omega.nat.sub_subst_equiv Omega.Nat.sub_subst_equiv
+#align omega.nat.sub_subst_equiv Omega.Nat.subSubst_equiv
 
-theorem sat_sub_elim {t s : Preterm} {p : Preform} : p.Sat → (subElim t s p).Sat :=
+theorem sat_subElim {t s : Preterm} {p : Preform} : p.Sat → (subElim t s p).Sat :=
   by
   intro h1; simp only [sub_elim, sub_elim_core]
   cases' h1 with v h1
@@ -166,11 +166,11 @@ theorem sat_sub_elim {t s : Preterm} {p : Preform} : p.Sat → (subElim t s p).S
       apply le_trans _ (le_max_right _ _)
     apply le_max_left
     apply le_max_right
-#align omega.nat.sat_sub_elim Omega.Nat.sat_sub_elim
+#align omega.nat.sat_sub_elim Omega.Nat.sat_subElim
 
-theorem unsat_of_unsat_sub_elim (t s : Preterm) (p : Preform) : (subElim t s p).Unsat → p.Unsat :=
-  mt sat_sub_elim
-#align omega.nat.unsat_of_unsat_sub_elim Omega.Nat.unsat_of_unsat_sub_elim
+theorem unsat_of_unsat_subElim (t s : Preterm) (p : Preform) : (subElim t s p).Unsat → p.Unsat :=
+  mt sat_subElim
+#align omega.nat.unsat_of_unsat_sub_elim Omega.Nat.unsat_of_unsat_subElim
 
 end Nat
 

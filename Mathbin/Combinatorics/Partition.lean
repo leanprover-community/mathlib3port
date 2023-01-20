@@ -71,13 +71,13 @@ def ofComposition (n : ℕ) (c : Composition n) : Partition n
   parts_sum := by rw [Multiset.coe_sum, c.blocks_sum]
 #align nat.partition.of_composition Nat.Partition.ofComposition
 
-theorem of_composition_surj {n : ℕ} : Function.Surjective (ofComposition n) :=
+theorem ofComposition_surj {n : ℕ} : Function.Surjective (ofComposition n) :=
   by
   rintro ⟨b, hb₁, hb₂⟩
   rcases Quotient.exists_rep b with ⟨b, rfl⟩
   refine' ⟨⟨b, fun i hi => hb₁ hi, _⟩, partition.ext _ _ rfl⟩
   simpa using hb₂
-#align nat.partition.of_composition_surj Nat.Partition.of_composition_surj
+#align nat.partition.of_composition_surj Nat.Partition.ofComposition_surj
 
 -- The argument `n` is kept explicit here since it is useful in tactic mode proofs to generate the
 -- proof obligation `l.sum = n`.
@@ -116,21 +116,21 @@ as the number of times it appears in the multiset `l`.
 (For `i = 0`, `partition.non_zero` combined with `multiset.count_eq_zero_of_not_mem` gives that
 this is `0` instead.)
 -/
-theorem count_of_sums_of_ne_zero {n : ℕ} {l : Multiset ℕ} (hl : l.Sum = n) {i : ℕ} (hi : i ≠ 0) :
+theorem count_ofSums_of_ne_zero {n : ℕ} {l : Multiset ℕ} (hl : l.Sum = n) {i : ℕ} (hi : i ≠ 0) :
     (ofSums n l hl).parts.count i = l.count i :=
   count_filter_of_pos hi
-#align nat.partition.count_of_sums_of_ne_zero Nat.Partition.count_of_sums_of_ne_zero
+#align nat.partition.count_of_sums_of_ne_zero Nat.Partition.count_ofSums_of_ne_zero
 
-theorem count_of_sums_zero {n : ℕ} {l : Multiset ℕ} (hl : l.Sum = n) :
+theorem count_ofSums_zero {n : ℕ} {l : Multiset ℕ} (hl : l.Sum = n) :
     (ofSums n l hl).parts.count 0 = 0 :=
   count_filter_of_neg fun h => h rfl
-#align nat.partition.count_of_sums_zero Nat.Partition.count_of_sums_zero
+#align nat.partition.count_of_sums_zero Nat.Partition.count_ofSums_zero
 
 /-- Show there are finitely many partitions by considering the surjection from compositions to
 partitions.
 -/
 instance (n : ℕ) : Fintype (Partition n) :=
-  Fintype.ofSurjective (ofComposition n) of_composition_surj
+  Fintype.ofSurjective (ofComposition n) ofComposition_surj
 
 /-- The finset of those partitions in which every part is odd. -/
 def odds (n : ℕ) : Finset (Partition n) :=

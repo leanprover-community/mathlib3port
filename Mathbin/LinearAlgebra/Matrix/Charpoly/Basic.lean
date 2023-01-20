@@ -60,21 +60,21 @@ theorem charmatrix_apply (M : Matrix n n R) (i j : n) :
 @[simp]
 theorem charmatrix_apply_eq (M : Matrix n n R) (i : n) :
     charmatrix M i i = (x : R[X]) - c (M i i) := by
-  simp only [charmatrix, sub_left_inj, Pi.sub_apply, scalar_apply_eq, RingHom.map_matrix_apply,
+  simp only [charmatrix, sub_left_inj, Pi.sub_apply, scalar_apply_eq, RingHom.mapMatrix_apply,
     map_apply, DMatrix.sub_apply]
 #align charmatrix_apply_eq charmatrix_apply_eq
 
 @[simp]
 theorem charmatrix_apply_ne (M : Matrix n n R) (i j : n) (h : i ≠ j) :
     charmatrix M i j = -c (M i j) := by
-  simp only [charmatrix, Pi.sub_apply, scalar_apply_ne _ _ _ h, zero_sub, RingHom.map_matrix_apply,
+  simp only [charmatrix, Pi.sub_apply, scalar_apply_ne _ _ _ h, zero_sub, RingHom.mapMatrix_apply,
     map_apply, DMatrix.sub_apply]
 #align charmatrix_apply_ne charmatrix_apply_ne
 
-theorem mat_poly_equiv_charmatrix (M : Matrix n n R) : matPolyEquiv (charmatrix M) = X - c M :=
+theorem matPolyEquiv_charmatrix (M : Matrix n n R) : matPolyEquiv (charmatrix M) = X - c M :=
   by
   ext (k i j)
-  simp only [mat_poly_equiv_coeff_apply, coeff_sub, Pi.sub_apply]
+  simp only [matPolyEquiv_coeff_apply, coeff_sub, Pi.sub_apply]
   by_cases h : i = j
   · subst h
     rw [charmatrix_apply_eq, coeff_sub]
@@ -82,7 +82,7 @@ theorem mat_poly_equiv_charmatrix (M : Matrix n n R) : matPolyEquiv (charmatrix 
     split_ifs <;> simp
   · rw [charmatrix_apply_ne _ _ _ h, coeff_X, coeff_neg, coeff_C, coeff_C]
     split_ifs <;> simp [h]
-#align mat_poly_equiv_charmatrix mat_poly_equiv_charmatrix
+#align mat_poly_equiv_charmatrix matPolyEquiv_charmatrix
 
 theorem charmatrix_reindex {m : Type v} [DecidableEq m] [Fintype m] (e : n ≃ m) (M : Matrix n n R) :
     charmatrix (reindex e e M) = reindex e e (charmatrix M) :=
@@ -122,7 +122,7 @@ theorem Matrix.aeval_self_charpoly (M : Matrix n n R) : aeval M M.charpoly = 0 :
   -- Using the algebra isomorphism `matrix n n R[X] ≃ₐ[R] polynomial (matrix n n R)`,
   -- we have the same identity in `polynomial (matrix n n R)`.
   apply_fun matPolyEquiv  at h
-  simp only [mat_poly_equiv.map_mul, mat_poly_equiv_charmatrix] at h
+  simp only [mat_poly_equiv.map_mul, matPolyEquiv_charmatrix] at h
   -- Because the coefficient ring `matrix n n R` is non-commutative,
   -- evaluation at `M` is not multiplicative.
   -- However, any polynomial which is a product of the form $N * (t I - M)$
@@ -132,7 +132,7 @@ theorem Matrix.aeval_self_charpoly (M : Matrix n n R) : aeval M M.charpoly = 0 :
   rw [eval_mul_X_sub_C] at h
   -- Now $χ_M (t) I$, when thought of as a polynomial of matrices
   -- and evaluated at some `N` is exactly $χ_M (N)$.
-  rw [mat_poly_equiv_smul_one, eval_map] at h
+  rw [matPolyEquiv_smul_one, eval_map] at h
   -- Thus we have $χ_M(M) = 0$, which is the desired result.
   exact h
 #align matrix.aeval_self_charpoly Matrix.aeval_self_charpoly

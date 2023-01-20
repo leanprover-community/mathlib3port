@@ -89,24 +89,24 @@ def comapEq {β γ : Type w} {f g : β → γ} (h : f = g) : comap (fun _ => C) 
   inv := { app := fun X b => eqToHom (by dsimp [comap]; subst h) }
 #align category_theory.graded_object.comap_eq CategoryTheory.GradedObject.comapEq
 
-theorem comap_eq_symm {β γ : Type w} {f g : β → γ} (h : f = g) :
+theorem comapEq_symm {β γ : Type w} {f g : β → γ} (h : f = g) :
     comapEq C h.symm = (comapEq C h).symm := by tidy
-#align category_theory.graded_object.comap_eq_symm CategoryTheory.GradedObject.comap_eq_symm
+#align category_theory.graded_object.comap_eq_symm CategoryTheory.GradedObject.comapEq_symm
 
-theorem comap_eq_trans {β γ : Type w} {f g h : β → γ} (k : f = g) (l : g = h) :
+theorem comapEq_trans {β γ : Type w} {f g h : β → γ} (k : f = g) (l : g = h) :
     comapEq C (k.trans l) = comapEq C k ≪≫ comapEq C l :=
   by
   ext (X b)
   simp
-#align category_theory.graded_object.comap_eq_trans CategoryTheory.GradedObject.comap_eq_trans
+#align category_theory.graded_object.comap_eq_trans CategoryTheory.GradedObject.comapEq_trans
 
 @[simp]
-theorem eq_to_hom_apply {β : Type w} {X Y : ∀ b : β, C} (h : X = Y) (b : β) :
+theorem eqToHom_apply {β : Type w} {X Y : ∀ b : β, C} (h : X = Y) (b : β) :
     (eqToHom h : X ⟶ Y) b = eqToHom (by subst h) :=
   by
   subst h
   rfl
-#align category_theory.graded_object.eq_to_hom_apply CategoryTheory.GradedObject.eq_to_hom_apply
+#align category_theory.graded_object.eq_to_hom_apply CategoryTheory.GradedObject.eqToHom_apply
 
 /-- The equivalence between β-graded objects and γ-graded objects,
 given an equivalence between β and γ.
@@ -170,17 +170,17 @@ instance hasShift {β : Type _} [AddCommGroup β] (s : β) : HasShift (GradedObj
 #align category_theory.graded_object.has_shift CategoryTheory.GradedObject.hasShift
 
 @[simp]
-theorem shift_functor_obj_apply {β : Type _} [AddCommGroup β] (s : β) (X : β → C) (t : β) (n : ℤ) :
+theorem shiftFunctor_obj_apply {β : Type _} [AddCommGroup β] (s : β) (X : β → C) (t : β) (n : ℤ) :
     (shiftFunctor (GradedObjectWithShift s C) n).obj X t = X (t + n • s) :=
   rfl
-#align category_theory.graded_object.shift_functor_obj_apply CategoryTheory.GradedObject.shift_functor_obj_apply
+#align category_theory.graded_object.shift_functor_obj_apply CategoryTheory.GradedObject.shiftFunctor_obj_apply
 
 @[simp]
-theorem shift_functor_map_apply {β : Type _} [AddCommGroup β] (s : β)
+theorem shiftFunctor_map_apply {β : Type _} [AddCommGroup β] (s : β)
     {X Y : GradedObjectWithShift s C} (f : X ⟶ Y) (t : β) (n : ℤ) :
     (shiftFunctor (GradedObjectWithShift s C) n).map f t = f (t + n • s) :=
   rfl
-#align category_theory.graded_object.shift_functor_map_apply CategoryTheory.GradedObject.shift_functor_map_apply
+#align category_theory.graded_object.shift_functor_map_apply CategoryTheory.GradedObject.shiftFunctor_map_apply
 
 instance hasZeroMorphisms [HasZeroMorphisms C] (β : Type w) :
     HasZeroMorphisms.{max w v} (GradedObject β C) where HasZero X Y := { zero := fun b => 0 }
@@ -196,13 +196,13 @@ section
 
 open ZeroObject
 
-instance has_zero_object [HasZeroObject C] [HasZeroMorphisms C] (β : Type w) :
+instance hasZeroObject [HasZeroObject C] [HasZeroMorphisms C] (β : Type w) :
     HasZeroObject.{max w v} (GradedObject β C) := by
   refine'
       ⟨⟨fun b => 0, fun X => ⟨⟨⟨fun b => 0⟩, fun f => _⟩⟩, fun X =>
           ⟨⟨⟨fun b => 0⟩, fun f => _⟩⟩⟩⟩ <;>
     ext
-#align category_theory.graded_object.has_zero_object CategoryTheory.GradedObject.has_zero_object
+#align category_theory.graded_object.has_zero_object CategoryTheory.GradedObject.hasZeroObject
 
 end
 

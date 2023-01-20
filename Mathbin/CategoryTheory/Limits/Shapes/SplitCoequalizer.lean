@@ -106,10 +106,10 @@ def IsSplitCoequalizer.asCofork {Z : C} {h : Y ⟶ Z} (t : IsSplitCoequalizer f 
 #align category_theory.is_split_coequalizer.as_cofork CategoryTheory.IsSplitCoequalizer.asCofork
 
 @[simp]
-theorem IsSplitCoequalizer.as_cofork_π {Z : C} {h : Y ⟶ Z} (t : IsSplitCoequalizer f g h) :
+theorem IsSplitCoequalizer.asCofork_π {Z : C} {h : Y ⟶ Z} (t : IsSplitCoequalizer f g h) :
     t.asCofork.π = h :=
   rfl
-#align category_theory.is_split_coequalizer.as_cofork_π CategoryTheory.IsSplitCoequalizer.as_cofork_π
+#align category_theory.is_split_coequalizer.as_cofork_π CategoryTheory.IsSplitCoequalizer.asCofork_π
 
 /--
 The cofork induced by a split coequalizer is a coequalizer, justifying the name. In some cases it
@@ -171,10 +171,10 @@ instance map_is_split_pair [HasSplitCoequalizer f g] : HasSplitCoequalizer (G.ma
 namespace Limits
 
 /-- If a pair has a split coequalizer, it has a coequalizer. -/
-instance (priority := 1) has_coequalizer_of_has_split_coequalizer [HasSplitCoequalizer f g] :
+instance (priority := 1) hasCoequalizer_of_hasSplitCoequalizer [HasSplitCoequalizer f g] :
     HasCoequalizer f g :=
   HasColimit.mk ⟨_, (HasSplitCoequalizer.isSplitCoequalizer f g).isCoequalizer⟩
-#align category_theory.limits.has_coequalizer_of_has_split_coequalizer CategoryTheory.Limits.has_coequalizer_of_has_split_coequalizer
+#align category_theory.limits.has_coequalizer_of_has_split_coequalizer CategoryTheory.Limits.hasCoequalizer_of_hasSplitCoequalizer
 
 end Limits
 

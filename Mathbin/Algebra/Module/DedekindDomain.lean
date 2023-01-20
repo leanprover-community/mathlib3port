@@ -37,7 +37,7 @@ open UniqueFactorizationMonoid
 
 /-- Over a Dedekind domain, a `I`-torsion module is the internal direct sum of its `p i ^ e i`-
 torsion submodules, where `I = ∏ i, p i ^ e i` is its unique decomposition in prime ideals.-/
-theorem is_internal_prime_power_torsion_of_is_torsion_by_ideal {I : Ideal R} (hI : I ≠ ⊥)
+theorem isInternal_prime_power_torsion_of_is_torsion_by_ideal {I : Ideal R} (hI : I ≠ ⊥)
     (hM : Module.IsTorsionBySet R M I) :
     ∃ (P : Finset <| Ideal R)(_ : DecidableEq P)(_ : ∀ p ∈ P, Prime p)(e : P → ℕ),
       DirectSum.IsInternal fun p : P => torsion_by_set R M (p ^ e p : Ideal R) :=
@@ -67,11 +67,11 @@ theorem is_internal_prime_power_torsion_of_is_torsion_by_ideal {I : Ideal R} (hI
         apply pow_ne_zero
         exact (prime_of_mem q hq).NeZero
       · exact (prime_of_mem p hp).Irreducible
-#align submodule.is_internal_prime_power_torsion_of_is_torsion_by_ideal Submodule.is_internal_prime_power_torsion_of_is_torsion_by_ideal
+#align submodule.is_internal_prime_power_torsion_of_is_torsion_by_ideal Submodule.isInternal_prime_power_torsion_of_is_torsion_by_ideal
 
 /-- A finitely generated torsion module over a Dedekind domain is an internal direct sum of its
 `p i ^ e i`-torsion submodules for some prime ideals `p i` and numbers `e i`.-/
-theorem is_internal_prime_power_torsion [Module.Finite R M] (hM : Module.IsTorsion R M) :
+theorem isInternal_prime_power_torsion [Module.Finite R M] (hM : Module.IsTorsion R M) :
     ∃ (P : Finset <| Ideal R)(_ : DecidableEq P)(_ : ∀ p ∈ P, Prime p)(e : P → ℕ),
       DirectSum.IsInternal fun p : P => torsion_by_set R M (p ^ e p : Ideal R) :=
   by
@@ -79,7 +79,7 @@ theorem is_internal_prime_power_torsion [Module.Finite R M] (hM : Module.IsTorsi
   refine' is_internal_prime_power_torsion_of_is_torsion_by_ideal _ hM'
   rw [← Set.nonempty_iff_ne_empty] at hI; rw [Submodule.ne_bot_iff]
   obtain ⟨x, H, hx⟩ := hI; exact ⟨x, H, nonZeroDivisors.ne_zero hx⟩
-#align submodule.is_internal_prime_power_torsion Submodule.is_internal_prime_power_torsion
+#align submodule.is_internal_prime_power_torsion Submodule.isInternal_prime_power_torsion
 
 end Submodule
 

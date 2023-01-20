@@ -54,7 +54,7 @@ attribute [reassoc.1] regular_mono.w
 
 /-- Every regular monomorphism is a monomorphism. -/
 instance (priority := 100) RegularMono.mono (f : X ⟶ Y) [RegularMono f] : Mono f :=
-  mono_of_is_limit_fork RegularMono.isLimit
+  mono_of_isLimit_fork RegularMono.isLimit
 #align category_theory.regular_mono.mono CategoryTheory.RegularMono.mono
 
 instance equalizerRegular (g h : X ⟶ Y) [HasLimit (parallelPair g h)] :
@@ -127,7 +127,7 @@ def regularOfIsPullbackFstOfRegular {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h
   regularOfIsPullbackSndOfRegular comm.symm (PullbackCone.flipIsLimit t)
 #align category_theory.regular_of_is_pullback_fst_of_regular CategoryTheory.regularOfIsPullbackFstOfRegular
 
-instance (priority := 100) strong_mono_of_regular_mono (f : X ⟶ Y) [RegularMono f] : StrongMono f :=
+instance (priority := 100) strongMono_of_regularMono (f : X ⟶ Y) [RegularMono f] : StrongMono f :=
   StrongMono.mk'
     (by
       intro A B z hz u v sq
@@ -138,12 +138,12 @@ instance (priority := 100) strong_mono_of_regular_mono (f : X ⟶ Y) [RegularMon
       obtain ⟨t, ht⟩ := regular_mono.lift' _ _ this
       refine' comm_sq.has_lift.mk' ⟨t, (cancel_mono f).1 _, ht⟩
       simp only [arrow.mk_hom, arrow.hom_mk'_left, category.assoc, ht, sq.w])
-#align category_theory.strong_mono_of_regular_mono CategoryTheory.strong_mono_of_regular_mono
+#align category_theory.strong_mono_of_regular_mono CategoryTheory.strongMono_of_regularMono
 
 /-- A regular monomorphism is an isomorphism if it is an epimorphism. -/
-theorem is_iso_of_regular_mono_of_epi (f : X ⟶ Y) [RegularMono f] [e : Epi f] : IsIso f :=
-  is_iso_of_epi_of_strong_mono _
-#align category_theory.is_iso_of_regular_mono_of_epi CategoryTheory.is_iso_of_regular_mono_of_epi
+theorem isIso_of_regularMono_of_epi (f : X ⟶ Y) [RegularMono f] [e : Epi f] : IsIso f :=
+  isIso_of_epi_of_strongMono _
+#align category_theory.is_iso_of_regular_mono_of_epi CategoryTheory.isIso_of_regularMono_of_epi
 
 section
 
@@ -170,13 +170,13 @@ instance (priority := 100) regularMonoCategoryOfSplitMonoCategory [SplitMonoCate
     infer_instance
 #align category_theory.regular_mono_category_of_split_mono_category CategoryTheory.regularMonoCategoryOfSplitMonoCategory
 
-instance (priority := 100) strong_mono_category_of_regular_mono_category [RegularMonoCategory C] :
+instance (priority := 100) strongMonoCategory_of_regularMonoCategory [RegularMonoCategory C] :
     StrongMonoCategory C
     where strong_mono_of_mono _ _ f _ :=
     by
     haveI := regular_mono_of_mono f
     infer_instance
-#align category_theory.strong_mono_category_of_regular_mono_category CategoryTheory.strong_mono_category_of_regular_mono_category
+#align category_theory.strong_mono_category_of_regular_mono_category CategoryTheory.strongMonoCategory_of_regularMonoCategory
 
 /-- A regular epimorphism is a morphism which is the coequalizer of some parallel pair. -/
 class RegularEpi (f : X ⟶ Y) where
@@ -190,7 +190,7 @@ attribute [reassoc.1] regular_epi.w
 
 /-- Every regular epimorphism is an epimorphism. -/
 instance (priority := 100) RegularEpi.epi (f : X ⟶ Y) [RegularEpi f] : Epi f :=
-  epi_of_is_colimit_cofork RegularEpi.isColimit
+  epi_of_isColimit_cofork RegularEpi.isColimit
 #align category_theory.regular_epi.epi CategoryTheory.RegularEpi.epi
 
 instance coequalizerRegular (g h : X ⟶ Y) [HasColimit (parallelPair g h)] :
@@ -264,7 +264,7 @@ def regularOfIsPushoutFstOfRegular {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h 
   regularOfIsPushoutSndOfRegular comm.symm (PushoutCocone.flipIsColimit t)
 #align category_theory.regular_of_is_pushout_fst_of_regular CategoryTheory.regularOfIsPushoutFstOfRegular
 
-instance (priority := 100) strong_epi_of_regular_epi (f : X ⟶ Y) [RegularEpi f] : StrongEpi f :=
+instance (priority := 100) strongEpi_of_regularEpi (f : X ⟶ Y) [RegularEpi f] : StrongEpi f :=
   StrongEpi.mk'
     (by
       intro A B z hz u v sq
@@ -278,12 +278,12 @@ instance (priority := 100) strong_epi_of_regular_epi (f : X ⟶ Y) [RegularEpi f
           ⟨t, ht,
             (cancel_epi f).1
               (by simp only [← category.assoc, ht, ← sq.w, arrow.mk_hom, arrow.hom_mk'_right])⟩)
-#align category_theory.strong_epi_of_regular_epi CategoryTheory.strong_epi_of_regular_epi
+#align category_theory.strong_epi_of_regular_epi CategoryTheory.strongEpi_of_regularEpi
 
 /-- A regular epimorphism is an isomorphism if it is a monomorphism. -/
-theorem is_iso_of_regular_epi_of_mono (f : X ⟶ Y) [RegularEpi f] [m : Mono f] : IsIso f :=
-  is_iso_of_mono_of_strong_epi _
-#align category_theory.is_iso_of_regular_epi_of_mono CategoryTheory.is_iso_of_regular_epi_of_mono
+theorem isIso_of_regularEpi_of_mono (f : X ⟶ Y) [RegularEpi f] [m : Mono f] : IsIso f :=
+  isIso_of_mono_of_strongEpi _
+#align category_theory.is_iso_of_regular_epi_of_mono CategoryTheory.isIso_of_regularEpi_of_mono
 
 section
 
@@ -310,13 +310,13 @@ instance (priority := 100) regularEpiCategoryOfSplitEpiCategory [SplitEpiCategor
     infer_instance
 #align category_theory.regular_epi_category_of_split_epi_category CategoryTheory.regularEpiCategoryOfSplitEpiCategory
 
-instance (priority := 100) strong_epi_category_of_regular_epi_category [RegularEpiCategory C] :
+instance (priority := 100) strongEpiCategory_of_regularEpiCategory [RegularEpiCategory C] :
     StrongEpiCategory C
     where strong_epi_of_epi _ _ f _ :=
     by
     haveI := regular_epi_of_epi f
     infer_instance
-#align category_theory.strong_epi_category_of_regular_epi_category CategoryTheory.strong_epi_category_of_regular_epi_category
+#align category_theory.strong_epi_category_of_regular_epi_category CategoryTheory.strongEpiCategory_of_regularEpiCategory
 
 end CategoryTheory
 

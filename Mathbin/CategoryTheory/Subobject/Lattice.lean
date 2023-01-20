@@ -240,23 +240,23 @@ theorem top_eq_id (B : C) : (⊤ : Subobject B) = Subobject.mk (𝟙 B) :=
   rfl
 #align category_theory.subobject.top_eq_id CategoryTheory.Subobject.top_eq_id
 
-theorem underlying_iso_top_hom {B : C} : (underlyingIso (𝟙 B)).Hom = (⊤ : Subobject B).arrow :=
+theorem underlyingIso_top_hom {B : C} : (underlyingIso (𝟙 B)).Hom = (⊤ : Subobject B).arrow :=
   by
   convert underlying_iso_hom_comp_eq_mk (𝟙 B)
   simp only [comp_id]
-#align category_theory.subobject.underlying_iso_top_hom CategoryTheory.Subobject.underlying_iso_top_hom
+#align category_theory.subobject.underlying_iso_top_hom CategoryTheory.Subobject.underlyingIso_top_hom
 
-instance top_arrow_is_iso {B : C} : IsIso (⊤ : Subobject B).arrow :=
+instance top_arrow_isIso {B : C} : IsIso (⊤ : Subobject B).arrow :=
   by
   rw [← underlying_iso_top_hom]
   infer_instance
-#align category_theory.subobject.top_arrow_is_iso CategoryTheory.Subobject.top_arrow_is_iso
+#align category_theory.subobject.top_arrow_is_iso CategoryTheory.Subobject.top_arrow_isIso
 
 @[simp, reassoc.1]
-theorem underlying_iso_inv_top_arrow {B : C} :
+theorem underlyingIso_inv_top_arrow {B : C} :
     (underlyingIso _).inv ≫ (⊤ : Subobject B).arrow = 𝟙 B :=
-  underlying_iso_arrow _
-#align category_theory.subobject.underlying_iso_inv_top_arrow CategoryTheory.Subobject.underlying_iso_inv_top_arrow
+  underlyingIso_arrow _
+#align category_theory.subobject.underlying_iso_inv_top_arrow CategoryTheory.Subobject.underlyingIso_inv_top_arrow
 
 @[simp]
 theorem map_top (f : X ⟶ Y) [Mono f] : (map f).obj ⊤ = Subobject.mk f :=
@@ -267,27 +267,27 @@ theorem top_factors {A B : C} (f : A ⟶ B) : (⊤ : Subobject B).Factors f :=
   ⟨f, comp_id _⟩
 #align category_theory.subobject.top_factors CategoryTheory.Subobject.top_factors
 
-theorem is_iso_iff_mk_eq_top {X Y : C} (f : X ⟶ Y) [Mono f] : IsIso f ↔ mk f = ⊤ :=
+theorem isIso_iff_mk_eq_top {X Y : C} (f : X ⟶ Y) [Mono f] : IsIso f ↔ mk f = ⊤ :=
   ⟨fun _ => mk_eq_mk_of_comm _ _ (as_iso f) (category.comp_id _), fun h =>
     by
     rw [← of_mk_le_mk_comp h.le, category.comp_id]
     exact is_iso.of_iso (iso_of_mk_eq_mk _ _ h)⟩
-#align category_theory.subobject.is_iso_iff_mk_eq_top CategoryTheory.Subobject.is_iso_iff_mk_eq_top
+#align category_theory.subobject.is_iso_iff_mk_eq_top CategoryTheory.Subobject.isIso_iff_mk_eq_top
 
-theorem is_iso_arrow_iff_eq_top {Y : C} (P : Subobject Y) : IsIso P.arrow ↔ P = ⊤ := by
+theorem isIso_arrow_iff_eq_top {Y : C} (P : Subobject Y) : IsIso P.arrow ↔ P = ⊤ := by
   rw [is_iso_iff_mk_eq_top, mk_arrow]
-#align category_theory.subobject.is_iso_arrow_iff_eq_top CategoryTheory.Subobject.is_iso_arrow_iff_eq_top
+#align category_theory.subobject.is_iso_arrow_iff_eq_top CategoryTheory.Subobject.isIso_arrow_iff_eq_top
 
-instance is_iso_top_arrow {Y : C} : IsIso (⊤ : Subobject Y).arrow := by rw [is_iso_arrow_iff_eq_top]
-#align category_theory.subobject.is_iso_top_arrow CategoryTheory.Subobject.is_iso_top_arrow
+instance isIso_top_arrow {Y : C} : IsIso (⊤ : Subobject Y).arrow := by rw [is_iso_arrow_iff_eq_top]
+#align category_theory.subobject.is_iso_top_arrow CategoryTheory.Subobject.isIso_top_arrow
 
-theorem mk_eq_top_of_is_iso {X Y : C} (f : X ⟶ Y) [IsIso f] : mk f = ⊤ :=
-  (is_iso_iff_mk_eq_top f).mp inferInstance
-#align category_theory.subobject.mk_eq_top_of_is_iso CategoryTheory.Subobject.mk_eq_top_of_is_iso
+theorem mk_eq_top_of_isIso {X Y : C} (f : X ⟶ Y) [IsIso f] : mk f = ⊤ :=
+  (isIso_iff_mk_eq_top f).mp inferInstance
+#align category_theory.subobject.mk_eq_top_of_is_iso CategoryTheory.Subobject.mk_eq_top_of_isIso
 
-theorem eq_top_of_is_iso_arrow {Y : C} (P : Subobject Y) [IsIso P.arrow] : P = ⊤ :=
-  (is_iso_arrow_iff_eq_top P).mp inferInstance
-#align category_theory.subobject.eq_top_of_is_iso_arrow CategoryTheory.Subobject.eq_top_of_is_iso_arrow
+theorem eq_top_of_isIso_arrow {Y : C} (P : Subobject Y) [IsIso P.arrow] : P = ⊤ :=
+  (isIso_arrow_iff_eq_top P).mp inferInstance
+#align category_theory.subobject.eq_top_of_is_iso_arrow CategoryTheory.Subobject.eq_top_of_isIso_arrow
 
 section
 
@@ -596,11 +596,11 @@ def wideCospan {A : C} (s : Set (Subobject A)) : WidePullbackShape (equivShrink 
 #align category_theory.subobject.wide_cospan CategoryTheory.Subobject.wideCospan
 
 @[simp]
-theorem wide_cospan_map_term {A : C} (s : Set (Subobject A)) (j) :
+theorem wideCospan_map_term {A : C} (s : Set (Subobject A)) (j) :
     (wideCospan s).map (WidePullbackShape.Hom.term j) =
       ((equivShrink (Subobject A)).symm j).arrow :=
   rfl
-#align category_theory.subobject.wide_cospan_map_term CategoryTheory.Subobject.wide_cospan_map_term
+#align category_theory.subobject.wide_cospan_map_term CategoryTheory.Subobject.wideCospan_map_term
 
 /-- Auxiliary construction of a cone for `le_Inf`. -/
 def leInfCone {A : C} (s : Set (Subobject A)) (f : Subobject A) (k : ∀ g ∈ s, f ≤ g) :
@@ -617,10 +617,10 @@ def leInfCone {A : C} (s : Set (Subobject A)) (f : Subobject A) (k : ∀ g ∈ s
 #align category_theory.subobject.le_Inf_cone CategoryTheory.Subobject.leInfCone
 
 @[simp]
-theorem le_Inf_cone_π_app_none {A : C} (s : Set (Subobject A)) (f : Subobject A)
+theorem leInfCone_π_app_none {A : C} (s : Set (Subobject A)) (f : Subobject A)
     (k : ∀ g ∈ s, f ≤ g) : (leInfCone s f k).π.app none = f.arrow :=
   rfl
-#align category_theory.subobject.le_Inf_cone_π_app_none CategoryTheory.Subobject.le_Inf_cone_π_app_none
+#align category_theory.subobject.le_Inf_cone_π_app_none CategoryTheory.Subobject.leInfCone_π_app_none
 
 variable [HasWidePullbacks.{v₁} C]
 
@@ -636,7 +636,7 @@ def widePullbackι {A : C} (s : Set (Subobject A)) : widePullback s ⟶ A :=
   Limits.limit.π (wideCospan s) none
 #align category_theory.subobject.wide_pullback_ι CategoryTheory.Subobject.widePullbackι
 
-instance wide_pullback_ι_mono {A : C} (s : Set (Subobject A)) : Mono (widePullbackι s) :=
+instance widePullbackι_mono {A : C} (s : Set (Subobject A)) : Mono (widePullbackι s) :=
   ⟨fun W u v h =>
     limit.hom_ext fun j => by
       cases j
@@ -645,7 +645,7 @@ instance wide_pullback_ι_mono {A : C} (s : Set (Subobject A)) : Mono (widePullb
         rw [assoc, assoc]
         erw [limit.w (wide_cospan s) (wide_pullback_shape.hom.term j)]
         exact h⟩
-#align category_theory.subobject.wide_pullback_ι_mono CategoryTheory.Subobject.wide_pullback_ι_mono
+#align category_theory.subobject.wide_pullback_ι_mono CategoryTheory.Subobject.widePullbackι_mono
 
 /- warning: category_theory.subobject.Inf clashes with category_theory.subobject.inf -> CategoryTheory.Subobject.inf
 warning: category_theory.subobject.Inf -> CategoryTheory.Subobject.inf is a dubious translation:
@@ -661,7 +661,7 @@ def inf {A : C} (s : Set (Subobject A)) : Subobject A :=
 #align category_theory.subobject.Inf CategoryTheory.Subobject.inf
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (f «expr ∈ » s) -/
-theorem Inf_le {A : C} (s : Set (Subobject A)) (f) (_ : f ∈ s) : inf s ≤ f :=
+theorem inf_le {A : C} (s : Set (Subobject A)) (f) (_ : f ∈ s) : inf s ≤ f :=
   by
   fapply le_of_comm
   · refine'
@@ -676,21 +676,28 @@ theorem Inf_le {A : C} (s : Set (Subobject A)) (f) (_ : f ∈ s) : inf s ≤ f :
     simp only [category.comp_id, category.assoc, ← underlying_iso_hom_comp_eq_mk,
       subobject.arrow_congr, congr_arg_mpr_hom_left, iso.cancel_iso_hom_left]
     convert limit.w (wide_cospan s) (wide_pullback_shape.hom.term _)
-#align category_theory.subobject.Inf_le CategoryTheory.Subobject.Inf_le
+#align category_theory.subobject.Inf_le CategoryTheory.Subobject.inf_le
 
-theorem le_Inf {A : C} (s : Set (Subobject A)) (f : Subobject A) (k : ∀ g ∈ s, f ≤ g) : f ≤ inf s :=
+/- warning: category_theory.subobject.le_Inf clashes with category_theory.subobject.le_inf -> CategoryTheory.Subobject.le_inf
+warning: category_theory.subobject.le_Inf -> CategoryTheory.Subobject.le_inf is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_3 : CategoryTheory.WellPowered.{u1, u2} C _inst_1] [_inst_4 : CategoryTheory.Limits.HasWidePullbacks.{u1, u1, u2} C _inst_1] {A : C} (s : Set.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 A)) (f : CategoryTheory.Subobject.{u1, u2} C _inst_1 A), (forall (g : CategoryTheory.Subobject.{u1, u2} C _inst_1 A), (Membership.Mem.{max u2 u1, max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 A) (Set.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 A)) (Set.hasMem.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 A)) g s) -> (LE.le.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 A) (Preorder.toLE.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 A) (PartialOrder.toPreorder.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 A) (CategoryTheory.Subobject.partialOrder.{u2, u1} C _inst_1 A))) f g)) -> (LE.le.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 A) (Preorder.toLE.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 A) (PartialOrder.toPreorder.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 A) (CategoryTheory.Subobject.partialOrder.{u2, u1} C _inst_1 A))) f (CategoryTheory.Subobject.inf.{u1, u2} C _inst_1 _inst_3 (fun (J : Type.{u1}) => _inst_4 J) A s))
+but is expected to have type
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_3 : CategoryTheory.Limits.HasPullbacks.{u1, u2} C _inst_1] {_inst_4 : C} (A : CategoryTheory.Subobject.{u1, u2} C _inst_1 _inst_4) (s : CategoryTheory.Subobject.{u1, u2} C _inst_1 _inst_4) (f : CategoryTheory.Subobject.{u1, u2} C _inst_1 _inst_4), (LE.le.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 _inst_4) (Preorder.toLE.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 _inst_4) (PartialOrder.toPreorder.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 _inst_4) (CategoryTheory.Subobject.partialOrder.{u2, u1} C _inst_1 _inst_4))) A s) -> (LE.le.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 _inst_4) (Preorder.toLE.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 _inst_4) (PartialOrder.toPreorder.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 _inst_4) (CategoryTheory.Subobject.partialOrder.{u2, u1} C _inst_1 _inst_4))) A f) -> (LE.le.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 _inst_4) (Preorder.toLE.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 _inst_4) (PartialOrder.toPreorder.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 _inst_4) (CategoryTheory.Subobject.partialOrder.{u2, u1} C _inst_1 _inst_4))) A (CategoryTheory.Functor.obj.{max u2 u1, max u2 u1, max u2 u1, max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 _inst_4) (Preorder.smallCategory.{max u2 u1} (CategoryTheory.ThinSkeleton.{u1, max u2 u1} (CategoryTheory.MonoOver.{u1, u2} C _inst_1 _inst_4) (CategoryTheory.MonoOver.category.{u2, u1} C _inst_1 _inst_4)) (CategoryTheory.ThinSkeleton.preorder.{u1, max u2 u1} (CategoryTheory.MonoOver.{u1, u2} C _inst_1 _inst_4) (CategoryTheory.MonoOver.category.{u2, u1} C _inst_1 _inst_4))) (CategoryTheory.Subobject.{u1, u2} C _inst_1 _inst_4) (Preorder.smallCategory.{max u2 u1} (CategoryTheory.ThinSkeleton.{u1, max u2 u1} (CategoryTheory.MonoOver.{u1, u2} C _inst_1 _inst_4) (CategoryTheory.MonoOver.category.{u2, u1} C _inst_1 _inst_4)) (CategoryTheory.ThinSkeleton.preorder.{u1, max u2 u1} (CategoryTheory.MonoOver.{u1, u2} C _inst_1 _inst_4) (CategoryTheory.MonoOver.category.{u2, u1} C _inst_1 _inst_4))) (CategoryTheory.Functor.obj.{max u2 u1, max u2 u1, max u2 u1, max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 _inst_4) (Preorder.smallCategory.{max u2 u1} (CategoryTheory.ThinSkeleton.{u1, max u2 u1} (CategoryTheory.MonoOver.{u1, u2} C _inst_1 _inst_4) (CategoryTheory.MonoOver.category.{u2, u1} C _inst_1 _inst_4)) (CategoryTheory.ThinSkeleton.preorder.{u1, max u2 u1} (CategoryTheory.MonoOver.{u1, u2} C _inst_1 _inst_4) (CategoryTheory.MonoOver.category.{u2, u1} C _inst_1 _inst_4))) (CategoryTheory.Functor.{max u2 u1, max u2 u1, max u2 u1, max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 _inst_4) (Preorder.smallCategory.{max u2 u1} (CategoryTheory.ThinSkeleton.{u1, max u2 u1} (CategoryTheory.MonoOver.{u1, u2} C _inst_1 _inst_4) (CategoryTheory.MonoOver.category.{u2, u1} C _inst_1 _inst_4)) (CategoryTheory.ThinSkeleton.preorder.{u1, max u2 u1} (CategoryTheory.MonoOver.{u1, u2} C _inst_1 _inst_4) (CategoryTheory.MonoOver.category.{u2, u1} C _inst_1 _inst_4))) (CategoryTheory.Subobject.{u1, u2} C _inst_1 _inst_4) (Preorder.smallCategory.{max u2 u1} (CategoryTheory.ThinSkeleton.{u1, max u2 u1} (CategoryTheory.MonoOver.{u1, u2} C _inst_1 _inst_4) (CategoryTheory.MonoOver.category.{u2, u1} C _inst_1 _inst_4)) (CategoryTheory.ThinSkeleton.preorder.{u1, max u2 u1} (CategoryTheory.MonoOver.{u1, u2} C _inst_1 _inst_4) (CategoryTheory.MonoOver.category.{u2, u1} C _inst_1 _inst_4)))) (CategoryTheory.Functor.category.{max u2 u1, max u2 u1, max u2 u1, max u2 u1} (CategoryTheory.ThinSkeleton.{u1, max u2 u1} (CategoryTheory.MonoOver.{u1, u2} C _inst_1 _inst_4) (CategoryTheory.MonoOver.category.{u2, u1} C _inst_1 _inst_4)) (Preorder.smallCategory.{max u2 u1} (CategoryTheory.ThinSkeleton.{u1, max u2 u1} (CategoryTheory.MonoOver.{u1, u2} C _inst_1 _inst_4) (CategoryTheory.MonoOver.category.{u2, u1} C _inst_1 _inst_4)) (CategoryTheory.ThinSkeleton.preorder.{u1, max u2 u1} (CategoryTheory.MonoOver.{u1, u2} C _inst_1 _inst_4) (CategoryTheory.MonoOver.category.{u2, u1} C _inst_1 _inst_4))) (CategoryTheory.ThinSkeleton.{u1, max u2 u1} (CategoryTheory.MonoOver.{u1, u2} C _inst_1 _inst_4) (CategoryTheory.MonoOver.category.{u2, u1} C _inst_1 _inst_4)) (Preorder.smallCategory.{max u2 u1} (CategoryTheory.ThinSkeleton.{u1, max u2 u1} (CategoryTheory.MonoOver.{u1, u2} C _inst_1 _inst_4) (CategoryTheory.MonoOver.category.{u2, u1} C _inst_1 _inst_4)) (CategoryTheory.ThinSkeleton.preorder.{u1, max u2 u1} (CategoryTheory.MonoOver.{u1, u2} C _inst_1 _inst_4) (CategoryTheory.MonoOver.category.{u2, u1} C _inst_1 _inst_4)))) (CategoryTheory.Subobject.inf.{u1, u2} C _inst_1 _inst_3 _inst_4) s) f))
+Case conversion may be inaccurate. Consider using '#align category_theory.subobject.le_Inf CategoryTheory.Subobject.le_infₓ'. -/
+theorem le_inf {A : C} (s : Set (Subobject A)) (f : Subobject A) (k : ∀ g ∈ s, f ≤ g) : f ≤ inf s :=
   by
   fapply le_of_comm
   · exact limits.limit.lift _ (le_Inf_cone s f k) ≫ (underlying_iso _).inv
   · dsimp [Inf, wide_pullback_ι]
     simp
-#align category_theory.subobject.le_Inf CategoryTheory.Subobject.le_Inf
+#align category_theory.subobject.le_Inf CategoryTheory.Subobject.le_inf
 
 instance {B : C} : CompleteSemilatticeInf (Subobject B) :=
   { Subobject.partialOrder B with
     inf := inf
-    Inf_le := Inf_le
-    le_Inf := le_Inf }
+    Inf_le := inf_le
+    le_Inf := le_inf }
 
 end InfCat
 
@@ -721,7 +728,7 @@ def sup {A : C} (s : Set (Subobject A)) : Subobject A :=
 #align category_theory.subobject.Sup CategoryTheory.Subobject.sup
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (f «expr ∈ » s) -/
-theorem le_Sup {A : C} (s : Set (Subobject A)) (f) (_ : f ∈ s) : f ≤ sup s :=
+theorem le_sup {A : C} (s : Set (Subobject A)) (f) (_ : f ∈ s) : f ≤ sup s :=
   by
   fapply le_of_comm
   · dsimp [Sup]
@@ -732,7 +739,7 @@ theorem le_Sup {A : C} (s : Set (Subobject A)) (f) (_ : f ∈ s) : f ≤ sup s :
     simp
     dsimp
     simp
-#align category_theory.subobject.le_Sup CategoryTheory.Subobject.le_Sup
+#align category_theory.subobject.le_Sup CategoryTheory.Subobject.le_sup
 
 theorem symm_apply_mem_iff_mem_image {α β : Type _} (e : α ≃ β) (s : Set α) (x : β) :
     e.symm x ∈ s ↔ x ∈ e '' s :=
@@ -741,7 +748,7 @@ theorem symm_apply_mem_iff_mem_image {α β : Type _} (e : α ≃ β) (s : Set �
     simpa using m⟩
 #align category_theory.subobject.symm_apply_mem_iff_mem_image CategoryTheory.Subobject.symm_apply_mem_iff_mem_image
 
-theorem Sup_le {A : C} (s : Set (Subobject A)) (f : Subobject A) (k : ∀ g ∈ s, g ≤ f) : sup s ≤ f :=
+theorem sup_le {A : C} (s : Set (Subobject A)) (f : Subobject A) (k : ∀ g ∈ s, g ≤ f) : sup s ≤ f :=
   by
   fapply le_of_comm
   · dsimp [Sup]
@@ -758,13 +765,13 @@ theorem Sup_le {A : C} (s : Set (Subobject A)) (f : Subobject A) (k : ∀ g ∈ 
       simp
   · dsimp [Sup]
     simp
-#align category_theory.subobject.Sup_le CategoryTheory.Subobject.Sup_le
+#align category_theory.subobject.Sup_le CategoryTheory.Subobject.sup_le
 
 instance {B : C} : CompleteSemilatticeSup (Subobject B) :=
   { Subobject.partialOrder B with
     sup := sup
-    le_Sup := le_Sup
-    Sup_le := Sup_le }
+    le_Sup := le_sup
+    Sup_le := sup_le }
 
 end SupCat
 
@@ -788,9 +795,9 @@ variable [HasZeroMorphisms C] [HasZeroObject C]
 open ZeroObject
 
 /-- A nonzero object has nontrivial subobject lattice. -/
-theorem nontrivial_of_not_is_zero {X : C} (h : ¬IsZero X) : Nontrivial (Subobject X) :=
-  ⟨⟨mk (0 : 0 ⟶ X), mk (𝟙 X), fun w => h (IsZero.of_iso (is_zero_zero C) (isoOfMkEqMk _ _ w).symm)⟩⟩
-#align category_theory.subobject.nontrivial_of_not_is_zero CategoryTheory.Subobject.nontrivial_of_not_is_zero
+theorem nontrivial_of_not_isZero {X : C} (h : ¬IsZero X) : Nontrivial (Subobject X) :=
+  ⟨⟨mk (0 : 0 ⟶ X), mk (𝟙 X), fun w => h (IsZero.of_iso (isZero_zero C) (isoOfMkEqMk _ _ w).symm)⟩⟩
+#align category_theory.subobject.nontrivial_of_not_is_zero CategoryTheory.Subobject.nontrivial_of_not_isZero
 
 end ZeroObject
 

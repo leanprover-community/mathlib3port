@@ -84,7 +84,7 @@ def pretopology : Pretopology (Opens T)
 /-- The pretopology associated to a space is the largest pretopology that
     generates the Grothendieck topology associated to the space. -/
 @[simp]
-theorem pretopology_of_grothendieck :
+theorem pretopology_ofGrothendieck :
     Pretopology.ofGrothendieck _ (Opens.grothendieckTopology T) = Opens.pretopology T :=
   by
   apply le_antisymm
@@ -94,17 +94,17 @@ theorem pretopology_of_grothendieck :
   · intro X R hR x hx
     rcases hR x hx with ⟨U, f, hf, hU⟩
     exact ⟨U, f, sieve.le_generate R U hf, hU⟩
-#align opens.pretopology_of_grothendieck Opens.pretopology_of_grothendieck
+#align opens.pretopology_of_grothendieck Opens.pretopology_ofGrothendieck
 
 /-- The pretopology associated to a space induces the Grothendieck topology associated to the space.
 -/
 @[simp]
-theorem pretopology_to_grothendieck :
+theorem pretopology_toGrothendieck :
     Pretopology.toGrothendieck _ (Opens.pretopology T) = Opens.grothendieckTopology T :=
   by
   rw [← pretopology_of_grothendieck]
   apply (pretopology.gi (opens T)).l_u_eq
-#align opens.pretopology_to_grothendieck Opens.pretopology_to_grothendieck
+#align opens.pretopology_to_grothendieck Opens.pretopology_toGrothendieck
 
 end Opens
 

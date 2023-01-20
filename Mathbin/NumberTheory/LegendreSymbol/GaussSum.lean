@@ -76,13 +76,13 @@ def gaussSum (χ : MulChar R R') (ψ : AddChar R R') : R' :=
 #align gauss_sum gaussSum
 
 /-- Replacing `ψ` by `mul_shift ψ a` and multiplying the Gauss sum by `χ a` does not change it. -/
-theorem gauss_sum_mul_shift (χ : MulChar R R') (ψ : AddChar R R') (a : Rˣ) :
+theorem gaussSum_mulShift (χ : MulChar R R') (ψ : AddChar R R') (a : Rˣ) :
     χ a * gaussSum χ (mulShift ψ a) = gaussSum χ ψ :=
   by
   simp only [gaussSum, mul_shift_apply, Finset.mul_sum]
   simp_rw [← mul_assoc, ← map_mul]
   exact Fintype.sum_bijective _ a.mul_left_bijective _ _ fun x => rfl
-#align gauss_sum_mul_shift gauss_sum_mul_shift
+#align gauss_sum_mul_shift gaussSum_mulShift
 
 end GaussSumDef
 
@@ -113,7 +113,7 @@ private theorem gauss_sum_mul_aux {χ : MulChar R R'} (hχ : IsNontrivial χ) (�
 
 /-- We have `gauss_sum χ ψ * gauss_sum χ⁻¹ ψ⁻¹ = fintype.card R`
 when `χ` is nontrivial and `ψ` is primitive (and `R` is a field). -/
-theorem gauss_sum_mul_gauss_sum_eq_card {χ : MulChar R R'} (hχ : IsNontrivial χ) {ψ : AddChar R R'}
+theorem gaussSum_mul_gaussSum_eq_card {χ : MulChar R R'} (hχ : IsNontrivial χ) {ψ : AddChar R R'}
     (hψ : IsPrimitive ψ) : gaussSum χ ψ * gaussSum χ⁻¹ ψ⁻¹ = Fintype.card R :=
   by
   simp only [gaussSum, AddChar.inv_apply, Finset.sum_mul, Finset.mul_sum, MulChar.inv_apply']
@@ -125,18 +125,18 @@ theorem gauss_sum_mul_gauss_sum_eq_card {χ : MulChar R R'} (hχ : IsNontrivial 
     simp_rw [← Finset.mul_sum, sum_mul_shift _ hψ, sub_eq_zero, mul_ite, mul_zero]
     rw [Finset.sum_ite_eq' Finset.univ (1 : R)]
     simp only [Finset.mem_univ, map_one, one_mul, if_true]
-#align gauss_sum_mul_gauss_sum_eq_card gauss_sum_mul_gauss_sum_eq_card
+#align gauss_sum_mul_gauss_sum_eq_card gaussSum_mul_gaussSum_eq_card
 
 /-- When `χ` is a nontrivial quadratic character, then the square of `gauss_sum χ ψ`
 is `χ(-1)` times the cardinality of `R`. -/
-theorem gauss_sum_sq {χ : MulChar R R'} (hχ₁ : IsNontrivial χ) (hχ₂ : IsQuadratic χ)
+theorem gaussSum_sq {χ : MulChar R R'} (hχ₁ : IsNontrivial χ) (hχ₂ : IsQuadratic χ)
     {ψ : AddChar R R'} (hψ : IsPrimitive ψ) : gaussSum χ ψ ^ 2 = χ (-1) * Fintype.card R :=
   by
-  rw [pow_two, ← gauss_sum_mul_gauss_sum_eq_card hχ₁ hψ, hχ₂.inv, mul_rotate']
+  rw [pow_two, ← gaussSum_mul_gaussSum_eq_card hχ₁ hψ, hχ₂.inv, mul_rotate']
   congr
-  rw [mul_comm, ← gauss_sum_mul_shift _ _ (-1 : Rˣ), inv_mul_shift]
+  rw [mul_comm, ← gaussSum_mulShift _ _ (-1 : Rˣ), inv_mul_shift]
   rfl
-#align gauss_sum_sq gauss_sum_sq
+#align gauss_sum_sq gaussSum_sq
 
 end GaussSumProd
 
@@ -145,7 +145,7 @@ end GaussSumProd
 -/
 
 
-section gauss_sum_frob
+section gaussSum_frob
 
 variable {R : Type u} [CommRing R] [Fintype R] {R' : Type v} [CommRing R']
 
@@ -156,28 +156,28 @@ include fp hch
 
 /-- When `R'` has prime characteristic `p`, then the `p`th power of the Gauss sum
 of `χ` and `ψ` is the Gauss sum of `χ^p` and `ψ^p`. -/
-theorem gauss_sum_frob (χ : MulChar R R') (ψ : AddChar R R') :
+theorem gaussSum_frob (χ : MulChar R R') (ψ : AddChar R R') :
     gaussSum χ ψ ^ p = gaussSum (χ ^ p) (ψ ^ p) :=
   by
   rw [← frobenius_def, gaussSum, gaussSum, map_sum]
   simp_rw [pow_apply' χ fp.1.Pos, map_mul, frobenius_def]
   rfl
-#align gauss_sum_frob gauss_sum_frob
+#align gauss_sum_frob gaussSum_frob
 
 /-- For a quadratic character `χ` and when the characteristic `p` of the target ring
 is a unit in the source ring, the `p`th power of the Gauss sum of`χ` and `ψ` is
 `χ p` times the original Gauss sum. -/
-theorem MulChar.IsQuadratic.gauss_sum_frob (hp : IsUnit (p : R)) {χ : MulChar R R'}
+theorem MulChar.IsQuadratic.gaussSum_frob (hp : IsUnit (p : R)) {χ : MulChar R R'}
     (hχ : IsQuadratic χ) (ψ : AddChar R R') : gaussSum χ ψ ^ p = χ p * gaussSum χ ψ := by
-  rw [gauss_sum_frob, pow_mul_shift, hχ.pow_char p, ← gauss_sum_mul_shift χ ψ hp.unit, ← mul_assoc,
+  rw [gaussSum_frob, pow_mul_shift, hχ.pow_char p, ← gaussSum_mulShift χ ψ hp.unit, ← mul_assoc,
     hp.unit_spec, ← pow_two, ← pow_apply' _ (by norm_num : 0 < 2), hχ.sq_eq_one, ← hp.unit_spec,
     one_apply_coe, one_mul]
-#align mul_char.is_quadratic.gauss_sum_frob MulChar.IsQuadratic.gauss_sum_frob
+#align mul_char.is_quadratic.gauss_sum_frob MulChar.IsQuadratic.gaussSum_frob
 
 /-- For a quadratic character `χ` and when the characteristic `p` of the target ring
 is a unit in the source ring and `n` is a natural number, the `p^n`th power of the Gauss
 sum of`χ` and `ψ` is `χ (p^n)` times the original Gauss sum. -/
-theorem MulChar.IsQuadratic.gauss_sum_frob_iter (n : ℕ) (hp : IsUnit (p : R)) {χ : MulChar R R'}
+theorem MulChar.IsQuadratic.gaussSum_frob_iter (n : ℕ) (hp : IsUnit (p : R)) {χ : MulChar R R'}
     (hχ : IsQuadratic χ) (ψ : AddChar R R') : gaussSum χ ψ ^ p ^ n = χ (p ^ n) * gaussSum χ ψ :=
   by
   induction' n with n ih
@@ -185,9 +185,9 @@ theorem MulChar.IsQuadratic.gauss_sum_frob_iter (n : ℕ) (hp : IsUnit (p : R)) 
   ·
     rw [pow_succ, mul_comm p, pow_mul, ih, mul_pow, hχ.gauss_sum_frob _ hp, ← mul_assoc, pow_succ,
       mul_comm (p : R), map_mul, ← pow_apply' χ fp.1.Pos (p ^ n), hχ.pow_char p]
-#align mul_char.is_quadratic.gauss_sum_frob_iter MulChar.IsQuadratic.gauss_sum_frob_iter
+#align mul_char.is_quadratic.gauss_sum_frob_iter MulChar.IsQuadratic.gaussSum_frob_iter
 
-end gauss_sum_frob
+end gaussSum_frob
 
 /-!
 ### Values of quadratic characters
@@ -211,7 +211,7 @@ theorem Char.card_pow_char_pow {χ : MulChar R R'} (hχ : IsQuadratic χ) (ψ : 
     intro hf
     rw [hf, zero_pow (by norm_num : 0 < 2), eq_comm, mul_eq_zero] at hg
     exact
-      not_is_unit_prime_of_dvd_card p
+      not_isUnit_prime_of_dvd_card p
         ((CharP.cast_eq_zero_iff R' p _).mp <| hg.resolve_left (is_unit_one.neg.map χ).NeZero) hp
   rw [← hg]
   apply mul_right_cancel₀ this
@@ -230,16 +230,16 @@ theorem Char.card_pow_card {F : Type} [Field F] [Fintype F] {F' : Type} [Field F
   obtain ⟨n', hp', hc'⟩ := FiniteField.card F' (ringChar F')
   let ψ := primitive_char_finite_field F F' hch₁
   let FF' := CyclotomicField ψ.n F'
-  have hchar := Algebra.ring_char_eq F' FF'
+  have hchar := Algebra.ringChar_eq F' FF'
   apply (algebraMap F' FF').Injective
   rw [map_pow, map_mul, map_nat_cast, hc', hchar, Nat.cast_pow]
-  simp only [← MulChar.ring_hom_comp_apply]
+  simp only [← MulChar.ringHomComp_apply]
   haveI := Fact.mk hp'
   haveI := Fact.mk (hchar.subst hp')
-  rw [Ne, ← Nat.prime_dvd_prime_iff_eq hp' hp, ← is_unit_iff_not_dvd_char, hchar] at hch₁
+  rw [Ne, ← Nat.prime_dvd_prime_iff_eq hp' hp, ← isUnit_iff_not_dvd_char, hchar] at hch₁
   exact
     Char.card_pow_char_pow (hχ₂.comp _) ψ.char (ringChar FF') n' hch₁ (hchar ▸ hch₂)
-      (gauss_sum_sq (hχ₁.comp <| RingHom.injective _) (hχ₂.comp _) ψ.prim)
+      (gaussSum_sq (hχ₁.comp <| RingHom.injective _) (hχ₂.comp _) ψ.prim)
 #align char.card_pow_card Char.card_pow_card
 
 end GaussSumValues
@@ -271,16 +271,16 @@ theorem FiniteField.two_pow_card {F : Type _} [Fintype F] [Field F] (hF : ringCh
   -- we work in `FF`, the eighth cyclotomic field extension of `F`
   let FF := (Polynomial.cyclotomic 8 F).SplittingField
   haveI : FiniteDimensional F FF :=
-    Polynomial.IsSplittingField.finite_dimensional FF (Polynomial.cyclotomic 8 F)
+    Polynomial.IsSplittingField.finiteDimensional FF (Polynomial.cyclotomic 8 F)
   haveI : Fintype FF := FiniteDimensional.fintypeOfFintype F FF
-  have hchar := Algebra.ring_char_eq F FF
+  have hchar := Algebra.ringChar_eq F FF
   have FFp := hchar.subst hp
   haveI := Fact.mk FFp
   have hFF := ne_of_eq_of_ne hchar.symm hF
   -- `ring_char FF ≠ 2`
   have hu : IsUnit (ringChar FF : Zmod 8) :=
     by
-    rw [is_unit_iff_not_dvd_char, ring_char_zmod_n]
+    rw [isUnit_iff_not_dvd_char, ring_char_zmod_n]
     rw [Ne, ← Nat.prime_dvd_prime_iff_eq FFp Nat.prime_two] at hFF
     change ¬_ ∣ 2 ^ 3
     exact mt FFp.dvd_of_dvd_pow hFF
@@ -307,8 +307,8 @@ theorem FiniteField.two_pow_card {F : Type _} [Fintype F] [Field F] (hF : ringCh
       apply pow_one
     convert_to (0 + 1 * τ ^ 1 + 0 + -1 * τ ^ 3 + 0 + -1 * τ ^ 5 + 0 + 1 * τ ^ 7) ^ 2 = _
     · simp only [χ₈_apply, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons,
-        Matrix.cons_vec_bit0_eq_alt0, Matrix.cons_vec_bit1_eq_alt1, Matrix.cons_vec_append,
-        Matrix.cons_vec_alt0, Matrix.cons_vec_alt1, Int.cast_zero, Int.cast_one, Int.cast_neg,
+        Matrix.cons_vec_bit0_eq_alt0, Matrix.cons_vec_bit1_eq_alt1, Matrix.cons_vecAppend,
+        Matrix.cons_vecAlt0, Matrix.cons_vecAlt1, Int.cast_zero, Int.cast_one, Int.cast_neg,
         zero_mul]
       rfl
     convert_to 8 + (τ ^ 4 + 1) * (τ ^ 10 - 2 * τ ^ 8 - 2 * τ ^ 6 + 6 * τ ^ 4 + τ ^ 2 - 8) = _
@@ -322,7 +322,7 @@ theorem FiniteField.two_pow_card {F : Type _} [Fintype F] [Field F] (hF : ringCh
   convert_to (8 : F) ^ (Fintype.card F / 2) = _
   ·
     rw [(by norm_num : (8 : F) = 2 ^ 2 * 2), mul_pow,
-      (FiniteField.is_square_iff hF <| hp2 2).mp ⟨2, pow_two 2⟩, one_mul]
+      (FiniteField.isSquare_iff hF <| hp2 2).mp ⟨2, pow_two 2⟩, one_mul]
   apply (algebraMap F FF).Injective
   simp only [map_pow, map_bit0, map_one, map_intCast]
   convert h

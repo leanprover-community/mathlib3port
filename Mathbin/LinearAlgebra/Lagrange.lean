@@ -137,55 +137,55 @@ def basisDivisor (x y : F) : F[X] :=
   c (x - y)⁻¹ * (X - c y)
 #align lagrange.basis_divisor Lagrange.basisDivisor
 
-theorem basis_divisor_self : basisDivisor x x = 0 := by
+theorem basisDivisor_self : basisDivisor x x = 0 := by
   simp only [basis_divisor, sub_self, inv_zero, map_zero, zero_mul]
-#align lagrange.basis_divisor_self Lagrange.basis_divisor_self
+#align lagrange.basis_divisor_self Lagrange.basisDivisor_self
 
-theorem basis_divisor_inj (hxy : basisDivisor x y = 0) : x = y :=
+theorem basisDivisor_inj (hxy : basisDivisor x y = 0) : x = y :=
   by
   simp_rw [basis_divisor, mul_eq_zero, X_sub_C_ne_zero, or_false_iff, C_eq_zero, inv_eq_zero,
     sub_eq_zero] at hxy
   exact hxy
-#align lagrange.basis_divisor_inj Lagrange.basis_divisor_inj
+#align lagrange.basis_divisor_inj Lagrange.basisDivisor_inj
 
 @[simp]
-theorem basis_divisor_eq_zero_iff : basisDivisor x y = 0 ↔ x = y :=
-  ⟨basis_divisor_inj, fun H => H ▸ basis_divisor_self⟩
-#align lagrange.basis_divisor_eq_zero_iff Lagrange.basis_divisor_eq_zero_iff
+theorem basisDivisor_eq_zero_iff : basisDivisor x y = 0 ↔ x = y :=
+  ⟨basisDivisor_inj, fun H => H ▸ basis_divisor_self⟩
+#align lagrange.basis_divisor_eq_zero_iff Lagrange.basisDivisor_eq_zero_iff
 
-theorem basis_divisor_ne_zero_iff : basisDivisor x y ≠ 0 ↔ x ≠ y := by
+theorem basisDivisor_ne_zero_iff : basisDivisor x y ≠ 0 ↔ x ≠ y := by
   rw [Ne.def, basis_divisor_eq_zero_iff]
-#align lagrange.basis_divisor_ne_zero_iff Lagrange.basis_divisor_ne_zero_iff
+#align lagrange.basis_divisor_ne_zero_iff Lagrange.basisDivisor_ne_zero_iff
 
-theorem degree_basis_divisor_of_ne (hxy : x ≠ y) : (basisDivisor x y).degree = 1 :=
+theorem degree_basisDivisor_of_ne (hxy : x ≠ y) : (basisDivisor x y).degree = 1 :=
   by
   rw [basis_divisor, degree_mul, degree_X_sub_C, degree_C, zero_add]
   exact inv_ne_zero (sub_ne_zero_of_ne hxy)
-#align lagrange.degree_basis_divisor_of_ne Lagrange.degree_basis_divisor_of_ne
+#align lagrange.degree_basis_divisor_of_ne Lagrange.degree_basisDivisor_of_ne
 
 @[simp]
-theorem degree_basis_divisor_self : (basisDivisor x x).degree = ⊥ := by
+theorem degree_basisDivisor_self : (basisDivisor x x).degree = ⊥ := by
   rw [basis_divisor_self, degree_zero]
-#align lagrange.degree_basis_divisor_self Lagrange.degree_basis_divisor_self
+#align lagrange.degree_basis_divisor_self Lagrange.degree_basisDivisor_self
 
-theorem nat_degree_basis_divisor_self : (basisDivisor x x).natDegree = 0 := by
+theorem natDegree_basisDivisor_self : (basisDivisor x x).natDegree = 0 := by
   rw [basis_divisor_self, nat_degree_zero]
-#align lagrange.nat_degree_basis_divisor_self Lagrange.nat_degree_basis_divisor_self
+#align lagrange.nat_degree_basis_divisor_self Lagrange.natDegree_basisDivisor_self
 
-theorem nat_degree_basis_divisor_of_ne (hxy : x ≠ y) : (basisDivisor x y).natDegree = 1 :=
-  nat_degree_eq_of_degree_eq_some (degree_basis_divisor_of_ne hxy)
-#align lagrange.nat_degree_basis_divisor_of_ne Lagrange.nat_degree_basis_divisor_of_ne
+theorem natDegree_basisDivisor_of_ne (hxy : x ≠ y) : (basisDivisor x y).natDegree = 1 :=
+  natDegree_eq_of_degree_eq_some (degree_basisDivisor_of_ne hxy)
+#align lagrange.nat_degree_basis_divisor_of_ne Lagrange.natDegree_basisDivisor_of_ne
 
 @[simp]
-theorem eval_basis_divisor_right : eval y (basisDivisor x y) = 0 := by
+theorem eval_basisDivisor_right : eval y (basisDivisor x y) = 0 := by
   simp only [basis_divisor, eval_mul, eval_C, eval_sub, eval_X, sub_self, mul_zero]
-#align lagrange.eval_basis_divisor_right Lagrange.eval_basis_divisor_right
+#align lagrange.eval_basis_divisor_right Lagrange.eval_basisDivisor_right
 
-theorem eval_basis_divisor_left_of_ne (hxy : x ≠ y) : eval x (basisDivisor x y) = 1 :=
+theorem eval_basisDivisor_left_of_ne (hxy : x ≠ y) : eval x (basisDivisor x y) = 1 :=
   by
   simp only [basis_divisor, eval_mul, eval_C, eval_sub, eval_X]
   exact inv_mul_cancel (sub_ne_zero_of_ne hxy)
-#align lagrange.eval_basis_divisor_left_of_ne Lagrange.eval_basis_divisor_left_of_ne
+#align lagrange.eval_basis_divisor_left_of_ne Lagrange.eval_basisDivisor_left_of_ne
 
 end BasisDivisor
 
@@ -252,7 +252,7 @@ theorem eval_basis_of_ne (hij : i ≠ j) (hj : j ∈ s) : (Lagrange.basis s v i)
 #align lagrange.eval_basis_of_ne Lagrange.eval_basis_of_ne
 
 @[simp]
-theorem nat_degree_basis (hvs : Set.InjOn v s) (hi : i ∈ s) :
+theorem natDegree_basis (hvs : Set.InjOn v s) (hi : i ∈ s) :
     (Lagrange.basis s v i).natDegree = s.card - 1 :=
   by
   have H : ∀ j, j ∈ s.erase i → basis_divisor (v i) (v j) ≠ 0 :=
@@ -264,7 +264,7 @@ theorem nat_degree_basis (hvs : Set.InjOn v s) (hi : i ∈ s) :
   refine' sum_congr rfl fun j hj => (nat_degree_basis_divisor_of_ne _).symm
   rw [Ne.def, ← basis_divisor_eq_zero_iff]
   exact H _ hj
-#align lagrange.nat_degree_basis Lagrange.nat_degree_basis
+#align lagrange.nat_degree_basis Lagrange.natDegree_basis
 
 theorem degree_basis (hvs : Set.InjOn v s) (hi : i ∈ s) :
     (Lagrange.basis s v i).degree = ↑(s.card - 1) := by
@@ -288,13 +288,13 @@ theorem sum_basis (hvs : Set.InjOn v s) (hs : s.Nonempty) : (∑ j in s, Lagrang
     rw [eval_basis_of_ne hij hi]
 #align lagrange.sum_basis Lagrange.sum_basis
 
-theorem basis_divisor_add_symm {x y : F} (hxy : x ≠ y) : basisDivisor x y + basisDivisor y x = 1 :=
+theorem basisDivisor_add_symm {x y : F} (hxy : x ≠ y) : basisDivisor x y + basisDivisor y x = 1 :=
   by
   classical rw [←
       sum_basis (Set.injOn_of_injective Function.injective_id _) ⟨x, mem_insert_self _ {y}⟩,
       sum_insert (not_mem_singleton.mpr hxy), sum_singleton, basis_pair_left hxy,
       basis_pair_right hxy, id, id]
-#align lagrange.basis_divisor_add_symm Lagrange.basis_divisor_add_symm
+#align lagrange.basis_divisor_add_symm Lagrange.basisDivisor_add_symm
 
 end Basis
 
@@ -417,7 +417,7 @@ def funEquivDegreeLt (hvs : Set.InjOn v s) : degreeLt F s.card ≃ₗ[F] s → F
   map_smul' c f := funext <| by simp
   invFun r :=
     ⟨interpolate s v fun x => if hx : x ∈ s then r ⟨x, hx⟩ else 0,
-      mem_degree_lt.2 <| degree_interpolate_lt _ hvs⟩
+      mem_degreeLt.2 <| degree_interpolate_lt _ hvs⟩
   left_inv := by
     rintro ⟨f, hf⟩
     simp only [Subtype.mk_eq_mk, Subtype.coe_mk, dite_eq_ite]
@@ -537,9 +537,9 @@ theorem nodal_eq_mul_nodal_erase [DecidableEq ι] (hi : i ∈ s) :
     nodal s v = (X - c (v i)) * nodal (s.erase i) v := by simp_rw [nodal, mul_prod_erase _ _ hi]
 #align lagrange.nodal_eq_mul_nodal_erase Lagrange.nodal_eq_mul_nodal_erase
 
-theorem X_sub_C_dvd_nodal (v : ι → F) (hi : i ∈ s) : X - c (v i) ∣ nodal s v :=
+theorem x_sub_c_dvd_nodal (v : ι → F) (hi : i ∈ s) : X - c (v i) ∣ nodal s v :=
   ⟨_, by classical exact nodal_eq_mul_nodal_erase hi⟩
-#align lagrange.X_sub_C_dvd_nodal Lagrange.X_sub_C_dvd_nodal
+#align lagrange.X_sub_C_dvd_nodal Lagrange.x_sub_c_dvd_nodal
 
 variable [DecidableEq ι]
 
@@ -578,23 +578,23 @@ def nodalWeight (s : Finset ι) (v : ι → F) (i : ι) :=
   ∏ j in s.erase i, (v i - v j)⁻¹
 #align lagrange.nodal_weight Lagrange.nodalWeight
 
-theorem nodal_weight_eq_eval_nodal_erase_inv :
+theorem nodalWeight_eq_eval_nodal_erase_inv :
     nodalWeight s v i = (eval (v i) (nodal (s.erase i) v))⁻¹ := by
   rw [eval_nodal, nodal_weight, prod_inv_distrib]
-#align lagrange.nodal_weight_eq_eval_nodal_erase_inv Lagrange.nodal_weight_eq_eval_nodal_erase_inv
+#align lagrange.nodal_weight_eq_eval_nodal_erase_inv Lagrange.nodalWeight_eq_eval_nodal_erase_inv
 
-theorem nodal_weight_eq_eval_nodal_derative (hi : i ∈ s) :
+theorem nodalWeight_eq_eval_nodal_derative (hi : i ∈ s) :
     nodalWeight s v i = (eval (v i) (nodal s v).derivative)⁻¹ := by
   rw [eval_nodal_derivative_eval_node_eq hi, nodal_weight_eq_eval_nodal_erase_inv]
-#align lagrange.nodal_weight_eq_eval_nodal_derative Lagrange.nodal_weight_eq_eval_nodal_derative
+#align lagrange.nodal_weight_eq_eval_nodal_derative Lagrange.nodalWeight_eq_eval_nodal_derative
 
-theorem nodal_weight_ne_zero (hvs : Set.InjOn v s) (hi : i ∈ s) : nodalWeight s v i ≠ 0 :=
+theorem nodalWeight_ne_zero (hvs : Set.InjOn v s) (hi : i ∈ s) : nodalWeight s v i ≠ 0 :=
   by
   rw [nodal_weight, prod_ne_zero_iff]
   intro j hj
   rcases mem_erase.mp hj with ⟨hij, hj⟩
   refine' inv_ne_zero (sub_ne_zero_of_ne (mt (hvs.eq_iff hi hj).mp hij.symm))
-#align lagrange.nodal_weight_ne_zero Lagrange.nodal_weight_ne_zero
+#align lagrange.nodal_weight_ne_zero Lagrange.nodalWeight_ne_zero
 
 theorem basis_eq_prod_sub_inv_mul_nodal_div (hi : i ∈ s) :
     Lagrange.basis s v i = c (nodalWeight s v i) * (nodal s v / (X - c (v i))) := by
@@ -609,10 +609,10 @@ theorem eval_basis_not_at_node (hi : i ∈ s) (hxi : x ≠ v i) :
     mul_assoc (x - v i)⁻¹, inv_mul_cancel (sub_ne_zero_of_ne hxi), one_mul]
 #align lagrange.eval_basis_not_at_node Lagrange.eval_basis_not_at_node
 
-theorem interpolate_eq_nodal_weight_mul_nodal_div_X_sub_C :
+theorem interpolate_eq_nodalWeight_mul_nodal_div_x_sub_c :
     interpolate s v r = ∑ i in s, c (nodalWeight s v i) * (nodal s v / (X - c (v i))) * c (r i) :=
   sum_congr rfl fun j hj => by rw [mul_comm, basis_eq_prod_sub_inv_mul_nodal_div hj]
-#align lagrange.interpolate_eq_nodal_weight_mul_nodal_div_X_sub_C Lagrange.interpolate_eq_nodal_weight_mul_nodal_div_X_sub_C
+#align lagrange.interpolate_eq_nodal_weight_mul_nodal_div_X_sub_C Lagrange.interpolate_eq_nodalWeight_mul_nodal_div_x_sub_c
 
 /-- This is the first barycentric form of the Lagrange interpolant. -/
 theorem eval_interpolate_not_at_node (hx : ∀ i ∈ s, x ≠ v i) :
@@ -624,12 +624,12 @@ theorem eval_interpolate_not_at_node (hx : ∀ i ∈ s, x ≠ v i) :
   rw [← mul_assoc, mul_comm, eval_basis_not_at_node hi (hx _ hi)]
 #align lagrange.eval_interpolate_not_at_node Lagrange.eval_interpolate_not_at_node
 
-theorem sum_nodal_weight_mul_inv_sub_ne_zero (hvs : Set.InjOn v s) (hx : ∀ i ∈ s, x ≠ v i)
+theorem sum_nodalWeight_mul_inv_sub_ne_zero (hvs : Set.InjOn v s) (hx : ∀ i ∈ s, x ≠ v i)
     (hs : s.Nonempty) : (∑ i in s, nodalWeight s v i * (x - v i)⁻¹) ≠ 0 :=
   @right_ne_zero_of_mul_eq_one _ _ _ (eval x (nodal s v)) _ <| by
     simpa only [Pi.one_apply, interpolate_one hvs hs, eval_one, mul_one] using
       (eval_interpolate_not_at_node 1 hx).symm
-#align lagrange.sum_nodal_weight_mul_inv_sub_ne_zero Lagrange.sum_nodal_weight_mul_inv_sub_ne_zero
+#align lagrange.sum_nodal_weight_mul_inv_sub_ne_zero Lagrange.sum_nodalWeight_mul_inv_sub_ne_zero
 
 /-- This is the second barycentric form of the Lagrange interpolant. -/
 theorem eval_interpolate_not_at_node' (hvs : Set.InjOn v s) (hs : s.Nonempty)

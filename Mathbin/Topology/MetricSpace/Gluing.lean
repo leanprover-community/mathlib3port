@@ -83,7 +83,7 @@ private theorem glue_dist_self (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ) : ∀ x,
   | inr x => dist_self _
 #align metric.glue_dist_self metric.glue_dist_self
 
-theorem glue_dist_glued_points [Nonempty Z] (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ) (p : Z) :
+theorem glueDist_glued_points [Nonempty Z] (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ) (p : Z) :
     glueDist Φ Ψ ε (inl (Φ p)) (inr (Ψ p)) = ε :=
   by
   have : (⨅ q, dist (Φ p) (Φ q) + dist (Ψ p) (Ψ q)) = 0 :=
@@ -95,7 +95,7 @@ theorem glue_dist_glued_points [Nonempty Z] (Φ : Z → X) (Ψ : Z → Y) (ε : 
     rw [this]
     exact cinfᵢ_le ⟨0, forall_range_iff.2 A⟩ p
   rw [glue_dist, this, zero_add]
-#align metric.glue_dist_glued_points Metric.glue_dist_glued_points
+#align metric.glue_dist_glued_points Metric.glueDist_glued_points
 
 private theorem glue_dist_comm (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ) :
     ∀ x y, glueDist Φ Ψ ε x y = glueDist Φ Ψ ε y x
@@ -124,7 +124,7 @@ private theorem glue_dist_triangle (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
           infᵢ ((fun t => t + dist y z) ∘ fun p => dist y (Φ p) + dist x (Ψ p)) :=
         by
         refine'
-          Monotone.map_cinfi_of_continuous_at (continuous_at_id.add continuous_at_const) _ (B _ _)
+          Monotone.map_cinfi_of_continuousAt (continuous_at_id.add continuousAt_const) _ (B _ _)
         intro x y hx
         simpa
       rw [this, comp]
@@ -147,7 +147,7 @@ private theorem glue_dist_triangle (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
           infᵢ ((fun t => dist x y + t) ∘ fun p => dist z (Φ p) + dist y (Ψ p)) :=
         by
         refine'
-          Monotone.map_cinfi_of_continuous_at (continuous_at_const.add continuous_at_id) _ (B _ _)
+          Monotone.map_cinfi_of_continuousAt (continuous_at_const.add continuousAt_id) _ (B _ _)
         intro x y hx
         simpa
       rw [this, comp]
@@ -170,7 +170,7 @@ private theorem glue_dist_triangle (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
           infᵢ ((fun t => dist x y + t) ∘ fun p => dist y (Φ p) + dist z (Ψ p)) :=
         by
         refine'
-          Monotone.map_cinfi_of_continuous_at (continuous_at_const.add continuous_at_id) _ (B _ _)
+          Monotone.map_cinfi_of_continuousAt (continuous_at_const.add continuousAt_id) _ (B _ _)
         intro x y hx
         simpa
       rw [this, comp]
@@ -193,7 +193,7 @@ private theorem glue_dist_triangle (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
           infᵢ ((fun t => t + dist y z) ∘ fun p => dist x (Φ p) + dist y (Ψ p)) :=
         by
         refine'
-          Monotone.map_cinfi_of_continuous_at (continuous_at_id.add continuous_at_const) _ (B _ _)
+          Monotone.map_cinfi_of_continuousAt (continuous_at_id.add continuousAt_const) _ (B _ _)
         intro x y hx
         simpa
       rw [this, comp]
@@ -275,9 +275,9 @@ def glueMetricApprox (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ) (ε0 : 0 < ε)
     (H : ∀ p q, |dist (Φ p) (Φ q) - dist (Ψ p) (Ψ q)| ≤ 2 * ε) : MetricSpace (Sum X Y)
     where
   dist := glueDist Φ Ψ ε
-  dist_self := glue_dist_self Φ Ψ ε
-  dist_comm := glue_dist_comm Φ Ψ ε
-  dist_triangle := glue_dist_triangle Φ Ψ ε H
+  dist_self := glueDist_self Φ Ψ ε
+  dist_comm := glueDist_comm Φ Ψ ε
+  dist_triangle := glueDist_triangle Φ Ψ ε H
   eq_of_dist_eq_zero := glue_eq_of_dist_eq_zero Φ Ψ ε ε0
 #align metric.glue_metric_approx Metric.glueMetricApprox
 
@@ -312,12 +312,12 @@ def Sum.dist : Sum X Y → Sum X Y → ℝ
   | inr b, inl a => dist b (Nonempty.some ⟨b⟩) + 1 + dist (Nonempty.some ⟨a⟩) a
 #align metric.sum.dist Metric.Sum.dist
 
-theorem Sum.dist_eq_glue_dist {p q : Sum X Y} (x : X) (y : Y) :
+theorem Sum.dist_eq_glueDist {p q : Sum X Y} (x : X) (y : Y) :
     Sum.dist p q =
       glueDist (fun _ : Unit => Nonempty.some ⟨x⟩) (fun _ : Unit => Nonempty.some ⟨y⟩) 1 p q :=
   by
   cases p <;> cases q <;> first |rfl|simp [sum.dist, glue_dist, dist_comm, add_comm, add_left_comm]
-#align metric.sum.dist_eq_glue_dist Metric.Sum.dist_eq_glue_dist
+#align metric.sum.dist_eq_glue_dist Metric.Sum.dist_eq_glueDist
 
 private theorem sum.dist_comm (x y : Sum X Y) : Sum.dist x y = Sum.dist y x := by
   cases x <;> cases y <;> simp only [sum.dist, dist_comm, add_comm, add_left_comm]
@@ -515,13 +515,13 @@ protected theorem dist_triangle (x y z : Σi, E i) : dist x z ≤ dist x y + dis
           
 #align metric.sigma.dist_triangle Metric.Sigma.dist_triangle
 
-protected theorem is_open_iff (s : Set (Σi, E i)) :
+protected theorem isOpen_iff (s : Set (Σi, E i)) :
     IsOpen s ↔ ∀ x ∈ s, ∃ ε > 0, ∀ y, dist x y < ε → y ∈ s :=
   by
   constructor
   · rintro hs ⟨i, x⟩ hx
     obtain ⟨ε, εpos, hε⟩ : ∃ (ε : ℝ)(H : ε > 0), ball x ε ⊆ Sigma.mk i ⁻¹' s :=
-      Metric.is_open_iff.1 (is_open_sigma_iff.1 hs i) x hx
+      Metric.isOpen_iff.1 (isOpen_sigma_iff.1 hs i) x hx
     refine' ⟨min ε 1, lt_min εpos zero_lt_one, _⟩
     rintro ⟨j, y⟩ hy
     rcases eq_or_ne i j with (rfl | hij)
@@ -533,15 +533,15 @@ protected theorem is_open_iff (s : Set (Σi, E i)) :
         _ < 1 := hy.trans_le (min_le_right _ _)
         
   · intro H
-    apply is_open_sigma_iff.2 fun i => _
-    apply Metric.is_open_iff.2 fun x hx => _
+    apply isOpen_sigma_iff.2 fun i => _
+    apply Metric.isOpen_iff.2 fun x hx => _
     obtain ⟨ε, εpos, hε⟩ : ∃ (ε : ℝ)(H : ε > 0), ∀ y, dist (⟨i, x⟩ : Σj, E j) y < ε → y ∈ s :=
       H ⟨i, x⟩ hx
     refine' ⟨ε, εpos, fun y hy => _⟩
     apply hε ⟨i, y⟩
     rw [sigma.dist_same]
     exact mem_ball'.1 hy
-#align metric.sigma.is_open_iff Metric.Sigma.is_open_iff
+#align metric.sigma.is_open_iff Metric.Sigma.isOpen_iff
 
 /-- A metric space structure on the disjoint union `Σ i, E i`.
 We embed isometrically each factor, set the basepoints at distance 1, arbitrarily,
@@ -583,7 +583,7 @@ theorem isometry_mk (i : ι) : Isometry (Sigma.mk i : E i → Σk, E k) :=
 #align metric.sigma.isometry_mk Metric.Sigma.isometry_mk
 
 /-- A disjoint union of complete metric spaces is complete. -/
-protected theorem complete_space [∀ i, CompleteSpace (E i)] : CompleteSpace (Σi, E i) :=
+protected theorem completeSpace [∀ i, CompleteSpace (E i)] : CompleteSpace (Σi, E i) :=
   by
   set s : ι → Set (Σi, E i) := fun i => Sigma.fst ⁻¹' {i}
   set U := { p : (Σk, E k) × Σk, E k | dist p.1 p.2 < 1 }
@@ -593,10 +593,10 @@ protected theorem complete_space [∀ i, CompleteSpace (E i)] : CompleteSpace (�
     exact (isometry_mk i).UniformInducing.is_complete_range
   have hd : ∀ (i j), ∀ x ∈ s i, ∀ y ∈ s j, (x, y) ∈ U → i = j := fun i j x hx y hy hxy =>
     (Eq.symm hx).trans ((fst_eq_of_dist_lt_one _ _ hxy).trans hy)
-  refine' complete_space_of_is_complete_univ _
-  convert is_complete_Union_separated hc (dist_mem_uniformity zero_lt_one) hd
+  refine' completeSpace_of_isComplete_univ _
+  convert isComplete_unionᵢ_separated hc (dist_mem_uniformity zero_lt_one) hd
   simp [s, ← preimage_Union]
-#align metric.sigma.complete_space Metric.Sigma.complete_space
+#align metric.sigma.complete_space Metric.Sigma.completeSpace
 
 end Sigma
 
@@ -617,9 +617,9 @@ structure on `X ⊕ Y` by declaring that `Φ x` and `Ψ x` are at distance `0`. 
 def gluePremetric (hΦ : Isometry Φ) (hΨ : Isometry Ψ) : PseudoMetricSpace (Sum X Y)
     where
   dist := glueDist Φ Ψ 0
-  dist_self := glue_dist_self Φ Ψ 0
-  dist_comm := glue_dist_comm Φ Ψ 0
-  dist_triangle := glue_dist_triangle Φ Ψ 0 fun p q => by rw [hΦ.dist_eq, hΨ.dist_eq] <;> simp
+  dist_self := glueDist_self Φ Ψ 0
+  dist_comm := glueDist_comm Φ Ψ 0
+  dist_triangle := glueDist_triangle Φ Ψ 0 fun p q => by rw [hΦ.dist_eq, hΨ.dist_eq] <;> simp
 #align metric.glue_premetric Metric.gluePremetric
 
 /-- Given two isometric embeddings `Φ : Z → X` and `Ψ : Z → Y`, we define a
@@ -663,13 +663,13 @@ theorem to_glue_commute (hΦ : Isometry Φ) (hΨ : Isometry Ψ) :
   exact glue_dist_glued_points Φ Ψ 0 x
 #align metric.to_glue_commute Metric.to_glue_commute
 
-theorem to_glue_l_isometry (hΦ : Isometry Φ) (hΨ : Isometry Ψ) : Isometry (toGlueL hΦ hΨ) :=
+theorem toGlueL_isometry (hΦ : Isometry Φ) (hΨ : Isometry Ψ) : Isometry (toGlueL hΦ hΨ) :=
   Isometry.of_dist_eq fun _ _ => rfl
-#align metric.to_glue_l_isometry Metric.to_glue_l_isometry
+#align metric.to_glue_l_isometry Metric.toGlueL_isometry
 
-theorem to_glue_r_isometry (hΦ : Isometry Φ) (hΨ : Isometry Ψ) : Isometry (toGlueR hΦ hΨ) :=
+theorem toGlueR_isometry (hΦ : Isometry Φ) (hΨ : Isometry Ψ) : Isometry (toGlueR hΦ hΨ) :=
   Isometry.of_dist_eq fun _ _ => rfl
-#align metric.to_glue_r_isometry Metric.to_glue_r_isometry
+#align metric.to_glue_r_isometry Metric.toGlueR_isometry
 
 end Gluing
 
@@ -696,7 +696,7 @@ def inductiveLimitDist (f : ∀ n, X n → X (n + 1)) (x y : Σn, X n) : ℝ :=
 
 /-- The predistance on the disjoint union `Σ n, X n` can be computed in any `X k` for large
 enough `k`. -/
-theorem inductive_limit_dist_eq_dist (I : ∀ n, Isometry (f n)) (x y : Σn, X n) (m : ℕ) :
+theorem inductiveLimitDist_eq_dist (I : ∀ n, Isometry (f n)) (x y : Σn, X n) (m : ℕ) :
     ∀ hx : x.1 ≤ m,
       ∀ hy : y.1 ≤ m,
         inductiveLimitDist f x y = dist (leRecOn hx f x.2 : X m) (leRecOn hy f y.2 : X m) :=
@@ -719,7 +719,7 @@ theorem inductive_limit_dist_eq_dist (I : ∀ n, Isometry (f n)) (x y : Σn, X n
       have ym : y.1 ≤ m := le_trans (le_max_right _ _) this
       rw [le_rec_on_succ xm, le_rec_on_succ ym, (I m).dist_eq]
       exact hm xm ym
-#align metric.inductive_limit_dist_eq_dist Metric.inductive_limit_dist_eq_dist
+#align metric.inductive_limit_dist_eq_dist Metric.inductiveLimitDist_eq_dist
 
 /-- Premetric space structure on `Σ n, X n`.-/
 def inductivePremetric (I : ∀ n, Isometry (f n)) : PseudoMetricSpace (Σn, X n)
@@ -772,17 +772,17 @@ instance (I : ∀ n, Isometry (f n)) [Inhabited (X 0)] : Inhabited (InductiveLim
   ⟨toInductiveLimit _ 0 default⟩
 
 /-- The map `to_inductive_limit n` mapping `X n` to the inductive limit is an isometry. -/
-theorem to_inductive_limit_isometry (I : ∀ n, Isometry (f n)) (n : ℕ) :
+theorem toInductiveLimit_isometry (I : ∀ n, Isometry (f n)) (n : ℕ) :
     Isometry (toInductiveLimit I n) :=
   Isometry.of_dist_eq fun x y =>
     by
     change inductive_limit_dist f ⟨n, x⟩ ⟨n, y⟩ = dist x y
     rw [inductive_limit_dist_eq_dist I ⟨n, x⟩ ⟨n, y⟩ n (le_refl n) (le_refl n), le_rec_on_self,
       le_rec_on_self]
-#align metric.to_inductive_limit_isometry Metric.to_inductive_limit_isometry
+#align metric.to_inductive_limit_isometry Metric.toInductiveLimit_isometry
 
 /-- The maps `to_inductive_limit n` are compatible with the maps `f n`. -/
-theorem to_inductive_limit_commute (I : ∀ n, Isometry (f n)) (n : ℕ) :
+theorem toInductiveLimit_commute (I : ∀ n, Isometry (f n)) (n : ℕ) :
     toInductiveLimit I n.succ ∘ f n = toInductiveLimit I n :=
   by
   funext
@@ -793,7 +793,7 @@ theorem to_inductive_limit_commute (I : ∀ n, Isometry (f n)) (n : ℕ) :
     exact le_rfl
     exact le_rfl
     exact le_succ _
-#align metric.to_inductive_limit_commute Metric.to_inductive_limit_commute
+#align metric.to_inductive_limit_commute Metric.toInductiveLimit_commute
 
 end InductiveLimit
 

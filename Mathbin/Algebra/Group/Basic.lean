@@ -1973,8 +1973,8 @@ section Multiplicative
 
 variable [Monoid β] (p r : α → α → Prop) [IsTotal α r] (f : α → α → β)
 
-@[to_additive additive_of_symmetric_of_is_total]
-theorem multiplicative_of_symmetric_of_is_total (hsymm : Symmetric p)
+@[to_additive additive_of_symmetric_of_isTotal]
+theorem multiplicative_of_symmetric_of_isTotal (hsymm : Symmetric p)
     (hf_swap : ∀ {a b}, p a b → f a b * f b a = 1)
     (hmul : ∀ {a b c}, r a b → r b c → p a b → p b c → p a c → f a c = f a b * f b c) {a b c : α}
     (pab : p a b) (pbc : p b c) (pac : p a c) : f a c = f a b * f b c :=
@@ -1991,8 +1991,8 @@ theorem multiplicative_of_symmetric_of_is_total (hsymm : Symmetric p)
   obtain rac | rca := total_of r a c
   · rw [hmul rba rac (hsymm pab) pac pbc]
   · rw [hmul rbc rca pbc (hsymm pac) (hsymm pab), mul_assoc, hf_swap (hsymm pac), mul_one]
-#align multiplicative_of_symmetric_of_is_total multiplicative_of_symmetric_of_is_total
-#align additive_of_symmetric_of_is_total additive_of_symmetric_of_is_total
+#align multiplicative_of_symmetric_of_is_total multiplicative_of_symmetric_of_isTotal
+#align additive_of_symmetric_of_is_total additive_of_symmetric_of_isTotal
 
 /- warning: multiplicative_of_is_total -> multiplicative_of_isTotal is a dubious translation:
 lean 3 declaration is
@@ -2010,7 +2010,7 @@ theorem multiplicative_of_isTotal (p : α → Prop) (hswap : ∀ {a b}, p a → 
     (hmul : ∀ {a b c}, r a b → r b c → p a → p b → p c → f a c = f a b * f b c) {a b c : α}
     (pa : p a) (pb : p b) (pc : p c) : f a c = f a b * f b c :=
   by
-  apply multiplicative_of_symmetric_of_is_total (fun a b => p a ∧ p b) r f fun _ _ => And.symm
+  apply multiplicative_of_symmetric_of_isTotal (fun a b => p a ∧ p b) r f fun _ _ => And.symm
   · simp_rw [and_imp]
     exact @hswap
   · exact fun a b c rab rbc pab pbc pac => hmul rab rbc pab.1 pab.2 pac.2

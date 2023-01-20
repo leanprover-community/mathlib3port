@@ -243,12 +243,12 @@ theorem bijection_natural (A B : C) (X X' : D) (f : (leftAdjoint i).obj (A ⨯ B
 The bijection allows us to show that `prod_comparison L A B` is an isomorphism, where the inverse
 is the forward map of the identity morphism.
 -/
-theorem prod_comparison_iso (A B : C) : IsIso (prodComparison (leftAdjoint i) A B) :=
+theorem prodComparison_iso (A B : C) : IsIso (prodComparison (leftAdjoint i) A B) :=
   ⟨⟨bijection i _ _ _ (𝟙 _), by
       rw [← (bijection i _ _ _).Injective.eq_iff, bijection_natural, ← bijection_symm_apply_id,
         Equiv.apply_symm_apply, id_comp],
       by rw [← bijection_natural, id_comp, ← bijection_symm_apply_id, Equiv.apply_symm_apply]⟩⟩
-#align category_theory.prod_comparison_iso CategoryTheory.prod_comparison_iso
+#align category_theory.prod_comparison_iso CategoryTheory.prodComparison_iso
 
 attribute [local instance] prod_comparison_iso
 

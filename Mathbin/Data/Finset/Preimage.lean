@@ -36,13 +36,13 @@ noncomputable def preimage (s : Finset β) (f : α → β) (hf : Set.InjOn f (f 
 @[simp]
 theorem mem_preimage {f : α → β} {s : Finset β} {hf : Set.InjOn f (f ⁻¹' ↑s)} {x : α} :
     x ∈ preimage s f hf ↔ f x ∈ s :=
-  Set.Finite.mem_to_finset _
+  Set.Finite.mem_toFinset _
 #align finset.mem_preimage Finset.mem_preimage
 
 @[simp, norm_cast]
 theorem coe_preimage {f : α → β} (s : Finset β) (hf : Set.InjOn f (f ⁻¹' ↑s)) :
     (↑(preimage s f hf) : Set α) = f ⁻¹' ↑s :=
-  Set.Finite.coe_to_finset _
+  Set.Finite.coe_toFinset _
 #align finset.coe_preimage Finset.coe_preimage
 
 @[simp]

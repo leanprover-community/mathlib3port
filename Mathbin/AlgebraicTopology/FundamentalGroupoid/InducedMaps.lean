@@ -98,12 +98,12 @@ include hfg
 
 /-- If `f(p(t) = g(q(t))` for two paths `p` and `q`, then the induced path homotopy classes
 `f(p)` and `g(p)` are the same as well, despite having a priori different types -/
-theorem heq_path_of_eq_image : HEq ((πₘ f).map ⟦p⟧) ((πₘ g).map ⟦q⟧) :=
+theorem hEq_path_of_eq_image : HEq ((πₘ f).map ⟦p⟧) ((πₘ g).map ⟦q⟧) :=
   by
   simp only [map_eq, ← Path.Homotopic.map_lift]
   apply Path.Homotopic.hpath_hext
   exact hfg
-#align continuous_map.homotopy.heq_path_of_eq_image ContinuousMap.Homotopy.heq_path_of_eq_image
+#align continuous_map.homotopy.heq_path_of_eq_image ContinuousMap.Homotopy.hEq_path_of_eq_image
 
 private theorem start_path : f x₀ = g x₂ := by convert hfg 0 <;> simp only [Path.source]
 #align continuous_map.homotopy.start_path continuous_map.homotopy.start_path
@@ -154,9 +154,9 @@ def uliftMap : C(TopCat.of (ULift.{u} I × X), Y) :=
 #align continuous_map.homotopy.ulift_map ContinuousMap.Homotopy.uliftMap
 
 @[simp]
-theorem ulift_apply (i : ULift.{u} I) (x : X) : H.uliftMap (i, x) = H (i.down, x) :=
+theorem uLift_apply (i : ULift.{u} I) (x : X) : H.uliftMap (i, x) = H (i.down, x) :=
   rfl
-#align continuous_map.homotopy.ulift_apply ContinuousMap.Homotopy.ulift_apply
+#align continuous_map.homotopy.ulift_apply ContinuousMap.Homotopy.uLift_apply
 
 /-- An abbreviation for `prod_to_prod_Top`, with some types already in place to help the
  typechecker. In particular, the first path should be on the ulifted unit interval. -/
@@ -201,7 +201,7 @@ theorem apply_one_path :
 #align continuous_map.homotopy.apply_one_path ContinuousMap.Homotopy.apply_one_path
 
 /-- Proof that `H.eval_at x = H(0 ⟶ 1, x ⟶ x)`, with the appropriate casts -/
-theorem eval_at_eq (x : X) :
+theorem evalAt_eq (x : X) :
     ⟦H.evalAt x⟧ =
       hcast (H.apply_zero x).symm ≫
         (πₘ H.uliftMap).map (prodToProdTopI uhpath01 (𝟙 x)) ≫ hcast (H.apply_one x).symm.symm :=
@@ -211,7 +211,7 @@ theorem eval_at_eq (x : X) :
   simp only [id_eq_path_refl, prod_to_prod_Top_map, Path.Homotopic.prod_lift, map_eq, ←
     Path.Homotopic.map_lift]
   apply Path.Homotopic.hpath_hext; intro ; rfl
-#align continuous_map.homotopy.eval_at_eq ContinuousMap.Homotopy.eval_at_eq
+#align continuous_map.homotopy.eval_at_eq ContinuousMap.Homotopy.evalAt_eq
 
 -- Finally, we show `d = f(p) ≫ H₁ = H₀ ≫ g(p)`
 theorem eq_diag_path :

@@ -38,9 +38,9 @@ noncomputable def arcsin : ℝ → ℝ :=
   coe ∘ IccExtend (neg_le_self zero_le_one) sinOrderIso.symm
 #align real.arcsin Real.arcsin
 
-theorem arcsin_mem_Icc (x : ℝ) : arcsin x ∈ Icc (-(π / 2)) (π / 2) :=
+theorem arcsin_mem_icc (x : ℝ) : arcsin x ∈ Icc (-(π / 2)) (π / 2) :=
   Subtype.coe_prop _
-#align real.arcsin_mem_Icc Real.arcsin_mem_Icc
+#align real.arcsin_mem_Icc Real.arcsin_mem_icc
 
 @[simp]
 theorem range_arcsin : range arcsin = Icc (-(π / 2)) (π / 2) :=
@@ -50,16 +50,16 @@ theorem range_arcsin : range arcsin = Icc (-(π / 2)) (π / 2) :=
 #align real.range_arcsin Real.range_arcsin
 
 theorem arcsin_le_pi_div_two (x : ℝ) : arcsin x ≤ π / 2 :=
-  (arcsin_mem_Icc x).2
+  (arcsin_mem_icc x).2
 #align real.arcsin_le_pi_div_two Real.arcsin_le_pi_div_two
 
 theorem neg_pi_div_two_le_arcsin (x : ℝ) : -(π / 2) ≤ arcsin x :=
-  (arcsin_mem_Icc x).1
+  (arcsin_mem_icc x).1
 #align real.neg_pi_div_two_le_arcsin Real.neg_pi_div_two_le_arcsin
 
-theorem arcsin_proj_Icc (x : ℝ) : arcsin (projIcc (-1) 1 (neg_le_self zero_le_one) x) = arcsin x :=
+theorem arcsin_projIcc (x : ℝ) : arcsin (projIcc (-1) 1 (neg_le_self zero_le_one) x) = arcsin x :=
   by rw [arcsin, Function.comp_apply, Icc_extend_coe, Function.comp_apply, Icc_extend]
-#align real.arcsin_proj_Icc Real.arcsin_proj_Icc
+#align real.arcsin_proj_Icc Real.arcsin_projIcc
 
 theorem sin_arcsin' {x : ℝ} (hx : x ∈ Icc (-1 : ℝ) 1) : sin (arcsin x) = x := by
   simpa [arcsin, Icc_extend_of_mem _ _ hx, -OrderIso.apply_symm_apply] using
@@ -71,29 +71,29 @@ theorem sin_arcsin {x : ℝ} (hx₁ : -1 ≤ x) (hx₂ : x ≤ 1) : sin (arcsin 
 #align real.sin_arcsin Real.sin_arcsin
 
 theorem arcsin_sin' {x : ℝ} (hx : x ∈ Icc (-(π / 2)) (π / 2)) : arcsin (sin x) = x :=
-  inj_on_sin (arcsin_mem_Icc _) hx <| by rw [sin_arcsin (neg_one_le_sin _) (sin_le_one _)]
+  injOn_sin (arcsin_mem_icc _) hx <| by rw [sin_arcsin (neg_one_le_sin _) (sin_le_one _)]
 #align real.arcsin_sin' Real.arcsin_sin'
 
 theorem arcsin_sin {x : ℝ} (hx₁ : -(π / 2) ≤ x) (hx₂ : x ≤ π / 2) : arcsin (sin x) = x :=
   arcsin_sin' ⟨hx₁, hx₂⟩
 #align real.arcsin_sin Real.arcsin_sin
 
-theorem strict_mono_on_arcsin : StrictMonoOn arcsin (Icc (-1) 1) :=
+theorem strictMonoOn_arcsin : StrictMonoOn arcsin (Icc (-1) 1) :=
   (Subtype.strictMono_coe _).comp_strict_mono_on <|
     sinOrderIso.symm.StrictMono.strict_mono_on_Icc_extend _
-#align real.strict_mono_on_arcsin Real.strict_mono_on_arcsin
+#align real.strict_mono_on_arcsin Real.strictMonoOn_arcsin
 
 theorem monotone_arcsin : Monotone arcsin :=
   (Subtype.mono_coe _).comp <| sinOrderIso.symm.Monotone.IccExtend _
 #align real.monotone_arcsin Real.monotone_arcsin
 
-theorem inj_on_arcsin : InjOn arcsin (Icc (-1) 1) :=
-  strict_mono_on_arcsin.InjOn
-#align real.inj_on_arcsin Real.inj_on_arcsin
+theorem injOn_arcsin : InjOn arcsin (Icc (-1) 1) :=
+  strictMonoOn_arcsin.InjOn
+#align real.inj_on_arcsin Real.injOn_arcsin
 
 theorem arcsin_inj {x y : ℝ} (hx₁ : -1 ≤ x) (hx₂ : x ≤ 1) (hy₁ : -1 ≤ y) (hy₂ : y ≤ 1) :
     arcsin x = arcsin y ↔ x = y :=
-  inj_on_arcsin.eq_iff ⟨hx₁, hx₂⟩ ⟨hy₁, hy₂⟩
+  injOn_arcsin.eq_iff ⟨hx₁, hx₂⟩ ⟨hy₁, hy₂⟩
 #align real.arcsin_inj Real.arcsin_inj
 
 @[continuity]
@@ -101,9 +101,9 @@ theorem continuous_arcsin : Continuous arcsin :=
   continuous_subtype_coe.comp sinOrderIso.symm.Continuous.Icc_extend'
 #align real.continuous_arcsin Real.continuous_arcsin
 
-theorem continuous_at_arcsin {x : ℝ} : ContinuousAt arcsin x :=
+theorem continuousAt_arcsin {x : ℝ} : ContinuousAt arcsin x :=
   continuous_arcsin.ContinuousAt
-#align real.continuous_at_arcsin Real.continuous_at_arcsin
+#align real.continuous_at_arcsin Real.continuousAt_arcsin
 
 theorem arcsin_eq_of_sin_eq {x y : ℝ} (h₁ : sin x = y) (h₂ : x ∈ Icc (-(π / 2)) (π / 2)) :
     arcsin y = x := by
@@ -279,9 +279,9 @@ theorem pi_div_four_le_arcsin {x} : π / 4 ≤ arcsin x ↔ sqrt 2 / 2 ≤ x :=
   constructor <;> linarith
 #align real.pi_div_four_le_arcsin Real.pi_div_four_le_arcsin
 
-theorem maps_to_sin_Ioo : MapsTo sin (Ioo (-(π / 2)) (π / 2)) (Ioo (-1) 1) := fun x h => by
+theorem mapsTo_sin_ioo : MapsTo sin (Ioo (-(π / 2)) (π / 2)) (Ioo (-1) 1) := fun x h => by
   rwa [mem_Ioo, ← arcsin_lt_pi_div_two, ← neg_pi_div_two_lt_arcsin, arcsin_sin h.1.le h.2.le]
-#align real.maps_to_sin_Ioo Real.maps_to_sin_Ioo
+#align real.maps_to_sin_Ioo Real.mapsTo_sin_ioo
 
 /-- `real.sin` as a `local_homeomorph` between `(-π / 2, π / 2)` and `(-1, 1)`. -/
 @[simp]
@@ -291,18 +291,18 @@ def sinLocalHomeomorph : LocalHomeomorph ℝ ℝ
   invFun := arcsin
   source := Ioo (-(π / 2)) (π / 2)
   target := Ioo (-1) 1
-  map_source' := maps_to_sin_Ioo
+  map_source' := mapsTo_sin_ioo
   map_target' y hy := ⟨neg_pi_div_two_lt_arcsin.2 hy.1, arcsin_lt_pi_div_two.2 hy.2⟩
   left_inv' x hx := arcsin_sin hx.1.le hx.2.le
   right_inv' y hy := sin_arcsin hy.1.le hy.2.le
-  open_source := is_open_Ioo
-  open_target := is_open_Ioo
+  open_source := isOpen_ioo
+  open_target := isOpen_ioo
   continuous_to_fun := continuous_sin.ContinuousOn
   continuous_inv_fun := continuous_arcsin.ContinuousOn
 #align real.sin_local_homeomorph Real.sinLocalHomeomorph
 
 theorem cos_arcsin_nonneg (x : ℝ) : 0 ≤ cos (arcsin x) :=
-  cos_nonneg_of_mem_Icc ⟨neg_pi_div_two_le_arcsin _, arcsin_le_pi_div_two _⟩
+  cos_nonneg_of_mem_icc ⟨neg_pi_div_two_le_arcsin _, arcsin_le_pi_div_two _⟩
 #align real.cos_arcsin_nonneg Real.cos_arcsin_nonneg
 
 -- The junk values for `arcsin` and `sqrt` make this true even outside `[-1, 1]`.
@@ -371,17 +371,17 @@ theorem arccos_cos {x : ℝ} (hx₁ : 0 ≤ x) (hx₂ : x ≤ π) : arccos (cos 
   rw [arccos, ← sin_pi_div_two_sub, arcsin_sin] <;> simp [sub_eq_add_neg] <;> linarith
 #align real.arccos_cos Real.arccos_cos
 
-theorem strict_anti_on_arccos : StrictAntiOn arccos (Icc (-1) 1) := fun x hx y hy h =>
-  sub_lt_sub_left (strict_mono_on_arcsin hx hy h) _
-#align real.strict_anti_on_arccos Real.strict_anti_on_arccos
+theorem strictAntiOn_arccos : StrictAntiOn arccos (Icc (-1) 1) := fun x hx y hy h =>
+  sub_lt_sub_left (strictMonoOn_arcsin hx hy h) _
+#align real.strict_anti_on_arccos Real.strictAntiOn_arccos
 
-theorem arccos_inj_on : InjOn arccos (Icc (-1) 1) :=
-  strict_anti_on_arccos.InjOn
-#align real.arccos_inj_on Real.arccos_inj_on
+theorem arccos_injOn : InjOn arccos (Icc (-1) 1) :=
+  strictAntiOn_arccos.InjOn
+#align real.arccos_inj_on Real.arccos_injOn
 
 theorem arccos_inj {x y : ℝ} (hx₁ : -1 ≤ x) (hx₂ : x ≤ 1) (hy₁ : -1 ≤ y) (hy₂ : y ≤ 1) :
     arccos x = arccos y ↔ x = y :=
-  arccos_inj_on.eq_iff ⟨hx₁, hx₂⟩ ⟨hy₁, hy₂⟩
+  arccos_injOn.eq_iff ⟨hx₁, hx₂⟩ ⟨hy₁, hy₂⟩
 #align real.arccos_inj Real.arccos_inj
 
 @[simp]

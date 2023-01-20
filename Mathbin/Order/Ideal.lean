@@ -91,12 +91,12 @@ section
 
 variable {I J s t : Ideal P} {x y : P}
 
-theorem to_lower_set_injective : Injective (toLowerSet : Ideal P → LowerSet P) := fun s t h =>
+theorem toLowerSet_injective : Injective (toLowerSet : Ideal P → LowerSet P) := fun s t h =>
   by
   cases s
   cases t
   congr
-#align order.ideal.to_lower_set_injective Order.Ideal.to_lower_set_injective
+#align order.ideal.to_lower_set_injective Order.Ideal.toLowerSet_injective
 
 instance : SetLike (Ideal P) P where
   coe s := s.carrier
@@ -113,9 +113,9 @@ theorem carrier_eq_coe (s : Ideal P) : s.carrier = s :=
 #align order.ideal.carrier_eq_coe Order.Ideal.carrier_eq_coe
 
 @[simp]
-theorem coe_to_lower_set (s : Ideal P) : (s.toLowerSet : Set P) = s :=
+theorem coe_toLowerSet (s : Ideal P) : (s.toLowerSet : Set P) = s :=
   rfl
-#align order.ideal.coe_to_lower_set Order.Ideal.coe_to_lower_set
+#align order.ideal.coe_to_lower_set Order.Ideal.coe_toLowerSet
 
 protected theorem lower (s : Ideal P) : IsLowerSet (s : Set P) :=
   s.lower'
@@ -129,9 +129,9 @@ protected theorem directed (s : Ideal P) : DirectedOn (· ≤ ·) (s : Set P) :=
   s.directed'
 #align order.ideal.directed Order.Ideal.directed
 
-protected theorem is_ideal (s : Ideal P) : IsIdeal (s : Set P) :=
+protected theorem isIdeal (s : Ideal P) : IsIdeal (s : Set P) :=
   ⟨s.lower, s.Nonempty, s.Directed⟩
-#align order.ideal.is_ideal Order.Ideal.is_ideal
+#align order.ideal.is_ideal Order.Ideal.isIdeal
 
 theorem mem_compl_of_ge {x y : P} : x ≤ y → x ∈ (I : Set P)ᶜ → y ∈ (I : Set P)ᶜ := fun h =>
   mt <| I.lower h
@@ -147,9 +147,9 @@ theorem coe_subset_coe : (s : Set P) ⊆ t ↔ s ≤ t :=
 #align order.ideal.coe_subset_coe Order.Ideal.coe_subset_coe
 
 @[simp]
-theorem coe_ssubset_coe : (s : Set P) ⊂ t ↔ s < t :=
+theorem coe_sSubset_coe : (s : Set P) ⊂ t ↔ s < t :=
   Iff.rfl
-#align order.ideal.coe_ssubset_coe Order.Ideal.coe_ssubset_coe
+#align order.ideal.coe_ssubset_coe Order.Ideal.coe_sSubset_coe
 
 @[trans]
 theorem mem_of_mem_of_le {x : P} {I J : Ideal P} : x ∈ I → I ≤ J → x ∈ J :=
@@ -163,12 +163,12 @@ class IsProper (I : Ideal P) : Prop where
   ne_univ : (I : Set P) ≠ univ
 #align order.ideal.is_proper Order.Ideal.IsProper
 
-theorem is_proper_of_not_mem {I : Ideal P} {p : P} (nmem : p ∉ I) : IsProper I :=
+theorem isProper_of_not_mem {I : Ideal P} {p : P} (nmem : p ∉ I) : IsProper I :=
   ⟨fun hp => by
     change p ∉ ↑I at nmem
     rw [hp] at nmem
     exact nmem (mem_univ p)⟩
-#align order.ideal.is_proper_of_not_mem Order.Ideal.is_proper_of_not_mem
+#align order.ideal.is_proper_of_not_mem Order.Ideal.isProper_of_not_mem
 
 /-- An ideal is maximal if it is maximal in the collection of proper ideals.
 
@@ -200,45 +200,45 @@ instance : OrderTop (Ideal P)
   le_top I := le_top
 
 @[simp]
-theorem top_to_lower_set : (⊤ : Ideal P).toLowerSet = ⊤ :=
+theorem top_toLowerSet : (⊤ : Ideal P).toLowerSet = ⊤ :=
   rfl
-#align order.ideal.top_to_lower_set Order.Ideal.top_to_lower_set
+#align order.ideal.top_to_lower_set Order.Ideal.top_toLowerSet
 
 @[simp]
 theorem coe_top : ((⊤ : Ideal P) : Set P) = univ :=
   rfl
 #align order.ideal.coe_top Order.Ideal.coe_top
 
-theorem is_proper_of_ne_top (ne_top : I ≠ ⊤) : IsProper I :=
+theorem isProper_of_ne_top (ne_top : I ≠ ⊤) : IsProper I :=
   ⟨fun h => ne_top <| ext h⟩
-#align order.ideal.is_proper_of_ne_top Order.Ideal.is_proper_of_ne_top
+#align order.ideal.is_proper_of_ne_top Order.Ideal.isProper_of_ne_top
 
 theorem IsProper.ne_top (hI : IsProper I) : I ≠ ⊤ := fun h => is_proper.ne_univ <| congr_arg coe h
 #align order.ideal.is_proper.ne_top Order.Ideal.IsProper.ne_top
 
-theorem IsCoatom.is_proper (hI : IsCoatom I) : IsProper I :=
-  is_proper_of_ne_top hI.1
-#align is_coatom.is_proper IsCoatom.is_proper
+theorem IsCoatom.isProper (hI : IsCoatom I) : IsProper I :=
+  isProper_of_ne_top hI.1
+#align is_coatom.is_proper IsCoatom.isProper
 
-theorem is_proper_iff_ne_top : IsProper I ↔ I ≠ ⊤ :=
-  ⟨fun h => h.ne_top, fun h => is_proper_of_ne_top h⟩
-#align order.ideal.is_proper_iff_ne_top Order.Ideal.is_proper_iff_ne_top
+theorem isProper_iff_ne_top : IsProper I ↔ I ≠ ⊤ :=
+  ⟨fun h => h.ne_top, fun h => isProper_of_ne_top h⟩
+#align order.ideal.is_proper_iff_ne_top Order.Ideal.isProper_iff_ne_top
 
-theorem IsMaximal.is_coatom (h : IsMaximal I) : IsCoatom I :=
-  ⟨IsMaximal.to_is_proper.ne_top, fun J h => ext <| IsMaximal.maximal_proper h⟩
-#align order.ideal.is_maximal.is_coatom Order.Ideal.IsMaximal.is_coatom
+theorem IsMaximal.isCoatom (h : IsMaximal I) : IsCoatom I :=
+  ⟨IsMaximal.to_isProper.ne_top, fun J h => ext <| IsMaximal.maximal_proper h⟩
+#align order.ideal.is_maximal.is_coatom Order.Ideal.IsMaximal.isCoatom
 
 theorem IsMaximal.is_coatom' [IsMaximal I] : IsCoatom I :=
-  IsMaximal.is_coatom ‹_›
+  IsMaximal.isCoatom ‹_›
 #align order.ideal.is_maximal.is_coatom' Order.Ideal.IsMaximal.is_coatom'
 
-theorem IsCoatom.is_maximal (hI : IsCoatom I) : IsMaximal I :=
-  { IsCoatom.is_proper ‹_› with maximal_proper := fun _ _ => by simp [hI.2 _ ‹_›] }
-#align is_coatom.is_maximal IsCoatom.is_maximal
+theorem IsCoatom.isMaximal (hI : IsCoatom I) : IsMaximal I :=
+  { IsCoatom.isProper ‹_› with maximal_proper := fun _ _ => by simp [hI.2 _ ‹_›] }
+#align is_coatom.is_maximal IsCoatom.isMaximal
 
-theorem is_maximal_iff_is_coatom : IsMaximal I ↔ IsCoatom I :=
+theorem isMaximal_iff_isCoatom : IsMaximal I ↔ IsCoatom I :=
   ⟨fun h => h.IsCoatom, fun h => h.IsMaximal⟩
-#align order.ideal.is_maximal_iff_is_coatom Order.Ideal.is_maximal_iff_is_coatom
+#align order.ideal.is_maximal_iff_is_coatom Order.Ideal.isMaximal_iff_isCoatom
 
 end Directed
 
@@ -322,7 +322,7 @@ variable [OrderTop P]
 
 @[simp]
 theorem principal_top : principal (⊤ : P) = ⊤ :=
-  to_lower_set_injective <| LowerSet.Iic_top
+  to_lower_set_injective <| LowerSet.iic_top
 #align order.ideal.principal_top Order.Ideal.principal_top
 
 end OrderTop
@@ -446,13 +446,14 @@ instance : InfSet (Ideal P) :=
 variable {S : Set (Ideal P)}
 
 @[simp]
-theorem coe_Inf : (↑(infₛ S) : Set P) = ⋂ s ∈ S, ↑s :=
+theorem coe_infₛ : (↑(infₛ S) : Set P) = ⋂ s ∈ S, ↑s :=
   LowerSet.coe_infi₂ _
-#align order.ideal.coe_Inf Order.Ideal.coe_Inf
+#align order.ideal.coe_Inf Order.Ideal.coe_infₛ
 
 @[simp]
-theorem mem_Inf : x ∈ infₛ S ↔ ∀ s ∈ S, x ∈ s := by simp_rw [← SetLike.mem_coe, coe_Inf, mem_Inter₂]
-#align order.ideal.mem_Inf Order.Ideal.mem_Inf
+theorem mem_infₛ : x ∈ infₛ S ↔ ∀ s ∈ S, x ∈ s := by
+  simp_rw [← SetLike.mem_coe, coe_Inf, mem_Inter₂]
+#align order.ideal.mem_Inf Order.Ideal.mem_infₛ
 
 instance : CompleteLattice (Ideal P) :=
   { Ideal.lattice,
@@ -594,14 +595,14 @@ def idealOfCofinals : Ideal P
       le_trans hm <| sequenceOfCofinals.monotone p 𝒟 (le_max_right _ _)⟩
 #align order.ideal_of_cofinals Order.idealOfCofinals
 
-theorem mem_ideal_of_cofinals : p ∈ idealOfCofinals p 𝒟 :=
+theorem mem_idealOfCofinals : p ∈ idealOfCofinals p 𝒟 :=
   ⟨0, le_rfl⟩
-#align order.mem_ideal_of_cofinals Order.mem_ideal_of_cofinals
+#align order.mem_ideal_of_cofinals Order.mem_idealOfCofinals
 
 /-- `ideal_of_cofinals p 𝒟` is `𝒟`-generic. -/
-theorem cofinal_meets_ideal_of_cofinals (i : ι) : ∃ x : P, x ∈ 𝒟 i ∧ x ∈ idealOfCofinals p 𝒟 :=
+theorem cofinal_meets_idealOfCofinals (i : ι) : ∃ x : P, x ∈ 𝒟 i ∧ x ∈ idealOfCofinals p 𝒟 :=
   ⟨_, sequenceOfCofinals.encode_mem p 𝒟 i, _, le_rfl⟩
-#align order.cofinal_meets_ideal_of_cofinals Order.cofinal_meets_ideal_of_cofinals
+#align order.cofinal_meets_ideal_of_cofinals Order.cofinal_meets_idealOfCofinals
 
 end IdealOfCofinals
 

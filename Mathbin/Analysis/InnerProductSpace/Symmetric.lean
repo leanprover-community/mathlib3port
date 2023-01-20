@@ -67,10 +67,10 @@ variable ()
 
 /-- An operator `T` on an inner product space is symmetric if and only if it is
 `linear_map.is_self_adjoint` with respect to the sesquilinear form given by the inner product. -/
-theorem is_symmetric_iff_sesq_form (T : E →ₗ[𝕜] E) :
+theorem isSymmetric_iff_sesq_form (T : E →ₗ[𝕜] E) :
     T.IsSymmetric ↔ @LinearMap.IsSelfAdjoint 𝕜 E _ _ _ (starRingEnd 𝕜) sesqFormOfInner T :=
   ⟨fun h x y => (h y x).symm, fun h x y => (h y x).symm⟩
-#align linear_map.is_symmetric_iff_sesq_form LinearMap.is_symmetric_iff_sesq_form
+#align linear_map.is_symmetric_iff_sesq_form LinearMap.isSymmetric_iff_sesq_form
 
 end Real
 
@@ -120,14 +120,14 @@ theorem IsSymmetric.continuous [CompleteSpace E] {T : E →ₗ[𝕜] E} (hT : Is
 
 /-- For a symmetric operator `T`, the function `λ x, ⟪T x, x⟫` is real-valued. -/
 @[simp]
-theorem IsSymmetric.coe_re_apply_inner_self_apply {T : E →L[𝕜] E} (hT : IsSymmetric (T : E →ₗ[𝕜] E))
+theorem IsSymmetric.coe_reApplyInnerSelf_apply {T : E →L[𝕜] E} (hT : IsSymmetric (T : E →ₗ[𝕜] E))
     (x : E) : (T.reApplyInnerSelf x : 𝕜) = ⟪T x, x⟫ :=
   by
   rsuffices ⟨r, hr⟩ : ∃ r : ℝ, ⟪T x, x⟫ = r
   · simp [hr, T.re_apply_inner_self_apply]
   rw [← eq_conj_iff_real]
   exact hT.conj_inner_sym x x
-#align linear_map.is_symmetric.coe_re_apply_inner_self_apply LinearMap.IsSymmetric.coe_re_apply_inner_self_apply
+#align linear_map.is_symmetric.coe_re_apply_inner_self_apply LinearMap.IsSymmetric.coe_reApplyInnerSelf_apply
 
 /-- If a symmetric operator preserves a submodule, its restriction to that submodule is
 symmetric. -/
@@ -139,7 +139,7 @@ theorem IsSymmetric.restrictScalars {T : E →ₗ[𝕜] E} (hT : T.IsSymmetric) 
     @LinearMap.IsSymmetric ℝ E _ (InnerProductSpace.isROrCToReal 𝕜 E)
       (@LinearMap.restrictScalars ℝ 𝕜 _ _ _ _ _ _ (InnerProductSpace.isROrCToReal 𝕜 E).toModule
         (InnerProductSpace.isROrCToReal 𝕜 E).toModule _ _ _ T) :=
-  fun x y => by simp [hT x y, real_inner_eq_re_inner, LinearMap.coe_restrict_scalars_eq_coe]
+  fun x y => by simp [hT x y, real_inner_eq_re_inner, LinearMap.coe_restrictScalars_eq_coe]
 #align linear_map.is_symmetric.restrict_scalars LinearMap.IsSymmetric.restrictScalars
 
 section Complex
@@ -148,7 +148,7 @@ variable {V : Type _} [InnerProductSpace ℂ V]
 
 /-- A linear operator on a complex inner product space is symmetric precisely when
 `⟪T v, v⟫_ℂ` is real for all v.-/
-theorem is_symmetric_iff_inner_map_self_real (T : V →ₗ[ℂ] V) :
+theorem isSymmetric_iff_inner_map_self_real (T : V →ₗ[ℂ] V) :
     IsSymmetric T ↔ ∀ v : V, conj ⟪T v, v⟫_ℂ = ⟪T v, v⟫_ℂ :=
   by
   constructor
@@ -160,11 +160,11 @@ theorem is_symmetric_iff_inner_map_self_real (T : V →ₗ[ℂ] V) :
     simp only [starRingEnd_apply, star_div', star_sub, star_add, star_mul]
     simp only [← starRingEnd_apply]
     rw [h (x + y), h (x - y), h (x + Complex.i • y), h (x - Complex.i • y)]
-    simp only [Complex.conj_I]
+    simp only [Complex.conj_i]
     rw [inner_map_polarization']
     norm_num
     ring
-#align linear_map.is_symmetric_iff_inner_map_self_real LinearMap.is_symmetric_iff_inner_map_self_real
+#align linear_map.is_symmetric_iff_inner_map_self_real LinearMap.isSymmetric_iff_inner_map_self_real
 
 end Complex
 

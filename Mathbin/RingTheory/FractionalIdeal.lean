@@ -238,7 +238,7 @@ variable (S)
 @[simp]
 theorem mem_coe_ideal {x : P} {I : Ideal R} :
     x ∈ (I : FractionalIdeal S P) ↔ ∃ x', x' ∈ I ∧ algebraMap R P x' = x :=
-  mem_coe_submodule _ _
+  mem_coeSubmodule _ _
 #align fractional_ideal.mem_coe_ideal FractionalIdeal.mem_coe_ideal
 
 theorem mem_coe_ideal_of_mem {x : R} {I : Ideal R} (hx : x ∈ I) :
@@ -248,13 +248,13 @@ theorem mem_coe_ideal_of_mem {x : R} {I : Ideal R} (hx : x ∈ I) :
 
 theorem coe_ideal_le_coe_ideal' [IsLocalization S P] (h : S ≤ nonZeroDivisors R) {I J : Ideal R} :
     (I : FractionalIdeal S P) ≤ J ↔ I ≤ J :=
-  coe_submodule_le_coe_submodule h
+  coeSubmodule_le_coeSubmodule h
 #align fractional_ideal.coe_ideal_le_coe_ideal' FractionalIdeal.coe_ideal_le_coe_ideal'
 
 @[simp]
 theorem coe_ideal_le_coe_ideal (K : Type _) [CommRing K] [Algebra R K] [IsFractionRing R K]
     {I J : Ideal R} : (I : FractionalIdeal R⁰ K) ≤ J ↔ I ≤ J :=
-  IsFractionRing.coe_submodule_le_coe_submodule
+  IsFractionRing.coeSubmodule_le_coeSubmodule
 #align fractional_ideal.coe_ideal_le_coe_ideal FractionalIdeal.coe_ideal_le_coe_ideal
 
 instance : Zero (FractionalIdeal S P) :=
@@ -354,9 +354,9 @@ variable {S}
 
 However, this is not definitionally equal to `1 : submodule R P`,
 which is proved in the actual `simp` lemma `coe_one`. -/
-theorem coe_one_eq_coe_submodule_top : ↑(1 : FractionalIdeal S P) = coeSubmodule P (⊤ : Ideal R) :=
+theorem coe_one_eq_coeSubmodule_top : ↑(1 : FractionalIdeal S P) = coeSubmodule P (⊤ : Ideal R) :=
   rfl
-#align fractional_ideal.coe_one_eq_coe_submodule_top FractionalIdeal.coe_one_eq_coe_submodule_top
+#align fractional_ideal.coe_one_eq_coe_submodule_top FractionalIdeal.coe_one_eq_coeSubmodule_top
 
 @[simp, norm_cast]
 theorem coe_one : (↑(1 : FractionalIdeal S P) : Submodule R P) = 1 := by
@@ -470,7 +470,7 @@ theorem coe_add (I J : FractionalIdeal S P) : (↑(I + J) : Submodule R P) = I +
 
 @[simp, norm_cast]
 theorem coe_ideal_sup (I J : Ideal R) : ↑(I ⊔ J) = (I + J : FractionalIdeal S P) :=
-  coe_to_submodule_injective <| coe_submodule_sup _ _ _
+  coe_to_submodule_injective <| coeSubmodule_sup _ _ _
 #align fractional_ideal.coe_ideal_sup FractionalIdeal.coe_ideal_sup
 
 theorem IsFractional.nsmul {I : Submodule R P} :
@@ -799,28 +799,28 @@ def mapEquiv (g : P ≃ₐ[R] P') : FractionalIdeal S P ≃+* FractionalIdeal S 
 #align fractional_ideal.map_equiv FractionalIdeal.mapEquiv
 
 @[simp]
-theorem coe_fun_map_equiv (g : P ≃ₐ[R] P') :
+theorem coe_fun_mapEquiv (g : P ≃ₐ[R] P') :
     (mapEquiv g : FractionalIdeal S P → FractionalIdeal S P') = map g :=
   rfl
-#align fractional_ideal.coe_fun_map_equiv FractionalIdeal.coe_fun_map_equiv
+#align fractional_ideal.coe_fun_map_equiv FractionalIdeal.coe_fun_mapEquiv
 
 @[simp]
-theorem map_equiv_apply (g : P ≃ₐ[R] P') (I : FractionalIdeal S P) : mapEquiv g I = map (↑g) I :=
+theorem mapEquiv_apply (g : P ≃ₐ[R] P') (I : FractionalIdeal S P) : mapEquiv g I = map (↑g) I :=
   rfl
-#align fractional_ideal.map_equiv_apply FractionalIdeal.map_equiv_apply
+#align fractional_ideal.map_equiv_apply FractionalIdeal.mapEquiv_apply
 
 @[simp]
-theorem map_equiv_symm (g : P ≃ₐ[R] P') :
+theorem mapEquiv_symm (g : P ≃ₐ[R] P') :
     ((mapEquiv g).symm : FractionalIdeal S P' ≃+* _) = mapEquiv g.symm :=
   rfl
-#align fractional_ideal.map_equiv_symm FractionalIdeal.map_equiv_symm
+#align fractional_ideal.map_equiv_symm FractionalIdeal.mapEquiv_symm
 
 @[simp]
-theorem map_equiv_refl : mapEquiv AlgEquiv.refl = RingEquiv.refl (FractionalIdeal S P) :=
+theorem mapEquiv_refl : mapEquiv AlgEquiv.refl = RingEquiv.refl (FractionalIdeal S P) :=
   RingEquiv.ext fun x => by simp
-#align fractional_ideal.map_equiv_refl FractionalIdeal.map_equiv_refl
+#align fractional_ideal.map_equiv_refl FractionalIdeal.mapEquiv_refl
 
-theorem is_fractional_span_iff {s : Set P} :
+theorem isFractional_span_iff {s : Set P} :
     IsFractional S (span R s) ↔ ∃ a ∈ S, ∀ b : P, b ∈ s → IsInteger R (a • b) :=
   ⟨fun ⟨a, a_mem, h⟩ => ⟨a, a_mem, fun b hb => h b (subset_span hb)⟩, fun ⟨a, a_mem, h⟩ =>
     ⟨a, a_mem, fun b hb =>
@@ -834,7 +834,7 @@ theorem is_fractional_span_iff {s : Set P} :
         fun s x hx => by
         rw [smul_comm]
         exact is_integer_smul hx⟩⟩
-#align fractional_ideal.is_fractional_span_iff FractionalIdeal.is_fractional_span_iff
+#align fractional_ideal.is_fractional_span_iff FractionalIdeal.isFractional_span_iff
 
 include loc
 
@@ -857,7 +857,7 @@ variable (S)
 
 theorem coe_ideal_fg (inj : Function.Injective (algebraMap R P)) (I : Ideal R) :
     Fg ((I : FractionalIdeal S P) : Submodule R P) ↔ I.Fg :=
-  coe_submodule_fg _ inj _
+  coeSubmodule_fg _ inj _
 #align fractional_ideal.coe_ideal_fg FractionalIdeal.coe_ideal_fg
 
 variable {S}
@@ -883,12 +883,12 @@ theorem fgOfIsUnit (I : FractionalIdeal S P) (h : IsUnit I) : Fg (I : Submodule 
   exact fg_unit I
 #align fractional_ideal.fg_of_is_unit FractionalIdeal.fgOfIsUnit
 
-theorem Ideal.fg_of_is_unit (inj : Function.Injective (algebraMap R P)) (I : Ideal R)
+theorem Ideal.fg_of_isUnit (inj : Function.Injective (algebraMap R P)) (I : Ideal R)
     (h : IsUnit (I : FractionalIdeal S P)) : I.Fg :=
   by
   rw [← coe_ideal_fg S inj I]
   exact fg_of_is_unit I h
-#align ideal.fg_of_is_unit Ideal.fg_of_is_unit
+#align ideal.fg_of_is_unit Ideal.fg_of_isUnit
 
 variable (S P P')
 
@@ -901,11 +901,11 @@ noncomputable irreducible_def canonicalEquiv : FractionalIdeal S P ≃+* Fractio
     {
       ringEquivOfRingEquiv P P' (RingEquiv.refl R)
         (show S.map _ = S by rw [RingEquiv.toMonoidHom_refl, Submonoid.map_id]) with
-      commutes' := fun r => ring_equiv_of_ring_equiv_eq _ _ }
+      commutes' := fun r => ringEquivOfRingEquiv_eq _ _ }
 #align fractional_ideal.canonical_equiv FractionalIdeal.canonicalEquiv
 
 @[simp]
-theorem mem_canonical_equiv_apply {I : FractionalIdeal S P} {x : P'} :
+theorem mem_canonicalEquiv_apply {I : FractionalIdeal S P} {x : P'} :
     x ∈ canonicalEquiv S P P' I ↔
       ∃ y ∈ I,
         IsLocalization.map P' (RingHom.id R) (fun y (hy : y ∈ S) => show RingHom.id R y ∈ S from hy)
@@ -914,24 +914,24 @@ theorem mem_canonical_equiv_apply {I : FractionalIdeal S P} {x : P'} :
   by
   rw [canonical_equiv, map_equiv_apply, mem_map]
   exact ⟨fun ⟨y, mem, Eq⟩ => ⟨y, mem, Eq⟩, fun ⟨y, mem, Eq⟩ => ⟨y, mem, Eq⟩⟩
-#align fractional_ideal.mem_canonical_equiv_apply FractionalIdeal.mem_canonical_equiv_apply
+#align fractional_ideal.mem_canonical_equiv_apply FractionalIdeal.mem_canonicalEquiv_apply
 
 @[simp]
-theorem canonical_equiv_symm : (canonicalEquiv S P P').symm = canonicalEquiv S P' P :=
+theorem canonicalEquiv_symm : (canonicalEquiv S P P').symm = canonicalEquiv S P' P :=
   RingEquiv.ext fun I =>
     SetLike.ext_iff.mpr fun x =>
       by
       rw [mem_canonical_equiv_apply, canonical_equiv, map_equiv_symm, map_equiv, [anonymous],
         mem_map]
       exact ⟨fun ⟨y, mem, Eq⟩ => ⟨y, mem, Eq⟩, fun ⟨y, mem, Eq⟩ => ⟨y, mem, Eq⟩⟩
-#align fractional_ideal.canonical_equiv_symm FractionalIdeal.canonical_equiv_symm
+#align fractional_ideal.canonical_equiv_symm FractionalIdeal.canonicalEquiv_symm
 
-theorem canonical_equiv_flip (I) : canonicalEquiv S P P' (canonicalEquiv S P' P I) = I := by
+theorem canonicalEquiv_flip (I) : canonicalEquiv S P P' (canonicalEquiv S P' P I) = I := by
   rw [← canonical_equiv_symm, RingEquiv.symm_apply_apply]
-#align fractional_ideal.canonical_equiv_flip FractionalIdeal.canonical_equiv_flip
+#align fractional_ideal.canonical_equiv_flip FractionalIdeal.canonicalEquiv_flip
 
 @[simp]
-theorem canonical_equiv_canonical_equiv (P'' : Type _) [CommRing P''] [Algebra R P'']
+theorem canonicalEquiv_canonicalEquiv (P'' : Type _) [CommRing P''] [Algebra R P'']
     [IsLocalization S P''] (I : FractionalIdeal S P) :
     canonicalEquiv S P' P'' (canonicalEquiv S P P' I) = canonicalEquiv S P P'' I :=
   by
@@ -939,30 +939,30 @@ theorem canonical_equiv_canonical_equiv (P'' : Type _) [CommRing P''] [Algebra R
   simp only [IsLocalization.map_map, RingHomInvPair.comp_eq₂, mem_canonical_equiv_apply,
     exists_prop, exists_exists_and_eq_and]
   rfl
-#align fractional_ideal.canonical_equiv_canonical_equiv FractionalIdeal.canonical_equiv_canonical_equiv
+#align fractional_ideal.canonical_equiv_canonical_equiv FractionalIdeal.canonicalEquiv_canonicalEquiv
 
-theorem canonical_equiv_trans_canonical_equiv (P'' : Type _) [CommRing P''] [Algebra R P'']
+theorem canonicalEquiv_trans_canonicalEquiv (P'' : Type _) [CommRing P''] [Algebra R P'']
     [IsLocalization S P''] :
     (canonicalEquiv S P P').trans (canonicalEquiv S P' P'') = canonicalEquiv S P P'' :=
-  RingEquiv.ext (canonical_equiv_canonical_equiv S P P' P'')
-#align fractional_ideal.canonical_equiv_trans_canonical_equiv FractionalIdeal.canonical_equiv_trans_canonical_equiv
+  RingEquiv.ext (canonicalEquiv_canonicalEquiv S P P' P'')
+#align fractional_ideal.canonical_equiv_trans_canonical_equiv FractionalIdeal.canonicalEquiv_trans_canonicalEquiv
 
 @[simp]
-theorem canonical_equiv_coe_ideal (I : Ideal R) : canonicalEquiv S P P' I = I :=
+theorem canonicalEquiv_coe_ideal (I : Ideal R) : canonicalEquiv S P P' I = I :=
   by
   ext
   simp [IsLocalization.map_eq]
-#align fractional_ideal.canonical_equiv_coe_ideal FractionalIdeal.canonical_equiv_coe_ideal
+#align fractional_ideal.canonical_equiv_coe_ideal FractionalIdeal.canonicalEquiv_coe_ideal
 
 omit loc'
 
 @[simp]
-theorem canonical_equiv_self : canonicalEquiv S P P = RingEquiv.refl _ :=
+theorem canonicalEquiv_self : canonicalEquiv S P P = RingEquiv.refl _ :=
   by
   rw [← canonical_equiv_trans_canonical_equiv S P P]
   convert (canonical_equiv S P P).symm_trans_self
   exact (canonical_equiv_symm S P P).symm
-#align fractional_ideal.canonical_equiv_self FractionalIdeal.canonical_equiv_self
+#align fractional_ideal.canonical_equiv_self FractionalIdeal.canonicalEquiv_self
 
 end Semiring
 
@@ -993,7 +993,7 @@ theorem exists_ne_zero_mem_is_integer [Nontrivial R] (hI : I ≠ 0) :
   obtain ⟨z, ⟨x, hx⟩⟩ := exists_integer_multiple R⁰ y
   refine' ⟨x, _, _⟩
   · rw [Ne.def, ← @IsFractionRing.to_map_eq_zero_iff R _ K, hx, Algebra.smul_def]
-    exact mul_ne_zero (IsFractionRing.to_map_ne_zero_of_mem_non_zero_divisors z.2) y_ne_zero
+    exact mul_ne_zero (IsFractionRing.to_map_ne_zero_of_mem_nonZeroDivisors z.2) y_ne_zero
   · rw [hx]
     exact smul_mem _ _ y_mem
 #align fractional_ideal.exists_ne_zero_mem_is_integer FractionalIdeal.exists_ne_zero_mem_is_integer
@@ -1066,7 +1066,7 @@ instance : Nontrivial (FractionalIdeal R₁⁰ K) :=
         by
         rw [← (algebraMap R₁ K).map_one]
         simpa only [h] using coe_mem_one R₁⁰ 1
-      one_ne_zero ((mem_zero_iff _).mp this)⟩⟩
+      one_neZero ((mem_zero_iff _).mp this)⟩⟩
 
 theorem ne_zero_of_mul_eq_one (I J : FractionalIdeal R₁⁰ K) (h : I * J = 1) : I ≠ 0 := fun hI =>
   zero_ne_one' (FractionalIdeal R₁⁰ K)
@@ -1250,10 +1250,10 @@ theorem eq_zero_or_one (I : FractionalIdeal K⁰ L) : I = 0 ∨ I = 1 :=
     exact Submodule.smul_mem I _ y_mem
 #align fractional_ideal.eq_zero_or_one FractionalIdeal.eq_zero_or_one
 
-theorem eq_zero_or_one_of_is_field (hF : IsField R₁) (I : FractionalIdeal R₁⁰ K) : I = 0 ∨ I = 1 :=
+theorem eq_zero_or_one_of_isField (hF : IsField R₁) (I : FractionalIdeal R₁⁰ K) : I = 0 ∨ I = 1 :=
   letI : Field R₁ := hF.to_field
   eq_zero_or_one I
-#align fractional_ideal.eq_zero_or_one_of_is_field FractionalIdeal.eq_zero_or_one_of_is_field
+#align fractional_ideal.eq_zero_or_one_of_is_field FractionalIdeal.eq_zero_or_one_of_isField
 
 end Field
 
@@ -1277,27 +1277,27 @@ def spanFinset {ι : Type _} (s : Finset ι) (f : ι → K) : FractionalIdeal R�
     · rintro _ ⟨i, hi, rfl⟩
       exact ha' i hi
     · rw [smul_zero]
-      exact IsLocalization.is_integer_zero
+      exact IsLocalization.isInteger_zero
     · intro x y hx hy
       rw [smul_add]
-      exact IsLocalization.is_integer_add hx hy
+      exact IsLocalization.isInteger_add hx hy
     · intro c x hx
       rw [smul_comm]
-      exact IsLocalization.is_integer_smul hx⟩
+      exact IsLocalization.isInteger_smul hx⟩
 #align fractional_ideal.span_finset FractionalIdeal.spanFinset
 
 variable {R₁}
 
 @[simp]
-theorem span_finset_eq_zero {ι : Type _} {s : Finset ι} {f : ι → K} :
+theorem spanFinset_eq_zero {ι : Type _} {s : Finset ι} {f : ι → K} :
     spanFinset R₁ s f = 0 ↔ ∀ j ∈ s, f j = 0 := by
   simp only [← coe_to_submodule_inj, span_finset_coe, coe_zero, Submodule.span_eq_bot,
     Set.mem_image, Finset.mem_coe, forall_exists_index, and_imp, forall_apply_eq_imp_iff₂]
-#align fractional_ideal.span_finset_eq_zero FractionalIdeal.span_finset_eq_zero
+#align fractional_ideal.span_finset_eq_zero FractionalIdeal.spanFinset_eq_zero
 
-theorem span_finset_ne_zero {ι : Type _} {s : Finset ι} {f : ι → K} :
+theorem spanFinset_ne_zero {ι : Type _} {s : Finset ι} {f : ι → K} :
     spanFinset R₁ s f ≠ 0 ↔ ∃ j ∈ s, f j ≠ 0 := by simp
-#align fractional_ideal.span_finset_ne_zero FractionalIdeal.span_finset_ne_zero
+#align fractional_ideal.span_finset_ne_zero FractionalIdeal.spanFinset_ne_zero
 
 open Submodule.IsPrincipal
 
@@ -1305,7 +1305,7 @@ include loc
 
 theorem isFractionalSpanSingleton (x : P) : IsFractional S (span R {x} : Submodule R P) :=
   let ⟨a, ha⟩ := exists_integer_multiple S x
-  is_fractional_span_iff.mpr ⟨a, a.2, fun x' hx' => (Set.mem_singleton_iff.mp hx').symm ▸ ha⟩
+  isFractional_span_iff.mpr ⟨a, a.2, fun x' hx' => (Set.mem_singleton_iff.mp hx').symm ▸ ha⟩
 #align fractional_ideal.is_fractional_span_singleton FractionalIdeal.isFractionalSpanSingleton
 
 variable (S)
@@ -1317,89 +1317,89 @@ irreducible_def spanSingleton (x : P) : FractionalIdeal S P :=
 
 -- local attribute [semireducible] span_singleton
 @[simp]
-theorem coe_span_singleton (x : P) : (spanSingleton S x : Submodule R P) = span R {x} :=
+theorem coe_spanSingleton (x : P) : (spanSingleton S x : Submodule R P) = span R {x} :=
   by
   rw [span_singleton]
   rfl
-#align fractional_ideal.coe_span_singleton FractionalIdeal.coe_span_singleton
+#align fractional_ideal.coe_span_singleton FractionalIdeal.coe_spanSingleton
 
 @[simp]
-theorem mem_span_singleton {x y : P} : x ∈ spanSingleton S y ↔ ∃ z : R, z • y = x :=
+theorem mem_spanSingleton {x y : P} : x ∈ spanSingleton S y ↔ ∃ z : R, z • y = x :=
   by
   rw [span_singleton]
   exact Submodule.mem_span_singleton
-#align fractional_ideal.mem_span_singleton FractionalIdeal.mem_span_singleton
+#align fractional_ideal.mem_span_singleton FractionalIdeal.mem_spanSingleton
 
-theorem mem_span_singleton_self (x : P) : x ∈ spanSingleton S x :=
-  (mem_span_singleton S).mpr ⟨1, one_smul _ _⟩
-#align fractional_ideal.mem_span_singleton_self FractionalIdeal.mem_span_singleton_self
+theorem mem_spanSingleton_self (x : P) : x ∈ spanSingleton S x :=
+  (mem_spanSingleton S).mpr ⟨1, one_smul _ _⟩
+#align fractional_ideal.mem_span_singleton_self FractionalIdeal.mem_spanSingleton_self
 
 variable {S}
 
-theorem span_singleton_eq_span_singleton [NoZeroSMulDivisors R P] {x y : P} :
+theorem spanSingleton_eq_spanSingleton [NoZeroSMulDivisors R P] {x y : P} :
     spanSingleton S x = spanSingleton S y ↔ ∃ z : Rˣ, z • x = y :=
   by
   rw [← Submodule.span_singleton_eq_span_singleton, span_singleton, span_singleton]
   exact Subtype.mk_eq_mk
-#align fractional_ideal.span_singleton_eq_span_singleton FractionalIdeal.span_singleton_eq_span_singleton
+#align fractional_ideal.span_singleton_eq_span_singleton FractionalIdeal.spanSingleton_eq_spanSingleton
 
-theorem eq_span_singleton_of_principal (I : FractionalIdeal S P) [IsPrincipal (I : Submodule R P)] :
+theorem eq_spanSingleton_of_principal (I : FractionalIdeal S P) [IsPrincipal (I : Submodule R P)] :
     I = spanSingleton S (generator (I : Submodule R P)) :=
   by
   rw [span_singleton]
   exact coe_to_submodule_injective (span_singleton_generator ↑I).symm
-#align fractional_ideal.eq_span_singleton_of_principal FractionalIdeal.eq_span_singleton_of_principal
+#align fractional_ideal.eq_span_singleton_of_principal FractionalIdeal.eq_spanSingleton_of_principal
 
-theorem is_principal_iff (I : FractionalIdeal S P) :
+theorem isPrincipal_iff (I : FractionalIdeal S P) :
     IsPrincipal (I : Submodule R P) ↔ ∃ x, I = spanSingleton S x :=
-  ⟨fun h => ⟨@generator _ _ _ _ _ (↑I) h, @eq_span_singleton_of_principal _ _ _ _ _ _ _ I h⟩,
-    fun ⟨x, hx⟩ => { principal := ⟨x, trans (congr_arg _ hx) (coe_span_singleton _ x)⟩ }⟩
-#align fractional_ideal.is_principal_iff FractionalIdeal.is_principal_iff
+  ⟨fun h => ⟨@generator _ _ _ _ _ (↑I) h, @eq_spanSingleton_of_principal _ _ _ _ _ _ _ I h⟩,
+    fun ⟨x, hx⟩ => { principal := ⟨x, trans (congr_arg _ hx) (coe_spanSingleton _ x)⟩ }⟩
+#align fractional_ideal.is_principal_iff FractionalIdeal.isPrincipal_iff
 
 @[simp]
-theorem span_singleton_zero : spanSingleton S (0 : P) = 0 :=
+theorem spanSingleton_zero : spanSingleton S (0 : P) = 0 :=
   by
   ext
   simp [Submodule.mem_span_singleton, eq_comm]
-#align fractional_ideal.span_singleton_zero FractionalIdeal.span_singleton_zero
+#align fractional_ideal.span_singleton_zero FractionalIdeal.spanSingleton_zero
 
-theorem span_singleton_eq_zero_iff {y : P} : spanSingleton S y = 0 ↔ y = 0 :=
+theorem spanSingleton_eq_zero_iff {y : P} : spanSingleton S y = 0 ↔ y = 0 :=
   ⟨fun h =>
     span_eq_bot.mp (by simpa using congr_arg Subtype.val h : span R {y} = ⊥) y (mem_singleton y),
     fun h => by simp [h]⟩
-#align fractional_ideal.span_singleton_eq_zero_iff FractionalIdeal.span_singleton_eq_zero_iff
+#align fractional_ideal.span_singleton_eq_zero_iff FractionalIdeal.spanSingleton_eq_zero_iff
 
-theorem span_singleton_ne_zero_iff {y : P} : spanSingleton S y ≠ 0 ↔ y ≠ 0 :=
-  not_congr span_singleton_eq_zero_iff
-#align fractional_ideal.span_singleton_ne_zero_iff FractionalIdeal.span_singleton_ne_zero_iff
+theorem spanSingleton_ne_zero_iff {y : P} : spanSingleton S y ≠ 0 ↔ y ≠ 0 :=
+  not_congr spanSingleton_eq_zero_iff
+#align fractional_ideal.span_singleton_ne_zero_iff FractionalIdeal.spanSingleton_ne_zero_iff
 
 @[simp]
-theorem span_singleton_one : spanSingleton S (1 : P) = 1 :=
+theorem spanSingleton_one : spanSingleton S (1 : P) = 1 :=
   by
   ext
   refine' (mem_span_singleton S).trans ((exists_congr _).trans (mem_one_iff S).symm)
   intro x'
   rw [Algebra.smul_def, mul_one]
-#align fractional_ideal.span_singleton_one FractionalIdeal.span_singleton_one
+#align fractional_ideal.span_singleton_one FractionalIdeal.spanSingleton_one
 
 @[simp]
-theorem span_singleton_mul_span_singleton (x y : P) :
+theorem spanSingleton_mul_spanSingleton (x y : P) :
     spanSingleton S x * spanSingleton S y = spanSingleton S (x * y) :=
   by
   apply coe_to_submodule_injective
   simp only [coe_mul, coe_span_singleton, span_mul_span, singleton_mul_singleton]
-#align fractional_ideal.span_singleton_mul_span_singleton FractionalIdeal.span_singleton_mul_span_singleton
+#align fractional_ideal.span_singleton_mul_span_singleton FractionalIdeal.spanSingleton_mul_spanSingleton
 
 @[simp]
-theorem span_singleton_pow (x : P) (n : ℕ) : spanSingleton S x ^ n = spanSingleton S (x ^ n) :=
+theorem spanSingleton_pow (x : P) (n : ℕ) : spanSingleton S x ^ n = spanSingleton S (x ^ n) :=
   by
   induction' n with n hn
   · rw [pow_zero, pow_zero, span_singleton_one]
   · rw [pow_succ, hn, span_singleton_mul_span_singleton, pow_succ]
-#align fractional_ideal.span_singleton_pow FractionalIdeal.span_singleton_pow
+#align fractional_ideal.span_singleton_pow FractionalIdeal.spanSingleton_pow
 
 @[simp]
-theorem coe_ideal_span_singleton (x : R) :
+theorem coe_ideal_spanSingleton (x : R) :
     (↑(Ideal.span {x} : Ideal R) : FractionalIdeal S P) = spanSingleton S (algebraMap R P x) :=
   by
   ext y
@@ -1412,10 +1412,10 @@ theorem coe_ideal_span_singleton (x : R) :
   · rintro ⟨y', rfl⟩
     refine' ⟨y' * x, submodule.mem_span_singleton.mpr ⟨y', rfl⟩, _⟩
     rw [RingHom.map_mul, Algebra.smul_def]
-#align fractional_ideal.coe_ideal_span_singleton FractionalIdeal.coe_ideal_span_singleton
+#align fractional_ideal.coe_ideal_span_singleton FractionalIdeal.coe_ideal_spanSingleton
 
 @[simp]
-theorem canonical_equiv_span_singleton {P'} [CommRing P'] [Algebra R P'] [IsLocalization S P']
+theorem canonicalEquiv_spanSingleton {P'} [CommRing P'] [Algebra R P'] [IsLocalization S P']
     (x : P) :
     canonicalEquiv S P P' (spanSingleton S x) =
       spanSingleton S
@@ -1436,7 +1436,7 @@ theorem canonical_equiv_span_singleton {P'} [CommRing P'] [Algebra R P'] [IsLoca
     use z • x
     use (mem_span_singleton _).mpr ⟨z, rfl⟩
     simp [IsLocalization.map_smul]
-#align fractional_ideal.canonical_equiv_span_singleton FractionalIdeal.canonical_equiv_span_singleton
+#align fractional_ideal.canonical_equiv_span_singleton FractionalIdeal.canonicalEquiv_spanSingleton
 
 theorem mem_singleton_mul {x y : P} {I : FractionalIdeal S P} :
     y ∈ spanSingleton S x * I ↔ ∃ y' ∈ I, y = x * y' :=
@@ -1480,23 +1480,23 @@ theorem mk'_mul_coe_ideal_eq_coe_ideal {I J : Ideal R₁} {x y : R₁} (hy : y �
 
 variable {K}
 
-theorem span_singleton_mul_coe_ideal_eq_coe_ideal {I J : Ideal R₁} {z : K} :
+theorem spanSingleton_mul_coe_ideal_eq_coe_ideal {I J : Ideal R₁} {z : K} :
     spanSingleton R₁⁰ z * (I : FractionalIdeal R₁⁰ K) = J ↔
       Ideal.span {((IsLocalization.sec R₁⁰ z).1 : R₁)} * I =
         Ideal.span {(IsLocalization.sec R₁⁰ z).2} * J :=
   by-- `erw` to deal with the distinction between `y` and `⟨y.1, y.2⟩`
   erw [← mk'_mul_coe_ideal_eq_coe_ideal K (IsLocalization.sec R₁⁰ z).2.Prop,
     IsLocalization.mk'_sec K z]
-#align fractional_ideal.span_singleton_mul_coe_ideal_eq_coe_ideal FractionalIdeal.span_singleton_mul_coe_ideal_eq_coe_ideal
+#align fractional_ideal.span_singleton_mul_coe_ideal_eq_coe_ideal FractionalIdeal.spanSingleton_mul_coe_ideal_eq_coe_ideal
 
 variable [IsDomain R₁]
 
-theorem one_div_span_singleton (x : K) : 1 / spanSingleton R₁⁰ x = spanSingleton R₁⁰ x⁻¹ :=
+theorem one_div_spanSingleton (x : K) : 1 / spanSingleton R₁⁰ x = spanSingleton R₁⁰ x⁻¹ :=
   if h : x = 0 then by simp [h] else (eq_one_div_of_mul_eq_one_right _ _ (by simp [h])).symm
-#align fractional_ideal.one_div_span_singleton FractionalIdeal.one_div_span_singleton
+#align fractional_ideal.one_div_span_singleton FractionalIdeal.one_div_spanSingleton
 
 @[simp]
-theorem div_span_singleton (J : FractionalIdeal R₁⁰ K) (d : K) :
+theorem div_spanSingleton (J : FractionalIdeal R₁⁰ K) (d : K) :
     J / spanSingleton R₁⁰ d = spanSingleton R₁⁰ d⁻¹ * J :=
   by
   rw [← one_div_span_singleton]
@@ -1513,9 +1513,9 @@ theorem div_span_singleton (J : FractionalIdeal R₁⁰ K) (d : K) :
   · rw [le_div_iff_mul_le h_spand, mul_assoc, mul_left_comm, one_div_span_singleton,
       span_singleton_mul_span_singleton, inv_mul_cancel hd, span_singleton_one, mul_one]
     exact le_refl J
-#align fractional_ideal.div_span_singleton FractionalIdeal.div_span_singleton
+#align fractional_ideal.div_span_singleton FractionalIdeal.div_spanSingleton
 
-theorem exists_eq_span_singleton_mul (I : FractionalIdeal R₁⁰ K) :
+theorem exists_eq_spanSingleton_mul (I : FractionalIdeal R₁⁰ K) :
     ∃ (a : R₁)(aI : Ideal R₁), a ≠ 0 ∧ I = spanSingleton R₁⁰ (algebraMap R₁ K a)⁻¹ * aI :=
   by
   obtain ⟨a_inv, nonzero, ha⟩ := I.is_fractional
@@ -1535,9 +1535,9 @@ theorem exists_eq_span_singleton_mul (I : FractionalIdeal R₁⁰ K) :
   · rintro ⟨y, hy, rfl⟩
     obtain ⟨x', hx', rfl⟩ := (mem_coe_ideal _).mp hy
     obtain ⟨y', hy', hx'⟩ := mem_singleton_mul.mp hx'
-    rw [Algebra.linear_map_apply] at hx'
+    rw [Algebra.linearMap_apply] at hx'
     rwa [hx', ← mul_assoc, inv_mul_cancel map_a_nonzero, one_mul]
-#align fractional_ideal.exists_eq_span_singleton_mul FractionalIdeal.exists_eq_span_singleton_mul
+#align fractional_ideal.exists_eq_span_singleton_mul FractionalIdeal.exists_eq_spanSingleton_mul
 
 instance isPrincipal {R} [CommRing R] [IsDomain R] [IsPrincipalIdealRing R] [Algebra R K]
     [IsFractionRing R K] (I : FractionalIdeal R⁰ K) : (I : Submodule R K).IsPrincipal :=
@@ -1555,13 +1555,13 @@ instance isPrincipal {R} [CommRing R] [IsDomain R] [IsPrincipalIdealRing R] [Alg
 
 include loc
 
-theorem le_span_singleton_mul_iff {x : P} {I J : FractionalIdeal S P} :
+theorem le_spanSingleton_mul_iff {x : P} {I J : FractionalIdeal S P} :
     I ≤ spanSingleton S x * J ↔ ∀ zI ∈ I, ∃ zJ ∈ J, x * zJ = zI :=
   show (∀ {zI} (hzI : zI ∈ I), zI ∈ spanSingleton _ x * J) ↔ ∀ zI ∈ I, ∃ zJ ∈ J, x * zJ = zI by
     simp only [mem_singleton_mul, eq_comm]
-#align fractional_ideal.le_span_singleton_mul_iff FractionalIdeal.le_span_singleton_mul_iff
+#align fractional_ideal.le_span_singleton_mul_iff FractionalIdeal.le_spanSingleton_mul_iff
 
-theorem span_singleton_mul_le_iff {x : P} {I J : FractionalIdeal S P} :
+theorem spanSingleton_mul_le_iff {x : P} {I J : FractionalIdeal S P} :
     spanSingleton _ x * I ≤ J ↔ ∀ z ∈ I, x * z ∈ J :=
   by
   simp only [mul_le, mem_singleton_mul, mem_span_singleton]
@@ -1571,12 +1571,12 @@ theorem span_singleton_mul_le_iff {x : P} {I J : FractionalIdeal S P} :
   · rintro h _ ⟨z, rfl⟩ zI hzI
     rw [Algebra.smul_mul_assoc]
     exact Submodule.smul_mem J.1 _ (h zI hzI)
-#align fractional_ideal.span_singleton_mul_le_iff FractionalIdeal.span_singleton_mul_le_iff
+#align fractional_ideal.span_singleton_mul_le_iff FractionalIdeal.spanSingleton_mul_le_iff
 
-theorem eq_span_singleton_mul {x : P} {I J : FractionalIdeal S P} :
+theorem eq_spanSingleton_mul {x : P} {I J : FractionalIdeal S P} :
     I = spanSingleton _ x * J ↔ (∀ zI ∈ I, ∃ zJ ∈ J, x * zJ = zI) ∧ ∀ z ∈ J, x * z ∈ I := by
   simp only [le_antisymm_iff, le_span_singleton_mul_iff, span_singleton_mul_le_iff]
-#align fractional_ideal.eq_span_singleton_mul FractionalIdeal.eq_span_singleton_mul
+#align fractional_ideal.eq_span_singleton_mul FractionalIdeal.eq_spanSingleton_mul
 
 end PrincipalIdealRing
 
@@ -1587,17 +1587,17 @@ variable {K : Type _} [Field K] [Algebra R₁ K] [frac : IsFractionRing R₁ K]
 attribute [local instance] Classical.propDecidable
 
 theorem isNoetherianZero : IsNoetherian R₁ (0 : FractionalIdeal R₁⁰ K) :=
-  is_noetherian_submodule.mpr fun I (hI : I ≤ (0 : FractionalIdeal R₁⁰ K)) =>
+  isNoetherian_submodule.mpr fun I (hI : I ≤ (0 : FractionalIdeal R₁⁰ K)) =>
     by
     rw [coe_zero] at hI
     rw [le_bot_iff.mp hI]
     exact fg_bot
 #align fractional_ideal.is_noetherian_zero FractionalIdeal.isNoetherianZero
 
-theorem is_noetherian_iff {I : FractionalIdeal R₁⁰ K} :
+theorem isNoetherian_iff {I : FractionalIdeal R₁⁰ K} :
     IsNoetherian R₁ I ↔ ∀ J ≤ I, (J : Submodule R₁ K).Fg :=
-  is_noetherian_submodule.trans ⟨fun h J hJ => h _ hJ, fun h J hJ => h ⟨J, isFractionalOfLe hJ⟩ hJ⟩
-#align fractional_ideal.is_noetherian_iff FractionalIdeal.is_noetherian_iff
+  isNoetherian_submodule.trans ⟨fun h J hJ => h _ hJ, fun h J hJ => h ⟨J, isFractionalOfLe hJ⟩ hJ⟩
+#align fractional_ideal.is_noetherian_iff FractionalIdeal.isNoetherian_iff
 
 theorem isNoetherianCoeIdeal [IsNoetherianRing R₁] (I : Ideal R₁) :
     IsNoetherian R₁ (I : FractionalIdeal R₁⁰ K) :=
@@ -1660,9 +1660,9 @@ def adjoinIntegral : FractionalIdeal S P :=
   ⟨_, isFractionalAdjoinIntegral S x hx⟩
 #align fractional_ideal.adjoin_integral FractionalIdeal.adjoinIntegral
 
-theorem mem_adjoin_integral_self : x ∈ adjoinIntegral S x hx :=
+theorem mem_adjoinIntegral_self : x ∈ adjoinIntegral S x hx :=
   Algebra.subset_adjoin (Set.mem_singleton x)
-#align fractional_ideal.mem_adjoin_integral_self FractionalIdeal.mem_adjoin_integral_self
+#align fractional_ideal.mem_adjoin_integral_self FractionalIdeal.mem_adjoinIntegral_self
 
 end Adjoin
 

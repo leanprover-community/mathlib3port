@@ -175,16 +175,16 @@ def LieAlgebra.IsEngelian : Prop :=
 
 variable {R L}
 
-theorem LieAlgebra.is_engelian_of_subsingleton [Subsingleton L] : LieAlgebra.IsEngelian R L :=
+theorem LieAlgebra.isEngelian_of_subsingleton [Subsingleton L] : LieAlgebra.IsEngelian R L :=
   by
   intro M _i1 _i2 _i3 _i4 h
   use 1
   suffices (⊤ : LieIdeal R L) = ⊥ by simp [this]
   haveI := (LieSubmodule.subsingleton_iff R L L).mpr inferInstance
   apply Subsingleton.elim
-#align lie_algebra.is_engelian_of_subsingleton LieAlgebra.is_engelian_of_subsingleton
+#align lie_algebra.is_engelian_of_subsingleton LieAlgebra.isEngelian_of_subsingleton
 
-theorem Function.Surjective.is_engelian {f : L →ₗ⁅R⁆ L₂} (hf : Function.Surjective f)
+theorem Function.Surjective.isEngelian {f : L →ₗ⁅R⁆ L₂} (hf : Function.Surjective f)
     (h : LieAlgebra.IsEngelian.{u₁, u₂, u₄} R L) : LieAlgebra.IsEngelian.{u₁, u₃, u₄} R L₂ :=
   by
   intro M _i1 _i2 _i3 _i4 h'
@@ -195,14 +195,14 @@ theorem Function.Surjective.is_engelian {f : L →ₗ⁅R⁆ L₂} (hf : Functio
   haveI : LieModule.IsNilpotent R L M := h M hnp
   apply hf.lie_module_is_nilpotent surj_id
   simp
-#align function.surjective.is_engelian Function.Surjective.is_engelian
+#align function.surjective.is_engelian Function.Surjective.isEngelian
 
-theorem LieEquiv.is_engelian_iff (e : L ≃ₗ⁅R⁆ L₂) :
+theorem LieEquiv.isEngelian_iff (e : L ≃ₗ⁅R⁆ L₂) :
     LieAlgebra.IsEngelian.{u₁, u₂, u₄} R L ↔ LieAlgebra.IsEngelian.{u₁, u₃, u₄} R L₂ :=
   ⟨e.Surjective.IsEngelian, e.symm.Surjective.IsEngelian⟩
-#align lie_equiv.is_engelian_iff LieEquiv.is_engelian_iff
+#align lie_equiv.is_engelian_iff LieEquiv.isEngelian_iff
 
-theorem LieAlgebra.exists_engelian_lie_subalgebra_of_lt_normalizer {K : LieSubalgebra R L}
+theorem LieAlgebra.exists_engelian_lieSubalgebra_of_lt_normalizer {K : LieSubalgebra R L}
     (hK₁ : LieAlgebra.IsEngelian.{u₁, u₂, u₄} R K) (hK₂ : K < K.normalizer) :
     ∃ (K' : LieSubalgebra R L)(hK' : LieAlgebra.IsEngelian.{u₁, u₂, u₄} R K'), K < K' :=
   by
@@ -219,10 +219,10 @@ theorem LieAlgebra.exists_engelian_lie_subalgebra_of_lt_normalizer {K : LieSubal
   refine' ⟨K', _, lt_iff_le_and_ne.mpr ⟨hKK', fun contra => hx₂ (contra.symm ▸ hxK')⟩⟩
   intro M _i1 _i2 _i3 _i4 h
   obtain ⟨I, hI₁ : (I : LieSubalgebra R K') = LieSubalgebra.ofLe hKK'⟩ :=
-    LieSubalgebra.exists_nested_lie_ideal_of_le_normalizer hKK' hK'
+    LieSubalgebra.exists_nested_lieIdeal_ofLe_normalizer hKK' hK'
   have hI₂ : (R ∙ (⟨x, hxK'⟩ : K')) ⊔ I = ⊤ :=
     by
-    rw [← LieIdeal.coe_to_lie_subalgebra_to_submodule R K' I, hI₁]
+    rw [← LieIdeal.coe_to_lieSubalgebra_to_submodule R K' I, hI₁]
     apply Submodule.map_injective_of_injective (K' : Submodule R L).injective_subtype
     simpa
   have e : K ≃ₗ⁅R⁆ I :=
@@ -230,7 +230,7 @@ theorem LieAlgebra.exists_engelian_lie_subalgebra_of_lt_normalizer {K : LieSubal
       (LieEquiv.ofEq _ _ ((LieSubalgebra.coe_set_eq _ _).mpr hI₁.symm))
   have hI₃ : LieAlgebra.IsEngelian R I := e.is_engelian_iff.mp hK₁
   exact LieSubmodule.isNilpotentOfIsNilpotentSpanSupEqTop hI₂ (h _) (hI₃ _ fun x => h x)
-#align lie_algebra.exists_engelian_lie_subalgebra_of_lt_normalizer LieAlgebra.exists_engelian_lie_subalgebra_of_lt_normalizer
+#align lie_algebra.exists_engelian_lie_subalgebra_of_lt_normalizer LieAlgebra.exists_engelian_lieSubalgebra_of_lt_normalizer
 
 attribute [local instance] LieSubalgebra.subsingleton_bot
 
@@ -241,7 +241,7 @@ variable [IsNoetherian R L]
 Note that this implies all traditional forms of Engel's theorem via
 `lie_module.nontrivial_max_triv_of_is_nilpotent`, `lie_module.is_nilpotent_iff_forall`,
 `lie_algebra.is_nilpotent_iff_forall`. -/
-theorem LieAlgebra.is_engelian_of_is_noetherian : LieAlgebra.IsEngelian R L :=
+theorem LieAlgebra.isEngelian_of_isNoetherian : LieAlgebra.IsEngelian R L :=
   by
   intro M _i1 _i2 _i3 _i4 h
   rw [← is_nilpotent_range_to_endomorphism_iff]
@@ -251,15 +251,15 @@ theorem LieAlgebra.is_engelian_of_is_noetherian : LieAlgebra.IsEngelian R L :=
     simp [h]
   change LieModule.IsNilpotent R L' M
   let s := { K : LieSubalgebra R L' | LieAlgebra.IsEngelian R K }
-  have hs : s.nonempty := ⟨⊥, LieAlgebra.is_engelian_of_subsingleton⟩
+  have hs : s.nonempty := ⟨⊥, LieAlgebra.isEngelian_of_subsingleton⟩
   suffices ⊤ ∈ s by
     rw [← is_nilpotent_of_top_iff]
     apply this M
-    simp [LieSubalgebra.to_endomorphism_eq, h]
+    simp [LieSubalgebra.toEndomorphism_eq, h]
   have : ∀ K ∈ s, K ≠ ⊤ → ∃ K' ∈ s, K < K' :=
     by
     rintro K (hK₁ : LieAlgebra.IsEngelian R K) hK₂
-    apply LieAlgebra.exists_engelian_lie_subalgebra_of_lt_normalizer hK₁
+    apply LieAlgebra.exists_engelian_lieSubalgebra_of_lt_normalizer hK₁
     apply lt_of_le_of_ne K.le_normalizer
     rw [Ne.def, eq_comm, K.normalizer_eq_self_iff, ← Ne.def, ←
       LieSubmodule.nontrivial_iff_ne_bot R K]
@@ -267,19 +267,19 @@ theorem LieAlgebra.is_engelian_of_is_noetherian : LieAlgebra.IsEngelian R L :=
       by
       replace hK₂ : K.to_lie_submodule ≠ ⊤ := by
         rwa [Ne.def, ← LieSubmodule.coe_to_submodule_eq_iff, K.coe_to_lie_submodule,
-          LieSubmodule.top_coe_submodule, ← LieSubalgebra.top_coe_submodule,
+          LieSubmodule.top_coeSubmodule, ← LieSubalgebra.top_coe_submodule,
           K.coe_to_submodule_eq_iff]
       exact Submodule.Quotient.nontrivial_of_lt_top _ hK₂.lt_top
     have : LieModule.IsNilpotent R K (L' ⧸ K.to_lie_submodule) :=
       by
       refine' hK₁ _ fun x => _
-      have hx := LieAlgebra.is_nilpotent_ad_of_is_nilpotent (h x)
+      have hx := LieAlgebra.isNilpotent_ad_of_isNilpotent (h x)
       exact Module.EndCat.IsNilpotent.mapq _ hx
     exact nontrivial_max_triv_of_is_nilpotent R K (L' ⧸ K.to_lie_submodule)
   haveI _i5 : IsNoetherian R L' :=
-    isNoetherianOfSurjective L _ (LinearMap.range_range_restrict (to_endomorphism R L M))
+    isNoetherianOfSurjective L _ (LinearMap.range_rangeRestrict (to_endomorphism R L M))
   obtain ⟨K, hK₁, hK₂⟩ :=
-    well_founded.well_founded_iff_has_max'.mp (LieSubalgebra.well_founded_of_noetherian R L') s hs
+    well_founded.well_founded_iff_has_max'.mp (LieSubalgebra.wellFounded_of_noetherian R L') s hs
   have hK₃ : K = ⊤ := by
     by_contra contra
     obtain ⟨K', hK'₁, hK'₂⟩ := this K hK₁ contra
@@ -287,22 +287,22 @@ theorem LieAlgebra.is_engelian_of_is_noetherian : LieAlgebra.IsEngelian R L :=
     replace hK'₂ := (ne_of_lt hK'₂).symm
     contradiction
   exact hK₃ ▸ hK₁
-#align lie_algebra.is_engelian_of_is_noetherian LieAlgebra.is_engelian_of_is_noetherian
+#align lie_algebra.is_engelian_of_is_noetherian LieAlgebra.isEngelian_of_isNoetherian
 
 /-- Engel's theorem. -/
-theorem LieModule.is_nilpotent_iff_forall :
+theorem LieModule.isNilpotent_iff_forall :
     LieModule.IsNilpotent R L M ↔ ∀ x, IsNilpotent <| toEndomorphism R L M x :=
   ⟨by
     intro h
     obtain ⟨k, hk⟩ := nilpotent_endo_of_nilpotent_module R L M
-    exact fun x => ⟨k, hk x⟩, fun h => LieAlgebra.is_engelian_of_is_noetherian M h⟩
-#align lie_module.is_nilpotent_iff_forall LieModule.is_nilpotent_iff_forall
+    exact fun x => ⟨k, hk x⟩, fun h => LieAlgebra.isEngelian_of_isNoetherian M h⟩
+#align lie_module.is_nilpotent_iff_forall LieModule.isNilpotent_iff_forall
 
 /-- Engel's theorem. -/
-theorem LieAlgebra.is_nilpotent_iff_forall :
+theorem LieAlgebra.isNilpotent_iff_forall :
     LieAlgebra.IsNilpotent R L ↔ ∀ x, IsNilpotent <| LieAlgebra.ad R L x :=
-  LieModule.is_nilpotent_iff_forall
-#align lie_algebra.is_nilpotent_iff_forall LieAlgebra.is_nilpotent_iff_forall
+  LieModule.isNilpotent_iff_forall
+#align lie_algebra.is_nilpotent_iff_forall LieAlgebra.isNilpotent_iff_forall
 
 end LieAlgebra
 

@@ -153,13 +153,13 @@ theorem multiset_prod_mem {M} [CommMonoid M] (S : Submonoid M) (m : Multiset M)
 #align add_submonoid.multiset_sum_mem AddSubmonoid.multiset_sum_mem
 
 @[to_additive]
-theorem multiset_noncomm_prod_mem (S : Submonoid M) (m : Multiset M) (comm) (h : ∀ x ∈ m, x ∈ S) :
+theorem multiset_noncommProd_mem (S : Submonoid M) (m : Multiset M) (comm) (h : ∀ x ∈ m, x ∈ S) :
     m.noncommProd comm ∈ S :=
   by
   induction' m using Quotient.inductionOn with l
   simp only [Multiset.quot_mk_to_coe, Multiset.noncommProd_coe]
   exact Submonoid.list_prod_mem _ h
-#align submonoid.multiset_noncomm_prod_mem Submonoid.multiset_noncomm_prod_mem
+#align submonoid.multiset_noncomm_prod_mem Submonoid.multiset_noncommProd_mem
 #align add_submonoid.multiset_noncomm_sum_mem AddSubmonoid.multiset_noncomm_sum_mem
 
 /-- Product of elements of a submonoid of a `comm_monoid` indexed by a `finset` is in the
@@ -175,7 +175,7 @@ theorem prod_mem {M : Type _} [CommMonoid M] (S : Submonoid M) {ι : Type _} {t 
 #align add_submonoid.sum_mem AddSubmonoid.sum_mem
 
 @[to_additive]
-theorem noncomm_prod_mem (S : Submonoid M) {ι : Type _} (t : Finset ι) (f : ι → M) (comm)
+theorem noncommProd_mem (S : Submonoid M) {ι : Type _} (t : Finset ι) (f : ι → M) (comm)
     (h : ∀ c ∈ t, f c ∈ S) : t.noncommProd f comm ∈ S :=
   by
   apply multiset_noncomm_prod_mem
@@ -183,7 +183,7 @@ theorem noncomm_prod_mem (S : Submonoid M) {ι : Type _} (t : Finset ι) (f : ι
   rw [Multiset.mem_map]
   rintro ⟨x, ⟨hx, rfl⟩⟩
   exact h x hx
-#align submonoid.noncomm_prod_mem Submonoid.noncomm_prod_mem
+#align submonoid.noncomm_prod_mem Submonoid.noncommProd_mem
 #align add_submonoid.noncomm_sum_mem AddSubmonoid.noncomm_sum_mem
 
 end Submonoid
@@ -201,7 +201,7 @@ namespace Submonoid
 -- TODO: this section can be generalized to `[submonoid_class B M] [complete_lattice B]`
 -- such that `complete_lattice.le` coincides with `set_like.le`
 @[to_additive]
-theorem mem_supr_of_directed {ι} [hι : Nonempty ι] {S : ι → Submonoid M} (hS : Directed (· ≤ ·) S)
+theorem mem_supᵢ_of_directed {ι} [hι : Nonempty ι] {S : ι → Submonoid M} (hS : Directed (· ≤ ·) S)
     {x : M} : (x ∈ ⨆ i, S i) ↔ ∃ i, x ∈ S i :=
   by
   refine' ⟨_, fun ⟨i, hi⟩ => (SetLike.le_def.1 <| le_supᵢ S i) hi⟩
@@ -212,31 +212,31 @@ theorem mem_supr_of_directed {ι} [hι : Nonempty ι] {S : ι → Submonoid M} (
   · rintro x y ⟨i, hi⟩ ⟨j, hj⟩
     rcases hS i j with ⟨k, hki, hkj⟩
     exact ⟨k, (S k).mul_mem (hki hi) (hkj hj)⟩
-#align submonoid.mem_supr_of_directed Submonoid.mem_supr_of_directed
-#align add_submonoid.mem_supr_of_directed AddSubmonoid.mem_supr_of_directed
+#align submonoid.mem_supr_of_directed Submonoid.mem_supᵢ_of_directed
+#align add_submonoid.mem_supr_of_directed AddSubmonoid.mem_supᵢ_of_directed
 
 @[to_additive]
-theorem coe_supr_of_directed {ι} [Nonempty ι] {S : ι → Submonoid M} (hS : Directed (· ≤ ·) S) :
+theorem coe_supᵢ_of_directed {ι} [Nonempty ι] {S : ι → Submonoid M} (hS : Directed (· ≤ ·) S) :
     ((⨆ i, S i : Submonoid M) : Set M) = ⋃ i, ↑(S i) :=
   Set.ext fun x => by simp [mem_supr_of_directed hS]
-#align submonoid.coe_supr_of_directed Submonoid.coe_supr_of_directed
-#align add_submonoid.coe_supr_of_directed AddSubmonoid.coe_supr_of_directed
+#align submonoid.coe_supr_of_directed Submonoid.coe_supᵢ_of_directed
+#align add_submonoid.coe_supr_of_directed AddSubmonoid.coe_supᵢ_of_directed
 
 @[to_additive]
-theorem mem_Sup_of_directed_on {S : Set (Submonoid M)} (Sne : S.Nonempty)
+theorem mem_supₛ_of_directedOn {S : Set (Submonoid M)} (Sne : S.Nonempty)
     (hS : DirectedOn (· ≤ ·) S) {x : M} : x ∈ supₛ S ↔ ∃ s ∈ S, x ∈ s :=
   by
   haveI : Nonempty S := Sne.to_subtype
   simp only [supₛ_eq_supᵢ', mem_supr_of_directed hS.directed_coe, SetCoe.exists, Subtype.coe_mk]
-#align submonoid.mem_Sup_of_directed_on Submonoid.mem_Sup_of_directed_on
-#align add_submonoid.mem_Sup_of_directed_on AddSubmonoid.mem_Sup_of_directed_on
+#align submonoid.mem_Sup_of_directed_on Submonoid.mem_supₛ_of_directedOn
+#align add_submonoid.mem_Sup_of_directed_on AddSubmonoid.mem_supₛ_of_directedOn
 
 @[to_additive]
-theorem coe_Sup_of_directed_on {S : Set (Submonoid M)} (Sne : S.Nonempty)
+theorem coe_supₛ_of_directedOn {S : Set (Submonoid M)} (Sne : S.Nonempty)
     (hS : DirectedOn (· ≤ ·) S) : (↑(supₛ S) : Set M) = ⋃ s ∈ S, ↑s :=
   Set.ext fun x => by simp [mem_Sup_of_directed_on Sne hS]
-#align submonoid.coe_Sup_of_directed_on Submonoid.coe_Sup_of_directed_on
-#align add_submonoid.coe_Sup_of_directed_on AddSubmonoid.coe_Sup_of_directed_on
+#align submonoid.coe_Sup_of_directed_on Submonoid.coe_supₛ_of_directedOn
+#align add_submonoid.coe_Sup_of_directed_on AddSubmonoid.coe_supₛ_of_directedOn
 
 @[to_additive]
 theorem mem_sup_left {S T : Submonoid M} : ∀ {x : M}, x ∈ S → x ∈ S ⊔ T :=
@@ -257,18 +257,18 @@ theorem mul_mem_sup {S T : Submonoid M} {x y : M} (hx : x ∈ S) (hy : y ∈ T) 
 #align add_submonoid.add_mem_sup AddSubmonoid.add_mem_sup
 
 @[to_additive]
-theorem mem_supr_of_mem {ι : Sort _} {S : ι → Submonoid M} (i : ι) :
+theorem mem_supᵢ_of_mem {ι : Sort _} {S : ι → Submonoid M} (i : ι) :
     ∀ {x : M}, x ∈ S i → x ∈ supᵢ S :=
   show S i ≤ supᵢ S from le_supᵢ _ _
-#align submonoid.mem_supr_of_mem Submonoid.mem_supr_of_mem
-#align add_submonoid.mem_supr_of_mem AddSubmonoid.mem_supr_of_mem
+#align submonoid.mem_supr_of_mem Submonoid.mem_supᵢ_of_mem
+#align add_submonoid.mem_supr_of_mem AddSubmonoid.mem_supᵢ_of_mem
 
 @[to_additive]
-theorem mem_Sup_of_mem {S : Set (Submonoid M)} {s : Submonoid M} (hs : s ∈ S) :
+theorem mem_supₛ_of_mem {S : Set (Submonoid M)} {s : Submonoid M} (hs : s ∈ S) :
     ∀ {x : M}, x ∈ s → x ∈ supₛ S :=
   show s ≤ supₛ S from le_supₛ hs
-#align submonoid.mem_Sup_of_mem Submonoid.mem_Sup_of_mem
-#align add_submonoid.mem_Sup_of_mem AddSubmonoid.mem_Sup_of_mem
+#align submonoid.mem_Sup_of_mem Submonoid.mem_supₛ_of_mem
+#align add_submonoid.mem_Sup_of_mem AddSubmonoid.mem_supₛ_of_mem
 
 /-- An induction principle for elements of `⨆ i, S i`.
 If `C` holds for `1` and all elements of `S i` for all `i`, and is preserved under multiplication,
@@ -276,20 +276,20 @@ then it holds for all elements of the supremum of `S`. -/
 @[elab_as_elim,
   to_additive
       " An induction principle for elements of `⨆ i, S i`.\nIf `C` holds for `0` and all elements of `S i` for all `i`, and is preserved under addition,\nthen it holds for all elements of the supremum of `S`. "]
-theorem supr_induction {ι : Sort _} (S : ι → Submonoid M) {C : M → Prop} {x : M} (hx : x ∈ ⨆ i, S i)
+theorem supᵢ_induction {ι : Sort _} (S : ι → Submonoid M) {C : M → Prop} {x : M} (hx : x ∈ ⨆ i, S i)
     (hp : ∀ (i), ∀ x ∈ S i, C x) (h1 : C 1) (hmul : ∀ x y, C x → C y → C (x * y)) : C x :=
   by
   rw [supr_eq_closure] at hx
   refine' closure_induction hx (fun x hx => _) h1 hmul
   obtain ⟨i, hi⟩ := set.mem_Union.mp hx
   exact hp _ _ hi
-#align submonoid.supr_induction Submonoid.supr_induction
-#align add_submonoid.supr_induction AddSubmonoid.supr_induction
+#align submonoid.supr_induction Submonoid.supᵢ_induction
+#align add_submonoid.supr_induction AddSubmonoid.supᵢ_induction
 
 /-- A dependent version of `submonoid.supr_induction`. -/
 @[elab_as_elim, to_additive "A dependent version of `add_submonoid.supr_induction`. "]
-theorem supr_induction' {ι : Sort _} (S : ι → Submonoid M) {C : ∀ x, (x ∈ ⨆ i, S i) → Prop}
-    (hp : ∀ (i), ∀ x ∈ S i, C x (mem_supr_of_mem i ‹_›)) (h1 : C 1 (one_mem _))
+theorem supᵢ_induction' {ι : Sort _} (S : ι → Submonoid M) {C : ∀ x, (x ∈ ⨆ i, S i) → Prop}
+    (hp : ∀ (i), ∀ x ∈ S i, C x (mem_supᵢ_of_mem i ‹_›)) (h1 : C 1 (one_mem _))
     (hmul : ∀ x y hx hy, C x hx → C y hy → C (x * y) (mul_mem ‹_› ‹_›)) {x : M}
     (hx : x ∈ ⨆ i, S i) : C x hx :=
   by
@@ -299,8 +299,8 @@ theorem supr_induction' {ι : Sort _} (S : ι → Submonoid M) {C : ∀ x, (x �
   · exact ⟨_, h1⟩
   · rintro ⟨_, Cx⟩ ⟨_, Cy⟩
     refine' ⟨_, hmul _ _ _ _ Cx Cy⟩
-#align submonoid.supr_induction' Submonoid.supr_induction'
-#align add_submonoid.supr_induction' AddSubmonoid.supr_induction'
+#align submonoid.supr_induction' Submonoid.supᵢ_induction'
+#align add_submonoid.supr_induction' AddSubmonoid.supᵢ_induction'
 
 end Submonoid
 
@@ -688,7 +688,7 @@ end Submonoid
 
 section mul_add
 
-theorem of_mul_image_powers_eq_multiples_of_mul [Monoid M] {x : M} :
+theorem ofMul_image_powers_eq_multiples_ofMul [Monoid M] {x : M} :
     Additive.ofMul '' (Submonoid.powers x : Set M) = AddSubmonoid.multiples (Additive.ofMul x) :=
   by
   ext
@@ -699,16 +699,16 @@ theorem of_mul_image_powers_eq_multiples_of_mul [Monoid M] {x : M} :
   · rintro ⟨n, hn⟩
     refine' ⟨x ^ n, ⟨n, rfl⟩, _⟩
     rwa [ofMul_pow]
-#align of_mul_image_powers_eq_multiples_of_mul of_mul_image_powers_eq_multiples_of_mul
+#align of_mul_image_powers_eq_multiples_of_mul ofMul_image_powers_eq_multiples_ofMul
 
-theorem of_add_image_multiples_eq_powers_of_add [AddMonoid A] {x : A} :
+theorem ofAdd_image_multiples_eq_powers_ofAdd [AddMonoid A] {x : A} :
     Multiplicative.ofAdd '' (AddSubmonoid.multiples x : Set A) =
       Submonoid.powers (Multiplicative.ofAdd x) :=
   by
   symm
   rw [Equiv.eq_image_iff_symm_image_eq]
-  exact of_mul_image_powers_eq_multiples_of_mul
-#align of_add_image_multiples_eq_powers_of_add of_add_image_multiples_eq_powers_of_add
+  exact ofMul_image_powers_eq_multiples_ofMul
+#align of_add_image_multiples_eq_powers_of_add ofAdd_image_multiples_eq_powers_ofAdd
 
 end mul_add
 

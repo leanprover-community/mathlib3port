@@ -36,15 +36,15 @@ namespace Finset
 
 variable {α : Type _} [DecidableEq α] {s t : Finset α} {a b : α}
 
-theorem is_diag_mk_of_mem_diag {a : α × α} (h : a ∈ s.diag) : Sym2.IsDiag ⟦a⟧ :=
-  (Sym2.is_diag_iff_proj_eq _).2 (mem_diag.1 h).2
-#align finset.is_diag_mk_of_mem_diag Finset.is_diag_mk_of_mem_diag
+theorem isDiag_mk''_of_mem_diag {a : α × α} (h : a ∈ s.diag) : Sym2.IsDiag ⟦a⟧ :=
+  (Sym2.isDiag_iff_proj_eq _).2 (mem_diag.1 h).2
+#align finset.is_diag_mk_of_mem_diag Finset.isDiag_mk''_of_mem_diag
 
-theorem not_is_diag_mk_of_mem_off_diag {a : α × α} (h : a ∈ s.offDiag) : ¬Sym2.IsDiag ⟦a⟧ :=
+theorem not_isDiag_mk''_of_mem_offDiag {a : α × α} (h : a ∈ s.offDiag) : ¬Sym2.IsDiag ⟦a⟧ :=
   by
-  rw [Sym2.is_diag_iff_proj_eq]
+  rw [Sym2.isDiag_iff_proj_eq]
   exact (mem_off_diag.1 h).2.2
-#align finset.not_is_diag_mk_of_mem_off_diag Finset.not_is_diag_mk_of_mem_off_diag
+#align finset.not_is_diag_mk_of_mem_off_diag Finset.not_isDiag_mk''_of_mem_offDiag
 
 section Sym2
 
@@ -67,8 +67,8 @@ theorem mem_sym2_iff : m ∈ s.Sym2 ↔ ∀ a ∈ m, a ∈ s :=
   rwa [mem_product] at h
 #align finset.mem_sym2_iff Finset.mem_sym2_iff
 
-theorem mk_mem_sym2_iff : ⟦(a, b)⟧ ∈ s.Sym2 ↔ a ∈ s ∧ b ∈ s := by rw [mem_sym2_iff, Sym2.ball]
-#align finset.mk_mem_sym2_iff Finset.mk_mem_sym2_iff
+theorem mk''_mem_sym2_iff : ⟦(a, b)⟧ ∈ s.Sym2 ↔ a ∈ s ∧ b ∈ s := by rw [mem_sym2_iff, Sym2.ball]
+#align finset.mk_mem_sym2_iff Finset.mk''_mem_sym2_iff
 
 @[simp]
 theorem sym2_empty : (∅ : Finset α).Sym2 = ∅ :=
@@ -102,7 +102,7 @@ theorem sym2_singleton (a : α) : ({a} : Finset α).Sym2 = {Sym2.diag a} := by
 
 @[simp]
 theorem diag_mem_sym2_iff : Sym2.diag a ∈ s.Sym2 ↔ a ∈ s :=
-  mk_mem_sym2_iff.trans <| and_self_iff _
+  mk''_mem_sym2_iff.trans <| and_self_iff _
 #align finset.diag_mem_sym2_iff Finset.diag_mem_sym2_iff
 
 @[simp]
@@ -110,12 +110,12 @@ theorem sym2_mono (h : s ⊆ t) : s.Sym2 ⊆ t.Sym2 := fun m he =>
   mem_sym2_iff.2 fun a ha => h <| mem_sym2_iff.1 he _ ha
 #align finset.sym2_mono Finset.sym2_mono
 
-theorem image_diag_union_image_off_diag :
+theorem image_diag_union_image_offDiag :
     s.diag.image Quotient.mk'' ∪ s.offDiag.image Quotient.mk'' = s.Sym2 :=
   by
   rw [← image_union, diag_union_off_diag]
   rfl
-#align finset.image_diag_union_image_off_diag Finset.image_diag_union_image_off_diag
+#align finset.image_diag_union_image_off_diag Finset.image_diag_union_image_offDiag
 
 end Sym2
 
@@ -236,11 +236,11 @@ theorem sym_fill_mem (a : α) {i : Fin (n + 1)} {m : Sym α (n - i)} (h : m ∈ 
     mem_insert.2 <| (Sym.mem_fill_iff.1 hb).imp And.right <| mem_sym_iff.1 h b
 #align finset.sym_fill_mem Finset.sym_fill_mem
 
-theorem sym_filter_ne_mem (a : α) (h : m ∈ s.Sym n) :
+theorem sym_filterNe_mem (a : α) (h : m ∈ s.Sym n) :
     (m.filter_ne a).2 ∈ (s.erase a).Sym (n - (m.filter_ne a).1) :=
   mem_sym_iff.2 fun b H =>
     mem_erase.2 <| (Multiset.mem_filter.1 H).symm.imp Ne.symm <| mem_sym_iff.1 h b
-#align finset.sym_filter_ne_mem Finset.sym_filter_ne_mem
+#align finset.sym_filter_ne_mem Finset.sym_filterNe_mem
 
 /-- If `a` does not belong to the finset `s`, then the `n`th symmetric power of `{a} ∪ s` is
   in 1-1 correspondence with the disjoint union of the `n - i`th symmetric powers of `s`,
@@ -257,7 +257,7 @@ def symInsertEquiv (h : a ∉ s) : (insert a s).Sym n ≃ Σi : Fin (n + 1), s.S
     · exact fun i => Sym α (n - i)
     swap; · exact fun _ _ => id
     swap; · exact Subtype.coe_injective
-    refine' Eq.trans _ (Sym.filter_ne_fill a _ _)
+    refine' Eq.trans _ (Sym.filterNe_fill a _ _)
     exacts[rfl, h ∘ mem_sym_iff.1 hm a]
 #align finset.sym_insert_equiv Finset.symInsertEquiv
 

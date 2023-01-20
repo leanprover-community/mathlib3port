@@ -106,7 +106,7 @@ variable {f : ℕ → ℝ≥0∞}
 theorem le_tsum_condensed (hf : ∀ ⦃m n⦄, 0 < m → m ≤ n → f n ≤ f m) :
     (∑' k, f k) ≤ f 0 + ∑' k : ℕ, 2 ^ k * f (2 ^ k) :=
   by
-  rw [Ennreal.tsum_eq_supr_nat' (Nat.tendsto_pow_at_top_at_top_of_one_lt _root_.one_lt_two)]
+  rw [Ennreal.tsum_eq_supᵢ_nat' (Nat.tendsto_pow_atTop_atTop_of_one_lt _root_.one_lt_two)]
   refine' supᵢ_le fun n => (Finset.le_sum_condensed hf n).trans (add_le_add_left _ _)
   simp only [nsmul_eq_mul, Nat.cast_pow, Nat.cast_two]
   apply Ennreal.sum_le_tsum
@@ -115,7 +115,7 @@ theorem le_tsum_condensed (hf : ∀ ⦃m n⦄, 0 < m → m ≤ n → f n ≤ f m
 theorem tsum_condensed_le (hf : ∀ ⦃m n⦄, 1 < m → m ≤ n → f n ≤ f m) :
     (∑' k : ℕ, 2 ^ k * f (2 ^ k)) ≤ f 1 + 2 * ∑' k, f k :=
   by
-  rw [Ennreal.tsum_eq_supr_nat' (tendsto_at_top_mono Nat.le_succ tendsto_id), two_mul, ← two_nsmul]
+  rw [Ennreal.tsum_eq_supᵢ_nat' (tendsto_at_top_mono Nat.le_succ tendsto_id), two_mul, ← two_nsmul]
   refine'
     supᵢ_le fun n =>
       le_trans _
@@ -255,13 +255,13 @@ theorem Real.not_summable_one_div_nat_cast : ¬Summable (fun n => 1 / n : ℕ �
 #align real.not_summable_one_div_nat_cast Real.not_summable_one_div_nat_cast
 
 /-- **Divergence of the Harmonic Series** -/
-theorem Real.tendsto_sum_range_one_div_nat_succ_at_top :
+theorem Real.tendsto_sum_range_one_div_nat_succ_atTop :
     Tendsto (fun n => ∑ i in Finset.range n, (1 / (i + 1) : ℝ)) atTop atTop :=
   by
-  rw [← not_summable_iff_tendsto_nat_at_top_of_nonneg]
+  rw [← not_summable_iff_tendsto_nat_atTop_of_nonneg]
   · exact_mod_cast mt (summable_nat_add_iff 1).1 Real.not_summable_one_div_nat_cast
   · exact fun i => div_nonneg zero_le_one i.cast_add_one_pos.le
-#align real.tendsto_sum_range_one_div_nat_succ_at_top Real.tendsto_sum_range_one_div_nat_succ_at_top
+#align real.tendsto_sum_range_one_div_nat_succ_at_top Real.tendsto_sum_range_one_div_nat_succ_atTop
 
 @[simp]
 theorem Nnreal.summable_rpow_inv {p : ℝ} : Summable (fun n => (n ^ p)⁻¹ : ℕ → ℝ≥0) ↔ 1 < p := by
@@ -283,7 +283,7 @@ open Finset
 
 variable {α : Type _} [LinearOrderedField α]
 
-theorem sum_Ioc_inv_sq_le_sub {k n : ℕ} (hk : k ≠ 0) (h : k ≤ n) :
+theorem sum_ioc_inv_sq_le_sub {k n : ℕ} (hk : k ≠ 0) (h : k ≤ n) :
     (∑ i in ioc k n, ((i ^ 2)⁻¹ : α)) ≤ k⁻¹ - n⁻¹ :=
   by
   refine' Nat.le_induction _ _ n h
@@ -300,9 +300,9 @@ theorem sum_Ioc_inv_sq_le_sub {k n : ℕ} (hk : k ≠ 0) (h : k ≤ n) :
   · ring_nf
     exact B.le
   · nlinarith
-#align sum_Ioc_inv_sq_le_sub sum_Ioc_inv_sq_le_sub
+#align sum_Ioc_inv_sq_le_sub sum_ioc_inv_sq_le_sub
 
-theorem sum_Ioo_inv_sq_le (k n : ℕ) : (∑ i in ioo k n, ((i ^ 2)⁻¹ : α)) ≤ 2 / (k + 1) :=
+theorem sum_ioo_inv_sq_le (k n : ℕ) : (∑ i in ioo k n, ((i ^ 2)⁻¹ : α)) ≤ 2 / (k + 1) :=
   calc
     (∑ i in ioo k n, ((i ^ 2)⁻¹ : α)) ≤ ∑ i in ioc k (max (k + 1) n), (i ^ 2)⁻¹ :=
       by
@@ -314,12 +314,12 @@ theorem sum_Ioo_inv_sq_le (k n : ℕ) : (∑ i in ioo k n, ((i ^ 2)⁻¹ : α)) 
         exact inv_nonneg.2 (sq_nonneg _)
     _ ≤ ((k + 1) ^ 2)⁻¹ + ∑ i in ioc k.succ (max (k + 1) n), (i ^ 2)⁻¹ :=
       by
-      rw [← Nat.Icc_succ_left, ← Nat.Ico_succ_right, sum_eq_sum_Ico_succ_bot]
+      rw [← Nat.icc_succ_left, ← Nat.ico_succ_right, sum_eq_sum_Ico_succ_bot]
       swap; · exact Nat.succ_lt_succ ((Nat.lt_succ_self k).trans_le (le_max_left _ _))
-      rw [Nat.Ico_succ_right, Nat.Icc_succ_left, Nat.cast_succ]
+      rw [Nat.ico_succ_right, Nat.icc_succ_left, Nat.cast_succ]
     _ ≤ ((k + 1) ^ 2)⁻¹ + (k + 1)⁻¹ :=
       by
-      refine' add_le_add le_rfl ((sum_Ioc_inv_sq_le_sub _ (le_max_left _ _)).trans _)
+      refine' add_le_add le_rfl ((sum_ioc_inv_sq_le_sub _ (le_max_left _ _)).trans _)
       · simp only [Ne.def, Nat.succ_ne_zero, not_false_iff]
       · simp only [Nat.cast_succ, one_div, sub_le_self_iff, inv_nonneg, Nat.cast_nonneg]
     _ ≤ 1 / (k + 1) + 1 / (k + 1) :=
@@ -331,7 +331,7 @@ theorem sum_Ioo_inv_sq_le (k n : ℕ) : (∑ i in ioo k n, ((i ^ 2)⁻¹ : α)) 
       simpa using pow_le_pow A one_le_two
     _ = 2 / (k + 1) := by ring
     
-#align sum_Ioo_inv_sq_le sum_Ioo_inv_sq_le
+#align sum_Ioo_inv_sq_le sum_ioo_inv_sq_le
 
 end
 

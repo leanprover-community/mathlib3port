@@ -58,7 +58,7 @@ instance (priority := 100) monoCoprodOfHasZeroMorphisms [HasZeroMorphisms C] : M
 
 namespace MonoCoprod
 
-theorem binary_cofan_inr {A B : C} [MonoCoprod C] (c : BinaryCofan A B) (hc : IsColimit c) :
+theorem binaryCofan_inr {A B : C} [MonoCoprod C] (c : BinaryCofan A B) (hc : IsColimit c) :
     Mono c.inr :=
   haveI hc' : is_colimit (binary_cofan.mk c.inr c.inl) :=
     binary_cofan.is_colimit_mk (fun s => hc.desc (binary_cofan.mk s.inr s.inl)) (by tidy) (by tidy)
@@ -67,13 +67,13 @@ theorem binary_cofan_inr {A B : C} [MonoCoprod C] (c : BinaryCofan A B) (hc : Is
         (by simp only [h₂, is_colimit.fac, binary_cofan.ι_app_left, binary_cofan.mk_inl])
         (by simp only [h₁, is_colimit.fac, binary_cofan.ι_app_right, binary_cofan.mk_inr])
   binary_cofan_inl _ hc'
-#align category_theory.limits.mono_coprod.binary_cofan_inr CategoryTheory.Limits.MonoCoprod.binary_cofan_inr
+#align category_theory.limits.mono_coprod.binary_cofan_inr CategoryTheory.Limits.MonoCoprod.binaryCofan_inr
 
 instance {A B : C} [MonoCoprod C] [HasBinaryCoproduct A B] : Mono (coprod.inl : A ⟶ A ⨿ B) :=
-  binary_cofan_inl _ (colimit.isColimit _)
+  binaryCofan_inl _ (colimit.isColimit _)
 
 instance {A B : C} [MonoCoprod C] [HasBinaryCoproduct A B] : Mono (coprod.inr : B ⟶ A ⨿ B) :=
-  binary_cofan_inr _ (colimit.isColimit _)
+  binaryCofan_inr _ (colimit.isColimit _)
 
 theorem mono_inl_iff {A B : C} {c₁ c₂ : BinaryCofan A B} (hc₁ : IsColimit c₁) (hc₂ : IsColimit c₂) :
     Mono c₁.inl ↔ Mono c₂.inl :=

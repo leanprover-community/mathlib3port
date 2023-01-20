@@ -58,12 +58,12 @@ theorem intervalIntegrablePow : IntervalIntegrable (fun x => x ^ n) μ a b :=
 
 theorem intervalIntegrableZpow {n : ℤ} (h : 0 ≤ n ∨ (0 : ℝ) ∉ [a, b]) :
     IntervalIntegrable (fun x => x ^ n) μ a b :=
-  (continuous_on_id.zpow₀ n fun x hx => h.symm.imp (ne_of_mem_of_not_mem hx) id).IntervalIntegrable
+  (continuousOn_id.zpow₀ n fun x hx => h.symm.imp (ne_of_mem_of_not_mem hx) id).IntervalIntegrable
 #align interval_integral.interval_integrable_zpow intervalIntegral.intervalIntegrableZpow
 
 theorem intervalIntegrableRpow {r : ℝ} (h : 0 ≤ r ∨ (0 : ℝ) ∉ [a, b]) :
     IntervalIntegrable (fun x => x ^ r) μ a b :=
-  (continuous_on_id.rpow_const fun x hx =>
+  (continuousOn_id.rpow_const fun x hx =>
       h.symm.imp (ne_of_mem_of_not_mem hx) id).IntervalIntegrable
 #align interval_integral.interval_integrable_rpow intervalIntegral.intervalIntegrableRpow
 
@@ -76,11 +76,11 @@ theorem intervalIntegrableRpow' {r : ℝ} (h : -1 < r) :
   have : ∀ c : ℝ, 0 ≤ c → IntervalIntegrable (fun x => x ^ r) volume 0 c :=
     by
     intro c hc
-    rw [interval_integrable_iff, uIoc_of_le hc]
+    rw [intervalIntegrable_iff, uIoc_of_le hc]
     have hderiv : ∀ x ∈ Ioo 0 c, HasDerivAt (fun x : ℝ => x ^ (r + 1) / (r + 1)) (x ^ r) x :=
       by
       intro x hx
-      convert (Real.has_deriv_at_rpow_const (Or.inl hx.1.ne')).div_const (r + 1)
+      convert (Real.hasDerivAt_rpow_const (Or.inl hx.1.ne')).div_const (r + 1)
       field_simp [(by linarith : r + 1 ≠ 0)]
       ring
     apply integrable_on_deriv_of_nonneg hc _ hderiv
@@ -95,8 +95,8 @@ theorem intervalIntegrableRpow' {r : ℝ} (h : -1 < r) :
   · exact this c hc
   · rw [IntervalIntegrable.iff_comp_neg, neg_zero]
     have m := (this (-c) (by linarith)).smul (cos (r * π))
-    rw [interval_integrable_iff] at m⊢
-    refine' m.congr_fun _ measurable_set_Ioc
+    rw [intervalIntegrable_iff] at m⊢
+    refine' m.congr_fun _ measurableSet_ioc
     intro x hx
     rw [uIoc_of_le (by linarith : 0 ≤ -c)] at hx
     simp only [Pi.smul_apply, Algebra.id.smul_eq_mul, log_neg_eq_log, mul_comm,
@@ -141,7 +141,7 @@ theorem IntervalIntegrable.div (h : IntervalIntegrable f ν a b) :
 
 theorem intervalIntegrableOneDiv (h : ∀ x : ℝ, x ∈ [a, b] → f x ≠ 0) (hf : ContinuousOn f [a, b]) :
     IntervalIntegrable (fun x => 1 / f x) μ a b :=
-  (continuous_on_const.div hf h).IntervalIntegrable
+  (continuousOn_const.div hf h).IntervalIntegrable
 #align interval_integral.interval_integrable_one_div intervalIntegral.intervalIntegrableOneDiv
 
 @[simp]
@@ -163,7 +163,7 @@ theorem IntervalIntegrable.log (hf : ContinuousOn f [a, b]) (h : ∀ x : ℝ, x 
 
 @[simp]
 theorem intervalIntegrableLog (h : (0 : ℝ) ∉ [a, b]) : IntervalIntegrable log μ a b :=
-  IntervalIntegrable.log continuous_on_id fun x hx => ne_of_mem_of_not_mem hx h
+  IntervalIntegrable.log continuousOn_id fun x hx => ne_of_mem_of_not_mem hx h
 #align interval_integral.interval_integrable_log intervalIntegral.intervalIntegrableLog
 
 @[simp]
@@ -269,7 +269,7 @@ theorem integral_rpow {r : ℝ} (h : -1 < r ∨ r ≠ -1 ∧ (0 : ℝ) ∉ [a, b
   have hderiv : ∀ x : ℝ, x ≠ 0 → HasDerivAt (fun x : ℝ => x ^ (r + 1) / (r + 1)) (x ^ r) x :=
     by
     intro x hx
-    convert (Real.has_deriv_at_rpow_const (Or.inl hx)).div_const (r + 1)
+    convert (Real.hasDerivAt_rpow_const (Or.inl hx)).div_const (r + 1)
     rw [add_sub_cancel, mul_div_cancel_left]
     contrapose! h
     rw [← eq_neg_iff_add_eq_zero] at h
@@ -293,7 +293,7 @@ theorem integral_rpow {r : ℝ} (h : -1 < r ∨ r ≠ -1 ∧ (0 : ℝ) ∉ [a, b
       · rw [zero_rpow]
         ring
         linarith
-      · apply ContinuousAt.continuous_on
+      · apply ContinuousAt.continuousOn
         intro x hx
         refine' (continuous_at_id.rpow_const _).div_const
         right
@@ -306,7 +306,7 @@ theorem integral_rpow {r : ℝ} (h : -1 < r ∨ r ≠ -1 ∧ (0 : ℝ) ∉ [a, b
       · rw [zero_rpow]
         ring
         linarith
-      · apply ContinuousAt.continuous_on
+      · apply ContinuousAt.continuousOn
         intro x hx
         refine' (continuous_at_id.rpow_const _).div_const
         right
@@ -337,7 +337,7 @@ theorem integral_cpow {r : ℂ} (ha : 0 < a) (hb : 0 < b) (hr : r ≠ -1) :
       0 < min a b := lt_min ha hb
       _ ≤ x := hx.left
       
-  convert ((has_deriv_at_id (x : ℂ)).cpow_const hx').div_const (r + 1)
+  convert ((hasDerivAt_id (x : ℂ)).cpow_const hx').div_const (r + 1)
   simp only [id.def, add_sub_cancel, mul_one]
   rw [mul_comm, mul_div_cancel]
   contrapose! hr
@@ -446,11 +446,11 @@ theorem integral_exp_mul_complex {c : ℂ} (hc : c ≠ 0) :
       congr
       skip
       rw [← mul_div_cancel (Complex.exp (c * x)) hc]
-    convert ((Complex.has_deriv_at_exp _).comp x _).div_const c using 1
-    simpa only [mul_one] using ((has_deriv_at_id (x : ℂ)).const_mul _).comp_of_real
+    convert ((Complex.hasDerivAt_exp _).comp x _).div_const c using 1
+    simpa only [mul_one] using ((hasDerivAt_id (x : ℂ)).const_mul _).comp_of_real
   rw [integral_deriv_eq_sub' _ (funext fun x => (D x).deriv) fun x hx => (D x).DifferentiableAt]
   · ring_nf
-  · apply Continuous.continuous_on
+  · apply Continuous.continuousOn
     continuity
 #align integral_exp_mul_complex integral_exp_mul_complex
 
@@ -461,7 +461,7 @@ theorem integral_log (h : (0 : ℝ) ∉ [a, b]) :
   obtain ⟨h', heq⟩ := fun x hx => ne_of_mem_of_not_mem hx h, fun x hx => mul_inv_cancel (h' x hx)
   convert
       integral_mul_deriv_eq_deriv_mul (fun x hx => has_deriv_at_log (h' x hx))
-        (fun x hx => has_deriv_at_id x)
+        (fun x hx => hasDerivAt_id x)
         (continuous_on_inv₀.mono <| subset_compl_singleton_iff.mpr h).IntervalIntegrable
         continuous_on_const.interval_integrable using
       1 <;>
@@ -527,7 +527,7 @@ theorem integral_mul_cpow_one_add_sq {t : ℂ} (ht : t ≠ -1) :
   · intro x hx
     have f : HasDerivAt (fun y : ℂ => 1 + y ^ 2) (2 * x) x :=
       by
-      convert (has_deriv_at_pow 2 (x : ℂ)).const_add 1
+      convert (hasDerivAt_pow 2 (x : ℂ)).const_add 1
       · norm_cast
       · simp
     have g :
@@ -537,8 +537,7 @@ theorem integral_mul_cpow_one_add_sq {t : ℂ} (ht : t ≠ -1) :
       have : z ≠ 0 := by
         contrapose! hz
         rw [hz, zero_re]
-      convert (HasDerivAt.cpow_const (has_deriv_at_id _) (Or.inl hz)).div_const (2 * (t + 1)) using
-        1
+      convert (HasDerivAt.cpow_const (hasDerivAt_id _) (Or.inl hz)).div_const (2 * (t + 1)) using 1
       field_simp
       ring
     convert (HasDerivAt.comp (↑x) (g _) f).comp_of_real using 1
@@ -651,7 +650,7 @@ theorem integral_sin_pow_pos : 0 < ∫ x in 0 ..π, sin x ^ n := by
 
 theorem integral_sin_pow_succ_le : (∫ x in 0 ..π, sin x ^ (n + 1)) ≤ ∫ x in 0 ..π, sin x ^ n :=
   by
-  let H x h := pow_le_pow_of_le_one (sin_nonneg_of_mem_Icc h) (sin_le_one x) (n.le_add_right 1)
+  let H x h := pow_le_pow_of_le_one (sin_nonneg_of_mem_icc h) (sin_le_one x) (n.le_add_right 1)
   refine' integral_mono_on pi_pos.le _ _ H <;> exact (continuous_sin.pow _).IntervalIntegrable 0 π
 #align integral_sin_pow_succ_le integral_sin_pow_succ_le
 
@@ -716,7 +715,7 @@ theorem integral_sin_pow_mul_cos_pow_odd (m n : ℕ) :
         ∫ x in a..b, sin x ^ m * (1 - sin x ^ 2) ^ n * cos x :=
       by simp only [pow_succ', ← mul_assoc, pow_mul, cos_sq']
     _ = ∫ u in sin a..sin b, u ^ m * (1 - u ^ 2) ^ n :=
-      integral_comp_mul_deriv (fun x hx => has_deriv_at_sin x) continuous_on_cos hc
+      integral_comp_mul_deriv (fun x hx => hasDerivAt_sin x) continuousOn_cos hc
     
 #align integral_sin_pow_mul_cos_pow_odd integral_sin_pow_mul_cos_pow_odd
 
@@ -754,7 +753,7 @@ theorem integral_sin_pow_odd_mul_cos_pow (m n : ℕ) :
       ext
       ring
     _ = ∫ u in cos b..cos a, u ^ n * (1 - u ^ 2) ^ m :=
-      integral_comp_mul_deriv (fun x hx => has_deriv_at_cos x) continuous_on_sin.neg hc
+      integral_comp_mul_deriv (fun x hx => hasDerivAt_cos x) continuousOn_sin.neg hc
     
 #align integral_sin_pow_odd_mul_cos_pow integral_sin_pow_odd_mul_cos_pow
 

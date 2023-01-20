@@ -170,19 +170,19 @@ def shiftFun {n : ℕ} {X : Type _} [Zero X] (f : Fin n → X) (i : Fin (n + 1))
 #align sSet.augmented.standard_simplex.shift_fun SSet.Augmented.standardSimplex.shiftFun
 
 @[simp]
-theorem shift_fun_0 {n : ℕ} {X : Type _} [Zero X] (f : Fin n → X) : shiftFun f 0 = 0 :=
+theorem shiftFun_0 {n : ℕ} {X : Type _} [Zero X] (f : Fin n → X) : shiftFun f 0 = 0 :=
   rfl
-#align sSet.augmented.standard_simplex.shift_fun_0 SSet.Augmented.standardSimplex.shift_fun_0
+#align sSet.augmented.standard_simplex.shift_fun_0 SSet.Augmented.standardSimplex.shiftFun_0
 
 @[simp]
-theorem shift_fun_succ {n : ℕ} {X : Type _} [Zero X] (f : Fin n → X) (i : Fin n) :
+theorem shiftFun_succ {n : ℕ} {X : Type _} [Zero X] (f : Fin n → X) (i : Fin n) :
     shiftFun f i.succ = f i := by
   dsimp [shift_fun]
   split_ifs
   · exfalso
     simpa only [Fin.ext_iff, Fin.val_succ] using h
   · simp only [Fin.pred_succ]
-#align sSet.augmented.standard_simplex.shift_fun_succ SSet.Augmented.standardSimplex.shift_fun_succ
+#align sSet.augmented.standard_simplex.shift_fun_succ SSet.Augmented.standardSimplex.shiftFun_succ
 
 /-- The shift of a morphism `f : [n] → Δ` in `simplex_category` corresponds to
 the monotone map which sends `0` to `0` and `i.succ` to `f.to_order_hom i`. -/
@@ -242,10 +242,10 @@ def extraDegeneracy (Δ : SimplexCategory) :
       simp only [Fin.succ_predAbove_succ, shift_fun_succ]
 #align sSet.augmented.standard_simplex.extra_degeneracy SSet.Augmented.standardSimplex.extraDegeneracy
 
-instance nonempty_extra_degeneracy_standard_simplex (Δ : SimplexCategory) :
+instance nonempty_extraDegeneracy_standardSimplex (Δ : SimplexCategory) :
     Nonempty (SimplicialObject.Augmented.ExtraDegeneracy (standardSimplex.obj Δ)) :=
   ⟨standardSimplex.extraDegeneracy Δ⟩
-#align sSet.augmented.standard_simplex.nonempty_extra_degeneracy_standard_simplex SSet.Augmented.standardSimplex.nonempty_extra_degeneracy_standard_simplex
+#align sSet.augmented.standard_simplex.nonempty_extra_degeneracy_standard_simplex SSet.Augmented.standardSimplex.nonempty_extraDegeneracy_standardSimplex
 
 end StandardSimplex
 
@@ -410,14 +410,14 @@ noncomputable def homotopyEquiv {C : Type _} [Category C] [Preadditive C] [HasZe
         · simp only [eq_self_iff_true]
       comm := fun i => by
         cases i
-        · rw [Homotopy.prev_d_chain_complex, Homotopy.d_next_zero_chain_complex, zero_add]
+        · rw [Homotopy.prevD_chainComplex, Homotopy.dNext_zero_chainComplex, zero_add]
           dsimp [ChainComplex.fromSingle₀Equiv, ChainComplex.toSingle₀Equiv]
           simp only [zero_add, eq_self_iff_true, preadditive.neg_comp, comp_id, if_true,
             alternating_face_map_complex.obj_d_eq, Fin.sum_univ_two, Fin.val_zero, pow_zero,
             one_zsmul, Fin.val_one, pow_one, neg_smul, preadditive.comp_add, ← s₀_comp_δ₁,
             s_comp_δ₀, preadditive.comp_neg, neg_add_rev, neg_neg, neg_add_cancel_right,
             neg_add_cancel_comm]
-        · rw [Homotopy.prev_d_chain_complex, Homotopy.d_next_succ_chain_complex]
+        · rw [Homotopy.prevD_chainComplex, Homotopy.dNext_succ_chainComplex]
           dsimp [ChainComplex.toSingle₀Equiv, ChainComplex.fromSingle₀Equiv]
           simp only [zero_comp, alternating_face_map_complex.obj_d_eq, eq_self_iff_true,
             preadditive.neg_comp, comp_id, if_true, preadditive.comp_neg,

@@ -273,11 +273,11 @@ example {W X Y Z : C} (f : W ⟶ (X ⊗ Y) ⊗ Z) : W ⟶ X ⊗ Y ⊗ Z :=
   f ⊗≫ 𝟙 _
 
 @[simp]
-theorem monoidal_comp_refl {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) : f ⊗≫ g = f ≫ g :=
+theorem monoidalComp_refl {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) : f ⊗≫ g = f ≫ g :=
   by
   dsimp [monoidal_comp]
   simp
-#align category_theory.monoidal_category.monoidal_comp_refl CategoryTheory.MonoidalCategory.monoidal_comp_refl
+#align category_theory.monoidal_category.monoidal_comp_refl CategoryTheory.MonoidalCategory.monoidalComp_refl
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -363,10 +363,10 @@ this moves brackets to the left in order to expose a maximal prefix
 built out of unitors and associators.
 -/
 @[nolint unused_arguments]
-theorem assoc_lift_hom {W X Y Z : C} [LiftObj W] [LiftObj X] [LiftObj Y] (f : W ⟶ X) (g : X ⟶ Y)
+theorem assoc_liftHom {W X Y Z : C} [LiftObj W] [LiftObj X] [LiftObj Y] (f : W ⟶ X) (g : X ⟶ Y)
     (h : Y ⟶ Z) [LiftHom f] [LiftHom g] : f ≫ g ≫ h = (f ≫ g) ≫ h :=
   (Category.assoc _ _ _).symm
-#align tactic.coherence.assoc_lift_hom Tactic.Coherence.assoc_lift_hom
+#align tactic.coherence.assoc_lift_hom Tactic.Coherence.assoc_liftHom
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/

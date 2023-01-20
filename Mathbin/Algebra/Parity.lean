@@ -122,9 +122,15 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Monoid.{u1} α] (m : α), (IsSquare.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1)) m) -> (Exists.{succ u1} α (fun (c : α) => Eq.{succ u1} α m (HPow.hPow.{u1, 0, u1} α Nat α (instHPow.{u1, 0} α Nat (Monoid.Pow.{u1} α _inst_1)) c (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))))
 Case conversion may be inaccurate. Consider using '#align is_square.exists_sq IsSquare.exists_sqₓ'. -/
-alias isSquare_iff_exists_sq ↔ IsSquare.exists_sq is_square_of_exists_sq
+/- warning: is_square_of_exists_sq -> isSquare_of_exists_sq is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Monoid.{u1} α] (m : α), (Exists.{succ u1} α (fun (c : α) => Eq.{succ u1} α m (HPow.hPow.{u1, 0, u1} α Nat α (instHPow.{u1, 0} α Nat (Monoid.Pow.{u1} α _inst_1)) c (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))))) -> (IsSquare.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1)) m)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Monoid.{u1} α] (m : α), (Exists.{succ u1} α (fun (c : α) => Eq.{succ u1} α m (HPow.hPow.{u1, 0, u1} α Nat α (instHPow.{u1, 0} α Nat (Monoid.Pow.{u1} α _inst_1)) c (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))))) -> (IsSquare.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1)) m)
+Case conversion may be inaccurate. Consider using '#align is_square_of_exists_sq isSquare_of_exists_sqₓ'. -/
+alias isSquare_iff_exists_sq ↔ IsSquare.exists_sq isSquare_of_exists_sq
 #align is_square.exists_sq IsSquare.exists_sq
-#align is_square_of_exists_sq is_square_of_exists_sq
+#align is_square_of_exists_sq isSquare_of_exists_sq
 
 attribute
   [to_additive Even.exists_two_nsmul
@@ -134,7 +140,7 @@ attribute
 attribute
   [to_additive even_of_exists_two_nsmul
       "Alias of the backwards direction of\n`even_iff_exists_two_nsmul`."]
-  is_square_of_exists_sq
+  isSquare_of_exists_sq
 
 /- warning: is_square.pow -> IsSquare.pow is a dubious translation:
 lean 3 declaration is
@@ -665,7 +671,7 @@ theorem Odd.pos [Nontrivial α] {n : α} (hn : Odd n) : 0 < n :=
   by
   obtain ⟨k, rfl⟩ := hn
   rw [pos_iff_ne_zero, Ne.def, add_eq_zero_iff, not_and']
-  exact fun h => (one_ne_zero h).elim
+  exact fun h => (one_neZero h).elim
 #align odd.pos Odd.pos
 
 end CanonicallyOrderedCommSemiring

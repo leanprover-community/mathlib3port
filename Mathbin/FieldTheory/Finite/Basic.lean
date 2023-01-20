@@ -191,8 +191,8 @@ theorem cast_card_eq_zero : (q : K) = 0 :=
 theorem forall_pow_eq_one_iff (i : ℕ) : (∀ x : Kˣ, x ^ i = 1) ↔ q - 1 ∣ i := by
   classical
     obtain ⟨x, hx⟩ := IsCyclic.exists_generator Kˣ
-    rw [← Fintype.card_units, ← order_of_eq_card_of_forall_mem_zpowers hx,
-      order_of_dvd_iff_pow_eq_one]
+    rw [← Fintype.card_units, ← orderOf_eq_card_of_forall_mem_zpowers hx,
+      orderOf_dvd_iff_pow_eq_one]
     constructor
     · intro h
       apply h
@@ -269,37 +269,37 @@ section
 
 variable (K' : Type _) [Field K'] {p n : ℕ}
 
-theorem X_pow_card_sub_X_nat_degree_eq (hp : 1 < p) : (X ^ p - X : K'[X]).natDegree = p :=
+theorem x_pow_card_sub_x_natDegree_eq (hp : 1 < p) : (X ^ p - X : K'[X]).natDegree = p :=
   by
   have h1 : (X : K'[X]).degree < (X ^ p : K'[X]).degree :=
     by
     rw [degree_X_pow, degree_X]
     exact_mod_cast hp
   rw [nat_degree_eq_of_degree_eq (degree_sub_eq_left_of_degree_lt h1), nat_degree_X_pow]
-#align finite_field.X_pow_card_sub_X_nat_degree_eq FiniteField.X_pow_card_sub_X_nat_degree_eq
+#align finite_field.X_pow_card_sub_X_nat_degree_eq FiniteField.x_pow_card_sub_x_natDegree_eq
 
-theorem X_pow_card_pow_sub_X_nat_degree_eq (hn : n ≠ 0) (hp : 1 < p) :
+theorem x_pow_card_pow_sub_x_natDegree_eq (hn : n ≠ 0) (hp : 1 < p) :
     (X ^ p ^ n - X : K'[X]).natDegree = p ^ n :=
-  X_pow_card_sub_X_nat_degree_eq K' <| Nat.one_lt_pow _ _ (Nat.pos_of_ne_zero hn) hp
-#align finite_field.X_pow_card_pow_sub_X_nat_degree_eq FiniteField.X_pow_card_pow_sub_X_nat_degree_eq
+  x_pow_card_sub_x_natDegree_eq K' <| Nat.one_lt_pow _ _ (Nat.pos_of_ne_zero hn) hp
+#align finite_field.X_pow_card_pow_sub_X_nat_degree_eq FiniteField.x_pow_card_pow_sub_x_natDegree_eq
 
-theorem X_pow_card_sub_X_ne_zero (hp : 1 < p) : (X ^ p - X : K'[X]) ≠ 0 :=
+theorem x_pow_card_sub_x_ne_zero (hp : 1 < p) : (X ^ p - X : K'[X]) ≠ 0 :=
   ne_zero_of_nat_degree_gt <|
     calc
       1 < _ := hp
-      _ = _ := (X_pow_card_sub_X_nat_degree_eq K' hp).symm
+      _ = _ := (x_pow_card_sub_x_natDegree_eq K' hp).symm
       
-#align finite_field.X_pow_card_sub_X_ne_zero FiniteField.X_pow_card_sub_X_ne_zero
+#align finite_field.X_pow_card_sub_X_ne_zero FiniteField.x_pow_card_sub_x_ne_zero
 
-theorem X_pow_card_pow_sub_X_ne_zero (hn : n ≠ 0) (hp : 1 < p) : (X ^ p ^ n - X : K'[X]) ≠ 0 :=
-  X_pow_card_sub_X_ne_zero K' <| Nat.one_lt_pow _ _ (Nat.pos_of_ne_zero hn) hp
-#align finite_field.X_pow_card_pow_sub_X_ne_zero FiniteField.X_pow_card_pow_sub_X_ne_zero
+theorem x_pow_card_pow_sub_x_ne_zero (hn : n ≠ 0) (hp : 1 < p) : (X ^ p ^ n - X : K'[X]) ≠ 0 :=
+  x_pow_card_sub_x_ne_zero K' <| Nat.one_lt_pow _ _ (Nat.pos_of_ne_zero hn) hp
+#align finite_field.X_pow_card_pow_sub_X_ne_zero FiniteField.x_pow_card_pow_sub_x_ne_zero
 
 end
 
 variable (p : ℕ) [Fact p.Prime] [Algebra (Zmod p) K]
 
-theorem roots_X_pow_card_sub_X : roots (X ^ q - X : K[X]) = Finset.univ.val := by
+theorem roots_x_pow_card_sub_x : roots (X ^ q - X : K[X]) = Finset.univ.val := by
   classical
     have aux : (X ^ q - X : K[X]) ≠ 0 := X_pow_card_sub_X_ne_zero K Fintype.one_lt_card
     have : (roots (X ^ q - X : K[X])).toFinset = Finset.univ :=
@@ -315,7 +315,7 @@ theorem roots_X_pow_card_sub_X : roots (X ^ q - X : K[X]) = Finset.univ.val := b
     ·
       rw [derivative_sub, derivative_X, derivative_X_pow, CharP.cast_card_eq_zero K, C_0, zero_mul,
         zero_sub]
-#align finite_field.roots_X_pow_card_sub_X FiniteField.roots_X_pow_card_sub_X
+#align finite_field.roots_X_pow_card_sub_X FiniteField.roots_x_pow_card_sub_x
 
 instance (F : Type _) [Field F] [Algebra F K] : IsSplittingField F K (X ^ q - X)
     where
@@ -413,7 +413,7 @@ theorem Zmod.pow_totient {n : ℕ} (x : (Zmod n)ˣ) : x ^ φ n = 1 :=
   of the same theorem. -/
 theorem Nat.ModEq.pow_totient {x n : ℕ} (h : Nat.Coprime x n) : x ^ φ n ≡ 1 [MOD n] :=
   by
-  rw [← Zmod.eq_iff_modeq_nat]
+  rw [← Zmod.eq_iff_modEq_nat]
   let x' : Units (Zmod n) := Zmod.unitOfCoprime _ h
   have := Zmod.pow_totient x'
   apply_fun (coe : Units (Zmod n) → Zmod n)  at this
@@ -480,15 +480,14 @@ theorem pow_card_sub_one_eq_one {p : ℕ} [Fact p.Prime] {a : Zmod p} (ha : a �
   rwa [Zmod.card p] at h
 #align zmod.pow_card_sub_one_eq_one Zmod.pow_card_sub_one_eq_one
 
-theorem order_of_units_dvd_card_sub_one {p : ℕ} [Fact p.Prime] (u : (Zmod p)ˣ) :
-    orderOf u ∣ p - 1 :=
-  order_of_dvd_of_pow_eq_one <| units_pow_card_sub_one_eq_one _ _
-#align zmod.order_of_units_dvd_card_sub_one Zmod.order_of_units_dvd_card_sub_one
+theorem orderOf_units_dvd_card_sub_one {p : ℕ} [Fact p.Prime] (u : (Zmod p)ˣ) : orderOf u ∣ p - 1 :=
+  orderOf_dvd_of_pow_eq_one <| units_pow_card_sub_one_eq_one _ _
+#align zmod.order_of_units_dvd_card_sub_one Zmod.orderOf_units_dvd_card_sub_one
 
-theorem order_of_dvd_card_sub_one {p : ℕ} [Fact p.Prime] {a : Zmod p} (ha : a ≠ 0) :
+theorem orderOf_dvd_card_sub_one {p : ℕ} [Fact p.Prime] {a : Zmod p} (ha : a ≠ 0) :
     orderOf a ∣ p - 1 :=
-  order_of_dvd_of_pow_eq_one <| pow_card_sub_one_eq_one ha
-#align zmod.order_of_dvd_card_sub_one Zmod.order_of_dvd_card_sub_one
+  orderOf_dvd_of_pow_eq_one <| pow_card_sub_one_eq_one ha
+#align zmod.order_of_dvd_card_sub_one Zmod.orderOf_dvd_card_sub_one
 
 open Polynomial
 
@@ -510,7 +509,7 @@ theorem Int.ModEq.pow_card_sub_one_eq_one {p : ℕ} (hp : Nat.Prime p) {n : ℤ}
     by
     rw [CharP.int_cast_eq_zero_iff _ p, ← (nat.prime_iff_prime_int.mp hp).coprime_iff_not_dvd]
     · exact hpn.symm
-    exact Zmod.char_p p
+    exact Zmod.charP p
   simpa [← Zmod.int_coe_eq_int_coe_iff] using Zmod.pow_card_sub_one_eq_one this
 #align int.modeq.pow_card_sub_one_eq_one Int.ModEq.pow_card_sub_one_eq_one
 
@@ -525,10 +524,10 @@ section Finite
 variable [Finite F]
 
 /-- In a finite field of characteristic `2`, all elements are squares. -/
-theorem is_square_of_char_two (hF : ringChar F = 2) (a : F) : IsSquare a :=
+theorem isSquare_of_char_two (hF : ringChar F = 2) (a : F) : IsSquare a :=
   haveI hF' : CharP F 2 := ringChar.of_eq hF
-  is_square_of_char_two' a
-#align finite_field.is_square_of_char_two FiniteField.is_square_of_char_two
+  isSquare_of_char_two' a
+#align finite_field.is_square_of_char_two FiniteField.isSquare_of_char_two
 
 /-- In a finite field of odd characteristic, not every element is a square. -/
 theorem exists_nonsquare (hF : ringChar F ≠ 2) : ∃ a : F, ¬IsSquare a :=
@@ -586,7 +585,7 @@ theorem pow_dichotomy (hF : ringChar F ≠ 2) {a : F} (ha : a ≠ 0) :
 
 /-- A unit `a` of a finite field `F` of odd characteristic is a square
 if and only if `a ^ (#F / 2) = 1`. -/
-theorem unit_is_square_iff (hF : ringChar F ≠ 2) (a : Fˣ) :
+theorem unit_isSquare_iff (hF : ringChar F ≠ 2) (a : Fˣ) :
     IsSquare a ↔ a ^ (Fintype.card F / 2) = 1 := by
   classical
     obtain ⟨g, hg⟩ := IsCyclic.exists_generator Fˣ
@@ -606,20 +605,20 @@ theorem unit_is_square_iff (hF : ringChar F ≠ 2) (a : Fˣ) :
       have key : 2 * (Fintype.card F / 2) ∣ n * (Fintype.card F / 2) :=
         by
         rw [← pow_mul] at h
-        rw [hodd, ← Fintype.card_units, ← order_of_eq_card_of_forall_mem_zpowers hg]
-        apply order_of_dvd_of_pow_eq_one h
+        rw [hodd, ← Fintype.card_units, ← orderOf_eq_card_of_forall_mem_zpowers hg]
+        apply orderOf_dvd_of_pow_eq_one h
       have : 0 < Fintype.card F / 2 := Nat.div_pos Fintype.one_lt_card (by norm_num)
       obtain ⟨m, rfl⟩ := Nat.dvd_of_mul_dvd_mul_right this key
       refine' ⟨g ^ m, _⟩
       rw [mul_comm, pow_mul, pow_two]
-#align finite_field.unit_is_square_iff FiniteField.unit_is_square_iff
+#align finite_field.unit_is_square_iff FiniteField.unit_isSquare_iff
 
 /-- A non-zero `a : F` is a square if and only if `a ^ (#F / 2) = 1`. -/
-theorem is_square_iff (hF : ringChar F ≠ 2) {a : F} (ha : a ≠ 0) :
+theorem isSquare_iff (hF : ringChar F ≠ 2) {a : F} (ha : a ≠ 0) :
     IsSquare a ↔ a ^ (Fintype.card F / 2) = 1 :=
   by
   apply
-    (iff_congr _ (by simp [Units.ext_iff])).mp (FiniteField.unit_is_square_iff hF (Units.mk0 a ha))
+    (iff_congr _ (by simp [Units.ext_iff])).mp (FiniteField.unit_isSquare_iff hF (Units.mk0 a ha))
   simp only [IsSquare, Units.ext_iff, Units.val_mk0, Units.val_mul]
   constructor
   · rintro ⟨y, hy⟩
@@ -630,7 +629,7 @@ theorem is_square_iff (hF : ringChar F ≠ 2) {a : F} (ha : a ≠ 0) :
       simpa [zero_pow] using ha
     refine' ⟨Units.mk0 y hy, _⟩
     simp
-#align finite_field.is_square_iff FiniteField.is_square_iff
+#align finite_field.is_square_iff FiniteField.isSquare_iff
 
 end FiniteField
 

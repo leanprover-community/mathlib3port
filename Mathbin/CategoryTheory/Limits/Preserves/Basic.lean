@@ -130,15 +130,15 @@ def isColimitOfPreserves (F : C ⥤ D) {c : Cocone K} (t : IsColimit c) [Preserv
   PreservesColimit.preserves t
 #align category_theory.limits.is_colimit_of_preserves CategoryTheory.Limits.isColimitOfPreserves
 
-instance preserves_limit_subsingleton (K : J ⥤ C) (F : C ⥤ D) : Subsingleton (PreservesLimit K F) :=
+instance preservesLimit_subsingleton (K : J ⥤ C) (F : C ⥤ D) : Subsingleton (PreservesLimit K F) :=
   by constructor <;> rintro ⟨a⟩ ⟨b⟩ <;> congr
-#align category_theory.limits.preserves_limit_subsingleton CategoryTheory.Limits.preserves_limit_subsingleton
+#align category_theory.limits.preserves_limit_subsingleton CategoryTheory.Limits.preservesLimit_subsingleton
 
-instance preserves_colimit_subsingleton (K : J ⥤ C) (F : C ⥤ D) :
+instance preservesColimit_subsingleton (K : J ⥤ C) (F : C ⥤ D) :
     Subsingleton (PreservesColimit K F) := by constructor <;> rintro ⟨a⟩ ⟨b⟩ <;> congr
-#align category_theory.limits.preserves_colimit_subsingleton CategoryTheory.Limits.preserves_colimit_subsingleton
+#align category_theory.limits.preserves_colimit_subsingleton CategoryTheory.Limits.preservesColimit_subsingleton
 
-instance preserves_limits_of_shape_subsingleton (J : Type w) [Category.{w'} J] (F : C ⥤ D) :
+instance preservesLimitsOfShape_subsingleton (J : Type w) [Category.{w'} J] (F : C ⥤ D) :
     Subsingleton (PreservesLimitsOfShape J F) :=
   by
   constructor
@@ -146,9 +146,9 @@ instance preserves_limits_of_shape_subsingleton (J : Type w) [Category.{w'} J] (
   cases a
   cases b
   congr
-#align category_theory.limits.preserves_limits_of_shape_subsingleton CategoryTheory.Limits.preserves_limits_of_shape_subsingleton
+#align category_theory.limits.preserves_limits_of_shape_subsingleton CategoryTheory.Limits.preservesLimitsOfShape_subsingleton
 
-instance preserves_colimits_of_shape_subsingleton (J : Type w) [Category.{w'} J] (F : C ⥤ D) :
+instance preservesColimitsOfShape_subsingleton (J : Type w) [Category.{w'} J] (F : C ⥤ D) :
     Subsingleton (PreservesColimitsOfShape J F) :=
   by
   constructor
@@ -156,7 +156,7 @@ instance preserves_colimits_of_shape_subsingleton (J : Type w) [Category.{w'} J]
   cases a
   cases b
   congr
-#align category_theory.limits.preserves_colimits_of_shape_subsingleton CategoryTheory.Limits.preserves_colimits_of_shape_subsingleton
+#align category_theory.limits.preserves_colimits_of_shape_subsingleton CategoryTheory.Limits.preservesColimitsOfShape_subsingleton
 
 instance preserves_limits_subsingleton (F : C ⥤ D) :
     Subsingleton (PreservesLimitsOfSize.{w', w} F) :=
@@ -460,15 +460,15 @@ def isColimitOfReflects (F : C ⥤ D) {c : Cocone K} (t : IsColimit (F.mapCocone
   ReflectsColimit.reflects t
 #align category_theory.limits.is_colimit_of_reflects CategoryTheory.Limits.isColimitOfReflects
 
-instance reflects_limit_subsingleton (K : J ⥤ C) (F : C ⥤ D) : Subsingleton (ReflectsLimit K F) :=
-  by constructor <;> rintro ⟨a⟩ ⟨b⟩ <;> congr
-#align category_theory.limits.reflects_limit_subsingleton CategoryTheory.Limits.reflects_limit_subsingleton
+instance reflectsLimit_subsingleton (K : J ⥤ C) (F : C ⥤ D) : Subsingleton (ReflectsLimit K F) := by
+  constructor <;> rintro ⟨a⟩ ⟨b⟩ <;> congr
+#align category_theory.limits.reflects_limit_subsingleton CategoryTheory.Limits.reflectsLimit_subsingleton
 
-instance reflects_colimit_subsingleton (K : J ⥤ C) (F : C ⥤ D) :
+instance reflectsColimit_subsingleton (K : J ⥤ C) (F : C ⥤ D) :
     Subsingleton (ReflectsColimit K F) := by constructor <;> rintro ⟨a⟩ ⟨b⟩ <;> congr
-#align category_theory.limits.reflects_colimit_subsingleton CategoryTheory.Limits.reflects_colimit_subsingleton
+#align category_theory.limits.reflects_colimit_subsingleton CategoryTheory.Limits.reflectsColimit_subsingleton
 
-instance reflects_limits_of_shape_subsingleton (J : Type w) [Category.{w'} J] (F : C ⥤ D) :
+instance reflectsLimitsOfShape_subsingleton (J : Type w) [Category.{w'} J] (F : C ⥤ D) :
     Subsingleton (ReflectsLimitsOfShape J F) :=
   by
   constructor
@@ -476,9 +476,9 @@ instance reflects_limits_of_shape_subsingleton (J : Type w) [Category.{w'} J] (F
   cases a
   cases b
   congr
-#align category_theory.limits.reflects_limits_of_shape_subsingleton CategoryTheory.Limits.reflects_limits_of_shape_subsingleton
+#align category_theory.limits.reflects_limits_of_shape_subsingleton CategoryTheory.Limits.reflectsLimitsOfShape_subsingleton
 
-instance reflects_colimits_of_shape_subsingleton (J : Type w) [Category.{w'} J] (F : C ⥤ D) :
+instance reflectsColimitsOfShape_subsingleton (J : Type w) [Category.{w'} J] (F : C ⥤ D) :
     Subsingleton (ReflectsColimitsOfShape J F) :=
   by
   constructor
@@ -486,7 +486,7 @@ instance reflects_colimits_of_shape_subsingleton (J : Type w) [Category.{w'} J] 
   cases a
   cases b
   congr
-#align category_theory.limits.reflects_colimits_of_shape_subsingleton CategoryTheory.Limits.reflects_colimits_of_shape_subsingleton
+#align category_theory.limits.reflects_colimits_of_shape_subsingleton CategoryTheory.Limits.reflectsColimitsOfShape_subsingleton
 
 instance reflects_limits_subsingleton (F : C ⥤ D) : Subsingleton (ReflectsLimitsOfSize.{w', w} F) :=
   by

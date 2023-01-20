@@ -92,10 +92,10 @@ theorem inr_eq_smul_eps [MulZeroOneClass R] (r : R) : inr r = (r • ε : R[ε])
 
 /-- For two algebra morphisms out of `R[ε]` to agree, it suffices for them to agree on `ε`. -/
 @[ext]
-theorem alg_hom_ext {A} [CommSemiring R] [Semiring A] [Algebra R A] ⦃f g : R[ε] →ₐ[R] A⦄
+theorem algHom_ext {A} [CommSemiring R] [Semiring A] [Algebra R A] ⦃f g : R[ε] →ₐ[R] A⦄
     (h : f ε = g ε) : f = g :=
   alg_hom_ext' <| LinearMap.ext_ring <| h
-#align dual_number.alg_hom_ext DualNumber.alg_hom_ext
+#align dual_number.alg_hom_ext DualNumber.algHom_ext
 
 variable {A : Type _} [CommSemiring R] [Semiring A] [Algebra R A]
 
@@ -118,7 +118,7 @@ def lift : { e : A // e * e = 0 } ≃ (R[ε] →ₐ[R] A) :=
 -- When applied to `ε`, `dual_number.lift` produces the element of `A` that squares to 0.
 @[simp]
 theorem lift_apply_eps (e : { e : A // e * e = 0 }) : lift e (ε : R[ε]) = e :=
-  (TrivSqZeroExt.lift_aux_apply_inr _ _ _).trans <| one_smul _ _
+  (TrivSqZeroExt.liftAux_apply_inr _ _ _).trans <| one_smul _ _
 #align dual_number.lift_apply_eps DualNumber.lift_apply_eps
 
 -- Lifting `dual_number.eps` itself gives the identity.

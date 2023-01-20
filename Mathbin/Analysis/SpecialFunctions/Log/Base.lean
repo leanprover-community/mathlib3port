@@ -123,9 +123,9 @@ theorem rpow_logb_of_neg (hx : x < 0) : b ^ logb b x = -x :=
   exact abs_of_neg hx
 #align real.rpow_logb_of_neg Real.rpow_logb_of_neg
 
-theorem surj_on_logb : SurjOn (logb b) (Ioi 0) univ := fun x _ =>
+theorem surjOn_logb : SurjOn (logb b) (Ioi 0) univ := fun x _ =>
   ⟨rpow b x, rpow_pos_of_pos b_pos x, logb_rpow b_pos b_ne_one⟩
-#align real.surj_on_logb Real.surj_on_logb
+#align real.surj_on_logb Real.surjOn_logb
 
 theorem logb_surjective : Surjective (logb b) := fun x => ⟨b ^ x, logb_rpow b_pos b_ne_one⟩
 #align real.logb_surjective Real.logb_surjective
@@ -135,7 +135,7 @@ theorem range_logb : range (logb b) = univ :=
   (logb_surjective b_pos b_ne_one).range_eq
 #align real.range_logb Real.range_logb
 
-theorem surj_on_logb' : SurjOn (logb b) (Iio 0) univ :=
+theorem surjOn_logb' : SurjOn (logb b) (Iio 0) univ :=
   by
   intro x x_in_univ
   use -b ^ x
@@ -143,7 +143,7 @@ theorem surj_on_logb' : SurjOn (logb b) (Iio 0) univ :=
   · simp only [Right.neg_neg_iff, Set.mem_Iio]
     apply rpow_pos_of_pos b_pos
   · rw [logb_neg_eq_logb, logb_rpow b_pos b_ne_one]
-#align real.surj_on_logb' Real.surj_on_logb'
+#align real.surj_on_logb' Real.surjOn_logb'
 
 end BPosAndNeOne
 
@@ -238,33 +238,33 @@ theorem logb_nonpos (hx : 0 ≤ x) (h'x : x ≤ 1) : logb b x ≤ 0 :=
   (logb_nonpos_iff' hb hx).2 h'x
 #align real.logb_nonpos Real.logb_nonpos
 
-theorem strict_mono_on_logb : StrictMonoOn (logb b) (Set.Ioi 0) := fun x hx y hy hxy =>
+theorem strictMonoOn_logb : StrictMonoOn (logb b) (Set.Ioi 0) := fun x hx y hy hxy =>
   logb_lt_logb hb hx hxy
-#align real.strict_mono_on_logb Real.strict_mono_on_logb
+#align real.strict_mono_on_logb Real.strictMonoOn_logb
 
-theorem strict_anti_on_logb : StrictAntiOn (logb b) (Set.Iio 0) :=
+theorem strictAntiOn_logb : StrictAntiOn (logb b) (Set.Iio 0) :=
   by
   rintro x (hx : x < 0) y (hy : y < 0) hxy
   rw [← logb_abs y, ← logb_abs x]
   refine' logb_lt_logb hb (abs_pos.2 hy.ne) _
   rwa [abs_of_neg hy, abs_of_neg hx, neg_lt_neg_iff]
-#align real.strict_anti_on_logb Real.strict_anti_on_logb
+#align real.strict_anti_on_logb Real.strictAntiOn_logb
 
-theorem logb_inj_on_pos : Set.InjOn (logb b) (Set.Ioi 0) :=
-  (strict_mono_on_logb hb).InjOn
-#align real.logb_inj_on_pos Real.logb_inj_on_pos
+theorem logb_injOn_pos : Set.InjOn (logb b) (Set.Ioi 0) :=
+  (strictMonoOn_logb hb).InjOn
+#align real.logb_inj_on_pos Real.logb_injOn_pos
 
 theorem eq_one_of_pos_of_logb_eq_zero (h₁ : 0 < x) (h₂ : logb b x = 0) : x = 1 :=
-  logb_inj_on_pos hb (Set.mem_Ioi.2 h₁) (Set.mem_Ioi.2 zero_lt_one) (h₂.trans Real.logb_one.symm)
+  logb_injOn_pos hb (Set.mem_Ioi.2 h₁) (Set.mem_Ioi.2 zero_lt_one) (h₂.trans Real.logb_one.symm)
 #align real.eq_one_of_pos_of_logb_eq_zero Real.eq_one_of_pos_of_logb_eq_zero
 
 theorem logb_ne_zero_of_pos_of_ne_one (hx_pos : 0 < x) (hx : x ≠ 1) : logb b x ≠ 0 :=
   mt (eq_one_of_pos_of_logb_eq_zero hb hx_pos) hx
 #align real.logb_ne_zero_of_pos_of_ne_one Real.logb_ne_zero_of_pos_of_ne_one
 
-theorem tendsto_logb_at_top : Tendsto (logb b) atTop atTop :=
-  Tendsto.at_top_div_const (log_pos hb) tendsto_log_at_top
-#align real.tendsto_logb_at_top Real.tendsto_logb_at_top
+theorem tendsto_logb_atTop : Tendsto (logb b) atTop atTop :=
+  Tendsto.atTop_div_const (log_pos hb) tendsto_log_atTop
+#align real.tendsto_logb_at_top Real.tendsto_logb_atTop
 
 end OneLtB
 
@@ -347,24 +347,24 @@ theorem logb_nonpos_iff_of_base_lt_one (hx : 0 < x) : logb b x ≤ 0 ↔ 1 ≤ x
   rw [← not_lt, logb_pos_iff_of_base_lt_one b_pos b_lt_one hx, not_lt]
 #align real.logb_nonpos_iff_of_base_lt_one Real.logb_nonpos_iff_of_base_lt_one
 
-theorem strict_anti_on_logb_of_base_lt_one : StrictAntiOn (logb b) (Set.Ioi 0) :=
-  fun x hx y hy hxy => logb_lt_logb_of_base_lt_one b_pos b_lt_one hx hxy
-#align real.strict_anti_on_logb_of_base_lt_one Real.strict_anti_on_logb_of_base_lt_one
+theorem strictAntiOn_logb_of_base_lt_one : StrictAntiOn (logb b) (Set.Ioi 0) := fun x hx y hy hxy =>
+  logb_lt_logb_of_base_lt_one b_pos b_lt_one hx hxy
+#align real.strict_anti_on_logb_of_base_lt_one Real.strictAntiOn_logb_of_base_lt_one
 
-theorem strict_mono_on_logb_of_base_lt_one : StrictMonoOn (logb b) (Set.Iio 0) :=
+theorem strictMonoOn_logb_of_base_lt_one : StrictMonoOn (logb b) (Set.Iio 0) :=
   by
   rintro x (hx : x < 0) y (hy : y < 0) hxy
   rw [← logb_abs y, ← logb_abs x]
   refine' logb_lt_logb_of_base_lt_one b_pos b_lt_one (abs_pos.2 hy.ne) _
   rwa [abs_of_neg hy, abs_of_neg hx, neg_lt_neg_iff]
-#align real.strict_mono_on_logb_of_base_lt_one Real.strict_mono_on_logb_of_base_lt_one
+#align real.strict_mono_on_logb_of_base_lt_one Real.strictMonoOn_logb_of_base_lt_one
 
-theorem logb_inj_on_pos_of_base_lt_one : Set.InjOn (logb b) (Set.Ioi 0) :=
-  (strict_anti_on_logb_of_base_lt_one b_pos b_lt_one).InjOn
-#align real.logb_inj_on_pos_of_base_lt_one Real.logb_inj_on_pos_of_base_lt_one
+theorem logb_injOn_pos_of_base_lt_one : Set.InjOn (logb b) (Set.Ioi 0) :=
+  (strictAntiOn_logb_of_base_lt_one b_pos b_lt_one).InjOn
+#align real.logb_inj_on_pos_of_base_lt_one Real.logb_injOn_pos_of_base_lt_one
 
 theorem eq_one_of_pos_of_logb_eq_zero_of_base_lt_one (h₁ : 0 < x) (h₂ : logb b x = 0) : x = 1 :=
-  logb_inj_on_pos_of_base_lt_one b_pos b_lt_one (Set.mem_Ioi.2 h₁) (Set.mem_Ioi.2 zero_lt_one)
+  logb_injOn_pos_of_base_lt_one b_pos b_lt_one (Set.mem_Ioi.2 h₁) (Set.mem_Ioi.2 zero_lt_one)
     (h₂.trans Real.logb_one.symm)
 #align real.eq_one_of_pos_of_logb_eq_zero_of_base_lt_one Real.eq_one_of_pos_of_logb_eq_zero_of_base_lt_one
 
@@ -372,7 +372,7 @@ theorem logb_ne_zero_of_pos_of_ne_one_of_base_lt_one (hx_pos : 0 < x) (hx : x �
   mt (eq_one_of_pos_of_logb_eq_zero_of_base_lt_one b_pos b_lt_one hx_pos) hx
 #align real.logb_ne_zero_of_pos_of_ne_one_of_base_lt_one Real.logb_ne_zero_of_pos_of_ne_one_of_base_lt_one
 
-theorem tendsto_logb_at_top_of_base_lt_one : Tendsto (logb b) atTop atBot :=
+theorem tendsto_logb_atTop_of_base_lt_one : Tendsto (logb b) atTop atBot :=
   by
   rw [tendsto_at_top_at_bot]
   intro e
@@ -383,7 +383,7 @@ theorem tendsto_logb_at_top_of_base_lt_one : Tendsto (logb b) atTop atBot :=
   rw [logb_le_iff_le_rpow_of_base_lt_one b_pos b_lt_one]
   tauto
   exact lt_of_lt_of_le zero_lt_one ha
-#align real.tendsto_logb_at_top_of_base_lt_one Real.tendsto_logb_at_top_of_base_lt_one
+#align real.tendsto_logb_at_top_of_base_lt_one Real.tendsto_logb_atTop_of_base_lt_one
 
 end BPosAndBLtOne
 

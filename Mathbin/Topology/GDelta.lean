@@ -56,56 +56,56 @@ def IsGδ (s : Set α) : Prop :=
 #align is_Gδ IsGδ
 
 /-- An open set is a Gδ set. -/
-theorem IsOpen.is_Gδ {s : Set α} (h : IsOpen s) : IsGδ s :=
+theorem IsOpen.isGδ {s : Set α} (h : IsOpen s) : IsGδ s :=
   ⟨{s}, by simp [h], countable_singleton _, (Set.interₛ_singleton _).symm⟩
-#align is_open.is_Gδ IsOpen.is_Gδ
+#align is_open.is_Gδ IsOpen.isGδ
 
 @[simp]
-theorem is_Gδ_empty : IsGδ (∅ : Set α) :=
-  is_open_empty.IsGδ
-#align is_Gδ_empty is_Gδ_empty
+theorem isGδ_empty : IsGδ (∅ : Set α) :=
+  isOpen_empty.IsGδ
+#align is_Gδ_empty isGδ_empty
 
 @[simp]
-theorem is_Gδ_univ : IsGδ (univ : Set α) :=
-  is_open_univ.IsGδ
-#align is_Gδ_univ is_Gδ_univ
+theorem isGδ_univ : IsGδ (univ : Set α) :=
+  isOpen_univ.IsGδ
+#align is_Gδ_univ isGδ_univ
 
-theorem is_Gδ_bInter_of_open {I : Set ι} (hI : I.Countable) {f : ι → Set α}
+theorem isGδ_bInter_of_open {I : Set ι} (hI : I.Countable) {f : ι → Set α}
     (hf : ∀ i ∈ I, IsOpen (f i)) : IsGδ (⋂ i ∈ I, f i) :=
   ⟨f '' I, by rwa [ball_image_iff], hI.image _, by rw [sInter_image]⟩
-#align is_Gδ_bInter_of_open is_Gδ_bInter_of_open
+#align is_Gδ_bInter_of_open isGδ_bInter_of_open
 
-theorem is_Gδ_Inter_of_open [Encodable ι] {f : ι → Set α} (hf : ∀ i, IsOpen (f i)) :
+theorem isGδ_interᵢ_of_open [Encodable ι] {f : ι → Set α} (hf : ∀ i, IsOpen (f i)) :
     IsGδ (⋂ i, f i) :=
   ⟨range f, by rwa [forall_range_iff], countable_range _, by rw [sInter_range]⟩
-#align is_Gδ_Inter_of_open is_Gδ_Inter_of_open
+#align is_Gδ_Inter_of_open isGδ_interᵢ_of_open
 
 /-- The intersection of an encodable family of Gδ sets is a Gδ set. -/
-theorem is_Gδ_Inter [Encodable ι] {s : ι → Set α} (hs : ∀ i, IsGδ (s i)) : IsGδ (⋂ i, s i) :=
+theorem isGδ_interᵢ [Encodable ι] {s : ι → Set α} (hs : ∀ i, IsGδ (s i)) : IsGδ (⋂ i, s i) :=
   by
   choose T hTo hTc hTs using hs
   obtain rfl : s = fun i => ⋂₀ T i := funext hTs
   refine' ⟨⋃ i, T i, _, countable_Union hTc, (sInter_Union _).symm⟩
   simpa [@forall_swap ι] using hTo
-#align is_Gδ_Inter is_Gδ_Inter
+#align is_Gδ_Inter isGδ_interᵢ
 
-theorem is_Gδ_bInter {s : Set ι} (hs : s.Countable) {t : ∀ i ∈ s, Set α}
+theorem isGδ_bInter {s : Set ι} (hs : s.Countable) {t : ∀ i ∈ s, Set α}
     (ht : ∀ i ∈ s, IsGδ (t i ‹_›)) : IsGδ (⋂ i ∈ s, t i ‹_›) :=
   by
   rw [bInter_eq_Inter]
   haveI := hs.to_encodable
-  exact is_Gδ_Inter fun x => ht x x.2
-#align is_Gδ_bInter is_Gδ_bInter
+  exact isGδ_interᵢ fun x => ht x x.2
+#align is_Gδ_bInter isGδ_bInter
 
 /-- A countable intersection of Gδ sets is a Gδ set. -/
-theorem is_Gδ_sInter {S : Set (Set α)} (h : ∀ s ∈ S, IsGδ s) (hS : S.Countable) : IsGδ (⋂₀ S) := by
-  simpa only [sInter_eq_bInter] using is_Gδ_bInter hS h
-#align is_Gδ_sInter is_Gδ_sInter
+theorem isGδ_interₛ {S : Set (Set α)} (h : ∀ s ∈ S, IsGδ s) (hS : S.Countable) : IsGδ (⋂₀ S) := by
+  simpa only [sInter_eq_bInter] using isGδ_bInter hS h
+#align is_Gδ_sInter isGδ_interₛ
 
 theorem IsGδ.inter {s t : Set α} (hs : IsGδ s) (ht : IsGδ t) : IsGδ (s ∩ t) :=
   by
   rw [inter_eq_Inter]
-  exact is_Gδ_Inter (Bool.forall_bool.2 ⟨ht, hs⟩)
+  exact isGδ_interᵢ (Bool.forall_bool.2 ⟨ht, hs⟩)
 #align is_Gδ.inter IsGδ.inter
 
 /-- The union of two Gδ sets is a Gδ set. -/
@@ -114,68 +114,68 @@ theorem IsGδ.union {s t : Set α} (hs : IsGδ s) (ht : IsGδ t) : IsGδ (s ∪ 
   rcases hs with ⟨S, Sopen, Scount, rfl⟩
   rcases ht with ⟨T, Topen, Tcount, rfl⟩
   rw [sInter_union_sInter]
-  apply is_Gδ_bInter_of_open (Scount.prod Tcount)
+  apply isGδ_bInter_of_open (Scount.prod Tcount)
   rintro ⟨a, b⟩ ⟨ha, hb⟩
   exact (Sopen a ha).union (Topen b hb)
 #align is_Gδ.union IsGδ.union
 
 /-- The union of finitely many Gδ sets is a Gδ set. -/
-theorem is_Gδ_bUnion {s : Set ι} (hs : s.Finite) {f : ι → Set α} (h : ∀ i ∈ s, IsGδ (f i)) :
+theorem isGδ_bUnion {s : Set ι} (hs : s.Finite) {f : ι → Set α} (h : ∀ i ∈ s, IsGδ (f i)) :
     IsGδ (⋃ i ∈ s, f i) := by
   refine' finite.induction_on hs (by simp) _ h
   simp only [ball_insert_iff, bUnion_insert]
   exact fun a s _ _ ihs H => H.1.union (ihs H.2)
-#align is_Gδ_bUnion is_Gδ_bUnion
+#align is_Gδ_bUnion isGδ_bUnion
 
-theorem IsClosed.is_Gδ {α} [UniformSpace α] [IsCountablyGenerated (𝓤 α)] {s : Set α}
+theorem IsClosed.isGδ {α} [UniformSpace α] [IsCountablyGenerated (𝓤 α)] {s : Set α}
     (hs : IsClosed s) : IsGδ s :=
   by
-  rcases(@uniformity_has_basis_open α _).exists_antitone_subbasis with ⟨U, hUo, hU, -⟩
+  rcases(@uniformity_hasBasis_open α _).exists_antitone_subbasis with ⟨U, hUo, hU, -⟩
   rw [← hs.closure_eq, ← hU.bInter_bUnion_ball]
-  refine' is_Gδ_bInter (to_countable _) fun n hn => IsOpen.is_Gδ _
-  exact is_open_bUnion fun x hx => UniformSpace.is_open_ball _ (hUo _).2
-#align is_closed.is_Gδ IsClosed.is_Gδ
+  refine' isGδ_bInter (to_countable _) fun n hn => IsOpen.isGδ _
+  exact isOpen_bUnion fun x hx => UniformSpace.isOpen_ball _ (hUo _).2
+#align is_closed.is_Gδ IsClosed.isGδ
 
 section T1Space
 
 variable [T1Space α]
 
-theorem is_Gδ_compl_singleton (a : α) : IsGδ ({a}ᶜ : Set α) :=
-  is_open_compl_singleton.IsGδ
-#align is_Gδ_compl_singleton is_Gδ_compl_singleton
+theorem isGδ_compl_singleton (a : α) : IsGδ ({a}ᶜ : Set α) :=
+  isOpen_compl_singleton.IsGδ
+#align is_Gδ_compl_singleton isGδ_compl_singleton
 
-theorem Set.Countable.is_Gδ_compl {s : Set α} (hs : s.Countable) : IsGδ (sᶜ) :=
+theorem Set.Countable.isGδ_compl {s : Set α} (hs : s.Countable) : IsGδ (sᶜ) :=
   by
   rw [← bUnion_of_singleton s, compl_Union₂]
-  exact is_Gδ_bInter hs fun x _ => is_Gδ_compl_singleton x
-#align set.countable.is_Gδ_compl Set.Countable.is_Gδ_compl
+  exact isGδ_bInter hs fun x _ => isGδ_compl_singleton x
+#align set.countable.is_Gδ_compl Set.Countable.isGδ_compl
 
-theorem Set.Finite.is_Gδ_compl {s : Set α} (hs : s.Finite) : IsGδ (sᶜ) :=
+theorem Set.Finite.isGδ_compl {s : Set α} (hs : s.Finite) : IsGδ (sᶜ) :=
   hs.Countable.is_Gδ_compl
-#align set.finite.is_Gδ_compl Set.Finite.is_Gδ_compl
+#align set.finite.is_Gδ_compl Set.Finite.isGδ_compl
 
-theorem Set.Subsingleton.is_Gδ_compl {s : Set α} (hs : s.Subsingleton) : IsGδ (sᶜ) :=
+theorem Set.Subsingleton.isGδ_compl {s : Set α} (hs : s.Subsingleton) : IsGδ (sᶜ) :=
   hs.Finite.is_Gδ_compl
-#align set.subsingleton.is_Gδ_compl Set.Subsingleton.is_Gδ_compl
+#align set.subsingleton.is_Gδ_compl Set.Subsingleton.isGδ_compl
 
-theorem Finset.is_Gδ_compl (s : Finset α) : IsGδ (sᶜ : Set α) :=
+theorem Finset.isGδ_compl (s : Finset α) : IsGδ (sᶜ : Set α) :=
   s.finite_to_set.is_Gδ_compl
-#align finset.is_Gδ_compl Finset.is_Gδ_compl
+#align finset.is_Gδ_compl Finset.isGδ_compl
 
 open TopologicalSpace
 
 variable [FirstCountableTopology α]
 
-theorem is_Gδ_singleton (a : α) : IsGδ ({a} : Set α) :=
+theorem isGδ_singleton (a : α) : IsGδ ({a} : Set α) :=
   by
   rcases(nhds_basis_opens a).exists_antitone_subbasis with ⟨U, hU, h_basis⟩
   rw [← bInter_basis_nhds h_basis.to_has_basis]
-  exact is_Gδ_bInter (to_countable _) fun n hn => (hU n).2.IsGδ
-#align is_Gδ_singleton is_Gδ_singleton
+  exact isGδ_bInter (to_countable _) fun n hn => (hU n).2.IsGδ
+#align is_Gδ_singleton isGδ_singleton
 
-theorem Set.Finite.is_Gδ {s : Set α} (hs : s.Finite) : IsGδ s :=
-  Finite.induction_on hs is_Gδ_empty fun a s _ _ hs => (is_Gδ_singleton a).union hs
-#align set.finite.is_Gδ Set.Finite.is_Gδ
+theorem Set.Finite.isGδ {s : Set α} (hs : s.Finite) : IsGδ s :=
+  Finite.induction_on hs isGδ_empty fun a s _ _ hs => (isGδ_singleton a).union hs
+#align set.finite.is_Gδ Set.Finite.isGδ
 
 end T1Space
 
@@ -190,17 +190,17 @@ open uniformity
 variable [TopologicalSpace α]
 
 /-- The set of points where a function is continuous is a Gδ set. -/
-theorem is_Gδ_set_of_continuous_at [UniformSpace β] [IsCountablyGenerated (𝓤 β)] (f : α → β) :
+theorem isGδ_setOf_continuousAt [UniformSpace β] [IsCountablyGenerated (𝓤 β)] (f : α → β) :
     IsGδ { x | ContinuousAt f x } :=
   by
-  obtain ⟨U, hUo, hU⟩ := (@uniformity_has_basis_open_symmetric β _).exists_antitone_subbasis
-  simp only [Uniform.continuous_at_iff_prod, nhds_prod_eq]
+  obtain ⟨U, hUo, hU⟩ := (@uniformity_hasBasis_open_symmetric β _).exists_antitone_subbasis
+  simp only [Uniform.continuousAt_iff_prod, nhds_prod_eq]
   simp only [(nhds_basis_opens _).prod_self.tendsto_iff hU.to_has_basis, forall_prop_of_true,
     set_of_forall, id]
-  refine' is_Gδ_Inter fun k => IsOpen.is_Gδ <| is_open_iff_mem_nhds.2 fun x => _
+  refine' isGδ_interᵢ fun k => IsOpen.isGδ <| isOpen_iff_mem_nhds.2 fun x => _
   rintro ⟨s, ⟨hsx, hso⟩, hsU⟩
   filter_upwards [IsOpen.mem_nhds hso hsx] with _ hy using⟨s, ⟨hy, hso⟩, hsU⟩
-#align is_Gδ_set_of_continuous_at is_Gδ_set_of_continuous_at
+#align is_Gδ_set_of_continuous_at isGδ_setOf_continuousAt
 
 end ContinuousAt
 

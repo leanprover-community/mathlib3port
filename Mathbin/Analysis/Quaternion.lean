@@ -56,14 +56,14 @@ instance : InnerProductSpace ℝ ℍ :=
   InnerProductSpace.ofCore
     { inner := HasInner.inner
       conj_sym := fun x y => by simp [inner_def, mul_comm]
-      nonneg_re := fun x => norm_sq_nonneg
-      definite := fun x => norm_sq_eq_zero.1
+      nonneg_re := fun x => normSq_nonneg
+      definite := fun x => normSq_eq_zero.1
       add_left := fun x y z => by simp only [inner_def, add_mul, add_re]
       smul_left := fun x y r => by simp [inner_def] }
 
-theorem norm_sq_eq_norm_sq (a : ℍ) : normSq a = ‖a‖ * ‖a‖ := by
+theorem normSq_eq_normSq (a : ℍ) : normSq a = ‖a‖ * ‖a‖ := by
   rw [← inner_self, real_inner_self_eq_norm_mul_norm]
-#align quaternion.norm_sq_eq_norm_sq Quaternion.norm_sq_eq_norm_sq
+#align quaternion.norm_sq_eq_norm_sq Quaternion.normSq_eq_normSq
 
 instance : NormOneClass ℍ :=
   ⟨by rw [norm_eq_sqrt_real_inner, inner_self, norm_sq.map_one, Real.sqrt_one]⟩
@@ -100,19 +100,19 @@ theorem coe_complex_re (z : ℂ) : (z : ℍ).re = z.re :=
 #align quaternion.coe_complex_re Quaternion.coe_complex_re
 
 @[simp, norm_cast]
-theorem coe_complex_im_i (z : ℂ) : (z : ℍ).imI = z.im :=
+theorem coe_complex_imI (z : ℂ) : (z : ℍ).imI = z.im :=
   rfl
-#align quaternion.coe_complex_im_i Quaternion.coe_complex_im_i
+#align quaternion.coe_complex_im_i Quaternion.coe_complex_imI
 
 @[simp, norm_cast]
-theorem coe_complex_im_j (z : ℂ) : (z : ℍ).imJ = 0 :=
+theorem coe_complex_imJ (z : ℂ) : (z : ℍ).imJ = 0 :=
   rfl
-#align quaternion.coe_complex_im_j Quaternion.coe_complex_im_j
+#align quaternion.coe_complex_im_j Quaternion.coe_complex_imJ
 
 @[simp, norm_cast]
-theorem coe_complex_im_k (z : ℂ) : (z : ℍ).imK = 0 :=
+theorem coe_complex_imK (z : ℂ) : (z : ℍ).imK = 0 :=
   rfl
-#align quaternion.coe_complex_im_k Quaternion.coe_complex_im_k
+#align quaternion.coe_complex_im_k Quaternion.coe_complex_imK
 
 @[simp, norm_cast]
 theorem coe_complex_add (z w : ℂ) : ↑(z + w) = (z + w : ℍ) := by ext <;> simp
@@ -152,9 +152,9 @@ def ofComplex : ℂ →ₐ[ℝ] ℍ where
 #align quaternion.of_complex Quaternion.ofComplex
 
 @[simp]
-theorem coe_of_complex : ⇑of_complex = coe :=
+theorem coe_ofComplex : ⇑of_complex = coe :=
   rfl
-#align quaternion.coe_of_complex Quaternion.coe_of_complex
+#align quaternion.coe_of_complex Quaternion.coe_ofComplex
 
 end Quaternion
 

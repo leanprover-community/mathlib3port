@@ -136,9 +136,9 @@ abbrev winv {X Y : C} (w : X ⟶ Y) (hw : W w) :=
 
 variable (W)
 
-theorem CategoryTheory.MorphismProperty.Q_inverts : W.IsInvertedBy W.q := fun X Y w hw =>
+theorem CategoryTheory.MorphismProperty.q_inverts : W.IsInvertedBy W.q := fun X Y w hw =>
   IsIso.of_iso (Localization.Construction.wiso w hw)
-#align category_theory.morphism_property.Q_inverts CategoryTheory.MorphismProperty.Q_inverts
+#align category_theory.morphism_property.Q_inverts CategoryTheory.MorphismProperty.q_inverts
 
 variable {W} (G : C ⥤ D) (hG : W.IsInvertedBy G)
 
@@ -219,7 +219,7 @@ variable {W}
 morphisms in the localized category if it contains the image of the
 morphisms in the original category, the inverses of the morphisms
 in `W` and if it is stable under composition -/
-theorem morphism_property_is_top (P : MorphismProperty W.Localization)
+theorem morphismProperty_is_top (P : MorphismProperty W.Localization)
     (hP₁ : ∀ ⦃X Y : C⦄ (f : X ⟶ Y), P (W.q.map f))
     (hP₂ : ∀ ⦃X Y : C⦄ (w : X ⟶ Y) (hw : W w), P (winv w hw)) (hP₃ : P.StableUnderComposition) :
     P = ⊤ := by
@@ -249,18 +249,18 @@ theorem morphism_property_is_top (P : MorphismProperty W.Localization)
       rcases g with (g | ⟨g, hg⟩)
       · apply hP₁
       · apply hP₂
-#align category_theory.localization.construction.morphism_property_is_top CategoryTheory.Localization.Construction.morphism_property_is_top
+#align category_theory.localization.construction.morphism_property_is_top CategoryTheory.Localization.Construction.morphismProperty_is_top
 
 /-- A `morphism_property` in `W.localization` is satisfied by all
 morphisms in the localized category if it contains the image of the
 morphisms in the original category, if is stable under composition
 and if the property is stable by passing to inverses. -/
-theorem morphism_property_is_top' (P : MorphismProperty W.Localization)
+theorem morphismProperty_is_top' (P : MorphismProperty W.Localization)
     (hP₁ : ∀ ⦃X Y : C⦄ (f : X ⟶ Y), P (W.q.map f))
     (hP₂ : ∀ ⦃X Y : W.Localization⦄ (e : X ≅ Y) (he : P e.Hom), P e.inv)
     (hP₃ : P.StableUnderComposition) : P = ⊤ :=
-  morphism_property_is_top P hP₁ (fun X Y w hw => hP₂ _ (hP₁ w)) hP₃
-#align category_theory.localization.construction.morphism_property_is_top' CategoryTheory.Localization.Construction.morphism_property_is_top'
+  morphismProperty_is_top P hP₁ (fun X Y w hw => hP₂ _ (hP₁ w)) hP₃
+#align category_theory.localization.construction.morphism_property_is_top' CategoryTheory.Localization.Construction.morphismProperty_is_top'
 
 namespace NatTransExtension
 
@@ -304,12 +304,12 @@ def natTransExtension {F₁ F₂ : W.Localization ⥤ D} (τ : W.q ⋙ F₁ ⟶ 
 #align category_theory.localization.construction.nat_trans_extension CategoryTheory.Localization.Construction.natTransExtension
 
 @[simp]
-theorem nat_trans_extension_hcomp {F G : W.Localization ⥤ D} (τ : W.q ⋙ F ⟶ W.q ⋙ G) :
+theorem natTransExtension_hcomp {F G : W.Localization ⥤ D} (τ : W.q ⋙ F ⟶ W.q ⋙ G) :
     𝟙 W.q ◫ natTransExtension τ = τ := by
   ext X
   simp only [nat_trans.hcomp_app, nat_trans.id_app, G.map_id, comp_id, nat_trans_extension_app,
     nat_trans_extension.app_eq]
-#align category_theory.localization.construction.nat_trans_extension_hcomp CategoryTheory.Localization.Construction.nat_trans_extension_hcomp
+#align category_theory.localization.construction.nat_trans_extension_hcomp CategoryTheory.Localization.Construction.natTransExtension_hcomp
 
 theorem nat_trans_hcomp_injective {F G : W.Localization ⥤ D} {τ₁ τ₂ : F ⟶ G}
     (h : 𝟙 W.q ◫ τ₁ = 𝟙 W.q ◫ τ₂) : τ₁ = τ₂ := by

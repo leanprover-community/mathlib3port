@@ -27,7 +27,7 @@ variable {E : Type _} [AddCommGroup E] [Module ℝ E] [TopologicalSpace E] [HasC
 theorem map_real_smul {G} [AddMonoidHomClass G E F] (f : G) (hf : Continuous f) (c : ℝ) (x : E) :
     f (c • x) = c • f x :=
   suffices (fun c : ℝ => f (c • x)) = fun c : ℝ => c • f x from congr_fun this c
-  Rat.dense_embedding_coe_real.dense.equalizer (hf.comp <| continuous_id.smul continuous_const)
+  Rat.denseEmbedding_coe_real.dense.equalizer (hf.comp <| continuous_id.smul continuous_const)
     (continuous_id.smul continuous_const) (funext fun r => map_rat_cast_smul f ℝ ℝ r x)
 #align map_real_smul map_real_smul
 
@@ -42,9 +42,9 @@ def toRealLinearMap (f : E →+ F) (hf : Continuous f) : E →L[ℝ] F :=
 #align add_monoid_hom.to_real_linear_map AddMonoidHom.toRealLinearMap
 
 @[simp]
-theorem coe_to_real_linear_map (f : E →+ F) (hf : Continuous f) : ⇑(f.toRealLinearMap hf) = f :=
+theorem coe_toRealLinearMap (f : E →+ F) (hf : Continuous f) : ⇑(f.toRealLinearMap hf) = f :=
   rfl
-#align add_monoid_hom.coe_to_real_linear_map AddMonoidHom.coe_to_real_linear_map
+#align add_monoid_hom.coe_to_real_linear_map AddMonoidHom.coe_toRealLinearMap
 
 end AddMonoidHom
 
@@ -58,9 +58,9 @@ def AddEquiv.toRealLinearEquiv (e : E ≃+ F) (h₁ : Continuous e) (h₂ : Cont
 /-- A topological group carries at most one structure of a topological `ℝ`-module, so for any
 topological `ℝ`-algebra `A` (e.g. `A = ℂ`) and any topological group that is both a topological
 `ℝ`-module and a topological `A`-module, these structures agree. -/
-instance (priority := 900) Real.is_scalar_tower [T2Space E] {A : Type _} [TopologicalSpace A]
-    [Ring A] [Algebra ℝ A] [Module A E] [HasContinuousSmul ℝ A] [HasContinuousSmul A E] :
+instance (priority := 900) Real.isScalarTower [T2Space E] {A : Type _} [TopologicalSpace A] [Ring A]
+    [Algebra ℝ A] [Module A E] [HasContinuousSmul ℝ A] [HasContinuousSmul A E] :
     IsScalarTower ℝ A E :=
   ⟨fun r x y => map_real_smul ((smulAddHom A E).flip y) (continuous_id.smul continuous_const) r x⟩
-#align real.is_scalar_tower Real.is_scalar_tower
+#align real.is_scalar_tower Real.isScalarTower
 

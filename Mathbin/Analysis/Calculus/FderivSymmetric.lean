@@ -94,7 +94,7 @@ theorem Convex.taylor_approx_two_segment {v w : E} (hv : x + v ∈ interior s)
   -- consider a ball of radius `δ` around `x` in which the Taylor approximation for `f''` is
   -- good up to `δ`.
   rw [HasFderivWithinAt, HasFderivAtFilter, is_o_iff] at hx
-  rcases Metric.mem_nhds_within_iff.1 (hx εpos) with ⟨δ, δpos, sδ⟩
+  rcases Metric.mem_nhdsWithin_iff.1 (hx εpos) with ⟨δ, δpos, sδ⟩
   have E1 : ∀ᶠ h in 𝓝[>] (0 : ℝ), h * (‖v‖ + ‖w‖) < δ :=
     by
     have : Filter.Tendsto (fun h => h * (‖v‖ + ‖w‖)) (𝓝[>] (0 : ℝ)) (𝓝 (0 * (‖v‖ + ‖w‖))) :=
@@ -102,9 +102,9 @@ theorem Convex.taylor_approx_two_segment {v w : E} (hv : x + v ∈ interior s)
     apply (tendsto_order.1 this).2 δ
     simpa only [zero_mul] using δpos
   have E2 : ∀ᶠ h in 𝓝[>] (0 : ℝ), (h : ℝ) < 1 :=
-    mem_nhds_within_Ioi_iff_exists_Ioo_subset.2
+    mem_nhdsWithin_ioi_iff_exists_ioo_subset.2
       ⟨(1 : ℝ), by simp only [mem_Ioi, zero_lt_one], fun x hx => hx.2⟩
-  filter_upwards [E1, E2, self_mem_nhds_within] with h hδ h_lt_1 hpos
+  filter_upwards [E1, E2, self_mem_nhdsWithin] with h hδ h_lt_1 hpos
   -- we consider `h` small enough that all points under consideration belong to this ball,
   -- and also with `0 < h < 1`.
   replace hpos : 0 < h := hpos
@@ -217,7 +217,7 @@ theorem Convex.taylor_approx_two_segment {v w : E} (hv : x + v ∈ interior s)
 along the vertices of a quadrilateral with sides `h v` and `h w` based at `x`.
 In a setting where `f` is not guaranteed to be continuous at `f`, we can still
 get this if we use a quadrilateral based at `h v + h w`. -/
-theorem Convex.is_o_alternate_sum_square {v w : E} (h4v : x + (4 : ℝ) • v ∈ interior s)
+theorem Convex.isO_alternate_sum_square {v w : E} (h4v : x + (4 : ℝ) • v ∈ interior s)
     (h4w : x + (4 : ℝ) • w ∈ interior s) :
     (fun h : ℝ =>
         f (x + h • (2 • v + 2 • w)) + f (x + h • (v + w)) - f (x + h • (2 • v + w)) -
@@ -266,7 +266,7 @@ theorem Convex.is_o_alternate_sum_square {v w : E} (h4v : x + (4 : ℝ) • v �
     by
     convert s_conv.interior.add_smul_sub_mem h2w h2v2w B using 1
     simp only [one_div, add_sub_cancel', inv_smul_smul₀, add_sub_add_right_eq_sub, Ne.def,
-      not_false_iff, bit0_eq_zero, one_ne_zero]
+      not_false_iff, bit0_eq_zero, one_neZero]
     rw [two_smul]
     abel
   have TA1 := s_conv.taylor_approx_two_segment hf xs hx h2vw h2vww
@@ -277,7 +277,7 @@ theorem Convex.is_o_alternate_sum_square {v w : E} (h4v : x + (4 : ℝ) • v �
     ContinuousLinearMap.add_apply, Pi.smul_apply, ContinuousLinearMap.coe_smul',
     ContinuousLinearMap.map_smul]
   abel
-#align convex.is_o_alternate_sum_square Convex.is_o_alternate_sum_square
+#align convex.is_o_alternate_sum_square Convex.isO_alternate_sum_square
 
 /-- Assume that `f` is differentiable inside a convex set `s`, and that its derivative `f'` is
 differentiable at a point `x`. Then, given two vectors `v` and `w` pointing inside `s`, one
@@ -300,12 +300,12 @@ theorem Convex.second_derivative_within_at_symmetric_of_mem_interior {v w : E}
     have : (fun h : ℝ => 1 / h ^ 2) =O[𝓝[>] 0] fun h => 1 / h ^ 2 := is_O_refl _ _
     have C := this.smul_is_o A
     apply C.congr' _ _
-    · filter_upwards [self_mem_nhds_within]
+    · filter_upwards [self_mem_nhdsWithin]
       intro h hpos
       rw [← one_smul ℝ (f'' w v - f'' v w), smul_smul, smul_smul]
       congr 1
       field_simp [LT.lt.ne' hpos]
-    · filter_upwards [self_mem_nhds_within] with _ hpos
+    · filter_upwards [self_mem_nhdsWithin] with _ hpos
       field_simp [LT.lt.ne' hpos, SMul.smul]
   simpa only [sub_eq_zero] using is_o_const_const_iff.1 B
 #align convex.second_derivative_within_at_symmetric_of_mem_interior Convex.second_derivative_within_at_symmetric_of_mem_interior
@@ -333,17 +333,17 @@ theorem Convex.second_derivative_within_at_symmetric {s : Set E} (s_conv : Conve
     refine' tendsto_const_nhds.add _
     refine' tendsto_const_nhds.smul _
     refine' tendsto_const_nhds.add _
-    exact continuous_at_id.smul continuous_at_const
+    exact continuous_at_id.smul continuousAt_const
   have B : ∀ m : E, ∀ᶠ t in 𝓝[>] (0 : ℝ), x + (4 : ℝ) • (z + t • m) ∈ interior s :=
     by
     intro m
-    apply nhds_within_le_nhds
+    apply nhdsWithin_le_nhds
     apply A m
     rw [mem_interior_iff_mem_nhds] at hy
     exact interior_mem_nhds.2 hy
   -- we choose `t m > 0` such that `x + 4 (z + (t m) m)` belongs to the interior of `s`, for any
   -- vector `m`.
-  choose t ts tpos using fun m => ((B m).And self_mem_nhds_within).exists
+  choose t ts tpos using fun m => ((B m).And self_mem_nhdsWithin).exists
   -- applying `second_derivative_within_at_symmetric_of_mem_interior` to the vectors `z`
   -- and `z + (t m) m`, we deduce that `f'' m z = f'' z m` for all `m`.
   have C : ∀ m : E, f'' m z = f'' z m := by

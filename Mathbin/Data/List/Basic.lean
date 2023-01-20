@@ -1313,7 +1313,13 @@ theorem getLast_append_singleton {a : α} (l : List α) :
 #align list.last_append_singleton List.getLast_append_singleton
 -/
 
-theorem last_append (l₁ l₂ : List α) (h : l₂ ≠ []) :
+/- warning: list.last_append -> List.getLast_append is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (l₁ : List.{u1} α) (l₂ : List.{u1} α) (h : Ne.{succ u1} (List.{u1} α) l₂ (List.nil.{u1} α)), Eq.{succ u1} α (List.getLast.{u1} α (Append.append.{u1} (List.{u1} α) (List.hasAppend.{u1} α) l₁ l₂) (List.append_ne_nil_of_ne_nil_right.{u1} α l₁ l₂ h)) (List.getLast.{u1} α l₂ h)
+but is expected to have type
+  forall {α : Type.{u1}} {l₁ : α} (l₂ : List.{u1} α) (h : Ne.{succ u1} (List.{u1} α) (HAppend.hAppend.{u1, u1, u1} (List.{u1} α) (List.{u1} α) (List.{u1} α) (instHAppend.{u1} (List.{u1} α) (List.instAppendList.{u1} α)) l₂ (List.cons.{u1} α l₁ (List.nil.{u1} α))) (List.nil.{u1} α)), Eq.{succ u1} α (List.getLast.{u1} α (HAppend.hAppend.{u1, u1, u1} (List.{u1} α) (List.{u1} α) (List.{u1} α) (instHAppend.{u1} (List.{u1} α) (List.instAppendList.{u1} α)) l₂ (List.cons.{u1} α l₁ (List.nil.{u1} α))) h) l₁
+Case conversion may be inaccurate. Consider using '#align list.last_append List.getLast_appendₓ'. -/
+theorem getLast_append (l₁ l₂ : List α) (h : l₂ ≠ []) :
     getLast (l₁ ++ l₂) (append_ne_nil_of_ne_nil_right l₁ l₂ h) = getLast l₂ h :=
   by
   induction' l₁ with _ _ ih
@@ -1321,7 +1327,7 @@ theorem last_append (l₁ l₂ : List α) (h : l₂ ≠ []) :
   · simp only [cons_append]
     rw [List.getLast_cons]
     exact ih
-#align list.last_append List.last_append
+#align list.last_append List.getLast_append
 
 #print List.getLast_concat' /-
 theorem getLast_concat' {a : α} (l : List α) : getLast (concat l a) (concat_ne_nil a l) = a := by
@@ -5371,14 +5377,14 @@ theorem reduceOption_length_eq_iff {l : List (Option α)} :
     simp only [forall_const, reduce_option_nil, not_mem_nil, forall_prop_of_false, eq_self_iff_true,
       length, not_false_iff]
   · cases hd
-    · simp only [mem_cons_iff, forall_eq_or_imp, Bool.coe_sort_ff, false_and_iff,
+    · simp only [mem_cons_iff, forall_eq_or_imp, Bool.coeSort_false, false_and_iff,
         reduce_option_cons_of_none, length, Option.isSome_none, iff_false_iff]
       intro H
       have := reduce_option_length_le tl
       rw [H] at this
       exact absurd (Nat.lt_succ_self _) (not_lt_of_le this)
     ·
-      simp only [hl, true_and_iff, mem_cons_iff, forall_eq_or_imp, add_left_inj, Bool.coe_sort_tt,
+      simp only [hl, true_and_iff, mem_cons_iff, forall_eq_or_imp, add_left_inj, Bool.coeSort_true,
         length, Option.isSome_some, reduce_option_cons_of_some]
 #align list.reduce_option_length_eq_iff List.reduceOption_length_eq_iff
 -/
@@ -6657,9 +6663,13 @@ section Map₂Right
 
 variable (f : Option α → β → γ) (a : α) (as : List α) (b : β) (bs : List β)
 
+/- warning: list.map₂_right_nil_left clashes with list.mapmap₂Right₂_right_nil_left -> List.map₂Right_nil_left
+Case conversion may be inaccurate. Consider using '#align list.map₂_right_nil_left List.map₂Right_nil_leftₓ'. -/
+#print List.map₂Right_nil_left /-
 @[simp]
-theorem map₂_right_nil_left : map₂Right f [] bs = bs.map (f none) := by cases bs <;> rfl
-#align list.map₂_right_nil_left List.map₂_right_nil_left
+theorem map₂Right_nil_left : map₂Right f [] bs = bs.map (f none) := by cases bs <;> rfl
+#align list.map₂_right_nil_left List.map₂Right_nil_left
+-/
 
 #print List.map₂Right_nil_right /-
 @[simp]
@@ -7120,8 +7130,8 @@ theorem getD_append_right (l l' : List α) (d : α) (n : ℕ) (h : l.length ≤ 
 theorem getD_eq_getD_get? (n : ℕ) : l.nthd n d = (l.nth n).getOrElse d :=
   by
   cases' lt_or_le _ _ with h h
-  · rw [nthd_eq_nth_le _ _ h, nth_le_nth h, Option.get_or_else_some]
-  · rw [nthd_eq_default _ _ h, nth_eq_none_iff.mpr h, Option.get_or_else_none]
+  · rw [nthd_eq_nth_le _ _ h, nth_le_nth h, Option.getD_some]
+  · rw [nthd_eq_default _ _ h, nth_eq_none_iff.mpr h, Option.getD_none]
 #align list.nthd_eq_get_or_else_nth List.getD_eq_getD_get?ₓ
 
 end Nthd

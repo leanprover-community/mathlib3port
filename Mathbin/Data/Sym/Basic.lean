@@ -542,7 +542,7 @@ theorem sigma_sub_ext {m₁ m₂ : Σi : Fin (n + 1), Sym α (n - i)} (h : (m₁
     h
 #align sym.sigma_sub_ext Sym.sigma_sub_ext
 
-theorem fill_filter_ne [DecidableEq α] (a : α) (m : Sym α n) :
+theorem fill_filterNe [DecidableEq α] (a : α) (m : Sym α n) :
     (m.filterNe a).2.fill a (m.filterNe a).1 = m :=
   Subtype.ext
     (by
@@ -553,9 +553,9 @@ theorem fill_filter_ne [DecidableEq α] (a : α) (m : Sym α n) :
         rfl
       · rw [if_pos h, if_neg h.symm, add_zero]
         rfl)
-#align sym.fill_filter_ne Sym.fill_filter_ne
+#align sym.fill_filter_ne Sym.fill_filterNe
 
-theorem filter_ne_fill [DecidableEq α] (a : α) (m : Σi : Fin (n + 1), Sym α (n - i)) (h : a ∉ m.2) :
+theorem filterNe_fill [DecidableEq α] (a : α) (m : Σi : Fin (n + 1), Sym α (n - i)) (h : a ∉ m.2) :
     (m.2.fill a m.1).filterNe a = m :=
   sigma_sub_ext
     (by
@@ -565,7 +565,7 @@ theorem filter_ne_fill [DecidableEq α] (a : α) (m : Σi : Fin (n + 1), Sym α 
         rw [mem_filter, Sym.mem_coe, mem_replicate] at hb
         exact hb.2 hb.1.2.symm
       · exact fun b hb => (hb.ne_of_not_mem h).symm)
-#align sym.filter_ne_fill Sym.filter_ne_fill
+#align sym.filter_ne_fill Sym.filterNe_fill
 
 end Sym
 

@@ -95,9 +95,9 @@ theorem left (K L : Type _) [Field K] [Algebra F K] [Ring L] [Nontrivial L] [Alg
 theorem right [hf : FiniteDimensional F A] : FiniteDimensional K A :=
   let ⟨⟨b, hb⟩⟩ := hf
   ⟨⟨b,
-      Submodule.restrict_scalars_injective F _ _ <|
+      Submodule.restrictScalars_injective F _ _ <|
         by
-        rw [Submodule.restrict_scalars_top, eq_top_iff, ← hb, Submodule.span_le]
+        rw [Submodule.restrictScalars_top, eq_top_iff, ← hb, Submodule.span_le]
         exact Submodule.subset_span⟩⟩
 #align finite_dimensional.right FiniteDimensional.right
 
@@ -115,7 +115,7 @@ theorem finrank_mul_finrank [FiniteDimensional F K] : finrank F K * finrank K A 
     exact mt (@right F K A _ _ _ _ _ _ _) hA
 #align finite_dimensional.finrank_mul_finrank FiniteDimensional.finrank_mul_finrank
 
-theorem Subalgebra.is_simple_order_of_finrank_prime (A) [Ring A] [IsDomain A] [Algebra F A]
+theorem Subalgebra.isSimpleOrder_of_finrank_prime (A) [Ring A] [IsDomain A] [Algebra F A]
     (hp : (finrank F A).Prime) : IsSimpleOrder (Subalgebra F A) :=
   { to_nontrivial :=
       ⟨⟨⊥, ⊤, fun he =>
@@ -128,19 +128,19 @@ theorem Subalgebra.is_simple_order_of_finrank_prime (A) [Ring A] [IsDomain A] [A
       · exact Subalgebra.eq_bot_of_finrank_one
       ·
         exact
-          Algebra.to_submodule_eq_top.1 (eq_top_of_finrank_eq <| K.finrank_to_submodule.trans h) }
-#align finite_dimensional.subalgebra.is_simple_order_of_finrank_prime FiniteDimensional.Subalgebra.is_simple_order_of_finrank_prime
+          Algebra.toSubmodule_eq_top.1 (eq_top_of_finrank_eq <| K.finrank_to_submodule.trans h) }
+#align finite_dimensional.subalgebra.is_simple_order_of_finrank_prime FiniteDimensional.Subalgebra.isSimpleOrder_of_finrank_prime
 
 -- TODO: `intermediate_field` version
-instance linear_map (F : Type u) (V : Type v) (W : Type w) [Field F] [AddCommGroup V] [Module F V]
+instance linearMap (F : Type u) (V : Type v) (W : Type w) [Field F] [AddCommGroup V] [Module F V]
     [AddCommGroup W] [Module F W] [FiniteDimensional F V] [FiniteDimensional F W] :
     FiniteDimensional F (V →ₗ[F] W) :=
   let b := Basis.ofVectorSpace F V
   let c := Basis.ofVectorSpace F W
   (Matrix.toLin b c).FiniteDimensional
-#align finite_dimensional.linear_map FiniteDimensional.linear_map
+#align finite_dimensional.linear_map FiniteDimensional.linearMap
 
-theorem finrank_linear_map (F : Type u) (V : Type v) (W : Type w) [Field F] [AddCommGroup V]
+theorem finrank_linearMap (F : Type u) (V : Type v) (W : Type w) [Field F] [AddCommGroup V]
     [Module F V] [AddCommGroup W] [Module F W] [FiniteDimensional F V] [FiniteDimensional F W] :
     finrank F (V →ₗ[F] W) = finrank F V * finrank F W :=
   by
@@ -148,7 +148,7 @@ theorem finrank_linear_map (F : Type u) (V : Type v) (W : Type w) [Field F] [Add
   let c := Basis.ofVectorSpace F W
   rw [LinearEquiv.finrank_eq (LinearMap.toMatrix b c), Matrix.finrank_matrix,
     finrank_eq_card_basis b, finrank_eq_card_basis c, mul_comm]
-#align finite_dimensional.finrank_linear_map FiniteDimensional.finrank_linear_map
+#align finite_dimensional.finrank_linear_map FiniteDimensional.finrank_linearMap
 
 -- TODO: generalize by removing [finite_dimensional F K]
 -- V = ⊕F,
@@ -165,7 +165,7 @@ theorem finrank_linear_map' (F : Type u) (K : Type v) (V : Type w) [Field F] [Fi
   mul_right_injective₀ finrank_pos.ne' <|
     calc
       finrank F K * finrank K (V →ₗ[F] K) = finrank F (V →ₗ[F] K) := finrank_mul_finrank _ _ _
-      _ = finrank F V * finrank F K := finrank_linear_map F V K
+      _ = finrank F V * finrank F K := finrank_linearMap F V K
       _ = finrank F K * finrank F V := mul_comm _ _
       
 #align finite_dimensional.finrank_linear_map' FiniteDimensional.finrank_linear_map'

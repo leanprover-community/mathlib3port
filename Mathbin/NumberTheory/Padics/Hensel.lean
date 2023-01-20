@@ -79,7 +79,7 @@ private theorem ncs_tendsto_const :
 
 private theorem ncs_tendsto_lim :
     Tendsto (fun i => ‖F.derivative.eval (ncs i)‖) atTop (𝓝 ‖F.derivative.eval ncs.lim‖) :=
-  Tendsto.comp (continuous_iff_continuous_at.1 continuous_norm _) (comp_tendsto_lim _)
+  Tendsto.comp (continuous_iff_continuousAt.1 continuous_norm _) (comp_tendsto_lim _)
 #align ncs_tendsto_lim ncs_tendsto_lim
 
 private theorem norm_deriv_eq : ‖F.derivative.eval ncs.lim‖ = ‖F.derivative.eval a‖ :=
@@ -170,7 +170,7 @@ private theorem T_pow {n : ℕ} (hn : n ≠ 0) : T ^ n < 1 :=
 #align T_pow T_pow
 
 private theorem T_pow' (n : ℕ) : T ^ 2 ^ n < 1 :=
-  T_pow (pow_ne_zero _ two_ne_zero)
+  T_pow (pow_ne_zero _ two_neZero)
 #align T_pow' T_pow'
 
 /-- We will construct a sequence of elements of ℤ_p satisfying successive values of `ih`. -/
@@ -403,8 +403,8 @@ private theorem bound' : Tendsto (fun n : ℕ => ‖F.derivative.eval a‖ * T ^
   rw [← mul_zero ‖F.derivative.eval a‖]
   exact
     tendsto_const_nhds.mul
-      (tendsto.comp (tendsto_pow_at_top_nhds_0_of_lt_1 (norm_nonneg _) (T_lt_one hnorm))
-        (Nat.tendsto_pow_at_top_at_top_of_one_lt (by norm_num)))
+      (tendsto.comp (tendsto_pow_atTop_nhds_0_of_lt_1 (norm_nonneg _) (T_lt_one hnorm))
+        (Nat.tendsto_pow_atTop_atTop_of_one_lt (by norm_num)))
 #align bound' bound'
 
 private theorem bound :
@@ -466,7 +466,7 @@ private theorem newton_seq_norm_tendsto_zero :
 
 private theorem newton_seq_dist_tendsto :
     Tendsto (fun n => ‖newton_cau_seq n - a‖) atTop (𝓝 (‖F.eval a‖ / ‖F.derivative.eval a‖)) :=
-  tendsto_const_nhds.congr' <| eventually_at_top.2 ⟨1, fun _ hx => (newton_seq_dist_to_a _ hx).symm⟩
+  tendsto_const_nhds.congr' <| eventually_atTop.2 ⟨1, fun _ hx => (newton_seq_dist_to_a _ hx).symm⟩
 #align newton_seq_dist_tendsto newton_seq_dist_tendsto
 
 private theorem newton_seq_dist_tendsto' :

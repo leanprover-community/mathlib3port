@@ -87,10 +87,10 @@ theorem restrictImageEmb {f : α → β} (hf : MeasurePreserving f μa μb) (h�
   simpa only [preimage_image_eq _ h₂.injective] using hf.restrict_preimage_emb h₂ (f '' s)
 #align measure_theory.measure_preserving.restrict_image_emb MeasureTheory.MeasurePreserving.restrictImageEmb
 
-theorem ae_measurable_comp_iff {f : α → β} (hf : MeasurePreserving f μa μb)
+theorem aeMeasurable_comp_iff {f : α → β} (hf : MeasurePreserving f μa μb)
     (h₂ : MeasurableEmbedding f) {g : β → γ} : AeMeasurable (g ∘ f) μa ↔ AeMeasurable g μb := by
   rw [← hf.map_eq, h₂.ae_measurable_map_iff]
-#align measure_theory.measure_preserving.ae_measurable_comp_iff MeasureTheory.MeasurePreserving.ae_measurable_comp_iff
+#align measure_theory.measure_preserving.ae_measurable_comp_iff MeasureTheory.MeasurePreserving.aeMeasurable_comp_iff
 
 protected theorem quasiMeasurePreserving {f : α → β} (hf : MeasurePreserving f μa μb) :
     QuasiMeasurePreserving f μa μb :=

@@ -110,19 +110,19 @@ def applyComposition (p : FormalMultilinearSeries 𝕜 E F) {n : ℕ} (c : Compo
     (Fin n → E) → Fin c.length → F := fun v i => p (c.blocksFun i) (v ∘ c.Embedding i)
 #align formal_multilinear_series.apply_composition FormalMultilinearSeries.applyComposition
 
-theorem apply_composition_ones (p : FormalMultilinearSeries 𝕜 E F) (n : ℕ) :
+theorem applyComposition_ones (p : FormalMultilinearSeries 𝕜 E F) (n : ℕ) :
     p.applyComposition (Composition.ones n) = fun v i =>
       p 1 fun _ => v (Fin.castLe (Composition.length_le _) i) :=
   by
   funext v i
-  apply p.congr (Composition.ones_blocks_fun _ _)
+  apply p.congr (Composition.ones_blocksFun _ _)
   intro j hjn hj1
   obtain rfl : j = 0 := by linarith
   refine' congr_arg v _
   rw [Fin.ext_iff, Fin.coe_castLe, Composition.ones_embedding, Fin.val_mk]
-#align formal_multilinear_series.apply_composition_ones FormalMultilinearSeries.apply_composition_ones
+#align formal_multilinear_series.apply_composition_ones FormalMultilinearSeries.applyComposition_ones
 
-theorem apply_composition_single (p : FormalMultilinearSeries 𝕜 E F) {n : ℕ} (hn : 0 < n)
+theorem applyComposition_single (p : FormalMultilinearSeries 𝕜 E F) {n : ℕ} (hn : 0 < n)
     (v : Fin n → E) : p.applyComposition (Composition.single n hn) v = fun j => p n v :=
   by
   ext j
@@ -134,20 +134,20 @@ theorem apply_composition_single (p : FormalMultilinearSeries 𝕜 E F) {n : ℕ
   have : j_val = 0 := le_bot_iff.1 (Nat.lt_succ_iff.1 j_property)
   unfold_coes
   congr <;> try first |assumption|simp
-#align formal_multilinear_series.apply_composition_single FormalMultilinearSeries.apply_composition_single
+#align formal_multilinear_series.apply_composition_single FormalMultilinearSeries.applyComposition_single
 
 @[simp]
-theorem remove_zero_apply_composition (p : FormalMultilinearSeries 𝕜 E F) {n : ℕ}
+theorem removeZero_applyComposition (p : FormalMultilinearSeries 𝕜 E F) {n : ℕ}
     (c : Composition n) : p.removeZero.applyComposition c = p.applyComposition c :=
   by
   ext (v i)
   simp [apply_composition, zero_lt_one.trans_le (c.one_le_blocks_fun i), remove_zero_of_pos]
-#align formal_multilinear_series.remove_zero_apply_composition FormalMultilinearSeries.remove_zero_apply_composition
+#align formal_multilinear_series.remove_zero_apply_composition FormalMultilinearSeries.removeZero_applyComposition
 
 /-- Technical lemma stating how `p.apply_composition` commutes with updating variables. This
 will be the key point to show that functions constructed from `apply_composition` retain
 multilinearity. -/
-theorem apply_composition_update (p : FormalMultilinearSeries 𝕜 E F) {n : ℕ} (c : Composition n)
+theorem applyComposition_update (p : FormalMultilinearSeries 𝕜 E F) {n : ℕ} (c : Composition n)
     (j : Fin n) (v : Fin n → E) (z : E) :
     p.applyComposition c (Function.update v j z) =
       Function.update (p.applyComposition c v) (c.index j)
@@ -174,14 +174,14 @@ theorem apply_composition_update (p : FormalMultilinearSeries 𝕜 E F) {n : ℕ
     · rw [B]
     apply Function.update_comp_eq_of_not_mem_range
     rwa [c.mem_range_embedding_iff']
-#align formal_multilinear_series.apply_composition_update FormalMultilinearSeries.apply_composition_update
+#align formal_multilinear_series.apply_composition_update FormalMultilinearSeries.applyComposition_update
 
 @[simp]
-theorem comp_continuous_linear_map_apply_composition {n : ℕ} (p : FormalMultilinearSeries 𝕜 F G)
+theorem compContinuousLinearMap_applyComposition {n : ℕ} (p : FormalMultilinearSeries 𝕜 F G)
     (f : E →L[𝕜] F) (c : Composition n) (v : Fin n → E) :
     (p.compContinuousLinearMap f).applyComposition c v = p.applyComposition c (f ∘ v) := by
   simp [apply_composition]
-#align formal_multilinear_series.comp_continuous_linear_map_apply_composition FormalMultilinearSeries.comp_continuous_linear_map_apply_composition
+#align formal_multilinear_series.comp_continuous_linear_map_apply_composition FormalMultilinearSeries.compContinuousLinearMap_applyComposition
 
 end FormalMultilinearSeries
 
@@ -210,11 +210,11 @@ def compAlongComposition {n : ℕ} (p : FormalMultilinearSeries 𝕜 E F) (c : C
 #align continuous_multilinear_map.comp_along_composition ContinuousMultilinearMap.compAlongComposition
 
 @[simp]
-theorem comp_along_composition_apply {n : ℕ} (p : FormalMultilinearSeries 𝕜 E F) (c : Composition n)
+theorem compAlongComposition_apply {n : ℕ} (p : FormalMultilinearSeries 𝕜 E F) (c : Composition n)
     (f : ContinuousMultilinearMap 𝕜 (fun i : Fin c.length => F) G) (v : Fin n → E) :
     (f.compAlongComposition p c) v = f (p.applyComposition c v) :=
   rfl
-#align continuous_multilinear_map.comp_along_composition_apply ContinuousMultilinearMap.comp_along_composition_apply
+#align continuous_multilinear_map.comp_along_composition_apply ContinuousMultilinearMap.compAlongComposition_apply
 
 end ContinuousMultilinearMap
 
@@ -237,11 +237,11 @@ def compAlongComposition {n : ℕ} (q : FormalMultilinearSeries 𝕜 F G)
 #align formal_multilinear_series.comp_along_composition FormalMultilinearSeries.compAlongComposition
 
 @[simp]
-theorem comp_along_composition_apply {n : ℕ} (q : FormalMultilinearSeries 𝕜 F G)
+theorem compAlongComposition_apply {n : ℕ} (q : FormalMultilinearSeries 𝕜 F G)
     (p : FormalMultilinearSeries 𝕜 E F) (c : Composition n) (v : Fin n → E) :
     (q.compAlongComposition p c) v = q c.length (p.applyComposition c v) :=
   rfl
-#align formal_multilinear_series.comp_along_composition_apply FormalMultilinearSeries.comp_along_composition_apply
+#align formal_multilinear_series.comp_along_composition_apply FormalMultilinearSeries.compAlongComposition_apply
 
 /-- Formal composition of two formal multilinear series. The `n`-th coefficient in the composition
 is defined to be the sum of `q.comp_along_composition p c` over all compositions of
@@ -300,22 +300,22 @@ theorem comp_coeff_one (q : FormalMultilinearSeries 𝕜 F G) (p : FormalMultili
 #align formal_multilinear_series.comp_coeff_one FormalMultilinearSeries.comp_coeff_one
 
 /-- Only `0`-th coefficient of `q.comp p` depends on `q 0`. -/
-theorem remove_zero_comp_of_pos (q : FormalMultilinearSeries 𝕜 F G)
+theorem removeZero_comp_of_pos (q : FormalMultilinearSeries 𝕜 F G)
     (p : FormalMultilinearSeries 𝕜 E F) {n : ℕ} (hn : 0 < n) : q.removeZero.comp p n = q.comp p n :=
   by
   ext v
   simp only [FormalMultilinearSeries.comp, comp_along_composition,
-    ContinuousMultilinearMap.comp_along_composition_apply, ContinuousMultilinearMap.sum_apply]
+    ContinuousMultilinearMap.compAlongComposition_apply, ContinuousMultilinearMap.sum_apply]
   apply Finset.sum_congr rfl fun c hc => _
   rw [remove_zero_of_pos _ (c.length_pos_of_pos hn)]
-#align formal_multilinear_series.remove_zero_comp_of_pos FormalMultilinearSeries.remove_zero_comp_of_pos
+#align formal_multilinear_series.remove_zero_comp_of_pos FormalMultilinearSeries.removeZero_comp_of_pos
 
 @[simp]
-theorem comp_remove_zero (q : FormalMultilinearSeries 𝕜 F G) (p : FormalMultilinearSeries 𝕜 E F) :
+theorem comp_removeZero (q : FormalMultilinearSeries 𝕜 F G) (p : FormalMultilinearSeries 𝕜 E F) :
     q.comp p.removeZero = q.comp p := by
   ext n
   simp [FormalMultilinearSeries.comp]
-#align formal_multilinear_series.comp_remove_zero FormalMultilinearSeries.comp_remove_zero
+#align formal_multilinear_series.comp_remove_zero FormalMultilinearSeries.comp_removeZero
 
 end FormalMultilinearSeries
 
@@ -329,7 +329,7 @@ namespace FormalMultilinearSeries
 
 /-- The norm of `f.comp_along_composition p c` is controlled by the product of
 the norms of the relevant bits of `f` and `p`. -/
-theorem comp_along_composition_bound {n : ℕ} (p : FormalMultilinearSeries 𝕜 E F) (c : Composition n)
+theorem compAlongComposition_bound {n : ℕ} (p : FormalMultilinearSeries 𝕜 E F) (c : Composition n)
     (f : ContinuousMultilinearMap 𝕜 (fun i : Fin c.length => F) G) (v : Fin n → E) :
     ‖f.compAlongComposition p c v‖ ≤ (‖f‖ * ∏ i, ‖p (c.blocksFun i)‖) * ∏ i : Fin n, ‖v i‖ :=
   calc
@@ -349,26 +349,26 @@ theorem comp_along_composition_bound {n : ℕ} (p : FormalMultilinearSeries 𝕜
       rw [← c.blocks_fin_equiv.prod_comp, ← Finset.univ_sigma_univ, Finset.prod_sigma]
       congr
     
-#align formal_multilinear_series.comp_along_composition_bound FormalMultilinearSeries.comp_along_composition_bound
+#align formal_multilinear_series.comp_along_composition_bound FormalMultilinearSeries.compAlongComposition_bound
 
 /-- The norm of `q.comp_along_composition p c` is controlled by the product of
 the norms of the relevant bits of `q` and `p`. -/
-theorem comp_along_composition_norm {n : ℕ} (q : FormalMultilinearSeries 𝕜 F G)
+theorem compAlongComposition_norm {n : ℕ} (q : FormalMultilinearSeries 𝕜 F G)
     (p : FormalMultilinearSeries 𝕜 E F) (c : Composition n) :
     ‖q.compAlongComposition p c‖ ≤ ‖q c.length‖ * ∏ i, ‖p (c.blocksFun i)‖ :=
   ContinuousMultilinearMap.op_norm_le_bound _
     (mul_nonneg (norm_nonneg _) (Finset.prod_nonneg fun i hi => norm_nonneg _))
-    (comp_along_composition_bound _ _ _)
-#align formal_multilinear_series.comp_along_composition_norm FormalMultilinearSeries.comp_along_composition_norm
+    (compAlongComposition_bound _ _ _)
+#align formal_multilinear_series.comp_along_composition_norm FormalMultilinearSeries.compAlongComposition_norm
 
-theorem comp_along_composition_nnnorm {n : ℕ} (q : FormalMultilinearSeries 𝕜 F G)
+theorem compAlongComposition_nnnorm {n : ℕ} (q : FormalMultilinearSeries 𝕜 F G)
     (p : FormalMultilinearSeries 𝕜 E F) (c : Composition n) :
     ‖q.compAlongComposition p c‖₊ ≤ ‖q c.length‖₊ * ∏ i, ‖p (c.blocksFun i)‖₊ :=
   by
   rw [← Nnreal.coe_le_coe]
   push_cast
   exact q.comp_along_composition_norm p c
-#align formal_multilinear_series.comp_along_composition_nnnorm FormalMultilinearSeries.comp_along_composition_nnnorm
+#align formal_multilinear_series.comp_along_composition_nnnorm FormalMultilinearSeries.compAlongComposition_nnnorm
 
 /-!
 ### The identity formal power series
@@ -548,7 +548,7 @@ theorem comp_summable_nnreal (q : FormalMultilinearSeries 𝕜 F G) (p : FormalM
   have : ∀ n : ℕ, HasSum (fun c : Composition n => (4 ^ n : ℝ≥0)⁻¹) (2 ^ (n - 1) / 4 ^ n) :=
     by
     intro n
-    convert has_sum_fintype fun c : Composition n => (4 ^ n : ℝ≥0)⁻¹
+    convert hasSum_fintype fun c : Composition n => (4 ^ n : ℝ≥0)⁻¹
     simp [Finset.card_univ, composition_card, div_eq_mul_inv]
   refine' Nnreal.summable_sigma.2 ⟨fun n => (this n).Summable, (Nnreal.summable_nat_add_iff 1).1 _⟩
   convert (Nnreal.summable_geometric (Nnreal.div_lt_one_of_lt one_lt_two)).mul_left (1 / 4)
@@ -603,12 +603,12 @@ def compPartialSumSource (m M N : ℕ) : Finset (Σn, Fin n → ℕ) :=
 #align formal_multilinear_series.comp_partial_sum_source FormalMultilinearSeries.compPartialSumSource
 
 @[simp]
-theorem mem_comp_partial_sum_source_iff (m M N : ℕ) (i : Σn, Fin n → ℕ) :
+theorem mem_compPartialSumSource_iff (m M N : ℕ) (i : Σn, Fin n → ℕ) :
     i ∈ compPartialSumSource m M N ↔ (m ≤ i.1 ∧ i.1 < M) ∧ ∀ a : Fin i.1, 1 ≤ i.2 a ∧ i.2 a < N :=
   by
-  simp only [comp_partial_sum_source, Finset.mem_Ico, Fintype.mem_piFinset, Finset.mem_sigma,
+  simp only [comp_partial_sum_source, Finset.mem_ico, Fintype.mem_piFinset, Finset.mem_sigma,
     iff_self_iff]
-#align formal_multilinear_series.mem_comp_partial_sum_source_iff FormalMultilinearSeries.mem_comp_partial_sum_source_iff
+#align formal_multilinear_series.mem_comp_partial_sum_source_iff FormalMultilinearSeries.mem_compPartialSumSource_iff
 
 /-- Change of variables appearing to compute the composition of partial sums of formal
 power series -/
@@ -622,19 +622,19 @@ def compChangeOfVariables (m M N : ℕ) (i : Σn, Fin n → ℕ) (hi : i ∈ com
 #align formal_multilinear_series.comp_change_of_variables FormalMultilinearSeries.compChangeOfVariables
 
 @[simp]
-theorem comp_change_of_variables_length (m M N : ℕ) {i : Σn, Fin n → ℕ}
+theorem compChangeOfVariables_length (m M N : ℕ) {i : Σn, Fin n → ℕ}
     (hi : i ∈ compPartialSumSource m M N) :
     Composition.length (compChangeOfVariables m M N i hi).2 = i.1 :=
   by
   rcases i with ⟨k, blocks_fun⟩
   dsimp [comp_change_of_variables]
   simp only [Composition.length, map_of_fn, length_of_fn]
-#align formal_multilinear_series.comp_change_of_variables_length FormalMultilinearSeries.comp_change_of_variables_length
+#align formal_multilinear_series.comp_change_of_variables_length FormalMultilinearSeries.compChangeOfVariables_length
 
-theorem comp_change_of_variables_blocks_fun (m M N : ℕ) {i : Σn, Fin n → ℕ}
+theorem compChangeOfVariables_blocksFun (m M N : ℕ) {i : Σn, Fin n → ℕ}
     (hi : i ∈ compPartialSumSource m M N) (j : Fin i.1) :
     (compChangeOfVariables m M N i hi).2.blocksFun
-        ⟨j, (comp_change_of_variables_length m M N hi).symm ▸ j.2⟩ =
+        ⟨j, (compChangeOfVariables_length m M N hi).symm ▸ j.2⟩ =
       i.2 j :=
   by
   rcases i with ⟨n, f⟩
@@ -642,7 +642,7 @@ theorem comp_change_of_variables_blocks_fun (m M N : ℕ) {i : Σn, Fin n → �
   simp only [map_of_fn, nth_le_of_fn', Function.comp_apply]
   apply congr_arg
   exact Fin.eta _ _
-#align formal_multilinear_series.comp_change_of_variables_blocks_fun FormalMultilinearSeries.comp_change_of_variables_blocks_fun
+#align formal_multilinear_series.comp_change_of_variables_blocks_fun FormalMultilinearSeries.compChangeOfVariables_blocksFun
 
 /-- Target set in the change of variables to compute the composition of partial sums of formal
 power series, here given a a set. -/
@@ -650,7 +650,7 @@ def compPartialSumTargetSet (m M N : ℕ) : Set (Σn, Composition n) :=
   { i | m ≤ i.2.length ∧ i.2.length < M ∧ ∀ j : Fin i.2.length, i.2.blocksFun j < N }
 #align formal_multilinear_series.comp_partial_sum_target_set FormalMultilinearSeries.compPartialSumTargetSet
 
-theorem comp_partial_sum_target_subset_image_comp_partial_sum_source (m M N : ℕ)
+theorem comp_partial_sum_target_subset_image_compPartialSumSource (m M N : ℕ)
     (i : Σn, Composition n) (hi : i ∈ compPartialSumTargetSet m M N) :
     ∃ (j : _)(hj : j ∈ compPartialSumSource m M N), i = compChangeOfVariables m M N j hj :=
   by
@@ -663,7 +663,7 @@ theorem comp_partial_sum_target_subset_image_comp_partial_sum_source (m M N : �
     rw [Composition.sigma_eq_iff_blocks_eq]
     simp only [Composition.blocksFun, Composition.blocks, Subtype.coe_eta, nth_le_map']
     conv_lhs => rw [← of_fn_nth_le c.blocks]
-#align formal_multilinear_series.comp_partial_sum_target_subset_image_comp_partial_sum_source FormalMultilinearSeries.comp_partial_sum_target_subset_image_comp_partial_sum_source
+#align formal_multilinear_series.comp_partial_sum_target_subset_image_comp_partial_sum_source FormalMultilinearSeries.comp_partial_sum_target_subset_image_compPartialSumSource
 
 /-- Target set in the change of variables to compute the composition of partial sums of formal
 power series, here given a a finset.
@@ -671,22 +671,22 @@ See also `comp_partial_sum`. -/
 def compPartialSumTarget (m M N : ℕ) : Finset (Σn, Composition n) :=
   Set.Finite.toFinset <|
     ((Finset.finite_to_set _).dependent_image _).Subset <|
-      comp_partial_sum_target_subset_image_comp_partial_sum_source m M N
+      comp_partial_sum_target_subset_image_compPartialSumSource m M N
 #align formal_multilinear_series.comp_partial_sum_target FormalMultilinearSeries.compPartialSumTarget
 
 @[simp]
-theorem mem_comp_partial_sum_target_iff {m M N : ℕ} {a : Σn, Composition n} :
+theorem mem_compPartialSumTarget_iff {m M N : ℕ} {a : Σn, Composition n} :
     a ∈ compPartialSumTarget m M N ↔
       m ≤ a.2.length ∧ a.2.length < M ∧ ∀ j : Fin a.2.length, a.2.blocksFun j < N :=
   by simp [comp_partial_sum_target, comp_partial_sum_target_set]
-#align formal_multilinear_series.mem_comp_partial_sum_target_iff FormalMultilinearSeries.mem_comp_partial_sum_target_iff
+#align formal_multilinear_series.mem_comp_partial_sum_target_iff FormalMultilinearSeries.mem_compPartialSumTarget_iff
 
 /-- `comp_change_of_variables m M N` is a bijection between `comp_partial_sum_source m M N`
 and `comp_partial_sum_target m M N`, yielding equal sums for functions that correspond to each
 other under the bijection. As `comp_change_of_variables m M N` is a dependent function, stating
 that it is a bijection is not directly possible, but the consequence on sums can be stated
 more easily. -/
-theorem comp_change_of_variables_sum {α : Type _} [AddCommMonoid α] (m M N : ℕ)
+theorem compChangeOfVariables_sum {α : Type _} [AddCommMonoid α] (m M N : ℕ)
     (f : (Σn : ℕ, Fin n → ℕ) → α) (g : (Σn, Composition n) → α)
     (h : ∀ (e) (he : e ∈ compPartialSumSource m M N), f e = g (compChangeOfVariables m M N e he)) :
     (∑ e in compPartialSumSource m M N, f e) = ∑ e in compPartialSumTarget m M N, g e :=
@@ -717,7 +717,7 @@ theorem comp_change_of_variables_sum {α : Type _} [AddCommMonoid α] (m M N : �
         (comp_change_of_variables_blocks_fun m M N H i).symm
       _ = (comp_change_of_variables m M N _ H').2.blocksFun _ :=
         by
-        apply Composition.blocks_fun_congr <;> try rw [HEq]
+        apply Composition.blocksFun_congr <;> try rw [HEq]
         rfl
       _ = blocks_fun' i := comp_change_of_variables_blocks_fun m M N H' i
       
@@ -725,32 +725,32 @@ theorem comp_change_of_variables_sum {α : Type _} [AddCommMonoid α] (m M N : �
   · intro i hi
     apply comp_partial_sum_target_subset_image_comp_partial_sum_source m M N i
     simpa [comp_partial_sum_target] using hi
-#align formal_multilinear_series.comp_change_of_variables_sum FormalMultilinearSeries.comp_change_of_variables_sum
+#align formal_multilinear_series.comp_change_of_variables_sum FormalMultilinearSeries.compChangeOfVariables_sum
 
 /-- The auxiliary set corresponding to the composition of partial sums asymptotically contains
 all possible compositions. -/
-theorem comp_partial_sum_target_tendsto_at_top :
+theorem compPartialSumTarget_tendsto_atTop :
     Tendsto (fun N => compPartialSumTarget 0 N N) atTop atTop :=
   by
-  apply Monotone.tendsto_at_top_finset
+  apply Monotone.tendsto_atTop_finset
   · intro m n hmn a ha
     have : ∀ i, i < m → i < n := fun i hi => lt_of_lt_of_le hi hmn
     tidy
   · rintro ⟨n, c⟩
     simp only [mem_comp_partial_sum_target_iff]
     obtain ⟨n, hn⟩ : BddAbove ↑(finset.univ.image fun i : Fin c.length => c.blocks_fun i) :=
-      Finset.bdd_above _
+      Finset.bddAbove _
     refine'
       ⟨max n c.length + 1, bot_le, lt_of_le_of_lt (le_max_right n c.length) (lt_add_one _), fun j =>
         lt_of_le_of_lt (le_trans _ (le_max_left _ _)) (lt_add_one _)⟩
     apply hn
     simp only [Finset.mem_image_of_mem, Finset.mem_coe, Finset.mem_univ]
-#align formal_multilinear_series.comp_partial_sum_target_tendsto_at_top FormalMultilinearSeries.comp_partial_sum_target_tendsto_at_top
+#align formal_multilinear_series.comp_partial_sum_target_tendsto_at_top FormalMultilinearSeries.compPartialSumTarget_tendsto_atTop
 
 /-- Composing the partial sums of two multilinear series coincides with the sum over all
 compositions in `comp_partial_sum_target 0 N N`. This is precisely the motivation for the
 definition of `comp_partial_sum_target`. -/
-theorem comp_partial_sum (q : FormalMultilinearSeries 𝕜 F G) (p : FormalMultilinearSeries 𝕜 E F)
+theorem comp_partialSum (q : FormalMultilinearSeries 𝕜 F G) (p : FormalMultilinearSeries 𝕜 E F)
     (N : ℕ) (z : E) :
     q.partialSum N (∑ i in Finset.ico 1 N, p i fun j => z) =
       ∑ i in compPartialSumTarget 0 N N, q.compAlongComposition p i.2 fun j => z :=
@@ -764,7 +764,7 @@ theorem comp_partial_sum (q : FormalMultilinearSeries 𝕜 F G) (p : FormalMulti
   · simpa only [FormalMultilinearSeries.partialSum, ContinuousMultilinearMap.map_sum_finset] using H
   -- rewrite the first sum as a big sum over a sigma type, in the finset
   -- `comp_partial_sum_target 0 N N`
-  rw [Finset.range_eq_Ico, Finset.sum_sigma']
+  rw [Finset.range_eq_ico, Finset.sum_sigma']
   -- use `comp_change_of_variables_sum`, saying that this change of variables respects sums
   apply comp_change_of_variables_sum 0 N N
   rintro ⟨k, blocks_fun⟩ H
@@ -772,7 +772,7 @@ theorem comp_partial_sum (q : FormalMultilinearSeries 𝕜 F G) (p : FormalMulti
   intros
   rw [← comp_change_of_variables_blocks_fun 0 N N H]
   rfl
-#align formal_multilinear_series.comp_partial_sum FormalMultilinearSeries.comp_partial_sum
+#align formal_multilinear_series.comp_partial_sum FormalMultilinearSeries.comp_partialSum
 
 end FormalMultilinearSeries
 
@@ -837,8 +837,8 @@ theorem HasFpowerSeriesAt.comp {g : F → G} {f : E → F} {q : FormalMultilinea
       rw [eventually_at_top]
       refine' ⟨1, fun n hn => _⟩
       symm
-      rw [eq_sub_iff_add_eq', Finset.range_eq_Ico, ← Hf.coeff_zero fun i => y,
-        Finset.sum_eq_sum_Ico_succ_bot hn]
+      rw [eq_sub_iff_add_eq', Finset.range_eq_ico, ← Hf.coeff_zero fun i => y,
+        Finset.sum_eq_sum_ico_succ_bot hn]
     have :
       tendsto (fun n => (∑ a in Finset.range n, p a fun b => y) - f x) at_top
         (𝓝 (f (x + y) - f x)) :=
@@ -855,7 +855,7 @@ theorem HasFpowerSeriesAt.comp {g : F → G} {f : E → F} {q : FormalMultilinea
       by
       refine' ContinuousAt.comp _ (continuous_const.add continuous_id).ContinuousAt
       simp only [add_sub_cancel'_right, id.def]
-      exact Hg.continuous_on.continuous_at (IsOpen.mem_nhds Emetric.is_open_ball fy_mem)
+      exact Hg.continuous_on.continuous_at (IsOpen.mem_nhds Emetric.isOpen_ball fy_mem)
     have B₂ : f (x + y) - f x ∈ Emetric.ball (0 : F) rg := by
       simpa [edist_eq_coe_nnnorm, edist_eq_coe_nnnorm_sub] using fy_mem
     rw [← emetric.is_open_ball.nhds_within_eq B₂] at A
@@ -879,7 +879,7 @@ theorem HasFpowerSeriesAt.comp {g : F → G} {f : E → F} {q : FormalMultilinea
       CauchySeq fun s : Finset (Σn, Composition n) =>
         ∑ i in s, q.comp_along_composition p i.2 fun j => y :=
       by
-      apply cauchy_seq_finset_of_norm_bounded _ (Nnreal.summable_coe.2 hr) _
+      apply cauchySeq_finset_of_norm_bounded _ (Nnreal.summable_coe.2 hr) _
       simp only [coe_nnnorm, Nnreal.coe_mul, Nnreal.coe_pow]
       rintro ⟨n, c⟩
       calc
@@ -895,7 +895,7 @@ theorem HasFpowerSeriesAt.comp {g : F → G} {f : E → F} {q : FormalMultilinea
           have := le_trans (le_of_lt hy) (min_le_right _ _)
           rwa [Ennreal.coe_le_coe, ← Nnreal.coe_le_coe, coe_nnnorm] at this
         
-    tendsto_nhds_of_cauchy_seq_of_subseq cau comp_partial_sum_target_tendsto_at_top C
+    tendsto_nhds_of_cauchySeq_of_subseq cau comp_partial_sum_target_tendsto_at_top C
   -- Fifth step: the sum over `n` of `q.comp p n` can be expressed as a particular resummation of
   -- the sum over all compositions, by grouping together the compositions of the same
   -- integer `n`. The convergence of the whole sum therefore implies the converence of the sum
@@ -905,7 +905,7 @@ theorem HasFpowerSeriesAt.comp {g : F → G} {f : E → F} {q : FormalMultilinea
     apply D.sigma
     intro n
     dsimp [FormalMultilinearSeries.comp]
-    convert has_sum_fintype _
+    convert hasSum_fintype _
     simp only [ContinuousMultilinearMap.sum_apply]
     rfl
   exact E
@@ -1020,9 +1020,9 @@ theorem sigma_pi_composition_eq_iff
       (of_fn fun i : Fin (Composition.length a) => (b i).blocks.Sum) =
         of_fn fun i : Fin (Composition.length a') => (b' i).blocks.Sum at
       this
-    simpa [Composition.blocks_sum, Composition.of_fn_blocks_fun] using this
+    simpa [Composition.blocks_sum, Composition.ofFn_blocksFun] using this
   induction h
-  simp only [true_and_iff, eq_self_iff_true, heq_iff_eq]
+  simp only [true_and_iff, eq_self_iff_true, hEq_iff_eq]
   ext i : 2
   have :
     nth_le (of_fn fun i : Fin (Composition.length a) => (b i).blocks) i (by simp [i.is_lt]) =
@@ -1080,7 +1080,7 @@ def sigmaCompositionAux (a : Composition n) (b : Composition a.length)
   blocks_sum := by simp only [Composition.blocksFun, nth_le_map', Composition.gather]
 #align composition.sigma_composition_aux Composition.sigmaCompositionAux
 
-theorem length_sigma_composition_aux (a : Composition n) (b : Composition a.length)
+theorem length_sigmaCompositionAux (a : Composition n) (b : Composition a.length)
     (i : Fin b.length) :
     Composition.length (Composition.sigmaCompositionAux a b ⟨i, (length_gather a b).symm ▸ i.2⟩) =
       Composition.blocksFun b i :=
@@ -1088,18 +1088,18 @@ theorem length_sigma_composition_aux (a : Composition n) (b : Composition a.leng
     by
     rw [nth_le_map_rev List.length, nth_le_of_eq (map_length_split_wrt_composition _ _)]
     rfl
-#align composition.length_sigma_composition_aux Composition.length_sigma_composition_aux
+#align composition.length_sigma_composition_aux Composition.length_sigmaCompositionAux
 
-theorem blocks_fun_sigma_composition_aux (a : Composition n) (b : Composition a.length)
+theorem blocksFun_sigmaCompositionAux (a : Composition n) (b : Composition a.length)
     (i : Fin b.length) (j : Fin (blocksFun b i)) :
     blocksFun (sigmaCompositionAux a b ⟨i, (length_gather a b).symm ▸ i.2⟩)
-        ⟨j, (length_sigma_composition_aux a b i).symm ▸ j.2⟩ =
+        ⟨j, (length_sigmaCompositionAux a b i).symm ▸ j.2⟩ =
       blocksFun a (embedding b i j) :=
   show nthLe (nthLe _ _ _) _ _ = nthLe a.blocks _ _
     by
     rw [nth_le_of_eq (nth_le_split_wrt_composition _ _ _), nth_le_drop', nth_le_take']
     rfl
-#align composition.blocks_fun_sigma_composition_aux Composition.blocks_fun_sigma_composition_aux
+#align composition.blocks_fun_sigma_composition_aux Composition.blocksFun_sigmaCompositionAux
 
 /-- Auxiliary lemma to prove that the composition of formal multilinear series is associative.
 
@@ -1109,7 +1109,7 @@ of `a` up to an index `size_up_to b i + j` (where the `j` corresponds to a set o
 that do not fill a whole block of `a.gather b`). The first part corresponds to a sum of blocks
 in `a.gather b`, and the second one to a sum of blocks in the next block of
 `sigma_composition_aux a b`. This is the content of this lemma. -/
-theorem size_up_to_size_up_to_add (a : Composition n) (b : Composition a.length) {i j : ℕ}
+theorem sizeUpTo_sizeUpTo_add (a : Composition n) (b : Composition a.length) {i j : ℕ}
     (hi : i < b.length) (hj : j < blocksFun b ⟨i, hi⟩) :
     sizeUpTo a (sizeUpTo b i + j) =
       sizeUpTo (a.gather b) i +
@@ -1151,7 +1151,7 @@ theorem size_up_to_size_up_to_add (a : Composition n) (b : Composition a.length)
     rw [this, size_up_to_succ _ D, IHj A, size_up_to_succ _ B]
     simp only [sigma_composition_aux, add_assoc, add_left_inj, Fin.val_mk]
     rw [nth_le_of_eq (nth_le_split_wrt_composition _ _ _), nth_le_drop', nth_le_take _ _ C]
-#align composition.size_up_to_size_up_to_add Composition.size_up_to_size_up_to_add
+#align composition.size_up_to_size_up_to_add Composition.sizeUpTo_sizeUpTo_add
 
 /-- Natural equivalence between `(Σ (a : composition n), composition a.length)` and
 `(Σ (c : composition n), Π (i : fin c.length), composition (c.blocks_fun i))`, that shows up as a
@@ -1178,7 +1178,7 @@ def sigmaEquivSigmaPi (n : ℕ) :
           by
           simp only [and_imp, List.mem_join, exists_imp, forall_mem_of_fn_iff]
           exact fun i j hj => Composition.blocks_pos _ hj
-        blocks_sum := by simp [sum_of_fn, Composition.blocks_sum, Composition.sum_blocks_fun] },
+        blocks_sum := by simp [sum_of_fn, Composition.blocks_sum, Composition.sum_blocksFun] },
       { blocks := ofFn fun j => (i.2 j).length
         blocks_pos :=
           forall_mem_ofFn_iff.2 fun j =>
@@ -1215,7 +1215,7 @@ def sigmaEquivSigmaPi (n : ℕ) :
     -- but we need to massage it to take care of the dependent setting.
     rintro ⟨c, d⟩
     have : map List.sum (of_fn fun i : Fin (Composition.length c) => (d i).blocks) = c.blocks := by
-      simp [map_of_fn, (· ∘ ·), Composition.blocks_sum, Composition.of_fn_blocks_fun]
+      simp [map_of_fn, (· ∘ ·), Composition.blocks_sum, Composition.ofFn_blocksFun]
     rw [sigma_pi_composition_eq_iff]
     dsimp
     congr

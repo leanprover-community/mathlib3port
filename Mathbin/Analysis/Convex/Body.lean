@@ -66,9 +66,9 @@ theorem convex (K : ConvexBody V) : Convex ℝ (K : Set V) :=
   K.convex'
 #align convex_body.convex ConvexBody.convex
 
-theorem is_compact (K : ConvexBody V) : IsCompact (K : Set V) :=
+theorem isCompact (K : ConvexBody V) : IsCompact (K : Set V) :=
   K.is_compact'
-#align convex_body.is_compact ConvexBody.is_compact
+#align convex_body.is_compact ConvexBody.isCompact
 
 theorem nonempty (K : ConvexBody V) : (K : Set V).Nonempty :=
   K.nonempty'
@@ -93,7 +93,7 @@ instance : AddMonoid (ConvexBody V)
   add_assoc K L M := by
     ext
     simp only [coe_mk, Set.image2_add, add_assoc]
-  zero := ⟨0, convex_singleton 0, is_compact_singleton, Set.singleton_nonempty 0⟩
+  zero := ⟨0, convex_singleton 0, isCompact_singleton, Set.singleton_nonempty 0⟩
   zero_add K := by
     ext
     simp only [coe_mk, Set.image2_add, zero_add]

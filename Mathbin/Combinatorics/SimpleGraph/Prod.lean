@@ -52,29 +52,29 @@ def boxProd (G : SimpleGraph α) (H : SimpleGraph β) : SimpleGraph (α × β)
 infixl:70 " □ " => boxProd
 
 @[simp]
-theorem box_prod_adj : (G □ H).Adj x y ↔ G.Adj x.1 y.1 ∧ x.2 = y.2 ∨ H.Adj x.2 y.2 ∧ x.1 = y.1 :=
+theorem boxProd_adj : (G □ H).Adj x y ↔ G.Adj x.1 y.1 ∧ x.2 = y.2 ∨ H.Adj x.2 y.2 ∧ x.1 = y.1 :=
   Iff.rfl
-#align simple_graph.box_prod_adj SimpleGraph.box_prod_adj
+#align simple_graph.box_prod_adj SimpleGraph.boxProd_adj
 
 @[simp]
-theorem box_prod_adj_left : (G □ H).Adj (a₁, b) (a₂, b) ↔ G.Adj a₁ a₂ := by
+theorem boxProd_adj_left : (G □ H).Adj (a₁, b) (a₂, b) ↔ G.Adj a₁ a₂ := by
   rw [box_prod_adj, and_iff_left rfl, or_iff_left fun h : H.adj b b ∧ _ => h.1.Ne rfl]
-#align simple_graph.box_prod_adj_left SimpleGraph.box_prod_adj_left
+#align simple_graph.box_prod_adj_left SimpleGraph.boxProd_adj_left
 
 @[simp]
-theorem box_prod_adj_right : (G □ H).Adj (a, b₁) (a, b₂) ↔ H.Adj b₁ b₂ := by
+theorem boxProd_adj_right : (G □ H).Adj (a, b₁) (a, b₂) ↔ H.Adj b₁ b₂ := by
   rw [box_prod_adj, and_iff_left rfl, or_iff_right fun h : G.adj a a ∧ _ => h.1.Ne rfl]
-#align simple_graph.box_prod_adj_right SimpleGraph.box_prod_adj_right
+#align simple_graph.box_prod_adj_right SimpleGraph.boxProd_adj_right
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem box_prod_neighbor_set (x : α × β) :
+theorem boxProd_neighborSet (x : α × β) :
     (G □ H).neighborSet x = G.neighborSet x.1 ×ˢ {x.2} ∪ {x.1} ×ˢ H.neighborSet x.2 :=
   by
   ext ⟨a', b'⟩
   simp only [mem_neighbor_set, Set.mem_union, box_prod_adj, Set.mem_prod, Set.mem_singleton_iff]
   simp only [eq_comm, and_comm']
-#align simple_graph.box_prod_neighbor_set SimpleGraph.box_prod_neighbor_set
+#align simple_graph.box_prod_neighbor_set SimpleGraph.boxProd_neighborSet
 
 variable (G H I)
 
@@ -88,7 +88,7 @@ def boxProdComm : G □ H ≃g H □ G :=
 @[simps]
 def boxProdAssoc : G □ H □ I ≃g G □ (H □ I) :=
   ⟨Equiv.prodAssoc _ _ _, fun x y => by
-    simp only [box_prod_adj, Equiv.prod_assoc_apply, or_and_right, or_assoc', Prod.ext_iff,
+    simp only [box_prod_adj, Equiv.prodAssoc_apply, or_and_right, or_assoc', Prod.ext_iff,
       and_assoc', @and_comm (x.1.1 = _)]⟩
 #align simple_graph.box_prod_assoc SimpleGraph.boxProdAssoc
 
@@ -97,7 +97,7 @@ def boxProdAssoc : G □ H □ I ≃g G □ (H □ I) :=
 def boxProdLeft (b : β) : G ↪g G □ H where
   toFun a := (a, b)
   inj' a₁ a₂ := congr_arg Prod.fst
-  map_rel_iff' a₁ a₂ := box_prod_adj_left
+  map_rel_iff' a₁ a₂ := boxProd_adj_left
 #align simple_graph.box_prod_left SimpleGraph.boxProdLeft
 
 /-- The embedding of `H` into `G □ H` given by `a`. -/
@@ -106,7 +106,7 @@ def boxProdRight (a : α) : H ↪g G □ H
     where
   toFun := Prod.mk a
   inj' b₁ b₂ := congr_arg Prod.snd
-  map_rel_iff' b₁ b₂ := box_prod_adj_right
+  map_rel_iff' b₁ b₂ := boxProd_adj_right
 #align simple_graph.box_prod_right SimpleGraph.boxProdRight
 
 namespace Walk
@@ -146,7 +146,7 @@ def ofBoxProdRight [DecidableEq α] [DecidableRel H.Adj] :
 #align simple_graph.walk.of_box_prod_right SimpleGraph.Walk.ofBoxProdRight
 
 @[simp]
-theorem of_box_prod_left_box_prod_left [DecidableEq β] [DecidableRel G.Adj] :
+theorem ofBoxProdLeft_boxProdLeft [DecidableEq β] [DecidableRel G.Adj] :
     ∀ {a₁ a₂ : α} (w : G.Walk a₁ a₂), (w.boxProdLeft H b).ofBoxProdLeft = w
   | _, _, nil => rfl
   | _, _, cons' x y z h w =>
@@ -154,10 +154,10 @@ theorem of_box_prod_left_box_prod_left [DecidableEq β] [DecidableRel G.Adj] :
     rw [walk.box_prod_left, map_cons, of_box_prod_left, Or.by_cases, dif_pos, ← walk.box_prod_left,
       of_box_prod_left_box_prod_left]
     exacts[rfl, ⟨h, rfl⟩]
-#align simple_graph.walk.of_box_prod_left_box_prod_left SimpleGraph.Walk.of_box_prod_left_box_prod_left
+#align simple_graph.walk.of_box_prod_left_box_prod_left SimpleGraph.Walk.ofBoxProdLeft_boxProdLeft
 
 @[simp]
-theorem of_box_prod_left_box_prod_right [DecidableEq α] [DecidableRel G.Adj] :
+theorem of_box_prod_left_boxProdRight [DecidableEq α] [DecidableRel G.Adj] :
     ∀ {b₁ b₂ : α} (w : G.Walk b₁ b₂), (w.boxProdRight G a).ofBoxProdRight = w
   | _, _, nil => rfl
   | _, _, cons' x y z h w =>
@@ -165,62 +165,62 @@ theorem of_box_prod_left_box_prod_right [DecidableEq α] [DecidableRel G.Adj] :
     rw [walk.box_prod_right, map_cons, of_box_prod_right, Or.by_cases, dif_pos, ←
       walk.box_prod_right, of_box_prod_left_box_prod_right]
     exacts[rfl, ⟨h, rfl⟩]
-#align simple_graph.walk.of_box_prod_left_box_prod_right SimpleGraph.Walk.of_box_prod_left_box_prod_right
+#align simple_graph.walk.of_box_prod_left_box_prod_right SimpleGraph.Walk.of_box_prod_left_boxProdRight
 
 end Walk
 
 variable {G H}
 
-protected theorem Preconnected.box_prod (hG : G.Preconnected) (hH : H.Preconnected) :
+protected theorem Preconnected.boxProd (hG : G.Preconnected) (hH : H.Preconnected) :
     (G □ H).Preconnected := by
   rintro x y
   obtain ⟨w₁⟩ := hG x.1 y.1
   obtain ⟨w₂⟩ := hH x.2 y.2
   rw [← @Prod.mk.eta _ _ x, ← @Prod.mk.eta _ _ y]
   exact ⟨(w₁.box_prod_left _ _).append (w₂.box_prod_right _ _)⟩
-#align simple_graph.preconnected.box_prod SimpleGraph.Preconnected.box_prod
+#align simple_graph.preconnected.box_prod SimpleGraph.Preconnected.boxProd
 
-protected theorem Preconnected.of_box_prod_left [Nonempty β] (h : (G □ H).Preconnected) :
+protected theorem Preconnected.of_boxProd_left [Nonempty β] (h : (G □ H).Preconnected) :
     G.Preconnected := by
   classical
     rintro a₁ a₂
     obtain ⟨w⟩ := h (a₁, Classical.arbitrary _) (a₂, Classical.arbitrary _)
     exact ⟨w.of_box_prod_left⟩
-#align simple_graph.preconnected.of_box_prod_left SimpleGraph.Preconnected.of_box_prod_left
+#align simple_graph.preconnected.of_box_prod_left SimpleGraph.Preconnected.of_boxProd_left
 
-protected theorem Preconnected.of_box_prod_right [Nonempty α] (h : (G □ H).Preconnected) :
+protected theorem Preconnected.of_boxProd_right [Nonempty α] (h : (G □ H).Preconnected) :
     H.Preconnected := by
   classical
     rintro b₁ b₂
     obtain ⟨w⟩ := h (Classical.arbitrary _, b₁) (Classical.arbitrary _, b₂)
     exact ⟨w.of_box_prod_right⟩
-#align simple_graph.preconnected.of_box_prod_right SimpleGraph.Preconnected.of_box_prod_right
+#align simple_graph.preconnected.of_box_prod_right SimpleGraph.Preconnected.of_boxProd_right
 
-protected theorem Connected.box_prod (hG : G.Connected) (hH : H.Connected) : (G □ H).Connected :=
+protected theorem Connected.boxProd (hG : G.Connected) (hH : H.Connected) : (G □ H).Connected :=
   by
   haveI := hG.nonempty
   haveI := hH.nonempty
   exact ⟨hG.preconnected.box_prod hH.preconnected⟩
-#align simple_graph.connected.box_prod SimpleGraph.Connected.box_prod
+#align simple_graph.connected.box_prod SimpleGraph.Connected.boxProd
 
-protected theorem Connected.of_box_prod_left (h : (G □ H).Connected) : G.Connected :=
+protected theorem Connected.of_boxProd_left (h : (G □ H).Connected) : G.Connected :=
   by
   haveI := (nonempty_prod.1 h.nonempty).1
   haveI := (nonempty_prod.1 h.nonempty).2
   exact ⟨h.preconnected.of_box_prod_left⟩
-#align simple_graph.connected.of_box_prod_left SimpleGraph.Connected.of_box_prod_left
+#align simple_graph.connected.of_box_prod_left SimpleGraph.Connected.of_boxProd_left
 
-protected theorem Connected.of_box_prod_right (h : (G □ H).Connected) : H.Connected :=
+protected theorem Connected.of_boxProd_right (h : (G □ H).Connected) : H.Connected :=
   by
   haveI := (nonempty_prod.1 h.nonempty).1
   haveI := (nonempty_prod.1 h.nonempty).2
   exact ⟨h.preconnected.of_box_prod_right⟩
-#align simple_graph.connected.of_box_prod_right SimpleGraph.Connected.of_box_prod_right
+#align simple_graph.connected.of_box_prod_right SimpleGraph.Connected.of_boxProd_right
 
 @[simp]
-theorem box_prod_connected : (G □ H).Connected ↔ G.Connected ∧ H.Connected :=
+theorem boxProd_connected : (G □ H).Connected ↔ G.Connected ∧ H.Connected :=
   ⟨fun h => ⟨h.ofBoxProdLeft, h.ofBoxProdRight⟩, fun h => h.1.boxProd h.2⟩
-#align simple_graph.box_prod_connected SimpleGraph.box_prod_connected
+#align simple_graph.box_prod_connected SimpleGraph.boxProd_connected
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -228,7 +228,7 @@ instance boxProdFintypeNeighborSet (x : α × β) [Fintype (G.neighborSet x.1)]
     [Fintype (H.neighborSet x.2)] : Fintype ((G □ H).neighborSet x) :=
   Fintype.ofEquiv
     ((G.neighborFinset x.1 ×ˢ {x.2}).disjUnion ({x.1} ×ˢ H.neighborFinset x.2) <|
-      Finset.disjoint_product.mpr <| Or.inl <| neighbor_finset_disjoint_singleton _ _)
+      Finset.disjoint_product.mpr <| Or.inl <| neighborFinset_disjoint_singleton _ _)
     ((Equiv.refl _).subtypeEquiv fun y =>
       by
       simp_rw [Finset.mem_disjUnion, Finset.mem_product, Finset.mem_singleton, mem_neighbor_finset,
@@ -238,24 +238,24 @@ instance boxProdFintypeNeighborSet (x : α × β) [Fintype (G.neighborSet x.1)]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem box_prod_neighbor_finset (x : α × β) [Fintype (G.neighborSet x.1)]
+theorem boxProd_neighborFinset (x : α × β) [Fintype (G.neighborSet x.1)]
     [Fintype (H.neighborSet x.2)] [Fintype ((G □ H).neighborSet x)] :
     (G □ H).neighborFinset x =
       (G.neighborFinset x.1 ×ˢ {x.2}).disjUnion ({x.1} ×ˢ H.neighborFinset x.2)
-        (Finset.disjoint_product.mpr <| Or.inl <| neighbor_finset_disjoint_singleton _ _) :=
+        (Finset.disjoint_product.mpr <| Or.inl <| neighborFinset_disjoint_singleton _ _) :=
   by
   -- swap out the fintype instance for the canonical one
   letI : Fintype ((G □ H).neighborSet x) := SimpleGraph.boxProdFintypeNeighborSet _
   refine' Eq.trans _ Finset.attach_map_val
   convert Finset.map_map _ (Function.Embedding.subtype _) Finset.univ
-#align simple_graph.box_prod_neighbor_finset SimpleGraph.box_prod_neighbor_finset
+#align simple_graph.box_prod_neighbor_finset SimpleGraph.boxProd_neighborFinset
 
-theorem box_prod_degree (x : α × β) [Fintype (G.neighborSet x.1)] [Fintype (H.neighborSet x.2)]
+theorem boxProd_degree (x : α × β) [Fintype (G.neighborSet x.1)] [Fintype (H.neighborSet x.2)]
     [Fintype ((G □ H).neighborSet x)] : (G □ H).degree x = G.degree x.1 + H.degree x.2 :=
   by
   rw [degree, degree, degree, box_prod_neighbor_finset, Finset.card_disjUnion]
   simp_rw [Finset.card_product, Finset.card_singleton, mul_one, one_mul]
-#align simple_graph.box_prod_degree SimpleGraph.box_prod_degree
+#align simple_graph.box_prod_degree SimpleGraph.boxProd_degree
 
 end SimpleGraph
 

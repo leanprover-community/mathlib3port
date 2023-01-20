@@ -63,10 +63,10 @@ theorem coe_pointwise_smul (m : M) (S : Subsemiring R) : ↑(m • S) = m • (S
 #align subsemiring.coe_pointwise_smul Subsemiring.coe_pointwise_smul
 
 @[simp]
-theorem pointwise_smul_to_add_submonoid (m : M) (S : Subsemiring R) :
+theorem pointwise_smul_toAddSubmonoid (m : M) (S : Subsemiring R) :
     (m • S).toAddSubmonoid = m • S.toAddSubmonoid :=
   rfl
-#align subsemiring.pointwise_smul_to_add_submonoid Subsemiring.pointwise_smul_to_add_submonoid
+#align subsemiring.pointwise_smul_to_add_submonoid Subsemiring.pointwise_smul_toAddSubmonoid
 
 theorem smul_mem_pointwise_smul (m : M) (r : R) (S : Subsemiring R) : r ∈ S → m • r ∈ m • S :=
   (Set.smul_mem_smul_set : _ → _ ∈ m • (S : Set R))

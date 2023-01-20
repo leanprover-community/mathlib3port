@@ -66,24 +66,24 @@ def polarCoord : LocalHomeomorph (ℝ × ℝ) (ℝ × ℝ)
     · conv_rhs => rw [← sqrt_sq (le_of_lt hr), ← one_mul (r ^ 2), ← sin_sq_add_cos_sq θ]
       congr 1
       ring
-    · convert Complex.arg_mul_cos_add_sin_mul_I hr ⟨hθ.1, hθ.2.le⟩
-      simp only [Complex.equiv_real_prod_symm_apply, Complex.of_real_mul, Complex.of_real_cos,
+    · convert Complex.arg_mul_cos_add_sin_mul_i hr ⟨hθ.1, hθ.2.le⟩
+      simp only [Complex.equivRealProd_symm_apply, Complex.of_real_mul, Complex.of_real_cos,
         Complex.of_real_sin]
       ring
   left_inv' := by
     rintro ⟨x, y⟩ hxy
     have A : sqrt (x ^ 2 + y ^ 2) = Complex.abs (x + y * Complex.i) := by
       simp only [Complex.abs_def, Complex.normSq, pow_two, MonoidWithZeroHom.coe_mk, Complex.add_re,
-        Complex.of_real_re, Complex.mul_re, Complex.I_re, mul_zero, Complex.of_real_im,
-        Complex.I_im, sub_self, add_zero, Complex.add_im, Complex.mul_im, mul_one, zero_add]
-    have Z := Complex.abs_mul_cos_add_sin_mul_I (x + y * Complex.i)
+        Complex.of_real_re, Complex.mul_re, Complex.i_re, mul_zero, Complex.of_real_im,
+        Complex.i_im, sub_self, add_zero, Complex.add_im, Complex.mul_im, mul_one, zero_add]
+    have Z := Complex.abs_mul_cos_add_sin_mul_i (x + y * Complex.i)
     simp only [← Complex.of_real_cos, ← Complex.of_real_sin, mul_add, ← Complex.of_real_mul, ←
       mul_assoc] at Z
     simpa [A, -Complex.of_real_cos, -Complex.of_real_sin] using Complex.ext_iff.1 Z
-  open_target := is_open_Ioi.Prod is_open_Ioo
+  open_target := isOpen_ioi.Prod isOpen_ioo
   open_source :=
-    (is_open_lt continuous_const continuous_fst).union
-      (is_open_ne_fun continuous_snd continuous_const)
+    (isOpen_lt continuous_const continuous_fst).union
+      (isOpen_ne_fun continuous_snd continuous_const)
   continuous_inv_fun :=
     ((continuous_fst.mul (continuous_cos.comp continuous_snd)).prod_mk
         (continuous_fst.mul (continuous_sin.comp continuous_snd))).ContinuousOn
@@ -97,7 +97,7 @@ def polarCoord : LocalHomeomorph (ℝ × ℝ) (ℝ × ℝ)
       rintro ⟨x, y⟩ hxy
       simpa only using hxy
     apply ContinuousOn.comp (fun z hz => _) _ A
-    · exact (Complex.continuous_at_arg hz).ContinuousWithinAt
+    · exact (Complex.continuousAt_arg hz).ContinuousWithinAt
     · exact complex.equiv_real_prodₗ.symm.continuous.continuous_on
 #align polar_coord polarCoord
 
@@ -110,7 +110,7 @@ theorem hasFderivAtPolarCoordSymm (p : ℝ × ℝ) :
             "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation")).toContinuousLinearMap
       p :=
   by
-  rw [Matrix.to_lin_fin_two_prod_to_continuous_linear_map]
+  rw [Matrix.toLin_finTwoProd_toContinuousLinearMap]
   convert
       HasFderivAt.prod
         (has_fderiv_at_fst.mul ((has_deriv_at_cos p.2).compHasFderivAt p hasFderivAtSnd))
@@ -119,12 +119,12 @@ theorem hasFderivAtPolarCoordSymm (p : ℝ × ℝ) :
     simp only [smul_smul, add_comm, neg_mul, neg_smul, smul_neg]
 #align has_fderiv_at_polar_coord_symm hasFderivAtPolarCoordSymm
 
-theorem polar_coord_source_ae_eq_univ : polarCoord.source =ᵐ[volume] univ :=
+theorem polarCoord_source_ae_eq_univ : polarCoord.source =ᵐ[volume] univ :=
   by
   have A : polar_coord.sourceᶜ ⊆ (LinearMap.snd ℝ ℝ ℝ).ker :=
     by
     intro x hx
-    simp only [polar_coord_source, compl_union, mem_inter_iff, mem_compl_iff, mem_set_of_eq, not_lt,
+    simp only [polarCoord_source, compl_union, mem_inter_iff, mem_compl_iff, mem_set_of_eq, not_lt,
       not_not] at hx
     exact hx.2
   have B : volume ((LinearMap.snd ℝ ℝ ℝ).ker : Set (ℝ × ℝ)) = 0 :=
@@ -136,11 +136,11 @@ theorem polar_coord_source_ae_eq_univ : polarCoord.source =ᵐ[volume] univ :=
     simpa using this
   simp only [ae_eq_univ]
   exact le_antisymm ((measure_mono A).trans (le_of_eq B)) bot_le
-#align polar_coord_source_ae_eq_univ polar_coord_source_ae_eq_univ
+#align polar_coord_source_ae_eq_univ polarCoord_source_ae_eq_univ
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
-theorem integral_comp_polar_coord_symm {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
+theorem integral_comp_polarCoord_symm {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
     [CompleteSpace E] (f : ℝ × ℝ → E) :
     (∫ p in polarCoord.target, p.1 • f (polarCoord.symm p)) = ∫ p, f p :=
   by
@@ -154,7 +154,7 @@ theorem integral_comp_polar_coord_symm {E : Type _} [NormedAddCommGroup E] [Norm
   have B_det : ∀ p, (B p).det = p.1 := by
     intro p
     conv_rhs => rw [← one_mul p.1, ← cos_sq_add_sin_sq p.2]
-    simp only [neg_mul, LinearMap.det_to_continuous_linear_map, LinearMap.det_to_lin,
+    simp only [neg_mul, LinearMap.det_toContinuousLinearMap, LinearMap.det_toLin,
       Matrix.det_fin_two_of, sub_neg_eq_add]
     ring
   symm
@@ -172,5 +172,5 @@ theorem integral_comp_polar_coord_symm {E : Type _} [NormedAddCommGroup E] [Norm
       rw [B_det, abs_of_pos]
       exact hx.1
     
-#align integral_comp_polar_coord_symm integral_comp_polar_coord_symm
+#align integral_comp_polar_coord_symm integral_comp_polarCoord_symm
 

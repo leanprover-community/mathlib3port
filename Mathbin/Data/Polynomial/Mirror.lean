@@ -57,15 +57,15 @@ theorem mirror_monomial (n : ℕ) (a : R) : (monomial n a).mirror = monomial n a
         mul_one]
 #align polynomial.mirror_monomial Polynomial.mirror_monomial
 
-theorem mirror_C (a : R) : (c a).mirror = c a :=
+theorem mirror_c (a : R) : (c a).mirror = c a :=
   mirror_monomial 0 a
-#align polynomial.mirror_C Polynomial.mirror_C
+#align polynomial.mirror_C Polynomial.mirror_c
 
-theorem mirror_X : x.mirror = (x : R[X]) :=
+theorem mirror_x : x.mirror = (x : R[X]) :=
   mirror_monomial 1 (1 : R)
-#align polynomial.mirror_X Polynomial.mirror_X
+#align polynomial.mirror_X Polynomial.mirror_x
 
-theorem mirror_nat_degree : p.mirror.natDegree = p.natDegree :=
+theorem mirror_natDegree : p.mirror.natDegree = p.natDegree :=
   by
   by_cases hp : p = 0
   · rw [hp, mirror_zero]
@@ -73,16 +73,16 @@ theorem mirror_nat_degree : p.mirror.natDegree = p.natDegree :=
   rw [mirror, nat_degree_mul', reverse_nat_degree, nat_degree_X_pow,
     tsub_add_cancel_of_le p.nat_trailing_degree_le_nat_degree]
   rwa [leading_coeff_X_pow, mul_one, reverse_leading_coeff, Ne, trailing_coeff_eq_zero]
-#align polynomial.mirror_nat_degree Polynomial.mirror_nat_degree
+#align polynomial.mirror_nat_degree Polynomial.mirror_natDegree
 
-theorem mirror_nat_trailing_degree : p.mirror.natTrailingDegree = p.natTrailingDegree :=
+theorem mirror_natTrailingDegree : p.mirror.natTrailingDegree = p.natTrailingDegree :=
   by
   by_cases hp : p = 0
   · rw [hp, mirror_zero]
   ·
     rw [mirror, nat_trailing_degree_mul_X_pow ((mt reverse_eq_zero.mp) hp),
       reverse_nat_trailing_degree, zero_add]
-#align polynomial.mirror_nat_trailing_degree Polynomial.mirror_nat_trailing_degree
+#align polynomial.mirror_nat_trailing_degree Polynomial.mirror_natTrailingDegree
 
 theorem coeff_mirror (n : ℕ) :
     p.mirror.coeff n = p.coeff (revAt (p.natDegree + p.natTrailingDegree) n) :=
@@ -156,15 +156,15 @@ theorem mirror_eq_zero : p.mirror = 0 ↔ p = 0 :=
 variable (p q)
 
 @[simp]
-theorem mirror_trailing_coeff : p.mirror.trailingCoeff = p.leadingCoeff := by
+theorem mirror_trailingCoeff : p.mirror.trailingCoeff = p.leadingCoeff := by
   rw [leading_coeff, trailing_coeff, mirror_nat_trailing_degree, coeff_mirror,
     rev_at_le (Nat.le_add_left _ _), add_tsub_cancel_right]
-#align polynomial.mirror_trailing_coeff Polynomial.mirror_trailing_coeff
+#align polynomial.mirror_trailing_coeff Polynomial.mirror_trailingCoeff
 
 @[simp]
-theorem mirror_leading_coeff : p.mirror.leadingCoeff = p.trailingCoeff := by
+theorem mirror_leadingCoeff : p.mirror.leadingCoeff = p.trailingCoeff := by
   rw [← p.mirror_mirror, mirror_trailing_coeff, p.mirror_mirror]
-#align polynomial.mirror_leading_coeff Polynomial.mirror_leading_coeff
+#align polynomial.mirror_leading_coeff Polynomial.mirror_leadingCoeff
 
 theorem coeff_mul_mirror :
     (p * p.mirror).coeff (p.natDegree + p.natTrailingDegree) = p.Sum fun n => (· ^ 2) :=
@@ -180,20 +180,19 @@ theorem coeff_mul_mirror :
 
 variable [NoZeroDivisors R]
 
-theorem nat_degree_mul_mirror : (p * p.mirror).natDegree = 2 * p.natDegree :=
+theorem natDegree_mul_mirror : (p * p.mirror).natDegree = 2 * p.natDegree :=
   by
   by_cases hp : p = 0
   · rw [hp, zero_mul, nat_degree_zero, mul_zero]
   rw [nat_degree_mul hp (mt mirror_eq_zero.mp hp), mirror_nat_degree, two_mul]
-#align polynomial.nat_degree_mul_mirror Polynomial.nat_degree_mul_mirror
+#align polynomial.nat_degree_mul_mirror Polynomial.natDegree_mul_mirror
 
-theorem nat_trailing_degree_mul_mirror :
-    (p * p.mirror).natTrailingDegree = 2 * p.natTrailingDegree :=
+theorem natTrailingDegree_mul_mirror : (p * p.mirror).natTrailingDegree = 2 * p.natTrailingDegree :=
   by
   by_cases hp : p = 0
   · rw [hp, zero_mul, nat_trailing_degree_zero, mul_zero]
   rw [nat_trailing_degree_mul hp (mt mirror_eq_zero.mp hp), mirror_nat_trailing_degree, two_mul]
-#align polynomial.nat_trailing_degree_mul_mirror Polynomial.nat_trailing_degree_mul_mirror
+#align polynomial.nat_trailing_degree_mul_mirror Polynomial.natTrailingDegree_mul_mirror
 
 end Semiring
 

@@ -32,7 +32,7 @@ open Polynomial Real
 
 open Nat Real
 
-theorem is_primitive_root_exp_of_coprime (i n : ℕ) (h0 : n ≠ 0) (hi : i.Coprime n) :
+theorem isPrimitiveRoot_exp_of_coprime (i n : ℕ) (h0 : n ≠ 0) (hi : i.Coprime n) :
     IsPrimitiveRoot (exp (2 * π * I * (i / n))) n :=
   by
   rw [IsPrimitiveRoot.iff_def]
@@ -49,14 +49,14 @@ theorem is_primitive_root_exp_of_coprime (i n : ℕ) (h0 : n ≠ 0) (hi : i.Copr
       rw [← Int.coe_nat_dvd, hk]
       apply dvd_mul_left
     exact hi.symm.dvd_of_dvd_mul_left this
-#align complex.is_primitive_root_exp_of_coprime Complex.is_primitive_root_exp_of_coprime
+#align complex.is_primitive_root_exp_of_coprime Complex.isPrimitiveRoot_exp_of_coprime
 
-theorem is_primitive_root_exp (n : ℕ) (h0 : n ≠ 0) : IsPrimitiveRoot (exp (2 * π * I / n)) n := by
+theorem isPrimitiveRoot_exp (n : ℕ) (h0 : n ≠ 0) : IsPrimitiveRoot (exp (2 * π * I / n)) n := by
   simpa only [Nat.cast_one, one_div] using
     is_primitive_root_exp_of_coprime 1 n h0 n.coprime_one_left
-#align complex.is_primitive_root_exp Complex.is_primitive_root_exp
+#align complex.is_primitive_root_exp Complex.isPrimitiveRoot_exp
 
-theorem is_primitive_root_iff (ζ : ℂ) (n : ℕ) (hn : n ≠ 0) :
+theorem isPrimitiveRoot_iff (ζ : ℂ) (n : ℕ) (hn : n ≠ 0) :
     IsPrimitiveRoot ζ n ↔ ∃ i < (n : ℕ), ∃ hi : i.Coprime n, exp (2 * π * I * (i / n)) = ζ :=
   by
   have hn0 : (n : ℂ) ≠ 0 := by exact_mod_cast hn
@@ -70,14 +70,14 @@ theorem is_primitive_root_iff (ζ : ℂ) (n : ℕ) (hn : n ≠ 0) :
   rw [← exp_nat_mul]
   congr 1
   field_simp [hn0, mul_comm (i : ℂ)]
-#align complex.is_primitive_root_iff Complex.is_primitive_root_iff
+#align complex.is_primitive_root_iff Complex.isPrimitiveRoot_iff
 
 /-- The complex `n`-th roots of unity are exactly the
 complex numbers of the form `e ^ (2 * real.pi * complex.I * (i / n))` for some `i < n`. -/
-theorem mem_roots_of_unity (n : ℕ+) (x : Units ℂ) :
+theorem mem_rootsOfUnity (n : ℕ+) (x : Units ℂ) :
     x ∈ rootsOfUnity n ℂ ↔ ∃ i < (n : ℕ), exp (2 * π * I * (i / n)) = x :=
   by
-  rw [mem_roots_of_unity, Units.ext_iff, Units.val_pow_eq_pow_val, Units.val_one]
+  rw [mem_rootsOfUnity, Units.ext_iff, Units.val_pow_eq_pow_val, Units.val_one]
   have hn0 : (n : ℂ) ≠ 0 := by exact_mod_cast n.ne_zero
   constructor
   · intro h
@@ -91,18 +91,18 @@ theorem mem_roots_of_unity (n : ℕ+) (x : Units ℂ) :
     rw [← H, ← exp_nat_mul, exp_eq_one_iff]
     use i
     field_simp [hn0, mul_comm ((n : ℕ) : ℂ), mul_comm (i : ℂ)]
-#align complex.mem_roots_of_unity Complex.mem_roots_of_unity
+#align complex.mem_roots_of_unity Complex.mem_rootsOfUnity
 
-theorem card_roots_of_unity (n : ℕ+) : Fintype.card (rootsOfUnity n ℂ) = n :=
-  (is_primitive_root_exp n n.NeZero).card_roots_of_unity
-#align complex.card_roots_of_unity Complex.card_roots_of_unity
+theorem card_rootsOfUnity (n : ℕ+) : Fintype.card (rootsOfUnity n ℂ) = n :=
+  (isPrimitiveRoot_exp n n.NeZero).card_roots_of_unity
+#align complex.card_roots_of_unity Complex.card_rootsOfUnity
 
-theorem card_primitive_roots (k : ℕ) : (primitiveRoots k ℂ).card = φ k :=
+theorem card_primitiveRoots (k : ℕ) : (primitiveRoots k ℂ).card = φ k :=
   by
   by_cases h : k = 0
   · simp [h]
   exact (is_primitive_root_exp k h).card_primitive_roots
-#align complex.card_primitive_roots Complex.card_primitive_roots
+#align complex.card_primitive_roots Complex.card_primitiveRoots
 
 end Complex
 
@@ -123,14 +123,14 @@ theorem IsPrimitiveRoot.arg_ext {n m : ℕ} {ζ μ : ℂ} (hζ : IsPrimitiveRoot
 
 theorem IsPrimitiveRoot.arg_eq_zero_iff {n : ℕ} {ζ : ℂ} (hζ : IsPrimitiveRoot ζ n) (hn : n ≠ 0) :
     ζ.arg = 0 ↔ ζ = 1 :=
-  ⟨fun h => hζ.arg_ext IsPrimitiveRoot.one hn one_ne_zero (h.trans Complex.arg_one.symm), fun h =>
+  ⟨fun h => hζ.arg_ext IsPrimitiveRoot.one hn one_neZero (h.trans Complex.arg_one.symm), fun h =>
     h.symm ▸ Complex.arg_one⟩
 #align is_primitive_root.arg_eq_zero_iff IsPrimitiveRoot.arg_eq_zero_iff
 
 theorem IsPrimitiveRoot.arg_eq_pi_iff {n : ℕ} {ζ : ℂ} (hζ : IsPrimitiveRoot ζ n) (hn : n ≠ 0) :
     ζ.arg = Real.pi ↔ ζ = -1 :=
   ⟨fun h =>
-    hζ.arg_ext (IsPrimitiveRoot.neg_one 0 two_ne_zero.symm) hn two_ne_zero
+    hζ.arg_ext (IsPrimitiveRoot.neg_one 0 two_neZero.symm) hn two_neZero
       (h.trans Complex.arg_neg_one.symm),
     fun h => h.symm ▸ Complex.arg_neg_one⟩
 #align is_primitive_root.arg_eq_pi_iff IsPrimitiveRoot.arg_eq_pi_iff
@@ -138,9 +138,9 @@ theorem IsPrimitiveRoot.arg_eq_pi_iff {n : ℕ} {ζ : ℂ} (hζ : IsPrimitiveRoo
 theorem IsPrimitiveRoot.arg {n : ℕ} {ζ : ℂ} (h : IsPrimitiveRoot ζ n) (hn : n ≠ 0) :
     ∃ i : ℤ, ζ.arg = i / n * (2 * Real.pi) ∧ IsCoprime i n ∧ i.natAbs < n :=
   by
-  rw [Complex.is_primitive_root_iff _ _ hn] at h
+  rw [Complex.isPrimitiveRoot_iff _ _ hn] at h
   obtain ⟨i, h, hin, rfl⟩ := h
-  rw [mul_comm, ← mul_assoc, Complex.exp_mul_I]
+  rw [mul_comm, ← mul_assoc, Complex.exp_mul_i]
   refine' ⟨if i * 2 ≤ n then i else i - n, _, _, _⟩
   on_goal 2 =>
     replace hin := nat.is_coprime_iff_coprime.mpr hin
@@ -160,7 +160,7 @@ theorem IsPrimitiveRoot.arg {n : ℕ} {ζ : ℂ} (h : IsPrimitiveRoot ζ n) (hn 
     rw [← Int.natAbs_neg, neg_sub, Int.natAbs_eq_iff]
     exact Or.inl (Int.ofNat_sub h.le).symm
   split_ifs with h₂
-  · convert Complex.arg_cos_add_sin_mul_I _
+  · convert Complex.arg_cos_add_sin_mul_i _
     · push_cast
     · push_cast
     field_simp [hn]
@@ -173,7 +173,7 @@ theorem IsPrimitiveRoot.arg {n : ℕ} {ζ : ℂ} (h : IsPrimitiveRoot ζ n) (hn 
       mul_le_of_le_one_right real.pi_pos.le
         ((div_le_iff' <| by exact_mod_cast pos_of_gt h).mpr <| by exact_mod_cast h₂)
   rw [← Complex.cos_sub_two_pi, ← Complex.sin_sub_two_pi]
-  convert Complex.arg_cos_add_sin_mul_I _
+  convert Complex.arg_cos_add_sin_mul_i _
   · push_cast
     rw [← sub_one_mul, sub_div, div_self]
     exact_mod_cast hn

@@ -87,29 +87,29 @@ theorem contractible_iff_id_nullhomotopic (Y : Type _) [TopologicalSpace Y] :
 
 variable {X Y : Type _} [TopologicalSpace X] [TopologicalSpace Y]
 
-protected theorem ContinuousMap.HomotopyEquiv.contractible_space [ContractibleSpace Y]
-    (e : X ≃ₕ Y) : ContractibleSpace X :=
+protected theorem ContinuousMap.HomotopyEquiv.contractibleSpace [ContractibleSpace Y] (e : X ≃ₕ Y) :
+    ContractibleSpace X :=
   ⟨(ContractibleSpace.hequiv_unit Y).map e.trans⟩
-#align continuous_map.homotopy_equiv.contractible_space ContinuousMap.HomotopyEquiv.contractible_space
+#align continuous_map.homotopy_equiv.contractible_space ContinuousMap.HomotopyEquiv.contractibleSpace
 
-protected theorem ContinuousMap.HomotopyEquiv.contractible_space_iff (e : X ≃ₕ Y) :
+protected theorem ContinuousMap.HomotopyEquiv.contractibleSpace_iff (e : X ≃ₕ Y) :
     ContractibleSpace X ↔ ContractibleSpace Y :=
   ⟨by
     intro h
     exact e.symm.contractible_space, by
     intro h
     exact e.contractible_space⟩
-#align continuous_map.homotopy_equiv.contractible_space_iff ContinuousMap.HomotopyEquiv.contractible_space_iff
+#align continuous_map.homotopy_equiv.contractible_space_iff ContinuousMap.HomotopyEquiv.contractibleSpace_iff
 
-protected theorem Homeomorph.contractible_space [ContractibleSpace Y] (e : X ≃ₜ Y) :
+protected theorem Homeomorph.contractibleSpace [ContractibleSpace Y] (e : X ≃ₜ Y) :
     ContractibleSpace X :=
   e.toHomotopyEquiv.ContractibleSpace
-#align homeomorph.contractible_space Homeomorph.contractible_space
+#align homeomorph.contractible_space Homeomorph.contractibleSpace
 
-protected theorem Homeomorph.contractible_space_iff (e : X ≃ₜ Y) :
+protected theorem Homeomorph.contractibleSpace_iff (e : X ≃ₜ Y) :
     ContractibleSpace X ↔ ContractibleSpace Y :=
   e.toHomotopyEquiv.contractible_space_iff
-#align homeomorph.contractible_space_iff Homeomorph.contractible_space_iff
+#align homeomorph.contractible_space_iff Homeomorph.contractibleSpace_iff
 
 namespace ContractibleSpace
 
@@ -117,7 +117,7 @@ instance (priority := 100) [ContractibleSpace X] : PathConnectedSpace X :=
   by
   obtain ⟨p, ⟨h⟩⟩ := id_nullhomotopic X
   have : ∀ x, Joined p x := fun x => ⟨(h.eval_at x).symm⟩
-  rw [path_connected_space_iff_eq]; use p; ext; tauto
+  rw [pathConnectedSpace_iff_eq]; use p; ext; tauto
 
 end ContractibleSpace
 

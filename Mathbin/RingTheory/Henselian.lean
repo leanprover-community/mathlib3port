@@ -67,7 +67,7 @@ open BigOperators Polynomial
 
 open LocalRing Polynomial Function
 
-theorem is_local_ring_hom_of_le_jacobson_bot {R : Type _} [CommRing R] (I : Ideal R)
+theorem isLocalRingHom_of_le_jacobson_bot {R : Type _} [CommRing R] (I : Ideal R)
     (h : I ≤ Ideal.jacobson ⊥) : IsLocalRingHom (Ideal.Quotient.mk I) :=
   by
   constructor
@@ -87,7 +87,7 @@ theorem is_local_ring_hom_of_le_jacobson_bot {R : Type _} [CommRing R] (I : Idea
   specialize h1 1
   simp at h1
   exact h1.1
-#align is_local_ring_hom_of_le_jacobson_bot is_local_ring_hom_of_le_jacobson_bot
+#align is_local_ring_hom_of_le_jacobson_bot isLocalRingHom_of_le_jacobson_bot
 
 /-- A ring `R` is *Henselian* at an ideal `I` if the following condition holds:
 for every polynomial `f` over `R`, with a *simple* root `a₀` over the quotient ring `R/I`,
@@ -131,7 +131,7 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] : HenselianLoc
      (Command.declModifiers [] [] [] [] [] [])
      (Command.theorem
       "theorem"
-      (Command.declId `HenselianLocalRing.tfae [])
+      (Command.declId `HenselianLocalRing.tFAE [])
       (Command.declSig
        [(Term.explicitBinder "(" [`R] [":" (Term.type "Type" [`u])] [] ")")
         (Term.instBinder "[" [] (Term.app `CommRing [`R]) "]")
@@ -279,7 +279,7 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] : HenselianLoc
                 (Tactic.simpLemma
                  []
                  [(patternIgnore (token.«← » "←"))]
-                 `LocalRing.mem_maximal_ideal)]
+                 `LocalRing.mem_maximalIdeal)]
                "]"]
               [(Tactic.location "at" (Tactic.locationHyp [`H `h₁ `aux] []))])
              []
@@ -418,11 +418,11 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] : HenselianLoc
                  "["
                  [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `mem_nonunits_iff)
                   ","
-                  (Tactic.rwRule [(patternIgnore (token.«← » "←"))] `LocalRing.mem_maximal_ideal)
+                  (Tactic.rwRule [(patternIgnore (token.«← » "←"))] `LocalRing.mem_maximalIdeal)
                   ","
                   (Tactic.rwRule
                    [(patternIgnore (token.«← » "←"))]
-                   (Term.app `LocalRing.ker_eq_maximal_ideal [`φ `hφ]))
+                   (Term.app `LocalRing.ker_eq_maximalIdeal [`φ `hφ]))
                   ","
                   (Tactic.rwRule [] `φ.mem_ker)]
                  "]")
@@ -483,10 +483,7 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] : HenselianLoc
                 [(patternIgnore (token.«← » "←"))]
                 `Ideal.Quotient.eq_zero_iff_mem)
                ","
-               (Tactic.simpLemma
-                []
-                [(patternIgnore (token.«← » "←"))]
-                `LocalRing.mem_maximal_ideal)]
+               (Tactic.simpLemma [] [(patternIgnore (token.«← » "←"))] `LocalRing.mem_maximalIdeal)]
               "]"]
              [(Tactic.location "at" (Tactic.locationHyp [`H `h₁ `aux] []))])
             []
@@ -625,11 +622,11 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] : HenselianLoc
                 "["
                 [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `mem_nonunits_iff)
                  ","
-                 (Tactic.rwRule [(patternIgnore (token.«← » "←"))] `LocalRing.mem_maximal_ideal)
+                 (Tactic.rwRule [(patternIgnore (token.«← » "←"))] `LocalRing.mem_maximalIdeal)
                  ","
                  (Tactic.rwRule
                   [(patternIgnore (token.«← » "←"))]
-                  (Term.app `LocalRing.ker_eq_maximal_ideal [`φ `hφ]))
+                  (Term.app `LocalRing.ker_eq_maximalIdeal [`φ `hφ]))
                  ","
                  (Tactic.rwRule [] `φ.mem_ker)]
                 "]")
@@ -729,11 +726,11 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] : HenselianLoc
             "["
             [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `mem_nonunits_iff)
              ","
-             (Tactic.rwRule [(patternIgnore (token.«← » "←"))] `LocalRing.mem_maximal_ideal)
+             (Tactic.rwRule [(patternIgnore (token.«← » "←"))] `LocalRing.mem_maximalIdeal)
              ","
              (Tactic.rwRule
               [(patternIgnore (token.«← » "←"))]
-              (Term.app `LocalRing.ker_eq_maximal_ideal [`φ `hφ]))
+              (Term.app `LocalRing.ker_eq_maximalIdeal [`φ `hφ]))
              ","
              (Tactic.rwRule [] `φ.mem_ker)]
             "]")
@@ -749,11 +746,11 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] : HenselianLoc
           "["
           [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `mem_nonunits_iff)
            ","
-           (Tactic.rwRule [(patternIgnore (token.«← » "←"))] `LocalRing.mem_maximal_ideal)
+           (Tactic.rwRule [(patternIgnore (token.«← » "←"))] `LocalRing.mem_maximalIdeal)
            ","
            (Tactic.rwRule
             [(patternIgnore (token.«← » "←"))]
-            (Term.app `LocalRing.ker_eq_maximal_ideal [`φ `hφ]))
+            (Term.app `LocalRing.ker_eq_maximalIdeal [`φ `hφ]))
            ","
            (Tactic.rwRule [] `φ.mem_ker)]
           "]")
@@ -765,11 +762,11 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] : HenselianLoc
         "["
         [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `mem_nonunits_iff)
          ","
-         (Tactic.rwRule [(patternIgnore (token.«← » "←"))] `LocalRing.mem_maximal_ideal)
+         (Tactic.rwRule [(patternIgnore (token.«← » "←"))] `LocalRing.mem_maximalIdeal)
          ","
          (Tactic.rwRule
           [(patternIgnore (token.«← » "←"))]
-          (Term.app `LocalRing.ker_eq_maximal_ideal [`φ `hφ]))
+          (Term.app `LocalRing.ker_eq_maximalIdeal [`φ `hφ]))
          ","
          (Tactic.rwRule [] `φ.mem_ker)]
         "]")
@@ -784,7 +781,7 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] : HenselianLoc
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
      [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app `LocalRing.ker_eq_maximal_ideal [`φ `hφ])
+      (Term.app `LocalRing.ker_eq_maximalIdeal [`φ `hφ])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -798,12 +795,12 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] : HenselianLoc
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
      [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-      `LocalRing.ker_eq_maximal_ideal
+      `LocalRing.ker_eq_maximalIdeal
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
      [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `LocalRing.mem_maximal_ideal
+      `LocalRing.mem_maximalIdeal
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
      [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -1093,7 +1090,7 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] : HenselianLoc
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 theorem
-  HenselianLocalRing.tfae
+  HenselianLocalRing.tFAE
   ( R : Type u ) [ CommRing R ] [ LocalRing R ]
     :
       TFAE
@@ -1146,7 +1143,7 @@ theorem
                   ,
                   ← Ideal.Quotient.eq_zero_iff_mem
                   ,
-                  ← LocalRing.mem_maximal_ideal
+                  ← LocalRing.mem_maximalIdeal
                 ]
               at H h₁ aux
             obtain ⟨ a , ha₁ , ha₂ ⟩ := H h₁ aux
@@ -1167,15 +1164,15 @@ theorem
                   [
                     ← mem_nonunits_iff
                       ,
-                      ← LocalRing.mem_maximal_ideal
+                      ← LocalRing.mem_maximalIdeal
                       ,
-                      ← LocalRing.ker_eq_maximal_ideal φ hφ
+                      ← LocalRing.ker_eq_maximalIdeal φ hφ
                       ,
                       φ.mem_ker
                     ]
                   at h₂
         tfae_finish
-#align henselian_local_ring.tfae HenselianLocalRing.tfae
+#align henselian_local_ring.tfae HenselianLocalRing.tFAE
 
 instance (R : Type _) [CommRing R] [hR : HenselianLocalRing R] : HenselianRing R (maximalIdeal R)
     where
@@ -1187,7 +1184,7 @@ instance (R : Type _) [CommRing R] [hR : HenselianLocalRing R] : HenselianRing R
     intro f hf a₀ h₁ h₂
     refine' HenselianLocalRing.is_henselian f hf a₀ h₁ _
     contrapose! h₂
-    rw [← mem_nonunits_iff, ← LocalRing.mem_maximal_ideal, ← Ideal.Quotient.eq_zero_iff_mem] at h₂
+    rw [← mem_nonunits_iff, ← LocalRing.mem_maximalIdeal, ← Ideal.Quotient.eq_zero_iff_mem] at h₂
     rw [h₂]
     exact not_isUnit_zero
 
@@ -1226,8 +1223,8 @@ instance (priority := 100) IsAdicComplete.henselianRing (R : Type _) [CommRing R
         exact (ih.eval f).trans h₁
       have hf'c : ∀ n, IsUnit (f'.eval (c n)) := by
         intro n
-        haveI := is_local_ring_hom_of_le_jacobson_bot I (IsAdicComplete.le_jacobson_bot I)
-        apply is_unit_of_map_unit (Ideal.Quotient.mk I)
+        haveI := isLocalRingHom_of_le_jacobson_bot I (IsAdicComplete.le_jacobson_bot I)
+        apply isUnit_of_map_unit (Ideal.Quotient.mk I)
         convert h₂ using 1
         exact smodeq.def.mp ((hc_mod n).eval _)
       have hfcI : ∀ n, f.eval (c n) ∈ I ^ (n + 1) :=
@@ -1239,7 +1236,7 @@ instance (priority := 100) IsAdicComplete.henselianRing (R : Type _) [CommRing R
         rw [← taylor_eval_sub (c n), hc]
         simp only [sub_eq_add_neg, add_neg_cancel_comm]
         rw [eval_eq_sum, sum_over_range' _ _ _ (lt_add_of_pos_right _ zero_lt_two), ←
-          Finset.sum_range_add_sum_Ico _ (Nat.le_add_left _ _)]
+          Finset.sum_range_add_sum_ico _ (Nat.le_add_left _ _)]
         swap
         · intro i
           rw [zero_mul]
@@ -1249,7 +1246,7 @@ instance (priority := 100) IsAdicComplete.henselianRing (R : Type _) [CommRing R
           rw [mul_left_comm, Ring.mul_inverse_cancel _ (hf'c n), mul_one, add_neg_self]
           exact Ideal.zero_mem _
         · refine' Submodule.sum_mem _ _
-          simp only [Finset.mem_Ico]
+          simp only [Finset.mem_ico]
           rintro i ⟨h2i, hi⟩
           have aux : n + 2 ≤ i * (n + 1) := by trans 2 * (n + 1) <;> nlinarith only [h2i]
           refine' Ideal.mul_mem_left _ _ (Ideal.pow_le_pow aux _)

@@ -126,14 +126,14 @@ def toLinear : GeneralLinearGroup n R ≃* LinearMap.GeneralLinearGroup R (n →
 -- These `λ a b, _inst a b` terms also appear in the type of `A`, but simp doesn't get confused by
 -- them so for now we do not care.
 @[simp]
-theorem coe_to_linear : (@toLinear n ‹_› ‹_› _ _ A : (n → R) →ₗ[R] n → R) = Matrix.mulVecLin A :=
+theorem coe_toLinear : (@toLinear n ‹_› ‹_› _ _ A : (n → R) →ₗ[R] n → R) = Matrix.mulVecLin A :=
   rfl
-#align matrix.general_linear_group.coe_to_linear Matrix.GeneralLinearGroup.coe_to_linear
+#align matrix.general_linear_group.coe_to_linear Matrix.GeneralLinearGroup.coe_toLinear
 
 @[simp]
-theorem to_linear_apply (v : n → R) : (@toLinear n ‹_› ‹_› _ _ A) v = Matrix.mulVecLin (↑A) v :=
+theorem toLinear_apply (v : n → R) : (@toLinear n ‹_› ‹_› _ _ A) v = Matrix.mulVecLin (↑A) v :=
   rfl
-#align matrix.general_linear_group.to_linear_apply Matrix.GeneralLinearGroup.to_linear_apply
+#align matrix.general_linear_group.to_linear_apply Matrix.GeneralLinearGroup.toLinear_apply
 
 end CoeLemmas
 
@@ -171,9 +171,9 @@ def gLPos : Subgroup (GL n R) :=
 end
 
 @[simp]
-theorem mem_GL_pos (A : GL n R) : A ∈ gLPos n R ↔ 0 < (A.det : R) :=
+theorem mem_gLPos (A : GL n R) : A ∈ gLPos n R ↔ 0 < (A.det : R) :=
   Iff.rfl
-#align matrix.mem_GL_pos Matrix.mem_GL_pos
+#align matrix.mem_GL_pos Matrix.mem_gLPos
 
 theorem gLPos.det_ne_zero (A : gLPos n R) : (A : Matrix n n R).det ≠ 0 :=
   ne_of_gt A.Prop
@@ -232,34 +232,34 @@ def toGLPos : SpecialLinearGroup n R →* gLPos n R
 instance : Coe (SpecialLinearGroup n R) (gLPos n R) :=
   ⟨toGLPos⟩
 
-theorem coe_eq_to_GL_pos : (coe : SpecialLinearGroup n R → gLPos n R) = to_GL_pos :=
+theorem coe_eq_toGLPos : (coe : SpecialLinearGroup n R → gLPos n R) = to_GL_pos :=
   rfl
-#align matrix.special_linear_group.coe_eq_to_GL_pos Matrix.SpecialLinearGroup.coe_eq_to_GL_pos
+#align matrix.special_linear_group.coe_eq_to_GL_pos Matrix.SpecialLinearGroup.coe_eq_toGLPos
 
-theorem to_GL_pos_injective : Function.Injective (toGLPos : SpecialLinearGroup n R → gLPos n R) :=
+theorem toGLPos_injective : Function.Injective (toGLPos : SpecialLinearGroup n R → gLPos n R) :=
   (show Function.Injective ((coe : gLPos n R → Matrix n n R) ∘ to_GL_pos) from
       Subtype.coe_injective).of_comp
-#align matrix.special_linear_group.to_GL_pos_injective Matrix.SpecialLinearGroup.to_GL_pos_injective
+#align matrix.special_linear_group.to_GL_pos_injective Matrix.SpecialLinearGroup.toGLPos_injective
 
 /-- Coercing a `special_linear_group` via `GL_pos` and `GL` is the same as coercing striaght to a
 matrix. -/
 @[simp]
-theorem coe_GL_pos_coe_GL_coe_matrix (g : SpecialLinearGroup n R) :
+theorem coe_gLPos_coe_GL_coe_matrix (g : SpecialLinearGroup n R) :
     (↑(↑(↑g : gLPos n R) : GL n R) : Matrix n n R) = ↑g :=
   rfl
-#align matrix.special_linear_group.coe_GL_pos_coe_GL_coe_matrix Matrix.SpecialLinearGroup.coe_GL_pos_coe_GL_coe_matrix
+#align matrix.special_linear_group.coe_GL_pos_coe_GL_coe_matrix Matrix.SpecialLinearGroup.coe_gLPos_coe_GL_coe_matrix
 
 @[simp]
-theorem coe_to_GL_pos_to_GL_det (g : SpecialLinearGroup n R) : ((g : gLPos n R) : GL n R).det = 1 :=
+theorem coe_to_gLPos_to_GL_det (g : SpecialLinearGroup n R) : ((g : gLPos n R) : GL n R).det = 1 :=
   Units.ext g.Prop
-#align matrix.special_linear_group.coe_to_GL_pos_to_GL_det Matrix.SpecialLinearGroup.coe_to_GL_pos_to_GL_det
+#align matrix.special_linear_group.coe_to_GL_pos_to_GL_det Matrix.SpecialLinearGroup.coe_to_gLPos_to_GL_det
 
 variable [Fact (Even (Fintype.card n))]
 
 @[norm_cast]
-theorem coe_GL_pos_neg (g : SpecialLinearGroup n R) : ↑(-g) = -(↑g : gLPos n R) :=
+theorem coe_gLPos_neg (g : SpecialLinearGroup n R) : ↑(-g) = -(↑g : gLPos n R) :=
   Subtype.ext <| Units.ext rfl
-#align matrix.special_linear_group.coe_GL_pos_neg Matrix.SpecialLinearGroup.coe_GL_pos_neg
+#align matrix.special_linear_group.coe_GL_pos_neg Matrix.SpecialLinearGroup.coe_gLPos_neg
 
 end SpecialLinearGroup
 
@@ -294,9 +294,9 @@ section CoeFnInstance
 instance : CoeFun (GL n R) fun _ => n → n → R where coe A := A.val
 
 @[simp]
-theorem coe_fn_eq_coe (A : GL n R) : ⇑A = (↑A : Matrix n n R) :=
+theorem coeFn_eq_coe (A : GL n R) : ⇑A = (↑A : Matrix n n R) :=
   rfl
-#align matrix.general_linear_group.coe_fn_eq_coe Matrix.GeneralLinearGroup.coe_fn_eq_coe
+#align matrix.general_linear_group.coe_fn_eq_coe Matrix.GeneralLinearGroup.coeFn_eq_coe
 
 end CoeFnInstance
 

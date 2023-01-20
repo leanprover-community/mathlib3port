@@ -122,16 +122,16 @@ noncomputable def comapEquiv (f : MvPolynomial σ R ≃ₐ[R] MvPolynomial τ R)
 #align mv_polynomial.comap_equiv MvPolynomial.comapEquiv
 
 @[simp]
-theorem comap_equiv_coe (f : MvPolynomial σ R ≃ₐ[R] MvPolynomial τ R) :
+theorem comapEquiv_coe (f : MvPolynomial σ R ≃ₐ[R] MvPolynomial τ R) :
     (comapEquiv f : (τ → R) → σ → R) = comap f :=
   rfl
-#align mv_polynomial.comap_equiv_coe MvPolynomial.comap_equiv_coe
+#align mv_polynomial.comap_equiv_coe MvPolynomial.comapEquiv_coe
 
 @[simp]
-theorem comap_equiv_symm_coe (f : MvPolynomial σ R ≃ₐ[R] MvPolynomial τ R) :
+theorem comapEquiv_symm_coe (f : MvPolynomial σ R ≃ₐ[R] MvPolynomial τ R) :
     ((comapEquiv f).symm : (σ → R) → τ → R) = comap f.symm :=
   rfl
-#align mv_polynomial.comap_equiv_symm_coe MvPolynomial.comap_equiv_symm_coe
+#align mv_polynomial.comap_equiv_symm_coe MvPolynomial.comapEquiv_symm_coe
 
 end MvPolynomial
 

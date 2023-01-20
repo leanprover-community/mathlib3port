@@ -117,7 +117,7 @@ def functorExtension₁ : (C ⥤ Karoubi D) ⥤ Karoubi C ⥤ Karoubi D
     simp only [assoc]
 #align category_theory.idempotents.functor_extension₁ CategoryTheory.Idempotents.functorExtension₁
 
-theorem functor_extension₁_comp_whiskering_left_to_karoubi :
+theorem functorExtension₁_comp_whiskeringLeft_toKaroubi :
     functorExtension₁ C D ⋙ (whiskeringLeft C (Karoubi C) (Karoubi D)).obj (toKaroubi C) = 𝟭 _ :=
   by
   refine' Functor.ext _ _
@@ -140,14 +140,14 @@ theorem functor_extension₁_comp_whiskering_left_to_karoubi :
     dsimp
     simp only [eq_to_hom_app, F.map_id, comp_f, eq_to_hom_f, id_eq, p_comp, eq_to_hom_refl, comp_id,
       comp_p, functor_extension₁.obj_obj_p, to_karoubi_obj_p, F.map_id X]
-#align category_theory.idempotents.functor_extension₁_comp_whiskering_left_to_karoubi CategoryTheory.Idempotents.functor_extension₁_comp_whiskering_left_to_karoubi
+#align category_theory.idempotents.functor_extension₁_comp_whiskering_left_to_karoubi CategoryTheory.Idempotents.functorExtension₁_comp_whiskeringLeft_toKaroubi
 
 /-- The natural isomorphism expressing that functors `karoubi C ⥤ karoubi D` obtained
 using `functor_extension₁` actually extends the original functors `C ⥤ karoubi D`. -/
 @[simps]
 def functorExtension₁CompWhiskeringLeftToKaroubiIso :
     functorExtension₁ C D ⋙ (whiskeringLeft C (Karoubi C) (Karoubi D)).obj (toKaroubi C) ≅ 𝟭 _ :=
-  eqToIso (functor_extension₁_comp_whiskering_left_to_karoubi C D)
+  eqToIso (functorExtension₁_comp_whiskeringLeft_toKaroubi C D)
 #align category_theory.idempotents.functor_extension₁_comp_whiskering_left_to_karoubi_iso CategoryTheory.Idempotents.functorExtension₁CompWhiskeringLeftToKaroubiIso
 
 /-- The counit isomorphism of the equivalence `(C ⥤ karoubi D) ≌ (karoubi C ⥤ karoubi D)`. -/
@@ -202,13 +202,13 @@ def karoubiUniversal₁ : C ⥤ Karoubi D ≌ Karoubi C ⥤ Karoubi D
       comp_p] using F.congr_map P.idem
 #align category_theory.idempotents.karoubi_universal₁ CategoryTheory.Idempotents.karoubiUniversal₁
 
-theorem functor_extension₁_comp (F : C ⥤ Karoubi D) (G : D ⥤ Karoubi E) :
+theorem functorExtension₁_comp (F : C ⥤ Karoubi D) (G : D ⥤ Karoubi E) :
     (functorExtension₁ C E).obj (F ⋙ (functorExtension₁ D E).obj G) =
       (functorExtension₁ C D).obj F ⋙ (functorExtension₁ D E).obj G :=
   Functor.ext (by tidy) fun X Y f => by
     dsimp
     simpa only [id_comp, comp_id]
-#align category_theory.idempotents.functor_extension₁_comp CategoryTheory.Idempotents.functor_extension₁_comp
+#align category_theory.idempotents.functor_extension₁_comp CategoryTheory.Idempotents.functorExtension₁_comp
 
 /-- The canonical functor `(C ⥤ D) ⥤ (karoubi C ⥤ karoubi D)` -/
 @[simps]
@@ -216,13 +216,13 @@ def functorExtension₂ : (C ⥤ D) ⥤ Karoubi C ⥤ Karoubi D :=
   (whiskeringRight C D (Karoubi D)).obj (toKaroubi D) ⋙ functorExtension₁ C D
 #align category_theory.idempotents.functor_extension₂ CategoryTheory.Idempotents.functorExtension₂
 
-theorem functor_extension₂_comp_whiskering_left_to_karoubi :
+theorem functorExtension₂_comp_whiskeringLeft_toKaroubi :
     functorExtension₂ C D ⋙ (whiskeringLeft C (Karoubi C) (Karoubi D)).obj (toKaroubi C) =
       (whiskeringRight C D (Karoubi D)).obj (toKaroubi D) :=
   by
   simp only [functor_extension₂, functor.assoc, functor_extension₁_comp_whiskering_left_to_karoubi,
     functor.comp_id]
-#align category_theory.idempotents.functor_extension₂_comp_whiskering_left_to_karoubi CategoryTheory.Idempotents.functor_extension₂_comp_whiskering_left_to_karoubi
+#align category_theory.idempotents.functor_extension₂_comp_whiskering_left_to_karoubi CategoryTheory.Idempotents.functorExtension₂_comp_whiskeringLeft_toKaroubi
 
 /-- The natural isomorphism expressing that functors `karoubi C ⥤ karoubi D` obtained
 using `functor_extension₂` actually extends the original functors `C ⥤ D`. -/
@@ -230,7 +230,7 @@ using `functor_extension₂` actually extends the original functors `C ⥤ D`. -
 def functorExtension₂CompWhiskeringLeftToKaroubiIso :
     functorExtension₂ C D ⋙ (whiskeringLeft C (Karoubi C) (Karoubi D)).obj (toKaroubi C) ≅
       (whiskeringRight C D (Karoubi D)).obj (toKaroubi D) :=
-  eqToIso (functor_extension₂_comp_whiskering_left_to_karoubi C D)
+  eqToIso (functorExtension₂_comp_whiskeringLeft_toKaroubi C D)
 #align category_theory.idempotents.functor_extension₂_comp_whiskering_left_to_karoubi_iso CategoryTheory.Idempotents.functorExtension₂CompWhiskeringLeftToKaroubiIso
 
 section IsIdempotentComplete
@@ -247,9 +247,9 @@ noncomputable def karoubiUniversal₂ : C ⥤ D ≌ Karoubi C ⥤ Karoubi D :=
   (Equivalence.congrRight (toKaroubi D).asEquivalence).trans (karoubiUniversal₁ C D)
 #align category_theory.idempotents.karoubi_universal₂ CategoryTheory.Idempotents.karoubiUniversal₂
 
-theorem karoubi_universal₂_functor_eq : (karoubiUniversal₂ C D).Functor = functorExtension₂ C D :=
+theorem karoubiUniversal₂_functor_eq : (karoubiUniversal₂ C D).Functor = functorExtension₂ C D :=
   rfl
-#align category_theory.idempotents.karoubi_universal₂_functor_eq CategoryTheory.Idempotents.karoubi_universal₂_functor_eq
+#align category_theory.idempotents.karoubi_universal₂_functor_eq CategoryTheory.Idempotents.karoubiUniversal₂_functor_eq
 
 noncomputable instance : IsEquivalence (functorExtension₂ C D) :=
   by
@@ -270,9 +270,9 @@ noncomputable def karoubiUniversal : C ⥤ D ≌ Karoubi C ⥤ D :=
   (karoubiUniversal₂ C D).trans (Equivalence.congrRight (toKaroubi D).asEquivalence.symm)
 #align category_theory.idempotents.karoubi_universal CategoryTheory.Idempotents.karoubiUniversal
 
-theorem karoubi_universal_functor_eq : (karoubiUniversal C D).Functor = functorExtension C D :=
+theorem karoubiUniversal_functor_eq : (karoubiUniversal C D).Functor = functorExtension C D :=
   rfl
-#align category_theory.idempotents.karoubi_universal_functor_eq CategoryTheory.Idempotents.karoubi_universal_functor_eq
+#align category_theory.idempotents.karoubi_universal_functor_eq CategoryTheory.Idempotents.karoubiUniversal_functor_eq
 
 noncomputable instance : IsEquivalence (functorExtension C D) :=
   by
@@ -291,7 +291,7 @@ noncomputable instance : IsEquivalence ((whiskeringLeft C (Karoubi C) D).obj (to
 
 variable {C D}
 
-theorem whiskering_left_obj_preimage_app {F G : Karoubi C ⥤ D}
+theorem whiskeringLeft_obj_preimage_app {F G : Karoubi C ⥤ D}
     (τ : toKaroubi _ ⋙ F ⟶ toKaroubi _ ⋙ G) (P : Karoubi C) :
     (((whiskeringLeft _ _ _).obj (toKaroubi _)).preimage τ).app P =
       F.map P.decompIdI ≫ τ.app P.x ≫ G.map P.decompIdP :=
@@ -299,7 +299,7 @@ theorem whiskering_left_obj_preimage_app {F G : Karoubi C ⥤ D}
   rw [nat_trans_eq]
   congr 2
   exact congr_app (((whiskering_left _ _ _).obj (to_karoubi _)).image_preimage τ) P.X
-#align category_theory.idempotents.whiskering_left_obj_preimage_app CategoryTheory.Idempotents.whiskering_left_obj_preimage_app
+#align category_theory.idempotents.whiskering_left_obj_preimage_app CategoryTheory.Idempotents.whiskeringLeft_obj_preimage_app
 
 end IsIdempotentComplete
 

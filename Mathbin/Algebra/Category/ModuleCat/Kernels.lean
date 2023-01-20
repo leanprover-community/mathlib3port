@@ -45,7 +45,7 @@ def kernelIsLimit : IsLimit (kernelCone f) :=
           rw [← @Function.comp_apply _ _ _ f (fork.ι s) c, ← coe_comp, fork.condition,
             has_zero_morphisms.comp_zero (fork.ι s) N]
           rfl)
-    (fun s => LinearMap.subtype_comp_cod_restrict _ _ _) fun s m h =>
+    (fun s => LinearMap.subtype_comp_codRestrict _ _ _) fun s m h =>
     LinearMap.ext fun x => Subtype.ext_iff_val.2 (by simpa [← h] )
 #align Module.kernel_is_limit ModuleCat.kernelIsLimit
 
@@ -70,14 +70,14 @@ def cokernelIsColimit : IsColimit (cokernelCocone f) :=
 end
 
 /-- The category of R-modules has kernels, given by the inclusion of the kernel submodule. -/
-theorem has_kernels_Module : HasKernels (ModuleCat R) :=
+theorem hasKernels_moduleCat : HasKernels (ModuleCat R) :=
   ⟨fun X Y f => HasLimit.mk ⟨_, kernelIsLimit f⟩⟩
-#align Module.has_kernels_Module ModuleCat.has_kernels_Module
+#align Module.has_kernels_Module ModuleCat.hasKernels_moduleCat
 
 /-- The category or R-modules has cokernels, given by the projection onto the quotient. -/
-theorem has_cokernels_Module : HasCokernels (ModuleCat R) :=
+theorem hasCokernels_moduleCat : HasCokernels (ModuleCat R) :=
   ⟨fun X Y f => HasColimit.mk ⟨_, cokernelIsColimit f⟩⟩
-#align Module.has_cokernels_Module ModuleCat.has_cokernels_Module
+#align Module.has_cokernels_Module ModuleCat.hasCokernels_moduleCat
 
 open ModuleCat
 
@@ -97,14 +97,14 @@ noncomputable def kernelIsoKer {G H : ModuleCat.{v} R} (f : G ⟶ H) :
 
 -- We now show this isomorphism commutes with the inclusion of the kernel into the source.
 @[simp, elementwise]
-theorem kernel_iso_ker_inv_kernel_ι : (kernelIsoKer f).inv ≫ kernel.ι f = f.ker.Subtype :=
-  limit.iso_limit_cone_inv_π _ _
-#align Module.kernel_iso_ker_inv_kernel_ι ModuleCat.kernel_iso_ker_inv_kernel_ι
+theorem kernelIsoKer_inv_kernel_ι : (kernelIsoKer f).inv ≫ kernel.ι f = f.ker.Subtype :=
+  limit.isoLimitCone_inv_π _ _
+#align Module.kernel_iso_ker_inv_kernel_ι ModuleCat.kernelIsoKer_inv_kernel_ι
 
 @[simp, elementwise]
-theorem kernel_iso_ker_hom_ker_subtype : (kernelIsoKer f).hom ≫ f.ker.Subtype = kernel.ι f :=
-  IsLimit.cone_point_unique_up_to_iso_inv_comp _ (limit.isLimit _) WalkingParallelPair.zero
-#align Module.kernel_iso_ker_hom_ker_subtype ModuleCat.kernel_iso_ker_hom_ker_subtype
+theorem kernelIsoKer_hom_ker_subtype : (kernelIsoKer f).hom ≫ f.ker.Subtype = kernel.ι f :=
+  IsLimit.conePointUniqueUpToIso_inv_comp _ (limit.isLimit _) WalkingParallelPair.zero
+#align Module.kernel_iso_ker_hom_ker_subtype ModuleCat.kernelIsoKer_hom_ker_subtype
 
 /-- The categorical cokernel of a morphism in `Module`
 agrees with the usual module-theoretical quotient.
@@ -116,16 +116,16 @@ noncomputable def cokernelIsoRangeQuotient {G H : ModuleCat.{v} R} (f : G ⟶ H)
 
 -- We now show this isomorphism commutes with the projection of target to the cokernel.
 @[simp, elementwise]
-theorem cokernel_π_cokernel_iso_range_quotient_hom :
+theorem cokernel_π_cokernelIsoRangeQuotient_hom :
     cokernel.π f ≫ (cokernelIsoRangeQuotient f).hom = f.range.mkq := by
   convert colimit.iso_colimit_cocone_ι_hom _ _ <;> rfl
-#align Module.cokernel_π_cokernel_iso_range_quotient_hom ModuleCat.cokernel_π_cokernel_iso_range_quotient_hom
+#align Module.cokernel_π_cokernel_iso_range_quotient_hom ModuleCat.cokernel_π_cokernelIsoRangeQuotient_hom
 
 @[simp, elementwise]
-theorem range_mkq_cokernel_iso_range_quotient_inv :
+theorem range_mkq_cokernelIsoRangeQuotient_inv :
     ↿f.range.mkq ≫ (cokernelIsoRangeQuotient f).inv = cokernel.π f := by
   convert colimit.iso_colimit_cocone_ι_inv ⟨_, cokernel_is_colimit f⟩ _ <;> rfl
-#align Module.range_mkq_cokernel_iso_range_quotient_inv ModuleCat.range_mkq_cokernel_iso_range_quotient_inv
+#align Module.range_mkq_cokernel_iso_range_quotient_inv ModuleCat.range_mkq_cokernelIsoRangeQuotient_inv
 
 theorem cokernel_π_ext {M N : ModuleCat.{u} R} (f : M ⟶ N) {x y : N} (m : M) (w : x = y + f m) :
     cokernel.π f x = cokernel.π f y := by

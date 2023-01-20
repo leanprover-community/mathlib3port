@@ -98,14 +98,14 @@ theorem dot_self_cross (v w : Fin 3 → R) : v ⬝ᵥ v ×₃ w = 0 := by
 /-- The cross product of two vectors is perpendicular to the second vector. -/
 @[simp]
 theorem dot_cross_self (v w : Fin 3 → R) : w ⬝ᵥ v ×₃ w = 0 := by
-  rw [← cross_anticomm, Matrix.dot_product_neg, dot_self_cross, neg_zero]
+  rw [← cross_anticomm, Matrix.dotProduct_neg, dot_self_cross, neg_zero]
 #align dot_cross_self dot_cross_self
 
 /-- Cyclic permutations preserve the triple product. See also `triple_product_eq_det`. -/
 theorem triple_product_permutation (u v w : Fin 3 → R) : u ⬝ᵥ v ×₃ w = v ⬝ᵥ w ×₃ u :=
   by
   simp only [cross_apply, vec3_dot_product, Matrix.head_cons, Matrix.cons_vec_bit0_eq_alt0,
-    Matrix.empty_vec_append, Matrix.cons_val_one, Matrix.cons_vec_alt0, Matrix.cons_vec_append,
+    Matrix.empty_vecAppend, Matrix.cons_val_one, Matrix.cons_vecAlt0, Matrix.cons_vecAppend,
     Matrix.cons_val_zero]
   ring
 #align triple_product_permutation triple_product_permutation
@@ -115,9 +115,9 @@ theorem triple_product_permutation (u v w : Fin 3 → R) : u ⬝ᵥ v ×₃ w = 
 theorem triple_product_eq_det (u v w : Fin 3 → R) : u ⬝ᵥ v ×₃ w = Matrix.det ![u, v, w] :=
   by
   simp only [vec3_dot_product, cross_apply, Matrix.det_fin_three, Matrix.head_cons,
-    Matrix.cons_vec_bit0_eq_alt0, Matrix.empty_vec_alt0, Matrix.cons_vec_alt0,
-    Matrix.vec_head_vec_alt0, Matrix.vec_append_apply_zero, Matrix.empty_vec_append,
-    Matrix.cons_vec_append, Matrix.cons_val', Matrix.cons_val_one, Matrix.cons_val_zero]
+    Matrix.cons_vec_bit0_eq_alt0, Matrix.empty_vecAlt0, Matrix.cons_vecAlt0, Matrix.vecHead_vecAlt0,
+    Matrix.vecAppend_apply_zero, Matrix.empty_vecAppend, Matrix.cons_vecAppend, Matrix.cons_val',
+    Matrix.cons_val_one, Matrix.cons_val_zero]
   ring
 #align triple_product_eq_det triple_product_eq_det
 

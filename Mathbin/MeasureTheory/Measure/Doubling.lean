@@ -57,15 +57,15 @@ variable {α : Type _} [MetricSpace α] [MeasurableSpace α] (μ : Measure α) [
 
 See also `is_doubling_measure.scaling_constant_of`. -/
 def doublingConstant : ℝ≥0 :=
-  Classical.choose <| exists_measure_closed_ball_le_mul μ
+  Classical.choose <| exists_measure_closedBall_le_mul μ
 #align is_doubling_measure.doubling_constant IsDoublingMeasure.doublingConstant
 
-theorem exists_measure_closed_ball_le_mul' :
+theorem exists_measure_closedBall_le_mul' :
     ∀ᶠ ε in 𝓝[>] 0, ∀ x, μ (closedBall x (2 * ε)) ≤ doublingConstant μ * μ (closedBall x ε) :=
-  Classical.choose_spec <| exists_measure_closed_ball_le_mul μ
-#align is_doubling_measure.exists_measure_closed_ball_le_mul' IsDoublingMeasure.exists_measure_closed_ball_le_mul'
+  Classical.choose_spec <| exists_measure_closedBall_le_mul μ
+#align is_doubling_measure.exists_measure_closed_ball_le_mul' IsDoublingMeasure.exists_measure_closedBall_le_mul'
 
-theorem exists_eventually_forall_measure_closed_ball_le_mul (K : ℝ) :
+theorem exists_eventually_forall_measure_closedBall_le_mul (K : ℝ) :
     ∃ C : ℝ≥0,
       ∀ᶠ ε in 𝓝[>] 0, ∀ (x t) (ht : t ≤ K), μ (closedBall x (t * ε)) ≤ C * μ (closedBall x ε) :=
   by
@@ -76,7 +76,7 @@ theorem exists_eventually_forall_measure_closed_ball_le_mul (K : ℝ) :
     intro n
     induction' n with n ih
     · simp
-    replace ih := eventually_nhds_within_pos_mul_left (two_pos : 0 < (2 : ℝ)) ih
+    replace ih := eventually_nhdsWithin_pos_mul_left (two_pos : 0 < (2 : ℝ)) ih
     refine' (ih.and (exists_measure_closed_ball_le_mul' μ)).mono fun ε hε x => _
     calc
       μ (closed_ball x (2 ^ (n + 1) * ε)) = μ (closed_ball x (2 ^ n * (2 * ε))) := by
@@ -93,33 +93,33 @@ theorem exists_eventually_forall_measure_closed_ball_le_mul (K : ℝ) :
         measure_mono <| closed_ball_subset_closed_ball (by nlinarith [mem_Ioi.mp hε])
   · refine'
       ⟨C ^ ⌈Real.logb 2 K⌉₊,
-        ((hμ ⌈Real.logb 2 K⌉₊).And eventually_mem_nhds_within).mono fun ε hε x t ht =>
+        ((hμ ⌈Real.logb 2 K⌉₊).And eventually_mem_nhdsWithin).mono fun ε hε x t ht =>
           le_trans (measure_mono <| closed_ball_subset_closed_ball _) (hε.1 x)⟩
     refine' mul_le_mul_of_nonneg_right (ht.trans _) (mem_Ioi.mp hε.2).le
     conv_lhs => rw [← Real.rpow_logb two_pos (by norm_num) (by linarith : 0 < K)]
     rw [← Real.rpow_nat_cast]
     exact Real.rpow_le_rpow_of_exponent_le one_le_two (Nat.le_ceil (Real.logb 2 K))
-#align is_doubling_measure.exists_eventually_forall_measure_closed_ball_le_mul IsDoublingMeasure.exists_eventually_forall_measure_closed_ball_le_mul
+#align is_doubling_measure.exists_eventually_forall_measure_closed_ball_le_mul IsDoublingMeasure.exists_eventually_forall_measure_closedBall_le_mul
 
 /-- A variant of `is_doubling_measure.doubling_constant` which allows for scaling the radius by
 values other than `2`. -/
 def scalingConstantOf (K : ℝ) : ℝ≥0 :=
-  max (Classical.choose <| exists_eventually_forall_measure_closed_ball_le_mul μ K) 1
+  max (Classical.choose <| exists_eventually_forall_measure_closedBall_le_mul μ K) 1
 #align is_doubling_measure.scaling_constant_of IsDoublingMeasure.scalingConstantOf
 
 @[simp]
-theorem one_le_scaling_constant_of (K : ℝ) : 1 ≤ scalingConstantOf μ K :=
+theorem one_le_scalingConstantOf (K : ℝ) : 1 ≤ scalingConstantOf μ K :=
   le_max_of_le_right <| le_refl 1
-#align is_doubling_measure.one_le_scaling_constant_of IsDoublingMeasure.one_le_scaling_constant_of
+#align is_doubling_measure.one_le_scaling_constant_of IsDoublingMeasure.one_le_scalingConstantOf
 
-theorem eventually_measure_mul_le_scaling_constant_of_mul (K : ℝ) :
+theorem eventually_measure_mul_le_scalingConstantOf_mul (K : ℝ) :
     ∃ R : ℝ,
       0 < R ∧
         ∀ (x t r) (ht : t ∈ Ioc 0 K) (hr : r ≤ R),
           μ (closedBall x (t * r)) ≤ scalingConstantOf μ K * μ (closedBall x r) :=
   by
   have h := Classical.choose_spec (exists_eventually_forall_measure_closed_ball_le_mul μ K)
-  rcases mem_nhds_within_Ioi_iff_exists_Ioc_subset.1 h with ⟨R, Rpos, hR⟩
+  rcases mem_nhdsWithin_ioi_iff_exists_ioc_subset.1 h with ⟨R, Rpos, hR⟩
   refine' ⟨R, Rpos, fun x t r ht hr => _⟩
   rcases lt_trichotomy r 0 with (rneg | rfl | rpos)
   · have : t * r < 0 := mul_neg_of_pos_of_neg ht.1 rneg
@@ -129,7 +129,7 @@ theorem eventually_measure_mul_le_scaling_constant_of_mul (K : ℝ) :
     apply Ennreal.one_le_coe_iff.2 (le_max_right _ _)
   · apply (hR ⟨rpos, hr⟩ x t ht.2).trans _
     exact Ennreal.mul_le_mul (Ennreal.coe_le_coe.2 (le_max_left _ _)) le_rfl
-#align is_doubling_measure.eventually_measure_mul_le_scaling_constant_of_mul IsDoublingMeasure.eventually_measure_mul_le_scaling_constant_of_mul
+#align is_doubling_measure.eventually_measure_mul_le_scaling_constant_of_mul IsDoublingMeasure.eventually_measure_mul_le_scalingConstantOf_mul
 
 theorem eventually_measure_le_scaling_constant_mul (K : ℝ) :
     ∀ᶠ r in 𝓝[>] 0, ∀ x, μ (closedBall x (K * r)) ≤ scalingConstantOf μ K * μ (closedBall x r) :=
@@ -142,7 +142,7 @@ theorem eventually_measure_le_scaling_constant_mul (K : ℝ) :
 theorem eventually_measure_le_scaling_constant_mul' (K : ℝ) (hK : 0 < K) :
     ∀ᶠ r in 𝓝[>] 0, ∀ x, μ (closedBall x r) ≤ scalingConstantOf μ K⁻¹ * μ (closedBall x (K * r)) :=
   by
-  convert eventually_nhds_within_pos_mul_left hK (eventually_measure_le_scaling_constant_mul μ K⁻¹)
+  convert eventually_nhdsWithin_pos_mul_left hK (eventually_measure_le_scaling_constant_mul μ K⁻¹)
   ext
   simp [inv_mul_cancel_left₀ hK.ne']
 #align is_doubling_measure.eventually_measure_le_scaling_constant_mul' IsDoublingMeasure.eventually_measure_le_scaling_constant_mul'
@@ -151,18 +151,18 @@ theorem eventually_measure_le_scaling_constant_mul' (K : ℝ) (hK : 0 < K) :
 multiplies the radius of balls by at most `K`, as stated
 in `measure_mul_le_scaling_constant_of_mul`. -/
 def scalingScaleOf (K : ℝ) : ℝ :=
-  (eventually_measure_mul_le_scaling_constant_of_mul μ K).some
+  (eventually_measure_mul_le_scalingConstantOf_mul μ K).some
 #align is_doubling_measure.scaling_scale_of IsDoublingMeasure.scalingScaleOf
 
-theorem scaling_scale_of_pos (K : ℝ) : 0 < scalingScaleOf μ K :=
-  (eventually_measure_mul_le_scaling_constant_of_mul μ K).some_spec.1
-#align is_doubling_measure.scaling_scale_of_pos IsDoublingMeasure.scaling_scale_of_pos
+theorem scalingScaleOf_pos (K : ℝ) : 0 < scalingScaleOf μ K :=
+  (eventually_measure_mul_le_scalingConstantOf_mul μ K).some_spec.1
+#align is_doubling_measure.scaling_scale_of_pos IsDoublingMeasure.scalingScaleOf_pos
 
-theorem measure_mul_le_scaling_constant_of_mul {K : ℝ} {x : α} {t r : ℝ} (ht : t ∈ Ioc 0 K)
+theorem measure_mul_le_scalingConstantOf_mul {K : ℝ} {x : α} {t r : ℝ} (ht : t ∈ Ioc 0 K)
     (hr : r ≤ scalingScaleOf μ K) :
     μ (closedBall x (t * r)) ≤ scalingConstantOf μ K * μ (closedBall x r) :=
-  (eventually_measure_mul_le_scaling_constant_of_mul μ K).some_spec.2 x t r ht hr
-#align is_doubling_measure.measure_mul_le_scaling_constant_of_mul IsDoublingMeasure.measure_mul_le_scaling_constant_of_mul
+  (eventually_measure_mul_le_scalingConstantOf_mul μ K).some_spec.2 x t r ht hr
+#align is_doubling_measure.measure_mul_le_scaling_constant_of_mul IsDoublingMeasure.measure_mul_le_scalingConstantOf_mul
 
 end IsDoublingMeasure
 

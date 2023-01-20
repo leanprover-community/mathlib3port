@@ -81,9 +81,9 @@ variable {D : Type _} [Category D]
 
 variable (F : C ⥤ D) {W X Y Z : C} {f : W ⟶ X} {g : W ⟶ Y} {h : X ⟶ Z} {i : Y ⟶ Z}
 
-theorem map_comm_sq (s : CommSq f g h i) : CommSq (F.map f) (F.map g) (F.map h) (F.map i) :=
+theorem map_commSq (s : CommSq f g h i) : CommSq (F.map f) (F.map g) (F.map h) (F.map i) :=
   ⟨by simpa using congr_arg (fun k : W ⟶ Z => F.map k) s.w⟩
-#align category_theory.functor.map_comm_sq CategoryTheory.Functor.map_comm_sq
+#align category_theory.functor.map_comm_sq CategoryTheory.Functor.map_commSq
 
 end Functor
 
@@ -154,19 +154,19 @@ def unopEquiv {A B X Y : Cᵒᵖ} {f : A ⟶ X} {i : A ⟶ B} {p : X ⟶ Y} {g :
 
 end LiftStruct
 
-instance subsingleton_lift_struct_of_epi (sq : CommSq f i p g) [Epi i] :
+instance subsingleton_liftStruct_of_epi (sq : CommSq f i p g) [Epi i] :
     Subsingleton (LiftStruct sq) :=
   ⟨fun l₁ l₂ => by
     ext
     simp only [← cancel_epi i, lift_struct.fac_left]⟩
-#align category_theory.comm_sq.subsingleton_lift_struct_of_epi CategoryTheory.CommSq.subsingleton_lift_struct_of_epi
+#align category_theory.comm_sq.subsingleton_lift_struct_of_epi CategoryTheory.CommSq.subsingleton_liftStruct_of_epi
 
-instance subsingleton_lift_struct_of_mono (sq : CommSq f i p g) [Mono p] :
+instance subsingleton_liftStruct_of_mono (sq : CommSq f i p g) [Mono p] :
     Subsingleton (LiftStruct sq) :=
   ⟨fun l₁ l₂ => by
     ext
     simp only [← cancel_mono p, lift_struct.fac_right]⟩
-#align category_theory.comm_sq.subsingleton_lift_struct_of_mono CategoryTheory.CommSq.subsingleton_lift_struct_of_mono
+#align category_theory.comm_sq.subsingleton_lift_struct_of_mono CategoryTheory.CommSq.subsingleton_liftStruct_of_mono
 
 variable (sq : CommSq f i p g)
 

@@ -138,11 +138,11 @@ theorem short_birthday : ∀ (x : Pgame.{u}) [Short x], x.birthday < Ordinal.ome
     rw [birthday, max_lt_iff]
     constructor;
     all_goals
-      rw [← Cardinal.ord_aleph_0]
+      rw [← Cardinal.ord_aleph0]
       refine'
-        Cardinal.lsub_lt_ord_of_is_regular.{u, u} Cardinal.is_regular_aleph_0
-          (Cardinal.lt_aleph_0_of_finite _) fun i => _
-      rw [Cardinal.ord_aleph_0]
+        Cardinal.lsub_lt_ord_of_isRegular.{u, u} Cardinal.isRegular_aleph0
+          (Cardinal.lt_aleph0_of_finite _) fun i => _
+      rw [Cardinal.ord_aleph0]
       apply short_birthday _
     · exact move_left_short' xL xR i
     · exact move_right_short' xL xR i

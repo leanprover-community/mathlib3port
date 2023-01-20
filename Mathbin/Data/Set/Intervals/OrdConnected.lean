@@ -213,9 +213,9 @@ theorem ordConnected_Ioi {a : α} : OrdConnected (Ioi a) :=
 -/
 
 @[instance]
-theorem ord_connected_Iio {a : α} : OrdConnected (Iio a) :=
+theorem ordConnected_iio {a : α} : OrdConnected (Iio a) :=
   ⟨fun x hx y hy z hz => lt_of_le_of_lt hz.2 hy⟩
-#align set.ord_connected_Iio Set.ord_connected_Iio
+#align set.ord_connected_Iio Set.ordConnected_iio
 
 #print Set.ordConnected_Icc /-
 @[instance]
@@ -227,7 +227,7 @@ theorem ordConnected_Icc {a b : α} : OrdConnected (Icc a b) :=
 #print Set.ordConnected_Ico /-
 @[instance]
 theorem ordConnected_Ico {a b : α} : OrdConnected (Ico a b) :=
-  ordConnected_Ici.inter ord_connected_Iio
+  ordConnected_Ici.inter ordConnected_iio
 #align set.ord_connected_Ico Set.ordConnected_Ico
 -/
 
@@ -241,7 +241,7 @@ theorem ordConnected_Ioc {a b : α} : OrdConnected (Ioc a b) :=
 #print Set.ordConnected_Ioo /-
 @[instance]
 theorem ordConnected_Ioo {a b : α} : OrdConnected (Ioo a b) :=
-  ordConnected_Ioi.inter ord_connected_Iio
+  ordConnected_Ioi.inter ordConnected_iio
 #align set.ord_connected_Ioo Set.ordConnected_Ioo
 -/
 
@@ -334,14 +334,14 @@ section LinearOrder
 variable {α : Type _} [LinearOrder α] {s : Set α} {x : α}
 
 @[instance]
-theorem ord_connected_uIcc {a b : α} : OrdConnected [a, b] :=
+theorem ordConnected_uIcc {a b : α} : OrdConnected [a, b] :=
   ord_connected_Icc
-#align set.ord_connected_uIcc Set.ord_connected_uIcc
+#align set.ord_connected_uIcc Set.ordConnected_uIcc
 
 @[instance]
-theorem ord_connected_uIoc {a b : α} : OrdConnected (Ι a b) :=
+theorem ordConnected_uIoc {a b : α} : OrdConnected (Ι a b) :=
   ord_connected_Ioc
-#align set.ord_connected_uIoc Set.ord_connected_uIoc
+#align set.ord_connected_uIoc Set.ordConnected_uIoc
 
 theorem OrdConnected.uIcc_subset (hs : OrdConnected s) ⦃x⦄ (hx : x ∈ s) ⦃y⦄ (hy : y ∈ s) :
     [x, y] ⊆ s :=
@@ -353,29 +353,29 @@ theorem OrdConnected.uIoc_subset (hs : OrdConnected s) ⦃x⦄ (hx : x ∈ s) �
   Ioc_subset_Icc_self.trans <| hs.uIcc_subset hx hy
 #align set.ord_connected.uIoc_subset Set.OrdConnected.uIoc_subset
 
-theorem ord_connected_iff_uIcc_subset :
+theorem ordConnected_iff_uIcc_subset :
     OrdConnected s ↔ ∀ ⦃x⦄ (hx : x ∈ s) ⦃y⦄ (hy : y ∈ s), [x, y] ⊆ s :=
-  ⟨fun h => h.uIcc_subset, fun H => ⟨fun x hx y hy => Icc_subset_uIcc.trans <| H hx hy⟩⟩
-#align set.ord_connected_iff_uIcc_subset Set.ord_connected_iff_uIcc_subset
+  ⟨fun h => h.uIcc_subset, fun H => ⟨fun x hx y hy => icc_subset_uIcc.trans <| H hx hy⟩⟩
+#align set.ord_connected_iff_uIcc_subset Set.ordConnected_iff_uIcc_subset
 
-theorem ord_connected_of_uIcc_subset_left (h : ∀ y ∈ s, [x, y] ⊆ s) : OrdConnected s :=
-  ord_connected_iff_uIcc_subset.2 fun y hy z hz =>
+theorem ordConnected_of_uIcc_subset_left (h : ∀ y ∈ s, [x, y] ⊆ s) : OrdConnected s :=
+  ordConnected_iff_uIcc_subset.2 fun y hy z hz =>
     calc
       [y, z] ⊆ [y, x] ∪ [x, z] := uIcc_subset_uIcc_union_uIcc
       _ = [x, y] ∪ [x, z] := by rw [uIcc_comm]
       _ ⊆ s := union_subset (h y hy) (h z hz)
       
-#align set.ord_connected_of_uIcc_subset_left Set.ord_connected_of_uIcc_subset_left
+#align set.ord_connected_of_uIcc_subset_left Set.ordConnected_of_uIcc_subset_left
 
-theorem ord_connected_iff_uIcc_subset_left (hx : x ∈ s) :
+theorem ordConnected_iff_uIcc_subset_left (hx : x ∈ s) :
     OrdConnected s ↔ ∀ ⦃y⦄, y ∈ s → [x, y] ⊆ s :=
-  ⟨fun hs => hs.uIcc_subset hx, ord_connected_of_uIcc_subset_left⟩
-#align set.ord_connected_iff_uIcc_subset_left Set.ord_connected_iff_uIcc_subset_left
+  ⟨fun hs => hs.uIcc_subset hx, ordConnected_of_uIcc_subset_left⟩
+#align set.ord_connected_iff_uIcc_subset_left Set.ordConnected_iff_uIcc_subset_left
 
-theorem ord_connected_iff_uIcc_subset_right (hx : x ∈ s) :
+theorem ordConnected_iff_uIcc_subset_right (hx : x ∈ s) :
     OrdConnected s ↔ ∀ ⦃y⦄, y ∈ s → [y, x] ⊆ s := by
   simp_rw [ord_connected_iff_uIcc_subset_left hx, uIcc_comm]
-#align set.ord_connected_iff_uIcc_subset_right Set.ord_connected_iff_uIcc_subset_right
+#align set.ord_connected_iff_uIcc_subset_right Set.ordConnected_iff_uIcc_subset_right
 
 end LinearOrder
 

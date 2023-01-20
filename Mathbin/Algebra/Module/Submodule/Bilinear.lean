@@ -154,21 +154,21 @@ theorem map₂_eq_span_image2 (f : M →ₗ[R] N →ₗ[R] P) (p : Submodule R M
   rw [← map₂_span_span, span_eq, span_eq]
 #align submodule.map₂_eq_span_image2 Submodule.map₂_eq_span_image2
 
-theorem map₂_supr_left (f : M →ₗ[R] N →ₗ[R] P) (s : ι → Submodule R M) (t : Submodule R N) :
+theorem map₂_supᵢ_left (f : M →ₗ[R] N →ₗ[R] P) (s : ι → Submodule R M) (t : Submodule R N) :
     map₂ f (⨆ i, s i) t = ⨆ i, map₂ f (s i) t :=
   by
   suffices map₂ f (⨆ i, span R (s i : Set M)) (span R t) = ⨆ i, map₂ f (span R (s i)) (span R t) by
     simpa only [span_eq] using this
   simp_rw [map₂_span_span, ← span_Union, map₂_span_span, Set.image2_unionᵢ_left]
-#align submodule.map₂_supr_left Submodule.map₂_supr_left
+#align submodule.map₂_supr_left Submodule.map₂_supᵢ_left
 
-theorem map₂_supr_right (f : M →ₗ[R] N →ₗ[R] P) (s : Submodule R M) (t : ι → Submodule R N) :
+theorem map₂_supᵢ_right (f : M →ₗ[R] N →ₗ[R] P) (s : Submodule R M) (t : ι → Submodule R N) :
     map₂ f s (⨆ i, t i) = ⨆ i, map₂ f s (t i) :=
   by
   suffices map₂ f (span R s) (⨆ i, span R (t i : Set N)) = ⨆ i, map₂ f (span R s) (span R (t i)) by
     simpa only [span_eq] using this
   simp_rw [map₂_span_span, ← span_Union, map₂_span_span, Set.image2_unionᵢ_right]
-#align submodule.map₂_supr_right Submodule.map₂_supr_right
+#align submodule.map₂_supr_right Submodule.map₂_supᵢ_right
 
 end Submodule
 

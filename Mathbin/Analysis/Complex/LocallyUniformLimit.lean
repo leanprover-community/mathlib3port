@@ -46,7 +46,7 @@ noncomputable def cderiv (r : ℝ) (f : ℂ → E) (z : ℂ) : E :=
 
 theorem cderiv_eq_deriv (hU : IsOpen U) (hf : DifferentiableOn ℂ f U) (hr : 0 < r)
     (hzr : closedBall z r ⊆ U) : cderiv r f z = deriv f z :=
-  two_pi_I_inv_smul_circle_integral_sub_sq_inv_smul_of_differentiable hU hzr hf (mem_ball_self hr)
+  two_pi_i_inv_smul_circleIntegral_sub_sq_inv_smul_of_differentiable hU hzr hf (mem_ball_self hr)
 #align complex.cderiv_eq_deriv Complex.cderiv_eq_deriv
 
 theorem norm_cderiv_le (hr : 0 < r) (hf : ∀ w ∈ sphere z r, ‖f w‖ ≤ M) : ‖cderiv r f z‖ ≤ M / r :=
@@ -89,7 +89,7 @@ theorem norm_cderiv_lt (hr : 0 < r) (hfM : ∀ w ∈ sphere z r, ‖f w‖ < M)
     by
     have e1 : (sphere z r).Nonempty := normed_space.sphere_nonempty.mpr hr.le
     have e2 : ContinuousOn (fun w => ‖f w‖) (sphere z r) := continuous_norm.comp_continuous_on hf
-    obtain ⟨x, hx, hx'⟩ := (is_compact_sphere z r).exists_forall_ge e1 e2
+    obtain ⟨x, hx, hx'⟩ := (isCompact_sphere z r).exists_forall_ge e1 e2
     exact ⟨‖f x‖, hfM x hx, hx'⟩
   exact (norm_cderiv_le hr hL2).trans_lt ((div_lt_div_right hr).mpr hL1)
 #align complex.norm_cderiv_lt Complex.norm_cderiv_lt
@@ -107,7 +107,7 @@ theorem TendstoUniformlyOn.cderiv (hF : TendstoUniformlyOn F f φ (cthickening �
   by_cases φ = ⊥
   · simp only [h, TendstoUniformlyOn, eventually_bot, imp_true_iff]
   haveI : φ.ne_bot := ne_bot_iff.2 h
-  have e1 : ContinuousOn f (cthickening δ K) := TendstoUniformlyOn.continuous_on hF hFn
+  have e1 : ContinuousOn f (cthickening δ K) := TendstoUniformlyOn.continuousOn hF hFn
   rw [tendsto_uniformly_on_iff] at hF⊢
   rintro ε hε
   filter_upwards [hF (ε * δ) (mul_pos hε hδ), hFn] with n h h' z hz
@@ -124,7 +124,7 @@ end Cderiv
 
 section Weierstrass
 
-theorem tendsto_uniformly_on_deriv_of_cthickening_subset (hf : TendstoLocallyUniformlyOn F f φ U)
+theorem tendstoUniformlyOn_deriv_of_cthickening_subset (hf : TendstoLocallyUniformlyOn F f φ U)
     (hF : ∀ᶠ n in φ, DifferentiableOn ℂ (F n) U) {δ : ℝ} (hδ : 0 < δ) (hK : IsCompact K)
     (hU : IsOpen U) (hKU : cthickening δ K ⊆ U) : TendstoUniformlyOn (deriv ∘ F) (cderiv δ f) φ K :=
   by
@@ -133,24 +133,24 @@ theorem tendsto_uniformly_on_deriv_of_cthickening_subset (hf : TendstoLocallyUni
   have h2 : IsCompact (cthickening δ K) :=
     is_compact_of_is_closed_bounded is_closed_cthickening hK.bounded.cthickening
   have h3 : TendstoUniformlyOn F f φ (cthickening δ K) :=
-    (tendsto_locally_uniformly_on_iff_forall_is_compact hU).mp hf (cthickening δ K) hKU h2
+    (tendstoLocallyUniformlyOn_iff_forall_isCompact hU).mp hf (cthickening δ K) hKU h2
   apply (h3.cderiv hδ h1).congr
   filter_upwards [hF] with n h z hz
   exact cderiv_eq_deriv hU h hδ ((closed_ball_subset_cthickening hz δ).trans hKU)
-#align complex.tendsto_uniformly_on_deriv_of_cthickening_subset Complex.tendsto_uniformly_on_deriv_of_cthickening_subset
+#align complex.tendsto_uniformly_on_deriv_of_cthickening_subset Complex.tendstoUniformlyOn_deriv_of_cthickening_subset
 
-theorem exists_cthickening_tendsto_uniformly_on (hf : TendstoLocallyUniformlyOn F f φ U)
+theorem exists_cthickening_tendstoUniformlyOn (hf : TendstoLocallyUniformlyOn F f φ U)
     (hF : ∀ᶠ n in φ, DifferentiableOn ℂ (F n) U) (hK : IsCompact K) (hU : IsOpen U) (hKU : K ⊆ U) :
     ∃ δ > 0, cthickening δ K ⊆ U ∧ TendstoUniformlyOn (deriv ∘ F) (cderiv δ f) φ K :=
   by
   obtain ⟨δ, hδ, hKδ⟩ := hK.exists_cthickening_subset_open hU hKU
   exact ⟨δ, hδ, hKδ, tendsto_uniformly_on_deriv_of_cthickening_subset hf hF hδ hK hU hKδ⟩
-#align complex.exists_cthickening_tendsto_uniformly_on Complex.exists_cthickening_tendsto_uniformly_on
+#align complex.exists_cthickening_tendsto_uniformly_on Complex.exists_cthickening_tendstoUniformlyOn
 
 /-- A locally uniform limit of holomorphic functions on an open domain of the complex plane is
 holomorphic (the derivatives converge locally uniformly to that of the limit, which is proved
 as `tendsto_locally_uniformly_on.deriv`). -/
-theorem TendstoLocallyUniformlyOn.differentiable_on [φ.ne_bot]
+theorem TendstoLocallyUniformlyOn.differentiableOn [φ.ne_bot]
     (hf : TendstoLocallyUniformlyOn F f φ U) (hF : ∀ᶠ n in φ, DifferentiableOn ℂ (F n) U)
     (hU : IsOpen U) : DifferentiableOn ℂ f U :=
   by
@@ -164,17 +164,17 @@ theorem TendstoLocallyUniformlyOn.differentiable_on [φ.ne_bot]
   have h5 : TendstoLocallyUniformlyOn (deriv ∘ F) (cderiv δ f) φ (interior K) :=
     h1.tendsto_locally_uniformly_on.mono interior_subset
   have h6 : ∀ x ∈ interior K, HasDerivAt f (cderiv δ f x) x := fun x h =>
-    has_deriv_at_of_tendsto_locally_uniformly_on' is_open_interior h5 h3 (fun _ => h4.tendsto_at) h
+    hasDerivAt_of_tendsto_locally_uniformly_on' isOpen_interior h5 h3 (fun _ => h4.tendsto_at) h
   have h7 : DifferentiableOn ℂ f (interior K) := fun x hx =>
     (h6 x hx).DifferentiableAt.DifferentiableWithinAt
   exact (h7.differentiable_at (interior_mem_nhds.mpr hKx)).DifferentiableWithinAt
-#align tendsto_locally_uniformly_on.differentiable_on TendstoLocallyUniformlyOn.differentiable_on
+#align tendsto_locally_uniformly_on.differentiable_on TendstoLocallyUniformlyOn.differentiableOn
 
 theorem TendstoLocallyUniformlyOn.deriv (hf : TendstoLocallyUniformlyOn F f φ U)
     (hF : ∀ᶠ n in φ, DifferentiableOn ℂ (F n) U) (hU : IsOpen U) :
     TendstoLocallyUniformlyOn (deriv ∘ F) (deriv f) φ U :=
   by
-  rw [tendsto_locally_uniformly_on_iff_forall_is_compact hU]
+  rw [tendstoLocallyUniformlyOn_iff_forall_isCompact hU]
   by_cases φ = ⊥
   · simp only [h, TendstoUniformlyOn, eventually_bot, imp_true_iff]
   haveI : φ.ne_bot := ne_bot_iff.2 h

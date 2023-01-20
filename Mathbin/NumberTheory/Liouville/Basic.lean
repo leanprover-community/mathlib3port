@@ -164,14 +164,14 @@ theorem exists_pos_real_of_irrational_root {α : ℝ} (ha : Irrational α) {f : 
   · exact fun a => one_le_pow_of_one_le ((le_add_iff_nonneg_left 1).mpr a.cast_nonneg) _
   -- 2: the polynomial `fR` is Lipschitz at `α` -- as its derivative continuous;
   · rw [mul_comm]
-    rw [Real.closed_ball_eq_Icc] at hy
+    rw [Real.closedBall_eq_icc] at hy
     -- apply the Mean Value Theorem: the bound on the derivative comes from differentiability.
     refine'
       Convex.norm_image_sub_le_of_norm_deriv_le (fun _ _ => fR.differentiable_at)
         (fun y h => by
           rw [fR.deriv]
           exact hM _ h)
-        (convex_Icc _ _) hy (mem_Icc_iff_abs_le.mp _)
+        (convex_icc _ _) hy (mem_Icc_iff_abs_le.mp _)
     exact @mem_closed_ball_self ℝ _ α ζ (le_of_lt z0)
   -- 3: the weird inequality of Liouville type with powers of the denominators.
   · show 1 ≤ (a + 1 : ℝ) ^ f.nat_degree * |eval α fR - eval (z / (a + 1)) fR|

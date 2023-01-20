@@ -228,22 +228,22 @@ instance [Add α] [IsRightCancelAdd α] : IsRightCancelMul (Multiplicative α)
     where mul_right_cancel := @add_right_cancel α _ _
 
 instance [Mul α] [IsCancelMul α] : IsCancelAdd (Additive α) :=
-  { Additive.is_left_cancel_add, Additive.is_right_cancel_add with }
+  { Additive.isLeftCancelAdd, Additive.isRightCancelAdd with }
 
 instance [Add α] [IsCancelAdd α] : IsCancelMul (Multiplicative α) :=
-  { Multiplicative.is_left_cancel_mul, Multiplicative.is_right_cancel_mul with }
+  { Multiplicative.isLeftCancelMul, Multiplicative.isRightCancelMul with }
 
 instance [LeftCancelSemigroup α] : AddLeftCancelSemigroup (Additive α) :=
-  { Additive.addSemigroup, Additive.is_left_cancel_add with }
+  { Additive.addSemigroup, Additive.isLeftCancelAdd with }
 
 instance [AddLeftCancelSemigroup α] : LeftCancelSemigroup (Multiplicative α) :=
-  { Multiplicative.semigroup, Multiplicative.is_left_cancel_mul with }
+  { Multiplicative.semigroup, Multiplicative.isLeftCancelMul with }
 
 instance [RightCancelSemigroup α] : AddRightCancelSemigroup (Additive α) :=
-  { Additive.addSemigroup, Additive.is_right_cancel_add with }
+  { Additive.addSemigroup, Additive.isRightCancelAdd with }
 
 instance [AddRightCancelSemigroup α] : RightCancelSemigroup (Multiplicative α) :=
-  { Multiplicative.semigroup, Multiplicative.is_right_cancel_mul with }
+  { Multiplicative.semigroup, Multiplicative.isRightCancelMul with }
 
 instance [One α] : Zero (Additive α) :=
   ⟨Additive.ofMul 1⟩

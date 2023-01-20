@@ -58,12 +58,12 @@ def TendstoInMeasure [HasDist E] {m : MeasurableSpace α} (μ : Measure α) (f :
   ∀ (ε) (hε : 0 < ε), Tendsto (fun i => μ { x | ε ≤ dist (f i x) (g x) }) l (𝓝 0)
 #align measure_theory.tendsto_in_measure MeasureTheory.TendstoInMeasure
 
-theorem tendsto_in_measure_iff_norm [SeminormedAddCommGroup E] {l : Filter ι} {f : ι → α → E}
+theorem tendstoInMeasure_iff_norm [SeminormedAddCommGroup E] {l : Filter ι} {f : ι → α → E}
     {g : α → E} :
     TendstoInMeasure μ f l g ↔
       ∀ (ε) (hε : 0 < ε), Tendsto (fun i => μ { x | ε ≤ ‖f i x - g x‖ }) l (𝓝 0) :=
   by simp_rw [tendsto_in_measure, dist_eq_norm]
-#align measure_theory.tendsto_in_measure_iff_norm MeasureTheory.tendsto_in_measure_iff_norm
+#align measure_theory.tendsto_in_measure_iff_norm MeasureTheory.tendstoInMeasure_iff_norm
 
 namespace TendstoInMeasure
 
@@ -120,8 +120,8 @@ theorem tendstoInMeasureOfTendstoAeOfStronglyMeasurable [IsFiniteMeasure μ]
   lift δ to ℝ≥0 using hδi
   rw [gt_iff_lt, Ennreal.coe_pos, ← Nnreal.coe_pos] at hδ
   obtain ⟨t, htm, ht, hunif⟩ := tendsto_uniformly_on_of_ae_tendsto' hf hg hfg hδ
-  rw [Ennreal.of_real_coe_nnreal] at ht
-  rw [Metric.tendsto_uniformly_on_iff] at hunif
+  rw [Ennreal.ofReal_coe_nnreal] at ht
+  rw [Metric.tendstoUniformlyOn_iff] at hunif
   obtain ⟨N, hN⟩ := eventually_at_top.1 (hunif ε hε)
   refine' ⟨N, fun n hn => _⟩
   suffices : { x : α | ε ≤ dist (f n x) (g x) } ⊆ t; exact (measure_mono this).trans ht
@@ -153,7 +153,7 @@ theorem exists_nat_measure_lt_two_inv (hfg : TendstoInMeasure μ f atTop g) (n :
     ∃ N, ∀ m ≥ N, μ { x | 2⁻¹ ^ n ≤ dist (f m x) (g x) } ≤ 2⁻¹ ^ n :=
   by
   specialize hfg (2⁻¹ ^ n) (by simp only [zero_lt_bit0, pow_pos, zero_lt_one, inv_pos])
-  rw [Ennreal.tendsto_at_top_zero] at hfg
+  rw [Ennreal.tendsto_atTop_zero] at hfg
   exact hfg (2⁻¹ ^ n) (pos_iff_ne_zero.mpr fun h_zero => by simpa using pow_eq_zero h_zero)
 #align measure_theory.exists_seq_tendsto_ae.exists_nat_measure_lt_two_inv MeasureTheory.ExistsSeqTendstoAe.exists_nat_measure_lt_two_inv
 
@@ -170,13 +170,13 @@ noncomputable def seqTendstoAeSeq (hfg : TendstoInMeasure μ f atTop g) : ℕ �
   | n + 1 => max (seqTendstoAeSeqAux hfg (n + 1)) (seq_tendsto_ae_seq n + 1)
 #align measure_theory.exists_seq_tendsto_ae.seq_tendsto_ae_seq MeasureTheory.ExistsSeqTendstoAe.seqTendstoAeSeq
 
-theorem seq_tendsto_ae_seq_succ (hfg : TendstoInMeasure μ f atTop g) {n : ℕ} :
+theorem seqTendstoAeSeq_succ (hfg : TendstoInMeasure μ f atTop g) {n : ℕ} :
     seqTendstoAeSeq hfg (n + 1) =
       max (seqTendstoAeSeqAux hfg (n + 1)) (seqTendstoAeSeq hfg n + 1) :=
   by rw [seq_tendsto_ae_seq]
-#align measure_theory.exists_seq_tendsto_ae.seq_tendsto_ae_seq_succ MeasureTheory.ExistsSeqTendstoAe.seq_tendsto_ae_seq_succ
+#align measure_theory.exists_seq_tendsto_ae.seq_tendsto_ae_seq_succ MeasureTheory.ExistsSeqTendstoAe.seqTendstoAeSeq_succ
 
-theorem seq_tendsto_ae_seq_spec (hfg : TendstoInMeasure μ f atTop g) (n k : ℕ)
+theorem seqTendstoAeSeq_spec (hfg : TendstoInMeasure μ f atTop g) (n k : ℕ)
     (hn : seqTendstoAeSeq hfg n ≤ k) : μ { x | 2⁻¹ ^ n ≤ dist (f k x) (g x) } ≤ 2⁻¹ ^ n :=
   by
   cases n
@@ -184,15 +184,15 @@ theorem seq_tendsto_ae_seq_spec (hfg : TendstoInMeasure μ f atTop g) (n k : ℕ
   ·
     exact
       Classical.choose_spec (exists_nat_measure_lt_two_inv hfg _) _ (le_trans (le_max_left _ _) hn)
-#align measure_theory.exists_seq_tendsto_ae.seq_tendsto_ae_seq_spec MeasureTheory.ExistsSeqTendstoAe.seq_tendsto_ae_seq_spec
+#align measure_theory.exists_seq_tendsto_ae.seq_tendsto_ae_seq_spec MeasureTheory.ExistsSeqTendstoAe.seqTendstoAeSeq_spec
 
-theorem seq_tendsto_ae_seq_strict_mono (hfg : TendstoInMeasure μ f atTop g) :
+theorem seqTendstoAeSeq_strictMono (hfg : TendstoInMeasure μ f atTop g) :
     StrictMono (seqTendstoAeSeq hfg) :=
   by
   refine' strictMono_nat_of_lt_succ fun n => _
   rw [seq_tendsto_ae_seq_succ]
   exact lt_of_lt_of_le (lt_add_one <| seq_tendsto_ae_seq hfg n) (le_max_right _ _)
-#align measure_theory.exists_seq_tendsto_ae.seq_tendsto_ae_seq_strict_mono MeasureTheory.ExistsSeqTendstoAe.seq_tendsto_ae_seq_strict_mono
+#align measure_theory.exists_seq_tendsto_ae.seq_tendsto_ae_seq_strict_mono MeasureTheory.ExistsSeqTendstoAe.seqTendstoAeSeq_strictMono
 
 end ExistsSeqTendstoAe
 
@@ -255,13 +255,13 @@ theorem TendstoInMeasure.exists_seq_tendsto_ae (hfg : TendstoInMeasure μ f atTo
   exact h_tendsto x
 #align measure_theory.tendsto_in_measure.exists_seq_tendsto_ae MeasureTheory.TendstoInMeasure.exists_seq_tendsto_ae
 
-theorem TendstoInMeasure.exists_seq_tendsto_in_measure_at_top {u : Filter ι} [NeBot u]
+theorem TendstoInMeasure.exists_seq_tendstoInMeasure_atTop {u : Filter ι} [NeBot u]
     [IsCountablyGenerated u] {f : ι → α → E} {g : α → E} (hfg : TendstoInMeasure μ f u g) :
     ∃ ns : ℕ → ι, TendstoInMeasure μ (fun n => f (ns n)) atTop g :=
   by
   obtain ⟨ns, h_tendsto_ns⟩ : ∃ ns : ℕ → ι, tendsto ns at_top u := exists_seq_tendsto u
   exact ⟨ns, fun ε hε => (hfg ε hε).comp h_tendsto_ns⟩
-#align measure_theory.tendsto_in_measure.exists_seq_tendsto_in_measure_at_top MeasureTheory.TendstoInMeasure.exists_seq_tendsto_in_measure_at_top
+#align measure_theory.tendsto_in_measure.exists_seq_tendsto_in_measure_at_top MeasureTheory.TendstoInMeasure.exists_seq_tendstoInMeasure_atTop
 
 theorem TendstoInMeasure.exists_seq_tendsto_ae' {u : Filter ι} [NeBot u] [IsCountablyGenerated u]
     {f : ι → α → E} {g : α → E} (hfg : TendstoInMeasure μ f u g) :
@@ -303,23 +303,22 @@ theorem tendstoInMeasureOfTendstoSnormOfStronglyMeasurable (hp_ne_zero : p ≠ 0
   intro ε hε
   replace hfg :=
     Ennreal.Tendsto.const_mul (tendsto.ennrpow_const p.to_real hfg)
-      (Or.inr <| @Ennreal.of_real_ne_top (1 / ε ^ p.to_real))
-  simp only [mul_zero, Ennreal.zero_rpow_of_pos (Ennreal.to_real_pos hp_ne_zero hp_ne_top)] at hfg
+      (Or.inr <| @Ennreal.ofReal_ne_top (1 / ε ^ p.to_real))
+  simp only [mul_zero, Ennreal.zero_rpow_of_pos (Ennreal.toReal_pos hp_ne_zero hp_ne_top)] at hfg
   rw [Ennreal.tendsto_nhds_zero] at hfg⊢
   intro δ hδ
   refine' (hfg δ hδ).mono fun n hn => _
   refine' le_trans _ hn
-  rw [Ennreal.of_real_div_of_pos (Real.rpow_pos_of_pos hε _), Ennreal.of_real_one, mul_comm,
-    mul_one_div, Ennreal.le_div_iff_mul_le _ (Or.inl Ennreal.of_real_ne_top), mul_comm]
+  rw [Ennreal.ofReal_div_of_pos (Real.rpow_pos_of_pos hε _), Ennreal.ofReal_one, mul_comm,
+    mul_one_div, Ennreal.le_div_iff_mul_le _ (Or.inl Ennreal.ofReal_ne_top), mul_comm]
   · convert
       mul_meas_ge_le_pow_snorm' μ hp_ne_zero hp_ne_top ((hf n).sub hg).AeStronglyMeasurable
         (Ennreal.ofReal ε)
-    · exact (Ennreal.of_real_rpow_of_pos hε).symm
+    · exact (Ennreal.ofReal_rpow_of_pos hε).symm
     · ext x
-      rw [dist_eq_norm, ← Ennreal.of_real_le_of_real_iff (norm_nonneg _),
-        of_real_norm_eq_coe_nnnorm]
+      rw [dist_eq_norm, ← Ennreal.ofReal_le_ofReal_iff (norm_nonneg _), ofReal_norm_eq_coe_nnnorm]
       exact Iff.rfl
-  · rw [Ne, Ennreal.of_real_eq_zero, not_le]
+  · rw [Ne, Ennreal.ofReal_eq_zero, not_le]
     exact Or.inl (Real.rpow_pos_of_pos hε _)
 #align measure_theory.tendsto_in_measure_of_tendsto_snorm_of_strongly_measurable MeasureTheory.tendstoInMeasureOfTendstoSnormOfStronglyMeasurable
 
@@ -352,16 +351,16 @@ theorem tendstoInMeasureOfTendstoSnormTop {E} [NormedAddCommGroup E] {f : ι →
   intro ε hε
   specialize
     hfg (Ennreal.ofReal δ / 2)
-      (Ennreal.div_pos_iff.2 ⟨(Ennreal.of_real_pos.2 hδ).Ne.symm, Ennreal.two_ne_top⟩)
+      (Ennreal.div_pos_iff.2 ⟨(Ennreal.ofReal_pos.2 hδ).Ne.symm, Ennreal.two_ne_top⟩)
   refine' hfg.mono fun n hn => _
   simp only [true_and_iff, gt_iff_lt, ge_iff_le, zero_tsub, zero_le, zero_add, Set.mem_Icc,
     Pi.sub_apply] at *
   have : essSup (fun x : α => (‖f n x - g x‖₊ : ℝ≥0∞)) μ < Ennreal.ofReal δ :=
     lt_of_le_of_lt hn
-      (Ennreal.half_lt_self (Ennreal.of_real_pos.2 hδ).Ne.symm ennreal.of_real_lt_top.ne)
-  refine' ((le_of_eq _).trans (ae_lt_of_ess_sup_lt this).le).trans hε.le
+      (Ennreal.half_lt_self (Ennreal.ofReal_pos.2 hδ).Ne.symm ennreal.of_real_lt_top.ne)
+  refine' ((le_of_eq _).trans (ae_lt_of_essSup_lt this).le).trans hε.le
   congr with x
-  simp only [Ennreal.of_real_le_iff_le_to_real ennreal.coe_lt_top.ne, Ennreal.coe_to_real, not_lt,
+  simp only [Ennreal.ofReal_le_iff_le_toReal ennreal.coe_lt_top.ne, Ennreal.coe_toReal, not_lt,
     coe_nnnorm, Set.mem_setOf_eq, Set.mem_compl_iff]
   rw [← dist_eq_norm (f n x) (g x)]
   rfl
@@ -383,7 +382,7 @@ theorem tendstoInMeasureOfTendstoLp [hp : Fact (1 ≤ p)] {f : ι → lp E p μ}
     {l : Filter ι} (hfg : Tendsto f l (𝓝 g)) : TendstoInMeasure μ (fun n => f n) l g :=
   tendstoInMeasureOfTendstoSnorm (Ennreal.zero_lt_one.trans_le hp.elim).Ne.symm
     (fun n => lp.aeStronglyMeasurable _) (lp.aeStronglyMeasurable _)
-    ((lp.tendsto_Lp_iff_tendsto_ℒp' _ _).mp hfg)
+    ((lp.tendsto_lp_iff_tendsto_ℒp' _ _).mp hfg)
 #align measure_theory.tendsto_in_measure_of_tendsto_Lp MeasureTheory.tendstoInMeasureOfTendstoLp
 
 end TendstoInMeasureOf

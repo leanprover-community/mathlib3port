@@ -146,15 +146,15 @@ def equivariantProjection : W →ₗ[MonoidAlgebra k G] V :=
 
 include h
 
-theorem equivariant_projection_condition (v : V) : (π.equivariantProjection G) (i v) = v :=
+theorem equivariantProjection_condition (v : V) : (π.equivariantProjection G) (i v) = v :=
   by
   rw [equivariant_projection, smul_apply, sum_of_conjugates_equivariant,
     equivariant_of_linear_of_comm_apply, sum_of_conjugates]
   rw [LinearMap.sum_apply]
   simp only [conjugate_i π i h]
   rw [Finset.sum_const, Finset.card_univ, nsmul_eq_smul_cast k, ← mul_smul,
-    Invertible.inv_of_mul_self, one_smul]
-#align linear_map.equivariant_projection_condition LinearMap.equivariant_projection_condition
+    Invertible.invOf_mul_self, one_smul]
+#align linear_map.equivariant_projection_condition LinearMap.equivariantProjection_condition
 
 end
 
@@ -191,12 +191,12 @@ theorem exists_left_inverse_of_injective (f : V →ₗ[MonoidAlgebra k G] W) (hf
   by
   obtain ⟨φ, hφ⟩ :=
     (f.restrict_scalars k).exists_left_inverse_of_injective
-      (by simp only [hf, Submodule.restrict_scalars_bot, LinearMap.ker_restrict_scalars])
+      (by simp only [hf, Submodule.restrictScalars_bot, LinearMap.ker_restrictScalars])
   refine' ⟨φ.equivariant_projection G, _⟩
   apply LinearMap.ext
   intro v
   simp only [LinearMap.id_coe, id.def, LinearMap.comp_apply]
-  apply LinearMap.equivariant_projection_condition
+  apply LinearMap.equivariantProjection_condition
   intro v
   have := congr_arg LinearMap.toFun hφ
   exact congr_fun this v
@@ -204,16 +204,16 @@ theorem exists_left_inverse_of_injective (f : V →ₗ[MonoidAlgebra k G] W) (hf
 
 namespace Submodule
 
-theorem exists_is_compl (p : Submodule (MonoidAlgebra k G) V) :
+theorem exists_isCompl (p : Submodule (MonoidAlgebra k G) V) :
     ∃ q : Submodule (MonoidAlgebra k G) V, IsCompl p q :=
   let ⟨f, hf⟩ := MonoidAlgebra.exists_left_inverse_of_injective p.Subtype p.ker_subtype
-  ⟨f.ker, LinearMap.is_compl_of_proj <| LinearMap.ext_iff.1 hf⟩
-#align monoid_algebra.submodule.exists_is_compl MonoidAlgebra.Submodule.exists_is_compl
+  ⟨f.ker, LinearMap.isCompl_of_proj <| LinearMap.ext_iff.1 hf⟩
+#align monoid_algebra.submodule.exists_is_compl MonoidAlgebra.Submodule.exists_isCompl
 
 /-- This also implies an instance `is_semisimple_module (monoid_algebra k G) V`. -/
-instance complemented_lattice : ComplementedLattice (Submodule (MonoidAlgebra k G) V) :=
-  ⟨exists_is_compl⟩
-#align monoid_algebra.submodule.complemented_lattice MonoidAlgebra.Submodule.complemented_lattice
+instance complementedLattice : ComplementedLattice (Submodule (MonoidAlgebra k G) V) :=
+  ⟨exists_isCompl⟩
+#align monoid_algebra.submodule.complemented_lattice MonoidAlgebra.Submodule.complementedLattice
 
 end Submodule
 

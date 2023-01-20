@@ -124,11 +124,11 @@ instance group {C : Type u} [Groupoid.{v} C] (X : C) : Group (EndCat X) :=
 
 end EndCat
 
-theorem is_unit_iff_is_iso {C : Type u} [Category.{v} C] {X : C} (f : EndCat X) :
+theorem isUnit_iff_isIso {C : Type u} [Category.{v} C] {X : C} (f : EndCat X) :
     IsUnit (f : EndCat X) ↔ IsIso f :=
   ⟨fun h => { out := ⟨h.Unit.inv, ⟨h.Unit.inv_val, h.Unit.val_inv⟩⟩ }, fun h =>
     ⟨⟨f, inv f, by simp, by simp⟩, rfl⟩⟩
-#align category_theory.is_unit_iff_is_iso CategoryTheory.is_unit_iff_is_iso
+#align category_theory.is_unit_iff_is_iso CategoryTheory.isUnit_iff_isIso
 
 variable {C : Type u} [Category.{v} C] (X : C)
 
@@ -160,13 +160,13 @@ instance : Group (AutCat X) := by
       ext <;>
     simp [flip, (· * ·), Monoid.mul, MulOneClass.mul, MulOneClass.one, One.one, Monoid.one, Inv.inv]
 
-theorem Aut_mul_def (f g : AutCat X) : f * g = g.trans f :=
+theorem autCat_mul_def (f g : AutCat X) : f * g = g.trans f :=
   rfl
-#align category_theory.Aut.Aut_mul_def CategoryTheory.AutCat.Aut_mul_def
+#align category_theory.Aut.Aut_mul_def CategoryTheory.AutCat.autCat_mul_def
 
-theorem Aut_inv_def (f : AutCat X) : f⁻¹ = f.symm :=
+theorem autCat_inv_def (f : AutCat X) : f⁻¹ = f.symm :=
   rfl
-#align category_theory.Aut.Aut_inv_def CategoryTheory.AutCat.Aut_inv_def
+#align category_theory.Aut.Aut_inv_def CategoryTheory.AutCat.autCat_inv_def
 
 /-- Units in the monoid of endomorphisms of an object
 are (multiplicatively) equivalent to automorphisms of that object.

@@ -139,9 +139,9 @@ instance : CoeFun (Valuation R Γ₀) fun _ => R → Γ₀ :=
   FunLike.hasCoeToFun
 
 @[simp]
-theorem to_fun_eq_coe (v : Valuation R Γ₀) : v.toFun = v :=
+theorem toFun_eq_coe (v : Valuation R Γ₀) : v.toFun = v :=
   rfl
-#align valuation.to_fun_eq_coe Valuation.to_fun_eq_coe
+#align valuation.to_fun_eq_coe Valuation.toFun_eq_coe
 
 @[ext]
 theorem ext {v₁ v₂ : Valuation R Γ₀} (h : ∀ r, v₁ r = v₂ r) : v₁ = v₂ :=
@@ -363,7 +363,7 @@ theorem map_one_sub_of_lt (h : v x < 1) : v (1 - x) = 1 :=
 #align valuation.map_one_sub_of_lt Valuation.map_one_sub_of_lt
 
 theorem one_lt_val_iff (v : Valuation K Γ₀) {x : K} (h : x ≠ 0) : 1 < v x ↔ v x⁻¹ < 1 := by
-  simpa using (inv_lt_inv₀ (v.ne_zero_iff.2 h) one_ne_zero).symm
+  simpa using (inv_lt_inv₀ (v.ne_zero_iff.2 h) one_neZero).symm
 #align valuation.one_lt_val_iff Valuation.one_lt_val_iff
 
 /-- The subgroup of elements whose valuation is less than a certain unit.-/
@@ -440,13 +440,13 @@ end IsEquiv
 -- end of namespace
 section
 
-theorem is_equiv_of_map_strict_mono [LinearOrderedCommMonoidWithZero Γ₀]
+theorem isEquiv_of_map_strictMono [LinearOrderedCommMonoidWithZero Γ₀]
     [LinearOrderedCommMonoidWithZero Γ'₀] [Ring R] {v : Valuation R Γ₀} (f : Γ₀ →*₀ Γ'₀)
     (H : StrictMono f) : IsEquiv (v.map f H.Monotone) v := fun x y =>
   ⟨H.le_iff_le.mp, fun h => H.Monotone h⟩
-#align valuation.is_equiv_of_map_strict_mono Valuation.is_equiv_of_map_strict_mono
+#align valuation.is_equiv_of_map_strict_mono Valuation.isEquiv_of_map_strictMono
 
-theorem is_equiv_of_val_le_one [LinearOrderedCommGroupWithZero Γ₀]
+theorem isEquiv_of_val_le_one [LinearOrderedCommGroupWithZero Γ₀]
     [LinearOrderedCommGroupWithZero Γ'₀] (v : Valuation K Γ₀) (v' : Valuation K Γ'₀)
     (h : ∀ {x : K}, v x ≤ 1 ↔ v' x ≤ 1) : v.IsEquiv v' :=
   by
@@ -465,15 +465,15 @@ theorem is_equiv_of_val_le_one [LinearOrderedCommGroupWithZero Γ₀]
     replace hy := v'.ne_zero_iff.mpr hy
     replace H := le_of_le_mul_right hy H
     rwa [h]
-#align valuation.is_equiv_of_val_le_one Valuation.is_equiv_of_val_le_one
+#align valuation.is_equiv_of_val_le_one Valuation.isEquiv_of_val_le_one
 
-theorem is_equiv_iff_val_le_one [LinearOrderedCommGroupWithZero Γ₀]
+theorem isEquiv_iff_val_le_one [LinearOrderedCommGroupWithZero Γ₀]
     [LinearOrderedCommGroupWithZero Γ'₀] (v : Valuation K Γ₀) (v' : Valuation K Γ'₀) :
     v.IsEquiv v' ↔ ∀ {x : K}, v x ≤ 1 ↔ v' x ≤ 1 :=
-  ⟨fun h x => by simpa using h x 1, is_equiv_of_val_le_one _ _⟩
-#align valuation.is_equiv_iff_val_le_one Valuation.is_equiv_iff_val_le_one
+  ⟨fun h x => by simpa using h x 1, isEquiv_of_val_le_one _ _⟩
+#align valuation.is_equiv_iff_val_le_one Valuation.isEquiv_iff_val_le_one
 
-theorem is_equiv_iff_val_eq_one [LinearOrderedCommGroupWithZero Γ₀]
+theorem isEquiv_iff_val_eq_one [LinearOrderedCommGroupWithZero Γ₀]
     [LinearOrderedCommGroupWithZero Γ'₀] (v : Valuation K Γ₀) (v' : Valuation K Γ'₀) :
     v.IsEquiv v' ↔ ∀ {x : K}, v x = 1 ↔ v' x = 1 :=
   by
@@ -508,9 +508,9 @@ theorem is_equiv_iff_val_eq_one [LinearOrderedCommGroupWithZero Γ₀]
         simp [this]
       · rw [← h] at hx'
         exact le_of_eq hx'
-#align valuation.is_equiv_iff_val_eq_one Valuation.is_equiv_iff_val_eq_one
+#align valuation.is_equiv_iff_val_eq_one Valuation.isEquiv_iff_val_eq_one
 
-theorem is_equiv_iff_val_lt_one [LinearOrderedCommGroupWithZero Γ₀]
+theorem isEquiv_iff_val_lt_one [LinearOrderedCommGroupWithZero Γ₀]
     [LinearOrderedCommGroupWithZero Γ'₀] (v : Valuation K Γ₀) (v' : Valuation K Γ'₀) :
     v.IsEquiv v' ↔ ∀ {x : K}, v x < 1 ↔ v' x < 1 :=
   by
@@ -535,22 +535,22 @@ theorem is_equiv_iff_val_lt_one [LinearOrderedCommGroupWithZero Γ₀]
       · simpa [hh, lt_self_iff_false] using h.1 h_2
       · rw [← inv_one, eq_inv_iff_eq_inv, ← map_inv₀] at hh
         exact hh.le.not_lt (h.1 ((one_lt_val_iff v hx).1 h_2))
-#align valuation.is_equiv_iff_val_lt_one Valuation.is_equiv_iff_val_lt_one
+#align valuation.is_equiv_iff_val_lt_one Valuation.isEquiv_iff_val_lt_one
 
-theorem is_equiv_iff_val_sub_one_lt_one [LinearOrderedCommGroupWithZero Γ₀]
+theorem isEquiv_iff_val_sub_one_lt_one [LinearOrderedCommGroupWithZero Γ₀]
     [LinearOrderedCommGroupWithZero Γ'₀] (v : Valuation K Γ₀) (v' : Valuation K Γ'₀) :
     v.IsEquiv v' ↔ ∀ {x : K}, v (x - 1) < 1 ↔ v' (x - 1) < 1 :=
   by
   rw [is_equiv_iff_val_lt_one]
   exact (Equiv.subRight 1).Surjective.forall
-#align valuation.is_equiv_iff_val_sub_one_lt_one Valuation.is_equiv_iff_val_sub_one_lt_one
+#align valuation.is_equiv_iff_val_sub_one_lt_one Valuation.isEquiv_iff_val_sub_one_lt_one
 
 /- failed to parenthesize: parenthesize: uncaught backtrack exception
 [PrettyPrinter.parenthesize.input] (Command.declaration
      (Command.declModifiers [] [] [] [] [] [])
      (Command.theorem
       "theorem"
-      (Command.declId `is_equiv_tfae [])
+      (Command.declId `isEquiv_tFAE [])
       (Command.declSig
        [(Term.instBinder "[" [] (Term.app `LinearOrderedCommGroupWithZero [`Γ₀]) "]")
         (Term.instBinder "[" [] (Term.app `LinearOrderedCommGroupWithZero [`Γ'₀]) "]")
@@ -702,7 +702,7 @@ theorem is_equiv_iff_val_sub_one_lt_one [LinearOrderedCommGroupWithZero Γ₀]
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 theorem
-  is_equiv_tfae
+  isEquiv_tFAE
   [ LinearOrderedCommGroupWithZero Γ₀ ]
       [ LinearOrderedCommGroupWithZero Γ'₀ ]
       ( v : Valuation K Γ₀ )
@@ -736,7 +736,7 @@ theorem
         ;
         · apply is_equiv_iff_val_sub_one_lt_one
         tfae_finish
-#align valuation.is_equiv_tfae Valuation.is_equiv_tfae
+#align valuation.is_equiv_tfae Valuation.isEquiv_tFAE
 
 end
 
@@ -775,7 +775,7 @@ theorem mem_supp_iff (x : R) : x ∈ supp v ↔ v x = 0 :=
 /-- The support of a valuation is a prime ideal. -/
 instance [Nontrivial Γ₀] [NoZeroDivisors Γ₀] : Ideal.IsPrime (supp v) :=
   ⟨fun h : v.supp = ⊤ =>
-    one_ne_zero <|
+    one_neZero <|
       show (1 : Γ₀) = 0 from
         calc
           1 = v 1 := v.map_one.symm
@@ -811,7 +811,7 @@ def onQuotVal {J : Ideal R} (hJ : J ≤ supp v) : R ⧸ J → Γ₀ := fun q =>
     calc
       v a = v (b + -(-a + b)) := by simp
       _ = v b :=
-        v.map_add_supp b <| (Ideal.neg_mem_iff _).2 <| hJ <| quotientAddGroup.left_rel_apply.mp h
+        v.map_add_supp b <| (Ideal.neg_mem_iff _).2 <| hJ <| quotientAddGroup.leftRel_apply.mp h
       
 #align valuation.on_quot_val Valuation.onQuotVal
 
@@ -826,10 +826,10 @@ def onQuot {J : Ideal R} (hJ : J ≤ supp v) : Valuation (R ⧸ J) Γ₀
 #align valuation.on_quot Valuation.onQuot
 
 @[simp]
-theorem on_quot_comap_eq {J : Ideal R} (hJ : J ≤ supp v) :
+theorem onQuot_comap_eq {J : Ideal R} (hJ : J ≤ supp v) :
     (v.onQuot hJ).comap (Ideal.Quotient.mk J) = v :=
   ext fun r => rfl
-#align valuation.on_quot_comap_eq Valuation.on_quot_comap_eq
+#align valuation.on_quot_comap_eq Valuation.onQuot_comap_eq
 
 theorem comap_supp {S : Type _} [CommRing S] (f : S →+* R) :
     supp (v.comap f) = Ideal.comap f v.supp :=
@@ -846,12 +846,12 @@ theorem self_le_supp_comap (J : Ideal R) (v : Valuation (R ⧸ J) Γ₀) :
 #align valuation.self_le_supp_comap Valuation.self_le_supp_comap
 
 @[simp]
-theorem comap_on_quot_eq (J : Ideal R) (v : Valuation (R ⧸ J) Γ₀) :
+theorem comap_onQuot_eq (J : Ideal R) (v : Valuation (R ⧸ J) Γ₀) :
     (v.comap (Ideal.Quotient.mk J)).onQuot (v.self_le_supp_comap J) = v :=
   ext <| by
     rintro ⟨x⟩
     rfl
-#align valuation.comap_on_quot_eq Valuation.comap_on_quot_eq
+#align valuation.comap_on_quot_eq Valuation.comap_onQuot_eq
 
 /-- The quotient valuation on R/J has support supp(v)/J if J ⊆ supp v. -/
 theorem supp_quot {J : Ideal R} (hJ : J ≤ supp v) :
@@ -1178,10 +1178,10 @@ def onQuot {J : Ideal R} (hJ : J ≤ supp v) : AddValuation (R ⧸ J) Γ₀ :=
 #align add_valuation.on_quot AddValuation.onQuot
 
 @[simp]
-theorem on_quot_comap_eq {J : Ideal R} (hJ : J ≤ supp v) :
+theorem onQuot_comap_eq {J : Ideal R} (hJ : J ≤ supp v) :
     (v.onQuot hJ).comap (Ideal.Quotient.mk J) = v :=
   v.on_quot_comap_eq hJ
-#align add_valuation.on_quot_comap_eq AddValuation.on_quot_comap_eq
+#align add_valuation.on_quot_comap_eq AddValuation.onQuot_comap_eq
 
 theorem comap_supp {S : Type _} [CommRing S] (f : S →+* R) :
     supp (v.comap f) = Ideal.comap f v.supp :=
@@ -1194,10 +1194,10 @@ theorem self_le_supp_comap (J : Ideal R) (v : AddValuation (R ⧸ J) Γ₀) :
 #align add_valuation.self_le_supp_comap AddValuation.self_le_supp_comap
 
 @[simp]
-theorem comap_on_quot_eq (J : Ideal R) (v : AddValuation (R ⧸ J) Γ₀) :
+theorem comap_onQuot_eq (J : Ideal R) (v : AddValuation (R ⧸ J) Γ₀) :
     (v.comap (Ideal.Quotient.mk J)).onQuot (v.self_le_supp_comap J) = v :=
   v.comap_on_quot_eq J
-#align add_valuation.comap_on_quot_eq AddValuation.comap_on_quot_eq
+#align add_valuation.comap_on_quot_eq AddValuation.comap_onQuot_eq
 
 /-- The quotient valuation on R/J has support supp(v)/J if J ⊆ supp v. -/
 theorem supp_quot {J : Ideal R} (hJ : J ≤ supp v) :

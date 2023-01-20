@@ -34,18 +34,18 @@ variable {σ τ R S : Type _} [CommSemiring R] [CommSemiring S]
 See also `polynomial.expand`. -/
 noncomputable def expand (p : ℕ) : MvPolynomial σ R →ₐ[R] MvPolynomial σ R :=
   { (eval₂Hom c fun i => x i ^ p : MvPolynomial σ R →+* MvPolynomial σ R) with
-    commutes' := fun r => eval₂_hom_C _ _ _ }
+    commutes' := fun r => eval₂Hom_c _ _ _ }
 #align mv_polynomial.expand MvPolynomial.expand
 
 @[simp]
-theorem expand_C (p : ℕ) (r : R) : expand p (c r : MvPolynomial σ R) = c r :=
-  eval₂_hom_C _ _ _
-#align mv_polynomial.expand_C MvPolynomial.expand_C
+theorem expand_c (p : ℕ) (r : R) : expand p (c r : MvPolynomial σ R) = c r :=
+  eval₂Hom_c _ _ _
+#align mv_polynomial.expand_C MvPolynomial.expand_c
 
 @[simp]
-theorem expand_X (p : ℕ) (i : σ) : expand p (x i : MvPolynomial σ R) = x i ^ p :=
-  eval₂_hom_X' _ _ _
-#align mv_polynomial.expand_X MvPolynomial.expand_X
+theorem expand_x (p : ℕ) (i : σ) : expand p (x i : MvPolynomial σ R) = x i ^ p :=
+  eval₂Hom_X' _ _ _
+#align mv_polynomial.expand_X MvPolynomial.expand_x
 
 @[simp]
 theorem expand_monomial (p : ℕ) (d : σ →₀ ℕ) (r : R) :
@@ -55,7 +55,7 @@ theorem expand_monomial (p : ℕ) (d : σ →₀ ℕ) (r : R) :
 
 theorem expand_one_apply (f : MvPolynomial σ R) : expand 1 f = f := by
   simp only [expand, bind₁_X_left, AlgHom.id_apply, RingHom.toFun_eq_coe, eval₂_hom_C_left,
-    AlgHom.coe_to_ring_hom, pow_one, AlgHom.coe_mk]
+    AlgHom.coe_to_ringHom, pow_one, AlgHom.coe_mk]
 #align mv_polynomial.expand_one_apply MvPolynomial.expand_one_apply
 
 @[simp]

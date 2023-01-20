@@ -98,18 +98,18 @@ instance : CoeFun (Derivation R A M) fun _ => A → M :=
   ⟨fun D => D.toLinearMap.toFun⟩
 
 -- Not a simp lemma because it can be proved via `coe_fn_coe` + `to_linear_map_eq_coe`
-theorem to_fun_eq_coe : D.toFun = ⇑D :=
+theorem toFun_eq_coe : D.toFun = ⇑D :=
   rfl
-#align derivation.to_fun_eq_coe Derivation.to_fun_eq_coe
+#align derivation.to_fun_eq_coe Derivation.toFun_eq_coe
 
 instance hasCoeToLinearMap : Coe (Derivation R A M) (A →ₗ[R] M) :=
   ⟨fun D => D.toLinearMap⟩
 #align derivation.has_coe_to_linear_map Derivation.hasCoeToLinearMap
 
 @[simp]
-theorem to_linear_map_eq_coe : D.toLinearMap = D :=
+theorem toLinearMap_eq_coe : D.toLinearMap = D :=
   rfl
-#align derivation.to_linear_map_eq_coe Derivation.to_linear_map_eq_coe
+#align derivation.to_linear_map_eq_coe Derivation.toLinearMap_eq_coe
 
 @[simp]
 theorem mk_coe (f : A →ₗ[R] M) (h₁ h₂) : ((⟨f, h₁, h₂⟩ : Derivation R A M) : A → M) = f :=
@@ -117,9 +117,9 @@ theorem mk_coe (f : A →ₗ[R] M) (h₁ h₂) : ((⟨f, h₁, h₂⟩ : Derivat
 #align derivation.mk_coe Derivation.mk_coe
 
 @[simp, norm_cast]
-theorem coe_fn_coe (f : Derivation R A M) : ⇑(f : A →ₗ[R] M) = f :=
+theorem coeFn_coe (f : Derivation R A M) : ⇑(f : A →ₗ[R] M) = f :=
   rfl
-#align derivation.coe_fn_coe Derivation.coe_fn_coe
+#align derivation.coe_fn_coe Derivation.coeFn_coe
 
 theorem coe_injective : @Function.Injective (Derivation R A M) (A → M) coeFn :=
   FunLike.coe_injective
@@ -168,10 +168,10 @@ theorem map_one_eq_zero : D 1 = 0 :=
 #align derivation.map_one_eq_zero Derivation.map_one_eq_zero
 
 @[simp]
-theorem map_algebra_map : D (algebraMap R A r) = 0 := by
+theorem map_algebraMap : D (algebraMap R A r) = 0 := by
   rw [← mul_one r, RingHom.map_mul, RingHom.map_one, ← smul_def, map_smul, map_one_eq_zero,
     smul_zero]
-#align derivation.map_algebra_map Derivation.map_algebra_map
+#align derivation.map_algebra_map Derivation.map_algebraMap
 
 @[simp]
 theorem map_coe_nat (n : ℕ) : D (n : A) = 0 := by
@@ -190,15 +190,15 @@ theorem leibniz_pow (n : ℕ) : D (a ^ n) = n • a ^ (n - 1) • D a :=
         Nat.succ_eq_add_one, Nat.add_succ_sub_one, add_zero, one_nsmul]
 #align derivation.leibniz_pow Derivation.leibniz_pow
 
-theorem eq_on_adjoin {s : Set A} (h : Set.EqOn D1 D2 s) : Set.EqOn D1 D2 (adjoin R s) := fun x hx =>
+theorem eqOn_adjoin {s : Set A} (h : Set.EqOn D1 D2 s) : Set.EqOn D1 D2 (adjoin R s) := fun x hx =>
   Algebra.adjoin_induction hx h (fun r => (D1.map_algebra_map r).trans (D2.map_algebra_map r).symm)
     (fun x y hx hy => by simp only [map_add, *]) fun x y hx hy => by simp only [leibniz, *]
-#align derivation.eq_on_adjoin Derivation.eq_on_adjoin
+#align derivation.eq_on_adjoin Derivation.eqOn_adjoin
 
 /-- If adjoin of a set is the whole algebra, then any two derivations equal on this set are equal
 on the whole algebra. -/
 theorem ext_of_adjoin_eq_top (s : Set A) (hs : adjoin R s = ⊤) (h : Set.EqOn D1 D2 s) : D1 = D2 :=
-  ext fun a => eq_on_adjoin h <| hs.symm ▸ trivial
+  ext fun a => eqOn_adjoin h <| hs.symm ▸ trivial
 #align derivation.ext_of_adjoin_eq_top Derivation.ext_of_adjoin_eq_top
 
 -- Data typeclasses
@@ -213,9 +213,9 @@ theorem coe_zero : ⇑(0 : Derivation R A M) = 0 :=
 #align derivation.coe_zero Derivation.coe_zero
 
 @[simp]
-theorem coe_zero_linear_map : ↑(0 : Derivation R A M) = (0 : A →ₗ[R] M) :=
+theorem coe_zero_linearMap : ↑(0 : Derivation R A M) = (0 : A →ₗ[R] M) :=
   rfl
-#align derivation.coe_zero_linear_map Derivation.coe_zero_linear_map
+#align derivation.coe_zero_linear_map Derivation.coe_zero_linearMap
 
 theorem zero_apply (a : A) : (0 : Derivation R A M) a = 0 :=
   rfl
@@ -234,9 +234,9 @@ theorem coe_add (D1 D2 : Derivation R A M) : ⇑(D1 + D2) = D1 + D2 :=
 #align derivation.coe_add Derivation.coe_add
 
 @[simp]
-theorem coe_add_linear_map (D1 D2 : Derivation R A M) : ↑(D1 + D2) = (D1 + D2 : A →ₗ[R] M) :=
+theorem coe_add_linearMap (D1 D2 : Derivation R A M) : ↑(D1 + D2) = (D1 + D2 : A →ₗ[R] M) :=
   rfl
-#align derivation.coe_add_linear_map Derivation.coe_add_linear_map
+#align derivation.coe_add_linear_map Derivation.coe_add_linearMap
 
 theorem add_apply : (D1 + D2) a = D1 a + D2 a :=
   rfl
@@ -262,9 +262,9 @@ theorem coe_smul (r : S) (D : Derivation R A M) : ⇑(r • D) = r • D :=
 #align derivation.coe_smul Derivation.coe_smul
 
 @[simp]
-theorem coe_smul_linear_map (r : S) (D : Derivation R A M) : ↑(r • D) = (r • D : A →ₗ[R] M) :=
+theorem coe_smul_linearMap (r : S) (D : Derivation R A M) : ↑(r • D) = (r • D : A →ₗ[R] M) :=
   rfl
-#align derivation.coe_smul_linear_map Derivation.coe_smul_linear_map
+#align derivation.coe_smul_linear_map Derivation.coe_smul_linearMap
 
 theorem smul_apply (r : S) (D : Derivation R A M) : (r • D) a = r • D a :=
   rfl
@@ -312,7 +312,7 @@ def LinearMap.compDer : Derivation R A M →ₗ[R] Derivation R A N
       map_one_eq_zero' := by simp only [LinearMap.comp_apply, coe_fn_coe, map_one_eq_zero, map_zero]
       leibniz' := fun a b => by
         simp only [coe_fn_coe, LinearMap.comp_apply, LinearMap.map_add, leibniz,
-          LinearMap.coe_coe_is_scalar_tower, LinearMap.map_smul] }
+          LinearMap.coe_coeIsScalarTower, LinearMap.map_smul] }
   map_add' D₁ D₂ := by
     ext
     exact LinearMap.map_add _ _ _
@@ -322,9 +322,9 @@ def LinearMap.compDer : Derivation R A M →ₗ[R] Derivation R A N
 #align linear_map.comp_der LinearMap.compDer
 
 @[simp]
-theorem coe_to_linear_map_comp : (f.compDer D : A →ₗ[R] N) = (f : M →ₗ[R] N).comp (D : A →ₗ[R] M) :=
+theorem coe_to_linearMap_comp : (f.compDer D : A →ₗ[R] N) = (f : M →ₗ[R] N).comp (D : A →ₗ[R] M) :=
   rfl
-#align derivation.coe_to_linear_map_comp Derivation.coe_to_linear_map_comp
+#align derivation.coe_to_linear_map_comp Derivation.coe_to_linearMap_comp
 
 @[simp]
 theorem coe_comp : (f.compDer D : A → N) = (f : M →ₗ[R] N).comp (D : A →ₗ[R] M) :=
@@ -399,9 +399,9 @@ theorem coe_mk' (D : A →ₗ[R] M) (h) : ⇑(mk' D h) = D :=
 #align derivation.coe_mk' Derivation.coe_mk'
 
 @[simp]
-theorem coe_mk'_linear_map (D : A →ₗ[R] M) (h) : (mk' D h : A →ₗ[R] M) = D :=
+theorem coe_mk'_linearMap (D : A →ₗ[R] M) (h) : (mk' D h : A →ₗ[R] M) = D :=
   rfl
-#align derivation.coe_mk'_linear_map Derivation.coe_mk'_linear_map
+#align derivation.coe_mk'_linear_map Derivation.coe_mk'_linearMap
 
 end Cancel
 
@@ -441,9 +441,9 @@ theorem leibniz_of_mul_eq_one {a b : A} (h : a * b = 1) : D a = -a ^ 2 • D b :
     
 #align derivation.leibniz_of_mul_eq_one Derivation.leibniz_of_mul_eq_one
 
-theorem leibniz_inv_of [Invertible a] : D (⅟ a) = -⅟ a ^ 2 • D a :=
+theorem leibniz_invOf [Invertible a] : D (⅟ a) = -⅟ a ^ 2 • D a :=
   D.leibniz_of_mul_eq_one <| invOf_mul_self a
-#align derivation.leibniz_inv_of Derivation.leibniz_inv_of
+#align derivation.leibniz_inv_of Derivation.leibniz_invOf
 
 theorem leibniz_inv {K : Type _} [Field K] [Module K M] [Algebra R K] (D : Derivation R K M)
     (a : K) : D a⁻¹ = -a⁻¹ ^ 2 • D a :=
@@ -464,9 +464,9 @@ theorem coe_neg (D : Derivation R A M) : ⇑(-D) = -D :=
 #align derivation.coe_neg Derivation.coe_neg
 
 @[simp]
-theorem coe_neg_linear_map (D : Derivation R A M) : ↑(-D) = (-D : A →ₗ[R] M) :=
+theorem coe_neg_linearMap (D : Derivation R A M) : ↑(-D) = (-D : A →ₗ[R] M) :=
   rfl
-#align derivation.coe_neg_linear_map Derivation.coe_neg_linear_map
+#align derivation.coe_neg_linear_map Derivation.coe_neg_linearMap
 
 theorem neg_apply : (-D) a = -D a :=
   rfl
@@ -483,9 +483,9 @@ theorem coe_sub (D1 D2 : Derivation R A M) : ⇑(D1 - D2) = D1 - D2 :=
 #align derivation.coe_sub Derivation.coe_sub
 
 @[simp]
-theorem coe_sub_linear_map (D1 D2 : Derivation R A M) : ↑(D1 - D2) = (D1 - D2 : A →ₗ[R] M) :=
+theorem coe_sub_linearMap (D1 D2 : Derivation R A M) : ↑(D1 - D2) = (D1 - D2 : A →ₗ[R] M) :=
   rfl
-#align derivation.coe_sub_linear_map Derivation.coe_sub_linear_map
+#align derivation.coe_sub_linear_map Derivation.coe_sub_linearMap
 
 theorem sub_apply : (D1 - D2) a = D1 a - D2 a :=
   rfl
@@ -574,11 +574,11 @@ def diffToIdealOfQuotientCompEq (f₁ f₂ : A →ₐ[R] B)
 #align diff_to_ideal_of_quotient_comp_eq diffToIdealOfQuotientCompEq
 
 @[simp]
-theorem diff_to_ideal_of_quotient_comp_eq_apply (f₁ f₂ : A →ₐ[R] B)
+theorem diffToIdealOfQuotientCompEq_apply (f₁ f₂ : A →ₐ[R] B)
     (e : (Ideal.Quotient.mkₐ R I).comp f₁ = (Ideal.Quotient.mkₐ R I).comp f₂) (x : A) :
     ((diffToIdealOfQuotientCompEq I f₁ f₂ e) x : B) = f₁ x - f₂ x :=
   rfl
-#align diff_to_ideal_of_quotient_comp_eq_apply diff_to_ideal_of_quotient_comp_eq_apply
+#align diff_to_ideal_of_quotient_comp_eq_apply diffToIdealOfQuotientCompEq_apply
 
 variable [Algebra A B] [IsScalarTower R A B]
 
@@ -614,19 +614,19 @@ def derivationToSquareZeroOfLift (f : A →ₐ[R] B)
       convert Ideal.mul_mem_mul (F x).2 (F y).2 using 1
     ext
     dsimp only [Submodule.coe_add, Submodule.coe_mk, LinearMap.coe_mk,
-      diff_to_ideal_of_quotient_comp_eq_apply, Submodule.coe_smul_of_tower,
-      IsScalarTower.coe_to_alg_hom', LinearMap.to_fun_eq_coe]
+      diffToIdealOfQuotientCompEq_apply, Submodule.coe_smul_of_tower, IsScalarTower.coe_to_alg_hom',
+      LinearMap.toFun_eq_coe]
     simp only [map_mul, sub_mul, mul_sub, Algebra.smul_def] at this⊢
     rw [sub_eq_iff_eq_add, sub_eq_iff_eq_add] at this
     rw [this]
     ring
 #align derivation_to_square_zero_of_lift derivationToSquareZeroOfLift
 
-theorem derivation_to_square_zero_of_lift_apply (f : A →ₐ[R] B)
+theorem derivationToSquareZeroOfLift_apply (f : A →ₐ[R] B)
     (e : (Ideal.Quotient.mkₐ R I).comp f = IsScalarTower.toAlgHom R A (B ⧸ I)) (x : A) :
     (derivationToSquareZeroOfLift I hI f e x : B) = f x - algebraMap A B x :=
   rfl
-#align derivation_to_square_zero_of_lift_apply derivation_to_square_zero_of_lift_apply
+#align derivation_to_square_zero_of_lift_apply derivationToSquareZeroOfLift_apply
 
 /-- Given a tower of algebras `R → A → B`, and a square-zero `I : ideal B`, each `R`-derivation
 from `A` to `I` corresponds to a lift `A →ₐ[R] B` of the canonical map `A →ₐ[R] B ⧸ I`. -/
@@ -650,25 +650,25 @@ def liftOfDerivationToSquareZero (f : Derivation R A I) : A →ₐ[R] B :=
       ring
     commutes' := fun r => by
       dsimp
-      simp [← IsScalarTower.algebra_map_apply R A B r]
+      simp [← IsScalarTower.algebraMap_apply R A B r]
     map_zero' :=
       ((I.restrictScalars R).Subtype.comp f.toLinearMap +
           (IsScalarTower.toAlgHom R A B).toLinearMap).map_zero }
 #align lift_of_derivation_to_square_zero liftOfDerivationToSquareZero
 
-theorem lift_of_derivation_to_square_zero_apply (f : Derivation R A I) (x : A) :
+theorem liftOfDerivationToSquareZero_apply (f : Derivation R A I) (x : A) :
     liftOfDerivationToSquareZero I hI f x = f x + algebraMap A B x :=
   rfl
-#align lift_of_derivation_to_square_zero_apply lift_of_derivation_to_square_zero_apply
+#align lift_of_derivation_to_square_zero_apply liftOfDerivationToSquareZero_apply
 
 @[simp]
-theorem lift_of_derivation_to_square_zero_mk_apply (d : Derivation R A I) (x : A) :
+theorem liftOfDerivationToSquareZero_mk_apply (d : Derivation R A I) (x : A) :
     Ideal.Quotient.mk I (liftOfDerivationToSquareZero I hI d x) = algebraMap A (B ⧸ I) x :=
   by
-  rw [lift_of_derivation_to_square_zero_apply, map_add,
-    ideal.quotient.eq_zero_iff_mem.mpr (d x).Prop, zero_add]
+  rw [liftOfDerivationToSquareZero_apply, map_add, ideal.quotient.eq_zero_iff_mem.mpr (d x).Prop,
+    zero_add]
   rfl
-#align lift_of_derivation_to_square_zero_mk_apply lift_of_derivation_to_square_zero_mk_apply
+#align lift_of_derivation_to_square_zero_mk_apply liftOfDerivationToSquareZero_mk_apply
 
 /-- Given a tower of algebras `R → A → B`, and a square-zero `I : ideal B`,
 there is a 1-1 correspondance between `R`-derivations from `A` to `I` and
@@ -682,7 +682,7 @@ def derivationToSquareZeroEquivLift :
     ⟨fun d => ⟨liftOfDerivationToSquareZero I hI d, _⟩, fun f =>
       (derivationToSquareZeroOfLift I hI f.1 f.2 : _), _, _⟩
   · ext x
-    exact lift_of_derivation_to_square_zero_mk_apply I hI d x
+    exact liftOfDerivationToSquareZero_mk_apply I hI d x
   · intro d
     ext x
     exact add_sub_cancel (d x : B) (algebraMap A B x)
@@ -719,12 +719,12 @@ def Derivation.tensorProductTo (D : Derivation R S M) : S ⊗[R] S →ₗ[S] M :
   TensorProduct.AlgebraTensorModule.lift ((LinearMap.lsmul S (S →ₗ[R] M)).flip D.toLinearMap)
 #align derivation.tensor_product_to Derivation.tensorProductTo
 
-theorem Derivation.tensor_product_to_tmul (D : Derivation R S M) (s t : S) :
+theorem Derivation.tensorProductTo_tmul (D : Derivation R S M) (s t : S) :
     D.tensorProductTo (s ⊗ₜ t) = s • D t :=
   rfl
-#align derivation.tensor_product_to_tmul Derivation.tensor_product_to_tmul
+#align derivation.tensor_product_to_tmul Derivation.tensorProductTo_tmul
 
-theorem Derivation.tensor_product_to_mul (D : Derivation R S M) (x y : S ⊗[R] S) :
+theorem Derivation.tensorProductTo_mul (D : Derivation R S M) (x y : S ⊗[R] S) :
     D.tensorProductTo (x * y) =
       TensorProduct.lmul' R x • D.tensorProductTo y +
         TensorProduct.lmul' R y • D.tensorProductTo x :=
@@ -749,7 +749,7 @@ theorem Derivation.tensor_product_to_mul (D : Derivation R S M) (x y : S ⊗[R] 
   dsimp
   rw [D.leibniz]
   simp only [smul_smul, smul_add, mul_comm (x * y) x₁, mul_right_comm x₁ x₂, ← mul_assoc]
-#align derivation.tensor_product_to_mul Derivation.tensor_product_to_mul
+#align derivation.tensor_product_to_mul Derivation.tensorProductTo_mul
 
 variable (R S)
 
@@ -823,24 +823,24 @@ instance KaehlerDifferential.module' {R' : Type _} [CommRing R'] [Algebra R' S] 
 #align kaehler_differential.module' KaehlerDifferential.module'
 
 instance : IsScalarTower S (S ⊗[R] S) (Ω[S⁄R]) :=
-  Ideal.Cotangent.is_scalar_tower _
+  Ideal.Cotangent.isScalarTower _
 
-instance KaehlerDifferential.is_scalar_tower_of_tower {R₁ R₂ : Type _} [CommRing R₁] [CommRing R₂]
+instance KaehlerDifferential.isScalarTower_of_tower {R₁ R₂ : Type _} [CommRing R₁] [CommRing R₂]
     [Algebra R₁ S] [Algebra R₂ S] [Algebra R₁ R₂] [IsScalarTower R₁ R₂ S] :
     IsScalarTower R₁ R₂ (Ω[S⁄R]) :=
   by
-  convert RestrictScalars.is_scalar_tower R₁ R₂ (Ω[S⁄R]) using 1
+  convert RestrictScalars.isScalarTower R₁ R₂ (Ω[S⁄R]) using 1
   ext (x m)
   show algebraMap R₁ S x • m = algebraMap R₂ S (algebraMap R₁ R₂ x) • m
-  rw [← IsScalarTower.algebra_map_apply]
-#align kaehler_differential.is_scalar_tower_of_tower KaehlerDifferential.is_scalar_tower_of_tower
+  rw [← IsScalarTower.algebraMap_apply]
+#align kaehler_differential.is_scalar_tower_of_tower KaehlerDifferential.isScalarTower_of_tower
 
 instance KaehlerDifferential.is_scalar_tower' : IsScalarTower R (S ⊗[R] S) (Ω[S⁄R]) :=
   by
-  convert RestrictScalars.is_scalar_tower R (S ⊗[R] S) (Ω[S⁄R]) using 1
+  convert RestrictScalars.isScalarTower R (S ⊗[R] S) (Ω[S⁄R]) using 1
   ext (x m)
   show algebraMap R S x • m = algebraMap R (S ⊗[R] S) x • m
-  simp_rw [IsScalarTower.algebra_map_apply R S (S ⊗[R] S), IsScalarTower.algebra_map_smul]
+  simp_rw [IsScalarTower.algebraMap_apply R S (S ⊗[R] S), IsScalarTower.algebraMap_smul]
 #align kaehler_differential.is_scalar_tower' KaehlerDifferential.is_scalar_tower'
 
 /-- The quotient map `I → Ω[S⁄R]` with `I` being the kernel of `S ⊗[R] S → S`. -/
@@ -858,12 +858,12 @@ def KaehlerDifferential.dLinearMap : S →ₗ[R] Ω[S⁄R] :=
       _ →ₗ[R] _)
 #align kaehler_differential.D_linear_map KaehlerDifferential.dLinearMap
 
-theorem KaehlerDifferential.D_linear_map_apply (s : S) :
+theorem KaehlerDifferential.dLinearMap_apply (s : S) :
     KaehlerDifferential.dLinearMap R S s =
       (KaehlerDifferential.ideal R S).toCotangent
         ⟨1 ⊗ₜ s - s ⊗ₜ 1, KaehlerDifferential.one_smul_sub_smul_one_mem_ideal R s⟩ :=
   rfl
-#align kaehler_differential.D_linear_map_apply KaehlerDifferential.D_linear_map_apply
+#align kaehler_differential.D_linear_map_apply KaehlerDifferential.dLinearMap_apply
 
 /-- The universal derivation into `Ω[S⁄R]`. -/
 def KaehlerDifferential.d : Derivation R S (Ω[S⁄R]) :=
@@ -871,13 +871,13 @@ def KaehlerDifferential.d : Derivation R S (Ω[S⁄R]) :=
     KaehlerDifferential.dLinearMap R
       S with
     map_one_eq_zero' := by
-      dsimp [KaehlerDifferential.D_linear_map_apply]
-      rw [Ideal.to_cotangent_eq_zero, Subtype.coe_mk, sub_self]
+      dsimp [KaehlerDifferential.dLinearMap_apply]
+      rw [Ideal.toCotangent_eq_zero, Subtype.coe_mk, sub_self]
       exact zero_mem _
     leibniz' := fun a b => by
-      dsimp [KaehlerDifferential.D_linear_map_apply]
+      dsimp [KaehlerDifferential.dLinearMap_apply]
       rw [← LinearMap.map_smul_of_tower, ← LinearMap.map_smul_of_tower, ← map_add,
-        Ideal.to_cotangent_eq, pow_two]
+        Ideal.toCotangent_eq, pow_two]
       convert
         Submodule.mul_mem_mul (KaehlerDifferential.one_smul_sub_smul_one_mem_ideal R a : _)
           (KaehlerDifferential.one_smul_sub_smul_one_mem_ideal R b : _) using
@@ -888,19 +888,19 @@ def KaehlerDifferential.d : Derivation R S (Ω[S⁄R]) :=
       ring_nf }
 #align kaehler_differential.D KaehlerDifferential.d
 
-theorem KaehlerDifferential.D_apply (s : S) :
+theorem KaehlerDifferential.d_apply (s : S) :
     KaehlerDifferential.d R S s =
       (KaehlerDifferential.ideal R S).toCotangent
         ⟨1 ⊗ₜ s - s ⊗ₜ 1, KaehlerDifferential.one_smul_sub_smul_one_mem_ideal R s⟩ :=
   rfl
-#align kaehler_differential.D_apply KaehlerDifferential.D_apply
+#align kaehler_differential.D_apply KaehlerDifferential.d_apply
 
 theorem KaehlerDifferential.span_range_derivation :
     Submodule.span S (Set.range <| KaehlerDifferential.d R S) = ⊤ :=
   by
   rw [_root_.eq_top_iff]
   rintro x -
-  obtain ⟨⟨x, hx⟩, rfl⟩ := Ideal.to_cotangent_surjective _ x
+  obtain ⟨⟨x, hx⟩, rfl⟩ := Ideal.toCotangent_surjective _ x
   have : x ∈ (KaehlerDifferential.ideal R S).restrictScalars S := hx
   rw [← KaehlerDifferential.submodule_span_range_eq_ideal] at this
   suffices
@@ -912,7 +912,7 @@ theorem KaehlerDifferential.span_range_derivation :
   · rintro _ ⟨x, rfl⟩
     refine' ⟨KaehlerDifferential.one_smul_sub_smul_one_mem_ideal R x, _⟩
     apply Submodule.subset_span
-    exact ⟨x, KaehlerDifferential.D_linear_map_apply R S x⟩
+    exact ⟨x, KaehlerDifferential.dLinearMap_apply R S x⟩
   · exact ⟨zero_mem _, zero_mem _⟩
   · rintro x y ⟨hx₁, hx₂⟩ ⟨hy₁, hy₂⟩
     exact ⟨add_mem hx₁ hy₁, add_mem hx₂ hy₂⟩
@@ -938,35 +938,35 @@ def Derivation.liftKaehlerDifferential (D : Derivation R S M) : Ω[S⁄R] →ₗ
     apply Submodule.smulInductionOn hx <;> clear hx x
     · rintro x (hx : _ = _) ⟨y, hy : _ = _⟩ -
       dsimp
-      rw [Derivation.tensor_product_to_mul, hx, hy, zero_smul, zero_smul, zero_add]
+      rw [Derivation.tensorProductTo_mul, hx, hy, zero_smul, zero_smul, zero_add]
     · intro x y ex ey
       rw [map_add, ex, ey, zero_add]
 #align derivation.lift_kaehler_differential Derivation.liftKaehlerDifferential
 
-theorem Derivation.lift_kaehler_differential_apply (D : Derivation R S M) (x) :
+theorem Derivation.liftKaehlerDifferential_apply (D : Derivation R S M) (x) :
     D.liftKaehlerDifferential ((KaehlerDifferential.ideal R S).toCotangent x) =
       D.tensorProductTo x :=
   rfl
-#align derivation.lift_kaehler_differential_apply Derivation.lift_kaehler_differential_apply
+#align derivation.lift_kaehler_differential_apply Derivation.liftKaehlerDifferential_apply
 
-theorem Derivation.lift_kaehler_differential_comp (D : Derivation R S M) :
+theorem Derivation.liftKaehlerDifferential_comp (D : Derivation R S M) :
     D.liftKaehlerDifferential.compDer (KaehlerDifferential.d R S) = D :=
   by
   ext a
-  dsimp [KaehlerDifferential.D_apply]
+  dsimp [KaehlerDifferential.d_apply]
   refine' (D.lift_kaehler_differential_apply _).trans _
-  rw [Subtype.coe_mk, map_sub, Derivation.tensor_product_to_tmul, Derivation.tensor_product_to_tmul,
+  rw [Subtype.coe_mk, map_sub, Derivation.tensorProductTo_tmul, Derivation.tensorProductTo_tmul,
     one_smul, D.map_one_eq_zero, smul_zero, sub_zero]
-#align derivation.lift_kaehler_differential_comp Derivation.lift_kaehler_differential_comp
+#align derivation.lift_kaehler_differential_comp Derivation.liftKaehlerDifferential_comp
 
 @[simp]
-theorem Derivation.lift_kaehler_differential_comp_D (D' : Derivation R S M) (x : S) :
+theorem Derivation.liftKaehlerDifferential_comp_d (D' : Derivation R S M) (x : S) :
     D'.liftKaehlerDifferential (KaehlerDifferential.d R S x) = D' x :=
   Derivation.congr_fun D'.lift_kaehler_differential_comp x
-#align derivation.lift_kaehler_differential_comp_D Derivation.lift_kaehler_differential_comp_D
+#align derivation.lift_kaehler_differential_comp_D Derivation.liftKaehlerDifferential_comp_d
 
 @[ext]
-theorem Derivation.lift_kaehler_differential_unique (f f' : Ω[S⁄R] →ₗ[S] M)
+theorem Derivation.lift_kaehlerDifferential_unique (f f' : Ω[S⁄R] →ₗ[S] M)
     (hf : f.compDer (KaehlerDifferential.d R S) = f'.compDer (KaehlerDifferential.d R S)) :
     f = f' := by
   apply LinearMap.ext
@@ -983,33 +983,33 @@ theorem Derivation.lift_kaehler_differential_unique (f f' : Ω[S⁄R] →ₗ[S] 
     rw [map_add, map_add, hx, hy]
   · intro a x e
     rw [map_smul, map_smul, e]
-#align derivation.lift_kaehler_differential_unique Derivation.lift_kaehler_differential_unique
+#align derivation.lift_kaehler_differential_unique Derivation.lift_kaehlerDifferential_unique
 
 variable (R S)
 
-theorem Derivation.lift_kaehler_differential_D :
+theorem Derivation.liftKaehlerDifferential_d :
     (KaehlerDifferential.d R S).liftKaehlerDifferential = LinearMap.id :=
-  Derivation.lift_kaehler_differential_unique _ _
+  Derivation.lift_kaehlerDifferential_unique _ _
     (KaehlerDifferential.d R S).lift_kaehler_differential_comp
-#align derivation.lift_kaehler_differential_D Derivation.lift_kaehler_differential_D
+#align derivation.lift_kaehler_differential_D Derivation.liftKaehlerDifferential_d
 
 variable {R S}
 
-theorem KaehlerDifferential.D_tensor_product_to (x : KaehlerDifferential.ideal R S) :
+theorem KaehlerDifferential.d_tensorProductTo (x : KaehlerDifferential.ideal R S) :
     (KaehlerDifferential.d R S).tensorProductTo x = (KaehlerDifferential.ideal R S).toCotangent x :=
   by
-  rw [← Derivation.lift_kaehler_differential_apply, Derivation.lift_kaehler_differential_D]
+  rw [← Derivation.liftKaehlerDifferential_apply, Derivation.liftKaehlerDifferential_d]
   rfl
-#align kaehler_differential.D_tensor_product_to KaehlerDifferential.D_tensor_product_to
+#align kaehler_differential.D_tensor_product_to KaehlerDifferential.d_tensorProductTo
 
 variable (R S)
 
-theorem KaehlerDifferential.tensor_product_to_surjective :
+theorem KaehlerDifferential.tensorProductTo_surjective :
     Function.Surjective (KaehlerDifferential.d R S).tensorProductTo :=
   by
   intro x; obtain ⟨x, rfl⟩ := (KaehlerDifferential.ideal R S).to_cotangent_surjective x
-  exact ⟨x, KaehlerDifferential.D_tensor_product_to x⟩
-#align kaehler_differential.tensor_product_to_surjective KaehlerDifferential.tensor_product_to_surjective
+  exact ⟨x, KaehlerDifferential.d_tensorProductTo x⟩
+#align kaehler_differential.tensor_product_to_surjective KaehlerDifferential.tensorProductTo_surjective
 
 /-- The `S`-linear maps from `Ω[S⁄R]` to `M` are (`S`-linearly) equivalent to `R`-derivations
 from `S` to `M`.  -/
@@ -1020,8 +1020,8 @@ def KaehlerDifferential.linearMapEquivDerivation : (Ω[S⁄R] →ₗ[S] M) ≃�
         S with
     invFun := Derivation.liftKaehlerDifferential
     left_inv := fun f =>
-      Derivation.lift_kaehler_differential_unique _ _ (Derivation.lift_kaehler_differential_comp _)
-    right_inv := Derivation.lift_kaehler_differential_comp }
+      Derivation.lift_kaehlerDifferential_unique _ _ (Derivation.liftKaehlerDifferential_comp _)
+    right_inv := Derivation.liftKaehlerDifferential_comp }
 #align kaehler_differential.linear_map_equiv_derivation KaehlerDifferential.linearMapEquivDerivation
 
 /-- The quotient ring of `S ⊗ S ⧸ J ^ 2` by `Ω[S⁄R]` is isomorphic to `S`. -/
@@ -1034,7 +1034,7 @@ def KaehlerDifferential.quotientCotangentIdealRingEquiv :
       (↑(tensor_product.lmul' R : S ⊗[R] S →ₐ[R] S) : S ⊗[R] S →+* S) :=
     by
     intro x
-    rw [AlgHom.coe_to_ring_hom, ← AlgHom.comp_apply, tensor_product.lmul'_comp_include_left]
+    rw [AlgHom.coe_to_ringHom, ← AlgHom.comp_apply, tensor_product.lmul'_comp_include_left]
     rfl
   refine' (Ideal.quotCotangent _).trans _
   refine' (Ideal.quotEquivOfEq _).trans (RingHom.quotientKerEquivOfRightInverse this)
@@ -1142,62 +1142,61 @@ noncomputable def KaehlerDifferential.kerTotal : Submodule S (S →₀ S) :=
 -- mathport name: «expr 𝖣 »
 local notation x "𝖣" y => (KaehlerDifferential.kerTotal R S).mkq (single y x)
 
-theorem KaehlerDifferential.ker_total_mkq_single_add (x y z) : (z𝖣x + y) = (z𝖣x) + z𝖣y :=
+theorem KaehlerDifferential.kerTotal_mkq_single_add (x y z) : (z𝖣x + y) = (z𝖣x) + z𝖣y :=
   by
   rw [← map_add, eq_comm, ← sub_eq_zero, ← map_sub, Submodule.mkq_apply,
     Submodule.Quotient.mk_eq_zero]
   simp_rw [← Finsupp.smul_single_one _ z, ← smul_add, ← smul_sub]
   exact Submodule.smul_mem _ _ (Submodule.subset_span (Or.inl <| Or.inl <| ⟨⟨_, _⟩, rfl⟩))
-#align kaehler_differential.ker_total_mkq_single_add KaehlerDifferential.ker_total_mkq_single_add
+#align kaehler_differential.ker_total_mkq_single_add KaehlerDifferential.kerTotal_mkq_single_add
 
-theorem KaehlerDifferential.ker_total_mkq_single_mul (x y z) :
-    (z𝖣x * y) = ((z * x)𝖣y) + (z * y)𝖣x :=
+theorem KaehlerDifferential.kerTotal_mkq_single_mul (x y z) : (z𝖣x * y) = ((z * x)𝖣y) + (z * y)𝖣x :=
   by
   rw [← map_add, eq_comm, ← sub_eq_zero, ← map_sub, Submodule.mkq_apply,
     Submodule.Quotient.mk_eq_zero]
   simp_rw [← Finsupp.smul_single_one _ z, ← @smul_eq_mul _ _ z, ← Finsupp.smul_single, ← smul_add, ←
     smul_sub]
   exact Submodule.smul_mem _ _ (Submodule.subset_span (Or.inl <| Or.inr <| ⟨⟨_, _⟩, rfl⟩))
-#align kaehler_differential.ker_total_mkq_single_mul KaehlerDifferential.ker_total_mkq_single_mul
+#align kaehler_differential.ker_total_mkq_single_mul KaehlerDifferential.kerTotal_mkq_single_mul
 
-theorem KaehlerDifferential.ker_total_mkq_single_algebra_map (x y) : (y𝖣algebraMap R S x) = 0 :=
+theorem KaehlerDifferential.kerTotal_mkq_single_algebraMap (x y) : (y𝖣algebraMap R S x) = 0 :=
   by
   rw [Submodule.mkq_apply, Submodule.Quotient.mk_eq_zero, ← Finsupp.smul_single_one _ y]
   exact Submodule.smul_mem _ _ (Submodule.subset_span (Or.inr <| ⟨_, rfl⟩))
-#align kaehler_differential.ker_total_mkq_single_algebra_map KaehlerDifferential.ker_total_mkq_single_algebra_map
+#align kaehler_differential.ker_total_mkq_single_algebra_map KaehlerDifferential.kerTotal_mkq_single_algebraMap
 
-theorem KaehlerDifferential.ker_total_mkq_single_algebra_map_one (x) : (x𝖣1) = 0 := by
-  rw [← (algebraMap R S).map_one, KaehlerDifferential.ker_total_mkq_single_algebra_map]
-#align kaehler_differential.ker_total_mkq_single_algebra_map_one KaehlerDifferential.ker_total_mkq_single_algebra_map_one
+theorem KaehlerDifferential.kerTotal_mkq_single_algebra_map_one (x) : (x𝖣1) = 0 := by
+  rw [← (algebraMap R S).map_one, KaehlerDifferential.kerTotal_mkq_single_algebraMap]
+#align kaehler_differential.ker_total_mkq_single_algebra_map_one KaehlerDifferential.kerTotal_mkq_single_algebra_map_one
 
-theorem KaehlerDifferential.ker_total_mkq_single_smul (r : R) (x y) : (y𝖣r • x) = r • y𝖣x := by
-  rw [Algebra.smul_def, KaehlerDifferential.ker_total_mkq_single_mul,
-    KaehlerDifferential.ker_total_mkq_single_algebra_map, add_zero, ← LinearMap.map_smul_of_tower,
+theorem KaehlerDifferential.kerTotal_mkq_single_smul (r : R) (x y) : (y𝖣r • x) = r • y𝖣x := by
+  rw [Algebra.smul_def, KaehlerDifferential.kerTotal_mkq_single_mul,
+    KaehlerDifferential.kerTotal_mkq_single_algebraMap, add_zero, ← LinearMap.map_smul_of_tower,
     Finsupp.smul_single, mul_comm, Algebra.smul_def]
-#align kaehler_differential.ker_total_mkq_single_smul KaehlerDifferential.ker_total_mkq_single_smul
+#align kaehler_differential.ker_total_mkq_single_smul KaehlerDifferential.kerTotal_mkq_single_smul
 
 /-- The (universal) derivation into `(S →₀ S) ⧸ kaehler_differential.ker_total R S`. -/
 noncomputable def KaehlerDifferential.derivationQuotKerTotal :
     Derivation R S ((S →₀ S) ⧸ KaehlerDifferential.kerTotal R S)
     where
   toFun x := 1𝖣x
-  map_add' x y := KaehlerDifferential.ker_total_mkq_single_add _ _ _ _ _
-  map_smul' r s := KaehlerDifferential.ker_total_mkq_single_smul _ _ _ _ _
-  map_one_eq_zero' := KaehlerDifferential.ker_total_mkq_single_algebra_map_one _ _ _
+  map_add' x y := KaehlerDifferential.kerTotal_mkq_single_add _ _ _ _ _
+  map_smul' r s := KaehlerDifferential.kerTotal_mkq_single_smul _ _ _ _ _
+  map_one_eq_zero' := KaehlerDifferential.kerTotal_mkq_single_algebra_map_one _ _ _
   leibniz' a b :=
-    (KaehlerDifferential.ker_total_mkq_single_mul _ _ _ _ _).trans
+    (KaehlerDifferential.kerTotal_mkq_single_mul _ _ _ _ _).trans
       (by
         simp_rw [← Finsupp.smul_single_one _ (1 * _ : S)]
         dsimp
         simp)
 #align kaehler_differential.derivation_quot_ker_total KaehlerDifferential.derivationQuotKerTotal
 
-theorem KaehlerDifferential.derivation_quot_ker_total_apply (x) :
+theorem KaehlerDifferential.derivationQuotKerTotal_apply (x) :
     KaehlerDifferential.derivationQuotKerTotal R S x = 1𝖣x :=
   rfl
-#align kaehler_differential.derivation_quot_ker_total_apply KaehlerDifferential.derivation_quot_ker_total_apply
+#align kaehler_differential.derivation_quot_ker_total_apply KaehlerDifferential.derivationQuotKerTotal_apply
 
-theorem KaehlerDifferential.derivation_quot_ker_total_lift_comp_total :
+theorem KaehlerDifferential.derivationQuotKerTotal_lift_comp_total :
     (KaehlerDifferential.derivationQuotKerTotal R S).liftKaehlerDifferential.comp
         (Finsupp.total S (Ω[S⁄R]) S (KaehlerDifferential.d R S)) =
       Submodule.mkq _ :=
@@ -1205,20 +1204,20 @@ theorem KaehlerDifferential.derivation_quot_ker_total_lift_comp_total :
   apply Finsupp.lhom_ext
   intro a b
   conv_rhs => rw [← Finsupp.smul_single_one a b, LinearMap.map_smul]
-  simp [KaehlerDifferential.derivation_quot_ker_total_apply]
-#align kaehler_differential.derivation_quot_ker_total_lift_comp_total KaehlerDifferential.derivation_quot_ker_total_lift_comp_total
+  simp [KaehlerDifferential.derivationQuotKerTotal_apply]
+#align kaehler_differential.derivation_quot_ker_total_lift_comp_total KaehlerDifferential.derivationQuotKerTotal_lift_comp_total
 
-theorem KaehlerDifferential.ker_total_eq :
+theorem KaehlerDifferential.kerTotal_eq :
     (Finsupp.total S (Ω[S⁄R]) S (KaehlerDifferential.d R S)).ker =
       KaehlerDifferential.kerTotal R S :=
   by
   apply le_antisymm
   · conv_rhs => rw [← (KaehlerDifferential.kerTotal R S).ker_mkq]
-    rw [← KaehlerDifferential.derivation_quot_ker_total_lift_comp_total]
+    rw [← KaehlerDifferential.derivationQuotKerTotal_lift_comp_total]
     exact LinearMap.ker_le_ker_comp _ _
   · rw [KaehlerDifferential.kerTotal, Submodule.span_le]
     rintro _ ((⟨⟨x, y⟩, rfl⟩ | ⟨⟨x, y⟩, rfl⟩) | ⟨x, rfl⟩) <;> dsimp <;> simp [LinearMap.mem_ker]
-#align kaehler_differential.ker_total_eq KaehlerDifferential.ker_total_eq
+#align kaehler_differential.ker_total_eq KaehlerDifferential.kerTotal_eq
 
 theorem KaehlerDifferential.total_surjective :
     Function.Surjective (Finsupp.total S (Ω[S⁄R]) S (KaehlerDifferential.d R S)) := by
@@ -1232,29 +1231,28 @@ noncomputable def KaehlerDifferential.quotKerTotalEquiv :
   {
     (KaehlerDifferential.kerTotal R S).liftq
       (Finsupp.total S (Ω[S⁄R]) S (KaehlerDifferential.d R S))
-      (KaehlerDifferential.ker_total_eq R
+      (KaehlerDifferential.kerTotal_eq R
           S).ge with
     invFun := (KaehlerDifferential.derivationQuotKerTotal R S).liftKaehlerDifferential
     left_inv := by
       intro x
       obtain ⟨x, rfl⟩ := Submodule.mkq_surjective _ x
       exact
-        LinearMap.congr_fun (KaehlerDifferential.derivation_quot_ker_total_lift_comp_total R S : _)
-          x
+        LinearMap.congr_fun (KaehlerDifferential.derivationQuotKerTotal_lift_comp_total R S : _) x
     right_inv := by
       intro x
       obtain ⟨x, rfl⟩ := KaehlerDifferential.total_surjective R S x
-      erw [LinearMap.congr_fun
-          (KaehlerDifferential.derivation_quot_ker_total_lift_comp_total R S : _) x]
+      erw [LinearMap.congr_fun (KaehlerDifferential.derivationQuotKerTotal_lift_comp_total R S : _)
+          x]
       rfl }
 #align kaehler_differential.quot_ker_total_equiv KaehlerDifferential.quotKerTotalEquiv
 
-theorem KaehlerDifferential.quot_ker_total_equiv_symm_comp_D :
+theorem KaehlerDifferential.quotKerTotalEquiv_symm_comp_d :
     (KaehlerDifferential.quotKerTotalEquiv R S).symm.toLinearMap.compDer
         (KaehlerDifferential.d R S) =
       KaehlerDifferential.derivationQuotKerTotal R S :=
   by convert (KaehlerDifferential.derivationQuotKerTotal R S).lift_kaehler_differential_comp using 0
-#align kaehler_differential.quot_ker_total_equiv_symm_comp_D KaehlerDifferential.quot_ker_total_equiv_symm_comp_D
+#align kaehler_differential.quot_ker_total_equiv_symm_comp_D KaehlerDifferential.quotKerTotalEquiv_symm_comp_d
 
 variable (A B : Type _) [CommRing A] [CommRing B] [Algebra R A] [Algebra S B] [Algebra R B]
 
@@ -1266,25 +1264,25 @@ local notation "finsupp_map" =>
   (Finsupp.mapRange.linearMap (Algebra.ofId A B).toLinearMap).comp
     (Finsupp.lmapDomain A A (algebraMap A B))
 
-theorem KaehlerDifferential.ker_total_map (h : Function.Surjective (algebraMap A B)) :
+theorem KaehlerDifferential.kerTotal_map (h : Function.Surjective (algebraMap A B)) :
     (KaehlerDifferential.kerTotal R A).map finsupp_map ⊔
         Submodule.span A (Set.range fun x : S => single (algebraMap S B x) (1 : B)) =
       (KaehlerDifferential.kerTotal S B).restrictScalars _ :=
   by
   rw [KaehlerDifferential.kerTotal, Submodule.map_span, KaehlerDifferential.kerTotal, ←
-    Submodule.span_eq_restrict_scalars _ _ _ _ h]
+    Submodule.span_eq_restrictScalars _ _ _ _ h]
   simp_rw [Set.image_union, Submodule.span_union, ← Set.image_univ, Set.image_image, Set.image_univ,
     map_sub, map_add]
-  simp only [LinearMap.comp_apply, Finsupp.mapRange.linear_map_apply, Finsupp.map_range_single,
-    Finsupp.lmap_domain_apply, Finsupp.map_domain_single, AlgHom.to_linear_map_apply,
-    Algebra.of_id_apply, ← IsScalarTower.algebra_map_apply, map_one, map_add, map_mul]
+  simp only [LinearMap.comp_apply, Finsupp.mapRange.linearMap_apply, Finsupp.mapRange_single,
+    Finsupp.lmapDomain_apply, Finsupp.mapDomain_single, AlgHom.toLinearMap_apply,
+    Algebra.ofId_apply, ← IsScalarTower.algebraMap_apply, map_one, map_add, map_mul]
   simp_rw [sup_assoc, ← (h.prod_map h).range_comp]
   congr 3
   rw [sup_eq_right]
   apply Submodule.span_mono
-  simp_rw [IsScalarTower.algebra_map_apply R S B]
+  simp_rw [IsScalarTower.algebraMap_apply R S B]
   exact Set.range_comp_subset_range (algebraMap R S) fun x => single (algebraMap S B x) (1 : B)
-#align kaehler_differential.ker_total_map KaehlerDifferential.ker_total_map
+#align kaehler_differential.ker_total_map KaehlerDifferential.kerTotal_map
 
 end Presentation
 
@@ -1323,17 +1321,17 @@ def KaehlerDifferential.map : Ω[A⁄R] →ₗ[A] Ω[B⁄S] :=
     (((KaehlerDifferential.d S B).restrictScalars R).comp_algebra_map A)
 #align kaehler_differential.map KaehlerDifferential.map
 
-theorem KaehlerDifferential.map_comp_der :
+theorem KaehlerDifferential.map_compDer :
     (KaehlerDifferential.map R S A B).compDer (KaehlerDifferential.d R A) =
       ((KaehlerDifferential.d S B).restrictScalars R).comp_algebra_map A :=
-  Derivation.lift_kaehler_differential_comp _
-#align kaehler_differential.map_comp_der KaehlerDifferential.map_comp_der
+  Derivation.liftKaehlerDifferential_comp _
+#align kaehler_differential.map_comp_der KaehlerDifferential.map_compDer
 
-theorem KaehlerDifferential.map_D (x : A) :
+theorem KaehlerDifferential.map_d (x : A) :
     KaehlerDifferential.map R S A B (KaehlerDifferential.d R A x) =
       KaehlerDifferential.d S B (algebraMap A B x) :=
-  Derivation.congr_fun (KaehlerDifferential.map_comp_der R S A B) x
-#align kaehler_differential.map_D KaehlerDifferential.map_D
+  Derivation.congr_fun (KaehlerDifferential.map_compDer R S A B) x
+#align kaehler_differential.map_D KaehlerDifferential.map_d
 
 open IsScalarTower (toAlgHom)
 
@@ -1341,12 +1339,12 @@ theorem KaehlerDifferential.map_surjective_of_surjective
     (h : Function.Surjective (algebraMap A B)) :
     Function.Surjective (KaehlerDifferential.map R S A B) :=
   by
-  rw [← LinearMap.range_eq_top, _root_.eq_top_iff, ← @Submodule.restrict_scalars_top B A, ←
-    KaehlerDifferential.span_range_derivation, ← Submodule.span_eq_restrict_scalars _ _ _ _ h,
+  rw [← LinearMap.range_eq_top, _root_.eq_top_iff, ← @Submodule.restrictScalars_top B A, ←
+    KaehlerDifferential.span_range_derivation, ← Submodule.span_eq_restrictScalars _ _ _ _ h,
     Submodule.span_le]
   rintro _ ⟨x, rfl⟩
   obtain ⟨y, rfl⟩ := h x
-  rw [← KaehlerDifferential.map_D R S A B]
+  rw [← KaehlerDifferential.map_d R S A B]
   exact ⟨_, rfl⟩
 #align kaehler_differential.map_surjective_of_surjective KaehlerDifferential.map_surjective_of_surjective
 
@@ -1357,13 +1355,13 @@ noncomputable def KaehlerDifferential.mapBaseChange : B ⊗[A] Ω[A⁄R] →ₗ[
 #align kaehler_differential.map_base_change KaehlerDifferential.mapBaseChange
 
 @[simp]
-theorem KaehlerDifferential.map_base_change_tmul (x : B) (y : Ω[A⁄R]) :
+theorem KaehlerDifferential.mapBaseChange_tmul (x : B) (y : Ω[A⁄R]) :
     KaehlerDifferential.mapBaseChange R A B (x ⊗ₜ y) = x • KaehlerDifferential.map R R A B y :=
   by
   conv_lhs => rw [← mul_one x, ← smul_eq_mul, ← TensorProduct.smul_tmul', LinearMap.map_smul]
   congr 1
   exact IsBaseChange.lift_eq _ _ _
-#align kaehler_differential.map_base_change_tmul KaehlerDifferential.map_base_change_tmul
+#align kaehler_differential.map_base_change_tmul KaehlerDifferential.mapBaseChange_tmul
 
 end ExactSequence
 

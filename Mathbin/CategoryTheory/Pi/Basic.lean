@@ -163,20 +163,20 @@ def isoApp {X Y : ∀ i, C i} (f : X ≅ Y) (i : I) : X i ≅ Y i :=
 #align category_theory.pi.iso_app CategoryTheory.pi.isoApp
 
 @[simp]
-theorem iso_app_refl (X : ∀ i, C i) (i : I) : isoApp (Iso.refl X) i = Iso.refl (X i) :=
+theorem isoApp_refl (X : ∀ i, C i) (i : I) : isoApp (Iso.refl X) i = Iso.refl (X i) :=
   rfl
-#align category_theory.pi.iso_app_refl CategoryTheory.pi.iso_app_refl
+#align category_theory.pi.iso_app_refl CategoryTheory.pi.isoApp_refl
 
 @[simp]
-theorem iso_app_symm {X Y : ∀ i, C i} (f : X ≅ Y) (i : I) : isoApp f.symm i = (isoApp f i).symm :=
+theorem isoApp_symm {X Y : ∀ i, C i} (f : X ≅ Y) (i : I) : isoApp f.symm i = (isoApp f i).symm :=
   rfl
-#align category_theory.pi.iso_app_symm CategoryTheory.pi.iso_app_symm
+#align category_theory.pi.iso_app_symm CategoryTheory.pi.isoApp_symm
 
 @[simp]
-theorem iso_app_trans {X Y Z : ∀ i, C i} (f : X ≅ Y) (g : Y ≅ Z) (i : I) :
+theorem isoApp_trans {X Y Z : ∀ i, C i} (f : X ≅ Y) (g : Y ≅ Z) (i : I) :
     isoApp (f ≪≫ g) i = isoApp f i ≪≫ isoApp g i :=
   rfl
-#align category_theory.pi.iso_app_trans CategoryTheory.pi.iso_app_trans
+#align category_theory.pi.iso_app_trans CategoryTheory.pi.isoApp_trans
 
 end Pi
 
@@ -207,12 +207,12 @@ def pi' (f : ∀ i, A ⥤ C i) : A ⥤ ∀ i, C i
 section EqToHom
 
 @[simp]
-theorem eq_to_hom_proj {x x' : ∀ i, C i} (h : x = x') (i : I) :
+theorem eqToHom_proj {x x' : ∀ i, C i} (h : x = x') (i : I) :
     (eqToHom h : x ⟶ x') i = eqToHom (Function.funext_iff.mp h i) :=
   by
   subst h
   rfl
-#align category_theory.functor.eq_to_hom_proj CategoryTheory.Functor.eq_to_hom_proj
+#align category_theory.functor.eq_to_hom_proj CategoryTheory.Functor.eqToHom_proj
 
 end EqToHom
 

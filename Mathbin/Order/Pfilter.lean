@@ -91,9 +91,9 @@ theorem mem_coe : x ∈ (F : Set P) ↔ x ∈ F :=
   iff_of_eq rfl
 #align order.pfilter.mem_coe Order.Pfilter.mem_coe
 
-theorem is_pfilter : IsPfilter (F : Set P) :=
+theorem isPfilter : IsPfilter (F : Set P) :=
   F.dual.IsIdeal
-#align order.pfilter.is_pfilter Order.Pfilter.is_pfilter
+#align order.pfilter.is_pfilter Order.Pfilter.isPfilter
 
 theorem nonempty : (F : Set P).Nonempty :=
   F.dual.Nonempty
@@ -195,13 +195,13 @@ section CompleteSemilatticeInf
 
 variable [CompleteSemilatticeInf P] {F : Pfilter P}
 
-theorem Inf_gc :
+theorem infₛ_gc :
     GaloisConnection (fun x => OrderDual.toDual (principal x)) fun F =>
       infₛ (OrderDual.ofDual F : Pfilter P) :=
   fun x F => by
   simp
   rfl
-#align order.pfilter.Inf_gc Order.Pfilter.Inf_gc
+#align order.pfilter.Inf_gc Order.Pfilter.infₛ_gc
 
 /-- If a poset `P` admits arbitrary `Inf`s, then `principal` and `Inf` form a Galois coinsertion. -/
 def infGi :
@@ -209,7 +209,7 @@ def infGi :
       infₛ (OrderDual.ofDual F : Pfilter P)
     where
   choice F _ := infₛ (id F : Pfilter P)
-  gc := Inf_gc
+  gc := infₛ_gc
   u_l_le s := infₛ_le <| mem_principal.2 <| le_refl s
   choice_eq _ _ := rfl
 #align order.pfilter.Inf_gi Order.Pfilter.infGi

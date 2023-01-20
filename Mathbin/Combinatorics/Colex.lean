@@ -330,7 +330,7 @@ theorem sdiff_le_sdiff_iff_le [LinearOrder α] (A B : Finset α) :
   rw [le_iff_le_iff_lt_iff_lt, sdiff_lt_sdiff_iff_lt]
 #align colex.sdiff_le_sdiff_iff_le Colex.sdiff_le_sdiff_iff_le
 
-theorem empty_to_colex_lt [LinearOrder α] {A : Finset α} (hA : A.Nonempty) :
+theorem empty_toColex_lt [LinearOrder α] {A : Finset α} (hA : A.Nonempty) :
     (∅ : Finset α).toColex < A.toColex :=
   by
   rw [Colex.lt_def]
@@ -338,23 +338,23 @@ theorem empty_to_colex_lt [LinearOrder α] {A : Finset α} (hA : A.Nonempty) :
   simp only [false_iff_iff, not_mem_empty]
   intro x hx t
   apply not_le_of_lt hx (le_max' _ _ t)
-#align colex.empty_to_colex_lt Colex.empty_to_colex_lt
+#align colex.empty_to_colex_lt Colex.empty_toColex_lt
 
 /-- If `A ⊂ B`, then `A` is less than `B` in the colex order. Note the converse does not hold, as
 `⊆` is not a linear order. -/
-theorem colex_lt_of_ssubset [LinearOrder α] {A B : Finset α} (h : A ⊂ B) : A.toColex < B.toColex :=
+theorem colex_lt_of_sSubset [LinearOrder α] {A B : Finset α} (h : A ⊂ B) : A.toColex < B.toColex :=
   by
   rw [← sdiff_lt_sdiff_iff_lt, sdiff_eq_empty_iff_subset.2 h.1]
   exact empty_to_colex_lt (by simpa [Finset.Nonempty] using exists_of_ssubset h)
-#align colex.colex_lt_of_ssubset Colex.colex_lt_of_ssubset
+#align colex.colex_lt_of_ssubset Colex.colex_lt_of_sSubset
 
 @[simp]
-theorem empty_to_colex_le [LinearOrder α] {A : Finset α} : (∅ : Finset α).toColex ≤ A.toColex :=
+theorem empty_toColex_le [LinearOrder α] {A : Finset α} : (∅ : Finset α).toColex ≤ A.toColex :=
   by
   rcases A.eq_empty_or_nonempty with (rfl | hA)
   · simp
   · apply (empty_to_colex_lt hA).le
-#align colex.empty_to_colex_le Colex.empty_to_colex_le
+#align colex.empty_to_colex_le Colex.empty_toColex_le
 
 /-- If `A ⊆ B`, then `A ≤ B` in the colex order. Note the converse does not hold, as `⊆` is not a
 linear order. -/
@@ -376,7 +376,7 @@ def toColexRelHom [LinearOrder α] :
 instance [LinearOrder α] : OrderBot (Finset.Colex α)
     where
   bot := (∅ : Finset α).toColex
-  bot_le x := empty_to_colex_le
+  bot_le x := empty_toColex_le
 
 instance [LinearOrder α] [Fintype α] : OrderTop (Finset.Colex α)
     where

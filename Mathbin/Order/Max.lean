@@ -173,16 +173,16 @@ instance [Nonempty ι] [∀ i, Preorder (π i)] [∀ i, NoMinOrder (π i)] : NoM
     exact ⟨_, update_lt_self_iff.2 hb⟩⟩
 
 -- See note [lower instance priority]
-instance (priority := 100) NoMinOrder.to_no_bot_order (α : Type _) [Preorder α] [NoMinOrder α] :
+instance (priority := 100) NoMinOrder.to_noBotOrder (α : Type _) [Preorder α] [NoMinOrder α] :
     NoBotOrder α :=
   ⟨fun a => (exists_lt a).imp fun _ => not_le_of_lt⟩
-#align no_min_order.to_no_bot_order NoMinOrder.to_no_bot_order
+#align no_min_order.to_no_bot_order NoMinOrder.to_noBotOrder
 
 -- See note [lower instance priority]
-instance (priority := 100) NoMaxOrder.to_no_top_order (α : Type _) [Preorder α] [NoMaxOrder α] :
+instance (priority := 100) NoMaxOrder.to_noTopOrder (α : Type _) [Preorder α] [NoMaxOrder α] :
     NoTopOrder α :=
   ⟨fun a => (exists_gt a).imp fun _ => not_le_of_lt⟩
-#align no_max_order.to_no_top_order NoMaxOrder.to_no_top_order
+#align no_max_order.to_no_top_order NoMaxOrder.to_noTopOrder
 
 #print NoBotOrder.to_noMinOrder /-
 theorem NoBotOrder.to_noMinOrder (α : Type _) [LinearOrder α] [NoBotOrder α] : NoMinOrder α :=
@@ -202,23 +202,27 @@ theorem NoTopOrder.to_noMaxOrder (α : Type _) [LinearOrder α] [NoTopOrder α] 
 #align no_top_order.to_no_max_order NoTopOrder.to_noMaxOrder
 -/
 
-theorem no_bot_order_iff_no_min_order (α : Type _) [LinearOrder α] : NoBotOrder α ↔ NoMinOrder α :=
+#print noBotOrder_iff_noMinOrder /-
+theorem noBotOrder_iff_noMinOrder (α : Type _) [LinearOrder α] : NoBotOrder α ↔ NoMinOrder α :=
   ⟨fun h =>
     haveI := h
     NoBotOrder.to_noMinOrder α,
     fun h =>
     haveI := h
-    NoMinOrder.to_no_bot_order α⟩
-#align no_bot_order_iff_no_min_order no_bot_order_iff_no_min_order
+    NoMinOrder.to_noBotOrder α⟩
+#align no_bot_order_iff_no_min_order noBotOrder_iff_noMinOrder
+-/
 
-theorem no_top_order_iff_no_max_order (α : Type _) [LinearOrder α] : NoTopOrder α ↔ NoMaxOrder α :=
+#print noTopOrder_iff_noMaxOrder /-
+theorem noTopOrder_iff_noMaxOrder (α : Type _) [LinearOrder α] : NoTopOrder α ↔ NoMaxOrder α :=
   ⟨fun h =>
     haveI := h
     NoTopOrder.to_noMaxOrder α,
     fun h =>
     haveI := h
-    NoMaxOrder.to_no_top_order α⟩
-#align no_top_order_iff_no_max_order no_top_order_iff_no_max_order
+    NoMaxOrder.to_noTopOrder α⟩
+#align no_top_order_iff_no_max_order noTopOrder_iff_noMaxOrder
+-/
 
 #print NoMinOrder.not_acc /-
 theorem NoMinOrder.not_acc [LT α] [NoMinOrder α] (a : α) : ¬Acc (· < ·) a := fun h =>
@@ -356,29 +360,29 @@ theorem isMax_ofDual_iff {a : αᵒᵈ} : IsMax (ofDual a) ↔ IsMin a :=
 #align is_max_of_dual_iff isMax_ofDual_iff
 -/
 
-alias isBot_toDual_iff ↔ _ IsTop.to_dual
-#align is_top.to_dual IsTop.to_dual
+alias isBot_toDual_iff ↔ _ IsTop.toDual
+#align is_top.to_dual IsTop.toDual
 
-alias isTop_toDual_iff ↔ _ IsBot.to_dual
-#align is_bot.to_dual IsBot.to_dual
+alias isTop_toDual_iff ↔ _ IsBot.toDual
+#align is_bot.to_dual IsBot.toDual
 
-alias isMin_toDual_iff ↔ _ IsMax.to_dual
-#align is_max.to_dual IsMax.to_dual
+alias isMin_toDual_iff ↔ _ IsMax.toDual
+#align is_max.to_dual IsMax.toDual
 
-alias isMax_toDual_iff ↔ _ IsMin.to_dual
-#align is_min.to_dual IsMin.to_dual
+alias isMax_toDual_iff ↔ _ IsMin.toDual
+#align is_min.to_dual IsMin.toDual
 
-alias isBot_ofDual_iff ↔ _ IsTop.of_dual
-#align is_top.of_dual IsTop.of_dual
+alias isBot_ofDual_iff ↔ _ IsTop.ofDual
+#align is_top.of_dual IsTop.ofDual
 
-alias isTop_ofDual_iff ↔ _ IsBot.of_dual
-#align is_bot.of_dual IsBot.of_dual
+alias isTop_ofDual_iff ↔ _ IsBot.ofDual
+#align is_bot.of_dual IsBot.ofDual
 
-alias isMin_ofDual_iff ↔ _ IsMax.of_dual
-#align is_max.of_dual IsMax.of_dual
+alias isMin_ofDual_iff ↔ _ IsMax.ofDual
+#align is_max.of_dual IsMax.ofDual
 
-alias isMax_ofDual_iff ↔ _ IsMin.of_dual
-#align is_min.of_dual IsMin.of_dual
+alias isMax_ofDual_iff ↔ _ IsMin.ofDual
+#align is_min.of_dual IsMin.ofDual
 
 end LE
 
@@ -428,11 +432,11 @@ theorem not_isMax_of_lt (h : a < b) : ¬IsMax a := fun ha => ha.not_lt h
 #align not_is_max_of_lt not_isMax_of_lt
 -/
 
-alias not_isMin_of_lt ← LT.lt.not_is_min
-#align has_lt.lt.not_is_min LT.lt.not_is_min
+alias not_isMin_of_lt ← LT.lt.not_isMin
+#align has_lt.lt.not_is_min LT.lt.not_isMin
 
-alias not_isMax_of_lt ← LT.lt.not_is_max
-#align has_lt.lt.not_is_max LT.lt.not_is_max
+alias not_isMax_of_lt ← LT.lt.not_isMax
+#align has_lt.lt.not_is_max LT.lt.not_isMax
 
 #print isMin_iff_forall_not_lt /-
 theorem isMin_iff_forall_not_lt : IsMin a ↔ ∀ b, ¬b < a :=

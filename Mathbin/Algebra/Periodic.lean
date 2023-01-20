@@ -57,10 +57,10 @@ theorem Periodic.funext [Add α] (h : Periodic f c) : (fun x => f (x + c)) = f :
 theorem Periodic.comp [Add α] (h : Periodic f c) (g : β → γ) : Periodic (g ∘ f) c := by simp_all
 #align function.periodic.comp Function.Periodic.comp
 
-theorem Periodic.comp_add_hom [Add α] [Add γ] (h : Periodic f c) (g : AddHom γ α) (g_inv : α → γ)
+theorem Periodic.comp_addHom [Add α] [Add γ] (h : Periodic f c) (g : AddHom γ α) (g_inv : α → γ)
     (hg : RightInverse g_inv g) : Periodic (f ∘ g) (g_inv c) := fun x => by
   simp only [hg c, h (g x), AddHom.map_add, comp_app]
-#align function.periodic.comp_add_hom Function.Periodic.comp_add_hom
+#align function.periodic.comp_add_hom Function.Periodic.comp_addHom
 
 @[to_additive]
 theorem Periodic.mul [Add α] [Mul β] (hf : Periodic f c) (hg : Periodic g c) : Periodic (f * g) c :=
@@ -294,27 +294,27 @@ theorem Periodic.exists_mem_Ico₀ [LinearOrderedAddCommGroup α] [Archimedean �
 
 /-- If a function `f` is `periodic` with positive period `c`, then for all `x` there exists some
   `y ∈ Ico a (a + c)` such that `f x = f y`. -/
-theorem Periodic.exists_mem_Ico [LinearOrderedAddCommGroup α] [Archimedean α] (h : Periodic f c)
+theorem Periodic.exists_mem_ico [LinearOrderedAddCommGroup α] [Archimedean α] (h : Periodic f c)
     (hc : 0 < c) (x a) : ∃ y ∈ Set.Ico a (a + c), f x = f y :=
   let ⟨n, H, _⟩ := existsUnique_add_zsmul_mem_Ico hc x a
   ⟨x + n • c, H, (h.zsmul n x).symm⟩
-#align function.periodic.exists_mem_Ico Function.Periodic.exists_mem_Ico
+#align function.periodic.exists_mem_Ico Function.Periodic.exists_mem_ico
 
 /-- If a function `f` is `periodic` with positive period `c`, then for all `x` there exists some
   `y ∈ Ioc a (a + c)` such that `f x = f y`. -/
-theorem Periodic.exists_mem_Ioc [LinearOrderedAddCommGroup α] [Archimedean α] (h : Periodic f c)
+theorem Periodic.exists_mem_ioc [LinearOrderedAddCommGroup α] [Archimedean α] (h : Periodic f c)
     (hc : 0 < c) (x a) : ∃ y ∈ Set.Ioc a (a + c), f x = f y :=
   let ⟨n, H, _⟩ := existsUnique_add_zsmul_mem_Ioc hc x a
   ⟨x + n • c, H, (h.zsmul n x).symm⟩
-#align function.periodic.exists_mem_Ioc Function.Periodic.exists_mem_Ioc
+#align function.periodic.exists_mem_Ioc Function.Periodic.exists_mem_ioc
 
-theorem Periodic.image_Ioc [LinearOrderedAddCommGroup α] [Archimedean α] (h : Periodic f c)
+theorem Periodic.image_ioc [LinearOrderedAddCommGroup α] [Archimedean α] (h : Periodic f c)
     (hc : 0 < c) (a : α) : f '' Set.Ioc a (a + c) = Set.range f :=
   (Set.image_subset_range _ _).antisymm <|
     Set.range_subset_iff.2 fun x =>
       let ⟨y, hy, hyx⟩ := h.exists_mem_Ioc hc x a
       ⟨y, hy, hyx.symm⟩
-#align function.periodic.image_Ioc Function.Periodic.image_Ioc
+#align function.periodic.image_Ioc Function.Periodic.image_ioc
 
 theorem periodic_with_period_zero [AddZeroClass α] (f : α → β) : Periodic f 0 := fun x => by
   rw [add_zero]
@@ -338,7 +338,7 @@ theorem Periodic.map_vadd_multiples [AddCommMonoid α] (hf : Periodic f c)
 def Periodic.lift [AddGroup α] (h : Periodic f c) (x : α ⧸ AddSubgroup.zmultiples c) : β :=
   Quotient.liftOn' x f fun a b h' =>
     by
-    rw [quotientAddGroup.left_rel_apply] at h'
+    rw [quotientAddGroup.leftRel_apply] at h'
     obtain ⟨k, hk⟩ := h'
     exact (h.zsmul k _).symm.trans (congr_arg f (add_eq_of_eq_neg_add hk))
 #align function.periodic.lift Function.Periodic.lift

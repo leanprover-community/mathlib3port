@@ -23,26 +23,26 @@ that in a list with alternating `tt`s and `ff`s, the number of `tt`s differs fro
 namespace List
 
 @[simp]
-theorem count_bnot_add_count (l : List Bool) (b : Bool) : count (!b) l + count b l = length l := by
+theorem count_not_add_count (l : List Bool) (b : Bool) : count (!b) l + count b l = length l := by
   simp only [length_eq_countp_add_countp (Eq (!b)), Bool.not_not_eq, count]
-#align list.count_bnot_add_count List.count_bnot_add_count
+#align list.count_bnot_add_count List.count_not_add_count
 
 @[simp]
-theorem count_add_count_bnot (l : List Bool) (b : Bool) : count b l + count (!b) l = length l := by
+theorem count_add_count_not (l : List Bool) (b : Bool) : count b l + count (!b) l = length l := by
   rw [add_comm, count_bnot_add_count]
-#align list.count_add_count_bnot List.count_add_count_bnot
+#align list.count_add_count_bnot List.count_add_count_not
 
 @[simp]
-theorem count_ff_add_count_tt (l : List Bool) : count false l + count true l = length l :=
-  count_bnot_add_count l true
-#align list.count_ff_add_count_tt List.count_ff_add_count_tt
+theorem count_false_add_count_true (l : List Bool) : count false l + count true l = length l :=
+  count_not_add_count l true
+#align list.count_ff_add_count_tt List.count_false_add_count_true
 
 @[simp]
-theorem count_tt_add_count_ff (l : List Bool) : count true l + count false l = length l :=
-  count_bnot_add_count l false
-#align list.count_tt_add_count_ff List.count_tt_add_count_ff
+theorem count_true_add_count_false (l : List Bool) : count true l + count false l = length l :=
+  count_not_add_count l false
+#align list.count_tt_add_count_ff List.count_true_add_count_false
 
-theorem Chain.count_bnot :
+theorem Chain.count_not :
     ∀ {b : Bool} {l : List Bool}, Chain (· ≠ ·) b l → count (!b) l = count b l + length l % 2
   | b, [], h => rfl
   | b, x :: l, h =>
@@ -50,13 +50,13 @@ theorem Chain.count_bnot :
     obtain rfl : b = !x := Bool.eq_not_iff.2 (rel_of_chain_cons h)
     rw [Bool.not_not, count_cons_self, count_cons_of_ne x.bnot_ne_self,
       chain.count_bnot (chain_of_chain_cons h), length, add_assoc, Nat.mod_two_add_succ_mod_two]
-#align list.chain.count_bnot List.Chain.count_bnot
+#align list.chain.count_bnot List.Chain.count_not
 
 namespace Chain'
 
 variable {l : List Bool}
 
-theorem count_bnot_eq_count (hl : Chain' (· ≠ ·) l) (h2 : Even (length l)) (b : Bool) :
+theorem count_not_eq_count (hl : Chain' (· ≠ ·) l) (h2 : Even (length l)) (b : Bool) :
     count (!b) l = count b l := by
   cases' l with x l
   · rfl
@@ -64,14 +64,14 @@ theorem count_bnot_eq_count (hl : Chain' (· ≠ ·) l) (h2 : Even (length l)) (
   suffices count (!x) (x :: l) = count x (x :: l) by
     cases b <;> cases x <;> try exact this <;> exact this.symm
   rw [count_cons_of_ne x.bnot_ne_self, hl.count_bnot, h2, count_cons_self]
-#align list.chain'.count_bnot_eq_count List.Chain'.count_bnot_eq_count
+#align list.chain'.count_bnot_eq_count List.Chain'.count_not_eq_count
 
-theorem count_ff_eq_count_tt (hl : Chain' (· ≠ ·) l) (h2 : Even (length l)) :
+theorem count_false_eq_count_true (hl : Chain' (· ≠ ·) l) (h2 : Even (length l)) :
     count false l = count true l :=
   hl.count_bnot_eq_count h2 true
-#align list.chain'.count_ff_eq_count_tt List.Chain'.count_ff_eq_count_tt
+#align list.chain'.count_ff_eq_count_tt List.Chain'.count_false_eq_count_true
 
-theorem count_bnot_le_count_add_one (hl : Chain' (· ≠ ·) l) (b : Bool) :
+theorem count_not_le_count_add_one (hl : Chain' (· ≠ ·) l) (b : Bool) :
     count (!b) l ≤ count b l + 1 := by
   cases' l with x l
   · exact zero_le _
@@ -80,15 +80,17 @@ theorem count_bnot_le_count_add_one (hl : Chain' (· ≠ ·) l) (b : Bool) :
     exact add_le_add_left (Nat.mod_lt _ two_pos).le _
   · rw [Bool.not_not, count_cons_self, count_cons_of_ne x.bnot_ne_self, hl.count_bnot]
     exact add_le_add_right (le_add_right le_rfl) _
-#align list.chain'.count_bnot_le_count_add_one List.Chain'.count_bnot_le_count_add_one
+#align list.chain'.count_bnot_le_count_add_one List.Chain'.count_not_le_count_add_one
 
-theorem count_ff_le_count_tt_add_one (hl : Chain' (· ≠ ·) l) : count false l ≤ count true l + 1 :=
+theorem count_false_le_count_true_add_one (hl : Chain' (· ≠ ·) l) :
+    count false l ≤ count true l + 1 :=
   hl.count_bnot_le_count_add_one true
-#align list.chain'.count_ff_le_count_tt_add_one List.Chain'.count_ff_le_count_tt_add_one
+#align list.chain'.count_ff_le_count_tt_add_one List.Chain'.count_false_le_count_true_add_one
 
-theorem count_tt_le_count_ff_add_one (hl : Chain' (· ≠ ·) l) : count true l ≤ count false l + 1 :=
+theorem count_true_le_count_false_add_one (hl : Chain' (· ≠ ·) l) :
+    count true l ≤ count false l + 1 :=
   hl.count_bnot_le_count_add_one false
-#align list.chain'.count_tt_le_count_ff_add_one List.Chain'.count_tt_le_count_ff_add_one
+#align list.chain'.count_tt_le_count_ff_add_one List.Chain'.count_true_le_count_false_add_one
 
 theorem two_mul_count_bool_of_even (hl : Chain' (· ≠ ·) l) (h2 : Even (length l)) (b : Bool) :
     2 * count b l = length l := by

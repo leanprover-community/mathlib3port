@@ -83,9 +83,9 @@ def toClm (φ : characterSpace 𝕜 A) : A →L[𝕜] 𝕜 :=
 #align weak_dual.character_space.to_clm WeakDual.characterSpace.toClm
 
 @[simp]
-theorem coe_to_clm (φ : characterSpace 𝕜 A) : ⇑(toClm φ) = φ :=
+theorem coe_toClm (φ : characterSpace 𝕜 A) : ⇑(toClm φ) = φ :=
   rfl
-#align weak_dual.character_space.coe_to_clm WeakDual.characterSpace.coe_to_clm
+#align weak_dual.character_space.coe_to_clm WeakDual.characterSpace.coe_toClm
 
 /-- Elements of the character space are non-unital algebra homomorphisms. -/
 instance : NonUnitalAlgHomClass (characterSpace 𝕜 A) 𝕜 A 𝕜 :=
@@ -106,9 +106,9 @@ def toNonUnitalAlgHom (φ : characterSpace 𝕜 A) : A →ₙₐ[𝕜] 𝕜
 #align weak_dual.character_space.to_non_unital_alg_hom WeakDual.characterSpace.toNonUnitalAlgHom
 
 @[simp]
-theorem coe_to_non_unital_alg_hom (φ : characterSpace 𝕜 A) : ⇑(toNonUnitalAlgHom φ) = φ :=
+theorem coe_toNonUnitalAlgHom (φ : characterSpace 𝕜 A) : ⇑(toNonUnitalAlgHom φ) = φ :=
   rfl
-#align weak_dual.character_space.coe_to_non_unital_alg_hom WeakDual.characterSpace.coe_to_non_unital_alg_hom
+#align weak_dual.character_space.coe_to_non_unital_alg_hom WeakDual.characterSpace.coe_toNonUnitalAlgHom
 
 instance [Subsingleton A] : IsEmpty (characterSpace 𝕜 A) :=
   ⟨fun φ =>
@@ -127,15 +127,15 @@ theorem union_zero :
 #align weak_dual.character_space.union_zero WeakDual.characterSpace.union_zero
 
 /-- The `character_space 𝕜 A` along with `0` is always a closed set in `weak_dual 𝕜 A`. -/
-theorem union_zero_is_closed [T2Space 𝕜] [HasContinuousMul 𝕜] :
+theorem union_zero_isClosed [T2Space 𝕜] [HasContinuousMul 𝕜] :
     IsClosed (characterSpace 𝕜 A ∪ {0}) :=
   by
   simp only [union_zero, Set.setOf_forall]
   exact
-    is_closed_Inter fun x =>
-      is_closed_Inter fun y =>
-        is_closed_eq (eval_continuous _) <| (eval_continuous _).mul (eval_continuous _)
-#align weak_dual.character_space.union_zero_is_closed WeakDual.characterSpace.union_zero_is_closed
+    isClosed_interᵢ fun x =>
+      isClosed_interᵢ fun y =>
+        isClosed_eq (eval_continuous _) <| (eval_continuous _).mul (eval_continuous _)
+#align weak_dual.character_space.union_zero_is_closed WeakDual.characterSpace.union_zero_isClosed
 
 end NonUnitalNonAssocSemiring
 
@@ -158,7 +158,7 @@ instance : AlgHomClass (characterSpace 𝕜 A) 𝕜 A 𝕜 :=
     map_one := map_one'
     commutes := fun φ r =>
       by
-      rw [Algebra.algebra_map_eq_smul_one, Algebra.id.map_eq_id, RingHom.id_apply]
+      rw [Algebra.algebraMap_eq_smul_one, Algebra.id.map_eq_id, RingHom.id_apply]
       change ((φ : WeakDual 𝕜 A) : A →L[𝕜] 𝕜) (r • 1) = r
       rw [map_smul, Algebra.id.smul_eq_mul, character_space.coe_coe, map_one' φ, mul_one] }
 
@@ -181,13 +181,13 @@ theorem eq_set_map_one_map_mul [Nontrivial 𝕜] :
 
 /-- under suitable mild assumptions on `𝕜`, the character space is a closed set in
 `weak_dual 𝕜 A`. -/
-protected theorem is_closed [Nontrivial 𝕜] [T2Space 𝕜] [HasContinuousMul 𝕜] :
+protected theorem isClosed [Nontrivial 𝕜] [T2Space 𝕜] [HasContinuousMul 𝕜] :
     IsClosed (characterSpace 𝕜 A) :=
   by
   rw [eq_set_map_one_map_mul, Set.setOf_and]
-  refine' IsClosed.inter (is_closed_eq (eval_continuous _) continuous_const) _
+  refine' IsClosed.inter (isClosed_eq (eval_continuous _) continuous_const) _
   simpa only [(union_zero 𝕜 A).symm] using union_zero_is_closed _ _
-#align weak_dual.character_space.is_closed WeakDual.characterSpace.is_closed
+#align weak_dual.character_space.is_closed WeakDual.characterSpace.isClosed
 
 end Unital
 
@@ -257,7 +257,7 @@ def gelfandTransform : A →ₐ[𝕜] C(characterSpace 𝕜 A, 𝕜)
   commutes' k := by
     ext
     simp only [AlgHomClass.commutes, Algebra.id.map_eq_id, RingHom.id_apply, coe_mk,
-      algebra_map_apply, Algebra.id.smul_eq_mul, mul_one]
+      algebraMap_apply, Algebra.id.smul_eq_mul, mul_one]
 #align weak_dual.gelfand_transform WeakDual.gelfandTransform
 
 end GelfandTransform

@@ -51,9 +51,9 @@ def IsInvariant (ϕ : τ → α → α) (s : Set α) : Prop :=
 
 variable (ϕ : τ → α → α) (s : Set α)
 
-theorem is_invariant_iff_image : IsInvariant ϕ s ↔ ∀ t, ϕ t '' s ⊆ s := by
+theorem isInvariant_iff_image : IsInvariant ϕ s ↔ ∀ t, ϕ t '' s ⊆ s := by
   simp_rw [IsInvariant, maps_to']
-#align is_invariant_iff_image is_invariant_iff_image
+#align is_invariant_iff_image isInvariant_iff_image
 
 /-- A set `s ⊆ α` is forward-invariant under `ϕ : τ → α → α` if
     `ϕ t s ⊆ s` for all `t ≥ 0`. -/
@@ -61,22 +61,22 @@ def IsFwInvariant [Preorder τ] [Zero τ] (ϕ : τ → α → α) (s : Set α) :
   ∀ ⦃t⦄, 0 ≤ t → MapsTo (ϕ t) s s
 #align is_fw_invariant IsFwInvariant
 
-theorem IsInvariant.is_fw_invariant [Preorder τ] [Zero τ] {ϕ : τ → α → α} {s : Set α}
+theorem IsInvariant.isFwInvariant [Preorder τ] [Zero τ] {ϕ : τ → α → α} {s : Set α}
     (h : IsInvariant ϕ s) : IsFwInvariant ϕ s := fun t ht => h t
-#align is_invariant.is_fw_invariant IsInvariant.is_fw_invariant
+#align is_invariant.is_fw_invariant IsInvariant.isFwInvariant
 
 /-- If `τ` is a `canonically_ordered_add_monoid` (e.g., `ℕ` or `ℝ≥0`), then the notions
 `is_fw_invariant` and `is_invariant` are equivalent. -/
-theorem IsFwInvariant.is_invariant [CanonicallyOrderedAddMonoid τ] {ϕ : τ → α → α} {s : Set α}
+theorem IsFwInvariant.isInvariant [CanonicallyOrderedAddMonoid τ] {ϕ : τ → α → α} {s : Set α}
     (h : IsFwInvariant ϕ s) : IsInvariant ϕ s := fun t => h (zero_le t)
-#align is_fw_invariant.is_invariant IsFwInvariant.is_invariant
+#align is_fw_invariant.is_invariant IsFwInvariant.isInvariant
 
 /-- If `τ` is a `canonically_ordered_add_monoid` (e.g., `ℕ` or `ℝ≥0`), then the notions
 `is_fw_invariant` and `is_invariant` are equivalent. -/
-theorem is_fw_invariant_iff_is_invariant [CanonicallyOrderedAddMonoid τ] {ϕ : τ → α → α}
-    {s : Set α} : IsFwInvariant ϕ s ↔ IsInvariant ϕ s :=
-  ⟨IsFwInvariant.is_invariant, IsInvariant.is_fw_invariant⟩
-#align is_fw_invariant_iff_is_invariant is_fw_invariant_iff_is_invariant
+theorem isFwInvariant_iff_isInvariant [CanonicallyOrderedAddMonoid τ] {ϕ : τ → α → α} {s : Set α} :
+    IsFwInvariant ϕ s ↔ IsInvariant ϕ s :=
+  ⟨IsFwInvariant.isInvariant, IsInvariant.isFwInvariant⟩
+#align is_fw_invariant_iff_is_invariant isFwInvariant_iff_isInvariant
 
 end Invariant
 
@@ -144,7 +144,7 @@ theorem map_zero_apply (x : α) : ϕ 0 x = x :=
 def fromIter {g : α → α} (h : Continuous g) : Flow ℕ α
     where
   toFun n x := (g^[n]) x
-  cont' := continuous_uncurry_of_discrete_topology_left (Continuous.iterate h)
+  cont' := continuous_uncurry_of_discreteTopology_left (Continuous.iterate h)
   map_add' := iterate_add_apply _
   map_zero' x := rfl
 #align flow.from_iter Flow.fromIter
@@ -165,12 +165,12 @@ namespace Flow
 variable {τ : Type _} [AddCommGroup τ] [TopologicalSpace τ] [TopologicalAddGroup τ] {α : Type _}
   [TopologicalSpace α] (ϕ : Flow τ α)
 
-theorem is_invariant_iff_image_eq (s : Set α) : IsInvariant ϕ s ↔ ∀ t, ϕ t '' s = s :=
-  (is_invariant_iff_image _ _).trans
+theorem isInvariant_iff_image_eq (s : Set α) : IsInvariant ϕ s ↔ ∀ t, ϕ t '' s = s :=
+  (isInvariant_iff_image _ _).trans
     (Iff.intro
       (fun h t => Subset.antisymm (h t) fun _ hx => ⟨_, h (-t) ⟨_, hx, rfl⟩, by simp [← map_add]⟩)
       fun h t => by rw [h t])
-#align flow.is_invariant_iff_image_eq Flow.is_invariant_iff_image_eq
+#align flow.is_invariant_iff_image_eq Flow.isInvariant_iff_image_eq
 
 /-- The time-reversal of a flow `ϕ` by a (commutative, additive) group
     is defined `ϕ.reverse t x = ϕ (-t) x`. -/

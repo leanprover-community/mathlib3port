@@ -96,17 +96,15 @@ def eComp (X Y Z : C) : ((X ⟶[V] Y) ⊗ Y ⟶[V] Z) ⟶ X ⟶[V] Z :=
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 -- We don't just use `restate_axiom` here; that would leave `V` as an implicit argument.
 @[simp, reassoc.1]
-theorem e_id_comp (X Y : C) :
-    (λ_ (X ⟶[V] Y)).inv ≫ (eId V X ⊗ 𝟙 _) ≫ eComp V X X Y = 𝟙 (X ⟶[V] Y) :=
+theorem eId_comp (X Y : C) : (λ_ (X ⟶[V] Y)).inv ≫ (eId V X ⊗ 𝟙 _) ≫ eComp V X X Y = 𝟙 (X ⟶[V] Y) :=
   EnrichedCategory.id_comp X Y
-#align category_theory.e_id_comp CategoryTheory.e_id_comp
+#align category_theory.e_id_comp CategoryTheory.eId_comp
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp, reassoc.1]
-theorem e_comp_id (X Y : C) :
-    (ρ_ (X ⟶[V] Y)).inv ≫ (𝟙 _ ⊗ eId V Y) ≫ eComp V X Y Y = 𝟙 (X ⟶[V] Y) :=
+theorem eComp_id (X Y : C) : (ρ_ (X ⟶[V] Y)).inv ≫ (𝟙 _ ⊗ eId V Y) ≫ eComp V X Y Y = 𝟙 (X ⟶[V] Y) :=
   EnrichedCategory.comp_id X Y
-#align category_theory.e_comp_id CategoryTheory.e_comp_id
+#align category_theory.e_comp_id CategoryTheory.eComp_id
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -158,8 +156,8 @@ def categoryOfEnrichedCategoryType (C : Type u₁) [𝒞 : EnrichedCategory (Typ
   Hom := 𝒞.Hom
   id X := eId (Type v) X PUnit.unit
   comp X Y Z f g := eComp (Type v) X Y Z ⟨f, g⟩
-  id_comp' X Y f := congr_fun (e_id_comp (Type v) X Y) f
-  comp_id' X Y f := congr_fun (e_comp_id (Type v) X Y) f
+  id_comp' X Y f := congr_fun (eId_comp (Type v) X Y) f
+  comp_id' X Y f := congr_fun (eComp_id (Type v) X Y) f
   assoc' W X Y Z f g h := (congr_fun (e_assoc (Type v) W X Y Z) ⟨f, g, h⟩ : _)
 #align category_theory.category_of_enriched_category_Type CategoryTheory.categoryOfEnrichedCategoryType
 
@@ -277,39 +275,39 @@ def ForgetEnrichment.homTo {X Y : ForgetEnrichment W C} (f : X ⟶ Y) :
 #align category_theory.forget_enrichment.hom_to CategoryTheory.ForgetEnrichment.homTo
 
 @[simp]
-theorem ForgetEnrichment.hom_to_hom_of {X Y : C} (f : 𝟙_ W ⟶ X ⟶[W] Y) :
+theorem ForgetEnrichment.homTo_homOf {X Y : C} (f : 𝟙_ W ⟶ X ⟶[W] Y) :
     ForgetEnrichment.homTo W (ForgetEnrichment.homOf W f) = f :=
   rfl
-#align category_theory.forget_enrichment.hom_to_hom_of CategoryTheory.ForgetEnrichment.hom_to_hom_of
+#align category_theory.forget_enrichment.hom_to_hom_of CategoryTheory.ForgetEnrichment.homTo_homOf
 
 @[simp]
-theorem ForgetEnrichment.hom_of_hom_to {X Y : ForgetEnrichment W C} (f : X ⟶ Y) :
+theorem ForgetEnrichment.homOf_homTo {X Y : ForgetEnrichment W C} (f : X ⟶ Y) :
     ForgetEnrichment.homOf W (ForgetEnrichment.homTo W f) = f :=
   rfl
-#align category_theory.forget_enrichment.hom_of_hom_to CategoryTheory.ForgetEnrichment.hom_of_hom_to
+#align category_theory.forget_enrichment.hom_of_hom_to CategoryTheory.ForgetEnrichment.homOf_homTo
 
 /-- The identity in the "underlying" category of an enriched category. -/
 @[simp]
-theorem forget_enrichment_id (X : ForgetEnrichment W C) :
+theorem forgetEnrichment_id (X : ForgetEnrichment W C) :
     ForgetEnrichment.homTo W (𝟙 X) = eId W (ForgetEnrichment.to W X : C) :=
   Category.id_comp _
-#align category_theory.forget_enrichment_id CategoryTheory.forget_enrichment_id
+#align category_theory.forget_enrichment_id CategoryTheory.forgetEnrichment_id
 
 @[simp]
-theorem forget_enrichment_id' (X : C) :
+theorem forgetEnrichment_id' (X : C) :
     ForgetEnrichment.homOf W (eId W X) = 𝟙 (ForgetEnrichment.of W X : C) :=
-  (forget_enrichment_id W (ForgetEnrichment.of W X)).symm
-#align category_theory.forget_enrichment_id' CategoryTheory.forget_enrichment_id'
+  (forgetEnrichment_id W (ForgetEnrichment.of W X)).symm
+#align category_theory.forget_enrichment_id' CategoryTheory.forgetEnrichment_id'
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Composition in the "underlying" category of an enriched category. -/
 @[simp]
-theorem forget_enrichment_comp {X Y Z : ForgetEnrichment W C} (f : X ⟶ Y) (g : Y ⟶ Z) :
+theorem forgetEnrichment_comp {X Y Z : ForgetEnrichment W C} (f : X ⟶ Y) (g : Y ⟶ Z) :
     ForgetEnrichment.homTo W (f ≫ g) =
       ((λ_ (𝟙_ W)).inv ≫ (ForgetEnrichment.homTo W f ⊗ ForgetEnrichment.homTo W g)) ≫
         eComp W _ _ _ :=
   rfl
-#align category_theory.forget_enrichment_comp CategoryTheory.forget_enrichment_comp
+#align category_theory.forget_enrichment_comp CategoryTheory.forgetEnrichment_comp
 
 end
 

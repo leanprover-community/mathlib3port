@@ -33,7 +33,7 @@ def conformalPregroupoid : Pregroupoid X
     where
   property f u := ∀ x, x ∈ u → ConformalAt f x
   comp f g u v hf hg hu hv huv x hx := (hg (f x) hx.2).comp x (hf x hx.1)
-  id_mem x hx := conformal_at_id x
+  id_mem x hx := conformalAt_id x
   locality f u hu h x hx :=
     let ⟨v, h₁, h₂, h₃⟩ := h x hx
     h₃ x ⟨hx, h₂⟩

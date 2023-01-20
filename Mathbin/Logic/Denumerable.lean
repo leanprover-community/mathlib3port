@@ -44,40 +44,40 @@ variable [Denumerable α] [Denumerable β]
 
 open Encodable
 
-theorem decode_is_some (α) [Denumerable α] (n : ℕ) : (decode α n).isSome :=
+theorem decode_isSome (α) [Denumerable α] (n : ℕ) : (decode α n).isSome :=
   Option.isSome_iff_exists.2 <| (decode_inv n).imp fun a => Exists.fst
-#align denumerable.decode_is_some Denumerable.decode_is_some
+#align denumerable.decode_is_some Denumerable.decode_isSome
 
 /-- Returns the `n`-th element of `α` indexed by the decoding. -/
 def ofNat (α) [f : Denumerable α] (n : ℕ) : α :=
-  Option.get (decode_is_some α n)
+  Option.get (decode_isSome α n)
 #align denumerable.of_nat Denumerable.ofNat
 
 @[simp]
-theorem decode_eq_of_nat (α) [Denumerable α] (n : ℕ) : decode α n = some (ofNat α n) :=
+theorem decode_eq_ofNat (α) [Denumerable α] (n : ℕ) : decode α n = some (ofNat α n) :=
   Option.eq_some_of_isSome _
-#align denumerable.decode_eq_of_nat Denumerable.decode_eq_of_nat
+#align denumerable.decode_eq_of_nat Denumerable.decode_eq_ofNat
 
 @[simp]
-theorem of_nat_of_decode {n b} (h : decode α n = some b) : ofNat α n = b :=
-  Option.some.inj <| (decode_eq_of_nat _ _).symm.trans h
-#align denumerable.of_nat_of_decode Denumerable.of_nat_of_decode
+theorem ofNat_of_decode {n b} (h : decode α n = some b) : ofNat α n = b :=
+  Option.some.inj <| (decode_eq_ofNat _ _).symm.trans h
+#align denumerable.of_nat_of_decode Denumerable.ofNat_of_decode
 
 @[simp]
-theorem encode_of_nat (n) : encode (ofNat α n) = n :=
+theorem encode_ofNat (n) : encode (ofNat α n) = n :=
   by
   let ⟨a, h, e⟩ := decode_inv n
   rwa [of_nat_of_decode h]
-#align denumerable.encode_of_nat Denumerable.encode_of_nat
+#align denumerable.encode_of_nat Denumerable.encode_ofNat
 
 @[simp]
-theorem of_nat_encode (a) : ofNat α (encode a) = a :=
-  of_nat_of_decode (encodek _)
-#align denumerable.of_nat_encode Denumerable.of_nat_encode
+theorem ofNat_encode (a) : ofNat α (encode a) = a :=
+  ofNat_of_decode (encodek _)
+#align denumerable.of_nat_encode Denumerable.ofNat_encode
 
 /-- A denumerable type is equivalent to `ℕ`. -/
 def eqv (α) [Denumerable α] : α ≃ ℕ :=
-  ⟨encode, ofNat α, of_nat_encode, encode_of_nat⟩
+  ⟨encode, ofNat α, ofNat_encode, encode_ofNat⟩
 #align denumerable.eqv Denumerable.eqv
 
 -- See Note [lower instance priority]
@@ -99,10 +99,10 @@ def ofEquiv (α) {β} [Denumerable α] (e : β ≃ α) : Denumerable β :=
 #align denumerable.of_equiv Denumerable.ofEquiv
 
 @[simp]
-theorem of_equiv_of_nat (α) {β} [Denumerable α] (e : β ≃ α) (n) :
+theorem ofEquiv_ofNat (α) {β} [Denumerable α] (e : β ≃ α) (n) :
     @ofNat β (ofEquiv _ e) n = e.symm (ofNat α n) := by
   apply of_nat_of_decode <;> show Option.map _ _ = _ <;> simp
-#align denumerable.of_equiv_of_nat Denumerable.of_equiv_of_nat
+#align denumerable.of_equiv_of_nat Denumerable.ofEquiv_ofNat
 
 /-- All denumerable types are equivalent. -/
 def equiv₂ (α β) [Denumerable α] [Denumerable β] : α ≃ β :=
@@ -114,9 +114,9 @@ instance nat : Denumerable ℕ :=
 #align denumerable.nat Denumerable.nat
 
 @[simp]
-theorem of_nat_nat (n) : ofNat ℕ n = n :=
+theorem ofNat_nat (n) : ofNat ℕ n = n :=
   rfl
-#align denumerable.of_nat_nat Denumerable.of_nat_nat
+#align denumerable.of_nat_nat Denumerable.ofNat_nat
 
 /-- If `α` is denumerable, then so is `option α`. -/
 instance option : Denumerable (Option α) :=
@@ -147,10 +147,10 @@ instance sigma : Denumerable (Sigma γ) :=
 #align denumerable.sigma Denumerable.sigma
 
 @[simp]
-theorem sigma_of_nat_val (n : ℕ) :
+theorem sigma_ofNat_val (n : ℕ) :
     ofNat (Sigma γ) n = ⟨ofNat α (unpair n).1, ofNat (γ _) (unpair n).2⟩ :=
   Option.some.inj <| by rw [← decode_eq_of_nat, decode_sigma_val] <;> simp <;> rfl
-#align denumerable.sigma_of_nat_val Denumerable.sigma_of_nat_val
+#align denumerable.sigma_of_nat_val Denumerable.sigma_ofNat_val
 
 end Sigma
 
@@ -160,13 +160,13 @@ instance prod : Denumerable (α × β) :=
 #align denumerable.prod Denumerable.prod
 
 @[simp]
-theorem prod_of_nat_val (n : ℕ) : ofNat (α × β) n = (ofNat α (unpair n).1, ofNat β (unpair n).2) :=
+theorem prod_ofNat_val (n : ℕ) : ofNat (α × β) n = (ofNat α (unpair n).1, ofNat β (unpair n).2) :=
   by simp <;> rfl
-#align denumerable.prod_of_nat_val Denumerable.prod_of_nat_val
+#align denumerable.prod_of_nat_val Denumerable.prod_ofNat_val
 
 @[simp]
-theorem prod_nat_of_nat : ofNat (ℕ × ℕ) = unpair := by funext <;> simp
-#align denumerable.prod_nat_of_nat Denumerable.prod_nat_of_nat
+theorem prod_nat_ofNat : ofNat (ℕ × ℕ) = unpair := by funext <;> simp
+#align denumerable.prod_nat_of_nat Denumerable.prod_nat_ofNat
 
 instance int : Denumerable ℤ :=
   Denumerable.mk' Equiv.intEquivNat
@@ -266,7 +266,7 @@ def ofNat (s : Set ℕ) [DecidablePred (· ∈ s)] [Infinite s] : ℕ → s
   | n + 1 => succ (of_nat n)
 #align nat.subtype.of_nat Nat.Subtype.ofNat
 
-theorem of_nat_surjective_aux : ∀ {x : ℕ} (hx : x ∈ s), ∃ n, ofNat s n = ⟨x, hx⟩
+theorem ofNat_surjective_aux : ∀ {x : ℕ} (hx : x ∈ s), ∃ n, ofNat s n = ⟨x, hx⟩
   | x => fun hx =>
     by
     let t : List s :=
@@ -291,20 +291,20 @@ theorem of_nat_surjective_aux : ∀ {x : ℕ} (hx : x ∈ s), ∃ n, ofNat s n =
               le_succ_of_forall_lt_le fun z hz => by
                 rw [ha] <;> cases m <;> exact List.le_maximum_of_mem (hmt.2 hz) hmax⟩decreasing_by
   tauto
-#align nat.subtype.of_nat_surjective_aux Nat.Subtype.of_nat_surjective_aux
+#align nat.subtype.of_nat_surjective_aux Nat.Subtype.ofNat_surjective_aux
 
-theorem of_nat_surjective : Surjective (ofNat s) := fun ⟨x, hx⟩ => of_nat_surjective_aux hx
-#align nat.subtype.of_nat_surjective Nat.Subtype.of_nat_surjective
-
-@[simp]
-theorem of_nat_range : Set.range (ofNat s) = Set.univ :=
-  of_nat_surjective.range_eq
-#align nat.subtype.of_nat_range Nat.Subtype.of_nat_range
+theorem ofNat_surjective : Surjective (ofNat s) := fun ⟨x, hx⟩ => ofNat_surjective_aux hx
+#align nat.subtype.of_nat_surjective Nat.Subtype.ofNat_surjective
 
 @[simp]
-theorem coe_comp_of_nat_range : Set.range (coe ∘ ofNat s : ℕ → ℕ) = s := by
+theorem ofNat_range : Set.range (ofNat s) = Set.univ :=
+  ofNat_surjective.range_eq
+#align nat.subtype.of_nat_range Nat.Subtype.ofNat_range
+
+@[simp]
+theorem coe_comp_ofNat_range : Set.range (coe ∘ ofNat s : ℕ → ℕ) = s := by
   rw [Set.range_comp coe, of_nat_range, Set.image_univ, Subtype.range_coe]
-#align nat.subtype.coe_comp_of_nat_range Nat.Subtype.coe_comp_of_nat_range
+#align nat.subtype.coe_comp_of_nat_range Nat.Subtype.coe_comp_ofNat_range
 
 private def to_fun_aux (x : s) : ℕ :=
   (List.range x).countp (· ∈ s)
@@ -348,7 +348,7 @@ def denumerable (s : Set ℕ) [DecidablePred (· ∈ s)] [Infinite s] : Denumera
   Denumerable.ofEquiv ℕ
     { toFun := toFunAux
       invFun := ofNat s
-      left_inv := leftInverse_of_surjective_of_rightInverse of_nat_surjective right_inverse_aux
+      left_inv := leftInverse_of_surjective_of_rightInverse ofNat_surjective right_inverse_aux
       right_inv := right_inverse_aux }
 #align nat.subtype.denumerable Nat.Subtype.denumerable
 

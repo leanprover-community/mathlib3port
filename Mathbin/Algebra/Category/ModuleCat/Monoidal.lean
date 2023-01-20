@@ -136,28 +136,28 @@ def leftUnitor (M : ModuleCat.{u} R) : ModuleCat.of R (R ⊗[R] M) ≅ M :=
   (LinearEquiv.toModuleIso (TensorProduct.lid R M) : of R (R ⊗ M) ≅ of R M).trans (ofSelfIso M)
 #align Module.monoidal_category.left_unitor ModuleCat.MonoidalCategory.leftUnitor
 
-theorem left_unitor_naturality {M N : ModuleCat R} (f : M ⟶ N) :
+theorem leftUnitor_naturality {M N : ModuleCat R} (f : M ⟶ N) :
     tensorHom (𝟙 (ModuleCat.of R R)) f ≫ (leftUnitor N).Hom = (leftUnitor M).Hom ≫ f :=
   by
   ext (x y); dsimp
   erw [TensorProduct.lid_tmul, TensorProduct.lid_tmul]
   rw [LinearMap.map_smul]
   rfl
-#align Module.monoidal_category.left_unitor_naturality ModuleCat.MonoidalCategory.left_unitor_naturality
+#align Module.monoidal_category.left_unitor_naturality ModuleCat.MonoidalCategory.leftUnitor_naturality
 
 /-- (implementation) the right unitor for R-modules -/
 def rightUnitor (M : ModuleCat.{u} R) : ModuleCat.of R (M ⊗[R] R) ≅ M :=
   (LinearEquiv.toModuleIso (TensorProduct.rid R M) : of R (M ⊗ R) ≅ of R M).trans (ofSelfIso M)
 #align Module.monoidal_category.right_unitor ModuleCat.MonoidalCategory.rightUnitor
 
-theorem right_unitor_naturality {M N : ModuleCat R} (f : M ⟶ N) :
+theorem rightUnitor_naturality {M N : ModuleCat R} (f : M ⟶ N) :
     tensorHom f (𝟙 (ModuleCat.of R R)) ≫ (rightUnitor N).Hom = (rightUnitor M).Hom ≫ f :=
   by
   ext (x y); dsimp
   erw [TensorProduct.rid_tmul, TensorProduct.rid_tmul]
   rw [LinearMap.map_smul]
   rfl
-#align Module.monoidal_category.right_unitor_naturality ModuleCat.MonoidalCategory.right_unitor_naturality
+#align Module.monoidal_category.right_unitor_naturality ModuleCat.MonoidalCategory.rightUnitor_naturality
 
 theorem triangle (M N : ModuleCat.{u} R) :
     (associator M (ModuleCat.of R R) N).Hom ≫ tensorHom (𝟙 M) (leftUnitor N).Hom =
@@ -188,8 +188,8 @@ instance monoidalCategory : MonoidalCategory (ModuleCat.{u} R)
   tensor_id' M N := tensor_id M N
   tensor_comp' M N K M' N' K' f g h := tensor_comp f g h
   associator_naturality' M N K M' N' K' f g h := associator_naturality f g h
-  left_unitor_naturality' M N f := left_unitor_naturality f
-  right_unitor_naturality' M N f := right_unitor_naturality f
+  left_unitor_naturality' M N f := leftUnitor_naturality f
+  right_unitor_naturality' M N f := rightUnitor_naturality f
   pentagon' M N K L := pentagon M N K L
   triangle' M N := triangle M N
 #align Module.monoidal_category ModuleCat.monoidalCategory
@@ -209,31 +209,31 @@ theorem hom_apply {K L M N : ModuleCat.{u} R} (f : K ⟶ L) (g : M ⟶ N) (k : K
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem left_unitor_hom_apply {M : ModuleCat.{u} R} (r : R) (m : M) :
+theorem leftUnitor_hom_apply {M : ModuleCat.{u} R} (r : R) (m : M) :
     ((λ_ M).Hom : 𝟙_ (ModuleCat R) ⊗ M ⟶ M) (r ⊗ₜ[R] m) = r • m :=
   TensorProduct.lid_tmul m r
-#align Module.monoidal_category.left_unitor_hom_apply ModuleCat.monoidalCategory.left_unitor_hom_apply
+#align Module.monoidal_category.left_unitor_hom_apply ModuleCat.monoidalCategory.leftUnitor_hom_apply
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem left_unitor_inv_apply {M : ModuleCat.{u} R} (m : M) :
+theorem leftUnitor_inv_apply {M : ModuleCat.{u} R} (m : M) :
     ((λ_ M).inv : M ⟶ 𝟙_ (ModuleCat.{u} R) ⊗ M) m = 1 ⊗ₜ[R] m :=
   TensorProduct.lid_symm_apply m
-#align Module.monoidal_category.left_unitor_inv_apply ModuleCat.monoidalCategory.left_unitor_inv_apply
+#align Module.monoidal_category.left_unitor_inv_apply ModuleCat.monoidalCategory.leftUnitor_inv_apply
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem right_unitor_hom_apply {M : ModuleCat.{u} R} (m : M) (r : R) :
+theorem rightUnitor_hom_apply {M : ModuleCat.{u} R} (m : M) (r : R) :
     ((ρ_ M).Hom : M ⊗ 𝟙_ (ModuleCat R) ⟶ M) (m ⊗ₜ r) = r • m :=
   TensorProduct.rid_tmul m r
-#align Module.monoidal_category.right_unitor_hom_apply ModuleCat.monoidalCategory.right_unitor_hom_apply
+#align Module.monoidal_category.right_unitor_hom_apply ModuleCat.monoidalCategory.rightUnitor_hom_apply
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem right_unitor_inv_apply {M : ModuleCat.{u} R} (m : M) :
+theorem rightUnitor_inv_apply {M : ModuleCat.{u} R} (m : M) :
     ((ρ_ M).inv : M ⟶ M ⊗ 𝟙_ (ModuleCat.{u} R)) m = m ⊗ₜ[R] 1 :=
   TensorProduct.rid_symm_apply m
-#align Module.monoidal_category.right_unitor_inv_apply ModuleCat.monoidalCategory.right_unitor_inv_apply
+#align Module.monoidal_category.right_unitor_inv_apply ModuleCat.monoidalCategory.rightUnitor_inv_apply
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -374,19 +374,19 @@ instance : MonoidalClosed (ModuleCat.{u} R)
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 -- I can't seem to express the function coercion here without writing `@coe_fn`.
 @[simp]
-theorem monoidal_closed_curry {M N P : ModuleCat.{u} R} (f : M ⊗ N ⟶ P) (x : M) (y : N) :
+theorem monoidalClosed_curry {M N P : ModuleCat.{u} R} (f : M ⊗ N ⟶ P) (x : M) (y : N) :
     @coeFn _ _ LinearMap.hasCoeToFun ((MonoidalClosed.curry f : N →ₗ[R] M →ₗ[R] P) y) x =
       f (x ⊗ₜ[R] y) :=
   rfl
-#align Module.monoidal_closed_curry ModuleCat.monoidal_closed_curry
+#align Module.monoidal_closed_curry ModuleCat.monoidalClosed_curry
 
 @[simp]
-theorem monoidal_closed_uncurry {M N P : ModuleCat.{u} R} (f : N ⟶ M ⟶[ModuleCat.{u} R] P) (x : M)
+theorem monoidalClosed_uncurry {M N P : ModuleCat.{u} R} (f : N ⟶ M ⟶[ModuleCat.{u} R] P) (x : M)
     (y : N) : MonoidalClosed.uncurry f (x ⊗ₜ[R] y) = (@coeFn _ _ LinearMap.hasCoeToFun (f y)) x :=
   by
   simp only [monoidal_closed.uncurry, ihom.adjunction, is_left_adjoint.adj]
   simp
-#align Module.monoidal_closed_uncurry ModuleCat.monoidal_closed_uncurry
+#align Module.monoidal_closed_uncurry ModuleCat.monoidalClosed_uncurry
 
 end ModuleCat
 

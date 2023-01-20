@@ -149,10 +149,10 @@ theorem to_real_linear_equiv_apply (f : E ≃ᵢ F) (x : E) :
 #align isometry_equiv.to_real_linear_equiv_apply IsometryEquiv.to_real_linear_equiv_apply
 
 @[simp]
-theorem to_real_linear_isometry_equiv_symm_apply (f : E ≃ᵢ F) (y : F) :
+theorem toRealLinearIsometryEquiv_symm_apply (f : E ≃ᵢ F) (y : F) :
     (f.toRealLinearIsometryEquiv.symm : F → E) y = f.symm (y + f 0) :=
   rfl
-#align isometry_equiv.to_real_linear_isometry_equiv_symm_apply IsometryEquiv.to_real_linear_isometry_equiv_symm_apply
+#align isometry_equiv.to_real_linear_isometry_equiv_symm_apply IsometryEquiv.toRealLinearIsometryEquiv_symm_apply
 
 /-- **Mazur-Ulam Theorem**: if `f` is an isometric bijection between two normed add-torsors over
 normed vector spaces over `ℝ`, then `f` is an affine isometry equivalence. -/
@@ -164,17 +164,17 @@ def toRealAffineIsometryEquiv (f : PE ≃ᵢ PF) : PE ≃ᵃⁱ[ℝ] PF :=
 #align isometry_equiv.to_real_affine_isometry_equiv IsometryEquiv.toRealAffineIsometryEquiv
 
 @[simp]
-theorem coe_fn_to_real_affine_isometry_equiv (f : PE ≃ᵢ PF) : ⇑f.toRealAffineIsometryEquiv = f :=
+theorem coeFn_toRealAffineIsometryEquiv (f : PE ≃ᵢ PF) : ⇑f.toRealAffineIsometryEquiv = f :=
   rfl
-#align isometry_equiv.coe_fn_to_real_affine_isometry_equiv IsometryEquiv.coe_fn_to_real_affine_isometry_equiv
+#align isometry_equiv.coe_fn_to_real_affine_isometry_equiv IsometryEquiv.coeFn_toRealAffineIsometryEquiv
 
 @[simp]
-theorem coe_to_real_affine_isometry_equiv (f : PE ≃ᵢ PF) :
+theorem coe_toRealAffineIsometryEquiv (f : PE ≃ᵢ PF) :
     f.toRealAffineIsometryEquiv.toIsometryEquiv = f :=
   by
   ext
   rfl
-#align isometry_equiv.coe_to_real_affine_isometry_equiv IsometryEquiv.coe_to_real_affine_isometry_equiv
+#align isometry_equiv.coe_to_real_affine_isometry_equiv IsometryEquiv.coe_toRealAffineIsometryEquiv
 
 end IsometryEquiv
 

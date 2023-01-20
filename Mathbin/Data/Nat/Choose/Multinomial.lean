@@ -211,7 +211,7 @@ theorem multinomial_filter_ne [DecidableEq α] (a : α) (m : Multiset α) :
   by
   dsimp only [multinomial]
   convert Finsupp.multinomial_update a _
-  · rw [← Finsupp.card_to_multiset, m.to_finsupp_to_multiset]
+  · rw [← Finsupp.card_toMultiset, m.to_finsupp_to_multiset]
   · ext1 a'
     rw [to_finsupp_apply, count_filter, Finsupp.coe_update]
     split_ifs

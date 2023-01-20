@@ -83,6 +83,7 @@ instance (priority := 100) LinearOrderedCommGroup.to_covariantClass (α : Type u
     [LinearOrderedCommGroup α] : CovariantClass α α (· * ·) (· ≤ ·)
     where elim a b c bc := LinearOrderedCommGroup.mul_le_mul_left _ _ bc a
 #align linear_ordered_comm_group.to_covariant_class LinearOrderedCommGroup.to_covariantClass
+#align linear_ordered_add_comm_group.to_covariant_class LinearOrderedAddCommGroup.to_covariantClass
 
 variable {α : Type u} [Lattice α] [CommGroup α]
 

@@ -342,32 +342,36 @@ section LinearOrder
 variable [LinearOrder α]
 
 -- see Note [lower instance priority]
-instance (priority := 100) PosMulStrictMono.to_pos_mul_mono_rev [PosMulStrictMono α] :
+instance (priority := 100) PosMulStrictMono.to_posMulMonoRev [PosMulStrictMono α] :
     PosMulMonoRev α :=
   ⟨fun x a b h => le_of_not_lt fun h' => h.not_lt <| mul_lt_mul_of_pos_left h' x.Prop⟩
-#align pos_mul_strict_mono.to_pos_mul_mono_rev PosMulStrictMono.to_pos_mul_mono_rev
+#align pos_mul_strict_mono.to_pos_mul_mono_rev PosMulStrictMono.to_posMulMonoRev
 
 -- see Note [lower instance priority]
-instance (priority := 100) MulPosStrictMono.to_mul_pos_mono_rev [MulPosStrictMono α] :
+instance (priority := 100) MulPosStrictMono.to_mulPosMonoRev [MulPosStrictMono α] :
     MulPosMonoRev α :=
   ⟨fun x a b h => le_of_not_lt fun h' => h.not_lt <| mul_lt_mul_of_pos_right h' x.Prop⟩
-#align mul_pos_strict_mono.to_mul_pos_mono_rev MulPosStrictMono.to_mul_pos_mono_rev
+#align mul_pos_strict_mono.to_mul_pos_mono_rev MulPosStrictMono.to_mulPosMonoRev
 
-theorem PosMulMonoRev.to_pos_mul_strict_mono [PosMulMonoRev α] : PosMulStrictMono α :=
+theorem PosMulMonoRev.to_posMulStrictMono [PosMulMonoRev α] : PosMulStrictMono α :=
   ⟨fun x a b h => lt_of_not_le fun h' => h.not_le <| le_of_mul_le_mul_of_pos_left h' x.Prop⟩
-#align pos_mul_mono_rev.to_pos_mul_strict_mono PosMulMonoRev.to_pos_mul_strict_mono
+#align pos_mul_mono_rev.to_pos_mul_strict_mono PosMulMonoRev.to_posMulStrictMono
 
-theorem MulPosMonoRev.to_mul_pos_strict_mono [MulPosMonoRev α] : MulPosStrictMono α :=
+theorem MulPosMonoRev.to_mulPosStrictMono [MulPosMonoRev α] : MulPosStrictMono α :=
   ⟨fun x a b h => lt_of_not_le fun h' => h.not_le <| le_of_mul_le_mul_of_pos_right h' x.Prop⟩
-#align mul_pos_mono_rev.to_mul_pos_strict_mono MulPosMonoRev.to_mul_pos_strict_mono
+#align mul_pos_mono_rev.to_mul_pos_strict_mono MulPosMonoRev.to_mulPosStrictMono
 
-theorem pos_mul_strict_mono_iff_pos_mul_mono_rev : PosMulStrictMono α ↔ PosMulMonoRev α :=
-  ⟨@PosMulStrictMono.to_pos_mul_mono_rev _ _ _ _, @PosMulMonoRev.to_pos_mul_strict_mono _ _ _ _⟩
-#align pos_mul_strict_mono_iff_pos_mul_mono_rev pos_mul_strict_mono_iff_pos_mul_mono_rev
+#print posMulStrictMono_iff_posMulMonoRev /-
+theorem posMulStrictMono_iff_posMulMonoRev : PosMulStrictMono α ↔ PosMulMonoRev α :=
+  ⟨@PosMulStrictMono.to_posMulMonoRev _ _ _ _, @PosMulMonoRev.to_posMulStrictMono _ _ _ _⟩
+#align pos_mul_strict_mono_iff_pos_mul_mono_rev posMulStrictMono_iff_posMulMonoRev
+-/
 
-theorem mul_pos_strict_mono_iff_mul_pos_mono_rev : MulPosStrictMono α ↔ MulPosMonoRev α :=
-  ⟨@MulPosStrictMono.to_mul_pos_mono_rev _ _ _ _, @MulPosMonoRev.to_mul_pos_strict_mono _ _ _ _⟩
-#align mul_pos_strict_mono_iff_mul_pos_mono_rev mul_pos_strict_mono_iff_mul_pos_mono_rev
+#print mulPosStrictMono_iff_mulPosMonoRev /-
+theorem mulPosStrictMono_iff_mulPosMonoRev : MulPosStrictMono α ↔ MulPosMonoRev α :=
+  ⟨@MulPosStrictMono.to_mulPosMonoRev _ _ _ _, @MulPosMonoRev.to_mulPosStrictMono _ _ _ _⟩
+#align mul_pos_strict_mono_iff_mul_pos_mono_rev mulPosStrictMono_iff_mulPosMonoRev
+-/
 
 #print PosMulReflectLT.toPosMulMono /-
 theorem PosMulReflectLT.toPosMulMono [PosMulReflectLT α] : PosMulMono α :=
@@ -381,21 +385,25 @@ theorem MulPosReflectLT.toMulPosMono [MulPosReflectLT α] : MulPosMono α :=
 #align mul_pos_reflect_lt.to_mul_pos_mono MulPosReflectLT.toMulPosMono
 -/
 
-theorem PosMulMono.to_pos_mul_reflect_lt [PosMulMono α] : PosMulReflectLT α :=
+theorem PosMulMono.to_posMulReflectLT [PosMulMono α] : PosMulReflectLT α :=
   ⟨fun x a b h => lt_of_not_le fun h' => h.not_le <| mul_le_mul_of_nonneg_left h' x.Prop⟩
-#align pos_mul_mono.to_pos_mul_reflect_lt PosMulMono.to_pos_mul_reflect_lt
+#align pos_mul_mono.to_pos_mul_reflect_lt PosMulMono.to_posMulReflectLT
 
-theorem MulPosMono.to_mul_pos_reflect_lt [MulPosMono α] : MulPosReflectLT α :=
+theorem MulPosMono.to_mulPosReflectLT [MulPosMono α] : MulPosReflectLT α :=
   ⟨fun x a b h => lt_of_not_le fun h' => h.not_le <| mul_le_mul_of_nonneg_right h' x.Prop⟩
-#align mul_pos_mono.to_mul_pos_reflect_lt MulPosMono.to_mul_pos_reflect_lt
+#align mul_pos_mono.to_mul_pos_reflect_lt MulPosMono.to_mulPosReflectLT
 
-theorem pos_mul_mono_iff_pos_mul_reflect_lt : PosMulMono α ↔ PosMulReflectLT α :=
-  ⟨@PosMulMono.to_pos_mul_reflect_lt _ _ _ _, @PosMulReflectLT.toPosMulMono _ _ _ _⟩
-#align pos_mul_mono_iff_pos_mul_reflect_lt pos_mul_mono_iff_pos_mul_reflect_lt
+#print posMulMono_iff_posMulReflectLT /-
+theorem posMulMono_iff_posMulReflectLT : PosMulMono α ↔ PosMulReflectLT α :=
+  ⟨@PosMulMono.to_posMulReflectLT _ _ _ _, @PosMulReflectLT.toPosMulMono _ _ _ _⟩
+#align pos_mul_mono_iff_pos_mul_reflect_lt posMulMono_iff_posMulReflectLT
+-/
 
-theorem mul_pos_mono_iff_mul_pos_reflect_lt : MulPosMono α ↔ MulPosReflectLT α :=
-  ⟨@MulPosMono.to_mul_pos_reflect_lt _ _ _ _, @MulPosReflectLT.toMulPosMono _ _ _ _⟩
-#align mul_pos_mono_iff_mul_pos_reflect_lt mul_pos_mono_iff_mul_pos_reflect_lt
+#print mulPosMono_iff_mulPosReflectLT /-
+theorem mulPosMono_iff_mulPosReflectLT : MulPosMono α ↔ MulPosReflectLT α :=
+  ⟨@MulPosMono.to_mulPosReflectLT _ _ _ _, @MulPosReflectLT.toMulPosMono _ _ _ _⟩
+#align mul_pos_mono_iff_mul_pos_reflect_lt mulPosMono_iff_mulPosReflectLT
+-/
 
 end LinearOrder
 

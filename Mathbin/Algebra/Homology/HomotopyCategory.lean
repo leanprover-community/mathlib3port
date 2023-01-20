@@ -155,21 +155,21 @@ def homologyFactors (i : ι) : quotient V c ⋙ homologyFunctor V c i ≅ homolo
 #align homotopy_category.homology_factors HomotopyCategory.homologyFactors
 
 @[simp]
-theorem homology_factors_hom_app (i : ι) (C : HomologicalComplex V c) :
+theorem homologyFactors_hom_app (i : ι) (C : HomologicalComplex V c) :
     (homologyFactors V c i).Hom.app C = 𝟙 _ :=
   rfl
-#align homotopy_category.homology_factors_hom_app HomotopyCategory.homology_factors_hom_app
+#align homotopy_category.homology_factors_hom_app HomotopyCategory.homologyFactors_hom_app
 
 @[simp]
-theorem homology_factors_inv_app (i : ι) (C : HomologicalComplex V c) :
+theorem homologyFactors_inv_app (i : ι) (C : HomologicalComplex V c) :
     (homologyFactors V c i).inv.app C = 𝟙 _ :=
   rfl
-#align homotopy_category.homology_factors_inv_app HomotopyCategory.homology_factors_inv_app
+#align homotopy_category.homology_factors_inv_app HomotopyCategory.homologyFactors_inv_app
 
-theorem homology_functor_map_factors (i : ι) {C D : HomologicalComplex V c} (f : C ⟶ D) :
+theorem homologyFunctor_map_factors (i : ι) {C D : HomologicalComplex V c} (f : C ⟶ D) :
     (homologyFunctor V c i).map f = ((homologyFunctor V c i).map ((quotient V c).map f) : _) :=
   (CategoryTheory.Quotient.lift_map_functor_map _ (homologyFunctor V c i) _ f).symm
-#align homotopy_category.homology_functor_map_factors HomotopyCategory.homology_functor_map_factors
+#align homotopy_category.homology_functor_map_factors HomotopyCategory.homologyFunctor_map_factors
 
 end HomotopyCategory
 
@@ -219,17 +219,17 @@ def NatTrans.mapHomotopyCategory {F G : V ⥤ W} [F.Additive] [G.Additive] (α :
 #align category_theory.nat_trans.map_homotopy_category CategoryTheory.NatTrans.mapHomotopyCategory
 
 @[simp]
-theorem NatTrans.map_homotopy_category_id (c : ComplexShape ι) (F : V ⥤ W) [F.Additive] :
+theorem NatTrans.mapHomotopyCategory_id (c : ComplexShape ι) (F : V ⥤ W) [F.Additive] :
     NatTrans.mapHomotopyCategory (𝟙 F) c = 𝟙 (F.mapHomotopyCategory c) := by tidy
-#align category_theory.nat_trans.map_homotopy_category_id CategoryTheory.NatTrans.map_homotopy_category_id
+#align category_theory.nat_trans.map_homotopy_category_id CategoryTheory.NatTrans.mapHomotopyCategory_id
 
 @[simp]
-theorem NatTrans.map_homotopy_category_comp (c : ComplexShape ι) {F G H : V ⥤ W} [F.Additive]
+theorem NatTrans.mapHomotopyCategory_comp (c : ComplexShape ι) {F G H : V ⥤ W} [F.Additive]
     [G.Additive] [H.Additive] (α : F ⟶ G) (β : G ⟶ H) :
     NatTrans.mapHomotopyCategory (α ≫ β) c =
       NatTrans.mapHomotopyCategory α c ≫ NatTrans.mapHomotopyCategory β c :=
   by tidy
-#align category_theory.nat_trans.map_homotopy_category_comp CategoryTheory.NatTrans.map_homotopy_category_comp
+#align category_theory.nat_trans.map_homotopy_category_comp CategoryTheory.NatTrans.mapHomotopyCategory_comp
 
 end CategoryTheory
 

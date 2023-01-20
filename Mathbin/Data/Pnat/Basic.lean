@@ -221,7 +221,7 @@ instance : ContravariantClass ℕ+ ℕ+ (· + ·) (· < ·) :=
 def Equiv.pnatEquivNat : ℕ+ ≃ ℕ where
   toFun := PNat.natPred
   invFun := Nat.succPNat
-  left_inv := succ_pnat_nat_pred
+  left_inv := succPNat_natPred
   right_inv := Nat.natPred_succPNat
 #align equiv.pnat_equiv_nat Equiv.pnatEquivNat
 -/

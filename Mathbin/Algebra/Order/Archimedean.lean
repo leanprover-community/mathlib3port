@@ -99,11 +99,11 @@ theorem existsUnique_zsmul_near_of_pos' {a : α} (ha : 0 < a) (g : α) :
     existsUnique_zsmul_near_of_pos ha g
 #align exists_unique_zsmul_near_of_pos' existsUnique_zsmul_near_of_pos'
 
-theorem exists_unique_sub_zsmul_mem_Ico {a : α} (ha : 0 < a) (b c : α) :
+theorem existsUnique_sub_zsmul_mem_ico {a : α} (ha : 0 < a) (b c : α) :
     ∃! m : ℤ, b - m • a ∈ Set.Ico c (c + a) := by
   simpa only [mem_Ico, le_sub_iff_add_le, zero_add, add_comm c, sub_lt_iff_lt_add', add_assoc] using
     existsUnique_zsmul_near_of_pos' ha (b - c)
-#align exists_unique_sub_zsmul_mem_Ico exists_unique_sub_zsmul_mem_Ico
+#align exists_unique_sub_zsmul_mem_Ico existsUnique_sub_zsmul_mem_ico
 
 /- warning: exists_unique_add_zsmul_mem_Ico -> existsUnique_add_zsmul_mem_Ico is a dubious translation:
 lean 3 declaration is
@@ -115,7 +115,7 @@ theorem existsUnique_add_zsmul_mem_Ico {a : α} (ha : 0 < a) (b c : α) :
     ∃! m : ℤ, b + m • a ∈ Set.Ico c (c + a) :=
   (Equiv.neg ℤ).Bijective.exists_unique_iff.2 <| by
     simpa only [Equiv.neg_apply, neg_zsmul, ← sub_eq_add_neg] using
-      exists_unique_sub_zsmul_mem_Ico ha b c
+      existsUnique_sub_zsmul_mem_ico ha b c
 #align exists_unique_add_zsmul_mem_Ico existsUnique_add_zsmul_mem_Ico
 
 /- warning: exists_unique_add_zsmul_mem_Ioc -> existsUnique_add_zsmul_mem_Ioc is a dubious translation:
@@ -132,12 +132,12 @@ theorem existsUnique_add_zsmul_mem_Ioc {a : α} (ha : 0 < a) (b c : α) :
       existsUnique_zsmul_near_of_pos ha (c - b)
 #align exists_unique_add_zsmul_mem_Ioc existsUnique_add_zsmul_mem_Ioc
 
-theorem exists_unique_sub_zsmul_mem_Ioc {a : α} (ha : 0 < a) (b c : α) :
+theorem existsUnique_sub_zsmul_mem_ioc {a : α} (ha : 0 < a) (b c : α) :
     ∃! m : ℤ, b - m • a ∈ Set.Ioc c (c + a) :=
   (Equiv.neg ℤ).Bijective.exists_unique_iff.2 <| by
     simpa only [Equiv.neg_apply, neg_zsmul, sub_neg_eq_add] using
       existsUnique_add_zsmul_mem_Ioc ha b c
-#align exists_unique_sub_zsmul_mem_Ioc exists_unique_sub_zsmul_mem_Ioc
+#align exists_unique_sub_zsmul_mem_Ioc existsUnique_sub_zsmul_mem_ioc
 
 end LinearOrderedAddCommGroup
 
@@ -389,13 +389,13 @@ theorem exists_rat_btwn {x y : α} (h : x < y) : ∃ q : ℚ, x < q ∧ (q : α)
   refine' lt_of_le_of_lt (add_le_add_right ((zh _).1 le_rfl) _) _
   rwa [← lt_sub_iff_add_lt', ← sub_mul, ← div_lt_iff' (sub_pos.2 h), one_div]
   · rw [Rat.coe_int_den, Nat.cast_one]
-    exact one_ne_zero
+    exact one_neZero
   · intro H
     rw [Rat.coe_nat_num, Int.cast_ofNat, Nat.cast_eq_zero] at H
     subst H
     cases n0
   · rw [Rat.coe_nat_den, Nat.cast_one]
-    exact one_ne_zero
+    exact one_neZero
 #align exists_rat_btwn exists_rat_btwn
 
 /- warning: le_of_forall_rat_lt_imp_le -> le_of_forall_rat_lt_imp_le is a dubious translation:

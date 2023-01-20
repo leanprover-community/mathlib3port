@@ -104,7 +104,7 @@ namespace Measure
 def ofMeasurable (m : ∀ s : Set α, MeasurableSet s → ℝ≥0∞) (m0 : m ∅ MeasurableSet.empty = 0)
     (mU :
       ∀ ⦃f : ℕ → Set α⦄ (h : ∀ i, MeasurableSet (f i)),
-        Pairwise (Disjoint on f) → m (⋃ i, f i) (MeasurableSet.Union h) = ∑' i, m (f i) (h i)) :
+        Pairwise (Disjoint on f) → m (⋃ i, f i) (MeasurableSet.unionᵢ h) = ∑' i, m (f i) (h i)) :
     Measure α :=
   {
     inducedOuterMeasure m _
@@ -122,20 +122,20 @@ def ofMeasurable (m : ∀ s : Set α, MeasurableSet s → ℝ≥0∞) (m0 : m �
         exact induced_outer_measure_eq m0 mU hs }
 #align measure_theory.measure.of_measurable MeasureTheory.Measure.ofMeasurable
 
-theorem of_measurable_apply {m : ∀ s : Set α, MeasurableSet s → ℝ≥0∞}
+theorem ofMeasurable_apply {m : ∀ s : Set α, MeasurableSet s → ℝ≥0∞}
     {m0 : m ∅ MeasurableSet.empty = 0}
     {mU :
       ∀ ⦃f : ℕ → Set α⦄ (h : ∀ i, MeasurableSet (f i)),
-        Pairwise (Disjoint on f) → m (⋃ i, f i) (MeasurableSet.Union h) = ∑' i, m (f i) (h i)}
+        Pairwise (Disjoint on f) → m (⋃ i, f i) (MeasurableSet.unionᵢ h) = ∑' i, m (f i) (h i)}
     (s : Set α) (hs : MeasurableSet s) : ofMeasurable m m0 mU s = m s hs :=
-  induced_outer_measure_eq m0 mU hs
-#align measure_theory.measure.of_measurable_apply MeasureTheory.Measure.of_measurable_apply
+  inducedOuterMeasure_eq m0 mU hs
+#align measure_theory.measure.of_measurable_apply MeasureTheory.Measure.ofMeasurable_apply
 
-theorem to_outer_measure_injective : Injective (toOuterMeasure : Measure α → OuterMeasure α) :=
+theorem toOuterMeasure_injective : Injective (toOuterMeasure : Measure α → OuterMeasure α) :=
   fun ⟨m₁, u₁, h₁⟩ ⟨m₂, u₂, h₂⟩ h => by
   congr
   exact h
-#align measure_theory.measure.to_outer_measure_injective MeasureTheory.Measure.to_outer_measure_injective
+#align measure_theory.measure.to_outer_measure_injective MeasureTheory.Measure.toOuterMeasure_injective
 
 @[ext]
 theorem ext (h : ∀ s, MeasurableSet s → μ₁ s = μ₂ s) : μ₁ = μ₂ :=
@@ -151,20 +151,20 @@ theorem ext_iff : μ₁ = μ₂ ↔ ∀ s, MeasurableSet s → μ₁ s = μ₂ s
 end Measure
 
 @[simp]
-theorem coe_to_outer_measure : ⇑μ.toOuterMeasure = μ :=
+theorem coe_toOuterMeasure : ⇑μ.toOuterMeasure = μ :=
   rfl
-#align measure_theory.coe_to_outer_measure MeasureTheory.coe_to_outer_measure
+#align measure_theory.coe_to_outer_measure MeasureTheory.coe_toOuterMeasure
 
-theorem to_outer_measure_apply (s : Set α) : μ.toOuterMeasure s = μ s :=
+theorem toOuterMeasure_apply (s : Set α) : μ.toOuterMeasure s = μ s :=
   rfl
-#align measure_theory.to_outer_measure_apply MeasureTheory.to_outer_measure_apply
+#align measure_theory.to_outer_measure_apply MeasureTheory.toOuterMeasure_apply
 
 theorem measure_eq_trim (s : Set α) : μ s = μ.toOuterMeasure.trim s := by rw [μ.trimmed] <;> rfl
 #align measure_theory.measure_eq_trim MeasureTheory.measure_eq_trim
 
-theorem measure_eq_infi (s : Set α) : μ s = ⨅ (t) (st : s ⊆ t) (ht : MeasurableSet t), μ t := by
+theorem measure_eq_infᵢ (s : Set α) : μ s = ⨅ (t) (st : s ⊆ t) (ht : MeasurableSet t), μ t := by
   rw [measure_eq_trim, outer_measure.trim_eq_infi] <;> rfl
-#align measure_theory.measure_eq_infi MeasureTheory.measure_eq_infi
+#align measure_theory.measure_eq_infi MeasureTheory.measure_eq_infᵢ
 
 /-- A variant of `measure_eq_infi` which has a single `infi`. This is useful when applying a
   lemma next that only works for non-empty infima, in which case you can use
@@ -174,15 +174,15 @@ theorem measure_eq_infi' (μ : Measure α) (s : Set α) :
   simp_rw [infᵢ_subtype, infᵢ_and, Subtype.coe_mk, ← measure_eq_infi]
 #align measure_theory.measure_eq_infi' MeasureTheory.measure_eq_infi'
 
-theorem measure_eq_induced_outer_measure :
+theorem measure_eq_inducedOuterMeasure :
     μ s = inducedOuterMeasure (fun s _ => μ s) MeasurableSet.empty μ.Empty s :=
   measure_eq_trim _
-#align measure_theory.measure_eq_induced_outer_measure MeasureTheory.measure_eq_induced_outer_measure
+#align measure_theory.measure_eq_induced_outer_measure MeasureTheory.measure_eq_inducedOuterMeasure
 
-theorem to_outer_measure_eq_induced_outer_measure :
+theorem toOuterMeasure_eq_inducedOuterMeasure :
     μ.toOuterMeasure = inducedOuterMeasure (fun s _ => μ s) MeasurableSet.empty μ.Empty :=
   μ.trimmed.symm
-#align measure_theory.to_outer_measure_eq_induced_outer_measure MeasureTheory.to_outer_measure_eq_induced_outer_measure
+#align measure_theory.to_outer_measure_eq_induced_outer_measure MeasureTheory.toOuterMeasure_eq_inducedOuterMeasure
 
 theorem measure_eq_extend (hs : MeasurableSet s) :
     μ s = extend (fun t (ht : MeasurableSet t) => μ t) s :=
@@ -239,9 +239,9 @@ theorem exists_measurable_superset_iff_measure_eq_zero :
   ⟨fun ⟨t, hst, _, ht⟩ => measure_mono_null hst ht, exists_measurable_superset_of_null⟩
 #align measure_theory.exists_measurable_superset_iff_measure_eq_zero MeasureTheory.exists_measurable_superset_iff_measure_eq_zero
 
-theorem measure_Union_le [Countable β] (s : β → Set α) : μ (⋃ i, s i) ≤ ∑' i, μ (s i) :=
+theorem measure_unionᵢ_le [Countable β] (s : β → Set α) : μ (⋃ i, s i) ≤ ∑' i, μ (s i) :=
   μ.toOuterMeasure.union _
-#align measure_theory.measure_Union_le MeasureTheory.measure_Union_le
+#align measure_theory.measure_Union_le MeasureTheory.measure_unionᵢ_le
 
 theorem measure_bUnion_le {s : Set β} (hs : s.Countable) (f : β → Set α) :
     μ (⋃ b ∈ s, f b) ≤ ∑' p : s, μ (f p) :=
@@ -258,11 +258,11 @@ theorem measure_bUnion_finset_le (s : Finset β) (f : β → Set α) :
   exact measure_bUnion_le s.countable_to_set f
 #align measure_theory.measure_bUnion_finset_le MeasureTheory.measure_bUnion_finset_le
 
-theorem measure_Union_fintype_le [Fintype β] (f : β → Set α) : μ (⋃ b, f b) ≤ ∑ p, μ (f p) :=
+theorem measure_unionᵢ_fintype_le [Fintype β] (f : β → Set α) : μ (⋃ b, f b) ≤ ∑ p, μ (f p) :=
   by
   convert measure_bUnion_finset_le Finset.univ f
   simp
-#align measure_theory.measure_Union_fintype_le MeasureTheory.measure_Union_fintype_le
+#align measure_theory.measure_Union_fintype_le MeasureTheory.measure_unionᵢ_fintype_le
 
 theorem measure_bUnion_lt_top {s : Set β} {f : β → Set α} (hs : s.Finite)
     (hfin : ∀ i ∈ s, μ (f i) ≠ ∞) : μ (⋃ i ∈ s, f i) < ∞ :=
@@ -273,33 +273,33 @@ theorem measure_bUnion_lt_top {s : Set β} {f : β → Set α} (hs : s.Finite)
   apply Ennreal.sum_lt_top; simpa only [finite.mem_to_finset]
 #align measure_theory.measure_bUnion_lt_top MeasureTheory.measure_bUnion_lt_top
 
-theorem measure_Union_null [Countable β] {s : β → Set α} : (∀ i, μ (s i) = 0) → μ (⋃ i, s i) = 0 :=
+theorem measure_unionᵢ_null [Countable β] {s : β → Set α} : (∀ i, μ (s i) = 0) → μ (⋃ i, s i) = 0 :=
   μ.toOuterMeasure.Union_null
-#align measure_theory.measure_Union_null MeasureTheory.measure_Union_null
+#align measure_theory.measure_Union_null MeasureTheory.measure_unionᵢ_null
 
 @[simp]
-theorem measure_Union_null_iff [Countable ι] {s : ι → Set α} :
+theorem measure_unionᵢ_null_iff [Countable ι] {s : ι → Set α} :
     μ (⋃ i, s i) = 0 ↔ ∀ i, μ (s i) = 0 :=
   μ.toOuterMeasure.Union_null_iff
-#align measure_theory.measure_Union_null_iff MeasureTheory.measure_Union_null_iff
+#align measure_theory.measure_Union_null_iff MeasureTheory.measure_unionᵢ_null_iff
 
 /-- A version of `measure_Union_null_iff` for unions indexed by Props
 TODO: in the long run it would be better to combine this with `measure_Union_null_iff` by
 generalising to `Sort`. -/
 @[simp]
-theorem measure_Union_null_iff' {ι : Prop} {s : ι → Set α} : μ (⋃ i, s i) = 0 ↔ ∀ i, μ (s i) = 0 :=
+theorem measure_unionᵢ_null_iff' {ι : Prop} {s : ι → Set α} : μ (⋃ i, s i) = 0 ↔ ∀ i, μ (s i) = 0 :=
   μ.toOuterMeasure.Union_null_iff'
-#align measure_theory.measure_Union_null_iff' MeasureTheory.measure_Union_null_iff'
+#align measure_theory.measure_Union_null_iff' MeasureTheory.measure_unionᵢ_null_iff'
 
 theorem measure_bUnion_null_iff {s : Set ι} (hs : s.Countable) {t : ι → Set α} :
     μ (⋃ i ∈ s, t i) = 0 ↔ ∀ i ∈ s, μ (t i) = 0 :=
   μ.toOuterMeasure.bUnion_null_iff hs
 #align measure_theory.measure_bUnion_null_iff MeasureTheory.measure_bUnion_null_iff
 
-theorem measure_sUnion_null_iff {S : Set (Set α)} (hS : S.Countable) :
+theorem measure_unionₛ_null_iff {S : Set (Set α)} (hS : S.Countable) :
     μ (⋃₀ S) = 0 ↔ ∀ s ∈ S, μ s = 0 :=
   μ.toOuterMeasure.sUnion_null_iff hS
-#align measure_theory.measure_sUnion_null_iff MeasureTheory.measure_sUnion_null_iff
+#align measure_theory.measure_sUnion_null_iff MeasureTheory.measure_unionₛ_null_iff
 
 theorem measure_union_le (s₁ s₂ : Set α) : μ (s₁ ∪ s₂) ≤ μ s₁ + μ s₂ :=
   μ.toOuterMeasure.union _ _
@@ -337,12 +337,12 @@ theorem measure_union_eq_top_iff : μ (s ∪ t) = ∞ ↔ μ s = ∞ ∨ μ t = 
   not_iff_not.1 <| by simp only [← lt_top_iff_ne_top, ← Ne.def, not_or, measure_union_lt_top_iff]
 #align measure_theory.measure_union_eq_top_iff MeasureTheory.measure_union_eq_top_iff
 
-theorem exists_measure_pos_of_not_measure_Union_null [Countable β] {s : β → Set α}
+theorem exists_measure_pos_of_not_measure_unionᵢ_null [Countable β] {s : β → Set α}
     (hs : μ (⋃ n, s n) ≠ 0) : ∃ n, 0 < μ (s n) :=
   by
   contrapose! hs
   exact measure_Union_null fun n => nonpos_iff_eq_zero.1 (hs n)
-#align measure_theory.exists_measure_pos_of_not_measure_Union_null MeasureTheory.exists_measure_pos_of_not_measure_Union_null
+#align measure_theory.exists_measure_pos_of_not_measure_Union_null MeasureTheory.exists_measure_pos_of_not_measure_unionᵢ_null
 
 theorem measure_inter_lt_top_of_left_ne_top (hs_finite : μ s ≠ ∞) : μ (s ∩ t) < ∞ :=
   (measure_mono (Set.inter_subset_left s t)).trans_lt hs_finite.lt_top
@@ -453,7 +453,7 @@ theorem ae_le_of_ae_lt {f g : α → ℝ≥0∞} (h : ∀ᵐ x ∂μ, f x < g x)
 
 @[simp]
 theorem ae_eq_empty : s =ᵐ[μ] (∅ : Set α) ↔ μ s = 0 :=
-  eventually_eq_empty.trans <| by simp only [ae_iff, not_not, set_of_mem_eq]
+  eventuallyEq_empty.trans <| by simp only [ae_iff, not_not, set_of_mem_eq]
 #align measure_theory.ae_eq_empty MeasureTheory.ae_eq_empty
 
 @[simp]
@@ -497,9 +497,9 @@ theorem ae_eq_set {s t : Set α} : s =ᵐ[μ] t ↔ μ (s \ t) = 0 ∧ μ (t \ s
 #align measure_theory.ae_eq_set MeasureTheory.ae_eq_set
 
 @[simp]
-theorem measure_symm_diff_eq_zero_iff {s t : Set α} : μ (s ∆ t) = 0 ↔ s =ᵐ[μ] t := by
+theorem measure_symmDiff_eq_zero_iff {s t : Set α} : μ (s ∆ t) = 0 ↔ s =ᵐ[μ] t := by
   simp [ae_eq_set, symmDiff_def]
-#align measure_theory.measure_symm_diff_eq_zero_iff MeasureTheory.measure_symm_diff_eq_zero_iff
+#align measure_theory.measure_symm_diff_eq_zero_iff MeasureTheory.measure_symmDiff_eq_zero_iff
 
 @[simp]
 theorem ae_eq_set_compl_compl {s t : Set α} : sᶜ =ᵐ[μ] tᶜ ↔ s =ᵐ[μ] t := by
@@ -571,10 +571,10 @@ theorem inter_ae_eq_empty_of_ae_eq_empty_right (h : t =ᵐ[μ] (∅ : Set α)) :
 #align measure_theory.inter_ae_eq_empty_of_ae_eq_empty_right MeasureTheory.inter_ae_eq_empty_of_ae_eq_empty_right
 
 @[to_additive]
-theorem Set.mul_indicator_ae_eq_one {M : Type _} [One M] {f : α → M} {s : Set α}
+theorem Set.mulIndicator_ae_eq_one {M : Type _} [One M] {f : α → M} {s : Set α}
     (h : s.mulIndicator f =ᵐ[μ] 1) : μ (s ∩ Function.mulSupport f) = 0 := by
   simpa [Filter.EventuallyEq, ae_iff] using h
-#align set.mul_indicator_ae_eq_one Set.mul_indicator_ae_eq_one
+#align set.mul_indicator_ae_eq_one Set.mulIndicator_ae_eq_one
 #align set.indicator_ae_eq_zero Set.indicator_ae_eq_zero
 
 /-- If `s ⊆ t` modulo a set of measure `0`, then `μ s ≤ μ t`. -/
@@ -621,31 +621,31 @@ irreducible_def toMeasurable (μ : Measure α) (s : Set α) : Set α :=
     else (exists_measurable_superset μ s).some
 #align measure_theory.to_measurable MeasureTheory.toMeasurable
 
-theorem subset_to_measurable (μ : Measure α) (s : Set α) : s ⊆ toMeasurable μ s :=
+theorem subset_toMeasurable (μ : Measure α) (s : Set α) : s ⊆ toMeasurable μ s :=
   by
   rw [to_measurable]; split_ifs with hs h's
   exacts[hs.some_spec.fst, h's.some_spec.fst, (exists_measurable_superset μ s).some_spec.1]
-#align measure_theory.subset_to_measurable MeasureTheory.subset_to_measurable
+#align measure_theory.subset_to_measurable MeasureTheory.subset_toMeasurable
 
-theorem ae_le_to_measurable : s ≤ᵐ[μ] toMeasurable μ s :=
-  (subset_to_measurable _ _).EventuallyLe
-#align measure_theory.ae_le_to_measurable MeasureTheory.ae_le_to_measurable
+theorem ae_le_toMeasurable : s ≤ᵐ[μ] toMeasurable μ s :=
+  (subset_toMeasurable _ _).EventuallyLe
+#align measure_theory.ae_le_to_measurable MeasureTheory.ae_le_toMeasurable
 
 @[simp]
-theorem measurable_set_to_measurable (μ : Measure α) (s : Set α) :
-    MeasurableSet (toMeasurable μ s) := by
+theorem measurableSet_toMeasurable (μ : Measure α) (s : Set α) : MeasurableSet (toMeasurable μ s) :=
+  by
   rw [to_measurable]; split_ifs with hs h's
   exacts[hs.some_spec.snd.1, h's.some_spec.snd.1, (exists_measurable_superset μ s).some_spec.2.1]
-#align measure_theory.measurable_set_to_measurable MeasureTheory.measurable_set_to_measurable
+#align measure_theory.measurable_set_to_measurable MeasureTheory.measurableSet_toMeasurable
 
 @[simp]
-theorem measure_to_measurable (s : Set α) : μ (toMeasurable μ s) = μ s :=
+theorem measure_toMeasurable (s : Set α) : μ (toMeasurable μ s) = μ s :=
   by
   rw [to_measurable]; split_ifs with hs h's
   · exact measure_congr hs.some_spec.snd.2
   · simpa only [inter_univ] using h's.some_spec.snd.2 univ MeasurableSet.univ
   · exact (exists_measurable_superset μ s).some_spec.2.2
-#align measure_theory.measure_to_measurable MeasureTheory.measure_to_measurable
+#align measure_theory.measure_to_measurable MeasureTheory.measure_toMeasurable
 
 /-- A measure space is a measurable space equipped with a
   measure, referred to as `volume`. -/
@@ -733,9 +733,9 @@ theorem congr (hf : AeMeasurable f μ) (h : f =ᵐ[μ] g) : AeMeasurable g μ :=
 
 end AeMeasurable
 
-theorem ae_measurable_congr (h : f =ᵐ[μ] g) : AeMeasurable f μ ↔ AeMeasurable g μ :=
+theorem aeMeasurable_congr (h : f =ᵐ[μ] g) : AeMeasurable f μ ↔ AeMeasurable g μ :=
   ⟨fun hf => AeMeasurable.congr hf h, fun hg => AeMeasurable.congr hg h.symm⟩
-#align ae_measurable_congr ae_measurable_congr
+#align ae_measurable_congr aeMeasurable_congr
 
 @[simp]
 theorem aeMeasurableConst {b : β} : AeMeasurable (fun a : α => b) μ :=

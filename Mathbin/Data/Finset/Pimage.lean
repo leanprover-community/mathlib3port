@@ -33,24 +33,24 @@ def toFinset (o : Part α) [Decidable o.Dom] : Finset α :=
 #align part.to_finset Part.toFinset
 
 @[simp]
-theorem mem_to_finset {o : Part α} [Decidable o.Dom] {x : α} : x ∈ o.toFinset ↔ x ∈ o := by
+theorem mem_toFinset {o : Part α} [Decidable o.Dom] {x : α} : x ∈ o.toFinset ↔ x ∈ o := by
   simp [to_finset]
-#align part.mem_to_finset Part.mem_to_finset
+#align part.mem_to_finset Part.mem_toFinset
 
 @[simp]
-theorem to_finset_none [Decidable (none : Part α).Dom] : none.toFinset = (∅ : Finset α) := by
+theorem toFinset_none [Decidable (none : Part α).Dom] : none.toFinset = (∅ : Finset α) := by
   simp [to_finset]
-#align part.to_finset_none Part.to_finset_none
+#align part.to_finset_none Part.toFinset_none
 
 @[simp]
-theorem to_finset_some {a : α} [Decidable (some a).Dom] : (some a).toFinset = {a} := by
+theorem toFinset_some {a : α} [Decidable (some a).Dom] : (some a).toFinset = {a} := by
   simp [to_finset]
-#align part.to_finset_some Part.to_finset_some
+#align part.to_finset_some Part.toFinset_some
 
 @[simp]
-theorem coe_to_finset (o : Part α) [Decidable o.Dom] : (o.toFinset : Set α) = { x | x ∈ o } :=
-  Set.ext fun x => mem_to_finset
-#align part.coe_to_finset Part.coe_to_finset
+theorem coe_toFinset (o : Part α) [Decidable o.Dom] : (o.toFinset : Set α) = { x | x ∈ o } :=
+  Set.ext fun x => mem_toFinset
+#align part.coe_to_finset Part.coe_toFinset
 
 end Part
 

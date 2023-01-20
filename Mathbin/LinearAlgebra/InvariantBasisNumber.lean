@@ -93,7 +93,7 @@ theorem le_of_fin_injective [StrongRankCondition R] {n m : ℕ} (f : (Fin n → 
 
 /-- A ring satisfies the strong rank condition if and only if, for all `n : ℕ`, any linear map
 `(fin (n + 1) → R) →ₗ[R] (fin n → R)` is not injective. -/
-theorem strong_rank_condition_iff_succ :
+theorem strongRankCondition_iff_succ :
     StrongRankCondition R ↔
       ∀ (n : ℕ) (f : (Fin (n + 1) → R) →ₗ[R] Fin n → R), ¬Function.Injective f :=
   by
@@ -104,7 +104,7 @@ theorem strong_rank_condition_iff_succ :
     exact
       h m (f.comp (Function.ExtendByZero.linearMap R (Fin.castLe (not_le.1 H))))
         (hf.comp (Function.extend_injective (RelEmbedding.injective _) 0))
-#align strong_rank_condition_iff_succ strong_rank_condition_iff_succ
+#align strong_rank_condition_iff_succ strongRankCondition_iff_succ
 
 theorem card_le_of_injective [StrongRankCondition R] {α β : Type _} [Fintype α] [Fintype β]
     (f : (α → R) →ₗ[R] β → R) (i : Injective f) : Fintype.card α ≤ Fintype.card β :=
@@ -198,7 +198,7 @@ theorem card_eq_of_lequiv {α β : Type _} [Fintype α] [Fintype β] (f : (α �
       (LinearEquiv.funCongrLeft R R (Fintype.equivFin β)).symm)
 #align card_eq_of_lequiv card_eq_of_lequiv
 
-theorem nontrivial_of_invariant_basis_number : Nontrivial R :=
+theorem nontrivial_of_invariantBasisNumber : Nontrivial R :=
   by
   by_contra h
   refine' zero_ne_one (eq_of_fin_equiv R _)
@@ -209,7 +209,7 @@ theorem nontrivial_of_invariant_basis_number : Nontrivial R :=
       |·
         intros
         exact 0|tidy
-#align nontrivial_of_invariant_basis_number nontrivial_of_invariant_basis_number
+#align nontrivial_of_invariant_basis_number nontrivial_of_invariantBasisNumber
 
 end
 
@@ -271,7 +271,7 @@ private def induced_map (I : Ideal R) (e : (ι → R) →ₗ[R] ι' → R) :
   Quotient.liftOn' x (fun y => Ideal.Quotient.mk _ (e y))
     (by
       refine' fun a b hab => Ideal.Quotient.eq.2 fun h => _
-      rw [Submodule.quotient_rel_r_def] at hab
+      rw [Submodule.quotientRel_r_def] at hab
       rw [← LinearMap.map_sub]
       exact Ideal.map_pi _ _ hab e h)
 #align induced_map induced_map

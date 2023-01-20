@@ -69,7 +69,7 @@ theorem MeasureTheory.aeMeasurableOfExistAlmostDisjointSupersets {α : Type _}
     exact MeasurableSet.bInter (s_count.mono (inter_subset_left _ _)) fun b hb => (huv i b).1
   let f' : α → β := fun x => ⨅ i : s, piecewise (u' i) (fun x => (i : β)) (fun x => (⊤ : β)) x
   have f'_meas : Measurable f' := by
-    apply measurable_infi
+    apply measurable_infᵢ
     exact fun i => Measurable.piecewise (u'_meas i) measurable_const measurable_const
   let t := ⋃ (p : s) (q : s ∩ Ioi p), u' p ∩ v p q
   have μt : μ t ≤ 0 :=
@@ -111,14 +111,14 @@ theorem MeasureTheory.aeMeasurableOfExistAlmostDisjointSupersets {α : Type _}
       simp only [H, piecewise_eq_of_mem]
       contrapose! hx
       obtain ⟨r, ⟨xr, rq⟩, rs⟩ : ∃ r, r ∈ Ioo (i : β) (f x) ∩ s :=
-        dense_iff_inter_open.1 s_dense (Ioo i (f x)) is_open_Ioo (nonempty_Ioo.2 hx)
+        dense_iff_inter_open.1 s_dense (Ioo i (f x)) isOpen_ioo (nonempty_Ioo.2 hx)
       have A : x ∈ v i r := (huv i r).2.2.2.1 rq
       apply mem_Union.2 ⟨i, _⟩
       refine' mem_Union.2 ⟨⟨r, ⟨rs, xr⟩⟩, _⟩
       exact ⟨H, A⟩
     · intro q hq
       obtain ⟨r, ⟨xr, rq⟩, rs⟩ : ∃ r, r ∈ Ioo (f x) q ∩ s :=
-        dense_iff_inter_open.1 s_dense (Ioo (f x) q) is_open_Ioo (nonempty_Ioo.2 hq)
+        dense_iff_inter_open.1 s_dense (Ioo (f x) q) isOpen_ioo (nonempty_Ioo.2 hq)
       refine' ⟨⟨r, rs⟩, _⟩
       have A : x ∈ u' r := mem_bInter fun i hi => (huv r i).2.2.1 xr
       simp only [A, rq, piecewise_eq_of_mem, Subtype.coe_mk]

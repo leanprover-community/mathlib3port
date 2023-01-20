@@ -32,12 +32,12 @@ open unitInterval
 /-- The special case of the Weierstrass approximation theorem for the interval `[0,1]`.
 This is just a matter of unravelling definitions and using the Bernstein approximations.
 -/
-theorem polynomial_functions_closure_eq_top' : (polynomialFunctions I).topologicalClosure = ⊤ :=
+theorem polynomialFunctions_closure_eq_top' : (polynomialFunctions I).topologicalClosure = ⊤ :=
   by
   apply eq_top_iff.mpr
   rintro f -
   refine' Filter.Frequently.mem_closure _
-  refine' Filter.Tendsto.frequently (bernstein_approximation_uniform f) _
+  refine' Filter.Tendsto.frequently (bernsteinApproximation_uniform f) _
   apply frequently_of_forall
   intro n
   simp only [SetLike.mem_coe]
@@ -46,7 +46,7 @@ theorem polynomial_functions_closure_eq_top' : (polynomialFunctions I).topologic
   apply Subalgebra.smul_mem
   dsimp [bernstein, polynomialFunctions]
   simp
-#align polynomial_functions_closure_eq_top' polynomial_functions_closure_eq_top'
+#align polynomial_functions_closure_eq_top' polynomialFunctions_closure_eq_top'
 
 /-- The **Weierstrass Approximation Theorem**:
 polynomials functions on `[a, b] ⊆ ℝ` are dense in `C([a,b],ℝ)`
@@ -55,7 +55,7 @@ polynomials functions on `[a, b] ⊆ ℝ` are dense in `C([a,b],ℝ)`
 our proof of that relies on the fact that `abs` is in the closure of polynomials on `[-M, M]`,
 so we may as well get this done first.)
 -/
-theorem polynomial_functions_closure_eq_top (a b : ℝ) :
+theorem polynomialFunctions_closure_eq_top (a b : ℝ) :
     (polynomialFunctions (Set.Icc a b)).topologicalClosure = ⊤ :=
   by
   by_cases h : a < b
@@ -69,14 +69,14 @@ theorem polynomial_functions_closure_eq_top (a b : ℝ) :
     let W' : C(Set.Icc a b, ℝ) ≃ₜ C(I, ℝ) := comp_right_homeomorph ℝ (iccHomeoI a b h).symm
     have w : (W : C(Set.Icc a b, ℝ) → C(I, ℝ)) = W' := rfl
     -- Thus we take the statement of the Weierstrass approximation theorem for `[0,1]`,
-    have p := polynomial_functions_closure_eq_top'
+    have p := polynomialFunctions_closure_eq_top'
     -- and pullback both sides, obtaining an equation between subalgebras of `C([a,b], ℝ)`.
     apply_fun fun s => s.comap W  at p
     simp only [Algebra.comap_top] at p
     -- Since the pullback operation is continuous, it commutes with taking `topological_closure`,
-    rw [Subalgebra.topological_closure_comap_homeomorph _ W W' w] at p
+    rw [Subalgebra.topologicalClosure_comap_homeomorph _ W W' w] at p
     -- and precomposing with an affine map takes polynomial functions to polynomial functions.
-    rw [polynomialFunctions.comap_comp_right_alg_hom_Icc_homeo_I] at p
+    rw [polynomialFunctions.comap_compRightAlgHom_iccHomeoI] at p
     -- 🎉
     exact p
   · -- Otherwise, `b ≤ a`, and the interval is a subsingleton,
@@ -86,18 +86,18 @@ theorem polynomial_functions_closure_eq_top (a b : ℝ) :
         le_antisymm ((x.2.2.trans (not_lt.mp h)).trans y.2.1)
           ((y.2.2.trans (not_lt.mp h)).trans x.2.1)⟩
     apply Subsingleton.elim
-#align polynomial_functions_closure_eq_top polynomial_functions_closure_eq_top
+#align polynomial_functions_closure_eq_top polynomialFunctions_closure_eq_top
 
 /-- An alternative statement of Weierstrass' theorem.
 
 Every real-valued continuous function on `[a,b]` is a uniform limit of polynomials.
 -/
-theorem continuous_map_mem_polynomial_functions_closure (a b : ℝ) (f : C(Set.Icc a b, ℝ)) :
+theorem continuousMap_mem_polynomialFunctions_closure (a b : ℝ) (f : C(Set.Icc a b, ℝ)) :
     f ∈ (polynomialFunctions (Set.Icc a b)).topologicalClosure :=
   by
-  rw [polynomial_functions_closure_eq_top _ _]
+  rw [polynomialFunctions_closure_eq_top _ _]
   simp
-#align continuous_map_mem_polynomial_functions_closure continuous_map_mem_polynomial_functions_closure
+#align continuous_map_mem_polynomial_functions_closure continuousMap_mem_polynomialFunctions_closure
 
 open Polynomial
 
@@ -106,15 +106,15 @@ for those who like their epsilons.
 
 Every real-valued continuous function on `[a,b]` is within any `ε > 0` of some polynomial.
 -/
-theorem exists_polynomial_near_continuous_map (a b : ℝ) (f : C(Set.Icc a b, ℝ)) (ε : ℝ)
+theorem exists_polynomial_near_continuousMap (a b : ℝ) (f : C(Set.Icc a b, ℝ)) (ε : ℝ)
     (pos : 0 < ε) : ∃ p : ℝ[X], ‖p.toContinuousMapOn _ - f‖ < ε :=
   by
-  have w := mem_closure_iff_frequently.mp (continuous_map_mem_polynomial_functions_closure _ _ f)
+  have w := mem_closure_iff_frequently.mp (continuousMap_mem_polynomialFunctions_closure _ _ f)
   rw [metric.nhds_basis_ball.frequently_iff] at w
   obtain ⟨-, H, ⟨m, ⟨-, rfl⟩⟩⟩ := w ε Pos
   rw [Metric.mem_ball, dist_eq_norm] at H
   exact ⟨m, H⟩
-#align exists_polynomial_near_continuous_map exists_polynomial_near_continuous_map
+#align exists_polynomial_near_continuous_map exists_polynomial_near_continuousMap
 
 /-- Another alternative statement of Weierstrass's theorem,
 for those who like epsilons, but not bundled continuous functions.
@@ -122,15 +122,15 @@ for those who like epsilons, but not bundled continuous functions.
 Every real-valued function `ℝ → ℝ` which is continuous on `[a,b]`
 can be approximated to within any `ε > 0` on `[a,b]` by some polynomial.
 -/
-theorem exists_polynomial_near_of_continuous_on (a b : ℝ) (f : ℝ → ℝ)
+theorem exists_polynomial_near_of_continuousOn (a b : ℝ) (f : ℝ → ℝ)
     (c : ContinuousOn f (Set.Icc a b)) (ε : ℝ) (pos : 0 < ε) :
     ∃ p : ℝ[X], ∀ x ∈ Set.Icc a b, |p.eval x - f x| < ε :=
   by
   let f' : C(Set.Icc a b, ℝ) := ⟨fun x => f x, continuous_on_iff_continuous_restrict.mp c⟩
-  obtain ⟨p, b⟩ := exists_polynomial_near_continuous_map a b f' ε Pos
+  obtain ⟨p, b⟩ := exists_polynomial_near_continuousMap a b f' ε Pos
   use p
   rw [norm_lt_iff _ Pos] at b
   intro x m
   exact b ⟨x, m⟩
-#align exists_polynomial_near_of_continuous_on exists_polynomial_near_of_continuous_on
+#align exists_polynomial_near_of_continuous_on exists_polynomial_near_of_continuousOn
 

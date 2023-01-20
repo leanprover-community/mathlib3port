@@ -47,14 +47,14 @@ circle.
 TODO: add a version for `w ∈ metric.ball c R`.
 
 TODO: add a version for higher derivatives. -/
-theorem deriv_eq_smul_circle_integral [CompleteSpace F] {R : ℝ} {c : ℂ} {f : ℂ → F} (hR : 0 < R)
+theorem deriv_eq_smul_circleIntegral [CompleteSpace F] {R : ℝ} {c : ℂ} {f : ℂ → F} (hR : 0 < R)
     (hf : DiffContOnCl ℂ f (ball c R)) :
     deriv f c = (2 * π * I : ℂ)⁻¹ • ∮ z in C(c, R), (z - c) ^ (-2 : ℤ) • f z :=
   by
   lift R to ℝ≥0 using hR.le
   refine' (hf.has_fpower_series_on_ball hR).HasFpowerSeriesAt.deriv.trans _
-  simp only [cauchy_power_series_apply, one_div, zpow_neg, pow_one, smul_smul, zpow_two, mul_inv]
-#align complex.deriv_eq_smul_circle_integral Complex.deriv_eq_smul_circle_integral
+  simp only [cauchyPowerSeries_apply, one_div, zpow_neg, pow_one, smul_smul, zpow_two, mul_inv]
+#align complex.deriv_eq_smul_circle_integral Complex.deriv_eq_smul_circleIntegral
 
 theorem norm_deriv_le_aux [CompleteSpace F] {c : ℂ} {R C : ℝ} {f : ℂ → F} (hR : 0 < R)
     (hf : DiffContOnCl ℂ f (ball c R)) (hC : ∀ z ∈ sphere c R, ‖f z‖ ≤ C) : ‖deriv f c‖ ≤ C / R :=
@@ -67,7 +67,7 @@ theorem norm_deriv_le_aux [CompleteSpace F] {c : ℂ} {R C : ℝ} {f : ℂ → F
     ‖deriv f c‖ = ‖(2 * π * I : ℂ)⁻¹ • ∮ z in C(c, R), (z - c) ^ (-2 : ℤ) • f z‖ :=
       congr_arg norm (deriv_eq_smul_circle_integral hR hf)
     _ ≤ R * (C / (R * R)) :=
-      circleIntegral.norm_two_pi_I_inv_smul_integral_le_of_norm_le_const hR.le this
+      circleIntegral.norm_two_pi_i_inv_smul_integral_le_of_norm_le_const hR.le this
     _ = C / R := by rw [mul_div_left_comm, div_self_mul_self', div_eq_mul_inv]
     
 #align complex.norm_deriv_le_aux Complex.norm_deriv_le_aux

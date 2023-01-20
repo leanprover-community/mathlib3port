@@ -131,7 +131,7 @@ private theorem bracket_lie_smul (a : A) (x y : A ⊗[R] L) : ⁅x, a • y⁆ =
       simp only [bracket_def, bracket', TensorProduct.smul_tmul', mul_left_comm a₁ a a₂,
         TensorProduct.curry_apply, LinearMap.mul'_apply, Algebra.id.smul_eq_mul,
         Function.comp_apply, LinearEquiv.coe_coe, LinearMap.coe_comp, TensorProduct.map_tmul,
-        TensorProduct.tensor_tensor_tensor_comm_tmul]
+        TensorProduct.tensorTensorTensorComm_tmul]
     · intro z₁ z₂ h₁ h₂
       simp only [h₁, h₂, smul_add, lie_add]
   · intro z₁ z₂ h₁ h₂

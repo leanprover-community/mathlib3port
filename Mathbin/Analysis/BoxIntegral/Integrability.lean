@@ -84,12 +84,12 @@ theorem hasIntegralIndicatorConst (l : IntegrationParams) (hl : l.bRiemann = ff)
     refine' fun J hJ hJs x hx => ⟨hrsU _ ⟨hJs, π.tag_mem_Icc J⟩ _, π.le_of_mem' J hJ hx⟩
     simpa only [r, s.piecewise_eq_of_mem _ _ hJs] using hπ.1 J hJ (box.coe_subset_Icc hx)
   refine' abs_sub_le_iff.2 ⟨_, _⟩
-  · refine' (Ennreal.le_to_real_sub B).trans (Ennreal.to_real_le_coe_of_le_coe _)
+  · refine' (Ennreal.le_toReal_sub B).trans (Ennreal.toReal_le_coe_of_le_coe _)
     refine' (tsub_le_tsub (measure_mono htU) le_rfl).trans (le_measure_diff.trans _)
     refine' (measure_mono fun x hx => _).trans hμU.le
     exact ⟨hx.1.1, fun hx' => hx.2 ⟨hx'.1, hx.1.2⟩⟩
   · have hμt : μ t ≠ ∞ := ((measure_mono (htU.trans (inter_subset_left _ _))).trans_lt hUt).Ne
-    refine' (Ennreal.le_to_real_sub hμt).trans (Ennreal.to_real_le_coe_of_le_coe _)
+    refine' (Ennreal.le_toReal_sub hμt).trans (Ennreal.toReal_le_coe_of_le_coe _)
     refine' le_measure_diff.trans ((measure_mono _).trans hμF.le)
     rintro x ⟨⟨hxs, hxI⟩, hxt⟩
     refine' ⟨⟨hxs, box.coe_subset_Icc hxI⟩, fun hxF => hxt _⟩
@@ -136,7 +136,7 @@ theorem hasIntegralZeroOfAeEqZero {l : IntegrationParams} {I : Box ι} {f : (ι 
   rw [dist_eq_norm, sub_zero, ← integral_sum_fiberwise fun J => N (π.tag J)]
   refine' le_trans _ (Nnreal.coe_lt_coe.2 hcε).le
   refine'
-    (norm_sum_le_of_le _ _).trans (sum_le_has_sum _ (fun n _ => (δ n).2) (Nnreal.has_sum_coe.2 hδc))
+    (norm_sum_le_of_le _ _).trans (sum_le_hasSum _ (fun n _ => (δ n).2) (Nnreal.hasSum_coe.2 hδc))
   rintro n -
   dsimp [integral_sum]
   have :
@@ -144,8 +144,8 @@ theorem hasIntegralZeroOfAeEqZero {l : IntegrationParams} {I : Box ι} {f : (ι 
     by
     intro J hJ
     rw [tagged_prepartition.mem_filter] at hJ
-    rw [norm_smul, Real.norm_eq_abs, abs_of_nonneg Ennreal.to_real_nonneg]
-    exact mul_le_mul_of_nonneg_left (hJ.2 ▸ Nat.le_ceil _) Ennreal.to_real_nonneg
+    rw [norm_smul, Real.norm_eq_abs, abs_of_nonneg Ennreal.toReal_nonneg]
+    exact mul_le_mul_of_nonneg_left (hJ.2 ▸ Nat.le_ceil _) Ennreal.toReal_nonneg
   refine' (norm_sum_le_of_le _ this).trans _
   clear this
   rw [← sum_mul, ← prepartition.measure_Union_to_real]
@@ -159,7 +159,7 @@ theorem hasIntegralZeroOfAeEqZero {l : IntegrationParams} {I : Box ι} {f : (ι 
     rintro x ⟨J, ⟨hJ, rfl⟩, hx⟩
     exact ⟨hrU _ (hπ.1 _ hJ (box.coe_subset_Icc hx)), π.le_of_mem' J hJ hx⟩
   lift m to ℝ≥0 using ne_top_of_lt this
-  rw [Ennreal.coe_to_real, ← Nnreal.coe_nat_cast, ← Nnreal.coe_mul, Nnreal.coe_le_coe, ←
+  rw [Ennreal.coe_toReal, ← Nnreal.coe_nat_cast, ← Nnreal.coe_mul, Nnreal.coe_le_coe, ←
     Ennreal.coe_le_coe, Ennreal.coe_mul, Ennreal.coe_nat, mul_comm]
   exact (mul_le_mul_left' this.le _).trans Ennreal.mul_div_le
 #align box_integral.has_integral_zero_of_ae_eq_zero BoxIntegral.hasIntegralZeroOfAeEqZero
@@ -285,8 +285,8 @@ theorem IntegrableOn.hasBoxIntegral [CompleteSpace E] {f : (ι → ℝ) → E} {
     rw [← hπp.Union_eq, π.to_prepartition.measure_Union_to_real, sum_mul, integral_sum]
     refine' dist_sum_sum_le_of_le _ fun J hJ => _
     dsimp
-    rw [dist_eq_norm, ← smul_sub, norm_smul, Real.norm_eq_abs, abs_of_nonneg Ennreal.to_real_nonneg]
-    refine' mul_le_mul_of_nonneg_left _ Ennreal.to_real_nonneg
+    rw [dist_eq_norm, ← smul_sub, norm_smul, Real.norm_eq_abs, abs_of_nonneg Ennreal.toReal_nonneg]
+    refine' mul_le_mul_of_nonneg_left _ Ennreal.toReal_nonneg
     rw [← dist_eq_norm']
     exact hNxε _
   · /- We group the terms of both sums by the values of `Nx (π.tag J)`.
@@ -298,7 +298,7 @@ theorem IntegrableOn.hasBoxIntegral [CompleteSpace E] {f : (ι → ℝ) → E} {
     refine' le_trans _ (Nnreal.coe_lt_coe.2 hcε).le
     refine'
       (dist_sum_sum_le_of_le _ fun n hn => _).trans
-        (sum_le_has_sum _ (fun n _ => (δ n).2) (Nnreal.has_sum_coe.2 hδc))
+        (sum_le_hasSum _ (fun n _ => (δ n).2) (Nnreal.hasSum_coe.2 hδc))
     have hNxn : ∀ J ∈ π.filter fun J => Nx (π.tag J) = n, Nx (π.tag J) = n := fun J hJ =>
       (π.mem_filter.1 hJ).2
     have hrn :

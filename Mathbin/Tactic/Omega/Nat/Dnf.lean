@@ -120,7 +120,7 @@ def dnf (p : Preform) : List Clause :=
   (dnfCore p).map nonnegate
 #align omega.nat.dnf Omega.Nat.dnf
 
-theorem holds_nonneg_consts_core {v : Nat → Int} (h1 : ∀ x, 0 ≤ v x) :
+theorem holds_nonnegConstsCore {v : Nat → Int} (h1 : ∀ x, 0 ≤ v x) :
     ∀ m bs, ∀ t ∈ nonnegConstsCore m bs, 0 ≤ Term.val v t
   | _, [] => fun _ h2 => by cases h2
   | k, ff :: bs => holds_nonneg_consts_core (k + 1) bs
@@ -131,12 +131,12 @@ theorem holds_nonneg_consts_core {v : Nat → Int} (h1 : ∀ x, 0 ≤ v x) :
     · simp only [term.val, one_mul, zero_add, coeffs.val_set]
       apply h1
     · apply holds_nonneg_consts_core (k + 1) bs
-#align omega.nat.holds_nonneg_consts_core Omega.Nat.holds_nonneg_consts_core
+#align omega.nat.holds_nonneg_consts_core Omega.Nat.holds_nonnegConstsCore
 
-theorem holds_nonneg_consts {v : Nat → Int} {bs : List Bool} :
+theorem holds_nonnegConsts {v : Nat → Int} {bs : List Bool} :
     (∀ x, 0 ≤ v x) → ∀ t ∈ nonnegConsts bs, 0 ≤ Term.val v t
   | h1 => by apply holds_nonneg_consts_core h1
-#align omega.nat.holds_nonneg_consts Omega.Nat.holds_nonneg_consts
+#align omega.nat.holds_nonneg_consts Omega.Nat.holds_nonnegConsts
 
 theorem exists_clause_holds {v : Nat → Nat} {p : Preform} :
     p.NegFree → p.SubFree → p.Holds v → ∃ c ∈ dnf p, Clause.Holds (fun x => ↑(v x)) c :=

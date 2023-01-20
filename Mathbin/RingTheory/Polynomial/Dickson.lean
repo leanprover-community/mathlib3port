@@ -151,7 +151,7 @@ theorem dickson_one_one_eval_add_inv (x y : R) (h : x * y = 1) :
 
 variable (R)
 
-theorem dickson_one_one_eq_chebyshev_T [Invertible (2 : R)] :
+theorem dickson_one_one_eq_chebyshev_t [Invertible (2 : R)] :
     ∀ n, dickson 1 (1 : R) n = 2 * (Chebyshev.t R n).comp (c (⅟ 2) * X)
   | 0 => by
     simp only [chebyshev.T_zero, mul_one, one_comp, dickson_zero]
@@ -166,15 +166,15 @@ theorem dickson_one_one_eq_chebyshev_T [Invertible (2 : R)] :
     simp only [← C_1, ← C_bit0, ← mul_assoc, ← C_mul, mul_invOf_self]
     rw [C_1, one_mul]
     ring
-#align polynomial.dickson_one_one_eq_chebyshev_T Polynomial.dickson_one_one_eq_chebyshev_T
+#align polynomial.dickson_one_one_eq_chebyshev_T Polynomial.dickson_one_one_eq_chebyshev_t
 
-theorem chebyshev_T_eq_dickson_one_one [Invertible (2 : R)] (n : ℕ) :
+theorem chebyshev_t_eq_dickson_one_one [Invertible (2 : R)] (n : ℕ) :
     Chebyshev.t R n = c (⅟ 2) * (dickson 1 1 n).comp (2 * X) :=
   by
   rw [dickson_one_one_eq_chebyshev_T]
   simp only [comp_assoc, mul_comp, C_comp, X_comp, ← mul_assoc, ← C_1, ← C_bit0, ← C_mul]
   rw [invOf_mul_self, C_1, one_mul, one_mul, comp_X]
-#align polynomial.chebyshev_T_eq_dickson_one_one Polynomial.chebyshev_T_eq_dickson_one_one
+#align polynomial.chebyshev_T_eq_dickson_one_one Polynomial.chebyshev_t_eq_dickson_one_one
 
 /-- The `(m * n)`-th Dickson polynomial of the first kind is the composition of the `m`-th and
 `n`-th. -/
@@ -227,7 +227,7 @@ theorem dickson_one_one_zmod_p (p : ℕ) [Fact p.Prime] : dickson 1 (1 : Zmod p)
   apply @Set.Infinite.mono _ { x : K | ∃ y, x = y + y⁻¹ ∧ y ≠ 0 }
   · rintro _ ⟨x, rfl, hx⟩
     simp only [eval_X, eval_pow, Set.mem_setOf_eq, @add_pow_char K _ p,
-      dickson_one_one_eval_add_inv _ _ (mul_inv_cancel hx), inv_pow, Zmod.cast_hom_apply,
+      dickson_one_one_eval_add_inv _ _ (mul_inv_cancel hx), inv_pow, Zmod.castHom_apply,
       Zmod.cast_one']
   -- Now we need to show that the set of such `x` is infinite.
   -- If the set is finite, then we will show that `K` is also finite.
@@ -251,7 +251,7 @@ theorem dickson_one_one_zmod_p (p : ℕ) [Fact p.Prime] : dickson 1 (1 : Zmod p)
         intro H
         have : φ.eval 0 = 0 := by rw [H, eval_zero]
         simpa [eval_X, eval_one, eval_pow, eval_sub, sub_zero, eval_add, eval_mul, mul_zero, sq,
-          zero_add, one_ne_zero]
+          zero_add, one_neZero]
       classical
         convert (φ.roots ∪ {0}).toFinset.finite_to_set using 1
         ext1 y
@@ -270,18 +270,18 @@ theorem dickson_one_one_zmod_p (p : ℕ) [Fact p.Prime] : dickson 1 (1 : Zmod p)
       simp only [exists_prop, Set.mem_unionᵢ, Set.bind_def, Ne.def, Set.mem_setOf_eq]
       by_cases hx : x = 0
       · simp only [hx, and_true_iff, eq_self_iff_true, inv_zero, or_true_iff]
-        exact ⟨_, 1, rfl, one_ne_zero⟩
+        exact ⟨_, 1, rfl, one_neZero⟩
       · simp only [hx, or_false_iff, exists_eq_right]
         exact ⟨_, rfl, hx⟩
 #align polynomial.dickson_one_one_zmod_p Polynomial.dickson_one_one_zmod_p
 
-theorem dickson_one_one_char_p (p : ℕ) [Fact p.Prime] [CharP R p] : dickson 1 (1 : R) p = X ^ p :=
+theorem dickson_one_one_charP (p : ℕ) [Fact p.Prime] [CharP R p] : dickson 1 (1 : R) p = X ^ p :=
   by
   have h : (1 : R) = Zmod.castHom (dvd_refl p) R 1
-  simp only [Zmod.cast_hom_apply, Zmod.cast_one']
+  simp only [Zmod.castHom_apply, Zmod.cast_one']
   rw [h, ← map_dickson (Zmod.castHom (dvd_refl p) R), dickson_one_one_zmod_p, Polynomial.map_pow,
     map_X]
-#align polynomial.dickson_one_one_char_p Polynomial.dickson_one_one_char_p
+#align polynomial.dickson_one_one_char_p Polynomial.dickson_one_one_charP
 
 end Dickson
 

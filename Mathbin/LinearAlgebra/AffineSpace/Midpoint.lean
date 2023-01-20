@@ -70,41 +70,41 @@ theorem AffineEquiv.map_midpoint (f : P ≃ᵃ[R] P') (a b : P) :
 omit V'
 
 @[simp]
-theorem AffineEquiv.point_reflection_midpoint_left (x y : P) :
+theorem AffineEquiv.pointReflection_midpoint_left (x y : P) :
     pointReflection R (midpoint R x y) x = y := by
   rw [midpoint, point_reflection_apply, line_map_apply, vadd_vsub, vadd_vadd, ← add_smul, ← two_mul,
     mul_invOf_self, one_smul, vsub_vadd]
-#align affine_equiv.point_reflection_midpoint_left AffineEquiv.point_reflection_midpoint_left
+#align affine_equiv.point_reflection_midpoint_left AffineEquiv.pointReflection_midpoint_left
 
 theorem midpoint_comm (x y : P) : midpoint R x y = midpoint R y x := by
   rw [midpoint, ← line_map_apply_one_sub, one_sub_invOf_two, midpoint]
 #align midpoint_comm midpoint_comm
 
 @[simp]
-theorem AffineEquiv.point_reflection_midpoint_right (x y : P) :
+theorem AffineEquiv.pointReflection_midpoint_right (x y : P) :
     pointReflection R (midpoint R x y) y = x := by
-  rw [midpoint_comm, AffineEquiv.point_reflection_midpoint_left]
-#align affine_equiv.point_reflection_midpoint_right AffineEquiv.point_reflection_midpoint_right
+  rw [midpoint_comm, AffineEquiv.pointReflection_midpoint_left]
+#align affine_equiv.point_reflection_midpoint_right AffineEquiv.pointReflection_midpoint_right
 
 theorem midpoint_vsub_midpoint (p₁ p₂ p₃ p₄ : P) :
     midpoint R p₁ p₂ -ᵥ midpoint R p₃ p₄ = midpoint R (p₁ -ᵥ p₃) (p₂ -ᵥ p₄) :=
-  line_map_vsub_line_map _ _ _ _ _
+  lineMap_vsub_lineMap _ _ _ _ _
 #align midpoint_vsub_midpoint midpoint_vsub_midpoint
 
 theorem midpoint_vadd_midpoint (v v' : V) (p p' : P) :
     midpoint R v v' +ᵥ midpoint R p p' = midpoint R (v +ᵥ p) (v' +ᵥ p') :=
-  line_map_vadd_line_map _ _ _ _ _
+  lineMap_vadd_lineMap _ _ _ _ _
 #align midpoint_vadd_midpoint midpoint_vadd_midpoint
 
 theorem midpoint_eq_iff {x y z : P} : midpoint R x y = z ↔ pointReflection R z x = y :=
   eq_comm.trans
-    ((injective_point_reflection_left_of_module R x).eq_iff'
-        (AffineEquiv.point_reflection_midpoint_left x y)).symm
+    ((injective_pointReflection_left_of_module R x).eq_iff'
+        (AffineEquiv.pointReflection_midpoint_left x y)).symm
 #align midpoint_eq_iff midpoint_eq_iff
 
 @[simp]
 theorem midpoint_vsub_left (p₁ p₂ : P) : midpoint R p₁ p₂ -ᵥ p₁ = (⅟ 2 : R) • (p₂ -ᵥ p₁) :=
-  line_map_vsub_left _ _ _
+  lineMap_vsub_left _ _ _
 #align midpoint_vsub_left midpoint_vsub_left
 
 @[simp]
@@ -114,7 +114,7 @@ theorem midpoint_vsub_right (p₁ p₂ : P) : midpoint R p₁ p₂ -ᵥ p₂ = (
 
 @[simp]
 theorem left_vsub_midpoint (p₁ p₂ : P) : p₁ -ᵥ midpoint R p₁ p₂ = (⅟ 2 : R) • (p₁ -ᵥ p₂) :=
-  left_vsub_line_map _ _ _
+  left_vsub_lineMap _ _ _
 #align left_vsub_midpoint left_vsub_midpoint
 
 @[simp]
@@ -195,7 +195,7 @@ theorem midpoint_unique (R' : Type _) [Ring R'] [Invertible (2 : R')] [Module R'
 
 @[simp]
 theorem midpoint_self (x : P) : midpoint R x x = x :=
-  line_map_same_apply _ _
+  lineMap_same_apply _ _
 #align midpoint_self midpoint_self
 
 @[simp]
@@ -236,21 +236,21 @@ theorem midpoint_add_sub (x y : V) : midpoint R (x + y) (x - y) = x := by
 
 end
 
-theorem line_map_inv_two {R : Type _} {V P : Type _} [DivisionRing R] [CharZero R] [AddCommGroup V]
+theorem lineMap_inv_two {R : Type _} {V P : Type _} [DivisionRing R] [CharZero R] [AddCommGroup V]
     [Module R V] [AddTorsor V P] (a b : P) : lineMap a b (2⁻¹ : R) = midpoint R a b :=
   rfl
-#align line_map_inv_two line_map_inv_two
+#align line_map_inv_two lineMap_inv_two
 
-theorem line_map_one_half {R : Type _} {V P : Type _} [DivisionRing R] [CharZero R] [AddCommGroup V]
+theorem lineMap_one_half {R : Type _} {V P : Type _} [DivisionRing R] [CharZero R] [AddCommGroup V]
     [Module R V] [AddTorsor V P] (a b : P) : lineMap a b (1 / 2 : R) = midpoint R a b := by
-  rw [one_div, line_map_inv_two]
-#align line_map_one_half line_map_one_half
+  rw [one_div, lineMap_inv_two]
+#align line_map_one_half lineMap_one_half
 
-theorem homothety_inv_of_two {R : Type _} {V P : Type _} [CommRing R] [Invertible (2 : R)]
+theorem homothety_invOf_two {R : Type _} {V P : Type _} [CommRing R] [Invertible (2 : R)]
     [AddCommGroup V] [Module R V] [AddTorsor V P] (a b : P) :
     homothety a (⅟ 2 : R) b = midpoint R a b :=
   rfl
-#align homothety_inv_of_two homothety_inv_of_two
+#align homothety_inv_of_two homothety_invOf_two
 
 theorem homothety_inv_two {k : Type _} {V P : Type _} [Field k] [CharZero k] [AddCommGroup V]
     [Module k V] [AddTorsor V P] (a b : P) : homothety a (2⁻¹ : k) b = midpoint k a b :=
@@ -292,11 +292,11 @@ def ofMapMidpoint (f : E → F) (h0 : f 0 = 0)
 #align add_monoid_hom.of_map_midpoint AddMonoidHom.ofMapMidpoint
 
 @[simp]
-theorem coe_of_map_midpoint (f : E → F) (h0 : f 0 = 0)
+theorem coe_ofMapMidpoint (f : E → F) (h0 : f 0 = 0)
     (hm : ∀ x y, f (midpoint R x y) = midpoint R' (f x) (f y)) :
     ⇑(ofMapMidpoint R R' f h0 hm) = f :=
   rfl
-#align add_monoid_hom.coe_of_map_midpoint AddMonoidHom.coe_of_map_midpoint
+#align add_monoid_hom.coe_of_map_midpoint AddMonoidHom.coe_ofMapMidpoint
 
 end AddMonoidHom
 

@@ -58,8 +58,8 @@ instance fieldSmoothRing {𝕜 : Type _} [NontriviallyNormedField 𝕜] : Smooth
       rw [smooth_iff]
       refine' ⟨continuous_mul, fun x y => _⟩
       simp only [Prod.mk.eta, mfld_simps]
-      rw [cont_diff_on_univ]
-      exact cont_diff_mul }
+      rw [contDiffOn_univ]
+      exact contDiff_mul }
 #align field_smooth_ring fieldSmoothRing
 
 variable {𝕜 R E H : Type _} [TopologicalSpace R] [TopologicalSpace H] [NontriviallyNormedField 𝕜]
@@ -67,7 +67,7 @@ variable {𝕜 R E H : Type _} [TopologicalSpace R] [TopologicalSpace H] [Nontri
 
 /-- A smooth (semi)ring is a topological (semi)ring. This is not an instance for technical reasons,
 see note [Design choices about smooth algebraic structures]. -/
-theorem topological_semiring_of_smooth [Semiring R] [SmoothRing I R] : TopologicalSemiring R :=
-  { has_continuous_mul_of_smooth I, has_continuous_add_of_smooth I with }
-#align topological_semiring_of_smooth topological_semiring_of_smooth
+theorem topologicalSemiring_of_smooth [Semiring R] [SmoothRing I R] : TopologicalSemiring R :=
+  { hasContinuousMul_of_smooth I, has_continuous_add_of_smooth I with }
+#align topological_semiring_of_smooth topologicalSemiring_of_smooth
 

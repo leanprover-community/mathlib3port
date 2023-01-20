@@ -132,10 +132,10 @@ theorem bounds_nonempty (k n : ℕ) (f : 𝓢(E, F)) :
   ⟨M, le_of_lt hMp, hMb⟩
 #align schwartz_map.bounds_nonempty SchwartzMap.bounds_nonempty
 
-theorem bounds_bdd_below (k n : ℕ) (f : 𝓢(E, F)) :
+theorem bounds_bddBelow (k n : ℕ) (f : 𝓢(E, F)) :
     BddBelow { c | 0 ≤ c ∧ ∀ x, ‖x‖ ^ k * ‖iteratedFderiv ℝ n f x‖ ≤ c } :=
   ⟨0, fun _ ⟨hn, _⟩ => hn⟩
-#align schwartz_map.bounds_bdd_below SchwartzMap.bounds_bdd_below
+#align schwartz_map.bounds_bdd_below SchwartzMap.bounds_bddBelow
 
 theorem decay_add_le_aux (k n : ℕ) (f g : 𝓢(E, F)) (x : E) :
     ‖x‖ ^ k * ‖iteratedFderiv ℝ n (f + g) x‖ ≤
@@ -144,7 +144,7 @@ theorem decay_add_le_aux (k n : ℕ) (f g : 𝓢(E, F)) (x : E) :
   rw [← mul_add]
   refine' mul_le_mul_of_nonneg_left _ (by positivity)
   convert norm_add_le _ _
-  exact iterated_fderiv_add_apply (f.smooth _) (g.smooth _)
+  exact iteratedFderiv_add_apply (f.smooth _) (g.smooth _)
 #align schwartz_map.decay_add_le_aux SchwartzMap.decay_add_le_aux
 
 theorem decay_neg_aux (k n : ℕ) (f : 𝓢(E, F)) (x : E) :
@@ -152,14 +152,14 @@ theorem decay_neg_aux (k n : ℕ) (f : 𝓢(E, F)) (x : E) :
   by
   nth_rw 4 [← norm_neg]
   congr
-  exact iterated_fderiv_neg_apply
+  exact iteratedFderiv_neg_apply
 #align schwartz_map.decay_neg_aux SchwartzMap.decay_neg_aux
 
 variable [NormedField 𝕜] [NormedSpace 𝕜 F] [SMulCommClass ℝ 𝕜 F]
 
 theorem decay_smul_aux (k n : ℕ) (f : 𝓢(E, F)) (c : 𝕜) (x : E) :
     ‖x‖ ^ k * ‖iteratedFderiv ℝ n (c • f) x‖ = ‖c‖ * ‖x‖ ^ k * ‖iteratedFderiv ℝ n f x‖ := by
-  rw [mul_comm ‖c‖, mul_assoc, iterated_fderiv_const_smul_apply (f.smooth _), norm_smul]
+  rw [mul_comm ‖c‖, mul_assoc, iteratedFderiv_const_smul_apply (f.smooth _), norm_smul]
 #align schwartz_map.decay_smul_aux SchwartzMap.decay_smul_aux
 
 end Aux
@@ -172,20 +172,20 @@ def seminormAux (k n : ℕ) (f : 𝓢(E, F)) : ℝ :=
   infₛ { c | 0 ≤ c ∧ ∀ x, ‖x‖ ^ k * ‖iteratedFderiv ℝ n f x‖ ≤ c }
 #align schwartz_map.seminorm_aux SchwartzMap.seminormAux
 
-theorem seminorm_aux_nonneg (k n : ℕ) (f : 𝓢(E, F)) : 0 ≤ f.seminormAux k n :=
+theorem seminormAux_nonneg (k n : ℕ) (f : 𝓢(E, F)) : 0 ≤ f.seminormAux k n :=
   le_cinfₛ (bounds_nonempty k n f) fun _ ⟨hx, _⟩ => hx
-#align schwartz_map.seminorm_aux_nonneg SchwartzMap.seminorm_aux_nonneg
+#align schwartz_map.seminorm_aux_nonneg SchwartzMap.seminormAux_nonneg
 
-theorem le_seminorm_aux (k n : ℕ) (f : 𝓢(E, F)) (x : E) :
+theorem le_seminormAux (k n : ℕ) (f : 𝓢(E, F)) (x : E) :
     ‖x‖ ^ k * ‖iteratedFderiv ℝ n (⇑f) x‖ ≤ f.seminormAux k n :=
   le_cinfₛ (bounds_nonempty k n f) fun y ⟨_, h⟩ => h x
-#align schwartz_map.le_seminorm_aux SchwartzMap.le_seminorm_aux
+#align schwartz_map.le_seminorm_aux SchwartzMap.le_seminormAux
 
 /-- If one controls the norm of every `A x`, then one controls the norm of `A`. -/
-theorem seminorm_aux_le_bound (k n : ℕ) (f : 𝓢(E, F)) {M : ℝ} (hMp : 0 ≤ M)
+theorem seminormAux_le_bound (k n : ℕ) (f : 𝓢(E, F)) {M : ℝ} (hMp : 0 ≤ M)
     (hM : ∀ x, ‖x‖ ^ k * ‖iteratedFderiv ℝ n f x‖ ≤ M) : f.seminormAux k n ≤ M :=
-  cinfₛ_le (bounds_bdd_below k n f) ⟨hMp, hM⟩
-#align schwartz_map.seminorm_aux_le_bound SchwartzMap.seminorm_aux_le_bound
+  cinfₛ_le (bounds_bddBelow k n f) ⟨hMp, hM⟩
+#align schwartz_map.seminorm_aux_le_bound SchwartzMap.seminormAux_le_bound
 
 end SeminormAux
 
@@ -223,7 +223,7 @@ instance [SMul 𝕜 𝕜'] [IsScalarTower 𝕜 𝕜' F] : IsScalarTower 𝕜 �
 instance [SMulCommClass 𝕜 𝕜' F] : SMulCommClass 𝕜 𝕜' 𝓢(E, F) :=
   ⟨fun a b f => ext fun x => smul_comm a b (f x)⟩
 
-theorem seminorm_aux_smul_le (k n : ℕ) (c : 𝕜) (f : 𝓢(E, F)) :
+theorem seminormAux_smul_le (k n : ℕ) (c : 𝕜) (f : 𝓢(E, F)) :
     (c • f).seminormAux k n ≤ ‖c‖ * f.seminormAux k n :=
   by
   refine'
@@ -231,7 +231,7 @@ theorem seminorm_aux_smul_le (k n : ℕ) (c : 𝕜) (f : 𝓢(E, F)) :
       fun x => (decay_smul_aux k n f c x).le.trans _
   rw [mul_assoc]
   exact mul_le_mul_of_nonneg_left (f.le_seminorm_aux k n x) (norm_nonneg _)
-#align schwartz_map.seminorm_aux_smul_le SchwartzMap.seminorm_aux_smul_le
+#align schwartz_map.seminorm_aux_smul_le SchwartzMap.seminormAux_smul_le
 
 instance hasNsmul : SMul ℕ 𝓢(E, F) :=
   ⟨fun c f =>
@@ -265,7 +265,7 @@ section Zero
 
 instance : Zero 𝓢(E, F) :=
   ⟨{  toFun := fun _ => 0
-      smooth' := cont_diff_const
+      smooth' := contDiff_const
       decay' := fun _ _ => ⟨1, fun _ => by simp⟩ }⟩
 
 instance : Inhabited 𝓢(E, F) :=
@@ -276,19 +276,19 @@ theorem coe_zero : ↑(0 : 𝓢(E, F)) = (0 : E → F) :=
 #align schwartz_map.coe_zero SchwartzMap.coe_zero
 
 @[simp]
-theorem coe_fn_zero : coeFn (0 : 𝓢(E, F)) = (0 : E → F) :=
+theorem coeFn_zero : coeFn (0 : 𝓢(E, F)) = (0 : E → F) :=
   rfl
-#align schwartz_map.coe_fn_zero SchwartzMap.coe_fn_zero
+#align schwartz_map.coe_fn_zero SchwartzMap.coeFn_zero
 
 @[simp]
 theorem zero_apply {x : E} : (0 : 𝓢(E, F)) x = 0 :=
   rfl
 #align schwartz_map.zero_apply SchwartzMap.zero_apply
 
-theorem seminorm_aux_zero (k n : ℕ) : (0 : 𝓢(E, F)).seminormAux k n = 0 :=
-  le_antisymm (seminorm_aux_le_bound k n _ rfl.le fun _ => by simp [Pi.zero_def])
-    (seminorm_aux_nonneg _ _ _)
-#align schwartz_map.seminorm_aux_zero SchwartzMap.seminorm_aux_zero
+theorem seminormAux_zero (k n : ℕ) : (0 : 𝓢(E, F)).seminormAux k n = 0 :=
+  le_antisymm (seminormAux_le_bound k n _ rfl.le fun _ => by simp [Pi.zero_def])
+    (seminormAux_nonneg _ _ _)
+#align schwartz_map.seminorm_aux_zero SchwartzMap.seminormAux_zero
 
 end Zero
 
@@ -315,13 +315,13 @@ theorem add_apply {f g : 𝓢(E, F)} {x : E} : (f + g) x = f x + g x :=
   rfl
 #align schwartz_map.add_apply SchwartzMap.add_apply
 
-theorem seminorm_aux_add_le (k n : ℕ) (f g : 𝓢(E, F)) :
+theorem seminormAux_add_le (k n : ℕ) (f g : 𝓢(E, F)) :
     (f + g).seminormAux k n ≤ f.seminormAux k n + g.seminormAux k n :=
   (f + g).seminorm_aux_le_bound k n
-    (add_nonneg (seminorm_aux_nonneg _ _ _) (seminorm_aux_nonneg _ _ _)) fun x =>
+    (add_nonneg (seminormAux_nonneg _ _ _) (seminormAux_nonneg _ _ _)) fun x =>
     (decay_add_le_aux k n f g x).trans <|
       add_le_add (f.le_seminorm_aux k n x) (g.le_seminorm_aux k n x)
-#align schwartz_map.seminorm_aux_add_le SchwartzMap.seminorm_aux_add_le
+#align schwartz_map.seminorm_aux_add_le SchwartzMap.seminormAux_add_le
 
 end Add
 
@@ -362,15 +362,15 @@ def coeHom : 𝓢(E, F) →+ E → F where
 
 variable {E F}
 
-theorem coe_coe_hom : (coeHom E F : 𝓢(E, F) → E → F) = coeFn :=
+theorem coe_coeHom : (coeHom E F : 𝓢(E, F) → E → F) = coeFn :=
   rfl
-#align schwartz_map.coe_coe_hom SchwartzMap.coe_coe_hom
+#align schwartz_map.coe_coe_hom SchwartzMap.coe_coeHom
 
-theorem coe_hom_injective : Function.Injective (coeHom E F) :=
+theorem coeHom_injective : Function.Injective (coeHom E F) :=
   by
   rw [coe_coe_hom]
   exact FunLike.coe_injective
-#align schwartz_map.coe_hom_injective SchwartzMap.coe_hom_injective
+#align schwartz_map.coe_hom_injective SchwartzMap.coeHom_injective
 
 end AddCommGroup
 
@@ -379,7 +379,7 @@ section Module
 variable [NormedField 𝕜] [NormedSpace 𝕜 F] [SMulCommClass ℝ 𝕜 F]
 
 instance : Module 𝕜 𝓢(E, F) :=
-  coe_hom_injective.Module 𝕜 (coeHom E F) fun _ _ => rfl
+  coeHom_injective.Module 𝕜 (coeHom E F) fun _ _ => rfl
 
 end Module
 
@@ -396,8 +396,8 @@ variable (𝕜)
 `𝓢(E, F)`. -/
 @[protected]
 def seminorm (k n : ℕ) : Seminorm 𝕜 𝓢(E, F) :=
-  Seminorm.ofSmulLe (seminormAux k n) (seminorm_aux_zero k n) (seminorm_aux_add_le k n)
-    (seminorm_aux_smul_le k n)
+  Seminorm.ofSmulLe (seminormAux k n) (seminormAux_zero k n) (seminormAux_add_le k n)
+    (seminormAux_smul_le k n)
 #align schwartz_map.seminorm SchwartzMap.seminorm
 
 /-- If one controls the seminorm for every `x`, then one controls the seminorm. -/
@@ -412,18 +412,18 @@ theorem le_seminorm (k n : ℕ) (f : 𝓢(E, F)) (x : E) :
   f.le_seminorm_aux k n x
 #align schwartz_map.le_seminorm SchwartzMap.le_seminorm
 
-theorem norm_iterated_fderiv_le_seminorm (f : 𝓢(E, F)) (n : ℕ) (x₀ : E) :
+theorem norm_iteratedFderiv_le_seminorm (f : 𝓢(E, F)) (n : ℕ) (x₀ : E) :
     ‖iteratedFderiv ℝ n f x₀‖ ≤ (SchwartzMap.seminorm 𝕜 0 n) f :=
   by
   have := SchwartzMap.le_seminorm 𝕜 0 n f x₀
   rwa [pow_zero, one_mul] at this
-#align schwartz_map.norm_iterated_fderiv_le_seminorm SchwartzMap.norm_iterated_fderiv_le_seminorm
+#align schwartz_map.norm_iterated_fderiv_le_seminorm SchwartzMap.norm_iteratedFderiv_le_seminorm
 
 theorem norm_pow_mul_le_seminorm (f : 𝓢(E, F)) (k : ℕ) (x₀ : E) :
     ‖x₀‖ ^ k * ‖f x₀‖ ≤ (SchwartzMap.seminorm 𝕜 k 0) f :=
   by
   have := SchwartzMap.le_seminorm 𝕜 k 0 f x₀
-  rwa [norm_iterated_fderiv_zero] at this
+  rwa [norm_iteratedFderiv_zero] at this
 #align schwartz_map.norm_pow_mul_le_seminorm SchwartzMap.norm_pow_mul_le_seminorm
 
 theorem norm_le_seminorm (f : 𝓢(E, F)) (x₀ : E) : ‖f x₀‖ ≤ (SchwartzMap.seminorm 𝕜 0 0) f :=
@@ -448,16 +448,16 @@ def schwartzSeminormFamily : SeminormFamily 𝕜 𝓢(E, F) (ℕ × ℕ) := fun 
 #align schwartz_seminorm_family schwartzSeminormFamily
 
 @[simp]
-theorem schwartz_seminorm_family_apply (n k : ℕ) :
+theorem schwartzSeminormFamily_apply (n k : ℕ) :
     schwartzSeminormFamily 𝕜 E F (n, k) = SchwartzMap.seminorm 𝕜 n k :=
   rfl
-#align schwartz_map.schwartz_seminorm_family_apply SchwartzMap.schwartz_seminorm_family_apply
+#align schwartz_map.schwartz_seminorm_family_apply SchwartzMap.schwartzSeminormFamily_apply
 
 @[simp]
-theorem schwartz_seminorm_family_apply_zero :
+theorem schwartzSeminormFamily_apply_zero :
     schwartzSeminormFamily 𝕜 E F 0 = SchwartzMap.seminorm 𝕜 0 0 :=
   rfl
-#align schwartz_map.schwartz_seminorm_family_apply_zero SchwartzMap.schwartz_seminorm_family_apply_zero
+#align schwartz_map.schwartz_seminorm_family_apply_zero SchwartzMap.schwartzSeminormFamily_apply_zero
 
 instance : TopologicalSpace 𝓢(E, F) :=
   (schwartzSeminormFamily ℝ E F).ModuleFilterBasis.topology'
@@ -465,7 +465,7 @@ instance : TopologicalSpace 𝓢(E, F) :=
 theorem schwartzWithSeminorms : WithSeminorms (schwartzSeminormFamily 𝕜 E F) :=
   by
   have A : WithSeminorms (schwartzSeminormFamily ℝ E F) := ⟨rfl⟩
-  rw [SeminormFamily.with_seminorms_iff_nhds_eq_infi] at A⊢
+  rw [SeminormFamily.withSeminorms_iff_nhds_eq_infᵢ] at A⊢
   rw [A]
   rfl
 #align schwartz_with_seminorms schwartzWithSeminorms
@@ -507,13 +507,13 @@ continuous linear maps `E→L[ℝ] F`. -/
 def fderiv (f : 𝓢(E, F)) : 𝓢(E, E →L[ℝ] F)
     where
   toFun := fderiv ℝ f
-  smooth' := (cont_diff_top_iff_fderiv.mp f.smooth').2
+  smooth' := (contDiff_top_iff_fderiv.mp f.smooth').2
   decay' := by
     intro k n
     cases' f.decay' k (n + 1) with C hC
     use C
     intro x
-    rw [norm_iterated_fderiv_fderiv]
+    rw [norm_iteratedFderiv_fderiv]
     exact hC x
 #align schwartz_map.fderiv SchwartzMap.fderiv
 
@@ -541,9 +541,9 @@ def fderivLm : 𝓢(E, F) →ₗ[𝕜] 𝓢(E, E →L[ℝ] F)
 #align schwartz_map.fderiv_lm SchwartzMap.fderivLm
 
 @[simp, norm_cast]
-theorem fderiv_lm_apply (f : 𝓢(E, F)) : fderivLm 𝕜 f = SchwartzMap.fderiv f :=
+theorem fderivLm_apply (f : 𝓢(E, F)) : fderivLm 𝕜 f = SchwartzMap.fderiv f :=
   rfl
-#align schwartz_map.fderiv_lm_apply SchwartzMap.fderiv_lm_apply
+#align schwartz_map.fderiv_lm_apply SchwartzMap.fderivLm_apply
 
 /-- The derivative on Schwartz space as a continuous linear map. -/
 def fderivClm : 𝓢(E, F) →L[𝕜] 𝓢(E, E →L[ℝ] F)
@@ -554,20 +554,20 @@ def fderivClm : 𝓢(E, F) →L[𝕜] 𝓢(E, E →L[ℝ] F)
       Seminorm.continuous_from_bounded (schwartzWithSeminorms 𝕜 E F)
         (schwartzWithSeminorms 𝕜 E (E →L[ℝ] F)) _ _
     rintro ⟨k, n⟩
-    use {⟨k, n + 1⟩}, 1, one_ne_zero
+    use {⟨k, n + 1⟩}, 1, one_neZero
     intro f
     simp only [schwartz_seminorm_family_apply, Seminorm.comp_apply, Finset.sup_singleton, one_smul]
     refine' (fderiv_lm 𝕜 f).seminorm_le_bound 𝕜 k n (by positivity) _
     intro x
-    rw [fderiv_lm_apply, coe_fderiv, norm_iterated_fderiv_fderiv]
+    rw [fderiv_lm_apply, coe_fderiv, norm_iteratedFderiv_fderiv]
     exact f.le_seminorm 𝕜 k (n + 1) x
   toLinearMap := fderivLm 𝕜
 #align schwartz_map.fderiv_clm SchwartzMap.fderivClm
 
 @[simp, norm_cast]
-theorem fderiv_clm_apply (f : 𝓢(E, F)) : fderivClm 𝕜 f = SchwartzMap.fderiv f :=
+theorem fderivClm_apply (f : 𝓢(E, F)) : fderivClm 𝕜 f = SchwartzMap.fderiv f :=
   rfl
-#align schwartz_map.fderiv_clm_apply SchwartzMap.fderiv_clm_apply
+#align schwartz_map.fderiv_clm_apply SchwartzMap.fderivClm_apply
 
 end fderiv
 
@@ -585,10 +585,10 @@ def toBoundedContinuousFunction (f : 𝓢(E, F)) : E →ᵇ F :=
 #align schwartz_map.to_bounded_continuous_function SchwartzMap.toBoundedContinuousFunction
 
 @[simp]
-theorem to_bounded_continuous_function_apply (f : 𝓢(E, F)) (x : E) :
+theorem toBoundedContinuousFunction_apply (f : 𝓢(E, F)) (x : E) :
     f.toBoundedContinuousFunction x = f x :=
   rfl
-#align schwartz_map.to_bounded_continuous_function_apply SchwartzMap.to_bounded_continuous_function_apply
+#align schwartz_map.to_bounded_continuous_function_apply SchwartzMap.toBoundedContinuousFunction_apply
 
 variable (𝕜 E F)
 
@@ -607,10 +607,10 @@ def toBoundedContinuousFunctionLm : 𝓢(E, F) →ₗ[𝕜] E →ᵇ F
 #align schwartz_map.to_bounded_continuous_function_lm SchwartzMap.toBoundedContinuousFunctionLm
 
 @[simp]
-theorem to_bounded_continuous_function_lm_apply (f : 𝓢(E, F)) (x : E) :
+theorem toBoundedContinuousFunctionLm_apply (f : 𝓢(E, F)) (x : E) :
     toBoundedContinuousFunctionLm 𝕜 E F f x = f x :=
   rfl
-#align schwartz_map.to_bounded_continuous_function_lm_apply SchwartzMap.to_bounded_continuous_function_lm_apply
+#align schwartz_map.to_bounded_continuous_function_lm_apply SchwartzMap.toBoundedContinuousFunctionLm_apply
 
 /-- The inclusion map from Schwartz functions to bounded continuous functions as a continuous linear
 map. -/
@@ -620,18 +620,18 @@ def toBoundedContinuousFunctionClm : 𝓢(E, F) →L[𝕜] E →ᵇ F :=
       change Continuous (to_bounded_continuous_function_lm 𝕜 E F)
       refine'
         Seminorm.continuous_from_bounded (schwartzWithSeminorms 𝕜 E F)
-          (normWithSeminorms 𝕜 (E →ᵇ F)) _ fun i => ⟨{0}, 1, one_ne_zero, fun f => _⟩
-      rw [Finset.sup_singleton, one_smul, Seminorm.comp_apply, coe_norm_seminorm,
+          (normWithSeminorms 𝕜 (E →ᵇ F)) _ fun i => ⟨{0}, 1, one_neZero, fun f => _⟩
+      rw [Finset.sup_singleton, one_smul, Seminorm.comp_apply, coe_normSeminorm,
         schwartz_seminorm_family_apply_zero, BoundedContinuousFunction.norm_le (map_nonneg _ _)]
       intro x
       exact norm_le_seminorm 𝕜 _ _ }
 #align schwartz_map.to_bounded_continuous_function_clm SchwartzMap.toBoundedContinuousFunctionClm
 
 @[simp]
-theorem to_bounded_continuous_function_clm_apply (f : 𝓢(E, F)) (x : E) :
+theorem toBoundedContinuousFunctionClm_apply (f : 𝓢(E, F)) (x : E) :
     toBoundedContinuousFunctionClm 𝕜 E F f x = f x :=
   rfl
-#align schwartz_map.to_bounded_continuous_function_clm_apply SchwartzMap.to_bounded_continuous_function_clm_apply
+#align schwartz_map.to_bounded_continuous_function_clm_apply SchwartzMap.toBoundedContinuousFunctionClm_apply
 
 variable {E}
 

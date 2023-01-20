@@ -96,7 +96,7 @@ theorem preErgodicOfPreErgodicConjugate (hg : MeasurePreserving g μ μ') (hf : 
     · simpa only [ae_eq_univ, ← preimage_compl, hg.measure_preimage hs₀.compl] using hs₂⟩
 #align measure_theory.measure_preserving.pre_ergodic_of_pre_ergodic_conjugate MeasureTheory.MeasurePreserving.preErgodicOfPreErgodicConjugate
 
-theorem pre_ergodic_conjugate_iff {e : α ≃ᵐ β} (h : MeasurePreserving e μ μ') :
+theorem preErgodic_conjugate_iff {e : α ≃ᵐ β} (h : MeasurePreserving e μ μ') :
     PreErgodic (e ∘ f ∘ e.symm) μ' ↔ PreErgodic f μ :=
   by
   refine'
@@ -106,7 +106,7 @@ theorem pre_ergodic_conjugate_iff {e : α ≃ᵐ β} (h : MeasurePreserving e μ
     rw [MeasurableEquiv.symm_comp_self, comp.left_id]
   · change e ∘ f = e ∘ f ∘ e.symm ∘ e
     rw [MeasurableEquiv.symm_comp_self, comp.right_id]
-#align measure_theory.measure_preserving.pre_ergodic_conjugate_iff MeasureTheory.MeasurePreserving.pre_ergodic_conjugate_iff
+#align measure_theory.measure_preserving.pre_ergodic_conjugate_iff MeasureTheory.MeasurePreserving.preErgodic_conjugate_iff
 
 theorem ergodic_conjugate_iff {e : α ≃ᵐ β} (h : MeasurePreserving e μ μ') :
     Ergodic (e ∘ f ∘ e.symm) μ' ↔ Ergodic f μ :=
@@ -147,7 +147,7 @@ theorem ae_empty_or_univ_of_preimage_ae_le' (hf : Ergodic f μ) (hs : Measurable
   by
   refine' hf.quasi_ergodic.ae_empty_or_univ' hs _
   refine' ae_eq_of_ae_subset_of_measure_ge hs' (hf.measure_preimage hs).symm.le _ h_fin
-  exact measurable_set_preimage hf.measurable hs
+  exact measurableSet_preimage hf.measurable hs
 #align ergodic.ae_empty_or_univ_of_preimage_ae_le' Ergodic.ae_empty_or_univ_of_preimage_ae_le'
 
 /-- See also `ergodic.ae_empty_or_univ_of_ae_le_preimage`. -/
@@ -164,7 +164,7 @@ theorem ae_empty_or_univ_of_image_ae_le' (hf : Ergodic f μ) (hs : MeasurableSet
     (hs' : f '' s ≤ᵐ[μ] s) (h_fin : μ s ≠ ∞) : s =ᵐ[μ] (∅ : Set α) ∨ s =ᵐ[μ] univ :=
   by
   replace hs' : s ≤ᵐ[μ] f ⁻¹' s :=
-    (HasSubset.Subset.eventually_le (subset_preimage_image f s)).trans
+    (HasSubset.Subset.eventuallyLe (subset_preimage_image f s)).trans
       (hf.quasi_measure_preserving.preimage_mono_ae hs')
   exact ae_empty_or_univ_of_ae_le_preimage' hf hs hs' h_fin
 #align ergodic.ae_empty_or_univ_of_image_ae_le' Ergodic.ae_empty_or_univ_of_image_ae_le'

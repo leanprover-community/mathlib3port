@@ -94,9 +94,9 @@ example {X : ProfiniteCat} : T2Space X :=
   inferInstance
 
 @[simp]
-theorem coe_to_CompHaus {X : ProfiniteCat} : (X.toCompHaus : Type _) = X :=
+theorem coe_toCompHaus {X : ProfiniteCat} : (X.toCompHaus : Type _) = X :=
   rfl
-#align Profinite.coe_to_CompHaus ProfiniteCat.coe_to_CompHaus
+#align Profinite.coe_to_CompHaus ProfiniteCat.coe_toCompHaus
 
 @[simp]
 theorem coe_id (X : ProfiniteCat) : (𝟙 X : X → X) = id :=
@@ -124,10 +124,9 @@ def ProfiniteCat.toTop : ProfiniteCat ⥤ TopCat :=
 #align Profinite.to_Top ProfiniteCat.toTop
 
 @[simp]
-theorem ProfiniteCat.to_CompHaus_to_Top :
-    profiniteToCompHaus ⋙ compHausToTop = ProfiniteCat.toTop :=
+theorem ProfiniteCat.to_compHausToTop : profiniteToCompHaus ⋙ compHausToTop = ProfiniteCat.toTop :=
   rfl
-#align Profinite.to_CompHaus_to_Top ProfiniteCat.to_CompHaus_to_Top
+#align Profinite.to_CompHaus_to_Top ProfiniteCat.to_compHausToTop
 
 section ProfiniteCat
 
@@ -142,9 +141,9 @@ def CompHausCat.toProfiniteObj (X : CompHausCat.{u}) : ProfiniteCat.{u}
     where
   toCompHaus :=
     { toTop := TopCat.of (ConnectedComponents X)
-      IsCompact := Quotient.compact_space
+      IsCompact := Quotient.compactSpace
       isHausdorff := ConnectedComponents.t2 }
-  IsTotallyDisconnected := ConnectedComponents.totally_disconnected_space
+  IsTotallyDisconnected := ConnectedComponents.totallyDisconnectedSpace
 #align CompHaus.to_Profinite_obj CompHausCat.toProfiniteObj
 
 /-- (Implementation) The bijection of homsets to establish the reflective adjunction of Profinite
@@ -153,10 +152,10 @@ spaces in compact Hausdorff spaces.
 def ProfiniteCat.toCompHausEquivalence (X : CompHausCat.{u}) (Y : ProfiniteCat.{u}) :
     (CompHausCat.toProfiniteObj X ⟶ Y) ≃ (X ⟶ profiniteToCompHaus.obj Y)
     where
-  toFun f := f.comp ⟨Quotient.mk', continuous_quotient_mk⟩
+  toFun f := f.comp ⟨Quotient.mk', continuous_quotient_mk''⟩
   invFun g :=
     { toFun := Continuous.connectedComponentsLift g.2
-      continuous_to_fun := Continuous.connected_components_lift_continuous g.2 }
+      continuous_to_fun := Continuous.connectedComponentsLift_continuous g.2 }
   left_inv f := ContinuousMap.ext <| ConnectedComponents.surjective_coe.forall.2 fun a => rfl
   right_inv f := ContinuousMap.ext fun x => rfl
 #align Profinite.to_CompHaus_equivalence ProfiniteCat.toCompHausEquivalence
@@ -168,10 +167,10 @@ def CompHausCat.toProfinite : CompHausCat ⥤ ProfiniteCat :=
   Adjunction.leftAdjointOfEquiv ProfiniteCat.toCompHausEquivalence fun _ _ _ _ _ => rfl
 #align CompHaus.to_Profinite CompHausCat.toProfinite
 
-theorem CompHausCat.to_Profinite_obj' (X : CompHausCat) :
+theorem CompHausCat.toProfinite_obj' (X : CompHausCat) :
     ↥(CompHausCat.toProfinite.obj X) = ConnectedComponents X :=
   rfl
-#align CompHaus.to_Profinite_obj' CompHausCat.to_Profinite_obj'
+#align CompHaus.to_Profinite_obj' CompHausCat.toProfinite_obj'
 
 /-- Finite types are given the discrete topology. -/
 def FintypeCat.discreteTopology (A : FintypeCat) : TopologicalSpace A :=
@@ -208,7 +207,7 @@ def limitCone {J : Type u} [SmallCategory J] (F : J ⥤ ProfiniteCat.{u}) : Limi
       IsTotallyDisconnected :=
         by
         change TotallyDisconnectedSpace ↥{ u : ∀ j : J, F.obj j | _ }
-        exact Subtype.totally_disconnected_space }
+        exact Subtype.totallyDisconnectedSpace }
   π := { app := (CompHausCat.limitCone.{u, u} (F ⋙ profiniteToCompHaus)).π.app }
 #align Profinite.limit_cone ProfiniteCat.limitCone
 
@@ -244,13 +243,13 @@ noncomputable instance toTop.createsLimits : CreatesLimits ProfiniteCat.toTop :=
   monadicCreatesLimits _
 #align Profinite.to_Top.creates_limits ProfiniteCat.toTop.createsLimits
 
-instance has_limits : Limits.HasLimits ProfiniteCat :=
+instance hasLimits : Limits.HasLimits ProfiniteCat :=
   hasLimitsOfHasLimitsCreatesLimits ProfiniteCat.toTop
-#align Profinite.has_limits ProfiniteCat.has_limits
+#align Profinite.has_limits ProfiniteCat.hasLimits
 
-instance has_colimits : Limits.HasColimits ProfiniteCat :=
+instance hasColimits : Limits.HasColimits ProfiniteCat :=
   hasColimitsOfReflective profiniteToCompHaus
-#align Profinite.has_colimits ProfiniteCat.has_colimits
+#align Profinite.has_colimits ProfiniteCat.hasColimits
 
 noncomputable instance forgetPreservesLimits : Limits.PreservesLimits (forget ProfiniteCat) := by
   apply limits.comp_preserves_limits ProfiniteCat.toTop (forget TopCat)
@@ -259,25 +258,25 @@ noncomputable instance forgetPreservesLimits : Limits.PreservesLimits (forget Pr
 variable {X Y : ProfiniteCat.{u}} (f : X ⟶ Y)
 
 /-- Any morphism of profinite spaces is a closed map. -/
-theorem is_closed_map : IsClosedMap f :=
-  CompHausCat.is_closed_map _
-#align Profinite.is_closed_map ProfiniteCat.is_closed_map
+theorem isClosedMap : IsClosedMap f :=
+  CompHausCat.isClosedMap _
+#align Profinite.is_closed_map ProfiniteCat.isClosedMap
 
 /-- Any continuous bijection of profinite spaces induces an isomorphism. -/
-theorem is_iso_of_bijective (bij : Function.Bijective f) : IsIso f :=
-  haveI := CompHausCat.is_iso_of_bijective (Profinite_to_CompHaus.map f) bij
+theorem isIso_of_bijective (bij : Function.Bijective f) : IsIso f :=
+  haveI := CompHausCat.isIso_of_bijective (Profinite_to_CompHaus.map f) bij
   is_iso_of_fully_faithful profiniteToCompHaus _
-#align Profinite.is_iso_of_bijective ProfiniteCat.is_iso_of_bijective
+#align Profinite.is_iso_of_bijective ProfiniteCat.isIso_of_bijective
 
 /-- Any continuous bijection of profinite spaces induces an isomorphism. -/
 noncomputable def isoOfBijective (bij : Function.Bijective f) : X ≅ Y :=
-  letI := ProfiniteCat.is_iso_of_bijective f bij
+  letI := ProfiniteCat.isIso_of_bijective f bij
   as_iso f
 #align Profinite.iso_of_bijective ProfiniteCat.isoOfBijective
 
-instance forget_reflects_isomorphisms : ReflectsIsomorphisms (forget ProfiniteCat) :=
-  ⟨by intro A B f hf <;> exact ProfiniteCat.is_iso_of_bijective _ ((is_iso_iff_bijective f).mp hf)⟩
-#align Profinite.forget_reflects_isomorphisms ProfiniteCat.forget_reflects_isomorphisms
+instance forget_reflectsIsomorphisms : ReflectsIsomorphisms (forget ProfiniteCat) :=
+  ⟨by intro A B f hf <;> exact ProfiniteCat.isIso_of_bijective _ ((is_iso_iff_bijective f).mp hf)⟩
+#align Profinite.forget_reflects_isomorphisms ProfiniteCat.forget_reflectsIsomorphisms
 
 /-- Construct an isomorphism from a homeomorphism. -/
 @[simps Hom inv]
@@ -329,7 +328,7 @@ theorem epi_iff_surjective {X Y : ProfiniteCat.{u}} (f : X ⟶ Y) : Epi f ↔ Fu
   · contrapose!
     rintro ⟨y, hy⟩ hf
     let C := Set.range f
-    have hC : IsClosed C := (is_compact_range f.continuous).IsClosed
+    have hC : IsClosed C := (isCompact_range f.continuous).IsClosed
     let U := Cᶜ
     have hU : IsOpen U := is_open_compl_iff.mpr hC
     have hyU : y ∈ U := by

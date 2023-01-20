@@ -80,9 +80,9 @@ instance : CoeFun (LocallyBoundedMap α β) fun _ => α → β :=
   FunLike.hasCoeToFun
 
 @[simp]
-theorem to_fun_eq_coe {f : LocallyBoundedMap α β} : f.toFun = (f : α → β) :=
+theorem toFun_eq_coe {f : LocallyBoundedMap α β} : f.toFun = (f : α → β) :=
   rfl
-#align locally_bounded_map.to_fun_eq_coe LocallyBoundedMap.to_fun_eq_coe
+#align locally_bounded_map.to_fun_eq_coe LocallyBoundedMap.toFun_eq_coe
 
 @[ext]
 theorem ext {f g : LocallyBoundedMap α β} (h : ∀ a, f a = g a) : f = g :=
@@ -111,14 +111,14 @@ def ofMapBounded (f : α → β) (h) : LocallyBoundedMap α β :=
 #align locally_bounded_map.of_map_bounded LocallyBoundedMap.ofMapBounded
 
 @[simp]
-theorem coe_of_map_bounded (f : α → β) {h} : ⇑(ofMapBounded f h) = f :=
+theorem coe_ofMapBounded (f : α → β) {h} : ⇑(ofMapBounded f h) = f :=
   rfl
-#align locally_bounded_map.coe_of_map_bounded LocallyBoundedMap.coe_of_map_bounded
+#align locally_bounded_map.coe_of_map_bounded LocallyBoundedMap.coe_ofMapBounded
 
 @[simp]
-theorem of_map_bounded_apply (f : α → β) {h} (a : α) : ofMapBounded f h a = f a :=
+theorem ofMapBounded_apply (f : α → β) {h} (a : α) : ofMapBounded f h a = f a :=
   rfl
-#align locally_bounded_map.of_map_bounded_apply LocallyBoundedMap.of_map_bounded_apply
+#align locally_bounded_map.of_map_bounded_apply LocallyBoundedMap.ofMapBounded_apply
 
 variable (α)
 

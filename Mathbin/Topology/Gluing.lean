@@ -102,19 +102,19 @@ theorem π_surjective : Function.Surjective 𝖣.π :=
   (TopCat.epi_iff_surjective 𝖣.π).mp inferInstance
 #align Top.glue_data.π_surjective TopCat.GlueData.π_surjective
 
-theorem is_open_iff (U : Set 𝖣.glued) : IsOpen U ↔ ∀ i, IsOpen (𝖣.ι i ⁻¹' U) :=
+theorem isOpen_iff (U : Set 𝖣.glued) : IsOpen U ↔ ∀ i, IsOpen (𝖣.ι i ⁻¹' U) :=
   by
   delta CategoryTheory.GlueData.ι
   simp_rw [← multicoequalizer.ι_sigma_π 𝖣.diagram]
   rw [← (homeo_of_iso (multicoequalizer.iso_coequalizer 𝖣.diagram).symm).is_open_preimage]
-  rw [coequalizer_is_open_iff, colimit_is_open_iff.{u}]
+  rw [coequalizer_is_open_iff, colimit_isOpen_iff.{u}]
   constructor
   · intro h j
     exact h ⟨j⟩
   · intro h j
     cases j
     exact h j
-#align Top.glue_data.is_open_iff TopCat.GlueData.is_open_iff
+#align Top.glue_data.is_open_iff TopCat.GlueData.isOpen_iff
 
 theorem ι_jointly_surjective (x : 𝖣.glued) : ∃ (i : _)(y : D.U i), 𝖣.ι i y = x :=
   𝖣.ι_jointly_surjective (forget TopCat) x
@@ -160,7 +160,7 @@ theorem rel_equiv : Equivalence D.Rel :=
 
 open CategoryTheory.Limits.WalkingParallelPair
 
-theorem eqv_gen_of_π_eq {x y : ∐ D.U} (h : 𝖣.π x = 𝖣.π y) :
+theorem eqvGen_of_π_eq {x y : ∐ D.U} (h : 𝖣.π x = 𝖣.π y) :
     EqvGen (Types.CoequalizerRel 𝖣.diagram.fstSigmaMap 𝖣.diagram.sndSigmaMap) x y :=
   by
   delta glue_data.π multicoequalizer.sigma_π at h
@@ -183,7 +183,7 @@ theorem eqv_gen_of_π_eq {x y : ∐ D.U} (h : 𝖣.π x = 𝖣.π y) :
     diagram_iso_parallel_pair_hom_app, colimit.iso_colimit_cocone_ι_hom, types_id_apply] at this
   exact Quot.eq.1 this
   infer_instance
-#align Top.glue_data.eqv_gen_of_π_eq TopCat.GlueData.eqv_gen_of_π_eq
+#align Top.glue_data.eqv_gen_of_π_eq TopCat.GlueData.eqvGen_of_π_eq
 
 theorem ι_eq_iff_rel (i j : D.J) (x : D.U i) (y : D.U j) :
     𝖣.ι i x = 𝖣.ι j y ↔ D.Rel ⟨i, x⟩ ⟨j, y⟩ :=
@@ -197,7 +197,7 @@ theorem ι_eq_iff_rel (i j : D.J) (x : D.U i) (y : D.U j) :
     rw [←
       show _ = Sigma.mk j y from concrete_category.congr_hom (sigmaIsoSigma.{u} D.U).inv_hom_id _]
     change InvImage D.rel (sigmaIsoSigma.{u} D.U).Hom _ _
-    simp only [TopCat.sigma_iso_sigma_inv_apply]
+    simp only [TopCat.sigmaIsoSigma_inv_apply]
     rw [← (InvImage.equivalence _ _ D.rel_equiv).eqv_gen_iff]
     refine' EqvGen.mono _ (D.eqv_gen_of_π_eq h : _)
     rintro _ _ ⟨x⟩
@@ -209,7 +209,7 @@ theorem ι_eq_iff_rel (i j : D.J) (x : D.U i) (y : D.U j) :
     unfold InvImage multispan_index.fst_sigma_map multispan_index.snd_sigma_map
     simp only [opens.inclusion_apply, TopCat.comp_app, sigma_iso_sigma_inv_apply,
       CategoryTheory.Limits.colimit.ι_desc_apply, cofan.mk_ι_app, sigma_iso_sigma_hom_ι_apply,
-      ContinuousMap.to_fun_eq_coe]
+      ContinuousMap.toFun_eq_coe]
     erw [sigma_iso_sigma_hom_ι_apply, sigma_iso_sigma_hom_ι_apply]
     exact
       Or.inr
@@ -299,10 +299,10 @@ theorem open_image_open (i : D.J) (U : Opens (𝖣.U i)) : IsOpen (𝖣.ι i '' 
   exact U.property
 #align Top.glue_data.open_image_open TopCat.GlueData.open_image_open
 
-theorem ι_open_embedding (i : D.J) : OpenEmbedding (𝖣.ι i) :=
-  open_embedding_of_continuous_injective_open (𝖣.ι i).continuous_to_fun (D.ι_injective i) fun U h =>
+theorem ι_openEmbedding (i : D.J) : OpenEmbedding (𝖣.ι i) :=
+  openEmbedding_of_continuous_injective_open (𝖣.ι i).continuous_to_fun (D.ι_injective i) fun U h =>
     D.open_image_open i ⟨U, h⟩
-#align Top.glue_data.ι_open_embedding TopCat.GlueData.ι_open_embedding
+#align Top.glue_data.ι_open_embedding TopCat.GlueData.ι_openEmbedding
 
 /-- A family of gluing data consists of
 1. An index type `J`
@@ -434,12 +434,12 @@ def fromOpenSubsetsGlue : (ofOpenSubsets U).toGlueData.glued ⟶ TopCat.of α :=
 #align Top.glue_data.from_open_subsets_glue TopCat.GlueData.fromOpenSubsetsGlue
 
 @[simp, elementwise]
-theorem ι_from_open_subsets_glue (i : J) :
+theorem ι_fromOpenSubsetsGlue (i : J) :
     (ofOpenSubsets U).toGlueData.ι i ≫ fromOpenSubsetsGlue U = Opens.inclusion _ :=
   multicoequalizer.π_desc _ _ _ _ _
-#align Top.glue_data.ι_from_open_subsets_glue TopCat.GlueData.ι_from_open_subsets_glue
+#align Top.glue_data.ι_from_open_subsets_glue TopCat.GlueData.ι_fromOpenSubsetsGlue
 
-theorem from_open_subsets_glue_injective : Function.Injective (fromOpenSubsetsGlue U) :=
+theorem fromOpenSubsetsGlue_injective : Function.Injective (fromOpenSubsetsGlue U) :=
   by
   intro x y e
   obtain ⟨i, ⟨x, hx⟩, rfl⟩ := (of_open_subsets U).ι_jointly_surjective x
@@ -450,13 +450,13 @@ theorem from_open_subsets_glue_injective : Function.Injective (fromOpenSubsetsGl
   rw [(of_open_subsets U).ι_eq_iff_rel]
   right
   exact ⟨⟨⟨x, hx⟩, hy⟩, rfl, rfl⟩
-#align Top.glue_data.from_open_subsets_glue_injective TopCat.GlueData.from_open_subsets_glue_injective
+#align Top.glue_data.from_open_subsets_glue_injective TopCat.GlueData.fromOpenSubsetsGlue_injective
 
-theorem from_open_subsets_glue_is_open_map : IsOpenMap (fromOpenSubsetsGlue U) :=
+theorem fromOpenSubsetsGlue_isOpenMap : IsOpenMap (fromOpenSubsetsGlue U) :=
   by
   intro s hs
   rw [(of_open_subsets U).is_open_iff] at hs
-  rw [is_open_iff_forall_mem_open]
+  rw [isOpen_iff_forall_mem_open]
   rintro _ ⟨x, hx, rfl⟩
   obtain ⟨i, ⟨x, hx'⟩, rfl⟩ := (of_open_subsets U).ι_jointly_surjective x
   use from_open_subsets_glue U '' s ∩ Set.range (@opens.inclusion (TopCat.of α) (U i))
@@ -471,14 +471,14 @@ theorem from_open_subsets_glue_is_open_map : IsOpenMap (fromOpenSubsetsGlue U) :
   · refine' ⟨Set.mem_image_of_mem _ hx, _⟩
     rw [ι_from_open_subsets_glue_apply]
     exact Set.mem_range_self _
-#align Top.glue_data.from_open_subsets_glue_is_open_map TopCat.GlueData.from_open_subsets_glue_is_open_map
+#align Top.glue_data.from_open_subsets_glue_is_open_map TopCat.GlueData.fromOpenSubsetsGlue_isOpenMap
 
-theorem from_open_subsets_glue_open_embedding : OpenEmbedding (fromOpenSubsetsGlue U) :=
-  open_embedding_of_continuous_injective_open (ContinuousMap.continuous_to_fun _)
-    (from_open_subsets_glue_injective U) (from_open_subsets_glue_is_open_map U)
-#align Top.glue_data.from_open_subsets_glue_open_embedding TopCat.GlueData.from_open_subsets_glue_open_embedding
+theorem fromOpenSubsetsGlue_openEmbedding : OpenEmbedding (fromOpenSubsetsGlue U) :=
+  openEmbedding_of_continuous_injective_open (ContinuousMap.continuous_toFun _)
+    (fromOpenSubsetsGlue_injective U) (fromOpenSubsetsGlue_isOpenMap U)
+#align Top.glue_data.from_open_subsets_glue_open_embedding TopCat.GlueData.fromOpenSubsetsGlue_openEmbedding
 
-theorem range_from_open_subsets_glue : Set.range (fromOpenSubsetsGlue U) = ⋃ i, (U i : Set α) :=
+theorem range_fromOpenSubsetsGlue : Set.range (fromOpenSubsetsGlue U) = ⋃ i, (U i : Set α) :=
   by
   ext
   constructor
@@ -488,16 +488,16 @@ theorem range_from_open_subsets_glue : Set.range (fromOpenSubsetsGlue U) = ⋃ i
     exact Set.subset_unionᵢ _ i hx'
   · rintro ⟨_, ⟨i, rfl⟩, hx⟩
     refine' ⟨(of_open_subsets U).toGlueData.ι i ⟨x, hx⟩, ι_from_open_subsets_glue_apply _ _ _⟩
-#align Top.glue_data.range_from_open_subsets_glue TopCat.GlueData.range_from_open_subsets_glue
+#align Top.glue_data.range_from_open_subsets_glue TopCat.GlueData.range_fromOpenSubsetsGlue
 
 /-- The gluing of an open cover is homeomomorphic to the original space. -/
 def openCoverGlueHomeo (h : (⋃ i, (U i : Set α)) = Set.univ) :
     (ofOpenSubsets U).toGlueData.glued ≃ₜ α :=
   Homeomorph.homeomorphOfContinuousOpen
     (Equiv.ofBijective (fromOpenSubsetsGlue U)
-      ⟨from_open_subsets_glue_injective U,
-        Set.range_iff_surjective.mp ((range_from_open_subsets_glue U).symm ▸ h)⟩)
-    (fromOpenSubsetsGlue U).2 (from_open_subsets_glue_is_open_map U)
+      ⟨fromOpenSubsetsGlue_injective U,
+        Set.range_iff_surjective.mp ((range_fromOpenSubsetsGlue U).symm ▸ h)⟩)
+    (fromOpenSubsetsGlue U).2 (fromOpenSubsetsGlue_isOpenMap U)
 #align Top.glue_data.open_cover_glue_homeo TopCat.GlueData.openCoverGlueHomeo
 
 end GlueData

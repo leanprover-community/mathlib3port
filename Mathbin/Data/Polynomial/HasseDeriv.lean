@@ -61,12 +61,11 @@ def hasseDeriv (k : ℕ) : R[X] →ₗ[R] R[X] :=
   lsum fun i => monomial (i - k) ∘ₗ DistribMulAction.toLinearMap R R (i.choose k)
 #align polynomial.hasse_deriv Polynomial.hasseDeriv
 
-theorem hasse_deriv_apply :
-    hasseDeriv k f = f.Sum fun i r => monomial (i - k) (↑(i.choose k) * r) := by
-  simpa only [← nsmul_eq_mul]
-#align polynomial.hasse_deriv_apply Polynomial.hasse_deriv_apply
+theorem hasseDeriv_apply : hasseDeriv k f = f.Sum fun i r => monomial (i - k) (↑(i.choose k) * r) :=
+  by simpa only [← nsmul_eq_mul]
+#align polynomial.hasse_deriv_apply Polynomial.hasseDeriv_apply
 
-theorem hasse_deriv_coeff (n : ℕ) : (hasseDeriv k f).coeff n = (n + k).choose k * f.coeff (n + k) :=
+theorem hasseDeriv_coeff (n : ℕ) : (hasseDeriv k f).coeff n = (n + k).choose k * f.coeff (n + k) :=
   by
   rw [hasse_deriv_apply, coeff_sum, sum_def, Finset.sum_eq_single (n + k), coeff_monomial]
   · simp only [if_true, add_tsub_cancel_right, eq_self_iff_true]
@@ -80,37 +79,37 @@ theorem hasse_deriv_coeff (n : ℕ) : (hasseDeriv k f).coeff n = (n + k).choose 
       exact (tsub_eq_iff_eq_add_of_le hik).mp hink
   · intro h
     simp only [not_mem_support_iff.mp h, monomial_zero_right, mul_zero, coeff_zero]
-#align polynomial.hasse_deriv_coeff Polynomial.hasse_deriv_coeff
+#align polynomial.hasse_deriv_coeff Polynomial.hasseDeriv_coeff
 
-theorem hasse_deriv_zero' : hasseDeriv 0 f = f := by
+theorem hasseDeriv_zero' : hasseDeriv 0 f = f := by
   simp only [hasse_deriv_apply, tsub_zero, Nat.choose_zero_right, Nat.cast_one, one_mul,
     sum_monomial_eq]
-#align polynomial.hasse_deriv_zero' Polynomial.hasse_deriv_zero'
+#align polynomial.hasse_deriv_zero' Polynomial.hasseDeriv_zero'
 
 @[simp]
-theorem hasse_deriv_zero : @hasseDeriv R _ 0 = LinearMap.id :=
+theorem hasseDeriv_zero : @hasseDeriv R _ 0 = LinearMap.id :=
   LinearMap.ext <| hasse_deriv_zero'
-#align polynomial.hasse_deriv_zero Polynomial.hasse_deriv_zero
+#align polynomial.hasse_deriv_zero Polynomial.hasseDeriv_zero
 
-theorem hasse_deriv_eq_zero_of_lt_nat_degree (p : R[X]) (n : ℕ) (h : p.natDegree < n) :
+theorem hasseDeriv_eq_zero_of_lt_natDegree (p : R[X]) (n : ℕ) (h : p.natDegree < n) :
     hasseDeriv n p = 0 := by
   rw [hasse_deriv_apply, sum_def]
   refine' Finset.sum_eq_zero fun x hx => _
   simp [Nat.choose_eq_zero_of_lt ((le_nat_degree_of_mem_supp _ hx).trans_lt h)]
-#align polynomial.hasse_deriv_eq_zero_of_lt_nat_degree Polynomial.hasse_deriv_eq_zero_of_lt_nat_degree
+#align polynomial.hasse_deriv_eq_zero_of_lt_nat_degree Polynomial.hasseDeriv_eq_zero_of_lt_natDegree
 
-theorem hasse_deriv_one' : hasseDeriv 1 f = derivative f := by
+theorem hasseDeriv_one' : hasseDeriv 1 f = derivative f := by
   simp only [hasse_deriv_apply, derivative_apply, ← C_mul_X_pow_eq_monomial, Nat.choose_one_right,
     (Nat.cast_commute _ _).Eq]
-#align polynomial.hasse_deriv_one' Polynomial.hasse_deriv_one'
+#align polynomial.hasse_deriv_one' Polynomial.hasseDeriv_one'
 
 @[simp]
-theorem hasse_deriv_one : @hasseDeriv R _ 1 = derivative :=
+theorem hasseDeriv_one : @hasseDeriv R _ 1 = derivative :=
   LinearMap.ext <| hasse_deriv_one'
-#align polynomial.hasse_deriv_one Polynomial.hasse_deriv_one
+#align polynomial.hasse_deriv_one Polynomial.hasseDeriv_one
 
 @[simp]
-theorem hasse_deriv_monomial (n : ℕ) (r : R) :
+theorem hasseDeriv_monomial (n : ℕ) (r : R) :
     hasseDeriv k (monomial n r) = monomial (n - k) (↑(n.choose k) * r) :=
   by
   ext i
@@ -125,23 +124,23 @@ theorem hasse_deriv_monomial (n : ℕ) (r : R) :
       rw [if_neg hnik]
     · push_neg  at hkn
       rw [Nat.choose_eq_zero_of_lt hkn, Nat.cast_zero, zero_mul, if_t_t]
-#align polynomial.hasse_deriv_monomial Polynomial.hasse_deriv_monomial
+#align polynomial.hasse_deriv_monomial Polynomial.hasseDeriv_monomial
 
-theorem hasse_deriv_C (r : R) (hk : 0 < k) : hasseDeriv k (c r) = 0 := by
+theorem hasseDeriv_c (r : R) (hk : 0 < k) : hasseDeriv k (c r) = 0 := by
   rw [← monomial_zero_left, hasse_deriv_monomial, Nat.choose_eq_zero_of_lt hk, Nat.cast_zero,
     zero_mul, monomial_zero_right]
-#align polynomial.hasse_deriv_C Polynomial.hasse_deriv_C
+#align polynomial.hasse_deriv_C Polynomial.hasseDeriv_c
 
-theorem hasse_deriv_apply_one (hk : 0 < k) : hasseDeriv k (1 : R[X]) = 0 := by
+theorem hasseDeriv_apply_one (hk : 0 < k) : hasseDeriv k (1 : R[X]) = 0 := by
   rw [← C_1, hasse_deriv_C k _ hk]
-#align polynomial.hasse_deriv_apply_one Polynomial.hasse_deriv_apply_one
+#align polynomial.hasse_deriv_apply_one Polynomial.hasseDeriv_apply_one
 
-theorem hasse_deriv_X (hk : 1 < k) : hasseDeriv k (x : R[X]) = 0 := by
+theorem hasseDeriv_x (hk : 1 < k) : hasseDeriv k (x : R[X]) = 0 := by
   rw [← monomial_one_one_eq_X, hasse_deriv_monomial, Nat.choose_eq_zero_of_lt hk, Nat.cast_zero,
     zero_mul, monomial_zero_right]
-#align polynomial.hasse_deriv_X Polynomial.hasse_deriv_X
+#align polynomial.hasse_deriv_X Polynomial.hasseDeriv_x
 
-theorem factorial_smul_hasse_deriv : ⇑(k ! • @hasseDeriv R _ k) = @derivative R _^[k] :=
+theorem factorial_smul_hasseDeriv : ⇑(k ! • @hasseDeriv R _ k) = @derivative R _^[k] :=
   by
   induction' k with k ih
   · rw [hasse_deriv_zero, factorial_zero, iterate_zero, one_smul, LinearMap.id_coe]
@@ -167,10 +166,10 @@ theorem factorial_smul_hasse_deriv : ⇑(k ! • @hasseDeriv R _ k) = @derivativ
   norm_cast
   simp only [factorial_succ, succ_eq_add_one]
   ring
-#align polynomial.factorial_smul_hasse_deriv Polynomial.factorial_smul_hasse_deriv
+#align polynomial.factorial_smul_hasse_deriv Polynomial.factorial_smul_hasseDeriv
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr mul_ne_zero, ",", expr H, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
-theorem hasse_deriv_comp (k l : ℕ) :
+theorem hasseDeriv_comp (k l : ℕ) :
     (@hasseDeriv R _ k).comp (hasseDeriv l) = (k + l).choose k • hasseDeriv (k + l) :=
   by
   ext i : 2
@@ -201,10 +200,10 @@ theorem hasse_deriv_comp (k l : ℕ) :
   all_goals
     trace
       "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr mul_ne_zero, \",\", expr H, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
-#align polynomial.hasse_deriv_comp Polynomial.hasse_deriv_comp
+#align polynomial.hasse_deriv_comp Polynomial.hasseDeriv_comp
 
-theorem nat_degree_hasse_deriv_le (p : R[X]) (n : ℕ) :
-    natDegree (hasseDeriv n p) ≤ natDegree p - n := by
+theorem natDegree_hasseDeriv_le (p : R[X]) (n : ℕ) : natDegree (hasseDeriv n p) ≤ natDegree p - n :=
+  by
   classical
     rw [hasse_deriv_apply, sum_def]
     refine' (nat_degree_sum_le _ _).trans _
@@ -219,9 +218,9 @@ theorem nat_degree_hasse_deriv_le (p : R[X]) (n : ℕ) :
         simp [Nat.choose_eq_zero_of_lt hx']
       rwa [tsub_add_cancel_of_le (hxn.trans hxp)]
     · simp
-#align polynomial.nat_degree_hasse_deriv_le Polynomial.nat_degree_hasse_deriv_le
+#align polynomial.nat_degree_hasse_deriv_le Polynomial.natDegree_hasseDeriv_le
 
-theorem nat_degree_hasse_deriv [NoZeroSMulDivisors ℕ R] (p : R[X]) (n : ℕ) :
+theorem natDegree_hasseDeriv [NoZeroSMulDivisors ℕ R] (p : R[X]) (n : ℕ) :
     natDegree (hasseDeriv n p) = natDegree p - n :=
   by
   cases' lt_or_le p.nat_degree n with hn hn
@@ -235,13 +234,13 @@ theorem nat_degree_hasse_deriv [NoZeroSMulDivisors ℕ R] (p : R[X]) (n : ℕ) :
         -- this is where we use the `smul_eq_zero` from `no_zero_smul_divisors`
         rw [← nsmul_eq_mul, smul_eq_zero, Nat.choose_eq_zero_iff] at hh
         exact (tsub_eq_zero_of_le (Or.resolve_right hh c0).le).symm
-#align polynomial.nat_degree_hasse_deriv Polynomial.nat_degree_hasse_deriv
+#align polynomial.nat_degree_hasse_deriv Polynomial.natDegree_hasseDeriv
 
 section
 
 open AddMonoidHom Finset.Nat
 
-theorem hasse_deriv_mul (f g : R[X]) :
+theorem hasseDeriv_mul (f g : R[X]) :
     hasseDeriv k (f * g) = ∑ ij in antidiagonal k, hasseDeriv ij.1 f * hasseDeriv ij.2 g :=
   by
   let D k := (@hasse_deriv R _ k).toAddMonoidHom
@@ -254,7 +253,7 @@ theorem hasse_deriv_mul (f g : R[X]) :
   clear f g
   ext (m r n s) : 4
   simp only [finset_sum_apply, coe_mul_left, coe_comp, flip_apply, comp_app, hasse_deriv_monomial,
-    LinearMap.to_add_monoid_hom_coe, comp_hom_apply_apply, coe_mul, monomial_mul_monomial]
+    LinearMap.toAddMonoidHom_coe, comp_hom_apply_apply, coe_mul, monomial_mul_monomial]
   have aux :
     ∀ x : ℕ × ℕ,
       x ∈ antidiagonal k →
@@ -278,7 +277,7 @@ theorem hasse_deriv_mul (f g : R[X]) :
     skip
     rw [aux _ H]
   rw_mod_cast [← LinearMap.map_sum, ← Finset.sum_mul, ← Nat.add_choose_eq]
-#align polynomial.hasse_deriv_mul Polynomial.hasse_deriv_mul
+#align polynomial.hasse_deriv_mul Polynomial.hasseDeriv_mul
 
 end
 

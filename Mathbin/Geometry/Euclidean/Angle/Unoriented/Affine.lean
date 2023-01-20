@@ -51,17 +51,17 @@ def angle (p1 p2 p3 : P) : ℝ :=
 -- mathport name: angle
 scoped notation "∠" => EuclideanGeometry.angle
 
-theorem continuous_at_angle {x : P × P × P} (hx12 : x.1 ≠ x.2.1) (hx32 : x.2.2 ≠ x.2.1) :
+theorem continuousAt_angle {x : P × P × P} (hx12 : x.1 ≠ x.2.1) (hx32 : x.2.2 ≠ x.2.1) :
     ContinuousAt (fun y : P × P × P => ∠ y.1 y.2.1 y.2.2) x :=
   by
   let f : P × P × P → V × V := fun y => (y.1 -ᵥ y.2.1, y.2.2 -ᵥ y.2.1)
   have hf1 : (f x).1 ≠ 0 := by simp [hx12]
   have hf2 : (f x).2 ≠ 0 := by simp [hx32]
   exact
-    (InnerProductGeometry.continuous_at_angle hf1 hf2).comp
+    (InnerProductGeometry.continuousAt_angle hf1 hf2).comp
       ((continuous_fst.vsub continuous_snd.fst).prod_mk
           (continuous_snd.snd.vsub continuous_snd.fst)).ContinuousAt
-#align euclidean_geometry.continuous_at_angle EuclideanGeometry.continuous_at_angle
+#align euclidean_geometry.continuous_at_angle EuclideanGeometry.continuousAt_angle
 
 @[simp]
 theorem AffineIsometry.angle_map {V₂ P₂ : Type _} [InnerProductSpace ℝ V₂] [MetricSpace P₂]
@@ -312,7 +312,7 @@ theorem Sbtw.angle₁₂₃_eq_pi {p₁ p₂ p₃ : P} (h : Sbtw ℝ p₁ p₂ p
   replace hr0 := hr0.lt_of_ne hr0'.symm
   replace hr1 := hr1.lt_of_ne hr1'
   refine' ⟨div_neg_of_neg_of_pos (Left.neg_neg_iff.2 (sub_pos.2 hr1)) hr0, _⟩
-  rw [← hp₂, AffineMap.line_map_apply, vsub_vadd_eq_vsub_sub, vsub_vadd_eq_vsub_sub, vsub_self,
+  rw [← hp₂, AffineMap.lineMap_apply, vsub_vadd_eq_vsub_sub, vsub_vadd_eq_vsub_sub, vsub_self,
     zero_sub, smul_neg, smul_smul, div_mul_cancel _ hr0', neg_smul, neg_neg, sub_eq_iff_eq_add, ←
     add_smul, sub_add_cancel, one_smul]
 #align sbtw.angle₁₂₃_eq_pi Sbtw.angle₁₂₃_eq_pi
@@ -337,7 +337,7 @@ theorem angle_eq_pi_iff_sbtw {p₁ p₂ p₃ : P} : ∠ p₁ p₂ p₃ = π ↔ 
         _⟩,
       (vsub_ne_zero.1 hp₁p₂).symm, _⟩
   · rw [← eq_vadd_iff_vsub_eq] at hp₃p₂
-    rw [AffineMap.line_map_apply, hp₃p₂, vadd_vsub_assoc, ← neg_vsub_eq_vsub_rev p₂ p₁, smul_neg, ←
+    rw [AffineMap.lineMap_apply, hp₃p₂, vadd_vsub_assoc, ← neg_vsub_eq_vsub_rev p₂ p₁, smul_neg, ←
       neg_smul, smul_add, smul_smul, ← add_smul, eq_comm, eq_vadd_iff_vsub_eq]
     convert (one_smul ℝ (p₂ -ᵥ p₁)).symm
     field_simp [(sub_pos.2 (hr.trans zero_lt_one)).Ne.symm]
@@ -357,8 +357,8 @@ theorem Wbtw.angle₂₁₃_eq_zero_of_ne {p₁ p₂ p₃ : P} (h : Wbtw ℝ p�
     simpa using hp₂p₁
   replace hr0 := hr0.lt_of_ne hr0'.symm
   refine' ⟨vsub_ne_zero.2 hp₂p₁, r⁻¹, inv_pos.2 hr0, _⟩
-  rw [AffineMap.line_map_apply, vadd_vsub_assoc, vsub_self, add_zero, smul_smul,
-    inv_mul_cancel hr0', one_smul]
+  rw [AffineMap.lineMap_apply, vadd_vsub_assoc, vsub_self, add_zero, smul_smul, inv_mul_cancel hr0',
+    one_smul]
 #align wbtw.angle₂₁₃_eq_zero_of_ne Wbtw.angle₂₁₃_eq_zero_of_ne
 
 /-- If the second of three points is strictly between the other two, the angle at the first point
@@ -415,12 +415,12 @@ theorem angle_eq_zero_iff_ne_and_wbtw {p₁ p₂ p₃ : P} :
     rintro ⟨hp₁p₂, r, hr0, hp₃p₂⟩
     rcases le_or_lt 1 r with (hr1 | hr1)
     · refine' Or.inl ⟨vsub_ne_zero.1 hp₁p₂, r⁻¹, ⟨(inv_pos.2 hr0).le, inv_le_one hr1⟩, _⟩
-      rw [AffineMap.line_map_apply, hp₃p₂, smul_smul, inv_mul_cancel hr0.ne.symm, one_smul,
+      rw [AffineMap.lineMap_apply, hp₃p₂, smul_smul, inv_mul_cancel hr0.ne.symm, one_smul,
         vsub_vadd]
     · refine' Or.inr ⟨_, r, ⟨hr0.le, hr1.le⟩, _⟩
       · rw [← @vsub_ne_zero V, hp₃p₂, smul_ne_zero_iff]
         exact ⟨hr0.ne.symm, hp₁p₂⟩
-      · rw [AffineMap.line_map_apply, ← hp₃p₂, vsub_vadd]
+      · rw [AffineMap.lineMap_apply, ← hp₃p₂, vsub_vadd]
   · rintro (⟨hp₁p₂, h⟩ | ⟨hp₃p₂, h⟩)
     · exact h.angle₂₁₃_eq_zero_of_ne hp₁p₂
     · exact h.angle₃₁₂_eq_zero_of_ne hp₃p₂

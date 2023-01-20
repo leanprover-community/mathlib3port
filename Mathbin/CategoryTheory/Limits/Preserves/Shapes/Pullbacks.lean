@@ -101,9 +101,9 @@ def preservesPullbackSymmetry : PreservesLimit (cospan g f) G
           (c.π.naturality walking_cospan.hom.inl : _)
 #align category_theory.limits.preserves_pullback_symmetry CategoryTheory.Limits.preservesPullbackSymmetry
 
-theorem has_pullback_of_preserves_pullback [HasPullback f g] : HasPullback (G.map f) (G.map g) :=
+theorem hasPullback_of_preserves_pullback [HasPullback f g] : HasPullback (G.map f) (G.map g) :=
   ⟨⟨⟨_, isLimitPullbackConeMapOfIsLimit G _ (pullbackIsPullback _ _)⟩⟩⟩
-#align category_theory.limits.has_pullback_of_preserves_pullback CategoryTheory.Limits.has_pullback_of_preserves_pullback
+#align category_theory.limits.has_pullback_of_preserves_pullback CategoryTheory.Limits.hasPullback_of_preserves_pullback
 
 variable [HasPullback f g] [HasPullback (G.map f) (G.map g)]
 
@@ -203,9 +203,9 @@ def preservesPushoutSymmetry : PreservesColimit (span g f) G
     · exact (c.ι.naturality walking_span.hom.snd).trans (c.ι.naturality walking_span.hom.fst).symm
 #align category_theory.limits.preserves_pushout_symmetry CategoryTheory.Limits.preservesPushoutSymmetry
 
-theorem has_pushout_of_preserves_pushout [HasPushout f g] : HasPushout (G.map f) (G.map g) :=
+theorem hasPushout_of_preserves_pushout [HasPushout f g] : HasPushout (G.map f) (G.map g) :=
   ⟨⟨⟨_, isColimitPushoutCoconeMapOfIsColimit G _ (pushoutIsPushout _ _)⟩⟩⟩
-#align category_theory.limits.has_pushout_of_preserves_pushout CategoryTheory.Limits.has_pushout_of_preserves_pushout
+#align category_theory.limits.has_pushout_of_preserves_pushout CategoryTheory.Limits.hasPushout_of_preserves_pushout
 
 variable [HasPushout f g] [HasPushout (G.map f) (G.map g)]
 

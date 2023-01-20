@@ -68,16 +68,10 @@ theorem nonempty_sigma : Nonempty (Σa : α, γ a) ↔ ∃ a : α, Nonempty (γ 
 #align nonempty_sigma nonempty_sigma
 -/
 
-/- warning: nonempty_psigma -> nonempty_psigma is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β : α -> Sort.{u2}}, Iff (Nonempty.{max 1 u1 u2} (PSigma.{u1, u2} α β)) (Exists.{u1} α (fun (a : α) => Nonempty.{u2} (β a)))
-but is expected to have type
-  forall {α : Sort.{u2}} {β : α -> Sort.{u1}}, Iff (Nonempty.{max (max 1 u1) u2} (PSigma.{u2, u1} α β)) (Exists.{u2} α (fun (a : α) => Nonempty.{u1} (β a)))
-Case conversion may be inaccurate. Consider using '#align nonempty_psigma nonempty_psigmaₓ'. -/
 @[simp]
-theorem nonempty_psigma {α} {β : α → Sort _} : Nonempty (PSigma β) ↔ ∃ a : α, Nonempty (β a) :=
+theorem nonempty_pSigma {α} {β : α → Sort _} : Nonempty (PSigma β) ↔ ∃ a : α, Nonempty (β a) :=
   Iff.intro (fun ⟨⟨a, c⟩⟩ => ⟨a, ⟨c⟩⟩) fun ⟨a, ⟨c⟩⟩ => ⟨⟨a, c⟩⟩
-#align nonempty_psigma nonempty_psigma
+#align nonempty_psigma nonempty_pSigma
 
 #print nonempty_subtype /-
 @[simp]
@@ -93,16 +87,10 @@ theorem nonempty_prod : Nonempty (α × β) ↔ Nonempty α ∧ Nonempty β :=
 #align nonempty_prod nonempty_prod
 -/
 
-/- warning: nonempty_pprod -> nonempty_pprod is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β : Sort.{u2}}, Iff (Nonempty.{max 1 u1 u2} (PProd.{u1, u2} α β)) (And (Nonempty.{u1} α) (Nonempty.{u2} β))
-but is expected to have type
-  forall {α : Sort.{u2}} {β : Sort.{u1}}, Iff (Nonempty.{max (max 1 u1) u2} (PProd.{u2, u1} α β)) (And (Nonempty.{u2} α) (Nonempty.{u1} β))
-Case conversion may be inaccurate. Consider using '#align nonempty_pprod nonempty_pprodₓ'. -/
 @[simp]
-theorem nonempty_pprod {α β} : Nonempty (PProd α β) ↔ Nonempty α ∧ Nonempty β :=
+theorem nonempty_pProd {α β} : Nonempty (PProd α β) ↔ Nonempty α ∧ Nonempty β :=
   Iff.intro (fun ⟨⟨a, b⟩⟩ => ⟨⟨a⟩, ⟨b⟩⟩) fun ⟨⟨a⟩, ⟨b⟩⟩ => ⟨⟨a, b⟩⟩
-#align nonempty_pprod nonempty_pprod
+#align nonempty_pprod nonempty_pProd
 
 #print nonempty_sum /-
 @[simp]
@@ -119,14 +107,8 @@ theorem nonempty_sum : Nonempty (Sum α β) ↔ Nonempty α ∨ Nonempty β :=
 #align nonempty_sum nonempty_sum
 -/
 
-/- warning: nonempty_psum -> nonempty_psum is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u1}} {β : Sort.{u2}}, Iff (Nonempty.{max 1 u1 u2} (PSum.{u1, u2} α β)) (Or (Nonempty.{u1} α) (Nonempty.{u2} β))
-but is expected to have type
-  forall {α : Sort.{u2}} {β : Sort.{u1}}, Iff (Nonempty.{max (max 1 u1) u2} (PSum.{u2, u1} α β)) (Or (Nonempty.{u2} α) (Nonempty.{u1} β))
-Case conversion may be inaccurate. Consider using '#align nonempty_psum nonempty_psumₓ'. -/
 @[simp]
-theorem nonempty_psum {α β} : Nonempty (PSum α β) ↔ Nonempty α ∨ Nonempty β :=
+theorem nonempty_pSum {α β} : Nonempty (PSum α β) ↔ Nonempty α ∨ Nonempty β :=
   Iff.intro
     (fun ⟨h⟩ =>
       match h with
@@ -136,29 +118,21 @@ theorem nonempty_psum {α β} : Nonempty (PSum α β) ↔ Nonempty α ∨ Nonemp
     match h with
     | Or.inl ⟨a⟩ => ⟨PSum.inl a⟩
     | Or.inr ⟨b⟩ => ⟨PSum.inr b⟩
-#align nonempty_psum nonempty_psum
+#align nonempty_psum nonempty_pSum
 
 @[simp]
 theorem nonempty_empty : ¬Nonempty Empty := fun ⟨h⟩ => h.elim
 #align nonempty_empty nonempty_empty
 
-/- warning: nonempty_ulift -> nonempty_ulift is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}}, Iff (Nonempty.{succ (max u1 u2)} (ULift.{u2, u1} α)) (Nonempty.{succ u1} α)
-but is expected to have type
-  forall {α : Type.{u2}}, Iff (Nonempty.{max (succ u2) (succ u1)} (ULift.{u1, u2} α)) (Nonempty.{succ u2} α)
-Case conversion may be inaccurate. Consider using '#align nonempty_ulift nonempty_uliftₓ'. -/
 @[simp]
-theorem nonempty_ulift : Nonempty (ULift α) ↔ Nonempty α :=
+theorem nonempty_uLift : Nonempty (ULift α) ↔ Nonempty α :=
   Iff.intro (fun ⟨⟨a⟩⟩ => ⟨a⟩) fun ⟨a⟩ => ⟨⟨a⟩⟩
-#align nonempty_ulift nonempty_ulift
+#align nonempty_ulift nonempty_uLift
 
-#print nonempty_plift /-
 @[simp]
-theorem nonempty_plift {α} : Nonempty (PLift α) ↔ Nonempty α :=
+theorem nonempty_pLift {α} : Nonempty (PLift α) ↔ Nonempty α :=
   Iff.intro (fun ⟨⟨a⟩⟩ => ⟨a⟩) fun ⟨a⟩ => ⟨⟨a⟩⟩
-#align nonempty_plift nonempty_plift
--/
+#align nonempty_plift nonempty_pLift
 
 #print Nonempty.forall /-
 @[simp]

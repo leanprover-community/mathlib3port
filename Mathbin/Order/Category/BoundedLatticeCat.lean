@@ -94,46 +94,46 @@ instance hasForgetToSemilatticeInf : HasForget₂ BoundedLatticeCat SemilatticeI
 #align BoundedLattice.has_forget_to_SemilatticeInf BoundedLatticeCat.hasForgetToSemilatticeInf
 
 @[simp]
-theorem coe_forget_to_BoundedOrder (X : BoundedLatticeCat) :
+theorem coe_forget_to_boundedOrderCat (X : BoundedLatticeCat) :
     ↥((forget₂ BoundedLatticeCat BoundedOrderCat).obj X) = ↥X :=
   rfl
-#align BoundedLattice.coe_forget_to_BoundedOrder BoundedLatticeCat.coe_forget_to_BoundedOrder
+#align BoundedLattice.coe_forget_to_BoundedOrder BoundedLatticeCat.coe_forget_to_boundedOrderCat
 
 @[simp]
-theorem coe_forget_to_Lattice (X : BoundedLatticeCat) :
+theorem coe_forget_to_latticeCat (X : BoundedLatticeCat) :
     ↥((forget₂ BoundedLatticeCat LatticeCat).obj X) = ↥X :=
   rfl
-#align BoundedLattice.coe_forget_to_Lattice BoundedLatticeCat.coe_forget_to_Lattice
+#align BoundedLattice.coe_forget_to_Lattice BoundedLatticeCat.coe_forget_to_latticeCat
 
 @[simp]
-theorem coe_forget_to_SemilatticeSup (X : BoundedLatticeCat) :
+theorem coe_forget_to_semilatticeSupCat (X : BoundedLatticeCat) :
     ↥((forget₂ BoundedLatticeCat SemilatticeSupCat).obj X) = ↥X :=
   rfl
-#align BoundedLattice.coe_forget_to_SemilatticeSup BoundedLatticeCat.coe_forget_to_SemilatticeSup
+#align BoundedLattice.coe_forget_to_SemilatticeSup BoundedLatticeCat.coe_forget_to_semilatticeSupCat
 
 @[simp]
-theorem coe_forget_to_SemilatticeInf (X : BoundedLatticeCat) :
+theorem coe_forget_to_semilatticeInfCat (X : BoundedLatticeCat) :
     ↥((forget₂ BoundedLatticeCat SemilatticeInfCat).obj X) = ↥X :=
   rfl
-#align BoundedLattice.coe_forget_to_SemilatticeInf BoundedLatticeCat.coe_forget_to_SemilatticeInf
+#align BoundedLattice.coe_forget_to_SemilatticeInf BoundedLatticeCat.coe_forget_to_semilatticeInfCat
 
-theorem forget_Lattice_PartialOrder_eq_forget_BoundedOrder_PartialOrder :
+theorem forget_latticeCat_partialOrderCat_eq_forget_boundedOrderCat_partialOrderCat :
     forget₂ BoundedLatticeCat LatticeCat ⋙ forget₂ LatticeCat PartialOrderCat =
       forget₂ BoundedLatticeCat BoundedOrderCat ⋙ forget₂ BoundedOrderCat PartialOrderCat :=
   rfl
-#align BoundedLattice.forget_Lattice_PartialOrder_eq_forget_BoundedOrder_PartialOrder BoundedLatticeCat.forget_Lattice_PartialOrder_eq_forget_BoundedOrder_PartialOrder
+#align BoundedLattice.forget_Lattice_PartialOrder_eq_forget_BoundedOrder_PartialOrder BoundedLatticeCat.forget_latticeCat_partialOrderCat_eq_forget_boundedOrderCat_partialOrderCat
 
-theorem forget_SemilatticeSup_PartialOrder_eq_forget_BoundedOrder_PartialOrder :
+theorem forget_semilatticeSupCat_partialOrderCat_eq_forget_boundedOrderCat_partialOrderCat :
     forget₂ BoundedLatticeCat SemilatticeSupCat ⋙ forget₂ SemilatticeSupCat PartialOrderCat =
       forget₂ BoundedLatticeCat BoundedOrderCat ⋙ forget₂ BoundedOrderCat PartialOrderCat :=
   rfl
-#align BoundedLattice.forget_SemilatticeSup_PartialOrder_eq_forget_BoundedOrder_PartialOrder BoundedLatticeCat.forget_SemilatticeSup_PartialOrder_eq_forget_BoundedOrder_PartialOrder
+#align BoundedLattice.forget_SemilatticeSup_PartialOrder_eq_forget_BoundedOrder_PartialOrder BoundedLatticeCat.forget_semilatticeSupCat_partialOrderCat_eq_forget_boundedOrderCat_partialOrderCat
 
-theorem forget_SemilatticeInf_PartialOrder_eq_forget_BoundedOrder_PartialOrder :
+theorem forget_semilatticeInfCat_partialOrderCat_eq_forget_boundedOrderCat_partialOrderCat :
     forget₂ BoundedLatticeCat SemilatticeInfCat ⋙ forget₂ SemilatticeInfCat PartialOrderCat =
       forget₂ BoundedLatticeCat BoundedOrderCat ⋙ forget₂ BoundedOrderCat PartialOrderCat :=
   rfl
-#align BoundedLattice.forget_SemilatticeInf_PartialOrder_eq_forget_BoundedOrder_PartialOrder BoundedLatticeCat.forget_SemilatticeInf_PartialOrder_eq_forget_BoundedOrder_PartialOrder
+#align BoundedLattice.forget_SemilatticeInf_PartialOrder_eq_forget_BoundedOrder_PartialOrder BoundedLatticeCat.forget_semilatticeInfCat_partialOrderCat_eq_forget_boundedOrderCat_partialOrderCat
 
 /-- Constructs an equivalence between bounded lattices from an order isomorphism
 between them. -/
@@ -168,27 +168,27 @@ def dualEquiv : BoundedLatticeCat ≌ BoundedLatticeCat :=
 
 end BoundedLatticeCat
 
-theorem BoundedLattice_dual_comp_forget_to_BoundedOrder :
+theorem boundedLatticeCat_dual_comp_forget_to_boundedOrderCat :
     BoundedLatticeCat.dual ⋙ forget₂ BoundedLatticeCat BoundedOrderCat =
       forget₂ BoundedLatticeCat BoundedOrderCat ⋙ BoundedOrderCat.dual :=
   rfl
-#align BoundedLattice_dual_comp_forget_to_BoundedOrder BoundedLattice_dual_comp_forget_to_BoundedOrder
+#align BoundedLattice_dual_comp_forget_to_BoundedOrder boundedLatticeCat_dual_comp_forget_to_boundedOrderCat
 
-theorem BoundedLattice_dual_comp_forget_to_Lattice :
+theorem boundedLatticeCat_dual_comp_forget_to_latticeCat :
     BoundedLatticeCat.dual ⋙ forget₂ BoundedLatticeCat LatticeCat =
       forget₂ BoundedLatticeCat LatticeCat ⋙ LatticeCat.dual :=
   rfl
-#align BoundedLattice_dual_comp_forget_to_Lattice BoundedLattice_dual_comp_forget_to_Lattice
+#align BoundedLattice_dual_comp_forget_to_Lattice boundedLatticeCat_dual_comp_forget_to_latticeCat
 
-theorem BoundedLattice_dual_comp_forget_to_SemilatticeSup :
+theorem boundedLatticeCat_dual_comp_forget_to_semilatticeSupCat :
     BoundedLatticeCat.dual ⋙ forget₂ BoundedLatticeCat SemilatticeSupCat =
       forget₂ BoundedLatticeCat SemilatticeInfCat ⋙ SemilatticeInfCat.dual :=
   rfl
-#align BoundedLattice_dual_comp_forget_to_SemilatticeSup BoundedLattice_dual_comp_forget_to_SemilatticeSup
+#align BoundedLattice_dual_comp_forget_to_SemilatticeSup boundedLatticeCat_dual_comp_forget_to_semilatticeSupCat
 
-theorem BoundedLattice_dual_comp_forget_to_SemilatticeInf :
+theorem boundedLatticeCat_dual_comp_forget_to_semilatticeInfCat :
     BoundedLatticeCat.dual ⋙ forget₂ BoundedLatticeCat SemilatticeInfCat =
       forget₂ BoundedLatticeCat SemilatticeSupCat ⋙ SemilatticeSupCat.dual :=
   rfl
-#align BoundedLattice_dual_comp_forget_to_SemilatticeInf BoundedLattice_dual_comp_forget_to_SemilatticeInf
+#align BoundedLattice_dual_comp_forget_to_SemilatticeInf boundedLatticeCat_dual_comp_forget_to_semilatticeInfCat
 

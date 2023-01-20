@@ -35,10 +35,10 @@ theorem eq_induced_by_maps_to_sierpinski (X : Type _) [t : TopologicalSpace X] :
   · rw [le_infᵢ_iff]
     exact fun u => Continuous.le_induced (is_open_iff_continuous_mem.mp u.2)
   · intro u h
-    rw [← generate_from_Union_is_open]
+    rw [← generateFrom_unionᵢ_isOpen]
     apply is_open_generate_from_of_mem
-    simp only [Set.mem_unionᵢ, Set.mem_setOf_eq, is_open_induced_iff']
-    exact ⟨⟨u, h⟩, {True}, is_open_singleton_true, by simp [Set.preimage]⟩
+    simp only [Set.mem_unionᵢ, Set.mem_setOf_eq, isOpen_induced_iff']
+    exact ⟨⟨u, h⟩, {True}, isOpen_singleton_true, by simp [Set.preimage]⟩
 #align topological_space.eq_induced_by_maps_to_sierpinski TopologicalSpace.eq_induced_by_maps_to_sierpinski
 
 variable (X : Type _) [TopologicalSpace X]
@@ -52,22 +52,22 @@ def productOfMemOpens : ContinuousMap X (Opens X → Prop)
   continuous_to_fun := continuous_pi_iff.2 fun u => continuous_Prop.2 u.property
 #align topological_space.product_of_mem_opens TopologicalSpace.productOfMemOpens
 
-theorem product_of_mem_opens_inducing : Inducing (productOfMemOpens X) :=
+theorem productOfMemOpens_inducing : Inducing (productOfMemOpens X) :=
   by
-  convert inducing_infi_to_pi fun (u : opens X) (x : X) => x ∈ u
+  convert inducing_infᵢ_to_pi fun (u : opens X) (x : X) => x ∈ u
   apply eq_induced_by_maps_to_sierpinski
-#align topological_space.product_of_mem_opens_inducing TopologicalSpace.product_of_mem_opens_inducing
+#align topological_space.product_of_mem_opens_inducing TopologicalSpace.productOfMemOpens_inducing
 
-theorem product_of_mem_opens_injective [T0Space X] : Function.Injective (productOfMemOpens X) :=
+theorem productOfMemOpens_injective [T0Space X] : Function.Injective (productOfMemOpens X) :=
   by
   intro x1 x2 h
   apply Inseparable.eq
   rw [← Inducing.inseparable_iff (product_of_mem_opens_inducing X), h]
-#align topological_space.product_of_mem_opens_injective TopologicalSpace.product_of_mem_opens_injective
+#align topological_space.product_of_mem_opens_injective TopologicalSpace.productOfMemOpens_injective
 
-theorem product_of_mem_opens_embedding [T0Space X] : Embedding (productOfMemOpens X) :=
-  Embedding.mk (product_of_mem_opens_inducing X) (product_of_mem_opens_injective X)
-#align topological_space.product_of_mem_opens_embedding TopologicalSpace.product_of_mem_opens_embedding
+theorem productOfMemOpens_embedding [T0Space X] : Embedding (productOfMemOpens X) :=
+  Embedding.mk (productOfMemOpens_inducing X) (productOfMemOpens_injective X)
+#align topological_space.product_of_mem_opens_embedding TopologicalSpace.productOfMemOpens_embedding
 
 end TopologicalSpace
 

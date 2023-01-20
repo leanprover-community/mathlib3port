@@ -94,7 +94,7 @@ def stalkToFiber (x : X) : F.sheafify.Presheaf.stalk x ⟶ F.stalk x :=
   stalkToFiber (Sheafify.isLocallyGerm F) x
 #align Top.presheaf.stalk_to_fiber TopCat.Presheaf.stalkToFiber
 
-theorem stalk_to_fiber_surjective (x : X) : Function.Surjective (F.stalkToFiber x) :=
+theorem stalkToFiber_surjective (x : X) : Function.Surjective (F.stalkToFiber x) :=
   by
   apply stalk_to_fiber_surjective
   intro t
@@ -103,9 +103,9 @@ theorem stalk_to_fiber_surjective (x : X) : Function.Surjective (F.stalkToFiber 
     fconstructor
     · exact fun y => F.germ y s
     · exact ⟨prelocal_predicate.sheafify_of ⟨s, fun _ => rfl⟩, rfl⟩
-#align Top.presheaf.stalk_to_fiber_surjective TopCat.Presheaf.stalk_to_fiber_surjective
+#align Top.presheaf.stalk_to_fiber_surjective TopCat.Presheaf.stalkToFiber_surjective
 
-theorem stalk_to_fiber_injective (x : X) : Function.Injective (F.stalkToFiber x) :=
+theorem stalkToFiber_injective (x : X) : Function.Injective (F.stalkToFiber x) :=
   by
   apply stalk_to_fiber_injective
   intros
@@ -131,12 +131,12 @@ theorem stalk_to_fiber_injective (x : X) : Function.Injective (F.stalkToFiber x)
     dsimp at wV
     erw [wU, ← F.germ_res iU' ⟨w, w.2.1⟩, wV, ← F.germ_res iV' ⟨w, w.2.1⟩,
       CategoryTheory.types_comp_apply, CategoryTheory.types_comp_apply, e']
-#align Top.presheaf.stalk_to_fiber_injective TopCat.Presheaf.stalk_to_fiber_injective
+#align Top.presheaf.stalk_to_fiber_injective TopCat.Presheaf.stalkToFiber_injective
 
 /-- The isomorphism betweeen a stalk of the sheafification and the original stalk.
 -/
 def sheafifyStalkIso (x : X) : F.sheafify.Presheaf.stalk x ≅ F.stalk x :=
-  (Equiv.ofBijective _ ⟨stalk_to_fiber_injective _ _, stalk_to_fiber_surjective _ _⟩).toIso
+  (Equiv.ofBijective _ ⟨stalkToFiber_injective _ _, stalkToFiber_surjective _ _⟩).toIso
 #align Top.presheaf.sheafify_stalk_iso TopCat.Presheaf.sheafifyStalkIso
 
 -- PROJECT functoriality, and that sheafification is the left adjoint of the forgetful functor.

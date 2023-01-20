@@ -93,12 +93,12 @@ theorem lift_cons {C} [Category C] (φ : V ⥤q C) {X Y Z : V} (p : Quiver.Path 
 #align category_theory.paths.lift_cons CategoryTheory.Paths.lift_cons
 
 @[simp]
-theorem lift_to_path {C} [Category C] (φ : V ⥤q C) {X Y : V} (f : X ⟶ Y) :
+theorem lift_toPath {C} [Category C] (φ : V ⥤q C) {X Y : V} (f : X ⟶ Y) :
     (lift φ).map f.toPath = φ.map f :=
   by
   dsimp [Quiver.Hom.toPath, lift]
   simp
-#align category_theory.paths.lift_to_path CategoryTheory.Paths.lift_to_path
+#align category_theory.paths.lift_to_path CategoryTheory.Paths.lift_toPath
 
 theorem lift_spec {C} [Category C] (φ : V ⥤q C) : of ⋙q (lift φ).toPrefunctor = φ :=
   by
@@ -152,10 +152,10 @@ variable (W : Type u₂) [Quiver.{v₂ + 1} W]
 
 -- A restatement of `prefunctor.map_path_comp` using `f ≫ g` instead of `f.comp g`.
 @[simp]
-theorem Prefunctor.map_path_comp' (F : V ⥤q W) {X Y Z : Paths V} (f : X ⟶ Y) (g : Y ⟶ Z) :
+theorem Prefunctor.mapPath_comp' (F : V ⥤q W) {X Y Z : Paths V} (f : X ⟶ Y) (g : Y ⟶ Z) :
     F.mapPath (f ≫ g) = (F.mapPath f).comp (F.mapPath g) :=
   Prefunctor.mapPath_comp _ _ _
-#align category_theory.prefunctor.map_path_comp' CategoryTheory.Prefunctor.map_path_comp'
+#align category_theory.prefunctor.map_path_comp' CategoryTheory.Prefunctor.mapPath_comp'
 
 end
 
@@ -179,29 +179,29 @@ def composePath {X : C} : ∀ {Y : C} (p : Path X Y), X ⟶ Y
 #align category_theory.compose_path CategoryTheory.composePath
 
 @[simp]
-theorem compose_path_to_path {X Y : C} (f : X ⟶ Y) : composePath f.toPath = f :=
+theorem composePath_toPath {X Y : C} (f : X ⟶ Y) : composePath f.toPath = f :=
   Category.id_comp _
-#align category_theory.compose_path_to_path CategoryTheory.compose_path_to_path
+#align category_theory.compose_path_to_path CategoryTheory.composePath_toPath
 
 @[simp]
-theorem compose_path_comp {X Y Z : C} (f : Path X Y) (g : Path Y Z) :
+theorem composePath_comp {X Y Z : C} (f : Path X Y) (g : Path Y Z) :
     composePath (f.comp g) = composePath f ≫ composePath g :=
   by
   induction' g with Y' Z' g e ih
   · simp
   · simp [ih]
-#align category_theory.compose_path_comp CategoryTheory.compose_path_comp
+#align category_theory.compose_path_comp CategoryTheory.composePath_comp
 
 @[simp]
-theorem compose_path_id {X : Paths C} : composePath (𝟙 X) = 𝟙 X :=
+theorem composePath_id {X : Paths C} : composePath (𝟙 X) = 𝟙 X :=
   rfl
-#align category_theory.compose_path_id CategoryTheory.compose_path_id
+#align category_theory.compose_path_id CategoryTheory.composePath_id
 
 @[simp]
-theorem compose_path_comp' {X Y Z : Paths C} (f : X ⟶ Y) (g : Y ⟶ Z) :
+theorem composePath_comp' {X Y Z : Paths C} (f : X ⟶ Y) (g : Y ⟶ Z) :
     composePath (f ≫ g) = composePath f ≫ composePath g :=
-  compose_path_comp f g
-#align category_theory.compose_path_comp' CategoryTheory.compose_path_comp'
+  composePath_comp f g
+#align category_theory.compose_path_comp' CategoryTheory.composePath_comp'
 
 variable (C)
 

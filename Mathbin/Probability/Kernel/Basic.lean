@@ -71,21 +71,21 @@ include mα mβ
 namespace Kernel
 
 @[simp]
-theorem coe_fn_zero : ⇑(0 : kernel α β) = 0 :=
+theorem coeFn_zero : ⇑(0 : kernel α β) = 0 :=
   rfl
-#align probability_theory.kernel.coe_fn_zero ProbabilityTheory.kernel.coe_fn_zero
+#align probability_theory.kernel.coe_fn_zero ProbabilityTheory.kernel.coeFn_zero
 
 @[simp]
-theorem coe_fn_add (κ η : kernel α β) : ⇑(κ + η) = κ + η :=
+theorem coeFn_add (κ η : kernel α β) : ⇑(κ + η) = κ + η :=
   rfl
-#align probability_theory.kernel.coe_fn_add ProbabilityTheory.kernel.coe_fn_add
+#align probability_theory.kernel.coe_fn_add ProbabilityTheory.kernel.coeFn_add
 
 omit mα mβ
 
 /-- Coercion to a function as an additive monoid homomorphism. -/
 def coeAddHom (α β : Type _) [MeasurableSpace α] [MeasurableSpace β] :
     kernel α β →+ α → Measure β :=
-  ⟨coeFn, coe_fn_zero, coe_fn_add⟩
+  ⟨coeFn, coeFn_zero, coeFn_add⟩
 #align probability_theory.kernel.coe_add_hom ProbabilityTheory.kernel.coeAddHom
 
 include mα mβ
@@ -465,7 +465,7 @@ theorem measurable_prod_mk_mem_of_finite (κ : kernel α β) {t : Set (α × β)
   by
   -- `t` is a measurable set in the product `α × β`: we use that the product σ-algebra is generated
   -- by boxes to prove the result by induction.
-  refine' MeasurableSpace.induction_on_inter generate_from_prod.symm is_pi_system_prod _ _ _ _ ht
+  refine' MeasurableSpace.induction_on_inter generate_from_prod.symm isPiSystem_prod _ _ _ _ ht
   ·-- case `t = ∅`
     simp only [Set.mem_empty_iff_false, Set.setOf_false, measure_empty, measurable_const]
   · -- case of a box: `t = t₁ ×ˢ t₂` for measurable sets `t₁` and `t₂`
@@ -571,7 +571,7 @@ theorem measurable_lintegral (κ : kernel α β) [IsSFiniteKernel κ] {f : α �
     · exact fun n => (F n).Measurable.comp measurable_prod_mk_left
     · exact fun i j hij b => simple_func.monotone_eapprox (Function.uncurry f) hij _
   simp_rw [this]
-  refine' measurable_supr fun n => simple_func.induction _ _ (F n)
+  refine' measurable_supᵢ fun n => simple_func.induction _ _ (F n)
   · intro c t ht
     simp only [simple_func.const_zero, simple_func.coe_piecewise, simple_func.coe_const,
       simple_func.coe_zero, Set.piecewise_eq_indicator]
@@ -593,19 +593,19 @@ theorem measurable_lintegral' (κ : kernel α β) [IsSFiniteKernel κ] {f : β �
   measurable_lintegral κ (hf.comp measurable_snd)
 #align probability_theory.kernel.measurable_lintegral' ProbabilityTheory.kernel.measurable_lintegral'
 
-theorem measurable_set_lintegral (κ : kernel α β) [IsSFiniteKernel κ] {f : α → β → ℝ≥0∞}
+theorem measurableSet_lintegral (κ : kernel α β) [IsSFiniteKernel κ] {f : α → β → ℝ≥0∞}
     (hf : Measurable (Function.uncurry f)) {s : Set β} (hs : MeasurableSet s) :
     Measurable fun a => ∫⁻ b in s, f a b ∂κ a :=
   by
   simp_rw [← lintegral_restrict κ hs]
   exact measurable_lintegral _ hf
-#align probability_theory.kernel.measurable_set_lintegral ProbabilityTheory.kernel.measurable_set_lintegral
+#align probability_theory.kernel.measurable_set_lintegral ProbabilityTheory.kernel.measurableSet_lintegral
 
-theorem measurable_set_lintegral' (κ : kernel α β) [IsSFiniteKernel κ] {f : β → ℝ≥0∞}
+theorem measurableSet_lintegral' (κ : kernel α β) [IsSFiniteKernel κ] {f : β → ℝ≥0∞}
     (hf : Measurable f) {s : Set β} (hs : MeasurableSet s) :
     Measurable fun a => ∫⁻ b in s, f b ∂κ a :=
-  measurable_set_lintegral κ (hf.comp measurable_snd) hs
-#align probability_theory.kernel.measurable_set_lintegral' ProbabilityTheory.kernel.measurable_set_lintegral'
+  measurableSet_lintegral κ (hf.comp measurable_snd) hs
+#align probability_theory.kernel.measurable_set_lintegral' ProbabilityTheory.kernel.measurableSet_lintegral'
 
 end MeasurableLintegral
 

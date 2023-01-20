@@ -68,7 +68,7 @@ noncomputable def Types.monoOverEquivalenceSet (α : Type u) : MonoOver α ≌ S
 #align types.mono_over_equivalence_set Types.monoOverEquivalenceSet
 
 instance : WellPowered (Type u) :=
-  well_powered_of_essentially_small_mono_over fun α =>
+  wellPowered_of_essentiallySmall_monoOver fun α =>
     EssentiallySmall.mk' (Types.monoOverEquivalenceSet α)
 
 /-- For `α : Type u`, `subobject α` is order isomorphic to `set α`.

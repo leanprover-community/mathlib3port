@@ -35,43 +35,76 @@ noncomputable def boolIndicator (x : α) :=
 #align set.bool_indicator Set.boolIndicator
 -/
 
-theorem mem_iff_bool_indicator (x : α) : x ∈ s ↔ s.boolIndicator x = tt :=
+/- warning: set.mem_iff_bool_indicator clashes with set.mem_iff_boolIndicator -> Set.mem_iff_boolIndicator
+Case conversion may be inaccurate. Consider using '#align set.mem_iff_bool_indicator Set.mem_iff_boolIndicatorₓ'. -/
+#print Set.mem_iff_boolIndicator /-
+theorem mem_iff_boolIndicator (x : α) : x ∈ s ↔ s.boolIndicator x = tt :=
   by
   unfold bool_indicator
   split_ifs <;> tauto
-#align set.mem_iff_bool_indicator Set.mem_iff_bool_indicator
+#align set.mem_iff_bool_indicator Set.mem_iff_boolIndicator
+-/
 
-theorem not_mem_iff_bool_indicator (x : α) : x ∉ s ↔ s.boolIndicator x = ff :=
+/- warning: set.not_mem_iff_bool_indicator clashes with set.not_mem_iff_boolIndicator -> Set.not_mem_iff_boolIndicator
+Case conversion may be inaccurate. Consider using '#align set.not_mem_iff_bool_indicator Set.not_mem_iff_boolIndicatorₓ'. -/
+#print Set.not_mem_iff_boolIndicator /-
+theorem not_mem_iff_boolIndicator (x : α) : x ∉ s ↔ s.boolIndicator x = ff :=
   by
   unfold bool_indicator
   split_ifs <;> tauto
-#align set.not_mem_iff_bool_indicator Set.not_mem_iff_bool_indicator
+#align set.not_mem_iff_bool_indicator Set.not_mem_iff_boolIndicator
+-/
 
-theorem preimage_bool_indicator_tt : s.boolIndicator ⁻¹' {true} = s :=
+/- warning: set.preimage_bool_indicator_tt clashes with set.preimage_boolIndicator_true -> Set.preimage_boolIndicator_true
+Case conversion may be inaccurate. Consider using '#align set.preimage_bool_indicator_tt Set.preimage_boolIndicator_trueₓ'. -/
+#print Set.preimage_boolIndicator_true /-
+theorem preimage_boolIndicator_true : s.boolIndicator ⁻¹' {true} = s :=
   ext fun x => (s.mem_iff_bool_indicator x).symm
-#align set.preimage_bool_indicator_tt Set.preimage_bool_indicator_tt
+#align set.preimage_bool_indicator_tt Set.preimage_boolIndicator_true
+-/
 
-theorem preimage_bool_indicator_ff : s.boolIndicator ⁻¹' {false} = sᶜ :=
+/- warning: set.preimage_bool_indicator_ff clashes with set.preimage_boolIndicator_false -> Set.preimage_boolIndicator_false
+warning: set.preimage_bool_indicator_ff -> Set.preimage_boolIndicator_false is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (s : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (Set.preimage.{u1, 0} α Bool (Set.boolIndicator.{u1} α s) (Singleton.singleton.{0, 0} Bool (Set.{0} Bool) (Set.hasSingleton.{0} Bool) Bool.false)) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s)
+but is expected to have type
+  forall {α : Type.{u1}} (s : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (Set.preimage.{u1, 0} α Bool (Set.boolIndicator.{u1} α s) (Singleton.singleton.{0, 0} Bool (Set.{0} Bool) (Set.instSingletonSet.{0} Bool) Bool.false)) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s)
+Case conversion may be inaccurate. Consider using '#align set.preimage_bool_indicator_ff Set.preimage_boolIndicator_falseₓ'. -/
+theorem preimage_boolIndicator_false : s.boolIndicator ⁻¹' {false} = sᶜ :=
   ext fun x => (s.not_mem_iff_bool_indicator x).symm
-#align set.preimage_bool_indicator_ff Set.preimage_bool_indicator_ff
+#align set.preimage_bool_indicator_ff Set.preimage_boolIndicator_false
 
 open Classical
 
-theorem preimage_bool_indicator_eq_union (t : Set Bool) :
+/- warning: set.preimage_bool_indicator_eq_union clashes with set.preimage_boolIndicator_eq_union -> Set.preimage_boolIndicator_eq_union
+warning: set.preimage_bool_indicator_eq_union -> Set.preimage_boolIndicator_eq_union is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (s : Set.{u1} α) (t : Set.{0} Bool), Eq.{succ u1} (Set.{u1} α) (Set.preimage.{u1, 0} α Bool (Set.boolIndicator.{u1} α s) t) (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) (ite.{succ u1} (Set.{u1} α) (Membership.Mem.{0, 0} Bool (Set.{0} Bool) (Set.hasMem.{0} Bool) Bool.true t) (Classical.propDecidable (Membership.Mem.{0, 0} Bool (Set.{0} Bool) (Set.hasMem.{0} Bool) Bool.true t)) s (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.hasEmptyc.{u1} α))) (ite.{succ u1} (Set.{u1} α) (Membership.Mem.{0, 0} Bool (Set.{0} Bool) (Set.hasMem.{0} Bool) Bool.false t) (Classical.propDecidable (Membership.Mem.{0, 0} Bool (Set.{0} Bool) (Set.hasMem.{0} Bool) Bool.false t)) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.hasEmptyc.{u1} α))))
+but is expected to have type
+  forall {α : Type.{u1}} (s : Set.{u1} α) (t : Set.{0} Bool), Eq.{succ u1} (Set.{u1} α) (Set.preimage.{u1, 0} α Bool (Set.boolIndicator.{u1} α s) t) (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) (ite.{succ u1} (Set.{u1} α) (Membership.mem.{0, 0} Bool (Set.{0} Bool) (Set.instMembershipSet.{0} Bool) Bool.true t) (Classical.propDecidable (Membership.mem.{0, 0} Bool (Set.{0} Bool) (Set.instMembershipSet.{0} Bool) Bool.true t)) s (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.instEmptyCollectionSet.{u1} α))) (ite.{succ u1} (Set.{u1} α) (Membership.mem.{0, 0} Bool (Set.{0} Bool) (Set.instMembershipSet.{0} Bool) Bool.false t) (Classical.propDecidable (Membership.mem.{0, 0} Bool (Set.{0} Bool) (Set.instMembershipSet.{0} Bool) Bool.false t)) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.instEmptyCollectionSet.{u1} α))))
+Case conversion may be inaccurate. Consider using '#align set.preimage_bool_indicator_eq_union Set.preimage_boolIndicator_eq_unionₓ'. -/
+theorem preimage_boolIndicator_eq_union (t : Set Bool) :
     s.boolIndicator ⁻¹' t = (if tt ∈ t then s else ∅) ∪ if ff ∈ t then sᶜ else ∅ :=
   by
   ext x
   dsimp [bool_indicator]
   split_ifs <;> tauto
-#align set.preimage_bool_indicator_eq_union Set.preimage_bool_indicator_eq_union
+#align set.preimage_bool_indicator_eq_union Set.preimage_boolIndicator_eq_union
 
-theorem preimage_bool_indicator (t : Set Bool) :
+/- warning: set.preimage_bool_indicator clashes with set.preimage_boolIndicator -> Set.preimage_boolIndicator
+warning: set.preimage_bool_indicator -> Set.preimage_boolIndicator is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (s : Set.{u1} α) (t : Set.{0} Bool), Or (Eq.{succ u1} (Set.{u1} α) (Set.preimage.{u1, 0} α Bool (Set.boolIndicator.{u1} α s) t) (Set.univ.{u1} α)) (Or (Eq.{succ u1} (Set.{u1} α) (Set.preimage.{u1, 0} α Bool (Set.boolIndicator.{u1} α s) t) s) (Or (Eq.{succ u1} (Set.{u1} α) (Set.preimage.{u1, 0} α Bool (Set.boolIndicator.{u1} α s) t) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s)) (Eq.{succ u1} (Set.{u1} α) (Set.preimage.{u1, 0} α Bool (Set.boolIndicator.{u1} α s) t) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.hasEmptyc.{u1} α)))))
+but is expected to have type
+  forall {α : Type.{u1}} (s : Set.{u1} α) (t : Set.{0} Bool), Or (Eq.{succ u1} (Set.{u1} α) (Set.preimage.{u1, 0} α Bool (Set.boolIndicator.{u1} α s) t) (Set.univ.{u1} α)) (Or (Eq.{succ u1} (Set.{u1} α) (Set.preimage.{u1, 0} α Bool (Set.boolIndicator.{u1} α s) t) s) (Or (Eq.{succ u1} (Set.{u1} α) (Set.preimage.{u1, 0} α Bool (Set.boolIndicator.{u1} α s) t) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s)) (Eq.{succ u1} (Set.{u1} α) (Set.preimage.{u1, 0} α Bool (Set.boolIndicator.{u1} α s) t) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.instEmptyCollectionSet.{u1} α)))))
+Case conversion may be inaccurate. Consider using '#align set.preimage_bool_indicator Set.preimage_boolIndicatorₓ'. -/
+theorem preimage_boolIndicator (t : Set Bool) :
     s.boolIndicator ⁻¹' t = univ ∨
       s.boolIndicator ⁻¹' t = s ∨ s.boolIndicator ⁻¹' t = sᶜ ∨ s.boolIndicator ⁻¹' t = ∅ :=
   by
   simp only [preimage_bool_indicator_eq_union]
   split_ifs <;> simp [s.union_compl_self]
-#align set.preimage_bool_indicator Set.preimage_bool_indicator
+#align set.preimage_bool_indicator Set.preimage_boolIndicator
 
 end Set
 

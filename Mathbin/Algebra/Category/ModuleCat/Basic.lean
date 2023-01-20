@@ -122,10 +122,10 @@ theorem forget₂_obj (X : ModuleCat R) :
 #align Module.forget₂_obj ModuleCat.forget₂_obj
 
 @[simp]
-theorem forget₂_obj_Module_of (X : Type v) [AddCommGroup X] [Module R X] :
+theorem forget₂_obj_moduleCat_of (X : Type v) [AddCommGroup X] [Module R X] :
     (forget₂ (ModuleCat R) AddCommGroupCat).obj (of R X) = AddCommGroupCat.of X :=
   rfl
-#align Module.forget₂_obj_Module_of ModuleCat.forget₂_obj_Module_of
+#align Module.forget₂_obj_Module_of ModuleCat.forget₂_obj_moduleCat_of
 
 @[simp]
 theorem forget₂_map (X Y : ModuleCat R) (f : X ⟶ Y) :
@@ -140,10 +140,10 @@ def ofHom {R : Type u} [Ring R] {X Y : Type v} [AddCommGroup X] [Module R X] [Ad
 #align Module.of_hom ModuleCat.ofHom
 
 @[simp]
-theorem of_hom_apply {R : Type u} [Ring R] {X Y : Type v} [AddCommGroup X] [Module R X]
+theorem ofHom_apply {R : Type u} [Ring R] {X Y : Type v} [AddCommGroup X] [Module R X]
     [AddCommGroup Y] [Module R Y] (f : X →ₗ[R] Y) (x : X) : ofHom f x = f x :=
   rfl
-#align Module.of_hom_apply ModuleCat.of_hom_apply
+#align Module.of_hom_apply ModuleCat.ofHom_apply
 
 instance : Inhabited (ModuleCat R) :=
   ⟨of R PUnit⟩
@@ -168,7 +168,7 @@ def ofSelfIso (M : ModuleCat R) : ModuleCat.of R M ≅ M
   inv := 𝟙 M
 #align Module.of_self_iso ModuleCat.ofSelfIso
 
-theorem is_zero_of_subsingleton (M : ModuleCat R) [Subsingleton M] : IsZero M :=
+theorem isZero_of_subsingleton (M : ModuleCat R) [Subsingleton M] : IsZero M :=
   by
   refine' ⟨fun X => ⟨⟨⟨0⟩, fun f => _⟩⟩, fun X => ⟨⟨⟨0⟩, fun f => _⟩⟩⟩
   · ext
@@ -176,10 +176,10 @@ theorem is_zero_of_subsingleton (M : ModuleCat R) [Subsingleton M] : IsZero M :=
     rw [this, map_zero, map_zero]
   · ext
     apply Subsingleton.elim
-#align Module.is_zero_of_subsingleton ModuleCat.is_zero_of_subsingleton
+#align Module.is_zero_of_subsingleton ModuleCat.isZero_of_subsingleton
 
 instance : HasZeroObject (ModuleCat.{v} R) :=
-  ⟨⟨of R PUnit, is_zero_of_subsingleton _⟩⟩
+  ⟨⟨of R PUnit, isZero_of_subsingleton _⟩⟩
 
 variable {R} {M N U : ModuleCat.{v} R}
 
@@ -321,8 +321,9 @@ instance : Preadditive (ModuleCat.{v} R)
       ext
       simp
 
-instance forget₂_AddCommGroup_additive : (forget₂ (ModuleCat.{v} R) AddCommGroupCat).Additive where
-#align Module.forget₂_AddCommGroup_additive ModuleCat.forget₂_AddCommGroup_additive
+instance forget₂_addCommGroupCat_additive : (forget₂ (ModuleCat.{v} R) AddCommGroupCat).Additive
+    where
+#align Module.forget₂_AddCommGroup_additive ModuleCat.forget₂_addCommGroupCat_additive
 
 section
 
@@ -342,10 +343,10 @@ instance : Linear S (ModuleCat.{v} S)
 
 variable {X Y X' Y' : ModuleCat.{v} S}
 
-theorem Iso.hom_congr_eq_arrow_congr (i : X ≅ X') (j : Y ≅ Y') (f : X ⟶ Y) :
+theorem Iso.homCongr_eq_arrowCongr (i : X ≅ X') (j : Y ≅ Y') (f : X ⟶ Y) :
     Iso.homCongr i j f = LinearEquiv.arrowCongr i.toLinearEquiv j.toLinearEquiv f :=
   rfl
-#align Module.iso.hom_congr_eq_arrow_congr ModuleCat.Iso.hom_congr_eq_arrow_congr
+#align Module.iso.hom_congr_eq_arrow_congr ModuleCat.Iso.homCongr_eq_arrowCongr
 
 theorem Iso.conj_eq_conj (i : X ≅ X') (f : EndCat X) :
     Iso.conj i f = LinearEquiv.conj i.toLinearEquiv f :=

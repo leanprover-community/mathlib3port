@@ -93,7 +93,7 @@ theorem ae_empty_or_univ_of_forall_vadd_ae_eq_self {s : Set <| AddCircle T}
   suffices ∀ᶠ j in l, μ (s ∩ I j) / μ (I j) = μ s / Ennreal.ofReal T
     by
     replace hd := hd.congr' this
-    rwa [tendsto_const_nhds_iff, Ennreal.div_eq_one_iff hT₁ Ennreal.of_real_ne_top] at hd
+    rwa [tendsto_const_nhds_iff, Ennreal.div_eq_one_iff hT₁ Ennreal.ofReal_ne_top] at hd
   refine' (hu₂.eventually_gt_at_top 0).mono fun j hj => _
   have huj : IsOfFinAddOrder (u j) := add_order_of_pos_iff.mp hj
   have huj' : 1 ≤ (↑(n j) : ℝ) := by
@@ -103,11 +103,11 @@ theorem ae_empty_or_univ_of_forall_vadd_ae_eq_self {s : Set <| AddCircle T}
   have hI₁ : μ (I j) ≠ ⊤ := measure_ne_top _ _
   have hI₂ : μ (I j) * ↑(n j) = Ennreal.ofReal T :=
     by
-    rw [volume_closed_ball, mul_div, mul_div_mul_left T _ two_ne_zero,
-      min_eq_right (div_le_self hT₀.le huj'), mul_comm, ← nsmul_eq_mul, ← Ennreal.of_real_nsmul,
+    rw [volume_closed_ball, mul_div, mul_div_mul_left T _ two_neZero,
+      min_eq_right (div_le_self hT₀.le huj'), mul_comm, ← nsmul_eq_mul, ← Ennreal.ofReal_nsmul,
       nsmul_eq_mul, mul_div_cancel']
     exact nat.cast_ne_zero.mpr hj.ne'
-  rw [Ennreal.div_eq_div_iff hT₁ Ennreal.of_real_ne_top hI₀ hI₁,
+  rw [Ennreal.div_eq_div_iff hT₁ Ennreal.ofReal_ne_top hI₀ hI₁,
     volume_of_add_preimage_eq s _ (u j) d huj (hu₁ j) closed_ball_ae_eq_ball, nsmul_eq_mul, ←
     mul_assoc, hI₂]
 #align add_circle.ae_empty_or_univ_of_forall_vadd_ae_eq_self AddCircle.ae_empty_or_univ_of_forall_vadd_ae_eq_self
@@ -122,14 +122,14 @@ theorem ergodicZsmul {n : ℤ} (hn : 1 < |n|) : Ergodic fun y : AddCircle T => n
       have hu₀ : ∀ j, addOrderOf (u j) = n.nat_abs ^ j := fun j =>
         add_order_of_div_of_gcd_eq_one (pow_pos (pos_of_gt hn) j) (gcd_one_left _)
       have hnu : ∀ j, n ^ j • u j = 0 := fun j => by
-        rw [← add_order_of_dvd_iff_zsmul_eq_zero, hu₀, Int.coe_nat_pow, Int.coe_natAbs, ← abs_pow,
+        rw [← add_orderOf_dvd_iff_zsmul_eq_zero, hu₀, Int.coe_nat_pow, Int.coe_natAbs, ← abs_pow,
           abs_dvd]
       have hu₁ : ∀ j, (u j +ᵥ s : Set _) =ᵐ[volume] s := fun j => by
         rw [vadd_eq_self_of_preimage_zsmul_eq_self hs' (hnu j)]
       have hu₂ : tendsto (fun j => addOrderOf <| u j) at_top at_top :=
         by
         simp_rw [hu₀]
-        exact Nat.tendsto_pow_at_top_at_top_of_one_lt hn
+        exact Nat.tendsto_pow_atTop_atTop_of_one_lt hn
       exact ae_empty_or_univ_of_forall_vadd_ae_eq_self hs.null_measurable_set hu₁ hu₂ }
 #align add_circle.ergodic_zsmul AddCircle.ergodicZsmul
 

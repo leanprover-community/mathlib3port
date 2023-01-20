@@ -72,7 +72,7 @@ we replace `equ` with `equ : t = u`.
 unsafe def unify_heterogeneous : unification_step := fun equ lhs_type rhs_type lhs rhs _ _ _ =>
   (do
       is_def_eq lhs_type rhs_type
-      let p ← to_expr ``(@eq_of_heq $(lhs_type) $(lhs) $(rhs) $(equ))
+      let p ← to_expr ``(@eq_of_hEq $(lhs_type) $(lhs) $(rhs) $(equ))
       let t ← to_expr ``(@Eq $(lhs_type) $(lhs) $(rhs))
       let equ' ← note equ.local_pp_name t p
       clear equ

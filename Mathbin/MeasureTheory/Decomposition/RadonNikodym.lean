@@ -48,7 +48,7 @@ namespace Measure
 
 include m
 
-theorem with_density_rn_deriv_eq (μ ν : Measure α) [HaveLebesgueDecomposition μ ν] (h : μ ≪ ν) :
+theorem withDensity_rnDeriv_eq (μ ν : Measure α) [HaveLebesgueDecomposition μ ν] (h : μ ≪ ν) :
     ν.withDensity (rnDeriv μ ν) = μ :=
   by
   obtain ⟨hf₁, ⟨E, hE₁, hE₂, hE₃⟩, hadd⟩ := have_lebesgue_decomposition_spec μ ν
@@ -65,17 +65,17 @@ theorem with_density_rn_deriv_eq (μ ν : Measure α) [HaveLebesgueDecomposition
     exact (add_eq_zero_iff.1 this).1
   rw [this, zero_add] at hadd
   exact hadd.symm
-#align measure_theory.measure.with_density_rn_deriv_eq MeasureTheory.Measure.with_density_rn_deriv_eq
+#align measure_theory.measure.with_density_rn_deriv_eq MeasureTheory.Measure.withDensity_rnDeriv_eq
 
 /-- **The Radon-Nikodym theorem**: Given two measures `μ` and `ν`, if
 `have_lebesgue_decomposition μ ν`, then `μ` is absolutely continuous to `ν` if and only if
 `ν.with_density (rn_deriv μ ν) = μ`. -/
-theorem absolutely_continuous_iff_with_density_rn_deriv_eq {μ ν : Measure α}
+theorem absolutelyContinuous_iff_withDensity_rnDeriv_eq {μ ν : Measure α}
     [HaveLebesgueDecomposition μ ν] : μ ≪ ν ↔ ν.withDensity (rnDeriv μ ν) = μ :=
-  ⟨with_density_rn_deriv_eq μ ν, fun h => h ▸ withDensityAbsolutelyContinuous _ _⟩
-#align measure_theory.measure.absolutely_continuous_iff_with_density_rn_deriv_eq MeasureTheory.Measure.absolutely_continuous_iff_with_density_rn_deriv_eq
+  ⟨withDensity_rnDeriv_eq μ ν, fun h => h ▸ withDensityAbsolutelyContinuous _ _⟩
+#align measure_theory.measure.absolutely_continuous_iff_with_density_rn_deriv_eq MeasureTheory.Measure.absolutelyContinuous_iff_withDensity_rnDeriv_eq
 
-theorem with_density_rn_deriv_to_real_eq {μ ν : Measure α} [IsFiniteMeasure μ]
+theorem with_density_rnDeriv_toReal_eq {μ ν : Measure α} [IsFiniteMeasure μ]
     [HaveLebesgueDecomposition μ ν] (h : μ ≪ ν) {i : Set α} (hi : MeasurableSet i) :
     (∫ x in i, (μ.rnDeriv ν x).toReal ∂ν) = (μ i).toReal :=
   by
@@ -85,7 +85,7 @@ theorem with_density_rn_deriv_to_real_eq {μ ν : Measure α} [IsFiniteMeasure �
       ae_lt_top (μ.measurable_rn_deriv ν) (lt_of_le_of_lt (lintegral_mono_set i.subset_univ) _).Ne
     rw [← with_density_apply _ MeasurableSet.univ, with_density_rn_deriv_eq μ ν h]
     exact measure_lt_top _ _
-#align measure_theory.measure.with_density_rn_deriv_to_real_eq MeasureTheory.Measure.with_density_rn_deriv_to_real_eq
+#align measure_theory.measure.with_density_rn_deriv_to_real_eq MeasureTheory.Measure.with_density_rnDeriv_toReal_eq
 
 end Measure
 
@@ -95,7 +95,7 @@ include m
 
 open Measure VectorMeasure
 
-theorem with_densityᵥ_rn_deriv_eq (s : SignedMeasure α) (μ : Measure α) [SigmaFinite μ]
+theorem withDensityᵥ_rnDeriv_eq (s : SignedMeasure α) (μ : Measure α) [SigmaFinite μ]
     (h : s ≪ᵥ μ.toEnnrealVectorMeasure) : μ.withDensityᵥ (s.rnDeriv μ) = s :=
   by
   rw [absolutely_continuous_ennreal_iff, (_ : μ.to_ennreal_vector_measure.ennreal_to_measure = μ),
@@ -115,13 +115,13 @@ theorem with_densityᵥ_rn_deriv_eq (s : SignedMeasure α) (μ : Measure α) [Si
       · rw [set_lintegral_univ]
         exact (lintegral_rn_deriv_lt_top _ _).Ne
   · exact equiv_measure.right_inv μ
-#align measure_theory.signed_measure.with_densityᵥ_rn_deriv_eq MeasureTheory.SignedMeasure.with_densityᵥ_rn_deriv_eq
+#align measure_theory.signed_measure.with_densityᵥ_rn_deriv_eq MeasureTheory.SignedMeasure.withDensityᵥ_rnDeriv_eq
 
 /-- The Radon-Nikodym theorem for signed measures. -/
-theorem absolutely_continuous_iff_with_densityᵥ_rn_deriv_eq (s : SignedMeasure α) (μ : Measure α)
+theorem absolutelyContinuous_iff_withDensityᵥ_rnDeriv_eq (s : SignedMeasure α) (μ : Measure α)
     [SigmaFinite μ] : s ≪ᵥ μ.toEnnrealVectorMeasure ↔ μ.withDensityᵥ (s.rnDeriv μ) = s :=
-  ⟨with_densityᵥ_rn_deriv_eq s μ, fun h => h ▸ withDensityᵥAbsolutelyContinuous _ _⟩
-#align measure_theory.signed_measure.absolutely_continuous_iff_with_densityᵥ_rn_deriv_eq MeasureTheory.SignedMeasure.absolutely_continuous_iff_with_densityᵥ_rn_deriv_eq
+  ⟨withDensityᵥ_rnDeriv_eq s μ, fun h => h ▸ withDensityᵥAbsolutelyContinuous _ _⟩
+#align measure_theory.signed_measure.absolutely_continuous_iff_with_densityᵥ_rn_deriv_eq MeasureTheory.SignedMeasure.absolutelyContinuous_iff_withDensityᵥ_rnDeriv_eq
 
 end SignedMeasure
 

@@ -215,13 +215,13 @@ v         v         v         v         v
 A' --f'-> B' --g'-> C' --h'-> D' --i'-> E'
 ```
 -/
-theorem is_iso_of_is_iso_of_is_iso_of_is_iso_of_is_iso : IsIso γ :=
+theorem isIso_of_isIso_of_isIso_of_isIso_of_isIso : IsIso γ :=
   have : Mono γ := by
     apply mono_of_epi_of_mono_of_mono comm₁ comm₂ comm₃ hfg hgh hf'g' <;> infer_instance
   have : Epi γ := by
     apply epi_of_epi_of_epi_of_mono comm₂ comm₃ comm₄ hhi hg'h' hh'i' <;> infer_instance
   is_iso_of_mono_of_epi _
-#align category_theory.abelian.is_iso_of_is_iso_of_is_iso_of_is_iso_of_is_iso CategoryTheory.Abelian.is_iso_of_is_iso_of_is_iso_of_is_iso_of_is_iso
+#align category_theory.abelian.is_iso_of_is_iso_of_is_iso_of_is_iso_of_is_iso CategoryTheory.Abelian.isIso_of_isIso_of_isIso_of_isIso_of_isIso
 
 end Five
 

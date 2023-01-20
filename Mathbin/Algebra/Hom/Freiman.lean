@@ -152,9 +152,9 @@ instance : CoeFun (A →*[n] β) fun _ => α → β :=
 initialize_simps_projections FreimanHom (toFun → apply)
 
 @[simp, to_additive]
-theorem to_fun_eq_coe (f : A →*[n] β) : f.toFun = f :=
+theorem toFun_eq_coe (f : A →*[n] β) : f.toFun = f :=
   rfl
-#align freiman_hom.to_fun_eq_coe FreimanHom.to_fun_eq_coe
+#align freiman_hom.to_fun_eq_coe FreimanHom.toFun_eq_coe
 #align add_freiman_hom.to_fun_eq_coe AddFreimanHom.to_fun_eq_coe
 
 @[ext, to_additive]
@@ -461,16 +461,16 @@ def MonoidHom.toFreimanHom (A : Set α) (n : ℕ) (f : α →* β) : A →*[n] �
 #align add_monoid_hom.to_add_freiman_hom AddMonoidHom.to_add_freiman_hom
 
 @[simp, to_additive]
-theorem MonoidHom.to_freiman_hom_coe (f : α →* β) : (f.toFreimanHom A n : α → β) = f :=
+theorem MonoidHom.toFreimanHom_coe (f : α →* β) : (f.toFreimanHom A n : α → β) = f :=
   rfl
-#align monoid_hom.to_freiman_hom_coe MonoidHom.to_freiman_hom_coe
+#align monoid_hom.to_freiman_hom_coe MonoidHom.toFreimanHom_coe
 #align add_monoid_hom.to_freiman_hom_coe AddMonoidHom.to_freiman_hom_coe
 
 @[to_additive]
-theorem MonoidHom.to_freiman_hom_injective :
+theorem MonoidHom.toFreimanHom_injective :
     Function.Injective (MonoidHom.toFreimanHom A n : (α →* β) → A →*[n] β) := fun f g h =>
   MonoidHom.ext <| show _ from FunLike.ext_iff.mp h
-#align monoid_hom.to_freiman_hom_injective MonoidHom.to_freiman_hom_injective
+#align monoid_hom.to_freiman_hom_injective MonoidHom.toFreimanHom_injective
 #align add_monoid_hom.to_freiman_hom_injective AddMonoidHom.to_freiman_hom_injective
 
 end CommMonoid
@@ -532,17 +532,16 @@ theorem FreimanHom.freimanHomClassOfLe [FreimanHomClass F A β n] (h : m ≤ n) 
 #align add_freiman_hom.add_freiman_hom_class_of_le AddFreimanHom.add_freiman_hom_class_of_le
 
 @[simp, to_additive AddFreimanHom.to_add_freiman_hom_coe]
-theorem FreimanHom.to_freiman_hom_coe (h : m ≤ n) (f : A →*[n] β) :
-    (f.toFreimanHom h : α → β) = f :=
+theorem FreimanHom.toFreimanHom_coe (h : m ≤ n) (f : A →*[n] β) : (f.toFreimanHom h : α → β) = f :=
   rfl
-#align freiman_hom.to_freiman_hom_coe FreimanHom.to_freiman_hom_coe
+#align freiman_hom.to_freiman_hom_coe FreimanHom.toFreimanHom_coe
 #align add_freiman_hom.to_add_freiman_hom_coe AddFreimanHom.to_add_freiman_hom_coe
 
 @[to_additive]
-theorem FreimanHom.to_freiman_hom_injective (h : m ≤ n) :
+theorem FreimanHom.toFreimanHom_injective (h : m ≤ n) :
     Function.Injective (FreimanHom.toFreimanHom h : (A →*[n] β) → A →*[m] β) := fun f g hfg =>
   FreimanHom.ext <| by convert FunLike.ext_iff.1 hfg
-#align freiman_hom.to_freiman_hom_injective FreimanHom.to_freiman_hom_injective
+#align freiman_hom.to_freiman_hom_injective FreimanHom.toFreimanHom_injective
 #align add_freiman_hom.to_freiman_hom_injective AddFreimanHom.to_freiman_hom_injective
 
 end CancelCommMonoid

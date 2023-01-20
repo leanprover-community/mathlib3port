@@ -84,9 +84,9 @@ def mkUnit {a : Units k} {A : 𝕎 k} (hA : A.coeff 0 = a) : Units (𝕎 k) :=
 #align witt_vector.mk_unit WittVector.mkUnit
 
 @[simp]
-theorem coe_mk_unit {a : Units k} {A : 𝕎 k} (hA : A.coeff 0 = a) : (mkUnit hA : 𝕎 k) = A :=
+theorem coe_mkUnit {a : Units k} {A : 𝕎 k} (hA : A.coeff 0 = a) : (mkUnit hA : 𝕎 k) = A :=
   rfl
-#align witt_vector.coe_mk_unit WittVector.coe_mk_unit
+#align witt_vector.coe_mk_unit WittVector.coe_mkUnit
 
 end CommRing
 
@@ -94,12 +94,12 @@ section Field
 
 variable {k : Type _} [Field k] [CharP k p]
 
-theorem is_unit_of_coeff_zero_ne_zero (x : 𝕎 k) (hx : x.coeff 0 ≠ 0) : IsUnit x :=
+theorem isUnit_of_coeff_zero_ne_zero (x : 𝕎 k) (hx : x.coeff 0 ≠ 0) : IsUnit x :=
   by
   let y : kˣ := Units.mk0 (x.coeff 0) hx
   have hy : x.coeff 0 = y := rfl
   exact (mk_unit hy).IsUnit
-#align witt_vector.is_unit_of_coeff_zero_ne_zero WittVector.is_unit_of_coeff_zero_ne_zero
+#align witt_vector.is_unit_of_coeff_zero_ne_zero WittVector.isUnit_of_coeff_zero_ne_zero
 
 variable (p)
 
@@ -125,7 +125,7 @@ theorem irreducible : Irreducible (p : 𝕎 k) :=
   apply_fun fun x => coeff x 1  at hab
   simp only [coeff_p_one, Nat.add_succ, add_comm _ n, Function.iterate_succ', Function.comp_apply,
     verschiebung_coeff_add_one, verschiebung_coeff_zero] at hab
-  exact (one_ne_zero hab).elim
+  exact (one_neZero hab).elim
 #align witt_vector.irreducible WittVector.irreducible
 
 end Field

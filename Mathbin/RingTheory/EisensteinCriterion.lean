@@ -31,7 +31,7 @@ open Polynomial
 namespace EisensteinCriterionAux
 
 -- Section for auxiliary lemmas used in the proof of `irreducible_of_eisenstein_criterion`
-theorem map_eq_C_mul_X_pow_of_forall_coeff_mem {f : R[X]} {P : Ideal R}
+theorem map_eq_c_mul_x_pow_of_forall_coeff_mem {f : R[X]} {P : Ideal R}
     (hfP : ∀ n : ℕ, ↑n < f.degree → f.coeff n ∈ P) :
     map (mk P) f = c ((mk P) f.leadingCoeff) * X ^ f.natDegree :=
   Polynomial.ext fun n => by
@@ -46,9 +46,9 @@ theorem map_eq_C_mul_X_pow_of_forall_coeff_mem {f : R[X]} {P : Ideal R}
       · refine' lt_of_le_of_lt (degree_C_mul_X_pow_le _ _) _
         rwa [← degree_eq_nat_degree hf0]
       · exact lt_of_le_of_lt (degree_map_le _ _) h
-#align polynomial.eisenstein_criterion_aux.map_eq_C_mul_X_pow_of_forall_coeff_mem Polynomial.EisensteinCriterionAux.map_eq_C_mul_X_pow_of_forall_coeff_mem
+#align polynomial.eisenstein_criterion_aux.map_eq_C_mul_X_pow_of_forall_coeff_mem Polynomial.EisensteinCriterionAux.map_eq_c_mul_x_pow_of_forall_coeff_mem
 
-theorem le_nat_degree_of_map_eq_mul_X_pow {n : ℕ} {P : Ideal R} (hP : P.IsPrime) {q : R[X]}
+theorem le_natDegree_of_map_eq_mul_x_pow {n : ℕ} {P : Ideal R} (hP : P.IsPrime) {q : R[X]}
     {c : Polynomial (R ⧸ P)} (hq : map (mk P) q = c * X ^ n) (hc0 : c.degree = 0) :
     n ≤ q.natDegree :=
   WithBot.coe_le_coe.1
@@ -56,24 +56,24 @@ theorem le_nat_degree_of_map_eq_mul_X_pow {n : ℕ} {P : Ideal R} (hP : P.IsPrim
       ↑n = degree (q.map (mk P)) := by
         rw [hq, degree_mul, hc0, zero_add, degree_pow, degree_X, nsmul_one, Nat.cast_withBot]
       _ ≤ degree q := degree_map_le _ _
-      _ ≤ natDegree q := degree_le_nat_degree
+      _ ≤ natDegree q := degree_le_natDegree
       )
-#align polynomial.eisenstein_criterion_aux.le_nat_degree_of_map_eq_mul_X_pow Polynomial.EisensteinCriterionAux.le_nat_degree_of_map_eq_mul_X_pow
+#align polynomial.eisenstein_criterion_aux.le_nat_degree_of_map_eq_mul_X_pow Polynomial.EisensteinCriterionAux.le_natDegree_of_map_eq_mul_x_pow
 
-theorem eval_zero_mem_ideal_of_eq_mul_X_pow {n : ℕ} {P : Ideal R} {q : R[X]}
+theorem eval_zero_mem_ideal_of_eq_mul_x_pow {n : ℕ} {P : Ideal R} {q : R[X]}
     {c : Polynomial (R ⧸ P)} (hq : map (mk P) q = c * X ^ n) (hn0 : 0 < n) : eval 0 q ∈ P := by
   rw [← coeff_zero_eq_eval_zero, ← eq_zero_iff_mem, ← coeff_map, coeff_zero_eq_eval_zero, hq,
     eval_mul, eval_pow, eval_X, zero_pow hn0, mul_zero]
-#align polynomial.eisenstein_criterion_aux.eval_zero_mem_ideal_of_eq_mul_X_pow Polynomial.EisensteinCriterionAux.eval_zero_mem_ideal_of_eq_mul_X_pow
+#align polynomial.eisenstein_criterion_aux.eval_zero_mem_ideal_of_eq_mul_X_pow Polynomial.EisensteinCriterionAux.eval_zero_mem_ideal_of_eq_mul_x_pow
 
-theorem is_unit_of_nat_degree_eq_zero_of_forall_dvd_is_unit {p q : R[X]}
+theorem isUnit_of_natDegree_eq_zero_of_forall_dvd_isUnit {p q : R[X]}
     (hu : ∀ x : R, c x ∣ p * q → IsUnit x) (hpm : p.natDegree = 0) : IsUnit p :=
   by
   rw [eq_C_of_degree_le_zero (nat_degree_eq_zero_iff_degree_le_zero.1 hpm), is_unit_C]
   refine' hu _ _
   rw [← eq_C_of_degree_le_zero (nat_degree_eq_zero_iff_degree_le_zero.1 hpm)]
   exact dvd_mul_right _ _
-#align polynomial.eisenstein_criterion_aux.is_unit_of_nat_degree_eq_zero_of_forall_dvd_is_unit Polynomial.EisensteinCriterionAux.is_unit_of_nat_degree_eq_zero_of_forall_dvd_is_unit
+#align polynomial.eisenstein_criterion_aux.is_unit_of_nat_degree_eq_zero_of_forall_dvd_is_unit Polynomial.EisensteinCriterionAux.isUnit_of_natDegree_eq_zero_of_forall_dvd_isUnit
 
 end EisensteinCriterionAux
 
@@ -90,9 +90,9 @@ theorem irreducible_of_eisenstein_criterion {f : R[X]} {P : Ideal R} (hP : P.IsP
     (h0 : f.coeff 0 ∉ P ^ 2) (hu : f.IsPrimitive) : Irreducible f :=
   have hf0 : f ≠ 0 := fun _ => by simp_all only [not_true, Submodule.zero_mem, coeff_zero]
   have hf : f.map (mk P) = c (mk P (leadingCoeff f)) * X ^ natDegree f :=
-    map_eq_C_mul_X_pow_of_forall_coeff_mem hfP
-  have hfd0 : 0 < f.natDegree := WithBot.coe_lt_coe.1 (lt_of_lt_of_le hfd0 degree_le_nat_degree)
-  ⟨mt degree_eq_zero_of_is_unit fun h => by simp_all only [lt_irrefl],
+    map_eq_c_mul_x_pow_of_forall_coeff_mem hfP
+  have hfd0 : 0 < f.natDegree := WithBot.coe_lt_coe.1 (lt_of_lt_of_le hfd0 degree_le_natDegree)
+  ⟨mt degree_eq_zero_of_isUnit fun h => by simp_all only [lt_irrefl],
     by
     rintro p q rfl
     rw [Polynomial.map_mul] at hf

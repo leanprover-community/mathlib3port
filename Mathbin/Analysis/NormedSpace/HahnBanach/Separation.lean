@@ -56,7 +56,7 @@ theorem separate_convex_open_set [TopologicalSpace E] [AddCommGroup E] [Topologi
       (gauge_add_le hs₁ <| absorbent_nhds_zero <| hs₂.mem_nhds hs₀) _
   have hφ₃ : φ x₀ = 1 := by
     rw [← Submodule.coe_mk x₀ (Submodule.mem_span_singleton_self _), hφ₁,
-      LinearPmap.mk_span_singleton'_apply_self]
+      LinearPmap.mkSpanSingleton'_apply_self]
   have hφ₄ : ∀ x ∈ s, φ x < 1 := fun x hx =>
     (hφ₂ x).trans_lt (gauge_lt_one_of_mem_of_open hs₁ hs₀ hs₂ hx)
   · refine' ⟨⟨φ, _⟩, hφ₃, hφ₄⟩
@@ -69,7 +69,7 @@ theorem separate_convex_open_set [TopologicalSpace E] [AddCommGroup E] [Topologi
     linarith
   rintro ⟨x, hx⟩
   obtain ⟨y, rfl⟩ := Submodule.mem_span_singleton.1 hx
-  rw [LinearPmap.mk_span_singleton'_apply]
+  rw [LinearPmap.mkSpanSingleton'_apply]
   simp only [mul_one, Algebra.id.smul_eq_mul, Submodule.coe_mk]
   obtain h | h := le_or_lt y 0
   · exact h.trans (gauge_nonneg _)
@@ -110,7 +110,7 @@ theorem geometric_hahn_banach_open (hs₁ : Convex ℝ s) (hs₂ : IsOpen s) (ht
     simp only [f.map_add, f.map_sub, hf₁] at this
     linarith
   refine' ⟨f, Inf (f '' t), image_subset_iff.1 (_ : f '' s ⊆ Iio (Inf (f '' t))), fun b hb => _⟩
-  · rw [← interior_Iic]
+  · rw [← interior_iic]
     refine' interior_maximal (image_subset_iff.2 fun a ha => _) (f.is_open_map_of_ne_zero _ _ hs₂)
     · exact le_cinfₛ (nonempty.image _ ⟨_, hb₀⟩) (ball_image_of_ball <| forall_le _ ha)
     · rintro rfl
@@ -145,7 +145,7 @@ theorem geometric_hahn_banach_open_open (hs₁ : Convex ℝ s) (hs₂ : IsOpen s
     rintro rfl
     exact (hf₁ _ ha₀).not_le (hf₂ _ hb₀)
   refine' ⟨f, s, hf₁, image_subset_iff.1 (_ : f '' t ⊆ Ioi s)⟩
-  rw [← interior_Ici]
+  rw [← interior_ici]
   refine' interior_maximal (image_subset_iff.2 hf₂) (f.is_open_map_of_ne_zero _ _ ht₃)
   rintro rfl
   exact (hf₁ _ ha₀).not_le (hf₂ _ hb₀)
@@ -185,7 +185,7 @@ theorem geometric_hahn_banach_closed_compact (hs₁ : Convex ℝ s) (hs₂ : IsC
 theorem geometric_hahn_banach_point_closed (ht₁ : Convex ℝ t) (ht₂ : IsClosed t) (disj : x ∉ t) :
     ∃ (f : E →L[ℝ] ℝ)(u : ℝ), f x < u ∧ ∀ b ∈ t, u < f b :=
   let ⟨f, u, v, ha, hst, hb⟩ :=
-    geometric_hahn_banach_compact_closed (convex_singleton x) is_compact_singleton ht₁ ht₂
+    geometric_hahn_banach_compact_closed (convex_singleton x) isCompact_singleton ht₁ ht₂
       (disjoint_singleton_left.2 disj)
   ⟨f, v, hst.trans' <| ha x <| mem_singleton _, hb⟩
 #align geometric_hahn_banach_point_closed geometric_hahn_banach_point_closed
@@ -193,7 +193,7 @@ theorem geometric_hahn_banach_point_closed (ht₁ : Convex ℝ t) (ht₂ : IsClo
 theorem geometric_hahn_banach_closed_point (hs₁ : Convex ℝ s) (hs₂ : IsClosed s) (disj : x ∉ s) :
     ∃ (f : E →L[ℝ] ℝ)(u : ℝ), (∀ a ∈ s, f a < u) ∧ u < f x :=
   let ⟨f, s, t, ha, hst, hb⟩ :=
-    geometric_hahn_banach_closed_compact hs₁ hs₂ (convex_singleton x) is_compact_singleton
+    geometric_hahn_banach_closed_compact hs₁ hs₂ (convex_singleton x) isCompact_singleton
       (disjoint_singleton_right.2 disj)
   ⟨f, s, ha, hst.trans <| hb x <| mem_singleton _⟩
 #align geometric_hahn_banach_closed_point geometric_hahn_banach_closed_point
@@ -202,13 +202,13 @@ theorem geometric_hahn_banach_closed_point (hs₁ : Convex ℝ s) (hs₂ : IsClo
 theorem geometric_hahn_banach_point_point [T1Space E] (hxy : x ≠ y) : ∃ f : E →L[ℝ] ℝ, f x < f y :=
   by
   obtain ⟨f, s, t, hs, st, ht⟩ :=
-    geometric_hahn_banach_compact_closed (convex_singleton x) is_compact_singleton
-      (convex_singleton y) is_closed_singleton (disjoint_singleton.2 hxy)
+    geometric_hahn_banach_compact_closed (convex_singleton x) isCompact_singleton
+      (convex_singleton y) isClosed_singleton (disjoint_singleton.2 hxy)
   exact ⟨f, by linarith [hs x rfl, ht y rfl]⟩
 #align geometric_hahn_banach_point_point geometric_hahn_banach_point_point
 
 /-- A closed convex set is the intersection of the halfspaces containing it. -/
-theorem Inter_halfspaces_eq (hs₁ : Convex ℝ s) (hs₂ : IsClosed s) :
+theorem interᵢ_halfspaces_eq (hs₁ : Convex ℝ s) (hs₂ : IsClosed s) :
     (⋂ l : E →L[ℝ] ℝ, { x | ∃ y ∈ s, l x ≤ l y }) = s :=
   by
   rw [Set.interᵢ_setOf]
@@ -217,5 +217,5 @@ theorem Inter_halfspaces_eq (hs₁ : Convex ℝ s) (hs₂ : IsClosed s) :
   obtain ⟨l, s, hlA, hl⟩ := geometric_hahn_banach_closed_point hs₁ hs₂ h
   obtain ⟨y, hy, hxy⟩ := hx l
   exact ((hxy.trans_lt (hlA y hy)).trans hl).not_le le_rfl
-#align Inter_halfspaces_eq Inter_halfspaces_eq
+#align Inter_halfspaces_eq interᵢ_halfspaces_eq
 

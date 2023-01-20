@@ -154,16 +154,16 @@ theorem range'_concat (s n : ℕ) : range' s (n + 1) = range' s n ++ [s + n] := 
 #align list.range'_concat List.range'_concat
 -/
 
-theorem range_core_range' : ∀ s n : ℕ, List.range.loop s (range' s n) = range' 0 (n + s)
+theorem loop_range' : ∀ s n : ℕ, List.range.loop s (range' s n) = range' 0 (n + s)
   | 0, n => rfl
   | s + 1, n => by
     rw [show n + (s + 1) = n + 1 + s from add_right_comm n s 1] <;>
       exact range_core_range' s (n + 1)
-#align list.range_core_range' List.range_core_range'
+#align list.range_core_range' List.loop_range'
 
 #print List.range_eq_range' /-
 theorem range_eq_range' (n : ℕ) : range n = range' 0 n :=
-  (range_core_range' n 0).trans <| by rw [zero_add]
+  (loop_range' n 0).trans <| by rw [zero_add]
 #align list.range_eq_range' List.range_eq_range'
 -/
 

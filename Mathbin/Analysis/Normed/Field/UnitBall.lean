@@ -57,7 +57,7 @@ def Subsemigroup.unitClosedBall (𝕜 : Type _) [NonUnitalSemiNormedRing 𝕜] :
     where
   carrier := closedBall 0 1
   mul_mem' x y hx hy := by
-    rw [mem_closed_ball_zero_iff] at *
+    rw [mem_closedBall_zero_iff] at *
     exact (norm_mul_le x y).trans (mul_le_one hx (norm_nonneg _) hy)
 #align subsemigroup.unit_closed_ball Subsemigroup.unitClosedBall
 
@@ -71,16 +71,16 @@ instance [NonUnitalSemiNormedRing 𝕜] : HasContinuousMul (closedBall (0 : 𝕜
   (Subsemigroup.unitClosedBall 𝕜).HasContinuousMul
 
 @[simp, norm_cast]
-theorem coe_mul_unit_closed_ball [NonUnitalSemiNormedRing 𝕜] (x y : closedBall (0 : 𝕜) 1) :
+theorem coe_mul_unit_closedBall [NonUnitalSemiNormedRing 𝕜] (x y : closedBall (0 : 𝕜) 1) :
     ↑(x * y) = (x * y : 𝕜) :=
   rfl
-#align coe_mul_unit_closed_ball coe_mul_unit_closed_ball
+#align coe_mul_unit_closed_ball coe_mul_unit_closedBall
 
 /-- Closed unit ball in a semi normed ring as a bundled `submonoid`. -/
 def Submonoid.unitClosedBall (𝕜 : Type _) [SemiNormedRing 𝕜] [NormOneClass 𝕜] : Submonoid 𝕜 :=
   { Subsemigroup.unitClosedBall 𝕜 with
     carrier := closedBall 0 1
-    one_mem' := mem_closed_ball_zero_iff.2 norm_one.le }
+    one_mem' := mem_closedBall_zero_iff.2 norm_one.le }
 #align submonoid.unit_closed_ball Submonoid.unitClosedBall
 
 instance [SemiNormedRing 𝕜] [NormOneClass 𝕜] : Monoid (closedBall (0 : 𝕜) 1) :=
@@ -90,16 +90,16 @@ instance [SemiNormedCommRing 𝕜] [NormOneClass 𝕜] : CommMonoid (closedBall 
   SubmonoidClass.toCommMonoid (Submonoid.unitClosedBall 𝕜)
 
 @[simp, norm_cast]
-theorem coe_one_unit_closed_ball [SemiNormedRing 𝕜] [NormOneClass 𝕜] :
+theorem coe_one_unit_closedBall [SemiNormedRing 𝕜] [NormOneClass 𝕜] :
     ((1 : closedBall (0 : 𝕜) 1) : 𝕜) = 1 :=
   rfl
-#align coe_one_unit_closed_ball coe_one_unit_closed_ball
+#align coe_one_unit_closed_ball coe_one_unit_closedBall
 
 @[simp, norm_cast]
-theorem coe_pow_unit_closed_ball [SemiNormedRing 𝕜] [NormOneClass 𝕜] (x : closedBall (0 : 𝕜) 1)
+theorem coe_pow_unit_closedBall [SemiNormedRing 𝕜] [NormOneClass 𝕜] (x : closedBall (0 : 𝕜) 1)
     (n : ℕ) : ↑(x ^ n) = (x ^ n : 𝕜) :=
   rfl
-#align coe_pow_unit_closed_ball coe_pow_unit_closed_ball
+#align coe_pow_unit_closed_ball coe_pow_unit_closedBall
 
 /-- Unit sphere in a normed division ring as a bundled `submonoid`. -/
 def Submonoid.unitSphere (𝕜 : Type _) [NormedDivisionRing 𝕜] : Submonoid 𝕜
@@ -173,19 +173,19 @@ def unitSphereToUnits (𝕜 : Type _) [NormedDivisionRing 𝕜] : sphere (0 : �
 #align unit_sphere_to_units unitSphereToUnits
 
 @[simp]
-theorem unit_sphere_to_units_apply_coe [NormedDivisionRing 𝕜] (x : sphere (0 : 𝕜) 1) :
+theorem unitSphereToUnits_apply_coe [NormedDivisionRing 𝕜] (x : sphere (0 : 𝕜) 1) :
     (unitSphereToUnits 𝕜 x : 𝕜) = x :=
   rfl
-#align unit_sphere_to_units_apply_coe unit_sphere_to_units_apply_coe
+#align unit_sphere_to_units_apply_coe unitSphereToUnits_apply_coe
 
-theorem unit_sphere_to_units_injective [NormedDivisionRing 𝕜] :
+theorem unitSphereToUnits_injective [NormedDivisionRing 𝕜] :
     Function.Injective (unitSphereToUnits 𝕜) := fun x y h =>
   Subtype.eq <| by convert congr_arg Units.val h
-#align unit_sphere_to_units_injective unit_sphere_to_units_injective
+#align unit_sphere_to_units_injective unitSphereToUnits_injective
 
 instance [NormedDivisionRing 𝕜] : Group (sphere (0 : 𝕜) 1) :=
-  unit_sphere_to_units_injective.Group (unitSphereToUnits 𝕜) (Units.ext rfl)
-    (fun x y => Units.ext rfl) (fun x => Units.ext rfl) (fun x y => Units.ext <| div_eq_mul_inv _ _)
+  unitSphereToUnits_injective.Group (unitSphereToUnits 𝕜) (Units.ext rfl) (fun x y => Units.ext rfl)
+    (fun x => Units.ext rfl) (fun x y => Units.ext <| div_eq_mul_inv _ _)
     (fun x n => Units.ext (Units.val_pow_eq_pow_val (unitSphereToUnits 𝕜 x) n).symm) fun x n =>
     Units.ext (Units.val_zpow_eq_zpow_val (unitSphereToUnits 𝕜 x) n).symm
 

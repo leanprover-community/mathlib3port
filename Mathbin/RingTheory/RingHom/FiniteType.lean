@@ -24,13 +24,13 @@ namespace RingHom
 
 open Pointwise
 
-theorem finite_type_stable_under_composition : StableUnderComposition @FiniteType :=
+theorem finiteType_stableUnderComposition : StableUnderComposition @FiniteType :=
   by
   introv R hf hg
   exact hg.comp hf
-#align ring_hom.finite_type_stable_under_composition RingHom.finite_type_stable_under_composition
+#align ring_hom.finite_type_stable_under_composition RingHom.finiteType_stableUnderComposition
 
-theorem finite_type_holds_for_localization_away : HoldsForLocalizationAway @FiniteType :=
+theorem finiteType_holdsForLocalizationAway : HoldsForLocalizationAway @FiniteType :=
   by
   introv R _
   skip
@@ -40,10 +40,10 @@ theorem finite_type_holds_for_localization_away : HoldsForLocalizationAway @Fini
     ext
     rw [Algebra.smul_def]
     rfl
-  exact IsLocalization.finite_type_of_monoid_fg (Submonoid.powers r) S
-#align ring_hom.finite_type_holds_for_localization_away RingHom.finite_type_holds_for_localization_away
+  exact IsLocalization.finiteType_of_monoid_fg (Submonoid.powers r) S
+#align ring_hom.finite_type_holds_for_localization_away RingHom.finiteType_holdsForLocalizationAway
 
-theorem finite_type_of_localization_span_target : OfLocalizationSpanTarget @FiniteType :=
+theorem finiteType_ofLocalizationSpanTarget : OfLocalizationSpanTarget @FiniteType :=
   by
   -- Setup algebra intances.
   rw [of_localization_span_target_iff_finite]
@@ -103,16 +103,16 @@ theorem finite_type_of_localization_span_target : OfLocalizationSpanTarget @Fini
         exact Or.inl (Or.inr r.2)
       · rw [ht]
         trivial
-#align ring_hom.finite_type_of_localization_span_target RingHom.finite_type_of_localization_span_target
+#align ring_hom.finite_type_of_localization_span_target RingHom.finiteType_ofLocalizationSpanTarget
 
-theorem finite_type_is_local : PropertyIsLocal @FiniteType :=
-  ⟨localization_finite_type, finite_type_of_localization_span_target,
-    finite_type_stable_under_composition, finite_type_holds_for_localization_away⟩
-#align ring_hom.finite_type_is_local RingHom.finite_type_is_local
+theorem finiteType_is_local : PropertyIsLocal @FiniteType :=
+  ⟨localization_finiteType, finiteType_ofLocalizationSpanTarget, finiteType_stableUnderComposition,
+    finiteType_holdsForLocalizationAway⟩
+#align ring_hom.finite_type_is_local RingHom.finiteType_is_local
 
-theorem finite_type_respects_iso : RingHom.RespectsIso @RingHom.FiniteType :=
-  RingHom.finite_type_is_local.RespectsIso
-#align ring_hom.finite_type_respects_iso RingHom.finite_type_respects_iso
+theorem finiteType_respectsIso : RingHom.RespectsIso @RingHom.FiniteType :=
+  RingHom.finiteType_is_local.RespectsIso
+#align ring_hom.finite_type_respects_iso RingHom.finiteType_respectsIso
 
 end RingHom
 

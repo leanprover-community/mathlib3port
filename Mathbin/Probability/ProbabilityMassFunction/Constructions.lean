@@ -80,18 +80,18 @@ section Measure
 variable (s : Set β)
 
 @[simp]
-theorem to_outer_measure_map_apply : (p.map f).toOuterMeasure s = p.toOuterMeasure (f ⁻¹' s) := by
+theorem toOuterMeasure_map_apply : (p.map f).toOuterMeasure s = p.toOuterMeasure (f ⁻¹' s) := by
   simp [map, Set.indicator, to_outer_measure_apply p (f ⁻¹' s)]
-#align pmf.to_outer_measure_map_apply Pmf.to_outer_measure_map_apply
+#align pmf.to_outer_measure_map_apply Pmf.toOuterMeasure_map_apply
 
 @[simp]
-theorem to_measure_map_apply [MeasurableSpace α] [MeasurableSpace β] (hf : Measurable f)
+theorem toMeasure_map_apply [MeasurableSpace α] [MeasurableSpace β] (hf : Measurable f)
     (hs : MeasurableSet s) : (p.map f).toMeasure s = p.toMeasure (f ⁻¹' s) :=
   by
   rw [to_measure_apply_eq_to_outer_measure_apply _ s hs,
-    to_measure_apply_eq_to_outer_measure_apply _ (f ⁻¹' s) (measurable_set_preimage hf hs)]
+    to_measure_apply_eq_to_outer_measure_apply _ (f ⁻¹' s) (measurableSet_preimage hf hs)]
   exact to_outer_measure_map_apply f p s
-#align pmf.to_measure_map_apply Pmf.to_measure_map_apply
+#align pmf.to_measure_map_apply Pmf.toMeasure_map_apply
 
 end Measure
 
@@ -146,46 +146,45 @@ section OfFinset
   such that `f a = 0` for `a ∉ s`, we get a `pmf` -/
 def ofFinset (f : α → ℝ≥0∞) (s : Finset α) (h : (∑ a in s, f a) = 1)
     (h' : ∀ (a) (_ : a ∉ s), f a = 0) : Pmf α :=
-  ⟨f, h ▸ has_sum_sum_of_ne_finset_zero h'⟩
+  ⟨f, h ▸ hasSum_sum_of_ne_finset_zero h'⟩
 #align pmf.of_finset Pmf.ofFinset
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (a «expr ∉ » s) -/
 variable {f : α → ℝ≥0∞} {s : Finset α} (h : (∑ a in s, f a) = 1) (h' : ∀ (a) (_ : a ∉ s), f a = 0)
 
 @[simp]
-theorem of_finset_apply (a : α) : ofFinset f s h h' a = f a :=
+theorem ofFinset_apply (a : α) : ofFinset f s h h' a = f a :=
   rfl
-#align pmf.of_finset_apply Pmf.of_finset_apply
+#align pmf.of_finset_apply Pmf.ofFinset_apply
 
 @[simp]
-theorem support_of_finset : (ofFinset f s h h').support = s ∩ Function.support f :=
+theorem support_ofFinset : (ofFinset f s h h').support = s ∩ Function.support f :=
   Set.ext fun a => by simpa [mem_support_iff] using mt (h' a)
-#align pmf.support_of_finset Pmf.support_of_finset
+#align pmf.support_of_finset Pmf.support_ofFinset
 
-theorem mem_support_of_finset_iff (a : α) : a ∈ (ofFinset f s h h').support ↔ a ∈ s ∧ f a ≠ 0 := by
+theorem mem_support_ofFinset_iff (a : α) : a ∈ (ofFinset f s h h').support ↔ a ∈ s ∧ f a ≠ 0 := by
   simp
-#align pmf.mem_support_of_finset_iff Pmf.mem_support_of_finset_iff
+#align pmf.mem_support_of_finset_iff Pmf.mem_support_ofFinset_iff
 
-theorem of_finset_apply_of_not_mem {a : α} (ha : a ∉ s) : ofFinset f s h h' a = 0 :=
+theorem ofFinset_apply_of_not_mem {a : α} (ha : a ∉ s) : ofFinset f s h h' a = 0 :=
   h' a ha
-#align pmf.of_finset_apply_of_not_mem Pmf.of_finset_apply_of_not_mem
+#align pmf.of_finset_apply_of_not_mem Pmf.ofFinset_apply_of_not_mem
 
 section Measure
 
 variable (t : Set α)
 
 @[simp]
-theorem to_outer_measure_of_finset_apply :
+theorem toOuterMeasure_ofFinset_apply :
     (ofFinset f s h h').toOuterMeasure t = ∑' x, t.indicator f x :=
-  to_outer_measure_apply (ofFinset f s h h') t
-#align pmf.to_outer_measure_of_finset_apply Pmf.to_outer_measure_of_finset_apply
+  toOuterMeasure_apply (ofFinset f s h h') t
+#align pmf.to_outer_measure_of_finset_apply Pmf.toOuterMeasure_ofFinset_apply
 
 @[simp]
-theorem to_measure_of_finset_apply [MeasurableSpace α] (ht : MeasurableSet t) :
+theorem toMeasure_ofFinset_apply [MeasurableSpace α] (ht : MeasurableSet t) :
     (ofFinset f s h h').toMeasure t = ∑' x, t.indicator f x :=
-  (to_measure_apply_eq_to_outer_measure_apply _ t ht).trans
-    (to_outer_measure_of_finset_apply h h' t)
-#align pmf.to_measure_of_finset_apply Pmf.to_measure_of_finset_apply
+  (toMeasure_apply_eq_toOuterMeasure_apply _ t ht).trans (toOuterMeasure_ofFinset_apply h h' t)
+#align pmf.to_measure_of_finset_apply Pmf.toMeasure_ofFinset_apply
 
 end Measure
 
@@ -201,34 +200,33 @@ def ofFintype [Fintype α] (f : α → ℝ≥0∞) (h : (∑ a, f a) = 1) : Pmf 
 variable [Fintype α] {f : α → ℝ≥0∞} (h : (∑ a, f a) = 1)
 
 @[simp]
-theorem of_fintype_apply (a : α) : ofFintype f h a = f a :=
+theorem ofFintype_apply (a : α) : ofFintype f h a = f a :=
   rfl
-#align pmf.of_fintype_apply Pmf.of_fintype_apply
+#align pmf.of_fintype_apply Pmf.ofFintype_apply
 
 @[simp]
-theorem support_of_fintype : (ofFintype f h).support = Function.support f :=
+theorem support_ofFintype : (ofFintype f h).support = Function.support f :=
   rfl
-#align pmf.support_of_fintype Pmf.support_of_fintype
+#align pmf.support_of_fintype Pmf.support_ofFintype
 
-theorem mem_support_of_fintype_iff (a : α) : a ∈ (ofFintype f h).support ↔ f a ≠ 0 :=
+theorem mem_support_ofFintype_iff (a : α) : a ∈ (ofFintype f h).support ↔ f a ≠ 0 :=
   Iff.rfl
-#align pmf.mem_support_of_fintype_iff Pmf.mem_support_of_fintype_iff
+#align pmf.mem_support_of_fintype_iff Pmf.mem_support_ofFintype_iff
 
 section Measure
 
 variable (s : Set α)
 
 @[simp]
-theorem to_outer_measure_of_fintype_apply :
-    (ofFintype f h).toOuterMeasure s = ∑' x, s.indicator f x :=
-  to_outer_measure_apply (ofFintype f h) s
-#align pmf.to_outer_measure_of_fintype_apply Pmf.to_outer_measure_of_fintype_apply
+theorem toOuterMeasure_ofFintype_apply : (ofFintype f h).toOuterMeasure s = ∑' x, s.indicator f x :=
+  toOuterMeasure_apply (ofFintype f h) s
+#align pmf.to_outer_measure_of_fintype_apply Pmf.toOuterMeasure_ofFintype_apply
 
 @[simp]
-theorem to_measure_of_fintype_apply [MeasurableSpace α] (hs : MeasurableSet s) :
+theorem toMeasure_ofFintype_apply [MeasurableSpace α] (hs : MeasurableSet s) :
     (ofFintype f h).toMeasure s = ∑' x, s.indicator f x :=
-  (to_measure_apply_eq_to_outer_measure_apply _ s hs).trans (to_outer_measure_of_fintype_apply h s)
-#align pmf.to_measure_of_fintype_apply Pmf.to_measure_of_fintype_apply
+  (toMeasure_apply_eq_toOuterMeasure_apply _ s hs).trans (toOuterMeasure_ofFintype_apply h s)
+#align pmf.to_measure_of_fintype_apply Pmf.toMeasure_ofFintype_apply
 
 end Measure
 

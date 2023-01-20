@@ -47,29 +47,29 @@ theorem pairwise_one_le_dist : Pairwise fun m n : ℕ => 1 ≤ dist m n :=
   exact_mod_cast hne
 #align nat.pairwise_one_le_dist Nat.pairwise_one_le_dist
 
-theorem uniform_embedding_coe_real : UniformEmbedding (coe : ℕ → ℝ) :=
-  uniform_embedding_bot_of_pairwise_le_dist zero_lt_one pairwise_one_le_dist
-#align nat.uniform_embedding_coe_real Nat.uniform_embedding_coe_real
+theorem uniformEmbedding_coe_real : UniformEmbedding (coe : ℕ → ℝ) :=
+  uniformEmbedding_bot_of_pairwise_le_dist zero_lt_one pairwise_one_le_dist
+#align nat.uniform_embedding_coe_real Nat.uniformEmbedding_coe_real
 
-theorem closed_embedding_coe_real : ClosedEmbedding (coe : ℕ → ℝ) :=
-  closed_embedding_of_pairwise_le_dist zero_lt_one pairwise_one_le_dist
-#align nat.closed_embedding_coe_real Nat.closed_embedding_coe_real
+theorem closedEmbedding_coe_real : ClosedEmbedding (coe : ℕ → ℝ) :=
+  closedEmbedding_of_pairwise_le_dist zero_lt_one pairwise_one_le_dist
+#align nat.closed_embedding_coe_real Nat.closedEmbedding_coe_real
 
 instance : MetricSpace ℕ :=
-  Nat.uniform_embedding_coe_real.comapMetricSpace _
+  Nat.uniformEmbedding_coe_real.comapMetricSpace _
 
 theorem preimage_ball (x : ℕ) (r : ℝ) : coe ⁻¹' ball (x : ℝ) r = ball x r :=
   rfl
 #align nat.preimage_ball Nat.preimage_ball
 
-theorem preimage_closed_ball (x : ℕ) (r : ℝ) : coe ⁻¹' closedBall (x : ℝ) r = closedBall x r :=
+theorem preimage_closedBall (x : ℕ) (r : ℝ) : coe ⁻¹' closedBall (x : ℝ) r = closedBall x r :=
   rfl
-#align nat.preimage_closed_ball Nat.preimage_closed_ball
+#align nat.preimage_closed_ball Nat.preimage_closedBall
 
-theorem closed_ball_eq_Icc (x : ℕ) (r : ℝ) : closedBall x r = Icc ⌈↑x - r⌉₊ ⌊↑x + r⌋₊ :=
+theorem closedBall_eq_icc (x : ℕ) (r : ℝ) : closedBall x r = Icc ⌈↑x - r⌉₊ ⌊↑x + r⌋₊ :=
   by
   rcases le_or_lt 0 r with (hr | hr)
-  · rw [← preimage_closed_ball, Real.closed_ball_eq_Icc, preimage_Icc]
+  · rw [← preimage_closed_ball, Real.closedBall_eq_icc, preimage_Icc]
     exact add_nonneg (cast_nonneg x) hr
   · rw [closed_ball_eq_empty.2 hr]
     apply (Icc_eq_empty _).symm
@@ -82,16 +82,16 @@ theorem closed_ball_eq_Icc (x : ℕ) (r : ℝ) : closedBall x r = Icc ⌈↑x - 
         rw [floor_coe, Nat.lt_ceil]
         linarith
       
-#align nat.closed_ball_eq_Icc Nat.closed_ball_eq_Icc
+#align nat.closed_ball_eq_Icc Nat.closedBall_eq_icc
 
 instance : ProperSpace ℕ :=
   ⟨by
     intro x r
     rw [closed_ball_eq_Icc]
-    exact (Set.finite_Icc _ _).IsCompact⟩
+    exact (Set.finite_icc _ _).IsCompact⟩
 
 instance : NoncompactSpace ℕ :=
-  noncompact_space_of_ne_bot <| by simp [Filter.at_top_ne_bot]
+  noncompactSpace_of_neBot <| by simp [Filter.atTop_neBot]
 
 end Nat
 

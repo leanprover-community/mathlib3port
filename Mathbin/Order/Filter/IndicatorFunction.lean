@@ -31,13 +31,13 @@ section Zero
 
 variable [Zero M] {s t : Set α} {f g : α → M} {a : α} {l : Filter α}
 
-theorem indicator_eventually_eq (hf : f =ᶠ[l ⊓ 𝓟 s] g) (hs : s =ᶠ[l] t) :
+theorem indicator_eventuallyEq (hf : f =ᶠ[l ⊓ 𝓟 s] g) (hs : s =ᶠ[l] t) :
     indicator s f =ᶠ[l] indicator t g :=
   (eventually_inf_principal.1 hf).mp <|
     hs.mem_iff.mono fun x hst hfg =>
       by_cases (fun hxs : x ∈ s => by simp only [*, hst.1 hxs, indicator_of_mem]) fun hxs => by
         simp only [indicator_of_not_mem hxs, indicator_of_not_mem (mt hst.2 hxs)]
-#align indicator_eventually_eq indicator_eventually_eq
+#align indicator_eventually_eq indicator_eventuallyEq
 
 end Zero
 
@@ -45,10 +45,10 @@ section AddMonoid
 
 variable [AddMonoid M] {s t : Set α} {f g : α → M} {a : α} {l : Filter α}
 
-theorem indicator_union_eventually_eq (h : ∀ᶠ a in l, a ∉ s ∩ t) :
+theorem indicator_union_eventuallyEq (h : ∀ᶠ a in l, a ∉ s ∩ t) :
     indicator (s ∪ t) f =ᶠ[l] indicator s f + indicator t f :=
   h.mono fun a ha => indicator_union_of_not_mem_inter ha _
-#align indicator_union_eventually_eq indicator_union_eventually_eq
+#align indicator_union_eventually_eq indicator_union_eventuallyEq
 
 end AddMonoid
 
@@ -56,10 +56,10 @@ section Order
 
 variable [Zero β] [Preorder β] {s t : Set α} {f g : α → β} {a : α} {l : Filter α}
 
-theorem indicator_eventually_le_indicator (h : f ≤ᶠ[l ⊓ 𝓟 s] g) :
+theorem indicator_eventuallyLe_indicator (h : f ≤ᶠ[l ⊓ 𝓟 s] g) :
     indicator s f ≤ᶠ[l] indicator s g :=
   (eventually_inf_principal.1 h).mono fun a h => indicator_rel_indicator le_rfl h
-#align indicator_eventually_le_indicator indicator_eventually_le_indicator
+#align indicator_eventually_le_indicator indicator_eventuallyLe_indicator
 
 end Order
 

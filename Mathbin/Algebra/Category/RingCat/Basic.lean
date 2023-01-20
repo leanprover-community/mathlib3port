@@ -64,10 +64,10 @@ def ofHom {R S : Type u} [Semiring R] [Semiring S] (f : R →+* S) : of R ⟶ of
 #align SemiRing.of_hom SemiRingCat.ofHom
 
 @[simp]
-theorem of_hom_apply {R S : Type u} [Semiring R] [Semiring S] (f : R →+* S) (x : R) :
+theorem ofHom_apply {R S : Type u} [Semiring R] [Semiring S] (f : R →+* S) (x : R) :
     ofHom f x = f x :=
   rfl
-#align SemiRing.of_hom_apply SemiRingCat.of_hom_apply
+#align SemiRing.of_hom_apply SemiRingCat.ofHom_apply
 
 instance : Inhabited SemiRingCat :=
   ⟨of PUnit⟩
@@ -121,9 +121,9 @@ def ofHom {R S : Type u} [Ring R] [Ring S] (f : R →+* S) : of R ⟶ of S :=
 #align Ring.of_hom RingCat.ofHom
 
 @[simp]
-theorem of_hom_apply {R S : Type u} [Ring R] [Ring S] (f : R →+* S) (x : R) : ofHom f x = f x :=
+theorem ofHom_apply {R S : Type u} [Ring R] [Ring S] (f : R →+* S) (x : R) : ofHom f x = f x :=
   rfl
-#align Ring.of_hom_apply RingCat.of_hom_apply
+#align Ring.of_hom_apply RingCat.ofHom_apply
 
 instance : Inhabited RingCat :=
   ⟨of PUnit⟩
@@ -175,10 +175,10 @@ def ofHom {R S : Type u} [CommSemiring R] [CommSemiring S] (f : R →+* S) : of 
 #align CommSemiRing.of_hom CommSemiRingCat.ofHom
 
 @[simp]
-theorem of_hom_apply {R S : Type u} [CommSemiring R] [CommSemiring S] (f : R →+* S) (x : R) :
+theorem ofHom_apply {R S : Type u} [CommSemiring R] [CommSemiring S] (f : R →+* S) (x : R) :
     ofHom f x = f x :=
   rfl
-#align CommSemiRing.of_hom_apply CommSemiRingCat.of_hom_apply
+#align CommSemiRing.of_hom_apply CommSemiRingCat.ofHom_apply
 
 instance : Inhabited CommSemiRingCat :=
   ⟨of PUnit⟩
@@ -229,10 +229,10 @@ def ofHom {R S : Type u} [CommRing R] [CommRing S] (f : R →+* S) : of R ⟶ of
 #align CommRing.of_hom CommRingCat.ofHom
 
 @[simp]
-theorem of_hom_apply {R S : Type u} [CommRing R] [CommRing S] (f : R →+* S) (x : R) :
+theorem ofHom_apply {R S : Type u} [CommRing R] [CommRing S] (f : R →+* S) (x : R) :
     ofHom f x = f x :=
   rfl
-#align CommRing.of_hom_apply CommRingCat.of_hom_apply
+#align CommRing.of_hom_apply CommRingCat.ofHom_apply
 
 instance : Inhabited CommRingCat :=
   ⟨of PUnit⟩
@@ -312,20 +312,20 @@ def commRingIsoToRingEquiv {X Y : CommRingCat} (i : X ≅ Y) : X ≃+* Y
 #align category_theory.iso.CommRing_iso_to_ring_equiv CategoryTheory.Iso.commRingIsoToRingEquiv
 
 @[simp]
-theorem CommRing_iso_to_ring_equiv_to_ring_hom {X Y : CommRingCat} (i : X ≅ Y) :
+theorem commRingIsoToRingEquiv_toRingHom {X Y : CommRingCat} (i : X ≅ Y) :
     i.commRingIsoToRingEquiv.toRingHom = i.Hom :=
   by
   ext
   rfl
-#align category_theory.iso.CommRing_iso_to_ring_equiv_to_ring_hom CategoryTheory.Iso.CommRing_iso_to_ring_equiv_to_ring_hom
+#align category_theory.iso.CommRing_iso_to_ring_equiv_to_ring_hom CategoryTheory.Iso.commRingIsoToRingEquiv_toRingHom
 
 @[simp]
-theorem CommRing_iso_to_ring_equiv_symm_to_ring_hom {X Y : CommRingCat} (i : X ≅ Y) :
+theorem commRingIsoToRingEquiv_symm_toRingHom {X Y : CommRingCat} (i : X ≅ Y) :
     i.commRingIsoToRingEquiv.symm.toRingHom = i.inv :=
   by
   ext
   rfl
-#align category_theory.iso.CommRing_iso_to_ring_equiv_symm_to_ring_hom CategoryTheory.Iso.CommRing_iso_to_ring_equiv_symm_to_ring_hom
+#align category_theory.iso.CommRing_iso_to_ring_equiv_symm_to_ring_hom CategoryTheory.Iso.commRingIsoToRingEquiv_symm_toRingHom
 
 end CategoryTheory.Iso
 
@@ -366,10 +366,10 @@ theorem CommRingCat.comp_eq_ring_hom_comp {R S T : CommRingCat} (f : R ⟶ S) (g
   rfl
 #align CommRing.comp_eq_ring_hom_comp CommRingCat.comp_eq_ring_hom_comp
 
-theorem CommRingCat.ring_hom_comp_eq_comp {R S T : Type _} [CommRing R] [CommRing S] [CommRing T]
+theorem CommRingCat.ringHom_comp_eq_comp {R S T : Type _} [CommRing R] [CommRing S] [CommRing T]
     (f : R →+* S) (g : S →+* T) : g.comp f = CommRingCat.ofHom f ≫ CommRingCat.ofHom g :=
   rfl
-#align CommRing.ring_hom_comp_eq_comp CommRingCat.ring_hom_comp_eq_comp
+#align CommRing.ring_hom_comp_eq_comp CommRingCat.ringHom_comp_eq_comp
 
 -- It would be nice if we could have the following,
 -- but it requires making `reflects_isomorphisms_forget₂` an instance,

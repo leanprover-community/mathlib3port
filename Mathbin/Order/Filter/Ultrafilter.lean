@@ -37,7 +37,7 @@ open Classical Filter
 equal to this filter. -/
 instance : IsAtomic (Filter α) :=
   IsAtomic.of_isChain_bounded fun c hc hne hb =>
-    ⟨infₛ c, (Inf_ne_bot_of_directed' hne (show IsChain (· ≥ ·) c from hc.symm).DirectedOn hb).Ne,
+    ⟨infₛ c, (infₛ_neBot_of_directed' hne (show IsChain (· ≥ ·) c from hc.symm).DirectedOn hb).Ne,
       fun x hx => infₛ_le hx⟩
 
 /-- An ultrafilter is a minimal (maximal in the set order) proper filter. -/
@@ -62,13 +62,13 @@ theorem unique (f : Ultrafilter α) {g : Filter α} (h : g ≤ f) (hne : NeBot g
   le_antisymm h <| f.le_of_le g hne h
 #align ultrafilter.unique Ultrafilter.unique
 
-instance ne_bot (f : Ultrafilter α) : NeBot (f : Filter α) :=
+instance neBot (f : Ultrafilter α) : NeBot (f : Filter α) :=
   f.ne_bot'
-#align ultrafilter.ne_bot Ultrafilter.ne_bot
+#align ultrafilter.ne_bot Ultrafilter.neBot
 
-protected theorem is_atom (f : Ultrafilter α) : IsAtom (f : Filter α) :=
+protected theorem isAtom (f : Ultrafilter α) : IsAtom (f : Filter α) :=
   ⟨f.ne_bot.Ne, fun g hgf => by_contra fun hg => hgf.Ne <| f.unique hgf.le ⟨hg⟩⟩
-#align ultrafilter.is_atom Ultrafilter.is_atom
+#align ultrafilter.is_atom Ultrafilter.isAtom
 
 @[simp, norm_cast]
 theorem mem_coe : s ∈ (f : Filter α) ↔ s ∈ f :=
@@ -98,17 +98,17 @@ theorem ext ⦃f g : Ultrafilter α⦄ (h : ∀ s, s ∈ f ↔ s ∈ g) : f = g 
   coe_injective <| Filter.ext h
 #align ultrafilter.ext Ultrafilter.ext
 
-theorem le_of_inf_ne_bot (f : Ultrafilter α) {g : Filter α} (hg : NeBot (↑f ⊓ g)) : ↑f ≤ g :=
+theorem le_of_inf_neBot (f : Ultrafilter α) {g : Filter α} (hg : NeBot (↑f ⊓ g)) : ↑f ≤ g :=
   le_of_inf_eq (f.unique inf_le_left hg)
-#align ultrafilter.le_of_inf_ne_bot Ultrafilter.le_of_inf_ne_bot
+#align ultrafilter.le_of_inf_ne_bot Ultrafilter.le_of_inf_neBot
 
 theorem le_of_inf_ne_bot' (f : Ultrafilter α) {g : Filter α} (hg : NeBot (g ⊓ f)) : ↑f ≤ g :=
   f.le_of_inf_ne_bot <| by rwa [inf_comm]
 #align ultrafilter.le_of_inf_ne_bot' Ultrafilter.le_of_inf_ne_bot'
 
-theorem inf_ne_bot_iff {f : Ultrafilter α} {g : Filter α} : NeBot (↑f ⊓ g) ↔ ↑f ≤ g :=
-  ⟨le_of_inf_ne_bot f, fun h => (inf_of_le_left h).symm ▸ f.ne_bot⟩
-#align ultrafilter.inf_ne_bot_iff Ultrafilter.inf_ne_bot_iff
+theorem inf_neBot_iff {f : Ultrafilter α} {g : Filter α} : NeBot (↑f ⊓ g) ↔ ↑f ≤ g :=
+  ⟨le_of_inf_neBot f, fun h => (inf_of_le_left h).symm ▸ f.ne_bot⟩
+#align ultrafilter.inf_ne_bot_iff Ultrafilter.inf_neBot_iff
 
 theorem disjoint_iff_not_le {f : Ultrafilter α} {g : Filter α} : Disjoint (↑f) g ↔ ¬↑f ≤ g := by
   rw [← inf_ne_bot_iff, ne_bot_iff, Ne.def, not_not, disjoint_iff]
@@ -197,10 +197,10 @@ theorem eventually_imp : (∀ᶠ x in f, p x → q x) ↔ (∀ᶠ x in f, p x) �
   simp only [imp_iff_not_or, eventually_or, eventually_not]
 #align ultrafilter.eventually_imp Ultrafilter.eventually_imp
 
-theorem finite_sUnion_mem_iff {s : Set (Set α)} (hs : s.Finite) : ⋃₀ s ∈ f ↔ ∃ t ∈ s, t ∈ f :=
+theorem finite_unionₛ_mem_iff {s : Set (Set α)} (hs : s.Finite) : ⋃₀ s ∈ f ↔ ∃ t ∈ s, t ∈ f :=
   Finite.induction_on hs (by simp) fun a s ha hs his => by
     simp [union_mem_iff, his, or_and_right, exists_or]
-#align ultrafilter.finite_sUnion_mem_iff Ultrafilter.finite_sUnion_mem_iff
+#align ultrafilter.finite_sUnion_mem_iff Ultrafilter.finite_unionₛ_mem_iff
 
 theorem finite_bUnion_mem_iff {is : Set β} {s : β → Set α} (his : is.Finite) :
     (⋃ i ∈ is, s i) ∈ f ↔ ∃ i ∈ is, s i ∈ f := by
@@ -356,15 +356,15 @@ instance monad : Monad Ultrafilter where map := @Ultrafilter.map
 
 section
 
-attribute [local instance] Filter.monad Filter.is_lawful_monad
+attribute [local instance] Filter.monad Filter.lawfulMonad
 
-instance is_lawful_monad : LawfulMonad Ultrafilter
+instance lawfulMonad : LawfulMonad Ultrafilter
     where
   id_map α f := coe_injective (id_map f.1)
   pure_bind α β a f := coe_injective (pure_bind a (coe ∘ f))
   bind_assoc α β γ f m₁ m₂ := coe_injective (filter_eq rfl)
   bind_pure_comp_eq_map α β f x := coe_injective (bind_pure_comp_eq_map f x.1)
-#align ultrafilter.is_lawful_monad Ultrafilter.is_lawful_monad
+#align ultrafilter.is_lawful_monad Ultrafilter.lawfulMonad
 
 end
 
@@ -409,9 +409,9 @@ variable {f : Filter α} {s : Set α} {a : α}
 
 open Ultrafilter
 
-theorem is_atom_pure : IsAtom (pure a : Filter α) :=
+theorem isAtom_pure : IsAtom (pure a : Filter α) :=
   (pure a : Ultrafilter α).IsAtom
-#align filter.is_atom_pure Filter.is_atom_pure
+#align filter.is_atom_pure Filter.isAtom_pure
 
 protected theorem NeBot.le_pure_iff (hf : f.ne_bot) : f ≤ pure a ↔ f = pure a :=
   ⟨Ultrafilter.unique (pure a), le_of_eq⟩
@@ -419,17 +419,17 @@ protected theorem NeBot.le_pure_iff (hf : f.ne_bot) : f ≤ pure a ↔ f = pure 
 
 @[simp]
 theorem lt_pure_iff : f < pure a ↔ f = ⊥ :=
-  is_atom_pure.lt_iff
+  isAtom_pure.lt_iff
 #align filter.lt_pure_iff Filter.lt_pure_iff
 
 theorem le_pure_iff' : f ≤ pure a ↔ f = ⊥ ∨ f = pure a :=
-  is_atom_pure.le_iff
+  isAtom_pure.le_iff
 #align filter.le_pure_iff' Filter.le_pure_iff'
 
 @[simp]
-theorem Iic_pure (a : α) : Iic (pure a : Filter α) = {⊥, pure a} :=
-  is_atom_pure.Iic_eq
-#align filter.Iic_pure Filter.Iic_pure
+theorem iic_pure (a : α) : Iic (pure a : Filter α) = {⊥, pure a} :=
+  isAtom_pure.Iic_eq
+#align filter.Iic_pure Filter.iic_pure
 
 theorem mem_iff_ultrafilter : s ∈ f ↔ ∀ g : Ultrafilter α, ↑g ≤ f → s ∈ g :=
   by
@@ -444,10 +444,10 @@ theorem le_iff_ultrafilter {f₁ f₂ : Filter α} : f₁ ≤ f₂ ↔ ∀ g : U
 #align filter.le_iff_ultrafilter Filter.le_iff_ultrafilter
 
 /-- A filter equals the intersection of all the ultrafilters which contain it. -/
-theorem supr_ultrafilter_le_eq (f : Filter α) :
+theorem supᵢ_ultrafilter_le_eq (f : Filter α) :
     (⨆ (g : Ultrafilter α) (hg : ↑g ≤ f), (g : Filter α)) = f :=
   eq_of_forall_ge_iff fun f' => by simp only [supᵢ_le_iff, ← le_iff_ultrafilter]
-#align filter.supr_ultrafilter_le_eq Filter.supr_ultrafilter_le_eq
+#align filter.supr_ultrafilter_le_eq Filter.supᵢ_ultrafilter_le_eq
 
 /-- The `tendsto` relation can be checked on ultrafilters. -/
 theorem tendsto_iff_ultrafilter (f : α → β) (l₁ : Filter α) (l₂ : Filter β) :
@@ -456,16 +456,16 @@ theorem tendsto_iff_ultrafilter (f : α → β) (l₁ : Filter α) (l₂ : Filte
 #align filter.tendsto_iff_ultrafilter Filter.tendsto_iff_ultrafilter
 
 theorem exists_ultrafilter_iff {f : Filter α} : (∃ u : Ultrafilter α, ↑u ≤ f) ↔ NeBot f :=
-  ⟨fun ⟨u, uf⟩ => ne_bot_of_le uf, fun h => @exists_ultrafilter_le _ _ h⟩
+  ⟨fun ⟨u, uf⟩ => neBot_of_le uf, fun h => @exists_ultrafilter_le _ _ h⟩
 #align filter.exists_ultrafilter_iff Filter.exists_ultrafilter_iff
 
-theorem forall_ne_bot_le_iff {g : Filter α} {p : Filter α → Prop} (hp : Monotone p) :
+theorem forall_neBot_le_iff {g : Filter α} {p : Filter α → Prop} (hp : Monotone p) :
     (∀ f : Filter α, NeBot f → f ≤ g → p f) ↔ ∀ f : Ultrafilter α, ↑f ≤ g → p f :=
   by
   refine' ⟨fun H f hf => H f f.ne_bot hf, _⟩
   intro H f hf hfg
   exact hp (of_le f) (H _ ((of_le f).trans hfg))
-#align filter.forall_ne_bot_le_iff Filter.forall_ne_bot_le_iff
+#align filter.forall_ne_bot_le_iff Filter.forall_neBot_le_iff
 
 section Hyperfilter
 
@@ -515,25 +515,24 @@ open Filter
 
 variable {m : α → β} {s : Set α} {g : Ultrafilter β}
 
-theorem comap_inf_principal_ne_bot_of_image_mem (h : m '' s ∈ g) :
-    (Filter.comap m g ⊓ 𝓟 s).ne_bot :=
-  Filter.comap_inf_principal_ne_bot_of_image_mem g.ne_bot h
-#align ultrafilter.comap_inf_principal_ne_bot_of_image_mem Ultrafilter.comap_inf_principal_ne_bot_of_image_mem
+theorem comap_inf_principal_neBot_of_image_mem (h : m '' s ∈ g) : (Filter.comap m g ⊓ 𝓟 s).ne_bot :=
+  Filter.comap_inf_principal_neBot_of_image_mem g.ne_bot h
+#align ultrafilter.comap_inf_principal_ne_bot_of_image_mem Ultrafilter.comap_inf_principal_neBot_of_image_mem
 
 /-- Ultrafilter extending the inf of a comapped ultrafilter and a principal ultrafilter. -/
 noncomputable def ofComapInfPrincipal (h : m '' s ∈ g) : Ultrafilter α :=
-  @of _ (Filter.comap m g ⊓ 𝓟 s) (comap_inf_principal_ne_bot_of_image_mem h)
+  @of _ (Filter.comap m g ⊓ 𝓟 s) (comap_inf_principal_neBot_of_image_mem h)
 #align ultrafilter.of_comap_inf_principal Ultrafilter.ofComapInfPrincipal
 
-theorem of_comap_inf_principal_mem (h : m '' s ∈ g) : s ∈ ofComapInfPrincipal h :=
+theorem ofComapInfPrincipal_mem (h : m '' s ∈ g) : s ∈ ofComapInfPrincipal h :=
   by
   let f := Filter.comap m g ⊓ 𝓟 s
   haveI : f.ne_bot := comap_inf_principal_ne_bot_of_image_mem h
   have : s ∈ f := mem_inf_of_right (mem_principal_self s)
   exact le_def.mp (of_le _) s this
-#align ultrafilter.of_comap_inf_principal_mem Ultrafilter.of_comap_inf_principal_mem
+#align ultrafilter.of_comap_inf_principal_mem Ultrafilter.ofComapInfPrincipal_mem
 
-theorem of_comap_inf_principal_eq_of_map (h : m '' s ∈ g) : (ofComapInfPrincipal h).map m = g :=
+theorem ofComapInfPrincipal_eq_of_map (h : m '' s ∈ g) : (ofComapInfPrincipal h).map m = g :=
   by
   let f := Filter.comap m g ⊓ 𝓟 s
   haveI : f.ne_bot := comap_inf_principal_ne_bot_of_image_mem h
@@ -545,7 +544,7 @@ theorem of_comap_inf_principal_eq_of_map (h : m '' s ∈ g) : (ofComapInfPrincip
     _ ≤ g ⊓ (𝓟 <| m '' s) := inf_le_inf_right _ map_comap_le
     _ = g := inf_of_le_left (le_principal_iff.mpr h)
     
-#align ultrafilter.of_comap_inf_principal_eq_of_map Ultrafilter.of_comap_inf_principal_eq_of_map
+#align ultrafilter.of_comap_inf_principal_eq_of_map Ultrafilter.ofComapInfPrincipal_eq_of_map
 
 end Ultrafilter
 

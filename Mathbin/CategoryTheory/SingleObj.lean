@@ -109,9 +109,9 @@ def toEnd [Monoid α] : α ≃* EndCat (SingleObj.star α) :=
   { Equiv.refl α with map_mul' := fun x y => rfl }
 #align category_theory.single_obj.to_End CategoryTheory.SingleObj.toEnd
 
-theorem to_End_def [Monoid α] (x : α) : toEnd α x = x :=
+theorem toEnd_def [Monoid α] (x : α) : toEnd α x = x :=
   rfl
-#align category_theory.single_obj.to_End_def CategoryTheory.SingleObj.to_End_def
+#align category_theory.single_obj.to_End_def CategoryTheory.SingleObj.toEnd_def
 
 /-- There is a 1-1 correspondence between monoid homomorphisms `α → β` and functors between the
     corresponding single-object categories. It means that `single_obj` is a fully faithful
@@ -135,14 +135,14 @@ def mapHom (α : Type u) (β : Type v) [Monoid α] [Monoid β] : (α →* β) �
   right_inv f := by cases f <;> obviously
 #align category_theory.single_obj.map_hom CategoryTheory.SingleObj.mapHom
 
-theorem map_hom_id (α : Type u) [Monoid α] : mapHom α α (MonoidHom.id α) = 𝟭 _ :=
+theorem mapHom_id (α : Type u) [Monoid α] : mapHom α α (MonoidHom.id α) = 𝟭 _ :=
   rfl
-#align category_theory.single_obj.map_hom_id CategoryTheory.SingleObj.map_hom_id
+#align category_theory.single_obj.map_hom_id CategoryTheory.SingleObj.mapHom_id
 
-theorem map_hom_comp {α : Type u} {β : Type v} [Monoid α] [Monoid β] (f : α →* β) {γ : Type w}
+theorem mapHom_comp {α : Type u} {β : Type v} [Monoid α] [Monoid β] (f : α →* β) {γ : Type w}
     [Monoid γ] (g : β →* γ) : mapHom α γ (g.comp f) = mapHom α β f ⋙ mapHom β γ g :=
   rfl
-#align category_theory.single_obj.map_hom_comp CategoryTheory.SingleObj.map_hom_comp
+#align category_theory.single_obj.map_hom_comp CategoryTheory.SingleObj.mapHom_comp
 
 /-- Given a function `f : C → G` from a category to a group, we get a functor
     `C ⥤ G` sending any morphism `x ⟶ y` to `f y * (f x)⁻¹`. -/
@@ -176,15 +176,15 @@ def toFunctor {α : Type u} {β : Type v} [Monoid α] [Monoid β] (f : α →* �
 #align monoid_hom.to_functor MonoidHom.toFunctor
 
 @[simp]
-theorem id_to_functor (α : Type u) [Monoid α] : (id α).toFunctor = 𝟭 _ :=
+theorem id_toFunctor (α : Type u) [Monoid α] : (id α).toFunctor = 𝟭 _ :=
   rfl
-#align monoid_hom.id_to_functor MonoidHom.id_to_functor
+#align monoid_hom.id_to_functor MonoidHom.id_toFunctor
 
 @[simp]
-theorem comp_to_functor {α : Type u} {β : Type v} [Monoid α] [Monoid β] (f : α →* β) {γ : Type w}
+theorem comp_toFunctor {α : Type u} {β : Type v} [Monoid α] [Monoid β] (f : α →* β) {γ : Type w}
     [Monoid γ] (g : β →* γ) : (g.comp f).toFunctor = f.toFunctor ⋙ g.toFunctor :=
   rfl
-#align monoid_hom.comp_to_functor MonoidHom.comp_to_functor
+#align monoid_hom.comp_to_functor MonoidHom.comp_toFunctor
 
 end MonoidHom
 
@@ -199,14 +199,14 @@ def toAut : αˣ ≃* AutCat (SingleObj.star α) :=
 #align units.to_Aut Units.toAut
 
 @[simp]
-theorem to_Aut_hom (x : αˣ) : (toAut α x).Hom = SingleObj.toEnd α x :=
+theorem toAut_hom (x : αˣ) : (toAut α x).Hom = SingleObj.toEnd α x :=
   rfl
-#align units.to_Aut_hom Units.to_Aut_hom
+#align units.to_Aut_hom Units.toAut_hom
 
 @[simp]
-theorem to_Aut_inv (x : αˣ) : (toAut α x).inv = SingleObj.toEnd α (x⁻¹ : αˣ) :=
+theorem toAut_inv (x : αˣ) : (toAut α x).inv = SingleObj.toEnd α (x⁻¹ : αˣ) :=
   rfl
-#align units.to_Aut_inv Units.to_Aut_inv
+#align units.to_Aut_inv Units.toAut_inv
 
 end Units
 
@@ -226,8 +226,8 @@ instance toCatFull : Full toCat
   witness' x y := by apply Equiv.right_inv
 #align Mon.to_Cat_full MonCat.toCatFull
 
-instance to_Cat_faithful : Faithful toCat where map_injective' x y := by apply Equiv.injective
-#align Mon.to_Cat_faithful MonCat.to_Cat_faithful
+instance toCat_faithful : Faithful toCat where map_injective' x y := by apply Equiv.injective
+#align Mon.to_Cat_faithful MonCat.toCat_faithful
 
 end MonCat
 

@@ -87,9 +87,9 @@ def toList : ∀ {b}, Lists' α b → List (Lists α)
 #align lists'.to_list Lists'.toList
 
 @[simp]
-theorem to_list_cons (a : Lists α) (l) : toList (cons a l) = a :: l.toList := by
+theorem toList_cons (a : Lists α) (l) : toList (cons a l) = a :: l.toList := by
   cases a <;> simp [cons]
-#align lists'.to_list_cons Lists'.to_list_cons
+#align lists'.to_list_cons Lists'.toList_cons
 
 /-- Converts a `list` of ZFA lists to a proper ZFA prelist. -/
 @[simp]
@@ -99,11 +99,11 @@ def ofList : List (Lists α) → Lists' α true
 #align lists'.of_list Lists'.ofList
 
 @[simp]
-theorem to_of_list (l : List (Lists α)) : toList (ofList l) = l := by induction l <;> simp [*]
-#align lists'.to_of_list Lists'.to_of_list
+theorem to_ofList (l : List (Lists α)) : toList (ofList l) = l := by induction l <;> simp [*]
+#align lists'.to_of_list Lists'.to_ofList
 
 @[simp]
-theorem of_to_list : ∀ l : Lists' α true, ofList (toList l) = l :=
+theorem of_toList : ∀ l : Lists' α true, ofList (toList l) = l :=
   suffices
     ∀ (b) (h : tt = b) (l : Lists' α b),
       let l' : Lists' α true := by rw [h] <;> exact l
@@ -114,7 +114,7 @@ theorem of_to_list : ∀ l : Lists' α true, ofList (toList l) = l :=
   case cons' b a l IH₁ IH₂ =>
     intro ; change l' with cons' a l
     simpa [cons] using IH₂ rfl
-#align lists'.of_to_list Lists'.of_to_list
+#align lists'.of_to_list Lists'.of_toList
 
 end Lists'
 
@@ -172,16 +172,16 @@ theorem cons_subset {a} {l₁ l₂ : Lists' α true} : Lists'.cons a l₁ ⊆ l�
   cases a; cases a'; cases h'; exact ⟨⟨_, m, e⟩, s⟩
 #align lists'.cons_subset Lists'.cons_subset
 
-theorem of_list_subset {l₁ l₂ : List (Lists α)} (h : l₁ ⊆ l₂) :
+theorem ofList_subset {l₁ l₂ : List (Lists α)} (h : l₁ ⊆ l₂) :
     Lists'.ofList l₁ ⊆ Lists'.ofList l₂ := by
   induction l₁; · exact subset.nil
   refine' subset.cons (Lists.Equiv.refl _) _ (l₁_ih (List.subset_of_cons_subset h))
   simp at h; simp [h]
-#align lists'.of_list_subset Lists'.of_list_subset
+#align lists'.of_list_subset Lists'.ofList_subset
 
 @[refl]
 theorem Subset.refl {l : Lists' α true} : l ⊆ l := by
-  rw [← Lists'.of_to_list l] <;> exact of_list_subset (List.Subset.refl _)
+  rw [← Lists'.of_toList l] <;> exact of_list_subset (List.Subset.refl _)
 #align lists'.subset.refl Lists'.Subset.refl
 
 theorem subset_nil {l : Lists' α true} : l ⊆ Lists'.nil → l = Lists'.nil :=
@@ -240,16 +240,16 @@ def ofList (l : List (Lists α)) : Lists α :=
   of' (Lists'.ofList l)
 #align lists.of_list Lists.ofList
 
-theorem is_list_to_list (l : List (Lists α)) : IsList (ofList l) :=
+theorem isList_to_list (l : List (Lists α)) : IsList (ofList l) :=
   Eq.refl _
-#align lists.is_list_to_list Lists.is_list_to_list
+#align lists.is_list_to_list Lists.isList_to_list
 
-theorem to_of_list (l : List (Lists α)) : toList (ofList l) = l := by simp [of_list, of']
-#align lists.to_of_list Lists.to_of_list
+theorem to_ofList (l : List (Lists α)) : toList (ofList l) = l := by simp [of_list, of']
+#align lists.to_of_list Lists.to_ofList
 
-theorem of_to_list : ∀ {l : Lists α}, IsList l → ofList (toList l) = l
+theorem of_toList : ∀ {l : Lists α}, IsList l → ofList (toList l) = l
   | ⟨tt, l⟩, _ => by simp [of_list, of']
-#align lists.of_to_list Lists.of_to_list
+#align lists.of_to_list Lists.of_toList
 
 instance : Inhabited (Lists α) :=
   ⟨of' Lists'.nil⟩
@@ -289,10 +289,10 @@ def Mem (a : Lists α) : Lists α → Prop
 instance : Membership (Lists α) (Lists α) :=
   ⟨Mem⟩
 
-theorem is_list_of_mem {a : Lists α} : ∀ {l : Lists α}, a ∈ l → IsList l
+theorem isList_of_mem {a : Lists α} : ∀ {l : Lists α}, a ∈ l → IsList l
   | ⟨_, Lists'.nil⟩, _ => rfl
   | ⟨_, Lists'.cons' _ _⟩, _ => rfl
-#align lists.is_list_of_mem Lists.is_list_of_mem
+#align lists.is_list_of_mem Lists.isList_of_mem
 
 theorem Equiv.antisymm_iff {l₁ l₂ : Lists' α true} : of' l₁ ~ of' l₂ ↔ l₁ ⊆ l₂ ∧ l₂ ⊆ l₁ :=
   by
@@ -356,20 +356,20 @@ def Equiv.decidableMeas :
 
 open WellFoundedTactics
 
-theorem sizeof_pos {b} (l : Lists' α b) : 0 < SizeOf.sizeOf l := by
+theorem sizeOf_pos {b} (l : Lists' α b) : 0 < SizeOf.sizeOf l := by
   cases l <;>
     run_tac
       andthen unfold_sizeof trivial_nat_lt
-#align lists.sizeof_pos Lists.sizeof_pos
+#align lists.sizeof_pos Lists.sizeOf_pos
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic well_founded_tactics.unfold_sizeof -/
-theorem lt_sizeof_cons' {b} (a : Lists' α b) (l) :
+theorem lt_sizeOf_cons' {b} (a : Lists' α b) (l) :
     SizeOf.sizeOf (⟨b, a⟩ : Lists α) < SizeOf.sizeOf (Lists'.cons' a l) :=
   by
   run_tac
     unfold_sizeof
   apply sizeof_pos
-#align lists.lt_sizeof_cons' Lists.lt_sizeof_cons'
+#align lists.lt_sizeof_cons' Lists.lt_sizeOf_cons'
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic well_founded_tactics.default_dec_tac -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic well_founded_tactics.default_dec_tac -/

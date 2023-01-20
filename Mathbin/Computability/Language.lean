@@ -203,29 +203,29 @@ theorem le_add_congr {l₁ l₂ m₁ m₂ : Language α} : l₁ ≤ m₁ → l�
   sup_le_sup
 #align language.le_add_congr Language.le_add_congr
 
-theorem mem_supr {ι : Sort v} {l : ι → Language α} {x : List α} : (x ∈ ⨆ i, l i) ↔ ∃ i, x ∈ l i :=
+theorem mem_supᵢ {ι : Sort v} {l : ι → Language α} {x : List α} : (x ∈ ⨆ i, l i) ↔ ∃ i, x ∈ l i :=
   mem_Union
-#align language.mem_supr Language.mem_supr
+#align language.mem_supr Language.mem_supᵢ
 
-theorem supr_mul {ι : Sort v} (l : ι → Language α) (m : Language α) :
+theorem supᵢ_mul {ι : Sort v} (l : ι → Language α) (m : Language α) :
     (⨆ i, l i) * m = ⨆ i, l i * m :=
   image2_unionᵢ_left _ _ _
-#align language.supr_mul Language.supr_mul
+#align language.supr_mul Language.supᵢ_mul
 
-theorem mul_supr {ι : Sort v} (l : ι → Language α) (m : Language α) :
+theorem mul_supᵢ {ι : Sort v} (l : ι → Language α) (m : Language α) :
     (m * ⨆ i, l i) = ⨆ i, m * l i :=
   image2_unionᵢ_right _ _ _
-#align language.mul_supr Language.mul_supr
+#align language.mul_supr Language.mul_supᵢ
 
-theorem supr_add {ι : Sort v} [Nonempty ι] (l : ι → Language α) (m : Language α) :
+theorem supᵢ_add {ι : Sort v} [Nonempty ι] (l : ι → Language α) (m : Language α) :
     (⨆ i, l i) + m = ⨆ i, l i + m :=
   supᵢ_sup
-#align language.supr_add Language.supr_add
+#align language.supr_add Language.supᵢ_add
 
-theorem add_supr {ι : Sort v} [Nonempty ι] (l : ι → Language α) (m : Language α) :
+theorem add_supᵢ {ι : Sort v} [Nonempty ι] (l : ι → Language α) (m : Language α) :
     (m + ⨆ i, l i) = ⨆ i, m + l i :=
   sup_supᵢ
-#align language.add_supr Language.add_supr
+#align language.add_supr Language.add_supᵢ
 
 theorem mem_pow {l : Language α} {x : List α} {n : ℕ} :
     x ∈ l ^ n ↔ ∃ S : List (List α), x = S.join ∧ S.length = n ∧ ∀ y ∈ S, y ∈ l :=
@@ -246,7 +246,7 @@ theorem mem_pow {l : Language α} {x : List α} {n : ℕ} :
       exact ⟨a, _, hS.1, ⟨S, rfl, rfl, hS.2⟩, rfl⟩
 #align language.mem_pow Language.mem_pow
 
-theorem star_eq_supr_pow (l : Language α) : l.star = ⨆ i : ℕ, l ^ i :=
+theorem star_eq_supᵢ_pow (l : Language α) : l.star = ⨆ i : ℕ, l ^ i :=
   by
   ext x
   simp only [mem_star, mem_supr, mem_pow]
@@ -255,7 +255,7 @@ theorem star_eq_supr_pow (l : Language α) : l.star = ⨆ i : ℕ, l ^ i :=
     exact ⟨_, S, rfl, rfl, hS⟩
   · rintro ⟨_, S, rfl, rfl, hS⟩
     exact ⟨S, rfl, hS⟩
-#align language.star_eq_supr_pow Language.star_eq_supr_pow
+#align language.star_eq_supr_pow Language.star_eq_supᵢ_pow
 
 @[simp]
 theorem map_star (f : α → β) (l : Language α) : map f (star l) = star (map f l) :=

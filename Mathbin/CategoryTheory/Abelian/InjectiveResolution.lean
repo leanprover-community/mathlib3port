@@ -73,11 +73,11 @@ def descFOne {Y Z : C} (f : Z ⟶ Y) (I : InjectiveResolutionCat Y) (J : Injecti
 #align category_theory.InjectiveResolution.desc_f_one CategoryTheory.InjectiveResolutionCat.descFOne
 
 @[simp]
-theorem desc_f_one_zero_comm {Y Z : C} (f : Z ⟶ Y) (I : InjectiveResolutionCat Y)
+theorem descFOne_zero_comm {Y Z : C} (f : Z ⟶ Y) (I : InjectiveResolutionCat Y)
     (J : InjectiveResolutionCat Z) :
     J.cocomplex.d 0 1 ≫ descFOne f I J = descFZero f I J ≫ I.cocomplex.d 0 1 := by
   simp [desc_f_zero, desc_f_one]
-#align category_theory.InjectiveResolution.desc_f_one_zero_comm CategoryTheory.InjectiveResolutionCat.desc_f_one_zero_comm
+#align category_theory.InjectiveResolution.desc_f_one_zero_comm CategoryTheory.InjectiveResolutionCat.descFOne_zero_comm
 
 /-- Auxiliary construction for `desc`. -/
 def descFSucc {Y Z : C} (I : InjectiveResolutionCat Y) (J : InjectiveResolutionCat Z) (n : ℕ)
@@ -94,7 +94,7 @@ def descFSucc {Y Z : C} (I : InjectiveResolutionCat Y) (J : InjectiveResolutionC
 /-- A morphism in `C` descends to a chain map between injective resolutions. -/
 def desc {Y Z : C} (f : Z ⟶ Y) (I : InjectiveResolutionCat Y) (J : InjectiveResolutionCat Z) :
     J.cocomplex ⟶ I.cocomplex :=
-  CochainComplex.mkHom _ _ (descFZero f _ _) (descFOne f _ _) (desc_f_one_zero_comm f I J).symm
+  CochainComplex.mkHom _ _ (descFZero f _ _) (descFOne f _ _) (descFOne_zero_comm f I J).symm
     fun n ⟨g, g', w⟩ => ⟨(descFSucc I J n g g' w.symm).1, (descFSucc I J n g g' w.symm).2.symm⟩
 #align category_theory.InjectiveResolution.desc CategoryTheory.InjectiveResolutionCat.desc
 
@@ -185,14 +185,14 @@ def homotopyEquiv {X : C} (I J : InjectiveResolutionCat X) : HomotopyEquiv I.coc
 #align category_theory.InjectiveResolution.homotopy_equiv CategoryTheory.InjectiveResolutionCat.homotopyEquiv
 
 @[simp, reassoc.1]
-theorem homotopy_equiv_hom_ι {X : C} (I J : InjectiveResolutionCat X) :
+theorem homotopyEquiv_hom_ι {X : C} (I J : InjectiveResolutionCat X) :
     I.ι ≫ (homotopyEquiv I J).Hom = J.ι := by simp [HomotopyEquiv]
-#align category_theory.InjectiveResolution.homotopy_equiv_hom_ι CategoryTheory.InjectiveResolutionCat.homotopy_equiv_hom_ι
+#align category_theory.InjectiveResolution.homotopy_equiv_hom_ι CategoryTheory.InjectiveResolutionCat.homotopyEquiv_hom_ι
 
 @[simp, reassoc.1]
-theorem homotopy_equiv_inv_ι {X : C} (I J : InjectiveResolutionCat X) :
+theorem homotopyEquiv_inv_ι {X : C} (I J : InjectiveResolutionCat X) :
     J.ι ≫ (homotopyEquiv I J).inv = I.ι := by simp [HomotopyEquiv]
-#align category_theory.InjectiveResolution.homotopy_equiv_inv_ι CategoryTheory.InjectiveResolutionCat.homotopy_equiv_inv_ι
+#align category_theory.InjectiveResolution.homotopy_equiv_inv_ι CategoryTheory.InjectiveResolutionCat.homotopyEquiv_inv_ι
 
 end Abelian
 

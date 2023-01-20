@@ -71,7 +71,7 @@ variable [Ring k] [Module k V] (b : AffineBasis ι k P)
 /-- The unique point in a single-point space is the simplest example of an affine basis. -/
 instance : Inhabited (AffineBasis PUnit k PUnit) :=
   ⟨{  points := id
-      ind := affine_independent_of_subsingleton k id
+      ind := affineIndependent_of_subsingleton k id
       tot := by simp }⟩
 
 include b
@@ -95,25 +95,25 @@ obtain a linear basis for the model space `V`.
 The linear basis correpsonding to the singled-out member `i : ι` is indexed by `{j : ι // j ≠ i}`
 and its `j`th element is `points j -ᵥ points i`. (See `basis_of_apply`.) -/
 noncomputable def basisOf (i : ι) : Basis { j : ι // j ≠ i } k V :=
-  Basis.mk ((affine_independent_iff_linear_independent_vsub k b.points i).mp b.ind)
+  Basis.mk ((affineIndependent_iff_linearIndependent_vsub k b.points i).mp b.ind)
     (by
       suffices
         Submodule.span k (range fun j : { x // x ≠ i } => b.points ↑j -ᵥ b.points i) =
           vectorSpan k (range b.points)
         by
-        rw [this, ← direction_affine_span, b.tot, AffineSubspace.direction_top]
+        rw [this, ← direction_affineSpan, b.tot, AffineSubspace.direction_top]
         exact le_rfl
       conv_rhs => rw [← image_univ]
-      rw [vector_span_image_eq_span_vsub_set_right_ne k b.points (mem_univ i)]
+      rw [vectorSpan_image_eq_span_vsub_set_right_ne k b.points (mem_univ i)]
       congr
       ext v
       simp)
 #align affine_basis.basis_of AffineBasis.basisOf
 
 @[simp]
-theorem basis_of_apply (i : ι) (j : { j : ι // j ≠ i }) :
+theorem basisOf_apply (i : ι) (j : { j : ι // j ≠ i }) :
     b.basisOf i j = b.points ↑j -ᵥ b.points i := by simp [basis_of]
-#align affine_basis.basis_of_apply AffineBasis.basis_of_apply
+#align affine_basis.basis_of_apply AffineBasis.basisOf_apply
 
 /-- The `i`th barycentric coordinate of a point. -/
 noncomputable def coord (i : ι) : P →ᵃ[k] k
@@ -126,20 +126,20 @@ noncomputable def coord (i : ι) : P →ᵃ[k] k
 #align affine_basis.coord AffineBasis.coord
 
 @[simp]
-theorem linear_eq_sum_coords (i : ι) : (b.Coord i).linear = -(b.basisOf i).sumCoords :=
+theorem linear_eq_sumCoords (i : ι) : (b.Coord i).linear = -(b.basisOf i).sumCoords :=
   rfl
-#align affine_basis.linear_eq_sum_coords AffineBasis.linear_eq_sum_coords
+#align affine_basis.linear_eq_sum_coords AffineBasis.linear_eq_sumCoords
 
 @[simp]
 theorem coord_apply_eq (i : ι) : b.Coord i (b.points i) = 1 := by
-  simp only [coord, Basis.coe_sum_coords, LinearEquiv.map_zero, LinearEquiv.coe_coe, sub_zero,
+  simp only [coord, Basis.coe_sumCoords, LinearEquiv.map_zero, LinearEquiv.coe_coe, sub_zero,
     AffineMap.coe_mk, Finsupp.sum_zero_index, vsub_self]
 #align affine_basis.coord_apply_eq AffineBasis.coord_apply_eq
 
 @[simp]
 theorem coord_apply_neq (i j : ι) (h : j ≠ i) : b.Coord i (b.points j) = 0 := by
   rw [coord, AffineMap.coe_mk, ← Subtype.coe_mk j h, ← b.basis_of_apply i ⟨j, h⟩,
-    Basis.sum_coords_self_apply, sub_self]
+    Basis.sumCoords_self_apply, sub_self]
 #align affine_basis.coord_apply_neq AffineBasis.coord_apply_neq
 
 theorem coord_apply [DecidableEq ι] (i j : ι) : b.Coord i (b.points j) = if i = j then 1 else 0 :=
@@ -151,7 +151,7 @@ theorem coord_apply [DecidableEq ι] (i j : ι) : b.Coord i (b.points j) = if i 
 @[simp]
 theorem coord_apply_combination_of_mem {s : Finset ι} {i : ι} (hi : i ∈ s) {w : ι → k}
     (hw : s.Sum w = 1) : b.Coord i (s.affineCombination b.points w) = w i := by
-  classical simp only [coord_apply, hi, Finset.affine_combination_eq_linear_combination, if_true,
+  classical simp only [coord_apply, hi, Finset.affineCombination_eq_linear_combination, if_true,
       mul_boole, hw, Function.comp_apply, smul_eq_mul, s.sum_ite_eq,
       s.map_affine_combination b.points w hw]
 #align affine_basis.coord_apply_combination_of_mem AffineBasis.coord_apply_combination_of_mem
@@ -159,7 +159,7 @@ theorem coord_apply_combination_of_mem {s : Finset ι} {i : ι} (hi : i ∈ s) {
 @[simp]
 theorem coord_apply_combination_of_not_mem {s : Finset ι} {i : ι} (hi : i ∉ s) {w : ι → k}
     (hw : s.Sum w = 1) : b.Coord i (s.affineCombination b.points w) = 0 := by
-  classical simp only [coord_apply, hi, Finset.affine_combination_eq_linear_combination, if_false,
+  classical simp only [coord_apply, hi, Finset.affineCombination_eq_linear_combination, if_false,
       mul_boole, hw, Function.comp_apply, smul_eq_mul, s.sum_ite_eq,
       s.map_affine_combination b.points w hw]
 #align affine_basis.coord_apply_combination_of_not_mem AffineBasis.coord_apply_combination_of_not_mem
@@ -171,25 +171,25 @@ theorem sum_coord_apply_eq_one [Fintype ι] (q : P) : (∑ i, b.Coord i q) = 1 :
     by
     rw [b.tot]
     exact AffineSubspace.mem_top k V q
-  obtain ⟨w, hw, rfl⟩ := eq_affine_combination_of_mem_affine_span_of_fintype hq
+  obtain ⟨w, hw, rfl⟩ := eq_affineCombination_of_mem_affineSpan_of_fintype hq
   convert hw
   ext i
   exact b.coord_apply_combination_of_mem (Finset.mem_univ i) hw
 #align affine_basis.sum_coord_apply_eq_one AffineBasis.sum_coord_apply_eq_one
 
 @[simp]
-theorem affine_combination_coord_eq_self [Fintype ι] (q : P) :
+theorem affineCombination_coord_eq_self [Fintype ι] (q : P) :
     (Finset.univ.affineCombination b.points fun i => b.Coord i q) = q :=
   by
   have hq : q ∈ affineSpan k (range b.points) :=
     by
     rw [b.tot]
     exact AffineSubspace.mem_top k V q
-  obtain ⟨w, hw, rfl⟩ := eq_affine_combination_of_mem_affine_span_of_fintype hq
+  obtain ⟨w, hw, rfl⟩ := eq_affineCombination_of_mem_affineSpan_of_fintype hq
   congr
   ext i
   exact b.coord_apply_combination_of_mem (Finset.mem_univ i) hw
-#align affine_basis.affine_combination_coord_eq_self AffineBasis.affine_combination_coord_eq_self
+#align affine_basis.affine_combination_coord_eq_self AffineBasis.affineCombination_coord_eq_self
 
 /-- A variant of `affine_basis.affine_combination_coord_eq_self` for the special case when the
 affine space is a module so we can talk about linear combinations. -/
@@ -280,17 +280,17 @@ theorem coord_apply_centroid [CharZero k] (b : AffineBasis ι k P) {s : Finset �
 theorem exists_affine_subbasis {t : Set P} (ht : affineSpan k t = ⊤) :
     ∃ (s : _)(_ : s ⊆ t)(b : AffineBasis (↥s) k P), b.points = coe :=
   by
-  obtain ⟨s, hst, h_tot, h_ind⟩ := exists_affine_independent k V t
+  obtain ⟨s, hst, h_tot, h_ind⟩ := exists_affineIndependent k V t
   refine' ⟨s, hst, ⟨coe, h_ind, _⟩, rfl⟩
   rw [Subtype.range_coe, h_tot, ht]
 #align affine_basis.exists_affine_subbasis AffineBasis.exists_affine_subbasis
 
 variable (k V P)
 
-theorem exists_affine_basis : ∃ (s : Set P)(b : AffineBasis (↥s) k P), b.points = coe :=
+theorem exists_affineBasis : ∃ (s : Set P)(b : AffineBasis (↥s) k P), b.points = coe :=
   let ⟨s, _, hs⟩ := exists_affine_subbasis (AffineSubspace.span_univ k V P)
   ⟨s, hs⟩
-#align affine_basis.exists_affine_basis AffineBasis.exists_affine_basis
+#align affine_basis.exists_affine_basis AffineBasis.exists_affineBasis
 
 end DivisionRing
 

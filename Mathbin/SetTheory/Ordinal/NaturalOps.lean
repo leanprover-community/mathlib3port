@@ -75,54 +75,54 @@ namespace NatOrdinal
 variable {a b c : NatOrdinal.{u}}
 
 @[simp]
-theorem to_ordinal_symm_eq : NatOrdinal.toOrdinal.symm = Ordinal.toNatOrdinal :=
+theorem toOrdinal_symm_eq : NatOrdinal.toOrdinal.symm = Ordinal.toNatOrdinal :=
   rfl
-#align nat_ordinal.to_ordinal_symm_eq NatOrdinal.to_ordinal_symm_eq
+#align nat_ordinal.to_ordinal_symm_eq NatOrdinal.toOrdinal_symm_eq
 
 @[simp]
-theorem to_ordinal_to_nat_ordinal (a : NatOrdinal) : a.toOrdinal.toNatOrdinal = a :=
+theorem toOrdinal_toNatOrdinal (a : NatOrdinal) : a.toOrdinal.toNatOrdinal = a :=
   rfl
-#align nat_ordinal.to_ordinal_to_nat_ordinal NatOrdinal.to_ordinal_to_nat_ordinal
+#align nat_ordinal.to_ordinal_to_nat_ordinal NatOrdinal.toOrdinal_toNatOrdinal
 
 theorem lt_wf : @WellFounded NatOrdinal (· < ·) :=
   Ordinal.lt_wf
 #align nat_ordinal.lt_wf NatOrdinal.lt_wf
 
 instance : WellFoundedLt NatOrdinal :=
-  Ordinal.well_founded_lt
+  Ordinal.wellFoundedLt
 
 instance : IsWellOrder NatOrdinal (· < ·) :=
-  Ordinal.HasLt.Lt.is_well_order
+  Ordinal.HasLt.Lt.isWellOrder
 
 @[simp]
-theorem to_ordinal_zero : toOrdinal 0 = 0 :=
+theorem toOrdinal_zero : toOrdinal 0 = 0 :=
   rfl
-#align nat_ordinal.to_ordinal_zero NatOrdinal.to_ordinal_zero
+#align nat_ordinal.to_ordinal_zero NatOrdinal.toOrdinal_zero
 
 @[simp]
-theorem to_ordinal_one : toOrdinal 1 = 1 :=
+theorem toOrdinal_one : toOrdinal 1 = 1 :=
   rfl
-#align nat_ordinal.to_ordinal_one NatOrdinal.to_ordinal_one
+#align nat_ordinal.to_ordinal_one NatOrdinal.toOrdinal_one
 
 @[simp]
-theorem to_ordinal_eq_zero (a) : toOrdinal a = 0 ↔ a = 0 :=
+theorem toOrdinal_eq_zero (a) : toOrdinal a = 0 ↔ a = 0 :=
   Iff.rfl
-#align nat_ordinal.to_ordinal_eq_zero NatOrdinal.to_ordinal_eq_zero
+#align nat_ordinal.to_ordinal_eq_zero NatOrdinal.toOrdinal_eq_zero
 
 @[simp]
-theorem to_ordinal_eq_one (a) : toOrdinal a = 1 ↔ a = 1 :=
+theorem toOrdinal_eq_one (a) : toOrdinal a = 1 ↔ a = 1 :=
   Iff.rfl
-#align nat_ordinal.to_ordinal_eq_one NatOrdinal.to_ordinal_eq_one
+#align nat_ordinal.to_ordinal_eq_one NatOrdinal.toOrdinal_eq_one
 
 @[simp]
-theorem to_ordinal_max : (max a b).toOrdinal = max a.toOrdinal b.toOrdinal :=
+theorem toOrdinal_max : (max a b).toOrdinal = max a.toOrdinal b.toOrdinal :=
   rfl
-#align nat_ordinal.to_ordinal_max NatOrdinal.to_ordinal_max
+#align nat_ordinal.to_ordinal_max NatOrdinal.toOrdinal_max
 
 @[simp]
-theorem to_ordinal_min : (min a b).toOrdinal = min a.toOrdinal b.toOrdinal :=
+theorem toOrdinal_min : (min a b).toOrdinal = min a.toOrdinal b.toOrdinal :=
   rfl
-#align nat_ordinal.to_ordinal_min NatOrdinal.to_ordinal_min
+#align nat_ordinal.to_ordinal_min NatOrdinal.toOrdinal_min
 
 theorem succ_def (a : NatOrdinal) : succ a = (a.toOrdinal + 1).toNatOrdinal :=
   rfl
@@ -145,45 +145,45 @@ namespace Ordinal
 variable {a b c : Ordinal.{u}}
 
 @[simp]
-theorem to_nat_ordinal_symm_eq : toNatOrdinal.symm = NatOrdinal.toOrdinal :=
+theorem toNatOrdinal_symm_eq : toNatOrdinal.symm = NatOrdinal.toOrdinal :=
   rfl
-#align ordinal.to_nat_ordinal_symm_eq Ordinal.to_nat_ordinal_symm_eq
+#align ordinal.to_nat_ordinal_symm_eq Ordinal.toNatOrdinal_symm_eq
 
 @[simp]
-theorem to_nat_ordinal_to_ordinal (a : Ordinal) : a.toNatOrdinal.toOrdinal = a :=
+theorem toNatOrdinal_toOrdinal (a : Ordinal) : a.toNatOrdinal.toOrdinal = a :=
   rfl
-#align ordinal.to_nat_ordinal_to_ordinal Ordinal.to_nat_ordinal_to_ordinal
+#align ordinal.to_nat_ordinal_to_ordinal Ordinal.toNatOrdinal_toOrdinal
 
 @[simp]
-theorem to_nat_ordinal_zero : toNatOrdinal 0 = 0 :=
+theorem toNatOrdinal_zero : toNatOrdinal 0 = 0 :=
   rfl
-#align ordinal.to_nat_ordinal_zero Ordinal.to_nat_ordinal_zero
+#align ordinal.to_nat_ordinal_zero Ordinal.toNatOrdinal_zero
 
 @[simp]
-theorem to_nat_ordinal_one : toNatOrdinal 1 = 1 :=
+theorem toNatOrdinal_one : toNatOrdinal 1 = 1 :=
   rfl
-#align ordinal.to_nat_ordinal_one Ordinal.to_nat_ordinal_one
+#align ordinal.to_nat_ordinal_one Ordinal.toNatOrdinal_one
 
 @[simp]
-theorem to_nat_ordinal_eq_zero (a) : toNatOrdinal a = 0 ↔ a = 0 :=
+theorem toNatOrdinal_eq_zero (a) : toNatOrdinal a = 0 ↔ a = 0 :=
   Iff.rfl
-#align ordinal.to_nat_ordinal_eq_zero Ordinal.to_nat_ordinal_eq_zero
+#align ordinal.to_nat_ordinal_eq_zero Ordinal.toNatOrdinal_eq_zero
 
 @[simp]
-theorem to_nat_ordinal_eq_one (a) : toNatOrdinal a = 1 ↔ a = 1 :=
+theorem toNatOrdinal_eq_one (a) : toNatOrdinal a = 1 ↔ a = 1 :=
   Iff.rfl
-#align ordinal.to_nat_ordinal_eq_one Ordinal.to_nat_ordinal_eq_one
+#align ordinal.to_nat_ordinal_eq_one Ordinal.toNatOrdinal_eq_one
 
 @[simp]
-theorem to_nat_ordinal_max : toNatOrdinal (max a b) = max a.toNatOrdinal b.toNatOrdinal :=
+theorem toNatOrdinal_max : toNatOrdinal (max a b) = max a.toNatOrdinal b.toNatOrdinal :=
   rfl
-#align ordinal.to_nat_ordinal_max Ordinal.to_nat_ordinal_max
+#align ordinal.to_nat_ordinal_max Ordinal.toNatOrdinal_max
 
 @[simp]
-theorem to_nat_ordinal_min :
+theorem toNatOrdinal_min :
     (LinearOrder.min a b).toNatOrdinal = LinearOrder.min a.toNatOrdinal b.toNatOrdinal :=
   rfl
-#align ordinal.to_nat_ordinal_min Ordinal.to_nat_ordinal_min
+#align ordinal.to_nat_ordinal_min Ordinal.toNatOrdinal_min
 
 /-- Natural addition on ordinals `a ♯ b`, also known as the Hessenberg sum, is recursively defined
 as the least ordinal greater than `a' ♯ b` and `a ♯ b'` for all `a' < a` and `b' < b`. In contrast
@@ -338,20 +338,20 @@ namespace NatOrdinal
 instance : Add NatOrdinal :=
   ⟨nadd⟩
 
-instance add_covariant_class_lt : CovariantClass NatOrdinal.{u} NatOrdinal.{u} (· + ·) (· < ·) :=
+instance add_covariantClass_lt : CovariantClass NatOrdinal.{u} NatOrdinal.{u} (· + ·) (· < ·) :=
   ⟨fun a b c h => nadd_lt_nadd_left h a⟩
-#align nat_ordinal.add_covariant_class_lt NatOrdinal.add_covariant_class_lt
+#align nat_ordinal.add_covariant_class_lt NatOrdinal.add_covariantClass_lt
 
-instance add_covariant_class_le : CovariantClass NatOrdinal.{u} NatOrdinal.{u} (· + ·) (· ≤ ·) :=
+instance add_covariantClass_le : CovariantClass NatOrdinal.{u} NatOrdinal.{u} (· + ·) (· ≤ ·) :=
   ⟨fun a b c h => nadd_le_nadd_left h a⟩
-#align nat_ordinal.add_covariant_class_le NatOrdinal.add_covariant_class_le
+#align nat_ordinal.add_covariant_class_le NatOrdinal.add_covariantClass_le
 
-instance add_contravariant_class_le :
+instance add_contravariantClass_le :
     ContravariantClass NatOrdinal.{u} NatOrdinal.{u} (· + ·) (· ≤ ·) :=
   ⟨fun a b c h => by
     by_contra' h'
     exact h.not_lt (add_lt_add_left h' a)⟩
-#align nat_ordinal.add_contravariant_class_le NatOrdinal.add_contravariant_class_le
+#align nat_ordinal.add_contravariant_class_le NatOrdinal.add_contravariantClass_le
 
 instance : OrderedCancelAddCommMonoid NatOrdinal :=
   { NatOrdinal.linearOrder with
@@ -373,14 +373,14 @@ theorem add_one_eq_succ : ∀ a : NatOrdinal, a + 1 = succ a :=
 #align nat_ordinal.add_one_eq_succ NatOrdinal.add_one_eq_succ
 
 @[simp]
-theorem to_ordinal_cast_nat (n : ℕ) : toOrdinal n = n :=
+theorem toOrdinal_cast_nat (n : ℕ) : toOrdinal n = n :=
   by
   induction' n with n hn
   · rfl
   · change nadd (to_ordinal n) 1 = n + 1
     rw [hn]
     apply nadd_one
-#align nat_ordinal.to_ordinal_cast_nat NatOrdinal.to_ordinal_cast_nat
+#align nat_ordinal.to_ordinal_cast_nat NatOrdinal.toOrdinal_cast_nat
 
 end NatOrdinal
 
@@ -391,11 +391,11 @@ open NaturalOps
 namespace Ordinal
 
 @[simp]
-theorem to_nat_ordinal_cast_nat (n : ℕ) : toNatOrdinal n = n :=
+theorem toNatOrdinal_cast_nat (n : ℕ) : toNatOrdinal n = n :=
   by
   rw [← to_ordinal_cast_nat n]
   rfl
-#align ordinal.to_nat_ordinal_cast_nat Ordinal.to_nat_ordinal_cast_nat
+#align ordinal.to_nat_ordinal_cast_nat Ordinal.toNatOrdinal_cast_nat
 
 theorem lt_of_nadd_lt_nadd_left : ∀ {a b c}, a ♯ b < a ♯ c → b < c :=
   @lt_of_add_lt_add_left NatOrdinal _ _ _

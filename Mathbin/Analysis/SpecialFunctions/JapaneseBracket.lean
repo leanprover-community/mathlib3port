@@ -79,12 +79,12 @@ theorem le_rpow_one_add_norm_iff_norm_le {r t : ℝ} (hr : 0 < r) (ht : 0 < t) (
 
 variable (E)
 
-theorem closed_ball_rpow_sub_one_eq_empty_aux {r t : ℝ} (hr : 0 < r) (ht : 1 < t) :
+theorem closedBall_rpow_sub_one_eq_empty_aux {r t : ℝ} (hr : 0 < r) (ht : 1 < t) :
     Metric.closedBall (0 : E) (t ^ (-r⁻¹) - 1) = ∅ :=
   by
-  rw [Metric.closed_ball_eq_empty, sub_neg]
+  rw [Metric.closedBall_eq_empty, sub_neg]
   exact Real.rpow_lt_one_of_one_lt_of_neg ht (by simp only [hr, Right.neg_neg_iff, inv_pos])
-#align closed_ball_rpow_sub_one_eq_empty_aux closed_ball_rpow_sub_one_eq_empty_aux
+#align closed_ball_rpow_sub_one_eq_empty_aux closedBall_rpow_sub_one_eq_empty_aux
 
 variable [NormedSpace ℝ E] [FiniteDimensional ℝ E]
 
@@ -100,7 +100,7 @@ theorem finite_integral_rpow_sub_one_pow_aux {r : ℝ} (n : ℕ) (hnr : (n : ℝ
     by
     intro x hx
     have hxr : 0 ≤ x ^ (-r⁻¹) := rpow_nonneg_of_nonneg hx.1.le _
-    apply Ennreal.of_real_le_of_real
+    apply Ennreal.ofReal_le_ofReal
     rw [← neg_mul, rpow_mul hx.1.le, rpow_nat_cast]
     refine' pow_le_pow_of_le_left _ (by simp only [sub_le_self_iff, zero_le_one]) n
     rw [le_sub_iff_add_le', add_zero]
@@ -109,7 +109,7 @@ theorem finite_integral_rpow_sub_one_pow_aux {r : ℝ} (n : ℕ) (hnr : (n : ℝ
     exact hr.le
   refine' lt_of_le_of_lt (set_lintegral_mono (by measurability) (by measurability) h_int) _
   refine' integrable_on.set_lintegral_lt_top _
-  rw [← interval_integrable_iff_integrable_Ioc_of_le zero_le_one]
+  rw [← intervalIntegrable_iff_integrable_ioc_of_le zero_le_one]
   apply intervalIntegral.intervalIntegrableRpow'
   rwa [neg_lt_neg_iff, inv_mul_lt_iff' hr, one_mul]
 #align finite_integral_rpow_sub_one_pow_aux finite_integral_rpow_sub_one_pow_aux
@@ -136,12 +136,12 @@ theorem finite_integral_one_add_norm [MeasureSpace E] [BorelSpace E]
     intro t ht
     congr 1
     ext x
-    simp only [mem_set_of_eq, mem_closed_ball_zero_iff]
+    simp only [mem_set_of_eq, mem_closedBall_zero_iff]
     exact le_rpow_one_add_norm_iff_norm_le hr (mem_Ioi.mp ht) x
-  rw [set_lintegral_congr_fun measurable_set_Ioi (ae_of_all volume <| h_int)]
+  rw [set_lintegral_congr_fun measurableSet_ioi (ae_of_all volume <| h_int)]
   have hIoi_eq : Ioi (0 : ℝ) = Ioc (0 : ℝ) 1 ∪ Ioi 1 := (Set.Ioc_union_Ioi_eq_Ioi zero_le_one).symm
   have hdisjoint : Disjoint (Ioc (0 : ℝ) 1) (Ioi 1) := by simp [disjoint_iff]
-  rw [hIoi_eq, lintegral_union measurable_set_Ioi hdisjoint, Ennreal.add_lt_top]
+  rw [hIoi_eq, lintegral_union measurableSet_ioi hdisjoint, Ennreal.add_lt_top]
   have h_int' :
     ∀ (t : ℝ) (ht : t ∈ Ioc (0 : ℝ) 1),
       (volume (Metric.closedBall (0 : E) (t ^ (-r⁻¹) - 1)) : Ennreal) =
@@ -156,7 +156,7 @@ theorem finite_integral_one_add_norm [MeasureSpace E] [BorelSpace E]
     measurability
   constructor
   -- The integral from 0 to 1:
-  · rw [set_lintegral_congr_fun measurable_set_Ioc (ae_of_all volume <| h_int'),
+  · rw [set_lintegral_congr_fun measurableSet_ioc (ae_of_all volume <| h_int'),
       lintegral_mul_const _ h_meas', Ennreal.mul_lt_top_iff]
     left
     -- We calculate the integral
@@ -165,9 +165,9 @@ theorem finite_integral_one_add_norm [MeasureSpace E] [BorelSpace E]
   have h_int'' :
     ∀ (t : ℝ) (ht : t ∈ Ioi (1 : ℝ)),
       (volume (Metric.closedBall (0 : E) (t ^ (-r⁻¹) - 1)) : Ennreal) = 0 :=
-    fun t ht => by rw [closed_ball_rpow_sub_one_eq_empty_aux E hr ht, measure_empty]
+    fun t ht => by rw [closedBall_rpow_sub_one_eq_empty_aux E hr ht, measure_empty]
   -- The integral over the constant zero function is finite:
-  rw [set_lintegral_congr_fun measurable_set_Ioi (ae_of_all volume <| h_int''), lintegral_const 0,
+  rw [set_lintegral_congr_fun measurableSet_ioi (ae_of_all volume <| h_int''), lintegral_const 0,
     zero_mul]
   exact WithTop.zero_lt_top
 #align finite_integral_one_add_norm finite_integral_one_add_norm

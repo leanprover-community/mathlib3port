@@ -107,9 +107,9 @@ def dualEquiv : LatticeCat ≌ LatticeCat :=
 
 end LatticeCat
 
-theorem Lattice_dual_comp_forget_to_PartialOrder :
+theorem latticeCat_dual_comp_forget_to_partialOrderCat :
     LatticeCat.dual ⋙ forget₂ LatticeCat PartialOrderCat =
       forget₂ LatticeCat PartialOrderCat ⋙ PartialOrderCat.dual :=
   rfl
-#align Lattice_dual_comp_forget_to_PartialOrder Lattice_dual_comp_forget_to_PartialOrder
+#align Lattice_dual_comp_forget_to_PartialOrder latticeCat_dual_comp_forget_to_partialOrderCat
 

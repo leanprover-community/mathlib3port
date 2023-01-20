@@ -51,13 +51,13 @@ instance trivialization.isLinear : (trivialization B F).isLinear 𝕜
 
 variable {𝕜}
 
-theorem trivialization.coord_changeL (b : B) :
+theorem trivialization.coordChangeL (b : B) :
     (trivialization B F).coordChangeL 𝕜 (trivialization B F) b = ContinuousLinearEquiv.refl 𝕜 F :=
   by
   ext v
-  rw [Trivialization.coord_changeL_apply']
+  rw [Trivialization.coordChangeL_apply']
   exacts[rfl, ⟨mem_univ _, mem_univ _⟩]
-#align bundle.trivial.trivialization.coord_changeL Bundle.Trivial.trivialization.coord_changeL
+#align bundle.trivial.trivialization.coord_changeL Bundle.Trivial.trivialization.coordChangeL
 
 variable (𝕜)
 
@@ -127,8 +127,8 @@ instance VectorBundle.prod [VectorBundle 𝕜 F₁ E₁] [VectorBundle 𝕜 F₂
     by
     rintro _ _ ⟨e₁, e₂, he₁, he₂, rfl⟩ ⟨e₁', e₂', he₁', he₂', rfl⟩; skip
     refine'
-        (((continuous_on_coord_change 𝕜 e₁ e₁').mono _).prodMapL 𝕜
-              ((continuous_on_coord_change 𝕜 e₂ e₂').mono _)).congr
+        (((continuousOn_coord_change 𝕜 e₁ e₁').mono _).prodMapL 𝕜
+              ((continuousOn_coord_change 𝕜 e₂ e₂').mono _)).congr
           _ <;>
       dsimp only [base_set_prod, mfld_simps]
     · mfld_set_tac
@@ -146,7 +146,7 @@ instance VectorBundle.prod [VectorBundle 𝕜 F₁ E₁] [VectorBundle 𝕜 F₂
 variable {𝕜 F₁ E₁ F₂ E₂}
 
 @[simp]
-theorem Trivialization.continuous_linear_equiv_at_prod {e₁ : Trivialization F₁ (π E₁)}
+theorem Trivialization.continuousLinearEquivAt_prod {e₁ : Trivialization F₁ (π E₁)}
     {e₂ : Trivialization F₂ (π E₂)} [e₁.isLinear 𝕜] [e₂.isLinear 𝕜] {x : B} (hx₁ : x ∈ e₁.baseSet)
     (hx₂ : x ∈ e₂.baseSet) :
     (e₁.Prod e₂).continuousLinearEquivAt 𝕜 x ⟨hx₁, hx₂⟩ =
@@ -157,7 +157,7 @@ theorem Trivialization.continuous_linear_equiv_at_prod {e₁ : Trivialization F�
   obtain ⟨v₁, v₂⟩ := v
   rw [(e₁.prod e₂).continuous_linear_equiv_at_apply 𝕜, Trivialization.prod]
   exact (congr_arg Prod.snd (prod_apply 𝕜 hx₁ hx₂ v₁ v₂) : _)
-#align trivialization.continuous_linear_equiv_at_prod Trivialization.continuous_linear_equiv_at_prod
+#align trivialization.continuous_linear_equiv_at_prod Trivialization.continuousLinearEquivAt_prod
 
 end
 
@@ -193,8 +193,7 @@ instance VectorBundle.pullback [∀ x, TopologicalSpace (E x)] [FiberBundle F E]
     by
     rintro _ _ ⟨e, he, rfl⟩ ⟨e', he', rfl⟩; skip
     refine'
-      ((continuous_on_coord_change 𝕜 e e').comp (map_continuous f).ContinuousOn fun b hb =>
-            hb).congr
+      ((continuousOn_coord_change 𝕜 e e').comp (map_continuous f).ContinuousOn fun b hb => hb).congr
         _
     rintro b (hb : f b ∈ e.base_set ∩ e'.base_set); ext v
     show ((e.pullback f).coordChangeL 𝕜 (e'.pullback f) b) v = (e.coord_changeL 𝕜 e' (f b)) v

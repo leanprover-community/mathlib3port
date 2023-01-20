@@ -63,12 +63,12 @@ class IsSemisimple : Prop where
   semisimple : radical R L = ⊥
 #align lie_algebra.is_semisimple LieAlgebra.IsSemisimple
 
-theorem is_semisimple_iff_no_solvable_ideals :
+theorem isSemisimple_iff_no_solvable_ideals :
     IsSemisimple R L ↔ ∀ I : LieIdeal R L, IsSolvable R I → I = ⊥ :=
   ⟨fun h => supₛ_eq_bot.mp h.semisimple, fun h => ⟨supₛ_eq_bot.mpr h⟩⟩
-#align lie_algebra.is_semisimple_iff_no_solvable_ideals LieAlgebra.is_semisimple_iff_no_solvable_ideals
+#align lie_algebra.is_semisimple_iff_no_solvable_ideals LieAlgebra.isSemisimple_iff_no_solvable_ideals
 
-theorem is_semisimple_iff_no_abelian_ideals :
+theorem isSemisimple_iff_no_abelian_ideals :
     IsSemisimple R L ↔ ∀ I : LieIdeal R L, IsLieAbelian I → I = ⊥ :=
   by
   rw [is_semisimple_iff_no_solvable_ideals]
@@ -80,7 +80,7 @@ theorem is_semisimple_iff_no_abelian_ideals :
     rw [← abelian_of_solvable_ideal_eq_bot_iff]
     apply h₁
     exact abelian_derived_abelian_of_ideal I
-#align lie_algebra.is_semisimple_iff_no_abelian_ideals LieAlgebra.is_semisimple_iff_no_abelian_ideals
+#align lie_algebra.is_semisimple_iff_no_abelian_ideals LieAlgebra.isSemisimple_iff_no_abelian_ideals
 
 @[simp]
 theorem center_eq_bot_of_semisimple [h : IsSemisimple R L] : center R L = ⊥ :=
@@ -126,7 +126,7 @@ theorem abelian_radical_iff_solvable_is_abelian [IsNoetherian R L] :
   constructor
   · rintro h₁ I h₂
     rw [lie_ideal.solvable_iff_le_radical] at h₂
-    exact (LieIdeal.hom_of_le_injective h₂).IsLieAbelian h₁
+    exact (LieIdeal.homOfLe_injective h₂).IsLieAbelian h₁
   · intro h
     apply h
     infer_instance

@@ -131,9 +131,9 @@ instance AddMonoid.fg_of_monoid_fg [Monoid.Fg M] : AddMonoid.Fg (Additive M) :=
   Monoid.fg_iff_add_fg.1 ‹_›
 #align add_monoid.fg_of_monoid_fg AddMonoid.fg_of_monoid_fg
 
-instance Monoid.fg_of_add_monoid_fg [AddMonoid.Fg N] : Monoid.Fg (Multiplicative N) :=
+instance Monoid.fg_of_addMonoid_fg [AddMonoid.Fg N] : Monoid.Fg (Multiplicative N) :=
   AddMonoid.fg_iff_mul_fg.1 ‹_›
-#align monoid.fg_of_add_monoid_fg Monoid.fg_of_add_monoid_fg
+#align monoid.fg_of_add_monoid_fg Monoid.fg_of_addMonoid_fg
 
 @[to_additive]
 instance (priority := 100) Monoid.fg_of_finite [Finite M] : Monoid.Fg M :=
@@ -258,12 +258,12 @@ theorem Subgroup.fg_iff_submonoid_fg (P : Subgroup G) : P.Fg ↔ P.toSubmonoid.F
   · rintro ⟨S, rfl⟩
     rw [Submonoid.fg_iff]
     refine' ⟨S ∪ S⁻¹, _, S.finite_to_set.union S.finite_to_set.inv⟩
-    exact (Subgroup.closure_to_submonoid _).symm
+    exact (Subgroup.closure_toSubmonoid _).symm
   · rintro ⟨S, hS⟩
     refine' ⟨S, le_antisymm _ _⟩
-    · rw [Subgroup.closure_le, ← Subgroup.coe_to_submonoid, ← hS]
+    · rw [Subgroup.closure_le, ← Subgroup.coe_toSubmonoid, ← hS]
       exact Submonoid.subset_closure
-    · rw [← Subgroup.to_submonoid_le, ← hS, Submonoid.closure_le]
+    · rw [← Subgroup.toSubmonoid_le, ← hS, Submonoid.closure_le]
       exact Subgroup.subset_closure
 #align subgroup.fg_iff_submonoid_fg Subgroup.fg_iff_submonoid_fg
 #align add_subgroup.fg_iff_add_submonoid.fg AddSubgroup.FgIffAddSubmonoid.fg
@@ -375,7 +375,7 @@ instance Group.fg_range {G' : Type _} [Group G'] [Group.Fg G] (f : G →* G') : 
 instance Group.closure_finset_fg (s : Finset G) : Group.Fg (Subgroup.closure (s : Set G)) :=
   by
   refine' ⟨⟨s.preimage coe (subtype.coe_injective.inj_on _), _⟩⟩
-  rw [Finset.coe_preimage, ← Subgroup.coe_subtype, Subgroup.closure_preimage_eq_top]
+  rw [Finset.coe_preimage, ← Subgroup.coeSubtype, Subgroup.closure_preimage_eq_top]
 #align group.closure_finset_fg Group.closure_finset_fg
 #align add_group.closure_finset_fg AddGroup.closure_finset_fg
 

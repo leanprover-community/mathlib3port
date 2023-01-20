@@ -191,7 +191,7 @@ theorem hasIntegralGPPderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → ℝⁿ
   refine' has_integral_of_le_Henstock_of_forall_is_o GP_le _ _ _ s hs _ _
   ·-- We use the volume as an upper estimate.
     exact (volume : Measure ℝⁿ⁺¹).toBoxAdditive.restrict _ le_top
-  · exact fun J => Ennreal.to_real_nonneg
+  · exact fun J => Ennreal.toReal_nonneg
   · intro c x hx ε ε0
     /- Near `x ∈ s` we choose `δ` so that both vectors are small. `volume J • eᵢ` is small because
         `volume J ≤ (2 * δ) ^ (n + 1)` is small, and the difference of the integrals is small
@@ -205,11 +205,10 @@ theorem hasIntegralGPPderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → ℝⁿ
             (2 * δ) ^ (n + 1) * ‖f' x (Pi.single i 1)‖ ≤ ε / 2 :=
       by
       refine' eventually.and _ (eventually.and _ _)
-      · exact Ioc_mem_nhds_within_Ioi ⟨le_rfl, one_half_pos⟩
-      · rcases((nhds_within_has_basis nhds_basis_closed_ball _).tendsto_iff
-                nhds_basis_closed_ball).1 (Hs x hx.2) _ (half_pos <| half_pos ε0) with
-          ⟨δ₁, δ₁0, hδ₁⟩
-        filter_upwards [Ioc_mem_nhds_within_Ioi ⟨le_rfl, δ₁0⟩] with δ hδ y₁ hy₁ y₂ hy₂
+      · exact ioc_mem_nhdsWithin_ioi ⟨le_rfl, one_half_pos⟩
+      · rcases((nhdsWithin_hasBasis nhds_basis_closed_ball _).tendsto_iff nhds_basis_closed_ball).1
+            (Hs x hx.2) _ (half_pos <| half_pos ε0) with ⟨δ₁, δ₁0, hδ₁⟩
+        filter_upwards [ioc_mem_nhdsWithin_ioi ⟨le_rfl, δ₁0⟩] with δ hδ y₁ hy₁ y₂ hy₂
         have : closed_ball x δ ∩ I.Icc ⊆ closed_ball x δ₁ ∩ I.Icc :=
           inter_subset_inter_left _ (closed_ball_subset_closed_ball hδ.2)
         rw [← dist_eq_norm]
@@ -265,7 +264,7 @@ theorem hasIntegralGPPderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → ℝⁿ
               _).trans
           _
       refine' (mul_le_mul_of_nonneg_right _ (half_pos ε0).le).trans_eq (one_mul _)
-      rw [box.coe_eq_pi, Real.volume_pi_Ioc_to_real (box.lower_le_upper _)]
+      rw [box.coe_eq_pi, Real.volume_pi_ioc_toReal (box.lower_le_upper _)]
       refine' prod_le_one (fun _ _ => sub_nonneg.2 <| box.lower_le_upper _ _) fun j hj => _
       calc
         J.upper (i.succ_above j) - J.lower (i.succ_above j) ≤
@@ -281,7 +280,7 @@ theorem hasIntegralGPPderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → ℝⁿ
     /- At a point `x ∉ s`, we unfold the definition of Fréchet differentiability, then use
         an estimate we proved earlier in this file. -/
     rcases exists_pos_mul_lt ε0 (2 * c) with ⟨ε', ε'0, hlt⟩
-    rcases(nhds_within_has_basis nhds_basis_closed_ball _).mem_iff.1 ((Hd x hx).def ε'0) with
+    rcases(nhdsWithin_hasBasis nhds_basis_closed_ball _).mem_iff.1 ((Hd x hx).def ε'0) with
       ⟨δ, δ0, Hδ⟩
     refine' ⟨δ, δ0, fun J hle hJδ hxJ hJc => _⟩
     simp only [box_additive_map.volume_apply, box.volume_apply, dist_eq_norm]
@@ -291,7 +290,7 @@ theorem hasIntegralGPPderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → ℝⁿ
         _
     · exact ⟨hJδ hy, box.le_iff_Icc.1 hle hy⟩
     · rw [mul_right_comm (2 : ℝ), ← box.volume_apply]
-      exact mul_le_mul_of_nonneg_right hlt.le Ennreal.to_real_nonneg
+      exact mul_le_mul_of_nonneg_right hlt.le Ennreal.toReal_nonneg
 #align box_integral.has_integral_GP_pderiv BoxIntegral.hasIntegralGPPderiv
 
 /-- Divergence theorem for a Henstock-Kurzweil style integral.
@@ -314,7 +313,7 @@ theorem hasIntegralGPDivergenceOfForallHasDerivWithinAt (f : ℝⁿ⁺¹ → E�
             BoxAdditiveMap.volume) :=
   by
   refine' has_integral_sum fun i hi => _; clear hi
-  simp only [has_fderiv_within_at_pi', continuous_within_at_pi] at Hd Hs
+  simp only [hasFderivWithinAt_pi', continuousWithinAt_pi] at Hd Hs
   convert has_integral_GP_pderiv I _ _ s hs (fun x hx => Hs x hx i) (fun x hx => Hd x hx i) i
 #align box_integral.has_integral_GP_divergence_of_forall_has_deriv_within_at BoxIntegral.hasIntegralGPDivergenceOfForallHasDerivWithinAt
 

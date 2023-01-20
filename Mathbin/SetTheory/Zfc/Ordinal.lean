@@ -43,16 +43,16 @@ def IsTransitive (x : SetCat) : Prop :=
 #align Set.is_transitive SetCat.IsTransitive
 
 @[simp]
-theorem empty_is_transitive : IsTransitive ∅ := fun y hy => (mem_empty y hy).elim
-#align Set.empty_is_transitive SetCat.empty_is_transitive
+theorem empty_isTransitive : IsTransitive ∅ := fun y hy => (mem_empty y hy).elim
+#align Set.empty_is_transitive SetCat.empty_isTransitive
 
 theorem IsTransitive.subset_of_mem (h : x.IsTransitive) : y ∈ x → y ⊆ x :=
   h y
 #align Set.is_transitive.subset_of_mem SetCat.IsTransitive.subset_of_mem
 
-theorem is_transitive_iff_mem_trans : z.IsTransitive ↔ ∀ {x y : SetCat}, x ∈ y → y ∈ z → x ∈ z :=
+theorem isTransitive_iff_mem_trans : z.IsTransitive ↔ ∀ {x y : SetCat}, x ∈ y → y ∈ z → x ∈ z :=
   ⟨fun h x y hx hy => h.subset_of_mem hy hx, fun H x hx y hy => H hy hx⟩
-#align Set.is_transitive_iff_mem_trans SetCat.is_transitive_iff_mem_trans
+#align Set.is_transitive_iff_mem_trans SetCat.isTransitive_iff_mem_trans
 
 alias is_transitive_iff_mem_trans ↔ is_transitive.mem_trans _
 #align Set.is_transitive.mem_trans SetCat.IsTransitive.mem_trans
@@ -79,18 +79,18 @@ theorem IsTransitive.sUnion' (H : ∀ y ∈ x, IsTransitive y) : (⋃₀ x).IsTr
 #align Set.is_transitive.sUnion' SetCat.IsTransitive.sUnion'
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem is_transitive_iff_sUnion_subset : x.IsTransitive ↔ ⋃₀ x ⊆ x :=
+theorem isTransitive_iff_sUnion_subset : x.IsTransitive ↔ ⋃₀ x ⊆ x :=
   ⟨fun h y hy => by
     rcases mem_sUnion.1 hy with ⟨z, hz, hz'⟩
     exact h.mem_trans hz' hz, fun H y hy z hz => H <| mem_sUnion_of_mem hz hy⟩
-#align Set.is_transitive_iff_sUnion_subset SetCat.is_transitive_iff_sUnion_subset
+#align Set.is_transitive_iff_sUnion_subset SetCat.isTransitive_iff_sUnion_subset
 
 alias is_transitive_iff_sUnion_subset ↔ is_transitive.sUnion_subset _
 #align Set.is_transitive.sUnion_subset SetCat.IsTransitive.sUnion_subset
 
-theorem is_transitive_iff_subset_powerset : x.IsTransitive ↔ x ⊆ powerset x :=
+theorem isTransitive_iff_subset_powerset : x.IsTransitive ↔ x ⊆ powerset x :=
   ⟨fun h y hy => mem_powerset.2 <| h.subset_of_mem hy, fun H y hy z hz => mem_powerset.1 (H hy) hz⟩
-#align Set.is_transitive_iff_subset_powerset SetCat.is_transitive_iff_subset_powerset
+#align Set.is_transitive_iff_subset_powerset SetCat.isTransitive_iff_subset_powerset
 
 alias is_transitive_iff_subset_powerset ↔ is_transitive.subset_powerset _
 #align Set.is_transitive.subset_powerset SetCat.IsTransitive.subset_powerset

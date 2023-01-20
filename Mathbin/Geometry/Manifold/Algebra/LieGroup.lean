@@ -90,9 +90,9 @@ theorem smooth_inv : Smooth I I fun x : G => x⁻¹ :=
 see note [Design choices about smooth algebraic structures]. -/
 @[to_additive
       "An additive Lie group is an additive topological group. This is not an instance for technical\nreasons, see note [Design choices about smooth algebraic structures]."]
-theorem topological_group_of_lie_group : TopologicalGroup G :=
-  { has_continuous_mul_of_smooth I with continuous_inv := (smooth_inv I).Continuous }
-#align topological_group_of_lie_group topological_group_of_lie_group
+theorem topologicalGroup_of_lieGroup : TopologicalGroup G :=
+  { hasContinuousMul_of_smooth I with continuous_inv := (smooth_inv I).Continuous }
+#align topological_group_of_lie_group topologicalGroup_of_lieGroup
 #align topological_add_group_of_lie_add_group topological_add_group_of_lie_add_group
 
 end
@@ -149,7 +149,7 @@ instance normedSpaceLieAddGroup {𝕜 : Type _} [NontriviallyNormedField 𝕜] {
     [NormedAddCommGroup E] [NormedSpace 𝕜 E] : LieAddGroup 𝓘(𝕜, E) E :=
   {
     model_space_smooth with
-    smooth_add := smooth_iff.2 ⟨continuous_add, fun x y => cont_diff_add.ContDiffOn⟩
-    smooth_neg := smooth_iff.2 ⟨continuous_neg, fun x y => cont_diff_neg.ContDiffOn⟩ }
+    smooth_add := smooth_iff.2 ⟨continuous_add, fun x y => contDiff_add.ContDiffOn⟩
+    smooth_neg := smooth_iff.2 ⟨continuous_neg, fun x y => contDiff_neg.ContDiffOn⟩ }
 #align normed_space_lie_add_group normedSpaceLieAddGroup
 

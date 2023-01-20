@@ -54,7 +54,7 @@ def LiouvilleWith (p x : ℝ) : Prop :=
 #align liouville_with LiouvilleWith
 
 /-- For `p = 1` (hence, for any `p ≤ 1`), the condition `liouville_with p x` is trivial. -/
-theorem liouville_with_one (x : ℝ) : LiouvilleWith 1 x :=
+theorem liouvilleWith_one (x : ℝ) : LiouvilleWith 1 x :=
   by
   use 2
   refine' ((eventually_gt_at_top 0).mono fun n hn => _).Frequently
@@ -67,7 +67,7 @@ theorem liouville_with_one (x : ℝ) : LiouvilleWith 1 x :=
   rw [abs_sub_comm, abs_of_pos (sub_pos.2 this), rpow_one, sub_lt_iff_lt_add',
     add_div_eq_mul_add_div _ _ hn'.ne', div_lt_div_right hn']
   simpa [bit0, ← add_assoc] using (Int.floor_le (x * n)).trans_lt (lt_add_one _)
-#align liouville_with_one liouville_with_one
+#align liouville_with_one liouvilleWith_one
 
 namespace LiouvilleWith
 
@@ -106,7 +106,7 @@ theorem frequently_lt_rpow_neg (h : LiouvilleWith p x) (hlt : q < p) :
   rcases h.exists_pos with ⟨C, hC₀, hC⟩
   have : ∀ᶠ n : ℕ in at_top, C < n ^ (p - q) := by
     simpa only [(· ∘ ·), neg_sub, one_div] using
-      ((tendsto_rpow_at_top (sub_pos.2 hlt)).comp tendsto_coe_nat_at_top_at_top).Eventually
+      ((tendsto_rpow_atTop (sub_pos.2 hlt)).comp tendsto_coe_nat_atTop_atTop).Eventually
         (eventually_gt_at_top C)
   refine' (this.and_frequently hC).mono _
   rintro n ⟨hnC, hn, m, hne, hlt⟩
@@ -361,7 +361,7 @@ theorem frequently_exists_num (hx : Liouville x) (n : ℕ) :
     have H : tendsto (fun m => 1 / b ^ m : ℕ → ℝ) at_top (𝓝 0) :=
       by
       simp only [one_div]
-      exact tendsto_inv_at_top_zero.comp (tendsto_pow_at_top_at_top_of_one_lt hb)
+      exact tendsto_inv_at_top_zero.comp (tendsto_pow_atTop_atTop_of_one_lt hb)
     refine' (H.eventually (hx.irrational.eventually_forall_le_dist_cast_div b)).mono _
     exact fun m hm a => hm a
   have : ∀ᶠ m : ℕ in at_top, ∀ b < N, 1 < b → ∀ a : ℤ, (1 / b ^ m : ℝ) ≤ |x - a / b| :=
@@ -380,25 +380,25 @@ theorem frequently_exists_num (hx : Liouville x) (n : ℕ) :
 #align liouville.frequently_exists_num Liouville.frequently_exists_num
 
 /-- A Liouville number is a Liouville number with any real exponent. -/
-protected theorem liouville_with (hx : Liouville x) (p : ℝ) : LiouvilleWith p x :=
+protected theorem liouvilleWith (hx : Liouville x) (p : ℝ) : LiouvilleWith p x :=
   by
   suffices : LiouvilleWith ⌈p⌉₊ x; exact this.mono (Nat.le_ceil p)
   refine' ⟨1, ((eventually_gt_at_top 1).and_frequently (hx.frequently_exists_num ⌈p⌉₊)).mono _⟩
   rintro b ⟨hb, a, hne, hlt⟩
   refine' ⟨a, hne, _⟩
   rwa [rpow_nat_cast]
-#align liouville.liouville_with Liouville.liouville_with
+#align liouville.liouville_with Liouville.liouvilleWith
 
 end Liouville
 
 /-- A number satisfies the Liouville condition with any exponent if and only if it is a Liouville
 number. -/
-theorem forall_liouville_with_iff {x : ℝ} : (∀ p, LiouvilleWith p x) ↔ Liouville x :=
+theorem forall_liouvilleWith_iff {x : ℝ} : (∀ p, LiouvilleWith p x) ↔ Liouville x :=
   by
-  refine' ⟨fun H n => _, Liouville.liouville_with⟩
+  refine' ⟨fun H n => _, Liouville.liouvilleWith⟩
   rcases((eventually_gt_at_top 1).and_frequently
         ((H (n + 1)).frequently_lt_rpow_neg (lt_add_one n))).exists with
     ⟨b, hb, a, hne, hlt⟩
   exact ⟨a, b, by exact_mod_cast hb, hne, by simpa [rpow_neg] using hlt⟩
-#align forall_liouville_with_iff forall_liouville_with_iff
+#align forall_liouville_with_iff forall_liouvilleWith_iff
 

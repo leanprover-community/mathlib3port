@@ -120,14 +120,14 @@ def UliftHom.objUp {C} (A : C) : UliftHom C :=
 #align category_theory.ulift_hom.obj_up CategoryTheory.UliftHom.objUp
 
 @[simp]
-theorem obj_down_obj_up {C} (A : C) : (UliftHom.objUp A).objDown = A :=
+theorem objDown_objUp {C} (A : C) : (UliftHom.objUp A).objDown = A :=
   rfl
-#align category_theory.obj_down_obj_up CategoryTheory.obj_down_obj_up
+#align category_theory.obj_down_obj_up CategoryTheory.objDown_objUp
 
 @[simp]
-theorem obj_up_obj_down {C} (A : UliftHom C) : UliftHom.objUp A.objDown = A :=
+theorem objUp_objDown {C} (A : UliftHom C) : UliftHom.objUp A.objDown = A :=
   rfl
-#align category_theory.obj_up_obj_down CategoryTheory.obj_up_obj_down
+#align category_theory.obj_up_obj_down CategoryTheory.objUp_objDown
 
 instance : Category.{max v₂ v₁} (UliftHom.{v₂} C)
     where

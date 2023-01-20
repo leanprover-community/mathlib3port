@@ -105,18 +105,18 @@ theorem degrees_monomial_eq (s : σ →₀ ℕ) (a : R) (ha : a ≠ 0) :
     Finset.le_sup <| by rw [support_monomial, if_neg ha, Finset.mem_singleton]
 #align mv_polynomial.degrees_monomial_eq MvPolynomial.degrees_monomial_eq
 
-theorem degrees_C (a : R) : degrees (c a : MvPolynomial σ R) = 0 :=
+theorem degrees_c (a : R) : degrees (c a : MvPolynomial σ R) = 0 :=
   Multiset.le_zero.1 <| degrees_monomial _ _
-#align mv_polynomial.degrees_C MvPolynomial.degrees_C
+#align mv_polynomial.degrees_C MvPolynomial.degrees_c
 
 theorem degrees_X' (n : σ) : degrees (x n : MvPolynomial σ R) ≤ {n} :=
-  le_trans (degrees_monomial _ _) <| le_of_eq <| to_multiset_single _ _
+  le_trans (degrees_monomial _ _) <| le_of_eq <| toMultiset_single _ _
 #align mv_polynomial.degrees_X' MvPolynomial.degrees_X'
 
 @[simp]
-theorem degrees_X [Nontrivial R] (n : σ) : degrees (x n : MvPolynomial σ R) = {n} :=
-  (degrees_monomial_eq _ (1 : R) one_ne_zero).trans (to_multiset_single _ _)
-#align mv_polynomial.degrees_X MvPolynomial.degrees_X
+theorem degrees_x [Nontrivial R] (n : σ) : degrees (x n : MvPolynomial σ R) = {n} :=
+  (degrees_monomial_eq _ (1 : R) one_neZero).trans (toMultiset_single _ _)
+#align mv_polynomial.degrees_X MvPolynomial.degrees_x
 
 @[simp]
 theorem degrees_zero : degrees (0 : MvPolynomial σ R) = 0 :=
@@ -127,7 +127,7 @@ theorem degrees_zero : degrees (0 : MvPolynomial σ R) = 0 :=
 
 @[simp]
 theorem degrees_one : degrees (1 : MvPolynomial σ R) = 0 :=
-  degrees_C 1
+  degrees_c 1
 #align mv_polynomial.degrees_one MvPolynomial.degrees_one
 
 theorem degrees_add (p q : MvPolynomial σ R) : (p + q).degrees ≤ p.degrees ⊔ q.degrees :=
@@ -156,7 +156,7 @@ theorem degrees_mul (p q : MvPolynomial σ R) : (p * q).degrees ≤ p.degrees + 
   have := support_mul p q hb
   simp only [Finset.mem_bunionᵢ, Finset.mem_singleton] at this
   rcases this with ⟨a₁, h₁, a₂, h₂, rfl⟩
-  rw [Finsupp.to_multiset_add]
+  rw [Finsupp.toMultiset_add]
   exact add_le_add (Finset.le_sup h₁) (Finset.le_sup h₂)
 #align mv_polynomial.degrees_mul MvPolynomial.degrees_mul
 
@@ -179,7 +179,7 @@ theorem degrees_pow (p : MvPolynomial σ R) : ∀ n : ℕ, (p ^ n).degrees ≤ n
 
 theorem mem_degrees {p : MvPolynomial σ R} {i : σ} :
     i ∈ p.degrees ↔ ∃ d, p.coeff d ≠ 0 ∧ i ∈ d.support := by
-  simp only [degrees, Multiset.mem_sup, ← mem_support_iff, Finsupp.mem_to_multiset, exists_prop]
+  simp only [degrees, Multiset.mem_sup, ← mem_support_iff, Finsupp.mem_toMultiset, exists_prop]
 #align mv_polynomial.mem_degrees MvPolynomial.mem_degrees
 
 theorem le_degrees_add {p q : MvPolynomial σ R} (h : p.degrees.Disjoint q.degrees) :
@@ -190,7 +190,7 @@ theorem le_degrees_add {p q : MvPolynomial σ R} (h : p.degrees.Disjoint q.degre
   rw [Multiset.le_iff_count]
   intro i
   rw [degrees, Multiset.count_finset_sup]
-  simp only [Finsupp.count_to_multiset]
+  simp only [Finsupp.count_toMultiset]
   by_cases h0 : d = 0
   · simp only [h0, zero_le, Finsupp.zero_apply]
   · refine' @Finset.le_sup _ _ _ _ (p + q).support _ d _
@@ -250,7 +250,7 @@ theorem degrees_rename_of_injective {p : MvPolynomial σ R} {f : σ → τ} (h :
   simp only [degrees, Multiset.map_finset_sup p.support Finsupp.toMultiset f h,
     support_rename_of_injective h, Finset.sup_image]
   refine' Finset.sup_congr rfl fun x hx => _
-  exact (Finsupp.to_multiset_map _ _).symm
+  exact (Finsupp.toMultiset_map _ _).symm
 #align mv_polynomial.degrees_rename_of_injective MvPolynomial.degrees_rename_of_injective
 
 end Degrees
@@ -272,18 +272,18 @@ theorem vars_0 : (0 : MvPolynomial σ R).vars = ∅ := by
 
 @[simp]
 theorem vars_monomial (h : r ≠ 0) : (monomial s r).vars = s.support := by
-  rw [vars, degrees_monomial_eq _ _ h, Finsupp.to_finset_to_multiset]
+  rw [vars, degrees_monomial_eq _ _ h, Finsupp.toFinset_toMultiset]
 #align mv_polynomial.vars_monomial MvPolynomial.vars_monomial
 
 @[simp]
-theorem vars_C : (c r : MvPolynomial σ R).vars = ∅ := by
+theorem vars_c : (c r : MvPolynomial σ R).vars = ∅ := by
   rw [vars, degrees_C, Multiset.toFinset_zero]
-#align mv_polynomial.vars_C MvPolynomial.vars_C
+#align mv_polynomial.vars_C MvPolynomial.vars_c
 
 @[simp]
-theorem vars_X [Nontrivial R] : (x n : MvPolynomial σ R).vars = {n} := by
+theorem vars_x [Nontrivial R] : (x n : MvPolynomial σ R).vars = {n} := by
   rw [X, vars_monomial (one_ne_zero' R), Finsupp.support_single_ne_zero _ (one_ne_zero' ℕ)]
-#align mv_polynomial.vars_X MvPolynomial.vars_X
+#align mv_polynomial.vars_X MvPolynomial.vars_x
 
 theorem mem_vars (i : σ) : i ∈ p.vars ↔ ∃ (d : σ →₀ ℕ)(H : d ∈ p.support), i ∈ d.support := by
   simp only [vars, Multiset.mem_toFinset, mem_degrees, mem_support_iff, exists_prop]
@@ -377,7 +377,7 @@ section IsDomain
 
 variable {A : Type _} [CommRing A] [IsDomain A]
 
-theorem vars_C_mul (a : A) (ha : a ≠ 0) (φ : MvPolynomial σ A) : (c a * φ).vars = φ.vars :=
+theorem vars_c_mul (a : A) (ha : a ≠ 0) (φ : MvPolynomial σ A) : (c a * φ).vars = φ.vars :=
   by
   ext1 i
   simp only [mem_vars, exists_prop, mem_support_iff]
@@ -385,7 +385,7 @@ theorem vars_C_mul (a : A) (ha : a ≠ 0) (φ : MvPolynomial σ A) : (c a * φ).
   intro d
   apply and_congr _ Iff.rfl
   rw [coeff_C_mul, mul_ne_zero_iff, eq_true ha, true_and_iff]
-#align mv_polynomial.vars_C_mul MvPolynomial.vars_C_mul
+#align mv_polynomial.vars_C_mul MvPolynomial.vars_c_mul
 
 end IsDomain
 
@@ -446,11 +446,11 @@ theorem vars_monomial_single (i : σ) {e : ℕ} {r : R} (he : e ≠ 0) (hr : r �
   rw [vars_monomial hr, Finsupp.support_single_ne_zero _ he]
 #align mv_polynomial.vars_monomial_single MvPolynomial.vars_monomial_single
 
-theorem vars_eq_support_bUnion_support : p.vars = p.support.bUnion Finsupp.support :=
+theorem vars_eq_support_bunionᵢ_support : p.vars = p.support.bUnion Finsupp.support :=
   by
   ext i
   rw [mem_vars, Finset.mem_bunionᵢ]
-#align mv_polynomial.vars_eq_support_bUnion_support MvPolynomial.vars_eq_support_bUnion_support
+#align mv_polynomial.vars_eq_support_bUnion_support MvPolynomial.vars_eq_support_bunionᵢ_support
 
 end Map
 
@@ -466,63 +466,63 @@ def degreeOf (n : σ) (p : MvPolynomial σ R) : ℕ :=
   p.degrees.count n
 #align mv_polynomial.degree_of MvPolynomial.degreeOf
 
-theorem degree_of_eq_sup (n : σ) (f : MvPolynomial σ R) :
+theorem degreeOf_eq_sup (n : σ) (f : MvPolynomial σ R) :
     degreeOf n f = f.support.sup fun m => m n :=
   by
   rw [degree_of, degrees, Multiset.count_finset_sup]
   congr
   ext
   simp
-#align mv_polynomial.degree_of_eq_sup MvPolynomial.degree_of_eq_sup
+#align mv_polynomial.degree_of_eq_sup MvPolynomial.degreeOf_eq_sup
 
-theorem degree_of_lt_iff {n : σ} {f : MvPolynomial σ R} {d : ℕ} (h : 0 < d) :
+theorem degreeOf_lt_iff {n : σ} {f : MvPolynomial σ R} {d : ℕ} (h : 0 < d) :
     degreeOf n f < d ↔ ∀ m : σ →₀ ℕ, m ∈ f.support → m n < d := by
   rwa [degree_of_eq_sup n f, Finset.sup_lt_iff]
-#align mv_polynomial.degree_of_lt_iff MvPolynomial.degree_of_lt_iff
+#align mv_polynomial.degree_of_lt_iff MvPolynomial.degreeOf_lt_iff
 
 @[simp]
-theorem degree_of_zero (n : σ) : degreeOf n (0 : MvPolynomial σ R) = 0 := by
+theorem degreeOf_zero (n : σ) : degreeOf n (0 : MvPolynomial σ R) = 0 := by
   simp only [degree_of, degrees_zero, Multiset.count_zero]
-#align mv_polynomial.degree_of_zero MvPolynomial.degree_of_zero
+#align mv_polynomial.degree_of_zero MvPolynomial.degreeOf_zero
 
 @[simp]
-theorem degree_of_C (a : R) (x : σ) : degreeOf x (c a : MvPolynomial σ R) = 0 := by
+theorem degreeOf_c (a : R) (x : σ) : degreeOf x (c a : MvPolynomial σ R) = 0 := by
   simp [degree_of, degrees_C]
-#align mv_polynomial.degree_of_C MvPolynomial.degree_of_C
+#align mv_polynomial.degree_of_C MvPolynomial.degreeOf_c
 
-theorem degree_of_X (i j : σ) [Nontrivial R] :
+theorem degreeOf_x (i j : σ) [Nontrivial R] :
     degreeOf i (x j : MvPolynomial σ R) = if i = j then 1 else 0 :=
   by
   by_cases c : i = j
   · simp only [c, if_true, eq_self_iff_true, degree_of, degrees_X, Multiset.count_singleton]
   simp [c, if_false, degree_of, degrees_X]
-#align mv_polynomial.degree_of_X MvPolynomial.degree_of_X
+#align mv_polynomial.degree_of_X MvPolynomial.degreeOf_x
 
-theorem degree_of_add_le (n : σ) (f g : MvPolynomial σ R) :
+theorem degreeOf_add_le (n : σ) (f g : MvPolynomial σ R) :
     degreeOf n (f + g) ≤ max (degreeOf n f) (degreeOf n g) :=
   by
   repeat' rw [degree_of]
   apply (Multiset.count_le_of_le n (degrees_add f g)).trans
   dsimp
   rw [Multiset.count_union]
-#align mv_polynomial.degree_of_add_le MvPolynomial.degree_of_add_le
+#align mv_polynomial.degree_of_add_le MvPolynomial.degreeOf_add_le
 
-theorem monomial_le_degree_of (i : σ) {f : MvPolynomial σ R} {m : σ →₀ ℕ} (h_m : m ∈ f.support) :
+theorem monomial_le_degreeOf (i : σ) {f : MvPolynomial σ R} {m : σ →₀ ℕ} (h_m : m ∈ f.support) :
     m i ≤ degreeOf i f := by
   rw [degree_of_eq_sup i]
   apply Finset.le_sup h_m
-#align mv_polynomial.monomial_le_degree_of MvPolynomial.monomial_le_degree_of
+#align mv_polynomial.monomial_le_degree_of MvPolynomial.monomial_le_degreeOf
 
 -- TODO we can prove equality here if R is a domain
-theorem degree_of_mul_le (i : σ) (f g : MvPolynomial σ R) :
+theorem degreeOf_mul_le (i : σ) (f g : MvPolynomial σ R) :
     degreeOf i (f * g) ≤ degreeOf i f + degreeOf i g :=
   by
   repeat' rw [degree_of]
   convert Multiset.count_le_of_le i (degrees_mul f g)
   rw [Multiset.count_add]
-#align mv_polynomial.degree_of_mul_le MvPolynomial.degree_of_mul_le
+#align mv_polynomial.degree_of_mul_le MvPolynomial.degreeOf_mul_le
 
-theorem degree_of_mul_X_ne {i j : σ} (f : MvPolynomial σ R) (h : i ≠ j) :
+theorem degreeOf_mul_x_ne {i j : σ} (f : MvPolynomial σ R) (h : i ≠ j) :
     degreeOf i (f * x j) = degreeOf i f :=
   by
   repeat' rw [degree_of_eq_sup i]
@@ -532,10 +532,10 @@ theorem degree_of_mul_X_ne {i j : σ} (f : MvPolynomial σ R) (h : i ≠ j) :
   ext
   simp only [single, Nat.one_ne_zero, add_right_eq_self, add_right_embedding_apply, coe_mk,
     Pi.add_apply, comp_app, ite_eq_right_iff, Finsupp.coe_add, Pi.single_eq_of_ne h]
-#align mv_polynomial.degree_of_mul_X_ne MvPolynomial.degree_of_mul_X_ne
+#align mv_polynomial.degree_of_mul_X_ne MvPolynomial.degreeOf_mul_x_ne
 
 -- TODO in the following we have equality iff f ≠ 0
-theorem degree_of_mul_X_eq (j : σ) (f : MvPolynomial σ R) :
+theorem degreeOf_mul_x_eq (j : σ) (f : MvPolynomial σ R) :
     degreeOf j (f * x j) ≤ degreeOf j f + 1 :=
   by
   repeat' rw [degree_of]
@@ -543,12 +543,12 @@ theorem degree_of_mul_X_eq (j : σ) (f : MvPolynomial σ R) :
   simp only [Multiset.count_add, add_le_add_iff_left]
   convert Multiset.count_le_of_le j (degrees_X' j)
   rw [Multiset.count_singleton_self]
-#align mv_polynomial.degree_of_mul_X_eq MvPolynomial.degree_of_mul_X_eq
+#align mv_polynomial.degree_of_mul_X_eq MvPolynomial.degreeOf_mul_x_eq
 
-theorem degree_of_rename_of_injective {p : MvPolynomial σ R} {f : σ → τ} (h : Function.Injective f)
+theorem degreeOf_rename_of_injective {p : MvPolynomial σ R} {f : σ → τ} (h : Function.Injective f)
     (i : σ) : degreeOf (f i) (rename f p) = degreeOf i p := by
   simp only [degree_of, degrees_rename_of_injective h, Multiset.count_map_eq_count' f p.degrees h]
-#align mv_polynomial.degree_of_rename_of_injective MvPolynomial.degree_of_rename_of_injective
+#align mv_polynomial.degree_of_rename_of_injective MvPolynomial.degreeOf_rename_of_injective
 
 end DegreeOf
 
@@ -562,49 +562,49 @@ def totalDegree (p : MvPolynomial σ R) : ℕ :=
   p.support.sup fun s => s.Sum fun n e => e
 #align mv_polynomial.total_degree MvPolynomial.totalDegree
 
-theorem total_degree_eq (p : MvPolynomial σ R) :
+theorem totalDegree_eq (p : MvPolynomial σ R) :
     p.totalDegree = p.support.sup fun m => m.toMultiset.card :=
   by
   rw [total_degree]
   congr ; funext m
-  exact (Finsupp.card_to_multiset _).symm
-#align mv_polynomial.total_degree_eq MvPolynomial.total_degree_eq
+  exact (Finsupp.card_toMultiset _).symm
+#align mv_polynomial.total_degree_eq MvPolynomial.totalDegree_eq
 
-theorem total_degree_le_degrees_card (p : MvPolynomial σ R) : p.totalDegree ≤ p.degrees.card :=
+theorem totalDegree_le_degrees_card (p : MvPolynomial σ R) : p.totalDegree ≤ p.degrees.card :=
   by
   rw [total_degree_eq]
   exact Finset.sup_le fun s hs => Multiset.card_le_of_le <| Finset.le_sup hs
-#align mv_polynomial.total_degree_le_degrees_card MvPolynomial.total_degree_le_degrees_card
+#align mv_polynomial.total_degree_le_degrees_card MvPolynomial.totalDegree_le_degrees_card
 
 @[simp]
-theorem total_degree_C (a : R) : (c a : MvPolynomial σ R).totalDegree = 0 :=
+theorem totalDegree_c (a : R) : (c a : MvPolynomial σ R).totalDegree = 0 :=
   Nat.eq_zero_of_le_zero <|
     Finset.sup_le fun n hn => by
       have := Finsupp.support_single_subset hn
       rw [Finset.mem_singleton] at this
       subst this
       exact le_rfl
-#align mv_polynomial.total_degree_C MvPolynomial.total_degree_C
+#align mv_polynomial.total_degree_C MvPolynomial.totalDegree_c
 
 @[simp]
-theorem total_degree_zero : (0 : MvPolynomial σ R).totalDegree = 0 := by
+theorem totalDegree_zero : (0 : MvPolynomial σ R).totalDegree = 0 := by
   rw [← C_0] <;> exact total_degree_C (0 : R)
-#align mv_polynomial.total_degree_zero MvPolynomial.total_degree_zero
+#align mv_polynomial.total_degree_zero MvPolynomial.totalDegree_zero
 
 @[simp]
-theorem total_degree_one : (1 : MvPolynomial σ R).totalDegree = 0 :=
-  total_degree_C (1 : R)
-#align mv_polynomial.total_degree_one MvPolynomial.total_degree_one
+theorem totalDegree_one : (1 : MvPolynomial σ R).totalDegree = 0 :=
+  totalDegree_c (1 : R)
+#align mv_polynomial.total_degree_one MvPolynomial.totalDegree_one
 
 @[simp]
-theorem total_degree_X {R} [CommSemiring R] [Nontrivial R] (s : σ) :
+theorem totalDegree_x {R} [CommSemiring R] [Nontrivial R] (s : σ) :
     (x s : MvPolynomial σ R).totalDegree = 1 :=
   by
   rw [total_degree, support_X]
   simp only [Finset.sup, sum_single_index, Finset.fold_singleton, sup_bot_eq]
-#align mv_polynomial.total_degree_X MvPolynomial.total_degree_X
+#align mv_polynomial.total_degree_X MvPolynomial.totalDegree_x
 
-theorem total_degree_add (a b : MvPolynomial σ R) :
+theorem totalDegree_add (a b : MvPolynomial σ R) :
     (a + b).totalDegree ≤ max a.totalDegree b.totalDegree :=
   Finset.sup_le fun n hn => by
     have := Finsupp.support_add hn
@@ -612,9 +612,9 @@ theorem total_degree_add (a b : MvPolynomial σ R) :
     cases this
     · exact le_max_of_le_left (Finset.le_sup this)
     · exact le_max_of_le_right (Finset.le_sup this)
-#align mv_polynomial.total_degree_add MvPolynomial.total_degree_add
+#align mv_polynomial.total_degree_add MvPolynomial.totalDegree_add
 
-theorem total_degree_add_eq_left_of_total_degree_lt {p q : MvPolynomial σ R}
+theorem totalDegree_add_eq_left_of_totalDegree_lt {p q : MvPolynomial σ R}
     (h : q.totalDegree < p.totalDegree) : (p + q).totalDegree = p.totalDegree := by
   classical
     apply le_antisymm
@@ -636,14 +636,14 @@ theorem total_degree_add_eq_left_of_total_degree_lt {p q : MvPolynomial σ R}
       exact ⟨hb₁, hb⟩
     rw [total_degree_eq, hb₂, total_degree_eq]
     exact Finset.le_sup hbb
-#align mv_polynomial.total_degree_add_eq_left_of_total_degree_lt MvPolynomial.total_degree_add_eq_left_of_total_degree_lt
+#align mv_polynomial.total_degree_add_eq_left_of_total_degree_lt MvPolynomial.totalDegree_add_eq_left_of_totalDegree_lt
 
-theorem total_degree_add_eq_right_of_total_degree_lt {p q : MvPolynomial σ R}
+theorem totalDegree_add_eq_right_of_totalDegree_lt {p q : MvPolynomial σ R}
     (h : q.totalDegree < p.totalDegree) : (q + p).totalDegree = p.totalDegree := by
   rw [add_comm, total_degree_add_eq_left_of_total_degree_lt h]
-#align mv_polynomial.total_degree_add_eq_right_of_total_degree_lt MvPolynomial.total_degree_add_eq_right_of_total_degree_lt
+#align mv_polynomial.total_degree_add_eq_right_of_total_degree_lt MvPolynomial.totalDegree_add_eq_right_of_totalDegree_lt
 
-theorem total_degree_mul (a b : MvPolynomial σ R) :
+theorem totalDegree_mul (a b : MvPolynomial σ R) :
     (a * b).totalDegree ≤ a.totalDegree + b.totalDegree :=
   Finset.sup_le fun n hn => by
     have := AddMonoidAlgebra.support_mul a b hn
@@ -655,14 +655,14 @@ theorem total_degree_mul (a b : MvPolynomial σ R) :
       rfl
     · intro a b₁ b₂
       rfl
-#align mv_polynomial.total_degree_mul MvPolynomial.total_degree_mul
+#align mv_polynomial.total_degree_mul MvPolynomial.totalDegree_mul
 
-theorem total_degree_smul_le [CommSemiring S] [DistribMulAction R S] (a : R)
-    (f : MvPolynomial σ S) : (a • f).totalDegree ≤ f.totalDegree :=
+theorem totalDegree_smul_le [CommSemiring S] [DistribMulAction R S] (a : R) (f : MvPolynomial σ S) :
+    (a • f).totalDegree ≤ f.totalDegree :=
   Finset.sup_mono support_smul
-#align mv_polynomial.total_degree_smul_le MvPolynomial.total_degree_smul_le
+#align mv_polynomial.total_degree_smul_le MvPolynomial.totalDegree_smul_le
 
-theorem total_degree_pow (a : MvPolynomial σ R) (n : ℕ) : (a ^ n).totalDegree ≤ n * a.totalDegree :=
+theorem totalDegree_pow (a : MvPolynomial σ R) (n : ℕ) : (a ^ n).totalDegree ≤ n * a.totalDegree :=
   by
   induction' n with n ih
   · simp only [Nat.zero_eq, zero_mul, pow_zero, total_degree_one]
@@ -672,52 +672,52 @@ theorem total_degree_pow (a : MvPolynomial σ R) (n : ℕ) : (a ^ n).totalDegree
     _ ≤ a.total_degree + n * a.total_degree := add_le_add_left ih _
     _ = (n + 1) * a.total_degree := by rw [add_mul, one_mul, add_comm]
     
-#align mv_polynomial.total_degree_pow MvPolynomial.total_degree_pow
+#align mv_polynomial.total_degree_pow MvPolynomial.totalDegree_pow
 
 @[simp]
-theorem total_degree_monomial (s : σ →₀ ℕ) {c : R} (hc : c ≠ 0) :
+theorem totalDegree_monomial (s : σ →₀ ℕ) {c : R} (hc : c ≠ 0) :
     (monomial s c : MvPolynomial σ R).totalDegree = s.Sum fun _ e => e := by
   simp [total_degree, support_monomial, if_neg hc]
-#align mv_polynomial.total_degree_monomial MvPolynomial.total_degree_monomial
+#align mv_polynomial.total_degree_monomial MvPolynomial.totalDegree_monomial
 
 @[simp]
-theorem total_degree_X_pow [Nontrivial R] (s : σ) (n : ℕ) :
-    (x s ^ n : MvPolynomial σ R).totalDegree = n := by simp [X_pow_eq_monomial, one_ne_zero]
-#align mv_polynomial.total_degree_X_pow MvPolynomial.total_degree_X_pow
+theorem totalDegree_x_pow [Nontrivial R] (s : σ) (n : ℕ) :
+    (x s ^ n : MvPolynomial σ R).totalDegree = n := by simp [X_pow_eq_monomial, one_neZero]
+#align mv_polynomial.total_degree_X_pow MvPolynomial.totalDegree_x_pow
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem total_degree_list_prod :
+theorem totalDegree_list_prod :
     ∀ s : List (MvPolynomial σ R), s.Prod.totalDegree ≤ (s.map MvPolynomial.totalDegree).Sum
   | [] => by rw [@List.prod_nil (MvPolynomial σ R) _, total_degree_one] <;> rfl
   | p::ps => by
     rw [@List.prod_cons (MvPolynomial σ R) _, List.map, List.sum_cons]
     exact le_trans (total_degree_mul _ _) (add_le_add_left (total_degree_list_prod ps) _)
-#align mv_polynomial.total_degree_list_prod MvPolynomial.total_degree_list_prod
+#align mv_polynomial.total_degree_list_prod MvPolynomial.totalDegree_list_prod
 
-theorem total_degree_multiset_prod (s : Multiset (MvPolynomial σ R)) :
+theorem totalDegree_multiset_prod (s : Multiset (MvPolynomial σ R)) :
     s.Prod.totalDegree ≤ (s.map MvPolynomial.totalDegree).Sum :=
   by
   refine' Quotient.inductionOn s fun l => _
   rw [Multiset.quot_mk_to_coe, Multiset.coe_prod, Multiset.coe_map, Multiset.coe_sum]
   exact total_degree_list_prod l
-#align mv_polynomial.total_degree_multiset_prod MvPolynomial.total_degree_multiset_prod
+#align mv_polynomial.total_degree_multiset_prod MvPolynomial.totalDegree_multiset_prod
 
-theorem total_degree_finset_prod {ι : Type _} (s : Finset ι) (f : ι → MvPolynomial σ R) :
+theorem totalDegree_finset_prod {ι : Type _} (s : Finset ι) (f : ι → MvPolynomial σ R) :
     (s.Prod f).totalDegree ≤ ∑ i in s, (f i).totalDegree :=
   by
   refine' le_trans (total_degree_multiset_prod _) _
   rw [Multiset.map_map]
   rfl
-#align mv_polynomial.total_degree_finset_prod MvPolynomial.total_degree_finset_prod
+#align mv_polynomial.total_degree_finset_prod MvPolynomial.totalDegree_finset_prod
 
-theorem total_degree_finset_sum {ι : Type _} (s : Finset ι) (f : ι → MvPolynomial σ R) :
+theorem totalDegree_finset_sum {ι : Type _} (s : Finset ι) (f : ι → MvPolynomial σ R) :
     (s.Sum f).totalDegree ≤ Finset.sup s fun i => (f i).totalDegree :=
   by
   induction' s using Finset.cons_induction with a s has hind
   · exact zero_le _
   · rw [Finset.sum_cons, Finset.sup_cons, sup_eq_max]
-    exact (MvPolynomial.total_degree_add _ _).trans (max_le_max le_rfl hind)
-#align mv_polynomial.total_degree_finset_sum MvPolynomial.total_degree_finset_sum
+    exact (MvPolynomial.totalDegree_add _ _).trans (max_le_max le_rfl hind)
+#align mv_polynomial.total_degree_finset_sum MvPolynomial.totalDegree_finset_sum
 
 theorem exists_degree_lt [Fintype σ] (f : MvPolynomial σ R) (n : ℕ)
     (h : f.totalDegree < n * Fintype.card σ) {d : σ →₀ ℕ} (hd : d ∈ f.support) : ∃ i, d i < n :=
@@ -735,7 +735,7 @@ theorem exists_degree_lt [Fintype σ] (f : MvPolynomial σ R) (n : ℕ)
     
 #align mv_polynomial.exists_degree_lt MvPolynomial.exists_degree_lt
 
-theorem coeff_eq_zero_of_total_degree_lt {f : MvPolynomial σ R} {d : σ →₀ ℕ}
+theorem coeff_eq_zero_of_totalDegree_lt {f : MvPolynomial σ R} {d : σ →₀ ℕ}
     (h : f.totalDegree < ∑ i in d.support, d i) : coeff d f = 0 := by
   classical
     rw [total_degree, Finset.sup_lt_iff] at h
@@ -744,21 +744,21 @@ theorem coeff_eq_zero_of_total_degree_lt {f : MvPolynomial σ R} {d : σ →₀ 
       refine' not_not.mp (mt h _)
       exact lt_irrefl _
     · exact lt_of_le_of_lt (Nat.zero_le _) h
-#align mv_polynomial.coeff_eq_zero_of_total_degree_lt MvPolynomial.coeff_eq_zero_of_total_degree_lt
+#align mv_polynomial.coeff_eq_zero_of_total_degree_lt MvPolynomial.coeff_eq_zero_of_totalDegree_lt
 
-theorem total_degree_rename_le (f : σ → τ) (p : MvPolynomial σ R) :
+theorem totalDegree_rename_le (f : σ → τ) (p : MvPolynomial σ R) :
     (rename f p).totalDegree ≤ p.totalDegree :=
   Finset.sup_le fun b => by
     intro h
     rw [rename_eq] at h
-    have h' := Finsupp.map_domain_support h
+    have h' := Finsupp.mapDomain_support h
     rw [Finset.mem_image] at h'
     rcases h' with ⟨s, hs, rfl⟩
-    rw [Finsupp.sum_map_domain_index]
+    rw [Finsupp.sum_mapDomain_index]
     exact le_trans le_rfl (Finset.le_sup hs)
     exact fun _ => rfl
     exact fun _ _ _ => rfl
-#align mv_polynomial.total_degree_rename_le MvPolynomial.total_degree_rename_le
+#align mv_polynomial.total_degree_rename_le MvPolynomial.totalDegree_rename_le
 
 end TotalDegree
 
@@ -769,7 +769,7 @@ section EvalVars
 
 variable [CommSemiring S]
 
-theorem eval₂_hom_eq_constant_coeff_of_vars (f : R →+* S) {g : σ → S} {p : MvPolynomial σ R}
+theorem eval₂Hom_eq_constantCoeff_of_vars (f : R →+* S) {g : σ → S} {p : MvPolynomial σ R}
     (hp : ∀ i ∈ p.vars, g i = 0) : eval₂Hom f g p = f (constantCoeff p) :=
   by
   conv_lhs => rw [p.as_sum]
@@ -797,14 +797,14 @@ theorem eval₂_hom_eq_constant_coeff_of_vars (f : R →+* S) {g : σ → S} {p 
   · rw [constant_coeff_eq, coeff, ← Ne.def, ← Finsupp.mem_support_iff] at h0
     intro
     contradiction
-#align mv_polynomial.eval₂_hom_eq_constant_coeff_of_vars MvPolynomial.eval₂_hom_eq_constant_coeff_of_vars
+#align mv_polynomial.eval₂_hom_eq_constant_coeff_of_vars MvPolynomial.eval₂Hom_eq_constantCoeff_of_vars
 
-theorem aeval_eq_constant_coeff_of_vars [Algebra R S] {g : σ → S} {p : MvPolynomial σ R}
+theorem aeval_eq_constantCoeff_of_vars [Algebra R S] {g : σ → S} {p : MvPolynomial σ R}
     (hp : ∀ i ∈ p.vars, g i = 0) : aeval g p = algebraMap _ _ (constantCoeff p) :=
-  eval₂_hom_eq_constant_coeff_of_vars _ hp
-#align mv_polynomial.aeval_eq_constant_coeff_of_vars MvPolynomial.aeval_eq_constant_coeff_of_vars
+  eval₂Hom_eq_constantCoeff_of_vars _ hp
+#align mv_polynomial.aeval_eq_constant_coeff_of_vars MvPolynomial.aeval_eq_constantCoeff_of_vars
 
-theorem eval₂_hom_congr' {f₁ f₂ : R →+* S} {g₁ g₂ : σ → S} {p₁ p₂ : MvPolynomial σ R} :
+theorem eval₂Hom_congr' {f₁ f₂ : R →+* S} {g₁ g₂ : σ → S} {p₁ p₂ : MvPolynomial σ R} :
     f₁ = f₂ →
       (∀ i, i ∈ p₁.vars → i ∈ p₂.vars → g₁ i = g₂ i) →
         p₁ = p₂ → eval₂Hom f₁ g₁ p₁ = eval₂Hom f₂ g₂ p₂ :=
@@ -823,7 +823,7 @@ theorem eval₂_hom_congr' {f₁ f₂ : R →+* S} {g₁ g₂ : σ → S} {p₁ 
     rw [mem_vars]
     exact ⟨d, hd, hi⟩
   rw [h i this this]
-#align mv_polynomial.eval₂_hom_congr' MvPolynomial.eval₂_hom_congr'
+#align mv_polynomial.eval₂_hom_congr' MvPolynomial.eval₂Hom_congr'
 
 /-- If `f₁` and `f₂` are ring homs out of the polynomial ring and `p₁` and `p₂` are polynomials,
   then `f₁ p₁ = f₂ p₂` if `p₁ = p₂` and `f₁` and `f₂` are equal on `R` and on the variables
@@ -833,7 +833,7 @@ theorem hom_congr_vars {f₁ f₂ : MvPolynomial σ R →+* S} {p₁ p₂ : MvPo
     (hp : p₁ = p₂) : f₁ p₁ = f₂ p₂ :=
   calc
     f₁ p₁ = eval₂Hom (f₁.comp c) (f₁ ∘ X) p₁ := RingHom.congr_fun (by ext <;> simp) _
-    _ = eval₂Hom (f₂.comp c) (f₂ ∘ X) p₂ := eval₂_hom_congr' hC hv hp
+    _ = eval₂Hom (f₂.comp c) (f₂ ∘ X) p₂ := eval₂Hom_congr' hC hv hp
     _ = f₂ p₂ := RingHom.congr_fun (by ext <;> simp) _
     
 #align mv_polynomial.hom_congr_vars MvPolynomial.hom_congr_vars

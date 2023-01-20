@@ -175,17 +175,16 @@ def mkIso {M N : ActionCat V G} (f : M.V ≅ N.V) (comm : ∀ g : G, M.ρ g ≫ 
         simp [w] }
 #align Action.mk_iso ActionCat.mkIso
 
-instance (priority := 100) is_iso_of_hom_is_iso {M N : ActionCat V G} (f : M ⟶ N) [IsIso f.Hom] :
+instance (priority := 100) isIso_of_hom_isIso {M N : ActionCat V G} (f : M ⟶ N) [IsIso f.Hom] :
     IsIso f := by
   convert is_iso.of_iso (mk_iso (as_iso f.hom) f.comm)
   ext
   rfl
-#align Action.is_iso_of_hom_is_iso ActionCat.is_iso_of_hom_is_iso
+#align Action.is_iso_of_hom_is_iso ActionCat.isIso_of_hom_isIso
 
-instance is_iso_hom_mk {M N : ActionCat V G} (f : M.V ⟶ N.V) [IsIso f] (w) :
-    @IsIso _ _ M N ⟨f, w⟩ :=
+instance isIso_hom_mk {M N : ActionCat V G} (f : M.V ⟶ N.V) [IsIso f] (w) : @IsIso _ _ M N ⟨f, w⟩ :=
   IsIso.of_iso (mkIso (asIso f) w)
-#align Action.is_iso_hom_mk ActionCat.is_iso_hom_mk
+#align Action.is_iso_hom_mk ActionCat.isIso_hom_mk
 
 namespace FunctorCategoryEquivalence
 
@@ -331,16 +330,16 @@ instance : HasZeroMorphisms (ActionCat V G)
     ext1
     simp
 
-instance forget_preserves_zero_morphisms : Functor.PreservesZeroMorphisms (forget V G) where
-#align Action.forget_preserves_zero_morphisms ActionCat.forget_preserves_zero_morphisms
+instance forget_preservesZeroMorphisms : Functor.PreservesZeroMorphisms (forget V G) where
+#align Action.forget_preserves_zero_morphisms ActionCat.forget_preservesZeroMorphisms
 
-instance forget₂_preserves_zero_morphisms [ConcreteCategory V] :
+instance forget₂_preservesZeroMorphisms [ConcreteCategory V] :
     Functor.PreservesZeroMorphisms (forget₂ (ActionCat V G) V) where
-#align Action.forget₂_preserves_zero_morphisms ActionCat.forget₂_preserves_zero_morphisms
+#align Action.forget₂_preserves_zero_morphisms ActionCat.forget₂_preservesZeroMorphisms
 
-instance functor_category_equivalence_preserves_zero_morphisms :
+instance functorCategoryEquivalence_preservesZeroMorphisms :
     Functor.PreservesZeroMorphisms (functorCategoryEquivalence V G).Functor where
-#align Action.functor_category_equivalence_preserves_zero_morphisms ActionCat.functor_category_equivalence_preserves_zero_morphisms
+#align Action.functor_category_equivalence_preserves_zero_morphisms ActionCat.functorCategoryEquivalence_preservesZeroMorphisms
 
 end HasZeroMorphisms
 
@@ -389,9 +388,9 @@ instance forget_additive : Functor.Additive (forget V G) where
 instance forget₂_additive [ConcreteCategory V] : Functor.Additive (forget₂ (ActionCat V G) V) where
 #align Action.forget₂_additive ActionCat.forget₂_additive
 
-instance functor_category_equivalence_additive :
+instance functorCategoryEquivalence_additive :
     Functor.Additive (functorCategoryEquivalence V G).Functor where
-#align Action.functor_category_equivalence_additive ActionCat.functor_category_equivalence_additive
+#align Action.functor_category_equivalence_additive ActionCat.functorCategoryEquivalence_additive
 
 @[simp]
 theorem zero_hom {X Y : ActionCat V G} : (0 : X ⟶ Y).Hom = 0 :=
@@ -494,21 +493,21 @@ instance : MonoidalCategory (ActionCat V G) :=
   Monoidal.transport (ActionCat.functorCategoryEquivalence _ _).symm
 
 @[simp]
-theorem tensor_unit_V : (𝟙_ (ActionCat V G)).V = 𝟙_ V :=
+theorem tensorUnit_v : (𝟙_ (ActionCat V G)).V = 𝟙_ V :=
   rfl
-#align Action.tensor_unit_V ActionCat.tensor_unit_V
+#align Action.tensor_unit_V ActionCat.tensorUnit_v
 
 @[simp]
-theorem tensor_unit_rho {g : G} : (𝟙_ (ActionCat V G)).ρ g = 𝟙 (𝟙_ V) :=
+theorem tensorUnit_rho {g : G} : (𝟙_ (ActionCat V G)).ρ g = 𝟙 (𝟙_ V) :=
   rfl
-#align Action.tensor_unit_rho ActionCat.tensor_unit_rho
+#align Action.tensor_unit_rho ActionCat.tensorUnit_rho
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem tensor_V {X Y : ActionCat V G} : (X ⊗ Y).V = X.V ⊗ Y.V :=
+theorem tensor_v {X Y : ActionCat V G} : (X ⊗ Y).V = X.V ⊗ Y.V :=
   rfl
-#align Action.tensor_V ActionCat.tensor_V
+#align Action.tensor_V ActionCat.tensor_v
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -520,10 +519,9 @@ theorem tensor_rho {X Y : ActionCat V G} {g : G} : (X ⊗ Y).ρ g = X.ρ g ⊗ Y
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem tensor_hom {W X Y Z : ActionCat V G} (f : W ⟶ X) (g : Y ⟶ Z) :
-    (f ⊗ g).Hom = f.Hom ⊗ g.Hom :=
+theorem tensorHom {W X Y Z : ActionCat V G} (f : W ⟶ X) (g : Y ⟶ Z) : (f ⊗ g).Hom = f.Hom ⊗ g.Hom :=
   rfl
-#align Action.tensor_hom ActionCat.tensor_hom
+#align Action.tensor_hom ActionCat.tensorHom
 
 @[simp]
 theorem associator_hom_hom {X Y Z : ActionCat V G} :
@@ -542,32 +540,32 @@ theorem associator_inv_hom {X Y Z : ActionCat V G} :
 #align Action.associator_inv_hom ActionCat.associator_inv_hom
 
 @[simp]
-theorem left_unitor_hom_hom {X : ActionCat V G} : Hom.hom (λ_ X).Hom = (λ_ X.V).Hom :=
+theorem leftUnitor_hom_hom {X : ActionCat V G} : Hom.hom (λ_ X).Hom = (λ_ X.V).Hom :=
   by
   dsimp [monoidal.transport_left_unitor]
   simp
-#align Action.left_unitor_hom_hom ActionCat.left_unitor_hom_hom
+#align Action.left_unitor_hom_hom ActionCat.leftUnitor_hom_hom
 
 @[simp]
-theorem left_unitor_inv_hom {X : ActionCat V G} : Hom.hom (λ_ X).inv = (λ_ X.V).inv :=
+theorem leftUnitor_inv_hom {X : ActionCat V G} : Hom.hom (λ_ X).inv = (λ_ X.V).inv :=
   by
   dsimp [monoidal.transport_left_unitor]
   simp
-#align Action.left_unitor_inv_hom ActionCat.left_unitor_inv_hom
+#align Action.left_unitor_inv_hom ActionCat.leftUnitor_inv_hom
 
 @[simp]
-theorem right_unitor_hom_hom {X : ActionCat V G} : Hom.hom (ρ_ X).Hom = (ρ_ X.V).Hom :=
+theorem rightUnitor_hom_hom {X : ActionCat V G} : Hom.hom (ρ_ X).Hom = (ρ_ X.V).Hom :=
   by
   dsimp [monoidal.transport_right_unitor]
   simp
-#align Action.right_unitor_hom_hom ActionCat.right_unitor_hom_hom
+#align Action.right_unitor_hom_hom ActionCat.rightUnitor_hom_hom
 
 @[simp]
-theorem right_unitor_inv_hom {X : ActionCat V G} : Hom.hom (ρ_ X).inv = (ρ_ X.V).inv :=
+theorem rightUnitor_inv_hom {X : ActionCat V G} : Hom.hom (ρ_ X).inv = (ρ_ X.V).inv :=
   by
   dsimp [monoidal.transport_right_unitor]
   simp
-#align Action.right_unitor_inv_hom ActionCat.right_unitor_inv_hom
+#align Action.right_unitor_inv_hom ActionCat.rightUnitor_inv_hom
 
 variable (V G)
 
@@ -579,11 +577,11 @@ def forgetMonoidal : MonoidalFunctor (ActionCat V G) V :=
     μ := fun X Y => 𝟙 _ }
 #align Action.forget_monoidal ActionCat.forgetMonoidal
 
-instance forget_monoidal_faithful : Faithful (forgetMonoidal V G).toFunctor :=
+instance forgetMonoidal_faithful : Faithful (forgetMonoidal V G).toFunctor :=
   by
   change faithful (forget V G)
   infer_instance
-#align Action.forget_monoidal_faithful ActionCat.forget_monoidal_faithful
+#align Action.forget_monoidal_faithful ActionCat.forgetMonoidal_faithful
 
 section
 
@@ -598,11 +596,11 @@ def forgetBraided : BraidedFunctor (ActionCat V G) V :=
   { forgetMonoidal _ _ with }
 #align Action.forget_braided ActionCat.forgetBraided
 
-instance forget_braided_faithful : Faithful (forgetBraided V G).toFunctor :=
+instance forgetBraided_faithful : Faithful (forgetBraided V G).toFunctor :=
   by
   change faithful (forget V G)
   infer_instance
-#align Action.forget_braided_faithful ActionCat.forget_braided_faithful
+#align Action.forget_braided_faithful ActionCat.forgetBraided_faithful
 
 end
 
@@ -671,34 +669,34 @@ variable {V H} (X : ActionCat V H)
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem right_dual_V [RightRigidCategory V] : Xᘁ.V = X.Vᘁ :=
+theorem rightDual_v [RightRigidCategory V] : Xᘁ.V = X.Vᘁ :=
   rfl
-#align Action.right_dual_V ActionCat.right_dual_V
+#align Action.right_dual_V ActionCat.rightDual_v
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem left_dual_V [LeftRigidCategory V] : (ᘁX).V = ᘁX.V :=
+theorem leftDual_v [LeftRigidCategory V] : (ᘁX).V = ᘁX.V :=
   rfl
-#align Action.left_dual_V ActionCat.left_dual_V
+#align Action.left_dual_V ActionCat.leftDual_v
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem right_dual_ρ [RightRigidCategory V] (h : H) : Xᘁ.ρ h = X.ρ (h⁻¹ : H)ᘁ :=
+theorem rightDual_ρ [RightRigidCategory V] (h : H) : Xᘁ.ρ h = X.ρ (h⁻¹ : H)ᘁ :=
   by
   rw [← single_obj.inv_as_inv]
   rfl
-#align Action.right_dual_ρ ActionCat.right_dual_ρ
+#align Action.right_dual_ρ ActionCat.rightDual_ρ
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem left_dual_ρ [LeftRigidCategory V] (h : H) : (ᘁX).ρ h = ᘁX.ρ (h⁻¹ : H) :=
+theorem leftDual_ρ [LeftRigidCategory V] (h : H) : (ᘁX).ρ h = ᘁX.ρ (h⁻¹ : H) :=
   by
   rw [← single_obj.inv_as_inv]
   rfl
-#align Action.left_dual_ρ ActionCat.left_dual_ρ
+#align Action.left_dual_ρ ActionCat.leftDual_ρ
 
 end Monoidal
 
@@ -770,10 +768,10 @@ def ofMulAction (G H : Type u) [Monoid G] [MulAction G H] : ActionCat (Type u) (
 #align Action.of_mul_action ActionCat.ofMulAction
 
 @[simp]
-theorem of_mul_action_apply {G H : Type u} [Monoid G] [MulAction G H] (g : G) (x : H) :
+theorem ofMulAction_apply {G H : Type u} [Monoid G] [MulAction G H] (g : G) (x : H) :
     (ofMulAction G H).ρ g x = (g • x : H) :=
   rfl
-#align Action.of_mul_action_apply ActionCat.of_mul_action_apply
+#align Action.of_mul_action_apply ActionCat.ofMulAction_apply
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[] -/
 /-- Given a family `F` of types with `G`-actions, this is the limit cone demonstrating that the
@@ -843,8 +841,8 @@ def mapAction (F : V ⥤ W) (G : MonCat.{u}) : ActionCat V G ⥤ ActionCat W G
 
 variable (F : V ⥤ W) (G : MonCat.{u}) [Preadditive V] [Preadditive W]
 
-instance map_Action_preadditive [F.Additive] : (F.mapAction G).Additive where
-#align category_theory.functor.map_Action_preadditive CategoryTheory.Functor.map_Action_preadditive
+instance mapAction_preadditive [F.Additive] : (F.mapAction G).Additive where
+#align category_theory.functor.map_Action_preadditive CategoryTheory.Functor.mapAction_preadditive
 
 variable {R : Type _} [Semiring R] [CategoryTheory.Linear R V] [CategoryTheory.Linear R W]
 

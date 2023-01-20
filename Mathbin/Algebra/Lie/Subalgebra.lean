@@ -269,9 +269,9 @@ def LieModuleHom.restrictLie (f : M →ₗ⁅R,L⁆ N) (L' : LieSubalgebra R L) 
 #align lie_module_hom.restrict_lie LieModuleHom.restrictLie
 
 @[simp]
-theorem LieModuleHom.coe_restrict_lie (f : M →ₗ⁅R,L⁆ N) : ⇑(f.restrictLie L') = f :=
+theorem LieModuleHom.coe_restrictLie (f : M →ₗ⁅R,L⁆ N) : ⇑(f.restrictLie L') = f :=
   rfl
-#align lie_module_hom.coe_restrict_lie LieModuleHom.coe_restrict_lie
+#align lie_module_hom.coe_restrict_lie LieModuleHom.coe_restrictLie
 
 end LieModule
 
@@ -280,7 +280,7 @@ def incl : L' →ₗ⁅R⁆ L :=
   { (L' : Submodule R L).Subtype with
     map_lie' := fun x y =>
       by
-      simp only [LinearMap.to_fun_eq_coe, Submodule.subtype_apply]
+      simp only [LinearMap.toFun_eq_coe, Submodule.subtype_apply]
       rfl }
 #align lie_subalgebra.incl LieSubalgebra.incl
 
@@ -293,7 +293,7 @@ theorem coe_incl : ⇑L'.incl = coe :=
 def incl' : L' →ₗ⁅R,L'⁆ L :=
   { (L' : Submodule R L).Subtype with
     map_lie' := fun x y => by
-      simp only [coe_bracket_of_module, LinearMap.to_fun_eq_coe, Submodule.subtype_apply,
+      simp only [coe_bracket_of_module, LinearMap.toFun_eq_coe, Submodule.subtype_apply,
         coe_bracket] }
 #align lie_subalgebra.incl' LieSubalgebra.incl'
 
@@ -347,17 +347,17 @@ def rangeRestrict : L →ₗ⁅R⁆ f.range :=
 #align lie_hom.range_restrict LieHom.rangeRestrict
 
 @[simp]
-theorem range_restrict_apply (x : L) : f.range_restrict x = ⟨f x, f.mem_range_self x⟩ :=
+theorem rangeRestrict_apply (x : L) : f.range_restrict x = ⟨f x, f.mem_range_self x⟩ :=
   rfl
-#align lie_hom.range_restrict_apply LieHom.range_restrict_apply
+#align lie_hom.range_restrict_apply LieHom.rangeRestrict_apply
 
-theorem surjective_range_restrict : Function.Surjective f.range_restrict :=
+theorem surjective_rangeRestrict : Function.Surjective f.range_restrict :=
   by
   rintro ⟨y, hy⟩
   erw [mem_range] at hy; obtain ⟨x, rfl⟩ := hy
   use x
   simp only [Subtype.mk_eq_mk, range_restrict_apply]
-#align lie_hom.surjective_range_restrict LieHom.surjective_range_restrict
+#align lie_hom.surjective_range_restrict LieHom.surjective_rangeRestrict
 
 /-- A Lie algebra is equivalent to its range under an injective Lie algebra morphism. -/
 noncomputable def equivRangeOfInjective (h : Function.Injective f) : L ≃ₗ⁅R⁆ f.range :=
@@ -368,14 +368,14 @@ noncomputable def equivRangeOfInjective (h : Function.Injective f) : L ≃ₗ⁅
 #align lie_hom.equiv_range_of_injective LieHom.equivRangeOfInjective
 
 @[simp]
-theorem equiv_range_of_injective_apply (h : Function.Injective f) (x : L) :
+theorem equivRangeOfInjective_apply (h : Function.Injective f) (x : L) :
     f.equivRangeOfInjective h x = ⟨f x, mem_range_self f x⟩ :=
   rfl
-#align lie_hom.equiv_range_of_injective_apply LieHom.equiv_range_of_injective_apply
+#align lie_hom.equiv_range_of_injective_apply LieHom.equivRangeOfInjective_apply
 
 end LieHom
 
-theorem Submodule.exists_lie_subalgebra_coe_eq_iff (p : Submodule R L) :
+theorem Submodule.exists_lieSubalgebra_coe_eq_iff (p : Submodule R L) :
     (∃ K : LieSubalgebra R L, ↑K = p) ↔ ∀ x y : L, x ∈ p → y ∈ p → ⁅x, y⁆ ∈ p :=
   by
   constructor
@@ -384,7 +384,7 @@ theorem Submodule.exists_lie_subalgebra_coe_eq_iff (p : Submodule R L) :
   · intro h
     use { p with lie_mem' := h }
     exact LieSubalgebra.coe_to_submodule_mk p _
-#align submodule.exists_lie_subalgebra_coe_eq_iff Submodule.exists_lie_subalgebra_coe_eq_iff
+#align submodule.exists_lie_subalgebra_coe_eq_iff Submodule.exists_lieSubalgebra_coe_eq_iff
 
 namespace LieSubalgebra
 
@@ -508,7 +508,7 @@ instance : InfSet (LieSubalgebra R L) :=
         "./././Mathport/Syntax/Translate/Expr.lean:369:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}" with
       lie_mem' := fun x y hx hy =>
         by
-        simp only [Submodule.mem_carrier, mem_Inter, Submodule.Inf_coe, mem_set_of_eq,
+        simp only [Submodule.mem_carrier, mem_Inter, Submodule.infₛ_coe, mem_set_of_eq,
           forall_apply_eq_imp_iff₂, exists_imp] at *
         intro K hK
         exact K.lie_mem (hx K hK) (hy K hK) }⟩
@@ -520,22 +520,22 @@ theorem inf_coe : (↑(K ⊓ K') : Set L) = K ∩ K' :=
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:369:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S} -/
 @[simp]
-theorem Inf_coe_to_submodule (S : Set (LieSubalgebra R L)) :
+theorem infₛ_coe_to_submodule (S : Set (LieSubalgebra R L)) :
     (↑(infₛ S) : Submodule R L) =
       infₛ
         "./././Mathport/Syntax/Translate/Expr.lean:369:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}" :=
   rfl
-#align lie_subalgebra.Inf_coe_to_submodule LieSubalgebra.Inf_coe_to_submodule
+#align lie_subalgebra.Inf_coe_to_submodule LieSubalgebra.infₛ_coe_to_submodule
 
 @[simp]
-theorem Inf_coe (S : Set (LieSubalgebra R L)) : (↑(infₛ S) : Set L) = ⋂ s ∈ S, (s : Set L) :=
+theorem infₛ_coe (S : Set (LieSubalgebra R L)) : (↑(infₛ S) : Set L) = ⋂ s ∈ S, (s : Set L) :=
   by
-  rw [← coe_to_submodule, Inf_coe_to_submodule, Submodule.Inf_coe]
+  rw [← coe_to_submodule, Inf_coe_to_submodule, Submodule.infₛ_coe]
   ext x
   simpa only [mem_Inter, mem_set_of_eq, forall_apply_eq_imp_iff₂, exists_imp]
-#align lie_subalgebra.Inf_coe LieSubalgebra.Inf_coe
+#align lie_subalgebra.Inf_coe LieSubalgebra.infₛ_coe
 
-theorem Inf_glb (S : Set (LieSubalgebra R L)) : IsGLB S (infₛ S) :=
+theorem infₛ_glb (S : Set (LieSubalgebra R L)) : IsGLB S (infₛ S) :=
   by
   have h : ∀ K K' : LieSubalgebra R L, (K : Set L) ≤ K' ↔ K ≤ K' :=
     by
@@ -544,14 +544,14 @@ theorem Inf_glb (S : Set (LieSubalgebra R L)) : IsGLB S (infₛ S) :=
   apply IsGLB.of_image h
   simp only [Inf_coe]
   exact isGLB_binfᵢ
-#align lie_subalgebra.Inf_glb LieSubalgebra.Inf_glb
+#align lie_subalgebra.Inf_glb LieSubalgebra.infₛ_glb
 
 /-- The set of Lie subalgebras of a Lie algebra form a complete lattice.
 
 We provide explicit values for the fields `bot`, `top`, `inf` to get more convenient definitions
 than we would otherwise obtain from `complete_lattice_of_Inf`. -/
 instance : CompleteLattice (LieSubalgebra R L) :=
-  { completeLatticeOfInf _ Inf_glb with
+  { completeLatticeOfInf _ infₛ_glb with
     bot := ⊥
     bot_le := fun N _ h => by
       rw [mem_bot] at h
@@ -616,15 +616,15 @@ theorem subsingleton_bot : Subsingleton ↥(⊥ : LieSubalgebra R L) :=
 
 variable (R L)
 
-theorem well_founded_of_noetherian [IsNoetherian R L] :
+theorem wellFounded_of_noetherian [IsNoetherian R L] :
     WellFounded ((· > ·) : LieSubalgebra R L → LieSubalgebra R L → Prop) :=
   let f :
     ((· > ·) : LieSubalgebra R L → LieSubalgebra R L → Prop) →r
       ((· > ·) : Submodule R L → Submodule R L → Prop) :=
     { toFun := coe
       map_rel' := fun N N' h => h }
-  RelHomClass.wellFounded f (is_noetherian_iff_well_founded.mp inferInstance)
-#align lie_subalgebra.well_founded_of_noetherian LieSubalgebra.well_founded_of_noetherian
+  RelHomClass.wellFounded f (isNoetherian_iff_wellFounded.mp inferInstance)
+#align lie_subalgebra.well_founded_of_noetherian LieSubalgebra.wellFounded_of_noetherian
 
 variable {R L K K' f}
 
@@ -639,17 +639,17 @@ def homOfLe : K →ₗ⁅R⁆ K' :=
 #align lie_subalgebra.hom_of_le LieSubalgebra.homOfLe
 
 @[simp]
-theorem coe_hom_of_le (x : K) : (homOfLe h x : L) = x :=
+theorem coe_homOfLe (x : K) : (homOfLe h x : L) = x :=
   rfl
-#align lie_subalgebra.coe_hom_of_le LieSubalgebra.coe_hom_of_le
+#align lie_subalgebra.coe_hom_of_le LieSubalgebra.coe_homOfLe
 
-theorem hom_of_le_apply (x : K) : homOfLe h x = ⟨x.1, h x.2⟩ :=
+theorem homOfLe_apply (x : K) : homOfLe h x = ⟨x.1, h x.2⟩ :=
   rfl
-#align lie_subalgebra.hom_of_le_apply LieSubalgebra.hom_of_le_apply
+#align lie_subalgebra.hom_of_le_apply LieSubalgebra.homOfLe_apply
 
-theorem hom_of_le_injective : Function.Injective (homOfLe h) := fun x y => by
+theorem homOfLe_injective : Function.Injective (homOfLe h) := fun x y => by
   simp only [hom_of_le_apply, imp_self, Subtype.mk_eq_mk, SetLike.coe_eq_coe, Subtype.val_eq_coe]
-#align lie_subalgebra.hom_of_le_injective LieSubalgebra.hom_of_le_injective
+#align lie_subalgebra.hom_of_le_injective LieSubalgebra.homOfLe_injective
 
 /-- Given two nested Lie subalgebras `K ⊆ K'`, we can view `K` as a Lie subalgebra of `K'`,
 regarded as Lie algebra in its own right. -/
@@ -658,7 +658,7 @@ def ofLe : LieSubalgebra R K' :=
 #align lie_subalgebra.of_le LieSubalgebra.ofLe
 
 @[simp]
-theorem mem_of_le (x : K') : x ∈ ofLe h ↔ (x : L) ∈ K :=
+theorem mem_ofLe (x : K') : x ∈ ofLe h ↔ (x : L) ∈ K :=
   by
   simp only [of_le, hom_of_le_apply, LieHom.mem_range]
   constructor
@@ -667,30 +667,30 @@ theorem mem_of_le (x : K') : x ∈ ofLe h ↔ (x : L) ∈ K :=
   · intro h
     use ⟨(x : L), h⟩
     simp
-#align lie_subalgebra.mem_of_le LieSubalgebra.mem_of_le
+#align lie_subalgebra.mem_of_le LieSubalgebra.mem_ofLe
 
-theorem of_le_eq_comap_incl : ofLe h = K.comap K'.incl :=
+theorem ofLe_eq_comap_incl : ofLe h = K.comap K'.incl :=
   by
   ext
   rw [mem_of_le]
   rfl
-#align lie_subalgebra.of_le_eq_comap_incl LieSubalgebra.of_le_eq_comap_incl
+#align lie_subalgebra.of_le_eq_comap_incl LieSubalgebra.ofLe_eq_comap_incl
 
 @[simp]
-theorem coe_of_le : (ofLe h : Submodule R K') = (Submodule.ofLe h).range :=
+theorem coe_ofLe : (ofLe h : Submodule R K') = (Submodule.ofLe h).range :=
   rfl
-#align lie_subalgebra.coe_of_le LieSubalgebra.coe_of_le
+#align lie_subalgebra.coe_of_le LieSubalgebra.coe_ofLe
 
 /-- Given nested Lie subalgebras `K ⊆ K'`, there is a natural equivalence from `K` to its image in
 `K'`.  -/
 noncomputable def equivOfLe : K ≃ₗ⁅R⁆ ofLe h :=
-  (homOfLe h).equivRangeOfInjective (hom_of_le_injective h)
+  (homOfLe h).equivRangeOfInjective (homOfLe_injective h)
 #align lie_subalgebra.equiv_of_le LieSubalgebra.equivOfLe
 
 @[simp]
-theorem equiv_of_le_apply (x : K) : equivOfLe h x = ⟨homOfLe h x, (homOfLe h).mem_range_self x⟩ :=
+theorem equivOfLe_apply (x : K) : equivOfLe h x = ⟨homOfLe h x, (homOfLe h).mem_range_self x⟩ :=
   rfl
-#align lie_subalgebra.equiv_of_le_apply LieSubalgebra.equiv_of_le_apply
+#align lie_subalgebra.equiv_of_le_apply LieSubalgebra.equivOfLe_apply
 
 end NestedSubalgebras
 
@@ -715,47 +715,47 @@ def lieSpan : LieSubalgebra R L :=
 
 variable {R L s}
 
-theorem mem_lie_span {x : L} : x ∈ lieSpan R L s ↔ ∀ K : LieSubalgebra R L, s ⊆ K → x ∈ K :=
+theorem mem_lieSpan {x : L} : x ∈ lieSpan R L s ↔ ∀ K : LieSubalgebra R L, s ⊆ K → x ∈ K :=
   by
   change x ∈ (lie_span R L s : Set L) ↔ _
   erw [Inf_coe]
   exact Set.mem_interᵢ₂
-#align lie_subalgebra.mem_lie_span LieSubalgebra.mem_lie_span
+#align lie_subalgebra.mem_lie_span LieSubalgebra.mem_lieSpan
 
-theorem subset_lie_span : s ⊆ lieSpan R L s :=
+theorem subset_lieSpan : s ⊆ lieSpan R L s :=
   by
   intro m hm
   erw [mem_lie_span]
   intro K hK
   exact hK hm
-#align lie_subalgebra.subset_lie_span LieSubalgebra.subset_lie_span
+#align lie_subalgebra.subset_lie_span LieSubalgebra.subset_lieSpan
 
-theorem submodule_span_le_lie_span : Submodule.span R s ≤ lieSpan R L s :=
+theorem submodule_span_le_lieSpan : Submodule.span R s ≤ lieSpan R L s :=
   by
   rw [Submodule.span_le]
   apply subset_lie_span
-#align lie_subalgebra.submodule_span_le_lie_span LieSubalgebra.submodule_span_le_lie_span
+#align lie_subalgebra.submodule_span_le_lie_span LieSubalgebra.submodule_span_le_lieSpan
 
-theorem lie_span_le {K} : lieSpan R L s ≤ K ↔ s ⊆ K :=
+theorem lieSpan_le {K} : lieSpan R L s ≤ K ↔ s ⊆ K :=
   by
   constructor
   · exact Set.Subset.trans subset_lie_span
   · intro hs m hm
     rw [mem_lie_span] at hm
     exact hm _ hs
-#align lie_subalgebra.lie_span_le LieSubalgebra.lie_span_le
+#align lie_subalgebra.lie_span_le LieSubalgebra.lieSpan_le
 
-theorem lie_span_mono {t : Set L} (h : s ⊆ t) : lieSpan R L s ≤ lieSpan R L t :=
+theorem lieSpan_mono {t : Set L} (h : s ⊆ t) : lieSpan R L s ≤ lieSpan R L t :=
   by
   rw [lie_span_le]
   exact Set.Subset.trans h subset_lie_span
-#align lie_subalgebra.lie_span_mono LieSubalgebra.lie_span_mono
+#align lie_subalgebra.lie_span_mono LieSubalgebra.lieSpan_mono
 
-theorem lie_span_eq : lieSpan R L (K : Set L) = K :=
-  le_antisymm (lie_span_le.mpr rfl.Subset) subset_lie_span
-#align lie_subalgebra.lie_span_eq LieSubalgebra.lie_span_eq
+theorem lieSpan_eq : lieSpan R L (K : Set L) = K :=
+  le_antisymm (lieSpan_le.mpr rfl.Subset) subset_lieSpan
+#align lie_subalgebra.lie_span_eq LieSubalgebra.lieSpan_eq
 
-theorem coe_lie_span_submodule_eq_iff {p : Submodule R L} :
+theorem coe_lieSpan_submodule_eq_iff {p : Submodule R L} :
     (lieSpan R L (p : Set L) : Submodule R L) = p ↔ ∃ K : LieSubalgebra R L, ↑K = p :=
   by
   rw [p.exists_lie_subalgebra_coe_eq_iff]; constructor <;> intro h
@@ -763,7 +763,7 @@ theorem coe_lie_span_submodule_eq_iff {p : Submodule R L} :
     rw [← h, mem_coe_submodule]
     exact lie_mem _ (subset_lie_span hm)
   · rw [← coe_to_submodule_mk p h, coe_to_submodule, coe_to_submodule_eq_iff, lie_span_eq]
-#align lie_subalgebra.coe_lie_span_submodule_eq_iff LieSubalgebra.coe_lie_span_submodule_eq_iff
+#align lie_subalgebra.coe_lie_span_submodule_eq_iff LieSubalgebra.coe_lieSpan_submodule_eq_iff
 
 variable (R L)
 
@@ -771,8 +771,8 @@ variable (R L)
 protected def gi : GaloisInsertion (lieSpan R L : Set L → LieSubalgebra R L) coe
     where
   choice s _ := lieSpan R L s
-  gc s t := lie_span_le
-  le_l_u s := subset_lie_span
+  gc s t := lieSpan_le
+  le_l_u s := subset_lieSpan
   choice_eq s h := rfl
 #align lie_subalgebra.gi LieSubalgebra.gi
 
@@ -792,9 +792,9 @@ theorem span_union (s t : Set L) : lieSpan R L (s ∪ t) = lieSpan R L s ⊔ lie
   (LieSubalgebra.gi R L).gc.l_sup
 #align lie_subalgebra.span_union LieSubalgebra.span_union
 
-theorem span_Union {ι} (s : ι → Set L) : lieSpan R L (⋃ i, s i) = ⨆ i, lieSpan R L (s i) :=
+theorem span_unionᵢ {ι} (s : ι → Set L) : lieSpan R L (⋃ i, s i) = ⨆ i, lieSpan R L (s i) :=
   (LieSubalgebra.gi R L).gc.l_supr
-#align lie_subalgebra.span_Union LieSubalgebra.span_Union
+#align lie_subalgebra.span_Union LieSubalgebra.span_unionᵢ
 
 end LieSpan
 
@@ -810,17 +810,17 @@ variable [CommRing R] [LieRing L₁] [LieRing L₂] [LieAlgebra R L₁] [LieAlge
 
 /-- An injective Lie algebra morphism is an equivalence onto its range. -/
 noncomputable def ofInjective (f : L₁ →ₗ⁅R⁆ L₂) (h : Function.Injective f) : L₁ ≃ₗ⁅R⁆ f.range :=
-  { LinearEquiv.ofInjective (f : L₁ →ₗ[R] L₂) <| by rwa [LieHom.coe_to_linear_map] with
+  { LinearEquiv.ofInjective (f : L₁ →ₗ[R] L₂) <| by rwa [LieHom.coe_to_linearMap] with
     map_lie' := fun x y => by
       apply SetCoe.ext
       simpa }
 #align lie_equiv.of_injective LieEquiv.ofInjective
 
 @[simp]
-theorem of_injective_apply (f : L₁ →ₗ⁅R⁆ L₂) (h : Function.Injective f) (x : L₁) :
+theorem ofInjective_apply (f : L₁ →ₗ⁅R⁆ L₂) (h : Function.Injective f) (x : L₁) :
     ↑(ofInjective f h x) = f x :=
   rfl
-#align lie_equiv.of_injective_apply LieEquiv.of_injective_apply
+#align lie_equiv.of_injective_apply LieEquiv.ofInjective_apply
 
 variable (L₁' L₁'' : LieSubalgebra R L₁) (L₂' : LieSubalgebra R L₂)
 
@@ -838,10 +838,10 @@ def ofEq (h : (L₁' : Set L₁) = L₁'') : L₁' ≃ₗ⁅R⁆ L₁'' :=
 #align lie_equiv.of_eq LieEquiv.ofEq
 
 @[simp]
-theorem of_eq_apply (L L' : LieSubalgebra R L₁) (h : (L : Set L₁) = L') (x : L) :
+theorem ofEq_apply (L L' : LieSubalgebra R L₁) (h : (L : Set L₁) = L') (x : L) :
     (↑(ofEq L L' h x) : L₁) = x :=
   rfl
-#align lie_equiv.of_eq_apply LieEquiv.of_eq_apply
+#align lie_equiv.of_eq_apply LieEquiv.ofEq_apply
 
 variable (e : L₁ ≃ₗ⁅R⁆ L₂)
 
@@ -855,9 +855,9 @@ def lieSubalgebraMap : L₁'' ≃ₗ⁅R⁆ (L₁''.map e : LieSubalgebra R L₂
 #align lie_equiv.lie_subalgebra_map LieEquiv.lieSubalgebraMap
 
 @[simp]
-theorem lie_subalgebra_map_apply (x : L₁'') : ↑(e.lieSubalgebraMap _ x) = e x :=
+theorem lieSubalgebraMap_apply (x : L₁'') : ↑(e.lieSubalgebraMap _ x) = e x :=
   rfl
-#align lie_equiv.lie_subalgebra_map_apply LieEquiv.lie_subalgebra_map_apply
+#align lie_equiv.lie_subalgebra_map_apply LieEquiv.lieSubalgebraMap_apply
 
 /-- An equivalence of Lie algebras restricts to an equivalence from any Lie subalgebra onto its
 image. -/
@@ -873,15 +873,15 @@ def ofSubalgebras (h : L₁'.map ↑e = L₂') : L₁' ≃ₗ⁅R⁆ L₂' :=
 #align lie_equiv.of_subalgebras LieEquiv.ofSubalgebras
 
 @[simp]
-theorem of_subalgebras_apply (h : L₁'.map ↑e = L₂') (x : L₁') : ↑(e.ofSubalgebras _ _ h x) = e x :=
+theorem ofSubalgebras_apply (h : L₁'.map ↑e = L₂') (x : L₁') : ↑(e.ofSubalgebras _ _ h x) = e x :=
   rfl
-#align lie_equiv.of_subalgebras_apply LieEquiv.of_subalgebras_apply
+#align lie_equiv.of_subalgebras_apply LieEquiv.ofSubalgebras_apply
 
 @[simp]
-theorem of_subalgebras_symm_apply (h : L₁'.map ↑e = L₂') (x : L₂') :
+theorem ofSubalgebras_symm_apply (h : L₁'.map ↑e = L₂') (x : L₂') :
     ↑((e.ofSubalgebras _ _ h).symm x) = e.symm x :=
   rfl
-#align lie_equiv.of_subalgebras_symm_apply LieEquiv.of_subalgebras_symm_apply
+#align lie_equiv.of_subalgebras_symm_apply LieEquiv.ofSubalgebras_symm_apply
 
 end LieEquiv
 

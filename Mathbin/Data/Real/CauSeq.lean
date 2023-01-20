@@ -607,7 +607,7 @@ instance : AddGroupWithOne (CauSeq β abv) :=
     nat_cast_zero := congr_arg const Nat.cast_zero
     nat_cast_succ := fun n => congr_arg const (Nat.cast_succ n)
     intCast := fun n => const n
-    int_cast_of_nat := fun n => congr_arg const (Int.cast_of_nat n)
+    int_cast_of_nat := fun n => congr_arg const (Int.cast_ofNat n)
     int_cast_neg_succ_of_nat := fun n => congr_arg const (Int.cast_negSucc n) }
 
 instance : Pow (CauSeq β abv) ℕ :=
@@ -983,7 +983,7 @@ theorem one_not_equiv_zero : ¬const abv 1 ≈ const abv 0 := fun h =>
   have h2 : 0 ≤ abv 1 := IsAbsoluteValue.abv_nonneg _ _
   have : abv 1 = 0 := le_antisymm h1 h2
   have : (1 : β) = 0 := (IsAbsoluteValue.abv_eq_zero abv).1 this
-  absurd this one_ne_zero
+  absurd this one_neZero
 #align cau_seq.one_not_equiv_zero CauSeq.one_not_equiv_zero
 
 end IsDomain

@@ -35,10 +35,10 @@ def ZeroAtFilter [Zero β] [TopologicalSpace β] (l : Filter α) (f : α → β)
   Filter.Tendsto f l (𝓝 0)
 #align filter.zero_at_filter Filter.ZeroAtFilter
 
-theorem zero_zero_at_filter [Zero β] [TopologicalSpace β] (l : Filter α) :
+theorem zero_zeroAtFilter [Zero β] [TopologicalSpace β] (l : Filter α) :
     ZeroAtFilter l (0 : α → β) :=
   tendsto_const_nhds
-#align filter.zero_zero_at_filter Filter.zero_zero_at_filter
+#align filter.zero_zero_at_filter Filter.zero_zeroAtFilter
 
 theorem ZeroAtFilter.add [TopologicalSpace β] [AddZeroClass β] [HasContinuousAdd β] {l : Filter α}
     {f g : α → β} (hf : ZeroAtFilter l f) (hg : ZeroAtFilter l g) : ZeroAtFilter l (f + g) := by
@@ -60,7 +60,7 @@ def zeroAtFilterSubmodule [TopologicalSpace β] [Semiring β] [HasContinuousAdd 
     [HasContinuousMul β] (l : Filter α) : Submodule β (α → β)
     where
   carrier := ZeroAtFilter l
-  zero_mem' := zero_zero_at_filter l
+  zero_mem' := zero_zeroAtFilter l
   add_mem' a b ha hb := ha.add hb
   smul_mem' c f hf := hf.smul c
 #align filter.zero_at_filter_submodule Filter.zeroAtFilterSubmodule
@@ -72,7 +72,7 @@ def zeroAtFilterAddSubmonoid [TopologicalSpace β] [AddZeroClass β] [HasContinu
     where
   carrier := ZeroAtFilter l
   add_mem' a b ha hb := ha.add hb
-  zero_mem' := zero_zero_at_filter l
+  zero_mem' := zero_zeroAtFilter l
 #align filter.zero_at_filter_add_submonoid Filter.zeroAtFilterAddSubmonoid
 
 /-- If `l` is a filter on `α`, then a function `f: α → β` is `bounded_at_filter l`
@@ -81,17 +81,17 @@ def BoundedAtFilter [HasNorm β] (l : Filter α) (f : α → β) : Prop :=
   Asymptotics.IsO l f (1 : α → ℝ)
 #align filter.bounded_at_filter Filter.BoundedAtFilter
 
-theorem ZeroAtFilter.bounded_at_filter [NormedAddCommGroup β] {l : Filter α} {f : α → β}
+theorem ZeroAtFilter.boundedAtFilter [NormedAddCommGroup β] {l : Filter α} {f : α → β}
     (hf : ZeroAtFilter l f) : BoundedAtFilter l f :=
   by
-  rw [zero_at_filter, ← Asymptotics.is_o_const_iff (one_ne_zero' ℝ)] at hf
+  rw [zero_at_filter, ← Asymptotics.isO_const_iff (one_ne_zero' ℝ)] at hf
   exact hf.is_O
-#align filter.zero_at_filter.bounded_at_filter Filter.ZeroAtFilter.bounded_at_filter
+#align filter.zero_at_filter.bounded_at_filter Filter.ZeroAtFilter.boundedAtFilter
 
-theorem const_bounded_at_filter [NormedField β] (l : Filter α) (c : β) :
+theorem const_boundedAtFilter [NormedField β] (l : Filter α) (c : β) :
     BoundedAtFilter l (Function.const α c : α → β) :=
-  Asymptotics.is_O_const_const c one_ne_zero l
-#align filter.const_bounded_at_filter Filter.const_bounded_at_filter
+  Asymptotics.isO_const_const c one_neZero l
+#align filter.const_bounded_at_filter Filter.const_boundedAtFilter
 
 theorem BoundedAtFilter.add [NormedAddCommGroup β] {l : Filter α} {f g : α → β}
     (hf : BoundedAtFilter l f) (hg : BoundedAtFilter l g) : BoundedAtFilter l (f + g) := by
@@ -112,7 +112,7 @@ theorem BoundedAtFilter.mul [NormedField β] {l : Filter α} {f g : α → β} (
     (hg : BoundedAtFilter l g) : BoundedAtFilter l (f * g) :=
   by
   refine' (hf.mul hg).trans _
-  convert Asymptotics.is_O_refl _ l
+  convert Asymptotics.isO_refl _ l
   ext x
   simp
 #align filter.bounded_at_filter.mul Filter.BoundedAtFilter.mul
@@ -121,7 +121,7 @@ theorem BoundedAtFilter.mul [NormedField β] {l : Filter α} {f g : α → β} (
 def boundedFilterSubmodule [NormedField β] (l : Filter α) : Submodule β (α → β)
     where
   carrier := BoundedAtFilter l
-  zero_mem' := const_bounded_at_filter l 0
+  zero_mem' := const_boundedAtFilter l 0
   add_mem' f g hf hg := hf.add hg
   smul_mem' c f hf := hf.smul c
 #align filter.bounded_filter_submodule Filter.boundedFilterSubmodule

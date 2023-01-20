@@ -105,18 +105,18 @@ theorem mersenne_int_ne_zero (p : ℕ) (w : 0 < p) : (2 ^ p - 1 : ℤ) ≠ 0 :=
   exact_mod_cast Nat.one_lt_two_pow p w
 #align lucas_lehmer.mersenne_int_ne_zero LucasLehmer.mersenne_int_ne_zero
 
-theorem s_mod_nonneg (p : ℕ) (w : 0 < p) (i : ℕ) : 0 ≤ sMod p i :=
+theorem sMod_nonneg (p : ℕ) (w : 0 < p) (i : ℕ) : 0 ≤ sMod p i :=
   by
   cases i <;> dsimp [s_mod]
   · exact sup_eq_right.mp rfl
   · apply Int.emod_nonneg
     exact mersenne_int_ne_zero p w
-#align lucas_lehmer.s_mod_nonneg LucasLehmer.s_mod_nonneg
+#align lucas_lehmer.s_mod_nonneg LucasLehmer.sMod_nonneg
 
-theorem s_mod_mod (p i : ℕ) : sMod p i % (2 ^ p - 1) = sMod p i := by cases i <;> simp [s_mod]
-#align lucas_lehmer.s_mod_mod LucasLehmer.s_mod_mod
+theorem sMod_mod (p i : ℕ) : sMod p i % (2 ^ p - 1) = sMod p i := by cases i <;> simp [s_mod]
+#align lucas_lehmer.s_mod_mod LucasLehmer.sMod_mod
 
-theorem s_mod_lt (p : ℕ) (w : 0 < p) (i : ℕ) : sMod p i < 2 ^ p - 1 :=
+theorem sMod_lt (p : ℕ) (w : 0 < p) (i : ℕ) : sMod p i < 2 ^ p - 1 :=
   by
   rw [← s_mod_mod]
   convert Int.emod_lt _ _
@@ -124,15 +124,15 @@ theorem s_mod_lt (p : ℕ) (w : 0 < p) (i : ℕ) : sMod p i < 2 ^ p - 1 :=
     simp only [sub_nonneg, ge_iff_le]
     exact_mod_cast Nat.one_le_two_pow p
   · exact mersenne_int_ne_zero p w
-#align lucas_lehmer.s_mod_lt LucasLehmer.s_mod_lt
+#align lucas_lehmer.s_mod_lt LucasLehmer.sMod_lt
 
-theorem s_zmod_eq_s (p' : ℕ) (i : ℕ) : sZmod (p' + 2) i = (s i : Zmod (2 ^ (p' + 2) - 1)) :=
+theorem sZmod_eq_s (p' : ℕ) (i : ℕ) : sZmod (p' + 2) i = (s i : Zmod (2 ^ (p' + 2) - 1)) :=
   by
   induction' i with i ih
   · dsimp [s, s_zmod]
     norm_num
   · push_cast [s, s_zmod, ih]
-#align lucas_lehmer.s_zmod_eq_s LucasLehmer.s_zmod_eq_s
+#align lucas_lehmer.s_zmod_eq_s LucasLehmer.sZmod_eq_s
 
 -- These next two don't make good `norm_cast` lemmas.
 theorem Int.coe_nat_pow_pred (b p : ℕ) (w : 0 < b) : ((b ^ p - 1 : ℕ) : ℤ) = (b ^ p - 1 : ℤ) :=
@@ -145,16 +145,16 @@ theorem Int.coe_nat_two_pow_pred (p : ℕ) : ((2 ^ p - 1 : ℕ) : ℤ) = (2 ^ p 
   Int.coe_nat_pow_pred 2 p (by decide)
 #align lucas_lehmer.int.coe_nat_two_pow_pred LucasLehmer.Int.coe_nat_two_pow_pred
 
-theorem s_zmod_eq_s_mod (p : ℕ) (i : ℕ) : sZmod p i = (sMod p i : Zmod (2 ^ p - 1)) := by
+theorem sZmod_eq_sMod (p : ℕ) (i : ℕ) : sZmod p i = (sMod p i : Zmod (2 ^ p - 1)) := by
   induction i <;> push_cast [← int.coe_nat_two_pow_pred p, s_mod, s_zmod, *]
-#align lucas_lehmer.s_zmod_eq_s_mod LucasLehmer.s_zmod_eq_s_mod
+#align lucas_lehmer.s_zmod_eq_s_mod LucasLehmer.sZmod_eq_sMod
 
 /-- The Lucas-Lehmer residue is `s p (p-2)` in `zmod (2^p - 1)`. -/
 def lucasLehmerResidue (p : ℕ) : Zmod (2 ^ p - 1) :=
   sZmod p (p - 2)
 #align lucas_lehmer.lucas_lehmer_residue LucasLehmer.lucasLehmerResidue
 
-theorem residue_eq_zero_iff_s_mod_eq_zero (p : ℕ) (w : 1 < p) :
+theorem residue_eq_zero_iff_sMod_eq_zero (p : ℕ) (w : 1 < p) :
     lucasLehmerResidue p = 0 ↔ sMod p (p - 2) = 0 :=
   by
   dsimp [lucas_lehmer_residue]
@@ -170,7 +170,7 @@ theorem residue_eq_zero_iff_s_mod_eq_zero (p : ℕ) (w : 1 < p) :
   · intro h
     rw [h]
     simp
-#align lucas_lehmer.residue_eq_zero_iff_s_mod_eq_zero LucasLehmer.residue_eq_zero_iff_s_mod_eq_zero
+#align lucas_lehmer.residue_eq_zero_iff_s_mod_eq_zero LucasLehmer.residue_eq_zero_iff_sMod_eq_zero
 
 /-- A Mersenne number `2^p-1` is prime if and only if
 the Lucas-Lehmer residue `s p (p-2) % (2^p - 1)` is zero.
@@ -181,7 +181,7 @@ def LucasLehmerTest (p : ℕ) : Prop :=
 
 /-- `q` is defined as the minimum factor of `mersenne p`, bundled as an `ℕ+`. -/
 def q (p : ℕ) : ℕ+ :=
-  ⟨Nat.minFac (mersenne p), Nat.min_fac_pos (mersenne p)⟩
+  ⟨Nat.minFac (mersenne p), Nat.minFac_pos (mersenne p)⟩
 #align lucas_lehmer.q LucasLehmer.q
 
 -- It would be nice to define this as (ℤ/qℤ)[x] / (x^2 - 3),
@@ -497,12 +497,12 @@ theorem coe_nat (n : ℕ) : ((n : ℤ) : X q) = (n : X q) := by ext <;> simp
 #align lucas_lehmer.X.coe_nat LucasLehmer.X.coe_nat
 
 /-- The cardinality of `X` is `q^2`. -/
-theorem X_card : Fintype.card (X q) = q ^ 2 :=
+theorem x_card : Fintype.card (X q) = q ^ 2 :=
   by
   dsimp [X]
   rw [Fintype.card_prod, Zmod.card q]
   ring
-#align lucas_lehmer.X.X_card LucasLehmer.X.X_card
+#align lucas_lehmer.X.X_card LucasLehmer.X.x_card
 
 /-- There are strictly fewer than `q^2` units, since `0` is not a unit. -/
 theorem units_card (w : 1 < q) : Fintype.card (X q)ˣ < q ^ 2 :=
@@ -613,11 +613,11 @@ theorem ω_pow_formula (p' : ℕ) (h : lucasLehmerResidue (p' + 2) = 0) :
 #align lucas_lehmer.ω_pow_formula LucasLehmer.ω_pow_formula
 
 /-- `q` is the minimum factor of `mersenne p`, so `M p = 0` in `X q`. -/
-theorem mersenne_coe_X (p : ℕ) : (mersenne p : X (q p)) = 0 :=
+theorem mersenne_coe_x (p : ℕ) : (mersenne p : X (q p)) = 0 :=
   by
   ext <;> simp [mersenne, q, Zmod.nat_coe_zmod_eq_zero_iff_dvd, -pow_pos]
   apply Nat.minFac_dvd
-#align lucas_lehmer.mersenne_coe_X LucasLehmer.mersenne_coe_X
+#align lucas_lehmer.mersenne_coe_X LucasLehmer.mersenne_coe_x
 
 theorem ω_pow_eq_neg_one (p' : ℕ) (h : lucasLehmerResidue (p' + 2) = 0) :
     (ω : X (q (p' + 2))) ^ 2 ^ (p' + 1) = -1 :=
@@ -645,9 +645,9 @@ def ωUnit (p : ℕ) : Units (X (q p)) where
 #align lucas_lehmer.ω_unit LucasLehmer.ωUnit
 
 @[simp]
-theorem ω_unit_coe (p : ℕ) : (ωUnit p : X (q p)) = ω :=
+theorem ωUnit_coe (p : ℕ) : (ωUnit p : X (q p)) = ω :=
   rfl
-#align lucas_lehmer.ω_unit_coe LucasLehmer.ω_unit_coe
+#align lucas_lehmer.ω_unit_coe LucasLehmer.ωUnit_coe
 
 /-- The order of `ω` in the unit group is exactly `2^p`. -/
 theorem order_ω (p' : ℕ) (h : lucasLehmerResidue (p' + 2) = 0) :
@@ -657,7 +657,7 @@ theorem order_ω (p' : ℕ) (h : lucasLehmerResidue (p' + 2) = 0) :
   -- the order of ω divides 2^p
   · exact Nat.prime_two
   · intro o
-    have ω_pow := order_of_dvd_iff_pow_eq_one.1 o
+    have ω_pow := orderOf_dvd_iff_pow_eq_one.1 o
     replace ω_pow :=
       congr_arg (Units.coeHom (X (q (p' + 2))) : Units (X (q (p' + 2))) → X (q (p' + 2))) ω_pow
     simp at ω_pow
@@ -665,7 +665,7 @@ theorem order_ω (p' : ℕ) (h : lucasLehmerResidue (p' + 2) = 0) :
       congr_arg Prod.fst (ω_pow.symm.trans (ω_pow_eq_neg_one p' h))
     haveI : Fact (2 < (q (p' + 2) : ℕ)) := ⟨two_lt_q _⟩
     apply Zmod.neg_one_ne_one h.symm
-  · apply order_of_dvd_iff_pow_eq_one.2
+  · apply orderOf_dvd_iff_pow_eq_one.2
     apply Units.ext
     push_cast
     exact ω_pow_eq_one p' h
@@ -675,7 +675,7 @@ theorem order_ineq (p' : ℕ) (h : lucasLehmerResidue (p' + 2) = 0) :
     2 ^ (p' + 2) < (q (p' + 2) : ℕ) ^ 2 :=
   calc
     2 ^ (p' + 2) = orderOf (ωUnit (p' + 2)) := (order_ω p' h).symm
-    _ ≤ Fintype.card (X _)ˣ := order_of_le_card_univ
+    _ ≤ Fintype.card (X _)ˣ := orderOf_le_card_univ
     _ < (q (p' + 2) : ℕ) ^ 2 := units_card (Nat.lt_of_succ_lt (two_lt_q _))
     
 #align lucas_lehmer.order_ineq LucasLehmer.order_ineq
@@ -710,12 +710,12 @@ namespace LucasLehmer
 
 open Tactic
 
-theorem s_mod_succ {p a i b c} (h1 : (2 ^ p - 1 : ℤ) = a) (h2 : sMod p i = b)
+theorem sMod_succ {p a i b c} (h1 : (2 ^ p - 1 : ℤ) = a) (h2 : sMod p i = b)
     (h3 : (b * b - 2) % a = c) : sMod p (i + 1) = c :=
   by
   dsimp [s_mod, mersenne]
   rw [h1, h2, sq, h3]
-#align lucas_lehmer.s_mod_succ LucasLehmer.s_mod_succ
+#align lucas_lehmer.s_mod_succ LucasLehmer.sMod_succ
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
@@ -778,7 +778,7 @@ Someone should do this, too!
 -/
 
 
-theorem modeq_mersenne (n k : ℕ) : k ≡ k / 2 ^ n + k % 2 ^ n [MOD 2 ^ n - 1] :=
+theorem modEq_mersenne (n k : ℕ) : k ≡ k / 2 ^ n + k % 2 ^ n [MOD 2 ^ n - 1] :=
   by
   -- See https://leanprover.zulipchat.com/#narrow/stream/113489-new-members/topic/help.20finding.20a.20lemma/near/177698446
   conv in k => rw [← Nat.div_add_mod k (2 ^ n)]
@@ -789,7 +789,7 @@ theorem modeq_mersenne (n k : ℕ) : k ≡ k / 2 ^ n + k % 2 ^ n [MOD 2 ^ n - 1]
     skip
     rw [← one_mul (k / 2 ^ n)]
   exact (Nat.modEq_sub <| Nat.succ_le_of_lt <| pow_pos zero_lt_two _).mul_right _
-#align modeq_mersenne modeq_mersenne
+#align modeq_mersenne modEq_mersenne
 
 -- It's hard to know what the limiting factor for large Mersenne primes would be.
 -- In the purely computational world, I think it's the squaring operation in `s`.

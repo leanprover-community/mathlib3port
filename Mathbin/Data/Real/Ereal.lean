@@ -80,22 +80,22 @@ instance : Top Ereal :=
 instance : Coe ℝ Ereal :=
   ⟨Real.toEreal⟩
 
-theorem coe_strict_mono : StrictMono (coe : ℝ → Ereal) :=
+theorem coe_strictMono : StrictMono (coe : ℝ → Ereal) :=
   WithBot.coe_strictMono.comp WithTop.coe_strictMono
-#align ereal.coe_strict_mono Ereal.coe_strict_mono
+#align ereal.coe_strict_mono Ereal.coe_strictMono
 
 theorem coe_injective : Injective (coe : ℝ → Ereal) :=
-  coe_strict_mono.Injective
+  coe_strictMono.Injective
 #align ereal.coe_injective Ereal.coe_injective
 
 @[simp, norm_cast]
 protected theorem coe_le_coe_iff {x y : ℝ} : (x : Ereal) ≤ (y : Ereal) ↔ x ≤ y :=
-  coe_strict_mono.le_iff_le
+  coe_strictMono.le_iff_le
 #align ereal.coe_le_coe_iff Ereal.coe_le_coe_iff
 
 @[simp, norm_cast]
 protected theorem coe_lt_coe_iff {x y : ℝ} : (x : Ereal) < (y : Ereal) ↔ x < y :=
-  coe_strict_mono.lt_iff_lt
+  coe_strictMono.lt_iff_lt
 #align ereal.coe_lt_coe_iff Ereal.coe_lt_coe_iff
 
 @[simp, norm_cast]
@@ -210,29 +210,29 @@ def toReal : Ereal → ℝ
 #align ereal.to_real Ereal.toReal
 
 @[simp]
-theorem to_real_top : toReal ⊤ = 0 :=
+theorem toReal_top : toReal ⊤ = 0 :=
   rfl
-#align ereal.to_real_top Ereal.to_real_top
+#align ereal.to_real_top Ereal.toReal_top
 
 @[simp]
-theorem to_real_bot : toReal ⊥ = 0 :=
+theorem toReal_bot : toReal ⊥ = 0 :=
   rfl
-#align ereal.to_real_bot Ereal.to_real_bot
+#align ereal.to_real_bot Ereal.toReal_bot
 
 @[simp]
-theorem to_real_zero : toReal 0 = 0 :=
+theorem toReal_zero : toReal 0 = 0 :=
   rfl
-#align ereal.to_real_zero Ereal.to_real_zero
+#align ereal.to_real_zero Ereal.toReal_zero
 
 @[simp]
-theorem to_real_one : toReal 1 = 1 :=
+theorem toReal_one : toReal 1 = 1 :=
   rfl
-#align ereal.to_real_one Ereal.to_real_one
+#align ereal.to_real_one Ereal.toReal_one
 
 @[simp]
-theorem to_real_coe (x : ℝ) : toReal (x : Ereal) = x :=
+theorem toReal_coe (x : ℝ) : toReal (x : Ereal) = x :=
   rfl
-#align ereal.to_real_coe Ereal.to_real_coe
+#align ereal.to_real_coe Ereal.toReal_coe
 
 @[simp]
 theorem bot_lt_coe (x : ℝ) : (⊥ : Ereal) < x :=
@@ -359,36 +359,36 @@ protected theorem coe_neg' {x : ℝ} : (x : Ereal) < 0 ↔ x < 0 :=
   Ereal.coe_lt_coe_iff
 #align ereal.coe_neg' Ereal.coe_neg'
 
-theorem to_real_le_to_real {x y : Ereal} (h : x ≤ y) (hx : x ≠ ⊥) (hy : y ≠ ⊤) :
+theorem toReal_le_toReal {x y : Ereal} (h : x ≤ y) (hx : x ≠ ⊥) (hy : y ≠ ⊤) :
     x.toReal ≤ y.toReal := by
   lift x to ℝ
   · simp [hx, (h.trans_lt (lt_top_iff_ne_top.2 hy)).Ne]
   lift y to ℝ
   · simp [hy, ((bot_lt_iff_ne_bot.2 hx).trans_le h).ne']
   simpa using h
-#align ereal.to_real_le_to_real Ereal.to_real_le_to_real
+#align ereal.to_real_le_to_real Ereal.toReal_le_toReal
 
-theorem coe_to_real {x : Ereal} (hx : x ≠ ⊤) (h'x : x ≠ ⊥) : (x.toReal : Ereal) = x :=
+theorem coe_toReal {x : Ereal} (hx : x ≠ ⊤) (h'x : x ≠ ⊥) : (x.toReal : Ereal) = x :=
   by
   induction x using Ereal.rec
   · simpa using h'x
   · rfl
   · simpa using hx
-#align ereal.coe_to_real Ereal.coe_to_real
+#align ereal.coe_to_real Ereal.coe_toReal
 
-theorem le_coe_to_real {x : Ereal} (h : x ≠ ⊤) : x ≤ x.toReal :=
+theorem le_coe_toReal {x : Ereal} (h : x ≠ ⊤) : x ≤ x.toReal :=
   by
   by_cases h' : x = ⊥
   · simp only [h', bot_le]
   · simp only [le_refl, coe_to_real h h']
-#align ereal.le_coe_to_real Ereal.le_coe_to_real
+#align ereal.le_coe_to_real Ereal.le_coe_toReal
 
-theorem coe_to_real_le {x : Ereal} (h : x ≠ ⊥) : ↑x.toReal ≤ x :=
+theorem coe_toReal_le {x : Ereal} (h : x ≠ ⊥) : ↑x.toReal ≤ x :=
   by
   by_cases h' : x = ⊤
   · simp only [h', le_top]
   · simp only [le_refl, coe_to_real h' h]
-#align ereal.coe_to_real_le Ereal.coe_to_real_le
+#align ereal.coe_to_real_le Ereal.coe_toReal_le
 
 theorem eq_top_iff_forall_lt (x : Ereal) : x = ⊤ ↔ ∀ y : ℝ, (y : Ereal) < x :=
   by
@@ -414,10 +414,10 @@ theorem eq_bot_iff_forall_lt (x : Ereal) : x = ⊥ ↔ ∀ y : ℝ, x < (y : Ere
 
 
 @[simp]
-theorem to_real_coe_ennreal : ∀ {x : ℝ≥0∞}, toReal (x : Ereal) = Ennreal.toReal x
+theorem toReal_coe_ennreal : ∀ {x : ℝ≥0∞}, toReal (x : Ereal) = Ennreal.toReal x
   | ⊤ => rfl
   | some x => rfl
-#align ereal.to_real_coe_ennreal Ereal.to_real_coe_ennreal
+#align ereal.to_real_coe_ennreal Ereal.toReal_coe_ennreal
 
 theorem coe_nnreal_eq_coe_real (x : ℝ≥0) : ((x : ℝ≥0∞) : Ereal) = (x : ℝ) :=
   rfl
@@ -453,25 +453,25 @@ theorem coe_nnreal_ne_top (x : ℝ≥0) : ((x : ℝ≥0∞) : Ereal) ≠ ⊤ := 
 theorem coe_nnreal_lt_top (x : ℝ≥0) : ((x : ℝ≥0∞) : Ereal) < ⊤ := by decide
 #align ereal.coe_nnreal_lt_top Ereal.coe_nnreal_lt_top
 
-theorem coe_ennreal_strict_mono : StrictMono (coe : ℝ≥0∞ → Ereal)
+theorem coe_ennreal_strictMono : StrictMono (coe : ℝ≥0∞ → Ereal)
   | ⊤, ⊤ => by simp
   | some x, ⊤ => by simp
   | ⊤, some y => by simp
   | some x, some y => by simp [coe_nnreal_eq_coe_real]
-#align ereal.coe_ennreal_strict_mono Ereal.coe_ennreal_strict_mono
+#align ereal.coe_ennreal_strict_mono Ereal.coe_ennreal_strictMono
 
 theorem coe_ennreal_injective : Injective (coe : ℝ≥0∞ → Ereal) :=
-  coe_ennreal_strict_mono.Injective
+  coe_ennreal_strictMono.Injective
 #align ereal.coe_ennreal_injective Ereal.coe_ennreal_injective
 
 @[simp, norm_cast]
 theorem coe_ennreal_le_coe_ennreal_iff {x y : ℝ≥0∞} : (x : Ereal) ≤ (y : Ereal) ↔ x ≤ y :=
-  coe_ennreal_strict_mono.le_iff_le
+  coe_ennreal_strictMono.le_iff_le
 #align ereal.coe_ennreal_le_coe_ennreal_iff Ereal.coe_ennreal_le_coe_ennreal_iff
 
 @[simp, norm_cast]
 theorem coe_ennreal_lt_coe_ennreal_iff {x y : ℝ≥0∞} : (x : Ereal) < (y : Ereal) ↔ x < y :=
-  coe_ennreal_strict_mono.lt_iff_lt
+  coe_ennreal_strictMono.lt_iff_lt
 #align ereal.coe_ennreal_lt_coe_ennreal_iff Ereal.coe_ennreal_lt_coe_ennreal_iff
 
 @[simp, norm_cast]
@@ -633,7 +633,7 @@ theorem coe_add_top (x : ℝ) : (x : Ereal) + ⊤ = ⊤ :=
   rfl
 #align ereal.coe_add_top Ereal.coe_add_top
 
-theorem to_real_add :
+theorem toReal_add :
     ∀ {x y : Ereal} (hx : x ≠ ⊤) (h'x : x ≠ ⊥) (hy : y ≠ ⊤) (h'y : y ≠ ⊥),
       toReal (x + y) = toReal x + toReal y
   | ⊥, y, hx, h'x, hy, h'y => (h'x rfl).elim
@@ -641,7 +641,7 @@ theorem to_real_add :
   | x, ⊤, hx, h'x, hy, h'y => (hy rfl).elim
   | x, ⊥, hx, h'x, hy, h'y => (h'y rfl).elim
   | (x : ℝ), (y : ℝ), hx, h'x, hy, h'y => by simp [← Ereal.coe_add]
-#align ereal.to_real_add Ereal.to_real_add
+#align ereal.to_real_add Ereal.toReal_add
 
 theorem add_lt_add_right_coe {x y : Ereal} (h : x < y) (z : ℝ) : x + z < y + z :=
   by
@@ -762,11 +762,11 @@ instance : InvolutiveNeg Ereal where
       simp [neg_neg a]
 
 @[simp]
-theorem to_real_neg : ∀ {a : Ereal}, toReal (-a) = -toReal a
+theorem toReal_neg : ∀ {a : Ereal}, toReal (-a) = -toReal a
   | ⊤ => by simp
   | ⊥ => by simp
   | (x : ℝ) => rfl
-#align ereal.to_real_neg Ereal.to_real_neg
+#align ereal.to_real_neg Ereal.toReal_neg
 
 @[simp]
 theorem neg_eq_top_iff {x : Ereal} : -x = ⊤ ↔ x = ⊥ :=
@@ -882,14 +882,14 @@ theorem sub_lt_sub_of_lt_of_le {x y z t : Ereal} (h : x < y) (h' : z ≤ t) (hz 
   add_lt_add_of_lt_of_le h (neg_le_neg_iff.2 h') (by simp [ht]) (by simp [hz])
 #align ereal.sub_lt_sub_of_lt_of_le Ereal.sub_lt_sub_of_lt_of_le
 
-theorem coe_real_ereal_eq_coe_to_nnreal_sub_coe_to_nnreal (x : ℝ) :
+theorem coe_real_ereal_eq_coe_toNnreal_sub_coe_toNnreal (x : ℝ) :
     (x : Ereal) = Real.toNnreal x - Real.toNnreal (-x) :=
   by
   rcases le_or_lt 0 x with (h | h)
   · have : Real.toNnreal x = ⟨x, h⟩ := by
       ext
       simp [h]
-    simp only [Real.to_nnreal_of_nonpos (neg_nonpos.mpr h), this, sub_zero, Ennreal.coe_zero,
+    simp only [Real.toNnreal_of_nonpos (neg_nonpos.mpr h), this, sub_zero, Ennreal.coe_zero,
       coe_ennreal_zero, coe_coe]
     rfl
   · have : (x : Ereal) = -(-x : ℝ) := by simp
@@ -898,19 +898,19 @@ theorem coe_real_ereal_eq_coe_to_nnreal_sub_coe_to_nnreal (x : ℝ) :
       by
       ext
       simp [neg_nonneg.mpr h.le]
-    simp only [Real.to_nnreal_of_nonpos h.le, this, zero_sub, neg_inj, coe_neg, Ennreal.coe_zero,
+    simp only [Real.toNnreal_of_nonpos h.le, this, zero_sub, neg_inj, coe_neg, Ennreal.coe_zero,
       coe_ennreal_zero, coe_coe]
     rfl
-#align ereal.coe_real_ereal_eq_coe_to_nnreal_sub_coe_to_nnreal Ereal.coe_real_ereal_eq_coe_to_nnreal_sub_coe_to_nnreal
+#align ereal.coe_real_ereal_eq_coe_to_nnreal_sub_coe_to_nnreal Ereal.coe_real_ereal_eq_coe_toNnreal_sub_coe_toNnreal
 
-theorem to_real_sub {x y : Ereal} (hx : x ≠ ⊤) (h'x : x ≠ ⊥) (hy : y ≠ ⊤) (h'y : y ≠ ⊥) :
+theorem toReal_sub {x y : Ereal} (hx : x ≠ ⊤) (h'x : x ≠ ⊥) (hy : y ≠ ⊤) (h'y : y ≠ ⊥) :
     toReal (x - y) = toReal x - toReal y :=
   by
   rw [sub_eq_add_neg, to_real_add hx h'x, to_real_neg]
   · rfl
   · simpa using hy
   · simpa using h'y
-#align ereal.to_real_sub Ereal.to_real_sub
+#align ereal.to_real_sub Ereal.toReal_sub
 
 /-! ### Multiplication -/
 
@@ -1032,7 +1032,7 @@ theorem bot_mul_coe_of_neg {x : ℝ} (h : x < 0) : (⊥ : Ereal) * x = ⊤ :=
   bot_mul_of_neg (Ereal.coe_neg'.2 h)
 #align ereal.bot_mul_coe_of_neg Ereal.bot_mul_coe_of_neg
 
-theorem to_real_mul {x y : Ereal} : toReal (x * y) = toReal x * toReal y :=
+theorem toReal_mul {x y : Ereal} : toReal (x * y) = toReal x * toReal y :=
   by
   induction x using Ereal.rec <;> induction y using Ereal.rec
   · simp only [bot_mul_bot, to_real_top, to_real_bot, mul_zero]
@@ -1056,7 +1056,7 @@ theorem to_real_mul {x y : Ereal} : toReal (x * y) = toReal x * toReal y :=
     · simp only [coe_zero, mul_zero, to_real_zero]
     · simp only [top_mul_coe_of_neg hy, to_real_top, to_real_bot, zero_mul]
   · simp only [top_mul_top, to_real_top, mul_zero]
-#align ereal.to_real_mul Ereal.to_real_mul
+#align ereal.to_real_mul Ereal.toReal_mul
 
 /-! ### Absolute value -/
 
@@ -1080,7 +1080,7 @@ theorem abs_bot : (⊥ : Ereal).abs = ⊤ :=
 #align ereal.abs_bot Ereal.abs_bot
 
 theorem abs_coe_lt_top (x : ℝ) : (x : Ereal).abs < ⊤ :=
-  Ennreal.of_real_lt_top
+  Ennreal.ofReal_lt_top
 #align ereal.abs_coe_lt_top Ereal.abs_coe_lt_top
 
 @[simp]
@@ -1088,7 +1088,7 @@ theorem abs_eq_zero_iff {x : Ereal} : x.abs = 0 ↔ x = 0 :=
   by
   induction x using Ereal.rec
   · simp only [abs_bot, Ennreal.top_ne_zero, bot_ne_zero]
-  · simp only [Ereal.abs, coe_eq_zero, Ennreal.of_real_eq_zero, abs_nonpos_iff]
+  · simp only [Ereal.abs, coe_eq_zero, Ennreal.ofReal_eq_zero, abs_nonpos_iff]
   · simp only [abs_top, Ennreal.top_ne_zero, top_ne_zero]
 #align ereal.abs_eq_zero_iff Ereal.abs_eq_zero_iff
 
@@ -1119,7 +1119,7 @@ theorem abs_mul (x y : Ereal) : (x * y).abs = x.abs * y.abs :=
     ·
       simp only [coe_mul_bot_of_neg hx, hx.ne, abs_bot, WithTop.mul_top, Ne.def, abs_eq_zero_iff,
         coe_eq_zero, not_false_iff, abs_top]
-  · simp only [← coe_mul, Ereal.abs, abs_mul, Ennreal.of_real_mul (abs_nonneg _)]
+  · simp only [← coe_mul, Ereal.abs, abs_mul, Ennreal.ofReal_mul (abs_nonneg _)]
   · rcases lt_trichotomy 0 x with (hx | rfl | hx)
     ·
       simp only [coe_mul_top_of_pos hx, hx.ne', WithTop.mul_top, Ne.def, abs_eq_zero_iff,
@@ -1207,7 +1207,7 @@ theorem sign_eq_and_abs_eq_iff_eq {x y : Ereal} : x.abs = y.abs ∧ sign x = sig
   · simpa only using hsign
   · simpa only using abs_coe_lt_top x
   · have : |x| = |y| := by
-      simpa only [Ereal.abs, Ennreal.of_real_eq_of_real_iff, abs_nonneg] using habs
+      simpa only [Ereal.abs, Ennreal.ofReal_eq_ofReal_iff, abs_nonneg] using habs
     rcases abs_eq_abs.1 this with (rfl | h)
     · rfl
     · rcases lt_trichotomy x 0 with (hx | rfl | hx)

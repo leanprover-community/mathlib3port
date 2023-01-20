@@ -83,41 +83,41 @@ protected theorem one : padicNorm p 1 = 1 := by simp [padicNorm]
 /-- The `p`-adic norm of `p` is `p⁻¹` if `p > 1`.
 
 See also `padic_norm.padic_norm_p_of_prime` for a version assuming `p` is prime. -/
-theorem padic_norm_p (hp : 1 < p) : padicNorm p p = p⁻¹ := by
+theorem padicNorm_p (hp : 1 < p) : padicNorm p p = p⁻¹ := by
   simp [padicNorm, (pos_of_gt hp).ne', padicValNat.self hp]
-#align padic_norm.padic_norm_p padicNorm.padic_norm_p
+#align padic_norm.padic_norm_p padicNorm.padicNorm_p
 
 /-- The `p`-adic norm of `p` is `p⁻¹` if `p` is prime.
 
 See also `padic_norm.padic_norm_p` for a version assuming `1 < p`. -/
 @[simp]
-theorem padic_norm_p_of_prime [Fact p.Prime] : padicNorm p p = p⁻¹ :=
+theorem padicNorm_p_of_prime [Fact p.Prime] : padicNorm p p = p⁻¹ :=
   padic_norm_p <| Nat.Prime.one_lt (Fact.out _)
-#align padic_norm.padic_norm_p_of_prime padicNorm.padic_norm_p_of_prime
+#align padic_norm.padic_norm_p_of_prime padicNorm.padicNorm_p_of_prime
 
 /-- The `p`-adic norm of `q` is `1` if `q` is prime and not equal to `p`. -/
-theorem padic_norm_of_prime_of_ne {q : ℕ} [p_prime : Fact p.Prime] [q_prime : Fact q.Prime]
+theorem padicNorm_of_prime_of_ne {q : ℕ} [p_prime : Fact p.Prime] [q_prime : Fact q.Prime]
     (neq : p ≠ q) : padicNorm p q = 1 :=
   by
-  have p : padicValRat p q = 0 := by exact_mod_cast @padic_val_nat_primes p q p_prime q_prime neq
+  have p : padicValRat p q = 0 := by exact_mod_cast @padicValNat_primes p q p_prime q_prime neq
   simp [padicNorm, p, q_prime.1.1, q_prime.1.NeZero]
-#align padic_norm.padic_norm_of_prime_of_ne padicNorm.padic_norm_of_prime_of_ne
+#align padic_norm.padic_norm_of_prime_of_ne padicNorm.padicNorm_of_prime_of_ne
 
 /-- The `p`-adic norm of `p` is less than `1` if `1 < p`.
 
 See also `padic_norm.padic_norm_p_lt_one_of_prime` for a version assuming `p` is prime. -/
-theorem padic_norm_p_lt_one (hp : 1 < p) : padicNorm p p < 1 :=
+theorem padicNorm_p_lt_one (hp : 1 < p) : padicNorm p p < 1 :=
   by
   rw [padic_norm_p hp, inv_lt_one_iff]
   exact_mod_cast Or.inr hp
-#align padic_norm.padic_norm_p_lt_one padicNorm.padic_norm_p_lt_one
+#align padic_norm.padic_norm_p_lt_one padicNorm.padicNorm_p_lt_one
 
 /-- The `p`-adic norm of `p` is less than `1` if `p` is prime.
 
 See also `padic_norm.padic_norm_p_lt_one` for a version assuming `1 < p`. -/
-theorem padic_norm_p_lt_one_of_prime [Fact p.Prime] : padicNorm p p < 1 :=
+theorem padicNorm_p_lt_one_of_prime [Fact p.Prime] : padicNorm p p < 1 :=
   padic_norm_p_lt_one <| Nat.Prime.one_lt (Fact.out _)
-#align padic_norm.padic_norm_p_lt_one_of_prime padicNorm.padic_norm_p_lt_one_of_prime
+#align padic_norm.padic_norm_p_lt_one_of_prime padicNorm.padicNorm_p_lt_one_of_prime
 
 /-- `padic_norm p q` takes discrete values `p ^ -z` for `z : ℤ`. -/
 protected theorem values_discrete {q : ℚ} (hq : q ≠ 0) : ∃ z : ℤ, padicNorm p q = p ^ (-z) :=
@@ -143,14 +143,14 @@ protected theorem nonzero {q : ℚ} (hq : q ≠ 0) : padicNorm p q ≠ 0 :=
 #align padic_norm.nonzero padicNorm.nonzero
 
 /-- If the `p`-adic norm of `q` is 0, then `q` is `0`. -/
-theorem zero_of_padic_norm_eq_zero {q : ℚ} (h : padicNorm p q = 0) : q = 0 :=
+theorem zero_of_padicNorm_eq_zero {q : ℚ} (h : padicNorm p q = 0) : q = 0 :=
   by
   apply by_contradiction; intro hq
   unfold padicNorm at h; rw [if_neg hq] at h
   apply absurd h
   apply zpow_ne_zero_of_ne_zero
   exact_mod_cast hp.1.NeZero
-#align padic_norm.zero_of_padic_norm_eq_zero padicNorm.zero_of_padic_norm_eq_zero
+#align padic_norm.zero_of_padic_norm_eq_zero padicNorm.zero_of_padicNorm_eq_zero
 
 /-- The `p`-adic norm is multiplicative. -/
 @[simp]
@@ -262,7 +262,7 @@ triangle inequality. -/
 instance : IsAbsoluteValue (padicNorm p)
     where
   abv_nonneg := padicNorm.nonneg
-  abv_eq_zero _ := ⟨zero_of_padic_norm_eq_zero, fun hx => by simpa only [hx] ⟩
+  abv_eq_zero _ := ⟨zero_of_padicNorm_eq_zero, fun hx => by simpa only [hx] ⟩
   abv_add := padicNorm.triangle_ineq
   abv_mul := padicNorm.mul
 

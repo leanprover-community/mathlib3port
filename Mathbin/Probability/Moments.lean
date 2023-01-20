@@ -69,25 +69,25 @@ theorem moment_zero (hp : p ≠ 0) : moment 0 p μ = 0 := by
 #align probability_theory.moment_zero ProbabilityTheory.moment_zero
 
 @[simp]
-theorem central_moment_zero (hp : p ≠ 0) : centralMoment 0 p μ = 0 := by
+theorem centralMoment_zero (hp : p ≠ 0) : centralMoment 0 p μ = 0 := by
   simp only [central_moment, hp, Pi.zero_apply, integral_const, Algebra.id.smul_eq_mul, mul_zero,
     zero_sub, Pi.pow_apply, Pi.neg_apply, neg_zero, zero_pow', Ne.def, not_false_iff]
-#align probability_theory.central_moment_zero ProbabilityTheory.central_moment_zero
+#align probability_theory.central_moment_zero ProbabilityTheory.centralMoment_zero
 
-theorem central_moment_one' [IsFiniteMeasure μ] (h_int : Integrable X μ) :
+theorem centralMoment_one' [IsFiniteMeasure μ] (h_int : Integrable X μ) :
     centralMoment X 1 μ = (1 - (μ Set.univ).toReal) * μ[X] :=
   by
   simp only [central_moment, Pi.sub_apply, pow_one]
   rw [integral_sub h_int (integrable_const _)]
   simp only [sub_mul, integral_const, Algebra.id.smul_eq_mul, one_mul]
-#align probability_theory.central_moment_one' ProbabilityTheory.central_moment_one'
+#align probability_theory.central_moment_one' ProbabilityTheory.centralMoment_one'
 
 @[simp]
-theorem central_moment_one [IsProbabilityMeasure μ] : centralMoment X 1 μ = 0 :=
+theorem centralMoment_one [IsProbabilityMeasure μ] : centralMoment X 1 μ = 0 :=
   by
   by_cases h_int : integrable X μ
   · rw [central_moment_one' h_int]
-    simp only [measure_univ, Ennreal.one_to_real, sub_self, zero_mul]
+    simp only [measure_univ, Ennreal.one_toReal, sub_self, zero_mul]
   · simp only [central_moment, Pi.sub_apply, pow_one]
     have : ¬integrable (fun x => X x - integral μ X) μ :=
       by
@@ -99,14 +99,14 @@ theorem central_moment_one [IsProbabilityMeasure μ] : centralMoment X 1 μ = 0 
       rw [h_add]
       exact h_sub.add (integrable_const _)
     rw [integral_undef this]
-#align probability_theory.central_moment_one ProbabilityTheory.central_moment_one
+#align probability_theory.central_moment_one ProbabilityTheory.centralMoment_one
 
-theorem central_moment_two_eq_variance [IsFiniteMeasure μ] (hX : Memℒp X 2 μ) :
+theorem centralMoment_two_eq_variance [IsFiniteMeasure μ] (hX : Memℒp X 2 μ) :
     centralMoment X 2 μ = variance X μ :=
   by
   rw [hX.variance_eq]
   rfl
-#align probability_theory.central_moment_two_eq_variance ProbabilityTheory.central_moment_two_eq_variance
+#align probability_theory.central_moment_two_eq_variance ProbabilityTheory.centralMoment_two_eq_variance
 
 section MomentGeneratingFunction
 
@@ -148,7 +148,7 @@ theorem mgf_const' (c : ℝ) : mgf (fun _ => c) μ t = (μ Set.univ).toReal * ex
 
 @[simp]
 theorem mgf_const (c : ℝ) [IsProbabilityMeasure μ] : mgf (fun _ => c) μ t = exp (t * c) := by
-  simp only [mgf_const', measure_univ, Ennreal.one_to_real, one_mul]
+  simp only [mgf_const', measure_univ, Ennreal.one_toReal, one_mul]
 #align probability_theory.mgf_const ProbabilityTheory.mgf_const
 
 @[simp]
@@ -158,7 +158,7 @@ theorem cgf_const' [IsFiniteMeasure μ] (hμ : μ ≠ 0) (c : ℝ) :
   simp only [cgf, mgf_const']
   rw [log_mul _ (exp_pos _).ne']
   · rw [log_exp _]
-  · rw [Ne.def, Ennreal.to_real_eq_zero_iff, measure.measure_univ_eq_zero]
+  · rw [Ne.def, Ennreal.toReal_eq_zero_iff, measure.measure_univ_eq_zero]
     simp only [hμ, measure_ne_top μ Set.univ, or_self_iff, not_false_iff]
 #align probability_theory.cgf_const' ProbabilityTheory.cgf_const'
 
@@ -174,7 +174,7 @@ theorem mgf_zero' : mgf X μ 0 = (μ Set.univ).toReal := by
 
 @[simp]
 theorem mgf_zero [IsProbabilityMeasure μ] : mgf X μ 0 = 1 := by
-  simp only [mgf_zero', measure_univ, Ennreal.one_to_real]
+  simp only [mgf_zero', measure_univ, Ennreal.one_toReal]
 #align probability_theory.mgf_zero ProbabilityTheory.mgf_zero
 
 @[simp]
@@ -183,7 +183,7 @@ theorem cgf_zero' : cgf X μ 0 = log (μ Set.univ).toReal := by simp only [cgf, 
 
 @[simp]
 theorem cgf_zero [IsProbabilityMeasure μ] : cgf X μ 0 = 0 := by
-  simp only [cgf_zero', measure_univ, Ennreal.one_to_real, log_one]
+  simp only [cgf_zero', measure_univ, Ennreal.one_toReal, log_one]
 #align probability_theory.cgf_zero ProbabilityTheory.cgf_zero
 
 theorem mgf_undef (hX : ¬Integrable (fun ω => exp (t * X ω)) μ) : mgf X μ t = 0 := by
@@ -325,7 +325,7 @@ theorem IndepFun.mgf_sum [IsProbabilityMeasure μ] {X : ι → Ω → ℝ}
     (s : Finset ι) : mgf (∑ i in s, X i) μ t = ∏ i in s, mgf (X i) μ t := by
   classical
     induction' s using Finset.induction_on with i s hi_notin_s h_rec h_int
-    · simp only [sum_empty, mgf_zero_fun, measure_univ, Ennreal.one_to_real, prod_empty]
+    · simp only [sum_empty, mgf_zero_fun, measure_univ, Ennreal.one_toReal, prod_empty]
     · have h_int' : ∀ i : ι, ae_strongly_measurable (fun ω : Ω => exp (t * X i ω)) μ := fun i =>
         ((h_meas i).const_mul t).exp.AeStronglyMeasurable
       rw [sum_insert hi_notin_s,
@@ -353,7 +353,7 @@ theorem measure_ge_le_exp_mul_mgf [IsFiniteMeasure μ] (ε : ℝ) (ht : 0 ≤ t)
   cases' ht.eq_or_lt with ht_zero_eq ht_pos
   · rw [ht_zero_eq.symm]
     simp only [neg_zero, zero_mul, exp_zero, mgf_zero', one_mul]
-    rw [Ennreal.to_real_le_to_real (measure_ne_top μ _) (measure_ne_top μ _)]
+    rw [Ennreal.toReal_le_toReal (measure_ne_top μ _) (measure_ne_top μ _)]
     exact measure_mono (Set.subset_univ _)
   calc
     (μ { ω | ε ≤ X ω }).toReal = (μ { ω | exp (t * ε) ≤ exp (t * X ω) }).toReal :=

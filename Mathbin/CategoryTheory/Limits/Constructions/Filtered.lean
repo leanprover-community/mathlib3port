@@ -78,26 +78,26 @@ end CoproductsFromFiniteFiltered
 
 open CoproductsFromFiniteFiltered
 
-theorem has_coproducts_of_finite_and_filtered [HasFiniteCoproducts C]
+theorem hasCoproducts_of_finite_and_filtered [HasFiniteCoproducts C]
     [HasFilteredColimitsOfSize.{w, w} C] : HasCoproducts.{w} C := fun α => by
   classical exact ⟨fun F => has_colimit.mk (lift_to_finset_colimit_cocone F)⟩
-#align category_theory.limits.has_coproducts_of_finite_and_filtered CategoryTheory.Limits.has_coproducts_of_finite_and_filtered
+#align category_theory.limits.has_coproducts_of_finite_and_filtered CategoryTheory.Limits.hasCoproducts_of_finite_and_filtered
 
 theorem hasColimitsOfFiniteAndFiltered [HasFiniteColimits C] [HasFilteredColimitsOfSize.{w, w} C] :
     HasColimitsOfSize.{w, w} C :=
-  have : HasCoproducts.{w} C := has_coproducts_of_finite_and_filtered
+  have : HasCoproducts.{w} C := hasCoproducts_of_finite_and_filtered
   has_colimits_of_has_coequalizers_and_coproducts
 #align category_theory.limits.has_colimits_of_finite_and_filtered CategoryTheory.Limits.hasColimitsOfFiniteAndFiltered
 
-theorem has_products_of_finite_and_cofiltered [HasFiniteProducts C]
+theorem hasProducts_of_finite_and_cofiltered [HasFiniteProducts C]
     [HasCofilteredLimitsOfSize.{w, w} C] : HasProducts.{w} C :=
-  have : HasCoproducts.{w} Cᵒᵖ := has_coproducts_of_finite_and_filtered
+  have : HasCoproducts.{w} Cᵒᵖ := hasCoproducts_of_finite_and_filtered
   has_products_of_opposite
-#align category_theory.limits.has_products_of_finite_and_cofiltered CategoryTheory.Limits.has_products_of_finite_and_cofiltered
+#align category_theory.limits.has_products_of_finite_and_cofiltered CategoryTheory.Limits.hasProducts_of_finite_and_cofiltered
 
 theorem hasLimitsOfFiniteAndCofiltered [HasFiniteLimits C] [HasCofilteredLimitsOfSize.{w, w} C] :
     HasLimitsOfSize.{w, w} C :=
-  have : HasProducts.{w} C := has_products_of_finite_and_cofiltered
+  have : HasProducts.{w} C := hasProducts_of_finite_and_cofiltered
   has_limits_of_has_equalizers_and_products
 #align category_theory.limits.has_limits_of_finite_and_cofiltered CategoryTheory.Limits.hasLimitsOfFiniteAndCofiltered
 

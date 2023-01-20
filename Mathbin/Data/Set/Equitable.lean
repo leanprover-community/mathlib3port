@@ -38,11 +38,11 @@ def EquitableOn [LE β] [Add β] [One β] (s : Set α) (f : α → β) : Prop :=
 #align set.equitable_on Set.EquitableOn
 
 @[simp]
-theorem equitable_on_empty [LE β] [Add β] [One β] (f : α → β) : EquitableOn ∅ f := fun a _ ha =>
+theorem equitableOn_empty [LE β] [Add β] [One β] (f : α → β) : EquitableOn ∅ f := fun a _ ha =>
   (Set.not_mem_empty _ ha).elim
-#align set.equitable_on_empty Set.equitable_on_empty
+#align set.equitable_on_empty Set.equitableOn_empty
 
-theorem equitable_on_iff_exists_le_le_add_one {s : Set α} {f : α → ℕ} :
+theorem equitableOn_iff_exists_le_le_add_one {s : Set α} {f : α → ℕ} :
     s.EquitableOn f ↔ ∃ b, ∀ a ∈ s, b ≤ f a ∧ f a ≤ b + 1 :=
   by
   refine' ⟨_, fun ⟨b, hb⟩ x y hx hy => (hb x hx).2.trans (add_le_add_right (hb y hy).1 _)⟩
@@ -56,31 +56,31 @@ theorem equitable_on_iff_exists_le_le_add_one {s : Set α} {f : α → ℕ} :
   refine' ⟨f w, fun y hy => ⟨Nat.le_of_succ_le_succ _, hs hy hw⟩⟩
   rw [(Nat.succ_le_of_lt hwx).antisymm (hs hx hw)]
   exact hs hx hy
-#align set.equitable_on_iff_exists_le_le_add_one Set.equitable_on_iff_exists_le_le_add_one
+#align set.equitable_on_iff_exists_le_le_add_one Set.equitableOn_iff_exists_le_le_add_one
 
-theorem equitable_on_iff_exists_image_subset_Icc {s : Set α} {f : α → ℕ} :
+theorem equitableOn_iff_exists_image_subset_icc {s : Set α} {f : α → ℕ} :
     s.EquitableOn f ↔ ∃ b, f '' s ⊆ Icc b (b + 1) := by
   simpa only [image_subset_iff] using equitable_on_iff_exists_le_le_add_one
-#align set.equitable_on_iff_exists_image_subset_Icc Set.equitable_on_iff_exists_image_subset_Icc
+#align set.equitable_on_iff_exists_image_subset_Icc Set.equitableOn_iff_exists_image_subset_icc
 
-theorem equitable_on_iff_exists_eq_eq_add_one {s : Set α} {f : α → ℕ} :
+theorem equitableOn_iff_exists_eq_eq_add_one {s : Set α} {f : α → ℕ} :
     s.EquitableOn f ↔ ∃ b, ∀ a ∈ s, f a = b ∨ f a = b + 1 := by
   simp_rw [equitable_on_iff_exists_le_le_add_one, Nat.le_and_le_add_one_iff]
-#align set.equitable_on_iff_exists_eq_eq_add_one Set.equitable_on_iff_exists_eq_eq_add_one
+#align set.equitable_on_iff_exists_eq_eq_add_one Set.equitableOn_iff_exists_eq_eq_add_one
 
 section OrderedSemiring
 
 variable [OrderedSemiring β]
 
-theorem Subsingleton.equitable_on {s : Set α} (hs : s.Subsingleton) (f : α → β) : s.EquitableOn f :=
+theorem Subsingleton.equitableOn {s : Set α} (hs : s.Subsingleton) (f : α → β) : s.EquitableOn f :=
   fun i j hi hj => by
   rw [hs hi hj]
   exact le_add_of_nonneg_right zero_le_one
-#align set.subsingleton.equitable_on Set.Subsingleton.equitable_on
+#align set.subsingleton.equitable_on Set.Subsingleton.equitableOn
 
-theorem equitable_on_singleton (a : α) (f : α → β) : Set.EquitableOn {a} f :=
+theorem equitableOn_singleton (a : α) (f : α → β) : Set.EquitableOn {a} f :=
   Set.subsingleton_singleton.EquitableOn f
-#align set.equitable_on_singleton Set.equitable_on_singleton
+#align set.equitable_on_singleton Set.equitableOn_singleton
 
 end OrderedSemiring
 
@@ -92,11 +92,11 @@ namespace Finset
 
 variable {s : Finset α} {f : α → ℕ} {a : α}
 
-theorem equitable_on_iff_le_le_add_one :
+theorem equitableOn_iff_le_le_add_one :
     EquitableOn (s : Set α) f ↔
       ∀ a ∈ s, (∑ i in s, f i) / s.card ≤ f a ∧ f a ≤ (∑ i in s, f i) / s.card + 1 :=
   by
-  rw [Set.equitable_on_iff_exists_le_le_add_one]
+  rw [Set.equitableOn_iff_exists_le_le_add_one]
   refine' ⟨_, fun h => ⟨_, h⟩⟩
   rintro ⟨b, hb⟩
   by_cases h : ∀ a ∈ s, f a = b + 1
@@ -114,23 +114,23 @@ theorem equitable_on_iff_le_le_add_one :
       ((sum_lt_sum (fun a ha => (hb a ha).2) ⟨_, hx₁, (hb _ hx₁).2.lt_of_ne hx₂⟩).trans_le _)
   rw [mul_comm, sum_const_nat]
   exact fun _ _ => rfl
-#align finset.equitable_on_iff_le_le_add_one Finset.equitable_on_iff_le_le_add_one
+#align finset.equitable_on_iff_le_le_add_one Finset.equitableOn_iff_le_le_add_one
 
 theorem EquitableOn.le (h : EquitableOn (s : Set α) f) (ha : a ∈ s) :
     (∑ i in s, f i) / s.card ≤ f a :=
-  (equitable_on_iff_le_le_add_one.1 h a ha).1
+  (equitableOn_iff_le_le_add_one.1 h a ha).1
 #align finset.equitable_on.le Finset.EquitableOn.le
 
 theorem EquitableOn.le_add_one (h : EquitableOn (s : Set α) f) (ha : a ∈ s) :
     f a ≤ (∑ i in s, f i) / s.card + 1 :=
-  (equitable_on_iff_le_le_add_one.1 h a ha).2
+  (equitableOn_iff_le_le_add_one.1 h a ha).2
 #align finset.equitable_on.le_add_one Finset.EquitableOn.le_add_one
 
-theorem equitable_on_iff :
+theorem equitableOn_iff :
     EquitableOn (s : Set α) f ↔
       ∀ a ∈ s, f a = (∑ i in s, f i) / s.card ∨ f a = (∑ i in s, f i) / s.card + 1 :=
   by simp_rw [equitable_on_iff_le_le_add_one, Nat.le_and_le_add_one_iff]
-#align finset.equitable_on_iff Finset.equitable_on_iff
+#align finset.equitable_on_iff Finset.equitableOn_iff
 
 end Finset
 

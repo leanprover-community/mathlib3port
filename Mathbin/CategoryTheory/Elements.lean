@@ -134,13 +134,13 @@ def toStructuredArrow : F.Elements ⥤ StructuredArrow PUnit F
 #align category_theory.category_of_elements.to_structured_arrow CategoryTheory.categoryOfElements.toStructuredArrow
 
 @[simp]
-theorem to_structured_arrow_obj (X) :
+theorem toStructuredArrow_obj (X) :
     (toStructuredArrow F).obj X =
       { left := ⟨⟨⟩⟩
         right := X.1
         Hom := fun _ => X.2 } :=
   rfl
-#align category_theory.category_of_elements.to_structured_arrow_obj CategoryTheory.categoryOfElements.to_structured_arrow_obj
+#align category_theory.category_of_elements.to_structured_arrow_obj CategoryTheory.categoryOfElements.toStructuredArrow_obj
 
 @[simp]
 theorem to_comma_map_right {X Y} (f : X ⟶ Y) : ((toStructuredArrow F).map f).right = f.val :=
@@ -155,16 +155,15 @@ def fromStructuredArrow : StructuredArrow PUnit F ⥤ F.Elements
 #align category_theory.category_of_elements.from_structured_arrow CategoryTheory.categoryOfElements.fromStructuredArrow
 
 @[simp]
-theorem from_structured_arrow_obj (X) :
-    (fromStructuredArrow F).obj X = ⟨X.right, X.Hom PUnit.unit⟩ :=
+theorem fromStructuredArrow_obj (X) : (fromStructuredArrow F).obj X = ⟨X.right, X.Hom PUnit.unit⟩ :=
   rfl
-#align category_theory.category_of_elements.from_structured_arrow_obj CategoryTheory.categoryOfElements.from_structured_arrow_obj
+#align category_theory.category_of_elements.from_structured_arrow_obj CategoryTheory.categoryOfElements.fromStructuredArrow_obj
 
 @[simp]
-theorem from_structured_arrow_map {X Y} (f : X ⟶ Y) :
+theorem fromStructuredArrow_map {X Y} (f : X ⟶ Y) :
     (fromStructuredArrow F).map f = ⟨f.right, congr_fun f.w'.symm PUnit.unit⟩ :=
   rfl
-#align category_theory.category_of_elements.from_structured_arrow_map CategoryTheory.categoryOfElements.from_structured_arrow_map
+#align category_theory.category_of_elements.from_structured_arrow_map CategoryTheory.categoryOfElements.fromStructuredArrow_map
 
 /-- The equivalence between the category of elements `F.elements`
     and the comma category `(*, F)`. -/
@@ -222,13 +221,13 @@ def fromCostructuredArrow (F : Cᵒᵖ ⥤ Type v) : (CostructuredArrow yoneda F
 #align category_theory.category_of_elements.from_costructured_arrow CategoryTheory.categoryOfElements.fromCostructuredArrow
 
 @[simp]
-theorem from_costructured_arrow_obj_mk (F : Cᵒᵖ ⥤ Type v) {X : C} (f : yoneda.obj X ⟶ F) :
+theorem fromCostructuredArrow_obj_mk (F : Cᵒᵖ ⥤ Type v) {X : C} (f : yoneda.obj X ⟶ F) :
     (fromCostructuredArrow F).obj (op (CostructuredArrow.mk f)) = ⟨op X, yonedaEquiv.1 f⟩ :=
   rfl
-#align category_theory.category_of_elements.from_costructured_arrow_obj_mk CategoryTheory.categoryOfElements.from_costructured_arrow_obj_mk
+#align category_theory.category_of_elements.from_costructured_arrow_obj_mk CategoryTheory.categoryOfElements.fromCostructuredArrow_obj_mk
 
 /-- The unit of the equivalence `F.elementsᵒᵖ ≅ (yoneda, F)` is indeed iso. -/
-theorem from_to_costructured_arrow_eq (F : Cᵒᵖ ⥤ Type v) :
+theorem from_toCostructuredArrow_eq (F : Cᵒᵖ ⥤ Type v) :
     (toCostructuredArrow F).rightOp ⋙ fromCostructuredArrow F = 𝟭 _ :=
   by
   apply Functor.ext
@@ -245,10 +244,10 @@ theorem from_to_costructured_arrow_eq (F : Cᵒᵖ ⥤ Type v) :
     rfl
   ext; simp [this]
   tidy
-#align category_theory.category_of_elements.from_to_costructured_arrow_eq CategoryTheory.categoryOfElements.from_to_costructured_arrow_eq
+#align category_theory.category_of_elements.from_to_costructured_arrow_eq CategoryTheory.categoryOfElements.from_toCostructuredArrow_eq
 
 /-- The counit of the equivalence `F.elementsᵒᵖ ≅ (yoneda, F)` is indeed iso. -/
-theorem to_from_costructured_arrow_eq (F : Cᵒᵖ ⥤ Type v) :
+theorem to_fromCostructuredArrow_eq (F : Cᵒᵖ ⥤ Type v) :
     (fromCostructuredArrow F).rightOp ⋙ toCostructuredArrow F = 𝟭 _ :=
   by
   apply functor.hext
@@ -276,21 +275,21 @@ theorem to_from_costructured_arrow_eq (F : Cᵒᵖ ⥤ Type v) :
     simp only [Quiver.Hom.unop_op, CategoryTheory.yoneda_obj_map]
     erw [category.comp_id]
   simp
-  exact proof_irrel_heq _ _
-#align category_theory.category_of_elements.to_from_costructured_arrow_eq CategoryTheory.categoryOfElements.to_from_costructured_arrow_eq
+  exact proof_irrel_hEq _ _
+#align category_theory.category_of_elements.to_from_costructured_arrow_eq CategoryTheory.categoryOfElements.to_fromCostructuredArrow_eq
 
 /-- The equivalence `F.elementsᵒᵖ ≅ (yoneda, F)` given by yoneda lemma. -/
 @[simps]
 def costructuredArrowYonedaEquivalence (F : Cᵒᵖ ⥤ Type v) :
     F.Elementsᵒᵖ ≌ CostructuredArrow yoneda F :=
   Equivalence.mk (toCostructuredArrow F) (fromCostructuredArrow F).rightOp
-    (NatIso.op (eqToIso (from_to_costructured_arrow_eq F)))
-    (eq_to_iso <| to_from_costructured_arrow_eq F)
+    (NatIso.op (eqToIso (from_toCostructuredArrow_eq F)))
+    (eq_to_iso <| to_fromCostructuredArrow_eq F)
 #align category_theory.category_of_elements.costructured_arrow_yoneda_equivalence CategoryTheory.categoryOfElements.costructuredArrowYonedaEquivalence
 
 /-- The equivalence `(-.elements)ᵒᵖ ≅ (yoneda, -)` of is actually a natural isomorphism of functors.
 -/
-theorem costructured_arrow_yoneda_equivalence_naturality {F₁ F₂ : Cᵒᵖ ⥤ Type v} (α : F₁ ⟶ F₂) :
+theorem costructuredArrow_yoneda_equivalence_naturality {F₁ F₂ : Cᵒᵖ ⥤ Type v} (α : F₁ ⟶ F₂) :
     (map α).op ⋙ toCostructuredArrow F₂ = toCostructuredArrow F₁ ⋙ CostructuredArrow.map α :=
   by
   fapply Functor.ext
@@ -313,7 +312,7 @@ theorem costructured_arrow_yoneda_equivalence_naturality {F₁ F₂ : Cᵒᵖ �
       cases H
       rfl
     simp [this]
-#align category_theory.category_of_elements.costructured_arrow_yoneda_equivalence_naturality CategoryTheory.categoryOfElements.costructured_arrow_yoneda_equivalence_naturality
+#align category_theory.category_of_elements.costructured_arrow_yoneda_equivalence_naturality CategoryTheory.categoryOfElements.costructuredArrow_yoneda_equivalence_naturality
 
 end CategoryOfElements
 

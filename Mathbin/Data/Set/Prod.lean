@@ -1107,10 +1107,10 @@ theorem offDiag_eq_empty : s.offDiag = ∅ ↔ s.Subsingleton := by
 -/
 
 alias off_diag_nonempty ↔ _ nontrivial.off_diag_nonempty
-#align set.nontrivial.off_diag_nonempty Set.Nontrivial.off_diag_nonempty
+#align set.nontrivial.off_diag_nonempty Set.Nontrivial.offDiag_nonempty
 
 alias off_diag_nonempty ↔ _ subsingleton.off_diag_eq_empty
-#align set.subsingleton.off_diag_eq_empty Set.Subsingleton.off_diag_eq_empty
+#align set.subsingleton.off_diag_eq_empty Set.Subsingleton.offDiag_eq_empty
 
 variable (s t)
 

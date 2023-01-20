@@ -93,14 +93,14 @@ theorem union_star [Star α] : (s ∪ t)⋆ = s⋆ ∪ t⋆ :=
 #align set.union_star Set.union_star
 
 @[simp]
-theorem Inter_star {ι : Sort _} [Star α] (s : ι → Set α) : (⋂ i, s i)⋆ = ⋂ i, (s i)⋆ :=
+theorem interᵢ_star {ι : Sort _} [Star α] (s : ι → Set α) : (⋂ i, s i)⋆ = ⋂ i, (s i)⋆ :=
   preimage_Inter
-#align set.Inter_star Set.Inter_star
+#align set.Inter_star Set.interᵢ_star
 
 @[simp]
-theorem Union_star {ι : Sort _} [Star α] (s : ι → Set α) : (⋃ i, s i)⋆ = ⋃ i, (s i)⋆ :=
+theorem unionᵢ_star {ι : Sort _} [Star α] (s : ι → Set α) : (⋃ i, s i)⋆ = ⋃ i, (s i)⋆ :=
   preimage_Union
-#align set.Union_star Set.Union_star
+#align set.Union_star Set.unionᵢ_star
 
 @[simp]
 theorem compl_star [Star α] : (sᶜ)⋆ = s⋆ᶜ :=

@@ -93,7 +93,7 @@ structure CU (X : Type _) [TopologicalSpace X] where
 #align urysohns.CU Urysohns.CU
 
 instance : Inhabited (CU X) :=
-  ⟨⟨∅, univ, is_closed_empty, is_open_univ, empty_subset _⟩⟩
+  ⟨⟨∅, univ, isClosed_empty, isOpen_univ, empty_subset _⟩⟩
 
 variable [NormalSpace X]
 
@@ -117,22 +117,22 @@ def right (c : CU X) : CU X
     where
   c := closure (normal_exists_closure_subset c.closed_C c.open_U c.Subset).some
   U := c.U
-  closed_C := is_closed_closure
+  closed_C := isClosed_closure
   open_U := c.open_U
   Subset := (normal_exists_closure_subset c.closed_C c.open_U c.Subset).some_spec.2.2
 #align urysohns.CU.right Urysohns.CU.right
 
-theorem left_U_subset_right_C (c : CU X) : c.left.U ⊆ c.right.c :=
+theorem left_u_subset_right_c (c : CU X) : c.left.U ⊆ c.right.c :=
   subset_closure
-#align urysohns.CU.left_U_subset_right_C Urysohns.CU.left_U_subset_right_C
+#align urysohns.CU.left_U_subset_right_C Urysohns.CU.left_u_subset_right_c
 
-theorem left_U_subset (c : CU X) : c.left.U ⊆ c.U :=
+theorem left_u_subset (c : CU X) : c.left.U ⊆ c.U :=
   Subset.trans c.left_U_subset_right_C c.right.Subset
-#align urysohns.CU.left_U_subset Urysohns.CU.left_U_subset
+#align urysohns.CU.left_U_subset Urysohns.CU.left_u_subset
 
-theorem subset_right_C (c : CU X) : c.c ⊆ c.right.c :=
+theorem subset_right_c (c : CU X) : c.c ⊆ c.right.c :=
   Subset.trans c.left.Subset c.left_U_subset_right_C
-#align urysohns.CU.subset_right_C Urysohns.CU.subset_right_C
+#align urysohns.CU.subset_right_C Urysohns.CU.subset_right_c
 
 /-- `n`-th approximation to a continuous function `f : X → ℝ` such that `f = 0` on `c.C` and `f = 1`
 outside of `c.U`. -/
@@ -141,23 +141,23 @@ noncomputable def approx : ℕ → CU X → X → ℝ
   | n + 1, c, x => midpoint ℝ (approx n c.left x) (approx n c.right x)
 #align urysohns.CU.approx Urysohns.CU.approx
 
-theorem approx_of_mem_C (c : CU X) (n : ℕ) {x : X} (hx : x ∈ c.c) : c.approx n x = 0 :=
+theorem approx_of_mem_c (c : CU X) (n : ℕ) {x : X} (hx : x ∈ c.c) : c.approx n x = 0 :=
   by
   induction' n with n ihn generalizing c
   · exact indicator_of_not_mem (fun hU => hU <| c.subset hx) _
   · simp only [approx]
     rw [ihn, ihn, midpoint_self]
     exacts[c.subset_right_C hx, hx]
-#align urysohns.CU.approx_of_mem_C Urysohns.CU.approx_of_mem_C
+#align urysohns.CU.approx_of_mem_C Urysohns.CU.approx_of_mem_c
 
-theorem approx_of_nmem_U (c : CU X) (n : ℕ) {x : X} (hx : x ∉ c.U) : c.approx n x = 1 :=
+theorem approx_of_nmem_u (c : CU X) (n : ℕ) {x : X} (hx : x ∉ c.U) : c.approx n x = 1 :=
   by
   induction' n with n ihn generalizing c
   · exact indicator_of_mem hx _
   · simp only [approx]
     rw [ihn, ihn, midpoint_self]
     exacts[hx, fun hU => hx <| c.left_U_subset hU]
-#align urysohns.CU.approx_of_nmem_U Urysohns.CU.approx_of_nmem_U
+#align urysohns.CU.approx_of_nmem_U Urysohns.CU.approx_of_nmem_u
 
 theorem approx_nonneg (c : CU X) (n : ℕ) (x : X) : 0 ≤ c.approx n x :=
   by
@@ -175,11 +175,11 @@ theorem approx_le_one (c : CU X) (n : ℕ) (x : X) : c.approx n x ≤ 1 :=
     refine' Iff.mpr (div_le_one zero_lt_two) (add_le_add _ _) <;> apply ihn
 #align urysohns.CU.approx_le_one Urysohns.CU.approx_le_one
 
-theorem bdd_above_range_approx (c : CU X) (x : X) : BddAbove (range fun n => c.approx n x) :=
+theorem bddAbove_range_approx (c : CU X) (x : X) : BddAbove (range fun n => c.approx n x) :=
   ⟨1, fun y ⟨n, hn⟩ => hn ▸ c.approx_le_one n x⟩
-#align urysohns.CU.bdd_above_range_approx Urysohns.CU.bdd_above_range_approx
+#align urysohns.CU.bdd_above_range_approx Urysohns.CU.bddAbove_range_approx
 
-theorem approx_le_approx_of_U_sub_C {c₁ c₂ : CU X} (h : c₁.U ⊆ c₂.c) (n₁ n₂ : ℕ) (x : X) :
+theorem approx_le_approx_of_u_sub_c {c₁ c₂ : CU X} (h : c₁.U ⊆ c₂.c) (n₁ n₂ : ℕ) (x : X) :
     c₂.approx n₂ x ≤ c₁.approx n₁ x :=
   by
   by_cases hx : x ∈ c₁.U
@@ -193,9 +193,9 @@ theorem approx_le_approx_of_U_sub_C {c₁ c₂ : CU X} (h : c₁.U ⊆ c₂.c) (
       approx n₂ c₂ x ≤ 1 := approx_le_one _ _ _
       _ = approx n₁ c₁ x := (approx_of_nmem_U _ _ hx).symm
       
-#align urysohns.CU.approx_le_approx_of_U_sub_C Urysohns.CU.approx_le_approx_of_U_sub_C
+#align urysohns.CU.approx_le_approx_of_U_sub_C Urysohns.CU.approx_le_approx_of_u_sub_c
 
-theorem approx_mem_Icc_right_left (c : CU X) (n : ℕ) (x : X) :
+theorem approx_mem_icc_right_left (c : CU X) (n : ℕ) (x : X) :
     c.approx n x ∈ Icc (c.right.approx n x) (c.left.approx n x) :=
   by
   induction' n with n ihn generalizing c
@@ -208,7 +208,7 @@ theorem approx_mem_Icc_right_left (c : CU X) (n : ℕ) (x : X) :
     refine' ⟨midpoint_le_midpoint _ (ihn _).1, midpoint_le_midpoint (ihn _).2 _⟩ <;>
       apply approx_le_approx_of_U_sub_C
     exacts[subset_closure, subset_closure]
-#align urysohns.CU.approx_mem_Icc_right_left Urysohns.CU.approx_mem_Icc_right_left
+#align urysohns.CU.approx_mem_Icc_right_left Urysohns.CU.approx_mem_icc_right_left
 
 theorem approx_le_succ (c : CU X) (n : ℕ) (x : X) : c.approx n x ≤ c.approx (n + 1) x :=
   by
@@ -232,18 +232,18 @@ protected noncomputable def lim (c : CU X) (x : X) : ℝ :=
   ⨆ n, c.approx n x
 #align urysohns.CU.lim Urysohns.CU.lim
 
-theorem tendsto_approx_at_top (c : CU X) (x : X) :
+theorem tendsto_approx_atTop (c : CU X) (x : X) :
     Tendsto (fun n => c.approx n x) atTop (𝓝 <| c.lim x) :=
-  tendsto_at_top_csupr (c.approx_mono x) ⟨1, fun x ⟨n, hn⟩ => hn ▸ c.approx_le_one _ _⟩
-#align urysohns.CU.tendsto_approx_at_top Urysohns.CU.tendsto_approx_at_top
+  tendsto_atTop_csupr (c.approx_mono x) ⟨1, fun x ⟨n, hn⟩ => hn ▸ c.approx_le_one _ _⟩
+#align urysohns.CU.tendsto_approx_at_top Urysohns.CU.tendsto_approx_atTop
 
-theorem lim_of_mem_C (c : CU X) (x : X) (h : x ∈ c.c) : c.lim x = 0 := by
+theorem lim_of_mem_c (c : CU X) (x : X) (h : x ∈ c.c) : c.lim x = 0 := by
   simp only [CU.lim, approx_of_mem_C, h, csupᵢ_const]
-#align urysohns.CU.lim_of_mem_C Urysohns.CU.lim_of_mem_C
+#align urysohns.CU.lim_of_mem_C Urysohns.CU.lim_of_mem_c
 
-theorem lim_of_nmem_U (c : CU X) (x : X) (h : x ∉ c.U) : c.lim x = 1 := by
+theorem lim_of_nmem_u (c : CU X) (x : X) (h : x ∉ c.U) : c.lim x = 1 := by
   simp only [CU.lim, approx_of_nmem_U c _ h, csupᵢ_const]
-#align urysohns.CU.lim_of_nmem_U Urysohns.CU.lim_of_nmem_U
+#align urysohns.CU.lim_of_nmem_U Urysohns.CU.lim_of_nmem_u
 
 theorem lim_eq_midpoint (c : CU X) (x : X) : c.lim x = midpoint ℝ (c.left.lim x) (c.right.lim x) :=
   by
@@ -264,22 +264,22 @@ theorem lim_le_one (c : CU X) (x : X) : c.lim x ≤ 1 :=
   csupᵢ_le fun n => c.approx_le_one _ _
 #align urysohns.CU.lim_le_one Urysohns.CU.lim_le_one
 
-theorem lim_mem_Icc (c : CU X) (x : X) : c.lim x ∈ Icc (0 : ℝ) 1 :=
+theorem lim_mem_icc (c : CU X) (x : X) : c.lim x ∈ Icc (0 : ℝ) 1 :=
   ⟨c.lim_nonneg x, c.lim_le_one x⟩
-#align urysohns.CU.lim_mem_Icc Urysohns.CU.lim_mem_Icc
+#align urysohns.CU.lim_mem_Icc Urysohns.CU.lim_mem_icc
 
 /-- Continuity of `urysohns.CU.lim`. See module docstring for a sketch of the proofs. -/
 theorem continuous_lim (c : CU X) : Continuous c.lim :=
   by
   obtain ⟨h0, h1234, h1⟩ : 0 < (2⁻¹ : ℝ) ∧ (2⁻¹ : ℝ) < 3 / 4 ∧ (3 / 4 : ℝ) < 1 := by norm_num
   refine'
-    continuous_iff_continuous_at.2 fun x =>
-      (Metric.nhds_basis_closed_ball_pow (h0.trans h1234) h1).tendsto_right_iff.2 fun n _ => _
-  simp only [Metric.mem_closed_ball]
+    continuous_iff_continuousAt.2 fun x =>
+      (Metric.nhds_basis_closedBall_pow (h0.trans h1234) h1).tendsto_right_iff.2 fun n _ => _
+  simp only [Metric.mem_closedBall]
   induction' n with n ihn generalizing c
   · refine' eventually_of_forall fun y => _
     rw [pow_zero]
-    exact Real.dist_le_of_mem_Icc_01 (c.lim_mem_Icc _) (c.lim_mem_Icc _)
+    exact Real.dist_le_of_mem_icc_01 (c.lim_mem_Icc _) (c.lim_mem_Icc _)
   · by_cases hxl : x ∈ c.left.U
     · filter_upwards [IsOpen.mem_nhds c.left.open_U hxl, ihn c.left] with _ hyl hyd
       rw [pow_succ, c.lim_eq_midpoint, c.lim_eq_midpoint,
@@ -290,7 +290,7 @@ theorem continuous_lim (c : CU X) : Continuous c.lim :=
       exact mul_le_mul h1234.le hyd dist_nonneg (h0.trans h1234).le
     · replace hxl : x ∈ c.left.right.Cᶜ
       exact compl_subset_compl.2 c.left.right.subset hxl
-      filter_upwards [IsOpen.mem_nhds (is_open_compl_iff.2 c.left.right.closed_C) hxl,
+      filter_upwards [IsOpen.mem_nhds (isOpen_compl_iff.2 c.left.right.closed_C) hxl,
         ihn c.left.right, ihn c.right] with y hyl hydl hydr
       replace hxl : x ∉ c.left.left.U
       exact compl_subset_compl.2 c.left.left_U_subset_right_C hxl
