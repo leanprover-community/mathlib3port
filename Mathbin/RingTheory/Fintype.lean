@@ -17,6 +17,12 @@ import Mathbin.Data.Fintype.Units
 
 open Classical
 
+/- warning: card_units_lt -> card_units_lt is a dubious translation:
+lean 3 declaration is
+  forall (M₀ : Type.{u1}) [_inst_1 : MonoidWithZero.{u1} M₀] [_inst_2 : Nontrivial.{u1} M₀] [_inst_3 : Fintype.{u1} M₀], LT.lt.{0} Nat Nat.hasLt (Fintype.card.{u1} (Units.{u1} M₀ (MonoidWithZero.toMonoid.{u1} M₀ _inst_1)) (Units.fintype.{u1} M₀ (MonoidWithZero.toMonoid.{u1} M₀ _inst_1) _inst_3 (fun (a : M₀) (b : M₀) => Classical.propDecidable (Eq.{succ u1} M₀ a b)))) (Fintype.card.{u1} M₀ _inst_3)
+but is expected to have type
+  forall (M₀ : Type.{u1}) [_inst_1 : MonoidWithZero.{u1} M₀] [_inst_2 : Nontrivial.{u1} M₀] [_inst_3 : Fintype.{u1} M₀], LT.lt.{0} Nat instLTNat (Fintype.card.{u1} (Units.{u1} M₀ (MonoidWithZero.toMonoid.{u1} M₀ _inst_1)) (instFintypeUnits.{u1} M₀ (MonoidWithZero.toMonoid.{u1} M₀ _inst_1) _inst_3 (fun (a : M₀) (b : M₀) => Classical.propDecidable (Eq.{succ u1} M₀ a b)))) (Fintype.card.{u1} M₀ _inst_3)
+Case conversion may be inaccurate. Consider using '#align card_units_lt card_units_ltₓ'. -/
 theorem card_units_lt (M₀ : Type _) [MonoidWithZero M₀] [Nontrivial M₀] [Fintype M₀] :
     Fintype.card M₀ˣ < Fintype.card M₀ :=
   Fintype.card_lt_of_injective_of_not_mem (coe : M₀ˣ → M₀) Units.ext not_isUnit_zero
