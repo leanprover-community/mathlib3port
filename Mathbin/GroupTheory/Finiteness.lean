@@ -58,7 +58,7 @@ add_decl_doc AddSubmonoid.Fg
       "An equivalent expression of `add_submonoid.fg` in terms of `set.finite` instead of\n`finset`."]
 theorem Submonoid.fg_iff (P : Submonoid M) :
     Submonoid.Fg P ↔ ∃ S : Set M, Submonoid.closure S = P ∧ S.Finite :=
-  ⟨fun ⟨S, hS⟩ => ⟨S, hS, Finset.finite_to_set S⟩, fun ⟨S, hS, hf⟩ =>
+  ⟨fun ⟨S, hS⟩ => ⟨S, hS, Finset.finite_toSet S⟩, fun ⟨S, hS, hf⟩ =>
     ⟨Set.Finite.toFinset hf, by simp [hS]⟩⟩
 #align submonoid.fg_iff Submonoid.fg_iff
 #align add_submonoid.fg_iff AddSubmonoid.fg_iff
@@ -244,7 +244,7 @@ add_decl_doc AddSubgroup.Fg
       "An equivalent expression of `add_subgroup.fg` in terms of `set.finite` instead of\n`finset`."]
 theorem Subgroup.fg_iff (P : Subgroup G) :
     Subgroup.Fg P ↔ ∃ S : Set G, Subgroup.closure S = P ∧ S.Finite :=
-  ⟨fun ⟨S, hS⟩ => ⟨S, hS, Finset.finite_to_set S⟩, fun ⟨S, hS, hf⟩ =>
+  ⟨fun ⟨S, hS⟩ => ⟨S, hS, Finset.finite_toSet S⟩, fun ⟨S, hS, hf⟩ =>
     ⟨Set.Finite.toFinset hf, by simp [hS]⟩⟩
 #align subgroup.fg_iff Subgroup.fg_iff
 #align add_subgroup.fg_iff AddSubgroup.fg_iff

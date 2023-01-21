@@ -443,7 +443,7 @@ theorem linearIndependent_of_finite (s : Set M)
     (H : ∀ (t) (_ : t ⊆ s), Set.Finite t → LinearIndependent R (fun x => x : t → M)) :
     LinearIndependent R (fun x => x : s → M) :=
   linearIndependent_subtype.2 fun l hl =>
-    linearIndependent_subtype.1 (H _ hl (Finset.finite_to_set _)) l (Subset.refl _)
+    linearIndependent_subtype.1 (H _ hl (Finset.finite_toSet _)) l (Subset.refl _)
 #align linear_independent_of_finite linearIndependent_of_finite
 
 theorem linearIndependent_unionᵢ_of_directed {η : Type _} {s : η → Set M} (hs : Directed (· ⊆ ·) s)

@@ -1419,7 +1419,7 @@ theorem pi_eq_generateFrom :
       generateFrom
         { g | ∃ (s : ∀ a, Set (π a))(i : Finset ι), (∀ a ∈ i, IsOpen (s a)) ∧ g = pi (↑i) s } :=
   le_antisymm
-    (le_generateFrom fun g ⟨s, i, hi, Eq⟩ => Eq.symm ▸ isOpen_set_pi (Finset.finite_to_set _) hi)
+    (le_generateFrom fun g ⟨s, i, hi, Eq⟩ => Eq.symm ▸ isOpen_set_pi (Finset.finite_toSet _) hi)
     (le_infᵢ fun a s ⟨t, ht, s_eq⟩ =>
       GenerateOpen.basic _ <|
         ⟨update (fun a => univ) a t, {a}, by simpa using ht, s_eq ▸ by ext f <;> simp [Set.pi]⟩)
@@ -1436,7 +1436,7 @@ theorem pi_generateFrom_eq {π : ι → Type _} {g : ∀ a, Set (Set (π a))} :
   exact fun s ⟨t, i, ht, Eq⟩ => ⟨t, i, fun a ha => generate_open.basic _ (ht a ha), Eq⟩
   · rintro s ⟨t, i, hi, rfl⟩
     rw [pi_def]
-    apply isOpen_bInter (Finset.finite_to_set _)
+    apply isOpen_bInter (Finset.finite_toSet _)
     intro a ha
     show ((generate_from G).coinduced fun f : ∀ a, π a => f a).IsOpen (t a)
     refine' le_generateFrom _ _ (hi a ha)

@@ -51,7 +51,7 @@ def Fg (N : Submodule R M) : Prop :=
 #align submodule.fg Submodule.Fg
 
 theorem fg_def {N : Submodule R M} : N.Fg ↔ ∃ S : Set M, S.Finite ∧ span R S = N :=
-  ⟨fun ⟨t, h⟩ => ⟨_, Finset.finite_to_set t, h⟩,
+  ⟨fun ⟨t, h⟩ => ⟨_, Finset.finite_toSet t, h⟩,
     by
     rintro ⟨t', h, rfl⟩
     rcases finite.exists_finset_coe h with ⟨t, rfl⟩

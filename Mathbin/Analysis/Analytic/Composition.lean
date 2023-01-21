@@ -670,7 +670,7 @@ power series, here given a a finset.
 See also `comp_partial_sum`. -/
 def compPartialSumTarget (m M N : ℕ) : Finset (Σn, Composition n) :=
   Set.Finite.toFinset <|
-    ((Finset.finite_to_set _).dependent_image _).Subset <|
+    ((Finset.finite_toSet _).dependent_image _).Subset <|
       comp_partial_sum_target_subset_image_compPartialSumSource m M N
 #align formal_multilinear_series.comp_partial_sum_target FormalMultilinearSeries.compPartialSumTarget
 

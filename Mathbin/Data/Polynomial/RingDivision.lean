@@ -915,7 +915,7 @@ theorem bUnion_roots_finite {R S : Type _} [Semiring R] [CommRing S] [IsDomain S
       · exact Set.image_subset_iff.2 fun f hf i _ => hf.2 i
       · refine' fun x hx y hy hxy => (ext_iff_nat_degree_le hx.1 hy.1).2 fun i hi => _
         exact id congr_fun hxy ⟨i, Nat.lt_succ_of_le hi⟩)
-    fun i hi => Finset.finite_to_set _
+    fun i hi => Finset.finite_toSet _
 #align polynomial.bUnion_roots_finite Polynomial.bUnion_roots_finite
 
 theorem mem_root_set' {p : T[X]} {S : Type _} [CommRing S] [IsDomain S] [Algebra T S] {a : S} :

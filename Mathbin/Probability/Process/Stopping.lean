@@ -1073,7 +1073,7 @@ theorem memℒpStoppedValueOfMemFinset (hτ : IsStoppingTime ℱ τ) (hu : ∀ n
   swap; infer_instance
   refine' mem_ℒp_finset_sum' _ fun i hi => mem_ℒp.indicator _ (hu i)
   refine' ℱ.le i { a : Ω | τ a = i } (hτ.measurable_set_eq_of_countable_range _ i)
-  refine' ((Finset.finite_to_set s).Subset fun ω hω => _).Countable
+  refine' ((Finset.finite_toSet s).Subset fun ω hω => _).Countable
   obtain ⟨y, rfl⟩ := hω
   exact hbdd y
 #align measure_theory.mem_ℒp_stopped_value_of_mem_finset MeasureTheory.memℒpStoppedValueOfMemFinset

@@ -746,51 +746,51 @@ end Set
 
 namespace Finset
 
-#print Finset.finite_to_set /-
+#print Finset.finite_toSet /-
 /-- Gives a `set.finite` for the `finset` coerced to a `set`.
 This is a wrapper around `set.to_finite`. -/
 @[simp]
-theorem finite_to_set (s : Finset α) : (s : Set α).Finite :=
+theorem finite_toSet (s : Finset α) : (s : Set α).Finite :=
   Set.toFinite _
-#align finset.finite_to_set Finset.finite_to_set
+#align finset.finite_to_set Finset.finite_toSet
 -/
 
-#print Finset.finite_to_set_toFinset /-
+#print Finset.finite_toSet_toFinset /-
 @[simp]
-theorem finite_to_set_toFinset (s : Finset α) : s.finite_to_set.toFinset = s :=
+theorem finite_toSet_toFinset (s : Finset α) : s.finite_to_set.toFinset = s :=
   by
   ext
   rw [Set.Finite.mem_toFinset, mem_coe]
-#align finset.finite_to_set_to_finset Finset.finite_to_set_toFinset
+#align finset.finite_to_set_to_finset Finset.finite_toSet_toFinset
 -/
 
 end Finset
 
 namespace Multiset
 
-#print Multiset.finite_to_set /-
+#print Multiset.finite_toSet /-
 @[simp]
-theorem finite_to_set (s : Multiset α) : { x | x ∈ s }.Finite := by
+theorem finite_toSet (s : Multiset α) : { x | x ∈ s }.Finite := by
   classical simpa only [← Multiset.mem_toFinset] using s.to_finset.finite_to_set
-#align multiset.finite_to_set Multiset.finite_to_set
+#align multiset.finite_to_set Multiset.finite_toSet
 -/
 
-#print Multiset.finite_to_set_toFinset /-
+#print Multiset.finite_toSet_toFinset /-
 @[simp]
-theorem finite_to_set_toFinset [DecidableEq α] (s : Multiset α) :
+theorem finite_toSet_toFinset [DecidableEq α] (s : Multiset α) :
     s.finite_to_set.toFinset = s.toFinset := by
   ext x
   simp
-#align multiset.finite_to_set_to_finset Multiset.finite_to_set_toFinset
+#align multiset.finite_to_set_to_finset Multiset.finite_toSet_toFinset
 -/
 
 end Multiset
 
-#print List.finite_to_set /-
+#print List.finite_toSet /-
 @[simp]
-theorem List.finite_to_set (l : List α) : { x | x ∈ l }.Finite :=
+theorem List.finite_toSet (l : List α) : { x | x ∈ l }.Finite :=
   (show Multiset α from ⟦l⟧).finite_to_set
-#align list.finite_to_set List.finite_to_set
+#align list.finite_to_set List.finite_toSet
 -/
 
 /-! ### Finite instances
@@ -1406,7 +1406,7 @@ theorem Finite.pi {δ : Type _} [Finite δ] {κ : δ → Type _} {t : ∀ d, Set
   lift t to ∀ d, Finset (κ d) using ht
   classical
     rw [← Fintype.coe_piFinset]
-    apply Finset.finite_to_set
+    apply Finset.finite_toSet
 #align set.finite.pi Set.Finite.pi
 
 #print Set.union_finset_finite_of_range_finite /-

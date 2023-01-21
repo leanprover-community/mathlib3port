@@ -326,7 +326,7 @@ theorem algebraicIndependent_of_finite (s : Set A)
     (H : ∀ (t) (_ : t ⊆ s), t.Finite → AlgebraicIndependent R (fun x => x : t → A)) :
     AlgebraicIndependent R (fun x => x : s → A) :=
   algebraicIndependent_subtype.2 fun p hp =>
-    algebraicIndependent_subtype.1 (H _ (mem_supported.1 hp) (Finset.finite_to_set _)) _ (by simp)
+    algebraicIndependent_subtype.1 (H _ (mem_supported.1 hp) (Finset.finite_toSet _)) _ (by simp)
 #align algebraic_independent_of_finite algebraicIndependent_of_finite
 
 theorem AlgebraicIndependent.image_of_comp {ι ι'} (s : Set ι) (f : ι → ι') (g : ι' → A)

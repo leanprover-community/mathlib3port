@@ -419,7 +419,7 @@ theorem nonempty_interᵢ_clPrehaar (K₀ : PositiveCompacts G) :
   let V₀ := ⋂ V ∈ t, (V : open_nhds_of 1).1
   have h1V₀ : IsOpen V₀ := by
     apply isOpen_bInter
-    apply Finset.finite_to_set
+    apply Finset.finite_toSet
     rintro ⟨V, hV⟩ h2V
     exact hV.1
   have h2V₀ : (1 : G) ∈ V₀ := by

@@ -202,7 +202,7 @@ theorem isIntegral_iff_isIntegral_closure_finite {r : A} :
   by
   constructor <;> intro hr
   · rcases hr with ⟨p, hmp, hpr⟩
-    refine' ⟨_, Finset.finite_to_set _, p.restriction, monic_restriction.2 hmp, _⟩
+    refine' ⟨_, Finset.finite_toSet _, p.restriction, monic_restriction.2 hmp, _⟩
     rw [← aeval_def, ← aeval_map_algebra_map R r p.restriction, map_restriction, aeval_def, hpr]
   rcases hr with ⟨s, hs, hsr⟩
   exact isIntegral_ofSubring _ hsr
@@ -345,7 +345,7 @@ theorem isIntegral_of_mem_of_fg (S : Subalgebra R A) (HS : S.toSubmodule.Fg) (x 
       exact smul_mem _ y (subset_span (Or.inl rfl))
   have foo : ∀ z, z ∈ S₁ ↔ z ∈ Algebra.adjoin (↥S₀) (y : Set A)
   simp [this]
-  haveI : IsNoetherianRing ↥S₀ := is_noetherian_subring_closure _ (Finset.finite_to_set _)
+  haveI : IsNoetherianRing ↥S₀ := is_noetherian_subring_closure _ (Finset.finite_toSet _)
   refine'
     isIntegral_of_submodule_noetherian (Algebra.adjoin S₀ ↑y)
       (isNoetherianOfFgOfNoetherian _
@@ -1003,7 +1003,7 @@ theorem isIntegral_trans (A_int : IsIntegral R A) (x : B) (hx : IsIntegral A x) 
   rcases hx with ⟨p, pmonic, hp⟩
   let S : Set B := ↑(p.map <| algebraMap A B).frange
   refine' isIntegral_of_mem_of_fg (adjoin R (S ∪ {x})) _ _ (subset_adjoin <| Or.inr rfl)
-  refine' fg_trans (fgAdjoinOfFinite (Finset.finite_to_set _) fun x hx => _) _
+  refine' fg_trans (fgAdjoinOfFinite (Finset.finite_toSet _) fun x hx => _) _
   · rw [Finset.mem_coe, frange, Finset.mem_image] at hx
     rcases hx with ⟨i, _, rfl⟩
     rw [coeff_map]

@@ -331,7 +331,7 @@ theorem IsCompact.elim_finite_subcover_image {b : Set ι} {c : ι → Set α} (h
   by
   rcases hs.elim_finite_subcover (fun i => c i : b → Set α) _ _ with ⟨d, hd⟩ <;> [skip,
     simpa using hc₁, simpa using hc₂]
-  refine' ⟨↑(d.image coe), _, Finset.finite_to_set _, _⟩
+  refine' ⟨↑(d.image coe), _, Finset.finite_toSet _, _⟩
   · simp
   · rwa [Finset.coe_image, bUnion_image]
 #align is_compact.elim_finite_subcover_image IsCompact.elim_finite_subcover_image
@@ -2011,7 +2011,7 @@ theorem isIrreducible_iff_interₛ {s : Set α} :
       rw [Finset.coe_insert, sInter_insert]
       apply h.2
       · solve_by_elim [Finset.mem_insert_self]
-      · apply isOpen_interₛ (Finset.finite_to_set U)
+      · apply isOpen_interₛ (Finset.finite_toSet U)
         intros
         solve_by_elim [Finset.mem_insert_of_mem]
       · solve_by_elim [Finset.mem_insert_self]
@@ -2081,7 +2081,7 @@ theorem isIrreducible_iff_unionₛ_closed {s : Set α} :
           solve_by_elim [Finset.mem_insert_of_mem]
       · solve_by_elim [Finset.mem_insert_self]
       · rw [sUnion_eq_bUnion]
-        apply isClosed_bUnion (Finset.finite_to_set Z)
+        apply isClosed_bUnion (Finset.finite_toSet Z)
         · intros
           solve_by_elim [Finset.mem_insert_of_mem]
       · simpa using H
