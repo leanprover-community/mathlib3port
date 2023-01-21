@@ -67,7 +67,7 @@ def TopologicalSpace.PositiveCompacts.piIcc01 (ι : Type _) [Fintype ι] : Posit
   carrier := pi univ fun i => Icc 0 1
   is_compact' := isCompact_univ_pi fun i => isCompact_icc
   interior_nonempty' := by
-    simp only [interior_pi_set, Set.to_finite, interior_icc, univ_pi_nonempty_iff, nonempty_Ioo,
+    simp only [interior_pi_set, Set.toFinite, interior_icc, univ_pi_nonempty_iff, nonempty_Ioo,
       imp_true_iff, zero_lt_one]
 #align topological_space.positive_compacts.pi_Icc01 TopologicalSpace.PositiveCompacts.piIcc01
 

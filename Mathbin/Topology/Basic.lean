@@ -185,7 +185,7 @@ theorem isOpen_interᵢ_prop {p : Prop} {s : p → Set α} (h : ∀ h : p, IsOpe
 
 theorem isOpen_bInter_finset {s : Finset β} {f : β → Set α} (h : ∀ i ∈ s, IsOpen (f i)) :
     IsOpen (⋂ i ∈ s, f i) :=
-  isOpen_bInter (to_finite _) h
+  isOpen_bInter (toFinite _) h
 #align is_open_bInter_finset isOpen_bInter_finset
 
 theorem isOpen_const {p : Prop} : IsOpen { a : α | p } :=

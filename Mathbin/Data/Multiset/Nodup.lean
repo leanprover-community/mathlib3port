@@ -300,11 +300,11 @@ protected theorem Nodup.sigma {σ : α → Type _} {t : ∀ a, Multiset (σ a)} 
 #align multiset.nodup.sigma Multiset.Nodup.sigma
 -/
 
-#print Multiset.Nodup.filter_map /-
-protected theorem Nodup.filter_map (f : α → Option β) (H : ∀ a a' b, b ∈ f a → b ∈ f a' → a = a') :
+#print Multiset.Nodup.filterMap /-
+protected theorem Nodup.filterMap (f : α → Option β) (H : ∀ a a' b, b ∈ f a → b ∈ f a' → a = a') :
     Nodup s → Nodup (filterMap f s) :=
   Quot.inductionOn s fun l => Nodup.filterMap H
-#align multiset.nodup.filter_map Multiset.Nodup.filter_map
+#align multiset.nodup.filter_map Multiset.Nodup.filterMap
 -/
 
 #print Multiset.nodup_range /-

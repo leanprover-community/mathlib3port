@@ -466,7 +466,7 @@ variable {Γ : Type _} [Group Γ] {T : Type _} [TopologicalSpace T] [MulAction �
 /-- A finite group action is always properly discontinuous. -/
 @[to_additive "A finite group action is always properly discontinuous."]
 instance (priority := 100) Finite.to_properlyDiscontinuousSmul [Finite Γ] :
-    ProperlyDiscontinuousSmul Γ T where finite_disjoint_inter_image _ _ _ _ := Set.to_finite _
+    ProperlyDiscontinuousSmul Γ T where finite_disjoint_inter_image _ _ _ _ := Set.toFinite _
 #align finite.to_properly_discontinuous_smul Finite.to_properlyDiscontinuousSmul
 #align finite.to_properly_discontinuous_vadd Finite.to_properly_discontinuous_vadd
 

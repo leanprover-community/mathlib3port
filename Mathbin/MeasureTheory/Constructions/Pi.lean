@@ -510,7 +510,7 @@ theorem ae_le_pi {β : ι → Type _} [∀ i, Preorder (β i)] {f f' : ∀ i, α
 
 theorem ae_le_set_pi {I : Set ι} {s t : ∀ i, Set (α i)} (h : ∀ i ∈ I, s i ≤ᵐ[μ i] t i) :
     Set.pi I s ≤ᵐ[Measure.pi μ] Set.pi I t :=
-  ((eventually_all_finite I.to_finite).2 fun i hi => tendsto_eval_ae_ae.Eventually (h i hi)).mono
+  ((eventually_all_finite I.toFinite).2 fun i hi => tendsto_eval_ae_ae.Eventually (h i hi)).mono
     fun x hst hx i hi => hst i hi <| hx i hi
 #align measure_theory.measure.ae_le_set_pi MeasureTheory.Measure.ae_le_set_pi
 

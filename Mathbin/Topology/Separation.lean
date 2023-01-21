@@ -300,7 +300,7 @@ theorem exists_open_singleton_of_open_finite [T0Space α] {s : Set α} (hfin : s
 
 theorem exists_open_singleton_of_fintype [T0Space α] [Finite α] [Nonempty α] :
     ∃ x : α, IsOpen ({x} : Set α) :=
-  let ⟨x, _, h⟩ := exists_open_singleton_of_open_finite (Set.to_finite _) univ_nonempty isOpen_univ
+  let ⟨x, _, h⟩ := exists_open_singleton_of_open_finite (Set.toFinite _) univ_nonempty isOpen_univ
   ⟨x, h⟩
 #align exists_open_singleton_of_fintype exists_open_singleton_of_fintype
 
@@ -1490,7 +1490,7 @@ theorem discrete_of_t1_of_finite {X : Type _} [TopologicalSpace X] [T1Space X] [
   apply singletons_open_iff_discrete.mp
   intro x
   rw [← isClosed_compl_iff]
-  exact (Set.to_finite _).IsClosed
+  exact (Set.toFinite _).IsClosed
 #align discrete_of_t1_of_finite discrete_of_t1_of_finite
 
 theorem PreconnectedSpace.trivial_of_discrete [PreconnectedSpace α] [DiscreteTopology α] :

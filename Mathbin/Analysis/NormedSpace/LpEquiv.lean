@@ -51,8 +51,8 @@ variable {α : Type _} {E : α → Type _} [∀ i, NormedAddCommGroup (E i)] {p 
 theorem Memℓp.all [Finite α] (f : ∀ i, E i) : Memℓp f p :=
   by
   rcases p.trichotomy with (rfl | rfl | h)
-  · exact mem_ℓp_zero_iff.mpr { i : α | f i ≠ 0 }.to_finite
-  · exact mem_ℓp_infty_iff.mpr (Set.Finite.bddAbove (Set.range fun i : α => ‖f i‖).to_finite)
+  · exact mem_ℓp_zero_iff.mpr { i : α | f i ≠ 0 }.toFinite
+  · exact mem_ℓp_infty_iff.mpr (Set.Finite.bddAbove (Set.range fun i : α => ‖f i‖).toFinite)
   · cases nonempty_fintype α
     exact memℓp_gen ⟨finset.univ.sum _, hasSum_fintype _⟩
 #align mem_ℓp.all Memℓp.all

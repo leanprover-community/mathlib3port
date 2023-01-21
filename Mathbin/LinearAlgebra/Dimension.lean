@@ -321,7 +321,7 @@ theorem LinearIndependent.finite_of_isNoetherian [IsNoetherian R M] {v : ι → 
 
 theorem LinearIndependent.set_finite_of_isNoetherian [IsNoetherian R M] {s : Set M}
     (hi : LinearIndependent R (coe : s → M)) : s.Finite :=
-  @Set.to_finite _ _ hi.finite_of_is_noetherian
+  @Set.toFinite _ _ hi.finite_of_is_noetherian
 #align linear_independent.set_finite_of_is_noetherian LinearIndependent.set_finite_of_isNoetherian
 
 -- One might hope that a finite spanning set implies that any linearly independent set is finite.

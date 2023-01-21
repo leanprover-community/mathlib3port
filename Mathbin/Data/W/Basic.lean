@@ -31,6 +31,7 @@ identifier `W` in the root namespace.
 -/
 
 
+#print WType /-
 /--
 Given `β : α → Type*`, `W_type β` is the type of finitely branching trees where nodes are labeled by
 elements of `α` and the children of a node labeled `a` are indexed by elements of `β a`.
@@ -38,6 +39,7 @@ elements of `α` and the children of a node labeled `a` are indexed by elements 
 inductive WType {α : Type _} (β : α → Type _)
   | mk (a : α) (f : β a → WType) : WType
 #align W_type WType
+-/
 
 instance : Inhabited (WType fun _ : Unit => Empty) :=
   ⟨WType.mk Unit.unit Empty.elim⟩
@@ -46,23 +48,39 @@ namespace WType
 
 variable {α : Type _} {β : α → Type _}
 
+#print WType.toSigma /-
 /-- The canonical map to the corresponding sigma type, returning the label of a node as an
   element `a` of `α`, and the children of the node as a function `β a → W_type β`. -/
 def toSigma : WType β → Σa : α, β a → WType β
   | ⟨a, f⟩ => ⟨a, f⟩
 #align W_type.to_sigma WType.toSigma
+-/
 
+#print WType.ofSigma /-
 /-- The canonical map from the sigma type into a `W_type`. Given a node `a : α`, and
   its children as a function `β a → W_type β`, return the corresponding tree. -/
 def ofSigma : (Σa : α, β a → WType β) → WType β
   | ⟨a, f⟩ => WType.mk a f
 #align W_type.of_sigma WType.ofSigma
+-/
 
+/- warning: W_type.of_sigma_to_sigma -> WType.ofSigma_toSigma is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : α -> Type.{u2}} (w : WType.{u1, u2} α β), Eq.{max (succ u1) (succ u2)} (WType.{u1, u2} α (fun (a : α) => β a)) (WType.ofSigma.{u1, u2} α (fun (a : α) => β a) (WType.toSigma.{u1, u2} α β w)) w
+but is expected to have type
+  forall {α : Type.{u2}} {β : α -> Type.{u1}} (w : WType.{u2, u1} α β), Eq.{max (succ u2) (succ u1)} (WType.{u2, u1} α (fun (a : α) => β a)) (WType.ofSigma.{u2, u1} α (fun (a : α) => β a) (WType.toSigma.{u2, u1} α β w)) w
+Case conversion may be inaccurate. Consider using '#align W_type.of_sigma_to_sigma WType.ofSigma_toSigmaₓ'. -/
 @[simp]
 theorem ofSigma_toSigma : ∀ w : WType β, ofSigma (toSigma w) = w
   | ⟨a, f⟩ => rfl
 #align W_type.of_sigma_to_sigma WType.ofSigma_toSigma
 
+/- warning: W_type.to_sigma_of_sigma -> WType.toSigma_ofSigma is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : α -> Type.{u2}} (s : Sigma.{u1, max u1 u2} α (fun (a : α) => (β a) -> (WType.{u1, u2} α β))), Eq.{max (succ u1) (succ (max u1 u2))} (Sigma.{u1, max u1 u2} α (fun (a : α) => (β a) -> (WType.{u1, u2} α (fun (a : α) => β a)))) (WType.toSigma.{u1, u2} α (fun (a : α) => β a) (WType.ofSigma.{u1, u2} α (fun (a : α) => β a) s)) s
+but is expected to have type
+  forall {α : Type.{u2}} {β : α -> Type.{u1}} (s : Sigma.{u2, max u2 u1} α (fun (a : α) => (β a) -> (WType.{u2, u1} α β))), Eq.{max (succ u2) (succ u1)} (Sigma.{u2, max u2 u1} α (fun (a : α) => (β a) -> (WType.{u2, u1} α (fun (a : α) => β a)))) (WType.toSigma.{u2, u1} α (fun (a : α) => β a) (WType.ofSigma.{u2, u1} α (fun (a : α) => β a) s)) s
+Case conversion may be inaccurate. Consider using '#align W_type.to_sigma_of_sigma WType.toSigma_ofSigmaₓ'. -/
 @[simp]
 theorem toSigma_ofSigma : ∀ s : Σa : α, β a → WType β, toSigma (ofSigma s) = s
   | ⟨a, f⟩ => rfl
@@ -70,6 +88,7 @@ theorem toSigma_ofSigma : ∀ s : Σa : α, β a → WType β, toSigma (ofSigma 
 
 variable (β)
 
+#print WType.equivSigma /-
 /-- The canonical bijection with the sigma type, showing that `W_type` is a fixed point of
   the polynomial functor `X ↦ Σ a : α, β a → X`. -/
 @[simps]
@@ -80,20 +99,23 @@ def equivSigma : WType β ≃ Σa : α, β a → WType β
   left_inv := ofSigma_toSigma
   right_inv := toSigma_ofSigma
 #align W_type.equiv_sigma WType.equivSigma
+-/
 
 variable {β}
 
-/- warning: W_type.elim -> WType.elim is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : α -> Type.{u2}} (γ : Type.{u3}), ((Sigma.{u1, max u2 u3} α (fun (a : α) => (β a) -> γ)) -> γ) -> (WType.{u1, u2} α β) -> γ
-but is expected to have type
-  forall {α : Type.{u2}} {β : α -> Type.{u3}} (γ : Type.{u1}), ((Sigma.{u2, max u3 u1} α (fun (a : α) => (β a) -> γ)) -> γ) -> (WType.{u2, u3} α β) -> γ
-Case conversion may be inaccurate. Consider using '#align W_type.elim WType.elimₓ'. -/
+#print WType.elim /-
 /-- The canonical map from `W_type β` into any type `γ` given a map `(Σ a : α, β a → γ) → γ`. -/
 def elim (γ : Type _) (fγ : (Σa : α, β a → γ) → γ) : WType β → γ
   | ⟨a, f⟩ => fγ ⟨a, fun b => elim (f b)⟩
 #align W_type.elim WType.elim
+-/
 
+/- warning: W_type.elim_injective -> WType.elim_injective is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : α -> Type.{u2}} (γ : Type.{u3}) (fγ : (Sigma.{u1, max u2 u3} α (fun (a : α) => (β a) -> γ)) -> γ), (Function.Injective.{max (succ u1) (succ (max u2 u3)), succ u3} (Sigma.{u1, max u2 u3} α (fun (a : α) => (β a) -> γ)) γ fγ) -> (Function.Injective.{max (succ u1) (succ u2), succ u3} (WType.{u1, u2} α (fun (a : α) => β a)) γ (WType.elim.{u1, u2, u3} α (fun (a : α) => β a) γ fγ))
+but is expected to have type
+  forall {α : Type.{u2}} {β : α -> Type.{u1}} (γ : Type.{u3}) (fγ : (Sigma.{u2, max u1 u3} α (fun (a : α) => (β a) -> γ)) -> γ), (Function.Injective.{max (max (succ u2) (succ u1)) (succ u3), succ u3} (Sigma.{u2, max u1 u3} α (fun (a : α) => (β a) -> γ)) γ fγ) -> (Function.Injective.{max (succ u1) (succ u2), succ u3} (WType.{u2, u1} α (fun (a : α) => β a)) γ (WType.elim.{u2, u1, u3} α (fun (a : α) => β a) γ fγ))
+Case conversion may be inaccurate. Consider using '#align W_type.elim_injective WType.elim_injectiveₓ'. -/
 theorem elim_injective (γ : Type _) (fγ : (Σa : α, β a → γ) → γ)
     (fγ_injective : Function.Injective fγ) : Function.Injective (elim γ fγ)
   | ⟨a₁, f₁⟩, ⟨a₂, f₂⟩, h =>
@@ -106,6 +128,7 @@ theorem elim_injective (γ : Type _) (fγ : (Σa : α, β a → γ) → γ)
 instance [hα : IsEmpty α] : IsEmpty (WType β) :=
   ⟨fun w => WType.recOn w (IsEmpty.elim hα)⟩
 
+#print WType.infinite_of_nonempty_of_isEmpty /-
 theorem infinite_of_nonempty_of_isEmpty (a b : α) [ha : Nonempty (β a)] [he : IsEmpty (β b)] :
     Infinite (WType β) :=
   ⟨by
@@ -124,20 +147,35 @@ theorem infinite_of_nonempty_of_isEmpty (a b : α) [ha : Nonempty (β a)] [he : 
       · refine' congr_arg Nat.succ (ih _)
         simp_all [Function.funext_iff]⟩
 #align W_type.infinite_of_nonempty_of_is_empty WType.infinite_of_nonempty_of_isEmpty
+-/
 
 variable [∀ a : α, Fintype (β a)]
 
+#print WType.depth /-
 /-- The depth of a finitely branching tree. -/
 def depth : WType β → ℕ
   | ⟨a, f⟩ => (Finset.sup Finset.univ fun n => depth (f n)) + 1
 #align W_type.depth WType.depth
+-/
 
+/- warning: W_type.depth_pos -> WType.depth_pos is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : α -> Type.{u2}} [_inst_1 : forall (a : α), Fintype.{u2} (β a)] (t : WType.{u1, u2} α β), LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) (WType.depth.{u1, u2} α β (fun (a : α) => _inst_1 a) t)
+but is expected to have type
+  forall {α : Type.{u2}} {β : α -> Type.{u1}} [_inst_1 : forall (a : α), Fintype.{u1} (β a)] (t : WType.{u2, u1} α β), LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) (WType.depth.{u2, u1} α β (fun (a : α) => _inst_1 a) t)
+Case conversion may be inaccurate. Consider using '#align W_type.depth_pos WType.depth_posₓ'. -/
 theorem depth_pos (t : WType β) : 0 < t.depth :=
   by
   cases t
   apply Nat.succ_pos
 #align W_type.depth_pos WType.depth_pos
 
+/- warning: W_type.depth_lt_depth_mk -> WType.depth_lt_depth_mk is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : α -> Type.{u2}} [_inst_1 : forall (a : α), Fintype.{u2} (β a)] (a : α) (f : (β a) -> (WType.{u1, u2} α β)) (i : β a), LT.lt.{0} Nat Nat.hasLt (WType.depth.{u1, u2} α β (fun (a : α) => _inst_1 a) (f i)) (WType.depth.{u1, u2} α (fun (a : α) => β a) (fun (a : α) => _inst_1 a) (WType.mk.{u1, u2} α (fun (a : α) => β a) a f))
+but is expected to have type
+  forall {α : Type.{u2}} {β : α -> Type.{u1}} [_inst_1 : forall (a : α), Fintype.{u1} (β a)] (a : α) (f : (β a) -> (WType.{u2, u1} α β)) (i : β a), LT.lt.{0} Nat instLTNat (WType.depth.{u2, u1} α β (fun (a : α) => _inst_1 a) (f i)) (WType.depth.{u2, u1} α β (fun (a : α) => _inst_1 a) (WType.mk.{u2, u1} α β a f))
+Case conversion may be inaccurate. Consider using '#align W_type.depth_lt_depth_mk WType.depth_lt_depth_mkₓ'. -/
 theorem depth_lt_depth_mk (a : α) (f : β a → WType β) (i : β a) : depth (f i) < depth ⟨a, f⟩ :=
   Nat.lt_succ_of_le (Finset.le_sup (Finset.mem_univ i))
 #align W_type.depth_lt_depth_mk WType.depth_lt_depth_mk

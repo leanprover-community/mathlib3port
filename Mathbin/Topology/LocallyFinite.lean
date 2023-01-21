@@ -38,7 +38,7 @@ def LocallyFinite (f : ι → Set X) :=
 #align locally_finite LocallyFinite
 
 theorem locallyFinite_of_finite [Finite ι] (f : ι → Set X) : LocallyFinite f := fun x =>
-  ⟨univ, univ_mem, to_finite _⟩
+  ⟨univ, univ_mem, toFinite _⟩
 #align locally_finite_of_finite locallyFinite_of_finite
 
 namespace LocallyFinite

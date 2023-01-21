@@ -302,7 +302,7 @@ theorem toMeasure_apply_of_finite (hs : s.Finite) : p.toMeasure s = ∑' x, s.in
 
 @[simp]
 theorem toMeasure_apply_fintype [Fintype α] : p.toMeasure s = ∑ x, s.indicator p x :=
-  (p.to_measure_apply_eq_to_outer_measure_apply s s.to_finite.MeasurableSet).trans
+  (p.to_measure_apply_eq_to_outer_measure_apply s s.toFinite.MeasurableSet).trans
     (p.to_outer_measure_apply_fintype s)
 #align pmf.to_measure_apply_fintype Pmf.toMeasure_apply_fintype
 

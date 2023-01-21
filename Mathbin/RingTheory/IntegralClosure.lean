@@ -425,7 +425,7 @@ theorem RingHom.IsIntegral.to_finite (h : f.IsIntegral) (h' : f.FiniteType) : f.
   constructor
   change (⊤ : Subalgebra R S).toSubmodule.Fg
   rw [← hs]
-  exact fgAdjoinOfFinite (Set.to_finite _) fun x _ => h x
+  exact fgAdjoinOfFinite (Set.toFinite _) fun x _ => h x
 #align ring_hom.is_integral.to_finite RingHom.IsIntegral.to_finite
 
 alias RingHom.IsIntegral.to_finite ← RingHom.Finite.of_isIntegral_of_finiteType
@@ -433,7 +433,7 @@ alias RingHom.IsIntegral.to_finite ← RingHom.Finite.of_isIntegral_of_finiteTyp
 
 /-- finite = integral + finite type -/
 theorem RingHom.finite_iff_isIntegral_and_finiteType : f.Finite ↔ f.IsIntegral ∧ f.FiniteType :=
-  ⟨fun h => ⟨h.to_is_integral, h.to_finite_type⟩, fun ⟨h, h'⟩ => h.to_finite h'⟩
+  ⟨fun h => ⟨h.to_is_integral, h.to_finite_type⟩, fun ⟨h, h'⟩ => h.toFinite h'⟩
 #align ring_hom.finite_iff_is_integral_and_finite_type RingHom.finite_iff_isIntegral_and_finiteType
 
 theorem Algebra.IsIntegral.finite (h : Algebra.IsIntegral R A) [h' : Algebra.FiniteType R A] :

@@ -258,7 +258,7 @@ theorem MonoidHom.map_finprod_pLift (f : M →* N) (g : α → M)
 @[to_additive]
 theorem MonoidHom.map_finprod_Prop {p : Prop} (f : M →* N) (g : p → M) :
     f (∏ᶠ x, g x) = ∏ᶠ x, f (g x) :=
-  f.map_finprod_plift g (Set.to_finite _)
+  f.map_finprod_plift g (Set.toFinite _)
 #align monoid_hom.map_finprod_Prop MonoidHom.map_finprod_Prop
 #align add_monoid_hom.map_finsum_Prop AddMonoidHom.map_finsum_Prop
 
@@ -390,7 +390,7 @@ theorem finprod_eq_prod (f : α → M) (hf : (mulSupport f).Finite) :
 
 @[to_additive]
 theorem finprod_eq_prod_of_fintype [Fintype α] (f : α → M) : (∏ᶠ i : α, f i) = ∏ i, f i :=
-  finprod_eq_prod_of_mulSupport_toFinset_subset _ (Set.to_finite _) <| Finset.subset_univ _
+  finprod_eq_prod_of_mulSupport_toFinset_subset _ (Set.toFinite _) <| Finset.subset_univ _
 #align finprod_eq_prod_of_fintype finprod_eq_prod_of_fintype
 #align finsum_eq_sum_of_fintype finsum_eq_sum_of_fintype
 

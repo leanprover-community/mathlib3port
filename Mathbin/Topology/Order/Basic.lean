@@ -1496,7 +1496,7 @@ variable {ι : Type _} {π : ι → Type _} [Finite ι] [∀ i, LinearOrder (π 
   [∀ i, TopologicalSpace (π i)] [∀ i, OrderTopology (π i)] {a b x : ∀ i, π i} {a' b' x' : ι → α}
 
 theorem pi_iic_mem_nhds (ha : ∀ i, x i < a i) : Iic a ∈ 𝓝 x :=
-  pi_univ_Iic a ▸ set_pi_mem_nhds (Set.to_finite _) fun i _ => iic_mem_nhds (ha _)
+  pi_univ_Iic a ▸ set_pi_mem_nhds (Set.toFinite _) fun i _ => iic_mem_nhds (ha _)
 #align pi_Iic_mem_nhds pi_iic_mem_nhds
 
 theorem pi_iic_mem_nhds' (ha : ∀ i, x' i < a' i) : Iic a' ∈ 𝓝 x' :=
@@ -1504,7 +1504,7 @@ theorem pi_iic_mem_nhds' (ha : ∀ i, x' i < a' i) : Iic a' ∈ 𝓝 x' :=
 #align pi_Iic_mem_nhds' pi_iic_mem_nhds'
 
 theorem pi_ici_mem_nhds (ha : ∀ i, a i < x i) : Ici a ∈ 𝓝 x :=
-  pi_univ_Ici a ▸ set_pi_mem_nhds (Set.to_finite _) fun i _ => ici_mem_nhds (ha _)
+  pi_univ_Ici a ▸ set_pi_mem_nhds (Set.toFinite _) fun i _ => ici_mem_nhds (ha _)
 #align pi_Ici_mem_nhds pi_ici_mem_nhds
 
 theorem pi_ici_mem_nhds' (ha : ∀ i, a' i < x' i) : Ici a' ∈ 𝓝 x' :=
@@ -1523,7 +1523,7 @@ variable [Nonempty ι]
 
 theorem pi_iio_mem_nhds (ha : ∀ i, x i < a i) : Iio a ∈ 𝓝 x :=
   by
-  refine' mem_of_superset (set_pi_mem_nhds (Set.to_finite _) fun i _ => _) (pi_univ_Iio_subset a)
+  refine' mem_of_superset (set_pi_mem_nhds (Set.toFinite _) fun i _ => _) (pi_univ_Iio_subset a)
   exact iio_mem_nhds (ha i)
 #align pi_Iio_mem_nhds pi_iio_mem_nhds
 
@@ -1541,7 +1541,7 @@ theorem pi_ioi_mem_nhds' (ha : ∀ i, a' i < x' i) : Ioi a' ∈ 𝓝 x' :=
 
 theorem pi_ioc_mem_nhds (ha : ∀ i, a i < x i) (hb : ∀ i, x i < b i) : Ioc a b ∈ 𝓝 x :=
   by
-  refine' mem_of_superset (set_pi_mem_nhds (Set.to_finite _) fun i _ => _) (pi_univ_Ioc_subset a b)
+  refine' mem_of_superset (set_pi_mem_nhds (Set.toFinite _) fun i _ => _) (pi_univ_Ioc_subset a b)
   exact ioc_mem_nhds (ha i) (hb i)
 #align pi_Ioc_mem_nhds pi_ioc_mem_nhds
 
@@ -1551,7 +1551,7 @@ theorem pi_ioc_mem_nhds' (ha : ∀ i, a' i < x' i) (hb : ∀ i, x' i < b' i) : I
 
 theorem pi_ico_mem_nhds (ha : ∀ i, a i < x i) (hb : ∀ i, x i < b i) : Ico a b ∈ 𝓝 x :=
   by
-  refine' mem_of_superset (set_pi_mem_nhds (Set.to_finite _) fun i _ => _) (pi_univ_Ico_subset a b)
+  refine' mem_of_superset (set_pi_mem_nhds (Set.toFinite _) fun i _ => _) (pi_univ_Ico_subset a b)
   exact ico_mem_nhds (ha i) (hb i)
 #align pi_Ico_mem_nhds pi_ico_mem_nhds
 
@@ -1561,7 +1561,7 @@ theorem pi_ico_mem_nhds' (ha : ∀ i, a' i < x' i) (hb : ∀ i, x' i < b' i) : I
 
 theorem pi_ioo_mem_nhds (ha : ∀ i, a i < x i) (hb : ∀ i, x i < b i) : Ioo a b ∈ 𝓝 x :=
   by
-  refine' mem_of_superset (set_pi_mem_nhds (Set.to_finite _) fun i _ => _) (pi_univ_Ioo_subset a b)
+  refine' mem_of_superset (set_pi_mem_nhds (Set.toFinite _) fun i _ => _) (pi_univ_Ioo_subset a b)
   exact ioo_mem_nhds (ha i) (hb i)
 #align pi_Ioo_mem_nhds pi_ioo_mem_nhds
 

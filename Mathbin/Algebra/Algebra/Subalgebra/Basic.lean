@@ -1454,7 +1454,7 @@ theorem mem_of_finset_sum_eq_one_of_pow_smul_mem {S : Type _} [CommRing S] [Alge
       by
       rw [Ideal.eq_top_iff_one, Ideal.span, Finsupp.mem_span_iff_total]
       refine'
-        ⟨(Finsupp.ofSupportFinite (fun i : ι' => (⟨l i, hl i⟩ : S')) (Set.to_finite _)).mapDomain
+        ⟨(Finsupp.ofSupportFinite (fun i : ι' => (⟨l i, hl i⟩ : S')) (Set.toFinite _)).mapDomain
             fun i => ⟨s' i, i, i.2, rfl⟩,
           S'.to_submodule.injective_subtype _⟩
       rw [Finsupp.total_mapDomain, Finsupp.total_apply, Finsupp.sum_fintype, map_sum,

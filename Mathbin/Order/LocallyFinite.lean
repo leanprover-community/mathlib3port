@@ -631,19 +631,19 @@ instance fintypeIoo : Fintype (Ioo a b) :=
 #align set.fintype_Ioo Set.fintypeIoo
 
 theorem finite_icc : (Icc a b).Finite :=
-  (Icc a b).to_finite
+  (Icc a b).toFinite
 #align set.finite_Icc Set.finite_icc
 
 theorem finite_ico : (Ico a b).Finite :=
-  (Ico a b).to_finite
+  (Ico a b).toFinite
 #align set.finite_Ico Set.finite_ico
 
 theorem finite_ioc : (Ioc a b).Finite :=
-  (Ioc a b).to_finite
+  (Ioc a b).toFinite
 #align set.finite_Ioc Set.finite_ioc
 
 theorem finite_ioo : (Ioo a b).Finite :=
-  (Ioo a b).to_finite
+  (Ioo a b).toFinite
 #align set.finite_Ioo Set.finite_ioo
 
 end Preorder
@@ -661,11 +661,11 @@ instance fintypeIoi : Fintype (Ioi a) :=
 #align set.fintype_Ioi Set.fintypeIoi
 
 theorem finite_ici : (Ici a).Finite :=
-  (Ici a).to_finite
+  (Ici a).toFinite
 #align set.finite_Ici Set.finite_ici
 
 theorem finite_ioi : (Ioi a).Finite :=
-  (Ioi a).to_finite
+  (Ioi a).toFinite
 #align set.finite_Ioi Set.finite_ioi
 
 end OrderTop
@@ -683,11 +683,11 @@ instance fintypeIio : Fintype (Iio b) :=
 #align set.fintype_Iio Set.fintypeIio
 
 theorem finite_iic : (Iic b).Finite :=
-  (Iic b).to_finite
+  (Iic b).toFinite
 #align set.finite_Iic Set.finite_iic
 
 theorem finite_iio : (Iio b).Finite :=
-  (Iio b).to_finite
+  (Iio b).toFinite
 #align set.finite_Iio Set.finite_iio
 
 end OrderBot

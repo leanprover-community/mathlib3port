@@ -897,7 +897,7 @@ instance rootSetFintype (p : T[X]) (S : Type _) [CommRing S] [IsDomain S] [Algeb
 
 theorem rootSet_finite (p : T[X]) (S : Type _) [CommRing S] [IsDomain S] [Algebra T S] :
     (p.rootSet S).Finite :=
-  Set.to_finite _
+  Set.toFinite _
 #align polynomial.root_set_finite Polynomial.rootSet_finite
 
 /-- The set of roots of all polynomials of bounded degree and having coefficients in a finite set
@@ -906,7 +906,7 @@ theorem bUnion_roots_finite {R S : Type _} [Semiring R] [CommRing S] [IsDomain S
     (d : ℕ) {U : Set R} (h : U.Finite) :
     (⋃ (f : R[X]) (hf : f.natDegree ≤ d ∧ ∀ i, f.coeff i ∈ U),
         ((f.map m).roots.toFinset : Set S)).Finite :=
-  Set.Finite.bUnion
+  Set.Finite.bunionᵢ
     (by
       -- We prove that the set of polynomials under consideration is finite because its
       -- image by the injective map `π` is finite

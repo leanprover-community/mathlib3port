@@ -58,7 +58,7 @@ instance finiteDimensional_vectorSpan_range [Finite ι] (p : ι → P) :
 is finite-dimensional. -/
 instance finiteDimensional_vectorSpan_image_of_finite [Finite ι] (p : ι → P) (s : Set ι) :
     FiniteDimensional k (vectorSpan k (p '' s)) :=
-  finiteDimensional_vectorSpan_of_finite k (Set.to_finite _)
+  finiteDimensional_vectorSpan_of_finite k (Set.toFinite _)
 #align finite_dimensional_vector_span_image_of_finite finiteDimensional_vectorSpan_image_of_finite
 
 /-- The direction of the affine span of a finite set is
@@ -79,7 +79,7 @@ instance finiteDimensional_direction_affineSpan_range [Finite ι] (p : ι → P)
 by a `fintype` is finite-dimensional. -/
 instance finiteDimensional_direction_affineSpan_image_of_finite [Finite ι] (p : ι → P) (s : Set ι) :
     FiniteDimensional k (affineSpan k (p '' s)).direction :=
-  finiteDimensional_direction_affineSpan_of_finite k (Set.to_finite _)
+  finiteDimensional_direction_affineSpan_of_finite k (Set.toFinite _)
 #align finite_dimensional_direction_affine_span_image_of_finite finiteDimensional_direction_affineSpan_image_of_finite
 
 /-- An affine-independent family of points in a finite-dimensional affine space is finite. -/
@@ -96,7 +96,7 @@ theorem finite_of_fin_dim_affineIndependent [FiniteDimensional k V] {p : ι → 
 /-- An affine-independent subset of a finite-dimensional affine space is finite. -/
 theorem finite_set_of_fin_dim_affineIndependent [FiniteDimensional k V] {s : Set ι} {f : s → P}
     (hi : AffineIndependent k f) : s.Finite :=
-  @Set.to_finite _ s (finite_of_fin_dim_affineIndependent k hi)
+  @Set.toFinite _ s (finite_of_fin_dim_affineIndependent k hi)
 #align finite_set_of_fin_dim_affine_independent finite_set_of_fin_dim_affineIndependent
 
 open Classical

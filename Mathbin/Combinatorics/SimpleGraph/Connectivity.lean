@@ -2048,11 +2048,11 @@ theorem finite_neighborSet_toSubgraph (p : G.Walk u v) : (p.toSubgraph.neighborS
   by
   induction p
   · rw [walk.to_subgraph, neighbor_set_singleton_subgraph]
-    apply Set.to_finite
+    apply Set.toFinite
   · rw [walk.to_subgraph, subgraph.neighbor_set_sup]
     refine' Set.Finite.union _ p_ih
     refine' Set.Finite.subset _ (neighbor_set_subgraph_of_adj_subset p_h)
-    apply Set.to_finite
+    apply Set.toFinite
 #align simple_graph.walk.finite_neighbor_set_to_subgraph SimpleGraph.Walk.finite_neighborSet_toSubgraph
 
 end Walk

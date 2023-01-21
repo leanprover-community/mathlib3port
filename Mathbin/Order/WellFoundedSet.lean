@@ -1148,7 +1148,7 @@ protected theorem Finite.isPwo (hs : s.Finite) : IsPwo s :=
 
 @[simp]
 theorem isPwo_of_finite [Finite α] : s.IsPwo :=
-  s.to_finite.IsPwo
+  s.toFinite.IsPwo
 #align set.is_pwo_of_finite Set.isPwo_of_finite
 
 @[simp]

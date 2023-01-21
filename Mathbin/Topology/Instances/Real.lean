@@ -284,7 +284,7 @@ theorem tendsto_zmultiples_subtype_cofinite (a : ℝ) :
   · rw [AddSubgroup.zmultiples_zero_eq_bot]
     intro K hK
     rw [Filter.mem_map, mem_cofinite]
-    apply Set.to_finite
+    apply Set.toFinite
   intro K hK
   have H := Int.tendsto_zmultiplesHom_cofinite ha hK
   simp only [Filter.mem_map, mem_cofinite, ← preimage_compl] at H⊢

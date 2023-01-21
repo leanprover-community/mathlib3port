@@ -504,7 +504,7 @@ theorem isNoetherianRing_iff_ideal_fg (R : Type _) [Semiring R] :
 -- see Note [lower instance priority]
 instance (priority := 80) isNoetherianOfFinite (R M) [Finite M] [Semiring R] [AddCommMonoid M]
     [Module R M] : IsNoetherian R M :=
-  ⟨fun s => ⟨(s : Set M).to_finite.toFinset, by rw [Set.Finite.coe_toFinset, Submodule.span_eq]⟩⟩
+  ⟨fun s => ⟨(s : Set M).toFinite.toFinset, by rw [Set.Finite.coe_toFinset, Submodule.span_eq]⟩⟩
 #align is_noetherian_of_finite isNoetherianOfFinite
 
 -- see Note [lower instance priority]

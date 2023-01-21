@@ -281,7 +281,7 @@ theorem measurable_const' {f : β → α} (hf : ∀ x y, f x = f y) : Measurable
 #align measurable_const' measurable_const'
 
 theorem measurable_of_finite [Finite α] [MeasurableSingletonClass α] (f : α → β) : Measurable f :=
-  fun s hs => (f ⁻¹' s).to_finite.MeasurableSet
+  fun s hs => (f ⁻¹' s).toFinite.MeasurableSet
 #align measurable_of_finite measurable_of_finite
 
 theorem measurable_of_countable [Countable α] [MeasurableSingletonClass α] (f : α → β) :
