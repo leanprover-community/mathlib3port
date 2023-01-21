@@ -4,10 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module linear_algebra.ray
-! leanprover-community/mathlib commit 1126441d6bccf98c81214a0780c73d499f6721fe
+! leanprover-community/mathlib commit 2445c98ae4b87eabebdde552593519b9b6dc350c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
+import Mathbin.GroupTheory.Subgroup.Actions
 import Mathbin.LinearAlgebra.LinearIndependent
 
 /-!
@@ -208,7 +209,7 @@ theorem add_left (hx : SameRay R x z) (hy : SameRay R y z) : SameRay R (x + y) z
 
 /-- If `y` and `z` are on the same ray as `x`, then so is `y + z`. -/
 theorem add_right (hy : SameRay R x y) (hz : SameRay R x z) : SameRay R x (y + z) :=
-  (hy.symm.addLeft hz.symm).symm
+  (hy.symm.add_left hz.symm).symm
 #align same_ray.add_right SameRay.add_right
 
 end SameRay

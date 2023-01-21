@@ -1873,8 +1873,13 @@ import Mathbin.GroupTheory.SpecificGroups.Alternating
 import Mathbin.GroupTheory.SpecificGroups.Cyclic
 import Mathbin.GroupTheory.SpecificGroups.Dihedral
 import Mathbin.GroupTheory.SpecificGroups.Quaternion
+import Mathbin.GroupTheory.Subgroup.Actions
 import Mathbin.GroupTheory.Subgroup.Basic
+import Mathbin.GroupTheory.Subgroup.MulOpposite
 import Mathbin.GroupTheory.Subgroup.Pointwise
+import Mathbin.GroupTheory.Subgroup.Saturated
+import Mathbin.GroupTheory.Subgroup.Simple
+import Mathbin.GroupTheory.Subgroup.Zpowers
 import Mathbin.GroupTheory.Submonoid.Basic
 import Mathbin.GroupTheory.Submonoid.Center
 import Mathbin.GroupTheory.Submonoid.Centralizer

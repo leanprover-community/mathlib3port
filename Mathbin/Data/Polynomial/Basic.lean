@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
 
 ! This file was ported from Lean 3 source module data.polynomial.basic
-! leanprover-community/mathlib commit 1126441d6bccf98c81214a0780c73d499f6721fe
+! leanprover-community/mathlib commit 2445c98ae4b87eabebdde552593519b9b6dc350c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1093,11 +1093,11 @@ theorem update_zero_eq_erase (p : R[X]) (n : ℕ) : p.update n 0 = p.erase n :=
 #align polynomial.update_zero_eq_erase Polynomial.update_zero_eq_erase
 
 theorem support_update (p : R[X]) (n : ℕ) (a : R) [Decidable (a = 0)] :
-    support (p.update n a) = if a = 0 then p.support.erase n else insert n p.support :=
-  by
-  cases p
-  simp only [support, update, support_update]
-  congr
+    support (p.update n a) = if a = 0 then p.support.erase n else insert n p.support := by
+  classical
+    cases p
+    simp only [support, update, support_update]
+    congr
 #align polynomial.support_update Polynomial.support_update
 
 theorem support_update_zero (p : R[X]) (n : ℕ) : support (p.update n 0) = p.support.erase n := by

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne
 
 ! This file was ported from Lean 3 source module analysis.special_functions.log.basic
-! leanprover-community/mathlib commit 1126441d6bccf98c81214a0780c73d499f6721fe
+! leanprover-community/mathlib commit 2445c98ae4b87eabebdde552593519b9b6dc350c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -416,4 +416,34 @@ theorem ContinuousOn.log (hf : ContinuousOn f s) (h₀ : ∀ x ∈ s, f x ≠ 0)
 #align continuous_on.log ContinuousOn.log
 
 end Continuity
+
+section TendstoCompAddSub
+
+open Filter
+
+namespace Real
+
+theorem tendsto_log_comp_add_sub_log (y : ℝ) :
+    Tendsto (fun x : ℝ => log (x + y) - log x) atTop (𝓝 0) :=
+  by
+  refine' tendsto.congr' (_ : ∀ᶠ x : ℝ in at_top, log (1 + y / x) = _) _
+  · refine'
+      eventually.mp ((eventually_ne_at_top 0).And (eventually_gt_at_top (-y)))
+        (eventually_of_forall fun x hx => _)
+    rw [← log_div _ hx.1]
+    · congr 1
+      field_simp [hx.1]
+    · linarith [hx.2]
+  · suffices tendsto (fun x : ℝ => log (1 + y / x)) at_top (𝓝 (log (1 + 0))) by simpa
+    refine' tendsto.log _ (by simp)
+    exact tendsto_const_nhds.add (tendsto_const_nhds.div_at_top tendsto_id)
+#align real.tendsto_log_comp_add_sub_log Real.tendsto_log_comp_add_sub_log
+
+theorem tendsto_log_nat_add_one_sub_log : Tendsto (fun k : ℕ => log (k + 1) - log k) atTop (𝓝 0) :=
+  (tendsto_log_comp_add_sub_log 1).comp tendsto_coe_nat_atTop_atTop
+#align real.tendsto_log_nat_add_one_sub_log Real.tendsto_log_nat_add_one_sub_log
+
+end Real
+
+end TendstoCompAddSub
 

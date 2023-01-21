@@ -4,13 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jordan Brown, Thomas Browning, Patrick Lutz
 
 ! This file was ported from Lean 3 source module group_theory.solvable
-! leanprover-community/mathlib commit 1126441d6bccf98c81214a0780c73d499f6721fe
+! leanprover-community/mathlib commit 2445c98ae4b87eabebdde552593519b9b6dc350c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Data.Fin.VecNotation
 import Mathbin.GroupTheory.Abelianization
 import Mathbin.GroupTheory.Perm.ViaEmbedding
+import Mathbin.GroupTheory.Subgroup.Simple
 import Mathbin.SetTheory.Cardinal.Basic
 
 /-!

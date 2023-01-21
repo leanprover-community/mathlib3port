@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.special_functions.gaussian
-! leanprover-community/mathlib commit 1126441d6bccf98c81214a0780c73d499f6721fe
+! leanprover-community/mathlib commit 2445c98ae4b87eabebdde552593519b9b6dc350c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -383,7 +383,7 @@ theorem gamma_one_half_eq : gamma (1 / 2) = sqrt π :=
   replace hh2 : 0 < (1 / 2 : ℂ).re := by
     rw [hh2]
     exact one_half_pos
-  rw [Gamma_eq_integral _ hh2, hh, Gamma_integral_of_real, of_real_inj, Real.gammaIntegral]
+  rw [Gamma_eq_integral hh2, hh, Gamma_integral_of_real, of_real_inj]
   -- now do change-of-variables
   rw [← integral_comp_rpow_Ioi_of_pos zero_lt_two]
   have :
