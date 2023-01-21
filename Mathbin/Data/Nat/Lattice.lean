@@ -32,21 +32,28 @@ noncomputable instance : InfSet ℕ :=
 noncomputable instance : SupSet ℕ :=
   ⟨fun s => if h : ∃ n, ∀ a ∈ s, a ≤ n then @Nat.find (fun n => ∀ a ∈ s, a ≤ n) _ h else 0⟩
 
+#print Nat.infₛ_def /-
 theorem infₛ_def {s : Set ℕ} (h : s.Nonempty) : infₛ s = @Nat.find (fun n => n ∈ s) _ h :=
   dif_pos _
 #align nat.Inf_def Nat.infₛ_def
+-/
 
+#print Nat.supₛ_def /-
 theorem supₛ_def {s : Set ℕ} (h : ∃ n, ∀ a ∈ s, a ≤ n) :
     supₛ s = @Nat.find (fun n => ∀ a ∈ s, a ≤ n) _ h :=
   dif_pos _
 #align nat.Sup_def Nat.supₛ_def
+-/
 
-theorem Set.Infinite.Nat.supₛ_eq_zero {s : Set ℕ} (h : s.Infinite) : supₛ s = 0 :=
+#print Nat.Set.Infinite.Nat.supₛ_eq_zero /-
+theorem Nat.Set.Infinite.Nat.supₛ_eq_zero {s : Set ℕ} (h : s.Infinite) : supₛ s = 0 :=
   dif_neg fun ⟨n, hn⟩ =>
     let ⟨k, hks, hk⟩ := h.exists_nat_lt n
     (hn k hks).not_lt hk
-#align set.infinite.nat.Sup_eq_zero Set.Infinite.Nat.supₛ_eq_zero
+#align set.infinite.nat.Sup_eq_zero Nat.Set.Infinite.Nat.supₛ_eq_zero
+-/
 
+#print Nat.infₛ_eq_zero /-
 @[simp]
 theorem infₛ_eq_zero {s : Set ℕ} : infₛ s = 0 ↔ 0 ∈ s ∨ s = ∅ :=
   by
@@ -56,25 +63,33 @@ theorem infₛ_eq_zero {s : Set ℕ} : infₛ s = 0 ↔ 0 ∈ s ∨ s = ∅ :=
       exists_false, dif_neg, not_false_iff]
   · simp only [h.ne_empty, or_false_iff, Nat.infₛ_def, h, Nat.find_eq_zero]
 #align nat.Inf_eq_zero Nat.infₛ_eq_zero
+-/
 
+#print Nat.infₛ_empty /-
 @[simp]
 theorem infₛ_empty : infₛ ∅ = 0 := by
   rw [Inf_eq_zero]
   right
   rfl
 #align nat.Inf_empty Nat.infₛ_empty
+-/
 
+#print Nat.infᵢ_of_empty /-
 @[simp]
 theorem infᵢ_of_empty {ι : Sort _} [IsEmpty ι] (f : ι → ℕ) : infᵢ f = 0 := by
   rw [infᵢ_of_empty', infₛ_empty]
 #align nat.infi_of_empty Nat.infᵢ_of_empty
+-/
 
+#print Nat.infₛ_mem /-
 theorem infₛ_mem {s : Set ℕ} (h : s.Nonempty) : infₛ s ∈ s :=
   by
   rw [Nat.infₛ_def h]
   exact Nat.find_spec h
 #align nat.Inf_mem Nat.infₛ_mem
+-/
 
+#print Nat.not_mem_of_lt_infₛ /-
 theorem not_mem_of_lt_infₛ {s : Set ℕ} {m : ℕ} (hm : m < infₛ s) : m ∉ s :=
   by
   cases eq_empty_or_nonempty s
@@ -83,13 +98,17 @@ theorem not_mem_of_lt_infₛ {s : Set ℕ} {m : ℕ} (hm : m < infₛ s) : m ∉
   · rw [Nat.infₛ_def h] at hm
     exact Nat.find_min h hm
 #align nat.not_mem_of_lt_Inf Nat.not_mem_of_lt_infₛ
+-/
 
+#print Nat.infₛ_le /-
 protected theorem infₛ_le {s : Set ℕ} {m : ℕ} (hm : m ∈ s) : infₛ s ≤ m :=
   by
   rw [Nat.infₛ_def ⟨m, hm⟩]
   exact Nat.find_min' ⟨m, hm⟩ hm
 #align nat.Inf_le Nat.infₛ_le
+-/
 
+#print Nat.nonempty_of_pos_infₛ /-
 theorem nonempty_of_pos_infₛ {s : Set ℕ} (h : 0 < infₛ s) : s.Nonempty :=
   by
   by_contra contra
@@ -100,16 +119,22 @@ theorem nonempty_of_pos_infₛ {s : Set ℕ} (h : 0 < infₛ s) : s.Nonempty :=
   right
   assumption
 #align nat.nonempty_of_pos_Inf Nat.nonempty_of_pos_infₛ
+-/
 
+#print Nat.nonempty_of_infₛ_eq_succ /-
 theorem nonempty_of_infₛ_eq_succ {s : Set ℕ} {k : ℕ} (h : infₛ s = k + 1) : s.Nonempty :=
   nonempty_of_pos_infₛ (h.symm ▸ succ_pos k : infₛ s > 0)
 #align nat.nonempty_of_Inf_eq_succ Nat.nonempty_of_infₛ_eq_succ
+-/
 
-theorem eq_ici_of_nonempty_of_upward_closed {s : Set ℕ} (hs : s.Nonempty)
+#print Nat.eq_Ici_of_nonempty_of_upward_closed /-
+theorem eq_Ici_of_nonempty_of_upward_closed {s : Set ℕ} (hs : s.Nonempty)
     (hs' : ∀ k₁ k₂ : ℕ, k₁ ≤ k₂ → k₁ ∈ s → k₂ ∈ s) : s = Ici (infₛ s) :=
   ext fun n => ⟨fun H => Nat.infₛ_le H, fun H => hs' (infₛ s) n H (infₛ_mem hs)⟩
-#align nat.eq_Ici_of_nonempty_of_upward_closed Nat.eq_ici_of_nonempty_of_upward_closed
+#align nat.eq_Ici_of_nonempty_of_upward_closed Nat.eq_Ici_of_nonempty_of_upward_closed
+-/
 
+#print Nat.infₛ_upward_closed_eq_succ_iff /-
 theorem infₛ_upward_closed_eq_succ_iff {s : Set ℕ} (hs : ∀ k₁ k₂ : ℕ, k₁ ≤ k₂ → k₁ ∈ s → k₂ ∈ s)
     (k : ℕ) : infₛ s = k + 1 ↔ k + 1 ∈ s ∧ k ∉ s :=
   by
@@ -121,6 +146,7 @@ theorem infₛ_upward_closed_eq_succ_iff {s : Set ℕ} (hs : ∀ k₁ k₂ : ℕ
     rw [Inf_def (⟨_, H⟩ : s.nonempty), find_eq_iff]
     exact ⟨H, fun n hnk hns => H' <| hs n k (lt_succ_iff.mp hnk) hns⟩
 #align nat.Inf_upward_closed_eq_succ_iff Nat.infₛ_upward_closed_eq_succ_iff
+-/
 
 /-- This instance is necessary, otherwise the lattice operations would be derived via
 conditionally_complete_linear_order_bot and marked as noncomputable. -/
@@ -144,11 +170,14 @@ noncomputable instance : ConditionallyCompleteLinearOrderBot ℕ :=
       apply bot_unique (Nat.find_min' _ _)
       trivial }
 
+#print Nat.supₛ_mem /-
 theorem supₛ_mem {s : Set ℕ} (h₁ : s.Nonempty) (h₂ : BddAbove s) : supₛ s ∈ s :=
   let ⟨k, hk⟩ := h₂
   h₁.cSup_mem ((finite_le_nat k).Subset hk)
 #align nat.Sup_mem Nat.supₛ_mem
+-/
 
+#print Nat.infₛ_add /-
 theorem infₛ_add {n : ℕ} {p : ℕ → Prop} (hn : n ≤ infₛ { m | p m }) :
     infₛ { m | p (m + n) } + n = infₛ { m | p m } :=
   by
@@ -165,7 +194,9 @@ theorem infₛ_add {n : ℕ} {p : ℕ → Prop} (hn : n ≤ infₛ { m | p m }) 
     rw [Nat.infₛ_def hp] at hn
     exact find_add hn
 #align nat.Inf_add Nat.infₛ_add
+-/
 
+#print Nat.infₛ_add' /-
 theorem infₛ_add' {n : ℕ} {p : ℕ → Prop} (h : 0 < infₛ { m | p m }) :
     infₛ { m | p m } + n = infₛ { m | p (m - n) } :=
   by
@@ -180,25 +211,50 @@ theorem infₛ_add' {n : ℕ} {p : ℕ → Prop} (h : 0 < infₛ { m | p m }) :
     rwa [add_tsub_cancel_right]
   · exact hb
 #align nat.Inf_add' Nat.infₛ_add'
+-/
 
 section
 
 variable {α : Type _} [CompleteLattice α]
 
+/- warning: nat.supr_lt_succ -> Nat.supᵢ_lt_succ is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] (u : Nat -> α) (n : Nat), Eq.{succ u1} α (supᵢ.{u1, 1} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) Nat (fun (k : Nat) => supᵢ.{u1, 0} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (LT.lt.{0} Nat Nat.hasLt k (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (fun (H : LT.lt.{0} Nat Nat.hasLt k (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) => u k))) (HasSup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)))) (supᵢ.{u1, 1} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) Nat (fun (k : Nat) => supᵢ.{u1, 0} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (LT.lt.{0} Nat Nat.hasLt k n) (fun (H : LT.lt.{0} Nat Nat.hasLt k n) => u k))) (u n))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] (u : Nat -> α) (n : Nat), Eq.{succ u1} α (supᵢ.{u1, 1} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) Nat (fun (k : Nat) => supᵢ.{u1, 0} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (LT.lt.{0} Nat instLTNat k (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (fun (H : LT.lt.{0} Nat instLTNat k (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) => u k))) (HasSup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)))) (supᵢ.{u1, 1} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) Nat (fun (k : Nat) => supᵢ.{u1, 0} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (LT.lt.{0} Nat instLTNat k n) (fun (H : LT.lt.{0} Nat instLTNat k n) => u k))) (u n))
+Case conversion may be inaccurate. Consider using '#align nat.supr_lt_succ Nat.supᵢ_lt_succₓ'. -/
 theorem supᵢ_lt_succ (u : ℕ → α) (n : ℕ) : (⨆ k < n + 1, u k) = (⨆ k < n, u k) ⊔ u n := by
   simp [Nat.lt_succ_iff_lt_or_eq, supᵢ_or, supᵢ_sup_eq]
 #align nat.supr_lt_succ Nat.supᵢ_lt_succ
 
+/- warning: nat.supr_lt_succ' -> Nat.supᵢ_lt_succ' is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] (u : Nat -> α) (n : Nat), Eq.{succ u1} α (supᵢ.{u1, 1} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) Nat (fun (k : Nat) => supᵢ.{u1, 0} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (LT.lt.{0} Nat Nat.hasLt k (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (fun (H : LT.lt.{0} Nat Nat.hasLt k (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) => u k))) (HasSup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)))) (u (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (supᵢ.{u1, 1} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) Nat (fun (k : Nat) => supᵢ.{u1, 0} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (LT.lt.{0} Nat Nat.hasLt k n) (fun (H : LT.lt.{0} Nat Nat.hasLt k n) => u (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) k (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] (u : Nat -> α) (n : Nat), Eq.{succ u1} α (supᵢ.{u1, 1} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) Nat (fun (k : Nat) => supᵢ.{u1, 0} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (LT.lt.{0} Nat instLTNat k (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (fun (H : LT.lt.{0} Nat instLTNat k (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) => u k))) (HasSup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)))) (u (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (supᵢ.{u1, 1} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) Nat (fun (k : Nat) => supᵢ.{u1, 0} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (LT.lt.{0} Nat instLTNat k n) (fun (H : LT.lt.{0} Nat instLTNat k n) => u (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) k (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))))
+Case conversion may be inaccurate. Consider using '#align nat.supr_lt_succ' Nat.supᵢ_lt_succ'ₓ'. -/
 theorem supᵢ_lt_succ' (u : ℕ → α) (n : ℕ) : (⨆ k < n + 1, u k) = u 0 ⊔ ⨆ k < n, u (k + 1) :=
   by
   rw [← sup_supᵢ_nat_succ]
   simp
 #align nat.supr_lt_succ' Nat.supᵢ_lt_succ'
 
+/- warning: nat.infi_lt_succ -> Nat.infᵢ_lt_succ is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] (u : Nat -> α) (n : Nat), Eq.{succ u1} α (infᵢ.{u1, 1} α (ConditionallyCompleteLattice.toHasInf.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) Nat (fun (k : Nat) => infᵢ.{u1, 0} α (ConditionallyCompleteLattice.toHasInf.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (LT.lt.{0} Nat Nat.hasLt k (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (fun (H : LT.lt.{0} Nat Nat.hasLt k (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) => u k))) (HasInf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)))) (infᵢ.{u1, 1} α (ConditionallyCompleteLattice.toHasInf.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) Nat (fun (k : Nat) => infᵢ.{u1, 0} α (ConditionallyCompleteLattice.toHasInf.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (LT.lt.{0} Nat Nat.hasLt k n) (fun (H : LT.lt.{0} Nat Nat.hasLt k n) => u k))) (u n))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] (u : Nat -> α) (n : Nat), Eq.{succ u1} α (infᵢ.{u1, 1} α (ConditionallyCompleteLattice.toInfSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) Nat (fun (k : Nat) => infᵢ.{u1, 0} α (ConditionallyCompleteLattice.toInfSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (LT.lt.{0} Nat instLTNat k (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (fun (H : LT.lt.{0} Nat instLTNat k (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) => u k))) (HasInf.inf.{u1} α (Lattice.toHasInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1))) (infᵢ.{u1, 1} α (ConditionallyCompleteLattice.toInfSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) Nat (fun (k : Nat) => infᵢ.{u1, 0} α (ConditionallyCompleteLattice.toInfSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (LT.lt.{0} Nat instLTNat k n) (fun (H : LT.lt.{0} Nat instLTNat k n) => u k))) (u n))
+Case conversion may be inaccurate. Consider using '#align nat.infi_lt_succ Nat.infᵢ_lt_succₓ'. -/
 theorem infᵢ_lt_succ (u : ℕ → α) (n : ℕ) : (⨅ k < n + 1, u k) = (⨅ k < n, u k) ⊓ u n :=
   @supᵢ_lt_succ αᵒᵈ _ _ _
 #align nat.infi_lt_succ Nat.infᵢ_lt_succ
 
+/- warning: nat.infi_lt_succ' -> Nat.infᵢ_lt_succ' is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] (u : Nat -> α) (n : Nat), Eq.{succ u1} α (infᵢ.{u1, 1} α (ConditionallyCompleteLattice.toHasInf.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) Nat (fun (k : Nat) => infᵢ.{u1, 0} α (ConditionallyCompleteLattice.toHasInf.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (LT.lt.{0} Nat Nat.hasLt k (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (fun (H : LT.lt.{0} Nat Nat.hasLt k (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) => u k))) (HasInf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)))) (u (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (infᵢ.{u1, 1} α (ConditionallyCompleteLattice.toHasInf.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) Nat (fun (k : Nat) => infᵢ.{u1, 0} α (ConditionallyCompleteLattice.toHasInf.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (LT.lt.{0} Nat Nat.hasLt k n) (fun (H : LT.lt.{0} Nat Nat.hasLt k n) => u (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) k (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] (u : Nat -> α) (n : Nat), Eq.{succ u1} α (infᵢ.{u1, 1} α (ConditionallyCompleteLattice.toInfSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) Nat (fun (k : Nat) => infᵢ.{u1, 0} α (ConditionallyCompleteLattice.toInfSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (LT.lt.{0} Nat instLTNat k (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (fun (H : LT.lt.{0} Nat instLTNat k (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) => u k))) (HasInf.inf.{u1} α (Lattice.toHasInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1))) (u (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (infᵢ.{u1, 1} α (ConditionallyCompleteLattice.toInfSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) Nat (fun (k : Nat) => infᵢ.{u1, 0} α (ConditionallyCompleteLattice.toInfSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (LT.lt.{0} Nat instLTNat k n) (fun (H : LT.lt.{0} Nat instLTNat k n) => u (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) k (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))))
+Case conversion may be inaccurate. Consider using '#align nat.infi_lt_succ' Nat.infᵢ_lt_succ'ₓ'. -/
 theorem infᵢ_lt_succ' (u : ℕ → α) (n : ℕ) : (⨅ k < n + 1, u k) = u 0 ⊓ ⨅ k < n, u (k + 1) :=
   @supᵢ_lt_succ' αᵒᵈ _ _ _
 #align nat.infi_lt_succ' Nat.infᵢ_lt_succ'
@@ -211,21 +267,45 @@ namespace Set
 
 variable {α : Type _}
 
-theorem bUnion_lt_succ (u : ℕ → Set α) (n : ℕ) : (⋃ k < n + 1, u k) = (⋃ k < n, u k) ∪ u n :=
+/- warning: set.bUnion_lt_succ -> Set.bunionᵢ_lt_succ is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (u : Nat -> (Set.{u1} α)) (n : Nat), Eq.{succ u1} (Set.{u1} α) (Set.unionᵢ.{u1, 1} α Nat (fun (k : Nat) => Set.unionᵢ.{u1, 0} α (LT.lt.{0} Nat Nat.hasLt k (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (fun (H : LT.lt.{0} Nat Nat.hasLt k (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) => u k))) (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) (Set.unionᵢ.{u1, 1} α Nat (fun (k : Nat) => Set.unionᵢ.{u1, 0} α (LT.lt.{0} Nat Nat.hasLt k n) (fun (H : LT.lt.{0} Nat Nat.hasLt k n) => u k))) (u n))
+but is expected to have type
+  forall {α : Type.{u1}} (u : Nat -> (Set.{u1} α)) (n : Nat), Eq.{succ u1} (Set.{u1} α) (Set.unionᵢ.{u1, 1} α Nat (fun (k : Nat) => Set.unionᵢ.{u1, 0} α (LT.lt.{0} Nat instLTNat k (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (fun (H : LT.lt.{0} Nat instLTNat k (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) => u k))) (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) (Set.unionᵢ.{u1, 1} α Nat (fun (k : Nat) => Set.unionᵢ.{u1, 0} α (LT.lt.{0} Nat instLTNat k n) (fun (H : LT.lt.{0} Nat instLTNat k n) => u k))) (u n))
+Case conversion may be inaccurate. Consider using '#align set.bUnion_lt_succ Set.bunionᵢ_lt_succₓ'. -/
+theorem bunionᵢ_lt_succ (u : ℕ → Set α) (n : ℕ) : (⋃ k < n + 1, u k) = (⋃ k < n, u k) ∪ u n :=
   Nat.supᵢ_lt_succ u n
-#align set.bUnion_lt_succ Set.bUnion_lt_succ
+#align set.bUnion_lt_succ Set.bunionᵢ_lt_succ
 
-theorem bUnion_lt_succ' (u : ℕ → Set α) (n : ℕ) : (⋃ k < n + 1, u k) = u 0 ∪ ⋃ k < n, u (k + 1) :=
+/- warning: set.bUnion_lt_succ' -> Set.bunionᵢ_lt_succ' is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (u : Nat -> (Set.{u1} α)) (n : Nat), Eq.{succ u1} (Set.{u1} α) (Set.unionᵢ.{u1, 1} α Nat (fun (k : Nat) => Set.unionᵢ.{u1, 0} α (LT.lt.{0} Nat Nat.hasLt k (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (fun (H : LT.lt.{0} Nat Nat.hasLt k (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) => u k))) (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) (u (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (Set.unionᵢ.{u1, 1} α Nat (fun (k : Nat) => Set.unionᵢ.{u1, 0} α (LT.lt.{0} Nat Nat.hasLt k n) (fun (H : LT.lt.{0} Nat Nat.hasLt k n) => u (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) k (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))))))
+but is expected to have type
+  forall {α : Type.{u1}} (u : Nat -> (Set.{u1} α)) (n : Nat), Eq.{succ u1} (Set.{u1} α) (Set.unionᵢ.{u1, 1} α Nat (fun (k : Nat) => Set.unionᵢ.{u1, 0} α (LT.lt.{0} Nat instLTNat k (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (fun (H : LT.lt.{0} Nat instLTNat k (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) => u k))) (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) (u (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Set.unionᵢ.{u1, 1} α Nat (fun (k : Nat) => Set.unionᵢ.{u1, 0} α (LT.lt.{0} Nat instLTNat k n) (fun (H : LT.lt.{0} Nat instLTNat k n) => u (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) k (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))))
+Case conversion may be inaccurate. Consider using '#align set.bUnion_lt_succ' Set.bunionᵢ_lt_succ'ₓ'. -/
+theorem bunionᵢ_lt_succ' (u : ℕ → Set α) (n : ℕ) : (⋃ k < n + 1, u k) = u 0 ∪ ⋃ k < n, u (k + 1) :=
   Nat.supᵢ_lt_succ' u n
-#align set.bUnion_lt_succ' Set.bUnion_lt_succ'
+#align set.bUnion_lt_succ' Set.bunionᵢ_lt_succ'
 
-theorem bInter_lt_succ (u : ℕ → Set α) (n : ℕ) : (⋂ k < n + 1, u k) = (⋂ k < n, u k) ∩ u n :=
+/- warning: set.bInter_lt_succ -> Set.binterᵢ_lt_succ is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (u : Nat -> (Set.{u1} α)) (n : Nat), Eq.{succ u1} (Set.{u1} α) (Set.interᵢ.{u1, 1} α Nat (fun (k : Nat) => Set.interᵢ.{u1, 0} α (LT.lt.{0} Nat Nat.hasLt k (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (fun (H : LT.lt.{0} Nat Nat.hasLt k (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) => u k))) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (Set.interᵢ.{u1, 1} α Nat (fun (k : Nat) => Set.interᵢ.{u1, 0} α (LT.lt.{0} Nat Nat.hasLt k n) (fun (H : LT.lt.{0} Nat Nat.hasLt k n) => u k))) (u n))
+but is expected to have type
+  forall {α : Type.{u1}} (u : Nat -> (Set.{u1} α)) (n : Nat), Eq.{succ u1} (Set.{u1} α) (Set.interᵢ.{u1, 1} α Nat (fun (k : Nat) => Set.interᵢ.{u1, 0} α (LT.lt.{0} Nat instLTNat k (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (fun (H : LT.lt.{0} Nat instLTNat k (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) => u k))) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) (Set.interᵢ.{u1, 1} α Nat (fun (k : Nat) => Set.interᵢ.{u1, 0} α (LT.lt.{0} Nat instLTNat k n) (fun (H : LT.lt.{0} Nat instLTNat k n) => u k))) (u n))
+Case conversion may be inaccurate. Consider using '#align set.bInter_lt_succ Set.binterᵢ_lt_succₓ'. -/
+theorem binterᵢ_lt_succ (u : ℕ → Set α) (n : ℕ) : (⋂ k < n + 1, u k) = (⋂ k < n, u k) ∩ u n :=
   Nat.infᵢ_lt_succ u n
-#align set.bInter_lt_succ Set.bInter_lt_succ
+#align set.bInter_lt_succ Set.binterᵢ_lt_succ
 
-theorem bInter_lt_succ' (u : ℕ → Set α) (n : ℕ) : (⋂ k < n + 1, u k) = u 0 ∩ ⋂ k < n, u (k + 1) :=
+/- warning: set.bInter_lt_succ' -> Set.binterᵢ_lt_succ' is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (u : Nat -> (Set.{u1} α)) (n : Nat), Eq.{succ u1} (Set.{u1} α) (Set.interᵢ.{u1, 1} α Nat (fun (k : Nat) => Set.interᵢ.{u1, 0} α (LT.lt.{0} Nat Nat.hasLt k (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (fun (H : LT.lt.{0} Nat Nat.hasLt k (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) => u k))) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (u (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (Set.interᵢ.{u1, 1} α Nat (fun (k : Nat) => Set.interᵢ.{u1, 0} α (LT.lt.{0} Nat Nat.hasLt k n) (fun (H : LT.lt.{0} Nat Nat.hasLt k n) => u (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) k (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))))))
+but is expected to have type
+  forall {α : Type.{u1}} (u : Nat -> (Set.{u1} α)) (n : Nat), Eq.{succ u1} (Set.{u1} α) (Set.interᵢ.{u1, 1} α Nat (fun (k : Nat) => Set.interᵢ.{u1, 0} α (LT.lt.{0} Nat instLTNat k (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (fun (H : LT.lt.{0} Nat instLTNat k (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) => u k))) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) (u (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Set.interᵢ.{u1, 1} α Nat (fun (k : Nat) => Set.interᵢ.{u1, 0} α (LT.lt.{0} Nat instLTNat k n) (fun (H : LT.lt.{0} Nat instLTNat k n) => u (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) k (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))))
+Case conversion may be inaccurate. Consider using '#align set.bInter_lt_succ' Set.binterᵢ_lt_succ'ₓ'. -/
+theorem binterᵢ_lt_succ' (u : ℕ → Set α) (n : ℕ) : (⋂ k < n + 1, u k) = u 0 ∩ ⋂ k < n, u (k + 1) :=
   Nat.infᵢ_lt_succ' u n
-#align set.bInter_lt_succ' Set.bInter_lt_succ'
+#align set.bInter_lt_succ' Set.binterᵢ_lt_succ'
 
 end Set
 

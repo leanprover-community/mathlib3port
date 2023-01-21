@@ -297,7 +297,9 @@ theorem exponent_eq_supᵢ_orderOf (h : ∀ g : G, 0 < orderOf g) : exponent G =
   by
   rw [supᵢ]
   rcases eq_or_ne (exponent G) 0 with (he | he)
-  · rw [he, Set.Infinite.Nat.supₛ_eq_zero <| (exponent_eq_zero_iff_range_order_of_infinite h).1 he]
+  ·
+    rw [he,
+      Nat.Set.Infinite.Nat.supₛ_eq_zero <| (exponent_eq_zero_iff_range_order_of_infinite h).1 he]
   have hne : (Set.range (orderOf : G → ℕ)).Nonempty := ⟨1, 1, orderOf_one⟩
   have hfin : (Set.range (orderOf : G → ℕ)).Finite := by
     rwa [← exponent_ne_zero_iff_range_order_of_finite h]
