@@ -6,12 +6,13 @@ Authors: Kevin Buzzard, Patrick Massot
 This file is to a certain extent based on `quotient_module.lean` by Johannes Hölzl.
 
 ! This file was ported from Lean 3 source module group_theory.quotient_group
-! leanprover-community/mathlib commit 2445c98ae4b87eabebdde552593519b9b6dc350c
+! leanprover-community/mathlib commit d6fad0e5bf2d6f48da9175d25c3dc5706b3834ce
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.GroupTheory.Congruence
 import Mathbin.GroupTheory.Coset
+import Mathbin.GroupTheory.Subgroup.Finite
 import Mathbin.GroupTheory.Subgroup.Pointwise
 
 /-!

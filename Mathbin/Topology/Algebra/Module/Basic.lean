@@ -5,7 +5,7 @@ Authors: Jan-David Salchow, Sébastien Gouëzel, Jean Lo, Yury Kudryashov, Fréd
   Heather Macbeth
 
 ! This file was ported from Lean 3 source module topology.algebra.module.basic
-! leanprover-community/mathlib commit 2445c98ae4b87eabebdde552593519b9b6dc350c
+! leanprover-community/mathlib commit d6fad0e5bf2d6f48da9175d25c3dc5706b3834ce
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -289,6 +289,27 @@ theorem LinearMap.isClosed_or_dense_ker [HasContinuousAdd M'] [IsSimpleModule R'
 #align linear_map.is_closed_or_dense_ker LinearMap.isClosed_or_dense_ker
 
 end closure
+
+section Pi
+
+theorem LinearMap.continuous_on_pi {ι : Type _} {R : Type _} {M : Type _} [Finite ι] [Semiring R]
+    [TopologicalSpace R] [AddCommMonoid M] [Module R M] [TopologicalSpace M] [HasContinuousAdd M]
+    [HasContinuousSmul R M] (f : (ι → R) →ₗ[R] M) : Continuous f :=
+  by
+  cases nonempty_fintype ι
+  classical
+    -- for the proof, write `f` in the standard basis, and use that each coordinate is a continuous
+    -- function.
+    have : (f : (ι → R) → M) = fun x => ∑ i : ι, x i • f fun j => if i = j then 1 else 0 :=
+      by
+      ext x
+      exact f.pi_apply_eq_sum_univ x
+    rw [this]
+    refine' continuous_finset_sum _ fun i hi => _
+    exact (continuous_apply i).smul continuous_const
+#align linear_map.continuous_on_pi LinearMap.continuous_on_pi
+
+end Pi
 
 /-- Continuous linear maps between modules. We only put the type classes that are necessary for the
 definition, although in applications `M` and `M₂` will be topological modules over the topological

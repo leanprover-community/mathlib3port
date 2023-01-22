@@ -579,6 +579,7 @@ import Mathbin.Analysis.Convex.Jensen
 import Mathbin.Analysis.Convex.Join
 import Mathbin.Analysis.Convex.KreinMilman
 import Mathbin.Analysis.Convex.Measure
+import Mathbin.Analysis.Convex.Normed
 import Mathbin.Analysis.Convex.PartitionOfUnity
 import Mathbin.Analysis.Convex.Quasiconvex
 import Mathbin.Analysis.Convex.Segment
@@ -1875,6 +1876,7 @@ import Mathbin.GroupTheory.SpecificGroups.Dihedral
 import Mathbin.GroupTheory.SpecificGroups.Quaternion
 import Mathbin.GroupTheory.Subgroup.Actions
 import Mathbin.GroupTheory.Subgroup.Basic
+import Mathbin.GroupTheory.Subgroup.Finite
 import Mathbin.GroupTheory.Subgroup.MulOpposite
 import Mathbin.GroupTheory.Subgroup.Pointwise
 import Mathbin.GroupTheory.Subgroup.Saturated
@@ -2983,6 +2985,7 @@ import Mathbin.Topology.Order.Basic
 import Mathbin.Topology.Order.Hom.Basic
 import Mathbin.Topology.Order.Hom.Esakia
 import Mathbin.Topology.Order.Lattice
+import Mathbin.Topology.Order.LowerTopology
 import Mathbin.Topology.Order.Priestley
 import Mathbin.Topology.Paracompact
 import Mathbin.Topology.PartitionOfUnity

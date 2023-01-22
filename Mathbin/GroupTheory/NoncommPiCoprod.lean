@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joachim Breitner
 
 ! This file was ported from Lean 3 source module group_theory.noncomm_pi_coprod
-! leanprover-community/mathlib commit 2445c98ae4b87eabebdde552593519b9b6dc350c
+! leanprover-community/mathlib commit d6fad0e5bf2d6f48da9175d25c3dc5706b3834ce
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,7 @@ import Mathbin.GroupTheory.OrderOfElement
 import Mathbin.Data.Finset.NoncommProd
 import Mathbin.Data.Fintype.BigOperators
 import Mathbin.Data.Nat.Gcd.BigOperators
+import Mathbin.Order.SupIndep
 
 /-!
 # Canonical homomorphism from a finite family of monoids
@@ -47,6 +48,44 @@ images of different morphisms commute, we obtain a canonical morphism
 
 
 open BigOperators
+
+namespace Subgroup
+
+variable {G : Type _} [Group G]
+
+/-- `finset.noncomm_prod` is “injective” in `f` if `f` maps into independent subgroups.  This
+generalizes (one direction of) `subgroup.disjoint_iff_mul_eq_one`. -/
+@[to_additive
+      "`finset.noncomm_sum` is “injective” in `f` if `f` maps into independent subgroups.\nThis generalizes (one direction of) `add_subgroup.disjoint_iff_add_eq_zero`. "]
+theorem eq_one_of_noncommProd_eq_one_of_independent {ι : Type _} (s : Finset ι) (f : ι → G) (comm)
+    (K : ι → Subgroup G) (hind : CompleteLattice.Independent K) (hmem : ∀ x ∈ s, f x ∈ K x)
+    (heq1 : s.noncommProd f comm = 1) : ∀ i ∈ s, f i = 1 := by
+  classical
+    revert heq1
+    induction' s using Finset.induction_on with i s hnmem ih
+    · simp
+    · have hcomm := comm.mono (Finset.coe_subset.2 <| Finset.subset_insert _ _)
+      simp only [Finset.forall_mem_insert] at hmem
+      have hmem_bsupr : s.noncomm_prod f hcomm ∈ ⨆ i ∈ (s : Set ι), K i :=
+        by
+        refine' Subgroup.noncommProd_mem _ _ _
+        intro x hx
+        have : K x ≤ ⨆ i ∈ (s : Set ι), K i := le_supᵢ₂ x hx
+        exact this (hmem.2 x hx)
+      intro heq1
+      rw [Finset.noncommProd_insert_of_not_mem _ _ _ _ hnmem] at heq1
+      have hnmem' : i ∉ (s : Set ι) := by simpa
+      obtain ⟨heq1i : f i = 1, heq1S : s.noncomm_prod f _ = 1⟩ :=
+        subgroup.disjoint_iff_mul_eq_one.mp (hind.disjoint_bsupr hnmem') hmem.1 hmem_bsupr heq1
+      intro i h
+      simp only [Finset.mem_insert] at h
+      rcases h with ⟨rfl | _⟩
+      · exact heq1i
+      · exact ih hcomm hmem.2 heq1S _ h
+#align subgroup.eq_one_of_noncomm_prod_eq_one_of_independent Subgroup.eq_one_of_noncommProd_eq_one_of_independent
+#align add_subgroup.eq_zero_of_noncomm_sum_eq_zero_of_independent AddSubgroup.eq_zero_of_noncomm_sum_eq_zero_of_independent
+
+end Subgroup
 
 section FamilyOfMonoids
 

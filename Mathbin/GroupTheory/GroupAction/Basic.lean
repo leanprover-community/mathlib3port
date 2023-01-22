@@ -4,10 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module group_theory.group_action.basic
-! leanprover-community/mathlib commit 2445c98ae4b87eabebdde552593519b9b6dc350c
+! leanprover-community/mathlib commit d6fad0e5bf2d6f48da9175d25c3dc5706b3834ce
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
+import Mathbin.Data.Fintype.Card
 import Mathbin.GroupTheory.GroupAction.Defs
 import Mathbin.GroupTheory.GroupAction.Group
 import Mathbin.Data.Setoid.Basic
@@ -35,7 +36,7 @@ universe u v w
 
 variable {α : Type u} {β : Type v} {γ : Type w}
 
-open BigOperators Pointwise
+open Pointwise
 
 open Function
 

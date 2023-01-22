@@ -4,13 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.bounded_variation
-! leanprover-community/mathlib commit 2445c98ae4b87eabebdde552593519b9b6dc350c
+! leanprover-community/mathlib commit d6fad0e5bf2d6f48da9175d25c3dc5706b3834ce
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.MeasureTheory.Measure.Lebesgue
 import Mathbin.Analysis.Calculus.Monotone
 import Mathbin.Data.Set.Function
+import Mathbin.Algebra.Group.Basic
 
 /-!
 # Functions of bounded variation
@@ -26,6 +27,7 @@ almost everywhere.
 * `has_bounded_variation_on f s` registers that the variation of `f` on `s` is finite.
 * `has_locally_bounded_variation f s` registers that `f` has finite variation on any compact
   subinterval of `s`.
+* `variation_on_from_to f s a b` is the signed variation of `f` on `s ∩ Icc a b`, converted to `ℝ`.
 
 * `evariation_on.Icc_add_Icc` states that the variation of `f` on `[a, c]` is the sum of its
   variations on `[a, b]` and `[b, c]`.
@@ -730,69 +732,129 @@ theorem MonotoneOn.hasLocallyBoundedVariationOn {f : α → ℝ} {s : Set α} (h
   ((hf.evariation_on_le as bs).trans_lt Ennreal.ofReal_lt_top).Ne
 #align monotone_on.has_locally_bounded_variation_on MonotoneOn.hasLocallyBoundedVariationOn
 
+/-- The **signed** variation of `f` on the interval `Icc a b` intersected with the set `s`,
+squashed to a real (therefore only really meaningful if the variation is finite)
+-/
+noncomputable def variationOnFromTo (f : α → E) (s : Set α) (a b : α) : ℝ :=
+  if a ≤ b then (evariationOn f (s ∩ Icc a b)).toReal else -(evariationOn f (s ∩ Icc b a)).toReal
+#align variation_on_from_to variationOnFromTo
+
+namespace variationOnFromTo
+
+variable (f : α → E) (s : Set α)
+
+@[protected]
+theorem self (a : α) : variationOnFromTo f s a a = 0 :=
+  by
+  dsimp only [variationOnFromTo]
+  rw [if_pos le_rfl, Icc_self, evariationOn.subsingleton, Ennreal.zero_toReal]
+  exact fun x hx y hy => hx.2.trans hy.2.symm
+#align variation_on_from_to.self variationOnFromTo.self
+
+@[protected]
+theorem nonneg_of_le {a b : α} (h : a ≤ b) : 0 ≤ variationOnFromTo f s a b := by
+  simp only [variationOnFromTo, if_pos h, Ennreal.toReal_nonneg]
+#align variation_on_from_to.nonneg_of_le variationOnFromTo.nonneg_of_le
+
+@[protected]
+theorem eq_neg_swap (a b : α) : variationOnFromTo f s a b = -variationOnFromTo f s b a :=
+  by
+  rcases lt_trichotomy a b with (ab | rfl | ba)
+  · simp only [variationOnFromTo, if_pos ab.le, if_neg ab.not_le, neg_neg]
+  · simp only [self, neg_zero]
+  · simp only [variationOnFromTo, if_pos ba.le, if_neg ba.not_le, neg_neg]
+#align variation_on_from_to.eq_neg_swap variationOnFromTo.eq_neg_swap
+
+@[protected]
+theorem nonpos_of_ge {a b : α} (h : b ≤ a) : variationOnFromTo f s a b ≤ 0 :=
+  by
+  rw [eq_neg_swap]
+  exact neg_nonpos_of_nonneg (nonneg_of_le f s h)
+#align variation_on_from_to.nonpos_of_ge variationOnFromTo.nonpos_of_ge
+
+@[protected]
+theorem eq_of_le {a b : α} (h : a ≤ b) :
+    variationOnFromTo f s a b = (evariationOn f (s ∩ Icc a b)).toReal :=
+  if_pos h
+#align variation_on_from_to.eq_of_le variationOnFromTo.eq_of_le
+
+@[protected]
+theorem eq_of_ge {a b : α} (h : b ≤ a) :
+    variationOnFromTo f s a b = -(evariationOn f (s ∩ Icc b a)).toReal := by
+  rw [eq_neg_swap, neg_inj, eq_of_le f s h]
+#align variation_on_from_to.eq_of_ge variationOnFromTo.eq_of_ge
+
+@[protected]
+theorem add {f : α → E} {s : Set α} (hf : HasLocallyBoundedVariationOn f s) {a b c : α} (ha : a ∈ s)
+    (hb : b ∈ s) (hc : c ∈ s) :
+    variationOnFromTo f s a b + variationOnFromTo f s b c = variationOnFromTo f s a c :=
+  by
+  symm
+  refine' additive_of_isTotal (· ≤ ·) (variationOnFromTo f s) (· ∈ s) _ _ ha hb hc
+  · rintro x y xs ys
+    simp only [eq_neg_swap f s y x, Subtype.coe_mk, add_right_neg, forall_true_left]
+  · rintro x y z xy yz xs ys zs
+    rw [eq_of_le f s xy, eq_of_le f s yz, eq_of_le f s (xy.trans yz), ←
+      Ennreal.toReal_add (hf x y xs ys) (hf y z ys zs), evariationOn.icc_add_icc f xy yz ys]
+#align variation_on_from_to.add variationOnFromTo.add
+
+variable {f} {s}
+
+@[protected]
+theorem monotoneOn (hf : HasLocallyBoundedVariationOn f s) {a : α} (as : a ∈ s) :
+    MonotoneOn (variationOnFromTo f s a) s :=
+  by
+  rintro b bs c cs bc
+  rw [← add hf as bs cs]
+  exact le_add_of_nonneg_right (nonneg_of_le f s bc)
+#align variation_on_from_to.monotone_on variationOnFromTo.monotoneOn
+
+@[protected]
+theorem antitoneOn (hf : HasLocallyBoundedVariationOn f s) {b : α} (bs : b ∈ s) :
+    AntitoneOn (fun a => variationOnFromTo f s a b) s :=
+  by
+  rintro a as c cs ac
+  dsimp only
+  rw [← add hf as cs bs]
+  exact le_add_of_nonneg_left (nonneg_of_le f s ac)
+#align variation_on_from_to.antitone_on variationOnFromTo.antitoneOn
+
+@[protected]
+theorem sub_self_monotoneOn {f : α → ℝ} {s : Set α} (hf : HasLocallyBoundedVariationOn f s) {a : α}
+    (as : a ∈ s) : MonotoneOn (variationOnFromTo f s a - f) s :=
+  by
+  rintro b bs c cs bc
+  rw [Pi.sub_apply, Pi.sub_apply, le_sub_iff_add_le, add_comm_sub, ← le_sub_iff_add_le']
+  calc
+    f c - f b ≤ |f c - f b| := le_abs_self _
+    _ = dist (f b) (f c) := by rw [dist_comm, Real.dist_eq]
+    _ ≤ variationOnFromTo f s b c :=
+      by
+      rw [eq_of_le f s bc, dist_edist]
+      apply Ennreal.toReal_mono (hf b c bs cs)
+      apply evariationOn.edist_le f
+      exacts[⟨bs, le_rfl, bc⟩, ⟨cs, bc, le_rfl⟩]
+    _ = variationOnFromTo f s a c - variationOnFromTo f s a b := by
+      rw [← add hf as bs cs, add_sub_cancel']
+    
+#align variation_on_from_to.sub_self_monotone_on variationOnFromTo.sub_self_monotoneOn
+
+end variationOnFromTo
+
 /-- If a real valued function has bounded variation on a set, then it is a difference of monotone
 functions there. -/
 theorem HasLocallyBoundedVariationOn.exists_monotoneOn_sub_monotoneOn {f : α → ℝ} {s : Set α}
     (h : HasLocallyBoundedVariationOn f s) :
     ∃ p q : α → ℝ, MonotoneOn p s ∧ MonotoneOn q s ∧ f = p - q :=
   by
-  rcases eq_empty_or_nonempty s with (rfl | hs)
+  rcases eq_empty_or_nonempty s with (rfl | ⟨c, cs⟩)
   ·
     exact
-      ⟨f, 0, subsingleton_empty.monotone_on _, subsingleton_empty.monotone_on _, by
-        simp only [tsub_zero]⟩
-  rcases hs with ⟨c, cs⟩
-  let p x :=
-    if c ≤ x then (evariationOn f (s ∩ Icc c x)).toReal else -(evariationOn f (s ∩ Icc x c)).toReal
-  have hp : MonotoneOn p s := by
-    intro x xs y ys hxy
-    dsimp only [p]
-    split_ifs with hcx hcy hcy
-    · have :
-        evariationOn f (s ∩ Icc c x) + evariationOn f (s ∩ Icc x y) =
-          evariationOn f (s ∩ Icc c y) :=
-        evariationOn.icc_add_icc f hcx hxy xs
-      rw [← this, Ennreal.toReal_add (h c x cs xs) (h x y xs ys)]
-      exact le_add_of_le_of_nonneg le_rfl Ennreal.toReal_nonneg
-    · exact (lt_irrefl _ ((not_le.1 hcy).trans_le (hcx.trans hxy))).elim
-    · exact (neg_nonpos.2 Ennreal.toReal_nonneg).trans Ennreal.toReal_nonneg
-    · simp only [neg_le_neg_iff]
-      have :
-        evariationOn f (s ∩ Icc x y) + evariationOn f (s ∩ Icc y c) =
-          evariationOn f (s ∩ Icc x c) :=
-        evariationOn.icc_add_icc f hxy (not_le.1 hcy).le ys
-      rw [← this, Ennreal.toReal_add (h x y xs ys) (h y c ys cs), add_comm]
-      exact le_add_of_le_of_nonneg le_rfl Ennreal.toReal_nonneg
-  have hq : MonotoneOn (fun x => p x - f x) s :=
-    by
-    intro x xs y ys hxy
-    dsimp only [p]
-    split_ifs with hcx hcy hcy
-    · have :
-        evariationOn f (s ∩ Icc c x) + evariationOn f (s ∩ Icc x y) =
-          evariationOn f (s ∩ Icc c y) :=
-        evariationOn.icc_add_icc f hcx hxy xs
-      rw [← this, Ennreal.toReal_add (h c x cs xs) (h x y xs ys)]
-      suffices f y - f x ≤ (evariationOn f (s ∩ Icc x y)).toReal by linarith
-      exact (h x y xs ys).sub_le ⟨ys, hxy, le_rfl⟩ ⟨xs, le_rfl, hxy⟩
-    · exact (lt_irrefl _ ((not_le.1 hcy).trans_le (hcx.trans hxy))).elim
-    · suffices
-        f y - f x ≤ (evariationOn f (s ∩ Icc x c)).toReal + (evariationOn f (s ∩ Icc c y)).toReal by
-        linarith
-      rw [← Ennreal.toReal_add (h x c xs cs) (h c y cs ys),
-        evariationOn.icc_add_icc f (not_le.1 hcx).le hcy cs]
-      exact (h x y xs ys).sub_le ⟨ys, hxy, le_rfl⟩ ⟨xs, le_rfl, hxy⟩
-    · have :
-        evariationOn f (s ∩ Icc x y) + evariationOn f (s ∩ Icc y c) =
-          evariationOn f (s ∩ Icc x c) :=
-        evariationOn.icc_add_icc f hxy (not_le.1 hcy).le ys
-      rw [← this, Ennreal.toReal_add (h x y xs ys) (h y c ys cs)]
-      suffices f y - f x ≤ (evariationOn f (s ∩ Icc x y)).toReal by linarith
-      exact (h x y xs ys).sub_le ⟨ys, hxy, le_rfl⟩ ⟨xs, le_rfl, hxy⟩
-  refine' ⟨p, fun x => p x - f x, hp, hq, _⟩
-  ext x
-  dsimp
-  abel
+      ⟨f, 0, subsingleton_empty.monotone_on _, subsingleton_empty.monotone_on _, (sub_zero f).symm⟩
+  ·
+    exact
+      ⟨_, _, variationOnFromTo.monotoneOn h cs, variationOnFromTo.sub_self_monotoneOn h cs,
+        (sub_sub_cancel _ _).symm⟩
 #align has_locally_bounded_variation_on.exists_monotone_on_sub_monotone_on HasLocallyBoundedVariationOn.exists_monotoneOn_sub_monotoneOn
 
 /-! ## Lipschitz functions and bounded variation -/

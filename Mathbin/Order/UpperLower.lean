@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Sara Rousta
 
 ! This file was ported from Lean 3 source module order.upper_lower
-! leanprover-community/mathlib commit 2445c98ae4b87eabebdde552593519b9b6dc350c
+! leanprover-community/mathlib commit d6fad0e5bf2d6f48da9175d25c3dc5706b3834ce
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1498,17 +1498,6 @@ def lowerClosure (s : Set α) : LowerSet α :=
   ⟨{ x | ∃ a ∈ s, x ≤ a }, fun x y h => Exists₂Cat.imp fun a _ => h.trans⟩
 #align lower_closure lowerClosure
 
--- We do not tag those two as `simp` to respect the abstraction.
-@[norm_cast]
-theorem coe_upperClosure (s : Set α) : ↑(upperClosure s) = { x | ∃ a ∈ s, a ≤ x } :=
-  rfl
-#align coe_upper_closure coe_upperClosure
-
-@[norm_cast]
-theorem coe_lowerClosure (s : Set α) : ↑(lowerClosure s) = { x | ∃ a ∈ s, x ≤ a } :=
-  rfl
-#align coe_lower_closure coe_lowerClosure
-
 @[simp]
 theorem mem_upperClosure : x ∈ upperClosure s ↔ ∃ a ∈ s, a ≤ x :=
   Iff.rfl
@@ -1518,6 +1507,21 @@ theorem mem_upperClosure : x ∈ upperClosure s ↔ ∃ a ∈ s, a ≤ x :=
 theorem mem_lowerClosure : x ∈ lowerClosure s ↔ ∃ a ∈ s, x ≤ a :=
   Iff.rfl
 #align mem_lower_closure mem_lowerClosure
+
+-- We do not tag those two as `simp` to respect the abstraction.
+@[norm_cast]
+theorem coe_upperClosure (s : Set α) : ↑(upperClosure s) = ⋃ a ∈ s, Ici a :=
+  by
+  ext
+  simp
+#align coe_upper_closure coe_upperClosure
+
+@[norm_cast]
+theorem coe_lowerClosure (s : Set α) : ↑(lowerClosure s) = ⋃ a ∈ s, Iic a :=
+  by
+  ext
+  simp
+#align coe_lower_closure coe_lowerClosure
 
 theorem subset_upperClosure : s ⊆ upperClosure s := fun x hx => ⟨x, hx, le_rfl⟩
 #align subset_upper_closure subset_upperClosure

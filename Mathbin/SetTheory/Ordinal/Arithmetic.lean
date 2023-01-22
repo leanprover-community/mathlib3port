@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Floris van Doorn, Violeta Hernández Palacios
 
 ! This file was ported from Lean 3 source module set_theory.ordinal.arithmetic
-! leanprover-community/mathlib commit 2445c98ae4b87eabebdde552593519b9b6dc350c
+! leanprover-community/mathlib commit d6fad0e5bf2d6f48da9175d25c3dc5706b3834ce
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -62,10 +62,10 @@ open Classical Cardinal Ordinal
 
 universe u v w
 
+namespace Ordinal
+
 variable {α : Type _} {β : Type _} {γ : Type _} {r : α → α → Prop} {s : β → β → Prop}
   {t : γ → γ → Prop}
-
-namespace Ordinal
 
 /-! ### Further properties of addition on ordinals -/
 
@@ -2963,19 +2963,19 @@ unsafe def positivity_opow : expr → tactic strictness
 
 end Tactic
 
-namespace Acc
+variable {α : Type u} {r : α → α → Prop} {a b : α}
 
-variable {a b : α}
+namespace Acc
 
 /-- The rank of an element `a` accessible under a relation `r` is defined inductively as the
 smallest ordinal greater than the ranks of all elements below it (i.e. elements `b` such that
 `r b a`). -/
-noncomputable def rank (h : Acc r a) : Ordinal :=
-  Acc.recOn h fun a h ih => Ordinal.sup fun b : { b // r b a } => Order.succ <| ih b b.2
+noncomputable def rank (h : Acc r a) : Ordinal.{u} :=
+  Acc.recOn h fun a h ih => Ordinal.sup.{u, u} fun b : { b // r b a } => Order.succ <| ih b b.2
 #align acc.rank Acc.rank
 
 theorem rank_eq (h : Acc r a) :
-    h.rank = Ordinal.sup fun b : { b // r b a } => Order.succ (h.inv b.2).rank :=
+    h.rank = Ordinal.sup.{u, u} fun b : { b // r b a } => Order.succ (h.inv b.2).rank :=
   by
   change (Acc.intro a fun _ => h.inv).rank = _
   rfl
@@ -2993,18 +2993,19 @@ end Acc
 
 namespace WellFounded
 
-variable (hwf : WellFounded r) {a b : α}
+variable (hwf : WellFounded r)
 
 include hwf
 
 /-- The rank of an element `a` under a well-founded relation `r` is defined inductively as the
 smallest ordinal greater than the ranks of all elements below it (i.e. elements `b` such that
 `r b a`). -/
-noncomputable def rank (a : α) : Ordinal :=
+noncomputable def rank (a : α) : Ordinal.{u} :=
   (hwf.apply a).rank
 #align well_founded.rank WellFounded.rank
 
-theorem rank_eq : hwf.rank a = Ordinal.sup fun b : { b // r b a } => Order.succ <| hwf.rank b :=
+theorem rank_eq :
+    hwf.rank a = Ordinal.sup.{u, u} fun b : { b // r b a } => Order.succ <| hwf.rank b :=
   by
   rw [rank, Acc.rank_eq]
   rfl

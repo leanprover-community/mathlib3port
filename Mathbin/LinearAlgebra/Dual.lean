@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Fabian Glöckle
 
 ! This file was ported from Lean 3 source module linear_algebra.dual
-! leanprover-community/mathlib commit 2445c98ae4b87eabebdde552593519b9b6dc350c
+! leanprover-community/mathlib commit d6fad0e5bf2d6f48da9175d25c3dc5706b3834ce
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1011,6 +1011,16 @@ theorem range_dualMap_le_dualAnnihilator_ker : f.dualMap.range ≤ f.ker.dualAnn
   rw [dual_map_apply, hx, map_zero]
 #align linear_map.range_dual_map_le_dual_annihilator_ker LinearMap.range_dualMap_le_dualAnnihilator_ker
 
+/-- if a linear map is surjective, then its dual is injective -/
+theorem dualMap_injective_of_surjective {f : M₁ →ₗ[R] M₂} (hf : Function.Surjective f) :
+    Function.Injective f.dualMap :=
+  by
+  obtain ⟨g, hg⟩ := hf.has_right_inverse
+  intro x y hxy
+  ext w
+  simpa only [dual_map_apply, hg w] using FunLike.congr_fun hxy (g w)
+#align linear_map.dual_map_injective_of_surjective LinearMap.dualMap_injective_of_surjective
+
 section FiniteDimensional
 
 variable {K : Type _} [Field K] {V₁ : Type _} {V₂ : Type _}
@@ -1044,6 +1054,44 @@ theorem range_dualMap_eq_dualAnnihilator_ker [FiniteDimensional K V₁] (f : V�
   simp_rw [this, finrank_range_dual_map_eq_finrank_range]
   exact finrank_range_add_finrank_ker f
 #align linear_map.range_dual_map_eq_dual_annihilator_ker LinearMap.range_dualMap_eq_dualAnnihilator_ker
+
+/-- `f.dual_map` is injective if and only if `f` is surjective -/
+@[simp]
+theorem dualMap_injective_iff {f : V₁ →ₗ[K] V₂} :
+    Function.Injective f.dualMap ↔ Function.Surjective f :=
+  by
+  refine' ⟨_, fun h => dual_map_injective_of_surjective h⟩
+  rw [← range_eq_top, ← ker_eq_bot]
+  intro h
+  apply FiniteDimensional.eq_top_of_finrank_eq
+  rw [← finrank_eq_zero] at h
+  rw [← add_zero (FiniteDimensional.finrank K f.range), ← h, ←
+    LinearMap.finrank_range_dualMap_eq_finrank_range, LinearMap.finrank_range_add_finrank_ker,
+    Subspace.dual_finrank_eq]
+#align linear_map.dual_map_injective_iff LinearMap.dualMap_injective_iff
+
+/-- `f.dual_map` is surjective if and only if `f` is injective -/
+@[simp]
+theorem dualMap_surjective_iff [FiniteDimensional K V₁] {f : V₁ →ₗ[K] V₂} :
+    Function.Surjective f.dualMap ↔ Function.Injective f :=
+  by
+  rw [← range_eq_top, ← ker_eq_bot]
+  constructor
+  · intro h
+    rw [← finrank_eq_zero, ← add_right_inj (FiniteDimensional.finrank K f.range), add_zero,
+      LinearMap.finrank_range_add_finrank_ker, ← LinearMap.finrank_range_dualMap_eq_finrank_range,
+      h, finrank_top, Subspace.dual_finrank_eq]
+  · intro h
+    rw [range_dual_map_eq_dual_annihilator_ker, h]
+    exact Submodule.dualAnnihilator_bot
+#align linear_map.dual_map_surjective_iff LinearMap.dualMap_surjective_iff
+
+/-- `f.dual_map` is bijective if and only if `f` is -/
+@[simp]
+theorem dualMap_bijective_iff [FiniteDimensional K V₁] {f : V₁ →ₗ[K] V₂} :
+    Function.Bijective f.dualMap ↔ Function.Bijective f := by
+  simp_rw [Function.Bijective, dual_map_surjective_iff, dual_map_injective_iff, and_comm]
+#align linear_map.dual_map_bijective_iff LinearMap.dualMap_bijective_iff
 
 end FiniteDimensional
 

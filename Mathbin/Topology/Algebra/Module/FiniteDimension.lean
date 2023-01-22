@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Anatole Dedecker
 
 ! This file was ported from Lean 3 source module topology.algebra.module.finite_dimension
-! leanprover-community/mathlib commit 2445c98ae4b87eabebdde552593519b9b6dc350c
+! leanprover-community/mathlib commit d6fad0e5bf2d6f48da9175d25c3dc5706b3834ce
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -52,29 +52,6 @@ noncomputable section
 open Set FiniteDimensional TopologicalSpace Filter
 
 open BigOperators
-
-section Semiring
-
-variable {ι 𝕜 F : Type _} [Finite ι] [Semiring 𝕜] [TopologicalSpace 𝕜] [AddCommMonoid F]
-  [Module 𝕜 F] [TopologicalSpace F] [HasContinuousAdd F] [HasContinuousSmul 𝕜 F]
-
-/-- A linear map on `ι → 𝕜` (where `ι` is finite) is continuous -/
-theorem LinearMap.continuous_on_pi (f : (ι → 𝕜) →ₗ[𝕜] F) : Continuous f :=
-  by
-  cases nonempty_fintype ι
-  classical
-    -- for the proof, write `f` in the standard basis, and use that each coordinate is a continuous
-    -- function.
-    have : (f : (ι → 𝕜) → F) = fun x => ∑ i : ι, x i • f fun j => if i = j then 1 else 0 :=
-      by
-      ext x
-      exact f.pi_apply_eq_sum_univ x
-    rw [this]
-    refine' continuous_finset_sum _ fun i hi => _
-    exact (continuous_apply i).smul continuous_const
-#align linear_map.continuous_on_pi LinearMap.continuous_on_pi
-
-end Semiring
 
 section Field
 

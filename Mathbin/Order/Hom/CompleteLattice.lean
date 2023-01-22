@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.hom.complete_lattice
-! leanprover-community/mathlib commit 2445c98ae4b87eabebdde552593519b9b6dc350c
+! leanprover-community/mathlib commit d6fad0e5bf2d6f48da9175d25c3dc5706b3834ce
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1300,23 +1300,27 @@ def Equiv.toOrderIsoSet (e : α ≃ β) : Set α ≃o Set β
     ⟨fun h => by simpa using @monotone_image _ _ e.symm _ _ h, fun h => monotone_image h⟩
 #align equiv.to_order_iso_set Equiv.toOrderIsoSet
 
-section
+variable [CompleteLattice α] (x : α × α)
 
-variable (α) [CompleteLattice α]
+/-- The map `(a, b) ↦ a ⊔ b` as a `Sup_hom`. -/
+def supSupHom : SupHom (α × α) α where
+  toFun x := x.1 ⊔ x.2
+  map_Sup' s := by simp_rw [Prod.fst_supₛ, Prod.snd_supₛ, supₛ_image, supᵢ_sup_eq]
+#align sup_Sup_hom supSupHom
 
 /-- The map `(a, b) ↦ a ⊓ b` as an `Inf_hom`. -/
-@[simps]
 def infInfHom : InfHom (α × α) α where
   toFun x := x.1 ⊓ x.2
   map_Inf' s := by simp_rw [Prod.fst_infₛ, Prod.snd_infₛ, infₛ_image, infᵢ_inf_eq]
 #align inf_Inf_hom infInfHom
 
-/-- The map `(a, b) ↦ a ⊔ b` as a `Sup_hom`. -/
-@[simps]
-def supSupHom : SupHom (α × α) α where
-  toFun x := x.1 ⊔ x.2
-  map_Sup' := (infInfHom αᵒᵈ).map_Inf'
-#align sup_Sup_hom supSupHom
+@[simp, norm_cast]
+theorem supSupHom_apply : supSupHom x = x.1 ⊔ x.2 :=
+  rfl
+#align sup_Sup_hom_apply supSupHom_apply
 
-end
+@[simp, norm_cast]
+theorem infInfHom_apply : infInfHom x = x.1 ⊓ x.2 :=
+  rfl
+#align inf_Inf_hom_apply infInfHom_apply
 

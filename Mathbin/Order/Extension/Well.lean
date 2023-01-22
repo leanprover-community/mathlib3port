@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Junyan Xu
 
 ! This file was ported from Lean 3 source module order.extension.well
-! leanprover-community/mathlib commit 2445c98ae4b87eabebdde552593519b9b6dc350c
+! leanprover-community/mathlib commit d6fad0e5bf2d6f48da9175d25c3dc5706b3834ce
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,7 +51,7 @@ arbitrary well-order to serve as a tiebreak between two elements of same rank.
 -/
 noncomputable def wellOrderExtension : LinearOrder α :=
   let l : LinearOrder α := IsWellOrder.linearOrder WellOrderingRel
-  @LinearOrder.lift' α (Ordinal ×ₗ α) _ (fun a : α => (WellFounded.rank.{u, u} hwf a, a)) fun _ _ =>
+  @LinearOrder.lift' α (Ordinal ×ₗ α) _ (fun a : α => (WellFounded.rank.{u} hwf a, a)) fun _ _ =>
     congr_arg Prod.snd
 #align well_founded.well_order_extension WellFounded.wellOrderExtension
 

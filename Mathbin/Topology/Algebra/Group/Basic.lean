@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.algebra.group.basic
-! leanprover-community/mathlib commit 2445c98ae4b87eabebdde552593519b9b6dc350c
+! leanprover-community/mathlib commit d6fad0e5bf2d6f48da9175d25c3dc5706b3834ce
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1344,7 +1344,7 @@ theorem IsOpen.mul_right (hs : IsOpen s) : IsOpen (s * t) :=
 
 @[to_additive]
 theorem subset_interior_mul_left : interior s * t ⊆ interior (s * t) :=
-  interior_maximal (Set.mul_subset_mul_right interior_subset) isOpen_interior.mul_right
+  interior_maximal (Set.mul_subset_mul_right interior_subset) isOpen_interior.mulRight
 #align subset_interior_mul_left subset_interior_mul_left
 #align subset_interior_add_left subset_interior_add_left
 
@@ -1392,13 +1392,13 @@ theorem IsOpen.div_right (hs : IsOpen s) : IsOpen (s / t) :=
 
 @[to_additive]
 theorem subset_interior_div_left : interior s / t ⊆ interior (s / t) :=
-  interior_maximal (div_subset_div_right interior_subset) isOpen_interior.div_right
+  interior_maximal (div_subset_div_right interior_subset) isOpen_interior.divRight
 #align subset_interior_div_left subset_interior_div_left
 #align subset_interior_sub_left subset_interior_sub_left
 
 @[to_additive]
 theorem subset_interior_div_right : s / interior t ⊆ interior (s / t) :=
-  interior_maximal (div_subset_div_left interior_subset) isOpen_interior.div_left
+  interior_maximal (div_subset_div_left interior_subset) isOpen_interior.divLeft
 #align subset_interior_div_right subset_interior_div_right
 #align subset_interior_sub_right subset_interior_sub_right
 

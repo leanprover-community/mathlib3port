@@ -4,12 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller
 
 ! This file was ported from Lean 3 source module data.sym.sym2
-! leanprover-community/mathlib commit 2445c98ae4b87eabebdde552593519b9b6dc350c
+! leanprover-community/mathlib commit d6fad0e5bf2d6f48da9175d25c3dc5706b3834ce
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Data.Finset.Prod
 import Mathbin.Data.Sym.Basic
+import Mathbin.Data.SetLike.Basic
 import Mathbin.Tactic.Linarith.Default
 
 /-!
@@ -276,19 +277,54 @@ theorem map.injective {f : α → β} (hinj : Injective f) : Injective (map f) :
 
 section Membership
 
-/-! ### Declarations about membership -/
+/-! ### Membership and set coercion -/
 
 
 /-- This is a predicate that determines whether a given term is a member of a term of the
 symmetric square.  From this point of view, the symmetric square is the subtype of
 cardinality-two multisets on `α`.
 -/
-def Mem (x : α) (z : Sym2 α) : Prop :=
+protected def Mem (x : α) (z : Sym2 α) : Prop :=
   ∃ y : α, z = ⟦(x, y)⟧
 #align sym2.mem Sym2.Mem
 
-instance : Membership α (Sym2 α) :=
-  ⟨Mem⟩
+theorem mem_iff' {a b c : α} : Sym2.Mem a ⟦(b, c)⟧ ↔ a = b ∨ a = c :=
+  { mp := by
+      rintro ⟨_, h⟩
+      rw [eq_iff] at h
+      tidy
+    mpr := by
+      rintro (rfl | rfl)
+      · exact ⟨_, rfl⟩
+      rw [eq_swap]
+      exact ⟨_, rfl⟩ }
+#align sym2.mem_iff' Sym2.mem_iff'
+
+instance : SetLike (Sym2 α) α where
+  coe z := { x | z.Mem x }
+  coe_injective' z z' h := by
+    simp only [Set.ext_iff, Set.mem_setOf_eq] at h
+    induction' z using Sym2.ind with x y
+    induction' z' using Sym2.ind with x' y'
+    have hx := h x; have hy := h y; have hx' := h x'; have hy' := h y'
+    simp only [mem_iff', eq_self_iff_true, or_true_iff, iff_true_iff, true_or_iff, true_iff_iff] at
+      hx hy hx' hy'
+    cases hx <;> cases hy <;> cases hx' <;> cases hy' <;> subst_vars
+    rw [Sym2.eq_swap]
+
+@[simp]
+theorem mem_iff_mem {x : α} {z : Sym2 α} : Sym2.Mem x z ↔ x ∈ z :=
+  Iff.rfl
+#align sym2.mem_iff_mem Sym2.mem_iff_mem
+
+theorem mem_iff_exists {x : α} {z : Sym2 α} : x ∈ z ↔ ∃ y : α, z = ⟦(x, y)⟧ :=
+  Iff.rfl
+#align sym2.mem_iff_exists Sym2.mem_iff_exists
+
+@[ext]
+theorem ext {p q : Sym2 α} (h : ∀ x, x ∈ p ↔ x ∈ q) : p = q :=
+  SetLike.ext h
+#align sym2.ext Sym2.ext
 
 theorem mem_mk''_left (x y : α) : x ∈ ⟦(x, y)⟧ :=
   ⟨y, rfl⟩
@@ -300,14 +336,7 @@ theorem mem_mk''_right (x y : α) : y ∈ ⟦(x, y)⟧ :=
 
 @[simp]
 theorem mem_iff {a b c : α} : a ∈ ⟦(b, c)⟧ ↔ a = b ∨ a = c :=
-  { mp := by
-      rintro ⟨_, h⟩
-      rw [eq_iff] at h
-      tidy
-    mpr := by
-      rintro ⟨_⟩ <;> subst a
-      · apply mem_mk_left
-      apply mem_mk_right }
+  mem_iff'
 #align sym2.mem_iff Sym2.mem_iff
 
 theorem out_fst_mem (e : Sym2 α) : e.out.1 ∈ e :=
@@ -358,18 +387,6 @@ theorem eq_of_ne_mem {x y : α} {z z' : Sym2 α} (h : x ≠ y) (h1 : x ∈ z) (h
     (h4 : y ∈ z') : z = z' :=
   ((mem_and_mem_iff h).mp ⟨h1, h2⟩).trans ((mem_and_mem_iff h).mp ⟨h3, h4⟩).symm
 #align sym2.eq_of_ne_mem Sym2.eq_of_ne_mem
-
-@[ext]
-protected theorem ext (z z' : Sym2 α) (h : ∀ x, x ∈ z ↔ x ∈ z') : z = z' :=
-  by
-  induction' z using Sym2.ind with x y
-  induction' z' using Sym2.ind with x' y'
-  have hx := h x; have hy := h y; have hx' := h x'; have hy' := h y'
-  simp only [mem_iff, eq_self_iff_true, or_true_iff, iff_true_iff, true_or_iff, true_iff_iff] at
-    hx hy hx' hy'
-  cases hx <;> cases hy <;> cases hx' <;> cases hy' <;> subst_vars
-  simp only [Sym2.eq_swap]
-#align sym2.ext Sym2.ext
 
 instance Mem.decidable [DecidableEq α] (x : α) (z : Sym2 α) : Decidable (x ∈ z) :=
   Quotient.recOnSubsingleton z fun ⟨y₁, y₂⟩ => decidable_of_iff' _ mem_iff
