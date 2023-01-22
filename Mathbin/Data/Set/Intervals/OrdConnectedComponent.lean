@@ -213,6 +213,7 @@ theorem ordConnectedSection_subset : ordConnectedSection s ⊆ s :=
 #align set.ord_connected_section_subset Set.ordConnectedSection_subset
 -/
 
+#print Set.eq_of_mem_ordConnectedSection_of_uIcc_subset /-
 theorem eq_of_mem_ordConnectedSection_of_uIcc_subset (hx : x ∈ ordConnectedSection s)
     (hy : y ∈ ordConnectedSection s) (h : [x, y] ⊆ s) : x = y :=
   by
@@ -223,6 +224,7 @@ theorem eq_of_mem_ordConnectedSection_of_uIcc_subset (hx : x ∈ ordConnectedSec
         (mem_ord_connected_component_trans (ord_connected_proj_mem_ord_connected_component _ _) h)
         (mem_ord_connected_component_ord_connected_proj _ _))
 #align set.eq_of_mem_ord_connected_section_of_uIcc_subset Set.eq_of_mem_ordConnectedSection_of_uIcc_subset
+-/
 
 #print Set.ordSeparatingSet /-
 /-- Given two sets `s t : set α`, the set `set.order_separating_set s t` is the set of points that

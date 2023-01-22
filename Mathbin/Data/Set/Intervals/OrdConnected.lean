@@ -333,31 +333,42 @@ section LinearOrder
 
 variable {α : Type _} [LinearOrder α] {s : Set α} {x : α}
 
+#print Set.ordConnected_uIcc /-
 @[instance]
 theorem ordConnected_uIcc {a b : α} : OrdConnected [a, b] :=
   ord_connected_Icc
 #align set.ord_connected_uIcc Set.ordConnected_uIcc
+-/
 
+#print Set.ordConnected_uIoc /-
 @[instance]
 theorem ordConnected_uIoc {a b : α} : OrdConnected (Ι a b) :=
   ord_connected_Ioc
 #align set.ord_connected_uIoc Set.ordConnected_uIoc
+-/
 
+#print Set.OrdConnected.uIcc_subset /-
 theorem OrdConnected.uIcc_subset (hs : OrdConnected s) ⦃x⦄ (hx : x ∈ s) ⦃y⦄ (hy : y ∈ s) :
     [x, y] ⊆ s :=
   hs.out (min_rec' (· ∈ s) hx hy) (max_rec' (· ∈ s) hx hy)
 #align set.ord_connected.uIcc_subset Set.OrdConnected.uIcc_subset
+-/
 
+#print Set.OrdConnected.uIoc_subset /-
 theorem OrdConnected.uIoc_subset (hs : OrdConnected s) ⦃x⦄ (hx : x ∈ s) ⦃y⦄ (hy : y ∈ s) :
     Ι x y ⊆ s :=
   Ioc_subset_Icc_self.trans <| hs.uIcc_subset hx hy
 #align set.ord_connected.uIoc_subset Set.OrdConnected.uIoc_subset
+-/
 
+#print Set.ordConnected_iff_uIcc_subset /-
 theorem ordConnected_iff_uIcc_subset :
     OrdConnected s ↔ ∀ ⦃x⦄ (hx : x ∈ s) ⦃y⦄ (hy : y ∈ s), [x, y] ⊆ s :=
-  ⟨fun h => h.uIcc_subset, fun H => ⟨fun x hx y hy => icc_subset_uIcc.trans <| H hx hy⟩⟩
+  ⟨fun h => h.uIcc_subset, fun H => ⟨fun x hx y hy => Icc_subset_uIcc.trans <| H hx hy⟩⟩
 #align set.ord_connected_iff_uIcc_subset Set.ordConnected_iff_uIcc_subset
+-/
 
+#print Set.ordConnected_of_uIcc_subset_left /-
 theorem ordConnected_of_uIcc_subset_left (h : ∀ y ∈ s, [x, y] ⊆ s) : OrdConnected s :=
   ordConnected_iff_uIcc_subset.2 fun y hy z hz =>
     calc
@@ -366,16 +377,21 @@ theorem ordConnected_of_uIcc_subset_left (h : ∀ y ∈ s, [x, y] ⊆ s) : OrdCo
       _ ⊆ s := union_subset (h y hy) (h z hz)
       
 #align set.ord_connected_of_uIcc_subset_left Set.ordConnected_of_uIcc_subset_left
+-/
 
+#print Set.ordConnected_iff_uIcc_subset_left /-
 theorem ordConnected_iff_uIcc_subset_left (hx : x ∈ s) :
     OrdConnected s ↔ ∀ ⦃y⦄, y ∈ s → [x, y] ⊆ s :=
   ⟨fun hs => hs.uIcc_subset hx, ordConnected_of_uIcc_subset_left⟩
 #align set.ord_connected_iff_uIcc_subset_left Set.ordConnected_iff_uIcc_subset_left
+-/
 
+#print Set.ordConnected_iff_uIcc_subset_right /-
 theorem ordConnected_iff_uIcc_subset_right (hx : x ∈ s) :
     OrdConnected s ↔ ∀ ⦃y⦄, y ∈ s → [y, x] ⊆ s := by
   simp_rw [ord_connected_iff_uIcc_subset_left hx, uIcc_comm]
 #align set.ord_connected_iff_uIcc_subset_right Set.ordConnected_iff_uIcc_subset_right
+-/
 
 end LinearOrder
 

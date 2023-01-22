@@ -280,8 +280,8 @@ theorem MeasureTheory.Integrable.intervalIntegrable (hf : Integrable f μ) :
 
 theorem MeasureTheory.IntegrableOn.intervalIntegrable (hf : IntegrableOn f [a, b] μ) :
     IntervalIntegrable f μ a b :=
-  ⟨MeasureTheory.IntegrableOn.monoSet hf (Ioc_subset_Icc_self.trans icc_subset_uIcc),
-    MeasureTheory.IntegrableOn.monoSet hf (Ioc_subset_Icc_self.trans icc_subset_uIcc')⟩
+  ⟨MeasureTheory.IntegrableOn.monoSet hf (Ioc_subset_Icc_self.trans Icc_subset_uIcc),
+    MeasureTheory.IntegrableOn.monoSet hf (Ioc_subset_Icc_self.trans Icc_subset_uIcc')⟩
 #align measure_theory.integrable_on.interval_integrable MeasureTheory.IntegrableOn.intervalIntegrable
 
 theorem intervalIntegrable_const_iff {c : E} :
