@@ -352,14 +352,10 @@ theorem not_ne {a b : Bool} : !a ≠ b ↔ a = b :=
 #align bool.bnot_ne Bool.not_ne
 -/
 
-/- warning: bool.bnot_ne_self -> Bool.not_ne_self is a dubious translation:
-lean 3 declaration is
-  forall (b : Bool), Ne.{1} Bool (not b) b
-but is expected to have type
-  forall (b : Bool), Eq.{1} Bool (not (Decidable.decide (Ne.{1} Bool b b) (instDecidableNot (Eq.{1} Bool b b) (instDecidableEqBool b b)))) Bool.true
-Case conversion may be inaccurate. Consider using '#align bool.bnot_ne_self Bool.not_ne_selfₓ'. -/
+#print Bool.not_ne_self /-
 theorem not_ne_self : ∀ b : Bool, !b ≠ b := by decide
 #align bool.bnot_ne_self Bool.not_ne_self
+-/
 
 #print Bool.self_ne_not /-
 theorem self_ne_not : ∀ b : Bool, b ≠ !b := by decide
