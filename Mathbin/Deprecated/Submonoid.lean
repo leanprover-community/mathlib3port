@@ -171,7 +171,7 @@ theorem IsSubmonoid.preimage {N : Type _} [Monoid N] {f : M → N} (hf : IsMonoi
     (hs : IsSubmonoid s) : IsSubmonoid (f ⁻¹' s) :=
   { one_mem := show f 1 ∈ s by rw [IsMonoidHom.map_one hf] <;> exact hs.one_mem
     mul_mem := fun a b (ha : f a ∈ s) (hb : f b ∈ s) =>
-      show f (a * b) ∈ s by rw [IsMonoidHom.map_mul hf] <;> exact hs.mul_mem ha hb }
+      show f (a * b) ∈ s by rw [IsMonoidHom.map_mul' hf] <;> exact hs.mul_mem ha hb }
 #align is_submonoid.preimage IsSubmonoid.preimage
 #align is_add_submonoid.preimage IsAddSubmonoid.preimage
 

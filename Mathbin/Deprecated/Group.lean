@@ -131,8 +131,6 @@ structure IsAddMonoidHom [AddZeroClass α] [AddZeroClass β] (f : α → β) ext
 #align is_add_monoid_hom IsAddMonoidHom
 -/
 
-/- warning: is_monoid_hom clashes with isMonoidHom -> IsMonoidHom
-Case conversion may be inaccurate. Consider using '#align is_monoid_hom IsMonoidHomₓ'. -/
 #print IsMonoidHom /-
 /- ./././Mathport/Syntax/Translate/Command.lean:388:30: infer kinds are unsupported in Lean 4: #[`map_one] [] -/
 /-- Predicate for monoid homomorphisms (deprecated -- use the bundled `monoid_hom` version). -/
@@ -175,8 +173,7 @@ theorem coe_of {f : M → N} (hf : IsMonoidHom f) : ⇑(MonoidHom.of hf) = f :=
 #align monoid_hom.coe_of MonoidHom.coe_of
 #align add_monoid_hom.coe_of AddMonoidHom.coe_of
 
-/- warning: monoid_hom.is_monoid_hom_coe clashes with monoid_hom.isMonoidHom_coe -> MonoidHom.isMonoidHom_coe
-warning: monoid_hom.is_monoid_hom_coe -> MonoidHom.isMonoidHom_coe is a dubious translation:
+/- warning: monoid_hom.is_monoid_hom_coe -> MonoidHom.isMonoidHom_coe is a dubious translation:
 lean 3 declaration is
   forall {M : Type.{u1}} {N : Type.{u2}} {mM : MulOneClass.{u1} M} {mN : MulOneClass.{u2} N} (f : MonoidHom.{u1, u2} M N mM mN), IsMonoidHom.{u1, u2} M N mM mN (coeFn.{max (succ u2) (succ u1), max (succ u1) (succ u2)} (MonoidHom.{u1, u2} M N mM mN) (fun (_x : MonoidHom.{u1, u2} M N mM mN) => M -> N) (MonoidHom.hasCoeToFun.{u1, u2} M N mM mN) f)
 but is expected to have type
@@ -206,8 +203,7 @@ theorem isMulHom (h : M ≃* N) : IsMulHom h :=
   ⟨h.map_mul⟩
 #align mul_equiv.is_mul_hom MulEquiv.isMulHom
 
-/- warning: mul_equiv.is_monoid_hom clashes with mul_equiv.isMonoidHom -> MulEquiv.isMonoidHom
-warning: mul_equiv.is_monoid_hom -> MulEquiv.isMonoidHom is a dubious translation:
+/- warning: mul_equiv.is_monoid_hom -> MulEquiv.isMonoidHom is a dubious translation:
 lean 3 declaration is
   forall {M : Type.{u1}} {N : Type.{u2}} [_inst_1 : MulOneClass.{u1} M] [_inst_2 : MulOneClass.{u2} N] (h : MulEquiv.{u1, u2} M N (MulOneClass.toHasMul.{u1} M _inst_1) (MulOneClass.toHasMul.{u2} N _inst_2)), IsMonoidHom.{u1, u2} M N _inst_1 _inst_2 (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (MulEquiv.{u1, u2} M N (MulOneClass.toHasMul.{u1} M _inst_1) (MulOneClass.toHasMul.{u2} N _inst_2)) (fun (_x : MulEquiv.{u1, u2} M N (MulOneClass.toHasMul.{u1} M _inst_1) (MulOneClass.toHasMul.{u2} N _inst_2)) => M -> N) (MulEquiv.hasCoeToFun.{u1, u2} M N (MulOneClass.toHasMul.{u1} M _inst_1) (MulOneClass.toHasMul.{u2} N _inst_2)) h)
 but is expected to have type
@@ -228,15 +224,19 @@ namespace IsMonoidHom
 
 variable [MulOneClass α] [MulOneClass β] {f : α → β} (hf : IsMonoidHom f)
 
+/- warning: is_monoid_hom.map_mul -> IsMonoidHom.map_mul' is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : MulOneClass.{u1} α] [_inst_2 : MulOneClass.{u2} β] {f : α -> β}, (IsMonoidHom.{u1, u2} α β _inst_1 _inst_2 f) -> (forall (x : α) (y : α), Eq.{succ u2} β (f (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α _inst_1)) x y)) (HMul.hMul.{u2, u2, u2} β β β (instHMul.{u2} β (MulOneClass.toHasMul.{u2} β _inst_2)) (f x) (f y)))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : MulOneClass.{u1} α] [_inst_2 : MulOneClass.{u2} β] {f : α -> β}, (IsMonoidHom.{u1, u2} α β _inst_1 _inst_2 f) -> (forall (x : α) (y : α), Eq.{succ u2} β (f (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α _inst_1)) x y)) (HMul.hMul.{u2, u2, u2} β β β (instHMul.{u2} β (MulOneClass.toMul.{u2} β _inst_2)) (f x) (f y)))
+Case conversion may be inaccurate. Consider using '#align is_monoid_hom.map_mul IsMonoidHom.map_mul'ₓ'. -/
 /-- A monoid homomorphism preserves multiplication. -/
 @[to_additive "An additive monoid homomorphism preserves addition."]
-theorem map_mul (x y) : f (x * y) = f x * f y :=
+theorem map_mul' (x y) : f (x * y) = f x * f y :=
   hf.map_mul x y
-#align is_monoid_hom.map_mul IsMonoidHom.map_mul
-#align is_add_monoid_hom.map_add IsAddMonoidHom.map_add
+#align is_monoid_hom.map_mul IsMonoidHom.map_mul'
 
-/- warning: is_monoid_hom.inv clashes with isMonoidHom.inv -> IsMonoidHom.inv
-warning: is_monoid_hom.inv -> IsMonoidHom.inv is a dubious translation:
+/- warning: is_monoid_hom.inv -> IsMonoidHom.inv is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_3 : MulOneClass.{u1} α] [_inst_4 : CommGroup.{u2} β] {f : α -> β}, (IsMonoidHom.{u1, u2} α β _inst_3 (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β (CommGroup.toGroup.{u2} β _inst_4)))) f) -> (IsMonoidHom.{u1, u2} α β _inst_3 (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β (CommGroup.toGroup.{u2} β _inst_4)))) (fun (a : α) => Inv.inv.{u2} β (DivInvMonoid.toHasInv.{u2} β (Group.toDivInvMonoid.{u2} β (CommGroup.toGroup.{u2} β _inst_4))) (f a)))
 but is expected to have type
@@ -255,8 +255,7 @@ theorem inv {α β} [MulOneClass α] [CommGroup β] {f : α → β} (hf : IsMono
 
 end IsMonoidHom
 
-/- warning: is_mul_hom.to_is_monoid_hom clashes with is_mul_hom.toIsMonoidHom -> IsMulHom.to_isMonoidHom
-warning: is_mul_hom.to_is_monoid_hom -> IsMulHom.to_isMonoidHom is a dubious translation:
+/- warning: is_mul_hom.to_is_monoid_hom -> IsMulHom.to_isMonoidHom is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : MulOneClass.{u1} α] [_inst_2 : Group.{u2} β] {f : α -> β}, (IsMulHom.{u1, u2} α β (MulOneClass.toHasMul.{u1} α _inst_1) (MulOneClass.toHasMul.{u2} β (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β _inst_2)))) f) -> (IsMonoidHom.{u1, u2} α β _inst_1 (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β _inst_2))) f)
 but is expected to have type
@@ -274,8 +273,6 @@ namespace IsMonoidHom
 
 variable [MulOneClass α] [MulOneClass β] {f : α → β}
 
-/- warning: is_monoid_hom.id clashes with isMonoidHom.id -> IsMonoidHom.id
-Case conversion may be inaccurate. Consider using '#align is_monoid_hom.id IsMonoidHom.idₓ'. -/
 #print IsMonoidHom.id /-
 /-- The identity map is a monoid homomorphism. -/
 @[to_additive "The identity map is an additive monoid homomorphism."]
@@ -286,8 +283,7 @@ theorem id : IsMonoidHom (@id α) :=
 #align is_add_monoid_hom.id IsAddMonoidHom.id
 -/
 
-/- warning: is_monoid_hom.comp clashes with isMonoidHom.comp -> IsMonoidHom.comp
-warning: is_monoid_hom.comp -> IsMonoidHom.comp is a dubious translation:
+/- warning: is_monoid_hom.comp -> IsMonoidHom.comp is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : MulOneClass.{u1} α] [_inst_2 : MulOneClass.{u2} β] {f : α -> β}, (IsMonoidHom.{u1, u2} α β _inst_1 _inst_2 f) -> (forall {γ : Type.{u3}} [_inst_3 : MulOneClass.{u3} γ] {g : β -> γ}, (IsMonoidHom.{u2, u3} β γ _inst_2 _inst_3 g) -> (IsMonoidHom.{u1, u3} α γ _inst_1 _inst_3 (Function.comp.{succ u1, succ u2, succ u3} α β γ g f)))
 but is expected to have type
@@ -403,8 +399,6 @@ theorem map_mul' : ∀ x y, f (x * y) = f x * f y :=
   hf.to_is_mul_hom.map_mul
 #align is_group_hom.map_mul IsGroupHom.map_mul'
 
-/- warning: is_group_hom.to_is_monoid_hom clashes with is_group_hom.toIsMonoidHom -> IsGroupHom.to_isMonoidHom
-Case conversion may be inaccurate. Consider using '#align is_group_hom.to_is_monoid_hom IsGroupHom.to_isMonoidHomₓ'. -/
 #print IsGroupHom.to_isMonoidHom /-
 /-- A group homomorphism is a monoid homomorphism. -/
 @[to_additive "An additive group homomorphism is an additive monoid homomorphism."]
@@ -536,8 +530,7 @@ section
 
 variable [NonAssocSemiring R] [NonAssocSemiring S]
 
-/- warning: ring_hom.to_is_monoid_hom clashes with ring_hom.toIsMonoidHom -> RingHom.to_isMonoidHom
-warning: ring_hom.to_is_monoid_hom -> RingHom.to_isMonoidHom is a dubious translation:
+/- warning: ring_hom.to_is_monoid_hom -> RingHom.to_isMonoidHom is a dubious translation:
 lean 3 declaration is
   forall {R : Type.{u1}} {S : Type.{u2}} [_inst_1 : NonAssocSemiring.{u1} R] [_inst_2 : NonAssocSemiring.{u2} S] (f : RingHom.{u1, u2} R S _inst_1 _inst_2), IsMonoidHom.{u1, u2} R S (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R _inst_1)) (MulZeroOneClass.toMulOneClass.{u2} S (NonAssocSemiring.toMulZeroOneClass.{u2} S _inst_2)) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (RingHom.{u1, u2} R S _inst_1 _inst_2) (fun (_x : RingHom.{u1, u2} R S _inst_1 _inst_2) => R -> S) (RingHom.hasCoeToFun.{u1, u2} R S _inst_1 _inst_2) f)
 but is expected to have type
@@ -632,8 +625,7 @@ theorem coe_map' {f : M → N} (hf : IsMonoidHom f) (x : Mˣ) : ↑((map' hf : M
   rfl
 #align units.coe_map' Units.coe_map'
 
-/- warning: units.coe_is_monoid_hom clashes with units.coe_isMonoidHom -> Units.coe_isMonoidHom
-warning: units.coe_is_monoid_hom -> Units.coe_isMonoidHom is a dubious translation:
+/- warning: units.coe_is_monoid_hom -> Units.coe_isMonoidHom is a dubious translation:
 lean 3 declaration is
   forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M], IsMonoidHom.{u1, u1} (Units.{u1} M _inst_1) M (Units.mulOneClass.{u1} M _inst_1) (Monoid.toMulOneClass.{u1} M _inst_1) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Units.{u1} M _inst_1) M (HasLiftT.mk.{succ u1, succ u1} (Units.{u1} M _inst_1) M (CoeTCₓ.coe.{succ u1, succ u1} (Units.{u1} M _inst_1) M (coeBase.{succ u1, succ u1} (Units.{u1} M _inst_1) M (Units.hasCoe.{u1} M _inst_1)))))
 but is expected to have type
@@ -691,8 +683,6 @@ theorem Additive.isAddMonoidHom [MulOneClass α] [MulOneClass β] {f : α → β
 #align additive.is_add_monoid_hom Additive.isAddMonoidHom
 -/
 
-/- warning: multiplicative.is_monoid_hom clashes with multiplicative.isMonoidHom -> Multiplicative.isMonoidHom
-Case conversion may be inaccurate. Consider using '#align multiplicative.is_monoid_hom Multiplicative.isMonoidHomₓ'. -/
 #print Multiplicative.isMonoidHom /-
 theorem Multiplicative.isMonoidHom [AddZeroClass α] [AddZeroClass β] {f : α → β}
     (hf : IsAddMonoidHom f) : @IsMonoidHom (Multiplicative α) (Multiplicative β) _ _ f :=

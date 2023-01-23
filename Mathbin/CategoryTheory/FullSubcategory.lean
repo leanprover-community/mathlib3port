@@ -54,8 +54,7 @@ variable (F : C → D)
 
 include F
 
-/- warning: category_theory.induced_category clashes with category_theory.InducedCategory -> CategoryTheory.InducedCategory
-warning: category_theory.induced_category -> CategoryTheory.InducedCategory is a dubious translation:
+/- warning: category_theory.induced_category -> CategoryTheory.InducedCategory is a dubious translation:
 lean 3 declaration is
   forall {C : Type.{u₁}} (D : Type.{u₂}) [_inst_1 : CategoryTheory.Category.{v, u₂} D], (C -> D) -> Type.{u₁}
 but is expected to have type

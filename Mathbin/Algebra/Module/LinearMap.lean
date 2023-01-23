@@ -88,8 +88,6 @@ structure IsLinearMap (R : Type u) {M : Type v} {M₂ : Type w} [Semiring R] [Ad
 
 section
 
-/- warning: linear_map clashes with LinearMap -> LinearMap
-Case conversion may be inaccurate. Consider using '#align linear_map LinearMapₓ'. -/
 #print LinearMap /-
 /-- A map `f` between an `R`-module and an `S`-module over a ring homomorphism `σ : R →+* S`
 is semilinear if it satisfies the two properties `f (x + y) = f x + f y` and

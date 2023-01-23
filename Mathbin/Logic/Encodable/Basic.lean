@@ -436,10 +436,10 @@ theorem decode_ge_two (n) (h : 2 ≤ n) : decode Bool n = none :=
 #align encodable.decode_ge_two Encodable.decode_ge_two
 -/
 
-#print Encodable.PropCat.encodable /-
-noncomputable instance Encodable.PropCat.encodable : Encodable Prop :=
+#print Encodable.Prop.encodable /-
+noncomputable instance Encodable.Prop.encodable : Encodable Prop :=
   ofEquiv Bool Equiv.propEquivBool
-#align Prop.encodable Encodable.PropCat.encodable
+#align Prop.encodable Encodable.Prop.encodable
 -/
 
 section Sigma
