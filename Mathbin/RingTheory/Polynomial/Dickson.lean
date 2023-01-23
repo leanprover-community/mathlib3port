@@ -201,7 +201,7 @@ theorem dickson_one_one_comp_comm (m n : ℕ) :
   rw [← dickson_one_one_mul, mul_comm, dickson_one_one_mul]
 #align polynomial.dickson_one_one_comp_comm Polynomial.dickson_one_one_comp_comm
 
-theorem dickson_one_one_zmod_p (p : ℕ) [Fact p.Prime] : dickson 1 (1 : Zmod p) p = X ^ p :=
+theorem dickson_one_one_zMod_p (p : ℕ) [Fact p.Prime] : dickson 1 (1 : ZMod p) p = X ^ p :=
   by
   -- Recall that `dickson_eval_add_inv` characterises `dickson 1 1 p`
   -- as a polynomial that maps `x + x⁻¹` to `x ^ p + (x⁻¹) ^ p`.
@@ -210,25 +210,25 @@ theorem dickson_one_one_zmod_p (p : ℕ) [Fact p.Prime] : dickson 1 (1 : Zmod p)
   -- For this argument, we need an arbitrary infinite field of characteristic `p`.
   obtain ⟨K, _, _, H⟩ : ∃ (K : Type)(_ : Field K), ∃ _ : CharP K p, Infinite K :=
     by
-    let K := FractionRing (Polynomial (Zmod p))
-    let f : Zmod p →+* K := (algebraMap _ (FractionRing _)).comp C
+    let K := FractionRing (Polynomial (ZMod p))
+    let f : ZMod p →+* K := (algebraMap _ (FractionRing _)).comp C
     have : CharP K p := by
       rw [← f.char_p_iff_char_p]
       infer_instance
     haveI : Infinite K :=
-      Infinite.of_injective (algebraMap (Polynomial (Zmod p)) (FractionRing (Polynomial (Zmod p))))
+      Infinite.of_injective (algebraMap (Polynomial (ZMod p)) (FractionRing (Polynomial (ZMod p))))
         (IsFractionRing.injective _ _)
     refine' ⟨K, _, _, _⟩ <;> infer_instance
   skip
-  apply map_injective (Zmod.castHom (dvd_refl p) K) (RingHom.injective _)
+  apply map_injective (ZMod.castHom (dvd_refl p) K) (RingHom.injective _)
   rw [map_dickson, Polynomial.map_pow, map_X]
   apply eq_of_infinite_eval_eq
   -- The two polynomials agree on all `x` of the form `x = y + y⁻¹`.
   apply @Set.Infinite.mono _ { x : K | ∃ y, x = y + y⁻¹ ∧ y ≠ 0 }
   · rintro _ ⟨x, rfl, hx⟩
     simp only [eval_X, eval_pow, Set.mem_setOf_eq, @add_pow_char K _ p,
-      dickson_one_one_eval_add_inv _ _ (mul_inv_cancel hx), inv_pow, Zmod.castHom_apply,
-      Zmod.cast_one']
+      dickson_one_one_eval_add_inv _ _ (mul_inv_cancel hx), inv_pow, ZMod.castHom_apply,
+      ZMod.cast_one']
   -- Now we need to show that the set of such `x` is infinite.
   -- If the set is finite, then we will show that `K` is also finite.
   · intro h
@@ -273,13 +273,13 @@ theorem dickson_one_one_zmod_p (p : ℕ) [Fact p.Prime] : dickson 1 (1 : Zmod p)
         exact ⟨_, 1, rfl, one_neZero⟩
       · simp only [hx, or_false_iff, exists_eq_right]
         exact ⟨_, rfl, hx⟩
-#align polynomial.dickson_one_one_zmod_p Polynomial.dickson_one_one_zmod_p
+#align polynomial.dickson_one_one_zmod_p Polynomial.dickson_one_one_zMod_p
 
 theorem dickson_one_one_charP (p : ℕ) [Fact p.Prime] [CharP R p] : dickson 1 (1 : R) p = X ^ p :=
   by
-  have h : (1 : R) = Zmod.castHom (dvd_refl p) R 1
-  simp only [Zmod.castHom_apply, Zmod.cast_one']
-  rw [h, ← map_dickson (Zmod.castHom (dvd_refl p) R), dickson_one_one_zmod_p, Polynomial.map_pow,
+  have h : (1 : R) = ZMod.castHom (dvd_refl p) R 1
+  simp only [ZMod.castHom_apply, ZMod.cast_one']
+  rw [h, ← map_dickson (ZMod.castHom (dvd_refl p) R), dickson_one_one_zmod_p, Polynomial.map_pow,
     map_X]
 #align polynomial.dickson_one_one_char_p Polynomial.dickson_one_one_charP
 

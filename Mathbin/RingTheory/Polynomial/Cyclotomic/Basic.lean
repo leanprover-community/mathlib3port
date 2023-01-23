@@ -805,18 +805,18 @@ theorem cyclotomic_coeff_zero (R : Type _) [CommRing R] {n : ℕ} (hn : 1 < n) :
 /-- If `(a : ℕ)` is a root of `cyclotomic n (zmod p)`, where `p` is a prime, then `a` and `p` are
 coprime. -/
 theorem coprime_of_root_cyclotomic {n : ℕ} (hpos : 0 < n) {p : ℕ} [hprime : Fact p.Prime] {a : ℕ}
-    (hroot : IsRoot (cyclotomic n (Zmod p)) (Nat.castRingHom (Zmod p) a)) : a.Coprime p :=
+    (hroot : IsRoot (cyclotomic n (ZMod p)) (Nat.castRingHom (ZMod p) a)) : a.Coprime p :=
   by
   apply Nat.Coprime.symm
   rw [hprime.1.coprime_iff_not_dvd]
   intro h
-  replace h := (Zmod.nat_coe_zmod_eq_zero_iff_dvd a p).2 h
+  replace h := (ZMod.nat_coe_zMod_eq_zero_iff_dvd a p).2 h
   rw [is_root.def, eq_nat_cast, h, ← coeff_zero_eq_eval_zero] at hroot
   by_cases hone : n = 1
   · simp only [hone, cyclotomic_one, zero_sub, coeff_one_zero, coeff_X_zero, neg_eq_zero,
       one_neZero, coeff_sub] at hroot
     exact hroot
-  rw [cyclotomic_coeff_zero (Zmod p)
+  rw [cyclotomic_coeff_zero (ZMod p)
       (Nat.succ_le_of_lt (lt_of_le_of_ne (Nat.succ_le_of_lt hpos) (Ne.symm hone)))] at
     hroot
   exact one_neZero hroot
@@ -829,16 +829,16 @@ section Order
 /-- If `(a : ℕ)` is a root of `cyclotomic n (zmod p)`, then the multiplicative order of `a` modulo
 `p` divides `n`. -/
 theorem orderOf_root_cyclotomic_dvd {n : ℕ} (hpos : 0 < n) {p : ℕ} [Fact p.Prime] {a : ℕ}
-    (hroot : IsRoot (cyclotomic n (Zmod p)) (Nat.castRingHom (Zmod p) a)) :
-    orderOf (Zmod.unitOfCoprime a (coprime_of_root_cyclotomic hpos hroot)) ∣ n :=
+    (hroot : IsRoot (cyclotomic n (ZMod p)) (Nat.castRingHom (ZMod p) a)) :
+    orderOf (ZMod.unitOfCoprime a (coprime_of_root_cyclotomic hpos hroot)) ∣ n :=
   by
   apply orderOf_dvd_of_pow_eq_one
-  suffices hpow : eval (Nat.castRingHom (Zmod p) a) (X ^ n - 1 : (Zmod p)[X]) = 0
+  suffices hpow : eval (Nat.castRingHom (ZMod p) a) (X ^ n - 1 : (ZMod p)[X]) = 0
   · simp only [eval_X, eval_one, eval_pow, eval_sub, eq_nat_cast] at hpow
     apply Units.val_eq_one.1
-    simp only [sub_eq_zero.mp hpow, Zmod.coe_unitOfCoprime, Units.val_pow_eq_pow_val]
+    simp only [sub_eq_zero.mp hpow, ZMod.coe_unitOfCoprime, Units.val_pow_eq_pow_val]
   rw [is_root.def] at hroot
-  rw [← prod_cyclotomic_eq_X_pow_sub_one hpos (Zmod p), ← Nat.cons_self_properDivisors hpos.ne',
+  rw [← prod_cyclotomic_eq_X_pow_sub_one hpos (ZMod p), ← Nat.cons_self_properDivisors hpos.ne',
     Finset.prod_cons, eval_mul, hroot, zero_mul]
 #align polynomial.order_of_root_cyclotomic_dvd Polynomial.orderOf_root_cyclotomic_dvd
 
@@ -1027,11 +1027,11 @@ section CharP
 theorem cyclotomic_mul_prime_eq_pow_of_not_dvd (R : Type _) {p n : ℕ} [hp : Fact (Nat.Prime p)]
     [Ring R] [CharP R p] (hn : ¬p ∣ n) : cyclotomic (n * p) R = cyclotomic n R ^ (p - 1) :=
   by
-  suffices cyclotomic (n * p) (Zmod p) = cyclotomic n (Zmod p) ^ (p - 1) by
-    rw [← map_cyclotomic _ (algebraMap (Zmod p) R), ← map_cyclotomic _ (algebraMap (Zmod p) R),
+  suffices cyclotomic (n * p) (ZMod p) = cyclotomic n (ZMod p) ^ (p - 1) by
+    rw [← map_cyclotomic _ (algebraMap (ZMod p) R), ← map_cyclotomic _ (algebraMap (ZMod p) R),
       this, Polynomial.map_pow]
-  apply mul_right_injective₀ (cyclotomic_ne_zero n <| Zmod p)
-  rw [← pow_succ, tsub_add_cancel_of_le hp.out.one_lt.le, mul_comm, ← Zmod.expand_card]
+  apply mul_right_injective₀ (cyclotomic_ne_zero n <| ZMod p)
+  rw [← pow_succ, tsub_add_cancel_of_le hp.out.one_lt.le, mul_comm, ← ZMod.expand_card]
   nth_rw 3 [← map_cyclotomic_int]
   rw [← map_expand, cyclotomic_expand_eq_cyclotomic_mul hp.out hn, Polynomial.map_mul,
     map_cyclotomic, map_cyclotomic]
@@ -1042,10 +1042,10 @@ theorem cyclotomic_mul_prime_eq_pow_of_not_dvd (R : Type _) {p n : ℕ} [hp : Fa
 theorem cyclotomic_mul_prime_dvd_eq_pow (R : Type _) {p n : ℕ} [hp : Fact (Nat.Prime p)] [Ring R]
     [CharP R p] (hn : p ∣ n) : cyclotomic (n * p) R = cyclotomic n R ^ p :=
   by
-  suffices cyclotomic (n * p) (Zmod p) = cyclotomic n (Zmod p) ^ p by
-    rw [← map_cyclotomic _ (algebraMap (Zmod p) R), ← map_cyclotomic _ (algebraMap (Zmod p) R),
+  suffices cyclotomic (n * p) (ZMod p) = cyclotomic n (ZMod p) ^ p by
+    rw [← map_cyclotomic _ (algebraMap (ZMod p) R), ← map_cyclotomic _ (algebraMap (ZMod p) R),
       this, Polynomial.map_pow]
-  rw [← Zmod.expand_card, ← map_cyclotomic_int n, ← map_expand,
+  rw [← ZMod.expand_card, ← map_cyclotomic_int n, ← map_expand,
     cyclotomic_expand_eq_cyclotomic hp.out hn, map_cyclotomic, mul_comm]
 #align polynomial.cyclotomic_mul_prime_dvd_eq_pow Polynomial.cyclotomic_mul_prime_dvd_eq_pow
 

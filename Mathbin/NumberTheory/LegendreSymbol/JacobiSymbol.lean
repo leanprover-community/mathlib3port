@@ -76,7 +76,7 @@ symbol `jacobi_sym a b`.
 -/
 
 
-open Nat Zmod
+open Nat ZMod
 
 -- Since we need the fact that the factors are prime, we use `list.pmap`.
 /-- The Jacobi symbol of `a` and `b` -/
@@ -137,7 +137,7 @@ theorem trichotomy (a : ℤ) (b : ℕ) : J(a | b) = 0 ∨ J(a | b) = 1 ∨ J(a |
       intro _ ha'
       rcases list.mem_pmap.mp ha' with ⟨p, hp, rfl⟩
       haveI : Fact p.prime := ⟨prime_of_mem_factors hp⟩
-      exact quadraticChar_isQuadratic (Zmod p) a)
+      exact quadraticChar_isQuadratic (ZMod p) a)
 #align jacobi_sym.trichotomy jacobiSym.trichotomy
 
 /-- The symbol `J(1 | b)` has the value `1`. -/
@@ -242,37 +242,37 @@ theorem mod_left' {a₁ a₂ : ℤ} {b : ℕ} (h : a₁ % b = a₂ % b) : J(a₁
 
 end jacobiSym
 
-namespace Zmod
+namespace ZMod
 
 open jacobiSym
 
 /-- If `J(a | b)` is `-1`, then `a` is not a square modulo `b`. -/
 theorem nonsquare_of_jacobiSym_eq_neg_one {a : ℤ} {b : ℕ} (h : J(a | b) = -1) :
-    ¬IsSquare (a : Zmod b) := fun ⟨r, ha⟩ =>
+    ¬IsSquare (a : ZMod b) := fun ⟨r, ha⟩ =>
   by
   rw [← r.coe_val_min_abs, ← Int.cast_mul, int_coe_eq_int_coe_iff', ← sq] at ha
   apply (by norm_num : ¬(0 : ℤ) ≤ -1)
   rw [← h, mod_left, ha, ← mod_left, pow_left]
   apply sq_nonneg
-#align zmod.nonsquare_of_jacobi_sym_eq_neg_one Zmod.nonsquare_of_jacobiSym_eq_neg_one
+#align zmod.nonsquare_of_jacobi_sym_eq_neg_one ZMod.nonsquare_of_jacobiSym_eq_neg_one
 
 /-- If `p` is prime, then `J(a | p)` is `-1` iff `a` is not a square modulo `p`. -/
 theorem nonsquare_iff_jacobiSym_eq_neg_one {a : ℤ} {p : ℕ} [Fact p.Prime] :
-    J(a | p) = -1 ↔ ¬IsSquare (a : Zmod p) :=
+    J(a | p) = -1 ↔ ¬IsSquare (a : ZMod p) :=
   by
   rw [← legendreSym.to_jacobiSym]
   exact legendreSym.eq_neg_one_iff p
-#align zmod.nonsquare_iff_jacobi_sym_eq_neg_one Zmod.nonsquare_iff_jacobiSym_eq_neg_one
+#align zmod.nonsquare_iff_jacobi_sym_eq_neg_one ZMod.nonsquare_iff_jacobiSym_eq_neg_one
 
 /-- If `p` is prime and `J(a | p) = 1`, then `a` is q square mod `p`. -/
 theorem isSquare_of_jacobiSym_eq_one {a : ℤ} {p : ℕ} [Fact p.Prime] (h : J(a | p) = 1) :
-    IsSquare (a : Zmod p) :=
+    IsSquare (a : ZMod p) :=
   not_not.mp <| by
     rw [← nonsquare_iff_jacobi_sym_eq_neg_one, h]
     decide
-#align zmod.is_square_of_jacobi_sym_eq_one Zmod.isSquare_of_jacobiSym_eq_one
+#align zmod.is_square_of_jacobi_sym_eq_one ZMod.isSquare_of_jacobiSym_eq_one
 
-end Zmod
+end ZMod
 
 /-!
 ### Values at `-1`, `2` and `-2`

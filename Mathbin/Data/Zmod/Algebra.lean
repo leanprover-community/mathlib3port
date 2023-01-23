@@ -16,11 +16,11 @@ import Mathbin.Algebra.Algebra.Basic
 -/
 
 
-namespace Zmod
+namespace ZMod
 
 variable (R : Type _) [Ring R]
 
-instance (p : ℕ) : Subsingleton (Algebra (Zmod p) R) :=
+instance (p : ℕ) : Subsingleton (Algebra (ZMod p) R) :=
   ⟨fun x y => Algebra.algebra_ext _ _ <| RingHom.congr_fun <| Subsingleton.elim _ _⟩
 
 section
@@ -28,23 +28,23 @@ section
 variable {n : ℕ} (m : ℕ) [CharP R m]
 
 /-- The `zmod n`-algebra structure on rings whose characteristic `m` divides `n` -/
-def algebra' (h : m ∣ n) : Algebra (Zmod n) R :=
-  { Zmod.castHom h R with
+def algebra' (h : m ∣ n) : Algebra (ZMod n) R :=
+  { ZMod.castHom h R with
     smul := fun a r => a * r
     commutes' := fun a r =>
       show (a * r : R) = r * a
         by
-        rcases Zmod.int_cast_surjective a with ⟨k, rfl⟩
-        show Zmod.castHom h R k * r = r * Zmod.castHom h R k
+        rcases ZMod.int_cast_surjective a with ⟨k, rfl⟩
+        show ZMod.castHom h R k * r = r * ZMod.castHom h R k
         rw [map_intCast]
         exact Commute.cast_int_left r k
     smul_def' := fun a r => rfl }
-#align zmod.algebra' Zmod.algebra'
+#align zmod.algebra' ZMod.algebra'
 
 end
 
-instance (p : ℕ) [CharP R p] : Algebra (Zmod p) R :=
+instance (p : ℕ) [CharP R p] : Algebra (ZMod p) R :=
   algebra' R p dvd_rfl
 
-end Zmod
+end ZMod
 

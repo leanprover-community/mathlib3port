@@ -54,8 +54,8 @@ presentation $\langle a, x | a^{2n} = 1, x^2 = a^n, x^{-1}ax=a^{-1}\rangle$. We 
 $a^i$ and `xa i` for $x * a^i$.
 -/
 inductive QuaternionGroup (n : ℕ) : Type
-  | a : Zmod (2 * n) → QuaternionGroup
-  | xa : Zmod (2 * n) → QuaternionGroup
+  | a : ZMod (2 * n) → QuaternionGroup
+  | xa : ZMod (2 * n) → QuaternionGroup
   deriving DecidableEq
 #align quaternion_group QuaternionGroup
 
@@ -96,7 +96,7 @@ instance : Group (QuaternionGroup n) where
     rintro (i | i) (j | j) (k | k) <;> simp only [mul] <;> abel
     simp only [neg_mul, one_mul, Int.cast_one, zsmul_eq_mul, Int.cast_neg, add_right_inj]
     calc
-      -(n : Zmod (2 * n)) = 0 - n := by rw [zero_sub]
+      -(n : ZMod (2 * n)) = 0 - n := by rw [zero_sub]
       _ = 2 * n - n := by
         norm_cast
         simp
@@ -120,22 +120,22 @@ instance : Group (QuaternionGroup n) where
 variable {n}
 
 @[simp]
-theorem a_mul_a (i j : Zmod (2 * n)) : a i * a j = a (i + j) :=
+theorem a_mul_a (i j : ZMod (2 * n)) : a i * a j = a (i + j) :=
   rfl
 #align quaternion_group.a_mul_a QuaternionGroup.a_mul_a
 
 @[simp]
-theorem a_mul_xa (i j : Zmod (2 * n)) : a i * xa j = xa (j - i) :=
+theorem a_mul_xa (i j : ZMod (2 * n)) : a i * xa j = xa (j - i) :=
   rfl
 #align quaternion_group.a_mul_xa QuaternionGroup.a_mul_xa
 
 @[simp]
-theorem xa_mul_a (i j : Zmod (2 * n)) : xa i * a j = xa (i + j) :=
+theorem xa_mul_a (i j : ZMod (2 * n)) : xa i * a j = xa (i + j) :=
   rfl
 #align quaternion_group.xa_mul_a QuaternionGroup.xa_mul_a
 
 @[simp]
-theorem xa_mul_xa (i j : Zmod (2 * n)) : xa i * xa j = a (n + j - i) :=
+theorem xa_mul_xa (i j : ZMod (2 * n)) : xa i * xa j = a (n + j - i) :=
   rfl
 #align quaternion_group.xa_mul_xa QuaternionGroup.xa_mul_xa
 
@@ -143,7 +143,7 @@ theorem one_def : (1 : QuaternionGroup n) = a 0 :=
   rfl
 #align quaternion_group.one_def QuaternionGroup.one_def
 
-private def fintype_helper : Sum (Zmod (2 * n)) (Zmod (2 * n)) ≃ QuaternionGroup n
+private def fintype_helper : Sum (ZMod (2 * n)) (ZMod (2 * n)) ≃ QuaternionGroup n
     where
   invFun i :=
     match i with
@@ -186,7 +186,7 @@ instance : Nontrivial (QuaternionGroup n) :=
 -/
 theorem card [NeZero n] : Fintype.card (QuaternionGroup n) = 4 * n :=
   by
-  rw [← fintype.card_eq.mpr ⟨fintype_helper⟩, Fintype.card_sum, Zmod.card, two_mul]
+  rw [← fintype.card_eq.mpr ⟨fintype_helper⟩, Fintype.card_sum, ZMod.card, two_mul]
   ring
 #align quaternion_group.card QuaternionGroup.card
 
@@ -207,15 +207,15 @@ theorem a_one_pow_n : (a 1 : QuaternionGroup n) ^ (2 * n) = 1 :=
   by
   rw [a_one_pow, one_def]
   congr 1
-  exact Zmod.nat_cast_self _
+  exact ZMod.nat_cast_self _
 #align quaternion_group.a_one_pow_n QuaternionGroup.a_one_pow_n
 
 @[simp]
-theorem xa_sq (i : Zmod (2 * n)) : xa i ^ 2 = a n := by simp [sq]
+theorem xa_sq (i : ZMod (2 * n)) : xa i ^ 2 = a n := by simp [sq]
 #align quaternion_group.xa_sq QuaternionGroup.xa_sq
 
 @[simp]
-theorem xa_pow_four (i : Zmod (2 * n)) : xa i ^ 4 = 1 :=
+theorem xa_pow_four (i : ZMod (2 * n)) : xa i ^ 4 = 1 :=
   by
   simp only [pow_succ, sq, xa_mul_xa, xa_mul_a, add_sub_cancel, add_sub_assoc, add_sub_cancel',
     sub_self, add_zero]
@@ -227,7 +227,7 @@ theorem xa_pow_four (i : Zmod (2 * n)) : xa i ^ 4 = 1 :=
 /-- If `0 < n`, then `xa i` has order 4.
 -/
 @[simp]
-theorem orderOf_xa [NeZero n] (i : Zmod (2 * n)) : orderOf (xa i) = 4 :=
+theorem orderOf_xa [NeZero n] (i : ZMod (2 * n)) : orderOf (xa i) = 4 :=
   by
   change _ = 2 ^ 2
   haveI : Fact (Nat.Prime 2) := Fact.mk Nat.prime_two
@@ -235,9 +235,9 @@ theorem orderOf_xa [NeZero n] (i : Zmod (2 * n)) : orderOf (xa i) = 4 :=
   · intro h
     simp only [pow_one, xa_sq] at h
     injection h with h'
-    apply_fun Zmod.val  at h'
+    apply_fun ZMod.val  at h'
     apply_fun (· / n)  at h'
-    simp only [Zmod.val_nat_cast, Zmod.val_zero, Nat.zero_div, Nat.mod_mul_left_div_self,
+    simp only [ZMod.val_nat_cast, ZMod.val_zero, Nat.zero_div, Nat.mod_mul_left_div_self,
       Nat.div_self (NeZero.pos n)] at h'
     norm_num at h'
   · norm_num
@@ -262,7 +262,7 @@ theorem orderOf_a_one : orderOf (a 1 : QuaternionGroup n) = 2 * n :=
     intro n h
     rw [one_def, a_one_pow]
     apply mt a.inj
-    haveI : CharZero (Zmod (2 * 0)) := Zmod.charZero
+    haveI : CharZero (ZMod (2 * 0)) := ZMod.charZero
     simpa using h.ne'
   apply
     (Nat.le_of_dvd (NeZero.pos _)
@@ -271,15 +271,15 @@ theorem orderOf_a_one : orderOf (a 1 : QuaternionGroup n) = 2 * n :=
   have h1 : (a 1 : QuaternionGroup n) ^ orderOf (a 1) = 1 := pow_orderOf_eq_one _
   rw [a_one_pow] at h1
   injection h1 with h2
-  rw [← Zmod.val_eq_zero, Zmod.val_nat_cast, Nat.mod_eq_of_lt h] at h2
+  rw [← ZMod.val_eq_zero, ZMod.val_nat_cast, Nat.mod_eq_of_lt h] at h2
   exact absurd h2.symm (orderOf_pos _).Ne
 #align quaternion_group.order_of_a_one QuaternionGroup.orderOf_a_one
 
 /-- If `0 < n`, then `a i` has order `(2 * n) / gcd (2 * n) i`.
 -/
-theorem orderOf_a [NeZero n] (i : Zmod (2 * n)) : orderOf (a i) = 2 * n / Nat.gcd (2 * n) i.val :=
+theorem orderOf_a [NeZero n] (i : ZMod (2 * n)) : orderOf (a i) = 2 * n / Nat.gcd (2 * n) i.val :=
   by
-  conv_lhs => rw [← Zmod.nat_cast_zmod_val i]
+  conv_lhs => rw [← ZMod.nat_cast_zMod_val i]
   rw [← a_one_pow, orderOf_pow, order_of_a_one]
 #align quaternion_group.order_of_a QuaternionGroup.orderOf_a
 

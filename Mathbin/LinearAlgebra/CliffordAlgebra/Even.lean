@@ -55,7 +55,7 @@ variable (Q)
 /-- The even submodule `clifford_algebra.even_odd Q 0` is also a subalgebra. -/
 def even : Subalgebra R (CliffordAlgebra Q) :=
   (evenOdd Q 0).toSubalgebra SetLike.GradedMonoid.one_mem fun x y hx hy =>
-    add_zero (0 : Zmod 2) ▸ SetLike.GradedMonoid.mul_mem hx hy
+    add_zero (0 : ZMod 2) ▸ SetLike.GradedMonoid.mul_mem hx hy
 #align clifford_algebra.even CliffordAlgebra.even
 
 @[simp]

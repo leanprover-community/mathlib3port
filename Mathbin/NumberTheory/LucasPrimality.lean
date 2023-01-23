@@ -42,7 +42,7 @@ to `1`.
 is prime. This is true because `a` has order `p-1` in the multiplicative group mod `p`, so this
 group must itself have order `p-1`, which only happens when `p` is prime.
 -/
-theorem lucas_primality (p : ℕ) (a : Zmod p) (ha : a ^ (p - 1) = 1)
+theorem lucas_primality (p : ℕ) (a : ZMod p) (ha : a ^ (p - 1) = 1)
     (hd : ∀ q : ℕ, q.Prime → q ∣ p - 1 → a ^ ((p - 1) / q) ≠ 1) : p.Prime :=
   by
   have h0 : p ≠ 0 := by
@@ -59,13 +59,13 @@ theorem lucas_primality (p : ℕ) (a : Zmod p) (ha : a ^ (p - 1) = 1)
   haveI : NeZero p := ⟨h0⟩
   rw [Nat.prime_iff_card_units]
   -- Prove cardinality of `units` of `zmod p` is both `≤ p-1` and `≥ p-1`
-  refine' le_antisymm (Nat.card_units_zmod_lt_sub_one hp1) _
+  refine' le_antisymm (Nat.card_units_zMod_lt_sub_one hp1) _
   have hp' : p - 2 + 1 = p - 1 := tsub_add_eq_add_tsub hp1
-  let a' : (Zmod p)ˣ := Units.mkOfMulEqOne a (a ^ (p - 2)) (by rw [← pow_succ, hp', ha])
+  let a' : (ZMod p)ˣ := Units.mkOfMulEqOne a (a ^ (p - 2)) (by rw [← pow_succ, hp', ha])
   calc
     p - 1 = orderOf a := order_of_a.symm
-    _ = orderOf a' := orderOf_injective (Units.coeHom (Zmod p)) Units.ext a'
-    _ ≤ Fintype.card (Zmod p)ˣ := orderOf_le_card_univ
+    _ = orderOf a' := orderOf_injective (Units.coeHom (ZMod p)) Units.ext a'
+    _ ≤ Fintype.card (ZMod p)ˣ := orderOf_le_card_univ
     
 #align lucas_primality lucas_primality
 

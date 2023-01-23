@@ -126,12 +126,12 @@ theorem card_fun [Finite α] : Nat.card (α → β) = Nat.card β ^ Nat.card α 
 #align nat.card_fun Nat.card_fun
 
 @[simp]
-theorem card_zmod (n : ℕ) : Nat.card (Zmod n) = n :=
+theorem card_zMod (n : ℕ) : Nat.card (ZMod n) = n :=
   by
   cases n
   · exact Nat.card_eq_zero_of_infinite
-  · rw [Nat.card_eq_fintype_card, Zmod.card]
-#align nat.card_zmod Nat.card_zmod
+  · rw [Nat.card_eq_fintype_card, ZMod.card]
+#align nat.card_zmod Nat.card_zMod
 
 end Nat
 

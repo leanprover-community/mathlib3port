@@ -52,9 +52,9 @@ theorem sq_add_sq_of_two_mul_sq_add_sq {m x y : ℤ} (h : 2 * m = x ^ 2 + y ^ 2)
 theorem exists_sq_add_sq_add_one_eq_k (p : ℕ) [hp : Fact p.Prime] :
     ∃ (a b : ℤ)(k : ℕ), a ^ 2 + b ^ 2 + 1 = k * p ∧ k < p :=
   hp.1.eq_two_or_odd.elim (fun hp2 => hp2.symm ▸ ⟨1, 0, 1, rfl, by decide⟩) fun hp1 =>
-    let ⟨a, b, hab⟩ := Zmod.sq_add_sq p (-1)
+    let ⟨a, b, hab⟩ := ZMod.sq_add_sq p (-1)
     have hab' : (p : ℤ) ∣ a.valMinAbs ^ 2 + b.valMinAbs ^ 2 + 1 :=
-      (CharP.int_cast_eq_zero_iff (Zmod p) p _).1 <| by simpa [eq_neg_iff_add_eq_zero] using hab
+      (CharP.int_cast_eq_zero_iff (ZMod p) p _).1 <| by simpa [eq_neg_iff_add_eq_zero] using hab
     let ⟨k, hk⟩ := hab'
     have hk0 : 0 ≤ k :=
       nonneg_of_mul_nonneg_right
@@ -69,8 +69,8 @@ theorem exists_sq_add_sq_add_one_eq_k (p : ℕ) [hp : Fact p.Prime] :
               Int.natAbs_of_nonneg hk0]
           _ ≤ (p / 2) ^ 2 + (p / 2) ^ 2 + 1 :=
             add_le_add
-              (add_le_add (Nat.pow_le_pow_of_le_left (Zmod.natAbs_valMinAbs_le _) _)
-                (Nat.pow_le_pow_of_le_left (Zmod.natAbs_valMinAbs_le _) _))
+              (add_le_add (Nat.pow_le_pow_of_le_left (ZMod.natAbs_valMinAbs_le _) _)
+                (Nat.pow_le_pow_of_le_left (ZMod.natAbs_valMinAbs_le _) _))
               le_rfl
           _ < (p / 2) ^ 2 + (p / 2) ^ 2 + (p % 2) ^ 2 + (2 * (p / 2) ^ 2 + 4 * (p / 2) * (p % 2)) :=
             by
@@ -98,7 +98,7 @@ private theorem sum_four_squares_of_two_mul_sum_four_squares {m a b c d : ℤ}
     (h : a ^ 2 + b ^ 2 + c ^ 2 + d ^ 2 = 2 * m) :
     ∃ w x y z : ℤ, w ^ 2 + x ^ 2 + y ^ 2 + z ^ 2 = m :=
   have :
-    ∀ f : Fin 4 → Zmod 2,
+    ∀ f : Fin 4 → ZMod 2,
       f 0 ^ 2 + f 1 ^ 2 + f 2 ^ 2 + f 3 ^ 2 = 0 →
         ∃ i : Fin 4,
           f i ^ 2 + f (swap i 0 1) ^ 2 = 0 ∧ f (swap i 0 2) ^ 2 + f (swap i 0 3) ^ 2 = 0 :=
@@ -107,15 +107,15 @@ private theorem sum_four_squares_of_two_mul_sum_four_squares {m a b c d : ℤ}
   let ⟨i, hσ⟩ :=
     this (coe ∘ f)
       (by
-        rw [← @zero_mul (Zmod 2) _ m, ← show ((2 : ℤ) : Zmod 2) = 0 from rfl, ← Int.cast_mul, ←
+        rw [← @zero_mul (ZMod 2) _ m, ← show ((2 : ℤ) : ZMod 2) = 0 from rfl, ← Int.cast_mul, ←
               h] <;>
             simp only [Int.cast_add, Int.cast_pow] <;>
           rfl)
   let σ := swap i 0
   have h01 : 2 ∣ f (σ 0) ^ 2 + f (σ 1) ^ 2 :=
-    (CharP.int_cast_eq_zero_iff (Zmod 2) 2 _).1 <| by simpa [σ] using hσ.1
+    (CharP.int_cast_eq_zero_iff (ZMod 2) 2 _).1 <| by simpa [σ] using hσ.1
   have h23 : 2 ∣ f (σ 2) ^ 2 + f (σ 3) ^ 2 :=
-    (CharP.int_cast_eq_zero_iff (Zmod 2) 2 _).1 <| by simpa using hσ.2
+    (CharP.int_cast_eq_zero_iff (ZMod 2) 2 _).1 <| by simpa using hσ.2
   let ⟨x, hx⟩ := h01
   let ⟨y, hy⟩ := h23
   ⟨(f (σ 0) - f (σ 1)) / 2, (f (σ 0) + f (σ 1)) / 2, (f (σ 2) - f (σ 3)) / 2,
@@ -163,10 +163,10 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] :
     fun hm2 : m % 2 = 1 =>
     if hm1 : m = 1 then ⟨a, b, c, d, by simp only [hm1, habcd, Int.ofNat_one, one_mul]⟩
     else
-      let w := (a : Zmod m).valMinAbs
-      let x := (b : Zmod m).valMinAbs
-      let y := (c : Zmod m).valMinAbs
-      let z := (d : Zmod m).valMinAbs
+      let w := (a : ZMod m).valMinAbs
+      let x := (b : ZMod m).valMinAbs
+      let y := (c : ZMod m).valMinAbs
+      let z := (d : ZMod m).valMinAbs
       have hnat_abs :
         w ^ 2 + x ^ 2 + y ^ 2 + z ^ 2 =
           (w.natAbs ^ 2 + x.natAbs ^ 2 + y.natAbs ^ 2 + z.natAbs ^ 2 : ℕ) :=
@@ -180,10 +180,10 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] :
             Int.ofNat_le.2 <|
               add_le_add
                 (add_le_add
-                  (add_le_add (Nat.pow_le_pow_of_le_left (Zmod.natAbs_valMinAbs_le _) _)
-                    (Nat.pow_le_pow_of_le_left (Zmod.natAbs_valMinAbs_le _) _))
-                  (Nat.pow_le_pow_of_le_left (Zmod.natAbs_valMinAbs_le _) _))
-                (Nat.pow_le_pow_of_le_left (Zmod.natAbs_valMinAbs_le _) _)
+                  (add_le_add (Nat.pow_le_pow_of_le_left (ZMod.natAbs_valMinAbs_le _) _)
+                    (Nat.pow_le_pow_of_le_left (ZMod.natAbs_valMinAbs_le _) _))
+                  (Nat.pow_le_pow_of_le_left (ZMod.natAbs_valMinAbs_le _) _))
+                (Nat.pow_le_pow_of_le_left (ZMod.natAbs_valMinAbs_le _) _)
           _ = 4 * (m / 2 : ℕ) ^ 2 := by simp [sq, bit0, bit1, mul_add, add_mul, add_assoc]
           _ < 4 * (m / 2 : ℕ) ^ 2 + ((4 * (m / 2) : ℕ) * (m % 2 : ℕ) + (m % 2 : ℕ) ^ 2) :=
             (lt_add_iff_pos_right _).2
@@ -196,11 +196,11 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] :
               mul_left_comm, pow_add, add_comm, add_left_comm]
           
       have hwxyzabcd :
-        ((w ^ 2 + x ^ 2 + y ^ 2 + z ^ 2 : ℤ) : Zmod m) =
-          ((a ^ 2 + b ^ 2 + c ^ 2 + d ^ 2 : ℤ) : Zmod m) :=
+        ((w ^ 2 + x ^ 2 + y ^ 2 + z ^ 2 : ℤ) : ZMod m) =
+          ((a ^ 2 + b ^ 2 + c ^ 2 + d ^ 2 : ℤ) : ZMod m) :=
         by simp [w, x, y, z, sq]
-      have hwxyz0 : ((w ^ 2 + x ^ 2 + y ^ 2 + z ^ 2 : ℤ) : Zmod m) = 0 := by
-        rw [hwxyzabcd, habcd, Int.cast_mul, cast_coe_nat, Zmod.nat_cast_self, zero_mul]
+      have hwxyz0 : ((w ^ 2 + x ^ 2 + y ^ 2 + z ^ 2 : ℤ) : ZMod m) = 0 := by
+        rw [hwxyzabcd, habcd, Int.cast_mul, cast_coe_nat, ZMod.nat_cast_self, zero_mul]
       let ⟨n, hn⟩ := (CharP.int_cast_eq_zero_iff _ m _).1 hwxyz0
       have hn0 : 0 < n.natAbs :=
         Int.natAbs_pos_of_ne_zero fun hn0 =>
@@ -225,23 +225,23 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] :
           (hp.1.eq_one_or_self_of_dvd _ hmdvdp).elim hm1 fun hmeqp => by
             simpa [lt_irrefl, hmeqp] using hmp
       have hawbxcydz : ((m : ℕ) : ℤ) ∣ a * w + b * x + c * y + d * z :=
-        (CharP.int_cast_eq_zero_iff (Zmod m) m _).1 <|
+        (CharP.int_cast_eq_zero_iff (ZMod m) m _).1 <|
           by
           rw [← hwxyz0]
           simp
           ring
       have haxbwczdy : ((m : ℕ) : ℤ) ∣ a * x - b * w - c * z + d * y :=
-        (CharP.int_cast_eq_zero_iff (Zmod m) m _).1 <|
+        (CharP.int_cast_eq_zero_iff (ZMod m) m _).1 <|
           by
           simp [sub_eq_add_neg]
           ring
       have haybzcwdx : ((m : ℕ) : ℤ) ∣ a * y + b * z - c * w - d * x :=
-        (CharP.int_cast_eq_zero_iff (Zmod m) m _).1 <|
+        (CharP.int_cast_eq_zero_iff (ZMod m) m _).1 <|
           by
           simp [sub_eq_add_neg]
           ring
       have hazbycxdw : ((m : ℕ) : ℤ) ∣ a * z - b * y + c * x - d * w :=
-        (CharP.int_cast_eq_zero_iff (Zmod m) m _).1 <|
+        (CharP.int_cast_eq_zero_iff (ZMod m) m _).1 <|
           by
           simp [sub_eq_add_neg]
           ring

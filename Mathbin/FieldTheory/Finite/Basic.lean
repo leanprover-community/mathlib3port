@@ -159,9 +159,9 @@ variable (K) [Field K] [Fintype K]
 theorem card (p : ℕ) [CharP K p] : ∃ n : ℕ+, Nat.Prime p ∧ q = p ^ (n : ℕ) :=
   by
   haveI hp : Fact p.prime := ⟨CharP.char_is_prime K p⟩
-  letI : Module (Zmod p) K := { (Zmod.castHom dvd_rfl K : Zmod p →+* _).toModule with }
-  obtain ⟨n, h⟩ := VectorSpace.card_fintype (Zmod p) K
-  rw [Zmod.card] at h
+  letI : Module (ZMod p) K := { (ZMod.castHom dvd_rfl K : ZMod p →+* _).toModule with }
+  obtain ⟨n, h⟩ := VectorSpace.card_fintype (ZMod p) K
+  rw [ZMod.card] at h
   refine' ⟨⟨n, _⟩, hp.1, h⟩
   apply Or.resolve_left (Nat.eq_zero_or_pos n)
   rintro rfl
@@ -297,7 +297,7 @@ theorem x_pow_card_pow_sub_x_ne_zero (hn : n ≠ 0) (hp : 1 < p) : (X ^ p ^ n - 
 
 end
 
-variable (p : ℕ) [Fact p.Prime] [Algebra (Zmod p) K]
+variable (p : ℕ) [Fact p.Prime] [Algebra (ZMod p) K]
 
 theorem roots_x_pow_card_sub_x : roots (X ^ q - X : K[X]) = Finset.univ.val := by
   classical
@@ -356,11 +356,11 @@ theorem expand_card (f : K[X]) : expand K q f = f ^ q :=
 
 end FiniteField
 
-namespace Zmod
+namespace ZMod
 
 open FiniteField Polynomial
 
-theorem sq_add_sq (p : ℕ) [hp : Fact p.Prime] (x : Zmod p) : ∃ a b : Zmod p, a ^ 2 + b ^ 2 = x :=
+theorem sq_add_sq (p : ℕ) [hp : Fact p.Prime] (x : ZMod p) : ∃ a b : ZMod p, a ^ 2 + b ^ 2 = x :=
   by
   cases' hp.1.eq_two_or_odd with hp2 hp_odd
   · subst p
@@ -370,17 +370,17 @@ theorem sq_add_sq (p : ℕ) [hp : Fact p.Prime] (x : Zmod p) : ∃ a b : Zmod p,
       simp
     · use 0, 1
       simp
-  let f : (Zmod p)[X] := X ^ 2
-  let g : (Zmod p)[X] := X ^ 2 - C x
+  let f : (ZMod p)[X] := X ^ 2
+  let g : (ZMod p)[X] := X ^ 2 - C x
   obtain ⟨a, b, hab⟩ : ∃ a b, f.eval a + g.eval b = 0 :=
     @exists_root_sum_quadratic _ _ _ _ f g (degree_X_pow 2) (degree_X_pow_sub_C (by decide) _)
-      (by rw [Zmod.card, hp_odd])
+      (by rw [ZMod.card, hp_odd])
   refine' ⟨a, b, _⟩
   rw [← sub_eq_zero]
   simpa only [eval_C, eval_X, eval_pow, eval_sub, ← add_sub_assoc] using hab
-#align zmod.sq_add_sq Zmod.sq_add_sq
+#align zmod.sq_add_sq ZMod.sq_add_sq
 
-end Zmod
+end ZMod
 
 namespace CharP
 
@@ -388,36 +388,36 @@ theorem sq_add_sq (R : Type _) [CommRing R] [IsDomain R] (p : ℕ) [NeZero p] [C
     ∃ a b : ℕ, (a ^ 2 + b ^ 2 : R) = x :=
   by
   haveI := char_is_prime_of_pos R p
-  obtain ⟨a, b, hab⟩ := Zmod.sq_add_sq p x
+  obtain ⟨a, b, hab⟩ := ZMod.sq_add_sq p x
   refine' ⟨a.val, b.val, _⟩
-  simpa using congr_arg (Zmod.castHom dvd_rfl R) hab
+  simpa using congr_arg (ZMod.castHom dvd_rfl R) hab
 #align char_p.sq_add_sq CharP.sq_add_sq
 
 end CharP
 
 open Nat
 
-open Zmod
+open ZMod
 
 /-- The **Fermat-Euler totient theorem**. `nat.modeq.pow_totient` is an alternative statement
   of the same theorem. -/
 @[simp]
-theorem Zmod.pow_totient {n : ℕ} (x : (Zmod n)ˣ) : x ^ φ n = 1 :=
+theorem ZMod.pow_totient {n : ℕ} (x : (ZMod n)ˣ) : x ^ φ n = 1 :=
   by
   cases n
   · rw [Nat.totient_zero, pow_zero]
   · rw [← card_units_eq_totient, pow_card_eq_one]
-#align zmod.pow_totient Zmod.pow_totient
+#align zmod.pow_totient ZMod.pow_totient
 
 /-- The **Fermat-Euler totient theorem**. `zmod.pow_totient` is an alternative statement
   of the same theorem. -/
 theorem Nat.ModEq.pow_totient {x n : ℕ} (h : Nat.Coprime x n) : x ^ φ n ≡ 1 [MOD n] :=
   by
-  rw [← Zmod.eq_iff_modEq_nat]
-  let x' : Units (Zmod n) := Zmod.unitOfCoprime _ h
-  have := Zmod.pow_totient x'
-  apply_fun (coe : Units (Zmod n) → Zmod n)  at this
-  simpa only [-Zmod.pow_totient, Nat.succ_eq_add_one, Nat.cast_pow, Units.val_one, Nat.cast_one,
+  rw [← ZMod.eq_iff_modEq_nat]
+  let x' : Units (ZMod n) := ZMod.unitOfCoprime _ h
+  have := ZMod.pow_totient x'
+  apply_fun (coe : Units (ZMod n) → ZMod n)  at this
+  simpa only [-ZMod.pow_totient, Nat.succ_eq_add_one, Nat.cast_pow, Units.val_one, Nat.cast_one,
     coe_unit_of_coprime, Units.val_pow_eq_pow_val]
 #align nat.modeq.pow_totient Nat.ModEq.pow_totient
 
@@ -438,79 +438,79 @@ end
 
 open FiniteField
 
-namespace Zmod
+namespace ZMod
 
 /-- A variation on Fermat's little theorem. See `zmod.pow_card_sub_one_eq_one` -/
 @[simp]
-theorem pow_card {p : ℕ} [Fact p.Prime] (x : Zmod p) : x ^ p = x :=
+theorem pow_card {p : ℕ} [Fact p.Prime] (x : ZMod p) : x ^ p = x :=
   by
   have h := FiniteField.pow_card x
-  rwa [Zmod.card p] at h
-#align zmod.pow_card Zmod.pow_card
+  rwa [ZMod.card p] at h
+#align zmod.pow_card ZMod.pow_card
 
 @[simp]
-theorem pow_card_pow {n p : ℕ} [Fact p.Prime] (x : Zmod p) : x ^ p ^ n = x :=
+theorem pow_card_pow {n p : ℕ} [Fact p.Prime] (x : ZMod p) : x ^ p ^ n = x :=
   by
   induction' n with n ih
   · simp
   · simp [pow_succ, pow_mul, ih, pow_card]
-#align zmod.pow_card_pow Zmod.pow_card_pow
+#align zmod.pow_card_pow ZMod.pow_card_pow
 
 @[simp]
-theorem frobenius_zmod (p : ℕ) [Fact p.Prime] : frobenius (Zmod p) p = RingHom.id _ :=
+theorem frobenius_zMod (p : ℕ) [Fact p.Prime] : frobenius (ZMod p) p = RingHom.id _ :=
   by
   ext a
-  rw [frobenius_def, Zmod.pow_card, RingHom.id_apply]
-#align zmod.frobenius_zmod Zmod.frobenius_zmod
+  rw [frobenius_def, ZMod.pow_card, RingHom.id_apply]
+#align zmod.frobenius_zmod ZMod.frobenius_zMod
 
 @[simp]
-theorem card_units (p : ℕ) [Fact p.Prime] : Fintype.card (Zmod p)ˣ = p - 1 := by
+theorem card_units (p : ℕ) [Fact p.Prime] : Fintype.card (ZMod p)ˣ = p - 1 := by
   rw [Fintype.card_units, card]
-#align zmod.card_units Zmod.card_units
+#align zmod.card_units ZMod.card_units
 
 /-- **Fermat's Little Theorem**: for every unit `a` of `zmod p`, we have `a ^ (p - 1) = 1`. -/
-theorem units_pow_card_sub_one_eq_one (p : ℕ) [Fact p.Prime] (a : (Zmod p)ˣ) : a ^ (p - 1) = 1 := by
+theorem units_pow_card_sub_one_eq_one (p : ℕ) [Fact p.Prime] (a : (ZMod p)ˣ) : a ^ (p - 1) = 1 := by
   rw [← card_units p, pow_card_eq_one]
-#align zmod.units_pow_card_sub_one_eq_one Zmod.units_pow_card_sub_one_eq_one
+#align zmod.units_pow_card_sub_one_eq_one ZMod.units_pow_card_sub_one_eq_one
 
 /-- **Fermat's Little Theorem**: for all nonzero `a : zmod p`, we have `a ^ (p - 1) = 1`. -/
-theorem pow_card_sub_one_eq_one {p : ℕ} [Fact p.Prime] {a : Zmod p} (ha : a ≠ 0) :
+theorem pow_card_sub_one_eq_one {p : ℕ} [Fact p.Prime] {a : ZMod p} (ha : a ≠ 0) :
     a ^ (p - 1) = 1 := by
   have h := pow_card_sub_one_eq_one a ha
-  rwa [Zmod.card p] at h
-#align zmod.pow_card_sub_one_eq_one Zmod.pow_card_sub_one_eq_one
+  rwa [ZMod.card p] at h
+#align zmod.pow_card_sub_one_eq_one ZMod.pow_card_sub_one_eq_one
 
-theorem orderOf_units_dvd_card_sub_one {p : ℕ} [Fact p.Prime] (u : (Zmod p)ˣ) : orderOf u ∣ p - 1 :=
+theorem orderOf_units_dvd_card_sub_one {p : ℕ} [Fact p.Prime] (u : (ZMod p)ˣ) : orderOf u ∣ p - 1 :=
   orderOf_dvd_of_pow_eq_one <| units_pow_card_sub_one_eq_one _ _
-#align zmod.order_of_units_dvd_card_sub_one Zmod.orderOf_units_dvd_card_sub_one
+#align zmod.order_of_units_dvd_card_sub_one ZMod.orderOf_units_dvd_card_sub_one
 
-theorem orderOf_dvd_card_sub_one {p : ℕ} [Fact p.Prime] {a : Zmod p} (ha : a ≠ 0) :
+theorem orderOf_dvd_card_sub_one {p : ℕ} [Fact p.Prime] {a : ZMod p} (ha : a ≠ 0) :
     orderOf a ∣ p - 1 :=
   orderOf_dvd_of_pow_eq_one <| pow_card_sub_one_eq_one ha
-#align zmod.order_of_dvd_card_sub_one Zmod.orderOf_dvd_card_sub_one
+#align zmod.order_of_dvd_card_sub_one ZMod.orderOf_dvd_card_sub_one
 
 open Polynomial
 
-theorem expand_card {p : ℕ} [Fact p.Prime] (f : Polynomial (Zmod p)) :
-    expand (Zmod p) p f = f ^ p :=
+theorem expand_card {p : ℕ} [Fact p.Prime] (f : Polynomial (ZMod p)) :
+    expand (ZMod p) p f = f ^ p :=
   by
   have h := FiniteField.expand_card f
-  rwa [Zmod.card p] at h
-#align zmod.expand_card Zmod.expand_card
+  rwa [ZMod.card p] at h
+#align zmod.expand_card ZMod.expand_card
 
-end Zmod
+end ZMod
 
 /-- **Fermat's Little Theorem**: for all `a : ℤ` coprime to `p`, we have
 `a ^ (p - 1) ≡ 1 [ZMOD p]`. -/
 theorem Int.ModEq.pow_card_sub_one_eq_one {p : ℕ} (hp : Nat.Prime p) {n : ℤ} (hpn : IsCoprime n p) :
     n ^ (p - 1) ≡ 1 [ZMOD p] := by
   haveI : Fact p.prime := ⟨hp⟩
-  have : ¬(n : Zmod p) = 0 :=
+  have : ¬(n : ZMod p) = 0 :=
     by
     rw [CharP.int_cast_eq_zero_iff _ p, ← (nat.prime_iff_prime_int.mp hp).coprime_iff_not_dvd]
     · exact hpn.symm
-    exact Zmod.charP p
-  simpa [← Zmod.int_coe_eq_int_coe_iff] using Zmod.pow_card_sub_one_eq_one this
+    exact ZMod.charP p
+  simpa [← ZMod.int_coe_eq_int_coe_iff] using ZMod.pow_card_sub_one_eq_one this
 #align int.modeq.pow_card_sub_one_eq_one Int.ModEq.pow_card_sub_one_eq_one
 
 section

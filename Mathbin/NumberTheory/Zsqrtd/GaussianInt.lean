@@ -299,11 +299,11 @@ theorem mod_four_eq_three_of_nat_prime_of_prime (p : ℕ) [hp : Fact p.Prime]
         have := Nat.mod_lt p (show 0 < 4 by decide)
         revert this hp3 hp1
         generalize p % 4 = m; decide!
-      let ⟨k, hk⟩ := Zmod.exists_sq_eq_neg_one_iff.2 <| by rw [hp41] <;> exact by decide
-      obtain ⟨k, k_lt_p, rfl⟩ : ∃ (k' : ℕ)(h : k' < p), (k' : Zmod p) = k := by
-        refine' ⟨k.val, k.val_lt, Zmod.nat_cast_zmod_val k⟩
+      let ⟨k, hk⟩ := ZMod.exists_sq_eq_neg_one_iff.2 <| by rw [hp41] <;> exact by decide
+      obtain ⟨k, k_lt_p, rfl⟩ : ∃ (k' : ℕ)(h : k' < p), (k' : ZMod p) = k := by
+        refine' ⟨k.val, k.val_lt, ZMod.nat_cast_zMod_val k⟩
       have hpk : p ∣ k ^ 2 + 1 := by
-        rw [pow_two, ← CharP.cast_eq_zero_iff (Zmod p) p, Nat.cast_add, Nat.cast_mul, Nat.cast_one,
+        rw [pow_two, ← CharP.cast_eq_zero_iff (ZMod p) p, Nat.cast_add, Nat.cast_mul, Nat.cast_one,
           ← hk, add_left_neg]
       have hkmul : (k ^ 2 + 1 : ℤ[i]) = ⟨k, 1⟩ * ⟨k, -1⟩ := by simp [sq, Zsqrtd.ext]
       have hpne1 : p ≠ 1 := ne_of_gt hp.1.one_lt
@@ -364,8 +364,8 @@ theorem prime_of_nat_prime_of_mod_four_eq_three (p : ℕ) [hp : Fact p.Prime] (h
   irreducible_iff_prime.1 <|
     by_contradiction fun hpi =>
       let ⟨a, b, hab⟩ := sq_add_sq_of_nat_prime_of_not_irreducible p hpi
-      have : ∀ a b : Zmod 4, a ^ 2 + b ^ 2 ≠ p := by
-        erw [← Zmod.nat_cast_mod p 4, hp3] <;> exact by decide
+      have : ∀ a b : ZMod 4, a ^ 2 + b ^ 2 ≠ p := by
+        erw [← ZMod.nat_cast_mod p 4, hp3] <;> exact by decide
       this a b (hab ▸ by simp)
 #align gaussian_int.prime_of_nat_prime_of_mod_four_eq_three GaussianInt.prime_of_nat_prime_of_mod_four_eq_three
 

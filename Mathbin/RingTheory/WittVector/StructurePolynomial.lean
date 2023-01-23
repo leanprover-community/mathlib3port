@@ -248,11 +248,11 @@ theorem c_p_pow_dvd_bind₁_rename_wittPolynomial_sub_sum (Φ : MvPolynomial idx
   · simp only [isUnit_one, Int.ofNat_zero, Int.ofNat_succ, zero_add, pow_zero, C_1, IsUnit.dvd]
   -- prepare a useful equation for rewriting
   have key := bind₁_rename_expand_wittPolynomial Φ n IH
-  apply_fun map (Int.castRingHom (Zmod (p ^ (n + 1))))  at key
+  apply_fun map (Int.castRingHom (ZMod (p ^ (n + 1))))  at key
   conv_lhs at key => simp only [map_bind₁, map_rename, map_expand, map_wittPolynomial]
   -- clean up and massage
   rw [Nat.succ_eq_add_one, C_dvd_iff_zmod, RingHom.map_sub, sub_eq_zero, map_bind₁]
-  simp only [map_rename, map_wittPolynomial, wittPolynomial_zmod_self]
+  simp only [map_rename, map_wittPolynomial, wittPolynomial_zMod_self]
   rw [key]; clear key IH
   rw [bind₁, aeval_wittPolynomial, RingHom.map_sum, RingHom.map_sum, Finset.sum_congr rfl]
   intro k hk
@@ -268,7 +268,7 @@ theorem c_p_pow_dvd_bind₁_rename_wittPolynomial_sub_sum (Φ : MvPolynomial idx
   -- the machine!
   apply dvd_sub_pow_of_dvd_sub
   rw [← C_eq_coe_nat, C_dvd_iff_zmod, RingHom.map_sub, sub_eq_zero, map_expand, RingHom.map_pow,
-    MvPolynomial.expand_zmod]
+    MvPolynomial.expand_zMod]
 #align C_p_pow_dvd_bind₁_rename_witt_polynomial_sub_sum c_p_pow_dvd_bind₁_rename_wittPolynomial_sub_sum
 
 variable (p)

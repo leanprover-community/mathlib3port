@@ -155,7 +155,7 @@ theorem jacobiSymNat.even_odd₁ (a b : ℕ) (r : ℤ) (hr : jacobiSymNat a (bit
   have hb : bit1 (bit0 (bit0 b)) % 8 = 1 := by
     rw [Nat.bit1_mod_bit0, Nat.bit0_mod_bit0, Nat.bit0_mod_two]
   rw [jacobi_sym_nat, bit0_eq_two_mul a, Nat.cast_mul, jacobiSym.mul_left, Nat.cast_two,
-    jacobiSym.at_two (odd_bit1 _), Zmod.χ₈_nat_mod_eight, hb]
+    jacobiSym.at_two (odd_bit1 _), ZMod.χ₈_nat_mod_eight, hb]
   norm_num
   exact hr
 #align norm_num.jacobi_sym_nat.even_odd₁ NormNum.jacobiSymNat.even_odd₁
@@ -166,7 +166,7 @@ theorem jacobiSymNat.even_odd₇ (a b : ℕ) (r : ℤ) (hr : jacobiSymNat a (bit
   have hb : bit1 (bit1 (bit1 b)) % 8 = 7 := by
     rw [Nat.bit1_mod_bit0, Nat.bit1_mod_bit0, Nat.bit1_mod_two]
   rw [jacobi_sym_nat, bit0_eq_two_mul a, Nat.cast_mul, jacobiSym.mul_left, Nat.cast_two,
-    jacobiSym.at_two (odd_bit1 _), Zmod.χ₈_nat_mod_eight, hb]
+    jacobiSym.at_two (odd_bit1 _), ZMod.χ₈_nat_mod_eight, hb]
   norm_num
   exact hr
 #align norm_num.jacobi_sym_nat.even_odd₇ NormNum.jacobiSymNat.even_odd₇
@@ -177,7 +177,7 @@ theorem jacobiSymNat.even_odd₃ (a b : ℕ) (r : ℤ) (hr : jacobiSymNat a (bit
   have hb : bit1 (bit1 (bit0 b)) % 8 = 3 := by
     rw [Nat.bit1_mod_bit0, Nat.bit1_mod_bit0, Nat.bit0_mod_two]
   rw [jacobi_sym_nat, bit0_eq_two_mul a, Nat.cast_mul, jacobiSym.mul_left, Nat.cast_two,
-    jacobiSym.at_two (odd_bit1 _), Zmod.χ₈_nat_mod_eight, hb]
+    jacobiSym.at_two (odd_bit1 _), ZMod.χ₈_nat_mod_eight, hb]
   norm_num
   exact hr
 #align norm_num.jacobi_sym_nat.even_odd₃ NormNum.jacobiSymNat.even_odd₃
@@ -188,7 +188,7 @@ theorem jacobiSymNat.even_odd₅ (a b : ℕ) (r : ℤ) (hr : jacobiSymNat a (bit
   have hb : bit1 (bit0 (bit1 b)) % 8 = 5 := by
     rw [Nat.bit1_mod_bit0, Nat.bit0_mod_bit0, Nat.bit1_mod_two]
   rw [jacobi_sym_nat, bit0_eq_two_mul a, Nat.cast_mul, jacobiSym.mul_left, Nat.cast_two,
-    jacobiSym.at_two (odd_bit1 _), Zmod.χ₈_nat_mod_eight, hb]
+    jacobiSym.at_two (odd_bit1 _), ZMod.χ₈_nat_mod_eight, hb]
   norm_num
   exact hr
 #align norm_num.jacobi_sym_nat.even_odd₅ NormNum.jacobiSymNat.even_odd₅

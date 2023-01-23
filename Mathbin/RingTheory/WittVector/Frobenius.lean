@@ -238,12 +238,12 @@ theorem map_frobeniusPoly (n : ℕ) :
   ring
 #align witt_vector.map_frobenius_poly WittVector.map_frobeniusPoly
 
-theorem frobeniusPoly_zmod (n : ℕ) :
-    MvPolynomial.map (Int.castRingHom (Zmod p)) (frobeniusPoly p n) = x n ^ p :=
+theorem frobeniusPoly_zMod (n : ℕ) :
+    MvPolynomial.map (Int.castRingHom (ZMod p)) (frobeniusPoly p n) = x n ^ p :=
   by
   rw [frobenius_poly, RingHom.map_add, RingHom.map_pow, RingHom.map_mul, map_X, map_C]
-  simp only [Int.cast_ofNat, add_zero, eq_intCast, Zmod.nat_cast_self, zero_mul, C_0]
-#align witt_vector.frobenius_poly_zmod WittVector.frobeniusPoly_zmod
+  simp only [Int.cast_ofNat, add_zero, eq_intCast, ZMod.nat_cast_self, zero_mul, C_0]
+#align witt_vector.frobenius_poly_zmod WittVector.frobeniusPoly_zMod
 
 @[simp]
 theorem bind₁_frobeniusPoly_wittPolynomial (n : ℕ) :
@@ -345,9 +345,9 @@ theorem coeff_frobenius_charP (x : 𝕎 R) (n : ℕ) : coeff (frobenius x) n = x
   calc
     aeval (fun k => x.coeff k) (frobenius_poly p n) =
         aeval (fun k => x.coeff k)
-          (MvPolynomial.map (Int.castRingHom (Zmod p)) (frobenius_poly p n)) :=
+          (MvPolynomial.map (Int.castRingHom (ZMod p)) (frobenius_poly p n)) :=
       _
-    _ = aeval (fun k => x.coeff k) (X n ^ p : MvPolynomial ℕ (Zmod p)) := _
+    _ = aeval (fun k => x.coeff k) (X n ^ p : MvPolynomial ℕ (ZMod p)) := _
     _ = x.coeff n ^ p := _
     
   · conv_rhs => rw [aeval_eq_eval₂_hom, eval₂_hom_map_hom]
@@ -363,8 +363,8 @@ theorem frobenius_eq_map_frobenius : @frobenius p R _ _ = map (frobenius R p) :=
 #align witt_vector.frobenius_eq_map_frobenius WittVector.frobenius_eq_map_frobenius
 
 @[simp]
-theorem frobenius_zmodp (x : 𝕎 (Zmod p)) : frobenius x = x := by
-  simp only [ext_iff, coeff_frobenius_char_p, Zmod.pow_card, eq_self_iff_true, forall_const]
+theorem frobenius_zmodp (x : 𝕎 (ZMod p)) : frobenius x = x := by
+  simp only [ext_iff, coeff_frobenius_char_p, ZMod.pow_card, eq_self_iff_true, forall_const]
 #align witt_vector.frobenius_zmodp WittVector.frobenius_zmodp
 
 variable (p R)

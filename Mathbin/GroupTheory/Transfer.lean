@@ -140,8 +140,8 @@ theorem transfer_eq_prod_quotient_orbitRel_zpowers_quot [FiniteIndex H] (g : G)
       
     simp only [quotient_equiv_sigma_zmod_symm_apply, transfer_transversal_apply',
       transfer_transversal_apply'']
-    rw [Fintype.prod_eq_single (0 : Zmod (Function.minimalPeriod ((· • ·) g) q.out')) fun k hk => _]
-    · simp only [if_pos, Zmod.cast_zero, zpow_zero, one_mul, mul_assoc]
+    rw [Fintype.prod_eq_single (0 : ZMod (Function.minimalPeriod ((· • ·) g) q.out')) fun k hk => _]
+    · simp only [if_pos, ZMod.cast_zero, zpow_zero, one_mul, mul_assoc]
     · simp only [if_neg hk, inv_mul_self]
       exact map_one ϕ
 #align monoid_hom.transfer_eq_prod_quotient_orbit_rel_zpowers_quot MonoidHom.transfer_eq_prod_quotient_orbitRel_zpowers_quot

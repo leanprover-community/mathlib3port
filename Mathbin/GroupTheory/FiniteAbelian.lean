@@ -55,9 +55,9 @@ variable [AddCommGroup G]
 /-- **Structure theorem of finitely generated abelian groups** : Any finitely generated abelian
 group is the product of a power of `ℤ` and a direct sum of some `zmod (p i ^ e i)` for some
 prime powers `p i ^ e i`. -/
-theorem equiv_free_prod_directSum_zmod [hG : AddGroup.Fg G] :
+theorem equiv_free_prod_directSum_zMod [hG : AddGroup.Fg G] :
     ∃ (n : ℕ)(ι : Type)(_ : Fintype ι)(p : ι → ℕ)(_ : ∀ i, Nat.Prime <| p i)(e : ι → ℕ),
-      Nonempty <| G ≃+ (Fin n →₀ ℤ) × ⨁ i : ι, Zmod (p i ^ e i) :=
+      Nonempty <| G ≃+ (Fin n →₀ ℤ) × ⨁ i : ι, ZMod (p i ^ e i) :=
   by
   obtain ⟨n, ι, fι, p, hp, e, ⟨f⟩⟩ :=
     @Module.equiv_free_prod_directSum _ _ _ _ _ _ _ (module.finite.iff_add_group_fg.mpr hG)
@@ -69,14 +69,14 @@ theorem equiv_free_prod_directSum_zmod [hG : AddGroup.Fg G] :
       ((AddEquiv.refl _).prodCongr <|
         Dfinsupp.mapRange.addEquiv fun i =>
           ((Int.quotientSpanEquivZmod _).trans <|
-              Zmod.ringEquivCongr <| (p i).nat_abs_pow _).toAddEquiv)
-#align add_comm_group.equiv_free_prod_direct_sum_zmod AddCommGroup.equiv_free_prod_directSum_zmod
+              ZMod.ringEquivCongr <| (p i).nat_abs_pow _).toAddEquiv)
+#align add_comm_group.equiv_free_prod_direct_sum_zmod AddCommGroup.equiv_free_prod_directSum_zMod
 
 /-- **Structure theorem of finite abelian groups** : Any finite abelian group is a direct sum of
 some `zmod (p i ^ e i)` for some prime powers `p i ^ e i`. -/
-theorem equiv_directSum_zmod_of_fintype [Finite G] :
+theorem equiv_directSum_zMod_of_fintype [Finite G] :
     ∃ (ι : Type)(_ : Fintype ι)(p : ι → ℕ)(_ : ∀ i, Nat.Prime <| p i)(e : ι → ℕ),
-      Nonempty <| G ≃+ ⨁ i : ι, Zmod (p i ^ e i) :=
+      Nonempty <| G ≃+ ⨁ i : ι, ZMod (p i ^ e i) :=
   by
   cases nonempty_fintype G
   obtain ⟨n, ι, fι, p, hp, e, ⟨f⟩⟩ := equiv_free_prod_direct_sum_zmod G
@@ -86,7 +86,7 @@ theorem equiv_directSum_zmod_of_fintype [Finite G] :
     exact
       (Fintype.ofSurjective (fun f : Fin n.succ →₀ ℤ => f 0) fun a =>
             ⟨Finsupp.single 0 a, Finsupp.single_eq_same⟩).False.elim
-#align add_comm_group.equiv_direct_sum_zmod_of_fintype AddCommGroup.equiv_directSum_zmod_of_fintype
+#align add_comm_group.equiv_direct_sum_zmod_of_fintype AddCommGroup.equiv_directSum_zMod_of_fintype
 
 theorem finite_of_fg_torsion [hG' : AddGroup.Fg G] (hG : AddMonoid.IsTorsion G) : Finite G :=
   @Module.finite_of_fg_torsion _ _ _ (Module.Finite.iff_add_group_fg.mpr hG') <|

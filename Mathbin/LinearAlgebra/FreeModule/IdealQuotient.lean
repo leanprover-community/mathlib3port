@@ -91,10 +91,10 @@ noncomputable def Ideal.quotientEquivPiSpan (I : Ideal S) (b : Basis ι R S) (hI
 /-- Ideal quotients over a free finite extension of `ℤ` are isomorphic to a direct product of
 `zmod`. -/
 noncomputable def Ideal.quotientEquivPiZmod (I : Ideal S) (b : Basis ι ℤ S) (hI : I ≠ ⊥) :
-    S ⧸ I ≃+ ∀ i, Zmod (I.smithCoeffs b hI i).natAbs :=
+    S ⧸ I ≃+ ∀ i, ZMod (I.smithCoeffs b hI i).natAbs :=
   let a := I.smithCoeffs b hI
   let e := I.quotientEquivPiSpan b hI
-  let e' : (∀ i : ι, ℤ ⧸ Ideal.span ({a i} : Set ℤ)) ≃+ ∀ i : ι, Zmod (a i).natAbs :=
+  let e' : (∀ i : ι, ℤ ⧸ Ideal.span ({a i} : Set ℤ)) ≃+ ∀ i : ι, ZMod (a i).natAbs :=
     AddEquiv.piCongrRight fun i => ↑(Int.quotientSpanEquivZmod (a i))
   (↑(e : (S ⧸ I) ≃ₗ[ℤ] _) : S ⧸ I ≃+ _).trans e'
 #align ideal.quotient_equiv_pi_zmod Ideal.quotientEquivPiZmod
@@ -111,6 +111,6 @@ noncomputable def Ideal.fintypeQuotientOfFreeOfNeBot [Module.Free ℤ S] [Module
   let e := I.quotientEquivPiZmod b hI
   haveI : ∀ i, NeZero (a i).natAbs := fun i =>
     ⟨Int.natAbs_ne_zero_of_ne_zero (Ideal.smithCoeffs_ne_zero b I hI i)⟩
-  Fintype.ofEquiv (∀ i, Zmod (a i).natAbs) e.symm
+  Fintype.ofEquiv (∀ i, ZMod (a i).natAbs) e.symm
 #align ideal.fintype_quotient_of_free_of_ne_bot Ideal.fintypeQuotientOfFreeOfNeBot
 

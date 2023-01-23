@@ -27,8 +27,8 @@ represents the rotations of the `n`-gon by `2πi/n`, and `sr i` represents the r
 the `n`-gon. `dihedral_group 0` corresponds to the infinite dihedral group.
 -/
 inductive DihedralGroup (n : ℕ) : Type
-  | r : Zmod n → DihedralGroup
-  | sr : Zmod n → DihedralGroup
+  | r : ZMod n → DihedralGroup
+  | sr : ZMod n → DihedralGroup
   deriving DecidableEq
 #align dihedral_group DihedralGroup
 
@@ -82,22 +82,22 @@ instance : Group (DihedralGroup n) where
     exact congr_arg r (sub_self a)
 
 @[simp]
-theorem r_mul_r (i j : Zmod n) : r i * r j = r (i + j) :=
+theorem r_mul_r (i j : ZMod n) : r i * r j = r (i + j) :=
   rfl
 #align dihedral_group.r_mul_r DihedralGroup.r_mul_r
 
 @[simp]
-theorem r_mul_sr (i j : Zmod n) : r i * sr j = sr (j - i) :=
+theorem r_mul_sr (i j : ZMod n) : r i * sr j = sr (j - i) :=
   rfl
 #align dihedral_group.r_mul_sr DihedralGroup.r_mul_sr
 
 @[simp]
-theorem sr_mul_r (i j : Zmod n) : sr i * r j = sr (i + j) :=
+theorem sr_mul_r (i j : ZMod n) : sr i * r j = sr (i + j) :=
   rfl
 #align dihedral_group.sr_mul_r DihedralGroup.sr_mul_r
 
 @[simp]
-theorem sr_mul_sr (i j : Zmod n) : sr i * sr j = r (j - i) :=
+theorem sr_mul_sr (i j : ZMod n) : sr i * sr j = r (j - i) :=
   rfl
 #align dihedral_group.sr_mul_sr DihedralGroup.sr_mul_sr
 
@@ -105,7 +105,7 @@ theorem one_def : (1 : DihedralGroup n) = r 0 :=
   rfl
 #align dihedral_group.one_def DihedralGroup.one_def
 
-private def fintype_helper : Sum (Zmod n) (Zmod n) ≃ DihedralGroup n
+private def fintype_helper : Sum (ZMod n) (ZMod n) ≃ DihedralGroup n
     where
   invFun i :=
     match i with
@@ -130,7 +130,7 @@ instance : Nontrivial (DihedralGroup n) :=
 /-- If `0 < n`, then `dihedral_group n` has `2n` elements.
 -/
 theorem card [NeZero n] : Fintype.card (DihedralGroup n) = 2 * n := by
-  rw [← fintype.card_eq.mpr ⟨fintype_helper⟩, Fintype.card_sum, Zmod.card, two_mul]
+  rw [← fintype.card_eq.mpr ⟨fintype_helper⟩, Fintype.card_sum, ZMod.card, two_mul]
 #align dihedral_group.card DihedralGroup.card
 
 @[simp]
@@ -146,21 +146,21 @@ theorem r_one_pow (k : ℕ) : (r 1 : DihedralGroup n) ^ k = r k :=
 #align dihedral_group.r_one_pow DihedralGroup.r_one_pow
 
 @[simp]
-theorem r_one_pow_n : r (1 : Zmod n) ^ n = 1 :=
+theorem r_one_pow_n : r (1 : ZMod n) ^ n = 1 :=
   by
   rw [r_one_pow, one_def]
   congr 1
-  exact Zmod.nat_cast_self _
+  exact ZMod.nat_cast_self _
 #align dihedral_group.r_one_pow_n DihedralGroup.r_one_pow_n
 
 @[simp]
-theorem sr_mul_self (i : Zmod n) : sr i * sr i = 1 := by rw [sr_mul_sr, sub_self, one_def]
+theorem sr_mul_self (i : ZMod n) : sr i * sr i = 1 := by rw [sr_mul_sr, sub_self, one_def]
 #align dihedral_group.sr_mul_self DihedralGroup.sr_mul_self
 
 /-- If `0 < n`, then `sr i` has order 2.
 -/
 @[simp]
-theorem orderOf_sr (i : Zmod n) : orderOf (sr i) = 2 :=
+theorem orderOf_sr (i : ZMod n) : orderOf (sr i) = 2 :=
   by
   rw [orderOf_eq_prime _ _]
   · exact ⟨Nat.prime_two⟩
@@ -187,15 +187,15 @@ theorem orderOf_r_one : orderOf (r 1 : DihedralGroup n) = n :=
     have h1 : (r 1 : DihedralGroup n) ^ orderOf (r 1) = 1 := pow_orderOf_eq_one _
     rw [r_one_pow] at h1
     injection h1 with h2
-    rw [← Zmod.val_eq_zero, Zmod.val_nat_cast, Nat.mod_eq_of_lt h] at h2
+    rw [← ZMod.val_eq_zero, ZMod.val_nat_cast, Nat.mod_eq_of_lt h] at h2
     exact absurd h2.symm (orderOf_pos _).Ne
 #align dihedral_group.order_of_r_one DihedralGroup.orderOf_r_one
 
 /-- If `0 < n`, then `i : zmod n` has order `n / gcd n i`.
 -/
-theorem orderOf_r [NeZero n] (i : Zmod n) : orderOf (r i) = n / Nat.gcd n i.val :=
+theorem orderOf_r [NeZero n] (i : ZMod n) : orderOf (r i) = n / Nat.gcd n i.val :=
   by
-  conv_lhs => rw [← Zmod.nat_cast_zmod_val i]
+  conv_lhs => rw [← ZMod.nat_cast_zMod_val i]
   rw [← r_one_pow, orderOf_pow, order_of_r_one]
 #align dihedral_group.order_of_r DihedralGroup.orderOf_r
 

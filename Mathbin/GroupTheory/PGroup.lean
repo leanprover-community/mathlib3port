@@ -201,7 +201,7 @@ theorem card_modEq_card_fixedPoints [Fintype (fixedPoints G α)] :
       _ ≡ ∑ a : fixed_points G α, 1 [MOD p] := _
       _ = _ := by simp <;> rfl
       
-    rw [← Zmod.eq_iff_modEq_nat p, Nat.cast_sum, Nat.cast_sum]
+    rw [← ZMod.eq_iff_modEq_nat p, Nat.cast_sum, Nat.cast_sum]
     have key :
       ∀ x,
         card { y // (Quotient.mk' y : Quotient (orbit_rel G α)) = Quotient.mk' x } =
@@ -221,7 +221,7 @@ theorem card_modEq_card_fixedPoints [Fintype (fixedPoints G α)] :
           (lt_of_not_ge
             (mt (pow_dvd_pow p)
               (by
-                rwa [pow_one, ← hk, ← Nat.modEq_zero_iff_dvd, ← Zmod.eq_iff_modEq_nat, ← key,
+                rwa [pow_one, ← hk, ← Nat.modEq_zero_iff_dvd, ← ZMod.eq_iff_modEq_nat, ← key,
                   Nat.cast_zero]))))
     exact
       ⟨⟨b, mem_fixed_points_iff_card_orbit_eq_one.2 <| by rw [hk, this, pow_zero]⟩,

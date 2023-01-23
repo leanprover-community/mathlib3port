@@ -329,10 +329,10 @@ theorem cyclotomicPrimePowCompXAddOneIsEisensteinAt [hp : Fact p.Prime] (n : ℕ
       rw [zero_add, pow_one] at hi⊢
       exact (cyclotomicCompXAddOneIsEisensteinAt p).Mem hi
     · intro i hi
-      rw [Ideal.submodule_span_eq, Ideal.mem_span_singleton, ← Zmod.int_coe_zmod_eq_zero_iff_dvd, ←
+      rw [Ideal.submodule_span_eq, Ideal.mem_span_singleton, ← ZMod.int_coe_zMod_eq_zero_iff_dvd, ←
         Int.coe_castRingHom, ← coeff_map, map_comp, map_cyclotomic, Polynomial.map_add, map_X,
         Polynomial.map_one, pow_add, pow_one, cyclotomic_mul_prime_dvd_eq_pow, pow_comp, ←
-        Zmod.expand_card, coeff_expand hp.out.pos]
+        ZMod.expand_card, coeff_expand hp.out.pos]
       · simp only [ite_eq_right_iff]
         rintro ⟨k, hk⟩
         rw [nat_degree_comp, show (X + 1 : ℤ[X]) = X + C 1 by simp, nat_degree_X_add_C, mul_one,
@@ -341,7 +341,7 @@ theorem cyclotomicPrimePowCompXAddOneIsEisensteinAt [hp : Fact p.Prime] (n : ℕ
         rw [hk, pow_succ, mul_assoc] at hi
         rw [hk, mul_comm, Nat.mul_div_cancel _ hp.out.pos]
         replace hn := hn (lt_of_mul_lt_mul_left' hi)
-        rw [Ideal.submodule_span_eq, Ideal.mem_span_singleton, ← Zmod.int_coe_zmod_eq_zero_iff_dvd,
+        rw [Ideal.submodule_span_eq, Ideal.mem_span_singleton, ← ZMod.int_coe_zMod_eq_zero_iff_dvd,
           ← Int.coe_castRingHom, ← coeff_map] at hn
         simpa [map_comp] using hn
       · exact ⟨p ^ n, by rw [pow_succ]⟩

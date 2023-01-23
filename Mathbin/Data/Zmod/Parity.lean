@@ -22,23 +22,23 @@ parity, zmod, even, odd
 -/
 
 
-namespace Zmod
+namespace ZMod
 
-theorem eq_zero_iff_even {n : ℕ} : (n : Zmod 2) = 0 ↔ Even n :=
-  (CharP.cast_eq_zero_iff (Zmod 2) 2 n).trans even_iff_two_dvd.symm
-#align zmod.eq_zero_iff_even Zmod.eq_zero_iff_even
+theorem eq_zero_iff_even {n : ℕ} : (n : ZMod 2) = 0 ↔ Even n :=
+  (CharP.cast_eq_zero_iff (ZMod 2) 2 n).trans even_iff_two_dvd.symm
+#align zmod.eq_zero_iff_even ZMod.eq_zero_iff_even
 
-theorem eq_one_iff_odd {n : ℕ} : (n : Zmod 2) = 1 ↔ Odd n :=
+theorem eq_one_iff_odd {n : ℕ} : (n : ZMod 2) = 1 ↔ Odd n :=
   by
-  rw [← @Nat.cast_one (Zmod 2), Zmod.eq_iff_modEq_nat, Nat.odd_iff, Nat.ModEq]
+  rw [← @Nat.cast_one (ZMod 2), ZMod.eq_iff_modEq_nat, Nat.odd_iff, Nat.ModEq]
   norm_num
-#align zmod.eq_one_iff_odd Zmod.eq_one_iff_odd
+#align zmod.eq_one_iff_odd ZMod.eq_one_iff_odd
 
-theorem ne_zero_iff_odd {n : ℕ} : (n : Zmod 2) ≠ 0 ↔ Odd n := by
+theorem ne_zero_iff_odd {n : ℕ} : (n : ZMod 2) ≠ 0 ↔ Odd n := by
   constructor <;>
     · contrapose
       simp [eq_zero_iff_even]
-#align zmod.ne_zero_iff_odd Zmod.ne_zero_iff_odd
+#align zmod.ne_zero_iff_odd ZMod.ne_zero_iff_odd
 
-end Zmod
+end ZMod
 

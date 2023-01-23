@@ -144,7 +144,7 @@ theorem valuation_of_unit_eq (x : Rˣ) :
 attribute [local semireducible] MulOpposite
 
 /-- The multiplicative `v`-adic valuation on `Kˣ` modulo `n`-th powers. -/
-def valuationOfNeZeroMod (n : ℕ) : (K/n) →* Multiplicative (Zmod n) :=
+def valuationOfNeZeroMod (n : ℕ) : (K/n) →* Multiplicative (ZMod n) :=
   (Int.quotientZmultiplesNatEquivZmod n).toMultiplicative.toMonoidHom.comp <|
     QuotientGroup.map (powMonoidHom n : Kˣ →* Kˣ).range (AddSubgroup.zmultiples (n : ℤ)).toSubgroup
       v.valuationOfNeZero
@@ -187,7 +187,7 @@ theorem monotone (hS : S ≤ S') : K⟮S,n⟯ ≤ K⟮S',n⟯ := fun _ hx v => h
 #align is_dedekind_domain.selmer_group.monotone IsDedekindDomain.selmerGroup.monotone
 
 /-- The multiplicative `v`-adic valuations on `K⟮S, n⟯` for all `v ∈ S`. -/
-def valuation : K⟮S,n⟯ →* S → Multiplicative (Zmod n)
+def valuation : K⟮S,n⟯ →* S → Multiplicative (ZMod n)
     where
   toFun x v := (v : HeightOneSpectrum R).valuationOfNeZeroMod n (x : K/n)
   map_one' := funext fun v => map_one _

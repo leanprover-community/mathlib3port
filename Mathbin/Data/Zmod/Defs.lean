@@ -80,45 +80,58 @@ instance (n : ℕ) [NeZero n] : CommRing (Fin n) :=
 
 end Fin
 
+#print ZMod /-
 /-- The integers modulo `n : ℕ`. -/
-def Zmod : ℕ → Type
+def ZMod : ℕ → Type
   | 0 => ℤ
   | n + 1 => Fin (n + 1)
-#align zmod Zmod
+#align zmod ZMod
+-/
 
-instance Zmod.decidableEq : ∀ n : ℕ, DecidableEq (Zmod n)
+#print ZMod.decidableEq /-
+instance ZMod.decidableEq : ∀ n : ℕ, DecidableEq (ZMod n)
   | 0 => Int.decidableEq
   | n + 1 => Fin.decidableEq _
-#align zmod.decidable_eq Zmod.decidableEq
+#align zmod.decidable_eq ZMod.decidableEq
+-/
 
-instance Zmod.hasRepr : ∀ n : ℕ, Repr (Zmod n)
+#print ZMod.repr /-
+instance ZMod.repr : ∀ n : ℕ, Repr (ZMod n)
   | 0 => Int.hasRepr
   | n + 1 => Fin.hasRepr _
-#align zmod.has_repr Zmod.hasRepr
+#align zmod.has_repr ZMod.repr
+-/
 
-namespace Zmod
+namespace ZMod
 
-instance fintype : ∀ (n : ℕ) [NeZero n], Fintype (Zmod n)
+#print ZMod.fintype /-
+instance fintype : ∀ (n : ℕ) [NeZero n], Fintype (ZMod n)
   | 0, h => (NeZero.ne 0 rfl).elim
   | n + 1, _ => Fin.fintype (n + 1)
-#align zmod.fintype Zmod.fintype
+#align zmod.fintype ZMod.fintype
+-/
 
-instance infinite : Infinite (Zmod 0) :=
+#print ZMod.infinite /-
+instance infinite : Infinite (ZMod 0) :=
   Int.infinite
-#align zmod.infinite Zmod.infinite
+#align zmod.infinite ZMod.infinite
+-/
 
+#print ZMod.card /-
 @[simp]
-theorem card (n : ℕ) [Fintype (Zmod n)] : Fintype.card (Zmod n) = n :=
+theorem card (n : ℕ) [Fintype (ZMod n)] : Fintype.card (ZMod n) = n :=
   by
   cases n
-  · exact (not_finite (Zmod 0)).elim
+  · exact (not_finite (ZMod 0)).elim
   · convert Fintype.card_fin (n + 1)
-#align zmod.card Zmod.card
+#align zmod.card ZMod.card
+-/
 
+#print ZMod.commRing /-
 /- We define each field by cases, to ensure that the eta-expanded `zmod.comm_ring` is defeq to the
 original, this helps avoid diamonds with instances coming from classes extending `comm_ring` such as
 field. -/
-instance commRing (n : ℕ) : CommRing (Zmod n)
+instance commRing (n : ℕ) : CommRing (ZMod n)
     where
   add := Nat.casesOn n (@Add.add Int _) fun n => @Add.add (Fin n.succ) _
   add_assoc := Nat.casesOn n (@add_assoc Int _) fun n => @add_assoc (Fin n.succ) _
@@ -160,11 +173,14 @@ instance commRing (n : ℕ) : CommRing (Zmod n)
   right_distrib :=
     Nat.casesOn n (@right_distrib Int _ _ _) fun n => @right_distrib (Fin n.succ) _ _ _
   mul_comm := Nat.casesOn n (@mul_comm Int _) fun n => @mul_comm (Fin n.succ) _
-#align zmod.comm_ring Zmod.commRing
+#align zmod.comm_ring ZMod.commRing
+-/
 
-instance inhabited (n : ℕ) : Inhabited (Zmod n) :=
+#print ZMod.inhabited /-
+instance inhabited (n : ℕ) : Inhabited (ZMod n) :=
   ⟨0⟩
-#align zmod.inhabited Zmod.inhabited
+#align zmod.inhabited ZMod.inhabited
+-/
 
-end Zmod
+end ZMod
 

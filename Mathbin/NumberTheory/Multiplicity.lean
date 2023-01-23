@@ -284,10 +284,10 @@ theorem Int.sq_mod_four_eq_one_of_odd {x : ℤ} : Odd x → x ^ 2 % 4 = 1 :=
     x ^ 2 % (4 : ℕ) = 1 % (4 : ℕ) := _
     _ = 1 := by norm_num
     
-  rw [← Zmod.int_coe_eq_int_coe_iff'] at hx⊢
+  rw [← ZMod.int_coe_eq_int_coe_iff'] at hx⊢
   push_cast
-  rw [← map_intCast (Zmod.castHom (show 2 ∣ 4 by norm_num) (Zmod 2)) x] at hx
-  set y : Zmod 4 := x
+  rw [← map_intCast (ZMod.castHom (show 2 ∣ 4 by norm_num) (ZMod 2)) x] at hx
+  set y : ZMod 4 := x
   -- Now we can just consider each of the 4 possible values for y
         fin_cases y <;>
         rw [hy] at hx⊢ <;>

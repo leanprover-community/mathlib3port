@@ -584,7 +584,7 @@ end Subgroup
 
 namespace Subgroup
 
-open Equiv Function MemLeftTransversals MulAction MulAction.quotient Zmod
+open Equiv Function MemLeftTransversals MulAction MulAction.quotient ZMod
 
 universe u
 
@@ -592,20 +592,20 @@ variable {G : Type u} [Group G] (H : Subgroup G) (g : G)
 
 /-- Partition `G ⧸ H` into orbits of the action of `g : G`. -/
 noncomputable def quotientEquivSigmaZmod :
-    G ⧸ H ≃ Σq : orbitRel.Quotient (zpowers g) (G ⧸ H), Zmod (minimalPeriod ((· • ·) g) q.out') :=
+    G ⧸ H ≃ Σq : orbitRel.Quotient (zpowers g) (G ⧸ H), ZMod (minimalPeriod ((· • ·) g) q.out') :=
   (selfEquivSigmaOrbits (zpowers g) (G ⧸ H)).trans
     (sigmaCongrRight fun q => orbitZpowersEquiv g q.out')
 #align subgroup.quotient_equiv_sigma_zmod Subgroup.quotientEquivSigmaZmod
 
 theorem quotientEquivSigmaZmod_symm_apply (q : orbitRel.Quotient (zpowers g) (G ⧸ H))
-    (k : Zmod (minimalPeriod ((· • ·) g) q.out')) :
+    (k : ZMod (minimalPeriod ((· • ·) g) q.out')) :
     (quotientEquivSigmaZmod H g).symm ⟨q, k⟩ = g ^ (k : ℤ) • q.out' :=
   rfl
 #align subgroup.quotient_equiv_sigma_zmod_symm_apply Subgroup.quotientEquivSigmaZmod_symm_apply
 
 theorem quotientEquivSigmaZmod_apply (q : orbitRel.Quotient (zpowers g) (G ⧸ H)) (k : ℤ) :
     quotientEquivSigmaZmod H g (g ^ k • q.out') = ⟨q, k⟩ := by
-  rw [apply_eq_iff_eq_symm_apply, quotient_equiv_sigma_zmod_symm_apply, Zmod.coe_int_cast,
+  rw [apply_eq_iff_eq_symm_apply, quotient_equiv_sigma_zmod_symm_apply, ZMod.coe_int_cast,
     zpow_smul_mod_minimal_period]
 #align subgroup.quotient_equiv_sigma_zmod_apply Subgroup.quotientEquivSigmaZmod_apply
 
@@ -649,14 +649,14 @@ theorem transferTransversal_apply (q : G ⧸ H) :
 #align subgroup.transfer_transversal_apply Subgroup.transferTransversal_apply
 
 theorem transferTransversal_apply' (q : orbitRel.Quotient (zpowers g) (G ⧸ H))
-    (k : Zmod (minimalPeriod ((· • ·) g) q.out')) :
+    (k : ZMod (minimalPeriod ((· • ·) g) q.out')) :
     ↑(toEquiv (transferTransversal H g).2 (g ^ (k : ℤ) • q.out')) = g ^ (k : ℤ) * q.out'.out' := by
   rw [transfer_transversal_apply, transfer_function_apply, ← quotient_equiv_sigma_zmod_symm_apply,
     apply_symm_apply]
 #align subgroup.transfer_transversal_apply' Subgroup.transferTransversal_apply'
 
 theorem transferTransversal_apply'' (q : orbitRel.Quotient (zpowers g) (G ⧸ H))
-    (k : Zmod (minimalPeriod ((· • ·) g) q.out')) :
+    (k : ZMod (minimalPeriod ((· • ·) g) q.out')) :
     ↑(toEquiv (g • transferTransversal H g).2 (g ^ (k : ℤ) • q.out')) =
       if k = 0 then g ^ minimalPeriod ((· • ·) g) q.out' * q.out'.out'
       else g ^ (k : ℤ) * q.out'.out' :=

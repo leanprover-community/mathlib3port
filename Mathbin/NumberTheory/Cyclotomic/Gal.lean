@@ -70,7 +70,7 @@ theorem autToPow_injective : Function.Injective <| hμ.autToPow K :=
     apply AlgEquiv.coe_algHom_injective
     apply (hμ.power_basis K).alg_hom_ext
     exact this
-  rw [Zmod.eq_iff_modEq_nat] at hfg
+  rw [ZMod.eq_iff_modEq_nat] at hfg
   refine' (hf.trans _).trans hg.symm
   rw [← rootsOfUnity.coe_pow _ hf'.some, ← rootsOfUnity.coe_pow _ hg'.some]
   congr 1
@@ -102,9 +102,9 @@ include h
 /-- The `mul_equiv` that takes an automorphism `f` to the element `k : (zmod n)ˣ` such that
   `f μ = μ ^ k`. A stronger version of `is_primitive_root.aut_to_pow`. -/
 @[simps]
-noncomputable def autEquivPow : (L ≃ₐ[K] L) ≃* (Zmod n)ˣ :=
+noncomputable def autEquivPow : (L ≃ₐ[K] L) ≃* (ZMod n)ˣ :=
   let hζ := zeta_spec n K L
-  let hμ t := hζ.pow_of_coprime _ (Zmod.val_coe_unit_coprime t)
+  let hμ t := hζ.pow_of_coprime _ (ZMod.val_coe_unit_coprime t)
   {
     (zeta_spec n K L).autToPow
       K with
@@ -115,7 +115,7 @@ noncomputable def autEquivPow : (L ≃ₐ[K] L) ≃* (Zmod n)ˣ :=
           simp only [IsPrimitiveRoot.powerBasis_gen]
           have hr :=
             IsPrimitiveRoot.minpoly_eq_cyclotomic_of_irreducible
-              ((zeta_spec n K L).pow_of_coprime _ (Zmod.val_coe_unit_coprime t)) h
+              ((zeta_spec n K L).pow_of_coprime _ (ZMod.val_coe_unit_coprime t)) h
           exact ((zeta_spec n K L).minpoly_eq_cyclotomic_of_irreducible h).symm.trans hr)
     left_inv := fun f => by
       simp only [MonoidHom.toFun_eq_coe]
@@ -135,8 +135,8 @@ noncomputable def autEquivPow : (L ≃ₐ[K] L) ≃* (Zmod n)ˣ :=
       simp only [← coe_coe, ← rootsOfUnity.coe_pow] at key
       replace key := rootsOfUnity.coe_injective key
       rw [pow_eq_pow_iff_modEq, ← orderOf_subgroup, ← orderOf_units, hζ.coe_to_roots_of_unity_coe, ←
-        (zeta_spec n K L).eq_order_of, ← Zmod.eq_iff_modEq_nat] at key
-      simp only [Zmod.nat_cast_val, Zmod.cast_id', id.def] at key
+        (zeta_spec n K L).eq_order_of, ← ZMod.eq_iff_modEq_nat] at key
+      simp only [ZMod.nat_cast_val, ZMod.cast_id', id.def] at key
       exact Units.ext key }
 #align is_cyclotomic_extension.aut_equiv_pow IsCyclotomicExtension.autEquivPow
 
@@ -148,7 +148,7 @@ variable {L}
 noncomputable def fromZetaAut : L ≃ₐ[K] L :=
   let hζ := (zeta_spec n K L).eq_pow_of_pow_eq_one hμ.pow_eq_one n.Pos
   (autEquivPow L h).symm <|
-    Zmod.unitOfCoprime hζ.some <|
+    ZMod.unitOfCoprime hζ.some <|
       ((zeta_spec n K L).pow_iff_coprime n.Pos hζ.some).mp <| hζ.some_spec.some_spec.symm ▸ hμ
 #align is_cyclotomic_extension.from_zeta_aut IsCyclotomicExtension.fromZetaAut
 
@@ -160,7 +160,7 @@ theorem fromZetaAut_spec : fromZetaAut hμ h (zeta n K L) = μ :=
   rw [← hζ.power_basis_gen K]
   rw [PowerBasis.equivOfMinpoly_gen, hμ.power_basis_gen K]
   convert h.some_spec.some_spec
-  exact Zmod.val_cast_of_lt h.some_spec.some
+  exact ZMod.val_cast_of_lt h.some_spec.some
 #align is_cyclotomic_extension.from_zeta_aut_spec IsCyclotomicExtension.fromZetaAut_spec
 
 end IsCyclotomicExtension
@@ -173,7 +173,7 @@ variable [Field L] (hμ : IsPrimitiveRoot μ n) [Algebra K L] [IsCyclotomicExten
 /-- `is_cyclotomic_extension.aut_equiv_pow` repackaged in terms of `gal`. Asserts that the
 Galois group of `cyclotomic n K` is equivalent to `(zmod n)ˣ` if `cyclotomic n K` is irreducible in
 the base field. -/
-noncomputable def galCyclotomicEquivUnitsZmod : (cyclotomic n K).Gal ≃* (Zmod n)ˣ :=
+noncomputable def galCyclotomicEquivUnitsZmod : (cyclotomic n K).Gal ≃* (ZMod n)ˣ :=
   (AlgEquiv.autCongr (IsSplittingField.algEquiv _ _)).symm.trans
     (IsCyclotomicExtension.autEquivPow L h)
 #align gal_cyclotomic_equiv_units_zmod galCyclotomicEquivUnitsZmod
@@ -181,7 +181,7 @@ noncomputable def galCyclotomicEquivUnitsZmod : (cyclotomic n K).Gal ≃* (Zmod 
 /-- `is_cyclotomic_extension.aut_equiv_pow` repackaged in terms of `gal`. Asserts that the
 Galois group of `X ^ n - 1` is equivalent to `(zmod n)ˣ` if `cyclotomic n K` is irreducible in the
 base field. -/
-noncomputable def galXPowEquivUnitsZmod : (X ^ (n : ℕ) - 1).Gal ≃* (Zmod n)ˣ :=
+noncomputable def galXPowEquivUnitsZmod : (X ^ (n : ℕ) - 1).Gal ≃* (ZMod n)ˣ :=
   (AlgEquiv.autCongr (IsSplittingField.algEquiv _ _)).symm.trans
     (IsCyclotomicExtension.autEquivPow L h)
 #align gal_X_pow_equiv_units_zmod galXPowEquivUnitsZmod

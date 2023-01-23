@@ -1282,9 +1282,9 @@ theorem linearIndependent_fin_cons {n} {v : Fin n → V} :
   convert Iff.rfl
   · ext
     -- TODO: why doesn't simp use `fin_succ_equiv_symm_coe` here?
-    rw [comp_app, comp_app, finSuccEquiv_symm_coe, Fin.cons_succ]
+    rw [comp_app, comp_app, finSuccEquiv_symm_some, Fin.cons_succ]
   · ext
-    rw [comp_app, comp_app, finSuccEquiv_symm_coe, Fin.cons_succ]
+    rw [comp_app, comp_app, finSuccEquiv_symm_some, Fin.cons_succ]
 #align linear_independent_fin_cons linearIndependent_fin_cons
 
 theorem linearIndependent_fin_snoc {n} {v : Fin n → V} :

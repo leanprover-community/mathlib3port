@@ -31,17 +31,17 @@ the bulk of the proof below.
 -/
 
 
-theorem sq_ne_two_fin_zmod_four (z : Zmod 4) : z * z ≠ 2 :=
+theorem sq_ne_two_fin_zMod_four (z : ZMod 4) : z * z ≠ 2 :=
   by
   change Fin 4 at z
   fin_cases z <;> norm_num [Fin.ext_iff, Fin.val_bit0, Fin.val_bit1]
-#align sq_ne_two_fin_zmod_four sq_ne_two_fin_zmod_four
+#align sq_ne_two_fin_zmod_four sq_ne_two_fin_zMod_four
 
 theorem Int.sq_ne_two_mod_four (z : ℤ) : z * z % 4 ≠ 2 :=
   by
   suffices ¬z * z % (4 : ℕ) = 2 % (4 : ℕ) by norm_num at this
-  rw [← Zmod.int_coe_eq_int_coe_iff']
-  simpa using sq_ne_two_fin_zmod_four _
+  rw [← ZMod.int_coe_eq_int_coe_iff']
+  simpa using sq_ne_two_fin_zMod_four _
 #align int.sq_ne_two_mod_four Int.sq_ne_two_mod_four
 
 noncomputable section

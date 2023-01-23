@@ -434,16 +434,16 @@ Used for Fox n-colorings of knots.
 -/
 @[nolint has_nonempty_instance]
 def Dihedral (n : ℕ) :=
-  Zmod n
+  ZMod n
 #align quandle.dihedral Quandle.Dihedral
 
 /-- The operation for the dihedral quandle.  It does not need to be an equivalence
 because it is an involution (see `dihedral_act.inv`).
 -/
-def dihedralAct (n : ℕ) (a : Zmod n) : Zmod n → Zmod n := fun b => 2 * a - b
+def dihedralAct (n : ℕ) (a : ZMod n) : ZMod n → ZMod n := fun b => 2 * a - b
 #align quandle.dihedral_act Quandle.dihedralAct
 
-theorem dihedralAct.inv (n : ℕ) (a : Zmod n) : Function.Involutive (dihedralAct n a) :=
+theorem dihedralAct.inv (n : ℕ) (a : ZMod n) : Function.Involutive (dihedralAct n a) :=
   by
   intro b
   dsimp [dihedral_act]

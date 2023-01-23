@@ -370,7 +370,7 @@ theorem natAbs_det_equiv (I : Ideal S) {E : Type _} [AddEquivClass E S I] (e : E
   haveI : ∀ i, NeZero (a i).natAbs := fun i =>
     ⟨Int.natAbs_ne_zero_of_ne_zero (Ideal.smithCoeffs_ne_zero b I hI i)⟩
   simp_rw [fintype.card_eq.mpr ⟨(Ideal.quotientEquivPiZmod I b hI).toEquiv⟩, Fintype.card_pi,
-    Zmod.card]
+    ZMod.card]
 #align ideal.nat_abs_det_equiv Ideal.natAbs_det_equiv
 
 /-- Let `b` be a basis for `S` over `ℤ` and `bI` a basis for `I` over `ℤ` of the same dimension.

@@ -38,11 +38,11 @@ variable (N : ℕ)
 
 -- mathport name: «exprSLMOD( )»
 local notation "SLMOD(" N ")" =>
-  @Matrix.SpecialLinearGroup.map (Fin 2) _ _ _ _ _ _ (Int.castRingHom (Zmod N))
+  @Matrix.SpecialLinearGroup.map (Fin 2) _ _ _ _ _ _ (Int.castRingHom (ZMod N))
 
 @[simp]
 theorem SL_reduction_mod_hom_val (N : ℕ) (γ : SL(2, ℤ)) :
-    ∀ i j : Fin 2, (SLMOD(N) γ : Matrix (Fin 2) (Fin 2) (Zmod N)) i j = ((↑ₘγ i j : ℤ) : Zmod N) :=
+    ∀ i j : Fin 2, (SLMOD(N) γ : Matrix (Fin 2) (Fin 2) (ZMod N)) i j = ((↑ₘγ i j : ℤ) : ZMod N) :=
   fun i j => rfl
 #align SL_reduction_mod_hom_val SL_reduction_mod_hom_val
 
@@ -59,9 +59,9 @@ theorem gamma_mem' (N : ℕ) (γ : SL(2, ℤ)) : γ ∈ gamma N ↔ SLMOD(N) γ 
 @[simp]
 theorem gamma_mem (N : ℕ) (γ : SL(2, ℤ)) :
     γ ∈ gamma N ↔
-      ((↑ₘγ 0 0 : ℤ) : Zmod N) = 1 ∧
-        ((↑ₘγ 0 1 : ℤ) : Zmod N) = 0 ∧
-          ((↑ₘγ 1 0 : ℤ) : Zmod N) = 0 ∧ ((↑ₘγ 1 1 : ℤ) : Zmod N) = 1 :=
+      ((↑ₘγ 0 0 : ℤ) : ZMod N) = 1 ∧
+        ((↑ₘγ 0 1 : ℤ) : ZMod N) = 0 ∧
+          ((↑ₘγ 1 0 : ℤ) : ZMod N) = 0 ∧ ((↑ₘγ 1 1 : ℤ) : ZMod N) = 1 :=
   by
   rw [gamma_mem']
   constructor
@@ -100,7 +100,7 @@ theorem gamma_zero_bot : gamma 0 = ⊥ := by
 modulo `N`. -/
 def gamma0 (N : ℕ) : Subgroup SL(2, ℤ)
     where
-  carrier := { g : SL(2, ℤ) | ((↑ₘg 1 0 : ℤ) : Zmod N) = 0 }
+  carrier := { g : SL(2, ℤ) | ((↑ₘg 1 0 : ℤ) : ZMod N) = 0 }
   one_mem' := by simp
   mul_mem' := by
     intro a b ha hb
@@ -120,18 +120,18 @@ def gamma0 (N : ℕ) : Subgroup SL(2, ℤ)
 #align Gamma0 gamma0
 
 @[simp]
-theorem gamma0_mem (N : ℕ) (A : SL(2, ℤ)) : A ∈ gamma0 N ↔ ((↑ₘA 1 0 : ℤ) : Zmod N) = 0 :=
+theorem gamma0_mem (N : ℕ) (A : SL(2, ℤ)) : A ∈ gamma0 N ↔ ((↑ₘA 1 0 : ℤ) : ZMod N) = 0 :=
   Iff.rfl
 #align Gamma0_mem gamma0_mem
 
-theorem gamma0_det (N : ℕ) (A : gamma0 N) : (A.1.1.det : Zmod N) = 1 := by simp [A.1.property]
+theorem gamma0_det (N : ℕ) (A : gamma0 N) : (A.1.1.det : ZMod N) = 1 := by simp [A.1.property]
 #align Gamma0_det gamma0_det
 
 /-- The group homomorphism from `Gamma0` to `zmod N` given by mapping a matrix to its lower
 right-hand entry. -/
-def gamma0Map (N : ℕ) : gamma0 N →* Zmod N
+def gamma0Map (N : ℕ) : gamma0 N →* ZMod N
     where
-  toFun g := ((↑ₘg 1 1 : ℤ) : Zmod N)
+  toFun g := ((↑ₘg 1 1 : ℤ) : ZMod N)
   map_one' := by simp
   map_mul' := by
     intro A B
@@ -159,7 +159,7 @@ theorem Gamma1_mem' (N : ℕ) (γ : gamma0 N) : γ ∈ gamma1' N ↔ (gamma0Map 
 
 theorem Gamma1_to_gamma0_mem (N : ℕ) (A : gamma0 N) :
     A ∈ gamma1' N ↔
-      ((↑ₘA 0 0 : ℤ) : Zmod N) = 1 ∧ ((↑ₘA 1 1 : ℤ) : Zmod N) = 1 ∧ ((↑ₘA 1 0 : ℤ) : Zmod N) = 0 :=
+      ((↑ₘA 0 0 : ℤ) : ZMod N) = 1 ∧ ((↑ₘA 1 1 : ℤ) : ZMod N) = 1 ∧ ((↑ₘA 1 0 : ℤ) : ZMod N) = 0 :=
   by
   constructor
   · intro ha
@@ -187,7 +187,7 @@ def gamma1 (N : ℕ) : Subgroup SL(2, ℤ) :=
 @[simp]
 theorem gamma1_mem (N : ℕ) (A : SL(2, ℤ)) :
     A ∈ gamma1 N ↔
-      ((↑ₘA 0 0 : ℤ) : Zmod N) = 1 ∧ ((↑ₘA 1 1 : ℤ) : Zmod N) = 1 ∧ ((↑ₘA 1 0 : ℤ) : Zmod N) = 0 :=
+      ((↑ₘA 0 0 : ℤ) : ZMod N) = 1 ∧ ((↑ₘA 1 1 : ℤ) : ZMod N) = 1 ∧ ((↑ₘA 1 0 : ℤ) : ZMod N) = 0 :=
   by
   constructor
   · intro ha

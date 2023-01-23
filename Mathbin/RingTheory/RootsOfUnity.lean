@@ -723,9 +723,9 @@ theorem pow_sub_one_eq [IsDomain R] {ζ : R} (hζ : IsPrimitiveRoot ζ k) (hk : 
 
 /-- The (additive) monoid equivalence between `zmod k`
 and the powers of a primitive root of unity `ζ`. -/
-def zmodEquivZpowers (h : IsPrimitiveRoot ζ k) : Zmod k ≃+ Additive (Subgroup.zpowers ζ) :=
+def zmodEquivZpowers (h : IsPrimitiveRoot ζ k) : ZMod k ≃+ Additive (Subgroup.zpowers ζ) :=
   AddEquiv.ofBijective
-    (AddMonoidHom.liftOfRightInverse (Int.castAddHom <| Zmod k) _ Zmod.int_cast_rightInverse
+    (AddMonoidHom.liftOfRightInverse (Int.castAddHom <| ZMod k) _ ZMod.int_cast_rightInverse
       ⟨{  toFun := fun i => Additive.ofMul (⟨_, i, rfl⟩ : Subgroup.zpowers ζ)
           map_zero' := by
             simp only [zpow_zero]
@@ -736,7 +736,7 @@ def zmodEquivZpowers (h : IsPrimitiveRoot ζ k) : Zmod k ≃+ Additive (Subgroup
             rfl },
         fun i hi =>
         by
-        simp only [AddMonoidHom.mem_ker, CharP.int_cast_eq_zero_iff (Zmod k) k, AddMonoidHom.coe_mk,
+        simp only [AddMonoidHom.mem_ker, CharP.int_cast_eq_zero_iff (ZMod k) k, AddMonoidHom.coe_mk,
           Int.coe_castAddHom] at hi⊢
         obtain ⟨i, rfl⟩ := hi
         simp only [zpow_mul, h.pow_eq_one, one_zpow, zpow_ofNat]
@@ -747,8 +747,8 @@ def zmodEquivZpowers (h : IsPrimitiveRoot ζ k) : Zmod k ≃+ Additive (Subgroup
         intro i hi
         rw [Subtype.ext_iff] at hi
         have := (h.zpow_eq_one_iff_dvd _).mp hi
-        rw [← (CharP.int_cast_eq_zero_iff (Zmod k) k _).mpr this, eq_comm]
-        exact Zmod.int_cast_rightInverse i
+        rw [← (CharP.int_cast_eq_zero_iff (ZMod k) k _).mpr this, eq_comm]
+        exact ZMod.int_cast_rightInverse i
       · rintro ⟨ξ, i, rfl⟩
         refine' ⟨Int.castAddHom _ i, _⟩
         rw [AddMonoidHom.lift_of_right_inverse_comp_apply]
@@ -758,14 +758,14 @@ def zmodEquivZpowers (h : IsPrimitiveRoot ζ k) : Zmod k ≃+ Additive (Subgroup
 @[simp]
 theorem zmodEquivZpowers_apply_coe_int (i : ℤ) :
     h.zmodEquivZpowers i = Additive.ofMul (⟨ζ ^ i, i, rfl⟩ : Subgroup.zpowers ζ) :=
-  AddMonoidHom.lift_of_right_inverse_comp_apply _ _ Zmod.int_cast_rightInverse _ _
+  AddMonoidHom.lift_of_right_inverse_comp_apply _ _ ZMod.int_cast_rightInverse _ _
 #align is_primitive_root.zmod_equiv_zpowers_apply_coe_int IsPrimitiveRoot.zmodEquivZpowers_apply_coe_int
 
 @[simp]
 theorem zmodEquivZpowers_apply_coe_nat (i : ℕ) :
     h.zmodEquivZpowers i = Additive.ofMul (⟨ζ ^ i, i, rfl⟩ : Subgroup.zpowers ζ) :=
   by
-  have : (i : Zmod k) = (i : ℤ) := by norm_cast
+  have : (i : ZMod k) = (i : ℤ) := by norm_cast
   simp only [this, zmod_equiv_zpowers_apply_coe_int, zpow_ofNat]
   rfl
 #align is_primitive_root.zmod_equiv_zpowers_apply_coe_nat IsPrimitiveRoot.zmodEquivZpowers_apply_coe_nat
@@ -805,7 +805,7 @@ theorem zpowers_eq {k : ℕ+} {ζ : Rˣ} (h : IsPrimitiveRoot ζ k) :
       (Subgroup.zpowers_subset <| show ζ ∈ rootsOfUnity k R from h.pow_eq_one) _
   calc
     Fintype.card (rootsOfUnity k R) ≤ k := card_rootsOfUnity R k
-    _ = Fintype.card (Zmod k) := (Zmod.card k).symm
+    _ = Fintype.card (ZMod k) := (ZMod.card k).symm
     _ = Fintype.card (Subgroup.zpowers ζ) := Fintype.card_congr h.zmod_equiv_zpowers.toEquiv
     
 #align is_primitive_root.zpowers_eq IsPrimitiveRoot.zpowers_eq
@@ -871,8 +871,8 @@ theorem card_roots_of_unity' {n : ℕ+} (h : IsPrimitiveRoot ζ n) :
   calc
     Fintype.card (rootsOfUnity n R) = Fintype.card (Subgroup.zpowers ζ) :=
       Fintype.card_congr <| by rw [h.zpowers_eq]
-    _ = Fintype.card (Zmod n) := Fintype.card_congr e.to_equiv.symm
-    _ = n := Zmod.card n
+    _ = Fintype.card (ZMod n) := Fintype.card_congr e.to_equiv.symm
+    _ = n := ZMod.card n
     
 #align is_primitive_root.card_roots_of_unity' IsPrimitiveRoot.card_roots_of_unity'
 
@@ -1046,19 +1046,19 @@ theorem minpoly_dvd_x_pow_sub_one : minpoly ℤ μ ∣ X ^ n - 1 :=
 
 /-- The reduction modulo `p` of the minimal polynomial of a root of unity `μ` is separable. -/
 theorem separable_minpoly_mod {p : ℕ} [Fact p.Prime] (hdiv : ¬p ∣ n) :
-    Separable (map (Int.castRingHom (Zmod p)) (minpoly ℤ μ)) :=
+    Separable (map (Int.castRingHom (ZMod p)) (minpoly ℤ μ)) :=
   by
-  have hdvd : map (Int.castRingHom (Zmod p)) (minpoly ℤ μ) ∣ X ^ n - 1 := by
+  have hdvd : map (Int.castRingHom (ZMod p)) (minpoly ℤ μ) ∣ X ^ n - 1 := by
     simpa [Polynomial.map_pow, map_X, Polynomial.map_one, Polynomial.map_sub] using
-      RingHom.map_dvd (map_ring_hom (Int.castRingHom (Zmod p))) (minpoly_dvd_X_pow_sub_one h)
+      RingHom.map_dvd (map_ring_hom (Int.castRingHom (ZMod p))) (minpoly_dvd_X_pow_sub_one h)
   refine' separable.of_dvd (separable_X_pow_sub_C 1 _ one_neZero) hdvd
   by_contra hzero
-  exact hdiv ((Zmod.nat_coe_zmod_eq_zero_iff_dvd n p).1 hzero)
+  exact hdiv ((ZMod.nat_coe_zMod_eq_zero_iff_dvd n p).1 hzero)
 #align is_primitive_root.separable_minpoly_mod IsPrimitiveRoot.separable_minpoly_mod
 
 /-- The reduction modulo `p` of the minimal polynomial of a root of unity `μ` is squarefree. -/
 theorem squarefree_minpoly_mod {p : ℕ} [Fact p.Prime] (hdiv : ¬p ∣ n) :
-    Squarefree (map (Int.castRingHom (Zmod p)) (minpoly ℤ μ)) :=
+    Squarefree (map (Int.castRingHom (ZMod p)) (minpoly ℤ μ)) :=
   (separable_minpoly_mod h hdiv).Squarefree
 #align is_primitive_root.squarefree_minpoly_mod IsPrimitiveRoot.squarefree_minpoly_mod
 
@@ -1082,23 +1082,23 @@ theorem minpoly_dvd_expand {p : ℕ} (hprime : Nat.Prime p) (hdiv : ¬p ∣ n) :
 /- Let `P` be the minimal polynomial of a root of unity `μ` and `Q` be the minimal polynomial of
 `μ ^ p`, where `p` is a prime that does not divide `n`. Then `P` divides `Q ^ p` modulo `p`. -/
 theorem minpoly_dvd_pow_mod {p : ℕ} [hprime : Fact p.Prime] (hdiv : ¬p ∣ n) :
-    map (Int.castRingHom (Zmod p)) (minpoly ℤ μ) ∣
-      map (Int.castRingHom (Zmod p)) (minpoly ℤ (μ ^ p)) ^ p :=
+    map (Int.castRingHom (ZMod p)) (minpoly ℤ μ) ∣
+      map (Int.castRingHom (ZMod p)) (minpoly ℤ (μ ^ p)) ^ p :=
   by
   set Q := minpoly ℤ (μ ^ p)
   have hfrob :
-    map (Int.castRingHom (Zmod p)) Q ^ p = map (Int.castRingHom (Zmod p)) (expand ℤ p Q) := by
-    rw [← Zmod.expand_card, map_expand]
+    map (Int.castRingHom (ZMod p)) Q ^ p = map (Int.castRingHom (ZMod p)) (expand ℤ p Q) := by
+    rw [← ZMod.expand_card, map_expand]
   rw [hfrob]
-  apply RingHom.map_dvd (map_ring_hom (Int.castRingHom (Zmod p)))
+  apply RingHom.map_dvd (map_ring_hom (Int.castRingHom (ZMod p)))
   exact minpoly_dvd_expand h hprime.1 hdiv
 #align is_primitive_root.minpoly_dvd_pow_mod IsPrimitiveRoot.minpoly_dvd_pow_mod
 
 /- Let `P` be the minimal polynomial of a root of unity `μ` and `Q` be the minimal polynomial of
 `μ ^ p`, where `p` is a prime that does not divide `n`. Then `P` divides `Q` modulo `p`. -/
 theorem minpoly_dvd_mod_p {p : ℕ} [hprime : Fact p.Prime] (hdiv : ¬p ∣ n) :
-    map (Int.castRingHom (Zmod p)) (minpoly ℤ μ) ∣
-      map (Int.castRingHom (Zmod p)) (minpoly ℤ (μ ^ p)) :=
+    map (Int.castRingHom (ZMod p)) (minpoly ℤ μ) ∣
+      map (Int.castRingHom (ZMod p)) (minpoly ℤ (μ ^ p)) :=
   (UniqueFactorizationMonoid.dvd_pow_iff_dvd_of_squarefree (squarefree_minpoly_mod h hdiv)
         hprime.1.NeZero).1
     (minpoly_dvd_pow_mod h hdiv)
@@ -1136,27 +1136,27 @@ theorem minpoly_eq_pow {p : ℕ} [hprime : Fact p.Prime] (hdiv : ¬p ∣ n) :
       exact minpoly_dvd_X_pow_sub_one h
     · apply (map_dvd_map (Int.castRingHom ℚ) Int.cast_injective Qmonic).2
       exact minpoly_dvd_X_pow_sub_one (pow_of_prime h hprime.1 hdiv)
-  replace prod := RingHom.map_dvd (map_ring_hom (Int.castRingHom (Zmod p))) Prod
+  replace prod := RingHom.map_dvd (map_ring_hom (Int.castRingHom (ZMod p))) Prod
   rw [coe_map_ring_hom, Polynomial.map_mul, Polynomial.map_sub, Polynomial.map_one,
     Polynomial.map_pow, map_X] at prod
   obtain ⟨R, hR⟩ := minpoly_dvd_mod_p h hdiv
   rw [hR, ← mul_assoc, ← Polynomial.map_mul, ← sq, Polynomial.map_pow] at prod
-  have habs : map (Int.castRingHom (Zmod p)) P ^ 2 ∣ map (Int.castRingHom (Zmod p)) P ^ 2 * R := by
+  have habs : map (Int.castRingHom (ZMod p)) P ^ 2 ∣ map (Int.castRingHom (ZMod p)) P ^ 2 * R := by
     use R
   replace habs :=
     lt_of_lt_of_le (PartEnat.coe_lt_coe.2 one_lt_two)
       (multiplicity.le_multiplicity_of_pow_dvd (dvd_trans habs Prod))
-  have hfree : Squarefree (X ^ n - 1 : (Zmod p)[X]) :=
-    (separable_X_pow_sub_C 1 (fun h => hdiv <| (Zmod.nat_coe_zmod_eq_zero_iff_dvd n p).1 h)
+  have hfree : Squarefree (X ^ n - 1 : (ZMod p)[X]) :=
+    (separable_X_pow_sub_C 1 (fun h => hdiv <| (ZMod.nat_coe_zMod_eq_zero_iff_dvd n p).1 h)
         one_neZero).Squarefree
   cases'
     (multiplicity.squarefree_iff_multiplicity_le_one (X ^ n - 1)).1 hfree
-      (map (Int.castRingHom (Zmod p)) P) with
+      (map (Int.castRingHom (ZMod p)) P) with
     hle hunit
   · rw [Nat.cast_one] at habs
     exact hle.not_lt habs
   · replace hunit := degree_eq_zero_of_is_unit hunit
-    rw [degree_map_eq_of_leading_coeff_ne_zero (Int.castRingHom (Zmod p)) _] at hunit
+    rw [degree_map_eq_of_leading_coeff_ne_zero (Int.castRingHom (ZMod p)) _] at hunit
     · exact (minpoly.degree_pos (IsIntegral h hpos)).ne' hunit
     simp only [Pmonic, eq_intCast, monic.leading_coeff, Int.cast_one, Ne.def, not_false_iff,
       one_neZero]
@@ -1238,7 +1238,7 @@ variable {S} [CommRing S] [IsDomain S] {μ : S} {n : ℕ+} (hμ : IsPrimitiveRoo
 
 /- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:132:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([1]) } -/
 /-- The `monoid_hom` that takes an automorphism to the power of μ that μ gets mapped to under it. -/
-noncomputable def autToPow : (S ≃ₐ[R] S) →* (Zmod n)ˣ :=
+noncomputable def autToPow : (S ≃ₐ[R] S) →* (ZMod n)ˣ :=
   let μ' := hμ.toRootsOfUnity
   have ho : orderOf μ' = n := by
     rw [hμ.eq_order_of, ← hμ.coe_to_roots_of_unity_coe, orderOf_units, orderOf_subgroup]
@@ -1252,7 +1252,7 @@ noncomputable def autToPow : (S ≃ₐ[R] S) →* (Zmod n)ˣ :=
         replace h : μ' = μ' ^ h1.some :=
           rootsOfUnity.coe_injective (by simpa only [rootsOfUnity.coe_pow] using h)
         rw [← pow_one μ'] at h
-        rw [← @Nat.cast_one <| Zmod n, Zmod.nat_coe_eq_nat_coe_iff, ← ho, ← pow_eq_pow_iff_modEq μ',
+        rw [← @Nat.cast_one <| ZMod n, ZMod.nat_coe_eq_nat_coe_iff, ← ho, ← pow_eq_pow_iff_modEq μ',
           h]
       map_mul' := by
         generalize_proofs hxy' hx' hy'
@@ -1267,18 +1267,18 @@ noncomputable def autToPow : (S ≃ₐ[R] S) →* (Zmod n)ˣ :=
         rw [← pow_mul] at hxy
         replace hxy : μ' ^ (hx'.some * hy'.some) = μ' ^ hxy'.some :=
           rootsOfUnity.coe_injective (by simpa only [rootsOfUnity.coe_pow] using hxy)
-        rw [← Nat.cast_mul, Zmod.nat_coe_eq_nat_coe_iff, ← ho, ← pow_eq_pow_iff_modEq μ', hxy] }
+        rw [← Nat.cast_mul, ZMod.nat_coe_eq_nat_coe_iff, ← ho, ← pow_eq_pow_iff_modEq μ', hxy] }
 #align is_primitive_root.aut_to_pow IsPrimitiveRoot.autToPow
 
 -- We are not using @[simps] in aut_to_pow to avoid a timeout.
 theorem coe_autToPow_apply (f : S ≃ₐ[R] S) :
-    (autToPow R hμ f : Zmod n) =
-      ((map_root_of_unity_eq_pow_self f hμ.toRootsOfUnity).some : Zmod n) :=
+    (autToPow R hμ f : ZMod n) =
+      ((map_root_of_unity_eq_pow_self f hμ.toRootsOfUnity).some : ZMod n) :=
   rfl
 #align is_primitive_root.coe_aut_to_pow_apply IsPrimitiveRoot.coe_autToPow_apply
 
 @[simp]
-theorem autToPow_spec (f : S ≃ₐ[R] S) : μ ^ (hμ.autToPow R f : Zmod n).val = f μ :=
+theorem autToPow_spec (f : S ≃ₐ[R] S) : μ ^ (hμ.autToPow R f : ZMod n).val = f μ :=
   by
   rw [IsPrimitiveRoot.coe_autToPow_apply]
   generalize_proofs h
@@ -1288,7 +1288,7 @@ theorem autToPow_spec (f : S ≃ₐ[R] S) : μ ^ (hμ.autToPow R f : Zmod n).val
   rw [← rootsOfUnity.coe_pow, ← rootsOfUnity.coe_pow]
   congr 1
   rw [pow_eq_pow_iff_modEq, ← orderOf_subgroup, ← orderOf_units, hμ.coe_to_roots_of_unity_coe, ←
-    hμ.eq_order_of, Zmod.val_nat_cast]
+    hμ.eq_order_of, ZMod.val_nat_cast]
   exact Nat.mod_modEq _ _
 #align is_primitive_root.aut_to_pow_spec IsPrimitiveRoot.autToPow_spec
 

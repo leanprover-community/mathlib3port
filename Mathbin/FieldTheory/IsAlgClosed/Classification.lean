@@ -212,21 +212,21 @@ private theorem ring_equiv_of_cardinal_eq_of_char_p (p : ℕ) [Fact p.Prime] [Ch
   by
   apply Classical.choice
   cases'
-    exists_isTranscendenceBasis (Zmod p)
-      (show Function.Injective (algebraMap (Zmod p) K) from RingHom.injective _) with
+    exists_isTranscendenceBasis (ZMod p)
+      (show Function.Injective (algebraMap (ZMod p) K) from RingHom.injective _) with
     s hs
   cases'
-    exists_isTranscendenceBasis (Zmod p)
-      (show Function.Injective (algebraMap (Zmod p) L) from RingHom.injective _) with
+    exists_isTranscendenceBasis (ZMod p)
+      (show Function.Injective (algebraMap (ZMod p) L) from RingHom.injective _) with
     t ht
   have : (#s) = (#t) :=
     by
     rw [←
-      cardinal_eq_cardinal_transcendence_basis_of_aleph_0_lt _ hs (lt_aleph_0_of_finite (Zmod p)).le
+      cardinal_eq_cardinal_transcendence_basis_of_aleph_0_lt _ hs (lt_aleph_0_of_finite (ZMod p)).le
         hK,
       ←
       cardinal_eq_cardinal_transcendence_basis_of_aleph_0_lt _ ht
-        (lt_aleph_0_of_finite (Zmod p)).le,
+        (lt_aleph_0_of_finite (ZMod p)).le,
       hKL]
     rwa [← hKL]
   cases' Cardinal.eq.1 this with e

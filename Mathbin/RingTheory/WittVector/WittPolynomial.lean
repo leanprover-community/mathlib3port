@@ -158,18 +158,18 @@ theorem aeval_wittPolynomial {A : Type _} [CommRing A] [Algebra R A] (f : ℕ �
 by expanding the `n`th Witt polynomial by `p`.
 -/
 @[simp]
-theorem wittPolynomial_zmod_self (n : ℕ) :
-    W_ (Zmod (p ^ (n + 1))) (n + 1) = expand p (W_ (Zmod (p ^ (n + 1))) n) :=
+theorem wittPolynomial_zMod_self (n : ℕ) :
+    W_ (ZMod (p ^ (n + 1))) (n + 1) = expand p (W_ (ZMod (p ^ (n + 1))) n) :=
   by
   simp only [wittPolynomial_eq_sum_c_mul_x_pow]
-  rw [sum_range_succ, ← Nat.cast_pow, CharP.cast_eq_zero (Zmod (p ^ (n + 1))) (p ^ (n + 1)), C_0,
+  rw [sum_range_succ, ← Nat.cast_pow, CharP.cast_eq_zero (ZMod (p ^ (n + 1))) (p ^ (n + 1)), C_0,
     zero_mul, add_zero, AlgHom.map_sum, sum_congr rfl]
   intro k hk
   rw [AlgHom.map_mul, AlgHom.map_pow, expand_X, alg_hom_C, ← pow_mul, ← pow_succ]
   congr
   rw [mem_range] at hk
   rw [add_comm, add_tsub_assoc_of_le (nat.lt_succ_iff.mp hk), ← add_comm]
-#align witt_polynomial_zmod_self wittPolynomial_zmod_self
+#align witt_polynomial_zmod_self wittPolynomial_zMod_self
 
 section PPrime
 

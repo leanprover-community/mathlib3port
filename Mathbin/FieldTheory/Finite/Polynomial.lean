@@ -25,31 +25,31 @@ variable {σ : Type _}
 
 /-- A polynomial over the integers is divisible by `n : ℕ`
 if and only if it is zero over `zmod n`. -/
-theorem c_dvd_iff_zmod (n : ℕ) (φ : MvPolynomial σ ℤ) :
-    c (n : ℤ) ∣ φ ↔ map (Int.castRingHom (Zmod n)) φ = 0 :=
-  c_dvd_iff_map_hom_eq_zero _ _ (CharP.int_cast_eq_zero_iff (Zmod n) n) _
-#align mv_polynomial.C_dvd_iff_zmod MvPolynomial.c_dvd_iff_zmod
+theorem c_dvd_iff_zMod (n : ℕ) (φ : MvPolynomial σ ℤ) :
+    c (n : ℤ) ∣ φ ↔ map (Int.castRingHom (ZMod n)) φ = 0 :=
+  c_dvd_iff_map_hom_eq_zero _ _ (CharP.int_cast_eq_zero_iff (ZMod n) n) _
+#align mv_polynomial.C_dvd_iff_zmod MvPolynomial.c_dvd_iff_zMod
 
 section frobenius
 
 variable {p : ℕ} [Fact p.Prime]
 
-theorem frobenius_zmod (f : MvPolynomial σ (Zmod p)) : frobenius _ p f = expand p f :=
+theorem frobenius_zMod (f : MvPolynomial σ (ZMod p)) : frobenius _ p f = expand p f :=
   by
   apply induction_on f
   · intro a
-    rw [expand_C, frobenius_def, ← C_pow, Zmod.pow_card]
+    rw [expand_C, frobenius_def, ← C_pow, ZMod.pow_card]
   · simp only [AlgHom.map_add, RingHom.map_add]
     intro _ _ hf hg
     rw [hf, hg]
   · simp only [expand_X, RingHom.map_mul, AlgHom.map_mul]
     intro _ _ hf
     rw [hf, frobenius_def]
-#align mv_polynomial.frobenius_zmod MvPolynomial.frobenius_zmod
+#align mv_polynomial.frobenius_zmod MvPolynomial.frobenius_zMod
 
-theorem expand_zmod (f : MvPolynomial σ (Zmod p)) : expand p f = f ^ p :=
-  (frobenius_zmod _).symm
-#align mv_polynomial.expand_zmod MvPolynomial.expand_zmod
+theorem expand_zMod (f : MvPolynomial σ (ZMod p)) : expand p f = f ^ p :=
+  (frobenius_zMod _).symm
+#align mv_polynomial.expand_zmod MvPolynomial.expand_zMod
 
 end frobenius
 

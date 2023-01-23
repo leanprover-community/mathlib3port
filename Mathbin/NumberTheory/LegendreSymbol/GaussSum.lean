@@ -260,7 +260,7 @@ in this way, the result is reduced to `card_pow_char_pow`.
 -/
 
 
-open Zmod
+open ZMod
 
 /-- For every finite field `F` of odd characteristic, we have `2^(#F/2) = χ₈(#F)` in `F`. -/
 theorem FiniteField.two_pow_card {F : Type _} [Fintype F] [Field F] (hF : ringChar F ≠ 2) :
@@ -278,7 +278,7 @@ theorem FiniteField.two_pow_card {F : Type _} [Fintype F] [Field F] (hF : ringCh
   haveI := Fact.mk FFp
   have hFF := ne_of_eq_of_ne hchar.symm hF
   -- `ring_char FF ≠ 2`
-  have hu : IsUnit (ringChar FF : Zmod 8) :=
+  have hu : IsUnit (ringChar FF : ZMod 8) :=
     by
     rw [isUnit_iff_not_dvd_char, ring_char_zmod_n]
     rw [Ne, ← Nat.prime_dvd_prime_iff_eq FFp Nat.prime_two] at hFF
@@ -291,14 +291,14 @@ theorem FiniteField.two_pow_card {F : Type _} [Fintype F] [Field F] (hF : ringCh
   have τ_spec : τ ^ 4 = -1 := by
     refine' (sq_eq_one_iff.1 _).resolve_left _ <;>
       · simp only [τ, ← map_nsmul_pow]
-        erw [AddChar.IsPrimitive.zmod_char_eq_one_iff 8 ψ₈.prim]
+        erw [AddChar.IsPrimitive.zMod_char_eq_one_iff 8 ψ₈.prim]
         decide
   -- we consider `χ₈` as a multiplicative character `ℤ/8ℤ → FF`
   let χ := χ₈.ring_hom_comp (Int.castRingHom FF)
   have hχ : χ (-1) = 1 := NormNum.int_cast_one
   have hq : is_quadratic χ := is_quadratic_χ₈.comp _
   -- we now show that the Gauss sum of `χ` and `ψ₈` has the relevant property
-  have hg : gaussSum χ ψ₈.char ^ 2 = χ (-1) * Fintype.card (Zmod 8) :=
+  have hg : gaussSum χ ψ₈.char ^ 2 = χ (-1) * Fintype.card (ZMod 8) :=
     by
     rw [hχ, one_mul, card, gaussSum]
     convert ← congr_arg (· ^ 2) (Fin.sum_univ_eight fun x => (χ₈ x : FF) * τ ^ x.val)

@@ -225,14 +225,14 @@ theorem ι_range_comap_involute :
 #align clifford_algebra.ι_range_comap_involute CliffordAlgebra.ι_range_comap_involute
 
 @[simp]
-theorem evenOdd_map_involute (n : Zmod 2) :
+theorem evenOdd_map_involute (n : ZMod 2) :
     (evenOdd Q n).map (involute : CliffordAlgebra Q →ₐ[R] CliffordAlgebra Q).toLinearMap =
       evenOdd Q n :=
   by simp_rw [even_odd, Submodule.map_supᵢ, Submodule.map_pow, ι_range_map_involute]
 #align clifford_algebra.even_odd_map_involute CliffordAlgebra.evenOdd_map_involute
 
 @[simp]
-theorem evenOdd_comap_involute (n : Zmod 2) :
+theorem evenOdd_comap_involute (n : ZMod 2) :
     (evenOdd Q n).comap (involute : CliffordAlgebra Q →ₐ[R] CliffordAlgebra Q).toLinearMap =
       evenOdd Q n :=
   by rw [← submodule_map_involute_eq_comap, even_odd_map_involute]
@@ -295,13 +295,13 @@ theorem submodule_comap_pow_reverse (p : Submodule R (CliffordAlgebra Q)) (n : �
 #align clifford_algebra.submodule_comap_pow_reverse CliffordAlgebra.submodule_comap_pow_reverse
 
 @[simp]
-theorem evenOdd_map_reverse (n : Zmod 2) :
+theorem evenOdd_map_reverse (n : ZMod 2) :
     (evenOdd Q n).map (reverse : CliffordAlgebra Q →ₗ[R] CliffordAlgebra Q) = evenOdd Q n := by
   simp_rw [even_odd, Submodule.map_supᵢ, submodule_map_pow_reverse, ι_range_map_reverse]
 #align clifford_algebra.even_odd_map_reverse CliffordAlgebra.evenOdd_map_reverse
 
 @[simp]
-theorem evenOdd_comap_reverse (n : Zmod 2) :
+theorem evenOdd_comap_reverse (n : ZMod 2) :
     (evenOdd Q n).comap (reverse : CliffordAlgebra Q →ₗ[R] CliffordAlgebra Q) = evenOdd Q n := by
   rw [← submodule_map_reverse_eq_comap, even_odd_map_reverse]
 #align clifford_algebra.even_odd_comap_reverse CliffordAlgebra.evenOdd_comap_reverse
@@ -309,13 +309,13 @@ theorem evenOdd_comap_reverse (n : Zmod 2) :
 end Reverse
 
 @[simp]
-theorem involute_mem_evenOdd_iff {x : CliffordAlgebra Q} {n : Zmod 2} :
+theorem involute_mem_evenOdd_iff {x : CliffordAlgebra Q} {n : ZMod 2} :
     involute x ∈ evenOdd Q n ↔ x ∈ evenOdd Q n :=
   SetLike.ext_iff.mp (evenOdd_comap_involute Q n) x
 #align clifford_algebra.involute_mem_even_odd_iff CliffordAlgebra.involute_mem_evenOdd_iff
 
 @[simp]
-theorem reverse_mem_evenOdd_iff {x : CliffordAlgebra Q} {n : Zmod 2} :
+theorem reverse_mem_evenOdd_iff {x : CliffordAlgebra Q} {n : ZMod 2} :
     reverse x ∈ evenOdd Q n ↔ x ∈ evenOdd Q n :=
   SetLike.ext_iff.mp (evenOdd_comap_reverse Q n) x
 #align clifford_algebra.reverse_mem_even_odd_iff CliffordAlgebra.reverse_mem_evenOdd_iff
