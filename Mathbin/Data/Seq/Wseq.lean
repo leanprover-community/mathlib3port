@@ -557,10 +557,10 @@ theorem LiftRel.trans (R : α → α → Prop) (H : Transitive R) : Transitive (
   have h2 := lift_rel_destruct h2
   refine'
     Computation.liftRel_def.2
-      ⟨(Computation.terminates_of_liftRel h1).trans (Computation.terminates_of_liftRel h2),
+      ⟨(Computation.terminates_of_LiftRel h1).trans (Computation.terminates_of_LiftRel h2),
         fun a c ha hc => _⟩
   rcases h1.left ha with ⟨b, hb, t1⟩
-  have t2 := Computation.rel_of_liftRel h2 hb hc
+  have t2 := Computation.rel_of_LiftRel h2 hb hc
   cases' a with a <;> cases' c with c
   · trivial
   · cases b
@@ -613,16 +613,16 @@ theorem Equiv.equivalence : Equivalence (@Equiv α) :=
 open Computation
 
 -- mathport name: exprreturn
-local notation "return" => Computation.return
+local notation "return" => Computation.pure
 
 @[simp]
 theorem destruct_nil : destruct (nil : Wseq α) = return none :=
-  Computation.destruct_eq_ret rfl
+  Computation.destruct_eq_pure rfl
 #align wseq.destruct_nil Wseq.destruct_nil
 
 @[simp]
 theorem destruct_cons (a : α) (s) : destruct (cons a s) = return (some (a, s)) :=
-  Computation.destruct_eq_ret <| by simp [destruct, cons, Computation.rmap]
+  Computation.destruct_eq_pure <| by simp [destruct, cons, Computation.rmap]
 #align wseq.destruct_cons Wseq.destruct_cons
 
 @[simp]
@@ -808,7 +808,7 @@ theorem drop.aux_none : ∀ n, @drop.aux α n none = return none
 #align wseq.drop.aux_none Wseq.drop.aux_none
 
 theorem destruct_dropn : ∀ (s : Wseq α) (n), destruct (drop s n) = destruct s >>= drop.aux n
-  | s, 0 => (bind_ret' _).symm
+  | s, 0 => (bind_pure' _).symm
   | s, n + 1 => by
     rw [← dropn_tail, destruct_dropn _ n, destruct_tail, LawfulMonad.bind_assoc] <;> rfl
 #align wseq.destruct_dropn Wseq.destruct_dropn
@@ -1252,7 +1252,7 @@ theorem ofList_cons (a : α) (l) : ofList (a::l) = cons a (ofList l) :=
 
 @[simp]
 theorem to_list'_nil (l : List α) : corec ToList._match2 (l, nil) = return l.reverse :=
-  destruct_eq_ret rfl
+  destruct_eq_pure rfl
 #align wseq.to_list'_nil Wseq.to_list'_nil
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -1292,7 +1292,7 @@ theorem toList_cons (a : α) (s) : toList (cons a s) = (List.cons a <$> toList s
 
 @[simp]
 theorem toList_nil : toList (nil : Wseq α) = return [] :=
-  destruct_eq_ret rfl
+  destruct_eq_pure rfl
 #align wseq.to_list_nil Wseq.toList_nil
 
 theorem toList_ofList (l : List α) : l ∈ toList (ofList l) := by
@@ -1558,7 +1558,7 @@ theorem LiftRelJoin.lem (R : α → β → Prop) {S T} {U : Wseq α → Wseq β 
   intro n IH a S T ST ra; simp [destruct_join] at ra;
   exact
     let ⟨o, m, k, rs1, rs2, en⟩ := of_results_bind ra
-    let ⟨p, mT, rop⟩ := Computation.exists_of_liftRel_left (lift_rel_destruct ST) rs1.Mem
+    let ⟨p, mT, rop⟩ := Computation.exists_of_LiftRel_left (lift_rel_destruct ST) rs1.Mem
     match o, p, rop, rs1, rs2, mT with
     | none, none, _, rs1, rs2, mT => by
       simp only [destruct_join] <;>
@@ -1568,7 +1568,7 @@ theorem LiftRelJoin.lem (R : α → β → Prop) {S T} {U : Wseq α → Wseq β 
         exact
           let ⟨k1, rs3, ek⟩ := of_results_think rs2
           let ⟨o', m1, n1, rs4, rs5, ek1⟩ := of_results_bind rs3
-          let ⟨p', mt, rop'⟩ := Computation.exists_of_liftRel_left (lift_rel_destruct st) rs4.Mem
+          let ⟨p', mt, rop'⟩ := Computation.exists_of_LiftRel_left (lift_rel_destruct st) rs4.Mem
           match o', p', rop', rs4, rs5, mt with
           | none, none, _, rs4, rs5', mt =>
             by

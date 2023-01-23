@@ -156,7 +156,7 @@ theorem IsLocalMaxOn.isLocalMax (hf : IsLocalMaxOn f s a) (hs : s ∈ 𝓝 a) : 
 #align is_local_max_on.is_local_max IsLocalMaxOn.isLocalMax
 
 theorem IsLocalExtrOn.isLocalExtr (hf : IsLocalExtrOn f s a) (hs : s ∈ 𝓝 a) : IsLocalExtr f a :=
-  hf.elim (fun hf => (hf.IsLocalMin hs).is_extr) fun hf => (hf.IsLocalMax hs).is_extr
+  hf.elim (fun hf => (hf.IsLocalMin hs).isExtr) fun hf => (hf.IsLocalMax hs).isExtr
 #align is_local_extr_on.is_local_extr IsLocalExtrOn.isLocalExtr
 
 theorem IsMinOn.isLocalMin (hf : IsMinOn f s a) (hs : s ∈ 𝓝 a) : IsLocalMin f a :=
@@ -333,8 +333,8 @@ theorem IsLocalMax.comp_continuousOn [TopologicalSpace δ] {s : Set δ} {g : δ 
 
 theorem IsLocalExtr.comp_continuousOn [TopologicalSpace δ] {s : Set δ} (g : δ → α) {b : δ}
     (hf : IsLocalExtr f (g b)) (hg : ContinuousOn g s) (hb : b ∈ s) : IsLocalExtrOn (f ∘ g) s b :=
-  hf.elim (fun hf => (hf.comp_continuous_on hg hb).is_extr) fun hf =>
-    (IsLocalMax.comp_continuousOn hf hg hb).is_extr
+  hf.elim (fun hf => (hf.comp_continuous_on hg hb).isExtr) fun hf =>
+    (IsLocalMax.comp_continuousOn hf hg hb).isExtr
 #align is_local_extr.comp_continuous_on IsLocalExtr.comp_continuousOn
 
 theorem IsLocalMinOn.comp_continuousOn [TopologicalSpace δ] {t : Set α} {s : Set δ} {g : δ → α}
@@ -356,8 +356,8 @@ theorem IsLocalMaxOn.comp_continuousOn [TopologicalSpace δ] {t : Set α} {s : S
 theorem IsLocalExtrOn.comp_continuousOn [TopologicalSpace δ] {t : Set α} {s : Set δ} (g : δ → α)
     {b : δ} (hf : IsLocalExtrOn f t (g b)) (hst : s ⊆ g ⁻¹' t) (hg : ContinuousOn g s)
     (hb : b ∈ s) : IsLocalExtrOn (f ∘ g) s b :=
-  hf.elim (fun hf => (hf.comp_continuous_on hst hg hb).is_extr) fun hf =>
-    (IsLocalMaxOn.comp_continuousOn hf hst hg hb).is_extr
+  hf.elim (fun hf => (hf.comp_continuous_on hst hg hb).isExtr) fun hf =>
+    (IsLocalMaxOn.comp_continuousOn hf hst hg hb).isExtr
 #align is_local_extr_on.comp_continuous_on IsLocalExtrOn.comp_continuousOn
 
 end Preorder
