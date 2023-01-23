@@ -158,7 +158,7 @@ then this function will not terminate.
 -/
 def filter (p : α → Prop) [DecidablePred p] : LazyList α → LazyList α
   | nil => nil
-  | cons h t => if p h then cons h (filter (t ())) else filter (t ())
+  | cons h t => if p h then cons h (Filter (t ())) else Filter (t ())
 #align lazy_list.filter LazyList.filter
 -/
 

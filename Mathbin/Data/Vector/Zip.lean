@@ -22,16 +22,30 @@ section ZipWith
 
 variable {α β γ : Type _} {n : ℕ} (f : α → β → γ)
 
+#print Vector.zipWith /-
 /-- Apply the function `f : α → β → γ` to each corresponding pair of elements from two vectors. -/
 def zipWith : Vector α n → Vector β n → Vector γ n := fun x y => ⟨List.zipWith f x.1 y.1, by simp⟩
 #align vector.zip_with Vector.zipWith
+-/
 
+/- warning: vector.zip_with_to_list -> Vector.zipWith_toList is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {n : Nat} (f : α -> β -> γ) (x : Vector.{u1} α n) (y : Vector.{u2} β n), Eq.{succ u3} (List.{u3} γ) (Vector.toList.{u3} γ n (Vector.zipWith.{u1, u2, u3} α β γ n f x y)) (List.zipWith.{u1, u2, u3} α β γ f (Vector.toList.{u1} α n x) (Vector.toList.{u2} β n y))
+but is expected to have type
+  forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} {n : Nat} (f : α -> β -> γ) (x : Vector.{u3} α n) (y : Vector.{u2} β n), Eq.{succ u1} (List.{u1} γ) (Vector.toList.{u1} γ n (Vector.zipWith.{u3, u2, u1} α β γ n f x y)) (List.zipWith.{u3, u2, u1} α β γ f (Vector.toList.{u3} α n x) (Vector.toList.{u2} β n y))
+Case conversion may be inaccurate. Consider using '#align vector.zip_with_to_list Vector.zipWith_toListₓ'. -/
 @[simp]
 theorem zipWith_toList (x : Vector α n) (y : Vector β n) :
     (Vector.zipWith f x y).toList = List.zipWith f x.toList y.toList :=
   rfl
 #align vector.zip_with_to_list Vector.zipWith_toList
 
+/- warning: vector.zip_with_nth -> Vector.zipWith_get is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {n : Nat} (f : α -> β -> γ) (x : Vector.{u1} α n) (y : Vector.{u2} β n) (i : Fin n), Eq.{succ u3} γ (Vector.get.{u3} γ n (Vector.zipWith.{u1, u2, u3} α β γ n f x y) i) (f (Vector.get.{u1} α n x i) (Vector.get.{u2} β n y i))
+but is expected to have type
+  forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} {n : Nat} (f : α -> β -> γ) (x : Vector.{u3} α n) (y : Vector.{u2} β n) (i : Fin n), Eq.{succ u1} γ (Vector.get.{u1} γ n (Vector.zipWith.{u3, u2, u1} α β γ n f x y) i) (f (Vector.get.{u3} α n x i) (Vector.get.{u2} β n y i))
+Case conversion may be inaccurate. Consider using '#align vector.zip_with_nth Vector.zipWith_getₓ'. -/
 @[simp]
 theorem zipWith_get (x : Vector α n) (y : Vector β n) (i) :
     (Vector.zipWith f x y).nth i = f (x.nth i) (y.nth i) :=
@@ -42,6 +56,12 @@ theorem zipWith_get (x : Vector α n) (y : Vector β n) (i) :
   congr
 #align vector.zip_with_nth Vector.zipWith_get
 
+/- warning: vector.zip_with_tail -> Vector.zipWith_tail is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {n : Nat} (f : α -> β -> γ) (x : Vector.{u1} α n) (y : Vector.{u2} β n), Eq.{succ u3} (Vector.{u3} γ (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Vector.tail.{u3} γ n (Vector.zipWith.{u1, u2, u3} α β γ n f x y)) (Vector.zipWith.{u1, u2, u3} α β γ (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) f (Vector.tail.{u1} α n x) (Vector.tail.{u2} β n y))
+but is expected to have type
+  forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} {n : Nat} (f : α -> β -> γ) (x : Vector.{u3} α n) (y : Vector.{u2} β n), Eq.{succ u1} (Vector.{u1} γ (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Vector.tail.{u1} γ n (Vector.zipWith.{u3, u2, u1} α β γ n f x y)) (Vector.zipWith.{u3, u2, u1} α β γ (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) f (Vector.tail.{u3} α n x) (Vector.tail.{u2} β n y))
+Case conversion may be inaccurate. Consider using '#align vector.zip_with_tail Vector.zipWith_tailₓ'. -/
 @[simp]
 theorem zipWith_tail (x : Vector α n) (y : Vector β n) :
     (Vector.zipWith f x y).tail = Vector.zipWith f x.tail y.tail :=
@@ -50,6 +70,12 @@ theorem zipWith_tail (x : Vector α n) (y : Vector β n) :
   simp [nth_tail]
 #align vector.zip_with_tail Vector.zipWith_tail
 
+/- warning: vector.prod_mul_prod_eq_prod_zip_with -> Vector.prod_mul_prod_eq_prod_zipWith is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {n : Nat} [_inst_1 : CommMonoid.{u1} α] (x : Vector.{u1} α n) (y : Vector.{u1} α n), Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)))) (List.prod.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) (Vector.toList.{u1} α n x)) (List.prod.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) (Vector.toList.{u1} α n y))) (List.prod.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) (Vector.toList.{u1} α n (Vector.zipWith.{u1, u1, u1} α α α n (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))))) x y)))
+but is expected to have type
+  forall {α : Type.{u1}} {n : Nat} [_inst_1 : CommMonoid.{u1} α] (x : Vector.{u1} α n) (y : Vector.{u1} α n), Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)))) (List.prod.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) (Monoid.toOne.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Vector.toList.{u1} α n x)) (List.prod.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) (Monoid.toOne.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Vector.toList.{u1} α n y))) (List.prod.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) (Monoid.toOne.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Vector.toList.{u1} α n (Vector.zipWith.{u1, u1, u1} α α α n (fun (x._@.Mathlib.Data.Vector.Zip._hyg.241 : α) (x._@.Mathlib.Data.Vector.Zip._hyg.243 : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)))) x._@.Mathlib.Data.Vector.Zip._hyg.241 x._@.Mathlib.Data.Vector.Zip._hyg.243) x y)))
+Case conversion may be inaccurate. Consider using '#align vector.prod_mul_prod_eq_prod_zip_with Vector.prod_mul_prod_eq_prod_zipWithₓ'. -/
 @[to_additive]
 theorem prod_mul_prod_eq_prod_zipWith [CommMonoid α] (x y : Vector α n) :
     x.toList.Prod * y.toList.Prod = (Vector.zipWith (· * ·) x y).toList.Prod :=

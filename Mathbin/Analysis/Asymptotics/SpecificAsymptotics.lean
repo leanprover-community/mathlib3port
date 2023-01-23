@@ -124,7 +124,7 @@ theorem Asymptotics.IsO.sum_range {α : Type _} [NormedAddCommGroup α] {f : ℕ
     by
     apply is_o_const_left.2
     exact Or.inr (h'g.congr fun n => (B n).symm)
-  filter_upwards [is_o_iff.1 this (half_pos εpos), Ici_mem_at_top N] with n hn Nn
+  filter_upwards [is_o_iff.1 this (half_pos εpos), Ici_mem_at_top N]with n hn Nn
   calc
     ‖∑ i in range n, f i‖ = ‖(∑ i in range N, f i) + ∑ i in Ico N n, f i‖ := by
       rw [sum_range_add_sum_Ico _ Nn]
@@ -165,11 +165,11 @@ theorem Filter.Tendsto.cesaro_smul {E : Type _} [NormedAddCommGroup E] [NormedSp
   rw [← tendsto_sub_nhds_zero_iff, ← is_o_one_iff ℝ]
   have := Asymptotics.isO_sum_range_of_tendsto_zero (tendsto_sub_nhds_zero_iff.2 h)
   apply ((is_O_refl (fun n : ℕ => (n : ℝ)⁻¹) at_top).smul_is_o this).congr' _ _
-  · filter_upwards [Ici_mem_at_top 1] with n npos
+  · filter_upwards [Ici_mem_at_top 1]with n npos
     have nposℝ : (0 : ℝ) < n := Nat.cast_pos.2 npos
     simp only [smul_sub, sum_sub_distrib, sum_const, card_range, sub_right_inj]
     rw [nsmul_eq_smul_cast ℝ, smul_smul, inv_mul_cancel nposℝ.ne', one_smul]
-  · filter_upwards [Ici_mem_at_top 1] with n npos
+  · filter_upwards [Ici_mem_at_top 1]with n npos
     have nposℝ : (0 : ℝ) < n := Nat.cast_pos.2 npos
     rw [Algebra.id.smul_eq_mul, inv_mul_cancel nposℝ.ne']
 #align filter.tendsto.cesaro_smul Filter.Tendsto.cesaro_smul

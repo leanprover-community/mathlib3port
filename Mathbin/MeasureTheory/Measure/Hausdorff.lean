@@ -830,7 +830,7 @@ theorem hausdorffMeasure_pi_real {ι : Type _} [Fintype ι] :
             (by
               run_tac
                 is_bounded_default)
-        filter_upwards [B] with _ hn
+        filter_upwards [B]with _ hn
         apply Finset.sum_le_sum fun i _ => _
         rw [Ennreal.rpow_nat_cast]
         exact pow_le_pow_of_le_left' (hn i) _

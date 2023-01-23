@@ -253,7 +253,7 @@ theorem tendsto_approxBounded_ae {β} {f : α → β} [NormedAddCommGroup β] [N
     {m m0 : MeasurableSpace α} {μ : Measure α} (hf : strongly_measurable[m] f) {c : ℝ}
     (hf_bound : ∀ᵐ x ∂μ, ‖f x‖ ≤ c) :
     ∀ᵐ x ∂μ, Tendsto (fun n => hf.approxBounded c n x) atTop (𝓝 (f x)) := by
-  filter_upwards [hf_bound] with x hfx using tendsto_approx_bounded_of_norm_le hf hfx
+  filter_upwards [hf_bound]with x hfx using tendsto_approx_bounded_of_norm_le hf hfx
 #align measure_theory.strongly_measurable.tendsto_approx_bounded_ae MeasureTheory.StronglyMeasurable.tendsto_approxBounded_ae
 
 theorem norm_approxBounded_le {β} {f : α → β} [SeminormedAddCommGroup β] [NormedSpace ℝ β]
@@ -1583,7 +1583,7 @@ theorem isSeparable_ae_range (hf : AeStronglyMeasurable f μ) :
     ∃ t : Set β, IsSeparable t ∧ ∀ᵐ x ∂μ, f x ∈ t :=
   by
   refine' ⟨range (hf.mk f), hf.strongly_measurable_mk.is_separable_range, _⟩
-  filter_upwards [hf.ae_eq_mk] with x hx
+  filter_upwards [hf.ae_eq_mk]with x hx
   simp [hx]
 #align measure_theory.ae_strongly_measurable.is_separable_ae_range MeasureTheory.AeStronglyMeasurable.isSeparable_ae_range
 
@@ -1659,7 +1659,7 @@ theorem aeStronglyMeasurableOfTendstoAe {ι : Type _} [PseudoMetrizableSpace β]
       (aeStronglyMeasurable_iff_aeMeasurable_separable.1 (hf (v n))).2
     choose t t_sep ht using this
     refine' ⟨closure (⋃ i, t i), (is_separable_Union fun i => t_sep i).closure, _⟩
-    filter_upwards [ae_all_iff.2 ht, lim] with x hx h'x
+    filter_upwards [ae_all_iff.2 ht, lim]with x hx h'x
     apply mem_closure_of_tendsto (h'x.comp hv)
     apply eventually_of_forall fun n => _
     apply mem_Union_of_mem n
@@ -1680,7 +1680,7 @@ theorem exists_stronglyMeasurable_limit_of_tendsto_ae [PseudoMetrizableSpace β]
     measurable_limit_of_tendsto_metrizable_ae (fun n => (hf n).AeMeasurable) h_ae_tendsto
   have Hg : ae_strongly_measurable g μ := aeStronglyMeasurableOfTendstoAe _ hf hg
   refine' ⟨Hg.mk g, Hg.strongly_measurable_mk, _⟩
-  filter_upwards [hg, Hg.ae_eq_mk] with x hx h'x
+  filter_upwards [hg, Hg.ae_eq_mk]with x hx h'x
   rwa [h'x] at hx
 #align exists_strongly_measurable_limit_of_tendsto_ae exists_stronglyMeasurable_limit_of_tendsto_ae
 
@@ -1697,7 +1697,7 @@ theorem sumMeasure [PseudoMetrizableSpace β] {m : MeasurableSpace α} {μ : ι 
   refine' ⟨⋃ i, t i, is_separable_Union t_sep, _⟩
   simp only [measure.ae_sum_eq, mem_Union, eventually_supr]
   intro i
-  filter_upwards [ht i] with x hx
+  filter_upwards [ht i]with x hx
   exact ⟨i, hx⟩
 #align measure_theory.ae_strongly_measurable.sum_measure MeasureTheory.AeStronglyMeasurable.sumMeasure
 
@@ -1828,16 +1828,16 @@ theorem aeStronglyMeasurable_withDensity_iff {E : Type _} [NormedAddCommGroup E]
     apply @ae_of_ae_restrict_of_ae_restrict_compl _ _ _ { x | f x ≠ 0 }
     · rw [eventually_eq, ae_with_density_iff hf.coe_nnreal_ennreal] at hg'
       rw [ae_restrict_iff' A]
-      filter_upwards [hg'] with a ha h'a
+      filter_upwards [hg']with a ha h'a
       have : (f a : ℝ≥0∞) ≠ 0 := by simpa only [Ne.def, Ennreal.coe_eq_zero] using h'a
       rw [ha this]
-    · filter_upwards [ae_restrict_mem A.compl] with x hx
+    · filter_upwards [ae_restrict_mem A.compl]with x hx
       simp only [not_not, mem_set_of_eq, mem_compl_iff] at hx
       simp [hx]
   · rintro ⟨g', g'meas, hg'⟩
     refine' ⟨fun x => (f x : ℝ)⁻¹ • g' x, hf.coe_nnreal_real.inv.strongly_measurable.smul g'meas, _⟩
     rw [eventually_eq, ae_with_density_iff hf.coe_nnreal_ennreal]
-    filter_upwards [hg'] with x hx h'x
+    filter_upwards [hg']with x hx h'x
     rw [← hx, smul_smul, _root_.inv_mul_cancel, one_smul]
     simp only [Ne.def, Ennreal.coe_eq_zero] at h'x
     simpa only [Nnreal.coe_eq_zero, Ne.def] using h'x

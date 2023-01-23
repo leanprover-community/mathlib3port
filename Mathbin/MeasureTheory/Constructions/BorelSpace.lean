@@ -1645,7 +1645,7 @@ theorem tendsto_measure_cthickening {μ : Measure α} {s : Set α}
   have B : tendsto (fun r => μ (cthickening r s)) (𝓝[Iic 0] 0) (𝓝 (μ (closure s))) :=
     by
     apply tendsto.congr' _ tendsto_const_nhds
-    filter_upwards [self_mem_nhdsWithin] with _ hr
+    filter_upwards [self_mem_nhdsWithin]with _ hr
     rw [cthickening_of_nonpos hr]
   convert B.sup A
   exact (nhds_left_sup_nhds_right' 0).symm
@@ -2216,7 +2216,7 @@ theorem aeMeasurableOfTendstoMetrizableAe {ι} {μ : Measure α} {f : ι → α 
   have h'f : ∀ n, AeMeasurable (f (v n)) μ := fun n => hf (v n)
   set p : α → (ℕ → β) → Prop := fun x f' => tendsto (fun n => f' n) at_top (𝓝 (g x))
   have hp : ∀ᵐ x ∂μ, p x fun n => f (v n) x := by
-    filter_upwards [h_tendsto] with x hx using hx.comp hv
+    filter_upwards [h_tendsto]with x hx using hx.comp hv
   set ae_seq_lim := fun x => ite (x ∈ aeSeqSet h'f p) (g x) (⟨f (v 0) x⟩ : Nonempty β).some with hs
   refine'
     ⟨ae_seq_lim,

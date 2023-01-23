@@ -228,13 +228,13 @@ variable [Bornology α]
 
 theorem isCobounded_bInter {s : Set ι} {f : ι → Set α} (hs : s.Finite) :
     IsCobounded (⋂ i ∈ s, f i) ↔ ∀ i ∈ s, IsCobounded (f i) :=
-  bInter_mem hs
+  binterᵢ_mem hs
 #align bornology.is_cobounded_bInter Bornology.isCobounded_bInter
 
 @[simp]
 theorem isCobounded_bInter_finset (s : Finset ι) {f : ι → Set α} :
     IsCobounded (⋂ i ∈ s, f i) ↔ ∀ i ∈ s, IsCobounded (f i) :=
-  bInter_finset_mem s
+  binterᵢ_finset_mem s
 #align bornology.is_cobounded_bInter_finset Bornology.isCobounded_bInter_finset
 
 @[simp]

@@ -65,7 +65,7 @@ theorem eqOn_zero_of_preconnected_of_eventuallyEq_zero_aux [CompleteSpace F] {f 
     apply (add_le_add A.le (le_refl (r / 2))).trans (le_of_eq _)
     exact Ennreal.add_halves _
   have M : Emetric.ball y (r / 2) ∈ 𝓝 x := emetric.is_open_ball.mem_nhds hxy
-  filter_upwards [M] with z hz
+  filter_upwards [M]with z hz
   have A : HasSum (fun n : ℕ => q n fun i : Fin n => z - y) (f z) := has_series.has_sum_sub hz
   have B : HasSum (fun n : ℕ => q n fun i : Fin n => z - y) 0 :=
     by
@@ -89,7 +89,7 @@ theorem eqOn_zero_of_preconnected_of_eventuallyEq_zero {f : E → F} {U : Set E}
   have A : eq_on (e ∘ f) 0 U :=
     by
     apply eq_on_zero_of_preconnected_of_eventually_eq_zero_aux this hU h₀
-    filter_upwards [hfz₀] with x hx
+    filter_upwards [hfz₀]with x hx
     simp only [hx, Function.comp_apply, Pi.zero_apply, map_zero]
   intro z hz
   have : e (f z) = e 0 := by simpa only using A hz

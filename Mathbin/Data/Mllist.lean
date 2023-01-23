@@ -141,8 +141,8 @@ unsafe def filter {α : Type u} (p : α → Prop) [DecidablePred p] : mllist m �
     cons do
       let (a, r) ← l
       let some a ← return a |
-        return (none, filter r)
-      return (if p a then some a else none, filter r)
+        return (none, Filter r)
+      return (if p a then some a else none, Filter r)
 #align tactic.mllist.filter tactic.mllist.filter
 
 /-- Filter a `mllist` using a function which returns values in the (alternative) monad.

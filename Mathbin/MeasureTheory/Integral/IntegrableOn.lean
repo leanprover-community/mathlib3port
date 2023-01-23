@@ -187,7 +187,7 @@ theorem integrableOn_singleton_iff {x : α} [MeasurableSingletonClass α] :
   by
   have : f =ᵐ[μ.restrict {x}] fun y => f x :=
     by
-    filter_upwards [ae_restrict_mem (measurable_set_singleton x)] with _ ha
+    filter_upwards [ae_restrict_mem (measurable_set_singleton x)]with _ ha
     simp only [mem_singleton_iff.1 ha]
   rw [integrable_on, integrable_congr this, integrable_const_iff]
   simp

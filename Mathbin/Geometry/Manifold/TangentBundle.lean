@@ -448,7 +448,7 @@ def tangentBundleCore : BasicSmoothVectorBundleCore I M E
       simp only [hx, i.1.map_target, mfld_simps]
     have B : ∀ᶠ y in 𝓝[range I] I x, (I ∘ i.1 ∘ i.1.symm ∘ I.symm) y = (id : E → E) y :=
       by
-      filter_upwards [A] with _ hy
+      filter_upwards [A]with _ hy
       rw [← I.image_eq] at hy
       rcases hy with ⟨z, hz⟩
       simp only [mfld_simps] at hz

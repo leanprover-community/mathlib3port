@@ -208,7 +208,7 @@ theorem hasIntegralGPPderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → ℝⁿ
       · exact ioc_mem_nhdsWithin_ioi ⟨le_rfl, one_half_pos⟩
       · rcases((nhdsWithin_hasBasis nhds_basis_closed_ball _).tendsto_iff nhds_basis_closed_ball).1
             (Hs x hx.2) _ (half_pos <| half_pos ε0) with ⟨δ₁, δ₁0, hδ₁⟩
-        filter_upwards [ioc_mem_nhdsWithin_ioi ⟨le_rfl, δ₁0⟩] with δ hδ y₁ hy₁ y₂ hy₂
+        filter_upwards [ioc_mem_nhdsWithin_ioi ⟨le_rfl, δ₁0⟩]with δ hδ y₁ hy₁ y₂ hy₂
         have : closed_ball x δ ∩ I.Icc ⊆ closed_ball x δ₁ ∩ I.Icc :=
           inter_subset_inter_left _ (closed_ball_subset_closed_ball hδ.2)
         rw [← dist_eq_norm]

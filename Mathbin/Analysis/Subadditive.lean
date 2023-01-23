@@ -118,7 +118,7 @@ theorem eventually_div_lt_of_div_lt {L : ℝ} {n : ℕ} (hn : n ≠ 0) (hL : u n
       tendsto_const_nhds.add (tendsto_const_nhds.div_at_top tendsto_coe_nat_atTop_atTop)
     rw [add_zero] at this
     exact (tendsto_order.1 this).2 _ wL
-  filter_upwards [B, C] with _ hp h'p using hp.trans_lt h'p
+  filter_upwards [B, C]with _ hp h'p using hp.trans_lt h'p
 #align subadditive.eventually_div_lt_of_div_lt Subadditive.eventually_div_lt_of_div_lt
 
 /-- Fekete's lemma: a subadditive sequence which is bounded below converges. -/

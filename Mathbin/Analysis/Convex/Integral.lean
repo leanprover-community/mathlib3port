@@ -71,7 +71,7 @@ theorem Convex.integral_mem [IsProbabilityMeasure μ] (hs : Convex ℝ s) (hsc :
   rw [integrable_congr hfg] at hfi
   have hg : ∀ᵐ x ∂μ, g x ∈ closure (range g ∩ s) :=
     by
-    filter_upwards [hfg.rw (fun x y => y ∈ s) hf] with x hx
+    filter_upwards [hfg.rw (fun x y => y ∈ s) hf]with x hx
     apply subset_closure
     exact ⟨mem_range_self _, hx⟩
   set G : ℕ → simple_func α E := simple_func.approx_on _ hgm.measurable (range g ∩ s) y₀ h₀

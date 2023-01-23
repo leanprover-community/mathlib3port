@@ -927,7 +927,7 @@ theorem ae_differentiableWithinAt_of_mem_real {f : ℝ → ℝ} {s : Set ℝ}
   obtain ⟨p, q, hp, hq, fpq⟩ : ∃ p q, MonotoneOn p s ∧ MonotoneOn q s ∧ f = p - q
   exact h.exists_monotone_on_sub_monotone_on
   filter_upwards [hp.ae_differentiable_within_at_of_mem,
-    hq.ae_differentiable_within_at_of_mem] with x hxp hxq xs
+    hq.ae_differentiable_within_at_of_mem]with x hxp hxq xs
   have fpq : ∀ x, f x = p x - q x := by simp [fpq]
   refine' ((hxp xs).sub (hxq xs)).congr (fun y hy => fpq y) (fpq x)
 #align has_locally_bounded_variation_on.ae_differentiable_within_at_of_mem_real HasLocallyBoundedVariationOn.ae_differentiableWithinAt_of_mem_real
@@ -943,7 +943,7 @@ theorem ae_differentiableWithinAt_of_mem_pi {ι : Type _} [Fintype ι] {f : ℝ 
     intro i
     apply ae_differentiable_within_at_of_mem_real
     exact LipschitzWith.comp_hasLocallyBoundedVariationOn (A i) h
-  filter_upwards [ae_all_iff.2 this] with x hx xs
+  filter_upwards [ae_all_iff.2 this]with x hx xs
   exact differentiableWithinAt_pi.2 fun i => hx i xs
 #align has_locally_bounded_variation_on.ae_differentiable_within_at_of_mem_pi HasLocallyBoundedVariationOn.ae_differentiableWithinAt_of_mem_pi
 
@@ -954,7 +954,7 @@ theorem ae_differentiableWithinAt_of_mem {f : ℝ → V} {s : Set ℝ}
   by
   let A := (Basis.ofVectorSpace ℝ V).equivFun.toContinuousLinearEquiv
   suffices H : ∀ᵐ x, x ∈ s → DifferentiableWithinAt ℝ (A ∘ f) s x
-  · filter_upwards [H] with x hx xs
+  · filter_upwards [H]with x hx xs
     have : f = (A.symm ∘ A) ∘ f := by
       simp only [ContinuousLinearEquiv.symm_comp_self, Function.comp.left_id]
     rw [this]
@@ -977,7 +977,7 @@ is differentiable almost everywhere. -/
 theorem ae_differentiableAt {f : ℝ → V} (h : HasLocallyBoundedVariationOn f univ) :
     ∀ᵐ x, DifferentiableAt ℝ f x :=
   by
-  filter_upwards [h.ae_differentiable_within_at_of_mem] with x hx
+  filter_upwards [h.ae_differentiable_within_at_of_mem]with x hx
   rw [differentiableWithinAt_univ] at hx
   exact hx (mem_univ _)
 #align has_locally_bounded_variation_on.ae_differentiable_at HasLocallyBoundedVariationOn.ae_differentiableAt

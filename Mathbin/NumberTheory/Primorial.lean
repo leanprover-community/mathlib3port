@@ -82,21 +82,21 @@ theorem primorial_le_4_pow : ∀ n : ℕ, n# ≤ 4 ^ n
       | ⟨m, twice_m⟩ => by
         have recurse : m + 1 < n + 2 := by linarith
         calc
-          (n + 2)# = ∏ i in filter Nat.Prime (range (2 * m + 2)), i := by simpa [two_mul, ← twice_m]
-          _ = ∏ i in filter Nat.Prime (Finset.ico (m + 2) (2 * m + 2) ∪ range (m + 2)), i :=
+          (n + 2)# = ∏ i in Filter Nat.Prime (range (2 * m + 2)), i := by simpa [two_mul, ← twice_m]
+          _ = ∏ i in Filter Nat.Prime (Finset.ico (m + 2) (2 * m + 2) ∪ range (m + 2)), i :=
             by
             rw [range_eq_Ico, Finset.union_comm, Finset.ico_union_ico_eq_ico]
             · exact bot_le
             · simpa only [add_le_add_iff_right, two_mul] using Nat.le_add_left m m
           _ =
               ∏ i in
-                filter Nat.Prime (Finset.ico (m + 2) (2 * m + 2)) ∪
-                  filter Nat.Prime (range (m + 2)),
+                Filter Nat.Prime (Finset.ico (m + 2) (2 * m + 2)) ∪
+                  Filter Nat.Prime (range (m + 2)),
                 i :=
             by rw [filter_union]
           _ =
-              (∏ i in filter Nat.Prime (Finset.ico (m + 2) (2 * m + 2)), i) *
-                ∏ i in filter Nat.Prime (range (m + 2)), i :=
+              (∏ i in Filter Nat.Prime (Finset.ico (m + 2) (2 * m + 2)), i) *
+                ∏ i in Filter Nat.Prime (range (m + 2)), i :=
             by
             apply Finset.prod_union
             have disj : Disjoint (Finset.ico (m + 2) (2 * m + 2)) (range (m + 2)) :=
@@ -105,12 +105,12 @@ theorem primorial_le_4_pow : ∀ n : ℕ, n# ≤ 4 ^ n
               intro _ pr _
               exact pr
             exact Finset.disjoint_filter_filter disj
-          _ ≤ (∏ i in filter Nat.Prime (Finset.ico (m + 2) (2 * m + 2)), i) * 4 ^ (m + 1) :=
+          _ ≤ (∏ i in Filter Nat.Prime (Finset.ico (m + 2) (2 * m + 2)), i) * 4 ^ (m + 1) :=
             Nat.mul_le_mul_left _ (primorial_le_4_pow (m + 1))
           _ ≤ choose (2 * m + 1) (m + 1) * 4 ^ (m + 1) :=
             by
             have s :
-              (∏ i in filter Nat.Prime (Finset.ico (m + 2) (2 * m + 2)), i) ∣
+              (∏ i in Filter Nat.Prime (Finset.ico (m + 2) (2 * m + 2)), i) ∣
                 choose (2 * m + 1) (m + 1) :=
               by
               refine' prod_primes_dvd (choose (2 * m + 1) (m + 1)) _ _
@@ -125,7 +125,7 @@ theorem primorial_le_4_pow : ∀ n : ℕ, n# ≤ 4 ^ n
                 rcases size with ⟨a_big, a_small⟩
                 exact dvd_choose_of_middling_prime a is_prime m a_big (nat.lt_succ_iff.mp a_small)
             have r :
-              (∏ i in filter Nat.Prime (Finset.ico (m + 2) (2 * m + 2)), i) ≤
+              (∏ i in Filter Nat.Prime (Finset.ico (m + 2) (2 * m + 2)), i) ≤
                 choose (2 * m + 1) (m + 1) :=
               by
               refine' @Nat.le_of_dvd _ _ _ s

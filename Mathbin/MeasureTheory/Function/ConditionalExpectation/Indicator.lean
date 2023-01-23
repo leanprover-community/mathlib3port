@@ -61,7 +61,7 @@ theorem condexp_ae_eq_restrict_zero (hs : measurable_set[m] s) (hf : f =ᵐ[μ.r
     rw [measure.restrict_restrict (hm _ ht), set_integral_condexp hm hf_int (ht.inter hs), ←
       measure.restrict_restrict (hm _ ht)]
     refine' set_integral_congr_ae (hm _ ht) _
-    filter_upwards [hf] with x hx h using hx
+    filter_upwards [hf]with x hx h using hx
   · exact strongly_measurable_condexp.ae_strongly_measurable'
   · exact strongly_measurable_zero.ae_strongly_measurable'
 #align measure_theory.condexp_ae_eq_restrict_zero MeasureTheory.condexp_ae_eq_restrict_zero
@@ -102,7 +102,7 @@ theorem condexp_indicator (hf_int : Integrable f μ) (hs : measurable_set[m] s) 
       by
       have : μ[s.indicator f + sᶜ.indicator f|m] =ᵐ[μ] μ[s.indicator f|m] + μ[sᶜ.indicator f|m] :=
         condexp_add (hf_int.indicator (hm _ hs)) (hf_int.indicator (hm _ hs.compl))
-      filter_upwards [this] with x hx
+      filter_upwards [this]with x hx
       classical rw [Set.indicator_apply, Set.indicator_apply, hx]
     _ = s.indicator (μ[s.indicator f|m]) + s.indicator (μ[sᶜ.indicator f|m]) := s.indicator_add' _ _
     _ =ᵐ[μ] s.indicator (μ[s.indicator f|m]) + s.indicator (sᶜ.indicator (μ[sᶜ.indicator f|m])) :=
@@ -113,7 +113,7 @@ theorem condexp_indicator (hf_int : Integrable f μ) (hs : measurable_set[m] s) 
         refine' (condexp_indicator_aux hs.compl _).symm.trans _
         · exact indicator_ae_eq_restrict_compl (hm _ hs.compl)
         · rw [Set.indicator_indicator, Set.inter_self]
-      filter_upwards [this] with x hx
+      filter_upwards [this]with x hx
       by_cases hxs : x ∈ s
       · simp only [hx, hxs, Set.indicator_of_mem]
       · simp only [hxs, Set.indicator_of_not_mem, not_false_iff]
@@ -203,7 +203,7 @@ theorem condexp_ae_eq_restrict_of_measurableSpace_eq_on {m m₂ m0 : MeasurableS
             ∫ x : α in t, 0 ∂μ.restrict (sᶜ) :=
           by
           refine' set_integral_congr_ae (hm₂ _ ht) _
-          filter_upwards [this] with x hx h using hx
+          filter_upwards [this]with x hx h using hx
         _ = 0 := integral_zero _ _
         
     refine' condexp_ae_eq_restrict_zero hs_m.compl _

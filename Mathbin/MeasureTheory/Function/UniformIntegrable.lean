@@ -146,7 +146,7 @@ protected theorem aeEq (hf : UnifIntegrable f p μ) (hfg : ∀ n, f n =ᵐ[μ] g
   intro ε hε
   obtain ⟨δ, hδ_pos, hfδ⟩ := hf hε
   refine' ⟨δ, hδ_pos, fun n s hs hμs => (le_of_eq <| snorm_congr_ae _).trans (hfδ n s hs hμs)⟩
-  filter_upwards [hfg n] with x hx
+  filter_upwards [hfg n]with x hx
   simp_rw [indicator_apply, hx]
 #align measure_theory.unif_integrable.ae_eq MeasureTheory.UnifIntegrable.aeEq
 
@@ -236,7 +236,7 @@ theorem Memℒp.integral_indicator_norm_ge_nonneg_le (hf : Memℒp f 1 μ) {ε :
     hf_mk.integral_indicator_norm_ge_nonneg_le_of_meas μ hf.1.strongly_measurable_mk hε
   refine' ⟨M, hM_pos, (le_of_eq _).trans hfM⟩
   refine' lintegral_congr_ae _
-  filter_upwards [hf.1.ae_eq_mk] with x hx
+  filter_upwards [hf.1.ae_eq_mk]with x hx
   simp only [indicator_apply, coe_nnnorm, mem_set_of_eq, Ennreal.coe_eq_coe, hx.symm]
 #align measure_theory.mem_ℒp.integral_indicator_norm_ge_nonneg_le MeasureTheory.Memℒp.integral_indicator_norm_ge_nonneg_le
 
@@ -625,7 +625,7 @@ theorem tendsto_Lp_of_tendsto_ae [IsFiniteMeasure μ] (hp : 1 ≤ p) (hp' : p �
     by
     rw [ae_all_iff]
     exact fun n => (hf n).ae_eq_mk
-  filter_upwards [hfg, h_ae_forall_eq, hg.1.ae_eq_mk] with x hx_tendsto hxf_eq hxg_eq
+  filter_upwards [hfg, h_ae_forall_eq, hg.1.ae_eq_mk]with x hx_tendsto hxf_eq hxg_eq
   rw [← hxg_eq]
   convert hx_tendsto
   ext1 n
@@ -799,7 +799,7 @@ theorem unifIntegrableOf (hp : 1 ≤ p) (hp' : p ≠ ∞) {f : ι → α → β}
     by
     intro i
     refine' le_trans (le_of_eq <| snorm_congr_ae _) (hC i)
-    filter_upwards [(Exists.choose_spec <| hf i).2] with x hx
+    filter_upwards [(Exists.choose_spec <| hf i).2]with x hx
     by_cases hfx : x ∈ { x | C ≤ ‖f i x‖₊ }
     · rw [indicator_of_mem hfx, indicator_of_mem, hx]
       rwa [mem_set_of, hx] at hfx
@@ -954,7 +954,7 @@ theorem uniformIntegrableOf [IsFiniteMeasure μ] (hp : 1 ≤ p) (hp' : p ≠ ∞
   refine' (uniform_integrable_of' hp hp' hgmeas fun ε hε => _).ae_eq hgeq
   obtain ⟨C, hC⟩ := h ε hε
   refine' ⟨C, fun i => le_trans (le_of_eq <| snorm_congr_ae _) (hC i)⟩
-  filter_upwards [(Exists.choose_spec <| hf i).2] with x hx
+  filter_upwards [(Exists.choose_spec <| hf i).2]with x hx
   by_cases hfx : x ∈ { x | C ≤ ‖f i x‖₊ }
   · rw [indicator_of_mem hfx, indicator_of_mem, hx]
     rwa [mem_set_of, hx] at hfx
@@ -1018,7 +1018,7 @@ theorem UniformIntegrable.spec (hp : p ≠ 0) (hp' : p ≠ ∞) (hfu : UniformIn
   have hgunif : uniform_integrable g p μ := hfu.ae_eq fun i => (Exists.choose_spec <| hfu.1 i).2
   obtain ⟨C, hC⟩ := hgunif.spec' hp hp' hgmeas hε
   refine' ⟨C, fun i => le_trans (le_of_eq <| snorm_congr_ae _) (hC i)⟩
-  filter_upwards [(Exists.choose_spec <| hfu.1 i).2] with x hx
+  filter_upwards [(Exists.choose_spec <| hfu.1 i).2]with x hx
   by_cases hfx : x ∈ { x | C ≤ ‖f i x‖₊ }
   · rw [indicator_of_mem hfx, indicator_of_mem, hx]
     rwa [mem_set_of, hx] at hfx

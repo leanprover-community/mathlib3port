@@ -98,8 +98,8 @@ theorem ico_filter_coprime_le {a : ℕ} (k n : ℕ) (a_pos : 0 < a) :
   simp only [mul_succ]
   simp_rw [← add_assoc] at ih⊢
   calc
-    (filter a.coprime (Ico k (k + n % a + a * i + a))).card =
-        (filter a.coprime
+    (Filter a.coprime (Ico k (k + n % a + a * i + a))).card =
+        (Filter a.coprime
             (Ico k (k + n % a + a * i) ∪ Ico (k + n % a + a * i) (k + n % a + a * i + a))).card :=
       by
       congr
@@ -107,7 +107,7 @@ theorem ico_filter_coprime_le {a : ℕ} (k n : ℕ) (a_pos : 0 < a) :
       rw [add_assoc]
       exact le_self_add
       exact le_self_add
-    _ ≤ (filter a.coprime (Ico k (k + n % a + a * i))).card + a.totient :=
+    _ ≤ (Filter a.coprime (Ico k (k + n % a + a * i))).card + a.totient :=
       by
       rw [filter_union, ← filter_coprime_Ico_eq_totient a (k + n % a + a * i)]
       apply card_union_le
@@ -183,7 +183,7 @@ theorem sum_totient (n : ℕ) : n.divisors.Sum φ = n :=
   rcases n.eq_zero_or_pos with (rfl | hn)
   · simp
   rw [← sum_div_divisors n φ]
-  have : n = ∑ d : ℕ in n.divisors, (filter (fun k : ℕ => n.gcd k = d) (range n)).card :=
+  have : n = ∑ d : ℕ in n.divisors, (Filter (fun k : ℕ => n.gcd k = d) (range n)).card :=
     by
     nth_rw_lhs 1 [← card_range n]
     refine' card_eq_sum_card_fiberwise fun x hx => mem_divisors.2 ⟨_, hn.ne'⟩

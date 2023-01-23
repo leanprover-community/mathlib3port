@@ -331,7 +331,7 @@ theorem isOWith_congr (hc : c₁ = c₂) (hf : f₁ =ᶠ[l] f₂) (hg : g₁ =�
   unfold is_O_with
   subst c₂
   apply Filter.eventually_congr
-  filter_upwards [hf, hg] with _ e₁ e₂
+  filter_upwards [hf, hg]with _ e₁ e₂
   rw [e₁, e₂]
 #align asymptotics.is_O_with_congr Asymptotics.isOWith_congr
 
@@ -518,7 +518,7 @@ theorem IsO.mono (h : f =o[l'] g) (hl : l ≤ l') : f =o[l] g :=
 theorem IsOWith.trans (hfg : IsOWith c l f g) (hgk : IsOWith c' l g k) (hc : 0 ≤ c) :
     IsOWith (c * c') l f k := by
   unfold is_O_with at *
-  filter_upwards [hfg, hgk] with x hx hx'
+  filter_upwards [hfg, hgk]with x hx hx'
   calc
     ‖f x‖ ≤ c * ‖g x‖ := hx
     _ ≤ c * (c' * ‖k x‖) := mul_le_mul_of_nonneg_left hx' hc
@@ -1142,7 +1142,7 @@ end
 
 theorem IsOWith.prod_left_same (hf : IsOWith c l f' k') (hg : IsOWith c l g' k') :
     IsOWith c l (fun x => (f' x, g' x)) k' := by
-  rw [is_O_with_iff] at * <;> filter_upwards [hf, hg] with x using max_le
+  rw [is_O_with_iff] at * <;> filter_upwards [hf, hg]with x using max_le
 #align asymptotics.is_O_with.prod_left_same Asymptotics.IsOWith.prod_left_same
 
 theorem IsOWith.prod_left (hf : IsOWith c l f' k') (hg : IsOWith c' l g' k') :
@@ -1235,7 +1235,7 @@ theorem IsOWith.add (h₁ : IsOWith c₁ l f₁ g) (h₂ : IsOWith c₂ l f₂ g
     IsOWith (c₁ + c₂) l (fun x => f₁ x + f₂ x) g := by
   rw [is_O_with] at * <;>
     filter_upwards [h₁,
-      h₂] with x hx₁ hx₂ using calc
+      h₂]with x hx₁ hx₂ using calc
         ‖f₁ x + f₂ x‖ ≤ c₁ * ‖g x‖ + c₂ * ‖g x‖ := norm_add_le_of_le hx₁ hx₂
         _ = (c₁ + c₂) * ‖g x‖ := (add_mul _ _ _).symm
         
@@ -1844,7 +1844,7 @@ theorem IsOWith.mul {f₁ f₂ : α → R} {g₁ g₂ : α → 𝕜} {c₁ c₂ 
     (h₂ : IsOWith c₂ l f₂ g₂) : IsOWith (c₁ * c₂) l (fun x => f₁ x * f₂ x) fun x => g₁ x * g₂ x :=
   by
   unfold is_O_with at *
-  filter_upwards [h₁, h₂] with _ hx₁ hx₂
+  filter_upwards [h₁, h₂]with _ hx₁ hx₂
   apply le_trans (norm_mul_le _ _)
   convert mul_le_mul hx₁ hx₂ (norm_nonneg _) (le_trans (norm_nonneg _) hx₁) using 1
   rw [norm_mul, mul_mul_mul_comm]

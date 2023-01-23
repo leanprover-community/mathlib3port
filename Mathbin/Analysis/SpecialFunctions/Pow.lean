@@ -1282,7 +1282,7 @@ theorem tendsto_exp_div_rpow_atTop (s : ℝ) : Tendsto (fun x : ℝ => exp x / x
   by
   cases' archimedean_iff_nat_lt.1 Real.archimedean s with n hn
   refine' tendsto_at_top_mono' _ _ (tendsto_exp_div_pow_at_top n)
-  filter_upwards [eventually_gt_at_top (0 : ℝ), eventually_ge_at_top (1 : ℝ)] with x hx₀ hx₁
+  filter_upwards [eventually_gt_at_top (0 : ℝ), eventually_ge_at_top (1 : ℝ)]with x hx₀ hx₁
   rw [div_le_div_left (exp_pos _) (pow_pos hx₀ _) (rpow_pos_of_pos hx₀ _), ← rpow_nat_cast]
   exact rpow_le_rpow_of_exponent_le hx₁ hn.le
 #align tendsto_exp_div_rpow_at_top tendsto_exp_div_rpow_atTop
@@ -1292,7 +1292,7 @@ theorem tendsto_exp_mul_div_rpow_atTop (s : ℝ) (b : ℝ) (hb : 0 < b) :
     Tendsto (fun x : ℝ => exp (b * x) / x ^ s) atTop atTop :=
   by
   refine' ((tendsto_rpow_atTop hb).comp (tendsto_exp_div_rpow_atTop (s / b))).congr' _
-  filter_upwards [eventually_ge_at_top (0 : ℝ)] with x hx₀
+  filter_upwards [eventually_ge_at_top (0 : ℝ)]with x hx₀
   simp [div_rpow, (exp_pos x).le, rpow_nonneg_of_nonneg, ← rpow_mul, ← exp_mul, mul_comm x, hb.ne',
     *]
 #align tendsto_exp_mul_div_rpow_at_top tendsto_exp_mul_div_rpow_atTop
@@ -1317,7 +1317,7 @@ theorem IsOWith.rpow (h : IsOWith c l f g) (hc : 0 ≤ c) (hr : 0 ≤ r) (hg : 0
     IsOWith (c ^ r) l (fun x => f x ^ r) fun x => g x ^ r :=
   by
   apply is_O_with.of_bound
-  filter_upwards [hg, h.bound] with x hgx hx
+  filter_upwards [hg, h.bound]with x hgx hx
   calc
     |f x ^ r| ≤ |f x| ^ r := abs_rpow_le_abs_rpow _ _
     _ ≤ (c * |g x|) ^ r := rpow_le_rpow (abs_nonneg _) hx hr

@@ -329,7 +329,7 @@ theorem add_haar_image_le_mul_of_det_lt (A : E →L[ℝ] E) {m : ℝ≥0}
         (𝓝 (μ (A '' closed_ball 0 1))) :=
       by
       apply L0.congr' _
-      filter_upwards [self_mem_nhdsWithin] with r hr
+      filter_upwards [self_mem_nhdsWithin]with r hr
       rw [← HC.add_closed_ball_zero (le_of_lt hr), add_comm]
     have L2 :
       tendsto (fun ε => μ (closed_ball 0 ε + A '' closed_ball 0 1)) (𝓝[>] 0)
@@ -397,7 +397,7 @@ theorem add_haar_image_le_mul_of_det_lt (A : E →L[ℝ] E) {m : ℝ≥0}
   -- measure of `f '' s` is at most `m * (μ s + a)` for any positive `a`.
   have J : ∀ᶠ a in 𝓝[>] (0 : ℝ≥0∞), μ (f '' s) ≤ m * (μ s + a) :=
     by
-    filter_upwards [self_mem_nhdsWithin] with a ha
+    filter_upwards [self_mem_nhdsWithin]with a ha
     change 0 < a at ha
     obtain ⟨t, r, t_count, ts, rpos, st, μt⟩ :
       ∃ (t : Set E)(r : E → ℝ),
@@ -840,7 +840,7 @@ theorem aeMeasurableFderivWithin (hs : MeasurableSet s)
     filter_upwards [ae_restrict_mem (t_meas n)]
     exact hg n
   -- putting these two properties together gives the conclusion.
-  filter_upwards [E₁, E₂] with x hx1 hx2
+  filter_upwards [E₁, E₂]with x hx1 hx2
   rw [← nndist_eq_nnnorm] at hx1
   rw [hx2, dist_comm]
   exact hx1

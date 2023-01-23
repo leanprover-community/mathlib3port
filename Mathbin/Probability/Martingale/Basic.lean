@@ -124,7 +124,7 @@ theorem set_integral_eq [SigmaFiniteFiltration μ ℱ] (hf : Martingale f ℱ μ
   by
   rw [← @set_integral_condexp _ _ _ _ _ (ℱ i) m0 _ _ _ (ℱ.le i) _ (hf.integrable j) hs]
   refine' set_integral_congr_ae (ℱ.le i s hs) _
-  filter_upwards [hf.2 i j hij] with _ heq _ using HEq.symm
+  filter_upwards [hf.2 i j hij]with _ heq _ using HEq.symm
 #align measure_theory.martingale.set_integral_eq MeasureTheory.Martingale.set_integral_eq
 
 theorem add (hf : Martingale f ℱ μ) (hg : Martingale g ℱ μ) : Martingale (f + g) ℱ μ :=
@@ -200,7 +200,7 @@ theorem set_integral_le [SigmaFiniteFiltration μ ℱ] {f : ι → Ω → ℝ} (
   by
   rw [← set_integral_condexp (ℱ.le i) (hf.integrable j) hs]
   refine' set_integral_mono_ae integrable_condexp.integrable_on (hf.integrable i).IntegrableOn _
-  filter_upwards [hf.2.1 i j hij] with _ heq using HEq
+  filter_upwards [hf.2.1 i j hij]with _ heq using HEq
 #align measure_theory.supermartingale.set_integral_le MeasureTheory.Supermartingale.set_integral_le
 
 theorem add [Preorder E] [CovariantClass E E (· + ·) (· ≤ ·)] (hf : Supermartingale f ℱ μ)
@@ -223,7 +223,7 @@ theorem neg [Preorder E] [CovariantClass E E (· + ·) (· ≤ ·)] (hf : Superm
   by
   refine' ⟨hf.1.neg, fun i j hij => _, fun i => (hf.2.2 i).neg⟩
   refine' eventually_le.trans _ (condexp_neg (f j)).symm.le
-  filter_upwards [hf.2.1 i j hij] with _ _
+  filter_upwards [hf.2.1 i j hij]with _ _
   simpa
 #align measure_theory.supermartingale.neg MeasureTheory.Supermartingale.neg
 
@@ -271,7 +271,7 @@ theorem neg [Preorder E] [CovariantClass E E (· + ·) (· ≤ ·)] (hf : Submar
     Supermartingale (-f) ℱ μ :=
   by
   refine' ⟨hf.1.neg, fun i j hij => (condexp_neg (f j)).le.trans _, fun i => (hf.2.2 i).neg⟩
-  filter_upwards [hf.2.1 i j hij] with _ _
+  filter_upwards [hf.2.1 i j hij]with _ _
   simpa
 #align measure_theory.submartingale.neg MeasureTheory.Submartingale.neg
 
@@ -333,7 +333,7 @@ theorem submartingaleOfSetIntegralLe [IsFiniteMeasure μ] {f : ι → Ω → ℝ
   suffices f i ≤ᵐ[μ.trim (ℱ.le i)] μ[f j|ℱ i] by exact ae_le_of_ae_le_trim this
   suffices 0 ≤ᵐ[μ.trim (ℱ.le i)] μ[f j|ℱ i] - f i
     by
-    filter_upwards [this] with x hx
+    filter_upwards [this]with x hx
     rwa [← sub_nonneg]
   refine'
     ae_nonneg_of_forall_set_integral_nonneg
@@ -399,7 +399,7 @@ theorem smulNonneg {f : ι → Ω → F} {c : ℝ} (hc : 0 ≤ c) (hf : Supermar
   by
   refine' ⟨hf.1.smul c, fun i j hij => _, fun i => (hf.2.2 i).smul c⟩
   refine' (condexp_smul c (f j)).le.trans _
-  filter_upwards [hf.2.1 i j hij] with _ hle
+  filter_upwards [hf.2.1 i j hij]with _ hle
   simp
   exact smul_le_smul_of_nonneg hle hc
 #align measure_theory.supermartingale.smul_nonneg MeasureTheory.Supermartingale.smulNonneg
@@ -502,7 +502,7 @@ theorem supermartingaleNat [IsFiniteMeasure μ] {f : ℕ → Ω → ℝ} (hadp :
   refine'
     (submartingale_nat hadp.neg (fun i => (hint i).neg) fun i =>
         eventually_le.trans _ (condexp_neg _).symm.le).neg
-  filter_upwards [hf i] with x hx using neg_le_neg hx
+  filter_upwards [hf i]with x hx using neg_le_neg hx
 #align measure_theory.supermartingale_nat MeasureTheory.supermartingaleNat
 
 theorem martingaleNat [IsFiniteMeasure μ] {f : ℕ → Ω → ℝ} (hadp : Adapted 𝒢 f)
@@ -541,7 +541,7 @@ theorem martingaleOfCondexpSubEqZeroNat [IsFiniteMeasure μ] {f : ℕ → Ω →
         submartingale_of_condexp_sub_nonneg_nat hadp hint fun i => (hf i).symm.le⟩
   rw [← neg_sub]
   refine' (eventually_eq.trans _ (condexp_neg _).symm).le
-  filter_upwards [hf i] with x hx
+  filter_upwards [hf i]with x hx
   simpa only [Pi.zero_apply, Pi.neg_apply, zero_eq_neg]
 #align measure_theory.martingale_of_condexp_sub_eq_zero_nat MeasureTheory.martingaleOfCondexpSubEqZeroNat
 

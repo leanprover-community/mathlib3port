@@ -124,7 +124,7 @@ theorem fAux_deriv_pos (n : ℕ) (x : ℝ) (hx : 0 < x) :
     HasDerivAt (fAux n) ((pAux (n + 1)).eval x * exp (-x⁻¹) / x ^ (2 * (n + 1))) x :=
   by
   apply (f_aux_deriv n x (ne_of_gt hx)).congr_of_eventually_eq
-  filter_upwards [lt_mem_nhds hx] with _ hy
+  filter_upwards [lt_mem_nhds hx]with _ hy
   simp [f_aux, hy.not_le]
 #align exp_neg_inv_glue.f_aux_deriv_pos expNegInvGlue.fAux_deriv_pos
 
@@ -187,7 +187,7 @@ theorem fAux_hasDerivAt (n : ℕ) (x : ℝ) : HasDerivAt (fAux n) (fAux (n + 1) 
   · have : f_aux (n + 1) x = 0 := by simp [f_aux, le_of_lt hx]
     rw [this]
     apply (hasDerivAt_const x (0 : ℝ)).congr_of_eventually_eq
-    filter_upwards [gt_mem_nhds hx] with _ hy
+    filter_upwards [gt_mem_nhds hx]with _ hy
     simp [f_aux, hy.le]
   · have : f_aux (n + 1) 0 = 0 := by simp [f_aux, le_refl]
     rw [hx, this]

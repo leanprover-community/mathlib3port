@@ -1637,7 +1637,7 @@ theorem setToFun_nonneg {T : Set α → G' →L[ℝ] G''} {C : ℝ} (hT : Domina
     rw [← Lp.coe_fn_le]
     have h0 := Lp.coe_fn_zero G' 1 μ
     have h := integrable.coe_fn_to_L1 hfi
-    filter_upwards [h0, h, hf] with _ h0a ha hfa
+    filter_upwards [h0, h, hf]with _ h0a ha hfa
     rw [h0a, ha]
     exact hfa
   · simp_rw [set_to_fun_undef _ hfi]
@@ -1677,14 +1677,14 @@ theorem tendsto_setToFun_of_L1 (hT : DominatedFinMeasAdditive μ T C) {ι} (f : 
       rw [Lp.tendsto_Lp_iff_tendsto_ℒp']
       simp_rw [snorm_one_eq_lintegral_nnnorm, Pi.sub_apply]
       refine' (tendsto_congr' _).mp hfs
-      filter_upwards [hfsi] with i hi
+      filter_upwards [hfsi]with i hi
       refine' lintegral_congr_ae _
-      filter_upwards [hi.coe_fn_to_L1, hfi.coe_fn_to_L1] with x hxi hxf
+      filter_upwards [hi.coe_fn_to_L1, hfi.coe_fn_to_L1]with x hxi hxf
       simp_rw [F_lp, dif_pos hi, hxi, hxf]
     suffices tendsto (fun i => set_to_fun μ T hT (F_lp i)) l (𝓝 (set_to_fun μ T hT f))
       by
       refine' (tendsto_congr' _).mp this
-      filter_upwards [hfsi] with i hi
+      filter_upwards [hfsi]with i hi
       suffices h_ae_eq : F_lp i =ᵐ[μ] fs i
       exact set_to_fun_congr_ae hT h_ae_eq
       simp_rw [F_lp, dif_pos hi]
@@ -1998,9 +1998,9 @@ theorem continuousOn_setToFun_of_dominated (hT : DominatedFinMeasAdditive μ T C
   by
   intro x hx
   refine' continuous_within_at_set_to_fun_of_dominated hT _ _ bound_integrable _
-  · filter_upwards [self_mem_nhdsWithin] with x hx using hfs_meas x hx
-  · filter_upwards [self_mem_nhdsWithin] with x hx using h_bound x hx
-  · filter_upwards [h_cont] with a ha using ha x hx
+  · filter_upwards [self_mem_nhdsWithin]with x hx using hfs_meas x hx
+  · filter_upwards [self_mem_nhdsWithin]with x hx using h_bound x hx
+  · filter_upwards [h_cont]with a ha using ha x hx
 #align measure_theory.continuous_on_set_to_fun_of_dominated MeasureTheory.continuousOn_setToFun_of_dominated
 
 theorem continuous_setToFun_of_dominated (hT : DominatedFinMeasAdditive μ T C) {fs : X → α → E}

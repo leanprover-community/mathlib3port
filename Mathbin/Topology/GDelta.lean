@@ -199,7 +199,7 @@ theorem isGδ_setOf_continuousAt [UniformSpace β] [IsCountablyGenerated (𝓤 �
     set_of_forall, id]
   refine' isGδ_interᵢ fun k => IsOpen.isGδ <| isOpen_iff_mem_nhds.2 fun x => _
   rintro ⟨s, ⟨hsx, hso⟩, hsU⟩
-  filter_upwards [IsOpen.mem_nhds hso hsx] with _ hy using⟨s, ⟨hy, hso⟩, hsU⟩
+  filter_upwards [IsOpen.mem_nhds hso hsx]with _ hy using⟨s, ⟨hy, hso⟩, hsU⟩
 #align is_Gδ_set_of_continuous_at isGδ_setOf_continuousAt
 
 end ContinuousAt

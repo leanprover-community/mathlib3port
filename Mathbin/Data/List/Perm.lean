@@ -1563,7 +1563,7 @@ theorem Perm.take_inter {α} [DecidableEq α] {xs ys : List α} (n : ℕ) (h : x
     have := h₁ _ (Or.inl rfl)
     cases n <;> simp only [mem_cons_iff, not_mem_nil, filter_false, take]
     cases n <;>
-      simp only [mem_cons_iff, false_or_iff, true_or_iff, filter, *, Nat.zero_eq, if_true,
+      simp only [mem_cons_iff, false_or_iff, true_or_iff, Filter, *, Nat.zero_eq, if_true,
         not_mem_nil, eq_self_iff_true, or_false_iff, if_false, perm_cons, take]
     · rw [filter_eq_nil.2]
       intros

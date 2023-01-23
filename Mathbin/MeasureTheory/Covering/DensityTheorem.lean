@@ -125,7 +125,7 @@ theorem tendsto_closedBall_filterAt {K : ℝ} {x : α} {ι : Type _} {l : Filter
     Tendsto (fun j => closedBall (w j) (δ j)) l ((vitaliFamily μ K).filterAt x) :=
   by
   refine' (VitaliFamily μ K).tendsto_filter_at_iff.mpr ⟨_, fun ε hε => _⟩
-  · filter_upwards [xmem, δlim self_mem_nhdsWithin] with j hj h'j
+  · filter_upwards [xmem, δlim self_mem_nhdsWithin]with j hj h'j
     exact closed_ball_mem_vitali_family_of_dist_le_mul μ hj h'j
   · by_cases l.ne_bot
     swap
@@ -165,7 +165,7 @@ theorem ae_tendsto_measure_inter_div (S : Set α) (K : ℝ) :
         Tendsto (fun j => μ (S ∩ closedBall (w j) (δ j)) / μ (closedBall (w j) (δ j))) l (𝓝 1) :=
   by
   filter_upwards [(VitaliFamily μ K).ae_tendsto_measure_inter_div
-      S] with x hx ι l w δ δlim xmem using hx.comp (tendsto_closed_ball_filter_at μ _ _ δlim xmem)
+      S]with x hx ι l w δ δlim xmem using hx.comp (tendsto_closed_ball_filter_at μ _ _ δlim xmem)
 #align is_doubling_measure.ae_tendsto_measure_inter_div IsDoublingMeasure.ae_tendsto_measure_inter_div
 
 /-- A version of *Lebesgue differentiation theorem* for a sequence of closed balls whose
@@ -177,7 +177,7 @@ theorem ae_tendsto_average_norm_sub {f : α → E} (hf : Integrable f μ) (K : �
         Tendsto (fun j => ⨍ y in closedBall (w j) (δ j), ‖f y - f x‖ ∂μ) l (𝓝 0) :=
   by
   filter_upwards [(VitaliFamily μ K).ae_tendsto_average_norm_sub
-      hf] with x hx ι l w δ δlim xmem using hx.comp (tendsto_closed_ball_filter_at μ _ _ δlim xmem)
+      hf]with x hx ι l w δ δlim xmem using hx.comp (tendsto_closed_ball_filter_at μ _ _ δlim xmem)
 #align is_doubling_measure.ae_tendsto_average_norm_sub IsDoublingMeasure.ae_tendsto_average_norm_sub
 
 /-- A version of *Lebesgue differentiation theorem* for a sequence of closed balls whose
@@ -190,7 +190,7 @@ theorem ae_tendsto_average [NormedSpace ℝ E] [CompleteSpace E] {f : α → E} 
         Tendsto (fun j => ⨍ y in closedBall (w j) (δ j), f y ∂μ) l (𝓝 (f x)) :=
   by
   filter_upwards [(VitaliFamily μ K).ae_tendsto_average
-      hf] with x hx ι l w δ δlim xmem using hx.comp (tendsto_closed_ball_filter_at μ _ _ δlim xmem)
+      hf]with x hx ι l w δ δlim xmem using hx.comp (tendsto_closed_ball_filter_at μ _ _ δlim xmem)
 #align is_doubling_measure.ae_tendsto_average IsDoublingMeasure.ae_tendsto_average
 
 end Applications

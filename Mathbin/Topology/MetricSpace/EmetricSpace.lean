@@ -89,8 +89,8 @@ def uniformSpaceOfEdist (edist : α → α → ℝ≥0∞) (edist_self : ∀ x :
       symm :=
         tendsto_infᵢ.2 fun ε =>
           tendsto_infᵢ.2 fun h =>
-            tendsto_infi' ε <|
-              tendsto_infi' h <| tendsto_principal_principal.2 <| by simp [edist_comm] }
+            tendsto_infᵢ' ε <|
+              tendsto_infᵢ' h <| tendsto_principal_principal.2 <| by simp [edist_comm] }
 #align uniform_space_of_edist uniformSpaceOfEdist
 
 -- the uniform structure is embedded in the emetric space structure

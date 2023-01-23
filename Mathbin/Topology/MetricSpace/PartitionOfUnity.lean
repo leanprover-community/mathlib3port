@@ -59,7 +59,7 @@ theorem eventually_nhds_zero_forall_closedBall_subset (hK : ∀ i, IsClosed (K i
   rcases nhds_basis_closed_eball.mem_iff.1 ((hU i).mem_nhds <| hKU i hi) with ⟨R, hR₀, hR⟩
   rcases ennreal.lt_iff_exists_nnreal_btwn.mp hR₀ with ⟨r, hr₀, hrR⟩
   filter_upwards [prod_mem_prod (eventually_lt_nhds hr₀)
-      (closed_ball_mem_nhds x (tsub_pos_iff_lt.2 hrR))] with p hp z hz
+      (closed_ball_mem_nhds x (tsub_pos_iff_lt.2 hrR))]with p hp z hz
   apply hR
   calc
     edist z x ≤ edist z p.2 + edist p.2 x := edist_triangle _ _ _

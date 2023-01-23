@@ -608,7 +608,7 @@ theorem measure_limRatioMeas_zero : ρ { x | v.limRatioMeas hρ x = 0 } = 0 :=
     exact nhdsWithin_le_nhds
   simp only [zero_mul, Ennreal.coe_zero] at B
   apply ge_of_tendsto B
-  filter_upwards [self_mem_nhdsWithin] using A
+  filter_upwards [self_mem_nhdsWithin]using A
 #align vitali_family.measure_lim_ratio_meas_zero VitaliFamily.measure_limRatioMeas_zero
 
 /-- As an intermediate step to show that `μ.with_density (v.lim_ratio_meas hρ) = ρ`, we show here
@@ -761,7 +761,7 @@ theorem withDensity_limRatioMeas_eq : μ.withDensity (v.limRatioMeas hρ) = ρ :
       · simp only [one_pow, Ennreal.coe_one, Ne.def, or_true_iff, Ennreal.one_ne_top, not_false_iff]
     simp only [one_pow, one_mul, Ennreal.coe_one] at this
     refine' ge_of_tendsto this _
-    filter_upwards [self_mem_nhdsWithin] with _ ht
+    filter_upwards [self_mem_nhdsWithin]with _ ht
     exact v.with_density_le_mul hρ hs ht
   · have :
       tendsto (fun t : ℝ≥0 => (t : ℝ≥0∞) * μ.with_density (v.lim_ratio_meas hρ) s) (𝓝[>] 1)
@@ -771,7 +771,7 @@ theorem withDensity_limRatioMeas_eq : μ.withDensity (v.limRatioMeas hρ) = ρ :
       simp only [Ennreal.coe_one, true_or_iff, Ne.def, not_false_iff, one_neZero]
     simp only [one_mul, Ennreal.coe_one] at this
     refine' ge_of_tendsto this _
-    filter_upwards [self_mem_nhdsWithin] with _ ht
+    filter_upwards [self_mem_nhdsWithin]with _ ht
     exact v.le_mul_with_density hρ hs ht
 #align vitali_family.with_density_lim_ratio_meas_eq VitaliFamily.withDensity_limRatioMeas_eq
 
@@ -789,7 +789,7 @@ theorem ae_tendsto_rnDeriv_of_absolutelyContinuous :
   have A : (μ.with_density (v.lim_ratio_meas hρ)).rnDeriv μ =ᵐ[μ] v.lim_ratio_meas hρ :=
     rn_deriv_with_density μ (v.lim_ratio_meas_measurable hρ)
   rw [v.with_density_lim_ratio_meas_eq hρ] at A
-  filter_upwards [v.ae_tendsto_lim_ratio_meas hρ, A] with _ _ h'x
+  filter_upwards [v.ae_tendsto_lim_ratio_meas hρ, A]with _ _ h'x
   rwa [h'x]
 #align vitali_family.ae_tendsto_rn_deriv_of_absolutely_continuous VitaliFamily.ae_tendsto_rnDeriv_of_absolutelyContinuous
 
@@ -812,7 +812,7 @@ theorem ae_tendsto_rnDeriv :
     rn_deriv_with_density μ (measurable_rn_deriv ρ μ)
   have C : ∀ᵐ x ∂μ, tendsto (fun a => t a / μ a) (v.filter_at x) (𝓝 (t.rn_deriv μ x)) :=
     v.ae_tendsto_rn_deriv_of_absolutely_continuous (with_density_absolutely_continuous _ _)
-  filter_upwards [A, B, C] with _ Ax Bx Cx
+  filter_upwards [A, B, C]with _ Ax Bx Cx
   convert Ax.add Cx
   · ext1 a
     conv_lhs => rw [eq_add]
@@ -854,12 +854,12 @@ theorem ae_tendsto_measure_inter_div (s : Set α) :
   have B : ∀ᵐ x ∂μ.restrict s, t.indicator 1 x = (1 : ℝ≥0∞) :=
     by
     refine' ae_restrict_of_ae_restrict_of_subset (subset_to_measurable μ s) _
-    filter_upwards [ae_restrict_mem (measurable_set_to_measurable μ s)] with _ hx
+    filter_upwards [ae_restrict_mem (measurable_set_to_measurable μ s)]with _ hx
     simp only [hx, Pi.one_apply, indicator_of_mem]
-  filter_upwards [A, B] with x hx h'x
+  filter_upwards [A, B]with x hx h'x
   rw [h'x] at hx
   apply hx.congr' _
-  filter_upwards [v.eventually_filter_at_measurable_set x] with _ ha
+  filter_upwards [v.eventually_filter_at_measurable_set x]with _ ha
   congr 1
   exact measure_to_measurable_inter_of_sigma_finite ha _
 #align vitali_family.ae_tendsto_measure_inter_div VitaliFamily.ae_tendsto_measure_inter_div
@@ -872,10 +872,10 @@ theorem ae_tendsto_lintegral_div' {f : α → ℝ≥0∞} (hf : Measurable f) (h
   by
   let ρ := μ.with_density f
   have : is_finite_measure ρ := is_finite_measure_with_density h'f
-  filter_upwards [ae_tendsto_rn_deriv v ρ, rn_deriv_with_density μ hf] with x hx h'x
+  filter_upwards [ae_tendsto_rn_deriv v ρ, rn_deriv_with_density μ hf]with x hx h'x
   rw [← h'x]
   apply hx.congr' _
-  filter_upwards [v.eventually_filter_at_measurable_set] with a ha
+  filter_upwards [v.eventually_filter_at_measurable_set]with a ha
   rw [← with_density_apply f ha]
 #align vitali_family.ae_tendsto_lintegral_div' VitaliFamily.ae_tendsto_lintegral_div'
 
@@ -886,7 +886,7 @@ theorem ae_tendsto_lintegral_div {f : α → ℝ≥0∞} (hf : AeMeasurable f μ
     convert h'f using 1
     apply lintegral_congr_ae
     exact hf.ae_eq_mk.symm
-  filter_upwards [v.ae_tendsto_lintegral_div' hf.measurable_mk A, hf.ae_eq_mk] with x hx h'x
+  filter_upwards [v.ae_tendsto_lintegral_div' hf.measurable_mk A, hf.ae_eq_mk]with x hx h'x
   rw [h'x]
   convert hx
   ext1 a
@@ -936,7 +936,7 @@ theorem ae_tendsto_lintegral_nnnorm_sub_div' {f : α → E} (hf : Integrable f �
               integrable_on_const, A.finite n, or_true_iff]
           Ennreal.add_lt_add hf.2 I.2
         
-  filter_upwards [main, v.ae_eventually_measure_pos] with x hx h'x
+  filter_upwards [main, v.ae_eventually_measure_pos]with x hx h'x
   have M :
     ∀ c ∈ t, tendsto (fun a => (∫⁻ y in a, ‖f y - c‖₊ ∂μ) / μ a) (v.filter_at x) (𝓝 ‖f x - c‖₊) :=
     by
@@ -946,7 +946,7 @@ theorem ae_tendsto_lintegral_nnnorm_sub_div' {f : α → E} (hf : Integrable f �
     simp only [xn, indicator_of_mem] at hx
     apply hx.congr' _
     filter_upwards [v.eventually_filter_at_subset_of_nhds (IsOpen.mem_nhds (A.set_mem n) xn),
-      v.eventually_filter_at_measurable_set] with a ha h'a
+      v.eventually_filter_at_measurable_set]with a ha h'a
     congr 1
     apply set_lintegral_congr_fun h'a
     apply eventually_of_forall fun y => _
@@ -959,7 +959,7 @@ theorem ae_tendsto_lintegral_nnnorm_sub_div' {f : α → E} (hf : Integrable f �
     have : f x ∈ closure t := ht (mem_range_self _)
     exact Emetric.mem_closure_iff.1 this (ε / 2) (Ennreal.half_pos (ne_of_gt εpos))
   filter_upwards [(tendsto_order.1 (M c ct)).2 (ε / 2) xc, h'x,
-    v.eventually_measure_lt_top x] with a ha h'a h''a
+    v.eventually_measure_lt_top x]with a ha h'a h''a
   apply Ennreal.div_le_of_le_mul
   calc
     (∫⁻ y in a, ‖f y - f x‖₊ ∂μ) ≤ ∫⁻ y in a, ‖f y - c‖₊ + ‖f x - c‖₊ ∂μ :=
@@ -983,13 +983,13 @@ theorem ae_tendsto_lintegral_nnnorm_sub_div {f : α → E} (hf : Integrable f μ
   by
   have I : integrable (hf.1.mk f) μ := hf.congr hf.1.ae_eq_mk
   filter_upwards [v.ae_tendsto_lintegral_nnnorm_sub_div' I hf.1.strongly_measurable_mk,
-    hf.1.ae_eq_mk] with x hx h'x
+    hf.1.ae_eq_mk]with x hx h'x
   apply hx.congr _
   intro a
   congr 1
   apply lintegral_congr_ae
   apply ae_restrict_of_ae
-  filter_upwards [hf.1.ae_eq_mk] with y hy
+  filter_upwards [hf.1.ae_eq_mk]with y hy
   rw [hy, h'x]
 #align vitali_family.ae_tendsto_lintegral_nnnorm_sub_div VitaliFamily.ae_tendsto_lintegral_nnnorm_sub_div
 
@@ -999,11 +999,11 @@ theorem ae_tendsto_average_norm_sub {f : α → E} (hf : Integrable f μ) :
     ∀ᵐ x ∂μ, Tendsto (fun a => ⨍ y in a, ‖f y - f x‖ ∂μ) (v.filterAt x) (𝓝 0) :=
   by
   filter_upwards [v.ae_tendsto_lintegral_nnnorm_sub_div hf,
-    v.ae_eventually_measure_pos] with x hx h'x
+    v.ae_eventually_measure_pos]with x hx h'x
   have := (Ennreal.tendsto_toReal Ennreal.zero_ne_top).comp hx
   simp only [Ennreal.zero_toReal] at this
   apply tendsto.congr' _ this
-  filter_upwards [h'x, v.eventually_measure_lt_top x] with a ha h'a
+  filter_upwards [h'x, v.eventually_measure_lt_top x]with a ha h'a
   simp only [Function.comp_apply, Ennreal.toReal_div, set_average_eq, div_eq_inv_mul]
   have A : integrable_on (fun y => (‖f y - f x‖₊ : ℝ)) a μ :=
     by
@@ -1022,10 +1022,10 @@ average of `f` on `a` tends to `f x` as `a` shrinks to `x` along a Vitali family
 theorem ae_tendsto_average [NormedSpace ℝ E] [CompleteSpace E] {f : α → E} (hf : Integrable f μ) :
     ∀ᵐ x ∂μ, Tendsto (fun a => ⨍ y in a, f y ∂μ) (v.filterAt x) (𝓝 (f x)) :=
   by
-  filter_upwards [v.ae_tendsto_average_norm_sub hf, v.ae_eventually_measure_pos] with x hx h'x
+  filter_upwards [v.ae_tendsto_average_norm_sub hf, v.ae_eventually_measure_pos]with x hx h'x
   rw [tendsto_iff_norm_tendsto_zero]
   refine' squeeze_zero' (eventually_of_forall fun a => norm_nonneg _) _ hx
-  filter_upwards [h'x, v.eventually_measure_lt_top x] with a ha h'a
+  filter_upwards [h'x, v.eventually_measure_lt_top x]with a ha h'a
   nth_rw 1 [← set_average_const ha.ne' h'a.ne (f x)]
   simp_rw [set_average_eq']
   rw [← integral_sub]

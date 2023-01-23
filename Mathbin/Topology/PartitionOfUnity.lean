@@ -429,7 +429,7 @@ theorem exists_finset_toPouFun_eventuallyEq (i : ι) (x : X) :
   by
   rcases f.locally_finite x with ⟨U, hU, hf⟩
   use hf.to_finset
-  filter_upwards [hU] with y hyU
+  filter_upwards [hU]with y hyU
   simp only [Pi.mul_apply, Finset.prod_apply]
   apply to_pou_fun_eq_mul_prod
   intro j hji hj

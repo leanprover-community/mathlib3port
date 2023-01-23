@@ -101,7 +101,7 @@ theorem equicontinuousAt_of_continuity_modulus {ι : Type _} [TopologicalSpace �
   by
   rw [Metric.equicontinuousAt_iff_right]
   intro ε ε0
-  filter_upwards [b_lim (iio_mem_nhds ε0), H] using fun x hx₁ hx₂ i => (hx₂ i).trans_lt hx₁
+  filter_upwards [b_lim (iio_mem_nhds ε0), H]using fun x hx₁ hx₂ i => (hx₂ i).trans_lt hx₁
 #align metric.equicontinuous_at_of_continuity_modulus Metric.equicontinuousAt_of_continuity_modulus
 
 /-- For a family of functions between (pseudo) metric spaces, a convenient way to prove

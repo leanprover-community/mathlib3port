@@ -92,7 +92,7 @@ theorem integrableRpowMulExpNegMulSq {b : ℝ} (hb : 0 < b) {s : ℝ} (hs : -1 <
       (measurable_id'.neg.pow measurable_const).mul
         ((measurable_id'.pow measurable_const).const_mul (-b)).exp
   · have : MeasurableSet (Ioi (0 : ℝ)) := measurableSet_ioi
-    filter_upwards [ae_restrict_mem this] with x hx
+    filter_upwards [ae_restrict_mem this]with x hx
     have h'x : 0 ≤ x := le_of_lt hx
     rw [Real.norm_eq_abs, abs_mul, abs_of_nonneg (exp_pos _).le]
     apply mul_le_mul_of_nonneg_right _ (exp_pos _).le

@@ -90,7 +90,7 @@ def UniformSpace.coreOfDist {α : Type _} (dist : α → α → ℝ) (dist_self 
   symm :=
     tendsto_infᵢ.2 fun ε =>
       tendsto_infᵢ.2 fun h =>
-        tendsto_infi' ε <| tendsto_infi' h <| tendsto_principal_principal.2 <| by simp [dist_comm]
+        tendsto_infᵢ' ε <| tendsto_infᵢ' h <| tendsto_principal_principal.2 <| by simp [dist_comm]
 #align uniform_space.core_of_dist UniformSpace.coreOfDist
 
 /-- Construct a uniform structure from a distance function and metric space axioms -/
@@ -1646,7 +1646,7 @@ theorem eventually_closedBall_subset {x : α} {u : Set α} (hu : u ∈ 𝓝 x) :
   obtain ⟨ε, εpos, hε⟩ : ∃ (ε : _)(hε : 0 < ε), closed_ball x ε ⊆ u :=
     nhds_basis_closed_ball.mem_iff.1 hu
   have : Iic ε ∈ 𝓝 (0 : ℝ) := iic_mem_nhds εpos
-  filter_upwards [this] with _ hr using subset.trans (closed_ball_subset_closed_ball hr) hε
+  filter_upwards [this]with _ hr using subset.trans (closed_ball_subset_closed_ball hr) hε
 #align eventually_closed_ball_subset eventually_closedBall_subset
 
 end Real
@@ -3070,7 +3070,7 @@ theorem IsComplete.nonempty_interᵢ_of_nonempty_bInter {s : ℕ → Set α} (h0
     cauchySeq_tendsto_of_isComplete h0 (fun n => I 0 n (zero_le _)) this
   refine' ⟨x, mem_Inter.2 fun n => _⟩
   apply (hs n).mem_of_tendsto xlim
-  filter_upwards [Ici_mem_at_top n] with p hp
+  filter_upwards [Ici_mem_at_top n]with p hp
   exact I n p hp
 #align is_complete.nonempty_Inter_of_nonempty_bInter IsComplete.nonempty_interᵢ_of_nonempty_bInter
 

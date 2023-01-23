@@ -78,9 +78,9 @@ protected theorem congr' (h_left : ∀ᶠ i in l, f i =ᵐ[μ] f' i) (h_right : 
     by
     rw [tendsto_congr' this]
     exact h_tendsto ε hε
-  filter_upwards [h_left] with i h_ae_eq
+  filter_upwards [h_left]with i h_ae_eq
   refine' measure_congr _
-  filter_upwards [h_ae_eq, h_right] with x hxf hxg
+  filter_upwards [h_ae_eq, h_right]with x hxf hxg
   rw [eq_iff_iff]
   change ε ≤ dist (f' i x) (g' x) ↔ ε ≤ dist (f i x) (g x)
   rw [hxg, hxf]
@@ -142,7 +142,7 @@ theorem tendstoInMeasureOfTendstoAe [IsFiniteMeasure μ] (hf : ∀ n, AeStrongly
       hg.strongly_measurable_mk _
   have hf_eq_ae : ∀ᵐ x ∂μ, ∀ n, (hf n).mk (f n) x = f n x :=
     ae_all_iff.mpr fun n => (hf n).ae_eq_mk.symm
-  filter_upwards [hf_eq_ae, hg.ae_eq_mk, hfg] with x hxf hxg hxfg
+  filter_upwards [hf_eq_ae, hg.ae_eq_mk, hfg]with x hxf hxg hxfg
   rw [← hxg, funext fun n => hxf n]
   exact hxfg
 #align measure_theory.tendsto_in_measure_of_tendsto_ae MeasureTheory.tendstoInMeasureOfTendstoAe

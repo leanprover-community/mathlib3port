@@ -84,7 +84,7 @@ theorem condexp_indep_eq (hle₁ : m₁ ≤ m) (hle₂ : m₂ ≤ m) [SigmaFinit
   · intro u v huv huint hueq
     rwa [← integral_congr_ae huv, ←
       (set_integral_congr_ae (hle₂ _ hms) _ : (∫ x in s, u x ∂μ) = ∫ x in s, v x ∂μ)]
-    filter_upwards [huv] with x hx _ using hx
+    filter_upwards [huv]with x hx _ using hx
   · exact ⟨f, hf, eventually_eq.rfl⟩
 #align measure_theory.condexp_indep_eq MeasureTheory.condexp_indep_eq
 

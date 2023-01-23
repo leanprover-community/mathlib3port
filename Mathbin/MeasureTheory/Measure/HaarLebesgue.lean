@@ -602,7 +602,7 @@ theorem add_haar_singleton_add_smul_div_singleton_add_smul {r : ℝ} (hr : r ≠
 instance (priority := 100) isDoublingMeasureOfIsAddHaarMeasure : IsDoublingMeasure μ :=
   by
   refine' ⟨⟨(2 : ℝ≥0) ^ finrank ℝ E, _⟩⟩
-  filter_upwards [self_mem_nhdsWithin] with r hr x
+  filter_upwards [self_mem_nhdsWithin]with r hr x
   rw [add_haar_closed_ball_mul μ x zero_le_two (le_of_lt hr), add_haar_closed_ball_center μ x,
     Ennreal.ofReal, Real.toNnreal_pow zero_le_two]
   simp only [Real.toNnreal_bit0, Real.toNnreal_one, le_refl]

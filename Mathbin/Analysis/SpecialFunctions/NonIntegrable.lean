@@ -156,7 +156,7 @@ theorem not_intervalIntegrable_of_sub_inv_isO_punctured {f : ℝ → F} {a b c :
   by
   have A : ∀ᶠ x in 𝓝[≠] c, HasDerivAt (fun x => Real.log (x - c)) (x - c)⁻¹ x :=
     by
-    filter_upwards [self_mem_nhdsWithin] with x hx
+    filter_upwards [self_mem_nhdsWithin]with x hx
     simpa using ((hasDerivAt_id x).sub_const c).log (sub_ne_zero.2 hx)
   have B : tendsto (fun x => ‖Real.log (x - c)‖) (𝓝[≠] c) at_top :=
     by

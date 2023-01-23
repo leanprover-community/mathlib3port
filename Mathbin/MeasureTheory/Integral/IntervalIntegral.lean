@@ -1850,7 +1850,7 @@ theorem measure_integral_sub_integral_sub_linear_isO_of_tendsto_ae
   have B' : ∀ᶠ t in lt, IntervalIntegrable f μ b (ub t) :=
     hb_lim.eventually_interval_integrable_ae hmeas_b (FTC_filter.finite_at_inner lb)
       (tendsto_const_pure.mono_right FTC_filter.pure_le) hub
-  filter_upwards [A, A', B, B'] with _ ua_va a_ua ub_vb b_ub
+  filter_upwards [A, A', B, B']with _ ua_va a_ua ub_vb b_ub
   rw [← integral_interval_sub_interval_comm']
   · dsimp only
     abel
@@ -2473,7 +2473,7 @@ theorem sub_le_integral_of_has_deriv_right_of_le_ico (hab : a ≤ b)
         mem_nhdsWithin_ioi_iff_exists_ioo_subset.2
           ⟨min M b, by simp only [hM, ht.right.right, lt_min_iff, mem_Ioi, and_self_iff],
             subset.refl _⟩
-      filter_upwards [this] with u hu
+      filter_upwards [this]with u hu
       have I : Icc t u ⊆ Icc a b := Icc_subset_Icc ht.2.1 (hu.2.le.trans (min_le_right _ _))
       calc
         (u - t) * y = ∫ v in Icc t u, y := by
@@ -2490,7 +2490,7 @@ theorem sub_le_integral_of_has_deriv_right_of_le_ico (hab : a ≤ b)
               ae_mono (measure.restrict_mono I le_rfl) G'lt_top
             have C2 : ∀ᵐ x : ℝ ∂volume.restrict (Icc t u), x ∈ Icc t u :=
               ae_restrict_mem measurableSet_icc
-            filter_upwards [C1, C2] with x G'x hx
+            filter_upwards [C1, C2]with x G'x hx
             apply Ereal.coe_le_coe_iff.1
             have : x ∈ Ioo m M := by
               simp only [hm.trans_le hx.left,
@@ -2503,13 +2503,13 @@ theorem sub_le_integral_of_has_deriv_right_of_le_ico (hab : a ≤ b)
       by
       have g'_lt_y : g' t < y := Ereal.coe_lt_coe_iff.1 g'_lt_y'
       filter_upwards [(hderiv t ⟨ht.2.1, ht.2.2⟩).limsup_slope_le' (not_mem_Ioi.2 le_rfl) g'_lt_y,
-        self_mem_nhdsWithin] with u hu t_lt_u
+        self_mem_nhdsWithin]with u hu t_lt_u
       have := mul_le_mul_of_nonneg_left hu.le (sub_pos.2 t_lt_u).le
       rwa [← smul_eq_mul, sub_smul_slope] at this
     -- combine the previous two bounds to show that `g u - g a` increases less quickly than
     -- `∫ x in a..u, G' x`.
     have I3 : ∀ᶠ u in 𝓝[>] t, g u - g t ≤ ∫ w in t..u, (G' w).toReal := by
-      filter_upwards [I1, I2] with u hu1 hu2 using hu2.trans hu1
+      filter_upwards [I1, I2]with u hu1 hu2 using hu2.trans hu1
     have I4 : ∀ᶠ u in 𝓝[>] t, u ∈ Ioc t (min v b) :=
       by
       refine' mem_nhdsWithin_ioi_iff_exists_ioc_subset.2 ⟨min v b, _, subset.refl _⟩
@@ -2659,7 +2659,7 @@ theorem integral_eq_sub_of_hasDerivAt_of_tendsto (hab : a < b) {fa fb}
   have Fderiv : ∀ x ∈ Ioo a b, HasDerivAt F (f' x) x :=
     by
     refine' fun x hx => (hderiv x hx).congr_of_eventually_eq _
-    filter_upwards [ioo_mem_nhds hx.1 hx.2] with _ hy
+    filter_upwards [ioo_mem_nhds hx.1 hx.2]with _ hy
     simp only [F]
     rw [update_noteq hy.2.Ne, update_noteq hy.1.ne']
   have hcont : ContinuousOn F (Icc a b) :=
@@ -2670,7 +2670,7 @@ theorem integral_eq_sub_of_hasDerivAt_of_tendsto (hab : a < b) {fa fb}
     · rintro -
       refine' (hb.congr' _).mono_left (nhdsWithin_mono _ Ico_subset_Iio_self)
       filter_upwards [ioo_mem_nhdsWithin_iio
-          (right_mem_Ioc.2 hab)] with _ hz using(update_noteq hz.1.ne' _ _).symm
+          (right_mem_Ioc.2 hab)]with _ hz using(update_noteq hz.1.ne' _ _).symm
   simpa [F, hab.ne, hab.ne'] using integral_eq_sub_of_has_deriv_at_of_le hab.le hcont Fderiv hint
 #align interval_integral.integral_eq_sub_of_has_deriv_at_of_tendsto intervalIntegral.integral_eq_sub_of_hasDerivAt_of_tendsto
 

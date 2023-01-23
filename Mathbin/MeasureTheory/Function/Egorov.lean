@@ -234,7 +234,7 @@ theorem tendstoUniformlyOn_of_ae_tendsto' [IsFiniteMeasure μ] (hf : ∀ n, Stro
     tendsto_uniformly_on_of_ae_tendsto hf hg MeasurableSet.univ (measure_ne_top μ univ) _ hε
   · refine' ⟨_, ht, _⟩
     rwa [compl_eq_univ_diff]
-  · filter_upwards [hfg] with _ htendsto _ using htendsto
+  · filter_upwards [hfg]with _ htendsto _ using htendsto
 #align measure_theory.tendsto_uniformly_on_of_ae_tendsto' MeasureTheory.tendstoUniformlyOn_of_ae_tendsto'
 
 end MeasureTheory

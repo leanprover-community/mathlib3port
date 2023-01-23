@@ -386,7 +386,7 @@ theorem isOpen_setOf_eventually_nhdsWithin [T1Space α] {p : α → Prop} :
     IsOpen { x | ∀ᶠ y in 𝓝[≠] x, p y } :=
   by
   refine' is_open_iff_mem_nhds.mpr fun a ha => _
-  filter_upwards [eventually_nhds_nhds_within.mpr ha] with b hb
+  filter_upwards [eventually_nhds_nhds_within.mpr ha]with b hb
   by_cases a = b
   · subst h
     exact hb

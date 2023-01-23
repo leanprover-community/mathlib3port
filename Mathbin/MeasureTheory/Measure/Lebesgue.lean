@@ -698,7 +698,7 @@ theorem ae_of_mem_of_ae_of_mem_inter_ioo {μ : Measure ℝ} [HasNoAtoms μ] {s :
       simp only [Ioo_eq_empty_of_le hba, inter_empty, IsEmpty.forall_iff, eventually_true,
         mem_empty_iff_false]
     · exact h a b as bs hab
-  filter_upwards [M, M'] with x hx h'x
+  filter_upwards [M, M']with x hx h'x
   intro xs
   by_cases Hx : x ∈ ⋃ i : ↥s × ↥s, T i
   · rw [← hA] at Hx

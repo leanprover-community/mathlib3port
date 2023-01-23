@@ -45,7 +45,7 @@ theorem tendstoUniformlyOn_tsum {f : α → β → F} (hu : Summable u) {s : Set
       s :=
   by
   refine' tendsto_uniformly_on_iff.2 fun ε εpos => _
-  filter_upwards [(tendsto_order.1 (tendsto_tsum_compl_atTop_zero u)).2 _ εpos] with t ht x hx
+  filter_upwards [(tendsto_order.1 (tendsto_tsum_compl_atTop_zero u)).2 _ εpos]with t ht x hx
   have A : Summable fun n => ‖f n x‖ :=
     summable_of_nonneg_of_le (fun n => norm_nonneg _) (fun n => hfu n x hx) hu
   rw [dist_eq_norm, ← sum_add_tsum_subtype_compl (summable_of_summable_norm A) t, add_sub_cancel']
@@ -302,7 +302,7 @@ theorem contDiff_tsum_of_eventually (hf : ∀ i, ContDiff 𝕜 N (f i))
       ext1 x
       refine' (sum_add_tsum_subtype_compl _ T).symm
       refine' summable_of_norm_bounded_eventually _ (hv 0 (zero_le _)) _
-      filter_upwards [h'f 0 (zero_le _)] with i hi
+      filter_upwards [h'f 0 (zero_le _)]with i hi
       simpa only [norm_iteratedFderiv_zero] using hi x
     rw [this]
     apply (ContDiff.sum fun i hi => (hf i).of_le hm).add

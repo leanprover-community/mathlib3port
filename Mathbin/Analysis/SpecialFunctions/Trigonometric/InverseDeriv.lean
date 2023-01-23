@@ -97,7 +97,7 @@ theorem differentiableWithinAt_arcsin_ici {x : ℝ} :
   rintro h rfl
   have : sin ∘ arcsin =ᶠ[𝓝[≥] (-1 : ℝ)] id := by
     filter_upwards [icc_mem_nhdsWithin_ici
-        ⟨le_rfl, neg_lt_self (zero_lt_one' ℝ)⟩] with x using sin_arcsin'
+        ⟨le_rfl, neg_lt_self (zero_lt_one' ℝ)⟩]with x using sin_arcsin'
   have := h.has_deriv_within_at.sin.congr_of_eventually_eq this.symm (by simp)
   simpa using (uniqueDiffOn_ici _ _ left_mem_Ici).eq_deriv _ this (hasDerivWithinAt_id _ _)
 #align real.differentiable_within_at_arcsin_Ici Real.differentiableWithinAt_arcsin_ici

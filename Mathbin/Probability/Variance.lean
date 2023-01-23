@@ -153,7 +153,7 @@ theorem evariance_zero : evariance 0 μ = 0 := by simp [evariance]
 theorem evariance_eq_zero_iff (hX : AeMeasurable X μ) : evariance X μ = 0 ↔ X =ᵐ[μ] fun ω => μ[X] :=
   by
   rw [evariance, lintegral_eq_zero_iff']
-  constructor <;> intro hX <;> filter_upwards [hX] with ω hω
+  constructor <;> intro hX <;> filter_upwards [hX]with ω hω
   · simp only [Pi.zero_apply, pow_eq_zero_iff, Nat.succ_pos', Ennreal.coe_eq_zero, nnnorm_eq_zero,
       sub_eq_zero] at hω
     exact hω

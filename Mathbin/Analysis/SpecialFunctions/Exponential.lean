@@ -102,7 +102,7 @@ theorem hasFderivAt_exp_of_mem_ball [CharZero 𝕂] {x : 𝔸}
     exact hasFderivAt_exp_zero_of_radius_pos hpos
   have : ∀ᶠ h in 𝓝 (0 : 𝔸), h ∈ Emetric.ball (0 : 𝔸) (expSeries 𝕂 𝔸).radius :=
     Emetric.ball_mem_nhds _ hpos
-  filter_upwards [this] with _ hh
+  filter_upwards [this]with _ hh
   rw [exp_add_of_mem_ball hx hh, exp_zero, zero_add, ContinuousLinearMap.id_apply, smul_eq_mul]
   ring
 #align has_fderiv_at_exp_of_mem_ball hasFderivAt_exp_of_mem_ball

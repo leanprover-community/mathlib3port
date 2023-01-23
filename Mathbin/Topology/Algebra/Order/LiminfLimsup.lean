@@ -293,7 +293,7 @@ theorem Antitone.map_limsup_of_continuousAt {F : Filter R} [NeBot F] {f : R → 
       Set.mem_image, exists_exists_and_eq_and] at hc⊢
     rcases hc with ⟨d, hd, h'd⟩
     refine' ⟨f d, _, h'd⟩
-    filter_upwards [hd] with x hx using f_decr hx
+    filter_upwards [hd]with x hx using f_decr hx
   · rcases eq_or_lt_of_le (bot_le : ⊥ ≤ F.Limsup) with (h | Limsup_ne_bot)
     · rw [← h]
       apply liminf_le_of_frequently_le

@@ -143,7 +143,7 @@ theorem equicontinuousAt_iff_pair {F : ι → X → α} {x₀ : X} :
     refine' ⟨_, H V hV, fun x hx y hy i => hVU (prod_mk_mem_compRel _ (hy i))⟩
     exact hVsymm.mk_mem_comm.mp (hx i)
   · rcases H U hU with ⟨V, hV, hVU⟩
-    filter_upwards [hV] using fun x hx i => hVU x₀ (mem_of_mem_nhds hV) x hx i
+    filter_upwards [hV]using fun x hx i => hVU x₀ (mem_of_mem_nhds hV) x hx i
 #align equicontinuous_at_iff_pair equicontinuousAt_iff_pair
 
 /-- Uniform equicontinuity implies equicontinuity. -/
@@ -377,7 +377,7 @@ theorem EquicontinuousAt.closure' {A : Set Y} {u : Y → X → α} {x₀ : X}
   by
   intro U hU
   rcases mem_uniformity_isClosed hU with ⟨V, hV, hVclosed, hVU⟩
-  filter_upwards [hA V hV] with x hx
+  filter_upwards [hA V hV]with x hx
   rw [SetCoe.forall] at *
   change A ⊆ (fun f => (u f x₀, u f x)) ⁻¹' V at hx
   refine' (closure_minimal hx <| hVclosed.preimage <| _).trans (preimage_mono hVU)

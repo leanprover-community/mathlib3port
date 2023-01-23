@@ -104,7 +104,7 @@ theorem Convex.taylor_approx_two_segment {v w : E} (hv : x + v ∈ interior s)
   have E2 : ∀ᶠ h in 𝓝[>] (0 : ℝ), (h : ℝ) < 1 :=
     mem_nhdsWithin_ioi_iff_exists_ioo_subset.2
       ⟨(1 : ℝ), by simp only [mem_Ioi, zero_lt_one], fun x hx => hx.2⟩
-  filter_upwards [E1, E2, self_mem_nhdsWithin] with h hδ h_lt_1 hpos
+  filter_upwards [E1, E2, self_mem_nhdsWithin]with h hδ h_lt_1 hpos
   -- we consider `h` small enough that all points under consideration belong to this ball,
   -- and also with `0 < h < 1`.
   replace hpos : 0 < h := hpos
@@ -305,7 +305,7 @@ theorem Convex.second_derivative_within_at_symmetric_of_mem_interior {v w : E}
       rw [← one_smul ℝ (f'' w v - f'' v w), smul_smul, smul_smul]
       congr 1
       field_simp [LT.lt.ne' hpos]
-    · filter_upwards [self_mem_nhdsWithin] with _ hpos
+    · filter_upwards [self_mem_nhdsWithin]with _ hpos
       field_simp [LT.lt.ne' hpos, SMul.smul]
   simpa only [sub_eq_zero] using is_o_const_const_iff.1 B
 #align convex.second_derivative_within_at_symmetric_of_mem_interior Convex.second_derivative_within_at_symmetric_of_mem_interior

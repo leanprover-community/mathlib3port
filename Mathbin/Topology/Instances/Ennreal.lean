@@ -145,7 +145,7 @@ theorem eventuallyEq_of_toReal_eventuallyEq {l : Filter α} {f g : α → ℝ≥
     (hfi : ∀ᶠ x in l, f x ≠ ∞) (hgi : ∀ᶠ x in l, g x ≠ ∞)
     (hfg : (fun x => (f x).toReal) =ᶠ[l] fun x => (g x).toReal) : f =ᶠ[l] g :=
   by
-  filter_upwards [hfi, hgi, hfg] with _ hfx hgx _
+  filter_upwards [hfi, hgi, hfg]with _ hfx hgx _
   rwa [← Ennreal.toReal_eq_toReal hfx hgx]
 #align ennreal.eventually_eq_of_to_real_eventually_eq Ennreal.eventuallyEq_of_toReal_eventuallyEq
 
@@ -798,7 +798,7 @@ theorem exists_frequently_lt_of_liminf_ne_top {ι : Type _} {l : Filter ι} {x :
               is_bounded_default)
           _)
   simp only [eventually_map, Ennreal.coe_le_coe]
-  filter_upwards [h r] with i hi using hi.trans ((coe_nnnorm (x i)).symm ▸ le_abs_self (x i))
+  filter_upwards [h r]with i hi using hi.trans ((coe_nnnorm (x i)).symm ▸ le_abs_self (x i))
 #align ennreal.exists_frequently_lt_of_liminf_ne_top Ennreal.exists_frequently_lt_of_liminf_ne_top
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic filter.is_bounded_default -/
@@ -816,7 +816,7 @@ theorem exists_frequently_lt_of_liminf_ne_top' {ι : Type _} {l : Filter ι} {x 
               is_bounded_default)
           _)
   simp only [eventually_map, Ennreal.coe_le_coe]
-  filter_upwards [h (-r)] with i hi using(le_neg.1 hi).trans (neg_le_abs_self _)
+  filter_upwards [h (-r)]with i hi using(le_neg.1 hi).trans (neg_le_abs_self _)
 #align ennreal.exists_frequently_lt_of_liminf_ne_top' Ennreal.exists_frequently_lt_of_liminf_ne_top'
 
 theorem exists_upcrossings_of_not_bounded_under {ι : Type _} {l : Filter ι} {x : ι → ℝ}
@@ -830,20 +830,20 @@ theorem exists_upcrossings_of_not_bounded_under {ι : Type _} {l : Filter ι} {x
     obtain ⟨q, hq⟩ := exists_rat_gt R
     refine' ⟨q, q + 1, (lt_add_iff_pos_right _).2 zero_lt_one, _, _⟩
     · refine' fun hcon => hR _
-      filter_upwards [hcon] with x hx using not_lt.2 (lt_of_lt_of_le hq (not_lt.1 hx)).le
+      filter_upwards [hcon]with x hx using not_lt.2 (lt_of_lt_of_le hq (not_lt.1 hx)).le
     · simp only [is_bounded_under, is_bounded, eventually_map, eventually_at_top, ge_iff_le,
         not_exists, not_forall, not_le, exists_prop] at hbdd
       refine' fun hcon => hbdd ↑(q + 1) _
-      filter_upwards [hcon] with x hx using not_lt.1 hx
+      filter_upwards [hcon]with x hx using not_lt.1 hx
   · obtain ⟨R, hR⟩ := exists_frequently_lt_of_liminf_ne_top' hf
     obtain ⟨q, hq⟩ := exists_rat_lt R
     refine' ⟨q - 1, q, (sub_lt_self_iff _).2 zero_lt_one, _, _⟩
     · simp only [is_bounded_under, is_bounded, eventually_map, eventually_at_top, ge_iff_le,
         not_exists, not_forall, not_le, exists_prop] at hbdd
       refine' fun hcon => hbdd ↑(q - 1) _
-      filter_upwards [hcon] with x hx using not_lt.1 hx
+      filter_upwards [hcon]with x hx using not_lt.1 hx
     · refine' fun hcon => hR _
-      filter_upwards [hcon] with x hx using not_lt.2 ((not_lt.1 hx).trans hq.le)
+      filter_upwards [hcon]with x hx using not_lt.2 ((not_lt.1 hx).trans hq.le)
 #align ennreal.exists_upcrossings_of_not_bounded_under Ennreal.exists_upcrossings_of_not_bounded_under
 
 end Liminf

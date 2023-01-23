@@ -93,7 +93,7 @@ noncomputable def Monotone.stieltjesFunction {f : ℝ → ℝ} (hf : Monotone f)
     obtain ⟨y, xy, h'y⟩ : ∃ (y : ℝ)(H : x < y), Ioc x y ⊆ f ⁻¹' Ioo l u :=
       mem_nhdsWithin_ioi_iff_exists_ioc_subset.1 (hf.tendsto_right_lim x (ioo_mem_nhds hlu.1 hlu.2))
     change ∀ᶠ y in 𝓝[≥] x, right_lim f y ∈ s
-    filter_upwards [ico_mem_nhdsWithin_ici ⟨le_refl x, xy⟩] with z hz
+    filter_upwards [ico_mem_nhdsWithin_ici ⟨le_refl x, xy⟩]with z hz
     apply lus
     refine' ⟨hlu.1.trans_le (hf.right_lim hz.1), _⟩
     obtain ⟨a, za, ay⟩ : ∃ a : ℝ, z < a ∧ a < y := exists_between hz.2

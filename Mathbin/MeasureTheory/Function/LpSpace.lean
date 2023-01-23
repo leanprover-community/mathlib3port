@@ -1338,7 +1338,7 @@ theorem snorm_smul_le_snorm_top_mul_snorm (p : ℝ≥0∞) {f : α → E} (hf : 
       · rw [one_div_nonneg]
         exact Ennreal.toReal_nonneg
       refine' lintegral_mono_ae _
-      filter_upwards [@Ennreal.ae_le_essSup _ _ μ fun x => ↑‖φ x‖₊] with x hx
+      filter_upwards [@Ennreal.ae_le_essSup _ _ μ fun x => ↑‖φ x‖₊]with x hx
       refine' Ennreal.mul_le_mul _ le_rfl
       exact Ennreal.rpow_le_rpow hx Ennreal.toReal_nonneg
     _ = essSup (fun x => ↑‖φ x‖₊) μ * (∫⁻ x, ↑‖f x‖₊ ^ p.to_real ∂μ) ^ (1 / p.to_real) :=
@@ -1477,7 +1477,7 @@ theorem snorm_indicator_ge_of_bdd_below (hp : p ≠ 0) (hp' : p ≠ ∞) {f : α
     one_div_mul_cancel (Ennreal.toReal_pos hp hp').Ne.symm, Ennreal.rpow_one, ← set_lintegral_const,
     ← lintegral_indicator _ hs]
   refine' lintegral_mono_ae _
-  filter_upwards [hf] with x hx
+  filter_upwards [hf]with x hx
   rw [nnnorm_indicator_eq_indicator_nnnorm]
   by_cases hxs : x ∈ s
   · simp only [Set.indicator_of_mem hxs] at hx⊢
@@ -1571,10 +1571,10 @@ theorem ae_bdd_liminf_atTop_of_snorm_bdd {p : ℝ≥0∞} (hp : p ≠ 0) {f : �
       ae_lt_of_essSup_lt
         (lt_of_le_of_lt (hbdd n) <| Ennreal.lt_add_right Ennreal.coe_ne_top one_neZero)
     rw [← ae_all_iff] at this
-    filter_upwards [this] with x hx using lt_of_le_of_lt
+    filter_upwards [this]with x hx using lt_of_le_of_lt
         (liminf_le_of_frequently_le' <| frequently_of_forall fun n => (hx n).le)
         (Ennreal.add_lt_top.2 ⟨Ennreal.coe_lt_top, Ennreal.one_lt_top⟩)
-  filter_upwards [ae_bdd_liminf_at_top_rpow_of_snorm_bdd hfmeas hbdd] with x hx
+  filter_upwards [ae_bdd_liminf_at_top_rpow_of_snorm_bdd hfmeas hbdd]with x hx
   have hppos : 0 < p.to_real := Ennreal.toReal_pos hp hp'
   have :
     liminf (fun n => (‖f n x‖₊ ^ p.to_real : ℝ≥0∞)) at_top =
@@ -1834,7 +1834,7 @@ theorem eq_zero_iff_ae_eq_zero {f : lp E p μ} : f = 0 ↔ f =ᵐ[μ] 0 :=
     exact ae_eq_fun.coe_fn_const _ _
   · intro h
     ext1
-    filter_upwards [h, ae_eq_fun.coe_fn_const α (0 : E)] with _ ha h'a
+    filter_upwards [h, ae_eq_fun.coe_fn_const α (0 : E)]with _ ha h'a
     rw [ha]
     exact h'a.symm
 #align measure_theory.Lp.eq_zero_iff_ae_eq_zero MeasureTheory.lp.eq_zero_iff_ae_eq_zero
@@ -2305,7 +2305,7 @@ def compLp (hg : LipschitzWith c g) (g0 : g 0 = 0) (f : lp E p μ) : lp F p μ :
     by
     suffices ∀ᵐ x ∂μ, ‖ae_eq_fun.comp g hg.continuous (f : α →ₘ[μ] E) x‖ ≤ c * ‖f x‖ by
       exact Lp.mem_Lp_of_ae_le_mul this
-    filter_upwards [ae_eq_fun.coe_fn_comp g hg.continuous (f : α →ₘ[μ] E)] with a ha
+    filter_upwards [ae_eq_fun.coe_fn_comp g hg.continuous (f : α →ₘ[μ] E)]with a ha
     simp only [ha]
     rw [← dist_zero_right, ← dist_zero_right, ← g0]
     exact hg.dist_le_mul (f a) 0⟩
@@ -2321,7 +2321,7 @@ theorem compLp_zero (hg : LipschitzWith c g) (g0 : g 0 = 0) : hg.compLp g0 (0 : 
   by
   rw [Lp.eq_zero_iff_ae_eq_zero]
   apply (coe_fn_comp_Lp _ _ _).trans
-  filter_upwards [Lp.coe_fn_zero E p μ] with _ ha
+  filter_upwards [Lp.coe_fn_zero E p μ]with _ ha
   simp [ha, g0]
 #align lipschitz_with.comp_Lp_zero LipschitzWith.compLp_zero
 
@@ -2330,7 +2330,7 @@ theorem norm_compLp_sub_le (hg : LipschitzWith c g) (g0 : g 0 = 0) (f f' : lp E 
   by
   apply Lp.norm_le_mul_norm_of_ae_le_mul
   filter_upwards [hg.coe_fn_comp_Lp g0 f, hg.coe_fn_comp_Lp g0 f',
-    Lp.coe_fn_sub (hg.comp_Lp g0 f) (hg.comp_Lp g0 f'), Lp.coe_fn_sub f f'] with a ha1 ha2 ha3 ha4
+    Lp.coe_fn_sub (hg.comp_Lp g0 f) (hg.comp_Lp g0 f'), Lp.coe_fn_sub f f']with a ha1 ha2 ha3 ha4
   simp [ha1, ha2, ha3, ha4, ← dist_eq_norm]
   exact hg.dist_le_mul (f a) (f' a)
 #align lipschitz_with.norm_comp_Lp_sub_le LipschitzWith.norm_compLp_sub_le
@@ -2443,7 +2443,7 @@ def compLpₗ (L : E →L[𝕜] F) : lp E p μ →ₗ[𝕜] lp F p μ
     dsimp
     ext1
     filter_upwards [Lp.coe_fn_smul c f, coe_fn_comp_Lp L (c • f), Lp.coe_fn_smul c (L.comp_Lp f),
-      coe_fn_comp_Lp L f] with _ ha1 ha2 ha3 ha4
+      coe_fn_comp_Lp L f]with _ ha1 ha2 ha3 ha4
     simp only [ha1, ha2, ha3, ha4, SMulHomClass.map_smul, Pi.smul_apply]
 #align continuous_linear_map.comp_Lpₗ ContinuousLinearMap.compLpₗ
 
@@ -2552,7 +2552,7 @@ theorem coeFn_posPart (f : lp ℝ p μ) : ⇑(posPart f) =ᵐ[μ] fun a => max (
 theorem coeFn_negPart_eq_max (f : lp ℝ p μ) : ∀ᵐ a ∂μ, negPart f a = max (-f a) 0 :=
   by
   rw [neg_part]
-  filter_upwards [coe_fn_pos_part (-f), coe_fn_neg f] with _ h₁ h₂
+  filter_upwards [coe_fn_pos_part (-f), coe_fn_neg f]with _ h₁ h₂
   rw [h₁, h₂, Pi.neg_apply]
 #align measure_theory.Lp.coe_fn_neg_part_eq_max MeasureTheory.lp.coeFn_negPart_eq_max
 
@@ -2700,7 +2700,7 @@ theorem tendsto_lp_iff_tendsto_ℒp'' {ι} {fi : Filter ι} [Fact (1 ≤ p)] (f 
   ext1 n
   apply snorm_congr_ae
   filter_upwards [((f_ℒp n).sub f_lim_ℒp).coe_fn_to_Lp,
-    Lp.coe_fn_sub ((f_ℒp n).toLp (f n)) (f_lim_ℒp.to_Lp f_lim)] with _ hx₁ hx₂
+    Lp.coe_fn_sub ((f_ℒp n).toLp (f n)) (f_lim_ℒp.to_Lp f_lim)]with _ hx₁ hx₂
   rw [← hx₂]
   exact hx₁.symm
 #align measure_theory.Lp.tendsto_Lp_iff_tendsto_ℒp'' MeasureTheory.lp.tendsto_lp_iff_tendsto_ℒp''
@@ -3068,7 +3068,7 @@ variable [IsFiniteMeasure μ]
 theorem mem_lp (f : α →ᵇ E) : f.toContinuousMap.toAeEqFun μ ∈ lp E p μ :=
   by
   refine' Lp.mem_Lp_of_ae_bound ‖f‖ _
-  filter_upwards [f.to_continuous_map.coe_fn_to_ae_eq_fun μ] with x _
+  filter_upwards [f.to_continuous_map.coe_fn_to_ae_eq_fun μ]with x _
   convert f.norm_coe_le_norm x
 #align bounded_continuous_function.mem_Lp BoundedContinuousFunction.mem_lp
 

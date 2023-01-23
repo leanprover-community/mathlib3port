@@ -124,7 +124,7 @@ theorem martingaleMartingalePart (hf : Adapted ℱ f) (hf_int : ∀ n, Integrabl
     intro k hk
     have : μ[μ[f (k + 1) - f k|ℱ k]|ℱ i] =ᵐ[μ] μ[f (k + 1) - f k|ℱ i] :=
       condexp_condexp_of_le (ℱ.mono hk) (ℱ.le k)
-    filter_upwards [this] with x hx
+    filter_upwards [this]with x hx
     rw [Pi.sub_apply, Pi.zero_apply, hx, sub_self]
   have h_lt :
     ∀ k,
@@ -168,7 +168,7 @@ theorem martingalePart_add_ae_eq [SigmaFiniteFiltration μ ℱ] {f g : ℕ → �
         (hf.adapted.add <| predictable.adapted hg <| hg0.symm ▸ strongly_measurable_zero) fun n =>
         (hf.integrable n).add <| hgint n)
   refine' (eventually_eq_iff_sub.2 _).symm
-  filter_upwards [hhmgle.eq_zero_of_predictable hhpred n] with ω hω
+  filter_upwards [hhmgle.eq_zero_of_predictable hhpred n]with ω hω
   rw [hhdef, Pi.sub_apply] at hω
   rw [hω, Pi.sub_apply, martingale_part]
   simp [hg0]
@@ -178,7 +178,7 @@ theorem predictablePart_add_ae_eq [SigmaFiniteFiltration μ ℱ] {f g : ℕ → 
     (hf : Martingale f ℱ μ) (hg : Adapted ℱ fun n => g (n + 1)) (hg0 : g 0 = 0)
     (hgint : ∀ n, Integrable (g n) μ) (n : ℕ) : predictablePart (f + g) ℱ μ n =ᵐ[μ] g n :=
   by
-  filter_upwards [martingale_part_add_ae_eq hf hg hg0 hgint n] with ω hω
+  filter_upwards [martingale_part_add_ae_eq hf hg hg0 hgint n]with ω hω
   rw [← add_right_inj (f n ω)]
   conv_rhs =>
     rw [← Pi.add_apply, ← Pi.add_apply, ← martingale_part_add_predictable_part ℱ μ (f + g)]
@@ -199,7 +199,7 @@ theorem martingalePart_bdd_difference {R : ℝ≥0} {f : ℕ → Ω → ℝ} (�
     (hbdd : ∀ᵐ ω ∂μ, ∀ i, |f (i + 1) ω - f i ω| ≤ R) :
     ∀ᵐ ω ∂μ, ∀ i, |martingalePart f ℱ μ (i + 1) ω - martingalePart f ℱ μ i ω| ≤ ↑(2 * R) :=
   by
-  filter_upwards [hbdd, predictable_part_bdd_difference ℱ hbdd] with ω hω₁ hω₂ i
+  filter_upwards [hbdd, predictable_part_bdd_difference ℱ hbdd]with ω hω₁ hω₂ i
   simp only [two_mul, martingale_part, Pi.sub_apply]
   have :
     |f (i + 1) ω - predictable_part f ℱ μ (i + 1) ω - (f i ω - predictable_part f ℱ μ i ω)| =

@@ -459,7 +459,7 @@ theorem fourierBasis_repr (f : lp ℂ 2 <| @haarAddCircle T hT) (i : ℤ) :
   trans ∫ t : AddCircle T, conj ((@fourierLp T hT 2 _ i : AddCircle T → ℂ) t) * f t ∂haar_add_circle
   · simp [fourier_basis.repr_apply_apply f i, MeasureTheory.L2Cat.inner_def]
   · apply integral_congr_ae
-    filter_upwards [coeFn_fourierLp 2 i] with _ ht
+    filter_upwards [coeFn_fourierLp 2 i]with _ ht
     rw [ht, ← fourier_neg, smul_eq_mul]
 #align fourier_basis_repr fourierBasis_repr
 

@@ -186,7 +186,7 @@ theorem horizontal_strip (hfd : DiffContOnCl ℂ f (im ⁻¹' Ioo a b))
     apply ((continuous_of_real.mul continuous_const).cexp.smul continuous_const).norm.tendsto'
     simp
     infer_instance
-  filter_upwards [self_mem_nhdsWithin] with ε ε₀
+  filter_upwards [self_mem_nhdsWithin]with ε ε₀
   change ε < 0 at ε₀
   -- An upper estimate on `‖g ε w‖` that will be used in two branches of the proof.
   obtain ⟨δ, δ₀, hδ⟩ :
@@ -222,7 +222,7 @@ theorem horizontal_strip (hfd : DiffContOnCl ℂ f (im ⁻¹' Ioo a b))
       mem_preimage, (· ∘ ·), Real.norm_eq_abs, abs_of_pos (Real.exp_pos _)] at hA
     suffices tendsto (fun R => expR (δ * expR (d * R) + B * expR (c * R) + Real.log A)) at_top (𝓝 0)
       by
-      filter_upwards [this.eventually (ge_mem_nhds hC₀), hA] with R hR Hle w hre him
+      filter_upwards [this.eventually (ge_mem_nhds hC₀), hA]with R hR Hle w hre him
       calc
         ‖g ε w • f w‖ ≤ expR (δ * expR (d * R) + B * expR (c * R) + Real.log A) := _
         _ ≤ C := hR
@@ -886,7 +886,7 @@ theorem right_half_plane_of_bounded_on_real (hd : DiffContOnCl ℂ f { z | 0 < z
     apply ((continuous_of_real.mul continuous_const).cexp.smul continuous_const).norm.tendsto'
     simp
     infer_instance
-  filter_upwards [self_mem_nhdsWithin] with ε ε₀
+  filter_upwards [self_mem_nhdsWithin]with ε ε₀
   change ε < 0 at ε₀
   set g : ℂ → E := fun z => exp (ε * z) • f z
   change ‖g z‖ ≤ C
@@ -958,7 +958,7 @@ theorem eq_zero_on_right_half_plane_of_superexponential_decay
     refine' ((is_O_refl (fun z : ℂ => expR z.re ^ n) _).mul hO.norm_left).trans (is_O.of_bound 1 _)
     simp only [← Real.exp_nat_mul, ← Real.exp_add, Real.norm_of_nonneg (Real.exp_pos _).le,
       Real.exp_le_exp, add_mul, eventually_inf_principal, eventually_comap, one_mul]
-    filter_upwards [eventually_ge_at_top (1 : ℝ)] with r hr z hzr hre
+    filter_upwards [eventually_ge_at_top (1 : ℝ)]with r hr z hzr hre
     subst r
     refine' add_le_add (mul_le_mul_of_nonneg_left _ n.cast_nonneg) _
     ·

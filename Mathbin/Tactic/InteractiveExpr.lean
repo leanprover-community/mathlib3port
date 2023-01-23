@@ -416,7 +416,7 @@ unsafe def tactic_view_goal {γ} (local_c : tc local_collection γ) (target_c : 
 -/
 unsafe inductive tactic_view_action (γ : Type)
   | out (a : γ) : tactic_view_action
-  | filter (f : filter_type) : tactic_view_action
+  | Filter (f : filter_type) : tactic_view_action
 #align widget_override.tactic_view_action widget_override.tactic_view_action
 
 /-- The "goals accomplished 🎉" HTML widget. This can be overridden using:

@@ -127,7 +127,7 @@ theorem norm_stoppedValue_leastGe_le (hr : 0 ≤ r) (hf0 : f 0 = 0)
     (hbdd : ∀ᵐ ω ∂μ, ∀ i, |f (i + 1) ω - f i ω| ≤ R) (i : ℕ) :
     ∀ᵐ ω ∂μ, stoppedValue f (leastGe f r i) ω ≤ r + R :=
   by
-  filter_upwards [hbdd] with ω hbddω
+  filter_upwards [hbdd]with ω hbddω
   change f (least_ge f r i ω) ω ≤ r + R
   by_cases heq : least_ge f r i ω = 0
   · rw [HEq, hf0, Pi.zero_apply]
@@ -172,7 +172,7 @@ theorem Submartingale.exists_tendsto_of_abs_bddAbove_aux [IsFiniteMeasure μ]
     exact fun i =>
       submartingale.exists_ae_tendsto_of_bdd (hf.stopped_value_least_ge i)
         (hf.stopped_value_least_ge_snorm_le' i.cast_nonneg hf0 hbdd)
-  filter_upwards [ht] with ω hω hωb
+  filter_upwards [ht]with ω hω hωb
   rw [BddAbove] at hωb
   obtain ⟨i, hi⟩ := exists_nat_gt hωb.some
   have hib : ∀ n, f n ω < i := by
@@ -194,7 +194,7 @@ theorem Submartingale.bddAbove_iff_exists_tendsto_aux [IsFiniteMeasure μ] (hf :
     (hf0 : f 0 = 0) (hbdd : ∀ᵐ ω ∂μ, ∀ i, |f (i + 1) ω - f i ω| ≤ R) :
     ∀ᵐ ω ∂μ, BddAbove (Set.range fun n => f n ω) ↔ ∃ c, Tendsto (fun n => f n ω) atTop (𝓝 c) := by
   filter_upwards [hf.exists_tendsto_of_abs_bdd_above_aux hf0
-      hbdd] with ω hω using⟨hω, fun ⟨c, hc⟩ => hc.bdd_above_range⟩
+      hbdd]with ω hω using⟨hω, fun ⟨c, hc⟩ => hc.bdd_above_range⟩
 #align measure_theory.submartingale.bdd_above_iff_exists_tendsto_aux MeasureTheory.Submartingale.bddAbove_iff_exists_tendsto_aux
 
 /-- One sided martingale bound: If `f` is a submartingale which has uniformly bounded differences,
@@ -211,7 +211,7 @@ theorem Submartingale.bddAbove_iff_exists_tendsto [IsFiniteMeasure μ] (hf : Sub
     simp only [hgdef, sub_self, Pi.zero_apply]
   have hgbdd : ∀ᵐ ω ∂μ, ∀ i : ℕ, |g (i + 1) ω - g i ω| ≤ ↑R := by
     simpa only [sub_sub_sub_cancel_right]
-  filter_upwards [hg.bdd_above_iff_exists_tendsto_aux hg0 hgbdd] with ω hω
+  filter_upwards [hg.bdd_above_iff_exists_tendsto_aux hg0 hgbdd]with ω hω
   convert hω using 1 <;> rw [eq_iff_iff]
   · simp only [hgdef]
     refine' ⟨fun h => _, fun h => _⟩ <;> obtain ⟨b, hb⟩ := h <;>
@@ -257,12 +257,12 @@ theorem Martingale.bddAbove_range_iff_bddBelow_range [IsFiniteMeasure μ] (hf : 
   by
   have hbdd' : ∀ᵐ ω ∂μ, ∀ i, |(-f) (i + 1) ω - (-f) i ω| ≤ R :=
     by
-    filter_upwards [hbdd] with ω hω i
+    filter_upwards [hbdd]with ω hω i
     erw [← abs_neg, neg_sub, sub_neg_eq_add, neg_add_eq_sub]
     exact hω i
   have hup := hf.submartingale.bdd_above_iff_exists_tendsto hbdd
   have hdown := hf.neg.submartingale.bdd_above_iff_exists_tendsto hbdd'
-  filter_upwards [hup, hdown] with ω hω₁ hω₂
+  filter_upwards [hup, hdown]with ω hω₁ hω₂
   have :
     (∃ c, tendsto (fun n => f n ω) at_top (𝓝 c)) ↔ ∃ c, tendsto (fun n => (-f) n ω) at_top (𝓝 c) :=
     by
@@ -286,7 +286,7 @@ theorem Martingale.ae_not_tendsto_atTop_atTop [IsFiniteMeasure μ] (hf : Marting
     (hbdd : ∀ᵐ ω ∂μ, ∀ i, |f (i + 1) ω - f i ω| ≤ R) :
     ∀ᵐ ω ∂μ, ¬Tendsto (fun n => f n ω) atTop atTop := by
   filter_upwards [hf.bdd_above_range_iff_bdd_below_range
-      hbdd] with ω hω htop using unbounded_of_tendsto_at_top htop
+      hbdd]with ω hω htop using unbounded_of_tendsto_at_top htop
       (hω.2 <| bddBelow_range_of_tendsto_atTop_atTop htop)
 #align measure_theory.martingale.ae_not_tendsto_at_top_at_top MeasureTheory.Martingale.ae_not_tendsto_atTop_atTop
 
@@ -294,7 +294,7 @@ theorem Martingale.ae_not_tendsto_atTop_atBot [IsFiniteMeasure μ] (hf : Marting
     (hbdd : ∀ᵐ ω ∂μ, ∀ i, |f (i + 1) ω - f i ω| ≤ R) :
     ∀ᵐ ω ∂μ, ¬Tendsto (fun n => f n ω) atTop atBot := by
   filter_upwards [hf.bdd_above_range_iff_bdd_below_range
-      hbdd] with ω hω htop using unbounded_of_tendsto_at_bot htop
+      hbdd]with ω hω htop using unbounded_of_tendsto_at_bot htop
       (hω.1 <| bddAbove_range_of_tendsto_atTop_atBot htop)
 #align measure_theory.martingale.ae_not_tendsto_at_top_at_bot MeasureTheory.Martingale.ae_not_tendsto_atTop_atBot
 
@@ -372,8 +372,8 @@ theorem tendsto_sum_indicator_atTop_iff [IsFiniteMeasure μ]
   have h₃ : ∀ᵐ ω ∂μ, ∀ n, 0 ≤ (μ[f (n + 1) - f n|ℱ n]) ω :=
     by
     refine' ae_all_iff.2 fun n => condexp_nonneg _
-    filter_upwards [ae_all_iff.1 hfmono n] with ω hω using sub_nonneg.2 hω
-  filter_upwards [h₁, h₂, h₃, hfmono] with ω hω₁ hω₂ hω₃ hω₄
+    filter_upwards [ae_all_iff.1 hfmono n]with ω hω using sub_nonneg.2 hω
+  filter_upwards [h₁, h₂, h₃, hfmono]with ω hω₁ hω₂ hω₃ hω₄
   constructor <;> intro ht
   · refine' tendsto_at_top_at_top_of_monotone' _ _
     · intro n m hnm

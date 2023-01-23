@@ -215,7 +215,7 @@ theorem AeStronglyMeasurable'.aeStronglyMeasurable'OfMeasurableSpaceLeOn {α E}
     by
     refine'
       Filter.EventuallyEq.trans _ (indicator_ae_eq_of_restrict_compl_ae_eq_zero (hm _ hs_m) hf_zero)
-    filter_upwards [hf.ae_eq_mk] with x hx
+    filter_upwards [hf.ae_eq_mk]with x hx
     by_cases hxs : x ∈ s
     · simp [hxs, hx]
     · simp [hxs]
@@ -1471,7 +1471,7 @@ theorem condexpL2_indicator_nonneg (hm : m ≤ m0) (hs : MeasurableSet s) (hμs 
     have h_ae :
       ∀ᵐ x ∂μ, x ∈ t → h.mk _ x = condexp_L2 ℝ hm (indicator_const_Lp 2 hs hμs (1 : ℝ)) x :=
       by
-      filter_upwards [h.ae_eq_mk] with x hx
+      filter_upwards [h.ae_eq_mk]with x hx
       exact fun _ => hx.symm
     rw [set_integral_congr_ae (hm t ht) h_ae,
       set_integral_condexp_L2_indicator ht hs ((le_trim hm).trans_lt hμt).Ne hμs]
@@ -1483,7 +1483,7 @@ theorem condexpIndSmul_nonneg {E} [NormedLatticeAddCommGroup E] [NormedSpace ℝ
     0 ≤ᵐ[μ] condexpIndSmul hm hs hμs x :=
   by
   refine' eventually_le.trans_eq _ (condexp_ind_smul_ae_eq_smul hm hs hμs x).symm
-  filter_upwards [condexp_L2_indicator_nonneg hm hs hμs] with a ha
+  filter_upwards [condexp_L2_indicator_nonneg hm hs hμs]with a ha
   exact smul_nonneg ha hx
 #align measure_theory.condexp_ind_smul_nonneg MeasureTheory.condexpIndSmul_nonneg
 

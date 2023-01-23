@@ -692,7 +692,7 @@ def setSeq (n : ℕ) : Set α :=
 #align sequentially_complete.set_seq SequentiallyComplete.setSeq
 
 theorem setSeq_mem (n : ℕ) : setSeq hf U_mem n ∈ f :=
-  (bInter_mem (finite_le_nat n)).2 fun m _ => (setSeqAux hf U_mem m).2.fst
+  (binterᵢ_mem (finite_le_nat n)).2 fun m _ => (setSeqAux hf U_mem m).2.fst
 #align sequentially_complete.set_seq_mem SequentiallyComplete.setSeq_mem
 
 theorem setSeq_mono ⦃m n : ℕ⦄ (h : m ≤ n) : setSeq hf U_mem n ⊆ setSeq hf U_mem m :=

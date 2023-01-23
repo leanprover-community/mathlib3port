@@ -46,7 +46,7 @@ instance pi.isCountablyGenerated [Countable ι] [∀ i, IsCountablyGenerated (f 
 #align filter.pi.is_countably_generated Filter.pi.isCountablyGenerated
 
 theorem tendsto_eval_pi (f : ∀ i, Filter (α i)) (i : ι) : Tendsto (eval i) (pi f) (f i) :=
-  tendsto_infi' i tendsto_comap
+  tendsto_infᵢ' i tendsto_comap
 #align filter.tendsto_eval_pi Filter.tendsto_eval_pi
 
 theorem tendsto_pi {β : Type _} {m : β → ∀ i, α i} {l : Filter β} :
@@ -132,7 +132,7 @@ theorem pi_inf_principal_univ_pi_eq_bot : pi f ⊓ 𝓟 (Set.pi univ s) = ⊥ �
     exact hts (fun i hi => hxt i) (mem_univ_pi.2 hxs)
   · simp only [inf_principal_eq_bot]
     rintro ⟨i, hi⟩
-    filter_upwards [mem_pi_of_mem i hi] with x using mt fun h => h i trivial
+    filter_upwards [mem_pi_of_mem i hi]with x using mt fun h => h i trivial
 #align filter.pi_inf_principal_univ_pi_eq_bot Filter.pi_inf_principal_univ_pi_eq_bot
 
 @[simp]

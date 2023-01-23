@@ -1253,7 +1253,7 @@ theorem tendsto_filterAt (μ : Measure α) [SigmaFinite μ] (x : α) :
       ∀ a : Set α, a ∈ (Besicovitch.vitaliFamily μ).setsAt x → a ⊆ closed_ball x ε → a ∈ s :=
     (VitaliFamily.mem_filterAt_iff _).1 hs
   have : Ioc (0 : ℝ) ε ∈ 𝓝[>] (0 : ℝ) := ioc_mem_nhdsWithin_ioi ⟨le_rfl, εpos⟩
-  filter_upwards [this] with _ hr
+  filter_upwards [this]with _ hr
   apply hε
   · exact mem_image_of_mem _ hr.1
   · exact closed_ball_subset_closed_ball hr.2
@@ -1268,7 +1268,7 @@ theorem ae_tendsto_rnDeriv (ρ μ : Measure β) [IsLocallyFiniteMeasure μ] [IsL
     ∀ᵐ x ∂μ,
       Tendsto (fun r => ρ (closedBall x r) / μ (closedBall x r)) (𝓝[>] 0) (𝓝 (ρ.rnDeriv μ x)) :=
   by
-  filter_upwards [VitaliFamily.ae_tendsto_rnDeriv (Besicovitch.vitaliFamily μ) ρ] with x hx
+  filter_upwards [VitaliFamily.ae_tendsto_rnDeriv (Besicovitch.vitaliFamily μ) ρ]with x hx
   exact hx.comp (tendsto_filter_at μ x)
 #align besicovitch.ae_tendsto_rn_deriv Besicovitch.ae_tendsto_rnDeriv
 
@@ -1300,7 +1300,7 @@ theorem ae_tendsto_measure_inter_div (μ : Measure β) [IsLocallyFiniteMeasure �
       Tendsto (fun r => μ (s ∩ closedBall x r) / μ (closedBall x r)) (𝓝[>] 0) (𝓝 1) :=
   by
   filter_upwards [VitaliFamily.ae_tendsto_measure_inter_div
-      (Besicovitch.vitaliFamily μ)] with x hx using hx.comp (tendsto_filter_at μ x)
+      (Besicovitch.vitaliFamily μ)]with x hx using hx.comp (tendsto_filter_at μ x)
 #align besicovitch.ae_tendsto_measure_inter_div Besicovitch.ae_tendsto_measure_inter_div
 
 end Besicovitch

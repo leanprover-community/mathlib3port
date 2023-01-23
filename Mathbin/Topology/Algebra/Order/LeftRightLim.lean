@@ -183,7 +183,7 @@ theorem tendsto_leftLim (x : α) : Tendsto f (𝓝[<] x) (𝓝 (leftLim f x)) :=
 theorem tendsto_leftLim_within (x : α) : Tendsto f (𝓝[<] x) (𝓝[≤] leftLim f x) :=
   by
   apply tendsto_nhdsWithin_of_tendsto_nhds_of_eventually_within f (hf.tendsto_left_lim x)
-  filter_upwards [self_mem_nhdsWithin] with y hy using hf.le_left_lim hy
+  filter_upwards [self_mem_nhdsWithin]with y hy using hf.le_left_lim hy
 #align monotone.tendsto_left_lim_within Monotone.tendsto_leftLim_within
 
 theorem tendsto_rightLim (x : α) : Tendsto f (𝓝[>] x) (𝓝 (rightLim f x)) :=
@@ -251,10 +251,10 @@ theorem countable_not_continuousWithinAt_ioi [TopologicalSpace.SecondCountableTo
     rintro x (hx : ¬ContinuousWithinAt f (Ioi x) x)
     contrapose! hx
     refine' tendsto_order.2 ⟨fun m hm => _, fun u hu => _⟩
-    · filter_upwards [self_mem_nhdsWithin] with y hy using hm.trans_le (hf (le_of_lt hy))
+    · filter_upwards [self_mem_nhdsWithin]with y hy using hm.trans_le (hf (le_of_lt hy))
     rcases hx u hu with ⟨v, xv, fvu⟩
     have : Ioo x v ∈ 𝓝[>] x := ioo_mem_nhdsWithin_ioi ⟨le_refl _, xv⟩
-    filter_upwards [this] with y hy
+    filter_upwards [this]with y hy
     apply (hf hy.2.le).trans_lt fvu
   -- choose `z x` such that `f` does not take the values in `(f x, z x)`.
   choose! z hz using this

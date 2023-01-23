@@ -621,7 +621,7 @@ theorem posPart_toSimpleFunc (f : α →₁ₛ[μ] ℝ) :
   have ae_eq : ∀ᵐ a ∂μ, to_simple_func (pos_part f) a = max ((to_simple_func f) a) 0 :=
     by
     filter_upwards [to_simple_func_eq_to_fun (pos_part f), Lp.coe_fn_pos_part (f : α →₁[μ] ℝ),
-      to_simple_func_eq_to_fun f] with _ _ h₂ _
+      to_simple_func_eq_to_fun f]with _ _ h₂ _
     convert h₂
   refine' ae_eq.mono fun a h => _
   rw [h, Eq]
@@ -644,13 +644,13 @@ theorem integral_eq_norm_posPart_sub (f : α →₁ₛ[μ] ℝ) : integral f = �
   -- Convert things in `L¹` to their `simple_func` counterpart
   have ae_eq₁ : (to_simple_func f).posPart =ᵐ[μ] (to_simple_func (pos_part f)).map norm :=
     by
-    filter_upwards [pos_part_to_simple_func f] with _ h
+    filter_upwards [pos_part_to_simple_func f]with _ h
     rw [simple_func.map_apply, h]
     conv_lhs => rw [← simple_func.pos_part_map_norm, simple_func.map_apply]
   -- Convert things in `L¹` to their `simple_func` counterpart
   have ae_eq₂ : (to_simple_func f).negPart =ᵐ[μ] (to_simple_func (neg_part f)).map norm :=
     by
-    filter_upwards [neg_part_to_simple_func f] with _ h
+    filter_upwards [neg_part_to_simple_func f]with _ h
     rw [simple_func.map_apply, h]
     conv_lhs => rw [← simple_func.neg_part_map_norm, simple_func.map_apply]
   -- Convert things in `L¹` to their `simple_func` counterpart
@@ -659,14 +659,14 @@ theorem integral_eq_norm_posPart_sub (f : α →₁ₛ[μ] ℝ) : integral f = �
       (to_simple_func f).posPart a - (to_simple_func f).negPart a =
         (to_simple_func (pos_part f)).map norm a - (to_simple_func (neg_part f)).map norm a :=
     by
-    filter_upwards [ae_eq₁, ae_eq₂] with _ h₁ h₂
+    filter_upwards [ae_eq₁, ae_eq₂]with _ h₁ h₂
     rw [h₁, h₂]
   rw [integral, norm_eq_integral, norm_eq_integral, ← simple_func.integral_sub]
   · show
       (to_simple_func f).integral μ =
         ((to_simple_func (pos_part f)).map norm - (to_simple_func (neg_part f)).map norm).integral μ
     apply MeasureTheory.SimpleFunc.integral_congr (simple_func.integrable f)
-    filter_upwards [ae_eq₁, ae_eq₂] with _ h₁ h₂
+    filter_upwards [ae_eq₁, ae_eq₂]with _ h₁ h₂
     show _ = _ - _
     rw [← h₁, ← h₂]
     have := (to_simple_func f).pos_part_sub_neg_part
@@ -1099,7 +1099,7 @@ theorem hasSum_integral_of_dominated_convergence {ι} [Countable ι] {F : ι →
     by
     intro n
     filter_upwards [hb_nonneg,
-      bound_summable] with _ ha0 ha_sum using le_tsum ha_sum _ fun i _ => ha0 i
+      bound_summable]with _ ha0 ha_sum using le_tsum ha_sum _ fun i _ => ha0 i
   have hF_integrable : ∀ n, integrable (F n) μ :=
     by
     refine' fun n => bound_integrable.mono' (hF_meas n) _
@@ -1111,7 +1111,7 @@ theorem hasSum_integral_of_dominated_convergence {ι} [Countable ι] {F : ι →
   · exact eventually_of_forall fun s => s.ae_strongly_measurable_sum fun n hn => hF_meas n
   · refine' eventually_of_forall fun s => _
     filter_upwards [eventually_countable_forall.2 h_bound, hb_nonneg,
-      bound_summable] with a hFa ha0 has
+      bound_summable]with a hFa ha0 has
     calc
       ‖∑ n in s, F n a‖ ≤ ∑ n in s, bound n a := norm_sum_le_of_le _ fun n hn => hFa n
       _ ≤ ∑' n, bound n a := sum_le_tsum _ (fun n hn => ha0 n) has
@@ -1180,7 +1180,7 @@ theorem integral_eq_lintegral_pos_part_sub_lintegral_neg_part {f : α → ℝ} (
     rw [L1.norm_def]
     congr 1
     apply lintegral_congr_ae
-    filter_upwards [Lp.coe_fn_pos_part f₁, hf.coe_fn_to_L1] with _ h₁ h₂
+    filter_upwards [Lp.coe_fn_pos_part f₁, hf.coe_fn_to_L1]with _ h₁ h₂
     rw [h₁, h₂, Ennreal.ofReal]
     congr 1
     apply Nnreal.eq
@@ -1192,7 +1192,7 @@ theorem integral_eq_lintegral_pos_part_sub_lintegral_neg_part {f : α → ℝ} (
     rw [L1.norm_def]
     congr 1
     apply lintegral_congr_ae
-    filter_upwards [Lp.coe_fn_neg_part f₁, hf.coe_fn_to_L1] with _ h₁ h₂
+    filter_upwards [Lp.coe_fn_neg_part f₁, hf.coe_fn_to_L1]with _ h₁ h₂
     rw [h₁, h₂, Ennreal.ofReal]
     congr 1
     apply Nnreal.eq
@@ -1274,11 +1274,11 @@ theorem ofReal_integral_eq_lintegral_ofReal {f : α → ℝ} (hfi : Integrable f
   by
   simp_rw [integral_congr_ae
       (show f =ᵐ[μ] fun x => ‖f x‖ by
-        filter_upwards [f_nn] with x hx
+        filter_upwards [f_nn]with x hx
         rw [Real.norm_eq_abs, abs_eq_self.mpr hx]),
     of_real_integral_norm_eq_lintegral_nnnorm hfi, ← ofReal_norm_eq_coe_nnnorm]
   apply lintegral_congr_ae
-  filter_upwards [f_nn] with x hx
+  filter_upwards [f_nn]with x hx
   exact congr_arg Ennreal.ofReal (by rw [Real.norm_eq_abs, abs_eq_self.mpr hx])
 #align measure_theory.of_real_integral_eq_lintegral_of_real MeasureTheory.ofReal_integral_eq_lintegral_ofReal
 
@@ -1802,17 +1802,17 @@ theorem integral_mul_le_Lp_mul_Lq_of_nonneg {p q : ℝ} (hpq : p.IsConjugateExpo
   have h_left : (∫ a, f a * g a ∂μ) = ∫ a, ‖f a‖ * ‖g a‖ ∂μ :=
     by
     refine' integral_congr_ae _
-    filter_upwards [hf_nonneg, hg_nonneg] with x hxf hxg
+    filter_upwards [hf_nonneg, hg_nonneg]with x hxf hxg
     rw [Real.norm_of_nonneg hxf, Real.norm_of_nonneg hxg]
   have h_right_f : (∫ a, f a ^ p ∂μ) = ∫ a, ‖f a‖ ^ p ∂μ :=
     by
     refine' integral_congr_ae _
-    filter_upwards [hf_nonneg] with x hxf
+    filter_upwards [hf_nonneg]with x hxf
     rw [Real.norm_of_nonneg hxf]
   have h_right_g : (∫ a, g a ^ q ∂μ) = ∫ a, ‖g a‖ ^ q ∂μ :=
     by
     refine' integral_congr_ae _
-    filter_upwards [hg_nonneg] with x hxg
+    filter_upwards [hg_nonneg]with x hxg
     rw [Real.norm_of_nonneg hxg]
   rw [h_left, h_right_f, h_right_g]
   exact integral_mul_norm_le_Lp_mul_Lq hpq hf hg
@@ -1957,9 +1957,9 @@ theorem snorm_one_le_of_le {r : ℝ≥0} {f : α → ℝ} (hfint : Integrable f 
       rw [integral_neg, neg_eq_zero]
       exact le_antisymm (integral_nonpos_of_ae hf) hfint'
     have := (integral_eq_zero_iff_of_nonneg_ae _ hfint.neg).1 hnegf
-    · filter_upwards [this] with ω hω
+    · filter_upwards [this]with ω hω
       rwa [Pi.neg_apply, Pi.zero_apply, neg_eq_zero] at hω
-    · filter_upwards [hf] with ω hω
+    · filter_upwards [hf]with ω hω
       rwa [Pi.zero_apply, Pi.neg_apply, Right.nonneg_neg_iff]
   by_cases hμ : is_finite_measure μ
   swap
@@ -1976,7 +1976,7 @@ theorem snorm_one_le_of_le {r : ℝ≥0} {f : α → ℝ} (hfint : Integrable f 
     by
     rw [← integral_const]
     refine' integral_mono_ae hfint.real_to_nnreal (integrable_const r) _
-    filter_upwards [hf] with ω hω using Real.toNnreal_le_iff_le_coe.2 hω
+    filter_upwards [hf]with ω hω using Real.toNnreal_le_iff_le_coe.2 hω
   rw [mem_ℒp.snorm_eq_integral_rpow_norm one_neZero Ennreal.one_ne_top
       (mem_ℒp_one_iff_integrable.2 hfint),
     Ennreal.ofReal_le_iff_le_toReal
@@ -1997,7 +1997,7 @@ theorem snorm_one_le_of_le' {r : ℝ} {f : α → ℝ} (hfint : Integrable f μ)
   by
   refine' snorm_one_le_of_le hfint hfint' _
   simp only [Real.coe_to_nnreal', le_max_iff]
-  filter_upwards [hf] with ω hω using Or.inl hω
+  filter_upwards [hf]with ω hω using Or.inl hω
 #align measure_theory.snorm_one_le_of_le' MeasureTheory.snorm_one_le_of_le'
 
 end SnormBound

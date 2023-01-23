@@ -315,7 +315,7 @@ theorem hasDerivWithinAt_next (t : Icc v.tMin v.tMax) :
       f.continuous_v_comp.continuous_within_at
   rw [v_comp_apply_coe] at this
   refine' this.congr_of_eventually_eq_of_mem _ t.coe_prop
-  filter_upwards [self_mem_nhdsWithin] with _ ht'
+  filter_upwards [self_mem_nhdsWithin]with _ ht'
   rw [v.proj_of_mem ht']
 #align picard_lindelof.fun_space.has_deriv_within_at_next PicardLindelof.FunSpace.hasDerivWithinAt_next
 

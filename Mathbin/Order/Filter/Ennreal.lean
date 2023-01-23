@@ -114,7 +114,7 @@ theorem limsup_mul_le [CountableInterFilter f] (u v : α → ℝ≥0∞) :
     f.limsup (u * v) ≤ f.limsup fun x => f.limsup u * v x :=
       by
       refine' limsup_le_limsup _ _
-      · filter_upwards [@eventually_le_limsup _ f _ u] with x hx
+      · filter_upwards [@eventually_le_limsup _ f _ u]with x hx
         exact Ennreal.mul_le_mul hx le_rfl
       ·
         run_tac

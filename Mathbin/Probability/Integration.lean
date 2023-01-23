@@ -174,7 +174,7 @@ theorem IndepFun.integrableLeftOfIntegrableMul {β : Type _} [MeasurableSpace β
     intro H
     have I : (fun ω => ↑‖Y ω‖₊) =ᵐ[μ] 0 := (lintegral_eq_zero_iff' hY.ennnorm).1 H
     apply h'Y
-    filter_upwards [I] with ω hω
+    filter_upwards [I]with ω hω
     simpa using hω
   apply lt_top_iff_ne_top.2 fun H => _
   have J : indep_fun (fun ω => ↑‖X ω‖₊) (fun ω => ↑‖Y ω‖₊) μ :=
@@ -198,7 +198,7 @@ theorem IndepFun.integrableRightOfIntegrableMul {β : Type _} [MeasurableSpace �
     intro H
     have I : (fun ω => ↑‖X ω‖₊) =ᵐ[μ] 0 := (lintegral_eq_zero_iff' hX.ennnorm).1 H
     apply h'X
-    filter_upwards [I] with ω hω
+    filter_upwards [I]with ω hω
     simpa using hω
   apply lt_top_iff_ne_top.2 fun H => _
   have J : indep_fun (fun ω => ↑‖X ω‖₊) (fun ω => ↑‖Y ω‖₊) μ :=
@@ -288,13 +288,13 @@ theorem IndepFun.integral_mul (hXY : IndepFun X Y μ) (hX : AeStronglyMeasurable
   by
   by_cases h'X : X =ᵐ[μ] 0
   · have h' : X * Y =ᵐ[μ] 0 := by
-      filter_upwards [h'X] with ω hω
+      filter_upwards [h'X]with ω hω
       simp [hω]
     simp only [integral_congr_ae h'X, integral_congr_ae h', Pi.zero_apply, integral_const,
       Algebra.id.smul_eq_mul, mul_zero, zero_mul]
   by_cases h'Y : Y =ᵐ[μ] 0
   · have h' : X * Y =ᵐ[μ] 0 := by
-      filter_upwards [h'Y] with ω hω
+      filter_upwards [h'Y]with ω hω
       simp [hω]
     simp only [integral_congr_ae h'Y, integral_congr_ae h', Pi.zero_apply, integral_const,
       Algebra.id.smul_eq_mul, mul_zero, zero_mul]

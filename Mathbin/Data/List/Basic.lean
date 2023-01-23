@@ -5460,7 +5460,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.filter_eq_foldr List.filter_eq_foldrₓ'. -/
 theorem filter_eq_foldr (p : α → Prop) [DecidablePred p] (l : List α) :
     filter p l = foldr (fun a out => if p a then a :: out else out) [] l := by
-  induction l <;> simp [*, filter]
+  induction l <;> simp [*, Filter]
 #align list.filter_eq_foldr List.filter_eq_foldr
 
 /- warning: list.filter_congr' -> List.filter_congr' is a dubious translation:
@@ -5567,7 +5567,7 @@ theorem filter_eq_self {l} : filter p l = l ↔ ∀ a ∈ l, p a :=
   · exact iff_of_true rfl (forall_mem_nil _)
   rw [forall_mem_cons]; by_cases p a
   · rw [filter_cons_of_pos _ h, cons_inj, ih, and_iff_right h]
-  · refine' iff_of_false (fun hl => h <| of_mem_filter (_ : a ∈ filter p (a :: l))) (mt And.left h)
+  · refine' iff_of_false (fun hl => h <| of_mem_filter (_ : a ∈ Filter p (a :: l))) (mt And.left h)
     rw [hl]
     exact mem_cons_self _ _
 #align list.filter_eq_self List.filter_eq_self
@@ -5648,7 +5648,7 @@ theorem filter_filter (q) [DecidablePred q] :
   | [] => rfl
   | a :: l => by
     by_cases hp : p a <;> by_cases hq : q a <;>
-      simp only [hp, hq, filter, if_true, if_false, true_and_iff, false_and_iff, filter_filter l,
+      simp only [hp, hq, Filter, if_true, if_false, true_and_iff, false_and_iff, filter_filter l,
         eq_self_iff_true]
 #align list.filter_filter List.filter_filter
 

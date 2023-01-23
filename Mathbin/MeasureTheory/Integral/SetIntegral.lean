@@ -394,12 +394,12 @@ theorem norm_set_integral_le_of_norm_le_const_ae' {C : ℝ} (hs : μ s < ∞)
   apply norm_set_integral_le_of_norm_le_const_ae hs
   have A : ∀ᵐ x : α ∂μ, x ∈ s → ‖ae_strongly_measurable.mk f hfm x‖ ≤ C :=
     by
-    filter_upwards [hC, hfm.ae_mem_imp_eq_mk] with _ h1 h2 h3
+    filter_upwards [hC, hfm.ae_mem_imp_eq_mk]with _ h1 h2 h3
     rw [← h2 h3]
     exact h1 h3
   have B : MeasurableSet { x | ‖(hfm.mk f) x‖ ≤ C } :=
     hfm.strongly_measurable_mk.norm.measurable measurableSet_iic
-  filter_upwards [hfm.ae_eq_mk, (ae_restrict_iff B).2 A] with _ h1 _
+  filter_upwards [hfm.ae_eq_mk, (ae_restrict_iff B).2 A]with _ h1 _
   rwa [h1]
 #align measure_theory.norm_set_integral_le_of_norm_le_const_ae' MeasureTheory.norm_set_integral_le_of_norm_le_const_ae'
 
@@ -1056,7 +1056,7 @@ theorem integral_withDensity_eq_integral_smul {f : α → ℝ≥0} (f_meas : Mea
   · intro u v huv u_int hu
     rw [← integral_congr_ae huv, hu]
     apply integral_congr_ae
-    filter_upwards [(ae_with_density_iff f_meas.coe_nnreal_ennreal).1 huv] with x hx
+    filter_upwards [(ae_with_density_iff f_meas.coe_nnreal_ennreal).1 huv]with x hx
     rcases eq_or_ne (f x) 0 with (h'x | h'x)
     · simp only [h'x, zero_smul]
     · rw [hx _]
@@ -1072,12 +1072,12 @@ theorem integral_withDensity_eq_integral_smul₀ {f : α → ℝ≥0} (hf : AeMe
       by
       congr 1
       apply with_density_congr_ae
-      filter_upwards [hf.ae_eq_mk] with x hx
+      filter_upwards [hf.ae_eq_mk]with x hx
       rw [hx]
     _ = ∫ a, f' a • g a ∂μ := integral_withDensity_eq_integral_smul hf.measurable_mk _
     _ = ∫ a, f a • g a ∂μ := by
       apply integral_congr_ae
-      filter_upwards [hf.ae_eq_mk] with x hx
+      filter_upwards [hf.ae_eq_mk]with x hx
       rw [hx]
     
 #align integral_with_density_eq_integral_smul₀ integral_withDensity_eq_integral_smul₀

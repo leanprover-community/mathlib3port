@@ -860,7 +860,7 @@ theorem convolution_neg_of_neg_eq (h1 : ∀ᵐ x ∂μ, f (-x) = f x) (h2 : ∀�
     (∫ t : G, (L (f t)) (g (-x - t)) ∂μ) = ∫ t : G, (L (f (-t))) (g (x + t)) ∂μ :=
       by
       apply integral_congr_ae
-      filter_upwards [h1, (eventually_add_left_iff μ x).2 h2] with t ht h't
+      filter_upwards [h1, (eventually_add_left_iff μ x).2 h2]with t ht h't
       simp_rw [ht, ← h't, neg_add']
     _ = ∫ t : G, (L (f t)) (g (x - t)) ∂μ :=
       by
@@ -1024,7 +1024,7 @@ theorem convolution_tendsto_right {ι} {g : ι → G → E'} {l : Filter ι} {x�
   dsimp only [uncurry] at hgδ
   have h2k := hk.eventually (ball_mem_nhds x₀ <| half_pos hδ)
   have h2φ := hφ (ball (0 : G) _) <| ball_mem_nhds _ (half_pos hδ)
-  filter_upwards [hp, h2k, h2φ, hnφ, hiφ, hmg] with i hpi hki hφi hnφi hiφi hmgi
+  filter_upwards [hp, h2k, h2φ, hnφ, hiφ, hmg]with i hpi hki hφi hnφi hiφi hmgi
   have hgi : dist (g i (k i)) z₀ < ε / 3 := hgδ hpi (hki.trans <| half_lt_self hδ)
   have h1 : ∀ x' ∈ ball (k i) (δ / 2), dist (g i x') (g i (k i)) ≤ ε / 3 + ε / 3 :=
     by

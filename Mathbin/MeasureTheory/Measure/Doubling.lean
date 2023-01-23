@@ -135,7 +135,7 @@ theorem eventually_measure_le_scaling_constant_mul (K : ℝ) :
     ∀ᶠ r in 𝓝[>] 0, ∀ x, μ (closedBall x (K * r)) ≤ scalingConstantOf μ K * μ (closedBall x r) :=
   by
   filter_upwards [Classical.choose_spec
-      (exists_eventually_forall_measure_closed_ball_le_mul μ K)] with r hr x
+      (exists_eventually_forall_measure_closed_ball_le_mul μ K)]with r hr x
   exact (hr x K le_rfl).trans (Ennreal.mul_le_mul (Ennreal.coe_le_coe.2 (le_max_left _ _)) le_rfl)
 #align is_doubling_measure.eventually_measure_le_scaling_constant_mul IsDoublingMeasure.eventually_measure_le_scaling_constant_mul
 

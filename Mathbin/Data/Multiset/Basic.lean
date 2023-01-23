@@ -3357,7 +3357,7 @@ theorem filter_sub [DecidableEq α] (s t : Multiset α) :
   · rw [filter_cons_of_neg _ h]
     by_cases m : a ∈ s
     ·
-      rw [(by rw [filter_cons_of_neg _ h] : filter p (erase s a) = filter p (a ::ₘ erase s a)),
+      rw [(by rw [filter_cons_of_neg _ h] : Filter p (erase s a) = Filter p (a ::ₘ erase s a)),
         cons_erase m]
     · rw [erase_of_not_mem m]
 #align multiset.filter_sub Multiset.filter_sub
@@ -4122,7 +4122,7 @@ the multiset -/
 theorem count_map_eq_count [DecidableEq β] (f : α → β) (s : Multiset α)
     (hf : Set.InjOn f { x : α | x ∈ s }) (x) (_ : x ∈ s) : (s.map f).count (f x) = s.count x :=
   by
-  suffices (filter (fun a : α => f x = f a) s).count x = card (filter (fun a : α => f x = f a) s)
+  suffices (Filter (fun a : α => f x = f a) s).count x = card (Filter (fun a : α => f x = f a) s)
     by
     rw [count, countp_map, ← this]
     exact count_filter_of_pos rfl

@@ -290,11 +290,11 @@ theorem tendsto_filterAt_iff {ι : Type _} {l : Filter ι} {f : ι → Set α} {
         H.Eventually <| v.eventually_filter_at_subset_closed_ball x hε⟩,
       fun H s hs => (_ : ∀ᶠ i in l, f i ∈ s)⟩
   obtain ⟨ε, εpos, hε⟩ := v.mem_filter_at_iff.mp hs
-  filter_upwards [H.1, H.2 ε εpos] with i hi hiε using hε _ hi hiε
+  filter_upwards [H.1, H.2 ε εpos]with i hi hiε using hε _ hi hiε
 #align vitali_family.tendsto_filter_at_iff VitaliFamily.tendsto_filterAt_iff
 
 theorem eventually_filterAt_measurableSet (x : α) : ∀ᶠ a in v.filterAt x, MeasurableSet a := by
-  filter_upwards [v.eventually_filter_at_mem_sets x] with _ ha using v.measurable_set' _ _ ha
+  filter_upwards [v.eventually_filter_at_mem_sets x]with _ ha using v.measurable_set' _ _ ha
 #align vitali_family.eventually_filter_at_measurable_set VitaliFamily.eventually_filterAt_measurableSet
 
 theorem frequently_filterAt_iff {x : α} {P : Set α → Prop} :

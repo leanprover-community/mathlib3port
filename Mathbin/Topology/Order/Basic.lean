@@ -1186,7 +1186,7 @@ theorem tendsto_nhds_top_mono [TopologicalSpace β] [Preorder β] [OrderTop β] 
   by
   simp only [nhds_top_order, tendsto_infi, tendsto_principal] at hf⊢
   intro x hx
-  filter_upwards [hf x hx, hg] with _ using lt_of_lt_of_le
+  filter_upwards [hf x hx, hg]with _ using lt_of_lt_of_le
 #align tendsto_nhds_top_mono tendsto_nhds_top_mono
 
 theorem tendsto_nhds_bot_mono [TopologicalSpace β] [Preorder β] [OrderBot β] [OrderTopology β]
@@ -4328,7 +4328,7 @@ theorem Monotone.tendsto_nhdsWithin_iio {α β : Type _} [LinearOrder α] [Topol
         exists_lt_of_lt_csupₛ (nonempty_image_iff.2 h) hl
     exact
       (mem_nhdsWithin_iio_iff_exists_ioo_subset' zx).2 ⟨z, zx, fun y hy => lz.trans_le (Mf hy.1.le)⟩
-  · filter_upwards [self_mem_nhdsWithin] with _ hy
+  · filter_upwards [self_mem_nhdsWithin]with _ hy
     apply lt_of_le_of_lt _ hm
     exact le_csupₛ (Mf.map_bdd_above bddAbove_Iio) (mem_image_of_mem _ hy)
 #align monotone.tendsto_nhds_within_Iio Monotone.tendsto_nhdsWithin_iio

@@ -58,14 +58,14 @@ theorem tendsto_apply_add_mul_sq_div_sub {f : ℝ → ℝ} {x a c d : ℝ} {l : 
       exact ((tendsto_id.sub_const x).const_mul c).const_add 1
     simp only [_root_.sub_self, add_zero, mul_zero] at this
     apply tendsto.congr' (eventually.filter_mono hl _) this
-    filter_upwards [self_mem_nhdsWithin] with y hy
+    filter_upwards [self_mem_nhdsWithin]with y hy
     field_simp [sub_ne_zero.2 hy]
     ring
   have Z := (hf.comp h').mul L
   rw [mul_one] at Z
   apply tendsto.congr' _ Z
   have : ∀ᶠ y in l, y + c * (y - x) ^ 2 ≠ x := by apply tendsto.mono_right h' hl self_mem_nhdsWithin
-  filter_upwards [this] with y hy
+  filter_upwards [this]with y hy
   field_simp [sub_ne_zero.2 hy]
 #align tendsto_apply_add_mul_sq_div_sub tendsto_apply_add_mul_sq_div_sub
 
@@ -82,7 +82,7 @@ theorem StieltjesFunction.ae_hasDerivAt (f : StieltjesFunction) :
     As `μ [y, x] = f x - f (y^-)`, this is not exactly the right result, so one uses a sandwiching
     argument to deduce the convergence for `(f x - f y) / (x - y)`. -/
   filter_upwards [VitaliFamily.ae_tendsto_rnDeriv (VitaliFamily (volume : Measure ℝ) 1) f.measure,
-    rn_deriv_lt_top f.measure volume, f.countable_left_lim_ne.ae_not_mem volume] with x hx h'x h''x
+    rn_deriv_lt_top f.measure volume, f.countable_left_lim_ne.ae_not_mem volume]with x hx h'x h''x
   -- Limit on the right, following from differentiation of measures
   have L1 :
     tendsto (fun y => (f y - f x) / (y - x)) (𝓝[>] x) (𝓝 (rn_deriv f.measure volume x).toReal) :=
@@ -159,7 +159,7 @@ theorem Monotone.ae_hasDerivAt {f : ℝ → ℝ} (hf : Monotone f) :
     values of `g`, by shifting with `(y - x)^2` (which has no influence on the relevant
     scale `y - x`.)-/
   filter_upwards [hf.stieltjes_function.ae_has_deriv_at,
-    hf.countable_not_continuous_at.ae_not_mem volume] with x hx h'x
+    hf.countable_not_continuous_at.ae_not_mem volume]with x hx h'x
   have A : hf.stieltjes_function x = f x :=
     by
     rw [not_not, hf.continuous_at_iff_left_lim_eq_right_lim] at h'x
@@ -246,7 +246,7 @@ theorem Monotone.ae_hasDerivAt {f : ℝ → ℝ} (hf : Monotone f) :
 
 /-- A monotone real function is differentiable Lebesgue-almost everywhere. -/
 theorem Monotone.ae_differentiableAt {f : ℝ → ℝ} (hf : Monotone f) : ∀ᵐ x, DifferentiableAt ℝ f x :=
-  by filter_upwards [hf.ae_has_deriv_at] with x hx using hx.differentiable_at
+  by filter_upwards [hf.ae_has_deriv_at]with x hx using hx.differentiable_at
 #align monotone.ae_differentiable_at Monotone.ae_differentiableAt
 
 /-- A real function which is monotone on a set is differentiable Lebesgue-almost everywhere on
@@ -265,11 +265,11 @@ theorem MonotoneOn.ae_differentiableWithinAt_of_mem {f : ℝ → ℝ} {s : Set �
     (hf.mono (inter_subset_left s (Icc a b))).exists_monotone_extension
       (hf.map_bdd_below (inter_subset_left _ _) ⟨a, fun x hx => hx.2.1, as⟩)
       (hf.map_bdd_above (inter_subset_left _ _) ⟨b, fun x hx => hx.2.2, bs⟩)
-  filter_upwards [hg.ae_differentiable_at] with x hx
+  filter_upwards [hg.ae_differentiable_at]with x hx
   intro h'x
   apply hx.differentiable_within_at.congr_of_eventually_eq _ (gf ⟨h'x.1, h'x.2.1.le, h'x.2.2.le⟩)
   have : Ioo a b ∈ 𝓝[s] x := nhdsWithin_le_nhds (ioo_mem_nhds h'x.2.1 h'x.2.2)
-  filter_upwards [self_mem_nhdsWithin, this] with y hy h'y
+  filter_upwards [self_mem_nhdsWithin, this]with y hy h'y
   exact gf ⟨hy, h'y.1.le, h'y.2.le⟩
 #align monotone_on.ae_differentiable_within_at_of_mem MonotoneOn.ae_differentiableWithinAt_of_mem
 

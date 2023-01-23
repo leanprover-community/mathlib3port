@@ -115,7 +115,7 @@ unsafe def append_dep (filter : expr → tactic Unit) (es : entries) (e : expr) 
     tactic (List Nat) :=
   (do
       let ei ← es.find e
-      filter ei
+      Filter ei
       return (ei :: deps)) <|>
     return deps
 #align tactic.explode.append_dep tactic.explode.append_dep
@@ -147,13 +147,13 @@ mutual
           let deps'
             ←-- in case of a "have" clause, the b' here has an annotation
                 explode.append_dep
-                filter es' b' []
-          let deps' ← explode.append_dep filter es' l deps'
+                Filter es' b' []
+          let deps' ← explode.append_dep Filter es' l deps'
           return <| es' ⟨e, es', depth, status.lam, thm.string "∀I", deps'⟩
     | e@(elet n t a b), si, depth, es => explode.core (reduce_lets e) si depth es
     | e@(macro n l), si, depth, es => explode.core l.head si depth es
     | e, si, depth, es =>
-      filter e >>
+      Filter e >>
         match get_app_fn_args e with
         | (nm@(const n _), args) => explode.args e args depth es (thm.expr nm) []
         | (fn, []) => do
@@ -164,13 +164,13 @@ mutual
           let deps
             ←-- in case of a "have" clause, the fn here has an annotation
                 explode.append_dep
-                filter es' fn.erase_annotations []
+                Filter es' fn.erase_annotations []
           explode.args e args depth es' (thm.string "∀E") deps
   unsafe def explode.args (filter : expr → tactic Unit) :
       expr → List expr → Nat → entries → thm → List Nat → tactic entries
     | e, arg :: args, depth, es, thm, deps => do
       let es' ← explode.core arg false depth es <|> return es
-      let deps' ← explode.append_dep filter es' arg deps
+      let deps' ← explode.append_dep Filter es' arg deps
       explode.args e args depth es' thm deps'
     | e, [], depth, es, thm, deps =>
       return (es.add ⟨e, es.size, depth, Status.reg, thm, deps.reverse⟩)
@@ -180,7 +180,7 @@ end
 
 unsafe def explode_expr (e : expr) (hide_non_prop := true) : tactic entries :=
   let filter := if hide_non_prop then fun e => may_be_proof e >>= guardb else fun _ => skip
-  tactic.explode.core filter e true 0 default
+  tactic.explode.core Filter e true 0 default
 #align tactic.explode_expr tactic.explode_expr
 
 unsafe def explode (n : Name) : tactic Unit := do

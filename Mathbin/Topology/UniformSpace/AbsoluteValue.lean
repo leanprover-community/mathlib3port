@@ -56,8 +56,8 @@ def uniformSpaceCore : UniformSpace.Core R
   symm :=
     tendsto_infᵢ.2 fun ε =>
       tendsto_infᵢ.2 fun h =>
-        tendsto_infi' ε <|
-          tendsto_infi' h <|
+        tendsto_infᵢ' ε <|
+          tendsto_infᵢ' h <|
             tendsto_principal_principal.2 fun ⟨x, y⟩ h =>
               by
               have h : abv (y - x) < ε := by simpa [-sub_eq_add_neg] using h

@@ -296,7 +296,7 @@ theorem eventually_residual {p : α → Prop} :
     (∀ᶠ x in residual α, p x) ↔ ∀ᶠ x in ⨅ (t : Set α) (ht : IsGδ t ∧ Dense t), 𝓟 t, p x := by
       simp only [residual, infᵢ_and]
     _ ↔ ∃ (t : Set α)(ht : IsGδ t ∧ Dense t), ∀ᶠ x in 𝓟 t, p x :=
-      mem_binfi_of_directed
+      mem_binfᵢ_of_directed
         (fun t₁ h₁ t₂ h₂ =>
           ⟨t₁ ∩ t₂, ⟨h₁.1.inter h₂.1, Dense.inter_of_Gδ h₁.1 h₂.1 h₁.2 h₂.2⟩, by simp⟩)
         ⟨univ, isGδ_univ, dense_univ⟩

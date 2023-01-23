@@ -149,7 +149,7 @@ theorem IntegrableOn.mulContinuousOnOfSubset (hg : IntegrableOn g A μ) (hg' : C
   rw [integrable_on, ← mem_ℒp_one_iff_integrable] at hg⊢
   have : ∀ᵐ x ∂μ.restrict A, ‖g x * g' x‖ ≤ C * ‖g x‖ :=
     by
-    filter_upwards [ae_restrict_mem hA] with x hx
+    filter_upwards [ae_restrict_mem hA]with x hx
     refine' (norm_mul_le _ _).trans _
     rw [mul_comm]
     apply mul_le_mul_of_nonneg_right (hC x (hAK hx)) (norm_nonneg _)
@@ -171,7 +171,7 @@ theorem IntegrableOn.continuousOnMulOfSubset (hg : ContinuousOn g K) (hg' : Inte
   rw [integrable_on, ← mem_ℒp_one_iff_integrable] at hg'⊢
   have : ∀ᵐ x ∂μ.restrict A, ‖g x * g' x‖ ≤ C * ‖g' x‖ :=
     by
-    filter_upwards [ae_restrict_mem hA] with x hx
+    filter_upwards [ae_restrict_mem hA]with x hx
     refine' (norm_mul_le _ _).trans _
     apply mul_le_mul_of_nonneg_right (hC x (hAK hx)) (norm_nonneg _)
   exact

@@ -1604,7 +1604,7 @@ theorem lintegral_nnnorm_eq_of_ae_nonneg {f : α → ℝ} (h_nonneg : 0 ≤ᵐ[�
     (∫⁻ x, ‖f x‖₊ ∂μ) = ∫⁻ x, Ennreal.ofReal (f x) ∂μ :=
   by
   apply lintegral_congr_ae
-  filter_upwards [h_nonneg] with x hx
+  filter_upwards [h_nonneg]with x hx
   rw [Real.nnnorm_of_nonneg hx, Ennreal.ofReal_eq_coe_nnreal hx]
 #align measure_theory.lintegral_nnnorm_eq_of_ae_nonneg MeasureTheory.lintegral_nnnorm_eq_of_ae_nonneg
 
@@ -1731,7 +1731,7 @@ theorem lintegral_tendsto_of_tendsto_of_monotone {f : ℕ → α → ℝ≥0∞}
   rw [← lintegral_supr' hf h_mono]
   refine' lintegral_congr_ae _
   filter_upwards [h_mono,
-    h_tendsto] with _ hx_mono hx_tendsto using tendsto_nhds_unique hx_tendsto
+    h_tendsto]with _ hx_mono hx_tendsto using tendsto_nhds_unique hx_tendsto
       (tendsto_atTop_supᵢ hx_mono)
 #align measure_theory.lintegral_tendsto_of_tendsto_of_monotone MeasureTheory.lintegral_tendsto_of_tendsto_of_monotone
 
@@ -2364,11 +2364,11 @@ theorem tendsto_lintegral_of_dominated_convergence' {F : ℕ → α → ℝ≥0�
     tendsto_lintegral_of_dominated_convergence bound (fun n => (hF_meas n).measurable_mk) _ h_fin
   · have : ∀ n, ∀ᵐ a ∂μ, (hF_meas n).mk (F n) a = F n a := fun n => (hF_meas n).ae_eq_mk.symm
     have : ∀ᵐ a ∂μ, ∀ n, (hF_meas n).mk (F n) a = F n a := ae_all_iff.mpr this
-    filter_upwards [this, h_lim] with a H H'
+    filter_upwards [this, h_lim]with a H H'
     simp_rw [H]
     exact H'
   · intro n
-    filter_upwards [h_bound n, (hF_meas n).ae_eq_mk] with a H H'
+    filter_upwards [h_bound n, (hF_meas n).ae_eq_mk]with a H H'
     rwa [H'] at H
 #align measure_theory.tendsto_lintegral_of_dominated_convergence' MeasureTheory.tendsto_lintegral_of_dominated_convergence'
 

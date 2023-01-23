@@ -264,7 +264,7 @@ theorem BoundedContinuousFunction.inner_toLp (f g : α →ᵇ 𝕜) :
   apply integral_congr_ae
   have hf_ae := f.coe_fn_to_Lp 2 μ 𝕜
   have hg_ae := g.coe_fn_to_Lp 2 μ 𝕜
-  filter_upwards [hf_ae, hg_ae] with _ hf hg
+  filter_upwards [hf_ae, hg_ae]with _ hf hg
   rw [hf, hg]
   simp
 #align measure_theory.bounded_continuous_function.inner_to_Lp MeasureTheory.BoundedContinuousFunction.inner_toLp
@@ -279,7 +279,7 @@ theorem ContinuousMap.inner_toLp (f g : C(α, 𝕜)) :
   apply integral_congr_ae
   have hf_ae := f.coe_fn_to_Lp μ
   have hg_ae := g.coe_fn_to_Lp μ
-  filter_upwards [hf_ae, hg_ae] with _ hf hg
+  filter_upwards [hf_ae, hg_ae]with _ hf hg
   rw [hf, hg]
   simp
 #align measure_theory.continuous_map.inner_to_Lp MeasureTheory.ContinuousMap.inner_toLp

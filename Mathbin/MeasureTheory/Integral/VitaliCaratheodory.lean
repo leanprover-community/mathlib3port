@@ -306,7 +306,7 @@ theorem exists_lt_lowerSemicontinuous_integral_gt_nnreal [SigmaFinite μ] (f : �
   have Ig : (∫⁻ a : α, Ennreal.ofReal (g a).toReal ∂μ) = ∫⁻ a : α, g a ∂μ :=
     by
     apply lintegral_congr_ae
-    filter_upwards [g_lt_top] with _ hx
+    filter_upwards [g_lt_top]with _ hx
     simp only [hx.ne, Ennreal.ofReal_toReal, Ne.def, not_false_iff]
   refine' ⟨g, f_lt_g, gcont, g_lt_top, _, _⟩
   · refine' ⟨gcont.measurable.ennreal_to_real.ae_measurable.ae_strongly_measurable, _⟩
@@ -505,7 +505,7 @@ theorem exists_lt_lowerSemicontinuous_integral_lt [SigmaFinite μ] (f : α → �
   let g : α → Ereal := fun x => (gp x : Ereal) - gm x
   have ae_g : ∀ᵐ x ∂μ, (g x).toReal = (gp x : Ereal).toReal - (gm x : Ereal).toReal :=
     by
-    filter_upwards [gp_lt_top] with _ hx
+    filter_upwards [gp_lt_top]with _ hx
     rw [Ereal.toReal_sub] <;> simp [hx.ne]
   refine' ⟨g, _, _, _, _, _⟩
   show integrable (fun x => Ereal.toReal (g x)) μ
@@ -537,7 +537,7 @@ theorem exists_lt_lowerSemicontinuous_integral_lt [SigmaFinite μ] (f : α → �
         field_simp [δ, mul_comm]
       
   show ∀ᵐ x : α ∂μ, g x < ⊤
-  · filter_upwards [gp_lt_top] with _ hx
+  · filter_upwards [gp_lt_top]with _ hx
     simp only [g, sub_eq_add_neg, coe_coe, Ne.def, (Ereal.add_lt_top _ _).Ne, lt_top_iff_ne_top,
       lt_top_iff_ne_top.1 hx, Ereal.coe_ennreal_eq_top_iff, not_false_iff, Ereal.neg_eq_top_iff,
       Ereal.coe_ennreal_ne_bot]

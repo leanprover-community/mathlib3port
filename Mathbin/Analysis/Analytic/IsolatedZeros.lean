@@ -107,7 +107,7 @@ theorem eq_pow_order_mul_iterate_dslope (hp : HasFpowerSeriesAt f p z₀) :
     ∀ᶠ z in 𝓝 z₀, f z = (z - z₀) ^ p.order • (swap dslope z₀^[p.order]) f z :=
   by
   have hq := has_fpower_series_at_iff'.mp (has_fpower_series_iterate_dslope_fslope p.order hp)
-  filter_upwards [hq, has_fpower_series_at_iff'.mp hp] with x hx1 hx2
+  filter_upwards [hq, has_fpower_series_at_iff'.mp hp]with x hx1 hx2
   have : ∀ k < p.order, p.coeff k = 0 := fun k hk => by
     simpa [coeff_eq_zero] using apply_eq_zero_of_lt_order hk
   obtain ⟨s, hs1, hs2⟩ := HasSum.exists_hasSum_smul_of_apply_eq_zero hx2 this
@@ -121,7 +121,7 @@ theorem locally_ne_zero (hp : HasFpowerSeriesAt f p z₀) (h : p ≠ 0) : ∀ᶠ
   rw [eventually_nhdsWithin_iff]
   have h2 := (has_fpower_series_iterate_dslope_fslope p.order hp).ContinuousAt
   have h3 := h2.eventually_ne (iterate_dslope_fslope_ne_zero hp h)
-  filter_upwards [eq_pow_order_mul_iterate_dslope hp, h3] with z e1 e2 e3
+  filter_upwards [eq_pow_order_mul_iterate_dslope hp, h3]with z e1 e2 e3
   simpa [e1, e2, e3] using pow_ne_zero p.order (sub_ne_zero.mpr e3)
 #align has_fpower_series_at.locally_ne_zero HasFpowerSeriesAt.locally_ne_zero
 

@@ -278,8 +278,7 @@ theorem IsBoundedUnder.sup [SemilatticeSup α] {f : Filter β} {u v : β → α}
     f.IsBoundedUnder (· ≤ ·) u →
       f.IsBoundedUnder (· ≤ ·) v → f.IsBoundedUnder (· ≤ ·) fun a => u a ⊔ v a
   | ⟨bu, (hu : ∀ᶠ x in f, u x ≤ bu)⟩, ⟨bv, (hv : ∀ᶠ x in f, v x ≤ bv)⟩ =>
-    ⟨bu ⊔ bv,
-      show ∀ᶠ x in f, u x ⊔ v x ≤ bu ⊔ bv by filter_upwards [hu, hv] with _ using sup_le_sup⟩
+    ⟨bu ⊔ bv, show ∀ᶠ x in f, u x ⊔ v x ≤ bu ⊔ bv by filter_upwards [hu, hv]with _ using sup_le_sup⟩
 #align filter.is_bounded_under.sup Filter.IsBoundedUnder.sup
 
 @[simp]
@@ -928,7 +927,7 @@ theorem limsup_eq_infₛ_supₛ {ι R : Type _} (F : Filter ι) [CompleteLattice
   · rw [limsup_eq]
     refine' infₛ_le_infₛ fun x hx => _
     rcases(mem_image _ F.sets x).mp hx with ⟨I, ⟨I_mem_F, hI⟩⟩
-    filter_upwards [I_mem_F] with i hi
+    filter_upwards [I_mem_F]with i hi
     exact hI ▸ le_supₛ (mem_image_of_mem _ hi)
   · refine'
       le_Inf_iff.mpr fun b hb =>

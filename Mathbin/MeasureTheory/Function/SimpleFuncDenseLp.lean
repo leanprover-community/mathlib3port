@@ -133,7 +133,7 @@ theorem tendsto_approxOn_Lp_snorm [OpensMeasurableSpace E] {f : β → E} (hf : 
     ∀ᵐ a : β ∂μ,
       tendsto (fun n => (‖approx_on f hf s y₀ h₀ n a - f a‖₊ : ℝ≥0∞) ^ p.to_real) at_top (𝓝 0) :=
     by
-    filter_upwards [hμ] with a ha
+    filter_upwards [hμ]with a ha
     have : tendsto (fun n => (approx_on f hf s y₀ h₀ n) a - f a) at_top (𝓝 (f a - f a)) :=
       (tendsto_approx_on hf h₀ ha).sub tendsto_const_nhds
     convert continuous_rpow_const.continuous_at.tendsto.comp (tendsto_coe.mpr this.nnnorm)
@@ -649,7 +649,7 @@ variable (E μ)
 theorem zero_toSimpleFunc : toSimpleFunc (0 : lp.simpleFunc E p μ) =ᵐ[μ] 0 :=
   by
   filter_upwards [to_simple_func_eq_to_fun (0 : Lp.simple_func E p μ),
-    Lp.coe_fn_zero E 1 μ] with _ h₁ _
+    Lp.coe_fn_zero E 1 μ]with _ h₁ _
   rwa [h₁]
 #align measure_theory.Lp.simple_func.zero_to_simple_func MeasureTheory.lp.simpleFunc.zero_toSimpleFunc
 
@@ -659,7 +659,7 @@ theorem add_toSimpleFunc (f g : lp.simpleFunc E p μ) :
     toSimpleFunc (f + g) =ᵐ[μ] toSimpleFunc f + toSimpleFunc g :=
   by
   filter_upwards [to_simple_func_eq_to_fun (f + g), to_simple_func_eq_to_fun f,
-    to_simple_func_eq_to_fun g, Lp.coe_fn_add (f : Lp E p μ) g] with _
+    to_simple_func_eq_to_fun g, Lp.coe_fn_add (f : Lp E p μ) g]with _
   simp only [← coe_coe, AddSubgroup.coe_add, Pi.add_apply]
   iterate 4 intro h; rw [h]
 #align measure_theory.Lp.simple_func.add_to_simple_func MeasureTheory.lp.simpleFunc.add_toSimpleFunc
@@ -667,7 +667,7 @@ theorem add_toSimpleFunc (f g : lp.simpleFunc E p μ) :
 theorem neg_toSimpleFunc (f : lp.simpleFunc E p μ) : toSimpleFunc (-f) =ᵐ[μ] -toSimpleFunc f :=
   by
   filter_upwards [to_simple_func_eq_to_fun (-f), to_simple_func_eq_to_fun f,
-    Lp.coe_fn_neg (f : Lp E p μ)] with _
+    Lp.coe_fn_neg (f : Lp E p μ)]with _
   simp only [Pi.neg_apply, AddSubgroup.coe_neg, ← coe_coe]
   repeat' intro h; rw [h]
 #align measure_theory.Lp.simple_func.neg_to_simple_func MeasureTheory.lp.simpleFunc.neg_toSimpleFunc
@@ -676,7 +676,7 @@ theorem sub_toSimpleFunc (f g : lp.simpleFunc E p μ) :
     toSimpleFunc (f - g) =ᵐ[μ] toSimpleFunc f - toSimpleFunc g :=
   by
   filter_upwards [to_simple_func_eq_to_fun (f - g), to_simple_func_eq_to_fun f,
-    to_simple_func_eq_to_fun g, Lp.coe_fn_sub (f : Lp E p μ) g] with _
+    to_simple_func_eq_to_fun g, Lp.coe_fn_sub (f : Lp E p μ) g]with _
   simp only [AddSubgroup.coe_sub, Pi.sub_apply, ← coe_coe]
   repeat' intro h; rw [h]
 #align measure_theory.Lp.simple_func.sub_to_simple_func MeasureTheory.lp.simpleFunc.sub_toSimpleFunc
@@ -687,7 +687,7 @@ theorem smul_toSimpleFunc (k : 𝕜) (f : lp.simpleFunc E p μ) :
     toSimpleFunc (k • f) =ᵐ[μ] k • toSimpleFunc f :=
   by
   filter_upwards [to_simple_func_eq_to_fun (k • f), to_simple_func_eq_to_fun f,
-    Lp.coe_fn_smul k (f : Lp E p μ)] with _
+    Lp.coe_fn_smul k (f : Lp E p μ)]with _
   simp only [Pi.smul_apply, coe_smul, ← coe_coe]
   repeat' intro h; rw [h]
 #align measure_theory.Lp.simple_func.smul_to_simple_func MeasureTheory.lp.simpleFunc.smul_toSimpleFunc
@@ -841,7 +841,7 @@ instance : CovariantClass (lp.simpleFunc G p μ) (lp.simpleFunc G p μ) (· + ·
   rw [← Lp.simple_func.coe_fn_le] at hg₁₂⊢
   have h_add_1 : ⇑(f + g₁) =ᵐ[μ] f + g₁ := Lp.coe_fn_add _ _
   have h_add_2 : ⇑(f + g₂) =ᵐ[μ] f + g₂ := Lp.coe_fn_add _ _
-  filter_upwards [h_add_1, h_add_2, hg₁₂] with _ h1 h2 h3
+  filter_upwards [h_add_1, h_add_2, hg₁₂]with _ h1 h2 h3
   rw [h1, h2, Pi.add_apply, Pi.add_apply]
   exact add_le_add le_rfl h3
 
@@ -857,7 +857,7 @@ theorem coeFn_nonneg (f : lp.simpleFunc G p μ) : 0 ≤ᵐ[μ] f ↔ 0 ≤ f :=
   by
   rw [← Lp.simple_func.coe_fn_le]
   have h0 : (0 : Lp.simple_func G p μ) =ᵐ[μ] (0 : α → G) := Lp.simple_func.coe_fn_zero p μ G
-  constructor <;> intro h <;> filter_upwards [h, h0] with _ _ h2
+  constructor <;> intro h <;> filter_upwards [h, h0]with _ _ h2
   · rwa [h2]
   · rwa [← h2]
 #align measure_theory.Lp.simple_func.coe_fn_nonneg MeasureTheory.lp.simpleFunc.coeFn_nonneg
@@ -868,7 +868,7 @@ theorem exists_simpleFunc_nonneg_ae_eq {f : lp.simpleFunc G p μ} (hf : 0 ≤ f)
   rw [← Lp.simple_func.coe_fn_nonneg] at hf
   have hf_ae : 0 ≤ᵐ[μ] simple_func.to_simple_func f :=
     by
-    filter_upwards [to_simple_func_eq_to_fun f, hf] with _ h1 _
+    filter_upwards [to_simple_func_eq_to_fun f, hf]with _ h1 _
     rwa [h1]
   let s := to_measurable μ { x | ¬0 ≤ simple_func.to_simple_func f x }ᶜ
   have hs_zero : μ (sᶜ) = 0 := by
@@ -940,7 +940,7 @@ theorem denseRange_coeSimpleFuncNonnegToLpNonneg [hp : Fact (1 ≤ p)] (hp_ne_to
     rw [← Lp.simple_func.coe_fn_le, coeFn_coe_base' (simple_func.to_Lp (x n) _),
       Lp.simple_func.to_Lp_eq_to_Lp]
     have h0 := Lp.simple_func.coe_fn_zero p μ G
-    filter_upwards [Lp.simple_func.coe_fn_zero p μ G, h_to_Lp n] with a ha0 ha_to_Lp
+    filter_upwards [Lp.simple_func.coe_fn_zero p μ G, h_to_Lp n]with a ha0 ha_to_Lp
     rw [ha0, ha_to_Lp]
     exact hx_nonneg n a
   have hx_tendsto : tendsto (fun n : ℕ => snorm (x n - g) p μ) at_top (𝓝 0) :=

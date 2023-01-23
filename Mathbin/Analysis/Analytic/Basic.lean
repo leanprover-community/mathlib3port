@@ -487,7 +487,7 @@ protected theorem HasFpowerSeriesAt.eventually (hf : HasFpowerSeriesAt f p x) :
 
 theorem HasFpowerSeriesOnBall.eventually_hasSum (hf : HasFpowerSeriesOnBall f p x r) :
     ∀ᶠ y in 𝓝 0, HasSum (fun n : ℕ => p n fun i : Fin n => y) (f (x + y)) := by
-  filter_upwards [Emetric.ball_mem_nhds (0 : E) hf.r_pos] using fun _ => hf.has_sum
+  filter_upwards [Emetric.ball_mem_nhds (0 : E) hf.r_pos]using fun _ => hf.has_sum
 #align has_fpower_series_on_ball.eventually_has_sum HasFpowerSeriesOnBall.eventually_hasSum
 
 theorem HasFpowerSeriesAt.eventually_hasSum (hf : HasFpowerSeriesAt f p x) :
@@ -498,7 +498,7 @@ theorem HasFpowerSeriesAt.eventually_hasSum (hf : HasFpowerSeriesAt f p x) :
 
 theorem HasFpowerSeriesOnBall.eventually_hasSum_sub (hf : HasFpowerSeriesOnBall f p x r) :
     ∀ᶠ y in 𝓝 x, HasSum (fun n : ℕ => p n fun i : Fin n => y - x) (f y) := by
-  filter_upwards [Emetric.ball_mem_nhds x hf.r_pos] with y using hf.has_sum_sub
+  filter_upwards [Emetric.ball_mem_nhds x hf.r_pos]with y using hf.has_sum_sub
 #align has_fpower_series_on_ball.eventually_has_sum_sub HasFpowerSeriesOnBall.eventually_hasSum_sub
 
 theorem HasFpowerSeriesAt.eventually_hasSum_sub (hf : HasFpowerSeriesAt f p x) :
@@ -509,7 +509,7 @@ theorem HasFpowerSeriesAt.eventually_hasSum_sub (hf : HasFpowerSeriesAt f p x) :
 
 theorem HasFpowerSeriesOnBall.eventually_eq_zero
     (hf : HasFpowerSeriesOnBall f (0 : FormalMultilinearSeries 𝕜 E F) x r) : ∀ᶠ z in 𝓝 x, f z = 0 :=
-  by filter_upwards [hf.eventually_has_sum_sub] with z hz using hz.unique hasSum_zero
+  by filter_upwards [hf.eventually_has_sum_sub]with z hz using hz.unique hasSum_zero
 #align has_fpower_series_on_ball.eventually_eq_zero HasFpowerSeriesOnBall.eventually_eq_zero
 
 theorem HasFpowerSeriesAt.eventually_eq_zero
@@ -724,7 +724,7 @@ theorem HasFpowerSeriesAt.isO_sub_partialSum_pow (hf : HasFpowerSeriesAt f p x) 
   exact hf.uniform_geometric_approx' h
   refine' is_O_iff.2 ⟨C * (a / r') ^ n, _⟩
   replace r'0 : 0 < (r' : ℝ); · exact_mod_cast r'0
-  filter_upwards [Metric.ball_mem_nhds (0 : E) r'0] with y hy
+  filter_upwards [Metric.ball_mem_nhds (0 : E) r'0]with y hy
   simpa [mul_pow, mul_div_assoc, mul_assoc, div_mul_eq_mul_div] using hp y hy n
 #align has_fpower_series_at.is_O_sub_partial_sum_pow HasFpowerSeriesAt.isO_sub_partialSum_pow
 

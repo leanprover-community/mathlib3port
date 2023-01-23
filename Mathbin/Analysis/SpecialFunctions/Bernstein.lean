@@ -236,7 +236,7 @@ theorem bernsteinApproximation_uniform (f : C(I, ℝ)) :
   let δ := δ f ε h
   have nhds_zero := tendsto_const_div_atTop_nhds_0_nat (2 * ‖f‖ * δ ^ (-2 : ℤ))
   filter_upwards [nhds_zero.eventually (gt_mem_nhds (half_pos h)),
-    eventually_gt_at_top 0] with n nh npos'
+    eventually_gt_at_top 0]with n nh npos'
   have npos : 0 < (n : ℝ) := by exact_mod_cast npos'
   -- Two easy inequalities we'll need later:
   have w₁ : 0 ≤ 2 * ‖f‖ := mul_nonneg (by norm_num) (norm_nonneg f)
