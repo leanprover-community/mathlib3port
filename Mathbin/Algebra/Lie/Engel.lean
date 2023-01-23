@@ -246,7 +246,7 @@ theorem LieAlgebra.isEngelian_of_isNoetherian : LieAlgebra.IsEngelian R L :=
   intro M _i1 _i2 _i3 _i4 h
   rw [← is_nilpotent_range_to_endomorphism_iff]
   let L' := (to_endomorphism R L M).range
-  replace h : ∀ y : L', IsNilpotent (y : Module.EndCat R M)
+  replace h : ∀ y : L', IsNilpotent (y : Module.End R M)
   · rintro ⟨-, ⟨y, rfl⟩⟩
     simp [h]
   change LieModule.IsNilpotent R L' M
@@ -274,7 +274,7 @@ theorem LieAlgebra.isEngelian_of_isNoetherian : LieAlgebra.IsEngelian R L :=
       by
       refine' hK₁ _ fun x => _
       have hx := LieAlgebra.isNilpotent_ad_of_isNilpotent (h x)
-      exact Module.EndCat.IsNilpotent.mapq _ hx
+      exact Module.End.IsNilpotent.mapq _ hx
     exact nontrivial_max_triv_of_is_nilpotent R K (L' ⧸ K.to_lie_submodule)
   haveI _i5 : IsNoetherian R L' :=
     isNoetherianOfSurjective L _ (LinearMap.range_rangeRestrict (to_endomorphism R L M))

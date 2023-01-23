@@ -49,7 +49,7 @@ local notation "⟪" x ", " y "⟫" => @inner 𝕜 _ _ x y
 
 open Nnreal
 
-open Module.EndCat Metric
+open Module.End Metric
 
 namespace ContinuousLinearMap
 
@@ -196,7 +196,7 @@ theorem hasEigenvector_of_isLocalExtrOn (hT : IsSelfAdjoint T) {x₀ : E} (hx₀
     HasEigenvector (T : E →ₗ[𝕜] E) (↑(rayleigh_quotient x₀)) x₀ :=
   by
   refine' ⟨_, hx₀⟩
-  rw [Module.EndCat.mem_eigenspace_iff]
+  rw [Module.End.mem_eigenspace_iff]
   exact hT.eq_smul_self_of_is_local_extr_on hextr
 #align is_self_adjoint.has_eigenvector_of_is_local_extr_on IsSelfAdjoint.hasEigenvector_of_isLocalExtrOn
 
@@ -299,7 +299,7 @@ theorem hasEigenvalue_infᵢ_of_finiteDimensional (hT : T.IsSymmetric) :
 omit _i
 
 theorem subsingleton_of_no_eigenvalue_finiteDimensional (hT : T.IsSymmetric)
-    (hT' : ∀ μ : 𝕜, Module.EndCat.eigenspace (T : E →ₗ[𝕜] E) μ = ⊥) : Subsingleton E :=
+    (hT' : ∀ μ : 𝕜, Module.End.eigenspace (T : E →ₗ[𝕜] E) μ = ⊥) : Subsingleton E :=
   (subsingleton_or_nontrivial E).resolve_right fun h =>
     absurd (hT' _) hT.has_eigenvalue_supr_of_finite_dimensional
 #align linear_map.is_symmetric.subsingleton_of_no_eigenvalue_finite_dimensional LinearMap.IsSymmetric.subsingleton_of_no_eigenvalue_finiteDimensional

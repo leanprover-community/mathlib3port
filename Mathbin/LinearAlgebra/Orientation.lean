@@ -383,7 +383,7 @@ theorem map_eq_iff_det_pos (x : Orientation R M ι) (f : M ≃ₗ[R] M)
   cases isEmpty_or_nonempty ι
   · have H : finrank R M = 0 := by
       refine' h.symm.trans _
-      convert Fintype.card_of_is_empty
+      convert Fintype.card_of_isEmpty
       infer_instance
     simp [LinearMap.det_eq_one_of_finrank_eq_zero H]
   have H : 0 < finrank R M := by
@@ -402,7 +402,7 @@ theorem map_eq_neg_iff_det_neg (x : Orientation R M ι) (f : M ≃ₗ[R] M)
   cases isEmpty_or_nonempty ι
   · have H : finrank R M = 0 := by
       refine' h.symm.trans _
-      convert Fintype.card_of_is_empty
+      convert Fintype.card_of_isEmpty
       infer_instance
     simp [LinearMap.det_eq_one_of_finrank_eq_zero H, Module.Ray.ne_neg_self x]
   have H : 0 < finrank R M := by

@@ -1123,11 +1123,11 @@ theorem rtensor_comp_apply (x : N ⊗[R] M) :
     (g.comp f).rtensor M x = (g.rtensor M) ((f.rtensor M) x) := by rw [rtensor_comp, coe_comp]
 #align linear_map.rtensor_comp_apply LinearMap.rtensor_comp_apply
 
-theorem ltensor_mul (f g : Module.EndCat R N) : (f * g).ltensor M = f.ltensor M * g.ltensor M :=
+theorem ltensor_mul (f g : Module.End R N) : (f * g).ltensor M = f.ltensor M * g.ltensor M :=
   ltensor_comp M f g
 #align linear_map.ltensor_mul LinearMap.ltensor_mul
 
-theorem rtensor_mul (f g : Module.EndCat R N) : (f * g).rtensor M = f.rtensor M * g.rtensor M :=
+theorem rtensor_mul (f g : Module.End R N) : (f * g).rtensor M = f.rtensor M * g.rtensor M :=
   rtensor_comp M f g
 #align linear_map.rtensor_mul LinearMap.rtensor_mul
 

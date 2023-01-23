@@ -61,7 +61,7 @@ theorem count_eq_card_filter_range (n : ℕ) : count p n = ((range n).filter p).
 /-- `count p n` can be expressed as the cardinality of `{k // k < n ∧ p k}`. -/
 theorem count_eq_card_fintype (n : ℕ) : count p n = Fintype.card { k : ℕ // k < n ∧ p k } :=
   by
-  rw [count_eq_card_filter_range, ← Fintype.card_of_finset, ← count_set.fintype]
+  rw [count_eq_card_filter_range, ← Fintype.card_ofFinset, ← count_set.fintype]
   rfl
 #align nat.count_eq_card_fintype Nat.count_eq_card_fintype
 

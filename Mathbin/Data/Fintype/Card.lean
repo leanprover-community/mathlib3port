@@ -141,12 +141,12 @@ theorem card_of_subtype {p : α → Prop} (s : Finset α) (H : ∀ x : α, x ∈
 #align fintype.card_of_subtype Fintype.card_of_subtype
 -/
 
-#print Fintype.card_of_finset /-
+#print Fintype.card_ofFinset /-
 @[simp]
-theorem card_of_finset {p : Set α} (s : Finset α) (H : ∀ x, x ∈ s ↔ x ∈ p) :
+theorem card_ofFinset {p : Set α} (s : Finset α) (H : ∀ x, x ∈ s ↔ x ∈ p) :
     @Fintype.card p (ofFinset s H) = s.card :=
   Fintype.subtype_card s H
-#align fintype.card_of_finset Fintype.card_of_finset
+#align fintype.card_of_finset Fintype.card_ofFinset
 -/
 
 #print Fintype.card_of_finset' /-
@@ -255,30 +255,30 @@ theorem card_eq {α β} [F : Fintype α] [G : Fintype β] : card α = card β �
     fun ⟨f⟩ => card_congr f⟩
 #align fintype.card_eq Fintype.card_eq
 
-#print Fintype.card_of_subsingleton /-
+#print Fintype.card_ofSubsingleton /-
 /-- Note: this lemma is specifically about `fintype.of_subsingleton`. For a statement about
 arbitrary `fintype` instances, use either `fintype.card_le_one_iff_subsingleton` or
 `fintype.card_unique`. -/
 @[simp]
-theorem card_of_subsingleton (a : α) [Subsingleton α] : @Fintype.card _ (ofSubsingleton a) = 1 :=
+theorem card_ofSubsingleton (a : α) [Subsingleton α] : @Fintype.card _ (ofSubsingleton a) = 1 :=
   rfl
-#align fintype.card_of_subsingleton Fintype.card_of_subsingleton
+#align fintype.card_of_subsingleton Fintype.card_ofSubsingleton
 -/
 
 #print Fintype.card_unique /-
 @[simp]
 theorem card_unique [Unique α] [h : Fintype α] : Fintype.card α = 1 :=
-  Subsingleton.elim (ofSubsingleton default) h ▸ card_of_subsingleton _
+  Subsingleton.elim (ofSubsingleton default) h ▸ card_ofSubsingleton _
 #align fintype.card_unique Fintype.card_unique
 -/
 
-#print Fintype.card_of_is_empty /-
+#print Fintype.card_of_isEmpty /-
 /-- Note: this lemma is specifically about `fintype.of_is_empty`. For a statement about
 arbitrary `fintype` instances, use `fintype.card_eq_zero_iff`. -/
 @[simp]
-theorem card_of_is_empty [IsEmpty α] : Fintype.card α = 0 :=
+theorem card_of_isEmpty [IsEmpty α] : Fintype.card α = 0 :=
   rfl
-#align fintype.card_of_is_empty Fintype.card_of_is_empty
+#align fintype.card_of_is_empty Fintype.card_of_isEmpty
 -/
 
 end Fintype
@@ -501,11 +501,11 @@ theorem Fintype.card_plift (α : Type _) [Fintype α] : Fintype.card (PLift α) 
 #align fintype.card_plift Fintype.card_plift
 -/
 
-#print Fintype.card_order_dual /-
+#print Fintype.card_orderDual /-
 @[simp]
-theorem Fintype.card_order_dual (α : Type _) [Fintype α] : Fintype.card αᵒᵈ = Fintype.card α :=
+theorem Fintype.card_orderDual (α : Type _) [Fintype α] : Fintype.card αᵒᵈ = Fintype.card α :=
   rfl
-#align fintype.card_order_dual Fintype.card_order_dual
+#align fintype.card_order_dual Fintype.card_orderDual
 -/
 
 #print Fintype.card_lex /-

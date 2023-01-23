@@ -119,7 +119,7 @@ variable (R A : Type _) [CommSemiring R] [NonUnitalSemiring A] [Module R A] [SMu
 /-- The multiplication in a non-unital algebra is a bilinear map.
 
 A weaker version of this for non-unital non-associative algebras exists as `linear_map.mul`. -/
-def NonUnitalAlgHom.lmul : A →ₙₐ[R] EndCat R A :=
+def NonUnitalAlgHom.lmul : A →ₙₐ[R] End R A :=
   {
     mul R A with
     map_mul' := by
@@ -168,7 +168,7 @@ variable (R A : Type _) [CommSemiring R] [Semiring A] [Algebra R A]
 the algebra.
 
 A weaker version of this for non-unital algebras exists as `non_unital_alg_hom.mul`. -/
-def Algebra.lmul : A →ₐ[R] EndCat R A :=
+def Algebra.lmul : A →ₐ[R] End R A :=
   {
     LinearMap.mul R
       A with

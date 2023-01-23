@@ -429,7 +429,7 @@ variable [Module R M] [Module R M₂]
 
 /-- `linear_map.prod_map` as an `algebra_hom` -/
 @[simps]
-def prodMapAlgHom : Module.EndCat R M × Module.EndCat R M₂ →ₐ[R] Module.EndCat R (M × M₂) :=
+def prodMapAlgHom : Module.End R M × Module.End R M₂ →ₐ[R] Module.End R (M × M₂) :=
   { prodMapRingHom R M M₂ with commutes' := fun _ => rfl }
 #align linear_map.prod_map_alg_hom LinearMap.prodMapAlgHom
 

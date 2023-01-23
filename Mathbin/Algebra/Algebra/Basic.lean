@@ -627,68 +627,67 @@ namespace Module
 
 variable (R : Type u) (M : Type v) [CommSemiring R] [AddCommMonoid M] [Module R M]
 
-instance : Algebra R (Module.EndCat R M) :=
+instance : Algebra R (Module.End R M) :=
   Algebra.ofModule smul_mul_assoc fun r f g => (smul_comm r f g).symm
 
-theorem algebraMap_endCat_eq_smul_id (a : R) : (algebraMap R (EndCat R M)) a = a • LinearMap.id :=
+theorem algebraMap_end_eq_smul_id (a : R) : (algebraMap R (End R M)) a = a • LinearMap.id :=
   rfl
-#align module.algebra_map_End_eq_smul_id Module.algebraMap_endCat_eq_smul_id
+#align module.algebra_map_End_eq_smul_id Module.algebraMap_end_eq_smul_id
 
 @[simp]
-theorem algebraMap_endCat_apply (a : R) (m : M) : (algebraMap R (EndCat R M)) a m = a • m :=
+theorem algebraMap_end_apply (a : R) (m : M) : (algebraMap R (End R M)) a m = a • m :=
   rfl
-#align module.algebra_map_End_apply Module.algebraMap_endCat_apply
+#align module.algebra_map_End_apply Module.algebraMap_end_apply
 
 @[simp]
-theorem ker_algebraMap_endCat (K : Type u) (V : Type v) [Field K] [AddCommGroup V] [Module K V]
-    (a : K) (ha : a ≠ 0) : ((algebraMap K (EndCat K V)) a).ker = ⊥ :=
+theorem ker_algebraMap_end (K : Type u) (V : Type v) [Field K] [AddCommGroup V] [Module K V] (a : K)
+    (ha : a ≠ 0) : ((algebraMap K (End K V)) a).ker = ⊥ :=
   LinearMap.ker_smul _ _ ha
-#align module.ker_algebra_map_End Module.ker_algebraMap_endCat
+#align module.ker_algebra_map_End Module.ker_algebraMap_end
 
 section
 
 variable {R M}
 
-theorem endCat_isUnit_apply_inv_apply_of_isUnit {f : Module.EndCat R M} (h : IsUnit f) (x : M) :
+theorem end_isUnit_apply_inv_apply_of_isUnit {f : Module.End R M} (h : IsUnit f) (x : M) :
     f (h.Unit.inv x) = x :=
   show (f * h.Unit.inv) x = x by simp
-#align module.End_is_unit_apply_inv_apply_of_is_unit Module.endCat_isUnit_apply_inv_apply_of_isUnit
+#align module.End_is_unit_apply_inv_apply_of_is_unit Module.end_isUnit_apply_inv_apply_of_isUnit
 
-theorem endCat_isUnit_inv_apply_apply_of_isUnit {f : Module.EndCat R M} (h : IsUnit f) (x : M) :
+theorem end_isUnit_inv_apply_apply_of_isUnit {f : Module.End R M} (h : IsUnit f) (x : M) :
     h.Unit.inv (f x) = x :=
   (by simp : (h.Unit.inv * f) x = x)
-#align module.End_is_unit_inv_apply_apply_of_is_unit Module.endCat_isUnit_inv_apply_apply_of_isUnit
+#align module.End_is_unit_inv_apply_apply_of_is_unit Module.end_isUnit_inv_apply_apply_of_isUnit
 
-theorem endCat_isUnit_iff (f : Module.EndCat R M) : IsUnit f ↔ Function.Bijective f :=
+theorem end_isUnit_iff (f : Module.End R M) : IsUnit f ↔ Function.Bijective f :=
   ⟨fun h =>
     Function.bijective_iff_has_inverse.mpr <|
       ⟨h.Unit.inv,
-        ⟨endCat_isUnit_inv_apply_apply_of_isUnit h, endCat_isUnit_apply_inv_apply_of_isUnit h⟩⟩,
+        ⟨end_isUnit_inv_apply_apply_of_isUnit h, end_isUnit_apply_inv_apply_of_isUnit h⟩⟩,
     fun H =>
     let e : M ≃ₗ[R] M := { f, Equiv.ofBijective f H with }
     ⟨⟨_, e.symm, LinearMap.ext e.right_inv, LinearMap.ext e.left_inv⟩, rfl⟩⟩
-#align module.End_is_unit_iff Module.endCat_isUnit_iff
+#align module.End_is_unit_iff Module.end_isUnit_iff
 
-theorem endCat_algebraMap_isUnit_inv_apply_eq_iff {x : R}
-    (h : IsUnit (algebraMap R (Module.EndCat R M) x)) (m m' : M) : h.Unit⁻¹ m = m' ↔ m = x • m' :=
-  { mp := fun H =>
-      ((congr_arg h.Unit H).symm.trans (endCat_isUnit_apply_inv_apply_of_isUnit h _)).symm
+theorem end_algebraMap_isUnit_inv_apply_eq_iff {x : R}
+    (h : IsUnit (algebraMap R (Module.End R M) x)) (m m' : M) : h.Unit⁻¹ m = m' ↔ m = x • m' :=
+  { mp := fun H => ((congr_arg h.Unit H).symm.trans (end_isUnit_apply_inv_apply_of_isUnit h _)).symm
     mpr := fun H =>
       H.symm ▸ by
-        apply_fun h.unit using ((Module.endCat_isUnit_iff _).mp h).Injective
+        apply_fun h.unit using ((Module.end_isUnit_iff _).mp h).Injective
         erw [End_is_unit_apply_inv_apply_of_is_unit]
         rfl }
-#align module.End_algebra_map_is_unit_inv_apply_eq_iff Module.endCat_algebraMap_isUnit_inv_apply_eq_iff
+#align module.End_algebra_map_is_unit_inv_apply_eq_iff Module.end_algebraMap_isUnit_inv_apply_eq_iff
 
-theorem endCat_algebraMap_isUnit_inv_apply_eq_iff' {x : R}
-    (h : IsUnit (algebraMap R (Module.EndCat R M) x)) (m m' : M) : m' = h.Unit⁻¹ m ↔ m = x • m' :=
-  { mp := fun H => ((congr_arg h.Unit H).trans (endCat_isUnit_apply_inv_apply_of_isUnit h _)).symm
+theorem end_algebraMap_isUnit_inv_apply_eq_iff' {x : R}
+    (h : IsUnit (algebraMap R (Module.End R M) x)) (m m' : M) : m' = h.Unit⁻¹ m ↔ m = x • m' :=
+  { mp := fun H => ((congr_arg h.Unit H).trans (end_isUnit_apply_inv_apply_of_isUnit h _)).symm
     mpr := fun H =>
       H.symm ▸ by
-        apply_fun h.unit using ((Module.endCat_isUnit_iff _).mp h).Injective
+        apply_fun h.unit using ((Module.end_isUnit_iff _).mp h).Injective
         erw [End_is_unit_apply_inv_apply_of_is_unit]
         rfl }
-#align module.End_algebra_map_is_unit_inv_apply_eq_iff' Module.endCat_algebraMap_isUnit_inv_apply_eq_iff'
+#align module.End_algebra_map_is_unit_inv_apply_eq_iff' Module.end_algebraMap_isUnit_inv_apply_eq_iff'
 
 end
 

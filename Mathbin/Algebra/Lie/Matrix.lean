@@ -43,17 +43,17 @@ variable {n : Type w} [DecidableEq n] [Fintype n]
 
 /-- The natural equivalence between linear endomorphisms of finite free modules and square matrices
 is compatible with the Lie algebra structures. -/
-def lieEquivMatrix' : Module.EndCat R (n → R) ≃ₗ⁅R⁆ Matrix n n R :=
+def lieEquivMatrix' : Module.End R (n → R) ≃ₗ⁅R⁆ Matrix n n R :=
   { LinearMap.toMatrix' with
     map_lie' := fun T S => by
       let f := @LinearMap.toMatrix' R _ n n _ _
       change f (T.comp S - S.comp T) = f T * f S - f S * f T
-      have h : ∀ T S : Module.EndCat R _, f (T.comp S) = f T ⬝ f S := LinearMap.toMatrix'_comp
+      have h : ∀ T S : Module.End R _, f (T.comp S) = f T ⬝ f S := LinearMap.toMatrix'_comp
       rw [LinearEquiv.map_sub, h, h, Matrix.mul_eq_mul, Matrix.mul_eq_mul] }
 #align lie_equiv_matrix' lieEquivMatrix'
 
 @[simp]
-theorem lieEquivMatrix'_apply (f : Module.EndCat R (n → R)) : lieEquivMatrix' f = f.toMatrix' :=
+theorem lieEquivMatrix'_apply (f : Module.End R (n → R)) : lieEquivMatrix' f = f.toMatrix' :=
   rfl
 #align lie_equiv_matrix'_apply lieEquivMatrix'_apply
 

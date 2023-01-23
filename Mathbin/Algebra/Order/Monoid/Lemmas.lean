@@ -2130,69 +2130,69 @@ theorem StrictAntiOn.mul' [CovariantClass α α (· * ·) (· < ·)]
 #align strict_anti_on.mul' StrictAntiOn.mul'
 #align strict_anti_on.add StrictAntiOn.add
 
-/- warning: monotone.mul_strict_mono' -> Monotone.mul_strict_mono' is a dubious translation:
+/- warning: monotone.mul_strict_mono' -> Monotone.mul_strictMono' is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Mul.{u1} α] [_inst_2 : Preorder.{u1} α] [_inst_3 : Preorder.{u2} β] [_inst_4 : CovariantClass.{u1, u1} α α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1)) (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_2))] [_inst_5 : CovariantClass.{u1, u1} α α (Function.swap.{succ u1, succ u1, succ u1} α α (fun (ᾰ : α) (ᾰ : α) => α) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1))) (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_2))] {f : β -> α} {g : β -> α}, (Monotone.{u2, u1} β α _inst_3 _inst_2 f) -> (StrictMono.{u2, u1} β α _inst_3 _inst_2 g) -> (StrictMono.{u2, u1} β α _inst_3 _inst_2 (fun (x : β) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) (f x) (g x)))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Mul.{u2} α] [_inst_2 : Preorder.{u2} α] [_inst_3 : Preorder.{u1} β] [_inst_4 : CovariantClass.{u2, u2} α α (fun (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.13665 : α) (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.13667 : α) => HMul.hMul.{u2, u2, u2} α α α (instHMul.{u2} α _inst_1) x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.13665 x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.13667) (fun (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.13680 : α) (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.13682 : α) => LT.lt.{u2} α (Preorder.toLT.{u2} α _inst_2) x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.13680 x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.13682)] [_inst_5 : CovariantClass.{u2, u2} α α (Function.swap.{succ u2, succ u2, succ u2} α α (fun (ᾰ : α) (ᾰ : α) => α) (fun (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.13702 : α) (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.13704 : α) => HMul.hMul.{u2, u2, u2} α α α (instHMul.{u2} α _inst_1) x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.13702 x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.13704)) (fun (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.13717 : α) (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.13719 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_2) x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.13717 x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.13719)] {f : β -> α} {g : β -> α}, (Monotone.{u1, u2} β α _inst_3 _inst_2 f) -> (StrictMono.{u1, u2} β α _inst_3 _inst_2 g) -> (StrictMono.{u1, u2} β α _inst_3 _inst_2 (fun (x : β) => HMul.hMul.{u2, u2, u2} α α α (instHMul.{u2} α _inst_1) (f x) (g x)))
-Case conversion may be inaccurate. Consider using '#align monotone.mul_strict_mono' Monotone.mul_strict_mono'ₓ'. -/
+Case conversion may be inaccurate. Consider using '#align monotone.mul_strict_mono' Monotone.mul_strictMono'ₓ'. -/
 /-- The product of a monotone function and a strictly monotone function is strictly monotone. -/
 @[to_additive add_strict_mono
       "The sum of a monotone function and a strictly monotone function is strictly monotone."]
-theorem Monotone.mul_strict_mono' [CovariantClass α α (· * ·) (· < ·)]
+theorem Monotone.mul_strictMono' [CovariantClass α α (· * ·) (· < ·)]
     [CovariantClass α α (swap (· * ·)) (· ≤ ·)] {f g : β → α} (hf : Monotone f)
     (hg : StrictMono g) : StrictMono fun x => f x * g x := fun x y h =>
   mul_lt_mul_of_le_of_lt (hf h.le) (hg h)
-#align monotone.mul_strict_mono' Monotone.mul_strict_mono'
-#align monotone.add_strict_mono Monotone.add_strict_mono
+#align monotone.mul_strict_mono' Monotone.mul_strictMono'
+#align monotone.add_strict_mono Monotone.add_strictMono
 
-/- warning: monotone_on.mul_strict_mono' -> MonotoneOn.mul_strict_mono' is a dubious translation:
+/- warning: monotone_on.mul_strict_mono' -> MonotoneOn.mul_strictMono' is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Mul.{u1} α] [_inst_2 : Preorder.{u1} α] [_inst_3 : Preorder.{u2} β] {s : Set.{u2} β} [_inst_4 : CovariantClass.{u1, u1} α α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1)) (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_2))] [_inst_5 : CovariantClass.{u1, u1} α α (Function.swap.{succ u1, succ u1, succ u1} α α (fun (ᾰ : α) (ᾰ : α) => α) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1))) (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_2))] {f : β -> α} {g : β -> α}, (MonotoneOn.{u2, u1} β α _inst_3 _inst_2 f s) -> (StrictMonoOn.{u2, u1} β α _inst_3 _inst_2 g s) -> (StrictMonoOn.{u2, u1} β α _inst_3 _inst_2 (fun (x : β) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) (f x) (g x)) s)
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Mul.{u2} α] [_inst_2 : Preorder.{u2} α] [_inst_3 : Preorder.{u1} β] {s : Set.{u1} β} [_inst_4 : CovariantClass.{u2, u2} α α (fun (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.13799 : α) (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.13801 : α) => HMul.hMul.{u2, u2, u2} α α α (instHMul.{u2} α _inst_1) x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.13799 x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.13801) (fun (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.13814 : α) (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.13816 : α) => LT.lt.{u2} α (Preorder.toLT.{u2} α _inst_2) x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.13814 x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.13816)] [_inst_5 : CovariantClass.{u2, u2} α α (Function.swap.{succ u2, succ u2, succ u2} α α (fun (ᾰ : α) (ᾰ : α) => α) (fun (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.13836 : α) (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.13838 : α) => HMul.hMul.{u2, u2, u2} α α α (instHMul.{u2} α _inst_1) x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.13836 x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.13838)) (fun (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.13851 : α) (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.13853 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_2) x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.13851 x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.13853)] {f : β -> α} {g : β -> α}, (MonotoneOn.{u1, u2} β α _inst_3 _inst_2 f s) -> (StrictMonoOn.{u1, u2} β α _inst_3 _inst_2 g s) -> (StrictMonoOn.{u1, u2} β α _inst_3 _inst_2 (fun (x : β) => HMul.hMul.{u2, u2, u2} α α α (instHMul.{u2} α _inst_1) (f x) (g x)) s)
-Case conversion may be inaccurate. Consider using '#align monotone_on.mul_strict_mono' MonotoneOn.mul_strict_mono'ₓ'. -/
+Case conversion may be inaccurate. Consider using '#align monotone_on.mul_strict_mono' MonotoneOn.mul_strictMono'ₓ'. -/
 /-- The product of a monotone function and a strictly monotone function is strictly monotone. -/
 @[to_additive add_strict_mono
       "The sum of a monotone function and a strictly monotone function is strictly monotone."]
-theorem MonotoneOn.mul_strict_mono' [CovariantClass α α (· * ·) (· < ·)]
+theorem MonotoneOn.mul_strictMono' [CovariantClass α α (· * ·) (· < ·)]
     [CovariantClass α α (swap (· * ·)) (· ≤ ·)] {f g : β → α} (hf : MonotoneOn f s)
     (hg : StrictMonoOn g s) : StrictMonoOn (fun x => f x * g x) s := fun x hx y hy h =>
   mul_lt_mul_of_le_of_lt (hf hx hy h.le) (hg hx hy h)
-#align monotone_on.mul_strict_mono' MonotoneOn.mul_strict_mono'
-#align monotone_on.add_strict_mono MonotoneOn.add_strict_mono
+#align monotone_on.mul_strict_mono' MonotoneOn.mul_strictMono'
+#align monotone_on.add_strict_mono MonotoneOn.add_strictMono
 
-/- warning: antitone.mul_strict_anti' -> Antitone.mul_strict_anti' is a dubious translation:
+/- warning: antitone.mul_strict_anti' -> Antitone.mul_strictAnti' is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Mul.{u1} α] [_inst_2 : Preorder.{u1} α] [_inst_3 : Preorder.{u2} β] [_inst_4 : CovariantClass.{u1, u1} α α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1)) (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_2))] [_inst_5 : CovariantClass.{u1, u1} α α (Function.swap.{succ u1, succ u1, succ u1} α α (fun (ᾰ : α) (ᾰ : α) => α) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1))) (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_2))] {f : β -> α} {g : β -> α}, (Antitone.{u2, u1} β α _inst_3 _inst_2 f) -> (StrictAnti.{u2, u1} β α _inst_3 _inst_2 g) -> (StrictAnti.{u2, u1} β α _inst_3 _inst_2 (fun (x : β) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) (f x) (g x)))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Mul.{u2} α] [_inst_2 : Preorder.{u2} α] [_inst_3 : Preorder.{u1} β] [_inst_4 : CovariantClass.{u2, u2} α α (fun (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.13944 : α) (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.13946 : α) => HMul.hMul.{u2, u2, u2} α α α (instHMul.{u2} α _inst_1) x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.13944 x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.13946) (fun (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.13959 : α) (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.13961 : α) => LT.lt.{u2} α (Preorder.toLT.{u2} α _inst_2) x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.13959 x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.13961)] [_inst_5 : CovariantClass.{u2, u2} α α (Function.swap.{succ u2, succ u2, succ u2} α α (fun (ᾰ : α) (ᾰ : α) => α) (fun (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.13981 : α) (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.13983 : α) => HMul.hMul.{u2, u2, u2} α α α (instHMul.{u2} α _inst_1) x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.13981 x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.13983)) (fun (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.13996 : α) (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.13998 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_2) x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.13996 x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.13998)] {f : β -> α} {g : β -> α}, (Antitone.{u1, u2} β α _inst_3 _inst_2 f) -> (StrictAnti.{u1, u2} β α _inst_3 _inst_2 g) -> (StrictAnti.{u1, u2} β α _inst_3 _inst_2 (fun (x : β) => HMul.hMul.{u2, u2, u2} α α α (instHMul.{u2} α _inst_1) (f x) (g x)))
-Case conversion may be inaccurate. Consider using '#align antitone.mul_strict_anti' Antitone.mul_strict_anti'ₓ'. -/
+Case conversion may be inaccurate. Consider using '#align antitone.mul_strict_anti' Antitone.mul_strictAnti'ₓ'. -/
 /-- The product of a antitone function and a strictly antitone function is strictly antitone. -/
 @[to_additive add_strict_anti
       "The sum of a antitone function and a strictly antitone function is strictly antitone."]
-theorem Antitone.mul_strict_anti' [CovariantClass α α (· * ·) (· < ·)]
+theorem Antitone.mul_strictAnti' [CovariantClass α α (· * ·) (· < ·)]
     [CovariantClass α α (swap (· * ·)) (· ≤ ·)] {f g : β → α} (hf : Antitone f)
     (hg : StrictAnti g) : StrictAnti fun x => f x * g x := fun x y h =>
   mul_lt_mul_of_le_of_lt (hf h.le) (hg h)
-#align antitone.mul_strict_anti' Antitone.mul_strict_anti'
-#align antitone.add_strict_anti Antitone.add_strict_anti
+#align antitone.mul_strict_anti' Antitone.mul_strictAnti'
+#align antitone.add_strict_anti Antitone.add_strictAnti
 
-/- warning: antitone_on.mul_strict_anti' -> AntitoneOn.mul_strict_anti' is a dubious translation:
+/- warning: antitone_on.mul_strict_anti' -> AntitoneOn.mul_strictAnti' is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Mul.{u1} α] [_inst_2 : Preorder.{u1} α] [_inst_3 : Preorder.{u2} β] {s : Set.{u2} β} [_inst_4 : CovariantClass.{u1, u1} α α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1)) (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_2))] [_inst_5 : CovariantClass.{u1, u1} α α (Function.swap.{succ u1, succ u1, succ u1} α α (fun (ᾰ : α) (ᾰ : α) => α) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1))) (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_2))] {f : β -> α} {g : β -> α}, (AntitoneOn.{u2, u1} β α _inst_3 _inst_2 f s) -> (StrictAntiOn.{u2, u1} β α _inst_3 _inst_2 g s) -> (StrictAntiOn.{u2, u1} β α _inst_3 _inst_2 (fun (x : β) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) (f x) (g x)) s)
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Mul.{u2} α] [_inst_2 : Preorder.{u2} α] [_inst_3 : Preorder.{u1} β] {s : Set.{u1} β} [_inst_4 : CovariantClass.{u2, u2} α α (fun (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.14078 : α) (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.14080 : α) => HMul.hMul.{u2, u2, u2} α α α (instHMul.{u2} α _inst_1) x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.14078 x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.14080) (fun (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.14093 : α) (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.14095 : α) => LT.lt.{u2} α (Preorder.toLT.{u2} α _inst_2) x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.14093 x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.14095)] [_inst_5 : CovariantClass.{u2, u2} α α (Function.swap.{succ u2, succ u2, succ u2} α α (fun (ᾰ : α) (ᾰ : α) => α) (fun (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.14115 : α) (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.14117 : α) => HMul.hMul.{u2, u2, u2} α α α (instHMul.{u2} α _inst_1) x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.14115 x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.14117)) (fun (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.14130 : α) (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.14132 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_2) x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.14130 x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.14132)] {f : β -> α} {g : β -> α}, (AntitoneOn.{u1, u2} β α _inst_3 _inst_2 f s) -> (StrictAntiOn.{u1, u2} β α _inst_3 _inst_2 g s) -> (StrictAntiOn.{u1, u2} β α _inst_3 _inst_2 (fun (x : β) => HMul.hMul.{u2, u2, u2} α α α (instHMul.{u2} α _inst_1) (f x) (g x)) s)
-Case conversion may be inaccurate. Consider using '#align antitone_on.mul_strict_anti' AntitoneOn.mul_strict_anti'ₓ'. -/
+Case conversion may be inaccurate. Consider using '#align antitone_on.mul_strict_anti' AntitoneOn.mul_strictAnti'ₓ'. -/
 /-- The product of a antitone function and a strictly antitone function is strictly antitone. -/
 @[to_additive add_strict_anti
       "The sum of a antitone function and a strictly antitone function is strictly antitone."]
-theorem AntitoneOn.mul_strict_anti' [CovariantClass α α (· * ·) (· < ·)]
+theorem AntitoneOn.mul_strictAnti' [CovariantClass α α (· * ·) (· < ·)]
     [CovariantClass α α (swap (· * ·)) (· ≤ ·)] {f g : β → α} (hf : AntitoneOn f s)
     (hg : StrictAntiOn g s) : StrictAntiOn (fun x => f x * g x) s := fun x hx y hy h =>
   mul_lt_mul_of_le_of_lt (hf hx hy h.le) (hg hx hy h)
-#align antitone_on.mul_strict_anti' AntitoneOn.mul_strict_anti'
-#align antitone_on.add_strict_anti AntitoneOn.add_strict_anti
+#align antitone_on.mul_strict_anti' AntitoneOn.mul_strictAnti'
+#align antitone_on.add_strict_anti AntitoneOn.add_strictAnti
 
 variable [CovariantClass α α (· * ·) (· ≤ ·)] [CovariantClass α α (swap (· * ·)) (· < ·)]
 
@@ -2425,11 +2425,11 @@ theorem bit0_mono [CovariantClass α α (· + ·) (· ≤ ·)] [CovariantClass �
 #align bit0_mono bit0_mono
 -/
 
-#print bit0_strict_mono /-
-theorem bit0_strict_mono [CovariantClass α α (· + ·) (· < ·)]
+#print bit0_strictMono /-
+theorem bit0_strictMono [CovariantClass α α (· + ·) (· < ·)]
     [CovariantClass α α (swap (· + ·)) (· < ·)] : StrictMono (bit0 : α → α) := fun a b h =>
   add_lt_add h h
-#align bit0_strict_mono bit0_strict_mono
+#align bit0_strict_mono bit0_strictMono
 -/
 
 end Bit

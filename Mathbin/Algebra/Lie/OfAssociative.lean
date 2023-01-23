@@ -153,13 +153,13 @@ def LieModule.ofAssociativeModule : LieModule R A M
   lie_smul := smul_algebra_smul_comm
 #align lie_module.of_associative_module LieModule.ofAssociativeModule
 
-instance Module.EndCat.lieRingModule : LieRingModule (Module.EndCat R M) M :=
+instance Module.End.lieRingModule : LieRingModule (Module.End R M) M :=
   LieRingModule.ofAssociativeModule
-#align module.End.lie_ring_module Module.EndCat.lieRingModule
+#align module.End.lie_ring_module Module.End.lieRingModule
 
-instance Module.EndCat.lieModule : LieModule R (Module.EndCat R M) M :=
+instance Module.End.lieModule : LieModule R (Module.End R M) M :=
   LieModule.ofAssociativeModule
-#align module.End.lie_module Module.EndCat.lieModule
+#align module.End.lie_module Module.End.lieModule
 
 end AssociativeRepresentation
 
@@ -229,7 +229,7 @@ variable [LieRingModule L M] [LieModule R L M]
 
 See also `lie_module.to_module_hom`. -/
 @[simps]
-def LieModule.toEndomorphism : L →ₗ⁅R⁆ Module.EndCat R M
+def LieModule.toEndomorphism : L →ₗ⁅R⁆ Module.End R M
     where
   toFun x :=
     { toFun := fun m => ⁅x, m⁆
@@ -247,7 +247,7 @@ def LieModule.toEndomorphism : L →ₗ⁅R⁆ Module.EndCat R M
 #align lie_module.to_endomorphism LieModule.toEndomorphism
 
 /-- The adjoint action of a Lie algebra on itself. -/
-def LieAlgebra.ad : L →ₗ⁅R⁆ Module.EndCat R L :=
+def LieAlgebra.ad : L →ₗ⁅R⁆ Module.End R L :=
   LieModule.toEndomorphism R L L
 #align lie_algebra.ad LieAlgebra.ad
 
@@ -257,12 +257,12 @@ theorem LieAlgebra.ad_apply (x y : L) : LieAlgebra.ad R L x y = ⁅x, y⁆ :=
 #align lie_algebra.ad_apply LieAlgebra.ad_apply
 
 @[simp]
-theorem LieModule.toEndomorphism_module_endCat :
-    LieModule.toEndomorphism R (Module.EndCat R M) M = LieHom.id :=
+theorem LieModule.toEndomorphism_module_end :
+    LieModule.toEndomorphism R (Module.End R M) M = LieHom.id :=
   by
   ext (g m)
   simp [lie_eq_smul]
-#align lie_module.to_endomorphism_module_End LieModule.toEndomorphism_module_endCat
+#align lie_module.to_endomorphism_module_End LieModule.toEndomorphism_module_end
 
 theorem LieSubalgebra.toEndomorphism_eq (K : LieSubalgebra R L) {x : K} :
     LieModule.toEndomorphism R K M x = LieModule.toEndomorphism R L M x :=
@@ -310,7 +310,7 @@ end LieSubmodule
 open LieAlgebra
 
 theorem LieAlgebra.ad_eq_lmul_left_sub_lmul_right (A : Type v) [Ring A] [Algebra R A] :
-    (ad R A : A → Module.EndCat R A) = LinearMap.mulLeft R - LinearMap.mulRight R :=
+    (ad R A : A → Module.End R A) = LinearMap.mulLeft R - LinearMap.mulRight R :=
   by
   ext (a b)
   simp [LieRing.of_associative_ring_bracket]
@@ -349,7 +349,7 @@ variable [CommRing R] [AddCommGroup M₁] [Module R M₁] [AddCommGroup M₂] [M
 variable (e : M₁ ≃ₗ[R] M₂)
 
 /-- A linear equivalence of two modules induces a Lie algebra equivalence of their endomorphisms. -/
-def lieConj : Module.EndCat R M₁ ≃ₗ⁅R⁆ Module.EndCat R M₂ :=
+def lieConj : Module.End R M₁ ≃ₗ⁅R⁆ Module.End R M₂ :=
   { e.conj with
     map_lie' := fun f g =>
       show e.conj ⁅f, g⁆ = ⁅e.conj f, e.conj g⁆ by
@@ -358,7 +358,7 @@ def lieConj : Module.EndCat R M₁ ≃ₗ⁅R⁆ Module.EndCat R M₂ :=
 #align linear_equiv.lie_conj LinearEquiv.lieConj
 
 @[simp]
-theorem lieConj_apply (f : Module.EndCat R M₁) : e.lieConj f = e.conj f :=
+theorem lieConj_apply (f : Module.End R M₁) : e.lieConj f = e.conj f :=
   rfl
 #align linear_equiv.lie_conj_apply LinearEquiv.lieConj_apply
 

@@ -506,15 +506,14 @@ variable (D : Derivation R A A) {D1 D2 : Derivation R A A} (r : R) (a b : A)
 /-- The commutator of derivations is again a derivation. -/
 instance : Bracket (Derivation R A A) (Derivation R A A) :=
   ⟨fun D1 D2 =>
-    mk' ⁅(D1 : Module.EndCat R A), (D2 : Module.EndCat R A)⁆ fun a b =>
+    mk' ⁅(D1 : Module.End R A), (D2 : Module.End R A)⁆ fun a b =>
       by
       simp only [Ring.lie_def, map_add, id.smul_eq_mul, LinearMap.mul_apply, leibniz, coe_fn_coe,
         LinearMap.sub_apply]
       ring⟩
 
 @[simp]
-theorem commutator_coe_linear_map :
-    ↑⁅D1, D2⁆ = ⁅(D1 : Module.EndCat R A), (D2 : Module.EndCat R A)⁆ :=
+theorem commutator_coe_linear_map : ↑⁅D1, D2⁆ = ⁅(D1 : Module.End R A), (D2 : Module.End R A)⁆ :=
   rfl
 #align derivation.commutator_coe_linear_map Derivation.commutator_coe_linear_map
 
@@ -1107,7 +1106,7 @@ The endomorphisms of `Ω[S⁄R]` corresponds to sections of the surjection `S �
 with `J` being the kernel of the multiplication map `S ⊗[R] S →ₐ[R] S`.
 -/
 noncomputable def KaehlerDifferential.endEquiv :
-    Module.EndCat S (Ω[S⁄R]) ≃
+    Module.End S (Ω[S⁄R]) ≃
       { f // (TensorProduct.lmul' R : S ⊗[R] S →ₐ[R] S).kerSquareLift.comp f = AlgHom.id R S } :=
   (KaehlerDifferential.linearMapEquivDerivation R S).toEquiv.trans <|
     (KaehlerDifferential.endEquivDerivation' R S).toEquiv.trans <|

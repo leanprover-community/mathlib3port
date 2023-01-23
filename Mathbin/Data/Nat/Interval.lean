@@ -123,31 +123,31 @@ theorem card_iio : (iio b).card = b := by rw [Iio_eq_Ico, card_Ico, bot_eq_zero,
 
 @[simp]
 theorem card_fintypeIcc : Fintype.card (Set.Icc a b) = b + 1 - a := by
-  rw [Fintype.card_of_finset, card_Icc]
+  rw [Fintype.card_ofFinset, card_Icc]
 #align nat.card_fintype_Icc Nat.card_fintypeIcc
 
 @[simp]
 theorem card_fintypeIco : Fintype.card (Set.Ico a b) = b - a := by
-  rw [Fintype.card_of_finset, card_Ico]
+  rw [Fintype.card_ofFinset, card_Ico]
 #align nat.card_fintype_Ico Nat.card_fintypeIco
 
 @[simp]
 theorem card_fintypeIoc : Fintype.card (Set.Ioc a b) = b - a := by
-  rw [Fintype.card_of_finset, card_Ioc]
+  rw [Fintype.card_ofFinset, card_Ioc]
 #align nat.card_fintype_Ioc Nat.card_fintypeIoc
 
 @[simp]
 theorem card_fintypeIoo : Fintype.card (Set.Ioo a b) = b - a - 1 := by
-  rw [Fintype.card_of_finset, card_Ioo]
+  rw [Fintype.card_ofFinset, card_Ioo]
 #align nat.card_fintype_Ioo Nat.card_fintypeIoo
 
 @[simp]
 theorem card_fintypeIic : Fintype.card (Set.Iic b) = b + 1 := by
-  rw [Fintype.card_of_finset, card_Iic]
+  rw [Fintype.card_ofFinset, card_Iic]
 #align nat.card_fintype_Iic Nat.card_fintypeIic
 
 @[simp]
-theorem card_fintypeIio : Fintype.card (Set.Iio b) = b := by rw [Fintype.card_of_finset, card_Iio]
+theorem card_fintypeIio : Fintype.card (Set.Iio b) = b := by rw [Fintype.card_ofFinset, card_Iio]
 #align nat.card_fintype_Iio Nat.card_fintypeIio
 
 -- TODO@Yaël: Generalize all the following lemmas to `succ_order`

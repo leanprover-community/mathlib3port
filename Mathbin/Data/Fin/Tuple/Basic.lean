@@ -234,20 +234,20 @@ def consCases {P : (∀ i : Fin n.succ, α i) → Sort v} (h : ∀ x₀ x, P (Fi
   cast (by rw [cons_self_tail]) <| h (x 0) (tail x)
 #align fin.cons_cases Fin.consCases
 
-/- warning: fin.cons_cases_cons -> Fin.cons_cases_cons is a dubious translation:
+/- warning: fin.cons_cases_cons -> Fin.consCases_cons is a dubious translation:
 lean 3 declaration is
   forall {n : Nat} {α : (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) -> Type.{u1}} {P : (forall (i : Fin (Nat.succ n)), α i) -> Sort.{u2}} (h : forall (x₀ : α (OfNat.ofNat.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (One.one.{0} Nat Nat.hasOne))) 0 (OfNat.mk.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (One.one.{0} Nat Nat.hasOne))) 0 (Zero.zero.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (One.one.{0} Nat Nat.hasOne))) (Fin.hasZeroOfNeZero (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (One.one.{0} Nat Nat.hasOne)) (NeZero.succ n)))))) (x : forall (i : Fin n), α (Fin.succ n i)), P (Fin.cons.{u1} n (fun (i : Fin (Nat.succ n)) => α i) x₀ x)) (x₀ : α (OfNat.ofNat.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (One.one.{0} Nat Nat.hasOne))) 0 (OfNat.mk.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (One.one.{0} Nat Nat.hasOne))) 0 (Zero.zero.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (One.one.{0} Nat Nat.hasOne))) (Fin.hasZeroOfNeZero (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (One.one.{0} Nat Nat.hasOne)) (NeZero.succ n)))))) (x : forall (i : Fin n), α (Fin.succ n i)), Eq.{u2} (P (Fin.cons.{u1} n (fun (i : Fin (Nat.succ n)) => α i) x₀ x)) (Fin.consCases.{u1, u2} n α P h (Fin.cons.{u1} n (fun (i : Fin (Nat.succ n)) => α i) x₀ x)) (h x₀ x)
 but is expected to have type
   forall {n : Nat} {α : (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) -> Type.{u1}} {P : (forall (i : Fin (Nat.succ n)), α i) -> Sort.{u2}} (h : forall (x₀ : α (OfNat.ofNat.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) 0 (Fin.instOfNatFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) 0 (NeZero.succ n)))) (x : forall (i : Fin n), α (Fin.succ n i)), P (Fin.cons.{u1} n (fun (i : Fin (Nat.succ n)) => α i) x₀ x)) (x₀ : α (OfNat.ofNat.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) 0 (Fin.instOfNatFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) 0 (NeZero.succ n)))) (x : forall (i : Fin n), α (Fin.succ n i)), Eq.{u2} (P (Fin.cons.{u1} n (fun (i : Fin (Nat.succ n)) => α i) x₀ x)) (Fin.consCases.{u1, u2} n α P h (Fin.cons.{u1} n (fun (i : Fin (Nat.succ n)) => α i) x₀ x)) (h x₀ x)
-Case conversion may be inaccurate. Consider using '#align fin.cons_cases_cons Fin.cons_cases_consₓ'. -/
+Case conversion may be inaccurate. Consider using '#align fin.cons_cases_cons Fin.consCases_consₓ'. -/
 @[simp]
-theorem cons_cases_cons {P : (∀ i : Fin n.succ, α i) → Sort v} (h : ∀ x₀ x, P (Fin.cons x₀ x))
+theorem consCases_cons {P : (∀ i : Fin n.succ, α i) → Sort v} (h : ∀ x₀ x, P (Fin.cons x₀ x))
     (x₀ : α 0) (x : ∀ i : Fin n, α i.succ) : @consCases _ _ _ h (cons x₀ x) = h x₀ x :=
   by
   rw [cons_cases, cast_eq]
   congr
   exact tail_cons _ _
-#align fin.cons_cases_cons Fin.cons_cases_cons
+#align fin.cons_cases_cons Fin.consCases_cons
 
 /- warning: fin.cons_induction -> Fin.consInductionₓ is a dubious translation:
 lean 3 declaration is

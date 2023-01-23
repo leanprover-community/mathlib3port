@@ -153,22 +153,22 @@ theorem card_ioo_of_lt (h : a < b) : ((ioo a b).card : ℤ) = b - a - 1 := by
 
 @[simp]
 theorem card_fintypeIcc : Fintype.card (Set.Icc a b) = (b + 1 - a).toNat := by
-  rw [← card_Icc, Fintype.card_of_finset]
+  rw [← card_Icc, Fintype.card_ofFinset]
 #align int.card_fintype_Icc Int.card_fintypeIcc
 
 @[simp]
 theorem card_fintypeIco : Fintype.card (Set.Ico a b) = (b - a).toNat := by
-  rw [← card_Ico, Fintype.card_of_finset]
+  rw [← card_Ico, Fintype.card_ofFinset]
 #align int.card_fintype_Ico Int.card_fintypeIco
 
 @[simp]
 theorem card_fintypeIoc : Fintype.card (Set.Ioc a b) = (b - a).toNat := by
-  rw [← card_Ioc, Fintype.card_of_finset]
+  rw [← card_Ioc, Fintype.card_ofFinset]
 #align int.card_fintype_Ioc Int.card_fintypeIoc
 
 @[simp]
 theorem card_fintypeIoo : Fintype.card (Set.Ioo a b) = (b - a - 1).toNat := by
-  rw [← card_Ioo, Fintype.card_of_finset]
+  rw [← card_Ioo, Fintype.card_ofFinset]
 #align int.card_fintype_Ioo Int.card_fintypeIoo
 
 theorem card_fintypeIcc_of_le (h : a ≤ b + 1) : (Fintype.card (Set.Icc a b) : ℤ) = b + 1 - a := by

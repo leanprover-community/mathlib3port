@@ -340,7 +340,7 @@ private theorem card_pow_eq_one_eq_order_of_aux (a : α) :
                   rw [← hi, ← zpow_ofNat, ← zpow_mul, mul_comm, zpow_mul, zpow_ofNat,
                     pow_orderOf_eq_one, one_zpow]⟩⟩)
           fun _ _ h => Subtype.eq (Subtype.mk.inj h)
-      _ = (univ.filter fun b : α => b ^ orderOf a = 1).card := Fintype.card_of_finset _ _
+      _ = (univ.filter fun b : α => b ^ orderOf a = 1).card := Fintype.card_ofFinset _ _
       )
 #align card_pow_eq_one_eq_order_of_aux card_pow_eq_one_eq_order_of_aux
 

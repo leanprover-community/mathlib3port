@@ -286,8 +286,8 @@ theorem quadraticChar_card_sqrts (hF : ringChar F ≠ 2) (a : F) :
       rw [h₁, List.toFinset_cons, List.toFinset_cons, List.toFinset_nil]
       exact Finset.card_doubleton (Ne.symm (mt (Ring.eq_self_iff_eq_zero_of_char_ne_two hF).mp h₀))
     · rw [quadratic_char_neg_one_iff_not_is_square.mpr h]
-      simp only [Int.coe_nat_eq_zero, Finset.card_eq_zero, Set.toFinset_card,
-        Fintype.card_of_finset, Set.mem_setOf_eq, add_left_neg]
+      simp only [Int.coe_nat_eq_zero, Finset.card_eq_zero, Set.toFinset_card, Fintype.card_ofFinset,
+        Set.mem_setOf_eq, add_left_neg]
       ext x
       simp only [iff_false_iff, Finset.mem_filter, Finset.mem_univ, true_and_iff,
         Finset.not_mem_empty]

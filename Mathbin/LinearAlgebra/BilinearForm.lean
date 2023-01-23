@@ -980,7 +980,7 @@ theorem IsAdjointPair.eq (h : IsAdjointPair B B' f g) : ∀ {x y}, B' (f x) y = 
   h
 #align bilin_form.is_adjoint_pair.eq BilinForm.IsAdjointPair.eq
 
-theorem isAdjointPair_iff_compLeft_eq_compRight (f g : Module.EndCat R M) :
+theorem isAdjointPair_iff_compLeft_eq_compRight (f g : Module.End R M) :
     IsAdjointPair B F f g ↔ F.compLeft f = B.compRight g :=
   by
   constructor <;> intro h
@@ -1029,7 +1029,7 @@ theorem IsAdjointPair.comp {f' : M' →ₗ[R] M''} {g' : M'' →ₗ[R] M'} (h : 
   rw [LinearMap.comp_apply, LinearMap.comp_apply, h', h]
 #align bilin_form.is_adjoint_pair.comp BilinForm.IsAdjointPair.comp
 
-theorem IsAdjointPair.mul {f g f' g' : Module.EndCat R M} (h : IsAdjointPair B B f g)
+theorem IsAdjointPair.mul {f g f' g' : Module.End R M} (h : IsAdjointPair B B f g)
     (h' : IsAdjointPair B B f' g') : IsAdjointPair B B (f * f') (g' * g) := fun x y => by
   rw [LinearMap.mul_apply, LinearMap.mul_apply, h, h']
 #align bilin_form.is_adjoint_pair.mul BilinForm.IsAdjointPair.mul
@@ -1040,12 +1040,12 @@ variable (B B' B₁ B₂) (F₂ : BilinForm R₂ M₂)
 on the underlying module. In the case that these two forms are identical, this is the usual concept
 of self adjointness. In the case that one of the forms is the negation of the other, this is the
 usual concept of skew adjointness. -/
-def IsPairSelfAdjoint (f : Module.EndCat R M) :=
+def IsPairSelfAdjoint (f : Module.End R M) :=
   IsAdjointPair B F f f
 #align bilin_form.is_pair_self_adjoint BilinForm.IsPairSelfAdjoint
 
 /-- The set of pair-self-adjoint endomorphisms are a submodule of the type of all endomorphisms. -/
-def isPairSelfAdjointSubmodule : Submodule R₂ (Module.EndCat R₂ M₂)
+def isPairSelfAdjointSubmodule : Submodule R₂ (Module.End R₂ M₂)
     where
   carrier := { f | IsPairSelfAdjoint B₂ F₂ f }
   zero_mem' := isAdjointPairZero
@@ -1054,11 +1054,11 @@ def isPairSelfAdjointSubmodule : Submodule R₂ (Module.EndCat R₂ M₂)
 #align bilin_form.is_pair_self_adjoint_submodule BilinForm.isPairSelfAdjointSubmodule
 
 @[simp]
-theorem mem_isPairSelfAdjointSubmodule (f : Module.EndCat R₂ M₂) :
+theorem mem_isPairSelfAdjointSubmodule (f : Module.End R₂ M₂) :
     f ∈ isPairSelfAdjointSubmodule B₂ F₂ ↔ IsPairSelfAdjoint B₂ F₂ f := by rfl
 #align bilin_form.mem_is_pair_self_adjoint_submodule BilinForm.mem_isPairSelfAdjointSubmodule
 
-theorem isPairSelfAdjoint_equiv (e : M₂' ≃ₗ[R₂] M₂) (f : Module.EndCat R₂ M₂) :
+theorem isPairSelfAdjoint_equiv (e : M₂' ≃ₗ[R₂] M₂) (f : Module.End R₂ M₂) :
     IsPairSelfAdjoint B₂ F₂ f ↔ IsPairSelfAdjoint (B₂.comp ↑e ↑e) (F₂.comp ↑e ↑e) (e.symm.conj f) :=
   by
   have hₗ : (F₂.comp ↑e ↑e).compLeft (e.symm.conj f) = (F₂.comp_left f).comp ↑e ↑e :=
@@ -1077,17 +1077,17 @@ theorem isPairSelfAdjoint_equiv (e : M₂' ≃ₗ[R₂] M₂) (f : Module.EndCat
 
 /-- An endomorphism of a module is self-adjoint with respect to a bilinear form if it serves as an
 adjoint for itself. -/
-def IsSelfAdjoint (f : Module.EndCat R M) :=
+def IsSelfAdjoint (f : Module.End R M) :=
   IsAdjointPair B B f f
 #align bilin_form.is_self_adjoint BilinForm.IsSelfAdjoint
 
 /-- An endomorphism of a module is skew-adjoint with respect to a bilinear form if its negation
 serves as an adjoint. -/
-def IsSkewAdjoint (f : Module.EndCat R₁ M₁) :=
+def IsSkewAdjoint (f : Module.End R₁ M₁) :=
   IsAdjointPair B₁ B₁ f (-f)
 #align bilin_form.is_skew_adjoint BilinForm.IsSkewAdjoint
 
-theorem isSkewAdjoint_iff_neg_self_adjoint (f : Module.EndCat R₁ M₁) :
+theorem isSkewAdjoint_iff_neg_self_adjoint (f : Module.End R₁ M₁) :
     B₁.IsSkewAdjoint f ↔ IsAdjointPair (-B₁) B₁ f f :=
   show (∀ x y, B₁ (f x) y = B₁ x ((-f) y)) ↔ ∀ x y, B₁ (f x) y = (-B₁) x (f y) by
     simp only [LinearMap.neg_apply, BilinForm.neg_apply, BilinForm.neg_right]
@@ -1100,7 +1100,7 @@ def selfAdjointSubmodule :=
 #align bilin_form.self_adjoint_submodule BilinForm.selfAdjointSubmodule
 
 @[simp]
-theorem mem_selfAdjointSubmodule (f : Module.EndCat R₂ M₂) :
+theorem mem_selfAdjointSubmodule (f : Module.End R₂ M₂) :
     f ∈ B₂.selfAdjointSubmodule ↔ B₂.IsSelfAdjoint f :=
   Iff.rfl
 #align bilin_form.mem_self_adjoint_submodule BilinForm.mem_selfAdjointSubmodule
@@ -1114,7 +1114,7 @@ def skewAdjointSubmodule :=
 #align bilin_form.skew_adjoint_submodule BilinForm.skewAdjointSubmodule
 
 @[simp]
-theorem mem_skewAdjointSubmodule (f : Module.EndCat R₃ M₃) :
+theorem mem_skewAdjointSubmodule (f : Module.End R₃ M₃) :
     f ∈ B₃.skewAdjointSubmodule ↔ B₃.IsSkewAdjoint f :=
   by
   rw [is_skew_adjoint_iff_neg_self_adjoint]

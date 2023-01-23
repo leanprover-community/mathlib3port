@@ -77,7 +77,7 @@ def equivFinOfCardPos {α : Type _} (h : Nat.card α ≠ 0) : α ≃ Fin (Nat.ca
 theorem card_of_subsingleton (a : α) [Subsingleton α] : Nat.card α = 1 :=
   by
   letI := Fintype.ofSubsingleton a
-  rw [card_eq_fintype_card, Fintype.card_of_subsingleton a]
+  rw [card_eq_fintype_card, Fintype.card_ofSubsingleton a]
 #align nat.card_of_subsingleton Nat.card_of_subsingleton
 
 @[simp]

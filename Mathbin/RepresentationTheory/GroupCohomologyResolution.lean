@@ -129,7 +129,7 @@ theorem ofTensorAux_single (g : G) (m : k) (x : Gⁿ →₀ k) :
 
 theorem ofTensorAux_comm_ofMulAction (g h : G) (x : Gⁿ) :
     ofTensorAux k G n
-        (TensorProduct.map (ofMulAction k G G g) (1 : Module.EndCat k (Gⁿ →₀ k))
+        (TensorProduct.map (ofMulAction k G G g) (1 : Module.End k (Gⁿ →₀ k))
           (single h (1 : k) ⊗ₜ single x (1 : k))) =
       ofMulAction k G Gⁿ⁺¹ g (ofTensorAux k G n (single h 1 ⊗ₜ single x 1)) :=
   by simp [of_mul_action_def, of_tensor_aux_single, mul_smul]
@@ -174,7 +174,7 @@ by `ρ(g₁)(g₂ ⊗ x) = (g₁ * g₂) ⊗ x`) sending `(g₀, ..., gₙ)` to
 def toTensor :
     RepCat.ofMulAction k G (Fin (n + 1) → G) ⟶
       RepCat.of
-        ((Representation.ofMulAction k G G).tprod (1 : G →* Module.EndCat k ((Fin n → G) →₀ k)))
+        ((Representation.ofMulAction k G G).tprod (1 : G →* Module.End k ((Fin n → G) →₀ k)))
     where
   hom := toTensorAux k G n
   comm' g := by ext <;> exact to_tensor_aux_of_mul_action _ _
@@ -185,7 +185,7 @@ by `ρ(g₁)(g₂ ⊗ x) = (g₁ * g₂) ⊗ x`) to `k[Gⁿ⁺¹]` sending `g �
 `(g, gg₁, gg₁g₂, ..., gg₁...gₙ)`. -/
 def ofTensor :
     RepCat.of
-        ((Representation.ofMulAction k G G).tprod (1 : G →* Module.EndCat k ((Fin n → G) →₀ k))) ⟶
+        ((Representation.ofMulAction k G G).tprod (1 : G →* Module.End k ((Fin n → G) →₀ k))) ⟶
       RepCat.ofMulAction k G (Fin (n + 1) → G)
     where
   hom := ofTensorAux k G n

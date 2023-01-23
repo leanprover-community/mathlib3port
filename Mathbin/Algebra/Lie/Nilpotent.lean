@@ -243,8 +243,8 @@ theorem infᵢ_max_gen_zero_eigenspace_eq_top_of_nilpotent [IsNilpotent R L M] :
     (⨅ x : L, (toEndomorphism R L M x).maximalGeneralizedEigenspace 0) = ⊤ :=
   by
   ext m
-  simp only [Module.EndCat.mem_maximalGeneralizedEigenspace, Submodule.mem_top, sub_zero,
-    iff_true_iff, zero_smul, Submodule.mem_infᵢ]
+  simp only [Module.End.mem_maximalGeneralizedEigenspace, Submodule.mem_top, sub_zero, iff_true_iff,
+    zero_smul, Submodule.mem_infᵢ]
   intro x
   obtain ⟨k, hk⟩ := nilpotent_endo_of_nilpotent_module R L M
   use k; rw [hk]

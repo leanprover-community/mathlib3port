@@ -256,20 +256,20 @@ theorem isNilpotent_mulRight_iff (a : A) : IsNilpotent (mulRight R a) ↔ IsNilp
 
 end LinearMap
 
-namespace Module.EndCat
+namespace Module.End
 
 variable {M : Type v} [Ring R] [AddCommGroup M] [Module R M]
 
-variable {f : Module.EndCat R M} {p : Submodule R M} (hp : p ≤ p.comap f)
+variable {f : Module.End R M} {p : Submodule R M} (hp : p ≤ p.comap f)
 
 theorem IsNilpotent.mapq (hnp : IsNilpotent f) : IsNilpotent (p.mapq p f hp) :=
   by
   obtain ⟨k, hk⟩ := hnp
   use k
   simp [← p.mapq_pow, hk]
-#align module.End.is_nilpotent.mapq Module.EndCat.IsNilpotent.mapq
+#align module.End.is_nilpotent.mapq Module.End.IsNilpotent.mapq
 
-end Module.EndCat
+end Module.End
 
 section Ideal
 

@@ -364,10 +364,10 @@ theorem isIntegral_of_mem_of_fg (S : Subalgebra R A) (HS : S.toSubmodule.Fg) (x 
   exact Subalgebra.smul_mem _ (Algebra.subset_adjoin <| hlx1 hr) _
 #align is_integral_of_mem_of_fg isIntegral_of_mem_of_fg
 
-theorem Module.EndCat.isIntegral {M : Type _} [AddCommGroup M] [Module R M] [Module.Finite R M] :
-    Algebra.IsIntegral R (Module.EndCat R M) :=
+theorem Module.End.isIntegral {M : Type _} [AddCommGroup M] [Module R M] [Module.Finite R M] :
+    Algebra.IsIntegral R (Module.End R M) :=
   LinearMap.exists_monic_and_aeval_eq_zero R
-#align module.End.is_integral Module.EndCat.isIntegral
+#align module.End.is_integral Module.End.isIntegral
 
 /-- Suppose `A` is an `R`-algebra, `M` is an `A`-module such that `a • m ≠ 0` for all non-zero `a`
 and `m`. If `x : A` fixes a nontrivial f.g. `R`-submodule `N` of `M`, then `x` is `R`-integral. -/
@@ -382,7 +382,7 @@ theorem isIntegral_of_smul_mem_submodule {M : Type _} [AddCommGroup M] [Module R
       add_mem' := fun a b ha hb n hn => (add_smul a b n).symm ▸ N.add_mem (ha _ hn) (hb _ hn)
       zero_mem' := fun n hn => (zero_smul A n).symm ▸ N.zero_mem
       algebra_map_mem' := fun r n hn => (algebraMap_smul A r n).symm ▸ N.smul_mem r hn }
-  let f : A' →ₐ[R] Module.EndCat R N :=
+  let f : A' →ₐ[R] Module.End R N :=
     AlgHom.ofLinearMap
       { toFun := fun x => (DistribMulAction.toLinearMap R M x).restrict x.Prop
         map_add' := fun x y => LinearMap.ext fun n => Subtype.ext <| add_smul x y n
@@ -405,7 +405,7 @@ theorem isIntegral_of_smul_mem_submodule {M : Type _} [AddCommGroup M] [Module R
   show IsIntegral R (A'.val ⟨x, hx⟩)
   rw [isIntegral_algHom_iff A'.val Subtype.val_injective, ← isIntegral_algHom_iff f this]
   haveI : Module.Finite R N := by rwa [Module.finite_def, Submodule.fg_top]
-  apply Module.EndCat.isIntegral
+  apply Module.End.isIntegral
 #align is_integral_of_smul_mem_submodule isIntegral_of_smul_mem_submodule
 
 variable {f}

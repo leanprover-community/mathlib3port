@@ -324,7 +324,7 @@ theorem smulRight_apply (f : M₁ →ₗ[R] S) (x : M) (c : M₁) : smulRight f 
 
 end SmulRight
 
-instance [Nontrivial M] : Nontrivial (Module.EndCat R M) :=
+instance [Nontrivial M] : Nontrivial (Module.End R M) :=
   by
   obtain ⟨m, ne⟩ := (nontrivial_iff_exists_ne (0 : M)).mp inferInstance
   exact nontrivial_of_ne 1 0 fun p => Ne (LinearMap.congr_fun p m)
@@ -344,14 +344,13 @@ theorem pow_apply (f : M →ₗ[R] M) (n : ℕ) (m : M) : (f ^ n) m = (f^[n]) m 
     exact (Function.Commute.iterate_self _ _ m).symm
 #align linear_map.pow_apply LinearMap.pow_apply
 
-theorem pow_map_zero_of_le {f : Module.EndCat R M} {m : M} {k l : ℕ} (hk : k ≤ l)
+theorem pow_map_zero_of_le {f : Module.End R M} {m : M} {k l : ℕ} (hk : k ≤ l)
     (hm : (f ^ k) m = 0) : (f ^ l) m = 0 := by
   rw [← tsub_add_cancel_of_le hk, pow_add, mul_apply, hm, map_zero]
 #align linear_map.pow_map_zero_of_le LinearMap.pow_map_zero_of_le
 
-theorem commute_pow_left_of_commute {f : M →ₛₗ[σ₁₂] M₂} {g : Module.EndCat R M}
-    {g₂ : Module.EndCat R₂ M₂} (h : g₂.comp f = f.comp g) (k : ℕ) :
-    (g₂ ^ k).comp f = f.comp (g ^ k) :=
+theorem commute_pow_left_of_commute {f : M →ₛₗ[σ₁₂] M₂} {g : Module.End R M} {g₂ : Module.End R₂ M₂}
+    (h : g₂.comp f = f.comp g) (k : ℕ) : (g₂ ^ k).comp f = f.comp (g ^ k) :=
   by
   induction' k with k ih
   · simpa only [pow_zero]
@@ -360,8 +359,8 @@ theorem commute_pow_left_of_commute {f : M →ₛₗ[σ₁₂] M₂} {g : Module
       h, LinearMap.comp_assoc, LinearMap.mul_eq_comp]
 #align linear_map.commute_pow_left_of_commute LinearMap.commute_pow_left_of_commute
 
-theorem submodule_pow_eq_zero_of_pow_eq_zero {N : Submodule R M} {g : Module.EndCat R N}
-    {G : Module.EndCat R M} (h : G.comp N.Subtype = N.Subtype.comp g) {k : ℕ} (hG : G ^ k = 0) :
+theorem submodule_pow_eq_zero_of_pow_eq_zero {N : Submodule R M} {g : Module.End R N}
+    {G : Module.End R M} (h : G.comp N.Subtype = N.Subtype.comp g) {k : ℕ} (hG : G ^ k = 0) :
     g ^ k = 0 := by
   ext m
   have hg : N.subtype.comp (g ^ k) m = 0 := by
@@ -2562,26 +2561,26 @@ def congrRight (f : M₂ ≃ₗ[R] M₃) : (M →ₗ[R] M₂) ≃ₗ[R] M →ₗ
 
 /-- If `M` and `M₂` are linearly isomorphic then the two spaces of linear maps from `M` and `M₂` to
 themselves are linearly isomorphic. -/
-def conj (e : M ≃ₗ[R] M₂) : Module.EndCat R M ≃ₗ[R] Module.EndCat R M₂ :=
+def conj (e : M ≃ₗ[R] M₂) : Module.End R M ≃ₗ[R] Module.End R M₂ :=
   arrowCongr e e
 #align linear_equiv.conj LinearEquiv.conj
 
-theorem conj_apply (e : M ≃ₗ[R] M₂) (f : Module.EndCat R M) :
+theorem conj_apply (e : M ≃ₗ[R] M₂) (f : Module.End R M) :
     e.conj f = ((↑e : M →ₗ[R] M₂).comp f).comp (e.symm : M₂ →ₗ[R] M) :=
   rfl
 #align linear_equiv.conj_apply LinearEquiv.conj_apply
 
-theorem conj_apply_apply (e : M ≃ₗ[R] M₂) (f : Module.EndCat R M) (x : M₂) :
+theorem conj_apply_apply (e : M ≃ₗ[R] M₂) (f : Module.End R M) (x : M₂) :
     e.conj f x = e (f (e.symm x)) :=
   rfl
 #align linear_equiv.conj_apply_apply LinearEquiv.conj_apply_apply
 
-theorem symm_conj_apply (e : M ≃ₗ[R] M₂) (f : Module.EndCat R M₂) :
+theorem symm_conj_apply (e : M ≃ₗ[R] M₂) (f : Module.End R M₂) :
     e.symm.conj f = ((↑e.symm : M₂ →ₗ[R] M).comp f).comp (e : M →ₗ[R] M₂) :=
   rfl
 #align linear_equiv.symm_conj_apply LinearEquiv.symm_conj_apply
 
-theorem conj_comp (e : M ≃ₗ[R] M₂) (f g : Module.EndCat R M) :
+theorem conj_comp (e : M ≃ₗ[R] M₂) (f g : Module.End R M) :
     e.conj (g.comp f) = (e.conj g).comp (e.conj f) :=
   arrowCongr_comp e e e f g
 #align linear_equiv.conj_comp LinearEquiv.conj_comp

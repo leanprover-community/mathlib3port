@@ -97,22 +97,22 @@ theorem card_ioo : (ioo a b).card = b - a - 1 := by
 
 @[simp]
 theorem card_fintypeIcc : Fintype.card (Set.Icc a b) = b + 1 - a := by
-  rw [← card_Icc, Fintype.card_of_finset]
+  rw [← card_Icc, Fintype.card_ofFinset]
 #align fin.card_fintype_Icc Fin.card_fintypeIcc
 
 @[simp]
 theorem card_fintypeIco : Fintype.card (Set.Ico a b) = b - a := by
-  rw [← card_Ico, Fintype.card_of_finset]
+  rw [← card_Ico, Fintype.card_ofFinset]
 #align fin.card_fintype_Ico Fin.card_fintypeIco
 
 @[simp]
 theorem card_fintypeIoc : Fintype.card (Set.Ioc a b) = b - a := by
-  rw [← card_Ioc, Fintype.card_of_finset]
+  rw [← card_Ioc, Fintype.card_ofFinset]
 #align fin.card_fintype_Ioc Fin.card_fintypeIoc
 
 @[simp]
 theorem card_fintypeIoo : Fintype.card (Set.Ioo a b) = b - a - 1 := by
-  rw [← card_Ioo, Fintype.card_of_finset]
+  rw [← card_Ioo, Fintype.card_ofFinset]
 #align fin.card_fintype_Ioo Fin.card_fintypeIoo
 
 theorem ici_eq_finset_subtype : ici a = (icc (a : ℕ) n).Fin n :=
@@ -196,21 +196,21 @@ theorem card_iio : (iio b).card = b := by
 
 @[simp]
 theorem card_fintypeIci : Fintype.card (Set.Ici a) = n - a := by
-  rw [Fintype.card_of_finset, card_Ici]
+  rw [Fintype.card_ofFinset, card_Ici]
 #align fin.card_fintype_Ici Fin.card_fintypeIci
 
 @[simp]
 theorem card_fintypeIoi : Fintype.card (Set.Ioi a) = n - 1 - a := by
-  rw [Fintype.card_of_finset, card_Ioi]
+  rw [Fintype.card_ofFinset, card_Ioi]
 #align fin.card_fintype_Ioi Fin.card_fintypeIoi
 
 @[simp]
 theorem card_fintypeIic : Fintype.card (Set.Iic b) = b + 1 := by
-  rw [Fintype.card_of_finset, card_Iic]
+  rw [Fintype.card_ofFinset, card_Iic]
 #align fin.card_fintype_Iic Fin.card_fintypeIic
 
 @[simp]
-theorem card_fintypeIio : Fintype.card (Set.Iio b) = b := by rw [Fintype.card_of_finset, card_Iio]
+theorem card_fintypeIio : Fintype.card (Set.Iio b) = b := by rw [Fintype.card_ofFinset, card_Iio]
 #align fin.card_fintype_Iio Fin.card_fintypeIio
 
 end Fin

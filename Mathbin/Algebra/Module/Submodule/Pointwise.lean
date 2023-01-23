@@ -198,9 +198,9 @@ protected def pointwiseDistribMulAction : DistribMulAction α (Submodule R M)
     where
   smul a S := S.map (DistribMulAction.toLinearMap R M a : M →ₗ[R] M)
   one_smul S :=
-    (congr_arg (fun f : Module.EndCat R M => S.map f) (LinearMap.ext <| one_smul α)).trans S.map_id
+    (congr_arg (fun f : Module.End R M => S.map f) (LinearMap.ext <| one_smul α)).trans S.map_id
   mul_smul a₁ a₂ S :=
-    (congr_arg (fun f : Module.EndCat R M => S.map f) (LinearMap.ext <| mul_smul _ _)).trans
+    (congr_arg (fun f : Module.End R M => S.map f) (LinearMap.ext <| mul_smul _ _)).trans
       (S.map_comp _ _)
   smul_zero a := map_bot _
   smul_add a S₁ S₂ := map_sup _ _ _
@@ -253,8 +253,7 @@ theorem span_smul (a : α) (s : Set M) : span R (a • s) = a • span R s :=
 
 instance pointwise_central_scalar [DistribMulAction αᵐᵒᵖ M] [SMulCommClass αᵐᵒᵖ R M]
     [IsCentralScalar α M] : IsCentralScalar α (Submodule R M) :=
-  ⟨fun a S =>
-    (congr_arg fun f : Module.EndCat R M => S.map f) <| LinearMap.ext <| op_smul_eq_smul _⟩
+  ⟨fun a S => (congr_arg fun f : Module.End R M => S.map f) <| LinearMap.ext <| op_smul_eq_smul _⟩
 #align submodule.pointwise_central_scalar Submodule.pointwise_central_scalar
 
 @[simp]

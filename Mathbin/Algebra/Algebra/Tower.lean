@@ -43,7 +43,7 @@ on the `R`-module `M`.
 
 This is a stronger version of `distrib_mul_action.to_linear_map`, and could also have been
 called `algebra.to_module_End`. -/
-def lsmul : A →ₐ[R] Module.EndCat R M
+def lsmul : A →ₐ[R] Module.End R M
     where
   toFun := DistribMulAction.toLinearMap R M
   map_one' := LinearMap.ext fun _ => one_smul A _

@@ -692,17 +692,17 @@ theorem map_le_map_iff_of_injective {S T : Submonoid M} : S.map f ≤ T.map f �
 #align submonoid.map_le_map_iff_of_injective Submonoid.map_le_map_iff_of_injective
 #align add_submonoid.map_le_map_iff_of_injective AddSubmonoid.map_le_map_iff_of_injective
 
-/- warning: submonoid.map_strict_mono_of_injective -> Submonoid.map_strict_mono_of_injective is a dubious translation:
+/- warning: submonoid.map_strict_mono_of_injective -> Submonoid.map_strictMono_of_injective is a dubious translation:
 lean 3 declaration is
   forall {M : Type.{u1}} {N : Type.{u2}} [_inst_1 : MulOneClass.{u1} M] [_inst_2 : MulOneClass.{u2} N] {F : Type.{u3}} [mc : MonoidHomClass.{u3, u1, u2} F M N _inst_1 _inst_2] {f : F}, (Function.Injective.{succ u1, succ u2} M N (coeFn.{succ u3, max (succ u1) (succ u2)} F (fun (_x : F) => M -> N) (FunLike.hasCoeToFun.{succ u3, succ u1, succ u2} F M (fun (_x : M) => N) (MulHomClass.toFunLike.{u3, u1, u2} F M N (MulOneClass.toHasMul.{u1} M _inst_1) (MulOneClass.toHasMul.{u2} N _inst_2) (MonoidHomClass.toMulHomClass.{u3, u1, u2} F M N _inst_1 _inst_2 mc))) f)) -> (StrictMono.{u1, u2} (Submonoid.{u1} M _inst_1) (Submonoid.{u2} N _inst_2) (PartialOrder.toPreorder.{u1} (Submonoid.{u1} M _inst_1) (SetLike.partialOrder.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.setLike.{u1} M _inst_1))) (PartialOrder.toPreorder.{u2} (Submonoid.{u2} N _inst_2) (SetLike.partialOrder.{u2, u2} (Submonoid.{u2} N _inst_2) N (Submonoid.setLike.{u2} N _inst_2))) (Submonoid.map.{u1, u2, u3} M N _inst_1 _inst_2 F mc f))
 but is expected to have type
   forall {M : Type.{u3}} {N : Type.{u2}} [_inst_1 : MulOneClass.{u3} M] [_inst_2 : MulOneClass.{u2} N] {F : Type.{u1}} [mc : MonoidHomClass.{u1, u3, u2} F M N _inst_1 _inst_2] {f : F}, (Function.Injective.{succ u3, succ u2} M N (FunLike.coe.{succ u1, succ u3, succ u2} F M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : M) => N) _x) (MulHomClass.toFunLike.{u1, u3, u2} F M N (MulOneClass.toMul.{u3} M _inst_1) (MulOneClass.toMul.{u2} N _inst_2) (MonoidHomClass.toMulHomClass.{u1, u3, u2} F M N _inst_1 _inst_2 mc)) f)) -> (StrictMono.{u3, u2} (Submonoid.{u3} M _inst_1) (Submonoid.{u2} N _inst_2) (PartialOrder.toPreorder.{u3} (Submonoid.{u3} M _inst_1) (CompleteSemilatticeInf.toPartialOrder.{u3} (Submonoid.{u3} M _inst_1) (CompleteLattice.toCompleteSemilatticeInf.{u3} (Submonoid.{u3} M _inst_1) (Submonoid.instCompleteLatticeSubmonoid.{u3} M _inst_1)))) (PartialOrder.toPreorder.{u2} (Submonoid.{u2} N _inst_2) (CompleteSemilatticeInf.toPartialOrder.{u2} (Submonoid.{u2} N _inst_2) (CompleteLattice.toCompleteSemilatticeInf.{u2} (Submonoid.{u2} N _inst_2) (Submonoid.instCompleteLatticeSubmonoid.{u2} N _inst_2)))) (Submonoid.map.{u3, u2, u1} M N _inst_1 _inst_2 F mc f))
-Case conversion may be inaccurate. Consider using '#align submonoid.map_strict_mono_of_injective Submonoid.map_strict_mono_of_injectiveₓ'. -/
+Case conversion may be inaccurate. Consider using '#align submonoid.map_strict_mono_of_injective Submonoid.map_strictMono_of_injectiveₓ'. -/
 @[to_additive]
-theorem map_strict_mono_of_injective : StrictMono (map f) :=
+theorem map_strictMono_of_injective : StrictMono (map f) :=
   (gciMapComap hf).strict_mono_l
-#align submonoid.map_strict_mono_of_injective Submonoid.map_strict_mono_of_injective
-#align add_submonoid.map_strict_mono_of_injective AddSubmonoid.map_strict_mono_of_injective
+#align submonoid.map_strict_mono_of_injective Submonoid.map_strictMono_of_injective
+#align add_submonoid.map_strict_mono_of_injective AddSubmonoid.map_strictMono_of_injective
 
 end GaloisCoinsertion
 
@@ -823,17 +823,17 @@ theorem comap_le_comap_iff_of_surjective {S T : Submonoid N} : S.comap f ≤ T.c
 #align submonoid.comap_le_comap_iff_of_surjective Submonoid.comap_le_comap_iff_of_surjective
 #align add_submonoid.comap_le_comap_iff_of_surjective AddSubmonoid.comap_le_comap_iff_of_surjective
 
-/- warning: submonoid.comap_strict_mono_of_surjective -> Submonoid.comap_strict_mono_of_surjective is a dubious translation:
+/- warning: submonoid.comap_strict_mono_of_surjective -> Submonoid.comap_strictMono_of_surjective is a dubious translation:
 lean 3 declaration is
   forall {M : Type.{u1}} {N : Type.{u2}} [_inst_1 : MulOneClass.{u1} M] [_inst_2 : MulOneClass.{u2} N] {F : Type.{u3}} [mc : MonoidHomClass.{u3, u1, u2} F M N _inst_1 _inst_2] {f : F}, (Function.Surjective.{succ u1, succ u2} M N (coeFn.{succ u3, max (succ u1) (succ u2)} F (fun (_x : F) => M -> N) (FunLike.hasCoeToFun.{succ u3, succ u1, succ u2} F M (fun (_x : M) => N) (MulHomClass.toFunLike.{u3, u1, u2} F M N (MulOneClass.toHasMul.{u1} M _inst_1) (MulOneClass.toHasMul.{u2} N _inst_2) (MonoidHomClass.toMulHomClass.{u3, u1, u2} F M N _inst_1 _inst_2 mc))) f)) -> (StrictMono.{u2, u1} (Submonoid.{u2} N _inst_2) (Submonoid.{u1} M _inst_1) (PartialOrder.toPreorder.{u2} (Submonoid.{u2} N _inst_2) (SetLike.partialOrder.{u2, u2} (Submonoid.{u2} N _inst_2) N (Submonoid.setLike.{u2} N _inst_2))) (PartialOrder.toPreorder.{u1} (Submonoid.{u1} M _inst_1) (SetLike.partialOrder.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.setLike.{u1} M _inst_1))) (Submonoid.comap.{u1, u2, u3} M N _inst_1 _inst_2 F mc f))
 but is expected to have type
   forall {M : Type.{u2}} {N : Type.{u3}} [_inst_1 : MulOneClass.{u2} M] [_inst_2 : MulOneClass.{u3} N] {F : Type.{u1}} [mc : MonoidHomClass.{u1, u2, u3} F M N _inst_1 _inst_2] {f : F}, (Function.Surjective.{succ u2, succ u3} M N (FunLike.coe.{succ u1, succ u2, succ u3} F M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : M) => N) _x) (MulHomClass.toFunLike.{u1, u2, u3} F M N (MulOneClass.toMul.{u2} M _inst_1) (MulOneClass.toMul.{u3} N _inst_2) (MonoidHomClass.toMulHomClass.{u1, u2, u3} F M N _inst_1 _inst_2 mc)) f)) -> (StrictMono.{u3, u2} (Submonoid.{u3} N _inst_2) (Submonoid.{u2} M _inst_1) (PartialOrder.toPreorder.{u3} (Submonoid.{u3} N _inst_2) (CompleteSemilatticeInf.toPartialOrder.{u3} (Submonoid.{u3} N _inst_2) (CompleteLattice.toCompleteSemilatticeInf.{u3} (Submonoid.{u3} N _inst_2) (Submonoid.instCompleteLatticeSubmonoid.{u3} N _inst_2)))) (PartialOrder.toPreorder.{u2} (Submonoid.{u2} M _inst_1) (CompleteSemilatticeInf.toPartialOrder.{u2} (Submonoid.{u2} M _inst_1) (CompleteLattice.toCompleteSemilatticeInf.{u2} (Submonoid.{u2} M _inst_1) (Submonoid.instCompleteLatticeSubmonoid.{u2} M _inst_1)))) (Submonoid.comap.{u2, u3, u1} M N _inst_1 _inst_2 F mc f))
-Case conversion may be inaccurate. Consider using '#align submonoid.comap_strict_mono_of_surjective Submonoid.comap_strict_mono_of_surjectiveₓ'. -/
+Case conversion may be inaccurate. Consider using '#align submonoid.comap_strict_mono_of_surjective Submonoid.comap_strictMono_of_surjectiveₓ'. -/
 @[to_additive]
-theorem comap_strict_mono_of_surjective : StrictMono (comap f) :=
+theorem comap_strictMono_of_surjective : StrictMono (comap f) :=
   (giMapComap hf).strict_mono_u
-#align submonoid.comap_strict_mono_of_surjective Submonoid.comap_strict_mono_of_surjective
-#align add_submonoid.comap_strict_mono_of_surjective AddSubmonoid.comap_strict_mono_of_surjective
+#align submonoid.comap_strict_mono_of_surjective Submonoid.comap_strictMono_of_surjective
+#align add_submonoid.comap_strict_mono_of_surjective AddSubmonoid.comap_strictMono_of_surjective
 
 end GaloisInsertion
 

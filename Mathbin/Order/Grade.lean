@@ -140,15 +140,15 @@ protected theorem Covby.grade (h : a ⋖ b) : grade 𝕆 a ⋖ grade 𝕆 b :=
 
 variable {𝕆}
 
-/- warning: grade_strict_mono -> grade_strict_mono is a dubious translation:
+/- warning: grade_strict_mono -> grade_strictMono is a dubious translation:
 lean 3 declaration is
   forall {𝕆 : Type.{u1}} {α : Type.{u2}} [_inst_1 : Preorder.{u1} 𝕆] [_inst_2 : Preorder.{u2} α] [_inst_3 : GradeOrder.{u1, u2} 𝕆 α _inst_1 _inst_2], StrictMono.{u2, u1} α 𝕆 _inst_2 _inst_1 (grade.{u1, u2} 𝕆 α _inst_1 _inst_2 _inst_3)
 but is expected to have type
   forall {𝕆 : Type.{u1}} {α : Type.{u2}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} 𝕆] [_inst_3 : GradeOrder.{u1, u2} 𝕆 α _inst_2 _inst_1], StrictMono.{u2, u1} α 𝕆 _inst_1 _inst_2 (grade.{u1, u2} 𝕆 α _inst_1 _inst_2 _inst_3)
-Case conversion may be inaccurate. Consider using '#align grade_strict_mono grade_strict_monoₓ'. -/
-theorem grade_strict_mono : StrictMono (grade 𝕆 : α → 𝕆) :=
+Case conversion may be inaccurate. Consider using '#align grade_strict_mono grade_strictMonoₓ'. -/
+theorem grade_strictMono : StrictMono (grade 𝕆 : α → 𝕆) :=
   GradeOrder.grade_strictMono
-#align grade_strict_mono grade_strict_mono
+#align grade_strict_mono grade_strictMono
 
 /- warning: covby_iff_lt_covby_grade -> covby_iff_lt_covby_grade is a dubious translation:
 lean 3 declaration is
@@ -158,7 +158,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align covby_iff_lt_covby_grade covby_iff_lt_covby_gradeₓ'. -/
 theorem covby_iff_lt_covby_grade : a ⋖ b ↔ a < b ∧ grade 𝕆 a ⋖ grade 𝕆 b :=
   ⟨fun h => ⟨h.1, h.grade _⟩,
-    And.imp_right fun h c ha hb => h.2 (grade_strict_mono ha) <| grade_strict_mono hb⟩
+    And.imp_right fun h c ha hb => h.2 (grade_strictMono ha) <| grade_strictMono hb⟩
 #align covby_iff_lt_covby_grade covby_iff_lt_covby_grade
 
 end GradeOrder
@@ -187,7 +187,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_min_grade_iff isMin_grade_iffₓ'. -/
 @[simp]
 theorem isMin_grade_iff : IsMin (grade 𝕆 a) ↔ IsMin a :=
-  ⟨grade_strict_mono.is_min_of_apply, IsMin.grade _⟩
+  ⟨grade_strictMono.is_min_of_apply, IsMin.grade _⟩
 #align is_min_grade_iff isMin_grade_iff
 
 end GradeMinOrder
@@ -216,7 +216,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_max_grade_iff isMax_grade_iffₓ'. -/
 @[simp]
 theorem isMax_grade_iff : IsMax (grade 𝕆 a) ↔ IsMax a :=
-  ⟨grade_strict_mono.is_max_of_apply, IsMax.grade _⟩
+  ⟨grade_strictMono.is_max_of_apply, IsMax.grade _⟩
 #align is_max_grade_iff isMax_grade_iff
 
 end GradeMaxOrder
@@ -231,7 +231,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align grade_mono grade_monoₓ'. -/
 -- graded order
 theorem grade_mono [PartialOrder α] [GradeOrder 𝕆 α] : Monotone (grade 𝕆 : α → 𝕆) :=
-  grade_strict_mono.Monotone
+  grade_strictMono.Monotone
 #align grade_mono grade_mono
 
 section LinearOrder
@@ -246,7 +246,7 @@ but is expected to have type
   forall {𝕆 : Type.{u1}} {α : Type.{u2}} [_inst_1 : LinearOrder.{u2} α] [_inst_2 : Preorder.{u1} 𝕆] [_inst_3 : GradeOrder.{u1, u2} 𝕆 α _inst_2 (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (DistribLattice.toLattice.{u2} α (instDistribLattice.{u2} α _inst_1)))))], Function.Injective.{succ u2, succ u1} α 𝕆 (grade.{u1, u2} 𝕆 α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (DistribLattice.toLattice.{u2} α (instDistribLattice.{u2} α _inst_1))))) _inst_2 _inst_3)
 Case conversion may be inaccurate. Consider using '#align grade_injective grade_injectiveₓ'. -/
 theorem grade_injective : Function.Injective (grade 𝕆 : α → 𝕆) :=
-  grade_strict_mono.Injective
+  grade_strictMono.Injective
 #align grade_injective grade_injective
 
 /- warning: grade_le_grade_iff -> grade_le_grade_iff is a dubious translation:
@@ -257,7 +257,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align grade_le_grade_iff grade_le_grade_iffₓ'. -/
 @[simp]
 theorem grade_le_grade_iff : grade 𝕆 a ≤ grade 𝕆 b ↔ a ≤ b :=
-  grade_strict_mono.le_iff_le
+  grade_strictMono.le_iff_le
 #align grade_le_grade_iff grade_le_grade_iff
 
 /- warning: grade_lt_grade_iff -> grade_lt_grade_iff is a dubious translation:
@@ -268,7 +268,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align grade_lt_grade_iff grade_lt_grade_iffₓ'. -/
 @[simp]
 theorem grade_lt_grade_iff : grade 𝕆 a < grade 𝕆 b ↔ a < b :=
-  grade_strict_mono.lt_iff_lt
+  grade_strictMono.lt_iff_lt
 #align grade_lt_grade_iff grade_lt_grade_iff
 
 /- warning: grade_eq_grade_iff -> grade_eq_grade_iff is a dubious translation:
@@ -365,7 +365,7 @@ theorem grade_self (a : α) : grade α a = a :=
 instance [GradeOrder 𝕆 α] : GradeOrder 𝕆ᵒᵈ αᵒᵈ
     where
   grade := to_dual ∘ grade 𝕆 ∘ of_dual
-  grade_strict_mono := grade_strict_mono.dual
+  grade_strict_mono := grade_strictMono.dual
   covby_grade a b h := (h.ofDual.grade _).toDual
 
 instance [GradeMaxOrder 𝕆 α] : GradeMinOrder 𝕆ᵒᵈ αᵒᵈ :=
@@ -410,7 +410,7 @@ def GradeOrder.liftLeft [GradeOrder 𝕆 α] (f : 𝕆 → ℙ) (hf : StrictMono
     (hcovby : ∀ a b, a ⋖ b → f a ⋖ f b) : GradeOrder ℙ α
     where
   grade := f ∘ grade 𝕆
-  grade_strict_mono := hf.comp grade_strict_mono
+  grade_strict_mono := hf.comp grade_strictMono
   covby_grade a b h := hcovby _ _ <| h.grade _
 #align grade_order.lift_left GradeOrder.liftLeft
 -/
@@ -454,7 +454,7 @@ def GradeOrder.liftRight [GradeOrder 𝕆 β] (f : α → β) (hf : StrictMono f
     (hcovby : ∀ a b, a ⋖ b → f a ⋖ f b) : GradeOrder 𝕆 α
     where
   grade := grade 𝕆 ∘ f
-  grade_strict_mono := grade_strict_mono.comp hf
+  grade_strict_mono := grade_strictMono.comp hf
   covby_grade a b h := (hcovby _ _ h).grade _
 #align grade_order.lift_right GradeOrder.liftRight
 -/

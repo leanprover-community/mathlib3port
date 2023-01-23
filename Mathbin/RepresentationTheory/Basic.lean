@@ -80,7 +80,7 @@ variable (ρ : Representation k G V)
 /-- A `k`-linear representation of `G` on `V` can be thought of as
 an algebra map from `monoid_algebra k G` into the `k`-linear endomorphisms of `V`.
 -/
-noncomputable def asAlgebraHom : MonoidAlgebra k G →ₐ[k] Module.EndCat k V :=
+noncomputable def asAlgebraHom : MonoidAlgebra k G →ₐ[k] Module.End k V :=
   (lift k G _) ρ
 #align representation.as_algebra_hom Representation.asAlgebraHom
 

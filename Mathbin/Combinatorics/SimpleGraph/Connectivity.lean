@@ -2158,7 +2158,7 @@ theorem set_walk_length_toFinset_eq (n : ℕ) (u v : V) :
 power of the adjacency matrix. -/
 theorem card_set_walk_length_eq (u v : V) (n : ℕ) :
     Fintype.card { p : G.Walk u v | p.length = n } = (G.finsetWalkLength n u v).card :=
-  Fintype.card_of_finset (G.finsetWalkLength n u v) fun p => by
+  Fintype.card_ofFinset (G.finsetWalkLength n u v) fun p => by
     rw [← Finset.mem_coe, coe_finset_walk_length_eq]
 #align simple_graph.card_set_walk_length_eq SimpleGraph.card_set_walk_length_eq
 

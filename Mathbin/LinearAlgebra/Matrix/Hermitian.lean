@@ -253,7 +253,7 @@ theorem IsHermitian.coe_re_diag {A : Matrix n n α} (h : A.IsHermitian) :
 theorem isHermitian_iff_isSymmetric [Fintype n] [DecidableEq n] {A : Matrix n n α} :
     IsHermitian A ↔
       LinearMap.IsSymmetric
-        ((PiLp.linearEquiv 2 α fun _ : n => α).symm.conj A.toLin' : Module.EndCat α (PiLp 2 _)) :=
+        ((PiLp.linearEquiv 2 α fun _ : n => α).symm.conj A.toLin' : Module.End α (PiLp 2 _)) :=
   by
   rw [LinearMap.IsSymmetric, (PiLp.equiv 2 fun _ : n => α).symm.Surjective.Forall₂]
   simp only [LinearEquiv.conj_apply, LinearMap.comp_apply, LinearEquiv.coe_coe,

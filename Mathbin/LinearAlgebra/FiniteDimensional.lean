@@ -1581,7 +1581,7 @@ namespace EndCat
 
 variable [DivisionRing K] [AddCommGroup V] [Module K V]
 
-theorem exists_ker_pow_eq_ker_pow_succ [FiniteDimensional K V] (f : EndCat K V) :
+theorem exists_ker_pow_eq_ker_pow_succ [FiniteDimensional K V] (f : End K V) :
     ∃ k : ℕ, k ≤ finrank K V ∧ (f ^ k).ker = (f ^ k.succ).ker := by
   classical
     by_contra h_contra
@@ -1609,9 +1609,9 @@ theorem exists_ker_pow_eq_ker_pow_succ [FiniteDimensional K V] (f : EndCat K V) 
       (h_le_ker_pow n hn).trans (h_le_finrank_V n)
     show False
     exact Nat.not_succ_le_self _ (h_any_n_lt (finrank K V).succ (finrank K V).succ.le_refl)
-#align module.End.exists_ker_pow_eq_ker_pow_succ Module.EndCat.exists_ker_pow_eq_ker_pow_succ
+#align module.End.exists_ker_pow_eq_ker_pow_succ Module.End.exists_ker_pow_eq_ker_pow_succ
 
-theorem ker_pow_constant {f : EndCat K V} {k : ℕ} (h : (f ^ k).ker = (f ^ k.succ).ker) :
+theorem ker_pow_constant {f : End K V} {k : ℕ} (h : (f ^ k).ker = (f ^ k.succ).ker) :
     ∀ m, (f ^ k).ker = (f ^ (k + m)).ker
   | 0 => by simp
   | m + 1 => by
@@ -1622,9 +1622,9 @@ theorem ker_pow_constant {f : EndCat K V} {k : ℕ} (h : (f ^ k).ker = (f ^ k.su
       change LinearMap.ker ((f ^ (k + 1)).comp (f ^ m)) ≤ LinearMap.ker ((f ^ k).comp (f ^ m))
       rw [LinearMap.ker_comp, LinearMap.ker_comp, h, Nat.add_one]
       exact le_rfl
-#align module.End.ker_pow_constant Module.EndCat.ker_pow_constant
+#align module.End.ker_pow_constant Module.End.ker_pow_constant
 
-theorem ker_pow_eq_ker_pow_finrank_of_le [FiniteDimensional K V] {f : EndCat K V} {m : ℕ}
+theorem ker_pow_eq_ker_pow_finrank_of_le [FiniteDimensional K V] {f : End K V} {m : ℕ}
     (hm : finrank K V ≤ m) : (f ^ m).ker = (f ^ finrank K V).ker :=
   by
   obtain ⟨k, h_k_le, hk⟩ :
@@ -1636,9 +1636,9 @@ theorem ker_pow_eq_ker_pow_finrank_of_le [FiniteDimensional K V] {f : EndCat K V
     _ = (f ^ (k + (finrank K V - k))).ker := ker_pow_constant hk (finrank K V - k)
     _ = (f ^ finrank K V).ker := by rw [add_tsub_cancel_of_le h_k_le]
     
-#align module.End.ker_pow_eq_ker_pow_finrank_of_le Module.EndCat.ker_pow_eq_ker_pow_finrank_of_le
+#align module.End.ker_pow_eq_ker_pow_finrank_of_le Module.End.ker_pow_eq_ker_pow_finrank_of_le
 
-theorem ker_pow_le_ker_pow_finrank [FiniteDimensional K V] (f : EndCat K V) (m : ℕ) :
+theorem ker_pow_le_ker_pow_finrank [FiniteDimensional K V] (f : End K V) (m : ℕ) :
     (f ^ m).ker ≤ (f ^ finrank K V).ker :=
   by
   by_cases h_cases : m < finrank K V
@@ -1646,7 +1646,7 @@ theorem ker_pow_le_ker_pow_finrank [FiniteDimensional K V] (f : EndCat K V) (m :
     apply LinearMap.ker_le_ker_comp
   · rw [ker_pow_eq_ker_pow_finrank_of_le (le_of_not_lt h_cases)]
     exact le_rfl
-#align module.End.ker_pow_le_ker_pow_finrank Module.EndCat.ker_pow_le_ker_pow_finrank
+#align module.End.ker_pow_le_ker_pow_finrank Module.End.ker_pow_le_ker_pow_finrank
 
 end EndCat
 

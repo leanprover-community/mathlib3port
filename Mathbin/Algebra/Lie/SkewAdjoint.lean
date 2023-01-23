@@ -45,9 +45,8 @@ variable {R : Type u} {M : Type v} [CommRing R] [AddCommGroup M] [Module R M]
 
 variable (B : BilinForm R M)
 
-theorem BilinForm.is_skew_adjoint_bracket (f g : Module.EndCat R M)
-    (hf : f ∈ B.skewAdjointSubmodule) (hg : g ∈ B.skewAdjointSubmodule) :
-    ⁅f, g⁆ ∈ B.skewAdjointSubmodule :=
+theorem BilinForm.is_skew_adjoint_bracket (f g : Module.End R M) (hf : f ∈ B.skewAdjointSubmodule)
+    (hg : g ∈ B.skewAdjointSubmodule) : ⁅f, g⁆ ∈ B.skewAdjointSubmodule :=
   by
   rw [mem_skew_adjoint_submodule] at *
   have hfg : is_adjoint_pair B B (f * g) (g * f) :=
@@ -65,7 +64,7 @@ theorem BilinForm.is_skew_adjoint_bracket (f g : Module.EndCat R M)
 
 /-- Given an `R`-module `M`, equipped with a bilinear form, the skew-adjoint endomorphisms form a
 Lie subalgebra of the Lie algebra of endomorphisms. -/
-def skewAdjointLieSubalgebra : LieSubalgebra R (Module.EndCat R M) :=
+def skewAdjointLieSubalgebra : LieSubalgebra R (Module.End R M) :=
   { B.skewAdjointSubmodule with lie_mem' := B.is_skew_adjoint_bracket }
 #align skew_adjoint_lie_subalgebra skewAdjointLieSubalgebra
 

@@ -143,7 +143,7 @@ instance RestrictScalars.isCentralScalar [Module S M] [Module Sᵐᵒᵖ M] [IsC
 /-- The `R`-algebra homomorphism from the original coefficient algebra `S` to endomorphisms
 of `restrict_scalars R S M`.
 -/
-def RestrictScalars.lsmul [Module S M] : S →ₐ[R] Module.EndCat R (RestrictScalars R S M) :=
+def RestrictScalars.lsmul [Module S M] : S →ₐ[R] Module.End R (RestrictScalars R S M) :=
   letI-- We use `restrict_scalars.module_orig` in the implementation,
   -- but not in the type.
    : Module S (RestrictScalars R S M) := RestrictScalars.moduleOrig R S M

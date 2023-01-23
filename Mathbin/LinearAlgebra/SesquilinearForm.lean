@@ -497,7 +497,7 @@ theorem IsAdjointPair.comp {f' : M₁ →ₗ[R] M₂} {g' : M₂ →ₗ[R] M₁}
   rw [LinearMap.comp_apply, LinearMap.comp_apply, h', h]
 #align linear_map.is_adjoint_pair.comp LinearMap.IsAdjointPair.comp
 
-theorem IsAdjointPair.mul {f g f' g' : Module.EndCat R M} (h : IsAdjointPair B B f g)
+theorem IsAdjointPair.mul {f g f' g' : Module.End R M} (h : IsAdjointPair B B f g)
     (h' : IsAdjointPair B B f' g') : IsAdjointPair B B (f * f') (g' * g) :=
   h'.comp h
 #align linear_map.is_adjoint_pair.mul LinearMap.IsAdjointPair.mul
@@ -549,13 +549,13 @@ variable (B F : M →ₗ[R] M →ₛₗ[I] R)
 on the underlying module. In the case that these two forms are identical, this is the usual concept
 of self adjointness. In the case that one of the forms is the negation of the other, this is the
 usual concept of skew adjointness. -/
-def IsPairSelfAdjoint (f : Module.EndCat R M) :=
+def IsPairSelfAdjoint (f : Module.End R M) :=
   IsAdjointPair B F f f
 #align linear_map.is_pair_self_adjoint LinearMap.IsPairSelfAdjoint
 
 /-- An endomorphism of a module is self-adjoint with respect to a bilinear form if it serves as an
 adjoint for itself. -/
-protected def IsSelfAdjoint (f : Module.EndCat R M) :=
+protected def IsSelfAdjoint (f : Module.End R M) :=
   IsAdjointPair B B f f
 #align linear_map.is_self_adjoint LinearMap.IsSelfAdjoint
 
@@ -570,7 +570,7 @@ variable [AddCommGroup M] [Module R M]
 variable [AddCommGroup M₁] [Module R M₁] (B F : M →ₗ[R] M →ₗ[R] R)
 
 /-- The set of pair-self-adjoint endomorphisms are a submodule of the type of all endomorphisms. -/
-def isPairSelfAdjointSubmodule : Submodule R (Module.EndCat R M)
+def isPairSelfAdjointSubmodule : Submodule R (Module.End R M)
     where
   carrier := { f | IsPairSelfAdjoint B F f }
   zero_mem' := isAdjointPairZero
@@ -580,7 +580,7 @@ def isPairSelfAdjointSubmodule : Submodule R (Module.EndCat R M)
 
 /-- An endomorphism of a module is skew-adjoint with respect to a bilinear form if its negation
 serves as an adjoint. -/
-def IsSkewAdjoint (f : Module.EndCat R M) :=
+def IsSkewAdjoint (f : Module.End R M) :=
   IsAdjointPair B B f (-f)
 #align linear_map.is_skew_adjoint LinearMap.IsSkewAdjoint
 
@@ -599,12 +599,12 @@ def skewAdjointSubmodule :=
 variable {B F}
 
 @[simp]
-theorem mem_isPairSelfAdjointSubmodule (f : Module.EndCat R M) :
+theorem mem_isPairSelfAdjointSubmodule (f : Module.End R M) :
     f ∈ isPairSelfAdjointSubmodule B F ↔ IsPairSelfAdjoint B F f :=
   Iff.rfl
 #align linear_map.mem_is_pair_self_adjoint_submodule LinearMap.mem_isPairSelfAdjointSubmodule
 
-theorem isPairSelfAdjoint_equiv (e : M₁ ≃ₗ[R] M) (f : Module.EndCat R M) :
+theorem isPairSelfAdjoint_equiv (e : M₁ ≃ₗ[R] M) (f : Module.End R M) :
     IsPairSelfAdjoint B F f ↔
       IsPairSelfAdjoint (B.compl₁₂ ↑e ↑e) (F.compl₁₂ ↑e ↑e) (e.symm.conj f) :=
   by
@@ -626,19 +626,19 @@ theorem isPairSelfAdjoint_equiv (e : M₁ ≃ₗ[R] M) (f : Module.EndCat R M) :
   simp_rw [is_pair_self_adjoint, is_adjoint_pair_iff_comp_eq_compl₂, hₗ, hᵣ, compl₁₂_inj he he]
 #align linear_map.is_pair_self_adjoint_equiv LinearMap.isPairSelfAdjoint_equiv
 
-theorem isSkewAdjoint_iff_neg_self_adjoint (f : Module.EndCat R M) :
+theorem isSkewAdjoint_iff_neg_self_adjoint (f : Module.End R M) :
     B.IsSkewAdjoint f ↔ IsAdjointPair (-B) B f f :=
   show (∀ x y, B (f x) y = B x ((-f) y)) ↔ ∀ x y, B (f x) y = (-B) x (f y) by simp
 #align linear_map.is_skew_adjoint_iff_neg_self_adjoint LinearMap.isSkewAdjoint_iff_neg_self_adjoint
 
 @[simp]
-theorem mem_selfAdjointSubmodule (f : Module.EndCat R M) :
+theorem mem_selfAdjointSubmodule (f : Module.End R M) :
     f ∈ B.selfAdjointSubmodule ↔ B.IsSelfAdjoint f :=
   Iff.rfl
 #align linear_map.mem_self_adjoint_submodule LinearMap.mem_selfAdjointSubmodule
 
 @[simp]
-theorem mem_skewAdjointSubmodule (f : Module.EndCat R M) :
+theorem mem_skewAdjointSubmodule (f : Module.End R M) :
     f ∈ B.skewAdjointSubmodule ↔ B.IsSkewAdjoint f :=
   by
   rw [is_skew_adjoint_iff_neg_self_adjoint]

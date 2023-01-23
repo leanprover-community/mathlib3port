@@ -35,6 +35,7 @@ example : unique_prods ℕ+ := by apply_instance
 -/
 
 
+#print UniqueMul /-
 /-- Let `G` be a Type with multiplication, let `A B : finset G` be finite subsets and
 let `a0 b0 : G` be two elements.  `unique_mul A B a0 b0` asserts `a0 * b0` can be written in at
 most one way as a product of an element of `A` and an element of `B`. -/
@@ -44,18 +45,22 @@ def UniqueMul {G} [Mul G] (A B : Finset G) (a0 b0 : G) : Prop :=
   ∀ ⦃a b⦄, a ∈ A → b ∈ B → a * b = a0 * b0 → a = a0 ∧ b = b0
 #align unique_mul UniqueMul
 #align unique_add UniqueAdd
+-/
 
 namespace UniqueMul
 
 variable {G H : Type _} [Mul G] [Mul H] {A B : Finset G} {a0 b0 : G}
 
+#print UniqueMul.mt /-
 theorem mt {G} [Mul G] {A B : Finset G} {a0 b0 : G} (h : UniqueMul A B a0 b0) :
     ∀ ⦃a b⦄, a ∈ A → b ∈ B → a ≠ a0 ∨ b ≠ b0 → a * b ≠ a0 * b0 := fun _ _ ha hb k =>
   by
   contrapose! k
   exact h ha hb k
 #align unique_mul.mt UniqueMul.mt
+-/
 
+#print UniqueMul.subsingleton /-
 @[to_additive]
 theorem subsingleton (A B : Finset G) (a0 b0 : G) (h : UniqueMul A B a0 b0) :
     Subsingleton { ab : G × G // ab.1 ∈ A ∧ ab.2 ∈ B ∧ ab.1 * ab.2 = a0 * b0 } :=
@@ -65,7 +70,9 @@ theorem subsingleton (A B : Finset G) (a0 b0 : G) (h : UniqueMul A B a0 b0) :
         (h ha hb ab).2.trans (h ha' hb' ab').2.symm⟩
 #align unique_mul.subsingleton UniqueMul.subsingleton
 #align unique_add.subsingleton UniqueAdd.subsingleton
+-/
 
+#print UniqueMul.set_subsingleton /-
 @[to_additive]
 theorem set_subsingleton (A B : Finset G) (a0 b0 : G) (h : UniqueMul A B a0 b0) :
     Set.Subsingleton { ab : G × G | ab.1 ∈ A ∧ ab.2 ∈ B ∧ ab.1 * ab.2 = a0 * b0 } :=
@@ -77,9 +84,11 @@ theorem set_subsingleton (A B : Finset G) (a0 b0 : G) (h : UniqueMul A B a0 b0) 
   rfl
 #align unique_mul.set_subsingleton UniqueMul.set_subsingleton
 #align unique_add.set_subsingleton UniqueAdd.set_subsingleton
+-/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (ab «expr ∈ » [finset.product/multiset.product/set.prod/list.product](A, B)) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print UniqueMul.iff_existsUnique /-
 @[to_additive]
 theorem iff_existsUnique (aA : a0 ∈ A) (bB : b0 ∈ B) :
     UniqueMul A B a0 b0 ↔ ∃! (ab : _)(_ : ab ∈ A ×ˢ B), ab.1 * ab.2 = a0 * b0 :=
@@ -91,9 +100,11 @@ theorem iff_existsUnique (aA : a0 ∈ A) (bB : b0 ∈ B) :
         exact prod.mk.inj_iff.mp (J (x, y) (Finset.mk_mem_product hx hy) l))⟩
 #align unique_mul.iff_exists_unique UniqueMul.iff_existsUnique
 #align unique_add.iff_exists_unique UniqueAdd.iff_existsUnique
+-/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (ab «expr ∈ » [finset.product/multiset.product/set.prod/list.product](A, B)) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print UniqueMul.exists_iff_exists_existsUnique /-
 @[to_additive]
 theorem exists_iff_exists_existsUnique :
     (∃ a0 b0 : G, a0 ∈ A ∧ b0 ∈ B ∧ UniqueMul A B a0 b0) ↔
@@ -106,7 +117,14 @@ theorem exists_iff_exists_existsUnique :
     exact ⟨a, b, ha, hb, (iff_exists_unique ha hb).mpr h⟩⟩
 #align unique_mul.exists_iff_exists_exists_unique UniqueMul.exists_iff_exists_existsUnique
 #align unique_add.exists_iff_exists_exists_unique UniqueAdd.exists_iff_exists_existsUnique
+-/
 
+/- warning: unique_mul.mul_hom_preimage -> UniqueMul.mulHom_preimage is a dubious translation:
+lean 3 declaration is
+  forall {G : Type.{u1}} {H : Type.{u2}} [_inst_1 : Mul.{u1} G] [_inst_2 : Mul.{u2} H] (f : MulHom.{u1, u2} G H _inst_1 _inst_2) (hf : Function.Injective.{succ u1, succ u2} G H (coeFn.{max (succ u2) (succ u1), max (succ u1) (succ u2)} (MulHom.{u1, u2} G H _inst_1 _inst_2) (fun (_x : MulHom.{u1, u2} G H _inst_1 _inst_2) => G -> H) (MulHom.hasCoeToFun.{u1, u2} G H _inst_1 _inst_2) f)) (a0 : G) (b0 : G) {A : Finset.{u2} H} {B : Finset.{u2} H}, (UniqueMul.{u2} H _inst_2 A B (coeFn.{max (succ u2) (succ u1), max (succ u1) (succ u2)} (MulHom.{u1, u2} G H _inst_1 _inst_2) (fun (_x : MulHom.{u1, u2} G H _inst_1 _inst_2) => G -> H) (MulHom.hasCoeToFun.{u1, u2} G H _inst_1 _inst_2) f a0) (coeFn.{max (succ u2) (succ u1), max (succ u1) (succ u2)} (MulHom.{u1, u2} G H _inst_1 _inst_2) (fun (_x : MulHom.{u1, u2} G H _inst_1 _inst_2) => G -> H) (MulHom.hasCoeToFun.{u1, u2} G H _inst_1 _inst_2) f b0)) -> (UniqueMul.{u1} G _inst_1 (Finset.preimage.{u1, u2} G H A (coeFn.{max (succ u2) (succ u1), max (succ u1) (succ u2)} (MulHom.{u1, u2} G H _inst_1 _inst_2) (fun (_x : MulHom.{u1, u2} G H _inst_1 _inst_2) => G -> H) (MulHom.hasCoeToFun.{u1, u2} G H _inst_1 _inst_2) f) (Set.injOn_of_injective.{u1, u2} G H (coeFn.{max (succ u2) (succ u1), max (succ u1) (succ u2)} (MulHom.{u1, u2} G H _inst_1 _inst_2) (fun (_x : MulHom.{u1, u2} G H _inst_1 _inst_2) => G -> H) (MulHom.hasCoeToFun.{u1, u2} G H _inst_1 _inst_2) f) hf (Set.preimage.{u1, u2} G H (coeFn.{max (succ u2) (succ u1), max (succ u1) (succ u2)} (MulHom.{u1, u2} G H _inst_1 _inst_2) (fun (_x : MulHom.{u1, u2} G H _inst_1 _inst_2) => G -> H) (MulHom.hasCoeToFun.{u1, u2} G H _inst_1 _inst_2) f) ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (Finset.{u2} H) (Set.{u2} H) (HasLiftT.mk.{succ u2, succ u2} (Finset.{u2} H) (Set.{u2} H) (CoeTCₓ.coe.{succ u2, succ u2} (Finset.{u2} H) (Set.{u2} H) (Finset.Set.hasCoeT.{u2} H))) A)))) (Finset.preimage.{u1, u2} G H B (coeFn.{max (succ u2) (succ u1), max (succ u1) (succ u2)} (MulHom.{u1, u2} G H _inst_1 _inst_2) (fun (_x : MulHom.{u1, u2} G H _inst_1 _inst_2) => G -> H) (MulHom.hasCoeToFun.{u1, u2} G H _inst_1 _inst_2) f) (Set.injOn_of_injective.{u1, u2} G H (coeFn.{max (succ u2) (succ u1), max (succ u1) (succ u2)} (MulHom.{u1, u2} G H _inst_1 _inst_2) (fun (_x : MulHom.{u1, u2} G H _inst_1 _inst_2) => G -> H) (MulHom.hasCoeToFun.{u1, u2} G H _inst_1 _inst_2) f) hf (Set.preimage.{u1, u2} G H (coeFn.{max (succ u2) (succ u1), max (succ u1) (succ u2)} (MulHom.{u1, u2} G H _inst_1 _inst_2) (fun (_x : MulHom.{u1, u2} G H _inst_1 _inst_2) => G -> H) (MulHom.hasCoeToFun.{u1, u2} G H _inst_1 _inst_2) f) ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (Finset.{u2} H) (Set.{u2} H) (HasLiftT.mk.{succ u2, succ u2} (Finset.{u2} H) (Set.{u2} H) (CoeTCₓ.coe.{succ u2, succ u2} (Finset.{u2} H) (Set.{u2} H) (Finset.Set.hasCoeT.{u2} H))) B)))) a0 b0)
+but is expected to have type
+  forall {G : Type.{u2}} {H : Type.{u1}} [_inst_1 : Mul.{u2} G] [_inst_2 : Mul.{u1} H] (f : MulHom.{u2, u1} G H _inst_1 _inst_2) (hf : Function.Injective.{succ u2, succ u1} G H (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (MulHom.{u2, u1} G H _inst_1 _inst_2) G (fun (_x : G) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : G) => H) _x) (MulHomClass.toFunLike.{max u2 u1, u2, u1} (MulHom.{u2, u1} G H _inst_1 _inst_2) G H _inst_1 _inst_2 (MulHom.mulHomClass.{u2, u1} G H _inst_1 _inst_2)) f)) (a0 : G) (b0 : G) {A : Finset.{u1} H} {B : Finset.{u1} H}, (UniqueMul.{u1} H _inst_2 A B (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (MulHom.{u2, u1} G H _inst_1 _inst_2) G (fun (_x : G) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : G) => H) _x) (MulHomClass.toFunLike.{max u2 u1, u2, u1} (MulHom.{u2, u1} G H _inst_1 _inst_2) G H _inst_1 _inst_2 (MulHom.mulHomClass.{u2, u1} G H _inst_1 _inst_2)) f a0) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (MulHom.{u2, u1} G H _inst_1 _inst_2) G (fun (_x : G) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : G) => H) _x) (MulHomClass.toFunLike.{max u2 u1, u2, u1} (MulHom.{u2, u1} G H _inst_1 _inst_2) G H _inst_1 _inst_2 (MulHom.mulHomClass.{u2, u1} G H _inst_1 _inst_2)) f b0)) -> (UniqueMul.{u2} G _inst_1 (Finset.preimage.{u2, u1} G H A (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (MulHom.{u2, u1} G H _inst_1 _inst_2) G (fun (_x : G) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : G) => H) _x) (MulHomClass.toFunLike.{max u2 u1, u2, u1} (MulHom.{u2, u1} G H _inst_1 _inst_2) G H _inst_1 _inst_2 (MulHom.mulHomClass.{u2, u1} G H _inst_1 _inst_2)) f) (Set.injOn_of_injective.{u1, u2} G H (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (MulHom.{u2, u1} G H _inst_1 _inst_2) G (fun (_x : G) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : G) => H) _x) (MulHomClass.toFunLike.{max u2 u1, u2, u1} (MulHom.{u2, u1} G H _inst_1 _inst_2) G H _inst_1 _inst_2 (MulHom.mulHomClass.{u2, u1} G H _inst_1 _inst_2)) f) hf (Set.preimage.{u2, u1} G H (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (MulHom.{u2, u1} G H _inst_1 _inst_2) G (fun (_x : G) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : G) => H) _x) (MulHomClass.toFunLike.{max u2 u1, u2, u1} (MulHom.{u2, u1} G H _inst_1 _inst_2) G H _inst_1 _inst_2 (MulHom.mulHomClass.{u2, u1} G H _inst_1 _inst_2)) f) (Finset.toSet.{u1} H A)))) (Finset.preimage.{u2, u1} G H B (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (MulHom.{u2, u1} G H _inst_1 _inst_2) G (fun (_x : G) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : G) => H) _x) (MulHomClass.toFunLike.{max u2 u1, u2, u1} (MulHom.{u2, u1} G H _inst_1 _inst_2) G H _inst_1 _inst_2 (MulHom.mulHomClass.{u2, u1} G H _inst_1 _inst_2)) f) (Set.injOn_of_injective.{u1, u2} G H (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (MulHom.{u2, u1} G H _inst_1 _inst_2) G (fun (_x : G) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : G) => H) _x) (MulHomClass.toFunLike.{max u2 u1, u2, u1} (MulHom.{u2, u1} G H _inst_1 _inst_2) G H _inst_1 _inst_2 (MulHom.mulHomClass.{u2, u1} G H _inst_1 _inst_2)) f) hf (Set.preimage.{u2, u1} G H (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (MulHom.{u2, u1} G H _inst_1 _inst_2) G (fun (_x : G) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : G) => H) _x) (MulHomClass.toFunLike.{max u2 u1, u2, u1} (MulHom.{u2, u1} G H _inst_1 _inst_2) G H _inst_1 _inst_2 (MulHom.mulHomClass.{u2, u1} G H _inst_1 _inst_2)) f) (Finset.toSet.{u1} H B)))) a0 b0)
+Case conversion may be inaccurate. Consider using '#align unique_mul.mul_hom_preimage UniqueMul.mulHom_preimageₓ'. -/
 /-- `unique_mul` is preserved by inverse images under injective, multiplicative maps. -/
 @[to_additive "`unique_add` is preserved by inverse images under injective, additive maps."]
 theorem mulHom_preimage (f : G →ₙ* H) (hf : Function.Injective f) (a0 b0 : G) {A B : Finset H}
@@ -119,8 +137,9 @@ theorem mulHom_preimage (f : G →ₙ* H) (hf : Function.Injective f) (a0 b0 : G
   rw [← hf.eq_iff, map_mul, map_mul] at ab
   exact u (finset.mem_preimage.mp ha) (finset.mem_preimage.mp hb) ab
 #align unique_mul.mul_hom_preimage UniqueMul.mulHom_preimage
-#align unique_add.add_hom_preimage UniqueAdd.add_hom_preimage
+#align unique_add.add_hom_preimage UniqueAdd.addHom_preimage
 
+#print UniqueMul.mulHom_image_iff /-
 /-- `unique_mul` is preserved under multiplicative maps that are injective.
 
 See `unique_mul.mul_hom_map_iff` for a version with swapped bundling. -/
@@ -141,23 +160,31 @@ theorem mulHom_image_iff [DecidableEq H] (f : G →ₙ* H) (hf : Function.Inject
     rw [← map_mul, ← map_mul, hf.eq_iff] at ab
     exact h ha hb ab
 #align unique_mul.mul_hom_image_iff UniqueMul.mulHom_image_iff
-#align unique_add.add_hom_image_iff UniqueAdd.add_hom_image_iff
+#align unique_add.add_hom_image_iff UniqueAdd.addHom_image_iff
+-/
 
+/- warning: unique_mul.mul_hom_map_iff -> UniqueMul.mulHom_map_iff is a dubious translation:
+lean 3 declaration is
+  forall {G : Type.{u1}} {H : Type.{u2}} [_inst_1 : Mul.{u1} G] [_inst_2 : Mul.{u2} H] {A : Finset.{u1} G} {B : Finset.{u1} G} {a0 : G} {b0 : G} (f : Function.Embedding.{succ u1, succ u2} G H), (forall (x : G) (y : G), Eq.{succ u2} H (coeFn.{max 1 (succ u1) (succ u2), max (succ u1) (succ u2)} (Function.Embedding.{succ u1, succ u2} G H) (fun (_x : Function.Embedding.{succ u1, succ u2} G H) => G -> H) (Function.Embedding.hasCoeToFun.{succ u1, succ u2} G H) f (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G _inst_1) x y)) (HMul.hMul.{u2, u2, u2} H H H (instHMul.{u2} H _inst_2) (coeFn.{max 1 (succ u1) (succ u2), max (succ u1) (succ u2)} (Function.Embedding.{succ u1, succ u2} G H) (fun (_x : Function.Embedding.{succ u1, succ u2} G H) => G -> H) (Function.Embedding.hasCoeToFun.{succ u1, succ u2} G H) f x) (coeFn.{max 1 (succ u1) (succ u2), max (succ u1) (succ u2)} (Function.Embedding.{succ u1, succ u2} G H) (fun (_x : Function.Embedding.{succ u1, succ u2} G H) => G -> H) (Function.Embedding.hasCoeToFun.{succ u1, succ u2} G H) f y))) -> (Iff (UniqueMul.{u2} H _inst_2 (Finset.map.{u1, u2} G H f A) (Finset.map.{u1, u2} G H f B) (coeFn.{max 1 (succ u1) (succ u2), max (succ u1) (succ u2)} (Function.Embedding.{succ u1, succ u2} G H) (fun (_x : Function.Embedding.{succ u1, succ u2} G H) => G -> H) (Function.Embedding.hasCoeToFun.{succ u1, succ u2} G H) f a0) (coeFn.{max 1 (succ u1) (succ u2), max (succ u1) (succ u2)} (Function.Embedding.{succ u1, succ u2} G H) (fun (_x : Function.Embedding.{succ u1, succ u2} G H) => G -> H) (Function.Embedding.hasCoeToFun.{succ u1, succ u2} G H) f b0)) (UniqueMul.{u1} G _inst_1 A B a0 b0))
+but is expected to have type
+  forall {G : Type.{u2}} {H : Type.{u1}} [_inst_1 : Mul.{u2} G] [_inst_2 : Mul.{u1} H] {A : Finset.{u2} G} {B : Finset.{u2} G} {a0 : G} {b0 : G} (f : Function.Embedding.{succ u2, succ u1} G H), (forall (x : G) (y : G), Eq.{succ u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : G) => H) (HMul.hMul.{u2, u2, u2} G G G (instHMul.{u2} G _inst_1) x y)) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} G H) G (fun (_x : G) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : G) => H) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} G H) G H (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} G H)) f (HMul.hMul.{u2, u2, u2} G G G (instHMul.{u2} G _inst_1) x y)) (HMul.hMul.{u1, u1, u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : G) => H) x) ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : G) => H) y) ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : G) => H) x) (instHMul.{u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : G) => H) x) _inst_2) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} G H) G (fun (_x : G) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : G) => H) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} G H) G H (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} G H)) f x) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} G H) G (fun (_x : G) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : G) => H) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} G H) G H (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} G H)) f y))) -> (Iff (UniqueMul.{u1} H _inst_2 (Finset.map.{u2, u1} G H f A) (Finset.map.{u2, u1} G H f B) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} G H) G (fun (_x : G) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : G) => H) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} G H) G H (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} G H)) f a0) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} G H) G (fun (_x : G) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : G) => H) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} G H) G H (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} G H)) f b0)) (UniqueMul.{u2} G _inst_1 A B a0 b0))
+Case conversion may be inaccurate. Consider using '#align unique_mul.mul_hom_map_iff UniqueMul.mulHom_map_iffₓ'. -/
 /-- `unique_mul` is preserved under embeddings that are multiplicative.
 
 See `unique_mul.mul_hom_image_iff` for a version with swapped bundling. -/
 @[to_additive
       "`unique_add` is preserved under embeddings that are additive.\n\nSee `unique_add.add_hom_image_iff` for a version with swapped bundling."]
-theorem mul_hom_map_iff (f : G ↪ H) (mul : ∀ x y, f (x * y) = f x * f y) :
+theorem mulHom_map_iff (f : G ↪ H) (mul : ∀ x y, f (x * y) = f x * f y) :
     UniqueMul (A.map f) (B.map f) (f a0) (f b0) ↔ UniqueMul A B a0 b0 := by
   classical convert mul_hom_image_iff ⟨f, mul⟩ f.2 <;>
       · ext
         simp only [Finset.mem_map, MulHom.coe_mk, Finset.mem_image]
-#align unique_mul.mul_hom_map_iff UniqueMul.mul_hom_map_iff
-#align unique_add.add_hom_map_iff UniqueAdd.add_hom_map_iff
+#align unique_mul.mul_hom_map_iff UniqueMul.mulHom_map_iff
+#align unique_add.add_hom_map_iff UniqueAdd.addHom_map_iff
 
 end UniqueMul
 
+#print UniqueSums /-
 /-- Let `G` be a Type with addition.  `unique_sums G` asserts that any two non-empty
 finite subsets of `A` have the `unique_add` property, with respect to some element of their
 sum `A + B`. -/
@@ -165,7 +192,9 @@ class UniqueSums (G) [Add G] : Prop where
   unique_add_of_nonempty :
     ∀ {A B : Finset G} (hA : A.Nonempty) (hB : B.Nonempty), ∃ a0 ∈ A, ∃ b0 ∈ B, UniqueAdd A B a0 b0
 #align unique_sums UniqueSums
+-/
 
+#print UniqueProds /-
 /-- Let `G` be a Type with multiplication.  `unique_prods G` asserts that any two non-empty
 finite subsets of `G` have the `unique_mul` property, with respect to some element of their
 product `A * B`. -/
@@ -173,6 +202,7 @@ class UniqueProds (G) [Mul G] : Prop where
   unique_mul_of_nonempty :
     ∀ {A B : Finset G} (hA : A.Nonempty) (hB : B.Nonempty), ∃ a0 ∈ A, ∃ b0 ∈ B, UniqueMul A B a0 b0
 #align unique_prods UniqueProds
+-/
 
 attribute [to_additive] UniqueProds
 
@@ -200,6 +230,7 @@ instance {M} [Mul M] [UniqueProds M] : UniqueSums (Additive M)
 
 end Additive
 
+#print eq_and_eq_of_le_of_le_of_mul_le /-
 @[to_additive]
 theorem eq_and_eq_of_le_of_le_of_mul_le {A} [Mul A] [LinearOrder A]
     [CovariantClass A A (· * ·) (· ≤ ·)] [CovariantClass A A (Function.swap (· * ·)) (· < ·)]
@@ -213,7 +244,9 @@ theorem eq_and_eq_of_le_of_le_of_mul_le {A} [Mul A] [LinearOrder A]
   exact ⟨ha.antisymm' (ha' ab), hb.antisymm' (hb' ab)⟩
 #align eq_and_eq_of_le_of_le_of_mul_le eq_and_eq_of_le_of_le_of_mul_le
 #align eq_and_eq_of_le_of_le_of_add_le eq_and_eq_of_le_of_le_of_add_le
+-/
 
+#print Covariants.to_uniqueProds /-
 -- see Note [lower instance priority]
 /-- This instance asserts that if `A` has a multiplication, a linear order, and multiplication
 is 'very monotone', then `A` also has `unique_prods`. -/
@@ -226,5 +259,6 @@ instance (priority := 100) Covariants.to_uniqueProds {A} [Mul A] [LinearOrder A]
     ⟨_, A.min'_mem ‹_›, _, B.min'_mem ‹_›, fun a b ha hb ab =>
       eq_and_eq_of_le_of_le_of_mul_le (Finset.min'_le _ _ ‹_›) (Finset.min'_le _ _ ‹_›) ab.le⟩
 #align covariants.to_unique_prods Covariants.to_uniqueProds
-#align covariants.to_unique_sums Covariants.to_unique_sums
+#align covariants.to_unique_sums Covariants.to_uniqueSums
+-/
 

@@ -101,7 +101,7 @@ instance {n : ℕ} : IsEmpty (Sequence₂ a₀ a₁ a₂ (n + 3)) :=
 theorem lift_mk {i : ℕ} :
     Cardinal.lift (#Sequence₂ a₀ a₁ a₂ i) = (#Sequence₂ (ULift a₀) (ULift a₁) (ULift a₂) i) := by
   rcases i with (_ | _ | _ | i) <;>
-    simp only [sequence₂, mk_ulift, mk_fintype, Fintype.card_of_is_empty, Nat.cast_zero, lift_zero]
+    simp only [sequence₂, mk_ulift, mk_fintype, Fintype.card_of_isEmpty, Nat.cast_zero, lift_zero]
 #align first_order.sequence₂.lift_mk FirstOrder.Sequence₂.lift_mk
 
 @[simp]

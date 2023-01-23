@@ -123,7 +123,7 @@ theorem monomial_smul_single (i : ℕ) (r : R) (j : ℕ) (m : M) :
     monomial i r • single R j m = single R (i + j) (r • m) :=
   by
   simp only [LinearMap.mul_apply, Polynomial.aeval_monomial, LinearMap.pow_apply,
-    Module.algebraMap_endCat_apply, modulePolynomialOfEndo_smul_def]
+    Module.algebraMap_end_apply, modulePolynomialOfEndo_smul_def]
   induction i generalizing r j m
   · simp [single]
   · rw [Function.iterate_succ, Function.comp_apply, Nat.succ_eq_add_one, add_assoc, ← i_ih]

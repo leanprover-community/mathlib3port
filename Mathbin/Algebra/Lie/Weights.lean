@@ -92,7 +92,7 @@ theorem exists_preWeightSpace_zero_le_ker_of_isNoetherian [IsNoetherian R M] (x 
     ∃ k : ℕ, preWeightSpace M (0 : L → R) ≤ (toEndomorphism R L M x ^ k).ker :=
   by
   use (to_endomorphism R L M x).maximalGeneralizedEigenspaceIndex 0
-  simp only [← Module.EndCat.generalizedEigenspace_zero, pre_weight_space, Pi.zero_apply, infᵢ_le, ←
+  simp only [← Module.End.generalizedEigenspace_zero, pre_weight_space, Pi.zero_apply, infᵢ_le, ←
     (to_endomorphism R L M x).maximal_generalized_eigenspace_eq]
 #align lie_module.exists_pre_weight_space_zero_le_ker_of_is_noetherian LieModule.exists_preWeightSpace_zero_le_ker_of_isNoetherian
 
@@ -112,7 +112,7 @@ protected theorem weight_vector_multiplication (M₁ : Type w₁) (M₂ : Type w
     LinearMap.coe_comp, TensorProduct.mapIncl, exists_imp, LinearMap.mem_range]
   rintro t rfl x
   -- Set up some notation.
-  let F : Module.EndCat R M₃ := to_endomorphism R L M₃ x - (χ₁ x + χ₂ x) • 1
+  let F : Module.End R M₃ := to_endomorphism R L M₃ x - (χ₁ x + χ₂ x) • 1
   change ∃ k, (F ^ k) (g _) = 0
   -- The goal is linear in `t` so use induction to reduce to the case that `t` is a pure tensor.
   apply t.induction_on
@@ -128,8 +128,8 @@ protected theorem weight_vector_multiplication (M₁ : Type w₁) (M₂ : Type w
   rintro ⟨m₁, hm₁⟩ ⟨m₂, hm₂⟩
   change ∃ k, (F ^ k) ((g : M₁ ⊗[R] M₂ →ₗ[R] M₃) (m₁ ⊗ₜ m₂)) = 0
   -- Eliminate `g` from the picture.
-  let f₁ : Module.EndCat R (M₁ ⊗[R] M₂) := (to_endomorphism R L M₁ x - χ₁ x • 1).rtensor M₂
-  let f₂ : Module.EndCat R (M₁ ⊗[R] M₂) := (to_endomorphism R L M₂ x - χ₂ x • 1).ltensor M₁
+  let f₁ : Module.End R (M₁ ⊗[R] M₂) := (to_endomorphism R L M₁ x - χ₁ x • 1).rtensor M₂
+  let f₂ : Module.End R (M₁ ⊗[R] M₂) := (to_endomorphism R L M₂ x - χ₂ x • 1).ltensor M₁
   have h_comm_square : F ∘ₗ ↑g = (g : M₁ ⊗[R] M₂ →ₗ[R] M₃).comp (f₁ + f₂) :=
     by
     ext (m₁ m₂)
@@ -315,8 +315,8 @@ theorem rootSpace_comap_eq_weightSpace (χ : H → R) :
     (rootSpace H χ).comap H.incl' = weightSpace H χ :=
   by
   ext x
-  let f : H → Module.EndCat R L := fun y => to_endomorphism R H L y - χ y • 1
-  let g : H → Module.EndCat R H := fun y => to_endomorphism R H H y - χ y • 1
+  let f : H → Module.End R L := fun y => to_endomorphism R H L y - χ y • 1
+  let g : H → Module.End R H := fun y => to_endomorphism R H H y - χ y • 1
   suffices
     (∀ y : H, ∃ k : ℕ, (f y ^ k).comp (H.incl : H →ₗ[R] L) x = 0) ↔
       ∀ y : H, ∃ k : ℕ, (H.incl : H →ₗ[R] L).comp (g y ^ k) x = 0
@@ -453,8 +453,8 @@ theorem toLieSubmodule_le_rootSpace_zero : H.toLieSubmodule ≤ rootSpace H 0 :=
   intro y
   obtain ⟨k, hk⟩ := (inferInstance : IsNilpotent R H)
   use k
-  let f : Module.EndCat R H := to_endomorphism R H H y
-  let g : Module.EndCat R L := to_endomorphism R H L y
+  let f : Module.End R H := to_endomorphism R H H y
+  let g : Module.End R L := to_endomorphism R H L y
   have hfg : g.comp (H : Submodule R L).Subtype = (H : Submodule R L).Subtype.comp f :=
     by
     ext z

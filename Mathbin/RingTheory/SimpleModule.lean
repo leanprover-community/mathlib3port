@@ -170,12 +170,12 @@ theorem isCoatom_ker_of_surjective [IsSimpleModule R N] {f : M →ₗ[R] N}
 #align linear_map.is_coatom_ker_of_surjective LinearMap.isCoatom_ker_of_surjective
 
 /-- Schur's Lemma makes the endomorphism ring of a simple module a division ring. -/
-noncomputable instance Module.EndCat.divisionRing [DecidableEq (Module.EndCat R M)]
-    [IsSimpleModule R M] : DivisionRing (Module.EndCat R M) :=
+noncomputable instance Module.End.divisionRing [DecidableEq (Module.End R M)] [IsSimpleModule R M] :
+    DivisionRing (Module.End R M) :=
   {
-    (Module.EndCat.ring :
+    (Module.End.ring :
       Ring
-        (Module.EndCat R
+        (Module.End R
           M)) with
     inv := fun f =>
       if h : f = 0 then 0
@@ -198,7 +198,7 @@ noncomputable instance Module.EndCat.divisionRing [DecidableEq (Module.EndCat R 
       rw [dif_neg a0, mul_eq_comp, one_apply, comp_apply]
       exact (Equiv.ofBijective _ (bijective_of_ne_zero a0)).right_inv x
     inv_zero := dif_pos rfl }
-#align module.End.division_ring Module.EndCat.divisionRing
+#align module.End.division_ring Module.End.divisionRing
 
 end LinearMap
 

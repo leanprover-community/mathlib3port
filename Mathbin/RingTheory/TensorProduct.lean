@@ -1085,7 +1085,7 @@ variable [Module R M] [Module R N]
 
 /-- The algebra homomorphism from `End M ⊗ End N` to `End (M ⊗ N)` sending `f ⊗ₜ g` to
 the `tensor_product.map f g`, the tensor product of the two maps. -/
-def endTensorEndAlgHom : EndCat R M ⊗[R] EndCat R N →ₐ[R] EndCat R (M ⊗[R] N) :=
+def endTensorEndAlgHom : End R M ⊗[R] End R N →ₐ[R] End R (M ⊗[R] N) :=
   by
   refine' Algebra.TensorProduct.algHomOfLinearMapTensorProduct (hom_tensor_hom_map R M N M N) _ _
   · intro f₁ f₂ g₁ g₂
@@ -1096,7 +1096,7 @@ def endTensorEndAlgHom : EndCat R M ⊗[R] EndCat R N →ₐ[R] EndCat R (M ⊗[
     simp [smul_tmul]
 #align module.End_tensor_End_alg_hom Module.endTensorEndAlgHom
 
-theorem endTensorEndAlgHom_apply (f : EndCat R M) (g : EndCat R N) :
+theorem endTensorEndAlgHom_apply (f : End R M) (g : End R N) :
     endTensorEndAlgHom (f ⊗ₜ[R] g) = TensorProduct.map f g := by
   simp only [End_tensor_End_alg_hom, Algebra.TensorProduct.algHomOfLinearMapTensorProduct_apply,
     hom_tensor_hom_map_apply]
@@ -1128,7 +1128,7 @@ variable [IsScalarTower R A M] [IsScalarTower R B M]
 `tensor_product.algebra.module` below. -/
 def moduleAux : A ⊗[R] B →ₗ[R] M →ₗ[R] M :=
   TensorProduct.lift
-    { toFun := fun a => a • (Algebra.lsmul R M : B →ₐ[R] Module.EndCat R M).toLinearMap
+    { toFun := fun a => a • (Algebra.lsmul R M : B →ₐ[R] Module.End R M).toLinearMap
       map_add' := fun r t => by
         ext
         simp only [add_smul, LinearMap.add_apply]

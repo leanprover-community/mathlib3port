@@ -50,7 +50,7 @@ attribute [local ext] TensorProduct.ext
 /-- It is useful to define the bracket via this auxiliary function so that we have a type-theoretic
 expression of the fact that `L` acts by linear endomorphisms. It simplifies the proofs in
 `lie_ring_module` below. -/
-def hasBracketAux (x : L) : Module.EndCat R (M ⊗[R] N) :=
+def hasBracketAux (x : L) : Module.End R (M ⊗[R] N) :=
   (toEndomorphism R L M x).rtensor N + (toEndomorphism R L N x).ltensor M
 #align tensor_product.lie_module.has_bracket_aux TensorProduct.LieModule.hasBracketAux
 

@@ -66,7 +66,7 @@ theorem bot_strongly_regular : (⊥ : SimpleGraph V).IsSRGWith (Fintype.card V) 
     of_adj := fun v w h => h.elim
     of_not_adj := fun v w h =>
       by
-      simp only [card_eq_zero, filter_congr_decidable, Fintype.card_of_finset, forall_true_left,
+      simp only [card_eq_zero, filter_congr_decidable, Fintype.card_ofFinset, forall_true_left,
         not_false_iff, bot_adj]
       ext
       simp [mem_common_neighbors] }

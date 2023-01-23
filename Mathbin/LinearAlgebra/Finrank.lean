@@ -378,7 +378,7 @@ theorem linearIndependent_of_top_le_span_of_card_eq_finrank {ι : Type _} [Finty
     ·
       calc
         (b '' (Set.univ \ {i})).toFinset.card = ((Set.univ \ {i}).toFinset.image b).card := by
-          rw [Set.toFinset_card, Fintype.card_of_finset]
+          rw [Set.toFinset_card, Fintype.card_ofFinset]
         _ ≤ (Set.univ \ {i}).toFinset.card := Finset.card_image_le
         _ = (finset.univ.erase i).card := congr_arg Finset.card (Finset.ext (by simp [and_comm']))
         _ < finset.univ.card := Finset.card_erase_lt_of_mem (Finset.mem_univ i)

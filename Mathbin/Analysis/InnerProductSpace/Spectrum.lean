@@ -58,7 +58,7 @@ local notation "⟪" x ", " y "⟫" => @inner 𝕜 E _ x y
 
 open BigOperators ComplexConjugate
 
-open Module.EndCat
+open Module.End
 
 namespace LinearMap
 
@@ -235,7 +235,7 @@ theorem hasEigenvector_eigenvectorBasis (i : Fin n) :
 #align linear_map.is_symmetric.has_eigenvector_eigenvector_basis LinearMap.IsSymmetric.hasEigenvector_eigenvectorBasis
 
 theorem hasEigenvalue_eigenvalues (i : Fin n) : HasEigenvalue T (hT.Eigenvalues hn i) :=
-  Module.EndCat.hasEigenvalue_of_hasEigenvector (hT.has_eigenvector_eigenvector_basis hn i)
+  Module.End.hasEigenvalue_of_hasEigenvector (hT.has_eigenvector_eigenvector_basis hn i)
 #align linear_map.is_symmetric.has_eigenvalue_eigenvalues LinearMap.IsSymmetric.hasEigenvalue_eigenvalues
 
 @[simp]
@@ -277,7 +277,7 @@ section Nonneg
 
 @[simp]
 theorem inner_product_apply_eigenvector {μ : 𝕜} {v : E} {T : E →ₗ[𝕜] E}
-    (h : v ∈ Module.EndCat.eigenspace T μ) : ⟪v, T v⟫ = μ * ‖v‖ ^ 2 := by
+    (h : v ∈ Module.End.eigenspace T μ) : ⟪v, T v⟫ = μ * ‖v‖ ^ 2 := by
   simp only [mem_eigenspace_iff.mp h, inner_smul_right, inner_self_eq_norm_sq_to_K]
 #align inner_product_apply_eigenvector inner_product_apply_eigenvector
 

@@ -64,13 +64,13 @@ def toLinearEquiv' (P : Matrix n n R) (h : Invertible P) : (n → R) ≃ₗ[R] n
 
 @[simp]
 theorem toLinearEquiv'_apply (P : Matrix n n R) (h : Invertible P) :
-    (↑(P.toLinearEquiv' h) : Module.EndCat R (n → R)) = P.toLin' :=
+    (↑(P.toLinearEquiv' h) : Module.End R (n → R)) = P.toLin' :=
   rfl
 #align matrix.to_linear_equiv'_apply Matrix.toLinearEquiv'_apply
 
 @[simp]
 theorem toLinearEquiv'_symm_apply (P : Matrix n n R) (h : Invertible P) :
-    (↑(P.toLinearEquiv' h).symm : Module.EndCat R (n → R)) = P⁻¹.toLin' :=
+    (↑(P.toLinearEquiv' h).symm : Module.End R (n → R)) = P⁻¹.toLin' :=
   show (⅟ P).toLin' = _ from congr_arg _ P.inv_of_eq_nonsing_inv
 #align matrix.to_linear_equiv'_symm_apply Matrix.toLinearEquiv'_symm_apply
 

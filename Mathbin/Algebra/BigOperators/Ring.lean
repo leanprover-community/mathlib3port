@@ -315,11 +315,11 @@ theorem dvd_sum {b : β} {s : Finset α} {f : α → β} (h : ∀ x ∈ s, b ∣
 #align finset.dvd_sum Finset.dvd_sum
 -/
 
-#print Finset.prod_nat_cast /-
+#print Finset.prod_natCast /-
 @[norm_cast]
-theorem prod_nat_cast (s : Finset α) (f : α → ℕ) : ↑(∏ x in s, f x : ℕ) = ∏ x in s, (f x : β) :=
+theorem prod_natCast (s : Finset α) (f : α → ℕ) : ↑(∏ x in s, f x : ℕ) = ∏ x in s, (f x : β) :=
   (Nat.castRingHom β).map_prod f s
-#align finset.prod_nat_cast Finset.prod_nat_cast
+#align finset.prod_nat_cast Finset.prod_natCast
 -/
 
 end CommSemiring
