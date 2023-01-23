@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module set_theory.zfc.basic
-! leanprover-community/mathlib commit d6fad0e5bf2d6f48da9175d25c3dc5706b3834ce
+! leanprover-community/mathlib commit 1f0096e6caa61e9c849ec2adbd227e960e9dff58
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1421,7 +1421,10 @@ theorem mem_irrefl (x : ClassCat) : x ∉ x :=
   irrefl x
 #align Class.mem_irrefl ClassCat.mem_irrefl
 
-/-- There is no universal set. -/
+/-- **There is no universal set.**
+
+This is stated as `univ ∉ univ`, meaning that `univ` (the class of all sets) is proper (does not
+belong to the class of all sets). -/
 theorem univ_not_mem_univ : univ ∉ univ :=
   mem_irrefl _
 #align Class.univ_not_mem_univ ClassCat.univ_not_mem_univ

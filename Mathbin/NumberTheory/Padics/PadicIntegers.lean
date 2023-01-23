@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis, Mario Carneiro, Johan Commelin
 
 ! This file was ported from Lean 3 source module number_theory.padics.padic_integers
-! leanprover-community/mathlib commit d6fad0e5bf2d6f48da9175d25c3dc5706b3834ce
+! leanprover-community/mathlib commit 1f0096e6caa61e9c849ec2adbd227e960e9dff58
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -760,7 +760,7 @@ instance isFractionRing : IsFractionRing ℤ_[p] ℚ_[p]
     rw [algebra_map_apply, algebra_map_apply, Subtype.coe_inj]
     refine' ⟨fun h => ⟨1, by rw [h]⟩, _⟩
     rintro ⟨⟨c, hc⟩, h⟩
-    exact (mul_eq_mul_right_iff.mp h).resolve_right (mem_non_zero_divisors_iff_ne_zero.mp hc)
+    exact (mul_eq_mul_left_iff.mp h).resolve_right (mem_non_zero_divisors_iff_ne_zero.mp hc)
 #align padic_int.is_fraction_ring PadicInt.isFractionRing
 
 end FractionRing

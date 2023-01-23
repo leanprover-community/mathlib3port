@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz, Junyan Xu, Jack McKoen
 
 ! This file was ported from Lean 3 source module ring_theory.valuation.valuation_subring
-! leanprover-community/mathlib commit d6fad0e5bf2d6f48da9175d25c3dc5706b3834ce
+! leanprover-community/mathlib commit 1f0096e6caa61e9c849ec2adbd227e960e9dff58
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -176,7 +176,7 @@ instance : IsFractionRing A K
         ext
         simpa using h⟩,
       fun ⟨c, h⟩ =>
-      congr_arg coe ((mul_eq_mul_right_iff.1 h).resolve_right (nonZeroDivisors.ne_zero c.2))⟩
+      congr_arg coe ((mul_eq_mul_left_iff.1 h).resolve_right (nonZeroDivisors.ne_zero c.2))⟩
 
 /-- The value group of the valuation associated to `A`. Note: it is actually a group with zero. -/
 def ValueGroup :=

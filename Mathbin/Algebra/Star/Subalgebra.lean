@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Jireh Loreaux
 
 ! This file was ported from Lean 3 source module algebra.star.subalgebra
-! leanprover-community/mathlib commit d6fad0e5bf2d6f48da9175d25c3dc5706b3834ce
+! leanprover-community/mathlib commit 1f0096e6caa61e9c849ec2adbd227e960e9dff58
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -291,10 +291,14 @@ section Centralizer
 
 variable (R) {A}
 
+theorem Set.star_mem_centralizer {a : A} {s : Set A} (h : ∀ a : A, a ∈ s → star a ∈ s)
+    (ha : a ∈ Set.centralizer s) : star a ∈ Set.centralizer s := fun y hy => by
+  simpa using congr_arg star (ha _ (h _ hy)).symm
+#align set.star_mem_centralizer Set.star_mem_centralizer
+
 /-- The centralizer, or commutant, of a *-closed set as star subalgebra. -/
 def centralizer (s : Set A) (w : ∀ a : A, a ∈ s → star a ∈ s) : StarSubalgebra R A :=
-  { Subalgebra.centralizer R s with
-    star_mem' := fun x xm y hy => by simpa using congr_arg star (xm _ (w _ hy)).symm }
+  { Subalgebra.centralizer R s with star_mem' := fun x => Set.star_mem_centralizer w }
 #align star_subalgebra.centralizer StarSubalgebra.centralizer
 
 @[simp]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Sébastien Gouëzel, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.measure.lebesgue
-! leanprover-community/mathlib commit d6fad0e5bf2d6f48da9175d25c3dc5706b3834ce
+! leanprover-community/mathlib commit 1f0096e6caa61e9c849ec2adbd227e960e9dff58
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -648,12 +648,7 @@ theorem ae_restrict_of_ae_restrict_inter_ioo {μ : Measure ℝ} [HasNoAtoms μ] 
     two endpoints, which don't matter since `μ` does not have any atom). -/
   let T : s × s → Set ℝ := fun p => Ioo p.1 p.2
   let u := ⋃ i : ↥s × ↥s, T i
-  have hfinite : (s \ u).Finite :=
-    by
-    refine' Set.finite_of_forall_between_eq_endpoints (s \ u) fun x hx y hy z hz hxy hyz => _
-    by_contra' h
-    apply hy.2
-    exact mem_Union_of_mem (⟨x, hx.1⟩, ⟨z, hz.1⟩) ⟨lt_of_le_of_ne hxy h.1, lt_of_le_of_ne hyz h.2⟩
+  have hfinite : (s \ u).Finite := s.finite_diff_Union_Ioo'
   obtain ⟨A, A_count, hA⟩ :
     ∃ A : Set (↥s × ↥s), A.Countable ∧ (⋃ i ∈ A, T i) = ⋃ i : ↥s × ↥s, T i :=
     is_open_Union_countable _ fun p => isOpen_ioo
@@ -688,12 +683,7 @@ theorem ae_of_mem_of_ae_of_mem_inter_ioo {μ : Measure ℝ} [HasNoAtoms μ] {s :
     two endpoints, which don't matter since `μ` does not have any atom). -/
   let T : s × s → Set ℝ := fun p => Ioo p.1 p.2
   let u := ⋃ i : ↥s × ↥s, T i
-  have hfinite : (s \ u).Finite :=
-    by
-    refine' Set.finite_of_forall_between_eq_endpoints (s \ u) fun x hx y hy z hz hxy hyz => _
-    by_contra' h
-    apply hy.2
-    exact mem_Union_of_mem (⟨x, hx.1⟩, ⟨z, hz.1⟩) ⟨lt_of_le_of_ne hxy h.1, lt_of_le_of_ne hyz h.2⟩
+  have hfinite : (s \ u).Finite := s.finite_diff_Union_Ioo'
   obtain ⟨A, A_count, hA⟩ :
     ∃ A : Set (↥s × ↥s), A.Countable ∧ (⋃ i ∈ A, T i) = ⋃ i : ↥s × ↥s, T i :=
     is_open_Union_countable _ fun p => isOpen_ioo

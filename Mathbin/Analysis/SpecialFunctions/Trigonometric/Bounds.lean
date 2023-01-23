@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Loeffler
 
 ! This file was ported from Lean 3 source module analysis.special_functions.trigonometric.bounds
-! leanprover-community/mathlib commit d6fad0e5bf2d6f48da9175d25c3dc5706b3834ce
+! leanprover-community/mathlib commit 1f0096e6caa61e9c849ec2adbd227e960e9dff58
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -25,6 +25,9 @@ Here we prove the following:
 * `sin_lt`: for `x > 0` we have `sin x < x`.
 * `sin_gt_sub_cube`: For `0 < x ≤ 1` we have `x - x ^ 3 / 4 < sin x`.
 * `lt_tan`: for `0 < x < π/2` we have `x < tan x`.
+* `cos_le_one_div_sqrt_sq_add_one` and `cos_lt_one_div_sqrt_sq_add_one`: for
+  `-3 * π / 2 ≤ x ≤ 3 * π / 2`, we have `cos x ≤ 1 / sqrt (x ^ 2 + 1)`, with strict inequality if
+  `x ≠ 0`. (This bound is not quite optimal, but not far off)
 
 ## Tags
 
@@ -79,11 +82,11 @@ theorem deriv_tan_sub_id (x : ℝ) (h : cos x ≠ 0) :
   HasDerivAt.deriv <| by simpa using (has_deriv_at_tan h).add (hasDerivAt_id x).neg
 #align real.deriv_tan_sub_id Real.deriv_tan_sub_id
 
-/-- For all `0 ≤ x < π/2` we have `x < tan x`.
+/-- For all `0 < x < π/2` we have `x < tan x`.
 
 This is proved by checking that the function `tan x - x` vanishes
 at zero and has non-negative derivative. -/
-theorem lt_tan (x : ℝ) (h1 : 0 < x) (h2 : x < π / 2) : x < tan x :=
+theorem lt_tan {x : ℝ} (h1 : 0 < x) (h2 : x < π / 2) : x < tan x :=
   by
   let U := Ico 0 (π / 2)
   have intU : interior U = Ioo 0 (π / 2) := interior_ico
@@ -121,6 +124,47 @@ theorem lt_tan (x : ℝ) (h1 : 0 < x) (h2 : x < π / 2) : x < tan x :=
   have x_in_U : x ∈ U := ⟨h1.le, h2⟩
   simpa only [tan_zero, sub_zero, sub_pos] using mono zero_in_U x_in_U h1
 #align real.lt_tan Real.lt_tan
+
+theorem le_tan {x : ℝ} (h1 : 0 ≤ x) (h2 : x < π / 2) : x ≤ tan x :=
+  by
+  rcases eq_or_lt_of_le h1 with (rfl | h1')
+  · rw [tan_zero]
+  · exact le_of_lt (lt_tan h1' h2)
+#align real.le_tan Real.le_tan
+
+theorem cos_lt_one_div_sqrt_sq_add_one {x : ℝ} (hx1 : -(3 * π / 2) ≤ x) (hx2 : x ≤ 3 * π / 2)
+    (hx3 : x ≠ 0) : cos x < 1 / sqrt (x ^ 2 + 1) :=
+  by
+  suffices ∀ {y : ℝ} (hy1 : 0 < y) (hy2 : y ≤ 3 * π / 2), cos y < 1 / sqrt (y ^ 2 + 1)
+    by
+    rcases lt_or_lt_iff_ne.mpr hx3.symm with ⟨⟩
+    · exact this h hx2
+    · convert this (by linarith : 0 < -x) (by linarith) using 1
+      · rw [cos_neg]
+      · rw [neg_sq]
+  intro y hy1 hy2
+  have hy3 : 0 < y ^ 2 + 1 := by linarith [sq_nonneg y]
+  rcases lt_or_le y (π / 2) with (hy2' | hy1')
+  · -- Main case : `0 < y < π / 2`
+    have hy4 : 0 < cos y := cos_pos_of_mem_Ioo ⟨by linarith, hy2'⟩
+    rw [← abs_of_nonneg (cos_nonneg_of_mem_Icc ⟨by linarith, hy2'.le⟩), ←
+      abs_of_nonneg (one_div_nonneg.mpr (sqrt_nonneg _)), ← sq_lt_sq, div_pow, one_pow,
+      sq_sqrt hy3.le, lt_one_div (pow_pos hy4 _) hy3, ← inv_one_add_tan_sq hy4.ne', one_div,
+      inv_inv, add_comm, add_lt_add_iff_left, sq_lt_sq, abs_of_pos hy1,
+      abs_of_nonneg (tan_nonneg_of_nonneg_of_le_pi_div_two hy1.le hy2'.le)]
+    exact Real.lt_tan hy1 hy2'
+  · -- Easy case : `π / 2 ≤ y ≤ 3 * π / 2`
+    refine' lt_of_le_of_lt _ (one_div_pos.mpr <| sqrt_pos_of_pos hy3)
+    exact cos_nonpos_of_pi_div_two_le_of_le hy1' (by linarith [pi_pos])
+#align real.cos_lt_one_div_sqrt_sq_add_one Real.cos_lt_one_div_sqrt_sq_add_one
+
+theorem cos_le_one_div_sqrt_sq_add_one {x : ℝ} (hx1 : -(3 * π / 2) ≤ x) (hx2 : x ≤ 3 * π / 2) :
+    cos x ≤ 1 / sqrt (x ^ 2 + 1) :=
+  by
+  rcases eq_or_ne x 0 with (rfl | hx3)
+  · simp
+  · exact (cos_lt_one_div_sqrt_sq_add_one hx1 hx2 hx3).le
+#align real.cos_le_one_div_sqrt_sq_add_one Real.cos_le_one_div_sqrt_sq_add_one
 
 end Real
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Johan Commelin, Amelia Livingston, Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.localization.away
-! leanprover-community/mathlib commit d6fad0e5bf2d6f48da9175d25c3dc5706b3834ce
+! leanprover-community/mathlib commit 1f0096e6caa61e9c849ec2adbd227e960e9dff58
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -126,7 +126,7 @@ noncomputable def atUnits (H : ∀ x : M, IsUnit (x : R)) : R ≃ₐ[R] S :=
   · intro x y hxy
     obtain ⟨c, eq⟩ := (IsLocalization.eq_iff_exists M S).mp hxy
     obtain ⟨u, hu⟩ := H c
-    rwa [← hu, Units.mul_left_inj] at eq
+    rwa [← hu, Units.mul_right_inj] at eq
   · intro y
     obtain ⟨⟨x, s⟩, eq⟩ := IsLocalization.surj M y
     obtain ⟨u, hu⟩ := H s
@@ -167,7 +167,7 @@ theorem away_of_isUnit_of_bijective {R : Type _} (S : Type _) [CommRing R] [Comm
       · rintro rfl
         exact ⟨1, rfl⟩
       · rintro ⟨⟨_, n, rfl⟩, e⟩
-        exact (hr.pow _).mul_left_inj.mp e }
+        exact (hr.pow _).mul_right_inj.mp e }
 #align is_localization.away_of_is_unit_of_bijective IsLocalization.away_of_isUnit_of_bijective
 
 end AtUnits

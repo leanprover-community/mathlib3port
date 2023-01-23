@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.morphisms.quasi_separated
-! leanprover-community/mathlib commit d6fad0e5bf2d6f48da9175d25c3dc5706b3834ce
+! leanprover-community/mathlib commit 1f0096e6caa61e9c849ec2adbd227e960e9dff58
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -401,11 +401,9 @@ theorem exists_eq_pow_mul_of_is_compact_of_quasi_separated_space_aux (X : Scheme
         rintro x ⟨H₁, H₂⟩
         exact ⟨h₂ H₁, H₂⟩
   use n
-  conv_lhs at e => rw [mul_comm]
-  conv_rhs at e => rw [mul_comm]
   simp only [pow_add, map_pow, map_mul, ← comp_apply, ← mul_assoc, ← functor.map_comp,
     Subtype.coe_mk] at e⊢
-  convert e
+  exact e
 #align algebraic_geometry.exists_eq_pow_mul_of_is_compact_of_quasi_separated_space_aux AlgebraicGeometry.exists_eq_pow_mul_of_is_compact_of_quasi_separated_space_aux
 
 theorem exists_eq_pow_mul_of_isCompact_of_isQuasiSeparated (X : SchemeCat) (U : Opens X.carrier)
@@ -575,15 +573,15 @@ theorem is_localization_basicOpen_of_qcqs {X : SchemeCat} {U : Opens X.carrier} 
     simpa only [map_pow, Subtype.coe_mk, RingHom.algebraMap_toAlgebra, mul_comm z] using e.symm
   · intro x y
     rw [← sub_eq_zero, ← map_sub, RingHom.algebraMap_toAlgebra]
-    simp_rw [← @sub_eq_zero _ _ (x * _) (y * _), ← sub_mul]
+    simp_rw [← @sub_eq_zero _ _ (_ * x) (_ * y), ← mul_sub]
     generalize x - y = z
     constructor
     · intro H
       obtain ⟨n, e⟩ := exists_pow_mul_eq_zero_of_res_basic_open_eq_zero_of_is_compact X hU _ _ H
       refine' ⟨⟨_, n, rfl⟩, _⟩
       simpa [mul_comm z] using e
-    · rintro ⟨⟨_, n, rfl⟩, e : z * f ^ n = 0⟩
-      rw [← ((RingedSpace.is_unit_res_basic_open _ f).pow n).mul_left_inj, zero_mul, ← map_pow, ←
+    · rintro ⟨⟨_, n, rfl⟩, e : f ^ n * z = 0⟩
+      rw [← ((RingedSpace.is_unit_res_basic_open _ f).pow n).mul_right_inj, mul_zero, ← map_pow, ←
         map_mul, e, map_zero]
 #align algebraic_geometry.is_localization_basic_open_of_qcqs AlgebraicGeometry.is_localization_basicOpen_of_qcqs
 

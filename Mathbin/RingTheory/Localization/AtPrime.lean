@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Johan Commelin, Amelia Livingston, Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.localization.at_prime
-! leanprover-community/mathlib commit d6fad0e5bf2d6f48da9175d25c3dc5706b3834ce
+! leanprover-community/mathlib commit 1f0096e6caa61e9c849ec2adbd227e960e9dff58
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -104,13 +104,15 @@ theorem AtPrime.localRing [IsLocalization.AtPrime S I] : LocalRing S :=
       rw [← hry] at hy
       obtain ⟨t, ht⟩ := IsLocalization.eq.1 hxyz
       simp only [mul_one, one_mul, Submonoid.coe_mul, Subtype.coe_mk] at ht
-      suffices : ↑sx * ↑sy * ↑sz * ↑t ∈ I
+      suffices : ↑t * (↑sx * ↑sy * ↑sz) ∈ I
       exact
         not_or_of_not (mt hp.mem_or_mem <| not_or_of_not sx.2 sy.2) sz.2
-          (hp.mem_or_mem <| (hp.mem_or_mem this).resolve_right t.2)
-      rw [← ht, mul_assoc]
+          (hp.mem_or_mem <| (hp.mem_or_mem this).resolve_left t.2)
+      rw [← ht]
       exact
-        I.mul_mem_right _ (I.add_mem (I.mul_mem_right _ <| this hx) (I.mul_mem_right _ <| this hy)))
+        I.mul_mem_left _
+          (I.mul_mem_right _
+            (I.add_mem (I.mul_mem_right _ <| this hx) (I.mul_mem_right _ <| this hy))))
 #align is_localization.at_prime.local_ring IsLocalization.AtPrime.localRing
 
 end IsLocalization

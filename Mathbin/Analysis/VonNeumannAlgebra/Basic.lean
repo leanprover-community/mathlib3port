@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module analysis.von_neumann_algebra.basic
-! leanprover-community/mathlib commit d6fad0e5bf2d6f48da9175d25c3dc5706b3834ce
+! leanprover-community/mathlib commit 1f0096e6caa61e9c849ec2adbd227e960e9dff58
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -71,7 +71,7 @@ and instead will use `⊤ : von_neumann_algebra H`.
 @[nolint has_nonempty_instance]
 structure VonNeumannAlgebra (H : Type u) [InnerProductSpace ℂ H] [CompleteSpace H] extends
   StarSubalgebra ℂ (H →L[ℂ] H) where
-  double_commutant : Set.centralizer (Set.centralizer carrier) = carrier
+  centralizer_centralizer' : Set.centralizer (Set.centralizer carrier) = carrier
 #align von_neumann_algebra VonNeumannAlgebra
 
 /-- Consider a von Neumann algebra acting on a Hilbert space `H` as a *-subalgebra of `H →L[ℂ] H`.
@@ -82,10 +82,63 @@ add_decl_doc VonNeumannAlgebra.toStarSubalgebra
 
 namespace VonNeumannAlgebra
 
-variable (H : Type u) [InnerProductSpace ℂ H] [CompleteSpace H]
+variable {H : Type u} [InnerProductSpace ℂ H] [CompleteSpace H]
 
 instance : SetLike (VonNeumannAlgebra H) (H →L[ℂ] H) :=
-  ⟨VonNeumannAlgebra.carrier, fun p q h => by cases p <;> cases q <;> congr ⟩
+  ⟨VonNeumannAlgebra.carrier, fun S T h => by cases S <;> cases T <;> congr ⟩
+
+instance : StarMemClass (VonNeumannAlgebra H) (H →L[ℂ] H) where star_mem s a := s.star_mem'
+
+instance : SubringClass (VonNeumannAlgebra H) (H →L[ℂ] H)
+    where
+  add_mem := add_mem'
+  mul_mem := mul_mem'
+  one_mem := one_mem'
+  zero_mem := zero_mem'
+  neg_mem s a ha := show -a ∈ s.toStarSubalgebra from neg_mem ha
+
+@[simp]
+theorem mem_carrier {S : VonNeumannAlgebra H} {x : H →L[ℂ] H} :
+    x ∈ S.carrier ↔ x ∈ (S : Set (H →L[ℂ] H)) :=
+  Iff.rfl
+#align von_neumann_algebra.mem_carrier VonNeumannAlgebra.mem_carrier
+
+@[ext]
+theorem ext {S T : VonNeumannAlgebra H} (h : ∀ x, x ∈ S ↔ x ∈ T) : S = T :=
+  SetLike.ext h
+#align von_neumann_algebra.ext VonNeumannAlgebra.ext
+
+@[simp]
+theorem centralizer_centralizer (S : VonNeumannAlgebra H) :
+    Set.centralizer (Set.centralizer (S : Set (H →L[ℂ] H))) = S :=
+  S.centralizer_centralizer'
+#align von_neumann_algebra.centralizer_centralizer VonNeumannAlgebra.centralizer_centralizer
+
+/-- The centralizer of a `von_neumann_algebra`, as a `von_neumann_algebra`.-/
+def commutant (S : VonNeumannAlgebra H) : VonNeumannAlgebra H :=
+  {
+    StarSubalgebra.centralizer ℂ (S : Set (H →L[ℂ] H)) fun a (ha : a ∈ S) =>
+      (star_mem ha : _) with
+    carrier := Set.centralizer (S : Set (H →L[ℂ] H))
+    centralizer_centralizer' := by rw [S.centralizer_centralizer] }
+#align von_neumann_algebra.commutant VonNeumannAlgebra.commutant
+
+@[simp]
+theorem coe_commutant (S : VonNeumannAlgebra H) :
+    ↑S.commutant = Set.centralizer (S : Set (H →L[ℂ] H)) :=
+  rfl
+#align von_neumann_algebra.coe_commutant VonNeumannAlgebra.coe_commutant
+
+@[simp]
+theorem mem_commutant_iff {S : VonNeumannAlgebra H} {z : H →L[ℂ] H} :
+    z ∈ S.commutant ↔ ∀ g ∈ S, g * z = z * g :=
+  Iff.rfl
+#align von_neumann_algebra.mem_commutant_iff VonNeumannAlgebra.mem_commutant_iff
+
+@[simp]
+theorem commutant_commutant (S : VonNeumannAlgebra H) : S.commutant.commutant = S :=
+  SetLike.coe_injective S.centralizer_centralizer'
+#align von_neumann_algebra.commutant_commutant VonNeumannAlgebra.commutant_commutant
 
 end VonNeumannAlgebra
 

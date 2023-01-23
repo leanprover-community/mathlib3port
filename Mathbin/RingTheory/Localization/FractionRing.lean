@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Johan Commelin, Amelia Livingston, Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.localization.fraction_ring
-! leanprover-community/mathlib commit d6fad0e5bf2d6f48da9175d25c3dc5706b3834ce
+! leanprover-community/mathlib commit 1f0096e6caa61e9c849ec2adbd227e960e9dff58
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -66,7 +66,7 @@ instance Rat.isFractionRing : IsFractionRing ℤ ℚ
         rintro rfl
         use 1, _⟩
     rintro ⟨⟨c, hc⟩, h⟩
-    apply mul_right_cancel₀ _ h
+    apply mul_left_cancel₀ _ h
     rwa [mem_nonZeroDivisors_iff_ne_zero] at hc
 #align rat.is_fraction_ring Rat.isFractionRing
 
@@ -188,7 +188,7 @@ theorem mk'_eq_zero_iff_eq_zero [Algebra R K] [IsFractionRing R K] {x : R} {y : 
     mk' K x y = 0 ↔ x = 0 :=
   by
   refine' ⟨fun hxy => _, fun h => by rw [h, mk'_zero]⟩
-  · simp_rw [mk'_eq_zero_iff, mul_right_coe_nonZeroDivisors_eq_zero_iff] at hxy
+  · simp_rw [mk'_eq_zero_iff, mul_left_coe_nonZeroDivisors_eq_zero_iff] at hxy
     exact (exists_const _).mp hxy
 #align is_fraction_ring.mk'_eq_zero_iff_eq_zero IsFractionRing.mk'_eq_zero_iff_eq_zero
 

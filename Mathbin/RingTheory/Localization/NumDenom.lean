@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Johan Commelin, Amelia Livingston, Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.localization.num_denom
-! leanprover-community/mathlib commit d6fad0e5bf2d6f48da9175d25c3dc5706b3834ce
+! leanprover-community/mathlib commit 1f0096e6caa61e9c849ec2adbd227e960e9dff58
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -88,7 +88,7 @@ theorem num_mul_denom_eq_num_iff_eq' {x y : K} :
 
 theorem num_mul_denom_eq_num_mul_denom_iff_eq {x y : K} :
     num A y * denom A x = num A x * denom A y ↔ x = y :=
-  ⟨fun h => by simpa only [mk'_num_denom] using mk'_eq_of_eq h, fun h => by rw [h]⟩
+  ⟨fun h => by simpa only [mk'_num_denom] using mk'_eq_of_eq' h, fun h => by rw [h]⟩
 #align is_fraction_ring.num_mul_denom_eq_num_mul_denom_iff_eq IsFractionRing.num_mul_denom_eq_num_mul_denom_iff_eq
 
 theorem eq_zero_of_num_eq_zero {x : K} (h : num A x = 0) : x = 0 :=

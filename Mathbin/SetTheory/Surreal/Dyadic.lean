@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Apurva Nakade
 
 ! This file was ported from Lean 3 source module set_theory.surreal.dyadic
-! leanprover-community/mathlib commit d6fad0e5bf2d6f48da9175d25c3dc5706b3834ce
+! leanprover-community/mathlib commit 1f0096e6caa61e9c849ec2adbd227e960e9dff58
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -255,7 +255,7 @@ def dyadicMap : Localization.Away (2 : ℤ) →+ Surreal
       by
       intro m₁ m₂ n₁ n₂ h₁
       obtain ⟨⟨n₃, y₃, hn₃⟩, h₂⟩ := localization.r_iff_exists.mp h₁
-      simp only [Subtype.coe_mk, mul_eq_mul_right_iff] at h₂
+      simp only [Subtype.coe_mk, mul_eq_mul_left_iff] at h₂
       cases h₂
       · simp only
         obtain ⟨a₁, ha₁⟩ := n₁.prop
@@ -265,7 +265,7 @@ def dyadicMap : Localization.Away (2 : ℤ) →+ Surreal
         have h₂ : 1 < (2 : ℤ).natAbs := one_lt_two
         rw [hn₁, hn₂, Submonoid.log_pow_int_eq_self h₂, Submonoid.log_pow_int_eq_self h₂]
         apply dyadic_aux
-        rwa [ha₁, ha₂]
+        rwa [ha₁, ha₂, mul_comm, mul_comm m₂]
       · have : (1 : ℤ) ≤ 2 ^ y₃ := by exact_mod_cast Nat.one_le_pow y₃ 2 Nat.succ_pos'
         linarith
   map_zero' := Localization.liftOn_zero _ _

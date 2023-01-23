@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Alexander Bentkamp
 
 ! This file was ported from Lean 3 source module linear_algebra.basis
-! leanprover-community/mathlib commit d6fad0e5bf2d6f48da9175d25c3dc5706b3834ce
+! leanprover-community/mathlib commit 1f0096e6caa61e9c849ec2adbd227e960e9dff58
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -73,7 +73,7 @@ universe u
 
 open Function Set Submodule
 
-open Classical BigOperators
+open BigOperators
 
 variable {ι : Type _} {ι' : Type _} {R : Type _} {R₂ : Type _} {K : Type _}
 
@@ -454,6 +454,7 @@ theorem range_reindex : Set.range (b.reindex e) = Set.range b := by rw [coe_rein
 
 /-- `b.reindex_range` is a basis indexed by `range b`, the basis vectors themselves. -/
 def reindexRange : Basis (range b) R M :=
+  haveI := Classical.dec (Nontrivial R)
   if h : Nontrivial R then
     letI := h
     b.reindex (Equiv.ofInjective b (Basis.injective b))
@@ -516,7 +517,7 @@ theorem reindexRange_repr (x : M) (i : ι) (h := Set.mem_range_self i) :
 
 section Fintype
 
-variable [Fintype ι]
+variable [Fintype ι] [DecidableEq M]
 
 /-- `b.reindex_finset_range` is a basis indexed by `finset.univ.image b`,
 the finite set of basis vectors themselves. -/
@@ -907,15 +908,18 @@ def Basis.equivFun : M ≃ₗ[R] ι → R :=
 #align basis.equiv_fun Basis.equivFun
 
 /-- A module over a finite ring that admits a finite basis is finite. -/
-def Module.fintypeOfFintype [Fintype R] : Fintype M :=
-  Fintype.ofEquiv _ b.equivFun.toEquiv.symm
+def Module.fintypeOfFintype (b : Basis ι R M) [Fintype R] : Fintype M :=
+  haveI := Classical.decEq ι
+  Fintype.ofEquiv _ b.equiv_fun.to_equiv.symm
 #align module.fintype_of_fintype Module.fintypeOfFintype
 
-theorem Module.card_fintype [Fintype R] [Fintype M] : card M = card R ^ card ι :=
-  calc
-    card M = card (ι → R) := card_congr b.equivFun.toEquiv
-    _ = card R ^ card ι := card_fun
-    
+theorem Module.card_fintype (b : Basis ι R M) [Fintype R] [Fintype M] : card M = card R ^ card ι :=
+  by
+  classical exact
+      calc
+        card M = card (ι → R) := card_congr b.equiv_fun.to_equiv
+        _ = card R ^ card ι := card_fun
+        
 #align module.card_fintype Module.card_fintype
 
 /-- Given a basis `v` indexed by `ι`, the canonical linear equivalence between `ι → R` and `M` maps
@@ -946,8 +950,8 @@ theorem Basis.sum_repr (u : M) : (∑ i, b.repr u i • b i) = u :=
 #align basis.sum_repr Basis.sum_repr
 
 @[simp]
-theorem Basis.equivFun_self (i j : ι) : b.equivFun (b i) j = if i = j then 1 else 0 := by
-  rw [b.equiv_fun_apply, b.repr_self_apply]
+theorem Basis.equivFun_self [DecidableEq ι] (i j : ι) :
+    b.equivFun (b i) j = if i = j then 1 else 0 := by rw [b.equiv_fun_apply, b.repr_self_apply]
 #align basis.equiv_fun_self Basis.equivFun_self
 
 theorem Basis.repr_sum_self (c : ι → R) : ⇑(b.repr (∑ i, c i • b i)) = c :=
@@ -976,7 +980,7 @@ theorem Basis.ofEquivFun_repr_apply (e : M ≃ₗ[R] ι → R) (x : M) (i : ι) 
 #align basis.of_equiv_fun_repr_apply Basis.ofEquivFun_repr_apply
 
 @[simp]
-theorem Basis.coe_ofEquivFun (e : M ≃ₗ[R] ι → R) :
+theorem Basis.coe_ofEquivFun [DecidableEq ι] (e : M ≃ₗ[R] ι → R) :
     (Basis.ofEquivFun e : ι → M) = fun i => e.symm (Function.update 0 i 1) :=
   funext fun i =>
     e.Injective <|
@@ -985,12 +989,12 @@ theorem Basis.coe_ofEquivFun (e : M ≃ₗ[R] ι → R) :
 #align basis.coe_of_equiv_fun Basis.coe_ofEquivFun
 
 @[simp]
-theorem Basis.ofEquivFun_equivFun (v : Basis ι R M) : Basis.ofEquivFun v.equivFun = v :=
-  by
-  ext j
-  simp only [Basis.equivFun_symm_apply, Basis.coe_ofEquivFun]
-  simp_rw [Function.update_apply, ite_smul]
-  simp only [Finset.mem_univ, if_true, Pi.zero_apply, one_smul, Finset.sum_ite_eq', zero_smul]
+theorem Basis.ofEquivFun_equivFun (v : Basis ι R M) : Basis.ofEquivFun v.equivFun = v := by
+  classical
+    ext j
+    simp only [Basis.equivFun_symm_apply, Basis.coe_ofEquivFun]
+    simp_rw [Function.update_apply, ite_smul]
+    simp only [Finset.mem_univ, if_true, Pi.zero_apply, one_smul, Finset.sum_ite_eq', zero_smul]
 #align basis.of_equiv_fun_equiv_fun Basis.ofEquivFun_equivFun
 
 variable (S : Type _) [Semiring S] [Module S M']
@@ -1173,7 +1177,8 @@ theorem mk_coord_apply_ne {i j : ι} (h : j ≠ i) : (Basis.mk hli hsp).Coord i 
 
 /-- Given a basis, the `i`th element of the dual basis evaluates to the Kronecker delta on the
 `j`th element of the basis. -/
-theorem mk_coord_apply {i j : ι} : (Basis.mk hli hsp).Coord i (v j) = if j = i then 1 else 0 :=
+theorem mk_coord_apply [DecidableEq ι] {i j : ι} :
+    (Basis.mk hli hsp).Coord i (v j) = if j = i then 1 else 0 :=
   by
   cases eq_or_ne j i
   · simp only [h, if_true, eq_self_iff_true, mk_coord_apply_eq i]
@@ -1264,18 +1269,18 @@ theorem unitsSmul_apply {v : Basis ι R M} {w : ι → Rˣ} (i : ι) : v.units_s
 
 @[simp]
 theorem coord_unitsSmul (e : Basis ι R₂ M) (w : ι → R₂ˣ) (i : ι) :
-    (e.units_smul w).Coord i = (w i)⁻¹ • e.Coord i :=
-  by
-  apply e.ext
-  intro j
-  trans ((e.units_smul w).Coord i) ((w j)⁻¹ • (e.units_smul w) j)
-  · congr
-    simp [Basis.unitsSmul, ← mul_smul]
-  simp only [Basis.coord_apply, LinearMap.smul_apply, Basis.repr_self, Units.smul_def,
-    SMulHomClass.map_smul, Finsupp.single_apply]
-  split_ifs with h h
-  · simp [h]
-  · simp
+    (e.units_smul w).Coord i = (w i)⁻¹ • e.Coord i := by
+  classical
+    apply e.ext
+    intro j
+    trans ((e.units_smul w).Coord i) ((w j)⁻¹ • (e.units_smul w) j)
+    · congr
+      simp [Basis.unitsSmul, ← mul_smul]
+    simp only [Basis.coord_apply, LinearMap.smul_apply, Basis.repr_self, Units.smul_def,
+      SMulHomClass.map_smul, Finsupp.single_apply]
+    split_ifs with h h
+    · simp [h]
+    · simp
 #align basis.coord_units_smul Basis.coord_unitsSmul
 
 @[simp]
@@ -1453,7 +1458,9 @@ noncomputable def sumExtend (hs : LinearIndependent K v) : Basis (Sum ι _) K V 
     Equiv.symm <|
       calc
         Sum ι (b \ s : Set V) ≃ Sum s (b \ s : Set V) := Equiv.sumCongr e (Equiv.refl _)
-        _ ≃ b := Equiv.Set.sumDiffSubset (hs.to_subtype_range.subset_extend _)
+        _ ≃ b :=
+          haveI := Classical.decPred (· ∈ s)
+          Equiv.Set.sumDiffSubset (hs.to_subtype_range.subset_extend _)
         
 #align basis.sum_extend Basis.sumExtend
 
@@ -1511,8 +1518,9 @@ open Fintype
 
 variable (K V)
 
-theorem VectorSpace.card_fintype [Fintype K] [Fintype V] : ∃ n : ℕ, card V = card K ^ n :=
-  ⟨card (Basis.ofVectorSpaceIndex K V), Module.card_fintype (Basis.ofVectorSpace K V)⟩
+theorem VectorSpace.card_fintype [Fintype K] [Fintype V] : ∃ n : ℕ, card V = card K ^ n := by
+  classical exact
+      ⟨card (Basis.ofVectorSpaceIndex K V), Module.card_fintype (Basis.ofVectorSpace K V)⟩
 #align vector_space.card_fintype VectorSpace.card_fintype
 
 section AtomsOfSubmoduleLattice

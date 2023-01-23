@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module ring_theory.artinian
-! leanprover-community/mathlib commit d6fad0e5bf2d6f48da9175d25c3dc5706b3834ce
+! leanprover-community/mathlib commit 1f0096e6caa61e9c849ec2adbd227e960e9dff58
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -488,8 +488,8 @@ theorem localization_surjective : Function.Surjective (algebraMap R L) :=
   rw [smul_eq_mul, smul_eq_mul, pow_succ', mul_assoc] at hr
   apply_fun algebraMap R L  at hr
   simp only [map_mul, ← [anonymous]] at hr
-  rw [← IsLocalization.mk'_one L, IsLocalization.mk'_eq_iff_eq, one_mul, Submonoid.coe_one, ←
-    (IsLocalization.map_units L (s ^ n)).mul_left_cancel hr, map_mul, mul_comm]
+  rw [← IsLocalization.mk'_one L, IsLocalization.mk'_eq_iff_eq, mul_one, Submonoid.coe_one, ←
+    (IsLocalization.map_units L (s ^ n)).mul_left_cancel hr, map_mul]
 #align is_artinian_ring.localization_surjective IsArtinianRing.localization_surjective
 
 theorem localization_artinian : IsArtinianRing L :=

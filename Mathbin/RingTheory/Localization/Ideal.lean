@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Johan Commelin, Amelia Livingston, Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.localization.ideal
-! leanprover-community/mathlib commit d6fad0e5bf2d6f48da9175d25c3dc5706b3834ce
+! leanprover-community/mathlib commit 1f0096e6caa61e9c849ec2adbd227e960e9dff58
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -89,12 +89,13 @@ theorem comap_map_of_isPrime_disjoint (I : Ideal R) (hI : I.IsPrime) (hM : Disjo
   by
   refine' le_antisymm (fun a ha => _) Ideal.le_comap_map
   obtain ⟨⟨b, s⟩, h⟩ := (mem_map_algebra_map_iff M S).1 (Ideal.mem_comap.1 ha)
-  replace h : algebraMap R S (a * s) = algebraMap R S b := by simpa only [← map_mul] using h
+  replace h : algebraMap R S (s * a) = algebraMap R S b := by
+    simpa only [← map_mul, mul_comm] using h
   obtain ⟨c, hc⟩ := (eq_iff_exists M S).1 h
-  have : a * (s * c) ∈ I := by
-    rw [← mul_assoc, hc]
-    exact I.mul_mem_right c b.2
-  exact (hI.mem_or_mem this).resolve_right fun hsc => hM.le_bot ⟨(s * c).2, hsc⟩
+  have : ↑c * ↑s * a ∈ I := by
+    rw [mul_assoc, hc]
+    exact I.mul_mem_left c b.2
+  exact (hI.mem_or_mem this).resolve_left fun hsc => hM.le_bot ⟨(c * s).2, hsc⟩
 #align is_localization.comap_map_of_is_prime_disjoint IsLocalization.comap_map_of_isPrime_disjoint
 
 /-- If `S` is the localization of `R` at a submonoid, the ordering of ideals of `S` is

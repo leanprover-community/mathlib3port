@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module linear_algebra.std_basis
-! leanprover-community/mathlib commit d6fad0e5bf2d6f48da9175d25c3dc5706b3834ce
+! leanprover-community/mathlib commit 1f0096e6caa61e9c849ec2adbd227e960e9dff58
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -39,8 +39,6 @@ this is a basis over `fin 3 → R`.
 
 
 open Function Submodule
-
-open BigOperators
 
 open BigOperators
 
@@ -287,14 +285,11 @@ noncomputable def basisFun : Basis η R (∀ j : η, R) :=
 #align pi.basis_fun Pi.basisFun
 
 @[simp]
-theorem basisFun_apply [DecidableEq η] (i) : basisFun R η i = stdBasis R (fun i : η => R) i 1 :=
-  by
+theorem basisFun_apply [DecidableEq η] (i) : basisFun R η i = stdBasis R (fun i : η => R) i 1 := by
   simp only [basis_fun, Basis.coe_ofEquivFun, LinearEquiv.refl_symm, LinearEquiv.refl_apply,
     std_basis_apply]
-  congr
 #align pi.basis_fun_apply Pi.basisFun_apply
 
--- Get rid of a `decidable_eq` mismatch.
 @[simp]
 theorem basisFun_repr (x : η → R) (i : η) : (Pi.basisFun R η).repr x i = x i := by simp [basis_fun]
 #align pi.basis_fun_repr Pi.basisFun_repr

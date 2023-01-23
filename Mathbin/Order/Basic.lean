@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Mario Carneiro
 
 ! This file was ported from Lean 3 source module order.basic
-! leanprover-community/mathlib commit d6fad0e5bf2d6f48da9175d25c3dc5706b3834ce
+! leanprover-community/mathlib commit 1f0096e6caa61e9c849ec2adbd227e960e9dff58
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1747,6 +1747,16 @@ theorem dense_or_discrete [LinearOrder α] (a₁ a₂ : α) :
       le_of_not_gt fun ha₁ => h ⟨a, ha₁, ha₂⟩⟩
 #align dense_or_discrete dense_or_discrete
 -/
+
+/-- If a linear order has no elements `x < y < z`, then it has at most two elements. -/
+theorem eq_or_eq_or_eq_of_forall_not_lt_lt {α : Type _} [LinearOrder α]
+    (h : ∀ ⦃x y z : α⦄, x < y → y < z → False) (x y z : α) : x = y ∨ y = z ∨ x = z :=
+  by
+  by_contra hne; push_neg  at hne
+  cases' hne.1.lt_or_lt with h₁ h₁ <;> cases' hne.2.1.lt_or_lt with h₂ h₂ <;>
+    cases' hne.2.2.lt_or_lt with h₃ h₃
+  exacts[h h₁ h₂, h h₂ h₃, h h₃ h₂, h h₃ h₁, h h₁ h₃, h h₂ h₃, h h₁ h₃, h h₂ h₁]
+#align eq_or_eq_or_eq_of_forall_not_lt_lt eq_or_eq_or_eq_of_forall_not_lt_lt
 
 namespace PUnit
 

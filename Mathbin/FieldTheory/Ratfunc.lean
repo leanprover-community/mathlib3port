@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module field_theory.ratfunc
-! leanprover-community/mathlib commit d6fad0e5bf2d6f48da9175d25c3dc5706b3834ce
+! leanprover-community/mathlib commit 1f0096e6caa61e9c849ec2adbd227e960e9dff58
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -136,7 +136,7 @@ theorem toFractionRing_injective : Function.Injective (toFractionRing : _ → Fr
 /-- Non-dependent recursion principle for `ratfunc K`:
 To construct a term of `P : Sort*` out of `x : ratfunc K`,
 it suffices to provide a constructor `f : Π (p q : K[X]), P`
-and a proof that `f p q = f p' q'` for all `p q p' q'` such that `p * q' = p' * q` where
+and a proof that `f p q = f p' q'` for all `p q p' q'` such that `q' * p = q * p'` where
 both `q` and `q'` are not zero divisors, stated as `q ∉ K[X]⁰`, `q' ∉ K[X]⁰`.
 
 If considering `K` as an integral domain, this is the same as saying that
@@ -147,18 +147,18 @@ When `[is_domain K]`, one can use `ratfunc.lift_on'`, which has the stronger req
 of `∀ {p q a : K[X]} (hq : q ≠ 0) (ha : a ≠ 0), f (a * p) (a * q) = f p q)`.
 -/
 protected irreducible_def liftOn {P : Sort v} (x : Ratfunc K) (f : ∀ p q : K[X], P)
-  (H : ∀ {p q p' q'} (hq : q ∈ K[X]⁰) (hq' : q' ∈ K[X]⁰), p * q' = p' * q → f p q = f p' q') : P :=
+  (H : ∀ {p q p' q'} (hq : q ∈ K[X]⁰) (hq' : q' ∈ K[X]⁰), q' * p = q * p' → f p q = f p' q') : P :=
   Localization.liftOn (to_fraction_ring x)
     (-- Fix timeout by manipulating elaboration order
     fun p q => f p q)
     fun p p' q q' h =>
     H q.2 q'.2
       (let ⟨⟨c, hc⟩, mul_eq⟩ := Localization.r_iff_exists.mp h
-      mul_cancel_right_coe_non_zero_divisor.mp mul_eq)
+      mul_cancel_left_coe_non_zero_divisor.mp mul_eq)
 #align ratfunc.lift_on Ratfunc.liftOn
 
 theorem liftOn_of_fraction_ring_mk {P : Sort v} (n : K[X]) (d : K[X]⁰) (f : ∀ p q : K[X], P)
-    (H : ∀ {p q p' q'} (hq : q ∈ K[X]⁰) (hq' : q' ∈ K[X]⁰), p * q' = p' * q → f p q = f p' q') :
+    (H : ∀ {p q p' q'} (hq : q ∈ K[X]⁰) (hq' : q' ∈ K[X]⁰), q' * p = q * p' → f p q = f p' q') :
     Ratfunc.liftOn (of_fraction_ring (Localization.mk n d)) f @H = f n d :=
   by
   unfold Ratfunc.liftOn
@@ -215,13 +215,13 @@ theorem mk_one' (p : K[X]) : Ratfunc.mk p 1 = of_fraction_ring (algebraMap _ _ p
 theorem mk_eq_mk {p q p' q' : K[X]} (hq : q ≠ 0) (hq' : q' ≠ 0) :
     Ratfunc.mk p q = Ratfunc.mk p' q' ↔ p * q' = p' * q := by
   rw [mk_def_of_ne _ hq, mk_def_of_ne _ hq', of_fraction_ring_injective.eq_iff,
-    IsLocalization.mk'_eq_iff_eq, [anonymous], [anonymous],
+    IsLocalization.mk'_eq_iff_eq', [anonymous], [anonymous],
     (IsFractionRing.injective K[X] (FractionRing K[X])).eq_iff]
 #align ratfunc.mk_eq_mk Ratfunc.mk_eq_mk
 
 theorem liftOn_mk {P : Sort v} (p q : K[X]) (f : ∀ p q : K[X], P) (f0 : ∀ p, f p 0 = f 0 1)
-    (H' : ∀ {p q p' q'} (hq : q ≠ 0) (hq' : q' ≠ 0), p * q' = p' * q → f p q = f p' q')
-    (H : ∀ {p q p' q'} (hq : q ∈ K[X]⁰) (hq' : q' ∈ K[X]⁰), p * q' = p' * q → f p q = f p' q' :=
+    (H' : ∀ {p q p' q'} (hq : q ≠ 0) (hq' : q' ≠ 0), q' * p = q * p' → f p q = f p' q')
+    (H : ∀ {p q p' q'} (hq : q ∈ K[X]⁰) (hq' : q' ∈ K[X]⁰), q' * p = q * p' → f p q = f p' q' :=
       fun p q p' q' hq hq' h => H' (nonZeroDivisors.ne_zero hq) (nonZeroDivisors.ne_zero hq') h) :
     (Ratfunc.mk p q).liftOn f @H = f p q :=
   by
@@ -234,29 +234,20 @@ theorem liftOn_mk {P : Sort v} (p q : K[X]) (f : ∀ p q : K[X], P) (f0 : ∀ p,
       [anonymous]]
 #align ratfunc.lift_on_mk Ratfunc.liftOn_mk
 
+omit hdomain
+
 theorem lift_on_condition_of_lift_on'_condition {P : Sort v} {f : ∀ p q : K[X], P}
     (H : ∀ {p q a} (hq : q ≠ 0) (ha : a ≠ 0), f (a * p) (a * q) = f p q) ⦃p q p' q' : K[X]⦄
-    (hq : q ≠ 0) (hq' : q' ≠ 0) (h : p * q' = p' * q) : f p q = f p' q' :=
-  by
-  have H0 : f 0 q = f 0 q' := by
-    calc
-      f 0 q = f (q' * 0) (q' * q) := (H hq hq').symm
-      _ = f (q * 0) (q * q') := by rw [mul_zero, mul_zero, mul_comm]
-      _ = f 0 q' := H hq' hq
-      
-  by_cases hp : p = 0
-  · simp only [hp, hq, zero_mul, or_false_iff, zero_eq_mul] at h⊢
-    rw [h, H0]
-  by_cases hp' : p' = 0
-  · simpa only [hp, hp', hq', zero_mul, or_self_iff, mul_eq_zero] using h
+    (hq : q ≠ 0) (hq' : q' ≠ 0) (h : q' * p = q * p') : f p q = f p' q' :=
   calc
-    f p q = f (p' * p) (p' * q) := (H hq hp').symm
-    _ = f (p * p') (p * q') := by rw [mul_comm p p', h]
-    _ = f p' q' := H hq' hp
+    f p q = f (q' * p) (q' * q) := (H hq hq').symm
+    _ = f (q * p') (q * q') := by rw [h, mul_comm q']
+    _ = f p' q' := H hq' hq
     
 #align ratfunc.lift_on_condition_of_lift_on'_condition Ratfunc.lift_on_condition_of_lift_on'_condition
 
--- f
+include hdomain
+
 /-- Non-dependent recursion principle for `ratfunc K`: if `f p q : P` for all `p q`,
 such that `f (a * p) (a * q) = f p q`, then we can find a value of `P`
 for all elements of `ratfunc K` by setting `lift_on' (p / q) f _ = f p q`.
@@ -615,7 +606,7 @@ def map [MonoidHomClass F R[X] S[X]] (φ : F) (hφ : R[X]⁰ ≤ S[X]⁰.comap �
       · exact hφ hq'
       · exact hφ hq
       refine' Localization.r_of_eq _
-      simpa only [map_mul] using (congr_arg φ h).symm
+      simpa only [map_mul] using congr_arg φ h
   map_one' :=
     by
     rw [← of_fraction_ring_one, ← Localization.mk_one, lift_on_of_fraction_ring_mk, dif_pos]
@@ -648,7 +639,7 @@ theorem map_injective [MonoidHomClass F R[X] S[X]] (φ : F) (hφ : R[X]⁰ ≤ S
   rintro ⟨x⟩ ⟨y⟩ h; induction x; induction y
   ·
     simpa only [map_apply_of_fraction_ring_mk, of_fraction_ring_injective.eq_iff,
-      Localization.mk_eq_mk_iff, Localization.r_iff_exists, mul_cancel_right_coe_non_zero_divisor,
+      Localization.mk_eq_mk_iff, Localization.r_iff_exists, mul_cancel_left_coe_non_zero_divisor,
       exists_const, [anonymous], ← map_mul, hf.eq_iff] using h
   · rfl
   · rfl
@@ -693,7 +684,8 @@ def liftMonoidWithZeroHom (φ : R[X] →*₀ G₀) (hφ : R[X]⁰ ≤ G₀⁰.co
       by
       cases subsingleton_or_nontrivial R
       · rw [Subsingleton.elim p q, Subsingleton.elim p' q, Subsingleton.elim q' q]
-      rw [div_eq_div_iff, ← map_mul, h, map_mul] <;> exact nonZeroDivisors.ne_zero (hφ ‹_›)
+      rw [div_eq_div_iff, ← map_mul, mul_comm p, h, map_mul, mul_comm] <;>
+        exact nonZeroDivisors.ne_zero (hφ ‹_›)
   map_one' :=
     by
     rw [← of_fraction_ring_one, ← Localization.mk_one, lift_on_of_fraction_ring_mk]
@@ -727,8 +719,9 @@ theorem liftMonoidWithZeroHom_injective [Nontrivial R] (φ : R[X] →*₀ G₀) 
   · simp_rw [lift_monoid_with_zero_hom_apply_of_fraction_ring_mk, Localization.mk_eq_mk_iff]
     intro h
     refine' Localization.r_of_eq _
-    simpa only [← hφ.eq_iff, map_mul] using mul_eq_mul_of_div_eq_div _ _ _ _ h.symm <;>
-      exact map_ne_zero_of_mem_nonZeroDivisors _ hφ (SetLike.coe_mem _)
+    have := mul_eq_mul_of_div_eq_div _ _ _ _ h
+    rwa [← map_mul, ← map_mul, hφ.eq_iff, mul_comm, mul_comm y_a] at this
+    all_goals exact map_ne_zero_of_mem_nonZeroDivisors _ hφ (SetLike.coe_mem _)
   · exact fun _ => rfl
   · exact fun _ => rfl
 #align ratfunc.lift_monoid_with_zero_hom_injective Ratfunc.liftMonoidWithZeroHom_injective
@@ -986,8 +979,8 @@ variable {K}
 
 @[simp]
 theorem liftOn_div {P : Sort v} (p q : K[X]) (f : ∀ p q : K[X], P) (f0 : ∀ p, f p 0 = f 0 1)
-    (H' : ∀ {p q p' q'} (hq : q ≠ 0) (hq' : q' ≠ 0), p * q' = p' * q → f p q = f p' q')
-    (H : ∀ {p q p' q'} (hq : q ∈ K[X]⁰) (hq' : q' ∈ K[X]⁰), p * q' = p' * q → f p q = f p' q' :=
+    (H' : ∀ {p q p' q'} (hq : q ≠ 0) (hq' : q' ≠ 0), q' * p = q * p' → f p q = f p' q')
+    (H : ∀ {p q p' q'} (hq : q ∈ K[X]⁰) (hq' : q' ∈ K[X]⁰), q' * p = q * p' → f p q = f p' q' :=
       fun p q p' q' hq hq' h => H' (nonZeroDivisors.ne_zero hq) (nonZeroDivisors.ne_zero hq') h) :
     (algebraMap _ (Ratfunc K) p / algebraMap _ _ q).liftOn f @H = f p q := by
   rw [← mk_eq_div, lift_on_mk _ _ f f0 @H']

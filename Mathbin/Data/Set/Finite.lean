@@ -4,11 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Kyle Miller
 
 ! This file was ported from Lean 3 source module data.set.finite
-! leanprover-community/mathlib commit d6fad0e5bf2d6f48da9175d25c3dc5706b3834ce
+! leanprover-community/mathlib commit 1f0096e6caa61e9c849ec2adbd227e960e9dff58
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.Data.Finset.Sort
+import Mathbin.Data.Finset.Basic
 import Mathbin.Data.Set.Functor
 import Mathbin.Data.Finite.Basic
 
@@ -2335,29 +2335,31 @@ protected theorem bddBelow [SemilatticeInf α] [Nonempty α] (s : Finset α) : B
 
 end Finset
 
-#print Set.finite_of_forall_between_eq_endpoints /-
-/-- If a set `s` does not contain any elements between any pair of elements `x, z ∈ s` with `x ≤ z`
-(i.e if given `x, y, z ∈ s` such that `x ≤ y ≤ z`, then `y` is either `x` or `z`), then `s` is
-finite.
--/
-theorem Set.finite_of_forall_between_eq_endpoints {α : Type _} [LinearOrder α] (s : Set α)
-    (h : ∀ x ∈ s, ∀ y ∈ s, ∀ z ∈ s, x ≤ y → y ≤ z → x = y ∨ y = z) : Set.Finite s :=
+variable [LinearOrder α]
+
+/-- If a linear order does not contain any triple of elements `x < y < z`, then this type
+is finite. -/
+theorem Finite.of_forall_not_lt_lt (h : ∀ ⦃x y z : α⦄, x < y → y < z → False) : Finite α :=
   by
-  by_contra hinf
-  change s.infinite at hinf
-  rcases hinf.exists_subset_card_eq 3 with ⟨t, hts, ht⟩
-  let f := t.order_iso_of_fin ht
-  let x := f 0
-  let y := f 1
-  let z := f 2
-  have := h x (hts x.2) y (hts y.2) z (hts z.2) (f.monotone <| by decide) (f.monotone <| by decide)
-  have key₁ : (0 : Fin 3) ≠ 1 := by decide
-  have key₂ : (1 : Fin 3) ≠ 2 := by decide
-  cases this
-  · dsimp only [x, y] at this
-    exact key₁ (f.injective <| Subtype.coe_injective this)
-  · dsimp only [y, z] at this
-    exact key₂ (f.injective <| Subtype.coe_injective this)
-#align set.finite_of_forall_between_eq_endpoints Set.finite_of_forall_between_eq_endpoints
--/
+  nontriviality α
+  rcases exists_pair_ne α with ⟨x, y, hne⟩
+  refine' @Finite.of_fintype α ⟨{x, y}, fun z => _⟩
+  simpa [hne] using eq_or_eq_or_eq_of_forall_not_lt_lt h z x y
+#align finite.of_forall_not_lt_lt Finite.of_forall_not_lt_lt
+
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x y z «expr ∈ » s) -/
+/-- If a set `s` does not contain any triple of elements `x < y < z`, then `s` is finite. -/
+theorem Set.finite_of_forall_not_lt_lt {s : Set α}
+    (h : ∀ (x) (_ : x ∈ s) (y) (_ : y ∈ s) (z) (_ : z ∈ s), x < y → y < z → False) : Set.Finite s :=
+  @Set.toFinite _ s <| Finite.of_forall_not_lt_lt <| by simpa only [SetCoe.forall'] using h
+#align set.finite_of_forall_not_lt_lt Set.finite_of_forall_not_lt_lt
+
+theorem Set.finite_diff_unionᵢ_ioo (s : Set α) : (s \ ⋃ (x ∈ s) (y ∈ s), Ioo x y).Finite :=
+  Set.finite_of_forall_not_lt_lt fun x hx y hy z hz hxy hyz =>
+    hy.2 <| mem_unionᵢ₂_of_mem hx.1 <| mem_unionᵢ₂_of_mem hz.1 ⟨hxy, hyz⟩
+#align set.finite_diff_Union_Ioo Set.finite_diff_unionᵢ_ioo
+
+theorem Set.finite_diff_unionᵢ_Ioo' (s : Set α) : (s \ ⋃ x : s × s, Ioo x.1 x.2).Finite := by
+  simpa only [Union, supᵢ_prod, supᵢ_subtype] using s.finite_diff_Union_Ioo
+#align set.finite_diff_Union_Ioo' Set.finite_diff_unionᵢ_Ioo'
 

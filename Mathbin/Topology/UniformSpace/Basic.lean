@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.uniform_space.basic
-! leanprover-community/mathlib commit d6fad0e5bf2d6f48da9175d25c3dc5706b3834ce
+! leanprover-community/mathlib commit 1f0096e6caa61e9c849ec2adbd227e960e9dff58
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1601,6 +1601,11 @@ theorem uniformity_subtype {p : α → Prop} [t : UniformSpace α] :
   rfl
 #align uniformity_subtype uniformity_subtype
 
+theorem uniformity_set_coe {s : Set α} [t : UniformSpace α] :
+    𝓤 s = comap (Prod.map (coe : s → α) (coe : s → α)) (𝓤 α) :=
+  rfl
+#align uniformity_set_coe uniformity_set_coe
+
 theorem uniformContinuous_subtype_val {p : α → Prop} [UniformSpace α] :
     UniformContinuous (Subtype.val : { a : α // p a } → α) :=
   uniformContinuous_comap
@@ -1621,11 +1626,10 @@ theorem uniformContinuousOn_iff_restrict [UniformSpace α] [UniformSpace β] {f 
     UniformContinuousOn f s ↔ UniformContinuous (s.restrict f) :=
   by
   unfold UniformContinuousOn Set.restrict UniformContinuous tendsto
-  rw [show (fun x : s × s => (f x.1, f x.2)) = Prod.map f f ∘ coe by ext x <;> cases x <;> rfl,
-    uniformity_comap rfl,
-    show Prod.map Subtype.val Subtype.val = (coe : s × s → α × α) by ext x <;> cases x <;> rfl]
-  conv in map _ (comap _ _) => rw [← Filter.map_map]
-  rw [subtype_coe_map_comap_prod]; rfl
+  conv_rhs =>
+    rw [show (fun x : s × s => (f x.1, f x.2)) = Prod.map f f ∘ Prod.map coe coe from rfl,
+      uniformity_set_coe, ← map_map, map_comap, range_prod_map, Subtype.range_coe]
+  rfl
 #align uniform_continuous_on_iff_restrict uniformContinuousOn_iff_restrict
 
 theorem tendsto_of_uniformContinuous_subtype [UniformSpace α] [UniformSpace β] {f : α → β}

@@ -1286,6 +1286,7 @@ import Mathbin.Data.Finset.Sort
 import Mathbin.Data.Finset.Sum
 import Mathbin.Data.Finset.Sups
 import Mathbin.Data.Finset.Sym
+import Mathbin.Data.Finsupp.Alist
 import Mathbin.Data.Finsupp.Antidiagonal
 import Mathbin.Data.Finsupp.Basic
 import Mathbin.Data.Finsupp.BigOperators
@@ -1483,6 +1484,7 @@ import Mathbin.Data.Nat.Factors
 import Mathbin.Data.Nat.Fib
 import Mathbin.Data.Nat.Gcd.Basic
 import Mathbin.Data.Nat.Gcd.BigOperators
+import Mathbin.Data.Nat.Hyperoperation
 import Mathbin.Data.Nat.Interval
 import Mathbin.Data.Nat.Lattice
 import Mathbin.Data.Nat.Log

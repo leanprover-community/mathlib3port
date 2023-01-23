@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang, Eric Wieser
 
 ! This file was ported from Lean 3 source module ring_theory.graded_algebra.homogeneous_localization
-! leanprover-community/mathlib commit d6fad0e5bf2d6f48da9175d25c3dc5706b3834ce
+! leanprover-community/mathlib commit 1f0096e6caa61e9c849ec2adbd227e960e9dff58
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -589,14 +589,14 @@ theorem isUnit_iff_isUnit_val (f : HomogeneousLocalization.AtPrime 𝒜 𝔭) : 
       Localization.mk_eq_mk', IsLocalization.eq] at eq1
     rcases eq1 with ⟨⟨c, hc⟩, eq1⟩
     simp only [← Subtype.val_eq_coe] at eq1
-    change a * f.num * 1 * c = _ at eq1
+    change c * (1 * (a * f.num)) = _ at eq1
     simp only [one_mul, mul_one] at eq1
-    have mem1 : a * f.num * c ∈ 𝔭.prime_compl :=
+    have mem1 : c * (a * f.num) ∈ 𝔭.prime_compl :=
       eq1.symm ▸ fun r => Or.elim (Ideal.IsPrime.mem_or_mem inferInstance r) (by tauto) (by tauto)
     have mem2 : f.num ∉ 𝔭 := by
       contrapose! mem1
       erw [not_not]
-      exact Ideal.mul_mem_right _ _ (Ideal.mul_mem_left _ _ mem1)
+      exact Ideal.mul_mem_left _ _ (Ideal.mul_mem_left _ _ mem1)
     refine'
             ⟨⟨f, Quotient.mk' ⟨f.deg, ⟨f.denom, f.denom_mem_deg⟩, ⟨f.num, f.num_mem_deg⟩, mem2⟩, _,
                 _⟩,

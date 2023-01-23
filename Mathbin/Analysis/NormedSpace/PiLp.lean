@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Jireh Loreaux
 
 ! This file was ported from Lean 3 source module analysis.normed_space.pi_Lp
-! leanprover-community/mathlib commit d6fad0e5bf2d6f48da9175d25c3dc5706b3834ce
+! leanprover-community/mathlib commit 1f0096e6caa61e9c849ec2adbd227e960e9dff58
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -851,13 +851,10 @@ def basisFun : Basis ι 𝕜 (PiLp p fun _ => 𝕜) :=
 
 @[simp]
 theorem basisFun_apply [DecidableEq ι] (i) :
-    basisFun p 𝕜 ι i = (PiLp.equiv p _).symm (Pi.single i 1) :=
-  by
+    basisFun p 𝕜 ι i = (PiLp.equiv p _).symm (Pi.single i 1) := by
   simp_rw [basis_fun, Basis.coe_ofEquivFun, PiLp.linearEquiv_symm_apply, Pi.single]
-  congr
 #align pi_Lp.basis_fun_apply PiLp.basisFun_apply
 
--- Get rid of a `decidable_eq` mismatch.
 @[simp]
 theorem basisFun_repr (x : PiLp p fun i : ι => 𝕜) (i : ι) : (basisFun p 𝕜 ι).repr x i = x i :=
   rfl

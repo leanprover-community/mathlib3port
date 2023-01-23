@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Johan Commelin, Amelia Livingston, Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.localization.localization_localization
-! leanprover-community/mathlib commit d6fad0e5bf2d6f48da9175d25c3dc5706b3834ce
+! leanprover-community/mathlib commit 1f0096e6caa61e9c849ec2adbd227e960e9dff58
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -101,7 +101,7 @@ theorem localization_localization_surj [IsLocalization N T] (x : T) :
 
 theorem localization_localization_eq_iff_exists [IsLocalization N T] (x y : R) :
     algebraMap R T x = algebraMap R T y ↔
-      ∃ c : localizationLocalizationSubmodule M N, x * c = y * c :=
+      ∃ c : localizationLocalizationSubmodule M N, ↑c * x = ↑c * y :=
   by
   rw [IsScalarTower.algebraMap_apply R S T, IsScalarTower.algebraMap_apply R S T,
     IsLocalization.eq_iff_exists N T]
@@ -109,20 +109,21 @@ theorem localization_localization_eq_iff_exists [IsLocalization N T] (x y : R) :
   · rintro ⟨z, eq₁⟩
     rcases IsLocalization.surj M (z : S) with ⟨⟨z', s⟩, eq₂⟩
     dsimp only at eq₂
-    obtain ⟨c, eq₃ : x * z' * ↑c = y * z' * ↑c⟩ := (IsLocalization.eq_iff_exists M S).mp _
+    obtain ⟨c, eq₃ : ↑c * (x * z') = ↑c * (y * z')⟩ := (IsLocalization.eq_iff_exists M S).mp _
     swap
-    · rw [RingHom.map_mul, RingHom.map_mul, ← eq₂, ← mul_assoc, ← mul_assoc, ← eq₁]
-    use z' * c
+    · rw [map_mul, map_mul, ← eq₂, ← mul_assoc, ← mul_assoc, mul_comm _ ↑z, eq₁, mul_comm _ ↑z]
+    use c * z'
     · rw [mem_localization_localization_submodule]
-      refine' ⟨z, s * c, _⟩
-      rw [RingHom.map_mul, ← eq₂, mul_assoc, ← RingHom.map_mul, Submonoid.coe_mul]
-    · simpa only [mul_assoc] using eq₃
-  · rintro ⟨⟨c, hc⟩, eq₁ : x * c = y * c⟩
+      refine' ⟨z, c * s, _⟩
+      rw [map_mul, ← eq₂, Submonoid.coe_mul, map_mul, mul_left_comm]
+    · rwa [mul_comm _ z', mul_comm _ z', ← mul_assoc, ← mul_assoc] at eq₃
+  · rintro ⟨⟨c, hc⟩, eq₁ : c * x = c * y⟩
     rw [mem_localization_localization_submodule] at hc
     rcases hc with ⟨z₁, z, eq₂⟩
     use z₁
-    refine' (IsLocalization.map_units S z).mul_left_inj.mp _
-    rw [mul_assoc, mul_assoc, ← eq₂, ← RingHom.map_mul, ← RingHom.map_mul, eq₁]
+    refine' (IsLocalization.map_units S z).mul_right_inj.mp _
+    rw [← mul_assoc, mul_comm _ ↑z₁, ← eq₂, ← map_mul, eq₁, map_mul, eq₂, ← mul_assoc,
+      mul_comm _ ↑z₁]
 #align is_localization.localization_localization_eq_iff_exists IsLocalization.localization_localization_eq_iff_exists
 
 /-- Given submodules `M ⊆ R` and `N ⊆ S = M⁻¹R`, with `f : R →+* S` the localization map, we have
@@ -228,7 +229,7 @@ theorem isLocalization_of_submonoid_le (M N : Submonoid R) (h : M ≤ N) [IsLoca
       by
       obtain ⟨⟨y₁, s₁⟩, e₁⟩ := IsLocalization.surj M x₁
       obtain ⟨⟨y₂, s₂⟩, e₂⟩ := IsLocalization.surj M x₂
-      refine' Iff.trans _ (Set.exists_image_iff (algebraMap R S) N fun c => x₁ * c = x₂ * c).symm
+      refine' Iff.trans _ (Set.exists_image_iff (algebraMap R S) N fun c => c * x₁ = c * x₂).symm
       dsimp only at e₁ e₂⊢
       suffices
         algebraMap R T (y₁ * s₂) = algebraMap R T (y₂ * s₁) ↔
@@ -270,7 +271,7 @@ theorem isLocalization_of_is_exists_mul_mem (M N : Submonoid R) [IsLocalization 
       rintro ⟨x, h⟩
       obtain ⟨m, hm⟩ := h' x
       refine' ⟨⟨_, hm⟩, _⟩
-      simp [mul_comm m, ← mul_assoc, h] }
+      simp [h, mul_assoc] }
 #align is_localization.is_localization_of_is_exists_mul_mem IsLocalization.isLocalization_of_is_exists_mul_mem
 
 end LocalizationLocalization
@@ -315,7 +316,7 @@ theorem isFractionRing_of_isDomain_of_isLocalization [IsDomain R] (S T : Type _)
   intro hx'
   apply @zero_ne_one S
   rw [← (algebraMap R S).map_one, ← @mk'_one R _ M, @comm _ Eq, mk'_eq_zero_iff]
-  exact ⟨⟨_, hx⟩, (one_mul x).symm ▸ hx'⟩
+  exact ⟨⟨x, hx⟩, by simp [hx']⟩
 #align is_fraction_ring.is_fraction_ring_of_is_domain_of_is_localization IsFractionRing.isFractionRing_of_isDomain_of_isLocalization
 
 end IsFractionRing

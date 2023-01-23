@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Jeremy Avigad
 
 ! This file was ported from Lean 3 source module order.filter.basic
-! leanprover-community/mathlib commit d6fad0e5bf2d6f48da9175d25c3dc5706b3834ce
+! leanprover-community/mathlib commit 1f0096e6caa61e9c849ec2adbd227e960e9dff58
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -290,9 +290,6 @@ def principal (s : Set α) : Filter α
 -- mathport name: filter.principal
 scoped notation "𝓟" => Filter.principal
 
-instance : Inhabited (Filter α) :=
-  ⟨𝓟 ∅⟩
-
 @[simp]
 theorem mem_principal {s t : Set α} : s ∈ 𝓟 t ↔ t ⊆ s :=
   Iff.rfl
@@ -512,6 +509,9 @@ instance : CompleteLattice (Filter α) :=
       exact mem_Inter₂.symm.trans (Set.ext_iff.1 (sInter_image _ _) x).symm)-- Inf
     _
     rfl
+
+instance : Inhabited (Filter α) :=
+  ⟨⊥⟩
 
 end CompleteLattice
 
@@ -809,7 +809,7 @@ theorem Set.PairwiseDisjoint.exists_mem_filter {ι : Type _} {l : ι → Filter 
 /-- There is exactly one filter on an empty type. -/
 instance unique [IsEmpty α] : Unique (Filter α)
     where
-  default := ⊥
+  toInhabited := Filter.inhabited
   uniq := filter_eq_bot_of_isEmpty
 #align filter.unique Filter.unique
 
@@ -2198,20 +2198,20 @@ theorem Function.Semiconj.filter_map {f : α → β} {ga : α → α} {gb : β �
   map_comm h.comp_eq
 #align function.semiconj.filter_map Function.Semiconj.filter_map
 
-theorem Commute.filter_map {f g : α → α} (h : Function.Commute f g) :
+theorem Function.Commute.filter_map {f g : α → α} (h : Function.Commute f g) :
     Function.Commute (map f) (map g) :=
   h.filterMap
-#align commute.filter_map Commute.filter_map
+#align function.commute.filter_map Function.Commute.filter_map
 
 theorem Function.Semiconj.filter_comap {f : α → β} {ga : α → α} {gb : β → β}
     (h : Function.Semiconj f ga gb) : Function.Semiconj (comap f) (comap gb) (comap ga) :=
   comap_comm h.comp_eq.symm
 #align function.semiconj.filter_comap Function.Semiconj.filter_comap
 
-theorem Commute.filter_comap {f g : α → α} (h : Function.Commute f g) :
+theorem Function.Commute.filter_comap {f g : α → α} (h : Function.Commute f g) :
     Function.Commute (comap f) (comap g) :=
   h.filter_comap
-#align commute.filter_comap Commute.filter_comap
+#align function.commute.filter_comap Function.Commute.filter_comap
 
 @[simp]
 theorem comap_principal {t : Set β} : comap m (𝓟 t) = 𝓟 (m ⁻¹' t) :=
@@ -2368,14 +2368,6 @@ theorem Function.Surjective.filter_map_top {f : α → β} (hf : Surjective f) :
 theorem subtype_coe_map_comap (s : Set α) (f : Filter α) :
     map (coe : s → α) (comap (coe : s → α) f) = f ⊓ 𝓟 s := by rw [map_comap, Subtype.range_coe]
 #align filter.subtype_coe_map_comap Filter.subtype_coe_map_comap
-
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem subtype_coe_map_comap_prod (s : Set α) (f : Filter (α × α)) :
-    map (coe : s × s → α × α) (comap (coe : s × s → α × α) f) = f ⊓ 𝓟 (s ×ˢ s) :=
-  by
-  have : (coe : s × s → α × α) = fun x => (x.1, x.2) := by ext ⟨x, y⟩ <;> rfl
-  simp [this, map_comap, ← prod_range_range_eq]
-#align filter.subtype_coe_map_comap_prod Filter.subtype_coe_map_comap_prod
 
 theorem image_mem_of_mem_comap {f : Filter α} {c : β → α} (h : range c ∈ f) {W : Set β}
     (W_in : W ∈ comap c f) : c '' W ∈ f :=

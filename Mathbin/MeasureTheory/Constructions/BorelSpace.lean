@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.constructions.borel_space
-! leanprover-community/mathlib commit d6fad0e5bf2d6f48da9175d25c3dc5706b3834ce
+! leanprover-community/mathlib commit 1f0096e6caa61e9c849ec2adbd227e960e9dff58
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -554,14 +554,7 @@ theorem Set.OrdConnected.measurableSet (h : OrdConnected s) : MeasurableSet s :=
   let u := ⋃ (x ∈ s) (y ∈ s), Ioo x y
   have huopen : IsOpen u := isOpen_bUnion fun x hx => isOpen_bUnion fun y hy => isOpen_ioo
   have humeas : MeasurableSet u := huopen.measurable_set
-  have hfinite : (s \ u).Finite :=
-    by
-    refine' Set.finite_of_forall_between_eq_endpoints (s \ u) fun x hx y hy z hz hxy hyz => _
-    by_contra' h
-    exact
-      hy.2
-        (mem_Union₂.mpr
-          ⟨x, hx.1, mem_Union₂.mpr ⟨z, hz.1, lt_of_le_of_ne hxy h.1, lt_of_le_of_ne hyz h.2⟩⟩)
+  have hfinite : (s \ u).Finite := s.finite_diff_Union_Ioo
   have : u ⊆ s :=
     Union₂_subset fun x hx => Union₂_subset fun y hy => Ioo_subset_Icc_self.trans (h.out hx hy)
   rw [← union_diff_cancel this]

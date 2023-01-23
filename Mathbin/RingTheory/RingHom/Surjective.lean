@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module ring_theory.ring_hom.surjective
-! leanprover-community/mathlib commit d6fad0e5bf2d6f48da9175d25c3dc5706b3834ce
+! leanprover-community/mathlib commit 1f0096e6caa61e9c849ec2adbd227e960e9dff58
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -84,10 +84,10 @@ theorem surjective_ofLocalizationSpan : OfLocalizationSpan surjective :=
     obtain ⟨z, ⟨_, n, rfl⟩, rfl⟩ := IsLocalization.mk'_surjective (Submonoid.powers (r : R)) y
     erw [IsLocalization.map_mk', IsLocalization.eq] at hy
     obtain ⟨⟨_, m, rfl⟩, hm⟩ := hy
-    dsimp at hm
-    simp_rw [_root_.mul_assoc, _root_.one_mul, ← map_pow, ← f.map_mul, ← pow_add, mul_comm x] at hm
-    rw [map_pow] at hm
-    refine' ⟨n + m, _, hm⟩
+    refine' ⟨m + n, _⟩
+    dsimp at hm⊢
+    simp_rw [_root_.one_mul, ← _root_.mul_assoc, ← map_pow, ← f.map_mul, ← pow_add, map_pow] at hm
+    exact ⟨_, hm⟩
 #align ring_hom.surjective_of_localization_span RingHom.surjective_ofLocalizationSpan
 
 end RingHom

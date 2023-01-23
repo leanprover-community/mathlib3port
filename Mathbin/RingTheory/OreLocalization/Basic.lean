@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jakob von Raumer, Kevin Klinge
 
 ! This file was ported from Lean 3 source module ring_theory.ore_localization.basic
-! leanprover-community/mathlib commit d6fad0e5bf2d6f48da9175d25c3dc5706b3834ce
+! leanprover-community/mathlib commit 1f0096e6caa61e9c849ec2adbd227e960e9dff58
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -506,12 +506,12 @@ protected def localizationMap : S.LocalizationMap R[S⁻¹]
       rw [one_mul, one_mul] at h₂
       subst h₂
       use u
-      exact h₁.symm
+      simpa only [mul_comm] using h₁.symm
     · rintro ⟨s, h⟩
       rw [numerator_hom_apply, numerator_hom_apply, ore_div_eq_iff]
-      use s
-      use s
-      simp [h, one_mul]
+      refine' ⟨s, s, _, _⟩
+      · simpa [mul_comm] using h.symm
+      · simp [one_mul]
 #align ore_localization.localization_map OreLocalization.localizationMap
 
 /-- If `R` is commutative, Ore localization and monoid localization are isomorphic. -/

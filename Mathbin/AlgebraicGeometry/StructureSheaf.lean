@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Scott Morrison
 
 ! This file was ported from Lean 3 source module algebraic_geometry.structure_sheaf
-! leanprover-community/mathlib commit d6fad0e5bf2d6f48da9175d25c3dc5706b3834ce
+! leanprover-community/mathlib commit 1f0096e6caa61e9c849ec2adbd227e960e9dff58
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -387,7 +387,9 @@ theorem const_mul (f₁ f₂ g₁ g₂ : R) (U hu₁ hu₂) :
 
 theorem const_ext {f₁ f₂ g₁ g₂ : R} {U hu₁ hu₂} (h : f₁ * g₂ = f₂ * g₁) :
     const R f₁ g₁ U hu₁ = const R f₂ g₂ U hu₂ :=
-  Subtype.eq <| funext fun x => IsLocalization.mk'_eq_of_eq h.symm
+  Subtype.eq <|
+    funext fun x =>
+      IsLocalization.mk'_eq_of_eq (by rw [mul_comm, Subtype.coe_mk, ← h, mul_comm, Subtype.coe_mk])
 #align algebraic_geometry.structure_sheaf.const_ext AlgebraicGeometry.StructureSheaf.const_ext
 
 theorem const_congr {f₁ f₂ g₁ g₂ : R} {U hu} (hf : f₁ = f₂) (hg : g₁ = g₂) :
@@ -668,17 +670,17 @@ theorem toBasicOpen_injective (f : R) : Function.Injective (toBasicOpen R f) :=
   rw [IsLocalization.eq]
   -- We know that the fractions `a/b` and `c/d` are equal as sections of the structure sheaf on
   -- `basic_open f`. We need to show that they agree as elements in the localization of `R` at `f`.
-  -- This amounts showing that `a * d * r = c * b * r`, for some power `r = f ^ n` of `f`.
+  -- This amounts showing that `r * (d * a) = r * (b * c)`, for some power `r = f ^ n` of `f`.
   -- We define `I` as the ideal of *all* elements `r` satisfying the above equation.
   let I : Ideal R :=
-    { carrier := { r : R | a * d * r = c * b * r }
-      zero_mem' := by simp only [Set.mem_setOf_eq, mul_zero]
+    { carrier := { r : R | r * (d * a) = r * (b * c) }
+      zero_mem' := by simp only [Set.mem_setOf_eq, zero_mul]
       add_mem' := fun r₁ r₂ hr₁ hr₂ => by
         dsimp at hr₁ hr₂⊢
-        simp only [mul_add, hr₁, hr₂]
+        simp only [add_mul, hr₁, hr₂]
       smul_mem' := fun r₁ r₂ hr₂ => by
         dsimp at hr₂⊢
-        simp only [mul_comm r₁ r₂, ← mul_assoc, hr₂] }
+        simp only [mul_assoc, hr₂] }
   -- Our claim now reduces to showing that `f` is contained in the radical of `I`
   suffices f ∈ I.radical by
     cases' this with n hn

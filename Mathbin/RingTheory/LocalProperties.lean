@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module ring_theory.local_properties
-! leanprover-community/mathlib commit d6fad0e5bf2d6f48da9175d25c3dc5706b3834ce
+! leanprover-community/mathlib commit 1f0096e6caa61e9c849ec2adbd227e960e9dff58
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -261,8 +261,8 @@ theorem Ideal.le_of_localization_maximal {I J : Ideal R}
   rw [← _root_.map_mul, ← sub_eq_zero, ← map_sub] at eq
   obtain ⟨⟨m, hm⟩, eq⟩ := (IsLocalization.map_eq_zero_iff P.prime_compl _ _).mp Eq
   refine' hs ((hP.is_prime.mem_or_mem (le (ideal.mem_colon_singleton.mpr _))).resolve_right hm)
-  simp only [Subtype.coe_mk, sub_mul, sub_eq_zero, mul_assoc] at eq
-  simpa only [Eq, mul_comm] using J.mul_mem_right m ha
+  simp only [Subtype.coe_mk, mul_sub, sub_eq_zero, mul_comm x s, mul_left_comm] at eq
+  simpa only [mul_assoc, Eq] using J.mul_mem_left m ha
 #align ideal.le_of_localization_maximal Ideal.le_of_localization_maximal
 
 /-- Let `I J : ideal R`. If the localization of `I` at each maximal ideal `P` is equal to
@@ -331,8 +331,8 @@ theorem localization_isReduced : LocalizationPreserves fun R hR => IsReduced R :
   rw [← (algebraMap R S).map_zero] at hx'
   obtain ⟨m', hm'⟩ := (IsLocalization.eq_iff_exists M S).mp hx'
   apply_fun (· * m' ^ n)  at hm'
-  simp only [mul_assoc, zero_mul] at hm'
-  rw [mul_comm, ← pow_succ, ← mul_pow] at hm'
+  simp only [mul_assoc, zero_mul, mul_zero] at hm'
+  rw [← mul_left_comm, ← pow_succ, ← mul_pow] at hm'
   replace hm' := IsNilpotent.eq_zero ⟨_, hm'.symm⟩
   rw [← (IsLocalization.map_units S m).mul_left_inj, hx, zero_mul, IsLocalization.map_eq_zero_iff M]
   exact ⟨m', by rw [← hm', mul_comm]⟩
@@ -384,8 +384,8 @@ theorem surjective_ofLocalizationSpan :
   erw [IsLocalization.map_mk'] at e'
   rw [eq_comm, IsLocalization.eq_mk'_iff_mul_eq, Subtype.coe_mk, Subtype.coe_mk, ← map_mul] at e'
   obtain ⟨⟨_, n', rfl⟩, e''⟩ := (IsLocalization.eq_iff_exists (Submonoid.powers (f r)) _).mp e'
-  rw [Subtype.coe_mk, mul_assoc, ← map_pow, ← map_mul, ← map_mul, ← pow_add, mul_comm] at e''
-  exact ⟨n + n', _, e''.symm⟩
+  rw [Subtype.coe_mk, mul_comm x, ← mul_assoc, ← map_pow, ← map_mul, ← map_mul, ← pow_add] at e''
+  exact ⟨n' + n, _, e''.symm⟩
 #align surjective_of_localization_span surjective_ofLocalizationSpan
 
 end Surjective
@@ -483,10 +483,9 @@ theorem IsLocalization.smul_mem_finsetIntegerMultiple_span [Algebra R S] [Algebr
       a hx' using
     1
   convert ha₂.symm
-  · rw [mul_comm (y' • x), Subtype.coe_mk, Submonoid.smul_def, Submonoid.coe_mul, ← smul_smul]
+  · rw [Subtype.coe_mk, Submonoid.smul_def, Submonoid.coe_mul, ← smul_smul]
     exact Algebra.smul_def _ _
-  · rw [mul_comm]
-    exact Algebra.smul_def _ _
+  · exact Algebra.smul_def _ _
 #align is_localization.smul_mem_finset_integer_multiple_span IsLocalization.smul_mem_finsetIntegerMultiple_span
 
 /-- If `S` is an `R' = M⁻¹R` algebra, and `x ∈ span R' s`,
@@ -656,10 +655,8 @@ theorem IsLocalization.exists_smul_mem_of_mem_adjoin [Algebra R S] [Algebra R S'
   rw [Algebra.smul_def, ← _root_.map_mul] at hx''
   obtain ⟨a, ha₂⟩ := (IsLocalization.eq_iff_exists M S').mp hx''
   use a * y ^ n
-  convert A.mul_mem hx' (hA₂ a.2)
-  convert ha₂.symm
-  simp only [Submonoid.smul_def, [anonymous], smul_eq_mul, Submonoid.coe_mul]
-  ring
+  convert A.mul_mem hx' (hA₂ a.prop)
+  rw [Submonoid.smul_def, smul_eq_mul, Submonoid.coe_mul, [anonymous], mul_assoc, ← ha₂, mul_comm]
 #align is_localization.exists_smul_mem_of_mem_adjoin IsLocalization.exists_smul_mem_of_mem_adjoin
 
 /-- Let `S` be an `R`-algebra, `M` an submonoid of `R`, and `S' = M⁻¹S`.

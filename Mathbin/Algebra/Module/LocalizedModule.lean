@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang, Jujian Zhang
 
 ! This file was ported from Lean 3 source module algebra.module.localized_module
-! leanprover-community/mathlib commit d6fad0e5bf2d6f48da9175d25c3dc5706b3834ce
+! leanprover-community/mathlib commit 1f0096e6caa61e9c849ec2adbd227e960e9dff58
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,8 +51,8 @@ variable (M : Type v) [AddCommMonoid M] [Module R M]
 
 /-- The equivalence relation on `M × S` where `(m1, s1) ≈ (m2, s2)` if and only if
 for some (u : S), u * (s2 • m1 - s1 • m2) = 0-/
-def R : M × S → M × S → Prop
-  | ⟨m1, s1⟩, ⟨m2, s2⟩ => ∃ u : S, u • s1 • m2 = u • s2 • m1
+def R (a b : M × S) : Prop :=
+  ∃ u : S, u • b.2 • a.1 = u • a.2 • b.1
 #align localized_module.r LocalizedModule.R
 
 theorem R.isEquiv : IsEquiv _ (R S M) :=
@@ -61,8 +61,8 @@ theorem R.isEquiv : IsEquiv _ (R S M) :=
       by
       use u1 * u2 * s2
       -- Put everything in the same shape, sorting the terms using `simp`
-      have hu1' := congr_arg ((· • ·) (u2 * s3)) hu1
-      have hu2' := congr_arg ((· • ·) (u1 * s1)) hu2
+      have hu1' := congr_arg ((· • ·) (u2 * s3)) hu1.symm
+      have hu2' := congr_arg ((· • ·) (u1 * s1)) hu2.symm
       simp only [← mul_smul, smul_assoc, mul_assoc, mul_comm, mul_left_comm] at hu1' hu2'⊢
       rw [hu2', hu1']
     symm := fun ⟨m1, s1⟩ ⟨m2, s2⟩ ⟨u, hu⟩ => ⟨u, hu.symm⟩ }
@@ -72,6 +72,11 @@ instance R.setoid : Setoid (M × S) where
   R := R S M
   iseqv := ⟨(R.isEquiv S M).refl, (R.isEquiv S M).symm, (R.isEquiv S M).trans⟩
 #align localized_module.r.setoid LocalizedModule.R.setoid
+
+-- TODO: change `localization` to use `r'` instead of `r` so that the two types are also defeq,
+-- `localization S = localized_module S R`.
+example {R} [CommSemiring R] (S : Submonoid R) : ⇑(Localization.r' S) = LocalizedModule.R S R :=
+  rfl
 
 /-- If `S` is a multiplicative subset of a ring `R` and `M` an `R`-module, then
 we can localize `M` by `S`.
@@ -90,7 +95,7 @@ def mk (m : M) (s : S) : LocalizedModule S M :=
   Quotient.mk'' ⟨m, s⟩
 #align localized_module.mk LocalizedModule.mk
 
-theorem mk_eq {m m' : M} {s s' : S} : mk m s = mk m' s' ↔ ∃ u : S, u • s • m' = u • s' • m :=
+theorem mk_eq {m m' : M} {s s' : S} : mk m s = mk m' s' ↔ ∃ u : S, u • s' • m = u • s • m' :=
   Quotient.eq
 #align localized_module.mk_eq LocalizedModule.mk_eq
 
@@ -172,7 +177,7 @@ private theorem add_assoc' (x y z : LocalizedModule S M) : x + y + z = x + (y + 
   rw [one_smul, one_smul]
   congr 1
   · rw [mul_assoc]
-  · rw [mul_comm, add_assoc, mul_smul, mul_smul, ← mul_smul sx sz, mul_comm, mul_smul]
+  · rw [eq_comm, mul_comm, add_assoc, mul_smul, mul_smul, ← mul_smul sx sz, mul_comm, mul_smul]
 #align localized_module.add_assoc' localized_module.add_assoc'
 
 private theorem add_comm' (x y : LocalizedModule S M) : x + y = y + x :=
@@ -256,9 +261,10 @@ instance {A : Type _} [Semiring A] [Algebra R A] {S : Submonoid R} :
           rintro ⟨a₁, s₁⟩ ⟨a₂, s₂⟩ ⟨b₁, t₁⟩ ⟨b₂, t₂⟩ ⟨u₁, e₁⟩ ⟨u₂, e₂⟩
           rw [mk_eq]
           use u₁ * u₂
-          dsimp only
+          dsimp only at e₁ e₂⊢
+          rw [eq_comm]
           trans (u₁ • t₁ • a₁) • u₂ • t₂ • a₂
-          rw [← e₁, ← e₂]; swap; rw [eq_comm]
+          rw [e₁, e₂]; swap; rw [eq_comm]
           all_goals
             rw [smul_smul, mul_mul_mul_comm, ← smul_eq_mul, ← smul_eq_mul A, smul_smul_smul_comm,
               mul_smul, mul_smul])
@@ -724,8 +730,9 @@ instance localizedModuleIsLocalizedModule : IsLocalizedModule S (LocalizedModule
         erw [LocalizedModule.smul'_mk, LocalizedModule.mkLinearMap_apply, Submonoid.coe_subtype,
           LocalizedModule.mk_cancel t])
   eq_iff_exists m1 m2 :=
-    { mp := fun eq1 => by simpa only [one_smul] using localized_module.mk_eq.mp eq1
-      mpr := fun ⟨c, eq1⟩ => LocalizedModule.mk_eq.mpr ⟨c, by simpa only [one_smul] using eq1⟩ }
+    { mp := fun eq1 => by simpa only [eq_comm, one_smul] using localized_module.mk_eq.mp eq1
+      mpr := fun ⟨c, eq1⟩ =>
+        LocalizedModule.mk_eq.mpr ⟨c, by simpa only [eq_comm, one_smul] using eq1⟩ }
 #align localized_module_is_localized_module localizedModuleIsLocalizedModule
 
 namespace IsLocalizedModule
@@ -744,7 +751,7 @@ noncomputable def fromLocalizedModule' : LocalizedModule S M → M' := fun p =>
       erw [Module.endCat_algebraMap_isUnit_inv_apply_eq_iff, ← h2.unit⁻¹.1.map_smul,
         Module.endCat_algebraMap_isUnit_inv_apply_eq_iff', ← LinearMap.map_smul, ←
         LinearMap.map_smul]
-      exact ((IsLocalizedModule.eq_iff_exists S f).mpr ⟨c, eq1⟩).symm)
+      exact (IsLocalizedModule.eq_iff_exists S f).mpr ⟨c, eq1⟩)
 #align is_localized_module.from_localized_module' IsLocalizedModule.fromLocalizedModule'
 
 @[simp]
@@ -1012,6 +1019,7 @@ theorem mk'_eq_mk'_iff (m₁ m₂ : M) (s₁ s₂ : S) :
   by
   delta mk'
   rw [(from_localized_module.inj S f).eq_iff, LocalizedModule.mk_eq]
+  simp_rw [eq_comm]
 #align is_localized_module.mk'_eq_mk'_iff IsLocalizedModule.mk'_eq_mk'_iff
 
 theorem mk'_neg {M M' : Type _} [AddCommGroup M] [AddCommGroup M'] [Module R M] [Module R M']

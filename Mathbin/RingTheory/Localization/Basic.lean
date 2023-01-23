@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Johan Commelin, Amelia Livingston, Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.localization.basic
-! leanprover-community/mathlib commit d6fad0e5bf2d6f48da9175d25c3dc5706b3834ce
+! leanprover-community/mathlib commit 1f0096e6caa61e9c849ec2adbd227e960e9dff58
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -105,7 +105,7 @@ expresses that `S` is isomorphic to the localization of `R` at `M`. -/
 class IsLocalization : Prop where
   map_units : ∀ y : M, IsUnit (algebraMap R S y)
   surj : ∀ z : S, ∃ x : R × M, z * algebraMap R S x.2 = algebraMap R S x.1
-  eq_iff_exists : ∀ {x y}, algebraMap R S x = algebraMap R S y ↔ ∃ c : M, x * c = y * c
+  eq_iff_exists : ∀ {x y}, algebraMap R S x = algebraMap R S y ↔ ∃ c : M, ↑c * x = ↑c * y
 #align is_localization IsLocalization
 
 variable {M S}
@@ -132,7 +132,7 @@ theorem of_le (N : Submonoid R) (h₁ : M ≤ N) (h₂ : ∀ r ∈ N, IsUnit (al
         rintro ⟨c, hc⟩
         exact ⟨⟨c, h₁ c.2⟩, hc⟩
       · rintro ⟨c, h⟩
-        simpa only [[anonymous], map_mul, (h₂ c c.2).mul_left_inj] using
+        simpa only [[anonymous], map_mul, (h₂ c c.2).mul_right_inj] using
           congr_arg (algebraMap R S) h }
 #align is_localization.of_le IsLocalization.of_le
 
@@ -212,14 +212,14 @@ theorem eq_zero_of_fst_eq_zero {z x} {y : M} (h : z * algebraMap R S y = algebra
 
 variable (M S)
 
-theorem map_eq_zero_iff (r : R) : algebraMap R S r = 0 ↔ ∃ m : M, r * m = 0 :=
+theorem map_eq_zero_iff (r : R) : algebraMap R S r = 0 ↔ ∃ m : M, ↑m * r = 0 :=
   by
   constructor
   intro h
   · obtain ⟨m, hm⟩ := (IsLocalization.eq_iff_exists M S).mp ((algebraMap R S).map_zero.trans h.symm)
     exact ⟨m, by simpa using hm.symm⟩
   · rintro ⟨m, hm⟩
-    rw [← (IsLocalization.map_units S m).mul_left_inj, zero_mul, ← RingHom.map_mul, hm,
+    rw [← (IsLocalization.map_units S m).mul_right_inj, mul_zero, ← RingHom.map_mul, hm,
       RingHom.map_zero]
 #align is_localization.map_eq_zero_iff IsLocalization.map_eq_zero_iff
 
@@ -311,9 +311,14 @@ def uniqueOfZeroMem (h : (0 : R) ∈ M) : Unique S :=
 #align is_localization.unique_of_zero_mem IsLocalization.uniqueOfZeroMem
 
 theorem mk'_eq_iff_eq {x₁ x₂} {y₁ y₂ : M} :
-    mk' S x₁ y₁ = mk' S x₂ y₂ ↔ algebraMap R S (x₁ * y₂) = algebraMap R S (x₂ * y₁) :=
+    mk' S x₁ y₁ = mk' S x₂ y₂ ↔ algebraMap R S (y₂ * x₁) = algebraMap R S (y₁ * x₂) :=
   (toLocalizationMap M S).mk'_eq_iff_eq
 #align is_localization.mk'_eq_iff_eq IsLocalization.mk'_eq_iff_eq
+
+theorem mk'_eq_iff_eq' {x₁ x₂} {y₁ y₂ : M} :
+    mk' S x₁ y₁ = mk' S x₂ y₂ ↔ algebraMap R S (x₁ * y₂) = algebraMap R S (x₂ * y₁) :=
+  (toLocalizationMap M S).mk'_eq_iff_eq'
+#align is_localization.mk'_eq_iff_eq' IsLocalization.mk'_eq_iff_eq'
 
 theorem mk'_mem_iff {x} {y : M} {I : Ideal S} : mk' S x y ∈ I ↔ algebraMap R S x ∈ I :=
   by
@@ -327,11 +332,11 @@ theorem mk'_mem_iff {x} {y : M} {I : Ideal S} : mk' S x y ∈ I ↔ algebraMap R
 #align is_localization.mk'_mem_iff IsLocalization.mk'_mem_iff
 
 protected theorem eq {a₁ b₁} {a₂ b₂ : M} :
-    mk' S a₁ a₂ = mk' S b₁ b₂ ↔ ∃ c : M, a₁ * b₂ * c = b₁ * a₂ * c :=
+    mk' S a₁ a₂ = mk' S b₁ b₂ ↔ ∃ c : M, ↑c * (↑b₂ * a₁) = c * (a₂ * b₁) :=
   (toLocalizationMap M S).Eq
 #align is_localization.eq IsLocalization.eq
 
-theorem mk'_eq_zero_iff (x : R) (s : M) : mk' S x s = 0 ↔ ∃ m : M, x * m = 0 := by
+theorem mk'_eq_zero_iff (x : R) (s : M) : mk' S x s = 0 ↔ ∃ m : M, ↑m * x = 0 := by
   rw [← (map_units S s).mul_left_inj, mk'_spec, zero_mul, map_eq_zero_iff M]
 #align is_localization.mk'_eq_zero_iff IsLocalization.mk'_eq_zero_iff
 
@@ -360,9 +365,15 @@ theorem mk'_eq_iff_mk'_eq {x₁ x₂} {y₁ y₂ : M} :
   (toLocalizationMap M S).mk'_eq_iff_mk'_eq (toLocalizationMap M P)
 #align is_localization.mk'_eq_iff_mk'_eq IsLocalization.mk'_eq_iff_mk'_eq
 
-theorem mk'_eq_of_eq {a₁ b₁ : R} {a₂ b₂ : M} (H : b₁ * a₂ = a₁ * b₂) : mk' S a₁ a₂ = mk' S b₁ b₂ :=
+theorem mk'_eq_of_eq {a₁ b₁ : R} {a₂ b₂ : M} (H : ↑a₂ * b₁ = ↑b₂ * a₁) :
+    mk' S a₁ a₂ = mk' S b₁ b₂ :=
   (toLocalizationMap M S).mk'_eq_of_eq H
 #align is_localization.mk'_eq_of_eq IsLocalization.mk'_eq_of_eq
+
+theorem mk'_eq_of_eq' {a₁ b₁ : R} {a₂ b₂ : M} (H : b₁ * ↑a₂ = a₁ * ↑b₂) :
+    mk' S a₁ a₂ = mk' S b₁ b₂ :=
+  (toLocalizationMap M S).mk'_eq_of_eq' H
+#align is_localization.mk'_eq_of_eq' IsLocalization.mk'_eq_of_eq'
 
 variable (S)
 
@@ -772,7 +783,7 @@ theorem isLocalization_of_base_ringEquiv [IsLocalization M S] (h : R ≃+* P) :
     rw [RingHom.algebraMap_toAlgebra, RingHom.comp_apply, RingHom.comp_apply,
       IsLocalization.eq_iff_exists M S]
     simp_rw [← h.to_equiv.apply_eq_iff_eq]
-    change (∃ c : M, h (h.symm x * c) = h (h.symm y * c)) ↔ _
+    change (∃ c : M, h (c * h.symm x) = h (c * h.symm y)) ↔ _
     simp only [RingEquiv.apply_symm_apply, RingEquiv.map_mul]
     exact
       ⟨fun ⟨c, e⟩ => ⟨⟨_, _, c.Prop, rfl⟩, e⟩, fun ⟨⟨_, c, h, e₁⟩, e₂⟩ => ⟨⟨_, h⟩, e₁.symm ▸ e₂⟩⟩
@@ -810,7 +821,7 @@ theorem nonZeroDivisors_le_comap [IsLocalization M S] :
   rw [← @mk'_one R _ M, ← mk'_mul, ← (algebraMap R S).map_zero, ← @mk'_one R _ M,
     IsLocalization.eq] at e
   obtain ⟨c, e⟩ := e
-  rw [zero_mul, zero_mul, Submonoid.coe_one, mul_one, mul_comm x a, mul_assoc, mul_comm] at e
+  rw [mul_zero, mul_zero, Submonoid.coe_one, one_mul, ← mul_assoc] at e
   rw [mk'_eq_zero_iff]
   exact ⟨c, ha _ e⟩
 #align is_localization.non_zero_divisors_le_comap IsLocalization.nonZeroDivisors_le_comap
@@ -849,12 +860,13 @@ protected irreducible_def add (z w : Localization M) : Localization M :=
         rw [r_eq_r'] at h1 h2⊢
         cases' h1 with t₅ ht₅
         cases' h2 with t₆ ht₆
-        use t₆ * t₅
+        use t₅ * t₆
+        dsimp only
         calc
-          ((b : R) * c + d * a) * (b' * d') * (t₆ * t₅) =
-              c * d' * t₆ * (b * b' * t₅) + a * b' * t₅ * (d * d' * t₆) :=
+          ↑t₅ * ↑t₆ * (↑b' * ↑d' * ((b : R) * c + d * a)) =
+              t₆ * (d' * c) * (t₅ * (b' * b)) + t₅ * (b' * a) * (t₆ * (d' * d)) :=
             by ring
-          _ = (b' * c' + d' * a') * (b * d) * (t₆ * t₅) := by rw [ht₆, ht₅] <;> ring
+          _ = t₅ * t₆ * (b * d * (b' * c' + d' * a')) := by rw [ht₆, ht₅] <;> ring
           )
 #align localization.add Localization.add
 
@@ -880,12 +892,12 @@ private unsafe def tac :=
   sorry
 #align localization.tac localization.tac
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3058009963.tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3058009963.tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3058009963.tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3058009963.tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3058009963.tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3058009963.tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.4157022005.tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.4157022005.tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.4157022005.tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.4157022005.tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.4157022005.tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.4157022005.tac -/
 instance : CommSemiring (Localization M) :=
   { Localization.commMonoidWithZero M with
     zero := 0
@@ -1104,7 +1116,7 @@ protected irreducible_def neg (z : Localization M) : Localization M :=
         rw [r_eq_r'] at h⊢
         cases' h with t ht
         use t
-        rw [neg_mul, neg_mul, ht]
+        rw [mul_neg, mul_neg, ht]
         ring_nf)
 #align localization.neg Localization.neg
 
@@ -1166,7 +1178,7 @@ theorem to_map_eq_zero_iff {x : R} (hM : M ≤ nonZeroDivisors R) : algebraMap R
   rw [← (algebraMap R S).map_zero]
   constructor <;> intro h
   · cases' (eq_iff_exists M S).mp h with c hc
-    rw [zero_mul] at hc
+    rw [mul_zero, mul_comm] at hc
     exact hM c.2 x hc
   · rw [h]
 #align is_localization.to_map_eq_zero_iff IsLocalization.to_map_eq_zero_iff

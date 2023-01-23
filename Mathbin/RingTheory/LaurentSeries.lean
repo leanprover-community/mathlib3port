@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module ring_theory.laurent_series
-! leanprover-community/mathlib commit d6fad0e5bf2d6f48da9175d25c3dc5706b3834ce
+! leanprover-community/mathlib commit 1f0096e6caa61e9c849ec2adbd227e960e9dff58
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -166,13 +166,13 @@ instance of_powerSeries_localization [CommRing R] :
     · rintro rfl
       exact ⟨1, rfl⟩
     · rintro ⟨⟨_, n, rfl⟩, hc⟩
-      rw [← sub_eq_zero, ← sub_mul, PowerSeries.ext_iff] at hc
+      rw [← sub_eq_zero, ← mul_sub, PowerSeries.ext_iff] at hc
       rw [← sub_eq_zero, PowerSeries.ext_iff]
       intro m
       have h := hc (m + n)
-      rw [LinearMap.map_zero, Subtype.coe_mk, PowerSeries.x_pow_eq, PowerSeries.monomial,
-        PowerSeries.coeff, Finsupp.single_add, MvPowerSeries.coeff_add_mul_monomial, mul_one] at h
-      exact h
+      rwa [LinearMap.map_zero, Subtype.coe_mk, PowerSeries.x_pow_eq, PowerSeries.monomial,
+        add_comm m, PowerSeries.coeff, Finsupp.single_add, MvPowerSeries.coeff_add_monomial_mul,
+        one_mul] at h
 #align laurent_series.of_power_series_localization LaurentSeries.of_powerSeries_localization
 
 instance {K : Type u} [Field K] : IsFractionRing (PowerSeries K) (LaurentSeries K) :=
