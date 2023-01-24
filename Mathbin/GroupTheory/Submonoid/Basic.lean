@@ -859,6 +859,7 @@ def eqLocusM (f g : M →* N) : Submonoid M
   one_mem' := by rw [Set.mem_setOf_eq, f.map_one, g.map_one]
   mul_mem' x y (hx : _ = _) (hy : _ = _) := by simp [*]
 #align monoid_hom.eq_mlocus MonoidHom.eqLocusM
+#align add_monoid_hom.eq_mlocus AddMonoidHom.eqLocusM
 -/
 
 /- warning: monoid_hom.eq_mlocus_same -> MonoidHom.eqLocusM_same is a dubious translation:
@@ -885,6 +886,7 @@ Case conversion may be inaccurate. Consider using '#align monoid_hom.eq_on_mclos
 theorem eqOn_closureM {f g : M →* N} {s : Set M} (h : Set.EqOn f g s) : Set.EqOn f g (closure s) :=
   show closure s ≤ f.eqMlocus g from closure_le.2 h
 #align monoid_hom.eq_on_mclosure MonoidHom.eqOn_closureM
+#align add_monoid_hom.eq_on_mclosure AddMonoidHom.eqOn_closureM
 
 /- warning: monoid_hom.eq_of_eq_on_mtop -> MonoidHom.eq_of_eqOn_topM is a dubious translation:
 lean 3 declaration is
@@ -896,6 +898,7 @@ Case conversion may be inaccurate. Consider using '#align monoid_hom.eq_of_eq_on
 theorem eq_of_eqOn_topM {f g : M →* N} (h : Set.EqOn f g (⊤ : Submonoid M)) : f = g :=
   ext fun x => h trivial
 #align monoid_hom.eq_of_eq_on_mtop MonoidHom.eq_of_eqOn_topM
+#align add_monoid_hom.eq_of_eq_on_mtop AddMonoidHom.eq_of_eqOn_topM
 
 /- warning: monoid_hom.eq_of_eq_on_mdense -> MonoidHom.eq_of_eqOn_denseM is a dubious translation:
 lean 3 declaration is
@@ -908,6 +911,7 @@ theorem eq_of_eqOn_denseM {s : Set M} (hs : closure s = ⊤) {f g : M →* N} (h
     f = g :=
   eq_of_eq_on_mtop <| hs ▸ eqOn_closureM h
 #align monoid_hom.eq_of_eq_on_mdense MonoidHom.eq_of_eqOn_denseM
+#align add_monoid_hom.eq_of_eq_on_mdense AddMonoidHom.eq_of_eqOn_denseM
 
 end MonoidHom
 
@@ -947,6 +951,7 @@ theorem IsUnit.mem_submonoid_iff {M : Type _} [Monoid M] (a : M) :
   change a ∈ setOf IsUnit ↔ IsUnit a
   rw [Set.mem_setOf_eq]
 #align is_unit.mem_submonoid_iff IsUnit.mem_submonoid_iff
+#align is_add_unit.mem_add_submonoid_iff IsAddUnit.mem_addSubmonoid_iff
 
 end IsUnit
 
@@ -974,6 +979,7 @@ def ofClosureMEqTopLeft {M N} [Monoid M] [Monoid N] {s : Set M} (f : M → N) (h
     dense_induction x hs hmul (fun y => by rw [one_mul, h1, one_mul]) fun a b ha hb y => by
       rw [mul_assoc, ha, ha, hb, mul_assoc]
 #align monoid_hom.of_mclosure_eq_top_left MonoidHom.ofClosureMEqTopLeft
+#align add_monoid_hom.of_mclosure_eq_top_left AddMonoidHom.ofClosureMEqTopLeft
 
 /- warning: monoid_hom.coe_of_mclosure_eq_top_left -> MonoidHom.coe_ofClosureMEqTopLeft is a dubious translation:
 lean 3 declaration is
@@ -1008,6 +1014,7 @@ def ofClosureMEqTopRight {M N} [Monoid M] [Monoid N] {s : Set M} (f : M → N) (
     dense_induction y hs (fun y hy x => hmul x y hy) (by simp [h1])
       (fun y₁ y₂ h₁ h₂ x => by simp only [← mul_assoc, h₁, h₂]) x
 #align monoid_hom.of_mclosure_eq_top_right MonoidHom.ofClosureMEqTopRight
+#align add_monoid_hom.of_mclosure_eq_top_right AddMonoidHom.ofClosureMEqTopRight
 
 /- warning: monoid_hom.coe_of_mclosure_eq_top_right -> MonoidHom.coe_ofClosureMEqTopRight is a dubious translation:
 lean 3 declaration is

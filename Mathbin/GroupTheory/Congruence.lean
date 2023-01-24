@@ -978,6 +978,7 @@ Case conversion may be inaccurate. Consider using '#align con.to_submonoid_inj C
 theorem to_submonoid_inj (c d : Con M) (H : (c : Submonoid (M × M)) = d) : c = d :=
   ext fun x y => show (x, y) ∈ (c : Submonoid (M × M)) ↔ (x, y) ∈ ↑d by rw [H]
 #align con.to_submonoid_inj Con.to_submonoid_inj
+#align add_con.to_add_submonoid_inj AddCon.to_addSubmonoid_inj
 
 /- warning: con.le_iff -> Con.le_iff is a dubious translation:
 lean 3 declaration is
@@ -1780,6 +1781,7 @@ theorem induction_on_units {p : Units c.Quotient → Prop} (u : Units c.Quotient
   rcases u with ⟨⟨x⟩, ⟨y⟩, h₁, h₂⟩
   exact H x y (c.eq.1 h₁) (c.eq.1 h₂)
 #align con.induction_on_units Con.induction_on_units
+#align add_con.induction_on_add_units AddCon.induction_on_addUnits
 
 end Units
 
@@ -1795,6 +1797,7 @@ Case conversion may be inaccurate. Consider using '#align con.has_smul Con.smuli
 instance smulinst {α M : Type _} [MulOneClass M] [SMul α M] [IsScalarTower α M M] (c : Con M) :
     SMul α c.Quotient where smul a := Quotient.map' ((· • ·) a) fun x y => c.smul a
 #align con.has_smul Con.smulinst
+#align add_con.has_vadd AddCon.smulinst
 
 /- warning: con.coe_smul -> Con.coe_smul is a dubious translation:
 lean 3 declaration is

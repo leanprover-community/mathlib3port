@@ -355,7 +355,7 @@ theorem mul_comm : ∀ a b : G, a * b = b * a :=
 lean 3 declaration is
   forall {G : Type.{u1}} [_inst_1 : CommSemigroup.{u1} G], IsCommutative.{u1} G (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (Semigroup.toHasMul.{u1} G (CommSemigroup.toSemigroup.{u1} G _inst_1))))
 but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : CommSemigroup.{u1} G], IsCommutative.{u1} G (fun (x._@.Mathlib.Algebra.Group.Defs._hyg.3376 : G) (x._@.Mathlib.Algebra.Group.Defs._hyg.3378 : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (Semigroup.toMul.{u1} G (CommSemigroup.toSemigroup.{u1} G _inst_1))) x._@.Mathlib.Algebra.Group.Defs._hyg.3376 x._@.Mathlib.Algebra.Group.Defs._hyg.3378)
+  forall {G : Type.{u1}} [_inst_1 : CommSemigroup.{u1} G], IsCommutative.{u1} G (fun (x._@.Mathlib.Algebra.Group.Defs._hyg.3377 : G) (x._@.Mathlib.Algebra.Group.Defs._hyg.3379 : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (Semigroup.toMul.{u1} G (CommSemigroup.toSemigroup.{u1} G _inst_1))) x._@.Mathlib.Algebra.Group.Defs._hyg.3377 x._@.Mathlib.Algebra.Group.Defs._hyg.3379)
 Case conversion may be inaccurate. Consider using '#align comm_semigroup.to_is_commutative CommSemigroup.to_isCommutativeₓ'. -/
 @[to_additive]
 instance CommSemigroup.to_isCommutative : IsCommutative G (· * ·) :=
@@ -371,12 +371,13 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align comm_semigroup.is_right_cancel_mul.to_is_left_cancel_mul CommSemigroup.IsRightCancelMul.toIsLeftCancelMulₓ'. -/
 /-- Any `comm_semigroup G` that satisfies `is_right_cancel_mul G` also satisfies
 `is_left_cancel_mul G`. -/
-@[to_additive AddCommSemigroup.IsRightCancelAdd.to_is_left_cancel_add
+@[to_additive AddCommSemigroup.IsRightCancelAdd.toIsLeftCancelAdd
       "Any\n`add_comm_semigroup G` that satisfies `is_right_cancel_add G` also satisfies\n`is_right_cancel_add G`."]
 theorem CommSemigroup.IsRightCancelMul.toIsLeftCancelMul (G : Type u) [CommSemigroup G]
     [IsRightCancelMul G] : IsLeftCancelMul G :=
   ⟨fun a b c h => mul_right_cancel <| (mul_comm _ _).trans (h.trans <| mul_comm _ _)⟩
 #align comm_semigroup.is_right_cancel_mul.to_is_left_cancel_mul CommSemigroup.IsRightCancelMul.toIsLeftCancelMul
+#align add_comm_semigroup.is_right_cancel_add.to_is_left_cancel_add AddCommSemigroup.IsRightCancelAdd.toIsLeftCancelAdd
 
 /- warning: comm_semigroup.is_left_cancel_mul.to_is_right_cancel_mul -> CommSemigroup.IsLeftCancelMul.toIsRightCancelMul is a dubious translation:
 lean 3 declaration is
@@ -386,12 +387,13 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align comm_semigroup.is_left_cancel_mul.to_is_right_cancel_mul CommSemigroup.IsLeftCancelMul.toIsRightCancelMulₓ'. -/
 /-- Any `comm_semigroup G` that satisfies `is_left_cancel_mul G` also satisfies
 `is_right_cancel_mul G`. -/
-@[to_additive AddCommSemigroup.IsLeftCancelAdd.to_is_right_cancel_add
+@[to_additive AddCommSemigroup.IsLeftCancelAdd.toIsRightCancelAdd
       "Any\n`add_comm_semigroup G` that satisfies `is_left_cancel_add G` also satisfies\n`is_left_cancel_add G`."]
 theorem CommSemigroup.IsLeftCancelMul.toIsRightCancelMul (G : Type u) [CommSemigroup G]
     [IsLeftCancelMul G] : IsRightCancelMul G :=
   ⟨fun a b c h => mul_left_cancel <| (mul_comm _ _).trans (h.trans <| mul_comm _ _)⟩
 #align comm_semigroup.is_left_cancel_mul.to_is_right_cancel_mul CommSemigroup.IsLeftCancelMul.toIsRightCancelMul
+#align add_comm_semigroup.is_left_cancel_add.to_is_right_cancel_add AddCommSemigroup.IsLeftCancelAdd.toIsRightCancelAdd
 
 /- warning: comm_semigroup.is_left_cancel_mul.to_is_cancel_mul -> CommSemigroup.IsLeftCancelMul.toIsCancelMul is a dubious translation:
 lean 3 declaration is
@@ -401,12 +403,13 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align comm_semigroup.is_left_cancel_mul.to_is_cancel_mul CommSemigroup.IsLeftCancelMul.toIsCancelMulₓ'. -/
 /-- Any `comm_semigroup G` that satisfies `is_left_cancel_mul G` also satisfies
 `is_cancel_mul G`. -/
-@[to_additive AddCommSemigroup.IsLeftCancelAdd.to_is_cancel_add
+@[to_additive AddCommSemigroup.IsLeftCancelAdd.toIsCancelAdd
       "Any `add_comm_semigroup G`\nthat satisfies `is_left_cancel_add G` also satisfies `is_cancel_add G`."]
 theorem CommSemigroup.IsLeftCancelMul.toIsCancelMul (G : Type u) [CommSemigroup G]
     [IsLeftCancelMul G] : IsCancelMul G :=
   { ‹IsLeftCancelMul G›, CommSemigroup.IsLeftCancelMul.toIsRightCancelMul G with }
 #align comm_semigroup.is_left_cancel_mul.to_is_cancel_mul CommSemigroup.IsLeftCancelMul.toIsCancelMul
+#align add_comm_semigroup.is_left_cancel_add.to_is_cancel_add AddCommSemigroup.IsLeftCancelAdd.toIsCancelAdd
 
 /- warning: comm_semigroup.is_right_cancel_mul.to_is_cancel_mul -> CommSemigroup.IsRightCancelMul.toIsCancelMul is a dubious translation:
 lean 3 declaration is
@@ -416,12 +419,13 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align comm_semigroup.is_right_cancel_mul.to_is_cancel_mul CommSemigroup.IsRightCancelMul.toIsCancelMulₓ'. -/
 /-- Any `comm_semigroup G` that satisfies `is_right_cancel_mul G` also satisfies
 `is_cancel_mul G`. -/
-@[to_additive AddCommSemigroup.IsRightCancelAdd.to_is_cancel_add
+@[to_additive AddCommSemigroup.IsRightCancelAdd.toIsCancelAdd
       "Any `add_comm_semigroup G`\nthat satisfies `is_right_cancel_add G` also satisfies `is_cancel_add G`."]
 theorem CommSemigroup.IsRightCancelMul.toIsCancelMul (G : Type u) [CommSemigroup G]
     [IsRightCancelMul G] : IsCancelMul G :=
   { ‹IsRightCancelMul G›, CommSemigroup.IsRightCancelMul.toIsLeftCancelMul G with }
 #align comm_semigroup.is_right_cancel_mul.to_is_cancel_mul CommSemigroup.IsRightCancelMul.toIsCancelMul
+#align add_comm_semigroup.is_right_cancel_add.to_is_cancel_add AddCommSemigroup.IsRightCancelAdd.toIsCancelAdd
 
 end CommSemigroup
 
@@ -456,6 +460,7 @@ instance (priority := 100) LeftCancelSemigroup.toIsLeftCancelMul (G : Type u)
     [LeftCancelSemigroup G] : IsLeftCancelMul G
     where mul_left_cancel := LeftCancelSemigroup.mul_left_cancel
 #align left_cancel_semigroup.to_is_left_cancel_mul LeftCancelSemigroup.toIsLeftCancelMul
+#align add_left_cancel_semigroup.to_is_left_cancel_add AddLeftCancelSemigroup.toIsLeftCancelAdd
 
 #print RightCancelSemigroup /-
 /-- A `right_cancel_semigroup` is a semigroup such that `a * b = c * b` implies `a = c`. -/
@@ -488,6 +493,7 @@ instance (priority := 100) RightCancelSemigroup.toIsRightCancelMul (G : Type u)
     [RightCancelSemigroup G] : IsRightCancelMul G
     where mul_right_cancel := RightCancelSemigroup.mul_right_cancel
 #align right_cancel_semigroup.to_is_right_cancel_mul RightCancelSemigroup.toIsRightCancelMul
+#align add_right_cancel_semigroup.to_is_right_cancel_add AddRightCancelSemigroup.toIsRightCancelAdd
 
 #print MulOneClass /-
 /-- Typeclass for expressing that a type `M` with multiplication and a one satisfies
@@ -889,6 +895,7 @@ instance (priority := 100) CancelCommMonoid.toCancelMonoid (M : Type u) [CancelC
     CancelMonoid M :=
   { ‹CancelCommMonoid M›, CommSemigroup.IsLeftCancelMul.toIsRightCancelMul M with }
 #align cancel_comm_monoid.to_cancel_monoid CancelCommMonoid.toCancelMonoid
+#align add_cancel_comm_monoid.to_cancel_add_monoid AddCancelCommMonoid.toAddCancelMonoid
 -/
 
 /- warning: cancel_monoid.to_is_cancel_mul -> CancelMonoid.toIsCancelMul is a dubious translation:
@@ -1137,15 +1144,17 @@ theorem zpow_ofNat (a : G) : ∀ n : ℕ, a ^ (n : ℤ) = a ^ n
       _ = a ^ (n + 1) := (pow_succ _ _).symm
       
 #align zpow_coe_nat zpow_ofNat
+#align of_nat_zsmul ofNat_zsmul
 -/
 
 /- warning: zpow_of_nat clashes with zpow_coe_nat -> zpow_ofNat
 Case conversion may be inaccurate. Consider using '#align zpow_of_nat zpow_ofNatₓ'. -/
 #print zpow_ofNat /-
-@[to_additive of_nat_zsmul]
+@[to_additive ofNat_zsmul]
 theorem zpow_ofNat (a : G) (n : ℕ) : a ^ Int.ofNat n = a ^ n :=
   zpow_ofNat a n
 #align zpow_of_nat zpow_ofNat
+#align of_nat_zsmul ofNat_zsmul
 -/
 
 /- warning: zpow_neg_succ_of_nat -> zpow_negSucc is a dubious translation:
@@ -1499,6 +1508,7 @@ theorem Group.toDivInvMonoid_injective {G : Type _} :
   rintro ⟨⟩ ⟨⟩ ⟨⟩
   rfl
 #align group.to_div_inv_monoid_injective Group.toDivInvMonoid_injective
+#align add_group.to_sub_neg_add_monoid_injective AddGroup.toSubNegAddMonoid_injective
 -/
 
 #print CommGroup /-
@@ -1526,6 +1536,7 @@ theorem CommGroup.toGroup_injective {G : Type u} : Function.Injective (@CommGrou
   rintro ⟨⟩ ⟨⟩ ⟨⟩
   rfl
 #align comm_group.to_group_injective CommGroup.toGroup_injective
+#align add_comm_group.to_add_group_injective AddCommGroup.toAddGroup_injective
 -/
 
 section CommGroup

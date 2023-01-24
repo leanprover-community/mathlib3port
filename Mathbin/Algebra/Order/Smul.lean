@@ -279,12 +279,7 @@ theorem OrderedSMul.mk'' [OrderedSemiring 𝕜] [LinearOrderedAddCommMonoid M] [
     lt_of_smul_lt_smul_of_pos := fun a b c hab hc => (h hc).lt_iff_lt.1 hab }
 #align ordered_smul.mk'' OrderedSMul.mk''
 
-/- warning: nat.ordered_smul -> Nat.orderedSMul is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_1 : LinearOrderedCancelAddCommMonoid.{u1} M], OrderedSMul.{0, u1} Nat M Nat.orderedSemiring (OrderedCancelAddCommMonoid.toOrderedAddCommMonoid.{u1} M (LinearOrderedCancelAddCommMonoid.toOrderedCancelAddCommMonoid.{u1} M _inst_1)) (AddMonoid.natSMulWithZero.{u1} M (AddRightCancelMonoid.toAddMonoid.{u1} M (AddCancelMonoid.toAddRightCancelMonoid.{u1} M (AddCancelCommMonoid.toCancelAddMonoid.{u1} M (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} M (LinearOrderedCancelAddCommMonoid.toOrderedCancelAddCommMonoid.{u1} M _inst_1))))))
-but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : LinearOrderedCancelAddCommMonoid.{u1} M], OrderedSMul.{0, u1} Nat M Nat.orderedSemiring (LinearOrderedAddCommMonoid.toOrderedAddCommMonoid.{u1} M (LinearOrderedCancelAddCommMonoid.toLinearOrderedAddCommMonoid.{u1} M _inst_1)) (AddMonoid.natSMulWithZero.{u1} M (AddRightCancelMonoid.toAddMonoid.{u1} M (AddCancelMonoid.toAddRightCancelMonoid.{u1} M (AddCancelCommMonoid.toAddCancelMonoid.{u1} M (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} M (LinearOrderedCancelAddCommMonoid.toOrderedCancelAddCommMonoid.{u1} M _inst_1))))))
-Case conversion may be inaccurate. Consider using '#align nat.ordered_smul Nat.orderedSMulₓ'. -/
+#print Nat.orderedSMul /-
 instance Nat.orderedSMul [LinearOrderedCancelAddCommMonoid M] : OrderedSMul ℕ M :=
   OrderedSMul.mk'' fun n hn a b hab => by
     cases n
@@ -293,6 +288,7 @@ instance Nat.orderedSMul [LinearOrderedCancelAddCommMonoid M] : OrderedSMul ℕ 
     · simp only [one_nsmul, hab]
     · simp only [succ_nsmul _ n.succ, add_lt_add hab (ih n.succ_pos)]
 #align nat.ordered_smul Nat.orderedSMul
+-/
 
 #print Int.orderedSMul /-
 instance Int.orderedSMul [LinearOrderedAddCommGroup M] : OrderedSMul ℤ M :=

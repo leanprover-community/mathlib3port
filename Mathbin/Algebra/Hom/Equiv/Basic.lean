@@ -276,6 +276,7 @@ Case conversion may be inaccurate. Consider using '#align mul_equiv.coe_to_mul_h
 theorem coe_toMulHom {f : M ≃* N} : ⇑f.toMulHom = f :=
   rfl
 #align mul_equiv.coe_to_mul_hom MulEquiv.coe_toMulHom
+#align add_equiv.coe_to_add_hom AddEquiv.coe_toAddHom
 
 /- warning: mul_equiv.map_mul -> MulEquiv.map_mul is a dubious translation:
 lean 3 declaration is

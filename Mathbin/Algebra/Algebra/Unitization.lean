@@ -173,7 +173,7 @@ instance [AddCommGroup R] [AddCommGroup A] : AddCommGroup (Unitization R A) :=
   Prod.addCommGroup
 
 instance [SMul S R] [SMul S A] : SMul S (Unitization R A) :=
-  Prod.hasSmul
+  Prod.smul
 
 instance [SMul T R] [SMul T A] [SMul S R] [SMul S A] [SMul T S] [IsScalarTower T S R]
     [IsScalarTower T S A] : IsScalarTower T S (Unitization R A) :=

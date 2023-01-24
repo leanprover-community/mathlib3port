@@ -492,7 +492,7 @@ theorem le_infᵢ_add_infᵢ {ι ι' : Sort _} [Nonempty ι] [Nonempty ι'] {f :
     {a : ℝ≥0} (h : ∀ i j, a ≤ f i + g j) : a ≤ (⨅ i, f i) + ⨅ j, g j :=
   by
   rw [← Nnreal.coe_le_coe, Nnreal.coe_add, coe_infi, coe_infi]
-  exact le_cinfi_add_cinfi h
+  exact le_cinfᵢ_add_cinfᵢ h
 #align nnreal.le_infi_add_infi Nnreal.le_infᵢ_add_infᵢ
 
 example : Archimedean ℝ≥0 := by infer_instance

@@ -103,6 +103,7 @@ theorem smul_left_injective' [SMul M α] [FaithfulSMul M α] :
 instance (priority := 910) Mul.toSMul (α : Type _) [Mul α] : SMul α α :=
   ⟨(· * ·)⟩
 #align has_mul.to_has_smul Mul.toSMul
+#align has_add.to_has_vadd Add.toVAdd
 -/
 
 #print smul_eq_mul /-
@@ -277,6 +278,7 @@ add_decl_doc VAddCommClass.symm
 instance smulCommClass_self (M α : Type _) [CommMonoid M] [MulAction M α] : SMulCommClass M M α :=
   ⟨fun a a' b => by rw [← mul_smul, mul_comm, mul_smul]⟩
 #align smul_comm_class_self smulCommClass_self
+#align vadd_comm_class_self vaddCommClass_self
 -/
 
 #print VAddAssocClass /-
@@ -321,6 +323,7 @@ Case conversion may be inaccurate. Consider using '#align semigroup.is_scalar_to
 instance Semigroup.isScalarTower [Semigroup α] : IsScalarTower α α α :=
   ⟨mul_assoc⟩
 #align semigroup.is_scalar_tower Semigroup.isScalarTower
+#align add_semigroup.vadd_assoc_class AddSemigroup.isScalarTower
 
 #print IsCentralVAdd /-
 /-- A typeclass indicating that the right (aka `add_opposite`) and left actions by `M` on `α` are
@@ -409,6 +412,7 @@ variable [SMul M α]
 def comp.smul (g : N → M) (n : N) (a : α) : α :=
   g n • a
 #align has_smul.comp.smul SMul.comp.smul
+#align has_vadd.comp.vadd VAdd.comp.vadd
 -/
 
 variable (α)
@@ -447,6 +451,7 @@ theorem comp.isScalarTower [SMul M β] [SMul α β] [IsScalarTower M α β] (g :
     haveI := comp α g <;> haveI := comp β g <;> exact IsScalarTower N α β :=
   { smul_assoc := fun n => @smul_assoc _ _ _ _ _ _ _ (g n) }
 #align has_smul.comp.is_scalar_tower SMul.comp.isScalarTower
+#align has_vadd.comp.vadd_assoc_class VAdd.comp.isScalarTower
 
 /- warning: has_smul.comp.smul_comm_class -> SMul.comp.smulCommClass is a dubious translation:
 lean 3 declaration is
@@ -464,6 +469,7 @@ theorem comp.smulCommClass [SMul β α] [SMulCommClass M β α] (g : N → M) :
     SMulCommClass N β α :=
   { smul_comm := fun n => @smul_comm _ _ _ _ _ _ (g n) }
 #align has_smul.comp.smul_comm_class SMul.comp.smulCommClass
+#align has_vadd.comp.vadd_comm_class VAdd.comp.vaddCommClass
 
 /- warning: has_smul.comp.smul_comm_class' -> SMul.comp.smulCommClass' is a dubious translation:
 lean 3 declaration is
@@ -481,6 +487,7 @@ theorem comp.smulCommClass' [SMul β α] [SMulCommClass β M α] (g : N → M) :
     SMulCommClass β N α :=
   { smul_comm := fun _ n => @smul_comm _ _ _ _ _ _ _ (g n) }
 #align has_smul.comp.smul_comm_class' SMul.comp.smulCommClass'
+#align has_vadd.comp.vadd_comm_class' VAdd.comp.vaddCommClass'
 
 end SMul
 
@@ -602,7 +609,7 @@ theorem one_smul (b : α) : (1 : M) • b = b :=
 lean 3 declaration is
   forall (M : Type.{u1}) {α : Type.{u2}} [_inst_1 : Monoid.{u1} M] [_inst_2 : MulAction.{u1, u2} M α _inst_1], Eq.{succ u2} (α -> α) (SMul.smul.{u1, u2} M α (MulAction.toHasSmul.{u1, u2} M α _inst_1 _inst_2) (OfNat.ofNat.{u1} M 1 (OfNat.mk.{u1} M 1 (One.one.{u1} M (MulOneClass.toHasOne.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)))))) (id.{succ u2} α)
 but is expected to have type
-  forall (M : Type.{u1}) {α : Type.{u2}} [_inst_1 : Monoid.{u1} M] [_inst_2 : MulAction.{u1, u2} M α _inst_1], Eq.{succ u2} (α -> α) ((fun (x._@.Mathlib.GroupTheory.GroupAction.Defs._hyg.2767 : M) (x._@.Mathlib.GroupTheory.GroupAction.Defs._hyg.2769 : α) => HSMul.hSMul.{u1, u2, u2} M α α (instHSMul.{u1, u2} M α (MulAction.toSMul.{u1, u2} M α _inst_1 _inst_2)) x._@.Mathlib.GroupTheory.GroupAction.Defs._hyg.2767 x._@.Mathlib.GroupTheory.GroupAction.Defs._hyg.2769) (OfNat.ofNat.{u1} M 1 (One.toOfNat1.{u1} M (Monoid.toOne.{u1} M _inst_1)))) (id.{succ u2} α)
+  forall (M : Type.{u1}) {α : Type.{u2}} [_inst_1 : Monoid.{u1} M] [_inst_2 : MulAction.{u1, u2} M α _inst_1], Eq.{succ u2} (α -> α) ((fun (x._@.Mathlib.GroupTheory.GroupAction.Defs._hyg.2796 : M) (x._@.Mathlib.GroupTheory.GroupAction.Defs._hyg.2798 : α) => HSMul.hSMul.{u1, u2, u2} M α α (instHSMul.{u1, u2} M α (MulAction.toSMul.{u1, u2} M α _inst_1 _inst_2)) x._@.Mathlib.GroupTheory.GroupAction.Defs._hyg.2796 x._@.Mathlib.GroupTheory.GroupAction.Defs._hyg.2798) (OfNat.ofNat.{u1} M 1 (One.toOfNat1.{u1} M (Monoid.toOne.{u1} M _inst_1)))) (id.{succ u2} α)
 Case conversion may be inaccurate. Consider using '#align one_smul_eq_id one_smul_eq_idₓ'. -/
 /-- `has_smul` version of `one_mul_eq_id` -/
 @[to_additive "`has_vadd` version of `zero_add_eq_id`"]
@@ -615,7 +622,7 @@ theorem one_smul_eq_id : ((· • ·) (1 : M) : α → α) = id :=
 lean 3 declaration is
   forall (M : Type.{u1}) {α : Type.{u2}} [_inst_1 : Monoid.{u1} M] [_inst_2 : MulAction.{u1, u2} M α _inst_1] (a₁ : M) (a₂ : M), Eq.{succ u2} (α -> α) (Function.comp.{succ u2, succ u2, succ u2} α α α (SMul.smul.{u1, u2} M α (MulAction.toHasSmul.{u1, u2} M α _inst_1 _inst_2) a₁) (SMul.smul.{u1, u2} M α (MulAction.toHasSmul.{u1, u2} M α _inst_1 _inst_2) a₂)) (SMul.smul.{u1, u2} M α (MulAction.toHasSmul.{u1, u2} M α _inst_1 _inst_2) (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toHasMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) a₁ a₂))
 but is expected to have type
-  forall (M : Type.{u1}) {α : Type.{u2}} [_inst_1 : Monoid.{u1} M] [_inst_2 : MulAction.{u1, u2} M α _inst_1] (a₁ : M) (a₂ : M), Eq.{succ u2} (α -> α) (Function.comp.{succ u2, succ u2, succ u2} α α α ((fun (x._@.Mathlib.GroupTheory.GroupAction.Defs._hyg.2820 : M) (x._@.Mathlib.GroupTheory.GroupAction.Defs._hyg.2822 : α) => HSMul.hSMul.{u1, u2, u2} M α α (instHSMul.{u1, u2} M α (MulAction.toSMul.{u1, u2} M α _inst_1 _inst_2)) x._@.Mathlib.GroupTheory.GroupAction.Defs._hyg.2820 x._@.Mathlib.GroupTheory.GroupAction.Defs._hyg.2822) a₁) ((fun (x._@.Mathlib.GroupTheory.GroupAction.Defs._hyg.2837 : M) (x._@.Mathlib.GroupTheory.GroupAction.Defs._hyg.2839 : α) => HSMul.hSMul.{u1, u2, u2} M α α (instHSMul.{u1, u2} M α (MulAction.toSMul.{u1, u2} M α _inst_1 _inst_2)) x._@.Mathlib.GroupTheory.GroupAction.Defs._hyg.2837 x._@.Mathlib.GroupTheory.GroupAction.Defs._hyg.2839) a₂)) ((fun (x._@.Mathlib.GroupTheory.GroupAction.Defs._hyg.2860 : M) (x._@.Mathlib.GroupTheory.GroupAction.Defs._hyg.2862 : α) => HSMul.hSMul.{u1, u2, u2} M α α (instHSMul.{u1, u2} M α (MulAction.toSMul.{u1, u2} M α _inst_1 _inst_2)) x._@.Mathlib.GroupTheory.GroupAction.Defs._hyg.2860 x._@.Mathlib.GroupTheory.GroupAction.Defs._hyg.2862) (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) a₁ a₂))
+  forall (M : Type.{u1}) {α : Type.{u2}} [_inst_1 : Monoid.{u1} M] [_inst_2 : MulAction.{u1, u2} M α _inst_1] (a₁ : M) (a₂ : M), Eq.{succ u2} (α -> α) (Function.comp.{succ u2, succ u2, succ u2} α α α ((fun (x._@.Mathlib.GroupTheory.GroupAction.Defs._hyg.2850 : M) (x._@.Mathlib.GroupTheory.GroupAction.Defs._hyg.2852 : α) => HSMul.hSMul.{u1, u2, u2} M α α (instHSMul.{u1, u2} M α (MulAction.toSMul.{u1, u2} M α _inst_1 _inst_2)) x._@.Mathlib.GroupTheory.GroupAction.Defs._hyg.2850 x._@.Mathlib.GroupTheory.GroupAction.Defs._hyg.2852) a₁) ((fun (x._@.Mathlib.GroupTheory.GroupAction.Defs._hyg.2867 : M) (x._@.Mathlib.GroupTheory.GroupAction.Defs._hyg.2869 : α) => HSMul.hSMul.{u1, u2, u2} M α α (instHSMul.{u1, u2} M α (MulAction.toSMul.{u1, u2} M α _inst_1 _inst_2)) x._@.Mathlib.GroupTheory.GroupAction.Defs._hyg.2867 x._@.Mathlib.GroupTheory.GroupAction.Defs._hyg.2869) a₂)) ((fun (x._@.Mathlib.GroupTheory.GroupAction.Defs._hyg.2890 : M) (x._@.Mathlib.GroupTheory.GroupAction.Defs._hyg.2892 : α) => HSMul.hSMul.{u1, u2, u2} M α α (instHSMul.{u1, u2} M α (MulAction.toSMul.{u1, u2} M α _inst_1 _inst_2)) x._@.Mathlib.GroupTheory.GroupAction.Defs._hyg.2890 x._@.Mathlib.GroupTheory.GroupAction.Defs._hyg.2892) (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) a₁ a₂))
 Case conversion may be inaccurate. Consider using '#align comp_smul_left comp_smul_leftₓ'. -/
 /-- `has_smul` version of `comp_mul_left` -/
 @[to_additive "`has_vadd` version of `comp_add_left`"]

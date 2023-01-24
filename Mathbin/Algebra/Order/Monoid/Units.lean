@@ -33,6 +33,7 @@ instance [Monoid α] [Preorder α] : Preorder αˣ :=
 theorem val_le_val [Monoid α] [Preorder α] {a b : αˣ} : (a : α) ≤ b ↔ a ≤ b :=
   Iff.rfl
 #align units.coe_le_coe Units.val_le_val
+#align add_units.coe_le_coe AddUnits.val_le_val
 -/
 
 #print Units.val_lt_val /-
@@ -40,6 +41,7 @@ theorem val_le_val [Monoid α] [Preorder α] {a b : αˣ} : (a : α) ≤ b ↔ a
 theorem val_lt_val [Monoid α] [Preorder α] {a b : αˣ} : (a : α) < b ↔ a < b :=
   Iff.rfl
 #align units.coe_lt_coe Units.val_lt_val
+#align add_units.coe_lt_coe AddUnits.val_lt_val
 -/
 
 @[to_additive]
@@ -70,6 +72,7 @@ Case conversion may be inaccurate. Consider using '#align units.max_coe Units.ma
 theorem max_val [Monoid α] [LinearOrder α] {a b : αˣ} : (↑(max a b) : α) = max a b :=
   Monotone.map_max orderEmbeddingVal.Monotone
 #align units.max_coe Units.max_val
+#align add_units.max_coe AddUnits.max_val
 
 /- warning: units.min_coe -> Units.min_val is a dubious translation:
 lean 3 declaration is
@@ -81,6 +84,7 @@ Case conversion may be inaccurate. Consider using '#align units.min_coe Units.mi
 theorem min_val [Monoid α] [LinearOrder α] {a b : αˣ} : (↑(min a b) : α) = min a b :=
   Monotone.map_min orderEmbeddingVal.Monotone
 #align units.min_coe Units.min_val
+#align add_units.min_coe AddUnits.min_val
 
 end Units
 

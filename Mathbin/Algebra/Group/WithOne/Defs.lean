@@ -243,7 +243,7 @@ theorem coe_one [One α] : ((1 : α) : WithZero α) = 1 :=
 -/
 
 instance [Mul α] : MulZeroClass (WithZero α) :=
-  { WithZero.hasZero with
+  { WithZero.zero with
     mul := Option.map₂ (· * ·)
     zero_mul := id <| Option.map₂_none_left (· * ·)
     mul_zero := id <| Option.map₂_none_right (· * ·) }

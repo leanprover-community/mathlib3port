@@ -38,6 +38,7 @@ Case conversion may be inaccurate. Consider using '#align set.inv_mem_Icc_iff Se
 theorem inv_mem_Icc_iff : a⁻¹ ∈ Set.Icc c d ↔ a ∈ Set.Icc d⁻¹ c⁻¹ :=
   (and_comm' _ _).trans <| and_congr inv_le' le_inv'
 #align set.inv_mem_Icc_iff Set.inv_mem_Icc_iff
+#align set.neg_mem_Icc_iff Set.neg_mem_Icc_iff
 
 /- warning: set.inv_mem_Ico_iff -> Set.inv_mem_Ico_iff is a dubious translation:
 lean 3 declaration is
@@ -49,6 +50,7 @@ Case conversion may be inaccurate. Consider using '#align set.inv_mem_Ico_iff Se
 theorem inv_mem_Ico_iff : a⁻¹ ∈ Set.Ico c d ↔ a ∈ Set.Ioc d⁻¹ c⁻¹ :=
   (and_comm' _ _).trans <| and_congr inv_lt' le_inv'
 #align set.inv_mem_Ico_iff Set.inv_mem_Ico_iff
+#align set.neg_mem_Ico_iff Set.neg_mem_Ico_iff
 
 /- warning: set.inv_mem_Ioc_iff -> Set.inv_mem_Ioc_iff is a dubious translation:
 lean 3 declaration is
@@ -60,6 +62,7 @@ Case conversion may be inaccurate. Consider using '#align set.inv_mem_Ioc_iff Se
 theorem inv_mem_Ioc_iff : a⁻¹ ∈ Set.Ioc c d ↔ a ∈ Set.Ico d⁻¹ c⁻¹ :=
   (and_comm' _ _).trans <| and_congr inv_le' lt_inv'
 #align set.inv_mem_Ioc_iff Set.inv_mem_Ioc_iff
+#align set.neg_mem_Ioc_iff Set.neg_mem_Ioc_iff
 
 /- warning: set.inv_mem_Ioo_iff -> Set.inv_mem_Ioo_iff is a dubious translation:
 lean 3 declaration is
@@ -71,6 +74,7 @@ Case conversion may be inaccurate. Consider using '#align set.inv_mem_Ioo_iff Se
 theorem inv_mem_Ioo_iff : a⁻¹ ∈ Set.Ioo c d ↔ a ∈ Set.Ioo d⁻¹ c⁻¹ :=
   (and_comm' _ _).trans <| and_congr inv_lt' lt_inv'
 #align set.inv_mem_Ioo_iff Set.inv_mem_Ioo_iff
+#align set.neg_mem_Ioo_iff Set.neg_mem_Ioo_iff
 
 end OrderedCommGroup
 

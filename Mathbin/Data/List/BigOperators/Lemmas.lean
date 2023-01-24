@@ -161,6 +161,7 @@ theorem alternatingProd_append :
     simp_rw [cons_append, alternating_prod_cons, alternating_prod_append, length_cons, pow_succ,
       neg_mul, one_mul, zpow_neg, ← div_eq_mul_inv, div_div]
 #align list.alternating_prod_append List.alternatingProd_append
+#align list.alternating_sum_append List.alternatingSum_append
 
 /- warning: list.alternating_prod_reverse -> List.alternatingProd_reverse is a dubious translation:
 lean 3 declaration is
@@ -179,6 +180,7 @@ theorem alternatingProd_reverse :
       one_mul, zpow_neg, inv_inv]
     rw [mul_comm, ← div_eq_mul_inv, div_zpow]
 #align list.alternating_prod_reverse List.alternatingProd_reverse
+#align list.alternating_sum_reverse List.alternatingSum_reverse
 
 end Alternating
 

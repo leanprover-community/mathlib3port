@@ -1035,7 +1035,7 @@ they are equal. -/
 theorem add_hom_ext {γ : Type w} [AddZeroClass γ] ⦃f g : (Π₀ i, β i) →+ γ⦄
     (H : ∀ (i : ι) (y : β i), f (single i y) = g (single i y)) : f = g :=
   by
-  refine' AddMonoidHom.eq_of_eqOn_mdense add_closure_Union_range_single fun f hf => _
+  refine' AddMonoidHom.eq_of_eqOn_denseM add_closure_Union_range_single fun f hf => _
   simp only [Set.mem_unionᵢ, Set.mem_range] at hf
   rcases hf with ⟨x, y, rfl⟩
   apply H

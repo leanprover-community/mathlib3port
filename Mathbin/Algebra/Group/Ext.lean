@@ -63,6 +63,7 @@ theorem CommMonoid.toMonoid_injective {M : Type u} : Function.Injective (@CommMo
   rintro ⟨⟩ ⟨⟩ h
   congr <;> injection h
 #align comm_monoid.to_monoid_injective CommMonoid.toMonoid_injective
+#align add_comm_monoid.to_add_monoid_injective AddCommMonoid.toAddMonoid_injective
 -/
 
 /- warning: comm_monoid.ext -> CommMonoid.ext is a dubious translation:
@@ -85,6 +86,7 @@ theorem LeftCancelMonoid.toMonoid_injective {M : Type u} :
   rintro ⟨⟩ ⟨⟩ h
   congr <;> injection h
 #align left_cancel_monoid.to_monoid_injective LeftCancelMonoid.toMonoid_injective
+#align add_left_cancel_monoid.to_add_monoid_injective AddLeftCancelMonoid.toAddMonoid_injective
 -/
 
 /- warning: left_cancel_monoid.ext -> LeftCancelMonoid.ext is a dubious translation:
@@ -108,6 +110,7 @@ theorem RightCancelMonoid.toMonoid_injective {M : Type u} :
   rintro ⟨⟩ ⟨⟩ h
   congr <;> injection h
 #align right_cancel_monoid.to_monoid_injective RightCancelMonoid.toMonoid_injective
+#align add_right_cancel_monoid.to_add_monoid_injective AddRightCancelMonoid.toAddMonoid_injective
 -/
 
 /- warning: right_cancel_monoid.ext -> RightCancelMonoid.ext is a dubious translation:
@@ -131,6 +134,7 @@ theorem CancelMonoid.toLeftCancelMonoid_injective {M : Type u} :
   rintro ⟨⟩ ⟨⟩ h
   congr <;> injection h
 #align cancel_monoid.to_left_cancel_monoid_injective CancelMonoid.toLeftCancelMonoid_injective
+#align add_cancel_monoid.to_left_cancel_add_monoid_injective AddCancelMonoid.toAddLeftCancelMonoid_injective
 -/
 
 /- warning: cancel_monoid.ext -> CancelMonoid.ext is a dubious translation:
@@ -154,6 +158,7 @@ theorem CancelCommMonoid.toCommMonoid_injective {M : Type u} :
   rintro ⟨⟩ ⟨⟩ h
   congr <;> injection h
 #align cancel_comm_monoid.to_comm_monoid_injective CancelCommMonoid.toCommMonoid_injective
+#align add_cancel_comm_monoid.to_add_comm_monoid_injective AddCancelCommMonoid.toAddCommMonoid_injective
 -/
 
 /- warning: cancel_comm_monoid.ext -> CancelCommMonoid.ext is a dubious translation:

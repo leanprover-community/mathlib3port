@@ -91,6 +91,7 @@ Case conversion may be inaccurate. Consider using '#align sigma.has_faithful_smu
 protected theorem FaithfulSMul' [FaithfulSMul M (α i)] : FaithfulSMul M (Σi, α i) :=
   ⟨fun x y h => eq_of_smul_eq_smul fun a : α i => hEq_iff_eq.1 (ext_iff.1 <| h <| mk i a).2⟩
 #align sigma.has_faithful_smul' Sigma.FaithfulSMul'
+#align sigma.has_faithful_vadd' Sigma.FaithfulVAdd'
 
 @[to_additive]
 instance [Nonempty ι] [∀ i, FaithfulSMul M (α i)] : FaithfulSMul M (Σi, α i) :=

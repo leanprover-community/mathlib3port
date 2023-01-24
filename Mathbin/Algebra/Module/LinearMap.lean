@@ -1674,7 +1674,7 @@ instance Module.End.ring : Ring (Module.End R N₁) :=
   { Module.End.semiring,
     LinearMap.addCommGroup with
     intCast := fun z => z • 1
-    int_cast_of_nat := of_nat_zsmul _
+    int_cast_of_nat := ofNat_zsmul _
     int_cast_neg_succ_of_nat := negSucc_zsmul _ }
 #align module.End.ring Module.End.ring
 -/

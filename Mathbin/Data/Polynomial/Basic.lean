@@ -785,7 +785,7 @@ theorem addSubmonoid_closure_setOf_eq_monomial :
 
 theorem add_hom_ext {M : Type _} [AddMonoid M] {f g : R[X] →+ M}
     (h : ∀ n a, f (monomial n a) = g (monomial n a)) : f = g :=
-  AddMonoidHom.eq_of_eqOn_mdense addSubmonoid_closure_setOf_eq_monomial <|
+  AddMonoidHom.eq_of_eqOn_denseM addSubmonoid_closure_setOf_eq_monomial <|
     by
     rintro p ⟨n, a, rfl⟩
     exact h n a

@@ -585,7 +585,7 @@ Case conversion may be inaccurate. Consider using '#align map_zpow map_zpowₓ'.
 -- to_additive puts the arguments in the wrong order, so generate an auxiliary lemma, then
 -- swap its arguments.
 /-- Group homomorphisms preserve integer power. -/
-@[to_additive MapZsmul.aux, simp]
+@[to_additive map_zsmul.aux, simp]
 theorem map_zpow [Group G] [DivisionMonoid H] [MonoidHomClass F G H] (f : F) (g : G) (n : ℤ) :
     f (g ^ n) = f g ^ n :=
   map_zpow' f (map_inv f) g n
@@ -601,7 +601,7 @@ Case conversion may be inaccurate. Consider using '#align map_zsmul map_zsmulₓ
 /-- Additive group homomorphisms preserve integer scaling. -/
 theorem map_zsmul [AddGroup G] [SubtractionMonoid H] [AddMonoidHomClass F G H] (f : F) (n : ℤ)
     (g : G) : f (n • g) = n • f g :=
-  MapZsmul.aux f g n
+  map_zsmul.aux f g n
 #align map_zsmul map_zsmul
 
 attribute [to_additive_reorder 8, to_additive] map_zpow

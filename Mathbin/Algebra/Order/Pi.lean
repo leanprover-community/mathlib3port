@@ -75,6 +75,7 @@ instance orderedCancelCommMonoid [∀ i, OrderedCancelCommMonoid <| f i] :
         npow := Monoid.npow } <;>
     pi_instance_derive_field
 #align pi.ordered_cancel_comm_monoid Pi.orderedCancelCommMonoid
+#align pi.ordered_cancel_add_comm_monoid Pi.orderedAddCancelCommMonoid
 -/
 
 #print Pi.orderedCommGroup /-

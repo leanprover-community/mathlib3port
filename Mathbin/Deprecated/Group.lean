@@ -184,6 +184,7 @@ theorem isMonoidHom_coe (f : M →* N) : IsMonoidHom (f : M → N) :=
   { map_mul := f.map_mul
     map_one := f.map_one }
 #align monoid_hom.is_monoid_hom_coe MonoidHom.isMonoidHom_coe
+#align add_monoid_hom.is_add_monoid_hom_coe AddMonoidHom.isAddMonoidHom_coe
 
 end MonoidHom
 
@@ -202,6 +203,7 @@ Case conversion may be inaccurate. Consider using '#align mul_equiv.is_mul_hom M
 theorem isMulHom (h : M ≃* N) : IsMulHom h :=
   ⟨h.map_mul⟩
 #align mul_equiv.is_mul_hom MulEquiv.isMulHom
+#align add_equiv.is_add_hom AddEquiv.isAddHom
 
 /- warning: mul_equiv.is_monoid_hom -> MulEquiv.isMonoidHom is a dubious translation:
 lean 3 declaration is
@@ -217,6 +219,7 @@ theorem isMonoidHom (h : M ≃* N) : IsMonoidHom h :=
   { map_mul := h.map_mul
     map_one := h.map_one }
 #align mul_equiv.is_monoid_hom MulEquiv.isMonoidHom
+#align add_equiv.is_add_monoid_hom AddEquiv.isAddMonoidHom
 
 end MulEquiv
 
@@ -235,6 +238,7 @@ Case conversion may be inaccurate. Consider using '#align is_monoid_hom.map_mul 
 theorem map_mul' (x y) : f (x * y) = f x * f y :=
   hf.map_mul x y
 #align is_monoid_hom.map_mul IsMonoidHom.map_mul'
+#align is_add_monoid_hom.map_add IsAddMonoidHom.map_add'
 
 /- warning: is_monoid_hom.inv -> IsMonoidHom.inv is a dubious translation:
 lean 3 declaration is
@@ -268,6 +272,7 @@ theorem IsMulHom.to_isMonoidHom [MulOneClass α] [Group β] {f : α → β} (hf 
   { map_one := mul_right_eq_self.1 <| by rw [← hf.map_mul, one_mul]
     map_mul := hf.map_mul }
 #align is_mul_hom.to_is_monoid_hom IsMulHom.to_isMonoidHom
+#align is_add_hom.to_is_add_monoid_hom IsAddHom.to_isAddMonoidHom
 
 namespace IsMonoidHom
 
@@ -356,6 +361,7 @@ theorem MonoidHom.isGroupHom {G H : Type _} {_ : Group G} {_ : Group H} (f : G �
     IsGroupHom (f : G → H) :=
   { map_mul := f.map_mul }
 #align monoid_hom.is_group_hom MonoidHom.isGroupHom
+#align add_monoid_hom.is_add_group_hom AddMonoidHom.isAddGroupHom
 
 /- warning: mul_equiv.is_group_hom -> MulEquiv.isGroupHom is a dubious translation:
 lean 3 declaration is
@@ -368,6 +374,7 @@ theorem MulEquiv.isGroupHom {G H : Type _} {_ : Group G} {_ : Group H} (h : G �
     IsGroupHom h :=
   { map_mul := h.map_mul }
 #align mul_equiv.is_group_hom MulEquiv.isGroupHom
+#align add_equiv.is_add_group_hom AddEquiv.isAddGroupHom
 
 /- warning: is_group_hom.mk' -> IsGroupHom.mk' is a dubious translation:
 lean 3 declaration is
@@ -405,6 +412,7 @@ theorem map_mul' : ∀ x y, f (x * y) = f x * f y :=
 theorem to_isMonoidHom : IsMonoidHom f :=
   hf.to_is_mul_hom.to_is_monoid_hom
 #align is_group_hom.to_is_monoid_hom IsGroupHom.to_isMonoidHom
+#align is_add_group_hom.to_is_add_monoid_hom IsAddGroupHom.to_isAddMonoidHom
 -/
 
 /- warning: is_group_hom.map_one -> IsGroupHom.map_one is a dubious translation:
@@ -579,11 +587,12 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CommGroup.{u1} α], IsGroupHom.{u1, u1} α α (CommGroup.toGroup.{u1} α _inst_1) (CommGroup.toGroup.{u1} α _inst_1) (Inv.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (DivisionCommMonoid.toDivisionMonoid.{u1} α (CommGroup.toDivisionCommMonoid.{u1} α _inst_1))))))
 Case conversion may be inaccurate. Consider using '#align inv.is_group_hom Inv.isGroupHomₓ'. -/
 /-- Inversion is a group homomorphism if the group is commutative. -/
-@[to_additive Neg.is_add_group_hom
+@[to_additive Neg.isAddGroupHom
       "Negation is an `add_group` homomorphism if the `add_group` is commutative."]
 theorem Inv.isGroupHom [CommGroup α] : IsGroupHom (Inv.inv : α → α) :=
   { map_mul := mul_inv }
 #align inv.is_group_hom Inv.isGroupHom
+#align neg.is_add_group_hom Neg.isAddGroupHom
 
 /- warning: is_add_group_hom.sub -> IsAddGroupHom.sub is a dubious translation:
 lean 3 declaration is
@@ -629,7 +638,7 @@ theorem coe_map' {f : M → N} (hf : IsMonoidHom f) (x : Mˣ) : ↑((map' hf : M
 lean 3 declaration is
   forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M], IsMonoidHom.{u1, u1} (Units.{u1} M _inst_1) M (Units.mulOneClass.{u1} M _inst_1) (Monoid.toMulOneClass.{u1} M _inst_1) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Units.{u1} M _inst_1) M (HasLiftT.mk.{succ u1, succ u1} (Units.{u1} M _inst_1) M (CoeTCₓ.coe.{succ u1, succ u1} (Units.{u1} M _inst_1) M (coeBase.{succ u1, succ u1} (Units.{u1} M _inst_1) M (Units.hasCoe.{u1} M _inst_1)))))
 but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M], IsMonoidHom.{u1, u1} (Units.{u1} M _inst_1) M (Units.instMulOneClassUnits.{u1} M _inst_1) (Monoid.toMulOneClass.{u1} M _inst_1) (fun (x._@.Mathlib.Deprecated.Group._hyg.1887 : Units.{u1} M _inst_1) => Units.val.{u1} M _inst_1 x._@.Mathlib.Deprecated.Group._hyg.1887)
+  forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M], IsMonoidHom.{u1, u1} (Units.{u1} M _inst_1) M (Units.instMulOneClassUnits.{u1} M _inst_1) (Monoid.toMulOneClass.{u1} M _inst_1) (fun (x._@.Mathlib.Deprecated.Group._hyg.1914 : Units.{u1} M _inst_1) => Units.val.{u1} M _inst_1 x._@.Mathlib.Deprecated.Group._hyg.1914)
 Case conversion may be inaccurate. Consider using '#align units.coe_is_monoid_hom Units.coe_isMonoidHomₓ'. -/
 theorem coe_isMonoidHom : IsMonoidHom (coe : Mˣ → M) :=
   (coeHom M).is_monoid_hom_coe

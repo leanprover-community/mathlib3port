@@ -1089,7 +1089,7 @@ noncomputable instance : InfSet ℝ :=
 
 /- warning: real.Inf_def -> Real.infₛ_def is a dubious translation:
 lean 3 declaration is
-  forall (S : Set.{0} Real), Eq.{1} Real (InfSet.infₛ.{0} Real Real.hasInf S) (Neg.neg.{0} Real Real.hasNeg (SupSet.supₛ.{0} Real Real.hasSup (Neg.neg.{0} (Set.{0} Real) (Set.hasNeg.{0} Real Real.hasNeg) S)))
+  forall (S : Set.{0} Real), Eq.{1} Real (InfSet.infₛ.{0} Real Real.hasInf S) (Neg.neg.{0} Real Real.hasNeg (SupSet.supₛ.{0} Real Real.hasSup (Neg.neg.{0} (Set.{0} Real) (Set.neg.{0} Real Real.hasNeg) S)))
 but is expected to have type
   forall (S : Set.{0} Real), Eq.{1} Real (InfSet.infₛ.{0} Real Real.instInfSetReal S) (Neg.neg.{0} Real Real.instNegReal (SupSet.supₛ.{0} Real Real.instSupSetReal (Neg.neg.{0} (Set.{0} Real) (Set.neg.{0} Real Real.instNegReal) S)))
 Case conversion may be inaccurate. Consider using '#align real.Inf_def Real.infₛ_defₓ'. -/

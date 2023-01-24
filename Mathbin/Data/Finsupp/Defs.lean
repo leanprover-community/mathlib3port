@@ -1094,7 +1094,7 @@ then they are equal. -/
 theorem add_hom_ext [AddZeroClass N] ⦃f g : (α →₀ M) →+ N⦄
     (H : ∀ x y, f (single x y) = g (single x y)) : f = g :=
   by
-  refine' AddMonoidHom.eq_of_eqOn_mdense add_closure_set_of_eq_single _
+  refine' AddMonoidHom.eq_of_eqOn_denseM add_closure_set_of_eq_single _
   rintro _ ⟨x, y, rfl⟩
   apply H
 #align finsupp.add_hom_ext Finsupp.add_hom_ext

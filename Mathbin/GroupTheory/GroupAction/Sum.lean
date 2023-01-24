@@ -109,6 +109,7 @@ instance [SMul Mᵐᵒᵖ α] [SMul Mᵐᵒᵖ β] [IsCentralScalar M α] [IsCen
 instance FaithfulSMulLeft [FaithfulSMul M α] : FaithfulSMul M (Sum α β) :=
   ⟨fun x y h => eq_of_smul_eq_smul fun a : α => by injection h (inl a)⟩
 #align sum.has_faithful_smul_left Sum.FaithfulSMulLeft
+#align sum.has_faithful_vadd_left Sum.FaithfulVAddLeft
 -/
 
 #print Sum.FaithfulSMulRight /-
@@ -116,6 +117,7 @@ instance FaithfulSMulLeft [FaithfulSMul M α] : FaithfulSMul M (Sum α β) :=
 instance FaithfulSMulRight [FaithfulSMul M β] : FaithfulSMul M (Sum α β) :=
   ⟨fun x y h => eq_of_smul_eq_smul fun b : β => by injection h (inr b)⟩
 #align sum.has_faithful_smul_right Sum.FaithfulSMulRight
+#align sum.has_faithful_vadd_right Sum.FaithfulVAddRight
 -/
 
 end SMul

@@ -110,7 +110,7 @@ instance [AddCommGroup M] : Ring (AddMonoid.End M) :=
   { AddMonoid.End.semiring,
     AddMonoidHom.addCommGroup with
     intCast := fun z => z • 1
-    int_cast_of_nat := of_nat_zsmul _
+    int_cast_of_nat := ofNat_zsmul _
     int_cast_neg_succ_of_nat := negSucc_zsmul _ }
 
 /- warning: add_monoid.End.int_cast_apply -> AddMonoid.End.int_cast_apply is a dubious translation:

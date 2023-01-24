@@ -28,7 +28,7 @@ namespace Prod
 #print Prod.smulWithZero /-
 instance smulWithZero [Zero R] [Zero M] [Zero N] [SMulWithZero R M] [SMulWithZero R N] :
     SMulWithZero R (M × N) :=
-  { Prod.hasSmul with
+  { Prod.smul with
     smul_zero := fun r => Prod.ext (smul_zero _) (smul_zero _)
     zero_smul := fun ⟨m, n⟩ => Prod.ext (zero_smul _ _) (zero_smul _ _) }
 #align prod.smul_with_zero Prod.smulWithZero

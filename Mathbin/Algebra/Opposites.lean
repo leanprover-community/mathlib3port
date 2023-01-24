@@ -126,6 +126,7 @@ Case conversion may be inaccurate. Consider using '#align mul_opposite.rec MulOp
 @[simp, to_additive "A recursor for `add_opposite`. Use as `induction x using add_opposite.rec`."]
 protected def rec' {F : ∀ X : αᵐᵒᵖ, Sort v} (h : ∀ X, F (op X)) : ∀ X, F X := fun X => h (unop X)
 #align mul_opposite.rec MulOpposite.rec'
+#align add_opposite.rec AddOpposite.rec'
 
 #print MulOpposite.opEquiv /-
 /-- The canonical bijection between `α` and `αᵐᵒᵖ`. -/

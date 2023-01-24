@@ -89,9 +89,10 @@ variable [One α] {s : Set α} {a : α}
 protected def one : One (Set α) :=
   ⟨{1}⟩
 #align set.has_one Set.one
+#align set.has_zero Set.zero
 -/
 
-scoped[Pointwise] attribute [instance] Set.one Set.hasZero
+scoped[Pointwise] attribute [instance] Set.one Set.zero
 
 #print Set.singleton_one /-
 @[to_additive]
@@ -171,6 +172,7 @@ def singletonOneHom : OneHom α (Set α) :=
 theorem coe_singletonOneHom : (singletonOneHom : α → Set α) = singleton :=
   rfl
 #align set.coe_singleton_one_hom Set.coe_singletonOneHom
+#align set.coe_singleton_zero_hom Set.coe_singletonZeroHom
 -/
 
 end One
@@ -188,9 +190,10 @@ equal to `{x⁻¹ | x ∈ s}`, see `set.image_inv`. -/
 protected def inv [Inv α] : Inv (Set α) :=
   ⟨preimage Inv.inv⟩
 #align set.has_inv Set.inv
+#align set.has_neg Set.neg
 -/
 
-scoped[Pointwise] attribute [instance] Set.inv Set.hasNeg
+scoped[Pointwise] attribute [instance] Set.inv Set.neg
 
 section Inv
 
@@ -441,9 +444,10 @@ locale `pointwise`. -/
 protected def mul : Mul (Set α) :=
   ⟨image2 (· * ·)⟩
 #align set.has_mul Set.mul
+#align set.has_add Set.add
 -/
 
-scoped[Pointwise] attribute [instance] Set.mul Set.hasAdd
+scoped[Pointwise] attribute [instance] Set.mul Set.add
 
 #print Set.image2_mul /-
 @[simp, to_additive]
@@ -693,6 +697,7 @@ theorem unionᵢ₂_mul (s : ∀ i, κ i → Set α) (t : Set α) :
     (⋃ (i) (j), s i j) * t = ⋃ (i) (j), s i j * t :=
   image2_unionᵢ₂_left _ _ _
 #align set.Union₂_mul Set.unionᵢ₂_mul
+#align set.Union₂_add Set.unionᵢ₂_add
 
 /- warning: set.mul_Union₂ -> Set.mul_unionᵢ₂ is a dubious translation:
 lean 3 declaration is
@@ -707,6 +712,7 @@ theorem mul_unionᵢ₂ (s : Set α) (t : ∀ i, κ i → Set α) :
     (s * ⋃ (i) (j), t i j) = ⋃ (i) (j), s * t i j :=
   image2_unionᵢ₂_right _ _ _
 #align set.mul_Union₂ Set.mul_unionᵢ₂
+#align set.add_Union₂ Set.add_unionᵢ₂
 
 /- warning: set.Inter_mul_subset -> Set.interᵢ_mul_subset is a dubious translation:
 lean 3 declaration is
@@ -745,6 +751,7 @@ theorem interᵢ₂_mul_subset (s : ∀ i, κ i → Set α) (t : Set α) :
     (⋂ (i) (j), s i j) * t ⊆ ⋂ (i) (j), s i j * t :=
   image2_interᵢ₂_subset_left _ _ _
 #align set.Inter₂_mul_subset Set.interᵢ₂_mul_subset
+#align set.Inter₂_add_subset Set.interᵢ₂_add_subset
 
 /- warning: set.mul_Inter₂_subset -> Set.mul_interᵢ₂_subset is a dubious translation:
 lean 3 declaration is
@@ -759,6 +766,7 @@ theorem mul_interᵢ₂_subset (s : Set α) (t : ∀ i, κ i → Set α) :
     (s * ⋂ (i) (j), t i j) ⊆ ⋂ (i) (j), s * t i j :=
   image2_interᵢ₂_subset_right _ _ _
 #align set.mul_Inter₂_subset Set.mul_interᵢ₂_subset
+#align set.add_Inter₂_subset Set.add_interᵢ₂_subset
 
 #print Set.singletonMulHom /-
 /-- The singleton operation as a `mul_hom`. -/
@@ -774,6 +782,7 @@ def singletonMulHom : α →ₙ* Set α :=
 theorem coe_singletonMulHom : (singletonMulHom : α → Set α) = singleton :=
   rfl
 #align set.coe_singleton_mul_hom Set.coe_singletonMulHom
+#align set.coe_singleton_add_hom Set.coe_singletonAddHom
 -/
 
 #print Set.singletonMulHom_apply /-
@@ -781,6 +790,7 @@ theorem coe_singletonMulHom : (singletonMulHom : α → Set α) = singleton :=
 theorem singletonMulHom_apply (a : α) : singletonMulHom a = {a} :=
   rfl
 #align set.singleton_mul_hom_apply Set.singletonMulHom_apply
+#align set.singleton_add_hom_apply Set.singletonAddHom_apply
 -/
 
 open MulOpposite
@@ -810,9 +820,10 @@ variable {ι : Sort _} {κ : ι → Sort _} [Div α] {s s₁ s₂ t t₁ t₂ u 
 protected def div : Div (Set α) :=
   ⟨image2 (· / ·)⟩
 #align set.has_div Set.div
+#align set.has_sub Set.sub
 -/
 
-scoped[Pointwise] attribute [instance] Set.div Set.hasSub
+scoped[Pointwise] attribute [instance] Set.div Set.sub
 
 #print Set.image2_div /-
 @[simp, to_additive]
@@ -844,7 +855,7 @@ theorem div_mem_div : a ∈ s → b ∈ t → a / b ∈ s / t :=
 theorem image_div_prod : (fun x : α × α => x.fst / x.snd) '' s ×ˢ t = s / t :=
   image_prod _
 #align set.image_div_prod Set.image_div_prod
-#align set.add_image_prod Set.add_image_prod
+#align set.sub_image_prod Set.sub_image_prod
 -/
 
 #print Set.empty_div /-
@@ -1062,6 +1073,7 @@ theorem unionᵢ₂_div (s : ∀ i, κ i → Set α) (t : Set α) :
     (⋃ (i) (j), s i j) / t = ⋃ (i) (j), s i j / t :=
   image2_unionᵢ₂_left _ _ _
 #align set.Union₂_div Set.unionᵢ₂_div
+#align set.Union₂_sub Set.unionᵢ₂_sub
 
 /- warning: set.div_Union₂ -> Set.div_unionᵢ₂ is a dubious translation:
 lean 3 declaration is
@@ -1076,6 +1088,7 @@ theorem div_unionᵢ₂ (s : Set α) (t : ∀ i, κ i → Set α) :
     (s / ⋃ (i) (j), t i j) = ⋃ (i) (j), s / t i j :=
   image2_unionᵢ₂_right _ _ _
 #align set.div_Union₂ Set.div_unionᵢ₂
+#align set.sub_Union₂ Set.sub_unionᵢ₂
 
 /- warning: set.Inter_div_subset -> Set.interᵢ_div_subset is a dubious translation:
 lean 3 declaration is
@@ -1114,6 +1127,7 @@ theorem interᵢ₂_div_subset (s : ∀ i, κ i → Set α) (t : Set α) :
     (⋂ (i) (j), s i j) / t ⊆ ⋂ (i) (j), s i j / t :=
   image2_interᵢ₂_subset_left _ _ _
 #align set.Inter₂_div_subset Set.interᵢ₂_div_subset
+#align set.Inter₂_sub_subset Set.interᵢ₂_sub_subset
 
 /- warning: set.div_Inter₂_subset -> Set.div_interᵢ₂_subset is a dubious translation:
 lean 3 declaration is
@@ -1128,6 +1142,7 @@ theorem div_interᵢ₂_subset (s : Set α) (t : ∀ i, κ i → Set α) :
     (s / ⋂ (i) (j), t i j) ⊆ ⋂ (i) (j), s / t i j :=
   image2_interᵢ₂_subset_right _ _ _
 #align set.div_Inter₂_subset Set.div_interᵢ₂_subset
+#align set.sub_Inter₂_subset Set.sub_interᵢ₂_subset
 
 end Div
 
@@ -1252,6 +1267,7 @@ Case conversion may be inaccurate. Consider using '#align set.coe_singleton_mono
 theorem coe_singletonMonoidHom : (singletonMonoidHom : α → Set α) = singleton :=
   rfl
 #align set.coe_singleton_monoid_hom Set.coe_singletonMonoidHom
+#align set.coe_singleton_add_monoid_hom Set.coe_singletonAddMonoidHom
 
 /- warning: set.singleton_monoid_hom_apply -> Set.singletonMonoidHom_apply is a dubious translation:
 lean 3 declaration is
@@ -1263,6 +1279,7 @@ Case conversion may be inaccurate. Consider using '#align set.singleton_monoid_h
 theorem singletonMonoidHom_apply (a : α) : singletonMonoidHom a = {a} :=
   rfl
 #align set.singleton_monoid_hom_apply Set.singletonMonoidHom_apply
+#align set.singleton_add_monoid_hom_apply Set.singletonAddMonoidHom_apply
 
 end MulOneClass
 
@@ -1490,6 +1507,7 @@ theorem isUnit_iff : IsUnit s ↔ ∃ a, s = {a} ∧ IsUnit a :=
   · rintro ⟨a, rfl, ha⟩
     exact ha.set
 #align set.is_unit_iff Set.isUnit_iff
+#align set.is_add_unit_iff Set.isAddUnit_iff
 -/
 
 end DivisionMonoid
@@ -1534,7 +1552,7 @@ lacks.
 
 /- warning: set.mul_add_subset -> Set.mul_add_subset is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Distrib.{u1} α] (s : Set.{u1} α) (t : Set.{u1} α) (u : Set.{u1} α), HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (Distrib.toHasMul.{u1} α _inst_1))) s (HAdd.hAdd.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHAdd.{u1} (Set.{u1} α) (Set.hasAdd.{u1} α (Distrib.toHasAdd.{u1} α _inst_1))) t u)) (HAdd.hAdd.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHAdd.{u1} (Set.{u1} α) (Set.hasAdd.{u1} α (Distrib.toHasAdd.{u1} α _inst_1))) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (Distrib.toHasMul.{u1} α _inst_1))) s t) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (Distrib.toHasMul.{u1} α _inst_1))) s u))
+  forall {α : Type.{u1}} [_inst_1 : Distrib.{u1} α] (s : Set.{u1} α) (t : Set.{u1} α) (u : Set.{u1} α), HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (Distrib.toHasMul.{u1} α _inst_1))) s (HAdd.hAdd.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHAdd.{u1} (Set.{u1} α) (Set.add.{u1} α (Distrib.toHasAdd.{u1} α _inst_1))) t u)) (HAdd.hAdd.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHAdd.{u1} (Set.{u1} α) (Set.add.{u1} α (Distrib.toHasAdd.{u1} α _inst_1))) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (Distrib.toHasMul.{u1} α _inst_1))) s t) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (Distrib.toHasMul.{u1} α _inst_1))) s u))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Distrib.{u1} α] (s : Set.{u1} α) (t : Set.{u1} α) (u : Set.{u1} α), HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (Distrib.toMul.{u1} α _inst_1))) s (HAdd.hAdd.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHAdd.{u1} (Set.{u1} α) (Set.add.{u1} α (Distrib.toAdd.{u1} α _inst_1))) t u)) (HAdd.hAdd.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHAdd.{u1} (Set.{u1} α) (Set.add.{u1} α (Distrib.toAdd.{u1} α _inst_1))) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (Distrib.toMul.{u1} α _inst_1))) s t) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (Distrib.toMul.{u1} α _inst_1))) s u))
 Case conversion may be inaccurate. Consider using '#align set.mul_add_subset Set.mul_add_subsetₓ'. -/
@@ -1544,7 +1562,7 @@ theorem mul_add_subset : s * (t + u) ⊆ s * t + s * u :=
 
 /- warning: set.add_mul_subset -> Set.add_mul_subset is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Distrib.{u1} α] (s : Set.{u1} α) (t : Set.{u1} α) (u : Set.{u1} α), HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (Distrib.toHasMul.{u1} α _inst_1))) (HAdd.hAdd.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHAdd.{u1} (Set.{u1} α) (Set.hasAdd.{u1} α (Distrib.toHasAdd.{u1} α _inst_1))) s t) u) (HAdd.hAdd.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHAdd.{u1} (Set.{u1} α) (Set.hasAdd.{u1} α (Distrib.toHasAdd.{u1} α _inst_1))) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (Distrib.toHasMul.{u1} α _inst_1))) s u) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (Distrib.toHasMul.{u1} α _inst_1))) t u))
+  forall {α : Type.{u1}} [_inst_1 : Distrib.{u1} α] (s : Set.{u1} α) (t : Set.{u1} α) (u : Set.{u1} α), HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (Distrib.toHasMul.{u1} α _inst_1))) (HAdd.hAdd.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHAdd.{u1} (Set.{u1} α) (Set.add.{u1} α (Distrib.toHasAdd.{u1} α _inst_1))) s t) u) (HAdd.hAdd.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHAdd.{u1} (Set.{u1} α) (Set.add.{u1} α (Distrib.toHasAdd.{u1} α _inst_1))) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (Distrib.toHasMul.{u1} α _inst_1))) s u) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (Distrib.toHasMul.{u1} α _inst_1))) t u))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Distrib.{u1} α] (s : Set.{u1} α) (t : Set.{u1} α) (u : Set.{u1} α), HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (Distrib.toMul.{u1} α _inst_1))) (HAdd.hAdd.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHAdd.{u1} (Set.{u1} α) (Set.add.{u1} α (Distrib.toAdd.{u1} α _inst_1))) s t) u) (HAdd.hAdd.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHAdd.{u1} (Set.{u1} α) (Set.add.{u1} α (Distrib.toAdd.{u1} α _inst_1))) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (Distrib.toMul.{u1} α _inst_1))) s u) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (Distrib.toMul.{u1} α _inst_1))) t u))
 Case conversion may be inaccurate. Consider using '#align set.add_mul_subset Set.add_mul_subsetₓ'. -/
@@ -1563,7 +1581,7 @@ variable [MulZeroClass α] {s t : Set α}
 
 /- warning: set.mul_zero_subset -> Set.mul_zero_subset is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : MulZeroClass.{u1} α] (s : Set.{u1} α), HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulZeroClass.toHasMul.{u1} α _inst_1))) s (OfNat.ofNat.{u1} (Set.{u1} α) 0 (OfNat.mk.{u1} (Set.{u1} α) 0 (Zero.zero.{u1} (Set.{u1} α) (Set.hasZero.{u1} α (MulZeroClass.toHasZero.{u1} α _inst_1)))))) (OfNat.ofNat.{u1} (Set.{u1} α) 0 (OfNat.mk.{u1} (Set.{u1} α) 0 (Zero.zero.{u1} (Set.{u1} α) (Set.hasZero.{u1} α (MulZeroClass.toHasZero.{u1} α _inst_1)))))
+  forall {α : Type.{u1}} [_inst_1 : MulZeroClass.{u1} α] (s : Set.{u1} α), HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulZeroClass.toHasMul.{u1} α _inst_1))) s (OfNat.ofNat.{u1} (Set.{u1} α) 0 (OfNat.mk.{u1} (Set.{u1} α) 0 (Zero.zero.{u1} (Set.{u1} α) (Set.zero.{u1} α (MulZeroClass.toHasZero.{u1} α _inst_1)))))) (OfNat.ofNat.{u1} (Set.{u1} α) 0 (OfNat.mk.{u1} (Set.{u1} α) 0 (Zero.zero.{u1} (Set.{u1} α) (Set.zero.{u1} α (MulZeroClass.toHasZero.{u1} α _inst_1)))))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : MulZeroClass.{u1} α] (s : Set.{u1} α), HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulZeroClass.toMul.{u1} α _inst_1))) s (OfNat.ofNat.{u1} (Set.{u1} α) 0 (Zero.toOfNat0.{u1} (Set.{u1} α) (Set.zero.{u1} α (MulZeroClass.toZero.{u1} α _inst_1))))) (OfNat.ofNat.{u1} (Set.{u1} α) 0 (Zero.toOfNat0.{u1} (Set.{u1} α) (Set.zero.{u1} α (MulZeroClass.toZero.{u1} α _inst_1))))
 Case conversion may be inaccurate. Consider using '#align set.mul_zero_subset Set.mul_zero_subsetₓ'. -/
@@ -1572,7 +1590,7 @@ theorem mul_zero_subset (s : Set α) : s * 0 ⊆ 0 := by simp [subset_def, mem_m
 
 /- warning: set.zero_mul_subset -> Set.zero_mul_subset is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : MulZeroClass.{u1} α] (s : Set.{u1} α), HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulZeroClass.toHasMul.{u1} α _inst_1))) (OfNat.ofNat.{u1} (Set.{u1} α) 0 (OfNat.mk.{u1} (Set.{u1} α) 0 (Zero.zero.{u1} (Set.{u1} α) (Set.hasZero.{u1} α (MulZeroClass.toHasZero.{u1} α _inst_1))))) s) (OfNat.ofNat.{u1} (Set.{u1} α) 0 (OfNat.mk.{u1} (Set.{u1} α) 0 (Zero.zero.{u1} (Set.{u1} α) (Set.hasZero.{u1} α (MulZeroClass.toHasZero.{u1} α _inst_1)))))
+  forall {α : Type.{u1}} [_inst_1 : MulZeroClass.{u1} α] (s : Set.{u1} α), HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulZeroClass.toHasMul.{u1} α _inst_1))) (OfNat.ofNat.{u1} (Set.{u1} α) 0 (OfNat.mk.{u1} (Set.{u1} α) 0 (Zero.zero.{u1} (Set.{u1} α) (Set.zero.{u1} α (MulZeroClass.toHasZero.{u1} α _inst_1))))) s) (OfNat.ofNat.{u1} (Set.{u1} α) 0 (OfNat.mk.{u1} (Set.{u1} α) 0 (Zero.zero.{u1} (Set.{u1} α) (Set.zero.{u1} α (MulZeroClass.toHasZero.{u1} α _inst_1)))))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : MulZeroClass.{u1} α] (s : Set.{u1} α), HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulZeroClass.toMul.{u1} α _inst_1))) (OfNat.ofNat.{u1} (Set.{u1} α) 0 (Zero.toOfNat0.{u1} (Set.{u1} α) (Set.zero.{u1} α (MulZeroClass.toZero.{u1} α _inst_1)))) s) (OfNat.ofNat.{u1} (Set.{u1} α) 0 (Zero.toOfNat0.{u1} (Set.{u1} α) (Set.zero.{u1} α (MulZeroClass.toZero.{u1} α _inst_1))))
 Case conversion may be inaccurate. Consider using '#align set.zero_mul_subset Set.zero_mul_subsetₓ'. -/
@@ -1581,7 +1599,7 @@ theorem zero_mul_subset (s : Set α) : 0 * s ⊆ 0 := by simp [subset_def, mem_m
 
 /- warning: set.nonempty.mul_zero -> Set.Nonempty.mul_zero is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : MulZeroClass.{u1} α] {s : Set.{u1} α}, (Set.Nonempty.{u1} α s) -> (Eq.{succ u1} (Set.{u1} α) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulZeroClass.toHasMul.{u1} α _inst_1))) s (OfNat.ofNat.{u1} (Set.{u1} α) 0 (OfNat.mk.{u1} (Set.{u1} α) 0 (Zero.zero.{u1} (Set.{u1} α) (Set.hasZero.{u1} α (MulZeroClass.toHasZero.{u1} α _inst_1)))))) (OfNat.ofNat.{u1} (Set.{u1} α) 0 (OfNat.mk.{u1} (Set.{u1} α) 0 (Zero.zero.{u1} (Set.{u1} α) (Set.hasZero.{u1} α (MulZeroClass.toHasZero.{u1} α _inst_1))))))
+  forall {α : Type.{u1}} [_inst_1 : MulZeroClass.{u1} α] {s : Set.{u1} α}, (Set.Nonempty.{u1} α s) -> (Eq.{succ u1} (Set.{u1} α) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulZeroClass.toHasMul.{u1} α _inst_1))) s (OfNat.ofNat.{u1} (Set.{u1} α) 0 (OfNat.mk.{u1} (Set.{u1} α) 0 (Zero.zero.{u1} (Set.{u1} α) (Set.zero.{u1} α (MulZeroClass.toHasZero.{u1} α _inst_1)))))) (OfNat.ofNat.{u1} (Set.{u1} α) 0 (OfNat.mk.{u1} (Set.{u1} α) 0 (Zero.zero.{u1} (Set.{u1} α) (Set.zero.{u1} α (MulZeroClass.toHasZero.{u1} α _inst_1))))))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : MulZeroClass.{u1} α] {s : Set.{u1} α}, (Set.Nonempty.{u1} α s) -> (Eq.{succ u1} (Set.{u1} α) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulZeroClass.toMul.{u1} α _inst_1))) s (OfNat.ofNat.{u1} (Set.{u1} α) 0 (Zero.toOfNat0.{u1} (Set.{u1} α) (Set.zero.{u1} α (MulZeroClass.toZero.{u1} α _inst_1))))) (OfNat.ofNat.{u1} (Set.{u1} α) 0 (Zero.toOfNat0.{u1} (Set.{u1} α) (Set.zero.{u1} α (MulZeroClass.toZero.{u1} α _inst_1)))))
 Case conversion may be inaccurate. Consider using '#align set.nonempty.mul_zero Set.Nonempty.mul_zeroₓ'. -/
@@ -1591,7 +1609,7 @@ theorem Nonempty.mul_zero (hs : s.Nonempty) : s * 0 = 0 :=
 
 /- warning: set.nonempty.zero_mul -> Set.Nonempty.zero_mul is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : MulZeroClass.{u1} α] {s : Set.{u1} α}, (Set.Nonempty.{u1} α s) -> (Eq.{succ u1} (Set.{u1} α) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulZeroClass.toHasMul.{u1} α _inst_1))) (OfNat.ofNat.{u1} (Set.{u1} α) 0 (OfNat.mk.{u1} (Set.{u1} α) 0 (Zero.zero.{u1} (Set.{u1} α) (Set.hasZero.{u1} α (MulZeroClass.toHasZero.{u1} α _inst_1))))) s) (OfNat.ofNat.{u1} (Set.{u1} α) 0 (OfNat.mk.{u1} (Set.{u1} α) 0 (Zero.zero.{u1} (Set.{u1} α) (Set.hasZero.{u1} α (MulZeroClass.toHasZero.{u1} α _inst_1))))))
+  forall {α : Type.{u1}} [_inst_1 : MulZeroClass.{u1} α] {s : Set.{u1} α}, (Set.Nonempty.{u1} α s) -> (Eq.{succ u1} (Set.{u1} α) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulZeroClass.toHasMul.{u1} α _inst_1))) (OfNat.ofNat.{u1} (Set.{u1} α) 0 (OfNat.mk.{u1} (Set.{u1} α) 0 (Zero.zero.{u1} (Set.{u1} α) (Set.zero.{u1} α (MulZeroClass.toHasZero.{u1} α _inst_1))))) s) (OfNat.ofNat.{u1} (Set.{u1} α) 0 (OfNat.mk.{u1} (Set.{u1} α) 0 (Zero.zero.{u1} (Set.{u1} α) (Set.zero.{u1} α (MulZeroClass.toHasZero.{u1} α _inst_1))))))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : MulZeroClass.{u1} α] {s : Set.{u1} α}, (Set.Nonempty.{u1} α s) -> (Eq.{succ u1} (Set.{u1} α) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulZeroClass.toMul.{u1} α _inst_1))) (OfNat.ofNat.{u1} (Set.{u1} α) 0 (Zero.toOfNat0.{u1} (Set.{u1} α) (Set.zero.{u1} α (MulZeroClass.toZero.{u1} α _inst_1)))) s) (OfNat.ofNat.{u1} (Set.{u1} α) 0 (Zero.toOfNat0.{u1} (Set.{u1} α) (Set.zero.{u1} α (MulZeroClass.toZero.{u1} α _inst_1)))))
 Case conversion may be inaccurate. Consider using '#align set.nonempty.zero_mul Set.Nonempty.zero_mulₓ'. -/
@@ -1661,6 +1679,7 @@ theorem Nonempty.one_mem_div (h : s.Nonempty) : (1 : α) ∈ s / s :=
 theorem isUnit_singleton (a : α) : IsUnit ({a} : Set α) :=
   (Group.isUnit a).Set
 #align set.is_unit_singleton Set.isUnit_singleton
+#align set.is_add_unit_singleton Set.isAddUnit_singleton
 -/
 
 #print Set.isUnit_iff_singleton /-
@@ -1668,13 +1687,14 @@ theorem isUnit_singleton (a : α) : IsUnit ({a} : Set α) :=
 theorem isUnit_iff_singleton : IsUnit s ↔ ∃ a, s = {a} := by
   simp only [is_unit_iff, Group.isUnit, and_true_iff]
 #align set.is_unit_iff_singleton Set.isUnit_iff_singleton
+#align set.is_add_unit_iff_singleton Set.isAddUnit_iff_singleton
 -/
 
 /- warning: set.image_mul_left -> Set.image_mul_left is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] {t : Set.{u1} α} {a : α}, Eq.{succ u1} (Set.{u1} α) (Set.image.{u1, u1} α α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))) a) t) (Set.preimage.{u1, u1} α α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))) (Inv.inv.{u1} α (DivInvMonoid.toHasInv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)) a)) t)
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] {t : Set.{u1} α} {a : α}, Eq.{succ u1} (Set.{u1} α) (Set.image.{u1, u1} α α ((fun (x._@.Mathlib.Data.Set.Pointwise.Basic._hyg.9254 : α) (x._@.Mathlib.Data.Set.Pointwise.Basic._hyg.9256 : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))) x._@.Mathlib.Data.Set.Pointwise.Basic._hyg.9254 x._@.Mathlib.Data.Set.Pointwise.Basic._hyg.9256) a) t) (Set.preimage.{u1, u1} α α ((fun (x._@.Mathlib.Data.Set.Pointwise.Basic._hyg.9276 : α) (x._@.Mathlib.Data.Set.Pointwise.Basic._hyg.9278 : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))) x._@.Mathlib.Data.Set.Pointwise.Basic._hyg.9276 x._@.Mathlib.Data.Set.Pointwise.Basic._hyg.9278) (Inv.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1)))) a)) t)
+  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] {t : Set.{u1} α} {a : α}, Eq.{succ u1} (Set.{u1} α) (Set.image.{u1, u1} α α ((fun (x._@.Mathlib.Data.Set.Pointwise.Basic._hyg.9382 : α) (x._@.Mathlib.Data.Set.Pointwise.Basic._hyg.9384 : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))) x._@.Mathlib.Data.Set.Pointwise.Basic._hyg.9382 x._@.Mathlib.Data.Set.Pointwise.Basic._hyg.9384) a) t) (Set.preimage.{u1, u1} α α ((fun (x._@.Mathlib.Data.Set.Pointwise.Basic._hyg.9404 : α) (x._@.Mathlib.Data.Set.Pointwise.Basic._hyg.9406 : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))) x._@.Mathlib.Data.Set.Pointwise.Basic._hyg.9404 x._@.Mathlib.Data.Set.Pointwise.Basic._hyg.9406) (Inv.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1)))) a)) t)
 Case conversion may be inaccurate. Consider using '#align set.image_mul_left Set.image_mul_leftₓ'. -/
 @[simp, to_additive]
 theorem image_mul_left : (· * ·) a '' t = (· * ·) a⁻¹ ⁻¹' t := by
@@ -1720,7 +1740,7 @@ theorem image_mul_right' : (· * b⁻¹) '' t = (· * b) ⁻¹' t := by simp
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] {a : α} {b : α}, Eq.{succ u1} (Set.{u1} α) (Set.preimage.{u1, u1} α α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))) a) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) b)) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))) (Inv.inv.{u1} α (DivInvMonoid.toHasInv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)) a) b))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] {a : α} {b : α}, Eq.{succ u1} (Set.{u1} α) (Set.preimage.{u1, u1} α α ((fun (x._@.Mathlib.Data.Set.Pointwise.Basic._hyg.9601 : α) (x._@.Mathlib.Data.Set.Pointwise.Basic._hyg.9603 : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))) x._@.Mathlib.Data.Set.Pointwise.Basic._hyg.9601 x._@.Mathlib.Data.Set.Pointwise.Basic._hyg.9603) a) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) b)) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))) (Inv.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1)))) a) b))
+  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] {a : α} {b : α}, Eq.{succ u1} (Set.{u1} α) (Set.preimage.{u1, u1} α α ((fun (x._@.Mathlib.Data.Set.Pointwise.Basic._hyg.9733 : α) (x._@.Mathlib.Data.Set.Pointwise.Basic._hyg.9735 : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))) x._@.Mathlib.Data.Set.Pointwise.Basic._hyg.9733 x._@.Mathlib.Data.Set.Pointwise.Basic._hyg.9735) a) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) b)) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))) (Inv.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1)))) a) b))
 Case conversion may be inaccurate. Consider using '#align set.preimage_mul_left_singleton Set.preimage_mul_left_singletonₓ'. -/
 @[simp, to_additive]
 theorem preimage_mul_left_singleton : (· * ·) a ⁻¹' {b} = {a⁻¹ * b} := by
@@ -1744,7 +1764,7 @@ theorem preimage_mul_right_singleton : (· * a) ⁻¹' {b} = {b * a⁻¹} := by
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] {a : α}, Eq.{succ u1} (Set.{u1} α) (Set.preimage.{u1, u1} α α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))) a) (OfNat.ofNat.{u1} (Set.{u1} α) 1 (OfNat.mk.{u1} (Set.{u1} α) 1 (One.one.{u1} (Set.{u1} α) (Set.one.{u1} α (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))))))) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) (Inv.inv.{u1} α (DivInvMonoid.toHasInv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)) a))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] {a : α}, Eq.{succ u1} (Set.{u1} α) (Set.preimage.{u1, u1} α α ((fun (x._@.Mathlib.Data.Set.Pointwise.Basic._hyg.9784 : α) (x._@.Mathlib.Data.Set.Pointwise.Basic._hyg.9786 : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))) x._@.Mathlib.Data.Set.Pointwise.Basic._hyg.9784 x._@.Mathlib.Data.Set.Pointwise.Basic._hyg.9786) a) (OfNat.ofNat.{u1} (Set.{u1} α) 1 (One.toOfNat1.{u1} (Set.{u1} α) (Set.one.{u1} α (InvOneClass.toOne.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1)))))))) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) (Inv.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1)))) a))
+  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] {a : α}, Eq.{succ u1} (Set.{u1} α) (Set.preimage.{u1, u1} α α ((fun (x._@.Mathlib.Data.Set.Pointwise.Basic._hyg.9918 : α) (x._@.Mathlib.Data.Set.Pointwise.Basic._hyg.9920 : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))) x._@.Mathlib.Data.Set.Pointwise.Basic._hyg.9918 x._@.Mathlib.Data.Set.Pointwise.Basic._hyg.9920) a) (OfNat.ofNat.{u1} (Set.{u1} α) 1 (One.toOfNat1.{u1} (Set.{u1} α) (Set.one.{u1} α (InvOneClass.toOne.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1)))))))) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) (Inv.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1)))) a))
 Case conversion may be inaccurate. Consider using '#align set.preimage_mul_left_one Set.preimage_mul_left_oneₓ'. -/
 @[simp, to_additive]
 theorem preimage_mul_left_one : (· * ·) a ⁻¹' 1 = {a⁻¹} := by
@@ -1820,7 +1840,7 @@ variable [GroupWithZero α] {s t : Set α}
 
 /- warning: set.div_zero_subset -> Set.div_zero_subset is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : GroupWithZero.{u1} α] (s : Set.{u1} α), HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (HDiv.hDiv.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHDiv.{u1} (Set.{u1} α) (Set.div.{u1} α (DivInvMonoid.toHasDiv.{u1} α (GroupWithZero.toDivInvMonoid.{u1} α _inst_1)))) s (OfNat.ofNat.{u1} (Set.{u1} α) 0 (OfNat.mk.{u1} (Set.{u1} α) 0 (Zero.zero.{u1} (Set.{u1} α) (Set.hasZero.{u1} α (MulZeroClass.toHasZero.{u1} α (MulZeroOneClass.toMulZeroClass.{u1} α (MonoidWithZero.toMulZeroOneClass.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1))))))))) (OfNat.ofNat.{u1} (Set.{u1} α) 0 (OfNat.mk.{u1} (Set.{u1} α) 0 (Zero.zero.{u1} (Set.{u1} α) (Set.hasZero.{u1} α (MulZeroClass.toHasZero.{u1} α (MulZeroOneClass.toMulZeroClass.{u1} α (MonoidWithZero.toMulZeroOneClass.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1))))))))
+  forall {α : Type.{u1}} [_inst_1 : GroupWithZero.{u1} α] (s : Set.{u1} α), HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (HDiv.hDiv.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHDiv.{u1} (Set.{u1} α) (Set.div.{u1} α (DivInvMonoid.toHasDiv.{u1} α (GroupWithZero.toDivInvMonoid.{u1} α _inst_1)))) s (OfNat.ofNat.{u1} (Set.{u1} α) 0 (OfNat.mk.{u1} (Set.{u1} α) 0 (Zero.zero.{u1} (Set.{u1} α) (Set.zero.{u1} α (MulZeroClass.toHasZero.{u1} α (MulZeroOneClass.toMulZeroClass.{u1} α (MonoidWithZero.toMulZeroOneClass.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1))))))))) (OfNat.ofNat.{u1} (Set.{u1} α) 0 (OfNat.mk.{u1} (Set.{u1} α) 0 (Zero.zero.{u1} (Set.{u1} α) (Set.zero.{u1} α (MulZeroClass.toHasZero.{u1} α (MulZeroOneClass.toMulZeroClass.{u1} α (MonoidWithZero.toMulZeroOneClass.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1))))))))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : GroupWithZero.{u1} α] (s : Set.{u1} α), HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (HDiv.hDiv.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHDiv.{u1} (Set.{u1} α) (Set.div.{u1} α (GroupWithZero.toDiv.{u1} α _inst_1))) s (OfNat.ofNat.{u1} (Set.{u1} α) 0 (Zero.toOfNat0.{u1} (Set.{u1} α) (Set.zero.{u1} α (MonoidWithZero.toZero.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1)))))) (OfNat.ofNat.{u1} (Set.{u1} α) 0 (Zero.toOfNat0.{u1} (Set.{u1} α) (Set.zero.{u1} α (MonoidWithZero.toZero.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1)))))
 Case conversion may be inaccurate. Consider using '#align set.div_zero_subset Set.div_zero_subsetₓ'. -/
@@ -1829,7 +1849,7 @@ theorem div_zero_subset (s : Set α) : s / 0 ⊆ 0 := by simp [subset_def, mem_d
 
 /- warning: set.zero_div_subset -> Set.zero_div_subset is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : GroupWithZero.{u1} α] (s : Set.{u1} α), HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (HDiv.hDiv.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHDiv.{u1} (Set.{u1} α) (Set.div.{u1} α (DivInvMonoid.toHasDiv.{u1} α (GroupWithZero.toDivInvMonoid.{u1} α _inst_1)))) (OfNat.ofNat.{u1} (Set.{u1} α) 0 (OfNat.mk.{u1} (Set.{u1} α) 0 (Zero.zero.{u1} (Set.{u1} α) (Set.hasZero.{u1} α (MulZeroClass.toHasZero.{u1} α (MulZeroOneClass.toMulZeroClass.{u1} α (MonoidWithZero.toMulZeroOneClass.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1)))))))) s) (OfNat.ofNat.{u1} (Set.{u1} α) 0 (OfNat.mk.{u1} (Set.{u1} α) 0 (Zero.zero.{u1} (Set.{u1} α) (Set.hasZero.{u1} α (MulZeroClass.toHasZero.{u1} α (MulZeroOneClass.toMulZeroClass.{u1} α (MonoidWithZero.toMulZeroOneClass.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1))))))))
+  forall {α : Type.{u1}} [_inst_1 : GroupWithZero.{u1} α] (s : Set.{u1} α), HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (HDiv.hDiv.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHDiv.{u1} (Set.{u1} α) (Set.div.{u1} α (DivInvMonoid.toHasDiv.{u1} α (GroupWithZero.toDivInvMonoid.{u1} α _inst_1)))) (OfNat.ofNat.{u1} (Set.{u1} α) 0 (OfNat.mk.{u1} (Set.{u1} α) 0 (Zero.zero.{u1} (Set.{u1} α) (Set.zero.{u1} α (MulZeroClass.toHasZero.{u1} α (MulZeroOneClass.toMulZeroClass.{u1} α (MonoidWithZero.toMulZeroOneClass.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1)))))))) s) (OfNat.ofNat.{u1} (Set.{u1} α) 0 (OfNat.mk.{u1} (Set.{u1} α) 0 (Zero.zero.{u1} (Set.{u1} α) (Set.zero.{u1} α (MulZeroClass.toHasZero.{u1} α (MulZeroOneClass.toMulZeroClass.{u1} α (MonoidWithZero.toMulZeroOneClass.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1))))))))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : GroupWithZero.{u1} α] (s : Set.{u1} α), HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (HDiv.hDiv.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHDiv.{u1} (Set.{u1} α) (Set.div.{u1} α (GroupWithZero.toDiv.{u1} α _inst_1))) (OfNat.ofNat.{u1} (Set.{u1} α) 0 (Zero.toOfNat0.{u1} (Set.{u1} α) (Set.zero.{u1} α (MonoidWithZero.toZero.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1))))) s) (OfNat.ofNat.{u1} (Set.{u1} α) 0 (Zero.toOfNat0.{u1} (Set.{u1} α) (Set.zero.{u1} α (MonoidWithZero.toZero.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1)))))
 Case conversion may be inaccurate. Consider using '#align set.zero_div_subset Set.zero_div_subsetₓ'. -/
@@ -1838,7 +1858,7 @@ theorem zero_div_subset (s : Set α) : 0 / s ⊆ 0 := by simp [subset_def, mem_d
 
 /- warning: set.nonempty.div_zero -> Set.Nonempty.div_zero is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : GroupWithZero.{u1} α] {s : Set.{u1} α}, (Set.Nonempty.{u1} α s) -> (Eq.{succ u1} (Set.{u1} α) (HDiv.hDiv.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHDiv.{u1} (Set.{u1} α) (Set.div.{u1} α (DivInvMonoid.toHasDiv.{u1} α (GroupWithZero.toDivInvMonoid.{u1} α _inst_1)))) s (OfNat.ofNat.{u1} (Set.{u1} α) 0 (OfNat.mk.{u1} (Set.{u1} α) 0 (Zero.zero.{u1} (Set.{u1} α) (Set.hasZero.{u1} α (MulZeroClass.toHasZero.{u1} α (MulZeroOneClass.toMulZeroClass.{u1} α (MonoidWithZero.toMulZeroOneClass.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1))))))))) (OfNat.ofNat.{u1} (Set.{u1} α) 0 (OfNat.mk.{u1} (Set.{u1} α) 0 (Zero.zero.{u1} (Set.{u1} α) (Set.hasZero.{u1} α (MulZeroClass.toHasZero.{u1} α (MulZeroOneClass.toMulZeroClass.{u1} α (MonoidWithZero.toMulZeroOneClass.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1)))))))))
+  forall {α : Type.{u1}} [_inst_1 : GroupWithZero.{u1} α] {s : Set.{u1} α}, (Set.Nonempty.{u1} α s) -> (Eq.{succ u1} (Set.{u1} α) (HDiv.hDiv.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHDiv.{u1} (Set.{u1} α) (Set.div.{u1} α (DivInvMonoid.toHasDiv.{u1} α (GroupWithZero.toDivInvMonoid.{u1} α _inst_1)))) s (OfNat.ofNat.{u1} (Set.{u1} α) 0 (OfNat.mk.{u1} (Set.{u1} α) 0 (Zero.zero.{u1} (Set.{u1} α) (Set.zero.{u1} α (MulZeroClass.toHasZero.{u1} α (MulZeroOneClass.toMulZeroClass.{u1} α (MonoidWithZero.toMulZeroOneClass.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1))))))))) (OfNat.ofNat.{u1} (Set.{u1} α) 0 (OfNat.mk.{u1} (Set.{u1} α) 0 (Zero.zero.{u1} (Set.{u1} α) (Set.zero.{u1} α (MulZeroClass.toHasZero.{u1} α (MulZeroOneClass.toMulZeroClass.{u1} α (MonoidWithZero.toMulZeroOneClass.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1)))))))))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : GroupWithZero.{u1} α] {s : Set.{u1} α}, (Set.Nonempty.{u1} α s) -> (Eq.{succ u1} (Set.{u1} α) (HDiv.hDiv.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHDiv.{u1} (Set.{u1} α) (Set.div.{u1} α (GroupWithZero.toDiv.{u1} α _inst_1))) s (OfNat.ofNat.{u1} (Set.{u1} α) 0 (Zero.toOfNat0.{u1} (Set.{u1} α) (Set.zero.{u1} α (MonoidWithZero.toZero.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1)))))) (OfNat.ofNat.{u1} (Set.{u1} α) 0 (Zero.toOfNat0.{u1} (Set.{u1} α) (Set.zero.{u1} α (MonoidWithZero.toZero.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1))))))
 Case conversion may be inaccurate. Consider using '#align set.nonempty.div_zero Set.Nonempty.div_zeroₓ'. -/
@@ -1848,7 +1868,7 @@ theorem Nonempty.div_zero (hs : s.Nonempty) : s / 0 = 0 :=
 
 /- warning: set.nonempty.zero_div -> Set.Nonempty.zero_div is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : GroupWithZero.{u1} α] {s : Set.{u1} α}, (Set.Nonempty.{u1} α s) -> (Eq.{succ u1} (Set.{u1} α) (HDiv.hDiv.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHDiv.{u1} (Set.{u1} α) (Set.div.{u1} α (DivInvMonoid.toHasDiv.{u1} α (GroupWithZero.toDivInvMonoid.{u1} α _inst_1)))) (OfNat.ofNat.{u1} (Set.{u1} α) 0 (OfNat.mk.{u1} (Set.{u1} α) 0 (Zero.zero.{u1} (Set.{u1} α) (Set.hasZero.{u1} α (MulZeroClass.toHasZero.{u1} α (MulZeroOneClass.toMulZeroClass.{u1} α (MonoidWithZero.toMulZeroOneClass.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1)))))))) s) (OfNat.ofNat.{u1} (Set.{u1} α) 0 (OfNat.mk.{u1} (Set.{u1} α) 0 (Zero.zero.{u1} (Set.{u1} α) (Set.hasZero.{u1} α (MulZeroClass.toHasZero.{u1} α (MulZeroOneClass.toMulZeroClass.{u1} α (MonoidWithZero.toMulZeroOneClass.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1)))))))))
+  forall {α : Type.{u1}} [_inst_1 : GroupWithZero.{u1} α] {s : Set.{u1} α}, (Set.Nonempty.{u1} α s) -> (Eq.{succ u1} (Set.{u1} α) (HDiv.hDiv.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHDiv.{u1} (Set.{u1} α) (Set.div.{u1} α (DivInvMonoid.toHasDiv.{u1} α (GroupWithZero.toDivInvMonoid.{u1} α _inst_1)))) (OfNat.ofNat.{u1} (Set.{u1} α) 0 (OfNat.mk.{u1} (Set.{u1} α) 0 (Zero.zero.{u1} (Set.{u1} α) (Set.zero.{u1} α (MulZeroClass.toHasZero.{u1} α (MulZeroOneClass.toMulZeroClass.{u1} α (MonoidWithZero.toMulZeroOneClass.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1)))))))) s) (OfNat.ofNat.{u1} (Set.{u1} α) 0 (OfNat.mk.{u1} (Set.{u1} α) 0 (Zero.zero.{u1} (Set.{u1} α) (Set.zero.{u1} α (MulZeroClass.toHasZero.{u1} α (MulZeroOneClass.toMulZeroClass.{u1} α (MonoidWithZero.toMulZeroOneClass.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1)))))))))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : GroupWithZero.{u1} α] {s : Set.{u1} α}, (Set.Nonempty.{u1} α s) -> (Eq.{succ u1} (Set.{u1} α) (HDiv.hDiv.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHDiv.{u1} (Set.{u1} α) (Set.div.{u1} α (GroupWithZero.toDiv.{u1} α _inst_1))) (OfNat.ofNat.{u1} (Set.{u1} α) 0 (Zero.toOfNat0.{u1} (Set.{u1} α) (Set.zero.{u1} α (MonoidWithZero.toZero.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1))))) s) (OfNat.ofNat.{u1} (Set.{u1} α) 0 (Zero.toOfNat0.{u1} (Set.{u1} α) (Set.zero.{u1} α (MonoidWithZero.toZero.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1))))))
 Case conversion may be inaccurate. Consider using '#align set.nonempty.zero_div Set.Nonempty.zero_divₓ'. -/

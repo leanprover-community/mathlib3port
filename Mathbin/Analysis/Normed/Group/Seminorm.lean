@@ -408,7 +408,7 @@ noncomputable instance : HasInf (GroupSeminorm E) :=
         cinfᵢ_eq_of_forall_ge_of_forall_gt_exists_lt (fun x => by positivity) fun r hr =>
           ⟨1, by rwa [div_one, map_one_eq_zero p, map_one_eq_zero q, add_zero]⟩
       mul_le' := fun x y =>
-        le_cinfi_add_cinfi fun u v =>
+        le_cinfᵢ_add_cinfᵢ fun u v =>
           by
           refine' cinfᵢ_le_of_le mul_bdd_below_range_add (u * v) _
           rw [mul_div_mul_comm, add_add_add_comm]

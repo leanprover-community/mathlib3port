@@ -82,6 +82,7 @@ section HasElem
 theorem unique_one {α : Type _} [Unique α] [One α] : default = (1 : α) :=
   Unique.default_eq 1
 #align unique_has_one unique_one
+#align unique_has_zero unique_zero
 -/
 
 end HasElem
@@ -616,6 +617,7 @@ theorem Units.val_mkOfMulEqOne [CommMonoid α] {a b : α} (h : a * b = 1) :
     (Units.mkOfMulEqOne a b h : α) = a :=
   rfl
 #align units.coe_mk_of_mul_eq_one Units.val_mkOfMulEqOne
+#align add_units.coe_mk_of_add_eq_zero AddUnits.val_mkOfAddEqZero
 
 section Monoid
 
@@ -1184,7 +1186,7 @@ protected theorem mul_right_cancel (h : IsUnit b) : a * b = c * b → a = c :=
 lean 3 declaration is
   forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] {a : M}, (IsUnit.{u1} M _inst_1 a) -> (Function.Injective.{succ u1, succ u1} M M (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toHasMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) a))
 but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] {a : M}, (IsUnit.{u1} M _inst_1 a) -> (Function.Injective.{succ u1, succ u1} M M ((fun (x._@.Mathlib.Algebra.Group.Units._hyg.6964 : M) (x._@.Mathlib.Algebra.Group.Units._hyg.6966 : M) => HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) x._@.Mathlib.Algebra.Group.Units._hyg.6964 x._@.Mathlib.Algebra.Group.Units._hyg.6966) a))
+  forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] {a : M}, (IsUnit.{u1} M _inst_1 a) -> (Function.Injective.{succ u1, succ u1} M M ((fun (x._@.Mathlib.Algebra.Group.Units._hyg.6966 : M) (x._@.Mathlib.Algebra.Group.Units._hyg.6968 : M) => HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) x._@.Mathlib.Algebra.Group.Units._hyg.6966 x._@.Mathlib.Algebra.Group.Units._hyg.6968) a))
 Case conversion may be inaccurate. Consider using '#align is_unit.mul_right_injective IsUnit.mul_right_injectiveₓ'. -/
 @[to_additive]
 protected theorem mul_right_injective (h : IsUnit a) : Injective ((· * ·) a) := fun _ _ =>

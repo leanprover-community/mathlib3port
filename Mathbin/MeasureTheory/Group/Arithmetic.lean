@@ -713,7 +713,7 @@ instance SubNegMonoid.has_measurable_smul_int₂ (M : Type _) [SubNegMonoid M] [
     suffices Measurable fun p : M × ℤ => p.2 • p.1 by apply this.comp measurable_swap
     refine' measurable_from_prod_countable fun n => _
     induction' n with n n ih
-    · simp only [of_nat_zsmul]
+    · simp only [ofNat_zsmul]
       exact measurable_const_smul _
     · simp only [negSucc_zsmul]
       exact (measurable_const_smul _).neg⟩
