@@ -751,7 +751,7 @@ theorem WithSeminorms.first_countable (hp : WithSeminorms p) :
   have : (𝓝 (0 : E)).IsCountablyGenerated :=
     by
     rw [p.with_seminorms_iff_nhds_eq_infi.mp hp]
-    exact Filter.Infi.isCountablyGenerated _
+    exact Filter.infᵢ.isCountablyGenerated _
   haveI : (uniformity E).IsCountablyGenerated := UniformAddGroup.uniformity_countably_generated
   exact UniformSpace.firstCountableTopology E
 #align with_seminorms.first_countable WithSeminorms.first_countable

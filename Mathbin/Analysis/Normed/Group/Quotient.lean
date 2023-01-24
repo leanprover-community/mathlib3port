@@ -332,7 +332,7 @@ noncomputable instance AddSubgroup.seminormedAddCommGroupQuotient (S : AddSubgro
       dsimp
       rw [quotient_norm_sub_rev]
     rw [funext this]
-    refine' Filter.hasBasis_binfi_principal _ Set.nonempty_Ioi
+    refine' Filter.hasBasis_binfᵢ_principal _ Set.nonempty_Ioi
     rintro ε (ε_pos : 0 < ε) η (η_pos : 0 < η)
     refine' ⟨min ε η, lt_min ε_pos η_pos, _, _⟩
     · suffices ∀ a b : M ⧸ S, ‖a - b‖ < ε → ‖a - b‖ < η → ‖a - b‖ < ε by simpa

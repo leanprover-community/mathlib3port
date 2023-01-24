@@ -1252,7 +1252,7 @@ uses `∃ N, ∀ n > N, ...` rather than `∃ N, ∀ n ≥ N, ...`
 -/
 theorem tendsto_at_top' [Nonempty β] [SemilatticeSup β] [NoMaxOrder β] {u : β → α} {a : α} :
     Tendsto u atTop (𝓝 a) ↔ ∀ ε > 0, ∃ N, ∀ n > N, dist (u n) a < ε :=
-  (atTop_basis_ioi.tendsto_iff nhds_basis_ball).trans <|
+  (atTop_basis_Ioi.tendsto_iff nhds_basis_ball).trans <|
     by
     simp only [exists_prop, true_and_iff]
     rfl

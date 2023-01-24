@@ -1123,7 +1123,7 @@ theorem nhdsWithin_iic_eq' [TopologicalSpace α] [Preorder α] [OrderTopology α
 theorem nhdsWithin_ici_basis' [TopologicalSpace α] [LinearOrder α] [OrderTopology α] {a : α}
     (ha : ∃ u, a < u) : (𝓝[≥] a).HasBasis (fun u => a < u) fun u => Ico a u :=
   (nhdsWithin_ici_eq' ha).symm ▸
-    hasBasis_binfi_principal
+    hasBasis_binfᵢ_principal
       (fun b hb c hc =>
         ⟨min b c, lt_min hb hc, Ico_subset_Ico_right (min_le_left _ _),
           Ico_subset_Ico_right (min_le_right _ _)⟩)

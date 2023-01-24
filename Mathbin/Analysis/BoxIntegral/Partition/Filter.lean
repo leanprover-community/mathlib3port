@@ -464,7 +464,7 @@ theorem toFilterUnion_congr (I : Box ι) (l : IntegrationParams) {π₁ π₂ : 
 
 theorem hasBasis_toFilterDistortion (l : IntegrationParams) (I : Box ι) (c : ℝ≥0) :
     (l.toFilterDistortion I c).HasBasis l.RCond fun r => { π | l.MemBaseSet I c r π } :=
-  hasBasis_binfi_principal'
+  hasBasis_binfᵢ_principal'
     (fun r₁ hr₁ r₂ hr₂ =>
       ⟨_, hr₁.min hr₂, fun _ => MemBaseSet.mono _ le_rfl le_rfl fun x hx => min_le_left _ _,
         fun _ => MemBaseSet.mono _ le_rfl le_rfl fun x hx => min_le_right _ _⟩)

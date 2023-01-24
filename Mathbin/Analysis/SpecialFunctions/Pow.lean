@@ -1235,7 +1235,7 @@ theorem tendsto_rpow_atTop {y : ℝ} (hy : 0 < y) : Tendsto (fun x : ℝ => x ^ 
 
 /-- The function `x ^ (-y)` tends to `0` at `+∞` for any positive real `y`. -/
 theorem tendsto_rpow_neg_atTop {y : ℝ} (hy : 0 < y) : Tendsto (fun x : ℝ => x ^ (-y)) atTop (𝓝 0) :=
-  Tendsto.congr' (eventuallyEq_of_mem (ioi_mem_atTop 0) fun x hx => (rpow_neg (le_of_lt hx) y).symm)
+  Tendsto.congr' (eventuallyEq_of_mem (Ioi_mem_atTop 0) fun x hx => (rpow_neg (le_of_lt hx) y).symm)
     (tendsto_rpow_atTop hy).inv_tendsto_at_top
 #align tendsto_rpow_neg_at_top tendsto_rpow_neg_atTop
 

@@ -211,7 +211,7 @@ theorem uniformity_pseudoedist : 𝓤 α = ⨅ ε > 0, 𝓟 { p : α × α | edi
 theorem uniformity_basis_edist :
     (𝓤 α).HasBasis (fun ε : ℝ≥0∞ => 0 < ε) fun ε => { p : α × α | edist p.1 p.2 < ε } :=
   (@uniformity_pseudoedist α _).symm ▸
-    hasBasis_binfi_principal
+    hasBasis_binfᵢ_principal
       (fun r hr p hp =>
         ⟨min r p, lt_min hr hp, fun x hx => lt_of_lt_of_le hx (min_le_left _ _), fun x hx =>
           lt_of_lt_of_le hx (min_le_right _ _)⟩)

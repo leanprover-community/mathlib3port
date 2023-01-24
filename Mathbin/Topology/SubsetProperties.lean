@@ -577,7 +577,7 @@ def cocompact (α : Type _) [TopologicalSpace α] : Filter α :=
 #align filter.cocompact Filter.cocompact
 
 theorem hasBasis_cocompact : (cocompact α).HasBasis IsCompact compl :=
-  hasBasis_binfi_principal'
+  hasBasis_binfᵢ_principal'
     (fun s hs t ht =>
       ⟨s ∪ t, hs.union ht, compl_subset_compl.2 (subset_union_left s t),
         compl_subset_compl.2 (subset_union_right s t)⟩)
