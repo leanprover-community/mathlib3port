@@ -20,7 +20,7 @@ universe u
 
 namespace Mvqpf
 
-open Mvfunctor
+open MvFunctor
 
 variable {n : ℕ} {A : Type u}
 
@@ -46,11 +46,11 @@ instance Pi.inhabited {α} [∀ a, Inhabited (F a α)] : Inhabited (Pi F α) :=
   ⟨fun a => default⟩
 #align mvqpf.pi.inhabited Mvqpf.Pi.inhabited
 
-variable [∀ α, Mvfunctor <| F α]
+variable [∀ α, MvFunctor <| F α]
 
 namespace Sigma
 
-instance : Mvfunctor (Sigma F) where map := fun α β f ⟨a, x⟩ => ⟨a, f <$$> x⟩
+instance : MvFunctor (Sigma F) where map := fun α β f ⟨a, x⟩ => ⟨a, f <$$> x⟩
 
 variable [∀ α, Mvqpf <| F α]
 
@@ -84,7 +84,7 @@ end Sigma
 
 namespace Pi
 
-instance : Mvfunctor (Pi F) where map α β f x a := f <$$> x a
+instance : MvFunctor (Pi F) where map α β f x a := f <$$> x a
 
 variable [∀ α, Mvqpf <| F α]
 

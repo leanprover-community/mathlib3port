@@ -845,7 +845,7 @@ theorem hausdorffMeasure_pi_real {ι : Type _} [Fintype ι] :
         · apply
             tendsto.congr' _
               ((ennreal.continuous_of_real.tendsto _).comp
-                ((tendsto_nat_ceil_mul_div_atTop (I i)).comp tendsto_coe_nat_atTop_atTop))
+                ((tendsto_nat_ceil_mul_div_atTop (I i)).comp tendsto_nat_cast_atTop_atTop))
           apply eventually_at_top.2 ⟨1, fun n hn => _⟩
           simp only [Ennreal.ofReal_div_of_pos (nat.cast_pos.mpr hn), comp_app,
             Ennreal.ofReal_coe_nat]

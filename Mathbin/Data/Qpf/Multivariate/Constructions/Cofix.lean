@@ -46,15 +46,15 @@ We define the relation `Mcongr` and take its quotient as the definition of `cofi
 
 universe u
 
-open Mvfunctor
+open MvFunctor
 
 namespace Mvqpf
 
 open TypeVec Mvpfunctor
 
-open Mvfunctor (Liftp Liftr)
+open MvFunctor (Liftp Liftr)
 
-variable {n : ℕ} {F : TypeVec.{u} (n + 1) → Type u} [Mvfunctor F] [q : Mvqpf F]
+variable {n : ℕ} {F : TypeVec.{u} (n + 1) → Type u} [MvFunctor F] [q : Mvqpf F]
 
 include q
 
@@ -90,7 +90,7 @@ than the input. For `F a b c` a ternary functor, fix F is a binary functor such 
 cofix F a b = F a b (cofix F a b)
 ```
 -/
-def Cofix (F : TypeVec (n + 1) → Type u) [Mvfunctor F] [q : Mvqpf F] (α : TypeVec n) :=
+def Cofix (F : TypeVec (n + 1) → Type u) [MvFunctor F] [q : Mvqpf F] (α : TypeVec n) :=
   Quot (@McongrCat _ F _ q α)
 #align mvqpf.cofix Mvqpf.Cofix
 
@@ -128,7 +128,7 @@ def Cofix.map {α β : TypeVec n} (g : α ⟹ β) : Cofix F α → Cofix F β :=
       show r' (g <$$> aa₁) (g <$$> aa₂); exact ⟨aa₁, aa₂, ra₁a₂, rfl, rfl⟩)
 #align mvqpf.cofix.map Mvqpf.Cofix.map
 
-instance Cofix.mvfunctor : Mvfunctor (Cofix F) where map := @Cofix.map _ _ _ _
+instance Cofix.mvfunctor : MvFunctor (Cofix F) where map := @Cofix.map _ _ _ _
 #align mvqpf.cofix.mvfunctor Mvqpf.Cofix.mvfunctor
 
 /-- Corecursor for `cofix F` -/
@@ -177,7 +177,7 @@ value instead of making a recursive call -/
 def Cofix.corec' {α : TypeVec n} {β : Type u} (g : β → F (α.append1 (Sum (Cofix F α) β))) (x : β) :
     Cofix F α :=
   let f : (α ::: Cofix F α) ⟹ (α ::: Sum (Cofix F α) β) := id ::: Sum.inl
-  Cofix.corec (Sum.elim (Mvfunctor.map f ∘ cofix.dest) g) (Sum.inr x : Sum (Cofix F α) β)
+  Cofix.corec (Sum.elim (MvFunctor.map f ∘ cofix.dest) g) (Sum.inr x : Sum (Cofix F α) β)
 #align mvqpf.cofix.corec' Mvqpf.Cofix.corec'
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -287,7 +287,7 @@ theorem Cofix.bisim_rel {α : TypeVec n} (r : Cofix F α → Cofix F α → Prop
 
 /-- Bisimulation principle using `liftr` to match and relate children of two trees. -/
 theorem Cofix.bisim {α : TypeVec n} (r : Cofix F α → Cofix F α → Prop)
-    (h : ∀ x y, r x y → Liftr (RelLast α r) (Cofix.dest x) (Cofix.dest y)) : ∀ x y, r x y → x = y :=
+    (h : ∀ x y, r x y → LiftR (RelLast α r) (Cofix.dest x) (Cofix.dest y)) : ∀ x y, r x y → x = y :=
   by
   apply cofix.bisim_rel
   intro x y rxy
@@ -303,11 +303,11 @@ theorem Cofix.bisim {α : TypeVec n} (r : Cofix F α → Cofix F α → Prop)
     apply h' _ j
 #align mvqpf.cofix.bisim Mvqpf.Cofix.bisim
 
-open Mvfunctor
+open MvFunctor
 
 /-- Bisimulation principle using `liftr'` to match and relate children of two trees. -/
 theorem Cofix.bisim₂ {α : TypeVec n} (r : Cofix F α → Cofix F α → Prop)
-    (h : ∀ x y, r x y → Liftr' (relLast' α r) (Cofix.dest x) (Cofix.dest y)) :
+    (h : ∀ x y, r x y → LiftR' (RelLast' α r) (Cofix.dest x) (Cofix.dest y)) :
     ∀ x y, r x y → x = y :=
   Cofix.bisim _ <| by intros <;> rw [← liftr_last_rel_iff] <;> apply h <;> assumption
 #align mvqpf.cofix.bisim₂ Mvqpf.Cofix.bisim₂
@@ -360,7 +360,7 @@ theorem Cofix.dest_mk {α : TypeVec n} (x : F (α.append1 <| Cofix F α)) :
   by
   have : cofix.mk ∘ cofix.dest = @_root_.id (cofix F α) := funext cofix.mk_dest
   rw [cofix.mk, cofix.dest_corec, ← comp_map, ← cofix.mk, ← append_fun_comp, this, id_comp,
-    append_fun_id_id, Mvfunctor.id_map]
+    append_fun_id_id, MvFunctor.id_map]
 #align mvqpf.cofix.dest_mk Mvqpf.Cofix.dest_mk
 
 theorem Cofix.ext {α : TypeVec n} (x y : Cofix F α) (h : x.dest = y.dest) : x = y := by
@@ -382,14 +382,14 @@ section LiftrMap
 
 omit q
 
-theorem liftr_map {α β : TypeVec n} {F' : TypeVec n → Type u} [Mvfunctor F'] [IsLawfulMvfunctor F']
+theorem liftr_map {α β : TypeVec n} {F' : TypeVec n → Type u} [MvFunctor F'] [LawfulMvFunctor F']
     (R : β ⊗ β ⟹ repeat n Prop) (x : F' α) (f g : α ⟹ β) (h : α ⟹ Subtype_ R)
-    (hh : subtypeVal _ ⊚ h = (f ⊗' g) ⊚ prod.diag) : Liftr' R (f <$$> x) (g <$$> x) :=
+    (hh : subtypeVal _ ⊚ h = (f ⊗' g) ⊚ prod.diag) : LiftR' R (f <$$> x) (g <$$> x) :=
   by
   rw [liftr_def]
   exists h <$$> x
-  rw [Mvfunctor.map_map, comp_assoc, hh, ← comp_assoc, fst_prod_mk, comp_assoc, fst_diag]
-  rw [Mvfunctor.map_map, comp_assoc, hh, ← comp_assoc, snd_prod_mk, comp_assoc, snd_diag]
+  rw [MvFunctor.map_map, comp_assoc, hh, ← comp_assoc, fst_prod_mk, comp_assoc, fst_diag]
+  rw [MvFunctor.map_map, comp_assoc, hh, ← comp_assoc, snd_prod_mk, comp_assoc, snd_diag]
   dsimp [liftr']; constructor <;> rfl
 #align mvqpf.liftr_map Mvqpf.liftr_map
 
@@ -405,14 +405,14 @@ open Function
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem liftr_map_last [IsLawfulMvfunctor F] {α : TypeVec n} {ι ι'} (R : ι' → ι' → Prop)
+theorem liftr_map_last [LawfulMvFunctor F] {α : TypeVec n} {ι ι'} (R : ι' → ι' → Prop)
     (x : F (α ::: ι)) (f g : ι → ι') (hh : ∀ x : ι, R (f x) (g x)) :
-    Liftr' (relLast' _ R) ((id ::: f) <$$> x) ((id ::: g) <$$> x) :=
+    LiftR' (RelLast' _ R) ((id ::: f) <$$> x) ((id ::: g) <$$> x) :=
   let h : ι → { x : ι' × ι' // uncurry R x } := fun x => ⟨(f x, g x), hh x⟩
   let b : (α ::: ι) ⟹ _ := @diagSub n α ::: h
   let c :
     (Subtype_ α.repeatEq ::: { x // uncurry R x }) ⟹
-      ((fun i : Fin2 n => { x // ofRepeat (α.relLast' R i.fs x) }) ::: Subtype (uncurry R)) :=
+      ((fun i : Fin2 n => { x // ofRepeat (α.RelLast' R i.fs x) }) ::: Subtype (uncurry R)) :=
     ofSubtype _ ::: id
   have hh :
     subtypeVal _ ⊚ toSubtype _ ⊚ from_append1_drop_last ⊚ c ⊚ b =
@@ -439,12 +439,11 @@ theorem liftr_map_last [IsLawfulMvfunctor F] {α : TypeVec n} {ι ι'} (R : ι' 
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem liftr_map_last' [IsLawfulMvfunctor F] {α : TypeVec n} {ι} (R : ι → ι → Prop)
-    (x : F (α ::: ι)) (f : ι → ι) (hh : ∀ x : ι, R (f x) x) :
-    Liftr' (relLast' _ R) ((id ::: f) <$$> x) x :=
+theorem liftr_map_last' [LawfulMvFunctor F] {α : TypeVec n} {ι} (R : ι → ι → Prop) (x : F (α ::: ι))
+    (f : ι → ι) (hh : ∀ x : ι, R (f x) x) : LiftR' (RelLast' _ R) ((id ::: f) <$$> x) x :=
   by
   have := liftr_map_last R x f id hh
-  rwa [append_fun_id_id, Mvfunctor.id_map] at this
+  rwa [append_fun_id_id, MvFunctor.id_map] at this
 #align mvqpf.liftr_map_last' Mvqpf.liftr_map_last'
 
 end LiftrMap
@@ -462,7 +461,7 @@ theorem Cofix.abs_repr {α} (x : Cofix F α) : Quot.mk _ (Cofix.repr x) = x :=
     congr
     skip
     rw [cofix.dest]
-  dsimp; rw [Mvfunctor.map_map, Mvfunctor.map_map, ← append_fun_comp_id, ← append_fun_comp_id]
+  dsimp; rw [MvFunctor.map_map, MvFunctor.map_map, ← append_fun_comp_id, ← append_fun_comp_id]
   let f : (α ::: (P F).M α) ⟹ subtype_ (α.rel_last' R) :=
     split_fun diag_sub fun x => ⟨(cofix.abs (cofix.abs x).repr, cofix.abs x), _⟩
   refine' liftr_map _ _ _ _ f _
@@ -523,11 +522,11 @@ end Tactic
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem corec_roll {α : TypeVec n} {X Y} {x₀ : X} (f : X → Y) (g : Y → F (α ::: X)) :
-    Cofix.corec (g ∘ f) x₀ = Cofix.corec (Mvfunctor.map (id ::: f) ∘ g) (f x₀) :=
+    Cofix.corec (g ∘ f) x₀ = Cofix.corec (MvFunctor.map (id ::: f) ∘ g) (f x₀) :=
   by
   mv_bisim x₀
   rw [Ha, Hb, cofix.dest_corec, cofix.dest_corec]
-  rw [Mvfunctor.map_map, ← append_fun_comp_id]
+  rw [MvFunctor.map_map, ← append_fun_comp_id]
   refine' liftr_map_last _ _ _ _ _
   intro a; refine' ⟨a, rfl, rfl⟩
 #align mvqpf.corec_roll Mvqpf.corec_roll
@@ -541,14 +540,14 @@ theorem Cofix.dest_corec' {α : TypeVec n} {β : Type u} (g : β → F (α.appen
   · mv_bisim i
     rw [Ha, Hb, cofix.dest_corec]
     dsimp [(· ∘ ·)]
-    repeat' rw [Mvfunctor.map_map, ← append_fun_comp_id]
+    repeat' rw [MvFunctor.map_map, ← append_fun_comp_id]
     apply liftr_map_last'
     dsimp [(· ∘ ·), R]
     intros
     exact ⟨_, rfl, rfl⟩
   · congr with y
     erw [append_fun_id_id]
-    simp [Mvfunctor.id_map]
+    simp [MvFunctor.id_map]
 #align mvqpf.cofix.dest_corec' Mvqpf.Cofix.dest_corec'
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/

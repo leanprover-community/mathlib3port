@@ -1572,7 +1572,7 @@ theorem isO_one_left_iff : (fun x => 1 : α → F) =o[l] f ↔ Tendsto (fun x =>
     _ ↔ ∀ n : ℕ, True → ∀ᶠ x in l, ‖f x‖ ∈ Ici (n : ℝ) := by
       simp only [norm_one, mul_one, true_imp_iff, mem_Ici]
     _ ↔ Tendsto (fun x => ‖f x‖) l atTop :=
-      atTop_countable_basis_of_archimedean.1.tendsto_right_iff.symm
+      atTop_hasCountableBasis_of_archimedean.1.tendsto_right_iff.symm
     
 #align asymptotics.is_o_one_left_iff Asymptotics.isO_one_left_iff
 

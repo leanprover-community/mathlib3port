@@ -21,7 +21,7 @@ universe u v
 
 namespace Mvqpf
 
-open Mvfunctor
+open MvFunctor
 
 variable {n : ℕ} (i : Fin2 n)
 
@@ -39,7 +39,7 @@ def Prj.map ⦃α β : TypeVec n⦄ (f : α ⟹ β) : Prj i α → Prj i β :=
   f _
 #align mvqpf.prj.map Mvqpf.Prj.map
 
-instance Prj.mvfunctor : Mvfunctor (Prj i) where map := Prj.map i
+instance Prj.mvfunctor : MvFunctor (Prj i) where map := Prj.map i
 #align mvqpf.prj.mvfunctor Mvqpf.Prj.mvfunctor
 
 /-- Polynomial representation of the projection functor -/

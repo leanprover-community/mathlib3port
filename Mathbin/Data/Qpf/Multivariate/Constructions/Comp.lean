@@ -23,10 +23,10 @@ universe u
 
 namespace Mvqpf
 
-open Mvfunctor
+open MvFunctor
 
-variable {n m : ℕ} (F : TypeVec.{u} n → Type _) [fF : Mvfunctor F] [q : Mvqpf F]
-  (G : Fin2 n → TypeVec.{u} m → Type u) [fG : ∀ i, Mvfunctor <| G i] [q' : ∀ i, Mvqpf <| G i]
+variable {n m : ℕ} (F : TypeVec.{u} n → Type _) [fF : MvFunctor F] [q : Mvqpf F]
+  (G : Fin2 n → TypeVec.{u} m → Type u) [fG : ∀ i, MvFunctor <| G i] [q' : ∀ i, Mvqpf <| G i]
 
 /-- Composition of an `n`-ary functor with `n` `m`-ary
 functors gives us one `m`-ary functor -/
@@ -36,7 +36,7 @@ def Comp (v : TypeVec.{u} m) : Type _ :=
 
 namespace Comp
 
-open Mvfunctor Mvpfunctor
+open MvFunctor Mvpfunctor
 
 variable {F G} {α β : TypeVec.{u} m} (f : α ⟹ β)
 
@@ -76,7 +76,7 @@ protected def map : (Comp F G) α → (Comp F G) β :=
   (map fun i => map f : (F fun i => G i α) → F fun i => G i β)
 #align mvqpf.comp.map Mvqpf.Comp.map
 
-instance : Mvfunctor (Comp F G) where map α β := Comp.map
+instance : MvFunctor (Comp F G) where map α β := Comp.map
 
 theorem map_mk (x : F fun i => G i α) :
     f <$$> Comp.mk x = Comp.mk ((fun i (x : G i α) => f <$$> x) <$$> x) :=
@@ -99,12 +99,12 @@ instance : Mvqpf (Comp F G)
       repr ∘ (map fun i => (repr : G i α → (fun i : Fin2 n => Obj (p (G i)) α) i)) ∘ comp.get
   abs_repr := by
     intros
-    simp [(· ∘ ·), Mvfunctor.map_map, (· ⊚ ·), abs_repr]
+    simp [(· ∘ ·), MvFunctor.map_map, (· ⊚ ·), abs_repr]
   abs_map := by
     intros
     simp [(· ∘ ·)]
     rw [← abs_map]
-    simp [Mvfunctor.id_map, (· ⊚ ·), map_mk, Mvpfunctor.comp.get_map, abs_map, Mvfunctor.map_map,
+    simp [MvFunctor.id_map, (· ⊚ ·), map_mk, Mvpfunctor.comp.get_map, abs_map, MvFunctor.map_map,
       abs_repr]
 
 end Comp

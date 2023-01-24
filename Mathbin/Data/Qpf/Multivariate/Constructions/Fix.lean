@@ -60,11 +60,11 @@ namespace Mvqpf
 
 open TypeVec
 
-open Mvfunctor (Liftp Liftr)
+open MvFunctor (Liftp Liftr)
 
-open Mvfunctor
+open MvFunctor
 
-variable {n : ℕ} {F : TypeVec.{u} (n + 1) → Type u} [Mvfunctor F] [q : Mvqpf F]
+variable {n : ℕ} {F : TypeVec.{u} (n + 1) → Type u} [MvFunctor F] [q : Mvqpf F]
 
 include q
 
@@ -190,7 +190,7 @@ than the input. For `F a b c` a ternary functor, fix F is a binary functor such 
 fix F a b = F a b (fix F a b)
 ```
 -/
-def Fix {n : ℕ} (F : TypeVec (n + 1) → Type _) [Mvfunctor F] [q : Mvqpf F] (α : TypeVec n) :=
+def Fix {n : ℕ} (F : TypeVec (n + 1) → Type _) [MvFunctor F] [q : Mvqpf F] (α : TypeVec n) :=
   Quotient (wSetoid α : Setoid (q.p.W α))
 #align mvqpf.fix Mvqpf.Fix
 
@@ -201,7 +201,7 @@ def Fix.map {α β : TypeVec n} (g : α ⟹ β) : Fix F α → Fix F β :=
   Quotient.lift (fun x : q.p.W α => ⟦q.p.wMap g x⟧) fun a b h => Quot.sound (wequivCat_map _ _ _ h)
 #align mvqpf.fix.map Mvqpf.Fix.map
 
-instance Fix.mvfunctor : Mvfunctor (Fix F) where map := @Fix.map _ _ _ _
+instance Fix.mvfunctor : MvFunctor (Fix F) where map := @Fix.map _ _ _ _
 #align mvqpf.fix.mvfunctor Mvqpf.Fix.mvfunctor
 
 variable {α : TypeVec.{u} n}
@@ -224,7 +224,7 @@ def Fix.mk (x : F (append1 α (Fix F α))) : Fix F α :=
 
 /-- Destructor for `fix F` -/
 def Fix.dest : Fix F α → F (append1 α (Fix F α)) :=
-  Fix.rec (Mvfunctor.map (appendFun id Fix.mk))
+  Fix.rec (MvFunctor.map (appendFun id Fix.mk))
 #align mvqpf.fix.dest Mvqpf.Fix.dest
 
 theorem Fix.rec_eq {β : Type u} (g : F (append1 α β) → β) (x : F (append1 α (Fix F α))) :
@@ -302,7 +302,7 @@ theorem Fix.mk_dest (x : Fix F α) : Fix.mk (Fix.dest x) = x :=
   rw [fix.dest, fix.rec_eq, ← comp_map, ← append_fun_comp, id_comp]
   intro h; rw [h]
   show fix.mk (append_fun id id <$$> x) = fix.mk x
-  rw [append_fun_id_id, Mvfunctor.id_map]
+  rw [append_fun_id_id, MvFunctor.id_map]
 #align mvqpf.fix.mk_dest Mvqpf.Fix.mk_dest
 
 theorem Fix.dest_mk (x : F (append1 α (Fix F α))) : Fix.dest (Fix.mk x) = x :=
@@ -311,7 +311,7 @@ theorem Fix.dest_mk (x : F (append1 α (Fix F α))) : Fix.dest (Fix.mk x) = x :=
   rw [fix.rec_eq, ← fix.dest, ← comp_map]
   conv =>
     rhs
-    rw [← Mvfunctor.id_map x]
+    rw [← MvFunctor.id_map x]
   rw [← append_fun_comp, id_comp]
   have : fix.mk ∘ fix.dest = id := by
     ext x
@@ -320,7 +320,7 @@ theorem Fix.dest_mk (x : F (append1 α (Fix F α))) : Fix.dest (Fix.mk x) = x :=
 #align mvqpf.fix.dest_mk Mvqpf.Fix.dest_mk
 
 theorem Fix.ind {α : TypeVec n} (p : Fix F α → Prop)
-    (h : ∀ x : F (α.append1 (Fix F α)), Liftp (PredLast α p) x → p (Fix.mk x)) : ∀ x, p x :=
+    (h : ∀ x : F (α.append1 (Fix F α)), LiftP (PredLast α p) x → p (Fix.mk x)) : ∀ x, p x :=
   by
   apply Quot.ind
   intro x
@@ -328,7 +328,7 @@ theorem Fix.ind {α : TypeVec n} (p : Fix F α → Prop)
   change p ⟦q.P.W_mk a f' f⟧
   rw [← fix.ind_aux a f' f]
   apply h
-  rw [Mvqpf.liftp_iff]
+  rw [Mvqpf.liftP_iff]
   refine' ⟨_, _, rfl, _⟩
   intro i j
   cases i
@@ -350,7 +350,7 @@ instance mvqpfFix : Mvqpf (Fix F) where
     intro α β g x;
     conv =>
       rhs
-      dsimp [Mvfunctor.map]
+      dsimp [MvFunctor.map]
     rw [fix.map]; apply Quot.sound
     apply Wequiv.refl
 #align mvqpf.mvqpf_fix Mvqpf.mvqpfFix
@@ -373,7 +373,7 @@ def Fix.drec {β : Fix F α → Type u}
     conv =>
       rhs
       rw [← ih]
-    rw [Mvfunctor.map_map, ← append_fun_comp, id_comp]
+    rw [MvFunctor.map_map, ← append_fun_comp, id_comp]
   cast (by rw [this]) y.2
 #align mvqpf.fix.drec Mvqpf.Fix.drec
 

@@ -26,7 +26,7 @@ universe u
 
 namespace Mvqpf
 
-open Mvfunctor
+open MvFunctor
 
 variable (n : ℕ)
 
@@ -42,7 +42,7 @@ instance Const.inhabited {A α} [Inhabited A] : Inhabited (Const n A α) :=
 
 namespace Const
 
-open Mvfunctor Mvpfunctor
+open MvFunctor Mvpfunctor
 
 variable {n} {A : Type u} {α β : TypeVec.{u} n} (f : α ⟹ β)
 
@@ -70,7 +70,7 @@ protected theorem get_mk (x : A) : Const.get (Const.mk x : Const n A α) = x :=
 protected def map : (Const n A) α → (Const n A) β := fun x => x
 #align mvqpf.const.map Mvqpf.Const.map
 
-instance : Mvfunctor (Const n A) where map α β f := Const.map
+instance : MvFunctor (Const n A) where map α β f := Const.map
 
 theorem map_mk (x : A) : f <$$> Const.mk x = Const.mk x :=
   rfl

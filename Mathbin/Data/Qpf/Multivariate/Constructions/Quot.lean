@@ -21,7 +21,7 @@ functions found in the definition of `mvqpf`
 
 universe u
 
-open Mvfunctor
+open MvFunctor
 
 namespace Mvqpf
 
@@ -31,9 +31,9 @@ variable {F : TypeVec.{u} n → Type u}
 
 section repr
 
-variable [Mvfunctor F] [q : Mvqpf F]
+variable [MvFunctor F] [q : Mvqpf F]
 
-variable {G : TypeVec.{u} n → Type u} [Mvfunctor G]
+variable {G : TypeVec.{u} n → Type u} [MvFunctor G]
 
 variable {FG_abs : ∀ {α}, F α → G α}
 
@@ -67,7 +67,7 @@ instance Quot1.inhabited {α : TypeVec n} [Inhabited <| F α] : Inhabited (Quot1
   ⟨Quot.mk _ default⟩
 #align mvqpf.quot1.inhabited Mvqpf.Quot1.inhabited
 
-variable [Mvfunctor F] [q : Mvqpf F]
+variable [MvFunctor F] [q : Mvqpf F]
 
 variable (Hfunc : ∀ ⦃α β⦄ (a b : F α) (f : α ⟹ β), R a b → R (f <$$> a) (f <$$> b))
 
@@ -77,7 +77,7 @@ def Quot1.map ⦃α β⦄ (f : α ⟹ β) : Quot1.{u} R α → Quot1.{u} R β :=
 #align mvqpf.quot1.map Mvqpf.Quot1.map
 
 /-- `mvfunctor` instance for `quot1` with well-behaved `R` -/
-def Quot1.mvfunctor : Mvfunctor (Quot1 R) where map := Quot1.map R Hfunc
+def Quot1.mvfunctor : MvFunctor (Quot1 R) where map := Quot1.map R Hfunc
 #align mvqpf.quot1.mvfunctor Mvqpf.Quot1.mvfunctor
 
 /-- `quot1` is a qpf -/

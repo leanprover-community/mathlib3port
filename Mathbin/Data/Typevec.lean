@@ -61,7 +61,7 @@ def Arrow (α β : TypeVec n) :=
 -/
 
 -- mathport name: typevec.arrow
-scoped[Mvfunctor] infixl:40 " ⟹ " => TypeVec.Arrow
+scoped[MvFunctor] infixl:40 " ⟹ " => TypeVec.Arrow
 
 #print TypeVec.Arrow.inhabited /-
 instance Arrow.inhabited (α β : TypeVec n) [∀ i, Inhabited (β i)] : Inhabited (α ⟹ β) :=
@@ -82,7 +82,7 @@ def comp {α β γ : TypeVec n} (g : β ⟹ γ) (f : α ⟹ β) : α ⟹ γ := f
 -/
 
 -- mathport name: typevec.comp
-scoped[Mvfunctor] infixr:80 " ⊚ " => TypeVec.comp
+scoped[MvFunctor] infixr:80 " ⊚ " => TypeVec.comp
 
 /- warning: typevec.id_comp -> TypeVec.id_comp is a dubious translation:
 lean 3 declaration is
@@ -649,7 +649,7 @@ def prod : ∀ {n} (α β : TypeVec.{u} n), TypeVec n
 -/
 
 -- mathport name: typevec.prod
-scoped[Mvfunctor] infixl:45 " ⊗ " => TypeVec.prod
+scoped[MvFunctor] infixl:45 " ⊗ " => TypeVec.prod
 
 #print TypeVec.const /-
 /-- `const x α` is an arrow that ignores its source and constructs a `typevec` that
@@ -722,21 +722,21 @@ theorem repeat_eq_nil (α : TypeVec 0) : repeatEq α = nil_fun := by ext i : 1 <
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print TypeVec.predLast' /-
+#print TypeVec.PredLast' /-
 /-- predicate on a type vector to constrain only the last object -/
-def predLast' (α : TypeVec n) {β : Type _} (p : β → Prop) : (α ::: β) ⟹ repeat (n + 1) Prop :=
+def PredLast' (α : TypeVec n) {β : Type _} (p : β → Prop) : (α ::: β) ⟹ repeat (n + 1) Prop :=
   splitFun (TypeVec.const True α) p
-#align typevec.pred_last' TypeVec.predLast'
+#align typevec.pred_last' TypeVec.PredLast'
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print TypeVec.relLast' /-
+#print TypeVec.RelLast' /-
 /-- predicate on the product of two type vectors to constrain only their last object -/
-def relLast' (α : TypeVec n) {β : Type _} (p : β → β → Prop) :
+def RelLast' (α : TypeVec n) {β : Type _} (p : β → β → Prop) :
     (α ::: β) ⊗ (α ::: β) ⟹ repeat (n + 1) Prop :=
   splitFun (repeatEq α) (uncurry p)
-#align typevec.rel_last' TypeVec.relLast'
+#align typevec.rel_last' TypeVec.RelLast'
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -839,7 +839,7 @@ protected def prod.map : ∀ {n} {α α' β β' : TypeVec.{u} n}, α ⟹ β → 
 -/
 
 -- mathport name: typevec.prod.map
-scoped[Mvfunctor] infixl:45 " ⊗' " => TypeVec.prod.map
+scoped[MvFunctor] infixl:45 " ⊗' " => TypeVec.prod.map
 
 #print TypeVec.fst_prod_mk /-
 theorem fst_prod_mk {α α' β β' : TypeVec n} (f : α ⟹ β) (g : α' ⟹ β') :
@@ -1038,17 +1038,17 @@ theorem lastFun_of_subtype {α} (p : α ⟹ repeat (n + 1) Prop) : lastFun (ofSu
 #align typevec.last_fun_of_subtype TypeVec.lastFun_of_subtype
 -/
 
-#print TypeVec.dropFun_rel_last /-
+#print TypeVec.dropFun_RelLast' /-
 @[simp]
-theorem dropFun_rel_last {α : TypeVec n} {β} (R : β → β → Prop) :
-    dropFun (relLast' α R) = repeatEq α :=
+theorem dropFun_RelLast' {α : TypeVec n} {β} (R : β → β → Prop) :
+    dropFun (RelLast' α R) = repeatEq α :=
   rfl
-#align typevec.drop_fun_rel_last TypeVec.dropFun_rel_last
+#align typevec.drop_fun_rel_last TypeVec.dropFun_RelLast'
 -/
 
 attribute [simp] drop_append1'
 
-open Mvfunctor
+open MvFunctor
 
 #print TypeVec.dropFun_prod /-
 @[simp]

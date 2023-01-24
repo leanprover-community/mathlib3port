@@ -50,7 +50,7 @@ theorem tendsto_div_of_monotone_of_exists_subseq_tendsto_div (u : ℕ → ℝ) (
     by
     rcases hlim 2 one_lt_two with ⟨c, cgrowth, ctop, clim⟩
     have : tendsto (fun n => u 0 / c n) at_top (𝓝 0) :=
-      tendsto_const_nhds.div_at_top (tendsto_coe_nat_atTop_iff.2 ctop)
+      tendsto_const_nhds.div_at_top (tendsto_nat_cast_atTop_iff.2 ctop)
     apply le_of_tendsto_of_tendsto' this clim fun n => _
     simp_rw [div_eq_inv_mul]
     exact mul_le_mul_of_nonneg_left (hmono (zero_le _)) (inv_nonneg.2 (Nat.cast_nonneg _))

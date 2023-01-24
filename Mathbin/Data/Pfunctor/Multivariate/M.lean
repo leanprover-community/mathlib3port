@@ -52,7 +52,7 @@ that `A` is a possibly infinite tree.
 
 universe u
 
-open Mvfunctor
+open MvFunctor
 
 namespace Mvpfunctor
 
@@ -92,7 +92,7 @@ def M (α : TypeVec n) : Type _ :=
   P.mp.Obj α
 #align mvpfunctor.M Mvpfunctor.M
 
-instance mvfunctorM : Mvfunctor P.M := by delta M <;> infer_instance
+instance mvfunctorM : MvFunctor P.M := by delta M <;> infer_instance
 #align mvpfunctor.mvfunctor_M Mvpfunctor.mvfunctorM
 
 instance inhabitedM {α : TypeVec _} [I : Inhabited P.A] [∀ i : Fin2 n, Inhabited (α i)] :
@@ -300,7 +300,7 @@ theorem M.bisim' {α : TypeVec n} (R : P.M α → P.M α → Prop)
     have : ∀ x y, R x y → EqvGen R x y := @EqvGen.rel _ R
     induction Hr
     · rw [← Quot.factor_mk_eq R (EqvGen R) this]
-      rwa [append_fun_comp_id, ← Mvfunctor.map_map, ← Mvfunctor.map_map, h]
+      rwa [append_fun_comp_id, ← MvFunctor.map_map, ← MvFunctor.map_map, h]
     all_goals cc
 #align mvpfunctor.M.bisim' Mvpfunctor.M.bisim'
 

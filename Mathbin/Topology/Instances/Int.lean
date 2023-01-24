@@ -79,7 +79,7 @@ instance : ProperSpace ℤ :=
 @[simp]
 theorem cocompact_eq : cocompact ℤ = at_bot ⊔ at_top := by
   simp only [← comap_dist_right_atTop_eq_cocompact (0 : ℤ), dist_eq, sub_zero, cast_zero, ←
-    cast_abs, ← @comap_comap _ _ _ _ abs, Int.comap_coe_atTop, comap_abs_at_top]
+    cast_abs, ← @comap_comap _ _ _ _ abs, Int.comap_cast_atTop, comap_abs_at_top]
 #align int.cocompact_eq Int.cocompact_eq
 
 @[simp]

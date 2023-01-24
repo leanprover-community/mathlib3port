@@ -31,7 +31,7 @@ open Classical TopologicalSpace Nat BigOperators uniformity Nnreal Ennreal
 variable {α : Type _} {β : Type _} {ι : Type _}
 
 theorem tendsto_inverse_atTop_nhds_0_nat : Tendsto (fun n : ℕ => (n : ℝ)⁻¹) atTop (𝓝 0) :=
-  tendsto_inv_atTop_zero.comp tendsto_coe_nat_atTop_atTop
+  tendsto_inv_atTop_zero.comp tendsto_nat_cast_atTop_atTop
 #align tendsto_inverse_at_top_nhds_0_nat tendsto_inverse_atTop_nhds_0_nat
 
 theorem tendsto_const_div_atTop_nhds_0_nat (C : ℝ) : Tendsto (fun n : ℕ => C / n) atTop (𝓝 0) := by

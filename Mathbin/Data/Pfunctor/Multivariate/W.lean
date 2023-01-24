@@ -55,7 +55,7 @@ namespace Mvpfunctor
 
 open TypeVec
 
-open Mvfunctor
+open MvFunctor
 
 variable {n : ℕ} (P : Mvpfunctor.{u} (n + 1))
 
@@ -130,7 +130,7 @@ def W (α : TypeVec n) : Type _ :=
   P.wp.Obj α
 #align mvpfunctor.W Mvpfunctor.W
 
-instance mvfunctorW : Mvfunctor P.W := by delta Mvpfunctor.W <;> infer_instance
+instance mvfunctorW : MvFunctor P.W := by delta Mvpfunctor.W <;> infer_instance
 #align mvpfunctor.mvfunctor_W Mvpfunctor.mvfunctorW
 
 /-!
@@ -248,8 +248,8 @@ theorem wMk_eq {α : TypeVec n} (a : P.A) (f : P.last.B a → P.last.W) (g' : P.
 theorem w_map_wMk {α β : TypeVec n} (g : α ⟹ β) (a : P.A) (f' : P.drop.B a ⟹ α)
     (f : P.last.B a → P.W α) : g <$$> P.wMk a f' f = P.wMk a (g ⊚ f') fun i => g <$$> f i :=
   by
-  show _ = P.W_mk a (g ⊚ f') (Mvfunctor.map g ∘ f)
-  have : Mvfunctor.map g ∘ f = fun i => ⟨(f i).fst, g ⊚ (f i).snd⟩ :=
+  show _ = P.W_mk a (g ⊚ f') (MvFunctor.map g ∘ f)
+  have : MvFunctor.map g ∘ f = fun i => ⟨(f i).fst, g ⊚ (f i).snd⟩ :=
     by
     ext i : 1
     dsimp [Function.comp]

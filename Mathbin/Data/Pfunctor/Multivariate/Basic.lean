@@ -23,7 +23,7 @@ they guarantee that occurrences of `α` are positive.
 
 universe u v
 
-open Mvfunctor
+open MvFunctor
 
 /-- multivariate polynomial functors
 -/
@@ -34,7 +34,7 @@ structure Mvpfunctor (n : ℕ) where
 
 namespace Mvpfunctor
 
-open Mvfunctor (Liftp Liftr)
+open MvFunctor (Liftp Liftr)
 
 variable {n m : ℕ} (P : Mvpfunctor.{u} n)
 
@@ -55,11 +55,11 @@ instance Obj.inhabited {α : TypeVec n} [Inhabited P.A] [∀ i, Inhabited (α i)
   ⟨⟨default, fun _ _ => default⟩⟩
 #align mvpfunctor.obj.inhabited Mvpfunctor.Obj.inhabited
 
-instance : Mvfunctor P.Obj :=
+instance : MvFunctor P.Obj :=
   ⟨@Mvpfunctor.map n P⟩
 
 theorem map_eq {α β : TypeVec n} (g : α ⟹ β) (a : P.A) (f : P.B a ⟹ α) :
-    @Mvfunctor.map _ P.Obj _ _ _ g ⟨a, f⟩ = ⟨a, g ⊚ f⟩ :=
+    @MvFunctor.map _ P.Obj _ _ _ g ⟨a, f⟩ = ⟨a, g ⊚ f⟩ :=
   rfl
 #align mvpfunctor.map_eq Mvpfunctor.map_eq
 
@@ -72,7 +72,7 @@ theorem comp_map {α β γ : TypeVec n} (f : α ⟹ β) (g : β ⟹ γ) :
   | ⟨a, h⟩ => rfl
 #align mvpfunctor.comp_map Mvpfunctor.comp_map
 
-instance : IsLawfulMvfunctor P.Obj where
+instance : LawfulMvFunctor P.Obj where
   id_map := @id_map _ P
   comp_map := @comp_map _ P
 
@@ -165,8 +165,8 @@ theorem comp.mk_get (x : (comp P Q).Obj α) : comp.mk (comp.get x) = x :=
 /-
 lifting predicates and relations
 -/
-theorem liftp_iff {α : TypeVec n} (p : ∀ ⦃i⦄, α i → Prop) (x : P.Obj α) :
-    Liftp p x ↔ ∃ a f, x = ⟨a, f⟩ ∧ ∀ i j, p (f i j) :=
+theorem liftP_iff {α : TypeVec n} (p : ∀ ⦃i⦄, α i → Prop) (x : P.Obj α) :
+    LiftP p x ↔ ∃ a f, x = ⟨a, f⟩ ∧ ∀ i j, p (f i j) :=
   by
   constructor
   · rintro ⟨y, hy⟩
@@ -177,20 +177,20 @@ theorem liftp_iff {α : TypeVec n} (p : ∀ ⦃i⦄, α i → Prop) (x : P.Obj �
   rintro ⟨a, f, xeq, pf⟩
   use ⟨a, fun i j => ⟨f i j, pf i j⟩⟩
   rw [xeq]; rfl
-#align mvpfunctor.liftp_iff Mvpfunctor.liftp_iff
+#align mvpfunctor.liftp_iff Mvpfunctor.liftP_iff
 
-theorem liftp_iff' {α : TypeVec n} (p : ∀ ⦃i⦄, α i → Prop) (a : P.A) (f : P.B a ⟹ α) :
-    @Liftp.{u} _ P.Obj _ α p ⟨a, f⟩ ↔ ∀ i x, p (f i x) :=
+theorem liftP_iff' {α : TypeVec n} (p : ∀ ⦃i⦄, α i → Prop) (a : P.A) (f : P.B a ⟹ α) :
+    @LiftP.{u} _ P.Obj _ α p ⟨a, f⟩ ↔ ∀ i x, p (f i x) :=
   by
   simp only [liftp_iff, Sigma.mk.inj_iff] <;> constructor <;> intro
   · casesm*Exists _, _ ∧ _
     subst_vars
     assumption
   repeat' first |constructor|assumption
-#align mvpfunctor.liftp_iff' Mvpfunctor.liftp_iff'
+#align mvpfunctor.liftp_iff' Mvpfunctor.liftP_iff'
 
-theorem liftr_iff {α : TypeVec n} (r : ∀ ⦃i⦄, α i → α i → Prop) (x y : P.Obj α) :
-    Liftr r x y ↔ ∃ a f₀ f₁, x = ⟨a, f₀⟩ ∧ y = ⟨a, f₁⟩ ∧ ∀ i j, r (f₀ i j) (f₁ i j) :=
+theorem liftR_iff {α : TypeVec n} (r : ∀ ⦃i⦄, α i → α i → Prop) (x y : P.Obj α) :
+    LiftR r x y ↔ ∃ a f₀ f₁, x = ⟨a, f₀⟩ ∧ y = ⟨a, f₁⟩ ∧ ∀ i j, r (f₀ i j) (f₁ i j) :=
   by
   constructor
   · rintro ⟨u, xeq, yeq⟩
@@ -210,9 +210,9 @@ theorem liftr_iff {α : TypeVec n} (r : ∀ ⦃i⦄, α i → α i → Prop) (x 
   · rw [xeq]
     rfl
   rw [yeq]; rfl
-#align mvpfunctor.liftr_iff Mvpfunctor.liftr_iff
+#align mvpfunctor.liftr_iff Mvpfunctor.liftR_iff
 
-open Set Mvfunctor
+open Set MvFunctor
 
 theorem supp_eq {α : TypeVec n} (a : P.A) (f : P.B a ⟹ α) (i) :
     @supp.{u} _ P.Obj _ α (⟨a, f⟩ : P.Obj α) i = f i '' univ :=
