@@ -368,7 +368,7 @@ Case conversion may be inaccurate. Consider using '#align mul_equiv.inv_fun_eq_s
 theorem invFun_eq_symm {f : M ≃* N} : f.invFun = f.symm :=
   rfl
 #align mul_equiv.inv_fun_eq_symm MulEquiv.invFun_eq_symm
-#align add_equiv.inv_fun_eq_symm AddEquiv.invFun_eq_symm
+#align add_equiv.neg_fun_eq_symm AddEquiv.invFun_eq_symm
 
 #print MulEquiv.Simps.symmApply /-
 -- we don't hyperlink the note in the additive version, since that breaks syntax highlighting
@@ -1139,7 +1139,7 @@ def MonoidHom.toMulEquiv [MulOneClass M] [MulOneClass N] (f : M →* N) (g : N �
   right_inv := MonoidHom.congr_fun h₂
   map_mul' := f.map_mul
 #align monoid_hom.to_mul_equiv MonoidHom.toMulEquiv
-#align add_monoid_hom.to_add_mul_equiv AddMonoidHom.toAddEquiv
+#align add_monoid_hom.to_add_equiv AddMonoidHom.toAddEquiv
 
 namespace Equiv
 

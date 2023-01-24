@@ -148,8 +148,6 @@ theorem or_exists_succ {p : ℕ → Prop} : (p 0 ∨ ∃ n, p (n + 1)) ↔ ∃ n
 /-! ### `succ` -/
 
 
-/- warning: has_lt.lt.nat_succ_le clashes with nat._root_.has_lt.lt.nat_succ_le -> LT.lt.nat_succ_le
-Case conversion may be inaccurate. Consider using '#align has_lt.lt.nat_succ_le LT.lt.nat_succ_leₓ'. -/
 #print LT.lt.nat_succ_le /-
 theorem LT.lt.nat_succ_le {n m : ℕ} (h : n < m) : succ n ≤ m :=
   succ_le_of_lt h

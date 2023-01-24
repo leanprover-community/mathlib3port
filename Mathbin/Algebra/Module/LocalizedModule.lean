@@ -123,7 +123,7 @@ def liftOn {α : Type _} (x : LocalizedModule S M) (f : M × S → α)
 #align localized_module.lift_on LocalizedModule.liftOn
 
 theorem liftOn_mk {α : Type _} {f : M × S → α} (wd : ∀ (p p' : M × S) (h1 : p ≈ p'), f p = f p')
-    (m : M) (s : S) : liftOn (mk m s) f wd = f ⟨m, s⟩ := by convert Quotient.liftOn_mk'' f wd ⟨m, s⟩
+    (m : M) (s : S) : liftOn (mk m s) f wd = f ⟨m, s⟩ := by convert Quotient.liftOn_mk f wd ⟨m, s⟩
 #align localized_module.lift_on_mk LocalizedModule.liftOn_mk
 
 /-- If `f : M × S → M × S → α` respects the equivalence relation `localized_module.r`, then
@@ -137,7 +137,7 @@ def liftOn₂ {α : Type _} (x y : LocalizedModule S M) (f : M × S → M × S �
 theorem liftOn₂_mk {α : Type _} (f : M × S → M × S → α)
     (wd : ∀ (p q p' q' : M × S) (h1 : p ≈ p') (h2 : q ≈ q'), f p q = f p' q') (m m' : M)
     (s s' : S) : liftOn₂ (mk m s) (mk m' s') f wd = f ⟨m, s⟩ ⟨m', s'⟩ := by
-  convert Quotient.liftOn₂_mk'' f wd _ _
+  convert Quotient.liftOn₂_mk f wd _ _
 #align localized_module.lift_on₂_mk LocalizedModule.liftOn₂_mk
 
 instance : Zero (LocalizedModule S M) :=

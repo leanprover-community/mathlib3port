@@ -40,9 +40,15 @@ protected def mulLeft₀ (a : G) (ha : a ≠ 0) : Perm G :=
   (Units.mk0 a ha).mulLeft
 #align equiv.mul_left₀ Equiv.mulLeft₀
 
-theorem mul_left_bijective₀ (a : G) (ha : a ≠ 0) : Function.Bijective ((· * ·) a : G → G) :=
+/- warning: mul_left_bijective₀ -> Equiv.mulLeft_bijective₀ is a dubious translation:
+lean 3 declaration is
+  forall {G : Type.{u1}} [_inst_1 : GroupWithZero.{u1} G] (a : G), (Ne.{succ u1} G a (OfNat.ofNat.{u1} G 0 (OfNat.mk.{u1} G 0 (Zero.zero.{u1} G (MulZeroClass.toHasZero.{u1} G (MulZeroOneClass.toMulZeroClass.{u1} G (MonoidWithZero.toMulZeroOneClass.{u1} G (GroupWithZero.toMonoidWithZero.{u1} G _inst_1)))))))) -> (Function.Bijective.{succ u1, succ u1} G G (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulZeroClass.toHasMul.{u1} G (MulZeroOneClass.toMulZeroClass.{u1} G (MonoidWithZero.toMulZeroOneClass.{u1} G (GroupWithZero.toMonoidWithZero.{u1} G _inst_1))))) a))
+but is expected to have type
+  forall {G : Type.{u1}} [_inst_1 : GroupWithZero.{u1} G] (a : G), (Ne.{succ u1} G a (OfNat.ofNat.{u1} G 0 (Zero.toOfNat0.{u1} G (MonoidWithZero.toZero.{u1} G (GroupWithZero.toMonoidWithZero.{u1} G _inst_1))))) -> (Function.Bijective.{succ u1, succ u1} G G ((fun (x._@.Mathlib.Algebra.Hom.Equiv.Units.GroupWithZero._hyg.76 : G) (x._@.Mathlib.Algebra.Hom.Equiv.Units.GroupWithZero._hyg.78 : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulZeroClass.toMul.{u1} G (MulZeroOneClass.toMulZeroClass.{u1} G (MonoidWithZero.toMulZeroOneClass.{u1} G (GroupWithZero.toMonoidWithZero.{u1} G _inst_1))))) x._@.Mathlib.Algebra.Hom.Equiv.Units.GroupWithZero._hyg.76 x._@.Mathlib.Algebra.Hom.Equiv.Units.GroupWithZero._hyg.78) a))
+Case conversion may be inaccurate. Consider using '#align mul_left_bijective₀ Equiv.mulLeft_bijective₀ₓ'. -/
+theorem Equiv.mulLeft_bijective₀ (a : G) (ha : a ≠ 0) : Function.Bijective ((· * ·) a : G → G) :=
   (Equiv.mulLeft₀ a ha).Bijective
-#align mul_left_bijective₀ mul_left_bijective₀
+#align mul_left_bijective₀ Equiv.mulLeft_bijective₀
 
 /- warning: equiv.mul_right₀ -> Equiv.mulRight₀ is a dubious translation:
 lean 3 declaration is
@@ -57,9 +63,15 @@ protected def mulRight₀ (a : G) (ha : a ≠ 0) : Perm G :=
   (Units.mk0 a ha).mulRight
 #align equiv.mul_right₀ Equiv.mulRight₀
 
-theorem mul_right_bijective₀ (a : G) (ha : a ≠ 0) : Function.Bijective ((· * a) : G → G) :=
+/- warning: mul_right_bijective₀ -> Equiv.mulRight_bijective₀ is a dubious translation:
+lean 3 declaration is
+  forall {G : Type.{u1}} [_inst_1 : GroupWithZero.{u1} G] (a : G), (Ne.{succ u1} G a (OfNat.ofNat.{u1} G 0 (OfNat.mk.{u1} G 0 (Zero.zero.{u1} G (MulZeroClass.toHasZero.{u1} G (MulZeroOneClass.toMulZeroClass.{u1} G (MonoidWithZero.toMulZeroOneClass.{u1} G (GroupWithZero.toMonoidWithZero.{u1} G _inst_1)))))))) -> (Function.Bijective.{succ u1, succ u1} G G (fun (_x : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulZeroClass.toHasMul.{u1} G (MulZeroOneClass.toMulZeroClass.{u1} G (MonoidWithZero.toMulZeroOneClass.{u1} G (GroupWithZero.toMonoidWithZero.{u1} G _inst_1))))) _x a))
+but is expected to have type
+  forall {G : Type.{u1}} [_inst_1 : GroupWithZero.{u1} G] (a : G), (Ne.{succ u1} G a (OfNat.ofNat.{u1} G 0 (Zero.toOfNat0.{u1} G (MonoidWithZero.toZero.{u1} G (GroupWithZero.toMonoidWithZero.{u1} G _inst_1))))) -> (Function.Bijective.{succ u1, succ u1} G G (fun (_x : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulZeroClass.toMul.{u1} G (MulZeroOneClass.toMulZeroClass.{u1} G (MonoidWithZero.toMulZeroOneClass.{u1} G (GroupWithZero.toMonoidWithZero.{u1} G _inst_1))))) _x a))
+Case conversion may be inaccurate. Consider using '#align mul_right_bijective₀ Equiv.mulRight_bijective₀ₓ'. -/
+theorem Equiv.mulRight_bijective₀ (a : G) (ha : a ≠ 0) : Function.Bijective ((· * a) : G → G) :=
   (Equiv.mulRight₀ a ha).Bijective
-#align mul_right_bijective₀ mul_right_bijective₀
+#align mul_right_bijective₀ Equiv.mulRight_bijective₀
 
 end GroupWithZero
 

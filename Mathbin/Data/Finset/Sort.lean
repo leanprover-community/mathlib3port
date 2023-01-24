@@ -203,8 +203,6 @@ def orderIsoOfFin (s : Finset α) {k : ℕ} (h : s.card = k) : Fin k ≃o s :=
 #align finset.order_iso_of_fin Finset.orderIsoOfFin
 -/
 
-/- warning: finset.order_emb_of_fin clashes with finset.orderEmbOfFin -> Finset.orderEmbOfFin
-Case conversion may be inaccurate. Consider using '#align finset.order_emb_of_fin Finset.orderEmbOfFinₓ'. -/
 #print Finset.orderEmbOfFin /-
 /-- Given a finset `s` of cardinality `k` in a linear order `α`, the map `order_emb_of_fin s h` is
 the increasing bijection between `fin k` and `s` as an order embedding into `α`. Here, `h` is a

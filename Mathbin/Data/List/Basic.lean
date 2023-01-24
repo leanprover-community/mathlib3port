@@ -1313,13 +1313,8 @@ theorem getLast_append_singleton {a : α} (l : List α) :
 #align list.last_append_singleton List.getLast_append_singleton
 -/
 
-/- warning: list.last_append -> List.getLast_append is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (l₁ : List.{u1} α) (l₂ : List.{u1} α) (h : Ne.{succ u1} (List.{u1} α) l₂ (List.nil.{u1} α)), Eq.{succ u1} α (List.getLast.{u1} α (Append.append.{u1} (List.{u1} α) (List.hasAppend.{u1} α) l₁ l₂) (List.append_ne_nil_of_ne_nil_right.{u1} α l₁ l₂ h)) (List.getLast.{u1} α l₂ h)
-but is expected to have type
-  forall {α : Type.{u1}} {l₁ : α} (l₂ : List.{u1} α) (h : Ne.{succ u1} (List.{u1} α) (HAppend.hAppend.{u1, u1, u1} (List.{u1} α) (List.{u1} α) (List.{u1} α) (instHAppend.{u1} (List.{u1} α) (List.instAppendList.{u1} α)) l₂ (List.cons.{u1} α l₁ (List.nil.{u1} α))) (List.nil.{u1} α)), Eq.{succ u1} α (List.getLast.{u1} α (HAppend.hAppend.{u1, u1, u1} (List.{u1} α) (List.{u1} α) (List.{u1} α) (instHAppend.{u1} (List.{u1} α) (List.instAppendList.{u1} α)) l₂ (List.cons.{u1} α l₁ (List.nil.{u1} α))) h) l₁
-Case conversion may be inaccurate. Consider using '#align list.last_append List.getLast_appendₓ'. -/
-theorem getLast_append (l₁ l₂ : List α) (h : l₂ ≠ []) :
+#print List.getLast_append' /-
+theorem getLast_append' (l₁ l₂ : List α) (h : l₂ ≠ []) :
     getLast (l₁ ++ l₂) (append_ne_nil_of_ne_nil_right l₁ l₂ h) = getLast l₂ h :=
   by
   induction' l₁ with _ _ ih
@@ -1327,7 +1322,8 @@ theorem getLast_append (l₁ l₂ : List α) (h : l₂ ≠ []) :
   · simp only [cons_append]
     rw [List.getLast_cons]
     exact ih
-#align list.last_append List.getLast_append
+#align list.last_append List.getLast_append'
+-/
 
 #print List.getLast_concat' /-
 theorem getLast_concat' {a : α} (l : List α) : getLast (concat l a) (concat_ne_nil a l) = a := by
@@ -6663,8 +6659,6 @@ section Map₂Right
 
 variable (f : Option α → β → γ) (a : α) (as : List α) (b : β) (bs : List β)
 
-/- warning: list.map₂_right_nil_left clashes with list.mapmap₂Right₂_right_nil_left -> List.map₂Right_nil_left
-Case conversion may be inaccurate. Consider using '#align list.map₂_right_nil_left List.map₂Right_nil_leftₓ'. -/
 #print List.map₂Right_nil_left /-
 @[simp]
 theorem map₂Right_nil_left : map₂Right f [] bs = bs.map (f none) := by cases bs <;> rfl

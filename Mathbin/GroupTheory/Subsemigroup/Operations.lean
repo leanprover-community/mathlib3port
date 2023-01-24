@@ -235,7 +235,7 @@ def comap (f : M →ₙ* N) (S : Subsemigroup N) : Subsemigroup M
   carrier := f ⁻¹' S
   mul_mem' a b ha hb := show f (a * b) ∈ S by rw [map_mul] <;> exact mul_mem ha hb
 #align subsemigroup.comap Subsemigroup.comap
-#align addsubemigroup.comp AddSubsemigroup.comap
+#align add_subsemigroup.comap AddSubsemigroup.comap
 -/
 
 #print Subsemigroup.coe_comap /-
@@ -282,7 +282,7 @@ def map (f : M →ₙ* N) (S : Subsemigroup M) : Subsemigroup N
     rintro _ _ ⟨x, hx, rfl⟩ ⟨y, hy, rfl⟩
     exact ⟨x * y, @mul_mem (Subsemigroup M) M _ _ _ _ _ _ hx hy, by rw [map_mul] <;> rfl⟩
 #align subsemigroup.map Subsemigroup.map
-#align addsubemigroup.map AddSubsemigroup.map
+#align add_subsemigroup.map AddSubsemigroup.map
 -/
 
 /- warning: subsemigroup.coe_map -> Subsemigroup.coe_map is a dubious translation:

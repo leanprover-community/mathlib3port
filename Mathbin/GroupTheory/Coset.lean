@@ -610,13 +610,14 @@ noncomputable def groupEquivQuotientTimesSubgroup : α ≃ (α ⧸ s) × s :=
   calc
     α ≃ ΣL : α ⧸ s, { x : α // (x : α ⧸ s) = L } := (Equiv.sigmaFiberEquiv QuotientGroup.mk).symm
     _ ≃ ΣL : α ⧸ s, leftCoset (Quotient.out' L) s :=
-      Equiv.sigmaCongrRight fun L => by
+      Equiv.sigmaCongrRight_trans fun L =>
+        by
         rw [← eq_class_eq_left_coset]
         show
           (_root_.subtype fun x : α => Quotient.mk' x = L) ≃
             _root_.subtype fun x : α => Quotient.mk' x = Quotient.mk' _
         simp [-Quotient.eq']
-    _ ≃ ΣL : α ⧸ s, s := Equiv.sigmaCongrRight fun L => leftCosetEquivSubgroup _
+    _ ≃ ΣL : α ⧸ s, s := Equiv.sigmaCongrRight_trans fun L => leftCosetEquivSubgroup _
     _ ≃ (α ⧸ s) × s := Equiv.sigmaEquivProd _ _
     
 #align subgroup.group_equiv_quotient_times_subgroup Subgroup.groupEquivQuotientTimesSubgroup

@@ -167,13 +167,19 @@ theorem extentClosure_unionᵢ (f : ι → Set β) :
 #align extent_closure_Union extentClosure_unionᵢ
 -/
 
+/- warning: intent_closure_Union₂ -> intentClosure_unionᵢ₂ is a dubious translation:
+lean 3 declaration is
+  forall {ι : Sort.{u1}} {α : Type.{u2}} {β : Type.{u3}} {κ : ι -> Sort.{u4}} (r : α -> β -> Prop) (f : forall (i : ι), (κ i) -> (Set.{u2} α)), Eq.{succ u3} (Set.{u3} β) (intentClosure.{u2, u3} α β r (Set.unionᵢ.{u2, u1} α ι (fun (i : ι) => Set.unionᵢ.{u2, u4} α (κ i) (fun (j : κ i) => f i j)))) (Set.interᵢ.{u3, u1} β ι (fun (i : ι) => Set.interᵢ.{u3, u4} β (κ i) (fun (j : κ i) => intentClosure.{u2, u3} α β r (f i j))))
+but is expected to have type
+  forall {ι : Sort.{u2}} {α : Type.{u4}} {β : Type.{u3}} {κ : ι -> Sort.{u1}} (r : α -> β -> Prop) (f : forall (i : ι), (κ i) -> (Set.{u4} α)), Eq.{succ u3} (Set.{u3} β) (intentClosure.{u4, u3} α β r (Set.unionᵢ.{u4, u2} α ι (fun (i : ι) => Set.unionᵢ.{u4, u1} α (κ i) (fun (j : κ i) => f i j)))) (Set.interᵢ.{u3, u2} β ι (fun (i : ι) => Set.interᵢ.{u3, u1} β (κ i) (fun (j : κ i) => intentClosure.{u4, u3} α β r (f i j))))
+Case conversion may be inaccurate. Consider using '#align intent_closure_Union₂ intentClosure_unionᵢ₂ₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp]
-theorem intentClosure_Union₂ (f : ∀ i, κ i → Set α) :
+theorem intentClosure_unionᵢ₂ (f : ∀ i, κ i → Set α) :
     intentClosure r (⋃ (i) (j), f i j) = ⋂ (i) (j), intentClosure r (f i j) :=
   (gc_intentClosure_extentClosure r).l_supr₂
-#align intent_closure_Union₂ intentClosure_Union₂
+#align intent_closure_Union₂ intentClosure_unionᵢ₂
 
 /- warning: extent_closure_Union₂ -> extentClosure_Union₂ is a dubious translation:
 lean 3 declaration is
@@ -186,7 +192,7 @@ Case conversion may be inaccurate. Consider using '#align extent_closure_Union�
 @[simp]
 theorem extentClosure_Union₂ (f : ∀ i, κ i → Set β) :
     extentClosure r (⋃ (i) (j), f i j) = ⋂ (i) (j), extentClosure r (f i j) :=
-  intentClosure_Union₂ _ _
+  intentClosure_unionᵢ₂ _ _
 #align extent_closure_Union₂ extentClosure_Union₂
 
 /- warning: subset_extent_closure_intent_closure -> subset_extentClosure_intentClosure is a dubious translation:
@@ -424,7 +430,7 @@ instance : SupSet (Concept α β r) :=
     { fst := extentClosure r (⋂ c ∈ S, (c : Concept _ _ _).snd)
       snd := ⋂ c ∈ S, (c : Concept _ _ _).snd
       closure_fst := by
-        simp_rw [← closure_fst, ← intentClosure_Union₂, intentClosure_extentClosure_intentClosure]
+        simp_rw [← closure_fst, ← intentClosure_unionᵢ₂, intentClosure_extentClosure_intentClosure]
       closure_snd := rfl }⟩
 
 instance : InfSet (Concept α β r) :=

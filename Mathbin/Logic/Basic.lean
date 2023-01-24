@@ -1562,21 +1562,29 @@ theorem not_and_of_not_or_not (h : ¬a ∨ ¬b) : ¬(a ∧ b)
 #align not_and_of_not_or_not not_and_of_not_or_not
 -/
 
+#print Decidable.not_and /-
 -- See Note [decidable namespace]
-protected theorem Decidable.not_and_distrib [Decidable a] : ¬(a ∧ b) ↔ ¬a ∨ ¬b :=
+protected theorem Decidable.not_and [Decidable a] : ¬(a ∧ b) ↔ ¬a ∨ ¬b :=
   ⟨fun h => if ha : a then Or.inr fun hb => h ⟨ha, hb⟩ else Or.inl ha, not_and_of_not_or_not⟩
-#align decidable.not_and_distrib Decidable.not_and_distrib
+#align decidable.not_and_distrib Decidable.not_and
+-/
 
+/- warning: decidable.not_and_distrib' -> Decidable.not_and' is a dubious translation:
+lean 3 declaration is
+  forall {a : Prop} {b : Prop} [_inst_1 : Decidable b], Iff (Not (And a b)) (Or (Not a) (Not b))
+but is expected to have type
+  forall {a : Prop} {b : Prop} [_inst_1 : Decidable a], Iff (Not (And b a)) (Or (Not b) (Not a))
+Case conversion may be inaccurate. Consider using '#align decidable.not_and_distrib' Decidable.not_and'ₓ'. -/
 -- See Note [decidable namespace]
-protected theorem Decidable.not_and_distrib' [Decidable b] : ¬(a ∧ b) ↔ ¬a ∨ ¬b :=
+protected theorem Decidable.not_and' [Decidable b] : ¬(a ∧ b) ↔ ¬a ∨ ¬b :=
   ⟨fun h => if hb : b then Or.inl fun ha => h ⟨ha, hb⟩ else Or.inr hb, not_and_of_not_or_not⟩
-#align decidable.not_and_distrib' Decidable.not_and_distrib'
+#align decidable.not_and_distrib' Decidable.not_and'
 
 #print not_and_or /-
 /-- One of de Morgan's laws: the negation of a conjunction is logically equivalent to the
 disjunction of the negations. -/
 theorem not_and_or : ¬(a ∧ b) ↔ ¬a ∨ ¬b :=
-  Decidable.not_and_distrib
+  Decidable.not_and
 #align not_and_distrib not_and_or
 -/
 
@@ -1617,7 +1625,7 @@ theorem or_iff_not_and_not : a ∨ b ↔ ¬(¬a ∧ ¬b) :=
 #print Decidable.and_iff_not_or_not /-
 -- See Note [decidable namespace]
 protected theorem Decidable.and_iff_not_or_not [Decidable a] [Decidable b] : a ∧ b ↔ ¬(¬a ∨ ¬b) :=
-  by rw [← Decidable.not_and_distrib, Decidable.not_not]
+  by rw [← Decidable.not_and, Decidable.not_not]
 #align decidable.and_iff_not_or_not Decidable.and_iff_not_or_not
 -/
 

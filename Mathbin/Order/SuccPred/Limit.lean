@@ -389,8 +389,6 @@ theorem isPredLimit_top [OrderTop α] : IsPredLimit (⊤ : α) :=
 
 variable [PredOrder α]
 
-/- warning: order.is_pred_limit.is_min clashes with order.isPredLimit.is_min -> Order.IsPredLimit.isMin
-Case conversion may be inaccurate. Consider using '#align order.is_pred_limit.is_min Order.IsPredLimit.isMinₓ'. -/
 #print Order.IsPredLimit.isMin /-
 protected theorem IsPredLimit.isMin (h : IsPredLimit (pred a)) : IsMin a :=
   by
@@ -486,8 +484,6 @@ theorem isPredLimit_of_pred_lt (H : ∀ a > b, pred a < b) : IsPredLimit b := fu
 #align order.is_pred_limit_of_pred_lt Order.isPredLimit_of_pred_lt
 -/
 
-/- warning: order.is_pred_limit.lt_pred clashes with order.isPredLimit.lt_pred -> Order.IsPredLimit.lt_pred
-Case conversion may be inaccurate. Consider using '#align order.is_pred_limit.lt_pred Order.IsPredLimit.lt_predₓ'. -/
 #print Order.IsPredLimit.lt_pred /-
 theorem IsPredLimit.lt_pred (h : IsPredLimit a) : a < b → a < pred b :=
   h.dual.succ_lt
@@ -559,8 +555,6 @@ section IsPredArchimedean
 
 variable [IsPredArchimedean α]
 
-/- warning: order.is_pred_limit.is_max clashes with order.isPredLimit.is_max -> Order.IsPredLimit.isMax
-Case conversion may be inaccurate. Consider using '#align order.is_pred_limit.is_max Order.IsPredLimit.isMaxₓ'. -/
 #print Order.IsPredLimit.isMax /-
 protected theorem IsPredLimit.isMax (h : IsPredLimit a) : IsMax a :=
   h.dual.IsMin

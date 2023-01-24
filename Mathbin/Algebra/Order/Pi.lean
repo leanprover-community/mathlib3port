@@ -59,7 +59,7 @@ instance {ι : Type _} {α : ι → Type _} [∀ i, LE (α i)] [∀ i, Mul (α i
       "The product of a family of canonically ordered additive monoids is\n  a canonically ordered additive monoid."]
 instance {ι : Type _} {Z : ι → Type _} [∀ i, CanonicallyOrderedMonoid (Z i)] :
     CanonicallyOrderedMonoid (∀ i, Z i) :=
-  { Pi.orderBot, Pi.orderedCommMonoid, Pi.existsMulOfLE with
+  { Pi.orderBot, Pi.orderedCommMonoid, Pi.existsMulOfLe with
     le_self_mul := fun f g i => le_self_mul }
 
 #print Pi.orderedCancelCommMonoid /-

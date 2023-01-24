@@ -864,8 +864,7 @@ theorem Injective.hasLeftInverse (hf : Injective f) : HasLeftInverse f :=
   ⟨invFun f, leftInverse_invFun hf⟩
 #align function.injective.has_left_inverse Function.Injective.hasLeftInverse
 
-/- warning: function.injective_iff_has_left_inverse clashes with function.injective_iff_has_leftInverse -> Function.injective_iff_hasLeftInverse
-warning: function.injective_iff_has_left_inverse -> Function.injective_iff_hasLeftInverse is a dubious translation:
+/- warning: function.injective_iff_has_left_inverse -> Function.injective_iff_hasLeftInverse is a dubious translation:
 lean 3 declaration is
   forall {α : Sort.{u1}} {β : Sort.{u2}} [_inst_1 : Nonempty.{u1} α] {f : α -> β}, Iff (Function.Injective.{u1, u2} α β f) (Function.HasLeftInverse.{u1, u2} α β f)
 but is expected to have type
@@ -895,8 +894,6 @@ theorem surjInv_eq (h : Surjective f) (b) : f (surjInv h b) = b :=
 #align function.surj_inv_eq Function.surjInv_eq
 -/
 
-/- warning: function.right_inverse_surj_inv clashes with function.right_inverse_surjInv -> Function.rightInverse_surjInv
-Case conversion may be inaccurate. Consider using '#align function.right_inverse_surj_inv Function.rightInverse_surjInvₓ'. -/
 #print Function.rightInverse_surjInv /-
 theorem rightInverse_surjInv (hf : Surjective f) : RightInverse (surjInv hf) f :=
   surjInv_eq hf
@@ -1543,16 +1540,12 @@ theorem comp_self : f ∘ f = id :=
 #align function.involutive.comp_self Function.Involutive.comp_self
 -/
 
-/- warning: function.involutive.left_inverse clashes with involutive.left_inverse -> Function.Involutive.leftInverse
-Case conversion may be inaccurate. Consider using '#align function.involutive.left_inverse Function.Involutive.leftInverseₓ'. -/
 #print Function.Involutive.leftInverse /-
 protected theorem leftInverse : LeftInverse f f :=
   h
 #align function.involutive.left_inverse Function.Involutive.leftInverse
 -/
 
-/- warning: function.involutive.right_inverse clashes with involutive.right_inverse -> Function.Involutive.rightInverse
-Case conversion may be inaccurate. Consider using '#align function.involutive.right_inverse Function.Involutive.rightInverseₓ'. -/
 #print Function.Involutive.rightInverse /-
 protected theorem rightInverse : RightInverse f f :=
   h

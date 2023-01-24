@@ -157,8 +157,7 @@ protected def seq (f : ULift (α → β)) (x : ULift α) : ULift β :=
   ULift.up (f.down x.down)
 #align ulift.seq ULift.seq
 
-/- warning: ulift.seq_up clashes with ULift.seq_up -> ULift.seq_up
-warning: ulift.seq_up -> ULift.seq_up is a dubious translation:
+/- warning: ulift.seq_up -> ULift.seq_up is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} (f : α -> β) (x : α), Eq.{succ (max u2 u3)} (ULift.{u3, u2} β) (ULift.seq.{u1, u2, u4, u5, u3} α β (ULift.up.{u4, max u1 u2} (α -> β) f) (ULift.up.{u5, u1} α x)) (ULift.up.{u3, u2} β (f x))
 but is expected to have type
@@ -169,8 +168,6 @@ theorem seq_up (f : α → β) (x : α) : (ULift.up f).seq (ULift.up x) = ULift.
   rfl
 #align ulift.seq_up ULift.seq_up
 
-/- warning: ulift.bind clashes with ULift.bind -> ULift.bind
-Case conversion may be inaccurate. Consider using '#align ulift.bind ULift.bindₓ'. -/
 #print ULift.bind /-
 /-- Monadic bind. -/
 protected def bind (a : ULift α) (f : α → ULift β) : ULift β :=
@@ -178,8 +175,7 @@ protected def bind (a : ULift α) (f : α → ULift β) : ULift β :=
 #align ulift.bind ULift.bind
 -/
 
-/- warning: ulift.bind_up clashes with ULift.bind_up -> ULift.bind_up
-warning: ulift.bind_up -> ULift.bind_up is a dubious translation:
+/- warning: ulift.bind_up -> ULift.bind_up is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} (a : α) (f : α -> (ULift.{u3, u2} β)), Eq.{succ (max u2 u3)} (ULift.{u3, u2} β) (ULift.bind.{u1, u2, u4, u3} α β (ULift.up.{u4, u1} α a) f) (f a)
 but is expected to have type
@@ -222,8 +218,7 @@ instance : LawfulMonad ULift
     cases f x
     rfl
 
-/- warning: ulift.rec.constant clashes with ULift.rec.constant -> ULift.rec.constant
-warning: ulift.rec.constant -> ULift.rec.constant is a dubious translation:
+/- warning: ulift.rec.constant -> ULift.rec.constant is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Sort.{u2}} (b : β), Eq.{imax (succ (max u1 u3)) u2} (forall (n : ULift.{u3, u1} α), (fun (_x : ULift.{u3, u1} α) => β) n) (ULift.rec.{u2, u3, u1} α (fun (_x : ULift.{u3, u1} α) => β) (fun (_x : α) => b)) (fun (_x : ULift.{u3, u1} α) => b)
 but is expected to have type

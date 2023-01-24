@@ -786,7 +786,7 @@ theorem le_sum {ι} (f : ι → Cardinal) (i) : f i ≤ sum f := by
 
 @[simp]
 theorem mk_sigma {ι} (f : ι → Type _) : (#Σi, f i) = sum fun i => #f i :=
-  mk_congr <| Equiv.sigmaCongrRight fun i => outMkEquiv.symm
+  mk_congr <| Equiv.sigmaCongrRight_trans fun i => outMkEquiv.symm
 #align cardinal.mk_sigma Cardinal.mk_sigma
 
 @[simp]
@@ -820,7 +820,7 @@ theorem lift_sum {ι : Type u} (f : ι → Cardinal.{v}) :
     Cardinal.lift.{w} (Cardinal.sum f) = Cardinal.sum fun i => Cardinal.lift.{w} (f i) :=
   Equiv.cardinal_eq <|
     Equiv.ulift.trans <|
-      Equiv.sigmaCongrRight fun a =>
+      Equiv.sigmaCongrRight_trans fun a =>
         Nonempty.some <| by rw [← lift_mk_eq, mk_out, mk_out, lift_lift]
 #align cardinal.lift_sum Cardinal.lift_sum
 

@@ -344,8 +344,6 @@ theorem lxor'_right_injective {n : ℕ} : Function.Injective (lxor' n) := fun m 
 #align nat.lxor_right_injective Nat.lxor'_right_injective
 -/
 
-/- warning: nat.lxor_left_injective clashes with nat.lxor'_left_injective -> Nat.lxor'_left_injective
-Case conversion may be inaccurate. Consider using '#align nat.lxor_left_injective Nat.lxor'_left_injectiveₓ'. -/
 #print Nat.lxor'_left_injective /-
 theorem lxor'_left_injective {n : ℕ} : Function.Injective fun m => lxor' m n :=
   fun m m' (h : lxor' m n = lxor' m' n) => by

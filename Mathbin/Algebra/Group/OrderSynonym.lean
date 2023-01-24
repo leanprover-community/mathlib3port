@@ -227,8 +227,7 @@ theorem ofDual_smul [SMul α β] (a : α) (b : βᵒᵈ) : ofDual (a • b) = a 
 #align of_dual_smul ofDual_smul
 #align of_dual_vadd ofDual_vadd
 
-/- warning: to_dual_smul' clashes with smul_to_dual -> toDual_smul'
-warning: to_dual_smul' -> toDual_smul' is a dubious translation:
+/- warning: to_dual_smul' -> toDual_smul' is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SMul.{u1, u2} α β] (a : α) (b : β), Eq.{succ u2} β (SMul.smul.{u1, u2} (OrderDual.{u1} α) β (instSMulOrderDual'.{u1, u2} α β _inst_1) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} α (OrderDual.{u1} α)) (fun (_x : Equiv.{succ u1, succ u1} α (OrderDual.{u1} α)) => α -> (OrderDual.{u1} α)) (Equiv.hasCoeToFun.{succ u1, succ u1} α (OrderDual.{u1} α)) (OrderDual.toDual.{u1} α) a) b) (SMul.smul.{u1, u2} α β _inst_1 a b)
 but is expected to have type
@@ -240,8 +239,7 @@ theorem toDual_smul' [SMul α β] (a : α) (b : β) : toDual a • b = a • b :
 #align to_dual_smul' toDual_smul'
 #align to_dual_vadd' toDual_vadd'
 
-/- warning: of_dual_smul' clashes with smul_of_dual -> ofDual_smul'
-warning: of_dual_smul' -> ofDual_smul' is a dubious translation:
+/- warning: of_dual_smul' -> ofDual_smul' is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SMul.{u1, u2} α β] (a : OrderDual.{u1} α) (b : β), Eq.{succ u2} β (SMul.smul.{u1, u2} α β _inst_1 (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (OrderDual.{u1} α) α) (fun (_x : Equiv.{succ u1, succ u1} (OrderDual.{u1} α) α) => (OrderDual.{u1} α) -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} (OrderDual.{u1} α) α) (OrderDual.ofDual.{u1} α) a) b) (SMul.smul.{u1, u2} (OrderDual.{u1} α) β (instSMulOrderDual'.{u1, u2} α β _inst_1) a b)
 but is expected to have type
@@ -287,7 +285,7 @@ Case conversion may be inaccurate. Consider using '#align pow_to_dual pow_toDual
 theorem pow_toDual [Pow α β] (a : α) (b : β) : a ^ toDual b = a ^ b :=
   rfl
 #align pow_to_dual pow_toDual
-#align smul_to_dual toDual_smul'
+#align to_dual_smul' toDual_smul'
 
 /- warning: pow_of_dual -> pow_ofDual is a dubious translation:
 lean 3 declaration is
@@ -299,7 +297,7 @@ Case conversion may be inaccurate. Consider using '#align pow_of_dual pow_ofDual
 theorem pow_ofDual [Pow α β] (a : α) (b : βᵒᵈ) : a ^ ofDual b = a ^ b :=
   rfl
 #align pow_of_dual pow_ofDual
-#align smul_of_dual ofDual_smul'
+#align of_dual_smul' ofDual_smul'
 
 /-! ### Lexicographical order -/
 
@@ -503,8 +501,7 @@ theorem ofLex_smul [SMul α β] (a : α) (b : Lex β) : ofLex (a • b) = a • 
 #align of_lex_smul ofLex_smul
 #align of_lex_vadd ofLex_vadd
 
-/- warning: to_lex_smul' clashes with smul_to_lex -> toLex_smul'
-warning: to_lex_smul' -> toLex_smul' is a dubious translation:
+/- warning: to_lex_smul' -> toLex_smul' is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SMul.{u1, u2} α β] (a : α) (b : β), Eq.{succ u2} β (SMul.smul.{u1, u2} (Lex.{u1} α) β (instSMulLex'.{u1, u2} α β _inst_1) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} α (Lex.{u1} α)) (fun (_x : Equiv.{succ u1, succ u1} α (Lex.{u1} α)) => α -> (Lex.{u1} α)) (Equiv.hasCoeToFun.{succ u1, succ u1} α (Lex.{u1} α)) (toLex.{u1} α) a) b) (SMul.smul.{u1, u2} α β _inst_1 a b)
 but is expected to have type
@@ -516,8 +513,7 @@ theorem toLex_smul' [SMul α β] (a : α) (b : β) : toLex a • b = a • b :=
 #align to_lex_smul' toLex_smul'
 #align to_lex_vadd' toLex_vadd'
 
-/- warning: of_lex_smul' clashes with smul_of_lex -> ofLex_smul'
-warning: of_lex_smul' -> ofLex_smul' is a dubious translation:
+/- warning: of_lex_smul' -> ofLex_smul' is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SMul.{u1, u2} α β] (a : Lex.{u1} α) (b : β), Eq.{succ u2} β (SMul.smul.{u1, u2} α β _inst_1 (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (Lex.{u1} α) α) (fun (_x : Equiv.{succ u1, succ u1} (Lex.{u1} α) α) => (Lex.{u1} α) -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} (Lex.{u1} α) α) (ofLex.{u1} α) a) b) (SMul.smul.{u1, u2} (Lex.{u1} α) β (instSMulLex'.{u1, u2} α β _inst_1) a b)
 but is expected to have type
@@ -563,7 +559,7 @@ Case conversion may be inaccurate. Consider using '#align pow_to_lex pow_toLex�
 theorem pow_toLex [Pow α β] (a : α) (b : β) : a ^ toLex b = a ^ b :=
   rfl
 #align pow_to_lex pow_toLex
-#align smul_to_lex toLex_smul'
+#align to_lex_smul' toLex_smul'
 
 /- warning: pow_of_lex -> pow_ofLex is a dubious translation:
 lean 3 declaration is
@@ -575,5 +571,5 @@ Case conversion may be inaccurate. Consider using '#align pow_of_lex pow_ofLex�
 theorem pow_ofLex [Pow α β] (a : α) (b : Lex β) : a ^ ofLex b = a ^ b :=
   rfl
 #align pow_of_lex pow_ofLex
-#align smul_of_lex ofLex_smul'
+#align of_lex_smul' ofLex_smul'
 

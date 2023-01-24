@@ -48,9 +48,9 @@ open Tactic.Interactive (casesm constructor_matching)
                               |
                                 q( ¬ ( _ ∧ _ ) )
                                 =>
-                                replace h ` `( Decidable.not_and_distrib' . mp $ ( h ) )
+                                replace h ` `( Decidable.not_and' . mp $ ( h ) )
                                   <|>
-                                  replace h ` `( Decidable.not_and_distrib . mp $ ( h ) )
+                                  replace h ` `( Decidable.not_and . mp $ ( h ) )
                               | q( ¬ ( _ ∨ _ ) ) => replace h ` `( not_or . mp $ ( h ) )
                               | q( ¬ _ ≠ _ ) => replace h ` `( Decidable.of_not_not $ ( h ) )
                               | q( ¬ ¬ _ ) => replace h ` `( Decidable.of_not_not $ ( h ) )

@@ -1793,8 +1793,7 @@ theorem mem_lowerBounds_image_self : a ∈ lowerBounds t → a ∈ t → f a ∈
 #align monotone_on.mem_lower_bounds_image_self MonotoneOn.mem_lowerBounds_image_self
 -/
 
-/- warning: monotone_on.image_upper_bounds_subset_upper_bounds_image clashes with monotone_on.image_upperBounds_subset_upperBounds_image -> MonotoneOn.image_upperBounds_subset_upperBounds_image
-warning: monotone_on.image_upper_bounds_subset_upper_bounds_image -> MonotoneOn.image_upperBounds_subset_upperBounds_image is a dubious translation:
+/- warning: monotone_on.image_upper_bounds_subset_upper_bounds_image -> MonotoneOn.image_upperBounds_subset_upperBounds_image is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β} {s : Set.{u1} α} {t : Set.{u1} α}, (MonotoneOn.{u1, u2} α β _inst_1 _inst_2 f t) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s t) -> (HasSubset.Subset.{u2} (Set.{u2} β) (Set.hasSubset.{u2} β) (Set.image.{u1, u2} α β f (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (upperBounds.{u1} α _inst_1 s) t)) (upperBounds.{u2} β _inst_2 (Set.image.{u1, u2} α β f s)))
 but is expected to have type
@@ -1807,8 +1806,7 @@ theorem image_upperBounds_subset_upperBounds_image (Hst : s ⊆ t) :
   exact Hf.mem_upper_bounds_image Hst ha.1 ha.2
 #align monotone_on.image_upper_bounds_subset_upper_bounds_image MonotoneOn.image_upperBounds_subset_upperBounds_image
 
-/- warning: monotone_on.image_lower_bounds_subset_lower_bounds_image clashes with monotone_on.image_lowerBounds_subset_lowerBounds_image -> MonotoneOn.image_lowerBounds_subset_lowerBounds_image
-warning: monotone_on.image_lower_bounds_subset_lower_bounds_image -> MonotoneOn.image_lowerBounds_subset_lowerBounds_image is a dubious translation:
+/- warning: monotone_on.image_lower_bounds_subset_lower_bounds_image -> MonotoneOn.image_lowerBounds_subset_lowerBounds_image is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β} {s : Set.{u1} α} {t : Set.{u1} α}, (MonotoneOn.{u1, u2} α β _inst_1 _inst_2 f t) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s t) -> (HasSubset.Subset.{u2} (Set.{u2} β) (Set.hasSubset.{u2} β) (Set.image.{u1, u2} α β f (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (lowerBounds.{u1} α _inst_1 s) t)) (lowerBounds.{u2} β _inst_2 (Set.image.{u1, u2} α β f s)))
 but is expected to have type
@@ -2168,7 +2166,7 @@ theorem mem_lowerBounds_image2_of_mem_lowerBounds_of_mem_upperBounds (ha : a ∈
 #align mem_lower_bounds_image2_of_mem_lower_bounds_of_mem_upper_bounds mem_lowerBounds_image2_of_mem_lowerBounds_of_mem_upperBounds
 -/
 
-/- warning: image2_upper_bounds_lower_bounds_subset_upper_bounds_image2 clashes with image2_upperBounds_lowerBounds_subset_upperBounds_image2 -> image2_upperBounds_lowerBounds_subset_upperBounds_image2
+/- warning: image2_upper_bounds_lower_bounds_subset_upper_bounds_image2 clashes with image2_upper_bounds_lower_bounds_subset_upperBounds_image2 -> image2_upperBounds_lowerBounds_subset_upperBounds_image2
 Case conversion may be inaccurate. Consider using '#align image2_upper_bounds_lower_bounds_subset_upper_bounds_image2 image2_upperBounds_lowerBounds_subset_upperBounds_image2ₓ'. -/
 #print image2_upperBounds_lowerBounds_subset_upperBounds_image2 /-
 theorem image2_upperBounds_lowerBounds_subset_upperBounds_image2 :

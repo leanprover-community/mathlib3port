@@ -35,10 +35,16 @@ variable (x y : ∀ i, f i) (i : I)
 
 namespace Pi
 
-theorem IsSMulRegular.pi {α : Type _} [∀ i, SMul α <| f i] {k : α}
+/- warning: is_smul_regular.pi -> Pi.IsSMulRegular.pi is a dubious translation:
+lean 3 declaration is
+  forall {I : Type.{u1}} {f : I -> Type.{u2}} {α : Type.{u3}} [_inst_1 : forall (i : I), SMul.{u3, u2} α (f i)] {k : α}, (forall (i : I), IsSMulRegular.{u3, u2} α (f i) (_inst_1 i) k) -> (IsSMulRegular.{u3, max u1 u2} α (forall (i : I), f i) (Pi.instSMul.{u1, u2, u3} I α (fun (i : I) => f i) (fun (i : I) => _inst_1 i)) k)
+but is expected to have type
+  forall {I : Type.{u2}} {f : I -> Type.{u3}} {α : Type.{u1}} [_inst_1 : forall (i : I), SMul.{u1, u3} α (f i)] {k : α}, (forall (i : I), IsSMulRegular.{u1, u3} α (f i) (_inst_1 i) k) -> (IsSMulRegular.{u1, max u2 u3} α (forall (i : I), f i) (Pi.instSMul.{u2, u3, u1} I α (fun (i : I) => f i) (fun (i : I) => _inst_1 i)) k)
+Case conversion may be inaccurate. Consider using '#align is_smul_regular.pi Pi.IsSMulRegular.piₓ'. -/
+theorem Pi.IsSMulRegular.pi {α : Type _} [∀ i, SMul α <| f i] {k : α}
     (hk : ∀ i, IsSMulRegular (f i) k) : IsSMulRegular (∀ i, f i) k := fun _ _ h =>
   funext fun i => hk i (congr_fun h i : _)
-#align is_smul_regular.pi IsSMulRegular.pi
+#align is_smul_regular.pi Pi.IsSMulRegular.pi
 
 #print Pi.smulWithZero /-
 instance smulWithZero (α) [Zero α] [∀ i, Zero (f i)] [∀ i, SMulWithZero α (f i)] :
@@ -85,6 +91,7 @@ instance module (α) {r : Semiring α} {m : ∀ i, AddCommMonoid <| f i} [∀ i,
 #align pi.module Pi.module
 -/
 
+#print Pi.Function.module /-
 /- Extra instance to short-circuit type class resolution.
 For unknown reasons, this is necessary for certain inference problems. E.g., for this to succeed:
 ```lean
@@ -95,10 +102,11 @@ See: https://leanprover.zulipchat.com/#narrow/stream/113488-general/topic/Typecl
 -/
 /-- A special case of `pi.module` for non-dependent types. Lean struggles to elaborate
 definitions elsewhere in the library without this. -/
-instance Function.module (α β : Type _) [Semiring α] [AddCommMonoid β] [Module α β] :
+instance Pi.Function.module (α β : Type _) [Semiring α] [AddCommMonoid β] [Module α β] :
     Module α (I → β) :=
   Pi.module _ _ _
-#align function.module Function.module
+#align function.module Pi.Function.module
+-/
 
 variable {I f}
 

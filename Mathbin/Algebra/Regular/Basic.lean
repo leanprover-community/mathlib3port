@@ -540,7 +540,7 @@ Case conversion may be inaccurate. Consider using '#align is_left_regular_of_lef
 theorem isLeftRegular_of_leftCancelSemigroup [LeftCancelSemigroup R] (g : R) : IsLeftRegular g :=
   mul_right_injective g
 #align is_left_regular_of_left_cancel_semigroup isLeftRegular_of_leftCancelSemigroup
-#align is_add_left_regular_of_add_left_cancel_semigroup isAddLeftRegular_of_addLeftCancelSemigroup
+#align is_add_left_regular_of_left_cancel_add_semigroup isAddLeftRegular_of_addLeftCancelSemigroup
 
 /- warning: is_right_regular_of_right_cancel_semigroup -> isRightRegular_of_rightCancelSemigroup is a dubious translation:
 lean 3 declaration is
@@ -554,7 +554,7 @@ theorem isRightRegular_of_rightCancelSemigroup [RightCancelSemigroup R] (g : R) 
     IsRightRegular g :=
   mul_left_injective g
 #align is_right_regular_of_right_cancel_semigroup isRightRegular_of_rightCancelSemigroup
-#align is_add_right_regular_of_add_right_cancel_semigroup isAddRightRegular_of_addRightCancelSemigroup
+#align is_add_right_regular_of_right_cancel_add_semigroup isAddRightRegular_of_addRightCancelSemigroup
 
 section CancelMonoid
 
@@ -572,7 +572,7 @@ Case conversion may be inaccurate. Consider using '#align is_regular_of_cancel_m
 theorem isRegular_of_cancelMonoid (g : R) : IsRegular g :=
   ⟨mul_right_injective g, mul_left_injective g⟩
 #align is_regular_of_cancel_monoid isRegular_of_cancelMonoid
-#align is_add_regular_of_add_cancel_monoid isAddRegular_of_addCancelMonoid
+#align is_add_regular_of_cancel_add_monoid isAddRegular_of_addCancelMonoid
 
 end CancelMonoid
 

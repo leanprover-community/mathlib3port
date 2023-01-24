@@ -238,7 +238,7 @@ Case conversion may be inaccurate. Consider using '#align semiconj_by.units_of_c
 theorem units_of_val {a x y : Mˣ} (h : SemiconjBy (a : M) x y) : SemiconjBy a x y :=
   Units.ext h
 #align semiconj_by.units_of_coe SemiconjBy.units_of_val
-#align add_semiconj_by.addUnits_of_coe AddSemiconjBy.addUnits_of_val
+#align add_semiconj_by.add_units_of_coe AddSemiconjBy.addUnits_of_val
 
 /- warning: semiconj_by.units_coe_iff -> SemiconjBy.units_val_iff is a dubious translation:
 lean 3 declaration is
@@ -267,7 +267,7 @@ theorem pow_right {a x y : M} (h : SemiconjBy a x y) (n : ℕ) : SemiconjBy a (x
   · rw [pow_succ, pow_succ]
     exact h.mul_right ih
 #align semiconj_by.pow_right SemiconjBy.pow_right
-#align add_semiconj_by.smul_right AddSemiconjBy.smul_right
+#align add_semiconj_by.nsmul_right AddSemiconjBy.smul_right
 
 end Monoid
 

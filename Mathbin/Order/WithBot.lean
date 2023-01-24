@@ -1969,10 +1969,12 @@ instance WithBot.trichotomous.gt [Preorder α] [h : IsTrichotomous α (· > ·)]
 #align with_bot.trichotomous.gt WithBot.trichotomous.gt
 -/
 
-instance WithBot.IsWellOrder.gt [Preorder α] [h : IsWellOrder α (· > ·)] :
+#print WithBot.isWellOrder.gt /-
+instance WithBot.isWellOrder.gt [Preorder α] [h : IsWellOrder α (· > ·)] :
     IsWellOrder (WithBot α) (· > ·) :=
   @WithTop.IsWellOrder.lt αᵒᵈ _ h
-#align with_bot.is_well_order.gt WithBot.IsWellOrder.gt
+#align with_bot.is_well_order.gt WithBot.isWellOrder.gt
+-/
 
 instance [LT α] [DenselyOrdered α] [NoMaxOrder α] : DenselyOrdered (WithTop α) :=
   OrderDual.denselyOrdered (WithBot αᵒᵈ)

@@ -208,8 +208,6 @@ def isoWhiskerRight {G H : C ⥤ D} (α : G ≅ H) (F : D ⥤ E) : G ⋙ F ≅ H
 #align category_theory.iso_whisker_right CategoryTheory.isoWhiskerRight
 -/
 
-/- warning: category_theory.iso_whisker_right_hom clashes with category_theory.isoWhiskerRight_hom -> CategoryTheory.isoWhiskerRight_hom
-Case conversion may be inaccurate. Consider using '#align category_theory.iso_whisker_right_hom CategoryTheory.isoWhiskerRight_homₓ'. -/
 #print CategoryTheory.isoWhiskerRight_hom /-
 @[simp]
 theorem isoWhiskerRight_hom {G H : C ⥤ D} (α : G ≅ H) (F : D ⥤ E) :

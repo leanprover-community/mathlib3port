@@ -2049,7 +2049,7 @@ theorem sumAddHom_comm {ι₁ ι₂ : Sort _} {β₁ : ι₁ → Type _} {β₂ 
       sumAddHom (fun i₁ => sumAddHom (fun i₂ => (h i₁ i₂).flip) f₂) f₁ :=
   by
   obtain ⟨⟨f₁, s₁, h₁⟩, ⟨f₂, s₂, h₂⟩⟩ := f₁, f₂
-  simp only [sum_add_hom, AddMonoidHom.finset_sum_apply, Quotient.liftOn_mk'', AddMonoidHom.coe_mk,
+  simp only [sum_add_hom, AddMonoidHom.finset_sum_apply, Quotient.liftOn_mk, AddMonoidHom.coe_mk,
     AddMonoidHom.flip_apply, Trunc.lift]
   exact Finset.sum_comm
 #align dfinsupp.sum_add_hom_comm Dfinsupp.sumAddHom_comm

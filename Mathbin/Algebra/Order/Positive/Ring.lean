@@ -205,7 +205,7 @@ instance [StrictOrderedCommSemiring R] [Nontrivial R] : OrderedCommMonoid { x : 
 /-- If `R` is a nontrivial linear ordered commutative semiring, then `{x : R // 0 < x}` is a linear
 ordered cancellative commutative monoid. -/
 instance [LinearOrderedCommSemiring R] : LinearOrderedCancelCommMonoid { x : R // 0 < x } :=
-  { Subtype.linearOrder _, Positive.Subtype.orderedCommMonoid with
+  { Subtype.linearOrder _, Positive.orderedCommMonoid with
     le_of_mul_le_mul_left := fun a b c h => Subtype.coe_le_coe.1 <| (mul_le_mul_left a.2).1 h }
 
 end mul_comm

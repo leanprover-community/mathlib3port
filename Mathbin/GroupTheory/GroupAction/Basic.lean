@@ -400,7 +400,7 @@ def selfEquivSigmaOrbits' : β ≃ Σω : Ω, ω.orbit :=
   calc
     β ≃ Σω : Ω, { b // Quotient.mk' b = ω } := (Equiv.sigmaFiberEquiv Quotient.mk').symm
     _ ≃ Σω : Ω, ω.orbit :=
-      Equiv.sigmaCongrRight fun ω =>
+      Equiv.sigmaCongrRight_trans fun ω =>
         Equiv.subtypeEquivRight fun x => orbitRel.Quotient.mem_orbit.symm
     
 #align mul_action.self_equiv_sigma_orbits' MulAction.selfEquivSigmaOrbits'
@@ -411,7 +411,7 @@ def selfEquivSigmaOrbits' : β ≃ Σω : Ω, ω.orbit :=
       "Decomposition of a type `X` as a disjoint union of its orbits under an additive group\naction."]
 def selfEquivSigmaOrbits : β ≃ Σω : Ω, orbit α ω.out' :=
   (selfEquivSigmaOrbits' α β).trans <|
-    Equiv.sigmaCongrRight fun i =>
+    Equiv.sigmaCongrRight_trans fun i =>
       Equiv.Set.ofEq <| orbitRel.Quotient.orbit_eq_orbit_out _ Quotient.out_eq'
 #align mul_action.self_equiv_sigma_orbits MulAction.selfEquivSigmaOrbits
 #align add_action.self_equiv_sigma_orbits AddAction.selfEquivSigmaOrbits

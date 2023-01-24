@@ -587,7 +587,7 @@ Case conversion may be inaccurate. Consider using '#align units.coe_inv Units.va
 theorem val_inv_eq_inv_val {M : Type _} [DivisionMonoid M] (u : Units M) : ↑u⁻¹ = (u⁻¹ : M) :=
   Eq.symm <| inv_eq_of_mul_eq_one_right u.mul_inv
 #align units.coe_inv Units.val_inv_eq_inv_val
-#align add_units.coe_neg AddUnits.val_neg_eq_neg_val
+#align add_units.coe_sub AddUnits.val_neg_eq_neg_val
 
 end Units
 
@@ -899,11 +899,11 @@ instance [Monoid M] [Subsingleton M] : Unique Mˣ
   uniq a := Units.val_eq_one.mp <| Subsingleton.elim (a : M) 1
 
 #print Units.isUnit /-
-@[simp, to_additive AddUnits.isAddUnit]
+@[simp, to_additive is_add_unit_add_unit]
 protected theorem Units.isUnit [Monoid M] (u : Mˣ) : IsUnit (u : M) :=
   ⟨u, rfl⟩
 #align units.is_unit Units.isUnit
-#align is_add_unit_add_unit AddUnits.isAddUnit
+#align add_units.is_add_unit_add_unit AddUnits.isAddUnit
 -/
 
 /- warning: is_unit_one -> isUnit_one is a dubious translation:
@@ -1031,7 +1031,7 @@ theorem Units.isUnit_units_mul {M : Type _} [Monoid M] (u : Mˣ) (a : M) :
       rwa [← mul_assoc, Units.inv_mul, one_mul] at this)
     u.IsUnit.mul
 #align units.is_unit_units_mul Units.isUnit_units_mul
-#align add_units.is_add_unit_units_add AddUnits.isAddUnit_addUnits_add
+#align add_units.is_add_unit_add_units_add AddUnits.isAddUnit_addUnits_add
 
 /- warning: is_unit_of_mul_is_unit_left -> isUnit_of_mul_isUnit_left is a dubious translation:
 lean 3 declaration is
@@ -1044,7 +1044,7 @@ theorem isUnit_of_mul_isUnit_left [CommMonoid M] {x y : M} (hu : IsUnit (x * y))
   let ⟨z, hz⟩ := isUnit_iff_exists_inv.1 hu
   isUnit_iff_exists_inv.2 ⟨y * z, by rwa [← mul_assoc]⟩
 #align is_unit_of_mul_is_unit_left isUnit_of_mul_isUnit_left
-#align is_add_unit_of_add_is_unit_left isAddUnit_of_add_isAddUnit_left
+#align is_add_unit_of_add_is_add_unit_left isAddUnit_of_add_isAddUnit_left
 
 /- warning: is_unit_of_mul_is_unit_right -> isUnit_of_mul_isUnit_right is a dubious translation:
 lean 3 declaration is
@@ -1056,7 +1056,7 @@ Case conversion may be inaccurate. Consider using '#align is_unit_of_mul_is_unit
 theorem isUnit_of_mul_isUnit_right [CommMonoid M] {x y : M} (hu : IsUnit (x * y)) : IsUnit y :=
   @isUnit_of_mul_isUnit_left _ _ y x <| by rwa [mul_comm]
 #align is_unit_of_mul_is_unit_right isUnit_of_mul_isUnit_right
-#align is_add_unit_of_add_is_unit_right isAddUnit_of_add_isAddUnit_right
+#align is_add_unit_of_add_is_add_unit_right isAddUnit_of_add_isAddUnit_right
 
 namespace IsUnit
 
@@ -1093,7 +1093,7 @@ protected noncomputable def unit (h : IsUnit a) : Mˣ :=
 theorem unit_of_val_units {a : Mˣ} (h : IsUnit (a : M)) : h.Unit = a :=
   Units.ext <| rfl
 #align is_unit.unit_of_coe_units IsUnit.unit_of_val_units
-#align is_add_unit.unit_of_coe_units IsAddUnit.addUnit_of_val_addUnits
+#align is_add_unit.add_unit_of_coe_add_units IsAddUnit.addUnit_of_val_addUnits
 -/
 
 #print IsUnit.unit_spec /-

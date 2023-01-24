@@ -3196,8 +3196,7 @@ open Set
 
 variable {fa : α → α} {fb : β → β} {f : α → β} {g : β → γ} {s t : Set α}
 
-/- warning: function.injective.comp_inj_on clashes with function.injective.comp_injOn -> Function.Injective.comp_injOn
-warning: function.injective.comp_inj_on -> Function.Injective.comp_injOn is a dubious translation:
+/- warning: function.injective.comp_inj_on -> Function.Injective.comp_injOn is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {f : α -> β} {g : β -> γ} {s : Set.{u1} α}, (Function.Injective.{succ u2, succ u3} β γ g) -> (Set.InjOn.{u1, u2} α β f s) -> (Set.InjOn.{u1, u3} α γ (Function.comp.{succ u1, succ u2, succ u3} α β γ g f) s)
 but is expected to have type

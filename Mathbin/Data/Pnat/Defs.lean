@@ -102,8 +102,6 @@ theorem natPred_succPNat (n : ℕ) : n.succPnat.natPred = n :=
 #align nat.nat_pred_succ_pnat Nat.natPred_succPNat
 -/
 
-/- warning: pnat.succ_pnat_nat_pred clashes with nat._root_.pnat.succ_pnat_nat_pred -> PNat.succPNat_natPred
-Case conversion may be inaccurate. Consider using '#align pnat.succ_pnat_nat_pred PNat.succPNat_natPredₓ'. -/
 #print PNat.succPNat_natPred /-
 @[simp]
 theorem PNat.succPNat_natPred (n : ℕ+) : n.natPred.succPnat = n :=
@@ -198,9 +196,11 @@ theorem ne_zero (n : ℕ+) : (n : ℕ) ≠ 0 :=
 #align pnat.ne_zero PNat.ne_zero
 -/
 
-instance NeZero.pNat {a : ℕ+} : NeZero (a : ℕ) :=
+#print NeZero.pnat /-
+instance NeZero.pnat {a : ℕ+} : NeZero (a : ℕ) :=
   ⟨a.NeZero⟩
-#align ne_zero.pnat NeZero.pNat
+#align ne_zero.pnat NeZero.pnat
+-/
 
 #print PNat.toPNat'_coe /-
 theorem toPNat'_coe {n : ℕ} : 0 < n → (n.toPnat' : ℕ) = n :=

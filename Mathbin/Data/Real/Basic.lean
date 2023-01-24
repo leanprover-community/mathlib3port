@@ -146,8 +146,7 @@ instance : Sub ℝ :=
 noncomputable instance : Inv ℝ :=
   ⟨inv'⟩
 
-/- warning: real.of_cauchy_zero clashes with real.ofCauchy_zero -> Real.ofCauchy_zero
-warning: real.of_cauchy_zero -> Real.ofCauchy_zero is a dubious translation:
+/- warning: real.of_cauchy_zero -> Real.ofCauchy_zero is a dubious translation:
 lean 3 declaration is
   Eq.{1} Real (Real.ofCauchy (OfNat.ofNat.{0} (CauSeq.Completion.Cauchy.{0, 0} Rat Rat.linearOrderedField Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.linearOrderedRing)) 0 (OfNat.mk.{0} (CauSeq.Completion.Cauchy.{0, 0} Rat Rat.linearOrderedField Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.linearOrderedRing)) 0 (Zero.zero.{0} (CauSeq.Completion.Cauchy.{0, 0} Rat Rat.linearOrderedField Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.linearOrderedRing)) (CauSeq.Completion.Cauchy.hasZero.{0, 0} Rat Rat.linearOrderedField Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.linearOrderedRing)))))) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))
 but is expected to have type
@@ -157,8 +156,7 @@ theorem ofCauchy_zero : (⟨0⟩ : ℝ) = 0 :=
   show _ = zero by rw [zero]
 #align real.of_cauchy_zero Real.ofCauchy_zero
 
-/- warning: real.of_cauchy_one clashes with real.ofCauchy_one -> Real.ofCauchy_one
-warning: real.of_cauchy_one -> Real.ofCauchy_one is a dubious translation:
+/- warning: real.of_cauchy_one -> Real.ofCauchy_one is a dubious translation:
 lean 3 declaration is
   Eq.{1} Real (Real.ofCauchy (OfNat.ofNat.{0} (CauSeq.Completion.Cauchy.{0, 0} Rat Rat.linearOrderedField Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.linearOrderedRing)) 1 (OfNat.mk.{0} (CauSeq.Completion.Cauchy.{0, 0} Rat Rat.linearOrderedField Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.linearOrderedRing)) 1 (One.one.{0} (CauSeq.Completion.Cauchy.{0, 0} Rat Rat.linearOrderedField Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.linearOrderedRing)) (CauSeq.Completion.Cauchy.hasOne.{0, 0} Rat Rat.linearOrderedField Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.linearOrderedRing)))))) (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne)))
 but is expected to have type
@@ -168,8 +166,7 @@ theorem ofCauchy_one : (⟨1⟩ : ℝ) = 1 :=
   show _ = one by rw [one]
 #align real.of_cauchy_one Real.ofCauchy_one
 
-/- warning: real.of_cauchy_add clashes with real.ofCauchy_add -> Real.ofCauchy_add
-warning: real.of_cauchy_add -> Real.ofCauchy_add is a dubious translation:
+/- warning: real.of_cauchy_add -> Real.ofCauchy_add is a dubious translation:
 lean 3 declaration is
   forall (a : CauSeq.Completion.Cauchy.{0, 0} Rat Rat.linearOrderedField Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.linearOrderedRing)) (b : CauSeq.Completion.Cauchy.{0, 0} Rat Rat.linearOrderedField Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.linearOrderedRing)), Eq.{1} Real (Real.ofCauchy (HAdd.hAdd.{0, 0, 0} (CauSeq.Completion.Cauchy.{0, 0} Rat Rat.linearOrderedField Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.linearOrderedRing)) (CauSeq.Completion.Cauchy.{0, 0} Rat Rat.linearOrderedField Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.linearOrderedRing)) (CauSeq.Completion.Cauchy.{0, 0} Rat Rat.linearOrderedField Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.linearOrderedRing)) (instHAdd.{0} (CauSeq.Completion.Cauchy.{0, 0} Rat Rat.linearOrderedField Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.linearOrderedRing)) (CauSeq.Completion.Cauchy.hasAdd.{0, 0} Rat Rat.linearOrderedField Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.linearOrderedRing))) a b)) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.hasAdd) (Real.ofCauchy a) (Real.ofCauchy b))
 but is expected to have type
@@ -179,8 +176,7 @@ theorem ofCauchy_add (a b) : (⟨a + b⟩ : ℝ) = ⟨a⟩ + ⟨b⟩ :=
   show _ = add _ _ by rw [add]
 #align real.of_cauchy_add Real.ofCauchy_add
 
-/- warning: real.of_cauchy_neg clashes with real.ofCauchy_neg -> Real.ofCauchy_neg
-warning: real.of_cauchy_neg -> Real.ofCauchy_neg is a dubious translation:
+/- warning: real.of_cauchy_neg -> Real.ofCauchy_neg is a dubious translation:
 lean 3 declaration is
   forall (a : CauSeq.Completion.Cauchy.{0, 0} Rat Rat.linearOrderedField Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.linearOrderedRing)), Eq.{1} Real (Real.ofCauchy (Neg.neg.{0} (CauSeq.Completion.Cauchy.{0, 0} Rat Rat.linearOrderedField Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.linearOrderedRing)) (CauSeq.Completion.Cauchy.hasNeg.{0, 0} Rat Rat.linearOrderedField Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.linearOrderedRing)) a)) (Neg.neg.{0} Real Real.hasNeg (Real.ofCauchy a))
 but is expected to have type
@@ -190,8 +186,7 @@ theorem ofCauchy_neg (a) : (⟨-a⟩ : ℝ) = -⟨a⟩ :=
   show _ = neg _ by rw [neg]
 #align real.of_cauchy_neg Real.ofCauchy_neg
 
-/- warning: real.of_cauchy_sub clashes with real.ofCauchy_sub -> Real.ofCauchy_sub
-warning: real.of_cauchy_sub -> Real.ofCauchy_sub is a dubious translation:
+/- warning: real.of_cauchy_sub -> Real.ofCauchy_sub is a dubious translation:
 lean 3 declaration is
   forall (a : CauSeq.Completion.Cauchy.{0, 0} Rat Rat.linearOrderedField Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.linearOrderedRing)) (b : CauSeq.Completion.Cauchy.{0, 0} Rat Rat.linearOrderedField Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.linearOrderedRing)), Eq.{1} Real (Real.ofCauchy (HSub.hSub.{0, 0, 0} (CauSeq.Completion.Cauchy.{0, 0} Rat Rat.linearOrderedField Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.linearOrderedRing)) (CauSeq.Completion.Cauchy.{0, 0} Rat Rat.linearOrderedField Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.linearOrderedRing)) (CauSeq.Completion.Cauchy.{0, 0} Rat Rat.linearOrderedField Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.linearOrderedRing)) (instHSub.{0} (CauSeq.Completion.Cauchy.{0, 0} Rat Rat.linearOrderedField Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.linearOrderedRing)) (CauSeq.Completion.Cauchy.hasSub.{0, 0} Rat Rat.linearOrderedField Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.linearOrderedRing))) a b)) (HSub.hSub.{0, 0, 0} Real Real Real (instHSub.{0} Real Real.hasSub) (Real.ofCauchy a) (Real.ofCauchy b))
 but is expected to have type
@@ -203,8 +198,7 @@ theorem ofCauchy_sub (a b) : (⟨a - b⟩ : ℝ) = ⟨a⟩ - ⟨b⟩ :=
   rfl
 #align real.of_cauchy_sub Real.ofCauchy_sub
 
-/- warning: real.of_cauchy_mul clashes with real.ofCauchy_mul -> Real.ofCauchy_mul
-warning: real.of_cauchy_mul -> Real.ofCauchy_mul is a dubious translation:
+/- warning: real.of_cauchy_mul -> Real.ofCauchy_mul is a dubious translation:
 lean 3 declaration is
   forall (a : CauSeq.Completion.Cauchy.{0, 0} Rat Rat.linearOrderedField Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.linearOrderedRing)) (b : CauSeq.Completion.Cauchy.{0, 0} Rat Rat.linearOrderedField Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.linearOrderedRing)), Eq.{1} Real (Real.ofCauchy (HMul.hMul.{0, 0, 0} (CauSeq.Completion.Cauchy.{0, 0} Rat Rat.linearOrderedField Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.linearOrderedRing)) (CauSeq.Completion.Cauchy.{0, 0} Rat Rat.linearOrderedField Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.linearOrderedRing)) (CauSeq.Completion.Cauchy.{0, 0} Rat Rat.linearOrderedField Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.linearOrderedRing)) (instHMul.{0} (CauSeq.Completion.Cauchy.{0, 0} Rat Rat.linearOrderedField Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.linearOrderedRing)) (CauSeq.Completion.Cauchy.hasMul.{0, 0} Rat Rat.linearOrderedField Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.linearOrderedRing))) a b)) (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.hasMul) (Real.ofCauchy a) (Real.ofCauchy b))
 but is expected to have type
@@ -214,8 +208,7 @@ theorem ofCauchy_mul (a b) : (⟨a * b⟩ : ℝ) = ⟨a⟩ * ⟨b⟩ :=
   show _ = mul _ _ by rw [mul]
 #align real.of_cauchy_mul Real.ofCauchy_mul
 
-/- warning: real.of_cauchy_inv clashes with real.ofCauchy_inv -> Real.ofCauchy_inv
-warning: real.of_cauchy_inv -> Real.ofCauchy_inv is a dubious translation:
+/- warning: real.of_cauchy_inv -> Real.ofCauchy_inv is a dubious translation:
 lean 3 declaration is
   forall {f : CauSeq.Completion.Cauchy.{0, 0} Rat Rat.linearOrderedField Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.linearOrderedRing)}, Eq.{1} Real (Real.ofCauchy (Inv.inv.{0} (CauSeq.Completion.Cauchy.{0, 0} Rat Rat.linearOrderedField Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.linearOrderedRing)) (CauSeq.Completion.Cauchy.hasInv.{0, 0} Rat Rat.linearOrderedField Rat Rat.divisionRing (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.linearOrderedRing)) f)) (Inv.inv.{0} Real Real.hasInv (Real.ofCauchy f))
 but is expected to have type
@@ -303,17 +296,35 @@ instance : IntCast ℝ where intCast z := ⟨z⟩
 
 instance : RatCast ℝ where ratCast q := ⟨q⟩
 
-theorem ofCauchy_nat_cast (n : ℕ) : (⟨n⟩ : ℝ) = n :=
+/- warning: real.of_cauchy_nat_cast -> Real.ofCauchy_natCast is a dubious translation:
+lean 3 declaration is
+  forall (n : Nat), Eq.{1} Real (Real.ofCauchy ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat (CauSeq.Completion.Cauchy.{0, 0} Rat Rat.linearOrderedField Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.linearOrderedRing)) (HasLiftT.mk.{1, 1} Nat (CauSeq.Completion.Cauchy.{0, 0} Rat Rat.linearOrderedField Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.linearOrderedRing)) (CoeTCₓ.coe.{1, 1} Nat (CauSeq.Completion.Cauchy.{0, 0} Rat Rat.linearOrderedField Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.linearOrderedRing)) (Nat.castCoe.{0} (CauSeq.Completion.Cauchy.{0, 0} Rat Rat.linearOrderedField Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.linearOrderedRing)) (CauSeq.Completion.Cauchy.hasNatCast.{0, 0} Rat Rat.linearOrderedField Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.linearOrderedRing))))) n)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Real (HasLiftT.mk.{1, 1} Nat Real (CoeTCₓ.coe.{1, 1} Nat Real (Nat.castCoe.{0} Real Real.hasNatCast))) n)
+but is expected to have type
+  forall (n : Nat), Eq.{1} Real (Real.ofCauchy (Nat.cast.{0} (CauSeq.Completion.Cauchy.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.instNegRat Rat.instHasSupRat)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.instLinearOrderedRingRat)) (CauSeq.Completion.instNatCastCauchy.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.instNegRat Rat.instHasSupRat)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.instLinearOrderedRingRat)) n)) (Nat.cast.{0} Real Real.natCast n)
+Case conversion may be inaccurate. Consider using '#align real.of_cauchy_nat_cast Real.ofCauchy_natCastₓ'. -/
+theorem ofCauchy_natCast (n : ℕ) : (⟨n⟩ : ℝ) = n :=
   rfl
-#align real.of_cauchy_nat_cast Real.ofCauchy_nat_cast
+#align real.of_cauchy_nat_cast Real.ofCauchy_natCast
 
-theorem ofCauchy_int_cast (z : ℤ) : (⟨z⟩ : ℝ) = z :=
+/- warning: real.of_cauchy_int_cast -> Real.ofCauchy_intCast is a dubious translation:
+lean 3 declaration is
+  forall (z : Int), Eq.{1} Real (Real.ofCauchy ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int (CauSeq.Completion.Cauchy.{0, 0} Rat Rat.linearOrderedField Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.linearOrderedRing)) (HasLiftT.mk.{1, 1} Int (CauSeq.Completion.Cauchy.{0, 0} Rat Rat.linearOrderedField Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.linearOrderedRing)) (CoeTCₓ.coe.{1, 1} Int (CauSeq.Completion.Cauchy.{0, 0} Rat Rat.linearOrderedField Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.linearOrderedRing)) (Int.castCoe.{0} (CauSeq.Completion.Cauchy.{0, 0} Rat Rat.linearOrderedField Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.linearOrderedRing)) (CauSeq.Completion.Cauchy.hasIntCast.{0, 0} Rat Rat.linearOrderedField Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.linearOrderedRing))))) z)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int Real (HasLiftT.mk.{1, 1} Int Real (CoeTCₓ.coe.{1, 1} Int Real (Int.castCoe.{0} Real Real.hasIntCast))) z)
+but is expected to have type
+  forall (z : Int), Eq.{1} Real (Real.ofCauchy (Int.cast.{0} (CauSeq.Completion.Cauchy.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.instNegRat Rat.instHasSupRat)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.instLinearOrderedRingRat)) (CauSeq.Completion.instIntCastCauchy.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.instNegRat Rat.instHasSupRat)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.instLinearOrderedRingRat)) z)) (Int.cast.{0} Real Real.intCast z)
+Case conversion may be inaccurate. Consider using '#align real.of_cauchy_int_cast Real.ofCauchy_intCastₓ'. -/
+theorem ofCauchy_intCast (z : ℤ) : (⟨z⟩ : ℝ) = z :=
   rfl
-#align real.of_cauchy_int_cast Real.ofCauchy_int_cast
+#align real.of_cauchy_int_cast Real.ofCauchy_intCast
 
-theorem ofCauchy_rat_cast (q : ℚ) : (⟨q⟩ : ℝ) = q :=
+/- warning: real.of_cauchy_rat_cast -> Real.ofCauchy_ratCast is a dubious translation:
+lean 3 declaration is
+  forall (q : Rat), Eq.{1} Real (Real.ofCauchy ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat (CauSeq.Completion.Cauchy.{0, 0} Rat Rat.linearOrderedField Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.linearOrderedRing)) (HasLiftT.mk.{1, 1} Rat (CauSeq.Completion.Cauchy.{0, 0} Rat Rat.linearOrderedField Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.linearOrderedRing)) (CoeTCₓ.coe.{1, 1} Rat (CauSeq.Completion.Cauchy.{0, 0} Rat Rat.linearOrderedField Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.linearOrderedRing)) (Rat.castCoe.{0} (CauSeq.Completion.Cauchy.{0, 0} Rat Rat.linearOrderedField Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.linearOrderedRing)) (CauSeq.Completion.Cauchy.hasRatCast.{0, 0} Rat Rat.linearOrderedField Rat Rat.divisionRing (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.linearOrderedRing))))) q)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat Real (HasLiftT.mk.{1, 1} Rat Real (CoeTCₓ.coe.{1, 1} Rat Real (Rat.castCoe.{0} Real Real.hasRatCast))) q)
+but is expected to have type
+  forall (q : Rat), Eq.{1} Real (Real.ofCauchy (RatCast.ratCast.{0} (CauSeq.Completion.Cauchy.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.instNegRat Rat.instHasSupRat)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.instLinearOrderedRingRat)) (CauSeq.Completion.instRatCastCauchyToRing.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat Rat.divisionRing (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.instNegRat Rat.instHasSupRat)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.instLinearOrderedRingRat)) q)) (RatCast.ratCast.{0} Real Real.ratCast q)
+Case conversion may be inaccurate. Consider using '#align real.of_cauchy_rat_cast Real.ofCauchy_ratCastₓ'. -/
+theorem ofCauchy_ratCast (q : ℚ) : (⟨q⟩ : ℝ) = q :=
   rfl
-#align real.of_cauchy_rat_cast Real.ofCauchy_rat_cast
+#align real.of_cauchy_rat_cast Real.ofCauchy_ratCast
 
 /- warning: real.cauchy_nat_cast -> Real.cauchy_natCast is a dubious translation:
 lean 3 declaration is
@@ -701,8 +712,7 @@ private irreducible_def sup : ℝ → ℝ → ℝ
 instance : HasSup ℝ :=
   ⟨sup⟩
 
-/- warning: real.of_cauchy_sup clashes with real.ofCauchy_sup -> Real.ofCauchy_sup
-warning: real.of_cauchy_sup -> Real.ofCauchy_sup is a dubious translation:
+/- warning: real.of_cauchy_sup -> Real.ofCauchy_sup is a dubious translation:
 lean 3 declaration is
   forall (a : CauSeq.{0, 0} Rat Rat.linearOrderedField Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup))) (b : CauSeq.{0, 0} Rat Rat.linearOrderedField Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup))), Eq.{1} Real (Real.ofCauchy (Quotient.mk''.{1} (CauSeq.{0, 0} Rat Rat.linearOrderedField Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup))) (CauSeq.equiv.{0, 0} Rat Rat Rat.linearOrderedField (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.linearOrderedRing)) (HasSup.sup.{0} (CauSeq.{0, 0} Rat Rat.linearOrderedField Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup))) (CauSeq.hasSup.{0} Rat Rat.linearOrderedField) a b))) (HasSup.sup.{0} Real Real.hasSup (Real.ofCauchy (Quotient.mk''.{1} (CauSeq.{0, 0} Rat Rat.linearOrderedField Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup))) (CauSeq.equiv.{0, 0} Rat Rat Rat.linearOrderedField (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.linearOrderedRing)) a)) (Real.ofCauchy (Quotient.mk''.{1} (CauSeq.{0, 0} Rat Rat.linearOrderedField Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup))) (CauSeq.equiv.{0, 0} Rat Rat Rat.linearOrderedField (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.linearOrderedRing)) b)))
 but is expected to have type
@@ -732,8 +742,7 @@ private irreducible_def inf : ℝ → ℝ → ℝ
 instance : HasInf ℝ :=
   ⟨inf⟩
 
-/- warning: real.of_cauchy_inf clashes with real.ofCauchy_inf -> Real.ofCauchy_inf
-warning: real.of_cauchy_inf -> Real.ofCauchy_inf is a dubious translation:
+/- warning: real.of_cauchy_inf -> Real.ofCauchy_inf is a dubious translation:
 lean 3 declaration is
   forall (a : CauSeq.{0, 0} Rat Rat.linearOrderedField Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup))) (b : CauSeq.{0, 0} Rat Rat.linearOrderedField Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup))), Eq.{1} Real (Real.ofCauchy (Quotient.mk''.{1} (CauSeq.{0, 0} Rat Rat.linearOrderedField Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup))) (CauSeq.equiv.{0, 0} Rat Rat Rat.linearOrderedField (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.linearOrderedRing)) (HasInf.inf.{0} (CauSeq.{0, 0} Rat Rat.linearOrderedField Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup))) (CauSeq.hasInf.{0} Rat Rat.linearOrderedField) a b))) (HasInf.inf.{0} Real Real.hasInf (Real.ofCauchy (Quotient.mk''.{1} (CauSeq.{0, 0} Rat Rat.linearOrderedField Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup))) (CauSeq.equiv.{0, 0} Rat Rat Rat.linearOrderedField (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.linearOrderedRing)) a)) (Real.ofCauchy (Quotient.mk''.{1} (CauSeq.{0, 0} Rat Rat.linearOrderedField Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup))) (CauSeq.equiv.{0, 0} Rat Rat Rat.linearOrderedField (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.linearOrderedRing)) b)))
 but is expected to have type

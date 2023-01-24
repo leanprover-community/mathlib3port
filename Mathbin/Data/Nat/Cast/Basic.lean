@@ -510,15 +510,19 @@ instance [h : AddMonoidWithOne α] : AddMonoidWithOne αᵒᵈ :=
 instance [h : AddCommMonoidWithOne α] : AddCommMonoidWithOne αᵒᵈ :=
   h
 
+#print toDual_natCast /-
 @[simp]
-theorem toDual_nat_cast [NatCast α] (n : ℕ) : toDual (n : α) = n :=
+theorem toDual_natCast [NatCast α] (n : ℕ) : toDual (n : α) = n :=
   rfl
-#align to_dual_nat_cast toDual_nat_cast
+#align to_dual_nat_cast toDual_natCast
+-/
 
+#print ofDual_natCast /-
 @[simp]
-theorem ofDual_nat_cast [NatCast α] (n : ℕ) : (ofDual n : α) = n :=
+theorem ofDual_natCast [NatCast α] (n : ℕ) : (ofDual n : α) = n :=
   rfl
-#align of_dual_nat_cast ofDual_nat_cast
+#align of_dual_nat_cast ofDual_natCast
+-/
 
 /-! ### Lexicographic order -/
 
@@ -532,13 +536,17 @@ instance [h : AddMonoidWithOne α] : AddMonoidWithOne (Lex α) :=
 instance [h : AddCommMonoidWithOne α] : AddCommMonoidWithOne (Lex α) :=
   h
 
+#print toLex_natCast /-
 @[simp]
-theorem toLex_nat_cast [NatCast α] (n : ℕ) : toLex (n : α) = n :=
+theorem toLex_natCast [NatCast α] (n : ℕ) : toLex (n : α) = n :=
   rfl
-#align to_lex_nat_cast toLex_nat_cast
+#align to_lex_nat_cast toLex_natCast
+-/
 
+#print ofLex_natCast /-
 @[simp]
-theorem ofLex_nat_cast [NatCast α] (n : ℕ) : (ofLex n : α) = n :=
+theorem ofLex_natCast [NatCast α] (n : ℕ) : (ofLex n : α) = n :=
   rfl
-#align of_lex_nat_cast ofLex_nat_cast
+#align of_lex_nat_cast ofLex_natCast
+-/
 

@@ -348,8 +348,7 @@ theorem infₛ_le_iff : infₛ s ≤ a ↔ ∀ b ∈ lowerBounds s, b ≤ a :=
   ⟨fun h b hb => le_trans (le_infₛ hb) h, fun hb => hb _ fun x => infₛ_le⟩
 #align Inf_le_iff infₛ_le_iff
 
-/- warning: infi_le_iff clashes with infᵢ_le_iff -> infᵢ_le_iff
-warning: infi_le_iff -> infᵢ_le_iff is a dubious translation:
+/- warning: infi_le_iff -> infᵢ_le_iff is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : CompleteSemilatticeInf.{u1} α] {a : α} {s : ι -> α}, Iff (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α _inst_1))) (infᵢ.{u1, u2} α (CompleteSemilatticeInf.toHasInf.{u1} α _inst_1) ι s) a) (forall (b : α), (forall (i : ι), LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α _inst_1))) b (s i)) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α _inst_1))) b a))
 but is expected to have type
@@ -1692,8 +1691,7 @@ theorem Monotone.le_map_supₛ [CompleteLattice β] {s : Set α} {f : α → β}
     (⨆ a ∈ s, f a) ≤ f (supₛ s) := by rw [supₛ_eq_supᵢ] <;> exact hf.le_map_supr₂ _
 #align monotone.le_map_Sup Monotone.le_map_supₛ
 
-/- warning: antitone.le_map_Inf clashes with antitone.le_map_infₛ -> Antitone.le_map_infₛ
-warning: antitone.le_map_Inf -> Antitone.le_map_infₛ is a dubious translation:
+/- warning: antitone.le_map_Inf -> Antitone.le_map_infₛ is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : CompleteLattice.{u2} β] {s : Set.{u1} α} {f : α -> β}, (Antitone.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2))) f) -> (LE.le.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2)))) (supᵢ.{u2, succ u1} β (CompleteSemilatticeSup.toHasSup.{u2} β (CompleteLattice.toCompleteSemilatticeSup.{u2} β _inst_2)) α (fun (a : α) => supᵢ.{u2, 0} β (CompleteSemilatticeSup.toHasSup.{u2} β (CompleteLattice.toCompleteSemilatticeSup.{u2} β _inst_2)) (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) => f a))) (f (InfSet.infₛ.{u1} α (CompleteSemilatticeInf.toHasInf.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) s)))
 but is expected to have type

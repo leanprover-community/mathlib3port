@@ -239,7 +239,7 @@ performance reasons, we define it explicitly below. -/
 instance leftHasSmul : SMul R' (M ⊗[R] N) :=
   ⟨fun r =>
     (addConGen (TensorProduct.Eqv R M N)).lift (Smul.aux r : _ →+ M ⊗[R] N) <|
-      AddCon.add_conGen_le fun x y hxy =>
+      AddCon.addConGen_le fun x y hxy =>
         match x, y, hxy with
         | _, _, eqv.of_zero_left n =>
           (AddCon.ker_rel _).2 <| by
@@ -458,7 +458,7 @@ with the property that its composition with the canonical bilinear map `M → N 
 the given bilinear map `M → N → P`. -/
 def liftAux : M ⊗[R] N →+ P :=
   (addConGen (TensorProduct.Eqv R M N)).lift (FreeAddMonoid.lift fun p : M × N => f p.1 p.2) <|
-    AddCon.add_conGen_le fun x y hxy =>
+    AddCon.addConGen_le fun x y hxy =>
       match x, y, hxy with
       | _, _, eqv.of_zero_left n =>
         (AddCon.ker_rel _).2 <| by
@@ -1243,7 +1243,7 @@ theorem Neg.aux_of (m : M) (n : N) : Neg.aux R (FreeAddMonoid.of (m, n)) = (-m) 
 instance : Neg (M ⊗[R] N)
     where neg :=
     (addConGen (TensorProduct.Eqv R M N)).lift (Neg.aux R) <|
-      AddCon.add_conGen_le fun x y hxy =>
+      AddCon.addConGen_le fun x y hxy =>
         match x, y, hxy with
         | _, _, eqv.of_zero_left n =>
           (AddCon.ker_rel _).2 <| by

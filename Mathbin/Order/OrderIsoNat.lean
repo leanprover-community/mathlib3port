@@ -35,27 +35,44 @@ namespace RelEmbedding
 
 variable {r : α → α → Prop} [IsStrictOrder α r]
 
+#print RelEmbedding.natLt /-
 /-- If `f` is a strictly `r`-increasing sequence, then this returns `f` as an order embedding. -/
 def natLt (f : ℕ → α) (H : ∀ n : ℕ, r (f n) (f (n + 1))) : ((· < ·) : ℕ → ℕ → Prop) ↪r r :=
   ofMonotone f <| Nat.rel_of_forall_rel_succ_of_lt r H
 #align rel_embedding.nat_lt RelEmbedding.natLt
+-/
 
+/- warning: rel_embedding.coe_nat_lt -> RelEmbedding.coe_natLt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {r : α -> α -> Prop} [_inst_1 : IsStrictOrder.{u1} α r] {f : Nat -> α} {H : forall (n : Nat), r (f n) (f (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))}, Eq.{succ u1} (Nat -> α) (coeFn.{succ u1, succ u1} (RelEmbedding.{0, u1} Nat α (LT.lt.{0} Nat Nat.hasLt) r) (fun (_x : RelEmbedding.{0, u1} Nat α (LT.lt.{0} Nat Nat.hasLt) r) => Nat -> α) (RelEmbedding.hasCoeToFun.{0, u1} Nat α (LT.lt.{0} Nat Nat.hasLt) r) (RelEmbedding.natLt.{u1} α r _inst_1 f H)) f
+but is expected to have type
+  forall {α : Type.{u1}} {r : α -> α -> Prop} [_inst_1 : IsStrictOrder.{u1} α r] {f : Nat -> α} {H : forall (n : Nat), r (f n) (f (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))}, Eq.{succ u1} (forall (ᾰ : Nat), (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Nat) => α) ᾰ) (FunLike.coe.{succ u1, 1, succ u1} (Function.Embedding.{1, succ u1} Nat α) Nat (fun (_x : Nat) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Nat) => α) _x) (EmbeddingLike.toFunLike.{succ u1, 1, succ u1} (Function.Embedding.{1, succ u1} Nat α) Nat α (Function.instEmbeddingLikeEmbedding.{1, succ u1} Nat α)) (RelEmbedding.toEmbedding.{0, u1} Nat α (fun (x._@.Mathlib.Order.OrderIsoNat._hyg.75 : Nat) (x._@.Mathlib.Order.OrderIsoNat._hyg.77 : Nat) => LT.lt.{0} Nat instLTNat x._@.Mathlib.Order.OrderIsoNat._hyg.75 x._@.Mathlib.Order.OrderIsoNat._hyg.77) r (RelEmbedding.natLt.{u1} α r _inst_1 f H))) f
+Case conversion may be inaccurate. Consider using '#align rel_embedding.coe_nat_lt RelEmbedding.coe_natLtₓ'. -/
 @[simp]
 theorem coe_natLt {f : ℕ → α} {H : ∀ n : ℕ, r (f n) (f (n + 1))} : ⇑(natLt f H) = f :=
   rfl
 #align rel_embedding.coe_nat_lt RelEmbedding.coe_natLt
 
+#print RelEmbedding.natGt /-
 /-- If `f` is a strictly `r`-decreasing sequence, then this returns `f` as an order embedding. -/
 def natGt (f : ℕ → α) (H : ∀ n : ℕ, r (f (n + 1)) (f n)) : ((· > ·) : ℕ → ℕ → Prop) ↪r r :=
   haveI := IsStrictOrder.swap r
   RelEmbedding.swap (nat_lt f H)
 #align rel_embedding.nat_gt RelEmbedding.natGt
+-/
 
+/- warning: rel_embedding.coe_nat_gt -> RelEmbedding.coe_natGt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {r : α -> α -> Prop} [_inst_1 : IsStrictOrder.{u1} α r] {f : Nat -> α} {H : forall (n : Nat), r (f (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (f n)}, Eq.{succ u1} (Nat -> α) (coeFn.{succ u1, succ u1} (RelEmbedding.{0, u1} Nat α (GT.gt.{0} Nat Nat.hasLt) r) (fun (_x : RelEmbedding.{0, u1} Nat α (GT.gt.{0} Nat Nat.hasLt) r) => Nat -> α) (RelEmbedding.hasCoeToFun.{0, u1} Nat α (GT.gt.{0} Nat Nat.hasLt) r) (RelEmbedding.natGt.{u1} α r _inst_1 f H)) f
+but is expected to have type
+  forall {α : Type.{u1}} {r : α -> α -> Prop} [_inst_1 : IsStrictOrder.{u1} α r] {f : Nat -> α} {H : forall (n : Nat), r (f (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (f n)}, Eq.{succ u1} (forall (ᾰ : Nat), (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Nat) => α) ᾰ) (FunLike.coe.{succ u1, 1, succ u1} (Function.Embedding.{1, succ u1} Nat α) Nat (fun (_x : Nat) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Nat) => α) _x) (EmbeddingLike.toFunLike.{succ u1, 1, succ u1} (Function.Embedding.{1, succ u1} Nat α) Nat α (Function.instEmbeddingLikeEmbedding.{1, succ u1} Nat α)) (RelEmbedding.toEmbedding.{0, u1} Nat α (fun (x._@.Mathlib.Order.OrderIsoNat._hyg.201 : Nat) (x._@.Mathlib.Order.OrderIsoNat._hyg.203 : Nat) => GT.gt.{0} Nat instLTNat x._@.Mathlib.Order.OrderIsoNat._hyg.201 x._@.Mathlib.Order.OrderIsoNat._hyg.203) r (RelEmbedding.natGt.{u1} α r _inst_1 f H))) f
+Case conversion may be inaccurate. Consider using '#align rel_embedding.coe_nat_gt RelEmbedding.coe_natGtₓ'. -/
 @[simp]
 theorem coe_natGt {f : ℕ → α} {H : ∀ n : ℕ, r (f (n + 1)) (f n)} : ⇑(natGt f H) = f :=
   rfl
 #align rel_embedding.coe_nat_gt RelEmbedding.coe_natGt
 
+#print RelEmbedding.exists_not_acc_lt_of_not_acc /-
 theorem exists_not_acc_lt_of_not_acc {a : α} {r} (h : ¬Acc r a) : ∃ b, ¬Acc r b ∧ r b a :=
   by
   contrapose! h
@@ -63,7 +80,14 @@ theorem exists_not_acc_lt_of_not_acc {a : α} {r} (h : ¬Acc r a) : ∃ b, ¬Acc
   by_contra hb
   exact h b hb hr
 #align rel_embedding.exists_not_acc_lt_of_not_acc RelEmbedding.exists_not_acc_lt_of_not_acc
+-/
 
+/- warning: rel_embedding.acc_iff_no_decreasing_seq -> RelEmbedding.acc_iff_no_decreasing_seq is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {r : α -> α -> Prop} [_inst_1 : IsStrictOrder.{u1} α r] {x : α}, Iff (Acc.{succ u1} α r x) (IsEmpty.{succ u1} (Subtype.{succ u1} (RelEmbedding.{0, u1} Nat α (GT.gt.{0} Nat Nat.hasLt) r) (fun (f : RelEmbedding.{0, u1} Nat α (GT.gt.{0} Nat Nat.hasLt) r) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (Set.range.{u1, 1} α Nat (coeFn.{succ u1, succ u1} (RelEmbedding.{0, u1} Nat α (GT.gt.{0} Nat Nat.hasLt) r) (fun (_x : RelEmbedding.{0, u1} Nat α (GT.gt.{0} Nat Nat.hasLt) r) => Nat -> α) (RelEmbedding.hasCoeToFun.{0, u1} Nat α (GT.gt.{0} Nat Nat.hasLt) r) f)))))
+but is expected to have type
+  forall {α : Type.{u1}} {r : α -> α -> Prop} [_inst_1 : IsStrictOrder.{u1} α r] {x : α}, Iff (Acc.{succ u1} α r x) (IsEmpty.{succ u1} (Subtype.{succ u1} (RelEmbedding.{0, u1} Nat α (fun (x._@.Mathlib.Order.OrderIsoNat._hyg.419 : Nat) (x._@.Mathlib.Order.OrderIsoNat._hyg.421 : Nat) => GT.gt.{0} Nat instLTNat x._@.Mathlib.Order.OrderIsoNat._hyg.419 x._@.Mathlib.Order.OrderIsoNat._hyg.421) r) (fun (f : RelEmbedding.{0, u1} Nat α (fun (x._@.Mathlib.Order.OrderIsoNat._hyg.419 : Nat) (x._@.Mathlib.Order.OrderIsoNat._hyg.421 : Nat) => GT.gt.{0} Nat instLTNat x._@.Mathlib.Order.OrderIsoNat._hyg.419 x._@.Mathlib.Order.OrderIsoNat._hyg.421) r) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (Set.range.{u1, 1} α Nat (FunLike.coe.{succ u1, 1, succ u1} (Function.Embedding.{1, succ u1} Nat α) Nat (fun (_x : Nat) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Nat) => α) _x) (EmbeddingLike.toFunLike.{succ u1, 1, succ u1} (Function.Embedding.{1, succ u1} Nat α) Nat α (Function.instEmbeddingLikeEmbedding.{1, succ u1} Nat α)) (RelEmbedding.toEmbedding.{0, u1} Nat α (fun (x._@.Mathlib.Order.OrderIsoNat._hyg.419 : Nat) (x._@.Mathlib.Order.OrderIsoNat._hyg.421 : Nat) => GT.gt.{0} Nat instLTNat x._@.Mathlib.Order.OrderIsoNat._hyg.419 x._@.Mathlib.Order.OrderIsoNat._hyg.421) r f))))))
+Case conversion may be inaccurate. Consider using '#align rel_embedding.acc_iff_no_decreasing_seq RelEmbedding.acc_iff_no_decreasing_seqₓ'. -/
 /-- A value is accessible iff it isn't contained in any infinite decreasing sequence. -/
 theorem acc_iff_no_decreasing_seq {x} :
     Acc r x ↔ IsEmpty { f : ((· > ·) : ℕ → ℕ → Prop) ↪r r // x ∈ Set.range f } :=
@@ -85,12 +109,19 @@ theorem acc_iff_no_decreasing_seq {x} :
     apply h
 #align rel_embedding.acc_iff_no_decreasing_seq RelEmbedding.acc_iff_no_decreasing_seq
 
+/- warning: rel_embedding.not_acc_of_decreasing_seq -> RelEmbedding.not_acc_of_decreasing_seq is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {r : α -> α -> Prop} [_inst_1 : IsStrictOrder.{u1} α r] (f : RelEmbedding.{0, u1} Nat α (GT.gt.{0} Nat Nat.hasLt) r) (k : Nat), Not (Acc.{succ u1} α r (coeFn.{succ u1, succ u1} (RelEmbedding.{0, u1} Nat α (GT.gt.{0} Nat Nat.hasLt) r) (fun (_x : RelEmbedding.{0, u1} Nat α (GT.gt.{0} Nat Nat.hasLt) r) => Nat -> α) (RelEmbedding.hasCoeToFun.{0, u1} Nat α (GT.gt.{0} Nat Nat.hasLt) r) f k))
+but is expected to have type
+  forall {α : Type.{u1}} {r : α -> α -> Prop} [_inst_1 : IsStrictOrder.{u1} α r] (f : RelEmbedding.{0, u1} Nat α (fun (x._@.Mathlib.Order.OrderIsoNat._hyg.655 : Nat) (x._@.Mathlib.Order.OrderIsoNat._hyg.657 : Nat) => GT.gt.{0} Nat instLTNat x._@.Mathlib.Order.OrderIsoNat._hyg.655 x._@.Mathlib.Order.OrderIsoNat._hyg.657) r) (k : Nat), Not (Acc.{succ u1} α r (FunLike.coe.{succ u1, 1, succ u1} (Function.Embedding.{1, succ u1} Nat α) Nat (fun (_x : Nat) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Nat) => α) _x) (EmbeddingLike.toFunLike.{succ u1, 1, succ u1} (Function.Embedding.{1, succ u1} Nat α) Nat α (Function.instEmbeddingLikeEmbedding.{1, succ u1} Nat α)) (RelEmbedding.toEmbedding.{0, u1} Nat α (fun (x._@.Mathlib.Order.OrderIsoNat._hyg.655 : Nat) (x._@.Mathlib.Order.OrderIsoNat._hyg.657 : Nat) => GT.gt.{0} Nat instLTNat x._@.Mathlib.Order.OrderIsoNat._hyg.655 x._@.Mathlib.Order.OrderIsoNat._hyg.657) r f) k))
+Case conversion may be inaccurate. Consider using '#align rel_embedding.not_acc_of_decreasing_seq RelEmbedding.not_acc_of_decreasing_seqₓ'. -/
 theorem not_acc_of_decreasing_seq (f : ((· > ·) : ℕ → ℕ → Prop) ↪r r) (k : ℕ) : ¬Acc r (f k) :=
   by
   rw [acc_iff_no_decreasing_seq, not_isEmpty_iff]
   exact ⟨⟨f, k, rfl⟩⟩
 #align rel_embedding.not_acc_of_decreasing_seq RelEmbedding.not_acc_of_decreasing_seq
 
+#print RelEmbedding.wellFounded_iff_no_descending_seq /-
 /-- A relation is well-founded iff it doesn't have any infinite decreasing sequence. -/
 theorem wellFounded_iff_no_descending_seq :
     WellFounded r ↔ IsEmpty (((· > ·) : ℕ → ℕ → Prop) ↪r r) :=
@@ -101,12 +132,15 @@ theorem wellFounded_iff_no_descending_seq :
   · intro h
     exact ⟨fun x => acc_iff_no_decreasing_seq.2 inferInstance⟩
 #align rel_embedding.well_founded_iff_no_descending_seq RelEmbedding.wellFounded_iff_no_descending_seq
+-/
 
+#print RelEmbedding.not_wellFounded_of_decreasing_seq /-
 theorem not_wellFounded_of_decreasing_seq (f : ((· > ·) : ℕ → ℕ → Prop) ↪r r) : ¬WellFounded r :=
   by
   rw [well_founded_iff_no_descending_seq, not_isEmpty_iff]
   exact ⟨f⟩
 #align rel_embedding.not_well_founded_of_decreasing_seq RelEmbedding.not_wellFounded_of_decreasing_seq
+-/
 
 end RelEmbedding
 
@@ -114,13 +148,16 @@ namespace Nat
 
 variable (s : Set ℕ) [Infinite s]
 
+#print Nat.orderEmbeddingOfSet /-
 /-- An order embedding from `ℕ` to itself with a specified range -/
 def orderEmbeddingOfSet [DecidablePred (· ∈ s)] : ℕ ↪o ℕ :=
   (RelEmbedding.orderEmbeddingOfLTEmbedding
         (RelEmbedding.natLt (Nat.Subtype.ofNat s) fun n => Nat.Subtype.lt_succ_self _)).trans
     (OrderEmbedding.subtype s)
 #align nat.order_embedding_of_set Nat.orderEmbeddingOfSet
+-/
 
+#print Nat.Subtype.orderIsoOfNat /-
 /-- `nat.subtype.of_nat` as an order isomorphism between `ℕ` and an infinite subset. See also
 `nat.nth` for a version where the subset may be finite. -/
 noncomputable def Subtype.orderIsoOfNat : ℕ ≃o s := by
@@ -130,18 +167,37 @@ noncomputable def Subtype.orderIsoOfNat : ℕ ≃o s := by
           (RelEmbedding.natLt (Nat.Subtype.ofNat s) fun n => Nat.Subtype.lt_succ_self _))
         Nat.Subtype.ofNat_surjective
 #align nat.subtype.order_iso_of_nat Nat.Subtype.orderIsoOfNat
+-/
 
 variable {s}
 
+/- warning: nat.coe_order_embedding_of_set -> Nat.coe_orderEmbeddingOfSet is a dubious translation:
+lean 3 declaration is
+  forall {s : Set.{0} Nat} [_inst_1 : Infinite.{1} (coeSort.{1, 2} (Set.{0} Nat) Type (Set.hasCoeToSort.{0} Nat) s)], Eq.{1} (Nat -> Nat) (coeFn.{1, 1} (OrderEmbedding.{0, 0} Nat Nat Nat.hasLe Nat.hasLe) (fun (_x : RelEmbedding.{0, 0} Nat Nat (LE.le.{0} Nat Nat.hasLe) (LE.le.{0} Nat Nat.hasLe)) => Nat -> Nat) (RelEmbedding.hasCoeToFun.{0, 0} Nat Nat (LE.le.{0} Nat Nat.hasLe) (LE.le.{0} Nat Nat.hasLe)) (Nat.orderEmbeddingOfSet s _inst_1 (fun (a : Nat) => Classical.propDecidable ((fun (_x : Nat) => Membership.Mem.{0, 0} Nat (Set.{0} Nat) (Set.hasMem.{0} Nat) _x s) a)))) (Function.comp.{1, 1, 1} Nat (coeSort.{1, 2} (Set.{0} Nat) Type (Set.hasCoeToSort.{0} Nat) s) Nat ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (coeSort.{1, 2} (Set.{0} Nat) Type (Set.hasCoeToSort.{0} Nat) s) Nat (HasLiftT.mk.{1, 1} (coeSort.{1, 2} (Set.{0} Nat) Type (Set.hasCoeToSort.{0} Nat) s) Nat (CoeTCₓ.coe.{1, 1} (coeSort.{1, 2} (Set.{0} Nat) Type (Set.hasCoeToSort.{0} Nat) s) Nat (coeBase.{1, 1} (coeSort.{1, 2} (Set.{0} Nat) Type (Set.hasCoeToSort.{0} Nat) s) Nat (coeSubtype.{1} Nat (fun (x : Nat) => Membership.Mem.{0, 0} Nat (Set.{0} Nat) (Set.hasMem.{0} Nat) x s)))))) (Nat.Subtype.ofNat s (fun (a : Nat) => Classical.propDecidable ((fun (_x : Nat) => Membership.Mem.{0, 0} Nat (Set.{0} Nat) (Set.hasMem.{0} Nat) _x s) a)) _inst_1))
+but is expected to have type
+  forall {s : Set.{0} Nat} [_inst_1 : Infinite.{1} (Set.Elem.{0} Nat s)] [dP : DecidablePred.{1} Nat (fun (x._@.Mathlib.Order.OrderIsoNat._hyg.1039 : Nat) => Membership.mem.{0, 0} Nat (Set.{0} Nat) (Set.instMembershipSet.{0} Nat) x._@.Mathlib.Order.OrderIsoNat._hyg.1039 s)], Eq.{1} (forall (a : Nat), (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Nat) => Nat) a) (FunLike.coe.{1, 1, 1} (Function.Embedding.{1, 1} Nat Nat) Nat (fun (a : Nat) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Nat) => Nat) a) (EmbeddingLike.toFunLike.{1, 1, 1} (Function.Embedding.{1, 1} Nat Nat) Nat Nat (Function.instEmbeddingLikeEmbedding.{1, 1} Nat Nat)) (RelEmbedding.toEmbedding.{0, 0} Nat Nat (fun (x._@.Mathlib.Order.Hom.Basic._hyg.744 : Nat) (x._@.Mathlib.Order.Hom.Basic._hyg.746 : Nat) => LE.le.{0} Nat instLENat x._@.Mathlib.Order.Hom.Basic._hyg.744 x._@.Mathlib.Order.Hom.Basic._hyg.746) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.759 : Nat) (x._@.Mathlib.Order.Hom.Basic._hyg.761 : Nat) => LE.le.{0} Nat instLENat x._@.Mathlib.Order.Hom.Basic._hyg.759 x._@.Mathlib.Order.Hom.Basic._hyg.761) (Nat.orderEmbeddingOfSet s _inst_1 (fun (a : Nat) => dP a)))) (Function.comp.{1, 1, 1} Nat (Set.Elem.{0} Nat s) Nat (Subtype.val.{1} Nat (fun (x : Nat) => Membership.mem.{0, 0} Nat (Set.{0} Nat) (Set.instMembershipSet.{0} Nat) x s)) (Nat.Subtype.ofNat s (fun (a : Nat) => dP a) _inst_1))
+Case conversion may be inaccurate. Consider using '#align nat.coe_order_embedding_of_set Nat.coe_orderEmbeddingOfSetₓ'. -/
 @[simp]
 theorem coe_orderEmbeddingOfSet : ⇑(orderEmbeddingOfSet s) = coe ∘ Subtype.ofNat s :=
   rfl
 #align nat.coe_order_embedding_of_set Nat.coe_orderEmbeddingOfSet
 
+/- warning: nat.order_embedding_of_set_apply -> Nat.orderEmbeddingOfSet_apply is a dubious translation:
+lean 3 declaration is
+  forall {s : Set.{0} Nat} [_inst_1 : Infinite.{1} (coeSort.{1, 2} (Set.{0} Nat) Type (Set.hasCoeToSort.{0} Nat) s)] {n : Nat}, Eq.{1} Nat (coeFn.{1, 1} (OrderEmbedding.{0, 0} Nat Nat Nat.hasLe Nat.hasLe) (fun (_x : RelEmbedding.{0, 0} Nat Nat (LE.le.{0} Nat Nat.hasLe) (LE.le.{0} Nat Nat.hasLe)) => Nat -> Nat) (RelEmbedding.hasCoeToFun.{0, 0} Nat Nat (LE.le.{0} Nat Nat.hasLe) (LE.le.{0} Nat Nat.hasLe)) (Nat.orderEmbeddingOfSet s _inst_1 (fun (a : Nat) => Classical.propDecidable ((fun (_x : Nat) => Membership.Mem.{0, 0} Nat (Set.{0} Nat) (Set.hasMem.{0} Nat) _x s) a))) n) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (coeSort.{1, 2} (Set.{0} Nat) Type (Set.hasCoeToSort.{0} Nat) s) Nat (HasLiftT.mk.{1, 1} (coeSort.{1, 2} (Set.{0} Nat) Type (Set.hasCoeToSort.{0} Nat) s) Nat (CoeTCₓ.coe.{1, 1} (coeSort.{1, 2} (Set.{0} Nat) Type (Set.hasCoeToSort.{0} Nat) s) Nat (coeBase.{1, 1} (coeSort.{1, 2} (Set.{0} Nat) Type (Set.hasCoeToSort.{0} Nat) s) Nat (coeSubtype.{1} Nat (fun (x : Nat) => Membership.Mem.{0, 0} Nat (Set.{0} Nat) (Set.hasMem.{0} Nat) x s))))) (Nat.Subtype.ofNat s (fun (a : Nat) => Classical.propDecidable ((fun (_x : Nat) => Membership.Mem.{0, 0} Nat (Set.{0} Nat) (Set.hasMem.{0} Nat) _x s) a)) _inst_1 n))
+but is expected to have type
+  forall {s : Set.{0} Nat} [_inst_1 : Infinite.{1} (Set.Elem.{0} Nat s)] [n : DecidablePred.{1} Nat (fun (x._@.Mathlib.Order.OrderIsoNat._hyg.1080 : Nat) => Membership.mem.{0, 0} Nat (Set.{0} Nat) (Set.instMembershipSet.{0} Nat) x._@.Mathlib.Order.OrderIsoNat._hyg.1080 s)] {n_1 : Nat}, Eq.{1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Nat) => Nat) n_1) (FunLike.coe.{1, 1, 1} (Function.Embedding.{1, 1} Nat Nat) Nat (fun (a : Nat) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Nat) => Nat) a) (EmbeddingLike.toFunLike.{1, 1, 1} (Function.Embedding.{1, 1} Nat Nat) Nat Nat (Function.instEmbeddingLikeEmbedding.{1, 1} Nat Nat)) (RelEmbedding.toEmbedding.{0, 0} Nat Nat (fun (x._@.Mathlib.Order.Hom.Basic._hyg.744 : Nat) (x._@.Mathlib.Order.Hom.Basic._hyg.746 : Nat) => LE.le.{0} Nat instLENat x._@.Mathlib.Order.Hom.Basic._hyg.744 x._@.Mathlib.Order.Hom.Basic._hyg.746) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.759 : Nat) (x._@.Mathlib.Order.Hom.Basic._hyg.761 : Nat) => LE.le.{0} Nat instLENat x._@.Mathlib.Order.Hom.Basic._hyg.759 x._@.Mathlib.Order.Hom.Basic._hyg.761) (Nat.orderEmbeddingOfSet s _inst_1 (fun (a : Nat) => n a))) n_1) (Subtype.val.{1} Nat (fun (x : Nat) => Membership.mem.{0, 0} Nat (Set.{0} Nat) (Set.instMembershipSet.{0} Nat) x s) (Nat.Subtype.ofNat s (fun (a : Nat) => n a) _inst_1 n_1))
+Case conversion may be inaccurate. Consider using '#align nat.order_embedding_of_set_apply Nat.orderEmbeddingOfSet_applyₓ'. -/
 theorem orderEmbeddingOfSet_apply {n : ℕ} : orderEmbeddingOfSet s n = Subtype.ofNat s n :=
   rfl
 #align nat.order_embedding_of_set_apply Nat.orderEmbeddingOfSet_apply
 
+/- warning: nat.subtype.order_iso_of_nat_apply -> Nat.Subtype.orderIsoOfNat_apply is a dubious translation:
+lean 3 declaration is
+  forall {s : Set.{0} Nat} [_inst_1 : Infinite.{1} (coeSort.{1, 2} (Set.{0} Nat) Type (Set.hasCoeToSort.{0} Nat) s)] {n : Nat}, Eq.{1} (coeSort.{1, 2} (Set.{0} Nat) Type (Set.hasCoeToSort.{0} Nat) s) (coeFn.{1, 1} (OrderIso.{0, 0} Nat (coeSort.{1, 2} (Set.{0} Nat) Type (Set.hasCoeToSort.{0} Nat) s) Nat.hasLe (Subtype.hasLe.{0} Nat Nat.hasLe (fun (x : Nat) => Membership.Mem.{0, 0} Nat (Set.{0} Nat) (Set.hasMem.{0} Nat) x s))) (fun (_x : RelIso.{0, 0} Nat (coeSort.{1, 2} (Set.{0} Nat) Type (Set.hasCoeToSort.{0} Nat) s) (LE.le.{0} Nat Nat.hasLe) (LE.le.{0} (coeSort.{1, 2} (Set.{0} Nat) Type (Set.hasCoeToSort.{0} Nat) s) (Subtype.hasLe.{0} Nat Nat.hasLe (fun (x : Nat) => Membership.Mem.{0, 0} Nat (Set.{0} Nat) (Set.hasMem.{0} Nat) x s)))) => Nat -> (coeSort.{1, 2} (Set.{0} Nat) Type (Set.hasCoeToSort.{0} Nat) s)) (RelIso.hasCoeToFun.{0, 0} Nat (coeSort.{1, 2} (Set.{0} Nat) Type (Set.hasCoeToSort.{0} Nat) s) (LE.le.{0} Nat Nat.hasLe) (LE.le.{0} (coeSort.{1, 2} (Set.{0} Nat) Type (Set.hasCoeToSort.{0} Nat) s) (Subtype.hasLe.{0} Nat Nat.hasLe (fun (x : Nat) => Membership.Mem.{0, 0} Nat (Set.{0} Nat) (Set.hasMem.{0} Nat) x s)))) (Nat.Subtype.orderIsoOfNat s _inst_1) n) (Nat.Subtype.ofNat s (fun (a : Nat) => Classical.propDecidable ((fun (_x : Nat) => Membership.Mem.{0, 0} Nat (Set.{0} Nat) (Set.hasMem.{0} Nat) _x s) a)) _inst_1 n)
+but is expected to have type
+  forall {s : Set.{0} Nat} [_inst_1 : Infinite.{1} (Set.Elem.{0} Nat s)] [n : DecidablePred.{1} Nat (fun (x._@.Mathlib.Order.OrderIsoNat._hyg.1119 : Nat) => Membership.mem.{0, 0} Nat (Set.{0} Nat) (Set.instMembershipSet.{0} Nat) x._@.Mathlib.Order.OrderIsoNat._hyg.1119 s)] {n_1 : Nat}, Eq.{1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Nat) => Set.Elem.{0} Nat s) n_1) (FunLike.coe.{1, 1, 1} (Function.Embedding.{1, 1} Nat (Set.Elem.{0} Nat s)) Nat (fun (a : Nat) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Nat) => Set.Elem.{0} Nat s) a) (EmbeddingLike.toFunLike.{1, 1, 1} (Function.Embedding.{1, 1} Nat (Set.Elem.{0} Nat s)) Nat (Set.Elem.{0} Nat s) (Function.instEmbeddingLikeEmbedding.{1, 1} Nat (Set.Elem.{0} Nat s))) (RelEmbedding.toEmbedding.{0, 0} Nat (Set.Elem.{0} Nat s) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1411 : Nat) (x._@.Mathlib.Order.Hom.Basic._hyg.1413 : Nat) => LE.le.{0} Nat instLENat x._@.Mathlib.Order.Hom.Basic._hyg.1411 x._@.Mathlib.Order.Hom.Basic._hyg.1413) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1426 : Set.Elem.{0} Nat s) (x._@.Mathlib.Order.Hom.Basic._hyg.1428 : Set.Elem.{0} Nat s) => LE.le.{0} (Set.Elem.{0} Nat s) (Subtype.le.{0} Nat instLENat (fun (x : Nat) => Membership.mem.{0, 0} Nat (Set.{0} Nat) (Set.instMembershipSet.{0} Nat) x s)) x._@.Mathlib.Order.Hom.Basic._hyg.1426 x._@.Mathlib.Order.Hom.Basic._hyg.1428) (RelIso.toRelEmbedding.{0, 0} Nat (Set.Elem.{0} Nat s) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1411 : Nat) (x._@.Mathlib.Order.Hom.Basic._hyg.1413 : Nat) => LE.le.{0} Nat instLENat x._@.Mathlib.Order.Hom.Basic._hyg.1411 x._@.Mathlib.Order.Hom.Basic._hyg.1413) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1426 : Set.Elem.{0} Nat s) (x._@.Mathlib.Order.Hom.Basic._hyg.1428 : Set.Elem.{0} Nat s) => LE.le.{0} (Set.Elem.{0} Nat s) (Subtype.le.{0} Nat instLENat (fun (x : Nat) => Membership.mem.{0, 0} Nat (Set.{0} Nat) (Set.instMembershipSet.{0} Nat) x s)) x._@.Mathlib.Order.Hom.Basic._hyg.1426 x._@.Mathlib.Order.Hom.Basic._hyg.1428) (Nat.Subtype.orderIsoOfNat s _inst_1))) n_1) (Nat.Subtype.ofNat s (fun (a : Nat) => n a) _inst_1 n_1)
+Case conversion may be inaccurate. Consider using '#align nat.subtype.order_iso_of_nat_apply Nat.Subtype.orderIsoOfNat_applyₓ'. -/
 @[simp]
 theorem Subtype.orderIsoOfNat_apply {n : ℕ} : Subtype.orderIsoOfNat s n = Subtype.ofNat s n := by
   simp [subtype.order_iso_of_nat]
@@ -149,10 +205,22 @@ theorem Subtype.orderIsoOfNat_apply {n : ℕ} : Subtype.orderIsoOfNat s n = Subt
 
 variable (s)
 
+/- warning: nat.order_embedding_of_set_range -> Nat.orderEmbeddingOfSet_range is a dubious translation:
+lean 3 declaration is
+  forall (s : Set.{0} Nat) [_inst_1 : Infinite.{1} (coeSort.{1, 2} (Set.{0} Nat) Type (Set.hasCoeToSort.{0} Nat) s)], Eq.{1} (Set.{0} Nat) (Set.range.{0, 1} Nat Nat (coeFn.{1, 1} (OrderEmbedding.{0, 0} Nat Nat Nat.hasLe Nat.hasLe) (fun (_x : RelEmbedding.{0, 0} Nat Nat (LE.le.{0} Nat Nat.hasLe) (LE.le.{0} Nat Nat.hasLe)) => Nat -> Nat) (RelEmbedding.hasCoeToFun.{0, 0} Nat Nat (LE.le.{0} Nat Nat.hasLe) (LE.le.{0} Nat Nat.hasLe)) (Nat.orderEmbeddingOfSet s _inst_1 (fun (a : Nat) => Classical.propDecidable ((fun (_x : Nat) => Membership.Mem.{0, 0} Nat (Set.{0} Nat) (Set.hasMem.{0} Nat) _x s) a))))) s
+but is expected to have type
+  forall (s : Set.{0} Nat) [_inst_1 : Infinite.{1} (Set.Elem.{0} Nat s)] [dP : DecidablePred.{1} Nat (fun (x._@.Mathlib.Order.OrderIsoNat._hyg.1254 : Nat) => Membership.mem.{0, 0} Nat (Set.{0} Nat) (Set.instMembershipSet.{0} Nat) x._@.Mathlib.Order.OrderIsoNat._hyg.1254 s)], Eq.{1} (Set.{0} Nat) (Set.range.{0, 1} Nat Nat (FunLike.coe.{1, 1, 1} (Function.Embedding.{1, 1} Nat Nat) Nat (fun (a : Nat) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Nat) => Nat) a) (EmbeddingLike.toFunLike.{1, 1, 1} (Function.Embedding.{1, 1} Nat Nat) Nat Nat (Function.instEmbeddingLikeEmbedding.{1, 1} Nat Nat)) (RelEmbedding.toEmbedding.{0, 0} Nat Nat (fun (x._@.Mathlib.Order.Hom.Basic._hyg.744 : Nat) (x._@.Mathlib.Order.Hom.Basic._hyg.746 : Nat) => LE.le.{0} Nat instLENat x._@.Mathlib.Order.Hom.Basic._hyg.744 x._@.Mathlib.Order.Hom.Basic._hyg.746) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.759 : Nat) (x._@.Mathlib.Order.Hom.Basic._hyg.761 : Nat) => LE.le.{0} Nat instLENat x._@.Mathlib.Order.Hom.Basic._hyg.759 x._@.Mathlib.Order.Hom.Basic._hyg.761) (Nat.orderEmbeddingOfSet s _inst_1 (fun (a : Nat) => dP a))))) s
+Case conversion may be inaccurate. Consider using '#align nat.order_embedding_of_set_range Nat.orderEmbeddingOfSet_rangeₓ'. -/
 theorem orderEmbeddingOfSet_range : Set.range (Nat.orderEmbeddingOfSet s) = s :=
   subtype.coe_comp_of_nat_range
 #align nat.order_embedding_of_set_range Nat.orderEmbeddingOfSet_range
 
+/- warning: nat.exists_subseq_of_forall_mem_union -> Nat.exists_subseq_of_forall_mem_union is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} (e : Nat -> α), (forall (n : Nat), Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) (e n) (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s t)) -> (Exists.{1} (OrderEmbedding.{0, 0} Nat Nat Nat.hasLe Nat.hasLe) (fun (g : OrderEmbedding.{0, 0} Nat Nat Nat.hasLe Nat.hasLe) => Or (forall (n : Nat), Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) (e (coeFn.{1, 1} (OrderEmbedding.{0, 0} Nat Nat Nat.hasLe Nat.hasLe) (fun (_x : RelEmbedding.{0, 0} Nat Nat (LE.le.{0} Nat Nat.hasLe) (LE.le.{0} Nat Nat.hasLe)) => Nat -> Nat) (RelEmbedding.hasCoeToFun.{0, 0} Nat Nat (LE.le.{0} Nat Nat.hasLe) (LE.le.{0} Nat Nat.hasLe)) g n)) s) (forall (n : Nat), Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) (e (coeFn.{1, 1} (OrderEmbedding.{0, 0} Nat Nat Nat.hasLe Nat.hasLe) (fun (_x : RelEmbedding.{0, 0} Nat Nat (LE.le.{0} Nat Nat.hasLe) (LE.le.{0} Nat Nat.hasLe)) => Nat -> Nat) (RelEmbedding.hasCoeToFun.{0, 0} Nat Nat (LE.le.{0} Nat Nat.hasLe) (LE.le.{0} Nat Nat.hasLe)) g n)) t)))
+but is expected to have type
+  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} (e : Nat -> α), (forall (n : Nat), Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) (e n) (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s t)) -> (Exists.{1} (OrderEmbedding.{0, 0} Nat Nat instLENat instLENat) (fun (g : OrderEmbedding.{0, 0} Nat Nat instLENat instLENat) => Or (forall (n : Nat), Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) (e (FunLike.coe.{1, 1, 1} (Function.Embedding.{1, 1} Nat Nat) Nat (fun (_x : Nat) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Nat) => Nat) _x) (EmbeddingLike.toFunLike.{1, 1, 1} (Function.Embedding.{1, 1} Nat Nat) Nat Nat (Function.instEmbeddingLikeEmbedding.{1, 1} Nat Nat)) (RelEmbedding.toEmbedding.{0, 0} Nat Nat (fun (x._@.Mathlib.Order.Hom.Basic._hyg.744 : Nat) (x._@.Mathlib.Order.Hom.Basic._hyg.746 : Nat) => LE.le.{0} Nat instLENat x._@.Mathlib.Order.Hom.Basic._hyg.744 x._@.Mathlib.Order.Hom.Basic._hyg.746) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.759 : Nat) (x._@.Mathlib.Order.Hom.Basic._hyg.761 : Nat) => LE.le.{0} Nat instLENat x._@.Mathlib.Order.Hom.Basic._hyg.759 x._@.Mathlib.Order.Hom.Basic._hyg.761) g) n)) s) (forall (n : Nat), Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) (e (FunLike.coe.{1, 1, 1} (Function.Embedding.{1, 1} Nat Nat) Nat (fun (_x : Nat) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Nat) => Nat) _x) (EmbeddingLike.toFunLike.{1, 1, 1} (Function.Embedding.{1, 1} Nat Nat) Nat Nat (Function.instEmbeddingLikeEmbedding.{1, 1} Nat Nat)) (RelEmbedding.toEmbedding.{0, 0} Nat Nat (fun (x._@.Mathlib.Order.Hom.Basic._hyg.744 : Nat) (x._@.Mathlib.Order.Hom.Basic._hyg.746 : Nat) => LE.le.{0} Nat instLENat x._@.Mathlib.Order.Hom.Basic._hyg.744 x._@.Mathlib.Order.Hom.Basic._hyg.746) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.759 : Nat) (x._@.Mathlib.Order.Hom.Basic._hyg.761 : Nat) => LE.le.{0} Nat instLENat x._@.Mathlib.Order.Hom.Basic._hyg.759 x._@.Mathlib.Order.Hom.Basic._hyg.761) g) n)) t)))
+Case conversion may be inaccurate. Consider using '#align nat.exists_subseq_of_forall_mem_union Nat.exists_subseq_of_forall_mem_unionₓ'. -/
 theorem exists_subseq_of_forall_mem_union {s t : Set α} (e : ℕ → α) (he : ∀ n, e n ∈ s ∪ t) :
     ∃ g : ℕ ↪o ℕ, (∀ n, e (g n) ∈ s) ∨ ∀ n, e (g n) ∈ t := by
   classical
@@ -166,6 +234,12 @@ theorem exists_subseq_of_forall_mem_union {s t : Set α} (e : ℕ → α) (he : 
 
 end Nat
 
+/- warning: exists_increasing_or_nonincreasing_subseq' -> exists_increasing_or_nonincreasing_subseq' is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (r : α -> α -> Prop) (f : Nat -> α), Exists.{1} (OrderEmbedding.{0, 0} Nat Nat Nat.hasLe Nat.hasLe) (fun (g : OrderEmbedding.{0, 0} Nat Nat Nat.hasLe Nat.hasLe) => Or (forall (n : Nat), r (f (coeFn.{1, 1} (OrderEmbedding.{0, 0} Nat Nat Nat.hasLe Nat.hasLe) (fun (_x : RelEmbedding.{0, 0} Nat Nat (LE.le.{0} Nat Nat.hasLe) (LE.le.{0} Nat Nat.hasLe)) => Nat -> Nat) (RelEmbedding.hasCoeToFun.{0, 0} Nat Nat (LE.le.{0} Nat Nat.hasLe) (LE.le.{0} Nat Nat.hasLe)) g n)) (f (coeFn.{1, 1} (OrderEmbedding.{0, 0} Nat Nat Nat.hasLe Nat.hasLe) (fun (_x : RelEmbedding.{0, 0} Nat Nat (LE.le.{0} Nat Nat.hasLe) (LE.le.{0} Nat Nat.hasLe)) => Nat -> Nat) (RelEmbedding.hasCoeToFun.{0, 0} Nat Nat (LE.le.{0} Nat Nat.hasLe) (LE.le.{0} Nat Nat.hasLe)) g (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))))) (forall (m : Nat) (n : Nat), (LT.lt.{0} Nat Nat.hasLt m n) -> (Not (r (f (coeFn.{1, 1} (OrderEmbedding.{0, 0} Nat Nat Nat.hasLe Nat.hasLe) (fun (_x : RelEmbedding.{0, 0} Nat Nat (LE.le.{0} Nat Nat.hasLe) (LE.le.{0} Nat Nat.hasLe)) => Nat -> Nat) (RelEmbedding.hasCoeToFun.{0, 0} Nat Nat (LE.le.{0} Nat Nat.hasLe) (LE.le.{0} Nat Nat.hasLe)) g m)) (f (coeFn.{1, 1} (OrderEmbedding.{0, 0} Nat Nat Nat.hasLe Nat.hasLe) (fun (_x : RelEmbedding.{0, 0} Nat Nat (LE.le.{0} Nat Nat.hasLe) (LE.le.{0} Nat Nat.hasLe)) => Nat -> Nat) (RelEmbedding.hasCoeToFun.{0, 0} Nat Nat (LE.le.{0} Nat Nat.hasLe) (LE.le.{0} Nat Nat.hasLe)) g n))))))
+but is expected to have type
+  forall {α : Type.{u1}} (r : α -> α -> Prop) (f : Nat -> α), Exists.{1} (OrderEmbedding.{0, 0} Nat Nat instLENat instLENat) (fun (g : OrderEmbedding.{0, 0} Nat Nat instLENat instLENat) => Or (forall (n : Nat), r (f (FunLike.coe.{1, 1, 1} (Function.Embedding.{1, 1} Nat Nat) Nat (fun (_x : Nat) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Nat) => Nat) _x) (EmbeddingLike.toFunLike.{1, 1, 1} (Function.Embedding.{1, 1} Nat Nat) Nat Nat (Function.instEmbeddingLikeEmbedding.{1, 1} Nat Nat)) (RelEmbedding.toEmbedding.{0, 0} Nat Nat (fun (x._@.Mathlib.Order.Hom.Basic._hyg.744 : Nat) (x._@.Mathlib.Order.Hom.Basic._hyg.746 : Nat) => LE.le.{0} Nat instLENat x._@.Mathlib.Order.Hom.Basic._hyg.744 x._@.Mathlib.Order.Hom.Basic._hyg.746) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.759 : Nat) (x._@.Mathlib.Order.Hom.Basic._hyg.761 : Nat) => LE.le.{0} Nat instLENat x._@.Mathlib.Order.Hom.Basic._hyg.759 x._@.Mathlib.Order.Hom.Basic._hyg.761) g) n)) (f (FunLike.coe.{1, 1, 1} (Function.Embedding.{1, 1} Nat Nat) Nat (fun (_x : Nat) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Nat) => Nat) _x) (EmbeddingLike.toFunLike.{1, 1, 1} (Function.Embedding.{1, 1} Nat Nat) Nat Nat (Function.instEmbeddingLikeEmbedding.{1, 1} Nat Nat)) (RelEmbedding.toEmbedding.{0, 0} Nat Nat (fun (x._@.Mathlib.Order.Hom.Basic._hyg.744 : Nat) (x._@.Mathlib.Order.Hom.Basic._hyg.746 : Nat) => LE.le.{0} Nat instLENat x._@.Mathlib.Order.Hom.Basic._hyg.744 x._@.Mathlib.Order.Hom.Basic._hyg.746) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.759 : Nat) (x._@.Mathlib.Order.Hom.Basic._hyg.761 : Nat) => LE.le.{0} Nat instLENat x._@.Mathlib.Order.Hom.Basic._hyg.759 x._@.Mathlib.Order.Hom.Basic._hyg.761) g) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))) (forall (m : Nat) (n : Nat), (LT.lt.{0} Nat instLTNat m n) -> (Not (r (f (FunLike.coe.{1, 1, 1} (Function.Embedding.{1, 1} Nat Nat) Nat (fun (_x : Nat) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Nat) => Nat) _x) (EmbeddingLike.toFunLike.{1, 1, 1} (Function.Embedding.{1, 1} Nat Nat) Nat Nat (Function.instEmbeddingLikeEmbedding.{1, 1} Nat Nat)) (RelEmbedding.toEmbedding.{0, 0} Nat Nat (fun (x._@.Mathlib.Order.Hom.Basic._hyg.744 : Nat) (x._@.Mathlib.Order.Hom.Basic._hyg.746 : Nat) => LE.le.{0} Nat instLENat x._@.Mathlib.Order.Hom.Basic._hyg.744 x._@.Mathlib.Order.Hom.Basic._hyg.746) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.759 : Nat) (x._@.Mathlib.Order.Hom.Basic._hyg.761 : Nat) => LE.le.{0} Nat instLENat x._@.Mathlib.Order.Hom.Basic._hyg.759 x._@.Mathlib.Order.Hom.Basic._hyg.761) g) m)) (f (FunLike.coe.{1, 1, 1} (Function.Embedding.{1, 1} Nat Nat) Nat (fun (_x : Nat) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Nat) => Nat) _x) (EmbeddingLike.toFunLike.{1, 1, 1} (Function.Embedding.{1, 1} Nat Nat) Nat Nat (Function.instEmbeddingLikeEmbedding.{1, 1} Nat Nat)) (RelEmbedding.toEmbedding.{0, 0} Nat Nat (fun (x._@.Mathlib.Order.Hom.Basic._hyg.744 : Nat) (x._@.Mathlib.Order.Hom.Basic._hyg.746 : Nat) => LE.le.{0} Nat instLENat x._@.Mathlib.Order.Hom.Basic._hyg.744 x._@.Mathlib.Order.Hom.Basic._hyg.746) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.759 : Nat) (x._@.Mathlib.Order.Hom.Basic._hyg.761 : Nat) => LE.le.{0} Nat instLENat x._@.Mathlib.Order.Hom.Basic._hyg.759 x._@.Mathlib.Order.Hom.Basic._hyg.761) g) n))))))
+Case conversion may be inaccurate. Consider using '#align exists_increasing_or_nonincreasing_subseq' exists_increasing_or_nonincreasing_subseq'ₓ'. -/
 theorem exists_increasing_or_nonincreasing_subseq' (r : α → α → Prop) (f : ℕ → α) :
     ∃ g : ℕ ↪o ℕ,
       (∀ n : ℕ, r (f (g n)) (f (g (n + 1)))) ∨ ∀ m n : ℕ, m < n → ¬r (f (g m)) (f (g n)) :=
@@ -205,6 +279,12 @@ theorem exists_increasing_or_nonincreasing_subseq' (r : α → α → Prop) (f :
           Or.intro_left _ fun n => (Nat.find_spec (h (g' n))).2⟩
 #align exists_increasing_or_nonincreasing_subseq' exists_increasing_or_nonincreasing_subseq'
 
+/- warning: exists_increasing_or_nonincreasing_subseq -> exists_increasing_or_nonincreasing_subseq is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (r : α -> α -> Prop) [_inst_1 : IsTrans.{u1} α r] (f : Nat -> α), Exists.{1} (OrderEmbedding.{0, 0} Nat Nat Nat.hasLe Nat.hasLe) (fun (g : OrderEmbedding.{0, 0} Nat Nat Nat.hasLe Nat.hasLe) => Or (forall (m : Nat) (n : Nat), (LT.lt.{0} Nat Nat.hasLt m n) -> (r (f (coeFn.{1, 1} (OrderEmbedding.{0, 0} Nat Nat Nat.hasLe Nat.hasLe) (fun (_x : RelEmbedding.{0, 0} Nat Nat (LE.le.{0} Nat Nat.hasLe) (LE.le.{0} Nat Nat.hasLe)) => Nat -> Nat) (RelEmbedding.hasCoeToFun.{0, 0} Nat Nat (LE.le.{0} Nat Nat.hasLe) (LE.le.{0} Nat Nat.hasLe)) g m)) (f (coeFn.{1, 1} (OrderEmbedding.{0, 0} Nat Nat Nat.hasLe Nat.hasLe) (fun (_x : RelEmbedding.{0, 0} Nat Nat (LE.le.{0} Nat Nat.hasLe) (LE.le.{0} Nat Nat.hasLe)) => Nat -> Nat) (RelEmbedding.hasCoeToFun.{0, 0} Nat Nat (LE.le.{0} Nat Nat.hasLe) (LE.le.{0} Nat Nat.hasLe)) g n)))) (forall (m : Nat) (n : Nat), (LT.lt.{0} Nat Nat.hasLt m n) -> (Not (r (f (coeFn.{1, 1} (OrderEmbedding.{0, 0} Nat Nat Nat.hasLe Nat.hasLe) (fun (_x : RelEmbedding.{0, 0} Nat Nat (LE.le.{0} Nat Nat.hasLe) (LE.le.{0} Nat Nat.hasLe)) => Nat -> Nat) (RelEmbedding.hasCoeToFun.{0, 0} Nat Nat (LE.le.{0} Nat Nat.hasLe) (LE.le.{0} Nat Nat.hasLe)) g m)) (f (coeFn.{1, 1} (OrderEmbedding.{0, 0} Nat Nat Nat.hasLe Nat.hasLe) (fun (_x : RelEmbedding.{0, 0} Nat Nat (LE.le.{0} Nat Nat.hasLe) (LE.le.{0} Nat Nat.hasLe)) => Nat -> Nat) (RelEmbedding.hasCoeToFun.{0, 0} Nat Nat (LE.le.{0} Nat Nat.hasLe) (LE.le.{0} Nat Nat.hasLe)) g n))))))
+but is expected to have type
+  forall {α : Type.{u1}} (r : α -> α -> Prop) [_inst_1 : IsTrans.{u1} α r] (f : Nat -> α), Exists.{1} (OrderEmbedding.{0, 0} Nat Nat instLENat instLENat) (fun (g : OrderEmbedding.{0, 0} Nat Nat instLENat instLENat) => Or (forall (m : Nat) (n : Nat), (LT.lt.{0} Nat instLTNat m n) -> (r (f (FunLike.coe.{1, 1, 1} (Function.Embedding.{1, 1} Nat Nat) Nat (fun (_x : Nat) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Nat) => Nat) _x) (EmbeddingLike.toFunLike.{1, 1, 1} (Function.Embedding.{1, 1} Nat Nat) Nat Nat (Function.instEmbeddingLikeEmbedding.{1, 1} Nat Nat)) (RelEmbedding.toEmbedding.{0, 0} Nat Nat (fun (x._@.Mathlib.Order.Hom.Basic._hyg.744 : Nat) (x._@.Mathlib.Order.Hom.Basic._hyg.746 : Nat) => LE.le.{0} Nat instLENat x._@.Mathlib.Order.Hom.Basic._hyg.744 x._@.Mathlib.Order.Hom.Basic._hyg.746) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.759 : Nat) (x._@.Mathlib.Order.Hom.Basic._hyg.761 : Nat) => LE.le.{0} Nat instLENat x._@.Mathlib.Order.Hom.Basic._hyg.759 x._@.Mathlib.Order.Hom.Basic._hyg.761) g) m)) (f (FunLike.coe.{1, 1, 1} (Function.Embedding.{1, 1} Nat Nat) Nat (fun (_x : Nat) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Nat) => Nat) _x) (EmbeddingLike.toFunLike.{1, 1, 1} (Function.Embedding.{1, 1} Nat Nat) Nat Nat (Function.instEmbeddingLikeEmbedding.{1, 1} Nat Nat)) (RelEmbedding.toEmbedding.{0, 0} Nat Nat (fun (x._@.Mathlib.Order.Hom.Basic._hyg.744 : Nat) (x._@.Mathlib.Order.Hom.Basic._hyg.746 : Nat) => LE.le.{0} Nat instLENat x._@.Mathlib.Order.Hom.Basic._hyg.744 x._@.Mathlib.Order.Hom.Basic._hyg.746) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.759 : Nat) (x._@.Mathlib.Order.Hom.Basic._hyg.761 : Nat) => LE.le.{0} Nat instLENat x._@.Mathlib.Order.Hom.Basic._hyg.759 x._@.Mathlib.Order.Hom.Basic._hyg.761) g) n)))) (forall (m : Nat) (n : Nat), (LT.lt.{0} Nat instLTNat m n) -> (Not (r (f (FunLike.coe.{1, 1, 1} (Function.Embedding.{1, 1} Nat Nat) Nat (fun (_x : Nat) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Nat) => Nat) _x) (EmbeddingLike.toFunLike.{1, 1, 1} (Function.Embedding.{1, 1} Nat Nat) Nat Nat (Function.instEmbeddingLikeEmbedding.{1, 1} Nat Nat)) (RelEmbedding.toEmbedding.{0, 0} Nat Nat (fun (x._@.Mathlib.Order.Hom.Basic._hyg.744 : Nat) (x._@.Mathlib.Order.Hom.Basic._hyg.746 : Nat) => LE.le.{0} Nat instLENat x._@.Mathlib.Order.Hom.Basic._hyg.744 x._@.Mathlib.Order.Hom.Basic._hyg.746) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.759 : Nat) (x._@.Mathlib.Order.Hom.Basic._hyg.761 : Nat) => LE.le.{0} Nat instLENat x._@.Mathlib.Order.Hom.Basic._hyg.759 x._@.Mathlib.Order.Hom.Basic._hyg.761) g) m)) (f (FunLike.coe.{1, 1, 1} (Function.Embedding.{1, 1} Nat Nat) Nat (fun (_x : Nat) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Nat) => Nat) _x) (EmbeddingLike.toFunLike.{1, 1, 1} (Function.Embedding.{1, 1} Nat Nat) Nat Nat (Function.instEmbeddingLikeEmbedding.{1, 1} Nat Nat)) (RelEmbedding.toEmbedding.{0, 0} Nat Nat (fun (x._@.Mathlib.Order.Hom.Basic._hyg.744 : Nat) (x._@.Mathlib.Order.Hom.Basic._hyg.746 : Nat) => LE.le.{0} Nat instLENat x._@.Mathlib.Order.Hom.Basic._hyg.744 x._@.Mathlib.Order.Hom.Basic._hyg.746) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.759 : Nat) (x._@.Mathlib.Order.Hom.Basic._hyg.761 : Nat) => LE.le.{0} Nat instLENat x._@.Mathlib.Order.Hom.Basic._hyg.759 x._@.Mathlib.Order.Hom.Basic._hyg.761) g) n))))))
+Case conversion may be inaccurate. Consider using '#align exists_increasing_or_nonincreasing_subseq exists_increasing_or_nonincreasing_subseqₓ'. -/
 /-- This is the infinitary Erdős–Szekeres theorem, and an important lemma in the usual proof of
     Bolzano-Weierstrass for `ℝ`. -/
 theorem exists_increasing_or_nonincreasing_subseq (r : α → α → Prop) [IsTrans α r] (f : ℕ → α) :
@@ -221,6 +301,7 @@ theorem exists_increasing_or_nonincreasing_subseq (r : α → α → Prop) [IsTr
   · exact ⟨g, Or.intro_right _ hnr⟩
 #align exists_increasing_or_nonincreasing_subseq exists_increasing_or_nonincreasing_subseq
 
+#print WellFounded.monotone_chain_condition' /-
 theorem WellFounded.monotone_chain_condition' [Preorder α] :
     WellFounded ((· > ·) : α → α → Prop) ↔ ∀ a : ℕ →o α, ∃ n, ∀ m, n ≤ m → ¬a n < a m :=
   by
@@ -232,8 +313,10 @@ theorem WellFounded.monotone_chain_condition' [Preorder α] :
     obtain ⟨n, hn⟩ := h (a.swap : ((· < ·) : ℕ → ℕ → Prop) →r ((· < ·) : α → α → Prop)).toOrderHom
     exact hn n.succ n.lt_succ_self.le ((RelEmbedding.map_rel_iff _).2 n.lt_succ_self)
 #align well_founded.monotone_chain_condition' WellFounded.monotone_chain_condition'
+-/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr ∀ a, «expr∃ , »((n), ∀ (m) (h : «expr ≤ »(n, m)), (_ : exprProp()))]] -/
+#print WellFounded.monotone_chain_condition /-
 /-- The "monotone chain condition" below is sometimes a convenient form of well foundedness. -/
 theorem WellFounded.monotone_chain_condition [PartialOrder α] :
     WellFounded ((· > ·) : α → α → Prop) ↔ ∀ a : ℕ →o α, ∃ n, ∀ m, n ≤ m → a n = a m :=
@@ -244,7 +327,9 @@ theorem WellFounded.monotone_chain_condition [PartialOrder α] :
     rw [lt_iff_le_and_ne]
     simp [a.mono h]
 #align well_founded.monotone_chain_condition WellFounded.monotone_chain_condition
+-/
 
+#print monotonicSequenceLimitIndex /-
 /-- Given an eventually-constant monotone sequence `a₀ ≤ a₁ ≤ a₂ ≤ ...` in a partially-ordered
 type, `monotonic_sequence_limit_index a` is the least natural number `n` for which `aₙ` reaches the
 constant value. For sequences that are not eventually constant, `monotonic_sequence_limit_index a`
@@ -252,13 +337,22 @@ is defined, but is a junk value. -/
 noncomputable def monotonicSequenceLimitIndex [Preorder α] (a : ℕ →o α) : ℕ :=
   infₛ { n | ∀ m, n ≤ m → a n = a m }
 #align monotonic_sequence_limit_index monotonicSequenceLimitIndex
+-/
 
+#print monotonicSequenceLimit /-
 /-- The constant value of an eventually-constant monotone sequence `a₀ ≤ a₁ ≤ a₂ ≤ ...` in a
 partially-ordered type. -/
 noncomputable def monotonicSequenceLimit [Preorder α] (a : ℕ →o α) :=
   a (monotonicSequenceLimitIndex a)
 #align monotonic_sequence_limit monotonicSequenceLimit
+-/
 
+/- warning: well_founded.supr_eq_monotonic_sequence_limit -> WellFounded.supᵢ_eq_monotonicSequenceLimit is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α], (WellFounded.{succ u1} α (GT.gt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))))) -> (forall (a : OrderHom.{0, u1} Nat α (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))), Eq.{succ u1} α (supᵢ.{u1, 1} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) Nat (coeFn.{succ u1, succ u1} (OrderHom.{0, u1} Nat α (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (fun (_x : OrderHom.{0, u1} Nat α (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) => Nat -> α) (OrderHom.hasCoeToFun.{0, u1} Nat α (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) a)) (monotonicSequenceLimit.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) a))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α], (WellFounded.{succ u1} α (fun (x._@.Mathlib.Order.OrderIsoNat._hyg.2887 : α) (x._@.Mathlib.Order.OrderIsoNat._hyg.2889 : α) => GT.gt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) x._@.Mathlib.Order.OrderIsoNat._hyg.2887 x._@.Mathlib.Order.OrderIsoNat._hyg.2889)) -> (forall (a : OrderHom.{0, u1} Nat α (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))), Eq.{succ u1} α (supᵢ.{u1, 1} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) Nat (OrderHom.toFun.{0, u1} Nat α (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) a)) (monotonicSequenceLimit.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) a))
+Case conversion may be inaccurate. Consider using '#align well_founded.supr_eq_monotonic_sequence_limit WellFounded.supᵢ_eq_monotonicSequenceLimitₓ'. -/
 theorem WellFounded.supᵢ_eq_monotonicSequenceLimit [CompleteLattice α]
     (h : WellFounded ((· > ·) : α → α → Prop)) (a : ℕ →o α) : supᵢ a = monotonicSequenceLimit a :=
   by

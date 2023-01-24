@@ -172,25 +172,25 @@ variable {M : Type _} [Monoid M] {a b : M} {u u₁ u₂ : Mˣ}
 theorem pow_right (h : Commute a b) (n : ℕ) : Commute a (b ^ n) :=
   h.pow_right n
 #align commute.pow_right Commute.pow_rightₓ
-#align add_commute.nsmul_right AddCommute.nsmul_right
+#align add_commute.nsmul_right AddCommute.smul_rightₓ
 
 @[simp, to_additive]
 theorem pow_left (h : Commute a b) (n : ℕ) : Commute (a ^ n) b :=
   (h.symm.pow_right n).symm
 #align commute.pow_left Commute.pow_leftₓ
-#align add_commute.nsmul_left AddCommute.nsmul_left
+#align add_commute.nsmul_left AddCommute.smul_leftₓ
 
 @[simp, to_additive]
 theorem pow_pow (h : Commute a b) (m n : ℕ) : Commute (a ^ m) (b ^ n) :=
   (h.pow_left m).pow_right n
 #align commute.pow_pow Commute.pow_powₓ
-#align add_commute.nsmul_nsmul AddCommute.nsmul_nsmul
+#align add_commute.nsmul_nsmul AddCommute.smul_smulₓ
 
 @[simp, to_additive]
 theorem self_pow (a : M) (n : ℕ) : Commute a (a ^ n) :=
   (Commute.refl a).pow_right n
 #align commute.self_pow Commute.self_powₓ
-#align add_commute.self_nsmul AddCommute.self_nsmul
+#align add_commute.self_nsmul AddCommute.self_smulₓ
 
 /- warning: commute.pow_self -> Commute.pow_self is a dubious translation:
 lean 3 declaration is
@@ -207,7 +207,7 @@ theorem pow_self (a : M) (n : ℕ) : Commute (a ^ n) a :=
 theorem pow_pow_self (a : M) (m n : ℕ) : Commute (a ^ m) (a ^ n) :=
   (Commute.refl a).pow_pow m n
 #align commute.pow_pow_self Commute.pow_pow_selfₓ
-#align add_commute.nsmul_nsmul_self AddCommute.nsmul_nsmul_self
+#align add_commute.nsmul_nsmul_self AddCommute.smul_smul_selfₓ
 
 /- warning: pow_succ' -> pow_succ' is a dubious translation:
 lean 3 declaration is

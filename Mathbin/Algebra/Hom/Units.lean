@@ -42,7 +42,7 @@ universe u v w
 theorem Group.isUnit {G} [Group G] (g : G) : IsUnit g :=
   ⟨⟨g, g⁻¹, mul_inv_self g, inv_mul_self g⟩, rfl⟩
 #align group.is_unit Group.isUnit
-#align add_group.is_unit AddGroup.isAddUnit
+#align add_group.is_add_unit AddGroup.isAddUnit
 -/
 
 section MonoidHomClass

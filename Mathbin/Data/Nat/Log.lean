@@ -49,7 +49,7 @@ def log (b : ℕ) : ℕ → ℕ
 theorem log_eq_zero_iff {b n : ℕ} : log b n = 0 ↔ n < b ∨ b ≤ 1 :=
   by
   rw [log, ite_eq_right_iff]
-  simp only [Nat.succ_ne_zero, imp_false, Decidable.not_and_distrib, not_le, not_lt]
+  simp only [Nat.succ_ne_zero, imp_false, Decidable.not_and, not_le, not_lt]
 #align nat.log_eq_zero_iff Nat.log_eq_zero_iff
 -/
 
@@ -308,14 +308,12 @@ theorem log_div_mul_self (b n : ℕ) : log b (n / b * b) = log b n :=
 #align nat.log_div_mul_self Nat.log_div_mul_self
 -/
 
-#print Nat.add_pred_div_lt /-
 private theorem add_pred_div_lt {b n : ℕ} (hb : 1 < b) (hn : 2 ≤ n) : (n + b - 1) / b < n :=
   by
   rw [div_lt_iff_lt_mul (zero_lt_one.trans hb), ← succ_le_iff, ← pred_eq_sub_one,
     succ_pred_eq_of_pos (add_pos (zero_lt_one.trans hn) (zero_lt_one.trans hb))]
   exact add_le_mul hn hb
-#align nat.add_pred_div_lt Nat.add_pred_div_lt
--/
+#align nat.add_pred_div_lt nat.add_pred_div_lt
 
 /-! ### Ceil logarithm -/
 

@@ -238,8 +238,6 @@ theorem or_inl {a b : Bool} (H : a) : a || b := by simp [H]
 #align bool.bor_inl Bool.or_inl
 -/
 
-/- warning: bool.bor_inr clashes with bool.bot_inr -> Bool.or_inr
-Case conversion may be inaccurate. Consider using '#align bool.bor_inr Bool.or_inrₓ'. -/
 #print Bool.or_inr /-
 theorem or_inr {a b : Bool} (H : b) : a || b := by simp [H]
 #align bool.bor_inr Bool.or_inr

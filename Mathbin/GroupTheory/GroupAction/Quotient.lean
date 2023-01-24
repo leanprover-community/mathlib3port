@@ -245,7 +245,7 @@ noncomputable def selfEquivSigmaOrbitsQuotientStabilizer' {φ : Ω → β}
   calc
     β ≃ Σω : Ω, orbitRel.Quotient.orbit ω := selfEquivSigmaOrbits' α β
     _ ≃ Σω : Ω, α ⧸ stabilizer α (φ ω) :=
-      Equiv.sigmaCongrRight fun ω =>
+      Equiv.sigmaCongrRight_trans fun ω =>
         (Equiv.Set.ofEq <| orbitRel.Quotient.orbit_eq_orbit_out _ hφ).trans <|
           orbitEquivQuotientStabilizer α (φ ω)
     
@@ -310,11 +310,11 @@ noncomputable def sigmaFixedByEquivOrbitsProdGroup : (Σa : α, fixedBy α β a)
     _ ≃ Σω : Ω, Σb : orbit α ω.out', stabilizer α (b : β) :=
       Equiv.sigmaAssoc fun (ω : Ω) (b : orbit α ω.out') => stabilizer α (b : β)
     _ ≃ Σω : Ω, Σb : orbit α ω.out', stabilizer α ω.out' :=
-      Equiv.sigmaCongrRight fun ω =>
-        Equiv.sigmaCongrRight fun ⟨b, hb⟩ => (stabilizerEquivStabilizerOfOrbitRel hb).toEquiv
+      Equiv.sigmaCongrRight_trans fun ω =>
+        Equiv.sigmaCongrRight_trans fun ⟨b, hb⟩ => (stabilizerEquivStabilizerOfOrbitRel hb).toEquiv
     _ ≃ Σω : Ω, orbit α ω.out' × stabilizer α ω.out' :=
-      Equiv.sigmaCongrRight fun ω => Equiv.sigmaEquivProd _ _
-    _ ≃ Σω : Ω, α := Equiv.sigmaCongrRight fun ω => orbitProdStabilizerEquivGroup α ω.out'
+      Equiv.sigmaCongrRight_trans fun ω => Equiv.sigmaEquivProd _ _
+    _ ≃ Σω : Ω, α := Equiv.sigmaCongrRight_trans fun ω => orbitProdStabilizerEquivGroup α ω.out'
     _ ≃ Ω × α := Equiv.sigmaEquivProd Ω α
     
 #align mul_action.sigma_fixed_by_equiv_orbits_prod_group MulAction.sigmaFixedByEquivOrbitsProdGroup

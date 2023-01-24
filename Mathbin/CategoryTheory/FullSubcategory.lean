@@ -71,8 +71,7 @@ def InducedCategory : Type u₁ :=
 
 variable {D}
 
-/- warning: category_theory.induced_category.has_coe_to_sort clashes with category_theory.InducedCategory.has_coe_to_sort -> CategoryTheory.InducedCategory.hasCoeToSort
-warning: category_theory.induced_category.has_coe_to_sort -> CategoryTheory.InducedCategory.hasCoeToSort is a dubious translation:
+/- warning: category_theory.induced_category.has_coe_to_sort -> CategoryTheory.InducedCategory.hasCoeToSort is a dubious translation:
 lean 3 declaration is
   forall {C : Type.{u₁}} {D : Type.{u₂}} [_inst_1 : CategoryTheory.Category.{v, u₂} D] (F : C -> D) {α : Sort.{u_1}} [_inst_2 : CoeSort.{succ u₂, u_1} D α], CoeSort.{succ u₁, u_1} (CategoryTheory.InducedCategory.{v, u₁, u₂} C D _inst_1 F) α
 but is expected to have type
@@ -83,8 +82,6 @@ instance InducedCategory.hasCoeToSort {α : Sort _} [CoeSort D α] :
   ⟨fun c => ↥(F c)⟩
 #align category_theory.induced_category.has_coe_to_sort CategoryTheory.InducedCategory.hasCoeToSort
 
-/- warning: category_theory.induced_category.category clashes with category_theory.InducedCategory.category -> CategoryTheory.InducedCategory.category
-Case conversion may be inaccurate. Consider using '#align category_theory.induced_category.category CategoryTheory.InducedCategory.categoryₓ'. -/
 #print CategoryTheory.InducedCategory.category /-
 instance InducedCategory.category : Category.{v} (InducedCategory D F)
     where
@@ -106,15 +103,11 @@ def inducedFunctor : InducedCategory D F ⥤ D
 #align category_theory.induced_functor CategoryTheory.inducedFunctor
 -/
 
-/- warning: category_theory.induced_category.full clashes with category_theory.InducedCategory.full -> CategoryTheory.InducedCategory.full
-Case conversion may be inaccurate. Consider using '#align category_theory.induced_category.full CategoryTheory.InducedCategory.fullₓ'. -/
 #print CategoryTheory.InducedCategory.full /-
 instance InducedCategory.full : Full (inducedFunctor F) where preimage x y f := f
 #align category_theory.induced_category.full CategoryTheory.InducedCategory.full
 -/
 
-/- warning: category_theory.induced_category.faithful clashes with category_theory.InducedCategory.faithful -> CategoryTheory.InducedCategory.faithful
-Case conversion may be inaccurate. Consider using '#align category_theory.induced_category.faithful CategoryTheory.InducedCategory.faithfulₓ'. -/
 #print CategoryTheory.InducedCategory.faithful /-
 instance InducedCategory.faithful : Faithful (inducedFunctor F) where
 #align category_theory.induced_category.faithful CategoryTheory.InducedCategory.faithful

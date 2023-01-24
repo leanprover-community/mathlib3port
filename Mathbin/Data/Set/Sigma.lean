@@ -25,21 +25,33 @@ namespace Set
 variable {ι ι' : Type _} {α β : ι → Type _} {s s₁ s₂ : Set ι} {t t₁ t₂ : ∀ i, Set (α i)}
   {u : Set (Σi, α i)} {x : Σi, α i} {i j : ι} {a : α i}
 
+/- warning: set.range_sigma_mk -> Set.range_sigmaMk is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} (i : ι), Eq.{succ (max u1 u2)} (Set.{max u1 u2} (Sigma.{u1, u2} ι α)) (Set.range.{max u1 u2, succ u2} (Sigma.{u1, u2} ι α) (α i) (Sigma.mk.{u1, u2} ι α i)) (Set.preimage.{max u1 u2, u1} (Sigma.{u1, u2} ι α) ι (Sigma.fst.{u1, u2} ι α) (Singleton.singleton.{u1, u1} ι (Set.{u1} ι) (Set.hasSingleton.{u1} ι) i))
+but is expected to have type
+  forall {ι : Type.{u2}} {α : ι -> Type.{u1}} (i : ι), Eq.{max (succ u2) (succ u1)} (Set.{max u2 u1} (Sigma.{u2, u1} ι α)) (Set.range.{max u2 u1, succ u1} (Sigma.{u2, u1} ι α) (α i) (Sigma.mk.{u2, u1} ι α i)) (Set.preimage.{max u1 u2, u2} (Sigma.{u2, u1} ι α) ι (Sigma.fst.{u2, u1} ι α) (Singleton.singleton.{u2, u2} ι (Set.{u2} ι) (Set.instSingletonSet.{u2} ι) i))
+Case conversion may be inaccurate. Consider using '#align set.range_sigma_mk Set.range_sigmaMkₓ'. -/
 @[simp]
-theorem range_sigma_mk (i : ι) : range (Sigma.mk i : α i → Sigma α) = Sigma.fst ⁻¹' {i} :=
+theorem range_sigmaMk (i : ι) : range (Sigma.mk i : α i → Sigma α) = Sigma.fst ⁻¹' {i} :=
   by
   apply subset.antisymm
   · rintro _ ⟨b, rfl⟩
     simp
   · rintro ⟨x, y⟩ (rfl | _)
     exact mem_range_self y
-#align set.range_sigma_mk Set.range_sigma_mk
+#align set.range_sigma_mk Set.range_sigmaMk
 
-theorem preimage_image_sigma_mk_of_ne (h : i ≠ j) (s : Set (α j)) :
+/- warning: set.preimage_image_sigma_mk_of_ne -> Set.preimage_image_sigmaMk_of_ne is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} {i : ι} {j : ι}, (Ne.{succ u1} ι i j) -> (forall (s : Set.{u2} (α j)), Eq.{succ u2} (Set.{u2} (α i)) (Set.preimage.{u2, max u1 u2} (α i) (Sigma.{u1, u2} ι (fun {j : ι} => α j)) (Sigma.mk.{u1, u2} ι (fun {j : ι} => α j) i) (Set.image.{u2, max u1 u2} (α j) (Sigma.{u1, u2} ι (fun {j : ι} => α j)) (Sigma.mk.{u1, u2} ι (fun {j : ι} => α j) j) s)) (EmptyCollection.emptyCollection.{u2} (Set.{u2} (α i)) (Set.hasEmptyc.{u2} (α i))))
+but is expected to have type
+  forall {ι : Type.{u2}} {α : ι -> Type.{u1}} {i : ι} {j : ι}, (Ne.{succ u2} ι i j) -> (forall (s : Set.{u1} (α j)), Eq.{succ u1} (Set.{u1} (α i)) (Set.preimage.{u1, max u2 u1} (α i) (Sigma.{u2, u1} ι α) (Sigma.mk.{u2, u1} ι α i) (Set.image.{u1, max u2 u1} (α j) (Sigma.{u2, u1} ι α) (Sigma.mk.{u2, u1} ι α j) s)) (EmptyCollection.emptyCollection.{u1} (Set.{u1} (α i)) (Set.instEmptyCollectionSet.{u1} (α i))))
+Case conversion may be inaccurate. Consider using '#align set.preimage_image_sigma_mk_of_ne Set.preimage_image_sigmaMk_of_neₓ'. -/
+theorem preimage_image_sigmaMk_of_ne (h : i ≠ j) (s : Set (α j)) :
     Sigma.mk i ⁻¹' (Sigma.mk j '' s) = ∅ := by
   ext x
   simp [h.symm]
-#align set.preimage_image_sigma_mk_of_ne Set.preimage_image_sigma_mk_of_ne
+#align set.preimage_image_sigma_mk_of_ne Set.preimage_image_sigmaMk_of_ne
 
 theorem image_sigma_mk_preimage_sigma_map_subset {β : ι' → Type _} (f : ι → ι')
     (g : ∀ i, α i → β (f i)) (i : ι) (s : Set (β (f i))) :
@@ -47,7 +59,13 @@ theorem image_sigma_mk_preimage_sigma_map_subset {β : ι' → Type _} (f : ι �
   image_subset_iff.2 fun x hx => ⟨g i x, hx, rfl⟩
 #align set.image_sigma_mk_preimage_sigma_map_subset Set.image_sigma_mk_preimage_sigma_map_subset
 
-theorem image_sigma_mk_preimage_sigma_map {β : ι' → Type _} {f : ι → ι'} (hf : Function.Injective f)
+/- warning: set.image_sigma_mk_preimage_sigma_map -> Set.image_sigmaMk_preimage_sigmaMap is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {ι' : Type.{u2}} {α : ι -> Type.{u3}} {β : ι' -> Type.{u4}} {f : ι -> ι'}, (Function.Injective.{succ u1, succ u2} ι ι' f) -> (forall (g : forall (i : ι), (α i) -> (β (f i))) (i : ι) (s : Set.{u4} (β (f i))), Eq.{succ (max u1 u3)} (Set.{max u1 u3} (Sigma.{u1, u3} ι (fun (i : ι) => α i))) (Set.image.{u3, max u1 u3} (α i) (Sigma.{u1, u3} ι (fun (i : ι) => α i)) (Sigma.mk.{u1, u3} ι (fun (i : ι) => α i) i) (Set.preimage.{u3, u4} (α i) (β (f i)) (g i) s)) (Set.preimage.{max u1 u3, max u2 u4} (Sigma.{u1, u3} ι (fun (i : ι) => α i)) (Sigma.{u2, u4} ι' β) (Sigma.map.{u1, u2, u3, u4} ι ι' (fun (i : ι) => α i) β f g) (Set.image.{u4, max u2 u4} (β (f i)) (Sigma.{u2, u4} ι' β) (Sigma.mk.{u2, u4} ι' β (f i)) s)))
+but is expected to have type
+  forall {ι : Type.{u3}} {ι' : Type.{u2}} {α : ι -> Type.{u1}} {β : ι' -> Type.{u4}} {f : ι -> ι'}, (Function.Injective.{succ u3, succ u2} ι ι' f) -> (forall (g : forall (i : ι), (α i) -> (β (f i))) (i : ι) (s : Set.{u4} (β (f i))), Eq.{max (succ u3) (succ u1)} (Set.{max u3 u1} (Sigma.{u3, u1} ι α)) (Set.image.{u1, max u3 u1} (α i) (Sigma.{u3, u1} ι α) (Sigma.mk.{u3, u1} ι α i) (Set.preimage.{u1, u4} (α i) (β (f i)) (g i) s)) (Set.preimage.{max u1 u3, max u4 u2} (Sigma.{u3, u1} ι (fun (i : ι) => α i)) (Sigma.{u2, u4} ι' β) (Sigma.map.{u3, u2, u1, u4} ι ι' (fun (i : ι) => α i) β f g) (Set.image.{u4, max u2 u4} (β (f i)) (Sigma.{u2, u4} ι' β) (Sigma.mk.{u2, u4} ι' β (f i)) s)))
+Case conversion may be inaccurate. Consider using '#align set.image_sigma_mk_preimage_sigma_map Set.image_sigmaMk_preimage_sigmaMapₓ'. -/
+theorem image_sigmaMk_preimage_sigmaMap {β : ι' → Type _} {f : ι → ι'} (hf : Function.Injective f)
     (g : ∀ i, α i → β (f i)) (i : ι) (s : Set (β (f i))) :
     Sigma.mk i '' (g i ⁻¹' s) = Sigma.map f g ⁻¹' (Sigma.mk (f i) '' s) :=
   by
@@ -56,7 +74,7 @@ theorem image_sigma_mk_preimage_sigma_map {β : ι' → Type _} {f : ι → ι'}
   simp only [hf.eq_iff, Sigma.map] at hxy
   rcases hxy with ⟨rfl, hxy⟩; rw [hEq_iff_eq] at hxy; subst y
   exact ⟨x, hys, rfl⟩
-#align set.image_sigma_mk_preimage_sigma_map Set.image_sigma_mk_preimage_sigma_map
+#align set.image_sigma_mk_preimage_sigma_map Set.image_sigmaMk_preimage_sigmaMap
 
 #print Set.Sigma /-
 /-- Indexed sum of sets. `s.sigma t` is the set of dependent pairs `⟨i, a⟩` such that `i ∈ s` and
@@ -314,11 +332,17 @@ theorem sigma_preimage_right {g : ∀ i, β i → α i} :
   rfl
 #align set.sigma_preimage_right Set.sigma_preimage_right
 
-theorem preimage_sigma_map_sigma {α' : ι' → Type _} (f : ι → ι') (g : ∀ i, α i → α' (f i))
+/- warning: set.preimage_sigma_map_sigma -> Set.preimage_sigmaMap_sigma is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {ι' : Type.{u2}} {α : ι -> Type.{u3}} {α' : ι' -> Type.{u4}} (f : ι -> ι') (g : forall (i : ι), (α i) -> (α' (f i))) (s : Set.{u2} ι') (t : forall (i : ι'), Set.{u4} (α' i)), Eq.{succ (max u1 u3)} (Set.{max u1 u3} (Sigma.{u1, u3} ι (fun (i : ι) => α i))) (Set.preimage.{max u1 u3, max u2 u4} (Sigma.{u1, u3} ι (fun (i : ι) => α i)) (Sigma.{u2, u4} ι' α') (Sigma.map.{u1, u2, u3, u4} ι ι' (fun (i : ι) => α i) α' f g) (Set.Sigma.{u2, u4} ι' (fun (i : ι') => α' i) s t)) (Set.Sigma.{u1, u3} ι (fun (i : ι) => α i) (Set.preimage.{u1, u2} ι ι' f s) (fun (i : ι) => Set.preimage.{u3, u4} (α i) (α' (f i)) (g i) (t (f i))))
+but is expected to have type
+  forall {ι : Type.{u2}} {ι' : Type.{u3}} {α : ι -> Type.{u1}} {α' : ι' -> Type.{u4}} (f : ι -> ι') (g : forall (i : ι), (α i) -> (α' (f i))) (s : Set.{u3} ι') (t : forall (i : ι'), Set.{u4} (α' i)), Eq.{max (succ u2) (succ u1)} (Set.{max u1 u2} (Sigma.{u2, u1} ι (fun (i : ι) => α i))) (Set.preimage.{max u1 u2, max u4 u3} (Sigma.{u2, u1} ι (fun (i : ι) => α i)) (Sigma.{u3, u4} ι' α') (Sigma.map.{u2, u3, u1, u4} ι ι' (fun (i : ι) => α i) α' f g) (Set.Sigma.{u3, u4} ι' (fun (i : ι') => α' i) s t)) (Set.Sigma.{u2, u1} ι (fun (i : ι) => α i) (Set.preimage.{u2, u3} ι ι' f s) (fun (i : ι) => Set.preimage.{u1, u4} (α i) (α' (f i)) (g i) (t (f i))))
+Case conversion may be inaccurate. Consider using '#align set.preimage_sigma_map_sigma Set.preimage_sigmaMap_sigmaₓ'. -/
+theorem preimage_sigmaMap_sigma {α' : ι' → Type _} (f : ι → ι') (g : ∀ i, α i → α' (f i))
     (s : Set ι') (t : ∀ i, Set (α' i)) :
     Sigma.map f g ⁻¹' s.Sigma t = (f ⁻¹' s).Sigma fun i => g i ⁻¹' t (f i) :=
   rfl
-#align set.preimage_sigma_map_sigma Set.preimage_sigma_map_sigma
+#align set.preimage_sigma_map_sigma Set.preimage_sigmaMap_sigma
 
 /- warning: set.mk_preimage_sigma -> Set.mk_preimage_sigma is a dubious translation:
 lean 3 declaration is
@@ -426,14 +450,22 @@ theorem sigma_eq_empty_iff : s.Sigma t = ∅ ↔ ∀ i ∈ s, t i = ∅ :=
     sigma_nonempty_iff.Not.trans <| by simp only [not_nonempty_iff_eq_empty, not_exists]
 #align set.sigma_eq_empty_iff Set.sigma_eq_empty_iff
 
-theorem image_sigma_mk_subset_sigma_left {a : ∀ i, α i} (ha : ∀ i, a i ∈ t i) :
+#print Set.image_sigmaMk_subset_sigma_left /-
+theorem image_sigmaMk_subset_sigma_left {a : ∀ i, α i} (ha : ∀ i, a i ∈ t i) :
     (fun i => Sigma.mk i (a i)) '' s ⊆ s.Sigma t :=
   image_subset_iff.2 fun i hi => ⟨hi, ha _⟩
-#align set.image_sigma_mk_subset_sigma_left Set.image_sigma_mk_subset_sigma_left
+#align set.image_sigma_mk_subset_sigma_left Set.image_sigmaMk_subset_sigma_left
+-/
 
-theorem image_sigma_mk_subset_sigma_right (hi : i ∈ s) : Sigma.mk i '' t i ⊆ s.Sigma t :=
+/- warning: set.image_sigma_mk_subset_sigma_right -> Set.image_sigmaMk_subset_sigma_right is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} {s : Set.{u1} ι} {t : forall (i : ι), Set.{u2} (α i)} {i : ι}, (Membership.Mem.{u1, u1} ι (Set.{u1} ι) (Set.hasMem.{u1} ι) i s) -> (HasSubset.Subset.{max u1 u2} (Set.{max u1 u2} (Sigma.{u1, u2} ι (fun {i : ι} => α i))) (Set.hasSubset.{max u1 u2} (Sigma.{u1, u2} ι (fun {i : ι} => α i))) (Set.image.{u2, max u1 u2} (α i) (Sigma.{u1, u2} ι (fun {i : ι} => α i)) (Sigma.mk.{u1, u2} ι (fun {i : ι} => α i) i) (t i)) (Set.Sigma.{u1, u2} ι (fun (i : ι) => α i) s t))
+but is expected to have type
+  forall {ι : Type.{u2}} {α : ι -> Type.{u1}} {s : Set.{u2} ι} {t : forall (i : ι), Set.{u1} (α i)} {i : ι}, (Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) i s) -> (HasSubset.Subset.{max u2 u1} (Set.{max u2 u1} (Sigma.{u2, u1} ι α)) (Set.instHasSubsetSet.{max u2 u1} (Sigma.{u2, u1} ι α)) (Set.image.{u1, max u2 u1} (α i) (Sigma.{u2, u1} ι α) (Sigma.mk.{u2, u1} ι α i) (t i)) (Set.Sigma.{u2, u1} ι (fun (i : ι) => α i) s t))
+Case conversion may be inaccurate. Consider using '#align set.image_sigma_mk_subset_sigma_right Set.image_sigmaMk_subset_sigma_rightₓ'. -/
+theorem image_sigmaMk_subset_sigma_right (hi : i ∈ s) : Sigma.mk i '' t i ⊆ s.Sigma t :=
   image_subset_iff.2 fun a => And.intro hi
-#align set.image_sigma_mk_subset_sigma_right Set.image_sigma_mk_subset_sigma_right
+#align set.image_sigma_mk_subset_sigma_right Set.image_sigmaMk_subset_sigma_right
 
 /- warning: set.sigma_subset_preimage_fst -> Set.sigma_subset_preimage_fst is a dubious translation:
 lean 3 declaration is

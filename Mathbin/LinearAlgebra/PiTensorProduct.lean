@@ -195,7 +195,7 @@ def liftAddHom (φ : (R × ∀ i, s i) → F)
       ∀ (r : R) (f : ∀ i, s i) (i : ι) (r' : R), φ (r, update f i (r' • f i)) = φ (r' * r, f)) :
     (⨂[R] i, s i) →+ F :=
   (addConGen (PiTensorProduct.Eqv R s)).lift (FreeAddMonoid.lift φ) <|
-    AddCon.add_conGen_le fun x y hxy =>
+    AddCon.addConGen_le fun x y hxy =>
       match x, y, hxy with
       | _, _, eqv.of_zero r' f i hf =>
         (AddCon.ker_rel _).2 <| by simp [FreeAddMonoid.lift_eval_of, C0 r' f i hf]

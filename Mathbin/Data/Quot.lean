@@ -381,18 +381,30 @@ theorem Quotient.lift₂_mk'' {α : Sort _} {β : Sort _} {γ : Sort _} [Setoid 
   rfl
 #align quotient.lift₂_mk Quotient.lift₂_mk''
 
+/- warning: quotient.lift_on_mk -> Quotient.liftOn_mk is a dubious translation:
+lean 3 declaration is
+  forall {α : Sort.{u1}} {β : Sort.{u2}} [s : Setoid.{u1} α] (f : α -> β) (h : forall (a : α) (b : α), (HasEquivₓ.Equiv.{u1} α (setoidHasEquiv.{u1} α s) a b) -> (Eq.{u2} β (f a) (f b))) (x : α), Eq.{u2} β (Quotient.liftOn.{u1, u2} α β s (Quotient.mk''.{u1} α s x) f h) (f x)
+but is expected to have type
+  forall {α : Sort.{u2}} {β : Sort.{u1}} [s : Setoid.{u2} α] (f : α -> β) (h : forall (a : α) (b : α), (HasEquiv.Equiv.{u2, 0} α (instHasEquiv.{u2} α s) a b) -> (Eq.{u1} β (f a) (f b))) (x : α), Eq.{u1} β (Quotient.liftOn.{u2, u1} α β s (Quotient.mk.{u2} α s x) f h) (f x)
+Case conversion may be inaccurate. Consider using '#align quotient.lift_on_mk Quotient.liftOn_mkₓ'. -/
 @[simp]
-theorem Quotient.liftOn_mk'' [s : Setoid α] (f : α → β) (h : ∀ a b : α, a ≈ b → f a = f b) (x : α) :
+theorem Quotient.liftOn_mk [s : Setoid α] (f : α → β) (h : ∀ a b : α, a ≈ b → f a = f b) (x : α) :
     Quotient.liftOn (Quotient.mk'' x) f h = f x :=
   rfl
-#align quotient.lift_on_mk Quotient.liftOn_mk''
+#align quotient.lift_on_mk Quotient.liftOn_mk
 
+/- warning: quotient.lift_on₂_mk -> Quotient.liftOn₂_mk is a dubious translation:
+lean 3 declaration is
+  forall {α : Sort.{u1}} {β : Sort.{u2}} [_inst_1 : Setoid.{u1} α] (f : α -> α -> β) (h : forall (a₁ : α) (a₂ : α) (b₁ : α) (b₂ : α), (HasEquivₓ.Equiv.{u1} α (setoidHasEquiv.{u1} α _inst_1) a₁ b₁) -> (HasEquivₓ.Equiv.{u1} α (setoidHasEquiv.{u1} α _inst_1) a₂ b₂) -> (Eq.{u2} β (f a₁ a₂) (f b₁ b₂))) (x : α) (y : α), Eq.{u2} β (Quotient.liftOn₂.{u1, u1, u2} α α β _inst_1 _inst_1 (Quotient.mk''.{u1} α _inst_1 x) (Quotient.mk''.{u1} α _inst_1 y) f h) (f x y)
+but is expected to have type
+  forall {α : Sort.{u2}} {β : Sort.{u1}} [_inst_1 : Setoid.{u2} α] (f : α -> α -> β) (h : forall (a₁ : α) (a₂ : α) (b₁ : α) (b₂ : α), (HasEquiv.Equiv.{u2, 0} α (instHasEquiv.{u2} α _inst_1) a₁ b₁) -> (HasEquiv.Equiv.{u2, 0} α (instHasEquiv.{u2} α _inst_1) a₂ b₂) -> (Eq.{u1} β (f a₁ a₂) (f b₁ b₂))) (x : α) (y : α), Eq.{u1} β (Quotient.liftOn₂.{u2, u2, u1} α α β _inst_1 _inst_1 (Quotient.mk.{u2} α _inst_1 x) (Quotient.mk.{u2} α _inst_1 y) f h) (f x y)
+Case conversion may be inaccurate. Consider using '#align quotient.lift_on₂_mk Quotient.liftOn₂_mkₓ'. -/
 @[simp]
-theorem Quotient.liftOn₂_mk'' {α : Sort _} {β : Sort _} [Setoid α] (f : α → α → β)
+theorem Quotient.liftOn₂_mk {α : Sort _} {β : Sort _} [Setoid α] (f : α → α → β)
     (h : ∀ a₁ a₂ b₁ b₂ : α, a₁ ≈ b₁ → a₂ ≈ b₂ → f a₁ a₂ = f b₁ b₂) (x y : α) :
     Quotient.liftOn₂ (Quotient.mk'' x) (Quotient.mk'' y) f h = f x y :=
   rfl
-#align quotient.lift_on₂_mk Quotient.liftOn₂_mk''
+#align quotient.lift_on₂_mk Quotient.liftOn₂_mk
 
 #print surjective_quot_mk /-
 /-- `quot.mk r` is a surjective function. -/
@@ -869,11 +881,17 @@ protected def hrecOn' {φ : Quotient s₁ → Sort _} (qa : Quotient s₁) (f : 
 #align quotient.hrec_on' Quotient.hrecOn'
 -/
 
+/- warning: quotient.hrec_on'_mk' -> Quotient.hrecOn'_mk'' is a dubious translation:
+lean 3 declaration is
+  forall {α : Sort.{u1}} {s₁ : Setoid.{u1} α} {φ : (Quotient.{u1} α s₁) -> Sort.{u2}} (f : forall (a : α), φ (Quotient.mk'.{u1} α s₁ a)) (c : forall (a₁ : α) (a₂ : α), (HasEquivₓ.Equiv.{u1} α (setoidHasEquiv.{u1} α s₁) a₁ a₂) -> (HEq.{u2} (φ (Quotient.mk'.{u1} α s₁ a₁)) (f a₁) (φ (Quotient.mk'.{u1} α s₁ a₂)) (f a₂))) (x : α), Eq.{u2} (φ (Quotient.mk'.{u1} α s₁ x)) (Quotient.hrecOn'.{u1, u2} α s₁ φ (Quotient.mk'.{u1} α s₁ x) f c) (f x)
+but is expected to have type
+  forall {α : Sort.{u2}} {s₁ : Setoid.{u2} α} {φ : (Quotient.{u2} α s₁) -> Sort.{u1}} (f : forall (a : α), φ (Quotient.mk''.{u2} α s₁ a)) (c : forall (a₁ : α) (a₂ : α), (HasEquiv.Equiv.{u2, 0} α (instHasEquiv.{u2} α s₁) a₁ a₂) -> (HEq.{u1} (φ (Quotient.mk''.{u2} α s₁ a₁)) (f a₁) (φ (Quotient.mk''.{u2} α s₁ a₂)) (f a₂))) (x : α), Eq.{u1} (φ (Quotient.mk''.{u2} α s₁ x)) (Quotient.hrecOn'.{u2, u1} α s₁ φ (Quotient.mk''.{u2} α s₁ x) f c) (f x)
+Case conversion may be inaccurate. Consider using '#align quotient.hrec_on'_mk' Quotient.hrecOn'_mk''ₓ'. -/
 @[simp]
-theorem hrecOn'_mk' {φ : Quotient s₁ → Sort _} (f : ∀ a, φ (Quotient.mk' a))
+theorem hrecOn'_mk'' {φ : Quotient s₁ → Sort _} (f : ∀ a, φ (Quotient.mk' a))
     (c : ∀ a₁ a₂, a₁ ≈ a₂ → HEq (f a₁) (f a₂)) (x : α) : (Quotient.mk' x).hrecOn' f c = f x :=
   rfl
-#align quotient.hrec_on'_mk' Quotient.hrecOn'_mk'
+#align quotient.hrec_on'_mk' Quotient.hrecOn'_mk''
 
 #print Quotient.hrecOn₂' /-
 /-- Recursion on two `quotient` arguments `a` and `b`, result type depends on `⟦a⟧` and `⟦b⟧`. -/
@@ -884,13 +902,19 @@ protected def hrecOn₂' {φ : Quotient s₁ → Quotient s₂ → Sort _} (qa :
 #align quotient.hrec_on₂' Quotient.hrecOn₂'
 -/
 
+/- warning: quotient.hrec_on₂'_mk' -> Quotient.hrecOn₂'_mk'' is a dubious translation:
+lean 3 declaration is
+  forall {α : Sort.{u1}} {β : Sort.{u2}} {s₁ : Setoid.{u1} α} {s₂ : Setoid.{u2} β} {φ : (Quotient.{u1} α s₁) -> (Quotient.{u2} β s₂) -> Sort.{u3}} (f : forall (a : α) (b : β), φ (Quotient.mk'.{u1} α s₁ a) (Quotient.mk'.{u2} β s₂ b)) (c : forall (a₁ : α) (b₁ : β) (a₂ : α) (b₂ : β), (HasEquivₓ.Equiv.{u1} α (setoidHasEquiv.{u1} α s₁) a₁ a₂) -> (HasEquivₓ.Equiv.{u2} β (setoidHasEquiv.{u2} β s₂) b₁ b₂) -> (HEq.{u3} (φ (Quotient.mk'.{u1} α s₁ a₁) (Quotient.mk'.{u2} β s₂ b₁)) (f a₁ b₁) (φ (Quotient.mk'.{u1} α s₁ a₂) (Quotient.mk'.{u2} β s₂ b₂)) (f a₂ b₂))) (x : α) (qb : Quotient.{u2} β s₂), Eq.{u3} (φ (Quotient.mk'.{u1} α s₁ x) qb) (Quotient.hrecOn₂'.{u1, u2, u3} α β s₁ s₂ φ (Quotient.mk'.{u1} α s₁ x) qb f c) (Quotient.hrecOn'.{u2, u3} β s₂ (fun (qb : Quotient.{u2} β s₂) => φ (Quotient.mk'.{u1} α s₁ x) qb) qb (f x) (fun (b₁ : β) (b₂ : β) => c x b₁ x b₂ (Setoid.refl.{u1} α s₁ x)))
+but is expected to have type
+  forall {α : Sort.{u3}} {β : Sort.{u2}} {s₁ : Setoid.{u3} α} {s₂ : Setoid.{u2} β} {φ : (Quotient.{u3} α s₁) -> (Quotient.{u2} β s₂) -> Sort.{u1}} (f : forall (a : α) (b : β), φ (Quotient.mk''.{u3} α s₁ a) (Quotient.mk''.{u2} β s₂ b)) (c : forall (a₁ : α) (b₁ : β) (a₂ : α) (b₂ : β), (HasEquiv.Equiv.{u3, 0} α (instHasEquiv.{u3} α s₁) a₁ a₂) -> (HasEquiv.Equiv.{u2, 0} β (instHasEquiv.{u2} β s₂) b₁ b₂) -> (HEq.{u1} (φ (Quotient.mk''.{u3} α s₁ a₁) (Quotient.mk''.{u2} β s₂ b₁)) (f a₁ b₁) (φ (Quotient.mk''.{u3} α s₁ a₂) (Quotient.mk''.{u2} β s₂ b₂)) (f a₂ b₂))) (x : α) (qb : Quotient.{u2} β s₂), Eq.{u1} (φ (Quotient.mk''.{u3} α s₁ x) qb) (Quotient.hrecOn₂'.{u3, u2, u1} α β s₁ s₂ φ (Quotient.mk''.{u3} α s₁ x) qb f c) (Quotient.hrecOn'.{u2, u1} β s₂ (φ (Quotient.mk''.{u3} α s₁ x)) qb (f x) (fun (b₁ : β) (b₂ : β) => c x b₁ x b₂ (Setoid.refl.{u3} α s₁ x)))
+Case conversion may be inaccurate. Consider using '#align quotient.hrec_on₂'_mk' Quotient.hrecOn₂'_mk''ₓ'. -/
 @[simp]
-theorem hrecOn₂'_mk' {φ : Quotient s₁ → Quotient s₂ → Sort _}
+theorem hrecOn₂'_mk'' {φ : Quotient s₁ → Quotient s₂ → Sort _}
     (f : ∀ a b, φ (Quotient.mk' a) (Quotient.mk' b))
     (c : ∀ a₁ b₁ a₂ b₂, a₁ ≈ a₂ → b₁ ≈ b₂ → HEq (f a₁ b₁) (f a₂ b₂)) (x : α) (qb : Quotient s₂) :
     (Quotient.mk' x).hrecOn₂' qb f c = qb.hrecOn' (f x) fun b₁ b₂ => c _ _ _ _ (Setoid.refl _) :=
   rfl
-#align quotient.hrec_on₂'_mk' Quotient.hrecOn₂'_mk'
+#align quotient.hrec_on₂'_mk' Quotient.hrecOn₂'_mk''
 
 #print Quotient.map' /-
 /-- Map a function `f : α → β` that sends equivalent elements to equivalent elements

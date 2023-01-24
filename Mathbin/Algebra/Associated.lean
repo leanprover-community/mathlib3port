@@ -276,8 +276,7 @@ theorem not_dvd_one [CommMonoid α] {p : α} (hp : Irreducible p) : ¬p ∣ 1 :=
   mt (isUnit_of_dvd_one _) hp.not_unit
 #align irreducible.not_dvd_one Irreducible.not_dvd_one
 
-/- warning: irreducible.is_unit_or_is_unit clashes with irreducible.is_unit_or_isUnit -> Irreducible.isUnit_or_isUnit
-warning: irreducible.is_unit_or_is_unit -> Irreducible.isUnit_or_isUnit is a dubious translation:
+/- warning: irreducible.is_unit_or_is_unit -> Irreducible.isUnit_or_isUnit is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : Monoid.{u1} α] {p : α}, (Irreducible.{u1} α _inst_1 p) -> (forall {a : α} {b : α}, (Eq.{succ u1} α p (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1))) a b)) -> (Or (IsUnit.{u1} α _inst_1 a) (IsUnit.{u1} α _inst_1 b)))
 but is expected to have type
@@ -1817,8 +1816,6 @@ end Associates
 
 section CommMonoidWithZero
 
-/- warning: dvd_not_unit.is_unit_of_irreducible_right clashes with dvdNotUnit.is_unit_of_irreducible_right -> DvdNotUnit.isUnit_of_irreducible_right
-Case conversion may be inaccurate. Consider using '#align dvd_not_unit.is_unit_of_irreducible_right DvdNotUnit.isUnit_of_irreducible_rightₓ'. -/
 #print DvdNotUnit.isUnit_of_irreducible_right /-
 theorem DvdNotUnit.isUnit_of_irreducible_right [CommMonoidWithZero α] {p q : α} (h : DvdNotUnit p q)
     (hq : Irreducible q) : IsUnit p :=
