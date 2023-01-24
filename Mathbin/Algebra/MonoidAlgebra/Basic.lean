@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Yury G. Kudryashov, Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.monoid_algebra.basic
-! leanprover-community/mathlib commit 1f0096e6caa61e9c849ec2adbd227e960e9dff58
+! leanprover-community/mathlib commit 8631e2d5ea77f6c13054d9151d82b83069680cb1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -127,11 +127,13 @@ instance : NonUnitalNonAssocSemiring (MonoidAlgebra k G) :=
     mul := (· * ·)
     add := (· + ·)
     left_distrib := fun f g h => by
-      simp only [mul_def, sum_add_index, mul_add, mul_zero, single_zero, single_add,
-        eq_self_iff_true, forall_true_iff, forall₃_true_iff, sum_add]
+      haveI := Classical.decEq G <;>
+        simp only [mul_def, sum_add_index, mul_add, mul_zero, single_zero, single_add,
+          eq_self_iff_true, forall_true_iff, forall₃_true_iff, sum_add]
     right_distrib := fun f g h => by
-      simp only [mul_def, sum_add_index, add_mul, zero_mul, single_zero, single_add,
-        eq_self_iff_true, forall_true_iff, forall₃_true_iff, sum_zero, sum_add]
+      haveI := Classical.decEq G <;>
+        simp only [mul_def, sum_add_index, add_mul, zero_mul, single_zero, single_add,
+          eq_self_iff_true, forall_true_iff, forall₃_true_iff, sum_zero, sum_add]
     zero_mul := fun f => by simp only [mul_def, sum_zero_index]
     mul_zero := fun f => by simp only [mul_def, sum_zero_index, sum_zero] }
 
@@ -1072,11 +1074,13 @@ instance : NonUnitalNonAssocSemiring (AddMonoidAlgebra k G) :=
     mul := (· * ·)
     add := (· + ·)
     left_distrib := fun f g h => by
-      simp only [mul_def, sum_add_index, mul_add, mul_zero, single_zero, single_add,
-        eq_self_iff_true, forall_true_iff, forall₃_true_iff, sum_add]
+      haveI := Classical.decEq G <;>
+        simp only [mul_def, sum_add_index, mul_add, mul_zero, single_zero, single_add,
+          eq_self_iff_true, forall_true_iff, forall₃_true_iff, sum_add]
     right_distrib := fun f g h => by
-      simp only [mul_def, sum_add_index, add_mul, mul_zero, zero_mul, single_zero, single_add,
-        eq_self_iff_true, forall_true_iff, forall₃_true_iff, sum_zero, sum_add]
+      haveI := Classical.decEq G <;>
+        simp only [mul_def, sum_add_index, add_mul, mul_zero, zero_mul, single_zero, single_add,
+          eq_self_iff_true, forall_true_iff, forall₃_true_iff, sum_zero, sum_add]
     zero_mul := fun f => by simp only [mul_def, sum_zero_index]
     mul_zero := fun f => by simp only [mul_def, sum_zero_index, sum_zero]
     nsmul := fun n f => n • f

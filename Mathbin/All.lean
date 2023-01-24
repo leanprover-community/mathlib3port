@@ -1758,7 +1758,7 @@ import Mathbin.FieldTheory.Laurent
 import Mathbin.FieldTheory.Minpoly.Basic
 import Mathbin.FieldTheory.Minpoly.Default
 import Mathbin.FieldTheory.Minpoly.Field
-import Mathbin.FieldTheory.Minpoly.GcdMonoid
+import Mathbin.FieldTheory.Minpoly.IsIntegrallyClosed
 import Mathbin.FieldTheory.MvPolynomial
 import Mathbin.FieldTheory.Normal
 import Mathbin.FieldTheory.PerfectClosure
@@ -2550,7 +2550,8 @@ import Mathbin.RingTheory.Polynomial.Cyclotomic.Basic
 import Mathbin.RingTheory.Polynomial.Cyclotomic.Eval
 import Mathbin.RingTheory.Polynomial.Default
 import Mathbin.RingTheory.Polynomial.Dickson
-import Mathbin.RingTheory.Polynomial.Eisenstein
+import Mathbin.RingTheory.Polynomial.Eisenstein.Basic
+import Mathbin.RingTheory.Polynomial.Eisenstein.IsIntegral
 import Mathbin.RingTheory.Polynomial.GaussLemma
 import Mathbin.RingTheory.Polynomial.Opposites
 import Mathbin.RingTheory.Polynomial.Pochhammer

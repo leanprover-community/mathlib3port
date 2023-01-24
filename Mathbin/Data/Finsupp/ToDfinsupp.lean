@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module data.finsupp.to_dfinsupp
-! leanprover-community/mathlib commit 1f0096e6caa61e9c849ec2adbd227e960e9dff58
+! leanprover-community/mathlib commit 8631e2d5ea77f6c13054d9151d82b83069680cb1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -267,8 +267,6 @@ section Sigma
 /-! ### Stronger versions of `finsupp.split` -/
 noncomputable section
 
-open Classical
-
 variable {η : ι → Type _} {N : Type _} [Semiring R]
 
 open Finsupp
@@ -282,9 +280,10 @@ def sigmaFinsuppEquivDfinsupp [Zero N] : ((Σi, η i) →₀ N) ≃ Π₀ i, η 
         ⟨(splitSupport f : Finset ι).val, fun i =>
           by
           rw [← Finset.mem_def, mem_split_support_iff_nonzero]
-          exact (Decidable.em _).symm⟩⟩
-  invFun f :=
-    by
+          exact (em _).symm⟩⟩
+  invFun f := by
+    haveI := Classical.decEq ι
+    haveI := fun i => Classical.decEq (η i →₀ N)
     refine'
       on_finset (Finset.sigma f.support fun j => (f j).support) (fun ji => f ji.1 ji.2) fun g hg =>
         finset.mem_sigma.mpr ⟨_, mem_support_iff.mpr hg⟩
@@ -313,7 +312,8 @@ theorem sigmaFinsuppEquivDfinsupp_symm_apply [Zero N] (f : Π₀ i, η i →₀ 
 #align sigma_finsupp_equiv_dfinsupp_symm_apply sigmaFinsuppEquivDfinsupp_symm_apply
 
 @[simp]
-theorem sigmaFinsuppEquivDfinsupp_support [Zero N] (f : (Σi, η i) →₀ N) :
+theorem sigmaFinsuppEquivDfinsupp_support [DecidableEq ι] [Zero N]
+    [∀ (i : ι) (x : η i →₀ N), Decidable (x ≠ 0)] (f : (Σi, η i) →₀ N) :
     (sigmaFinsuppEquivDfinsupp f).support = Finsupp.splitSupport f :=
   by
   ext
@@ -322,7 +322,7 @@ theorem sigmaFinsuppEquivDfinsupp_support [Zero N] (f : (Σi, η i) →₀ N) :
 #align sigma_finsupp_equiv_dfinsupp_support sigmaFinsuppEquivDfinsupp_support
 
 @[simp]
-theorem sigmaFinsuppEquivDfinsupp_single [Zero N] (a : Σi, η i) (n : N) :
+theorem sigmaFinsuppEquivDfinsupp_single [DecidableEq ι] [Zero N] (a : Σi, η i) (n : N) :
     sigmaFinsuppEquivDfinsupp (Finsupp.single a n) =
       @Dfinsupp.single _ (fun i => η i →₀ N) _ _ a.1 (Finsupp.single a.2 n) :=
   by
@@ -330,7 +330,7 @@ theorem sigmaFinsuppEquivDfinsupp_single [Zero N] (a : Σi, η i) (n : N) :
   ext (j b)
   by_cases h : i = j
   · subst h
-    simp [split_apply, Finsupp.single_apply]
+    classical simp [split_apply, Finsupp.single_apply]
   suffices Finsupp.single (⟨i, a⟩ : Σi, η i) n ⟨j, b⟩ = 0 by simp [split_apply, dif_neg h, this]
   have H : (⟨i, a⟩ : Σi, η i) ≠ ⟨j, b⟩ := by simp [h]
   rw [Finsupp.single_apply, if_neg H]

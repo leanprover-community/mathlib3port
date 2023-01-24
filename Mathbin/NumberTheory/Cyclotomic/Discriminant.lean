@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module number_theory.cyclotomic.discriminant
-! leanprover-community/mathlib commit 1f0096e6caa61e9c849ec2adbd227e960e9dff58
+! leanprover-community/mathlib commit 8631e2d5ea77f6c13054d9151d82b83069680cb1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -50,9 +50,9 @@ theorem discr_zeta_eq_discr_zeta_sub_one (hζ : IsPrimitiveRoot ζ n) :
     discr_eq_discr_of_to_matrix_coeff_is_integral _ (fun i j => to_matrix_is_integral H₁ _ _ _ _)
       fun i j => to_matrix_is_integral H₂ _ _ _ _
   · exact hζ.is_integral n.pos
-  · refine' minpoly.gcd_domain_eq_field_fractions' _ (hζ.is_integral n.pos)
+  · refine' minpoly.isIntegrallyClosed_eq_field_fractions' _ (hζ.is_integral n.pos)
   · exact isIntegral_sub (hζ.is_integral n.pos) isIntegral_one
-  · refine' minpoly.gcd_domain_eq_field_fractions' _ _
+  · refine' minpoly.isIntegrallyClosed_eq_field_fractions' _ _
     exact isIntegral_sub (hζ.is_integral n.pos) isIntegral_one
 #align is_primitive_root.discr_zeta_eq_discr_zeta_sub_one IsPrimitiveRoot.discr_zeta_eq_discr_zeta_sub_one
 
@@ -74,42 +74,32 @@ theorem discr_prime_pow_ne_two [IsCyclotomicExtension {p ^ (k + 1)} K L] [hp : F
       (-1) ^ ((p ^ (k + 1) : ℕ).totient / 2) * p ^ ((p : ℕ) ^ k * ((p - 1) * (k + 1) - 1)) :=
   by
   haveI hne := IsCyclotomicExtension.ne_zero' (p ^ (k + 1)) K L
-  have hp2 : p = 2 → 1 ≤ k := by
-    intro hp
-    refine' one_le_iff_ne_zero.2 fun h => _
-    rw [h, hp, zero_add, pow_one] at hk
-    exact hk rfl
-  rw [discr_power_basis_eq_norm, finrank _ hirr, hζ.power_basis_gen _, ←
+  rw [discr_power_basis_eq_norm, finrank L hirr, hζ.power_basis_gen _, ←
     hζ.minpoly_eq_cyclotomic_of_irreducible hirr, PNat.pow_coe,
-    totient_prime_pow hp.out (succ_pos k)]
+    totient_prime_pow hp.out (succ_pos k), succ_sub_one]
+  have hp2 : p = 2 → k ≠ 0 := by
+    rintro rfl rfl
+    exact absurd rfl hk
   congr 1
-  · by_cases hptwo : p = 2
-    · obtain ⟨k₁, hk₁⟩ := Nat.exists_eq_succ_of_ne_zero (one_le_iff_ne_zero.1 (hp2 hptwo))
-      rw [hk₁, succ_sub_one, hptwo, PNat.coe_bit0, PNat.one_coe, succ_sub_succ_eq_sub, tsub_zero,
-        mul_one, pow_succ, mul_assoc, Nat.mul_div_cancel_left _ zero_lt_two,
-        Nat.mul_div_cancel_left _ zero_lt_two]
-      by_cases hk₁zero : k₁ = 0
-      · simp [hk₁zero]
-      obtain ⟨k₂, rfl⟩ := Nat.exists_eq_succ_of_ne_zero hk₁zero
-      rw [pow_succ, mul_assoc, pow_mul (-1 : K), pow_mul (-1 : K), neg_one_sq, one_pow, one_pow]
-    · simp only [succ_sub_succ_eq_sub, tsub_zero]
-      replace hptwo : ↑p ≠ 2
-      · intro h
-        rw [← PNat.one_coe, ← PNat.coe_bit0, PNat.coe_inj] at h
-        exact hptwo h
-      obtain ⟨a, ha⟩ := even_sub_one_of_prime_ne_two hp.out hptwo
-      rw [mul_comm ((p : ℕ) ^ k), mul_assoc, ha]
-      nth_rw 1 [← mul_one a]
-      nth_rw 5 [← mul_one a]
-      rw [← Nat.mul_succ, mul_comm a, mul_assoc, mul_assoc 2, Nat.mul_div_cancel_left _ zero_lt_two,
-        Nat.mul_div_cancel_left _ zero_lt_two, ← mul_assoc, mul_comm (a * (p : ℕ) ^ k), pow_mul, ←
-        ha]
-      congr 1
-      refine'
-        Odd.neg_one_pow
-          (Nat.Even.sub_odd
-            (Nat.succ_le_iff.2 (mul_pos (tsub_pos_iff_lt.2 hp.out.one_lt) (pow_pos hp.out.pos _)))
-            (Even.mul_right (Nat.even_sub_one_of_prime_ne_two hp.out hptwo) _) odd_one)
+  · rcases eq_or_ne p 2 with (rfl | hp2)
+    · rcases Nat.exists_eq_succ_of_ne_zero (hp2 rfl) with ⟨k, rfl⟩
+      rw [PNat.coe_bit0, PNat.one_coe, succ_sub_succ_eq_sub, tsub_zero, mul_one, pow_succ,
+        mul_assoc, Nat.mul_div_cancel_left _ zero_lt_two, Nat.mul_div_cancel_left _ zero_lt_two]
+      cases k
+      · simp
+      ·
+        rw [pow_succ, (even_two.mul_right _).neg_one_pow,
+          ((even_two.mul_right _).mul_right _).neg_one_pow]
+    · replace hp2 : (p : ℕ) ≠ 2
+      · rwa [Ne.def, ← PNat.one_coe, ← PNat.coe_bit0, PNat.coe_inj]
+      have hpo : Odd (p : ℕ) := hp.out.odd_of_ne_two hp2
+      obtain ⟨a, ha⟩ := (hp.out.even_sub_one hp2).two_dvd
+      rw [ha, mul_left_comm, mul_assoc, Nat.mul_div_cancel_left _ two_pos,
+        Nat.mul_div_cancel_left _ two_pos, mul_right_comm, pow_mul, (hpo.pow.mul _).neg_one_pow,
+        pow_mul, hpo.pow.neg_one_pow]
+      refine' Nat.Even.sub_odd _ (even_two_mul _) odd_one
+      rw [mul_left_comm, ← ha]
+      exact one_le_mul (one_le_pow _ _ hp.1.Pos) (succ_le_iff.2 <| tsub_pos_of_lt hp.1.one_lt)
   · have H := congr_arg derivative (cyclotomic_prime_pow_mul_X_pow_sub_one K p k)
     rw [derivative_mul, derivative_sub, derivative_one, sub_zero, derivative_X_pow, C_eq_nat_cast,
       derivative_sub, derivative_one, sub_zero, derivative_X_pow, C_eq_nat_cast, ← PNat.pow_coe,
@@ -121,22 +111,20 @@ theorem discr_prime_pow_ne_two [IsCyclotomicExtension {p ^ (k + 1)} K L] [hp : F
     have hnorm : (norm K) (ζ ^ (p : ℕ) ^ k - 1) = p ^ (p : ℕ) ^ k :=
       by
       by_cases hp : p = 2
-      · exact hζ.pow_sub_one_norm_prime_pow_of_one_le hirr rfl.le (hp2 hp)
-      · exact hζ.pow_sub_one_norm_prime_ne_two hirr rfl.le hp
+      · exact hζ.pow_sub_one_norm_prime_pow_of_ne_zero hirr le_rfl (hp2 hp)
+      · exact hζ.pow_sub_one_norm_prime_ne_two hirr le_rfl hp
     rw [MonoidHom.map_mul, hnorm, MonoidHom.map_mul, ← map_nat_cast (algebraMap K L),
-      Algebra.norm_algebraMap, finrank _ hirr, PNat.pow_coe, totient_prime_pow hp.out (succ_pos k),
+      Algebra.norm_algebraMap, finrank L hirr, PNat.pow_coe, totient_prime_pow hp.out (succ_pos k),
       Nat.sub_one, Nat.pred_succ, ← hζ.minpoly_eq_cyclotomic_of_irreducible hirr, map_pow,
       hζ.norm_eq_one hk hirr, one_pow, mul_one, cast_pow, ← coe_coe, ← pow_mul, ← mul_assoc,
       mul_comm (k + 1), mul_assoc] at H
-    · have := mul_pos (succ_pos k) (tsub_pos_iff_lt.2 hp.out.one_lt)
+    · have := mul_pos (succ_pos k) (tsub_pos_of_lt hp.out.one_lt)
       rw [← succ_pred_eq_of_pos this, mul_succ, pow_add _ _ ((p : ℕ) ^ k)] at H
       replace H := (mul_left_inj' fun h => _).1 H
       · simpa only [← PNat.pow_coe, H, mul_comm _ (k + 1)]
       · replace h := pow_eq_zero h
         rw [coe_coe] at h
         simpa using hne.1
-    all_goals infer_instance
-  all_goals infer_instance
 #align is_cyclotomic_extension.discr_prime_pow_ne_two IsCyclotomicExtension.discr_prime_pow_ne_two
 
 /-- If `p` is a prime and `is_cyclotomic_extension {p ^ (k + 1)} K L`, then the discriminant of

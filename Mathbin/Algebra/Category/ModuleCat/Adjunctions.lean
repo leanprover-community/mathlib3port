@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Johan Commelin
 
 ! This file was ported from Lean 3 source module algebra.category.Module.adjunctions
-! leanprover-community/mathlib commit 1f0096e6caa61e9c849ec2adbd227e960e9dff58
+! leanprover-community/mathlib commit 8631e2d5ea77f6c13054d9151d82b83069680cb1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -244,12 +244,12 @@ instance : Preadditive (FreeCat R C)
   homGroup X Y := Finsupp.addCommGroup
   add_comp' X Y Z f f' g := by
     dsimp
-    rw [Finsupp.sum_add_index] <;> · simp [add_mul]
+    rw [Finsupp.sum_add_index'] <;> · simp [add_mul]
   comp_add' X Y Z f g g' := by
     dsimp
     rw [← Finsupp.sum_add]
     congr ; ext (r h)
-    rw [Finsupp.sum_add_index] <;> · simp [mul_add]
+    rw [Finsupp.sum_add_index'] <;> · simp [mul_add]
 
 instance : Linear R (FreeCat R C)
     where
@@ -303,7 +303,7 @@ def lift (F : C ⥤ D) : FreeCat R C ⥤ D
     · simp only [limits.zero_comp, sum_zero_index]
     · intro f₁ f₂ w₁ w₂
       rw [add_comp]
-      rw [Finsupp.sum_add_index, Finsupp.sum_add_index]
+      rw [Finsupp.sum_add_index', Finsupp.sum_add_index']
       · simp only [w₁, w₂, add_comp]
       · intros
         rw [zero_smul]
@@ -318,7 +318,7 @@ def lift (F : C ⥤ D) : FreeCat R C ⥤ D
       · simp only [limits.comp_zero, sum_zero_index]
       · intro f₁ f₂ w₁ w₂
         rw [comp_add]
-        rw [Finsupp.sum_add_index, Finsupp.sum_add_index]
+        rw [Finsupp.sum_add_index', Finsupp.sum_add_index']
         · simp only [w₁, w₂, comp_add]
         · intros
           rw [zero_smul]
@@ -341,7 +341,7 @@ theorem lift_map_single (F : C ⥤ D) {X Y : C} (f : X ⟶ Y) (r : R) :
 instance lift_additive (F : C ⥤ D) : (lift R F).Additive
     where map_add' X Y f g := by
     dsimp
-    rw [Finsupp.sum_add_index] <;> simp [add_smul]
+    rw [Finsupp.sum_add_index'] <;> simp [add_smul]
 #align category_theory.Free.lift_additive CategoryTheory.FreeCat.lift_additive
 
 instance liftLinear (F : C ⥤ D) : (lift R F).Linear R

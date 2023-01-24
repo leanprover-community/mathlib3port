@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.finsupp.interval
-! leanprover-community/mathlib commit 1f0096e6caa61e9c849ec2adbd227e960e9dff58
+! leanprover-community/mathlib commit 8631e2d5ea77f6c13054d9151d82b83069680cb1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -70,7 +70,9 @@ variable [Zero α] [PartialOrder α] [LocallyFiniteOrder α] {f g : ι →₀ α
 def rangeIcc (f g : ι →₀ α) : ι →₀ Finset α
     where
   toFun i := icc (f i) (g i)
-  support := f.support ∪ g.support
+  support :=
+    haveI := Classical.decEq ι
+    f.support ∪ g.support
   mem_support_to_fun i :=
     by
     rw [mem_union, ← not_iff_not, not_or, not_mem_support_iff, not_mem_support_iff, not_ne_iff]
@@ -92,14 +94,17 @@ section PartialOrder
 
 variable [PartialOrder α] [Zero α] [LocallyFiniteOrder α] (f g : ι →₀ α)
 
-instance : LocallyFiniteOrder (ι →₀ α) :=
-  LocallyFiniteOrder.ofIcc (ι →₀ α) (fun f g => (f.support ∪ g.support).Finsupp <| f.rangeIcc g)
-    fun f g x =>
-    by
-    refine'
-      (mem_finsupp_iff_of_support_subset <| Finset.subset_of_eq <| range_Icc_support _ _).trans _
-    simp_rw [mem_range_Icc_apply_iff]
-    exact forall_and
+instance : LocallyFiniteOrder (ι →₀ α) := by
+  haveI := Classical.decEq ι <;> haveI := Classical.decEq α <;>
+    exact
+      LocallyFiniteOrder.ofIcc (ι →₀ α) (fun f g => (f.support ∪ g.support).Finsupp <| f.rangeIcc g)
+        fun f g x =>
+        by
+        refine'
+          (mem_finsupp_iff_of_support_subset <| Finset.subset_of_eq <| range_Icc_support _ _).trans
+            _
+        simp_rw [mem_range_Icc_apply_iff]
+        exact forall_and
 
 theorem icc_eq [DecidableEq ι] : icc f g = (f.support ∪ g.support).Finsupp (f.rangeIcc g) := by
   convert rfl
@@ -134,8 +139,8 @@ variable [CanonicallyOrderedAddMonoid α] [LocallyFiniteOrder α]
 variable (f : ι →₀ α)
 
 theorem card_iic : (iic f).card = ∏ i in f.support, (iic (f i)).card := by
-  simp_rw [Iic_eq_Icc, card_Icc, Finsupp.bot_eq_zero, support_zero, empty_union, zero_apply,
-    bot_eq_zero]
+  classical simp_rw [Iic_eq_Icc, card_Icc, Finsupp.bot_eq_zero, support_zero, empty_union,
+      zero_apply, bot_eq_zero]
 #align finsupp.card_Iic Finsupp.card_iic
 
 theorem card_iio : (iio f).card = (∏ i in f.support, (iic (f i)).card) - 1 := by

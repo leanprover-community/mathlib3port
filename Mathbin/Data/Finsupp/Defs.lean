@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Scott Morrison
 
 ! This file was ported from Lean 3 source module data.finsupp.defs
-! leanprover-community/mathlib commit 1f0096e6caa61e9c849ec2adbd227e960e9dff58
+! leanprover-community/mathlib commit 8631e2d5ea77f6c13054d9151d82b83069680cb1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -256,6 +256,15 @@ noncomputable def Equiv.finsuppUnique {ι : Type _} [Unique ι] : (ι →₀ M) 
   Finsupp.equivFunOnFinite.trans (Equiv.funUnique ι M)
 #align equiv.finsupp_unique Equiv.finsuppUnique
 
+@[ext]
+theorem unique_ext [Unique α] {f g : α →₀ M} (h : f default = g default) : f = g :=
+  ext fun a => by rwa [Unique.eq_default a]
+#align finsupp.unique_ext Finsupp.unique_ext
+
+theorem unique_ext_iff [Unique α] {f g : α →₀ M} : f = g ↔ f default = g default :=
+  ⟨fun h => h ▸ rfl, unique_ext⟩
+#align finsupp.unique_ext_iff Finsupp.unique_ext_iff
+
 end Basic
 
 /-! ### Declarations about `single` -/
@@ -433,15 +442,6 @@ instance [Nonempty α] [Nontrivial M] : Nontrivial (α →₀ M) :=
 theorem unique_single [Unique α] (x : α →₀ M) : x = single default (x default) :=
   ext <| Unique.forall_iff.2 single_eq_same.symm
 #align finsupp.unique_single Finsupp.unique_single
-
-@[ext]
-theorem unique_ext [Unique α] {f g : α →₀ M} (h : f default = g default) : f = g :=
-  ext fun a => by rwa [Unique.eq_default a]
-#align finsupp.unique_ext Finsupp.unique_ext
-
-theorem unique_ext_iff [Unique α] {f g : α →₀ M} : f = g ↔ f default = g default :=
-  ⟨fun h => h ▸ rfl, unique_ext⟩
-#align finsupp.unique_ext_iff Finsupp.unique_ext_iff
 
 @[simp]
 theorem unique_single_eq_iff [Unique α] {b' : M} : single a b = single a' b' ↔ b = b' := by

@@ -4,15 +4,16 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module ring_theory.roots_of_unity
-! leanprover-community/mathlib commit 1f0096e6caa61e9c849ec2adbd227e960e9dff58
+! leanprover-community/mathlib commit 8631e2d5ea77f6c13054d9151d82b83069680cb1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.CharP.Two
 import Mathbin.Algebra.NeZero
+import Mathbin.Algebra.GcdMonoid.IntegrallyClosed
 import Mathbin.Data.Polynomial.RingDivision
 import Mathbin.FieldTheory.Finite.Basic
-import Mathbin.FieldTheory.Minpoly.GcdMonoid
+import Mathbin.FieldTheory.Minpoly.IsIntegrallyClosed
 import Mathbin.FieldTheory.Separable
 import Mathbin.GroupTheory.SpecificGroups.Cyclic
 import Mathbin.NumberTheory.Divisors
@@ -1039,7 +1040,8 @@ theorem minpoly_dvd_x_pow_sub_one : minpoly ℤ μ ∣ X ^ n - 1 :=
   by
   rcases n.eq_zero_or_pos with (rfl | hpos)
   · simp
-  apply minpoly.gcd_domain_dvd (IsIntegral h hpos) (monic_X_pow_sub_C 1 hpos.ne').NeZero
+  letI : IsIntegrallyClosed ℤ := GCDMonoid.toIsIntegrallyClosed
+  apply minpoly.isIntegrallyClosed_dvd (IsIntegral h hpos)
   simp only [((IsPrimitiveRoot.iff_def μ n).mp h).left, aeval_X_pow, eq_intCast, Int.cast_one,
     aeval_one, AlgHom.map_sub, sub_self]
 #align is_primitive_root.minpoly_dvd_X_pow_sub_one IsPrimitiveRoot.minpoly_dvd_x_pow_sub_one
@@ -1063,17 +1065,13 @@ theorem squarefree_minpoly_mod {p : ℕ} [Fact p.Prime] (hdiv : ¬p ∣ n) :
 #align is_primitive_root.squarefree_minpoly_mod IsPrimitiveRoot.squarefree_minpoly_mod
 
 /- Let `P` be the minimal polynomial of a root of unity `μ` and `Q` be the minimal polynomial of
-`μ ^ p`, where `p` is a prime that does not divide `n`. Then `P` divides `expand ℤ p Q`. -/
-theorem minpoly_dvd_expand {p : ℕ} (hprime : Nat.Prime p) (hdiv : ¬p ∣ n) :
-    minpoly ℤ μ ∣ expand ℤ p (minpoly ℤ (μ ^ p)) :=
+`μ ^ p`, where `p` is a natural number that does not divide `n`. Then `P` divides `expand ℤ p Q`. -/
+theorem minpoly_dvd_expand {p : ℕ} (hdiv : ¬p ∣ n) : minpoly ℤ μ ∣ expand ℤ p (minpoly ℤ (μ ^ p)) :=
   by
   rcases n.eq_zero_or_pos with (rfl | hpos)
   · simp_all
-  refine' minpoly.gcd_domain_dvd (h.is_integral hpos) _ _
-  · apply monic.ne_zero
-    rw [Polynomial.Monic, leading_coeff, nat_degree_expand, mul_comm,
-      coeff_expand_mul' (Nat.Prime.pos hprime), ← leading_coeff, ← Polynomial.Monic]
-    exact minpoly.monic (IsIntegral (pow_of_prime h hprime hdiv) hpos)
+  letI : IsIntegrallyClosed ℤ := GCDMonoid.toIsIntegrallyClosed
+  refine' minpoly.isIntegrallyClosed_dvd (h.is_integral hpos) _
   · rw [aeval_def, coe_expand, ← comp, eval₂_eq_eval_map, map_comp, Polynomial.map_pow, map_X,
       eval_comp, eval_pow, eval_X, ← eval₂_eq_eval_map, ← aeval_def]
     exact minpoly.aeval _ _
@@ -1091,7 +1089,7 @@ theorem minpoly_dvd_pow_mod {p : ℕ} [hprime : Fact p.Prime] (hdiv : ¬p ∣ n)
     rw [← ZMod.expand_card, map_expand]
   rw [hfrob]
   apply RingHom.map_dvd (map_ring_hom (Int.castRingHom (ZMod p)))
-  exact minpoly_dvd_expand h hprime.1 hdiv
+  exact minpoly_dvd_expand h hdiv
 #align is_primitive_root.minpoly_dvd_pow_mod IsPrimitiveRoot.minpoly_dvd_pow_mod
 
 /- Let `P` be the minimal polynomial of a root of unity `μ` and `Q` be the minimal polynomial of

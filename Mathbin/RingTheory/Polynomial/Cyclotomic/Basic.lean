@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module ring_theory.polynomial.cyclotomic.basic
-! leanprover-community/mathlib commit 1f0096e6caa61e9c849ec2adbd227e960e9dff58
+! leanprover-community/mathlib commit 8631e2d5ea77f6c13054d9151d82b83069680cb1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -852,7 +852,7 @@ open IsPrimitiveRoot Complex
 theorem IsPrimitiveRoot.minpoly_dvd_cyclotomic {n : ℕ} {K : Type _} [Field K] {μ : K}
     (h : IsPrimitiveRoot μ n) (hpos : 0 < n) [CharZero K] : minpoly ℤ μ ∣ cyclotomic n ℤ :=
   by
-  apply minpoly.gcd_domain_dvd (IsIntegral h hpos) (cyclotomic_ne_zero n ℤ)
+  apply minpoly.isIntegrallyClosed_dvd (IsIntegral h hpos)
   simpa [aeval_def, eval₂_eq_eval_map, is_root.def] using is_root_cyclotomic hpos h
 #align is_primitive_root.minpoly_dvd_cyclotomic IsPrimitiveRoot.minpoly_dvd_cyclotomic
 
@@ -880,7 +880,7 @@ theorem cyclotomic_eq_minpoly_rat {n : ℕ} {K : Type _} [Field K] {μ : K} (h :
     (hpos : 0 < n) [CharZero K] : cyclotomic n ℚ = minpoly ℚ μ :=
   by
   rw [← map_cyclotomic_int, cyclotomic_eq_minpoly h hpos]
-  exact (minpoly.gcd_domain_eq_field_fractions' _ (IsIntegral h hpos)).symm
+  exact (minpoly.isIntegrallyClosed_eq_field_fractions' _ (IsIntegral h hpos)).symm
 #align polynomial.cyclotomic_eq_minpoly_rat Polynomial.cyclotomic_eq_minpoly_rat
 
 /-- `cyclotomic n ℤ` is irreducible. -/
@@ -984,9 +984,7 @@ theorem cyclotomic_expand_eq_cyclotomic {p n : ℕ} (hp : Nat.Prime p) (hdiv : p
   · have hpos := Nat.mul_pos hzero hp.pos
     have hprim := Complex.isPrimitiveRoot_exp _ hpos.ne.symm
     rw [cyclotomic_eq_minpoly hprim hpos]
-    refine'
-      minpoly.gcd_domain_dvd (hprim.is_integral hpos) ((cyclotomic.monic n ℤ).expand hp.pos).NeZero
-        _
+    refine' minpoly.isIntegrallyClosed_dvd (hprim.is_integral hpos) _
     rw [aeval_def, ← eval_map, map_expand, map_cyclotomic, expand_eval, ← is_root.def,
       is_root_cyclotomic_iff]
     · convert IsPrimitiveRoot.pow_of_dvd hprim hp.ne_zero (dvd_mul_left p n)

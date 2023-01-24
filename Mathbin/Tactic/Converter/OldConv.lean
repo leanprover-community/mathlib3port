@@ -6,7 +6,7 @@ Authors: Leonardo de Moura
 Converter monad for building simplifiers.
 
 ! This file was ported from Lean 3 source module tactic.converter.old_conv
-! leanprover-community/mathlib commit 1f0096e6caa61e9c849ec2adbd227e960e9dff58
+! leanprover-community/mathlib commit 8631e2d5ea77f6c13054d9151d82b83069680cb1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

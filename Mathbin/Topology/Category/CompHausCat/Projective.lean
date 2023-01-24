@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module topology.category.CompHaus.projective
-! leanprover-community/mathlib commit 1f0096e6caa61e9c849ec2adbd227e960e9dff58
+! leanprover-community/mathlib commit 8631e2d5ea77f6c13054d9151d82b83069680cb1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -39,7 +39,7 @@ open CategoryTheory Function
 namespace CompHausCat
 
 instance projective_ultrafilter (X : Type _) : Projective (of <| Ultrafilter X)
-    where factors Y Z f g hg := by
+    where Factors Y Z f g hg := by
     rw [epi_iff_surjective] at hg
     obtain ⟨g', hg'⟩ := hg.has_right_inverse
     let t : X → Y := g' ∘ f ∘ (pure : X → Ultrafilter X)

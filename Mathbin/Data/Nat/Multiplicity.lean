@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module data.nat.multiplicity
-! leanprover-community/mathlib commit 1f0096e6caa61e9c849ec2adbd227e960e9dff58
+! leanprover-community/mathlib commit 8631e2d5ea77f6c13054d9151d82b83069680cb1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,7 @@ import Mathbin.Algebra.GeomSum
 import Mathbin.Data.Nat.Bitwise
 import Mathbin.Data.Nat.Log
 import Mathbin.Data.Nat.Parity
+import Mathbin.Data.Nat.Prime
 import Mathbin.RingTheory.Multiplicity
 
 /-!
@@ -80,25 +81,25 @@ theorem multiplicity_eq_card_pow_dvd {m n b : ℕ} (hm : m ≠ 1) (hn : 0 < n) (
 namespace Prime
 
 theorem multiplicity_one {p : ℕ} (hp : p.Prime) : multiplicity p 1 = 0 :=
-  multiplicity.one_right (prime_iff.mp hp).not_unit
+  multiplicity.one_right hp.Prime.not_unit
 #align nat.prime.multiplicity_one Nat.Prime.multiplicity_one
 
 theorem multiplicity_mul {p m n : ℕ} (hp : p.Prime) :
     multiplicity p (m * n) = multiplicity p m + multiplicity p n :=
-  multiplicity.mul <| prime_iff.mp hp
+  multiplicity.mul hp.Prime
 #align nat.prime.multiplicity_mul Nat.Prime.multiplicity_mul
 
 theorem multiplicity_pow {p m n : ℕ} (hp : p.Prime) :
     multiplicity p (m ^ n) = n • multiplicity p m :=
-  multiplicity.pow <| prime_iff.mp hp
+  multiplicity.pow hp.Prime
 #align nat.prime.multiplicity_pow Nat.Prime.multiplicity_pow
 
 theorem multiplicity_self {p : ℕ} (hp : p.Prime) : multiplicity p p = 1 :=
-  multiplicity_self (prime_iff.mp hp).not_unit hp.NeZero
+  multiplicity_self hp.Prime.not_unit hp.NeZero
 #align nat.prime.multiplicity_self Nat.Prime.multiplicity_self
 
 theorem multiplicity_pow_self {p n : ℕ} (hp : p.Prime) : multiplicity p (p ^ n) = n :=
-  multiplicity_pow_self hp.NeZero (prime_iff.mp hp).not_unit n
+  multiplicity_pow_self hp.NeZero hp.Prime.not_unit n
 #align nat.prime.multiplicity_pow_self Nat.Prime.multiplicity_pow_self
 
 /-- **Legendre's Theorem**
@@ -130,7 +131,7 @@ theorem multiplicity_factorial {p : ℕ} (hp : p.Prime) :
 theorem multiplicity_factorial_mul_succ {n p : ℕ} (hp : p.Prime) :
     multiplicity p (p * (n + 1))! = multiplicity p (p * n)! + multiplicity p (n + 1) + 1 :=
   by
-  have hp' := prime_iff.mp hp
+  have hp' := hp.prime
   have h0 : 2 ≤ p := hp.two_le
   have h1 : 1 ≤ p * n + 1 := Nat.le_add_left _ _
   have h2 : p * n + 1 ≤ p * (n + 1)
@@ -161,8 +162,8 @@ theorem multiplicity_factorial_mul {n p : ℕ} (hp : p.Prime) :
   by
   induction' n with n ih
   · simp
-  · simp only [succ_eq_add_one, multiplicity.mul, hp, prime_iff.mp hp, ih,
-      multiplicity_factorial_mul_succ, ← add_assoc, Nat.cast_one, Nat.cast_add, factorial_succ]
+  · simp only [succ_eq_add_one, multiplicity.mul, hp, hp.prime, ih, multiplicity_factorial_mul_succ,
+      ← add_assoc, Nat.cast_one, Nat.cast_add, factorial_succ]
     congr 1
     rw [add_comm, add_assoc]
 #align nat.prime.multiplicity_factorial_mul Nat.Prime.multiplicity_factorial_mul
@@ -255,7 +256,7 @@ end Prime
 
 theorem multiplicity_two_factorial_lt : ∀ {n : ℕ} (h : n ≠ 0), multiplicity 2 n ! < n :=
   by
-  have h2 := prime_iff.mp prime_two
+  have h2 := prime_two.prime
   refine' binary_rec _ _
   · contradiction
   · intro b n ih h

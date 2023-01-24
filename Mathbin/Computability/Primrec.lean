@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module computability.primrec
-! leanprover-community/mathlib commit 1f0096e6caa61e9c849ec2adbd227e960e9dff58
+! leanprover-community/mathlib commit 8631e2d5ea77f6c13054d9151d82b83069680cb1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -37,6 +37,7 @@ open Denumerable Encodable Function
 
 namespace Nat
 
+/-- The non-dependent recursor on naturals. -/
 def elim {C : Sort _} : C → (ℕ → C → C) → ℕ → C :=
   @Nat.rec fun _ => C
 #align nat.elim Nat.elim
@@ -51,6 +52,7 @@ theorem elim_succ {C} (a f n) : @Nat.elim C a f (succ n) = f n (Nat.elim a f n) 
   rfl
 #align nat.elim_succ Nat.elim_succ
 
+/-- Cases on whether the input is 0 or a successor. -/
 def cases {C : Sort _} (a : C) (f : ℕ → C) : ℕ → C :=
   Nat.elim a fun n _ => f n
 #align nat.cases Nat.cases
@@ -65,6 +67,7 @@ theorem cases_succ {C} (a f n) : @Nat.cases C a f (succ n) = f n :=
   rfl
 #align nat.cases_succ Nat.cases_succ
 
+/-- Calls the given function on a pair of entries `n`, encoded via the pairing function. -/
 @[simp, reducible]
 def unpaired {α} (f : ℕ → ℕ → α) (n : ℕ) : α :=
   f n.unpair.1 n.unpair.2
@@ -102,8 +105,7 @@ protected theorem id : Primrec id :=
 
 theorem prec1 {f} (m : ℕ) (hf : Primrec f) :
     Primrec fun n => n.elim m fun y IH => f <| mkpair y IH :=
-  ((prec (const m) (hf.comp right)).comp (zero.pair Primrec.id)).of_eq fun n => by
-    simp <;> dsimp <;> rw [unpair_mkpair]
+  ((prec (const m) (hf.comp right)).comp (zero.pair Primrec.id)).of_eq fun n => by simp
 #align nat.primrec.prec1 Nat.Primrec.prec1
 
 theorem cases1 {f} (m : ℕ) (hf : Primrec f) : Primrec (Nat.cases m f) :=
@@ -166,6 +168,7 @@ instance (priority := 10) ofDenumerable (α) [Denumerable α] : Primcodable α :
   ⟨succ.of_eq <| by simp⟩
 #align primcodable.of_denumerable Primcodable.ofDenumerable
 
+/-- Builds a `primcodable` instance from an equivalence to a `primcodable` type. -/
 def ofEquiv (α) {β} [Primcodable α] (e : β ≃ α) : Primcodable β :=
   { Encodable.ofEquiv α e with
     prim :=
@@ -1205,6 +1208,7 @@ variable [Primcodable α] [Primcodable β]
 
 open Primrec
 
+/-- A subtype of a primitive recursive predicate is `primcodable`. -/
 def subtype {p : α → Prop} [DecidablePred p] (hp : PrimrecPred p) : Primcodable (Subtype p) :=
   ⟨have : Primrec fun n => (decode α n).bind fun a => Option.guard p a :=
       option_bind Primrec.decode (option_guard (hp.comp snd) snd)
@@ -1454,7 +1458,8 @@ theorem tail {n f} (hf : @Primrec' n f) : @Primrec' n.succ fun v => f v.tail :=
     rw [← of_fn_nth v.tail] <;> congr <;> funext i <;> simp
 #align nat.primrec'.tail Nat.Primrec'.tail
 
-def Vec {n m} (f : Vector ℕ n → Vector ℕ m) :=
+/-- A function from vectors to vectors is primitive recursive when all of its projections are. -/
+def Vec {n m} (f : Vector ℕ n → Vector ℕ m) : Prop :=
   ∀ i, Primrec' fun v => (f v).nth i
 #align nat.primrec'.vec Nat.Primrec'.Vec
 

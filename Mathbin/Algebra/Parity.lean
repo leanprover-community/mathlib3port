@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 
 ! This file was ported from Lean 3 source module algebra.parity
-! leanprover-community/mathlib commit 1f0096e6caa61e9c849ec2adbd227e960e9dff58
+! leanprover-community/mathlib commit 8631e2d5ea77f6c13054d9151d82b83069680cb1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -394,6 +394,17 @@ Case conversion may be inaccurate. Consider using '#align even_iff_two_dvd even_
 theorem even_iff_two_dvd {a : α} : Even a ↔ 2 ∣ a := by simp [Even, Dvd.Dvd, two_mul]
 #align even_iff_two_dvd even_iff_two_dvd
 
+alias even_iff_two_dvd ↔ Even.two_dvd _
+#align even.two_dvd Even.two_dvd
+
+theorem Even.trans_dvd (hm : Even m) (hn : m ∣ n) : Even n :=
+  even_iff_two_dvd.2 <| hm.two_dvd.trans hn
+#align even.trans_dvd Even.trans_dvd
+
+theorem Dvd.Dvd.even (hn : m ∣ n) (hm : Even m) : Even n :=
+  hm.trans_dvd hn
+#align has_dvd.dvd.even Dvd.Dvd.even
+
 /- warning: range_two_mul -> range_two_mul is a dubious translation:
 lean 3 declaration is
   forall (α : Type.{u1}) [_inst_3 : Semiring.{u1} α], Eq.{succ u1} (Set.{u1} α) (Set.range.{u1, succ u1} α α (fun (x : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (Distrib.toHasMul.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_3))))) (OfNat.ofNat.{u1} α 2 (OfNat.mk.{u1} α 2 (bit0.{u1} α (Distrib.toHasAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_3)))) (One.one.{u1} α (AddMonoidWithOne.toOne.{u1} α (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} α (NonAssocSemiring.toAddCommMonoidWithOne.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_3)))))))) x)) (setOf.{u1} α (fun (a : α) => Even.{u1} α (Distrib.toHasAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_3)))) a))
@@ -563,9 +574,8 @@ theorem Odd.add_odd : Odd m → Odd n → Even (m + n) :=
   by
   rintro ⟨m, rfl⟩ ⟨n, rfl⟩
   refine' ⟨n + m + 1, _⟩
-  rw [← two_mul, ← add_assoc, add_comm _ (2 * n), ← add_assoc, ← mul_add, add_assoc,
-    mul_add _ (n + m), mul_one]
-  rfl
+  rw [two_mul, two_mul]
+  ac_rfl
 #align odd.add_odd Odd.add_odd
 
 #print odd_one /-

@@ -4,12 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module number_theory.cyclotomic.rat
-! leanprover-community/mathlib commit 1f0096e6caa61e9c849ec2adbd227e960e9dff58
+! leanprover-community/mathlib commit 8631e2d5ea77f6c13054d9151d82b83069680cb1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.NumberTheory.Cyclotomic.Discriminant
-import Mathbin.RingTheory.Polynomial.Eisenstein
+import Mathbin.RingTheory.Polynomial.Eisenstein.IsIntegral
 
 /-!
 # Ring of integers of `p ^ n`-th cyclotomic fields
@@ -109,7 +109,7 @@ theorem isIntegralClosure_adjoin_singleton_of_prime_pow [hcycl : IsCyclotomicExt
     exact Subalgebra.algebraMap_mem _ _
   · have hmin : (minpoly ℤ B.gen).IsEisensteinAt (Submodule.span ℤ {((p : ℕ) : ℤ)}) :=
       by
-      have h₁ := minpoly.gcd_domain_eq_field_fractions' ℚ hint
+      have h₁ := minpoly.isIntegrallyClosed_eq_field_fractions' ℚ hint
       have h₂ := hζ.minpoly_sub_one_eq_cyclotomic_comp (cyclotomic.irreducible_rat (p ^ _).Pos)
       rw [IsPrimitiveRoot.subOnePowerBasis_gen] at h₁
       rw [h₁, ← map_cyclotomic_int, show Int.castRingHom ℚ = algebraMap ℤ ℚ by rfl,

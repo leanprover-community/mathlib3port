@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Aaron Anderson
 
 ! This file was ported from Lean 3 source module data.finsupp.order
-! leanprover-community/mathlib commit 1f0096e6caa61e9c849ec2adbd227e960e9dff58
+! leanprover-community/mathlib commit 8631e2d5ea77f6c13054d9151d82b83069680cb1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -26,7 +26,7 @@ This file lifts order structures on `α` to `ι →₀ α`.
 
 noncomputable section
 
-open Classical BigOperators
+open BigOperators
 
 open Finset
 
@@ -149,8 +149,9 @@ theorem add_eq_zero_iff (f g : ι →₀ α) : f + g = 0 ↔ f = 0 ∧ g = 0 := 
 #align finsupp.add_eq_zero_iff Finsupp.add_eq_zero_iff
 
 theorem le_iff' (f g : ι →₀ α) {s : Finset ι} (hf : f.support ⊆ s) : f ≤ g ↔ ∀ i ∈ s, f i ≤ g i :=
-  ⟨fun h s hs => h s, fun h s =>
-    if H : s ∈ f.support then h s (hf H) else (not_mem_support_iff.1 H).symm ▸ zero_le (g s)⟩
+  ⟨fun h s hs => h s, fun h s => by
+    classical exact
+        if H : s ∈ f.support then h s (hf H) else (not_mem_support_iff.1 H).symm ▸ zero_le (g s)⟩
 #align finsupp.le_iff' Finsupp.le_iff'
 
 theorem le_iff (f g : ι →₀ α) : f ≤ g ↔ ∀ i ∈ f.support, f i ≤ g i :=
@@ -206,7 +207,8 @@ theorem support_tsub {f1 f2 : ι →₀ α} : (f1 - f2).support ⊆ f1.support :
     Ne.def, coe_tsub, Pi.sub_apply, not_imp_not, zero_le, imp_true_iff]
 #align finsupp.support_tsub Finsupp.support_tsub
 
-theorem subset_support_tsub {f1 f2 : ι →₀ α} : f1.support \ f2.support ⊆ (f1 - f2).support := by
+theorem subset_support_tsub [DecidableEq ι] {f1 f2 : ι →₀ α} :
+    f1.support \ f2.support ⊆ (f1 - f2).support := by
   simp (config := { contextual := true }) [subset_iff]
 #align finsupp.subset_support_tsub Finsupp.subset_support_tsub
 
@@ -233,11 +235,11 @@ theorem support_sup [DecidableEq ι] (f g : ι →₀ α) : (f ⊔ g).support = 
   rw [_root_.sup_eq_bot_iff, not_and_or]
 #align finsupp.support_sup Finsupp.support_sup
 
-theorem disjoint_iff {f g : ι →₀ α} : Disjoint f g ↔ Disjoint f.support g.support :=
-  by
-  rw [disjoint_iff, disjoint_iff, Finsupp.bot_eq_zero, ← Finsupp.support_eq_empty,
-    Finsupp.support_inf]
-  rfl
+theorem disjoint_iff {f g : ι →₀ α} : Disjoint f g ↔ Disjoint f.support g.support := by
+  classical
+    rw [disjoint_iff, disjoint_iff, Finsupp.bot_eq_zero, ← Finsupp.support_eq_empty,
+      Finsupp.support_inf]
+    rfl
 #align finsupp.disjoint_iff Finsupp.disjoint_iff
 
 end CanonicallyLinearOrderedAddMonoid

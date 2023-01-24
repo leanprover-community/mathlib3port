@@ -4,12 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.is_adjoin_root
-! leanprover-community/mathlib commit 1f0096e6caa61e9c849ec2adbd227e960e9dff58
+! leanprover-community/mathlib commit 8631e2d5ea77f6c13054d9151d82b83069680cb1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Data.Polynomial.AlgebraMap
-import Mathbin.FieldTheory.Minpoly.GcdMonoid
+import Mathbin.FieldTheory.Minpoly.IsIntegrallyClosed
 import Mathbin.RingTheory.PowerBasis
 
 /-!
@@ -724,9 +724,9 @@ end IsAdjoinRoot
 
 namespace IsAdjoinRootMonic
 
-theorem minpoly_eq [IsDomain R] [IsDomain S] [NoZeroSMulDivisors R S] [NormalizedGCDMonoid R]
+theorem minpoly_eq [IsDomain R] [IsDomain S] [NoZeroSMulDivisors R S] [IsIntegrallyClosed R]
     (h : IsAdjoinRootMonic S f) (hirr : Irreducible f) : minpoly R h.root = f :=
-  let ⟨q, hq⟩ := minpoly.gcd_domain_dvd h.is_integral_root h.Monic.NeZero h.aeval_root
+  let ⟨q, hq⟩ := minpoly.isIntegrallyClosed_dvd h.is_integral_root h.aeval_root
   symm <|
     eq_of_monic_of_associated h.Monic (minpoly.monic h.is_integral_root) <| by
       convert

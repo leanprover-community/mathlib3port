@@ -4,12 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Benjamin Davidson
 
 ! This file was ported from Lean 3 source module data.nat.parity
-! leanprover-community/mathlib commit 1f0096e6caa61e9c849ec2adbd227e960e9dff58
+! leanprover-community/mathlib commit 8631e2d5ea77f6c13054d9151d82b83069680cb1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Data.Nat.Modeq
-import Mathbin.Data.Nat.Factors
 import Mathbin.Algebra.Parity
 
 /-!
@@ -247,18 +246,11 @@ theorem even_mul_self_pred (n : ℕ) : Even (n * (n - 1)) :=
     apply even_mul_succ_self
 #align nat.even_mul_self_pred Nat.even_mul_self_pred
 
-theorem even_sub_one_of_prime_ne_two {p : ℕ} (hp : Prime p) (hodd : p ≠ 2) : Even (p - 1) :=
-  Odd.sub_odd (odd_iff.2 <| hp.eq_two_or_odd.resolve_left hodd) (odd_iff.2 rfl)
-#align nat.even_sub_one_of_prime_ne_two Nat.even_sub_one_of_prime_ne_two
-
 theorem two_mul_div_two_of_even : Even n → 2 * (n / 2) = n := fun h =>
   Nat.mul_div_cancel_left' (even_iff_two_dvd.mp h)
 #align nat.two_mul_div_two_of_even Nat.two_mul_div_two_of_even
 
-theorem div_two_mul_two_of_even : Even n → n / 2 * 2 = n :=
-  fun
-    --nat.div_mul_cancel
-    h =>
+theorem div_two_mul_two_of_even : Even n → n / 2 * 2 = n := fun h =>
   Nat.div_mul_cancel (even_iff_two_dvd.mp h)
 #align nat.div_two_mul_two_of_even Nat.div_two_mul_two_of_even
 
@@ -392,10 +384,14 @@ theorem Even.mod_even {n a : ℕ} (hn : Even n) (ha : Even a) : Even (n % a) :=
   (Even.mod_even_iff ha).mpr hn
 #align even.mod_even Even.mod_even
 
-/-- `2` is not a prime factor of an odd natural number. -/
-theorem Odd.factors_ne_two {n p : ℕ} (hn : Odd n) (hp : p ∈ n.factors) : p ≠ 2 :=
+theorem Odd.of_dvd_nat {m n : ℕ} (hn : Odd n) (hm : m ∣ n) : Odd m :=
+  odd_iff_not_even.2 <| mt hm.Even (odd_iff_not_even.1 hn)
+#align odd.of_dvd_nat Odd.of_dvd_nat
+
+/-- `2` is not a factor of an odd natural number. -/
+theorem Odd.ne_two_of_dvd_nat {m n : ℕ} (hn : Odd n) (hm : m ∣ n) : m ≠ 2 :=
   by
   rintro rfl
-  exact two_dvd_ne_zero.mpr (odd_iff.mp hn) (dvd_of_mem_factors hp)
-#align odd.factors_ne_two Odd.factors_ne_two
+  exact absurd (hn.of_dvd_nat hm) (by decide)
+#align odd.ne_two_of_dvd_nat Odd.ne_two_of_dvd_nat
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Scott Morrison
 
 ! This file was ported from Lean 3 source module data.finsupp.basic
-! leanprover-community/mathlib commit 1f0096e6caa61e9c849ec2adbd227e960e9dff58
+! leanprover-community/mathlib commit 8631e2d5ea77f6c13054d9151d82b83069680cb1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -859,16 +859,16 @@ theorem some_single_some [Zero M] (a : α) (m : M) :
 theorem prod_option_index [AddCommMonoid M] [CommMonoid N] (f : Option α →₀ M)
     (b : Option α → M → N) (h_zero : ∀ o, b o 0 = 1)
     (h_add : ∀ o m₁ m₂, b o (m₁ + m₂) = b o m₁ * b o m₂) :
-    f.Prod b = b none (f none) * f.some.Prod fun a => b (Option.some a) :=
-  by
-  apply induction_linear f
-  · simp [h_zero]
-  · intro f₁ f₂ h₁ h₂
-    rw [Finsupp.prod_add_index, h₁, h₂, some_add, Finsupp.prod_add_index]
-    simp only [h_add, Pi.add_apply, Finsupp.coe_add]
-    rw [mul_mul_mul_comm]
-    all_goals simp [h_zero, h_add]
-  · rintro (_ | a) m <;> simp [h_zero, h_add]
+    f.Prod b = b none (f none) * f.some.Prod fun a => b (Option.some a) := by
+  classical
+    apply induction_linear f
+    · simp [some_zero, h_zero]
+    · intro f₁ f₂ h₁ h₂
+      rw [Finsupp.prod_add_index, h₁, h₂, some_add, Finsupp.prod_add_index]
+      simp only [h_add, Pi.add_apply, Finsupp.coe_add]
+      rw [mul_mul_mul_comm]
+      all_goals simp [h_zero, h_add]
+    · rintro (_ | a) m <;> simp [h_zero, h_add]
 #align finsupp.prod_option_index Finsupp.prod_option_index
 #align finsupp.sum_option_index Finsupp.sum_option_index
 
@@ -1263,8 +1263,18 @@ protected def uncurry (f : α →₀ β →₀ M) : α × β →₀ M :=
 
 /-- `finsupp_prod_equiv` defines the `equiv` between `((α × β) →₀ M)` and `(α →₀ (β →₀ M))` given by
 currying and uncurrying. -/
-def finsuppProdEquiv : (α × β →₀ M) ≃ (α →₀ β →₀ M) := by
-  refine' ⟨Finsupp.curry, Finsupp.uncurry, fun f => _, fun f => _⟩ <;>
+def finsuppProdEquiv : (α × β →₀ M) ≃ (α →₀ β →₀ M)
+    where
+  toFun := Finsupp.curry
+  invFun := Finsupp.uncurry
+  left_inv f := by
+    rw [Finsupp.uncurry, sum_curry_index]
+    · simp_rw [Prod.mk.eta, sum_single]
+    · intros
+      apply single_zero
+    · intros
+      apply single_add
+  right_inv f := by
     simp only [Finsupp.curry, Finsupp.uncurry, sum_sum_index, sum_zero_index, sum_add_index,
       sum_single_index, single_zero, single_add, eq_self_iff_true, forall_true_iff,
       forall₃_true_iff, Prod.mk.eta, (single_sum _ _ _).symm, sum_single]
