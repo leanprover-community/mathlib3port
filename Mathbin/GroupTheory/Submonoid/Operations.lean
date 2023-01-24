@@ -916,7 +916,7 @@ theorem coe_pow {M} [Monoid M] {A : Type _} [SetLike A M] [SubmonoidClass A M] {
     (n : ℕ) : (↑(x ^ n) : M) = ↑x ^ n :=
   rfl
 #align submonoid_class.coe_pow SubmonoidClass.coe_pow
-#align add_submonoid_class.coe_nsmul AddSubmonoidClass.coe_smul
+#align add_submonoid_class.coe_nsmul AddSubmonoidClass.coe_nsmul
 
 /- warning: submonoid_class.mk_pow -> SubmonoidClass.mk_pow is a dubious translation:
 lean 3 declaration is
@@ -929,7 +929,7 @@ theorem mk_pow {M} [Monoid M] {A : Type _} [SetLike A M] [SubmonoidClass A M] {S
     (hx : x ∈ S) (n : ℕ) : (⟨x, hx⟩ : S) ^ n = ⟨x ^ n, pow_mem hx n⟩ :=
   rfl
 #align submonoid_class.mk_pow SubmonoidClass.mk_pow
-#align add_submonoid_class.mk_nsmul AddSubmonoidClass.mk_smul
+#align add_submonoid_class.mk_nsmul AddSubmonoidClass.mk_nsmul
 
 #print SubmonoidClass.toMulOneClass /-
 -- Prefer subclasses of `monoid` over subclasses of `submonoid_class`.
@@ -1155,7 +1155,7 @@ protected theorem pow_mem {M : Type _} [Monoid M] (S : Submonoid M) {x : M} (hx 
     x ^ n ∈ S :=
   pow_mem hx n
 #align submonoid.pow_mem Submonoid.pow_mem
-#align add_submonoid.nsmul_mem AddSubmonoid.smul_mem
+#align add_submonoid.nsmul_mem AddSubmonoid.nsmul_mem
 
 /- warning: submonoid.coe_pow clashes with [anonymous] -> [anonymous]
 warning: submonoid.coe_pow -> [anonymous] is a dubious translation:

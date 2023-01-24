@@ -238,7 +238,7 @@ theorem pow_def [∀ i, Pow (f i) β] (x : ∀ i, f i) (b : β) : x ^ b = fun i 
 lean 3 declaration is
   forall {I : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : Pow.{u3, u2} β α] (b : β) (a : α), Eq.{succ (max u1 u3)} (I -> β) (HPow.hPow.{max u1 u3, u2, max u1 u3} (I -> β) α (I -> β) (instHPow.{max u1 u3, u2} (I -> β) α (Pi.hasPow.{u1, u3, u2} I α (fun (ᾰ : I) => β) (fun (i : I) => _inst_1))) (Function.const.{succ u3, succ u1} β I b) a) (Function.const.{succ u3, succ u1} β I (HPow.hPow.{u3, u2, u3} β α β (instHPow.{u3, u2} β α _inst_1) b a))
 but is expected to have type
-  forall {I : Type.{u3}} {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Pow.{u2, u1} β α] (b : β) (a : α), Eq.{max (succ u3) (succ u2)} (I -> β) (HPow.hPow.{max u3 u2, u1, max u3 u2} (I -> β) α (I -> β) (instHPow.{max u3 u2, u1} (I -> β) α (Pi.instPow.{u3, u2, u1} I α (fun (ᾰ : I) => β) (fun (i : I) => _inst_1))) (Function.const.{succ u2, succ u3} β I b) a) (Function.const.{succ u2, succ u3} β I (HPow.hPow.{u2, u1, u2} β α β (instHPow.{u2, u1} β α _inst_1) b a))
+  forall {I : Type.{u3}} {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Pow.{u2, u1} α β] (b : α) (a : β), Eq.{max (succ u3) (succ u2)} (I -> α) (HPow.hPow.{max u3 u2, u1, max u3 u2} (I -> α) β (I -> α) (instHPow.{max u3 u2, u1} (I -> α) β (Pi.instPow.{u3, u2, u1} I β (fun (ᾰ : I) => α) (fun (i : I) => _inst_1))) (Function.const.{succ u2, succ u3} α I b) a) (Function.const.{succ u2, succ u3} α I (HPow.hPow.{u2, u1, u2} α β α (instHPow.{u2, u1} α β _inst_1) b a))
 Case conversion may be inaccurate. Consider using '#align pi.const_pow Pi.const_powₓ'. -/
 -- `to_additive` generates bad output if we take `has_pow α β`.
 @[simp, to_additive smul_const, to_additive_reorder 5]

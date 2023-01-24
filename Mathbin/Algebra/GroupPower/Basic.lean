@@ -131,7 +131,7 @@ Case conversion may be inaccurate. Consider using '#align pow_mul_comm' pow_mul_
 theorem pow_mul_comm' (a : M) (n : ℕ) : a ^ n * a = a * a ^ n :=
   Commute.pow_self a n
 #align pow_mul_comm' pow_mul_comm'
-#align nsmul_add_comm' smul_add_comm'
+#align nsmul_add_comm' nsmul_add_comm'
 
 /- warning: pow_add -> pow_add is a dubious translation:
 lean 3 declaration is
@@ -284,7 +284,7 @@ theorem Commute.mul_pow {a b : M} (h : Commute a b) (n : ℕ) : (a * b) ^ n = a 
   Nat.recOn n (by simp only [pow_zero, one_mul]) fun n ihn => by
     simp only [pow_succ, ihn, ← mul_assoc, (h.pow_left n).right_comm]
 #align commute.mul_pow Commute.mul_pow
-#align add_commute.add_nsmul AddCommute.add_smul
+#align add_commute.add_nsmul AddCommute.add_nsmul
 
 /- warning: pow_bit0' -> pow_bit0' is a dubious translation:
 lean 3 declaration is

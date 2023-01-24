@@ -83,7 +83,7 @@ theorem invOf_pow (m : M) [Invertible m] (n : ℕ) [Invertible (m ^ n)] : ⅟ (m
 theorem IsUnit.pow {m : M} (n : ℕ) : IsUnit m → IsUnit (m ^ n) := fun ⟨u, hu⟩ =>
   ⟨u ^ n, hu ▸ u.coe_pow _⟩
 #align is_unit.pow IsUnit.pow
-#align is_add_unit.nsmul IsAddUnit.smul
+#align is_add_unit.nsmul IsAddUnit.nsmul
 -/
 
 #print Units.ofPow /-
@@ -94,7 +94,7 @@ def Units.ofPow (u : Mˣ) (x : M) {n : ℕ} (hn : n ≠ 0) (hu : x ^ n = u) : M�
     (by rwa [← pow_succ, Nat.sub_add_cancel (Nat.succ_le_of_lt <| Nat.pos_of_ne_zero hn)])
     (Commute.self_pow _ _)
 #align units.of_pow Units.ofPow
-#align units.of_nsmul AddUnits.ofSMul
+#align units.of_nsmul AddUnits.ofNSMul
 -/
 
 #print isUnit_pow_iff /-
@@ -102,7 +102,7 @@ def Units.ofPow (u : Mˣ) (x : M) {n : ℕ} (hn : n ≠ 0) (hu : x ^ n = u) : M�
 theorem isUnit_pow_iff {a : M} {n : ℕ} (hn : n ≠ 0) : IsUnit (a ^ n) ↔ IsUnit a :=
   ⟨fun ⟨u, hu⟩ => (u.ofPow a hn hu.symm).IsUnit, fun h => h.pow n⟩
 #align is_unit_pow_iff isUnit_pow_iff
-#align is_add_unit_nsmul_iff isAddUnit_smul_iff
+#align is_add_unit_nsmul_iff isAddUnit_nsmul_iff
 -/
 
 #print isUnit_pow_succ_iff /-
@@ -110,7 +110,7 @@ theorem isUnit_pow_iff {a : M} {n : ℕ} (hn : n ≠ 0) : IsUnit (a ^ n) ↔ IsU
 theorem isUnit_pow_succ_iff {m : M} {n : ℕ} : IsUnit (m ^ (n + 1)) ↔ IsUnit m :=
   isUnit_pow_iff n.succ_ne_zero
 #align is_unit_pow_succ_iff isUnit_pow_succ_iff
-#align is_add_unit_nsmul_succ_iff isAddUnit_smul_succ_iff
+#align is_add_unit_nsmul_succ_iff isAddUnit_nsmul_succ_iff
 -/
 
 /- warning: units.of_pow_eq_one -> Units.ofPowEqOne is a dubious translation:
@@ -124,7 +124,7 @@ Case conversion may be inaccurate. Consider using '#align units.of_pow_eq_one Un
 def Units.ofPowEqOne (x : M) (n : ℕ) (hx : x ^ n = 1) (hn : n ≠ 0) : Mˣ :=
   Units.ofPow 1 x hn hx
 #align units.of_pow_eq_one Units.ofPowEqOne
-#align add_units.of_nsmul_eq_zero AddUnits.ofSMulEqZero
+#align add_units.of_nsmul_eq_zero AddUnits.ofNSMulEqZero
 
 /- warning: units.pow_of_pow_eq_one -> Units.pow_ofPowEqOne is a dubious translation:
 lean 3 declaration is
@@ -137,7 +137,7 @@ theorem Units.pow_ofPowEqOne {x : M} {n : ℕ} (hx : x ^ n = 1) (hn : n ≠ 0) :
     Units.ofPowEqOne x n hx hn ^ n = 1 :=
   Units.ext <| by rwa [Units.val_pow_eq_pow_val, Units.coe_ofPowEqOne, Units.val_one]
 #align units.pow_of_pow_eq_one Units.pow_ofPowEqOne
-#align add_units.nsmul_of_nsmul_eq_zero AddUnits.smul_ofSMulEqZero
+#align add_units.nsmul_of_nsmul_eq_zero AddUnits.nsmul_ofNSMulEqZero
 
 /- warning: is_unit_of_pow_eq_one -> isUnit_ofPowEqOne is a dubious translation:
 lean 3 declaration is
@@ -149,7 +149,7 @@ Case conversion may be inaccurate. Consider using '#align is_unit_of_pow_eq_one 
 theorem isUnit_ofPowEqOne {x : M} {n : ℕ} (hx : x ^ n = 1) (hn : n ≠ 0) : IsUnit x :=
   (Units.ofPowEqOne x n hx hn).IsUnit
 #align is_unit_of_pow_eq_one isUnit_ofPowEqOne
-#align is_add_unit_of_nsmul_eq_zero isAddUnit_ofSMulEqZero
+#align is_add_unit_of_nsmul_eq_zero isAddUnit_ofNSMulEqZero
 
 /- warning: invertible_of_pow_eq_one -> invertibleOfPowEqOne is a dubious translation:
 lean 3 declaration is

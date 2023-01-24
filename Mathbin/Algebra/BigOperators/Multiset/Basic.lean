@@ -222,6 +222,7 @@ theorem prod_map_eq_pow_single [DecidableEq ι] (i : ι)
   induction' m using Quotient.inductionOn with l
   simp [List.prod_map_eq_pow_single i f hf]
 #align multiset.prod_map_eq_pow_single Multiset.prod_map_eq_pow_single
+#align multiset.sum_map_eq_nsmul_single Multiset.sum_map_eq_nsmul_single
 
 /- warning: multiset.prod_eq_pow_single -> Multiset.prod_eq_pow_single is a dubious translation:
 lean 3 declaration is
@@ -237,12 +238,14 @@ theorem prod_eq_pow_single [DecidableEq α] (a : α) (h : ∀ (a') (_ : a' ≠ a
   induction' s using Quotient.inductionOn with l
   simp [List.prod_eq_pow_single a h]
 #align multiset.prod_eq_pow_single Multiset.prod_eq_pow_single
+#align multiset.sum_eq_nsmul_single Multiset.sum_eq_nsmul_single
 
 #print Multiset.pow_count /-
 @[to_additive]
 theorem pow_count [DecidableEq α] (a : α) : a ^ s.count a = (s.filter (Eq a)).Prod := by
   rw [filter_eq, prod_replicate]
 #align multiset.pow_count Multiset.pow_count
+#align multiset.nsmul_count Multiset.nsmul_count
 -/
 
 /- warning: multiset.prod_hom -> Multiset.prod_hom is a dubious translation:
@@ -346,6 +349,7 @@ theorem prod_map_neg [HasDistribNeg α] (s : Multiset α) :
 theorem prod_map_pow {n : ℕ} : (m.map fun i => f i ^ n).Prod = (m.map f).Prod ^ n :=
   m.prod_hom' (powMonoidHom n : α →* α) f
 #align multiset.prod_map_pow Multiset.prod_map_pow
+#align multiset.sum_map_nsmul Multiset.sum_map_nsmul
 -/
 
 /- warning: multiset.prod_map_prod_map -> Multiset.prod_map_prod_map is a dubious translation:

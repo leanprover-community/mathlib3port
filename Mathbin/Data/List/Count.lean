@@ -566,6 +566,7 @@ theorem prod_map_eq_pow_single [Monoid β] {l : List α} (a : α) (f : α → β
     · rw [ha', pow_succ]
     · rw [hf a' (Ne.symm ha') (List.mem_cons_self a' as), one_mul]
 #align list.prod_map_eq_pow_single List.prod_map_eq_pow_single
+#align list.sum_map_eq_nsmul_single List.sum_map_eq_nsmul_single
 
 /- warning: list.prod_eq_pow_single -> List.prod_eq_pow_single is a dubious translation:
 lean 3 declaration is
@@ -579,6 +580,7 @@ theorem prod_eq_pow_single [Monoid α] {l : List α} (a : α)
     (h : ∀ (a') (_ : a' ≠ a), a' ∈ l → a' = 1) : l.Prod = a ^ l.count a :=
   trans (by rw [map_id'']) (prod_map_eq_pow_single a id h)
 #align list.prod_eq_pow_single List.prod_eq_pow_single
+#align list.sum_eq_nsmul_single List.sum_eq_nsmul_single
 
 end Count
 

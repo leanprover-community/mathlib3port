@@ -351,6 +351,7 @@ Case conversion may be inaccurate. Consider using '#align pow_le_one_iff pow_le_
 theorem pow_le_one_iff {x : M} {n : ℕ} (hn : n ≠ 0) : x ^ n ≤ 1 ↔ x ≤ 1 :=
   @one_le_pow_iff Mᵒᵈ _ _ _ _ _ hn
 #align pow_le_one_iff pow_le_one_iff
+#align nsmul_nonpos_iff nsmul_nonpos_iff
 
 /- warning: one_lt_pow_iff -> one_lt_pow_iff is a dubious translation:
 lean 3 declaration is
@@ -374,6 +375,7 @@ Case conversion may be inaccurate. Consider using '#align pow_lt_one_iff pow_lt_
 theorem pow_lt_one_iff {x : M} {n : ℕ} (hn : n ≠ 0) : x ^ n < 1 ↔ x < 1 :=
   lt_iff_lt_of_le_iff_le (one_le_pow_iff hn)
 #align pow_lt_one_iff pow_lt_one_iff
+#align nsmul_neg_iff nsmul_neg_iff
 
 /- warning: pow_eq_one_iff -> pow_eq_one_iff is a dubious translation:
 lean 3 declaration is
@@ -385,6 +387,7 @@ Case conversion may be inaccurate. Consider using '#align pow_eq_one_iff pow_eq_
 theorem pow_eq_one_iff {x : M} {n : ℕ} (hn : n ≠ 0) : x ^ n = 1 ↔ x = 1 := by
   simp only [le_antisymm_iff, pow_le_one_iff hn, one_le_pow_iff hn]
 #align pow_eq_one_iff pow_eq_one_iff
+#align nsmul_eq_zero_iff nsmul_eq_zero_iff
 
 variable [CovariantClass M M (· * ·) (· < ·)] {a : M} {m n : ℕ}
 

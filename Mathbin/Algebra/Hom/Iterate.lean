@@ -363,7 +363,7 @@ theorem pow_iterate (n : ℕ) (j : ℕ) : (fun x : G => x ^ n)^[j] = fun x => x 
       mul_smul := fun m n g => pow_mul' g m n }
   smul_iterate n j
 #align pow_iterate pow_iterate
-#align smul_iterate smul_iterate
+#align nsmul_iterate nsmul_iterate
 -/
 
 end Monoid
