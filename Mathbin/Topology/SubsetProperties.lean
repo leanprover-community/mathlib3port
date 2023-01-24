@@ -1176,24 +1176,17 @@ instance Pi.compactSpace [∀ i, CompactSpace (π i)] : CompactSpace (∀ i, π 
     exact isCompact_univ_pi fun i => isCompact_univ⟩
 #align pi.compact_space Pi.compactSpace
 
-/- warning: filter.Coprod_cocompact clashes with filter.coprod_cocompact -> Filter.coprod_cocompact
-warning: filter.Coprod_cocompact -> Filter.coprod_cocompact is a dubious translation:
-lean 3 declaration is
-  forall {δ : Type.{u1}} {κ : δ -> Type.{u2}} [_inst_4 : forall (d : δ), TopologicalSpace.{u2} (κ d)], Eq.{succ (max u1 u2)} (Filter.{max u1 u2} (forall (i : δ), κ i)) (Filter.coprod.{u1, u2} δ (fun (d : δ) => κ d) (fun (d : δ) => Filter.cocompact.{u2} (κ d) (_inst_4 d))) (Filter.cocompact.{max u1 u2} (forall (d : δ), κ d) (PiCat.topologicalSpace.{u1, u2} δ (fun (i : δ) => κ i) (fun (a : δ) => _inst_4 a)))
-but is expected to have type
-  forall {δ : Type.{u1}} {κ : Type.{u2}} [_inst_4 : TopologicalSpace.{u1} δ] [_inst_2 : TopologicalSpace.{u2} κ], Eq.{succ (max u1 u2)} (Filter.{max u1 u2} (Prod.{u1, u2} δ κ)) (Filter.coprod.{u1, u2} δ κ (Filter.cocompact.{u1} δ _inst_4) (Filter.cocompact.{u2} κ _inst_2)) (Filter.cocompact.{max u1 u2} (Prod.{u1, u2} δ κ) (Prod.topologicalSpace.{u1, u2} δ κ _inst_4 _inst_2))
-Case conversion may be inaccurate. Consider using '#align filter.Coprod_cocompact Filter.coprod_cocompactₓ'. -/
 /-- **Tychonoff's theorem** formulated in terms of filters: `filter.cocompact` on an indexed product
 type `Π d, κ d` the `filter.Coprod` of filters `filter.cocompact` on `κ d`. -/
-theorem Filter.coprod_cocompact {δ : Type _} {κ : δ → Type _} [∀ d, TopologicalSpace (κ d)] :
-    (Filter.coprod fun d => Filter.cocompact (κ d)) = Filter.cocompact (∀ d, κ d) :=
+theorem Filter.coprodᵢ_cocompact {δ : Type _} {κ : δ → Type _} [∀ d, TopologicalSpace (κ d)] :
+    (Filter.coprodᵢ fun d => Filter.cocompact (κ d)) = Filter.cocompact (∀ d, κ d) :=
   by
   refine' le_antisymm (supᵢ_le fun i => Filter.comap_cocompact_le (continuous_apply i)) _
   refine' compl_surjective.forall.2 fun s H => _
   simp only [compl_mem_Coprod, Filter.mem_cocompact, compl_subset_compl, image_subset_iff] at H⊢
   choose K hKc htK using H
   exact ⟨Set.pi univ K, isCompact_univ_pi hKc, fun f hf i hi => htK i hf⟩
-#align filter.Coprod_cocompact Filter.coprod_cocompact
+#align filter.Coprod_cocompact Filter.coprodᵢ_cocompact
 
 end Tychonoff
 

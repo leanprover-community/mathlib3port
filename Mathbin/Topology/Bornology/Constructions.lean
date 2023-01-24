@@ -34,8 +34,8 @@ instance : Bornology (α × β)
 
 instance : Bornology (∀ i, π i)
     where
-  cobounded := Filter.coprod fun i => cobounded (π i)
-  le_cofinite := @coprod_cofinite ι π _ ▸ Filter.coprod_mono fun i => Bornology.le_cofinite _
+  cobounded := Filter.coprodᵢ fun i => cobounded (π i)
+  le_cofinite := @coprodᵢ_cofinite ι π _ ▸ Filter.coprodᵢ_mono fun i => Bornology.le_cofinite _
 
 /-- Inverse image of a bornology. -/
 @[reducible]
@@ -109,13 +109,13 @@ theorem isBounded_prod_self : IsBounded (s ×ˢ s) ↔ IsBounded s :=
 -/
 
 
-theorem cobounded_pi : cobounded (∀ i, π i) = Filter.coprod fun i => cobounded (π i) :=
+theorem cobounded_pi : cobounded (∀ i, π i) = Filter.coprodᵢ fun i => cobounded (π i) :=
   rfl
 #align bornology.cobounded_pi Bornology.cobounded_pi
 
 theorem forall_isBounded_image_eval_iff {s : Set (∀ i, π i)} :
     (∀ i, IsBounded (eval i '' s)) ↔ IsBounded s :=
-  compl_mem_coprod.symm
+  compl_mem_coprodᵢ.symm
 #align bornology.forall_is_bounded_image_eval_iff Bornology.forall_isBounded_image_eval_iff
 
 theorem IsBounded.pi (h : ∀ i, IsBounded (S i)) : IsBounded (pi univ S) :=
