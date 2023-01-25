@@ -1628,11 +1628,11 @@ instance pure (a : ℝ) : FTCFilter a (pure a) ⊥
   le_nhds := bot_le
 #align interval_integral.FTC_filter.pure intervalIntegral.FTCFilter.pure
 
-instance nhdsWithin_singleton (a : ℝ) : FTCFilter a (𝓝[{a}] a) ⊥ :=
+instance nhdsWithinSingleton (a : ℝ) : FTCFilter a (𝓝[{a}] a) ⊥ :=
   by
   rw [nhdsWithin, principal_singleton, inf_eq_right.2 (pure_le_nhds a)]
   infer_instance
-#align interval_integral.FTC_filter.nhds_within_singleton intervalIntegral.FTCFilter.nhdsWithin_singleton
+#align interval_integral.FTC_filter.nhds_within_singleton intervalIntegral.FTCFilter.nhdsWithinSingleton
 
 theorem finiteAtInner {a : ℝ} (l : Filter ℝ) {l'} [h : FTCFilter a l l'] {μ : Measure ℝ}
     [IsLocallyFiniteMeasure μ] : μ.FiniteAtFilter l' :=
@@ -1645,34 +1645,34 @@ instance nhds (a : ℝ) : FTCFilter a (𝓝 a) (𝓝 a)
   le_nhds := le_rfl
 #align interval_integral.FTC_filter.nhds intervalIntegral.FTCFilter.nhds
 
-instance nhds_univ (a : ℝ) : FTCFilter a (𝓝[univ] a) (𝓝 a) :=
+instance nhdsUniv (a : ℝ) : FTCFilter a (𝓝[univ] a) (𝓝 a) :=
   by
   rw [nhdsWithin_univ]
   infer_instance
-#align interval_integral.FTC_filter.nhds_univ intervalIntegral.FTCFilter.nhds_univ
+#align interval_integral.FTC_filter.nhds_univ intervalIntegral.FTCFilter.nhdsUniv
 
-instance nhds_left (a : ℝ) : FTCFilter a (𝓝[≤] a) (𝓝[≤] a)
+instance nhdsLeft (a : ℝ) : FTCFilter a (𝓝[≤] a) (𝓝[≤] a)
     where
   pure_le := pure_le_nhdsWithin right_mem_Iic
   le_nhds := inf_le_left
-#align interval_integral.FTC_filter.nhds_left intervalIntegral.FTCFilter.nhds_left
+#align interval_integral.FTC_filter.nhds_left intervalIntegral.FTCFilter.nhdsLeft
 
-instance nhds_right (a : ℝ) : FTCFilter a (𝓝[≥] a) (𝓝[>] a)
+instance nhdsRight (a : ℝ) : FTCFilter a (𝓝[≥] a) (𝓝[>] a)
     where
   pure_le := pure_le_nhdsWithin left_mem_Ici
   le_nhds := inf_le_left
-#align interval_integral.FTC_filter.nhds_right intervalIntegral.FTCFilter.nhds_right
+#align interval_integral.FTC_filter.nhds_right intervalIntegral.FTCFilter.nhdsRight
 
-instance nhds_icc {x a b : ℝ} [h : Fact (x ∈ Icc a b)] : FTCFilter x (𝓝[Icc a b] x) (𝓝[Icc a b] x)
+instance nhdsIcc {x a b : ℝ} [h : Fact (x ∈ Icc a b)] : FTCFilter x (𝓝[Icc a b] x) (𝓝[Icc a b] x)
     where
   pure_le := pure_le_nhdsWithin h.out
   le_nhds := inf_le_left
-#align interval_integral.FTC_filter.nhds_Icc intervalIntegral.FTCFilter.nhds_icc
+#align interval_integral.FTC_filter.nhds_Icc intervalIntegral.FTCFilter.nhdsIcc
 
-instance nhds_uIcc {x a b : ℝ} [h : Fact (x ∈ [a, b])] : FTCFilter x (𝓝[[a, b]] x) (𝓝[[a, b]] x) :=
+instance nhdsUIcc {x a b : ℝ} [h : Fact (x ∈ [a, b])] : FTCFilter x (𝓝[[a, b]] x) (𝓝[[a, b]] x) :=
   haveI : Fact (x ∈ Set.Icc (min a b) (max a b)) := h
   FTC_filter.nhds_Icc
-#align interval_integral.FTC_filter.nhds_uIcc intervalIntegral.FTCFilter.nhds_uIcc
+#align interval_integral.FTC_filter.nhds_uIcc intervalIntegral.FTCFilter.nhdsUIcc
 
 end FTCFilter
 

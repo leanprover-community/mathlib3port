@@ -924,7 +924,7 @@ theorem tendsto_order {f : β → α} {a : α} {x : Filter β} :
   simp [nhds_eq_order a, tendsto_inf, tendsto_infi, tendsto_principal]
 #align tendsto_order tendsto_order
 
-instance tendsto_icc_class_nhds (a : α) : TendstoIxxClass Icc (𝓝 a) (𝓝 a) :=
+instance tendstoIccClassNhds (a : α) : TendstoIxxClass Icc (𝓝 a) (𝓝 a) :=
   by
   simp only [nhds_eq_order, infᵢ_subtype']
   refine'
@@ -932,19 +932,19 @@ instance tendsto_icc_class_nhds (a : α) : TendstoIxxClass Icc (𝓝 a) (𝓝 a)
       fun s hs => _
   refine' ((ord_connected_bInter _).inter (ord_connected_bInter _)).out <;> intro _ _
   exacts[ord_connected_Ioi, ord_connected_Iio]
-#align tendsto_Icc_class_nhds tendsto_icc_class_nhds
+#align tendsto_Icc_class_nhds tendstoIccClassNhds
 
-instance tendsto_ico_class_nhds (a : α) : TendstoIxxClass Ico (𝓝 a) (𝓝 a) :=
+instance tendstoIcoClassNhds (a : α) : TendstoIxxClass Ico (𝓝 a) (𝓝 a) :=
   tendstoIxxClass_of_subset fun _ _ => Ico_subset_Icc_self
-#align tendsto_Ico_class_nhds tendsto_ico_class_nhds
+#align tendsto_Ico_class_nhds tendstoIcoClassNhds
 
-instance tendsto_ioc_class_nhds (a : α) : TendstoIxxClass Ioc (𝓝 a) (𝓝 a) :=
+instance tendstoIocClassNhds (a : α) : TendstoIxxClass Ioc (𝓝 a) (𝓝 a) :=
   tendstoIxxClass_of_subset fun _ _ => Ioc_subset_Icc_self
-#align tendsto_Ioc_class_nhds tendsto_ioc_class_nhds
+#align tendsto_Ioc_class_nhds tendstoIocClassNhds
 
-instance tendsto_ioo_class_nhds (a : α) : TendstoIxxClass Ioo (𝓝 a) (𝓝 a) :=
+instance tendstoIooClassNhds (a : α) : TendstoIxxClass Ioo (𝓝 a) (𝓝 a) :=
   tendstoIxxClass_of_subset fun _ _ => Ioo_subset_Icc_self
-#align tendsto_Ioo_class_nhds tendsto_ioo_class_nhds
+#align tendsto_Ioo_class_nhds tendstoIooClassNhds
 
 /-- **Squeeze theorem** (also known as **sandwich theorem**). This version assumes that inequalities
 hold eventually for the filter. -/
@@ -984,13 +984,13 @@ theorem tendsto_order_unbounded {f : β → α} {a : α} {x : Filter β} (hu : �
 
 end Preorder
 
-instance tendsto_Ixx_nhdsWithin {α : Type _} [Preorder α] [TopologicalSpace α] (a : α) {s t : Set α}
+instance tendstoIxxNhdsWithin {α : Type _} [Preorder α] [TopologicalSpace α] (a : α) {s t : Set α}
     {Ixx} [TendstoIxxClass Ixx (𝓝 a) (𝓝 a)] [TendstoIxxClass Ixx (𝓟 s) (𝓟 t)] :
     TendstoIxxClass Ixx (𝓝[s] a) (𝓝[t] a) :=
   Filter.tendstoIxxClass_inf
-#align tendsto_Ixx_nhds_within tendsto_Ixx_nhdsWithin
+#align tendsto_Ixx_nhds_within tendstoIxxNhdsWithin
 
-instance tendsto_icc_class_nhds_pi {ι : Type _} {α : ι → Type _} [∀ i, Preorder (α i)]
+instance tendstoIccClassNhdsPi {ι : Type _} {α : ι → Type _} [∀ i, Preorder (α i)]
     [∀ i, TopologicalSpace (α i)] [∀ i, OrderTopology (α i)] (f : ∀ i, α i) :
     TendstoIxxClass Icc (𝓝 f) (𝓝 f) := by
   constructor
@@ -1001,7 +1001,7 @@ instance tendsto_icc_class_nhds_pi {ι : Type _} {α : ι → Type _} [∀ i, Pr
   have : tendsto (fun g : ∀ i, α i => g i) (𝓝 f) (𝓝 (f i)) := (continuous_apply i).Tendsto f
   refine' (tendsto_lift'.1 ((this.comp tendsto_fst).IccCat (this.comp tendsto_snd)) s hs).mono _
   exact fun p hp g hg => hp ⟨hg.1 _, hg.2 _⟩
-#align tendsto_Icc_class_nhds_pi tendsto_icc_class_nhds_pi
+#align tendsto_Icc_class_nhds_pi tendstoIccClassNhdsPi
 
 theorem induced_order_topology' {α : Type u} {β : Type v} [Preorder α] [ta : TopologicalSpace β]
     [Preorder β] [OrderTopology β] (f : α → β) (hf : ∀ {x y}, f x < f y ↔ x < y)
