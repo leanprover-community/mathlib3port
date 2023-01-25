@@ -249,7 +249,7 @@ def drop : Mvpfunctor n where
 
 /-- Split polynomial functor, get a univariate functor
 from a `n+1`-ary functor -/
-def last : Pfunctor where
+def last : PFunctor where
   A := P.A
   B a := (P.B a).last
 #align mvpfunctor.last Mvpfunctor.last

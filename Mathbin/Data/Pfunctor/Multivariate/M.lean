@@ -63,18 +63,18 @@ variable {n : ℕ} (P : Mvpfunctor.{u} (n + 1))
 /-- A path from the root of a tree to one of its node -/
 inductive M.Path : P.last.M → Fin2 n → Type u
   |
-  root (x : P.last.M) (a : P.A) (f : P.last.B a → P.last.M) (h : Pfunctor.M.dest x = ⟨a, f⟩)
+  root (x : P.last.M) (a : P.A) (f : P.last.B a → P.last.M) (h : PFunctor.M.dest x = ⟨a, f⟩)
     (i : Fin2 n) (c : P.drop.B a i) : M.path x i
   |
-  child (x : P.last.M) (a : P.A) (f : P.last.B a → P.last.M) (h : Pfunctor.M.dest x = ⟨a, f⟩)
+  child (x : P.last.M) (a : P.A) (f : P.last.B a → P.last.M) (h : PFunctor.M.dest x = ⟨a, f⟩)
     (j : P.last.B a) (i : Fin2 n) (c : M.path (f j) i) : M.path x i
 #align mvpfunctor.M.path Mvpfunctor.M.Path
 
 instance M.Path.inhabited (x : P.last.M) {i} [Inhabited (P.drop.B x.head i)] :
     Inhabited (M.Path P x i) :=
-  ⟨M.Path.root _ (Pfunctor.M.head x) (Pfunctor.M.children x)
-      (Pfunctor.M.casesOn' x <| by
-        intros <;> simp [Pfunctor.M.dest_mk] <;> ext <;> rw [Pfunctor.M.children_mk] <;> rfl)
+  ⟨M.Path.root _ (PFunctor.M.head x) (PFunctor.M.children x)
+      (PFunctor.M.casesOn' x <| by
+        intros <;> simp [PFunctor.M.dest_mk] <;> ext <;> rw [PFunctor.M.children_mk] <;> rfl)
       _ default⟩
 #align mvpfunctor.M.path.inhabited Mvpfunctor.M.Path.inhabited
 
@@ -97,13 +97,13 @@ instance mvfunctorM : MvFunctor P.M := by delta M <;> infer_instance
 
 instance inhabitedM {α : TypeVec _} [I : Inhabited P.A] [∀ i : Fin2 n, Inhabited (α i)] :
     Inhabited (P.M α) :=
-  @Obj.inhabited _ (mp P) _ (@Pfunctor.M.inhabited P.last I) _
+  @Obj.inhabited _ (mp P) _ (@PFunctor.M.inhabited P.last I) _
 #align mvpfunctor.inhabited_M Mvpfunctor.inhabitedM
 
 /-- construct through corecursion the shape of an M-type
 without its contents -/
 def M.corecShape {β : Type u} (g₀ : β → P.A) (g₂ : ∀ b : β, P.last.B (g₀ b) → β) : β → P.last.M :=
-  Pfunctor.M.corec fun b => ⟨g₀ b, g₂ b⟩
+  PFunctor.M.corec fun b => ⟨g₀ b, g₂ b⟩
 #align mvpfunctor.M.corec_shape Mvpfunctor.M.corecShape
 
 /-- Proof of type equality as an arrow -/
@@ -120,18 +120,18 @@ def M.corecContents {α : TypeVec.{u} n} {β : Type u} (g₀ : β → P.A)
     ∀ x b, x = M.corecShape P g₀ g₂ b → M.Path P x ⟹ α
   | _, b, h, _, M.path.root x a f h' i c =>
     have : a = g₀ b := by
-      rw [h, M.corec_shape, Pfunctor.M.dest_corec] at h'
+      rw [h, M.corec_shape, PFunctor.M.dest_corec] at h'
       cases h'
       rfl
     g₁ b i (P.castDropB this i c)
   | _, b, h, _, M.path.child x a f h' j i c =>
     have h₀ : a = g₀ b := by
-      rw [h, M.corec_shape, Pfunctor.M.dest_corec] at h'
+      rw [h, M.corec_shape, PFunctor.M.dest_corec] at h'
       cases h'
       rfl
     have h₁ : f j = M.corecShape P g₀ g₂ (g₂ b (castLastB P h₀ j)) :=
       by
-      rw [h, M.corec_shape, Pfunctor.M.dest_corec] at h'
+      rw [h, M.corec_shape, PFunctor.M.dest_corec] at h'
       cases h'
       rfl
     M.corec_contents (f j) (g₂ b (P.castLastB h₀ j)) h₁ i c
@@ -150,26 +150,26 @@ def M.corec {α : TypeVec n} {β : Type u} (g : β → P.Obj (α.append1 β)) : 
 
 /-- Implementation of destructor for M-type of `P` -/
 def M.pathDestLeft {α : TypeVec n} {x : P.last.M} {a : P.A} {f : P.last.B a → P.last.M}
-    (h : Pfunctor.M.dest x = ⟨a, f⟩) (f' : M.Path P x ⟹ α) : P.drop.B a ⟹ α := fun i c =>
+    (h : PFunctor.M.dest x = ⟨a, f⟩) (f' : M.Path P x ⟹ α) : P.drop.B a ⟹ α := fun i c =>
   f' i (M.Path.root x a f h i c)
 #align mvpfunctor.M.path_dest_left Mvpfunctor.M.pathDestLeft
 
 /-- Implementation of destructor for M-type of `P` -/
 def M.pathDestRight {α : TypeVec n} {x : P.last.M} {a : P.A} {f : P.last.B a → P.last.M}
-    (h : Pfunctor.M.dest x = ⟨a, f⟩) (f' : M.Path P x ⟹ α) : ∀ j : P.last.B a, M.Path P (f j) ⟹ α :=
+    (h : PFunctor.M.dest x = ⟨a, f⟩) (f' : M.Path P x ⟹ α) : ∀ j : P.last.B a, M.Path P (f j) ⟹ α :=
   fun j i c => f' i (M.Path.child x a f h j i c)
 #align mvpfunctor.M.path_dest_right Mvpfunctor.M.pathDestRight
 
 /-- Destructor for M-type of `P` -/
 def M.dest' {α : TypeVec n} {x : P.last.M} {a : P.A} {f : P.last.B a → P.last.M}
-    (h : Pfunctor.M.dest x = ⟨a, f⟩) (f' : M.Path P x ⟹ α) : P.Obj (α.append1 (P.M α)) :=
+    (h : PFunctor.M.dest x = ⟨a, f⟩) (f' : M.Path P x ⟹ α) : P.Obj (α.append1 (P.M α)) :=
   ⟨a, splitFun (M.pathDestLeft P h f') fun x => ⟨f x, M.pathDestRight P h f' x⟩⟩
 #align mvpfunctor.M.dest' Mvpfunctor.M.dest'
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Destructor for M-types -/
 def M.dest {α : TypeVec n} (x : P.M α) : P.Obj (α ::: P.M α) :=
-  M.dest' P (Sigma.eta <| Pfunctor.M.dest x.fst).symm x.snd
+  M.dest' P (Sigma.eta <| PFunctor.M.dest x.fst).symm x.snd
 #align mvpfunctor.M.dest Mvpfunctor.M.dest
 
 /-- Constructor for M-types -/
@@ -178,13 +178,13 @@ def M.mk {α : TypeVec n} : P.Obj (α.append1 (P.M α)) → P.M α :=
 #align mvpfunctor.M.mk Mvpfunctor.M.mk
 
 theorem M.dest'_eq_dest' {α : TypeVec n} {x : P.last.M} {a₁ : P.A} {f₁ : P.last.B a₁ → P.last.M}
-    (h₁ : Pfunctor.M.dest x = ⟨a₁, f₁⟩) {a₂ : P.A} {f₂ : P.last.B a₂ → P.last.M}
-    (h₂ : Pfunctor.M.dest x = ⟨a₂, f₂⟩) (f' : M.Path P x ⟹ α) : M.dest' P h₁ f' = M.dest' P h₂ f' :=
+    (h₁ : PFunctor.M.dest x = ⟨a₁, f₁⟩) {a₂ : P.A} {f₂ : P.last.B a₂ → P.last.M}
+    (h₂ : PFunctor.M.dest x = ⟨a₂, f₂⟩) (f' : M.Path P x ⟹ α) : M.dest' P h₁ f' = M.dest' P h₂ f' :=
   by cases h₁.symm.trans h₂ <;> rfl
 #align mvpfunctor.M.dest'_eq_dest' Mvpfunctor.M.dest'_eq_dest'
 
 theorem M.dest_eq_dest' {α : TypeVec n} {x : P.last.M} {a : P.A} {f : P.last.B a → P.last.M}
-    (h : Pfunctor.M.dest x = ⟨a, f⟩) (f' : M.Path P x ⟹ α) : M.dest P ⟨x, f'⟩ = M.dest' P h f' :=
+    (h : PFunctor.M.dest x = ⟨a, f⟩) (f' : M.Path P x ⟹ α) : M.dest P ⟨x, f'⟩ = M.dest' P h f' :=
   M.dest'_eq_dest' _ _ _ _
 #align mvpfunctor.M.dest_eq_dest' Mvpfunctor.M.dest_eq_dest'
 
@@ -209,12 +209,12 @@ theorem M.dest_corec {α : TypeVec n} {β : Type u} (g : β → P.Obj (α.append
 theorem M.bisim_lemma {α : TypeVec n} {a₁ : (mp P).A} {f₁ : (mp P).B a₁ ⟹ α} {a' : P.A}
     {f' : (P.B a').drop ⟹ α} {f₁' : (P.B a').last → M P α}
     (e₁ : M.dest P ⟨a₁, f₁⟩ = ⟨a', splitFun f' f₁'⟩) :
-    ∃ (g₁' : _)(e₁' : Pfunctor.M.dest a₁ = ⟨a', g₁'⟩),
+    ∃ (g₁' : _)(e₁' : PFunctor.M.dest a₁ = ⟨a', g₁'⟩),
       f' = M.pathDestLeft P e₁' f₁ ∧
         f₁' = fun x : (last P).B a' => ⟨g₁' x, M.pathDestRight P e₁' f₁ x⟩ :=
   by
   generalize ef : @split_fun n _ (append1 α (M P α)) f' f₁' = ff at e₁
-  cases' e₁' : Pfunctor.M.dest a₁ with a₁' g₁'
+  cases' e₁' : PFunctor.M.dest a₁ with a₁' g₁'
   rw [M.dest_eq_dest' _ e₁'] at e₁
   cases e₁; exact ⟨_, e₁', split_fun_inj ef⟩
 #align mvpfunctor.M.bisim_lemma Mvpfunctor.M.bisim_lemma
@@ -233,7 +233,7 @@ theorem M.bisim {α : TypeVec n} (R : P.M α → P.M α → Prop)
   have : a₁ = a₂ :=
     by
     refine'
-      Pfunctor.M.bisim (fun a₁ a₂ => ∃ x y, R x y ∧ x.1 = a₁ ∧ y.1 = a₂) _ _ _
+      PFunctor.M.bisim (fun a₁ a₂ => ∃ x y, R x y ∧ x.1 = a₁ ∧ y.1 = a₂) _ _ _
         ⟨⟨a₁, f₁⟩, ⟨a₂, f₂⟩, r, rfl, rfl⟩
     rintro _ _ ⟨⟨a₁, f₁⟩, ⟨a₂, f₂⟩, r, rfl, rfl⟩
     rcases h _ _ r with ⟨a', f', f₁', f₂', e₁, e₂, h'⟩
