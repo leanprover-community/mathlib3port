@@ -55,7 +55,7 @@ theorem IsSubfield.pow_mem {a : F} {n : ℤ} {s : Set F} (hs : IsSubfield s) (h 
 #align is_subfield.pow_mem IsSubfield.pow_mem
 
 theorem Univ.isSubfield : IsSubfield (@Set.univ F) :=
-  { Univ.isSubmonoid, IsAddSubgroup.univ_add_subgroup with inv_mem := by intros <;> trivial }
+  { Univ.IsSubmonoid, IsAddSubgroup.univ_add_subgroup with inv_mem := by intros <;> trivial }
 #align univ.is_subfield Univ.isSubfield
 
 theorem Preimage.isSubfield {K : Type _} [Field K] (f : F →+* K) {s : Set K} (hs : IsSubfield s) :

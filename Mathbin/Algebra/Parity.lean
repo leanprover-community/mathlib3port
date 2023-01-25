@@ -801,7 +801,7 @@ theorem odd_abs [LinearOrder α] : Odd (abs a) ↔ Odd a := by
 
 end Ring
 
-section Powers
+section powers
 
 variable [LinearOrderedRing R] {a : R} {n : ℕ}
 
@@ -930,5 +930,5 @@ theorem Odd.strictMono_pow (hn : Odd n) : StrictMono fun a : R => a ^ n := by
   cases' hn with k hk <;> simpa only [hk, two_mul] using strictMono_pow_bit1 _
 #align odd.strict_mono_pow Odd.strictMono_pow
 
-end Powers
+end powers
 

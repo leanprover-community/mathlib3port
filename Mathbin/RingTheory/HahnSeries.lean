@@ -1791,7 +1791,7 @@ theorem hsum_embDomain : (s.embDomain f).hsum = s.hsum :=
 
 end EmbDomain
 
-section Powers
+section powers
 
 variable [LinearOrderedCancelAddCommMonoid Γ] [CommRing R] [IsDomain R]
 
@@ -1856,7 +1856,7 @@ theorem one_sub_self_mul_hsum_powers : (1 - x) * (powers x hx).hsum = 1 :=
   simp
 #align hahn_series.summable_family.one_sub_self_mul_hsum_powers HahnSeries.SummableFamily.one_sub_self_mul_hsum_powers
 
-end Powers
+end powers
 
 end SummableFamily
 

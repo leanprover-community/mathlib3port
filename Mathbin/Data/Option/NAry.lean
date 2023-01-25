@@ -391,6 +391,7 @@ theorem map_map₂_right_anticomm {f : α → β' → γ} {g : β → β'} {f' :
     map₂ f a (b.map g) = (map₂ f' b a).map g' := by cases a <;> cases b <;> simp [h_right_anticomm]
 #align option.map_map₂_right_anticomm Option.map_map₂_right_anticomm
 
+#print Option.map₂_left_identity /-
 /-- If `a` is a left identity for a binary operation `f`, then `some a` is a left identity for
 `option.map₂ f`. -/
 theorem map₂_left_identity {f : α → β → β} {a : α} (h : ∀ b, f a b = b) (o : Option β) :
@@ -398,7 +399,14 @@ theorem map₂_left_identity {f : α → β → β} {a : α} (h : ∀ b, f a b =
   cases o
   exacts[rfl, congr_arg some (h _)]
 #align option.map₂_left_identity Option.map₂_left_identity
+-/
 
+/- warning: option.map₂_right_identity -> Option.map₂_right_identity is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β -> α} {b : β}, (forall (a : α), Eq.{succ u1} α (f a b) a) -> (forall (o : Option.{u1} α), Eq.{succ u1} (Option.{u1} α) (Option.map₂.{u1, u2, u1} α β α f o (Option.some.{u2} β b)) o)
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β -> α} {b : β}, (forall (a : α), Eq.{succ u2} α (f a b) a) -> (forall (o : Option.{u2} α), Eq.{succ u2} (Option.{u2} α) (Option.map₂.{u2, u1, u2} α β α f o (Option.some.{u1} β b)) o)
+Case conversion may be inaccurate. Consider using '#align option.map₂_right_identity Option.map₂_right_identityₓ'. -/
 /-- If `b` is a right identity for a binary operation `f`, then `some b` is a right identity for
 `option.map₂ f`. -/
 theorem map₂_right_identity {f : α → β → α} {b : β} (h : ∀ a, f a b = a) (o : Option α) :

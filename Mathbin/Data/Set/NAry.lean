@@ -795,12 +795,20 @@ theorem image_image2_right_anticomm {f : α → β' → γ} {g : β → β'} {f'
   (image_image2_antidistrib_right fun a b => (h_right_anticomm b a).symm).symm
 #align set.image_image2_right_anticomm Set.image_image2_right_anticomm
 
+#print Set.image2_left_identity /-
 /-- If `a` is a left identity for `f : α → β → β`, then `{a}` is a left identity for
 `set.image2 f`. -/
 theorem image2_left_identity {f : α → β → β} {a : α} (h : ∀ b, f a b = b) (t : Set β) :
     image2 f {a} t = t := by rw [image2_singleton_left, show f a = id from funext h, image_id]
 #align set.image2_left_identity Set.image2_left_identity
+-/
 
+/- warning: set.image2_right_identity -> Set.image2_right_identity is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β -> α} {b : β}, (forall (a : α), Eq.{succ u1} α (f a b) a) -> (forall (s : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (Set.image2.{u1, u2, u1} α β α f s (Singleton.singleton.{u2, u2} β (Set.{u2} β) (Set.hasSingleton.{u2} β) b)) s)
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β -> α} {b : β}, (forall (a : α), Eq.{succ u2} α (f a b) a) -> (forall (s : Set.{u2} α), Eq.{succ u2} (Set.{u2} α) (Set.image2.{u2, u1, u2} α β α f s (Singleton.singleton.{u1, u1} β (Set.{u1} β) (Set.instSingletonSet.{u1} β) b)) s)
+Case conversion may be inaccurate. Consider using '#align set.image2_right_identity Set.image2_right_identityₓ'. -/
 /-- If `b` is a right identity for `f : α → β → α`, then `{b}` is a right identity for
 `set.image2 f`. -/
 theorem image2_right_identity {f : α → β → α} {b : β} (h : ∀ a, f a b = a) (s : Set α) :

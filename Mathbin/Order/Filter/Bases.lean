@@ -612,12 +612,6 @@ theorem hasBasis_self {l : Filter α} {P : Set α → Prop} :
       ⟨fun h => h.1, fun h => ⟨h, fun ⟨t, hl, hP, hts⟩ => mem_of_superset hl hts⟩⟩
 #align filter.has_basis_self Filter.hasBasis_self
 
-/- warning: filter.has_basis.comp_of_surjective -> Filter.HasBasis.comp_of_surjective is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {ι' : Sort.{u3}} {l : Filter.{u1} α} {p : ι -> Prop} {s : ι -> (Set.{u1} α)}, (Filter.HasBasis.{u1, u2} α ι l p s) -> (forall {g : ι' -> ι}, (Function.Surjective.{u3, u2} ι' ι g) -> (Filter.HasBasis.{u1, u3} α ι' l (Function.comp.{u3, u2, 1} ι' ι Prop p g) (Function.comp.{u3, u2, succ u1} ι' ι (Set.{u1} α) s g)))
-but is expected to have type
-  forall {α : Type.{u3}} {ι : Sort.{u2}} {ι' : Sort.{u1}} {l : Filter.{u3} α} {p : ι -> Prop} {s : ι -> (Set.{u3} α)}, (Filter.HasBasis.{u3, u2} α ι l p s) -> (forall {g : ι' -> ι}, (Function.Surjective.{u1, u2} ι' ι g) -> (Filter.HasBasis.{u3, u1} α ι' l (Function.comp.{u1, u2, 1} ι' ι Prop p g) (Function.comp.{u1, u2, succ u3} ι' ι (Set.{u3} α) s g)))
-Case conversion may be inaccurate. Consider using '#align filter.has_basis.comp_of_surjective Filter.HasBasis.comp_of_surjectiveₓ'. -/
 theorem HasBasis.comp_of_surjective (h : l.HasBasis p s) {g : ι' → ι} (hg : Function.Surjective g) :
     l.HasBasis (p ∘ g) (s ∘ g) :=
   ⟨fun t => h.mem_iff.trans hg.exists⟩

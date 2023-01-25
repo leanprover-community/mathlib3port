@@ -71,7 +71,7 @@ theorem isSubring_image {R : Type u} {S : Type v} [Ring R] [Ring S] (f : R →+*
 theorem isSubring_set_range {R : Type u} {S : Type v} [Ring R] [Ring S] (f : R →+* S) :
     IsSubring (Set.range f) :=
   { IsAddGroupHom.range_add_subgroup f.to_is_add_group_hom,
-    Range.isSubmonoid f.to_is_monoid_hom with }
+    Range.is_submonoid f.to_is_monoid_hom with }
 #align ring_hom.is_subring_set_range RingHom.isSubring_set_range
 
 end RingHom
@@ -87,7 +87,7 @@ theorem IsSubring.inter {S₁ S₂ : Set R} (hS₁ : IsSubring S₁) (hS₂ : Is
 theorem IsSubring.interᵢ {ι : Sort _} {S : ι → Set R} (h : ∀ y : ι, IsSubring (S y)) :
     IsSubring (Set.interᵢ S) :=
   { IsAddSubgroup.interᵢ fun i => (h i).to_is_add_subgroup,
-    IsSubmonoid.interᵢ fun i => (h i).to_is_submonoid with }
+    IsSubmonoid.Inter fun i => (h i).to_is_submonoid with }
 #align is_subring.Inter IsSubring.interᵢ
 
 theorem isSubring_unionᵢ_of_directed {ι : Type _} [hι : Nonempty ι] {s : ι → Set R}
@@ -95,7 +95,7 @@ theorem isSubring_unionᵢ_of_directed {ι : Type _} [hι : Nonempty ι] {s : ι
     IsSubring (⋃ i, s i) :=
   { to_is_add_subgroup :=
       is_add_subgroup_unionᵢ_of_directed (fun i => (h i).to_is_add_subgroup) Directed
-    to_is_submonoid := isSubmonoid_unionᵢ_of_directed (fun i => (h i).to_is_submonoid) Directed }
+    to_is_submonoid := is_submonoid_Union_of_directed (fun i => (h i).to_is_submonoid) Directed }
 #align is_subring_Union_of_directed isSubring_unionᵢ_of_directed
 
 namespace Ring
@@ -103,7 +103,7 @@ namespace Ring
 /-- The smallest subring containing a given subset of a ring, considered as a set. This function
 is deprecated; use `subring.closure`. -/
 def closure (s : Set R) :=
-  AddGroup.closure (Monoid.closure s)
+  AddGroup.closure (Monoid.Closure s)
 #align ring.closure Ring.closure
 
 variable {s : Set R}
@@ -188,12 +188,12 @@ theorem closure.isSubring : IsSubring (closure s) :=
   {
     AddGroup.closure.is_add_subgroup
       _ with
-    one_mem := AddGroup.mem_closure <| IsSubmonoid.one_mem <| Monoid.closure.isSubmonoid _
+    one_mem := AddGroup.mem_closure <| IsSubmonoid.one_mem <| Monoid.closure.IsSubmonoid _
     mul_mem := fun a b ha hb =>
       AddGroup.InClosure.rec_on hb
         (fun c hc =>
           AddGroup.InClosure.rec_on ha
-            (fun d hd => AddGroup.subset_closure ((Monoid.closure.isSubmonoid _).mul_mem hd hc))
+            (fun d hd => AddGroup.subset_closure ((Monoid.closure.IsSubmonoid _).mul_mem hd hc))
             ((zero_mul c).symm ▸ (AddGroup.closure.is_add_subgroup _).zero_mem)
             (fun d hd hdc =>
               neg_mul_eq_neg_mul d c ▸ (AddGroup.closure.is_add_subgroup _).neg_mem hdc)
