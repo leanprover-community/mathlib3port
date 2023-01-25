@@ -360,9 +360,11 @@ theorem exists_eq_add_of_le (h : m ≤ n) : ∃ k : ℕ, n = m + k :=
 #align nat.exists_eq_add_of_le Nat.exists_eq_add_of_le
 -/
 
+#print Nat.exists_eq_add_of_le' /-
 theorem exists_eq_add_of_le' (h : m ≤ n) : ∃ k : ℕ, n = k + m :=
   ⟨n - m, (Nat.sub_add_cancel h).symm⟩
 #align nat.exists_eq_add_of_le' Nat.exists_eq_add_of_le'
+-/
 
 #print Nat.exists_eq_add_of_lt /-
 theorem exists_eq_add_of_lt (h : m < n) : ∃ k : ℕ, n = m + k + 1 :=
