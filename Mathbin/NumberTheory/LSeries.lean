@@ -4,10 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module number_theory.l_series
-! leanprover-community/mathlib commit 8631e2d5ea77f6c13054d9151d82b83069680cb1
+! leanprover-community/mathlib commit e3d9ab8faa9dea8f78155c6c27d62a621f4c152d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
+import Mathbin.Analysis.NormedSpace.FiniteDimension
 import Mathbin.Analysis.PSeries
 import Mathbin.NumberTheory.ArithmeticFunction
 import Mathbin.Topology.Algebra.InfiniteSum

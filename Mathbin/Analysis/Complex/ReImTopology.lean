@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.complex.re_im_topology
-! leanprover-community/mathlib commit 8631e2d5ea77f6c13054d9151d82b83069680cb1
+! leanprover-community/mathlib commit e3d9ab8faa9dea8f78155c6c27d62a621f4c152d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -45,12 +45,12 @@ namespace Complex
 
 /-- `complex.re` turns `ℂ` into a trivial topological fiber bundle over `ℝ`. -/
 theorem isHomeomorphicTrivialFiberBundle_re : IsHomeomorphicTrivialFiberBundle ℝ re :=
-  ⟨equivRealProdₗ.toHomeomorph, fun z => rfl⟩
+  ⟨equivRealProdClm.toHomeomorph, fun z => rfl⟩
 #align complex.is_homeomorphic_trivial_fiber_bundle_re Complex.isHomeomorphicTrivialFiberBundle_re
 
 /-- `complex.im` turns `ℂ` into a trivial topological fiber bundle over `ℝ`. -/
 theorem isHomeomorphicTrivialFiberBundle_im : IsHomeomorphicTrivialFiberBundle ℝ im :=
-  ⟨equivRealProdₗ.toHomeomorph.trans (Homeomorph.prodComm ℝ ℝ), fun z => rfl⟩
+  ⟨equivRealProdClm.toHomeomorph.trans (Homeomorph.prodComm ℝ ℝ), fun z => rfl⟩
 #align complex.is_homeomorphic_trivial_fiber_bundle_im Complex.isHomeomorphicTrivialFiberBundle_im
 
 theorem isOpenMap_re : IsOpenMap re :=
@@ -174,8 +174,8 @@ theorem frontier_setOf_lt_im (a : ℝ) : frontier { z : ℂ | a < z.im } = { z |
 #align complex.frontier_set_of_lt_im Complex.frontier_setOf_lt_im
 
 theorem closure_reProdIm (s t : Set ℝ) : closure (s ×ℂ t) = closure s ×ℂ closure t := by
-  simpa only [← preimage_eq_preimage equiv_real_prodₗ.symm.to_homeomorph.surjective,
-    equiv_real_prodₗ.symm.to_homeomorph.preimage_closure] using @closure_prod_eq _ _ _ _ s t
+  simpa only [← preimage_eq_preimage equiv_real_prod_clm.symm.to_homeomorph.surjective,
+    equiv_real_prod_clm.symm.to_homeomorph.preimage_closure] using @closure_prod_eq _ _ _ _ s t
 #align complex.closure_re_prod_im Complex.closure_reProdIm
 
 theorem interior_reProdIm (s t : Set ℝ) : interior (s ×ℂ t) = interior s ×ℂ interior t := by
@@ -184,8 +184,8 @@ theorem interior_reProdIm (s t : Set ℝ) : interior (s ×ℂ t) = interior s ×
 
 theorem frontier_reProdIm (s t : Set ℝ) :
     frontier (s ×ℂ t) = closure s ×ℂ frontier t ∪ frontier s ×ℂ closure t := by
-  simpa only [← preimage_eq_preimage equiv_real_prodₗ.symm.to_homeomorph.surjective,
-    equiv_real_prodₗ.symm.to_homeomorph.preimage_frontier] using frontier_prod_eq s t
+  simpa only [← preimage_eq_preimage equiv_real_prod_clm.symm.to_homeomorph.surjective,
+    equiv_real_prod_clm.symm.to_homeomorph.preimage_frontier] using frontier_prod_eq s t
 #align complex.frontier_re_prod_im Complex.frontier_reProdIm
 
 theorem frontier_setOf_le_re_and_le_im (a b : ℝ) :
@@ -214,6 +214,6 @@ theorem IsClosed.reProdIm (hs : IsClosed s) (ht : IsClosed t) : IsClosed (s ×�
 #align is_closed.re_prod_im IsClosed.reProdIm
 
 theorem Metric.Bounded.reProdIm (hs : Bounded s) (ht : Bounded t) : Bounded (s ×ℂ t) :=
-  equivRealProdₗ.antilipschitz.bounded_preimage (hs.Prod ht)
+  antilipschitz_equivRealProd.bounded_preimage (hs.Prod ht)
 #align metric.bounded.re_prod_im Metric.Bounded.reProdIm
 

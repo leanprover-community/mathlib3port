@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.metric_space.antilipschitz
-! leanprover-community/mathlib commit 8631e2d5ea77f6c13054d9151d82b83069680cb1
+! leanprover-community/mathlib commit e3d9ab8faa9dea8f78155c6c27d62a621f4c152d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -261,4 +261,11 @@ theorem LipschitzWith.to_rightInverse [PseudoEmetricSpace α] [PseudoEmetricSpac
     {f : α → β} (hf : LipschitzWith K f) {g : β → α} (hg : Function.RightInverse g f) :
     AntilipschitzWith K g := fun x y => by simpa only [hg _] using hf (g x) (g y)
 #align lipschitz_with.to_right_inverse LipschitzWith.to_rightInverse
+
+/-- The preimage of a proper space under a Lipschitz homeomorphism is proper. -/
+@[protected]
+theorem LipschitzWith.properSpace [PseudoMetricSpace α] [MetricSpace β] [ProperSpace β] {K : ℝ≥0}
+    {f : α ≃ₜ β} (hK : LipschitzWith K f) : ProperSpace α :=
+  (hK.to_right_inverse f.right_inv).ProperSpace f.symm.Continuous f.symm.Surjective
+#align lipschitz_with.proper_space LipschitzWith.properSpace
 

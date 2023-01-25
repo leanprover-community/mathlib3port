@@ -546,6 +546,7 @@ import Mathbin.Analysis.Complex.Isometry
 import Mathbin.Analysis.Complex.Liouville
 import Mathbin.Analysis.Complex.LocallyUniformLimit
 import Mathbin.Analysis.Complex.OpenMapping
+import Mathbin.Analysis.Complex.OperatorNorm
 import Mathbin.Analysis.Complex.PhragmenLindelof
 import Mathbin.Analysis.Complex.Polynomial
 import Mathbin.Analysis.Complex.ReImTopology
@@ -1220,7 +1221,6 @@ import Mathbin.Data.Complex.Cardinality
 import Mathbin.Data.Complex.Determinant
 import Mathbin.Data.Complex.Exponential
 import Mathbin.Data.Complex.ExponentialBounds
-import Mathbin.Data.Complex.IsROrC
 import Mathbin.Data.Complex.Module
 import Mathbin.Data.Countable.Basic
 import Mathbin.Data.Countable.Defs
@@ -1361,6 +1361,8 @@ import Mathbin.Data.Int.Range
 import Mathbin.Data.Int.Sqrt
 import Mathbin.Data.Int.SuccPred
 import Mathbin.Data.Int.Units
+import Mathbin.Data.IsROrC.Basic
+import Mathbin.Data.IsROrC.Lemmas
 import Mathbin.Data.Json
 import Mathbin.Data.LazyList
 import Mathbin.Data.LazyList.Basic

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andreas Swerdlow, Kexing Ying
 
 ! This file was ported from Lean 3 source module linear_algebra.bilinear_form
-! leanprover-community/mathlib commit 8631e2d5ea77f6c13054d9151d82b83069680cb1
+! leanprover-community/mathlib commit e3d9ab8faa9dea8f78155c6c27d62a621f4c152d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1364,17 +1364,17 @@ theorem toLin_restrict_ker_eq_inf_orthogonal (B : BilinForm K V) (W : Subspace K
     exact hx.2 _ Submodule.mem_top
 #align bilin_form.to_lin_restrict_ker_eq_inf_orthogonal BilinForm.toLin_restrict_ker_eq_inf_orthogonal
 
-theorem toLin_restrict_range_dualAnnihilatorComap_eq_orthogonal (B : BilinForm K V)
-    (W : Subspace K V) : (B.toLin.domRestrict W).range.dualAnnihilatorComap = B.orthogonal W :=
+theorem toLin_restrict_range_dualCoannihilator_eq_orthogonal (B : BilinForm K V)
+    (W : Subspace K V) : (B.toLin.domRestrict W).range.dualCoannihilator = B.orthogonal W :=
   by
   ext x; constructor <;> rw [mem_orthogonal_iff] <;> intro hx
   · intro y hy
-    rw [Submodule.mem_dualAnnihilatorComap] at hx
+    rw [Submodule.mem_dualCoannihilator] at hx
     refine' hx (B.to_lin.dom_restrict W ⟨y, hy⟩) ⟨⟨y, hy⟩, rfl⟩
-  · rw [Submodule.mem_dualAnnihilatorComap]
+  · rw [Submodule.mem_dualCoannihilator]
     rintro _ ⟨⟨w, hw⟩, rfl⟩
     exact hx w hw
-#align bilin_form.to_lin_restrict_range_dual_annihilator_comap_eq_orthogonal BilinForm.toLin_restrict_range_dualAnnihilatorComap_eq_orthogonal
+#align bilin_form.to_lin_restrict_range_dual_coannihilator_eq_orthogonal BilinForm.toLin_restrict_range_dualCoannihilator_eq_orthogonal
 
 variable [FiniteDimensional K V]
 
@@ -1385,10 +1385,10 @@ theorem finrank_add_finrank_orthogonal {B : BilinForm K V} {W : Subspace K V} (b
       finrank K V + finrank K (W ⊓ B.orthogonal ⊤ : Subspace K V) :=
   by
   rw [← to_lin_restrict_ker_eq_inf_orthogonal _ _ b₁, ←
-    to_lin_restrict_range_dual_annihilator_comap_eq_orthogonal _ _, finrank_map_subtype_eq]
+    to_lin_restrict_range_dual_coannihilator_eq_orthogonal _ _, finrank_map_subtype_eq]
   conv_rhs =>
     rw [←
-      @Subspace.finrank_add_finrank_dualAnnihilatorComap_eq K V _ _ _ _
+      @Subspace.finrank_add_finrank_dualCoannihilator_eq K V _ _ _ _
         (B.to_lin.dom_restrict W).range,
       add_comm, ← add_assoc, add_comm (finrank K ↥(B.to_lin.dom_restrict W).ker),
       LinearMap.finrank_range_add_finrank_ker]

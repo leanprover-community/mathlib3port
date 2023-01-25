@@ -5,7 +5,7 @@ Authors: Johannes Hölzl, Mario Carneiro, Kevin Buzzard, Yury Kudryashov, Fréd�
   Heather Macbeth
 
 ! This file was ported from Lean 3 source module linear_algebra.basic
-! leanprover-community/mathlib commit 8631e2d5ea77f6c13054d9151d82b83069680cb1
+! leanprover-community/mathlib commit e3d9ab8faa9dea8f78155c6c27d62a621f4c152d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1924,6 +1924,12 @@ end LinearMap
 theorem LinearMap.range_rangeRestrict [Semiring R] [AddCommMonoid M] [AddCommMonoid M₂] [Module R M]
     [Module R M₂] (f : M →ₗ[R] M₂) : f.range_restrict.range = ⊤ := by simp [f.range_cod_restrict _]
 #align linear_map.range_range_restrict LinearMap.range_rangeRestrict
+
+@[simp]
+theorem LinearMap.ker_rangeRestrict [Semiring R] [AddCommMonoid M] [AddCommMonoid M₂] [Module R M]
+    [Module R M₂] (f : M →ₗ[R] M₂) : f.range_restrict.ker = f.ker :=
+  LinearMap.ker_codRestrict _ _ _
+#align linear_map.ker_range_restrict LinearMap.ker_rangeRestrict
 
 /-! ### Linear equivalences -/
 

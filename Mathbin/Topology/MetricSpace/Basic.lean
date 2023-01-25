@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Robert Y. Lewis, Johannes Hölzl, Mario Carneiro, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.basic
-! leanprover-community/mathlib commit 8631e2d5ea77f6c13054d9151d82b83069680cb1
+! leanprover-community/mathlib commit e3d9ab8faa9dea8f78155c6c27d62a621f4c152d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -2467,6 +2467,15 @@ instance (priority := 100) complete_of_proper [ProperSpace α] : CompleteSpace �
       ⟨y, -, hy⟩
     exact ⟨y, hy⟩⟩
 #align complete_of_proper complete_of_proper
+
+/-- A binary product of proper spaces is proper. -/
+instance prod_properSpace {α : Type _} {β : Type _} [PseudoMetricSpace α] [PseudoMetricSpace β]
+    [ProperSpace α] [ProperSpace β] : ProperSpace (α × β)
+    where is_compact_closed_ball := by
+    rintro ⟨x, y⟩ r
+    rw [← closedBall_prod_same x y]
+    apply (is_compact_closed_ball x r).Prod (is_compact_closed_ball y r)
+#align prod_proper_space prod_properSpace
 
 /-- A finite product of proper spaces is proper. -/
 instance pi_properSpace {π : β → Type _} [Fintype β] [∀ b, PseudoMetricSpace (π b)]

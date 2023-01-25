@@ -4,12 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.complex.basic
-! leanprover-community/mathlib commit 8631e2d5ea77f6c13054d9151d82b83069680cb1
+! leanprover-community/mathlib commit e3d9ab8faa9dea8f78155c6c27d62a621f4c152d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.Data.Complex.Determinant
-import Mathbin.Data.Complex.IsROrC
+import Mathbin.Data.Complex.Module
+import Mathbin.Data.IsROrC.Basic
+import Mathbin.Topology.Algebra.Module.InfiniteSum
+import Mathbin.Topology.Instances.RealVectorSpace
 
 /-!
 # Normed space structure on `ℂ`.
@@ -34,6 +36,8 @@ isometries in `of_real_li` and `conj_lie`.
 We also register the fact that `ℂ` is an `is_R_or_C` field.
 -/
 
+
+assert_not_exists absorbs
 
 noncomputable section
 
@@ -206,6 +210,39 @@ theorem norm_eq_one_of_pow_eq_one {ζ : ℂ} {n : ℕ} (h : ζ ^ n = 1) (hn : n 
   congr_arg coe (nnnorm_eq_one_of_pow_eq_one h hn)
 #align complex.norm_eq_one_of_pow_eq_one Complex.norm_eq_one_of_pow_eq_one
 
+theorem equivRealProd_apply_le (z : ℂ) : ‖equivRealProd z‖ ≤ abs z := by
+  simp [Prod.norm_def, abs_re_le_abs, abs_im_le_abs]
+#align complex.equiv_real_prod_apply_le Complex.equivRealProd_apply_le
+
+theorem equivRealProd_apply_le' (z : ℂ) : ‖equivRealProd z‖ ≤ 1 * abs z := by
+  simpa using equiv_real_prod_apply_le z
+#align complex.equiv_real_prod_apply_le' Complex.equivRealProd_apply_le'
+
+theorem lipschitz_equivRealProd : LipschitzWith 1 equivRealProd := by
+  simpa using AddMonoidHomClass.lipschitz_of_bound equiv_real_prod_lm 1 equiv_real_prod_apply_le'
+#align complex.lipschitz_equiv_real_prod Complex.lipschitz_equivRealProd
+
+theorem antilipschitz_equivRealProd : AntilipschitzWith (Nnreal.sqrt 2) equivRealProd := by
+  simpa using AddMonoidHomClass.antilipschitz_of_bound equiv_real_prod_lm abs_le_sqrt_two_mul_max
+#align complex.antilipschitz_equiv_real_prod Complex.antilipschitz_equivRealProd
+
+theorem uniformEmbedding_equivRealProd : UniformEmbedding equivRealProd :=
+  antilipschitz_equivRealProd.UniformEmbedding lipschitz_equivRealProd.UniformContinuous
+#align complex.uniform_embedding_equiv_real_prod Complex.uniformEmbedding_equivRealProd
+
+instance : CompleteSpace ℂ :=
+  (completeSpace_congr uniformEmbedding_equivRealProd).mpr inferInstance
+
+/-- The natural `continuous_linear_equiv` from `ℂ` to `ℝ × ℝ`. -/
+@[simps (config := { simpRhs := true }) apply symm_apply_re symm_apply_im]
+def equivRealProdClm : ℂ ≃L[ℝ] ℝ × ℝ :=
+  equivRealProdLm.toContinuousLinearEquivOfBounds 1 (Real.sqrt 2) equivRealProd_apply_le' fun p =>
+    abs_le_sqrt_two_mul_max (equivRealProd.symm p)
+#align complex.equiv_real_prod_clm Complex.equivRealProdClm
+
+instance : ProperSpace ℂ :=
+  (id lipschitz_equivRealProd : LipschitzWith 1 equivRealProdClm.toHomeomorph).ProperSpace
+
 /-- The `abs` function on `ℂ` is proper. -/
 theorem tendsto_abs_cocompact_atTop : Filter.Tendsto abs (Filter.cocompact ℂ) Filter.atTop :=
   tendsto_norm_cocompact_atTop
@@ -240,20 +277,6 @@ theorem reClm_apply (z : ℂ) : (reClm : ℂ → ℝ) z = z.re :=
   rfl
 #align complex.re_clm_apply Complex.reClm_apply
 
-@[simp]
-theorem reClm_norm : ‖re_clm‖ = 1 :=
-  le_antisymm (LinearMap.mkContinuous_norm_le _ zero_le_one _) <|
-    calc
-      1 = ‖reClm 1‖ := by simp
-      _ ≤ ‖re_clm‖ := unit_le_op_norm _ _ (by simp)
-      
-#align complex.re_clm_norm Complex.reClm_norm
-
-@[simp]
-theorem reClm_nnnorm : ‖re_clm‖₊ = 1 :=
-  Subtype.ext reClm_norm
-#align complex.re_clm_nnnorm Complex.reClm_nnnorm
-
 /-- Continuous linear map version of the real part function, from `ℂ` to `ℝ`. -/
 def imClm : ℂ →L[ℝ] ℝ :=
   imLm.mkContinuous 1 fun x => by simp [abs_im_le_abs]
@@ -273,20 +296,6 @@ theorem imClm_coe : (coe imClm : ℂ →ₗ[ℝ] ℝ) = im_lm :=
 theorem imClm_apply (z : ℂ) : (imClm : ℂ → ℝ) z = z.im :=
   rfl
 #align complex.im_clm_apply Complex.imClm_apply
-
-@[simp]
-theorem imClm_norm : ‖im_clm‖ = 1 :=
-  le_antisymm (LinearMap.mkContinuous_norm_le _ zero_le_one _) <|
-    calc
-      1 = ‖imClm i‖ := by simp
-      _ ≤ ‖im_clm‖ := unit_le_op_norm _ _ (by simp)
-      
-#align complex.im_clm_norm Complex.imClm_norm
-
-@[simp]
-theorem imClm_nnnorm : ‖im_clm‖₊ = 1 :=
-  Subtype.ext imClm_norm
-#align complex.im_clm_nnnorm Complex.imClm_nnnorm
 
 theorem restrictScalars_one_smul_right' (x : E) :
     ContinuousLinearMap.restrictScalars ℝ ((1 : ℂ →L[ℂ] ℂ).smul_right x : ℂ →L[ℂ] E) =
@@ -341,18 +350,6 @@ theorem nndist_conj_comm (z w : ℂ) : nndist (conj z) w = nndist z (conj w) :=
   Subtype.ext <| dist_conj_comm _ _
 #align complex.nndist_conj_comm Complex.nndist_conj_comm
 
-/-- The determinant of `conj_lie`, as a linear map. -/
-@[simp]
-theorem det_conjLie : (conjLie.toLinearEquiv : ℂ →ₗ[ℝ] ℂ).det = -1 :=
-  det_conj_ae
-#align complex.det_conj_lie Complex.det_conjLie
-
-/-- The determinant of `conj_lie`, as a linear equiv. -/
-@[simp]
-theorem linearEquiv_det_conjLie : conjLie.toLinearEquiv.det = -1 :=
-  linear_equiv_det_conj_ae
-#align complex.linear_equiv_det_conj_lie Complex.linearEquiv_det_conjLie
-
 instance : HasContinuousStar ℂ :=
   ⟨conjLie.Continuous⟩
 
@@ -385,16 +382,6 @@ theorem conjCle_coe : conjCle.toLinearEquiv = conjAe.toLinearEquiv :=
 theorem conjCle_apply (z : ℂ) : conjCle z = conj z :=
   rfl
 #align complex.conj_cle_apply Complex.conjCle_apply
-
-@[simp]
-theorem conjCle_norm : ‖(conjCle : ℂ →L[ℝ] ℂ)‖ = 1 :=
-  conjLie.toLinearIsometry.norm_to_continuous_linear_map
-#align complex.conj_cle_norm Complex.conjCle_norm
-
-@[simp]
-theorem conjCle_nnorm : ‖(conjCle : ℂ →L[ℝ] ℂ)‖₊ = 1 :=
-  Subtype.ext conjCle_norm
-#align complex.conj_cle_nnorm Complex.conjCle_nnorm
 
 /-- Linear isometry version of the canonical embedding of `ℝ` in `ℂ`. -/
 def ofRealLi : ℝ →ₗᵢ[ℝ] ℂ :=
@@ -433,16 +420,6 @@ theorem ofRealClm_coe : (ofRealClm : ℝ →ₗ[ℝ] ℂ) = ofRealAm.toLinearMap
 theorem ofRealClm_apply (x : ℝ) : ofRealClm x = x :=
   rfl
 #align complex.of_real_clm_apply Complex.ofRealClm_apply
-
-@[simp]
-theorem ofRealClm_norm : ‖of_real_clm‖ = 1 :=
-  ofRealLi.norm_to_continuous_linear_map
-#align complex.of_real_clm_norm Complex.ofRealClm_norm
-
-@[simp]
-theorem ofRealClm_nnnorm : ‖of_real_clm‖₊ = 1 :=
-  Subtype.ext <| of_real_clm_norm
-#align complex.of_real_clm_nnnorm Complex.ofRealClm_nnnorm
 
 noncomputable instance : IsROrC ℂ
     where
@@ -492,31 +469,6 @@ theorem eq_coe_norm_of_nonneg {z : ℂ} (hz : 0 ≤ z) : z = ↑‖z‖ := by
 
 end ComplexOrder
 
-section
-
-variable {α β γ : Type _} [AddCommMonoid α] [TopologicalSpace α] [AddCommMonoid γ]
-  [TopologicalSpace γ]
-
-/-- The natural `add_equiv` from `ℂ` to `ℝ × ℝ`. -/
-@[simps (config := { simpRhs := true }) apply symm_apply_re symm_apply_im]
-def equivRealProdAddHom : ℂ ≃+ ℝ × ℝ :=
-  { equivRealProd with map_add' := by simp }
-#align complex.equiv_real_prod_add_hom Complex.equivRealProdAddHom
-
-/-- The natural `linear_equiv` from `ℂ` to `ℝ × ℝ`. -/
-@[simps (config := { simpRhs := true }) apply symm_apply_re symm_apply_im]
-def equivRealProdAddHomLm : ℂ ≃ₗ[ℝ] ℝ × ℝ :=
-  { equivRealProdAddHom with map_smul' := by simp [equiv_real_prod_add_hom] }
-#align complex.equiv_real_prod_add_hom_lm Complex.equivRealProdAddHomLm
-
-/-- The natural `continuous_linear_equiv` from `ℂ` to `ℝ × ℝ`. -/
-@[simps (config := { simpRhs := true }) apply symm_apply_re symm_apply_im]
-def equivRealProdₗ : ℂ ≃L[ℝ] ℝ × ℝ :=
-  equivRealProdAddHomLm.toContinuousLinearEquiv
-#align complex.equiv_real_prodₗ Complex.equivRealProdₗ
-
-end
-
 theorem hasSum_iff {α} (f : α → ℂ) (c : ℂ) :
     HasSum f c ↔ HasSum (fun x => (f x).re) c.re ∧ HasSum (fun x => (f x).im) c.im :=
   by
@@ -524,7 +476,7 @@ theorem hasSum_iff {α} (f : α → ℂ) (c : ℂ) :
   -- `has_sum.mapL` here:
   refine' ⟨fun h => ⟨re_clm.has_sum h, im_clm.has_sum h⟩, _⟩
   rintro ⟨h₁, h₂⟩
-  convert (h₁.prod_mk h₂).mapL equiv_real_prodₗ.symm.to_continuous_linear_map
+  convert (h₁.prod_mk h₂).mapL equiv_real_prod_clm.symm.to_continuous_linear_map
   · ext x <;> rfl
   · cases c
     rfl

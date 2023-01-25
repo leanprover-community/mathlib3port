@@ -3,15 +3,14 @@ Copyright (c) 2020 Frédéric Dupuis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis
 
-! This file was ported from Lean 3 source module data.complex.is_R_or_C
-! leanprover-community/mathlib commit 8631e2d5ea77f6c13054d9151d82b83069680cb1
+! This file was ported from Lean 3 source module data.is_R_or_C.basic
+! leanprover-community/mathlib commit e3d9ab8faa9dea8f78155c6c27d62a621f4c152d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Data.Real.Sqrt
-import Mathbin.FieldTheory.Tower
-import Mathbin.Analysis.NormedSpace.FiniteDimension
 import Mathbin.Analysis.NormedSpace.Star.Basic
+import Mathbin.Analysis.NormedSpace.ContinuousLinearMap
 
 /-!
 # `is_R_or_C`: a typeclass for ℝ or ℂ
@@ -39,6 +38,8 @@ in `data/nat/cast`. See also Note [coercion into rings] for more details.
 
 In addition, several lemmas need to be set at priority 900 to make sure that they do not override
 their counterparts in `complex.lean` (which causes linter errors).
+
+A few lemmas requiring heavier imports are in `data.is_R_or_C.lemmas`.
 -/
 
 
@@ -973,62 +974,6 @@ theorem of_real_finsupp_prod {α M : Type _} [Zero M] (f : α →₀ M) (g : α 
 
 end IsROrC
 
-namespace Polynomial
-
-open Polynomial
-
-theorem of_real_eval (p : ℝ[X]) (x : ℝ) : (p.eval x : K) = aeval (↑x) p :=
-  (@aeval_algebraMap_apply_eq_algebraMap_eval ℝ K _ _ _ x p).symm
-#align polynomial.of_real_eval Polynomial.of_real_eval
-
-end Polynomial
-
-namespace FiniteDimensional
-
-open Classical
-
-open IsROrC
-
-library_note "is_R_or_C instance"/--
-This instance generates a type-class problem with a metavariable `?m` that should satisfy
-`is_R_or_C ?m`. Since this can only be satisfied by `ℝ` or `ℂ`, this does not cause problems. -/
-
-
-/-- An `is_R_or_C` field is finite-dimensional over `ℝ`, since it is spanned by `{1, I}`. -/
-@[nolint dangerous_instance]
-instance isROrC_to_real : FiniteDimensional ℝ K :=
-  ⟨⟨{1, i}, by
-      rw [eq_top_iff]
-      intro a _
-      rw [Finset.coe_insert, Finset.coe_singleton, Submodule.mem_span_insert]
-      refine' ⟨re a, im a • I, _, _⟩
-      · rw [Submodule.mem_span_singleton]
-        use im a
-      simp [re_add_im a, Algebra.smul_def, algebra_map_eq_of_real]⟩⟩
-#align finite_dimensional.is_R_or_C_to_real FiniteDimensional.isROrC_to_real
-
-variable (K E) [NormedAddCommGroup E] [NormedSpace K E]
-
-/-- A finite dimensional vector space over an `is_R_or_C` is a proper metric space.
-
-This is not an instance because it would cause a search for `finite_dimensional ?x E` before
-`is_R_or_C ?x`. -/
-theorem proper_isROrC [FiniteDimensional K E] : ProperSpace E :=
-  by
-  letI : NormedSpace ℝ E := RestrictScalars.normedSpace ℝ K E
-  letI : FiniteDimensional ℝ E := FiniteDimensional.trans ℝ K E
-  infer_instance
-#align finite_dimensional.proper_is_R_or_C FiniteDimensional.proper_isROrC
-
-variable {E}
-
-instance IsROrC.properSpace_submodule (S : Submodule K E) [FiniteDimensional K ↥S] :
-    ProperSpace S :=
-  proper_isROrC K S
-#align finite_dimensional.is_R_or_C.proper_space_submodule FiniteDimensional.IsROrC.properSpace_submodule
-
-end FiniteDimensional
-
 section Instances
 
 noncomputable instance Real.isROrC : IsROrC ℝ :=
@@ -1138,15 +1083,6 @@ noncomputable def reClm : K →L[ℝ] ℝ :=
     exact abs_re_le_abs
 #align is_R_or_C.re_clm IsROrC.reClm
 
-@[simp, is_R_or_C_simps]
-theorem reClm_norm : ‖(reClm : K →L[ℝ] ℝ)‖ = 1 :=
-  by
-  apply le_antisymm (LinearMap.mkContinuous_norm_le _ zero_le_one _)
-  convert ContinuousLinearMap.ratio_le_op_norm _ (1 : K)
-  · simp
-  · infer_instance
-#align is_R_or_C.re_clm_norm IsROrC.reClm_norm
-
 @[simp, is_R_or_C_simps, norm_cast]
 theorem reClm_coe : ((reClm : K →L[ℝ] ℝ) : K →ₗ[ℝ] ℝ) = re_lm :=
   rfl
@@ -1234,11 +1170,6 @@ theorem conjCle_apply : (conjCle : K → K) = conj :=
   rfl
 #align is_R_or_C.conj_cle_apply IsROrC.conjCle_apply
 
-@[simp, is_R_or_C_simps]
-theorem conjCle_norm : ‖(@conjCle K _ : K →L[ℝ] K)‖ = 1 :=
-  (@conjLie K _).toLinearIsometry.norm_to_continuous_linear_map
-#align is_R_or_C.conj_cle_norm IsROrC.conjCle_norm
-
 instance (priority := 100) : HasContinuousStar K :=
   ⟨conjLie.Continuous⟩
 
@@ -1283,11 +1214,6 @@ theorem ofRealClm_coe : (@ofRealClm K _ : ℝ →ₗ[ℝ] K) = ofRealAm.toLinear
 theorem ofRealClm_apply : (ofRealClm : ℝ → K) = coe :=
   rfl
 #align is_R_or_C.of_real_clm_apply IsROrC.ofRealClm_apply
-
-@[simp, is_R_or_C_simps]
-theorem ofRealClm_norm : ‖(ofRealClm : ℝ →L[ℝ] K)‖ = 1 :=
-  LinearIsometry.norm_toContinuousLinearMap ofRealLi
-#align is_R_or_C.of_real_clm_norm IsROrC.ofRealClm_norm
 
 @[continuity]
 theorem continuous_of_real : Continuous (coe : ℝ → K) :=

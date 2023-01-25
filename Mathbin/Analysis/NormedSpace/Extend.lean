@@ -4,12 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ruben Van de Velde
 
 ! This file was ported from Lean 3 source module analysis.normed_space.extend
-! leanprover-community/mathlib commit 8631e2d5ea77f6c13054d9151d82b83069680cb1
+! leanprover-community/mathlib commit e3d9ab8faa9dea8f78155c6c27d62a621f4c152d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
+import Mathbin.Analysis.NormedSpace.OperatorNorm
 import Mathbin.Algebra.Algebra.RestrictScalars
-import Mathbin.Data.Complex.IsROrC
+import Mathbin.Data.IsROrC.Basic
 
 /-!
 # Extending a continuous `ℝ`-linear map to a continuous `𝕜`-linear map

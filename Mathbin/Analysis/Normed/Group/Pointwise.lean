@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.normed.group.pointwise
-! leanprover-community/mathlib commit 8631e2d5ea77f6c13054d9151d82b83069680cb1
+! leanprover-community/mathlib commit e3d9ab8faa9dea8f78155c6c27d62a621f4c152d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -208,13 +208,26 @@ theorem closedBall_one_div_singleton : closedBall 1 δ / {x} = closedBall x⁻¹
 #align closed_ball_one_div_singleton closedBall_one_div_singleton
 #align closed_ball_zero_sub_singleton closedBall_zero_sub_singleton
 
-@[simp, to_additive]
+-- This is the `to_additive` version of the below, but it will later follow as a special case of
+-- `vadd_closed_ball` for `normed_add_torsor`s, so we give it higher simp priority.
+-- (There is no `normed_mul_torsor`, hence the asymmetry between additive and multiplicative
+-- versions.)
+@[simp]
+theorem vadd_closedBall_zero {E : Type _} [SeminormedAddCommGroup E] (δ : ℝ) (x : E) :
+    x +ᵥ Metric.closedBall 0 δ = Metric.closedBall x δ :=
+  by
+  ext
+  simp [mem_vadd_set_iff_neg_vadd_mem, neg_add_eq_sub, dist_eq_norm_sub]
+#align vadd_closed_ball_zero vadd_closedBall_zero
+
+@[simp]
 theorem smul_closedBall_one : x • closedBall 1 δ = closedBall x δ :=
   by
   ext
   simp [mem_smul_set_iff_inv_smul_mem, inv_mul_eq_div, dist_eq_norm_div]
 #align smul_closed_ball_one smul_closedBall_one
-#align vadd_closed_ball_zero vadd_closedBall_zero
+
+attribute [to_additive] smul_closedBall_one
 
 @[to_additive]
 theorem mul_ball_one : s * ball 1 δ = thickening δ s :=

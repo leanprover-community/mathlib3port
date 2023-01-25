@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp, Sébastien Gouëzel, Eric Wieser
 
 ! This file was ported from Lean 3 source module data.complex.module
-! leanprover-community/mathlib commit 8631e2d5ea77f6c13054d9151d82b83069680cb1
+! leanprover-community/mathlib commit e3d9ab8faa9dea8f78155c6c27d62a621f4c152d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -333,6 +333,18 @@ theorem real_algHom_eq_id_or_conj (f : ℂ →ₐ[ℝ] ℂ) : f = AlgHom.id ℝ 
     refine' fun h => alg_hom_ext _
   exacts[h, conj_I.symm ▸ h]
 #align complex.real_alg_hom_eq_id_or_conj Complex.real_algHom_eq_id_or_conj
+
+/-- The natural `add_equiv` from `ℂ` to `ℝ × ℝ`. -/
+@[simps (config := { simpRhs := true }) apply symm_apply_re symm_apply_im]
+def equivRealProdAddHom : ℂ ≃+ ℝ × ℝ :=
+  { equivRealProd with map_add' := by simp }
+#align complex.equiv_real_prod_add_hom Complex.equivRealProdAddHom
+
+/-- The natural `linear_equiv` from `ℂ` to `ℝ × ℝ`. -/
+@[simps (config := { simpRhs := true }) apply symm_apply_re symm_apply_im]
+def equivRealProdLm : ℂ ≃ₗ[ℝ] ℝ × ℝ :=
+  { equivRealProdAddHom with map_smul' := by simp [equiv_real_prod_add_hom] }
+#align complex.equiv_real_prod_lm Complex.equivRealProdLm
 
 section lift
 

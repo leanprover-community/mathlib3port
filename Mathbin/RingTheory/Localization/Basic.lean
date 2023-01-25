@@ -4,11 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Johan Commelin, Amelia Livingston, Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.localization.basic
-! leanprover-community/mathlib commit 8631e2d5ea77f6c13054d9151d82b83069680cb1
+! leanprover-community/mathlib commit e3d9ab8faa9dea8f78155c6c27d62a621f4c152d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.Algebra.Algebra.Equiv
+import Mathbin.Algebra.Algebra.Tower
 import Mathbin.Algebra.Ring.Equiv
 import Mathbin.GroupTheory.MonoidLocalization
 import Mathbin.RingTheory.Ideal.Basic
@@ -892,12 +892,12 @@ private unsafe def tac :=
   sorry
 #align localization.tac localization.tac
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.4157022005.tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.4157022005.tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.4157022005.tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.4157022005.tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.4157022005.tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.4157022005.tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.219831961.tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.219831961.tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.219831961.tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.219831961.tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.219831961.tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.219831961.tac -/
 instance : CommSemiring (Localization M) :=
   { Localization.commMonoidWithZero M with
     zero := 0
@@ -1323,7 +1323,12 @@ variable (S M)
 Given an algebra `R → S`, a submonoid `R` of `M`, and a localization `Rₘ` for `M`,
 let `Sₘ` be the localization of `S` to the image of `M` under `algebra_map R S`.
 Then this is the natural algebra structure on `Rₘ → Sₘ`, such that the entire square commutes,
-where `localization_map.map_comp` gives the commutativity of the underlying maps -/
+where `localization_map.map_comp` gives the commutativity of the underlying maps.
+
+This instance can be helpful if you define `Sₘ := localization (algebra.algebra_map_submonoid S M)`,
+however we will instead use the hypotheses `[algebra Rₘ Sₘ] [is_scalar_tower R Rₘ Sₘ]` in lemmas
+since the algebra structure may arise in different ways.
+-/
 noncomputable def localizationAlgebra : Algebra Rₘ Sₘ :=
   (map Sₘ (algebraMap R S)
         (show _ ≤ (Algebra.algebraMapSubmonoid S M).comap _ from M.le_comap_map) :
@@ -1332,11 +1337,75 @@ noncomputable def localizationAlgebra : Algebra Rₘ Sₘ :=
 
 end
 
-theorem algebraMap_mk' (r : R) (m : M) :
-    (@algebraMap Rₘ Sₘ _ _ (localizationAlgebra M S)) (mk' Rₘ r m) =
-      mk' Sₘ (algebraMap R S r) ⟨algebraMap R S m, Algebra.mem_algebraMapSubmonoid_of_mem m⟩ :=
-  map_mk' _ _ _
-#align algebra_map_mk' algebraMap_mk'
+section
+
+variable [Algebra Rₘ Sₘ] [Algebra R Sₘ] [IsScalarTower R Rₘ Sₘ] [IsScalarTower R S Sₘ]
+
+variable (S Rₘ Sₘ)
+
+include S
+
+theorem IsLocalization.map_units_map_submonoid (y : M) : IsUnit (algebraMap R Sₘ y) :=
+  by
+  rw [IsScalarTower.algebraMap_apply _ S]
+  exact IsLocalization.map_units Sₘ ⟨algebraMap R S y, Algebra.mem_algebraMapSubmonoid_of_mem y⟩
+#align is_localization.map_units_map_submonoid IsLocalization.map_units_map_submonoid
+
+@[simp]
+theorem IsLocalization.algebraMap_mk' (x : R) (y : M) :
+    algebraMap Rₘ Sₘ (IsLocalization.mk' Rₘ x y) =
+      IsLocalization.mk' Sₘ (algebraMap R S x)
+        ⟨algebraMap R S y, Algebra.mem_algebraMapSubmonoid_of_mem y⟩ :=
+  by
+  rw [IsLocalization.eq_mk'_iff_mul_eq, Subtype.coe_mk, ← IsScalarTower.algebraMap_apply, ←
+    IsScalarTower.algebraMap_apply, IsScalarTower.algebraMap_apply R Rₘ Sₘ,
+    IsScalarTower.algebraMap_apply R Rₘ Sₘ, ← _root_.map_mul, mul_comm,
+    IsLocalization.mul_mk'_eq_mk'_of_mul]
+  exact congr_arg (algebraMap Rₘ Sₘ) (IsLocalization.mk'_mul_cancel_left x y)
+#align is_localization.algebra_map_mk' IsLocalization.algebraMap_mk'
+
+variable (M)
+
+/-- If the square below commutes, the bottom map is uniquely specified:
+```
+R  →  S
+↓     ↓
+Rₘ → Sₘ
+```
+-/
+theorem IsLocalization.algebraMap_eq_map_map_submonoid :
+    algebraMap Rₘ Sₘ =
+      map Sₘ (algebraMap R S)
+        (show _ ≤ (Algebra.algebraMapSubmonoid S M).comap _ from M.le_comap_map) :=
+  Eq.symm <|
+    IsLocalization.map_unique _ (algebraMap Rₘ Sₘ) fun x => by
+      rw [← IsScalarTower.algebraMap_apply R S Sₘ, ← IsScalarTower.algebraMap_apply R Rₘ Sₘ]
+#align is_localization.algebra_map_eq_map_map_submonoid IsLocalization.algebraMap_eq_map_map_submonoid
+
+/-- If the square below commutes, the bottom map is uniquely specified:
+```
+R  →  S
+↓     ↓
+Rₘ → Sₘ
+```
+-/
+theorem IsLocalization.algebraMap_apply_eq_map_map_submonoid (x) :
+    algebraMap Rₘ Sₘ x =
+      map Sₘ (algebraMap R S)
+        (show _ ≤ (Algebra.algebraMapSubmonoid S M).comap _ from M.le_comap_map) x :=
+  FunLike.congr_fun (IsLocalization.algebraMap_eq_map_map_submonoid _ _ _ _) x
+#align is_localization.algebra_map_apply_eq_map_map_submonoid IsLocalization.algebraMap_apply_eq_map_map_submonoid
+
+variable {R}
+
+theorem IsLocalization.lift_algebraMap_eq_algebraMap :
+    @IsLocalization.lift R _ M Rₘ _ _ Sₘ _ _ (algebraMap R Sₘ)
+        (IsLocalization.map_units_map_submonoid S Sₘ) =
+      algebraMap Rₘ Sₘ :=
+  IsLocalization.lift_unique _ fun x => (IsScalarTower.algebraMap_apply _ _ _ _).symm
+#align is_localization.lift_algebra_map_eq_algebra_map IsLocalization.lift_algebraMap_eq_algebraMap
+
+end
 
 variable (Rₘ Sₘ)
 

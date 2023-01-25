@@ -5,7 +5,7 @@ Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Sébasti
   Rémy Degenne, David Loeffler
 
 ! This file was ported from Lean 3 source module analysis.special_functions.pow
-! leanprover-community/mathlib commit 8631e2d5ea77f6c13054d9151d82b83069680cb1
+! leanprover-community/mathlib commit e3d9ab8faa9dea8f78155c6c27d62a621f4c152d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -26,9 +26,7 @@ We also prove basic properties of these functions.
 
 noncomputable section
 
-open Classical Real TopologicalSpace Nnreal Ennreal Filter BigOperators Asymptotics
-
-open ComplexConjugate
+open Classical Real TopologicalSpace Nnreal Ennreal Filter BigOperators ComplexConjugate
 
 open Filter Finset Set
 

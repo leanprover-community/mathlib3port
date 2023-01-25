@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Junyan Xu
 
 ! This file was ported from Lean 3 source module order.game_add
-! leanprover-community/mathlib commit 8631e2d5ea77f6c13054d9151d82b83069680cb1
+! leanprover-community/mathlib commit e3d9ab8faa9dea8f78155c6c27d62a621f4c152d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -40,14 +40,17 @@ variable {α β : Type _} (rα : α → α → Prop) (rβ : β → β → Prop)
 namespace Prod
 
 #print Prod.GameAdd /-
-/-- The "addition of games" relation in combinatorial game theory, on the product type: if
-  `rα a' a` means that `a ⟶ a'` is a valid move in game `α`, and `rβ b' b` means that `b ⟶ b'`
-  is a valid move in game `β`, then `game_add rα rβ` specifies the valid moves in the juxtaposition
-  of `α` and `β`: the player is free to choose one of the games and make a move in it,
-  while leaving the other game unchanged. -/
+/-- `prod.game_add rα rβ x y` means that `x` can be reached from `y` by decreasing either entry with
+  respect to the relations `rα` and `rβ`.
+
+  It is so called, as it models game addition within combinatorial game theory. If `rα a₁ a₂` means
+  that `a₂ ⟶ a₁` is a valid move in game `α`, and `rβ b₁ b₂` means that `b₂ ⟶ b₁` is a valid move
+  in game `β`, then `game_add rα rβ` specifies the valid moves in the juxtaposition of `α` and `β`:
+  the player is free to choose one of the games and make a move in it, while leaving the other game
+  unchanged. -/
 inductive GameAdd : α × β → α × β → Prop
-  | fst {a' a b} : rα a' a → game_add (a', b) (a, b)
-  | snd {a b' b} : rβ b' b → game_add (a, b') (a, b)
+  | fst {a₁ a₂ b} : rα a₁ a₂ → game_add (a₁, b) (a₂, b)
+  | snd {a b₁ b₂} : rβ b₁ b₂ → game_add (a, b₁) (a, b₂)
 #align prod.game_add Prod.GameAdd
 -/
 
@@ -97,7 +100,9 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {rα : α -> α -> Prop} {rβ : β -> β -> Prop}, (WellFounded.{succ u2} α rα) -> (WellFounded.{succ u1} β rβ) -> (WellFounded.{max (succ u1) (succ u2)} (Prod.{u2, u1} α β) (Prod.GameAdd.{u2, u1} α β rα rβ))
 Case conversion may be inaccurate. Consider using '#align well_founded.prod_game_add WellFounded.prod_gameAddₓ'. -/
-/-- The sum of two well-founded games is well-founded. -/
+/-- The `prod.game_add` relation on well-founded inputs is well-founded.
+
+  In particular, the sum of two well-founded games is well-founded. -/
 theorem WellFounded.prod_gameAdd (hα : WellFounded rα) (hβ : WellFounded rβ) :
     WellFounded (Prod.GameAdd rα rβ) :=
   ⟨fun ⟨a, b⟩ => (hα.apply a).prod_game_add (hβ.apply b)⟩
