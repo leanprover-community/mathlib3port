@@ -1973,6 +1973,12 @@ section Multiplicative
 
 variable [Monoid β] (p r : α → α → Prop) [IsTotal α r] (f : α → α → β)
 
+/- warning: multiplicative_of_symmetric_of_is_total -> multiplicative_of_symmetric_of_isTotal is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Monoid.{u2} β] (p : α -> α -> Prop) (r : α -> α -> Prop) [_inst_2 : IsTotal.{u1} α r] (f : α -> α -> β), (Symmetric.{succ u1} α p) -> (forall {a : α} {b : α}, (p a b) -> (Eq.{succ u2} β (HMul.hMul.{u2, u2, u2} β β β (instHMul.{u2} β (MulOneClass.toHasMul.{u2} β (Monoid.toMulOneClass.{u2} β _inst_1))) (f a b) (f b a)) (OfNat.ofNat.{u2} β 1 (OfNat.mk.{u2} β 1 (One.one.{u2} β (MulOneClass.toHasOne.{u2} β (Monoid.toMulOneClass.{u2} β _inst_1))))))) -> (forall {a : α} {b : α} {c : α}, (r a b) -> (r b c) -> (p a b) -> (p b c) -> (p a c) -> (Eq.{succ u2} β (f a c) (HMul.hMul.{u2, u2, u2} β β β (instHMul.{u2} β (MulOneClass.toHasMul.{u2} β (Monoid.toMulOneClass.{u2} β _inst_1))) (f a b) (f b c)))) -> (forall {a : α} {b : α} {c : α}, (p a b) -> (p b c) -> (p a c) -> (Eq.{succ u2} β (f a c) (HMul.hMul.{u2, u2, u2} β β β (instHMul.{u2} β (MulOneClass.toHasMul.{u2} β (Monoid.toMulOneClass.{u2} β _inst_1))) (f a b) (f b c))))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Monoid.{u1} β] (p : α -> α -> Prop) (r : α -> α -> Prop) [_inst_2 : IsTotal.{u2} α r] (f : α -> α -> β), (Symmetric.{succ u2} α p) -> (forall {a : α} {b : α}, (p a b) -> (Eq.{succ u1} β (HMul.hMul.{u1, u1, u1} β β β (instHMul.{u1} β (MulOneClass.toMul.{u1} β (Monoid.toMulOneClass.{u1} β _inst_1))) (f a b) (f b a)) (OfNat.ofNat.{u1} β 1 (One.toOfNat1.{u1} β (Monoid.toOne.{u1} β _inst_1))))) -> (forall {a : α} {b : α} {c : α}, (r a b) -> (r b c) -> (p a b) -> (p b c) -> (p a c) -> (Eq.{succ u1} β (f a c) (HMul.hMul.{u1, u1, u1} β β β (instHMul.{u1} β (MulOneClass.toMul.{u1} β (Monoid.toMulOneClass.{u1} β _inst_1))) (f a b) (f b c)))) -> (forall {a : α} {b : α} {c : α}, (p a b) -> (p b c) -> (p a c) -> (Eq.{succ u1} β (f a c) (HMul.hMul.{u1, u1, u1} β β β (instHMul.{u1} β (MulOneClass.toMul.{u1} β (Monoid.toMulOneClass.{u1} β _inst_1))) (f a b) (f b c))))
+Case conversion may be inaccurate. Consider using '#align multiplicative_of_symmetric_of_is_total multiplicative_of_symmetric_of_isTotalₓ'. -/
 @[to_additive additive_of_symmetric_of_isTotal]
 theorem multiplicative_of_symmetric_of_isTotal (hsymm : Symmetric p)
     (hf_swap : ∀ {a b}, p a b → f a b * f b a = 1)

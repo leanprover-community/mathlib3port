@@ -111,13 +111,17 @@ theorem Perm.mem_iff {a : α} {l₁ l₂ : List α} (h : l₁ ~ l₂) : a ∈ l�
 #align list.perm.mem_iff List.Perm.mem_iff
 -/
 
+#print List.Perm.subset_congr_left /-
 theorem Perm.subset_congr_left {l₁ l₂ l₃ : List α} (h : l₁ ~ l₂) : l₁ ⊆ l₃ ↔ l₂ ⊆ l₃ :=
   ⟨h.symm.Subset.trans, h.Subset.trans⟩
 #align list.perm.subset_congr_left List.Perm.subset_congr_left
+-/
 
+#print List.Perm.subset_congr_right /-
 theorem Perm.subset_congr_right {l₁ l₂ l₃ : List α} (h : l₁ ~ l₂) : l₃ ⊆ l₁ ↔ l₃ ⊆ l₂ :=
   ⟨fun h' => h'.trans h.Subset, fun h' => h'.trans h.symm.Subset⟩
 #align list.perm.subset_congr_right List.Perm.subset_congr_right
+-/
 
 #print List.Perm.append_right /-
 theorem Perm.append_right {l₁ l₂ : List α} (t₁ : List α) (p : l₁ ~ l₂) : l₁ ++ t₁ ~ l₂ ++ t₁ :=
@@ -1185,6 +1189,7 @@ theorem perm_iff_count {l₁ l₂ : List α} : l₁ ~ l₂ ↔ ∀ a, count a l�
 #align list.perm_iff_count List.perm_iff_count
 -/
 
+#print List.perm_replicate_append_replicate /-
 theorem perm_replicate_append_replicate {l : List α} {a b : α} {m n : ℕ} (h : a ≠ b) :
     l ~ replicate m a ++ replicate n b ↔ count a l = m ∧ count b l = n ∧ l ⊆ [a, b] :=
   by
@@ -1194,6 +1199,7 @@ theorem perm_replicate_append_replicate {l : List α} {a b : α} {m n : ℕ} (h 
   simp_rw [Ne.def, ← and_imp, ← not_or, Decidable.not_imp_not, subset_def, mem_cons_iff,
     not_mem_nil, or_false_iff, or_comm']
 #align list.perm_replicate_append_replicate List.perm_replicate_append_replicate
+-/
 
 #print List.Subperm.cons_right /-
 theorem Subperm.cons_right {α : Type _} {l l' : List α} (x : α) (h : l <+~ l') : l <+~ x :: l' :=

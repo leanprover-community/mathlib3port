@@ -96,21 +96,33 @@ theorem zero_smul (m : M) : (0 : R) • m = 0 :=
 
 variable {R} {a : R} {b : M}
 
+/- warning: smul_eq_zero_of_left -> smul_eq_zero_of_left is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u1}} {M : Type.{u2}} [_inst_1 : Zero.{u1} R] [_inst_2 : Zero.{u2} M] [_inst_3 : SMulWithZero.{u1, u2} R M _inst_1 _inst_2] {a : R}, (Eq.{succ u1} R a (OfNat.ofNat.{u1} R 0 (OfNat.mk.{u1} R 0 (Zero.zero.{u1} R _inst_1)))) -> (forall (b : M), Eq.{succ u2} M (SMul.smul.{u1, u2} R M (SMulZeroClass.toHasSmul.{u1, u2} R M _inst_2 (SMulWithZero.toSmulZeroClass.{u1, u2} R M _inst_1 _inst_2 _inst_3)) a b) (OfNat.ofNat.{u2} M 0 (OfNat.mk.{u2} M 0 (Zero.zero.{u2} M _inst_2))))
+but is expected to have type
+  forall {R : Type.{u2}} {M : Type.{u1}} [_inst_1 : Zero.{u2} R] [_inst_2 : Zero.{u1} M] [_inst_3 : SMulWithZero.{u2, u1} R M _inst_1 _inst_2] {a : R}, (Eq.{succ u2} R a (OfNat.ofNat.{u2} R 0 (Zero.toOfNat0.{u2} R _inst_1))) -> (forall (b : M), Eq.{succ u1} M (HSMul.hSMul.{u2, u1, u1} R M M (instHSMul.{u2, u1} R M (SMulZeroClass.toSMul.{u2, u1} R M _inst_2 (SMulWithZero.toSMulZeroClass.{u2, u1} R M _inst_1 _inst_2 _inst_3))) a b) (OfNat.ofNat.{u1} M 0 (Zero.toOfNat0.{u1} M _inst_2)))
+Case conversion may be inaccurate. Consider using '#align smul_eq_zero_of_left smul_eq_zero_of_leftₓ'. -/
 theorem smul_eq_zero_of_left (h : a = 0) (b : M) : a • b = 0 :=
   h.symm ▸ zero_smul _ b
 #align smul_eq_zero_of_left smul_eq_zero_of_left
 
+#print smul_eq_zero_of_right /-
 theorem smul_eq_zero_of_right (a : R) (h : b = 0) : a • b = 0 :=
   h.symm ▸ smul_zero a
 #align smul_eq_zero_of_right smul_eq_zero_of_right
+-/
 
+#print left_ne_zero_of_smul /-
 theorem left_ne_zero_of_smul : a • b ≠ 0 → a ≠ 0 :=
   mt fun h => smul_eq_zero_of_left h b
 #align left_ne_zero_of_smul left_ne_zero_of_smul
+-/
 
+#print right_ne_zero_of_smul /-
 theorem right_ne_zero_of_smul : a • b ≠ 0 → b ≠ 0 :=
   mt <| smul_eq_zero_of_right a
 #align right_ne_zero_of_smul right_ne_zero_of_smul
+-/
 
 variable {R M} [Zero R'] [Zero M'] [SMul R M']
 
@@ -232,12 +244,24 @@ instance MonoidWithZero.toOppositeMulActionWithZero : MulActionWithZero Rᵐᵒ�
   { MulZeroClass.toOppositeSMulWithZero R, Monoid.toOppositeMulAction R with }
 #align monoid_with_zero.to_opposite_mul_action_with_zero MonoidWithZero.toOppositeMulActionWithZero
 
+/- warning: mul_action_with_zero.subsingleton -> MulActionWithZero.subsingleton is a dubious translation:
+lean 3 declaration is
+  forall (R : Type.{u1}) (M : Type.{u2}) [_inst_1 : MonoidWithZero.{u1} R] [_inst_3 : Zero.{u2} M] [_inst_4 : MulActionWithZero.{u1, u2} R M _inst_1 _inst_3] [_inst_5 : Subsingleton.{succ u1} R], Subsingleton.{succ u2} M
+but is expected to have type
+  forall (R : Type.{u2}) (M : Type.{u1}) [_inst_1 : MonoidWithZero.{u2} R] [_inst_3 : Zero.{u1} M] [_inst_4 : MulActionWithZero.{u2, u1} R M _inst_1 _inst_3] [_inst_5 : Subsingleton.{succ u2} R], Subsingleton.{succ u1} M
+Case conversion may be inaccurate. Consider using '#align mul_action_with_zero.subsingleton MulActionWithZero.subsingletonₓ'. -/
 protected theorem MulActionWithZero.subsingleton [MulActionWithZero R M] [Subsingleton R] :
     Subsingleton M :=
   ⟨fun x y => by
     rw [← one_smul R x, ← one_smul R y, Subsingleton.elim (1 : R) 0, zero_smul, zero_smul]⟩
 #align mul_action_with_zero.subsingleton MulActionWithZero.subsingleton
 
+/- warning: mul_action_with_zero.nontrivial -> MulActionWithZero.nontrivial is a dubious translation:
+lean 3 declaration is
+  forall (R : Type.{u1}) (M : Type.{u2}) [_inst_1 : MonoidWithZero.{u1} R] [_inst_3 : Zero.{u2} M] [_inst_4 : MulActionWithZero.{u1, u2} R M _inst_1 _inst_3] [_inst_5 : Nontrivial.{u2} M], Nontrivial.{u1} R
+but is expected to have type
+  forall (R : Type.{u2}) (M : Type.{u1}) [_inst_1 : MonoidWithZero.{u2} R] [_inst_3 : Zero.{u1} M] [_inst_4 : MulActionWithZero.{u2, u1} R M _inst_1 _inst_3] [_inst_5 : Nontrivial.{u1} M], Nontrivial.{u2} R
+Case conversion may be inaccurate. Consider using '#align mul_action_with_zero.nontrivial MulActionWithZero.nontrivialₓ'. -/
 protected theorem MulActionWithZero.nontrivial [MulActionWithZero R M] [Nontrivial M] :
     Nontrivial R :=
   (subsingleton_or_nontrivial R).resolve_left fun hR =>

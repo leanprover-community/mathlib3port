@@ -3536,61 +3536,145 @@ instance [InfSet α] [InfSet β] : InfSet (α × β) :=
 
 variable {α β}
 
+/- warning: prod.fst_Inf -> Prod.fst_infₛ is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : InfSet.{u1} α] [_inst_2 : InfSet.{u2} β] (s : Set.{max u1 u2} (Prod.{u1, u2} α β)), Eq.{succ u1} α (Prod.fst.{u1, u2} α β (InfSet.infₛ.{max u1 u2} (Prod.{u1, u2} α β) (Prod.hasInf.{u1, u2} α β _inst_1 _inst_2) s)) (InfSet.infₛ.{u1} α _inst_1 (Set.image.{max u1 u2, u1} (Prod.{u1, u2} α β) α (Prod.fst.{u1, u2} α β) s))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : InfSet.{u2} α] [_inst_2 : InfSet.{u1} β] (s : Set.{max u1 u2} (Prod.{u2, u1} α β)), Eq.{succ u2} α (Prod.fst.{u2, u1} α β (InfSet.infₛ.{max u2 u1} (Prod.{u2, u1} α β) (Prod.infSet.{u2, u1} α β _inst_1 _inst_2) s)) (InfSet.infₛ.{u2} α _inst_1 (Set.image.{max u1 u2, u2} (Prod.{u2, u1} α β) α (Prod.fst.{u2, u1} α β) s))
+Case conversion may be inaccurate. Consider using '#align prod.fst_Inf Prod.fst_infₛₓ'. -/
 theorem fst_infₛ [InfSet α] [InfSet β] (s : Set (α × β)) : (infₛ s).fst = infₛ (Prod.fst '' s) :=
   rfl
 #align prod.fst_Inf Prod.fst_infₛ
 
+/- warning: prod.snd_Inf -> Prod.snd_infₛ is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : InfSet.{u1} α] [_inst_2 : InfSet.{u2} β] (s : Set.{max u1 u2} (Prod.{u1, u2} α β)), Eq.{succ u2} β (Prod.snd.{u1, u2} α β (InfSet.infₛ.{max u1 u2} (Prod.{u1, u2} α β) (Prod.hasInf.{u1, u2} α β _inst_1 _inst_2) s)) (InfSet.infₛ.{u2} β _inst_2 (Set.image.{max u1 u2, u2} (Prod.{u1, u2} α β) β (Prod.snd.{u1, u2} α β) s))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : InfSet.{u2} α] [_inst_2 : InfSet.{u1} β] (s : Set.{max u1 u2} (Prod.{u2, u1} α β)), Eq.{succ u1} β (Prod.snd.{u2, u1} α β (InfSet.infₛ.{max u2 u1} (Prod.{u2, u1} α β) (Prod.infSet.{u2, u1} α β _inst_1 _inst_2) s)) (InfSet.infₛ.{u1} β _inst_2 (Set.image.{max u1 u2, u1} (Prod.{u2, u1} α β) β (Prod.snd.{u2, u1} α β) s))
+Case conversion may be inaccurate. Consider using '#align prod.snd_Inf Prod.snd_infₛₓ'. -/
 theorem snd_infₛ [InfSet α] [InfSet β] (s : Set (α × β)) : (infₛ s).snd = infₛ (Prod.snd '' s) :=
   rfl
 #align prod.snd_Inf Prod.snd_infₛ
 
+/- warning: prod.swap_Inf -> Prod.swap_infₛ is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : InfSet.{u1} α] [_inst_2 : InfSet.{u2} β] (s : Set.{max u1 u2} (Prod.{u1, u2} α β)), Eq.{max (succ u2) (succ u1)} (Prod.{u2, u1} β α) (Prod.swap.{u1, u2} α β (InfSet.infₛ.{max u1 u2} (Prod.{u1, u2} α β) (Prod.hasInf.{u1, u2} α β _inst_1 _inst_2) s)) (InfSet.infₛ.{max u2 u1} (Prod.{u2, u1} β α) (Prod.hasInf.{u2, u1} β α _inst_2 _inst_1) (Set.image.{max u1 u2, max u2 u1} (Prod.{u1, u2} α β) (Prod.{u2, u1} β α) (Prod.swap.{u1, u2} α β) s))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : InfSet.{u2} α] [_inst_2 : InfSet.{u1} β] (s : Set.{max u1 u2} (Prod.{u2, u1} α β)), Eq.{max (succ u2) (succ u1)} (Prod.{u1, u2} β α) (Prod.swap.{u2, u1} α β (InfSet.infₛ.{max u2 u1} (Prod.{u2, u1} α β) (Prod.infSet.{u2, u1} α β _inst_1 _inst_2) s)) (InfSet.infₛ.{max u1 u2} (Prod.{u1, u2} β α) (Prod.infSet.{u1, u2} β α _inst_2 _inst_1) (Set.image.{max u1 u2, max u1 u2} (Prod.{u2, u1} α β) (Prod.{u1, u2} β α) (Prod.swap.{u2, u1} α β) s))
+Case conversion may be inaccurate. Consider using '#align prod.swap_Inf Prod.swap_infₛₓ'. -/
 theorem swap_infₛ [InfSet α] [InfSet β] (s : Set (α × β)) : (infₛ s).swap = infₛ (Prod.swap '' s) :=
   ext (congr_arg infₛ <| image_comp Prod.fst swap s : _)
     (congr_arg infₛ <| image_comp Prod.snd swap s : _)
 #align prod.swap_Inf Prod.swap_infₛ
 
+/- warning: prod.fst_Sup -> Prod.fst_supₛ is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SupSet.{u1} α] [_inst_2 : SupSet.{u2} β] (s : Set.{max u1 u2} (Prod.{u1, u2} α β)), Eq.{succ u1} α (Prod.fst.{u1, u2} α β (SupSet.supₛ.{max u1 u2} (Prod.{u1, u2} α β) (Prod.hasSup.{u1, u2} α β _inst_1 _inst_2) s)) (SupSet.supₛ.{u1} α _inst_1 (Set.image.{max u1 u2, u1} (Prod.{u1, u2} α β) α (Prod.fst.{u1, u2} α β) s))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : SupSet.{u2} α] [_inst_2 : SupSet.{u1} β] (s : Set.{max u1 u2} (Prod.{u2, u1} α β)), Eq.{succ u2} α (Prod.fst.{u2, u1} α β (SupSet.supₛ.{max u2 u1} (Prod.{u2, u1} α β) (Prod.supSet.{u2, u1} α β _inst_1 _inst_2) s)) (SupSet.supₛ.{u2} α _inst_1 (Set.image.{max u1 u2, u2} (Prod.{u2, u1} α β) α (Prod.fst.{u2, u1} α β) s))
+Case conversion may be inaccurate. Consider using '#align prod.fst_Sup Prod.fst_supₛₓ'. -/
 theorem fst_supₛ [SupSet α] [SupSet β] (s : Set (α × β)) : (supₛ s).fst = supₛ (Prod.fst '' s) :=
   rfl
 #align prod.fst_Sup Prod.fst_supₛ
 
+/- warning: prod.snd_Sup -> Prod.snd_supₛ is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SupSet.{u1} α] [_inst_2 : SupSet.{u2} β] (s : Set.{max u1 u2} (Prod.{u1, u2} α β)), Eq.{succ u2} β (Prod.snd.{u1, u2} α β (SupSet.supₛ.{max u1 u2} (Prod.{u1, u2} α β) (Prod.hasSup.{u1, u2} α β _inst_1 _inst_2) s)) (SupSet.supₛ.{u2} β _inst_2 (Set.image.{max u1 u2, u2} (Prod.{u1, u2} α β) β (Prod.snd.{u1, u2} α β) s))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : SupSet.{u2} α] [_inst_2 : SupSet.{u1} β] (s : Set.{max u1 u2} (Prod.{u2, u1} α β)), Eq.{succ u1} β (Prod.snd.{u2, u1} α β (SupSet.supₛ.{max u2 u1} (Prod.{u2, u1} α β) (Prod.supSet.{u2, u1} α β _inst_1 _inst_2) s)) (SupSet.supₛ.{u1} β _inst_2 (Set.image.{max u1 u2, u1} (Prod.{u2, u1} α β) β (Prod.snd.{u2, u1} α β) s))
+Case conversion may be inaccurate. Consider using '#align prod.snd_Sup Prod.snd_supₛₓ'. -/
 theorem snd_supₛ [SupSet α] [SupSet β] (s : Set (α × β)) : (supₛ s).snd = supₛ (Prod.snd '' s) :=
   rfl
 #align prod.snd_Sup Prod.snd_supₛ
 
+/- warning: prod.swap_Sup -> Prod.swap_supₛ is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SupSet.{u1} α] [_inst_2 : SupSet.{u2} β] (s : Set.{max u1 u2} (Prod.{u1, u2} α β)), Eq.{max (succ u2) (succ u1)} (Prod.{u2, u1} β α) (Prod.swap.{u1, u2} α β (SupSet.supₛ.{max u1 u2} (Prod.{u1, u2} α β) (Prod.hasSup.{u1, u2} α β _inst_1 _inst_2) s)) (SupSet.supₛ.{max u2 u1} (Prod.{u2, u1} β α) (Prod.hasSup.{u2, u1} β α _inst_2 _inst_1) (Set.image.{max u1 u2, max u2 u1} (Prod.{u1, u2} α β) (Prod.{u2, u1} β α) (Prod.swap.{u1, u2} α β) s))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : SupSet.{u2} α] [_inst_2 : SupSet.{u1} β] (s : Set.{max u1 u2} (Prod.{u2, u1} α β)), Eq.{max (succ u2) (succ u1)} (Prod.{u1, u2} β α) (Prod.swap.{u2, u1} α β (SupSet.supₛ.{max u2 u1} (Prod.{u2, u1} α β) (Prod.supSet.{u2, u1} α β _inst_1 _inst_2) s)) (SupSet.supₛ.{max u1 u2} (Prod.{u1, u2} β α) (Prod.supSet.{u1, u2} β α _inst_2 _inst_1) (Set.image.{max u1 u2, max u1 u2} (Prod.{u2, u1} α β) (Prod.{u1, u2} β α) (Prod.swap.{u2, u1} α β) s))
+Case conversion may be inaccurate. Consider using '#align prod.swap_Sup Prod.swap_supₛₓ'. -/
 theorem swap_supₛ [SupSet α] [SupSet β] (s : Set (α × β)) : (supₛ s).swap = supₛ (Prod.swap '' s) :=
   ext (congr_arg supₛ <| image_comp Prod.fst swap s : _)
     (congr_arg supₛ <| image_comp Prod.snd swap s : _)
 #align prod.swap_Sup Prod.swap_supₛ
 
+/- warning: prod.fst_infi -> Prod.fst_infᵢ is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} [_inst_1 : InfSet.{u1} α] [_inst_2 : InfSet.{u2} β] (f : ι -> (Prod.{u1, u2} α β)), Eq.{succ u1} α (Prod.fst.{u1, u2} α β (infᵢ.{max u1 u2, u3} (Prod.{u1, u2} α β) (Prod.hasInf.{u1, u2} α β _inst_1 _inst_2) ι f)) (infᵢ.{u1, u3} α _inst_1 ι (fun (i : ι) => Prod.fst.{u1, u2} α β (f i)))
+but is expected to have type
+  forall {α : Type.{u3}} {β : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : InfSet.{u3} α] [_inst_2 : InfSet.{u2} β] (f : ι -> (Prod.{u3, u2} α β)), Eq.{succ u3} α (Prod.fst.{u3, u2} α β (infᵢ.{max u3 u2, u1} (Prod.{u3, u2} α β) (Prod.infSet.{u3, u2} α β _inst_1 _inst_2) ι f)) (infᵢ.{u3, u1} α _inst_1 ι (fun (i : ι) => Prod.fst.{u3, u2} α β (f i)))
+Case conversion may be inaccurate. Consider using '#align prod.fst_infi Prod.fst_infᵢₓ'. -/
 theorem fst_infᵢ [InfSet α] [InfSet β] (f : ι → α × β) : (infᵢ f).fst = ⨅ i, (f i).fst :=
   congr_arg infₛ (range_comp _ _).symm
 #align prod.fst_infi Prod.fst_infᵢ
 
+/- warning: prod.snd_infi -> Prod.snd_infᵢ is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} [_inst_1 : InfSet.{u1} α] [_inst_2 : InfSet.{u2} β] (f : ι -> (Prod.{u1, u2} α β)), Eq.{succ u2} β (Prod.snd.{u1, u2} α β (infᵢ.{max u1 u2, u3} (Prod.{u1, u2} α β) (Prod.hasInf.{u1, u2} α β _inst_1 _inst_2) ι f)) (infᵢ.{u2, u3} β _inst_2 ι (fun (i : ι) => Prod.snd.{u1, u2} α β (f i)))
+but is expected to have type
+  forall {α : Type.{u3}} {β : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : InfSet.{u3} α] [_inst_2 : InfSet.{u2} β] (f : ι -> (Prod.{u3, u2} α β)), Eq.{succ u2} β (Prod.snd.{u3, u2} α β (infᵢ.{max u3 u2, u1} (Prod.{u3, u2} α β) (Prod.infSet.{u3, u2} α β _inst_1 _inst_2) ι f)) (infᵢ.{u2, u1} β _inst_2 ι (fun (i : ι) => Prod.snd.{u3, u2} α β (f i)))
+Case conversion may be inaccurate. Consider using '#align prod.snd_infi Prod.snd_infᵢₓ'. -/
 theorem snd_infᵢ [InfSet α] [InfSet β] (f : ι → α × β) : (infᵢ f).snd = ⨅ i, (f i).snd :=
   congr_arg infₛ (range_comp _ _).symm
 #align prod.snd_infi Prod.snd_infᵢ
 
+/- warning: prod.swap_infi -> Prod.swap_infᵢ is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} [_inst_1 : InfSet.{u1} α] [_inst_2 : InfSet.{u2} β] (f : ι -> (Prod.{u1, u2} α β)), Eq.{max (succ u2) (succ u1)} (Prod.{u2, u1} β α) (Prod.swap.{u1, u2} α β (infᵢ.{max u1 u2, u3} (Prod.{u1, u2} α β) (Prod.hasInf.{u1, u2} α β _inst_1 _inst_2) ι f)) (infᵢ.{max u2 u1, u3} (Prod.{u2, u1} β α) (Prod.hasInf.{u2, u1} β α _inst_2 _inst_1) ι (fun (i : ι) => Prod.swap.{u1, u2} α β (f i)))
+but is expected to have type
+  forall {α : Type.{u3}} {β : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : InfSet.{u3} α] [_inst_2 : InfSet.{u2} β] (f : ι -> (Prod.{u3, u2} α β)), Eq.{max (succ u3) (succ u2)} (Prod.{u2, u3} β α) (Prod.swap.{u3, u2} α β (infᵢ.{max u3 u2, u1} (Prod.{u3, u2} α β) (Prod.infSet.{u3, u2} α β _inst_1 _inst_2) ι f)) (infᵢ.{max u3 u2, u1} (Prod.{u2, u3} β α) (Prod.infSet.{u2, u3} β α _inst_2 _inst_1) ι (fun (i : ι) => Prod.swap.{u3, u2} α β (f i)))
+Case conversion may be inaccurate. Consider using '#align prod.swap_infi Prod.swap_infᵢₓ'. -/
 theorem swap_infᵢ [InfSet α] [InfSet β] (f : ι → α × β) : (infᵢ f).swap = ⨅ i, (f i).swap := by
   simp_rw [infᵢ, swap_Inf, range_comp]
 #align prod.swap_infi Prod.swap_infᵢ
 
+/- warning: prod.infi_mk -> Prod.infᵢ_mk is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} [_inst_1 : InfSet.{u1} α] [_inst_2 : InfSet.{u2} β] (f : ι -> α) (g : ι -> β), Eq.{succ (max u1 u2)} (Prod.{u1, u2} α β) (infᵢ.{max u1 u2, u3} (Prod.{u1, u2} α β) (Prod.hasInf.{u1, u2} α β _inst_1 _inst_2) ι (fun (i : ι) => Prod.mk.{u1, u2} α β (f i) (g i))) (Prod.mk.{u1, u2} α β (infᵢ.{u1, u3} α _inst_1 ι (fun (i : ι) => f i)) (infᵢ.{u2, u3} β _inst_2 ι (fun (i : ι) => g i)))
+but is expected to have type
+  forall {α : Type.{u3}} {β : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : InfSet.{u3} α] [_inst_2 : InfSet.{u2} β] (f : ι -> α) (g : ι -> β), Eq.{max (succ u3) (succ u2)} (Prod.{u3, u2} α β) (infᵢ.{max u2 u3, u1} (Prod.{u3, u2} α β) (Prod.infSet.{u3, u2} α β _inst_1 _inst_2) ι (fun (i : ι) => Prod.mk.{u3, u2} α β (f i) (g i))) (Prod.mk.{u3, u2} α β (infᵢ.{u3, u1} α _inst_1 ι (fun (i : ι) => f i)) (infᵢ.{u2, u1} β _inst_2 ι (fun (i : ι) => g i)))
+Case conversion may be inaccurate. Consider using '#align prod.infi_mk Prod.infᵢ_mkₓ'. -/
 theorem infᵢ_mk [InfSet α] [InfSet β] (f : ι → α) (g : ι → β) :
     (⨅ i, (f i, g i)) = (⨅ i, f i, ⨅ i, g i) :=
   congr_arg₂ Prod.mk (fst_infᵢ _) (snd_infᵢ _)
 #align prod.infi_mk Prod.infᵢ_mk
 
+/- warning: prod.fst_supr -> Prod.fst_supᵢ is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} [_inst_1 : SupSet.{u1} α] [_inst_2 : SupSet.{u2} β] (f : ι -> (Prod.{u1, u2} α β)), Eq.{succ u1} α (Prod.fst.{u1, u2} α β (supᵢ.{max u1 u2, u3} (Prod.{u1, u2} α β) (Prod.hasSup.{u1, u2} α β _inst_1 _inst_2) ι f)) (supᵢ.{u1, u3} α _inst_1 ι (fun (i : ι) => Prod.fst.{u1, u2} α β (f i)))
+but is expected to have type
+  forall {α : Type.{u3}} {β : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : SupSet.{u3} α] [_inst_2 : SupSet.{u2} β] (f : ι -> (Prod.{u3, u2} α β)), Eq.{succ u3} α (Prod.fst.{u3, u2} α β (supᵢ.{max u3 u2, u1} (Prod.{u3, u2} α β) (Prod.supSet.{u3, u2} α β _inst_1 _inst_2) ι f)) (supᵢ.{u3, u1} α _inst_1 ι (fun (i : ι) => Prod.fst.{u3, u2} α β (f i)))
+Case conversion may be inaccurate. Consider using '#align prod.fst_supr Prod.fst_supᵢₓ'. -/
 theorem fst_supᵢ [SupSet α] [SupSet β] (f : ι → α × β) : (supᵢ f).fst = ⨆ i, (f i).fst :=
   congr_arg supₛ (range_comp _ _).symm
 #align prod.fst_supr Prod.fst_supᵢ
 
+/- warning: prod.snd_supr -> Prod.snd_supᵢ is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} [_inst_1 : SupSet.{u1} α] [_inst_2 : SupSet.{u2} β] (f : ι -> (Prod.{u1, u2} α β)), Eq.{succ u2} β (Prod.snd.{u1, u2} α β (supᵢ.{max u1 u2, u3} (Prod.{u1, u2} α β) (Prod.hasSup.{u1, u2} α β _inst_1 _inst_2) ι f)) (supᵢ.{u2, u3} β _inst_2 ι (fun (i : ι) => Prod.snd.{u1, u2} α β (f i)))
+but is expected to have type
+  forall {α : Type.{u3}} {β : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : SupSet.{u3} α] [_inst_2 : SupSet.{u2} β] (f : ι -> (Prod.{u3, u2} α β)), Eq.{succ u2} β (Prod.snd.{u3, u2} α β (supᵢ.{max u3 u2, u1} (Prod.{u3, u2} α β) (Prod.supSet.{u3, u2} α β _inst_1 _inst_2) ι f)) (supᵢ.{u2, u1} β _inst_2 ι (fun (i : ι) => Prod.snd.{u3, u2} α β (f i)))
+Case conversion may be inaccurate. Consider using '#align prod.snd_supr Prod.snd_supᵢₓ'. -/
 theorem snd_supᵢ [SupSet α] [SupSet β] (f : ι → α × β) : (supᵢ f).snd = ⨆ i, (f i).snd :=
   congr_arg supₛ (range_comp _ _).symm
 #align prod.snd_supr Prod.snd_supᵢ
 
+/- warning: prod.swap_supr -> Prod.swap_supᵢ is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} [_inst_1 : SupSet.{u1} α] [_inst_2 : SupSet.{u2} β] (f : ι -> (Prod.{u1, u2} α β)), Eq.{max (succ u2) (succ u1)} (Prod.{u2, u1} β α) (Prod.swap.{u1, u2} α β (supᵢ.{max u1 u2, u3} (Prod.{u1, u2} α β) (Prod.hasSup.{u1, u2} α β _inst_1 _inst_2) ι f)) (supᵢ.{max u2 u1, u3} (Prod.{u2, u1} β α) (Prod.hasSup.{u2, u1} β α _inst_2 _inst_1) ι (fun (i : ι) => Prod.swap.{u1, u2} α β (f i)))
+but is expected to have type
+  forall {α : Type.{u3}} {β : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : SupSet.{u3} α] [_inst_2 : SupSet.{u2} β] (f : ι -> (Prod.{u3, u2} α β)), Eq.{max (succ u3) (succ u2)} (Prod.{u2, u3} β α) (Prod.swap.{u3, u2} α β (supᵢ.{max u3 u2, u1} (Prod.{u3, u2} α β) (Prod.supSet.{u3, u2} α β _inst_1 _inst_2) ι f)) (supᵢ.{max u3 u2, u1} (Prod.{u2, u3} β α) (Prod.supSet.{u2, u3} β α _inst_2 _inst_1) ι (fun (i : ι) => Prod.swap.{u3, u2} α β (f i)))
+Case conversion may be inaccurate. Consider using '#align prod.swap_supr Prod.swap_supᵢₓ'. -/
 theorem swap_supᵢ [SupSet α] [SupSet β] (f : ι → α × β) : (supᵢ f).swap = ⨆ i, (f i).swap := by
   simp_rw [supᵢ, swap_Sup, range_comp]
 #align prod.swap_supr Prod.swap_supᵢ
 
+/- warning: prod.supr_mk -> Prod.supᵢ_mk is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} [_inst_1 : SupSet.{u1} α] [_inst_2 : SupSet.{u2} β] (f : ι -> α) (g : ι -> β), Eq.{succ (max u1 u2)} (Prod.{u1, u2} α β) (supᵢ.{max u1 u2, u3} (Prod.{u1, u2} α β) (Prod.hasSup.{u1, u2} α β _inst_1 _inst_2) ι (fun (i : ι) => Prod.mk.{u1, u2} α β (f i) (g i))) (Prod.mk.{u1, u2} α β (supᵢ.{u1, u3} α _inst_1 ι (fun (i : ι) => f i)) (supᵢ.{u2, u3} β _inst_2 ι (fun (i : ι) => g i)))
+but is expected to have type
+  forall {α : Type.{u3}} {β : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : SupSet.{u3} α] [_inst_2 : SupSet.{u2} β] (f : ι -> α) (g : ι -> β), Eq.{max (succ u3) (succ u2)} (Prod.{u3, u2} α β) (supᵢ.{max u2 u3, u1} (Prod.{u3, u2} α β) (Prod.supSet.{u3, u2} α β _inst_1 _inst_2) ι (fun (i : ι) => Prod.mk.{u3, u2} α β (f i) (g i))) (Prod.mk.{u3, u2} α β (supᵢ.{u3, u1} α _inst_1 ι (fun (i : ι) => f i)) (supᵢ.{u2, u1} β _inst_2 ι (fun (i : ι) => g i)))
+Case conversion may be inaccurate. Consider using '#align prod.supr_mk Prod.supᵢ_mkₓ'. -/
 theorem supᵢ_mk [SupSet α] [SupSet β] (f : ι → α) (g : ι → β) :
     (⨆ i, (f i, g i)) = (⨆ i, f i, ⨆ i, g i) :=
   congr_arg₂ Prod.mk (fst_supᵢ _) (snd_supᵢ _)

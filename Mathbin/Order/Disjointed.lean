@@ -162,7 +162,7 @@ theorem disjointed_eq_inf_compl (f : ℕ → α) (n : ℕ) : disjointed f n = f 
   · rw [disjointed_zero, eq_comm, inf_eq_left]
     simp_rw [le_infᵢ_iff]
     exact fun i hi => (i.not_lt_zero hi).elim
-  simp_rw [disjointed_succ, partialSups_eq_bsupr, sdiff_eq, compl_supᵢ]
+  simp_rw [disjointed_succ, partialSups_eq_bsupᵢ, sdiff_eq, compl_supᵢ]
   congr
   ext i
   rw [Nat.lt_succ_iff]

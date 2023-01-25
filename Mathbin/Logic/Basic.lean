@@ -2349,6 +2349,12 @@ theorem forall_eq' {a' : α} : (∀ a, a' = a → p a) ↔ p a' := by simp [@eq_
 #align forall_eq' forall_eq'
 -/
 
+/- warning: decidable.and_forall_ne -> Decidable.and_forall_ne is a dubious translation:
+lean 3 declaration is
+  forall {α : Sort.{u1}} {p : α -> Prop} [_inst_1 : DecidableEq.{u1} α] (a : α), Iff (And (p a) (forall (b : α), (Ne.{u1} α b a) -> (p b))) (forall (b : α), p b)
+but is expected to have type
+  forall {α : Sort.{u1}} [p : DecidableEq.{u1} α] (_inst_1 : α) {a : α -> Prop}, Iff (And (a _inst_1) (forall (b : α), (Ne.{u1} α b _inst_1) -> (a b))) (forall (b : α), a b)
+Case conversion may be inaccurate. Consider using '#align decidable.and_forall_ne Decidable.and_forall_neₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (b «expr ≠ » a) -/
 theorem Decidable.and_forall_ne [DecidableEq α] (a : α) :
     (p a ∧ ∀ (b) (_ : b ≠ a), p b) ↔ ∀ b, p b := by

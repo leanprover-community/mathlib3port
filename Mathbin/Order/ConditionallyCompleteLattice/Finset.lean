@@ -152,13 +152,13 @@ non-empty. As a result, we can translate between the two.
 
 namespace Finset
 
-/- warning: finset.sup'_eq_cSup_image -> Finset.sup'_eq_cSup_image is a dubious translation:
+/- warning: finset.sup'_eq_cSup_image -> Finset.sup'_eq_csupₛ_image is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : ConditionallyCompleteLattice.{u2} β] (s : Finset.{u1} α) (H : Finset.Nonempty.{u1} α s) (f : α -> β), Eq.{succ u2} β (Finset.sup'.{u2, u1} β α (Lattice.toSemilatticeSup.{u2} β (ConditionallyCompleteLattice.toLattice.{u2} β _inst_1)) s H f) (SupSet.supₛ.{u2} β (ConditionallyCompleteLattice.toHasSup.{u2} β _inst_1) (Set.image.{u1, u2} α β f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) s)))
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : ConditionallyCompleteLattice.{u2} β] (s : Finset.{u1} α) (H : Finset.Nonempty.{u1} α s) (f : α -> β), Eq.{succ u2} β (Finset.sup'.{u2, u1} β α (Lattice.toSemilatticeSup.{u2} β (ConditionallyCompleteLattice.toLattice.{u2} β _inst_1)) s H f) (SupSet.supₛ.{u2} β (ConditionallyCompleteLattice.toSupSet.{u2} β _inst_1) (Set.image.{u1, u2} α β f (Finset.toSet.{u1} α s)))
-Case conversion may be inaccurate. Consider using '#align finset.sup'_eq_cSup_image Finset.sup'_eq_cSup_imageₓ'. -/
-theorem sup'_eq_cSup_image [ConditionallyCompleteLattice β] (s : Finset α) (H) (f : α → β) :
+Case conversion may be inaccurate. Consider using '#align finset.sup'_eq_cSup_image Finset.sup'_eq_csupₛ_imageₓ'. -/
+theorem sup'_eq_csupₛ_image [ConditionallyCompleteLattice β] (s : Finset α) (H) (f : α → β) :
     s.sup' H f = supₛ (f '' s) := by
   apply le_antisymm
   · refine' Finset.sup'_le _ _ fun a ha => _
@@ -168,39 +168,39 @@ theorem sup'_eq_cSup_image [ConditionallyCompleteLattice β] (s : Finset α) (H)
   · apply csupₛ_le ((coe_nonempty.mpr H).image _)
     rintro _ ⟨a, ha, rfl⟩
     exact Finset.le_sup' _ ha
-#align finset.sup'_eq_cSup_image Finset.sup'_eq_cSup_image
+#align finset.sup'_eq_cSup_image Finset.sup'_eq_csupₛ_image
 
-/- warning: finset.inf'_eq_cInf_image -> Finset.inf'_eq_cInf_image is a dubious translation:
+/- warning: finset.inf'_eq_cInf_image -> Finset.inf'_eq_cinfₛ_image is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : ConditionallyCompleteLattice.{u2} β] (s : Finset.{u1} α) (H : Finset.Nonempty.{u1} α s) (f : α -> β), Eq.{succ u2} β (Finset.inf'.{u2, u1} β α (Lattice.toSemilatticeInf.{u2} β (ConditionallyCompleteLattice.toLattice.{u2} β _inst_1)) s H f) (InfSet.infₛ.{u2} β (ConditionallyCompleteLattice.toHasInf.{u2} β _inst_1) (Set.image.{u1, u2} α β f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) s)))
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : ConditionallyCompleteLattice.{u2} β] (s : Finset.{u1} α) (H : Finset.Nonempty.{u1} α s) (f : α -> β), Eq.{succ u2} β (Finset.inf'.{u2, u1} β α (Lattice.toSemilatticeInf.{u2} β (ConditionallyCompleteLattice.toLattice.{u2} β _inst_1)) s H f) (InfSet.infₛ.{u2} β (ConditionallyCompleteLattice.toInfSet.{u2} β _inst_1) (Set.image.{u1, u2} α β f (Finset.toSet.{u1} α s)))
-Case conversion may be inaccurate. Consider using '#align finset.inf'_eq_cInf_image Finset.inf'_eq_cInf_imageₓ'. -/
-theorem inf'_eq_cInf_image [ConditionallyCompleteLattice β] (s : Finset α) (H) (f : α → β) :
+Case conversion may be inaccurate. Consider using '#align finset.inf'_eq_cInf_image Finset.inf'_eq_cinfₛ_imageₓ'. -/
+theorem inf'_eq_cinfₛ_image [ConditionallyCompleteLattice β] (s : Finset α) (H) (f : α → β) :
     s.inf' H f = infₛ (f '' s) :=
-  @sup'_eq_cSup_image _ βᵒᵈ _ _ H _
-#align finset.inf'_eq_cInf_image Finset.inf'_eq_cInf_image
+  @sup'_eq_csupₛ_image _ βᵒᵈ _ _ H _
+#align finset.inf'_eq_cInf_image Finset.inf'_eq_cinfₛ_image
 
-/- warning: finset.sup'_id_eq_cSup -> Finset.sup'_id_eq_cSup is a dubious translation:
+/- warning: finset.sup'_id_eq_cSup -> Finset.sup'_id_eq_csupₛ is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : ConditionallyCompleteLattice.{u1} α] (s : Finset.{u1} α) (H : Finset.Nonempty.{u1} α s), Eq.{succ u1} α (Finset.sup'.{u1, u1} α α (Lattice.toSemilatticeSup.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α _inst_1)) s H (id.{succ u1} α)) (SupSet.supₛ.{u1} α (ConditionallyCompleteLattice.toHasSup.{u1} α _inst_1) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) s))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : ConditionallyCompleteLattice.{u1} α] (s : Finset.{u1} α) (H : Finset.Nonempty.{u1} α s), Eq.{succ u1} α (Finset.sup'.{u1, u1} α α (Lattice.toSemilatticeSup.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α _inst_1)) s H (id.{succ u1} α)) (SupSet.supₛ.{u1} α (ConditionallyCompleteLattice.toSupSet.{u1} α _inst_1) (Finset.toSet.{u1} α s))
-Case conversion may be inaccurate. Consider using '#align finset.sup'_id_eq_cSup Finset.sup'_id_eq_cSupₓ'. -/
-theorem sup'_id_eq_cSup [ConditionallyCompleteLattice α] (s : Finset α) (H) :
+Case conversion may be inaccurate. Consider using '#align finset.sup'_id_eq_cSup Finset.sup'_id_eq_csupₛₓ'. -/
+theorem sup'_id_eq_csupₛ [ConditionallyCompleteLattice α] (s : Finset α) (H) :
     s.sup' H id = supₛ s := by rw [sup'_eq_cSup_image s H, Set.image_id]
-#align finset.sup'_id_eq_cSup Finset.sup'_id_eq_cSup
+#align finset.sup'_id_eq_cSup Finset.sup'_id_eq_csupₛ
 
-/- warning: finset.inf'_id_eq_cInf -> Finset.inf'_id_eq_cInf is a dubious translation:
+/- warning: finset.inf'_id_eq_cInf -> Finset.inf'_id_eq_cinfₛ is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : ConditionallyCompleteLattice.{u1} α] (s : Finset.{u1} α) (H : Finset.Nonempty.{u1} α s), Eq.{succ u1} α (Finset.inf'.{u1, u1} α α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α _inst_1)) s H (id.{succ u1} α)) (InfSet.infₛ.{u1} α (ConditionallyCompleteLattice.toHasInf.{u1} α _inst_1) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) s))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : ConditionallyCompleteLattice.{u1} α] (s : Finset.{u1} α) (H : Finset.Nonempty.{u1} α s), Eq.{succ u1} α (Finset.inf'.{u1, u1} α α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α _inst_1)) s H (id.{succ u1} α)) (InfSet.infₛ.{u1} α (ConditionallyCompleteLattice.toInfSet.{u1} α _inst_1) (Finset.toSet.{u1} α s))
-Case conversion may be inaccurate. Consider using '#align finset.inf'_id_eq_cInf Finset.inf'_id_eq_cInfₓ'. -/
-theorem inf'_id_eq_cInf [ConditionallyCompleteLattice α] (s : Finset α) (H) :
+Case conversion may be inaccurate. Consider using '#align finset.inf'_id_eq_cInf Finset.inf'_id_eq_cinfₛₓ'. -/
+theorem inf'_id_eq_cinfₛ [ConditionallyCompleteLattice α] (s : Finset α) (H) :
     s.inf' H id = infₛ s :=
-  @sup'_id_eq_cSup αᵒᵈ _ _ H
-#align finset.inf'_id_eq_cInf Finset.inf'_id_eq_cInf
+  @sup'_id_eq_csupₛ αᵒᵈ _ _ H
+#align finset.inf'_id_eq_cInf Finset.inf'_id_eq_cinfₛ
 
 end Finset
 

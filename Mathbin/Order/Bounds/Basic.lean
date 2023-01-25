@@ -1209,10 +1209,12 @@ theorem bddBelow_bddAbove_iff_subset_Icc : BddBelow s ∧ BddAbove s ↔ ∃ a b
 -/
 
 
+#print isGreatest_univ_iff /-
 @[simp]
 theorem isGreatest_univ_iff : IsGreatest univ a ↔ IsTop a := by
   simp [IsGreatest, mem_upperBounds, IsTop]
 #align is_greatest_univ_iff isGreatest_univ_iff
+-/
 
 /- warning: is_greatest_univ -> isGreatest_univ is a dubious translation:
 lean 3 declaration is
@@ -1257,10 +1259,12 @@ theorem OrderBot.lowerBounds_univ [PartialOrder γ] [OrderBot γ] :
   @OrderTop.upperBounds_univ γᵒᵈ _ _
 #align order_bot.lower_bounds_univ OrderBot.lowerBounds_univ
 
+#print isLeast_univ_iff /-
 @[simp]
 theorem isLeast_univ_iff : IsLeast univ a ↔ IsBot a :=
   @isGreatest_univ_iff αᵒᵈ _ _
 #align is_least_univ_iff isLeast_univ_iff
+-/
 
 /- warning: is_least_univ -> isLeast_univ is a dubious translation:
 lean 3 declaration is
@@ -1344,14 +1348,18 @@ theorem bddBelow_empty [Nonempty α] : BddBelow (∅ : Set α) := by
 #align bdd_below_empty bddBelow_empty
 -/
 
+#print isGLB_empty_iff /-
 @[simp]
 theorem isGLB_empty_iff : IsGLB ∅ a ↔ IsTop a := by simp [IsGLB]
 #align is_glb_empty_iff isGLB_empty_iff
+-/
 
+#print isLUB_empty_iff /-
 @[simp]
 theorem isLUB_empty_iff : IsLUB ∅ a ↔ IsBot a :=
   @isGLB_empty_iff αᵒᵈ _ _
 #align is_lub_empty_iff isLUB_empty_iff
+-/
 
 /- warning: is_glb_empty -> isGLB_empty is a dubious translation:
 lean 3 declaration is
