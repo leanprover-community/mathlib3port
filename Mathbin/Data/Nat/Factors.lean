@@ -258,7 +258,7 @@ theorem perm_factors_mul {a b : ℕ} (ha : a ≠ 0) (hb : b ≠ 0) :
 
 #print Nat.perm_factors_mul_of_coprime /-
 /-- For coprime `a` and `b`, the prime factors of `a * b` are the union of those of `a` and `b` -/
-theorem perm_factors_mul_of_coprime {a b : ℕ} (hab : Coprime a b) :
+theorem perm_factors_mul_of_coprime {a b : ℕ} (hab : coprime a b) :
     (a * b).factors ~ a.factors ++ b.factors :=
   by
   rcases a.eq_zero_or_pos with (rfl | ha)
@@ -329,7 +329,7 @@ theorem mem_factors_mul {a b : ℕ} (ha : a ≠ 0) (hb : b ≠ 0) {p : ℕ} :
 
 #print Nat.coprime_factors_disjoint /-
 /-- The sets of factors of coprime `a` and `b` are disjoint -/
-theorem coprime_factors_disjoint {a b : ℕ} (hab : a.Coprime b) :
+theorem coprime_factors_disjoint {a b : ℕ} (hab : a.coprime b) :
     List.Disjoint a.factors b.factors := by
   intro q hqa hqb
   apply not_prime_one
@@ -340,11 +340,11 @@ theorem coprime_factors_disjoint {a b : ℕ} (hab : a.Coprime b) :
 
 /- warning: nat.mem_factors_mul_of_coprime -> Nat.mem_factors_mul_of_coprime is a dubious translation:
 lean 3 declaration is
-  forall {a : Nat} {b : Nat}, (Nat.Coprime a b) -> (forall (p : Nat), Iff (Membership.Mem.{0, 0} Nat (List.{0} Nat) (List.hasMem.{0} Nat) p (Nat.factors (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) a b))) (Membership.Mem.{0, 0} Nat (List.{0} Nat) (List.hasMem.{0} Nat) p (Union.union.{0} (List.{0} Nat) (List.hasUnion.{0} Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b)) (Nat.factors a) (Nat.factors b))))
+  forall {a : Nat} {b : Nat}, (Nat.coprime a b) -> (forall (p : Nat), Iff (Membership.Mem.{0, 0} Nat (List.{0} Nat) (List.hasMem.{0} Nat) p (Nat.factors (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) a b))) (Membership.Mem.{0, 0} Nat (List.{0} Nat) (List.hasMem.{0} Nat) p (Union.union.{0} (List.{0} Nat) (List.hasUnion.{0} Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b)) (Nat.factors a) (Nat.factors b))))
 but is expected to have type
   forall {a : Nat} {b : Nat}, (Nat.coprime a b) -> (forall (p : Nat), Iff (Membership.mem.{0, 0} Nat (List.{0} Nat) (List.instMembershipList.{0} Nat) p (Nat.factors (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) a b))) (Membership.mem.{0, 0} Nat (List.{0} Nat) (List.instMembershipList.{0} Nat) p (Union.union.{0} (List.{0} Nat) (List.instUnionList.{0} Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b)) (Nat.factors a) (Nat.factors b))))
 Case conversion may be inaccurate. Consider using '#align nat.mem_factors_mul_of_coprime Nat.mem_factors_mul_of_coprimeₓ'. -/
-theorem mem_factors_mul_of_coprime {a b : ℕ} (hab : Coprime a b) (p : ℕ) :
+theorem mem_factors_mul_of_coprime {a b : ℕ} (hab : coprime a b) (p : ℕ) :
     p ∈ (a * b).factors ↔ p ∈ a.factors ∪ b.factors :=
   by
   rcases a.eq_zero_or_pos with (rfl | ha)

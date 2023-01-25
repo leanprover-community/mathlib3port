@@ -85,11 +85,11 @@ theorem prime_pow_prime_divisor {p k : ℕ} (hk : k ≠ 0) (hp : Prime p) :
 
 /- warning: nat.factors_mul_to_finset_of_coprime -> Nat.factors_mul_toFinset_of_coprime is a dubious translation:
 lean 3 declaration is
-  forall {a : Nat} {b : Nat}, (Nat.Coprime a b) -> (Eq.{1} (Finset.{0} Nat) (List.toFinset.{0} Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) (Nat.factors (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) a b))) (Union.union.{0} (Finset.{0} Nat) (Finset.hasUnion.{0} Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b)) (List.toFinset.{0} Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) (Nat.factors a)) (List.toFinset.{0} Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) (Nat.factors b))))
+  forall {a : Nat} {b : Nat}, (Nat.coprime a b) -> (Eq.{1} (Finset.{0} Nat) (List.toFinset.{0} Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) (Nat.factors (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) a b))) (Union.union.{0} (Finset.{0} Nat) (Finset.hasUnion.{0} Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b)) (List.toFinset.{0} Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) (Nat.factors a)) (List.toFinset.{0} Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) (Nat.factors b))))
 but is expected to have type
   forall {a : Nat} {b : Nat}, (Nat.coprime a b) -> (Eq.{1} (Finset.{0} Nat) (List.toFinset.{0} Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) (Nat.factors (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) a b))) (Union.union.{0} (Finset.{0} Nat) (Finset.instUnionFinset.{0} Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b)) (List.toFinset.{0} Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) (Nat.factors a)) (List.toFinset.{0} Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) (Nat.factors b))))
 Case conversion may be inaccurate. Consider using '#align nat.factors_mul_to_finset_of_coprime Nat.factors_mul_toFinset_of_coprimeₓ'. -/
-theorem factors_mul_toFinset_of_coprime {a b : ℕ} (hab : Coprime a b) :
+theorem factors_mul_toFinset_of_coprime {a b : ℕ} (hab : coprime a b) :
     (a * b).factors.toFinset = a.factors.toFinset ∪ b.factors.toFinset :=
   (List.toFinset.ext <| mem_factors_mul_of_coprime hab).trans <| List.toFinset_union _ _
 #align nat.factors_mul_to_finset_of_coprime Nat.factors_mul_toFinset_of_coprime

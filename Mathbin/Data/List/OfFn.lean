@@ -219,11 +219,13 @@ theorem ofFn_add {m n} (f : Fin (m + n) → α) :
     rfl
 #align list.of_fn_add List.ofFn_add
 
+#print List.ofFn_fin_append /-
 @[simp]
 theorem ofFn_fin_append {m n} (a : Fin m → α) (b : Fin n → α) :
     List.ofFn (Fin.append a b) = List.ofFn a ++ List.ofFn b := by
   simp_rw [of_fn_add, Fin.append_left, Fin.append_right]
 #align list.of_fn_fin_append List.ofFn_fin_append
+-/
 
 #print List.ofFn_mul /-
 /-- This breaks a list of `m*n` items into `m` groups each containing `n` elements. -/
@@ -301,12 +303,14 @@ theorem ofFn_const (n : ℕ) (c : α) : (ofFn fun i : Fin n => c) = replicate n 
 #align list.of_fn_const List.ofFn_const
 -/
 
+#print List.ofFn_fin_repeat /-
 @[simp]
 theorem ofFn_fin_repeat {m} (a : Fin m → α) (n : ℕ) :
     List.ofFn (Fin.repeat n a) = (List.replicate n (List.ofFn a)).join := by
   simp_rw [of_fn_mul, ← of_fn_const, Fin.repeat, Fin.modNat, Fin.val_mk, add_comm,
     Nat.add_mul_mod_self_right, Nat.mod_eq_of_lt (Fin.is_lt _), Fin.eta]
 #align list.of_fn_fin_repeat List.ofFn_fin_repeat
+-/
 
 #print List.equivSigmaTuple /-
 /-- Lists are equivalent to the sigma type of tuples of a given length. -/

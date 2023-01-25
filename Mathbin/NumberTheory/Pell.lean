@@ -1041,7 +1041,7 @@ theorem yz_sub {m n} (h : n ≤ m) : yz (m - n) = xz n * yz m - xz m * yz n :=
   exact congr_arg Zsqrtd.im (pell_zd_sub a1 h)
 #align pell.yz_sub Pell.yz_sub
 
-theorem xy_coprime (n) : (xn n).Coprime (yn n) :=
+theorem xy_coprime (n) : (xn n).coprime (yn n) :=
   Nat.coprime_of_dvd' fun k kp kx ky => by
     let p := pell_eq n
     rw [← p] <;>
@@ -1089,8 +1089,8 @@ theorem y_dvd_iff (m n) : yn m ∣ yn n ↔ m ∣ n :=
     Nat.dvd_of_mod_eq_zero <|
       (Nat.eq_zero_or_pos _).resolve_right fun hp =>
         by
-        have co : Nat.Coprime (yn m) (xn (m * (n / m))) :=
-          Nat.Coprime.symm <| (xy_coprime _).coprime_dvd_right (y_mul_dvd m (n / m))
+        have co : Nat.coprime (yn m) (xn (m * (n / m))) :=
+          Nat.coprime.symm <| (xy_coprime _).coprime_dvd_right (y_mul_dvd m (n / m))
         have m0 : 0 < m :=
           m.eq_zero_or_pos.resolve_left fun e => by
             rw [e, Nat.mod_zero] at hp <;> rw [e] at h <;>
@@ -1528,10 +1528,10 @@ theorem matiyasevic {a k x y} :
         let v := yn a1 m
         have ky : k ≤ y := yn_ge_n a1 k
         have yv : y * y ∣ v := (ysq_dvd_yy a1 k).trans <| (y_dvd_iff _ _ _).2 <| dvd_mul_left _ _
-        have uco : Nat.Coprime u (4 * y) :=
+        have uco : Nat.coprime u (4 * y) :=
           have : 2 ∣ v :=
             modeq_zero_iff_dvd.1 <| (yn_modeq_two _ _).trans (dvd_mul_right _ _).modeq_zero_nat
-          have : Nat.Coprime u 2 := (xy_coprime a1 m).coprime_dvd_right this
+          have : Nat.coprime u 2 := (xy_coprime a1 m).coprime_dvd_right this
           (this.mul_right this).mul_right <|
             (xy_coprime _ _).coprime_dvd_right (dvd_of_mul_left_dvd yv)
         let ⟨b, ba, bm1⟩ := chinese_remainder uco a 1

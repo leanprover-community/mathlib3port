@@ -454,7 +454,7 @@ protected theorem div_pow (dvd : p ^ a ∣ b) : padicValNat p (b / p ^ a) = padi
   exact hp
 #align padic_val_nat.div_pow padicValNat.div_pow
 
-protected theorem div' {m : ℕ} (cpm : Coprime p m) {b : ℕ} (dvd : m ∣ b) :
+protected theorem div' {m : ℕ} (cpm : coprime p m) {b : ℕ} (dvd : m ∣ b) :
     padicValNat p (b / m) = padicValNat p b := by
   rw [padicValNat.div_of_dvd dvd, eq_zero_of_not_dvd (hp.out.coprime_iff_not_dvd.mp cpm),
       Nat.sub_zero] <;>

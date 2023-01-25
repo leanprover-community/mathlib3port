@@ -137,15 +137,19 @@ theorem getRight_eq_none_iff : x.getRight = none ↔ x.isLeft := by
 #align sum.get_right_eq_none_iff Sum.getRight_eq_none_iff
 -/
 
+#print Sum.getLeft_eq_some_iff /-
 @[simp]
 theorem getLeft_eq_some_iff {a} : x.getLeft = some a ↔ x = inl a := by
   cases x <;> simp only [get_left]
 #align sum.get_left_eq_some_iff Sum.getLeft_eq_some_iff
+-/
 
+#print Sum.getRight_eq_some_iff /-
 @[simp]
 theorem getRight_eq_some_iff {b} : x.getRight = some b ↔ x = inr b := by
   cases x <;> simp only [get_right]
 #align sum.get_right_eq_some_iff Sum.getRight_eq_some_iff
+-/
 
 #print Sum.not_isLeft /-
 @[simp]
@@ -362,6 +366,12 @@ theorem map_id_id (α β) : Sum.map (@id α) (@id β) = id :=
   funext fun x => Sum.recOn x (fun _ => rfl) fun _ => rfl
 #align sum.map_id_id Sum.map_id_id
 
+/- warning: sum.elim_map -> Sum.elim_map is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {δ : Type.{u4}} {ε : Sort.{u5}} {f₁ : α -> β} {f₂ : β -> ε} {g₁ : γ -> δ} {g₂ : δ -> ε} {x : Sum.{u1, u3} α γ}, Eq.{u5} ε (Sum.elim.{u2, u4, u5} β δ ε f₂ g₂ (Sum.map.{u1, u3, u2, u4} α β γ δ f₁ g₁ x)) (Sum.elim.{u1, u3, u5} α γ ε (Function.comp.{succ u1, succ u2, u5} α β ε f₂ f₁) (Function.comp.{succ u3, succ u4, u5} γ δ ε g₂ g₁) x)
+but is expected to have type
+  forall {α : Type.{u5}} {β : Type.{u4}} {γ : Type.{u3}} {δ : Type.{u2}} {ε : Sort.{u1}} {f₁ : α -> β} {f₂ : β -> ε} {g₁ : γ -> δ} {g₂ : δ -> ε} {x : Sum.{u5, u3} α γ}, Eq.{u1} ε (Sum.elim.{u4, u2, u1} β δ ε f₂ g₂ (Sum.map.{u5, u3, u4, u2} α β γ δ f₁ g₁ x)) (Sum.elim.{u5, u3, u1} α γ ε (Function.comp.{succ u5, succ u4, u1} α β ε f₂ f₁) (Function.comp.{succ u3, succ u2, u1} γ δ ε g₂ g₁) x)
+Case conversion may be inaccurate. Consider using '#align sum.elim_map Sum.elim_mapₓ'. -/
 theorem elim_map {α β γ δ ε : Sort _} {f₁ : α → β} {f₂ : β → ε} {g₁ : γ → δ} {g₂ : δ → ε} {x} :
     Sum.elim f₂ g₂ (Sum.map f₁ g₁ x) = Sum.elim (f₂ ∘ f₁) (g₂ ∘ g₁) x := by cases x <;> rfl
 #align sum.elim_map Sum.elim_map

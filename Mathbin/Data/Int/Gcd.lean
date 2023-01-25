@@ -192,7 +192,7 @@ theorem exists_mul_emod_eq_gcd {k n : ℕ} (hk : gcd n k < k) : ∃ m, n * m % k
 -/
 
 #print Nat.exists_mul_emod_eq_one_of_coprime /-
-theorem exists_mul_emod_eq_one_of_coprime {k n : ℕ} (hkn : Coprime n k) (hk : 1 < k) :
+theorem exists_mul_emod_eq_one_of_coprime {k n : ℕ} (hkn : coprime n k) (hk : 1 < k) :
     ∃ m, n * m % k = 1 :=
   Exists.cases_on (exists_mul_emod_eq_gcd (lt_of_le_of_lt (le_of_eq hkn) hk)) fun m hm =>
     ⟨m, hm.trans hkn⟩
@@ -823,26 +823,26 @@ theorem nat_lcm_helper (x y d m n : ℕ) (hd : Nat.gcd x y = d) (d0 : 0 < d) (xy
   mul_right_injective₀ d0.ne' <| by rw [dm, ← xy, ← hd, Nat.gcd_mul_lcm]
 #align tactic.norm_num.nat_lcm_helper Tactic.NormNum.nat_lcm_helper
 
-theorem nat_coprime_helper_zero_left (x : ℕ) (h : 1 < x) : ¬Nat.Coprime 0 x :=
+theorem nat_coprime_helper_zero_left (x : ℕ) (h : 1 < x) : ¬Nat.coprime 0 x :=
   mt (Nat.coprime_zero_left _).1 <| ne_of_gt h
 #align tactic.norm_num.nat_coprime_helper_zero_left Tactic.NormNum.nat_coprime_helper_zero_left
 
-theorem nat_coprime_helper_zero_right (x : ℕ) (h : 1 < x) : ¬Nat.Coprime x 0 :=
+theorem nat_coprime_helper_zero_right (x : ℕ) (h : 1 < x) : ¬Nat.coprime x 0 :=
   mt (Nat.coprime_zero_right _).1 <| ne_of_gt h
 #align tactic.norm_num.nat_coprime_helper_zero_right Tactic.NormNum.nat_coprime_helper_zero_right
 
 theorem nat_coprime_helper_1 (x y a b tx ty : ℕ) (hx : x * a = tx) (hy : y * b = ty)
-    (h : tx + 1 = ty) : Nat.Coprime x y :=
+    (h : tx + 1 = ty) : Nat.coprime x y :=
   nat_gcd_helper_1 _ _ _ _ _ _ _ _ _ (one_mul _) (one_mul _) hx hy h
 #align tactic.norm_num.nat_coprime_helper_1 Tactic.NormNum.nat_coprime_helper_1
 
 theorem nat_coprime_helper_2 (x y a b tx ty : ℕ) (hx : x * a = tx) (hy : y * b = ty)
-    (h : ty + 1 = tx) : Nat.Coprime x y :=
+    (h : ty + 1 = tx) : Nat.coprime x y :=
   nat_gcd_helper_2 _ _ _ _ _ _ _ _ _ (one_mul _) (one_mul _) hx hy h
 #align tactic.norm_num.nat_coprime_helper_2 Tactic.NormNum.nat_coprime_helper_2
 
 theorem nat_not_coprime_helper (d x y u v : ℕ) (hu : d * u = x) (hv : d * v = y) (h : 1 < d) :
-    ¬Nat.Coprime x y :=
+    ¬Nat.coprime x y :=
   Nat.not_coprime_of_dvd_of_dvd h ⟨_, hu.symm⟩ ⟨_, hv.symm⟩
 #align tactic.norm_num.nat_not_coprime_helper Tactic.NormNum.nat_not_coprime_helper
 
@@ -1013,7 +1013,7 @@ unsafe def eval_gcd : expr → tactic (expr × expr)
   | q(Nat.lcm $(ex) $(ey)) => do
     let c ← mk_instance_cache q(ℕ)
     Prod.snd <$> prove_lcm_nat c ex ey
-  | q(Nat.Coprime $(ex) $(ey)) => do
+  | q(Nat.coprime $(ex) $(ey)) => do
     let c ← mk_instance_cache q(ℕ)
     prove_coprime_nat c ex ey >>= Sum.elim true_intro false_intro ∘ Prod.snd
   | q(Int.gcd $(ex) $(ey)) => do

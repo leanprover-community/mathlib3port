@@ -482,105 +482,141 @@ See also `nat.coprime_of_dvd` and `nat.coprime_of_dvd'` to prove `nat.coprime m 
 -/
 
 
-instance (m n : ℕ) : Decidable (Coprime m n) := by unfold coprime <;> infer_instance
+instance (m n : ℕ) : Decidable (coprime m n) := by unfold coprime <;> infer_instance
 
 #print Nat.coprime_iff_gcd_eq_one /-
-theorem coprime_iff_gcd_eq_one {m n : ℕ} : Coprime m n ↔ gcd m n = 1 :=
+theorem coprime_iff_gcd_eq_one {m n : ℕ} : coprime m n ↔ gcd m n = 1 :=
   Iff.rfl
 #align nat.coprime_iff_gcd_eq_one Nat.coprime_iff_gcd_eq_one
 -/
 
-theorem Coprime.gcd_eq_one {m n : ℕ} (h : Coprime m n) : gcd m n = 1 :=
+#print Nat.coprime.gcd_eq_one /-
+theorem coprime.gcd_eq_one {m n : ℕ} (h : coprime m n) : gcd m n = 1 :=
   h
-#align nat.coprime.gcd_eq_one Nat.Coprime.gcd_eq_one
+#align nat.coprime.gcd_eq_one Nat.coprime.gcd_eq_one
+-/
 
 #print Nat.coprime.lcm_eq_mul /-
-theorem coprime.lcm_eq_mul {m n : ℕ} (h : Coprime m n) : lcm m n = m * n := by
+theorem coprime.lcm_eq_mul {m n : ℕ} (h : coprime m n) : lcm m n = m * n := by
   rw [← one_mul (lcm m n), ← h.gcd_eq_one, gcd_mul_lcm]
 #align nat.coprime.lcm_eq_mul Nat.coprime.lcm_eq_mul
 -/
 
-theorem Coprime.symm {m n : ℕ} : Coprime n m → Coprime m n :=
+/- warning: nat.coprime.symm -> Nat.coprime.symm is a dubious translation:
+lean 3 declaration is
+  forall {m : Nat} {n : Nat}, (Nat.coprime n m) -> (Nat.coprime m n)
+but is expected to have type
+  forall {m : Nat} {n : Nat}, (Nat.coprime m n) -> (Nat.coprime n m)
+Case conversion may be inaccurate. Consider using '#align nat.coprime.symm Nat.coprime.symmₓ'. -/
+theorem coprime.symm {m n : ℕ} : coprime n m → coprime m n :=
   (gcd_comm m n).trans
-#align nat.coprime.symm Nat.Coprime.symm
+#align nat.coprime.symm Nat.coprime.symm
 
 /- warning: nat.coprime_comm -> Nat.coprime_comm is a dubious translation:
 lean 3 declaration is
-  forall {m : Nat} {n : Nat}, Iff (Nat.Coprime n m) (Nat.Coprime m n)
+  forall {m : Nat} {n : Nat}, Iff (Nat.coprime n m) (Nat.coprime m n)
 but is expected to have type
   forall {m : Nat} {n : Nat}, Iff (Nat.coprime m n) (Nat.coprime n m)
 Case conversion may be inaccurate. Consider using '#align nat.coprime_comm Nat.coprime_commₓ'. -/
-theorem coprime_comm {m n : ℕ} : Coprime n m ↔ Coprime m n :=
-  ⟨Coprime.symm, Coprime.symm⟩
+theorem coprime_comm {m n : ℕ} : coprime n m ↔ coprime m n :=
+  ⟨coprime.symm, coprime.symm⟩
 #align nat.coprime_comm Nat.coprime_comm
 
 #print Nat.coprime.symmetric /-
-theorem coprime.symmetric : Symmetric Coprime := fun m n => Coprime.symm
+theorem coprime.symmetric : Symmetric coprime := fun m n => coprime.symm
 #align nat.coprime.symmetric Nat.coprime.symmetric
 -/
 
-theorem Coprime.dvd_of_dvd_mul_right {m n k : ℕ} (H1 : Coprime k n) (H2 : k ∣ m * n) : k ∣ m :=
+/- warning: nat.coprime.dvd_of_dvd_mul_right -> Nat.coprime.dvd_of_dvd_mul_right is a dubious translation:
+lean 3 declaration is
+  forall {m : Nat} {n : Nat} {k : Nat}, (Nat.coprime k n) -> (Dvd.Dvd.{0} Nat Nat.hasDvd k (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) m n)) -> (Dvd.Dvd.{0} Nat Nat.hasDvd k m)
+but is expected to have type
+  forall {m : Nat} {n : Nat} {k : Nat}, (Nat.coprime m n) -> (Dvd.dvd.{0} Nat Nat.instDvdNat m (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) k n)) -> (Dvd.dvd.{0} Nat Nat.instDvdNat m k)
+Case conversion may be inaccurate. Consider using '#align nat.coprime.dvd_of_dvd_mul_right Nat.coprime.dvd_of_dvd_mul_rightₓ'. -/
+theorem coprime.dvd_of_dvd_mul_right {m n k : ℕ} (H1 : coprime k n) (H2 : k ∣ m * n) : k ∣ m :=
   by
   let t := dvd_gcd (dvd_mul_left k m) H2
   rwa [gcd_mul_left, H1.gcd_eq_one, mul_one] at t
-#align nat.coprime.dvd_of_dvd_mul_right Nat.Coprime.dvd_of_dvd_mul_right
+#align nat.coprime.dvd_of_dvd_mul_right Nat.coprime.dvd_of_dvd_mul_right
 
-theorem Coprime.dvd_of_dvd_mul_left {m n k : ℕ} (H1 : Coprime k m) (H2 : k ∣ m * n) : k ∣ n := by
+/- warning: nat.coprime.dvd_of_dvd_mul_left -> Nat.coprime.dvd_of_dvd_mul_left is a dubious translation:
+lean 3 declaration is
+  forall {m : Nat} {n : Nat} {k : Nat}, (Nat.coprime k m) -> (Dvd.Dvd.{0} Nat Nat.hasDvd k (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) m n)) -> (Dvd.Dvd.{0} Nat Nat.hasDvd k n)
+but is expected to have type
+  forall {m : Nat} {n : Nat} {k : Nat}, (Nat.coprime m n) -> (Dvd.dvd.{0} Nat Nat.instDvdNat m (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) n k)) -> (Dvd.dvd.{0} Nat Nat.instDvdNat m k)
+Case conversion may be inaccurate. Consider using '#align nat.coprime.dvd_of_dvd_mul_left Nat.coprime.dvd_of_dvd_mul_leftₓ'. -/
+theorem coprime.dvd_of_dvd_mul_left {m n k : ℕ} (H1 : coprime k m) (H2 : k ∣ m * n) : k ∣ n := by
   rw [mul_comm] at H2 <;> exact H1.dvd_of_dvd_mul_right H2
-#align nat.coprime.dvd_of_dvd_mul_left Nat.Coprime.dvd_of_dvd_mul_left
+#align nat.coprime.dvd_of_dvd_mul_left Nat.coprime.dvd_of_dvd_mul_left
 
 #print Nat.coprime.dvd_mul_right /-
-theorem coprime.dvd_mul_right {m n k : ℕ} (H : Coprime k n) : k ∣ m * n ↔ k ∣ m :=
+theorem coprime.dvd_mul_right {m n k : ℕ} (H : coprime k n) : k ∣ m * n ↔ k ∣ m :=
   ⟨H.dvd_of_dvd_mul_right, fun h => dvd_mul_of_dvd_left h n⟩
 #align nat.coprime.dvd_mul_right Nat.coprime.dvd_mul_right
 -/
 
 #print Nat.coprime.dvd_mul_left /-
-theorem coprime.dvd_mul_left {m n k : ℕ} (H : Coprime k m) : k ∣ m * n ↔ k ∣ n :=
+theorem coprime.dvd_mul_left {m n k : ℕ} (H : coprime k m) : k ∣ m * n ↔ k ∣ n :=
   ⟨H.dvd_of_dvd_mul_left, fun h => dvd_mul_of_dvd_right h m⟩
 #align nat.coprime.dvd_mul_left Nat.coprime.dvd_mul_left
 -/
 
-theorem Coprime.gcd_mul_left_cancel {k : ℕ} (m : ℕ) {n : ℕ} (H : Coprime k n) :
+/- warning: nat.coprime.gcd_mul_left_cancel -> Nat.coprime.gcd_mul_left_cancel is a dubious translation:
+lean 3 declaration is
+  forall {k : Nat} (m : Nat) {n : Nat}, (Nat.coprime k n) -> (Eq.{1} Nat (Nat.gcd (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) k m) n) (Nat.gcd m n))
+but is expected to have type
+  forall {k : Nat} {m : Nat} (n : Nat), (Nat.coprime k m) -> (Eq.{1} Nat (Nat.gcd (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) k n) m) (Nat.gcd n m))
+Case conversion may be inaccurate. Consider using '#align nat.coprime.gcd_mul_left_cancel Nat.coprime.gcd_mul_left_cancelₓ'. -/
+theorem coprime.gcd_mul_left_cancel {k : ℕ} (m : ℕ) {n : ℕ} (H : coprime k n) :
     gcd (k * m) n = gcd m n :=
-  have H1 : Coprime (gcd (k * m) n) k := by
+  have H1 : coprime (gcd (k * m) n) k := by
     rw [coprime, gcd_assoc, H.symm.gcd_eq_one, gcd_one_right]
   dvd_antisymm (dvd_gcd (H1.dvd_of_dvd_mul_left (gcd_dvd_left _ _)) (gcd_dvd_right _ _))
     (gcd_dvd_gcd_mul_left _ _ _)
-#align nat.coprime.gcd_mul_left_cancel Nat.Coprime.gcd_mul_left_cancel
+#align nat.coprime.gcd_mul_left_cancel Nat.coprime.gcd_mul_left_cancel
 
-theorem Coprime.gcd_mul_right_cancel (m : ℕ) {k n : ℕ} (H : Coprime k n) :
+/- warning: nat.coprime.gcd_mul_right_cancel -> Nat.coprime.gcd_mul_right_cancel is a dubious translation:
+lean 3 declaration is
+  forall (m : Nat) {k : Nat} {n : Nat}, (Nat.coprime k n) -> (Eq.{1} Nat (Nat.gcd (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) m k) n) (Nat.gcd m n))
+but is expected to have type
+  forall {m : Nat} {k : Nat} (n : Nat), (Nat.coprime m k) -> (Eq.{1} Nat (Nat.gcd (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) n m) k) (Nat.gcd n k))
+Case conversion may be inaccurate. Consider using '#align nat.coprime.gcd_mul_right_cancel Nat.coprime.gcd_mul_right_cancelₓ'. -/
+theorem coprime.gcd_mul_right_cancel (m : ℕ) {k n : ℕ} (H : coprime k n) :
     gcd (m * k) n = gcd m n := by rw [mul_comm m k, H.gcd_mul_left_cancel m]
-#align nat.coprime.gcd_mul_right_cancel Nat.Coprime.gcd_mul_right_cancel
+#align nat.coprime.gcd_mul_right_cancel Nat.coprime.gcd_mul_right_cancel
 
-theorem Coprime.gcd_mul_left_cancel_right {k m : ℕ} (n : ℕ) (H : Coprime k m) :
+#print Nat.coprime.gcd_mul_left_cancel_right /-
+theorem coprime.gcd_mul_left_cancel_right {k m : ℕ} (n : ℕ) (H : coprime k m) :
     gcd m (k * n) = gcd m n := by rw [gcd_comm m n, gcd_comm m (k * n), H.gcd_mul_left_cancel n]
-#align nat.coprime.gcd_mul_left_cancel_right Nat.Coprime.gcd_mul_left_cancel_right
+#align nat.coprime.gcd_mul_left_cancel_right Nat.coprime.gcd_mul_left_cancel_right
+-/
 
-theorem Coprime.gcd_mul_right_cancel_right {k m : ℕ} (n : ℕ) (H : Coprime k m) :
+#print Nat.coprime.gcd_mul_right_cancel_right /-
+theorem coprime.gcd_mul_right_cancel_right {k m : ℕ} (n : ℕ) (H : coprime k m) :
     gcd m (n * k) = gcd m n := by rw [mul_comm n k, H.gcd_mul_left_cancel_right n]
-#align nat.coprime.gcd_mul_right_cancel_right Nat.Coprime.gcd_mul_right_cancel_right
+#align nat.coprime.gcd_mul_right_cancel_right Nat.coprime.gcd_mul_right_cancel_right
+-/
 
 #print Nat.coprime_div_gcd_div_gcd /-
-theorem coprime_div_gcd_div_gcd {m n : ℕ} (H : 0 < gcd m n) : Coprime (m / gcd m n) (n / gcd m n) :=
+theorem coprime_div_gcd_div_gcd {m n : ℕ} (H : 0 < gcd m n) : coprime (m / gcd m n) (n / gcd m n) :=
   by rw [coprime_iff_gcd_eq_one, gcd_div (gcd_dvd_left m n) (gcd_dvd_right m n), Nat.div_self H]
 #align nat.coprime_div_gcd_div_gcd Nat.coprime_div_gcd_div_gcd
 -/
 
 /- warning: nat.not_coprime_of_dvd_of_dvd -> Nat.not_coprime_of_dvd_of_dvd is a dubious translation:
 lean 3 declaration is
-  forall {m : Nat} {n : Nat} {d : Nat}, (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))) d) -> (Dvd.Dvd.{0} Nat Nat.hasDvd d m) -> (Dvd.Dvd.{0} Nat Nat.hasDvd d n) -> (Not (Nat.Coprime m n))
+  forall {m : Nat} {n : Nat} {d : Nat}, (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))) d) -> (Dvd.Dvd.{0} Nat Nat.hasDvd d m) -> (Dvd.Dvd.{0} Nat Nat.hasDvd d n) -> (Not (Nat.coprime m n))
 but is expected to have type
   forall {m : Nat} {n : Nat} {d : Nat}, (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) m) -> (Dvd.dvd.{0} Nat Nat.instDvdNat m n) -> (Dvd.dvd.{0} Nat Nat.instDvdNat m d) -> (Not (Nat.coprime n d))
 Case conversion may be inaccurate. Consider using '#align nat.not_coprime_of_dvd_of_dvd Nat.not_coprime_of_dvd_of_dvdₓ'. -/
 theorem not_coprime_of_dvd_of_dvd {m n d : ℕ} (dgt1 : 1 < d) (Hm : d ∣ m) (Hn : d ∣ n) :
-    ¬Coprime m n := fun co =>
+    ¬coprime m n := fun co =>
   not_lt_of_ge (le_of_dvd zero_lt_one <| by rw [← co.gcd_eq_one] <;> exact dvd_gcd Hm Hn) dgt1
 #align nat.not_coprime_of_dvd_of_dvd Nat.not_coprime_of_dvd_of_dvd
 
 #print Nat.exists_coprime /-
 theorem exists_coprime {m n : ℕ} (H : 0 < gcd m n) :
-    ∃ m' n', Coprime m' n' ∧ m = m' * gcd m n ∧ n = n' * gcd m n :=
+    ∃ m' n', coprime m' n' ∧ m = m' * gcd m n ∧ n = n' * gcd m n :=
   ⟨_, _, coprime_div_gcd_div_gcd H, (Nat.div_mul_cancel (gcd_dvd_left m n)).symm,
     (Nat.div_mul_cancel (gcd_dvd_right m n)).symm⟩
 #align nat.exists_coprime Nat.exists_coprime
@@ -588,7 +624,7 @@ theorem exists_coprime {m n : ℕ} (H : 0 < gcd m n) :
 
 #print Nat.exists_coprime' /-
 theorem exists_coprime' {m n : ℕ} (H : 0 < gcd m n) :
-    ∃ g m' n', 0 < g ∧ Coprime m' n' ∧ m = m' * g ∧ n = n' * g :=
+    ∃ g m' n', 0 < g ∧ coprime m' n' ∧ m = m' * g ∧ n = n' * g :=
   let ⟨m', n', h⟩ := exists_coprime H
   ⟨_, m', n', H, h⟩
 #align nat.exists_coprime' Nat.exists_coprime'
@@ -596,122 +632,159 @@ theorem exists_coprime' {m n : ℕ} (H : 0 < gcd m n) :
 
 #print Nat.coprime_add_self_right /-
 @[simp]
-theorem coprime_add_self_right {m n : ℕ} : Coprime m (n + m) ↔ Coprime m n := by
+theorem coprime_add_self_right {m n : ℕ} : coprime m (n + m) ↔ coprime m n := by
   rw [coprime, coprime, gcd_add_self_right]
 #align nat.coprime_add_self_right Nat.coprime_add_self_right
 -/
 
 #print Nat.coprime_self_add_right /-
 @[simp]
-theorem coprime_self_add_right {m n : ℕ} : Coprime m (m + n) ↔ Coprime m n := by
+theorem coprime_self_add_right {m n : ℕ} : coprime m (m + n) ↔ coprime m n := by
   rw [add_comm, coprime_add_self_right]
 #align nat.coprime_self_add_right Nat.coprime_self_add_right
 -/
 
 #print Nat.coprime_add_self_left /-
 @[simp]
-theorem coprime_add_self_left {m n : ℕ} : Coprime (m + n) n ↔ Coprime m n := by
+theorem coprime_add_self_left {m n : ℕ} : coprime (m + n) n ↔ coprime m n := by
   rw [coprime, coprime, gcd_add_self_left]
 #align nat.coprime_add_self_left Nat.coprime_add_self_left
 -/
 
 #print Nat.coprime_self_add_left /-
 @[simp]
-theorem coprime_self_add_left {m n : ℕ} : Coprime (m + n) m ↔ Coprime n m := by
+theorem coprime_self_add_left {m n : ℕ} : coprime (m + n) m ↔ coprime n m := by
   rw [coprime, coprime, gcd_self_add_left]
 #align nat.coprime_self_add_left Nat.coprime_self_add_left
 -/
 
 #print Nat.coprime_add_mul_right_right /-
 @[simp]
-theorem coprime_add_mul_right_right (m n k : ℕ) : Coprime m (n + k * m) ↔ Coprime m n := by
+theorem coprime_add_mul_right_right (m n k : ℕ) : coprime m (n + k * m) ↔ coprime m n := by
   rw [coprime, coprime, gcd_add_mul_right_right]
 #align nat.coprime_add_mul_right_right Nat.coprime_add_mul_right_right
 -/
 
 #print Nat.coprime_add_mul_left_right /-
 @[simp]
-theorem coprime_add_mul_left_right (m n k : ℕ) : Coprime m (n + m * k) ↔ Coprime m n := by
+theorem coprime_add_mul_left_right (m n k : ℕ) : coprime m (n + m * k) ↔ coprime m n := by
   rw [coprime, coprime, gcd_add_mul_left_right]
 #align nat.coprime_add_mul_left_right Nat.coprime_add_mul_left_right
 -/
 
 #print Nat.coprime_mul_right_add_right /-
 @[simp]
-theorem coprime_mul_right_add_right (m n k : ℕ) : Coprime m (k * m + n) ↔ Coprime m n := by
+theorem coprime_mul_right_add_right (m n k : ℕ) : coprime m (k * m + n) ↔ coprime m n := by
   rw [coprime, coprime, gcd_mul_right_add_right]
 #align nat.coprime_mul_right_add_right Nat.coprime_mul_right_add_right
 -/
 
 #print Nat.coprime_mul_left_add_right /-
 @[simp]
-theorem coprime_mul_left_add_right (m n k : ℕ) : Coprime m (m * k + n) ↔ Coprime m n := by
+theorem coprime_mul_left_add_right (m n k : ℕ) : coprime m (m * k + n) ↔ coprime m n := by
   rw [coprime, coprime, gcd_mul_left_add_right]
 #align nat.coprime_mul_left_add_right Nat.coprime_mul_left_add_right
 -/
 
 #print Nat.coprime_add_mul_right_left /-
 @[simp]
-theorem coprime_add_mul_right_left (m n k : ℕ) : Coprime (m + k * n) n ↔ Coprime m n := by
+theorem coprime_add_mul_right_left (m n k : ℕ) : coprime (m + k * n) n ↔ coprime m n := by
   rw [coprime, coprime, gcd_add_mul_right_left]
 #align nat.coprime_add_mul_right_left Nat.coprime_add_mul_right_left
 -/
 
 #print Nat.coprime_add_mul_left_left /-
 @[simp]
-theorem coprime_add_mul_left_left (m n k : ℕ) : Coprime (m + n * k) n ↔ Coprime m n := by
+theorem coprime_add_mul_left_left (m n k : ℕ) : coprime (m + n * k) n ↔ coprime m n := by
   rw [coprime, coprime, gcd_add_mul_left_left]
 #align nat.coprime_add_mul_left_left Nat.coprime_add_mul_left_left
 -/
 
 #print Nat.coprime_mul_right_add_left /-
 @[simp]
-theorem coprime_mul_right_add_left (m n k : ℕ) : Coprime (k * n + m) n ↔ Coprime m n := by
+theorem coprime_mul_right_add_left (m n k : ℕ) : coprime (k * n + m) n ↔ coprime m n := by
   rw [coprime, coprime, gcd_mul_right_add_left]
 #align nat.coprime_mul_right_add_left Nat.coprime_mul_right_add_left
 -/
 
 #print Nat.coprime_mul_left_add_left /-
 @[simp]
-theorem coprime_mul_left_add_left (m n k : ℕ) : Coprime (n * k + m) n ↔ Coprime m n := by
+theorem coprime_mul_left_add_left (m n k : ℕ) : coprime (n * k + m) n ↔ coprime m n := by
   rw [coprime, coprime, gcd_mul_left_add_left]
 #align nat.coprime_mul_left_add_left Nat.coprime_mul_left_add_left
 -/
 
-theorem Coprime.mul {m n k : ℕ} (H1 : Coprime m k) (H2 : Coprime n k) : Coprime (m * n) k :=
+/- warning: nat.coprime.mul -> Nat.coprime.mul is a dubious translation:
+lean 3 declaration is
+  forall {m : Nat} {n : Nat} {k : Nat}, (Nat.coprime m k) -> (Nat.coprime n k) -> (Nat.coprime (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) m n) k)
+but is expected to have type
+  forall {m : Nat} {n : Nat} {k : Nat}, (Nat.coprime m n) -> (Nat.coprime k n) -> (Nat.coprime (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) m k) n)
+Case conversion may be inaccurate. Consider using '#align nat.coprime.mul Nat.coprime.mulₓ'. -/
+theorem coprime.mul {m n k : ℕ} (H1 : coprime m k) (H2 : coprime n k) : coprime (m * n) k :=
   (H1.gcd_mul_left_cancel n).trans H2
-#align nat.coprime.mul Nat.Coprime.mul
+#align nat.coprime.mul Nat.coprime.mul
 
-theorem Coprime.mul_right {k m n : ℕ} (H1 : Coprime k m) (H2 : Coprime k n) : Coprime k (m * n) :=
+#print Nat.coprime.mul_right /-
+theorem coprime.mul_right {k m n : ℕ} (H1 : coprime k m) (H2 : coprime k n) : coprime k (m * n) :=
   (H1.symm.mul H2.symm).symm
-#align nat.coprime.mul_right Nat.Coprime.mul_right
+#align nat.coprime.mul_right Nat.coprime.mul_right
+-/
 
-theorem Coprime.coprime_dvd_left {m k n : ℕ} (H1 : m ∣ k) (H2 : Coprime k n) : Coprime m n :=
+#print Nat.coprime.coprime_dvd_left /-
+theorem coprime.coprime_dvd_left {m k n : ℕ} (H1 : m ∣ k) (H2 : coprime k n) : coprime m n :=
   eq_one_of_dvd_one (by delta coprime at H2 <;> rw [← H2] <;> exact gcd_dvd_gcd_of_dvd_left _ H1)
-#align nat.coprime.coprime_dvd_left Nat.Coprime.coprime_dvd_left
+#align nat.coprime.coprime_dvd_left Nat.coprime.coprime_dvd_left
+-/
 
-theorem Coprime.coprime_dvd_right {m k n : ℕ} (H1 : n ∣ m) (H2 : Coprime k m) : Coprime k n :=
+/- warning: nat.coprime.coprime_dvd_right -> Nat.coprime.coprime_dvd_right is a dubious translation:
+lean 3 declaration is
+  forall {m : Nat} {k : Nat} {n : Nat}, (Dvd.Dvd.{0} Nat Nat.hasDvd n m) -> (Nat.coprime k m) -> (Nat.coprime k n)
+but is expected to have type
+  forall {m : Nat} {k : Nat} {n : Nat}, (Dvd.dvd.{0} Nat Nat.instDvdNat m k) -> (Nat.coprime n k) -> (Nat.coprime n m)
+Case conversion may be inaccurate. Consider using '#align nat.coprime.coprime_dvd_right Nat.coprime.coprime_dvd_rightₓ'. -/
+theorem coprime.coprime_dvd_right {m k n : ℕ} (H1 : n ∣ m) (H2 : coprime k m) : coprime k n :=
   (H2.symm.coprime_dvd_left H1).symm
-#align nat.coprime.coprime_dvd_right Nat.Coprime.coprime_dvd_right
+#align nat.coprime.coprime_dvd_right Nat.coprime.coprime_dvd_right
 
-theorem Coprime.coprime_mul_left {k m n : ℕ} (H : Coprime (k * m) n) : Coprime m n :=
+#print Nat.coprime.coprime_mul_left /-
+theorem coprime.coprime_mul_left {k m n : ℕ} (H : coprime (k * m) n) : coprime m n :=
   H.coprime_dvd_left (dvd_mul_left _ _)
-#align nat.coprime.coprime_mul_left Nat.Coprime.coprime_mul_left
+#align nat.coprime.coprime_mul_left Nat.coprime.coprime_mul_left
+-/
 
-theorem Coprime.coprime_mul_right {k m n : ℕ} (H : Coprime (m * k) n) : Coprime m n :=
+/- warning: nat.coprime.coprime_mul_right -> Nat.coprime.coprime_mul_right is a dubious translation:
+lean 3 declaration is
+  forall {k : Nat} {m : Nat} {n : Nat}, (Nat.coprime (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) m k) n) -> (Nat.coprime m n)
+but is expected to have type
+  forall {k : Nat} {m : Nat} {n : Nat}, (Nat.coprime (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) k m) n) -> (Nat.coprime k n)
+Case conversion may be inaccurate. Consider using '#align nat.coprime.coprime_mul_right Nat.coprime.coprime_mul_rightₓ'. -/
+theorem coprime.coprime_mul_right {k m n : ℕ} (H : coprime (m * k) n) : coprime m n :=
   H.coprime_dvd_left (dvd_mul_right _ _)
-#align nat.coprime.coprime_mul_right Nat.Coprime.coprime_mul_right
+#align nat.coprime.coprime_mul_right Nat.coprime.coprime_mul_right
 
-theorem Coprime.coprime_mul_left_right {k m n : ℕ} (H : Coprime m (k * n)) : Coprime m n :=
+/- warning: nat.coprime.coprime_mul_left_right -> Nat.coprime.coprime_mul_left_right is a dubious translation:
+lean 3 declaration is
+  forall {k : Nat} {m : Nat} {n : Nat}, (Nat.coprime m (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) k n)) -> (Nat.coprime m n)
+but is expected to have type
+  forall {k : Nat} {m : Nat} {n : Nat}, (Nat.coprime k (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) m n)) -> (Nat.coprime k n)
+Case conversion may be inaccurate. Consider using '#align nat.coprime.coprime_mul_left_right Nat.coprime.coprime_mul_left_rightₓ'. -/
+theorem coprime.coprime_mul_left_right {k m n : ℕ} (H : coprime m (k * n)) : coprime m n :=
   H.coprime_dvd_right (dvd_mul_left _ _)
-#align nat.coprime.coprime_mul_left_right Nat.Coprime.coprime_mul_left_right
+#align nat.coprime.coprime_mul_left_right Nat.coprime.coprime_mul_left_right
 
-theorem Coprime.coprime_mul_right_right {k m n : ℕ} (H : Coprime m (n * k)) : Coprime m n :=
+/- warning: nat.coprime.coprime_mul_right_right -> Nat.coprime.coprime_mul_right_right is a dubious translation:
+lean 3 declaration is
+  forall {k : Nat} {m : Nat} {n : Nat}, (Nat.coprime m (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) n k)) -> (Nat.coprime m n)
+but is expected to have type
+  forall {k : Nat} {m : Nat} {n : Nat}, (Nat.coprime k (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) m n)) -> (Nat.coprime k m)
+Case conversion may be inaccurate. Consider using '#align nat.coprime.coprime_mul_right_right Nat.coprime.coprime_mul_right_rightₓ'. -/
+theorem coprime.coprime_mul_right_right {k m n : ℕ} (H : coprime m (n * k)) : coprime m n :=
   H.coprime_dvd_right (dvd_mul_right _ _)
-#align nat.coprime.coprime_mul_right_right Nat.Coprime.coprime_mul_right_right
+#align nat.coprime.coprime_mul_right_right Nat.coprime.coprime_mul_right_right
 
-theorem Coprime.coprime_div_left {m n a : ℕ} (cmn : Coprime m n) (dvd : a ∣ m) :
-    Coprime (m / a) n := by
+#print Nat.coprime.coprime_div_left /-
+theorem coprime.coprime_div_left {m n a : ℕ} (cmn : coprime m n) (dvd : a ∣ m) :
+    coprime (m / a) n := by
   by_cases a_split : a = 0
   · subst a_split
     rw [zero_dvd_iff] at dvd
@@ -719,76 +792,113 @@ theorem Coprime.coprime_div_left {m n a : ℕ} (cmn : Coprime m n) (dvd : a ∣ 
   · rcases dvd with ⟨k, rfl⟩
     rw [Nat.mul_div_cancel_left _ (Nat.pos_of_ne_zero a_split)]
     exact coprime.coprime_mul_left cmn
-#align nat.coprime.coprime_div_left Nat.Coprime.coprime_div_left
+#align nat.coprime.coprime_div_left Nat.coprime.coprime_div_left
+-/
 
-theorem Coprime.coprime_div_right {m n a : ℕ} (cmn : Coprime m n) (dvd : a ∣ n) :
-    Coprime m (n / a) :=
-  (Coprime.coprime_div_left cmn.symm dvd).symm
-#align nat.coprime.coprime_div_right Nat.Coprime.coprime_div_right
+#print Nat.coprime.coprime_div_right /-
+theorem coprime.coprime_div_right {m n a : ℕ} (cmn : coprime m n) (dvd : a ∣ n) :
+    coprime m (n / a) :=
+  (coprime.coprime_div_left cmn.symm dvd).symm
+#align nat.coprime.coprime_div_right Nat.coprime.coprime_div_right
+-/
 
 /- warning: nat.coprime_mul_iff_left -> Nat.coprime_mul_iff_left is a dubious translation:
 lean 3 declaration is
-  forall {k : Nat} {m : Nat} {n : Nat}, Iff (Nat.Coprime (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) m n) k) (And (Nat.Coprime m k) (Nat.Coprime n k))
+  forall {k : Nat} {m : Nat} {n : Nat}, Iff (Nat.coprime (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) m n) k) (And (Nat.coprime m k) (Nat.coprime n k))
 but is expected to have type
   forall {k : Nat} {m : Nat} {n : Nat}, Iff (Nat.coprime (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) k m) n) (And (Nat.coprime k n) (Nat.coprime m n))
 Case conversion may be inaccurate. Consider using '#align nat.coprime_mul_iff_left Nat.coprime_mul_iff_leftₓ'. -/
-theorem coprime_mul_iff_left {k m n : ℕ} : Coprime (m * n) k ↔ Coprime m k ∧ Coprime n k :=
-  ⟨fun h => ⟨Coprime.coprime_mul_right h, Coprime.coprime_mul_left h⟩, fun ⟨h, _⟩ => by
+theorem coprime_mul_iff_left {k m n : ℕ} : coprime (m * n) k ↔ coprime m k ∧ coprime n k :=
+  ⟨fun h => ⟨coprime.coprime_mul_right h, coprime.coprime_mul_left h⟩, fun ⟨h, _⟩ => by
     rwa [coprime_iff_gcd_eq_one, coprime.gcd_mul_left_cancel n h]⟩
 #align nat.coprime_mul_iff_left Nat.coprime_mul_iff_left
 
 #print Nat.coprime_mul_iff_right /-
-theorem coprime_mul_iff_right {k m n : ℕ} : Coprime k (m * n) ↔ Coprime k m ∧ Coprime k n := by
+theorem coprime_mul_iff_right {k m n : ℕ} : coprime k (m * n) ↔ coprime k m ∧ coprime k n := by
   simpa only [coprime_comm] using coprime_mul_iff_left
 #align nat.coprime_mul_iff_right Nat.coprime_mul_iff_right
 -/
 
-theorem Coprime.gcd_left (k : ℕ) {m n : ℕ} (hmn : Coprime m n) : Coprime (gcd k m) n :=
+/- warning: nat.coprime.gcd_left -> Nat.coprime.gcd_left is a dubious translation:
+lean 3 declaration is
+  forall (k : Nat) {m : Nat} {n : Nat}, (Nat.coprime m n) -> (Nat.coprime (Nat.gcd k m) n)
+but is expected to have type
+  forall {k : Nat} {m : Nat} (n : Nat), (Nat.coprime k m) -> (Nat.coprime (Nat.gcd n k) m)
+Case conversion may be inaccurate. Consider using '#align nat.coprime.gcd_left Nat.coprime.gcd_leftₓ'. -/
+theorem coprime.gcd_left (k : ℕ) {m n : ℕ} (hmn : coprime m n) : coprime (gcd k m) n :=
   hmn.coprime_dvd_left <| gcd_dvd_right k m
-#align nat.coprime.gcd_left Nat.Coprime.gcd_left
+#align nat.coprime.gcd_left Nat.coprime.gcd_left
 
-theorem Coprime.gcd_right (k : ℕ) {m n : ℕ} (hmn : Coprime m n) : Coprime m (gcd k n) :=
+/- warning: nat.coprime.gcd_right -> Nat.coprime.gcd_right is a dubious translation:
+lean 3 declaration is
+  forall (k : Nat) {m : Nat} {n : Nat}, (Nat.coprime m n) -> (Nat.coprime m (Nat.gcd k n))
+but is expected to have type
+  forall {k : Nat} {m : Nat} (n : Nat), (Nat.coprime k m) -> (Nat.coprime k (Nat.gcd n m))
+Case conversion may be inaccurate. Consider using '#align nat.coprime.gcd_right Nat.coprime.gcd_rightₓ'. -/
+theorem coprime.gcd_right (k : ℕ) {m n : ℕ} (hmn : coprime m n) : coprime m (gcd k n) :=
   hmn.coprime_dvd_right <| gcd_dvd_right k n
-#align nat.coprime.gcd_right Nat.Coprime.gcd_right
+#align nat.coprime.gcd_right Nat.coprime.gcd_right
 
-theorem Coprime.gcd_both (k l : ℕ) {m n : ℕ} (hmn : Coprime m n) : Coprime (gcd k m) (gcd l n) :=
+/- warning: nat.coprime.gcd_both -> Nat.coprime.gcd_both is a dubious translation:
+lean 3 declaration is
+  forall (k : Nat) (l : Nat) {m : Nat} {n : Nat}, (Nat.coprime m n) -> (Nat.coprime (Nat.gcd k m) (Nat.gcd l n))
+but is expected to have type
+  forall {k : Nat} {l : Nat} (m : Nat) (n : Nat), (Nat.coprime k l) -> (Nat.coprime (Nat.gcd m k) (Nat.gcd n l))
+Case conversion may be inaccurate. Consider using '#align nat.coprime.gcd_both Nat.coprime.gcd_bothₓ'. -/
+theorem coprime.gcd_both (k l : ℕ) {m n : ℕ} (hmn : coprime m n) : coprime (gcd k m) (gcd l n) :=
   (hmn.gcd_left k).gcd_right l
-#align nat.coprime.gcd_both Nat.Coprime.gcd_both
+#align nat.coprime.gcd_both Nat.coprime.gcd_both
 
-theorem Coprime.mul_dvd_of_dvd_of_dvd {a n m : ℕ} (hmn : Coprime m n) (hm : m ∣ a) (hn : n ∣ a) :
+/- warning: nat.coprime.mul_dvd_of_dvd_of_dvd -> Nat.coprime.mul_dvd_of_dvd_of_dvd is a dubious translation:
+lean 3 declaration is
+  forall {a : Nat} {n : Nat} {m : Nat}, (Nat.coprime m n) -> (Dvd.Dvd.{0} Nat Nat.hasDvd m a) -> (Dvd.Dvd.{0} Nat Nat.hasDvd n a) -> (Dvd.Dvd.{0} Nat Nat.hasDvd (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) m n) a)
+but is expected to have type
+  forall {a : Nat} {n : Nat} {m : Nat}, (Nat.coprime a n) -> (Dvd.dvd.{0} Nat Nat.instDvdNat a m) -> (Dvd.dvd.{0} Nat Nat.instDvdNat n m) -> (Dvd.dvd.{0} Nat Nat.instDvdNat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) a n) m)
+Case conversion may be inaccurate. Consider using '#align nat.coprime.mul_dvd_of_dvd_of_dvd Nat.coprime.mul_dvd_of_dvd_of_dvdₓ'. -/
+theorem coprime.mul_dvd_of_dvd_of_dvd {a n m : ℕ} (hmn : coprime m n) (hm : m ∣ a) (hn : n ∣ a) :
     m * n ∣ a :=
   let ⟨k, hk⟩ := hm
   hk.symm ▸ mul_dvd_mul_left _ (hmn.symm.dvd_of_dvd_mul_left (hk ▸ hn))
-#align nat.coprime.mul_dvd_of_dvd_of_dvd Nat.Coprime.mul_dvd_of_dvd_of_dvd
+#align nat.coprime.mul_dvd_of_dvd_of_dvd Nat.coprime.mul_dvd_of_dvd_of_dvd
 
 #print Nat.coprime_one_left /-
-theorem coprime_one_left : ∀ n, Coprime 1 n :=
+theorem coprime_one_left : ∀ n, coprime 1 n :=
   gcd_one_left
 #align nat.coprime_one_left Nat.coprime_one_left
 -/
 
 #print Nat.coprime_one_right /-
-theorem coprime_one_right : ∀ n, Coprime n 1 :=
+theorem coprime_one_right : ∀ n, coprime n 1 :=
   gcd_one_right
 #align nat.coprime_one_right Nat.coprime_one_right
 -/
 
-theorem Coprime.pow_left {m k : ℕ} (n : ℕ) (H1 : Coprime m k) : Coprime (m ^ n) k :=
+#print Nat.coprime.pow_left /-
+theorem coprime.pow_left {m k : ℕ} (n : ℕ) (H1 : coprime m k) : coprime (m ^ n) k :=
   Nat.recOn n (coprime_one_left _) fun n IH => H1.mul IH
-#align nat.coprime.pow_left Nat.Coprime.pow_left
+#align nat.coprime.pow_left Nat.coprime.pow_left
+-/
 
-theorem Coprime.pow_right {m k : ℕ} (n : ℕ) (H1 : Coprime k m) : Coprime k (m ^ n) :=
+/- warning: nat.coprime.pow_right -> Nat.coprime.pow_right is a dubious translation:
+lean 3 declaration is
+  forall {m : Nat} {k : Nat} (n : Nat), (Nat.coprime k m) -> (Nat.coprime k (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.Pow.{0} Nat Nat.monoid)) m n))
+but is expected to have type
+  forall {m : Nat} {k : Nat} (n : Nat), (Nat.coprime m k) -> (Nat.coprime m (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) k n))
+Case conversion may be inaccurate. Consider using '#align nat.coprime.pow_right Nat.coprime.pow_rightₓ'. -/
+theorem coprime.pow_right {m k : ℕ} (n : ℕ) (H1 : coprime k m) : coprime k (m ^ n) :=
   (H1.symm.pow_left n).symm
-#align nat.coprime.pow_right Nat.Coprime.pow_right
+#align nat.coprime.pow_right Nat.coprime.pow_right
 
-theorem Coprime.pow {k l : ℕ} (m n : ℕ) (H1 : Coprime k l) : Coprime (k ^ m) (l ^ n) :=
+#print Nat.coprime.pow /-
+theorem coprime.pow {k l : ℕ} (m n : ℕ) (H1 : coprime k l) : coprime (k ^ m) (l ^ n) :=
   (H1.pow_left _).pow_right _
-#align nat.coprime.pow Nat.Coprime.pow
+#align nat.coprime.pow Nat.coprime.pow
+-/
 
 #print Nat.coprime_pow_left_iff /-
 @[simp]
 theorem coprime_pow_left_iff {n : ℕ} (hn : 0 < n) (a b : ℕ) :
-    Nat.Coprime (a ^ n) b ↔ Nat.Coprime a b :=
+    Nat.coprime (a ^ n) b ↔ Nat.coprime a b :=
   by
   obtain ⟨n, rfl⟩ := exists_eq_succ_of_ne_zero hn.ne'
   rw [pow_succ, Nat.coprime_mul_iff_left]
@@ -799,52 +909,54 @@ theorem coprime_pow_left_iff {n : ℕ} (hn : 0 < n) (a b : ℕ) :
 #print Nat.coprime_pow_right_iff /-
 @[simp]
 theorem coprime_pow_right_iff {n : ℕ} (hn : 0 < n) (a b : ℕ) :
-    Nat.Coprime a (b ^ n) ↔ Nat.Coprime a b := by
+    Nat.coprime a (b ^ n) ↔ Nat.coprime a b := by
   rw [Nat.coprime_comm, coprime_pow_left_iff hn, Nat.coprime_comm]
 #align nat.coprime_pow_right_iff Nat.coprime_pow_right_iff
 -/
 
-theorem Coprime.eq_one_of_dvd {k m : ℕ} (H : Coprime k m) (d : k ∣ m) : k = 1 := by
+#print Nat.coprime.eq_one_of_dvd /-
+theorem coprime.eq_one_of_dvd {k m : ℕ} (H : coprime k m) (d : k ∣ m) : k = 1 := by
   rw [← H.gcd_eq_one, gcd_eq_left d]
-#align nat.coprime.eq_one_of_dvd Nat.Coprime.eq_one_of_dvd
+#align nat.coprime.eq_one_of_dvd Nat.coprime.eq_one_of_dvd
+-/
 
 #print Nat.coprime_zero_left /-
 @[simp]
-theorem coprime_zero_left (n : ℕ) : Coprime 0 n ↔ n = 1 := by simp [coprime]
+theorem coprime_zero_left (n : ℕ) : coprime 0 n ↔ n = 1 := by simp [coprime]
 #align nat.coprime_zero_left Nat.coprime_zero_left
 -/
 
 #print Nat.coprime_zero_right /-
 @[simp]
-theorem coprime_zero_right (n : ℕ) : Coprime n 0 ↔ n = 1 := by simp [coprime]
+theorem coprime_zero_right (n : ℕ) : coprime n 0 ↔ n = 1 := by simp [coprime]
 #align nat.coprime_zero_right Nat.coprime_zero_right
 -/
 
 #print Nat.not_coprime_zero_zero /-
-theorem not_coprime_zero_zero : ¬Coprime 0 0 := by simp
+theorem not_coprime_zero_zero : ¬coprime 0 0 := by simp
 #align nat.not_coprime_zero_zero Nat.not_coprime_zero_zero
 -/
 
 #print Nat.coprime_one_left_iff /-
 @[simp]
-theorem coprime_one_left_iff (n : ℕ) : Coprime 1 n ↔ True := by simp [coprime]
+theorem coprime_one_left_iff (n : ℕ) : coprime 1 n ↔ True := by simp [coprime]
 #align nat.coprime_one_left_iff Nat.coprime_one_left_iff
 -/
 
 #print Nat.coprime_one_right_iff /-
 @[simp]
-theorem coprime_one_right_iff (n : ℕ) : Coprime n 1 ↔ True := by simp [coprime]
+theorem coprime_one_right_iff (n : ℕ) : coprime n 1 ↔ True := by simp [coprime]
 #align nat.coprime_one_right_iff Nat.coprime_one_right_iff
 -/
 
 #print Nat.coprime_self /-
 @[simp]
-theorem coprime_self (n : ℕ) : Coprime n n ↔ n = 1 := by simp [coprime]
+theorem coprime_self (n : ℕ) : coprime n n ↔ n = 1 := by simp [coprime]
 #align nat.coprime_self Nat.coprime_self
 -/
 
 #print Nat.gcd_mul_of_coprime_of_dvd /-
-theorem gcd_mul_of_coprime_of_dvd {a b c : ℕ} (hac : Coprime a c) (b_dvd_c : b ∣ c) :
+theorem gcd_mul_of_coprime_of_dvd {a b c : ℕ} (hac : coprime a c) (b_dvd_c : b ∣ c) :
     gcd (a * b) c = b :=
   by
   rcases exists_eq_mul_left_of_dvd b_dvd_c with ⟨d, rfl⟩
@@ -855,7 +967,7 @@ theorem gcd_mul_of_coprime_of_dvd {a b c : ℕ} (hac : Coprime a c) (b_dvd_c : b
 -/
 
 #print Nat.coprime.eq_of_mul_eq_zero /-
-theorem coprime.eq_of_mul_eq_zero {m n : ℕ} (h : m.Coprime n) (hmn : m * n = 0) :
+theorem coprime.eq_of_mul_eq_zero {m n : ℕ} (h : m.coprime n) (hmn : m * n = 0) :
     m = 0 ∧ n = 1 ∨ m = 1 ∧ n = 0 :=
   (Nat.eq_zero_of_mul_eq_zero hmn).imp (fun hm => ⟨hm, n.coprime_zero_left.mp <| hm ▸ h⟩) fun hn =>
     ⟨m.coprime_zero_left.mp <| hn ▸ h.symm, hn⟩
@@ -913,11 +1025,17 @@ theorem gcd_mul_dvd_mul_gcd (k m n : ℕ) : gcd k (m * n) ∣ gcd k m * gcd k n 
 #align nat.gcd_mul_dvd_mul_gcd Nat.gcd_mul_dvd_mul_gcd
 -/
 
-theorem Coprime.gcd_mul (k : ℕ) {m n : ℕ} (h : Coprime m n) : gcd k (m * n) = gcd k m * gcd k n :=
+/- warning: nat.coprime.gcd_mul -> Nat.coprime.gcd_mul is a dubious translation:
+lean 3 declaration is
+  forall (k : Nat) {m : Nat} {n : Nat}, (Nat.coprime m n) -> (Eq.{1} Nat (Nat.gcd k (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) m n)) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) (Nat.gcd k m) (Nat.gcd k n)))
+but is expected to have type
+  forall {k : Nat} {m : Nat} (n : Nat), (Nat.coprime k m) -> (Eq.{1} Nat (Nat.gcd n (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) k m)) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) (Nat.gcd n k) (Nat.gcd n m)))
+Case conversion may be inaccurate. Consider using '#align nat.coprime.gcd_mul Nat.coprime.gcd_mulₓ'. -/
+theorem coprime.gcd_mul (k : ℕ) {m n : ℕ} (h : coprime m n) : gcd k (m * n) = gcd k m * gcd k n :=
   dvd_antisymm (gcd_mul_dvd_mul_gcd k m n)
     ((h.gcd_both k k).mul_dvd_of_dvd_of_dvd (gcd_dvd_gcd_mul_right_right _ _ _)
       (gcd_dvd_gcd_mul_left_right _ _ _))
-#align nat.coprime.gcd_mul Nat.Coprime.gcd_mul
+#align nat.coprime.gcd_mul Nat.coprime.gcd_mul
 
 #print Nat.pow_dvd_pow_iff /-
 theorem pow_dvd_pow_iff {a b n : ℕ} (n0 : 0 < n) : a ^ n ∣ b ^ n ↔ a ∣ b :=
@@ -936,14 +1054,14 @@ theorem pow_dvd_pow_iff {a b n : ℕ} (n0 : 0 < n) : a ^ n ∣ b ^ n ↔ a ∣ b
 
 /- warning: nat.gcd_mul_gcd_of_coprime_of_mul_eq_mul -> Nat.gcd_mul_gcd_of_coprime_of_mul_eq_mul is a dubious translation:
 lean 3 declaration is
-  forall {a : Nat} {b : Nat} {c : Nat} {d : Nat}, (Nat.Coprime c d) -> (Eq.{1} Nat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) a b) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) c d)) -> (Eq.{1} Nat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) (Nat.gcd a c) (Nat.gcd b c)) c)
+  forall {a : Nat} {b : Nat} {c : Nat} {d : Nat}, (Nat.coprime c d) -> (Eq.{1} Nat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) a b) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) c d)) -> (Eq.{1} Nat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) (Nat.gcd a c) (Nat.gcd b c)) c)
 but is expected to have type
   forall {a : Nat} {b : Nat} {c : Nat} {d : Nat}, (Nat.coprime a b) -> (Eq.{1} Nat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) c d) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) a b)) -> (Eq.{1} Nat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) (Nat.gcd c a) (Nat.gcd d a)) a)
 Case conversion may be inaccurate. Consider using '#align nat.gcd_mul_gcd_of_coprime_of_mul_eq_mul Nat.gcd_mul_gcd_of_coprime_of_mul_eq_mulₓ'. -/
-theorem gcd_mul_gcd_of_coprime_of_mul_eq_mul {a b c d : ℕ} (cop : c.Coprime d) (h : a * b = c * d) :
+theorem gcd_mul_gcd_of_coprime_of_mul_eq_mul {a b c d : ℕ} (cop : c.coprime d) (h : a * b = c * d) :
     a.gcd c * b.gcd c = c := by
   apply dvd_antisymm
-  · apply Nat.Coprime.dvd_of_dvd_mul_right (Nat.Coprime.mul (cop.gcd_left _) (cop.gcd_left _))
+  · apply Nat.coprime.dvd_of_dvd_mul_right (Nat.coprime.mul (cop.gcd_left _) (cop.gcd_left _))
     rw [← h]
     apply mul_dvd_mul (gcd_dvd _ _).1 (gcd_dvd _ _).1
   · rw [gcd_comm a _, gcd_comm b _]
@@ -954,7 +1072,7 @@ theorem gcd_mul_gcd_of_coprime_of_mul_eq_mul {a b c d : ℕ} (cop : c.Coprime d)
 
 #print Nat.eq_one_of_dvd_coprimes /-
 /-- If `k:ℕ` divides coprime `a` and `b` then `k = 1` -/
-theorem eq_one_of_dvd_coprimes {a b k : ℕ} (h_ab_coprime : Coprime a b) (hka : k ∣ a)
+theorem eq_one_of_dvd_coprimes {a b k : ℕ} (h_ab_coprime : coprime a b) (hka : k ∣ a)
     (hkb : k ∣ b) : k = 1 :=
   by
   rw [coprime_iff_gcd_eq_one] at h_ab_coprime
@@ -965,7 +1083,7 @@ theorem eq_one_of_dvd_coprimes {a b k : ℕ} (h_ab_coprime : Coprime a b) (hka :
 -/
 
 #print Nat.coprime.mul_add_mul_ne_mul /-
-theorem coprime.mul_add_mul_ne_mul {m n a b : ℕ} (cop : Coprime m n) (ha : a ≠ 0) (hb : b ≠ 0) :
+theorem coprime.mul_add_mul_ne_mul {m n a b : ℕ} (cop : coprime m n) (ha : a ≠ 0) (hb : b ≠ 0) :
     a * m + b * n ≠ m * n := by
   intro h
   obtain ⟨x, rfl⟩ : n ∣ a :=

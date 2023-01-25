@@ -1748,6 +1748,7 @@ theorem dense_or_discrete [LinearOrder α] (a₁ a₂ : α) :
 #align dense_or_discrete dense_or_discrete
 -/
 
+#print eq_or_eq_or_eq_of_forall_not_lt_lt /-
 /-- If a linear order has no elements `x < y < z`, then it has at most two elements. -/
 theorem eq_or_eq_or_eq_of_forall_not_lt_lt {α : Type _} [LinearOrder α]
     (h : ∀ ⦃x y z : α⦄, x < y → y < z → False) (x y z : α) : x = y ∨ y = z ∨ x = z :=
@@ -1757,6 +1758,7 @@ theorem eq_or_eq_or_eq_of_forall_not_lt_lt {α : Type _} [LinearOrder α]
     cases' hne.2.2.lt_or_lt with h₃ h₃
   exacts[h h₁ h₂, h h₂ h₃, h h₃ h₂, h h₃ h₁, h h₁ h₃, h h₂ h₃, h h₁ h₃, h h₂ h₁]
 #align eq_or_eq_or_eq_of_forall_not_lt_lt eq_or_eq_or_eq_of_forall_not_lt_lt
+-/
 
 namespace PUnit
 

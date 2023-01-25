@@ -57,7 +57,7 @@ structure Rat where mk' ::
   num : ℤ
   denom : ℕ
   Pos : 0 < denom
-  cop : Num.natAbs.Coprime denom
+  cop : Num.natAbs.coprime denom
 #align rat Rat
 -/
 

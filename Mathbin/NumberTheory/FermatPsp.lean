@@ -78,7 +78,7 @@ instance decidablePsp (n b : ℕ) : Decidable (FermatPsp n b) :=
 `n` and `b` are both positive.
 -/
 theorem coprime_of_probablePrime {n b : ℕ} (h : ProbablePrime n b) (h₁ : 1 ≤ n) (h₂ : 1 ≤ b) :
-    Nat.Coprime n b := by
+    Nat.coprime n b := by
   by_cases h₃ : 2 ≤ n
   · -- To prove that `n` is coprime with `b`, we we need to show that for all prime factors of `n`,
     -- we can derive a contradiction if `n` divides `b`.
@@ -123,7 +123,7 @@ positive.
 
 This lemma is a small wrapper based on `coprime_of_probable_prime`
 -/
-theorem coprime_of_fermatPsp {n b : ℕ} (h : FermatPsp n b) (h₁ : 1 ≤ b) : Nat.Coprime n b :=
+theorem coprime_of_fermatPsp {n b : ℕ} (h : FermatPsp n b) (h₁ : 1 ≤ b) : Nat.coprime n b :=
   by
   rcases h with ⟨hp, hn₁, hn₂⟩
   exact coprime_of_probable_prime hp (by linarith) h₁
@@ -293,12 +293,12 @@ private theorem psp_from_prime_psp {b : ℕ} (b_ge_two : 2 ≤ b) {p : ℕ} (p_p
     -- We already proved that `b ^ 2 - 1 ∣ b ^ (p - 1) - 1`.
     -- Since `2 ∣ b ^ p + b` and `p ∣ b ^ p + b`, if we show that 2 and p are coprime, then we
     -- know that `2 * p ∣ b ^ p + b`
-    have q₁ : Nat.Coprime p (b ^ 2 - 1) :=
+    have q₁ : Nat.coprime p (b ^ 2 - 1) :=
       haveI q₂ : ¬p ∣ b ^ 2 - 1 := by
         rw [mul_comm] at not_dvd
         exact mt (fun h : p ∣ b ^ 2 - 1 => dvd_mul_of_dvd_left h _) not_dvd
       (Nat.Prime.coprime_iff_not_dvd p_prime).mpr q₂
-    have q₂ : p * (b ^ 2 - 1) ∣ b ^ (p - 1) - 1 := Nat.Coprime.mul_dvd_of_dvd_of_dvd q₁ ha₃ ha₄
+    have q₂ : p * (b ^ 2 - 1) ∣ b ^ (p - 1) - 1 := Nat.coprime.mul_dvd_of_dvd_of_dvd q₁ ha₃ ha₄
     have q₃ : p * (b ^ 2 - 1) * 2 ∣ (b ^ (p - 1) - 1) * (b ^ p + b) := mul_dvd_mul q₂ ha₂
     have q₄ : p * (b ^ 2 - 1) * 2 ∣ b * ((b ^ (p - 1) - 1) * (b ^ p + b)) :=
       dvd_mul_of_dvd_right q₃ _

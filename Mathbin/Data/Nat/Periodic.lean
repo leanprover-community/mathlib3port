@@ -28,7 +28,7 @@ theorem periodic_gcd (a : ℕ) : Periodic (gcd a) a := by
   simp only [forall_const, gcd_add_self_right, eq_self_iff_true, periodic]
 #align nat.periodic_gcd Nat.periodic_gcd
 
-theorem periodic_coprime (a : ℕ) : Periodic (Coprime a) a := by
+theorem periodic_coprime (a : ℕ) : Periodic (coprime a) a := by
   simp only [coprime_add_self_right, forall_const, iff_self_iff, eq_iff_iff, periodic]
 #align nat.periodic_coprime Nat.periodic_coprime
 
