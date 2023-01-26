@@ -4,11 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Fox Thomson
 
 ! This file was ported from Lean 3 source module computability.language
-! leanprover-community/mathlib commit e3d9ab8faa9dea8f78155c6c27d62a621f4c152d
+! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Hom.Ring
+import Mathbin.Algebra.Order.Kleene
 import Mathbin.Data.List.Join
 import Mathbin.Data.Set.Lattice
 
@@ -23,6 +24,8 @@ over the languages.
 
 
 open List Set
+
+open Computability
 
 universe v
 
@@ -82,16 +85,15 @@ theorem mul_def (l m : Language α) : l * m = image2 (· ++ ·) l m :=
   rfl
 #align language.mul_def Language.mul_def
 
-/-- The star of a language `L` is the set of all strings which can be written by concatenating
-  strings from `L`. -/
-def star (l : Language α) : Language α :=
-  { x | ∃ S : List (List α), x = S.join ∧ ∀ y ∈ S, y ∈ l }
-#align language.star Language.star
+/-- The Kleene star of a language `L` is the set of all strings which can be written by
+concatenating strings from `L`. -/
+instance : HasKstar (Language α) :=
+  ⟨fun l => { x | ∃ L : List (List α), x = L.join ∧ ∀ y ∈ L, y ∈ l }⟩
 
-theorem star_def (l : Language α) :
-    l.star = { x | ∃ S : List (List α), x = S.join ∧ ∀ y ∈ S, y ∈ l } :=
+theorem kstar_def (l : Language α) :
+    l∗ = { x | ∃ L : List (List α), x = L.join ∧ ∀ y ∈ L, y ∈ l } :=
   rfl
-#align language.star_def Language.star_def
+#align language.kstar_def Language.kstar_def
 
 @[simp]
 theorem not_mem_zero (x : List α) : x ∉ (0 : Language α) :=
@@ -106,7 +108,6 @@ theorem nil_mem_one : [] ∈ (1 : Language α) :=
   Set.mem_singleton _
 #align language.nil_mem_one Language.nil_mem_one
 
-@[simp]
 theorem mem_add (l m : Language α) (x : List α) : x ∈ l + m ↔ x ∈ l ∨ x ∈ m :=
   Iff.rfl
 #align language.mem_add Language.mem_add
@@ -119,17 +120,17 @@ theorem append_mem_mul : a ∈ l → b ∈ m → a ++ b ∈ l * m :=
   mem_image2_of_mem
 #align language.append_mem_mul Language.append_mem_mul
 
-theorem mem_star : x ∈ l.star ↔ ∃ S : List (List α), x = S.join ∧ ∀ y ∈ S, y ∈ l :=
+theorem mem_kstar : x ∈ l∗ ↔ ∃ L : List (List α), x = L.join ∧ ∀ y ∈ L, y ∈ l :=
   Iff.rfl
-#align language.mem_star Language.mem_star
+#align language.mem_kstar Language.mem_kstar
 
-theorem join_mem_star {S : List (List α)} (h : ∀ y ∈ S, y ∈ l) : S.join ∈ l.star :=
-  ⟨S, rfl, h⟩
-#align language.join_mem_star Language.join_mem_star
+theorem join_mem_kstar {L : List (List α)} (h : ∀ y ∈ L, y ∈ l) : L.join ∈ l∗ :=
+  ⟨L, rfl, h⟩
+#align language.join_mem_kstar Language.join_mem_kstar
 
-theorem nil_mem_star (l : Language α) : [] ∈ l.star :=
+theorem nil_mem_kstar (l : Language α) : [] ∈ l∗ :=
   ⟨[], rfl, fun _ => False.elim⟩
-#align language.nil_mem_star Language.nil_mem_star
+#align language.nil_mem_kstar Language.nil_mem_kstar
 
 instance : Semiring (Language α) where
   add := (· + ·)
@@ -175,8 +176,8 @@ theorem map_map (g : β → γ) (f : α → β) (l : Language α) : map g (map f
   simp [map, image_image]
 #align language.map_map Language.map_map
 
-theorem star_def_nonempty (l : Language α) :
-    l.star = { x | ∃ S : List (List α), x = S.join ∧ ∀ y ∈ S, y ∈ l ∧ y ≠ [] } :=
+theorem kstar_def_nonempty (l : Language α) :
+    l∗ = { x | ∃ S : List (List α), x = S.join ∧ ∀ y ∈ S, y ∈ l ∧ y ≠ [] } :=
   by
   ext x
   constructor
@@ -186,7 +187,7 @@ theorem star_def_nonempty (l : Language α) :
     exact ⟨h y hy.1, hy.2⟩
   · rintro ⟨S, hx, h⟩
     exact ⟨S, hx, fun y hy => (h y hy).1⟩
-#align language.star_def_nonempty Language.star_def_nonempty
+#align language.kstar_def_nonempty Language.kstar_def_nonempty
 
 theorem le_iff (l m : Language α) : l ≤ m ↔ l + m = m :=
   sup_eq_right.symm
@@ -246,64 +247,63 @@ theorem mem_pow {l : Language α} {x : List α} {n : ℕ} :
       exact ⟨a, _, hS.1, ⟨S, rfl, rfl, hS.2⟩, rfl⟩
 #align language.mem_pow Language.mem_pow
 
-theorem star_eq_supᵢ_pow (l : Language α) : l.star = ⨆ i : ℕ, l ^ i :=
+theorem kstar_eq_supᵢ_pow (l : Language α) : l∗ = ⨆ i : ℕ, l ^ i :=
   by
   ext x
-  simp only [mem_star, mem_supr, mem_pow]
+  simp only [mem_kstar, mem_supr, mem_pow]
   constructor
   · rintro ⟨S, rfl, hS⟩
     exact ⟨_, S, rfl, rfl, hS⟩
   · rintro ⟨_, S, rfl, rfl, hS⟩
     exact ⟨S, rfl, hS⟩
-#align language.star_eq_supr_pow Language.star_eq_supᵢ_pow
+#align language.kstar_eq_supr_pow Language.kstar_eq_supᵢ_pow
 
 @[simp]
-theorem map_star (f : α → β) (l : Language α) : map f (star l) = star (map f l) :=
+theorem map_kstar (f : α → β) (l : Language α) : map f l∗ = (map f l)∗ :=
   by
-  rw [star_eq_supr_pow, star_eq_supr_pow]
+  rw [kstar_eq_supr_pow, kstar_eq_supr_pow]
   simp_rw [← map_pow]
   exact image_Union
-#align language.map_star Language.map_star
+#align language.map_kstar Language.map_kstar
 
-theorem mul_self_star_comm (l : Language α) : l.star * l = l * l.star := by
-  simp only [star_eq_supr_pow, mul_supr, supr_mul, ← pow_succ, ← pow_succ']
-#align language.mul_self_star_comm Language.mul_self_star_comm
+theorem mul_self_kstar_comm (l : Language α) : l∗ * l = l * l∗ := by
+  simp only [kstar_eq_supr_pow, mul_supr, supr_mul, ← pow_succ, ← pow_succ']
+#align language.mul_self_kstar_comm Language.mul_self_kstar_comm
 
 @[simp]
-theorem one_add_self_mul_star_eq_star (l : Language α) : 1 + l * l.star = l.star :=
+theorem one_add_self_mul_kstar_eq_kstar (l : Language α) : 1 + l * l∗ = l∗ :=
   by
-  simp only [star_eq_supr_pow, mul_supr, ← pow_succ, ← pow_zero l]
+  simp only [kstar_eq_supr_pow, mul_supr, ← pow_succ, ← pow_zero l]
   exact sup_supᵢ_nat_succ _
-#align language.one_add_self_mul_star_eq_star Language.one_add_self_mul_star_eq_star
+#align language.one_add_self_mul_kstar_eq_kstar Language.one_add_self_mul_kstar_eq_kstar
 
 @[simp]
-theorem one_add_star_mul_self_eq_star (l : Language α) : 1 + l.star * l = l.star := by
-  rw [mul_self_star_comm, one_add_self_mul_star_eq_star]
-#align language.one_add_star_mul_self_eq_star Language.one_add_star_mul_self_eq_star
+theorem one_add_kstar_mul_self_eq_kstar (l : Language α) : 1 + l∗ * l = l∗ := by
+  rw [mul_self_kstar_comm, one_add_self_mul_kstar_eq_kstar]
+#align language.one_add_kstar_mul_self_eq_kstar Language.one_add_kstar_mul_self_eq_kstar
 
-theorem star_mul_le_right_of_mul_le_right (l m : Language α) : l * m ≤ m → l.star * m ≤ m :=
-  by
-  intro h
-  rw [star_eq_supr_pow, supr_mul]
-  refine' supᵢ_le _
-  intro n
-  induction' n with n ih
-  · simp
-  rw [pow_succ', mul_assoc (l ^ n) l m]
-  exact le_trans (le_mul_congr le_rfl h) ih
-#align language.star_mul_le_right_of_mul_le_right Language.star_mul_le_right_of_mul_le_right
-
-theorem star_mul_le_left_of_mul_le_left (l m : Language α) : m * l ≤ m → m * l.star ≤ m :=
-  by
-  intro h
-  rw [star_eq_supr_pow, mul_supr]
-  refine' supᵢ_le _
-  intro n
-  induction' n with n ih
-  · simp
-  rw [pow_succ, ← mul_assoc m l (l ^ n)]
-  exact le_trans (le_mul_congr h le_rfl) ih
-#align language.star_mul_le_left_of_mul_le_left Language.star_mul_le_left_of_mul_le_left
+instance : KleeneAlgebra (Language α) :=
+  { Language.semiring, Set.completeBooleanAlgebra,
+    Language.hasKstar with
+    one_le_kstar := fun a l hl => ⟨[], hl, by simp⟩
+    mul_kstar_le_kstar := fun a => (one_add_self_mul_kstar_eq_kstar a).le.trans' le_sup_right
+    kstar_mul_le_kstar := fun a => (one_add_kstar_mul_self_eq_kstar a).le.trans' le_sup_right
+    kstar_mul_le_self := fun l m h =>
+      by
+      rw [kstar_eq_supr_pow, supr_mul]
+      refine' supᵢ_le fun n => _
+      induction' n with n ih
+      · simp
+      rw [pow_succ', mul_assoc (l ^ n) l m]
+      exact le_trans (le_mul_congr le_rfl h) ih
+    mul_kstar_le_self := fun l m h =>
+      by
+      rw [kstar_eq_supr_pow, mul_supr]
+      refine' supᵢ_le fun n => _
+      induction' n with n ih
+      · simp
+      rw [pow_succ, ← mul_assoc m l (l ^ n)]
+      exact le_trans (le_mul_congr h le_rfl) ih }
 
 end Language
 

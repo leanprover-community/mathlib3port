@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module topology.algebra.group_with_zero
-! leanprover-community/mathlib commit e3d9ab8faa9dea8f78155c6c27d62a621f4c152d
+! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -163,6 +163,16 @@ theorem Filter.Tendsto.div {l : Filter α} {a b : G₀} (hf : Tendsto f l (𝓝 
     (hg : Tendsto g l (𝓝 b)) (hy : b ≠ 0) : Tendsto (f / g) l (𝓝 (a / b)) := by
   simpa only [div_eq_mul_inv] using hf.mul (hg.inv₀ hy)
 #align filter.tendsto.div Filter.Tendsto.div
+
+theorem Filter.tendsto_mul_iff_of_ne_zero [T1Space G₀] {f g : α → G₀} {l : Filter α} {x y : G₀}
+    (hg : Tendsto g l (𝓝 y)) (hy : y ≠ 0) :
+    Tendsto (fun n => f n * g n) l (𝓝 <| x * y) ↔ Tendsto f l (𝓝 x) :=
+  by
+  refine' ⟨fun hfg => _, fun hf => hf.mul hg⟩
+  rw [← mul_div_cancel x hy]
+  refine' tendsto.congr' _ (hfg.div hg hy)
+  refine' eventually.mp (hg.eventually_ne hy) (eventually_of_forall fun n hn => mul_div_cancel _ hn)
+#align filter.tendsto_mul_iff_of_ne_zero Filter.tendsto_mul_iff_of_ne_zero
 
 variable [TopologicalSpace α] [TopologicalSpace β] {s : Set α} {a : α}
 

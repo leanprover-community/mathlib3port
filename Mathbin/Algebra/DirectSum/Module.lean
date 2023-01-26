@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module algebra.direct_sum.module
-! leanprover-community/mathlib commit e3d9ab8faa9dea8f78155c6c27d62a621f4c152d
+! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -287,20 +287,22 @@ theorem sigmaLcurry_apply (f : ⨁ i : Σi, _, δ i.1 i.2) (i : ι) (j : α i) :
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /-- `uncurry` as a linear map.-/
-noncomputable def sigmaLuncurry : (⨁ (i) (j), δ i j) →ₗ[R] ⨁ i : Σi, _, δ i.1 i.2 :=
+def sigmaLuncurry [∀ i, DecidableEq (α i)] [∀ i j, DecidableEq (δ i j)] :
+    (⨁ (i) (j), δ i j) →ₗ[R] ⨁ i : Σi, _, δ i.1 i.2 :=
   { sigmaUncurry with map_smul' := Dfinsupp.sigmaUncurry_smul }
 #align direct_sum.sigma_luncurry DirectSum.sigmaLuncurry
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp]
-theorem sigmaLuncurry_apply (f : ⨁ (i) (j), δ i j) (i : ι) (j : α i) :
-    sigmaLuncurry R f ⟨i, j⟩ = f i j :=
+theorem sigmaLuncurry_apply [∀ i, DecidableEq (α i)] [∀ i j, DecidableEq (δ i j)]
+    (f : ⨁ (i) (j), δ i j) (i : ι) (j : α i) : sigmaLuncurry R f ⟨i, j⟩ = f i j :=
   sigmaUncurry_apply f i j
 #align direct_sum.sigma_luncurry_apply DirectSum.sigmaLuncurry_apply
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /-- `curry_equiv` as a linear equiv.-/
-noncomputable def sigmaLcurryEquiv : (⨁ i : Σi, _, δ i.1 i.2) ≃ₗ[R] ⨁ (i) (j), δ i j :=
+noncomputable def sigmaLcurryEquiv [∀ i, DecidableEq (α i)] [∀ i j, DecidableEq (δ i j)] :
+    (⨁ i : Σi, _, δ i.1 i.2) ≃ₗ[R] ⨁ (i) (j), δ i j :=
   { sigmaCurryEquiv, sigmaLcurry R with }
 #align direct_sum.sigma_lcurry_equiv DirectSum.sigmaLcurryEquiv
 

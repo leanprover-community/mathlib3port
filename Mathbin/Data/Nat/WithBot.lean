@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module data.nat.with_bot
-! leanprover-community/mathlib commit e3d9ab8faa9dea8f78155c6c27d62a621f4c152d
+! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -68,7 +68,6 @@ theorem add_eq_three_iff {n m : WithBot ℕ} :
 -/
 
 #print Nat.WithBot.coe_nonneg /-
-@[simp]
 theorem coe_nonneg {n : ℕ} : 0 ≤ (n : WithBot ℕ) :=
   by
   rw [← WithBot.coe_zero, WithBot.coe_le_coe]
@@ -80,7 +79,7 @@ theorem coe_nonneg {n : ℕ} : 0 ≤ (n : WithBot ℕ) :=
 @[simp]
 theorem lt_zero_iff (n : WithBot ℕ) : n < 0 ↔ n = ⊥ :=
   Option.casesOn n (by decide) fun n =>
-    iff_of_false (by simp [WithBot.some_eq_coe]) fun h => Option.noConfusion h
+    iff_of_false (by simp [WithBot.some_eq_coe, coe_nonneg]) fun h => Option.noConfusion h
 #align nat.with_bot.lt_zero_iff Nat.WithBot.lt_zero_iff
 -/
 
@@ -98,6 +97,14 @@ theorem one_le_iff_zero_lt {x : WithBot ℕ} : 1 ≤ x ↔ 0 < x :=
 theorem lt_one_iff_le_zero {x : WithBot ℕ} : x < 1 ↔ x ≤ 0 :=
   not_iff_not.mp (by simpa using one_le_iff_zero_lt)
 #align nat.with_bot.lt_one_iff_le_zero Nat.WithBot.lt_one_iff_le_zero
+-/
+
+#print Nat.WithBot.add_one_le_of_lt /-
+theorem add_one_le_of_lt {n m : WithBot ℕ} (h : n < m) : n + 1 ≤ m :=
+  by
+  cases n; · exact bot_le
+  cases m; exacts[(not_lt_bot h).elim, WithBot.some_le_some.2 (WithBot.some_lt_some.1 h)]
+#align nat.with_bot.add_one_le_of_lt Nat.WithBot.add_one_le_of_lt
 -/
 
 end WithBot

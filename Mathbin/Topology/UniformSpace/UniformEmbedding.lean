@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Sébastien Gouëzel, Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.uniform_space.uniform_embedding
-! leanprover-community/mathlib commit e3d9ab8faa9dea8f78155c6c27d62a621f4c152d
+! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -539,7 +539,7 @@ theorem uniformly_extend_spec [CompleteSpace γ] (a : α) : Tendsto f (comap e (
 theorem uniformContinuous_uniformly_extend [cγ : CompleteSpace γ] : UniformContinuous ψ :=
   fun d hd =>
   let ⟨s, hs, hs_comp⟩ :=
-    (mem_lift'_sets <| monotone_compRel monotone_id <| monotone_compRel monotone_id monotone_id).mp
+    (mem_lift'_sets <| monotone_id.compRel <| monotone_id.compRel monotone_id).mp
       (comp_le_uniformity3 hd)
   have h_pnt : ∀ {a m}, m ∈ 𝓝 a → ∃ c, c ∈ f '' preimage e m ∧ (c, ψ a) ∈ s ∧ (ψ a, c) ∈ s :=
     fun a m hm =>

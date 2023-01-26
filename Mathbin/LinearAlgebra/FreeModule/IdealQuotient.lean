@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.free_module.ideal_quotient
-! leanprover-community/mathlib commit e3d9ab8faa9dea8f78155c6c27d62a621f4c152d
+! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -106,11 +106,13 @@ because the choice of `fintype` instance is non-canonical.
 -/
 noncomputable def Ideal.fintypeQuotientOfFreeOfNeBot [Module.Free ℤ S] [Module.Finite ℤ S]
     (I : Ideal S) (hI : I ≠ ⊥) : Fintype (S ⧸ I) :=
+  by
   let b := Module.Free.chooseBasis ℤ S
   let a := I.smithCoeffs b hI
   let e := I.quotientEquivPiZmod b hI
   haveI : ∀ i, NeZero (a i).natAbs := fun i =>
-    ⟨Int.natAbs_ne_zero_of_ne_zero (Ideal.smithCoeffs_ne_zero b I hI i)⟩
-  Fintype.ofEquiv (∀ i, ZMod (a i).natAbs) e.symm
+        ⟨Int.natAbs_ne_zero_of_ne_zero (Ideal.smithCoeffs_ne_zero b I hI i)⟩ <;>
+      classical skip <;>
+    exact Fintype.ofEquiv (∀ i, ZMod (a i).natAbs) e.symm
 #align ideal.fintype_quotient_of_free_of_ne_bot Ideal.fintypeQuotientOfFreeOfNeBot
 

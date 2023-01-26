@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Reid Barton, Mario Carneiro, Isabel Longbottom, Scott Morrison, Apurva Nakade
 
 ! This file was ported from Lean 3 source module set_theory.game.basic
-! leanprover-community/mathlib commit e3d9ab8faa9dea8f78155c6c27d62a621f4c152d
+! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -839,8 +839,7 @@ noncomputable instance : Inv Pgame :=
 noncomputable instance : Div Pgame :=
   ⟨fun x y => x * y⁻¹⟩
 
-theorem inv_eq_of_equiv_zero {x : Pgame} (h : x ≈ 0) : x⁻¹ = 0 :=
-  if_pos h
+theorem inv_eq_of_equiv_zero {x : Pgame} (h : x ≈ 0) : x⁻¹ = 0 := by classical exact if_pos h
 #align pgame.inv_eq_of_equiv_zero Pgame.inv_eq_of_equiv_zero
 
 @[simp]
@@ -848,12 +847,12 @@ theorem inv_zero : (0 : Pgame)⁻¹ = 0 :=
   inv_eq_of_equiv_zero (equiv_refl _)
 #align pgame.inv_zero Pgame.inv_zero
 
-theorem inv_eq_of_pos {x : Pgame} (h : 0 < x) : x⁻¹ = inv' x :=
-  (if_neg h.Lf.not_equiv').trans (if_pos h)
+theorem inv_eq_of_pos {x : Pgame} (h : 0 < x) : x⁻¹ = inv' x := by
+  classical exact (if_neg h.lf.not_equiv').trans (if_pos h)
 #align pgame.inv_eq_of_pos Pgame.inv_eq_of_pos
 
-theorem inv_eq_of_lf_zero {x : Pgame} (h : x ⧏ 0) : x⁻¹ = -inv' (-x) :=
-  (if_neg h.not_equiv).trans (if_neg h.not_gt)
+theorem inv_eq_of_lf_zero {x : Pgame} (h : x ⧏ 0) : x⁻¹ = -inv' (-x) := by
+  classical exact (if_neg h.not_equiv).trans (if_neg h.not_gt)
 #align pgame.inv_eq_of_lf_zero Pgame.inv_eq_of_lf_zero
 
 /-- `1⁻¹` has exactly the same moves as `1`. -/

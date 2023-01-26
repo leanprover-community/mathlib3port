@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Sébastien Gouëzel, Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.pi_L2
-! leanprover-community/mathlib commit e3d9ab8faa9dea8f78155c6c27d62a621f4c152d
+! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -340,8 +340,9 @@ protected theorem coe_toBasis (b : OrthonormalBasis ι 𝕜 E) : (⇑b.toBasis :
   by
   change ⇑(Basis.ofEquivFun b.repr.to_linear_equiv) = b
   ext j
-  rw [Basis.coe_ofEquivFun]
-  congr
+  classical
+    rw [Basis.coe_ofEquivFun]
+    congr
 #align orthonormal_basis.coe_to_basis OrthonormalBasis.coe_toBasis
 
 @[simp]
@@ -464,7 +465,7 @@ protected theorem coe_mk (hon : Orthonormal 𝕜 v) (hsp : ⊤ ≤ Submodule.spa
 #align orthonormal_basis.coe_mk OrthonormalBasis.coe_mk
 
 /-- Any finite subset of a orthonormal family is an `orthonormal_basis` for its span. -/
-protected def span {v' : ι' → E} (h : Orthonormal 𝕜 v') (s : Finset ι') :
+protected def span [DecidableEq E] {v' : ι' → E} (h : Orthonormal 𝕜 v') (s : Finset ι') :
     OrthonormalBasis s 𝕜 (span 𝕜 (s.image v' : Set E)) :=
   let e₀' : Basis s 𝕜 _ :=
     Basis.span (h.LinearIndependent.comp (coe : s → ι') Subtype.coe_injective)
@@ -484,8 +485,8 @@ protected def span {v' : ι' → E} (h : Orthonormal 𝕜 v') (s : Finset ι') :
 #align orthonormal_basis.span OrthonormalBasis.span
 
 @[simp]
-protected theorem span_apply {v' : ι' → E} (h : Orthonormal 𝕜 v') (s : Finset ι') (i : s) :
-    (OrthonormalBasis.span h s i : E) = v' i := by
+protected theorem span_apply [DecidableEq E] {v' : ι' → E} (h : Orthonormal 𝕜 v') (s : Finset ι')
+    (i : s) : (OrthonormalBasis.span h s i : E) = v' i := by
   simp only [OrthonormalBasis.span, Basis.span_apply, LinearIsometryEquiv.ofEq_symm,
     OrthonormalBasis.map_apply, OrthonormalBasis.coe_mk, LinearIsometryEquiv.coe_ofEq_apply]
 #align orthonormal_basis.span_apply OrthonormalBasis.span_apply

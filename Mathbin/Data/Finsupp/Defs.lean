@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Scott Morrison
 
 ! This file was ported from Lean 3 source module data.finsupp.defs
-! leanprover-community/mathlib commit e3d9ab8faa9dea8f78155c6c27d62a621f4c152d
+! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -293,30 +293,29 @@ def single (a : α) (b : M) : α →₀ M
       simp [Pi.single_eq_of_ne', ha]
 #align finsupp.single Finsupp.single
 
-theorem single_apply [Decidable (a = a')] : single a b a' = if a = a' then b else 0 :=
-  by
-  simp_rw [@eq_comm _ a a']
-  convert Pi.single_apply _ _ _
+theorem single_apply [Decidable (a = a')] : single a b a' = if a = a' then b else 0 := by
+  classical
+    simp_rw [@eq_comm _ a a']
+    convert Pi.single_apply _ _ _
 #align finsupp.single_apply Finsupp.single_apply
 
 theorem single_apply_left {f : α → β} (hf : Function.Injective f) (x z : α) (y : M) :
-    single (f x) y (f z) = single x y z := by simp only [single_apply, hf.eq_iff]
+    single (f x) y (f z) = single x y z := by classical simp only [single_apply, hf.eq_iff]
 #align finsupp.single_apply_left Finsupp.single_apply_left
 
-theorem single_eq_indicator : ⇑(single a b) = Set.indicator {a} fun _ => b :=
-  by
-  ext
-  simp [single_apply, Set.indicator, @eq_comm _ a]
+theorem single_eq_indicator : ⇑(single a b) = Set.indicator {a} fun _ => b := by
+  classical
+    ext
+    simp [single_apply, Set.indicator, @eq_comm _ a]
 #align finsupp.single_eq_indicator Finsupp.single_eq_indicator
 
 @[simp]
-theorem single_eq_same : (single a b : α →₀ M) a = b :=
-  Pi.single_eq_same a b
+theorem single_eq_same : (single a b : α →₀ M) a = b := by classical exact Pi.single_eq_same a b
 #align finsupp.single_eq_same Finsupp.single_eq_same
 
 @[simp]
-theorem single_eq_of_ne (h : a ≠ a') : (single a b : α →₀ M) a' = 0 :=
-  Pi.single_eq_of_ne' h _
+theorem single_eq_of_ne (h : a ≠ a') : (single a b : α →₀ M) a' = 0 := by
+  classical exact Pi.single_eq_of_ne' h _
 #align finsupp.single_eq_of_ne Finsupp.single_eq_of_ne
 
 theorem single_eq_update [DecidableEq α] (a : α) (b : M) : ⇑(single a b) = Function.update 0 a b :=
@@ -330,25 +329,27 @@ theorem single_eq_pi_single [DecidableEq α] (a : α) (b : M) : ⇑(single a b) 
 @[simp]
 theorem single_zero (a : α) : (single a 0 : α →₀ M) = 0 :=
   coe_fn_injective <| by
-    simpa only [single_eq_update, coe_zero] using Function.update_eq_self a (0 : α → M)
+    classical simpa only [single_eq_update, coe_zero] using Function.update_eq_self a (0 : α → M)
 #align finsupp.single_zero Finsupp.single_zero
 
 theorem single_of_single_apply (a a' : α) (b : M) :
-    single a ((single a' b) a) = single a' (single a' b) a :=
-  by
-  rw [single_apply, single_apply]
-  ext
-  split_ifs
-  · rw [h]
-  · rw [zero_apply, single_apply, if_t_t]
+    single a ((single a' b) a) = single a' (single a' b) a := by
+  classical
+    rw [single_apply, single_apply]
+    ext
+    split_ifs
+    · rw [h]
+    · rw [zero_apply, single_apply, if_t_t]
 #align finsupp.single_of_single_apply Finsupp.single_of_single_apply
 
-theorem support_single_ne_zero (a : α) (hb : b ≠ 0) : (single a b).support = {a} :=
-  if_neg hb
+theorem support_single_ne_zero (a : α) (hb : b ≠ 0) : (single a b).support = {a} := by
+  classical exact if_neg hb
 #align finsupp.support_single_ne_zero Finsupp.support_single_ne_zero
 
-theorem support_single_subset : (single a b).support ⊆ {a} :=
-  show ite _ _ _ ⊆ _ by split_ifs <;> [exact empty_subset _, exact subset.refl _]
+theorem support_single_subset : (single a b).support ⊆ {a} := by
+  classical
+    show ite _ _ _ ⊆ _
+    split_ifs <;> [exact empty_subset _, exact subset.refl _]
 #align finsupp.support_single_subset Finsupp.support_single_subset
 
 theorem single_apply_mem (x) : single a b x ∈ ({0, b} : Set M) := by
@@ -430,7 +431,9 @@ theorem single_eq_zero : single a b = 0 ↔ b = 0 := by simp [ext_iff, single_eq
 #align finsupp.single_eq_zero Finsupp.single_eq_zero
 
 theorem single_swap (a₁ a₂ : α) (b : M) : single a₁ b a₂ = single a₂ b a₁ := by
-  simp only [single_apply] <;> ac_rfl
+  classical
+    simp only [single_apply]
+    ac_rfl
 #align finsupp.single_swap Finsupp.single_swap
 
 instance [Nonempty α] [Nontrivial M] : Nontrivial (α →₀ M) :=

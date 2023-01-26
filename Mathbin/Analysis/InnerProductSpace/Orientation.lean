@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.orientation
-! leanprover-community/mathlib commit e3d9ab8faa9dea8f78155c6c27d62a621f4c152d
+! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -227,8 +227,10 @@ respect to any orthonormal basis of the space compatible with the orientation. -
 theorem volumeForm_robust (b : OrthonormalBasis (Fin n) ℝ E) (hb : b.toBasis.Orientation = o) :
     o.volumeForm = b.toBasis.det := by
   cases n
-  · have : o = positive_orientation := hb.symm.trans b.to_basis.orientation_is_empty
-    simp [volume_form, Or.by_cases, dif_pos this]
+  ·
+    classical
+      have : o = positive_orientation := hb.symm.trans b.to_basis.orientation_is_empty
+      simp [volume_form, Or.by_cases, dif_pos this]
   · dsimp [volume_form]
     rw [same_orientation_iff_det_eq_det, hb]
     exact o.fin_orthonormal_basis_orientation _ _
@@ -239,8 +241,10 @@ respect to any orthonormal basis of the space compatible with the orientation. -
 theorem volumeForm_robust_neg (b : OrthonormalBasis (Fin n) ℝ E) (hb : b.toBasis.Orientation ≠ o) :
     o.volumeForm = -b.toBasis.det := by
   cases n
-  · have : positive_orientation ≠ o := by rwa [b.to_basis.orientation_is_empty] at hb
-    simp [volume_form, Or.by_cases, dif_neg this.symm]
+  ·
+    classical
+      have : positive_orientation ≠ o := by rwa [b.to_basis.orientation_is_empty] at hb
+      simp [volume_form, Or.by_cases, dif_neg this.symm]
   let e : OrthonormalBasis (Fin n.succ) ℝ E := o.fin_orthonormal_basis n.succ_pos (Fact.out _)
   dsimp [volume_form]
   apply e.det_eq_neg_det_of_opposite_orientation b
@@ -252,7 +256,7 @@ theorem volumeForm_robust_neg (b : OrthonormalBasis (Fin n) ℝ E) (hb : b.toBas
 theorem volumeForm_neg_orientation : (-o).volumeForm = -o.volumeForm :=
   by
   cases n
-  · refine' o.eq_or_eq_neg_of_is_empty.by_cases _ _ <;> rintro rfl <;> simp [volume_form_zero_neg]
+  · refine' o.eq_or_eq_neg_of_is_empty.elim _ _ <;> rintro rfl <;> simp [volume_form_zero_neg]
   let e : OrthonormalBasis (Fin n.succ) ℝ E := o.fin_orthonormal_basis n.succ_pos (Fact.out _)
   have h₁ : e.to_basis.orientation = o := o.fin_orthonormal_basis_orientation _ _
   have h₂ : e.to_basis.orientation ≠ -o := by
@@ -264,7 +268,7 @@ theorem volumeForm_neg_orientation : (-o).volumeForm = -o.volumeForm :=
 theorem volumeForm_robust' (b : OrthonormalBasis (Fin n) ℝ E) (v : Fin n → E) :
     |o.volumeForm v| = |b.toBasis.det v| := by
   cases n
-  · refine' o.eq_or_eq_neg_of_is_empty.by_cases _ _ <;> rintro rfl <;> simp
+  · refine' o.eq_or_eq_neg_of_is_empty.elim _ _ <;> rintro rfl <;> simp
   ·
     rw [o.volume_form_robust (b.adjust_to_orientation o) (b.orientation_adjust_to_orientation o),
       b.abs_det_adjust_to_orientation]
@@ -276,7 +280,7 @@ value by the product of the norms of the vectors `v i`. -/
 theorem abs_volumeForm_apply_le (v : Fin n → E) : |o.volumeForm v| ≤ ∏ i : Fin n, ‖v i‖ :=
   by
   cases n
-  · refine' o.eq_or_eq_neg_of_is_empty.by_cases _ _ <;> rintro rfl <;> simp
+  · refine' o.eq_or_eq_neg_of_is_empty.elim _ _ <;> rintro rfl <;> simp
   haveI : FiniteDimensional ℝ E := fact_finite_dimensional_of_finrank_eq_succ n
   have : finrank ℝ E = Fintype.card (Fin n.succ) := by simpa using _i.out
   let b : OrthonormalBasis (Fin n.succ) ℝ E := gramSchmidtOrthonormalBasis this v
@@ -301,7 +305,7 @@ theorem abs_volumeForm_apply_of_pairwise_orthogonal {v : Fin n → E}
     (hv : Pairwise fun i j => ⟪v i, v j⟫ = 0) : |o.volumeForm v| = ∏ i : Fin n, ‖v i‖ :=
   by
   cases n
-  · refine' o.eq_or_eq_neg_of_is_empty.by_cases _ _ <;> rintro rfl <;> simp
+  · refine' o.eq_or_eq_neg_of_is_empty.elim _ _ <;> rintro rfl <;> simp
   haveI : FiniteDimensional ℝ E := fact_finite_dimensional_of_finrank_eq_succ n
   have hdim : finrank ℝ E = Fintype.card (Fin n.succ) := by simpa using _i.out
   let b : OrthonormalBasis (Fin n.succ) ℝ E := gramSchmidtOrthonormalBasis hdim v
@@ -335,7 +339,7 @@ theorem volumeForm_map {F : Type _} [InnerProductSpace ℝ F] [Fact (finrank ℝ
     (Orientation.map (Fin n) φ.toLinearEquiv o).volumeForm x = o.volumeForm (φ.symm ∘ x) :=
   by
   cases n
-  · refine' o.eq_or_eq_neg_of_is_empty.by_cases _ _ <;> rintro rfl <;> simp
+  · refine' o.eq_or_eq_neg_of_is_empty.elim _ _ <;> rintro rfl <;> simp
   let e : OrthonormalBasis (Fin n.succ) ℝ E := o.fin_orthonormal_basis n.succ_pos (Fact.out _)
   have he : e.to_basis.orientation = o :=
     o.fin_orthonormal_basis_orientation n.succ_pos (Fact.out _)

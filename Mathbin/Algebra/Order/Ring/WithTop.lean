@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro
 
 ! This file was ported from Lean 3 source module algebra.order.ring.with_top
-! leanprover-community/mathlib commit e3d9ab8faa9dea8f78155c6c27d62a621f4c152d
+! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -18,7 +18,7 @@ import Mathbin.Algebra.Order.Ring.Canonical
 > Any changes to this file require a corresponding PR to mathlib4.
 
 The main results of this section are `with_top.canonically_ordered_comm_semiring` and
-`with_bot.comm_monoid_with_zero`.
+`with_bot.ordered_comm_semiring`.
 -/
 
 
@@ -410,18 +410,111 @@ instance [CommMonoidWithZero α] [NoZeroDivisors α] [Nontrivial α] :
 instance [CanonicallyOrderedCommSemiring α] [Nontrivial α] : CommSemiring (WithBot α) :=
   WithTop.commSemiring
 
-instance [CanonicallyOrderedCommSemiring α] [Nontrivial α] : PosMulMono (WithBot α) :=
-  posMulMono_iff_covariant_pos.2
-    ⟨by
-      rintro ⟨x, x0⟩ a b h; simp only [Subtype.coe_mk]
-      lift x to α using x0.ne_bot
-      induction a using WithBot.recBotCoe; · simp_rw [mul_bot x0.ne.symm, bot_le]
-      induction b using WithBot.recBotCoe; · exact absurd h (bot_lt_coe a).not_le
-      simp only [← coe_mul, coe_le_coe] at *
-      exact mul_le_mul_left' h x⟩
+instance [MulZeroClass α] [Preorder α] [PosMulMono α] : PosMulMono (WithBot α) :=
+  ⟨by
+    rintro ⟨x, x0⟩ a b h; simp only [Subtype.coe_mk]
+    rcases eq_or_ne x 0 with (rfl | x0'); · simp
+    lift x to α;
+    · rintro ⟨rfl⟩
+      exact (WithBot.bot_lt_coe (0 : α)).not_le x0
+    induction a using WithBot.recBotCoe; · simp_rw [mul_bot x0', bot_le]
+    induction b using WithBot.recBotCoe; · exact absurd h (bot_lt_coe a).not_le
+    simp only [← coe_mul, coe_le_coe] at *
+    norm_cast  at x0
+    exact mul_le_mul_of_nonneg_left h x0⟩
 
-instance [CanonicallyOrderedCommSemiring α] [Nontrivial α] : MulPosMono (WithBot α) :=
-  posMulMono_iff_mulPosMono.mp inferInstance
+instance [MulZeroClass α] [Preorder α] [MulPosMono α] : MulPosMono (WithBot α) :=
+  ⟨by
+    rintro ⟨x, x0⟩ a b h; simp only [Subtype.coe_mk]
+    rcases eq_or_ne x 0 with (rfl | x0'); · simp
+    lift x to α;
+    · rintro ⟨rfl⟩
+      exact (WithBot.bot_lt_coe (0 : α)).not_le x0
+    induction a using WithBot.recBotCoe; · simp_rw [bot_mul x0', bot_le]
+    induction b using WithBot.recBotCoe; · exact absurd h (bot_lt_coe a).not_le
+    simp only [← coe_mul, coe_le_coe] at *
+    norm_cast  at x0
+    exact mul_le_mul_of_nonneg_right h x0⟩
+
+instance [MulZeroClass α] [Preorder α] [PosMulStrictMono α] : PosMulStrictMono (WithBot α) :=
+  ⟨by
+    rintro ⟨x, x0⟩ a b h; simp only [Subtype.coe_mk]
+    lift x to α using x0.ne_bot
+    induction b using WithBot.recBotCoe; · exact absurd h not_lt_bot
+    induction a using WithBot.recBotCoe; · simp_rw [mul_bot x0.ne.symm, ← coe_mul, bot_lt_coe]
+    simp only [← coe_mul, coe_lt_coe] at *
+    norm_cast  at x0
+    exact mul_lt_mul_of_pos_left h x0⟩
+
+instance [MulZeroClass α] [Preorder α] [MulPosStrictMono α] : MulPosStrictMono (WithBot α) :=
+  ⟨by
+    rintro ⟨x, x0⟩ a b h; simp only [Subtype.coe_mk]
+    lift x to α using x0.ne_bot
+    induction b using WithBot.recBotCoe; · exact absurd h not_lt_bot
+    induction a using WithBot.recBotCoe; · simp_rw [bot_mul x0.ne.symm, ← coe_mul, bot_lt_coe]
+    simp only [← coe_mul, coe_lt_coe] at *
+    norm_cast  at x0
+    exact mul_lt_mul_of_pos_right h x0⟩
+
+instance [MulZeroClass α] [Preorder α] [PosMulReflectLT α] : PosMulReflectLT (WithBot α) :=
+  ⟨by
+    rintro ⟨x, x0⟩ a b h; simp only [Subtype.coe_mk] at h
+    rcases eq_or_ne x 0 with (rfl | x0'); · simpa using h
+    lift x to α;
+    · rintro ⟨rfl⟩
+      exact (WithBot.bot_lt_coe (0 : α)).not_le x0
+    induction b using WithBot.recBotCoe;
+    · rw [mul_bot x0'] at h
+      exact absurd h bot_le.not_lt
+    induction a using WithBot.recBotCoe; · exact WithBot.bot_lt_coe _
+    simp only [← coe_mul, coe_lt_coe] at *
+    norm_cast  at x0
+    exact lt_of_mul_lt_mul_left h x0⟩
+
+instance [MulZeroClass α] [Preorder α] [MulPosReflectLT α] : MulPosReflectLT (WithBot α) :=
+  ⟨by
+    rintro ⟨x, x0⟩ a b h; simp only [Subtype.coe_mk] at h
+    rcases eq_or_ne x 0 with (rfl | x0'); · simpa using h
+    lift x to α;
+    · rintro ⟨rfl⟩
+      exact (WithBot.bot_lt_coe (0 : α)).not_le x0
+    induction b using WithBot.recBotCoe;
+    · rw [bot_mul x0'] at h
+      exact absurd h bot_le.not_lt
+    induction a using WithBot.recBotCoe; · exact WithBot.bot_lt_coe _
+    simp only [← coe_mul, coe_lt_coe] at *
+    norm_cast  at x0
+    exact lt_of_mul_lt_mul_right h x0⟩
+
+instance [MulZeroClass α] [Preorder α] [PosMulMonoRev α] : PosMulMonoRev (WithBot α) :=
+  ⟨by
+    rintro ⟨x, x0⟩ a b h; simp only [Subtype.coe_mk] at h
+    lift x to α using x0.ne_bot
+    induction a using WithBot.recBotCoe; · exact bot_le
+    induction b using WithBot.recBotCoe
+    · rw [mul_bot x0.ne.symm, ← coe_mul] at h
+      exact absurd h (bot_lt_coe (x * a)).not_le
+    simp only [← coe_mul, coe_le_coe] at *
+    norm_cast  at x0
+    exact le_of_mul_le_mul_left h x0⟩
+
+instance [MulZeroClass α] [Preorder α] [MulPosMonoRev α] : MulPosMonoRev (WithBot α) :=
+  ⟨by
+    rintro ⟨x, x0⟩ a b h; simp only [Subtype.coe_mk] at h
+    lift x to α using x0.ne_bot
+    induction a using WithBot.recBotCoe; · exact bot_le
+    induction b using WithBot.recBotCoe
+    · rw [bot_mul x0.ne.symm, ← coe_mul] at h
+      exact absurd h (bot_lt_coe (a * x)).not_le
+    simp only [← coe_mul, coe_le_coe] at *
+    norm_cast  at x0
+    exact le_of_mul_le_mul_right h x0⟩
+
+instance [CanonicallyOrderedCommSemiring α] [Nontrivial α] : OrderedCommSemiring (WithBot α) :=
+  { WithBot.zeroLeOneClass, WithBot.orderedAddCommMonoid,
+    WithBot.commSemiring with
+    mul_le_mul_of_nonneg_left := fun _ _ _ => mul_le_mul_of_nonneg_left
+    mul_le_mul_of_nonneg_right := fun _ _ _ => mul_le_mul_of_nonneg_right }
 
 end WithBot
 

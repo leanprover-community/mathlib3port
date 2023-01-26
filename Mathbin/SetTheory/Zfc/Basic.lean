@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module set_theory.zfc.basic
-! leanprover-community/mathlib commit e3d9ab8faa9dea8f78155c6c27d62a621f4c152d
+! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1073,6 +1073,14 @@ theorem toSet_sUnion (x : SetCat.{u}) : (⋃₀ x).toSet = ⋃₀ (to_set '' x.t
 #align Set.to_set_sUnion SetCat.toSet_sUnion
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+@[simp]
+theorem sUnion_empty : ⋃₀ (∅ : SetCat.{u}) = ∅ :=
+  by
+  ext
+  simp
+#align Set.sUnion_empty SetCat.sUnion_empty
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The binary union operation -/
 protected def union (x y : SetCat.{u}) : SetCat.{u} :=
   ⋃₀ {x, y}
@@ -1391,6 +1399,10 @@ protected def Mem (A B : ClassCat.{u}) : Prop :=
 instance : Membership ClassCat ClassCat :=
   ⟨ClassCat.Mem⟩
 
+@[simp]
+theorem not_mem_empty (x : ClassCat.{u}) : x ∉ (∅ : ClassCat.{u}) := fun ⟨_, _, h⟩ => h
+#align Class.not_mem_empty ClassCat.not_mem_empty
+
 theorem mem_univ {A : ClassCat.{u}} : A ∈ univ.{u} ↔ ∃ x : SetCat.{u}, ↑x = A :=
   exists_congr fun x => and_true_iff _
 #align Class.mem_univ ClassCat.mem_univ
@@ -1523,6 +1535,42 @@ theorem sUnion_hom (x : SetCat.{u}) : ⋃₀ (x : ClassCat.{u}) = ⋃₀ x :=
     refine' Iff.trans _ Set.mem_sUnion.symm
     exact ⟨fun ⟨_, ⟨a, rfl, ax⟩, za⟩ => ⟨a, ax, za⟩, fun ⟨a, ax, za⟩ => ⟨_, ⟨a, rfl, ax⟩, za⟩⟩
 #align Class.sUnion_hom ClassCat.sUnion_hom
+
+@[ext]
+theorem ext {x y : ClassCat.{u}} : (∀ z : ClassCat.{u}, z ∈ x ↔ z ∈ y) → x = y :=
+  by
+  refine' fun h => Set.ext fun z => _
+  change x z ↔ y z
+  rw [← mem_hom_left z x, ← mem_hom_left z y]
+  exact h z
+#align Class.ext ClassCat.ext
+
+theorem ext_iff {x y : ClassCat.{u}} : x = y ↔ ∀ z : ClassCat.{u}, z ∈ x ↔ z ∈ y :=
+  ⟨fun h => by simp [h], ext⟩
+#align Class.ext_iff ClassCat.ext_iff
+
+theorem coe_mem_powerset {x : ClassCat.{u}} {y : SetCat.{u}} : powerset x y ↔ ↑y ⊆ x :=
+  Iff.rfl
+#align Class.coe_mem_powerset ClassCat.coe_mem_powerset
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+@[simp]
+theorem mem_sUnion {x y : ClassCat.{u}} : y ∈ ⋃₀ x ↔ ∃ z, z ∈ x ∧ y ∈ z :=
+  by
+  constructor
+  · rintro ⟨w, rfl, ⟨z, hzx, hwz⟩⟩
+    exact ⟨z, hzx, (mem_hom_left _ _).2 hwz⟩
+  · rintro ⟨w, hwx, ⟨z, rfl, hwz⟩⟩
+    exact ⟨z, rfl, ⟨w, hwx, hwz⟩⟩
+#align Class.mem_sUnion ClassCat.mem_sUnion
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+@[simp]
+theorem sUnion_empty : ⋃₀ (∅ : ClassCat.{u}) = (∅ : ClassCat.{u}) :=
+  by
+  ext
+  simp
+#align Class.sUnion_empty ClassCat.sUnion_empty
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The definite description operator, which is `{x}` if `{y | A y} = {x}` and `∅` otherwise. -/

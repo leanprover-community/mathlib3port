@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module order.prop_instances
-! leanprover-community/mathlib commit e3d9ab8faa9dea8f78155c6c27d62a621f4c152d
+! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -108,13 +108,14 @@ theorem disjoint_iff [∀ i, OrderBot (α' i)] {f g : ∀ i, α' i} :
   by
   constructor
   · intro h i x hf hg
-    refine'
-      (update_le_iff.mp <|-- this line doesn't work
-            h
-            (update_le_iff.mpr ⟨hf, fun _ _ => _⟩) (update_le_iff.mpr ⟨hg, fun _ _ => _⟩)).1
-    · exact ⊥
-    · exact bot_le
-    · exact bot_le
+    classical
+      refine'
+        (update_le_iff.mp <|-- this line doesn't work
+              h
+              (update_le_iff.mpr ⟨hf, fun _ _ => _⟩) (update_le_iff.mpr ⟨hg, fun _ _ => _⟩)).1
+      · exact ⊥
+      · exact bot_le
+      · exact bot_le
   · intro h x hf hg i
     apply h i (hf i) (hg i)
 #align pi.disjoint_iff Pi.disjoint_iff
@@ -155,7 +156,7 @@ theorem Prop.codisjoint_iff {P Q : Prop} : Codisjoint P Q ↔ P ∨ Q :=
 theorem Prop.isCompl_iff {P Q : Prop} : IsCompl P Q ↔ ¬(P ↔ Q) :=
   by
   rw [isCompl_iff, Prop.disjoint_iff, Prop.codisjoint_iff, not_iff]
-  tauto
+  classical tauto
 #align Prop.is_compl_iff Prop.isCompl_iff
 -/
 

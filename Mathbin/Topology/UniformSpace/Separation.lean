@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.uniform_space.separation
-! leanprover-community/mathlib commit e3d9ab8faa9dea8f78155c6c27d62a621f4c152d
+! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -277,7 +277,7 @@ instance separationSetoid.uniformSpace {α : Type u} [u : UniformSpace α] :
     calc
       ((map (fun p : α × α => (⟦p.fst⟧, ⟦p.snd⟧)) u.uniformity).lift' fun s => compRel s s) =
           u.uniformity.lift' ((fun s => compRel s s) ∘ image fun p : α × α => (⟦p.fst⟧, ⟦p.snd⟧)) :=
-        map_lift'_eq2 <| monotone_compRel monotone_id monotone_id
+        map_lift'_eq2 <| monotone_id.compRel monotone_id
       _ ≤
           u.uniformity.lift'
             ((image fun p : α × α => (⟦p.fst⟧, ⟦p.snd⟧)) ∘ fun s : Set (α × α) =>
@@ -293,9 +293,7 @@ instance separationSetoid.uniformSpace {α : Type u} [u : UniformSpace α] :
       _ =
           map (fun p : α × α => (⟦p.1⟧, ⟦p.2⟧))
             (u.uniformity.lift' fun s : Set (α × α) => compRel s (compRel s s)) :=
-        by
-        rw [map_lift'_eq] <;>
-          exact monotone_compRel monotone_id (monotone_compRel monotone_id monotone_id)
+        by rw [map_lift'_eq] <;> exact monotone_id.comp_rel (monotone_id.comp_rel monotone_id)
       _ ≤ map (fun p : α × α => (⟦p.1⟧, ⟦p.2⟧)) u.uniformity := map_mono comp_le_uniformity3
       
   is_open_uniformity s :=

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module data.pi.lex
-! leanprover-community/mathlib commit e3d9ab8faa9dea8f78155c6c27d62a621f4c152d
+! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -266,9 +266,11 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align pi.lex.no_max_order' Pi.Lex.noMaxOrder'ₓ'. -/
 theorem Lex.noMaxOrder' [Preorder ι] [∀ i, LT (β i)] (i : ι) [NoMaxOrder (β i)] :
     NoMaxOrder (Lex (∀ i, β i)) :=
-  ⟨fun a =>
-    let ⟨b, hb⟩ := exists_gt (a i)
-    ⟨a.update i b, i, fun j hj => (a.update_noteq hj.Ne b).symm, by rwa [a.update_same i b]⟩⟩
+  ⟨fun a => by
+    classical
+      obtain ⟨b, hb⟩ := exists_gt (a i)
+      exact
+        ⟨a.update i b, i, fun j hj => (a.update_noteq hj.Ne b).symm, by rwa [a.update_same i b]⟩⟩
 #align pi.lex.no_max_order' Pi.Lex.noMaxOrder'
 
 instance [LinearOrder ι] [IsWellOrder ι (· < ·)] [Nonempty ι] [∀ i, PartialOrder (β i)]

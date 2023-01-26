@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Fox Thomson
 
 ! This file was ported from Lean 3 source module computability.DFA
-! leanprover-community/mathlib commit e3d9ab8faa9dea8f78155c6c27d62a621f4c152d
+! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,7 @@ import Mathbin.Tactic.NormNum
 
 /-!
 # Deterministic Finite Automata
+
 This file contains the definition of a Deterministic Finite Automaton (DFA), a state machine which
 determines whether a string (implemented as a list over an arbitrary alphabet) is in a regular set
 in linear time.
@@ -21,6 +22,8 @@ Note that this definition allows for Automaton with infinite states, a `fintype`
 supplied for true DFA's.
 -/
 
+
+open Computability
 
 universe u v
 
@@ -133,9 +136,9 @@ theorem evalFrom_split [Fintype σ] {x : List α} {s t : σ} (hlen : Fintype.car
 #align DFA.eval_from_split DFA.evalFrom_split
 
 theorem evalFrom_of_pow {x y : List α} {s : σ} (hx : M.evalFrom s x = s)
-    (hy : y ∈ @Language.star α {x}) : M.evalFrom s y = s :=
+    (hy : y ∈ ({x} : Language α)∗) : M.evalFrom s y = s :=
   by
-  rw [Language.mem_star] at hy
+  rw [Language.mem_kstar] at hy
   rcases hy with ⟨S, rfl, hS⟩
   induction' S with a S ih
   · rfl
@@ -151,7 +154,7 @@ theorem pumping_lemma [Fintype σ] {x : List α} (hx : x ∈ M.accepts)
     (hlen : Fintype.card σ ≤ List.length x) :
     ∃ a b c,
       x = a ++ b ++ c ∧
-        a.length + b.length ≤ Fintype.card σ ∧ b ≠ [] ∧ {a} * Language.star {b} * {c} ≤ M.accepts :=
+        a.length + b.length ≤ Fintype.card σ ∧ b ≠ [] ∧ {a} * {b}∗ * {c} ≤ M.accepts :=
   by
   obtain ⟨_, a, b, c, hx, hlen, hnil, rfl, hb, hc⟩ := M.eval_from_split hlen rfl
   use a, b, c, hx, hlen, hnil

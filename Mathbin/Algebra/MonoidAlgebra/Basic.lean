@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Yury G. Kudryashov, Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.monoid_algebra.basic
-! leanprover-community/mathlib commit e3d9ab8faa9dea8f78155c6c27d62a621f4c152d
+! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -345,27 +345,28 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem mul_apply_antidiagonal [Mul G] (f g : MonoidAlgebra k G) (x : G) (s : Finset (G × G))
-    (hs : ∀ {p : G × G}, p ∈ s ↔ p.1 * p.2 = x) : (f * g) x = ∑ p in s, f p.1 * g p.2 :=
-  let F : G × G → k := fun p => by classical exact if p.1 * p.2 = x then f p.1 * g p.2 else 0
-  calc
-    (f * g) x = ∑ a₁ in f.support, ∑ a₂ in g.support, F (a₁, a₂) := mul_apply f g x
-    _ = ∑ p in f.support ×ˢ g.support, F p := Finset.sum_product.symm
-    _ = ∑ p in (f.support ×ˢ g.support).filter fun p : G × G => p.1 * p.2 = x, f p.1 * g p.2 :=
-      (Finset.sum_filter _ _).symm
-    _ = ∑ p in s.filter fun p : G × G => p.1 ∈ f.support ∧ p.2 ∈ g.support, f p.1 * g p.2 :=
-      sum_congr
-        (by
-          ext
-          simp only [mem_filter, mem_product, hs, and_comm'])
-        fun _ _ => rfl
-    _ = ∑ p in s, f p.1 * g p.2 :=
-      sum_subset (filter_subset _ _) fun p hps hp =>
-        by
-        simp only [mem_filter, mem_support_iff, not_and, not_not] at hp⊢
-        by_cases h1 : f p.1 = 0
-        · rw [h1, zero_mul]
-        · rw [hp hps h1, mul_zero]
-    
+    (hs : ∀ {p : G × G}, p ∈ s ↔ p.1 * p.2 = x) : (f * g) x = ∑ p in s, f p.1 * g p.2 := by
+  classical exact
+      let F : G × G → k := fun p => if p.1 * p.2 = x then f p.1 * g p.2 else 0
+      calc
+        (f * g) x = ∑ a₁ in f.support, ∑ a₂ in g.support, F (a₁, a₂) := mul_apply f g x
+        _ = ∑ p in f.support ×ˢ g.support, F p := finset.sum_product.symm
+        _ = ∑ p in (f.support ×ˢ g.support).filter fun p : G × G => p.1 * p.2 = x, f p.1 * g p.2 :=
+          (Finset.sum_filter _ _).symm
+        _ = ∑ p in s.filter fun p : G × G => p.1 ∈ f.support ∧ p.2 ∈ g.support, f p.1 * g p.2 :=
+          sum_congr
+            (by
+              ext
+              simp only [mem_filter, mem_product, hs, and_comm'])
+            fun _ _ => rfl
+        _ = ∑ p in s, f p.1 * g p.2 :=
+          sum_subset (filter_subset _ _) fun p hps hp =>
+            by
+            simp only [mem_filter, mem_support_iff, not_and, not_not] at hp⊢
+            by_cases h1 : f p.1 = 0
+            · rw [h1, zero_mul]
+            · rw [hp hps h1, mul_zero]
+        
 #align monoid_algebra.mul_apply_antidiagonal MonoidAlgebra.mul_apply_antidiagonal
 
 @[simp]
@@ -524,10 +525,11 @@ also commute with the algebra multiplication. -/
 instance sMulCommClass_self [SMulCommClass R k k] :
     SMulCommClass R (MonoidAlgebra k G) (MonoidAlgebra k G) :=
   ⟨fun t a b => by
-    ext m
-    simp only [mul_apply, Finsupp.sum, Finset.smul_sum, smul_ite, mul_smul_comm, sum_smul_index',
-      imp_true_iff, eq_self_iff_true, coe_smul, ite_eq_right_iff, smul_eq_mul, Pi.smul_apply,
-      mul_zero, smul_zero]⟩
+    classical
+      ext m
+      simp only [mul_apply, Finsupp.sum, Finset.smul_sum, smul_ite, mul_smul_comm, sum_smul_index',
+        imp_true_iff, eq_self_iff_true, coe_smul, ite_eq_right_iff, smul_eq_mul, Pi.smul_apply,
+        mul_zero, smul_zero]⟩
 #align monoid_algebra.smul_comm_class_self MonoidAlgebra.sMulCommClass_self
 
 instance sMulCommClass_symm_self [SMulCommClass k R k] :

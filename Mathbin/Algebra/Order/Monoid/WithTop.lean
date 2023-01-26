@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module algebra.order.monoid.with_top
-! leanprover-community/mathlib commit e3d9ab8faa9dea8f78155c6c27d62a621f4c152d
+! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -50,6 +50,30 @@ theorem coe_eq_one {a : α} : (a : WithTop α) = 1 ↔ a = 1 :=
 #align with_top.coe_eq_one WithTop.coe_eq_one
 #align with_top.coe_eq_zero WithTop.coe_eq_zero
 -/
+
+/- warning: with_top.one_le_coe -> WithTop.one_le_coe is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : One.{u1} α] [_inst_2 : LE.{u1} α] {a : α}, Iff (LE.le.{u1} (WithTop.{u1} α) (WithTop.hasLe.{u1} α _inst_2) (OfNat.ofNat.{u1} (WithTop.{u1} α) 1 (OfNat.mk.{u1} (WithTop.{u1} α) 1 (One.one.{u1} (WithTop.{u1} α) (WithTop.one.{u1} α _inst_1)))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithTop.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithTop.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithTop.{u1} α) (WithTop.hasCoeT.{u1} α))) a)) (LE.le.{u1} α _inst_2 (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α _inst_1))) a)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : One.{u1} α] [_inst_2 : LE.{u1} α] {a : α}, Iff (LE.le.{u1} (WithTop.{u1} α) (WithTop.le.{u1} α _inst_2) (OfNat.ofNat.{u1} (WithTop.{u1} α) 1 (One.toOfNat1.{u1} (WithTop.{u1} α) (WithTop.one.{u1} α _inst_1))) (WithTop.some.{u1} α a)) (LE.le.{u1} α _inst_2 (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α _inst_1)) a)
+Case conversion may be inaccurate. Consider using '#align with_top.one_le_coe WithTop.one_le_coeₓ'. -/
+@[simp, norm_cast, to_additive coe_nonneg]
+theorem one_le_coe [LE α] {a : α} : 1 ≤ (a : WithTop α) ↔ 1 ≤ a :=
+  coe_le_coe
+#align with_top.one_le_coe WithTop.one_le_coe
+#align with_top.coe_nonneg WithTop.coe_nonneg
+
+/- warning: with_top.coe_le_one -> WithTop.coe_le_one is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : One.{u1} α] [_inst_2 : LE.{u1} α] {a : α}, Iff (LE.le.{u1} (WithTop.{u1} α) (WithTop.hasLe.{u1} α _inst_2) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithTop.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithTop.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithTop.{u1} α) (WithTop.hasCoeT.{u1} α))) a) (OfNat.ofNat.{u1} (WithTop.{u1} α) 1 (OfNat.mk.{u1} (WithTop.{u1} α) 1 (One.one.{u1} (WithTop.{u1} α) (WithTop.one.{u1} α _inst_1))))) (LE.le.{u1} α _inst_2 a (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α _inst_1))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : One.{u1} α] [_inst_2 : LE.{u1} α] {a : α}, Iff (LE.le.{u1} (WithTop.{u1} α) (WithTop.le.{u1} α _inst_2) (WithTop.some.{u1} α a) (OfNat.ofNat.{u1} (WithTop.{u1} α) 1 (One.toOfNat1.{u1} (WithTop.{u1} α) (WithTop.one.{u1} α _inst_1)))) (LE.le.{u1} α _inst_2 a (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α _inst_1)))
+Case conversion may be inaccurate. Consider using '#align with_top.coe_le_one WithTop.coe_le_oneₓ'. -/
+@[simp, norm_cast, to_additive coe_le_zero]
+theorem coe_le_one [LE α] {a : α} : (a : WithTop α) ≤ 1 ↔ a ≤ 1 :=
+  coe_le_coe
+#align with_top.coe_le_one WithTop.coe_le_one
+#align with_top.coe_le_zero WithTop.coe_le_zero
 
 /- warning: with_top.one_lt_coe -> WithTop.one_lt_coe is a dubious translation:
 lean 3 declaration is
@@ -605,13 +629,37 @@ theorem coe_eq_one [One α] {a : α} : (a : WithBot α) = 1 ↔ a = 1 :=
 #align with_bot.coe_eq_zero WithBot.coe_eq_zero
 -/
 
+/- warning: with_bot.one_le_coe -> WithBot.one_le_coe is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : One.{u1} α] [_inst_2 : LE.{u1} α] {a : α}, Iff (LE.le.{u1} (WithBot.{u1} α) (WithBot.hasLe.{u1} α _inst_2) (OfNat.ofNat.{u1} (WithBot.{u1} α) 1 (OfNat.mk.{u1} (WithBot.{u1} α) 1 (One.one.{u1} (WithBot.{u1} α) (WithBot.hasOne.{u1} α _inst_1)))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α))) a)) (LE.le.{u1} α _inst_2 (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α _inst_1))) a)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : One.{u1} α] [_inst_2 : LE.{u1} α] {a : α}, Iff (LE.le.{u1} (WithBot.{u1} α) (WithBot.le.{u1} α _inst_2) (OfNat.ofNat.{u1} (WithBot.{u1} α) 1 (One.toOfNat1.{u1} (WithBot.{u1} α) (WithBot.one.{u1} α _inst_1))) (WithBot.some.{u1} α a)) (LE.le.{u1} α _inst_2 (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α _inst_1)) a)
+Case conversion may be inaccurate. Consider using '#align with_bot.one_le_coe WithBot.one_le_coeₓ'. -/
+@[simp, norm_cast, to_additive coe_nonneg]
+theorem one_le_coe [One α] [LE α] {a : α} : 1 ≤ (a : WithBot α) ↔ 1 ≤ a :=
+  coe_le_coe
+#align with_bot.one_le_coe WithBot.one_le_coe
+#align with_bot.coe_nonneg WithBot.coe_nonneg
+
+/- warning: with_bot.coe_le_one -> WithBot.coe_le_one is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : One.{u1} α] [_inst_2 : LE.{u1} α] {a : α}, Iff (LE.le.{u1} (WithBot.{u1} α) (WithBot.hasLe.{u1} α _inst_2) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α))) a) (OfNat.ofNat.{u1} (WithBot.{u1} α) 1 (OfNat.mk.{u1} (WithBot.{u1} α) 1 (One.one.{u1} (WithBot.{u1} α) (WithBot.hasOne.{u1} α _inst_1))))) (LE.le.{u1} α _inst_2 a (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α _inst_1))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : One.{u1} α] [_inst_2 : LE.{u1} α] {a : α}, Iff (LE.le.{u1} (WithBot.{u1} α) (WithBot.le.{u1} α _inst_2) (WithBot.some.{u1} α a) (OfNat.ofNat.{u1} (WithBot.{u1} α) 1 (One.toOfNat1.{u1} (WithBot.{u1} α) (WithBot.one.{u1} α _inst_1)))) (LE.le.{u1} α _inst_2 a (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α _inst_1)))
+Case conversion may be inaccurate. Consider using '#align with_bot.coe_le_one WithBot.coe_le_oneₓ'. -/
+@[simp, norm_cast, to_additive coe_le_zero]
+theorem coe_le_one [One α] [LE α] {a : α} : (a : WithBot α) ≤ 1 ↔ a ≤ 1 :=
+  coe_le_coe
+#align with_bot.coe_le_one WithBot.coe_le_one
+#align with_bot.coe_le_zero WithBot.coe_le_zero
+
 /- warning: with_bot.one_lt_coe -> WithBot.one_lt_coe is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : One.{u1} α] [_inst_2 : LT.{u1} α] {a : α}, Iff (LT.lt.{u1} (WithBot.{u1} α) (WithBot.hasLt.{u1} α _inst_2) (OfNat.ofNat.{u1} (WithBot.{u1} α) 1 (OfNat.mk.{u1} (WithBot.{u1} α) 1 (One.one.{u1} (WithBot.{u1} α) (WithBot.hasOne.{u1} α _inst_1)))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α))) a)) (LT.lt.{u1} α _inst_2 (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α _inst_1))) a)
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : One.{u1} α] [_inst_2 : LT.{u1} α] {a : α}, Iff (LT.lt.{u1} (WithBot.{u1} α) (WithBot.lt.{u1} α _inst_2) (OfNat.ofNat.{u1} (WithBot.{u1} α) 1 (One.toOfNat1.{u1} (WithBot.{u1} α) (WithBot.one.{u1} α _inst_1))) (WithBot.some.{u1} α a)) (LT.lt.{u1} α _inst_2 (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α _inst_1)) a)
 Case conversion may be inaccurate. Consider using '#align with_bot.one_lt_coe WithBot.one_lt_coeₓ'. -/
-@[norm_cast, to_additive coe_pos]
+@[simp, norm_cast, to_additive coe_pos]
 theorem one_lt_coe [One α] [LT α] {a : α} : 1 < (a : WithBot α) ↔ 1 < a :=
   coe_lt_coe
 #align with_bot.one_lt_coe WithBot.one_lt_coe
@@ -623,7 +671,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : One.{u1} α] [_inst_2 : LT.{u1} α] {a : α}, Iff (LT.lt.{u1} (WithBot.{u1} α) (WithBot.lt.{u1} α _inst_2) (WithBot.some.{u1} α a) (OfNat.ofNat.{u1} (WithBot.{u1} α) 1 (One.toOfNat1.{u1} (WithBot.{u1} α) (WithBot.one.{u1} α _inst_1)))) (LT.lt.{u1} α _inst_2 a (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α _inst_1)))
 Case conversion may be inaccurate. Consider using '#align with_bot.coe_lt_one WithBot.coe_lt_oneₓ'. -/
-@[norm_cast, to_additive coe_lt_zero]
+@[simp, norm_cast, to_additive coe_lt_zero]
 theorem coe_lt_one [One α] [LT α] {a : α} : (a : WithBot α) < 1 ↔ a < 1 :=
   coe_lt_coe
 #align with_bot.coe_lt_one WithBot.coe_lt_one
@@ -635,7 +683,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : One.{u2} α] (f : α -> β), Eq.{succ u1} (WithBot.{u1} β) (WithBot.map.{u2, u1} α β f (OfNat.ofNat.{u2} (WithBot.{u2} α) 1 (One.toOfNat1.{u2} (WithBot.{u2} α) (WithBot.one.{u2} α _inst_1)))) (WithBot.some.{u1} β (f (OfNat.ofNat.{u2} α 1 (One.toOfNat1.{u2} α _inst_1))))
 Case conversion may be inaccurate. Consider using '#align with_bot.map_one WithBot.map_oneₓ'. -/
-@[to_additive]
+@[simp, to_additive]
 protected theorem map_one {β} [One α] (f : α → β) : (1 : WithBot α).map f = (f 1 : WithBot β) :=
   rfl
 #align with_bot.map_one WithBot.map_one

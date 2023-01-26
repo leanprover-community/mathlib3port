@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 
 ! This file was ported from Lean 3 source module number_theory.legendre_symbol.mul_character
-! leanprover-community/mathlib commit e3d9ab8faa9dea8f78155c6c27d62a621f4c152d
+! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -121,8 +121,9 @@ noncomputable def trivial : MulChar R R'
   map_one' := by simp only [isUnit_one, if_true]
   map_mul' := by
     intro x y
-    simp only [IsUnit.mul_iff, boole_mul]
-    split_ifs <;> tauto
+    classical
+      simp only [IsUnit.mul_iff, boole_mul]
+      split_ifs <;> tauto
 #align mul_char.trivial MulChar.trivial
 
 end trivial
@@ -206,16 +207,17 @@ noncomputable def ofUnitHom (f : Rˣ →* R'ˣ) : MulChar R R'
     have h1 : (is_unit_one.unit : Rˣ) = 1 := units.eq_iff.mp rfl
     simp only [h1, dif_pos, Units.val_eq_one, map_one, isUnit_one]
   map_mul' := by
-    intro x y
-    by_cases hx : IsUnit x
-    · simp only [hx, IsUnit.mul_iff, true_and_iff, dif_pos]
-      by_cases hy : IsUnit y
-      · simp only [hy, dif_pos]
-        have hm : (is_unit.mul_iff.mpr ⟨hx, hy⟩).Unit = hx.unit * hy.unit := units.eq_iff.mp rfl
-        rw [hm, map_mul]
-        norm_cast
-      · simp only [hy, not_false_iff, dif_neg, mul_zero]
-    · simp only [hx, IsUnit.mul_iff, false_and_iff, not_false_iff, dif_neg, zero_mul]
+    classical
+      intro x y
+      by_cases hx : IsUnit x
+      · simp only [hx, IsUnit.mul_iff, true_and_iff, dif_pos]
+        by_cases hy : IsUnit y
+        · simp only [hy, dif_pos]
+          have hm : (is_unit.mul_iff.mpr ⟨hx, hy⟩).Unit = hx.unit * hy.unit := units.eq_iff.mp rfl
+          rw [hm, map_mul]
+          norm_cast
+        · simp only [hy, not_false_iff, dif_neg, mul_zero]
+      · simp only [hx, IsUnit.mul_iff, false_and_iff, not_false_iff, dif_neg, zero_mul]
   map_nonunit' := by
     intro a ha
     simp only [ha, not_false_iff, dif_neg]
@@ -290,8 +292,7 @@ noncomputable instance inhabited : Inhabited (MulChar R R') :=
 
 /-- Evaluation of the trivial character -/
 @[simp]
-theorem one_apply_coe (a : Rˣ) : (1 : MulChar R R') a = 1 :=
-  dif_pos a.IsUnit
+theorem one_apply_coe (a : Rˣ) : (1 : MulChar R R') a = 1 := by classical exact dif_pos a.is_unit
 #align mul_char.one_apply_coe MulChar.one_apply_coe
 
 /-- Multiplication of multiplicative characters. (This needs the target to be commutative.) -/

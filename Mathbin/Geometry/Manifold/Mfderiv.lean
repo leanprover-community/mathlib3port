@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module geometry.manifold.mfderiv
-! leanprover-community/mathlib commit e3d9ab8faa9dea8f78155c6c27d62a621f4c152d
+! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -294,7 +294,7 @@ def HasMfderivAt (f : M → M') (x : M) (f' : TangentSpace I x →L[𝕜] Tangen
 derivative of `f` at `x` within `s`, as a continuous linear map from the tangent space at `x` to the
 tangent space at `f x`. -/
 def mfderivWithin (f : M → M') (s : Set M) (x : M) : TangentSpace I x →L[𝕜] TangentSpace I' (f x) :=
-  if h : MdifferentiableWithinAt I I' f s x then
+  if MdifferentiableWithinAt I I' f s x then
     (fderivWithin 𝕜 (writtenInExtChartAt I I' x f) ((extChartAt I x).symm ⁻¹' s ∩ range I)
         ((extChartAt I x) x) :
       _)
@@ -305,7 +305,7 @@ def mfderivWithin (f : M → M') (s : Set M) (x : M) : TangentSpace I x →L[�
 `f` at `x`, as a continuous linear map from the tangent space at `x` to the tangent space at
 `f x`. -/
 def mfderiv (f : M → M') (x : M) : TangentSpace I x →L[𝕜] TangentSpace I' (f x) :=
-  if h : MdifferentiableAt I I' f x then
+  if MdifferentiableAt I I' f x then
     (fderivWithin 𝕜 (writtenInExtChartAt I I' x f : E → E') (range I) ((extChartAt I x) x) : _)
   else 0
 #align mfderiv mfderiv
@@ -447,11 +447,11 @@ theorem mdifferentiableWithinAt_iff_of_mem_source {x' : M} {y : M'}
 
 theorem mfderivWithin_zero_of_not_mdifferentiableWithinAt
     (h : ¬MdifferentiableWithinAt I I' f s x) : mfderivWithin I I' f s x = 0 := by
-  simp only [mfderivWithin, h, dif_neg, not_false_iff]
+  simp only [mfderivWithin, h, if_neg, not_false_iff]
 #align mfderiv_within_zero_of_not_mdifferentiable_within_at mfderivWithin_zero_of_not_mdifferentiableWithinAt
 
 theorem mfderiv_zero_of_not_mdifferentiableAt (h : ¬MdifferentiableAt I I' f x) :
-    mfderiv I I' f x = 0 := by simp only [mfderiv, h, dif_neg, not_false_iff]
+    mfderiv I I' f x = 0 := by simp only [mfderiv, h, if_neg, not_false_iff]
 #align mfderiv_zero_of_not_mdifferentiable_at mfderiv_zero_of_not_mdifferentiableAt
 
 theorem HasMfderivWithinAt.mono (h : HasMfderivWithinAt I I' f t x f') (hst : s ⊆ t) :
@@ -525,7 +525,7 @@ theorem MdifferentiableWithinAt.hasMfderivWithinAt (h : MdifferentiableWithinAt 
     HasMfderivWithinAt I I' f s x (mfderivWithin I I' f s x) :=
   by
   refine' ⟨h.1, _⟩
-  simp only [mfderivWithin, h, dif_pos, mfld_simps]
+  simp only [mfderivWithin, h, if_pos, mfld_simps]
   exact DifferentiableWithinAt.hasFderivWithinAt h.2
 #align mdifferentiable_within_at.has_mfderiv_within_at MdifferentiableWithinAt.hasMfderivWithinAt
 
@@ -533,21 +533,21 @@ theorem MdifferentiableWithinAt.mfderivWithin (h : MdifferentiableWithinAt I I' 
     mfderivWithin I I' f s x =
       fderivWithin 𝕜 (writtenInExtChartAt I I' x f : _) ((extChartAt I x).symm ⁻¹' s ∩ range I)
         ((extChartAt I x) x) :=
-  by simp only [mfderivWithin, h, dif_pos]
+  by simp only [mfderivWithin, h, if_pos]
 #align mdifferentiable_within_at.mfderiv_within MdifferentiableWithinAt.mfderivWithin
 
 theorem MdifferentiableAt.hasMfderivAt (h : MdifferentiableAt I I' f x) :
     HasMfderivAt I I' f x (mfderiv I I' f x) :=
   by
   refine' ⟨h.1, _⟩
-  simp only [mfderiv, h, dif_pos, mfld_simps]
+  simp only [mfderiv, h, if_pos, mfld_simps]
   exact DifferentiableWithinAt.hasFderivWithinAt h.2
 #align mdifferentiable_at.has_mfderiv_at MdifferentiableAt.hasMfderivAt
 
 theorem MdifferentiableAt.mfderiv (h : MdifferentiableAt I I' f x) :
     mfderiv I I' f x =
       fderivWithin 𝕜 (writtenInExtChartAt I I' x f : _) (range I) ((extChartAt I x) x) :=
-  by simp only [mfderiv, h, dif_pos]
+  by simp only [mfderiv, h, if_pos]
 #align mdifferentiable_at.mfderiv MdifferentiableAt.mfderiv
 
 theorem HasMfderivAt.mfderiv (h : HasMfderivAt I I' f x f') : mfderiv I I' f x = f' :=
@@ -831,7 +831,7 @@ theorem Filter.EventuallyEq.mfderivWithin_eq (hs : UniqueMdiffWithinAt I s x) (h
   by_cases h : MdifferentiableWithinAt I I' f s x
   · exact (h.has_mfderiv_within_at.congr_of_eventually_eq hL hx).mfderivWithin hs
   · unfold mfderivWithin
-    rw [dif_neg h, dif_neg]
+    rw [if_neg h, if_neg]
     rwa [← hL.mdifferentiable_within_at_iff I I' hx]
 #align filter.eventually_eq.mfderiv_within_eq Filter.EventuallyEq.mfderivWithin_eq
 
@@ -1109,8 +1109,8 @@ theorem mfderivWithin_eq_fderivWithin :
     mfderivWithin 𝓘(𝕜, E) 𝓘(𝕜, E') f s x = fderivWithin 𝕜 f s x :=
   by
   by_cases h : MdifferentiableWithinAt 𝓘(𝕜, E) 𝓘(𝕜, E') f s x
-  · simp only [mfderivWithin, h, dif_pos, mfld_simps]
-  · simp only [mfderivWithin, h, dif_neg, not_false_iff]
+  · simp only [mfderivWithin, h, if_pos, mfld_simps]
+  · simp only [mfderivWithin, h, if_neg, not_false_iff]
     rw [mdifferentiableWithinAt_iff_differentiableWithinAt] at h
     exact (fderivWithin_zero_of_not_differentiableWithinAt h).symm
 #align mfderiv_within_eq_fderiv_within mfderivWithin_eq_fderivWithin
@@ -1344,8 +1344,9 @@ canonical, but in this case (the tangent space of a vector space) it is canonica
  -/
 
 
-variable {z : M} {F' : Type _} [NormedCommRing F'] [NormedAlgebra 𝕜 F'] {f g : M → E'}
-  {p q : M → F'} {I} {f' g' : TangentSpace I z →L[𝕜] E'} {p' q' : TangentSpace I z →L[𝕜] F'}
+section Group
+
+variable {I} {z : M} {f g : M → E'} {f' g' : TangentSpace I z →L[𝕜] E'}
 
 theorem HasMfderivAt.add (hf : HasMfderivAt I 𝓘(𝕜, E') f z f')
     (hg : HasMfderivAt I 𝓘(𝕜, E') g z g') : HasMfderivAt I 𝓘(𝕜, E') (f + g) z (f' + g') :=
@@ -1362,21 +1363,12 @@ theorem Mdifferentiable.add (hf : Mdifferentiable I 𝓘(𝕜, E') f)
   (hf x).add (hg x)
 #align mdifferentiable.add Mdifferentiable.add
 
-theorem HasMfderivAt.mul (hp : HasMfderivAt I 𝓘(𝕜, F') p z p')
-    (hq : HasMfderivAt I 𝓘(𝕜, F') q z q') :
-    HasMfderivAt I 𝓘(𝕜, F') (p * q) z (p z • q' + q z • p' : E →L[𝕜] F') :=
-  ⟨hp.1.mul hq.1, by simpa only [mfld_simps] using hp.2.mul hq.2⟩
-#align has_mfderiv_at.mul HasMfderivAt.mul
-
-theorem MdifferentiableAt.mul (hp : MdifferentiableAt I 𝓘(𝕜, F') p z)
-    (hq : MdifferentiableAt I 𝓘(𝕜, F') q z) : MdifferentiableAt I 𝓘(𝕜, F') (p * q) z :=
-  (hp.HasMfderivAt.mul hq.HasMfderivAt).MdifferentiableAt
-#align mdifferentiable_at.mul MdifferentiableAt.mul
-
-theorem Mdifferentiable.mul {f g : M → F'} (hf : Mdifferentiable I 𝓘(𝕜, F') f)
-    (hg : Mdifferentiable I 𝓘(𝕜, F') g) : Mdifferentiable I 𝓘(𝕜, F') (f * g) := fun x =>
-  (hf x).mul (hg x)
-#align mdifferentiable.mul Mdifferentiable.mul
+theorem mfderiv_add (hf : MdifferentiableAt I 𝓘(𝕜, E') f z)
+    (hg : MdifferentiableAt I 𝓘(𝕜, E') g z) :
+    (mfderiv I 𝓘(𝕜, E') (f + g) z : TangentSpace I z →L[𝕜] E') =
+      (mfderiv I 𝓘(𝕜, E') f z + mfderiv I 𝓘(𝕜, E') g z : TangentSpace I z →L[𝕜] E') :=
+  (hf.HasMfderivAt.add hg.HasMfderivAt).mfderiv
+#align mfderiv_add mfderiv_add
 
 theorem HasMfderivAt.const_smul (hf : HasMfderivAt I 𝓘(𝕜, E') f z f') (s : 𝕜) :
     HasMfderivAt I 𝓘(𝕜, E') (s • f) z (s • f') :=
@@ -1388,23 +1380,50 @@ theorem MdifferentiableAt.const_smul (hf : MdifferentiableAt I 𝓘(𝕜, E') f 
   (hf.HasMfderivAt.const_smul s).MdifferentiableAt
 #align mdifferentiable_at.const_smul MdifferentiableAt.const_smul
 
-theorem Mdifferentiable.const_smul {f : M → E'} (s : 𝕜) (hf : Mdifferentiable I 𝓘(𝕜, E') f) :
+theorem Mdifferentiable.const_smul (s : 𝕜) (hf : Mdifferentiable I 𝓘(𝕜, E') f) :
     Mdifferentiable I 𝓘(𝕜, E') (s • f) := fun x => (hf x).const_smul s
 #align mdifferentiable.const_smul Mdifferentiable.const_smul
+
+theorem const_smul_mfderiv (hf : MdifferentiableAt I 𝓘(𝕜, E') f z) (s : 𝕜) :
+    (mfderiv I 𝓘(𝕜, E') (s • f) z : TangentSpace I z →L[𝕜] E') =
+      (s • mfderiv I 𝓘(𝕜, E') f z : TangentSpace I z →L[𝕜] E') :=
+  (hf.HasMfderivAt.const_smul s).mfderiv
+#align const_smul_mfderiv const_smul_mfderiv
 
 theorem HasMfderivAt.neg (hf : HasMfderivAt I 𝓘(𝕜, E') f z f') :
     HasMfderivAt I 𝓘(𝕜, E') (-f) z (-f') :=
   ⟨hf.1.neg, hf.2.neg⟩
 #align has_mfderiv_at.neg HasMfderivAt.neg
 
+theorem hasMfderivAt_neg : HasMfderivAt I 𝓘(𝕜, E') (-f) z (-f') ↔ HasMfderivAt I 𝓘(𝕜, E') f z f' :=
+  ⟨fun hf => by convert hf.neg <;> rw [neg_neg], fun hf => hf.neg⟩
+#align has_mfderiv_at_neg hasMfderivAt_neg
+
 theorem MdifferentiableAt.neg (hf : MdifferentiableAt I 𝓘(𝕜, E') f z) :
     MdifferentiableAt I 𝓘(𝕜, E') (-f) z :=
   hf.HasMfderivAt.neg.MdifferentiableAt
 #align mdifferentiable_at.neg MdifferentiableAt.neg
 
-theorem Mdifferentiable.neg {f : M → E'} (hf : Mdifferentiable I 𝓘(𝕜, E') f) :
-    Mdifferentiable I 𝓘(𝕜, E') (-f) := fun x => (hf x).neg
+theorem mdifferentiableAt_neg :
+    MdifferentiableAt I 𝓘(𝕜, E') (-f) z ↔ MdifferentiableAt I 𝓘(𝕜, E') f z :=
+  ⟨fun hf => by convert hf.neg <;> rw [neg_neg], fun hf => hf.neg⟩
+#align mdifferentiable_at_neg mdifferentiableAt_neg
+
+theorem Mdifferentiable.neg (hf : Mdifferentiable I 𝓘(𝕜, E') f) : Mdifferentiable I 𝓘(𝕜, E') (-f) :=
+  fun x => (hf x).neg
 #align mdifferentiable.neg Mdifferentiable.neg
+
+theorem mfderiv_neg (f : M → E') (x : M) :
+    (mfderiv I 𝓘(𝕜, E') (-f) x : TangentSpace I x →L[𝕜] E') =
+      (-mfderiv I 𝓘(𝕜, E') f x : TangentSpace I x →L[𝕜] E') :=
+  by
+  simp_rw [mfderiv]
+  by_cases hf : MdifferentiableAt I 𝓘(𝕜, E') f x
+  · exact hf.has_mfderiv_at.neg.mfderiv
+  · rw [if_neg hf]
+    rw [← mdifferentiableAt_neg] at hf
+    rw [if_neg hf, neg_zero]
+#align mfderiv_neg mfderiv_neg
 
 theorem HasMfderivAt.sub (hf : HasMfderivAt I 𝓘(𝕜, E') f z f')
     (hg : HasMfderivAt I 𝓘(𝕜, E') g z g') : HasMfderivAt I 𝓘(𝕜, E') (f - g) z (f' - g') :=
@@ -1416,10 +1435,81 @@ theorem MdifferentiableAt.sub (hf : MdifferentiableAt I 𝓘(𝕜, E') f z)
   (hf.HasMfderivAt.sub hg.HasMfderivAt).MdifferentiableAt
 #align mdifferentiable_at.sub MdifferentiableAt.sub
 
-theorem Mdifferentiable.sub {f : M → E'} (hf : Mdifferentiable I 𝓘(𝕜, E') f)
+theorem Mdifferentiable.sub (hf : Mdifferentiable I 𝓘(𝕜, E') f)
     (hg : Mdifferentiable I 𝓘(𝕜, E') g) : Mdifferentiable I 𝓘(𝕜, E') (f - g) := fun x =>
   (hf x).sub (hg x)
 #align mdifferentiable.sub Mdifferentiable.sub
+
+theorem mfderiv_sub (hf : MdifferentiableAt I 𝓘(𝕜, E') f z)
+    (hg : MdifferentiableAt I 𝓘(𝕜, E') g z) :
+    (mfderiv I 𝓘(𝕜, E') (f - g) z : TangentSpace I z →L[𝕜] E') =
+      (mfderiv I 𝓘(𝕜, E') f z - mfderiv I 𝓘(𝕜, E') g z : TangentSpace I z →L[𝕜] E') :=
+  (hf.HasMfderivAt.sub hg.HasMfderivAt).mfderiv
+#align mfderiv_sub mfderiv_sub
+
+end Group
+
+section AlgebraOverRing
+
+variable {I} {z : M} {F' : Type _} [NormedRing F'] [NormedAlgebra 𝕜 F'] {p q : M → F'}
+  {p' q' : TangentSpace I z →L[𝕜] F'}
+
+theorem HasMfderivWithinAt.mul' (hp : HasMfderivWithinAt I 𝓘(𝕜, F') p s z p')
+    (hq : HasMfderivWithinAt I 𝓘(𝕜, F') q s z q') :
+    HasMfderivWithinAt I 𝓘(𝕜, F') (p * q) s z (p z • q' + p'.smul_right (q z) : E →L[𝕜] F') :=
+  ⟨hp.1.mul hq.1, by simpa only [mfld_simps] using hp.2.mul' hq.2⟩
+#align has_mfderiv_within_at.mul' HasMfderivWithinAt.mul'
+
+theorem HasMfderivAt.mul' (hp : HasMfderivAt I 𝓘(𝕜, F') p z p')
+    (hq : HasMfderivAt I 𝓘(𝕜, F') q z q') :
+    HasMfderivAt I 𝓘(𝕜, F') (p * q) z (p z • q' + p'.smul_right (q z) : E →L[𝕜] F') :=
+  hasMfderivWithinAt_univ.mp <| hp.HasMfderivWithinAt.mul' hq.HasMfderivWithinAt
+#align has_mfderiv_at.mul' HasMfderivAt.mul'
+
+theorem MdifferentiableWithinAt.mul (hp : MdifferentiableWithinAt I 𝓘(𝕜, F') p s z)
+    (hq : MdifferentiableWithinAt I 𝓘(𝕜, F') q s z) :
+    MdifferentiableWithinAt I 𝓘(𝕜, F') (p * q) s z :=
+  (hp.HasMfderivWithinAt.mul' hq.HasMfderivWithinAt).MdifferentiableWithinAt
+#align mdifferentiable_within_at.mul MdifferentiableWithinAt.mul
+
+theorem MdifferentiableAt.mul (hp : MdifferentiableAt I 𝓘(𝕜, F') p z)
+    (hq : MdifferentiableAt I 𝓘(𝕜, F') q z) : MdifferentiableAt I 𝓘(𝕜, F') (p * q) z :=
+  (hp.HasMfderivAt.mul' hq.HasMfderivAt).MdifferentiableAt
+#align mdifferentiable_at.mul MdifferentiableAt.mul
+
+theorem MdifferentiableOn.mul (hp : MdifferentiableOn I 𝓘(𝕜, F') p s)
+    (hq : MdifferentiableOn I 𝓘(𝕜, F') q s) : MdifferentiableOn I 𝓘(𝕜, F') (p * q) s := fun x hx =>
+  (hp x hx).mul <| hq x hx
+#align mdifferentiable_on.mul MdifferentiableOn.mul
+
+theorem Mdifferentiable.mul (hp : Mdifferentiable I 𝓘(𝕜, F') p)
+    (hq : Mdifferentiable I 𝓘(𝕜, F') q) : Mdifferentiable I 𝓘(𝕜, F') (p * q) := fun x =>
+  (hp x).mul (hq x)
+#align mdifferentiable.mul Mdifferentiable.mul
+
+end AlgebraOverRing
+
+section AlgebraOverCommRing
+
+variable {I} {z : M} {F' : Type _} [NormedCommRing F'] [NormedAlgebra 𝕜 F'] {p q : M → F'}
+  {p' q' : TangentSpace I z →L[𝕜] F'}
+
+theorem HasMfderivWithinAt.mul (hp : HasMfderivWithinAt I 𝓘(𝕜, F') p s z p')
+    (hq : HasMfderivWithinAt I 𝓘(𝕜, F') q s z q') :
+    HasMfderivWithinAt I 𝓘(𝕜, F') (p * q) s z (p z • q' + q z • p' : E →L[𝕜] F') :=
+  by
+  convert hp.mul' hq
+  ext z
+  apply mul_comm
+#align has_mfderiv_within_at.mul HasMfderivWithinAt.mul
+
+theorem HasMfderivAt.mul (hp : HasMfderivAt I 𝓘(𝕜, F') p z p')
+    (hq : HasMfderivAt I 𝓘(𝕜, F') q z q') :
+    HasMfderivAt I 𝓘(𝕜, F') (p * q) z (p z • q' + q z • p' : E →L[𝕜] F') :=
+  hasMfderivWithinAt_univ.mp <| hp.HasMfderivWithinAt.mul hq.HasMfderivWithinAt
+#align has_mfderiv_at.mul HasMfderivAt.mul
+
+end AlgebraOverCommRing
 
 end Arithmetic
 

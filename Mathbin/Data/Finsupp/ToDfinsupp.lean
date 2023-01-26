@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module data.finsupp.to_dfinsupp
-! leanprover-community/mathlib commit e3d9ab8faa9dea8f78155c6c27d62a621f4c152d
+! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -333,7 +333,7 @@ theorem sigmaFinsuppEquivDfinsupp_single [DecidableEq ι] [Zero N] (a : Σi, η 
     classical simp [split_apply, Finsupp.single_apply]
   suffices Finsupp.single (⟨i, a⟩ : Σi, η i) n ⟨j, b⟩ = 0 by simp [split_apply, dif_neg h, this]
   have H : (⟨i, a⟩ : Σi, η i) ≠ ⟨j, b⟩ := by simp [h]
-  rw [Finsupp.single_apply, if_neg H]
+  classical rw [Finsupp.single_apply, if_neg H]
 #align sigma_finsupp_equiv_dfinsupp_single sigmaFinsuppEquivDfinsupp_single
 
 -- Without this Lean fails to find the `add_zero_class` instance on `Π₀ i, (η i →₀ N)`.

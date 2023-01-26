@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module data.pequiv
-! leanprover-community/mathlib commit e3d9ab8faa9dea8f78155c6c27d62a621f4c152d
+! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -68,8 +68,14 @@ variable {α : Type u} {β : Type v} {γ : Type w} {δ : Type x}
 
 open Function Option
 
-instance : CoeFun (α ≃. β) fun _ => α → Option β :=
-  ⟨toFun⟩
+instance funLike : FunLike (α ≃. β) α fun _ => Option β
+    where
+  coe := toFun
+  coe_injective' := by
+    rintro ⟨f₁, f₂, hf⟩ ⟨g₁, g₂, hg⟩ (rfl : f₁ = g₁)
+    congr with (y x)
+    simp only [hf, hg]
+#align pequiv.fun_like PEquiv.funLike
 
 #print PEquiv.coe_mk_apply /-
 @[simp]
@@ -81,27 +87,14 @@ theorem coe_mk_apply (f₁ : α → Option β) (f₂ : β → Option α) (h) (x 
 
 #print PEquiv.ext /-
 @[ext]
-theorem ext : ∀ {f g : α ≃. β} (h : ∀ x, f x = g x), f = g
-  | ⟨f₁, f₂, hf⟩, ⟨g₁, g₂, hg⟩, h =>
-    by
-    have h : f₁ = g₁ := funext h
-    have : ∀ b, f₂ b = g₂ b := by
-      subst h
-      intro b
-      have hf := fun a => hf a b
-      have hg := fun a => hg a b
-      cases' h : g₂ b with a
-      · simp only [h, Option.not_mem_none, false_iff_iff] at hg
-        simp only [hg, iff_false_iff] at hf
-        rwa [Option.eq_none_iff_forall_not_mem]
-      · rw [← Option.mem_def, hf, ← hg, h, Option.mem_def]
-    simp [*, funext_iff]
+theorem ext {f g : α ≃. β} (h : ∀ x, f x = g x) : f = g :=
+  FunLike.ext f g h
 #align pequiv.ext PEquiv.ext
 -/
 
 #print PEquiv.ext_iff /-
 theorem ext_iff {f g : α ≃. β} : f = g ↔ ∀ x, f x = g x :=
-  ⟨congr_fun ∘ congr_arg _, ext⟩
+  FunLike.ext_iff
 #align pequiv.ext_iff PEquiv.ext_iff
 -/
 
@@ -534,7 +527,7 @@ instance : PartialOrder (α ≃. β)
 
 /- warning: pequiv.le_def -> PEquiv.le_def is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : PEquiv.{u1, u2} α β} {g : PEquiv.{u1, u2} α β}, Iff (LE.le.{max u1 u2} (PEquiv.{u1, u2} α β) (Preorder.toLE.{max u1 u2} (PEquiv.{u1, u2} α β) (PartialOrder.toPreorder.{max u1 u2} (PEquiv.{u1, u2} α β) (PEquiv.partialOrder.{u1, u2} α β))) f g) (forall (a : α) (b : β), (Membership.Mem.{u2, u2} β (Option.{u2} β) (Option.hasMem.{u2} β) b (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (PEquiv.{u1, u2} α β) (fun (_x : PEquiv.{u1, u2} α β) => α -> (Option.{u2} β)) (PEquiv.hasCoeToFun.{u1, u2} α β) f a)) -> (Membership.Mem.{u2, u2} β (Option.{u2} β) (Option.hasMem.{u2} β) b (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (PEquiv.{u1, u2} α β) (fun (_x : PEquiv.{u1, u2} α β) => α -> (Option.{u2} β)) (PEquiv.hasCoeToFun.{u1, u2} α β) g a)))
+  forall {α : Type.{u1}} {β : Type.{u2}} {f : PEquiv.{u1, u2} α β} {g : PEquiv.{u1, u2} α β}, Iff (LE.le.{max u1 u2} (PEquiv.{u1, u2} α β) (Preorder.toLE.{max u1 u2} (PEquiv.{u1, u2} α β) (PartialOrder.toPreorder.{max u1 u2} (PEquiv.{u1, u2} α β) (PEquiv.partialOrder.{u1, u2} α β))) f g) (forall (a : α) (b : β), (Membership.Mem.{u2, u2} β (Option.{u2} β) (Option.hasMem.{u2} β) b (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (PEquiv.{u1, u2} α β) (fun (_x : PEquiv.{u1, u2} α β) => α -> (Option.{u2} β)) (FunLike.hasCoeToFun.{max (succ u1) (succ u2), succ u1, succ u2} (PEquiv.{u1, u2} α β) α (fun (_x : α) => Option.{u2} β) (PEquiv.funLike.{u1, u2} α β)) f a)) -> (Membership.Mem.{u2, u2} β (Option.{u2} β) (Option.hasMem.{u2} β) b (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (PEquiv.{u1, u2} α β) (fun (_x : PEquiv.{u1, u2} α β) => α -> (Option.{u2} β)) (FunLike.hasCoeToFun.{max (succ u1) (succ u2), succ u1, succ u2} (PEquiv.{u1, u2} α β) α (fun (_x : α) => Option.{u2} β) (PEquiv.funLike.{u1, u2} α β)) g a)))
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} {f : PEquiv.{u1, u2} α β} {g : PEquiv.{u1, u2} α β}, Iff (LE.le.{max u1 u2} (PEquiv.{u1, u2} α β) (Preorder.toLE.{max u1 u2} (PEquiv.{u1, u2} α β) (PartialOrder.toPreorder.{max u1 u2} (PEquiv.{u1, u2} α β) (PEquiv.instPartialOrderPEquiv.{u1, u2} α β))) f g) (forall (a : α) (b : β), (Membership.mem.{u2, u2} β ((fun (x._@.Mathlib.Data.PEquiv._hyg.723 : α) => Option.{u2} β) a) (Option.instMembershipOption.{u2} β) b (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (PEquiv.{u1, u2} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.PEquiv._hyg.723 : α) => Option.{u2} β) _x) (PEquiv.instFunLikePEquivOption.{u1, u2} α β) f a)) -> (Membership.mem.{u2, u2} β ((fun (x._@.Mathlib.Data.PEquiv._hyg.723 : α) => Option.{u2} β) a) (Option.instMembershipOption.{u2} β) b (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (PEquiv.{u1, u2} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.PEquiv._hyg.723 : α) => Option.{u2} β) _x) (PEquiv.instFunLikePEquivOption.{u1, u2} α β) g a)))
 Case conversion may be inaccurate. Consider using '#align pequiv.le_def PEquiv.le_defₓ'. -/
@@ -621,7 +614,7 @@ theorem toPEquiv_symm (f : α ≃ β) : f.symm.toPequiv = f.toPequiv.symm :=
 
 /- warning: equiv.to_pequiv_apply -> Equiv.toPEquiv_apply is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (f : Equiv.{succ u1, succ u2} α β) (x : α), Eq.{succ u2} (Option.{u2} β) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (PEquiv.{u1, u2} α β) (fun (_x : PEquiv.{u1, u2} α β) => α -> (Option.{u2} β)) (PEquiv.hasCoeToFun.{u1, u2} α β) (Equiv.toPEquiv.{u1, u2} α β f) x) (Option.some.{u2} β (coeFn.{max 1 (max (succ u1) (succ u2)) (succ u2) (succ u1), max (succ u1) (succ u2)} (Equiv.{succ u1, succ u2} α β) (fun (_x : Equiv.{succ u1, succ u2} α β) => α -> β) (Equiv.hasCoeToFun.{succ u1, succ u2} α β) f x))
+  forall {α : Type.{u1}} {β : Type.{u2}} (f : Equiv.{succ u1, succ u2} α β) (x : α), Eq.{succ u2} (Option.{u2} β) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (PEquiv.{u1, u2} α β) (fun (_x : PEquiv.{u1, u2} α β) => α -> (Option.{u2} β)) (FunLike.hasCoeToFun.{max (succ u1) (succ u2), succ u1, succ u2} (PEquiv.{u1, u2} α β) α (fun (_x : α) => Option.{u2} β) (PEquiv.funLike.{u1, u2} α β)) (Equiv.toPEquiv.{u1, u2} α β f) x) (Option.some.{u2} β (coeFn.{max 1 (max (succ u1) (succ u2)) (succ u2) (succ u1), max (succ u1) (succ u2)} (Equiv.{succ u1, succ u2} α β) (fun (_x : Equiv.{succ u1, succ u2} α β) => α -> β) (Equiv.hasCoeToFun.{succ u1, succ u2} α β) f x))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (f : Equiv.{succ u2, succ u1} α β) (x : α), Eq.{succ u1} ((fun (x._@.Mathlib.Data.PEquiv._hyg.723 : α) => Option.{u1} β) x) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (PEquiv.{u2, u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.PEquiv._hyg.723 : α) => Option.{u1} β) _x) (PEquiv.instFunLikePEquivOption.{u2, u1} α β) (Equiv.toPEquiv.{u2, u1} α β f) x) (Option.some.{u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) x) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α β) α β (EquivLike.toEmbeddingLike.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α β) α β (Equiv.instEquivLikeEquiv.{succ u2, succ u1} α β))) f x))
 Case conversion may be inaccurate. Consider using '#align equiv.to_pequiv_apply Equiv.toPEquiv_applyₓ'. -/

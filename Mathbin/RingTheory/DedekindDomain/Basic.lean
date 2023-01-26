@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenji Nakagawa, Anne Baanen, Filippo A. E. Nuccio
 
 ! This file was ported from Lean 3 source module ring_theory.dedekind_domain.basic
-! leanprover-community/mathlib commit e3d9ab8faa9dea8f78155c6c27d62a621f4c152d
+! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -74,6 +74,18 @@ theorem DimensionLeOne.integralClosure [Nontrivial R] [IsDomain A] [Algebra R A]
     (h : DimensionLeOne R) : DimensionLeOne (integralClosure R A) :=
   h.IsIntegralClosure R A (integralClosure R A)
 #align ring.dimension_le_one.integral_closure Ring.DimensionLeOne.integralClosure
+
+variable {R}
+
+theorem DimensionLeOne.not_lt_lt (h : Ring.DimensionLeOne R) (p₀ p₁ p₂ : Ideal R) [hp₁ : p₁.IsPrime]
+    [hp₂ : p₂.IsPrime] : ¬(p₀ < p₁ ∧ p₁ < p₂)
+  | ⟨h01, h12⟩ => h12.Ne ((h p₁ (bot_le.trans_lt h01).ne' hp₁).eq_of_le hp₂.ne_top h12.le)
+#align ring.dimension_le_one.not_lt_lt Ring.DimensionLeOne.not_lt_lt
+
+theorem DimensionLeOne.eq_bot_of_lt (h : Ring.DimensionLeOne R) (p P : Ideal R) [hp : p.IsPrime]
+    [hP : P.IsPrime] (hpP : p < P) : p = ⊥ :=
+  by_contra fun hp0 => h.not_lt_lt ⊥ p P ⟨Ne.bot_lt hp0, hpP⟩
+#align ring.dimension_le_one.eq_bot_of_lt Ring.DimensionLeOne.eq_bot_of_lt
 
 end Ring
 

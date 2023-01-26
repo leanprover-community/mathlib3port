@@ -18,7 +18,7 @@ As (non-exhaustive) examples, these includes things like:
 * order.complete_lattice
 
 ! This file was ported from Lean 3 source module tactic.default
-! leanprover-community/mathlib commit e3d9ab8faa9dea8f78155c6c27d62a621f4c152d
+! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

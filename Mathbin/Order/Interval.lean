@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.interval
-! leanprover-community/mathlib commit e3d9ab8faa9dea8f78155c6c27d62a621f4c152d
+! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -697,7 +697,8 @@ noncomputable instance [@DecidableRel α (· ≤ ·)] : CompleteLattice (Interva
                 s.fst_le_snd.trans (WithBot.coe_le_coe.1 <| ha _ hc).2 }
 
 @[simp, norm_cast]
-theorem coe_infₛ (S : Set (Interval α)) : ↑(infₛ S) = ⋂ s ∈ S, (s : Set α) :=
+theorem coe_infₛ [@DecidableRel α (· ≤ ·)] (S : Set (Interval α)) :
+    ↑(infₛ S) = ⋂ s ∈ S, (s : Set α) :=
   by
   change coe (dite _ _ _) = _
   split_ifs
@@ -714,14 +715,15 @@ theorem coe_infₛ (S : Set (Interval α)) : ↑(infₛ S) = ⋂ s ∈ S, (s : S
 #align interval.coe_Inf Interval.coe_infₛ
 
 @[simp, norm_cast]
-theorem coe_infᵢ (f : ι → Interval α) : ↑(⨅ i, f i) = ⋂ i, (f i : Set α) := by simp [infᵢ]
+theorem coe_infᵢ [@DecidableRel α (· ≤ ·)] (f : ι → Interval α) :
+    ↑(⨅ i, f i) = ⋂ i, (f i : Set α) := by simp [infᵢ]
 #align interval.coe_infi Interval.coe_infᵢ
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp, norm_cast]
-theorem coe_infi₂ (f : ∀ i, κ i → Interval α) : ↑(⨅ (i) (j), f i j) = ⋂ (i) (j), (f i j : Set α) :=
-  by simp_rw [coe_infi]
+theorem coe_infi₂ [@DecidableRel α (· ≤ ·)] (f : ∀ i, κ i → Interval α) :
+    ↑(⨅ (i) (j), f i j) = ⋂ (i) (j), (f i j : Set α) := by simp_rw [coe_infi]
 #align interval.coe_infi₂ Interval.coe_infi₂
 
 end CompleteLattice

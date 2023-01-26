@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Junyan Xu
 
 ! This file was ported from Lean 3 source module order.game_add
-! leanprover-community/mathlib commit e3d9ab8faa9dea8f78155c6c27d62a621f4c152d
+! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -30,7 +30,6 @@ subsequency relation on the addition of combinatorial games.
 
 ## Todo
 
-- Add custom `induction` and `fix` lemmas.
 - Define `sym2.game_add`.
 -/
 
@@ -54,17 +53,37 @@ inductive GameAdd : α × β → α × β → Prop
 #align prod.game_add Prod.GameAdd
 -/
 
+theorem gameAdd_iff {rα rβ} {x y : α × β} :
+    GameAdd rα rβ x y ↔ rα x.1 y.1 ∧ x.2 = y.2 ∨ rβ x.2 y.2 ∧ x.1 = y.1 :=
+  by
+  constructor
+  · rintro (@⟨a₁, a₂, b, h⟩ | @⟨a, b₁, b₂, h⟩)
+    exacts[Or.inl ⟨h, rfl⟩, Or.inr ⟨h, rfl⟩]
+  · revert x y
+    rintro ⟨a₁, b₁⟩ ⟨a₂, b₂⟩ (⟨h, rfl : b₁ = b₂⟩ | ⟨h, rfl : a₁ = a₂⟩)
+    exacts[game_add.fst h, game_add.snd h]
+#align prod.game_add_iff Prod.gameAdd_iff
+
+theorem gameAdd_mk_iff {rα rβ} {a₁ a₂ : α} {b₁ b₂ : β} :
+    GameAdd rα rβ (a₁, b₁) (a₂, b₂) ↔ rα a₁ a₂ ∧ b₁ = b₂ ∨ rβ b₁ b₂ ∧ a₁ = a₂ :=
+  game_add_iff
+#align prod.game_add_mk_iff Prod.gameAdd_mk_iff
+
+@[simp]
+theorem gameAdd_swap_swap : ∀ a b : α × β, GameAdd rβ rα a.swap b.swap ↔ GameAdd rα rβ a b :=
+  fun ⟨a₁, b₁⟩ ⟨a₂, b₂⟩ => by rw [Prod.swap, game_add_mk_iff, game_add_mk_iff, or_comm']
+#align prod.game_add_swap_swap Prod.gameAdd_swap_swap
+
 #print Prod.gameAdd_le_lex /-
-/-- `game_add` is a `subrelation` of `prod.lex`. -/
+/-- `prod.game_add` is a `subrelation` of `prod.lex`. -/
 theorem gameAdd_le_lex : GameAdd rα rβ ≤ Prod.Lex rα rβ := fun _ _ h =>
   h.rec (fun _ _ b => Prod.Lex.left b b) fun a _ _ => Prod.Lex.right a
 #align prod.game_add_le_lex Prod.gameAdd_le_lex
 -/
 
 #print Prod.rprod_le_transGen_gameAdd /-
-/-- `prod.rprod` is a subrelation of the transitive closure of `game_add`. -/
-theorem rprod_le_transGen_gameAdd : Prod.RProd rα rβ ≤ Relation.TransGen (GameAdd rα rβ) :=
-  fun _ _ h =>
+/-- `prod.rprod` is a subrelation of the transitive closure of `prod.game_add`. -/
+theorem rprod_le_transGen_gameAdd : RProd rα rβ ≤ Relation.TransGen (GameAdd rα rβ) := fun _ _ h =>
   h.rec
     (by
       intro _ _ _ _ hα hβ
@@ -107,4 +126,36 @@ theorem WellFounded.prod_gameAdd (hα : WellFounded rα) (hβ : WellFounded rβ)
     WellFounded (Prod.GameAdd rα rβ) :=
   ⟨fun ⟨a, b⟩ => (hα.apply a).prod_game_add (hβ.apply b)⟩
 #align well_founded.prod_game_add WellFounded.prod_gameAdd
+
+namespace Prod
+
+/-- Recursion on the well-founded `prod.game_add` relation.
+
+  Note that it's strictly more general to recurse on the lexicographic order instead. -/
+def GameAdd.fix {C : α → β → Sort _} (hα : WellFounded rα) (hβ : WellFounded rβ)
+    (IH : ∀ a₁ b₁, (∀ a₂ b₂, GameAdd rα rβ (a₂, b₂) (a₁, b₁) → C a₂ b₂) → C a₁ b₁) (a : α) (b : β) :
+    C a b :=
+  @WellFounded.fix (α × β) (fun x => C x.1 x.2) _ (hα.prod_game_add hβ)
+    (fun ⟨x₁, x₂⟩ IH' => IH x₁ x₂ fun a' b' => IH' ⟨a', b'⟩) ⟨a, b⟩
+#align prod.game_add.fix Prod.GameAdd.fix
+
+theorem GameAdd.fix_eq {C : α → β → Sort _} (hα : WellFounded rα) (hβ : WellFounded rβ)
+    (IH : ∀ a₁ b₁, (∀ a₂ b₂, GameAdd rα rβ (a₂, b₂) (a₁, b₁) → C a₂ b₂) → C a₁ b₁) (a : α) (b : β) :
+    GameAdd.fix hα hβ IH a b = IH a b fun a' b' h => GameAdd.fix hα hβ IH a' b' :=
+  by
+  rw [game_add.fix, WellFounded.fix_eq]
+  rfl
+#align prod.game_add.fix_eq Prod.GameAdd.fix_eq
+
+/-- Induction on the well-founded `prod.game_add` relation.
+
+  Note that it's strictly more general to induct on the lexicographic order instead. -/
+theorem GameAdd.induction {C : α → β → Prop} :
+    WellFounded rα →
+      WellFounded rβ →
+        (∀ a₁ b₁, (∀ a₂ b₂, GameAdd rα rβ (a₂, b₂) (a₁, b₁) → C a₂ b₂) → C a₁ b₁) → ∀ a b, C a b :=
+  game_add.fix
+#align prod.game_add.induction Prod.GameAdd.induction
+
+end Prod
 

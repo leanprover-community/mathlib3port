@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Fox Thomson, Yaël Dillies
 
 ! This file was ported from Lean 3 source module computability.epsilon_NFA
-! leanprover-community/mathlib commit e3d9ab8faa9dea8f78155c6c27d62a621f4c152d
+! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,7 @@ import Mathbin.Computability.NFA
 
 /-!
 # Epsilon Nondeterministic Finite Automata
+
 This file contains the definition of an epsilon Nondeterministic Finite Automaton (`ε_NFA`), a state
 machine which determines whether a string (implemented as a list over an arbitrary alphabet) is in a
 regular set by evaluating the string over every possible path, also having access to ε-transitons,
@@ -22,6 +23,8 @@ supplied for true `ε_NFA`'s.
 
 
 open Set
+
+open Computability
 
 universe u v
 
@@ -165,8 +168,7 @@ theorem pumping_lemma [Fintype σ] {x : List α} (hx : x ∈ M.accepts)
     (hlen : Fintype.card (Set σ) ≤ List.length x) :
     ∃ a b c,
       x = a ++ b ++ c ∧
-        a.length + b.length ≤ Fintype.card (Set σ) ∧
-          b ≠ [] ∧ {a} * Language.star {b} * {c} ≤ M.accepts :=
+        a.length + b.length ≤ Fintype.card (Set σ) ∧ b ≠ [] ∧ {a} * {b}∗ * {c} ≤ M.accepts :=
   by
   rw [← to_NFA_correct] at hx⊢
   exact M.to_NFA.pumping_lemma hx hlen

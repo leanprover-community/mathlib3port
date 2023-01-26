@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.continuous_on
-! leanprover-community/mathlib commit e3d9ab8faa9dea8f78155c6c27d62a621f4c152d
+! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -713,11 +713,6 @@ theorem nhdsWithin_le_comap {x : α} {s : Set α} {f : α → β} (ctsf : Contin
 theorem comap_nhdsWithin_range {α} (f : α → β) (y : β) : comap f (𝓝[range f] y) = comap f (𝓝 y) :=
   comap_inf_principal_range
 #align comap_nhds_within_range comap_nhdsWithin_range
-
-theorem continuousWithinAt_iff_ptendsto_res (f : α → β) {x : α} {s : Set α} :
-    ContinuousWithinAt f s x ↔ Ptendsto (Pfun.res f s) (𝓝 x) (𝓝 (f x)) :=
-  tendsto_iff_ptendsto _ _ _ _
-#align continuous_within_at_iff_ptendsto_res continuousWithinAt_iff_ptendsto_res
 
 theorem continuous_iff_continuousOn_univ {f : α → β} : Continuous f ↔ ContinuousOn f univ := by
   simp [continuous_iff_continuousAt, ContinuousOn, ContinuousAt, ContinuousWithinAt,

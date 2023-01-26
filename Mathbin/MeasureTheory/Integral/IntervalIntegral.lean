@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov, Patrick Massot, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.integral.interval_integral
-! leanprover-community/mathlib commit e3d9ab8faa9dea8f78155c6c27d62a621f4c152d
+! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1444,16 +1444,29 @@ theorem integral_pos_iff_support_of_nonneg_ae (hf : 0 ≤ᵐ[μ] f) (hfi : Inter
   integral_pos_iff_support_of_nonneg_ae' (ae_mono Measure.restrict_le_self hf) hfi
 #align interval_integral.integral_pos_iff_support_of_nonneg_ae intervalIntegral.integral_pos_iff_support_of_nonneg_ae
 
-/-- If `f : ℝ → ℝ` is strictly positive and integrable on `(a, b]` for real numbers `a < b`, then
-its integral over `a..b` is strictly positive. -/
-theorem intervalIntegral_pos_of_pos {f : ℝ → ℝ} {a b : ℝ}
-    (hfi : IntervalIntegrable f MeasureSpace.volume a b) (h : ∀ x, 0 < f x) (hab : a < b) :
-    0 < ∫ x in a..b, f x :=
+/-- If `f : ℝ → ℝ` is integrable on `(a, b]` for real numbers `a < b`, and positive on the interior
+of the interval, then its integral over `a..b` is strictly positive. -/
+theorem intervalIntegral_pos_of_pos_on {f : ℝ → ℝ} {a b : ℝ} (hfi : IntervalIntegrable f volume a b)
+    (hpos : ∀ x : ℝ, x ∈ Ioo a b → 0 < f x) (hab : a < b) : 0 < ∫ x : ℝ in a..b, f x :=
   by
-  have hsupp : support f = univ := eq_univ_iff_forall.mpr fun t => (h t).Ne.symm
-  replace h₀ : 0 ≤ᵐ[volume] f := eventually_of_forall fun x => (h x).le
-  rw [integral_pos_iff_support_of_nonneg_ae h₀ hfi]
-  exact ⟨hab, by simp [hsupp, hab]⟩
+  have hsupp : Ioo a b ⊆ support f ∩ Ioc a b := fun x hx =>
+    ⟨mem_support.mpr (hpos x hx).ne', Ioo_subset_Ioc_self hx⟩
+  have h₀ : 0 ≤ᵐ[volume.restrict (uIoc a b)] f :=
+    by
+    rw [eventually_le, uIoc_of_le hab.le]
+    refine' ae_restrict_of_ae_eq_of_ae_restrict Ioo_ae_eq_Ioc _
+    exact (ae_restrict_iff' measurableSet_ioo).mpr (ae_of_all _ fun x hx => (hpos x hx).le)
+  rw [integral_pos_iff_support_of_nonneg_ae' h₀ hfi]
+  exact ⟨hab, ((measure.measure_Ioo_pos _).mpr hab).trans_le (measure_mono hsupp)⟩
+#align interval_integral.interval_integral_pos_of_pos_on intervalIntegral.intervalIntegral_pos_of_pos_on
+
+/-- If `f : ℝ → ℝ` is strictly positive everywhere, and integrable on `(a, b]` for real numbers
+`a < b`, then its integral over `a..b` is strictly positive. (See `interval_integral_pos_of_pos_on`
+for a version only assuming positivity of `f` on `(a, b)` rather than everywhere.) -/
+theorem intervalIntegral_pos_of_pos {f : ℝ → ℝ} {a b : ℝ}
+    (hfi : IntervalIntegrable f MeasureSpace.volume a b) (hpos : ∀ x, 0 < f x) (hab : a < b) :
+    0 < ∫ x in a..b, f x :=
+  intervalIntegral_pos_of_pos_on hfi (fun x hx => hpos x) hab
 #align interval_integral.interval_integral_pos_of_pos intervalIntegral.intervalIntegral_pos_of_pos
 
 /-- If `f` and `g` are two functions that are interval integrable on `a..b`, `a ≤ b`,

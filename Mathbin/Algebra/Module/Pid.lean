@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Pierre-Alexandre Bazin
 
 ! This file was ported from Lean 3 source module algebra.module.pid
-! leanprover-community/mathlib commit e3d9ab8faa9dea8f78155c6c27d62a621f4c152d
+! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -268,15 +268,16 @@ theorem equiv_directSum_of_isTorsion [h' : Module.Finite R N] (hN : Module.IsTor
     exact fun i =>
       torsion_by_prime_power_decomposition (hp i)
         ((is_torsion'_powers_iff <| p i).mpr fun x => ⟨e i, smul_torsion_by _ _⟩)
-  refine'
-    ⟨Σi, Fin (this i).some, inferInstance, fun ⟨i, j⟩ => p i, fun ⟨i, j⟩ => hp i, fun ⟨i, j⟩ =>
-      (this i).some_spec.some j,
-      ⟨(LinearEquiv.ofBijective (DirectSum.coeLinearMap _) h).symm.trans <|
-          (Dfinsupp.mapRange.linearEquiv fun i => (this i).some_spec.some_spec.some).trans <|
-            (DirectSum.sigmaLcurryEquiv R).symm.trans
-              (Dfinsupp.mapRange.linearEquiv fun i => quot_equiv_of_eq _ _ _)⟩⟩
-  cases' i with i j
-  simp only
+  classical
+    refine'
+      ⟨Σi, Fin (this i).some, inferInstance, fun ⟨i, j⟩ => p i, fun ⟨i, j⟩ => hp i, fun ⟨i, j⟩ =>
+        (this i).some_spec.some j,
+        ⟨(LinearEquiv.ofBijective (DirectSum.coeLinearMap _) h).symm.trans <|
+            (Dfinsupp.mapRange.linearEquiv fun i => (this i).some_spec.some_spec.some).trans <|
+              (DirectSum.sigmaLcurryEquiv R).symm.trans
+                (Dfinsupp.mapRange.linearEquiv fun i => quot_equiv_of_eq _ _ _)⟩⟩
+    cases' i with i j
+    simp only
 #align module.equiv_direct_sum_of_is_torsion Module.equiv_directSum_of_isTorsion
 
 /-- **Structure theorem of finitely generated modules over a PID** : A finitely generated

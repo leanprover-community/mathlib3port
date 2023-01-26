@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.uniform_space.compact
-! leanprover-community/mathlib commit e3d9ab8faa9dea8f78155c6c27d62a621f4c152d
+! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -84,6 +84,7 @@ theorem unique_uniformity_of_compact [t : TopologicalSpace γ] [CompactSpace γ]
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr is_open.union, ",", expr is_open.prod, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -91,23 +92,16 @@ theorem unique_uniformity_of_compact [t : TopologicalSpace γ] [CompactSpace γ]
 /-- The unique uniform structure inducing a given compact topological structure. -/
 def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ] : UniformSpace γ
     where
-  uniformity := ⨆ x, 𝓝 (x, x)
-  refl := by
-    simp_rw [Filter.principal_le_iff, mem_supr]
-    rintro V V_in ⟨x, _⟩ ⟨⟩
-    exact mem_of_mem_nhds (V_in x)
-  symm := by
-    refine' le_of_eq _
-    rw [Filter.map_supᵢ]
-    congr with x : 1
-    erw [nhds_prod_eq, ← prod_comm]
+  uniformity := 𝓝ˢ (diagonal γ)
+  refl := principal_le_nhdsSet
+  symm := continuous_swap.tendsto_nhds_set fun x => Eq.symm
   comp :=
     by
     /-
-        This is the difficult part of the proof. We need to prove that, for each neighborhood W
-        of the diagonal Δ, W ○ W is still a neighborhood of the diagonal.
+        This is the difficult part of the proof. We need to prove that, for each neighborhood `W`
+        of the diagonal `Δ`, there exists a smaller neighborhood `V` such that `V ○ V ⊆ W`.
         -/
-    set 𝓝Δ := ⨆ x : γ, 𝓝 (x, x)
+    set 𝓝Δ := 𝓝ˢ (diagonal γ)
     -- The filter of neighborhoods of Δ
     set F := 𝓝Δ.lift' fun s : Set (γ × γ) => s ○ s
     -- Compositions of neighborhoods of Δ
@@ -125,16 +119,8 @@ def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ]
       by
       have : (x, y) ∈ closure (Vᶜ) := by rwa [mem_closure_iff_clusterPt]
       rwa [closure_compl] at this
-    have diag_subset : diagonal γ ⊆ interior V :=
-      by
-      rw [subset_interior_iff_nhds]
-      rintro ⟨x, x⟩ ⟨⟩
-      exact (mem_supr.mp V_in : _) x
-    have x_ne_y : x ≠ y := by
-      intro h
-      apply this
-      apply diag_subset
-      simp [h]
+    have diag_subset : diagonal γ ⊆ interior V := subset_interior_iff_mem_nhdsSet.2 V_in
+    have x_ne_y : x ≠ y := mt (@diag_subset (x, y)) this
     -- Since γ is compact and Hausdorff, it is normal, hence T₃.
     haveI : NormalSpace γ := normalOfCompactT2
     -- So there are closed neighboords V₁ and V₂ of x and y contained in disjoint open neighborhoods
@@ -145,19 +131,17 @@ def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ]
     -- We set U₃ := (V₁ ∪ V₂)ᶜ so that W := U₁ ×ˢ U₁ ∪ U₂ ×ˢ U₂ ∪ U₃ ×ˢ U₃ is an open
     -- neighborhood of Δ.
     let U₃ := (V₁ ∪ V₂)ᶜ
-    have U₃_op : IsOpen U₃ := is_open_compl_iff.mpr (IsClosed.union V₁_cl V₂_cl)
+    have U₃_op : IsOpen U₃ := (V₁_cl.union V₂_cl).is_open_compl
     let W := U₁ ×ˢ U₁ ∪ U₂ ×ˢ U₂ ∪ U₃ ×ˢ U₃
     have W_in : W ∈ 𝓝Δ := by
-      rw [mem_supr]
-      intro x
-      apply IsOpen.mem_nhds (IsOpen.union (IsOpen.union _ _) _)
-      · by_cases hx : x ∈ V₁ ∪ V₂
-        · left
-          cases' hx with hx hx <;> [left, right] <;> constructor <;> tauto
-        · right
-          rw [mem_prod]
-          tauto
-      all_goals simp only [IsOpen.prod, *]
+      rw [mem_nhdsSet_iff_forall]
+      rintro ⟨z, z'⟩ (rfl : z = z')
+      refine' IsOpen.mem_nhds _ _
+      ·
+        trace
+          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr is_open.union, \",\", expr is_open.prod, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+      · simp only [mem_union, mem_prod, and_self_iff]
+        exact (em _).imp_left fun h => union_subset_union VU₁ VU₂ h
     -- So W ○ W ∈ F by definition of F
     have : W ○ W ∈ F := by simpa only using mem_lift' W_in
     -- And V₁ ×ˢ V₂ ∈ 𝓝 (x, y)
@@ -182,19 +166,16 @@ def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ]
     by
     -- Here we need to prove the topology induced by the constructed uniformity is the
     -- topology we started with.
-    suffices ∀ x : γ, Filter.comap (Prod.mk x) (⨆ y, 𝓝 (y, y)) = 𝓝 x
+    suffices ∀ x : γ, Filter.comap (Prod.mk x) (𝓝ˢ (diagonal γ)) = 𝓝 x
       by
       intro s
-      change IsOpen s ↔ _
-      simp_rw [isOpen_iff_mem_nhds, nhds_eq_comap_uniformity_aux, this]
+      simp_rw [isOpen_fold, isOpen_iff_mem_nhds, ← mem_comap_prod_mk, this]
     intro x
-    simp_rw [comap_supr, nhds_prod_eq, comap_prod,
-      show Prod.fst ∘ Prod.mk x = fun y : γ => x by ext <;> simp,
-      show Prod.snd ∘ Prod.mk x = (id : γ → γ) by ext <;> rfl, comap_id]
+    simp_rw [nhdsSet_diagonal, comap_supr, nhds_prod_eq, comap_prod, (· ∘ ·), comap_id']
     rw [supᵢ_split_single _ x, comap_const_of_mem fun V => mem_of_mem_nhds]
     suffices ∀ (y) (_ : y ≠ x), comap (fun y : γ => x) (𝓝 y) ⊓ 𝓝 y ≤ 𝓝 x by simpa
     intro y hxy
-    simp [comap_const_of_not_mem (compl_singleton_mem_nhds hxy) (by simp)]
+    simp [comap_const_of_not_mem (compl_singleton_mem_nhds hxy) (not_not.2 rfl)]
 #align uniform_space_of_compact_t2 uniformSpaceOfCompactT2
 
 /-!
@@ -206,13 +187,9 @@ def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ]
 continuous. -/
 theorem CompactSpace.uniformContinuous_of_continuous [CompactSpace α] {f : α → β}
     (h : Continuous f) : UniformContinuous f :=
-  calc
-    map (Prod.map f f) (𝓤 α) = map (Prod.map f f) (⨆ x, 𝓝 (x, x)) := by rw [compactSpace_uniformity]
-    _ = ⨆ x, map (Prod.map f f) (𝓝 (x, x)) := by rw [Filter.map_supᵢ]
-    _ ≤ ⨆ x, 𝓝 (f x, f x) := supᵢ_mono fun x => (h.prod_map h).ContinuousAt
-    _ ≤ ⨆ y, 𝓝 (y, y) := supᵢ_comp_le (fun y => 𝓝 (y, y)) f
-    _ ≤ 𝓤 β := supᵢ_nhds_le_uniformity
-    
+  have : Tendsto (Prod.map f f) (𝓝ˢ (diagonal α)) (𝓝ˢ (diagonal β)) :=
+    (h.prod_map h).tendsto_nhds_set mapsTo_prod_map_diagonal
+  (this.mono_left nhdsSet_diagonal_eq_uniformity.ge).mono_right nhdsSet_diagonal_le_uniformity
 #align compact_space.uniform_continuous_of_continuous CompactSpace.uniformContinuous_of_continuous
 
 /-- Heine-Cantor: a continuous function on a compact set of a uniform space is uniformly

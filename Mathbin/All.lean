@@ -315,6 +315,7 @@ import Mathbin.Algebra.Order.Hom.Monoid
 import Mathbin.Algebra.Order.Hom.Ring
 import Mathbin.Algebra.Order.Interval
 import Mathbin.Algebra.Order.Invertible
+import Mathbin.Algebra.Order.Kleene
 import Mathbin.Algebra.Order.LatticeGroup
 import Mathbin.Algebra.Order.Module
 import Mathbin.Algebra.Order.Monoid.Basic
@@ -559,6 +560,7 @@ import Mathbin.Analysis.Complex.UpperHalfPlane.Basic
 import Mathbin.Analysis.Complex.UpperHalfPlane.FunctionsBoundedAtInfty
 import Mathbin.Analysis.Complex.UpperHalfPlane.Metric
 import Mathbin.Analysis.Complex.UpperHalfPlane.Topology
+import Mathbin.Analysis.ConstantSpeed
 import Mathbin.Analysis.Convex.Basic
 import Mathbin.Analysis.Convex.Between
 import Mathbin.Analysis.Convex.Body
@@ -2993,6 +2995,7 @@ import Mathbin.Topology.Order.Lattice
 import Mathbin.Topology.Order.LowerTopology
 import Mathbin.Topology.Order.Priestley
 import Mathbin.Topology.Paracompact
+import Mathbin.Topology.Partial
 import Mathbin.Topology.PartitionOfUnity
 import Mathbin.Topology.PathConnected
 import Mathbin.Topology.Perfect

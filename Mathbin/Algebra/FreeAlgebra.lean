@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Adam Topaz
 
 ! This file was ported from Lean 3 source module algebra.free_algebra
-! leanprover-community/mathlib commit e3d9ab8faa9dea8f78155c6c27d62a621f4c152d
+! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -444,13 +444,13 @@ theorem algebraMap_eq_one_iff (x : R) : algebraMap R (FreeAlgebra R X) x = 1 ↔
 -- this proof is copied from the approach in `free_abelian_group.of_injective`
 theorem ι_injective [Nontrivial R] : Function.Injective (ι R : X → FreeAlgebra R X) :=
   fun x y hoxy =>
-  by_contradiction fun hxy : x ≠ y =>
-    let f : FreeAlgebra R X →ₐ[R] R :=
-      lift R fun z => by classical exact if x = z then (1 : R) else 0
-    have hfx1 : f (ι R x) = 1 := (lift_ι_apply _ _).trans <| if_pos rfl
-    have hfy1 : f (ι R y) = 1 := hoxy ▸ hfx1
-    have hfy0 : f (ι R y) = 0 := (lift_ι_apply _ _).trans <| if_neg hxy
-    one_neZero <| hfy1.symm.trans hfy0
+  by_contradiction <| by
+    classical exact fun hxy : x ≠ y =>
+        let f : FreeAlgebra R X →ₐ[R] R := lift R fun z => if x = z then (1 : R) else 0
+        have hfx1 : f (ι R x) = 1 := (lift_ι_apply _ _).trans <| if_pos rfl
+        have hfy1 : f (ι R y) = 1 := hoxy ▸ hfx1
+        have hfy0 : f (ι R y) = 0 := (lift_ι_apply _ _).trans <| if_neg hxy
+        one_neZero <| hfy1.symm.trans hfy0
 #align free_algebra.ι_injective FreeAlgebra.ι_injective
 
 @[simp]

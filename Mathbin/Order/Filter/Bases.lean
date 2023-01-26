@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Johannes Hölzl, Mario Carneiro, Patrick Massot
 
 ! This file was ported from Lean 3 source module order.filter.bases
-! leanprover-community/mathlib commit e3d9ab8faa9dea8f78155c6c27d62a621f4c152d
+! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Order.Filter.Prod
 
 /-!
 # Filter bases
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 A filter basis `B : filter_basis α` on a type `α` is a nonempty collection of sets of `α`
 such that the intersection of two elements of this collection contains some element of
@@ -612,10 +615,16 @@ theorem hasBasis_self {l : Filter α} {P : Set α → Prop} :
       ⟨fun h => h.1, fun h => ⟨h, fun ⟨t, hl, hP, hts⟩ => mem_of_superset hl hts⟩⟩
 #align filter.has_basis_self Filter.hasBasis_self
 
-theorem HasBasis.comp_of_surjective (h : l.HasBasis p s) {g : ι' → ι} (hg : Function.Surjective g) :
+/- warning: filter.has_basis.comp_surjective -> Filter.HasBasis.comp_surjective is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {ι : Sort.{u2}} {ι' : Sort.{u3}} {l : Filter.{u1} α} {p : ι -> Prop} {s : ι -> (Set.{u1} α)}, (Filter.HasBasis.{u1, u2} α ι l p s) -> (forall {g : ι' -> ι}, (Function.Surjective.{u3, u2} ι' ι g) -> (Filter.HasBasis.{u1, u3} α ι' l (Function.comp.{u3, u2, 1} ι' ι Prop p g) (Function.comp.{u3, u2, succ u1} ι' ι (Set.{u1} α) s g)))
+but is expected to have type
+  forall {α : Type.{u3}} {ι : Sort.{u2}} {ι' : Sort.{u1}} {l : Filter.{u3} α} {p : ι -> Prop} {s : ι -> (Set.{u3} α)}, (Filter.HasBasis.{u3, u2} α ι l p s) -> (forall {g : ι' -> ι}, (Function.Surjective.{u1, u2} ι' ι g) -> (Filter.HasBasis.{u3, u1} α ι' l (Function.comp.{u1, u2, 1} ι' ι Prop p g) (Function.comp.{u1, u2, succ u3} ι' ι (Set.{u3} α) s g)))
+Case conversion may be inaccurate. Consider using '#align filter.has_basis.comp_surjective Filter.HasBasis.comp_surjectiveₓ'. -/
+theorem HasBasis.comp_surjective (h : l.HasBasis p s) {g : ι' → ι} (hg : Function.Surjective g) :
     l.HasBasis (p ∘ g) (s ∘ g) :=
   ⟨fun t => h.mem_iff.trans hg.exists⟩
-#align filter.has_basis.comp_of_surjective Filter.HasBasis.comp_of_surjective
+#align filter.has_basis.comp_surjective Filter.HasBasis.comp_surjective
 
 /- warning: filter.has_basis.comp_equiv -> Filter.HasBasis.comp_equiv is a dubious translation:
 lean 3 declaration is
@@ -624,7 +633,7 @@ but is expected to have type
   forall {α : Type.{u3}} {ι : Sort.{u2}} {ι' : Sort.{u1}} {l : Filter.{u3} α} {p : ι -> Prop} {s : ι -> (Set.{u3} α)}, (Filter.HasBasis.{u3, u2} α ι l p s) -> (forall (e : Equiv.{u1, u2} ι' ι), Filter.HasBasis.{u3, u1} α ι' l (Function.comp.{u1, u2, 1} ι' ι Prop p (FunLike.coe.{max (max 1 u2) u1, u1, u2} (Equiv.{u1, u2} ι' ι) ι' (fun (_x : ι') => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : ι') => ι) _x) (EmbeddingLike.toFunLike.{max (max 1 u2) u1, u1, u2} (Equiv.{u1, u2} ι' ι) ι' ι (EquivLike.toEmbeddingLike.{max (max 1 u2) u1, u1, u2} (Equiv.{u1, u2} ι' ι) ι' ι (Equiv.instEquivLikeEquiv.{u1, u2} ι' ι))) e)) (Function.comp.{u1, u2, succ u3} ι' ι (Set.{u3} α) s (FunLike.coe.{max (max 1 u2) u1, u1, u2} (Equiv.{u1, u2} ι' ι) ι' (fun (_x : ι') => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : ι') => ι) _x) (EmbeddingLike.toFunLike.{max (max 1 u2) u1, u1, u2} (Equiv.{u1, u2} ι' ι) ι' ι (EquivLike.toEmbeddingLike.{max (max 1 u2) u1, u1, u2} (Equiv.{u1, u2} ι' ι) ι' ι (Equiv.instEquivLikeEquiv.{u1, u2} ι' ι))) e)))
 Case conversion may be inaccurate. Consider using '#align filter.has_basis.comp_equiv Filter.HasBasis.comp_equivₓ'. -/
 theorem HasBasis.comp_equiv (h : l.HasBasis p s) (e : ι' ≃ ι) : l.HasBasis (p ∘ e) (s ∘ e) :=
-  h.comp_of_surjective e.Surjective
+  h.comp_surjective e.Surjective
 #align filter.has_basis.comp_equiv Filter.HasBasis.comp_equiv
 
 /- warning: filter.has_basis.restrict -> Filter.HasBasis.restrict is a dubious translation:

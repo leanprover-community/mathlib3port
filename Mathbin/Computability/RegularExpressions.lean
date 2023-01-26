@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Fox Thomson
 
 ! This file was ported from Lean 3 source module computability.regular_expressions
-! leanprover-community/mathlib commit e3d9ab8faa9dea8f78155c6c27d62a621f4c152d
+! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -26,6 +26,8 @@ computer science such as the POSIX standard.
 
 
 open List Set
+
+open Computability
 
 universe u
 
@@ -101,7 +103,7 @@ def matches : RegularExpression α → Language α
   | Char a => {[a]}
   | P + Q => P.matches + Q.matches
   | P * Q => P.matches * Q.matches
-  | star P => P.matches.star
+  | star P => P.matches∗
 #align regular_expression.matches RegularExpression.matches
 
 @[simp]
@@ -136,7 +138,7 @@ theorem matches_pow (P : RegularExpression α) : ∀ n : ℕ, (P ^ n).matches = 
 #align regular_expression.matches_pow RegularExpression.matches_pow
 
 @[simp]
-theorem matches_star (P : RegularExpression α) : P.star.matches = P.matches.star :=
+theorem matches_star (P : RegularExpression α) : P.star.matches = P.matches∗ :=
   rfl
 #align regular_expression.matches_star RegularExpression.matches_star
 
@@ -378,7 +380,7 @@ theorem rmatch_iff_matches (P : RegularExpression α) : ∀ x : List α, P.rmatc
       rw [← ih₂] at hmatch₂
       exact ⟨x, y, hsum.symm, hmatch₁, hmatch₂⟩
   case star _ ih =>
-    rw [star_rmatch_iff, Language.star_def_nonempty]
+    rw [star_rmatch_iff, Language.kstar_def_nonempty]
     constructor
     all_goals
       rintro ⟨S, hx, hS⟩
@@ -451,7 +453,7 @@ theorem matches_map (f : α → β) :
   | R * S => by simp only [matches_map, map, matches_mul, map_mul]
   | star R => by
     simp_rw [map, matches, matches_map]
-    rw [Language.star_eq_supᵢ_pow, Language.star_eq_supᵢ_pow]
+    rw [Language.kstar_eq_supᵢ_pow, Language.kstar_eq_supᵢ_pow]
     simp_rw [← map_pow]
     exact image_Union.symm
 #align regular_expression.matches_map RegularExpression.matches_map

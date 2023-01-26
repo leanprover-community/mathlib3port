@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module geometry.manifold.cont_mdiff_mfderiv
-! leanprover-community/mathlib commit e3d9ab8faa9dea8f78155c6c27d62a621f4c152d
+! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -250,7 +250,7 @@ theorem ContMdiffOn.contMdiffOn_tangentMapWithin_aux {f : H → H'} {s : Set H}
   · apply ContDiffOn.prod B _
     apply C.congr fun p hp => _
     simp only [mfld_simps] at hp
-    simp only [mfderivWithin, hf.mdifferentiable_on one_le_n _ hp.2, hp.1, dif_pos, mfld_simps]
+    simp only [mfderivWithin, hf.mdifferentiable_on one_le_n _ hp.2, hp.1, if_pos, mfld_simps]
   have D :
     ContDiffOn 𝕜 m (fun x => fderivWithin 𝕜 (I' ∘ f ∘ I.symm) (I.symm ⁻¹' s ∩ range I) x)
       (range I ∩ I.symm ⁻¹' s) :=
@@ -702,7 +702,7 @@ theorem tangentMap_tangentBundle_pure (p : TangentBundle I M) :
     · exact differentiableAt_const _
     · exact ModelWithCorners.uniqueDiffAtImage I
     · exact differentiable_at_id'.prod (differentiableAt_const _)
-  simp only [TangentBundle.zeroSection, tangentMap, mfderiv, A, dif_pos, chart_at,
+  simp only [TangentBundle.zeroSection, tangentMap, mfderiv, A, if_pos, chart_at,
     BasicSmoothVectorBundleCore.chart, BasicSmoothVectorBundleCore.toVectorBundleCore,
     tangentBundleCore, Function.comp, ContinuousLinearMap.map_zero, mfld_simps]
   rw [← fderivWithin_inter N (I.unique_diff (I ((chart_at H x) x)) (Set.mem_range_self _))] at B

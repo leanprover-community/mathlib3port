@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module topology.uniform_space.completion
-! leanprover-community/mathlib commit e3d9ab8faa9dea8f78155c6c27d62a621f4c152d
+! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -124,13 +124,13 @@ private theorem comp_gen : (((𝓤 α).lift' gen).lift' fun s => compRel s s) �
       by
       rw [lift'_lift'_assoc]
       exact monotone_gen
-      exact monotone_compRel monotone_id monotone_id
+      exact monotone_id.comp_rel monotone_id
     _ ≤ (𝓤 α).lift' fun s => gen <| compRel s s :=
       lift'_mono' fun s hs => comp_rel_gen_gen_subset_gen_comp_rel
     _ = ((𝓤 α).lift' fun s : Set (α × α) => compRel s s).lift' gen :=
       by
       rw [lift'_lift'_assoc]
-      exact monotone_compRel monotone_id monotone_id
+      exact monotone_id.comp_rel monotone_id
       exact monotone_gen
     _ ≤ (𝓤 α).lift' gen := lift'_mono comp_le_uniformity le_rfl
     

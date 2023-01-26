@@ -7,7 +7,7 @@ Provides a `subtype_instance` tactic which builds instances for algebraic substr
 (sub-groups, sub-rings...).
 
 ! This file was ported from Lean 3 source module tactic.subtype_instance
-! leanprover-community/mathlib commit e3d9ab8faa9dea8f78155c6c27d62a621f4c152d
+! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

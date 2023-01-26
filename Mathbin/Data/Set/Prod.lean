@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Johannes Hölzl, Patrick Massot
 
 ! This file was ported from Lean 3 source module data.set.prod
-! leanprover-community/mathlib commit e3d9ab8faa9dea8f78155c6c27d62a621f4c152d
+! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1006,6 +1006,12 @@ theorem mem_diagonal_iff {x : α × α} : x ∈ diagonal α ↔ x.1 = x.2 :=
 #align set.mem_diagonal_iff Set.mem_diagonal_iff
 -/
 
+#print Set.diagonal_nonempty /-
+theorem diagonal_nonempty [Nonempty α] : (diagonal α).Nonempty :=
+  Nonempty.elim ‹_› fun x => ⟨_, mem_diagonal x⟩
+#align set.diagonal_nonempty Set.diagonal_nonempty
+-/
+
 #print Set.decidableMemDiagonal /-
 instance decidableMemDiagonal [h : DecidableEq α] (x : α × α) : Decidable (x ∈ diagonal α) :=
   h x.1 x.2
@@ -1029,6 +1035,12 @@ theorem range_diag : (range fun x => (x, x)) = diagonal α :=
 #align set.range_diag Set.range_diag
 -/
 
+#print Set.diagonal_subset_iff /-
+theorem diagonal_subset_iff {s} : diagonal α ⊆ s ↔ ∀ x, (x, x) ∈ s := by
+  rw [← range_diag, range_subset_iff]
+#align set.diagonal_subset_iff Set.diagonal_subset_iff
+-/
+
 /- warning: set.prod_subset_compl_diagonal_iff_disjoint -> Set.prod_subset_compl_diagonal_iff_disjoint is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α}, Iff (HasSubset.Subset.{u1} (Set.{u1} (Prod.{u1, u1} α α)) (Set.hasSubset.{u1} (Prod.{u1, u1} α α)) (Set.prod.{u1, u1} α α s t) (HasCompl.compl.{u1} (Set.{u1} (Prod.{u1, u1} α α)) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} (Prod.{u1, u1} α α)) (Set.booleanAlgebra.{u1} (Prod.{u1, u1} α α))) (Set.diagonal.{u1} α))) (Disjoint.{u1} (Set.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (Lattice.toSemilatticeInf.{u1} (Set.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} α) (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) s t)
@@ -1038,9 +1050,7 @@ Case conversion may be inaccurate. Consider using '#align set.prod_subset_compl_
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem prod_subset_compl_diagonal_iff_disjoint : s ×ˢ t ⊆ diagonal αᶜ ↔ Disjoint s t :=
-  subset_compl_comm.trans <| by
-    simp_rw [← range_diag, range_subset_iff, disjoint_left, mem_compl_iff, prod_mk_mem_set_prod_eq,
-      not_and]
+  prod_subset_iff.trans disjoint_iff_forall_ne.symm
 #align set.prod_subset_compl_diagonal_iff_disjoint Set.prod_subset_compl_diagonal_iff_disjoint
 
 /- warning: set.diag_preimage_prod -> Set.diag_preimage_prod is a dubious translation:
@@ -1061,6 +1071,17 @@ theorem diag_preimage_prod_self (s : Set α) : (fun x => (x, x)) ⁻¹' s ×ˢ s
   inter_self s
 #align set.diag_preimage_prod_self Set.diag_preimage_prod_self
 -/
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem diag_image (s : Set α) : (fun x => (x, x)) '' s = diagonal α ∩ s ×ˢ s :=
+  by
+  ext x; constructor
+  · rintro ⟨x, hx, rfl⟩
+    exact ⟨rfl, hx, hx⟩
+  · obtain ⟨x, y⟩ := x
+    rintro ⟨rfl : x = y, h2x⟩
+    exact mem_image_of_mem _ h2x.1
+#align set.diag_image Set.diag_image
 
 end Diagonal
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Andrew Zipperer, Haitao Zhang, Minchao Wu, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.set.function
-! leanprover-community/mathlib commit e3d9ab8faa9dea8f78155c6c27d62a621f4c152d
+! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -736,6 +736,16 @@ Case conversion may be inaccurate. Consider using '#align set.maps_to' Set.mapsT
 theorem mapsTo' : MapsTo f s t ↔ f '' s ⊆ t :=
   image_subset_iff.symm
 #align set.maps_to' Set.mapsTo'
+
+/- warning: set.maps_to_prod_map_diagonal -> Set.mapsTo_prod_map_diagonal is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β}, Set.MapsTo.{u1, u2} (Prod.{u1, u1} α α) (Prod.{u2, u2} β β) (Prod.map.{u1, u2, u1, u2} α β α β f f) (Set.diagonal.{u1} α) (Set.diagonal.{u2} β)
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β}, Set.MapsTo.{u2, u1} (Prod.{u2, u2} α α) (Prod.{u1, u1} β β) (Prod.map.{u2, u1, u2, u1} α β α β f f) (Set.diagonal.{u2} α) (Set.diagonal.{u1} β)
+Case conversion may be inaccurate. Consider using '#align set.maps_to_prod_map_diagonal Set.mapsTo_prod_map_diagonalₓ'. -/
+theorem mapsTo_prod_map_diagonal : MapsTo (Prod.map f f) (diagonal α) (diagonal β) :=
+  diagonal_subset_iff.2 fun x => rfl
+#align set.maps_to_prod_map_diagonal Set.mapsTo_prod_map_diagonal
 
 /- warning: set.maps_to.subset_preimage -> Set.MapsTo.subset_preimage is a dubious translation:
 lean 3 declaration is

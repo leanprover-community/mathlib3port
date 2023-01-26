@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.bounded_variation
-! leanprover-community/mathlib commit e3d9ab8faa9dea8f78155c6c27d62a621f4c152d
+! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,8 @@ import Mathbin.MeasureTheory.Measure.Lebesgue
 import Mathbin.Analysis.Calculus.Monotone
 import Mathbin.Data.Set.Function
 import Mathbin.Algebra.Group.Basic
+import Mathbin.Tactic.SwapVar
+import Mathbin.Tactic.Wlog
 
 /-!
 # Functions of bounded variation
@@ -98,7 +100,7 @@ theorem eq_of_edist_zero_on {f f' : α → E} {s : Set α} (h : ∀ ⦃x⦄, x �
   rw [edist_congr_right (h <| p.snd.prop.2 (i + 1)), edist_congr_left (h <| p.snd.prop.2 i)]
 #align evariation_on.eq_of_edist_zero_on evariationOn.eq_of_edist_zero_on
 
-theorem eq_of_eqOn {f f' : α → E} {s : Set α} (h : Set.EqOn f f' s) :
+theorem eq_of_eqOn {f f' : α → E} {s : Set α} (h : EqOn f f' s) :
     evariationOn f s = evariationOn f' s :=
   eq_of_edist_zero_on fun x xs => by rw [h xs, edist_self]
 #align evariation_on.eq_of_eq_on evariationOn.eq_of_eqOn
@@ -633,13 +635,13 @@ theorem icc_add_icc (f : α → E) {s : Set α} {a b c : α} (hab : a ≤ b) (hb
 #align evariation_on.Icc_add_Icc evariationOn.icc_add_icc
 
 theorem comp_le_of_monotoneOn (f : α → E) {s : Set α} {t : Set β} (φ : β → α) (hφ : MonotoneOn φ t)
-    (φst : Set.MapsTo φ t s) : evariationOn (f ∘ φ) t ≤ evariationOn f s :=
+    (φst : MapsTo φ t s) : evariationOn (f ∘ φ) t ≤ evariationOn f s :=
   supᵢ_le fun ⟨n, u, hu, ut⟩ =>
     le_supᵢ_of_le ⟨n, φ ∘ u, fun x y xy => hφ (ut x) (ut y) (hu xy), fun i => φst (ut i)⟩ le_rfl
 #align evariation_on.comp_le_of_monotone_on evariationOn.comp_le_of_monotoneOn
 
 theorem comp_le_of_antitoneOn (f : α → E) {s : Set α} {t : Set β} (φ : β → α) (hφ : AntitoneOn φ t)
-    (φst : Set.MapsTo φ t s) : evariationOn (f ∘ φ) t ≤ evariationOn f s :=
+    (φst : MapsTo φ t s) : evariationOn (f ∘ φ) t ≤ evariationOn f s :=
   by
   refine' supᵢ_le _
   rintro ⟨n, u, hu, ut⟩
@@ -655,37 +657,70 @@ theorem comp_le_of_antitoneOn (f : α → E) {s : Set α} {t : Set β} (φ : β 
   simpa only [tsub_pos_iff_lt, Finset.mem_range] using hx
 #align evariation_on.comp_le_of_antitone_on evariationOn.comp_le_of_antitoneOn
 
-theorem comp_eq_of_monotoneOn (f : α → E) {s : Set α} {t : Set β} (φ : β → α) (hφ : MonotoneOn φ t)
-    (φst : Set.MapsTo φ t s) (φsur : Set.SurjOn φ t s) :
-    evariationOn (f ∘ φ) t = evariationOn f s :=
+theorem comp_eq_of_monotoneOn (f : α → E) {t : Set β} (φ : β → α) (hφ : MonotoneOn φ t) :
+    evariationOn (f ∘ φ) t = evariationOn f (φ '' t) :=
   by
-  apply le_antisymm (comp_le_of_monotone_on f φ hφ φst)
+  apply le_antisymm (comp_le_of_monotone_on f φ hφ (maps_to_image φ t))
   cases isEmpty_or_nonempty β
   · convert zero_le _
-    exact evariationOn.subsingleton f ((subsingleton_of_subsingleton.image _).anti φsur)
+    exact
+      evariationOn.subsingleton f ((subsingleton_of_subsingleton.image _).anti (surj_on_image φ t))
   let ψ := φ.inv_fun_on t
-  have ψφs : Set.EqOn (φ ∘ ψ) id s := φsur.right_inv_on_inv_fun_on
-  have ψts : Set.MapsTo ψ s t := φsur.maps_to_inv_fun_on
-  have hψ : MonotoneOn ψ s := Function.monotoneOn_of_rightInvOn_of_mapsTo hφ ψφs ψts
-  change evariationOn (f ∘ id) s ≤ evariationOn (f ∘ φ) t
-  rw [← eq_of_eq_on (ψφs.comp_left : Set.EqOn (f ∘ φ ∘ ψ) (f ∘ id) s)]
+  have ψφs : eq_on (φ ∘ ψ) id (φ '' t) := (surj_on_image φ t).right_inv_on_inv_fun_on
+  have ψts : maps_to ψ (φ '' t) t := (surj_on_image φ t).maps_to_inv_fun_on
+  have hψ : MonotoneOn ψ (φ '' t) := Function.monotoneOn_of_rightInvOn_of_mapsTo hφ ψφs ψts
+  change evariationOn (f ∘ id) (φ '' t) ≤ evariationOn (f ∘ φ) t
+  rw [← eq_of_eq_on (ψφs.comp_left : eq_on (f ∘ φ ∘ ψ) (f ∘ id) (φ '' t))]
   exact comp_le_of_monotone_on _ ψ hψ ψts
 #align evariation_on.comp_eq_of_monotone_on evariationOn.comp_eq_of_monotoneOn
 
-theorem comp_eq_of_antitoneOn (f : α → E) {s : Set α} {t : Set β} (φ : β → α) (hφ : AntitoneOn φ t)
-    (φst : Set.MapsTo φ t s) (φsur : Set.SurjOn φ t s) :
-    evariationOn (f ∘ φ) t = evariationOn f s :=
+-- porting note: move to file `data.set.intervals.basic` once the port is over,
+-- and use it in theorem `polynomial_functions_closure_eq_top`
+-- in the file `topology/continuous_function/weierstrass.lean`
+theorem Set.subsingleton_icc_of_ge {α : Type _} [PartialOrder α] {a b : α} (h : b ≤ a) :
+    Set.Subsingleton (Icc a b) := by
+  rintro c ⟨ac, cb⟩ d ⟨ad, db⟩
+  cases le_antisymm (cb.trans h) ac
+  cases le_antisymm (db.trans h) ad
+  rfl
+#align set.subsingleton_Icc_of_ge Set.subsingleton_icc_of_ge
+
+theorem comp_inter_icc_eq_of_monotoneOn (f : α → E) {t : Set β} (φ : β → α) (hφ : MonotoneOn φ t)
+    {x y : β} (hx : x ∈ t) (hy : y ∈ t) :
+    evariationOn (f ∘ φ) (t ∩ Icc x y) = evariationOn f (φ '' t ∩ Icc (φ x) (φ y)) :=
   by
-  apply le_antisymm (comp_le_of_antitone_on f φ hφ φst)
+  rcases le_total x y with (h | h)
+  · convert comp_eq_of_monotone_on f φ (hφ.mono (Set.inter_subset_left t (Icc x y)))
+    apply le_antisymm
+    · rintro _ ⟨⟨u, us, rfl⟩, vφx, vφy⟩
+      rcases le_total x u with (xu | ux)
+      · rcases le_total u y with (uy | yu)
+        · exact ⟨u, ⟨us, ⟨xu, uy⟩⟩, rfl⟩
+        · rw [le_antisymm vφy (hφ hy us yu)]
+          exact ⟨y, ⟨hy, ⟨h, le_rfl⟩⟩, rfl⟩
+      · rw [← le_antisymm vφx (hφ us hx ux)]
+        exact ⟨x, ⟨hx, ⟨le_rfl, h⟩⟩, rfl⟩
+    · rintro _ ⟨u, ⟨⟨hu, xu, uy⟩, rfl⟩⟩
+      refine' ⟨⟨u, hu, rfl⟩, ⟨hφ hx hu xu, hφ hu hy uy⟩⟩
+  · rw [evariationOn.subsingleton, evariationOn.subsingleton]
+    exacts[(Set.subsingleton_icc_of_ge (hφ hy hx h)).anti (Set.inter_subset_right _ _),
+      (Set.subsingleton_icc_of_ge h).anti (Set.inter_subset_right _ _)]
+#align evariation_on.comp_inter_Icc_eq_of_monotone_on evariationOn.comp_inter_icc_eq_of_monotoneOn
+
+theorem comp_eq_of_antitoneOn (f : α → E) {t : Set β} (φ : β → α) (hφ : AntitoneOn φ t) :
+    evariationOn (f ∘ φ) t = evariationOn f (φ '' t) :=
+  by
+  apply le_antisymm (comp_le_of_antitone_on f φ hφ (maps_to_image φ t))
   cases isEmpty_or_nonempty β
   · convert zero_le _
-    exact evariationOn.subsingleton f ((subsingleton_of_subsingleton.image _).anti φsur)
+    exact
+      evariationOn.subsingleton f ((subsingleton_of_subsingleton.image _).anti (surj_on_image φ t))
   let ψ := φ.inv_fun_on t
-  have ψφs : Set.EqOn (φ ∘ ψ) id s := φsur.right_inv_on_inv_fun_on
-  have ψts : Set.MapsTo ψ s t := φsur.maps_to_inv_fun_on
-  have hψ : AntitoneOn ψ s := Function.antitoneOn_of_rightInvOn_of_mapsTo hφ ψφs ψts
-  change evariationOn (f ∘ id) s ≤ evariationOn (f ∘ φ) t
-  rw [← eq_of_eq_on (ψφs.comp_left : Set.EqOn (f ∘ φ ∘ ψ) (f ∘ id) s)]
+  have ψφs : eq_on (φ ∘ ψ) id (φ '' t) := (surj_on_image φ t).right_inv_on_inv_fun_on
+  have ψts := (surj_on_image φ t).maps_to_inv_fun_on
+  have hψ : AntitoneOn ψ (φ '' t) := Function.antitoneOn_of_rightInvOn_of_mapsTo hφ ψφs ψts
+  change evariationOn (f ∘ id) (φ '' t) ≤ evariationOn (f ∘ φ) t
+  rw [← eq_of_eq_on (ψφs.comp_left : eq_on (f ∘ φ ∘ ψ) (f ∘ id) (φ '' t))]
   exact comp_le_of_antitone_on _ ψ hψ ψts
 #align evariation_on.comp_eq_of_antitone_on evariationOn.comp_eq_of_antitoneOn
 
@@ -693,7 +728,9 @@ open OrderDual
 
 theorem comp_ofDual (f : α → E) (s : Set α) :
     evariationOn (f ∘ of_dual) (of_dual ⁻¹' s) = evariationOn f s :=
-  comp_eq_of_antitoneOn f ofDual (fun _ _ _ _ => id) (mapsTo_preimage _ _) fun x hx => ⟨x, hx, rfl⟩
+  by
+  convert comp_eq_of_antitone_on f of_dual fun _ _ _ _ => id
+  simp only [Equiv.image_preimage]
 #align evariation_on.comp_of_dual evariationOn.comp_ofDual
 
 end evariationOn
@@ -798,6 +835,62 @@ theorem add {f : α → E} {s : Set α} (hf : HasLocallyBoundedVariationOn f s) 
       Ennreal.toReal_add (hf x y xs ys) (hf y z ys zs), evariationOn.icc_add_icc f xy yz ys]
 #align variation_on_from_to.add variationOnFromTo.add
 
+@[protected]
+theorem edist_zero_of_eq_zero {f : α → E} {s : Set α} (hf : HasLocallyBoundedVariationOn f s)
+    {a b : α} (ha : a ∈ s) (hb : b ∈ s) (h : variationOnFromTo f s a b = 0) :
+    edist (f a) (f b) = 0 :=
+  by
+  wlog (discharger := tactic.skip) h' : a ≤ b := le_total a b using b a, a b
+  · apply le_antisymm _ (zero_le _)
+    rw [← Ennreal.ofReal_zero, ← h, eq_of_le f s h', Ennreal.ofReal_toReal (hf a b ha hb)]
+    apply evariationOn.edist_le
+    exacts[⟨ha, ⟨le_rfl, h'⟩⟩, ⟨hb, ⟨h', le_rfl⟩⟩]
+  · intro ha hb hab
+    rw [edist_comm]
+    apply this hb ha
+    rw [eq_neg_swap, hab, neg_zero]
+#align variation_on_from_to.edist_zero_of_eq_zero variationOnFromTo.edist_zero_of_eq_zero
+
+@[protected]
+theorem eq_left_iff {f : α → E} {s : Set α} (hf : HasLocallyBoundedVariationOn f s) {a b c : α}
+    (ha : a ∈ s) (hb : b ∈ s) (hc : c ∈ s) :
+    variationOnFromTo f s a b = variationOnFromTo f s a c ↔ variationOnFromTo f s b c = 0 := by
+  simp only [← add hf ha hb hc, self_eq_add_right]
+#align variation_on_from_to.eq_left_iff variationOnFromTo.eq_left_iff
+
+@[protected]
+theorem eq_zero_iff_of_le {f : α → E} {s : Set α} (hf : HasLocallyBoundedVariationOn f s) {a b : α}
+    (ha : a ∈ s) (hb : b ∈ s) (ab : a ≤ b) :
+    variationOnFromTo f s a b = 0 ↔
+      ∀ ⦃x⦄ (hx : x ∈ s ∩ Icc a b) ⦃y⦄ (hy : y ∈ s ∩ Icc a b), edist (f x) (f y) = 0 :=
+  by
+  rw [eq_of_le _ _ ab, Ennreal.toReal_eq_zero_iff, or_iff_left (hf a b ha hb),
+    evariationOn.eq_zero_iff]
+#align variation_on_from_to.eq_zero_iff_of_le variationOnFromTo.eq_zero_iff_of_le
+
+@[protected]
+theorem eq_zero_iff_of_ge {f : α → E} {s : Set α} (hf : HasLocallyBoundedVariationOn f s) {a b : α}
+    (ha : a ∈ s) (hb : b ∈ s) (ba : b ≤ a) :
+    variationOnFromTo f s a b = 0 ↔
+      ∀ ⦃x⦄ (hx : x ∈ s ∩ Icc b a) ⦃y⦄ (hy : y ∈ s ∩ Icc b a), edist (f x) (f y) = 0 :=
+  by
+  rw [eq_of_ge _ _ ba, neg_eq_zero, Ennreal.toReal_eq_zero_iff, or_iff_left (hf b a hb ha),
+    evariationOn.eq_zero_iff]
+#align variation_on_from_to.eq_zero_iff_of_ge variationOnFromTo.eq_zero_iff_of_ge
+
+@[protected]
+theorem eq_zero_iff {f : α → E} {s : Set α} (hf : HasLocallyBoundedVariationOn f s) {a b : α}
+    (ha : a ∈ s) (hb : b ∈ s) :
+    variationOnFromTo f s a b = 0 ↔
+      ∀ ⦃x⦄ (hx : x ∈ s ∩ uIcc a b) ⦃y⦄ (hy : y ∈ s ∩ uIcc a b), edist (f x) (f y) = 0 :=
+  by
+  rcases le_total a b with (ab | ba)
+  · rw [uIcc_of_le ab]
+    exact eq_zero_iff_of_le hf ha hb ab
+  · rw [uIcc_of_ge ba]
+    exact eq_zero_iff_of_ge hf ha hb ba
+#align variation_on_from_to.eq_zero_iff variationOnFromTo.eq_zero_iff
+
 variable {f} {s}
 
 @[protected]
@@ -838,6 +931,20 @@ theorem sub_self_monotoneOn {f : α → ℝ} {s : Set α} (hf : HasLocallyBounde
       rw [← add hf as bs cs, add_sub_cancel']
     
 #align variation_on_from_to.sub_self_monotone_on variationOnFromTo.sub_self_monotoneOn
+
+@[protected]
+theorem comp_eq_of_monotoneOn (f : α → E) {t : Set β} (φ : β → α) (hφ : MonotoneOn φ t) {x y : β}
+    (hx : x ∈ t) (hy : y ∈ t) :
+    variationOnFromTo (f ∘ φ) t x y = variationOnFromTo f (φ '' t) (φ x) (φ y) :=
+  by
+  rcases le_total x y with (h | h)
+  ·
+    rw [eq_of_le _ _ h, eq_of_le _ _ (hφ hx hy h),
+      evariationOn.comp_inter_icc_eq_of_monotoneOn f φ hφ hx hy]
+  ·
+    rw [eq_of_ge _ _ h, eq_of_ge _ _ (hφ hy hx h),
+      evariationOn.comp_inter_icc_eq_of_monotoneOn f φ hφ hy hx]
+#align variation_on_from_to.comp_eq_of_monotone_on variationOnFromTo.comp_eq_of_monotoneOn
 
 end variationOnFromTo
 

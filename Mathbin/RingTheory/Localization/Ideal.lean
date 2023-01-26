@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Johan Commelin, Amelia Livingston, Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.localization.ideal
-! leanprover-community/mathlib commit e3d9ab8faa9dea8f78155c6c27d62a621f4c152d
+! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -213,6 +213,18 @@ theorem surjective_quotientMap_of_maximal_of_localization {I : Ideal S} [I.IsPri
                 (Ideal.mem_comap.2 (Ideal.Quotient.eq_zero_iff_mem.1 hn))))
           (trans hn (by rw [← RingHom.map_mul, ← mk'_eq_mul_mk'_one, mk'_self, RingHom.map_one])))
 #align is_localization.surjective_quotient_map_of_maximal_of_localization IsLocalization.surjective_quotientMap_of_maximal_of_localization
+
+open nonZeroDivisors
+
+theorem bot_lt_comap_prime [IsDomain R] (hM : M ≤ R⁰) (p : Ideal S) [hpp : p.IsPrime]
+    (hp0 : p ≠ ⊥) : ⊥ < Ideal.comap (algebraMap R S) p :=
+  by
+  haveI : IsDomain S := is_domain_of_le_non_zero_divisors _ hM
+  convert
+    (order_iso_of_prime M S).lt_iff_lt.mpr
+      (show (⟨⊥, Ideal.botPrime⟩ : { p : Ideal S // p.IsPrime }) < ⟨p, hpp⟩ from hp0.bot_lt)
+  exact (Ideal.comap_bot_of_injective (algebraMap R S) (IsLocalization.injective _ hM)).symm
+#align is_localization.bot_lt_comap_prime IsLocalization.bot_lt_comap_prime
 
 end CommRing
 

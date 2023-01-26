@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module topology.algebra.uniform_group
-! leanprover-community/mathlib commit e3d9ab8faa9dea8f78155c6c27d62a621f4c152d
+! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -596,7 +596,7 @@ def TopologicalGroup.toUniformSpace : UniformSpace G
         rcases p_comp_rel with ⟨z, ⟨Hz1, Hz2⟩⟩
         simpa using V_sum _ Hz2 _ Hz1
       exact Set.Subset.trans comp_rel_sub U_sub
-    · exact monotone_compRel monotone_id monotone_id
+    · exact monotone_id.comp_rel monotone_id
   is_open_uniformity := by
     intro S
     let S' x := { p : G × G | p.1 = x → p.2 ∈ S }

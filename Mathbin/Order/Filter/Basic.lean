@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Jeremy Avigad
 
 ! This file was ported from Lean 3 source module order.filter.basic
-! leanprover-community/mathlib commit e3d9ab8faa9dea8f78155c6c27d62a621f4c152d
+! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1687,6 +1687,9 @@ theorem principal_neBot_iff {s : Set α} : NeBot (𝓟 s) ↔ s.Nonempty :=
 #align filter.principal_ne_bot_iff Filter.principal_neBot_iff
 -/
 
+alias principal_ne_bot_iff ↔ _ _root_.set.nonempty.principal_ne_bot
+#align set.nonempty.principal_ne_bot Set.Nonempty.principal_neBot
+
 /- warning: filter.is_compl_principal -> Filter.isCompl_principal is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} (s : Set.{u1} α), IsCompl.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α)) (Filter.principal.{u1} α s) (Filter.principal.{u1} α (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s))
@@ -3189,6 +3192,14 @@ theorem mem_comap' : s ∈ comap f l ↔ { y | ∀ ⦃x⦄, f x = y → x ∈ s 
 #align filter.mem_comap' Filter.mem_comap'
 -/
 
+#print Filter.mem_comap_prod_mk /-
+/-- RHS form is used, e.g., in the definition of `uniform_space`. -/
+theorem mem_comap_prod_mk {x : α} {s : Set β} {F : Filter (α × β)} :
+    s ∈ comap (Prod.mk x) F ↔ { p : α × β | p.fst = x → p.snd ∈ s } ∈ F := by
+  simp_rw [mem_comap', Prod.ext_iff, and_imp, @forall_swap β (_ = _), forall_eq, eq_comm]
+#align filter.mem_comap_prod_mk Filter.mem_comap_prod_mk
+-/
+
 #print Filter.eventually_comap /-
 @[simp]
 theorem eventually_comap : (∀ᶠ a in comap f l, p a) ↔ ∀ᶠ b in l, ∀ a, f a = b → p a :=
@@ -3393,6 +3404,12 @@ theorem Eventually.comap {p : β → Prop} (hf : ∀ᶠ b in g, p b) (f : α →
 theorem comap_id : comap id f = f :=
   le_antisymm (fun s => preimage_mem_comap) fun s ⟨t, ht, hst⟩ => mem_of_superset ht hst
 #align filter.comap_id Filter.comap_id
+-/
+
+#print Filter.comap_id' /-
+theorem comap_id' : comap (fun x => x) f = f :=
+  comap_id
+#align filter.comap_id' Filter.comap_id'
 -/
 
 /- warning: filter.comap_const_of_not_mem -> Filter.comap_const_of_not_mem is a dubious translation:

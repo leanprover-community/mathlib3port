@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard, David Kurniadi Angdinata
 
 ! This file was ported from Lean 3 source module algebraic_geometry.elliptic_curve.weierstrass
-! leanprover-community/mathlib commit e3d9ab8faa9dea8f78155c6c27d62a621f4c152d
+! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -666,6 +666,10 @@ instance : IsScalarTower R R[X] W.CoordinateRing :=
 instance [Subsingleton R] : Subsingleton W.CoordinateRing :=
   Module.subsingleton R[X] _
 
+section
+
+open Classical
+
 /-- The basis $\{1, Y\}$ for the coordinate ring $R[W]$ over the polynomial ring $R[X]$.
 
 Given a Weierstrass curve `W`, write `W^.coordinate_ring.basis` for this basis. -/
@@ -675,11 +679,14 @@ protected noncomputable def basis : Basis (Fin 2) R[X] W.CoordinateRing :=
       finCongr <| W.nat_degree_polynomial
 #align weierstrass_curve.coordinate_ring.basis WeierstrassCurve.CoordinateRing.basis
 
+end
+
 theorem basis_apply (n : Fin 2) : W n = (AdjoinRoot.powerBasis' W.monic_polynomial).gen ^ (n : ℕ) :=
   by
-  nontriviality R
-  simpa only [coordinate_ring.basis, Or.by_cases, dif_neg (not_subsingleton R), Basis.reindex_apply,
-    PowerBasis.basis_eq_pow]
+  classical
+    nontriviality R
+    simpa only [coordinate_ring.basis, Or.by_cases, dif_neg (not_subsingleton R),
+      Basis.reindex_apply, PowerBasis.basis_eq_pow]
 #align weierstrass_curve.coordinate_ring.basis_apply WeierstrassCurve.CoordinateRing.basis_apply
 
 theorem basis_zero : W 0 = 1 := by simpa only [basis_apply] using pow_zero _
