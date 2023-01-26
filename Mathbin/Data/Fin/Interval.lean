@@ -77,22 +77,22 @@ theorem map_subtype_embedding_ioo : (Ioo a b).map Fin.valEmbedding = Ioo a b := 
 
 @[simp]
 theorem card_icc : (Icc a b).card = b + 1 - a := by
-  rw [← Nat.card_icc, ← map_subtype_embedding_Icc, card_map]
+  rw [← Nat.card_Icc, ← map_subtype_embedding_Icc, card_map]
 #align fin.card_Icc Fin.card_icc
 
 @[simp]
 theorem card_ico : (Ico a b).card = b - a := by
-  rw [← Nat.card_ico, ← map_subtype_embedding_Ico, card_map]
+  rw [← Nat.card_Ico, ← map_subtype_embedding_Ico, card_map]
 #align fin.card_Ico Fin.card_ico
 
 @[simp]
 theorem card_ioc : (Ioc a b).card = b - a := by
-  rw [← Nat.card_ioc, ← map_subtype_embedding_Ioc, card_map]
+  rw [← Nat.card_Ioc, ← map_subtype_embedding_Ioc, card_map]
 #align fin.card_Ioc Fin.card_ioc
 
 @[simp]
 theorem card_ioo : (Ioo a b).card = b - a - 1 := by
-  rw [← Nat.card_ioo, ← map_subtype_embedding_Ioo, card_map]
+  rw [← Nat.card_Ioo, ← map_subtype_embedding_Ioo, card_map]
 #align fin.card_Ioo Fin.card_ioo
 
 @[simp]
@@ -175,23 +175,23 @@ theorem map_subtype_embedding_iio : (Iio b).map Fin.valEmbedding = Iio b := by
 theorem card_ici : (Ici a).card = n - a := by
   cases n
   · exact Fin.elim0 a
-  rw [← card_map, map_subtype_embedding_Ici, Nat.card_icc]
+  rw [← card_map, map_subtype_embedding_Ici, Nat.card_Icc]
   rfl
 #align fin.card_Ici Fin.card_ici
 
 @[simp]
 theorem card_ioi : (Ioi a).card = n - 1 - a := by
-  rw [← card_map, map_subtype_embedding_Ioi, Nat.card_ioc]
+  rw [← card_map, map_subtype_embedding_Ioi, Nat.card_Ioc]
 #align fin.card_Ioi Fin.card_ioi
 
 @[simp]
 theorem card_iic : (Iic b).card = b + 1 := by
-  rw [← Nat.card_iic b, ← map_subtype_embedding_Iic, card_map]
+  rw [← Nat.card_Iic b, ← map_subtype_embedding_Iic, card_map]
 #align fin.card_Iic Fin.card_iic
 
 @[simp]
 theorem card_iio : (Iio b).card = b := by
-  rw [← Nat.card_iio b, ← map_subtype_embedding_Iio, card_map]
+  rw [← Nat.card_Iio b, ← map_subtype_embedding_Iio, card_map]
 #align fin.card_Iio Fin.card_iio
 
 @[simp]

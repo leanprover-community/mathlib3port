@@ -3057,7 +3057,7 @@ variable {E p μ}
 theorem MeasureTheory.lp.mem_boundedContinuousFunction_iff {f : lp E p μ} :
     f ∈ MeasureTheory.lp.boundedContinuousFunction E p μ ↔
       ∃ f₀ : α →ᵇ E, f₀.toContinuousMap.toAeEqFun μ = (f : α →ₘ[μ] E) :=
-  AddSubgroup.mem_add_subgroupOf
+  AddSubgroup.mem_addSubgroupOf
 #align measure_theory.Lp.mem_bounded_continuous_function_iff MeasureTheory.lp.mem_boundedContinuousFunction_iff
 
 namespace BoundedContinuousFunction
@@ -3103,7 +3103,7 @@ theorem range_toLpHom [Fact (1 ≤ p)] :
   by
   symm
   convert
-    AddMonoidHom.add_subgroup_of_range_eq_of_le
+    AddMonoidHom.addSubgroupOf_range_eq_of_le
       ((ContinuousMap.to_ae_eq_fun_add_hom μ).comp (to_continuous_map_add_hom α E))
       (by
         rintro - ⟨f, rfl⟩

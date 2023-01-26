@@ -49,7 +49,7 @@ theorem factorization_choose_le_log : (choose n k).factorization p ≤ log p n :
     simp [choose_eq_zero_of_lt hnk]
   rw [factorization_def _ hp, @padicValNat_def _ ⟨hp⟩ _ (choose_pos hkn)]
   simp only [hp.multiplicity_choose hkn (lt_add_one _), PartEnat.get_coe]
-  refine' (Finset.card_filter_le _ _).trans (le_of_eq (Nat.card_ico _ _))
+  refine' (Finset.card_filter_le _ _).trans (le_of_eq (Nat.card_Ico _ _))
 #align nat.factorization_choose_le_log Nat.factorization_choose_le_log
 
 /-- A `pow` form of `nat.factorization_choose_le`

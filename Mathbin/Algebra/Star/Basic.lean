@@ -49,7 +49,7 @@ advantage of not requiring a topology.
 
 assert_not_exists Finset
 
-assert_not_exists subgroup
+assert_not_exists Subgroup
 
 universe u v
 

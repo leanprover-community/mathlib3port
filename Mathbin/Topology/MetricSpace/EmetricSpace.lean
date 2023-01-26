@@ -168,7 +168,7 @@ theorem edist_le_ico_sum_edist (f : ℕ → α) {m n} (h : m ≤ n) :
   by
   revert n
   refine' Nat.le_induction _ _
-  · simp only [Finset.sum_empty, Finset.ico_self, edist_self]
+  · simp only [Finset.sum_empty, Finset.Ico_self, edist_self]
     -- TODO: Why doesn't Lean close this goal automatically? `exact le_rfl` fails too.
     exact le_refl (0 : ℝ≥0∞)
   · intro n hn hrec
@@ -176,14 +176,14 @@ theorem edist_le_ico_sum_edist (f : ℕ → α) {m n} (h : m ≤ n) :
       edist (f m) (f (n + 1)) ≤ edist (f m) (f n) + edist (f n) (f (n + 1)) := edist_triangle _ _ _
       _ ≤ (∑ i in Finset.Ico m n, _) + _ := add_le_add hrec le_rfl
       _ = ∑ i in Finset.Ico m (n + 1), _ := by
-        rw [Nat.ico_succ_right_eq_insert_ico hn, Finset.sum_insert, add_comm] <;> simp
+        rw [Nat.Ico_succ_right_eq_insert_Ico hn, Finset.sum_insert, add_comm] <;> simp
       
 #align edist_le_Ico_sum_edist edist_le_ico_sum_edist
 
 /-- The triangle (polygon) inequality for sequences of points; `finset.range` version. -/
 theorem edist_le_range_sum_edist (f : ℕ → α) (n : ℕ) :
     edist (f 0) (f n) ≤ ∑ i in Finset.range n, edist (f i) (f (i + 1)) :=
-  Nat.ico_zero_eq_range ▸ edist_le_ico_sum_edist f (Nat.zero_le n)
+  Nat.Ico_zero_eq_range ▸ edist_le_ico_sum_edist f (Nat.zero_le n)
 #align edist_le_range_sum_edist edist_le_range_sum_edist
 
 /-- A version of `edist_le_Ico_sum_edist` with each intermediate distance replaced
@@ -200,7 +200,7 @@ with an upper estimate. -/
 theorem edist_le_range_sum_of_edist_le {f : ℕ → α} (n : ℕ) {d : ℕ → ℝ≥0∞}
     (hd : ∀ {k}, k < n → edist (f k) (f (k + 1)) ≤ d k) :
     edist (f 0) (f n) ≤ ∑ i in Finset.range n, d i :=
-  Nat.ico_zero_eq_range ▸ edist_le_ico_sum_of_edist_le (zero_le n) fun _ _ => hd
+  Nat.Ico_zero_eq_range ▸ edist_le_ico_sum_of_edist_le (zero_le n) fun _ _ => hd
 #align edist_le_range_sum_of_edist_le edist_le_range_sum_of_edist_le
 
 /-- Reformulation of the uniform structure in terms of the extended distance -/

@@ -908,7 +908,7 @@ theorem upcrossingsBefore_eq_sum (hab : a < b) :
     simp only [Set.mem_setOf_eq, not_lt]
     exact (upper_crossing_time_eq_of_upcrossings_before_lt hab hk.1).symm.le
   rw [Finset.sum_congr rfl h₁, Finset.sum_congr rfl h₂, Finset.sum_const, Finset.sum_const,
-    smul_eq_mul, mul_one, smul_eq_mul, mul_zero, Nat.card_ico, Nat.add_succ_sub_one, add_zero,
+    smul_eq_mul, mul_one, smul_eq_mul, mul_zero, Nat.card_Ico, Nat.add_succ_sub_one, add_zero,
     add_zero]
 #align measure_theory.upcrossings_before_eq_sum MeasureTheory.upcrossingsBefore_eq_sum
 

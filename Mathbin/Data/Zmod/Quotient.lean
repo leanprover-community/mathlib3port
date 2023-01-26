@@ -166,7 +166,7 @@ theorem minimalPeriod_eq_card [Fintype (orbit (zpowers a) b)] :
     minimalPeriod ((· • ·) a) b = Fintype.card (orbit (zpowers a) b) := by
   rw [← Fintype.ofEquiv_card (orbit_zpowers_equiv a b), ZMod.card]
 #align mul_action.minimal_period_eq_card MulAction.minimalPeriod_eq_card
-#align add_action.minimal_period_eq_card AddAction.minimalPeriod_eq_card
+#align add_action.minimal_period_eq_card AddAction.minimal_period_eq_card
 
 @[to_additive]
 instance minimalPeriod_pos [Finite <| orbit (zpowers a) b] :
@@ -177,7 +177,7 @@ instance minimalPeriod_pos [Finite <| orbit (zpowers a) b] :
     rw [minimal_period_eq_card]
     exact Fintype.card_ne_zero⟩
 #align mul_action.minimal_period_pos MulAction.minimalPeriod_pos
-#align add_action.minimal_period_pos AddAction.minimalPeriod_pos
+#align add_action.minimal_period_pos AddAction.minimal_period_pos
 
 end MulAction
 

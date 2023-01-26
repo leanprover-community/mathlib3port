@@ -314,9 +314,9 @@ theorem sum_ioo_inv_sq_le (k n : ℕ) : (∑ i in Ioo k n, ((i ^ 2)⁻¹ : α)) 
         exact inv_nonneg.2 (sq_nonneg _)
     _ ≤ ((k + 1) ^ 2)⁻¹ + ∑ i in Ioc k.succ (max (k + 1) n), (i ^ 2)⁻¹ :=
       by
-      rw [← Nat.icc_succ_left, ← Nat.ico_succ_right, sum_eq_sum_Ico_succ_bot]
+      rw [← Nat.Icc_succ_left, ← Nat.Ico_succ_right, sum_eq_sum_Ico_succ_bot]
       swap; · exact Nat.succ_lt_succ ((Nat.lt_succ_self k).trans_le (le_max_left _ _))
-      rw [Nat.ico_succ_right, Nat.icc_succ_left, Nat.cast_succ]
+      rw [Nat.Ico_succ_right, Nat.Icc_succ_left, Nat.cast_succ]
     _ ≤ ((k + 1) ^ 2)⁻¹ + (k + 1)⁻¹ :=
       by
       refine' add_le_add le_rfl ((sum_ioc_inv_sq_le_sub _ (le_max_left _ _)).trans _)

@@ -339,7 +339,7 @@ include hdec
 theorem noncommPiCoprod_mulSingle (i : ι) (y : H i) :
     noncommPiCoprod hcomm (Pi.mulSingle i y) = y := by apply MonoidHom.noncommPiCoprod_mulSingle
 #align subgroup.noncomm_pi_coprod_mul_single Subgroup.noncommPiCoprod_mulSingle
-#align add_subgroup.noncomm_pi_coprod_single AddSubgroup.noncommPiCoprod_single
+#align add_subgroup.noncomm_pi_coprod_single AddSubgroup.noncomm_pi_coprod_single
 
 omit hdec
 
@@ -347,7 +347,7 @@ omit hdec
 theorem noncommPiCoprod_range : (noncommPiCoprod hcomm).range = ⨆ i : ι, H i := by
   simp [noncomm_pi_coprod, MonoidHom.noncommPiCoprod_range]
 #align subgroup.noncomm_pi_coprod_range Subgroup.noncommPiCoprod_range
-#align add_subgroup.noncomm_pi_coprod_range AddSubgroup.noncommPiCoprod_range
+#align add_subgroup.noncomm_pi_coprod_range AddSubgroup.noncomm_pi_coprod_range
 
 @[to_additive]
 theorem injective_noncommPiCoprod_of_independent (hind : CompleteLattice.Independent H) :
@@ -358,7 +358,7 @@ theorem injective_noncommPiCoprod_of_independent (hind : CompleteLattice.Indepen
   · intro i
     exact Subtype.coe_injective
 #align subgroup.injective_noncomm_pi_coprod_of_independent Subgroup.injective_noncommPiCoprod_of_independent
-#align add_subgroup.injective_noncomm_pi_coprod_of_independent AddSubgroup.injective_noncommPiCoprod_of_independent
+#align add_subgroup.injective_noncomm_pi_coprod_of_independent AddSubgroup.injective_noncomm_pi_coprod_of_independent
 
 variable (hcomm)
 

@@ -752,14 +752,14 @@ def zmodEquivZpowers (h : IsPrimitiveRoot ζ k) : ZMod k ≃+ Additive (Subgroup
         exact ZMod.int_cast_rightInverse i
       · rintro ⟨ξ, i, rfl⟩
         refine' ⟨Int.castAddHom _ i, _⟩
-        rw [AddMonoidHom.lift_of_right_inverse_comp_apply]
+        rw [AddMonoidHom.liftOfRightInverse_comp_apply]
         rfl)
 #align is_primitive_root.zmod_equiv_zpowers IsPrimitiveRoot.zmodEquivZpowers
 
 @[simp]
 theorem zmodEquivZpowers_apply_coe_int (i : ℤ) :
     h.zmodEquivZpowers i = Additive.ofMul (⟨ζ ^ i, i, rfl⟩ : Subgroup.zpowers ζ) :=
-  AddMonoidHom.lift_of_right_inverse_comp_apply _ _ ZMod.int_cast_rightInverse _ _
+  AddMonoidHom.liftOfRightInverse_comp_apply _ _ ZMod.int_cast_rightInverse _ _
 #align is_primitive_root.zmod_equiv_zpowers_apply_coe_int IsPrimitiveRoot.zmodEquivZpowers_apply_coe_int
 
 @[simp]

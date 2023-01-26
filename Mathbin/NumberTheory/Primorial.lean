@@ -86,7 +86,7 @@ theorem primorial_le_4_pow : ∀ n : ℕ, n# ≤ 4 ^ n
           (n + 2)# = ∏ i in Filter Nat.Prime (range (2 * m + 2)), i := by simpa [two_mul, ← twice_m]
           _ = ∏ i in Filter Nat.Prime (Finset.Ico (m + 2) (2 * m + 2) ∪ range (m + 2)), i :=
             by
-            rw [range_eq_Ico, Finset.union_comm, Finset.ico_union_ico_eq_ico]
+            rw [range_eq_Ico, Finset.union_comm, Finset.Ico_union_Ico_eq_Ico]
             · exact bot_le
             · simpa only [add_le_add_iff_right, two_mul] using Nat.le_add_left m m
           _ =

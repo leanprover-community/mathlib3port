@@ -585,7 +585,7 @@ theorem orderOf_inv (x : G) : orderOf x⁻¹ = orderOf x := by simp [orderOf_eq_
 theorem orderOf_subgroup {H : Subgroup G} (y : H) : orderOf (y : G) = orderOf y :=
   orderOf_injective H.Subtype Subtype.coe_injective y
 #align order_of_subgroup orderOf_subgroup
-#align order_of_add_subgroup orderOf_add_subgroup
+#align order_of_add_subgroup order_of_add_subgroup
 
 @[to_additive zsmul_eq_mod_add_orderOf]
 theorem zpow_eq_mod_orderOf : x ^ i = x ^ (i % orderOf x) :=

@@ -481,7 +481,7 @@ theorem radius_rightInv_pos_of_radius_pos_aux2 {n : ℕ} (hn : 2 ≤ n + 1)
     (∑ k in Ico 1 (n + 1), a ^ k * ‖p.right_inv i k‖) =
         a * I + ∑ k in Ico 2 (n + 1), a ^ k * ‖p.right_inv i k‖ :=
       by
-      simp only [LinearIsometryEquiv.norm_map, pow_one, right_inv_coeff_one, Nat.ico_succ_singleton,
+      simp only [LinearIsometryEquiv.norm_map, pow_one, right_inv_coeff_one, Nat.Ico_succ_singleton,
         sum_singleton, ← sum_Ico_consecutive _ one_le_two hn]
     _ =
         a * I +

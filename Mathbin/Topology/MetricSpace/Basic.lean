@@ -330,20 +330,20 @@ theorem dist_le_ico_sum_dist (f : ℕ → α) {m n} (h : m ≤ n) :
   by
   revert n
   apply Nat.le_induction
-  · simp only [Finset.sum_empty, Finset.ico_self, dist_self]
+  · simp only [Finset.sum_empty, Finset.Ico_self, dist_self]
   · intro n hn hrec
     calc
       dist (f m) (f (n + 1)) ≤ dist (f m) (f n) + dist _ _ := dist_triangle _ _ _
       _ ≤ (∑ i in Finset.Ico m n, _) + _ := add_le_add hrec le_rfl
       _ = ∑ i in Finset.Ico m (n + 1), _ := by
-        rw [Nat.ico_succ_right_eq_insert_ico hn, Finset.sum_insert, add_comm] <;> simp
+        rw [Nat.Ico_succ_right_eq_insert_Ico hn, Finset.sum_insert, add_comm] <;> simp
       
 #align dist_le_Ico_sum_dist dist_le_ico_sum_dist
 
 /-- The triangle (polygon) inequality for sequences of points; `finset.range` version. -/
 theorem dist_le_range_sum_dist (f : ℕ → α) (n : ℕ) :
     dist (f 0) (f n) ≤ ∑ i in Finset.range n, dist (f i) (f (i + 1)) :=
-  Nat.ico_zero_eq_range ▸ dist_le_ico_sum_dist f (Nat.zero_le n)
+  Nat.Ico_zero_eq_range ▸ dist_le_ico_sum_dist f (Nat.zero_le n)
 #align dist_le_range_sum_dist dist_le_range_sum_dist
 
 /-- A version of `dist_le_Ico_sum_dist` with each intermediate distance replaced
@@ -360,7 +360,7 @@ with an upper estimate. -/
 theorem dist_le_range_sum_of_dist_le {f : ℕ → α} (n : ℕ) {d : ℕ → ℝ}
     (hd : ∀ {k}, k < n → dist (f k) (f (k + 1)) ≤ d k) :
     dist (f 0) (f n) ≤ ∑ i in Finset.range n, d i :=
-  Nat.ico_zero_eq_range ▸ dist_le_ico_sum_of_dist_le (zero_le n) fun _ _ => hd
+  Nat.Ico_zero_eq_range ▸ dist_le_ico_sum_of_dist_le (zero_le n) fun _ _ => hd
 #align dist_le_range_sum_of_dist_le dist_le_range_sum_of_dist_le
 
 theorem swap_dist : Function.swap (@dist α _) = dist := by funext x y <;> exact dist_comm _ _

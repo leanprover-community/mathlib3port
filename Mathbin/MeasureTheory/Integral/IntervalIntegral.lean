@@ -1064,7 +1064,7 @@ theorem sum_integral_adjacent_intervals {a : ℕ → ℝ} {n : ℕ}
     (hint : ∀ k < n, IntervalIntegrable f μ (a k) (a <| k + 1)) :
     (∑ k : ℕ in Finset.range n, ∫ x in a k..a <| k + 1, f x ∂μ) = ∫ x in a 0 ..a n, f x ∂μ :=
   by
-  rw [← Nat.ico_zero_eq_range]
+  rw [← Nat.Ico_zero_eq_range]
   exact sum_integral_adjacent_intervals_Ico (zero_le n) fun k hk => hint k hk.2
 #align interval_integral.sum_integral_adjacent_intervals intervalIntegral.sum_integral_adjacent_intervals
 

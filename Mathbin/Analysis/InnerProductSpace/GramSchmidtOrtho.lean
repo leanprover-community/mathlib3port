@@ -86,7 +86,7 @@ theorem gramSchmidt_def'' (f : ι → E) (n : ι) :
 @[simp]
 theorem gramSchmidt_zero {ι : Type _} [LinearOrder ι] [LocallyFiniteOrder ι] [OrderBot ι]
     [IsWellOrder ι (· < ·)] (f : ι → E) : gramSchmidt 𝕜 f ⊥ = f ⊥ := by
-  rw [gramSchmidt_def, Iio_eq_Ico, Finset.ico_self, Finset.sum_empty, sub_zero]
+  rw [gramSchmidt_def, Iio_eq_Ico, Finset.Ico_self, Finset.sum_empty, sub_zero]
 #align gram_schmidt_zero gramSchmidt_zero
 
 /-- **Gram-Schmidt Orthogonalisation**:

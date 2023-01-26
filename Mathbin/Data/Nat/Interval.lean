@@ -64,147 +64,219 @@ variable (a b c : ℕ)
 
 namespace Nat
 
-theorem icc_eq_range' : Icc a b = ⟨List.range' a (b + 1 - a), List.nodup_range' _ _⟩ :=
+#print Nat.Icc_eq_range' /-
+theorem Icc_eq_range' : Icc a b = ⟨List.range' a (b + 1 - a), List.nodup_range' _ _⟩ :=
   rfl
-#align nat.Icc_eq_range' Nat.icc_eq_range'
+#align nat.Icc_eq_range' Nat.Icc_eq_range'
+-/
 
-theorem ico_eq_range' : Ico a b = ⟨List.range' a (b - a), List.nodup_range' _ _⟩ :=
+#print Nat.Ico_eq_range' /-
+theorem Ico_eq_range' : Ico a b = ⟨List.range' a (b - a), List.nodup_range' _ _⟩ :=
   rfl
-#align nat.Ico_eq_range' Nat.ico_eq_range'
+#align nat.Ico_eq_range' Nat.Ico_eq_range'
+-/
 
-theorem ioc_eq_range' : Ioc a b = ⟨List.range' (a + 1) (b - a), List.nodup_range' _ _⟩ :=
+#print Nat.Ioc_eq_range' /-
+theorem Ioc_eq_range' : Ioc a b = ⟨List.range' (a + 1) (b - a), List.nodup_range' _ _⟩ :=
   rfl
-#align nat.Ioc_eq_range' Nat.ioc_eq_range'
+#align nat.Ioc_eq_range' Nat.Ioc_eq_range'
+-/
 
-theorem ioo_eq_range' : Ioo a b = ⟨List.range' (a + 1) (b - a - 1), List.nodup_range' _ _⟩ :=
+#print Nat.Ioo_eq_range' /-
+theorem Ioo_eq_range' : Ioo a b = ⟨List.range' (a + 1) (b - a - 1), List.nodup_range' _ _⟩ :=
   rfl
-#align nat.Ioo_eq_range' Nat.ioo_eq_range'
+#align nat.Ioo_eq_range' Nat.Ioo_eq_range'
+-/
 
-theorem iio_eq_range : Iio = range := by
+#print Nat.Iio_eq_range /-
+theorem Iio_eq_range : Iio = range := by
   ext (b x)
   rw [mem_Iio, mem_range]
-#align nat.Iio_eq_range Nat.iio_eq_range
+#align nat.Iio_eq_range Nat.Iio_eq_range
+-/
 
+#print Nat.Ico_zero_eq_range /-
 @[simp]
-theorem ico_zero_eq_range : Ico 0 = range := by rw [← bot_eq_zero, ← Iio_eq_Ico, Iio_eq_range]
-#align nat.Ico_zero_eq_range Nat.ico_zero_eq_range
+theorem Ico_zero_eq_range : Ico 0 = range := by rw [← bot_eq_zero, ← Iio_eq_Ico, Iio_eq_range]
+#align nat.Ico_zero_eq_range Nat.Ico_zero_eq_range
+-/
 
-theorem Finset.range_eq_ico : range = Ico 0 :=
-  ico_zero_eq_range.symm
-#align finset.range_eq_Ico Finset.range_eq_ico
+#print Finset.range_eq_Ico /-
+theorem Finset.range_eq_Ico : range = Ico 0 :=
+  Ico_zero_eq_range.symm
+#align finset.range_eq_Ico Finset.range_eq_Ico
+-/
 
+#print Nat.card_Icc /-
 @[simp]
-theorem card_icc : (Icc a b).card = b + 1 - a :=
+theorem card_Icc : (Icc a b).card = b + 1 - a :=
   List.length_range' _ _
-#align nat.card_Icc Nat.card_icc
+#align nat.card_Icc Nat.card_Icc
+-/
 
+#print Nat.card_Ico /-
 @[simp]
-theorem card_ico : (Ico a b).card = b - a :=
+theorem card_Ico : (Ico a b).card = b - a :=
   List.length_range' _ _
-#align nat.card_Ico Nat.card_ico
+#align nat.card_Ico Nat.card_Ico
+-/
 
+#print Nat.card_Ioc /-
 @[simp]
-theorem card_ioc : (Ioc a b).card = b - a :=
+theorem card_Ioc : (Ioc a b).card = b - a :=
   List.length_range' _ _
-#align nat.card_Ioc Nat.card_ioc
+#align nat.card_Ioc Nat.card_Ioc
+-/
 
+#print Nat.card_Ioo /-
 @[simp]
-theorem card_ioo : (Ioo a b).card = b - a - 1 :=
+theorem card_Ioo : (Ioo a b).card = b - a - 1 :=
   List.length_range' _ _
-#align nat.card_Ioo Nat.card_ioo
+#align nat.card_Ioo Nat.card_Ioo
+-/
 
+#print Nat.card_Iic /-
 @[simp]
-theorem card_iic : (Iic b).card = b + 1 := by rw [Iic_eq_Icc, card_Icc, bot_eq_zero, tsub_zero]
-#align nat.card_Iic Nat.card_iic
+theorem card_Iic : (Iic b).card = b + 1 := by rw [Iic_eq_Icc, card_Icc, bot_eq_zero, tsub_zero]
+#align nat.card_Iic Nat.card_Iic
+-/
 
+#print Nat.card_Iio /-
 @[simp]
-theorem card_iio : (Iio b).card = b := by rw [Iio_eq_Ico, card_Ico, bot_eq_zero, tsub_zero]
-#align nat.card_Iio Nat.card_iio
+theorem card_Iio : (Iio b).card = b := by rw [Iio_eq_Ico, card_Ico, bot_eq_zero, tsub_zero]
+#align nat.card_Iio Nat.card_Iio
+-/
 
+#print Nat.card_fintypeIcc /-
 @[simp]
 theorem card_fintypeIcc : Fintype.card (Set.Icc a b) = b + 1 - a := by
   rw [Fintype.card_ofFinset, card_Icc]
 #align nat.card_fintype_Icc Nat.card_fintypeIcc
+-/
 
+#print Nat.card_fintypeIco /-
 @[simp]
 theorem card_fintypeIco : Fintype.card (Set.Ico a b) = b - a := by
   rw [Fintype.card_ofFinset, card_Ico]
 #align nat.card_fintype_Ico Nat.card_fintypeIco
+-/
 
+#print Nat.card_fintypeIoc /-
 @[simp]
 theorem card_fintypeIoc : Fintype.card (Set.Ioc a b) = b - a := by
   rw [Fintype.card_ofFinset, card_Ioc]
 #align nat.card_fintype_Ioc Nat.card_fintypeIoc
+-/
 
+#print Nat.card_fintypeIoo /-
 @[simp]
 theorem card_fintypeIoo : Fintype.card (Set.Ioo a b) = b - a - 1 := by
   rw [Fintype.card_ofFinset, card_Ioo]
 #align nat.card_fintype_Ioo Nat.card_fintypeIoo
+-/
 
+#print Nat.card_fintypeIic /-
 @[simp]
 theorem card_fintypeIic : Fintype.card (Set.Iic b) = b + 1 := by
   rw [Fintype.card_ofFinset, card_Iic]
 #align nat.card_fintype_Iic Nat.card_fintypeIic
+-/
 
+#print Nat.card_fintypeIio /-
 @[simp]
 theorem card_fintypeIio : Fintype.card (Set.Iio b) = b := by rw [Fintype.card_ofFinset, card_Iio]
 #align nat.card_fintype_Iio Nat.card_fintypeIio
+-/
 
+#print Nat.Icc_succ_left /-
 -- TODO@Yaël: Generalize all the following lemmas to `succ_order`
-theorem icc_succ_left : Icc a.succ b = Ioc a b :=
+theorem Icc_succ_left : Icc a.succ b = Ioc a b :=
   by
   ext x
   rw [mem_Icc, mem_Ioc, succ_le_iff]
-#align nat.Icc_succ_left Nat.icc_succ_left
+#align nat.Icc_succ_left Nat.Icc_succ_left
+-/
 
-theorem ico_succ_right : Ico a b.succ = Icc a b :=
+#print Nat.Ico_succ_right /-
+theorem Ico_succ_right : Ico a b.succ = Icc a b :=
   by
   ext x
   rw [mem_Ico, mem_Icc, lt_succ_iff]
-#align nat.Ico_succ_right Nat.ico_succ_right
+#align nat.Ico_succ_right Nat.Ico_succ_right
+-/
 
-theorem ico_succ_left : Ico a.succ b = Ioo a b :=
+#print Nat.Ico_succ_left /-
+theorem Ico_succ_left : Ico a.succ b = Ioo a b :=
   by
   ext x
   rw [mem_Ico, mem_Ioo, succ_le_iff]
-#align nat.Ico_succ_left Nat.ico_succ_left
+#align nat.Ico_succ_left Nat.Ico_succ_left
+-/
 
-theorem icc_pred_right {b : ℕ} (h : 0 < b) : Icc a (b - 1) = Ico a b :=
+#print Nat.Icc_pred_right /-
+theorem Icc_pred_right {b : ℕ} (h : 0 < b) : Icc a (b - 1) = Ico a b :=
   by
   ext x
   rw [mem_Icc, mem_Ico, lt_iff_le_pred h]
-#align nat.Icc_pred_right Nat.icc_pred_right
+#align nat.Icc_pred_right Nat.Icc_pred_right
+-/
 
-theorem ico_succ_succ : Ico a.succ b.succ = Ioc a b :=
+#print Nat.Ico_succ_succ /-
+theorem Ico_succ_succ : Ico a.succ b.succ = Ioc a b :=
   by
   ext x
   rw [mem_Ico, mem_Ioc, succ_le_iff, lt_succ_iff]
-#align nat.Ico_succ_succ Nat.ico_succ_succ
+#align nat.Ico_succ_succ Nat.Ico_succ_succ
+-/
 
+#print Nat.Ico_succ_singleton /-
 @[simp]
-theorem ico_succ_singleton : Ico a (a + 1) = {a} := by rw [Ico_succ_right, Icc_self]
-#align nat.Ico_succ_singleton Nat.ico_succ_singleton
+theorem Ico_succ_singleton : Ico a (a + 1) = {a} := by rw [Ico_succ_right, Icc_self]
+#align nat.Ico_succ_singleton Nat.Ico_succ_singleton
+-/
 
+#print Nat.Ico_pred_singleton /-
 @[simp]
-theorem ico_pred_singleton {a : ℕ} (h : 0 < a) : Ico (a - 1) a = {a - 1} := by
+theorem Ico_pred_singleton {a : ℕ} (h : 0 < a) : Ico (a - 1) a = {a - 1} := by
   rw [← Icc_pred_right _ h, Icc_self]
-#align nat.Ico_pred_singleton Nat.ico_pred_singleton
+#align nat.Ico_pred_singleton Nat.Ico_pred_singleton
+-/
 
+#print Nat.Ioc_succ_singleton /-
 @[simp]
-theorem ioc_succ_singleton : Ioc b (b + 1) = {b + 1} := by rw [← Nat.icc_succ_left, Icc_self]
-#align nat.Ioc_succ_singleton Nat.ioc_succ_singleton
+theorem Ioc_succ_singleton : Ioc b (b + 1) = {b + 1} := by rw [← Nat.Icc_succ_left, Icc_self]
+#align nat.Ioc_succ_singleton Nat.Ioc_succ_singleton
+-/
 
 variable {a b c}
 
-theorem ico_succ_right_eq_insert_ico (h : a ≤ b) : Ico a (b + 1) = insert b (Ico a b) := by
+/- warning: nat.Ico_succ_right_eq_insert_Ico -> Nat.Ico_succ_right_eq_insert_Ico is a dubious translation:
+lean 3 declaration is
+  forall {a : Nat} {b : Nat}, (LE.le.{0} Nat Nat.hasLe a b) -> (Eq.{1} (Finset.{0} Nat) (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.locallyFiniteOrder a (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) b (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Insert.insert.{0, 0} Nat (Finset.{0} Nat) (Finset.hasInsert.{0} Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b)) b (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.locallyFiniteOrder a b)))
+but is expected to have type
+  forall {a : Nat} {b : Nat}, (LE.le.{0} Nat instLENat a b) -> (Eq.{1} (Finset.{0} Nat) (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring a (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) b (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Insert.insert.{0, 0} Nat (Finset.{0} Nat) (Finset.instInsertFinset.{0} Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b)) b (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring a b)))
+Case conversion may be inaccurate. Consider using '#align nat.Ico_succ_right_eq_insert_Ico Nat.Ico_succ_right_eq_insert_Icoₓ'. -/
+theorem Ico_succ_right_eq_insert_Ico (h : a ≤ b) : Ico a (b + 1) = insert b (Ico a b) := by
   rw [Ico_succ_right, ← Ico_insert_right h]
-#align nat.Ico_succ_right_eq_insert_Ico Nat.ico_succ_right_eq_insert_ico
+#align nat.Ico_succ_right_eq_insert_Ico Nat.Ico_succ_right_eq_insert_Ico
 
-theorem ico_insert_succ_left (h : a < b) : insert a (Ico a.succ b) = Ico a b := by
+/- warning: nat.Ico_insert_succ_left -> Nat.Ico_insert_succ_left is a dubious translation:
+lean 3 declaration is
+  forall {a : Nat} {b : Nat}, (LT.lt.{0} Nat Nat.hasLt a b) -> (Eq.{1} (Finset.{0} Nat) (Insert.insert.{0, 0} Nat (Finset.{0} Nat) (Finset.hasInsert.{0} Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b)) a (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.locallyFiniteOrder (Nat.succ a) b)) (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.locallyFiniteOrder a b))
+but is expected to have type
+  forall {a : Nat} {b : Nat}, (LT.lt.{0} Nat instLTNat a b) -> (Eq.{1} (Finset.{0} Nat) (Insert.insert.{0, 0} Nat (Finset.{0} Nat) (Finset.instInsertFinset.{0} Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b)) a (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring (Nat.succ a) b)) (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring a b))
+Case conversion may be inaccurate. Consider using '#align nat.Ico_insert_succ_left Nat.Ico_insert_succ_leftₓ'. -/
+theorem Ico_insert_succ_left (h : a < b) : insert a (Ico a.succ b) = Ico a b := by
   rw [Ico_succ_left, ← Ioo_insert_left h]
-#align nat.Ico_insert_succ_left Nat.ico_insert_succ_left
+#align nat.Ico_insert_succ_left Nat.Ico_insert_succ_left
 
-theorem image_sub_const_ico (h : c ≤ a) : ((Ico a b).image fun x => x - c) = Ico (a - c) (b - c) :=
+/- warning: nat.image_sub_const_Ico -> Nat.image_sub_const_Ico is a dubious translation:
+lean 3 declaration is
+  forall {a : Nat} {b : Nat} {c : Nat}, (LE.le.{0} Nat Nat.hasLe c a) -> (Eq.{1} (Finset.{0} Nat) (Finset.image.{0, 0} Nat Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) (fun (x : Nat) => HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) x c) (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.locallyFiniteOrder a b)) (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.locallyFiniteOrder (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) a c) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) b c)))
+but is expected to have type
+  forall {a : Nat} {b : Nat} {c : Nat}, (LE.le.{0} Nat instLENat c a) -> (Eq.{1} (Finset.{0} Nat) (Finset.image.{0, 0} Nat Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) (fun (x : Nat) => HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) x c) (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring a b)) (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) a c) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) b c)))
+Case conversion may be inaccurate. Consider using '#align nat.image_sub_const_Ico Nat.image_sub_const_Icoₓ'. -/
+theorem image_sub_const_Ico (h : c ≤ a) : ((Ico a b).image fun x => x - c) = Ico (a - c) (b - c) :=
   by
   ext x
   rw [mem_image]
@@ -216,9 +288,15 @@ theorem image_sub_const_ico (h : c ≤ a) : ((Ico a b).image fun x => x - c) = I
     refine' ⟨x + c, _, add_tsub_cancel_right _ _⟩
     rw [mem_Ico] at h⊢
     exact ⟨tsub_le_iff_right.1 h.1, lt_tsub_iff_right.1 h.2⟩
-#align nat.image_sub_const_Ico Nat.image_sub_const_ico
+#align nat.image_sub_const_Ico Nat.image_sub_const_Ico
 
-theorem ico_image_const_sub_eq_ico (hac : a ≤ c) :
+/- warning: nat.Ico_image_const_sub_eq_Ico -> Nat.Ico_image_const_sub_eq_Ico is a dubious translation:
+lean 3 declaration is
+  forall {a : Nat} {b : Nat} {c : Nat}, (LE.le.{0} Nat Nat.hasLe a c) -> (Eq.{1} (Finset.{0} Nat) (Finset.image.{0, 0} Nat Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) (fun (x : Nat) => HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) c x) (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.locallyFiniteOrder a b)) (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.locallyFiniteOrder (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) c (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) b) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) c (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) a)))
+but is expected to have type
+  forall {a : Nat} {b : Nat} {c : Nat}, (LE.le.{0} Nat instLENat a c) -> (Eq.{1} (Finset.{0} Nat) (Finset.image.{0, 0} Nat Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) (fun (x : Nat) => HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) c x) (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring a b)) (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) c (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) b) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) c (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) a)))
+Case conversion may be inaccurate. Consider using '#align nat.Ico_image_const_sub_eq_Ico Nat.Ico_image_const_sub_eq_Icoₓ'. -/
+theorem Ico_image_const_sub_eq_Ico (hac : a ≤ c) :
     ((Ico a b).image fun x => c - x) = Ico (c + 1 - b) (c + 1 - a) :=
   by
   ext x
@@ -243,16 +321,23 @@ theorem ico_image_const_sub_eq_ico (hac : a ≤ c) :
       exact
         ⟨le_tsub_of_add_le_right ha,
           (tsub_lt_iff_left hx).2 <| succ_le_iff.1 <| tsub_le_iff_right.1 hb⟩
-#align nat.Ico_image_const_sub_eq_Ico Nat.ico_image_const_sub_eq_ico
+#align nat.Ico_image_const_sub_eq_Ico Nat.Ico_image_const_sub_eq_Ico
 
-theorem ico_succ_left_eq_erase_ico : Ico a.succ b = erase (Ico a b) a :=
+/- warning: nat.Ico_succ_left_eq_erase_Ico -> Nat.Ico_succ_left_eq_erase_Ico is a dubious translation:
+lean 3 declaration is
+  forall {a : Nat} {b : Nat}, Eq.{1} (Finset.{0} Nat) (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.locallyFiniteOrder (Nat.succ a) b) (Finset.erase.{0} Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.locallyFiniteOrder a b) a)
+but is expected to have type
+  forall {a : Nat} {b : Nat}, Eq.{1} (Finset.{0} Nat) (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring (Nat.succ a) b) (Finset.erase.{0} Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring a b) a)
+Case conversion may be inaccurate. Consider using '#align nat.Ico_succ_left_eq_erase_Ico Nat.Ico_succ_left_eq_erase_Icoₓ'. -/
+theorem Ico_succ_left_eq_erase_Ico : Ico a.succ b = erase (Ico a b) a :=
   by
   ext x
   rw [Ico_succ_left, mem_erase, mem_Ico, mem_Ioo, ← and_assoc', ne_comm, and_comm' (a ≠ x),
     lt_iff_le_and_ne]
-#align nat.Ico_succ_left_eq_erase_Ico Nat.ico_succ_left_eq_erase_ico
+#align nat.Ico_succ_left_eq_erase_Ico Nat.Ico_succ_left_eq_erase_Ico
 
-theorem mod_injOn_ico (n a : ℕ) : Set.InjOn (· % a) (Finset.Ico n (n + a)) :=
+#print Nat.mod_injOn_Ico /-
+theorem mod_injOn_Ico (n a : ℕ) : Set.InjOn (· % a) (Finset.Ico n (n + a)) :=
   by
   induction' n with n ih
   · simp only [zero_add, nat_zero_eq_zero, Ico_zero_eq_range]
@@ -276,11 +361,18 @@ theorem mod_injOn_ico (n a : ℕ) : Set.InjOn (· % a) (Finset.Ico n (n + a)) :=
     refine' ih hk _ hkl
     simp only [lt_add_iff_pos_right, Set.left_mem_Ico, Finset.coe_Ico, ha]
   · refine' ih _ _ hkl <;> simp only [Finset.mem_coe, hk, hl]
-#align nat.mod_inj_on_Ico Nat.mod_injOn_ico
+#align nat.mod_inj_on_Ico Nat.mod_injOn_Ico
+-/
 
+/- warning: nat.image_Ico_mod -> Nat.image_Ico_mod is a dubious translation:
+lean 3 declaration is
+  forall (n : Nat) (a : Nat), Eq.{1} (Finset.{0} Nat) (Finset.image.{0, 0} Nat Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) (fun (_x : Nat) => HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.hasMod) _x a) (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.locallyFiniteOrder n (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n a))) (Finset.range a)
+but is expected to have type
+  forall (n : Nat) (a : Nat), Eq.{1} (Finset.{0} Nat) (Finset.image.{0, 0} Nat Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) (fun (_x : Nat) => HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) _x a) (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring n (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n a))) (Finset.range a)
+Case conversion may be inaccurate. Consider using '#align nat.image_Ico_mod Nat.image_Ico_modₓ'. -/
 /-- Note that while this lemma cannot be easily generalized to a type class, it holds for ℤ as
 well. See `int.image_Ico_mod` for the ℤ version. -/
-theorem image_ico_mod (n a : ℕ) : (Ico n (n + a)).image (· % a) = range a :=
+theorem image_Ico_mod (n a : ℕ) : (Ico n (n + a)).image (· % a) = range a :=
   by
   obtain rfl | ha := eq_or_ne a 0
   · rw [range_zero, add_zero, Ico_self, image_empty]
@@ -305,18 +397,20 @@ theorem image_ico_mod (n a : ℕ) : (Ico n (n + a)).image (· % a) = range a :=
       refine' add_lt_add_of_lt_of_le hia (le_trans _ hn.le)
       simp only [zero_le, le_add_iff_nonneg_left]
     · rw [Nat.add_mul_mod_self_left, Nat.mod_eq_of_lt hia]
-#align nat.image_Ico_mod Nat.image_ico_mod
+#align nat.image_Ico_mod Nat.image_Ico_mod
 
 section Multiset
 
 open Multiset
 
-theorem multiset_ico_map_mod (n a : ℕ) : (Multiset.Ico n (n + a)).map (· % a) = range a :=
+#print Nat.multiset_Ico_map_mod /-
+theorem multiset_Ico_map_mod (n a : ℕ) : (Multiset.Ico n (n + a)).map (· % a) = range a :=
   by
   convert congr_arg Finset.val (image_Ico_mod n a)
   refine' ((nodup_map_iff_inj_on (Finset.Ico _ _).Nodup).2 <| _).dedup.symm
   exact mod_inj_on_Ico _ _
-#align nat.multiset_Ico_map_mod Nat.multiset_ico_map_mod
+#align nat.multiset_Ico_map_mod Nat.multiset_Ico_map_mod
+-/
 
 end Multiset
 
@@ -324,18 +418,30 @@ end Nat
 
 namespace Finset
 
+/- warning: finset.range_image_pred_top_sub -> Finset.range_image_pred_top_sub is a dubious translation:
+lean 3 declaration is
+  forall (n : Nat), Eq.{1} (Finset.{0} Nat) (Finset.image.{0, 0} Nat Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) (fun (j : Nat) => HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) j) (Finset.range n)) (Finset.range n)
+but is expected to have type
+  forall (n : Nat), Eq.{1} (Finset.{0} Nat) (Finset.image.{0, 0} Nat Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) (fun (j : Nat) => HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) j) (Finset.range n)) (Finset.range n)
+Case conversion may be inaccurate. Consider using '#align finset.range_image_pred_top_sub Finset.range_image_pred_top_subₓ'. -/
 theorem range_image_pred_top_sub (n : ℕ) :
     ((Finset.range n).image fun j => n - 1 - j) = Finset.range n :=
   by
   cases n
   · rw [range_zero, image_empty]
-  · rw [Finset.range_eq_ico, Nat.ico_image_const_sub_eq_ico (zero_le _)]
+  · rw [Finset.range_eq_Ico, Nat.Ico_image_const_sub_eq_Ico (zero_le _)]
     simp_rw [succ_sub_succ, tsub_zero, tsub_self]
 #align finset.range_image_pred_top_sub Finset.range_image_pred_top_sub
 
+/- warning: finset.range_add_eq_union -> Finset.range_add_eq_union is a dubious translation:
+lean 3 declaration is
+  forall (a : Nat) (b : Nat), Eq.{1} (Finset.{0} Nat) (Finset.range (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) a b)) (Union.union.{0} (Finset.{0} Nat) (Finset.hasUnion.{0} Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b)) (Finset.range a) (Finset.map.{0, 0} Nat Nat (addLeftEmbedding.{0} Nat (AddLeftCancelMonoid.toAddLeftCancelSemigroup.{0} Nat (AddCancelCommMonoid.toAddLeftCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring)))) a) (Finset.range b)))
+but is expected to have type
+  forall (a : Nat) (b : Nat), Eq.{1} (Finset.{0} Nat) (Finset.range (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) a b)) (Union.union.{0} (Finset.{0} Nat) (Finset.instUnionFinset.{0} Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b)) (Finset.range a) (Finset.map.{0, 0} Nat Nat (addLeftEmbedding.{0} Nat (AddLeftCancelMonoid.toAddLeftCancelSemigroup.{0} Nat (AddCancelCommMonoid.toAddLeftCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring)))) a) (Finset.range b)))
+Case conversion may be inaccurate. Consider using '#align finset.range_add_eq_union Finset.range_add_eq_unionₓ'. -/
 theorem range_add_eq_union : range (a + b) = range a ∪ (range b).map (addLeftEmbedding a) :=
   by
-  rw [Finset.range_eq_ico, map_eq_image]
+  rw [Finset.range_eq_Ico, map_eq_image]
   convert (Ico_union_Ico_eq_Ico a.zero_le le_self_add).symm
   exact image_add_left_Ico _ _ _
 #align finset.range_add_eq_union Finset.range_add_eq_union
@@ -348,15 +454,20 @@ variable {P : ℕ → Prop} (h : ∀ n, P (n + 1) → P n)
 
 include h
 
+#print Nat.decreasing_induction_of_not_bddAbove /-
 theorem Nat.decreasing_induction_of_not_bddAbove (hP : ¬BddAbove { x | P x }) (n : ℕ) : P n :=
   let ⟨m, hm, hl⟩ := not_bddAbove_iff.1 hP n
   decreasingInduction h hl.le hm
 #align nat.decreasing_induction_of_not_bdd_above Nat.decreasing_induction_of_not_bddAbove
+-/
 
+#print Nat.decreasing_induction_of_infinite /-
 theorem Nat.decreasing_induction_of_infinite (hP : { x | P x }.Infinite) (n : ℕ) : P n :=
   Nat.decreasing_induction_of_not_bddAbove h (mt BddAbove.finite hP) n
 #align nat.decreasing_induction_of_infinite Nat.decreasing_induction_of_infinite
+-/
 
+#print Nat.cauchy_induction' /-
 theorem Nat.cauchy_induction' (seed : ℕ) (hs : P seed) (hi : ∀ x, seed ≤ x → P x → ∃ y, x < y ∧ P y)
     (n : ℕ) : P n := by
   apply Nat.decreasing_induction_of_infinite h fun hf => _
@@ -364,12 +475,16 @@ theorem Nat.cauchy_induction' (seed : ℕ) (hs : P seed) (hi : ∀ x, seed ≤ x
   obtain ⟨y, hl, hy⟩ := hi m (le_of_not_lt fun hl => hl.Ne <| hm seed hs hl.le) hP
   exact hl.ne (hm y hy hl.le)
 #align nat.cauchy_induction' Nat.cauchy_induction'
+-/
 
+#print Nat.cauchy_induction /-
 theorem Nat.cauchy_induction (seed : ℕ) (hs : P seed) (f : ℕ → ℕ)
     (hf : ∀ x, seed ≤ x → P x → x < f x ∧ P (f x)) (n : ℕ) : P n :=
   seed.cauchy_induction' h hs (fun x hl hx => ⟨f x, hf x hl hx⟩) n
 #align nat.cauchy_induction Nat.cauchy_induction
+-/
 
+#print Nat.cauchy_induction_mul /-
 theorem Nat.cauchy_induction_mul (k seed : ℕ) (hk : 1 < k) (hs : P seed.succ)
     (hm : ∀ x, seed < x → P x → P (k * x)) (n : ℕ) : P n :=
   by
@@ -377,11 +492,14 @@ theorem Nat.cauchy_induction_mul (k seed : ℕ) (hk : 1 < k) (hs : P seed.succ)
   convert (mul_lt_mul_right <| seed.succ_pos.trans_le hl).2 hk
   rw [one_mul]
 #align nat.cauchy_induction_mul Nat.cauchy_induction_mul
+-/
 
+#print Nat.cauchy_induction_two_mul /-
 theorem Nat.cauchy_induction_two_mul (seed : ℕ) (hs : P seed.succ)
     (hm : ∀ x, seed < x → P x → P (2 * x)) (n : ℕ) : P n :=
   Nat.cauchy_induction_mul h 2 seed one_lt_two hs hm n
 #align nat.cauchy_induction_two_mul Nat.cauchy_induction_two_mul
+-/
 
 end Induction
 

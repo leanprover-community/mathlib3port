@@ -626,7 +626,7 @@ theorem Submartingale.sumMulSub [IsFiniteMeasure μ] {R : ℝ} {ξ f : ℕ → �
           (hf.adapted.strongly_measurable_le hi.le))
   refine' submartingale_of_condexp_sub_nonneg_nat hadp hint fun i => _
   simp only [← Finset.sum_ico_eq_sub _ (Nat.le_succ _), Finset.sum_apply, Pi.mul_apply,
-    Pi.sub_apply, Nat.ico_succ_singleton, Finset.sum_singleton]
+    Pi.sub_apply, Nat.Ico_succ_singleton, Finset.sum_singleton]
   exact
     eventually_le.trans
       (eventually_le.mul_nonneg (eventually_of_forall (hnonneg _))

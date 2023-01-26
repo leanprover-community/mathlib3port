@@ -398,7 +398,7 @@ theorem coeff_iterate_derivative_as_prod_ico {k} (p : R[X]) :
     apply congr_arg₂
     · have set_eq : Ico m.succ (m + k.succ.succ) = Ico (m + 1).succ (m + 1 + k.succ) ∪ {m + 1} :=
         by
-        simp_rw [← Nat.ico_succ_singleton, union_comm, Nat.succ_eq_add_one, add_comm (k + 1),
+        simp_rw [← Nat.Ico_succ_singleton, union_comm, Nat.succ_eq_add_one, add_comm (k + 1),
           add_assoc]
         rw [Ico_union_Ico_eq_Ico] <;> simp_rw [add_le_add_iff_left, le_add_self]
       rw [set_eq, prod_union, prod_singleton]

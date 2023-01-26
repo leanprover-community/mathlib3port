@@ -53,9 +53,9 @@ theorem commutator_eq_normalClosure : commutator G = Subgroup.normalClosure (com
   simp [commutator, Subgroup.commutator_def', commutatorSet]
 #align commutator_eq_normal_closure commutator_eq_normalClosure
 
-instance commutatorCharacteristic : (commutator G).Characteristic :=
-  Subgroup.commutatorCharacteristic ⊤ ⊤
-#align commutator_characteristic commutatorCharacteristic
+instance commutator_characteristic : (commutator G).Characteristic :=
+  Subgroup.commutator_characteristic ⊤ ⊤
+#align commutator_characteristic commutator_characteristic
 
 instance [Finite (commutatorSet G)] : Group.Fg (commutator G) :=
   by

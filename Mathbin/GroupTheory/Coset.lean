@@ -234,7 +234,7 @@ theorem rightCoset_mem_rightCoset {a : α} (ha : a ∈ s) : (s : Set α) *r a = 
 theorem orbit_subgroup_eq_rightCoset (a : α) : MulAction.orbit s a = s *r a :=
   Set.ext fun b => ⟨fun ⟨c, d⟩ => ⟨c, c.2, d⟩, fun ⟨c, d, e⟩ => ⟨⟨c, d⟩, e⟩⟩
 #align orbit_subgroup_eq_right_coset orbit_subgroup_eq_rightCoset
-#align orbit_add_subgroup_eq_right_coset orbit_add_subgroup_eq_rightCoset
+#align orbit_add_subgroup_eq_right_coset orbit_add_subgroup_eq_right_coset
 
 @[to_additive]
 theorem orbit_subgroup_eq_self_of_mem {a : α} (ha : a ∈ s) : MulAction.orbit s a = s :=
@@ -728,7 +728,7 @@ theorem quotientSubgroupOfMapOfLe_apply_mk (H : Subgroup α) (h : s ≤ t) (g : 
     quotientSubgroupOfMapOfLe H h (QuotientGroup.mk g) = QuotientGroup.mk g :=
   rfl
 #align subgroup.quotient_subgroup_of_map_of_le_apply_mk Subgroup.quotientSubgroupOfMapOfLe_apply_mk
-#align add_subgroup.quotient_add_subgroup_of_map_of_le_apply_mk AddSubgroup.quotient_add_subgroupOf_map_of_le_apply_mk
+#align add_subgroup.quotient_add_subgroup_of_map_of_le_apply_mk AddSubgroup.quotient_add_subgroup_of_map_of_le_apply_mk
 
 /-- If `s ≤ t`, then there is a map `α ⧸ s → α ⧸ t`. -/
 @[to_additive "If `s ≤ t`, then there is an map `α ⧸ s → α ⧸ t`."]

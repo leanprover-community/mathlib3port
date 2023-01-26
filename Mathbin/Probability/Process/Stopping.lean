@@ -1059,7 +1059,7 @@ theorem stoppedProcess_eq'' [LinearOrder ι] [LocallyFiniteOrderBot ι] [AddComm
   rw [stopped_process_eq_of_mem_finset n h_mem]
   swap; · infer_instance
   congr with i
-  simp only [Finset.iio_filter_lt, min_eq_right]
+  simp only [Finset.Iio_filter_lt, min_eq_right]
 #align measure_theory.stopped_process_eq'' MeasureTheory.stoppedProcess_eq''
 
 section StoppedValue

@@ -729,7 +729,7 @@ section Pointwise
 
 open Pointwise
 
-theorem characteristicOfNormal {p : ℕ} [Fact p.Prime] [Finite (Sylow p G)] (P : Sylow p G)
+theorem characteristic_of_normal {p : ℕ} [Fact p.Prime] [Finite (Sylow p G)] (P : Sylow p G)
     (h : (P : Subgroup G).Normal) : (P : Subgroup G).Characteristic :=
   by
   haveI := Sylow.subsingleton_of_normal P h
@@ -737,7 +737,7 @@ theorem characteristicOfNormal {p : ℕ} [Fact p.Prime] [Finite (Sylow p G)] (P 
   intro Φ
   show (Φ • P).toSubgroup = P.to_subgroup
   congr
-#align sylow.characteristic_of_normal Sylow.characteristicOfNormal
+#align sylow.characteristic_of_normal Sylow.characteristic_of_normal
 
 end Pointwise
 

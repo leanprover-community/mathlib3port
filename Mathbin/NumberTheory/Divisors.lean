@@ -182,7 +182,7 @@ theorem properDivisors_zero : properDivisors 0 = ∅ :=
 #align nat.proper_divisors_zero Nat.properDivisors_zero
 
 theorem properDivisors_subset_divisors : properDivisors n ⊆ divisors n :=
-  filter_subset_filter _ <| ico_subset_ico_right n.le_succ
+  filter_subset_filter _ <| Ico_subset_Ico_right n.le_succ
 #align nat.proper_divisors_subset_divisors Nat.properDivisors_subset_divisors
 
 @[simp]

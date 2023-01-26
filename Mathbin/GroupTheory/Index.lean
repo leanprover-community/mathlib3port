@@ -122,7 +122,7 @@ theorem relindex_subgroupOf (hKL : K ≤ L) :
     (H.subgroupOf L).relindex (K.subgroupOf L) = H.relindex K :=
   ((index_comap (H.subgroupOf L) (inclusion hKL)).trans (congr_arg _ (inclusion_range hKL))).symm
 #align subgroup.relindex_subgroup_of Subgroup.relindex_subgroupOf
-#align add_subgroup.relindex_add_subgroup_of AddSubgroup.relindex_add_subgroupOf
+#align add_subgroup.relindex_add_subgroup_of AddSubgroup.relindex_add_subgroup_of
 
 variable (H K L)
 

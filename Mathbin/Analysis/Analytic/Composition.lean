@@ -764,7 +764,7 @@ theorem comp_partialSum (q : FormalMultilinearSeries 𝕜 F G) (p : FormalMultil
   · simpa only [FormalMultilinearSeries.partialSum, ContinuousMultilinearMap.map_sum_finset] using H
   -- rewrite the first sum as a big sum over a sigma type, in the finset
   -- `comp_partial_sum_target 0 N N`
-  rw [Finset.range_eq_ico, Finset.sum_sigma']
+  rw [Finset.range_eq_Ico, Finset.sum_sigma']
   -- use `comp_change_of_variables_sum`, saying that this change of variables respects sums
   apply comp_change_of_variables_sum 0 N N
   rintro ⟨k, blocks_fun⟩ H
@@ -837,7 +837,7 @@ theorem HasFpowerSeriesAt.comp {g : F → G} {f : E → F} {q : FormalMultilinea
       rw [eventually_at_top]
       refine' ⟨1, fun n hn => _⟩
       symm
-      rw [eq_sub_iff_add_eq', Finset.range_eq_ico, ← Hf.coeff_zero fun i => y,
+      rw [eq_sub_iff_add_eq', Finset.range_eq_Ico, ← Hf.coeff_zero fun i => y,
         Finset.sum_eq_sum_ico_succ_bot hn]
     have :
       tendsto (fun n => (∑ a in Finset.range n, p a fun b => y) - f x) at_top

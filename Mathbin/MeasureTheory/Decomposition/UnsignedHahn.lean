@@ -112,13 +112,13 @@ theorem hahn_decomposition [IsFiniteMeasure μ] [IsFiniteMeasure ν] :
     intro a b c d hab hcd
     dsimp only [f]
     rw [Finset.inf_eq_infᵢ, Finset.inf_eq_infᵢ]
-    exact bInter_subset_bInter_left (Finset.ico_subset_ico hab <| Nat.succ_le_succ hcd)
+    exact bInter_subset_bInter_left (Finset.Ico_subset_Ico hab <| Nat.succ_le_succ hcd)
   have f_succ : ∀ n m, n ≤ m → f n (m + 1) = f n m ∩ e (m + 1) :=
     by
     intro n m hnm
     have : n ≤ m + 1 := le_of_lt (Nat.succ_le_succ hnm)
     simp only [f]
-    rw [Nat.ico_succ_right_eq_insert_ico this, Finset.inf_insert, Set.inter_comm]
+    rw [Nat.Ico_succ_right_eq_insert_Ico this, Finset.inf_insert, Set.inter_comm]
     rfl
   have le_d_f : ∀ n m, m ≤ n → γ - 2 * (1 / 2) ^ m + (1 / 2) ^ n ≤ d (f m n) :=
     by
@@ -126,7 +126,7 @@ theorem hahn_decomposition [IsFiniteMeasure μ] [IsFiniteMeasure ν] :
     refine' Nat.le_induction _ _ n h
     · have := he₂ m
       simp only [f]
-      rw [Nat.ico_succ_singleton, Finset.inf_singleton]
+      rw [Nat.Ico_succ_singleton, Finset.inf_singleton]
       exact aux this
     · intro n(hmn : m ≤ n)ih
       have : γ + (γ - 2 * (1 / 2) ^ m + (1 / 2) ^ (n + 1)) ≤ γ + d (f m (n + 1)) := by

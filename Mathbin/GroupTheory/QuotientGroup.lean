@@ -397,7 +397,7 @@ theorem rangeKerLift_injective : Injective (rangeKerLift φ) := fun a b =>
       rw [left_rel_apply, ← ker_range_restrict, mem_ker, φ.range_restrict.map_mul, ← h,
         φ.range_restrict.map_inv, inv_mul_self]
 #align quotient_group.range_ker_lift_injective QuotientGroup.rangeKerLift_injective
-#align quotient_add_group.range_ker_lift_injective quotientAddGroup.rangeKerLift_injective
+#align quotient_add_group.range_ker_lift_injective quotientAddGroup.range_ker_lift_injective
 
 @[to_additive]
 theorem rangeKerLift_surjective : Surjective (rangeKerLift φ) :=
@@ -406,7 +406,7 @@ theorem rangeKerLift_surjective : Surjective (rangeKerLift φ) :=
   use mk g
   rfl
 #align quotient_group.range_ker_lift_surjective QuotientGroup.rangeKerLift_surjective
-#align quotient_add_group.range_ker_lift_surjective quotientAddGroup.rangeKerLift_surjective
+#align quotient_add_group.range_ker_lift_surjective quotientAddGroup.range_ker_lift_surjective
 
 /-- **Noether's first isomorphism theorem** (a definition): the canonical isomorphism between
 `G/(ker φ)` to `range φ`. -/
@@ -483,7 +483,7 @@ theorem quotientMapSubgroupOfOfLe_coe {A' A B' B : Subgroup G} [hAN : (A'.subgro
     quotientMapSubgroupOfOfLe h' h x = ↑(Subgroup.inclusion h x : B) :=
   rfl
 #align quotient_group.quotient_map_subgroup_of_of_le_coe QuotientGroup.quotientMapSubgroupOfOfLe_coe
-#align quotient_add_group.quotient_map_add_subgroup_of_of_le_coe quotientAddGroup.quotient_map_add_subgroupOf_of_le_coe
+#align quotient_add_group.quotient_map_add_subgroup_of_of_le_coe quotientAddGroup.quotient_map_add_subgroup_of_of_le_coe
 
 /-- Let `A', A, B', B` be subgroups of `G`.
 If `A' = B'` and `A = B`, then the quotients `A / (A' ⊓ A)` and `B / (B' ⊓ B)` are isomorphic.

@@ -193,12 +193,12 @@ theorem commutator_le_map_commutator {f : G →* G'} {K₁ K₂ : Subgroup G'} (
 
 variable (H₁ H₂)
 
-instance commutatorCharacteristic [h₁ : Characteristic H₁] [h₂ : Characteristic H₂] :
+instance commutator_characteristic [h₁ : Characteristic H₁] [h₂ : Characteristic H₂] :
     Characteristic ⁅H₁, H₂⁆ :=
   characteristic_iff_le_map.mpr fun ϕ =>
     commutator_le_map_commutator (characteristic_iff_le_map.mp h₁ ϕ)
       (characteristic_iff_le_map.mp h₂ ϕ)
-#align subgroup.commutator_characteristic Subgroup.commutatorCharacteristic
+#align subgroup.commutator_characteristic Subgroup.commutator_characteristic
 
 theorem commutator_prod_prod (K₁ K₂ : Subgroup G') :
     ⁅H₁.Prod K₁, H₂.Prod K₂⁆ = ⁅H₁, H₂⁆.Prod ⁅K₁, K₂⁆ :=

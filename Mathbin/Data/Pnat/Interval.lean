@@ -62,22 +62,22 @@ theorem map_subtype_embedding_ioo : (Ioo a b).map (Function.Embedding.subtype _)
 
 @[simp]
 theorem card_icc : (Icc a b).card = b + 1 - a := by
-  rw [← Nat.card_icc, ← map_subtype_embedding_Icc, card_map]
+  rw [← Nat.card_Icc, ← map_subtype_embedding_Icc, card_map]
 #align pnat.card_Icc PNat.card_icc
 
 @[simp]
 theorem card_ico : (Ico a b).card = b - a := by
-  rw [← Nat.card_ico, ← map_subtype_embedding_Ico, card_map]
+  rw [← Nat.card_Ico, ← map_subtype_embedding_Ico, card_map]
 #align pnat.card_Ico PNat.card_ico
 
 @[simp]
 theorem card_ioc : (Ioc a b).card = b - a := by
-  rw [← Nat.card_ioc, ← map_subtype_embedding_Ioc, card_map]
+  rw [← Nat.card_Ioc, ← map_subtype_embedding_Ioc, card_map]
 #align pnat.card_Ioc PNat.card_ioc
 
 @[simp]
 theorem card_ioo : (Ioo a b).card = b - a - 1 := by
-  rw [← Nat.card_ioo, ← map_subtype_embedding_Ioo, card_map]
+  rw [← Nat.card_Ioo, ← map_subtype_embedding_Ioo, card_map]
 #align pnat.card_Ioo PNat.card_ioo
 
 @[simp]

@@ -145,7 +145,7 @@ theorem sum_le_of_monotoneOn_icc (f : α → E) {s : Set α} {m n : ℕ} {u : �
     (∑ i in Finset.Ico m n, edist (f (u (i + 1))) (f (u i))) ≤ evariationOn f s :=
   by
   rcases le_or_lt n m with (hnm | hmn)
-  · simp only [Finset.ico_eq_empty_of_le hnm, Finset.sum_empty, zero_le']
+  · simp only [Finset.Ico_eq_empty_of_le hnm, Finset.sum_empty, zero_le']
   let v i := u (m + i)
   have hv : MonotoneOn v (Iic (n - m)) :=
     by
@@ -160,7 +160,7 @@ theorem sum_le_of_monotoneOn_icc (f : α → E) {s : Set α} {m n : ℕ} {u : �
     (∑ i in Finset.Ico m n, edist (f (u (i + 1))) (f (u i))) =
         ∑ i in Finset.range (n - m), edist (f (u (m + i + 1))) (f (u (m + i))) :=
       by
-      rw [Finset.range_eq_ico]
+      rw [Finset.range_eq_Ico]
       convert (Finset.sum_ico_add (fun i => edist (f (u (i + 1))) (f (u i))) 0 (n - m) m).symm
       · rw [zero_add]
       · rw [tsub_add_cancel_of_le hmn.le]
@@ -400,13 +400,13 @@ theorem add_point (f : α → E) {s : Set α} {x : α} (hx : x ∈ s) (u : ℕ �
         rw [add_comm 1 i]
       _ = ∑ i in Finset.Ico 1 (n + 1), edist (f (w (i + 1))) (f (w i)) :=
         by
-        rw [Finset.range_eq_ico]
+        rw [Finset.range_eq_Ico]
         exact Finset.sum_ico_add (fun i => edist (f (w (i + 1))) (f (w i))) 0 n 1
       _ ≤ ∑ j in Finset.range (n + 1), edist (f (w (j + 1))) (f (w j)) :=
         by
         apply Finset.sum_le_sum_of_subset _
-        rw [Finset.range_eq_ico]
-        exact Finset.ico_subset_ico zero_le_one le_rfl
+        rw [Finset.range_eq_Ico]
+        exact Finset.Ico_subset_Ico zero_le_one le_rfl
       
   ·
     calc
@@ -415,7 +415,7 @@ theorem add_point (f : α → E) {s : Set α} {x : α} (hx : x ∈ s) (u : ℕ �
               ∑ i in Finset.Ico (N - 1) N, edist (f (u (i + 1))) (f (u i))) +
             ∑ i in Finset.Ico N n, edist (f (u (i + 1))) (f (u i)) :=
         by
-        rw [Finset.sum_ico_consecutive, Finset.sum_ico_consecutive, Finset.range_eq_ico]
+        rw [Finset.sum_ico_consecutive, Finset.sum_ico_consecutive, Finset.range_eq_Ico]
         · exact zero_le _
         · exact hN.1
         · exact zero_le _
@@ -433,7 +433,7 @@ theorem add_point (f : α → E) {s : Set α} {x : α} (hx : x ∈ s) (u : ℕ �
           have B : i < N := Nat.lt_of_succ_lt A
           rw [if_pos A, if_pos B]
         · have A : N - 1 + 1 = N := Nat.succ_pred_eq_of_pos Npos
-          have : Finset.Ico (N - 1) N = {N - 1} := by rw [← Nat.ico_succ_singleton, A]
+          have : Finset.Ico (N - 1) N = {N - 1} := by rw [← Nat.Ico_succ_singleton, A]
           simp only [this, A, Finset.sum_singleton]
         · apply Finset.sum_congr rfl fun i hi => _
           simp only [Finset.mem_Ico] at hi
@@ -478,12 +478,12 @@ theorem add_point (f : α → E) {s : Set α} {x : α} (hx : x ∈ s) (u : ℕ �
         have A : N - 1 + 1 = N := Nat.succ_pred_eq_of_pos Npos
         have B : N - 1 + 1 < N + 1 := A.symm ▸ N.lt_succ_self
         have C : N - 1 < N + 1 := lt_of_le_of_lt N.pred_le N.lt_succ_self
-        rw [Finset.sum_eq_sum_ico_succ_bot C, Finset.sum_eq_sum_ico_succ_bot B, A, Finset.ico_self,
+        rw [Finset.sum_eq_sum_ico_succ_bot C, Finset.sum_eq_sum_ico_succ_bot B, A, Finset.Ico_self,
           Finset.sum_empty, add_zero, add_comm (edist _ _)]
         exact edist_triangle _ _ _
       _ = ∑ j in Finset.range (n + 1), edist (f (w (j + 1))) (f (w j)) :=
         by
-        rw [Finset.sum_ico_consecutive, Finset.sum_ico_consecutive, Finset.range_eq_ico]
+        rw [Finset.sum_ico_consecutive, Finset.sum_ico_consecutive, Finset.range_eq_Ico]
         · exact zero_le _
         · exact Nat.succ_le_succ hN.left
         · exact zero_le _
@@ -551,7 +551,7 @@ theorem add_le_union (f : α → E) {s t : Set α} (h : ∀ x ∈ s, ∀ y ∈ t
           ∑ i : ℕ in Finset.Ico (n + 1) (n + 1 + m), edist (f (w (i + 1))) (f (w i)) :=
       by
       congr 1
-      rw [Finset.range_eq_ico]
+      rw [Finset.range_eq_Ico]
       convert Finset.sum_ico_add (fun i : ℕ => edist (f (w (i + 1))) (f (w i))) 0 m (n + 1) using
           3 <;>
         abel
@@ -596,7 +596,7 @@ theorem union (f : α → E) {s t : Set α} {x : α} (hs : IsGreatest s x) (ht :
       _ =
           (∑ j in Finset.Ico 0 N, edist (f (v (j + 1))) (f (v j))) +
             ∑ j in Finset.Ico N m, edist (f (v (j + 1))) (f (v j)) :=
-        by rw [Finset.range_eq_ico, Finset.sum_ico_consecutive _ (zero_le _) hN.le]
+        by rw [Finset.range_eq_Ico, Finset.sum_ico_consecutive _ (zero_le _) hN.le]
       _ ≤ evariationOn f s + evariationOn f t :=
         by
         refine' add_le_add _ _

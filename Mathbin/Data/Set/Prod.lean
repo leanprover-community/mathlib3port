@@ -1072,6 +1072,12 @@ theorem diag_preimage_prod_self (s : Set α) : (fun x => (x, x)) ⁻¹' s ×ˢ s
 #align set.diag_preimage_prod_self Set.diag_preimage_prod_self
 -/
 
+/- warning: set.diag_image -> Set.diag_image is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (s : Set.{u1} α), Eq.{succ u1} (Set.{u1} (Prod.{u1, u1} α α)) (Set.image.{u1, u1} α (Prod.{u1, u1} α α) (fun (x : α) => Prod.mk.{u1, u1} α α x x) s) (Inter.inter.{u1} (Set.{u1} (Prod.{u1, u1} α α)) (Set.hasInter.{u1} (Prod.{u1, u1} α α)) (Set.diagonal.{u1} α) (Set.prod.{u1, u1} α α s s))
+but is expected to have type
+  forall {α : Type.{u1}} (s : Set.{u1} α), Eq.{succ u1} (Set.{u1} (Prod.{u1, u1} α α)) (Set.image.{u1, u1} α (Prod.{u1, u1} α α) (fun (x : α) => Prod.mk.{u1, u1} α α x x) s) (Inter.inter.{u1} (Set.{u1} (Prod.{u1, u1} α α)) (Set.instInterSet.{u1} (Prod.{u1, u1} α α)) (Set.diagonal.{u1} α) (Set.prod.{u1, u1} α α s s))
+Case conversion may be inaccurate. Consider using '#align set.diag_image Set.diag_imageₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem diag_image (s : Set α) : (fun x => (x, x)) '' s = diagonal α ∩ s ×ˢ s :=
   by

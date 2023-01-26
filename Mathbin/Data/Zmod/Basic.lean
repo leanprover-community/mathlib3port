@@ -1203,11 +1203,11 @@ variable (f : { f : ℤ →+ A // f n = 0 })
 
 @[simp]
 theorem lift_coe (x : ℤ) : lift n f (x : ZMod n) = f x :=
-  AddMonoidHom.lift_of_right_inverse_comp_apply _ _ _ _ _
+  AddMonoidHom.liftOfRightInverse_comp_apply _ _ _ _ _
 #align zmod.lift_coe ZMod.lift_coe
 
 theorem lift_castAddHom (x : ℤ) : lift n f (Int.castAddHom (ZMod n) x) = f x :=
-  AddMonoidHom.lift_of_right_inverse_comp_apply _ _ _ _ _
+  AddMonoidHom.liftOfRightInverse_comp_apply _ _ _ _ _
 #align zmod.lift_cast_add_hom ZMod.lift_castAddHom
 
 @[simp]

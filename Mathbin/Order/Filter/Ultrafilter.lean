@@ -701,16 +701,16 @@ theorem le_pure_iff' : f ≤ pure a ↔ f = ⊥ ∨ f = pure a :=
   isAtom_pure.le_iff
 #align filter.le_pure_iff' Filter.le_pure_iff'
 
-/- warning: filter.Iic_pure -> Filter.iic_pure is a dubious translation:
+/- warning: filter.Iic_pure -> Filter.Iic_pure is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} (a : α), Eq.{succ u1} (Set.{u1} (Filter.{u1} α)) (Set.Iic.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α)) (Pure.pure.{u1, u1} Filter.{u1} Filter.hasPure.{u1} α a)) (Insert.insert.{u1, u1} (Filter.{u1} α) (Set.{u1} (Filter.{u1} α)) (Set.hasInsert.{u1} (Filter.{u1} α)) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toHasBot.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) (Singleton.singleton.{u1, u1} (Filter.{u1} α) (Set.{u1} (Filter.{u1} α)) (Set.hasSingleton.{u1} (Filter.{u1} α)) (Pure.pure.{u1, u1} Filter.{u1} Filter.hasPure.{u1} α a)))
 but is expected to have type
   forall {α : Type.{u1}} (a : α), Eq.{succ u1} (Set.{u1} (Filter.{u1} α)) (Set.Iic.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α)) (Pure.pure.{u1, u1} Filter.{u1} Filter.instPureFilter.{u1} α a)) (Insert.insert.{u1, u1} (Filter.{u1} α) (Set.{u1} (Filter.{u1} α)) (Set.instInsertSet.{u1} (Filter.{u1} α)) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))) (Singleton.singleton.{u1, u1} (Filter.{u1} α) (Set.{u1} (Filter.{u1} α)) (Set.instSingletonSet.{u1} (Filter.{u1} α)) (Pure.pure.{u1, u1} Filter.{u1} Filter.instPureFilter.{u1} α a)))
-Case conversion may be inaccurate. Consider using '#align filter.Iic_pure Filter.iic_pureₓ'. -/
+Case conversion may be inaccurate. Consider using '#align filter.Iic_pure Filter.Iic_pureₓ'. -/
 @[simp]
-theorem iic_pure (a : α) : Iic (pure a : Filter α) = {⊥, pure a} :=
+theorem Iic_pure (a : α) : Iic (pure a : Filter α) = {⊥, pure a} :=
   isAtom_pure.Iic_eq
-#align filter.Iic_pure Filter.iic_pure
+#align filter.Iic_pure Filter.Iic_pure
 
 /- warning: filter.mem_iff_ultrafilter -> Filter.mem_iff_ultrafilter is a dubious translation:
 lean 3 declaration is
