@@ -38,10 +38,10 @@ variable [DecidableEq ι] [∀ i, Preorder (α i)] [∀ i, LocallyFiniteOrder (�
 
 instance : LocallyFiniteOrder (Σi, α i)
     where
-  finsetIcc := sigmaLift fun _ => icc
-  finsetIco := sigmaLift fun _ => ico
-  finsetIoc := sigmaLift fun _ => ioc
-  finsetIoo := sigmaLift fun _ => ioo
+  finsetIcc := sigmaLift fun _ => Icc
+  finsetIco := sigmaLift fun _ => Ico
+  finsetIoc := sigmaLift fun _ => Ioc
+  finsetIoo := sigmaLift fun _ => Ioo
   finset_mem_Icc := fun ⟨i, a⟩ ⟨j, b⟩ ⟨k, c⟩ =>
     by
     simp_rw [mem_sigma_lift, le_def, mem_Icc, exists_and_left, ← exists_and_right, ← exists_prop]
@@ -65,19 +65,19 @@ section
 
 variable (a b : Σi, α i)
 
-theorem card_icc : (icc a b).card = if h : a.1 = b.1 then (icc (h.rec a.2) b.2).card else 0 :=
+theorem card_icc : (Icc a b).card = if h : a.1 = b.1 then (Icc (h.rec a.2) b.2).card else 0 :=
   card_sigmaLift _ _ _
 #align sigma.card_Icc Sigma.card_icc
 
-theorem card_ico : (ico a b).card = if h : a.1 = b.1 then (ico (h.rec a.2) b.2).card else 0 :=
+theorem card_ico : (Ico a b).card = if h : a.1 = b.1 then (Ico (h.rec a.2) b.2).card else 0 :=
   card_sigmaLift _ _ _
 #align sigma.card_Ico Sigma.card_ico
 
-theorem card_ioc : (ioc a b).card = if h : a.1 = b.1 then (ioc (h.rec a.2) b.2).card else 0 :=
+theorem card_ioc : (Ioc a b).card = if h : a.1 = b.1 then (Ioc (h.rec a.2) b.2).card else 0 :=
   card_sigmaLift _ _ _
 #align sigma.card_Ioc Sigma.card_ioc
 
-theorem card_ioo : (ioo a b).card = if h : a.1 = b.1 then (ioo (h.rec a.2) b.2).card else 0 :=
+theorem card_ioo : (Ioo a b).card = if h : a.1 = b.1 then (Ioo (h.rec a.2) b.2).card else 0 :=
   card_sigmaLift _ _ _
 #align sigma.card_Ioo Sigma.card_ioo
 
@@ -86,22 +86,22 @@ end
 variable (i : ι) (a b : α i)
 
 @[simp]
-theorem icc_mk_mk : icc (⟨i, a⟩ : Sigma α) ⟨i, b⟩ = (icc a b).map (Embedding.sigmaMk i) :=
+theorem icc_mk_mk : Icc (⟨i, a⟩ : Sigma α) ⟨i, b⟩ = (Icc a b).map (Embedding.sigmaMk i) :=
   dif_pos rfl
 #align sigma.Icc_mk_mk Sigma.icc_mk_mk
 
 @[simp]
-theorem ico_mk_mk : ico (⟨i, a⟩ : Sigma α) ⟨i, b⟩ = (ico a b).map (Embedding.sigmaMk i) :=
+theorem ico_mk_mk : Ico (⟨i, a⟩ : Sigma α) ⟨i, b⟩ = (Ico a b).map (Embedding.sigmaMk i) :=
   dif_pos rfl
 #align sigma.Ico_mk_mk Sigma.ico_mk_mk
 
 @[simp]
-theorem ioc_mk_mk : ioc (⟨i, a⟩ : Sigma α) ⟨i, b⟩ = (ioc a b).map (Embedding.sigmaMk i) :=
+theorem ioc_mk_mk : Ioc (⟨i, a⟩ : Sigma α) ⟨i, b⟩ = (Ioc a b).map (Embedding.sigmaMk i) :=
   dif_pos rfl
 #align sigma.Ioc_mk_mk Sigma.ioc_mk_mk
 
 @[simp]
-theorem ioo_mk_mk : ioo (⟨i, a⟩ : Sigma α) ⟨i, b⟩ = (ioo a b).map (Embedding.sigmaMk i) :=
+theorem ioo_mk_mk : Ioo (⟨i, a⟩ : Sigma α) ⟨i, b⟩ = (Ioo a b).map (Embedding.sigmaMk i) :=
   dif_pos rfl
 #align sigma.Ioo_mk_mk Sigma.ioo_mk_mk
 

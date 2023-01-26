@@ -326,7 +326,7 @@ theorem dist_triangle4_right (x₁ y₁ x₂ y₂ : α) :
 
 /-- The triangle (polygon) inequality for sequences of points; `finset.Ico` version. -/
 theorem dist_le_ico_sum_dist (f : ℕ → α) {m n} (h : m ≤ n) :
-    dist (f m) (f n) ≤ ∑ i in Finset.ico m n, dist (f i) (f (i + 1)) :=
+    dist (f m) (f n) ≤ ∑ i in Finset.Ico m n, dist (f i) (f (i + 1)) :=
   by
   revert n
   apply Nat.le_induction
@@ -334,8 +334,8 @@ theorem dist_le_ico_sum_dist (f : ℕ → α) {m n} (h : m ≤ n) :
   · intro n hn hrec
     calc
       dist (f m) (f (n + 1)) ≤ dist (f m) (f n) + dist _ _ := dist_triangle _ _ _
-      _ ≤ (∑ i in Finset.ico m n, _) + _ := add_le_add hrec le_rfl
-      _ = ∑ i in Finset.ico m (n + 1), _ := by
+      _ ≤ (∑ i in Finset.Ico m n, _) + _ := add_le_add hrec le_rfl
+      _ = ∑ i in Finset.Ico m (n + 1), _ := by
         rw [Nat.ico_succ_right_eq_insert_ico hn, Finset.sum_insert, add_comm] <;> simp
       
 #align dist_le_Ico_sum_dist dist_le_ico_sum_dist
@@ -350,9 +350,9 @@ theorem dist_le_range_sum_dist (f : ℕ → α) (n : ℕ) :
 with an upper estimate. -/
 theorem dist_le_ico_sum_of_dist_le {f : ℕ → α} {m n} (hmn : m ≤ n) {d : ℕ → ℝ}
     (hd : ∀ {k}, m ≤ k → k < n → dist (f k) (f (k + 1)) ≤ d k) :
-    dist (f m) (f n) ≤ ∑ i in Finset.ico m n, d i :=
+    dist (f m) (f n) ≤ ∑ i in Finset.Ico m n, d i :=
   le_trans (dist_le_ico_sum_dist f hmn) <|
-    Finset.sum_le_sum fun k hk => hd (Finset.mem_ico.1 hk).1 (Finset.mem_ico.1 hk).2
+    Finset.sum_le_sum fun k hk => hd (Finset.mem_Ico.1 hk).1 (Finset.mem_Ico.1 hk).2
 #align dist_le_Ico_sum_of_dist_le dist_le_ico_sum_of_dist_le
 
 /-- A version of `dist_le_range_sum_dist` with each intermediate distance replaced
@@ -2342,7 +2342,7 @@ theorem Fin.dist_insertNth_insertNth {n : ℕ} {α : Fin (n + 1) → Type _}
   simp only [dist_nndist, Fin.nndist_insertNth_insertNth, Nnreal.coe_max]
 #align fin.dist_insert_nth_insert_nth Fin.dist_insertNth_insertNth
 
-theorem Real.dist_le_of_mem_pi_icc {x y x' y' : β → ℝ} (hx : x ∈ icc x' y') (hy : y ∈ icc x' y') :
+theorem Real.dist_le_of_mem_pi_icc {x y x' y' : β → ℝ} (hx : x ∈ Icc x' y') (hy : y ∈ Icc x' y') :
     dist x y ≤ dist x' y' :=
   by
   refine'

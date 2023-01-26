@@ -457,7 +457,7 @@ theorem weaklyRegularOfFinite [BorelSpace α] (μ : Measure α) [IsFiniteMeasure
     -- `U n` with measure at most `μ (s n) + δ n` for a summable `δ`, and taking the union of these.
     refine'
       ⟨⋃ k ∈ t, F k, Union_mono fun k => Union_subset fun _ => hFs _, ⋃ n, U n, Union_mono hsU,
-        isClosed_bUnion t.finite_to_set fun k _ => hFc k, isOpen_unionᵢ hUo, ht.le.trans _, _⟩
+        isClosed_bunionᵢ t.finite_to_set fun k _ => hFc k, isOpen_unionᵢ hUo, ht.le.trans _, _⟩
     · calc
         (∑ k in t, μ (s k)) + ε / 2 ≤ ((∑ k in t, μ (F k)) + ∑ k in t, δ k) + ε / 2 :=
           by

@@ -50,7 +50,7 @@ namespace Finset
 variable {M : Type _} [OrderedAddCommMonoid M] {f : ℕ → M}
 
 theorem le_sum_condensed' (hf : ∀ ⦃m n⦄, 0 < m → m ≤ n → f n ≤ f m) (n : ℕ) :
-    (∑ k in ico 1 (2 ^ n), f k) ≤ ∑ k in range n, 2 ^ k • f (2 ^ k) :=
+    (∑ k in Ico 1 (2 ^ n), f k) ≤ ∑ k in range n, 2 ^ k • f (2 ^ k) :=
   by
   induction' n with n ihn
   · simp
@@ -73,7 +73,7 @@ theorem le_sum_condensed (hf : ∀ ⦃m n⦄, 0 < m → m ≤ n → f n ≤ f m)
 #align finset.le_sum_condensed Finset.le_sum_condensed
 
 theorem sum_condensed_le' (hf : ∀ ⦃m n⦄, 1 < m → m ≤ n → f n ≤ f m) (n : ℕ) :
-    (∑ k in range n, 2 ^ k • f (2 ^ (k + 1))) ≤ ∑ k in ico 2 (2 ^ n + 1), f k :=
+    (∑ k in range n, 2 ^ k • f (2 ^ (k + 1))) ≤ ∑ k in Ico 2 (2 ^ n + 1), f k :=
   by
   induction' n with n ihn
   · simp
@@ -91,7 +91,7 @@ theorem sum_condensed_le' (hf : ∀ ⦃m n⦄, 1 < m → m ≤ n → f n ≤ f m
 #align finset.sum_condensed_le' Finset.sum_condensed_le'
 
 theorem sum_condensed_le (hf : ∀ ⦃m n⦄, 1 < m → m ≤ n → f n ≤ f m) (n : ℕ) :
-    (∑ k in range (n + 1), 2 ^ k • f (2 ^ k)) ≤ f 1 + 2 • ∑ k in ico 2 (2 ^ n + 1), f k :=
+    (∑ k in range (n + 1), 2 ^ k • f (2 ^ k)) ≤ f 1 + 2 • ∑ k in Ico 2 (2 ^ n + 1), f k :=
   by
   convert add_le_add_left (nsmul_le_nsmul_of_le_right (sum_condensed_le' hf n) 2) (f 1)
   simp [sum_range_succ', add_comm, pow_succ, mul_nsmul', sum_nsmul]
@@ -120,7 +120,7 @@ theorem tsum_condensed_le (hf : ∀ ⦃m n⦄, 1 < m → m ≤ n → f n ≤ f m
     supᵢ_le fun n =>
       le_trans _
         (add_le_add_left
-          (nsmul_le_nsmul_of_le_right (Ennreal.sum_le_tsum <| Finset.ico 2 (2 ^ n + 1)) _) _)
+          (nsmul_le_nsmul_of_le_right (Ennreal.sum_le_tsum <| Finset.Ico 2 (2 ^ n + 1)) _) _)
   simpa using Finset.sum_condensed_le hf n
 #align ennreal.tsum_condensed_le Ennreal.tsum_condensed_le
 
@@ -284,7 +284,7 @@ open Finset
 variable {α : Type _} [LinearOrderedField α]
 
 theorem sum_ioc_inv_sq_le_sub {k n : ℕ} (hk : k ≠ 0) (h : k ≤ n) :
-    (∑ i in ioc k n, ((i ^ 2)⁻¹ : α)) ≤ k⁻¹ - n⁻¹ :=
+    (∑ i in Ioc k n, ((i ^ 2)⁻¹ : α)) ≤ k⁻¹ - n⁻¹ :=
   by
   refine' Nat.le_induction _ _ n h
   · simp only [Ioc_self, sum_empty, sub_self]
@@ -302,9 +302,9 @@ theorem sum_ioc_inv_sq_le_sub {k n : ℕ} (hk : k ≠ 0) (h : k ≤ n) :
   · nlinarith
 #align sum_Ioc_inv_sq_le_sub sum_ioc_inv_sq_le_sub
 
-theorem sum_ioo_inv_sq_le (k n : ℕ) : (∑ i in ioo k n, ((i ^ 2)⁻¹ : α)) ≤ 2 / (k + 1) :=
+theorem sum_ioo_inv_sq_le (k n : ℕ) : (∑ i in Ioo k n, ((i ^ 2)⁻¹ : α)) ≤ 2 / (k + 1) :=
   calc
-    (∑ i in ioo k n, ((i ^ 2)⁻¹ : α)) ≤ ∑ i in ioc k (max (k + 1) n), (i ^ 2)⁻¹ :=
+    (∑ i in Ioo k n, ((i ^ 2)⁻¹ : α)) ≤ ∑ i in Ioc k (max (k + 1) n), (i ^ 2)⁻¹ :=
       by
       apply sum_le_sum_of_subset_of_nonneg
       · intro x hx
@@ -312,7 +312,7 @@ theorem sum_ioo_inv_sq_le (k n : ℕ) : (∑ i in ioo k n, ((i ^ 2)⁻¹ : α)) 
         simp only [hx, hx.2.le, mem_Ioc, le_max_iff, or_true_iff, and_self_iff]
       · intro i hi hident
         exact inv_nonneg.2 (sq_nonneg _)
-    _ ≤ ((k + 1) ^ 2)⁻¹ + ∑ i in ioc k.succ (max (k + 1) n), (i ^ 2)⁻¹ :=
+    _ ≤ ((k + 1) ^ 2)⁻¹ + ∑ i in Ioc k.succ (max (k + 1) n), (i ^ 2)⁻¹ :=
       by
       rw [← Nat.icc_succ_left, ← Nat.ico_succ_right, sum_eq_sum_Ico_succ_bot]
       swap; · exact Nat.succ_lt_succ ((Nat.lt_succ_self k).trans_le (le_max_left _ _))

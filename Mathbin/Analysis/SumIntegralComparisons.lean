@@ -83,7 +83,7 @@ theorem AntitoneOn.integral_le_sum (hf : AntitoneOn f (Icc x₀ (x₀ + a))) :
 #align antitone_on.integral_le_sum AntitoneOn.integral_le_sum
 
 theorem AntitoneOn.integral_le_sum_ico (hab : a ≤ b) (hf : AntitoneOn f (Set.Icc a b)) :
-    (∫ x in a..b, f x) ≤ ∑ x in Finset.ico a b, f x :=
+    (∫ x in a..b, f x) ≤ ∑ x in Finset.Ico a b, f x :=
   by
   rw [(Nat.sub_add_cancel hab).symm, Nat.cast_add]
   conv =>
@@ -144,7 +144,7 @@ theorem AntitoneOn.sum_le_integral (hf : AntitoneOn f (Icc x₀ (x₀ + a))) :
 #align antitone_on.sum_le_integral AntitoneOn.sum_le_integral
 
 theorem AntitoneOn.sum_le_integral_ico (hab : a ≤ b) (hf : AntitoneOn f (Set.Icc a b)) :
-    (∑ i in Finset.ico a b, f (i + 1 : ℕ)) ≤ ∫ x in a..b, f x :=
+    (∑ i in Finset.Ico a b, f (i + 1 : ℕ)) ≤ ∫ x in a..b, f x :=
   by
   rw [(Nat.sub_add_cancel hab).symm, Nat.cast_add]
   conv =>
@@ -176,7 +176,7 @@ theorem MonotoneOn.sum_le_integral (hf : MonotoneOn f (Icc x₀ (x₀ + a))) :
 #align monotone_on.sum_le_integral MonotoneOn.sum_le_integral
 
 theorem MonotoneOn.sum_le_integral_ico (hab : a ≤ b) (hf : MonotoneOn f (Set.Icc a b)) :
-    (∑ x in Finset.ico a b, f x) ≤ ∫ x in a..b, f x :=
+    (∑ x in Finset.Ico a b, f x) ≤ ∫ x in a..b, f x :=
   by
   rw [← neg_le_neg_iff, ← Finset.sum_neg_distrib, ← intervalIntegral.integral_neg]
   exact hf.neg.integral_le_sum_Ico hab
@@ -190,7 +190,7 @@ theorem MonotoneOn.integral_le_sum (hf : MonotoneOn f (Icc x₀ (x₀ + a))) :
 #align monotone_on.integral_le_sum MonotoneOn.integral_le_sum
 
 theorem MonotoneOn.integral_le_sum_ico (hab : a ≤ b) (hf : MonotoneOn f (Set.Icc a b)) :
-    (∫ x in a..b, f x) ≤ ∑ i in Finset.ico a b, f (i + 1 : ℕ) :=
+    (∫ x in a..b, f x) ≤ ∑ i in Finset.Ico a b, f (i + 1 : ℕ) :=
   by
   rw [← neg_le_neg_iff, ← Finset.sum_neg_distrib, ← intervalIntegral.integral_neg]
   exact hf.neg.sum_le_integral_Ico hab

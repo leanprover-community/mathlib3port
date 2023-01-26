@@ -599,14 +599,14 @@ giving the main statement in `comp_partial_sum`. -/
 power series.
 See also `comp_partial_sum`. -/
 def compPartialSumSource (m M N : ℕ) : Finset (Σn, Fin n → ℕ) :=
-  Finset.sigma (Finset.ico m M) (fun n : ℕ => Fintype.piFinset fun i : Fin n => Finset.ico 1 N : _)
+  Finset.sigma (Finset.Ico m M) (fun n : ℕ => Fintype.piFinset fun i : Fin n => Finset.Ico 1 N : _)
 #align formal_multilinear_series.comp_partial_sum_source FormalMultilinearSeries.compPartialSumSource
 
 @[simp]
 theorem mem_compPartialSumSource_iff (m M N : ℕ) (i : Σn, Fin n → ℕ) :
     i ∈ compPartialSumSource m M N ↔ (m ≤ i.1 ∧ i.1 < M) ∧ ∀ a : Fin i.1, 1 ≤ i.2 a ∧ i.2 a < N :=
   by
-  simp only [comp_partial_sum_source, Finset.mem_ico, Fintype.mem_piFinset, Finset.mem_sigma,
+  simp only [comp_partial_sum_source, Finset.mem_Ico, Fintype.mem_piFinset, Finset.mem_sigma,
     iff_self_iff]
 #align formal_multilinear_series.mem_comp_partial_sum_source_iff FormalMultilinearSeries.mem_compPartialSumSource_iff
 
@@ -752,13 +752,13 @@ compositions in `comp_partial_sum_target 0 N N`. This is precisely the motivatio
 definition of `comp_partial_sum_target`. -/
 theorem comp_partialSum (q : FormalMultilinearSeries 𝕜 F G) (p : FormalMultilinearSeries 𝕜 E F)
     (N : ℕ) (z : E) :
-    q.partialSum N (∑ i in Finset.ico 1 N, p i fun j => z) =
+    q.partialSum N (∑ i in Finset.Ico 1 N, p i fun j => z) =
       ∑ i in compPartialSumTarget 0 N N, q.compAlongComposition p i.2 fun j => z :=
   by
   -- we expand the composition, using the multilinearity of `q` to expand along each coordinate.
   suffices H :
     (∑ n in Finset.range N,
-        ∑ r in Fintype.piFinset fun i : Fin n => Finset.ico 1 N,
+        ∑ r in Fintype.piFinset fun i : Fin n => Finset.Ico 1 N,
           q n fun i : Fin n => p (r i) fun j => z) =
       ∑ i in comp_partial_sum_target 0 N N, q.comp_along_composition p i.2 fun j => z
   · simpa only [FormalMultilinearSeries.partialSum, ContinuousMultilinearMap.map_sum_finset] using H
@@ -828,11 +828,11 @@ theorem HasFpowerSeriesAt.comp {g : F → G} {f : E → F} {q : FormalMultilinea
     to `g (f (x + y))`, pointwise convergence would not be enough, but we have uniform convergence
     to save the day. -/
   -- First step: the partial sum of `p` converges to `f (x + y)`.
-  have A : tendsto (fun n => ∑ a in Finset.ico 1 n, p a fun b => y) at_top (𝓝 (f (x + y) - f x)) :=
+  have A : tendsto (fun n => ∑ a in Finset.Ico 1 n, p a fun b => y) at_top (𝓝 (f (x + y) - f x)) :=
     by
     have L :
       ∀ᶠ n in at_top,
-        (∑ a in Finset.range n, p a fun b => y) - f x = ∑ a in Finset.ico 1 n, p a fun b => y :=
+        (∑ a in Finset.range n, p a fun b => y) - f x = ∑ a in Finset.Ico 1 n, p a fun b => y :=
       by
       rw [eventually_at_top]
       refine' ⟨1, fun n hn => _⟩
@@ -846,7 +846,7 @@ theorem HasFpowerSeriesAt.comp {g : F → G} {f : E → F} {q : FormalMultilinea
     exact tendsto.congr' L this
   -- Second step: the composition of the partial sums of `q` and `p` converges to `g (f (x + y))`.
   have B :
-    tendsto (fun n => q.partial_sum n (∑ a in Finset.ico 1 n, p a fun b => y)) at_top
+    tendsto (fun n => q.partial_sum n (∑ a in Finset.Ico 1 n, p a fun b => y)) at_top
       (𝓝 (g (f (x + y)))) :=
     by
     -- we use the fact that the partial sums of `q` converge locally uniformly to `g`, and that

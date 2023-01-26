@@ -140,11 +140,11 @@ theorem tendsto_real_toNnreal_atTop : Tendsto Real.toNnreal atTop atTop :=
 #align tendsto_real_to_nnreal_at_top tendsto_real_toNnreal_atTop
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (a «expr ≠ » 0) -/
-theorem nhds_zero : 𝓝 (0 : ℝ≥0) = ⨅ (a) (_ : a ≠ 0), 𝓟 (iio a) :=
+theorem nhds_zero : 𝓝 (0 : ℝ≥0) = ⨅ (a) (_ : a ≠ 0), 𝓟 (Iio a) :=
   nhds_bot_order.trans <| by simp [bot_lt_iff_ne_bot]
 #align nnreal.nhds_zero Nnreal.nhds_zero
 
-theorem nhds_zero_basis : (𝓝 (0 : ℝ≥0)).HasBasis (fun a : ℝ≥0 => 0 < a) fun a => iio a :=
+theorem nhds_zero_basis : (𝓝 (0 : ℝ≥0)).HasBasis (fun a : ℝ≥0 => 0 < a) fun a => Iio a :=
   nhds_bot_basis
 #align nnreal.nhds_zero_basis Nnreal.nhds_zero_basis
 

@@ -262,7 +262,7 @@ variable [∀ x y, OmegaCompletePartialOrder <| γ x y]
 
 open OmegaCompletePartialOrder.Chain
 
-theorem continuous_curry : continuous <| monotoneCurry α β γ := fun c =>
+theorem continuous_curry : Continuous <| monotoneCurry α β γ := fun c =>
   by
   ext (x y)
   dsimp [curry, ωSup]
@@ -270,7 +270,7 @@ theorem continuous_curry : continuous <| monotoneCurry α β γ := fun c =>
   rfl
 #align pi.continuous_curry Pi.continuous_curry
 
-theorem continuous_uncurry : continuous <| monotoneUncurry α β γ := fun c =>
+theorem continuous_uncurry : Continuous <| monotoneUncurry α β γ := fun c =>
   by
   ext (x y)
   dsimp [uncurry, ωSup]
@@ -294,7 +294,7 @@ variable {f : (∀ (x) (y : β x), γ x y) →o ∀ (x) (y : β x), γ x y}
 variable (hc : Continuous f)
 
 theorem uncurry_curry_continuous :
-    continuous <| (monotoneUncurry α β γ).comp <| f.comp <| monotoneCurry α β γ :=
+    Continuous <| (monotoneUncurry α β γ).comp <| f.comp <| monotoneCurry α β γ :=
   continuous_comp _ _ (continuous_comp _ _ (continuous_curry _ _ _) hc) (continuous_uncurry _ _ _)
 #align pi.uncurry_curry_continuous Pi.uncurry_curry_continuous
 

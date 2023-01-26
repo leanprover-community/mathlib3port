@@ -1756,7 +1756,7 @@ theorem isClosed_setOf_lipschitzOnWith {α β} [PseudoEmetricSpace α] [PseudoEm
     (s : Set α) : IsClosed { f : α → β | LipschitzOnWith K f s } :=
   by
   simp only [LipschitzOnWith, set_of_forall]
-  refine' isClosed_bInter fun x hx => isClosed_bInter fun y hy => isClosed_le _ _
+  refine' isClosed_binterᵢ fun x hx => isClosed_binterᵢ fun y hy => isClosed_le _ _
   exacts[Continuous.edist (continuous_apply x) (continuous_apply y), continuous_const]
 #align is_closed_set_of_lipschitz_on_with isClosed_setOf_lipschitzOnWith
 

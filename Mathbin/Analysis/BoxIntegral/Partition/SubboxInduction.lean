@@ -166,7 +166,7 @@ exists a tagged prepartition `π'` of `I` such that
 * `π'` covers exactly the same part of `I` as `π`;
 * the distortion of `π'` is equal to the distortion of `π`.
 -/
-theorem exists_tagged_le_isHenstock_isSubordinate_union_eq {I : Box ι} (r : (ι → ℝ) → ioi (0 : ℝ))
+theorem exists_tagged_le_isHenstock_isSubordinate_union_eq {I : Box ι} (r : (ι → ℝ) → Ioi (0 : ℝ))
     (π : Prepartition I) :
     ∃ π' : TaggedPrepartition I,
       π'.toPrepartition ≤ π ∧
@@ -190,33 +190,33 @@ is a tagged partition `π'` such that
 * `π'` covers exactly the same part of `I` as `π`;
 * the distortion of `π'` is equal to the distortion of `π`.
 -/
-def toSubordinate (π : Prepartition I) (r : (ι → ℝ) → ioi (0 : ℝ)) : TaggedPrepartition I :=
+def toSubordinate (π : Prepartition I) (r : (ι → ℝ) → Ioi (0 : ℝ)) : TaggedPrepartition I :=
   (π.exists_tagged_le_is_Henstock_is_subordinate_Union_eq r).some
 #align box_integral.prepartition.to_subordinate BoxIntegral.Prepartition.toSubordinate
 
-theorem toSubordinate_toPrepartition_le (π : Prepartition I) (r : (ι → ℝ) → ioi (0 : ℝ)) :
+theorem toSubordinate_toPrepartition_le (π : Prepartition I) (r : (ι → ℝ) → Ioi (0 : ℝ)) :
     (π.toSubordinate r).toPrepartition ≤ π :=
   (π.exists_tagged_le_is_Henstock_is_subordinate_Union_eq r).some_spec.1
 #align box_integral.prepartition.to_subordinate_to_prepartition_le BoxIntegral.Prepartition.toSubordinate_toPrepartition_le
 
-theorem isHenstockToSubordinate (π : Prepartition I) (r : (ι → ℝ) → ioi (0 : ℝ)) :
+theorem isHenstockToSubordinate (π : Prepartition I) (r : (ι → ℝ) → Ioi (0 : ℝ)) :
     (π.toSubordinate r).IsHenstock :=
   (π.exists_tagged_le_is_Henstock_is_subordinate_Union_eq r).some_spec.2.1
 #align box_integral.prepartition.is_Henstock_to_subordinate BoxIntegral.Prepartition.isHenstockToSubordinate
 
-theorem isSubordinateToSubordinate (π : Prepartition I) (r : (ι → ℝ) → ioi (0 : ℝ)) :
+theorem isSubordinateToSubordinate (π : Prepartition I) (r : (ι → ℝ) → Ioi (0 : ℝ)) :
     (π.toSubordinate r).IsSubordinate r :=
   (π.exists_tagged_le_is_Henstock_is_subordinate_Union_eq r).some_spec.2.2.1
 #align box_integral.prepartition.is_subordinate_to_subordinate BoxIntegral.Prepartition.isSubordinateToSubordinate
 
 @[simp]
-theorem distortion_toSubordinate (π : Prepartition I) (r : (ι → ℝ) → ioi (0 : ℝ)) :
+theorem distortion_toSubordinate (π : Prepartition I) (r : (ι → ℝ) → Ioi (0 : ℝ)) :
     (π.toSubordinate r).distortion = π.distortion :=
   (π.exists_tagged_le_is_Henstock_is_subordinate_Union_eq r).some_spec.2.2.2.1
 #align box_integral.prepartition.distortion_to_subordinate BoxIntegral.Prepartition.distortion_toSubordinate
 
 @[simp]
-theorem union_toSubordinate (π : Prepartition I) (r : (ι → ℝ) → ioi (0 : ℝ)) :
+theorem union_toSubordinate (π : Prepartition I) (r : (ι → ℝ) → Ioi (0 : ℝ)) :
     (π.toSubordinate r).union = π.union :=
   (π.exists_tagged_le_is_Henstock_is_subordinate_Union_eq r).some_spec.2.2.2.2
 #align box_integral.prepartition.Union_to_subordinate BoxIntegral.Prepartition.union_toSubordinate

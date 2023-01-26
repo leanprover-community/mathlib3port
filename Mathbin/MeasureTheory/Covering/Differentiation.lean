@@ -300,7 +300,7 @@ theorem ae_tendsto_limRatio :
   by
   filter_upwards [v.ae_tendsto_div hρ]
   intro x hx
-  exact tendsto_nhds_lim hx
+  exact tendsto_nhds_limUnder hx
 #align vitali_family.ae_tendsto_lim_ratio VitaliFamily.ae_tendsto_limRatio
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (m n) -/
@@ -419,7 +419,7 @@ theorem exists_measurable_supersets_limRatio {p q : ℝ≥0} (hpq : p < q) :
         by
         refine' v.measure_le_of_frequently_le _ hρ _ fun x hx => _
         have L : tendsto (fun a : Set α => ρ a / μ a) (v.filter_at x) (𝓝 (v.lim_ratio ρ x)) :=
-          tendsto_nhds_lim hx.1.1.1
+          tendsto_nhds_limUnder hx.1.1.1
         have I : ∀ᶠ b : Set α in v.filter_at x, ρ b / μ b < p := (tendsto_order.1 L).2 _ hx.1.1.2
         apply I.frequently.mono fun a ha => _
         rw [coe_nnreal_smul_apply]
@@ -444,7 +444,7 @@ theorem exists_measurable_supersets_limRatio {p q : ℝ≥0} (hpq : p < q) :
         refine' v.measure_le_of_frequently_le _ (absolutely_continuous.rfl.smul _) _ _
         intro x hx
         have L : tendsto (fun a : Set α => ρ a / μ a) (v.filter_at x) (𝓝 (v.lim_ratio ρ x)) :=
-          tendsto_nhds_lim hx.2.1.1
+          tendsto_nhds_limUnder hx.2.1.1
         have I : ∀ᶠ b : Set α in v.filter_at x, (q : ℝ≥0∞) < ρ b / μ b :=
           (tendsto_order.1 L).1 _ hx.2.1.2
         apply I.frequently.mono fun a ha => _

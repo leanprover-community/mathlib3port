@@ -386,7 +386,7 @@ theorem degree_derivative_eq [NoZeroSMulDivisors ℕ R] (p : R[X]) (hp : 0 < nat
 #align polynomial.degree_derivative_eq Polynomial.degree_derivative_eq
 
 theorem coeff_iterate_derivative_as_prod_ico {k} (p : R[X]) :
-    ∀ m : ℕ, ((derivative^[k]) p).coeff m = (∏ i in ico m.succ (m + k.succ), i) • p.coeff (m + k) :=
+    ∀ m : ℕ, ((derivative^[k]) p).coeff m = (∏ i in Ico m.succ (m + k.succ), i) • p.coeff (m + k) :=
   by
   induction' k with k ih
   ·

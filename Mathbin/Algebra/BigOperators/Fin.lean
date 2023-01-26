@@ -177,14 +177,14 @@ theorem sum_const [AddCommMonoid α] (n : ℕ) (x : α) : (∑ i : Fin n, x) = n
 
 @[to_additive]
 theorem prod_ioi_zero {M : Type _} [CommMonoid M] {n : ℕ} {v : Fin n.succ → M} :
-    (∏ i in ioi 0, v i) = ∏ j : Fin n, v j.succ := by
+    (∏ i in Ioi 0, v i) = ∏ j : Fin n, v j.succ := by
   rw [Ioi_zero_eq_map, Finset.prod_map, RelEmbedding.coeFn_toEmbedding, coe_succ_embedding]
 #align fin.prod_Ioi_zero Fin.prod_ioi_zero
 #align fin.sum_Ioi_zero Fin.sum_ioi_zero
 
 @[to_additive]
 theorem prod_ioi_succ {M : Type _} [CommMonoid M] {n : ℕ} (i : Fin n) (v : Fin n.succ → M) :
-    (∏ j in ioi i.succ, v j) = ∏ j in ioi i, v j.succ := by
+    (∏ j in Ioi i.succ, v j) = ∏ j in Ioi i, v j.succ := by
   rw [Ioi_succ, Finset.prod_map, RelEmbedding.coeFn_toEmbedding, coe_succ_embedding]
 #align fin.prod_Ioi_succ Fin.prod_ioi_succ
 #align fin.sum_Ioi_succ Fin.sum_ioi_succ

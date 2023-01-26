@@ -181,7 +181,7 @@ theorem exists_countable_union_perfect_of_isClosed [SecondCountableTopology α]
     · exact countable.mono (inter_subset_left _ _) bct
     · exact inter_subset_right _ _
   refine' ⟨V ∩ C, D, Vct, ⟨_, _⟩, _⟩
-  · refine' hclosed.sdiff (isOpen_bUnion fun U => _)
+  · refine' hclosed.sdiff (isOpen_bunionᵢ fun U => _)
     exact fun ⟨Ub, _⟩ => is_topological_basis.is_open bbasis Ub
   · rw [preperfect_iff_nhds]
     intro x xD E xE

@@ -528,7 +528,7 @@ theorem rothNumberNat_zero : rothNumberNat 0 = 0 :=
   rfl
 #align roth_number_nat_zero rothNumberNat_zero
 
-theorem addRothNumber_ico (a b : ℕ) : addRothNumber (ico a b) = rothNumberNat (b - a) :=
+theorem addRothNumber_ico (a b : ℕ) : addRothNumber (Ico a b) = rothNumberNat (b - a) :=
   by
   obtain h | h := le_total b a
   · rw [tsub_eq_zero_of_le h, Ico_eq_empty_of_le h, rothNumberNat_zero, add_roth_number_empty]

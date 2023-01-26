@@ -56,27 +56,27 @@ local notation "⟪" x ", " y "⟫" => @inner 𝕜 _ _ x y
 /-- The Gram-Schmidt process takes a set of vectors as input
 and outputs a set of orthogonal vectors which have the same span. -/
 noncomputable def gramSchmidt (f : ι → E) : ι → E
-  | n => f n - ∑ i : iio n, orthogonalProjection (𝕜 ∙ gramSchmidt i) (f n)decreasing_by
+  | n => f n - ∑ i : Iio n, orthogonalProjection (𝕜 ∙ gramSchmidt i) (f n)decreasing_by
   exact mem_Iio.1 i.2
 #align gram_schmidt gramSchmidt
 
 /-- This lemma uses `∑ i in` instead of `∑ i :`.-/
 theorem gramSchmidt_def (f : ι → E) (n : ι) :
-    gramSchmidt 𝕜 f n = f n - ∑ i in iio n, orthogonalProjection (𝕜 ∙ gramSchmidt 𝕜 f i) (f n) :=
+    gramSchmidt 𝕜 f n = f n - ∑ i in Iio n, orthogonalProjection (𝕜 ∙ gramSchmidt 𝕜 f i) (f n) :=
   by
   rw [← sum_attach, attach_eq_univ, gramSchmidt]
   rfl
 #align gram_schmidt_def gramSchmidt_def
 
 theorem gramSchmidt_def' (f : ι → E) (n : ι) :
-    f n = gramSchmidt 𝕜 f n + ∑ i in iio n, orthogonalProjection (𝕜 ∙ gramSchmidt 𝕜 f i) (f n) := by
+    f n = gramSchmidt 𝕜 f n + ∑ i in Iio n, orthogonalProjection (𝕜 ∙ gramSchmidt 𝕜 f i) (f n) := by
   rw [gramSchmidt_def, sub_add_cancel]
 #align gram_schmidt_def' gramSchmidt_def'
 
 theorem gramSchmidt_def'' (f : ι → E) (n : ι) :
     f n =
       gramSchmidt 𝕜 f n +
-        ∑ i in iio n, (⟪gramSchmidt 𝕜 f i, f n⟫ / ‖gramSchmidt 𝕜 f i‖ ^ 2) • gramSchmidt 𝕜 f i :=
+        ∑ i in Iio n, (⟪gramSchmidt 𝕜 f i, f n⟫ / ‖gramSchmidt 𝕜 f i‖ ^ 2) • gramSchmidt 𝕜 f i :=
   by
   convert gramSchmidt_def' 𝕜 f n
   ext i
@@ -152,7 +152,7 @@ theorem mem_span_gramSchmidt (f : ι → E) {i j : ι} (hij : i ≤ j) :
     Submodule.add_mem _ (subset_span <| mem_image_of_mem _ hij)
       (Submodule.sum_mem _ fun k hk =>
         smul_mem (span 𝕜 (gramSchmidt 𝕜 f '' Iic j)) _ <|
-          subset_span <| mem_image_of_mem (gramSchmidt 𝕜 f) <| (Finset.mem_iio.1 hk).le.trans hij)
+          subset_span <| mem_image_of_mem (gramSchmidt 𝕜 f) <| (Finset.mem_Iio.1 hk).le.trans hij)
 #align mem_span_gram_schmidt mem_span_gramSchmidt
 
 theorem gramSchmidt_mem_span (f : ι → E) : ∀ {j i}, i ≤ j → gramSchmidt 𝕜 f i ∈ span 𝕜 (f '' Iic j)
@@ -161,7 +161,7 @@ theorem gramSchmidt_mem_span (f : ι → E) : ∀ {j i}, i ≤ j → gramSchmidt
     simp_rw [orthogonalProjection_singleton]
     refine'
       Submodule.sub_mem _ (subset_span (mem_image_of_mem _ hij)) (Submodule.sum_mem _ fun k hk => _)
-    let hkj : k < j := (Finset.mem_iio.1 hk).trans_le hij
+    let hkj : k < j := (Finset.mem_Iio.1 hk).trans_le hij
     exact
       smul_mem _ _
         (span_mono (image_subset f <| Iic_subset_Iic.2 hkj.le) <| gramSchmidt_mem_span le_rfl)
@@ -225,10 +225,10 @@ theorem gramSchmidt_ne_zero_coe {f : ι → E} (n : ι)
     by
     rw [← span_gramSchmidt_iio 𝕜 f n, gramSchmidt_def' _ f, h, zero_add]
     apply Submodule.sum_mem _ _
-    simp_intro a ha only [Finset.mem_ico]
+    simp_intro a ha only [Finset.mem_Ico]
     simp only [Set.mem_image, Set.mem_Iio, orthogonalProjection_singleton]
     apply Submodule.smul_mem _ _ _
-    rw [Finset.mem_iio] at ha
+    rw [Finset.mem_Iio] at ha
     refine' subset_span ⟨a, ha, by rfl⟩
   have h₂ :
     (f ∘ (coe : Set.Iic n → ι)) ⟨n, le_refl n⟩ ∈

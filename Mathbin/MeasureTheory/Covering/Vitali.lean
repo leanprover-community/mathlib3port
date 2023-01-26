@@ -361,7 +361,7 @@ theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [Opens
     by
     intro z hz
     set k := ⋃ (a : v) (ha : a ∈ w), B a with hk
-    have k_closed : IsClosed k := isClosed_bUnion w.finite_to_set fun i hi => h't _ (ut (vu i.2))
+    have k_closed : IsClosed k := isClosed_bunionᵢ w.finite_to_set fun i hi => h't _ (ut (vu i.2))
     have z_notmem_k : z ∉ k :=
       by
       simp only [not_exists, exists_prop, mem_Union, mem_sep_iff, forall_exists_index,

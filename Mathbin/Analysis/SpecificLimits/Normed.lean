@@ -146,7 +146,7 @@ theorem isO_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) :
            [(Std.ExtendedBinder.«term∃__,_»
              "∃"
              (Lean.binderIdent `a)
-             («binderTerm∈_» "∈" (Term.app `ioo [(«term-_» "-" `R) `R]))
+             («binderTerm∈_» "∈" (Term.app `Ioo [(«term-_» "-" `R) `R]))
              ","
              (Asymptotics.Analysis.Asymptotics.Asymptotics.«term_=o[_]_»
               `f
@@ -158,7 +158,7 @@ theorem isO_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) :
             (Std.ExtendedBinder.«term∃__,_»
              "∃"
              (Lean.binderIdent `a)
-             («binderTerm∈_» "∈" (Term.app `ioo [(num "0") `R]))
+             («binderTerm∈_» "∈" (Term.app `Ioo [(num "0") `R]))
              ","
              (Asymptotics.Analysis.Asymptotics.Asymptotics.«term_=o[_]_»
               `f
@@ -170,7 +170,7 @@ theorem isO_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) :
             (Std.ExtendedBinder.«term∃__,_»
              "∃"
              (Lean.binderIdent `a)
-             («binderTerm∈_» "∈" (Term.app `ioo [(«term-_» "-" `R) `R]))
+             («binderTerm∈_» "∈" (Term.app `Ioo [(«term-_» "-" `R) `R]))
              ","
              (Asymptotics.Analysis.Asymptotics.Asymptotics.«term_=O[_]_»
               `f
@@ -182,7 +182,7 @@ theorem isO_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) :
             (Std.ExtendedBinder.«term∃__,_»
              "∃"
              (Lean.binderIdent `a)
-             («binderTerm∈_» "∈" (Term.app `ioo [(num "0") `R]))
+             («binderTerm∈_» "∈" (Term.app `Ioo [(num "0") `R]))
              ","
              (Asymptotics.Analysis.Asymptotics.Asymptotics.«term_=O[_]_»
               `f
@@ -220,7 +220,7 @@ theorem isO_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) :
             (Std.ExtendedBinder.«term∃__,_»
              "∃"
              (Lean.binderIdent `a)
-             («binderTerm∈_» "∈" (Term.app `ioo [(num "0") `R]))
+             («binderTerm∈_» "∈" (Term.app `Ioo [(num "0") `R]))
              ","
              (Std.ExtendedBinder.«term∃__,_»
               "∃"
@@ -257,7 +257,7 @@ theorem isO_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) :
             (Std.ExtendedBinder.«term∃__,_»
              "∃"
              (Lean.binderIdent `a)
-             («binderTerm∈_» "∈" (Term.app `ioo [(num "0") `R]))
+             («binderTerm∈_» "∈" (Term.app `Ioo [(num "0") `R]))
              ","
              (Filter.Order.Filter.Basic.«term∀ᶠ_in_,_»
               "∀ᶠ"
@@ -1756,21 +1756,21 @@ theorem isO_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) :
       :
         TFAE
           [
-            ∃ a ∈ ioo - R R , f =o[ at_top ] pow a
+            ∃ a ∈ Ioo - R R , f =o[ at_top ] pow a
               ,
-              ∃ a ∈ ioo 0 R , f =o[ at_top ] pow a
+              ∃ a ∈ Ioo 0 R , f =o[ at_top ] pow a
               ,
-              ∃ a ∈ ioo - R R , f =O[ at_top ] pow a
+              ∃ a ∈ Ioo - R R , f =O[ at_top ] pow a
               ,
-              ∃ a ∈ ioo 0 R , f =O[ at_top ] pow a
+              ∃ a ∈ Ioo 0 R , f =O[ at_top ] pow a
               ,
               ∃ a < R , ∃ ( C : _ ) ( h₀ : 0 < C ∨ 0 < R ) , ∀ n , | f n | ≤ C * a ^ n
               ,
-              ∃ a ∈ ioo 0 R , ∃ C > 0 , ∀ n , | f n | ≤ C * a ^ n
+              ∃ a ∈ Ioo 0 R , ∃ C > 0 , ∀ n , | f n | ≤ C * a ^ n
               ,
               ∃ a < R , ∀ᶠ n in at_top , | f n | ≤ a ^ n
               ,
-              ∃ a ∈ ioo 0 R , ∀ᶠ n in at_top , | f n | ≤ a ^ n
+              ∃ a ∈ Ioo 0 R , ∀ᶠ n in at_top , | f n | ≤ a ^ n
             ]
     :=
       by

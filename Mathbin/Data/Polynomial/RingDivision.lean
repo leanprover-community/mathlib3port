@@ -308,7 +308,7 @@ theorem Monic.irreducible_iff_natDegree (hp : p.Monic) :
 
 theorem Monic.irreducible_iff_nat_degree' (hp : p.Monic) :
     Irreducible p ↔
-      p ≠ 1 ∧ ∀ f g : R[X], f.Monic → g.Monic → f * g = p → g.natDegree ∉ ioc 0 (p.natDegree / 2) :=
+      p ≠ 1 ∧ ∀ f g : R[X], f.Monic → g.Monic → f * g = p → g.natDegree ∉ Ioc 0 (p.natDegree / 2) :=
   by
   simp_rw [hp.irreducible_iff_nat_degree, mem_Ioc, Nat.le_div_iff_mul_le zero_lt_two, mul_two]
   apply and_congr_right'

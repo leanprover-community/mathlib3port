@@ -1264,7 +1264,7 @@ variable [TopologicalSpace β] [Group α] [MulAction α β] [HasContinuousConstS
 theorem IsOpen.smul_left (ht : IsOpen t) : IsOpen (s • t) :=
   by
   rw [← bUnion_smul_set]
-  exact isOpen_bUnion fun a _ => ht.smul _
+  exact isOpen_bunionᵢ fun a _ => ht.smul _
 #align is_open.smul_left IsOpen.smul_left
 #align is_open.vadd_left IsOpen.vadd_left
 
@@ -1338,7 +1338,7 @@ variable [TopologicalSpace α] [Group α] [HasContinuousConstSmul αᵐᵒᵖ α
 theorem IsOpen.mul_right (hs : IsOpen s) : IsOpen (s * t) :=
   by
   rw [← bUnion_op_smul_set]
-  exact isOpen_bUnion fun a _ => hs.smul _
+  exact isOpen_bunionᵢ fun a _ => hs.smul _
 #align is_open.mul_right IsOpen.mul_right
 #align is_open.add_right IsOpen.add_right
 
@@ -1378,7 +1378,7 @@ variable [TopologicalSpace α] [Group α] [TopologicalGroup α] {s t : Set α}
 theorem IsOpen.div_left (ht : IsOpen t) : IsOpen (s / t) :=
   by
   rw [← Union_div_left_image]
-  exact isOpen_bUnion fun a ha => isOpenMap_div_left a t ht
+  exact isOpen_bunionᵢ fun a ha => isOpenMap_div_left a t ht
 #align is_open.div_left IsOpen.div_left
 #align is_open.sub_left IsOpen.sub_left
 
@@ -1386,7 +1386,7 @@ theorem IsOpen.div_left (ht : IsOpen t) : IsOpen (s / t) :=
 theorem IsOpen.div_right (hs : IsOpen s) : IsOpen (s / t) :=
   by
   rw [← Union_div_right_image]
-  exact isOpen_bUnion fun a ha => isOpenMap_div_right a s hs
+  exact isOpen_bunionᵢ fun a ha => isOpenMap_div_right a s hs
 #align is_open.div_right IsOpen.div_right
 #align is_open.sub_right IsOpen.sub_right
 

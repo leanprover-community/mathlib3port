@@ -60,7 +60,7 @@ theorem mem_supᵢ_of_directed {S : ι → Subsemigroup M} (hS : Directed (· �
   by
   refine' ⟨_, fun ⟨i, hi⟩ => (SetLike.le_def.1 <| le_supᵢ S i) hi⟩
   suffices x ∈ closure (⋃ i, (S i : Set M)) → ∃ i, x ∈ S i by
-    simpa only [closure_Union, closure_eq (S _)] using this
+    simpa only [closure_unionᵢ, closure_eq (S _)] using this
   refine' fun hx => closure_induction hx (fun y hy => mem_Union.mp hy) _
   · rintro x y ⟨i, hi⟩ ⟨j, hj⟩
     rcases hS i j with ⟨k, hki, hkj⟩

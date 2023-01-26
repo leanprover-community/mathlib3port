@@ -113,7 +113,7 @@ theorem sum_range_choose_halfway (m : Nat) : (∑ i in range (m + 1), choose (2 
         by rw [two_mul, this]
       _ =
           (∑ i in range (m + 1), choose (2 * m + 1) i) +
-            ∑ i in ico (m + 1) (2 * m + 2), choose (2 * m + 1) i :=
+            ∑ i in Ico (m + 1) (2 * m + 2), choose (2 * m + 1) i :=
         by
         rw [range_eq_Ico, sum_Ico_reflect]
         · congr

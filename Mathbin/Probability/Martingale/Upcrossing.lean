@@ -697,13 +697,13 @@ theorem mul_upcrossingsBefore_le (hf : a ≤ f N ω) (hab : a < b) :
                 i ∈
                   Set.Ico (lower_crossing_time a b f N k ω) (upper_crossing_time a b f N (k + 1) ω))
               (Finset.range N) =
-            Finset.ico (lower_crossing_time a b f N k ω) (upper_crossing_time a b f N (k + 1) ω)),
+            Finset.Ico (lower_crossing_time a b f N k ω) (upper_crossing_time a b f N (k + 1) ω)),
         Finset.sum_ico_eq_add_neg _ lower_crossing_time_le_upper_crossing_time_succ,
         Finset.sum_range_sub fun n => f n ω, Finset.sum_range_sub fun n => f n ω, neg_sub,
         sub_add_sub_cancel]
       · rfl
       · ext i
-        simp only [Set.mem_Ico, Finset.mem_filter, Finset.mem_range, Finset.mem_ico,
+        simp only [Set.mem_Ico, Finset.mem_filter, Finset.mem_range, Finset.mem_Ico,
           and_iff_right_iff_imp, and_imp]
         exact fun _ h => lt_of_lt_of_le h upper_crossing_time_le
     simp_rw [h₁]
@@ -879,7 +879,7 @@ stopping time.
 
 theorem upcrossingsBefore_eq_sum (hab : a < b) :
     upcrossingsBefore a b f N ω =
-      ∑ i in Finset.ico 1 (N + 1), { n | upperCrossingTime a b f N n ω < N }.indicator 1 i :=
+      ∑ i in Finset.Ico 1 (N + 1), { n | upperCrossingTime a b f N n ω < N }.indicator 1 i :=
   by
   by_cases hN : N = 0
   · simp [hN]
@@ -887,11 +887,11 @@ theorem upcrossingsBefore_eq_sum (hab : a < b) :
     Finset.sum_ico_consecutive _ (Nat.succ_le_succ zero_le')
       (Nat.succ_le_succ (upcrossings_before_le f ω hab))]
   have h₁ :
-    ∀ k ∈ Finset.ico 1 (upcrossings_before a b f N ω + 1),
+    ∀ k ∈ Finset.Ico 1 (upcrossings_before a b f N ω + 1),
       { n : ℕ | upper_crossing_time a b f N n ω < N }.indicator 1 k = 1 :=
     by
     rintro k hk
-    rw [Finset.mem_ico] at hk
+    rw [Finset.mem_Ico] at hk
     rw [Set.indicator_of_mem]
     · rfl
     ·
@@ -899,11 +899,11 @@ theorem upcrossingsBefore_eq_sum (hab : a < b) :
         upper_crossing_time_lt_of_le_upcrossings_before (zero_lt_iff.2 hN) hab
           (Nat.lt_succ_iff.1 hk.2)
   have h₂ :
-    ∀ k ∈ Finset.ico (upcrossings_before a b f N ω + 1) (N + 1),
+    ∀ k ∈ Finset.Ico (upcrossings_before a b f N ω + 1) (N + 1),
       { n : ℕ | upper_crossing_time a b f N n ω < N }.indicator 1 k = 0 :=
     by
     rintro k hk
-    rw [Finset.mem_ico, Nat.succ_le_iff] at hk
+    rw [Finset.mem_Ico, Nat.succ_le_iff] at hk
     rw [Set.indicator_of_not_mem]
     simp only [Set.mem_setOf_eq, not_lt]
     exact (upper_crossing_time_eq_of_upcrossings_before_lt hab hk.1).symm.le
@@ -917,7 +917,7 @@ theorem Adapted.measurable_upcrossingsBefore (hf : Adapted ℱ f) (hab : a < b) 
   by
   have :
     upcrossings_before a b f N = fun ω =>
-      ∑ i in Finset.ico 1 (N + 1), { n | upper_crossing_time a b f N n ω < N }.indicator 1 i :=
+      ∑ i in Finset.Ico 1 (N + 1), { n | upper_crossing_time a b f N n ω < N }.indicator 1 i :=
     by
     ext ω
     exact upcrossings_before_eq_sum hab

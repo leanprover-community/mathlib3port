@@ -188,7 +188,7 @@ theorem strictConvexOn_zpow {m : ℤ} (hm₀ : m ≠ 0) (hm₁ : m ≠ 1) :
   refine' mul_pos _ (zpow_pos_of_pos hx _)
   exact_mod_cast int_prod_range_pos (even_bit0 1) fun hm => _
   norm_cast  at hm
-  rw [← Finset.coe_ico] at hm
+  rw [← Finset.coe_Ico] at hm
   fin_cases hm <;> cc
 #align strict_convex_on_zpow strictConvexOn_zpow
 

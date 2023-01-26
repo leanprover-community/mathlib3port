@@ -102,7 +102,7 @@ theorem hahn_decomposition [IsFiniteMeasure μ] [IsFiniteMeasure ν] :
   change ℕ → Set α at e
   have he₁ : ∀ n, MeasurableSet (e n) := fun n => (he n).1
   have he₂ : ∀ n, γ - (1 / 2) ^ n < d (e n) := fun n => (he n).2
-  let f : ℕ → ℕ → Set α := fun n m => (Finset.ico n (m + 1)).inf e
+  let f : ℕ → ℕ → Set α := fun n m => (Finset.Ico n (m + 1)).inf e
   have hf : ∀ n m, MeasurableSet (f n m) := by
     intro n m
     simp only [f, Finset.inf_eq_infᵢ]

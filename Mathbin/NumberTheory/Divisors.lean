@@ -46,20 +46,20 @@ variable (n : ℕ)
 
 /-- `divisors n` is the `finset` of divisors of `n`. As a special case, `divisors 0 = ∅`. -/
 def divisors : Finset ℕ :=
-  Finset.filter (fun x : ℕ => x ∣ n) (Finset.ico 1 (n + 1))
+  Finset.filter (fun x : ℕ => x ∣ n) (Finset.Ico 1 (n + 1))
 #align nat.divisors Nat.divisors
 
 /-- `proper_divisors n` is the `finset` of divisors of `n`, other than `n`.
   As a special case, `proper_divisors 0 = ∅`. -/
 def properDivisors : Finset ℕ :=
-  Finset.filter (fun x : ℕ => x ∣ n) (Finset.ico 1 n)
+  Finset.filter (fun x : ℕ => x ∣ n) (Finset.Ico 1 n)
 #align nat.proper_divisors Nat.properDivisors
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- `divisors_antidiagonal n` is the `finset` of pairs `(x,y)` such that `x * y = n`.
   As a special case, `divisors_antidiagonal 0 = ∅`. -/
 def divisorsAntidiagonal : Finset (ℕ × ℕ) :=
-  (ico 1 (n + 1) ×ˢ ico 1 (n + 1)).filter fun x => x.fst * x.snd = n
+  (Ico 1 (n + 1) ×ˢ Ico 1 (n + 1)).filter fun x => x.fst * x.snd = n
 #align nat.divisors_antidiagonal Nat.divisorsAntidiagonal
 
 variable {n}
@@ -128,7 +128,7 @@ theorem dvd_of_mem_divisors {m : ℕ} (h : n ∈ divisors m) : n ∣ m :=
 theorem mem_divisorsAntidiagonal {x : ℕ × ℕ} :
     x ∈ divisorsAntidiagonal n ↔ x.fst * x.snd = n ∧ n ≠ 0 :=
   by
-  simp only [divisors_antidiagonal, Finset.mem_ico, Ne.def, Finset.mem_filter, Finset.mem_product]
+  simp only [divisors_antidiagonal, Finset.mem_Ico, Ne.def, Finset.mem_filter, Finset.mem_product]
   rw [and_comm']
   apply and_congr_right
   rintro rfl

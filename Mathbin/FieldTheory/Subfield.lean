@@ -826,7 +826,8 @@ theorem mem_supᵢ_of_directed {ι} [hι : Nonempty ι] {S : ι → Subfield K} 
     {x : K} : (x ∈ ⨆ i, S i) ↔ ∃ i, x ∈ S i :=
   by
   refine' ⟨_, fun ⟨i, hi⟩ => (SetLike.le_def.1 <| le_supᵢ S i) hi⟩
-  suffices x ∈ closure (⋃ i, (S i : Set K)) → ∃ i, x ∈ S i by simpa only [closure_Union, closure_eq]
+  suffices x ∈ closure (⋃ i, (S i : Set K)) → ∃ i, x ∈ S i by
+    simpa only [closure_unionᵢ, closure_eq]
   refine' fun hx => closure_induction hx (fun x => set.mem_Union.mp) _ _ _ _ _
   · exact hι.elim fun i => ⟨i, (S i).one_mem⟩
   · rintro x y ⟨i, hi⟩ ⟨j, hj⟩

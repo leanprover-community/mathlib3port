@@ -164,7 +164,7 @@ theorem edist_triangle4 (x y z t : α) : edist x t ≤ edist x y + edist y z + e
 
 /-- The triangle (polygon) inequality for sequences of points; `finset.Ico` version. -/
 theorem edist_le_ico_sum_edist (f : ℕ → α) {m n} (h : m ≤ n) :
-    edist (f m) (f n) ≤ ∑ i in Finset.ico m n, edist (f i) (f (i + 1)) :=
+    edist (f m) (f n) ≤ ∑ i in Finset.Ico m n, edist (f i) (f (i + 1)) :=
   by
   revert n
   refine' Nat.le_induction _ _
@@ -174,8 +174,8 @@ theorem edist_le_ico_sum_edist (f : ℕ → α) {m n} (h : m ≤ n) :
   · intro n hn hrec
     calc
       edist (f m) (f (n + 1)) ≤ edist (f m) (f n) + edist (f n) (f (n + 1)) := edist_triangle _ _ _
-      _ ≤ (∑ i in Finset.ico m n, _) + _ := add_le_add hrec le_rfl
-      _ = ∑ i in Finset.ico m (n + 1), _ := by
+      _ ≤ (∑ i in Finset.Ico m n, _) + _ := add_le_add hrec le_rfl
+      _ = ∑ i in Finset.Ico m (n + 1), _ := by
         rw [Nat.ico_succ_right_eq_insert_ico hn, Finset.sum_insert, add_comm] <;> simp
       
 #align edist_le_Ico_sum_edist edist_le_ico_sum_edist
@@ -190,9 +190,9 @@ theorem edist_le_range_sum_edist (f : ℕ → α) (n : ℕ) :
 with an upper estimate. -/
 theorem edist_le_ico_sum_of_edist_le {f : ℕ → α} {m n} (hmn : m ≤ n) {d : ℕ → ℝ≥0∞}
     (hd : ∀ {k}, m ≤ k → k < n → edist (f k) (f (k + 1)) ≤ d k) :
-    edist (f m) (f n) ≤ ∑ i in Finset.ico m n, d i :=
+    edist (f m) (f n) ≤ ∑ i in Finset.Ico m n, d i :=
   le_trans (edist_le_ico_sum_edist f hmn) <|
-    Finset.sum_le_sum fun k hk => hd (Finset.mem_ico.1 hk).1 (Finset.mem_ico.1 hk).2
+    Finset.sum_le_sum fun k hk => hd (Finset.mem_Ico.1 hk).1 (Finset.mem_Ico.1 hk).2
 #align edist_le_Ico_sum_of_edist_le edist_le_ico_sum_of_edist_le
 
 /-- A version of `edist_le_range_sum_edist` with each intermediate distance replaced

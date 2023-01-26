@@ -132,10 +132,10 @@ variable [Preorder α] [Preorder β] [LocallyFiniteOrder α] [LocallyFiniteOrder
 
 instance : LocallyFiniteOrder (Sum α β)
     where
-  finsetIcc := sumLift₂ icc icc
-  finsetIco := sumLift₂ ico ico
-  finsetIoc := sumLift₂ ioc ioc
-  finsetIoo := sumLift₂ ioo ioo
+  finsetIcc := sumLift₂ Icc Icc
+  finsetIco := sumLift₂ Ico Ico
+  finsetIoc := sumLift₂ Ioc Ioc
+  finsetIoo := sumLift₂ Ioo Ioo
   finset_mem_Icc := by rintro (a | a) (b | b) (x | x) <;> simp
   finset_mem_Ico := by rintro (a | a) (b | b) (x | x) <;> simp
   finset_mem_Ioc := by rintro (a | a) (b | b) (x | x) <;> simp
@@ -143,75 +143,75 @@ instance : LocallyFiniteOrder (Sum α β)
 
 variable (a₁ a₂ : α) (b₁ b₂ : β) (a b : Sum α β)
 
-theorem icc_inl_inl : icc (inl a₁ : Sum α β) (inl a₂) = (icc a₁ a₂).map Embedding.inl :=
+theorem icc_inl_inl : Icc (inl a₁ : Sum α β) (inl a₂) = (Icc a₁ a₂).map Embedding.inl :=
   rfl
 #align sum.Icc_inl_inl Sum.icc_inl_inl
 
-theorem ico_inl_inl : ico (inl a₁ : Sum α β) (inl a₂) = (ico a₁ a₂).map Embedding.inl :=
+theorem ico_inl_inl : Ico (inl a₁ : Sum α β) (inl a₂) = (Ico a₁ a₂).map Embedding.inl :=
   rfl
 #align sum.Ico_inl_inl Sum.ico_inl_inl
 
-theorem ioc_inl_inl : ioc (inl a₁ : Sum α β) (inl a₂) = (ioc a₁ a₂).map Embedding.inl :=
+theorem ioc_inl_inl : Ioc (inl a₁ : Sum α β) (inl a₂) = (Ioc a₁ a₂).map Embedding.inl :=
   rfl
 #align sum.Ioc_inl_inl Sum.ioc_inl_inl
 
-theorem ioo_inl_inl : ioo (inl a₁ : Sum α β) (inl a₂) = (ioo a₁ a₂).map Embedding.inl :=
+theorem ioo_inl_inl : Ioo (inl a₁ : Sum α β) (inl a₂) = (Ioo a₁ a₂).map Embedding.inl :=
   rfl
 #align sum.Ioo_inl_inl Sum.ioo_inl_inl
 
 @[simp]
-theorem icc_inl_inr : icc (inl a₁) (inr b₂) = ∅ :=
+theorem icc_inl_inr : Icc (inl a₁) (inr b₂) = ∅ :=
   rfl
 #align sum.Icc_inl_inr Sum.icc_inl_inr
 
 @[simp]
-theorem ico_inl_inr : ico (inl a₁) (inr b₂) = ∅ :=
+theorem ico_inl_inr : Ico (inl a₁) (inr b₂) = ∅ :=
   rfl
 #align sum.Ico_inl_inr Sum.ico_inl_inr
 
 @[simp]
-theorem ioc_inl_inr : ioc (inl a₁) (inr b₂) = ∅ :=
+theorem ioc_inl_inr : Ioc (inl a₁) (inr b₂) = ∅ :=
   rfl
 #align sum.Ioc_inl_inr Sum.ioc_inl_inr
 
 @[simp]
-theorem ioo_inl_inr : ioo (inl a₁) (inr b₂) = ∅ :=
+theorem ioo_inl_inr : Ioo (inl a₁) (inr b₂) = ∅ :=
   rfl
 #align sum.Ioo_inl_inr Sum.ioo_inl_inr
 
 @[simp]
-theorem icc_inr_inl : icc (inr b₁) (inl a₂) = ∅ :=
+theorem icc_inr_inl : Icc (inr b₁) (inl a₂) = ∅ :=
   rfl
 #align sum.Icc_inr_inl Sum.icc_inr_inl
 
 @[simp]
-theorem ico_inr_inl : ico (inr b₁) (inl a₂) = ∅ :=
+theorem ico_inr_inl : Ico (inr b₁) (inl a₂) = ∅ :=
   rfl
 #align sum.Ico_inr_inl Sum.ico_inr_inl
 
 @[simp]
-theorem ioc_inr_inl : ioc (inr b₁) (inl a₂) = ∅ :=
+theorem ioc_inr_inl : Ioc (inr b₁) (inl a₂) = ∅ :=
   rfl
 #align sum.Ioc_inr_inl Sum.ioc_inr_inl
 
 @[simp]
-theorem ioo_inr_inl : ioo (inr b₁) (inl a₂) = ∅ :=
+theorem ioo_inr_inl : Ioo (inr b₁) (inl a₂) = ∅ :=
   rfl
 #align sum.Ioo_inr_inl Sum.ioo_inr_inl
 
-theorem icc_inr_inr : icc (inr b₁ : Sum α β) (inr b₂) = (icc b₁ b₂).map Embedding.inr :=
+theorem icc_inr_inr : Icc (inr b₁ : Sum α β) (inr b₂) = (Icc b₁ b₂).map Embedding.inr :=
   rfl
 #align sum.Icc_inr_inr Sum.icc_inr_inr
 
-theorem ico_inr_inr : ico (inr b₁ : Sum α β) (inr b₂) = (ico b₁ b₂).map Embedding.inr :=
+theorem ico_inr_inr : Ico (inr b₁ : Sum α β) (inr b₂) = (Ico b₁ b₂).map Embedding.inr :=
   rfl
 #align sum.Ico_inr_inr Sum.ico_inr_inr
 
-theorem ioc_inr_inr : ioc (inr b₁ : Sum α β) (inr b₂) = (ioc b₁ b₂).map Embedding.inr :=
+theorem ioc_inr_inr : Ioc (inr b₁ : Sum α β) (inr b₂) = (Ioc b₁ b₂).map Embedding.inr :=
   rfl
 #align sum.Ioc_inr_inr Sum.ioc_inr_inr
 
-theorem ioo_inr_inr : ioo (inr b₁ : Sum α β) (inr b₂) = (ioo b₁ b₂).map Embedding.inr :=
+theorem ioo_inr_inr : Ioo (inr b₁ : Sum α β) (inr b₂) = (Ioo b₁ b₂).map Embedding.inr :=
   rfl
 #align sum.Ioo_inr_inr Sum.ioo_inr_inr
 

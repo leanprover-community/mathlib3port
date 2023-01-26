@@ -88,7 +88,7 @@ unsafe def closure :=
   ref (expr_map (Sum ℕ (expr × expr)))
 #align tactic.closure tactic.closure
 
-namespace Closure
+namespace closure
 
 /-- `with_new_closure f` creates an empty `closure` `c`, executes `f` on `c`, and then deletes `c`,
 returning the output of `f`. -/
@@ -200,7 +200,7 @@ unsafe def is_eqv (cl : closure) (e₀ e₁ : expr) : tactic Bool := do
   return <| r = r'
 #align tactic.closure.is_eqv tactic.closure.is_eqv
 
-end Closure
+end closure
 
 /-- mutable graphs between local propositions that imply each other with the proof of implication -/
 @[reducible]

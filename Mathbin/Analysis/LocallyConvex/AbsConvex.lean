@@ -181,7 +181,7 @@ theorem withGaugeSeminormFamily : WithSeminorms (gaugeSeminormFamily 𝕜 E) :=
   -- We have to show that the intersection contains zero, is open, balanced, and convex
   refine'
     ⟨mem_Inter₂.mpr fun _ _ => by simp [Seminorm.mem_ball_zero, hr],
-      isOpen_bInter (to_finite _) fun S _ => _,
+      isOpen_binterᵢ (to_finite _) fun S _ => _,
       balanced_Inter₂ fun _ _ => Seminorm.balanced_ball_zero _ _,
       convex_Inter₂ fun _ _ => Seminorm.convex_ball _ _ _⟩
   -- The only nontrivial part is to show that the ball is open

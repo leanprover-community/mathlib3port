@@ -199,7 +199,7 @@ theorem IsCompact.elim_directed_cover {ι : Type v} [hι : Nonempty ι] (hs : Is
 /-- For every open cover of a compact set, there exists a finite subcover. -/
 theorem IsCompact.elim_finite_subcover {ι : Type v} (hs : IsCompact s) (U : ι → Set α)
     (hUo : ∀ i, IsOpen (U i)) (hsU : s ⊆ ⋃ i, U i) : ∃ t : Finset ι, s ⊆ ⋃ i ∈ t, U i :=
-  hs.elim_directed_cover _ (fun t => isOpen_bUnion fun i _ => hUo i)
+  hs.elim_directed_cover _ (fun t => isOpen_bunionᵢ fun i _ => hUo i)
     (unionᵢ_eq_unionᵢ_finset U ▸ hsU) (directed_of_sup fun t₁ t₂ h => bunionᵢ_subset_bunionᵢ_left h)
 #align is_compact.elim_finite_subcover IsCompact.elim_finite_subcover
 
@@ -230,7 +230,7 @@ theorem IsCompact.disjoint_nhdsSet_left {l : Filter α} (hs : IsCompact s) :
   rcases hs.elim_nhds_subcover U fun x hx => (hUo x hx).mem_nhds (hxU x hx) with ⟨t, hts, hst⟩
   refine'
     (hasBasis_nhdsSet _).disjoint_iff_left.2
-      ⟨⋃ x ∈ t, U x, ⟨isOpen_bUnion fun x hx => hUo x (hts x hx), hst⟩, _⟩
+      ⟨⋃ x ∈ t, U x, ⟨isOpen_bunionᵢ fun x hx => hUo x (hts x hx), hst⟩, _⟩
   rw [compl_Union₂, bInter_finset_mem]
   exact fun x hx => hUl x (hts x hx)
 #align is_compact.disjoint_nhds_set_left IsCompact.disjoint_nhdsSet_left
@@ -564,7 +564,7 @@ theorem isCompact_open_iff_eq_finite_unionᵢ_of_isTopologicalBasis (b : ι → 
     · rintro ⟨s, hs, rfl⟩
       constructor
       · exact hs.is_compact_bUnion fun i _ => hb' i
-      · apply isOpen_bUnion
+      · apply isOpen_bunionᵢ
         intro i hi
         exact hb.is_open (Set.mem_range_self _)
 #align is_compact_open_iff_eq_finite_Union_of_is_topological_basis isCompact_open_iff_eq_finite_unionᵢ_of_isTopologicalBasis
@@ -754,8 +754,8 @@ theorem nhdsContainBoxes_of_compact {s : Set α} (hs : IsCompact s) (t : Set β)
   let ⟨s0, s0_cover⟩ := hs.elim_finite_subcover _ (fun i => (h i).1) us_cover
   let u := ⋃ i ∈ s0, (uvs i).1
   let v := ⋂ i ∈ s0, (uvs i).2
-  have : IsOpen u := isOpen_bUnion fun i _ => (h i).1
-  have : IsOpen v := isOpen_bInter s0.finite_to_set fun i _ => (h i).2.1
+  have : IsOpen u := isOpen_bunionᵢ fun i _ => (h i).1
+  have : IsOpen v := isOpen_binterᵢ s0.finite_to_set fun i _ => (h i).2.1
   have : t ⊆ v := subset_interᵢ₂ fun i _ => (h i).2.2.2.1
   have : u ×ˢ v ⊆ n := fun ⟨x', y'⟩ ⟨hx', hy'⟩ =>
     have : ∃ i ∈ s0, x' ∈ (uvs i).1 := by simpa using hx'
@@ -1678,7 +1678,7 @@ theorem isClopen_unionᵢ {β : Type _} [Finite β] {s : β → Set α} (h : ∀
 
 theorem isClopen_bUnion {β : Type _} {s : Set β} {f : β → Set α} (hs : s.Finite)
     (h : ∀ i ∈ s, IsClopen <| f i) : IsClopen (⋃ i ∈ s, f i) :=
-  ⟨isOpen_bUnion fun i hi => (h i hi).1, isClosed_bUnion hs fun i hi => (h i hi).2⟩
+  ⟨isOpen_bunionᵢ fun i hi => (h i hi).1, isClosed_bunionᵢ hs fun i hi => (h i hi).2⟩
 #align is_clopen_bUnion isClopen_bUnion
 
 theorem isClopen_bUnion_finset {β : Type _} {s : Finset β} {f : β → Set α}
@@ -1693,7 +1693,7 @@ theorem isClopen_interᵢ {β : Type _} [Finite β] {s : β → Set α} (h : ∀
 
 theorem isClopen_bInter {β : Type _} {s : Set β} (hs : s.Finite) {f : β → Set α}
     (h : ∀ i ∈ s, IsClopen (f i)) : IsClopen (⋂ i ∈ s, f i) :=
-  ⟨isOpen_bInter hs fun i hi => (h i hi).1, isClosed_bInter fun i hi => (h i hi).2⟩
+  ⟨isOpen_binterᵢ hs fun i hi => (h i hi).1, isClosed_binterᵢ fun i hi => (h i hi).2⟩
 #align is_clopen_bInter isClopen_bInter
 
 theorem isClopen_bInter_finset {β : Type _} {s : Finset β} {f : β → Set α}
@@ -2074,7 +2074,7 @@ theorem isIrreducible_iff_unionₛ_closed {s : Set α} :
           solve_by_elim [Finset.mem_insert_of_mem]
       · solve_by_elim [Finset.mem_insert_self]
       · rw [sUnion_eq_bUnion]
-        apply isClosed_bUnion (Finset.finite_toSet Z)
+        apply isClosed_bunionᵢ (Finset.finite_toSet Z)
         · intros
           solve_by_elim [Finset.mem_insert_of_mem]
       · simpa using H

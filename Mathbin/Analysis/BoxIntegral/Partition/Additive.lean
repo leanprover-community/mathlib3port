@@ -137,7 +137,7 @@ def ofMapSplitAdd [Fintype ι] (f : Box ι → M) (I₀ : WithTop (Box ι))
       ∀ I : Box ι,
         ↑I ≤ I₀ →
           ∀ {i x},
-            x ∈ ioo (I.lower i) (I.upper i) →
+            x ∈ Ioo (I.lower i) (I.upper i) →
               (I.splitLower i x).elim 0 f + (I.splitUpper i x).elim 0 f = f I) :
     ι →ᵇᵃ[I₀] M := by
   refine' ⟨f, _⟩
@@ -213,8 +213,8 @@ end ToSmul
 `I₀`. -/
 @[simps]
 def upperSubLower.{u} {G : Type u} [AddCommGroup G] (I₀ : Box (Fin (n + 1))) (i : Fin (n + 1))
-    (f : ℝ → Box (Fin n) → G) (fb : icc (I₀.lower i) (I₀.upper i) → Fin n →ᵇᵃ[I₀.face i] G)
-    (hf : ∀ (x) (hx : x ∈ icc (I₀.lower i) (I₀.upper i)) (J), f x J = fb ⟨x, hx⟩ J) :
+    (f : ℝ → Box (Fin n) → G) (fb : Icc (I₀.lower i) (I₀.upper i) → Fin n →ᵇᵃ[I₀.face i] G)
+    (hf : ∀ (x) (hx : x ∈ Icc (I₀.lower i) (I₀.upper i)) (J), f x J = fb ⟨x, hx⟩ J) :
     Fin (n + 1) →ᵇᵃ[I₀] G :=
   ofMapSplitAdd (fun J : Box (Fin (n + 1)) => f (J.upper i) (J.face i) - f (J.lower i) (J.face i))
     I₀

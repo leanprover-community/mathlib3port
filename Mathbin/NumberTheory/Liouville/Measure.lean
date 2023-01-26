@@ -42,7 +42,7 @@ theorem setOf_liouvilleWith_subset_aux :
           ⋃ n > (0 : ℕ),
             { x : ℝ |
               ∃ᶠ b : ℕ in at_top,
-                ∃ a ∈ Finset.icc (0 : ℤ) b, |x - (a : ℤ) / b| < 1 / b ^ (2 + 1 / n : ℝ) } :=
+                ∃ a ∈ Finset.Icc (0 : ℤ) b, |x - (a : ℤ) / b| < 1 / b ^ (2 + 1 / n : ℝ) } :=
   by
   rintro x ⟨p, hp, hxp⟩
   rcases exists_nat_one_div_lt (sub_pos.2 hp) with ⟨n, hn⟩
@@ -52,7 +52,7 @@ theorem setOf_liouvilleWith_subset_aux :
       LiouvilleWith p y →
         y ∈ Ico (0 : ℝ) 1 →
           ∃ᶠ b : ℕ in at_top,
-            ∃ a ∈ Finset.icc (0 : ℤ) b, |y - a / b| < 1 / b ^ (2 + 1 / (n + 1 : ℕ) : ℝ)
+            ∃ a ∈ Finset.Icc (0 : ℤ) b, |y - a / b| < 1 / b ^ (2 + 1 / (n + 1 : ℕ) : ℝ)
     by
     simp only [mem_Union, mem_preimage]
     have hx : x + ↑(-⌊x⌋) ∈ Ico (0 : ℝ) 1 := by
@@ -77,7 +77,7 @@ theorem setOf_liouvilleWith_subset_aux :
     simpa using n.cast_add_one_pos.le
   rw [sub_div' _ _ _ hb0.ne', abs_div, abs_of_pos hb0, div_lt_div_right hb0, abs_sub_lt_iff,
     sub_lt_iff_lt_add, sub_lt_iff_lt_add, ← sub_lt_iff_lt_add'] at hlt
-  rw [Finset.mem_icc, ← Int.lt_add_one_iff, ← Int.lt_add_one_iff, ← neg_lt_iff_pos_add, add_comm, ←
+  rw [Finset.mem_Icc, ← Int.lt_add_one_iff, ← Int.lt_add_one_iff, ← neg_lt_iff_pos_add, add_comm, ←
     @Int.cast_lt ℝ, ← @Int.cast_lt ℝ]
   push_cast
   refine' ⟨lt_of_le_of_lt _ hlt.1, hlt.2.trans_le _⟩
@@ -115,11 +115,11 @@ theorem volume_unionᵢ_setOf_liouvilleWith :
     rw [Real.volume_ball, mul_one_div, ← Nnreal.coe_two, ← Nnreal.coe_nat_cast, ← Nnreal.coe_rpow, ←
       Nnreal.coe_div, Ennreal.ofReal_coe_nnreal]
   have :
-    ∀ b : ℕ, volume (⋃ a ∈ Finset.icc (0 : ℤ) b, B a b) ≤ (2 * (b ^ (1 - r) + b ^ (-r)) : ℝ≥0) :=
+    ∀ b : ℕ, volume (⋃ a ∈ Finset.Icc (0 : ℤ) b, B a b) ≤ (2 * (b ^ (1 - r) + b ^ (-r)) : ℝ≥0) :=
     by
     intro b
     calc
-      volume (⋃ a ∈ Finset.icc (0 : ℤ) b, B a b) ≤ ∑ a in Finset.icc (0 : ℤ) b, volume (B a b) :=
+      volume (⋃ a ∈ Finset.Icc (0 : ℤ) b, B a b) ≤ ∑ a in Finset.Icc (0 : ℤ) b, volume (B a b) :=
         measure_bUnion_finset_le _ _
       _ = ((b + 1) * (2 / b ^ r) : ℝ≥0) := by
         simp only [hB, Int.card_icc, Finset.sum_const, nsmul_eq_mul, sub_zero, ← Int.ofNat_succ,

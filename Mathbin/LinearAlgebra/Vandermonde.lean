@@ -78,7 +78,7 @@ theorem vandermonde_transpose_mul_vandermonde {n : ℕ} (v : Fin n → R) (i j) 
 #align matrix.vandermonde_transpose_mul_vandermonde Matrix.vandermonde_transpose_mul_vandermonde
 
 theorem det_vandermonde {n : ℕ} (v : Fin n → R) :
-    det (vandermonde v) = ∏ i : Fin n, ∏ j in ioi i, v j - v i :=
+    det (vandermonde v) = ∏ i : Fin n, ∏ j in Ioi i, v j - v i :=
   by
   unfold vandermonde
   induction' n with n ih

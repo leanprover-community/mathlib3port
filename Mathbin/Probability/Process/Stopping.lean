@@ -1019,8 +1019,8 @@ theorem stoppedValue_eq_of_mem_finset [AddCommMonoid E] {s : Finset ι} (hbdd : 
 
 theorem stoppedValue_eq' [Preorder ι] [LocallyFiniteOrderBot ι] [AddCommMonoid E] {N : ι}
     (hbdd : ∀ ω, τ ω ≤ N) :
-    stoppedValue u τ = ∑ i in Finset.iic N, Set.indicator { ω | τ ω = i } (u i) :=
-  stoppedValue_eq_of_mem_finset fun ω => Finset.mem_iic.mpr (hbdd ω)
+    stoppedValue u τ = ∑ i in Finset.Iic N, Set.indicator { ω | τ ω = i } (u i) :=
+  stoppedValue_eq_of_mem_finset fun ω => Finset.mem_Iic.mpr (hbdd ω)
 #align measure_theory.stopped_value_eq' MeasureTheory.stoppedValue_eq'
 
 theorem stoppedProcess_eq_of_mem_finset [LinearOrder ι] [AddCommMonoid E] {s : Finset ι} (n : ι)
@@ -1053,9 +1053,9 @@ theorem stoppedProcess_eq_of_mem_finset [LinearOrder ι] [AddCommMonoid E] {s : 
 theorem stoppedProcess_eq'' [LinearOrder ι] [LocallyFiniteOrderBot ι] [AddCommMonoid E] (n : ι) :
     stoppedProcess u τ n =
       Set.indicator { a | n ≤ τ a } (u n) +
-        ∑ i in Finset.iio n, Set.indicator { ω | τ ω = i } (u i) :=
+        ∑ i in Finset.Iio n, Set.indicator { ω | τ ω = i } (u i) :=
   by
-  have h_mem : ∀ ω, τ ω < n → τ ω ∈ Finset.iio n := fun ω h => finset.mem_Iio.mpr h
+  have h_mem : ∀ ω, τ ω < n → τ ω ∈ Finset.Iio n := fun ω h => finset.mem_Iio.mpr h
   rw [stopped_process_eq_of_mem_finset n h_mem]
   swap; · infer_instance
   congr with i
@@ -1080,7 +1080,7 @@ theorem memℒpStoppedValueOfMemFinset (hτ : IsStoppingTime ℱ τ) (hu : ∀ n
 
 theorem memℒpStoppedValue [LocallyFiniteOrderBot ι] (hτ : IsStoppingTime ℱ τ)
     (hu : ∀ n, Memℒp (u n) p μ) {N : ι} (hbdd : ∀ ω, τ ω ≤ N) : Memℒp (stoppedValue u τ) p μ :=
-  memℒpStoppedValueOfMemFinset hτ hu fun ω => Finset.mem_iic.mpr (hbdd ω)
+  memℒpStoppedValueOfMemFinset hτ hu fun ω => Finset.mem_Iic.mpr (hbdd ω)
 #align measure_theory.mem_ℒp_stopped_value MeasureTheory.memℒpStoppedValue
 
 theorem integrableStoppedValueOfMemFinset (hτ : IsStoppingTime ℱ τ) (hu : ∀ n, Integrable (u n) μ)
@@ -1095,7 +1095,7 @@ variable (ι)
 theorem integrableStoppedValue [LocallyFiniteOrderBot ι] (hτ : IsStoppingTime ℱ τ)
     (hu : ∀ n, Integrable (u n) μ) {N : ι} (hbdd : ∀ ω, τ ω ≤ N) :
     Integrable (stoppedValue u τ) μ :=
-  integrableStoppedValueOfMemFinset hτ hu fun ω => Finset.mem_iic.mpr (hbdd ω)
+  integrableStoppedValueOfMemFinset hτ hu fun ω => Finset.mem_Iic.mpr (hbdd ω)
 #align measure_theory.integrable_stopped_value MeasureTheory.integrableStoppedValue
 
 end StoppedValue
@@ -1123,7 +1123,7 @@ theorem memℒpStoppedProcessOfMemFinset (hτ : IsStoppingTime ℱ τ) (hu : ∀
 
 theorem memℒpStoppedProcess [LocallyFiniteOrderBot ι] (hτ : IsStoppingTime ℱ τ)
     (hu : ∀ n, Memℒp (u n) p μ) (n : ι) : Memℒp (stoppedProcess u τ n) p μ :=
-  memℒpStoppedProcessOfMemFinset hτ hu n fun ω h => Finset.mem_iio.mpr h
+  memℒpStoppedProcessOfMemFinset hτ hu n fun ω h => Finset.mem_Iio.mpr h
 #align measure_theory.mem_ℒp_stopped_process MeasureTheory.memℒpStoppedProcess
 
 theorem integrableStoppedProcessOfMemFinset (hτ : IsStoppingTime ℱ τ) (hu : ∀ n, Integrable (u n) μ)
@@ -1135,7 +1135,7 @@ theorem integrableStoppedProcessOfMemFinset (hτ : IsStoppingTime ℱ τ) (hu : 
 
 theorem integrableStoppedProcess [LocallyFiniteOrderBot ι] (hτ : IsStoppingTime ℱ τ)
     (hu : ∀ n, Integrable (u n) μ) (n : ι) : Integrable (stoppedProcess u τ n) μ :=
-  integrableStoppedProcessOfMemFinset hτ hu n fun ω h => Finset.mem_iio.mpr h
+  integrableStoppedProcessOfMemFinset hτ hu n fun ω h => Finset.mem_Iio.mpr h
 #align measure_theory.integrable_stopped_process MeasureTheory.integrableStoppedProcess
 
 end StoppedProcess
@@ -1187,7 +1187,7 @@ variable {f : Filtration ℕ m} {u : ℕ → Ω → β} {τ π : Ω → ℕ}
 
 theorem stoppedValue_sub_eq_sum [AddCommGroup β] (hle : τ ≤ π) :
     stoppedValue u π - stoppedValue u τ = fun ω =>
-      (∑ i in Finset.ico (τ ω) (π ω), u (i + 1) - u i) ω :=
+      (∑ i in Finset.Ico (τ ω) (π ω), u (i + 1) - u i) ω :=
   by
   ext ω
   rw [Finset.sum_ico_eq_sub _ (hle ω), Finset.sum_range_sub, Finset.sum_range_sub]
@@ -1203,7 +1203,7 @@ theorem stoppedValue_sub_eq_sum' [AddCommGroup β] (hle : τ ≤ π) {N : ℕ} (
   simp only [Finset.sum_apply, Finset.sum_indicator_eq_sum_filter]
   refine' Finset.sum_congr _ fun _ _ => rfl
   ext i
-  simp only [Finset.mem_filter, Set.mem_setOf_eq, Finset.mem_range, Finset.mem_ico]
+  simp only [Finset.mem_filter, Set.mem_setOf_eq, Finset.mem_range, Finset.mem_Ico]
   exact ⟨fun h => ⟨lt_trans h.2 (Nat.lt_succ_iff.2 <| hbdd _), h⟩, fun h => h.2⟩
 #align measure_theory.stopped_value_sub_eq_sum' MeasureTheory.stoppedValue_sub_eq_sum'
 
@@ -1225,7 +1225,7 @@ theorem stoppedProcess_eq (n : ℕ) :
   rw [stopped_process_eq'' n]
   swap; · infer_instance
   congr with i
-  rw [Finset.mem_iio, Finset.mem_range]
+  rw [Finset.mem_Iio, Finset.mem_range]
 #align measure_theory.stopped_process_eq MeasureTheory.stoppedProcess_eq
 
 theorem stoppedProcess_eq' (n : ℕ) :

@@ -418,7 +418,7 @@ theorem nonempty_interᵢ_clPrehaar (K₀ : PositiveCompacts G) :
   refine' this.inter_Inter_nonempty (cl_prehaar K₀) (fun s => isClosed_closure) fun t => _
   let V₀ := ⋂ V ∈ t, (V : open_nhds_of 1).1
   have h1V₀ : IsOpen V₀ := by
-    apply isOpen_bInter
+    apply isOpen_binterᵢ
     apply Finset.finite_toSet
     rintro ⟨V, hV⟩ h2V
     exact hV.1

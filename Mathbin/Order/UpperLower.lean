@@ -1484,7 +1484,7 @@ end CompleteLattice
 
 end LowerSet
 
-section Closure
+section closure
 
 variable [Preorder α] [Preorder β] {s t : Set α} {x : α}
 
@@ -1729,7 +1729,7 @@ theorem ordConnected_iff_upperClosure_inter_lowerClosure :
   exact (UpperSet.upper _).OrdConnected.inter (LowerSet.lower _).OrdConnected
 #align ord_connected_iff_upper_closure_inter_lower_closure ordConnected_iff_upperClosure_inter_lowerClosure
 
-end Closure
+end closure
 
 /-! ### Product -/
 

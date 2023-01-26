@@ -1092,7 +1092,7 @@ theorem continuousOn_open_of_generateFrom {β : Type _} {s : Set α} {T : Set (S
     rw [this]
     exact hu.inter hv
   · rw [preimage_sUnion, inter_Union₂]
-    exact isOpen_bUnion hU'
+    exact isOpen_bunionᵢ hU'
   · exact hs
 #align continuous_on_open_of_generate_from continuousOn_open_of_generateFrom
 

@@ -397,17 +397,17 @@ expression for `∑_{k<n+1} aᵏ Qₖ` in terms of a sum of powers of the same s
 in a general abstract setup. -/
 theorem radius_right_inv_pos_of_radius_pos_aux1 (n : ℕ) (p : ℕ → ℝ) (hp : ∀ k, 0 ≤ p k) {r a : ℝ}
     (hr : 0 ≤ r) (ha : 0 ≤ a) :
-    (∑ k in ico 2 (n + 1),
+    (∑ k in Ico 2 (n + 1),
         a ^ k *
           ∑ c in ({ c | 1 < Composition.length c }.toFinset : Finset (Composition k)),
             r ^ c.length * ∏ j, p (c.blocksFun j)) ≤
-      ∑ j in ico 2 (n + 1), r ^ j * (∑ k in ico 1 n, a ^ k * p k) ^ j :=
+      ∑ j in Ico 2 (n + 1), r ^ j * (∑ k in Ico 1 n, a ^ k * p k) ^ j :=
   calc
-    (∑ k in ico 2 (n + 1),
+    (∑ k in Ico 2 (n + 1),
           a ^ k *
             ∑ c in ({ c | 1 < Composition.length c }.toFinset : Finset (Composition k)),
               r ^ c.length * ∏ j, p (c.blocksFun j)) =
-        ∑ k in ico 2 (n + 1),
+        ∑ k in Ico 2 (n + 1),
           ∑ c in ({ c | 1 < Composition.length c }.toFinset : Finset (Composition k)),
             ∏ j, r * (a ^ c.blocksFun j * p (c.blocksFun j)) :=
       by
@@ -443,7 +443,7 @@ theorem radius_right_inv_pos_of_radius_pos_aux1 (n : ℕ) (p : ℕ → ℝ) (hp 
       rw [Fin.heq_fun_iff K.symm]
       intro j
       rw [comp_change_of_variables_blocks_fun]
-    _ = ∑ j in ico 2 (n + 1), r ^ j * (∑ k in ico 1 n, a ^ k * p k) ^ j :=
+    _ = ∑ j in Ico 2 (n + 1), r ^ j * (∑ k in Ico 1 n, a ^ k * p k) ^ j :=
       by
       rw [comp_partial_sum_source, ←
         sum_sigma' (Ico 2 (n + 1))
@@ -472,20 +472,20 @@ in the specific setup we are interesting in, by reducing to the general bound in
 theorem radius_rightInv_pos_of_radius_pos_aux2 {n : ℕ} (hn : 2 ≤ n + 1)
     (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[𝕜] F) {r a C : ℝ} (hr : 0 ≤ r) (ha : 0 ≤ a)
     (hC : 0 ≤ C) (hp : ∀ n, ‖p n‖ ≤ C * r ^ n) :
-    (∑ k in ico 1 (n + 1), a ^ k * ‖p.right_inv i k‖) ≤
+    (∑ k in Ico 1 (n + 1), a ^ k * ‖p.right_inv i k‖) ≤
       ‖(i.symm : F →L[𝕜] E)‖ * a +
         ‖(i.symm : F →L[𝕜] E)‖ * C *
-          ∑ k in ico 2 (n + 1), (r * ∑ j in ico 1 n, a ^ j * ‖p.right_inv i j‖) ^ k :=
+          ∑ k in Ico 2 (n + 1), (r * ∑ j in Ico 1 n, a ^ j * ‖p.right_inv i j‖) ^ k :=
   let I := ‖(i.symm : F →L[𝕜] E)‖
   calc
-    (∑ k in ico 1 (n + 1), a ^ k * ‖p.right_inv i k‖) =
-        a * I + ∑ k in ico 2 (n + 1), a ^ k * ‖p.right_inv i k‖ :=
+    (∑ k in Ico 1 (n + 1), a ^ k * ‖p.right_inv i k‖) =
+        a * I + ∑ k in Ico 2 (n + 1), a ^ k * ‖p.right_inv i k‖ :=
       by
       simp only [LinearIsometryEquiv.norm_map, pow_one, right_inv_coeff_one, Nat.ico_succ_singleton,
         sum_singleton, ← sum_Ico_consecutive _ one_le_two hn]
     _ =
         a * I +
-          ∑ k in ico 2 (n + 1),
+          ∑ k in Ico 2 (n + 1),
             a ^ k *
               ‖(i.symm : F →L[𝕜] E).compContinuousMultilinearMap
                   (∑ c in ({ c | 1 < Composition.length c }.toFinset : Finset (Composition k)),
@@ -496,7 +496,7 @@ theorem radius_rightInv_pos_of_radius_pos_aux2 {n : ℕ} (hn : 2 ≤ n + 1)
       rw [right_inv_coeff _ _ _ (mem_Ico.1 hj).1, norm_neg]
     _ ≤
         a * ‖(i.symm : F →L[𝕜] E)‖ +
-          ∑ k in ico 2 (n + 1),
+          ∑ k in Ico 2 (n + 1),
             a ^ k *
               (I *
                 ∑ c in ({ c | 1 < Composition.length c }.toFinset : Finset (Composition k)),
@@ -514,7 +514,7 @@ theorem radius_rightInv_pos_of_radius_pos_aux2 {n : ℕ} (hn : 2 ≤ n + 1)
     _ =
         I * a +
           I * C *
-            ∑ k in ico 2 (n + 1),
+            ∑ k in Ico 2 (n + 1),
               a ^ k *
                 ∑ c in ({ c | 1 < Composition.length c }.toFinset : Finset (Composition k)),
                   r ^ c.length * ∏ j, ‖p.right_inv i (c.blocksFun j)‖ :=
@@ -522,7 +522,7 @@ theorem radius_rightInv_pos_of_radius_pos_aux2 {n : ℕ} (hn : 2 ≤ n + 1)
       simp_rw [mul_assoc C, ← mul_sum, ← mul_assoc, mul_comm _ ‖↑i.symm‖, mul_assoc, ← mul_sum, ←
         mul_assoc, mul_comm _ C, mul_assoc, ← mul_sum]
       ring
-    _ ≤ I * a + I * C * ∑ k in ico 2 (n + 1), (r * ∑ j in ico 1 n, a ^ j * ‖p.right_inv i j‖) ^ k :=
+    _ ≤ I * a + I * C * ∑ k in Ico 2 (n + 1), (r * ∑ j in Ico 1 n, a ^ j * ‖p.right_inv i j‖) ^ k :=
       by
       trace
         "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr add_le_add, \",\", expr le_refl, \",\", expr mul_le_mul_of_nonneg_left, \",\", expr norm_nonneg, \",\", expr hC, \",\", expr mul_nonneg, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"

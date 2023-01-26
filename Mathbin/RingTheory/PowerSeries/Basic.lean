@@ -638,7 +638,7 @@ variable [CommSemiring R] (n : σ →₀ ℕ)
 
 /-- Auxiliary definition for the truncation function. -/
 def truncFun (φ : MvPowerSeries σ R) : MvPolynomial σ R :=
-  ∑ m in Finset.iio n, MvPolynomial.monomial m (coeff R m φ)
+  ∑ m in Finset.Iio n, MvPolynomial.monomial m (coeff R m φ)
 #align mv_power_series.trunc_fun MvPowerSeries.truncFun
 
 theorem coeff_truncFun (m : σ →₀ ℕ) (φ : MvPowerSeries σ R) :
@@ -1716,7 +1716,7 @@ section Trunc
 
 /-- The `n`th truncation of a formal power series to a polynomial -/
 def trunc (n : ℕ) (φ : PowerSeries R) : R[X] :=
-  ∑ m in ico 0 n, Polynomial.monomial m (coeff R m φ)
+  ∑ m in Ico 0 n, Polynomial.monomial m (coeff R m φ)
 #align power_series.trunc PowerSeries.trunc
 
 theorem coeff_trunc (m) (n) (φ : PowerSeries R) :

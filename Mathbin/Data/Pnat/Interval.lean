@@ -28,55 +28,55 @@ namespace PNat
 
 variable (a b : ℕ+)
 
-theorem icc_eq_finset_subtype : icc a b = (icc (a : ℕ) b).Subtype fun n : ℕ => 0 < n :=
+theorem icc_eq_finset_subtype : Icc a b = (Icc (a : ℕ) b).Subtype fun n : ℕ => 0 < n :=
   rfl
 #align pnat.Icc_eq_finset_subtype PNat.icc_eq_finset_subtype
 
-theorem ico_eq_finset_subtype : ico a b = (ico (a : ℕ) b).Subtype fun n : ℕ => 0 < n :=
+theorem ico_eq_finset_subtype : Ico a b = (Ico (a : ℕ) b).Subtype fun n : ℕ => 0 < n :=
   rfl
 #align pnat.Ico_eq_finset_subtype PNat.ico_eq_finset_subtype
 
-theorem ioc_eq_finset_subtype : ioc a b = (ioc (a : ℕ) b).Subtype fun n : ℕ => 0 < n :=
+theorem ioc_eq_finset_subtype : Ioc a b = (Ioc (a : ℕ) b).Subtype fun n : ℕ => 0 < n :=
   rfl
 #align pnat.Ioc_eq_finset_subtype PNat.ioc_eq_finset_subtype
 
-theorem ioo_eq_finset_subtype : ioo a b = (ioo (a : ℕ) b).Subtype fun n : ℕ => 0 < n :=
+theorem ioo_eq_finset_subtype : Ioo a b = (Ioo (a : ℕ) b).Subtype fun n : ℕ => 0 < n :=
   rfl
 #align pnat.Ioo_eq_finset_subtype PNat.ioo_eq_finset_subtype
 
-theorem map_subtype_embedding_icc : (icc a b).map (Function.Embedding.subtype _) = icc (a : ℕ) b :=
-  map_subtype_embedding_icc _ _ _ fun c _ x hx _ hc _ => hc.trans_le hx
+theorem map_subtype_embedding_icc : (Icc a b).map (Function.Embedding.subtype _) = Icc (a : ℕ) b :=
+  map_subtype_embedding_Icc _ _ _ fun c _ x hx _ hc _ => hc.trans_le hx
 #align pnat.map_subtype_embedding_Icc PNat.map_subtype_embedding_icc
 
-theorem map_subtype_embedding_ico : (ico a b).map (Function.Embedding.subtype _) = ico (a : ℕ) b :=
-  map_subtype_embedding_ico _ _ _ fun c _ x hx _ hc _ => hc.trans_le hx
+theorem map_subtype_embedding_ico : (Ico a b).map (Function.Embedding.subtype _) = Ico (a : ℕ) b :=
+  map_subtype_embedding_Ico _ _ _ fun c _ x hx _ hc _ => hc.trans_le hx
 #align pnat.map_subtype_embedding_Ico PNat.map_subtype_embedding_ico
 
-theorem map_subtype_embedding_ioc : (ioc a b).map (Function.Embedding.subtype _) = ioc (a : ℕ) b :=
-  map_subtype_embedding_ioc _ _ _ fun c _ x hx _ hc _ => hc.trans_le hx
+theorem map_subtype_embedding_ioc : (Ioc a b).map (Function.Embedding.subtype _) = Ioc (a : ℕ) b :=
+  map_subtype_embedding_Ioc _ _ _ fun c _ x hx _ hc _ => hc.trans_le hx
 #align pnat.map_subtype_embedding_Ioc PNat.map_subtype_embedding_ioc
 
-theorem map_subtype_embedding_ioo : (ioo a b).map (Function.Embedding.subtype _) = ioo (a : ℕ) b :=
-  map_subtype_embedding_ioo _ _ _ fun c _ x hx _ hc _ => hc.trans_le hx
+theorem map_subtype_embedding_ioo : (Ioo a b).map (Function.Embedding.subtype _) = Ioo (a : ℕ) b :=
+  map_subtype_embedding_Ioo _ _ _ fun c _ x hx _ hc _ => hc.trans_le hx
 #align pnat.map_subtype_embedding_Ioo PNat.map_subtype_embedding_ioo
 
 @[simp]
-theorem card_icc : (icc a b).card = b + 1 - a := by
+theorem card_icc : (Icc a b).card = b + 1 - a := by
   rw [← Nat.card_icc, ← map_subtype_embedding_Icc, card_map]
 #align pnat.card_Icc PNat.card_icc
 
 @[simp]
-theorem card_ico : (ico a b).card = b - a := by
+theorem card_ico : (Ico a b).card = b - a := by
   rw [← Nat.card_ico, ← map_subtype_embedding_Ico, card_map]
 #align pnat.card_Ico PNat.card_ico
 
 @[simp]
-theorem card_ioc : (ioc a b).card = b - a := by
+theorem card_ioc : (Ioc a b).card = b - a := by
   rw [← Nat.card_ioc, ← map_subtype_embedding_Ioc, card_map]
 #align pnat.card_Ioc PNat.card_ioc
 
 @[simp]
-theorem card_ioo : (ioo a b).card = b - a - 1 := by
+theorem card_ioo : (Ioo a b).card = b - a - 1 := by
   rw [← Nat.card_ioo, ← map_subtype_embedding_Ioo, card_map]
 #align pnat.card_Ioo PNat.card_ioo
 

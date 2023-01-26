@@ -74,7 +74,7 @@ instance : ProperSpace ℤ :=
   ⟨by
     intro x r
     rw [closed_ball_eq_Icc]
-    exact (Set.finite_icc _ _).IsCompact⟩
+    exact (Set.finite_Icc _ _).IsCompact⟩
 
 @[simp]
 theorem cocompact_eq : cocompact ℤ = at_bot ⊔ at_top := by

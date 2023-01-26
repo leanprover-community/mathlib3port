@@ -133,7 +133,7 @@ theorem IsClosed.isGδ {α} [UniformSpace α] [IsCountablyGenerated (𝓤 α)] {
   rcases(@uniformity_hasBasis_open α _).exists_antitone_subbasis with ⟨U, hUo, hU, -⟩
   rw [← hs.closure_eq, ← hU.bInter_bUnion_ball]
   refine' isGδ_bInter (to_countable _) fun n hn => IsOpen.isGδ _
-  exact isOpen_bUnion fun x hx => UniformSpace.isOpen_ball _ (hUo _).2
+  exact isOpen_bunionᵢ fun x hx => UniformSpace.isOpen_ball _ (hUo _).2
 #align is_closed.is_Gδ IsClosed.isGδ
 
 section T1Space

@@ -38,7 +38,7 @@ variable [Semiring R] {p q : R[X]}
 /-- `div_X p` returns a polynomial `q` such that `q * X + C (p.coeff 0) = p`.
   It can be used in a semiring where the usual division algorithm is not possible -/
 def divX (p : R[X]) : R[X] :=
-  ∑ n in ico 0 p.natDegree, monomial n (p.coeff (n + 1))
+  ∑ n in Ico 0 p.natDegree, monomial n (p.coeff (n + 1))
 #align polynomial.div_X Polynomial.divX
 
 @[simp]

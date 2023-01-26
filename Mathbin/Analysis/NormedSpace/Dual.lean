@@ -198,7 +198,7 @@ theorem isClosed_polar (s : Set E) : IsClosed (polar 𝕜 s) :=
   by
   dsimp only [NormedSpace.polar]
   simp only [LinearMap.polar_eq_interᵢ, LinearMap.flip_apply]
-  refine' isClosed_bInter fun z hz => _
+  refine' isClosed_binterᵢ fun z hz => _
   exact is_closed_Iic.preimage (ContinuousLinearMap.apply 𝕜 𝕜 z).Continuous.norm
 #align normed_space.is_closed_polar NormedSpace.isClosed_polar
 

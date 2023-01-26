@@ -552,7 +552,7 @@ theorem measurableSet_lt [SecondCountableTopology α] {f g : δ → α} (hf : Me
 theorem Set.OrdConnected.measurableSet (h : OrdConnected s) : MeasurableSet s :=
   by
   let u := ⋃ (x ∈ s) (y ∈ s), Ioo x y
-  have huopen : IsOpen u := isOpen_bUnion fun x hx => isOpen_bUnion fun y hy => isOpen_ioo
+  have huopen : IsOpen u := isOpen_bunionᵢ fun x hx => isOpen_bunionᵢ fun y hy => isOpen_ioo
   have humeas : MeasurableSet u := huopen.measurable_set
   have hfinite : (s \ u).Finite := s.finite_diff_Union_Ioo
   have : u ⊆ s :=

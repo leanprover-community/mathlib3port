@@ -88,7 +88,7 @@ instance : ProperSpace ℕ :=
   ⟨by
     intro x r
     rw [closed_ball_eq_Icc]
-    exact (Set.finite_icc _ _).IsCompact⟩
+    exact (Set.finite_Icc _ _).IsCompact⟩
 
 instance : NoncompactSpace ℕ :=
   noncompactSpace_of_neBot <| by simp [Filter.atTop_neBot]

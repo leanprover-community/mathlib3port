@@ -1167,7 +1167,7 @@ theorem partialSections.closed [∀ j : J, T2Space (F.obj j)] {G : Finset J}
     simp only [Set.mem_interᵢ, Set.mem_setOf_eq]
     rfl
   rw [this]
-  apply isClosed_bInter
+  apply isClosed_binterᵢ
   intro f hf
   apply isClosed_eq
   continuity

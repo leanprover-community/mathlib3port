@@ -170,11 +170,11 @@ variable [Fintype α] (𝒜)
 @[simp]
 theorem bunionᵢ_slice [DecidableEq α] : (Iic <| Fintype.card α).bUnion 𝒜.slice = 𝒜 :=
   Subset.antisymm (bunionᵢ_subset.2 fun r _ => slice_subset) fun s hs =>
-    mem_bunionᵢ.2 ⟨s.card, mem_iic.2 <| s.card_le_univ, mem_slice.2 <| ⟨hs, rfl⟩⟩
+    mem_bunionᵢ.2 ⟨s.card, mem_Iic.2 <| s.card_le_univ, mem_slice.2 <| ⟨hs, rfl⟩⟩
 #align finset.bUnion_slice Finset.bunionᵢ_slice
 
 @[simp]
-theorem sum_card_slice : (∑ r in iic (Fintype.card α), (𝒜 # r).card) = 𝒜.card :=
+theorem sum_card_slice : (∑ r in Iic (Fintype.card α), (𝒜 # r).card) = 𝒜.card :=
   by
   letI := Classical.decEq α
   rw [← card_bUnion, bUnion_slice]

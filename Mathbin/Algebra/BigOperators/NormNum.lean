@@ -233,31 +233,31 @@ theorem Finset.insert_eq_coe_list_cons {α : Type _} [DecidableEq α] (x : α) (
 
 /-- For now this only works on types that are contiguous subsets of the integers -/
 unsafe def eval_finset_interval : expr → tactic (Option (List expr × expr × expr))
-  | e@q(@Finset.icc $(α) $(inst_1) $(inst_2) $(ea) $(eb)) => do
+  | e@q(@Finset.Icc $(α) $(inst_1) $(inst_2) $(ea) $(eb)) => do
     let a ← expr.to_int ea
     let b ← expr.to_int eb
-    let eis ← (Finset.icc a b).val.unquot.mmap fun i => expr.of_int α i
+    let eis ← (Finset.Icc a b).val.unquot.mmap fun i => expr.of_int α i
     let eq ← mk_eq_refl e
     let nd ← i_to_expr ``(Finset.nodup $(e))
     pure (eis, Eq, nd)
-  | e@q(@Finset.ico $(α) $(inst_1) $(inst_2) $(ea) $(eb)) => do
+  | e@q(@Finset.Ico $(α) $(inst_1) $(inst_2) $(ea) $(eb)) => do
     let a ← expr.to_int ea
     let b ← expr.to_int eb
-    let eis ← (Finset.ico a b).val.unquot.mmap fun i => expr.of_int α i
+    let eis ← (Finset.Ico a b).val.unquot.mmap fun i => expr.of_int α i
     let eq ← mk_eq_refl e
     let nd ← i_to_expr ``(Finset.nodup $(e))
     pure (eis, Eq, nd)
-  | e@q(@Finset.ioc $(α) $(inst_1) $(inst_2) $(ea) $(eb)) => do
+  | e@q(@Finset.Ioc $(α) $(inst_1) $(inst_2) $(ea) $(eb)) => do
     let a ← expr.to_int ea
     let b ← expr.to_int eb
-    let eis ← (Finset.ioc a b).val.unquot.mmap fun i => expr.of_int α i
+    let eis ← (Finset.Ioc a b).val.unquot.mmap fun i => expr.of_int α i
     let eq ← mk_eq_refl e
     let nd ← i_to_expr ``(Finset.nodup $(e))
     pure (eis, Eq, nd)
-  | e@q(@Finset.ioo $(α) $(inst_1) $(inst_2) $(ea) $(eb)) => do
+  | e@q(@Finset.Ioo $(α) $(inst_1) $(inst_2) $(ea) $(eb)) => do
     let a ← expr.to_int ea
     let b ← expr.to_int eb
-    let eis ← (Finset.ioo a b).val.unquot.mmap fun i => expr.of_int α i
+    let eis ← (Finset.Ioo a b).val.unquot.mmap fun i => expr.of_int α i
     let eq ← mk_eq_refl e
     let nd ← i_to_expr ``(Finset.nodup $(e))
     pure (eis, Eq, nd)

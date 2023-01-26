@@ -278,7 +278,7 @@ theorem geom_sum_eq [DivisionRing α] {x : α} (h : x ≠ 1) (n : ℕ) :
 
 protected theorem Commute.mul_geom_sum₂_ico [Ring α] {x y : α} (h : Commute x y) {m n : ℕ}
     (hmn : m ≤ n) :
-    ((x - y) * ∑ i in Finset.ico m n, x ^ i * y ^ (n - 1 - i)) = x ^ n - x ^ m * y ^ (n - m) :=
+    ((x - y) * ∑ i in Finset.Ico m n, x ^ i * y ^ (n - 1 - i)) = x ^ n - x ^ m * y ^ (n - m) :=
   by
   rw [sum_Ico_eq_sub _ hmn]
   have :
@@ -321,13 +321,13 @@ theorem geom_sum₂_succ_eq {α : Type u} [CommRing α] (x y : α) {n : ℕ} :
 #align geom_sum₂_succ_eq geom_sum₂_succ_eq
 
 theorem mul_geom_sum₂_ico [CommRing α] (x y : α) {m n : ℕ} (hmn : m ≤ n) :
-    ((x - y) * ∑ i in Finset.ico m n, x ^ i * y ^ (n - 1 - i)) = x ^ n - x ^ m * y ^ (n - m) :=
+    ((x - y) * ∑ i in Finset.Ico m n, x ^ i * y ^ (n - 1 - i)) = x ^ n - x ^ m * y ^ (n - m) :=
   (Commute.all x y).mul_geom_sum₂_Ico hmn
 #align mul_geom_sum₂_Ico mul_geom_sum₂_ico
 
 protected theorem Commute.geom_sum₂_ico_mul [Ring α] {x y : α} (h : Commute x y) {m n : ℕ}
     (hmn : m ≤ n) :
-    (∑ i in Finset.ico m n, x ^ i * y ^ (n - 1 - i)) * (x - y) = x ^ n - y ^ (n - m) * x ^ m :=
+    (∑ i in Finset.Ico m n, x ^ i * y ^ (n - 1 - i)) * (x - y) = x ^ n - y ^ (n - m) * x ^ m :=
   by
   apply op_injective
   simp only [op_sub, op_mul, op_pow, op_sum]
@@ -342,42 +342,42 @@ protected theorem Commute.geom_sum₂_ico_mul [Ring α] {x y : α} (h : Commute 
 #align commute.geom_sum₂_Ico_mul Commute.geom_sum₂_ico_mul
 
 theorem geom_sum_ico_mul [Ring α] (x : α) {m n : ℕ} (hmn : m ≤ n) :
-    (∑ i in Finset.ico m n, x ^ i) * (x - 1) = x ^ n - x ^ m := by
+    (∑ i in Finset.Ico m n, x ^ i) * (x - 1) = x ^ n - x ^ m := by
   rw [sum_Ico_eq_sub _ hmn, sub_mul, geom_sum_mul, geom_sum_mul, sub_sub_sub_cancel_right]
 #align geom_sum_Ico_mul geom_sum_ico_mul
 
 theorem geom_sum_ico_mul_neg [Ring α] (x : α) {m n : ℕ} (hmn : m ≤ n) :
-    (∑ i in Finset.ico m n, x ^ i) * (1 - x) = x ^ m - x ^ n := by
+    (∑ i in Finset.Ico m n, x ^ i) * (1 - x) = x ^ m - x ^ n := by
   rw [sum_Ico_eq_sub _ hmn, sub_mul, geom_sum_mul_neg, geom_sum_mul_neg, sub_sub_sub_cancel_left]
 #align geom_sum_Ico_mul_neg geom_sum_ico_mul_neg
 
 protected theorem Commute.geom_sum₂_ico [DivisionRing α] {x y : α} (h : Commute x y) (hxy : x ≠ y)
     {m n : ℕ} (hmn : m ≤ n) :
-    (∑ i in Finset.ico m n, x ^ i * y ^ (n - 1 - i)) = (x ^ n - y ^ (n - m) * x ^ m) / (x - y) :=
+    (∑ i in Finset.Ico m n, x ^ i * y ^ (n - 1 - i)) = (x ^ n - y ^ (n - m) * x ^ m) / (x - y) :=
   by
   have : x - y ≠ 0 := by simp_all [-sub_eq_add_neg, sub_eq_iff_eq_add]
   rw [← h.geom_sum₂_Ico_mul hmn, mul_div_cancel _ this]
 #align commute.geom_sum₂_Ico Commute.geom_sum₂_ico
 
 theorem geom_sum₂_ico [Field α] {x y : α} (hxy : x ≠ y) {m n : ℕ} (hmn : m ≤ n) :
-    (∑ i in Finset.ico m n, x ^ i * y ^ (n - 1 - i)) = (x ^ n - y ^ (n - m) * x ^ m) / (x - y) :=
+    (∑ i in Finset.Ico m n, x ^ i * y ^ (n - 1 - i)) = (x ^ n - y ^ (n - m) * x ^ m) / (x - y) :=
   (Commute.all x y).geom_sum₂_Ico hxy hmn
 #align geom_sum₂_Ico geom_sum₂_ico
 
 theorem geom_sum_ico [DivisionRing α] {x : α} (hx : x ≠ 1) {m n : ℕ} (hmn : m ≤ n) :
-    (∑ i in Finset.ico m n, x ^ i) = (x ^ n - x ^ m) / (x - 1) := by
+    (∑ i in Finset.Ico m n, x ^ i) = (x ^ n - x ^ m) / (x - 1) := by
   simp only [sum_Ico_eq_sub _ hmn, geom_sum_eq hx, div_sub_div_same, sub_sub_sub_cancel_right]
 #align geom_sum_Ico geom_sum_ico
 
 theorem geom_sum_Ico' [DivisionRing α] {x : α} (hx : x ≠ 1) {m n : ℕ} (hmn : m ≤ n) :
-    (∑ i in Finset.ico m n, x ^ i) = (x ^ m - x ^ n) / (1 - x) :=
+    (∑ i in Finset.Ico m n, x ^ i) = (x ^ m - x ^ n) / (1 - x) :=
   by
   simp only [geom_sum_ico hx hmn]
   convert neg_div_neg_eq (x ^ m - x ^ n) (1 - x) <;> abel
 #align geom_sum_Ico' geom_sum_Ico'
 
 theorem geom_sum_ico_le_of_lt_one [LinearOrderedField α] {x : α} (hx : 0 ≤ x) (h'x : x < 1)
-    {m n : ℕ} : (∑ i in ico m n, x ^ i) ≤ x ^ m / (1 - x) :=
+    {m n : ℕ} : (∑ i in Ico m n, x ^ i) ≤ x ^ m / (1 - x) :=
   by
   rcases le_or_lt m n with (hmn | hmn)
   · rw [geom_sum_Ico' h'x.ne hmn]
@@ -448,7 +448,7 @@ theorem Nat.geom_sum_le {b : ℕ} (hb : 2 ≤ b) (a n : ℕ) :
 #align nat.geom_sum_le Nat.geom_sum_le
 
 theorem Nat.geom_sum_ico_le {b : ℕ} (hb : 2 ≤ b) (a n : ℕ) :
-    (∑ i in ico 1 n, a / b ^ i) ≤ a / (b - 1) :=
+    (∑ i in Ico 1 n, a / b ^ i) ≤ a / (b - 1) :=
   by
   cases n
   · rw [Ico_eq_empty_of_le (zero_le_one' ℕ), sum_empty]

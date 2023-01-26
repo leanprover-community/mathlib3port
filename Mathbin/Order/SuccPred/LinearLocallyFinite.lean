@@ -94,17 +94,17 @@ theorem isMax_of_succFn_le [LocallyFiniteOrder ι] (i : ι) (hi : succFn i ≤ i
   by
   refine' fun j hij => not_lt.mp fun hij_lt => _
   have h_succ_fn_eq : succ_fn i = i := le_antisymm hi (le_succ_fn i)
-  have h_glb : IsGLB (Finset.ioc i j : Set ι) i :=
+  have h_glb : IsGLB (Finset.Ioc i j : Set ι) i :=
     by
-    rw [Finset.coe_ioc]
+    rw [Finset.coe_Ioc]
     have h := succ_fn_spec i
     rw [h_succ_fn_eq] at h
     exact is_glb_Ioc_of_is_glb_Ioi hij_lt h
-  have hi_mem : i ∈ Finset.ioc i j :=
+  have hi_mem : i ∈ Finset.Ioc i j :=
     by
     refine' Finset.is_glb_mem _ h_glb _
     exact ⟨_, finset.mem_Ioc.mpr ⟨hij_lt, le_rfl⟩⟩
-  rw [Finset.mem_ioc] at hi_mem
+  rw [Finset.mem_Ioc] at hi_mem
   exact lt_irrefl i hi_mem.1
 #align linear_locally_finite_order.is_max_of_succ_fn_le LinearLocallyFiniteOrder.isMax_of_succFn_le
 
@@ -154,11 +154,11 @@ instance (priority := 100) LinearLocallyFiniteOrder.isSuccArchimedean [LocallyFi
       · refine' lt_of_le_of_ne _ (h _)
         rw [Function.iterate_succ', Function.comp_apply]
         exact succ_le_of_lt hn
-    have h_mem : ∀ n, (succ^[n]) i ∈ Finset.icc i j := fun n =>
+    have h_mem : ∀ n, (succ^[n]) i ∈ Finset.Icc i j := fun n =>
       finset.mem_Icc.mpr ⟨le_succ_iterate n i, (h_lt n).le⟩
     obtain ⟨n, m, hnm, h_eq⟩ : ∃ n m, n < m ∧ (succ^[n]) i = (succ^[m]) i :=
       by
-      let f : ℕ → Finset.icc i j := fun n => ⟨(succ^[n]) i, h_mem n⟩
+      let f : ℕ → Finset.Icc i j := fun n => ⟨(succ^[n]) i, h_mem n⟩
       obtain ⟨n, m, hnm_ne, hfnm⟩ : ∃ n m, n ≠ m ∧ f n = f m
       exact Finite.exists_ne_map_eq_of_infinite f
       have hnm_eq : (succ^[n]) i = (succ^[m]) i := by simpa only [Subtype.mk_eq_mk] using hfnm

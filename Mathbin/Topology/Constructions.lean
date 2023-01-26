@@ -1368,7 +1368,7 @@ theorem Continuous.fin_insertNth {n} {π : Fin (n + 1) → Type _} [∀ i, Topol
 
 theorem isOpen_set_pi {i : Set ι} {s : ∀ a, Set (π a)} (hi : i.Finite)
     (hs : ∀ a ∈ i, IsOpen (s a)) : IsOpen (pi i s) := by
-  rw [pi_def] <;> exact isOpen_bInter hi fun a ha => (hs _ ha).Preimage (continuous_apply _)
+  rw [pi_def] <;> exact isOpen_binterᵢ hi fun a ha => (hs _ ha).Preimage (continuous_apply _)
 #align is_open_set_pi isOpen_set_pi
 
 theorem isClosed_set_pi {i : Set ι} {s : ∀ a, Set (π a)} (hs : ∀ a ∈ i, IsClosed (s a)) :
@@ -1436,7 +1436,7 @@ theorem pi_generateFrom_eq {π : ι → Type _} {g : ∀ a, Set (Set (π a))} :
   exact fun s ⟨t, i, ht, Eq⟩ => ⟨t, i, fun a ha => generate_open.basic _ (ht a ha), Eq⟩
   · rintro s ⟨t, i, hi, rfl⟩
     rw [pi_def]
-    apply isOpen_bInter (Finset.finite_toSet _)
+    apply isOpen_binterᵢ (Finset.finite_toSet _)
     intro a ha
     show ((generate_from G).coinduced fun f : ∀ a, π a => f a).IsOpen (t a)
     refine' le_generateFrom _ _ (hi a ha)
@@ -1578,7 +1578,7 @@ theorem isOpen_sigma_fst_preimage (s : Set ι) : IsOpen (Sigma.fst ⁻¹' s : Se
   by
   rw [← bUnion_of_singleton s, preimage_Union₂]
   simp only [← range_sigma_mk]
-  exact isOpen_bUnion fun _ _ => isOpen_range_sigma_mk
+  exact isOpen_bunionᵢ fun _ _ => isOpen_range_sigma_mk
 #align is_open_sigma_fst_preimage isOpen_sigma_fst_preimage
 
 /-- A map out of a sum type is continuous iff its restriction to each summand is. -/

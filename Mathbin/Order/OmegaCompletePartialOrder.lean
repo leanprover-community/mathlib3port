@@ -363,7 +363,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align omega_complete_partial_order.continuous_comp OmegaCompletePartialOrder.continuous_compₓ'. -/
 theorem continuous_comp (hfc : Continuous f) (hgc : Continuous g) : Continuous (g.comp f) :=
   by
-  dsimp [continuous] at *; intro
+  dsimp [Continuous] at *; intro
   rw [hfc, hgc, chain.map_comp]
 #align omega_complete_partial_order.continuous_comp OmegaCompletePartialOrder.continuous_comp
 

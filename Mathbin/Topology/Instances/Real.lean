@@ -258,7 +258,7 @@ theorem tendsto_coe_cofinite : Tendsto (coe : ℤ → ℝ) cofinite (cocompact �
   refine' tendsto_cocompact_of_tendsto_dist_comp_atTop (0 : ℝ) _
   simp only [Filter.tendsto_atTop, eventually_cofinite, not_le, ← mem_ball]
   change ∀ r : ℝ, (coe ⁻¹' ball (0 : ℝ) r).Finite
-  simp [Real.ball_eq_ioo, Set.finite_ioo]
+  simp [Real.ball_eq_ioo, Set.finite_Ioo]
 #align int.tendsto_coe_cofinite Int.tendsto_coe_cofinite
 
 /-- For nonzero `a`, the "multiples of `a`" map `zmultiples_hom` from `ℤ` to `ℝ` is discrete, i.e.

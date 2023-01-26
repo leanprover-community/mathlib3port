@@ -521,14 +521,15 @@ theorem uniform_extend_subtype [CompleteSpace γ] {p : α → Prop} {e : α → 
     ⟨_, hb, fun x => by
       change e x ∈ closure (e '' s) → x ∈ range Subtype.val
       rw [← closure_induced, mem_closure_iff_clusterPt, ClusterPt, ne_bot_iff, nhds_induced, ←
-        de.to_dense_inducing.nhds_eq_comap, ← mem_closure_iff_nhds_ne_bot, hs.closure_eq]
+        de.to_dense_inducing.nhds_eq_comap, ← mem_closure_iff_nhds_neBot, hs.closure_eq]
       exact fun hxs => ⟨⟨x, hp x hxs⟩, rfl⟩⟩
 #align uniform_extend_subtype uniform_extend_subtype
 
 include h_f
 
 theorem uniformly_extend_spec [CompleteSpace γ] (a : α) : Tendsto f (comap e (𝓝 a)) (𝓝 (ψ a)) := by
-  simpa only [DenseInducing.extend] using tendsto_nhds_lim (uniformly_extend_exists h_e ‹_› h_f _)
+  simpa only [DenseInducing.extend] using
+    tendsto_nhds_limUnder (uniformly_extend_exists h_e ‹_› h_f _)
 #align uniformly_extend_spec uniformly_extend_spec
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/

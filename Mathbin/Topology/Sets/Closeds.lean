@@ -99,7 +99,7 @@ instance : CompleteLattice (Closeds α) :=
     _
     rfl
     (-- Inf
-    fun S => ⟨⋂ s ∈ S, ↑s, isClosed_bInter fun s _ => s.2⟩)
+    fun S => ⟨⋂ s ∈ S, ↑s, isClosed_binterᵢ fun s _ => s.2⟩)
     (funext fun S => SetLike.coe_injective infₛ_image.symm)
 
 /-- The type of closed sets is inhabited, with default element the empty set. -/

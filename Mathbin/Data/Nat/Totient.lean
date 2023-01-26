@@ -78,14 +78,14 @@ theorem totient_pos : ∀ {n : ℕ}, 0 < n → 0 < φ n
 #align nat.totient_pos Nat.totient_pos
 
 theorem filter_coprime_ico_eq_totient (a n : ℕ) :
-    ((ico n (n + a)).filter (coprime a)).card = totient a :=
+    ((Ico n (n + a)).filter (coprime a)).card = totient a :=
   by
   rw [totient, filter_Ico_card_eq_of_periodic, count_eq_card_filter_range]
   exact periodic_coprime a
 #align nat.filter_coprime_Ico_eq_totient Nat.filter_coprime_ico_eq_totient
 
 theorem ico_filter_coprime_le {a : ℕ} (k n : ℕ) (a_pos : 0 < a) :
-    ((ico k (k + n)).filter (coprime a)).card ≤ totient a * (n / a + 1) :=
+    ((Ico k (k + n)).filter (coprime a)).card ≤ totient a * (n / a + 1) :=
   by
   conv_lhs => rw [← Nat.mod_add_div n a]
   induction' n / a with i ih

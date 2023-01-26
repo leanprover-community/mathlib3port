@@ -34,7 +34,7 @@ variable [CommMonoid β]
 
 @[to_additive]
 theorem prod_ico_add' [OrderedCancelAddCommMonoid α] [ExistsAddOfLE α] [LocallyFiniteOrder α]
-    (f : α → β) (a b c : α) : (∏ x in ico a b, f (x + c)) = ∏ x in ico (a + c) (b + c), f x :=
+    (f : α → β) (a b c : α) : (∏ x in Ico a b, f (x + c)) = ∏ x in Ico (a + c) (b + c), f x :=
   by
   rw [← map_add_right_Ico, Prod_map]
   rfl
@@ -43,7 +43,7 @@ theorem prod_ico_add' [OrderedCancelAddCommMonoid α] [ExistsAddOfLE α] [Locall
 
 @[to_additive]
 theorem prod_ico_add [OrderedCancelAddCommMonoid α] [ExistsAddOfLE α] [LocallyFiniteOrder α]
-    (f : α → β) (a b c : α) : (∏ x in ico a b, f (c + x)) = ∏ x in ico (a + c) (b + c), f x :=
+    (f : α → β) (a b c : α) : (∏ x in Ico a b, f (c + x)) = ∏ x in Ico (a + c) (b + c), f x :=
   by
   convert prod_Ico_add' f a b c
   simp_rw [add_comm]
@@ -51,41 +51,41 @@ theorem prod_ico_add [OrderedCancelAddCommMonoid α] [ExistsAddOfLE α] [Locally
 #align finset.sum_Ico_add Finset.sum_ico_add
 
 theorem sum_ico_succ_top {δ : Type _} [AddCommMonoid δ] {a b : ℕ} (hab : a ≤ b) (f : ℕ → δ) :
-    (∑ k in ico a (b + 1), f k) = (∑ k in ico a b, f k) + f b := by
+    (∑ k in Ico a (b + 1), f k) = (∑ k in Ico a b, f k) + f b := by
   rw [Nat.ico_succ_right_eq_insert_ico hab, sum_insert right_not_mem_Ico, add_comm]
 #align finset.sum_Ico_succ_top Finset.sum_ico_succ_top
 
 @[to_additive]
 theorem prod_ico_succ_top {a b : ℕ} (hab : a ≤ b) (f : ℕ → β) :
-    (∏ k in ico a (b + 1), f k) = (∏ k in ico a b, f k) * f b :=
+    (∏ k in Ico a (b + 1), f k) = (∏ k in Ico a b, f k) * f b :=
   @sum_ico_succ_top (Additive β) _ _ _ hab _
 #align finset.prod_Ico_succ_top Finset.prod_ico_succ_top
 #align finset.sum_Ico_succ_top Finset.sum_ico_succ_top
 
 theorem sum_eq_sum_ico_succ_bot {δ : Type _} [AddCommMonoid δ] {a b : ℕ} (hab : a < b) (f : ℕ → δ) :
-    (∑ k in ico a b, f k) = f a + ∑ k in ico (a + 1) b, f k :=
+    (∑ k in Ico a b, f k) = f a + ∑ k in Ico (a + 1) b, f k :=
   by
-  have ha : a ∉ ico (a + 1) b := by simp
+  have ha : a ∉ Ico (a + 1) b := by simp
   rw [← sum_insert ha, Nat.ico_insert_succ_left hab]
 #align finset.sum_eq_sum_Ico_succ_bot Finset.sum_eq_sum_ico_succ_bot
 
 @[to_additive]
 theorem prod_eq_prod_ico_succ_bot {a b : ℕ} (hab : a < b) (f : ℕ → β) :
-    (∏ k in ico a b, f k) = f a * ∏ k in ico (a + 1) b, f k :=
+    (∏ k in Ico a b, f k) = f a * ∏ k in Ico (a + 1) b, f k :=
   @sum_eq_sum_ico_succ_bot (Additive β) _ _ _ hab _
 #align finset.prod_eq_prod_Ico_succ_bot Finset.prod_eq_prod_ico_succ_bot
 #align finset.sum_eq_sum_Ico_succ_bot Finset.sum_eq_sum_ico_succ_bot
 
 @[to_additive]
 theorem prod_ico_consecutive (f : ℕ → β) {m n k : ℕ} (hmn : m ≤ n) (hnk : n ≤ k) :
-    ((∏ i in ico m n, f i) * ∏ i in ico n k, f i) = ∏ i in ico m k, f i :=
+    ((∏ i in Ico m n, f i) * ∏ i in Ico n k, f i) = ∏ i in Ico m k, f i :=
   ico_union_ico_eq_ico hmn hnk ▸ Eq.symm <| prod_union <| ico_disjoint_ico_consecutive m n k
 #align finset.prod_Ico_consecutive Finset.prod_ico_consecutive
 #align finset.sum_Ico_consecutive Finset.sum_ico_consecutive
 
 @[to_additive]
 theorem prod_ioc_consecutive (f : ℕ → β) {m n k : ℕ} (hmn : m ≤ n) (hnk : n ≤ k) :
-    ((∏ i in ioc m n, f i) * ∏ i in ioc n k, f i) = ∏ i in ioc m k, f i :=
+    ((∏ i in Ioc m n, f i) * ∏ i in Ioc n k, f i) = ∏ i in Ioc m k, f i :=
   by
   rw [← Ioc_union_Ioc_eq_Ioc hmn hnk, prod_union]
   apply disjoint_left.2 fun x hx h'x => _
@@ -95,28 +95,28 @@ theorem prod_ioc_consecutive (f : ℕ → β) {m n k : ℕ} (hmn : m ≤ n) (hnk
 
 @[to_additive]
 theorem prod_ioc_succ_top {a b : ℕ} (hab : a ≤ b) (f : ℕ → β) :
-    (∏ k in ioc a (b + 1), f k) = (∏ k in ioc a b, f k) * f (b + 1) := by
+    (∏ k in Ioc a (b + 1), f k) = (∏ k in Ioc a b, f k) * f (b + 1) := by
   rw [← prod_Ioc_consecutive _ hab (Nat.le_succ b), Nat.ioc_succ_singleton, prod_singleton]
 #align finset.prod_Ioc_succ_top Finset.prod_ioc_succ_top
 #align finset.sum_Ioc_succ_top Finset.sum_ioc_succ_top
 
 @[to_additive]
 theorem prod_range_mul_prod_ico (f : ℕ → β) {m n : ℕ} (h : m ≤ n) :
-    ((∏ k in range m, f k) * ∏ k in ico m n, f k) = ∏ k in range n, f k :=
+    ((∏ k in range m, f k) * ∏ k in Ico m n, f k) = ∏ k in range n, f k :=
   Nat.ico_zero_eq_range ▸ Nat.ico_zero_eq_range ▸ prod_ico_consecutive f m.zero_le h
 #align finset.prod_range_mul_prod_Ico Finset.prod_range_mul_prod_ico
 #align finset.sum_range_add_sum_Ico Finset.sum_range_add_sum_ico
 
 @[to_additive]
 theorem prod_ico_eq_mul_inv {δ : Type _} [CommGroup δ] (f : ℕ → δ) {m n : ℕ} (h : m ≤ n) :
-    (∏ k in ico m n, f k) = (∏ k in range n, f k) * (∏ k in range m, f k)⁻¹ :=
+    (∏ k in Ico m n, f k) = (∏ k in range n, f k) * (∏ k in range m, f k)⁻¹ :=
   eq_mul_inv_iff_mul_eq.2 <| by rw [mul_comm] <;> exact prod_range_mul_prod_Ico f h
 #align finset.prod_Ico_eq_mul_inv Finset.prod_ico_eq_mul_inv
 #align finset.sum_Ico_eq_add_neg Finset.sum_ico_eq_add_neg
 
 @[to_additive]
 theorem prod_ico_eq_div {δ : Type _} [CommGroup δ] (f : ℕ → δ) {m n : ℕ} (h : m ≤ n) :
-    (∏ k in ico m n, f k) = (∏ k in range n, f k) / ∏ k in range m, f k := by
+    (∏ k in Ico m n, f k) = (∏ k in range n, f k) / ∏ k in range m, f k := by
   simpa only [div_eq_mul_inv] using prod_Ico_eq_mul_inv f h
 #align finset.prod_Ico_eq_div Finset.prod_ico_eq_div
 #align finset.sum_Ico_eq_sub Finset.sum_ico_eq_sub
@@ -135,15 +135,15 @@ theorem prod_range_sub_prod_range {α : Type _} [CommGroup α] {f : ℕ → α} 
 
 /-- The two ways of summing over `(i,j)` in the range `a<=i<=j<b` are equal. -/
 theorem sum_ico_ico_comm {M : Type _} [AddCommMonoid M] (a b : ℕ) (f : ℕ → ℕ → M) :
-    (∑ i in Finset.ico a b, ∑ j in Finset.ico i b, f i j) =
-      ∑ j in Finset.ico a b, ∑ i in Finset.ico a (j + 1), f i j :=
+    (∑ i in Finset.Ico a b, ∑ j in Finset.Ico i b, f i j) =
+      ∑ j in Finset.Ico a b, ∑ i in Finset.Ico a (j + 1), f i j :=
   by
   rw [Finset.sum_sigma', Finset.sum_sigma']
   refine'
             Finset.sum_bij' (fun (x : Σi : ℕ, ℕ) _ => (⟨x.2, x.1⟩ : Σi : ℕ, ℕ)) _ (fun _ _ => rfl)
               (fun (x : Σi : ℕ, ℕ) _ => (⟨x.2, x.1⟩ : Σi : ℕ, ℕ)) _ (by rintro ⟨⟩ _ <;> rfl)
               (by rintro ⟨⟩ _ <;> rfl) <;>
-          simp only [Finset.mem_ico, Sigma.forall, Finset.mem_sigma] <;>
+          simp only [Finset.mem_Ico, Sigma.forall, Finset.mem_sigma] <;>
         rintro a b ⟨⟨h₁, h₂⟩, ⟨h₃, h₄⟩⟩ <;>
       refine' ⟨⟨_, _⟩, ⟨_, _⟩⟩ <;>
     linarith
@@ -151,7 +151,7 @@ theorem sum_ico_ico_comm {M : Type _} [AddCommMonoid M] (a b : ℕ) (f : ℕ →
 
 @[to_additive]
 theorem prod_ico_eq_prod_range (f : ℕ → β) (m n : ℕ) :
-    (∏ k in ico m n, f k) = ∏ k in range (n - m), f (m + k) :=
+    (∏ k in Ico m n, f k) = ∏ k in range (n - m), f (m + k) :=
   by
   by_cases h : m ≤ n
   · rw [← Nat.ico_zero_eq_range, prod_Ico_add, zero_add, tsub_add_cancel_of_le h]
@@ -161,7 +161,7 @@ theorem prod_ico_eq_prod_range (f : ℕ → β) (m n : ℕ) :
 #align finset.sum_Ico_eq_sum_range Finset.sum_ico_eq_sum_range
 
 theorem prod_ico_reflect (f : ℕ → β) (k : ℕ) {m n : ℕ} (h : m ≤ n + 1) :
-    (∏ j in ico k m, f (n - j)) = ∏ j in ico (n + 1 - m) (n + 1 - k), f j :=
+    (∏ j in Ico k m, f (n - j)) = ∏ j in Ico (n + 1 - m) (n + 1 - k), f j :=
   by
   have : ∀ i < m, i ≤ n := by
     intro i hi
@@ -176,7 +176,7 @@ theorem prod_ico_reflect (f : ℕ → β) (k : ℕ) {m n : ℕ} (h : m ≤ n + 1
 #align finset.prod_Ico_reflect Finset.prod_ico_reflect
 
 theorem sum_ico_reflect {δ : Type _} [AddCommMonoid δ] (f : ℕ → δ) (k : ℕ) {m n : ℕ}
-    (h : m ≤ n + 1) : (∑ j in ico k m, f (n - j)) = ∑ j in ico (n + 1 - m) (n + 1 - k), f j :=
+    (h : m ≤ n + 1) : (∑ j in Ico k m, f (n - j)) = ∑ j in Ico (n + 1 - m) (n + 1 - k), f j :=
   @prod_ico_reflect (Multiplicative δ) _ f k m n h
 #align finset.sum_Ico_reflect Finset.sum_ico_reflect
 
@@ -196,7 +196,7 @@ theorem sum_range_reflect {δ : Type _} [AddCommMonoid δ] (f : ℕ → δ) (n :
 #align finset.sum_range_reflect Finset.sum_range_reflect
 
 @[simp]
-theorem prod_ico_id_eq_factorial : ∀ n : ℕ, (∏ x in ico 1 (n + 1), x) = n !
+theorem prod_ico_id_eq_factorial : ∀ n : ℕ, (∏ x in Ico 1 (n + 1), x) = n !
   | 0 => rfl
   | n + 1 => by
     rw [prod_Ico_succ_top <| Nat.succ_le_succ <| zero_le n, Nat.factorial_succ,
@@ -255,14 +255,14 @@ theorem prod_range_succ_div_top : (∏ i in range (n + 1), f i) / f n = ∏ i in
 #align finset.sum_range_succ_sub_top Finset.sum_range_succ_sub_top
 
 @[to_additive]
-theorem prod_ico_div_bot (hmn : m < n) : (∏ i in ico m n, f i) / f m = ∏ i in ico (m + 1) n, f i :=
+theorem prod_ico_div_bot (hmn : m < n) : (∏ i in Ico m n, f i) / f m = ∏ i in Ico (m + 1) n, f i :=
   div_eq_iff_eq_mul'.mpr <| prod_eq_prod_ico_succ_bot hmn _
 #align finset.prod_Ico_div_bot Finset.prod_ico_div_bot
 #align finset.sum_Ico_sub_bot Finset.sum_ico_sub_bot
 
 @[to_additive]
 theorem prod_ico_succ_div_top (hmn : m ≤ n) :
-    (∏ i in ico m (n + 1), f i) / f n = ∏ i in ico m n, f i :=
+    (∏ i in Ico m (n + 1), f i) / f n = ∏ i in Ico m n, f i :=
   div_eq_iff_eq_mul.mpr <| prod_ico_succ_top hmn _
 #align finset.prod_Ico_succ_div_top Finset.prod_ico_succ_div_top
 #align finset.sum_Ico_succ_sub_top Finset.sum_ico_succ_sub_top
@@ -283,8 +283,8 @@ local notation "G " n:80 => ∑ i in range n, g i
 
 /-- **Summation by parts**, also known as **Abel's lemma** or an **Abel transformation** -/
 theorem sum_ico_by_parts (hmn : m < n) :
-    (∑ i in ico m n, f i • g i) =
-      f (n - 1) • G n - f m • G m - ∑ i in ico m (n - 1), (f (i + 1) - f i) • G (i + 1) :=
+    (∑ i in Ico m n, f i • g i) =
+      f (n - 1) • G n - f m • G m - ∑ i in Ico m (n - 1), (f (i + 1) - f i) • G (i + 1) :=
   by
   have h₁ : (∑ i in Ico (m + 1) n, f i • G i) = ∑ i in Ico m (n - 1), f (i + 1) • G (i + 1) :=
     by

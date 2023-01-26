@@ -397,7 +397,7 @@ theorem isOpen_setOf_eventually_nhdsWithin [T1Space α] {p : α → Prop} :
 protected theorem Set.Finite.isClosed [T1Space α] {s : Set α} (hs : Set.Finite s) : IsClosed s :=
   by
   rw [← bUnion_of_singleton s]
-  exact isClosed_bUnion hs fun i hi => isClosed_singleton
+  exact isClosed_bunionᵢ hs fun i hi => isClosed_singleton
 #align set.finite.is_closed Set.Finite.isClosed
 
 theorem TopologicalSpace.IsTopologicalBasis.exists_mem_of_ne [T1Space α] {b : Set (Set α)}
@@ -1818,7 +1818,7 @@ theorem Filter.Tendsto.lim_eq {a : α} {f : Filter β} [NeBot f] {g : β → α}
 
 theorem Filter.lim_eq_iff {f : Filter β} [NeBot f] {g : β → α} (h : ∃ a, Tendsto g f (𝓝 a)) {a} :
     @lim _ _ _ ⟨a⟩ f g = a ↔ Tendsto g f (𝓝 a) :=
-  ⟨fun c => c ▸ tendsto_nhds_lim h, Filter.Tendsto.lim_eq⟩
+  ⟨fun c => c ▸ tendsto_nhds_limUnder h, Filter.Tendsto.lim_eq⟩
 #align filter.lim_eq_iff Filter.lim_eq_iff
 
 theorem Continuous.lim_eq [TopologicalSpace β] {f : β → α} (h : Continuous f) (a : β) :
@@ -1972,7 +1972,7 @@ theorem eq_on_closure₂' [T2Space α] {s : Set β} {t : Set γ} {f g : β → �
     (hg₂ : ∀ y, Continuous fun x => g x y) : ∀ x ∈ closure s, ∀ y ∈ closure t, f x y = g x y :=
   suffices closure s ⊆ ⋂ y ∈ closure t, { x | f x y = g x y } by simpa only [subset_def, mem_Inter]
   (closure_minimal fun x hx => mem_interᵢ₂.2 <| Set.EqOn.closure (h x hx) (hf₁ _) (hg₁ _)) <|
-    isClosed_bInter fun y hy => isClosed_eq (hf₂ _) (hg₂ _)
+    isClosed_binterᵢ fun y hy => isClosed_eq (hf₂ _) (hg₂ _)
 #align eq_on_closure₂' eq_on_closure₂'
 
 theorem eq_on_closure₂ [T2Space α] {s : Set β} {t : Set γ} {f g : β → γ → α}
@@ -2110,7 +2110,7 @@ theorem IsCompact.finite_compact_cover [T2Space α] {s : Set α} (hs : IsCompact
     simp only [Finset.set_bunionᵢ_insert] at hsC
     simp only [Finset.mem_insert] at hU
     have hU' : ∀ i ∈ t, IsOpen (U i) := fun i hi => hU i (Or.inr hi)
-    rcases hs.binary_compact_cover (hU x (Or.inl rfl)) (isOpen_bUnion hU') hsC with
+    rcases hs.binary_compact_cover (hU x (Or.inl rfl)) (isOpen_bunionᵢ hU') hsC with
       ⟨K₁, K₂, h1K₁, h1K₂, h2K₁, h2K₂, hK⟩
     rcases ih U hU' h1K₂ h2K₂ with ⟨K, h1K, h2K, h3K⟩
     refine' ⟨update K x K₁, _, _, _⟩
@@ -3461,7 +3461,7 @@ theorem normalSpaceOfT3SecondCountable [SecondCountableTopology α] [T3Space α]
       exact fun x hx => mem_Union.2 ⟨⟨x, hx⟩, hxu x hx⟩
     · simp only [← supr_eq_Union, supᵢ_and']
       exact
-        isClosed_bUnion
+        isClosed_bunionᵢ
           (((finite_le_nat n).preimage_embedding (Encodable.encode' _)).Subset <|
             inter_subset_right _ _)
           fun u hu => isClosed_closure
@@ -3471,8 +3471,8 @@ theorem normalSpaceOfT3SecondCountable [SecondCountableTopology α] [T3Space α]
   refine'
     ⟨⋃ u ∈ U, ↑u \ ⋃ (v ∈ V) (hv : Encodable.encode v ≤ Encodable.encode u), closure ↑v,
       ⋃ v ∈ V, ↑v \ ⋃ (u ∈ U) (hu : Encodable.encode u ≤ Encodable.encode v), closure ↑u,
-      isOpen_bUnion fun u hu => (is_open_of_mem_countable_basis u.2).sdiff (hVc _),
-      isOpen_bUnion fun v hv => (is_open_of_mem_countable_basis v.2).sdiff (hUc _), fun x hx => _,
+      isOpen_bunionᵢ fun u hu => (is_open_of_mem_countable_basis u.2).sdiff (hVc _),
+      isOpen_bunionᵢ fun v hv => (is_open_of_mem_countable_basis v.2).sdiff (hUc _), fun x hx => _,
       fun x hx => _, _⟩
   · rcases mem_Union₂.1 (hsU hx) with ⟨u, huU, hxu⟩
     refine' mem_bUnion huU ⟨hxu, _⟩

@@ -1274,7 +1274,7 @@ theorem closure_eq_bot_iff (G : Type _) [Group G] (S : Set G) : closure S = ⊥ 
 
 @[to_additive]
 theorem supᵢ_eq_closure {ι : Sort _} (p : ι → Subgroup G) :
-    (⨆ i, p i) = closure (⋃ i, (p i : Set G)) := by simp_rw [closure_Union, closure_eq]
+    (⨆ i, p i) = closure (⋃ i, (p i : Set G)) := by simp_rw [closure_unionᵢ, closure_eq]
 #align subgroup.supr_eq_closure Subgroup.supᵢ_eq_closure
 #align add_subgroup.supr_eq_closure AddSubgroup.supᵢ_eq_closure
 
@@ -1323,7 +1323,7 @@ theorem mem_supᵢ_of_directed {ι} [hι : Nonempty ι] {K : ι → Subgroup G} 
   by
   refine' ⟨_, fun ⟨i, hi⟩ => (SetLike.le_def.1 <| le_supᵢ K i) hi⟩
   suffices x ∈ closure (⋃ i, (K i : Set G)) → ∃ i, x ∈ K i by
-    simpa only [closure_Union, closure_eq (K _)] using this
+    simpa only [closure_unionᵢ, closure_eq (K _)] using this
   refine' fun hx => closure_induction hx (fun _ => mem_Union.1) _ _ _
   · exact hι.elim fun i => ⟨i, (K i).one_mem⟩
   · rintro x y ⟨i, hi⟩ ⟨j, hj⟩

@@ -200,7 +200,7 @@ theorem HasIntegral.tendsto (h : HasIntegral I l f vol y) :
 theorem hasIntegral_iff :
     HasIntegral I l f vol y ↔
       ∀ ε > (0 : ℝ),
-        ∃ r : ℝ≥0 → ℝⁿ → ioi (0 : ℝ),
+        ∃ r : ℝ≥0 → ℝⁿ → Ioi (0 : ℝ),
           (∀ c, l.RCond (r c)) ∧
             ∀ c π, l.MemBaseSet I c (r c) π → IsPartition π → dist (integralSum f vol π) y ≤ ε :=
   ((l.has_basis_to_filter_Union_top I).tendsto_iff nhds_basis_closedBall).trans <| by
@@ -213,7 +213,7 @@ theorem hasIntegralOfMul (a : ℝ)
     (h :
       ∀ ε : ℝ,
         0 < ε →
-          ∃ r : ℝ≥0 → ℝⁿ → ioi (0 : ℝ),
+          ∃ r : ℝ≥0 → ℝⁿ → Ioi (0 : ℝ),
             (∀ c, l.RCond (r c)) ∧
               ∀ c π,
                 l.MemBaseSet I c (r c) π → IsPartition π → dist (integralSum f vol π) y ≤ a * ε) :
@@ -235,7 +235,7 @@ net. Here we restate this fact in terms of `∀ ε > 0, ∃ r, ...`. -/
 theorem integrable_iff_cauchy_basis [CompleteSpace F] :
     Integrable I l f vol ↔
       ∀ ε > (0 : ℝ),
-        ∃ r : ℝ≥0 → ℝⁿ → ioi (0 : ℝ),
+        ∃ r : ℝ≥0 → ℝⁿ → Ioi (0 : ℝ),
           (∀ c, l.RCond (r c)) ∧
             ∀ c₁ c₂ π₁ π₂,
               l.MemBaseSet I c₁ (r c₁) π₁ →
@@ -469,7 +469,7 @@ corresponding integral sum is `ε`-close to the integral.
 
 If `box.integral.integration_params.bRiemann = tt`, then `r c x` does not depend on `x`. If `ε ≤ 0`,
 then we use `r c x = 1`.  -/
-def convergenceR (h : Integrable I l f vol) (ε : ℝ) : ℝ≥0 → ℝⁿ → ioi (0 : ℝ) :=
+def convergenceR (h : Integrable I l f vol) (ε : ℝ) : ℝ≥0 → ℝⁿ → Ioi (0 : ℝ) :=
   if hε : 0 < ε then (hasIntegral_iff.1 h.HasIntegral ε hε).some
   else fun _ _ => ⟨1, Set.mem_Ioi.2 zero_lt_one⟩
 #align box_integral.integrable.convergence_r BoxIntegral.Integrable.convergenceR

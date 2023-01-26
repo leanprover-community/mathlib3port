@@ -126,7 +126,7 @@ instance : CompleteLattice (Opens α) :=
     fun U V => ⟨↑U ∩ ↑V, U.2.inter V.2⟩)
     (funext fun U => funext fun V => ext (U.2.inter V.2).interior_eq.symm)
     (-- Sup
-    fun S => ⟨⋃ s ∈ S, ↑s, isOpen_bUnion fun s _ => s.2⟩)
+    fun S => ⟨⋃ s ∈ S, ↑s, isOpen_bunionᵢ fun s _ => s.2⟩)
     (funext fun S => ext supₛ_image.symm)-- Inf
     _
     rfl
