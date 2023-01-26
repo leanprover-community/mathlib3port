@@ -1185,9 +1185,9 @@ def singleton {u v : V} (h : G.Adj u v) : G.Path u v :=
   ⟨Walk.cons h Walk.nil, by simp [h.ne]⟩
 #align simple_graph.path.singleton SimpleGraph.Path.singleton
 
-theorem mk''_mem_edges_singleton {u v : V} (h : G.Adj u v) :
+theorem mk'_mem_edges_singleton {u v : V} (h : G.Adj u v) :
     ⟦(u, v)⟧ ∈ (singleton h : G.Walk u v).edges := by simp [singleton]
-#align simple_graph.path.mk_mem_edges_singleton SimpleGraph.Path.mk''_mem_edges_singleton
+#align simple_graph.path.mk_mem_edges_singleton SimpleGraph.Path.mk'_mem_edges_singleton
 
 /-- The reverse of a path is another path.  See also `simple_graph.walk.reverse`. -/
 @[symm, simps]
@@ -1901,7 +1901,7 @@ protected theorem ConnectedComponent.exact {v w : V} :
 @[simp]
 protected theorem ConnectedComponent.eq {v w : V} :
     G.connectedComponentMk v = G.connectedComponentMk w ↔ G.Reachable v w :=
-  @Quotient.eq _ G.reachableSetoid _ _
+  @Quotient.eq' _ G.reachableSetoid _ _
 #align simple_graph.connected_component.eq SimpleGraph.ConnectedComponent.eq
 
 /-- The `connected_component` specialization of `quot.lift`. Provides the stronger

@@ -194,9 +194,9 @@ attribute [local instance] hom_to_fun
 
 scoped[Pseudoelement] attribute [instance] CategoryTheory.Abelian.Pseudoelement.homToFun
 
-theorem pseudo_apply_mk'' {P Q : C} (f : P ⟶ Q) (a : Over P) : f ⟦a⟧ = ⟦a.Hom ≫ f⟧ :=
+theorem pseudo_apply_mk' {P Q : C} (f : P ⟶ Q) (a : Over P) : f ⟦a⟧ = ⟦a.Hom ≫ f⟧ :=
   rfl
-#align category_theory.abelian.pseudoelement.pseudo_apply_mk CategoryTheory.Abelian.Pseudoelement.pseudo_apply_mk''
+#align category_theory.abelian.pseudoelement.pseudo_apply_mk CategoryTheory.Abelian.Pseudoelement.pseudo_apply_mk'
 
 /-- Applying a pseudoelement to a composition of morphisms is the same as composing
     with each morphism. Sadly, this is not a definitional equality, but at least it is
@@ -270,7 +270,7 @@ theorem zero_eq_zero {P Q : C} : ⟦((0 : Q ⟶ P) : Over P)⟧ = (0 : Pseudoele
 theorem pseudo_zero_iff {P : C} (a : Over P) : (a : P) = 0 ↔ a.Hom = 0 :=
   by
   rw [← pseudo_zero_aux P a]
-  exact Quotient.eq
+  exact Quotient.eq'
 #align category_theory.abelian.pseudoelement.pseudo_zero_iff CategoryTheory.Abelian.Pseudoelement.pseudo_zero_iff
 
 end Zero

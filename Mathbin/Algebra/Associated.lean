@@ -1575,7 +1575,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : MonoidWithZero.{u1} α] {a : Associates.{u1} α (MonoidWithZero.toMonoid.{u1} α _inst_1)}, (Ne.{succ u1} (Associates.{u1} α (MonoidWithZero.toMonoid.{u1} α _inst_1)) a (OfNat.ofNat.{u1} (Associates.{u1} α (MonoidWithZero.toMonoid.{u1} α _inst_1)) 0 (Zero.toOfNat0.{u1} (Associates.{u1} α (MonoidWithZero.toMonoid.{u1} α _inst_1)) (Associates.instZeroAssociates.{u1} α (MonoidWithZero.toZero.{u1} α _inst_1) (MonoidWithZero.toMonoid.{u1} α _inst_1))))) -> (Exists.{succ u1} α (fun (a0 : α) => And (Ne.{succ u1} α a0 (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α _inst_1)))) (Eq.{succ u1} (Associates.{u1} α (MonoidWithZero.toMonoid.{u1} α _inst_1)) (Associates.mk.{u1} α (MonoidWithZero.toMonoid.{u1} α _inst_1) a0) a)))
 Case conversion may be inaccurate. Consider using '#align associates.exists_non_zero_rep Associates.exists_non_zero_repₓ'. -/
 theorem exists_non_zero_rep {a : Associates α} : a ≠ 0 → ∃ a0 : α, a0 ≠ 0 ∧ Associates.mk a0 = a :=
-  Quotient.inductionOn a fun b nz => ⟨b, mt (congr_arg Quotient.mk'') nz, rfl⟩
+  Quotient.inductionOn a fun b nz => ⟨b, mt (congr_arg Quotient.mk') nz, rfl⟩
 #align associates.exists_non_zero_rep Associates.exists_non_zero_rep
 
 end MonoidWithZero

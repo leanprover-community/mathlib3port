@@ -59,12 +59,12 @@ variable {V}
 
 /-- Construct an element of the projectivization from a nonzero vector. -/
 def mk (v : V) (hv : v ≠ 0) : ℙ K V :=
-  Quotient.mk' ⟨v, hv⟩
+  Quotient.mk'' ⟨v, hv⟩
 #align projectivization.mk Projectivization.mk
 
 /-- A variant of `projectivization.mk` in terms of a subtype. `mk` is preferred. -/
 def mk' (v : { v : V // v ≠ 0 }) : ℙ K V :=
-  Quotient.mk' v
+  Quotient.mk'' v
 #align projectivization.mk' Projectivization.mk'
 
 @[simp]
@@ -111,7 +111,7 @@ variable (K)
 
 theorem mk_eq_mk_iff (v w : V) (hv : v ≠ 0) (hw : w ≠ 0) :
     mk K v hv = mk K w hw ↔ ∃ a : Kˣ, a • w = v :=
-  Quotient.eq'
+  Quotient.eq''
 #align projectivization.mk_eq_mk_iff Projectivization.mk_eq_mk_iff
 
 /-- Two nonzero vectors go to the same point in projective space if and only if one is
@@ -250,7 +250,7 @@ theorem map_injective {σ : K →+* L} {τ : L →+* K} [RingHomInvPair σ τ] (
   rw [← u.mk_rep, ← v.mk_rep] at *
   apply Quotient.sound'
   dsimp [map, mk] at h
-  simp only [Quotient.eq'] at h
+  simp only [Quotient.eq''] at h
   obtain ⟨a, ha⟩ := h
   use Units.map τ.to_monoid_hom a
   dsimp at ha⊢

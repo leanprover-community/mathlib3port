@@ -1266,41 +1266,42 @@ theorem psigmaCongrRight_refl {α} {β : α → Sort _} :
   rfl
 #align equiv.psigma_congr_right_refl Equiv.psigmaCongrRight_refl
 
-/- warning: equiv.sigma_congr_right -> Equiv.sigmaCongrRight_trans is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u_1}} {β₁ : α -> Type.{u_2}} {β₂ : α -> Type.{u_3}}, (forall (a : α), Equiv.{succ u_2, succ u_3} (β₁ a) (β₂ a)) -> (Equiv.{max (succ u_1) (succ u_2), max (succ u_1) (succ u_3)} (Sigma.{u_1, u_2} α (fun (a : α) => β₁ a)) (Sigma.{u_1, u_3} α (fun (a : α) => β₂ a)))
-but is expected to have type
-  forall {α : Type.{u_1}} {β₁ : α -> Type.{u_2}} {β₂ : α -> Type.{u_3}} {F : α -> Type.{u_4}} (F_1 : forall (a : α), Equiv.{succ u_2, succ u_3} (β₁ a) (β₂ a)) (G : forall (a : α), Equiv.{succ u_3, succ u_4} (β₂ a) (F a)), Eq.{max (max (succ u_2) (succ u_4)) (succ u_1)} (Equiv.{max (succ u_2) (succ u_1), max (succ u_1) (succ u_4)} (Sigma.{u_1, u_2} α (fun (a : α) => β₁ a)) (Sigma.{u_1, u_4} α (fun (a : α) => F a))) (Equiv.trans.{max (succ u_2) (succ u_1), max (succ u_3) (succ u_1), max (succ u_1) (succ u_4)} (Sigma.{u_1, u_2} α (fun (a : α) => β₁ a)) (Sigma.{u_1, u_3} α (fun (a : α) => β₂ a)) (Sigma.{u_1, u_4} α (fun (a : α) => F a)) (Equiv.sigmaCongrRight.{u_1, u_2, u_3} α (fun (a : α) => β₁ a) (fun (a : α) => β₂ a) F_1) (Equiv.sigmaCongrRight.{u_1, u_3, u_4} α (fun (a : α) => β₂ a) (fun (a : α) => F a) G)) (Equiv.sigmaCongrRight.{u_1, u_2, u_4} α (fun (a : α) => β₁ a) (fun (a : α) => F a) (fun (a : α) => Equiv.trans.{succ u_2, succ u_3, succ u_4} (β₁ a) (β₂ a) (F a) (F_1 a) (G a)))
-Case conversion may be inaccurate. Consider using '#align equiv.sigma_congr_right Equiv.sigmaCongrRight_transₓ'. -/
+#print Equiv.sigmaCongrRight /-
 /-- A family of equivalences `Π a, β₁ a ≃ β₂ a` generates an equivalence between `Σ a, β₁ a` and
 `Σ a, β₂ a`. -/
 @[simps apply]
-def sigmaCongrRight_trans {α} {β₁ β₂ : α → Type _} (F : ∀ a, β₁ a ≃ β₂ a) : (Σa, β₁ a) ≃ Σa, β₂ a :=
+def sigmaCongrRight {α} {β₁ β₂ : α → Type _} (F : ∀ a, β₁ a ≃ β₂ a) : (Σa, β₁ a) ≃ Σa, β₂ a :=
   ⟨fun a => ⟨a.1, F a.1 a.2⟩, fun a => ⟨a.1, (F a.1).symm a.2⟩, fun ⟨a, b⟩ =>
     congr_arg (Sigma.mk a) <| symm_apply_apply (F a) b, fun ⟨a, b⟩ =>
     congr_arg (Sigma.mk a) <| apply_symm_apply (F a) b⟩
-#align equiv.sigma_congr_right Equiv.sigmaCongrRight_trans
+#align equiv.sigma_congr_right Equiv.sigmaCongrRight
+-/
 
+/- warning: equiv.sigma_congr_right_trans -> Equiv.sigmaCongrRight_trans is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β₁ : α -> Type.{u2}} {β₂ : α -> Type.{u3}} {β₃ : α -> Type.{u4}} (F : forall (a : α), Equiv.{succ u2, succ u3} (β₁ a) (β₂ a)) (G : forall (a : α), Equiv.{succ u3, succ u4} (β₂ a) (β₃ a)), Eq.{max 1 (max (max (succ u1) (succ u2)) (succ u1) (succ u4)) (max (succ u1) (succ u4)) (succ u1) (succ u2)} (Equiv.{max (succ u1) (succ u2), max (succ u1) (succ u4)} (Sigma.{u1, u2} α (fun (a : α) => β₁ a)) (Sigma.{u1, u4} α (fun (a : α) => β₃ a))) (Equiv.trans.{max (succ u1) (succ u2), max (succ u1) (succ u3), max (succ u1) (succ u4)} (Sigma.{u1, u2} α (fun (a : α) => β₁ a)) (Sigma.{u1, u3} α (fun (a : α) => β₂ a)) (Sigma.{u1, u4} α (fun (a : α) => β₃ a)) (Equiv.sigmaCongrRight.{u1, u2, u3} α (fun (a : α) => β₁ a) (fun (a : α) => β₂ a) F) (Equiv.sigmaCongrRight.{u1, u3, u4} α (fun (a : α) => β₂ a) (fun (a : α) => β₃ a) G)) (Equiv.sigmaCongrRight.{u1, u2, u4} α (fun (a : α) => β₁ a) (fun (a : α) => β₃ a) (fun (a : α) => Equiv.trans.{succ u2, succ u3, succ u4} (β₁ a) (β₂ a) (β₃ a) (F a) (G a)))
+but is expected to have type
+  forall {α : Type.{u4}} {β₁ : α -> Type.{u3}} {β₂ : α -> Type.{u2}} {β₃ : α -> Type.{u1}} (F : forall (a : α), Equiv.{succ u3, succ u2} (β₁ a) (β₂ a)) (G : forall (a : α), Equiv.{succ u2, succ u1} (β₂ a) (β₃ a)), Eq.{max (max (succ u3) (succ u1)) (succ u4)} (Equiv.{max (succ u3) (succ u4), max (succ u4) (succ u1)} (Sigma.{u4, u3} α (fun (a : α) => β₁ a)) (Sigma.{u4, u1} α (fun (a : α) => β₃ a))) (Equiv.trans.{max (succ u3) (succ u4), max (succ u2) (succ u4), max (succ u4) (succ u1)} (Sigma.{u4, u3} α (fun (a : α) => β₁ a)) (Sigma.{u4, u2} α (fun (a : α) => β₂ a)) (Sigma.{u4, u1} α (fun (a : α) => β₃ a)) (Equiv.sigmaCongrRight.{u4, u3, u2} α (fun (a : α) => β₁ a) (fun (a : α) => β₂ a) F) (Equiv.sigmaCongrRight.{u4, u2, u1} α (fun (a : α) => β₂ a) (fun (a : α) => β₃ a) G)) (Equiv.sigmaCongrRight.{u4, u3, u1} α (fun (a : α) => β₁ a) (fun (a : α) => β₃ a) (fun (a : α) => Equiv.trans.{succ u3, succ u2, succ u1} (β₁ a) (β₂ a) (β₃ a) (F a) (G a)))
+Case conversion may be inaccurate. Consider using '#align equiv.sigma_congr_right_trans Equiv.sigmaCongrRight_transₓ'. -/
 @[simp]
-theorem sigmaCongrRight_trans_trans {α} {β₁ β₂ β₃ : α → Type _} (F : ∀ a, β₁ a ≃ β₂ a)
+theorem sigmaCongrRight_trans {α} {β₁ β₂ β₃ : α → Type _} (F : ∀ a, β₁ a ≃ β₂ a)
     (G : ∀ a, β₂ a ≃ β₃ a) :
-    (sigmaCongrRight_trans F).trans (sigmaCongrRight_trans G) =
-      sigmaCongrRight_trans fun a => (F a).trans (G a) :=
+    (sigmaCongrRight F).trans (sigmaCongrRight G) = sigmaCongrRight fun a => (F a).trans (G a) :=
   by
   ext1 x
   cases x
   rfl
-#align equiv.sigma_congr_right_trans Equiv.sigmaCongrRight_trans_trans
+#align equiv.sigma_congr_right_trans Equiv.sigmaCongrRight_trans
 
 /- warning: equiv.sigma_congr_right_symm -> Equiv.sigmaCongrRight_symm is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β₁ : α -> Type.{u2}} {β₂ : α -> Type.{u3}} (F : forall (a : α), Equiv.{succ u2, succ u3} (β₁ a) (β₂ a)), Eq.{max 1 (max (max (succ u1) (succ u3)) (succ u1) (succ u2)) (max (succ u1) (succ u2)) (succ u1) (succ u3)} (Equiv.{max (succ u1) (succ u3), max (succ u1) (succ u2)} (Sigma.{u1, u3} α (fun (a : α) => β₂ a)) (Sigma.{u1, u2} α (fun (a : α) => β₁ a))) (Equiv.symm.{max (succ u1) (succ u2), max (succ u1) (succ u3)} (Sigma.{u1, u2} α (fun (a : α) => β₁ a)) (Sigma.{u1, u3} α (fun (a : α) => β₂ a)) (Equiv.sigmaCongrRight_trans.{u1, u2, u3} α (fun (a : α) => β₁ a) (fun (a : α) => β₂ a) F)) (Equiv.sigmaCongrRight_trans.{u1, u3, u2} α (fun (a : α) => β₂ a) (fun (a : α) => β₁ a) (fun (a : α) => Equiv.symm.{succ u2, succ u3} (β₁ a) (β₂ a) (F a)))
+  forall {α : Type.{u1}} {β₁ : α -> Type.{u2}} {β₂ : α -> Type.{u3}} (F : forall (a : α), Equiv.{succ u2, succ u3} (β₁ a) (β₂ a)), Eq.{max 1 (max (max (succ u1) (succ u3)) (succ u1) (succ u2)) (max (succ u1) (succ u2)) (succ u1) (succ u3)} (Equiv.{max (succ u1) (succ u3), max (succ u1) (succ u2)} (Sigma.{u1, u3} α (fun (a : α) => β₂ a)) (Sigma.{u1, u2} α (fun (a : α) => β₁ a))) (Equiv.symm.{max (succ u1) (succ u2), max (succ u1) (succ u3)} (Sigma.{u1, u2} α (fun (a : α) => β₁ a)) (Sigma.{u1, u3} α (fun (a : α) => β₂ a)) (Equiv.sigmaCongrRight.{u1, u2, u3} α (fun (a : α) => β₁ a) (fun (a : α) => β₂ a) F)) (Equiv.sigmaCongrRight.{u1, u3, u2} α (fun (a : α) => β₂ a) (fun (a : α) => β₁ a) (fun (a : α) => Equiv.symm.{succ u2, succ u3} (β₁ a) (β₂ a) (F a)))
 but is expected to have type
   forall {α : Type.{u3}} {β₁ : α -> Type.{u2}} {β₂ : α -> Type.{u1}} (F : forall (a : α), Equiv.{succ u2, succ u1} (β₁ a) (β₂ a)), Eq.{max (max (succ u2) (succ u1)) (succ u3)} (Equiv.{max (succ u1) (succ u3), max (succ u2) (succ u3)} (Sigma.{u3, u1} α (fun (a : α) => β₂ a)) (Sigma.{u3, u2} α (fun (a : α) => β₁ a))) (Equiv.symm.{max (succ u2) (succ u3), max (succ u1) (succ u3)} (Sigma.{u3, u2} α (fun (a : α) => β₁ a)) (Sigma.{u3, u1} α (fun (a : α) => β₂ a)) (Equiv.sigmaCongrRight.{u3, u2, u1} α (fun (a : α) => β₁ a) (fun (a : α) => β₂ a) F)) (Equiv.sigmaCongrRight.{u3, u1, u2} α (fun (a : α) => β₂ a) (fun (a : α) => β₁ a) (fun (a : α) => Equiv.symm.{succ u2, succ u1} (β₁ a) (β₂ a) (F a)))
 Case conversion may be inaccurate. Consider using '#align equiv.sigma_congr_right_symm Equiv.sigmaCongrRight_symmₓ'. -/
 @[simp]
 theorem sigmaCongrRight_symm {α} {β₁ β₂ : α → Type _} (F : ∀ a, β₁ a ≃ β₂ a) :
-    (sigmaCongrRight_trans F).symm = sigmaCongrRight_trans fun a => (F a).symm :=
+    (sigmaCongrRight F).symm = sigmaCongrRight fun a => (F a).symm :=
   by
   ext1 x
   cases x
@@ -1309,13 +1310,13 @@ theorem sigmaCongrRight_symm {α} {β₁ β₂ : α → Type _} (F : ∀ a, β�
 
 /- warning: equiv.sigma_congr_right_refl -> Equiv.sigmaCongrRight_refl is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : α -> Type.{u2}}, Eq.{max 1 (succ u1) (succ u2)} (Equiv.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (Sigma.{u1, u2} α (fun (a : α) => β a)) (Sigma.{u1, u2} α (fun (a : α) => β a))) (Equiv.sigmaCongrRight_trans.{u1, u2, u2} α (fun (a : α) => β a) (fun (a : α) => β a) (fun (a : α) => Equiv.refl.{succ u2} (β a))) (Equiv.refl.{max (succ u1) (succ u2)} (Sigma.{u1, u2} α (fun (a : α) => β a)))
+  forall {α : Type.{u1}} {β : α -> Type.{u2}}, Eq.{max 1 (succ u1) (succ u2)} (Equiv.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (Sigma.{u1, u2} α (fun (a : α) => β a)) (Sigma.{u1, u2} α (fun (a : α) => β a))) (Equiv.sigmaCongrRight.{u1, u2, u2} α (fun (a : α) => β a) (fun (a : α) => β a) (fun (a : α) => Equiv.refl.{succ u2} (β a))) (Equiv.refl.{max (succ u1) (succ u2)} (Sigma.{u1, u2} α (fun (a : α) => β a)))
 but is expected to have type
   forall {α : Type.{u2}} {β : α -> Type.{u1}}, Eq.{max (succ u1) (succ u2)} (Equiv.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (Sigma.{u2, u1} α (fun (a : α) => β a)) (Sigma.{u2, u1} α (fun (a : α) => β a))) (Equiv.sigmaCongrRight.{u2, u1, u1} α (fun (a : α) => β a) (fun (a : α) => β a) (fun (a : α) => Equiv.refl.{succ u1} (β a))) (Equiv.refl.{max (succ u1) (succ u2)} (Sigma.{u2, u1} α (fun (a : α) => β a)))
 Case conversion may be inaccurate. Consider using '#align equiv.sigma_congr_right_refl Equiv.sigmaCongrRight_reflₓ'. -/
 @[simp]
 theorem sigmaCongrRight_refl {α} {β : α → Type _} :
-    (sigmaCongrRight_trans fun a => Equiv.refl (β a)) = Equiv.refl (Σa, β a) :=
+    (sigmaCongrRight fun a => Equiv.refl (β a)) = Equiv.refl (Σa, β a) :=
   by
   ext1 x
   cases x
@@ -1351,7 +1352,7 @@ Variant of `sigma_plift_equiv_subtype`.
 -/
 def sigmaULiftPLiftEquivSubtype {α : Type v} (P : α → Prop) :
     (Σi, ULift (PLift (P i))) ≃ Subtype P :=
-  (sigmaCongrRight_trans fun a => Equiv.ulift).trans (sigmaPLiftEquivSubtype P)
+  (sigmaCongrRight fun a => Equiv.ulift).trans (sigmaPLiftEquivSubtype P)
 #align equiv.sigma_ulift_plift_equiv_subtype Equiv.sigmaULiftPLiftEquivSubtype
 -/
 
@@ -1361,7 +1362,7 @@ namespace Perm
 /-- A family of permutations `Π a, perm (β a)` generates a permuation `perm (Σ a, β₁ a)`. -/
 @[reducible]
 def sigmaCongrRight {α} {β : α → Sort _} (F : ∀ a, Perm (β a)) : Perm (Σa, β a) :=
-  Equiv.sigmaCongrRight_trans F
+  Equiv.sigmaCongrRight F
 #align equiv.perm.sigma_congr_right Equiv.Perm.sigmaCongrRight
 -/
 
@@ -1374,7 +1375,7 @@ Case conversion may be inaccurate. Consider using '#align equiv.perm.sigma_congr
 @[simp]
 theorem sigmaCongrRight_trans {α} {β : α → Sort _} (F : ∀ a, Perm (β a)) (G : ∀ a, Perm (β a)) :
     (sigmaCongrRight F).trans (sigmaCongrRight G) = sigmaCongrRight fun a => (F a).trans (G a) :=
-  Equiv.sigmaCongrRight_trans_trans F G
+  Equiv.sigmaCongrRight_trans F G
 #align equiv.perm.sigma_congr_right_trans Equiv.Perm.sigmaCongrRight_trans
 
 /- warning: equiv.perm.sigma_congr_right_symm -> Equiv.Perm.sigmaCongrRight_symm is a dubious translation:
@@ -1437,7 +1438,7 @@ def sigmaCongrLeft' {α₁ α₂} {β : α₁ → Sort _} (f : α₁ ≃ α₂) 
 of matching fibers -/
 def sigmaCongr {α₁ α₂} {β₁ : α₁ → Sort _} {β₂ : α₂ → Sort _} (f : α₁ ≃ α₂)
     (F : ∀ a, β₁ a ≃ β₂ (f a)) : Sigma β₁ ≃ Sigma β₂ :=
-  (sigmaCongrRight_trans F).trans (sigmaCongrLeft f)
+  (sigmaCongrRight F).trans (sigmaCongrLeft f)
 #align equiv.sigma_congr Equiv.sigmaCongr
 -/
 
@@ -1453,7 +1454,7 @@ def sigmaEquivProd (α β : Type _) : (Σ_ : α, β) ≃ α × β :=
 /-- If each fiber of a `sigma` type is equivalent to a fixed type, then the sigma type
 is equivalent to the product. -/
 def sigmaEquivProdOfEquiv {α β} {β₁ : α → Sort _} (F : ∀ a, β₁ a ≃ β) : Sigma β₁ ≃ α × β :=
-  (sigmaCongrRight_trans F).trans (sigmaEquivProd α β)
+  (sigmaCongrRight F).trans (sigmaEquivProd α β)
 #align equiv.sigma_equiv_prod_of_equiv Equiv.sigmaEquivProdOfEquiv
 -/
 
@@ -1670,11 +1671,11 @@ protected def congr {ra : Setoid α} {rb : Setoid β} (e : α ≃ β)
 -/
 
 @[simp]
-theorem congr_mk'' {ra : Setoid α} {rb : Setoid β} (e : α ≃ β)
+theorem congr_mk' {ra : Setoid α} {rb : Setoid β} (e : α ≃ β)
     (eq : ∀ a₁ a₂ : α, Setoid.r a₁ a₂ ↔ Setoid.r (e a₁) (e a₂)) (a : α) :
-    Quotient.congr e Eq (Quotient.mk'' a) = Quotient.mk'' (e a) :=
+    Quotient.congr e Eq (Quotient.mk' a) = Quotient.mk' (e a) :=
   rfl
-#align quotient.congr_mk Quotient.congr_mk''
+#align quotient.congr_mk Quotient.congr_mk'
 
 #print Quotient.congrRight /-
 /-- Quotients are congruent on equivalences under equality of their relation.

@@ -152,7 +152,7 @@ spaces in compact Hausdorff spaces.
 def ProfiniteCat.toCompHausEquivalence (X : CompHausCat.{u}) (Y : ProfiniteCat.{u}) :
     (CompHausCat.toProfiniteObj X ⟶ Y) ≃ (X ⟶ profiniteToCompHaus.obj Y)
     where
-  toFun f := f.comp ⟨Quotient.mk', continuous_quotient_mk''⟩
+  toFun f := f.comp ⟨Quotient.mk'', continuous_quotient_mk'⟩
   invFun g :=
     { toFun := Continuous.connectedComponentsLift g.2
       continuous_to_fun := Continuous.connectedComponentsLift_continuous g.2 }

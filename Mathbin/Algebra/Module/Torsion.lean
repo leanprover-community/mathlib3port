@@ -738,8 +738,8 @@ theorem torsion_eq_bot : torsion R (M ⧸ torsion R M) = ⊥ :=
   eq_bot_iff.mpr fun z =>
     Quotient.inductionOn' z fun x ⟨a, hax⟩ =>
       by
-      rw [Quotient.mk'_eq_mk'', ← quotient.mk_smul, quotient.mk_eq_zero] at hax
-      rw [mem_bot, Quotient.mk'_eq_mk'', quotient.mk_eq_zero]
+      rw [Quotient.mk''_eq_mk', ← quotient.mk_smul, quotient.mk_eq_zero] at hax
+      rw [mem_bot, Quotient.mk''_eq_mk', quotient.mk_eq_zero]
       cases' hax with b h
       exact ⟨b * a, (mul_smul _ _ _).trans h⟩
 #align submodule.quotient_torsion.torsion_eq_bot Submodule.QuotientTorsion.torsion_eq_bot

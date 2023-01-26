@@ -43,13 +43,13 @@ variable {abv}
 #print CauSeq.Completion.mk /-
 /-- The map from Cauchy sequences into the Cauchy completion. -/
 def mk : CauSeq _ abv → Cauchy abv :=
-  Quotient.mk''
+  Quotient.mk'
 #align cau_seq.completion.mk CauSeq.Completion.mk
 -/
 
 /- warning: cau_seq.completion.mk_eq_mk -> CauSeq.Completion.mk_eq_mk is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : LinearOrderedField.{u1} α] {β : Type.{u2}} [_inst_2 : Ring.{u2} β] {abv : β -> α} [_inst_3 : IsAbsoluteValue.{u1, u2} α (StrictOrderedSemiring.toOrderedSemiring.{u1} α (StrictOrderedRing.toStrictOrderedSemiring.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α (LinearOrderedCommRing.toLinearOrderedRing.{u1} α (LinearOrderedField.toLinearOrderedCommRing.{u1} α _inst_1))))) β (Ring.toSemiring.{u2} β _inst_2) abv] (f : CauSeq.{u1, u2} α _inst_1 β _inst_2 abv), Eq.{succ u2} (CauSeq.Completion.Cauchy.{u1, u2} α _inst_1 β _inst_2 abv _inst_3) (Quotient.mk''.{succ u2} (CauSeq.{u1, u2} α _inst_1 β _inst_2 abv) (CauSeq.equiv.{u1, u2} α β _inst_1 _inst_2 abv _inst_3) f) (CauSeq.Completion.mk.{u1, u2} α _inst_1 β _inst_2 abv _inst_3 f)
+  forall {α : Type.{u1}} [_inst_1 : LinearOrderedField.{u1} α] {β : Type.{u2}} [_inst_2 : Ring.{u2} β] {abv : β -> α} [_inst_3 : IsAbsoluteValue.{u1, u2} α (StrictOrderedSemiring.toOrderedSemiring.{u1} α (StrictOrderedRing.toStrictOrderedSemiring.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α (LinearOrderedCommRing.toLinearOrderedRing.{u1} α (LinearOrderedField.toLinearOrderedCommRing.{u1} α _inst_1))))) β (Ring.toSemiring.{u2} β _inst_2) abv] (f : CauSeq.{u1, u2} α _inst_1 β _inst_2 abv), Eq.{succ u2} (CauSeq.Completion.Cauchy.{u1, u2} α _inst_1 β _inst_2 abv _inst_3) (Quotient.mk'.{succ u2} (CauSeq.{u1, u2} α _inst_1 β _inst_2 abv) (CauSeq.equiv.{u1, u2} α β _inst_1 _inst_2 abv _inst_3) f) (CauSeq.Completion.mk.{u1, u2} α _inst_1 β _inst_2 abv _inst_3 f)
 but is expected to have type
   forall {α : Type.{u2}} [_inst_1 : LinearOrderedField.{u2} α] {β : Type.{u1}} [_inst_2 : Ring.{u1} β] {abv : β -> α} [_inst_3 : IsAbsoluteValue.{u2, u1} α (OrderedCommSemiring.toOrderedSemiring.{u2} α (StrictOrderedCommSemiring.toOrderedCommSemiring.{u2} α (LinearOrderedCommSemiring.toStrictOrderedCommSemiring.{u2} α (LinearOrderedSemifield.toLinearOrderedCommSemiring.{u2} α (LinearOrderedField.toLinearOrderedSemifield.{u2} α _inst_1))))) β (Ring.toSemiring.{u1} β _inst_2) abv] (f : CauSeq.{u2, u1} α _inst_1 β _inst_2 abv), Eq.{succ u1} (CauSeq.Completion.Cauchy.{u2, u1} α _inst_1 β _inst_2 abv _inst_3) (Quotient.mk.{succ u1} (CauSeq.{u2, u1} α _inst_1 β _inst_2 abv) (CauSeq.equiv.{u2, u1} α β _inst_1 _inst_2 abv _inst_3) f) (CauSeq.Completion.mk.{u2, u1} α _inst_1 β _inst_2 abv _inst_3 f)
 Case conversion may be inaccurate. Consider using '#align cau_seq.completion.mk_eq_mk CauSeq.Completion.mk_eq_mkₓ'. -/
@@ -65,7 +65,7 @@ but is expected to have type
   forall {α : Type.{u2}} [_inst_1 : LinearOrderedField.{u2} α] {β : Type.{u1}} [_inst_2 : Ring.{u1} β] {abv : β -> α} [_inst_3 : IsAbsoluteValue.{u2, u1} α (OrderedCommSemiring.toOrderedSemiring.{u2} α (StrictOrderedCommSemiring.toOrderedCommSemiring.{u2} α (LinearOrderedCommSemiring.toStrictOrderedCommSemiring.{u2} α (LinearOrderedSemifield.toLinearOrderedCommSemiring.{u2} α (LinearOrderedField.toLinearOrderedSemifield.{u2} α _inst_1))))) β (Ring.toSemiring.{u1} β _inst_2) abv] {f : CauSeq.{u2, u1} α _inst_1 β _inst_2 abv} {g : CauSeq.{u2, u1} α _inst_1 β _inst_2 abv}, Iff (Eq.{succ u1} (CauSeq.Completion.Cauchy.{u2, u1} α _inst_1 β _inst_2 abv _inst_3) (CauSeq.Completion.mk.{u2, u1} α _inst_1 β _inst_2 abv _inst_3 f) (CauSeq.Completion.mk.{u2, u1} α _inst_1 β _inst_2 abv _inst_3 g)) (HasEquiv.Equiv.{succ u1, 0} (CauSeq.{u2, u1} α _inst_1 β _inst_2 abv) (instHasEquiv.{succ u1} (CauSeq.{u2, u1} α _inst_1 β _inst_2 abv) (CauSeq.equiv.{u2, u1} α β _inst_1 _inst_2 abv _inst_3)) f g)
 Case conversion may be inaccurate. Consider using '#align cau_seq.completion.mk_eq CauSeq.Completion.mk_eqₓ'. -/
 theorem mk_eq {f g : CauSeq _ abv} : mk f = mk g ↔ f ≈ g :=
-  Quotient.eq
+  Quotient.eq'
 #align cau_seq.completion.mk_eq CauSeq.Completion.mk_eq
 
 #print CauSeq.Completion.ofRat /-
@@ -108,7 +108,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align cau_seq.completion.mk_eq_zero CauSeq.Completion.mk_eq_zeroₓ'. -/
 @[simp]
 theorem mk_eq_zero {f : CauSeq _ abv} : mk f = 0 ↔ LimZero f := by
-  have : mk f = 0 ↔ lim_zero (f - 0) := Quotient.eq <;> rwa [sub_zero] at this
+  have : mk f = 0 ↔ lim_zero (f - 0) := Quotient.eq' <;> rwa [sub_zero] at this
 #align cau_seq.completion.mk_eq_zero CauSeq.Completion.mk_eq_zero
 
 instance : Add (Cauchy abv) :=
@@ -259,7 +259,7 @@ private theorem one_def : 1 = (mk 1 : Cauchy abv) :=
 #align cau_seq.completion.one_def cau_seq.completion.one_def
 
 instance : Ring (Cauchy abv) :=
-  Function.Surjective.ring mk (surjective_quotient_mk'' _) zero_def.symm one_def.symm
+  Function.Surjective.ring mk (surjective_quotient_mk' _) zero_def.symm one_def.symm
     (fun _ _ => (mk_add _ _).symm) (fun _ _ => (mk_mul _ _).symm) (fun _ => (mk_neg _).symm)
     (fun _ _ => (mk_sub _ _).symm) (fun _ _ => (mk_smul _ _).symm) (fun _ _ => (mk_smul _ _).symm)
     (fun _ _ => (mk_pow _ _).symm) (fun _ => rfl) fun _ => rfl
@@ -295,7 +295,7 @@ variable {α : Type _} [LinearOrderedField α]
 variable {β : Type _} [CommRing β] {abv : β → α} [IsAbsoluteValue abv]
 
 instance : CommRing (Cauchy abv) :=
-  Function.Surjective.commRing mk (surjective_quotient_mk'' _) zero_def.symm one_def.symm
+  Function.Surjective.commRing mk (surjective_quotient_mk' _) zero_def.symm one_def.symm
     (fun _ _ => (mk_add _ _).symm) (fun _ _ => (mk_mul _ _).symm) (fun _ => (mk_neg _).symm)
     (fun _ _ => (mk_sub _ _).symm) (fun _ _ => (mk_smul _ _).symm) (fun _ _ => (mk_smul _ _).symm)
     (fun _ _ => (mk_pow _ _).symm) (fun _ => rfl) fun _ => rfl

@@ -297,7 +297,7 @@ instance : CategoryTheory.Groupoid (FundamentalGroupoid X)
     Quotient.lift (fun l : Path x y => ⟦l.symm⟧)
       (by
         rintro a b ⟨h⟩
-        rw [Quotient.eq]
+        rw [Quotient.eq']
         exact ⟨h.symm₂⟩)
       p
   inv_comp' x y f :=
@@ -343,7 +343,7 @@ def fundamentalGroupoidFunctor : TopCat ⥤ CategoryTheory.GroupoidCat
     congr
     ext (x y p)
     refine' Quotient.inductionOn p fun q => _
-    simp only [Quotient.map_mk'', Path.map_map, Quotient.eq]
+    simp only [Quotient.map_mk', Path.map_map, Quotient.eq']
     rfl
 #align fundamental_groupoid.fundamental_groupoid_functor FundamentalGroupoid.fundamentalGroupoidFunctor
 

@@ -74,9 +74,9 @@ theorem neg_equiv_self (G : Pgame) [h : G.Impartial] : G ≈ -G :=
 #align pgame.impartial.neg_equiv_self Pgame.Impartial.neg_equiv_self
 
 @[simp]
-theorem mk''_neg_equiv_self (G : Pgame) [h : G.Impartial] : -⟦G⟧ = ⟦G⟧ :=
+theorem mk'_neg_equiv_self (G : Pgame) [h : G.Impartial] : -⟦G⟧ = ⟦G⟧ :=
   Quot.sound (neg_equiv_self G).symm
-#align pgame.impartial.mk_neg_equiv_self Pgame.Impartial.mk''_neg_equiv_self
+#align pgame.impartial.mk_neg_equiv_self Pgame.Impartial.mk'_neg_equiv_self
 
 instance moveLeft_impartial {G : Pgame} [h : G.Impartial] (i : G.LeftMoves) :
     (G.moveLeft i).Impartial :=
@@ -171,9 +171,9 @@ theorem add_self : G + G ≈ 0 :=
 #align pgame.impartial.add_self Pgame.Impartial.add_self
 
 @[simp]
-theorem mk''_add_self : ⟦G⟧ + ⟦G⟧ = 0 :=
+theorem mk'_add_self : ⟦G⟧ + ⟦G⟧ = 0 :=
   Quot.sound (add_self G)
-#align pgame.impartial.mk_add_self Pgame.Impartial.mk''_add_self
+#align pgame.impartial.mk_add_self Pgame.Impartial.mk'_add_self
 
 /-- This lemma doesn't require `H` to be impartial. -/
 theorem equiv_iff_add_equiv_zero (H : Pgame) : (H ≈ G) ↔ (H + G ≈ 0) :=

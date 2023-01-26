@@ -208,18 +208,19 @@ theorem cardQuot_pow_of_prime [IsDedekindDomain S] [Module.Finite ℤ S] [Module
       Ideal.exists_mul_add_mem_pow_succ hP a c a_mem a_not_mem hc
     choose k hk_mem hk_eq using fun c' (hc' : c' ∈ map (mkq (P ^ i.succ)) (P ^ i)) =>
       submodule.mem_map.mp hc'
-    refine' Equiv.ofBijective (fun c' => Quotient.mk' (f (k c' c'.Prop) (hk_mem c' c'.Prop))) ⟨_, _⟩
+    refine'
+      Equiv.ofBijective (fun c' => Quotient.mk'' (f (k c' c'.Prop) (hk_mem c' c'.Prop))) ⟨_, _⟩
     · rintro ⟨c₁', hc₁'⟩ ⟨c₂', hc₂'⟩ h
       rw [Subtype.mk_eq_mk, ← hk_eq _ hc₁', ← hk_eq _ hc₂', mkq_apply, mkq_apply,
         Submodule.Quotient.eq, ← hf _ (hk_mem _ hc₁'), ← hf _ (hk_mem _ hc₂')]
       refine' Ideal.mul_add_mem_pow_succ_inj _ _ _ _ _ _ a_mem (hg _ _) (hg _ _) _
-      simpa only [Submodule.Quotient.mk'_eq_mk, Submodule.Quotient.mk'_eq_mk,
+      simpa only [Submodule.Quotient.mk''_eq_mk, Submodule.Quotient.mk''_eq_mk,
         Submodule.Quotient.eq] using h
     · intro d'
       refine' Quotient.inductionOn' d' fun d => _
       have hd' := mem_map.mpr ⟨a * d, Ideal.mul_mem_right d _ a_mem, rfl⟩
       refine' ⟨⟨_, hd'⟩, _⟩
-      simp only [Submodule.Quotient.mk'_eq_mk, Ideal.Quotient.mk_eq_mk, Ideal.Quotient.eq,
+      simp only [Submodule.Quotient.mk''_eq_mk, Ideal.Quotient.mk_eq_mk, Ideal.Quotient.eq,
         Subtype.coe_mk]
       refine'
         Ideal.mul_add_mem_pow_succ_unique hP a _ _ _ _ a_not_mem (hg _ (hk_mem _ hd')) (zero_mem _)

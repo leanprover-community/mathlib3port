@@ -119,7 +119,7 @@ theorem isAcyclic_of_path_unique (h : ∀ (v w : V) (p q : G.Path v w), p = q) :
       true_and_iff] at hc
     specialize h _ _ ⟨c_p, by simp only [walk.is_path_def, hc.2]⟩ (path.singleton (G.symm c_h))
     simp only [path.singleton] at h
-    simpa [-Quotient.eq, Sym2.eq_swap, h] using hc
+    simpa [-Quotient.eq', Sym2.eq_swap, h] using hc
 #align simple_graph.is_acyclic_of_path_unique SimpleGraph.isAcyclic_of_path_unique
 
 theorem isAcyclic_iff_path_unique : G.IsAcyclic ↔ ∀ ⦃v w : V⦄ (p q : G.Path v w), p = q :=

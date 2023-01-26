@@ -61,7 +61,7 @@ def ValueGroup : Type v :=
 #align valuation_ring.value_group ValuationRing.ValueGroup
 
 instance : Inhabited (ValueGroup A K) :=
-  ⟨Quotient.mk' 0⟩
+  ⟨Quotient.mk'' 0⟩
 
 instance : LE (ValueGroup A K) :=
   LE.mk fun x y =>
@@ -82,14 +82,14 @@ instance : LE (ValueGroup A K) :=
           simp only [← mul_assoc, ← Units.val_mul, mul_inv_self, one_mul])
 
 instance : Zero (ValueGroup A K) :=
-  ⟨Quotient.mk' 0⟩
+  ⟨Quotient.mk'' 0⟩
 
 instance : One (ValueGroup A K) :=
-  ⟨Quotient.mk' 1⟩
+  ⟨Quotient.mk'' 1⟩
 
 instance : Mul (ValueGroup A K) :=
   Mul.mk fun x y =>
-    Quotient.liftOn₂' x y (fun a b => Quotient.mk' <| a * b)
+    Quotient.liftOn₂' x y (fun a b => Quotient.mk'' <| a * b)
       (by
         rintro _ _ a b ⟨c, rfl⟩ ⟨d, rfl⟩
         apply Quotient.sound'
@@ -100,7 +100,7 @@ instance : Mul (ValueGroup A K) :=
 
 instance : Inv (ValueGroup A K) :=
   Inv.mk fun x =>
-    Quotient.liftOn' x (fun a => Quotient.mk' a⁻¹)
+    Quotient.liftOn' x (fun a => Quotient.mk'' a⁻¹)
       (by
         rintro _ a ⟨b, rfl⟩
         apply Quotient.sound'
@@ -221,7 +221,7 @@ noncomputable instance : LinearOrderedCommGroupWithZero (ValueGroup A K) :=
 /-- Any valuation ring induces a valuation on its fraction field. -/
 def valuation : Valuation K (ValueGroup A K)
     where
-  toFun := Quotient.mk'
+  toFun := Quotient.mk''
   map_zero' := rfl
   map_one' := rfl
   map_mul' _ _ := rfl

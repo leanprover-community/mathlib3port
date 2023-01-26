@@ -1226,15 +1226,15 @@ theorem Fintype.card_compl_eq_card_compl [Finite α] (p q : α → Prop) [Fintyp
 #print Fintype.card_quotient_le /-
 theorem Fintype.card_quotient_le [Fintype α] (s : Setoid α)
     [DecidableRel ((· ≈ ·) : α → α → Prop)] : Fintype.card (Quotient s) ≤ Fintype.card α :=
-  Fintype.card_le_of_surjective _ (surjective_quotient_mk'' _)
+  Fintype.card_le_of_surjective _ (surjective_quotient_mk' _)
 #align fintype.card_quotient_le Fintype.card_quotient_le
 -/
 
 #print Fintype.card_quotient_lt /-
 theorem Fintype.card_quotient_lt [Fintype α] {s : Setoid α} [DecidableRel ((· ≈ ·) : α → α → Prop)]
     {x y : α} (h1 : x ≠ y) (h2 : x ≈ y) : Fintype.card (Quotient s) < Fintype.card α :=
-  Fintype.card_lt_of_surjective_not_injective _ (surjective_quotient_mk'' _) fun w =>
-    h1 (w <| Quotient.eq.mpr h2)
+  Fintype.card_lt_of_surjective_not_injective _ (surjective_quotient_mk' _) fun w =>
+    h1 (w <| Quotient.eq'.mpr h2)
 #align fintype.card_quotient_lt Fintype.card_quotient_lt
 -/
 

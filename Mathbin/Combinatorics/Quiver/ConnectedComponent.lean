@@ -58,7 +58,7 @@ variable {V}
 #print Quiver.WeaklyConnectedComponent.mk /-
 /-- The weakly connected component corresponding to a vertex. -/
 protected def mk : V → WeaklyConnectedComponent V :=
-  Quotient.mk'
+  Quotient.mk''
 #align quiver.weakly_connected_component.mk Quiver.WeaklyConnectedComponent.mk
 -/
 
@@ -76,7 +76,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align quiver.weakly_connected_component.eq Quiver.WeaklyConnectedComponent.eqₓ'. -/
 protected theorem eq (a b : V) :
     (a : WeaklyConnectedComponent V) = b ↔ Nonempty (@Path (Symmetrify V) _ a b) :=
-  Quotient.eq'
+  Quotient.eq''
 #align quiver.weakly_connected_component.eq Quiver.WeaklyConnectedComponent.eq
 
 end WeaklyConnectedComponent

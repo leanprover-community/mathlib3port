@@ -82,7 +82,7 @@ abbrev mk : M → M ⧸ N :=
   Submodule.Quotient.mk
 #align lie_submodule.quotient.mk LieSubmodule.Quotient.mk
 
-theorem is_quotient_mk (m : M) : Quotient.mk' m = (mk m : M ⧸ N) :=
+theorem is_quotient_mk (m : M) : Quotient.mk'' m = (mk m : M ⧸ N) :=
   rfl
 #align lie_submodule.quotient.is_quotient_mk LieSubmodule.Quotient.is_quotient_mk
 

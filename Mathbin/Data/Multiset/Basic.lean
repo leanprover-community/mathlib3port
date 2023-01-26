@@ -63,13 +63,13 @@ theorem quot_mk_to_coe'' (l : List α) : @Eq (Multiset α) (Quot.mk Setoid.r l) 
 #print Multiset.coe_eq_coe /-
 @[simp]
 theorem coe_eq_coe {l₁ l₂ : List α} : (l₁ : Multiset α) = l₂ ↔ l₁ ~ l₂ :=
-  Quotient.eq
+  Quotient.eq'
 #align multiset.coe_eq_coe Multiset.coe_eq_coe
 -/
 
 #print Multiset.decidableEq /-
 instance decidableEq [DecidableEq α] : DecidableEq (Multiset α)
-  | s₁, s₂ => Quotient.recOnSubsingleton₂ s₁ s₂ fun l₁ l₂ => decidable_of_iff' _ Quotient.eq
+  | s₁, s₂ => Quotient.recOnSubsingleton₂ s₁ s₂ fun l₁ l₂ => decidable_of_iff' _ Quotient.eq'
 #align multiset.has_decidable_eq Multiset.decidableEq
 -/
 
@@ -4063,7 +4063,7 @@ theorem count_filter {p} [DecidablePred p] {a} {s : Multiset α} :
 
 #print Multiset.ext /-
 theorem ext {s t : Multiset α} : s = t ↔ ∀ a, count a s = count a t :=
-  Quotient.induction_on₂ s t fun l₁ l₂ => Quotient.eq.trans perm_iff_count
+  Quotient.induction_on₂ s t fun l₁ l₂ => Quotient.eq'.trans perm_iff_count
 #align multiset.ext Multiset.ext
 -/
 

@@ -85,10 +85,10 @@ instance : MulAction G H.QuotientDiff
             coe_one, ← Subtype.ext_iff])
   mul_smul g₁ g₂ q :=
     Quotient.inductionOn' q fun T =>
-      congr_arg Quotient.mk' (by rw [mul_inv_rev] <;> exact mul_smul (op g₁⁻¹) (op g₂⁻¹) T)
+      congr_arg Quotient.mk'' (by rw [mul_inv_rev] <;> exact mul_smul (op g₁⁻¹) (op g₂⁻¹) T)
   one_smul q :=
     Quotient.inductionOn' q fun T =>
-      congr_arg Quotient.mk' (by rw [inv_one] <;> apply one_smul Gᵐᵒᵖ T)
+      congr_arg Quotient.mk'' (by rw [inv_one] <;> apply one_smul Gᵐᵒᵖ T)
 
 theorem smul_diff' (h : H) :
     diff (MonoidHom.id H) α (op (h : G) • β) = diff (MonoidHom.id H) α β * h ^ H.index :=

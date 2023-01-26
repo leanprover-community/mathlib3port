@@ -289,15 +289,15 @@ the Jacobson radical of the quotient ring `R/I` is the zero ideal -/
 theorem jacobson_eq_iff_jacobson_quotient_eq_bot :
     I.jacobson = I ↔ jacobson (⊥ : Ideal (R ⧸ I)) = ⊥ :=
   by
-  have hf : Function.Surjective (Quotient.mk'' I) := Submodule.Quotient.mk_surjective I
+  have hf : Function.Surjective (Quotient.mk' I) := Submodule.Quotient.mk_surjective I
   constructor
   · intro h
-    replace h := congr_arg (map (Quotient.mk'' I)) h
+    replace h := congr_arg (map (Quotient.mk' I)) h
     rw [map_jacobson_of_surjective hf (le_of_eq mk_ker)] at h
     simpa using h
   · intro h
-    replace h := congr_arg (comap (Quotient.mk'' I)) h
-    rw [comap_jacobson_of_surjective hf, ← (Quotient.mk'' I).ker_eq_comap_bot] at h
+    replace h := congr_arg (comap (Quotient.mk' I)) h
+    rw [comap_jacobson_of_surjective hf, ← (Quotient.mk' I).ker_eq_comap_bot] at h
     simpa using h
 #align ideal.jacobson_eq_iff_jacobson_quotient_eq_bot Ideal.jacobson_eq_iff_jacobson_quotient_eq_bot
 
@@ -306,17 +306,16 @@ the nilradical and Jacobson radical of the quotient ring `R/I` coincide -/
 theorem radical_eq_jacobson_iff_radical_quotient_eq_jacobson_bot :
     I.radical = I.jacobson ↔ radical (⊥ : Ideal (R ⧸ I)) = jacobson ⊥ :=
   by
-  have hf : Function.Surjective (Quotient.mk'' I) := Submodule.Quotient.mk_surjective I
+  have hf : Function.Surjective (Quotient.mk' I) := Submodule.Quotient.mk_surjective I
   constructor
   · intro h
-    have := congr_arg (map (Quotient.mk'' I)) h
+    have := congr_arg (map (Quotient.mk' I)) h
     rw [map_radical_of_surjective hf (le_of_eq mk_ker),
       map_jacobson_of_surjective hf (le_of_eq mk_ker)] at this
     simpa using this
   · intro h
-    have := congr_arg (comap (Quotient.mk'' I)) h
-    rw [comap_radical, comap_jacobson_of_surjective hf, ← (Quotient.mk'' I).ker_eq_comap_bot] at
-      this
+    have := congr_arg (comap (Quotient.mk' I)) h
+    rw [comap_radical, comap_jacobson_of_surjective hf, ← (Quotient.mk' I).ker_eq_comap_bot] at this
     simpa using this
 #align ideal.radical_eq_jacobson_iff_radical_quotient_eq_jacobson_bot Ideal.radical_eq_jacobson_iff_radical_quotient_eq_jacobson_bot
 

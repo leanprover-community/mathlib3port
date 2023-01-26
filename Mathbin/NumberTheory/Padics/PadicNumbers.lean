@@ -522,7 +522,7 @@ instance : AddCommGroup ℚ_[p] := by infer_instance
 
 /-- Builds the equivalence class of a Cauchy sequence of rationals. -/
 def mk : PadicSeq p → ℚ_[p] :=
-  Quotient.mk''
+  Quotient.mk'
 #align padic.mk Padic.mk
 
 variable (p)
@@ -532,7 +532,7 @@ theorem zero_def : (0 : ℚ_[p]) = ⟦0⟧ :=
 #align padic.zero_def Padic.zero_def
 
 theorem mk_eq {f g : PadicSeq p} : mk f = mk g ↔ f ≈ g :=
-  Quotient.eq
+  Quotient.eq'
 #align padic.mk_eq Padic.mk_eq
 
 theorem const_equiv {q r : ℚ} : const (padicNorm p) q ≈ const (padicNorm p) r ↔ q = r :=
@@ -542,7 +542,7 @@ theorem const_equiv {q r : ℚ} : const (padicNorm p) q ≈ const (padicNorm p) 
 
 @[norm_cast]
 theorem coe_inj {q r : ℚ} : (↑q : ℚ_[p]) = ↑r ↔ q = r :=
-  ⟨(const_equiv p).1 ∘ Quotient.eq.1, fun h => by rw [h]⟩
+  ⟨(const_equiv p).1 ∘ Quotient.eq'.1, fun h => by rw [h]⟩
 #align padic.coe_inj Padic.coe_inj
 
 instance : CharZero ℚ_[p] :=
@@ -599,7 +599,7 @@ def padicNormE {p : ℕ} [hp : Fact p.Prime] : AbsoluteValue ℚ_[p] ℚ
   nonneg' q := Quotient.inductionOn q <| PadicSeq.norm_nonneg
   eq_zero' q :=
     Quotient.inductionOn q <| by
-      simpa only [Padic.zero_def, Quotient.eq] using PadicSeq.norm_zero_iff
+      simpa only [Padic.zero_def, Quotient.eq'] using PadicSeq.norm_zero_iff
   add_le' q r :=
     by
     trans

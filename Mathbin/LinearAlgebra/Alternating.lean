@@ -867,7 +867,7 @@ theorem ModSumCongr.swap_smul_involutive {α β : Type _} [DecidableEq (Sum α �
     Function.Involutive (SMul.smul (Equiv.swap i j) : ModSumCongr α β → ModSumCongr α β) := fun σ =>
   by
   apply σ.induction_on' fun σ => _
-  exact _root_.congr_arg Quotient.mk' (Equiv.swap_mul_involutive i j σ)
+  exact _root_.congr_arg Quotient.mk'' (Equiv.swap_mul_involutive i j σ)
 #align equiv.perm.mod_sum_congr.swap_smul_involutive Equiv.Perm.ModSumCongr.swap_smul_involutive
 
 end Equiv.Perm
@@ -898,14 +898,14 @@ def DomCoprod.summand (a : AlternatingMap R' Mᵢ N₁ ιa) (b : AlternatingMap 
     rw [← a.map_congr_perm fun i => v (σ₁ _), ← b.map_congr_perm fun i => v (σ₁ _)]
 #align alternating_map.dom_coprod.summand AlternatingMap.DomCoprod.summand
 
-theorem DomCoprod.summand_mk' (a : AlternatingMap R' Mᵢ N₁ ιa) (b : AlternatingMap R' Mᵢ N₂ ιb)
+theorem DomCoprod.summand_mk'' (a : AlternatingMap R' Mᵢ N₁ ιa) (b : AlternatingMap R' Mᵢ N₂ ιb)
     (σ : Equiv.Perm (Sum ιa ιb)) :
-    DomCoprod.summand a b (Quotient.mk' σ) =
+    DomCoprod.summand a b (Quotient.mk'' σ) =
       σ.sign •
         (MultilinearMap.domCoprod ↑a ↑b : MultilinearMap R' (fun _ => Mᵢ) (N₁ ⊗ N₂)).domDomCongr
           σ :=
   rfl
-#align alternating_map.dom_coprod.summand_mk' AlternatingMap.DomCoprod.summand_mk'
+#align alternating_map.dom_coprod.summand_mk' AlternatingMap.DomCoprod.summand_mk''
 
 /-- Swapping elements in `σ` with equal values in `v` results in an addition that cancels -/
 theorem DomCoprod.summand_add_swap_smul_eq_zero (a : AlternatingMap R' Mᵢ N₁ ιa)
@@ -914,7 +914,7 @@ theorem DomCoprod.summand_add_swap_smul_eq_zero (a : AlternatingMap R' Mᵢ N₁
     DomCoprod.summand a b σ v + DomCoprod.summand a b (swap i j • σ) v = 0 :=
   by
   apply σ.induction_on' fun σ => _
-  dsimp only [Quotient.liftOn'_mk', Quotient.map'_mk', MulAction.quotient.smul_mk,
+  dsimp only [Quotient.liftOn'_mk'', Quotient.map'_mk'', MulAction.quotient.smul_mk,
     dom_coprod.summand]
   rw [smul_eq_mul, perm.sign_mul, perm.sign_swap hij]
   simp only [one_mul, neg_mul, Function.comp_apply, Units.neg_smul, perm.coe_mul, Units.val_neg,
@@ -933,7 +933,7 @@ theorem DomCoprod.summand_eq_zero_of_smul_invariant (a : AlternatingMap R' Mᵢ 
     swap i j • σ = σ → DomCoprod.summand a b σ v = 0 :=
   by
   apply σ.induction_on' fun σ => _
-  dsimp only [Quotient.liftOn'_mk', Quotient.map'_mk', MultilinearMap.smul_apply,
+  dsimp only [Quotient.liftOn'_mk'', Quotient.map'_mk'', MultilinearMap.smul_apply,
     MultilinearMap.domDomCongr_apply, MultilinearMap.domCoprod_apply, dom_coprod.summand]
   intro hσ
   cases hi : σ⁻¹ i <;> cases hj : σ⁻¹ j <;> rw [perm.inv_eq_iff_eq] at hi hj <;> substs hi hj <;>
@@ -1020,7 +1020,7 @@ def domCoprod' :
         congr
         ext σ
         apply σ.induction_on' fun σ => _
-        simp only [Quotient.liftOn'_mk', coe_add, coe_smul, MultilinearMap.smul_apply, ←
+        simp only [Quotient.liftOn'_mk'', coe_add, coe_smul, MultilinearMap.smul_apply, ←
           MultilinearMap.domCoprod'_apply]
         simp only [TensorProduct.add_tmul, ← TensorProduct.smul_tmul', TensorProduct.tmul_add,
           TensorProduct.tmul_smul, LinearMap.map_add, LinearMap.map_smul]
@@ -1067,8 +1067,8 @@ theorem MultilinearMap.domCoprod_alternization (a : MultilinearMap R' (fun _ : �
   ext1 σ
   apply σ.induction_on' fun σ => _
   -- unfold the quotient mess left by `finset.sum_partition`
-  conv in _ = Quotient.mk' _ =>
-    change Quotient.mk' _ = Quotient.mk' _
+  conv in _ = Quotient.mk'' _ =>
+    change Quotient.mk'' _ = Quotient.mk'' _
     rw [QuotientGroup.eq']
   -- eliminate a multiplication
   rw [← Finset.map_univ_equiv (Equiv.mulLeft σ), Finset.filter_map, Finset.sum_map]

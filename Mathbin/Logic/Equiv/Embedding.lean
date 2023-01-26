@@ -84,7 +84,7 @@ def prodEmbeddingDisjointEquivSigmaEmbeddingRestricted {α β γ : Type _} :
       Σf : α ↪ γ, β ↪ ↥(Set.range fᶜ) :=
   (subtype_prod_equiv_sigma_subtype fun (a : α ↪ γ) (b : β ↪ _) =>
         Disjoint (Set.range a) (Set.range b)).trans <|
-    Equiv.sigmaCongrRight_trans fun a =>
+    Equiv.sigmaCongrRight fun a =>
       (subtype_equiv_prop <| by
             ext f
             rw [← Set.range_subset_iff, Set.subset_compl_iff_disjoint_right, disjoint_comm]).trans

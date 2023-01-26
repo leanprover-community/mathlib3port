@@ -407,7 +407,7 @@ protected def Quotient :=
 
 /-- The projection onto the quotient associated to an indexed partition. -/
 def proj : α → hs.Quotient :=
-  Quotient.mk'
+  Quotient.mk''
 #align indexed_partition.proj IndexedPartition.proj
 
 instance [Inhabited α] : Inhabited hs.Quotient :=
@@ -419,7 +419,7 @@ theorem proj_eq_iff {x y : α} : hs.proj x = hs.proj y ↔ hs.index x = hs.index
 
 @[simp]
 theorem proj_some_index (x : α) : hs.proj (hs.some (hs.index x)) = hs.proj x :=
-  Quotient.eq'.2 (hs.some_index x)
+  Quotient.eq''.2 (hs.some_index x)
 #align indexed_partition.proj_some_index IndexedPartition.proj_some_index
 
 /-- The obvious equivalence between the quotient associated to an indexed partition and
@@ -473,7 +473,7 @@ theorem proj_fiber (x : hs.Quotient) : hs.proj ⁻¹' {x} = s (hs.equivQuotient.
   Quotient.inductionOn' x fun x => by
     ext y
     simp only [Set.mem_preimage, Set.mem_singleton_iff, hs.mem_iff_index_eq]
-    exact Quotient.eq'
+    exact Quotient.eq''
 #align indexed_partition.proj_fiber IndexedPartition.proj_fiber
 
 end IndexedPartition

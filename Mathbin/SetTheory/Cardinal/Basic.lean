@@ -112,7 +112,7 @@ namespace Cardinal
 
 /-- The cardinal number of a type -/
 def mk : Type u → Cardinal :=
-  Quotient.mk''
+  Quotient.mk'
 #align cardinal.mk Cardinal.mk
 
 -- mathport name: cardinal.mk
@@ -140,13 +140,13 @@ theorem induction_on₃ {p : Cardinal → Cardinal → Cardinal → Prop} (c₁ 
 #align cardinal.induction_on₃ Cardinal.induction_on₃
 
 protected theorem eq : (#α) = (#β) ↔ Nonempty (α ≃ β) :=
-  Quotient.eq
+  Quotient.eq'
 #align cardinal.eq Cardinal.eq
 
 @[simp]
-theorem mk''_def (α : Type u) : @Eq Cardinal ⟦α⟧ (#α) :=
+theorem mk'_def (α : Type u) : @Eq Cardinal ⟦α⟧ (#α) :=
   rfl
-#align cardinal.mk_def Cardinal.mk''_def
+#align cardinal.mk_def Cardinal.mk'_def
 
 @[simp]
 theorem mk_out (c : Cardinal) : (#c.out) = c :=
@@ -297,7 +297,7 @@ theorem lift_mk_le' {α : Type u} {β : Type v} : lift.{v} (#α) ≤ lift.{u} (#
 
 theorem lift_mk_eq {α : Type u} {β : Type v} :
     lift.{max v w} (#α) = lift.{max u w} (#β) ↔ Nonempty (α ≃ β) :=
-  Quotient.eq.trans
+  Quotient.eq'.trans
     ⟨fun ⟨f⟩ => ⟨Equiv.ulift.symm.trans <| f.trans Equiv.ulift⟩, fun ⟨f⟩ =>
       ⟨Equiv.ulift.trans <| f.trans Equiv.ulift.symm⟩⟩
 #align cardinal.lift_mk_eq Cardinal.lift_mk_eq
@@ -786,7 +786,7 @@ theorem le_sum {ι} (f : ι → Cardinal) (i) : f i ≤ sum f := by
 
 @[simp]
 theorem mk_sigma {ι} (f : ι → Type _) : (#Σi, f i) = sum fun i => #f i :=
-  mk_congr <| Equiv.sigmaCongrRight_trans fun i => outMkEquiv.symm
+  mk_congr <| Equiv.sigmaCongrRight fun i => outMkEquiv.symm
 #align cardinal.mk_sigma Cardinal.mk_sigma
 
 @[simp]
@@ -820,7 +820,7 @@ theorem lift_sum {ι : Type u} (f : ι → Cardinal.{v}) :
     Cardinal.lift.{w} (Cardinal.sum f) = Cardinal.sum fun i => Cardinal.lift.{w} (f i) :=
   Equiv.cardinal_eq <|
     Equiv.ulift.trans <|
-      Equiv.sigmaCongrRight_trans fun a =>
+      Equiv.sigmaCongrRight fun a =>
         Nonempty.some <| by rw [← lift_mk_eq, mk_out, mk_out, lift_lift]
 #align cardinal.lift_sum Cardinal.lift_sum
 

@@ -73,7 +73,7 @@ instance QuotientGroup.hasContinuousSmul [LocallyCompactSpace G] : HasContinuous
       by
       change Continuous fun p : G × G => QuotientGroup.mk (p.1 * p.2)
       refine' continuous_coinduced_rng.comp continuous_mul
-    exact QuotientMap.continuous_lift_prod_right quotientMap_quotient_mk'' H
+    exact QuotientMap.continuous_lift_prod_right quotientMap_quotient_mk' H
 #align quotient_group.has_continuous_smul QuotientGroup.hasContinuousSmul
 #align quotient_add_group.has_continuous_vadd quotientAddGroup.has_continuous_vadd
 

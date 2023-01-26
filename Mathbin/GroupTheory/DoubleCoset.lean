@@ -127,7 +127,7 @@ def quotToDoset (H K : Subgroup G) (q : Quotient ↑H ↑K) : Set G :=
 
 /-- Map from `G` to `H \ G / K`-/
 abbrev mk (H K : Subgroup G) (a : G) : Quotient ↑H ↑K :=
-  Quotient.mk' a
+  Quotient.mk'' a
 #align doset.mk doset.mk
 
 instance (H K : Subgroup G) : Inhabited (Quotient ↑H ↑K) :=
@@ -135,7 +135,7 @@ instance (H K : Subgroup G) : Inhabited (Quotient ↑H ↑K) :=
 
 theorem eq (H K : Subgroup G) (a b : G) : mk H K a = mk H K b ↔ ∃ h ∈ H, ∃ k ∈ K, b = h * a * k :=
   by
-  rw [Quotient.eq']
+  rw [Quotient.eq'']
   apply rel_iff
 #align doset.eq doset.eq
 

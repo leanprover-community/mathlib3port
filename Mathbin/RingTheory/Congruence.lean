@@ -168,7 +168,7 @@ protected def Quotient :=
 
 See Note [use has_coe_t]. -/
 instance : CoeTC R c.Quotient :=
-  ⟨@Quotient.mk'' _ c.toSetoid⟩
+  ⟨@Quotient.mk' _ c.toSetoid⟩
 
 -- Lower the priority since it unifies with any quotient type.
 /-- The quotient by a decidable congruence relation has decidable equality. -/
@@ -187,7 +187,7 @@ theorem quot_mk_eq_coe (x : R) : Quot.mk c x = (x : c.Quotient) :=
 element of the quotient by `c`. -/
 @[simp]
 protected theorem eq {a b : R} : (a : c.Quotient) = b ↔ c a b :=
-  Quotient.eq'
+  Quotient.eq''
 #align ring_con.eq RingCon.eq
 -/
 
@@ -489,8 +489,8 @@ instance [Monoid α] [NonAssocSemiring R] [DistribMulAction α R] [IsScalarTower
     (c : RingCon R) : DistribMulAction α c.Quotient :=
   { c.toCon.MulAction with
     smul := (· • ·)
-    smul_zero := fun r => congr_arg Quotient.mk' <| smul_zero _
-    smul_add := fun r => Quotient.ind₂' fun m₁ m₂ => congr_arg Quotient.mk' <| smul_add _ _ _ }
+    smul_zero := fun r => congr_arg Quotient.mk'' <| smul_zero _
+    smul_add := fun r => Quotient.ind₂' fun m₁ m₂ => congr_arg Quotient.mk'' <| smul_add _ _ _ }
 
 instance [Monoid α] [Semiring R] [MulSemiringAction α R] [IsScalarTower α R R] (c : RingCon R) :
     MulSemiringAction α c.Quotient :=
@@ -507,7 +507,7 @@ Case conversion may be inaccurate. Consider using '#align ring_con.mk' RingCon.m
 /-- The natural homomorphism from a ring to its quotient by a congruence relation. -/
 def mk' [NonAssocSemiring R] (c : RingCon R) : R →+* c.Quotient
     where
-  toFun := Quotient.mk'
+  toFun := Quotient.mk''
   map_zero' := rfl
   map_one' := rfl
   map_add' _ _ := rfl

@@ -114,7 +114,7 @@ class IsFraisse : Prop where
   is_nonempty : K.Nonempty
   Fg : ∀ M : Bundled.{w} L.StructureCat, M ∈ K → StructureCat.Fg L M
   is_equiv_invariant : ∀ M N : Bundled.{w} L.StructureCat, Nonempty (M ≃[L] N) → (M ∈ K ↔ N ∈ K)
-  is_essentially_countable : (Quotient.mk'' '' K).Countable
+  is_essentially_countable : (Quotient.mk' '' K).Countable
   Hereditary : Hereditary K
   JointEmbedding : JointEmbedding K
   Amalgamation : Amalgamation K
@@ -171,12 +171,12 @@ theorem age.jointEmbedding : JointEmbedding (L.age M) := fun N hN P hP =>
 
 /-- The age of a countable structure is essentially countable (has countably many isomorphism
 classes). -/
-theorem age.countable_quotient [h : Countable M] : (Quotient.mk'' '' L.age M).Countable := by
+theorem age.countable_quotient [h : Countable M] : (Quotient.mk' '' L.age M).Countable := by
   classical
     refine'
       (congr_arg _ (Set.ext <| forall_quotient_iff.2 fun N => _)).mp
         (countable_range fun s : Finset M => ⟦⟨closure L (s : Set M), inferInstance⟩⟧)
-    simp only [mem_image, mem_range, mem_set_of_eq, Quotient.eq]
+    simp only [mem_image, mem_range, mem_set_of_eq, Quotient.eq']
     constructor
     · rintro ⟨s, hs⟩
       use bundled.of ↥(closure L (s : Set M))
@@ -205,7 +205,7 @@ theorem age_directLimit {ι : Type w} [Preorder ι] [IsDirected ι (· ≤ ·)] 
       rw [← hs, closure_le]
       intro x hx
       refine' ⟨f (out x).1 i (hi (out x).1 (Finset.mem_image_of_mem _ hx)) (out x).2, _⟩
-      rw [embedding.coe_to_hom, direct_limit.of_apply, Quotient.mk''_eq_iff_out,
+      rw [embedding.coe_to_hom, direct_limit.of_apply, Quotient.mk'_eq_iff_out,
         direct_limit.equiv_iff G f _ (hi (out x).1 (Finset.mem_image_of_mem _ hx)),
         DirectedSystem.map_self]
       rfl
@@ -216,14 +216,14 @@ theorem age_directLimit {ι : Type w} [Preorder ι] [IsDirected ι (· ≤ ·)] 
 /-- Sufficient conditions for a class to be the age of a countably-generated structure. -/
 theorem exists_cg_is_age_of (hn : K.Nonempty)
     (h : ∀ M N : Bundled.{w} L.StructureCat, Nonempty (M ≃[L] N) → (M ∈ K ↔ N ∈ K))
-    (hc : (Quotient.mk'' '' K).Countable)
+    (hc : (Quotient.mk' '' K).Countable)
     (fg : ∀ M : Bundled.{w} L.StructureCat, M ∈ K → StructureCat.Fg L M) (hp : Hereditary K)
     (jep : JointEmbedding K) :
     ∃ M : Bundled.{w} L.StructureCat, StructureCat.Cg L M ∧ L.age M = K :=
   by
   obtain ⟨F, hF⟩ := hc.exists_eq_range (hn.image _)
-  simp only [Set.ext_iff, forall_quotient_iff, mem_image, mem_range, Quotient.eq] at hF
-  simp_rw [Quotient.eq_mk''_iff_out] at hF
+  simp only [Set.ext_iff, forall_quotient_iff, mem_image, mem_range, Quotient.eq'] at hF
+  simp_rw [Quotient.eq_mk'_iff_out] at hF
   have hF' : ∀ n : ℕ, (F n).out ∈ K := by
     intro n
     obtain ⟨P, hP1, hP2⟩ := (hF (F n).out).2 ⟨n, Setoid.refl _⟩
@@ -246,7 +246,7 @@ theorem exists_countable_is_age_of_iff [Countable (Σl, L.Functions l)] :
     (∃ M : Bundled.{w} L.StructureCat, Countable M ∧ L.age M = K) ↔
       K.Nonempty ∧
         (∀ M N : Bundled.{w} L.StructureCat, Nonempty (M ≃[L] N) → (M ∈ K ↔ N ∈ K)) ∧
-          (Quotient.mk'' '' K).Countable ∧
+          (Quotient.mk' '' K).Countable ∧
             (∀ M : Bundled.{w} L.StructureCat, M ∈ K → StructureCat.Fg L M) ∧
               Hereditary K ∧ JointEmbedding K :=
   by

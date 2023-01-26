@@ -673,7 +673,7 @@ noncomputable def Quotient.outRelEmbedding [s : Setoid α] {r : α → α → Pr
   ⟨Embedding.quotientOut α,
     by
     refine' fun x y => Quotient.induction_on₂ x y fun a b => _
-    apply iff_iff_eq.2 (H _ _ _ _ _ _) <;> apply Quotient.mk''_out⟩
+    apply iff_iff_eq.2 (H _ _ _ _ _ _) <;> apply Quotient.mk'_out⟩
 #align quotient.out_rel_embedding Quotient.outRelEmbedding
 -/
 

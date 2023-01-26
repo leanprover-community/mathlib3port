@@ -92,11 +92,11 @@ variable {M S}
 
 /-- The canonical map sending `(m, s) ↦ m/s`-/
 def mk (m : M) (s : S) : LocalizedModule S M :=
-  Quotient.mk'' ⟨m, s⟩
+  Quotient.mk' ⟨m, s⟩
 #align localized_module.mk LocalizedModule.mk
 
 theorem mk_eq {m m' : M} {s s' : S} : mk m s = mk m' s' ↔ ∃ u : S, u • s' • m = u • s • m' :=
-  Quotient.eq
+  Quotient.eq'
 #align localized_module.mk_eq LocalizedModule.mk_eq
 
 @[elab_as_elim]

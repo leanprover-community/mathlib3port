@@ -470,7 +470,7 @@ instance fintype [Fintype α] (s : Subgroup α) [DecidableRel (leftRel s).R] : F
 /-- The canonical map from a group `α` to the quotient `α ⧸ s`. -/
 @[to_additive "The canonical map from an `add_group` `α` to the quotient `α ⧸ s`."]
 abbrev mk (a : α) : α ⧸ s :=
-  Quotient.mk' a
+  Quotient.mk'' a
 #align quotient_group.mk QuotientGroup.mk
 #align quotient_add_group.mk quotientAddGroup.mk
 
@@ -522,7 +522,7 @@ instance (s : Subgroup α) : Inhabited (α ⧸ s) :=
 @[to_additive quotientAddGroup.eq]
 protected theorem eq {a b : α} : (a : α ⧸ s) = b ↔ a⁻¹ * b ∈ s :=
   calc
-    _ ↔ @Setoid.r _ (leftRel s) a b := Quotient.eq'
+    _ ↔ @Setoid.r _ (leftRel s) a b := Quotient.eq''
     _ ↔ _ := by rw [left_rel_apply]
     
 #align quotient_group.eq QuotientGroup.eq
@@ -610,14 +610,13 @@ noncomputable def groupEquivQuotientTimesSubgroup : α ≃ (α ⧸ s) × s :=
   calc
     α ≃ ΣL : α ⧸ s, { x : α // (x : α ⧸ s) = L } := (Equiv.sigmaFiberEquiv QuotientGroup.mk).symm
     _ ≃ ΣL : α ⧸ s, leftCoset (Quotient.out' L) s :=
-      Equiv.sigmaCongrRight_trans fun L =>
-        by
+      Equiv.sigmaCongrRight fun L => by
         rw [← eq_class_eq_left_coset]
         show
-          (_root_.subtype fun x : α => Quotient.mk' x = L) ≃
-            _root_.subtype fun x : α => Quotient.mk' x = Quotient.mk' _
-        simp [-Quotient.eq']
-    _ ≃ ΣL : α ⧸ s, s := Equiv.sigmaCongrRight_trans fun L => leftCosetEquivSubgroup _
+          (_root_.subtype fun x : α => Quotient.mk'' x = L) ≃
+            _root_.subtype fun x : α => Quotient.mk'' x = Quotient.mk'' _
+        simp [-Quotient.eq'']
+    _ ≃ ΣL : α ⧸ s, s := Equiv.sigmaCongrRight fun L => leftCosetEquivSubgroup _
     _ ≃ (α ⧸ s) × s := Equiv.sigmaEquivProd _ _
     
 #align subgroup.group_equiv_quotient_times_subgroup Subgroup.groupEquivQuotientTimesSubgroup
@@ -651,7 +650,7 @@ def quotientEquivProdOfLe' (h_le : s ≤ t) (f : α ⧸ t → α)
     where
   toFun a :=
     ⟨a.map' id fun b c h => leftRel_apply.mpr (h_le (leftRel_apply.mp h)),
-      a.map' (fun g : α => ⟨(f (Quotient.mk' g))⁻¹ * g, leftRel_apply.mp (Quotient.exact' (hf g))⟩)
+      a.map' (fun g : α => ⟨(f (Quotient.mk'' g))⁻¹ * g, leftRel_apply.mp (Quotient.exact' (hf g))⟩)
         fun b c h => by
         rw [left_rel_apply]
         change ((f b)⁻¹ * b)⁻¹ * ((f c)⁻¹ * c) ∈ s
@@ -666,14 +665,14 @@ def quotientEquivProdOfLe' (h_le : s ≤ t) (f : α ⧸ t → α)
       rwa [mul_inv_rev, mul_assoc, inv_mul_cancel_left]
   left_inv := by
     refine' Quotient.ind' fun a => _
-    simp_rw [Quotient.map'_mk', id.def, [anonymous], mul_inv_cancel_left]
+    simp_rw [Quotient.map'_mk'', id.def, [anonymous], mul_inv_cancel_left]
   right_inv := by
     refine' Prod.rec _
     refine' Quotient.ind' fun a => _
     refine' Quotient.ind' fun b => _
-    have key : Quotient.mk' (f (Quotient.mk' a) * b) = Quotient.mk' a :=
+    have key : Quotient.mk'' (f (Quotient.mk'' a) * b) = Quotient.mk'' a :=
       (QuotientGroup.mk_mul_of_mem (f a) b.2).trans (hf a)
-    simp_rw [Quotient.map'_mk', id.def, key, inv_mul_cancel_left, Subtype.coe_eta]
+    simp_rw [Quotient.map'_mk'', id.def, key, inv_mul_cancel_left, Subtype.coe_eta]
 #align subgroup.quotient_equiv_prod_of_le' Subgroup.quotientEquivProdOfLe'
 #align add_subgroup.quotient_equiv_sum_of_le' AddSubgroup.quotientEquivSumOfLe'
 
@@ -701,7 +700,7 @@ def quotientSubgroupOfEmbeddingOfLe (H : Subgroup α) (h : s ≤ t) :
   inj' :=
     Quotient.ind₂' <| by
       intro a b h
-      simpa only [Quotient.map'_mk', eq'] using h
+      simpa only [Quotient.map'_mk'', eq'] using h
 #align subgroup.quotient_subgroup_of_embedding_of_le Subgroup.quotientSubgroupOfEmbeddingOfLe
 #align add_subgroup.quotient_add_subgroup_of_embedding_of_le AddSubgroup.quotientAddSubgroupOfEmbeddingOfLe
 

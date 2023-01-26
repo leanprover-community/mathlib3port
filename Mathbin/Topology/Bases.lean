@@ -947,15 +947,15 @@ variable {S : Setoid X}
 
 /-- The image of a topological basis "downstairs" in an open quotient is a topological basis. -/
 theorem IsTopologicalBasis.quotient {V : Set (Set X)} (hV : IsTopologicalBasis V)
-    (h : IsOpenMap (Quotient.mk'' : X → Quotient S)) :
-    IsTopologicalBasis (Set.image (Quotient.mk'' : X → Quotient S) '' V) :=
-  hV.QuotientMap quotientMap_quotient_mk'' h
+    (h : IsOpenMap (Quotient.mk' : X → Quotient S)) :
+    IsTopologicalBasis (Set.image (Quotient.mk' : X → Quotient S) '' V) :=
+  hV.QuotientMap quotientMap_quotient_mk' h
 #align topological_space.is_topological_basis.quotient TopologicalSpace.IsTopologicalBasis.quotient
 
 /-- An open quotient of a second countable space is second countable. -/
 theorem Quotient.secondCountableTopology [SecondCountableTopology X]
-    (h : IsOpenMap (Quotient.mk'' : X → Quotient S)) : SecondCountableTopology (Quotient S) :=
-  quotientMap_quotient_mk''.SecondCountableTopology h
+    (h : IsOpenMap (Quotient.mk' : X → Quotient S)) : SecondCountableTopology (Quotient S) :=
+  quotientMap_quotient_mk'.SecondCountableTopology h
 #align topological_space.quotient.second_countable_topology TopologicalSpace.Quotient.secondCountableTopology
 
 end Quotient

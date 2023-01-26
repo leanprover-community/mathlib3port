@@ -227,7 +227,7 @@ section OrderTop
 
 instance orderTop {X : C} : OrderTop (Subobject X)
     where
-  top := Quotient.mk' ⊤
+  top := Quotient.mk'' ⊤
   le_top := by
     refine' Quotient.ind' fun f => _
     exact ⟨mono_over.le_top f⟩
@@ -311,7 +311,7 @@ variable [HasInitial C] [InitialMonoClass C]
 
 instance orderBot {X : C} : OrderBot (Subobject X)
     where
-  bot := Quotient.mk' ⊥
+  bot := Quotient.mk'' ⊥
   bot_le := by
     refine' Quotient.ind' fun f => _
     exact ⟨mono_over.bot_le f⟩
@@ -475,7 +475,7 @@ theorem finset_inf_arrow_factors {I : Type _} {B : C} (s : Finset I) (P : I → 
 #align category_theory.subobject.finset_inf_arrow_factors CategoryTheory.Subobject.finset_inf_arrow_factors
 
 theorem inf_eq_map_pullback' {A : C} (f₁ : MonoOver A) (f₂ : Subobject A) :
-    (Subobject.inf.obj (Quotient.mk' f₁)).obj f₂ =
+    (Subobject.inf.obj (Quotient.mk'' f₁)).obj f₂ =
       (Subobject.map f₁.arrow).obj ((Subobject.pullback f₁.arrow).obj f₂) :=
   by
   apply Quotient.inductionOn' f₂
@@ -484,7 +484,7 @@ theorem inf_eq_map_pullback' {A : C} (f₁ : MonoOver A) (f₂ : Subobject A) :
 #align category_theory.subobject.inf_eq_map_pullback' CategoryTheory.Subobject.inf_eq_map_pullback'
 
 theorem inf_eq_map_pullback {A : C} (f₁ : MonoOver A) (f₂ : Subobject A) :
-    (Quotient.mk' f₁ ⊓ f₂ : Subobject A) = (map f₁.arrow).obj ((pullback f₁.arrow).obj f₂) :=
+    (Quotient.mk'' f₁ ⊓ f₂ : Subobject A) = (map f₁.arrow).obj ((pullback f₁.arrow).obj f₂) :=
   inf_eq_map_pullback' f₁ f₂
 #align category_theory.subobject.inf_eq_map_pullback CategoryTheory.Subobject.inf_eq_map_pullback
 

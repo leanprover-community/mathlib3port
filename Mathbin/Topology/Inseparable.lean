@@ -1067,7 +1067,7 @@ namespace SeparationQuotient
 
 /-- The natural map from a topological space to its separation quotient. -/
 def mk : X → SeparationQuotient X :=
-  Quotient.mk'
+  Quotient.mk''
 #align separation_quotient.mk SeparationQuotient.mk
 
 theorem quotientMap_mk : QuotientMap (mk : X → SeparationQuotient X) :=
@@ -1080,7 +1080,7 @@ theorem continuous_mk : Continuous (mk : X → SeparationQuotient X) :=
 
 @[simp]
 theorem mk_eq_mk : mk x = mk y ↔ (x ~ y) :=
-  Quotient.eq'
+  Quotient.eq''
 #align separation_quotient.mk_eq_mk SeparationQuotient.mk_eq_mk
 
 theorem surjective_mk : Surjective (mk : X → SeparationQuotient X) :=

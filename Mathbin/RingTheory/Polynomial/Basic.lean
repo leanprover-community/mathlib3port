@@ -716,7 +716,7 @@ theorem eval₂_c_mk_eq_zero {I : Ideal R} :
   rw [eval₂_sum]
   refine' Finset.sum_eq_zero fun n hn => _
   dsimp
-  rw [eval₂_monomial (C.comp (Quotient.mk'' I)) X]
+  rw [eval₂_monomial (C.comp (Quotient.mk' I)) X]
   refine' mul_eq_zero_of_left (Polynomial.ext fun m => _) (X ^ n)
   erw [coeff_C]
   by_cases h : m = 0
@@ -747,7 +747,7 @@ def polynomialQuotientEquivQuotientPolynomial (I : Ideal R) :
       simp only [coe_eval₂_ring_hom] at hq
       simp only [coe_eval₂_ring_hom, hp, hq, RingHom.map_add]
     · rintro n ⟨x⟩
-      simp only [← smul_X_eq_monomial, C_mul', Quotient.lift_mk'', Submodule.Quotient.quot_mk_eq_mk,
+      simp only [← smul_X_eq_monomial, C_mul', Quotient.lift_mk', Submodule.Quotient.quot_mk_eq_mk,
         quotient.mk_eq_mk, eval₂_X_pow, eval₂_smul, coe_eval₂_ring_hom, RingHom.map_pow, eval₂_C,
         RingHom.coe_comp, RingHom.map_mul, eval₂_X]
   right_inv := by
@@ -756,7 +756,7 @@ def polynomialQuotientEquivQuotientPolynomial (I : Ideal R) :
     · simp_intro p q hp hq
       rw [hp, hq]
     · intro n a
-      simp only [← smul_X_eq_monomial, ← C_mul' a (X ^ n), Quotient.lift_mk'',
+      simp only [← smul_X_eq_monomial, ← C_mul' a (X ^ n), Quotient.lift_mk',
         Submodule.Quotient.quot_mk_eq_mk, quotient.mk_eq_mk, eval₂_X_pow, eval₂_smul,
         coe_eval₂_ring_hom, RingHom.map_pow, eval₂_C, RingHom.coe_comp, RingHom.map_mul, eval₂_X]
 #align ideal.polynomial_quotient_equiv_quotient_polynomial Ideal.polynomialQuotientEquivQuotientPolynomial
@@ -797,7 +797,7 @@ theorem isPrimeMapCOfIsPrime {P : Ideal R} (H : IsPrime P) :
 theorem eq_zero_of_polynomial_mem_map_range (I : Ideal R[X]) (x : ((Quotient.mk I).comp c).range)
     (hx : c x ∈ I.map (Polynomial.mapRingHom ((Quotient.mk I).comp c).range_restrict)) : x = 0 :=
   by
-  let i := ((Quotient.mk'' I).comp C).range_restrict
+  let i := ((Quotient.mk' I).comp C).range_restrict
   have hi' : (Polynomial.mapRingHom i).ker ≤ I :=
     by
     refine' fun f hf => polynomial_mem_ideal_of_coeff_mem_ideal I f fun n => _
@@ -815,7 +815,7 @@ theorem eq_zero_of_polynomial_mem_map_range (I : Ideal R[X]) (x : ((Quotient.mk 
     by
     obtain ⟨f, hf⟩ :=
       mem_image_of_mem_map_of_surjective (Polynomial.mapRingHom i)
-        (Polynomial.map_surjective _ ((Quotient.mk'' I).comp C).range_restrict_surjective) this
+        (Polynomial.map_surjective _ ((Quotient.mk' I).comp C).range_restrict_surjective) this
     refine' sub_add_cancel (C y) f ▸ I.add_mem (hi' _ : C y - f ∈ I) hf.1
     rw [RingHom.mem_ker, RingHom.map_sub, hf.2, sub_eq_zero, coe_map_ring_hom, map_C]
   exact hx

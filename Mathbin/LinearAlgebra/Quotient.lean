@@ -57,18 +57,18 @@ namespace Quotient
 /-- Map associating to an element of `M` the corresponding element of `M/p`,
 when `p` is a submodule of `M`. -/
 def mk {p : Submodule R M} : M → M ⧸ p :=
-  Quotient.mk'
+  Quotient.mk''
 #align submodule.quotient.mk Submodule.Quotient.mk
 
 @[simp]
-theorem mk''_eq_mk'' {p : Submodule R M} (x : M) : @Quotient.mk'' _ (quotientRel p) x = mk x :=
+theorem mk'_eq_mk' {p : Submodule R M} (x : M) : @Quotient.mk' _ (quotientRel p) x = mk x :=
   rfl
-#align submodule.quotient.mk_eq_mk Submodule.Quotient.mk''_eq_mk''
+#align submodule.quotient.mk_eq_mk Submodule.Quotient.mk'_eq_mk'
 
 @[simp]
-theorem mk'_eq_mk {p : Submodule R M} (x : M) : (Quotient.mk' x : M ⧸ p) = mk x :=
+theorem mk''_eq_mk {p : Submodule R M} (x : M) : (Quotient.mk'' x : M ⧸ p) = mk x :=
   rfl
-#align submodule.quotient.mk'_eq_mk Submodule.Quotient.mk'_eq_mk
+#align submodule.quotient.mk'_eq_mk Submodule.Quotient.mk''_eq_mk
 
 @[simp]
 theorem quot_mk_eq_mk {p : Submodule R M} (x : M) : (Quot.mk _ x : M ⧸ p) = mk x :=
@@ -95,7 +95,7 @@ theorem mk_zero : mk 0 = (0 : M ⧸ p) :=
 #align submodule.quotient.mk_zero Submodule.Quotient.mk_zero
 
 @[simp]
-theorem mk_eq_zero : (mk x : M ⧸ p) = 0 ↔ x ∈ p := by simpa using (Quotient.eq p : mk x = 0 ↔ _)
+theorem mk_eq_zero : (mk x : M ⧸ p) = 0 ↔ x ∈ p := by simpa using (Quotient.eq' p : mk x = 0 ↔ _)
 #align submodule.quotient.mk_eq_zero Submodule.Quotient.mk_eq_zero
 
 instance addCommGroup : AddCommGroup (M ⧸ p) :=
@@ -454,7 +454,7 @@ theorem comap_liftq (f : M →ₛₗ[τ₁₂] M₂) (h) : q.comap (p.liftq f h)
 theorem map_liftq [RingHomSurjective τ₁₂] (f : M →ₛₗ[τ₁₂] M₂) (h) (q : Submodule R (M ⧸ p)) :
     q.map (p.liftq f h) = (q.comap p.mkq).map f :=
   le_antisymm (by rintro _ ⟨⟨x⟩, hxq, rfl⟩ <;> exact ⟨x, hxq, rfl⟩)
-    (by rintro _ ⟨x, hxq, rfl⟩ <;> exact ⟨Quotient.mk'' x, hxq, rfl⟩)
+    (by rintro _ ⟨x, hxq, rfl⟩ <;> exact ⟨Quotient.mk' x, hxq, rfl⟩)
 #align submodule.map_liftq Submodule.map_liftq
 
 theorem ker_liftq (f : M →ₛₗ[τ₁₂] M₂) (h) : ker (p.liftq f h) = (ker f).map (mkq p) :=

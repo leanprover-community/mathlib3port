@@ -217,9 +217,9 @@ theorem toPgame_add : ∀ a b : Ordinal.{u}, a.toPgame + b.toPgame ≈ (a ♯ b)
 #align ordinal.to_pgame_add Ordinal.toPgame_add
 
 @[simp]
-theorem toPgame_add_mk'' (a b : Ordinal) : ⟦a.toPgame⟧ + ⟦b.toPgame⟧ = ⟦(a ♯ b).toPgame⟧ :=
+theorem toPgame_add_mk' (a b : Ordinal) : ⟦a.toPgame⟧ + ⟦b.toPgame⟧ = ⟦(a ♯ b).toPgame⟧ :=
   Quot.sound (toPgame_add a b)
-#align ordinal.to_pgame_add_mk Ordinal.toPgame_add_mk''
+#align ordinal.to_pgame_add_mk Ordinal.toPgame_add_mk'
 
 end Ordinal
 

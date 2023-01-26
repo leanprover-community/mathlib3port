@@ -206,7 +206,7 @@ theorem valuation_le_one_iff (x : K) : A.Valuation x ≤ 1 ↔ x ∈ A :=
 #align valuation_subring.valuation_le_one_iff ValuationSubring.valuation_le_one_iff
 
 theorem valuation_eq_iff (x y : K) : A.Valuation x = A.Valuation y ↔ ∃ a : Aˣ, (a : K) * y = x :=
-  Quotient.eq'
+  Quotient.eq''
 #align valuation_subring.valuation_eq_iff ValuationSubring.valuation_eq_iff
 
 theorem valuation_le_iff (x y : K) : A.Valuation x ≤ A.Valuation y ↔ ∃ a : A, (a : K) * y = x :=

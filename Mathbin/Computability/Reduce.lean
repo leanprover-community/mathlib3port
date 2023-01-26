@@ -369,7 +369,7 @@ namespace ManyOneDegree
 
 /-- The many-one degree of a set on a primcodable type. -/
 def of (p : α → Prop) : ManyOneDegree :=
-  Quotient.mk' (toNat p)
+  Quotient.mk'' (toNat p)
 #align many_one_degree.of ManyOneDegree.of
 
 @[elab_as_elim]
@@ -415,7 +415,7 @@ protected theorem liftOn₂_eq {φ} (p q : Set ℕ) (f : Set ℕ → Set ℕ →
 
 @[simp]
 theorem of_eq_of {p : α → Prop} {q : β → Prop} : of p = of q ↔ ManyOneEquiv p q := by
-  simp [of, Quotient.eq']
+  simp [of, Quotient.eq'']
 #align many_one_degree.of_eq_of ManyOneDegree.of_eq_of
 
 instance : Inhabited ManyOneDegree :=

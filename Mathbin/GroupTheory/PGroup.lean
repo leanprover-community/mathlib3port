@@ -195,21 +195,21 @@ theorem card_modEq_card_fixedPoints [Fintype (fixedPoints G α)] :
     card α ≡ card (fixedPoints G α) [MOD p] := by
   classical
     calc
-      card α = card (Σy : Quotient (orbit_rel G α), { x // Quotient.mk' x = y }) :=
-        card_congr (Equiv.sigmaFiberEquiv (@Quotient.mk' _ (orbit_rel G α))).symm
-      _ = ∑ a : Quotient (orbit_rel G α), card { x // Quotient.mk' x = a } := card_sigma _
+      card α = card (Σy : Quotient (orbit_rel G α), { x // Quotient.mk'' x = y }) :=
+        card_congr (Equiv.sigmaFiberEquiv (@Quotient.mk'' _ (orbit_rel G α))).symm
+      _ = ∑ a : Quotient (orbit_rel G α), card { x // Quotient.mk'' x = a } := card_sigma _
       _ ≡ ∑ a : fixed_points G α, 1 [MOD p] := _
       _ = _ := by simp <;> rfl
       
     rw [← ZMod.eq_iff_modEq_nat p, Nat.cast_sum, Nat.cast_sum]
     have key :
       ∀ x,
-        card { y // (Quotient.mk' y : Quotient (orbit_rel G α)) = Quotient.mk' x } =
+        card { y // (Quotient.mk'' y : Quotient (orbit_rel G α)) = Quotient.mk'' x } =
           card (orbit G x) :=
-      fun x => by simp only [Quotient.eq'] <;> congr
+      fun x => by simp only [Quotient.eq''] <;> congr
     refine'
       Eq.symm
-        (Finset.sum_bij_ne_zero (fun a _ _ => Quotient.mk' a.1) (fun _ _ _ => Finset.mem_univ _)
+        (Finset.sum_bij_ne_zero (fun a _ _ => Quotient.mk'' a.1) (fun _ _ _ => Finset.mem_univ _)
           (fun a₁ a₂ _ _ _ _ h =>
             Subtype.eq ((mem_fixed_points' α).mp a₂.2 a₁.1 (Quotient.exact' h)))
           (fun b => Quotient.inductionOn' b fun b _ hb => _) fun a ha _ => by

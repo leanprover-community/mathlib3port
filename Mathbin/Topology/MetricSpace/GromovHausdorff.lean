@@ -108,7 +108,7 @@ theorem eq_toGHSpace_iff {X : Type u} [MetricSpace X] [CompactSpace X] [Nonempty
     {p : NonemptyCompacts ℓ_infty_ℝ} :
     ⟦p⟧ = toGHSpace X ↔ ∃ Ψ : X → ℓ_infty_ℝ, Isometry Ψ ∧ range Ψ = p :=
   by
-  simp only [to_GH_space, Quotient.eq]
+  simp only [to_GH_space, Quotient.eq']
   refine' ⟨fun h => _, _⟩
   · rcases Setoid.symm h with ⟨e⟩
     have f := (kuratowskiEmbedding.isometry X).isometryEquivOnRange.trans e
@@ -159,7 +159,7 @@ theorem toGHSpace_eq_toGHSpace_iff_isometryEquiv {X : Type u} [MetricSpace X] [C
     [Nonempty X] {Y : Type v} [MetricSpace Y] [CompactSpace Y] [Nonempty Y] :
     toGHSpace X = toGHSpace Y ↔ Nonempty (X ≃ᵢ Y) :=
   ⟨by
-    simp only [to_GH_space, Quotient.eq]
+    simp only [to_GH_space, Quotient.eq']
     rintro ⟨e⟩
     have I :
       (NonemptyCompacts.kuratowskiEmbedding X ≃ᵢ NonemptyCompacts.kuratowskiEmbedding Y) =
@@ -171,7 +171,7 @@ theorem toGHSpace_eq_toGHSpace_iff_isometryEquiv {X : Type u} [MetricSpace X] [C
     have g := (kuratowskiEmbedding.isometry Y).isometryEquivOnRange.symm
     exact ⟨f.trans <| (cast I e).trans g⟩, by
     rintro ⟨e⟩
-    simp only [to_GH_space, Quotient.eq]
+    simp only [to_GH_space, Quotient.eq']
     have f := (kuratowskiEmbedding.isometry X).isometryEquivOnRange.symm
     have g := (kuratowskiEmbedding.isometry Y).isometryEquivOnRange
     have I :

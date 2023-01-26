@@ -102,7 +102,7 @@ def preorderToPartialOrder : PreorderCat.{u} ⥤ PartialOrderCat
   map X Y f := f.Antisymmetrization
   map_id' X := by
     ext
-    exact Quotient.inductionOn' x fun x => Quotient.map'_mk' _ (fun a b => id) _
+    exact Quotient.inductionOn' x fun x => Quotient.map'_mk'' _ (fun a b => id) _
   map_comp' X Y Z f g := by
     ext
     exact Quotient.inductionOn' x fun x => OrderHom.antisymmetrization_apply_mk _ _

@@ -487,7 +487,7 @@ instance inhabitedSym [Inhabited α] (n : ℕ) : Inhabited (Sym α n) :=
 
 #print Sym.inhabitedSym' /-
 instance inhabitedSym' [Inhabited α] (n : ℕ) : Inhabited (Sym' α n) :=
-  ⟨Quotient.mk' (Vector.replicate n default)⟩
+  ⟨Quotient.mk'' (Vector.replicate n default)⟩
 #align sym.inhabited_sym' Sym.inhabitedSym'
 -/
 

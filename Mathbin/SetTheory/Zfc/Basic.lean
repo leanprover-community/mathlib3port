@@ -673,13 +673,13 @@ open PSet
 
 /-- Turns a pre-set into a ZFC set. -/
 def mk : PSet → SetCat :=
-  Quotient.mk''
+  Quotient.mk'
 #align Set.mk SetCat.mk
 
 @[simp]
-theorem mk''_eq (x : PSet) : @Eq SetCat ⟦x⟧ (mk x) :=
+theorem mk'_eq (x : PSet) : @Eq SetCat ⟦x⟧ (mk x) :=
   rfl
-#align Set.mk_eq SetCat.mk''_eq
+#align Set.mk_eq SetCat.mk'_eq
 
 @[simp]
 theorem mk_out : ∀ x : SetCat, mk x.out = x :=
@@ -687,7 +687,7 @@ theorem mk_out : ∀ x : SetCat, mk x.out = x :=
 #align Set.mk_out SetCat.mk_out
 
 theorem eq {x y : PSet} : mk x = mk y ↔ Equiv x y :=
-  Quotient.eq
+  Quotient.eq'
 #align Set.eq SetCat.eq
 
 theorem sound {x y : PSet} (h : PSet.Equiv x y) : mk x = mk y :=

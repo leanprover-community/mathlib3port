@@ -1131,7 +1131,7 @@ theorem prodCongrRight_trans_prodComm :
 
 #print Equiv.sigmaCongrRight_sigmaEquivProd /-
 theorem sigmaCongrRight_sigmaEquivProd :
-    (sigmaCongrRight_trans e).trans (sigmaEquivProd α₁ β₂) =
+    (sigmaCongrRight e).trans (sigmaEquivProd α₁ β₂) =
       (sigmaEquivProd α₁ β₁).trans (prodCongrRight e) :=
   by
   ext ⟨a, b⟩ : 1
@@ -1141,12 +1141,12 @@ theorem sigmaCongrRight_sigmaEquivProd :
 
 /- warning: equiv.sigma_equiv_prod_sigma_congr_right -> Equiv.sigmaEquivProd_sigmaCongrRight is a dubious translation:
 lean 3 declaration is
-  forall {α₁ : Type.{u1}} {β₁ : Type.{u2}} {β₂ : Type.{u3}} (e : α₁ -> (Equiv.{succ u2, succ u3} β₁ β₂)), Eq.{max 1 (max (max (succ u1) (succ u2)) (succ u1) (succ u3)) (max (succ u1) (succ u3)) (succ u1) (succ u2)} (Equiv.{max (succ u1) (succ u2), max (succ u1) (succ u3)} (Prod.{u1, u2} α₁ β₁) (Sigma.{u1, u3} α₁ (fun (a : α₁) => β₂))) (Equiv.trans.{max (succ u1) (succ u2), max (succ u1) (succ u2), max (succ u1) (succ u3)} (Prod.{u1, u2} α₁ β₁) (Sigma.{u1, u2} α₁ (fun (_x : α₁) => β₁)) (Sigma.{u1, u3} α₁ (fun (a : α₁) => β₂)) (Equiv.symm.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (Sigma.{u1, u2} α₁ (fun (_x : α₁) => β₁)) (Prod.{u1, u2} α₁ β₁) (Equiv.sigmaEquivProd.{u1, u2} α₁ β₁)) (Equiv.sigmaCongrRight_trans.{u1, u2, u3} α₁ (fun (_x : α₁) => β₁) (fun (ᾰ : α₁) => β₂) e)) (Equiv.trans.{max (succ u1) (succ u2), max (succ u1) (succ u3), max (succ u1) (succ u3)} (Prod.{u1, u2} α₁ β₁) (Prod.{u1, u3} α₁ β₂) (Sigma.{u1, u3} α₁ (fun (a : α₁) => β₂)) (Equiv.prodCongrRight.{u1, u2, u3} α₁ β₁ β₂ e) (Equiv.symm.{max (succ u1) (succ u3), max (succ u1) (succ u3)} (Sigma.{u1, u3} α₁ (fun (_x : α₁) => β₂)) (Prod.{u1, u3} α₁ β₂) (Equiv.sigmaEquivProd.{u1, u3} α₁ β₂)))
+  forall {α₁ : Type.{u1}} {β₁ : Type.{u2}} {β₂ : Type.{u3}} (e : α₁ -> (Equiv.{succ u2, succ u3} β₁ β₂)), Eq.{max 1 (max (max (succ u1) (succ u2)) (succ u1) (succ u3)) (max (succ u1) (succ u3)) (succ u1) (succ u2)} (Equiv.{max (succ u1) (succ u2), max (succ u1) (succ u3)} (Prod.{u1, u2} α₁ β₁) (Sigma.{u1, u3} α₁ (fun (a : α₁) => β₂))) (Equiv.trans.{max (succ u1) (succ u2), max (succ u1) (succ u2), max (succ u1) (succ u3)} (Prod.{u1, u2} α₁ β₁) (Sigma.{u1, u2} α₁ (fun (_x : α₁) => β₁)) (Sigma.{u1, u3} α₁ (fun (a : α₁) => β₂)) (Equiv.symm.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (Sigma.{u1, u2} α₁ (fun (_x : α₁) => β₁)) (Prod.{u1, u2} α₁ β₁) (Equiv.sigmaEquivProd.{u1, u2} α₁ β₁)) (Equiv.sigmaCongrRight.{u1, u2, u3} α₁ (fun (_x : α₁) => β₁) (fun (ᾰ : α₁) => β₂) e)) (Equiv.trans.{max (succ u1) (succ u2), max (succ u1) (succ u3), max (succ u1) (succ u3)} (Prod.{u1, u2} α₁ β₁) (Prod.{u1, u3} α₁ β₂) (Sigma.{u1, u3} α₁ (fun (a : α₁) => β₂)) (Equiv.prodCongrRight.{u1, u2, u3} α₁ β₁ β₂ e) (Equiv.symm.{max (succ u1) (succ u3), max (succ u1) (succ u3)} (Sigma.{u1, u3} α₁ (fun (_x : α₁) => β₂)) (Prod.{u1, u3} α₁ β₂) (Equiv.sigmaEquivProd.{u1, u3} α₁ β₂)))
 but is expected to have type
   forall {α₁ : Type.{u2}} {β₁ : Type.{u3}} {β₂ : Type.{u1}} (e : α₁ -> (Equiv.{succ u3, succ u1} β₁ β₂)), Eq.{max (max (succ u3) (succ u2)) (succ u1)} (Equiv.{max (succ u3) (succ u2), max (succ u2) (succ u1)} (Prod.{u2, u3} α₁ β₁) (Sigma.{u2, u1} α₁ (fun (a : α₁) => β₂))) (Equiv.trans.{max (succ u3) (succ u2), max (succ u3) (succ u2), max (succ u2) (succ u1)} (Prod.{u2, u3} α₁ β₁) (Sigma.{u2, u3} α₁ (fun (_x : α₁) => β₁)) (Sigma.{u2, u1} α₁ (fun (a : α₁) => β₂)) (Equiv.symm.{max (succ u3) (succ u2), max (succ u3) (succ u2)} (Sigma.{u2, u3} α₁ (fun (_x : α₁) => β₁)) (Prod.{u2, u3} α₁ β₁) (Equiv.sigmaEquivProd.{u2, u3} α₁ β₁)) (Equiv.sigmaCongrRight.{u2, u3, u1} α₁ (fun (_x : α₁) => β₁) (fun (ᾰ : α₁) => β₂) e)) (Equiv.trans.{max (succ u3) (succ u2), max (succ u2) (succ u1), max (succ u2) (succ u1)} (Prod.{u2, u3} α₁ β₁) (Prod.{u2, u1} α₁ β₂) (Sigma.{u2, u1} α₁ (fun (a : α₁) => β₂)) (Equiv.prodCongrRight.{u2, u3, u1} α₁ β₁ β₂ e) (Equiv.symm.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (Sigma.{u2, u1} α₁ (fun (_x : α₁) => β₂)) (Prod.{u2, u1} α₁ β₂) (Equiv.sigmaEquivProd.{u2, u1} α₁ β₂)))
 Case conversion may be inaccurate. Consider using '#align equiv.sigma_equiv_prod_sigma_congr_right Equiv.sigmaEquivProd_sigmaCongrRightₓ'. -/
 theorem sigmaEquivProd_sigmaCongrRight :
-    (sigmaEquivProd α₁ β₁).symm.trans (sigmaCongrRight_trans e) =
+    (sigmaEquivProd α₁ β₁).symm.trans (sigmaCongrRight e) =
       (prodCongrRight e).trans (sigmaEquivProd α₁ β₂).symm :=
   by
   ext ⟨a, b⟩ : 1
@@ -1164,7 +1164,7 @@ Case conversion may be inaccurate. Consider using '#align equiv.of_fiber_equiv E
 @[simps]
 def ofFiberEquiv {α β γ : Type _} {f : α → γ} {g : β → γ}
     (e : ∀ c, { a // f a = c } ≃ { b // g b = c }) : α ≃ β :=
-  (sigmaFiberEquiv f).symm.trans <| (Equiv.sigmaCongrRight_trans e).trans (sigmaFiberEquiv g)
+  (sigmaFiberEquiv f).symm.trans <| (Equiv.sigmaCongrRight e).trans (sigmaFiberEquiv g)
 #align equiv.of_fiber_equiv Equiv.ofFiberEquiv
 
 /- warning: equiv.of_fiber_equiv_map -> Equiv.ofFiberEquiv_map is a dubious translation:

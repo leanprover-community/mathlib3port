@@ -89,7 +89,7 @@ noncomputable def fromSkeleton : Skeleton C ⥤ C :=
   inducedFunctor _ deriving Full, Faithful
 #align category_theory.from_skeleton CategoryTheory.fromSkeleton
 
-instance : EssSurj (fromSkeleton C) where mem_ess_image X := ⟨Quotient.mk'' X, Quotient.mk''_out X⟩
+instance : EssSurj (fromSkeleton C) where mem_ess_image X := ⟨Quotient.mk' X, Quotient.mk'_out X⟩
 
 noncomputable instance : IsEquivalence (fromSkeleton C) :=
   Equivalence.ofFullyFaithfullyEssSurj (fromSkeleton C)
@@ -138,7 +138,7 @@ def ThinSkeleton : Type u₁ :=
 #align category_theory.thin_skeleton CategoryTheory.ThinSkeleton
 
 instance inhabitedThinSkeleton [Inhabited C] : Inhabited (ThinSkeleton C) :=
-  ⟨Quotient.mk'' default⟩
+  ⟨Quotient.mk' default⟩
 #align category_theory.inhabited_thin_skeleton CategoryTheory.inhabitedThinSkeleton
 
 instance ThinSkeleton.preorder : Preorder (ThinSkeleton C)
@@ -160,7 +160,7 @@ instance ThinSkeleton.preorder : Preorder (ThinSkeleton C)
 @[simps]
 def toThinSkeleton : C ⥤ ThinSkeleton C
     where
-  obj := Quotient.mk''
+  obj := Quotient.mk'
   map X Y f := homOfLe (Nonempty.intro f)
 #align category_theory.to_thin_skeleton CategoryTheory.toThinSkeleton
 
@@ -235,19 +235,19 @@ noncomputable def fromThinSkeleton : ThinSkeleton C ⥤ C
   obj := Quotient.out
   map x y :=
     Quotient.recOnSubsingleton₂ x y fun X Y f =>
-      (Nonempty.some (Quotient.mk''_out X)).Hom ≫
-        f.le.some ≫ (Nonempty.some (Quotient.mk''_out Y)).inv
+      (Nonempty.some (Quotient.mk'_out X)).Hom ≫
+        f.le.some ≫ (Nonempty.some (Quotient.mk'_out Y)).inv
 #align category_theory.thin_skeleton.from_thin_skeleton CategoryTheory.ThinSkeleton.fromThinSkeleton
 
 noncomputable instance fromThinSkeletonEquivalence : IsEquivalence (fromThinSkeleton C)
     where
   inverse := toThinSkeleton C
-  counitIso := NatIso.ofComponents (fun X => Nonempty.some (Quotient.mk''_out X)) (by tidy)
+  counitIso := NatIso.ofComponents (fun X => Nonempty.some (Quotient.mk'_out X)) (by tidy)
   unitIso :=
     NatIso.ofComponents
       (fun x =>
         Quotient.recOnSubsingleton x fun X =>
-          eqToIso (Quotient.sound ⟨(Nonempty.some (Quotient.mk''_out X)).symm⟩))
+          eqToIso (Quotient.sound ⟨(Nonempty.some (Quotient.mk'_out X)).symm⟩))
       (by tidy)
 #align category_theory.thin_skeleton.from_thin_skeleton_equivalence CategoryTheory.ThinSkeleton.fromThinSkeletonEquivalence
 

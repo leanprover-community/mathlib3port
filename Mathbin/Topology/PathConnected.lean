@@ -802,7 +802,7 @@ def ZerothHomotopy :=
 #align zeroth_homotopy ZerothHomotopy
 
 instance : Inhabited (ZerothHomotopy ℝ) :=
-  ⟨@Quotient.mk'' ℝ (pathSetoid ℝ) 0⟩
+  ⟨@Quotient.mk' ℝ (pathSetoid ℝ) 0⟩
 
 variable {X}
 

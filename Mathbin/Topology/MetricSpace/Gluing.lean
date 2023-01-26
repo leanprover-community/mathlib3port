@@ -659,7 +659,7 @@ theorem to_glue_commute (hΦ : Isometry Φ) (hΨ : Isometry Ψ) :
   by
   letI : PseudoMetricSpace (Sum X Y) := glue_premetric hΦ hΨ
   funext
-  simp only [comp, to_glue_l, to_glue_r, Quotient.eq]
+  simp only [comp, to_glue_l, to_glue_r, Quotient.eq']
   exact glue_dist_glued_points Φ Ψ 0 x
 #align metric.to_glue_commute Metric.to_glue_commute
 
@@ -786,7 +786,7 @@ theorem toInductiveLimit_commute (I : ∀ n, Isometry (f n)) (n : ℕ) :
     toInductiveLimit I n.succ ∘ f n = toInductiveLimit I n :=
   by
   funext
-  simp only [comp, to_inductive_limit, Quotient.eq]
+  simp only [comp, to_inductive_limit, Quotient.eq']
   show inductive_limit_dist f ⟨n.succ, f n x⟩ ⟨n, x⟩ = 0
   · rw [inductive_limit_dist_eq_dist I ⟨n.succ, f n x⟩ ⟨n, x⟩ n.succ, le_rec_on_self,
       le_rec_on_succ, le_rec_on_self, dist_self]

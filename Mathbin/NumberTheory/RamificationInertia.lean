@@ -563,7 +563,7 @@ noncomputable def quotientToQuotientRangePowQuotSuccAux {i : ℕ} {a : S} (a_mem
 theorem quotientToQuotientRangePowQuotSuccAux_mk {i : ℕ} {a : S} (a_mem : a ∈ P ^ i) (x : S) :
     quotientToQuotientRangePowQuotSuccAux f p P a_mem (Submodule.Quotient.mk x) =
       Submodule.Quotient.mk ⟨_, Ideal.mem_map_of_mem _ (Ideal.mul_mem_left _ x a_mem)⟩ :=
-  by apply Quotient.map'_mk'
+  by apply Quotient.map'_mk''
 #align ideal.quotient_to_quotient_range_pow_quot_succ_aux_mk Ideal.quotientToQuotientRangePowQuotSuccAux_mk
 
 include hfp
@@ -575,14 +575,14 @@ noncomputable def quotientToQuotientRangePowQuotSucc {i : ℕ} {a : S} (a_mem : 
   toFun := quotientToQuotientRangePowQuotSuccAux f p P a_mem
   map_add' := by
     intro x y; refine' Quotient.inductionOn' x fun x => Quotient.inductionOn' y fun y => _
-    simp only [Submodule.Quotient.mk'_eq_mk, ← Submodule.Quotient.mk_add,
+    simp only [Submodule.Quotient.mk''_eq_mk, ← Submodule.Quotient.mk_add,
       quotient_to_quotient_range_pow_quot_succ_aux_mk, add_mul]
     refine' congr_arg Submodule.Quotient.mk _
     ext
     rfl
   map_smul' := by
     intro x y; refine' Quotient.inductionOn' x fun x => Quotient.inductionOn' y fun y => _
-    simp only [Submodule.Quotient.mk'_eq_mk, ← Submodule.Quotient.mk_add,
+    simp only [Submodule.Quotient.mk''_eq_mk, ← Submodule.Quotient.mk_add,
       quotient_to_quotient_range_pow_quot_succ_aux_mk, RingHom.id_apply]
     refine' congr_arg Submodule.Quotient.mk _
     ext
@@ -604,7 +604,7 @@ theorem quotientToQuotientRangePowQuotSucc_injective [IsDomain S] [IsDedekindDom
     Quotient.inductionOn' y fun y h =>
       by
       have Pe_le_Pi1 : P ^ e ≤ P ^ (i + 1) := Ideal.pow_le_pow hi
-      simp only [Submodule.Quotient.mk'_eq_mk, quotient_to_quotient_range_pow_quot_succ_mk,
+      simp only [Submodule.Quotient.mk''_eq_mk, quotient_to_quotient_range_pow_quot_succ_mk,
         Submodule.Quotient.eq, LinearMap.mem_range, Subtype.ext_iff, Subtype.coe_mk,
         Submodule.coe_sub] at h⊢
       rcases h with ⟨⟨⟨z⟩, hz⟩, h⟩

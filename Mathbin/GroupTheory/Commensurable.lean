@@ -72,7 +72,7 @@ def quotConjEquiv (H K : Subgroup G) (g : ConjAct G) :
   Quotient.congr (K.equivSmul g).toEquiv fun a b =>
     by
     dsimp
-    rw [← Quotient.eq', ← Quotient.eq', QuotientGroup.eq', QuotientGroup.eq',
+    rw [← Quotient.eq'', ← Quotient.eq'', QuotientGroup.eq', QuotientGroup.eq',
       Subgroup.mem_subgroupOf, Subgroup.mem_subgroupOf, ← MulEquiv.map_inv, ← MulEquiv.map_mul,
       Subgroup.equivSmul_apply_coe]
     exact subgroup.smul_mem_pointwise_smul_iff.symm

@@ -240,46 +240,46 @@ noncomputable instance structure : L.StructureCat (DirectLimit G f) :=
 #align first_order.language.direct_limit.Structure FirstOrder.Language.DirectLimit.structure
 
 @[simp]
-theorem funMap_quotient_mk''_sigma_mk'' {n : ℕ} {F : L.Functions n} {i : ι} {x : Fin n → G i} :
+theorem funMap_quotient_mk'_sigma_mk' {n : ℕ} {F : L.Functions n} {i : ι} {x : Fin n → G i} :
     (funMap F fun a => (⟦⟨i, x a⟩⟧ : DirectLimit G f)) = ⟦⟨i, funMap F x⟩⟧ :=
   by
-  simp only [Function.comp_apply, fun_map_quotient_mk, Quotient.eq]
+  simp only [Function.comp_apply, fun_map_quotient_mk, Quotient.eq']
   obtain ⟨k, ik, jk⟩ :=
     directed_of (· ≤ ·) i (Classical.choose (Fintype.bddAbove_range fun a : Fin n => i))
   refine' ⟨k, jk, ik, _⟩
   simp only [embedding.map_fun, comp_unify]
   rfl
-#align first_order.language.direct_limit.fun_map_quotient_mk_sigma_mk FirstOrder.Language.DirectLimit.funMap_quotient_mk''_sigma_mk''
+#align first_order.language.direct_limit.fun_map_quotient_mk_sigma_mk FirstOrder.Language.DirectLimit.funMap_quotient_mk'_sigma_mk'
 
 @[simp]
-theorem relMap_quotient_mk''_sigma_mk'' {n : ℕ} {R : L.Relations n} {i : ι} {x : Fin n → G i} :
+theorem relMap_quotient_mk'_sigma_mk' {n : ℕ} {R : L.Relations n} {i : ι} {x : Fin n → G i} :
     (RelMap R fun a => (⟦⟨i, x a⟩⟧ : DirectLimit G f)) = RelMap R x :=
   by
   rw [rel_map_quotient_mk]
   obtain ⟨k, ik, jk⟩ :=
     directed_of (· ≤ ·) i (Classical.choose (Fintype.bddAbove_range fun a : Fin n => i))
   rw [rel_map_equiv_unify G f R (fun a => ⟨i, x a⟩) i, unify_sigma_mk_self]
-#align first_order.language.direct_limit.rel_map_quotient_mk_sigma_mk FirstOrder.Language.DirectLimit.relMap_quotient_mk''_sigma_mk''
+#align first_order.language.direct_limit.rel_map_quotient_mk_sigma_mk FirstOrder.Language.DirectLimit.relMap_quotient_mk'_sigma_mk'
 
-theorem exists_quotient_mk''_sigma_mk''_eq {α : Type _} [Fintype α] (x : α → DirectLimit G f) :
-    ∃ (i : ι)(y : α → G i), x = Quotient.mk'' ∘ Sigma.mk i ∘ y :=
+theorem exists_quotient_mk'_sigma_mk'_eq {α : Type _} [Fintype α] (x : α → DirectLimit G f) :
+    ∃ (i : ι)(y : α → G i), x = Quotient.mk' ∘ Sigma.mk i ∘ y :=
   by
   obtain ⟨i, hi⟩ := Fintype.bddAbove_range fun a => (x a).out.1
   refine' ⟨i, unify f (Quotient.out ∘ x) i hi, _⟩
   ext a
-  rw [Quotient.eq_mk''_iff_out, Function.comp_apply, unify, equiv_iff G f _]
+  rw [Quotient.eq_mk'_iff_out, Function.comp_apply, unify, equiv_iff G f _]
   · simp only [DirectedSystem.map_self]
   · rfl
-#align first_order.language.direct_limit.exists_quotient_mk_sigma_mk_eq FirstOrder.Language.DirectLimit.exists_quotient_mk''_sigma_mk''_eq
+#align first_order.language.direct_limit.exists_quotient_mk_sigma_mk_eq FirstOrder.Language.DirectLimit.exists_quotient_mk'_sigma_mk'_eq
 
 variable (L ι)
 
 /-- The canonical map from a component to the direct limit. -/
 def of (i : ι) : G i ↪[L] DirectLimit G f
     where
-  toFun := Quotient.mk'' ∘ Sigma.mk i
+  toFun := Quotient.mk' ∘ Sigma.mk i
   inj' x y h := by
-    simp only [Quotient.eq] at h
+    simp only [Quotient.eq'] at h
     obtain ⟨j, h1, h2, h3⟩ := h
     exact (f i j h1).Injective h3
 #align first_order.language.direct_limit.of FirstOrder.Language.DirectLimit.of
@@ -294,7 +294,7 @@ theorem of_apply {i : ι} {x : G i} : of L ι G f i x = ⟦⟨i, x⟩⟧ :=
 @[simp]
 theorem of_f {i j : ι} {hij : i ≤ j} {x : G i} : of L ι G f j (f i j hij x) = of L ι G f i x :=
   by
-  simp only [of_apply, Quotient.eq]
+  simp only [of_apply, Quotient.eq']
   refine' Setoid.symm ⟨j, hij, refl j, _⟩
   simp only [DirectedSystem.map_self]
 #align first_order.language.direct_limit.of_f FirstOrder.Language.DirectLimit.of_f
@@ -334,19 +334,19 @@ def lift : DirectLimit G f ↪[L] P
       exact congr_arg _ ((equiv_iff _ _ _ _).1 xy)
   inj' x y xy :=
     by
-    rw [← Quotient.out_eq x, ← Quotient.out_eq y, Quotient.lift_mk'', Quotient.lift_mk''] at xy
+    rw [← Quotient.out_eq x, ← Quotient.out_eq y, Quotient.lift_mk', Quotient.lift_mk'] at xy
     obtain ⟨i, hx, hy⟩ := directed_of (· ≤ ·) x.out.1 y.out.1
     rw [← Hg x.out.1 i hx, ← Hg y.out.1 i hy] at xy
-    rw [← Quotient.out_eq x, ← Quotient.out_eq y, Quotient.eq, equiv_iff G f hx hy]
+    rw [← Quotient.out_eq x, ← Quotient.out_eq y, Quotient.eq', equiv_iff G f hx hy]
     exact (g i).Injective xy
   map_fun' n F x := by
     obtain ⟨i, y, rfl⟩ := exists_quotient_mk_sigma_mk_eq G f x
-    rw [fun_map_quotient_mk_sigma_mk, ← Function.comp.assoc, Quotient.lift_comp_mk'']
-    simp only [Quotient.lift_mk'', embedding.map_fun]
+    rw [fun_map_quotient_mk_sigma_mk, ← Function.comp.assoc, Quotient.lift_comp_mk']
+    simp only [Quotient.lift_mk', embedding.map_fun]
   map_rel' n R x := by
     obtain ⟨i, y, rfl⟩ := exists_quotient_mk_sigma_mk_eq G f x
     rw [rel_map_quotient_mk_sigma_mk G f, ← (g i).map_rel R y, ← Function.comp.assoc,
-      Quotient.lift_comp_mk'']
+      Quotient.lift_comp_mk']
 #align first_order.language.direct_limit.lift FirstOrder.Language.DirectLimit.lift
 
 variable {L ι G f}
@@ -354,11 +354,11 @@ variable {L ι G f}
 omit Hg
 
 @[simp]
-theorem lift_quotient_mk''_sigma_mk'' {i} (x : G i) : lift L ι G f g Hg ⟦⟨i, x⟩⟧ = (g i) x :=
+theorem lift_quotient_mk'_sigma_mk' {i} (x : G i) : lift L ι G f g Hg ⟦⟨i, x⟩⟧ = (g i) x :=
   by
   change (lift L ι G f g Hg).toFun ⟦⟨i, x⟩⟧ = _
-  simp only [lift, Quotient.lift_mk'']
-#align first_order.language.direct_limit.lift_quotient_mk_sigma_mk FirstOrder.Language.DirectLimit.lift_quotient_mk''_sigma_mk''
+  simp only [lift, Quotient.lift_mk']
+#align first_order.language.direct_limit.lift_quotient_mk_sigma_mk FirstOrder.Language.DirectLimit.lift_quotient_mk'_sigma_mk'
 
 theorem lift_of {i} (x : G i) : lift L ι G f g Hg (of L ι G f i x) = g i x := by simp
 #align first_order.language.direct_limit.lift_of FirstOrder.Language.DirectLimit.lift_of

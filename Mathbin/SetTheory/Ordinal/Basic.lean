@@ -202,7 +202,7 @@ theorem type_out (o : Ordinal) : Ordinal.type o.out.R = o := by
 
 theorem type_eq {α β} {r : α → α → Prop} {s : β → β → Prop} [IsWellOrder α r] [IsWellOrder β s] :
     type r = type s ↔ Nonempty (r ≃r s) :=
-  Quotient.eq
+  Quotient.eq'
 #align ordinal.type_eq Ordinal.type_eq
 
 theorem RelIso.ordinal_type_eq {α β} {r : α → α → Prop} {s : β → β → Prop} [IsWellOrder α r]
@@ -721,7 +721,7 @@ theorem lift_type_le {α : Type u} {β : Type v} {r s} [IsWellOrder α r] [IsWel
 
 theorem lift_type_eq {α : Type u} {β : Type v} {r s} [IsWellOrder α r] [IsWellOrder β s] :
     lift.{max v w} (type r) = lift.{max u w} (type s) ↔ Nonempty (r ≃r s) :=
-  Quotient.eq.trans
+  Quotient.eq'.trans
     ⟨fun ⟨f⟩ =>
       ⟨(RelIso.preimage Equiv.ulift r).symm.trans <| f.trans (RelIso.preimage Equiv.ulift s)⟩,
       fun ⟨f⟩ =>

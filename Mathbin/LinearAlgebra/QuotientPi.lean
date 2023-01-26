@@ -95,12 +95,12 @@ def quotientPi [Fintype ι] [DecidableEq ι] (p : ∀ i, Submodule R (Ms i)) :
     invFun := piQuotientLift p (pi Set.univ p) single fun i => le_comap_single_pi p
     left_inv := fun x =>
       Quotient.inductionOn' x fun x' => by
-        simp_rw [Quotient.mk'_eq_mk'', quotient_pi_lift_mk, mkq_apply, pi_quotient_lift_mk,
+        simp_rw [Quotient.mk''_eq_mk', quotient_pi_lift_mk, mkq_apply, pi_quotient_lift_mk,
           lsum_single, id_apply]
     right_inv := by
       rw [Function.rightInverse_iff_comp, ← coe_comp, ← @id_coe R]
       refine' congr_arg _ (pi_ext fun i x => Quotient.inductionOn' x fun x' => funext fun j => _)
-      rw [comp_apply, pi_quotient_lift_single, Quotient.mk'_eq_mk'', mapq_apply,
+      rw [comp_apply, pi_quotient_lift_single, Quotient.mk''_eq_mk', mapq_apply,
         quotient_pi_lift_mk, id_apply]
       by_cases hij : i = j <;> simp only [mkq_apply, coe_single]
       · subst hij

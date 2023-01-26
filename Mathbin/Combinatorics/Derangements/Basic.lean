@@ -202,7 +202,7 @@ def derangementsRecursionEquiv :
     derangements (Option α) ≃
       Σa : α, Sum (derangements (({a}ᶜ : Set α) : Type _)) (derangements α) :=
   derangementsOptionEquivSigmaAtMostOneFixedPoint.trans
-    (sigmaCongrRight_trans atMostOneFixedPointEquivSumDerangements)
+    (sigmaCongrRight atMostOneFixedPointEquivSumDerangements)
 #align derangements.derangements_recursion_equiv derangements.derangementsRecursionEquiv
 
 end Option

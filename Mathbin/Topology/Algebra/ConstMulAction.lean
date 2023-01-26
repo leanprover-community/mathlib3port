@@ -478,14 +478,14 @@ export ProperlyDiscontinuousVadd (finite_disjoint_inter_image)
   quotient. -/
 @[to_additive
       "The quotient map by a group action is open, i.e. the quotient by a group\naction is an open quotient. "]
-theorem isOpenMap_quotient_mk''_mul [HasContinuousConstSmul Γ T] :
-    IsOpenMap (Quotient.mk'' : T → Quotient (MulAction.orbitRel Γ T)) :=
+theorem isOpenMap_quotient_mk'_mul [HasContinuousConstSmul Γ T] :
+    IsOpenMap (Quotient.mk' : T → Quotient (MulAction.orbitRel Γ T)) :=
   by
   intro U hU
   rw [isOpen_coinduced, MulAction.quotient_preimage_image_eq_union_mul U]
   exact isOpen_unionᵢ fun γ => (Homeomorph.smul γ).IsOpenMap U hU
-#align is_open_map_quotient_mk_mul isOpenMap_quotient_mk''_mul
-#align is_open_map_quotient_mk_add isOpenMap_quotient_mk''_add
+#align is_open_map_quotient_mk_mul isOpenMap_quotient_mk'_mul
+#align is_open_map_quotient_mk_add isOpenMap_quotient_mk'_add
 
 /-- The quotient by a discontinuous group action of a locally compact t2 space is t2. -/
 @[to_additive "The quotient by a discontinuous group action of a locally compact t2\nspace is t2."]
@@ -495,8 +495,8 @@ instance (priority := 100) t2SpaceOfProperlyDiscontinuousSmulOfT2Space [T2Space 
   by
   set Q := Quotient (MulAction.orbitRel Γ T)
   rw [t2Space_iff_nhds]
-  let f : T → Q := Quotient.mk''
-  have f_op : IsOpenMap f := isOpenMap_quotient_mk''_mul
+  let f : T → Q := Quotient.mk'
+  have f_op : IsOpenMap f := isOpenMap_quotient_mk'_mul
   rintro ⟨x₀⟩ ⟨y₀⟩ (hxy : f x₀ ≠ f y₀)
   show ∃ U ∈ 𝓝 (f x₀), ∃ V ∈ 𝓝 (f y₀), _
   have hx₀y₀ : x₀ ≠ y₀ := ne_of_apply_ne _ hxy
@@ -530,7 +530,7 @@ instance (priority := 100) t2SpaceOfProperlyDiscontinuousSmulOfT2Space [T2Space 
       "The quotient of a second countable space by an additive group action is second\ncountable."]
 theorem HasContinuousConstSmul.secondCountableTopology [SecondCountableTopology T]
     [HasContinuousConstSmul Γ T] : SecondCountableTopology (Quotient (MulAction.orbitRel Γ T)) :=
-  TopologicalSpace.Quotient.secondCountableTopology isOpenMap_quotient_mk''_mul
+  TopologicalSpace.Quotient.secondCountableTopology isOpenMap_quotient_mk'_mul
 #align has_continuous_const_smul.second_countable_topology HasContinuousConstSmul.secondCountableTopology
 #align has_continuous_const_vadd.second_countable_topology HasContinuousConstVadd.secondCountableTopology
 

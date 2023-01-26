@@ -56,7 +56,7 @@ instance {r : α → α → Prop} [t : TopologicalSpace α] : TopologicalSpace (
   coinduced (Quot.mk r) t
 
 instance {s : Setoid α} [t : TopologicalSpace α] : TopologicalSpace (Quotient s) :=
-  coinduced Quotient.mk'' t
+  coinduced Quotient.mk' t
 
 instance [t₁ : TopologicalSpace α] [t₂ : TopologicalSpace β] : TopologicalSpace (α × β) :=
   induced Prod.fst t₁ ⊓ induced Prod.snd t₂
@@ -233,20 +233,20 @@ theorem nhds_ofDual (a : α) : 𝓝 (ofDual a) = map ofDual (𝓝 a) :=
 end
 
 theorem Quotient.preimage_mem_nhds [TopologicalSpace α] [s : Setoid α] {V : Set <| Quotient s}
-    {a : α} (hs : V ∈ 𝓝 (Quotient.mk'' a)) : Quotient.mk'' ⁻¹' V ∈ 𝓝 a :=
+    {a : α} (hs : V ∈ 𝓝 (Quotient.mk' a)) : Quotient.mk' ⁻¹' V ∈ 𝓝 a :=
   preimage_nhds_coinduced hs
 #align quotient.preimage_mem_nhds Quotient.preimage_mem_nhds
 
 /-- The image of a dense set under `quotient.mk` is a dense set. -/
 theorem Dense.quotient [Setoid α] [TopologicalSpace α] {s : Set α} (H : Dense s) :
-    Dense (Quotient.mk'' '' s) :=
-  (surjective_quotient_mk'' α).DenseRange.dense_image continuous_coinduced_rng H
+    Dense (Quotient.mk' '' s) :=
+  (surjective_quotient_mk' α).DenseRange.dense_image continuous_coinduced_rng H
 #align dense.quotient Dense.quotient
 
 /-- The composition of `quotient.mk` and a function with dense range has dense range. -/
 theorem DenseRange.quotient [Setoid α] [TopologicalSpace α] {f : β → α} (hf : DenseRange f) :
-    DenseRange (Quotient.mk'' ∘ f) :=
-  (surjective_quotient_mk'' α).DenseRange.comp hf continuous_coinduced_rng
+    DenseRange (Quotient.mk' ∘ f) :=
+  (surjective_quotient_mk' α).DenseRange.comp hf continuous_coinduced_rng
 #align dense_range.quotient DenseRange.quotient
 
 instance {p : α → Prop} [TopologicalSpace α] [DiscreteTopology α] : DiscreteTopology (Subtype p) :=
@@ -1249,13 +1249,13 @@ theorem continuous_quot_lift {f : α → β} (hr : ∀ a b, r a b → f a = f b)
   continuous_coinduced_dom.2 h
 #align continuous_quot_lift continuous_quot_lift
 
-theorem quotientMap_quotient_mk'' : QuotientMap (@Quotient.mk'' α s) :=
+theorem quotientMap_quotient_mk' : QuotientMap (@Quotient.mk' α s) :=
   quotientMap_quot_mk
-#align quotient_map_quotient_mk quotientMap_quotient_mk''
+#align quotient_map_quotient_mk quotientMap_quotient_mk'
 
-theorem continuous_quotient_mk'' : Continuous (@Quotient.mk'' α s) :=
+theorem continuous_quotient_mk' : Continuous (@Quotient.mk' α s) :=
   continuous_coinduced_rng
-#align continuous_quotient_mk continuous_quotient_mk''
+#align continuous_quotient_mk continuous_quotient_mk'
 
 theorem Continuous.quotient_lift {f : α → β} (h : Continuous f) (hs : ∀ a b, a ≈ b → f a = f b) :
     Continuous (Quotient.lift f hs : Quotient s → β) :=
@@ -1270,7 +1270,7 @@ theorem Continuous.quotient_liftOn' {f : α → β} (h : Continuous f)
 
 theorem Continuous.quotient_map' {t : Setoid β} {f : α → β} (hf : Continuous f)
     (H : (s.R ⇒ t.R) f f) : Continuous (Quotient.map' f H) :=
-  (continuous_quotient_mk''.comp hf).quotient_lift _
+  (continuous_quotient_mk'.comp hf).quotient_lift _
 #align continuous.quotient_map' Continuous.quotient_map'
 
 end Quotient

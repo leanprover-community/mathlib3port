@@ -313,7 +313,7 @@ theorem continuous_stoneCechUnit : Continuous (stoneCechUnit : α → StoneCech 
     by
     have : ↑(g.map pure) ≤ 𝓝 g := by rw [ultrafilter_converges_iff] <;> exact (bind_pure _).symm
     have : (g.map stoneCechUnit : Filter (StoneCech α)) ≤ 𝓝 ⟦g⟧ :=
-      continuousAt_iff_ultrafilter.mp (continuous_quotient_mk''.Tendsto g) _ this
+      continuousAt_iff_ultrafilter.mp (continuous_quotient_mk'.Tendsto g) _ this
     rwa [show ⟦g⟧ = ⟦pure x⟧ from Quotient.sound <| convergent_eqv_pure gx] at this
 #align continuous_stone_cech_unit continuous_stoneCechUnit
 

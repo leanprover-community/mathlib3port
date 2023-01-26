@@ -347,11 +347,11 @@ instance completeSpace_separation [h : CompleteSpace α] :
     CompleteSpace (Quotient (separationSetoid α)) :=
   ⟨fun f => fun hf : Cauchy f =>
     have : Cauchy (f.comap fun x => ⟦x⟧) :=
-      hf.comap' comap_quotient_le_uniformity <| hf.left.comap_of_surj (surjective_quotient_mk'' _)
+      hf.comap' comap_quotient_le_uniformity <| hf.left.comap_of_surj (surjective_quotient_mk' _)
     let ⟨x, (hx : (f fun x => ⟦x⟧) ≤ 𝓝 x)⟩ := CompleteSpace.complete this
     ⟨⟦x⟧,
       (comap_le_comap_iff <| by simp).1
-        (hx.trans <| map_le_iff_le_comap.1 continuous_quotient_mk''.ContinuousAt)⟩⟩
+        (hx.trans <| map_le_iff_le_comap.1 continuous_quotient_mk'.ContinuousAt)⟩⟩
 #align uniform_space.complete_space_separation UniformSpace.completeSpace_separation
 
 /-- Hausdorff completion of `α` -/
@@ -378,10 +378,10 @@ instance : T3Space (Completion α) :=
 
 /-- Automatic coercion from `α` to its completion. Not always injective. -/
 instance : CoeTC α (Completion α) :=
-  ⟨Quotient.mk'' ∘ pure_cauchy⟩
+  ⟨Quotient.mk' ∘ pure_cauchy⟩
 
 -- note [use has_coe_t]
-protected theorem coe_eq : (coe : α → Completion α) = Quotient.mk'' ∘ pure_cauchy :=
+protected theorem coe_eq : (coe : α → Completion α) = Quotient.mk' ∘ pure_cauchy :=
   rfl
 #align uniform_space.completion.coe_eq UniformSpace.Completion.coe_eq
 
@@ -621,12 +621,12 @@ def completionSeparationQuotientEquiv (α : Type u) [UniformSpace α] :
   by
   refine'
     ⟨completion.extension (SeparationQuotient.lift (coe : α → completion α)),
-      completion.map Quotient.mk'', _, _⟩
+      completion.map Quotient.mk', _, _⟩
   · intro a
     refine' induction_on a (isClosed_eq (continuous_map.comp continuous_extension) continuous_id) _
     rintro ⟨a⟩
     show
-      completion.map Quotient.mk'' (completion.extension (SeparationQuotient.lift coe) ↑(⟦a⟧)) =
+      completion.map Quotient.mk' (completion.extension (SeparationQuotient.lift coe) ↑(⟦a⟧)) =
         ↑(⟦a⟧)
     rw [extension_coe (separation_quotient.uniform_continuous_lift _),
         SeparationQuotient.lift_mk (uniform_continuous_coe α),

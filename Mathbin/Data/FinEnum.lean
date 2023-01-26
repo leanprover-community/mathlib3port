@@ -159,7 +159,7 @@ instance fin {n} : FinEnum (Fin n) :=
 #print FinEnum.Quotient.enum /-
 instance Quotient.enum [FinEnum α] (s : Setoid α) [DecidableRel ((· ≈ ·) : α → α → Prop)] :
     FinEnum (Quotient s) :=
-  FinEnum.ofSurjective Quotient.mk'' fun x => Quotient.inductionOn x fun x => ⟨x, rfl⟩
+  FinEnum.ofSurjective Quotient.mk' fun x => Quotient.inductionOn x fun x => ⟨x, rfl⟩
 #align fin_enum.quotient.enum FinEnum.Quotient.enum
 -/
 

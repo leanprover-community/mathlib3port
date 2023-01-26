@@ -119,7 +119,7 @@ variable {α}
 #print toAntisymmetrization /-
 /-- Turn an element into its antisymmetrization. -/
 def toAntisymmetrization : α → Antisymmetrization α r :=
-  Quotient.mk'
+  Quotient.mk''
 #align to_antisymmetrization toAntisymmetrization
 -/
 
@@ -357,7 +357,7 @@ Case conversion may be inaccurate. Consider using '#align order_hom.antisymmetri
 @[simp]
 theorem OrderHom.antisymmetrization_apply_mk (f : α →o β) (a : α) :
     f.Antisymmetrization (toAntisymmetrization _ a) = toAntisymmetrization _ (f a) :=
-  Quotient.map'_mk' f (liftFun_antisymm_rel f) _
+  Quotient.map'_mk'' f (liftFun_antisymm_rel f) _
 #align order_hom.antisymmetrization_apply_mk OrderHom.antisymmetrization_apply_mk
 
 variable (α)
@@ -389,8 +389,8 @@ def OrderIso.dualAntisymmetrization :
     where
   toFun := Quotient.map' id fun _ _ => And.symm
   invFun := Quotient.map' id fun _ _ => And.symm
-  left_inv a := Quotient.inductionOn' a fun a => by simp_rw [Quotient.map'_mk', id]
-  right_inv a := Quotient.inductionOn' a fun a => by simp_rw [Quotient.map'_mk', id]
+  left_inv a := Quotient.inductionOn' a fun a => by simp_rw [Quotient.map'_mk'', id]
+  right_inv a := Quotient.inductionOn' a fun a => by simp_rw [Quotient.map'_mk'', id]
   map_rel_iff' a b := Quotient.inductionOn₂' a b fun a b => Iff.rfl
 #align order_iso.dual_antisymmetrization OrderIso.dualAntisymmetrization
 

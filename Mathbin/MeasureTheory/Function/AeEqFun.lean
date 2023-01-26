@@ -119,7 +119,7 @@ variable [TopologicalSpace β] [TopologicalSpace γ] [TopologicalSpace δ]
 /-- Construct the equivalence class `[f]` of an almost everywhere measurable function `f`, based
     on the equivalence relation of being almost everywhere equal. -/
 def mk {β : Type _} [TopologicalSpace β] (f : α → β) (hf : AeStronglyMeasurable f μ) : α →ₘ[μ] β :=
-  Quotient.mk' ⟨f, hf⟩
+  Quotient.mk'' ⟨f, hf⟩
 #align measure_theory.ae_eq_fun.mk MeasureTheory.AeEqFun.mk
 
 /-- A measurable representative of an `ae_eq_fun` [f] -/
@@ -153,7 +153,7 @@ theorem quot_mk_eq_mk (f : α → β) (hf) :
 
 @[simp]
 theorem mk_eq_mk {f g : α → β} {hf hg} : (mk f hf : α →ₘ[μ] β) = mk g hg ↔ f =ᵐ[μ] g :=
-  Quotient.eq'
+  Quotient.eq''
 #align measure_theory.ae_eq_fun.mk_eq_mk MeasureTheory.AeEqFun.mk_eq_mk
 
 @[simp]

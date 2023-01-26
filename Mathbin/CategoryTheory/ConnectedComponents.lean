@@ -46,11 +46,11 @@ def ConnectedComponents (J : Type u₁) [Category.{v₁} J] : Type u₁ :=
 #align category_theory.connected_components CategoryTheory.ConnectedComponents
 
 instance [Inhabited J] : Inhabited (ConnectedComponents J) :=
-  ⟨Quotient.mk' default⟩
+  ⟨Quotient.mk'' default⟩
 
 /-- Given an index for a connected component, produce the actual component as a full subcategory. -/
 def Component (j : ConnectedComponents J) : Type u₁ :=
-  FullSubcategory fun k => Quotient.mk' k = j deriving Category
+  FullSubcategory fun k => Quotient.mk'' k = j deriving Category
 #align category_theory.component CategoryTheory.Component
 
 /-- The inclusion functor from a connected component to the whole category. -/
@@ -80,7 +80,7 @@ instance (j : ConnectedComponents J) : IsConnected (Component j) :=
   -- Get an explicit zigzag as a list
   rcases List.exists_chain_of_relationReflTransGen h₁₂ with ⟨l, hl₁, hl₂⟩
   -- Everything which has a zigzag to j₂ can be lifted to the same component as `j₂`.
-  let f : ∀ x, zigzag x j₂ → component (Quotient.mk' j₂) := fun x h => ⟨x, Quotient.sound' h⟩
+  let f : ∀ x, zigzag x j₂ → component (Quotient.mk'' j₂) := fun x h => ⟨x, Quotient.sound' h⟩
   -- Everything in our chosen zigzag from `j₁` to `j₂` has a zigzag to `j₂`.
   have hf : ∀ a : J, a ∈ l → zigzag a j₂ := by
     intro i hi
@@ -130,14 +130,14 @@ instance : Full (decomposedTo J)
     rintro ⟨j', X, hX⟩ ⟨k', Y, hY⟩ f
     dsimp at f
     have : j' = k'
-    rw [← hX, ← hY, Quotient.eq']
+    rw [← hX, ← hY, Quotient.eq'']
     exact Relation.ReflTransGen.single (Or.inl ⟨f⟩)
     subst this
     refine' sigma.sigma_hom.mk f
   witness' := by
     rintro ⟨j', X, hX⟩ ⟨_, Y, rfl⟩ f
-    have : Quotient.mk' Y = j' := by
-      rw [← hX, Quotient.eq']
+    have : Quotient.mk'' Y = j' := by
+      rw [← hX, Quotient.eq'']
       exact Relation.ReflTransGen.single (Or.inr ⟨f⟩)
     subst this
     rfl

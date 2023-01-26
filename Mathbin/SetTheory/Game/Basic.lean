@@ -125,7 +125,7 @@ instance : IsTrichotomous Game (· ⧏ ·) :=
   ⟨by
     rintro ⟨x⟩ ⟨y⟩
     change _ ∨ ⟦x⟧ = ⟦y⟧ ∨ _
-    rw [Quotient.eq]
+    rw [Quotient.eq']
     apply lf_or_equiv_or_gf⟩
 
 /-! It can be useful to use these lemmas to turn `pgame` inequalities into `game` inequalities, as
@@ -145,7 +145,7 @@ theorem Pgame.lt_iff_game_lt {x y : Pgame} : x < y ↔ ⟦x⟧ < ⟦y⟧ :=
 #align pgame.lt_iff_game_lt Pgame.lt_iff_game_lt
 
 theorem Pgame.equiv_iff_game_eq {x y : Pgame} : (x ≈ y) ↔ ⟦x⟧ = ⟦y⟧ :=
-  (@Quotient.eq _ _ x y).symm
+  (@Quotient.eq' _ _ x y).symm
 #align pgame.equiv_iff_game_eq Pgame.equiv_iff_game_eq
 
 /-- The fuzzy, confused, or incomparable relation on games.
@@ -222,13 +222,13 @@ theorem quot_sub (a b : Pgame) : ⟦a - b⟧ = ⟦a⟧ - ⟦b⟧ :=
   rfl
 #align pgame.quot_sub Pgame.quot_sub
 
-theorem quot_eq_of_mk''_quot_eq {x y : Pgame} (L : x.LeftMoves ≃ y.LeftMoves)
+theorem quot_eq_of_mk'_quot_eq {x y : Pgame} (L : x.LeftMoves ≃ y.LeftMoves)
     (R : x.RightMoves ≃ y.RightMoves) (hl : ∀ i, ⟦x.moveLeft i⟧ = ⟦y.moveLeft (L i)⟧)
     (hr : ∀ j, ⟦x.moveRight j⟧ = ⟦y.moveRight (R j)⟧) : ⟦x⟧ = ⟦y⟧ :=
   by
-  simp_rw [Quotient.eq] at hl hr
+  simp_rw [Quotient.eq'] at hl hr
   exact Quot.sound (equiv_of_mk_equiv L R hl hr)
-#align pgame.quot_eq_of_mk_quot_eq Pgame.quot_eq_of_mk''_quot_eq
+#align pgame.quot_eq_of_mk_quot_eq Pgame.quot_eq_of_mk'_quot_eq
 
 /-! Multiplicative operations can be defined at the level of pre-games,
 but to prove their properties we need to use the abelian group structure of games.

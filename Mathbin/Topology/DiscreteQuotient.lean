@@ -118,7 +118,7 @@ instance : TopologicalSpace S :=
 
 /-- The projection from `X` to the given discrete quotient. -/
 def proj : X → S :=
-  Quotient.mk'
+  Quotient.mk''
 #align discrete_quotient.proj DiscreteQuotient.proj
 
 theorem proj_surjective : Function.Surjective S.proj :=
@@ -128,7 +128,7 @@ theorem proj_surjective : Function.Surjective S.proj :=
 theorem fiber_eq (x : X) : S.proj ⁻¹' {S.proj x} = setOf (S.Rel x) :=
   by
   ext1 y
-  simp only [Set.mem_preimage, Set.mem_singleton_iff, Quotient.eq',
+  simp only [Set.mem_preimage, Set.mem_singleton_iff, Quotient.eq'',
     DiscreteQuotient.proj.equations._eqn_1, Set.mem_setOf_eq]
   exact ⟨fun h => S.symm _ _ h, fun h => S.symm _ _ h⟩
 #align discrete_quotient.fiber_eq DiscreteQuotient.fiber_eq

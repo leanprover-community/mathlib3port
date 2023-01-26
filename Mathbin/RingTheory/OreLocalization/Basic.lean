@@ -108,7 +108,7 @@ variable {R S}
 
 /-- The division in the ore localization `R[S⁻¹]`, as a fraction of an element of `R` and `S`. -/
 def oreDiv (r : R) (s : S) : R[S⁻¹] :=
-  Quotient.mk'' (r, s)
+  Quotient.mk' (r, s)
 #align ore_localization.ore_div OreLocalization.oreDiv
 
 -- mathport name: «expr /ₒ »
@@ -124,7 +124,7 @@ protected theorem ind {β : R[S⁻¹] → Prop} (c : ∀ (r : R) (s : S), β (r 
 
 theorem oreDiv_eq_iff {r₁ r₂ : R} {s₁ s₂ : S} :
     r₁ /ₒ s₁ = r₂ /ₒ s₂ ↔ ∃ (u : S)(v : R), r₂ * u = r₁ * v ∧ (s₂ : R) * u = s₁ * v :=
-  Quotient.eq'
+  Quotient.eq''
 #align ore_localization.ore_div_eq_iff OreLocalization.oreDiv_eq_iff
 
 /-- A fraction `r /ₒ s` is equal to its expansion by an arbitrary factor `t` if `s * t ∈ S`. -/
@@ -594,7 +594,7 @@ private def add' (r₂ : R) (s₂ : S) : R[S⁻¹] → R[S⁻¹] :=
 
 private theorem add'_comm (r₁ r₂ : R) (s₁ s₂ : S) : add' r₁ s₁ (r₂ /ₒ s₂) = add' r₂ s₂ (r₁ /ₒ s₁) :=
   by
-  simp only [add', ore_div, add'', Quotient.lift_mk'', Quotient.eq]
+  simp only [add', ore_div, add'', Quotient.lift_mk', Quotient.eq']
   have hb := ore_eq (↑s₂) s₁
   set rb := ore_num (↑s₂) s₁ with h
   -- r~~

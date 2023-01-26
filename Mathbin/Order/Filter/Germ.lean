@@ -108,7 +108,7 @@ namespace Product
 variable {ε : α → Type _}
 
 instance : CoeTC (∀ a, ε a) (l.product ε) :=
-  ⟨Quotient.mk'⟩
+  ⟨Quotient.mk''⟩
 
 instance [∀ a, Inhabited (ε a)] : Inhabited (l.product ε) :=
   ⟨(↑fun a => (default : ε a) : l.product ε)⟩
@@ -118,7 +118,7 @@ end Product
 namespace Germ
 
 instance : CoeTC (α → β) (Germ l β) :=
-  ⟨Quotient.mk'⟩
+  ⟨Quotient.mk''⟩
 
 instance : HasLiftT β (Germ l β) :=
   ⟨fun c => ↑fun x : α => c⟩
@@ -129,9 +129,9 @@ theorem quot_mk_eq_coe (l : Filter α) (f : α → β) : Quot.mk _ f = (f : Germ
 #align filter.germ.quot_mk_eq_coe Filter.Germ.quot_mk_eq_coe
 
 @[simp]
-theorem mk'_eq_coe (l : Filter α) (f : α → β) : Quotient.mk' f = (f : Germ l β) :=
+theorem mk''_eq_coe (l : Filter α) (f : α → β) : Quotient.mk'' f = (f : Germ l β) :=
   rfl
-#align filter.germ.mk'_eq_coe Filter.Germ.mk'_eq_coe
+#align filter.germ.mk'_eq_coe Filter.Germ.mk''_eq_coe
 
 @[elab_as_elim]
 theorem induction_on (f : Germ l β) {p : Germ l β → Prop} (h : ∀ f : α → β, p f) : p f :=
@@ -173,7 +173,7 @@ theorem map'_coe {lc : Filter γ} (F : (α → β) → γ → δ) (hF : (l.Event
 
 @[simp, norm_cast]
 theorem coe_eq : (f : Germ l β) = g ↔ f =ᶠ[l] g :=
-  Quotient.eq'
+  Quotient.eq''
 #align filter.germ.coe_eq Filter.Germ.coe_eq
 
 alias coe_eq ↔ _ _root_.filter.eventually_eq.germ_eq

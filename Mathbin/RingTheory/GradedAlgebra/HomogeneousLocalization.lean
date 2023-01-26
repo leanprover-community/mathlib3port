@@ -316,10 +316,10 @@ def val (y : HomogeneousLocalization 𝒜 x) : at x :=
 #align homogeneous_localization.val HomogeneousLocalization.val
 
 @[simp]
-theorem val_mk' (i : NumDenomSameDeg 𝒜 x) :
-    val (Quotient.mk' i) = Localization.mk i.num ⟨i.denom, i.denom_mem⟩ :=
+theorem val_mk'' (i : NumDenomSameDeg 𝒜 x) :
+    val (Quotient.mk'' i) = Localization.mk i.num ⟨i.denom, i.denom_mem⟩ :=
   rfl
-#align homogeneous_localization.val_mk' HomogeneousLocalization.val_mk'
+#align homogeneous_localization.val_mk' HomogeneousLocalization.val_mk''
 
 variable (x)
 
@@ -396,15 +396,15 @@ instance : Mul (HomogeneousLocalization 𝒜 x)
       simp only [num_mul, denom_mul]
       convert congr_arg₂ (· * ·) h h' <;> erw [Localization.mk_mul] <;> rfl
 
-instance : One (HomogeneousLocalization 𝒜 x) where one := Quotient.mk' 1
+instance : One (HomogeneousLocalization 𝒜 x) where one := Quotient.mk'' 1
 
-instance : Zero (HomogeneousLocalization 𝒜 x) where zero := Quotient.mk' 0
+instance : Zero (HomogeneousLocalization 𝒜 x) where zero := Quotient.mk'' 0
 
-theorem zero_eq : (0 : HomogeneousLocalization 𝒜 x) = Quotient.mk' 0 :=
+theorem zero_eq : (0 : HomogeneousLocalization 𝒜 x) = Quotient.mk'' 0 :=
   rfl
 #align homogeneous_localization.zero_eq HomogeneousLocalization.zero_eq
 
-theorem one_eq : (1 : HomogeneousLocalization 𝒜 x) = Quotient.mk' 1 :=
+theorem one_eq : (1 : HomogeneousLocalization 𝒜 x) = Quotient.mk'' 1 :=
   rfl
 #align homogeneous_localization.one_eq HomogeneousLocalization.one_eq
 
@@ -550,7 +550,7 @@ theorem eq_num_div_denom (f : HomogeneousLocalization 𝒜 x) :
   apply_fun HomogeneousLocalization.val  at this
   rw [← this]
   unfold HomogeneousLocalization.val
-  simp only [Quotient.liftOn'_mk']
+  simp only [Quotient.liftOn'_mk'']
   rfl
 #align homogeneous_localization.eq_num_div_denom HomogeneousLocalization.eq_num_div_denom
 
@@ -559,7 +559,7 @@ theorem ext_iff_val (f g : HomogeneousLocalization 𝒜 x) : f = g ↔ f.val = g
     mpr := fun h => by
       induction f using Quotient.inductionOn
       induction g using Quotient.inductionOn
-      rw [Quotient.eq]
+      rw [Quotient.eq']
       unfold HomogeneousLocalization.val at h
       simpa only [Quotient.liftOn'_mk] using h }
 #align homogeneous_localization.ext_iff_val HomogeneousLocalization.ext_iff_val
@@ -598,7 +598,7 @@ theorem isUnit_iff_isUnit_val (f : HomogeneousLocalization.AtPrime 𝒜 𝔭) : 
       erw [not_not]
       exact Ideal.mul_mem_left _ _ (Ideal.mul_mem_left _ _ mem1)
     refine'
-            ⟨⟨f, Quotient.mk' ⟨f.deg, ⟨f.denom, f.denom_mem_deg⟩, ⟨f.num, f.num_mem_deg⟩, mem2⟩, _,
+            ⟨⟨f, Quotient.mk'' ⟨f.deg, ⟨f.denom, f.denom_mem_deg⟩, ⟨f.num, f.num_mem_deg⟩, mem2⟩, _,
                 _⟩,
               rfl⟩ <;>
           simp only [ext_iff_val, mul_val, val_mk', ← Subtype.val_eq_coe, f.eq_num_div_denom,
@@ -619,7 +619,7 @@ instance : LocalRing (HomogeneousLocalization.AtPrime 𝒜 𝔭) :=
     by
     simp only [← is_unit_iff_is_unit_val, sub_val, one_val]
     induction a using Quotient.inductionOn'
-    simp only [HomogeneousLocalization.val_mk', ← Subtype.val_eq_coe]
+    simp only [HomogeneousLocalization.val_mk'', ← Subtype.val_eq_coe]
     by_cases mem1 : a.num.1 ∈ 𝔭
     · right
       have : a.denom.1 - a.num.1 ∈ 𝔭.prime_compl := fun h =>

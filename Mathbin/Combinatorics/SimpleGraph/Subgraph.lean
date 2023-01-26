@@ -816,7 +816,7 @@ theorem map_subgraphOfAdj (f : G →g G') {v w : V} (hvw : G.Adj v w) :
         simp
       · use w
         simp
-  · simp only [Relation.Map, subgraph.map_adj, subgraph_of_adj_adj, Quotient.eq, Sym2.rel_iff]
+  · simp only [Relation.Map, subgraph.map_adj, subgraph_of_adj_adj, Quotient.eq', Sym2.rel_iff]
     constructor
     · rintro ⟨a, b, ⟨rfl, rfl⟩ | ⟨rfl, rfl⟩, rfl, rfl⟩ <;> simp
     · rintro (⟨rfl, rfl⟩ | ⟨rfl, rfl⟩)
@@ -965,7 +965,7 @@ theorem deleteEdges_coe_eq (s : Set (Sym2 G'.verts)) :
   · intro hs
     refine' Sym2.ind _
     rintro ⟨v', hv'⟩ ⟨w', hw'⟩
-    simp only [Sym2.map_pair_eq, Subtype.coe_mk, Quotient.eq]
+    simp only [Sym2.map_pair_eq, Subtype.coe_mk, Quotient.eq']
     contrapose!
     rintro (_ | _) <;> simpa [Sym2.eq_swap]
   · intro h' hs
@@ -1090,7 +1090,7 @@ theorem subgraphOfAdj_eq_induce {v w : V} (hvw : G.Adj v w) :
   · simp
   · constructor
     · intro h
-      simp only [subgraph_of_adj_adj, Quotient.eq, Sym2.rel_iff] at h
+      simp only [subgraph_of_adj_adj, Quotient.eq', Sym2.rel_iff] at h
       obtain ⟨rfl, rfl⟩ | ⟨rfl, rfl⟩ := h <;> simp [hvw, hvw.symm]
     · intro h
       simp only [induce_adj, Set.mem_insert_iff, Set.mem_singleton_iff, top_adj_iff] at h

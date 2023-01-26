@@ -245,42 +245,42 @@ theorem mem_rightTransversals_iff_existsUnique_mul_inv_mem :
 #align add_subgroup.mem_right_transversals_iff_exists_unique_add_neg_mem AddSubgroup.mem_rightTransversals_iff_existsUnique_add_neg_mem
 
 @[to_additive]
-theorem mem_leftTransversals_iff_existsUnique_quotient_mk'_eq :
+theorem mem_leftTransversals_iff_existsUnique_quotient_mk''_eq :
     S ∈ leftTransversals (H : Set G) ↔
-      ∀ q : Quotient (QuotientGroup.leftRel H), ∃! s : S, Quotient.mk' s.1 = q :=
+      ∀ q : Quotient (QuotientGroup.leftRel H), ∃! s : S, Quotient.mk'' s.1 = q :=
   by
   simp_rw [mem_left_transversals_iff_exists_unique_inv_mul_mem, SetLike.mem_coe, ←
     QuotientGroup.eq']
-  exact ⟨fun h q => Quotient.inductionOn' q h, fun h g => h (Quotient.mk' g)⟩
-#align subgroup.mem_left_transversals_iff_exists_unique_quotient_mk'_eq Subgroup.mem_leftTransversals_iff_existsUnique_quotient_mk'_eq
-#align add_subgroup.mem_left_transversals_iff_exists_unique_quotient_mk'_eq AddSubgroup.mem_leftTransversals_iff_existsUnique_quotient_mk'_eq
+  exact ⟨fun h q => Quotient.inductionOn' q h, fun h g => h (Quotient.mk'' g)⟩
+#align subgroup.mem_left_transversals_iff_exists_unique_quotient_mk'_eq Subgroup.mem_leftTransversals_iff_existsUnique_quotient_mk''_eq
+#align add_subgroup.mem_left_transversals_iff_exists_unique_quotient_mk'_eq AddSubgroup.mem_leftTransversals_iff_existsUnique_quotient_mk''_eq
 
 @[to_additive]
-theorem mem_rightTransversals_iff_existsUnique_quotient_mk'_eq :
+theorem mem_rightTransversals_iff_existsUnique_quotient_mk''_eq :
     S ∈ rightTransversals (H : Set G) ↔
-      ∀ q : Quotient (QuotientGroup.rightRel H), ∃! s : S, Quotient.mk' s.1 = q :=
+      ∀ q : Quotient (QuotientGroup.rightRel H), ∃! s : S, Quotient.mk'' s.1 = q :=
   by
   simp_rw [mem_right_transversals_iff_exists_unique_mul_inv_mem, SetLike.mem_coe, ←
-    QuotientGroup.rightRel_apply, ← Quotient.eq']
-  exact ⟨fun h q => Quotient.inductionOn' q h, fun h g => h (Quotient.mk' g)⟩
-#align subgroup.mem_right_transversals_iff_exists_unique_quotient_mk'_eq Subgroup.mem_rightTransversals_iff_existsUnique_quotient_mk'_eq
-#align add_subgroup.mem_right_transversals_iff_exists_unique_quotient_mk'_eq AddSubgroup.mem_rightTransversals_iff_existsUnique_quotient_mk'_eq
+    QuotientGroup.rightRel_apply, ← Quotient.eq'']
+  exact ⟨fun h q => Quotient.inductionOn' q h, fun h g => h (Quotient.mk'' g)⟩
+#align subgroup.mem_right_transversals_iff_exists_unique_quotient_mk'_eq Subgroup.mem_rightTransversals_iff_existsUnique_quotient_mk''_eq
+#align add_subgroup.mem_right_transversals_iff_exists_unique_quotient_mk'_eq AddSubgroup.mem_rightTransversals_iff_existsUnique_quotient_mk''_eq
 
 @[to_additive]
 theorem mem_leftTransversals_iff_bijective :
     S ∈ leftTransversals (H : Set G) ↔
-      Function.Bijective (S.restrict (Quotient.mk' : G → Quotient (QuotientGroup.leftRel H))) :=
-  mem_leftTransversals_iff_existsUnique_quotient_mk'_eq.trans
-    (Function.bijective_iff_existsUnique (S.restrict Quotient.mk')).symm
+      Function.Bijective (S.restrict (Quotient.mk'' : G → Quotient (QuotientGroup.leftRel H))) :=
+  mem_leftTransversals_iff_existsUnique_quotient_mk''_eq.trans
+    (Function.bijective_iff_existsUnique (S.restrict Quotient.mk'')).symm
 #align subgroup.mem_left_transversals_iff_bijective Subgroup.mem_leftTransversals_iff_bijective
 #align add_subgroup.mem_left_transversals_iff_bijective AddSubgroup.mem_leftTransversals_iff_bijective
 
 @[to_additive]
 theorem mem_rightTransversals_iff_bijective :
     S ∈ rightTransversals (H : Set G) ↔
-      Function.Bijective (S.restrict (Quotient.mk' : G → Quotient (QuotientGroup.rightRel H))) :=
-  mem_rightTransversals_iff_existsUnique_quotient_mk'_eq.trans
-    (Function.bijective_iff_existsUnique (S.restrict Quotient.mk')).symm
+      Function.Bijective (S.restrict (Quotient.mk'' : G → Quotient (QuotientGroup.rightRel H))) :=
+  mem_rightTransversals_iff_existsUnique_quotient_mk''_eq.trans
+    (Function.bijective_iff_existsUnique (S.restrict Quotient.mk'')).symm
 #align subgroup.mem_right_transversals_iff_bijective Subgroup.mem_rightTransversals_iff_bijective
 #align add_subgroup.mem_right_transversals_iff_bijective AddSubgroup.mem_rightTransversals_iff_bijective
 
@@ -311,7 +311,7 @@ theorem range_mem_leftTransversals {f : G ⧸ H → G} (hf : ∀ q, ↑(f q) = q
 
 @[to_additive]
 theorem range_mem_rightTransversals {f : Quotient (QuotientGroup.rightRel H) → G}
-    (hf : ∀ q, Quotient.mk' (f q) = q) : Set.range f ∈ rightTransversals (H : Set G) :=
+    (hf : ∀ q, Quotient.mk'' (f q) = q) : Set.range f ∈ rightTransversals (H : Set G) :=
   mem_rightTransversals_iff_bijective.mpr
     ⟨by
       rintro ⟨-, q₁, rfl⟩ ⟨-, q₂, rfl⟩ h <;>
@@ -337,9 +337,9 @@ theorem exists_right_transversal (g : G) : ∃ S ∈ rightTransversals (H : Set 
   classical
     refine'
       ⟨Set.range (Function.update Quotient.out' _ g), range_mem_right_transversals fun q => _,
-        Quotient.mk' g, Function.update_same (Quotient.mk' g) g Quotient.out'⟩
-    by_cases hq : q = Quotient.mk' g
-    · exact hq.symm ▸ congr_arg _ (Function.update_same (Quotient.mk' g) g Quotient.out')
+        Quotient.mk'' g, Function.update_same (Quotient.mk'' g) g Quotient.out'⟩
+    by_cases hq : q = Quotient.mk'' g
+    · exact hq.symm ▸ congr_arg _ (Function.update_same (Quotient.mk'' g) g Quotient.out')
     · exact Eq.trans (congr_arg _ (Function.update_noteq hq g Quotient.out')) q.out_eq'
 #align subgroup.exists_right_transversal Subgroup.exists_right_transversal
 #align add_subgroup.exists_right_transversal AddSubgroup.exists_right_transversal
@@ -354,10 +354,10 @@ noncomputable def toEquiv (hS : S ∈ Subgroup.leftTransversals (H : Set G)) : G
 #align add_subgroup.mem_left_transversals.to_equiv AddSubgroup.MemLeftTransversals.toEquiv
 
 @[to_additive]
-theorem mk'_toEquiv (hS : S ∈ Subgroup.leftTransversals (H : Set G)) (q : G ⧸ H) :
-    Quotient.mk' (toEquiv hS q : G) = q :=
+theorem mk''_toEquiv (hS : S ∈ Subgroup.leftTransversals (H : Set G)) (q : G ⧸ H) :
+    Quotient.mk'' (toEquiv hS q : G) = q :=
   (toEquiv hS).symm_apply_apply q
-#align subgroup.mem_left_transversals.mk'_to_equiv Subgroup.MemLeftTransversals.mk'_toEquiv
+#align subgroup.mem_left_transversals.mk'_to_equiv Subgroup.MemLeftTransversals.mk''_toEquiv
 #align add_subgroup.mem_left_transversals.mk'_to_equiv AddSubgroup.MemLeftTransversals.mk'_to_equiv
 
 @[to_additive]
@@ -374,14 +374,14 @@ theorem toEquiv_apply {f : G ⧸ H → G} (hf : ∀ q, (f q : G ⧸ H) = q) (q :
 @[to_additive
       "A left transversal can be viewed as a function mapping each element of the group\n  to the chosen representative from that left coset."]
 noncomputable def toFun (hS : S ∈ Subgroup.leftTransversals (H : Set G)) : G → S :=
-  toEquiv hS ∘ Quotient.mk'
+  toEquiv hS ∘ Quotient.mk''
 #align subgroup.mem_left_transversals.to_fun Subgroup.MemLeftTransversals.toFun
 #align add_subgroup.mem_left_transversals.to_fun AddSubgroup.MemLeftTransversals.toFun
 
 @[to_additive]
 theorem inv_toFun_mul_mem (hS : S ∈ Subgroup.leftTransversals (H : Set G)) (g : G) :
     (toFun hS g : G)⁻¹ * g ∈ H :=
-  QuotientGroup.leftRel_apply.mp <| Quotient.exact' <| mk'_toEquiv _ _
+  QuotientGroup.leftRel_apply.mp <| Quotient.exact' <| mk''_toEquiv _ _
 #align subgroup.mem_left_transversals.inv_to_fun_mul_mem Subgroup.MemLeftTransversals.inv_toFun_mul_mem
 #align add_subgroup.mem_left_transversals.neg_to_fun_add_mem AddSubgroup.MemLeftTransversals.neg_toFun_add_mem
 
@@ -405,15 +405,15 @@ noncomputable def toEquiv (hS : S ∈ Subgroup.rightTransversals (H : Set G)) :
 #align add_subgroup.mem_right_transversals.to_equiv AddSubgroup.MemRightTransversals.toEquiv
 
 @[to_additive]
-theorem mk'_toEquiv (hS : S ∈ Subgroup.rightTransversals (H : Set G))
-    (q : Quotient (QuotientGroup.rightRel H)) : Quotient.mk' (toEquiv hS q : G) = q :=
+theorem mk''_toEquiv (hS : S ∈ Subgroup.rightTransversals (H : Set G))
+    (q : Quotient (QuotientGroup.rightRel H)) : Quotient.mk'' (toEquiv hS q : G) = q :=
   (toEquiv hS).symm_apply_apply q
-#align subgroup.mem_right_transversals.mk'_to_equiv Subgroup.MemRightTransversals.mk'_toEquiv
+#align subgroup.mem_right_transversals.mk'_to_equiv Subgroup.MemRightTransversals.mk''_toEquiv
 #align add_subgroup.mem_right_transversals.mk'_to_equiv AddSubgroup.MemRightTransversals.mk'_to_equiv
 
 @[to_additive]
 theorem toEquiv_apply {f : Quotient (QuotientGroup.rightRel H) → G}
-    (hf : ∀ q, Quotient.mk' (f q) = q) (q : Quotient (QuotientGroup.rightRel H)) :
+    (hf : ∀ q, Quotient.mk'' (f q) = q) (q : Quotient (QuotientGroup.rightRel H)) :
     (toEquiv (range_mem_rightTransversals hf) q : G) = f q :=
   by
   refine' (subtype.ext_iff.mp _).trans (Subtype.coe_mk (f q) ⟨q, rfl⟩)
@@ -426,14 +426,14 @@ theorem toEquiv_apply {f : Quotient (QuotientGroup.rightRel H) → G}
 @[to_additive
       "A right transversal can be viewed as a function mapping each element of the group\n  to the chosen representative from that right coset."]
 noncomputable def toFun (hS : S ∈ Subgroup.rightTransversals (H : Set G)) : G → S :=
-  toEquiv hS ∘ Quotient.mk'
+  toEquiv hS ∘ Quotient.mk''
 #align subgroup.mem_right_transversals.to_fun Subgroup.MemRightTransversals.toFun
 #align add_subgroup.mem_right_transversals.to_fun AddSubgroup.MemRightTransversals.toFun
 
 @[to_additive]
 theorem mul_inv_toFun_mem (hS : S ∈ Subgroup.rightTransversals (H : Set G)) (g : G) :
     g * (toFun hS g : G)⁻¹ ∈ H :=
-  QuotientGroup.rightRel_apply.mp <| Quotient.exact' <| mk'_toEquiv _ _
+  QuotientGroup.rightRel_apply.mp <| Quotient.exact' <| mk''_toEquiv _ _
 #align subgroup.mem_right_transversals.mul_inv_to_fun_mem Subgroup.MemRightTransversals.mul_inv_toFun_mem
 #align add_subgroup.mem_right_transversals.add_neg_to_fun_mem AddSubgroup.MemRightTransversals.add_neg_toFun_mem
 
@@ -594,7 +594,7 @@ variable {G : Type u} [Group G] (H : Subgroup G) (g : G)
 noncomputable def quotientEquivSigmaZmod :
     G ⧸ H ≃ Σq : orbitRel.Quotient (zpowers g) (G ⧸ H), ZMod (minimalPeriod ((· • ·) g) q.out') :=
   (selfEquivSigmaOrbits (zpowers g) (G ⧸ H)).trans
-    (sigmaCongrRight_trans fun q => orbitZpowersEquiv g q.out')
+    (sigmaCongrRight fun q => orbitZpowersEquiv g q.out')
 #align subgroup.quotient_equiv_sigma_zmod Subgroup.quotientEquivSigmaZmod
 
 theorem quotientEquivSigmaZmod_symm_apply (q : orbitRel.Quotient (zpowers g) (G ⧸ H))

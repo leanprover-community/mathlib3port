@@ -2396,7 +2396,7 @@ theorem bot_quotient_isMaximal_iff (I : Ideal R) : (⊥ : Ideal (R ⧸ I)).IsMax
 @[simp]
 theorem mem_quotient_iff_mem_sup {I J : Ideal R} {x : R} :
     Quotient.mk I x ∈ J.map (Quotient.mk I) ↔ x ∈ J ⊔ I := by
-  rw [← mem_comap, comap_map_of_surjective (Quotient.mk'' I) quotient.mk_surjective, ←
+  rw [← mem_comap, comap_map_of_surjective (Quotient.mk' I) quotient.mk_surjective, ←
     RingHom.ker_eq_comap_bot, mk_ker]
 #align ideal.mem_quotient_iff_mem_sup Ideal.mem_quotient_iff_mem_sup
 
@@ -2670,7 +2670,7 @@ theorem comp_quotientMap_eq_of_comp_eq {R' S' : Type _} [CommRing R'] [CommRing 
   refine' RingHom.ext fun a => _
   obtain ⟨r, rfl⟩ := quotient.mk_surjective a
   simp only [RingHom.comp_apply, quotient_map_mk]
-  exact congr_arg (Quotient.mk'' I) (trans (g'.comp_apply f r).symm (hfg ▸ f'.comp_apply g r))
+  exact congr_arg (Quotient.mk' I) (trans (g'.comp_apply f r).symm (hfg ▸ f'.comp_apply g r))
 #align ideal.comp_quotient_map_eq_of_comp_eq Ideal.comp_quotientMap_eq_of_comp_eq
 
 /-- The algebra hom `A/I →+* B/J` induced by an algebra hom `f : A →ₐ[R₁] B` with `I ≤ f⁻¹(J)`. -/

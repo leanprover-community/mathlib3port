@@ -188,11 +188,11 @@ def ListBlank (Γ) [Inhabited Γ] :=
 #align turing.list_blank Turing.ListBlank
 
 instance ListBlank.inhabited {Γ} [Inhabited Γ] : Inhabited (ListBlank Γ) :=
-  ⟨Quotient.mk' []⟩
+  ⟨Quotient.mk'' []⟩
 #align turing.list_blank.inhabited Turing.ListBlank.inhabited
 
 instance ListBlank.hasEmptyc {Γ} [Inhabited Γ] : EmptyCollection (ListBlank Γ) :=
-  ⟨Quotient.mk' []⟩
+  ⟨Quotient.mk'' []⟩
 #align turing.list_blank.has_emptyc Turing.ListBlank.hasEmptyc
 
 /-- A modified version of `quotient.lift_on'` specialized for `list_blank`, with the stronger
@@ -205,7 +205,7 @@ protected def ListBlank.liftOn {Γ} [Inhabited Γ] {α} (l : ListBlank Γ) (f : 
 
 /-- The quotient map turning a `list` into a `list_blank`. -/
 def ListBlank.mk {Γ} [Inhabited Γ] : List Γ → ListBlank Γ :=
-  Quotient.mk'
+  Quotient.mk''
 #align turing.list_blank.mk Turing.ListBlank.mk
 
 @[elab_as_elim]

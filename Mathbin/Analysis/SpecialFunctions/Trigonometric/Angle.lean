@@ -39,7 +39,7 @@ namespace Angle
 
 @[continuity]
 theorem continuous_coe : Continuous (coe : ℝ → Angle) :=
-  continuous_quotient_mk''
+  continuous_quotient_mk'
 #align real.angle.continuous_coe Real.Angle.continuous_coe
 
 /-- Coercion `ℝ → angle` as an additive homomorphism. -/

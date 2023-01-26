@@ -1596,14 +1596,14 @@ def ConnectedComponents (α : Type u) [TopologicalSpace α] :=
 #align connected_components ConnectedComponents
 
 instance : CoeTC α (ConnectedComponents α) :=
-  ⟨Quotient.mk'⟩
+  ⟨Quotient.mk''⟩
 
 namespace ConnectedComponents
 
 @[simp]
 theorem coe_eq_coe {x y : α} :
     (x : ConnectedComponents α) = y ↔ connectedComponent x = connectedComponent y :=
-  Quotient.eq'
+  Quotient.eq''
 #align connected_components.coe_eq_coe ConnectedComponents.coe_eq_coe
 
 theorem coe_ne_coe {x y : α} :
@@ -1716,12 +1716,12 @@ instance ConnectedComponents.totallyDisconnectedSpace :
 /-- Functoriality of `connected_components` -/
 def Continuous.connectedComponentsMap {β : Type _} [TopologicalSpace β] {f : α → β}
     (h : Continuous f) : ConnectedComponents α → ConnectedComponents β :=
-  Continuous.connectedComponentsLift (continuous_quotient_mk''.comp h)
+  Continuous.connectedComponentsLift (continuous_quotient_mk'.comp h)
 #align continuous.connected_components_map Continuous.connectedComponentsMap
 
 theorem Continuous.connectedComponentsMap_continuous {β : Type _} [TopologicalSpace β] {f : α → β}
     (h : Continuous f) : Continuous h.connectedComponentsMap :=
-  Continuous.connectedComponentsLift_continuous (continuous_quotient_mk''.comp h)
+  Continuous.connectedComponentsLift_continuous (continuous_quotient_mk'.comp h)
 #align continuous.connected_components_map_continuous Continuous.connectedComponentsMap_continuous
 
 end connectedComponentSetoid

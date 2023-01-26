@@ -36,15 +36,15 @@ namespace Finset
 
 variable {α : Type _} [DecidableEq α] {s t : Finset α} {a b : α}
 
-theorem isDiag_mk''_of_mem_diag {a : α × α} (h : a ∈ s.diag) : Sym2.IsDiag ⟦a⟧ :=
+theorem isDiag_mk'_of_mem_diag {a : α × α} (h : a ∈ s.diag) : Sym2.IsDiag ⟦a⟧ :=
   (Sym2.isDiag_iff_proj_eq _).2 (mem_diag.1 h).2
-#align finset.is_diag_mk_of_mem_diag Finset.isDiag_mk''_of_mem_diag
+#align finset.is_diag_mk_of_mem_diag Finset.isDiag_mk'_of_mem_diag
 
-theorem not_isDiag_mk''_of_mem_offDiag {a : α × α} (h : a ∈ s.offDiag) : ¬Sym2.IsDiag ⟦a⟧ :=
+theorem not_isDiag_mk'_of_mem_offDiag {a : α × α} (h : a ∈ s.offDiag) : ¬Sym2.IsDiag ⟦a⟧ :=
   by
   rw [Sym2.isDiag_iff_proj_eq]
   exact (mem_off_diag.1 h).2.2
-#align finset.not_is_diag_mk_of_mem_off_diag Finset.not_isDiag_mk''_of_mem_offDiag
+#align finset.not_is_diag_mk_of_mem_off_diag Finset.not_isDiag_mk'_of_mem_offDiag
 
 section Sym2
 
@@ -53,7 +53,7 @@ variable {m : Sym2 α}
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Lifts a finset to `sym2 α`. `s.sym2` is the finset of all pairs with elements in `s`. -/
 protected def sym2 (s : Finset α) : Finset (Sym2 α) :=
-  (s ×ˢ s).image Quotient.mk''
+  (s ×ˢ s).image Quotient.mk'
 #align finset.sym2 Finset.sym2
 
 @[simp]
@@ -67,8 +67,8 @@ theorem mem_sym2_iff : m ∈ s.Sym2 ↔ ∀ a ∈ m, a ∈ s :=
   rwa [mem_product] at h
 #align finset.mem_sym2_iff Finset.mem_sym2_iff
 
-theorem mk''_mem_sym2_iff : ⟦(a, b)⟧ ∈ s.Sym2 ↔ a ∈ s ∧ b ∈ s := by rw [mem_sym2_iff, Sym2.ball]
-#align finset.mk_mem_sym2_iff Finset.mk''_mem_sym2_iff
+theorem mk'_mem_sym2_iff : ⟦(a, b)⟧ ∈ s.Sym2 ↔ a ∈ s ∧ b ∈ s := by rw [mem_sym2_iff, Sym2.ball]
+#align finset.mk_mem_sym2_iff Finset.mk'_mem_sym2_iff
 
 @[simp]
 theorem sym2_empty : (∅ : Finset α).Sym2 = ∅ :=
@@ -102,7 +102,7 @@ theorem sym2_singleton (a : α) : ({a} : Finset α).Sym2 = {Sym2.diag a} := by
 
 @[simp]
 theorem diag_mem_sym2_iff : Sym2.diag a ∈ s.Sym2 ↔ a ∈ s :=
-  mk''_mem_sym2_iff.trans <| and_self_iff _
+  mk'_mem_sym2_iff.trans <| and_self_iff _
 #align finset.diag_mem_sym2_iff Finset.diag_mem_sym2_iff
 
 @[simp]
@@ -111,7 +111,7 @@ theorem sym2_mono (h : s ⊆ t) : s.Sym2 ⊆ t.Sym2 := fun m he =>
 #align finset.sym2_mono Finset.sym2_mono
 
 theorem image_diag_union_image_offDiag :
-    s.diag.image Quotient.mk'' ∪ s.offDiag.image Quotient.mk'' = s.Sym2 :=
+    s.diag.image Quotient.mk' ∪ s.offDiag.image Quotient.mk' = s.Sym2 :=
   by
   rw [← image_union, diag_union_off_diag]
   rfl

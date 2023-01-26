@@ -77,7 +77,7 @@ variable {𝒜}
 -/
 def IsFraction {U : Opens (ProjectiveSpectrum.top 𝒜)} (f : ∀ x : U, at x.1) : Prop :=
   ∃ (i : ℕ)(r s : 𝒜 i),
-    ∀ x : U, ∃ s_nin : s.1 ∉ x.1.asHomogeneousIdeal, f x = Quotient.mk' ⟨i, r, s, s_nin⟩
+    ∀ x : U, ∃ s_nin : s.1 ∉ x.1.asHomogeneousIdeal, f x = Quotient.mk'' ⟨i, r, s, s_nin⟩
 #align algebraic_geometry.projective_spectrum.structure_sheaf.is_fraction AlgebraicGeometry.ProjectiveSpectrum.StructureSheaf.IsFraction
 
 variable (𝒜)
@@ -328,7 +328,7 @@ basic open set `D(f.denom)`-/
 def sectionInBasicOpen (x : ProjectiveSpectrum.top 𝒜) :
     ∀ f : at x, (ProjCat.structureSheaf 𝒜).1.obj (op (ProjectiveSpectrum.basicOpen 𝒜 f.denom)) :=
   fun f =>
-  ⟨fun y => Quotient.mk' ⟨f.deg, ⟨f.num, f.num_mem_deg⟩, ⟨f.denom, f.denom_mem_deg⟩, y.2⟩, fun y =>
+  ⟨fun y => Quotient.mk'' ⟨f.deg, ⟨f.num, f.num_mem_deg⟩, ⟨f.denom, f.denom_mem_deg⟩, y.2⟩, fun y =>
     ⟨ProjectiveSpectrum.basicOpen 𝒜 f.denom, y.2,
       ⟨𝟙 _, ⟨f.deg, ⟨⟨f.num, f.num_mem_deg⟩, ⟨f.denom, f.denom_mem_deg⟩, fun z => ⟨z.2, rfl⟩⟩⟩⟩⟩⟩
 #align algebraic_geometry.section_in_basic_open AlgebraicGeometry.sectionInBasicOpen
@@ -360,7 +360,7 @@ def ProjCat.stalkIso' (x : ProjectiveSpectrum.top 𝒜) :
       erw [stalk_to_fiber_ring_hom_germ 𝒜 u1 ⟨x, memu1⟩ s1,
         stalk_to_fiber_ring_hom_germ 𝒜 u2 ⟨x, memu2⟩ s2] at eq1
       erw [eq1] at eq2
-      erw [eq2, Quotient.eq] at eq3
+      erw [eq2, Quotient.eq'] at eq3
       change Localization.mk _ _ = Localization.mk _ _ at eq3
       rw [Localization.mk_eq_mk', IsLocalization.eq] at eq3
       obtain ⟨⟨c, hc⟩, eq3⟩ := eq3
@@ -406,7 +406,7 @@ def ProjCat.stalkIso' (x : ProjectiveSpectrum.top 𝒜) :
         hs1 ⟨_, le_of_hom (opens.inf_le_left _ _ ≫ opens.inf_le_right _ _) y.2⟩
       obtain ⟨b2_nin_y, eq7⟩ := hs2 ⟨_, le_of_hom (opens.inf_le_right _ _) y.2⟩
       simp only at eq6 eq7
-      erw [eq6, eq7, Quotient.eq]
+      erw [eq6, eq7, Quotient.eq']
       change Localization.mk _ _ = Localization.mk _ _
       exact
         eq3' _
@@ -426,7 +426,7 @@ def ProjCat.stalkIso' (x : ProjectiveSpectrum.top 𝒜) :
           erw [stalk_to_fiber_ring_hom_germ 𝒜 (ProjectiveSpectrum.basicOpen 𝒜 f.denom) ⟨x, _⟩
               (section_in_basic_open _ x f)]
           simp only [section_in_basic_open, Subtype.ext_iff_val,
-            HomogeneousLocalization.ext_iff_val, HomogeneousLocalization.val_mk',
+            HomogeneousLocalization.ext_iff_val, HomogeneousLocalization.val_mk'',
             f.eq_num_div_denom]
           rfl⟩⟩
 #align algebraic_geometry.Proj.stalk_iso' AlgebraicGeometry.ProjCat.stalkIso'

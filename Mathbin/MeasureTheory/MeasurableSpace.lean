@@ -467,7 +467,7 @@ instance {α} {r : α → α → Prop} [m : MeasurableSpace α] : MeasurableSpac
   m.map (Quot.mk r)
 
 instance {α} {s : Setoid α} [m : MeasurableSpace α] : MeasurableSpace (Quotient s) :=
-  m.map Quotient.mk'
+  m.map Quotient.mk''
 
 @[to_additive]
 instance QuotientGroup.measurableSpace {G} [Group G] [MeasurableSpace G] (S : Subgroup G) :
@@ -477,24 +477,24 @@ instance QuotientGroup.measurableSpace {G} [Group G] [MeasurableSpace G] (S : Su
 #align quotient_add_group.measurable_space quotientAddGroup.measurableSpace
 
 theorem measurableSet_quotient {s : Setoid α} {t : Set (Quotient s)} :
-    MeasurableSet t ↔ MeasurableSet (Quotient.mk' ⁻¹' t) :=
+    MeasurableSet t ↔ MeasurableSet (Quotient.mk'' ⁻¹' t) :=
   Iff.rfl
 #align measurable_set_quotient measurableSet_quotient
 
 theorem measurable_from_quotient {s : Setoid α} {f : Quotient s → β} :
-    Measurable f ↔ Measurable (f ∘ Quotient.mk') :=
+    Measurable f ↔ Measurable (f ∘ Quotient.mk'') :=
   Iff.rfl
 #align measurable_from_quotient measurable_from_quotient
 
 @[measurability]
-theorem measurable_quotient_mk'' [s : Setoid α] : Measurable (Quotient.mk'' : α → Quotient s) :=
+theorem measurable_quotient_mk' [s : Setoid α] : Measurable (Quotient.mk' : α → Quotient s) :=
   fun s => id
-#align measurable_quotient_mk measurable_quotient_mk''
+#align measurable_quotient_mk measurable_quotient_mk'
 
 @[measurability]
-theorem measurable_quotient_mk' {s : Setoid α} : Measurable (Quotient.mk' : α → Quotient s) :=
+theorem measurable_quotient_mk'' {s : Setoid α} : Measurable (Quotient.mk'' : α → Quotient s) :=
   fun s => id
-#align measurable_quotient_mk' measurable_quotient_mk'
+#align measurable_quotient_mk' measurable_quotient_mk''
 
 @[measurability]
 theorem measurable_quot_mk {r : α → α → Prop} : Measurable (Quot.mk r) := fun s => id
@@ -503,7 +503,7 @@ theorem measurable_quot_mk {r : α → α → Prop} : Measurable (Quot.mk r) := 
 @[to_additive]
 theorem QuotientGroup.measurable_coe {G} [Group G] [MeasurableSpace G] {S : Subgroup G} :
     Measurable (coe : G → G ⧸ S) :=
-  measurable_quotient_mk'
+  measurable_quotient_mk''
 #align quotient_group.measurable_coe QuotientGroup.measurable_coe
 #align quotient_add_group.measurable_coe quotientAddGroup.measurable_coe
 

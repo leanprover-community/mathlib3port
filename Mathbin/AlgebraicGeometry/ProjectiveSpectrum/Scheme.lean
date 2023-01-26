@@ -285,7 +285,7 @@ forward map is continuous.
 theorem preimage_eq (a b : A) (k : ℕ) (a_mem : a ∈ 𝒜 k) (b_mem1 : b ∈ 𝒜 k)
     (b_mem2 : b ∈ Submonoid.powers f) :
     toFun 𝒜 f ⁻¹'
-        (@PrimeSpectrum.basicOpen (A⁰_ f) _ (Quotient.mk' ⟨k, ⟨a, a_mem⟩, ⟨b, b_mem1⟩, b_mem2⟩) :
+        (@PrimeSpectrum.basicOpen (A⁰_ f) _ (Quotient.mk'' ⟨k, ⟨a, a_mem⟩, ⟨b, b_mem1⟩, b_mem2⟩) :
           Set (PrimeSpectrum (HomogeneousLocalization.Away 𝒜 f))) =
       { x | x.1 ∈ (pbo f) ⊓ pbo a } :=
   by
@@ -297,7 +297,7 @@ theorem preimage_eq (a b : A) (k : ℕ) (a_mem : a ∈ 𝒜 k) (b_mem1 : b ∈ �
       rw [ProjectiveSpectrum.mem_coe_basicOpen]
       intro a_mem_y
       apply hy
-      rw [to_fun, mem_carrier_iff, HomogeneousLocalization.val_mk', Subtype.coe_mk]
+      rw [to_fun, mem_carrier_iff, HomogeneousLocalization.val_mk'', Subtype.coe_mk]
       dsimp
       rcases b_mem2 with ⟨k, hk⟩
       simp only [show (mk a ⟨b, ⟨k, hk⟩⟩ : away f) = mk 1 ⟨f ^ k, ⟨_, rfl⟩⟩ * mk a 1
@@ -389,7 +389,7 @@ The set `{a | aᵢᵐ/fⁱ ∈ q}`
 def carrier (q : Spec.T A⁰_ f) : Set A :=
   { a |
     ∀ i,
-      (Quotient.mk'
+      (Quotient.mk''
             ⟨m * i,
               ⟨proj 𝒜 i a ^ m, by
                 run_tac
@@ -408,7 +408,7 @@ def carrier (q : Spec.T A⁰_ f) : Set A :=
 theorem mem_carrier_iff (q : Spec.T A⁰_ f) (a : A) :
     a ∈ carrier f_deg q ↔
       ∀ i,
-        (Quotient.mk'
+        (Quotient.mk''
               ⟨m * i,
                 ⟨proj 𝒜 i a ^ m, by
                   run_tac
@@ -454,21 +454,21 @@ theorem carrier.add_mem (q : Spec.T A⁰_ f) {a b : A} (ha : a ∈ carrier f_deg
     (hb : b ∈ carrier f_deg q) : a + b ∈ carrier f_deg q :=
   by
   refine' fun i => (q.2.mem_or_mem _).elim id id
-  change (Quotient.mk' ⟨_, _, _, _⟩ : A⁰_ f) ∈ q.1; dsimp only [Subtype.coe_mk]
+  change (Quotient.mk'' ⟨_, _, _, _⟩ : A⁰_ f) ∈ q.1; dsimp only [Subtype.coe_mk]
   simp_rw [← pow_add, map_add, add_pow, mul_comm, ← nsmul_eq_mul]
   let g : ℕ → A⁰_ f := fun j =>
     (m + m).choose j •
       if h2 : m + m < j then 0
       else
         if h1 : j ≤ m then
-          Quotient.mk'
+          Quotient.mk''
               ⟨m * i, ⟨proj 𝒜 i a ^ j * proj 𝒜 i b ^ (m - j), _⟩,
                 ⟨_, by
                   rw [mul_comm] <;>
                     run_tac
                       mem_tac⟩,
                 ⟨i, rfl⟩⟩ *
-            Quotient.mk'
+            Quotient.mk''
               ⟨m * i,
                 ⟨proj 𝒜 i b ^ m, by
                   run_tac
@@ -479,7 +479,7 @@ theorem carrier.add_mem (q : Spec.T A⁰_ f) {a b : A} (ha : a ∈ carrier f_deg
                       mem_tac⟩,
                 ⟨i, rfl⟩⟩
         else
-          Quotient.mk'
+          Quotient.mk''
               ⟨m * i,
                 ⟨proj 𝒜 i a ^ m, by
                   run_tac
@@ -489,7 +489,7 @@ theorem carrier.add_mem (q : Spec.T A⁰_ f) {a b : A} (ha : a ∈ carrier f_deg
                     run_tac
                       mem_tac⟩,
                 ⟨i, rfl⟩⟩ *
-            Quotient.mk'
+            Quotient.mk''
               ⟨m * i, ⟨proj 𝒜 i a ^ (j - m) * proj 𝒜 i b ^ (m + m - j), _⟩,
                 ⟨_, by
                   rw [mul_comm] <;>
@@ -553,8 +553,8 @@ theorem carrier.smul_mem (c x : A) (hx : x ∈ carrier f_deg q) : c • x ∈ ca
     simp_rw [Subtype.coe_mk, proj_apply, smul_eq_mul, coe_decompose_mul_of_left_mem 𝒜 i ha]
     split_ifs
     · convert_to
-        (Quotient.mk' ⟨_, ⟨a ^ m, pow_mem_graded m ha⟩, ⟨_, _⟩, ⟨n, rfl⟩⟩ *
-              Quotient.mk'
+        (Quotient.mk'' ⟨_, ⟨a ^ m, pow_mem_graded m ha⟩, ⟨_, _⟩, ⟨n, rfl⟩⟩ *
+              Quotient.mk''
                 ⟨_,
                   ⟨proj 𝒜 (i - n) x ^ m, by
                     run_tac

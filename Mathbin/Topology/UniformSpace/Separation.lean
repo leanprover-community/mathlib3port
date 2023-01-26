@@ -319,10 +319,10 @@ theorem uniformity_quotient :
   rfl
 #align uniform_space.uniformity_quotient UniformSpace.uniformity_quotient
 
-theorem uniformContinuous_quotient_mk'' :
-    UniformContinuous (Quotient.mk'' : α → Quotient (separationSetoid α)) :=
+theorem uniformContinuous_quotient_mk' :
+    UniformContinuous (Quotient.mk' : α → Quotient (separationSetoid α)) :=
   le_rfl
-#align uniform_space.uniform_continuous_quotient_mk UniformSpace.uniformContinuous_quotient_mk''
+#align uniform_space.uniform_continuous_quotient_mk UniformSpace.uniformContinuous_quotient_mk'
 
 theorem uniformContinuous_quotient {f : Quotient (separationSetoid α) → β}
     (hf : UniformContinuous fun x => f ⟦x⟧) : UniformContinuous f :=
@@ -409,9 +409,9 @@ def lift [SeparatedSpace β] (f : α → β) : SeparationQuotient α → β :=
   else fun x => f (Nonempty.some ⟨x.out⟩)
 #align uniform_space.separation_quotient.lift UniformSpace.SeparationQuotient.lift
 
-theorem lift_mk'' [SeparatedSpace β] {f : α → β} (h : UniformContinuous f) (a : α) :
+theorem lift_mk' [SeparatedSpace β] {f : α → β} (h : UniformContinuous f) (a : α) :
     lift f ⟦a⟧ = f a := by rw [lift, dif_pos h] <;> rfl
-#align uniform_space.separation_quotient.lift_mk UniformSpace.SeparationQuotient.lift_mk''
+#align uniform_space.separation_quotient.lift_mk UniformSpace.SeparationQuotient.lift_mk'
 
 theorem uniformContinuous_lift [SeparatedSpace β] (f : α → β) : UniformContinuous (lift f) :=
   by
@@ -424,20 +424,20 @@ theorem uniformContinuous_lift [SeparatedSpace β] (f : α → β) : UniformCont
 
 /-- The separation quotient functor acting on functions. -/
 def map (f : α → β) : SeparationQuotient α → SeparationQuotient β :=
-  lift (Quotient.mk'' ∘ f)
+  lift (Quotient.mk' ∘ f)
 #align uniform_space.separation_quotient.map UniformSpace.SeparationQuotient.map
 
-theorem map_mk'' {f : α → β} (h : UniformContinuous f) (a : α) : map f ⟦a⟧ = ⟦f a⟧ := by
+theorem map_mk' {f : α → β} (h : UniformContinuous f) (a : α) : map f ⟦a⟧ = ⟦f a⟧ := by
   rw [map, lift_mk (uniform_continuous_quotient_mk.comp h)]
-#align uniform_space.separation_quotient.map_mk UniformSpace.SeparationQuotient.map_mk''
+#align uniform_space.separation_quotient.map_mk UniformSpace.SeparationQuotient.map_mk'
 
 theorem uniformContinuous_map (f : α → β) : UniformContinuous (map f) :=
-  uniformContinuous_lift (Quotient.mk'' ∘ f)
+  uniformContinuous_lift (Quotient.mk' ∘ f)
 #align uniform_space.separation_quotient.uniform_continuous_map UniformSpace.SeparationQuotient.uniformContinuous_map
 
 theorem map_unique {f : α → β} (hf : UniformContinuous f)
-    {g : SeparationQuotient α → SeparationQuotient β}
-    (comm : Quotient.mk'' ∘ f = g ∘ Quotient.mk'') : map f = g := by
+    {g : SeparationQuotient α → SeparationQuotient β} (comm : Quotient.mk' ∘ f = g ∘ Quotient.mk') :
+    map f = g := by
   ext ⟨a⟩ <;>
     calc
       map f ⟦a⟧ = ⟦f a⟧ := map_mk hf a

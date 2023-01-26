@@ -268,13 +268,13 @@ theorem Module.Ray.ind {C : Module.Ray R M → Prop} (h : ∀ (v) (hv : v ≠ 0)
 variable {R}
 
 instance [Nontrivial M] : Nonempty (Module.Ray R M) :=
-  Nonempty.map Quotient.mk'' inferInstance
+  Nonempty.map Quotient.mk' inferInstance
 
 /-- The rays given by two nonzero vectors are equal if and only if those vectors
 satisfy `same_ray`. -/
 theorem ray_eq_iff {v₁ v₂ : M} (hv₁ : v₁ ≠ 0) (hv₂ : v₂ ≠ 0) :
     rayOfNeZero R _ hv₁ = rayOfNeZero R _ hv₂ ↔ SameRay R v₁ v₂ :=
-  Quotient.eq
+  Quotient.eq'
 #align ray_eq_iff ray_eq_iff
 
 /-- The ray given by a positive multiple of a nonzero vector. -/
@@ -329,8 +329,8 @@ variable [SMulCommClass R G M]
 instance : MulAction G (Module.Ray R M)
     where
   smul r := Quotient.map ((· • ·) r) fun a b h => h.smul _
-  mul_smul a b := Quotient.ind fun m => congr_arg Quotient.mk'' <| mul_smul a b _
-  one_smul := Quotient.ind fun m => congr_arg Quotient.mk'' <| one_smul _ _
+  mul_smul a b := Quotient.ind fun m => congr_arg Quotient.mk' <| mul_smul a b _
+  one_smul := Quotient.ind fun m => congr_arg Quotient.mk' <| one_smul _ _
 
 /-- The action via `linear_equiv.apply_distrib_mul_action` corresponds to `module.ray.map`. -/
 @[simp]
@@ -474,7 +474,7 @@ variable {R}
 instance : InvolutiveNeg (Module.Ray R M)
     where
   neg := Neg.neg
-  neg_neg x := Quotient.ind (fun a => congr_arg Quotient.mk'' <| neg_neg _) x
+  neg_neg x := Quotient.ind (fun a => congr_arg Quotient.mk' <| neg_neg _) x
 
 variable {R M}
 

@@ -385,11 +385,11 @@ theorem mk_bijective : Function.Bijective (@ConjClasses.mk α _) :=
 #print ConjClasses.mkEquiv /-
 /-- The bijection between a `comm_group` and its `conj_classes`. -/
 def mkEquiv : α ≃ ConjClasses α :=
-  ⟨ConjClasses.mk, Quotient.lift id fun (a : α) b => isConj_iff_eq.1, Quotient.lift_mk'' _ _,
+  ⟨ConjClasses.mk, Quotient.lift id fun (a : α) b => isConj_iff_eq.1, Quotient.lift_mk' _ _,
     by
     rw [Function.RightInverse, Function.LeftInverse, forall_is_conj]
     intro x
-    rw [← quotient_mk_eq_mk, ← quotient_mk_eq_mk, Quotient.lift_mk'', id.def]⟩
+    rw [← quotient_mk_eq_mk, ← quotient_mk_eq_mk, Quotient.lift_mk', id.def]⟩
 #align conj_classes.mk_equiv ConjClasses.mkEquiv
 -/
 
@@ -456,7 +456,7 @@ theorem mem_carrier_iff_mk_eq {a : α} {b : ConjClasses α} : a ∈ carrier b �
   revert b
   rw [forall_is_conj]
   intro b
-  rw [carrier, eq_comm, mk_eq_mk_iff_is_conj, ← quotient_mk_eq_mk, Quotient.lift_mk'']
+  rw [carrier, eq_comm, mk_eq_mk_iff_is_conj, ← quotient_mk_eq_mk, Quotient.lift_mk']
   rfl
 #align conj_classes.mem_carrier_iff_mk_eq ConjClasses.mem_carrier_iff_mk_eq
 -/

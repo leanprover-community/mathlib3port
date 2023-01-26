@@ -59,8 +59,8 @@ instance Setoid.decidableRel (r : Setoid α) [h : DecidableRel r.R] : DecidableR
 #print Quotient.eq_rel /-
 /-- A version of `quotient.eq'` compatible with `setoid.rel`, to make rewriting possible. -/
 theorem Quotient.eq_rel {r : Setoid α} {x y} :
-    (Quotient.mk' x : Quotient r) = Quotient.mk' y ↔ r.Rel x y :=
-  Quotient.eq
+    (Quotient.mk'' x : Quotient r) = Quotient.mk'' y ↔ r.Rel x y :=
+  Quotient.eq'
 #align quotient.eq_rel Quotient.eq_rel
 -/
 
@@ -132,8 +132,8 @@ def ker (f : α → β) : Setoid α :=
 #print Setoid.ker_mk_eq /-
 /-- The kernel of the quotient map induced by an equivalence relation r equals r. -/
 @[simp]
-theorem ker_mk_eq (r : Setoid α) : ker (@Quotient.mk'' _ r) = r :=
-  ext' fun x y => Quotient.eq
+theorem ker_mk_eq (r : Setoid α) : ker (@Quotient.mk' _ r) = r :=
+  ext' fun x y => Quotient.eq'
 #align setoid.ker_mk_eq Setoid.ker_mk_eq
 -/
 
@@ -143,13 +143,13 @@ theorem ker_apply_mk_out {f : α → β} (a : α) :
         haveI := Setoid.ker f
         ⟦a⟧.out) =
       f a :=
-  @Quotient.mk''_out _ (Setoid.ker f) a
+  @Quotient.mk'_out _ (Setoid.ker f) a
 #align setoid.ker_apply_mk_out Setoid.ker_apply_mk_out
 -/
 
 #print Setoid.ker_apply_mk_out' /-
 theorem ker_apply_mk_out' {f : α → β} (a : α) :
-    f (Quotient.mk' a : Quotient <| Setoid.ker f).out' = f a :=
+    f (Quotient.mk'' a : Quotient <| Setoid.ker f).out' = f a :=
   @Quotient.mk_out' _ (Setoid.ker f) a
 #align setoid.ker_apply_mk_out' Setoid.ker_apply_mk_out'
 -/
@@ -427,7 +427,7 @@ theorem ker_iff_mem_preimage {f : α → β} {x y} : (ker f).Rel x y ↔ x ∈ f
 def liftEquiv (r : Setoid α) : { f : α → β // r ≤ ker f } ≃ (Quotient r → β)
     where
   toFun f := Quotient.lift (f : α → β) f.2
-  invFun f := ⟨f ∘ Quotient.mk'', fun x y h => by simp [ker_def, Quotient.sound h]⟩
+  invFun f := ⟨f ∘ Quotient.mk', fun x y h => by simp [ker_def, Quotient.sound h]⟩
   left_inv := fun ⟨f, hf⟩ => Subtype.eq <| funext fun x => rfl
   right_inv f := funext fun x => Quotient.inductionOn' x fun x => rfl
 #align setoid.lift_equiv Setoid.liftEquiv
@@ -435,16 +435,16 @@ def liftEquiv (r : Setoid α) : { f : α → β // r ≤ ker f } ≃ (Quotient r
 
 /- warning: setoid.lift_unique -> Setoid.lift_unique is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : Setoid.{succ u1} α} {f : α -> β} (H : LE.le.{u1} (Setoid.{succ u1} α) (Setoid.hasLe.{u1} α) r (Setoid.ker.{u1, u2} α β f)) (g : (Quotient.{succ u1} α r) -> β), (Eq.{max (succ u1) (succ u2)} (α -> β) f (Function.comp.{succ u1, succ u1, succ u2} α (Quotient.{succ u1} α r) β g (Quotient.mk''.{succ u1} α r))) -> (Eq.{max (succ u1) (succ u2)} ((Quotient.{succ u1} α r) -> β) (Quotient.lift.{succ u1, succ u2} α β r f H) g)
+  forall {α : Type.{u1}} {β : Type.{u2}} {r : Setoid.{succ u1} α} {f : α -> β} (H : LE.le.{u1} (Setoid.{succ u1} α) (Setoid.hasLe.{u1} α) r (Setoid.ker.{u1, u2} α β f)) (g : (Quotient.{succ u1} α r) -> β), (Eq.{max (succ u1) (succ u2)} (α -> β) f (Function.comp.{succ u1, succ u1, succ u2} α (Quotient.{succ u1} α r) β g (Quotient.mk'.{succ u1} α r))) -> (Eq.{max (succ u1) (succ u2)} ((Quotient.{succ u1} α r) -> β) (Quotient.lift.{succ u1, succ u2} α β r f H) g)
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {r : Setoid.{succ u2} α} {f : α -> β} (H : LE.le.{u2} (Setoid.{succ u2} α) (Setoid.instLESetoid.{u2} α) r (Setoid.ker.{u2, u1} α β f)) (g : (Quotient.{succ u2} α r) -> β), (Eq.{max (succ u2) (succ u1)} (α -> β) f (Function.comp.{succ u2, succ u2, succ u1} α (Quotient.{succ u2} α r) β g (Quotient.mk''.{succ u2} α r))) -> (Eq.{max (succ u2) (succ u1)} ((Quotient.{succ u2} α r) -> β) (Quotient.lift.{succ u2, succ u1} α β r f H) g)
 Case conversion may be inaccurate. Consider using '#align setoid.lift_unique Setoid.lift_uniqueₓ'. -/
 /-- The uniqueness part of the universal property for quotients of an arbitrary type. -/
 theorem lift_unique {r : Setoid α} {f : α → β} (H : r ≤ ker f) (g : Quotient r → β)
-    (Hg : f = g ∘ Quotient.mk'') : Quotient.lift f H = g :=
+    (Hg : f = g ∘ Quotient.mk') : Quotient.lift f H = g :=
   by
   ext ⟨x⟩
-  erw [Quotient.lift_mk'' f H, Hg]
+  erw [Quotient.lift_mk' f H, Hg]
   rfl
 #align setoid.lift_unique Setoid.lift_unique
 
@@ -487,7 +487,7 @@ noncomputable def quotientKerEquivRange : Quotient (ker f) ≃ Set.range f :=
       Subtype.ext_val h)
     ⟨fun x y h => ker_lift_injective f <| by rcases x with ⟨⟩ <;> rcases y with ⟨⟩ <;> injections,
       fun ⟨w, z, hz⟩ =>
-      ⟨@Quotient.mk'' _ (ker f) z, by rw [Quotient.lift_mk''] <;> exact Subtype.ext_iff_val.2 hz⟩⟩
+      ⟨@Quotient.mk' _ (ker f) z, by rw [Quotient.lift_mk'] <;> exact Subtype.ext_iff_val.2 hz⟩⟩
 #align setoid.quotient_ker_equiv_range Setoid.quotientKerEquivRange
 -/
 
@@ -499,7 +499,7 @@ def quotientKerEquivOfRightInverse (g : β → α) (hf : Function.RightInverse g
     Quotient (ker f) ≃ β
     where
   toFun a := Quotient.liftOn' a f fun _ _ => id
-  invFun b := Quotient.mk' (g b)
+  invFun b := Quotient.mk'' (g b)
   left_inv a := Quotient.inductionOn' a fun a => Quotient.sound' <| hf (f a)
   right_inv := hf
 #align setoid.quotient_ker_equiv_of_right_inverse Setoid.quotientKerEquivOfRightInverse
@@ -573,16 +573,16 @@ theorem comap_rel (f : α → β) (r : Setoid β) (x y : α) : (comap f r).Rel x
 #print Setoid.comap_eq /-
 /-- Given a map `f : N → M` and an equivalence relation `r` on `β`, the equivalence relation
     induced on `α` by `f` equals the kernel of `r`'s quotient map composed with `f`. -/
-theorem comap_eq {f : α → β} {r : Setoid β} : comap f r = ker (@Quotient.mk'' _ r ∘ f) :=
-  ext fun x y => show _ ↔ ⟦_⟧ = ⟦_⟧ by rw [Quotient.eq] <;> rfl
+theorem comap_eq {f : α → β} {r : Setoid β} : comap f r = ker (@Quotient.mk' _ r ∘ f) :=
+  ext fun x y => show _ ↔ ⟦_⟧ = ⟦_⟧ by rw [Quotient.eq'] <;> rfl
 #align setoid.comap_eq Setoid.comap_eq
 -/
 
 #print Setoid.comapQuotientEquiv /-
 /-- The second isomorphism theorem for sets. -/
 noncomputable def comapQuotientEquiv (f : α → β) (r : Setoid β) :
-    Quotient (comap f r) ≃ Set.range (@Quotient.mk'' _ r ∘ f) :=
-  (Quotient.congrRight <| ext_iff.1 comap_eq).trans <| quotient_ker_equiv_range <| Quotient.mk'' ∘ f
+    Quotient (comap f r) ≃ Set.range (@Quotient.mk' _ r ∘ f) :=
+  (Quotient.congrRight <| ext_iff.1 comap_eq).trans <| quotient_ker_equiv_range <| Quotient.mk' ∘ f
 #align setoid.comap_quotient_equiv Setoid.comapQuotientEquiv
 -/
 
@@ -595,10 +595,10 @@ def quotientQuotientEquivQuotient (s : Setoid α) (h : r ≤ s) :
     where
   toFun x :=
     Quotient.liftOn' x
-      (fun w => Quotient.liftOn' w (@Quotient.mk'' _ s) fun x y H => Quotient.sound <| h H)
+      (fun w => Quotient.liftOn' w (@Quotient.mk' _ s) fun x y H => Quotient.sound <| h H)
       fun x y => Quotient.inductionOn₂' x y fun w z H => show @Quot.mk _ _ _ = @Quot.mk _ _ _ from H
   invFun x :=
-    Quotient.liftOn' x (fun w => @Quotient.mk'' _ (ker <| Quot.mapRight h) <| @Quotient.mk'' _ r w)
+    Quotient.liftOn' x (fun w => @Quotient.mk' _ (ker <| Quot.mapRight h) <| @Quotient.mk' _ r w)
       fun x y H => Quotient.sound' <| show @Quot.mk _ _ _ = @Quot.mk _ _ _ from Quotient.sound H
   left_inv x :=
     Quotient.inductionOn' x fun y => Quotient.inductionOn' y fun w => by show ⟦_⟧ = _ <;> rfl
@@ -615,8 +615,8 @@ open Quotient
 equivalence relations containing `r` and the equivalence relations on the quotient of `α` by `r`. -/
 def correspondence (r : Setoid α) : { s // r ≤ s } ≃o Setoid (Quotient r)
     where
-  toFun s := mapOfSurjective s.1 Quotient.mk'' ((ker_mk_eq r).symm ▸ s.2) exists_rep
-  invFun s := ⟨comap Quotient.mk' s, fun x y h => by rw [comap_rel, eq_rel.2 h]⟩
+  toFun s := mapOfSurjective s.1 Quotient.mk' ((ker_mk_eq r).symm ▸ s.2) exists_rep
+  invFun s := ⟨comap Quotient.mk'' s, fun x y h => by rw [comap_rel, eq_rel.2 h]⟩
   left_inv s :=
     Subtype.ext_iff_val.2 <|
       ext' fun _ _ =>
@@ -625,7 +625,7 @@ def correspondence (r : Setoid α) : { s // r ≤ s } ≃o Setoid (Quotient r)
           s.1.trans' (s.1.symm' <| s.2 <| eq_rel.1 hx) <| s.1.trans' H <| s.2 <| eq_rel.1 hy,
           fun h => ⟨_, _, rfl, rfl, h⟩⟩
   right_inv s :=
-    let Hm : ker Quotient.mk' ≤ comap Quotient.mk' s := fun x y h => by
+    let Hm : ker Quotient.mk'' ≤ comap Quotient.mk'' s := fun x y h => by
       rw [comap_rel, (@eq_rel _ r x y).2 (ker_mk_eq r ▸ h)]
     ext' fun x y =>
       ⟨fun h =>
@@ -655,9 +655,9 @@ theorem Quotient.subsingleton_iff {s : Setoid α} : Subsingleton (Quotient s) �
   by
   simp only [subsingleton_iff, eq_top_iff, Setoid.le_def, Setoid.top_def, Pi.top_apply,
     forall_const]
-  refine' (surjective_quotient_mk'' _).forall.trans (forall_congr' fun a => _)
-  refine' (surjective_quotient_mk'' _).forall.trans (forall_congr' fun b => _)
-  exact Quotient.eq'
+  refine' (surjective_quotient_mk' _).forall.trans (forall_congr' fun a => _)
+  refine' (surjective_quotient_mk' _).forall.trans (forall_congr' fun b => _)
+  exact Quotient.eq''
 #align quotient.subsingleton_iff Quotient.subsingleton_iff
 
 /- warning: quot.subsingleton_iff -> Quot.subsingleton_iff is a dubious translation:

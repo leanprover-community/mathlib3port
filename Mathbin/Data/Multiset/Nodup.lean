@@ -353,7 +353,7 @@ theorem nodup_bind {s : Multiset α} {t : α → Multiset β} :
 
 #print Multiset.Nodup.ext /-
 theorem Nodup.ext {s t : Multiset α} : Nodup s → Nodup t → (s = t ↔ ∀ a, a ∈ s ↔ a ∈ t) :=
-  Quotient.induction_on₂ s t fun l₁ l₂ d₁ d₂ => Quotient.eq.trans <| perm_ext d₁ d₂
+  Quotient.induction_on₂ s t fun l₁ l₂ d₁ d₂ => Quotient.eq'.trans <| perm_ext d₁ d₂
 #align multiset.nodup.ext Multiset.Nodup.ext
 -/
 

@@ -421,10 +421,10 @@ theorem exists_sub_one_mem_and_mem (s : Finset ι) {f : ι → Ideal R}
     rcases this with ⟨g, hgi, hgj⟩
     use ∏ x in s.erase i, g x
     constructor
-    · rw [← Quotient.eq, RingHom.map_one, RingHom.map_prod]
+    · rw [← Quotient.eq', RingHom.map_one, RingHom.map_prod]
       apply Finset.prod_eq_one
       intros
-      rw [← RingHom.map_one, Quotient.eq]
+      rw [← RingHom.map_one, Quotient.eq']
       apply hgi
     intro j hjs hji
     rw [← quotient.eq_zero_iff_mem, RingHom.map_prod]
@@ -446,7 +446,7 @@ theorem exists_sub_mem [Finite ι] {f : ι → Ideal R} (hf : ∀ i j, i ≠ j �
   rcases this with ⟨φ, hφ1, hφ2⟩
   use ∑ i, g i * φ i
   intro i
-  rw [← Quotient.eq, RingHom.map_sum]
+  rw [← Quotient.eq', RingHom.map_sum]
   refine' Eq.trans (Finset.sum_eq_single i _ _) _
   · intro j _ hji
     rw [quotient.eq_zero_iff_mem]
@@ -454,7 +454,7 @@ theorem exists_sub_mem [Finite ι] {f : ι → Ideal R} (hf : ∀ i j, i ≠ j �
   · intro hi
     exact (hi <| Finset.mem_univ i).elim
   specialize hφ1 i
-  rw [← Quotient.eq, RingHom.map_one] at hφ1
+  rw [← Quotient.eq', RingHom.map_one] at hφ1
   rw [RingHom.map_mul, hφ1, mul_one]
 #align ideal.exists_sub_mem Ideal.exists_sub_mem
 
@@ -475,7 +475,7 @@ theorem quotientInfToPiQuotient_bijective [Finite ι] {f : ι → Ideal R}
       Quotient.eq.2 <|
         (Submodule.mem_infᵢ _).2 fun i =>
           Quotient.eq.1 <|
-            show quotientInfToPiQuotient f (Quotient.mk' r) i = _ by rw [hrs] <;> rfl,
+            show quotientInfToPiQuotient f (Quotient.mk'' r) i = _ by rw [hrs] <;> rfl,
     fun g =>
     let ⟨r, hr⟩ := exists_sub_mem hf fun i => Quotient.out' (g i)
     ⟨Quotient.mk _ r, funext fun i => Quotient.out_eq' (g i) ▸ Quotient.eq.2 (hr i)⟩⟩

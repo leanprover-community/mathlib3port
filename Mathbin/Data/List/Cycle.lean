@@ -447,7 +447,7 @@ instance : Coe (List α) (Cycle α) :=
 
 @[simp]
 theorem coe_eq_coe {l₁ l₂ : List α} : (l₁ : Cycle α) = l₂ ↔ l₁ ~r l₂ :=
-  @Quotient.eq _ (IsRotated.setoid _) _ _
+  @Quotient.eq' _ (IsRotated.setoid _) _ _
 #align cycle.coe_eq_coe Cycle.coe_eq_coe
 
 @[simp]
@@ -456,9 +456,9 @@ theorem mk_eq_coe (l : List α) : Quot.mk _ l = (l : Cycle α) :=
 #align cycle.mk_eq_coe Cycle.mk_eq_coe
 
 @[simp]
-theorem mk'_eq_coe (l : List α) : Quotient.mk' l = (l : Cycle α) :=
+theorem mk''_eq_coe (l : List α) : Quotient.mk'' l = (l : Cycle α) :=
   rfl
-#align cycle.mk'_eq_coe Cycle.mk'_eq_coe
+#align cycle.mk'_eq_coe Cycle.mk''_eq_coe
 
 theorem coe_cons_eq_coe_append (l : List α) (a : α) : (↑(a :: l) : Cycle α) = ↑(l ++ [a]) :=
   Quot.sound ⟨1, by rw [rotate_cons_succ, rotate_zero]⟩
@@ -519,7 +519,7 @@ theorem not_mem_nil : ∀ a, a ∉ @nil α :=
 #align cycle.not_mem_nil Cycle.not_mem_nil
 
 instance [DecidableEq α] : DecidableEq (Cycle α) := fun s₁ s₂ =>
-  Quotient.recOnSubsingleton₂' s₁ s₂ fun l₁ l₂ => decidable_of_iff' _ Quotient.eq'
+  Quotient.recOnSubsingleton₂' s₁ s₂ fun l₁ l₂ => decidable_of_iff' _ Quotient.eq''
 
 instance [DecidableEq α] (x : α) (s : Cycle α) : Decidable (x ∈ s) :=
   Quotient.recOnSubsingleton' s fun l => List.decidableMem x l
@@ -730,7 +730,7 @@ theorem lists_coe (l : List α) : lists (l : Cycle α) = ↑l.cyclicPermutations
 theorem mem_lists_iff_coe_eq {s : Cycle α} {l : List α} : l ∈ s.lists ↔ (l : Cycle α) = s :=
   Quotient.inductionOn' s fun l =>
     by
-    rw [lists, Quotient.liftOn'_mk']
+    rw [lists, Quotient.liftOn'_mk'']
     simp
 #align cycle.mem_lists_iff_coe_eq Cycle.mem_lists_iff_coe_eq
 

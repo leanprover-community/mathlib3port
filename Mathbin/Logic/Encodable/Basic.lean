@@ -887,7 +887,7 @@ theorem Quotient.rep_spec (q : Quotient s) : ⟦q.rep⟧ = q :=
 #print encodableQuotient /-
 /-- The quotient of an encodable space by a decidable equivalence relation is encodable. -/
 def encodableQuotient : Encodable (Quotient s) :=
-  ⟨fun q => encode q.rep, fun n => Quotient.mk'' <$> decode α n, by
+  ⟨fun q => encode q.rep, fun n => Quotient.mk' <$> decode α n, by
     rintro ⟨l⟩ <;> rw [encodek] <;> exact congr_arg some ⟦l⟧.rep_spec⟩
 #align encodable_quotient encodableQuotient
 -/

@@ -305,7 +305,7 @@ See Note [use has_coe_t]. -/
 @[to_additive
       "Coercion from a type with an addition to its quotient by an additive congruence\nrelation"]
 instance (priority := 0) : CoeTC M c.Quotient :=
-  ⟨@Quotient.mk'' _ c.toSetoid⟩
+  ⟨@Quotient.mk' _ c.toSetoid⟩
 
 -- Lower the priority since it unifies with any quotient type.
 /-- The quotient by a decidable congruence relation has decidable equality. -/
@@ -407,7 +407,7 @@ variable (c)
   to_additive
       "Two elements are related by an additive congruence relation `c` iff they\nare represented by the same element of the quotient by `c`."]
 protected theorem eq {a b : M} : (a : c.Quotient) = b ↔ c a b :=
-  Quotient.eq'
+  Quotient.eq''
 #align con.eq Con.eq
 #align add_con.eq AddCon.eq
 -/
@@ -429,7 +429,7 @@ instance hasMul : Mul c.Quotient :=
   to_additive
       "The kernel of the quotient map induced by an additive congruence relation\n`c` equals `c`."]
 theorem mul_ker_mk_eq : (mulKer (coe : M → c.Quotient) fun x y => rfl) = c :=
-  ext fun x y => Quotient.eq'
+  ext fun x y => Quotient.eq''
 #align con.mul_ker_mk_eq Con.mul_ker_mk_eq
 #align add_con.add_ker_mk_eq AddCon.add_ker_mk_eq
 -/
@@ -1823,8 +1823,8 @@ instance mulAction {α M : Type _} [Monoid α] [MulOneClass M] [MulAction α M] 
     (c : Con M) : MulAction α c.Quotient
     where
   smul := (· • ·)
-  one_smul := Quotient.ind' fun x => congr_arg Quotient.mk' <| one_smul _ _
-  mul_smul a₁ a₂ := Quotient.ind' fun x => congr_arg Quotient.mk' <| mul_smul _ _ _
+  one_smul := Quotient.ind' fun x => congr_arg Quotient.mk'' <| one_smul _ _
+  mul_smul a₁ a₂ := Quotient.ind' fun x => congr_arg Quotient.mk'' <| mul_smul _ _ _
 #align con.mul_action Con.mulAction
 #align add_con.add_action AddCon.addAction
 
@@ -1838,8 +1838,8 @@ instance mulDistribMulAction {α M : Type _} [Monoid α] [Monoid M] [MulDistribM
     [IsScalarTower α M M] (c : Con M) : MulDistribMulAction α c.Quotient :=
   { c.MulAction with
     smul := (· • ·)
-    smul_one := fun r => congr_arg Quotient.mk' <| smul_one _
-    smul_mul := fun r => Quotient.ind₂' fun m₁ m₂ => congr_arg Quotient.mk' <| smul_mul' _ _ _ }
+    smul_one := fun r => congr_arg Quotient.mk'' <| smul_one _
+    smul_mul := fun r => Quotient.ind₂' fun m₁ m₂ => congr_arg Quotient.mk'' <| smul_mul' _ _ _ }
 #align con.mul_distrib_mul_action Con.mulDistribMulAction
 
 end Actions
