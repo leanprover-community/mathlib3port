@@ -192,7 +192,7 @@ theorem IsMaxChain.not_superChain (h : IsMaxChain r s) : ¬SuperChain r s t := f
 lean 3 declaration is
   forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LE.{u1} α] [_inst_2 : OrderBot.{u1} α _inst_1], (IsMaxChain.{u1} α (LE.le.{u1} α _inst_1) s) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α _inst_1 _inst_2)) s)
 but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LE.{u1} α] [_inst_2 : OrderBot.{u1} α _inst_1], (IsMaxChain.{u1} α (fun (x._@.Mathlib.Order.Chain._hyg.1661 : α) (x._@.Mathlib.Order.Chain._hyg.1663 : α) => LE.le.{u1} α _inst_1 x._@.Mathlib.Order.Chain._hyg.1661 x._@.Mathlib.Order.Chain._hyg.1663) s) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) (Bot.bot.{u1} α (OrderBot.toBot.{u1} α _inst_1 _inst_2)) s)
+  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LE.{u1} α] [_inst_2 : OrderBot.{u1} α _inst_1], (IsMaxChain.{u1} α (fun (x._@.Mathlib.Order.Chain._hyg.1657 : α) (x._@.Mathlib.Order.Chain._hyg.1659 : α) => LE.le.{u1} α _inst_1 x._@.Mathlib.Order.Chain._hyg.1657 x._@.Mathlib.Order.Chain._hyg.1659) s) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) (Bot.bot.{u1} α (OrderBot.toBot.{u1} α _inst_1 _inst_2)) s)
 Case conversion may be inaccurate. Consider using '#align is_max_chain.bot_mem IsMaxChain.bot_memₓ'. -/
 theorem IsMaxChain.bot_mem [LE α] [OrderBot α] (h : IsMaxChain (· ≤ ·) s) : ⊥ ∈ s :=
   (h.2 (h.1.insert fun a _ _ => Or.inl bot_le) <| subset_insert _ _).symm ▸ mem_insert _ _
@@ -202,7 +202,7 @@ theorem IsMaxChain.bot_mem [LE α] [OrderBot α] (h : IsMaxChain (· ≤ ·) s) 
 lean 3 declaration is
   forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LE.{u1} α] [_inst_2 : OrderTop.{u1} α _inst_1], (IsMaxChain.{u1} α (LE.le.{u1} α _inst_1) s) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) (Top.top.{u1} α (OrderTop.toHasTop.{u1} α _inst_1 _inst_2)) s)
 but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LE.{u1} α] [_inst_2 : OrderTop.{u1} α _inst_1], (IsMaxChain.{u1} α (fun (x._@.Mathlib.Order.Chain._hyg.1748 : α) (x._@.Mathlib.Order.Chain._hyg.1750 : α) => LE.le.{u1} α _inst_1 x._@.Mathlib.Order.Chain._hyg.1748 x._@.Mathlib.Order.Chain._hyg.1750) s) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) (Top.top.{u1} α (OrderTop.toTop.{u1} α _inst_1 _inst_2)) s)
+  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LE.{u1} α] [_inst_2 : OrderTop.{u1} α _inst_1], (IsMaxChain.{u1} α (fun (x._@.Mathlib.Order.Chain._hyg.1744 : α) (x._@.Mathlib.Order.Chain._hyg.1746 : α) => LE.le.{u1} α _inst_1 x._@.Mathlib.Order.Chain._hyg.1744 x._@.Mathlib.Order.Chain._hyg.1746) s) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) (Top.top.{u1} α (OrderTop.toTop.{u1} α _inst_1 _inst_2)) s)
 Case conversion may be inaccurate. Consider using '#align is_max_chain.top_mem IsMaxChain.top_memₓ'. -/
 theorem IsMaxChain.top_mem [LE α] [OrderTop α] (h : IsMaxChain (· ≤ ·) s) : ⊤ ∈ s :=
   (h.2 (h.1.insert fun a _ _ => Or.inr le_top) <| subset_insert _ _).symm ▸ mem_insert _ _
