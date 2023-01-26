@@ -576,7 +576,7 @@ theorem measurableSet_range_of_continuous_injective {β : Type _} [TopologicalSp
         
     haveI : Nonempty γ := ⟨y 0⟩
     -- let `z` be its limit.
-    let z := lim at_top y
+    let z := limUnder at_top y
     have y_lim : tendsto y at_top (𝓝 z) := cauchy_y.tendsto_lim
     suffices f z = x by
       rw [← this]

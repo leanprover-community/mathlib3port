@@ -474,8 +474,6 @@ theorem descFactorial_eq_zero_iff_lt {n : ℕ} : ∀ {k : ℕ}, n.descFactorial 
 alias desc_factorial_eq_zero_iff_lt ↔ _ desc_factorial_of_lt
 #align nat.desc_factorial_of_lt Nat.descFactorial_of_lt
 
-/- warning: nat.add_desc_factorial_eq_asc_factorial clashes with nat.add_descFactorial_eq_asc_factorial -> Nat.add_descFactorial_eq_ascFactorial
-Case conversion may be inaccurate. Consider using '#align nat.add_desc_factorial_eq_asc_factorial Nat.add_descFactorial_eq_ascFactorialₓ'. -/
 #print Nat.add_descFactorial_eq_ascFactorial /-
 theorem add_descFactorial_eq_ascFactorial (n : ℕ) :
     ∀ k : ℕ, (n + k).descFactorial k = n.ascFactorial k

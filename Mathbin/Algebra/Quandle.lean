@@ -88,6 +88,7 @@ open MulOpposite
 
 universe u v
 
+#print Shelf /-
 /-- A *shelf* is a structure with a self-distributive binary operation.
 The binary operation is regarded as a left action of the type on itself.
 -/
@@ -95,7 +96,9 @@ class Shelf (α : Type u) where
   act : α → α → α
   self_distrib : ∀ {x y z : α}, act x (act y z) = act (act x y) (act x z)
 #align shelf Shelf
+-/
 
+#print ShelfHom /-
 /-- The type of homomorphisms between shelves.
 This is also the notion of rack and quandle homomorphisms.
 -/
@@ -104,7 +107,9 @@ structure ShelfHom (S₁ : Type _) (S₂ : Type _) [Shelf S₁] [Shelf S₂] whe
   toFun : S₁ → S₂
   map_act' : ∀ {x y : S₁}, to_fun (Shelf.act x y) = Shelf.act (to_fun x) (to_fun y)
 #align shelf_hom ShelfHom
+-/
 
+#print Rack /-
 /-- A *rack* is an automorphic set (a set with an action on itself by
 bijections) that is self-distributive.  It is a shelf such that each
 element's action is invertible.
@@ -117,6 +122,7 @@ class Rack (α : Type u) extends Shelf α where
   left_inv : ∀ x, Function.LeftInverse (inv_act x) (act x)
   right_inv : ∀ x, Function.RightInverse (inv_act x) (act x)
 #align rack Rack
+-/
 
 -- mathport name: shelf.act
 scoped[Quandles] infixr:65 " ◃ " => Shelf.act
@@ -137,40 +143,53 @@ theorem self_distrib {x y z : R} : x ◃ y ◃ z = (x ◃ y) ◃ x ◃ z :=
   Shelf.self_distrib
 #align rack.self_distrib Rack.self_distrib
 
+#print Rack.act' /-
 /-- A rack acts on itself by equivalences.
 -/
-def act (x : R) : R ≃ R where
+def act' (x : R) : R ≃ R where
   toFun := Shelf.act x
   invFun := invAct x
   left_inv := left_inv x
   right_inv := right_inv x
-#align rack.act Rack.act
+#align rack.act Rack.act'
+-/
 
+#print Rack.act'_apply /-
 @[simp]
-theorem act_apply (x y : R) : act x y = x ◃ y :=
+theorem act'_apply (x y : R) : act' x y = x ◃ y :=
   rfl
-#align rack.act_apply Rack.act_apply
+#align rack.act_apply Rack.act'_apply
+-/
 
+#print Rack.act'_symm_apply /-
 @[simp]
-theorem act_symm_apply (x y : R) : (act x).symm y = x ◃⁻¹ y :=
+theorem act'_symm_apply (x y : R) : (act' x).symm y = x ◃⁻¹ y :=
   rfl
-#align rack.act_symm_apply Rack.act_symm_apply
+#align rack.act_symm_apply Rack.act'_symm_apply
+-/
 
+#print Rack.invAct_apply /-
 @[simp]
-theorem invAct_apply (x y : R) : (act x)⁻¹ y = x ◃⁻¹ y :=
+theorem invAct_apply (x y : R) : (act' x)⁻¹ y = x ◃⁻¹ y :=
   rfl
 #align rack.inv_act_apply Rack.invAct_apply
+-/
 
+#print Rack.invAct_act_eq /-
 @[simp]
 theorem invAct_act_eq (x y : R) : x ◃⁻¹ x ◃ y = y :=
   left_inv x y
 #align rack.inv_act_act_eq Rack.invAct_act_eq
+-/
 
+#print Rack.act_invAct_eq /-
 @[simp]
 theorem act_invAct_eq (x y : R) : x ◃ x ◃⁻¹ y = y :=
   right_inv x y
 #align rack.act_inv_act_eq Rack.act_invAct_eq
+-/
 
+#print Rack.left_cancel /-
 theorem left_cancel (x : R) {y y' : R} : x ◃ y = x ◃ y' ↔ y = y' :=
   by
   constructor
@@ -178,7 +197,9 @@ theorem left_cancel (x : R) {y y' : R} : x ◃ y = x ◃ y' ↔ y = y' :=
   rintro rfl
   rfl
 #align rack.left_cancel Rack.left_cancel
+-/
 
+#print Rack.left_cancel_inv /-
 theorem left_cancel_inv (x : R) {y y' : R} : x ◃⁻¹ y = x ◃⁻¹ y' ↔ y = y' :=
   by
   constructor
@@ -186,13 +207,22 @@ theorem left_cancel_inv (x : R) {y y' : R} : x ◃⁻¹ y = x ◃⁻¹ y' ↔ y 
   rintro rfl
   rfl
 #align rack.left_cancel_inv Rack.left_cancel_inv
+-/
 
+#print Rack.self_distrib_inv /-
 theorem self_distrib_inv {x y z : R} : x ◃⁻¹ y ◃⁻¹ z = (x ◃⁻¹ y) ◃⁻¹ x ◃⁻¹ z :=
   by
   rw [← left_cancel (x ◃⁻¹ y), right_inv, ← left_cancel x, right_inv, self_distrib]
   repeat' rw [right_inv]
 #align rack.self_distrib_inv Rack.self_distrib_inv
+-/
 
+/- warning: rack.ad_conj -> Rack.ad_conj is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u1}} [_inst_2 : Rack.{u1} R] (x : R) (y : R), Eq.{succ u1} (Equiv.{succ u1, succ u1} R R) (Rack.act'.{u1} R _inst_2 (Shelf.act.{u1} R (Rack.toShelf.{u1} R _inst_2) x y)) (HMul.hMul.{u1, u1, u1} (Equiv.{succ u1, succ u1} R R) (Equiv.{succ u1, succ u1} R R) (Equiv.{succ u1, succ u1} R R) (instHMul.{u1} (Equiv.{succ u1, succ u1} R R) (MulOneClass.toHasMul.{u1} (Equiv.{succ u1, succ u1} R R) (Monoid.toMulOneClass.{u1} (Equiv.{succ u1, succ u1} R R) (DivInvMonoid.toMonoid.{u1} (Equiv.{succ u1, succ u1} R R) (Group.toDivInvMonoid.{u1} (Equiv.{succ u1, succ u1} R R) (Equiv.Perm.permGroup.{u1} R)))))) (HMul.hMul.{u1, u1, u1} (Equiv.{succ u1, succ u1} R R) (Equiv.{succ u1, succ u1} R R) (Equiv.{succ u1, succ u1} R R) (instHMul.{u1} (Equiv.{succ u1, succ u1} R R) (MulOneClass.toHasMul.{u1} (Equiv.{succ u1, succ u1} R R) (Monoid.toMulOneClass.{u1} (Equiv.{succ u1, succ u1} R R) (DivInvMonoid.toMonoid.{u1} (Equiv.{succ u1, succ u1} R R) (Group.toDivInvMonoid.{u1} (Equiv.{succ u1, succ u1} R R) (Equiv.Perm.permGroup.{u1} R)))))) (Rack.act'.{u1} R _inst_2 x) (Rack.act'.{u1} R _inst_2 y)) (Inv.inv.{u1} (Equiv.{succ u1, succ u1} R R) (DivInvMonoid.toHasInv.{u1} (Equiv.{succ u1, succ u1} R R) (Group.toDivInvMonoid.{u1} (Equiv.{succ u1, succ u1} R R) (Equiv.Perm.permGroup.{u1} R))) (Rack.act'.{u1} R _inst_2 x)))
+but is expected to have type
+  forall {R : Type.{u1}} [_inst_2 : Rack.{u1} R] (x : R) (y : R), Eq.{succ u1} (Equiv.{succ u1, succ u1} R R) (Rack.act'.{u1} R _inst_2 (Shelf.act.{u1} R (Rack.toShelf.{u1} R _inst_2) x y)) (HMul.hMul.{u1, u1, u1} (Equiv.{succ u1, succ u1} R R) (Equiv.{succ u1, succ u1} R R) (Equiv.{succ u1, succ u1} R R) (instHMul.{u1} (Equiv.{succ u1, succ u1} R R) (MulOneClass.toMul.{u1} (Equiv.{succ u1, succ u1} R R) (Monoid.toMulOneClass.{u1} (Equiv.{succ u1, succ u1} R R) (DivInvMonoid.toMonoid.{u1} (Equiv.{succ u1, succ u1} R R) (Group.toDivInvMonoid.{u1} (Equiv.{succ u1, succ u1} R R) (Equiv.Perm.permGroup.{u1} R)))))) (HMul.hMul.{u1, u1, u1} (Equiv.{succ u1, succ u1} R R) (Equiv.{succ u1, succ u1} R R) (Equiv.{succ u1, succ u1} R R) (instHMul.{u1} (Equiv.{succ u1, succ u1} R R) (MulOneClass.toMul.{u1} (Equiv.{succ u1, succ u1} R R) (Monoid.toMulOneClass.{u1} (Equiv.{succ u1, succ u1} R R) (DivInvMonoid.toMonoid.{u1} (Equiv.{succ u1, succ u1} R R) (Group.toDivInvMonoid.{u1} (Equiv.{succ u1, succ u1} R R) (Equiv.Perm.permGroup.{u1} R)))))) (Rack.act'.{u1} R _inst_2 x) (Rack.act'.{u1} R _inst_2 y)) (Inv.inv.{u1} (Equiv.{succ u1, succ u1} R R) (InvOneClass.toInv.{u1} (Equiv.{succ u1, succ u1} R R) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.{succ u1, succ u1} R R) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.{succ u1, succ u1} R R) (Group.toDivisionMonoid.{u1} (Equiv.{succ u1, succ u1} R R) (Equiv.Perm.permGroup.{u1} R))))) (Rack.act'.{u1} R _inst_2 x)))
+Case conversion may be inaccurate. Consider using '#align rack.ad_conj Rack.ad_conjₓ'. -/
 /-- The *adjoint action* of a rack on itself is `op'`, and the adjoint
 action of `x ◃ y` is the conjugate of the action of `y` by the action
 of `x`. It is another way to understand the self-distributivity axiom.
@@ -200,12 +230,13 @@ of `x`. It is another way to understand the self-distributivity axiom.
 This is used in the natural rack homomorphism `to_conj` from `R` to
 `conj (R ≃ R)` defined by `op'`.
 -/
-theorem ad_conj {R : Type _} [Rack R] (x y : R) : act (x ◃ y) = act x * act y * (act x)⁻¹ :=
+theorem ad_conj {R : Type _} [Rack R] (x y : R) : act' (x ◃ y) = act' x * act' y * (act' x)⁻¹ :=
   by
   rw [eq_mul_inv_iff_mul_eq]; ext z
   apply self_distrib.symm
 #align rack.ad_conj Rack.ad_conj
 
+#print Rack.oppositeRack /-
 /-- The opposite rack, swapping the roles of `◃` and `◃⁻¹`.
 -/
 instance oppositeRack : Rack Rᵐᵒᵖ
@@ -221,28 +252,38 @@ instance oppositeRack : Rack Rᵐᵒᵖ
   left_inv := MulOpposite.rec' fun x => MulOpposite.rec' fun y => by simp
   right_inv := MulOpposite.rec' fun x => MulOpposite.rec' fun y => by simp
 #align rack.opposite_rack Rack.oppositeRack
+-/
 
+#print Rack.op_act_op_eq /-
 @[simp]
 theorem op_act_op_eq {x y : R} : op x ◃ op y = op (x ◃⁻¹ y) :=
   rfl
 #align rack.op_act_op_eq Rack.op_act_op_eq
+-/
 
+#print Rack.op_invAct_op_eq /-
 @[simp]
 theorem op_invAct_op_eq {x y : R} : op x ◃⁻¹ op y = op (x ◃ y) :=
   rfl
 #align rack.op_inv_act_op_eq Rack.op_invAct_op_eq
+-/
 
+#print Rack.self_act_act_eq /-
 @[simp]
 theorem self_act_act_eq {x y : R} : (x ◃ x) ◃ y = x ◃ y := by rw [← right_inv x y, ← self_distrib]
 #align rack.self_act_act_eq Rack.self_act_act_eq
+-/
 
+#print Rack.self_invAct_invAct_eq /-
 @[simp]
 theorem self_invAct_invAct_eq {x y : R} : (x ◃⁻¹ x) ◃⁻¹ y = x ◃⁻¹ y :=
   by
   have h := @self_act_act_eq _ _ (op x) (op y)
   simpa using h
 #align rack.self_inv_act_inv_act_eq Rack.self_invAct_invAct_eq
+-/
 
+#print Rack.self_act_invAct_eq /-
 @[simp]
 theorem self_act_invAct_eq {x y : R} : (x ◃ x) ◃⁻¹ y = x ◃⁻¹ y :=
   by
@@ -251,14 +292,18 @@ theorem self_act_invAct_eq {x y : R} : (x ◃ x) ◃⁻¹ y = x ◃⁻¹ y :=
   rw [self_act_act_eq]
   rw [right_inv]
 #align rack.self_act_inv_act_eq Rack.self_act_invAct_eq
+-/
 
+#print Rack.self_invAct_act_eq /-
 @[simp]
 theorem self_invAct_act_eq {x y : R} : (x ◃⁻¹ x) ◃ y = x ◃ y :=
   by
   have h := @self_act_inv_act_eq _ _ (op x) (op y)
   simpa using h
 #align rack.self_inv_act_act_eq Rack.self_invAct_act_eq
+-/
 
+#print Rack.self_act_eq_iff_eq /-
 theorem self_act_eq_iff_eq {x y : R} : x ◃ x = y ◃ y ↔ x = y :=
   by
   constructor; swap; rintro rfl; rfl
@@ -267,13 +312,17 @@ theorem self_act_eq_iff_eq {x y : R} : x ◃ x = y ◃ y ↔ x = y :=
   rw [← left_cancel (x ◃ x), right_inv, self_act_act_eq]
   rw [h, ← left_cancel (y ◃ y), right_inv, self_act_act_eq]
 #align rack.self_act_eq_iff_eq Rack.self_act_eq_iff_eq
+-/
 
+#print Rack.self_invAct_eq_iff_eq /-
 theorem self_invAct_eq_iff_eq {x y : R} : x ◃⁻¹ x = y ◃⁻¹ y ↔ x = y :=
   by
   have h := @self_act_eq_iff_eq _ _ (op x) (op y)
   simpa using h
 #align rack.self_inv_act_eq_iff_eq Rack.self_invAct_eq_iff_eq
+-/
 
+#print Rack.selfApplyEquiv /-
 /-- The map `x ↦ x ◃ x` is a bijection.  (This has applications for the
 regular isotopy version of the Reidemeister I move for knot diagrams.)
 -/
@@ -284,25 +333,33 @@ def selfApplyEquiv (R : Type _) [Rack R] : R ≃ R
   left_inv x := by simp
   right_inv x := by simp
 #align rack.self_apply_equiv Rack.selfApplyEquiv
+-/
 
+#print Rack.IsInvolutory /-
 /-- An involutory rack is one for which `rack.op R x` is an involution for every x.
 -/
 def IsInvolutory (R : Type _) [Rack R] : Prop :=
   ∀ x : R, Function.Involutive (Shelf.act x)
 #align rack.is_involutory Rack.IsInvolutory
+-/
 
+#print Rack.involutory_invAct_eq_act /-
 theorem involutory_invAct_eq_act {R : Type _} [Rack R] (h : IsInvolutory R) (x y : R) :
     x ◃⁻¹ y = x ◃ y := by
   rw [← left_cancel x, right_inv]
   exact ((h x).LeftInverse y).symm
 #align rack.involutory_inv_act_eq_act Rack.involutory_invAct_eq_act
+-/
 
+#print Rack.IsAbelian /-
 /-- An abelian rack is one for which the mediality axiom holds.
 -/
 def IsAbelian (R : Type _) [Rack R] : Prop :=
   ∀ x y z w : R, (x ◃ y) ◃ z ◃ w = (x ◃ z) ◃ y ◃ w
 #align rack.is_abelian Rack.IsAbelian
+-/
 
+#print Rack.assoc_iff_id /-
 /-- Associative racks are uninteresting.
 -/
 theorem assoc_iff_id {R : Type _} [Rack R] {x y z : R} : x ◃ y ◃ z = (x ◃ y) ◃ z ↔ x ◃ z = z :=
@@ -310,6 +367,7 @@ theorem assoc_iff_id {R : Type _} [Rack R] {x y z : R} : x ◃ y ◃ z = (x ◃ 
   rw [self_distrib]
   rw [left_cancel]
 #align rack.assoc_iff_id Rack.assoc_iff_id
+-/
 
 end Rack
 
@@ -320,33 +378,58 @@ variable {S₁ : Type _} {S₂ : Type _} {S₃ : Type _} [Shelf S₁] [Shelf S�
 instance : CoeFun (S₁ →◃ S₂) fun _ => S₁ → S₂ :=
   ⟨ShelfHom.toFun⟩
 
+/- warning: shelf_hom.to_fun_eq_coe clashes with [anonymous] -> [anonymous]
+warning: shelf_hom.to_fun_eq_coe -> [anonymous] is a dubious translation:
+lean 3 declaration is
+  forall {S₁ : Type.{u1}} {S₂ : Type.{u2}} [_inst_1 : Shelf.{u1} S₁] [_inst_2 : Shelf.{u2} S₂] (f : ShelfHom.{u1, u2} S₁ S₂ _inst_1 _inst_2), Eq.{max (succ u1) (succ u2)} (S₁ -> S₂) (ShelfHom.toFun.{u1, u2} S₁ S₂ _inst_1 _inst_2 f) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (ShelfHom.{u1, u2} S₁ S₂ _inst_1 _inst_2) (fun (_x : ShelfHom.{u1, u2} S₁ S₂ _inst_1 _inst_2) => S₁ -> S₂) (ShelfHom.hasCoeToFun.{u1, u2} S₁ S₂ _inst_1 _inst_2) f)
+but is expected to have type
+  forall {S₁ : Type.{u1}} {S₂ : Type.{u2}}, (Nat -> S₁ -> S₂) -> Nat -> (List.{u1} S₁) -> (List.{u2} S₂)
+Case conversion may be inaccurate. Consider using '#align shelf_hom.to_fun_eq_coe [anonymous]ₓ'. -/
 @[simp]
-theorem toFun_eq_coe (f : S₁ →◃ S₂) : f.toFun = f :=
+theorem [anonymous] (f : S₁ →◃ S₂) : f.toFun = f :=
   rfl
-#align shelf_hom.to_fun_eq_coe ShelfHom.toFun_eq_coe
+#align shelf_hom.to_fun_eq_coe [anonymous]
 
+/- warning: shelf_hom.map_act -> ShelfHom.map_act is a dubious translation:
+lean 3 declaration is
+  forall {S₁ : Type.{u1}} {S₂ : Type.{u2}} [_inst_1 : Shelf.{u1} S₁] [_inst_2 : Shelf.{u2} S₂] (f : ShelfHom.{u1, u2} S₁ S₂ _inst_1 _inst_2) {x : S₁} {y : S₁}, Eq.{succ u2} S₂ (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (ShelfHom.{u1, u2} S₁ S₂ _inst_1 _inst_2) (fun (_x : ShelfHom.{u1, u2} S₁ S₂ _inst_1 _inst_2) => S₁ -> S₂) (ShelfHom.hasCoeToFun.{u1, u2} S₁ S₂ _inst_1 _inst_2) f (Shelf.act.{u1} S₁ _inst_1 x y)) (Shelf.act.{u2} S₂ _inst_2 (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (ShelfHom.{u1, u2} S₁ S₂ _inst_1 _inst_2) (fun (_x : ShelfHom.{u1, u2} S₁ S₂ _inst_1 _inst_2) => S₁ -> S₂) (ShelfHom.hasCoeToFun.{u1, u2} S₁ S₂ _inst_1 _inst_2) f x) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (ShelfHom.{u1, u2} S₁ S₂ _inst_1 _inst_2) (fun (_x : ShelfHom.{u1, u2} S₁ S₂ _inst_1 _inst_2) => S₁ -> S₂) (ShelfHom.hasCoeToFun.{u1, u2} S₁ S₂ _inst_1 _inst_2) f y))
+but is expected to have type
+  forall {S₁ : Type.{u2}} {S₂ : Type.{u1}} [_inst_1 : Shelf.{u2} S₁] [_inst_2 : Shelf.{u1} S₂] (f : ShelfHom.{u2, u1} S₁ S₂ _inst_1 _inst_2) {x : S₁} {y : S₁}, Eq.{succ u1} S₂ (ShelfHom.toFun.{u2, u1} S₁ S₂ _inst_1 _inst_2 f (Shelf.act.{u2} S₁ _inst_1 x y)) (Shelf.act.{u1} S₂ _inst_2 (ShelfHom.toFun.{u2, u1} S₁ S₂ _inst_1 _inst_2 f x) (ShelfHom.toFun.{u2, u1} S₁ S₂ _inst_1 _inst_2 f y))
+Case conversion may be inaccurate. Consider using '#align shelf_hom.map_act ShelfHom.map_actₓ'. -/
 @[simp]
 theorem map_act (f : S₁ →◃ S₂) {x y : S₁} : f (x ◃ y) = f x ◃ f y :=
   map_act' f
 #align shelf_hom.map_act ShelfHom.map_act
 
+#print ShelfHom.id /-
 /-- The identity homomorphism -/
 def id (S : Type _) [Shelf S] : S →◃ S where
   toFun := id
   map_act' := by simp
 #align shelf_hom.id ShelfHom.id
+-/
 
+#print ShelfHom.inhabited /-
 instance inhabited (S : Type _) [Shelf S] : Inhabited (S →◃ S) :=
   ⟨id S⟩
 #align shelf_hom.inhabited ShelfHom.inhabited
+-/
 
+#print ShelfHom.comp /-
 /-- The composition of shelf homomorphisms -/
 def comp (g : S₂ →◃ S₃) (f : S₁ →◃ S₂) : S₁ →◃ S₃
     where
   toFun := g.toFun ∘ f.toFun
   map_act' := by simp
 #align shelf_hom.comp ShelfHom.comp
+-/
 
+/- warning: shelf_hom.comp_apply -> ShelfHom.comp_apply is a dubious translation:
+lean 3 declaration is
+  forall {S₁ : Type.{u1}} {S₂ : Type.{u2}} {S₃ : Type.{u3}} [_inst_1 : Shelf.{u1} S₁] [_inst_2 : Shelf.{u2} S₂] [_inst_3 : Shelf.{u3} S₃] (g : ShelfHom.{u2, u3} S₂ S₃ _inst_2 _inst_3) (f : ShelfHom.{u1, u2} S₁ S₂ _inst_1 _inst_2) (x : S₁), Eq.{succ u3} S₃ (coeFn.{max (succ u1) (succ u3), max (succ u1) (succ u3)} (ShelfHom.{u1, u3} S₁ S₃ _inst_1 _inst_3) (fun (_x : ShelfHom.{u1, u3} S₁ S₃ _inst_1 _inst_3) => S₁ -> S₃) (ShelfHom.hasCoeToFun.{u1, u3} S₁ S₃ _inst_1 _inst_3) (ShelfHom.comp.{u1, u2, u3} S₁ S₂ S₃ _inst_1 _inst_2 _inst_3 g f) x) (coeFn.{max (succ u2) (succ u3), max (succ u2) (succ u3)} (ShelfHom.{u2, u3} S₂ S₃ _inst_2 _inst_3) (fun (_x : ShelfHom.{u2, u3} S₂ S₃ _inst_2 _inst_3) => S₂ -> S₃) (ShelfHom.hasCoeToFun.{u2, u3} S₂ S₃ _inst_2 _inst_3) g (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (ShelfHom.{u1, u2} S₁ S₂ _inst_1 _inst_2) (fun (_x : ShelfHom.{u1, u2} S₁ S₂ _inst_1 _inst_2) => S₁ -> S₂) (ShelfHom.hasCoeToFun.{u1, u2} S₁ S₂ _inst_1 _inst_2) f x))
+but is expected to have type
+  forall {S₁ : Type.{u1}} {S₂ : Type.{u3}} {S₃ : Type.{u2}} [_inst_1 : Shelf.{u1} S₁] [_inst_2 : Shelf.{u3} S₂] [_inst_3 : Shelf.{u2} S₃] (g : ShelfHom.{u3, u2} S₂ S₃ _inst_2 _inst_3) (f : ShelfHom.{u1, u3} S₁ S₂ _inst_1 _inst_2) (x : S₁), Eq.{succ u2} S₃ (ShelfHom.toFun.{u1, u2} S₁ S₃ _inst_1 _inst_3 (ShelfHom.comp.{u1, u3, u2} S₁ S₂ S₃ _inst_1 _inst_2 _inst_3 g f) x) (ShelfHom.toFun.{u3, u2} S₂ S₃ _inst_2 _inst_3 g (ShelfHom.toFun.{u1, u3} S₁ S₂ _inst_1 _inst_2 f x))
+Case conversion may be inaccurate. Consider using '#align shelf_hom.comp_apply ShelfHom.comp_applyₓ'. -/
 @[simp]
 theorem comp_apply (g : S₂ →◃ S₃) (f : S₁ →◃ S₂) (x : S₁) : (g.comp f) x = g (f x) :=
   rfl
@@ -354,11 +437,13 @@ theorem comp_apply (g : S₂ →◃ S₃) (f : S₁ →◃ S₂) (x : S₁) : (g
 
 end ShelfHom
 
+#print Quandle /-
 /-- A quandle is a rack such that each automorphism fixes its corresponding element.
 -/
 class Quandle (α : Type _) extends Rack α where
   fix : ∀ {x : α}, act x x = x
 #align quandle Quandle
+-/
 
 namespace Quandle
 
@@ -368,19 +453,24 @@ variable {Q : Type _} [Quandle Q]
 
 attribute [simp] fix
 
+#print Quandle.fix_inv /-
 @[simp]
 theorem fix_inv {x : Q} : x ◃⁻¹ x = x :=
   by
   rw [← left_cancel x]
   simp
 #align quandle.fix_inv Quandle.fix_inv
+-/
 
+#print Quandle.oppositeQuandle /-
 instance oppositeQuandle : Quandle Qᵐᵒᵖ
     where fix x := by
     induction x using MulOpposite.rec'
     simp
 #align quandle.opposite_quandle Quandle.oppositeQuandle
+-/
 
+#print Quandle.Conj /-
 /-- The conjugation quandle of a group.  Each element of the group acts by
 the corresponding inner automorphism.
 -/
@@ -388,7 +478,9 @@ the corresponding inner automorphism.
 def Conj (G : Type _) :=
   G
 #align quandle.conj Quandle.Conj
+-/
 
+#print Quandle.Conj.quandle /-
 instance Conj.quandle (G : Type _) [Group G] : Quandle (Conj G)
     where
   act x := @MulAut.conj G _ x
@@ -404,19 +496,29 @@ instance Conj.quandle (G : Type _) [Group G] : Quandle (Conj G)
     group
   fix x := by simp
 #align quandle.conj.quandle Quandle.Conj.quandle
+-/
 
+/- warning: quandle.conj_act_eq_conj -> Quandle.conj_act_eq_conj is a dubious translation:
+lean 3 declaration is
+  forall {G : Type.{u1}} [_inst_2 : Group.{u1} G] (x : Quandle.Conj.{u1} G) (y : Quandle.Conj.{u1} G), Eq.{succ u1} (Quandle.Conj.{u1} G) (Shelf.act.{u1} (Quandle.Conj.{u1} G) (Rack.toShelf.{u1} (Quandle.Conj.{u1} G) (Quandle.toRack.{u1} (Quandle.Conj.{u1} G) (Quandle.Conj.quandle.{u1} G _inst_2))) x y) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))) x y) (Inv.inv.{u1} G (DivInvMonoid.toHasInv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)) x))
+but is expected to have type
+  forall {G : Type.{u1}} [_inst_2 : Group.{u1} G] (x : Quandle.Conj.{u1} G) (y : Quandle.Conj.{u1} G), Eq.{succ u1} (Quandle.Conj.{u1} G) (Shelf.act.{u1} (Quandle.Conj.{u1} G) (Rack.toShelf.{u1} (Quandle.Conj.{u1} G) (Quandle.toRack.{u1} (Quandle.Conj.{u1} G) (Quandle.Conj.quandle.{u1} G _inst_2))) x y) (HMul.hMul.{u1, u1, u1} (Quandle.Conj.{u1} G) (Quandle.Conj.{u1} G) (Quandle.Conj.{u1} G) (instHMul.{u1} (Quandle.Conj.{u1} G) (MulOneClass.toMul.{u1} (Quandle.Conj.{u1} G) (Monoid.toMulOneClass.{u1} (Quandle.Conj.{u1} G) (DivInvMonoid.toMonoid.{u1} (Quandle.Conj.{u1} G) (Group.toDivInvMonoid.{u1} (Quandle.Conj.{u1} G) _inst_2))))) (HMul.hMul.{u1, u1, u1} (Quandle.Conj.{u1} G) (Quandle.Conj.{u1} G) (Quandle.Conj.{u1} G) (instHMul.{u1} (Quandle.Conj.{u1} G) (MulOneClass.toMul.{u1} (Quandle.Conj.{u1} G) (Monoid.toMulOneClass.{u1} (Quandle.Conj.{u1} G) (DivInvMonoid.toMonoid.{u1} (Quandle.Conj.{u1} G) (Group.toDivInvMonoid.{u1} (Quandle.Conj.{u1} G) _inst_2))))) x y) (Inv.inv.{u1} (Quandle.Conj.{u1} G) (InvOneClass.toInv.{u1} (Quandle.Conj.{u1} G) (DivInvOneMonoid.toInvOneClass.{u1} (Quandle.Conj.{u1} G) (DivisionMonoid.toDivInvOneMonoid.{u1} (Quandle.Conj.{u1} G) (Group.toDivisionMonoid.{u1} (Quandle.Conj.{u1} G) _inst_2)))) x))
+Case conversion may be inaccurate. Consider using '#align quandle.conj_act_eq_conj Quandle.conj_act_eq_conjₓ'. -/
 @[simp]
 theorem conj_act_eq_conj {G : Type _} [Group G] (x y : Conj G) :
     x ◃ y = ((x : G) * (y : G) * (x : G)⁻¹ : G) :=
   rfl
 #align quandle.conj_act_eq_conj Quandle.conj_act_eq_conj
 
+#print Quandle.conj_swap /-
 theorem conj_swap {G : Type _} [Group G] (x y : Conj G) : x ◃ y = y ↔ y ◃ x = x :=
   by
   dsimp [conj] at *; constructor
   repeat' intro h; conv_rhs => rw [eq_mul_inv_of_mul_eq (eq_mul_inv_of_mul_eq h)]; simp
 #align quandle.conj_swap Quandle.conj_swap
+-/
 
+#print Quandle.Conj.map /-
 /-- `conj` is functorial
 -/
 def Conj.map {G : Type _} {H : Type _} [Group G] [Group H] (f : G →* H) : Conj G →◃ Conj H
@@ -424,10 +526,12 @@ def Conj.map {G : Type _} {H : Type _} [Group G] [Group H] (f : G →* H) : Conj
   toFun := f
   map_act' := by simp
 #align quandle.conj.map Quandle.Conj.map
+-/
 
 instance {G : Type _} {H : Type _} [Group G] [Group H] : HasLift (G →* H) (Conj G →◃ Conj H)
     where lift := Conj.map
 
+#print Quandle.Dihedral /-
 /-- The dihedral quandle. This is the conjugation quandle of the dihedral group restrict to flips.
 
 Used for Fox n-colorings of knots.
@@ -436,19 +540,24 @@ Used for Fox n-colorings of knots.
 def Dihedral (n : ℕ) :=
   ZMod n
 #align quandle.dihedral Quandle.Dihedral
+-/
 
+#print Quandle.dihedralAct /-
 /-- The operation for the dihedral quandle.  It does not need to be an equivalence
 because it is an involution (see `dihedral_act.inv`).
 -/
 def dihedralAct (n : ℕ) (a : ZMod n) : ZMod n → ZMod n := fun b => 2 * a - b
 #align quandle.dihedral_act Quandle.dihedralAct
+-/
 
+#print Quandle.dihedralAct.inv /-
 theorem dihedralAct.inv (n : ℕ) (a : ZMod n) : Function.Involutive (dihedralAct n a) :=
   by
   intro b
   dsimp [dihedral_act]
   ring
 #align quandle.dihedral_act.inv Quandle.dihedralAct.inv
+-/
 
 instance (n : ℕ) : Quandle (Dihedral n)
     where
@@ -463,14 +572,16 @@ end Quandle
 
 namespace Rack
 
+#print Rack.toConj /-
 /-- This is the natural rack homomorphism to the conjugation quandle of the group `R ≃ R`
 that acts on the rack.
 -/
 def toConj (R : Type _) [Rack R] : R →◃ Quandle.Conj (R ≃ R)
     where
-  toFun := act
+  toFun := act'
   map_act' := ad_conj
 #align rack.to_conj Rack.toConj
+-/
 
 section EnvelGroup
 
@@ -533,6 +644,7 @@ well-founded recursion.
 -/
 
 
+#print Rack.PreEnvelGroup /-
 /-- Free generators of the enveloping group.
 -/
 inductive PreEnvelGroup (R : Type u) : Type u
@@ -541,13 +653,17 @@ inductive PreEnvelGroup (R : Type u) : Type u
   | mul (a b : pre_envel_group) : pre_envel_group
   | inv (a : pre_envel_group) : pre_envel_group
 #align rack.pre_envel_group Rack.PreEnvelGroup
+-/
 
+#print Rack.PreEnvelGroup.inhabited /-
 instance PreEnvelGroup.inhabited (R : Type u) : Inhabited (PreEnvelGroup R) :=
   ⟨PreEnvelGroup.unit⟩
 #align rack.pre_envel_group.inhabited Rack.PreEnvelGroup.inhabited
+-/
 
 open PreEnvelGroup
 
+#print Rack.PreEnvelGroupRel' /-
 /-- Relations for the enveloping group. This is a type-valued relation because
 `to_envel_group.map_aux.well_def` inducts on it to show `to_envel_group.map`
 is well-defined.  The relation `pre_envel_group_rel` is the `Prop`-valued version,
@@ -573,44 +689,58 @@ inductive PreEnvelGroupRel' (R : Type u) [Rack R] : PreEnvelGroup R → PreEnvel
   act_incl (x y : R) :
     pre_envel_group_rel' (mul (mul (incl x) (incl y)) (inv (incl x))) (incl (x ◃ y))
 #align rack.pre_envel_group_rel' Rack.PreEnvelGroupRel'
+-/
 
+#print Rack.PreEnvelGroupRel'.inhabited /-
 instance PreEnvelGroupRel'.inhabited (R : Type u) [Rack R] :
     Inhabited (PreEnvelGroupRel' R Unit Unit) :=
   ⟨PreEnvelGroupRel'.refl⟩
 #align rack.pre_envel_group_rel'.inhabited Rack.PreEnvelGroupRel'.inhabited
+-/
 
+#print Rack.PreEnvelGroupRel /-
 /--
 The `pre_envel_group_rel` relation as a `Prop`.  Used as the relation for `pre_envel_group.setoid`.
 -/
 inductive PreEnvelGroupRel (R : Type u) [Rack R] : PreEnvelGroup R → PreEnvelGroup R → Prop
   | Rel {a b : PreEnvelGroup R} (r : PreEnvelGroupRel' R a b) : pre_envel_group_rel a b
 #align rack.pre_envel_group_rel Rack.PreEnvelGroupRel
+-/
 
+#print Rack.PreEnvelGroupRel'.rel /-
 /-- A quick way to convert a `pre_envel_group_rel'` to a `pre_envel_group_rel`.
 -/
 theorem PreEnvelGroupRel'.rel {R : Type u} [Rack R] {a b : PreEnvelGroup R} :
     PreEnvelGroupRel' R a b → PreEnvelGroupRel R a b :=
   pre_envel_group_rel.rel
 #align rack.pre_envel_group_rel'.rel Rack.PreEnvelGroupRel'.rel
+-/
 
+#print Rack.PreEnvelGroupRel.refl /-
 @[refl]
 theorem PreEnvelGroupRel.refl {R : Type u} [Rack R] {a : PreEnvelGroup R} :
     PreEnvelGroupRel R a a :=
   PreEnvelGroupRel.rel PreEnvelGroupRel'.refl
 #align rack.pre_envel_group_rel.refl Rack.PreEnvelGroupRel.refl
+-/
 
+#print Rack.PreEnvelGroupRel.symm /-
 @[symm]
 theorem PreEnvelGroupRel.symm {R : Type u} [Rack R] {a b : PreEnvelGroup R} :
     PreEnvelGroupRel R a b → PreEnvelGroupRel R b a
   | ⟨r⟩ => r.symm.Rel
 #align rack.pre_envel_group_rel.symm Rack.PreEnvelGroupRel.symm
+-/
 
+#print Rack.PreEnvelGroupRel.trans /-
 @[trans]
 theorem PreEnvelGroupRel.trans {R : Type u} [Rack R] {a b c : PreEnvelGroup R} :
     PreEnvelGroupRel R a b → PreEnvelGroupRel R b c → PreEnvelGroupRel R a c
   | ⟨rab⟩, ⟨rbc⟩ => (rab.trans rbc).Rel
 #align rack.pre_envel_group_rel.trans Rack.PreEnvelGroupRel.trans
+-/
 
+#print Rack.PreEnvelGroup.setoid /-
 instance PreEnvelGroup.setoid (R : Type _) [Rack R] : Setoid (PreEnvelGroup R)
     where
   R := PreEnvelGroupRel R
@@ -619,12 +749,15 @@ instance PreEnvelGroup.setoid (R : Type _) [Rack R] : Setoid (PreEnvelGroup R)
     constructor; apply pre_envel_group_rel.symm
     apply pre_envel_group_rel.trans
 #align rack.pre_envel_group.setoid Rack.PreEnvelGroup.setoid
+-/
 
+#print Rack.EnvelGroup /-
 /-- The universal enveloping group for the rack R.
 -/
 def EnvelGroup (R : Type _) [Rack R] :=
   Quotient (PreEnvelGroup.setoid R)
 #align rack.envel_group Rack.EnvelGroup
+-/
 
 -- Define the `group` instances in two steps so `inv` can be inferred correctly.
 -- TODO: is there a non-invasive way of defining the instance directly?
@@ -647,10 +780,18 @@ instance (R : Type _) [Rack R] : Group (EnvelGroup R) :=
     mul_left_inv := fun a =>
       Quotient.inductionOn a fun a => Quotient.sound (PreEnvelGroupRel'.mul_left_inv a).Rel }
 
+#print Rack.EnvelGroup.inhabited /-
 instance EnvelGroup.inhabited (R : Type _) [Rack R] : Inhabited (EnvelGroup R) :=
   ⟨1⟩
 #align rack.envel_group.inhabited Rack.EnvelGroup.inhabited
+-/
 
+/- warning: rack.to_envel_group -> Rack.toEnvelGroup is a dubious translation:
+lean 3 declaration is
+  forall (R : Type.{u1}) [_inst_1 : Rack.{u1} R], ShelfHom.{u1, u1} R (Quandle.Conj.{u1} (Rack.EnvelGroup.{u1} R _inst_1)) (Rack.toShelf.{u1} R _inst_1) (Rack.toShelf.{u1} (Quandle.Conj.{u1} (Rack.EnvelGroup.{u1} R _inst_1)) (Quandle.toRack.{u1} (Quandle.Conj.{u1} (Rack.EnvelGroup.{u1} R _inst_1)) (Quandle.Conj.quandle.{u1} (Rack.EnvelGroup.{u1} R _inst_1) (Rack.EnvelGroup.group.{u1} R _inst_1))))
+but is expected to have type
+  forall (R : Type.{u1}) [_inst_1 : Rack.{u1} R], ShelfHom.{u1, u1} R (Quandle.Conj.{u1} (Rack.EnvelGroup.{u1} R _inst_1)) (Rack.toShelf.{u1} R _inst_1) (Rack.toShelf.{u1} (Quandle.Conj.{u1} (Rack.EnvelGroup.{u1} R _inst_1)) (Quandle.toRack.{u1} (Quandle.Conj.{u1} (Rack.EnvelGroup.{u1} R _inst_1)) (Quandle.Conj.quandle.{u1} (Rack.EnvelGroup.{u1} R _inst_1) (Rack.instGroupEnvelGroup.{u1} R _inst_1))))
+Case conversion may be inaccurate. Consider using '#align rack.to_envel_group Rack.toEnvelGroupₓ'. -/
 /-- The canonical homomorphism from a rack to its enveloping group.
 Satisfies universal properties given by `to_envel_group.map` and `to_envel_group.univ`.
 -/
@@ -660,6 +801,7 @@ def toEnvelGroup (R : Type _) [Rack R] : R →◃ Quandle.Conj (EnvelGroup R)
   map_act' x y := Quotient.sound (PreEnvelGroupRel'.act_incl x y).symm.Rel
 #align rack.to_envel_group Rack.toEnvelGroup
 
+#print Rack.toEnvelGroup.mapAux /-
 /-- The preliminary definition of the induced map from the enveloping group.
 See `to_envel_group.map`.
 -/
@@ -670,11 +812,18 @@ def toEnvelGroup.mapAux {R : Type _} [Rack R] {G : Type _} [Group G] (f : R →�
   | mul a b => to_envel_group.map_aux a * to_envel_group.map_aux b
   | inv a => (to_envel_group.map_aux a)⁻¹
 #align rack.to_envel_group.map_aux Rack.toEnvelGroup.mapAux
+-/
 
 namespace ToEnvelGroup.MapAux
 
 open PreEnvelGroupRel'
 
+/- warning: rack.to_envel_group.map_aux.well_def -> Rack.toEnvelGroup.mapAux.well_def is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u1}} [_inst_1 : Rack.{u1} R] {G : Type.{u2}} [_inst_2 : Group.{u2} G] (f : ShelfHom.{u1, u2} R (Quandle.Conj.{u2} G) (Rack.toShelf.{u1} R _inst_1) (Rack.toShelf.{u2} (Quandle.Conj.{u2} G) (Quandle.toRack.{u2} (Quandle.Conj.{u2} G) (Quandle.Conj.quandle.{u2} G _inst_2)))) {a : Rack.PreEnvelGroup.{u1} R} {b : Rack.PreEnvelGroup.{u1} R}, (Rack.PreEnvelGroupRel'.{u1} R _inst_1 a b) -> (Eq.{succ u2} G (Rack.toEnvelGroup.mapAux.{u1, u2} R _inst_1 G _inst_2 f a) (Rack.toEnvelGroup.mapAux.{u1, u2} R _inst_1 G _inst_2 f b))
+but is expected to have type
+  forall {R : Type.{u2}} [_inst_1 : Rack.{u2} R] {G : Type.{u1}} [_inst_2 : Group.{u1} G] (f : ShelfHom.{u2, u1} R (Quandle.Conj.{u1} G) (Rack.toShelf.{u2} R _inst_1) (Rack.toShelf.{u1} (Quandle.Conj.{u1} G) (Quandle.toRack.{u1} (Quandle.Conj.{u1} G) (Quandle.Conj.quandle.{u1} G _inst_2)))) {a : Rack.PreEnvelGroup.{u2} R} {b : Rack.PreEnvelGroup.{u2} R}, (Rack.PreEnvelGroupRel'.{u2} R _inst_1 a b) -> (Eq.{succ u1} G (Rack.toEnvelGroup.mapAux.{u2, u1} R _inst_1 G _inst_2 f a) (Rack.toEnvelGroup.mapAux.{u2, u1} R _inst_1 G _inst_2 f b))
+Case conversion may be inaccurate. Consider using '#align rack.to_envel_group.map_aux.well_def Rack.toEnvelGroup.mapAux.well_defₓ'. -/
 /-- Show that `to_envel_group.map_aux` sends equivalent expressions to equal terms.
 -/
 theorem well_def {R : Type _} [Rack R] {G : Type _} [Group G] (f : R →◃ Quandle.Conj G) :
@@ -694,6 +843,12 @@ theorem well_def {R : Type _} [Rack R] {G : Type _} [Group G] (f : R →◃ Quan
 
 end ToEnvelGroup.MapAux
 
+/- warning: rack.to_envel_group.map -> Rack.toEnvelGroup.map is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u1}} [_inst_1 : Rack.{u1} R] {G : Type.{u2}} [_inst_2 : Group.{u2} G], Equiv.{max (succ u1) (succ u2), max (succ u2) (succ u1)} (ShelfHom.{u1, u2} R (Quandle.Conj.{u2} G) (Rack.toShelf.{u1} R _inst_1) (Rack.toShelf.{u2} (Quandle.Conj.{u2} G) (Quandle.toRack.{u2} (Quandle.Conj.{u2} G) (Quandle.Conj.quandle.{u2} G _inst_2)))) (MonoidHom.{u1, u2} (Rack.EnvelGroup.{u1} R _inst_1) G (Monoid.toMulOneClass.{u1} (Rack.EnvelGroup.{u1} R _inst_1) (DivInvMonoid.toMonoid.{u1} (Rack.EnvelGroup.{u1} R _inst_1) (Rack.EnvelGroup.divInvMonoid.{u1} R _inst_1))) (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_2))))
+but is expected to have type
+  forall {R : Type.{u1}} [_inst_1 : Rack.{u1} R] {G : Type.{u2}} [_inst_2 : Group.{u2} G], Equiv.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (ShelfHom.{u1, u2} R (Quandle.Conj.{u2} G) (Rack.toShelf.{u1} R _inst_1) (Rack.toShelf.{u2} (Quandle.Conj.{u2} G) (Quandle.toRack.{u2} (Quandle.Conj.{u2} G) (Quandle.Conj.quandle.{u2} G _inst_2)))) (MonoidHom.{u1, u2} (Rack.EnvelGroup.{u1} R _inst_1) G (Monoid.toMulOneClass.{u1} (Rack.EnvelGroup.{u1} R _inst_1) (DivInvMonoid.toMonoid.{u1} (Rack.EnvelGroup.{u1} R _inst_1) (Rack.instDivInvMonoidEnvelGroup.{u1} R _inst_1))) (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_2))))
+Case conversion may be inaccurate. Consider using '#align rack.to_envel_group.map Rack.toEnvelGroup.mapₓ'. -/
 /-- Given a map from a rack to a group, lift it to being a map from the enveloping group.
 More precisely, the `envel_group` functor is left adjoint to `quandle.conj`.
 -/
@@ -729,6 +884,12 @@ def toEnvelGroup.map {R : Type _} [Rack R] {G : Type _} [Group G] :
           rw [hm, F.map_inv, MonoidHom.map_inv, x_ih]
 #align rack.to_envel_group.map Rack.toEnvelGroup.map
 
+/- warning: rack.to_envel_group.univ -> Rack.toEnvelGroup.univ is a dubious translation:
+lean 3 declaration is
+  forall (R : Type.{u1}) [_inst_1 : Rack.{u1} R] (G : Type.{u2}) [_inst_2 : Group.{u2} G] (f : ShelfHom.{u1, u2} R (Quandle.Conj.{u2} G) (Rack.toShelf.{u1} R _inst_1) (Rack.toShelf.{u2} (Quandle.Conj.{u2} G) (Quandle.toRack.{u2} (Quandle.Conj.{u2} G) (Quandle.Conj.quandle.{u2} G _inst_2)))), Eq.{max (succ u1) (succ u2)} (ShelfHom.{u1, u2} R (Quandle.Conj.{u2} G) (Rack.toShelf.{u1} R _inst_1) (Rack.toShelf.{u2} (Quandle.Conj.{u2} G) (Quandle.toRack.{u2} (Quandle.Conj.{u2} G) (Quandle.Conj.quandle.{u2} G _inst_2)))) (ShelfHom.comp.{u1, u1, u2} R (Quandle.Conj.{u1} (Rack.EnvelGroup.{u1} R _inst_1)) (Quandle.Conj.{u2} G) (Rack.toShelf.{u1} R _inst_1) (Rack.toShelf.{u1} (Quandle.Conj.{u1} (Rack.EnvelGroup.{u1} R _inst_1)) (Quandle.toRack.{u1} (Quandle.Conj.{u1} (Rack.EnvelGroup.{u1} R _inst_1)) (Quandle.Conj.quandle.{u1} (Rack.EnvelGroup.{u1} R _inst_1) (Rack.EnvelGroup.group.{u1} R _inst_1)))) (Rack.toShelf.{u2} (Quandle.Conj.{u2} G) (Quandle.toRack.{u2} (Quandle.Conj.{u2} G) (Quandle.Conj.quandle.{u2} G _inst_2))) (Quandle.Conj.map.{u1, u2} (Rack.EnvelGroup.{u1} R _inst_1) G (Rack.EnvelGroup.group.{u1} R _inst_1) _inst_2 (coeFn.{max 1 (max (max (succ u1) (succ u2)) (succ u2) (succ u1)) (max (succ u2) (succ u1)) (succ u1) (succ u2), max (max (succ u1) (succ u2)) (succ u2) (succ u1)} (Equiv.{max (succ u1) (succ u2), max (succ u2) (succ u1)} (ShelfHom.{u1, u2} R (Quandle.Conj.{u2} G) (Rack.toShelf.{u1} R _inst_1) (Rack.toShelf.{u2} (Quandle.Conj.{u2} G) (Quandle.toRack.{u2} (Quandle.Conj.{u2} G) (Quandle.Conj.quandle.{u2} G _inst_2)))) (MonoidHom.{u1, u2} (Rack.EnvelGroup.{u1} R _inst_1) G (Monoid.toMulOneClass.{u1} (Rack.EnvelGroup.{u1} R _inst_1) (DivInvMonoid.toMonoid.{u1} (Rack.EnvelGroup.{u1} R _inst_1) (Rack.EnvelGroup.divInvMonoid.{u1} R _inst_1))) (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_2))))) (fun (_x : Equiv.{max (succ u1) (succ u2), max (succ u2) (succ u1)} (ShelfHom.{u1, u2} R (Quandle.Conj.{u2} G) (Rack.toShelf.{u1} R _inst_1) (Rack.toShelf.{u2} (Quandle.Conj.{u2} G) (Quandle.toRack.{u2} (Quandle.Conj.{u2} G) (Quandle.Conj.quandle.{u2} G _inst_2)))) (MonoidHom.{u1, u2} (Rack.EnvelGroup.{u1} R _inst_1) G (Monoid.toMulOneClass.{u1} (Rack.EnvelGroup.{u1} R _inst_1) (DivInvMonoid.toMonoid.{u1} (Rack.EnvelGroup.{u1} R _inst_1) (Rack.EnvelGroup.divInvMonoid.{u1} R _inst_1))) (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_2))))) => (ShelfHom.{u1, u2} R (Quandle.Conj.{u2} G) (Rack.toShelf.{u1} R _inst_1) (Rack.toShelf.{u2} (Quandle.Conj.{u2} G) (Quandle.toRack.{u2} (Quandle.Conj.{u2} G) (Quandle.Conj.quandle.{u2} G _inst_2)))) -> (MonoidHom.{u1, u2} (Rack.EnvelGroup.{u1} R _inst_1) G (Monoid.toMulOneClass.{u1} (Rack.EnvelGroup.{u1} R _inst_1) (DivInvMonoid.toMonoid.{u1} (Rack.EnvelGroup.{u1} R _inst_1) (Rack.EnvelGroup.divInvMonoid.{u1} R _inst_1))) (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_2))))) (Equiv.hasCoeToFun.{max (succ u1) (succ u2), max (succ u2) (succ u1)} (ShelfHom.{u1, u2} R (Quandle.Conj.{u2} G) (Rack.toShelf.{u1} R _inst_1) (Rack.toShelf.{u2} (Quandle.Conj.{u2} G) (Quandle.toRack.{u2} (Quandle.Conj.{u2} G) (Quandle.Conj.quandle.{u2} G _inst_2)))) (MonoidHom.{u1, u2} (Rack.EnvelGroup.{u1} R _inst_1) G (Monoid.toMulOneClass.{u1} (Rack.EnvelGroup.{u1} R _inst_1) (DivInvMonoid.toMonoid.{u1} (Rack.EnvelGroup.{u1} R _inst_1) (Rack.EnvelGroup.divInvMonoid.{u1} R _inst_1))) (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_2))))) (Rack.toEnvelGroup.map.{u1, u2} R _inst_1 G _inst_2) f)) (Rack.toEnvelGroup.{u1} R _inst_1)) f
+but is expected to have type
+  forall (R : Type.{u2}) [_inst_1 : Rack.{u2} R] (G : Type.{u1}) [_inst_2 : Group.{u1} G] (f : ShelfHom.{u2, u1} R (Quandle.Conj.{u1} G) (Rack.toShelf.{u2} R _inst_1) (Rack.toShelf.{u1} (Quandle.Conj.{u1} G) (Quandle.toRack.{u1} (Quandle.Conj.{u1} G) (Quandle.Conj.quandle.{u1} G _inst_2)))), Eq.{max (succ u2) (succ u1)} (ShelfHom.{u2, u1} R (Quandle.Conj.{u1} G) (Rack.toShelf.{u2} R _inst_1) (Rack.toShelf.{u1} (Quandle.Conj.{u1} G) (Quandle.toRack.{u1} (Quandle.Conj.{u1} G) (Quandle.Conj.quandle.{u1} G _inst_2)))) (ShelfHom.comp.{u2, u2, u1} R (Quandle.Conj.{u2} (Rack.EnvelGroup.{u2} R _inst_1)) (Quandle.Conj.{u1} G) (Rack.toShelf.{u2} R _inst_1) (Rack.toShelf.{u2} (Quandle.Conj.{u2} (Rack.EnvelGroup.{u2} R _inst_1)) (Quandle.toRack.{u2} (Quandle.Conj.{u2} (Rack.EnvelGroup.{u2} R _inst_1)) (Quandle.Conj.quandle.{u2} (Rack.EnvelGroup.{u2} R _inst_1) (Rack.instGroupEnvelGroup.{u2} R _inst_1)))) (Rack.toShelf.{u1} (Quandle.Conj.{u1} G) (Quandle.toRack.{u1} (Quandle.Conj.{u1} G) (Quandle.Conj.quandle.{u1} G _inst_2))) (Quandle.Conj.map.{u2, u1} (Rack.EnvelGroup.{u2} R _inst_1) G (Rack.instGroupEnvelGroup.{u2} R _inst_1) _inst_2 (FunLike.coe.{max (succ u1) (succ u2), max (succ u1) (succ u2), max (succ u1) (succ u2)} (Equiv.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (ShelfHom.{u2, u1} R (Quandle.Conj.{u1} G) (Rack.toShelf.{u2} R _inst_1) (Rack.toShelf.{u1} (Quandle.Conj.{u1} G) (Quandle.toRack.{u1} (Quandle.Conj.{u1} G) (Quandle.Conj.quandle.{u1} G _inst_2)))) (MonoidHom.{u2, u1} (Rack.EnvelGroup.{u2} R _inst_1) G (Monoid.toMulOneClass.{u2} (Rack.EnvelGroup.{u2} R _inst_1) (DivInvMonoid.toMonoid.{u2} (Rack.EnvelGroup.{u2} R _inst_1) (Rack.instDivInvMonoidEnvelGroup.{u2} R _inst_1))) (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))) (ShelfHom.{u2, u1} R (Quandle.Conj.{u1} G) (Rack.toShelf.{u2} R _inst_1) (Rack.toShelf.{u1} (Quandle.Conj.{u1} G) (Quandle.toRack.{u1} (Quandle.Conj.{u1} G) (Quandle.Conj.quandle.{u1} G _inst_2)))) (fun (_x : ShelfHom.{u2, u1} R (Quandle.Conj.{u1} G) (Rack.toShelf.{u2} R _inst_1) (Rack.toShelf.{u1} (Quandle.Conj.{u1} G) (Quandle.toRack.{u1} (Quandle.Conj.{u1} G) (Quandle.Conj.quandle.{u1} G _inst_2)))) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : ShelfHom.{u2, u1} R (Quandle.Conj.{u1} G) (Rack.toShelf.{u2} R _inst_1) (Rack.toShelf.{u1} (Quandle.Conj.{u1} G) (Quandle.toRack.{u1} (Quandle.Conj.{u1} G) (Quandle.Conj.quandle.{u1} G _inst_2)))) => MonoidHom.{u2, u1} (Rack.EnvelGroup.{u2} R _inst_1) G (Monoid.toMulOneClass.{u2} (Rack.EnvelGroup.{u2} R _inst_1) (DivInvMonoid.toMonoid.{u2} (Rack.EnvelGroup.{u2} R _inst_1) (Rack.instDivInvMonoidEnvelGroup.{u2} R _inst_1))) (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)))) _x) (EmbeddingLike.toFunLike.{max (succ u1) (succ u2), max (succ u1) (succ u2), max (succ u1) (succ u2)} (Equiv.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (ShelfHom.{u2, u1} R (Quandle.Conj.{u1} G) (Rack.toShelf.{u2} R _inst_1) (Rack.toShelf.{u1} (Quandle.Conj.{u1} G) (Quandle.toRack.{u1} (Quandle.Conj.{u1} G) (Quandle.Conj.quandle.{u1} G _inst_2)))) (MonoidHom.{u2, u1} (Rack.EnvelGroup.{u2} R _inst_1) G (Monoid.toMulOneClass.{u2} (Rack.EnvelGroup.{u2} R _inst_1) (DivInvMonoid.toMonoid.{u2} (Rack.EnvelGroup.{u2} R _inst_1) (Rack.instDivInvMonoidEnvelGroup.{u2} R _inst_1))) (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))) (ShelfHom.{u2, u1} R (Quandle.Conj.{u1} G) (Rack.toShelf.{u2} R _inst_1) (Rack.toShelf.{u1} (Quandle.Conj.{u1} G) (Quandle.toRack.{u1} (Quandle.Conj.{u1} G) (Quandle.Conj.quandle.{u1} G _inst_2)))) (MonoidHom.{u2, u1} (Rack.EnvelGroup.{u2} R _inst_1) G (Monoid.toMulOneClass.{u2} (Rack.EnvelGroup.{u2} R _inst_1) (DivInvMonoid.toMonoid.{u2} (Rack.EnvelGroup.{u2} R _inst_1) (Rack.instDivInvMonoidEnvelGroup.{u2} R _inst_1))) (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)))) (EquivLike.toEmbeddingLike.{max (succ u1) (succ u2), max (succ u1) (succ u2), max (succ u1) (succ u2)} (Equiv.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (ShelfHom.{u2, u1} R (Quandle.Conj.{u1} G) (Rack.toShelf.{u2} R _inst_1) (Rack.toShelf.{u1} (Quandle.Conj.{u1} G) (Quandle.toRack.{u1} (Quandle.Conj.{u1} G) (Quandle.Conj.quandle.{u1} G _inst_2)))) (MonoidHom.{u2, u1} (Rack.EnvelGroup.{u2} R _inst_1) G (Monoid.toMulOneClass.{u2} (Rack.EnvelGroup.{u2} R _inst_1) (DivInvMonoid.toMonoid.{u2} (Rack.EnvelGroup.{u2} R _inst_1) (Rack.instDivInvMonoidEnvelGroup.{u2} R _inst_1))) (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))) (ShelfHom.{u2, u1} R (Quandle.Conj.{u1} G) (Rack.toShelf.{u2} R _inst_1) (Rack.toShelf.{u1} (Quandle.Conj.{u1} G) (Quandle.toRack.{u1} (Quandle.Conj.{u1} G) (Quandle.Conj.quandle.{u1} G _inst_2)))) (MonoidHom.{u2, u1} (Rack.EnvelGroup.{u2} R _inst_1) G (Monoid.toMulOneClass.{u2} (Rack.EnvelGroup.{u2} R _inst_1) (DivInvMonoid.toMonoid.{u2} (Rack.EnvelGroup.{u2} R _inst_1) (Rack.instDivInvMonoidEnvelGroup.{u2} R _inst_1))) (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)))) (Equiv.instEquivLikeEquiv.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (ShelfHom.{u2, u1} R (Quandle.Conj.{u1} G) (Rack.toShelf.{u2} R _inst_1) (Rack.toShelf.{u1} (Quandle.Conj.{u1} G) (Quandle.toRack.{u1} (Quandle.Conj.{u1} G) (Quandle.Conj.quandle.{u1} G _inst_2)))) (MonoidHom.{u2, u1} (Rack.EnvelGroup.{u2} R _inst_1) G (Monoid.toMulOneClass.{u2} (Rack.EnvelGroup.{u2} R _inst_1) (DivInvMonoid.toMonoid.{u2} (Rack.EnvelGroup.{u2} R _inst_1) (Rack.instDivInvMonoidEnvelGroup.{u2} R _inst_1))) (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))))) (Rack.toEnvelGroup.map.{u2, u1} R _inst_1 G _inst_2) f)) (Rack.toEnvelGroup.{u2} R _inst_1)) f
+Case conversion may be inaccurate. Consider using '#align rack.to_envel_group.univ Rack.toEnvelGroup.univₓ'. -/
 /-- Given a homomorphism from a rack to a group, it factors through the enveloping group.
 -/
 theorem toEnvelGroup.univ (R : Type _) [Rack R] (G : Type _) [Group G] (f : R →◃ Quandle.Conj G) :
@@ -736,6 +897,12 @@ theorem toEnvelGroup.univ (R : Type _) [Rack R] (G : Type _) [Group G] (f : R �
   toEnvelGroup.map.symm_apply_apply f
 #align rack.to_envel_group.univ Rack.toEnvelGroup.univ
 
+/- warning: rack.to_envel_group.univ_uniq -> Rack.toEnvelGroup.univ_uniq is a dubious translation:
+lean 3 declaration is
+  forall (R : Type.{u1}) [_inst_1 : Rack.{u1} R] (G : Type.{u2}) [_inst_2 : Group.{u2} G] (f : ShelfHom.{u1, u2} R (Quandle.Conj.{u2} G) (Rack.toShelf.{u1} R _inst_1) (Rack.toShelf.{u2} (Quandle.Conj.{u2} G) (Quandle.toRack.{u2} (Quandle.Conj.{u2} G) (Quandle.Conj.quandle.{u2} G _inst_2)))) (g : MonoidHom.{u1, u2} (Rack.EnvelGroup.{u1} R _inst_1) G (Monoid.toMulOneClass.{u1} (Rack.EnvelGroup.{u1} R _inst_1) (DivInvMonoid.toMonoid.{u1} (Rack.EnvelGroup.{u1} R _inst_1) (Rack.EnvelGroup.divInvMonoid.{u1} R _inst_1))) (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_2)))), (Eq.{max (succ u1) (succ u2)} (ShelfHom.{u1, u2} R (Quandle.Conj.{u2} G) (Rack.toShelf.{u1} R _inst_1) (Rack.toShelf.{u2} (Quandle.Conj.{u2} G) (Quandle.toRack.{u2} (Quandle.Conj.{u2} G) (Quandle.Conj.quandle.{u2} G _inst_2)))) f (ShelfHom.comp.{u1, u1, u2} R (Quandle.Conj.{u1} (Rack.EnvelGroup.{u1} R _inst_1)) (Quandle.Conj.{u2} G) (Rack.toShelf.{u1} R _inst_1) (Rack.toShelf.{u1} (Quandle.Conj.{u1} (Rack.EnvelGroup.{u1} R _inst_1)) (Quandle.toRack.{u1} (Quandle.Conj.{u1} (Rack.EnvelGroup.{u1} R _inst_1)) (Quandle.Conj.quandle.{u1} (Rack.EnvelGroup.{u1} R _inst_1) (Rack.EnvelGroup.group.{u1} R _inst_1)))) (Rack.toShelf.{u2} (Quandle.Conj.{u2} G) (Quandle.toRack.{u2} (Quandle.Conj.{u2} G) (Quandle.Conj.quandle.{u2} G _inst_2))) (Quandle.Conj.map.{u1, u2} (Rack.EnvelGroup.{u1} R _inst_1) G (Rack.EnvelGroup.group.{u1} R _inst_1) _inst_2 g) (Rack.toEnvelGroup.{u1} R _inst_1))) -> (Eq.{max (succ u2) (succ u1)} (MonoidHom.{u1, u2} (Rack.EnvelGroup.{u1} R _inst_1) G (Monoid.toMulOneClass.{u1} (Rack.EnvelGroup.{u1} R _inst_1) (DivInvMonoid.toMonoid.{u1} (Rack.EnvelGroup.{u1} R _inst_1) (Rack.EnvelGroup.divInvMonoid.{u1} R _inst_1))) (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_2)))) g (coeFn.{max 1 (max (max (succ u1) (succ u2)) (succ u2) (succ u1)) (max (succ u2) (succ u1)) (succ u1) (succ u2), max (max (succ u1) (succ u2)) (succ u2) (succ u1)} (Equiv.{max (succ u1) (succ u2), max (succ u2) (succ u1)} (ShelfHom.{u1, u2} R (Quandle.Conj.{u2} G) (Rack.toShelf.{u1} R _inst_1) (Rack.toShelf.{u2} (Quandle.Conj.{u2} G) (Quandle.toRack.{u2} (Quandle.Conj.{u2} G) (Quandle.Conj.quandle.{u2} G _inst_2)))) (MonoidHom.{u1, u2} (Rack.EnvelGroup.{u1} R _inst_1) G (Monoid.toMulOneClass.{u1} (Rack.EnvelGroup.{u1} R _inst_1) (DivInvMonoid.toMonoid.{u1} (Rack.EnvelGroup.{u1} R _inst_1) (Rack.EnvelGroup.divInvMonoid.{u1} R _inst_1))) (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_2))))) (fun (_x : Equiv.{max (succ u1) (succ u2), max (succ u2) (succ u1)} (ShelfHom.{u1, u2} R (Quandle.Conj.{u2} G) (Rack.toShelf.{u1} R _inst_1) (Rack.toShelf.{u2} (Quandle.Conj.{u2} G) (Quandle.toRack.{u2} (Quandle.Conj.{u2} G) (Quandle.Conj.quandle.{u2} G _inst_2)))) (MonoidHom.{u1, u2} (Rack.EnvelGroup.{u1} R _inst_1) G (Monoid.toMulOneClass.{u1} (Rack.EnvelGroup.{u1} R _inst_1) (DivInvMonoid.toMonoid.{u1} (Rack.EnvelGroup.{u1} R _inst_1) (Rack.EnvelGroup.divInvMonoid.{u1} R _inst_1))) (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_2))))) => (ShelfHom.{u1, u2} R (Quandle.Conj.{u2} G) (Rack.toShelf.{u1} R _inst_1) (Rack.toShelf.{u2} (Quandle.Conj.{u2} G) (Quandle.toRack.{u2} (Quandle.Conj.{u2} G) (Quandle.Conj.quandle.{u2} G _inst_2)))) -> (MonoidHom.{u1, u2} (Rack.EnvelGroup.{u1} R _inst_1) G (Monoid.toMulOneClass.{u1} (Rack.EnvelGroup.{u1} R _inst_1) (DivInvMonoid.toMonoid.{u1} (Rack.EnvelGroup.{u1} R _inst_1) (Rack.EnvelGroup.divInvMonoid.{u1} R _inst_1))) (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_2))))) (Equiv.hasCoeToFun.{max (succ u1) (succ u2), max (succ u2) (succ u1)} (ShelfHom.{u1, u2} R (Quandle.Conj.{u2} G) (Rack.toShelf.{u1} R _inst_1) (Rack.toShelf.{u2} (Quandle.Conj.{u2} G) (Quandle.toRack.{u2} (Quandle.Conj.{u2} G) (Quandle.Conj.quandle.{u2} G _inst_2)))) (MonoidHom.{u1, u2} (Rack.EnvelGroup.{u1} R _inst_1) G (Monoid.toMulOneClass.{u1} (Rack.EnvelGroup.{u1} R _inst_1) (DivInvMonoid.toMonoid.{u1} (Rack.EnvelGroup.{u1} R _inst_1) (Rack.EnvelGroup.divInvMonoid.{u1} R _inst_1))) (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_2))))) (Rack.toEnvelGroup.map.{u1, u2} R _inst_1 G _inst_2) f))
+but is expected to have type
+  forall (R : Type.{u2}) [_inst_1 : Rack.{u2} R] (G : Type.{u1}) [_inst_2 : Group.{u1} G] (f : ShelfHom.{u2, u1} R (Quandle.Conj.{u1} G) (Rack.toShelf.{u2} R _inst_1) (Rack.toShelf.{u1} (Quandle.Conj.{u1} G) (Quandle.toRack.{u1} (Quandle.Conj.{u1} G) (Quandle.Conj.quandle.{u1} G _inst_2)))) (g : MonoidHom.{u2, u1} (Rack.EnvelGroup.{u2} R _inst_1) G (Monoid.toMulOneClass.{u2} (Rack.EnvelGroup.{u2} R _inst_1) (DivInvMonoid.toMonoid.{u2} (Rack.EnvelGroup.{u2} R _inst_1) (Rack.instDivInvMonoidEnvelGroup.{u2} R _inst_1))) (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)))), (Eq.{max (succ u2) (succ u1)} (ShelfHom.{u2, u1} R (Quandle.Conj.{u1} G) (Rack.toShelf.{u2} R _inst_1) (Rack.toShelf.{u1} (Quandle.Conj.{u1} G) (Quandle.toRack.{u1} (Quandle.Conj.{u1} G) (Quandle.Conj.quandle.{u1} G _inst_2)))) f (ShelfHom.comp.{u2, u2, u1} R (Quandle.Conj.{u2} (Rack.EnvelGroup.{u2} R _inst_1)) (Quandle.Conj.{u1} G) (Rack.toShelf.{u2} R _inst_1) (Rack.toShelf.{u2} (Quandle.Conj.{u2} (Rack.EnvelGroup.{u2} R _inst_1)) (Quandle.toRack.{u2} (Quandle.Conj.{u2} (Rack.EnvelGroup.{u2} R _inst_1)) (Quandle.Conj.quandle.{u2} (Rack.EnvelGroup.{u2} R _inst_1) (Rack.instGroupEnvelGroup.{u2} R _inst_1)))) (Rack.toShelf.{u1} (Quandle.Conj.{u1} G) (Quandle.toRack.{u1} (Quandle.Conj.{u1} G) (Quandle.Conj.quandle.{u1} G _inst_2))) (Quandle.Conj.map.{u2, u1} (Rack.EnvelGroup.{u2} R _inst_1) G (Rack.instGroupEnvelGroup.{u2} R _inst_1) _inst_2 g) (Rack.toEnvelGroup.{u2} R _inst_1))) -> (Eq.{max (succ u2) (succ u1)} (MonoidHom.{u2, u1} (Rack.EnvelGroup.{u2} R _inst_1) G (Monoid.toMulOneClass.{u2} (Rack.EnvelGroup.{u2} R _inst_1) (DivInvMonoid.toMonoid.{u2} (Rack.EnvelGroup.{u2} R _inst_1) (Rack.instDivInvMonoidEnvelGroup.{u2} R _inst_1))) (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)))) g (FunLike.coe.{max (succ u1) (succ u2), max (succ u1) (succ u2), max (succ u1) (succ u2)} (Equiv.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (ShelfHom.{u2, u1} R (Quandle.Conj.{u1} G) (Rack.toShelf.{u2} R _inst_1) (Rack.toShelf.{u1} (Quandle.Conj.{u1} G) (Quandle.toRack.{u1} (Quandle.Conj.{u1} G) (Quandle.Conj.quandle.{u1} G _inst_2)))) (MonoidHom.{u2, u1} (Rack.EnvelGroup.{u2} R _inst_1) G (Monoid.toMulOneClass.{u2} (Rack.EnvelGroup.{u2} R _inst_1) (DivInvMonoid.toMonoid.{u2} (Rack.EnvelGroup.{u2} R _inst_1) (Rack.instDivInvMonoidEnvelGroup.{u2} R _inst_1))) (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))) (ShelfHom.{u2, u1} R (Quandle.Conj.{u1} G) (Rack.toShelf.{u2} R _inst_1) (Rack.toShelf.{u1} (Quandle.Conj.{u1} G) (Quandle.toRack.{u1} (Quandle.Conj.{u1} G) (Quandle.Conj.quandle.{u1} G _inst_2)))) (fun (_x : ShelfHom.{u2, u1} R (Quandle.Conj.{u1} G) (Rack.toShelf.{u2} R _inst_1) (Rack.toShelf.{u1} (Quandle.Conj.{u1} G) (Quandle.toRack.{u1} (Quandle.Conj.{u1} G) (Quandle.Conj.quandle.{u1} G _inst_2)))) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : ShelfHom.{u2, u1} R (Quandle.Conj.{u1} G) (Rack.toShelf.{u2} R _inst_1) (Rack.toShelf.{u1} (Quandle.Conj.{u1} G) (Quandle.toRack.{u1} (Quandle.Conj.{u1} G) (Quandle.Conj.quandle.{u1} G _inst_2)))) => MonoidHom.{u2, u1} (Rack.EnvelGroup.{u2} R _inst_1) G (Monoid.toMulOneClass.{u2} (Rack.EnvelGroup.{u2} R _inst_1) (DivInvMonoid.toMonoid.{u2} (Rack.EnvelGroup.{u2} R _inst_1) (Rack.instDivInvMonoidEnvelGroup.{u2} R _inst_1))) (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)))) _x) (EmbeddingLike.toFunLike.{max (succ u1) (succ u2), max (succ u1) (succ u2), max (succ u1) (succ u2)} (Equiv.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (ShelfHom.{u2, u1} R (Quandle.Conj.{u1} G) (Rack.toShelf.{u2} R _inst_1) (Rack.toShelf.{u1} (Quandle.Conj.{u1} G) (Quandle.toRack.{u1} (Quandle.Conj.{u1} G) (Quandle.Conj.quandle.{u1} G _inst_2)))) (MonoidHom.{u2, u1} (Rack.EnvelGroup.{u2} R _inst_1) G (Monoid.toMulOneClass.{u2} (Rack.EnvelGroup.{u2} R _inst_1) (DivInvMonoid.toMonoid.{u2} (Rack.EnvelGroup.{u2} R _inst_1) (Rack.instDivInvMonoidEnvelGroup.{u2} R _inst_1))) (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))) (ShelfHom.{u2, u1} R (Quandle.Conj.{u1} G) (Rack.toShelf.{u2} R _inst_1) (Rack.toShelf.{u1} (Quandle.Conj.{u1} G) (Quandle.toRack.{u1} (Quandle.Conj.{u1} G) (Quandle.Conj.quandle.{u1} G _inst_2)))) (MonoidHom.{u2, u1} (Rack.EnvelGroup.{u2} R _inst_1) G (Monoid.toMulOneClass.{u2} (Rack.EnvelGroup.{u2} R _inst_1) (DivInvMonoid.toMonoid.{u2} (Rack.EnvelGroup.{u2} R _inst_1) (Rack.instDivInvMonoidEnvelGroup.{u2} R _inst_1))) (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)))) (EquivLike.toEmbeddingLike.{max (succ u1) (succ u2), max (succ u1) (succ u2), max (succ u1) (succ u2)} (Equiv.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (ShelfHom.{u2, u1} R (Quandle.Conj.{u1} G) (Rack.toShelf.{u2} R _inst_1) (Rack.toShelf.{u1} (Quandle.Conj.{u1} G) (Quandle.toRack.{u1} (Quandle.Conj.{u1} G) (Quandle.Conj.quandle.{u1} G _inst_2)))) (MonoidHom.{u2, u1} (Rack.EnvelGroup.{u2} R _inst_1) G (Monoid.toMulOneClass.{u2} (Rack.EnvelGroup.{u2} R _inst_1) (DivInvMonoid.toMonoid.{u2} (Rack.EnvelGroup.{u2} R _inst_1) (Rack.instDivInvMonoidEnvelGroup.{u2} R _inst_1))) (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))) (ShelfHom.{u2, u1} R (Quandle.Conj.{u1} G) (Rack.toShelf.{u2} R _inst_1) (Rack.toShelf.{u1} (Quandle.Conj.{u1} G) (Quandle.toRack.{u1} (Quandle.Conj.{u1} G) (Quandle.Conj.quandle.{u1} G _inst_2)))) (MonoidHom.{u2, u1} (Rack.EnvelGroup.{u2} R _inst_1) G (Monoid.toMulOneClass.{u2} (Rack.EnvelGroup.{u2} R _inst_1) (DivInvMonoid.toMonoid.{u2} (Rack.EnvelGroup.{u2} R _inst_1) (Rack.instDivInvMonoidEnvelGroup.{u2} R _inst_1))) (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)))) (Equiv.instEquivLikeEquiv.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (ShelfHom.{u2, u1} R (Quandle.Conj.{u1} G) (Rack.toShelf.{u2} R _inst_1) (Rack.toShelf.{u1} (Quandle.Conj.{u1} G) (Quandle.toRack.{u1} (Quandle.Conj.{u1} G) (Quandle.Conj.quandle.{u1} G _inst_2)))) (MonoidHom.{u2, u1} (Rack.EnvelGroup.{u2} R _inst_1) G (Monoid.toMulOneClass.{u2} (Rack.EnvelGroup.{u2} R _inst_1) (DivInvMonoid.toMonoid.{u2} (Rack.EnvelGroup.{u2} R _inst_1) (Rack.instDivInvMonoidEnvelGroup.{u2} R _inst_1))) (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))))) (Rack.toEnvelGroup.map.{u2, u1} R _inst_1 G _inst_2) f))
+Case conversion may be inaccurate. Consider using '#align rack.to_envel_group.univ_uniq Rack.toEnvelGroup.univ_uniqₓ'. -/
 /-- The homomorphism `to_envel_group.map f` is the unique map that fits into the commutative
 triangle in `to_envel_group.univ`.
 -/
@@ -745,6 +912,12 @@ theorem toEnvelGroup.univ_uniq (R : Type _) [Rack R] (G : Type _) [Group G]
   h.symm ▸ (toEnvelGroup.map.apply_symm_apply g).symm
 #align rack.to_envel_group.univ_uniq Rack.toEnvelGroup.univ_uniq
 
+/- warning: rack.envel_action -> Rack.envelAction is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u1}} [_inst_1 : Rack.{u1} R], MonoidHom.{u1, u1} (Rack.EnvelGroup.{u1} R _inst_1) (Equiv.{succ u1, succ u1} R R) (Monoid.toMulOneClass.{u1} (Rack.EnvelGroup.{u1} R _inst_1) (DivInvMonoid.toMonoid.{u1} (Rack.EnvelGroup.{u1} R _inst_1) (Rack.EnvelGroup.divInvMonoid.{u1} R _inst_1))) (Monoid.toMulOneClass.{u1} (Equiv.{succ u1, succ u1} R R) (DivInvMonoid.toMonoid.{u1} (Equiv.{succ u1, succ u1} R R) (Group.toDivInvMonoid.{u1} (Equiv.{succ u1, succ u1} R R) (Equiv.Perm.permGroup.{u1} R))))
+but is expected to have type
+  forall {R : Type.{u1}} [_inst_1 : Rack.{u1} R], MonoidHom.{u1, u1} (Rack.EnvelGroup.{u1} R _inst_1) (Equiv.{succ u1, succ u1} R R) (Monoid.toMulOneClass.{u1} (Rack.EnvelGroup.{u1} R _inst_1) (DivInvMonoid.toMonoid.{u1} (Rack.EnvelGroup.{u1} R _inst_1) (Rack.instDivInvMonoidEnvelGroup.{u1} R _inst_1))) (Monoid.toMulOneClass.{u1} (Equiv.{succ u1, succ u1} R R) (DivInvMonoid.toMonoid.{u1} (Equiv.{succ u1, succ u1} R R) (Group.toDivInvMonoid.{u1} (Equiv.{succ u1, succ u1} R R) (Equiv.Perm.permGroup.{u1} R))))
+Case conversion may be inaccurate. Consider using '#align rack.envel_action Rack.envelActionₓ'. -/
 /-- The induced group homomorphism from the enveloping group into bijections of the rack,
 using `rack.to_conj`. Satisfies the property `envel_action_prop`.
 
@@ -754,11 +927,13 @@ def envelAction {R : Type _} [Rack R] : EnvelGroup R →* R ≃ R :=
   toEnvelGroup.map (toConj R)
 #align rack.envel_action Rack.envelAction
 
+#print Rack.envelAction_prop /-
 @[simp]
 theorem envelAction_prop {R : Type _} [Rack R] (x y : R) :
     envelAction (toEnvelGroup R x) y = x ◃ y :=
   rfl
 #align rack.envel_action_prop Rack.envelAction_prop
+-/
 
 end EnvelGroup
 

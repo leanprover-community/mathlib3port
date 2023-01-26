@@ -738,14 +738,14 @@ theorem stronglyMeasurable_of_tendsto {ι : Type _} {m : MeasurableSpace α} [To
     StronglyMeasurable g := by
   borelize β
   refine' stronglyMeasurable_iff_measurable_separable.2 ⟨_, _⟩
-  · exact measurable_of_tendsto_metrizable' u (fun i => (hf i).Measurable) lim
+  · exact measurable_of_tendsto_metrizable' u (fun i => (hf i).Measurable) limUnder
   · rcases u.exists_seq_tendsto with ⟨v, hv⟩
     have : is_separable (closure (⋃ i, range (f (v i)))) :=
       (is_separable_Union fun i => (hf (v i)).is_separable_range).closure
     apply this.mono
     rintro _ ⟨x, rfl⟩
     rw [tendsto_pi_nhds] at lim
-    apply mem_closure_of_tendsto ((lim x).comp hv)
+    apply mem_closure_of_tendsto ((limUnder x).comp hv)
     apply eventually_of_forall fun n => _
     apply mem_Union_of_mem n
     exact mem_range_self _
@@ -1653,13 +1653,13 @@ theorem aeStronglyMeasurableOfTendstoAe {ι : Type _} [PseudoMetrizableSpace β]
     AeStronglyMeasurable g μ := by
   borelize β
   refine' aeStronglyMeasurable_iff_aeMeasurable_separable.2 ⟨_, _⟩
-  · exact aeMeasurableOfTendstoMetrizableAe _ (fun n => (hf n).AeMeasurable) lim
+  · exact aeMeasurableOfTendstoMetrizableAe _ (fun n => (hf n).AeMeasurable) limUnder
   · rcases u.exists_seq_tendsto with ⟨v, hv⟩
     have : ∀ n : ℕ, ∃ t : Set β, is_separable t ∧ f (v n) ⁻¹' t ∈ μ.ae := fun n =>
       (aeStronglyMeasurable_iff_aeMeasurable_separable.1 (hf (v n))).2
     choose t t_sep ht using this
     refine' ⟨closure (⋃ i, t i), (is_separable_Union fun i => t_sep i).closure, _⟩
-    filter_upwards [ae_all_iff.2 ht, lim]with x hx h'x
+    filter_upwards [ae_all_iff.2 ht, limUnder]with x hx h'x
     apply mem_closure_of_tendsto (h'x.comp hv)
     apply eventually_of_forall fun n => _
     apply mem_Union_of_mem n

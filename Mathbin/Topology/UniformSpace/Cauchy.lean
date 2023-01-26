@@ -466,10 +466,10 @@ theorem Cauchy.le_nhds_lim [CompleteSpace α] [Nonempty α] {f : Filter α} (hf 
   le_nhds_lim (CompleteSpace.complete hf)
 #align cauchy.le_nhds_Lim Cauchy.le_nhds_lim
 
-theorem CauchySeq.tendsto_lim [SemilatticeSup β] [CompleteSpace α] [Nonempty α] {u : β → α}
-    (h : CauchySeq u) : Tendsto u atTop (𝓝 <| lim atTop u) :=
+theorem CauchySeq.tendsto_limUnder [SemilatticeSup β] [CompleteSpace α] [Nonempty α] {u : β → α}
+    (h : CauchySeq u) : Tendsto u atTop (𝓝 <| limUnder atTop u) :=
   h.le_nhds_Lim
-#align cauchy_seq.tendsto_lim CauchySeq.tendsto_lim
+#align cauchy_seq.tendsto_lim CauchySeq.tendsto_limUnder
 
 theorem IsClosed.isComplete [CompleteSpace α] {s : Set α} (h : IsClosed s) : IsComplete s :=
   fun f cf fs =>

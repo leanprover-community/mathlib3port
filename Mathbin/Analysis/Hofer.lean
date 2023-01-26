@@ -122,6 +122,6 @@ theorem hofer {X : Type _} [MetricSpace X] [CompleteSpace X] (x : X) (ε : ℝ) 
   -- But ϕ ∘ u also needs to go to ϕ(y)
   have lim : tendsto (ϕ ∘ u) at_top (𝓝 (ϕ y)) := tendsto.comp cont.continuous_at limy
   -- So we have our contradiction!
-  exact not_tendsto_atTop_of_tendsto_nhds lim lim_top
+  exact not_tendsto_atTop_of_tendsto_nhds limUnder lim_top
 #align hofer hofer
 

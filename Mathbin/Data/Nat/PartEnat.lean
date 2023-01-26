@@ -592,7 +592,7 @@ open Classical
 
 @[simp]
 theorem toWithTop_add {x y : PartEnat} : toWithTop (x + y) = toWithTop x + toWithTop y := by
-  apply PartEnat.cases_on y <;> apply PartEnat.cases_on x <;> simp [← Nat.cast_add, ← Enat.coe_add]
+  apply PartEnat.cases_on y <;> apply PartEnat.cases_on x <;> simp [← Nat.cast_add, ← ENat.coe_add]
 #align part_enat.to_with_top_add PartEnat.toWithTop_add
 
 /-- `equiv` between `part_enat` and `ℕ∞` (for the order isomorphism see

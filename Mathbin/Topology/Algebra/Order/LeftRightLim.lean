@@ -52,7 +52,7 @@ noncomputable irreducible_def Function.leftLim (f : α → β) (a : α) : β := 
   classical
     haveI : Nonempty β := ⟨f a⟩
     letI : TopologicalSpace α := Preorder.topology α
-    exact if 𝓝[<] a = ⊥ ∨ ¬∃ y, tendsto f (𝓝[<] a) (𝓝 y) then f a else lim (𝓝[<] a) f
+    exact if 𝓝[<] a = ⊥ ∨ ¬∃ y, tendsto f (𝓝[<] a) (𝓝 y) then f a else limUnder (𝓝[<] a) f
 #align function.left_lim Function.leftLim
 
 /-- Let `f : α → β` be a function from a linear order `α` to a topological_space `β`, and

@@ -581,13 +581,13 @@ and cones over `F` with cone point `W`
 is natural in `F`.
 -/
 def limYoneda :
-    lim ⋙ yoneda ⋙ (whiskeringRight _ _ _).obj uliftFunctor.{u₁} ≅ CategoryTheory.cones J C :=
+    limUnder ⋙ yoneda ⋙ (whiskeringRight _ _ _).obj uliftFunctor.{u₁} ≅ CategoryTheory.cones J C :=
   NatIso.ofComponents (fun F => NatIso.ofComponents (fun W => limit.homIso F (unop W)) (by tidy))
     (by tidy)
 #align category_theory.limits.lim_yoneda CategoryTheory.Limits.limYoneda
 
 /-- The constant functor and limit functor are adjoint to each other-/
-def constLimAdj : (const J : C ⥤ J ⥤ C) ⊣ lim
+def constLimAdj : (const J : C ⥤ J ⥤ C) ⊣ limUnder
     where
   homEquiv c g :=
     { toFun := fun f => limit.lift _ ⟨c, f⟩

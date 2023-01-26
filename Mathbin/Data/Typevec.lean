@@ -415,8 +415,7 @@ theorem appendFun_comp' {α₀ α₁ α₂ : TypeVec n} {β₀ β₁ β₂ : Typ
   eq_of_drop_last_eq rfl rfl
 #align typevec.append_fun_comp' TypeVec.appendFun_comp'
 
-/- warning: typevec.nil_fun_comp clashes with typevec.nilFun_comp -> TypeVec.nilFun_comp
-warning: typevec.nil_fun_comp -> TypeVec.nilFun_comp is a dubious translation:
+/- warning: typevec.nil_fun_comp -> TypeVec.nilFun_comp is a dubious translation:
 lean 3 declaration is
   forall {α₀ : TypeVec.{u1} (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))} (f₀ : TypeVec.Arrow.{u1, u2} (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) α₀ (Fin2.elim0.{succ (succ u2)} (fun (ᾰ : Fin2 (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) => Type.{u2}))), Eq.{max 1 (succ u1) (succ u2)} (TypeVec.Arrow.{u1, u2} (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) α₀ (Fin2.elim0.{succ (succ u2)} (fun (ᾰ : Fin2 (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) => Type.{u2}))) (TypeVec.comp.{u1, u2, u2} (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) α₀ (Fin2.elim0.{succ (succ u2)} (fun (ᾰ : Fin2 (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) => Type.{u2})) (Fin2.elim0.{succ (succ u2)} (fun (ᾰ : Fin2 (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) => Type.{u2})) (TypeVec.nilFun.{u2, u2} (Fin2.elim0.{succ (succ u2)} (fun (ᾰ : Fin2 (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) => Type.{u2})) (Fin2.elim0.{succ (succ u2)} (fun (ᾰ : Fin2 (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) => Type.{u2}))) f₀) f₀
 but is expected to have type

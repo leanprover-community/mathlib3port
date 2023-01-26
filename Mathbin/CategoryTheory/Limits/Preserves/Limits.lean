@@ -85,7 +85,7 @@ variable [PreservesLimitsOfShape J G] [HasLimitsOfShape J D] [HasLimitsOfShape J
 /-- If `C, D` has all limits of shape `J`, and `G` preserves them, then `preserves_limit_iso` is
 functorial wrt `F`. -/
 @[simps]
-def preservesLimitNatIso : lim ⋙ G ≅ (whiskeringRight J C D).obj G ⋙ lim :=
+def preservesLimitNatIso : limUnder ⋙ G ≅ (whiskeringRight J C D).obj G ⋙ limUnder :=
   NatIso.ofComponents (fun F => preservesLimitIso G F)
     (by
       intro _ _ f

@@ -394,7 +394,7 @@ theorem trailingDegree_mul' (h : p.trailingCoeff * q.trailingCoeff ≠ 0) :
   have hq : q ≠ 0 := fun hq => h (by rw [hq, trailing_coeff_zero, mul_zero])
   refine' le_antisymm _ le_trailing_degree_mul
   rw [trailing_degree_eq_nat_trailing_degree hp, trailing_degree_eq_nat_trailing_degree hq, ←
-    Enat.coe_add]
+    ENat.coe_add]
   apply le_trailing_degree_of_ne_zero
   rwa [coeff_mul_nat_trailing_degree_add_nat_trailing_degree]
 #align polynomial.trailing_degree_mul' Polynomial.trailingDegree_mul'

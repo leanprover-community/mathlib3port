@@ -39,7 +39,7 @@ variable {X Y : Type _} [TopologicalSpace X] [TopologicalSpace Y]
 /-- Extend a function from a set `A`. The resulting function `g` is such that
 at any `x₀`, if `f` converges to some `y` as `x` tends to `x₀` within `A`,
 then `g x₀` is defined to be one of these `y`. Else, `g x₀` could be anything. -/
-def extendFrom (A : Set X) (f : X → Y) : X → Y := fun x => @lim _ ⟨f x⟩ (𝓝[A] x) f
+def extendFrom (A : Set X) (f : X → Y) : X → Y := fun x => @limUnder _ ⟨f x⟩ (𝓝[A] x) f
 #align extend_from extendFrom
 
 /-- If `f` converges to some `y` as `x` tends to `x₀` within `A`,

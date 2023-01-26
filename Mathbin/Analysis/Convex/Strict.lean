@@ -182,7 +182,7 @@ theorem strictConvex_ici (r : β) : StrictConvex 𝕜 (Ici r) :=
 #align strict_convex_Ici strictConvex_ici
 
 theorem strictConvex_iio (r : β) : StrictConvex 𝕜 (Iio r) :=
-  ordConnected_iio.StrictConvex
+  ordConnected_Iio.StrictConvex
 #align strict_convex_Iio strictConvex_iio
 
 theorem strictConvex_ioi (r : β) : StrictConvex 𝕜 (Ioi r) :=

@@ -2468,7 +2468,7 @@ theorem tendsto_inf_principal_nhds_iff_of_forall_eq {f : β → α} {l : Filter 
 -/
 
 
-section lim
+section limUnder
 
 #print lim /-
 /-- If `f` is a filter, then `Lim f` is a limit of the filter, if it exists. -/
@@ -2492,18 +2492,13 @@ def Ultrafilter.lim : Ultrafilter α → α := fun F => lim' F
 #align ultrafilter.Lim Ultrafilter.lim
 -/
 
-/- warning: lim clashes with Lim -> lim
-warning: lim -> lim is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u}} {β : Type.{v}} [_inst_1 : TopologicalSpace.{u} α] [_inst_2 : Nonempty.{succ u} α], (Filter.{v} β) -> (β -> α) -> α
-but is expected to have type
-  forall {α : Type.{u}} [β : TopologicalSpace.{u} α] [_inst_1 : Nonempty.{succ u} α], (Filter.{u} α) -> α
-Case conversion may be inaccurate. Consider using '#align lim limₓ'. -/
+#print limUnder /-
 /-- If `f` is a filter in `β` and `g : β → α` is a function, then `lim f` is a limit of `g` at `f`,
 if it exists. -/
-noncomputable def lim [Nonempty α] (f : Filter β) (g : β → α) : α :=
+noncomputable def limUnder [Nonempty α] (f : Filter β) (g : β → α) : α :=
   lim (f.map g)
-#align lim lim
+#align lim limUnder
+-/
 
 /- warning: le_nhds_Lim -> le_nhds_lim is a dubious translation:
 lean 3 declaration is
@@ -2525,12 +2520,12 @@ this lemma with a `[nonempty α]` argument of `lim` derived from `h` to make it 
 without a `[nonempty α]` instance. Because of the built-in proof irrelevance, Lean will unify
 this instance with any other instance. -/
 theorem tendsto_nhds_limUnder {f : Filter β} {g : β → α} (h : ∃ a, Tendsto g f (𝓝 a)) :
-    Tendsto g f (𝓝 <| @lim _ _ _ (nonempty_of_exists h) f g) :=
+    Tendsto g f (𝓝 <| @limUnder _ _ _ (nonempty_of_exists h) f g) :=
   le_nhds_lim h
 #align tendsto_nhds_lim tendsto_nhds_limUnder
 -/
 
-end lim
+end limUnder
 
 end TopologicalSpace
 

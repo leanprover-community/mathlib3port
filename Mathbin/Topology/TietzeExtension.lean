@@ -139,15 +139,16 @@ theorem exists_extension_norm_eq_of_closed_embedding' (f : X →ᵇ ℝ) (e : C(
       
   have hg_cau : CauchySeq g := cauchySeq_of_le_geometric _ _ (by norm_num1) hg_dist
   have :
-    tendsto (fun n => (g n).comp_continuous e) at_top (𝓝 <| (lim at_top g).comp_continuous e) :=
+    tendsto (fun n => (g n).comp_continuous e) at_top
+      (𝓝 <| (limUnder at_top g).comp_continuous e) :=
     ((continuous_comp_continuous e).Tendsto _).comp hg_cau.tendsto_lim
-  have hge : (lim at_top g).comp_continuous e = f :=
+  have hge : (limUnder at_top g).comp_continuous e = f :=
     by
     refine' tendsto_nhds_unique this (tendsto_iff_dist_tendsto_zero.2 _)
     refine' squeeze_zero (fun _ => dist_nonneg) hgf _
     rw [← zero_mul ‖f‖]
     refine' (tendsto_pow_atTop_nhds_0_of_lt_1 _ _).mul tendsto_const_nhds <;> norm_num1
-  refine' ⟨lim at_top g, le_antisymm _ _, hge⟩
+  refine' ⟨limUnder at_top g, le_antisymm _ _, hge⟩
   · rw [← dist_zero_left, ← g0]
     refine'
       (dist_le_of_le_geometric_of_tendsto₀ _ _ (by norm_num1) hg_dist hg_cau.tendsto_lim).trans_eq _

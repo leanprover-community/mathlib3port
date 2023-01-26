@@ -37,8 +37,7 @@ section
 
 open Classical
 
-/- warning: nat.is_coprime_iff_coprime clashes with nat.isCoprime_iff_coprime -> Nat.isCoprime_iff_coprime
-warning: nat.is_coprime_iff_coprime -> Nat.isCoprime_iff_coprime is a dubious translation:
+/- warning: nat.is_coprime_iff_coprime -> Nat.isCoprime_iff_coprime is a dubious translation:
 lean 3 declaration is
   forall {m : Nat} {n : Nat}, Iff (IsCoprime.{0} Int Int.commSemiring ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) m) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) n)) (Nat.coprime m n)
 but is expected to have type

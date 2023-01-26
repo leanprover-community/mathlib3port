@@ -670,7 +670,7 @@ def transnumAuxSeq (n : ℕ) : ℝ :=
 an auxiliary sequence `\frac{f^{2^n}(0)}{2^n}` to define `τ(f)` because some proofs are simpler
 this way. -/
 def translationNumber : ℝ :=
-  lim atTop f.transnumAuxSeq
+  limUnder atTop f.transnumAuxSeq
 #align circle_deg1_lift.translation_number CircleDeg1Lift.translationNumber
 
 -- mathport name: exprτ

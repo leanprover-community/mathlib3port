@@ -761,7 +761,8 @@ private def lim : ℚ_[p] :=
 #align padic.lim padic.lim
 
 theorem complete' : ∃ q : ℚ_[p], ∀ ε > 0, ∃ N, ∀ i ≥ N, padicNormE (q - f i) < ε :=
-  ⟨lim f, fun ε hε => by
+  ⟨limUnder f, fun ε hε =>
+    by
     obtain ⟨N, hN⟩ := exi_rat_seq_conv f (half_pos hε)
     obtain ⟨N2, hN2⟩ := padicNormE.defn (lim' f) (half_pos hε)
     refine' ⟨max N N2, fun i hi => _⟩

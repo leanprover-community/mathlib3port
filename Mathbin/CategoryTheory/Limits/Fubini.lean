@@ -183,26 +183,26 @@ noncomputable instance diagramOfConesInhabited : Inhabited (DiagramOfCones F) :=
 
 @[simp]
 theorem DiagramOfCones.mkOfHasLimits_conePoints :
-    (DiagramOfCones.mkOfHasLimits F).conePoints = F ⋙ lim :=
+    (DiagramOfCones.mkOfHasLimits F).conePoints = F ⋙ limUnder :=
   rfl
 #align category_theory.limits.diagram_of_cones.mk_of_has_limits_cone_points CategoryTheory.Limits.DiagramOfCones.mkOfHasLimits_conePoints
 
 variable [HasLimit (uncurry.obj F)]
 
-variable [HasLimit (F ⋙ lim)]
+variable [HasLimit (F ⋙ limUnder)]
 
 /-- The Fubini theorem for a functor `F : J ⥤ K ⥤ C`,
 showing that the limit of `uncurry.obj F` can be computed as
 the limit of the limits of the functors `F.obj j`.
 -/
-noncomputable def limitUncurryIsoLimitCompLim : limit (uncurry.obj F) ≅ limit (F ⋙ lim) :=
+noncomputable def limitUncurryIsoLimitCompLim : limit (uncurry.obj F) ≅ limit (F ⋙ limUnder) :=
   by
   let c := limit.cone (uncurry.obj F)
   let P : is_limit c := limit.is_limit _
   let G := diagram_of_cones.mk_of_has_limits F
   let Q : ∀ j, is_limit (G.obj j) := fun j => limit.is_limit _
   have Q' := cone_of_cone_uncurry_is_limit Q P
-  have Q'' := limit.is_limit (F ⋙ lim)
+  have Q'' := limit.is_limit (F ⋙ limUnder)
   exact is_limit.cone_point_unique_up_to_iso Q' Q''
 #align category_theory.limits.limit_uncurry_iso_limit_comp_lim CategoryTheory.Limits.limitUncurryIsoLimitCompLim
 
@@ -233,7 +233,8 @@ variable (F) [HasLimitsOfShape J C] [HasLimitsOfShape K C]
 variable [HasLimitsOfShape (J × K) C] [HasLimitsOfShape (K × J) C]
 
 /-- The limit of `F.flip ⋙ lim` is isomorphic to the limit of `F ⋙ lim`. -/
-noncomputable def limitFlipCompLimIsoLimitCompLim : limit (F.flip ⋙ lim) ≅ limit (F ⋙ lim) :=
+noncomputable def limitFlipCompLimIsoLimitCompLim :
+    limit (F.flip ⋙ limUnder) ≅ limit (F ⋙ limUnder) :=
   (limitUncurryIsoLimitCompLim _).symm ≪≫
     HasLimit.isoOfNatIso (uncurryObjFlip _) ≪≫
       HasLimit.isoOfEquivalence (prod.braiding _ _)
@@ -278,13 +279,13 @@ variable [HasLimitsOfShape K C]
 
 variable [HasLimit G]
 
-variable [HasLimit (curry.obj G ⋙ lim)]
+variable [HasLimit (curry.obj G ⋙ limUnder)]
 
 /-- The Fubini theorem for a functor `G : J × K ⥤ C`,
 showing that the limit of `G` can be computed as
 the limit of the limits of the functors `G.obj (j, _)`.
 -/
-noncomputable def limitIsoLimitCurryCompLim : limit G ≅ limit (curry.obj G ⋙ lim) :=
+noncomputable def limitIsoLimitCurryCompLim : limit G ≅ limit (curry.obj G ⋙ limUnder) :=
   by
   have i : G ≅ uncurry.obj ((@curry J _ K _ C _).obj G) := currying.symm.unit_iso.app G
   haveI : limits.has_limit (uncurry.obj ((@curry J _ K _ C _).obj G)) := has_limit_of_iso i
@@ -321,12 +322,12 @@ open CategoryTheory.prod
 showing that $\lim_k \lim_j G(j,k) ≅ \lim_j \lim_k G(j,k)$.
 -/
 noncomputable def limitCurrySwapCompLimIsoLimitCurryCompLim :
-    limit (curry.obj (swap K J ⋙ G) ⋙ lim) ≅ limit (curry.obj G ⋙ lim) :=
+    limit (curry.obj (swap K J ⋙ G) ⋙ limUnder) ≅ limit (curry.obj G ⋙ limUnder) :=
   calc
-    limit (curry.obj (swap K J ⋙ G) ⋙ lim) ≅ limit (swap K J ⋙ G) :=
+    limit (curry.obj (swap K J ⋙ G) ⋙ limUnder) ≅ limit (swap K J ⋙ G) :=
       (limitIsoLimitCurryCompLim _).symm
     _ ≅ limit G := HasLimit.isoOfEquivalence (braiding K J) (Iso.refl _)
-    _ ≅ limit (curry.obj G ⋙ lim) := limitIsoLimitCurryCompLim _
+    _ ≅ limit (curry.obj G ⋙ limUnder) := limitIsoLimitCurryCompLim _
     
 #align category_theory.limits.limit_curry_swap_comp_lim_iso_limit_curry_comp_lim CategoryTheory.Limits.limitCurrySwapCompLimIsoLimitCurryCompLim
 

@@ -177,7 +177,7 @@ theorem cpow_nat_inv_pow (x : ℂ) {n : ℕ} (hn : n ≠ 0) : (x ^ (n⁻¹ : ℂ
 
 end Complex
 
-section lim
+section limUnder
 
 open Complex
 
@@ -316,7 +316,7 @@ theorem ContinuousOn.cpow_const {b : ℂ} (hf : ContinuousOn f s)
   hf.cpow continuousOn_const h
 #align continuous_on.cpow_const ContinuousOn.cpow_const
 
-end lim
+end limUnder
 
 namespace Real
 

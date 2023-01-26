@@ -1776,7 +1776,7 @@ theorem exists_open_nhds_disjoint_closure [T25Space α] {x y : α} (h : x ≠ y)
       (disjoint_lift'_closure_nhds.2 h)
 #align exists_open_nhds_disjoint_closure exists_open_nhds_disjoint_closure
 
-section lim
+section limUnder
 
 variable [T2Space α] {f : Filter α}
 
@@ -1811,20 +1811,20 @@ theorem isOpen_iff_ultrafilter' [CompactSpace α] (U : Set α) :
   exact cond _ hx
 #align is_open_iff_ultrafilter' isOpen_iff_ultrafilter'
 
-theorem Filter.Tendsto.lim_eq {a : α} {f : Filter β} [NeBot f] {g : β → α} (h : Tendsto g f (𝓝 a)) :
-    @lim _ _ _ ⟨a⟩ f g = a :=
+theorem Filter.Tendsto.limUnder_eq {a : α} {f : Filter β} [NeBot f] {g : β → α}
+    (h : Tendsto g f (𝓝 a)) : @limUnder _ _ _ ⟨a⟩ f g = a :=
   lim_eq h
-#align filter.tendsto.lim_eq Filter.Tendsto.lim_eq
+#align filter.tendsto.lim_eq Filter.Tendsto.limUnder_eq
 
-theorem Filter.lim_eq_iff {f : Filter β} [NeBot f] {g : β → α} (h : ∃ a, Tendsto g f (𝓝 a)) {a} :
-    @lim _ _ _ ⟨a⟩ f g = a ↔ Tendsto g f (𝓝 a) :=
-  ⟨fun c => c ▸ tendsto_nhds_limUnder h, Filter.Tendsto.lim_eq⟩
-#align filter.lim_eq_iff Filter.lim_eq_iff
+theorem Filter.limUnder_eq_iff {f : Filter β} [NeBot f] {g : β → α} (h : ∃ a, Tendsto g f (𝓝 a))
+    {a} : @limUnder _ _ _ ⟨a⟩ f g = a ↔ Tendsto g f (𝓝 a) :=
+  ⟨fun c => c ▸ tendsto_nhds_limUnder h, Filter.Tendsto.limUnder_eq⟩
+#align filter.lim_eq_iff Filter.limUnder_eq_iff
 
-theorem Continuous.lim_eq [TopologicalSpace β] {f : β → α} (h : Continuous f) (a : β) :
-    @lim _ _ _ ⟨f a⟩ (𝓝 a) f = f a :=
+theorem Continuous.limUnder_eq [TopologicalSpace β] {f : β → α} (h : Continuous f) (a : β) :
+    @limUnder _ _ _ ⟨f a⟩ (𝓝 a) f = f a :=
   (h.Tendsto a).lim_eq
-#align continuous.lim_eq Continuous.lim_eq
+#align continuous.lim_eq Continuous.limUnder_eq
 
 @[simp]
 theorem lim_nhds (a : α) : @lim _ _ ⟨a⟩ (𝓝 a) = a :=
@@ -1832,9 +1832,9 @@ theorem lim_nhds (a : α) : @lim _ _ ⟨a⟩ (𝓝 a) = a :=
 #align Lim_nhds lim_nhds
 
 @[simp]
-theorem lim_nhds_id (a : α) : @lim _ _ _ ⟨a⟩ (𝓝 a) id = a :=
+theorem limUnder_nhds_id (a : α) : @limUnder _ _ _ ⟨a⟩ (𝓝 a) id = a :=
   lim_nhds a
-#align lim_nhds_id lim_nhds_id
+#align lim_nhds_id limUnder_nhds_id
 
 @[simp]
 theorem lim_nhdsWithin {a : α} {s : Set α} (h : a ∈ closure s) : @lim _ _ ⟨a⟩ (𝓝[s] a) = a :=
@@ -1843,12 +1843,12 @@ theorem lim_nhdsWithin {a : α} {s : Set α} (h : a ∈ closure s) : @lim _ _ �
 #align Lim_nhds_within lim_nhdsWithin
 
 @[simp]
-theorem lim_nhdsWithin_id {a : α} {s : Set α} (h : a ∈ closure s) :
-    @lim _ _ _ ⟨a⟩ (𝓝[s] a) id = a :=
+theorem limUnder_nhdsWithin_id {a : α} {s : Set α} (h : a ∈ closure s) :
+    @limUnder _ _ _ ⟨a⟩ (𝓝[s] a) id = a :=
   lim_nhdsWithin h
-#align lim_nhds_within_id lim_nhdsWithin_id
+#align lim_nhds_within_id limUnder_nhdsWithin_id
 
-end lim
+end limUnder
 
 /-!
 ### `t2_space` constructions

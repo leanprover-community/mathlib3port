@@ -2174,8 +2174,6 @@ theorem mem_lowerBounds_image2_of_mem_lowerBounds_of_mem_upperBounds (ha : a ∈
 #align mem_lower_bounds_image2_of_mem_lower_bounds_of_mem_upper_bounds mem_lowerBounds_image2_of_mem_lowerBounds_of_mem_upperBounds
 -/
 
-/- warning: image2_upper_bounds_lower_bounds_subset_upper_bounds_image2 clashes with image2_upper_bounds_lower_bounds_subset_upperBounds_image2 -> image2_upperBounds_lowerBounds_subset_upperBounds_image2
-Case conversion may be inaccurate. Consider using '#align image2_upper_bounds_lower_bounds_subset_upper_bounds_image2 image2_upperBounds_lowerBounds_subset_upperBounds_image2ₓ'. -/
 #print image2_upperBounds_lowerBounds_subset_upperBounds_image2 /-
 theorem image2_upperBounds_lowerBounds_subset_upperBounds_image2 :
     image2 f (upperBounds s) (lowerBounds t) ⊆ upperBounds (image2 f s t) :=

@@ -480,7 +480,7 @@ namespace Expr
 
 /-- List of names removed by `clean`. All these names must resolve to functions defeq `id`. -/
 unsafe def clean_ids : List Name :=
-  [`` id, `` idRhs, `` idDelta, `` hidden]
+  [`` id, `` id, `` id, `` hidden]
 #align expr.clean_ids expr.clean_ids
 
 /-- Clean an expression by removing `id`s listed in `clean_ids`. -/

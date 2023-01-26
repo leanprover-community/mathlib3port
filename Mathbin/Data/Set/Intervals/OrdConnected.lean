@@ -212,10 +212,12 @@ theorem ordConnected_Ioi {a : α} : OrdConnected (Ioi a) :=
 #align set.ord_connected_Ioi Set.ordConnected_Ioi
 -/
 
+#print Set.ordConnected_Iio /-
 @[instance]
-theorem ordConnected_iio {a : α} : OrdConnected (Iio a) :=
+theorem ordConnected_Iio {a : α} : OrdConnected (Iio a) :=
   ⟨fun x hx y hy z hz => lt_of_le_of_lt hz.2 hy⟩
-#align set.ord_connected_Iio Set.ordConnected_iio
+#align set.ord_connected_Iio Set.ordConnected_Iio
+-/
 
 #print Set.ordConnected_Icc /-
 @[instance]
@@ -227,7 +229,7 @@ theorem ordConnected_Icc {a b : α} : OrdConnected (Icc a b) :=
 #print Set.ordConnected_Ico /-
 @[instance]
 theorem ordConnected_Ico {a b : α} : OrdConnected (Ico a b) :=
-  ordConnected_Ici.inter ordConnected_iio
+  ordConnected_Ici.inter ordConnected_Iio
 #align set.ord_connected_Ico Set.ordConnected_Ico
 -/
 
@@ -241,7 +243,7 @@ theorem ordConnected_Ioc {a b : α} : OrdConnected (Ioc a b) :=
 #print Set.ordConnected_Ioo /-
 @[instance]
 theorem ordConnected_Ioo {a b : α} : OrdConnected (Ioo a b) :=
-  ordConnected_Ioi.inter ordConnected_iio
+  ordConnected_Ioi.inter ordConnected_Iio
 #align set.ord_connected_Ioo Set.ordConnected_Ioo
 -/
 

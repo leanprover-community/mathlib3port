@@ -260,7 +260,7 @@ theorem contDiff_tsum (hf : ∀ i, ContDiff 𝕜 N (f i)) (hv : ∀ k : ℕ, (k 
       exact h'f _ _ _ hm
   · intro m hm
     have h'm : ((m + 1 : ℕ) : ℕ∞) ≤ N := by
-      simpa only [Enat.coe_add, Nat.cast_withBot, Enat.coe_one] using Enat.add_one_le_of_lt hm
+      simpa only [ENat.coe_add, Nat.cast_withBot, ENat.coe_one] using ENat.add_one_le_of_lt hm
     rw [iteratedFderiv_tsum hf hv h'f hm.le]
     have A :
       ∀ n x, HasFderivAt (iteratedFderiv 𝕜 m (f n)) (fderiv 𝕜 (iteratedFderiv 𝕜 m (f n)) x) x :=

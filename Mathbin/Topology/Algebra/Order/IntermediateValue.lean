@@ -480,7 +480,7 @@ theorem isPreconnected_iic : IsPreconnected (Iic a) :=
 #align is_preconnected_Iic isPreconnected_iic
 
 theorem isPreconnected_iio : IsPreconnected (Iio a) :=
-  ordConnected_iio.IsPreconnected
+  ordConnected_Iio.IsPreconnected
 #align is_preconnected_Iio isPreconnected_iio
 
 theorem isPreconnected_ioi : IsPreconnected (Ioi a) :=

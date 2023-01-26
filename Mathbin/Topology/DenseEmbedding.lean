@@ -150,7 +150,7 @@ variable [TopologicalSpace γ]
   continuous extension, then `g` is the unique such extension. In general,
   `g` might not be continuous or even extend `f`. -/
 def extend (di : DenseInducing i) (f : α → γ) (b : β) : γ :=
-  @lim _ ⟨f (di.dense.some b)⟩ (comap i (𝓝 b)) f
+  @limUnder _ ⟨f (di.dense.some b)⟩ (comap i (𝓝 b)) f
 #align dense_inducing.extend DenseInducing.extend
 
 theorem extend_eq_of_tendsto [T2Space γ] {b : β} {c : γ} {f : α → γ}

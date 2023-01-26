@@ -1160,21 +1160,21 @@ instance : CauSeq.IsComplete ℂ abs :=
 open CauSeq
 
 theorem lim_eq_lim_im_add_lim_re (f : CauSeq ℂ abs) :
-    lim f = ↑(lim (cauSeqRe f)) + ↑(lim (cauSeqIm f)) * I :=
+    limUnder f = ↑(limUnder (cauSeqRe f)) + ↑(limUnder (cauSeqIm f)) * I :=
   lim_eq_of_equiv_const <|
     calc
       f ≈ _ := equiv_limAux f
-      _ = CauSeq.const abs (↑(lim (cauSeqRe f)) + ↑(lim (cauSeqIm f)) * I) :=
+      _ = CauSeq.const abs (↑(limUnder (cauSeqRe f)) + ↑(limUnder (cauSeqIm f)) * I) :=
         CauSeq.ext fun _ =>
           Complex.ext (by simp [lim_aux, cau_seq_re]) (by simp [lim_aux, cau_seq_im])
       
 #align complex.lim_eq_lim_im_add_lim_re Complex.lim_eq_lim_im_add_lim_re
 
-theorem lim_re (f : CauSeq ℂ abs) : lim (cauSeqRe f) = (lim f).re := by
+theorem lim_re (f : CauSeq ℂ abs) : limUnder (cauSeqRe f) = (limUnder f).re := by
   rw [lim_eq_lim_im_add_lim_re] <;> simp
 #align complex.lim_re Complex.lim_re
 
-theorem lim_im (f : CauSeq ℂ abs) : lim (cauSeqIm f) = (lim f).im := by
+theorem lim_im (f : CauSeq ℂ abs) : limUnder (cauSeqIm f) = (limUnder f).im := by
   rw [lim_eq_lim_im_add_lim_re] <;> simp
 #align complex.lim_im Complex.lim_im
 
@@ -1188,7 +1188,7 @@ noncomputable def cauSeqConj (f : CauSeq ℂ abs) : CauSeq ℂ abs :=
   ⟨_, isCauSeq_conj f⟩
 #align complex.cau_seq_conj Complex.cauSeqConj
 
-theorem lim_conj (f : CauSeq ℂ abs) : lim (cauSeqConj f) = conj (lim f) :=
+theorem lim_conj (f : CauSeq ℂ abs) : limUnder (cauSeqConj f) = conj (limUnder f) :=
   Complex.ext (by simp [cau_seq_conj, (lim_re _).symm, cau_seq_re])
     (by simp [cau_seq_conj, (lim_im _).symm, cau_seq_im, (lim_neg _).symm] <;> rfl)
 #align complex.lim_conj Complex.lim_conj
@@ -1198,7 +1198,7 @@ noncomputable def cauSeqAbs (f : CauSeq ℂ abs) : CauSeq ℝ abs' :=
   ⟨_, isCauSeq_abs f.2⟩
 #align complex.cau_seq_abs Complex.cauSeqAbs
 
-theorem lim_abs (f : CauSeq ℂ abs) : lim (cauSeqAbs f) = abs (lim f) :=
+theorem lim_abs (f : CauSeq ℂ abs) : limUnder (cauSeqAbs f) = abs (limUnder f) :=
   lim_eq_of_equiv_const fun ε ε0 =>
     let ⟨i, hi⟩ := equiv_lim f ε ε0
     ⟨i, fun j hj => lt_of_le_of_lt (abs.abs_abv_sub_le_abv_sub _ _) (hi j hj)⟩

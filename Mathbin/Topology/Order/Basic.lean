@@ -197,22 +197,22 @@ theorem le_of_tendsto_of_tendsto' {f g : β → α} {b : Filter β} {a₁ a₂ :
 
 theorem le_of_tendsto {f : β → α} {a b : α} {x : Filter β} [NeBot x] (lim : Tendsto f x (𝓝 a))
     (h : ∀ᶠ c in x, f c ≤ b) : a ≤ b :=
-  le_of_tendsto_of_tendsto lim tendsto_const_nhds h
+  le_of_tendsto_of_tendsto limUnder tendsto_const_nhds h
 #align le_of_tendsto le_of_tendsto
 
 theorem le_of_tendsto' {f : β → α} {a b : α} {x : Filter β} [NeBot x] (lim : Tendsto f x (𝓝 a))
     (h : ∀ c, f c ≤ b) : a ≤ b :=
-  le_of_tendsto lim (eventually_of_forall h)
+  le_of_tendsto limUnder (eventually_of_forall h)
 #align le_of_tendsto' le_of_tendsto'
 
 theorem ge_of_tendsto {f : β → α} {a b : α} {x : Filter β} [NeBot x] (lim : Tendsto f x (𝓝 a))
     (h : ∀ᶠ c in x, b ≤ f c) : b ≤ a :=
-  le_of_tendsto_of_tendsto tendsto_const_nhds lim h
+  le_of_tendsto_of_tendsto tendsto_const_nhds limUnder h
 #align ge_of_tendsto ge_of_tendsto
 
 theorem ge_of_tendsto' {f : β → α} {a b : α} {x : Filter β} [NeBot x] (lim : Tendsto f x (𝓝 a))
     (h : ∀ c, b ≤ f c) : b ≤ a :=
-  ge_of_tendsto lim (eventually_of_forall h)
+  ge_of_tendsto limUnder (eventually_of_forall h)
 #align ge_of_tendsto' ge_of_tendsto'
 
 @[simp]

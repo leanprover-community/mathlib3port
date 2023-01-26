@@ -60,12 +60,12 @@ variable [HasColimitsOfShape K C]
 $\colim_k \lim_j F(j,k) → \lim_j \colim_k F(j, k)$.
 -/
 noncomputable def colimitLimitToLimitColimit :
-    colimit (curry.obj (swap K J ⋙ F) ⋙ lim) ⟶ limit (curry.obj F ⋙ colim) :=
+    colimit (curry.obj (swap K J ⋙ F) ⋙ limUnder) ⟶ limit (curry.obj F ⋙ colim) :=
   limit.lift (curry.obj F ⋙ colim)
     { x := _
       π :=
         { app := fun j =>
-            colimit.desc (curry.obj (swap K J ⋙ F) ⋙ lim)
+            colimit.desc (curry.obj (swap K J ⋙ F) ⋙ limUnder)
               { x := _
                 ι :=
                   { app := fun k =>
@@ -100,7 +100,7 @@ theorem ι_colimitLimitToLimitColimit_π (j) (k) :
 @[simp]
 theorem ι_colimitLimitToLimitColimit_π_apply (F : J × K ⥤ Type v) (j) (k) (f) :
     limit.π (curry.obj F ⋙ colim) j
-        (colimitLimitToLimitColimit F (colimit.ι (curry.obj (swap K J ⋙ F) ⋙ lim) k f)) =
+        (colimitLimitToLimitColimit F (colimit.ι (curry.obj (swap K J ⋙ F) ⋙ limUnder) k f)) =
       colimit.ι ((curry.obj F).obj j) k (limit.π ((curry.obj (swap K J ⋙ F)).obj k) j f) :=
   by
   dsimp [colimit_limit_to_limit_colimit]

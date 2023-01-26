@@ -95,7 +95,7 @@ namespace VitaliFamily
 Do *not* use this definition: it is only a temporary device to show that this ratio tends almost
 everywhere to the Radon-Nikodym derivative. -/
 noncomputable def limRatio (ρ : Measure α) (x : α) : ℝ≥0∞ :=
-  lim (v.filterAt x) fun a => ρ a / μ a
+  limUnder (v.filterAt x) fun a => ρ a / μ a
 #align vitali_family.lim_ratio VitaliFamily.limRatio
 
 /-- For almost every point `x`, sufficiently small sets in a Vitali family around `x` have positive

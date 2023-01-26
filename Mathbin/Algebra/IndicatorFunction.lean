@@ -735,8 +735,7 @@ theorem mulIndicator_mul_eq_right {f g : α → M} (h : Disjoint (mulSupport f) 
 #align set.mul_indicator_mul_eq_right Set.mulIndicator_mul_eq_right
 #align set.indicator_add_eq_right Set.indicator_add_eq_right
 
-/- warning: set.mul_indicator_mul_compl_eq_piecewise clashes with set.mulIndicator_mul_compl_eq_piecewise -> Set.mulIndicator_mul_compl_eq_piecewise
-warning: set.mul_indicator_mul_compl_eq_piecewise -> Set.mulIndicator_mul_compl_eq_piecewise is a dubious translation:
+/- warning: set.mul_indicator_mul_compl_eq_piecewise -> Set.mulIndicator_mul_compl_eq_piecewise is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {M : Type.{u2}} [_inst_1 : MulOneClass.{u2} M] {s : Set.{u1} α} [_inst_2 : DecidablePred.{succ u1} α (fun (_x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) _x s)] (f : α -> M) (g : α -> M), Eq.{succ (max u1 u2)} (α -> M) (HMul.hMul.{max u1 u2, max u1 u2, max u1 u2} (α -> M) (α -> M) (α -> M) (instHMul.{max u1 u2} (α -> M) (Pi.instMul.{u1, u2} α (fun (ᾰ : α) => M) (fun (i : α) => MulOneClass.toHasMul.{u2} M _inst_1))) (Set.mulIndicator.{u1, u2} α M (MulOneClass.toHasOne.{u2} M _inst_1) s f) (Set.mulIndicator.{u1, u2} α M (MulOneClass.toHasOne.{u2} M _inst_1) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s) g)) (Set.piecewise.{u1, succ u2} α (fun (ᾰ : α) => M) s f g (fun (j : α) => _inst_2 j))
 but is expected to have type

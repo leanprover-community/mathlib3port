@@ -64,8 +64,8 @@ private unsafe
       | prf , q( $ ( a ) = 0 ) => return prf
       | prf , q( $ ( a ) ≥ 0 ) => mk_app ` ` neg_nonpos_of_nonneg [ prf ]
       | prf , q( $ ( a ) > 0 ) => mk_app `neg_neg_of_pos [ prf ]
-      | prf , q( 0 ≥ $ ( a ) ) => to_expr ` `( idRhs ( $ ( a ) ≤ 0 ) $ ( prf ) )
-      | prf , q( 0 > $ ( a ) ) => to_expr ` `( idRhs ( $ ( a ) < 0 ) $ ( prf ) )
+      | prf , q( 0 ≥ $ ( a ) ) => to_expr ` `( id ( $ ( a ) ≤ 0 ) $ ( prf ) )
+      | prf , q( 0 > $ ( a ) ) => to_expr ` `( id ( $ ( a ) < 0 ) $ ( prf ) )
       | prf , q( 0 = $ ( a ) ) => mk_app `eq.symm [ prf ]
       | prf , q( 0 ≤ $ ( a ) ) => mk_app ` ` neg_nonpos_of_nonneg [ prf ]
       | prf , q( 0 < $ ( a ) ) => mk_app `neg_neg_of_pos [ prf ]

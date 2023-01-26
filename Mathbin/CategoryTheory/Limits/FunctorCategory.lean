@@ -407,13 +407,13 @@ open CategoryTheory.prod
 /-- The limit of a diagram `F : J ⥤ K ⥤ C` is isomorphic to the functor given by
 the individual limits on objects. -/
 @[simps]
-def limitIsoFlipCompLim [HasLimitsOfShape J C] (F : J ⥤ K ⥤ C) : limit F ≅ F.flip ⋙ lim :=
+def limitIsoFlipCompLim [HasLimitsOfShape J C] (F : J ⥤ K ⥤ C) : limit F ≅ F.flip ⋙ limUnder :=
   NatIso.ofComponents (limitObjIsoLimitCompEvaluation F) <| by tidy
 #align category_theory.limits.limit_iso_flip_comp_lim CategoryTheory.Limits.limitIsoFlipCompLim
 
 /-- A variant of `limit_iso_flip_comp_lim` where the arguemnts of `F` are flipped. -/
 @[simps]
-def limitFlipIsoCompLim [HasLimitsOfShape J C] (F : K ⥤ J ⥤ C) : limit F.flip ≅ F ⋙ lim :=
+def limitFlipIsoCompLim [HasLimitsOfShape J C] (F : K ⥤ J ⥤ C) : limit F.flip ≅ F ⋙ limUnder :=
   (NatIso.ofComponents fun k =>
       limitObjIsoLimitCompEvaluation F.flip k ≪≫ HasLimit.isoOfNatIso (flipCompEvaluation _ _)) <|
     by tidy
@@ -424,7 +424,7 @@ Note that this does not require `K` to be small.
 -/
 @[simps]
 def limitIsoSwapCompLim [HasLimitsOfShape J C] (G : J ⥤ K ⥤ C) :
-    limit G ≅ curry.obj (swap K J ⋙ uncurry.obj G) ⋙ lim :=
+    limit G ≅ curry.obj (swap K J ⋙ uncurry.obj G) ⋙ limUnder :=
   limitIsoFlipCompLim G ≪≫ isoWhiskerRight (flipIsoCurrySwapUncurry _) _
 #align category_theory.limits.limit_iso_swap_comp_lim CategoryTheory.Limits.limitIsoSwapCompLim
 

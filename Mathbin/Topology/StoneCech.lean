@@ -328,7 +328,7 @@ instance StoneCech.t2Space : T2Space (StoneCech α) :=
   change ff ⟦x⟧ = ff ⟦y⟧
   have lim := fun (z : Ultrafilter α) (gz : (g : Filter (StoneCech α)) ≤ 𝓝 ⟦z⟧) =>
     ((continuous_stoneCechExtend hf).Tendsto _).mono_left gz
-  exact tendsto_nhds_unique (lim x gx) (lim y gy)
+  exact tendsto_nhds_unique (limUnder x gx) (limUnder y gy)
 #align stone_cech.t2_space StoneCech.t2Space
 
 instance StoneCech.compactSpace : CompactSpace (StoneCech α) :=

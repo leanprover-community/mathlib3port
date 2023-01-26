@@ -952,8 +952,6 @@ instance : Subsingleton (LocallyFiniteOrderBot α) :=
       rw [h₀_finset_mem_Iio, h₁_finset_mem_Iio]
     simp_rw [hIic, hIio]
 
-/- warning: order_embedding.locally_finite_order clashes with order_embedding.locallyFiniteOrder -> OrderEmbedding.locallyFiniteOrder
-Case conversion may be inaccurate. Consider using '#align order_embedding.locally_finite_order OrderEmbedding.locallyFiniteOrderₓ'. -/
 #print OrderEmbedding.locallyFiniteOrder /-
 -- Should this be called `locally_finite_order.lift`?
 /-- Given an order embedding `α ↪o β`, pulls back the `locally_finite_order` on `β` to `α`. -/

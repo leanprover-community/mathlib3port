@@ -2149,7 +2149,7 @@ theorem measurable_of_tendsto_ennreal' {ι} {f : ι → α → ℝ≥0∞} {g : 
   have : (fun y => liminf (fun n => (f (x n) y : ℝ≥0∞)) at_top) = g :=
     by
     ext1 y
-    exact ((lim y).comp hx).liminf_eq
+    exact ((limUnder y).comp hx).liminf_eq
   rw [← this]
   show Measurable fun y => liminf (fun n => (f (x n) y : ℝ≥0∞)) at_top
   exact measurable_liminf fun n => hf (x n)
@@ -2158,7 +2158,7 @@ theorem measurable_of_tendsto_ennreal' {ι} {f : ι → α → ℝ≥0∞} {g : 
 /-- A sequential limit of measurable `ℝ≥0∞` valued functions is measurable. -/
 theorem measurable_of_tendsto_ennreal {f : ℕ → α → ℝ≥0∞} {g : α → ℝ≥0∞} (hf : ∀ i, Measurable (f i))
     (lim : Tendsto f atTop (𝓝 g)) : Measurable g :=
-  measurable_of_tendsto_ennreal' atTop hf lim
+  measurable_of_tendsto_ennreal' atTop hf limUnder
 #align measurable_of_tendsto_ennreal measurable_of_tendsto_ennreal
 
 /-- A limit (over a general filter) of measurable `ℝ≥0` valued functions is measurable. -/
@@ -2168,13 +2168,13 @@ theorem measurable_of_tendsto_nnreal' {ι} {f : ι → α → ℝ≥0} {g : α �
   simp_rw [← measurable_coe_nnreal_ennreal_iff] at hf⊢
   refine' measurable_of_tendsto_ennreal' u hf _
   rw [tendsto_pi_nhds] at lim⊢
-  exact fun x => (ennreal.continuous_coe.tendsto (g x)).comp (lim x)
+  exact fun x => (ennreal.continuous_coe.tendsto (g x)).comp (limUnder x)
 #align measurable_of_tendsto_nnreal' measurable_of_tendsto_nnreal'
 
 /-- A sequential limit of measurable `ℝ≥0` valued functions is measurable. -/
 theorem measurable_of_tendsto_nnreal {f : ℕ → α → ℝ≥0} {g : α → ℝ≥0} (hf : ∀ i, Measurable (f i))
     (lim : Tendsto f atTop (𝓝 g)) : Measurable g :=
-  measurable_of_tendsto_nnreal' atTop hf lim
+  measurable_of_tendsto_nnreal' atTop hf limUnder
 #align measurable_of_tendsto_nnreal measurable_of_tendsto_nnreal
 
 /-- A limit (over a general filter) of measurable functions valued in a (pseudo) metrizable space is
@@ -2192,7 +2192,7 @@ theorem measurable_of_tendsto_metrizable' {ι} {f : ι → α → β} {g : α �
     exact measurable_of_tendsto_nnreal' u (fun i => (hf i).infNndist) this
     rw [tendsto_pi_nhds] at lim⊢
     intro x
-    exact ((continuous_inf_nndist_pt s).Tendsto (g x)).comp (lim x)
+    exact ((continuous_inf_nndist_pt s).Tendsto (g x)).comp (limUnder x)
   have h4s : g ⁻¹' s = (fun x => inf_nndist (g x) s) ⁻¹' {0} :=
     by
     ext x
@@ -2205,7 +2205,7 @@ theorem measurable_of_tendsto_metrizable' {ι} {f : ι → α → β} {g : α �
 measurable. -/
 theorem measurable_of_tendsto_metrizable {f : ℕ → α → β} {g : α → β} (hf : ∀ i, Measurable (f i))
     (lim : Tendsto f atTop (𝓝 g)) : Measurable g :=
-  measurable_of_tendsto_metrizable' atTop hf lim
+  measurable_of_tendsto_metrizable' atTop hf limUnder
 #align measurable_of_tendsto_metrizable measurable_of_tendsto_metrizable
 
 theorem aeMeasurableOfTendstoMetrizableAe {ι} {μ : Measure α} {f : ι → α → β} {g : α → β}

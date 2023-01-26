@@ -1562,7 +1562,7 @@ theorem contDiffOn_convolution_right_with_param_aux {G : Type uP} {E' : Type uP}
     `n` (but for this we need the spaces at the different steps of the induction to live in the same
     universe, which is why we make the assumption in the lemma that all the relevant spaces
     come from the same universe). -/
-  induction' n using Enat.nat_induction with n ih ih generalizing g E' F
+  induction' n using ENat.nat_induction with n ih ih generalizing g E' F
   · rw [contDiffOn_zero] at hg⊢
     exact continuousOn_convolution_right_with_param L hk hgs hf hg
   · let f' : P → G → P × G →L[𝕜] F := fun p a =>

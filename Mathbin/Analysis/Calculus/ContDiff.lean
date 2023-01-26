@@ -1047,7 +1047,7 @@ theorem ContDiffOn.ftaylorSeriesWithin (h : ContDiffOn 𝕜 n f s) (hs : UniqueD
     simp only [ftaylorSeriesWithin, ContinuousMultilinearMap.uncurry0_apply,
       iteratedFderivWithin_zero_apply]
   · intro m hm x hx
-    rcases(h x hx) m.succ (Enat.add_one_le_of_lt hm) with ⟨u, hu, p, Hp⟩
+    rcases(h x hx) m.succ (ENat.add_one_le_of_lt hm) with ⟨u, hu, p, Hp⟩
     rw [insert_eq_of_mem hx] at hu
     rcases mem_nhdsWithin.1 hu with ⟨o, o_open, xo, ho⟩
     rw [inter_comm] at ho
@@ -2139,7 +2139,7 @@ private theorem cont_diff_on.comp_same_univ {Eu : Type u} [NormedAddCommGroup Eu
     (hg : ContDiffOn 𝕜 n g t) (hf : ContDiffOn 𝕜 n f s) (st : s ⊆ f ⁻¹' t) :
     ContDiffOn 𝕜 n (g ∘ f) s :=
   by
-  induction' n using Enat.nat_induction with n IH Itop generalizing Eu Fu Gu
+  induction' n using ENat.nat_induction with n IH Itop generalizing Eu Fu Gu
   · rw [contDiffOn_zero] at hf hg⊢
     exact ContinuousOn.comp hg hf st
   · rw [contDiffOn_succ_iff_hasFderivWithinAt] at hg⊢
@@ -3296,7 +3296,7 @@ invertible element.  The proof is by induction, bootstrapping using an identity 
 derivative of inversion as a bilinear map of inversion itself. -/
 theorem contDiffAt_ring_inverse [CompleteSpace R] (x : Rˣ) : ContDiffAt 𝕜 n Ring.inverse (x : R) :=
   by
-  induction' n using Enat.nat_induction with n IH Itop
+  induction' n using ENat.nat_induction with n IH Itop
   · intro m hm
     refine' ⟨{ y : R | IsUnit y }, _, _⟩
     · simp [nhdsWithin_univ]
@@ -3428,7 +3428,7 @@ theorem LocalHomeomorph.contDiffAt_symm [CompleteSpace E] (f : LocalHomeomorph E
     ContDiffAt 𝕜 n f.symm a :=
   by
   -- We prove this by induction on `n`
-  induction' n using Enat.nat_induction with n IH Itop
+  induction' n using ENat.nat_induction with n IH Itop
   · rw [contDiffAt_zero]
     exact ⟨f.target, IsOpen.mem_nhds f.open_target ha, f.continuous_inv_fun⟩
   · obtain ⟨f', ⟨u, hu, hff'⟩, hf'⟩ := cont_diff_at_succ_iff_has_fderiv_at.mp hf

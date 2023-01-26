@@ -53,11 +53,17 @@ theorem preimage_image_sigmaMk_of_ne (h : i ≠ j) (s : Set (α j)) :
   simp [h.symm]
 #align set.preimage_image_sigma_mk_of_ne Set.preimage_image_sigmaMk_of_ne
 
-theorem image_sigma_mk_preimage_sigma_map_subset {β : ι' → Type _} (f : ι → ι')
+/- warning: set.image_sigma_mk_preimage_sigma_map_subset -> Set.image_sigmaMk_preimage_sigmaMap_subset is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {ι' : Type.{u2}} {α : ι -> Type.{u3}} {β : ι' -> Type.{u4}} (f : ι -> ι') (g : forall (i : ι), (α i) -> (β (f i))) (i : ι) (s : Set.{u4} (β (f i))), HasSubset.Subset.{max u1 u3} (Set.{max u1 u3} (Sigma.{u1, u3} ι (fun (i : ι) => α i))) (Set.hasSubset.{max u1 u3} (Sigma.{u1, u3} ι (fun (i : ι) => α i))) (Set.image.{u3, max u1 u3} (α i) (Sigma.{u1, u3} ι (fun (i : ι) => α i)) (Sigma.mk.{u1, u3} ι (fun (i : ι) => α i) i) (Set.preimage.{u3, u4} (α i) (β (f i)) (g i) s)) (Set.preimage.{max u1 u3, max u2 u4} (Sigma.{u1, u3} ι (fun (i : ι) => α i)) (Sigma.{u2, u4} ι' β) (Sigma.map.{u1, u2, u3, u4} ι ι' (fun (i : ι) => α i) β f g) (Set.image.{u4, max u2 u4} (β (f i)) (Sigma.{u2, u4} ι' β) (Sigma.mk.{u2, u4} ι' β (f i)) s))
+but is expected to have type
+  forall {ι : Type.{u3}} {ι' : Type.{u1}} {α : ι -> Type.{u2}} {β : ι' -> Type.{u4}} (f : ι -> ι') (g : forall (i : ι), (α i) -> (β (f i))) (i : ι) (s : Set.{u4} (β (f i))), HasSubset.Subset.{max u3 u2} (Set.{max u3 u2} (Sigma.{u3, u2} ι α)) (Set.instHasSubsetSet.{max u3 u2} (Sigma.{u3, u2} ι α)) (Set.image.{u2, max u3 u2} (α i) (Sigma.{u3, u2} ι α) (Sigma.mk.{u3, u2} ι α i) (Set.preimage.{u2, u4} (α i) (β (f i)) (g i) s)) (Set.preimage.{max u3 u2, max u4 u1} (Sigma.{u3, u2} ι α) (Sigma.{u1, u4} ι' β) (Sigma.map.{u3, u1, u2, u4} ι ι' α β f g) (Set.image.{u4, max u1 u4} (β (f i)) (Sigma.{u1, u4} ι' β) (Sigma.mk.{u1, u4} ι' β (f i)) s))
+Case conversion may be inaccurate. Consider using '#align set.image_sigma_mk_preimage_sigma_map_subset Set.image_sigmaMk_preimage_sigmaMap_subsetₓ'. -/
+theorem image_sigmaMk_preimage_sigmaMap_subset {β : ι' → Type _} (f : ι → ι')
     (g : ∀ i, α i → β (f i)) (i : ι) (s : Set (β (f i))) :
     Sigma.mk i '' (g i ⁻¹' s) ⊆ Sigma.map f g ⁻¹' (Sigma.mk (f i) '' s) :=
   image_subset_iff.2 fun x hx => ⟨g i x, hx, rfl⟩
-#align set.image_sigma_mk_preimage_sigma_map_subset Set.image_sigma_mk_preimage_sigma_map_subset
+#align set.image_sigma_mk_preimage_sigma_map_subset Set.image_sigmaMk_preimage_sigmaMap_subset
 
 /- warning: set.image_sigma_mk_preimage_sigma_map -> Set.image_sigmaMk_preimage_sigmaMap is a dubious translation:
 lean 3 declaration is

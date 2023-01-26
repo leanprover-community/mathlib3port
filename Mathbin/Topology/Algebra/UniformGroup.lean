@@ -807,7 +807,7 @@ theorem tendsto_div_comap_self (x₀ : α) :
     rwa [← map_div e t.2 t.1]
   have lim : tendsto (fun x : α × α => x.2 / x.1) (𝓝 (x₀, x₀)) (𝓝 (e 1)) := by
     simpa using (continuous_div'.comp (@continuous_swap α α _ _)).Tendsto (x₀, x₀)
-  simpa using de.tendsto_comap_nhds_nhds lim comm
+  simpa using de.tendsto_comap_nhds_nhds limUnder comm
 #align tendsto_div_comap_self tendsto_div_comap_self
 #align tendsto_sub_comap_self tendsto_sub_comap_self
 
@@ -865,7 +865,7 @@ private theorem extend_Z_bilin_aux (x₀ : α) (y₁ : δ) :
   have lim := lim2.comp lim1
   rw [tendsto_prod_self_iff] at lim
   simp_rw [ball_mem_comm]
-  exact lim W' W'_nhd
+  exact limUnder W' W'_nhd
 #align dense_inducing.extend_Z_bilin_aux dense_inducing.extend_Z_bilin_aux
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x x' «expr ∈ » U₁) -/

@@ -398,7 +398,7 @@ def exp' (z : ℂ) : CauSeq ℂ Complex.abs :=
 /-- The complex exponential function, defined via its Taylor series -/
 @[pp_nodot]
 irreducible_def exp (z : ℂ) : ℂ :=
-  lim (exp' z)
+  limUnder (exp' z)
 #align complex.exp Complex.exp
 
 /-- The complex sine function, defined via `exp` -/
@@ -574,7 +574,7 @@ theorem exp_conj : exp (conj x) = conj (exp x) :=
   by
   dsimp [exp]
   rw [← lim_conj]
-  refine' congr_arg lim (CauSeq.ext fun _ => _)
+  refine' congr_arg limUnder (CauSeq.ext fun _ => _)
   dsimp [exp', Function.comp, cau_seq_conj]
   rw [(starRingEnd _).map_sum]
   refine' sum_congr rfl fun n hn => _
@@ -1486,7 +1486,7 @@ open IsAbsoluteValue
 instead. -/
 theorem add_one_le_exp_of_nonneg {x : ℝ} (hx : 0 ≤ x) : x + 1 ≤ exp x :=
   calc
-    x + 1 ≤ lim (⟨fun n : ℕ => ((exp' x) n).re, isCauSeq_re (exp' x)⟩ : CauSeq ℝ Abs.abs) :=
+    x + 1 ≤ limUnder (⟨fun n : ℕ => ((exp' x) n).re, isCauSeq_re (exp' x)⟩ : CauSeq ℝ Abs.abs) :=
       le_lim
         (CauSeq.le_of_exists
           ⟨2, fun j hj =>

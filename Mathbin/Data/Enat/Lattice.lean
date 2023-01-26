@@ -18,5 +18,5 @@ This instance is not in `data.enat.basic` to avoid dependency on `finset`s.
 -/
 
 
-deriving instance CompleteLinearOrder for Enat
+deriving instance CompleteLinearOrder for ENat
 
