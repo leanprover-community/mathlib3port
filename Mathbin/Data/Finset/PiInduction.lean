@@ -36,6 +36,12 @@ variable {ι : Type _} {α : ι → Type _} [Finite ι] [DecidableEq ι] [∀ i,
 
 namespace Finset
 
+/- warning: finset.induction_on_pi_of_choice -> Finset.induction_on_pi_of_choice is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : Finite.{succ u1} ι] [_inst_2 : DecidableEq.{succ u1} ι] [_inst_3 : forall (i : ι), DecidableEq.{succ u2} (α i)] (r : forall (i : ι), (α i) -> (Finset.{u2} (α i)) -> Prop), (forall (i : ι) (s : Finset.{u2} (α i)), (Finset.Nonempty.{u2} (α i) s) -> (Exists.{succ u2} (α i) (fun (x : α i) => Exists.{0} (Membership.Mem.{u2, u2} (α i) (Finset.{u2} (α i)) (Finset.hasMem.{u2} (α i)) x s) (fun (H : Membership.Mem.{u2, u2} (α i) (Finset.{u2} (α i)) (Finset.hasMem.{u2} (α i)) x s) => r i x (Finset.erase.{u2} (α i) (fun (a : α i) (b : α i) => _inst_3 i a b) s x))))) -> (forall {p : (forall (i : ι), Finset.{u2} (α i)) -> Prop} (f : forall (i : ι), Finset.{u2} (α i)), (p (fun (_x : ι) => EmptyCollection.emptyCollection.{u2} (Finset.{u2} (α _x)) (Finset.hasEmptyc.{u2} (α _x)))) -> (forall (g : forall (i : ι), Finset.{u2} (α i)) (i : ι) (x : α i), (r i x (g i)) -> (p g) -> (p (Function.update.{succ u1, succ u2} ι (fun (i : ι) => Finset.{u2} (α i)) (fun (a : ι) (b : ι) => _inst_2 a b) g i (Insert.insert.{u2, u2} (α i) (Finset.{u2} (α i)) (Finset.hasInsert.{u2} (α i) (fun (a : α i) (b : α i) => _inst_3 i a b)) x (g i))))) -> (p f))
+but is expected to have type
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : Finite.{succ u1} ι] [_inst_2 : DecidableEq.{succ u1} ι] [_inst_3 : forall (i : ι), DecidableEq.{succ u2} (α i)] (r : forall (i : ι), (α i) -> (Finset.{u2} (α i)) -> Prop), (forall (i : ι) (s : Finset.{u2} (α i)), (Finset.Nonempty.{u2} (α i) s) -> (Exists.{succ u2} (α i) (fun (x : α i) => And (Membership.mem.{u2, u2} (α i) (Finset.{u2} (α i)) (Finset.instMembershipFinset.{u2} (α i)) x s) (r i x (Finset.erase.{u2} (α i) (fun (a : α i) (b : α i) => _inst_3 i a b) s x))))) -> (forall {p : (forall (i : ι), Finset.{u2} (α i)) -> Prop} (f : forall (i : ι), Finset.{u2} (α i)), (p (fun (_x : ι) => EmptyCollection.emptyCollection.{u2} (Finset.{u2} (α _x)) (Finset.instEmptyCollectionFinset.{u2} (α _x)))) -> (forall (g : forall (i : ι), Finset.{u2} (α i)) (i : ι) (x : α i), (r i x (g i)) -> (p g) -> (p (Function.update.{succ u1, succ u2} ι (fun (i : ι) => Finset.{u2} (α i)) (fun (a : ι) (b : ι) => _inst_2 a b) g i (Insert.insert.{u2, u2} (α i) (Finset.{u2} (α i)) (Finset.instInsertFinset.{u2} (α i) (fun (a : α i) (b : α i) => _inst_3 i a b)) x (g i))))) -> (p f))
+Case conversion may be inaccurate. Consider using '#align finset.induction_on_pi_of_choice Finset.induction_on_pi_of_choiceₓ'. -/
 /-- General theorem for `finset.induction_on_pi`-style induction principles. -/
 theorem induction_on_pi_of_choice (r : ∀ i, α i → Finset (α i) → Prop)
     (H_ex : ∀ (i) (s : Finset (α i)) (hs : s.Nonempty), ∃ x ∈ s, r i x (s.erase x))
@@ -66,6 +72,7 @@ theorem induction_on_pi_of_choice (r : ∀ i, α i → Finset (α i) → Prop)
       (@le_update_iff _ _ _ _ g g i _).2 ⟨subset_insert _ _, fun _ _ => le_rfl⟩]
 #align finset.induction_on_pi_of_choice Finset.induction_on_pi_of_choice
 
+#print Finset.induction_on_pi /-
 /-- Given a predicate on functions `Π i, finset (α i)` defined on a finite type, it is true on all
 maps provided that it is true on `λ _, ∅` and for any function `g : Π i, finset (α i)`, an index
 `i : ι`, and `x ∉ g i`, `p g` implies `p (update g i (insert x (g i)))`.
@@ -80,7 +87,9 @@ theorem induction_on_pi {p : (∀ i, Finset (α i)) → Prop} (f : ∀ i, Finset
   induction_on_pi_of_choice (fun i x s => x ∉ s) (fun i s ⟨x, hx⟩ => ⟨x, hx, not_mem_erase x s⟩) f
     h0 step
 #align finset.induction_on_pi Finset.induction_on_pi
+-/
 
+#print Finset.induction_on_pi_max /-
 /-- Given a predicate on functions `Π i, finset (α i)` defined on a finite type, it is true on all
 maps provided that it is true on `λ _, ∅` and for any function `g : Π i, finset (α i)`, an index
 `i : ι`, and an element`x : α i` that is strictly greater than all elements of `g i`, `p g` implies
@@ -97,7 +106,9 @@ theorem induction_on_pi_max [∀ i, LinearOrder (α i)] {p : (∀ i, Finset (α 
   induction_on_pi_of_choice (fun i x s => ∀ y ∈ s, y < x)
     (fun i s hs => ⟨s.max' hs, s.max'_mem hs, fun y => s.lt_max'_of_mem_erase_max' _⟩) f h0 step
 #align finset.induction_on_pi_max Finset.induction_on_pi_max
+-/
 
+#print Finset.induction_on_pi_min /-
 /-- Given a predicate on functions `Π i, finset (α i)` defined on a finite type, it is true on all
 maps provided that it is true on `λ _, ∅` and for any function `g : Π i, finset (α i)`, an index
 `i : ι`, and an element`x : α i` that is strictly less than all elements of `g i`, `p g` implies
@@ -113,6 +124,7 @@ theorem induction_on_pi_min [∀ i, LinearOrder (α i)] {p : (∀ i, Finset (α 
     p f :=
   @induction_on_pi_max ι (fun i => (α i)ᵒᵈ) _ _ _ _ _ _ h0 step
 #align finset.induction_on_pi_min Finset.induction_on_pi_min
+-/
 
 end Finset
 
