@@ -317,7 +317,7 @@ theorem map_unop_mul (M N : Submodule R Aᵐᵒᵖ) :
     LinearEquiv.injective _
   map_injective_of_injective this <| by
     rw [← map_comp, map_op_mul, ← map_comp, ← map_comp, LinearEquiv.comp_coe,
-      LinearEquiv.symm_trans_self, LinearEquiv.refl_to_linearMap, map_id, map_id, map_id]
+      LinearEquiv.symm_trans_self, LinearEquiv.refl_toLinearMap, map_id, map_id, map_id]
 #align submodule.map_unop_mul Submodule.map_unop_mul
 
 theorem comap_op_mul (M N : Submodule R Aᵐᵒᵖ) :

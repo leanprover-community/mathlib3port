@@ -499,7 +499,7 @@ theorem lift_reindex (e : ι ≃ ι₂) (φ : MultilinearMap R (fun _ => M) E) (
 theorem reindex_trans (e : ι ≃ ι₂) (e' : ι₂ ≃ ι₃) :
     (reindex R M e).trans (reindex R M e') = reindex R M (e.trans e') :=
   by
-  apply LinearEquiv.to_linearMap_injective
+  apply LinearEquiv.toLinearMap_injective
   ext f
   simp only [LinearEquiv.trans_apply, LinearEquiv.coe_coe, reindex_tprod,
     LinearMap.coe_compMultilinearMap, Function.comp_apply, MultilinearMap.domDomCongr_apply,
@@ -521,9 +521,9 @@ theorem reindex_symm (e : ι ≃ ι₂) : (reindex R M e).symm = reindex R M e.s
 @[simp]
 theorem reindex_refl : reindex R M (Equiv.refl ι) = LinearEquiv.refl R _ :=
   by
-  apply LinearEquiv.to_linearMap_injective
+  apply LinearEquiv.toLinearMap_injective
   ext1
-  rw [reindex_comp_tprod, LinearEquiv.refl_to_linearMap, Equiv.refl_symm]
+  rw [reindex_comp_tprod, LinearEquiv.refl_toLinearMap, Equiv.refl_symm]
   rfl
 #align pi_tensor_product.reindex_refl PiTensorProduct.reindex_refl
 

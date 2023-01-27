@@ -227,25 +227,25 @@ protected theorem Subsingleton.antivary [Subsingleton ι] (f : ι → α) (g : �
   fun i j h => (ne_of_apply_ne _ h.Ne <| Subsingleton.elim _ _).elim
 #align subsingleton.antivary Subsingleton.antivary
 
-/- warning: subsingleton.monovary_on -> Subsingleton.monovary_on is a dubious translation:
+/- warning: subsingleton.monovary_on -> Subsingleton.monovaryOn is a dubious translation:
 lean 3 declaration is
   forall {ι : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u3} β] [_inst_4 : Subsingleton.{succ u1} ι] (f : ι -> α) (g : ι -> β) (s : Set.{u1} ι), MonovaryOn.{u1, u2, u3} ι α β _inst_1 _inst_2 f g s
 but is expected to have type
   forall {ι : Type.{u3}} {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] [_inst_4 : Subsingleton.{succ u3} ι] (f : ι -> α) (g : ι -> β) (s : Set.{u3} ι), MonovaryOn.{u3, u2, u1} ι α β _inst_1 _inst_2 f g s
-Case conversion may be inaccurate. Consider using '#align subsingleton.monovary_on Subsingleton.monovary_onₓ'. -/
-protected theorem Subsingleton.monovary_on [Subsingleton ι] (f : ι → α) (g : ι → β) (s : Set ι) :
+Case conversion may be inaccurate. Consider using '#align subsingleton.monovary_on Subsingleton.monovaryOnₓ'. -/
+protected theorem Subsingleton.monovaryOn [Subsingleton ι] (f : ι → α) (g : ι → β) (s : Set ι) :
     MonovaryOn f g s := fun i _ j _ h => (ne_of_apply_ne _ h.Ne <| Subsingleton.elim _ _).elim
-#align subsingleton.monovary_on Subsingleton.monovary_on
+#align subsingleton.monovary_on Subsingleton.monovaryOn
 
-/- warning: subsingleton.antivary_on -> Subsingleton.antivary_on is a dubious translation:
+/- warning: subsingleton.antivary_on -> Subsingleton.antivaryOn is a dubious translation:
 lean 3 declaration is
   forall {ι : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u3} β] [_inst_4 : Subsingleton.{succ u1} ι] (f : ι -> α) (g : ι -> β) (s : Set.{u1} ι), AntivaryOn.{u1, u2, u3} ι α β _inst_1 _inst_2 f g s
 but is expected to have type
   forall {ι : Type.{u3}} {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] [_inst_4 : Subsingleton.{succ u3} ι] (f : ι -> α) (g : ι -> β) (s : Set.{u3} ι), AntivaryOn.{u3, u2, u1} ι α β _inst_1 _inst_2 f g s
-Case conversion may be inaccurate. Consider using '#align subsingleton.antivary_on Subsingleton.antivary_onₓ'. -/
-protected theorem Subsingleton.antivary_on [Subsingleton ι] (f : ι → α) (g : ι → β) (s : Set ι) :
+Case conversion may be inaccurate. Consider using '#align subsingleton.antivary_on Subsingleton.antivaryOnₓ'. -/
+protected theorem Subsingleton.antivaryOn [Subsingleton ι] (f : ι → α) (g : ι → β) (s : Set ι) :
     AntivaryOn f g s := fun i _ j _ h => (ne_of_apply_ne _ h.Ne <| Subsingleton.elim _ _).elim
-#align subsingleton.antivary_on Subsingleton.antivary_on
+#align subsingleton.antivary_on Subsingleton.antivaryOn
 
 /- warning: monovary_on_const_left -> monovaryOn_const_left is a dubious translation:
 lean 3 declaration is

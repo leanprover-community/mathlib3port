@@ -122,7 +122,7 @@ theorem volume_unionᵢ_setOf_liouvilleWith :
       volume (⋃ a ∈ Finset.Icc (0 : ℤ) b, B a b) ≤ ∑ a in Finset.Icc (0 : ℤ) b, volume (B a b) :=
         measure_bUnion_finset_le _ _
       _ = ((b + 1) * (2 / b ^ r) : ℝ≥0) := by
-        simp only [hB, Int.card_icc, Finset.sum_const, nsmul_eq_mul, sub_zero, ← Int.ofNat_succ,
+        simp only [hB, Int.card_Icc, Finset.sum_const, nsmul_eq_mul, sub_zero, ← Int.ofNat_succ,
           Int.toNat_coe_nat, ← Nat.cast_succ, Ennreal.coe_mul, Ennreal.coe_nat]
       _ = _ := _
       

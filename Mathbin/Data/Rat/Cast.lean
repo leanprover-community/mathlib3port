@@ -856,15 +856,15 @@ theorem RingHom.ext_rat {R : Type _} [Semiring R] [RingHomClass F ℚ R] (f g : 
       ((f : ℚ →+* R).comp (Int.castRingHom ℚ)).ext_int ((g : ℚ →+* R).comp (Int.castRingHom ℚ))
 #align ring_hom.ext_rat RingHom.ext_rat
 
-/- warning: rat.subsingleton_ring_hom -> Rat.subsingleton_ring_hom is a dubious translation:
+/- warning: rat.subsingleton_ring_hom -> Rat.subsingleton_ringHom is a dubious translation:
 lean 3 declaration is
   forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R], Subsingleton.{succ u1} (RingHom.{0, u1} Rat R (NonAssocRing.toNonAssocSemiring.{0} Rat (Ring.toNonAssocRing.{0} Rat (StrictOrderedRing.toRing.{0} Rat (LinearOrderedRing.toStrictOrderedRing.{0} Rat Rat.linearOrderedRing)))) (Semiring.toNonAssocSemiring.{u1} R _inst_1))
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R], Subsingleton.{succ u1} (RingHom.{0, u1} Rat R (NonAssocRing.toNonAssocSemiring.{0} Rat (Ring.toNonAssocRing.{0} Rat (StrictOrderedRing.toRing.{0} Rat (LinearOrderedRing.toStrictOrderedRing.{0} Rat Rat.instLinearOrderedRingRat)))) (Semiring.toNonAssocSemiring.{u1} R _inst_1))
-Case conversion may be inaccurate. Consider using '#align rat.subsingleton_ring_hom Rat.subsingleton_ring_homₓ'. -/
-instance Rat.subsingleton_ring_hom {R : Type _} [Semiring R] : Subsingleton (ℚ →+* R) :=
+Case conversion may be inaccurate. Consider using '#align rat.subsingleton_ring_hom Rat.subsingleton_ringHomₓ'. -/
+instance Rat.subsingleton_ringHom {R : Type _} [Semiring R] : Subsingleton (ℚ →+* R) :=
   ⟨RingHom.ext_rat⟩
-#align rat.subsingleton_ring_hom Rat.subsingleton_ring_hom
+#align rat.subsingleton_ring_hom Rat.subsingleton_ringHom
 
 namespace MulOpposite
 

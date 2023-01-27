@@ -305,7 +305,7 @@ theorem trace_comp_comm' (f : M →ₗ[R] N) (g : N →ₗ[R] M) :
 @[simp]
 theorem trace_conj' (f : M →ₗ[R] M) (e : M ≃ₗ[R] N) : trace R N (e.conj f) = trace R M f := by
   rw [e.conj_apply, trace_comp_comm', ← comp_assoc, LinearEquiv.comp_coe,
-    LinearEquiv.self_trans_symm, LinearEquiv.refl_to_linearMap, id_comp]
+    LinearEquiv.self_trans_symm, LinearEquiv.refl_toLinearMap, id_comp]
 #align linear_map.trace_conj' LinearMap.trace_conj'
 
 theorem IsProj.trace {p : Submodule R M} {f : M →ₗ[R] M} (h : IsProj p f) [Module.Free R p]

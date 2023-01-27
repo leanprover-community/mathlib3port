@@ -760,7 +760,7 @@ theorem one_lt_cosh : 1 < cosh x ↔ x ≠ 0 :=
 
 theorem sinh_sub_id_strictMono : StrictMono fun x => sinh x - x :=
   by
-  refine' strictMono_of_odd_strictMono_on_nonneg (fun x => by simp) _
+  refine' strictMono_of_odd_strictMonoOn_nonneg (fun x => by simp) _
   refine' (convex_ici _).strict_mono_on_of_deriv_pos _ fun x hx => _
   · exact (continuous_sinh.sub continuous_id).ContinuousOn
   · rw [interior_ici, mem_Ioi] at hx

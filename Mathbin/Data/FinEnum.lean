@@ -229,34 +229,34 @@ instance (β : α → Type v) [FinEnum α] [∀ a, FinEnum (β a)] : FinEnum (Si
   ofList ((toList α).bind fun a => (toList (β a)).map <| Sigma.mk a)
     (by intro x <;> cases x <;> simp)
 
-#print FinEnum.Psigma.finEnum /-
-instance Psigma.finEnum [FinEnum α] [∀ a, FinEnum (β a)] : FinEnum (Σ'a, β a) :=
+#print FinEnum.PSigma.finEnum /-
+instance PSigma.finEnum [FinEnum α] [∀ a, FinEnum (β a)] : FinEnum (Σ'a, β a) :=
   FinEnum.ofEquiv _ (Equiv.psigmaEquivSigma _)
-#align fin_enum.psigma.fin_enum FinEnum.Psigma.finEnum
+#align fin_enum.psigma.fin_enum FinEnum.PSigma.finEnum
 -/
 
-#print FinEnum.Psigma.finEnumPropLeft /-
-instance Psigma.finEnumPropLeft {α : Prop} {β : α → Type v} [∀ a, FinEnum (β a)] [Decidable α] :
+#print FinEnum.PSigma.finEnumPropLeft /-
+instance PSigma.finEnumPropLeft {α : Prop} {β : α → Type v} [∀ a, FinEnum (β a)] [Decidable α] :
     FinEnum (Σ'a, β a) :=
   if h : α then ofList ((toList (β h)).map <| PSigma.mk h) fun ⟨a, Ba⟩ => by simp
   else ofList [] fun ⟨a, Ba⟩ => (h a).elim
-#align fin_enum.psigma.fin_enum_prop_left FinEnum.Psigma.finEnumPropLeft
+#align fin_enum.psigma.fin_enum_prop_left FinEnum.PSigma.finEnumPropLeft
 -/
 
-#print FinEnum.Psigma.finEnumPropRight /-
-instance Psigma.finEnumPropRight {β : α → Prop} [FinEnum α] [∀ a, Decidable (β a)] :
+#print FinEnum.PSigma.finEnumPropRight /-
+instance PSigma.finEnumPropRight {β : α → Prop} [FinEnum α] [∀ a, Decidable (β a)] :
     FinEnum (Σ'a, β a) :=
   FinEnum.ofEquiv { a // β a }
     ⟨fun ⟨x, y⟩ => ⟨x, y⟩, fun ⟨x, y⟩ => ⟨x, y⟩, fun ⟨x, y⟩ => rfl, fun ⟨x, y⟩ => rfl⟩
-#align fin_enum.psigma.fin_enum_prop_right FinEnum.Psigma.finEnumPropRight
+#align fin_enum.psigma.fin_enum_prop_right FinEnum.PSigma.finEnumPropRight
 -/
 
-#print FinEnum.Psigma.finEnumPropProp /-
-instance Psigma.finEnumPropProp {α : Prop} {β : α → Prop} [Decidable α] [∀ a, Decidable (β a)] :
+#print FinEnum.PSigma.finEnumPropProp /-
+instance PSigma.finEnumPropProp {α : Prop} {β : α → Prop} [Decidable α] [∀ a, Decidable (β a)] :
     FinEnum (Σ'a, β a) :=
   if h : ∃ a, β a then ofList [⟨h.fst, h.snd⟩] (by rintro ⟨⟩ <;> simp)
   else ofList [] fun a => (h ⟨a.fst, a.snd⟩).elim
-#align fin_enum.psigma.fin_enum_prop_prop FinEnum.Psigma.finEnumPropProp
+#align fin_enum.psigma.fin_enum_prop_prop FinEnum.PSigma.finEnumPropProp
 -/
 
 instance (priority := 100) [FinEnum α] : Fintype α

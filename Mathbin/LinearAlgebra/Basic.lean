@@ -1987,7 +1987,7 @@ theorem zero_apply (x : M) : (0 : M ≃ₛₗ[σ₁₂] M₂) x = 0 :=
 /-- Between two zero modules, the zero map is the only equivalence. -/
 instance : Unique (M ≃ₛₗ[σ₁₂] M₂)
     where
-  uniq f := to_linearMap_injective (Subsingleton.elim _ _)
+  uniq f := toLinearMap_injective (Subsingleton.elim _ _)
   default := 0
 
 omit σ₂₁

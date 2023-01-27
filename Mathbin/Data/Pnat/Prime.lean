@@ -24,10 +24,10 @@ This file extends the theory of `ℕ+` with `gcd`, `lcm` and `prime` functions, 
 
 namespace Nat.Primes
 
-#print Nat.Primes.coePnat /-
-instance coePnat : Coe Nat.Primes ℕ+ :=
+#print Nat.Primes.coePNat /-
+instance coePNat : Coe Nat.Primes ℕ+ :=
   ⟨fun p => ⟨(p : ℕ), p.property.Pos⟩⟩
-#align nat.primes.coe_pnat Nat.Primes.coePnat
+#align nat.primes.coe_pnat Nat.Primes.coePNat
 -/
 
 #print Nat.Primes.coe_pnat_nat /-

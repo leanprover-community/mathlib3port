@@ -180,8 +180,8 @@ def toLin' : SpecialLinearGroup n R →* (n → R) ≃ₗ[R] n → R
     LinearEquiv.ofLinear (Matrix.toLin' ↑ₘA) (Matrix.toLin' ↑ₘA⁻¹)
       (by rw [← to_lin'_mul, ← coe_mul, mul_right_inv, coe_one, to_lin'_one])
       (by rw [← to_lin'_mul, ← coe_mul, mul_left_inv, coe_one, to_lin'_one])
-  map_one' := LinearEquiv.to_linearMap_injective Matrix.toLin'_one
-  map_mul' A B := LinearEquiv.to_linearMap_injective <| Matrix.toLin'_mul A B
+  map_one' := LinearEquiv.toLinearMap_injective Matrix.toLin'_one
+  map_mul' A B := LinearEquiv.toLinearMap_injective <| Matrix.toLin'_mul A B
 #align matrix.special_linear_group.to_lin' Matrix.SpecialLinearGroup.toLin'
 
 theorem toLin'_apply (A : SpecialLinearGroup n R) (v : n → R) :
@@ -206,8 +206,7 @@ theorem toLin'_symm_to_linearMap (A : SpecialLinearGroup n R) :
 
 theorem toLin'_injective :
     Function.Injective ⇑(toLin' : SpecialLinearGroup n R →* (n → R) ≃ₗ[R] n → R) := fun A B h =>
-  Subtype.coe_injective <|
-    Matrix.toLin'.Injective <| LinearEquiv.to_linearMap_injective.eq_iff.mpr h
+  Subtype.coe_injective <| Matrix.toLin'.Injective <| LinearEquiv.toLinearMap_injective.eq_iff.mpr h
 #align matrix.special_linear_group.to_lin'_injective Matrix.SpecialLinearGroup.toLin'_injective
 
 /-- `to_GL` is the map from the special linear group to the general linear group -/

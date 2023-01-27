@@ -394,7 +394,7 @@ theorem exists_linearIsometryEquiv_eq_of_det_pos {f : V ≃ₗᵢ[ℝ] V}
   obtain ⟨x, hx⟩ : ∃ x, x ≠ (0 : V) := exists_ne (0 : V)
   use o.oangle x (f x)
   apply LinearIsometryEquiv.toLinearEquiv_injective
-  apply LinearEquiv.to_linearMap_injective
+  apply LinearEquiv.toLinearMap_injective
   apply (o.basis_right_angle_rotation x hx).ext
   intro i
   symm

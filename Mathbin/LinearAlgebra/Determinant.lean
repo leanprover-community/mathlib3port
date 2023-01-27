@@ -326,11 +326,11 @@ theorem det_conj {N : Type _} [AddCommGroup N] [Module A N] (f : M →ₗ[A] M) 
       rw [← det_to_matrix b f, ← det_to_matrix (b.map e), to_matrix_comp (b.map e) b (b.map e),
         to_matrix_comp (b.map e) b b, ← Matrix.mul_assoc, Matrix.det_conj_of_mul_eq_one]
       ·
-        rw [← to_matrix_comp, LinearEquiv.comp_coe, e.symm_trans_self,
-          LinearEquiv.refl_to_linearMap, to_matrix_id]
+        rw [← to_matrix_comp, LinearEquiv.comp_coe, e.symm_trans_self, LinearEquiv.refl_toLinearMap,
+          to_matrix_id]
       ·
-        rw [← to_matrix_comp, LinearEquiv.comp_coe, e.self_trans_symm,
-          LinearEquiv.refl_to_linearMap, to_matrix_id]
+        rw [← to_matrix_comp, LinearEquiv.comp_coe, e.self_trans_symm, LinearEquiv.refl_toLinearMap,
+          to_matrix_id]
     · have H' : ¬∃ t : Finset N, Nonempty (Basis t A N) :=
         by
         contrapose! H

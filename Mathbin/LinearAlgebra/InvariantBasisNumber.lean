@@ -174,12 +174,12 @@ class InvariantBasisNumber : Prop where
   eq_of_fin_equiv : ∀ {n m : ℕ}, ((Fin n → R) ≃ₗ[R] Fin m → R) → n = m
 #align invariant_basis_number InvariantBasisNumber
 
-instance (priority := 100) invariantBasisNumberOfRankCondition [RankCondition R] :
+instance (priority := 100) invariantBasisNumber_of_rankCondition [RankCondition R] :
     InvariantBasisNumber R
     where eq_of_fin_equiv n m e :=
     le_antisymm (le_of_fin_surjective R e.symm.toLinearMap e.symm.Surjective)
       (le_of_fin_surjective R e.toLinearMap e.Surjective)
-#align invariant_basis_number_of_rank_condition invariantBasisNumberOfRankCondition
+#align invariant_basis_number_of_rank_condition invariantBasisNumber_of_rankCondition
 
 end
 
@@ -303,13 +303,13 @@ attribute [local instance] Ideal.Quotient.field
 In fact, any nontrivial commutative ring satisfies the strong rank condition, see
 `comm_ring_strong_rank_condition`. We prove this instance separately to avoid dependency on
 `linear_algebra.charpoly.basic`. -/
-instance (priority := 100) invariantBasisNumberOfNontrivialOfCommRing {R : Type u} [CommRing R]
+instance (priority := 100) invariantBasisNumber_of_nontrivial_of_commRing {R : Type u} [CommRing R]
     [Nontrivial R] : InvariantBasisNumber R :=
   ⟨fun n m e =>
     let ⟨I, hI⟩ := Ideal.exists_maximal R
     eq_of_fin_equiv (R ⧸ I)
       ((Ideal.piQuotEquiv _ _).symm ≪≫ₗ (induced_equiv _ e ≪≫ₗ Ideal.piQuotEquiv _ _))⟩
-#align invariant_basis_number_of_nontrivial_of_comm_ring invariantBasisNumberOfNontrivialOfCommRing
+#align invariant_basis_number_of_nontrivial_of_comm_ring invariantBasisNumber_of_nontrivial_of_commRing
 
 end
 
