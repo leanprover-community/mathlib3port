@@ -1673,7 +1673,7 @@ def DistribMulActionHom.single (a : α) : M →+[R] α →₀ M :=
 
 theorem distribMulActionHom_ext {f g : (α →₀ M) →+[R] N}
     (h : ∀ (a : α) (m : M), f (single a m) = g (single a m)) : f = g :=
-  DistribMulActionHom.toAddMonoidHom_injective <| add_hom_ext h
+  DistribMulActionHom.toAddMonoidHom_injective <| addHom_ext h
 #align finsupp.distrib_mul_action_hom_ext Finsupp.distribMulActionHom_ext
 
 /-- See note [partially-applied ext lemmas]. -/

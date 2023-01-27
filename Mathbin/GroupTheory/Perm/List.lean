@@ -42,6 +42,7 @@ variable [DecidableEq α] (l : List α)
 
 open Equiv Equiv.Perm
 
+#print List.formPerm /-
 /-- A list `l : list α` can be interpreted as a `equiv.perm α` where each element in the list
 is permuted to the next one, defined as `form_perm`. When we have that `nodup l`,
 we prove that `equiv.perm.support (form_perm l) = l.to_finset`, and that
@@ -50,29 +51,51 @@ we prove that `equiv.perm.support (form_perm l) = l.to_finset`, and that
 def formPerm : Equiv.Perm α :=
   (zipWith Equiv.swap l l.tail).Prod
 #align list.form_perm List.formPerm
+-/
 
+/- warning: list.form_perm_nil -> List.formPerm_nil is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α], Eq.{succ u1} (Equiv.Perm.{succ u1} α) (List.formPerm.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (List.nil.{u1} α)) (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (OfNat.mk.{u1} (Equiv.Perm.{succ u1} α) 1 (One.one.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α], Eq.{succ u1} (Equiv.Perm.{succ u1} α) (List.formPerm.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (List.nil.{u1} α)) (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (One.toOfNat1.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))))
+Case conversion may be inaccurate. Consider using '#align list.form_perm_nil List.formPerm_nilₓ'. -/
 @[simp]
 theorem formPerm_nil : formPerm ([] : List α) = 1 :=
   rfl
 #align list.form_perm_nil List.formPerm_nil
 
+/- warning: list.form_perm_singleton -> List.formPerm_singleton is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (x : α), Eq.{succ u1} (Equiv.Perm.{succ u1} α) (List.formPerm.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (List.cons.{u1} α x (List.nil.{u1} α))) (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (OfNat.mk.{u1} (Equiv.Perm.{succ u1} α) 1 (One.one.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (x : α), Eq.{succ u1} (Equiv.Perm.{succ u1} α) (List.formPerm.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (List.cons.{u1} α x (List.nil.{u1} α))) (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (One.toOfNat1.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))))
+Case conversion may be inaccurate. Consider using '#align list.form_perm_singleton List.formPerm_singletonₓ'. -/
 @[simp]
 theorem formPerm_singleton (x : α) : formPerm [x] = 1 :=
   rfl
 #align list.form_perm_singleton List.formPerm_singleton
 
+/- warning: list.form_perm_cons_cons -> List.formPerm_cons_cons is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (x : α) (y : α) (l : List.{u1} α), Eq.{succ u1} (Equiv.Perm.{succ u1} α) (List.formPerm.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (List.cons.{u1} α x (List.cons.{u1} α y l))) (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) x y) (List.formPerm.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (List.cons.{u1} α y l)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (x : α) (y : α) (l : List.{u1} α), Eq.{succ u1} (Equiv.Perm.{succ u1} α) (List.formPerm.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (List.cons.{u1} α x (List.cons.{u1} α y l))) (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) x y) (List.formPerm.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (List.cons.{u1} α y l)))
+Case conversion may be inaccurate. Consider using '#align list.form_perm_cons_cons List.formPerm_cons_consₓ'. -/
 @[simp]
 theorem formPerm_cons_cons (x y : α) (l : List α) :
     formPerm (x :: y :: l) = swap x y * formPerm (y :: l) :=
   prod_cons
 #align list.form_perm_cons_cons List.formPerm_cons_cons
 
+#print List.formPerm_pair /-
 theorem formPerm_pair (x y : α) : formPerm [x, y] = swap x y :=
   rfl
 #align list.form_perm_pair List.formPerm_pair
+-/
 
 variable {l} {x : α}
 
+#print List.formPerm_apply_of_not_mem /-
 theorem formPerm_apply_of_not_mem (x : α) (l : List α) (h : x ∉ l) : formPerm l x = x :=
   by
   cases' l with y l
@@ -83,11 +106,15 @@ theorem formPerm_apply_of_not_mem (x : α) (l : List α) (h : x ∉ l) : formPer
     simp only [not_or, mem_cons_iff] at h
     simp [IH, swap_apply_of_ne_of_ne, h]
 #align list.form_perm_apply_of_not_mem List.formPerm_apply_of_not_mem
+-/
 
+#print List.mem_of_formPerm_apply_ne /-
 theorem mem_of_formPerm_apply_ne (x : α) (l : List α) : l.formPerm x ≠ x → x ∈ l :=
   not_imp_comm.2 <| List.formPerm_apply_of_not_mem _ _
 #align list.mem_of_form_perm_apply_ne List.mem_of_formPerm_apply_ne
+-/
 
+#print List.formPerm_apply_mem_of_mem /-
 theorem formPerm_apply_mem_of_mem (x : α) (l : List α) (h : x ∈ l) : formPerm l x ∈ l :=
   by
   cases' l with y l
@@ -100,7 +127,9 @@ theorem formPerm_apply_mem_of_mem (x : α) (l : List α) (h : x ∈ l) : formPer
     · replace h : x = y := Or.resolve_right h hx
       simp [form_perm_apply_of_not_mem _ _ hx, ← h]
 #align list.form_perm_apply_mem_of_mem List.formPerm_apply_mem_of_mem
+-/
 
+#print List.mem_of_formPerm_apply_mem /-
 theorem mem_of_formPerm_apply_mem (x : α) (l : List α) (h : l.formPerm x ∈ l) : x ∈ l :=
   by
   cases' l with y l
@@ -117,11 +146,15 @@ theorem mem_of_formPerm_apply_mem (x : α) (l : List α) (h : l.formPerm x ∈ l
       simp only [List.mem_cons]
       obtain h | h | h := h <;> · split_ifs  at h <;> cc
 #align list.mem_of_form_perm_apply_mem List.mem_of_formPerm_apply_mem
+-/
 
+#print List.formPerm_mem_iff_mem /-
 theorem formPerm_mem_iff_mem : l.formPerm x ∈ l ↔ x ∈ l :=
   ⟨l.mem_of_form_perm_apply_mem x, l.form_perm_apply_mem_of_mem x⟩
 #align list.form_perm_mem_iff_mem List.formPerm_mem_iff_mem
+-/
 
+#print List.formPerm_cons_concat_apply_last /-
 @[simp]
 theorem formPerm_cons_concat_apply_last (x y : α) (xs : List α) :
     formPerm (x :: (xs ++ [y])) y = x :=
@@ -130,23 +163,31 @@ theorem formPerm_cons_concat_apply_last (x y : α) (xs : List α) :
   · simp
   · simp [IH]
 #align list.form_perm_cons_concat_apply_last List.formPerm_cons_concat_apply_last
+-/
 
+#print List.formPerm_apply_getLast /-
 @[simp]
 theorem formPerm_apply_getLast (x : α) (xs : List α) :
     formPerm (x :: xs) ((x :: xs).last (cons_ne_nil x xs)) = x := by
   induction' xs using List.reverseRecOn with xs y IH generalizing x <;> simp
 #align list.form_perm_apply_last List.formPerm_apply_getLast
+-/
 
+#print List.formPerm_apply_nthLe_length /-
 @[simp]
 theorem formPerm_apply_nthLe_length (x : α) (xs : List α) :
     formPerm (x :: xs) ((x :: xs).nthLe xs.length (by simp)) = x := by
   rw [nth_le_cons_length, form_perm_apply_last] <;> rfl
 #align list.form_perm_apply_nth_le_length List.formPerm_apply_nthLe_length
+-/
 
+#print List.formPerm_apply_head /-
 theorem formPerm_apply_head (x y : α) (xs : List α) (h : Nodup (x :: y :: xs)) :
     formPerm (x :: y :: xs) x = y := by simp [form_perm_apply_of_not_mem _ _ h.not_mem]
 #align list.form_perm_apply_head List.formPerm_apply_head
+-/
 
+#print List.formPerm_apply_nthLe_zero /-
 theorem formPerm_apply_nthLe_zero (l : List α) (h : Nodup l) (hl : 1 < l.length) :
     formPerm l (l.nthLe 0 (zero_lt_one.trans hl)) = l.nthLe 1 hl :=
   by
@@ -155,14 +196,18 @@ theorem formPerm_apply_nthLe_zero (l : List α) (h : Nodup l) (hl : 1 < l.length
   · simp
   · simpa using form_perm_apply_head _ _ _ h
 #align list.form_perm_apply_nth_le_zero List.formPerm_apply_nthLe_zero
+-/
 
 variable (l)
 
+#print List.formPerm_eq_head_iff_eq_getLast /-
 theorem formPerm_eq_head_iff_eq_getLast (x y : α) :
     formPerm (y :: l) x = y ↔ x = getLast (y :: l) (cons_ne_nil _ _) :=
   Iff.trans (by rw [form_perm_apply_last]) (formPerm (y :: l)).Injective.eq_iff
 #align list.form_perm_eq_head_iff_eq_last List.formPerm_eq_head_iff_eq_getLast
+-/
 
+#print List.zipWith_swap_prod_support' /-
 theorem zipWith_swap_prod_support' (l l' : List α) :
     { x | (zipWith swap l l').Prod x ≠ x } ≤ l.toFinset ⊔ l'.toFinset :=
   by
@@ -186,7 +231,14 @@ theorem zipWith_swap_prod_support' (l l' : List α) :
         rw [swap_apply_ne_self_iff] at hx
         rcases hx with ⟨hyz, rfl | rfl⟩ <;> simp
 #align list.zip_with_swap_prod_support' List.zipWith_swap_prod_support'
+-/
 
+/- warning: list.zip_with_swap_prod_support -> List.zipWith_swap_prod_support is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] (l : List.{u1} α) (l' : List.{u1} α), LE.le.{u1} (Finset.{u1} α) (Preorder.toLE.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (List.prod.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (List.zipWith.{u1, u1, u1} α α (Equiv.Perm.{succ u1} α) (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b)) l l'))) (HasSup.sup.{u1} (Finset.{u1} α) (SemilatticeSup.toHasSup.{u1} (Finset.{u1} α) (Lattice.toSemilatticeSup.{u1} (Finset.{u1} α) (Finset.lattice.{u1} α (fun (a : α) (b : α) => _inst_1 a b)))) (List.toFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b) l) (List.toFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b) l'))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] (l : List.{u1} α) (l' : List.{u1} α), LE.le.{u1} (Finset.{u1} α) (Preorder.toLE.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (List.prod.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (List.zipWith.{u1, u1, u1} α α (Equiv.Perm.{succ u1} α) (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b)) l l'))) (HasSup.sup.{u1} (Finset.{u1} α) (SemilatticeSup.toHasSup.{u1} (Finset.{u1} α) (Lattice.toSemilatticeSup.{u1} (Finset.{u1} α) (Finset.instLatticeFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)))) (List.toFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b) l) (List.toFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b) l'))
+Case conversion may be inaccurate. Consider using '#align list.zip_with_swap_prod_support List.zipWith_swap_prod_supportₓ'. -/
 theorem zipWith_swap_prod_support [Fintype α] (l l' : List α) :
     (zipWith swap l l').Prod.Support ≤ l.toFinset ⊔ l'.toFinset :=
   by
@@ -195,19 +247,24 @@ theorem zipWith_swap_prod_support [Fintype α] (l l' : List α) :
   simpa using zip_with_swap_prod_support' _ _ hx'
 #align list.zip_with_swap_prod_support List.zipWith_swap_prod_support
 
+#print List.support_formPerm_le' /-
 theorem support_formPerm_le' : { x | formPerm l x ≠ x } ≤ l.toFinset :=
   by
   refine' (zip_with_swap_prod_support' l l.tail).trans _
   simpa [Finset.subset_iff] using tail_subset l
 #align list.support_form_perm_le' List.support_formPerm_le'
+-/
 
+#print List.support_formPerm_le /-
 theorem support_formPerm_le [Fintype α] : Support (formPerm l) ≤ l.toFinset :=
   by
   intro x hx
   have hx' : x ∈ { x | form_perm l x ≠ x } := by simpa using hx
   simpa using support_form_perm_le' _ hx'
 #align list.support_form_perm_le List.support_formPerm_le
+-/
 
+#print List.formPerm_apply_lt /-
 theorem formPerm_apply_lt (xs : List α) (h : Nodup xs) (n : ℕ) (hn : n + 1 < xs.length) :
     formPerm xs (xs.nthLe n ((Nat.lt_succ_self n).trans hn)) = xs.nthLe (n + 1) hn :=
   by
@@ -224,7 +281,9 @@ theorem formPerm_apply_lt (xs : List α) (h : Nodup xs) (n : ℕ) (hn : n + 1 < 
         · rintro rfl
           simpa [nth_le_mem _ _ _] using h
 #align list.form_perm_apply_lt List.formPerm_apply_lt
+-/
 
+#print List.formPerm_apply_nthLe /-
 theorem formPerm_apply_nthLe (xs : List α) (h : Nodup xs) (n : ℕ) (hn : n < xs.length) :
     formPerm xs (xs.nthLe n hn) =
       xs.nthLe ((n + 1) % xs.length) (Nat.mod_lt _ (n.zero_le.trans_lt hn)) :=
@@ -238,7 +297,9 @@ theorem formPerm_apply_nthLe (xs : List α) (h : Nodup xs) (n : ℕ) (hn : n < x
     · simp
     · simp [form_perm_apply_lt, h, Nat.mod_eq_of_lt, Nat.succ_lt_succ hn']
 #align list.form_perm_apply_nth_le List.formPerm_apply_nthLe
+-/
 
+#print List.support_formPerm_of_nodup' /-
 theorem support_formPerm_of_nodup' (l : List α) (h : Nodup l) (h' : ∀ x : α, l ≠ [x]) :
     { x | formPerm l x ≠ x } = l.toFinset :=
   by
@@ -257,7 +318,9 @@ theorem support_formPerm_of_nodup' (l : List α) (h : Nodup l) (h' : ∀ x : α,
       simpa [← h, eq_comm, length_eq_one] using hn'
     · simpa [Nat.mod_eq_of_lt hn'] using h
 #align list.support_form_perm_of_nodup' List.support_formPerm_of_nodup'
+-/
 
+#print List.support_formPerm_of_nodup /-
 theorem support_formPerm_of_nodup [Fintype α] (l : List α) (h : Nodup l) (h' : ∀ x : α, l ≠ [x]) :
     Support (formPerm l) = l.toFinset :=
   by
@@ -265,7 +328,9 @@ theorem support_formPerm_of_nodup [Fintype α] (l : List α) (h : Nodup l) (h' :
   convert support_form_perm_of_nodup' _ h h'
   simp [Set.ext_iff]
 #align list.support_form_perm_of_nodup List.support_formPerm_of_nodup
+-/
 
+#print List.formPerm_rotate_one /-
 theorem formPerm_rotate_one (l : List α) (h : Nodup l) : formPerm (l.rotate 1) = formPerm l :=
   by
   have h' : nodup (l.rotate 1) := by simpa using h
@@ -277,7 +342,9 @@ theorem formPerm_rotate_one (l : List α) (h : Nodup l) : formPerm (l.rotate 1) 
   · rw [form_perm_apply_of_not_mem _ _ hx, form_perm_apply_of_not_mem]
     simpa using hx
 #align list.form_perm_rotate_one List.formPerm_rotate_one
+-/
 
+#print List.formPerm_rotate /-
 theorem formPerm_rotate (l : List α) (h : Nodup l) (n : ℕ) : formPerm (l.rotate n) = formPerm l :=
   by
   induction' n with n hn
@@ -286,13 +353,22 @@ theorem formPerm_rotate (l : List α) (h : Nodup l) (n : ℕ) : formPerm (l.rota
     rwa [is_rotated.nodup_iff]
     exact is_rotated.forall l n
 #align list.form_perm_rotate List.formPerm_rotate
+-/
 
+#print List.formPerm_eq_of_isRotated /-
 theorem formPerm_eq_of_isRotated {l l' : List α} (hd : Nodup l) (h : l ~r l') :
     formPerm l = formPerm l' := by
   obtain ⟨n, rfl⟩ := h
   exact (form_perm_rotate l hd n).symm
 #align list.form_perm_eq_of_is_rotated List.formPerm_eq_of_isRotated
+-/
 
+/- warning: list.form_perm_reverse -> List.formPerm_reverse is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (l : List.{u1} α), (List.Nodup.{u1} α l) -> (Eq.{succ u1} (Equiv.Perm.{succ u1} α) (List.formPerm.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (List.reverse.{u1} α l)) (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toHasInv.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))) (List.formPerm.{u1} α (fun (a : α) (b : α) => _inst_1 a b) l)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (l : List.{u1} α), (List.Nodup.{u1} α l) -> (Eq.{succ u1} (Equiv.Perm.{succ u1} α) (List.formPerm.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (List.reverse.{u1} α l)) (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toInv.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (List.formPerm.{u1} α (fun (a : α) (b : α) => _inst_1 a b) l)))
+Case conversion may be inaccurate. Consider using '#align list.form_perm_reverse List.formPerm_reverseₓ'. -/
 theorem formPerm_reverse (l : List α) (h : Nodup l) : formPerm l.reverse = (formPerm l)⁻¹ :=
   by
   -- Let's show `form_perm l` is an inverse to `form_perm l.reverse`.
@@ -323,6 +399,7 @@ theorem formPerm_reverse (l : List α) (h : Nodup l) : formPerm l.reverse = (for
       exact k.zero_le.trans_lt hk
 #align list.form_perm_reverse List.formPerm_reverse
 
+#print List.formPerm_pow_apply_nthLe /-
 theorem formPerm_pow_apply_nthLe (l : List α) (h : Nodup l) (n k : ℕ) (hk : k < l.length) :
     (formPerm l ^ n) (l.nthLe k hk) =
       l.nthLe ((k + n) % l.length) (Nat.mod_lt _ (k.zero_le.trans_lt hk)) :=
@@ -331,13 +408,17 @@ theorem formPerm_pow_apply_nthLe (l : List α) (h : Nodup l) (n k : ℕ) (hk : k
   · simp [Nat.mod_eq_of_lt hk]
   · simp [pow_succ, mul_apply, hn, form_perm_apply_nth_le _ h, Nat.succ_eq_add_one, ← Nat.add_assoc]
 #align list.form_perm_pow_apply_nth_le List.formPerm_pow_apply_nthLe
+-/
 
+#print List.formPerm_pow_apply_head /-
 theorem formPerm_pow_apply_head (x : α) (l : List α) (h : Nodup (x :: l)) (n : ℕ) :
     (formPerm (x :: l) ^ n) x =
       (x :: l).nthLe (n % (x :: l).length) (Nat.mod_lt _ (Nat.zero_lt_succ _)) :=
   by convert form_perm_pow_apply_nth_le _ h n 0 _ <;> simp
 #align list.form_perm_pow_apply_head List.formPerm_pow_apply_head
+-/
 
+#print List.formPerm_ext_iff /-
 theorem formPerm_ext_iff {x y x' y' : α} {l l' : List α} (hd : Nodup (x :: y :: l))
     (hd' : Nodup (x' :: y' :: l')) :
     formPerm (x :: y :: l) = formPerm (x' :: y' :: l') ↔ (x :: y :: l) ~r (x' :: y' :: l') :=
@@ -378,7 +459,9 @@ theorem formPerm_ext_iff {x y x' y' : α} {l l' : List α} (hd : Nodup (x :: y :
       have h1 : 1 = 1 % (x' :: y' :: l').length := by simp
       rw [hl, Nat.mod_eq_of_lt hk', h1, ← Nat.add_mod, Nat.succ_add]
 #align list.form_perm_ext_iff List.formPerm_ext_iff
+-/
 
+#print List.formPerm_apply_mem_eq_self_iff /-
 theorem formPerm_apply_mem_eq_self_iff (hl : Nodup l) (x : α) (hx : x ∈ l) :
     formPerm l x = x ↔ length l ≤ 1 :=
   by
@@ -393,14 +476,18 @@ theorem formPerm_apply_mem_eq_self_iff (hl : Nodup l) (x : α) (hx : x ∈ l) :
       simpa [Nat.mod_eq_of_lt (Nat.succ_lt_succ hk'), Nat.succ_lt_succ_iff] using
         k.zero_le.trans_lt hk'
 #align list.form_perm_apply_mem_eq_self_iff List.formPerm_apply_mem_eq_self_iff
+-/
 
+#print List.formPerm_apply_mem_ne_self_iff /-
 theorem formPerm_apply_mem_ne_self_iff (hl : Nodup l) (x : α) (hx : x ∈ l) :
     formPerm l x ≠ x ↔ 2 ≤ l.length :=
   by
   rw [Ne.def, form_perm_apply_mem_eq_self_iff _ hl x hx, not_le]
   exact ⟨Nat.succ_le_of_lt, Nat.lt_of_succ_le⟩
 #align list.form_perm_apply_mem_ne_self_iff List.formPerm_apply_mem_ne_self_iff
+-/
 
+#print List.mem_of_formPerm_ne_self /-
 theorem mem_of_formPerm_ne_self (l : List α) (x : α) (h : formPerm l x ≠ x) : x ∈ l :=
   by
   suffices x ∈ { y | form_perm l y ≠ y }
@@ -409,11 +496,20 @@ theorem mem_of_formPerm_ne_self (l : List α) (x : α) (h : formPerm l x ≠ x) 
     exact support_form_perm_le' _ this
   simpa using h
 #align list.mem_of_form_perm_ne_self List.mem_of_formPerm_ne_self
+-/
 
+#print List.formPerm_eq_self_of_not_mem /-
 theorem formPerm_eq_self_of_not_mem (l : List α) (x : α) (h : x ∉ l) : formPerm l x = x :=
   by_contra fun H => h <| mem_of_formPerm_ne_self _ _ H
 #align list.form_perm_eq_self_of_not_mem List.formPerm_eq_self_of_not_mem
+-/
 
+/- warning: list.form_perm_eq_one_iff -> List.formPerm_eq_one_iff is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (l : List.{u1} α), (List.Nodup.{u1} α l) -> (Iff (Eq.{succ u1} (Equiv.Perm.{succ u1} α) (List.formPerm.{u1} α (fun (a : α) (b : α) => _inst_1 a b) l) (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (OfNat.mk.{u1} (Equiv.Perm.{succ u1} α) 1 (One.one.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))))))) (LE.le.{0} Nat Nat.hasLe (List.length.{u1} α l) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (l : List.{u1} α), (List.Nodup.{u1} α l) -> (Iff (Eq.{succ u1} (Equiv.Perm.{succ u1} α) (List.formPerm.{u1} α (fun (a : α) (b : α) => _inst_1 a b) l) (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (One.toOfNat1.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))))) (LE.le.{0} Nat instLENat (List.length.{u1} α l) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))
+Case conversion may be inaccurate. Consider using '#align list.form_perm_eq_one_iff List.formPerm_eq_one_iffₓ'. -/
 theorem formPerm_eq_one_iff (hl : Nodup l) : formPerm l = 1 ↔ l.length ≤ 1 :=
   by
   cases' l with hd tl
@@ -427,6 +523,7 @@ theorem formPerm_eq_one_iff (hl : Nodup l) : formPerm l = 1 ↔ l.length ≤ 1 :
       simp [h]
 #align list.form_perm_eq_one_iff List.formPerm_eq_one_iff
 
+#print List.formPerm_eq_formPerm_iff /-
 theorem formPerm_eq_formPerm_iff {l l' : List α} (hl : l.Nodup) (hl' : l'.Nodup) :
     l.formPerm = l'.formPerm ↔ l ~r l' ∨ l.length ≤ 1 ∧ l'.length ≤ 1 :=
   by
@@ -450,8 +547,10 @@ theorem formPerm_eq_formPerm_iff {l l' : List α} (hl : l.Nodup) (hl' : l'.Nodup
       simpa using h.perm.length_eq
     · simp [-form_perm_cons_cons, form_perm_ext_iff hl hl']
 #align list.form_perm_eq_form_perm_iff List.formPerm_eq_formPerm_iff
+-/
 
-theorem formPerm_zpow_apply_mem_imp_mem (l : List α) (x : α) (hx : x ∈ l) (n : ℤ) :
+#print List.form_perm_zpow_apply_mem_imp_mem /-
+theorem form_perm_zpow_apply_mem_imp_mem (l : List α) (x : α) (hx : x ∈ l) (n : ℤ) :
     (formPerm l ^ n) x ∈ l := by
   by_cases h : (l.form_perm ^ n) x = x
   · simpa [h] using hx
@@ -459,8 +558,15 @@ theorem formPerm_zpow_apply_mem_imp_mem (l : List α) (x : α) (hx : x ∈ l) (n
     rw [← set_support_apply_mem] at this
     replace this := set_support_zpow_subset _ _ this
     simpa using support_form_perm_le' _ this
-#align list.form_perm_zpow_apply_mem_imp_mem List.formPerm_zpow_apply_mem_imp_mem
+#align list.form_perm_zpow_apply_mem_imp_mem List.form_perm_zpow_apply_mem_imp_mem
+-/
 
+/- warning: list.form_perm_pow_length_eq_one_of_nodup -> List.formPerm_pow_length_eq_one_of_nodup is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (l : List.{u1} α), (List.Nodup.{u1} α l) -> (Eq.{succ u1} (Equiv.Perm.{succ u1} α) (HPow.hPow.{u1, 0, u1} (Equiv.Perm.{succ u1} α) Nat (Equiv.Perm.{succ u1} α) (instHPow.{u1, 0} (Equiv.Perm.{succ u1} α) Nat (Monoid.Pow.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (List.formPerm.{u1} α (fun (a : α) (b : α) => _inst_1 a b) l) (List.length.{u1} α l)) (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (OfNat.mk.{u1} (Equiv.Perm.{succ u1} α) 1 (One.one.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasOne.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (l : List.{u1} α), (List.Nodup.{u1} α l) -> (Eq.{succ u1} (Equiv.Perm.{succ u1} α) (HPow.hPow.{u1, 0, u1} (Equiv.Perm.{succ u1} α) Nat (Equiv.Perm.{succ u1} α) (instHPow.{u1, 0} (Equiv.Perm.{succ u1} α) Nat (Monoid.Pow.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (List.formPerm.{u1} α (fun (a : α) (b : α) => _inst_1 a b) l) (List.length.{u1} α l)) (OfNat.ofNat.{u1} (Equiv.Perm.{succ u1} α) 1 (One.toOfNat1.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))))))
+Case conversion may be inaccurate. Consider using '#align list.form_perm_pow_length_eq_one_of_nodup List.formPerm_pow_length_eq_one_of_nodupₓ'. -/
 theorem formPerm_pow_length_eq_one_of_nodup (hl : Nodup l) : formPerm l ^ length l = 1 :=
   by
   ext x

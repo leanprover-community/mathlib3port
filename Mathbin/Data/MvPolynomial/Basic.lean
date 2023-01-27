@@ -465,7 +465,7 @@ theorem algHom_ext' {A B : Type _} [CommSemiring A] [CommSemiring B] [Algebra R 
 @[ext]
 theorem algHom_ext {A : Type _} [Semiring A] [Algebra R A] {f g : MvPolynomial σ R →ₐ[R] A}
     (hf : ∀ i : σ, f (x i) = g (x i)) : f = g :=
-  AddMonoidAlgebra.algHom_ext' (mul_hom_ext' fun x : σ => MonoidHom.ext_mnat (hf x))
+  AddMonoidAlgebra.algHom_ext' (mulHom_ext' fun x : σ => MonoidHom.ext_mnat (hf x))
 #align mv_polynomial.alg_hom_ext MvPolynomial.algHom_ext
 
 @[simp]

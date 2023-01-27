@@ -80,7 +80,7 @@ def lsingle (a : α) : M →ₗ[R] α →₀ M :=
 
 /-- Two `R`-linear maps from `finsupp X M` which agree on each `single x y` agree everywhere. -/
 theorem lhom_ext ⦃φ ψ : (α →₀ M) →ₗ[R] N⦄ (h : ∀ a b, φ (single a b) = ψ (single a b)) : φ = ψ :=
-  LinearMap.toAddMonoidHom_injective <| add_hom_ext h
+  LinearMap.toAddMonoidHom_injective <| addHom_ext h
 #align finsupp.lhom_ext Finsupp.lhom_ext
 
 /-- Two `R`-linear maps from `finsupp X M` which agree on each `single x y` agree everywhere.

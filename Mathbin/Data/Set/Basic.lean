@@ -345,13 +345,13 @@ theorem mem_setOf {a : α} {p : α → Prop} : a ∈ { x | p x } ↔ p a :=
 #align set.mem_set_of Set.mem_setOf
 -/
 
-#print Membership.Mem.out /-
+#print Membership.mem.out /-
 /-- If `h : a ∈ {x | p x}` then `h.out : p x`. These are definitionally equal, but this can
 nevertheless be useful for various reasons, e.g. to apply further projection notation or in an
 argument to `simp`. -/
-theorem Membership.Mem.out {p : α → Prop} {a : α} (h : a ∈ { x | p x }) : p a :=
+theorem Membership.mem.out {p : α → Prop} {a : α} (h : a ∈ { x | p x }) : p a :=
   h
-#align has_mem.mem.out Membership.Mem.out
+#align has_mem.mem.out Membership.mem.out
 -/
 
 #print Set.nmem_setOf_iff /-
