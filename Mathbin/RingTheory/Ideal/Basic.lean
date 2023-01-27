@@ -270,8 +270,8 @@ theorem IsPrime.mem_of_pow_mem {I : Ideal α} (hI : I.IsPrime) {r : α} (n : ℕ
     exact Or.cases_on (hI.mem_or_mem H) id ih
 #align ideal.is_prime.mem_of_pow_mem Ideal.IsPrime.mem_of_pow_mem
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x «expr ∉ » I) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (y «expr ∉ » I) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x «expr ∉ » I) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (y «expr ∉ » I) -/
 theorem not_isPrime_iff {I : Ideal α} :
     ¬I.IsPrime ↔ I = ⊤ ∨ ∃ (x : _)(_ : x ∉ I)(y : _)(_ : y ∉ I), x * y ∈ I :=
   by
@@ -759,7 +759,7 @@ theorem not_isField_of_subsingleton {R : Type _} [Ring R] [Subsingleton R] : ¬I
   fun ⟨⟨x, y, hxy⟩, _, _⟩ => hxy (Subsingleton.elim x y)
 #align ring.not_is_field_of_subsingleton Ring.not_isField_of_subsingleton
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x «expr ≠ » (0 : R)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x «expr ≠ » (0 : R)) -/
 theorem exists_not_isUnit_of_not_isField [Nontrivial R] (hf : ¬IsField R) :
     ∃ (x : _)(_ : x ≠ (0 : R)), ¬IsUnit x :=
   by

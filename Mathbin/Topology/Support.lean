@@ -149,7 +149,7 @@ theorem hasCompactMulSupport_def : HasCompactMulSupport f ↔ IsCompact (closure
 #align has_compact_mul_support_def hasCompactMulSupport_def
 #align has_compact_support_def has_compact_support_def
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x «expr ∉ » K) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x «expr ∉ » K) -/
 @[to_additive]
 theorem exists_compact_iff_hasCompactMulSupport [T2Space α] :
     (∃ K : Set α, IsCompact K ∧ ∀ (x) (_ : x ∉ K), f x = 1) ↔ HasCompactMulSupport f := by
@@ -158,7 +158,7 @@ theorem exists_compact_iff_hasCompactMulSupport [T2Space α] :
 #align exists_compact_iff_has_compact_mul_support exists_compact_iff_hasCompactMulSupport
 #align exists_compact_iff_has_compact_support exists_compact_iff_has_compact_support
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x «expr ∉ » K) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x «expr ∉ » K) -/
 @[to_additive]
 theorem HasCompactMulSupport.intro [T2Space α] {K : Set α} (hK : IsCompact K)
     (hfK : ∀ (x) (_ : x ∉ K), f x = 1) : HasCompactMulSupport f :=

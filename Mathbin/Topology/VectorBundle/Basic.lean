@@ -780,7 +780,7 @@ open TopologicalSpace
 
 open VectorBundle
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (e e' «expr ∈ » pretrivialization_atlas) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (e e' «expr ∈ » pretrivialization_atlas) -/
 /-- This structure permits to define a vector bundle when trivializations are given as local
 equivalences but there is not yet a topology on the total space or the fibers.
 The total space is hence given a topology in such a way that there is a fiber bundle structure for

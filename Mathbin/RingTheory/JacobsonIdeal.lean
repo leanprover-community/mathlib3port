@@ -172,7 +172,7 @@ theorem eq_jacobson_iff_infₛ_maximal' :
           hM.2⟩⟩⟩
 #align ideal.eq_jacobson_iff_Inf_maximal' Ideal.eq_jacobson_iff_infₛ_maximal'
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x «expr ∉ » I) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x «expr ∉ » I) -/
 /-- An ideal `I` equals its Jacobson radical if and only if every element outside `I`
 also lies outside of a maximal ideal containing `I`. -/
 theorem eq_jacobson_iff_not_mem :

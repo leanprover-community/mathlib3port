@@ -1015,7 +1015,7 @@ protected theorem PartiallyWellOrderedOn.insert (h : PartiallyWellOrderedOn s r)
   partiallyWellOrderedOn_insert.2 h
 #align set.partially_well_ordered_on.insert Set.PartiallyWellOrderedOn.insert
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 theorem partiallyWellOrderedOn_iff_finite_antichains [IsSymm α r] :
     s.PartiallyWellOrderedOn r ↔ ∀ (t) (_ : t ⊆ s), IsAntichain r t → t.Finite :=
   by

@@ -824,7 +824,7 @@ theorem TendstoLocallyUniformly.comp [TopologicalSpace γ] (h : TendstoLocallyUn
   exact h.comp _ (maps_to_univ _ _) cg
 #align tendsto_locally_uniformly.comp TendstoLocallyUniformly.comp
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (K «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (K «expr ⊆ » s) -/
 /- failed to parenthesize: parenthesize: uncaught backtrack exception
 [PrettyPrinter.parenthesize.input] (Command.declaration
      (Command.declModifiers [] [] [] [] [] [])
@@ -1270,7 +1270,7 @@ theorem
         tfae_finish
 #align tendsto_locally_uniformly_on_tfae tendstoLocallyUniformlyOn_tFAE
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (K «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (K «expr ⊆ » s) -/
 theorem tendstoLocallyUniformlyOn_iff_forall_isCompact [LocallyCompactSpace α] (hs : IsOpen s) :
     TendstoLocallyUniformlyOn F f p s ↔
       ∀ (K) (_ : K ⊆ s), IsCompact K → TendstoUniformlyOn F f p K :=

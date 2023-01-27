@@ -298,7 +298,7 @@ theorem stronglyMeasurable_bot_iff [Nonempty β] [T2Space β] :
 
 end BasicPropertiesInAnyTopologicalSpace
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x «expr ∉ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x «expr ∉ » t) -/
 theorem finStronglyMeasurableOfSetSigmaFinite [TopologicalSpace β] [Zero β] {m : MeasurableSpace α}
     {μ : Measure α} (hf_meas : StronglyMeasurable f) {t : Set α} (ht : MeasurableSet t)
     (hft_zero : ∀ x ∈ tᶜ, f x = 0) (htμ : SigmaFinite (μ.restrict t)) : FinStronglyMeasurable f μ :=
@@ -907,9 +907,9 @@ theorem measurableSet_le {m : MeasurableSpace α} [TopologicalSpace β] [Preorde
   exact (hf.prod_mk hg).Measurable is_closed_le_prod.measurable_set
 #align measure_theory.strongly_measurable.measurable_set_le MeasureTheory.StronglyMeasurable.measurableSet_le
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x «expr ∉ » s) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x «expr ∉ » s) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x «expr ∉ » s) -/
 theorem stronglyMeasurable_in_set {m : MeasurableSpace α} [TopologicalSpace β] [Zero β] {s : Set α}
     {f : α → β} (hs : MeasurableSet s) (hf : StronglyMeasurable f)
     (hf_zero : ∀ (x) (_ : x ∉ s), f x = 0) :
@@ -933,7 +933,7 @@ theorem stronglyMeasurable_in_set {m : MeasurableSpace α} [TopologicalSpace β]
     exact tendsto_const_nhds
 #align measure_theory.strongly_measurable.strongly_measurable_in_set MeasureTheory.StronglyMeasurable.stronglyMeasurable_in_set
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x «expr ∉ » s) -/
 /-- If the restriction to a set `s` of a σ-algebra `m` is included in the restriction to `s` of
 another σ-algebra `m₂` (hypothesis `hs`), the set `s` is `m` measurable and a function `f` supported
 on `s` is `m`-strongly-measurable, then `f` is also `m₂`-strongly-measurable. -/

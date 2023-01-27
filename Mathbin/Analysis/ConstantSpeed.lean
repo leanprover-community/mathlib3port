@@ -174,7 +174,7 @@ theorem HasConstantSpeedOnWith.icc_icc {x y z : ℝ} (hfs : HasConstantSpeedOnWi
       inf_of_le_right vz]
 #align has_constant_speed_on_with.Icc_Icc HasConstantSpeedOnWith.icc_icc
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 theorem hasConstantSpeedOnWith_zero_iff :
     HasConstantSpeedOnWith f s 0 ↔ ∀ (x) (_ : x ∈ s) (y) (_ : y ∈ s), edist (f x) (f y) = 0 :=
   by

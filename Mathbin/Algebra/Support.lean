@@ -121,7 +121,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {M : Type.{u1}} [_inst_1 : One.{u1} M] {f : α -> M} {s : Set.{u2} α}, Iff (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) (Function.mulSupport.{u2, u1} α M _inst_1 f) s) (forall (x : α), (Not (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s)) -> (Eq.{succ u1} M (f x) (OfNat.ofNat.{u1} M 1 (One.toOfNat1.{u1} M _inst_1))))
 Case conversion may be inaccurate. Consider using '#align function.mul_support_subset_iff' Function.mulSupport_subset_iff'ₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x «expr ∉ » s) -/
 @[to_additive]
 theorem mulSupport_subset_iff' {f : α → M} {s : Set α} :
     mulSupport f ⊆ s ↔ ∀ (x) (_ : x ∉ s), f x = 1 :=

@@ -965,7 +965,7 @@ theorem IsPrime.radical_le_iff (hJ : IsPrime J) : radical I ≤ J ↔ I ≤ J :=
   hJ.IsRadical.radical_le_iff
 #align ideal.is_prime.radical_le_iff Ideal.IsPrime.radical_le_iff
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x «expr ∉ » m) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x «expr ∉ » m) -/
 theorem radical_eq_infₛ (I : Ideal R) : radical I = infₛ { J : Ideal R | I ≤ J ∧ IsPrime J } :=
   le_antisymm (le_infₛ fun J hJ => hJ.2.radical_le_iff.2 hJ.1) fun r hr =>
     by_contradiction fun hri =>

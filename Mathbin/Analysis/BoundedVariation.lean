@@ -212,7 +212,7 @@ theorem edist_le (f : α → E) {s : Set α} {x y : α} (hx : x ∈ s) (hy : y �
   simp [u, edist_comm]
 #align evariation_on.edist_le evariationOn.edist_le
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 theorem eq_zero_iff (f : α → E) {s : Set α} :
     evariationOn f s = 0 ↔ ∀ (x) (_ : x ∈ s) (y) (_ : y ∈ s), edist (f x) (f y) = 0 :=
   by

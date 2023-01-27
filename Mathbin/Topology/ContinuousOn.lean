@@ -342,7 +342,7 @@ theorem nhdsWithin_pi_eq' {ι : Type _} {α : ι → Type _} [∀ i, Topological
     infi_principal_finite hI, ← infᵢ_inf_eq]
 #align nhds_within_pi_eq' nhdsWithin_pi_eq'
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (i «expr ∉ » I) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (i «expr ∉ » I) -/
 theorem nhdsWithin_pi_eq {ι : Type _} {α : ι → Type _} [∀ i, TopologicalSpace (α i)] {I : Set ι}
     (hI : I.Finite) (s : ∀ i, Set (α i)) (x : ∀ i, α i) :
     𝓝[pi I s] x =

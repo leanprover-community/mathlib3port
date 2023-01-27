@@ -62,8 +62,8 @@ variable {R : Type u} [CommRing R] [IsDomain R] [IsDedekindDomain R]
 /-! ## `S`-integers -/
 
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (v «expr ∉ » S) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (v «expr ∉ » S) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (v «expr ∉ » S) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (v «expr ∉ » S) -/
 /-- The `R`-subalgebra of `S`-integers of `K`. -/
 @[simps]
 def integer : Subalgebra R K :=
@@ -74,7 +74,7 @@ def integer : Subalgebra R K :=
     algebra_map_mem' := fun x v _ => v.valuation_le_one x }
 #align set.integer Set.integer
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (v «expr ∉ » S) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (v «expr ∉ » S) -/
 theorem integer_eq :
     (S.integer K).toSubring =
       ⨅ (v) (_ : v ∉ S), (v : HeightOneSpectrum R).Valuation.ValuationSubring.toSubring :=
@@ -89,8 +89,8 @@ theorem integer_valuation_le_one (x : S.integer K) {v : HeightOneSpectrum R} (hv
 /-! ## `S`-units -/
 
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (v «expr ∉ » S) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (v «expr ∉ » S) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (v «expr ∉ » S) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (v «expr ∉ » S) -/
 /-- The subgroup of `S`-units of `Kˣ`. -/
 @[simps]
 def unit : Subgroup Kˣ :=
@@ -99,7 +99,7 @@ def unit : Subgroup Kˣ :=
     Set.ext fun _ => by simpa only [SetLike.mem_coe, Subgroup.mem_infᵢ, Valuation.mem_unitGroup_iff]
 #align set.unit Set.unit
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (v «expr ∉ » S) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (v «expr ∉ » S) -/
 theorem unit_eq :
     S.Unit K = ⨅ (v) (_ : v ∉ S), (v : HeightOneSpectrum R).Valuation.ValuationSubring.unitGroup :=
   Subgroup.copy_eq _ _ _

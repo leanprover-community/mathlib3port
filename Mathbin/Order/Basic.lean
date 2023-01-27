@@ -1175,7 +1175,7 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u2}} {π : ι -> Type.{u1}} [_inst_1 : DecidableEq.{succ u2} ι] [_inst_2 : forall (i : ι), Preorder.{u1} (π i)] {x : forall (i : ι), π i} {y : forall (i : ι), π i} {i : ι} {a : π i}, Iff (LE.le.{max u2 u1} (forall (i : ι), π i) (Pi.hasLe.{u2, u1} ι (fun (i : ι) => π i) (fun (i : ι) => Preorder.toLE.{u1} (π i) (_inst_2 i))) x (Function.update.{succ u2, succ u1} ι (fun (i : ι) => π i) (fun (a : ι) (b : ι) => _inst_1 a b) y i a)) (And (LE.le.{u1} (π i) (Preorder.toLE.{u1} (π i) (_inst_2 i)) (x i) a) (forall (j : ι), (Ne.{succ u2} ι j i) -> (LE.le.{u1} (π j) (Preorder.toLE.{u1} (π j) (_inst_2 j)) (x j) (y j))))
 Case conversion may be inaccurate. Consider using '#align le_update_iff le_update_iffₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (j «expr ≠ » i) -/
 theorem le_update_iff : x ≤ Function.update y i a ↔ x i ≤ a ∧ ∀ (j) (_ : j ≠ i), x j ≤ y j :=
   Function.forall_update_iff _ fun j z => x j ≤ z
 #align le_update_iff le_update_iff
@@ -1186,7 +1186,7 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u2}} {π : ι -> Type.{u1}} [_inst_1 : DecidableEq.{succ u2} ι] [_inst_2 : forall (i : ι), Preorder.{u1} (π i)] {x : forall (i : ι), π i} {y : forall (i : ι), π i} {i : ι} {a : π i}, Iff (LE.le.{max u2 u1} (forall (a : ι), π a) (Pi.hasLe.{u2, u1} ι (fun (a : ι) => π a) (fun (i : ι) => Preorder.toLE.{u1} (π i) (_inst_2 i))) (Function.update.{succ u2, succ u1} ι (fun (i : ι) => π i) (fun (a : ι) (b : ι) => _inst_1 a b) x i a) y) (And (LE.le.{u1} (π i) (Preorder.toLE.{u1} (π i) (_inst_2 i)) a (y i)) (forall (j : ι), (Ne.{succ u2} ι j i) -> (LE.le.{u1} (π j) (Preorder.toLE.{u1} (π j) (_inst_2 j)) (x j) (y j))))
 Case conversion may be inaccurate. Consider using '#align update_le_iff update_le_iffₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (j «expr ≠ » i) -/
 theorem update_le_iff : Function.update x i a ≤ y ↔ a ≤ y i ∧ ∀ (j) (_ : j ≠ i), x j ≤ y j :=
   Function.forall_update_iff _ fun j z => z ≤ y j
 #align update_le_iff update_le_iff
@@ -1197,7 +1197,7 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u2}} {π : ι -> Type.{u1}} [_inst_1 : DecidableEq.{succ u2} ι] [_inst_2 : forall (i : ι), Preorder.{u1} (π i)] {x : forall (i : ι), π i} {y : forall (i : ι), π i} {i : ι} {a : π i} {b : π i}, Iff (LE.le.{max u2 u1} (forall (a : ι), π a) (Pi.hasLe.{u2, u1} ι (fun (a : ι) => π a) (fun (i : ι) => Preorder.toLE.{u1} (π i) (_inst_2 i))) (Function.update.{succ u2, succ u1} ι (fun (i : ι) => π i) (fun (a : ι) (b : ι) => _inst_1 a b) x i a) (Function.update.{succ u2, succ u1} ι (fun (a : ι) => π a) (fun (a : ι) (b : ι) => _inst_1 a b) y i b)) (And (LE.le.{u1} (π i) (Preorder.toLE.{u1} (π i) (_inst_2 i)) a b) (forall (j : ι), (Ne.{succ u2} ι j i) -> (LE.le.{u1} (π j) (Preorder.toLE.{u1} (π j) (_inst_2 j)) (x j) (y j))))
 Case conversion may be inaccurate. Consider using '#align update_le_update_iff update_le_update_iffₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (j «expr ≠ » i) -/
 theorem update_le_update_iff :
     Function.update x i a ≤ Function.update y i b ↔ a ≤ b ∧ ∀ (j) (_ : j ≠ i), x j ≤ y j := by
   simp (config := { contextual := true }) [update_le_iff]

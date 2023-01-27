@@ -372,7 +372,7 @@ noncomputable def Submodule.basisOfPidOfLeSpan {ι : Type _} [Finite ι] {b : ι
 
 variable {M}
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (i «expr ∉ » I) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (i «expr ∉ » I) -/
 /-- A finite type torsion free module over a PID is free. -/
 noncomputable def Module.freeOfFiniteTypeTorsionFree [Fintype ι] {s : ι → M}
     (hs : span R (range s) = ⊤) [NoZeroSMulDivisors R M] : Σn : ℕ, Basis (Fin n) R M := by

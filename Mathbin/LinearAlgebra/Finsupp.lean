@@ -215,7 +215,7 @@ theorem mem_supported {s : Set α} (p : α →₀ M) : p ∈ supported M R s ↔
   Iff.rfl
 #align finsupp.mem_supported Finsupp.mem_supported
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x «expr ∉ » s) -/
 theorem mem_supported' {s : Set α} (p : α →₀ M) :
     p ∈ supported M R s ↔ ∀ (x) (_ : x ∉ s), p x = 0 := by
   haveI := Classical.decPred fun x : α => x ∈ s <;>
@@ -485,7 +485,7 @@ theorem lmapDomain_supported [Nonempty α] (f : α → α') (s : Set α) :
     exact Function.invFunOn_eq (by simpa using hl hc)
 #align finsupp.lmap_domain_supported Finsupp.lmapDomain_supported
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (a b «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a b «expr ∈ » s) -/
 theorem lmapDomain_disjoint_ker (f : α → α') {s : Set α}
     (H : ∀ (a) (_ : a ∈ s) (b) (_ : b ∈ s), f a = f b → a = b) :
     Disjoint (supported M R s) (lmapDomain M R f).ker :=

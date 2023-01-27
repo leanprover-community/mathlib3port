@@ -150,7 +150,7 @@ protected theorem union (m : OuterMeasure α) (s₁ s₂ : Set α) : m (s₁ ∪
   relSupAdd m m.Empty (· ≤ ·) m.Union_nat s₁ s₂
 #align measure_theory.outer_measure.union MeasureTheory.OuterMeasure.union
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 /-- If a set has zero measure in a neighborhood of each of its points, then it has zero measure
 in a second-countable space. -/
 theorem null_of_locally_null [TopologicalSpace α] [SecondCountableTopology α] (m : OuterMeasure α)
@@ -723,7 +723,7 @@ theorem ofFunction_eq_supₛ : OuterMeasure.ofFunction m m_empty = supₛ { μ |
   (@isGreatest_ofFunction α m m_empty).IsLub.Sup_eq.symm
 #align measure_theory.outer_measure.of_function_eq_Sup MeasureTheory.OuterMeasure.ofFunction_eq_supₛ
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (u «expr ⊆ » «expr ∪ »(s, t)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (u «expr ⊆ » «expr ∪ »(s, t)) -/
 /-- If `m u = ∞` for any set `u` that has nonempty intersection both with `s` and `t`, then
 `μ (s ∪ t) = μ s + μ t`, where `μ = measure_theory.outer_measure.of_function m m_empty`.
 

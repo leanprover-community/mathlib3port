@@ -1069,8 +1069,8 @@ theorem orthonormalSUnionOfDirected {s : Set (Set E)} (hs : DirectedOn (· ⊆ �
   rw [Set.unionₛ_eq_unionᵢ] <;> exact orthonormalUnionOfDirected hs.directed_coe (by simpa using h)
 #align orthonormal_sUnion_of_directed orthonormalSUnionOfDirected
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (w «expr ⊇ » s) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (u «expr ⊇ » w) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (w «expr ⊇ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (u «expr ⊇ » w) -/
 /-- Given an orthonormal set `v` of vectors in `E`, there exists a maximal orthonormal set
 containing it. -/
 theorem exists_maximal_orthonormal {s : Set E} (hs : Orthonormal 𝕜 (coe : s → E)) :

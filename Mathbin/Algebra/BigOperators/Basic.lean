@@ -3024,8 +3024,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} [_inst_1 : DecidableEq.{succ u2} α] {β : Type.{u1}} {i : Finset.{u1} β} {f : β -> (Multiset.{u2} α)}, Iff (Eq.{succ u2} (Multiset.{u2} α) (Finset.sum.{u2, u1} (Multiset.{u2} α) β (OrderedCancelAddCommMonoid.toAddCommMonoid.{u2} (Multiset.{u2} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u2} α)) i f) (Finset.sup.{u2, u1} (Multiset.{u2} α) β (Lattice.toSemilatticeSup.{u2} (Multiset.{u2} α) (Multiset.instLatticeMultiset.{u2} α (fun (a : α) (b : α) => _inst_1 a b))) (Multiset.instOrderBotMultisetToLEToPreorderInstPartialOrderMultiset.{u2} α) i f)) (forall (x : β), (Membership.mem.{u1, u1} β (Finset.{u1} β) (Finset.instMembershipFinset.{u1} β) x i) -> (forall (y : β), (Membership.mem.{u1, u1} β (Finset.{u1} β) (Finset.instMembershipFinset.{u1} β) y i) -> (Ne.{succ u1} β x y) -> (Multiset.Disjoint.{u2} α (f x) (f y))))
 Case conversion may be inaccurate. Consider using '#align multiset.finset_sum_eq_sup_iff_disjoint Multiset.finset_sum_eq_sup_iff_disjointₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x «expr ∈ » i) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x y «expr ∈ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x «expr ∈ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » i) -/
 theorem finset_sum_eq_sup_iff_disjoint {β : Type _} {i : Finset β} {f : β → Multiset α} :
     i.Sum f = i.sup f ↔ ∀ (x) (_ : x ∈ i) (y) (_ : y ∈ i), x ≠ y → Multiset.Disjoint (f x) (f y) :=
   by

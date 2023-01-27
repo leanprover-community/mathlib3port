@@ -553,7 +553,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {β : List.{u1} α} [_inst_1 : DecidableEq.{succ u1} α] {_inst_2 : Type.{u2}} [l : Monoid.{u2} _inst_2] (a : α) (f : α -> _inst_2), (forall (a' : α), (Ne.{succ u1} α a' a) -> (Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) a' β) -> (Eq.{succ u2} _inst_2 (f a') (OfNat.ofNat.{u2} _inst_2 1 (One.toOfNat1.{u2} _inst_2 (Monoid.toOne.{u2} _inst_2 l))))) -> (Eq.{succ u2} _inst_2 (List.prod.{u2} _inst_2 (MulOneClass.toMul.{u2} _inst_2 (Monoid.toMulOneClass.{u2} _inst_2 l)) (Monoid.toOne.{u2} _inst_2 l) (List.map.{u1, u2} α _inst_2 f β)) (HPow.hPow.{u2, 0, u2} _inst_2 Nat _inst_2 (instHPow.{u2, 0} _inst_2 Nat (Monoid.Pow.{u2} _inst_2 l)) (f a) (List.count.{u1} α (instBEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) a β)))
 Case conversion may be inaccurate. Consider using '#align list.prod_map_eq_pow_single List.prod_map_eq_pow_singleₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (a' «expr ≠ » a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a' «expr ≠ » a) -/
 @[to_additive]
 theorem prod_map_eq_pow_single [Monoid β] {l : List α} (a : α) (f : α → β)
     (hf : ∀ (a') (_ : a' ≠ a), a' ∈ l → f a' = 1) : (l.map f).Prod = f a ^ l.count a :=
@@ -574,7 +574,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {_inst_1 : List.{u1} α} [_inst_2 : DecidableEq.{succ u1} α] [l : Monoid.{u1} α] (a : α), (forall (a' : α), (Ne.{succ u1} α a' a) -> (Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) a' _inst_1) -> (Eq.{succ u1} α a' (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (Monoid.toOne.{u1} α l))))) -> (Eq.{succ u1} α (List.prod.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α l)) (Monoid.toOne.{u1} α l) _inst_1) (HPow.hPow.{u1, 0, u1} α Nat α (instHPow.{u1, 0} α Nat (Monoid.Pow.{u1} α l)) a (List.count.{u1} α (instBEq.{u1} α (fun (a : α) (b : α) => _inst_2 a b)) a _inst_1)))
 Case conversion may be inaccurate. Consider using '#align list.prod_eq_pow_single List.prod_eq_pow_singleₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (a' «expr ≠ » a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a' «expr ≠ » a) -/
 @[to_additive]
 theorem prod_eq_pow_single [Monoid α] {l : List α} (a : α)
     (h : ∀ (a') (_ : a' ≠ a), a' ∈ l → a' = 1) : l.Prod = a ^ l.count a :=

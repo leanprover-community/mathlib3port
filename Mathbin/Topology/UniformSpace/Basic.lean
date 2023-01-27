@@ -894,7 +894,7 @@ theorem nhds_eq_uniformity_prod {a b : α} :
     exact monotone_preimage.set_prod monotone_const
 #align nhds_eq_uniformity_prod nhds_eq_uniformity_prod
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (t «expr ⊆ » cl_d) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊆ » cl_d) -/
 theorem nhdset_of_mem_uniformity {d : Set (α × α)} (s : Set (α × α)) (hd : d ∈ 𝓤 α) :
     ∃ t : Set (α × α),
       IsOpen t ∧ s ⊆ t ∧ t ⊆ { p | ∃ x y, (p.1, x) ∈ d ∧ (x, y) ∈ s ∧ (y, p.2) ∈ d } :=
@@ -1167,7 +1167,7 @@ theorem Filter.HasBasis.uniformContinuous_iff [UniformSpace β] {p : γ → Prop
 #align filter.has_basis.uniform_continuous_iff Filter.HasBasis.uniformContinuous_iff
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x y «expr ∈ » S) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » S) -/
 theorem Filter.HasBasis.uniformContinuousOn_iff [UniformSpace β] {p : γ → Prop}
     {s : γ → Set (α × α)} (ha : (𝓤 α).HasBasis p s) {q : δ → Prop} {t : δ → Set (β × β)}
     (hb : (𝓤 β).HasBasis q t) {f : α → β} {S : Set α} :

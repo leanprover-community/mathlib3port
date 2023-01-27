@@ -1316,7 +1316,7 @@ variable {𝕜 E} {v : Set E}
 
 open FiniteDimensional Submodule Set
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (u «expr ⊇ » v) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (u «expr ⊇ » v) -/
 /-- An orthonormal set in an `inner_product_space` is maximal, if and only if the orthogonal
 complement of its span is empty. -/
 theorem maximal_orthonormal_iff_orthogonal_complement_eq_bot (hv : Orthonormal 𝕜 (coe : v → E)) :
@@ -1385,7 +1385,7 @@ theorem maximal_orthonormal_iff_orthogonal_complement_eq_bot (hv : Orthonormal �
 
 variable [FiniteDimensional 𝕜 E]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (u «expr ⊇ » v) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (u «expr ⊇ » v) -/
 /-- An orthonormal set in a finite-dimensional `inner_product_space` is maximal, if and only if it
 is a basis. -/
 theorem maximal_orthonormal_iff_basis_of_finiteDimensional (hv : Orthonormal 𝕜 (coe : v → E)) :

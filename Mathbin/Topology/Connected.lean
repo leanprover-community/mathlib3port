@@ -99,7 +99,7 @@ theorem Set.Subsingleton.isPreconnected {s : Set α} (hs : s.Subsingleton) : IsP
   hs.inductionOn isPreconnected_empty fun x => isPreconnected_singleton
 #align set.subsingleton.is_preconnected Set.Subsingleton.isPreconnected
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 /-- If any point of a set is joined to a fixed point by a preconnected subset,
 then the original set is preconnected as well. -/
 theorem isPreconnected_of_forall {s : Set α} (x : α)
@@ -115,8 +115,8 @@ theorem isPreconnected_of_forall {s : Set α} (x : α)
   exact this.imp fun z hz => ⟨ts hz.1, hz.2⟩
 #align is_preconnected_of_forall isPreconnected_of_forall
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x y «expr ∈ » s) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 /-- If any two points of a set are contained in a preconnected subset,
 then the original set is preconnected as well. -/
 theorem isPreconnected_of_forall_pair {s : Set α}
@@ -177,9 +177,9 @@ theorem IsPreconnected.unionₛ_directed {S : Set (Set α)} (K : DirectedOn (· 
   exact Hnuv.mono Kruv
 #align is_preconnected.sUnion_directed IsPreconnected.unionₛ_directed
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (i j «expr ∈ » t) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (p «expr ⊆ » t) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (i j «expr ∈ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (i j «expr ∈ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (p «expr ⊆ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (i j «expr ∈ » t) -/
 /-- The bUnion of a family of preconnected sets is preconnected if the graph determined by
 whether two sets intersect is preconnected. -/
 theorem IsPreconnected.bUnion_of_reflTransGen {ι : Type _} {t : Set ι} {s : ι → Set α}
@@ -217,7 +217,7 @@ theorem IsPreconnected.bUnion_of_reflTransGen {ι : Type _} {t : Set ι} {s : ι
   exact ⟨⋃ j ∈ p, s j, bUnion_subset_bUnion_left hpt, mem_bUnion hip hxi, mem_bUnion hjp hyj, hp⟩
 #align is_preconnected.bUnion_of_refl_trans_gen IsPreconnected.bUnion_of_reflTransGen
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (i j «expr ∈ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (i j «expr ∈ » t) -/
 /-- The bUnion of a family of preconnected sets is preconnected if the graph determined by
 whether two sets intersect is preconnected. -/
 theorem IsConnected.bUnion_of_reflTransGen {ι : Type _} {t : Set ι} {s : ι → Set α}
@@ -1272,7 +1272,7 @@ theorem locallyConnectedSpace_iff_open_connected_basis :
 #align locally_connected_space_iff_open_connected_basis locallyConnectedSpace_iff_open_connected_basis
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr ∀ x, (_ : exprProp())]] -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (V «expr ⊆ » U) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (V «expr ⊆ » U) -/
 theorem locallyConnectedSpace_iff_open_connected_subsets :
     LocallyConnectedSpace α ↔
       ∀ (x : α), ∀ U ∈ 𝓝 x, ∃ (V : _)(_ : V ⊆ U), IsOpen V ∧ x ∈ V ∧ IsConnected V :=

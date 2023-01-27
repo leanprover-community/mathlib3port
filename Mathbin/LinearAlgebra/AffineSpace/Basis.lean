@@ -276,7 +276,7 @@ theorem coord_apply_centroid [CharZero k] (b : AffineBasis ι k P) {s : Finset �
     Finset.centroidWeights]
 #align affine_basis.coord_apply_centroid AffineBasis.coord_apply_centroid
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (s «expr ⊆ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (s «expr ⊆ » t) -/
 theorem exists_affine_subbasis {t : Set P} (ht : affineSpan k t = ⊤) :
     ∃ (s : _)(_ : s ⊆ t)(b : AffineBasis (↥s) k P), b.points = coe :=
   by

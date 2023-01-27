@@ -716,7 +716,7 @@ theorem card_eq_one : s.card = 1 ↔ ∃ a, s = {a} := by
 #align finset.card_eq_one Finset.card_eq_one
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (a «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a «expr ∉ » s) -/
 #print Finset.exists_eq_insert_iff /-
 theorem exists_eq_insert_iff [DecidableEq α] {s t : Finset α} :
     (∃ (a : _)(_ : a ∉ s), insert a s = t) ↔ s ⊆ t ∧ s.card + 1 = t.card :=
@@ -876,7 +876,7 @@ theorem card_eq_three [DecidableEq α] :
 /-! ### Inductions -/
 
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (t «expr ⊂ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊂ » s) -/
 #print Finset.strongInduction /-
 /-- Suppose that, given objects defined on all strict subsets of any finset `s`, one knows how to
 define an object on `s`. Then one can inductively define an object on all finsets, starting from
@@ -897,13 +897,13 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {p : (Finset.{u2} α) -> Sort.{u1}} (H : forall (s : Finset.{u2} α), (forall (t : Finset.{u2} α), (HasSSubset.SSubset.{u2} (Finset.{u2} α) (Finset.instHasSSubsetFinset.{u2} α) t s) -> (p t)) -> (p s)) (s : Finset.{u2} α), Eq.{u1} (p s) (Finset.strongInduction.{u2, u1} α (fun (t : Finset.{u2} α) => p t) H s) (H s (fun (t : Finset.{u2} α) (h : HasSSubset.SSubset.{u2} (Finset.{u2} α) (Finset.instHasSSubsetFinset.{u2} α) t s) => Finset.strongInduction.{u2, u1} α (fun (t : Finset.{u2} α) => p t) H t))
 Case conversion may be inaccurate. Consider using '#align finset.strong_induction_eq Finset.strongInduction_eqₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (t «expr ⊂ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊂ » s) -/
 theorem strongInduction_eq {p : Finset α → Sort _} (H : ∀ s, (∀ (t) (_ : t ⊂ s), p t) → p s)
     (s : Finset α) : strongInduction H s = H s fun t h => strongInduction H t := by
   rw [strong_induction]
 #align finset.strong_induction_eq Finset.strongInduction_eq
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (t «expr ⊂ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊂ » s) -/
 #print Finset.strongInductionOn /-
 /-- Analogue of `strong_induction` with order of arguments swapped. -/
 @[elab_as_elim]
@@ -918,7 +918,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {p : (Finset.{u2} α) -> Sort.{u1}} (s : Finset.{u2} α) (H : forall (s : Finset.{u2} α), (forall (t : Finset.{u2} α), (HasSSubset.SSubset.{u2} (Finset.{u2} α) (Finset.instHasSSubsetFinset.{u2} α) t s) -> (p t)) -> (p s)), Eq.{u1} (p s) (Finset.strongInductionOn.{u2, u1} α (fun (t : Finset.{u2} α) => p t) s H) (H s (fun (t : Finset.{u2} α) (h : HasSSubset.SSubset.{u2} (Finset.{u2} α) (Finset.instHasSSubsetFinset.{u2} α) t s) => Finset.strongInductionOn.{u2, u1} α (fun (t : Finset.{u2} α) => p t) t H))
 Case conversion may be inaccurate. Consider using '#align finset.strong_induction_on_eq Finset.strongInductionOn_eqₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (t «expr ⊂ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊂ » s) -/
 theorem strongInductionOn_eq {p : Finset α → Sort _} (s : Finset α)
     (H : ∀ s, (∀ (t) (_ : t ⊂ s), p t) → p s) :
     s.strong_induction_on H = H s fun t h => t.strong_induction_on H :=
@@ -927,7 +927,7 @@ theorem strongInductionOn_eq {p : Finset α → Sort _} (s : Finset α)
   rw [strong_induction]
 #align finset.strong_induction_on_eq Finset.strongInductionOn_eq
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 #print Finset.case_strong_induction_on /-
 @[elab_as_elim]
 theorem case_strong_induction_on [DecidableEq α] {p : Finset α → Prop} (s : Finset α) (h₀ : p ∅)

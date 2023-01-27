@@ -91,7 +91,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α _inst_1)] {a : α}, Iff (IsAtom.{u1} α _inst_1 _inst_2 a) (And (Ne.{succ u1} α a (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_2))) (forall (b : α), (Ne.{succ u1} α b (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_2))) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) b a) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) a b)))
 Case conversion may be inaccurate. Consider using '#align is_atom_iff isAtom_iffₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (b «expr ≠ » «expr⊥»()) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (b «expr ≠ » «expr⊥»()) -/
 theorem isAtom_iff {a : α} : IsAtom a ↔ a ≠ ⊥ ∧ ∀ (b) (_ : b ≠ ⊥), b ≤ a → a ≤ b :=
   and_congr Iff.rfl <|
     forall_congr' fun b => by simp only [Ne.def, @not_imp_comm (b = ⊥), not_imp, lt_iff_le_not_le]
@@ -207,7 +207,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α _inst_1)] {a : α}, Iff (IsCoatom.{u1} α _inst_1 _inst_2 a) (And (Ne.{succ u1} α a (Top.top.{u1} α (OrderTop.toTop.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_2))) (forall (b : α), (Ne.{succ u1} α b (Top.top.{u1} α (OrderTop.toTop.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_2))) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) a b) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) b a)))
 Case conversion may be inaccurate. Consider using '#align is_coatom_iff isCoatom_iffₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (b «expr ≠ » «expr⊤»()) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (b «expr ≠ » «expr⊤»()) -/
 theorem isCoatom_iff {a : α} : IsCoatom a ↔ a ≠ ⊤ ∧ ∀ (b) (_ : b ≠ ⊤), a ≤ b → b ≤ a :=
   @isAtom_iff αᵒᵈ _ _ _
 #align is_coatom_iff isCoatom_iff

@@ -289,7 +289,7 @@ theorem isBasis_iff_nbhd {B : Set (Opens α)} :
       exact ⟨V, ⟨V, hV, rfl⟩, H⟩
 #align topological_space.opens.is_basis_iff_nbhd TopologicalSpace.Opens.isBasis_iff_nbhd
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (Us «expr ⊆ » B) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (Us «expr ⊆ » B) -/
 theorem isBasis_iff_cover {B : Set (Opens α)} :
     IsBasis B ↔ ∀ U : Opens α, ∃ (Us : _)(_ : Us ⊆ B), U = supₛ Us :=
   by

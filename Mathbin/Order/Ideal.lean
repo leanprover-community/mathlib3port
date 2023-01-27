@@ -380,8 +380,8 @@ instance : HasSup (Ideal P) :=
           le_sup_left, le_sup_right⟩
       lower' := fun x y h ⟨yi, _, yj, _, _⟩ => ⟨yi, ‹_›, yj, ‹_›, h.trans ‹_›⟩ }⟩
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (i «expr ∈ » I) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (j «expr ∈ » J) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (i «expr ∈ » I) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (j «expr ∈ » J) -/
 instance : Lattice (Ideal P) :=
   { Ideal.partialOrder with
     sup := (· ⊔ ·)

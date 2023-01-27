@@ -359,7 +359,7 @@ theorem filter_append_perm (p : α → Prop) [DecidablePred p] (l : List α) :
       exact perm_append_comm.trans (perm_append_comm.cons _)
 #align list.filter_append_perm List.filter_append_perm
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (l₁' list.perm l₁) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (l₁' list.perm l₁) -/
 #print List.exists_perm_sublist /-
 theorem exists_perm_sublist {l₁ l₂ l₂' : List α} (s : l₁ <+ l₂) (p : l₂ ~ l₂') :
     ∃ (l₁' : _)(_ : l₁' ~ l₁), l₁' <+ l₂' :=
@@ -480,7 +480,7 @@ end Rel
 
 section Subperm
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (l list.perm l₁) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (l list.perm l₁) -/
 #print List.Subperm /-
 /-- `subperm l₁ l₂`, denoted `l₁ <+~ l₂`, means that `l₁` is a sublist of
   a permutation of `l₂`. This is an analogue of `l₁ ⊆ l₂` which respects
@@ -1686,7 +1686,7 @@ theorem length_permutations (l : List α) : length (permutations l) = (length l)
 #align list.length_permutations List.length_permutations
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (ts' list.perm «expr[ ,]»([])) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (ts' list.perm «expr[ ,]»([])) -/
 #print List.mem_permutations_of_perm_lemma /-
 theorem mem_permutations_of_perm_lemma {is l : List α}
     (H : l ~ [] ++ is → (∃ (ts' : _)(_ : ts' ~ []), l = ts' ++ is) ∨ l ∈ permutationsAux is []) :
@@ -1694,7 +1694,7 @@ theorem mem_permutations_of_perm_lemma {is l : List α}
 #align list.mem_permutations_of_perm_lemma List.mem_permutations_of_perm_lemma
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (is' list.perm is) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (is' list.perm is) -/
 #print List.mem_permutationsAux_of_perm /-
 theorem mem_permutationsAux_of_perm :
     ∀ {ts is l : List α},

@@ -602,7 +602,7 @@ theorem AnalyticOn.sub {s : Set E} (hf : AnalyticOn 𝕜 f s) (hg : AnalyticOn �
     AnalyticOn 𝕜 (f - g) s := fun z hz => (hf z hz).sub (hg z hz)
 #align analytic_on.sub AnalyticOn.sub
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (i «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (i «expr ≠ » 0) -/
 theorem HasFpowerSeriesOnBall.coeff_zero (hf : HasFpowerSeriesOnBall f pf x r) (v : Fin 0 → E) :
     pf 0 v = f x := by
   have v_eq : v = fun i => 0 := Subsingleton.elim _ _
@@ -800,7 +800,7 @@ theorem HasFpowerSeriesOnBall.isO_image_sub_image_sub_deriv_principal
   exact (is_O_refl _ _).const_mul_left _
 #align has_fpower_series_on_ball.is_O_image_sub_image_sub_deriv_principal HasFpowerSeriesOnBall.isO_image_sub_image_sub_deriv_principal
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (y z «expr ∈ » emetric.ball[emetric.ball] x r') -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (y z «expr ∈ » emetric.ball[emetric.ball] x r') -/
 /-- If `f` has formal power series `∑ n, pₙ` on a ball of radius `r`, then for `y, z` in any smaller
 ball, the norm of the difference `f y - f z - p 1 (λ _, y - z)` is bounded above by
 `C * (max ‖y - x‖ ‖z - x‖) * ‖y - z‖`. -/

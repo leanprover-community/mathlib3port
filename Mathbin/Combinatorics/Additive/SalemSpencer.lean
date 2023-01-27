@@ -333,7 +333,7 @@ section Monoid
 
 variable [Monoid α] [DecidableEq β] [Monoid β] (s t : Finset α)
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 /-- The multiplicative Roth number of a finset is the cardinality of its biggest multiplicative
 Salem-Spencer subset. -/
 @[to_additive
@@ -355,8 +355,8 @@ theorem mulRothNumber_le : mulRothNumber s ≤ s.card := by convert Nat.findGrea
 #align mul_roth_number_le mulRothNumber_le
 #align add_roth_number_le add_roth_number_le
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (t «expr ⊆ » s) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 @[to_additive]
 theorem mulRothNumber_spec :
     ∃ (t : _)(_ : t ⊆ s), t.card = mulRothNumber s ∧ MulSalemSpencer (t : Set α) :=
@@ -499,7 +499,7 @@ theorem rothNumberNat_le (N : ℕ) : rothNumberNat N ≤ N :=
   (add_roth_number_le _).trans (card_range _).le
 #align roth_number_nat_le rothNumberNat_le
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (t «expr ⊆ » range[finset.range] n) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊆ » range[finset.range] n) -/
 theorem rothNumberNat_spec (n : ℕ) :
     ∃ (t : _)(_ : t ⊆ range n), t.card = rothNumberNat n ∧ AddSalemSpencer (t : Set ℕ) :=
   add_roth_number_spec _

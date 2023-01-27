@@ -329,7 +329,7 @@ theorem SetIndependent.disjoint_supₛ {x : α} {y : Set α} (hx : x ∈ s) (hy 
 
 omit hs
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (j «expr ≠ » i) -/
 #print CompleteLattice.Independent /-
 /-- An independent indexed family of elements in a complete lattice is one in which every element
   is disjoint from the `supr` of the rest.
@@ -365,7 +365,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : CompleteLattice.{u1} α] {t : ι -> α}, Iff (CompleteLattice.Independent.{succ u2, u1} ι α _inst_1 t) (forall (i : ι), Disjoint.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) (t i) (supᵢ.{u1, succ u2} α (CompleteLattice.toSupSet.{u1} α _inst_1) ι (fun (j : ι) => supᵢ.{u1, 0} α (CompleteLattice.toSupSet.{u1} α _inst_1) (Ne.{succ u2} ι j i) (fun (H : Ne.{succ u2} ι j i) => t j))))
 Case conversion may be inaccurate. Consider using '#align complete_lattice.independent_def CompleteLattice.independent_defₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (j «expr ≠ » i) -/
 theorem independent_def : Independent t ↔ ∀ i : ι, Disjoint (t i) (⨆ (j) (_ : j ≠ i), t j) :=
   Iff.rfl
 #align complete_lattice.independent_def CompleteLattice.independent_def
@@ -388,7 +388,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : CompleteLattice.{u1} α] {t : ι -> α}, Iff (CompleteLattice.Independent.{succ u2, u1} ι α _inst_1 t) (forall (i : ι), Disjoint.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) (t i) (SupSet.supₛ.{u1} α (CompleteLattice.toSupSet.{u1} α _inst_1) (setOf.{u1} α (fun (a : α) => Exists.{succ u2} ι (fun (j : ι) => Exists.{0} (Ne.{succ u2} ι j i) (fun (H : Ne.{succ u2} ι j i) => Eq.{succ u1} α (t j) a))))))
 Case conversion may be inaccurate. Consider using '#align complete_lattice.independent_def'' CompleteLattice.independent_def''ₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (j «expr ≠ » i) -/
 theorem independent_def'' :
     Independent t ↔ ∀ i, Disjoint (t i) (supₛ { a | ∃ (j : _)(_ : j ≠ i), t j = a }) :=
   by

@@ -970,7 +970,7 @@ lean 3 declaration is
 but is expected to have type
   forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (s : Set.{u1} G), (Set.Nonempty.{u1} G s) -> (forall (x : G), (Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) x s) -> (forall (y : G), (Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) y s) -> (Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) x (Inv.inv.{u1} G (InvOneClass.toInv.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_1)))) y)) s))) -> (Subgroup.{u1} G _inst_1)
 Case conversion may be inaccurate. Consider using '#align subgroup.of_div Subgroup.ofDivₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 /-- Construct a subgroup from a nonempty set that is closed under division. -/
 @[to_additive "Construct a subgroup from a nonempty set that is closed under subtraction"]
 def ofDiv (s : Set G) (hsn : s.Nonempty) (hs : ∀ (x) (_ : x ∈ s) (y) (_ : y ∈ s), x * y⁻¹ ∈ s) :

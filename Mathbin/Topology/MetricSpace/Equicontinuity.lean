@@ -58,7 +58,7 @@ theorem equicontinuousAt_iff {ι : Type _} [PseudoMetricSpace β] {F : ι → β
   nhds_basis_ball.equicontinuous_at_iff uniformity_basis_dist
 #align metric.equicontinuous_at_iff Metric.equicontinuousAt_iff
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x x' «expr ∈ » U) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x x' «expr ∈ » U) -/
 /-- Reformulation of `equicontinuous_at_iff_pair` for families of functions taking values in a
 (pseudo) metric space. -/
 protected theorem equicontinuousAt_iff_pair {ι : Type _} [TopologicalSpace β] {F : ι → β → α}

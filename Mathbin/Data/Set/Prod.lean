@@ -1707,7 +1707,7 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u2}} {α : ι -> Type.{u1}} {t : forall (i : ι), Set.{u1} (α i)} {i : ι} [_inst_1 : DecidableEq.{succ u2} ι] {f : forall (i : ι), α i}, (forall (j : ι), (Ne.{succ u2} ι j i) -> (Membership.mem.{u1, u1} (α j) (Set.{u1} (α j)) (Set.instMembershipSet.{u1} (α j)) (f j) (t j))) -> (Eq.{succ u1} (Set.{u1} (α i)) (Set.preimage.{u1, max u2 u1} (α i) (forall (a : ι), α a) (Function.update.{succ u2, succ u1} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) f i) (Set.pi.{u2, u1} ι (fun (a : ι) => α a) (Set.univ.{u2} ι) t)) (t i))
 Case conversion may be inaccurate. Consider using '#align set.update_preimage_univ_pi Set.update_preimage_univ_piₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (j «expr ≠ » i) -/
 theorem update_preimage_univ_pi [DecidableEq ι] {f : ∀ i, α i} (hf : ∀ (j) (_ : j ≠ i), f j ∈ t j) :
     update f i ⁻¹' pi univ t = t i :=
   update_preimage_pi (mem_univ i) fun j _ => hf j

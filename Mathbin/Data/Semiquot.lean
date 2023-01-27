@@ -201,7 +201,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u_1}} {β : Type.{u_2}} (q : Semiquot.{u_1} α) (f : α -> β), (forall (a : α), (Membership.mem.{u_1, u_1} α (Semiquot.{u_1} α) (Semiquot.instMembershipSemiquot.{u_1} α) a q) -> (forall (b : α), (Membership.mem.{u_1, u_1} α (Semiquot.{u_1} α) (Semiquot.instMembershipSemiquot.{u_1} α) b q) -> (Eq.{succ u_2} β (f a) (f b)))) -> β
 Case conversion may be inaccurate. Consider using '#align semiquot.lift_on Semiquot.liftOnₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (a b «expr ∈ » q) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a b «expr ∈ » q) -/
 /-- If `f` is a constant on `q.s`, then `q.lift_on f` is the value of `f`
 at any point of `q`. -/
 def liftOn (q : Semiquot α) (f : α → β) (h : ∀ (a) (_ : a ∈ q) (b) (_ : b ∈ q), f a = f b) : β :=
@@ -214,7 +214,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u_1}} {β : Type.{u_2}} (q : Semiquot.{u_1} α) (f : α -> β) (h : forall (a : α), (Membership.mem.{u_1, u_1} α (Semiquot.{u_1} α) (Semiquot.instMembershipSemiquot.{u_1} α) a q) -> (forall (b : α), (Membership.mem.{u_1, u_1} α (Semiquot.{u_1} α) (Semiquot.instMembershipSemiquot.{u_1} α) b q) -> (Eq.{succ u_2} β (f a) (f b)))) (a : α), (Membership.mem.{u_1, u_1} α (Semiquot.{u_1} α) (Semiquot.instMembershipSemiquot.{u_1} α) a q) -> (Eq.{succ u_2} β (Semiquot.liftOn.{u_1, u_2} α β q f h) (f a))
 Case conversion may be inaccurate. Consider using '#align semiquot.lift_on_of_mem Semiquot.liftOn_ofMemₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (a b «expr ∈ » q) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a b «expr ∈ » q) -/
 theorem liftOn_ofMem (q : Semiquot α) (f : α → β) (h : ∀ (a) (_ : a ∈ q) (b) (_ : b ∈ q), f a = f b)
     (a : α) (aq : a ∈ q) : liftOn q f h = f a := by
   revert h <;> rw [eq_mk_of_mem aq] <;> intro <;> rfl
@@ -369,7 +369,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u_1}}, (Semiquot.{u_1} α) -> Prop
 Case conversion may be inaccurate. Consider using '#align semiquot.is_pure Semiquot.IsPureₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (a b «expr ∈ » q) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a b «expr ∈ » q) -/
 /-- Assert that a `semiquot` contains only one possible value. -/
 def IsPure (q : Semiquot α) : Prop :=
   ∀ (a) (_ : a ∈ q) (b) (_ : b ∈ q), a = b

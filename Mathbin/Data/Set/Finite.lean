@@ -2352,7 +2352,7 @@ theorem Finite.of_forall_not_lt_lt (h : ∀ ⦃x y z : α⦄, x < y → y < z �
 #align finite.of_forall_not_lt_lt Finite.of_forall_not_lt_lt
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x y z «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y z «expr ∈ » s) -/
 #print Set.finite_of_forall_not_lt_lt /-
 /-- If a set `s` does not contain any triple of elements `x < y < z`, then `s` is finite. -/
 theorem Set.finite_of_forall_not_lt_lt {s : Set α}

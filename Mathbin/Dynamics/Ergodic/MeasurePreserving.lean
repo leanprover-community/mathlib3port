@@ -160,7 +160,7 @@ theorem exists_mem_image_mem_of_volume_lt_mul_volume (hf : MeasurePreserving f �
   · exact fun hi hj hij hxi hxj => this hj hi hij.symm hxj hxi
 #align measure_theory.measure_preserving.exists_mem_image_mem_of_volume_lt_mul_volume MeasureTheory.MeasurePreserving.exists_mem_image_mem_of_volume_lt_mul_volume
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (m «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (m «expr ≠ » 0) -/
 /-- A self-map preserving a finite measure is conservative: if `μ s ≠ 0`, then at least one point
 `x ∈ s` comes back to `s` under iterations of `f`. Actually, a.e. point of `s` comes back to `s`
 infinitely many times, see `measure_theory.measure_preserving.conservative` and theorems about

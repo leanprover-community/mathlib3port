@@ -483,7 +483,7 @@ theorem le_generate_iff {s : Set (Set α)} {f : Filter α} : f ≤ Filter.genera
       inter_mem hx hy
 #align filter.sets_iff_generate Filter.le_generate_iff
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 #print Filter.mem_generate_iff /-
 theorem mem_generate_iff {s : Set <| Set α} {U : Set α} :
     U ∈ generate s ↔ ∃ (t : _)(_ : t ⊆ s), Set.Finite t ∧ ⋂₀ t ⊆ U :=
@@ -991,7 +991,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {ι : Type.{u1}} {s : ι -> (Filter.{u2} α)} {U : Set.{u2} α}, Iff (Membership.mem.{u2, u2} (Set.{u2} α) (Filter.{u2} α) (instMembershipSetFilter.{u2} α) U (infᵢ.{u2, succ u1} (Filter.{u2} α) (CompleteLattice.toInfSet.{u2} (Filter.{u2} α) (Filter.instCompleteLatticeFilter.{u2} α)) ι (fun (i : ι) => s i))) (Exists.{succ u1} (Set.{u1} ι) (fun (I : Set.{u1} ι) => And (Set.Finite.{u1} ι I) (Exists.{max (succ u2) (succ u1)} (ι -> (Set.{u2} α)) (fun (V : ι -> (Set.{u2} α)) => And (forall (i : ι), Membership.mem.{u2, u2} (Set.{u2} α) (Filter.{u2} α) (instMembershipSetFilter.{u2} α) (V i) (s i)) (And (forall (i : ι), (Not (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i I)) -> (Eq.{succ u2} (Set.{u2} α) (V i) (Set.univ.{u2} α))) (And (Eq.{succ u2} (Set.{u2} α) U (Set.interᵢ.{u2, succ u1} α ι (fun (i : ι) => Set.interᵢ.{u2, 0} α (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i I) (fun (H : Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i I) => V i)))) (Eq.{succ u2} (Set.{u2} α) U (Set.interᵢ.{u2, succ u1} α ι (fun (i : ι) => V i)))))))))
 Case conversion may be inaccurate. Consider using '#align filter.mem_infi' Filter.mem_infᵢ'ₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (i «expr ∉ » I) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (i «expr ∉ » I) -/
 theorem mem_infᵢ' {ι} {s : ι → Filter α} {U : Set α} :
     (U ∈ ⨅ i, s i) ↔
       ∃ I : Set ι,

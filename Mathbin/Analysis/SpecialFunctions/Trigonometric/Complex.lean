@@ -185,7 +185,7 @@ theorem cos_eq_iff_quadratic {z w : ℂ} :
   ring
 #align complex.cos_eq_iff_quadratic Complex.cos_eq_iff_quadratic
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (w «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (w «expr ≠ » 0) -/
 theorem cos_surjective : Function.Surjective cos :=
   by
   intro x

@@ -968,14 +968,14 @@ theorem isPathConnected_iff_eq : IsPathConnected F ↔ ∃ x ∈ F, pathComponen
     rwa [← h] at y_in
 #align is_path_connected_iff_eq isPathConnected_iff_eq
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x y «expr ∈ » F) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » F) -/
 theorem IsPathConnected.joinedIn (h : IsPathConnected F) :
     ∀ (x) (_ : x ∈ F) (y) (_ : y ∈ F), JoinedIn F x y := fun x x_in x y_in =>
   let ⟨b, b_in, hb⟩ := h
   (hb x_in).symm.trans (hb y_in)
 #align is_path_connected.joined_in IsPathConnected.joinedIn
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x y «expr ∈ » F) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » F) -/
 theorem isPathConnected_iff :
     IsPathConnected F ↔ F.Nonempty ∧ ∀ (x) (_ : x ∈ F) (y) (_ : y ∈ F), JoinedIn F x y :=
   ⟨fun h =>

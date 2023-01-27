@@ -251,7 +251,7 @@ theorem schemeRestrictBasicOpenOfLocalizationPreserves (h₁ : RingHom.RespectsI
     exact (Set.preimage_image_eq _ Subtype.coe_injective).symm
 #align algebraic_geometry.Scheme_restrict_basic_open_of_localization_preserves AlgebraicGeometry.schemeRestrictBasicOpenOfLocalizationPreserves
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (V «expr = » (opens.map f.val.base).obj (Y.basic_open r.val)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (V «expr = » (opens.map f.val.base).obj (Y.basic_open r.val)) -/
 theorem sourceAffineLocallyIsLocal (h₁ : RingHom.RespectsIso @P)
     (h₂ : RingHom.LocalizationPreserves @P) (h₃ : RingHom.OfLocalizationSpan @P) :
     (sourceAffineLocally @P).IsLocal := by

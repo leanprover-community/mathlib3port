@@ -192,7 +192,7 @@ theorem maximalIdealIsPrincipalOfIsDedekindDomain [LocalRing R] [IsDomain R] [Is
       · rwa [Submodule.span_le, Set.singleton_subset_iff]
 #align maximal_ideal_is_principal_of_is_dedekind_domain maximalIdealIsPrincipalOfIsDedekindDomain
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (I «expr ≠ » «expr⊥»()) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (I «expr ≠ » «expr⊥»()) -/
 /- failed to parenthesize: parenthesize: uncaught backtrack exception
 [PrettyPrinter.parenthesize.input] (Command.declaration
      (Command.declModifiers [] [] [] [] [] [])

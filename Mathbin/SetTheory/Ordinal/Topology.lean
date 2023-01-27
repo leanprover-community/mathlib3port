@@ -243,7 +243,7 @@ theorem isNormal_iff_strictMono_and_continuous (f : Ordinal.{u} → Ordinal.{u})
         sup_typein_limit ho.2⟩
 #align ordinal.is_normal_iff_strict_mono_and_continuous Ordinal.isNormal_iff_strictMono_and_continuous
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (b «expr < » a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (b «expr < » a) -/
 theorem enumOrd_isNormal_iff_isClosed (hs : s.Unbounded (· < ·)) :
     IsNormal (enumOrd s) ↔ IsClosed s :=
   by

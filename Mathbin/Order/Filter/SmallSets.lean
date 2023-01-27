@@ -85,7 +85,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {l : Filter.{u1} α} {p : (Set.{u1} α) -> Prop}, Iff (Filter.Eventually.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => p s) (Filter.smallSets.{u1} α l)) (Exists.{succ u1} (Set.{u1} α) (fun (s : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s l) (forall (t : Set.{u1} α), (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) t s) -> (p t))))
 Case conversion may be inaccurate. Consider using '#align filter.eventually_small_sets Filter.eventually_smallSetsₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 theorem eventually_smallSets {p : Set α → Prop} :
     (∀ᶠ s in l.smallSets, p s) ↔ ∃ s ∈ l, ∀ (t) (_ : t ⊆ s), p t :=
   eventually_lift'_iff monotone_powerset
@@ -109,7 +109,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {l : Filter.{u1} α} {p : (Set.{u1} α) -> Prop}, Iff (Filter.Frequently.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => p s) (Filter.smallSets.{u1} α l)) (forall (t : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) t l) -> (Exists.{succ u1} (Set.{u1} α) (fun (s : Set.{u1} α) => And (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s t) (p s))))
 Case conversion may be inaccurate. Consider using '#align filter.frequently_small_sets Filter.frequently_smallSetsₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (s «expr ⊆ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (s «expr ⊆ » t) -/
 theorem frequently_smallSets {p : Set α → Prop} :
     (∃ᶠ s in l.smallSets, p s) ↔ ∀ t ∈ l, ∃ (s : _)(_ : s ⊆ t), p s :=
   l.has_basis_small_sets.frequently_iff

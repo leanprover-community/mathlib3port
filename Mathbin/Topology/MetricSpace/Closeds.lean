@@ -202,7 +202,7 @@ instance Closeds.completeSpace [CompleteSpace α] : CompleteSpace (Closeds α) :
   exact ⟨N, fun n hn => lt_of_le_of_lt (main n) (hN n hn)⟩
 #align emetric.closeds.complete_space Emetric.Closeds.completeSpace
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (v «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (v «expr ⊆ » s) -/
 /-- In a compact space, the type of closed subsets is compact. -/
 instance Closeds.compactSpace [CompactSpace α] : CompactSpace (Closeds α) :=
   ⟨by

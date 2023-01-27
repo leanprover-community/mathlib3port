@@ -252,7 +252,7 @@ noncomputable instance : InvOneClass (FractionalIdeal R₁⁰ K) :=
 
 end FractionalIdeal
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (I «expr ≠ » («expr⊥»() : fractional_ideal[fractional_ideal] non_zero_divisors(A) (fraction_ring[fraction_ring] A))) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (I «expr ≠ » («expr⊥»() : fractional_ideal[fractional_ideal] non_zero_divisors(A) (fraction_ring[fraction_ring] A))) -/
 /-- A Dedekind domain is an integral domain such that every fractional ideal has an inverse.
 
 This is equivalent to `is_dedekind_domain`.
@@ -268,7 +268,7 @@ open FractionalIdeal
 
 variable {R A K}
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (I «expr ≠ » («expr⊥»() : fractional_ideal[fractional_ideal] non_zero_divisors(A) K)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (I «expr ≠ » («expr⊥»() : fractional_ideal[fractional_ideal] non_zero_divisors(A) K)) -/
 theorem isDedekindDomainInv_iff [Algebra A K] [IsFractionRing A K] :
     IsDedekindDomainInv A ↔ ∀ (I) (_ : I ≠ (⊥ : FractionalIdeal A⁰ K)), I * I⁻¹ = 1 :=
   by
@@ -1352,7 +1352,7 @@ theorem Ideal.prod_le_prime {ι : Type _} {s : Finset ι} {f : ι → Ideal R} {
   exact ((Ideal.prime_iff_isPrime hP0).mpr hP).dvd_finset_prod_iff _
 #align ideal.prod_le_prime Ideal.prod_le_prime
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (i j «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (i j «expr ∈ » s) -/
 /-- The intersection of distinct prime powers in a Dedekind domain is the product of these
 prime powers. -/
 theorem IsDedekindDomain.inf_prime_pow_eq_prod {ι : Type _} (s : Finset ι) (f : ι → Ideal R)

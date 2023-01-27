@@ -218,7 +218,7 @@ private theorem subset_cl {X : CompactumCat} (A : Set X) : A ⊆ cl A := fun a h
   ⟨X.incl a, ha, by simp⟩
 #align Compactum.subset_cl Compactum.subset_cl
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (B C «expr ∈ » C0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (B C «expr ∈ » C0) -/
 private theorem cl_cl {X : CompactumCat} (A : Set X) : cl (cl A) ⊆ cl A :=
   by
   rintro _ ⟨F, hF, rfl⟩
@@ -293,7 +293,7 @@ theorem isClosed_cl {X : CompactumCat} (A : Set X) : IsClosed (cl A) :=
   exact cl_cl _ ⟨F, hF, rfl⟩
 #align Compactum.is_closed_cl CompactumCat.isClosed_cl
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (S1 S2 «expr ∈ » T0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (S1 S2 «expr ∈ » T0) -/
 theorem str_eq_of_le_nhds {X : CompactumCat} (F : Ultrafilter X) (x : X) : ↑F ≤ 𝓝 x → X.str F = x :=
   by
   -- Notation to be used in this proof.

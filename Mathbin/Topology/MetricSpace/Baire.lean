@@ -304,7 +304,7 @@ theorem eventually_residual {p : α → Prop} :
     
 #align eventually_residual eventually_residual
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 /-- A set is residual (comeagre) if and only if it includes a dense `Gδ` set. -/
 theorem mem_residual {s : Set α} : s ∈ residual α ↔ ∃ (t : _)(_ : t ⊆ s), IsGδ t ∧ Dense t :=
   (@eventually_residual α _ _ fun x => x ∈ s).trans <|
