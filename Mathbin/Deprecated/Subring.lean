@@ -64,13 +64,13 @@ theorem isSubring_preimage {R : Type u} {S : Type v} [Ring R] [Ring S] (f : R �
 
 theorem isSubring_image {R : Type u} {S : Type v} [Ring R] [Ring S] (f : R →+* S) {s : Set R}
     (hs : IsSubring s) : IsSubring (f '' s) :=
-  { IsAddGroupHom.image_add_subgroup f.to_is_add_group_hom hs.to_is_add_subgroup,
+  { IsAddGroupHom.image_addSubgroup f.to_is_add_group_hom hs.to_is_add_subgroup,
     IsSubmonoid.image f.to_is_monoid_hom hs.to_is_submonoid with }
 #align ring_hom.is_subring_image RingHom.isSubring_image
 
 theorem isSubring_set_range {R : Type u} {S : Type v} [Ring R] [Ring S] (f : R →+* S) :
     IsSubring (Set.range f) :=
-  { IsAddGroupHom.range_add_subgroup f.to_is_add_group_hom,
+  { IsAddGroupHom.range_addSubgroup f.to_is_add_group_hom,
     Range.is_submonoid f.to_is_monoid_hom with }
 #align ring_hom.is_subring_set_range RingHom.isSubring_set_range
 
@@ -94,7 +94,7 @@ theorem isSubring_unionᵢ_of_directed {ι : Type _} [hι : Nonempty ι] {s : ι
     (h : ∀ i, IsSubring (s i)) (directed : ∀ i j, ∃ k, s i ⊆ s k ∧ s j ⊆ s k) :
     IsSubring (⋃ i, s i) :=
   { to_is_add_subgroup :=
-      is_add_subgroup_unionᵢ_of_directed (fun i => (h i).to_is_add_subgroup) Directed
+      isAddSubgroup_unionᵢ_of_directed (fun i => (h i).to_is_add_subgroup) Directed
     to_is_submonoid := is_submonoid_Union_of_directed (fun i => (h i).to_is_submonoid) Directed }
 #align is_subring_Union_of_directed isSubring_unionᵢ_of_directed
 
@@ -186,7 +186,7 @@ protected theorem InClosure.rec_on {C : R → Prop} {x : R} (hx : x ∈ closure 
 
 theorem closure.isSubring : IsSubring (closure s) :=
   {
-    AddGroup.closure.is_add_subgroup
+    AddGroup.closure.isAddSubgroup
       _ with
     one_mem := AddGroup.mem_closure <| IsSubmonoid.one_mem <| Monoid.closure.IsSubmonoid _
     mul_mem := fun a b ha hb =>
@@ -194,15 +194,15 @@ theorem closure.isSubring : IsSubring (closure s) :=
         (fun c hc =>
           AddGroup.InClosure.rec_on ha
             (fun d hd => AddGroup.subset_closure ((Monoid.closure.IsSubmonoid _).mul_mem hd hc))
-            ((zero_mul c).symm ▸ (AddGroup.closure.is_add_subgroup _).zero_mem)
+            ((zero_mul c).symm ▸ (AddGroup.closure.isAddSubgroup _).zero_mem)
             (fun d hd hdc =>
-              neg_mul_eq_neg_mul d c ▸ (AddGroup.closure.is_add_subgroup _).neg_mem hdc)
+              neg_mul_eq_neg_mul d c ▸ (AddGroup.closure.isAddSubgroup _).neg_mem hdc)
             fun d e hd he hdc hec =>
-            (add_mul d e c).symm ▸ (AddGroup.closure.is_add_subgroup _).add_mem hdc hec)
-        ((mul_zero a).symm ▸ (AddGroup.closure.is_add_subgroup _).zero_mem)
-        (fun c hc hac => neg_mul_eq_mul_neg a c ▸ (AddGroup.closure.is_add_subgroup _).neg_mem hac)
+            (add_mul d e c).symm ▸ (AddGroup.closure.isAddSubgroup _).add_mem hdc hec)
+        ((mul_zero a).symm ▸ (AddGroup.closure.isAddSubgroup _).zero_mem)
+        (fun c hc hac => neg_mul_eq_mul_neg a c ▸ (AddGroup.closure.isAddSubgroup _).neg_mem hac)
         fun c d hc hd hac had =>
-        (mul_add a c d).symm ▸ (AddGroup.closure.is_add_subgroup _).add_mem hac had }
+        (mul_add a c d).symm ▸ (AddGroup.closure.isAddSubgroup _).add_mem hac had }
 #align ring.closure.is_subring Ring.closure.isSubring
 
 theorem mem_closure {a : R} : a ∈ s → a ∈ closure s :=
