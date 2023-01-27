@@ -220,6 +220,7 @@ import Mathbin.Algebra.Homology.Homology
 import Mathbin.Algebra.Homology.Homotopy
 import Mathbin.Algebra.Homology.HomotopyCategory
 import Mathbin.Algebra.Homology.ImageToKernel
+import Mathbin.Algebra.Homology.Opposite
 import Mathbin.Algebra.Homology.QuasiIso
 import Mathbin.Algebra.Homology.ShortExact.Abelian
 import Mathbin.Algebra.Homology.ShortExact.Preadditive

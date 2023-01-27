@@ -4,13 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Paul Lezeau
 
 ! This file was ported from Lean 3 source module number_theory.kummer_dedekind
-! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
+! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.RingTheory.AdjoinRoot
-import Mathbin.RingTheory.DedekindDomain.Ideal
 import Mathbin.RingTheory.AlgebraTower
+import Mathbin.RingTheory.DedekindDomain.Ideal
+import Mathbin.RingTheory.IsAdjoinRoot
 
 /-!
 # Kummer-Dedekind theorem
@@ -87,6 +87,14 @@ theorem conductor_subset_adjoin : (conductor R x : Set S) ⊆ R<x> := fun y hy =
 theorem mem_conductor_iff {y : S} : y ∈ conductor R x ↔ ∀ b : S, y * b ∈ R<x> :=
   ⟨fun h => h, fun h => h⟩
 #align mem_conductor_iff mem_conductor_iff
+
+theorem conductor_eq_top_of_adjoin_eq_top (h : R<x> = ⊤) : conductor R x = ⊤ := by
+  simp only [Ideal.eq_top_iff_one, mem_conductor_iff, h, mem_top, forall_const]
+#align conductor_eq_top_of_adjoin_eq_top conductor_eq_top_of_adjoin_eq_top
+
+theorem conductor_eq_top_of_powerBasis (pb : PowerBasis R S) : conductor R pb.gen = ⊤ :=
+  conductor_eq_top_of_adjoin_eq_top pb.adjoin_gen_eq_top
+#align conductor_eq_top_of_power_basis conductor_eq_top_of_powerBasis
 
 variable {I : Ideal R}
 
@@ -230,9 +238,11 @@ namespace KummerDedekind
 
 open BigOperators Polynomial Classical
 
-variable [IsDomain R] [IsDomain S] [IsDedekindDomain S]
+variable [IsDomain R] [IsIntegrallyClosed R]
 
-variable (pb : PowerBasis R S)
+variable [IsDomain S] [IsDedekindDomain S]
+
+variable [NoZeroSMulDivisors R S]
 
 attribute [local instance] Ideal.Quotient.field
 
@@ -240,33 +250,42 @@ attribute [local instance] Ideal.Quotient.field
     factors of `I*S` are in bijection with those of the minimal polynomial of the generator of `S`
     over `R`, taken `mod I`.-/
 noncomputable def normalizedFactorsMapEquivNormalizedFactorsMinPolyMk (hI : IsMaximal I)
-    (hI' : I ≠ ⊥) :
+    (hI' : I ≠ ⊥) (hx : (conductor R x).comap (algebraMap R S) ⊔ I = ⊤) (hx' : IsIntegral R x) :
     { J : Ideal S | J ∈ normalizedFactors (I.map (algebraMap R S)) } ≃
-      { d : (R ⧸ I)[X] | d ∈ normalizedFactors (map I (minpoly R pb.gen)) } :=
-  (--show that `I * S` ≠ ⊥
-        --show that the ideal spanned by `(minpoly R pb.gen) mod I` is non-zero
-        normalizedFactorsEquivOfQuotEquiv
-        (↑(pb.quotientEquivQuotientMinpolyMap I))
-        (show I.map (algebraMap R S) ≠ ⊥ by
-          rwa [Ne.def, map_eq_bot_iff_of_injective pb.basis.algebra_map_injective, ← Ne.def])
-        (by
+      { d : (R ⧸ I)[X] | d ∈ normalizedFactors (map I (minpoly R x)) } :=
+  (normalizedFactorsEquivOfQuotEquiv
+        ((quotAdjoinEquivQuotMap hx
+                (by
+                  apply NoZeroSMulDivisors.algebraMap_injective (Algebra.adjoin R {x}) S
+                  exact Subalgebra.noZeroSMulDivisors_top (Algebra.adjoin R {x}))).symm.trans
+          (((Algebra.adjoin.powerBasis' hx').quotientEquivQuotientMinpolyMap I).toRingEquiv.trans
+            (quotEquivOfEq
+              (show
+                Ideal.span {(minpoly R (Algebra.adjoin.powerBasis' hx').gen).map I} =
+                  Ideal.span {(minpoly R x).map I}
+                by rw [Algebra.adjoin.powerBasis'_minpoly_gen hx']))))
+        (--show that `I * S` ≠ ⊥
+        show I.map (algebraMap R S) ≠ ⊥ by
+          rwa [Ne.def, map_eq_bot_iff_of_injective (NoZeroSMulDivisors.algebraMap_injective R S), ←
+            Ne.def])
+        (--show that the ideal spanned by `(minpoly R pb.gen) mod I` is non-zero
+        by
           by_contra
           exact
-            (show map I (minpoly R pb.gen) ≠ 0 from
-                Polynomial.map_monic_ne_zero (minpoly.monic pb.is_integral_gen))
+            (show map I (minpoly R x) ≠ 0 from Polynomial.map_monic_ne_zero (minpoly.monic hx'))
               (span_singleton_eq_bot.mp h))).trans
     (normalizedFactorsEquivSpanNormalizedFactors
-        (show map I (minpoly R pb.gen) ≠ 0 from
-          Polynomial.map_monic_ne_zero (minpoly.monic pb.is_integral_gen))).symm
+        (show map I (minpoly R x) ≠ 0 from Polynomial.map_monic_ne_zero (minpoly.monic hx'))).symm
 #align kummer_dedekind.normalized_factors_map_equiv_normalized_factors_min_poly_mk KummerDedekind.normalizedFactorsMapEquivNormalizedFactorsMinPolyMk
 
 /-- The second half of the **Kummer-Dedekind Theorem** in the monogenic case, stating that the
     bijection `factors_equiv'` defined in the first half preserves multiplicities. -/
-theorem multiplicity_factors_map_eq_multiplicity (hI : IsMaximal I) (hI' : I ≠ ⊥) {J : Ideal S}
+theorem multiplicity_factors_map_eq_multiplicity (hI : IsMaximal I) (hI' : I ≠ ⊥)
+    (hx : (conductor R x).comap (algebraMap R S) ⊔ I = ⊤) (hx' : IsIntegral R x) {J : Ideal S}
     (hJ : J ∈ normalizedFactors (I.map (algebraMap R S))) :
     multiplicity J (I.map (algebraMap R S)) =
-      multiplicity (↑(normalizedFactorsMapEquivNormalizedFactorsMinPolyMk pb hI hI' ⟨J, hJ⟩))
-        (map I (minpoly R pb.gen)) :=
+      multiplicity (↑(normalizedFactorsMapEquivNormalizedFactorsMinPolyMk hI hI' hx hx' ⟨J, hJ⟩))
+        (map I (minpoly R x)) :=
   by
   rw [normalized_factors_map_equiv_normalized_factors_min_poly_mk, Equiv.coe_trans,
     Function.comp_apply,
@@ -276,12 +295,12 @@ theorem multiplicity_factors_map_eq_multiplicity (hI : IsMaximal I) (hI' : I ≠
 
 /-- The **Kummer-Dedekind Theorem**. -/
 theorem normalizedFactors_ideal_map_eq_normalizedFactors_min_poly_mk_map (hI : IsMaximal I)
-    (hI' : I ≠ ⊥) :
+    (hI' : I ≠ ⊥) (hx : (conductor R x).comap (algebraMap R S) ⊔ I = ⊤) (hx' : IsIntegral R x) :
     normalizedFactors (I.map (algebraMap R S)) =
       Multiset.map
         (fun f =>
-          ((normalizedFactorsMapEquivNormalizedFactorsMinPolyMk pb hI hI').symm f : Ideal S))
-        (normalizedFactors (Polynomial.map I (minpoly R pb.gen))).attach :=
+          ((normalizedFactorsMapEquivNormalizedFactorsMinPolyMk hI hI' hx hx').symm f : Ideal S))
+        (normalizedFactors (Polynomial.map I (minpoly R x))).attach :=
   by
   ext J
   -- WLOG, assume J is a normalized factor
@@ -290,61 +309,68 @@ theorem normalizedFactors_ideal_map_eq_normalizedFactors_min_poly_mk_map (hI : I
   · rw [multiset.count_eq_zero.mpr hJ, eq_comm, Multiset.count_eq_zero, Multiset.mem_map]
     simp only [Multiset.mem_attach, true_and_iff, not_exists]
     rintro J' rfl
-    exact hJ ((normalized_factors_map_equiv_normalized_factors_min_poly_mk pb hI hI').symm J').Prop
+    exact
+      hJ ((normalized_factors_map_equiv_normalized_factors_min_poly_mk hI hI' hx hx').symm J').Prop
   -- Then we just have to compare the multiplicities, which we already proved are equal.
-  have := multiplicity_factors_map_eq_multiplicity pb hI hI' hJ
+  have := multiplicity_factors_map_eq_multiplicity hI hI' hx hx' hJ
   rw [multiplicity_eq_count_normalized_factors, multiplicity_eq_count_normalized_factors,
     UniqueFactorizationMonoid.normalize_normalized_factor _ hJ,
     UniqueFactorizationMonoid.normalize_normalized_factor, PartEnat.coe_inj] at this
   refine' this.trans _
   -- Get rid of the `map` by applying the equiv to both sides.
-  generalize hJ' : (normalized_factors_map_equiv_normalized_factors_min_poly_mk pb hI hI') ⟨J, hJ⟩ =
-    J'
+  generalize hJ' :
+    (normalized_factors_map_equiv_normalized_factors_min_poly_mk hI hI' hx hx') ⟨J, hJ⟩ = J'
   have :
-    ((normalized_factors_map_equiv_normalized_factors_min_poly_mk pb hI hI').symm J' : Ideal S) =
+    ((normalized_factors_map_equiv_normalized_factors_min_poly_mk hI hI' hx hx').symm J' :
+        Ideal S) =
       J :=
     by rw [← hJ', Equiv.symm_apply_apply _ _, Subtype.coe_mk]
   subst this
   -- Get rid of the `attach` by applying the subtype `coe` to both sides.
   rw [Multiset.count_map_eq_count' fun f =>
-      ((normalized_factors_map_equiv_normalized_factors_min_poly_mk pb hI hI').symm f : Ideal S),
+      ((normalized_factors_map_equiv_normalized_factors_min_poly_mk hI hI' hx hx').symm f :
+        Ideal S),
     Multiset.attach_count_eq_count_coe]
   · exact subtype.coe_injective.comp (Equiv.injective _)
-  · exact (normalized_factors_map_equiv_normalized_factors_min_poly_mk pb hI hI' _).Prop
+  · exact (normalized_factors_map_equiv_normalized_factors_min_poly_mk hI hI' hx hx' _).Prop
   ·
     exact
       irreducible_of_normalized_factor _
-        (normalized_factors_map_equiv_normalized_factors_min_poly_mk pb hI hI' _).Prop
-  · exact Polynomial.map_monic_ne_zero (minpoly.monic pb.is_integral_gen)
+        (normalized_factors_map_equiv_normalized_factors_min_poly_mk hI hI' hx hx' _).Prop
+  · exact Polynomial.map_monic_ne_zero (minpoly.monic hx')
   · exact irreducible_of_normalized_factor _ hJ
-  · rwa [← bot_eq_zero, Ne.def, map_eq_bot_iff_of_injective pb.basis.algebra_map_injective]
+  ·
+    rwa [← bot_eq_zero, Ne.def,
+      map_eq_bot_iff_of_injective (NoZeroSMulDivisors.algebraMap_injective R S)]
 #align kummer_dedekind.normalized_factors_ideal_map_eq_normalized_factors_min_poly_mk_map KummerDedekind.normalizedFactors_ideal_map_eq_normalizedFactors_min_poly_mk_map
 
 theorem Ideal.irreducible_map_of_irreducible_minpoly (hI : IsMaximal I) (hI' : I ≠ ⊥)
-    (hf : Irreducible (map I (minpoly R pb.gen))) : Irreducible (I.map (algebraMap R S)) :=
+    (hx : (conductor R x).comap (algebraMap R S) ⊔ I = ⊤) (hx' : IsIntegral R x)
+    (hf : Irreducible (map I (minpoly R x))) : Irreducible (I.map (algebraMap R S)) :=
   by
   have mem_norm_factors :
-    normalize (map I (minpoly R pb.gen)) ∈ normalized_factors (map I (minpoly R pb.gen)) := by
+    normalize (map I (minpoly R x)) ∈ normalized_factors (map I (minpoly R x)) := by
     simp [normalized_factors_irreducible hf]
-  suffices ∃ x, normalized_factors (I.map (algebraMap R S)) = {x}
+  suffices ∃ y, normalized_factors (I.map (algebraMap R S)) = {y}
     by
-    obtain ⟨x, hx⟩ := this
+    obtain ⟨y, hy⟩ := this
     have h :=
       normalized_factors_prod
         (show I.map (algebraMap R S) ≠ 0 by
-          rwa [← bot_eq_zero, Ne.def, map_eq_bot_iff_of_injective pb.basis.algebra_map_injective])
-    rw [associated_iff_eq, hx, Multiset.prod_singleton] at h
+          rwa [← bot_eq_zero, Ne.def,
+            map_eq_bot_iff_of_injective (NoZeroSMulDivisors.algebraMap_injective R S)])
+    rw [associated_iff_eq, hy, Multiset.prod_singleton] at h
     rw [← h]
     exact
-      irreducible_of_normalized_factor x
-        (show x ∈ normalized_factors (I.map (algebraMap R S)) by simp [hx])
-  rw [normalized_factors_ideal_map_eq_normalized_factors_min_poly_mk_map pb hI hI']
+      irreducible_of_normalized_factor y
+        (show y ∈ normalized_factors (I.map (algebraMap R S)) by simp [hy])
+  rw [normalized_factors_ideal_map_eq_normalized_factors_min_poly_mk_map hI hI' hx hx']
   use
-    ((normalized_factors_map_equiv_normalized_factors_min_poly_mk pb hI hI').symm
-        ⟨normalize (map I (minpoly R pb.gen)), mem_norm_factors⟩ :
+    ((normalized_factors_map_equiv_normalized_factors_min_poly_mk hI hI' hx hx').symm
+        ⟨normalize (map I (minpoly R x)), mem_norm_factors⟩ :
       Ideal S)
   rw [Multiset.map_eq_singleton]
-  use ⟨normalize (map I (minpoly R pb.gen)), mem_norm_factors⟩
+  use ⟨normalize (map I (minpoly R x)), mem_norm_factors⟩
   refine' ⟨_, rfl⟩
   apply Multiset.map_injective Subtype.coe_injective
   rw [Multiset.attach_map_val, Multiset.map_singleton, Subtype.coe_mk]

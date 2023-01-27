@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Joey van Langen, Casper Putz
 
 ! This file was ported from Lean 3 source module algebra.char_p.basic
-! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
+! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -174,8 +174,7 @@ theorem add_pow_char_of_commute [Semiring R] {p : ℕ} [Fact p.Prime] [CharP R p
       rw [this]
       simp
     rw [CharP.cast_eq_zero_iff R p]
-    refine' Nat.Prime.dvd_choose_self (pos_iff_ne_zero.mpr h2) _ (Fact.out _)
-    rwa [← Finset.mem_range]
+    exact Nat.Prime.dvd_choose_self (Fact.out _) h2 (Finset.mem_range.1 h1)
   · intro h1
     contrapose! h1
     rw [Finset.mem_range]

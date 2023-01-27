@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Firsching, Fabian Kruse, Nikolas Kuhn
 
 ! This file was ported from Lean 3 source module analysis.special_functions.stirling
-! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
+! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -25,16 +25,15 @@ The proof follows: <https://proofwiki.org/wiki/Stirling%27s_Formula>.
 
 We proceed in two parts.
 
-### Part 1
-We consider the fraction sequence $a_n$ of fractions $\frac{n!}{\sqrt{2n}(\frac{n}{e})^n}$ and
-prove that this sequence converges against a real, positive number $a$. For this the two main
+**Part 1**: We consider the sequence $a_n$ of fractions $\frac{n!}{\sqrt{2n}(\frac{n}{e})^n}$
+and prove that this sequence converges to a real, positive number $a$. For this the two main
 ingredients are
  - taking the logarithm of the sequence and
- - use the series expansion of $\log(1 + x)$.
+ - using the series expansion of $\log(1 + x)$.
 
-### Part 2
-We use the fact that the series defined in part 1 converges againt a real number $a$ and prove that
-$a = \sqrt{\pi}$. Here the main ingredient is the convergence of the Wallis product.
+**Part 2**: We use the fact that the series defined in part 1 converges againt a real number $a$
+and prove that $a = \sqrt{\pi}$. Here the main ingredient is the convergence of Wallis' product
+formula for `π`.
 -/
 
 
@@ -242,28 +241,6 @@ theorem stirlingSeq_has_pos_limit_a : ∃ a : ℝ, 0 < a ∧ Tendsto stirlingSeq
 -/
 
 
-/-- For `n : ℕ`, define `w n` as `2^(4*n) * n!^4 / ((2*n)!^2 * (2*n + 1))` -/
-noncomputable def w (n : ℕ) : ℝ :=
-  2 ^ (4 * n) * n ! ^ 4 / ((2 * n)! ^ 2 * (2 * n + 1))
-#align stirling.w Stirling.w
-
-/-- The sequence `w n` converges to `π/2` -/
-theorem tendsto_w_atTop : Tendsto (fun n : ℕ => w n) atTop (𝓝 (π / 2)) :=
-  by
-  convert tendsto_prod_pi_div_two
-  funext n
-  induction' n with n ih
-  ·
-    rw [w, prod_range_zero, cast_zero, mul_zero, pow_zero, one_mul, mul_zero, factorial_zero,
-      cast_one, one_pow, one_pow, one_mul, mul_zero, zero_add, div_one]
-  rw [w, prod_range_succ, ← ih, w, _root_.div_mul_div_comm, _root_.div_mul_div_comm]
-  refine' (div_eq_div_iff _ _).mpr _
-  any_goals exact ne_of_gt (by positivity)
-  simp_rw [Nat.mul_succ, factorial_succ, pow_succ]
-  push_cast
-  ring_nf
-#align stirling.tendsto_w_at_top Stirling.tendsto_w_atTop
-
 /-- The sequence `n / (2 * n + 1)` tends to `1/2` -/
 theorem tendsto_self_div_two_mul_self_add_one :
     Tendsto (fun n : ℕ => (n : ℝ) / (2 * n + 1)) atTop (𝓝 (1 / 2)) :=
@@ -277,15 +254,16 @@ theorem tendsto_self_div_two_mul_self_add_one :
     (((tendsto_const_div_atTop_nhds_0_nat 1).const_add (2 : ℝ)).inv₀
           ((add_zero (2 : ℝ)).symm ▸ two_neZero)).congr'
       (eventually_at_top.mpr ⟨1, fun n hn => _⟩)
-  rw [add_div' (1 : ℝ) (2 : ℝ) (n : ℝ) (cast_ne_zero.mpr (one_le_iff_ne_zero.mp hn)), inv_div]
+  rw [add_div' (1 : ℝ) 2 n (cast_ne_zero.mpr (one_le_iff_ne_zero.mp hn)), inv_div]
 #align stirling.tendsto_self_div_two_mul_self_add_one Stirling.tendsto_self_div_two_mul_self_add_one
 
 /-- For any `n ≠ 0`, we have the identity
-`(stirling_seq n)^4/(stirling_seq (2*n))^2 * (n / (2 * n + 1)) = w n`. -/
+`(stirling_seq n)^4 / (stirling_seq (2*n))^2 * (n / (2 * n + 1)) = W n`, where `W n` is the
+`n`-th partial product of Wallis' formula for `π / 2`. -/
 theorem stirlingSeq_pow_four_div_stirlingSeq_pow_two_eq (n : ℕ) (hn : n ≠ 0) :
-    stirlingSeq n ^ 4 / stirlingSeq (2 * n) ^ 2 * (n / (2 * n + 1)) = w n :=
+    stirlingSeq n ^ 4 / stirlingSeq (2 * n) ^ 2 * (n / (2 * n + 1)) = Wallis.w n :=
   by
-  rw [bit0_eq_two_mul, stirling_seq, pow_mul, stirling_seq, w]
+  rw [bit0_eq_two_mul, stirling_seq, pow_mul, stirling_seq, wallis.W_eq_factorial_ratio]
   simp_rw [div_pow, mul_pow]
   rw [sq_sqrt, sq_sqrt]
   any_goals positivity
@@ -301,10 +279,10 @@ theorem stirlingSeq_pow_four_div_stirlingSeq_pow_two_eq (n : ℕ) (hn : n ≠ 0)
 #align stirling.stirling_seq_pow_four_div_stirling_seq_pow_two_eq Stirling.stirlingSeq_pow_four_div_stirlingSeq_pow_two_eq
 
 /-- Suppose the sequence `stirling_seq` (defined above) has the limit `a ≠ 0`.
-Then the sequence `w` has limit `a^2/2`
+Then the Wallis sequence `W n` has limit `a^2 / 2`.
 -/
 theorem second_wallis_limit (a : ℝ) (hane : a ≠ 0) (ha : Tendsto stirlingSeq atTop (𝓝 a)) :
-    Tendsto w atTop (𝓝 (a ^ 2 / 2)) :=
+    Tendsto Wallis.w atTop (𝓝 (a ^ 2 / 2)) :=
   by
   refine'
     tendsto.congr'
@@ -328,8 +306,8 @@ theorem tendsto_stirlingSeq_sqrt_pi : Tendsto (fun n : ℕ => stirlingSeq n) atT
   by
   obtain ⟨a, hapos, halimit⟩ := stirling_seq_has_pos_limit_a
   have hπ : π / 2 = a ^ 2 / 2 :=
-    tendsto_nhds_unique tendsto_w_at_top (second_wallis_limit a (ne_of_gt hapos) halimit)
-  rwa [(div_left_inj' (show (2 : ℝ) ≠ 0 from two_neZero)).mp hπ, sqrt_sq hapos.le]
+    tendsto_nhds_unique wallis.tendsto_W_nhds_pi_div_two (second_wallis_limit a hapos.ne' halimit)
+  rwa [(div_left_inj' (two_ne_zero' ℝ)).mp hπ, sqrt_sq hapos.le]
 #align stirling.tendsto_stirling_seq_sqrt_pi Stirling.tendsto_stirlingSeq_sqrt_pi
 
 end Stirling

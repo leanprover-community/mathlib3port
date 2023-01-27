@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.special_functions.gaussian
-! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
+! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -371,28 +371,13 @@ theorem integral_gaussian_ioi (b : ℝ) : (∫ x in Ioi 0, exp (-b * x ^ 2)) = s
     exact (div_pos pi_pos hb).le
 #align integral_gaussian_Ioi integral_gaussian_ioi
 
-namespace Complex
-
 /-- The special-value formula `Γ(1/2) = √π`, which is equivalent to the Gaussian integral. -/
-theorem gamma_one_half_eq : gamma (1 / 2) = sqrt π :=
+theorem Real.gamma_one_half_eq : Real.gamma (1 / 2) = sqrt π :=
   by
-  -- first reduce to real integrals
-  have hh : (1 / 2 : ℂ) = ↑(1 / 2 : ℝ) := by
-    simp only [one_div, of_real_inv, of_real_bit0, of_real_one]
-  have hh2 : (1 / 2 : ℂ).re = 1 / 2 := by convert of_real_re (1 / 2 : ℝ)
-  replace hh2 : 0 < (1 / 2 : ℂ).re := by
-    rw [hh2]
-    exact one_half_pos
-  rw [Gamma_eq_integral hh2, hh, Gamma_integral_of_real, of_real_inj]
-  -- now do change-of-variables
-  rw [← integral_comp_rpow_Ioi_of_pos zero_lt_two]
-  have :
-    eq_on
-      (fun x : ℝ =>
-        (2 * x ^ ((2 : ℝ) - 1)) • (Real.exp (-x ^ (2 : ℝ)) * (x ^ (2 : ℝ)) ^ (1 / (2 : ℝ) - 1)))
-      (fun x : ℝ => 2 * Real.exp (-1 * x ^ (2 : ℕ))) (Ioi 0) :=
-    by
-    intro x hx
+  rw [Gamma_eq_integral one_half_pos, ← integral_comp_rpow_Ioi_of_pos zero_lt_two]
+  convert congr_arg (fun x : ℝ => 2 * x) (integral_gaussian_ioi 1)
+  · rw [← integral_mul_left]
+    refine' set_integral_congr measurableSet_ioi fun x hx => _
     dsimp only
     have : (x ^ (2 : ℝ)) ^ (1 / (2 : ℝ) - 1) = x⁻¹ :=
       by
@@ -403,10 +388,14 @@ theorem gamma_one_half_eq : gamma (1 / 2) = sqrt π :=
     field_simp [(ne_of_lt hx).symm]
     norm_num
     ring
-  rw [set_integral_congr measurableSet_ioi this, integral_mul_left, integral_gaussian_ioi]
-  field_simp
-  ring
-#align complex.Gamma_one_half_eq Complex.gamma_one_half_eq
+  · rw [div_one, ← mul_div_assoc, mul_comm, mul_div_cancel _ (two_ne_zero' ℝ)]
+#align real.Gamma_one_half_eq Real.gamma_one_half_eq
 
-end Complex
+/-- The special-value formula `Γ(1/2) = √π`, which is equivalent to the Gaussian integral. -/
+theorem Complex.gamma_one_half_eq : Complex.gamma (1 / 2) = π ^ (1 / 2 : ℂ) :=
+  by
+  convert congr_arg coe Real.gamma_one_half_eq
+  · simpa only [one_div, of_real_inv, of_real_bit0] using Gamma_of_real (1 / 2)
+  · rw [sqrt_eq_rpow, of_real_cpow pi_pos.le, of_real_div, of_real_bit0, of_real_one]
+#align complex.Gamma_one_half_eq Complex.gamma_one_half_eq
 

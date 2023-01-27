@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp, François Dupuis
 
 ! This file was ported from Lean 3 source module analysis.convex.function
-! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
+! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -837,68 +837,61 @@ variable [Module 𝕜 E] [Module 𝕜 β] [OrderedSMul 𝕜 β] {s : Set E} {f g
 
 /- The following lemmas don't require `module 𝕜 E` if you add the hypothesis `x ≠ y`. At the time of
 the writing, we decided the resulting lemmas wouldn't be useful. Feel free to reintroduce them. -/
-theorem StrictConvexOn.lt_left_of_right_lt' (hf : StrictConvexOn 𝕜 s f) {x y : E} (hx : x ∈ s)
-    (hy : y ∈ s) {a b : 𝕜} (ha : 0 < a) (hb : 0 < b) (hab : a + b = 1)
-    (hfy : f y < f (a • x + b • y)) : f (a • x + b • y) < f x :=
+theorem ConvexOn.lt_left_of_right_lt' (hf : ConvexOn 𝕜 s f) {x y : E} (hx : x ∈ s) (hy : y ∈ s)
+    {a b : 𝕜} (ha : 0 < a) (hb : 0 < b) (hab : a + b = 1) (hfy : f y < f (a • x + b • y)) :
+    f (a • x + b • y) < f x :=
   not_le.1 fun h =>
     lt_irrefl (f (a • x + b • y)) <|
       calc
-        f (a • x + b • y) < a • f x + b • f y :=
-          hf.2 hx hy
-            (by
-              rintro rfl
-              rw [Convex.combo_self hab] at hfy
-              exact lt_irrefl _ hfy)
-            ha hb hab
+        f (a • x + b • y) ≤ a • f x + b • f y := hf.2 hx hy ha.le hb.le hab
         _ < a • f (a • x + b • y) + b • f (a • x + b • y) :=
           add_lt_add_of_le_of_lt (smul_le_smul_of_nonneg h ha.le) (smul_lt_smul_of_pos hfy hb)
         _ = f (a • x + b • y) := Convex.combo_self hab _
         
-#align strict_convex_on.lt_left_of_right_lt' StrictConvexOn.lt_left_of_right_lt'
+#align convex_on.lt_left_of_right_lt' ConvexOn.lt_left_of_right_lt'
 
-theorem StrictConcaveOn.left_lt_of_lt_right' (hf : StrictConcaveOn 𝕜 s f) {x y : E} (hx : x ∈ s)
-    (hy : y ∈ s) {a b : 𝕜} (ha : 0 < a) (hb : 0 < b) (hab : a + b = 1)
-    (hfy : f (a • x + b • y) < f y) : f x < f (a • x + b • y) :=
+theorem ConcaveOn.left_lt_of_lt_right' (hf : ConcaveOn 𝕜 s f) {x y : E} (hx : x ∈ s) (hy : y ∈ s)
+    {a b : 𝕜} (ha : 0 < a) (hb : 0 < b) (hab : a + b = 1) (hfy : f (a • x + b • y) < f y) :
+    f x < f (a • x + b • y) :=
   hf.dual.lt_left_of_right_lt' hx hy ha hb hab hfy
-#align strict_concave_on.left_lt_of_lt_right' StrictConcaveOn.left_lt_of_lt_right'
+#align concave_on.left_lt_of_lt_right' ConcaveOn.left_lt_of_lt_right'
 
-theorem StrictConvexOn.lt_right_of_left_lt' (hf : StrictConvexOn 𝕜 s f) {x y : E} {a b : 𝕜}
-    (hx : x ∈ s) (hy : y ∈ s) (ha : 0 < a) (hb : 0 < b) (hab : a + b = 1)
-    (hfx : f x < f (a • x + b • y)) : f (a • x + b • y) < f y :=
-  by
+theorem ConvexOn.lt_right_of_left_lt' (hf : ConvexOn 𝕜 s f) {x y : E} {a b : 𝕜} (hx : x ∈ s)
+    (hy : y ∈ s) (ha : 0 < a) (hb : 0 < b) (hab : a + b = 1) (hfx : f x < f (a • x + b • y)) :
+    f (a • x + b • y) < f y := by
   rw [add_comm] at hab hfx⊢
   exact hf.lt_left_of_right_lt' hy hx hb ha hab hfx
-#align strict_convex_on.lt_right_of_left_lt' StrictConvexOn.lt_right_of_left_lt'
+#align convex_on.lt_right_of_left_lt' ConvexOn.lt_right_of_left_lt'
 
-theorem StrictConcaveOn.lt_right_of_left_lt' (hf : StrictConcaveOn 𝕜 s f) {x y : E} {a b : 𝕜}
-    (hx : x ∈ s) (hy : y ∈ s) (ha : 0 < a) (hb : 0 < b) (hab : a + b = 1)
-    (hfx : f (a • x + b • y) < f x) : f y < f (a • x + b • y) :=
+theorem ConcaveOn.lt_right_of_left_lt' (hf : ConcaveOn 𝕜 s f) {x y : E} {a b : 𝕜} (hx : x ∈ s)
+    (hy : y ∈ s) (ha : 0 < a) (hb : 0 < b) (hab : a + b = 1) (hfx : f (a • x + b • y) < f x) :
+    f y < f (a • x + b • y) :=
   hf.dual.lt_right_of_left_lt' hx hy ha hb hab hfx
-#align strict_concave_on.lt_right_of_left_lt' StrictConcaveOn.lt_right_of_left_lt'
+#align concave_on.lt_right_of_left_lt' ConcaveOn.lt_right_of_left_lt'
 
-theorem StrictConvexOn.lt_left_of_right_lt (hf : StrictConvexOn 𝕜 s f) {x y z : E} (hx : x ∈ s)
-    (hy : y ∈ s) (hz : z ∈ openSegment 𝕜 x y) (hyz : f y < f z) : f z < f x :=
+theorem ConvexOn.lt_left_of_right_lt (hf : ConvexOn 𝕜 s f) {x y z : E} (hx : x ∈ s) (hy : y ∈ s)
+    (hz : z ∈ openSegment 𝕜 x y) (hyz : f y < f z) : f z < f x :=
   by
   obtain ⟨a, b, ha, hb, hab, rfl⟩ := hz
   exact hf.lt_left_of_right_lt' hx hy ha hb hab hyz
-#align strict_convex_on.lt_left_of_right_lt StrictConvexOn.lt_left_of_right_lt
+#align convex_on.lt_left_of_right_lt ConvexOn.lt_left_of_right_lt
 
-theorem StrictConcaveOn.left_lt_of_lt_right (hf : StrictConcaveOn 𝕜 s f) {x y z : E} (hx : x ∈ s)
-    (hy : y ∈ s) (hz : z ∈ openSegment 𝕜 x y) (hyz : f z < f y) : f x < f z :=
+theorem ConcaveOn.left_lt_of_lt_right (hf : ConcaveOn 𝕜 s f) {x y z : E} (hx : x ∈ s) (hy : y ∈ s)
+    (hz : z ∈ openSegment 𝕜 x y) (hyz : f z < f y) : f x < f z :=
   hf.dual.lt_left_of_right_lt hx hy hz hyz
-#align strict_concave_on.left_lt_of_lt_right StrictConcaveOn.left_lt_of_lt_right
+#align concave_on.left_lt_of_lt_right ConcaveOn.left_lt_of_lt_right
 
-theorem StrictConvexOn.lt_right_of_left_lt (hf : StrictConvexOn 𝕜 s f) {x y z : E} (hx : x ∈ s)
-    (hy : y ∈ s) (hz : z ∈ openSegment 𝕜 x y) (hxz : f x < f z) : f z < f y :=
+theorem ConvexOn.lt_right_of_left_lt (hf : ConvexOn 𝕜 s f) {x y z : E} (hx : x ∈ s) (hy : y ∈ s)
+    (hz : z ∈ openSegment 𝕜 x y) (hxz : f x < f z) : f z < f y :=
   by
   obtain ⟨a, b, ha, hb, hab, rfl⟩ := hz
   exact hf.lt_right_of_left_lt' hx hy ha hb hab hxz
-#align strict_convex_on.lt_right_of_left_lt StrictConvexOn.lt_right_of_left_lt
+#align convex_on.lt_right_of_left_lt ConvexOn.lt_right_of_left_lt
 
-theorem StrictConcaveOn.lt_right_of_left_lt (hf : StrictConcaveOn 𝕜 s f) {x y z : E} (hx : x ∈ s)
-    (hy : y ∈ s) (hz : z ∈ openSegment 𝕜 x y) (hxz : f z < f x) : f y < f z :=
+theorem ConcaveOn.lt_right_of_left_lt (hf : ConcaveOn 𝕜 s f) {x y z : E} (hx : x ∈ s) (hy : y ∈ s)
+    (hz : z ∈ openSegment 𝕜 x y) (hxz : f z < f x) : f y < f z :=
   hf.dual.lt_right_of_left_lt hx hy hz hxz
-#align strict_concave_on.lt_right_of_left_lt StrictConcaveOn.lt_right_of_left_lt
+#align concave_on.lt_right_of_left_lt ConcaveOn.lt_right_of_left_lt
 
 end Module
 

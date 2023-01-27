@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.is_adjoin_root
-! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
+! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -332,6 +332,28 @@ powerful than `adjoin_root.is_adjoin_root`. -/
 protected def isAdjoinRootMonic (hf : Monic f) : IsAdjoinRootMonic (AdjoinRoot f) f :=
   { AdjoinRoot.isAdjoinRoot f with Monic := hf }
 #align adjoin_root.is_adjoin_root_monic AdjoinRoot.isAdjoinRootMonic
+
+@[simp]
+theorem isAdjoinRoot_map_eq_mk : (AdjoinRoot.isAdjoinRoot f).map = AdjoinRoot.mk f :=
+  rfl
+#align adjoin_root.is_adjoin_root_map_eq_mk AdjoinRoot.isAdjoinRoot_map_eq_mk
+
+@[simp]
+theorem isAdjoinRootMonic_map_eq_mk (hf : f.Monic) :
+    (AdjoinRoot.isAdjoinRootMonic f hf).map = AdjoinRoot.mk f :=
+  rfl
+#align adjoin_root.is_adjoin_root_monic_map_eq_mk AdjoinRoot.isAdjoinRootMonic_map_eq_mk
+
+@[simp]
+theorem isAdjoinRoot_root_eq_root : (AdjoinRoot.isAdjoinRoot f).root = AdjoinRoot.root f := by
+  simp only [IsAdjoinRoot.root, AdjoinRoot.root, AdjoinRoot.isAdjoinRoot_map_eq_mk]
+#align adjoin_root.is_adjoin_root_root_eq_root AdjoinRoot.isAdjoinRoot_root_eq_root
+
+@[simp]
+theorem isAdjoinRootMonic_root_eq_root (hf : Monic f) :
+    (AdjoinRoot.isAdjoinRootMonic f hf).root = AdjoinRoot.root f := by
+  simp only [IsAdjoinRoot.root, AdjoinRoot.root, AdjoinRoot.isAdjoinRootMonic_map_eq_mk]
+#align adjoin_root.is_adjoin_root_monic_root_eq_root AdjoinRoot.isAdjoinRootMonic_root_eq_root
 
 end AdjoinRoot
 
@@ -737,6 +759,25 @@ theorem minpoly_eq [IsDomain R] [IsDomain S] [NoZeroSMulDivisors R S] [IsIntegra
 #align is_adjoin_root_monic.minpoly_eq IsAdjoinRootMonic.minpoly_eq
 
 end IsAdjoinRootMonic
+
+section Algebra
+
+open AdjoinRoot IsAdjoinRoot minpoly PowerBasis IsAdjoinRootMonic Algebra
+
+theorem Algebra.adjoin.powerBasis'_minpoly_gen [IsDomain R] [IsDomain S] [NoZeroSMulDivisors R S]
+    [IsIntegrallyClosed R] {x : S} (hx' : IsIntegral R x) :
+    minpoly R x = minpoly R (Algebra.adjoin.powerBasis' hx').gen :=
+  by
+  haveI := is_domain_of_prime (prime_of_is_integrally_closed hx')
+  haveI :=
+    no_zero_smul_divisors_of_prime_of_degree_ne_zero (prime_of_is_integrally_closed hx')
+      (ne_of_lt (degree_pos hx')).symm
+  rw [← minpoly_gen_eq, adjoin.power_basis', minpoly_gen_map, minpoly_gen_eq, power_basis'_gen, ←
+    is_adjoin_root_monic_root_eq_root _ (monic hx'), minpoly_eq]
+  exact Irreducible hx'
+#align algebra.adjoin.power_basis'_minpoly_gen Algebra.adjoin.powerBasis'_minpoly_gen
+
+end Algebra
 
 end CommRing
 

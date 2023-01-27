@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Floris van Doorn, Violeta Hernández Palacios
 
 ! This file was ported from Lean 3 source module set_theory.ordinal.arithmetic
-! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
+! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1985,6 +1985,13 @@ theorem mex_not_mem_range {ι : Type u} (f : ι → Ordinal.{max u v}) : mex f �
   cinfₛ_mem (nonempty_compl_range f)
 #align ordinal.mex_not_mem_range Ordinal.mex_not_mem_range
 
+theorem le_mex_of_forall {ι : Type u} {f : ι → Ordinal.{max u v}} {a : Ordinal}
+    (H : ∀ b < a, ∃ i, f i = b) : a ≤ mex f :=
+  by
+  by_contra' h
+  exact mex_not_mem_range f (H _ h)
+#align ordinal.le_mex_of_forall Ordinal.le_mex_of_forall
+
 theorem ne_mex {ι} (f : ι → Ordinal) : ∀ i, f i ≠ mex f := by simpa using mex_not_mem_range f
 #align ordinal.ne_mex Ordinal.ne_mex
 
@@ -2039,6 +2046,13 @@ theorem bmex_not_mem_brange {o : Ordinal} (f : ∀ a < o, Ordinal) : bmex o f �
   rw [← range_family_of_bfamily]
   apply mex_not_mem_range
 #align ordinal.bmex_not_mem_brange Ordinal.bmex_not_mem_brange
+
+theorem le_bmex_of_forall {o : Ordinal} (f : ∀ a < o, Ordinal) {a : Ordinal}
+    (H : ∀ b < a, ∃ i hi, f i hi = b) : a ≤ bmex o f :=
+  by
+  by_contra' h
+  exact bmex_not_mem_brange f (H _ h)
+#align ordinal.le_bmex_of_forall Ordinal.le_bmex_of_forall
 
 theorem ne_bmex {o : Ordinal} (f : ∀ a < o, Ordinal) {i} (hi) : f i hi ≠ bmex o f :=
   by

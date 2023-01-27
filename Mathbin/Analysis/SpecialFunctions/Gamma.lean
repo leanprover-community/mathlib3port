@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Loeffler
 
 ! This file was ported from Lean 3 source module analysis.special_functions.gamma
-! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
+! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -60,7 +60,7 @@ noncomputable section
 
 open Filter intervalIntegral Set Real MeasureTheory Asymptotics
 
-open Nat TopologicalSpace Ennreal BigOperators
+open Nat TopologicalSpace Ennreal BigOperators ComplexConjugate
 
 theorem integral_exp_neg_ioi : (∫ x : ℝ in Ioi 0, exp (-x)) = 1 :=
   by
@@ -147,6 +147,16 @@ See `complex.Gamma_integral_convergent` for a proof of the convergence of the in
 def gammaIntegral (s : ℂ) : ℂ :=
   ∫ x in Ioi (0 : ℝ), ↑(-x).exp * ↑x ^ (s - 1)
 #align complex.Gamma_integral Complex.gammaIntegral
+
+theorem gammaIntegral_conj (s : ℂ) : gammaIntegral (conj s) = conj (gammaIntegral s) :=
+  by
+  rw [Gamma_integral, Gamma_integral, ← integral_conj]
+  refine' set_integral_congr measurableSet_ioi fun x hx => _
+  dsimp only
+  rw [RingHom.map_mul, conj_of_real, cpow_def_of_ne_zero (of_real_ne_zero.mpr (ne_of_gt hx)),
+    cpow_def_of_ne_zero (of_real_ne_zero.mpr (ne_of_gt hx)), ← exp_conj, RingHom.map_mul, ←
+    of_real_log (le_of_lt hx), conj_of_real, RingHom.map_sub, RingHom.map_one]
+#align complex.Gamma_integral_conj Complex.gammaIntegral_conj
 
 theorem gammaIntegral_of_real (s : ℝ) :
     gammaIntegral ↑s = ↑(∫ x : ℝ in Ioi 0, Real.exp (-x) * x ^ (s - 1)) :=
@@ -433,6 +443,21 @@ theorem gamma_nat_eq_factorial (n : ℕ) : gamma (n + 1) = n ! :=
     exact hn
 #align complex.Gamma_nat_eq_factorial Complex.gamma_nat_eq_factorial
 
+theorem gamma_conj (s : ℂ) : gamma (conj s) = conj (gamma s) :=
+  by
+  suffices : ∀ (n : ℕ) (s : ℂ), Gamma_aux n (conj s) = conj (Gamma_aux n s); exact this _ _
+  intro n
+  induction' n with n IH
+  · rw [Gamma_aux]
+    exact Gamma_integral_conj
+  · intro s
+    rw [Gamma_aux]
+    dsimp only
+    rw [div_eq_mul_inv _ s, RingHom.map_mul, conj_inv, ← div_eq_mul_inv]
+    suffices conj s + 1 = conj (s + 1) by rw [this, IH]
+    rw [RingHom.map_add, RingHom.map_one]
+#align complex.Gamma_conj Complex.gamma_conj
+
 end GammaDef
 
 end Complex
@@ -699,6 +724,10 @@ theorem gamma_one : gamma 1 = 1 := by
   rw [Gamma, Complex.of_real_one, Complex.gamma_one, Complex.one_re]
 #align real.Gamma_one Real.gamma_one
 
+theorem Complex.gamma_of_real (s : ℝ) : Complex.gamma (s : ℂ) = gamma s := by
+  rw [Gamma, eq_comm, ← Complex.eq_conj_iff_re, ← Complex.gamma_conj, Complex.conj_of_real]
+#align complex.Gamma_of_real Complex.gamma_of_real
+
 theorem gamma_nat_eq_factorial (n : ℕ) : gamma (n + 1) = n ! := by
   rw [Gamma, Complex.of_real_add, Complex.of_real_nat_cast, Complex.of_real_one,
     Complex.gamma_nat_eq_factorial, ← Complex.of_real_nat_cast, Complex.of_real_re]
@@ -839,6 +868,22 @@ theorem convexOn_log_gamma : ConvexOn ℝ (Ioi 0) (log ∘ Gamma) :=
       (mul_pos (rpow_pos_of_pos (Gamma_pos_of_pos hx) _) (rpow_pos_of_pos (Gamma_pos_of_pos hy) _))]
   exact Gamma_mul_add_mul_le_rpow_Gamma_mul_rpow_Gamma hx hy ha hb hab
 #align real.convex_on_log_Gamma Real.convexOn_log_gamma
+
+theorem convexOn_gamma : ConvexOn ℝ (Ioi 0) gamma :=
+  by
+  refine' ⟨convex_ioi 0, fun x hx y hy a b ha hb hab => _⟩
+  have :=
+    ConvexOn.comp (convex_on_exp.subset (subset_univ _) _) convex_on_log_Gamma fun u hu v hv huv =>
+      exp_le_exp.mpr huv
+  convert this.2 hx hy ha hb hab
+  · rw [Function.comp_apply, exp_log (Gamma_pos_of_pos <| this.1 hx hy ha hb hab)]
+  · rw [Function.comp_apply, exp_log (Gamma_pos_of_pos hx)]
+  · rw [Function.comp_apply, exp_log (Gamma_pos_of_pos hy)]
+  · rw [convex_iff_is_preconnected]
+    refine' is_preconnected_Ioi.image _ fun x hx => ContinuousAt.continuousWithinAt _
+    refine' (differentiable_at_Gamma fun m => _).ContinuousAt.log (Gamma_pos_of_pos hx).ne'
+    exact (add_pos_of_pos_of_nonneg hx (Nat.cast_nonneg m)).ne'
+#align real.convex_on_Gamma Real.convexOn_gamma
 
 section BohrMollerup
 
@@ -1086,6 +1131,48 @@ theorem eq_gamma_of_log_convex {f : ℝ → ℝ} (hf_conv : ConvexOn ℝ (Ioi 0)
 #align real.eq_Gamma_of_log_convex Real.eq_gamma_of_log_convex
 
 end BohrMollerup
+
+section StrictMono
+
+theorem gamma_two : gamma 2 = 1 := by simpa using Gamma_nat_eq_factorial 1
+#align real.Gamma_two Real.gamma_two
+
+theorem gamma_three_div_two_lt_one : gamma (3 / 2) < 1 :=
+  by
+  -- This can also be proved using the closed-form evaluation of `Gamma (1 / 2)` in
+  -- `analysis.special_functions.gaussian`, but we give a self-contained proof using log-convexity
+  -- to avoid unnecessary imports.
+  have A : (0 : ℝ) < 3 / 2 := by norm_num
+  have :=
+    bohr_mollerup.f_add_nat_le convex_on_log_Gamma (fun y hy => _) two_neZero one_half_pos
+      (by norm_num : 1 / 2 ≤ (1 : ℝ))
+  swap
+  ·
+    rw [Function.comp_apply, Gamma_add_one hy.ne', log_mul hy.ne' (Gamma_pos_of_pos hy).ne',
+      add_comm]
+  rw [Function.comp_apply, Function.comp_apply, Nat.cast_two, Gamma_two, log_one, zero_add,
+    (by norm_num : (2 : ℝ) + 1 / 2 = 3 / 2 + 1), Gamma_add_one A.ne',
+    log_mul A.ne' (Gamma_pos_of_pos A).ne', ← le_sub_iff_add_le',
+    log_le_iff_le_exp (Gamma_pos_of_pos A)] at this
+  refine' this.trans_lt (exp_lt_one_iff.mpr _)
+  rw [mul_comm, ← mul_div_assoc, div_sub' _ _ (2 : ℝ) two_neZero]
+  refine' div_neg_of_neg_of_pos _ two_pos
+  rw [sub_neg, mul_one, ← Nat.cast_two, ← log_pow, ← exp_lt_exp, Nat.cast_two, exp_log two_pos,
+      exp_log] <;>
+    norm_num
+#align real.Gamma_three_div_two_lt_one Real.gamma_three_div_two_lt_one
+
+theorem gamma_strictMonoOn_ici : StrictMonoOn gamma (Ici 2) :=
+  by
+  convert
+    convex_on_Gamma.strict_mono_of_lt (by norm_num : (0 : ℝ) < 3 / 2)
+      (by norm_num : (3 / 2 : ℝ) < 2) (Gamma_two.symm ▸ Gamma_three_div_two_lt_one)
+  symm
+  rw [inter_eq_right_iff_subset]
+  exact fun x hx => two_pos.trans_le hx
+#align real.Gamma_strict_mono_on_Ici Real.gamma_strictMonoOn_ici
+
+end StrictMono
 
 end Real
 

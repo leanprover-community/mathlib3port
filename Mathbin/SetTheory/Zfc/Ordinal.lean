@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Violeta Hernández Palacios
 
 ! This file was ported from Lean 3 source module set_theory.zfc.ordinal
-! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
+! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,7 +43,7 @@ def IsTransitive (x : SetCat) : Prop :=
 #align Set.is_transitive SetCat.IsTransitive
 
 @[simp]
-theorem empty_isTransitive : IsTransitive ∅ := fun y hy => (mem_empty y hy).elim
+theorem empty_isTransitive : IsTransitive ∅ := fun y hy => (not_mem_empty y hy).elim
 #align Set.empty_is_transitive SetCat.empty_isTransitive
 
 theorem IsTransitive.subset_of_mem (h : x.IsTransitive) : y ∈ x → y ⊆ x :=

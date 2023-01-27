@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudriashov, Malo Jaffré
 
 ! This file was ported from Lean 3 source module analysis.convex.slope
-! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
+! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -248,4 +248,25 @@ theorem strictConcaveOn_iff_slope_strict_anti_adjacent :
   ⟨fun h => ⟨h.1, fun x y z => h.slope_anti_adjacent⟩, fun h =>
     strictConcaveOn_of_slope_strict_anti_adjacent h.1 h.2⟩
 #align strict_concave_on_iff_slope_strict_anti_adjacent strictConcaveOn_iff_slope_strict_anti_adjacent
+
+/-- If `f` is convex on a set `s` in a linearly ordered field, and `f x < f y` for two points
+`x < y` in `s`, then `f` is strictly monotone on `s ∩ [y, ∞)`. -/
+theorem ConvexOn.strict_mono_of_lt (hf : ConvexOn 𝕜 s f) {x y : 𝕜} (hx : x ∈ s) (hxy : x < y)
+    (hxy' : f x < f y) : StrictMonoOn f (s ∩ Set.Ici y) :=
+  by
+  intro u hu v hv huv
+  have step1 : ∀ {z : 𝕜}, z ∈ s ∩ Set.Ioi y → f y < f z :=
+    by
+    refine' fun z hz => hf.lt_right_of_left_lt hx hz.1 _ hxy'
+    rw [openSegment_eq_ioo (hxy.trans hz.2)]
+    exact ⟨hxy, hz.2⟩
+  rcases eq_or_lt_of_le hu.2 with (rfl | hu2)
+  · exact step1 ⟨hv.1, huv⟩
+  · refine' hf.lt_right_of_left_lt _ hv.1 _ (step1 ⟨hu.1, hu2⟩)
+    · apply hf.1.segment_subset hx hu.1
+      rw [segment_eq_icc (hxy.le.trans hu.2)]
+      exact ⟨hxy.le, hu.2⟩
+    · rw [openSegment_eq_ioo (hu2.trans huv)]
+      exact ⟨hu2, huv⟩
+#align convex_on.strict_mono_of_lt ConvexOn.strict_mono_of_lt
 

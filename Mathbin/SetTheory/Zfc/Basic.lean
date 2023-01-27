@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module set_theory.zfc.basic
-! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
+! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -189,6 +189,10 @@ protected theorem Equiv.euc {x} : ∀ {y z}, Equiv x y → Equiv z y → Equiv x
 protected theorem Equiv.symm {x y} : Equiv x y → Equiv y x :=
   (Equiv.refl y).euc
 #align pSet.equiv.symm PSet.Equiv.symm
+
+protected theorem Equiv.comm {x y} : Equiv x y ↔ Equiv y x :=
+  ⟨Equiv.symm, Equiv.symm⟩
+#align pSet.equiv.comm PSet.Equiv.comm
 
 @[trans]
 protected theorem Equiv.trans {x y z} (h1 : Equiv x y) (h2 : Equiv y z) : Equiv x z :=
@@ -392,9 +396,9 @@ instance : IsEmpty (Type ∅) :=
   PEmpty.isEmpty
 
 @[simp]
-theorem mem_empty (x : PSet.{u}) : x ∉ (∅ : PSet.{u}) :=
+theorem not_mem_empty (x : PSet.{u}) : x ∉ (∅ : PSet.{u}) :=
   IsEmpty.exists_iff.1
-#align pSet.mem_empty PSet.mem_empty
+#align pSet.not_mem_empty PSet.not_mem_empty
 
 @[simp]
 theorem toSet_empty : toSet ∅ = ∅ := by simp [to_set]
@@ -822,9 +826,9 @@ instance : Inhabited SetCat :=
   ⟨∅⟩
 
 @[simp]
-theorem mem_empty (x) : x ∉ (∅ : SetCat.{u}) :=
-  Quotient.inductionOn x PSet.mem_empty
-#align Set.mem_empty SetCat.mem_empty
+theorem not_mem_empty (x) : x ∉ (∅ : SetCat.{u}) :=
+  Quotient.inductionOn x PSet.not_mem_empty
+#align Set.not_mem_empty SetCat.not_mem_empty
 
 @[simp]
 theorem toSet_empty : toSet ∅ = ∅ := by simp [to_set]
@@ -849,8 +853,8 @@ theorem nonempty_mk_iff {x : PSet} : (mk x).Nonempty ↔ x.Nonempty :=
 #align Set.nonempty_mk_iff SetCat.nonempty_mk_iff
 
 theorem eq_empty (x : SetCat.{u}) : x = ∅ ↔ ∀ y : SetCat.{u}, y ∉ x :=
-  ⟨fun h y => h.symm ▸ mem_empty y, fun h =>
-    ext fun y => ⟨fun yx => absurd yx (h y), fun y0 => absurd y0 (mem_empty _)⟩⟩
+  ⟨fun h y => h.symm ▸ not_mem_empty y, fun h =>
+    ext fun y => ⟨fun yx => absurd yx (h y), fun y0 => absurd y0 (not_mem_empty _)⟩⟩
 #align Set.eq_empty SetCat.eq_empty
 
 /-- `insert x y` is the set `{x} ∪ y` -/
@@ -912,7 +916,7 @@ theorem toSet_insert (x y : SetCat) : (insert x y).toSet = insert x y.toSet :=
 @[simp]
 theorem mem_singleton {x y : SetCat.{u}} : x ∈ @singleton SetCat.{u} SetCat.{u} _ y ↔ x = y :=
   Iff.trans mem_insert_iff
-    ⟨fun o => Or.ndrec (fun h => h) (fun n => absurd n (mem_empty _)) o, Or.inl⟩
+    ⟨fun o => Or.ndrec (fun h => h) (fun n => absurd n (not_mem_empty _)) o, Or.inl⟩
 #align Set.mem_singleton SetCat.mem_singleton
 
 @[simp]
@@ -1499,7 +1503,7 @@ theorem sep_hom (p : ClassCat.{u}) (x : SetCat.{u}) :
 
 @[simp]
 theorem empty_hom : ↑(∅ : SetCat.{u}) = (∅ : ClassCat.{u}) :=
-  Set.ext fun y => (iff_false_iff _).2 (SetCat.mem_empty y)
+  Set.ext fun y => (iff_false_iff _).2 (SetCat.not_mem_empty y)
 #align Class.empty_hom ClassCat.empty_hom
 
 @[simp]

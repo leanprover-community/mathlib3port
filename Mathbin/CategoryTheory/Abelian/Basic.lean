@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel, Johan Commelin, Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.abelian.basic
-! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
+! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -419,11 +419,42 @@ abbrev coimageIsoImage' : Abelian.coimage f ≅ image f :=
   IsImage.isoExt (coimageStrongEpiMonoFactorisation f).toMonoIsImage (Image.isImage f)
 #align category_theory.abelian.coimage_iso_image' CategoryTheory.Abelian.coimageIsoImage'
 
+theorem coimageIsoImage'_hom :
+    (coimageIsoImage' f).Hom =
+      cokernel.desc _ (factorThruImage f) (by simp [← cancel_mono (limits.image.ι f)]) :=
+  by
+  ext
+  simp only [← cancel_mono (limits.image.ι f), is_image.iso_ext_hom, cokernel.π_desc,
+    category.assoc, is_image.lift_ι, coimage_strong_epi_mono_factorisation_to_mono_factorisation_m,
+    limits.image.fac]
+#align category_theory.abelian.coimage_iso_image'_hom CategoryTheory.Abelian.coimageIsoImage'_hom
+
+theorem factorThruImage_comp_coimageIsoImage'_inv :
+    factorThruImage f ≫ (coimageIsoImage' f).inv = cokernel.π _ := by
+  simp only [is_image.iso_ext_inv, image.is_image_lift, image.fac_lift,
+    coimage_strong_epi_mono_factorisation_to_mono_factorisation_e]
+#align category_theory.abelian.factor_thru_image_comp_coimage_iso_image'_inv CategoryTheory.Abelian.factorThruImage_comp_coimageIsoImage'_inv
+
 /-- There is a canonical isomorphism between the abelian image and the categorical image of a
     morphism. -/
 abbrev imageIsoImage : Abelian.image f ≅ image f :=
   IsImage.isoExt (imageStrongEpiMonoFactorisation f).toMonoIsImage (Image.isImage f)
 #align category_theory.abelian.image_iso_image CategoryTheory.Abelian.imageIsoImage
+
+theorem imageIsoImage_hom_comp_image_ι : (imageIsoImage f).Hom ≫ Limits.image.ι _ = kernel.ι _ := by
+  simp only [is_image.iso_ext_hom, is_image.lift_ι,
+    image_strong_epi_mono_factorisation_to_mono_factorisation_m]
+#align category_theory.abelian.image_iso_image_hom_comp_image_ι CategoryTheory.Abelian.imageIsoImage_hom_comp_image_ι
+
+theorem imageIsoImage_inv :
+    (imageIsoImage f).inv =
+      kernel.lift _ (Limits.image.ι f) (by simp [← cancel_epi (factor_thru_image f)]) :=
+  by
+  ext
+  simp only [is_image.iso_ext_inv, image.is_image_lift, limits.image.fac_lift,
+    image_strong_epi_mono_factorisation_to_mono_factorisation_e, category.assoc, kernel.lift_ι,
+    limits.image.fac]
+#align category_theory.abelian.image_iso_image_inv CategoryTheory.Abelian.imageIsoImage_inv
 
 end Images
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca, Paul Lezeau, Junyan Xu
 
 ! This file was ported from Lean 3 source module field_theory.minpoly.is_integrally_closed
-! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
+! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -147,6 +147,19 @@ theorem IsIntegrallyClosed.Minpoly.unique {s : S} {P : R[X]} (hmo : P.Monic)
   · exact le_antisymm (min R s hmo hP) (Pmin (minpoly R s) (monic hs) (aeval R s))
   · rw [(monic hs).leadingCoeff, hmo.leading_coeff]
 #align minpoly.is_integrally_closed.minpoly.unique minpoly.IsIntegrallyClosed.Minpoly.unique
+
+theorem prime_of_isIntegrallyClosed {x : S} (hx : IsIntegral R x) : Prime (minpoly R x) :=
+  by
+  refine'
+    ⟨(minpoly.monic hx).NeZero,
+      ⟨by
+        by_contra h_contra <;>
+          exact (ne_of_lt (minpoly.degree_pos hx)) (degree_eq_zero_of_is_unit h_contra).symm,
+        fun a b h => or_iff_not_imp_left.mpr fun h' => _⟩⟩
+  rw [← minpoly.isIntegrallyClosed_dvd_iff hx] at h' h⊢
+  rw [aeval_mul] at h
+  exact eq_zero_of_ne_zero_of_mul_left_eq_zero h' h
+#align minpoly.prime_of_is_integrally_closed minpoly.prime_of_isIntegrallyClosed
 
 section AdjoinRoot
 

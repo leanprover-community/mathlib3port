@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Chris Hughes
 
 ! This file was ported from Lean 3 source module ring_theory.adjoin_root
-! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
+! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -226,6 +226,20 @@ theorem isAlgebraic_root (hf : f ≠ 0) : IsAlgebraic R (root f) :=
   ⟨f, hf, eval₂_root f⟩
 #align adjoin_root.is_algebraic_root AdjoinRoot.isAlgebraic_root
 
+theorem of.injective_of_degree_ne_zero [IsDomain R] (hf : f.degree ≠ 0) :
+    Function.Injective (AdjoinRoot.of f) :=
+  by
+  rw [injective_iff_map_eq_zero]
+  intro p hp
+  rw [AdjoinRoot.of, RingHom.comp_apply, AdjoinRoot.mk_eq_zero] at hp
+  by_cases h : f = 0
+  · exact C_eq_zero.mp (eq_zero_of_zero_dvd (by rwa [h] at hp))
+  · contrapose! hf with h_contra
+    rw [← degree_C h_contra]
+    apply le_antisymm (degree_le_of_dvd hp (by rwa [Ne.def, C_eq_zero])) _
+    rwa [degree_C h_contra, zero_le_degree_iff]
+#align adjoin_root.of.injective_of_degree_ne_zero AdjoinRoot.of.injective_of_degree_ne_zero
+
 variable [CommRing S]
 
 /-- Lift a ring homomorphism `i : R →+* S` to `adjoin_root f →+* S`. -/
@@ -325,6 +339,23 @@ theorem algHom_subsingleton {S : Type _} [CommRing S] [Algebra R S] {r : R} :
 #align adjoin_root.alg_hom_subsingleton AdjoinRoot.algHom_subsingleton
 
 end AdjoinInv
+
+section Prime
+
+variable {f}
+
+theorem isDomain_of_prime (hf : Prime f) : IsDomain (AdjoinRoot f) :=
+  (Ideal.Quotient.isDomain_iff_prime (span {f} : Ideal R[X])).mpr <|
+    (Ideal.span_singleton_prime hf.NeZero).mpr hf
+#align adjoin_root.is_domain_of_prime AdjoinRoot.isDomain_of_prime
+
+theorem noZeroSMulDivisors_of_prime_of_degree_ne_zero [IsDomain R] (hf : Prime f)
+    (hf' : f.degree ≠ 0) : NoZeroSMulDivisors R (AdjoinRoot f) :=
+  haveI := is_domain_of_prime hf
+  no_zero_smul_divisors.iff_algebra_map_injective.mpr (of.injective_of_degree_ne_zero hf')
+#align adjoin_root.no_zero_smul_divisors_of_prime_of_degree_ne_zero AdjoinRoot.noZeroSMulDivisors_of_prime_of_degree_ne_zero
+
+end Prime
 
 end CommRing
 

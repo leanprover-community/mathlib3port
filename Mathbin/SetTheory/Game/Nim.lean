@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Fox Thomson, Markus Himmel
 
 ! This file was ported from Lean 3 source module set_theory.game.nim
-! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
+! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -239,14 +239,6 @@ instance nim_impartial (o : Ordinal) : Impartial (nim o) :=
   refine' ⟨equiv_rfl, fun i => _, fun i => _⟩ <;> simpa using IH _ (typein_lt_self _)
 #align pgame.nim_impartial Pgame.nim_impartial
 
-theorem exists_ordinal_moveLeft_eq {o : Ordinal} (i) : ∃ o' < o, (nim o).moveLeft i = nim o' :=
-  ⟨_, typein_lt_self _, moveLeft_nim' i⟩
-#align pgame.exists_ordinal_move_left_eq Pgame.exists_ordinal_moveLeft_eq
-
-theorem exists_moveLeft_eq {o o' : Ordinal} (h : o' < o) : ∃ i, (nim o).moveLeft i = nim o' :=
-  ⟨toLeftMovesNim ⟨o', h⟩, by simp⟩
-#align pgame.exists_move_left_eq Pgame.exists_moveLeft_eq
-
 theorem nim_fuzzy_zero_of_ne_zero {o : Ordinal} (ho : o ≠ 0) : nim o ‖ 0 :=
   by
   rw [impartial.fuzzy_zero_iff_lf, nim_def, lf_zero_le]
@@ -383,65 +375,45 @@ theorem grundyValue_eq_mex_right :
     apply grundy_value_neg
 #align pgame.grundy_value_eq_mex_right Pgame.grundyValue_eq_mex_right
 
+-- Todo: this actually generalizes to all ordinals, by defining `ordinal.lxor` as the pairwise
+-- `nat.lxor` of base `ω` Cantor normal forms.
+/-- The Grundy value of the sum of two nim games with natural numbers of piles equals their bitwise
+xor. -/
 @[simp]
 theorem grundyValue_nim_add_nim (n m : ℕ) : grundyValue (nim.{u} n + nim.{u} m) = Nat.lxor' n m :=
   by
+  -- We do strong induction on both variables.
   induction' n using Nat.strong_induction_on with n hn generalizing m
   induction' m using Nat.strong_induction_on with m hm
   rw [grundy_value_eq_mex_left]
-  -- We want to show that `n xor m` is the smallest unreachable Grundy value. We will do this in two
-  -- steps:
-  -- h₀: `n xor m` is not a reachable grundy number.
-  -- h₁: every Grundy number strictly smaller than `n xor m` is reachable.
-  have h₀ : ∀ i, grundy_value ((nim n + nim m).moveLeft i) ≠ (Nat.lxor' n m : Ordinal) :=
-    by
-    -- To show that `n xor m` is unreachable, we show that every move produces a Grundy number
-    -- different from `n xor m`.
-    intro i
-    -- The move operates either on the left pile or on the right pile.
-    apply left_moves_add_cases i
-    all_goals
-      -- One of the piles is reduced to `k` stones, with `k < n` or `k < m`.
-      intro a
-      obtain ⟨ok, hk, hk'⟩ := exists_ordinal_move_left_eq a
-      obtain ⟨k, rfl⟩ := Ordinal.lt_omega.1 (lt_trans hk (Ordinal.nat_lt_omega _))
-      replace hk := Ordinal.nat_cast_lt.1 hk
-      -- Thus, the problem is reduced to computing the Grundy value of `nim n + nim k` or
-      -- `nim k + nim m`, both of which can be dealt with using an inductive hypothesis.
-      simp only [hk', add_move_left_inl, add_move_left_inr, id]
-      first |rw [hn _ hk]|rw [hm _ hk]
-      -- But of course xor is injective, so if we change one of the arguments, we will not get the
-      -- same value again.
-      intro h
-      rw [Ordinal.nat_cast_inj] at h
-      try rw [Nat.lxor'_comm n k, Nat.lxor'_comm n m] at h
-      exact hk.ne (Nat.lxor'_left_injective h)
-  have h₁ :
-    ∀ u : Ordinal,
-      u < Nat.lxor' n m → u ∈ Set.range fun i => grundy_value ((nim n + nim m).moveLeft i) :=
-    by
-    -- Take any natural number `u` less than `n xor m`.
-    intro ou hu
-    obtain ⟨u, rfl⟩ := Ordinal.lt_omega.1 (lt_trans hu (Ordinal.nat_lt_omega _))
+  apply (Ordinal.mex_le_of_ne.{u, u} fun i => _).antisymm (Ordinal.le_mex_of_forall fun ou hu => _)
+  -- The Grundy value `nat.lxor n m` can't be reached by left moves.
+  ·
+    apply left_moves_add_cases i <;>
+      · -- A left move leaves us with a Grundy value of `nat.lxor k m` for `k < n`, or `nat.lxor n k`
+        -- for `k < m`.
+        refine' fun a => left_moves_nim_rec_on a fun ok hk => _
+        obtain ⟨k, rfl⟩ := Ordinal.lt_omega.1 (hk.trans (Ordinal.nat_lt_omega _))
+        simp only [add_move_left_inl, add_move_left_inr, move_left_nim', Equiv.symm_apply_apply]
+        -- The inequality follows from injectivity.
+        rw [nat_cast_lt] at hk
+        first |rw [hn _ hk]|rw [hm _ hk]
+        refine' fun h => hk.ne _
+        rw [Ordinal.nat_cast_inj] at h
+        first |rwa [Nat.lxor'_left_inj] at h|rwa [Nat.lxor'_right_inj] at h
+  -- Every other smaller Grundy value can be reached by left moves.
+  · -- If `u < nat.lxor m n`, then either `nat.lxor u n < m` or `nat.lxor u m < n`.
+    obtain ⟨u, rfl⟩ := Ordinal.lt_omega.1 (hu.trans (Ordinal.nat_lt_omega _))
     replace hu := Ordinal.nat_cast_lt.1 hu
-    -- Our goal is to produce a move that gives the Grundy value `u`.
-    rw [Set.mem_range]
-    -- By a lemma about xor, either `u xor m < n` or `u xor n < m`.
     cases' Nat.lt_lxor'_cases hu with h h
-    -- Therefore, we can play the corresponding move, and by the inductive hypothesis the new state
-    -- is `(u xor m) xor m = u` or `n xor (u xor n) = u` as required.
-    · obtain ⟨i, hi⟩ := exists_move_left_eq (Ordinal.nat_cast_lt.2 h)
-      refine' ⟨to_left_moves_add (Sum.inl i), _⟩
-      simp only [hi, add_move_left_inl]
-      rw [hn _ h, Nat.lxor'_assoc, Nat.lxor'_self, Nat.lxor'_zero]
-    · obtain ⟨i, hi⟩ := exists_move_left_eq (Ordinal.nat_cast_lt.2 h)
-      refine' ⟨to_left_moves_add (Sum.inr i), _⟩
-      simp only [hi, add_move_left_inr]
-      rw [hm _ h, Nat.lxor'_comm, Nat.lxor'_assoc, Nat.lxor'_self, Nat.lxor'_zero]
-  -- We are done!
-  apply (Ordinal.mex_le_of_ne.{u, u} h₀).antisymm
-  contrapose! h₁
-  exact ⟨_, ⟨h₁, Ordinal.mex_not_mem_range _⟩⟩
+    -- In the first case, reducing the `m` pile to `nat.lxor u n` gives the desired Grundy value.
+    · refine' ⟨to_left_moves_add (Sum.inl <| to_left_moves_nim ⟨_, Ordinal.nat_cast_lt.2 h⟩), _⟩
+      simp [Nat.lxor_cancel_right, hn _ h]
+    -- In the second case, reducing the `n` pile to `nat.lxor u m` gives the desired Grundy value.
+    · refine' ⟨to_left_moves_add (Sum.inr <| to_left_moves_nim ⟨_, Ordinal.nat_cast_lt.2 h⟩), _⟩
+      have : n.lxor (u.lxor n) = u
+      rw [Nat.lxor'_comm u, Nat.lxor'_cancel_left]
+      simpa [hm _ h] using this
 #align pgame.grundy_value_nim_add_nim Pgame.grundyValue_nim_add_nim
 
 theorem nim_add_nim_equiv {n m : ℕ} : nim n + nim m ≈ nim (Nat.lxor' n m) := by

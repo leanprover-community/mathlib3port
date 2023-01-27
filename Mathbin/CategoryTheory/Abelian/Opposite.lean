@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.abelian.opposite
-! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
+! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -142,6 +142,57 @@ theorem Cokernel.π_unop :
 def cokernelUnopUnop : cokernel g.unop ≅ (kernel g).unop :=
   (cokernelUnopOp g).unop.symm
 #align category_theory.cokernel_unop_unop CategoryTheory.cokernelUnopUnop
+
+/-- The opposite of the image of `g.unop` is the image of `g.` -/
+def imageUnopOp : Opposite.op (image g.unop) ≅ image g :=
+  (Abelian.imageIsoImage _).op ≪≫
+    (cokernelOpOp _).symm ≪≫
+      cokernelIsoOfEq (Cokernel.π_unop _) ≪≫
+        cokernelEpiComp _ _ ≪≫ cokernelCompIsIso _ _ ≪≫ Abelian.coimageIsoImage' _
+#align category_theory.image_unop_op CategoryTheory.imageUnopOp
+
+/-- The opposite of the image of `f` is the image of `f.op`. -/
+def imageOpOp : Opposite.op (image f) ≅ image f.op :=
+  imageUnopOp f.op
+#align category_theory.image_op_op CategoryTheory.imageOpOp
+
+/-- The image of `f.op` is the opposite of the image of `f`. -/
+def imageOpUnop : (image f.op).unop ≅ image f :=
+  (imageUnopOp f.op).unop
+#align category_theory.image_op_unop CategoryTheory.imageOpUnop
+
+/-- The image of `g` is the opposite of the image of `g.unop.` -/
+def imageUnopUnop : (image g).unop ≅ image g.unop :=
+  (imageUnopOp g).unop
+#align category_theory.image_unop_unop CategoryTheory.imageUnopUnop
+
+theorem image_ι_op_comp_imageUnopOp_hom :
+    (image.ι g.unop).op ≫ (imageUnopOp g).Hom = factorThruImage g :=
+  by
+  dsimp only [image_unop_op]
+  simp only [← category.assoc, ← op_comp, iso.trans_hom, iso.symm_hom, iso.op_hom,
+    cokernel_op_op_inv, cokernel_comp_is_iso_hom, cokernel_epi_comp_hom,
+    cokernel_iso_of_eq_hom_comp_desc_assoc, abelian.coimage_iso_image'_hom, eq_to_hom_refl,
+    is_iso.inv_id, category.id_comp (cokernel.π (kernel.ι g))]
+  simp only [category.assoc, abelian.image_iso_image_hom_comp_image_ι, kernel.lift_ι,
+    Quiver.Hom.op_unop, cokernel.π_desc]
+#align category_theory.image_ι_op_comp_image_unop_op_hom CategoryTheory.image_ι_op_comp_imageUnopOp_hom
+
+theorem imageUnopOp_hom_comp_image_ι :
+    (imageUnopOp g).Hom ≫ image.ι g = (factorThruImage g.unop).op := by
+  simp only [← cancel_epi (image.ι g.unop).op, ← category.assoc, image_ι_op_comp_image_unop_op_hom,
+    ← op_comp, image.fac, Quiver.Hom.op_unop]
+#align category_theory.image_unop_op_hom_comp_image_ι CategoryTheory.imageUnopOp_hom_comp_image_ι
+
+theorem factorThruImage_comp_imageUnopOp_inv :
+    factorThruImage g ≫ (imageUnopOp g).inv = (image.ι g.unop).op := by
+  rw [iso.comp_inv_eq, image_ι_op_comp_image_unop_op_hom]
+#align category_theory.factor_thru_image_comp_image_unop_op_inv CategoryTheory.factorThruImage_comp_imageUnopOp_inv
+
+theorem imageUnopOp_inv_comp_op_factorThruImage :
+    (imageUnopOp g).inv ≫ (factorThruImage g.unop).op = image.ι g := by
+  rw [iso.inv_comp_eq, image_unop_op_hom_comp_image_ι]
+#align category_theory.image_unop_op_inv_comp_op_factor_thru_image CategoryTheory.imageUnopOp_inv_comp_op_factorThruImage
 
 end
 

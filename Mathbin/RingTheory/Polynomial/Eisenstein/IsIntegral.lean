@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module ring_theory.polynomial.eisenstein.is_integral
-! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
+! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -66,10 +66,9 @@ theorem cyclotomicCompXAddOneIsEisensteinAt [hp : Fact p.Prime] :
       rw [lcoeff_apply, ← C_eq_nat_cast, C_mul_X_pow_eq_monomial, coeff_monomial]
     rw [nat_degree_comp, show (X + 1 : ℤ[X]) = X + C 1 by simp, nat_degree_X_add_C, mul_one,
       nat_degree_cyclotomic, Nat.totient_prime hp.out] at hi
-    simp only [lt_of_lt_of_le hi (Nat.sub_le _ _), sum_ite_eq', mem_range, if_true,
-      Ideal.submodule_span_eq, Ideal.mem_span_singleton]
-    exact
-      Int.coe_nat_dvd.2 (Nat.Prime.dvd_choose_self (Nat.succ_pos i) (lt_tsub_iff_right.1 hi) hp.out)
+    simp only [hi.trans_le (Nat.sub_le _ _), sum_ite_eq', mem_range, if_true,
+      Ideal.submodule_span_eq, Ideal.mem_span_singleton, Int.coe_nat_dvd]
+    exact hp.out.dvd_choose_self i.succ_ne_zero (lt_tsub_iff_right.1 hi)
   · rw [coeff_zero_eq_eval_zero, eval_comp, cyclotomic_prime, eval_add, eval_X, eval_one, zero_add,
       eval_geom_sum, one_geom_sum, Ideal.submodule_span_eq, Ideal.span_singleton_pow,
       Ideal.mem_span_singleton]

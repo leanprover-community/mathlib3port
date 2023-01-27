@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Benjamin Davidson
 
 ! This file was ported from Lean 3 source module analysis.special_functions.integrals
-! leanprover-community/mathlib commit f93c11933efbc3c2f0299e47b8ff83e9b539cbf6
+! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -489,6 +489,22 @@ theorem integral_sin : (∫ x in a..b, sin x) = cos a - cos b := by
 theorem integral_cos : (∫ x in a..b, cos x) = sin b - sin a := by
   rw [integral_deriv_eq_sub'] <;> norm_num [continuous_on_cos]
 #align integral_cos integral_cos
+
+theorem integral_cos_mul_complex {z : ℂ} (hz : z ≠ 0) (a b : ℝ) :
+    (∫ x in a..b, Complex.cos (z * x)) = Complex.sin (z * b) / z - Complex.sin (z * a) / z :=
+  by
+  apply integral_eq_sub_of_has_deriv_at
+  swap
+  · apply Continuous.intervalIntegrable
+    exact complex.continuous_cos.comp (continuous_const.mul Complex.continuous_of_real)
+  intro x hx
+  have a := Complex.hasDerivAt_sin (↑x * z)
+  have b : HasDerivAt (fun y => y * z : ℂ → ℂ) z ↑x := hasDerivAt_mul_const _
+  have c : HasDerivAt (fun y : ℂ => Complex.sin (y * z)) _ ↑x := HasDerivAt.comp x a b
+  convert HasDerivAt.comp_of_real (c.div_const z)
+  · simp_rw [mul_comm]
+  · rw [mul_div_cancel _ hz, mul_comm]
+#align integral_cos_mul_complex integral_cos_mul_complex
 
 theorem integral_cos_sq_sub_sin_sq :
     (∫ x in a..b, cos x ^ 2 - sin x ^ 2) = sin b * cos b - sin a * cos a := by
