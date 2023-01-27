@@ -57,14 +57,14 @@ instance AddCommGroup.ofSubgroupOnRing [Ring R] [SetLike σ R] [AddSubgroupClass
 #align add_comm_group.of_subgroup_on_ring AddCommGroup.ofSubgroupOnRing
 
 theorem SetLike.algebraMap_mem_graded [Zero ι] [CommSemiring S] [Semiring R] [Algebra S R]
-    (A : ι → Submodule S R) [SetLike.HasGradedOne A] (s : S) : algebraMap S R s ∈ A 0 :=
+    (A : ι → Submodule S R) [SetLike.GradedOne A] (s : S) : algebraMap S R s ∈ A 0 :=
   by
   rw [Algebra.algebraMap_eq_smul_one]
   exact (A 0).smul_mem s <| SetLike.one_mem_graded _
 #align set_like.algebra_map_mem_graded SetLike.algebraMap_mem_graded
 
 theorem SetLike.nat_cast_mem_graded [Zero ι] [AddMonoidWithOne R] [SetLike σ R]
-    [AddSubmonoidClass σ R] (A : ι → σ) [SetLike.HasGradedOne A] (n : ℕ) : (n : R) ∈ A 0 :=
+    [AddSubmonoidClass σ R] (A : ι → σ) [SetLike.GradedOne A] (n : ℕ) : (n : R) ∈ A 0 :=
   by
   induction n
   · rw [Nat.cast_zero]
@@ -74,7 +74,7 @@ theorem SetLike.nat_cast_mem_graded [Zero ι] [AddMonoidWithOne R] [SetLike σ R
 #align set_like.nat_cast_mem_graded SetLike.nat_cast_mem_graded
 
 theorem SetLike.int_cast_mem_graded [Zero ι] [AddGroupWithOne R] [SetLike σ R]
-    [AddSubgroupClass σ R] (A : ι → σ) [SetLike.HasGradedOne A] (z : ℤ) : (z : R) ∈ A 0 :=
+    [AddSubgroupClass σ R] (A : ι → σ) [SetLike.GradedOne A] (z : ℤ) : (z : R) ∈ A 0 :=
   by
   induction z
   · rw [Int.cast_ofNat]
@@ -94,9 +94,9 @@ namespace SetLike
 
 /-- Build a `gnon_unital_non_assoc_semiring` instance for a collection of additive submonoids. -/
 instance gnonUnitalNonAssocSemiring [Add ι] [NonUnitalNonAssocSemiring R] [SetLike σ R]
-    [AddSubmonoidClass σ R] (A : ι → σ) [SetLike.HasGradedMul A] :
+    [AddSubmonoidClass σ R] (A : ι → σ) [SetLike.GradedMul A] :
     DirectSum.GnonUnitalNonAssocSemiring fun i => A i :=
-  { SetLike.ghasMul A with
+  { SetLike.gMul A with
     mul_zero := fun i j _ => Subtype.ext (mul_zero _)
     zero_mul := fun i j _ => Subtype.ext (zero_mul _)
     mul_add := fun i j _ _ _ => Subtype.ext (mul_add _ _ _)
@@ -106,7 +106,7 @@ instance gnonUnitalNonAssocSemiring [Add ι] [NonUnitalNonAssocSemiring R] [SetL
 /-- Build a `gsemiring` instance for a collection of additive submonoids. -/
 instance gsemiring [AddMonoid ι] [Semiring R] [SetLike σ R] [AddSubmonoidClass σ R] (A : ι → σ)
     [SetLike.GradedMonoid A] : DirectSum.Gsemiring fun i => A i :=
-  { SetLike.gmonoid A with
+  { SetLike.gMonoid A with
     mul_zero := fun i j _ => Subtype.ext (mul_zero _)
     zero_mul := fun i j _ => Subtype.ext (zero_mul _)
     mul_add := fun i j _ _ _ => Subtype.ext (mul_add _ _ _)
@@ -119,7 +119,7 @@ instance gsemiring [AddMonoid ι] [Semiring R] [SetLike σ R] [AddSubmonoidClass
 /-- Build a `gcomm_semiring` instance for a collection of additive submonoids. -/
 instance gcommSemiring [AddCommMonoid ι] [CommSemiring R] [SetLike σ R] [AddSubmonoidClass σ R]
     (A : ι → σ) [SetLike.GradedMonoid A] : DirectSum.GcommSemiring fun i => A i :=
-  { SetLike.gcommMonoid A, SetLike.gsemiring A with }
+  { SetLike.gCommMonoid A, SetLike.gsemiring A with }
 #align set_like.gcomm_semiring SetLike.gcommSemiring
 
 /-- Build a `gring` instance for a collection of additive subgroups. -/
@@ -136,7 +136,7 @@ instance gring [AddMonoid ι] [Ring R] [SetLike σ R] [AddSubgroupClass σ R] (A
 /-- Build a `gcomm_semiring` instance for a collection of additive submonoids. -/
 instance gcommRing [AddCommMonoid ι] [CommRing R] [SetLike σ R] [AddSubgroupClass σ R] (A : ι → σ)
     [SetLike.GradedMonoid A] : DirectSum.GcommRing fun i => A i :=
-  { SetLike.gcommMonoid A, SetLike.gring A with }
+  { SetLike.gCommMonoid A, SetLike.gring A with }
 #align set_like.gcomm_ring SetLike.gcommRing
 
 end SetLike
@@ -167,7 +167,7 @@ theorem coe_mul_apply [AddMonoid ι] [SetLike.GradedMonoid A]
         r ij.1 * r' ij.2 :=
   by
   rw [mul_eq_sum_support_ghas_mul, Dfinsupp.finset_sum_apply, AddSubmonoidClass.coe_finset_sum]
-  simp_rw [coe_of_apply, ← Finset.sum_filter, SetLike.coe_ghasMul]
+  simp_rw [coe_of_apply, ← Finset.sum_filter, SetLike.coe_gMul]
 #align direct_sum.coe_mul_apply DirectSum.coe_mul_apply
 
 theorem coe_mul_apply_eq_dfinsupp_sum [AddMonoid ι] [SetLike.GradedMonoid A]
@@ -351,17 +351,16 @@ end DirectSum
 
 section HomogeneousElement
 
-theorem SetLike.isHomogeneous_zero_submodule [Zero ι] [Semiring S] [AddCommMonoid R] [Module S R]
-    (A : ι → Submodule S R) : SetLike.IsHomogeneous A (0 : R) :=
+theorem SetLike.homogeneous_zero_submodule [Zero ι] [Semiring S] [AddCommMonoid R] [Module S R]
+    (A : ι → Submodule S R) : SetLike.Homogeneous A (0 : R) :=
   ⟨0, Submodule.zero_mem _⟩
-#align set_like.is_homogeneous_zero_submodule SetLike.isHomogeneous_zero_submodule
+#align set_like.is_homogeneous_zero_submodule SetLike.homogeneous_zero_submodule
 
-theorem SetLike.IsHomogeneous.smul [CommSemiring S] [Semiring R] [Algebra S R]
-    {A : ι → Submodule S R} {s : S} {r : R} (hr : SetLike.IsHomogeneous A r) :
-    SetLike.IsHomogeneous A (s • r) :=
+theorem SetLike.Homogeneous.smul [CommSemiring S] [Semiring R] [Algebra S R] {A : ι → Submodule S R}
+    {s : S} {r : R} (hr : SetLike.Homogeneous A r) : SetLike.Homogeneous A (s • r) :=
   let ⟨i, hi⟩ := hr
   ⟨i, Submodule.smul_mem _ _ hi⟩
-#align set_like.is_homogeneous.smul SetLike.IsHomogeneous.smul
+#align set_like.is_homogeneous.smul SetLike.Homogeneous.smul
 
 end HomogeneousElement
 

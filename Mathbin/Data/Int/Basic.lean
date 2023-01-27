@@ -612,7 +612,8 @@ theorem mod_add_div_aux (m n : ℕ) : (n - (m % n + 1) - (n * (m / n) + n) : ℤ
   exact @congr_arg ℕ ℤ _ _ (fun i => (i + 1 : ℤ)) (Nat.mod_add_div _ _).symm
 #align int.mod_add_div_aux Int.mod_add_div_aux
 
-theorem mod_add_div : ∀ a b : ℤ, a % b + b * (a / b) = a
+#print Int.emod_add_ediv /-
+theorem emod_add_ediv : ∀ a b : ℤ, a % b + b * (a / b) = a
   | (m : ℕ), (n : ℕ) => congr_arg ofNat (Nat.mod_add_div _ _)
   | (m : ℕ), -[n+1] =>
     show (_ + -(n + 1) * -(m / (n + 1) : ℕ) : ℤ) = _ by
@@ -620,10 +621,11 @@ theorem mod_add_div : ∀ a b : ℤ, a % b + b * (a / b) = a
   | -[m+1], 0 => by rw [mod_zero, Int.div_zero] <;> rfl
   | -[m+1], (n + 1 : ℕ) => mod_add_div_aux m n.succ
   | -[m+1], -[n+1] => mod_add_div_aux m n.succ
-#align int.mod_add_div Int.mod_add_divₓ
+#align int.mod_add_div Int.emod_add_ediv
+-/
 
 theorem div_add_mod (a b : ℤ) : b * (a / b) + a % b = a :=
-  (add_comm _ _).trans (mod_add_div _ _)
+  (add_comm _ _).trans (emod_add_ediv _ _)
 #align int.div_add_mod Int.div_add_modₓ
 
 theorem mod_add_div' (m k : ℤ) : m % k + m / k * k = m :=
@@ -639,7 +641,7 @@ theorem div_add_mod' (m k : ℤ) : m / k * k + m % k = m :=
 #align int.div_add_mod' Int.div_add_mod'ₓ
 
 theorem mod_def (a b : ℤ) : a % b = a - b * (a / b) :=
-  eq_sub_of_add_eq (mod_add_div _ _)
+  eq_sub_of_add_eq (emod_add_ediv _ _)
 #align int.mod_def Int.mod_defₓ
 
 /-! ### properties of `/` and `%` -/

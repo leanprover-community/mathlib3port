@@ -108,7 +108,7 @@ protected theorem mvPolynomial (ι : Type u_2) [Finite ι] :
     exact
       let eqv := (MvPolynomial.renameEquiv R <| Fintype.equivFin ι).symm
       ⟨Fintype.card ι, eqv, eqv.Surjective,
-        ((RingHom.injective_iff_ker_eq_bot _).1 eqv.Injective).symm ▸ Submodule.fgBot⟩
+        ((RingHom.injective_iff_ker_eq_bot _).1 eqv.Injective).symm ▸ Submodule.fg_bot⟩
 #align algebra.finite_presentation.mv_polynomial Algebra.FinitePresentation.mvPolynomial
 
 /-- `R` is finitely presented as `R`-algebra. -/
@@ -165,7 +165,7 @@ theorem iff_quotient_mv_polynomial' :
     refine'
       ⟨ULift (Fin n), inferInstance, f.comp ulift_var.to_alg_hom, hfs.comp ulift_var.surjective,
         Ideal.fg_ker_comp _ _ _ hfk ulift_var.surjective⟩
-    convert Submodule.fgBot
+    convert Submodule.fg_bot
     exact RingHom.ker_coe_equiv ulift_var.to_ring_equiv
   · rintro ⟨ι, hfintype, f, hf⟩
     skip
@@ -173,7 +173,7 @@ theorem iff_quotient_mv_polynomial' :
     refine'
       ⟨Fintype.card ι, f.comp Equiv.symm, hf.1.comp (AlgEquiv.symm Equiv).Surjective,
         Ideal.fg_ker_comp _ f _ hf.2 equiv.symm.surjective⟩
-    convert Submodule.fgBot
+    convert Submodule.fg_bot
     exact RingHom.ker_coe_equiv equiv.symm.to_ring_equiv
 #align algebra.finite_presentation.iff_quotient_mv_polynomial' Algebra.FinitePresentation.iff_quotient_mv_polynomial'
 
@@ -192,7 +192,7 @@ theorem mvPolynomial_of_finitePresentation (hfp : FinitePresentation R A) (ι : 
       ⟨Sum ι ι', by infer_instance, g,
         (MvPolynomial.map_surjective f.to_ring_hom hf_surj).comp (AlgEquiv.surjective _),
         Ideal.fg_ker_comp _ _ _ _ (AlgEquiv.surjective _)⟩
-    · convert Submodule.fgBot
+    · convert Submodule.fg_bot
       exact RingHom.ker_coe_equiv (MvPolynomial.sumAlgEquiv R ι ι').toRingEquiv
     · rw [AlgHom.toRingHom_eq_coe, MvPolynomial.mapAlgHom_coe_ringHom, MvPolynomial.ker_map]
       exact hf_ker.map MvPolynomial.c

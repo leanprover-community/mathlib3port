@@ -283,7 +283,7 @@ variable (I M)
 instance : IsHausdorff I (adicCompletion I M) :=
   ⟨fun x hx =>
     ext fun n =>
-      smulInductionOn (Smodeq.zero.1 <| hx n)
+      smul_induction_on (Smodeq.zero.1 <| hx n)
         (fun r hr x _ =>
           ((eval I M n).map_smul r x).symm ▸
             Quotient.inductionOn' (eval I M n x) fun x => Smodeq.zero.2 <| smul_mem_smul hr mem_top)

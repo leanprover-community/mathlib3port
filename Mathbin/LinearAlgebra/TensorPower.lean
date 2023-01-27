@@ -60,11 +60,11 @@ open TensorProduct
 open PiTensorProduct
 
 /-- As a graded monoid, `⨂[R]^i M` has a `1 : ⨂[R]^0 M`. -/
-instance ghasOne : GradedMonoid.GhasOne fun i => (⨂[R]^i) M where one := tprod R Fin.elim0
+instance ghasOne : GradedMonoid.GOne fun i => (⨂[R]^i) M where one := tprod R Fin.elim0
 #align tensor_power.ghas_one TensorPower.ghasOne
 
 -- mathport name: exprₜ1
-local notation "ₜ1" => @GradedMonoid.GhasOne.one ℕ (fun i => (⨂[R]^i) M) _ _
+local notation "ₜ1" => @GradedMonoid.GOne.one ℕ (fun i => (⨂[R]^i) M) _ _
 
 theorem ghasOne_def : ₜ1 = tprod R Fin.elim0 :=
   rfl
@@ -76,11 +76,11 @@ def mulEquiv {n m : ℕ} : (⨂[R]^n) M ⊗[R] (⨂[R]^m) M ≃ₗ[R] (⨂[R]^(n
 #align tensor_power.mul_equiv TensorPower.mulEquiv
 
 /-- As a graded monoid, `⨂[R]^i M` has a `(*) : ⨂[R]^i M → ⨂[R]^j M → ⨂[R]^(i + j) M`. -/
-instance ghasMul : GradedMonoid.GhasMul fun i => (⨂[R]^i) M where mul i j a b := mulEquiv (a ⊗ₜ b)
+instance ghasMul : GradedMonoid.GMul fun i => (⨂[R]^i) M where mul i j a b := mulEquiv (a ⊗ₜ b)
 #align tensor_power.ghas_mul TensorPower.ghasMul
 
 -- mathport name: «expr ₜ* »
-local infixl:70 " ₜ* " => @GradedMonoid.GhasMul.mul ℕ (fun i => (⨂[R]^i) M) _ _ _ _
+local infixl:70 " ₜ* " => @GradedMonoid.GMul.mul ℕ (fun i => (⨂[R]^i) M) _ _ _ _
 
 theorem ghasMul_def {i j} (a : (⨂[R]^i) M) (b : (⨂[R]^j) M) : a ₜ* b = mulEquiv (a ⊗ₜ b) :=
   rfl

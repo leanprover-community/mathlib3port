@@ -934,7 +934,7 @@ def Derivation.liftKaehlerDifferential (D : Derivation R S M) : Ω[S⁄R] →ₗ
   · exact D.tensor_product_to.comp ((KaehlerDifferential.ideal R S).Subtype.restrictScalars S)
   · intro x hx
     change _ = _
-    apply Submodule.smulInductionOn hx <;> clear hx x
+    apply Submodule.smul_induction_on hx <;> clear hx x
     · rintro x (hx : _ = _) ⟨y, hy : _ = _⟩ -
       dsimp
       rw [Derivation.tensorProductTo_mul, hx, hy, zero_smul, zero_smul, zero_add]

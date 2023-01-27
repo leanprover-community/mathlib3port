@@ -113,10 +113,10 @@ theorem LieIdeal.normalizer_eq_top {R : Type u} {L : Type v} [CommRing R] [LieRi
 open LieIdeal
 
 /-- A nilpotent Lie algebra is its own Cartan subalgebra. -/
-instance LieAlgebra.topIsCartanSubalgebraOfNilpotent [LieAlgebra.IsNilpotent R L] :
+instance LieAlgebra.top_isCartanSubalgebra_of_nilpotent [LieAlgebra.IsNilpotent R L] :
     LieSubalgebra.IsCartanSubalgebra (⊤ : LieSubalgebra R L)
     where
   nilpotent := inferInstance
   self_normalizing := by rw [← top_coe_lie_subalgebra, normalizer_eq_top, top_coe_lie_subalgebra]
-#align lie_algebra.top_is_cartan_subalgebra_of_nilpotent LieAlgebra.topIsCartanSubalgebraOfNilpotent
+#align lie_algebra.top_is_cartan_subalgebra_of_nilpotent LieAlgebra.top_isCartanSubalgebra_of_nilpotent
 

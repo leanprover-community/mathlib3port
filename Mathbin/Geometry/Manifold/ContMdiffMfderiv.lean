@@ -700,7 +700,7 @@ theorem tangentMap_tangentBundle_pure (p : TangentBundle I M) :
     · simp
     · exact differentiableAt_id'
     · exact differentiableAt_const _
-    · exact ModelWithCorners.uniqueDiffAtImage I
+    · exact ModelWithCorners.unique_diff_at_image I
     · exact differentiable_at_id'.prod (differentiableAt_const _)
   simp only [TangentBundle.zeroSection, tangentMap, mfderiv, A, if_pos, chart_at,
     BasicSmoothVectorBundleCore.chart, BasicSmoothVectorBundleCore.toVectorBundleCore,

@@ -168,7 +168,7 @@ theorem reduce_to_affine_global (P : ∀ (X : SchemeCat) (U : Opens X.carrier), 
   apply h₃
 #align algebraic_geometry.reduce_to_affine_global AlgebraicGeometry.reduce_to_affine_global
 
-theorem reduceToAffineNbhd (P : ∀ (X : SchemeCat) (x : X.carrier), Prop)
+theorem reduce_to_affine_nbhd (P : ∀ (X : SchemeCat) (x : X.carrier), Prop)
     (h₁ : ∀ (R : CommRingCat) (x : PrimeSpectrum R), P (SchemeCat.spec.obj <| op R) x)
     (h₂ : ∀ {X Y} (f : X ⟶ Y) [IsOpenImmersion f] (x : X.carrier), P X x → P Y (f.1.base x)) :
     ∀ (X : SchemeCat) (x : X.carrier), P X x :=
@@ -178,7 +178,7 @@ theorem reduceToAffineNbhd (P : ∀ (X : SchemeCat) (x : X.carrier), Prop)
   convert h₂ (X.affine_cover.map (X.affine_cover.f x)) y _
   · rw [e]
   apply h₁
-#align algebraic_geometry.reduce_to_affine_nbhd AlgebraicGeometry.reduceToAffineNbhd
+#align algebraic_geometry.reduce_to_affine_nbhd AlgebraicGeometry.reduce_to_affine_nbhd
 
 theorem eq_zero_of_basicOpen_eq_bot {X : SchemeCat} [hX : IsReduced X] {U : Opens X.carrier}
     (s : X.Presheaf.obj (op U)) (hs : X.basicOpen s = ⊥) : s = 0 :=

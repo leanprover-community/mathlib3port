@@ -234,7 +234,7 @@ theorem taylorWithinEval_hasDerivAt_ioo {f : ℝ → E} {a b t : ℝ} (x : ℝ) 
     HasDerivAt (fun y => taylorWithinEval f n (Icc a b) y x)
       (((n ! : ℝ)⁻¹ * (x - t) ^ n) • iteratedDerivWithin (n + 1) f (Icc a b) t) t :=
   haveI h_nhds := IsOpen.mem_nhds isOpen_ioo ht
-  (hasDerivWithinAt_taylorWithinEval (uniqueDiffWithinAtIoo ht) (uniqueDiffOn_icc hx)
+  (hasDerivWithinAt_taylorWithinEval (uniqueDiffWithinAt_ioo ht) (uniqueDiffOn_icc hx)
         (nhdsWithin_le_nhds h_nhds) ht Ioo_subset_Icc_self hf hf').HasDerivAt
     h_nhds
 #align taylor_within_eval_has_deriv_at_Ioo taylorWithinEval_hasDerivAt_ioo

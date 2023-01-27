@@ -1946,16 +1946,16 @@ variable [CommRing R] [IsDomain R]
 
 /-- The ideal spanned by the variable in the power series ring
  over an integral domain is a prime ideal.-/
-theorem spanXIsPrime : (Ideal.span ({x} : Set (PowerSeries R))).IsPrime :=
+theorem span_x_isPrime : (Ideal.span ({x} : Set (PowerSeries R))).IsPrime :=
   by
   suffices Ideal.span ({X} : Set (PowerSeries R)) = (constant_coeff R).ker
     by
     rw [this]
-    exact RingHom.kerIsPrime _
+    exact RingHom.ker_isPrime _
   apply Ideal.ext
   intro φ
   rw [RingHom.mem_ker, Ideal.mem_span_singleton, X_dvd_iff]
-#align power_series.span_X_is_prime PowerSeries.spanXIsPrime
+#align power_series.span_X_is_prime PowerSeries.span_x_isPrime
 
 /-- The variable of the power series ring over an integral domain is prime.-/
 theorem x_prime : Prime (x : PowerSeries R) :=

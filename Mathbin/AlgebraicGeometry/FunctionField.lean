@@ -125,7 +125,7 @@ noncomputable instance (R : CommRingCat) [IsDomain R] :
 
 @[simp]
 theorem genericPoint_eq_bot_of_affine (R : CommRingCat) [IsDomain R] :
-    genericPoint (SchemeCat.spec.obj <| op R).carrier = (⟨0, Ideal.botPrime⟩ : PrimeSpectrum R) :=
+    genericPoint (SchemeCat.spec.obj <| op R).carrier = (⟨0, Ideal.bot_prime⟩ : PrimeSpectrum R) :=
   by
   apply (genericPoint_spec (Scheme.Spec.obj <| op R).carrier).Eq
   simp [isGenericPoint_def, ← PrimeSpectrum.zeroLocus_vanishingIdeal_eq_closure]

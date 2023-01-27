@@ -211,7 +211,7 @@ instance Subgroup.isCyclic {α : Type u} [Group α] [IsCyclic α] (H : Subgroup 
           exact_mod_cast (Nat.find_spec hex).2
         have hk₃ : g ^ (k % Nat.find hex) ∈ H :=
           (Subgroup.mul_mem_cancel_right H hk₂).1 <| by
-            rw [← zpow_add, Int.mod_add_div, hk] <;> exact hx
+            rw [← zpow_add, Int.emod_add_ediv, hk] <;> exact hx
         have hk₄ : k % Nat.find hex = (k % Nat.find hex).natAbs := by
           rw [Int.natAbs_of_nonneg
               (Int.emod_nonneg _ (Int.coe_nat_ne_zero_iff_pos.2 (Nat.find_spec hex).1))]

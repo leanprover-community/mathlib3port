@@ -102,8 +102,8 @@ theorem exists_maximalIdeal_pow_eq_of_principal [IsNoetherianRing R] [LocalRing 
       exact Nat.find_spec this
 #align exists_maximal_ideal_pow_eq_of_principal exists_maximalIdeal_pow_eq_of_principal
 
-theorem maximalIdealIsPrincipalOfIsDedekindDomain [LocalRing R] [IsDomain R] [IsDedekindDomain R] :
-    (maximalIdeal R).IsPrincipal := by
+theorem maximalIdeal_isPrincipal_of_isDedekindDomain [LocalRing R] [IsDomain R]
+    [IsDedekindDomain R] : (maximalIdeal R).IsPrincipal := by
   classical
     by_cases ne_bot : maximal_ideal R = ⊥
     · rw [ne_bot]
@@ -190,7 +190,7 @@ theorem maximalIdealIsPrincipalOfIsDedekindDomain [LocalRing R] [IsDomain R] [Is
         rw [← mul_left_cancel₀ hb₄ hk, mul_comm]
         exact ideal.mem_span_singleton'.mpr ⟨_, rfl⟩
       · rwa [Submodule.span_le, Set.singleton_subset_iff]
-#align maximal_ideal_is_principal_of_is_dedekind_domain maximalIdealIsPrincipalOfIsDedekindDomain
+#align maximal_ideal_is_principal_of_is_dedekind_domain maximalIdeal_isPrincipal_of_isDedekindDomain
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (I «expr ≠ » «expr⊥»()) -/
 /- failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -311,7 +311,7 @@ theorem maximalIdealIsPrincipalOfIsDedekindDomain [LocalRing R] [IsDomain R] [Is
                     ":="
                     `ufm_of_gcd_of_wfDvdMonoid)))
                  []
-                 (Tactic.apply "apply" `DiscreteValuationRing.ofUfdOfUniqueIrreducible)
+                 (Tactic.apply "apply" `DiscreteValuationRing.of_ufd_of_unique_irreducible)
                  []
                  (tactic__
                   (cdotTk (patternIgnore (token.«· » "·")))
@@ -433,7 +433,9 @@ theorem maximalIdealIsPrincipalOfIsDedekindDomain [LocalRing R] [IsDomain R] [Is
                 (cdotTk (patternIgnore (token.«· » "·")))
                 [(Tactic.intro "intro" [`h])
                  []
-                 (Tactic.exact "exact" (Term.app `maximalIdealIsPrincipalOfIsDedekindDomain [`R]))])
+                 (Tactic.exact
+                  "exact"
+                  (Term.app `maximalIdeal_isPrincipal_of_isDedekindDomain [`R]))])
                []
                (Tactic.tfaeHave "tfae_have" [] (num "5") "→" (num "6"))
                []
@@ -1038,7 +1040,7 @@ theorem maximalIdealIsPrincipalOfIsDedekindDomain [LocalRing R] [IsDomain R] [Is
                    ":="
                    `ufm_of_gcd_of_wfDvdMonoid)))
                 []
-                (Tactic.apply "apply" `DiscreteValuationRing.ofUfdOfUniqueIrreducible)
+                (Tactic.apply "apply" `DiscreteValuationRing.of_ufd_of_unique_irreducible)
                 []
                 (tactic__
                  (cdotTk (patternIgnore (token.«· » "·")))
@@ -1160,7 +1162,9 @@ theorem maximalIdealIsPrincipalOfIsDedekindDomain [LocalRing R] [IsDomain R] [Is
                (cdotTk (patternIgnore (token.«· » "·")))
                [(Tactic.intro "intro" [`h])
                 []
-                (Tactic.exact "exact" (Term.app `maximalIdealIsPrincipalOfIsDedekindDomain [`R]))])
+                (Tactic.exact
+                 "exact"
+                 (Term.app `maximalIdeal_isPrincipal_of_isDedekindDomain [`R]))])
               []
               (Tactic.tfaeHave "tfae_have" [] (num "5") "→" (num "6"))
               []
@@ -1737,7 +1741,7 @@ theorem maximalIdealIsPrincipalOfIsDedekindDomain [LocalRing R] [IsDomain R] [Is
                ":="
                `ufm_of_gcd_of_wfDvdMonoid)))
             []
-            (Tactic.apply "apply" `DiscreteValuationRing.ofUfdOfUniqueIrreducible)
+            (Tactic.apply "apply" `DiscreteValuationRing.of_ufd_of_unique_irreducible)
             []
             (tactic__
              (cdotTk (patternIgnore (token.«· » "·")))
@@ -1859,7 +1863,7 @@ theorem maximalIdealIsPrincipalOfIsDedekindDomain [LocalRing R] [IsDomain R] [Is
            (cdotTk (patternIgnore (token.«· » "·")))
            [(Tactic.intro "intro" [`h])
             []
-            (Tactic.exact "exact" (Term.app `maximalIdealIsPrincipalOfIsDedekindDomain [`R]))])
+            (Tactic.exact "exact" (Term.app `maximalIdeal_isPrincipal_of_isDedekindDomain [`R]))])
           []
           (Tactic.tfaeHave "tfae_have" [] (num "5") "→" (num "6"))
           []
@@ -2799,7 +2803,7 @@ theorem
               intro
                 haveI := IsBezout.toGcdDomain R
                 haveI : UniqueFactorizationMonoid R := ufm_of_gcd_of_wfDvdMonoid
-                apply DiscreteValuationRing.ofUfdOfUniqueIrreducible
+                apply DiscreteValuationRing.of_ufd_of_unique_irreducible
                 ·
                   obtain ⟨ x , hx₁ , hx₂ ⟩ := Ring.exists_not_isUnit_of_not_isField h
                     obtain ⟨ p , hp₁ , hp₂ ⟩ := WfDvdMonoid.exists_irreducible_factor hx₂ hx₁
@@ -2831,7 +2835,7 @@ theorem
                       h₁
                     ⟩
             tfae_have 3 → 5
-            · intro h exact maximalIdealIsPrincipalOfIsDedekindDomain R
+            · intro h exact maximalIdeal_isPrincipal_of_isDedekindDomain R
             tfae_have 5 → 6
             ·
               rintro ⟨ x , hx ⟩

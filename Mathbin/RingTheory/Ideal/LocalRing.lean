@@ -766,7 +766,7 @@ end ResidueField
 
 theorem ker_eq_maximalIdeal [Field K] (φ : R →+* K) (hφ : Function.Surjective φ) :
     φ.ker = maximalIdeal R :=
-  LocalRing.eq_maximalIdeal <| (RingHom.kerIsMaximalOfSurjective φ) hφ
+  LocalRing.eq_maximalIdeal <| (RingHom.ker_isMaximal_of_surjective φ) hφ
 #align local_ring.ker_eq_maximal_ideal LocalRing.ker_eq_maximalIdeal
 
 theorem isLocalRingHom_residue : IsLocalRingHom (LocalRing.residue R) :=

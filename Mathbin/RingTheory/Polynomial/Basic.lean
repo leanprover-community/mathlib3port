@@ -784,10 +784,10 @@ theorem isDomain_map_c_quotient {P : Ideal R} (H : IsPrime P) :
 #align ideal.is_domain_map_C_quotient Ideal.isDomain_map_c_quotient
 
 /-- If `P` is a prime ideal of `R`, then `P.R[x]` is a prime ideal of `R[x]`. -/
-theorem isPrimeMapCOfIsPrime {P : Ideal R} (H : IsPrime P) :
+theorem isPrime_map_c_of_isPrime {P : Ideal R} (H : IsPrime P) :
     IsPrime (map (c : R →+* R[X]) P : Ideal R[X]) :=
   (Quotient.isDomain_iff_prime (map c P : Ideal R[X])).mp (isDomain_map_c_quotient H)
-#align ideal.is_prime_map_C_of_is_prime Ideal.isPrimeMapCOfIsPrime
+#align ideal.is_prime_map_C_of_is_prime Ideal.isPrime_map_c_of_isPrime
 
 /-- Given any ring `R` and an ideal `I` of `R[X]`, we get a map `R → R[x] → R[x]/I`.
   If we let `R` be the image of `R` in `R[x]/I` then we also have a map `R[x] → R'[x]`.
@@ -821,9 +821,11 @@ theorem eq_zero_of_polynomial_mem_map_range (I : Ideal R[X]) (x : ((Quotient.mk 
   exact hx
 #align ideal.eq_zero_of_polynomial_mem_map_range Ideal.eq_zero_of_polynomial_mem_map_range
 
-theorem isFgDegreeLe [IsNoetherianRing R] (I : Ideal R[X]) (n : ℕ) : Submodule.Fg (I.degreeLe n) :=
-  isNoetherian_submodule_left.1 (isNoetherianOfFgOfNoetherian _ ⟨_, degreeLe_eq_span_x_pow.symm⟩) _
-#align ideal.is_fg_degree_le Ideal.isFgDegreeLe
+theorem is_fg_degreeLe [IsNoetherianRing R] (I : Ideal R[X]) (n : ℕ) :
+    Submodule.Fg (I.degreeLe n) :=
+  isNoetherian_submodule_left.1
+    (isNoetherian_of_fg_of_noetherian _ ⟨_, degreeLe_eq_span_x_pow.symm⟩) _
+#align ideal.is_fg_degree_le Ideal.is_fg_degreeLe
 
 end CommRing
 
@@ -844,7 +846,7 @@ theorem prime_c_iff : Prime (c r) ↔ Prime r :=
     by
     have := hr.1
     rw [← Ideal.span_singleton_prime] at hr⊢
-    · convert Ideal.isPrimeMapCOfIsPrime hr using 1
+    · convert Ideal.isPrime_map_c_of_isPrime hr using 1
       rw [Ideal.map_span, Set.image_singleton]
     exacts[fun h => this (C_eq_zero.1 h), this]⟩
 #align polynomial.prime_C_iff Polynomial.prime_c_iff
@@ -962,7 +964,7 @@ protected theorem Polynomial.isNoetherianRing [IsNoetherianRing R] : IsNoetheria
           (Set.range I.leadingCoeffNth) ⟨_, ⟨0, rfl⟩⟩
       have hm : M ∈ Set.range I.leadingCoeffNth := WellFounded.min_mem _ _ _
       let ⟨N, HN⟩ := hm
-      let ⟨s, hs⟩ := I.isFgDegreeLe N
+      let ⟨s, hs⟩ := I.is_fg_degree_le N
       have hm2 : ∀ k, I.leadingCoeffNth k ≤ M := fun k =>
         Or.cases_on (le_or_lt k N) (fun h => HN ▸ I.leading_coeff_nth_mono h) fun h x hx =>
           by_contradiction fun hxm =>

@@ -339,9 +339,9 @@ theorem unique_diff_preimage_source {β : Type _} [TopologicalSpace β] {e : Loc
   I.unique_diff_preimage e.open_source
 #align model_with_corners.unique_diff_preimage_source ModelWithCorners.unique_diff_preimage_source
 
-theorem uniqueDiffAtImage {x : H} : UniqueDiffWithinAt 𝕜 (range I) (I x) :=
+theorem unique_diff_at_image {x : H} : UniqueDiffWithinAt 𝕜 (range I) (I x) :=
   I.unique_diff _ (mem_range_self _)
-#align model_with_corners.unique_diff_at_image ModelWithCorners.uniqueDiffAtImage
+#align model_with_corners.unique_diff_at_image ModelWithCorners.unique_diff_at_image
 
 theorem symm_continuousWithinAt_comp_right_iff {X} [TopologicalSpace X] {f : H → X} {s : Set H}
     {x : H} :

@@ -287,34 +287,34 @@ theorem UniqueDiffOn.uniqueDiffWithinAt {s : Set E} {x} (hs : UniqueDiffOn 𝕜 
   hs x h
 #align unique_diff_on.unique_diff_within_at UniqueDiffOn.uniqueDiffWithinAt
 
-theorem uniqueDiffWithinAtUniv : UniqueDiffWithinAt 𝕜 univ x :=
+theorem uniqueDiffWithinAt_univ : UniqueDiffWithinAt 𝕜 univ x :=
   by
   rw [uniqueDiffWithinAt_iff, tangent_cone_univ]
   simp
-#align unique_diff_within_at_univ uniqueDiffWithinAtUniv
+#align unique_diff_within_at_univ uniqueDiffWithinAt_univ
 
-theorem uniqueDiffOn_univ : UniqueDiffOn 𝕜 (univ : Set E) := fun x hx => uniqueDiffWithinAtUniv
+theorem uniqueDiffOn_univ : UniqueDiffOn 𝕜 (univ : Set E) := fun x hx => uniqueDiffWithinAt_univ
 #align unique_diff_on_univ uniqueDiffOn_univ
 
 theorem uniqueDiffOn_empty : UniqueDiffOn 𝕜 (∅ : Set E) := fun x hx => hx.elim
 #align unique_diff_on_empty uniqueDiffOn_empty
 
-theorem UniqueDiffWithinAt.monoNhds (h : UniqueDiffWithinAt 𝕜 s x) (st : 𝓝[s] x ≤ 𝓝[t] x) :
+theorem UniqueDiffWithinAt.mono_nhds (h : UniqueDiffWithinAt 𝕜 s x) (st : 𝓝[s] x ≤ 𝓝[t] x) :
     UniqueDiffWithinAt 𝕜 t x :=
   by
   simp only [uniqueDiffWithinAt_iff] at *
   rw [mem_closure_iff_nhdsWithin_neBot] at h⊢
   exact ⟨h.1.mono <| Submodule.span_mono <| tangent_cone_mono_nhds st, h.2.mono st⟩
-#align unique_diff_within_at.mono_nhds UniqueDiffWithinAt.monoNhds
+#align unique_diff_within_at.mono_nhds UniqueDiffWithinAt.mono_nhds
 
 theorem UniqueDiffWithinAt.mono (h : UniqueDiffWithinAt 𝕜 s x) (st : s ⊆ t) :
     UniqueDiffWithinAt 𝕜 t x :=
-  h.monoNhds <| nhdsWithin_mono _ st
+  h.mono_nhds <| nhdsWithin_mono _ st
 #align unique_diff_within_at.mono UniqueDiffWithinAt.mono
 
 theorem uniqueDiffWithinAt_congr (st : 𝓝[s] x = 𝓝[t] x) :
     UniqueDiffWithinAt 𝕜 s x ↔ UniqueDiffWithinAt 𝕜 t x :=
-  ⟨fun h => h.monoNhds <| le_of_eq st, fun h => h.monoNhds <| le_of_eq st.symm⟩
+  ⟨fun h => h.mono_nhds <| le_of_eq st, fun h => h.mono_nhds <| le_of_eq st.symm⟩
 #align unique_diff_within_at_congr uniqueDiffWithinAt_congr
 
 theorem uniqueDiffWithinAt_inter (ht : t ∈ 𝓝 x) :
@@ -337,12 +337,12 @@ theorem UniqueDiffWithinAt.inter' (hs : UniqueDiffWithinAt 𝕜 s x) (ht : t ∈
   (uniqueDiffWithinAt_inter' ht).2 hs
 #align unique_diff_within_at.inter' UniqueDiffWithinAt.inter'
 
-theorem uniqueDiffWithinAtOfMemNhds (h : s ∈ 𝓝 x) : UniqueDiffWithinAt 𝕜 s x := by
+theorem uniqueDiffWithinAt_of_mem_nhds (h : s ∈ 𝓝 x) : UniqueDiffWithinAt 𝕜 s x := by
   simpa only [univ_inter] using unique_diff_within_at_univ.inter h
-#align unique_diff_within_at_of_mem_nhds uniqueDiffWithinAtOfMemNhds
+#align unique_diff_within_at_of_mem_nhds uniqueDiffWithinAt_of_mem_nhds
 
 theorem IsOpen.uniqueDiffWithinAt (hs : IsOpen s) (xs : x ∈ s) : UniqueDiffWithinAt 𝕜 s x :=
-  uniqueDiffWithinAtOfMemNhds (IsOpen.mem_nhds hs xs)
+  uniqueDiffWithinAt_of_mem_nhds (IsOpen.mem_nhds hs xs)
 #align is_open.unique_diff_within_at IsOpen.uniqueDiffWithinAt
 
 theorem UniqueDiffOn.inter (hs : UniqueDiffOn 𝕜 s) (ht : IsOpen t) : UniqueDiffOn 𝕜 (s ∩ t) :=
@@ -370,7 +370,7 @@ theorem UniqueDiffWithinAt.prod {t : Set F} {y : F} (hs : UniqueDiffWithinAt �
   exact (hs.1.Prod ht.1).mono this
 #align unique_diff_within_at.prod UniqueDiffWithinAt.prod
 
-theorem UniqueDiffWithinAt.univPi (ι : Type _) [Finite ι] (E : ι → Type _)
+theorem UniqueDiffWithinAt.univ_pi (ι : Type _) [Finite ι] (E : ι → Type _)
     [∀ i, NormedAddCommGroup (E i)] [∀ i, NormedSpace 𝕜 (E i)] (s : ∀ i, Set (E i)) (x : ∀ i, E i)
     (h : ∀ i, UniqueDiffWithinAt 𝕜 (s i) (x i)) : UniqueDiffWithinAt 𝕜 (Set.pi univ s) x := by
   classical
@@ -381,7 +381,7 @@ theorem UniqueDiffWithinAt.univPi (ι : Type _) [Finite ι] (E : ι → Type _)
       maps_to']
     exact fun i =>
       (mapsTo_tangent_cone_pi fun j hj => (h j).2).mono subset.rfl Submodule.subset_span
-#align unique_diff_within_at.univ_pi UniqueDiffWithinAt.univPi
+#align unique_diff_within_at.univ_pi UniqueDiffWithinAt.univ_pi
 
 theorem UniqueDiffWithinAt.pi (ι : Type _) [Finite ι] (E : ι → Type _)
     [∀ i, NormedAddCommGroup (E i)] [∀ i, NormedSpace 𝕜 (E i)] (s : ∀ i, Set (E i)) (x : ∀ i, E i)
@@ -389,8 +389,8 @@ theorem UniqueDiffWithinAt.pi (ι : Type _) [Finite ι] (E : ι → Type _)
     UniqueDiffWithinAt 𝕜 (Set.pi I s) x := by
   classical
     rw [← Set.univ_pi_piecewise]
-    refine' UniqueDiffWithinAt.univPi _ _ _ _ fun i => _
-    by_cases hi : i ∈ I <;> simp [*, uniqueDiffWithinAtUniv]
+    refine' UniqueDiffWithinAt.univ_pi _ _ _ _ fun i => _
+    by_cases hi : i ∈ I <;> simp [*, uniqueDiffWithinAt_univ]
 #align unique_diff_within_at.pi UniqueDiffWithinAt.pi
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -417,7 +417,7 @@ theorem UniqueDiffOn.univ_pi (ι : Type _) [Finite ι] (E : ι → Type _)
 
 /-- In a real vector space, a convex set with nonempty interior is a set of unique
 differentiability at every point of its closure. -/
-theorem uniqueDiffWithinAtConvex {s : Set G} (conv : Convex ℝ s) (hs : (interior s).Nonempty)
+theorem uniqueDiffWithinAt_convex {s : Set G} (conv : Convex ℝ s) (hs : (interior s).Nonempty)
     {x : G} (hx : x ∈ closure s) : UniqueDiffWithinAt ℝ s x :=
   by
   rcases hs with ⟨y, hy⟩
@@ -432,12 +432,12 @@ theorem uniqueDiffWithinAtConvex {s : Set G} (conv : Convex ℝ s) (hs : (interi
   rintro _ ⟨z, zs, rfl⟩
   refine' mem_tangent_cone_of_openSegment_subset (subset.trans _ interior_subset)
   exact conv.open_segment_closure_interior_subset_interior hx zs
-#align unique_diff_within_at_convex uniqueDiffWithinAtConvex
+#align unique_diff_within_at_convex uniqueDiffWithinAt_convex
 
 /-- In a real vector space, a convex set with nonempty interior is a set of unique
 differentiability. -/
 theorem uniqueDiffOn_convex {s : Set G} (conv : Convex ℝ s) (hs : (interior s).Nonempty) :
-    UniqueDiffOn ℝ s := fun x xs => uniqueDiffWithinAtConvex conv hs (subset_closure xs)
+    UniqueDiffOn ℝ s := fun x xs => uniqueDiffWithinAt_convex conv hs (subset_closure xs)
 #align unique_diff_on_convex uniqueDiffOn_convex
 
 theorem uniqueDiffOn_ici (a : ℝ) : UniqueDiffOn ℝ (Ici a) :=
@@ -481,18 +481,18 @@ theorem uniqueDiffOn_icc_zero_one : UniqueDiffOn ℝ (Icc (0 : ℝ) 1) :=
   uniqueDiffOn_icc zero_lt_one
 #align unique_diff_on_Icc_zero_one uniqueDiffOn_icc_zero_one
 
-theorem uniqueDiffWithinAtIoo {a b t : ℝ} (ht : t ∈ Set.Ioo a b) :
+theorem uniqueDiffWithinAt_ioo {a b t : ℝ} (ht : t ∈ Set.Ioo a b) :
     UniqueDiffWithinAt ℝ (Set.Ioo a b) t :=
   IsOpen.uniqueDiffWithinAt isOpen_ioo ht
-#align unique_diff_within_at_Ioo uniqueDiffWithinAtIoo
+#align unique_diff_within_at_Ioo uniqueDiffWithinAt_ioo
 
-theorem uniqueDiffWithinAtIoi (a : ℝ) : UniqueDiffWithinAt ℝ (Ioi a) a :=
-  uniqueDiffWithinAtConvex (convex_ioi a) (by simp) (by simp)
-#align unique_diff_within_at_Ioi uniqueDiffWithinAtIoi
+theorem uniqueDiffWithinAt_ioi (a : ℝ) : UniqueDiffWithinAt ℝ (Ioi a) a :=
+  uniqueDiffWithinAt_convex (convex_ioi a) (by simp) (by simp)
+#align unique_diff_within_at_Ioi uniqueDiffWithinAt_ioi
 
-theorem uniqueDiffWithinAtIio (a : ℝ) : UniqueDiffWithinAt ℝ (Iio a) a :=
-  uniqueDiffWithinAtConvex (convex_iio a) (by simp) (by simp)
-#align unique_diff_within_at_Iio uniqueDiffWithinAtIio
+theorem uniqueDiffWithinAt_iio (a : ℝ) : UniqueDiffWithinAt ℝ (Iio a) a :=
+  uniqueDiffWithinAt_convex (convex_iio a) (by simp) (by simp)
+#align unique_diff_within_at_Iio uniqueDiffWithinAt_iio
 
 end UniqueDiff
 

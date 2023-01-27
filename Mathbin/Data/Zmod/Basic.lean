@@ -545,7 +545,7 @@ theorem int_coe_zMod_eq_iff (p : ℕ) (n : ℤ) (z : ZMod p) [NeZero p] :
   constructor
   · rintro rfl
     refine' ⟨n / p, _⟩
-    rw [val_int_cast, Int.mod_add_div]
+    rw [val_int_cast, Int.emod_add_ediv]
   · rintro ⟨k, rfl⟩
     rw [Int.cast_add, Int.cast_mul, Int.cast_ofNat, Int.cast_ofNat, nat_cast_val,
       ZMod.nat_cast_self, zero_mul, add_zero, cast_id]

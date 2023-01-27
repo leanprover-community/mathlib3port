@@ -319,10 +319,11 @@ end Basic
 
 section Fintype
 
-theorem finiteOfSingleton [IsDomain B] [h : IsCyclotomicExtension {n} A B] : Module.Finite A B := by
+theorem finite_of_singleton [IsDomain B] [h : IsCyclotomicExtension {n} A B] : Module.Finite A B :=
+  by
   classical
     rw [Module.finite_def, ← top_to_submodule, ← ((iff_adjoin_eq_top _ _ _).1 h).2]
-    refine' fgAdjoinOfFinite _ fun b hb => _
+    refine' fg_adjoin_of_finite _ fun b hb => _
     · simp only [mem_singleton_iff, exists_eq_left]
       have : { b : B | b ^ (n : ℕ) = 1 } = (nth_roots n (1 : B)).toFinset :=
         Set.ext fun x => ⟨fun h => by simpa using h, fun h => by simpa using h⟩
@@ -330,7 +331,7 @@ theorem finiteOfSingleton [IsDomain B] [h : IsCyclotomicExtension {n} A B] : Mod
       exact (nth_roots (↑n) 1).toFinset.finite_to_set
     · simp only [mem_singleton_iff, exists_eq_left, mem_set_of_eq] at hb
       refine' ⟨X ^ (n : ℕ) - 1, ⟨monic_X_pow_sub_C _ n.pos.ne.symm, by simp [hb]⟩⟩
-#align is_cyclotomic_extension.finite_of_singleton IsCyclotomicExtension.finiteOfSingleton
+#align is_cyclotomic_extension.finite_of_singleton IsCyclotomicExtension.finite_of_singleton
 
 /-- If `S` is finite and `is_cyclotomic_extension S A B`, then `B` is a finite `A`-algebra. -/
 @[protected]
@@ -368,7 +369,7 @@ scoped[Cyclotomic] attribute [instance] IsCyclotomicExtension.numberField
 /-- A finite cyclotomic extension of an integral noetherian domain is integral -/
 theorem integral [IsDomain B] [IsNoetherianRing A] [Finite S] [IsCyclotomicExtension S A B] :
     Algebra.IsIntegral A B :=
-  isIntegral_of_noetherian <| isNoetherianOfFgOfNoetherian' <| (Finite S A B).out
+  isIntegral_of_noetherian <| isNoetherian_of_fg_of_noetherian' <| (Finite S A B).out
 #align is_cyclotomic_extension.integral IsCyclotomicExtension.integral
 
 /-- If `S` is finite and `is_cyclotomic_extension S K A`, then `finite_dimensional K A`. -/

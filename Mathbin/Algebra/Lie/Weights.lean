@@ -500,12 +500,13 @@ subalgebra.
 
 When `L` is Noetherian, it follows from Engel's theorem that the converse holds. See
 `lie_algebra.zero_root_subalgebra_eq_iff_is_cartan` -/
-theorem isCartanOfZeroRootSubalgebraEq (h : zeroRootSubalgebra R L H = H) : H.IsCartanSubalgebra :=
+theorem is_cartan_of_zeroRootSubalgebra_eq (h : zeroRootSubalgebra R L H = H) :
+    H.IsCartanSubalgebra :=
   { nilpotent := inferInstance
     self_normalizing := by
       rw [← h]
       exact zero_root_subalgebra_normalizer_eq_self R L H }
-#align lie_algebra.is_cartan_of_zero_root_subalgebra_eq LieAlgebra.isCartanOfZeroRootSubalgebraEq
+#align lie_algebra.is_cartan_of_zero_root_subalgebra_eq LieAlgebra.is_cartan_of_zeroRootSubalgebra_eq
 
 @[simp]
 theorem zeroRootSubalgebra_eq_of_is_cartan (H : LieSubalgebra R L) [H.IsCartanSubalgebra]
@@ -519,7 +520,7 @@ theorem zeroRootSubalgebra_eq_of_is_cartan (H : LieSubalgebra R L) [H.IsCartanSu
 
 theorem zeroRootSubalgebra_eq_iff_is_cartan [IsNoetherian R L] :
     zeroRootSubalgebra R L H = H ↔ H.IsCartanSubalgebra :=
-  ⟨isCartanOfZeroRootSubalgebraEq R L H, by
+  ⟨is_cartan_of_zeroRootSubalgebra_eq R L H, by
     intros
     simp⟩
 #align lie_algebra.zero_root_subalgebra_eq_iff_is_cartan LieAlgebra.zeroRootSubalgebra_eq_iff_is_cartan

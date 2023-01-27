@@ -935,7 +935,7 @@ theorem stalkAlgebra_map (p : PrimeSpectrum R) (r : R) :
 #align algebraic_geometry.structure_sheaf.stalk_algebra_map AlgebraicGeometry.StructureSheaf.stalkAlgebra_map
 
 /-- Stalk of the structure sheaf at a prime p as localization of R -/
-instance IsLocalization.toStalk (p : PrimeSpectrum R) :
+instance IsLocalization.to_stalk (p : PrimeSpectrum R) :
     IsLocalization.AtPrime ((structureSheaf R).Presheaf.stalk p) p.asIdeal :=
   by
   convert
@@ -948,7 +948,7 @@ instance IsLocalization.toStalk (p : PrimeSpectrum R) :
   congr 1
   erw [iso.eq_comp_inv]
   exact to_stalk_comp_stalk_to_fiber_ring_hom R p
-#align algebraic_geometry.structure_sheaf.is_localization.to_stalk AlgebraicGeometry.StructureSheaf.IsLocalization.toStalk
+#align algebraic_geometry.structure_sheaf.is_localization.to_stalk AlgebraicGeometry.StructureSheaf.IsLocalization.to_stalk
 
 instance openAlgebra (U : (Opens (PrimeSpectrum R))ᵒᵖ) : Algebra R ((structureSheaf R).val.obj U) :=
   (toOpen R (unop U)).toAlgebra

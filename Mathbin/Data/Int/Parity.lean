@@ -43,7 +43,7 @@ theorem emod_two_ne_zero : ¬n % 2 = 0 ↔ n % 2 = 1 := by
 #print Int.even_iff /-
 theorem even_iff : Even n ↔ n % 2 = 0 :=
   ⟨fun ⟨m, hm⟩ => by simp [← two_mul, hm], fun h =>
-    ⟨n / 2, (mod_add_div n 2).symm.trans (by simp [← two_mul, h])⟩⟩
+    ⟨n / 2, (emod_add_ediv n 2).symm.trans (by simp [← two_mul, h])⟩⟩
 #align int.even_iff Int.even_iff
 -/
 
@@ -58,7 +58,7 @@ theorem odd_iff : Odd n ↔ n % 2 = 1 :=
     rw [hm, add_mod]
     norm_num, fun h =>
     ⟨n / 2,
-      (mod_add_div n 2).symm.trans
+      (emod_add_ediv n 2).symm.trans
         (by
           rw [h]
           abel)⟩⟩

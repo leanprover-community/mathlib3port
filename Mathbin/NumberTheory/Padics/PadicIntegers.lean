@@ -676,7 +676,7 @@ theorem irreducible_p : Irreducible (p : ℤ_[p]) :=
 #align padic_int.irreducible_p PadicInt.irreducible_p
 
 instance : DiscreteValuationRing ℤ_[p] :=
-  DiscreteValuationRing.ofHasUnitMulPowIrreducibleFactorization
+  DiscreteValuationRing.of_hasUnitMulPowIrreducibleFactorization
     ⟨p, irreducible_p, fun x hx =>
       ⟨x.Valuation.natAbs, unitCoeff hx, by rw [mul_comm, ← unit_coeff_spec hx]⟩⟩
 

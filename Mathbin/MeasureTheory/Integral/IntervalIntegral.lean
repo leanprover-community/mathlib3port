@@ -2718,7 +2718,7 @@ theorem integrableOnDerivRightOfNonneg (hab : a ≤ b) (hcont : ContinuousOn g (
     by
     apply (aeMeasurableDerivWithinIoi g _).congr
     refine' (ae_restrict_mem measurableSet_ioo).mono fun x hx => _
-    exact (hderiv x hx).derivWithin (uniqueDiffWithinAtIoi _)
+    exact (hderiv x hx).derivWithin (uniqueDiffWithinAt_ioi _)
   suffices H : (∫⁻ x in Ioo a b, ‖g' x‖₊) ≤ Ennreal.ofReal (g b - g a)
   exact ⟨meas_g'.ae_strongly_measurable, H.trans_lt Ennreal.ofReal_lt_top⟩
   by_contra' H

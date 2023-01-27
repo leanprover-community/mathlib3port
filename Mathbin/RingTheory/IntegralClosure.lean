@@ -208,7 +208,7 @@ theorem isIntegral_iff_isIntegral_closure_finite {r : A} :
   exact isIntegral_ofSubring _ hsr
 #align is_integral_iff_is_integral_closure_finite isIntegral_iff_isIntegral_closure_finite
 
-theorem fgAdjoinSingletonOfIntegral (x : A) (hx : IsIntegral R x) :
+theorem fg_adjoin_singleton_of_integral (x : A) (hx : IsIntegral R x) :
     (Algebra.adjoin R ({x} : Set A)).toSubmodule.Fg :=
   by
   rcases hx with ⟨f, hfm, hfx⟩
@@ -237,9 +237,9 @@ theorem fgAdjoinSingletonOfIntegral (x : A) (hx : IsIntegral R x) :
   rw [degree_le_iff_coeff_zero] at this
   rw [mem_support_iff] at hkq; apply hkq; apply this
   exact lt_of_le_of_lt degree_le_nat_degree (WithBot.coe_lt_coe.2 hk)
-#align fg_adjoin_singleton_of_integral fgAdjoinSingletonOfIntegral
+#align fg_adjoin_singleton_of_integral fg_adjoin_singleton_of_integral
 
-theorem fgAdjoinOfFinite {s : Set A} (hfs : s.Finite) (his : ∀ x ∈ s, IsIntegral R x) :
+theorem fg_adjoin_of_finite {s : Set A} (hfs : s.Finite) (his : ∀ x ∈ s, IsIntegral R x) :
     (Algebra.adjoin R s).toSubmodule.Fg :=
   Set.Finite.induction_on hfs
     (fun _ =>
@@ -253,14 +253,14 @@ theorem fgAdjoinOfFinite {s : Set A} (hfs : s.Finite) (his : ∀ x ∈ s, IsInte
       rw [← Set.union_singleton, Algebra.adjoin_union_coe_submodule] <;>
         exact
           fg.mul (ih fun i hi => his i <| Set.mem_insert_of_mem a hi)
-            (fgAdjoinSingletonOfIntegral _ <| his a <| Set.mem_insert a s))
+            (fg_adjoin_singleton_of_integral _ <| his a <| Set.mem_insert a s))
     his
-#align fg_adjoin_of_finite fgAdjoinOfFinite
+#align fg_adjoin_of_finite fg_adjoin_of_finite
 
-theorem isNoetherianAdjoinFinset [IsNoetherianRing R] (s : Finset A)
+theorem isNoetherian_adjoin_finset [IsNoetherianRing R] (s : Finset A)
     (hs : ∀ x ∈ s, IsIntegral R x) : IsNoetherian R (Algebra.adjoin R (↑s : Set A)) :=
-  isNoetherianOfFgOfNoetherian _ (fgAdjoinOfFinite s.finite_to_set hs)
-#align is_noetherian_adjoin_finset isNoetherianAdjoinFinset
+  isNoetherian_of_fg_of_noetherian _ (fg_adjoin_of_finite s.finite_to_set hs)
+#align is_noetherian_adjoin_finset isNoetherian_adjoin_finset
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- If `S` is a sub-`R`-algebra of `A` and `S` is finitely-generated as an `R`-module,
@@ -348,7 +348,7 @@ theorem isIntegral_of_mem_of_fg (S : Subalgebra R A) (HS : S.toSubmodule.Fg) (x 
   haveI : IsNoetherianRing ↥S₀ := is_noetherian_subring_closure _ (Finset.finite_toSet _)
   refine'
     isIntegral_of_submodule_noetherian (Algebra.adjoin S₀ ↑y)
-      (isNoetherianOfFgOfNoetherian _
+      (isNoetherian_of_fg_of_noetherian _
         ⟨insert 1 y, by
           rw [Finset.coe_insert]
           ext z
@@ -425,7 +425,7 @@ theorem RingHom.IsIntegral.to_finite (h : f.IsIntegral) (h' : f.FiniteType) : f.
   constructor
   change (⊤ : Subalgebra R S).toSubmodule.Fg
   rw [← hs]
-  exact fgAdjoinOfFinite (Set.toFinite _) fun x _ => h x
+  exact fg_adjoin_of_finite (Set.toFinite _) fun x _ => h x
 #align ring_hom.is_integral.to_finite RingHom.IsIntegral.to_finite
 
 alias RingHom.IsIntegral.to_finite ← RingHom.Finite.of_isIntegral_of_finiteType
@@ -467,7 +467,7 @@ theorem RingHom.is_integral_of_mem_closure {x y z : S} (hx : f.IsIntegralElem x)
     (hy : f.IsIntegralElem y) (hz : z ∈ Subring.closure ({x, y} : Set S)) : f.IsIntegralElem z :=
   by
   letI : Algebra R S := f.to_algebra
-  have := (fgAdjoinSingletonOfIntegral x hx).mul (fgAdjoinSingletonOfIntegral y hy)
+  have := (fg_adjoin_singleton_of_integral x hx).mul (fg_adjoin_singleton_of_integral y hy)
   rw [← Algebra.adjoin_union_coe_submodule, Set.singleton_union] at this
   exact
     isIntegral_of_mem_of_fg (Algebra.adjoin R {x, y}) this z
@@ -565,7 +565,8 @@ def integralClosure : Subalgebra R A
 
 theorem mem_integralClosure_iff_mem_fg {r : A} :
     r ∈ integralClosure R A ↔ ∃ M : Subalgebra R A, M.toSubmodule.Fg ∧ r ∈ M :=
-  ⟨fun hr => ⟨Algebra.adjoin R {r}, fgAdjoinSingletonOfIntegral _ hr, Algebra.subset_adjoin rfl⟩,
+  ⟨fun hr =>
+    ⟨Algebra.adjoin R {r}, fg_adjoin_singleton_of_integral _ hr, Algebra.subset_adjoin rfl⟩,
     fun ⟨M, Hf, hrM⟩ => isIntegral_of_mem_of_fg M Hf _ hrM⟩
 #align mem_integral_closure_iff_mem_fg mem_integralClosure_iff_mem_fg
 
@@ -1003,12 +1004,12 @@ theorem isIntegral_trans (A_int : IsIntegral R A) (x : B) (hx : IsIntegral A x) 
   rcases hx with ⟨p, pmonic, hp⟩
   let S : Set B := ↑(p.map <| algebraMap A B).frange
   refine' isIntegral_of_mem_of_fg (adjoin R (S ∪ {x})) _ _ (subset_adjoin <| Or.inr rfl)
-  refine' fg_trans (fgAdjoinOfFinite (Finset.finite_toSet _) fun x hx => _) _
+  refine' fg_trans (fg_adjoin_of_finite (Finset.finite_toSet _) fun x hx => _) _
   · rw [Finset.mem_coe, frange, Finset.mem_image] at hx
     rcases hx with ⟨i, _, rfl⟩
     rw [coeff_map]
     exact map_isIntegral (IsScalarTower.toAlgHom R A B) (A_int _)
-  · apply fgAdjoinSingletonOfIntegral
+  · apply fg_adjoin_singleton_of_integral
     exact isIntegral_trans_aux _ pmonic hp
 #align is_integral_trans isIntegral_trans
 
@@ -1153,7 +1154,7 @@ theorem isField_of_isIntegral_of_is_field' {R S : Type _} [CommRing R] [CommRing
   refine' ⟨⟨0, 1, zero_ne_one⟩, mul_comm, fun x hx => _⟩
   let A := Algebra.adjoin R ({x} : Set S)
   haveI : IsNoetherian R A :=
-    isNoetherianOfFgOfNoetherian A.to_submodule (fgAdjoinSingletonOfIntegral x (H x))
+    isNoetherian_of_fg_of_noetherian A.to_submodule (fg_adjoin_singleton_of_integral x (H x))
   haveI : Module.Finite R A := Module.IsNoetherian.finite R A
   obtain ⟨y, hy⟩ :=
     LinearMap.surjective_of_injective

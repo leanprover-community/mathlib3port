@@ -277,7 +277,7 @@ theorem LieAlgebra.isEngelian_of_isNoetherian : LieAlgebra.IsEngelian R L :=
       exact Module.End.IsNilpotent.mapq _ hx
     exact nontrivial_max_triv_of_is_nilpotent R K (L' ⧸ K.to_lie_submodule)
   haveI _i5 : IsNoetherian R L' :=
-    isNoetherianOfSurjective L _ (LinearMap.range_rangeRestrict (to_endomorphism R L M))
+    isNoetherian_of_surjective L _ (LinearMap.range_rangeRestrict (to_endomorphism R L M))
   obtain ⟨K, hK₁, hK₂⟩ :=
     well_founded.well_founded_iff_has_max'.mp (LieSubalgebra.wellFounded_of_noetherian R L') s hs
   have hK₃ : K = ⊤ := by

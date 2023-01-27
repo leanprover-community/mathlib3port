@@ -428,7 +428,7 @@ theorem card_classGroup_eq_one_iff [IsDedekindDomain R] [Fintype (ClassGroup R)]
   refine' ⟨fun I => _⟩
   by_cases hI : I = ⊥
   · rw [hI]
-    exact botIsPrincipal
+    exact bot_isPrincipal
   exact (ClassGroup.mk0_eq_one_iff (mem_non_zero_divisors_iff_ne_zero.mpr hI)).mp (eq_one _)
 #align card_class_group_eq_one_iff card_classGroup_eq_one_iff
 

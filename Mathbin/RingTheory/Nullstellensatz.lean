@@ -106,7 +106,7 @@ theorem mem_vanishingIdeal_singleton_iff (x : σ → k) (p : MvPolynomial σ k) 
   ⟨fun h => h x rfl, fun hpx y hy => hy.symm ▸ hpx⟩
 #align mv_polynomial.mem_vanishing_ideal_singleton_iff MvPolynomial.mem_vanishingIdeal_singleton_iff
 
-instance vanishingIdealSingletonIsMaximal {x : σ → k} :
+instance vanishingIdeal_singleton_isMaximal {x : σ → k} :
     (vanishingIdeal {x} : Ideal (MvPolynomial σ k)).IsMaximal :=
   by
   have : MvPolynomial σ k ⧸ vanishing_ideal {x} ≃+* k :=
@@ -121,7 +121,7 @@ instance vanishingIdealSingletonIsMaximal {x : σ → k} :
           quotient.eq_zero_iff_mem] at hp)
   rw [← bot_quotient_is_maximal_iff, ring_equiv.bot_maximal_iff this]
   exact bot_is_maximal
-#align mv_polynomial.vanishing_ideal_singleton_is_maximal MvPolynomial.vanishingIdealSingletonIsMaximal
+#align mv_polynomial.vanishing_ideal_singleton_is_maximal MvPolynomial.vanishingIdeal_singleton_isMaximal
 
 theorem radical_le_vanishingIdeal_zeroLocus (I : Ideal (MvPolynomial σ k)) :
     I.radical ≤ vanishingIdeal (zeroLocus I) :=
@@ -172,7 +172,7 @@ theorem isMaximal_iff_eq_vanishingIdeal_singleton (I : Ideal (MvPolynomial σ k)
   refine'
     ⟨fun hI => _, fun h =>
       let ⟨x, hx⟩ := h
-      hx.symm ▸ MvPolynomial.vanishingIdealSingletonIsMaximal⟩
+      hx.symm ▸ MvPolynomial.vanishingIdeal_singleton_isMaximal⟩
   letI : I.is_maximal := hI
   letI : Field (MvPolynomial σ k ⧸ I) := quotient.field I
   let ϕ : k →+* MvPolynomial σ k ⧸ I := (Ideal.Quotient.mk I).comp C
@@ -208,7 +208,7 @@ theorem vanishingIdeal_zeroLocus_eq_radical (I : Ideal (MvPolynomial σ k)) :
       (mem_Inf.mp hp)
         ⟨le_trans (le_vanishing_ideal_zero_locus I)
             (vanishing_ideal_anti_mono fun y hy => hy.symm ▸ hx),
-          MvPolynomial.vanishingIdealSingletonIsMaximal⟩
+          MvPolynomial.vanishingIdeal_singleton_isMaximal⟩
 #align mv_polynomial.vanishing_ideal_zero_locus_eq_radical MvPolynomial.vanishingIdeal_zeroLocus_eq_radical
 
 @[simp]

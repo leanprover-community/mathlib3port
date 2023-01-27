@@ -146,20 +146,20 @@ theorem IsClosable.closure_mono {f g : E →ₗ.[R] F} (hg : g.IsClosable) (h : 
 #align linear_pmap.is_closable.closure_mono LinearPmap.IsClosable.closure_mono
 
 /-- If `f` is closable, then the closure is closed. -/
-theorem IsClosable.closureIsClosed {f : E →ₗ.[R] F} (hf : f.IsClosable) : f.closure.IsClosed :=
+theorem IsClosable.closure_isClosed {f : E →ₗ.[R] F} (hf : f.IsClosable) : f.closure.IsClosed :=
   by
   rw [IsClosed, ← hf.graph_closure_eq_closure_graph]
   exact f.graph.is_closed_topological_closure
-#align linear_pmap.is_closable.closure_is_closed LinearPmap.IsClosable.closureIsClosed
+#align linear_pmap.is_closable.closure_is_closed LinearPmap.IsClosable.closure_isClosed
 
 /-- If `f` is closable, then the closure is closable. -/
 theorem IsClosable.closureIsClosable {f : E →ₗ.[R] F} (hf : f.IsClosable) : f.closure.IsClosable :=
-  hf.closureIsClosed.IsClosable
+  hf.closure_is_closed.IsClosable
 #align linear_pmap.is_closable.closure_is_closable LinearPmap.IsClosable.closureIsClosable
 
 theorem isClosable_iff_exists_closed_extension {f : E →ₗ.[R] F} :
     f.IsClosable ↔ ∃ (g : E →ₗ.[R] F)(hg : g.IsClosed), f ≤ g :=
-  ⟨fun h => ⟨f.closure, h.closureIsClosed, f.le_closure⟩, fun ⟨_, hg, h⟩ =>
+  ⟨fun h => ⟨f.closure, h.closure_is_closed, f.le_closure⟩, fun ⟨_, hg, h⟩ =>
     hg.IsClosable.leIsClosable h⟩
 #align linear_pmap.is_closable_iff_exists_closed_extension LinearPmap.isClosable_iff_exists_closed_extension
 

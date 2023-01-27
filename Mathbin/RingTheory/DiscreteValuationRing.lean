@@ -69,7 +69,7 @@ theorem not_a_field : maximalIdeal R ≠ ⊥ :=
 
 /-- A discrete valuation ring `R` is not a field. -/
 theorem not_isField : ¬IsField R :=
-  Ring.not_isField_iff_exists_prime.mpr ⟨_, not_a_field R, IsMaximal.isPrime' (maximalIdeal R)⟩
+  Ring.not_isField_iff_exists_prime.mpr ⟨_, not_a_field R, IsMaximal.is_prime' (maximalIdeal R)⟩
 #align discrete_valuation_ring.not_is_field DiscreteValuationRing.not_isField
 
 variable {R}
@@ -96,7 +96,7 @@ theorem irreducible_of_span_eq_maximalIdeal {R : Type _} [CommRing R] [LocalRing
 /-- An element of a DVR is irreducible iff it is a uniformizer, that is, generates the
   maximal ideal of R -/
 theorem irreducible_iff_uniformizer (ϖ : R) : Irreducible ϖ ↔ maximalIdeal R = Ideal.span {ϖ} :=
-  ⟨fun hϖ => (eq_maximalIdeal (isMaximalOfIrreducible hϖ)).symm, fun h =>
+  ⟨fun hϖ => (eq_maximalIdeal (isMaximal_of_irreducible hϖ)).symm, fun h =>
     irreducible_of_span_eq_maximalIdeal ϖ
       (fun e => not_a_field R <| by rwa [h, span_singleton_eq_bot]) h⟩
 #align discrete_valuation_ring.irreducible_iff_uniformizer DiscreteValuationRing.irreducible_iff_uniformizer
@@ -262,7 +262,7 @@ theorem of_ufd_of_unique_irreducible [UniqueFactorizationMonoid R] (h₁ : ∃ p
 
 end HasUnitMulPowIrreducibleFactorization
 
-theorem auxPidOfUfdOfUniqueIrreducible (R : Type u) [CommRing R] [IsDomain R]
+theorem aux_pid_of_ufd_of_unique_irreducible (R : Type u) [CommRing R] [IsDomain R]
     [UniqueFactorizationMonoid R] (h₁ : ∃ p : R, Irreducible p)
     (h₂ : ∀ ⦃p q : R⦄, Irreducible p → Irreducible q → Associated p q) : IsPrincipalIdealRing R :=
   by
@@ -292,13 +292,13 @@ theorem auxPidOfUfdOfUniqueIrreducible (R : Type u) [CommRing R] [IsDomain R]
     simpa only [Units.mul_inv_cancel_right] using I.mul_mem_right (↑u⁻¹) hr
   · erw [Submodule.span_singleton_le_iff_mem]
     exact Nat.find_spec ex
-#align discrete_valuation_ring.aux_pid_of_ufd_of_unique_irreducible DiscreteValuationRing.auxPidOfUfdOfUniqueIrreducible
+#align discrete_valuation_ring.aux_pid_of_ufd_of_unique_irreducible DiscreteValuationRing.aux_pid_of_ufd_of_unique_irreducible
 
 /-- A unique factorization domain with at least one irreducible element
 in which all irreducible elements are associated
 is a discrete valuation ring.
 -/
-theorem ofUfdOfUniqueIrreducible {R : Type u} [CommRing R] [IsDomain R]
+theorem of_ufd_of_unique_irreducible {R : Type u} [CommRing R] [IsDomain R]
     [UniqueFactorizationMonoid R] (h₁ : ∃ p : R, Irreducible p)
     (h₂ : ∀ ⦃p q : R⦄, Irreducible p → Irreducible q → Associated p q) : DiscreteValuationRing R :=
   by
@@ -317,20 +317,20 @@ theorem ofUfdOfUniqueIrreducible {R : Type u} [CommRing R] [IsDomain R]
     erw [Ne.def, span_singleton_eq_bot] at I0
     rwa [UniqueFactorizationMonoid.irreducible_iff_prime, ← Ideal.span_singleton_prime I0]
     infer_instance
-#align discrete_valuation_ring.of_ufd_of_unique_irreducible DiscreteValuationRing.ofUfdOfUniqueIrreducible
+#align discrete_valuation_ring.of_ufd_of_unique_irreducible DiscreteValuationRing.of_ufd_of_unique_irreducible
 
 /-- An integral domain in which there is an irreducible element `p`
 such that every nonzero element is associated to a power of `p`
 is a discrete valuation ring.
 -/
-theorem ofHasUnitMulPowIrreducibleFactorization {R : Type u} [CommRing R] [IsDomain R]
+theorem of_hasUnitMulPowIrreducibleFactorization {R : Type u} [CommRing R] [IsDomain R]
     (hR : HasUnitMulPowIrreducibleFactorization R) : DiscreteValuationRing R :=
   by
   letI : UniqueFactorizationMonoid R := hR.to_unique_factorization_monoid
   apply of_ufd_of_unique_irreducible _ hR.unique_irreducible
   obtain ⟨p, hp, H⟩ := hR
   exact ⟨p, hp⟩
-#align discrete_valuation_ring.of_has_unit_mul_pow_irreducible_factorization DiscreteValuationRing.ofHasUnitMulPowIrreducibleFactorization
+#align discrete_valuation_ring.of_has_unit_mul_pow_irreducible_factorization DiscreteValuationRing.of_hasUnitMulPowIrreducibleFactorization
 
 section
 

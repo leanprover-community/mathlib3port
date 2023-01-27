@@ -40,7 +40,7 @@ namespace Algebra
 variable {R : Type u} {A : Type v} {B : Type w} [CommSemiring R] [CommSemiring A] [Algebra R A]
   {s t : Set A}
 
-theorem fgTrans (h1 : (adjoin R s).toSubmodule.Fg) (h2 : (adjoin (adjoin R s) t).toSubmodule.Fg) :
+theorem fg_trans (h1 : (adjoin R s).toSubmodule.Fg) (h2 : (adjoin (adjoin R s) t).toSubmodule.Fg) :
     (adjoin R (s ∪ t)).toSubmodule.Fg :=
   by
   rcases fg_def.1 h1 with ⟨p, hp, hp'⟩
@@ -83,7 +83,7 @@ theorem fgTrans (h1 : (adjoin R s).toSubmodule.Fg) (h2 : (adjoin (adjoin R s) t)
     rw [smul_mul_assoc]
     refine' smul_mem _ _ _
     exact subset_span ⟨t, z, hlp ht, hlq hz, rfl⟩
-#align algebra.fg_trans Algebra.fgTrans
+#align algebra.fg_trans Algebra.fg_trans
 
 end Algebra
 
@@ -179,7 +179,7 @@ theorem fg_top (S : Subalgebra R A) : (⊤ : Subalgebra R S).Fg ↔ S.Fg :=
       exact h⟩
 #align subalgebra.fg_top Subalgebra.fg_top
 
-theorem inductionOnAdjoin [IsNoetherian R A] (P : Subalgebra R A → Prop) (base : P ⊥)
+theorem induction_on_adjoin [IsNoetherian R A] (P : Subalgebra R A → Prop) (base : P ⊥)
     (ih : ∀ (S : Subalgebra R A) (x : A), P S → P (Algebra.adjoin R (insert x S)))
     (S : Subalgebra R A) : P S := by
   classical
@@ -189,7 +189,7 @@ theorem inductionOnAdjoin [IsNoetherian R A] (P : Subalgebra R A → Prop) (base
     intro x t hxt h
     rw [Finset.coe_insert]
     simpa only [Algebra.adjoin_insert_adjoin] using ih _ x h
-#align subalgebra.induction_on_adjoin Subalgebra.inductionOnAdjoin
+#align subalgebra.induction_on_adjoin Subalgebra.induction_on_adjoin
 
 end Subalgebra
 

@@ -181,7 +181,7 @@ theorem finprod_heightOneSpectrum_factorization (I : Ideal R) (hI : I ≠ 0) :
   rw [← hJv]
   apply
     Ideal.finprod_count
-      ⟨J, Ideal.isPrimeOfPrime (irreducible_iff_prime.mp hv), Irreducible.ne_zero hv⟩ I hI
+      ⟨J, Ideal.isPrime_of_prime (irreducible_iff_prime.mp hv), Irreducible.ne_zero hv⟩ I hI
 #align ideal.finprod_height_one_spectrum_factorization Ideal.finprod_heightOneSpectrum_factorization
 
 /-- The ideal `I` equals the finprod `∏_v v^(val_v(I))`, when both sides are regarded as fractional

@@ -246,7 +246,7 @@ theorem cardQuot_mul [IsDedekindDomain S] [Module.Free ℤ S] [Module.Finite ℤ
     UniqueFactorizationMonoid.multiplicative_of_coprime card_quot I J (card_quot_bot _ _)
       (fun I J hI => by simp [ideal.is_unit_iff.mp hI, Ideal.mul_top])
       (fun I i hI =>
-        have : Ideal.IsPrime I := Ideal.isPrimeOfPrime hI
+        have : Ideal.IsPrime I := Ideal.isPrime_of_prime hI
         cardQuot_pow_of_prime hI.ne_zero)
       fun I J hIJ =>
       cardQuot_mul_of_coprime
@@ -431,14 +431,14 @@ theorem irreducible_of_irreducible_absNorm {I : Ideal S} (hI : Irreducible I.abs
           hI.is_unit_or_is_unit (_root_.map_mul abs_norm a b)⟩
 #align ideal.irreducible_of_irreducible_abs_norm Ideal.irreducible_of_irreducible_absNorm
 
-theorem isPrimeOfIrreducibleAbsNorm {I : Ideal S} (hI : Irreducible I.absNorm) : I.IsPrime :=
-  isPrimeOfPrime
+theorem isPrime_of_irreducible_absNorm {I : Ideal S} (hI : Irreducible I.absNorm) : I.IsPrime :=
+  isPrime_of_prime
     (UniqueFactorizationMonoid.irreducible_iff_prime.mp (irreducible_of_irreducible_absNorm hI))
-#align ideal.is_prime_of_irreducible_abs_norm Ideal.isPrimeOfIrreducibleAbsNorm
+#align ideal.is_prime_of_irreducible_abs_norm Ideal.isPrime_of_irreducible_absNorm
 
 theorem prime_of_irreducible_absNorm_span {a : S} (ha : a ≠ 0)
     (hI : Irreducible (Ideal.span ({a} : Set S)).absNorm) : Prime a :=
-  (Ideal.span_singleton_prime ha).mp (isPrimeOfIrreducibleAbsNorm hI)
+  (Ideal.span_singleton_prime ha).mp (isPrime_of_irreducible_absNorm hI)
 #align ideal.prime_of_irreducible_abs_norm_span Ideal.prime_of_irreducible_absNorm_span
 
 end Ideal

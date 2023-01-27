@@ -139,7 +139,7 @@ theorem cotangentIdeal_square (I : Ideal R) : I.cotangentIdeal ^ 2 = ⊥ :=
   by
   rw [eq_bot_iff, pow_two I.cotangent_ideal, ← smul_eq_mul]
   intro x hx
-  apply Submodule.smulInductionOn hx
+  apply Submodule.smul_induction_on hx
   · rintro _ ⟨x, hx, rfl⟩ _ ⟨y, hy, rfl⟩
     apply (Submodule.Quotient.eq _).mpr _
     rw [sub_zero, pow_two]
@@ -248,7 +248,7 @@ instance : IsScalarTower R (ResidueField R) (CotangentSpace R) :=
   Module.IsTorsionBySet.isScalarTower _
 
 instance [IsNoetherianRing R] : FiniteDimensional (ResidueField R) (CotangentSpace R) :=
-  Module.Finite.ofRestrictScalarsFinite R _ _
+  Module.Finite.of_restrict_scalars_finite R _ _
 
 end LocalRing
 

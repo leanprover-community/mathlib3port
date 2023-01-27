@@ -435,7 +435,7 @@ theorem iff_local_bezout_domain : ValuationRing R ↔ LocalRing R ∧ IsBezout R
     rintro ⟨h₁, h₂⟩
     skip
     refine' iff_dvd_total.mpr ⟨fun a b => _⟩
-    obtain ⟨g, e : _ = Ideal.span _⟩ := IsBezout.spanPairIsPrincipal a b
+    obtain ⟨g, e : _ = Ideal.span _⟩ := IsBezout.span_pair_isPrincipal a b
     obtain ⟨a, rfl⟩ :=
       ideal.mem_span_singleton'.mp
         (show a ∈ Ideal.span {g} by

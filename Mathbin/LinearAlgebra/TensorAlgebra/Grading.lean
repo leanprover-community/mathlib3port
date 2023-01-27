@@ -56,7 +56,7 @@ instance gradedAlgebra :
     cases' x with x hx
     dsimp only [Subtype.coe_mk, DirectSum.lof_eq_of]
     refine'
-      Submodule.powInductionOnLeft' _ (fun r => _) (fun x y i hx hy ihx ihy => _)
+      Submodule.pow_induction_on_left' _ (fun r => _) (fun x y i hx hy ihx ihy => _)
         (fun m hm i x hx ih => _) hx
     · rw [AlgHom.commutes, DirectSum.algebraMap_apply]
       rfl

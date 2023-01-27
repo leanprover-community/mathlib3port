@@ -121,7 +121,7 @@ include A
 /-- For any `I : ideal A`, not necessarily homogeneous, `I.homogeneous_core' 𝒜`
 is the largest homogeneous ideal of `A` contained in `I`, as an ideal. -/
 def Ideal.homogeneousCore' (I : Ideal A) : Ideal A :=
-  Ideal.span (coe '' ((coe : Subtype (IsHomogeneous 𝒜) → A) ⁻¹' I))
+  Ideal.span (coe '' ((coe : Subtype (Homogeneous 𝒜) → A) ⁻¹' I))
 #align ideal.homogeneous_core' Ideal.homogeneousCore'
 
 theorem Ideal.homogeneousCore'_mono : Monotone (Ideal.homogeneousCore' 𝒜) := fun I J I_le_J =>
@@ -156,7 +156,7 @@ theorem Ideal.isHomogeneous_iff_subset_interᵢ :
   subset_interᵢ_iff.symm
 #align ideal.is_homogeneous_iff_subset_Inter Ideal.isHomogeneous_iff_subset_interᵢ
 
-theorem Ideal.mul_homogeneous_element_mem_of_mem {I : Ideal A} (r x : A) (hx₁ : IsHomogeneous 𝒜 x)
+theorem Ideal.mul_homogeneous_element_mem_of_mem {I : Ideal A} (r x : A) (hx₁ : Homogeneous 𝒜 x)
     (hx₂ : x ∈ I) (j : ι) : GradedRing.proj 𝒜 j (r * x) ∈ I := by
   classical
     rw [← DirectSum.sum_support_decompose 𝒜 r, Finset.sum_mul, map_sum]
@@ -171,7 +171,7 @@ theorem Ideal.mul_homogeneous_element_mem_of_mem {I : Ideal A} (r x : A) (hx₁ 
     · exact I.zero_mem
 #align ideal.mul_homogeneous_element_mem_of_mem Ideal.mul_homogeneous_element_mem_of_mem
 
-theorem Ideal.isHomogeneous_span (s : Set A) (h : ∀ x ∈ s, IsHomogeneous 𝒜 x) :
+theorem Ideal.homogeneous_span (s : Set A) (h : ∀ x ∈ s, Homogeneous 𝒜 x) :
     (Ideal.span s).IsHomogeneous 𝒜 := by
   rintro i r hr
   rw [Ideal.span, Finsupp.span_eq_range_total] at hr
@@ -186,13 +186,13 @@ theorem Ideal.isHomogeneous_span (s : Set A) (h : ∀ x ∈ s, IsHomogeneous �
   · rcases z with ⟨z, hz2⟩
     apply h _ hz2
   · exact Ideal.subset_span z.2
-#align ideal.is_homogeneous_span Ideal.isHomogeneous_span
+#align ideal.is_homogeneous_span Ideal.homogeneous_span
 
 /-- For any `I : ideal A`, not necessarily homogeneous, `I.homogeneous_core' 𝒜`
 is the largest homogeneous ideal of `A` contained in `I`.-/
 def Ideal.homogeneousCore : HomogeneousIdeal 𝒜 :=
   ⟨Ideal.homogeneousCore' 𝒜 I,
-    Ideal.isHomogeneous_span _ _ fun x h =>
+    Ideal.homogeneous_span _ _ fun x h =>
       by
       rw [Subtype.image_preimage_coe] at h
       exact h.2⟩
@@ -208,10 +208,10 @@ theorem Ideal.toIdeal_homogeneousCore_le : (I.homogeneousCore 𝒜).toIdeal ≤ 
 
 variable {𝒜 I}
 
-theorem Ideal.mem_homogeneousCore_of_isHomogeneous_of_mem {x : A} (h : SetLike.IsHomogeneous 𝒜 x)
+theorem Ideal.mem_homogeneousCore_of_homogeneous_of_mem {x : A} (h : SetLike.Homogeneous 𝒜 x)
     (hmem : x ∈ I) : x ∈ I.homogeneousCore 𝒜 :=
   Ideal.subset_span ⟨⟨x, h⟩, hmem, rfl⟩
-#align ideal.mem_homogeneous_core_of_is_homogeneous_of_mem Ideal.mem_homogeneousCore_of_isHomogeneous_of_mem
+#align ideal.mem_homogeneous_core_of_is_homogeneous_of_mem Ideal.mem_homogeneousCore_of_homogeneous_of_mem
 
 theorem Ideal.IsHomogeneous.toIdeal_homogeneousCore_eq_self (h : I.IsHomogeneous 𝒜) :
     (I.homogeneousCore 𝒜).toIdeal = I :=
@@ -567,9 +567,9 @@ the smallest homogeneous ideal containing `I`. -/
 def Ideal.homogeneousHull : HomogeneousIdeal 𝒜 :=
   ⟨Ideal.span { r : A | ∃ (i : ι)(x : I), (DirectSum.decompose 𝒜 (x : A) i : A) = r },
     by
-    refine' Ideal.isHomogeneous_span _ _ fun x hx => _
+    refine' Ideal.homogeneous_span _ _ fun x hx => _
     obtain ⟨i, x, rfl⟩ := hx
-    apply SetLike.isHomogeneous_coe⟩
+    apply SetLike.homogeneous_coe⟩
 #align ideal.homogeneous_hull Ideal.homogeneousHull
 
 theorem Ideal.le_toIdeal_homogeneousHull : I ≤ (Ideal.homogeneousHull 𝒜 I).toIdeal :=
@@ -625,10 +625,10 @@ theorem Ideal.homogeneousHull_eq_supᵢ :
     I.homogeneousHull 𝒜 =
       ⨆ i,
         ⟨Ideal.span (GradedRing.proj 𝒜 i '' I),
-          Ideal.isHomogeneous_span 𝒜 _
+          Ideal.homogeneous_span 𝒜 _
             (by
               rintro _ ⟨x, -, rfl⟩
-              apply SetLike.isHomogeneous_coe)⟩ :=
+              apply SetLike.homogeneous_coe)⟩ :=
   by
   ext1
   rw [Ideal.toIdeal_homogeneousHull_eq_supᵢ, to_ideal_supr]

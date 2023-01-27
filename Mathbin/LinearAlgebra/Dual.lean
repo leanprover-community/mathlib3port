@@ -504,9 +504,9 @@ instance dualFree : Free R (Dual R M) :=
   Free.ofBasis (Free.chooseBasis R M).dualBasis
 #align basis.dual_free Basis.dualFree
 
-instance dualFinite : Finite R (Dual R M) :=
-  Finite.ofBasis (Free.chooseBasis R M).dualBasis
-#align basis.dual_finite Basis.dualFinite
+instance dual_finite : Finite R (Dual R M) :=
+  Finite.of_basis (Free.chooseBasis R M).dualBasis
+#align basis.dual_finite Basis.dual_finite
 
 end
 

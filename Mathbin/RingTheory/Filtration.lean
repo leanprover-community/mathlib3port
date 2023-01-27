@@ -204,13 +204,13 @@ def Ideal.stableFiltration (I : Ideal R) (N : Submodule R M) : I.Filtration M
     exact le_refl _
 #align ideal.stable_filtration Ideal.stableFiltration
 
-theorem Ideal.stableFiltrationStable (I : Ideal R) (N : Submodule R M) :
+theorem Ideal.stableFiltration_stable (I : Ideal R) (N : Submodule R M) :
     (I.stableFiltration N).Stable := by
   use 0
   intro n _
   dsimp
   rw [add_comm, pow_add, mul_smul, pow_one]
-#align ideal.stable_filtration_stable Ideal.stableFiltrationStable
+#align ideal.stable_filtration_stable Ideal.stableFiltration_stable
 
 variable {F F'} (h : F.Stable)
 
@@ -369,7 +369,7 @@ theorem submodule_eq_span_le_iff_stable_ge (n₀ : ℕ) :
     simp only [not_le, Nat.lt_succ_iff] at hj'
     rw [Nat.succ_eq_add_one, ← hF _ hj']
     rintro _ ⟨m, hm, rfl⟩
-    apply Submodule.smulInductionOn hm
+    apply Submodule.smul_induction_on hm
     · intro r hr m' hm'
       rw [add_comm, ← monomial_smul_single]
       exact
@@ -410,7 +410,7 @@ theorem submodule_fg_iff_stable (hF' : ∀ i, (F.n i).Fg) : F.Submodule.Fg ↔ F
     · rintro ⟨n, hn⟩
       rw [hn]
       simp_rw [Submodule.span_Union₂, ← Finset.mem_range_succ_iff, supᵢ_subtype']
-      apply Submodule.fgSupr
+      apply Submodule.fg_supᵢ
       rintro ⟨i, hi⟩
       obtain ⟨s, hs⟩ := hF' i
       have :
@@ -425,26 +425,26 @@ theorem submodule_fg_iff_stable (hF' : ∀ i, (F.n i).Fg) : F.Submodule.Fg ↔ F
 
 variable {F}
 
-theorem Stable.ofLe [IsNoetherianRing R] [h : Module.Finite R M] (hF : F.Stable)
+theorem Stable.of_le [IsNoetherianRing R] [h : Module.Finite R M] (hF : F.Stable)
     {F' : I.Filtration M} (hf : F' ≤ F) : F'.Stable :=
   by
-  haveI := isNoetherianOfFgOfNoetherian' h.1
+  haveI := isNoetherian_of_fg_of_noetherian' h.1
   rw [← submodule_fg_iff_stable] at hF⊢
   any_goals intro i; exact IsNoetherian.noetherian _
-  have := isNoetherianOfFgOfNoetherian _ hF
+  have := isNoetherian_of_fg_of_noetherian _ hF
   rw [isNoetherian_submodule] at this
   exact this _ (OrderHomClass.mono (submodule_inf_hom M I) hf)
-#align ideal.filtration.stable.of_le Ideal.Filtration.Stable.ofLe
+#align ideal.filtration.stable.of_le Ideal.Filtration.Stable.of_le
 
-theorem Stable.interRight [IsNoetherianRing R] [h : Module.Finite R M] (hF : F.Stable) :
+theorem Stable.inter_right [IsNoetherianRing R] [h : Module.Finite R M] (hF : F.Stable) :
     (F ⊓ F').Stable :=
   hF.of_le inf_le_left
-#align ideal.filtration.stable.inter_right Ideal.Filtration.Stable.interRight
+#align ideal.filtration.stable.inter_right Ideal.Filtration.Stable.inter_right
 
-theorem Stable.interLeft [IsNoetherianRing R] [h : Module.Finite R M] (hF : F.Stable) :
+theorem Stable.inter_left [IsNoetherianRing R] [h : Module.Finite R M] (hF : F.Stable) :
     (F' ⊓ F).Stable :=
   hF.of_le inf_le_right
-#align ideal.filtration.stable.inter_left Ideal.Filtration.Stable.interLeft
+#align ideal.filtration.stable.inter_left Ideal.Filtration.Stable.inter_left
 
 end Ideal.Filtration
 
@@ -453,7 +453,7 @@ variable (I)
 /-- **Artin-Rees lemma** -/
 theorem Ideal.exists_pow_inf_eq_pow_smul [IsNoetherianRing R] [h : Module.Finite R M]
     (N : Submodule R M) : ∃ k : ℕ, ∀ n ≥ k, I ^ n • ⊤ ⊓ N = I ^ (n - k) • (I ^ k • ⊤ ⊓ N) :=
-  ((I.stableFiltrationStable ⊤).inter_right (I.trivialFiltration N)).exists_pow_smul_eq_of_ge
+  ((I.stable_filtration_stable ⊤).inter_right (I.trivialFiltration N)).exists_pow_smul_eq_of_ge
 #align ideal.exists_pow_inf_eq_pow_smul Ideal.exists_pow_inf_eq_pow_smul
 
 theorem Ideal.mem_infᵢ_smul_pow_eq_bot_iff [IsNoetherianRing R] [hM : Module.Finite R M] (x : M) :
@@ -465,7 +465,7 @@ theorem Ideal.mem_infᵢ_smul_pow_eq_bot_iff [IsNoetherianRing R] [hM : Module.F
     intro k
     exact inf_eq_right.mpr ((infᵢ_le _ k).trans <| le_of_eq <| by simp)
   constructor
-  · haveI := isNoetherianOfFgOfNoetherian' hM.out
+  · haveI := isNoetherian_of_fg_of_noetherian' hM.out
     obtain ⟨r, hr₁, hr₂⟩ :=
       Submodule.exists_mem_and_smul_eq_self_of_fg_of_le_smul I N (IsNoetherian.noetherian N) _
     · intro H

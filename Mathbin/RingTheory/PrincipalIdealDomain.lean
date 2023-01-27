@@ -56,13 +56,13 @@ class Submodule.IsPrincipal (S : Submodule R M) : Prop where
   principal : ∃ a, S = span R {a}
 #align submodule.is_principal Submodule.IsPrincipal
 
-instance botIsPrincipal : (⊥ : Submodule R M).IsPrincipal :=
+instance bot_isPrincipal : (⊥ : Submodule R M).IsPrincipal :=
   ⟨⟨0, by simp⟩⟩
-#align bot_is_principal botIsPrincipal
+#align bot_is_principal bot_isPrincipal
 
-instance topIsPrincipal : (⊤ : Submodule R R).IsPrincipal :=
+instance top_isPrincipal : (⊤ : Submodule R R).IsPrincipal :=
   ⟨⟨1, Ideal.span_singleton_one.symm⟩⟩
-#align top_is_principal topIsPrincipal
+#align top_is_principal top_isPrincipal
 
 variable (R)
 
@@ -164,7 +164,7 @@ open Submodule.IsPrincipal Ideal
 -- 0 isn't prime in a non-ID PIR but the Krull dimension is still <= 1.
 -- The below result follows from this, but we could also use the below result to
 -- prove this (quotient out by p).
-theorem toMaximalIdeal [CommRing R] [IsDomain R] [IsPrincipalIdealRing R] {S : Ideal R}
+theorem to_maximal_ideal [CommRing R] [IsDomain R] [IsPrincipalIdealRing R] {S : Ideal R}
     [hpi : IsPrime S] (hS : S ≠ ⊥) : IsMaximal S :=
   isMaximal_iff.2
     ⟨(ne_top_iff_one S).1 hpi.1, by
@@ -178,7 +178,7 @@ theorem toMaximalIdeal [CommRing R] [IsDomain R] [IsPrincipalIdealRing R] {S : I
       have : generator S ≠ 0 := mt (eq_bot_iff_generator_eq_zero _).2 hS
       rw [← mul_one (generator S), hy, mul_left_comm, mul_right_inj' this] at hz
       exact hz.symm ▸ T.mul_mem_right _ (generator_mem T)⟩
-#align is_prime.to_maximal_ideal IsPrime.toMaximalIdeal
+#align is_prime.to_maximal_ideal IsPrime.to_maximal_ideal
 
 end IsPrime
 
@@ -194,7 +194,7 @@ theorem mod_mem_iff {S : Ideal R} {x y : R} (hy : y ∈ S) : x % y ∈ S ↔ x �
 #align mod_mem_iff mod_mem_iff
 
 -- see Note [lower instance priority]
-instance (priority := 100) EuclideanDomain.toPrincipalIdealDomain : IsPrincipalIdealRing R
+instance (priority := 100) EuclideanDomain.to_principal_ideal_domain : IsPrincipalIdealRing R
     where principal S :=
     ⟨if h : { x : R | x ∈ S ∧ x ≠ 0 }.Nonempty then
         have wf : WellFounded (EuclideanDomain.r : R → R → Prop) := EuclideanDomain.r_wellFounded
@@ -230,13 +230,13 @@ instance (priority := 100) EuclideanDomain.toPrincipalIdealDomain : IsPrincipalI
               exact
                 ⟨fun haS => by_contradiction fun ha0 => h ⟨a, ⟨haS, ha0⟩⟩, fun h₁ =>
                   h₁.symm ▸ S.zero_mem⟩⟩⟩
-#align euclidean_domain.to_principal_ideal_domain EuclideanDomain.toPrincipalIdealDomain
+#align euclidean_domain.to_principal_ideal_domain EuclideanDomain.to_principal_ideal_domain
 
 end
 
 theorem IsField.isPrincipalIdealRing {R : Type _} [CommRing R] (h : IsField R) :
     IsPrincipalIdealRing R :=
-  @EuclideanDomain.toPrincipalIdealDomain R (@Field.toEuclideanDomain R h.toField)
+  @EuclideanDomain.to_principal_ideal_domain R (@Field.toEuclideanDomain R h.toField)
 #align is_field.is_principal_ideal_ring IsField.isPrincipalIdealRing
 
 namespace PrincipalIdealRing
@@ -254,8 +254,8 @@ instance (priority := 100) isNoetherianRing [Ring R] [IsPrincipalIdealRing R] :
       exact ⟨{a}, SetLike.coe_injective rfl⟩⟩
 #align principal_ideal_ring.is_noetherian_ring PrincipalIdealRing.isNoetherianRing
 
-theorem isMaximalOfIrreducible [CommRing R] [IsPrincipalIdealRing R] {p : R} (hp : Irreducible p) :
-    Ideal.IsMaximal (span R ({p} : Set R)) :=
+theorem isMaximal_of_irreducible [CommRing R] [IsPrincipalIdealRing R] {p : R}
+    (hp : Irreducible p) : Ideal.IsMaximal (span R ({p} : Set R)) :=
   ⟨⟨mt Ideal.span_singleton_eq_top.1 hp.1, fun I hI =>
       by
       rcases principal I with ⟨a, rfl⟩
@@ -263,12 +263,12 @@ theorem isMaximalOfIrreducible [CommRing R] [IsPrincipalIdealRing R] {p : R} (hp
       rcases Ideal.span_singleton_le_span_singleton.1 (le_of_lt hI) with ⟨b, rfl⟩
       refine' (of_irreducible_mul hp).resolve_right (mt (fun hb => _) (not_le_of_lt hI))
       erw [Ideal.span_singleton_le_span_singleton, IsUnit.mul_right_dvd hb]⟩⟩
-#align principal_ideal_ring.is_maximal_of_irreducible PrincipalIdealRing.isMaximalOfIrreducible
+#align principal_ideal_ring.is_maximal_of_irreducible PrincipalIdealRing.isMaximal_of_irreducible
 
 variable [CommRing R] [IsDomain R] [IsPrincipalIdealRing R]
 
 theorem irreducible_iff_prime {p : R} : Irreducible p ↔ Prime p :=
-  ⟨fun hp => (Ideal.span_singleton_prime hp.NeZero).1 <| (isMaximalOfIrreducible hp).IsPrime,
+  ⟨fun hp => (Ideal.span_singleton_prime hp.NeZero).1 <| (isMaximal_of_irreducible hp).IsPrime,
     Prime.irreducible⟩
 #align principal_ideal_ring.irreducible_iff_prime PrincipalIdealRing.irreducible_iff_prime
 
@@ -332,25 +332,25 @@ variable {S N : Type _} [Ring R] [AddCommGroup M] [AddCommGroup N] [Ring S]
 
 variable [Module R M] [Module R N]
 
-theorem Submodule.IsPrincipal.ofComap (f : M →ₗ[R] N) (hf : Function.Surjective f)
+theorem Submodule.IsPrincipal.of_comap (f : M →ₗ[R] N) (hf : Function.Surjective f)
     (S : Submodule R N) [hI : IsPrincipal (S.comap f)] : IsPrincipal S :=
   ⟨⟨f (IsPrincipal.generator (S.comap f)), by
       rw [← Set.image_singleton, ← Submodule.map_span, is_principal.span_singleton_generator,
         Submodule.map_comap_eq_of_surjective hf]⟩⟩
-#align submodule.is_principal.of_comap Submodule.IsPrincipal.ofComap
+#align submodule.is_principal.of_comap Submodule.IsPrincipal.of_comap
 
-theorem Ideal.IsPrincipal.ofComap (f : R →+* S) (hf : Function.Surjective f) (I : Ideal S)
+theorem Ideal.IsPrincipal.of_comap (f : R →+* S) (hf : Function.Surjective f) (I : Ideal S)
     [hI : IsPrincipal (I.comap f)] : IsPrincipal I :=
   ⟨⟨f (IsPrincipal.generator (I.comap f)), by
       rw [Ideal.submodule_span_eq, ← Set.image_singleton, ← Ideal.map_span,
         Ideal.span_singleton_generator, Ideal.map_comap_of_surjective f hf]⟩⟩
-#align ideal.is_principal.of_comap Ideal.IsPrincipal.ofComap
+#align ideal.is_principal.of_comap Ideal.IsPrincipal.of_comap
 
 /-- The surjective image of a principal ideal ring is again a principal ideal ring. -/
-theorem IsPrincipalIdealRing.ofSurjective [IsPrincipalIdealRing R] (f : R →+* S)
+theorem IsPrincipalIdealRing.of_surjective [IsPrincipalIdealRing R] (f : R →+* S)
     (hf : Function.Surjective f) : IsPrincipalIdealRing S :=
-  ⟨fun I => Ideal.IsPrincipal.ofComap f hf I⟩
-#align is_principal_ideal_ring.of_surjective IsPrincipalIdealRing.ofSurjective
+  ⟨fun I => Ideal.IsPrincipal.of_comap f hf I⟩
+#align is_principal_ideal_ring.of_surjective IsPrincipalIdealRing.of_surjective
 
 end Surjective
 

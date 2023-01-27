@@ -156,13 +156,13 @@ theorem localization_localization_isLocalization_of_has_all_units [IsLocalizatio
 Given a submodule `M ⊆ R` and a prime ideal `p` of `S = M⁻¹R`, with `f : R →+* S` the localization
 map, then `T = Sₚ` is the localization of `R` at `f⁻¹(p)`.
 -/
-theorem isLocalizationIsLocalizationAtPrimeIsLocalization (p : Ideal S) [Hp : p.IsPrime]
+theorem isLocalization_isLocalization_atPrime_isLocalization (p : Ideal S) [Hp : p.IsPrime]
     [IsLocalization.AtPrime T p] : IsLocalization.AtPrime T (p.comap (algebraMap R S)) :=
   by
   apply localization_localization_is_localization_of_has_all_units M p.prime_compl T
   intro x hx hx'
   exact (Hp.1 : ¬_) (p.eq_top_of_is_unit_mem hx' hx)
-#align is_localization.is_localization_is_localization_at_prime_is_localization IsLocalization.isLocalizationIsLocalizationAtPrimeIsLocalization
+#align is_localization.is_localization_is_localization_at_prime_is_localization IsLocalization.isLocalization_isLocalization_atPrime_isLocalization
 
 instance (p : Ideal (Localization M)) [p.IsPrime] : Algebra R (Localization.AtPrime p) :=
   Localization.algebra
@@ -171,10 +171,10 @@ instance (p : Ideal (Localization M)) [p.IsPrime] :
     IsScalarTower R (Localization M) (Localization.AtPrime p) :=
   IsScalarTower.of_algebraMap_eq' rfl
 
-instance localizationLocalizationAtPrimeIsLocalization (p : Ideal (Localization M)) [p.IsPrime] :
-    IsLocalization.AtPrime (Localization.AtPrime p) (p.comap (algebraMap R _)) :=
-  isLocalizationIsLocalizationAtPrimeIsLocalization M _ _
-#align is_localization.localization_localization_at_prime_is_localization IsLocalization.localizationLocalizationAtPrimeIsLocalization
+instance localization_localization_atPrime_is_localization (p : Ideal (Localization M))
+    [p.IsPrime] : IsLocalization.AtPrime (Localization.AtPrime p) (p.comap (algebraMap R _)) :=
+  isLocalization_isLocalization_atPrime_isLocalization M _ _
+#align is_localization.localization_localization_at_prime_is_localization IsLocalization.localization_localization_atPrime_is_localization
 
 /-- Given a submodule `M ⊆ R` and a prime ideal `p` of `M⁻¹R`, with `f : R →+* S` the localization
 map, then `(M⁻¹R)ₚ` is isomorphic (as an `R`-algebra) to the localization of `R` at `f⁻¹(p)`.

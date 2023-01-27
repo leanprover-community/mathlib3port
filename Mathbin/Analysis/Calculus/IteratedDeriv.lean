@@ -310,7 +310,7 @@ theorem iteratedDeriv_succ : iteratedDeriv (n + 1) f = deriv (iteratedDeriv n f)
   by
   ext x
   rw [← iteratedDerivWithin_univ, ← iteratedDerivWithin_univ, ← derivWithin_univ]
-  exact iteratedDerivWithin_succ uniqueDiffWithinAtUniv
+  exact iteratedDerivWithin_succ uniqueDiffWithinAt_univ
 #align iterated_deriv_succ iteratedDeriv_succ
 
 /-- The `n`-th iterated derivative can be obtained by iterating `n` times the

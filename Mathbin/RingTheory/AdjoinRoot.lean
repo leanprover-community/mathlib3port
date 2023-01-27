@@ -137,7 +137,7 @@ theorem finiteType : Algebra.FiniteType R (AdjoinRoot f) :=
 #align adjoin_root.finite_type AdjoinRoot.finiteType
 
 theorem finitePresentation : Algebra.FinitePresentation R (AdjoinRoot f) :=
-  (Algebra.FinitePresentation.polynomial R).Quotient (Submodule.fgSpanSingleton f)
+  (Algebra.FinitePresentation.polynomial R).Quotient (Submodule.fg_span_singleton f)
 #align adjoin_root.finite_presentation AdjoinRoot.finitePresentation
 
 /-- The adjoined root. -/
@@ -363,9 +363,9 @@ section Irreducible
 
 variable [Field K] {f : K[X]}
 
-instance spanMaximalOfIrreducible [Fact (Irreducible f)] : (span {f}).IsMaximal :=
-  PrincipalIdealRing.isMaximalOfIrreducible <| Fact.out _
-#align adjoin_root.span_maximal_of_irreducible AdjoinRoot.spanMaximalOfIrreducible
+instance span_maximal_of_irreducible [Fact (Irreducible f)] : (span {f}).IsMaximal :=
+  PrincipalIdealRing.isMaximal_of_irreducible <| Fact.out _
+#align adjoin_root.span_maximal_of_irreducible AdjoinRoot.span_maximal_of_irreducible
 
 noncomputable instance field [Fact (Irreducible f)] : Field (AdjoinRoot f) :=
   { AdjoinRoot.commRing f, Ideal.Quotient.field (span {f} : Ideal K[X]) with }

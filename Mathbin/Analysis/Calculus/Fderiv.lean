@@ -667,7 +667,7 @@ theorem fderivWithin_univ : fderivWithin 𝕜 f univ = fderiv 𝕜 f :=
   by
   ext x : 1
   by_cases h : DifferentiableAt 𝕜 f x
-  · apply HasFderivWithinAt.fderivWithin _ uniqueDiffWithinAtUniv
+  · apply HasFderivWithinAt.fderivWithin _ uniqueDiffWithinAt_univ
     rw [hasFderivWithinAt_univ]
     apply h.has_fderiv_at
   · have : ¬DifferentiableWithinAt 𝕜 f univ x := by rwa [differentiableWithinAt_univ]
@@ -965,7 +965,7 @@ theorem Filter.EventuallyEq.fderiv_eq (hL : f₁ =ᶠ[𝓝 x] f) : fderiv 𝕜 f
   have A : f₁ x = f x := hL.eq_of_nhds
   rw [← fderivWithin_univ, ← fderivWithin_univ]
   rw [← nhdsWithin_univ] at hL
-  exact hL.fderiv_within_eq uniqueDiffWithinAtUniv A
+  exact hL.fderiv_within_eq uniqueDiffWithinAt_univ A
 #align filter.eventually_eq.fderiv_eq Filter.EventuallyEq.fderiv_eq
 
 protected theorem Filter.EventuallyEq.fderiv (h : f₁ =ᶠ[𝓝 x] f) : fderiv 𝕜 f₁ =ᶠ[𝓝 x] fderiv 𝕜 f :=
@@ -1940,7 +1940,7 @@ theorem fderivWithin_add_const (hxs : UniqueDiffWithinAt 𝕜 s x) (c : F) :
 #align fderiv_within_add_const fderivWithin_add_const
 
 theorem fderiv_add_const (c : F) : fderiv 𝕜 (fun y => f y + c) x = fderiv 𝕜 f x := by
-  simp only [← fderivWithin_univ, fderivWithin_add_const uniqueDiffWithinAtUniv]
+  simp only [← fderivWithin_univ, fderivWithin_add_const uniqueDiffWithinAt_univ]
 #align fderiv_add_const fderiv_add_const
 
 theorem HasStrictFderivAt.const_add (hf : HasStrictFderivAt f f' x) (c : F) :
@@ -2270,7 +2270,7 @@ theorem fderivWithin_neg (hxs : UniqueDiffWithinAt 𝕜 s x) :
 
 @[simp]
 theorem fderiv_neg : fderiv 𝕜 (fun y => -f y) x = -fderiv 𝕜 f x := by
-  simp only [← fderivWithin_univ, fderivWithin_neg uniqueDiffWithinAtUniv]
+  simp only [← fderivWithin_univ, fderivWithin_neg uniqueDiffWithinAt_univ]
 #align fderiv_neg fderiv_neg
 
 end Neg
@@ -2467,7 +2467,7 @@ theorem fderivWithin_const_sub (hxs : UniqueDiffWithinAt 𝕜 s x) (c : F) :
 #align fderiv_within_const_sub fderivWithin_const_sub
 
 theorem fderiv_const_sub (c : F) : fderiv 𝕜 (fun y => c - f y) x = -fderiv 𝕜 f x := by
-  simp only [← fderivWithin_univ, fderivWithin_const_sub uniqueDiffWithinAtUniv]
+  simp only [← fderivWithin_univ, fderivWithin_const_sub uniqueDiffWithinAt_univ]
 #align fderiv_const_sub fderiv_const_sub
 
 end Sub
@@ -3178,7 +3178,7 @@ theorem comp_fderiv {f : G → E} {x : G} :
     fderiv 𝕜 (iso ∘ f) x = (iso : E →L[𝕜] F).comp (fderiv 𝕜 f x) :=
   by
   rw [← fderivWithin_univ, ← fderivWithin_univ]
-  exact iso.comp_fderiv_within uniqueDiffWithinAtUniv
+  exact iso.comp_fderiv_within uniqueDiffWithinAt_univ
 #align continuous_linear_equiv.comp_fderiv ContinuousLinearEquiv.comp_fderiv
 
 end ContinuousLinearEquiv
@@ -3448,11 +3448,11 @@ theorem UniqueDiffOn.image {f' : E → E →L[𝕜] F} (hs : UniqueDiffOn 𝕜 s
   ball_image_iff.2 fun x hx => (hf' x hx).UniqueDiffWithinAt (hs x hx) (hd x hx)
 #align unique_diff_on.image UniqueDiffOn.image
 
-theorem HasFderivWithinAt.uniqueDiffWithinAtOfContinuousLinearEquiv {x : E} (e' : E ≃L[𝕜] F)
+theorem HasFderivWithinAt.uniqueDiffWithinAt_of_continuousLinearEquiv {x : E} (e' : E ≃L[𝕜] F)
     (h : HasFderivWithinAt f (e' : E →L[𝕜] F) s x) (hs : UniqueDiffWithinAt 𝕜 s x) :
     UniqueDiffWithinAt 𝕜 (f '' s) (f x) :=
   h.UniqueDiffWithinAt hs e'.Surjective.DenseRange
-#align has_fderiv_within_at.unique_diff_within_at_of_continuous_linear_equiv HasFderivWithinAt.uniqueDiffWithinAtOfContinuousLinearEquiv
+#align has_fderiv_within_at.unique_diff_within_at_of_continuous_linear_equiv HasFderivWithinAt.uniqueDiffWithinAt_of_continuousLinearEquiv
 
 theorem ContinuousLinearEquiv.uniqueDiffOn_image (e : E ≃L[𝕜] F) (h : UniqueDiffOn 𝕜 s) :
     UniqueDiffOn 𝕜 (e '' s) :=
@@ -3571,7 +3571,7 @@ theorem differentiableAt_iff_restrictScalars (hf : DifferentiableAt 𝕜 f x) :
   by
   rw [← differentiableWithinAt_univ, ← fderivWithin_univ]
   exact
-    differentiableWithinAt_iff_restrictScalars 𝕜 hf.differentiable_within_at uniqueDiffWithinAtUniv
+    differentiableWithinAt_iff_restrictScalars 𝕜 hf.differentiable_within_at uniqueDiffWithinAt_univ
 #align differentiable_at_iff_restrict_scalars differentiableAt_iff_restrictScalars
 
 end RestrictScalars

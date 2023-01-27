@@ -81,7 +81,7 @@ theorem inv_zero' : (0 : FractionalIdeal R₁⁰ K)⁻¹ = 0 :=
 #align fractional_ideal.inv_zero' FractionalIdeal.inv_zero'
 
 theorem inv_nonzero {J : FractionalIdeal R₁⁰ K} (h : J ≠ 0) :
-    J⁻¹ = ⟨(1 : FractionalIdeal R₁⁰ K) / J, fractionalDivOfNonzero h⟩ :=
+    J⁻¹ = ⟨(1 : FractionalIdeal R₁⁰ K) / J, fractional_div_of_nonzero h⟩ :=
   div_nonzero _
 #align fractional_ideal.inv_nonzero FractionalIdeal.inv_nonzero
 
@@ -237,7 +237,7 @@ theorem invertible_iff_generator_nonzero (I : FractionalIdeal R₁⁰ K)
     contradiction
 #align fractional_ideal.invertible_iff_generator_nonzero FractionalIdeal.invertible_iff_generator_nonzero
 
-theorem isPrincipalInv (I : FractionalIdeal R₁⁰ K) [Submodule.IsPrincipal (I : Submodule R₁ K)]
+theorem isPrincipal_inv (I : FractionalIdeal R₁⁰ K) [Submodule.IsPrincipal (I : Submodule R₁ K)]
     (h : I ≠ 0) : Submodule.IsPrincipal I⁻¹.1 :=
   by
   rw [val_eq_coe, is_principal_iff]
@@ -245,7 +245,7 @@ theorem isPrincipalInv (I : FractionalIdeal R₁⁰ K) [Submodule.IsPrincipal (I
   have hI : I * span_singleton _ (generator (I : Submodule R₁ K))⁻¹ = 1
   apply mul_generator_self_inv _ I h
   exact (right_inverse_eq _ I (span_singleton _ (generator (I : Submodule R₁ K))⁻¹) hI).symm
-#align fractional_ideal.is_principal_inv FractionalIdeal.isPrincipalInv
+#align fractional_ideal.is_principal_inv FractionalIdeal.isPrincipal_inv
 
 noncomputable instance : InvOneClass (FractionalIdeal R₁⁰ K) :=
   { FractionalIdeal.hasOne, FractionalIdeal.hasInv K with inv_one := div_one }
@@ -312,7 +312,7 @@ theorem isNoetherianRing : IsNoetherianRing A :=
   refine' is_noetherian_ring_iff.mpr ⟨fun I : Ideal A => _⟩
   by_cases hI : I = ⊥
   · rw [hI]
-    apply Submodule.fgBot
+    apply Submodule.fg_bot
   have hI : (I : FractionalIdeal A⁰ (FractionRing A)) ≠ 0 := coe_ideal_ne_zero.mpr hI
   exact I.fg_of_is_unit (IsFractionRing.injective A (FractionRing A)) (h.is_unit hI)
 #align is_dedekind_domain_inv.is_noetherian_ring IsDedekindDomainInv.isNoetherianRing
@@ -751,7 +751,7 @@ theorem Ideal.dvd_span_singleton {I : Ideal A} {x : A} : I ∣ Ideal.span {x} �
   Ideal.dvd_iff_le.trans (Ideal.span_le.trans Set.singleton_subset_iff)
 #align ideal.dvd_span_singleton Ideal.dvd_span_singleton
 
-theorem Ideal.isPrimeOfPrime {P : Ideal A} (h : Prime P) : IsPrime P :=
+theorem Ideal.isPrime_of_prime {P : Ideal A} (h : Prime P) : IsPrime P :=
   by
   refine' ⟨_, fun x y hxy => _⟩
   · rintro rfl
@@ -759,7 +759,7 @@ theorem Ideal.isPrimeOfPrime {P : Ideal A} (h : Prime P) : IsPrime P :=
     exact h.not_unit isUnit_one
   · simp only [← Ideal.dvd_span_singleton, ← Ideal.span_singleton_mul_span_singleton] at hxy⊢
     exact h.dvd_or_dvd hxy
-#align ideal.is_prime_of_prime Ideal.isPrimeOfPrime
+#align ideal.is_prime_of_prime Ideal.isPrime_of_prime
 
 theorem Ideal.prime_of_isPrime {P : Ideal A} (hP : P ≠ ⊥) (h : IsPrime P) : Prime P :=
   by
@@ -770,14 +770,14 @@ theorem Ideal.prime_of_isPrime {P : Ideal A} (hP : P ≠ ⊥) (h : IsPrime P) : 
 /-- In a Dedekind domain, the (nonzero) prime elements of the monoid with zero `ideal A`
 are exactly the prime ideals. -/
 theorem Ideal.prime_iff_isPrime {P : Ideal A} (hP : P ≠ ⊥) : Prime P ↔ IsPrime P :=
-  ⟨Ideal.isPrimeOfPrime, Ideal.prime_of_isPrime hP⟩
+  ⟨Ideal.isPrime_of_prime, Ideal.prime_of_isPrime hP⟩
 #align ideal.prime_iff_is_prime Ideal.prime_iff_isPrime
 
 /-- In a Dedekind domain, the the prime ideals are the zero ideal together with the prime elements
 of the monoid with zero `ideal A`. -/
 theorem Ideal.isPrime_iff_bot_or_prime {P : Ideal A} : IsPrime P ↔ P = ⊥ ∨ Prime P :=
   ⟨fun hp => (eq_or_ne P ⊥).imp_right fun hp0 => Ideal.prime_of_isPrime hp0 hp, fun hp =>
-    hp.elim (fun h => h.symm ▸ Ideal.botPrime) Ideal.isPrimeOfPrime⟩
+    hp.elim (fun h => h.symm ▸ Ideal.bot_prime) Ideal.isPrime_of_prime⟩
 #align ideal.is_prime_iff_bot_or_prime Ideal.isPrime_iff_bot_or_prime
 
 theorem Ideal.strictAnti_pow (I : Ideal A) (hI0 : I ≠ ⊥) (hI1 : I ≠ ⊤) :
@@ -1325,7 +1325,7 @@ theorem Ideal.le_mul_of_no_prime_factors {I J K : Ideal R}
   exact
     mul_dvd_mul_left K
       (UniqueFactorizationMonoid.dvd_of_dvd_mul_right_of_no_prime_factors hJ0
-        (fun P hPJ hPK => mt Ideal.isPrimeOfPrime (coprime P hPJ hPK)) hJ)
+        (fun P hPJ hPK => mt Ideal.isPrime_of_prime (coprime P hPJ hPK)) hJ)
 #align ideal.le_mul_of_no_prime_factors Ideal.le_mul_of_no_prime_factors
 
 theorem Ideal.le_of_pow_le_prime {I P : Ideal R} [hP : P.IsPrime] {n : ℕ} (h : I ^ n ≤ P) : I ≤ P :=
@@ -1373,8 +1373,8 @@ theorem IsDedekindDomain.inf_prime_pow_eq_prod {ι : Type _} (s : Finset ι) (f 
   intro P hPa hPs hPp
   haveI := hPp
   obtain ⟨b, hb, hPb⟩ := ideal.prod_le_prime.mp hPs
-  haveI := Ideal.isPrimeOfPrime (Prime a (Finset.mem_insert_self a s))
-  haveI := Ideal.isPrimeOfPrime (Prime b (Finset.mem_insert_of_mem hb))
+  haveI := Ideal.isPrime_of_prime (Prime a (Finset.mem_insert_self a s))
+  haveI := Ideal.isPrime_of_prime (Prime b (Finset.mem_insert_of_mem hb))
   refine'
     coprime a (Finset.mem_insert_self a s) b (Finset.mem_insert_of_mem hb) _
       (((is_dedekind_domain.dimension_le_one.prime_le_prime_iff_eq _).mp
@@ -1402,7 +1402,7 @@ noncomputable def IsDedekindDomain.quotientEquivPiOfProdEq {ι : Type _} [Fintyp
         (by
           intro P hPi hPj hPp
           haveI := hPp
-          haveI := Ideal.isPrimeOfPrime (Prime i); haveI := Ideal.isPrimeOfPrime (Prime j)
+          haveI := Ideal.isPrime_of_prime (Prime i); haveI := Ideal.isPrime_of_prime (Prime j)
           exact
             coprime i j hij
               (((is_dedekind_domain.dimension_le_one.prime_le_prime_iff_eq (Prime i).NeZero).mp

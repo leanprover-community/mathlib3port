@@ -117,7 +117,7 @@ instance [SMul R₁ R] [Module R₁ L] [IsScalarTower R₁ R L] (L' : LieSubalge
   L'.toSubmodule.IsScalarTower
 
 instance (L' : LieSubalgebra R L) [IsNoetherian R L] : IsNoetherian R L' :=
-  isNoetherianSubmodule' ↑L'
+  isNoetherian_submodule' ↑L'
 
 end
 

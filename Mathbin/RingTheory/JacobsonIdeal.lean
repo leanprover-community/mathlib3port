@@ -377,12 +377,12 @@ theorem isLocal_iff {I : Ideal R} : IsLocal I ↔ IsMaximal (jacobson I) :=
   ⟨fun h => h.1, fun h => ⟨h⟩⟩
 #align ideal.is_local_iff Ideal.isLocal_iff
 
-theorem isLocalOfIsMaximalRadical {I : Ideal R} (hi : IsMaximal (radical I)) : IsLocal I :=
+theorem isLocal_of_isMaximal_radical {I : Ideal R} (hi : IsMaximal (radical I)) : IsLocal I :=
   ⟨have : radical I = jacobson I :=
       le_antisymm (le_infₛ fun M ⟨him, hm⟩ => hm.IsPrime.radical_le_iff.2 him)
         (infₛ_le ⟨le_radical, hi⟩)
     show IsMaximal (jacobson I) from this ▸ hi⟩
-#align ideal.is_local_of_is_maximal_radical Ideal.isLocalOfIsMaximalRadical
+#align ideal.is_local_of_is_maximal_radical Ideal.isLocal_of_isMaximal_radical
 
 theorem IsLocal.le_jacobson {I J : Ideal R} (hi : IsLocal I) (hij : I ≤ J) (hj : J ≠ ⊤) :
     J ≤ jacobson I :=
@@ -410,7 +410,7 @@ theorem isPrimary_of_isMaximal_radical [CommRing R] {I : Ideal R} (hi : IsMaxima
     le_antisymm (le_infₛ fun M ⟨him, hm⟩ => hm.IsPrime.radical_le_iff.2 him)
       (infₛ_le ⟨le_radical, hi⟩)
   ⟨ne_top_of_lt <| lt_of_le_of_lt le_radical (lt_top_iff_ne_top.2 hi.1.1), fun x y hxy =>
-    ((isLocalOfIsMaximalRadical hi).mem_jacobson_or_exists_inv y).symm.imp
+    ((isLocal_of_isMaximal_radical hi).mem_jacobson_or_exists_inv y).symm.imp
       (fun ⟨z, hz⟩ => by
         rw [← mul_one x, ← sub_sub_cancel (z * y) 1, mul_sub, mul_left_comm] <;>
           exact I.sub_mem (I.mul_mem_left _ hxy) (I.mul_mem_left _ hz))

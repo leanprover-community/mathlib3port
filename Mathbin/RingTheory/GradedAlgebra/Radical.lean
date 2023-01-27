@@ -54,10 +54,10 @@ variable [SetLike σ A] [AddSubmonoidClass σ A] {𝒜 : ι → σ} [GradedRing 
 include A
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem Ideal.IsHomogeneous.isPrimeOfHomogeneousMemOrMem {I : Ideal A} (hI : I.IsHomogeneous 𝒜)
+theorem Ideal.IsHomogeneous.isPrime_of_homogeneous_mem_or_mem {I : Ideal A} (hI : I.IsHomogeneous 𝒜)
     (I_ne_top : I ≠ ⊤)
     (homogeneous_mem_or_mem :
-      ∀ {x y : A}, IsHomogeneous 𝒜 x → IsHomogeneous 𝒜 y → x * y ∈ I → x ∈ I ∨ y ∈ I) :
+      ∀ {x y : A}, Homogeneous 𝒜 x → Homogeneous 𝒜 y → x * y ∈ I → x ∈ I ∨ y ∈ I) :
     Ideal.IsPrime I :=
   ⟨I_ne_top, by
     intro x y hxy
@@ -151,28 +151,28 @@ theorem Ideal.IsHomogeneous.isPrimeOfHomogeneousMemOrMem {I : Ideal A} (hI : I.I
         · apply neither_mem.1 h
         · apply neither_mem.2 h
       exact not_mem_I mem_I⟩
-#align ideal.is_homogeneous.is_prime_of_homogeneous_mem_or_mem Ideal.IsHomogeneous.isPrimeOfHomogeneousMemOrMem
+#align ideal.is_homogeneous.is_prime_of_homogeneous_mem_or_mem Ideal.IsHomogeneous.isPrime_of_homogeneous_mem_or_mem
 
 theorem Ideal.IsHomogeneous.isPrime_iff {I : Ideal A} (h : I.IsHomogeneous 𝒜) :
     I.IsPrime ↔
       I ≠ ⊤ ∧
         ∀ {x y : A},
-          SetLike.IsHomogeneous 𝒜 x → SetLike.IsHomogeneous 𝒜 y → x * y ∈ I → x ∈ I ∨ y ∈ I :=
+          SetLike.Homogeneous 𝒜 x → SetLike.Homogeneous 𝒜 y → x * y ∈ I → x ∈ I ∨ y ∈ I :=
   ⟨fun HI => ⟨ne_of_apply_ne _ HI.ne_top, fun x y hx hy hxy => Ideal.IsPrime.mem_or_mem HI hxy⟩,
     fun ⟨I_ne_top, homogeneous_mem_or_mem⟩ =>
-    h.isPrimeOfHomogeneousMemOrMem I_ne_top @homogeneous_mem_or_mem⟩
+    h.is_prime_of_homogeneous_mem_or_mem I_ne_top @homogeneous_mem_or_mem⟩
 #align ideal.is_homogeneous.is_prime_iff Ideal.IsHomogeneous.isPrime_iff
 
 theorem Ideal.IsPrime.homogeneousCore {I : Ideal A} (h : I.IsPrime) :
     (I.homogeneousCore 𝒜).toIdeal.IsPrime :=
   by
-  apply (Ideal.homogeneousCore 𝒜 I).IsHomogeneous.isPrimeOfHomogeneousMemOrMem
+  apply (Ideal.homogeneousCore 𝒜 I).IsHomogeneous.is_prime_of_homogeneous_mem_or_mem
   · exact ne_top_of_le_ne_top h.ne_top (Ideal.toIdeal_homogeneousCore_le 𝒜 I)
   rintro x y hx hy hxy
   have H := h.mem_or_mem (Ideal.toIdeal_homogeneousCore_le 𝒜 I hxy)
   refine' H.imp _ _
-  · exact Ideal.mem_homogeneousCore_of_isHomogeneous_of_mem hx
-  · exact Ideal.mem_homogeneousCore_of_isHomogeneous_of_mem hy
+  · exact Ideal.mem_homogeneousCore_of_homogeneous_of_mem hx
+  · exact Ideal.mem_homogeneousCore_of_homogeneous_of_mem hy
 #align ideal.is_prime.homogeneous_core Ideal.IsPrime.homogeneousCore
 
 theorem Ideal.IsHomogeneous.radical_eq {I : Ideal A} (hI : I.IsHomogeneous 𝒜) :

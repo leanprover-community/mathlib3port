@@ -269,16 +269,16 @@ def baseChange (f : M →ₗ[R] N) : A ⊗[R] M →ₗ[A] A ⊗[R] N
 variable {A}
 
 @[simp]
-theorem baseChange_tmul (a : A) (x : M) : f.baseChange A (a ⊗ₜ x) = a ⊗ₜ f x :=
+theorem baseChange_tmul (a : A) (x : M) : f.base_change A (a ⊗ₜ x) = a ⊗ₜ f x :=
   rfl
 #align linear_map.base_change_tmul LinearMap.baseChange_tmul
 
-theorem baseChange_eq_ltensor : (f.baseChange A : A ⊗ M → A ⊗ N) = f.ltensor A :=
+theorem baseChange_eq_ltensor : (f.base_change A : A ⊗ M → A ⊗ N) = f.ltensor A :=
   rfl
 #align linear_map.base_change_eq_ltensor LinearMap.baseChange_eq_ltensor
 
 @[simp]
-theorem baseChange_add : (f + g).baseChange A = f.baseChange A + g.baseChange A :=
+theorem baseChange_add : (f + g).base_change A = f.base_change A + g.base_change A :=
   by
   ext
   simp [base_change_eq_ltensor]
@@ -292,7 +292,7 @@ theorem baseChange_zero : baseChange A (0 : M →ₗ[R] N) = 0 :=
 #align linear_map.base_change_zero LinearMap.baseChange_zero
 
 @[simp]
-theorem baseChange_smul : (r • f).baseChange A = r • f.baseChange A :=
+theorem baseChange_smul : (r • f).base_change A = r • f.base_change A :=
   by
   ext
   simp [base_change_tmul]
@@ -322,14 +322,14 @@ variable [AddCommGroup M] [Module R M] [AddCommGroup N] [Module R N]
 variable (f g : M →ₗ[R] N)
 
 @[simp]
-theorem baseChange_sub : (f - g).baseChange A = f.baseChange A - g.baseChange A :=
+theorem baseChange_sub : (f - g).base_change A = f.base_change A - g.base_change A :=
   by
   ext
   simp [base_change_eq_ltensor]
 #align linear_map.base_change_sub LinearMap.baseChange_sub
 
 @[simp]
-theorem baseChange_neg : (-f).baseChange A = -f.baseChange A :=
+theorem baseChange_neg : (-f).base_change A = -f.base_change A :=
   by
   ext
   simp [base_change_eq_ltensor]

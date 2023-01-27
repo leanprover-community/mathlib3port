@@ -590,7 +590,7 @@ theorem orderOf_subgroup {H : Subgroup G} (y : H) : orderOf (y : G) = orderOf y 
 @[to_additive zsmul_eq_mod_add_orderOf]
 theorem zpow_eq_mod_orderOf : x ^ i = x ^ (i % orderOf x) :=
   calc
-    x ^ i = x ^ (i % orderOf x + orderOf x * (i / orderOf x)) := by rw [Int.mod_add_div]
+    x ^ i = x ^ (i % orderOf x + orderOf x * (i / orderOf x)) := by rw [Int.emod_add_ediv]
     _ = x ^ (i % orderOf x) := by simp [zpow_add, zpow_mul, pow_orderOf_eq_one]
     
 #align zpow_eq_mod_order_of zpow_eq_mod_orderOf

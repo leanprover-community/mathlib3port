@@ -87,8 +87,8 @@ variable (R S)
 /-- The map from the direct sum of prime spectra to the prime spectrum of a direct product. -/
 @[simp]
 def primeSpectrumProdOfSum : Sum (PrimeSpectrum R) (PrimeSpectrum S) → PrimeSpectrum (R × S)
-  | Sum.inl ⟨I, hI⟩ => ⟨Ideal.prod I ⊤, Ideal.isPrimeIdealProdTop⟩
-  | Sum.inr ⟨J, hJ⟩ => ⟨Ideal.prod ⊤ J, Ideal.isPrimeIdealProdTop'⟩
+  | Sum.inl ⟨I, hI⟩ => ⟨Ideal.prod I ⊤, Ideal.isPrime_ideal_prod_top⟩
+  | Sum.inr ⟨J, hJ⟩ => ⟨Ideal.prod ⊤ J, Ideal.isPrime_ideal_prod_top'⟩
 #align prime_spectrum.prime_spectrum_prod_of_sum PrimeSpectrum.primeSpectrumProdOfSum
 
 /-- The prime spectrum of `R × S` is in bijection with the disjoint unions of the prime spectrum of
@@ -528,7 +528,7 @@ theorem t1Space_iff_isField [IsDomain R] : T1Space (PrimeSpectrum R) ↔ IsField
   by
   refine' ⟨_, fun h => _⟩
   · intro h
-    have hbot : Ideal.IsPrime (⊥ : Ideal R) := Ideal.botPrime
+    have hbot : Ideal.IsPrime (⊥ : Ideal R) := Ideal.bot_prime
     exact
       not_not.1
         (mt
@@ -537,7 +537,7 @@ theorem t1Space_iff_isField [IsDomain R] : T1Space (PrimeSpectrum R) ↔ IsField
           (not_not.2 rfl))
   · refine' ⟨fun x => (is_closed_singleton_iff_is_maximal x).2 _⟩
     by_cases hx : x.as_ideal = ⊥
-    · exact hx.symm ▸ @Ideal.botIsMaximal R (@Field.toDivisionRing _ h.to_field)
+    · exact hx.symm ▸ @Ideal.bot_isMaximal R (@Field.toDivisionRing _ h.to_field)
     · exact absurd h (Ring.not_isField_iff_exists_prime.2 ⟨x.as_ideal, ⟨hx, x.2⟩⟩)
 #align prime_spectrum.t1_space_iff_is_field PrimeSpectrum.t1Space_iff_isField
 
@@ -584,7 +584,7 @@ theorem isIrreducible_iff_vanishingIdeal_isPrime {s : Set (PrimeSpectrum R)} :
 instance [IsDomain R] : IrreducibleSpace (PrimeSpectrum R) :=
   by
   rw [irreducibleSpace_def, Set.top_eq_univ, ← zero_locus_bot, is_irreducible_zero_locus_iff]
-  simpa using Ideal.botPrime
+  simpa using Ideal.bot_prime
 
 instance : QuasiSober (PrimeSpectrum R) :=
   ⟨fun S h₁ h₂ =>
@@ -657,14 +657,14 @@ theorem comap_singleton_isClosed_of_surjective (f : R →+* S) (hf : Function.Su
     (x : PrimeSpectrum S) (hx : IsClosed ({x} : Set (PrimeSpectrum S))) :
     IsClosed ({comap f x} : Set (PrimeSpectrum R)) :=
   haveI : x.as_ideal.is_maximal := (is_closed_singleton_iff_is_maximal x).1 hx
-  (is_closed_singleton_iff_is_maximal _).2 (Ideal.comapIsMaximalOfSurjective f hf)
+  (is_closed_singleton_iff_is_maximal _).2 (Ideal.comap_isMaximal_of_surjective f hf)
 #align prime_spectrum.comap_singleton_is_closed_of_surjective PrimeSpectrum.comap_singleton_isClosed_of_surjective
 
 theorem comap_singleton_isClosed_of_isIntegral (f : R →+* S) (hf : f.IsIntegral)
     (x : PrimeSpectrum S) (hx : IsClosed ({x} : Set (PrimeSpectrum S))) :
     IsClosed ({comap f x} : Set (PrimeSpectrum R)) :=
   (isClosed_singleton_iff_isMaximal _).2
-    (Ideal.isMaximalComapOfIsIntegralOfIsMaximal' f hf x.asIdeal <|
+    (Ideal.isMaximal_comap_of_isIntegral_of_is_maximal' f hf x.asIdeal <|
       (isClosed_singleton_iff_isMaximal x).1 hx)
 #align prime_spectrum.comap_singleton_is_closed_of_is_integral PrimeSpectrum.comap_singleton_isClosed_of_isIntegral
 
@@ -713,7 +713,7 @@ theorem localization_comap_range [Algebra R S] (M : Submonoid R) [IsLocalization
     rintro ⟨p, rfl⟩ x ⟨hx₁, hx₂⟩
     exact (p.2.1 : ¬_) (p.as_ideal.eq_top_of_is_unit_mem hx₂ (IsLocalization.map_units S ⟨x, hx₁⟩))
   · intro h
-    use ⟨x.as_ideal.map (algebraMap R S), IsLocalization.isPrimeOfIsPrimeDisjoint M S _ x.2 h⟩
+    use ⟨x.as_ideal.map (algebraMap R S), IsLocalization.isPrime_of_isPrime_disjoint M S _ x.2 h⟩
     ext1
     exact IsLocalization.comap_map_of_isPrime_disjoint M S _ x.2 h
 #align prime_spectrum.localization_comap_range PrimeSpectrum.localization_comap_range
@@ -748,7 +748,7 @@ theorem image_comap_zeroLocus_eq_zeroLocus_comap (hf : Surjective f) (I : Ideal 
   · rintro ⟨p, hp, rfl⟩ a ha
     exact hp ha
   · have hp : ker f ≤ p.as_ideal := (Ideal.comap_mono bot_le).trans h_I_p
-    refine' ⟨⟨p.as_ideal.map f, Ideal.mapIsPrimeOfSurjective hf hp⟩, fun x hx => _, _⟩
+    refine' ⟨⟨p.as_ideal.map f, Ideal.map_isPrime_of_surjective hf hp⟩, fun x hx => _, _⟩
     · obtain ⟨x', rfl⟩ := hf x
       exact Ideal.mem_map_of_mem f (h_I_p hx)
     · ext x

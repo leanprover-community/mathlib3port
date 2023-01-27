@@ -104,11 +104,11 @@ theorem GradedAlgebra.lift_ι_eq (i' : ZMod 2) (x' : evenOdd Q i') :
   by
   cases' x' with x' hx'
   dsimp only [Subtype.coe_mk, DirectSum.lof_eq_of]
-  refine' Submodule.suprInduction' _ (fun i x hx => _) _ (fun x y hx hy ihx ihy => _) hx'
+  refine' Submodule.supᵢ_induction' _ (fun i x hx => _) _ (fun x y hx hy ihx ihy => _) hx'
   · obtain ⟨i, rfl⟩ := i
     dsimp only [Subtype.coe_mk] at hx
     refine'
-      Submodule.powInductionOnLeft' _ (fun r => _) (fun x y i hx hy ihx ihy => _)
+      Submodule.pow_induction_on_left' _ (fun r => _) (fun x y i hx hy ihx ihy => _)
         (fun m hm i x hx ih => _) hx
     · rw [AlgHom.commutes, DirectSum.algebraMap_apply]
       rfl
@@ -179,14 +179,14 @@ theorem evenOddInduction (n : ZMod 2) {P : ∀ x, x ∈ evenOdd Q n → Prop}
             (zero_add n ▸ SetLike.mul_mem_graded (ι_mul_ι_mem_evenOdd_zero Q m₁ m₂) hx))
     (x : CliffordAlgebra Q) (hx : x ∈ evenOdd Q n) : P x hx :=
   by
-  apply Submodule.suprInduction' _ _ (hr 0 (Submodule.zero_mem _)) @hadd
+  apply Submodule.supᵢ_induction' _ _ (hr 0 (Submodule.zero_mem _)) @hadd
   refine' Subtype.rec _
   simp_rw [Subtype.coe_mk, ZMod.nat_coe_zMod_eq_iff, add_comm n.val]
   rintro n' ⟨k, rfl⟩ xv
   simp_rw [pow_add, pow_mul]
-  refine' Submodule.mulInductionOn' _ _
+  refine' Submodule.mul_induction_on' _ _
   · intro a ha b hb
-    refine' Submodule.powInductionOnLeft' ((ι Q).range ^ 2) _ _ _ ha
+    refine' Submodule.pow_induction_on_left' ((ι Q).range ^ 2) _ _ _ ha
     · intro r
       simp_rw [← Algebra.smul_def]
       exact hr _ (Submodule.smul_mem _ _ hb)
@@ -196,7 +196,7 @@ theorem evenOddInduction (n : ZMod 2) {P : ∀ x, x ∈ evenOdd Q n → Prop}
     · intro x hx n y hy ihy
       revert hx
       simp_rw [pow_two]
-      refine' Submodule.mulInductionOn' _ _
+      refine' Submodule.mul_induction_on' _ _
       · simp_rw [LinearMap.mem_range]
         rintro _ ⟨m₁, rfl⟩ _ ⟨m₂, rfl⟩
         simp_rw [mul_assoc _ y b]

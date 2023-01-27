@@ -451,7 +451,7 @@ def lift [Algebra K F] (f : K[X]) [IsSplittingField K L f]
 theorem finiteDimensional (f : K[X]) [IsSplittingField K L f] : FiniteDimensional K L :=
   ⟨@Algebra.top_toSubmodule K L _ _ _ ▸
       adjoin_roots L f ▸
-        fgAdjoinOfFinite (Finset.finite_toSet _) fun y hy =>
+        fg_adjoin_of_finite (Finset.finite_toSet _) fun y hy =>
           if hf : f = 0 then by
             rw [hf, Polynomial.map_zero, roots_zero] at hy
             cases hy

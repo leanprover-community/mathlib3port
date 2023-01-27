@@ -1277,7 +1277,7 @@ theorem derivWithin_const_sub (hxs : UniqueDiffWithinAt 𝕜 s x) (c : F) :
 
 theorem deriv_const_sub (c : F) : deriv (fun y => c - f y) x = -deriv f x := by
   simp only [← derivWithin_univ,
-    derivWithin_const_sub (uniqueDiffWithinAtUniv : UniqueDiffWithinAt 𝕜 _ _)]
+    derivWithin_const_sub (uniqueDiffWithinAt_univ : UniqueDiffWithinAt 𝕜 _ _)]
 #align deriv_const_sub deriv_const_sub
 
 end Sub

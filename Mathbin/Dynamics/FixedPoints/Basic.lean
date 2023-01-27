@@ -173,11 +173,11 @@ def fixedPoints (f : α → α) : Set α :=
 #align function.fixed_points Function.fixedPoints
 -/
 
-#print Function.fixedPoints.instDecidable /-
-instance fixedPoints.instDecidable [DecidableEq α] (f : α → α) (x : α) :
+#print Function.fixedPoints.decidable /-
+instance fixedPoints.decidable [DecidableEq α] (f : α → α) (x : α) :
     Decidable (x ∈ fixedPoints f) :=
   is_fixed_pt.decidable
-#align function.fixed_points.decidable Function.fixedPoints.instDecidable
+#align function.fixed_points.decidable Function.fixedPoints.decidable
 -/
 
 #print Function.mem_fixedPoints /-

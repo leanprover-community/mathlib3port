@@ -55,7 +55,7 @@ instance Module.Finite.linearMap [Module.Finite R M] [Module.Finite R N] :
   · infer_instance
   classical
     have f := (LinearMap.toMatrix (choose_basis R M) (choose_basis R N)).symm
-    exact Module.Finite.ofSurjective f.to_linear_map (LinearEquiv.surjective f)
+    exact Module.Finite.of_surjective f.to_linear_map (LinearEquiv.surjective f)
 #align module.finite.linear_map Module.Finite.linearMap
 
 end CommRing

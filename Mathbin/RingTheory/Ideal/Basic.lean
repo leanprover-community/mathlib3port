@@ -286,10 +286,10 @@ theorem zero_ne_one_of_proper {I : Ideal α} (h : I ≠ ⊤) : (0 : α) ≠ 1 :=
   I.ne_top_iff_one.1 h <| hz ▸ I.zero_mem
 #align ideal.zero_ne_one_of_proper Ideal.zero_ne_one_of_proper
 
-theorem botPrime {R : Type _} [Ring R] [IsDomain R] : (⊥ : Ideal R).IsPrime :=
+theorem bot_prime {R : Type _} [Ring R] [IsDomain R] : (⊥ : Ideal R).IsPrime :=
   ⟨fun h => one_neZero (by rwa [Ideal.eq_top_iff_one, Submodule.mem_bot] at h), fun x y h =>
     mul_eq_zero.mp (by simpa only [Submodule.mem_bot] using h)⟩
-#align ideal.bot_prime Ideal.botPrime
+#align ideal.bot_prime Ideal.bot_prime
 
 /-- An ideal is maximal if it is maximal in the collection of proper ideals. -/
 class IsMaximal (I : Ideal α) : Prop where
@@ -462,7 +462,7 @@ theorem mem_pi (x : ι → α) : x ∈ I.pi ι ↔ ∀ i, x i ∈ I :=
 
 end Pi
 
-theorem infIsPrimeOfIsChain {s : Set (Ideal α)} (hs : s.Nonempty) (hs' : IsChain (· ≤ ·) s)
+theorem infₛ_isPrime_of_isChain {s : Set (Ideal α)} (hs : s.Nonempty) (hs' : IsChain (· ≤ ·) s)
     (H : ∀ p ∈ s, Ideal.IsPrime p) : (infₛ s).IsPrime :=
   ⟨fun e =>
     let ⟨x, hx⟩ := hs
@@ -477,7 +477,7 @@ theorem infIsPrimeOfIsChain {s : Set (Ideal α)} (hs : s.Nonempty) (hs' : IsChai
       cases hs'.total hI hJ
       · exact h (((H I hI).mem_or_mem (e hI)).resolve_left hI')
       · exact ((H J hJ).mem_or_mem (e hJ)).resolve_left fun x => hI' <| h x⟩
-#align ideal.Inf_is_prime_of_is_chain Ideal.infIsPrimeOfIsChain
+#align ideal.Inf_is_prime_of_is_chain Ideal.infₛ_isPrime_of_isChain
 
 end Ideal
 
@@ -547,9 +547,9 @@ theorem IsMaximal.isPrime {I : Ideal α} (H : I.IsMaximal) : I.IsPrime :=
 #align ideal.is_maximal.is_prime Ideal.IsMaximal.isPrime
 
 -- see Note [lower instance priority]
-instance (priority := 100) IsMaximal.isPrime' (I : Ideal α) : ∀ [H : I.IsMaximal], I.IsPrime :=
+instance (priority := 100) IsMaximal.is_prime' (I : Ideal α) : ∀ [H : I.IsMaximal], I.IsPrime :=
   is_maximal.is_prime
-#align ideal.is_maximal.is_prime' Ideal.IsMaximal.isPrime'
+#align ideal.is_maximal.is_prime' Ideal.IsMaximal.is_prime'
 
 theorem span_singleton_lt_span_singleton [CommRing β] [IsDomain β] {x y : β} :
     span ({x} : Set β) < span ({y} : Set β) ↔ DvdNotUnit y x := by
@@ -724,10 +724,10 @@ theorem eq_bot_of_prime [h : I.IsPrime] : I = ⊥ :=
   or_iff_not_imp_right.mp I.eq_bot_or_top h.1
 #align ideal.eq_bot_of_prime Ideal.eq_bot_of_prime
 
-theorem botIsMaximal : IsMaximal (⊥ : Ideal K) :=
+theorem bot_isMaximal : IsMaximal (⊥ : Ideal K) :=
   ⟨⟨fun h => absurd ((eq_top_iff_one (⊤ : Ideal K)).mp rfl) (by rw [← h] <;> simp), fun I hI =>
       or_iff_not_imp_left.mp (eq_bot_or_top I) (ne_of_gt hI)⟩⟩
-#align ideal.bot_is_maximal Ideal.botIsMaximal
+#align ideal.bot_is_maximal Ideal.bot_isMaximal
 
 end Ideal
 

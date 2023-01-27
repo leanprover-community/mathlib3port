@@ -223,14 +223,14 @@ variable {S}
 correspond to maximal ideals in the original ring `R` that don't contain `y`.
 This lemma gives the correspondence in the particular case of an ideal and its map.
 See `le_rel_iso_of_maximal` for the more general statement, and the reverse of this implication -/
-theorem isMaximalOfIsMaximalDisjoint [IsJacobson R] (I : Ideal R) (hI : I.IsMaximal) (hy : y ∉ I) :
-    (map (algebraMap R S) I).IsMaximal :=
+theorem isMaximal_of_isMaximal_disjoint [IsJacobson R] (I : Ideal R) (hI : I.IsMaximal)
+    (hy : y ∉ I) : (map (algebraMap R S) I).IsMaximal :=
   by
   rw [is_maximal_iff_is_maximal_disjoint S y,
     comap_map_of_is_prime_disjoint (powers y) S I (is_maximal.is_prime hI)
       ((disjoint_powers_iff_not_mem y hI.is_prime.is_radical).2 hy)]
   exact ⟨hI, hy⟩
-#align ideal.is_maximal_of_is_maximal_disjoint Ideal.isMaximalOfIsMaximalDisjoint
+#align ideal.is_maximal_of_is_maximal_disjoint Ideal.isMaximal_of_isMaximal_disjoint
 
 /-- If `R` is a Jacobson ring, then maximal ideals in the localization at `y`
 correspond to maximal ideals in the original ring `R` that don't contain `y` -/
@@ -238,7 +238,7 @@ def orderIsoOfMaximal [IsJacobson R] :
     { p : Ideal S // p.IsMaximal } ≃o { p : Ideal R // p.IsMaximal ∧ y ∉ p }
     where
   toFun p := ⟨Ideal.comap (algebraMap R S) p.1, (isMaximal_iff_isMaximal_disjoint S y p.1).1 p.2⟩
-  invFun p := ⟨Ideal.map (algebraMap R S) p.1, isMaximalOfIsMaximalDisjoint y p.1 p.2.1 p.2.2⟩
+  invFun p := ⟨Ideal.map (algebraMap R S) p.1, isMaximal_of_isMaximal_disjoint y p.1 p.2.1 p.2.2⟩
   left_inv J := Subtype.eq (map_comap (powers y) S J)
   right_inv I :=
     Subtype.eq
@@ -498,7 +498,7 @@ variable (P : Ideal R[X]) [hP : P.IsMaximal]
 
 include P hP
 
-theorem isMaximalComapCOfIsMaximal [Nontrivial R] (hP' : ∀ x : R, c x ∈ P → x = 0) :
+theorem isMaximal_comap_c_of_isMaximal [Nontrivial R] (hP' : ∀ x : R, c x ∈ P → x = 0) :
     IsMaximal (comap (c : R →+* R[X]) P : Ideal R) :=
   by
   haveI hp'_prime : (P.comap (C : R →+* R[X]) : Ideal R).IsPrime := comap_is_prime C P
@@ -546,7 +546,7 @@ theorem isMaximalComapCOfIsMaximal [Nontrivial R] (hP' : ∀ x : R, c x ∈ P �
   let bot_maximal := (bot_quotient_is_maximal_iff _).mpr hP
   refine' map.is_maximal (algebraMap _ _) (IsField.localization_map_bijective hM' _) bot_maximal
   rwa [← quotient.maximal_ideal_iff_is_field_quotient, ← bot_quotient_is_maximal_iff]
-#align ideal.polynomial.is_maximal_comap_C_of_is_maximal Ideal.Polynomial.isMaximalComapCOfIsMaximal
+#align ideal.polynomial.is_maximal_comap_C_of_is_maximal Ideal.Polynomial.isMaximal_comap_c_of_isMaximal
 
 /-- Used to bootstrap the more general `quotient_mk_comp_C_is_integral_of_jacobson` -/
 private theorem quotient_mk_comp_C_is_integral_of_jacobson' [Nontrivial R] (hR : IsJacobson R)
@@ -616,20 +616,20 @@ theorem quotient_mk_comp_c_isIntegral_of_jacobson :
     rwa [quotient.eq_zero_iff_mem, mem_comap, hPJ, mem_comap, coe_map_ring_hom, map_C]
 #align ideal.polynomial.quotient_mk_comp_C_is_integral_of_jacobson Ideal.Polynomial.quotient_mk_comp_c_isIntegral_of_jacobson
 
-theorem isMaximalComapCOfIsJacobson : (P.comap (c : R →+* R[X])).IsMaximal :=
+theorem isMaximal_comap_c_of_isJacobson : (P.comap (c : R →+* R[X])).IsMaximal :=
   by
   rw [← @mk_ker _ _ P, RingHom.ker_eq_comap_bot, comap_comap]
   exact
     is_maximal_comap_of_is_integral_of_is_maximal' _ (quotient_mk_comp_C_is_integral_of_jacobson P)
       ⊥ ((bot_quotient_is_maximal_iff _).mpr hP)
-#align ideal.polynomial.is_maximal_comap_C_of_is_jacobson Ideal.Polynomial.isMaximalComapCOfIsJacobson
+#align ideal.polynomial.is_maximal_comap_C_of_is_jacobson Ideal.Polynomial.isMaximal_comap_c_of_isJacobson
 
 omit P hP
 
 theorem comp_c_integral_of_surjective_of_jacobson {S : Type _} [Field S] (f : R[X] →+* S)
     (hf : Function.Surjective f) : (f.comp c).IsIntegral :=
   by
-  haveI : f.ker.IsMaximal := RingHom.kerIsMaximalOfSurjective f hf
+  haveI : f.ker.IsMaximal := RingHom.ker_isMaximal_of_surjective f hf
   let g : R[X] ⧸ f.ker →+* S := Ideal.Quotient.lift f.ker f fun _ h => h
   have hfg : g.comp (Quotient.mk' f.ker) = f := ring_hom_ext' rfl rfl
   rw [← hfg, RingHom.comp_assoc]

@@ -183,8 +183,8 @@ instance Quotient.tower_quotient_map_quotient [Algebra R S] :
 
 instance QuotientMapQuotient.isNoetherian [Algebra R S] [IsNoetherian R S] (I : Ideal R) :
     IsNoetherian (R ⧸ I) (S ⧸ Ideal.map (algebraMap R S) I) :=
-  isNoetherianOfTower R <|
-    isNoetherianOfSurjective S (Ideal.Quotient.mkₐ R _).toLinearMap <|
+  isNoetherian_of_tower R <|
+    isNoetherian_of_surjective S (Ideal.Quotient.mkₐ R _).toLinearMap <|
       LinearMap.range_eq_top.mpr Ideal.Quotient.mk_surjective
 #align ideal.quotient_map_quotient.is_noetherian Ideal.QuotientMapQuotient.isNoetherian
 
@@ -256,18 +256,18 @@ theorem comap_ne_bot_of_root_mem [IsDomain S] {r : S} (r_ne_zero : r ≠ 0) (hr 
   absurd (mem_bot.mp (eq_bot_iff.mp h mem)) hi
 #align ideal.comap_ne_bot_of_root_mem Ideal.comap_ne_bot_of_root_mem
 
-theorem isMaximalOfIsIntegralOfIsMaximalComap [Algebra R S] (hRS : Algebra.IsIntegral R S)
+theorem isMaximal_of_isIntegral_of_isMaximal_comap [Algebra R S] (hRS : Algebra.IsIntegral R S)
     (I : Ideal S) [I.IsPrime] (hI : IsMaximal (I.comap (algebraMap R S))) : IsMaximal I :=
   ⟨⟨mt comap_eq_top_iff.mpr hI.1.1, fun J I_lt_J =>
       let ⟨I_le_J, x, hxJ, hxI⟩ := SetLike.lt_iff_le_and_exists.mp I_lt_J
       comap_eq_top_iff.1 <|
         hI.1.2 _ (comap_lt_comap_of_integral_mem_sdiff I_le_J ⟨hxJ, hxI⟩ (hRS x))⟩⟩
-#align ideal.is_maximal_of_is_integral_of_is_maximal_comap Ideal.isMaximalOfIsIntegralOfIsMaximalComap
+#align ideal.is_maximal_of_is_integral_of_is_maximal_comap Ideal.isMaximal_of_isIntegral_of_isMaximal_comap
 
-theorem isMaximalOfIsIntegralOfIsMaximalComap' (f : R →+* S) (hf : f.IsIntegral) (I : Ideal S)
+theorem isMaximal_of_isIntegral_of_isMaximal_comap' (f : R →+* S) (hf : f.IsIntegral) (I : Ideal S)
     [hI' : I.IsPrime] (hI : IsMaximal (I.comap f)) : IsMaximal I :=
-  @isMaximalOfIsIntegralOfIsMaximalComap R _ S _ f.toAlgebra hf I hI' hI
-#align ideal.is_maximal_of_is_integral_of_is_maximal_comap' Ideal.isMaximalOfIsIntegralOfIsMaximalComap'
+  @isMaximal_of_isIntegral_of_isMaximal_comap R _ S _ f.toAlgebra hf I hI' hI
+#align ideal.is_maximal_of_is_integral_of_is_maximal_comap' Ideal.isMaximal_of_isIntegral_of_isMaximal_comap'
 
 variable [Algebra R S]
 
@@ -291,7 +291,7 @@ theorem eq_bot_of_comap_eq_bot [Nontrivial R] [IsDomain S] (hRS : Algebra.IsInte
   · exact absurd hI (comap_ne_bot_of_integral_mem hx0 hx (hRS x))
 #align ideal.eq_bot_of_comap_eq_bot Ideal.eq_bot_of_comap_eq_bot
 
-theorem isMaximalComapOfIsIntegralOfIsMaximal (hRS : Algebra.IsIntegral R S) (I : Ideal S)
+theorem isMaximal_comap_of_isIntegral_of_isMaximal (hRS : Algebra.IsIntegral R S) (I : Ideal S)
     [hI : I.IsMaximal] : IsMaximal (I.comap (algebraMap R S)) :=
   by
   refine' quotient.maximal_of_is_field _ _
@@ -299,12 +299,12 @@ theorem isMaximalComapOfIsIntegralOfIsMaximal (hRS : Algebra.IsIntegral R S) (I 
   exact
     isField_of_isIntegral_of_isField (isIntegral_quotient_of_isIntegral hRS)
       algebra_map_quotient_injective (by rwa [← quotient.maximal_ideal_iff_is_field_quotient])
-#align ideal.is_maximal_comap_of_is_integral_of_is_maximal Ideal.isMaximalComapOfIsIntegralOfIsMaximal
+#align ideal.is_maximal_comap_of_is_integral_of_is_maximal Ideal.isMaximal_comap_of_isIntegral_of_isMaximal
 
-theorem isMaximalComapOfIsIntegralOfIsMaximal' {R S : Type _} [CommRing R] [CommRing S]
+theorem isMaximal_comap_of_isIntegral_of_is_maximal' {R S : Type _} [CommRing R] [CommRing S]
     (f : R →+* S) (hf : f.IsIntegral) (I : Ideal S) (hI : I.IsMaximal) : IsMaximal (I.comap f) :=
-  @isMaximalComapOfIsIntegralOfIsMaximal R _ S _ f.toAlgebra hf I hI
-#align ideal.is_maximal_comap_of_is_integral_of_is_maximal' Ideal.isMaximalComapOfIsIntegralOfIsMaximal'
+  @isMaximal_comap_of_isIntegral_of_isMaximal R _ S _ f.toAlgebra hf I hI
+#align ideal.is_maximal_comap_of_is_integral_of_is_maximal' Ideal.isMaximal_comap_of_isIntegral_of_is_maximal'
 
 section IsIntegralClosure
 
@@ -318,10 +318,10 @@ theorem IsIntegralClosure.comap_lt_comap {I J : Ideal A} [I.IsPrime] (I_lt_J : I
   comap_lt_comap_of_integral_mem_sdiff I_le_J ⟨hxJ, hxI⟩ (IsIntegralClosure.isIntegral R S x)
 #align ideal.is_integral_closure.comap_lt_comap Ideal.IsIntegralClosure.comap_lt_comap
 
-theorem IsIntegralClosure.isMaximalOfIsMaximalComap (I : Ideal A) [I.IsPrime]
+theorem IsIntegralClosure.isMaximal_of_isMaximal_comap (I : Ideal A) [I.IsPrime]
     (hI : IsMaximal (I.comap (algebraMap R A))) : IsMaximal I :=
-  isMaximalOfIsIntegralOfIsMaximalComap (fun x => IsIntegralClosure.isIntegral R S x) I hI
-#align ideal.is_integral_closure.is_maximal_of_is_maximal_comap Ideal.IsIntegralClosure.isMaximalOfIsMaximalComap
+  isMaximal_of_isIntegral_of_isMaximal_comap (fun x => IsIntegralClosure.isIntegral R S x) I hI
+#align ideal.is_integral_closure.is_maximal_of_is_maximal_comap Ideal.IsIntegralClosure.isMaximal_of_isMaximal_comap
 
 variable [IsDomain A]
 
@@ -344,10 +344,10 @@ theorem IntegralClosure.comap_lt_comap {I J : Ideal (integralClosure R S)} [I.Is
   IsIntegralClosure.comap_lt_comap S I_lt_J
 #align ideal.integral_closure.comap_lt_comap Ideal.IntegralClosure.comap_lt_comap
 
-theorem IntegralClosure.isMaximalOfIsMaximalComap (I : Ideal (integralClosure R S)) [I.IsPrime]
+theorem IntegralClosure.isMaximal_of_isMaximal_comap (I : Ideal (integralClosure R S)) [I.IsPrime]
     (hI : IsMaximal (I.comap (algebraMap R (integralClosure R S)))) : IsMaximal I :=
-  IsIntegralClosure.isMaximalOfIsMaximalComap S I hI
-#align ideal.integral_closure.is_maximal_of_is_maximal_comap Ideal.IntegralClosure.isMaximalOfIsMaximalComap
+  IsIntegralClosure.isMaximal_of_isMaximal_comap S I hI
+#align ideal.integral_closure.is_maximal_of_is_maximal_comap Ideal.IntegralClosure.isMaximal_of_isMaximal_comap
 
 section
 

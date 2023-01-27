@@ -66,80 +66,80 @@ open IsArtinian
 
 include R
 
-theorem isArtinianOfInjective (f : M →ₗ[R] P) (h : Function.Injective f) [IsArtinian R P] :
+theorem isArtinian_of_injective (f : M →ₗ[R] P) (h : Function.Injective f) [IsArtinian R P] :
     IsArtinian R M :=
   ⟨Subrelation.wf
       (fun A B hAB => show A.map f < B.map f from Submodule.map_strictMono_of_injective h hAB)
       (InvImage.wf (Submodule.map f) (IsArtinian.wellFounded_submodule_lt R P))⟩
-#align is_artinian_of_injective isArtinianOfInjective
+#align is_artinian_of_injective isArtinian_of_injective
 
-instance isArtinianSubmodule' [IsArtinian R M] (N : Submodule R M) : IsArtinian R N :=
-  isArtinianOfInjective N.Subtype Subtype.val_injective
-#align is_artinian_submodule' isArtinianSubmodule'
+instance isArtinian_submodule' [IsArtinian R M] (N : Submodule R M) : IsArtinian R N :=
+  isArtinian_of_injective N.Subtype Subtype.val_injective
+#align is_artinian_submodule' isArtinian_submodule'
 
-theorem isArtinianOfLe {s t : Submodule R M} [ht : IsArtinian R t] (h : s ≤ t) : IsArtinian R s :=
-  isArtinianOfInjective (Submodule.ofLe h) (Submodule.ofLe_injective h)
-#align is_artinian_of_le isArtinianOfLe
+theorem isArtinian_of_le {s t : Submodule R M} [ht : IsArtinian R t] (h : s ≤ t) : IsArtinian R s :=
+  isArtinian_of_injective (Submodule.ofLe h) (Submodule.ofLe_injective h)
+#align is_artinian_of_le isArtinian_of_le
 
 variable (M)
 
-theorem isArtinianOfSurjective (f : M →ₗ[R] P) (hf : Function.Surjective f) [IsArtinian R M] :
+theorem isArtinian_of_surjective (f : M →ₗ[R] P) (hf : Function.Surjective f) [IsArtinian R M] :
     IsArtinian R P :=
   ⟨Subrelation.wf
       (fun A B hAB =>
         show A.comap f < B.comap f from Submodule.comap_strictMono_of_surjective hf hAB)
       (InvImage.wf (Submodule.comap f) (IsArtinian.wellFounded_submodule_lt _ _))⟩
-#align is_artinian_of_surjective isArtinianOfSurjective
+#align is_artinian_of_surjective isArtinian_of_surjective
 
 variable {M}
 
-theorem isArtinianOfLinearEquiv (f : M ≃ₗ[R] P) [IsArtinian R M] : IsArtinian R P :=
-  isArtinianOfSurjective _ f.toLinearMap f.toEquiv.Surjective
-#align is_artinian_of_linear_equiv isArtinianOfLinearEquiv
+theorem isArtinian_of_linearEquiv (f : M ≃ₗ[R] P) [IsArtinian R M] : IsArtinian R P :=
+  isArtinian_of_surjective _ f.toLinearMap f.toEquiv.Surjective
+#align is_artinian_of_linear_equiv isArtinian_of_linearEquiv
 
-theorem isArtinianOfRangeEqKer [IsArtinian R M] [IsArtinian R P] (f : M →ₗ[R] N) (g : N →ₗ[R] P)
+theorem isArtinian_of_range_eq_ker [IsArtinian R M] [IsArtinian R P] (f : M →ₗ[R] N) (g : N →ₗ[R] P)
     (hf : Function.Injective f) (hg : Function.Surjective g) (h : f.range = g.ker) :
     IsArtinian R N :=
   ⟨wellFounded_lt_exact_sequence (IsArtinian.wellFounded_submodule_lt _ _)
       (IsArtinian.wellFounded_submodule_lt _ _) f.range (Submodule.map f) (Submodule.comap f)
       (Submodule.comap g) (Submodule.map g) (Submodule.gciMapComap hf) (Submodule.giMapComap hg)
       (by simp [Submodule.map_comap_eq, inf_comm]) (by simp [Submodule.comap_map_eq, h])⟩
-#align is_artinian_of_range_eq_ker isArtinianOfRangeEqKer
+#align is_artinian_of_range_eq_ker isArtinian_of_range_eq_ker
 
-instance isArtinianProd [IsArtinian R M] [IsArtinian R P] : IsArtinian R (M × P) :=
-  isArtinianOfRangeEqKer (LinearMap.inl R M P) (LinearMap.snd R M P) LinearMap.inl_injective
+instance isArtinian_prod [IsArtinian R M] [IsArtinian R P] : IsArtinian R (M × P) :=
+  isArtinian_of_range_eq_ker (LinearMap.inl R M P) (LinearMap.snd R M P) LinearMap.inl_injective
     LinearMap.snd_surjective (LinearMap.range_inl R M P)
-#align is_artinian_prod isArtinianProd
+#align is_artinian_prod isArtinian_prod
 
-instance (priority := 100) isArtinianOfFinite [Finite M] : IsArtinian R M :=
+instance (priority := 100) isArtinian_of_finite [Finite M] : IsArtinian R M :=
   ⟨Finite.wellFounded_of_trans_of_irrefl _⟩
-#align is_artinian_of_finite isArtinianOfFinite
+#align is_artinian_of_finite isArtinian_of_finite
 
 attribute [local elab_as_elim] Finite.induction_empty_option
 
-instance isArtinianPi {R ι : Type _} [Finite ι] :
+instance isArtinian_pi {R ι : Type _} [Finite ι] :
     ∀ {M : ι → Type _} [Ring R] [∀ i, AddCommGroup (M i)],
       ∀ [∀ i, Module R (M i)], ∀ [∀ i, IsArtinian R (M i)], IsArtinian R (∀ i, M i) :=
   Finite.induction_empty_option
     (by
       intro α β e hα M _ _ _ _
-      exact isArtinianOfLinearEquiv (LinearEquiv.piCongrLeft R M e))
+      exact isArtinian_of_linearEquiv (LinearEquiv.piCongrLeft R M e))
     (by
       intro M _ _ _ _
       infer_instance)
     (by
       intro α _ ih M _ _ _ _
-      exact isArtinianOfLinearEquiv (LinearEquiv.piOptionEquivProd R).symm)
+      exact isArtinian_of_linearEquiv (LinearEquiv.piOptionEquivProd R).symm)
     ι
-#align is_artinian_pi isArtinianPi
+#align is_artinian_pi isArtinian_pi
 
 /-- A version of `is_artinian_pi` for non-dependent functions. We need this instance because
 sometimes Lean fails to apply the dependent version in non-dependent settings (e.g., it fails to
 prove that `ι → ℝ` is finite dimensional over `ℝ`). -/
-instance isArtinianPi' {R ι M : Type _} [Ring R] [AddCommGroup M] [Module R M] [Finite ι]
+instance isArtinian_pi' {R ι M : Type _} [Ring R] [AddCommGroup M] [Module R M] [Finite ι]
     [IsArtinian R M] : IsArtinian R (ι → M) :=
-  isArtinianPi
-#align is_artinian_pi' isArtinianPi'
+  isArtinian_pi
+#align is_artinian_pi' isArtinian_pi'
 
 end
 
@@ -349,32 +349,32 @@ theorem Ring.is_artinian_of_zero_eq_one {R} [Ring R] (h01 : (0 : R) = 1) : IsArt
   inferInstance
 #align ring.is_artinian_of_zero_eq_one Ring.is_artinian_of_zero_eq_one
 
-theorem isArtinianOfSubmoduleOfArtinian (R M) [Ring R] [AddCommGroup M] [Module R M]
+theorem isArtinian_of_submodule_of_artinian (R M) [Ring R] [AddCommGroup M] [Module R M]
     (N : Submodule R M) (h : IsArtinian R M) : IsArtinian R N := by infer_instance
-#align is_artinian_of_submodule_of_artinian isArtinianOfSubmoduleOfArtinian
+#align is_artinian_of_submodule_of_artinian isArtinian_of_submodule_of_artinian
 
-theorem isArtinianOfQuotientOfArtinian (R) [Ring R] (M) [AddCommGroup M] [Module R M]
+theorem isArtinian_of_quotient_of_artinian (R) [Ring R] (M) [AddCommGroup M] [Module R M]
     (N : Submodule R M) (h : IsArtinian R M) : IsArtinian R (M ⧸ N) :=
-  isArtinianOfSurjective M (Submodule.mkq N) (Submodule.Quotient.mk_surjective N)
-#align is_artinian_of_quotient_of_artinian isArtinianOfQuotientOfArtinian
+  isArtinian_of_surjective M (Submodule.mkq N) (Submodule.Quotient.mk_surjective N)
+#align is_artinian_of_quotient_of_artinian isArtinian_of_quotient_of_artinian
 
 /-- If `M / S / R` is a scalar tower, and `M / R` is Artinian, then `M / S` is
 also Artinian. -/
-theorem isArtinianOfTower (R) {S M} [CommRing R] [Ring S] [AddCommGroup M] [Algebra R S]
+theorem isArtinian_of_tower (R) {S M} [CommRing R] [Ring S] [AddCommGroup M] [Algebra R S]
     [Module S M] [Module R M] [IsScalarTower R S M] (h : IsArtinian R M) : IsArtinian S M :=
   by
   rw [isArtinian_iff_wellFounded] at h⊢
   refine' (Submodule.restrictScalarsEmbedding R S M).WellFounded h
-#align is_artinian_of_tower isArtinianOfTower
+#align is_artinian_of_tower isArtinian_of_tower
 
-theorem isArtinianOfFgOfArtinian {R M} [Ring R] [AddCommGroup M] [Module R M] (N : Submodule R M)
-    [IsArtinianRing R] (hN : N.Fg) : IsArtinian R N :=
+theorem isArtinian_of_fg_of_artinian {R M} [Ring R] [AddCommGroup M] [Module R M]
+    (N : Submodule R M) [IsArtinianRing R] (hN : N.Fg) : IsArtinian R N :=
   by
   let ⟨s, hs⟩ := hN
   haveI := Classical.decEq M
   haveI := Classical.decEq R
   have : ∀ x ∈ s, x ∈ N := fun x hx => hs ▸ Submodule.subset_span hx
-  refine' @isArtinianOfSurjective ((↑s : Set M) → R) _ _ _ (Pi.module _ _ _) _ _ _ isArtinianPi
+  refine' @isArtinian_of_surjective ((↑s : Set M) → R) _ _ _ (Pi.module _ _ _) _ _ _ isArtinian_pi
   · fapply LinearMap.mk
     · exact fun f => ⟨∑ i in s.attach, f i • i.1, N.sum_mem fun c _ => N.smul_mem _ <| this _ c.2⟩
     · intro f g
@@ -396,20 +396,20 @@ theorem isArtinianOfFgOfArtinian {R M} [Ring R] [AddCommGroup M] [Module R M] (N
   rw [@Finset.sum_attach M M s _ fun i => l i • i, ← hl2, Finsupp.total_apply, Finsupp.sum, eq_comm]
   refine' Finset.sum_subset hl1 fun x _ hx => _
   rw [Finsupp.not_mem_support_iff.1 hx, zero_smul]
-#align is_artinian_of_fg_of_artinian isArtinianOfFgOfArtinian
+#align is_artinian_of_fg_of_artinian isArtinian_of_fg_of_artinian
 
-theorem isArtinianOfFgOfArtinian' {R M} [Ring R] [AddCommGroup M] [Module R M] [IsArtinianRing R]
-    (h : (⊤ : Submodule R M).Fg) : IsArtinian R M :=
-  have : IsArtinian R (⊤ : Submodule R M) := isArtinianOfFgOfArtinian _ h
-  isArtinianOfLinearEquiv (LinearEquiv.ofTop (⊤ : Submodule R M) rfl)
-#align is_artinian_of_fg_of_artinian' isArtinianOfFgOfArtinian'
+theorem isArtinian_of_fg_of_artinian' {R M} [Ring R] [AddCommGroup M] [Module R M]
+    [IsArtinianRing R] (h : (⊤ : Submodule R M).Fg) : IsArtinian R M :=
+  have : IsArtinian R (⊤ : Submodule R M) := isArtinian_of_fg_of_artinian _ h
+  isArtinian_of_linearEquiv (LinearEquiv.ofTop (⊤ : Submodule R M) rfl)
+#align is_artinian_of_fg_of_artinian' isArtinian_of_fg_of_artinian'
 
 /-- In a module over a artinian ring, the submodule generated by finitely many vectors is
 artinian. -/
-theorem isArtinianSpanOfFinite (R) {M} [Ring R] [AddCommGroup M] [Module R M] [IsArtinianRing R]
+theorem isArtinian_span_of_finite (R) {M} [Ring R] [AddCommGroup M] [Module R M] [IsArtinianRing R]
     {A : Set M} (hA : A.Finite) : IsArtinian R (Submodule.span R A) :=
-  isArtinianOfFgOfArtinian _ (Submodule.fg_def.mpr ⟨A, hA, rfl⟩)
-#align is_artinian_span_of_finite isArtinianSpanOfFinite
+  isArtinian_of_fg_of_artinian _ (Submodule.fg_def.mpr ⟨A, hA, rfl⟩)
+#align is_artinian_span_of_finite isArtinian_span_of_finite
 
 theorem Function.Surjective.isArtinianRing {R} [Ring R] {S} [Ring S] {F} [RingHomClass F R S]
     {f : F} (hf : Function.Surjective f) [H : IsArtinianRing R] : IsArtinianRing S :=

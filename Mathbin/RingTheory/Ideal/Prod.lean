@@ -113,7 +113,7 @@ theorem prod.ext_iff {I I' : Ideal R} {J J' : Ideal S} : prod I J = prod I' J' �
   simp only [← ideal_prod_equiv_symm_apply, ideal_prod_equiv.symm.injective.eq_iff, Prod.mk.inj_iff]
 #align ideal.prod.ext_iff Ideal.prod.ext_iff
 
-theorem isPrimeOfIsPrimeProdTop {I : Ideal R} (h : (Ideal.prod I (⊤ : Ideal S)).IsPrime) :
+theorem isPrime_of_isPrime_prod_top {I : Ideal R} (h : (Ideal.prod I (⊤ : Ideal S)).IsPrime) :
     I.IsPrime := by
   constructor
   · contrapose! h
@@ -124,16 +124,16 @@ theorem isPrimeOfIsPrimeProdTop {I : Ideal R} (h : (Ideal.prod I (⊤ : Ideal S)
       rw [Prod.mk_mul_mk, mul_one, mem_prod]
       exact ⟨hxy, trivial⟩
     simpa using h.mem_or_mem this
-#align ideal.is_prime_of_is_prime_prod_top Ideal.isPrimeOfIsPrimeProdTop
+#align ideal.is_prime_of_is_prime_prod_top Ideal.isPrime_of_isPrime_prod_top
 
-theorem isPrimeOfIsPrimeProdTop' {I : Ideal S} (h : (Ideal.prod (⊤ : Ideal R) I).IsPrime) :
+theorem isPrime_of_isPrime_prod_top' {I : Ideal S} (h : (Ideal.prod (⊤ : Ideal R) I).IsPrime) :
     I.IsPrime := by
   apply @is_prime_of_is_prime_prod_top _ R
   rw [← map_prod_comm_prod]
   exact map_is_prime_of_equiv _
-#align ideal.is_prime_of_is_prime_prod_top' Ideal.isPrimeOfIsPrimeProdTop'
+#align ideal.is_prime_of_is_prime_prod_top' Ideal.isPrime_of_isPrime_prod_top'
 
-theorem isPrimeIdealProdTop {I : Ideal R} [h : I.IsPrime] : (prod I (⊤ : Ideal S)).IsPrime :=
+theorem isPrime_ideal_prod_top {I : Ideal R} [h : I.IsPrime] : (prod I (⊤ : Ideal S)).IsPrime :=
   by
   constructor
   · rcases h with ⟨h, -⟩
@@ -144,14 +144,14 @@ theorem isPrimeIdealProdTop {I : Ideal R} [h : I.IsPrime] : (prod I (⊤ : Ideal
   cases' h.mem_or_mem h₁ with h h
   · exact Or.inl ⟨h, trivial⟩
   · exact Or.inr ⟨h, trivial⟩
-#align ideal.is_prime_ideal_prod_top Ideal.isPrimeIdealProdTop
+#align ideal.is_prime_ideal_prod_top Ideal.isPrime_ideal_prod_top
 
-theorem isPrimeIdealProdTop' {I : Ideal S} [h : I.IsPrime] : (prod (⊤ : Ideal R) I).IsPrime :=
+theorem isPrime_ideal_prod_top' {I : Ideal S} [h : I.IsPrime] : (prod (⊤ : Ideal R) I).IsPrime :=
   by
   rw [← map_prod_comm_prod]
   apply map_is_prime_of_equiv _
   exact is_prime_ideal_prod_top
-#align ideal.is_prime_ideal_prod_top' Ideal.isPrimeIdealProdTop'
+#align ideal.is_prime_ideal_prod_top' Ideal.isPrime_ideal_prod_top'
 
 theorem ideal_prod_prime_aux {I : Ideal R} {J : Ideal S} :
     (Ideal.prod I J).IsPrime → I = ⊤ ∨ J = ⊤ :=

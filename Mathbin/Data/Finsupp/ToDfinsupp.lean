@@ -287,7 +287,7 @@ def sigmaFinsuppEquivDfinsupp [Zero N] : ((Σi, η i) →₀ N) ≃ Π₀ i, η 
     refine'
       on_finset (Finset.sigma f.support fun j => (f j).support) (fun ji => f ji.1 ji.2) fun g hg =>
         finset.mem_sigma.mpr ⟨_, mem_support_iff.mpr hg⟩
-    simp only [Ne.def, Dfinsupp.mem_support_to_fun]
+    simp only [Ne.def, Dfinsupp.mem_support_toFun]
     intro h
     rw [h] at hg
     simpa using hg
@@ -317,7 +317,7 @@ theorem sigmaFinsuppEquivDfinsupp_support [DecidableEq ι] [Zero N]
     (sigmaFinsuppEquivDfinsupp f).support = Finsupp.splitSupport f :=
   by
   ext
-  rw [Dfinsupp.mem_support_to_fun]
+  rw [Dfinsupp.mem_support_toFun]
   exact (Finsupp.mem_splitSupport_iff_nonzero _ _).symm
 #align sigma_finsupp_equiv_dfinsupp_support sigmaFinsuppEquivDfinsupp_support
 

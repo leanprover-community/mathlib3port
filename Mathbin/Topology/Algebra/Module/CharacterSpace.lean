@@ -219,10 +219,10 @@ variable [Field 𝕜] [TopologicalSpace 𝕜] [HasContinuousAdd 𝕜] [HasContin
 variable [Ring A] [TopologicalSpace A] [Algebra 𝕜 A]
 
 /-- The `ring_hom.ker` of `φ : character_space 𝕜 A` is maximal. -/
-instance kerIsMaximal (φ : characterSpace 𝕜 A) : (RingHom.ker φ).IsMaximal :=
-  RingHom.kerIsMaximalOfSurjective φ fun z =>
+instance ker_isMaximal (φ : characterSpace 𝕜 A) : (RingHom.ker φ).IsMaximal :=
+  RingHom.ker_isMaximal_of_surjective φ fun z =>
     ⟨algebraMap 𝕜 A z, by simp only [AlgHomClass.commutes, Algebra.id.map_eq_id, RingHom.id_apply]⟩
-#align weak_dual.ker_is_maximal WeakDual.kerIsMaximal
+#align weak_dual.ker_is_maximal WeakDual.ker_isMaximal
 
 end Kernel
 

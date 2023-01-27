@@ -65,7 +65,7 @@ TODO: prove the equivalence.
 -/
 structure IsDedekindDomainDvr : Prop where
   IsNoetherianRing : IsNoetherianRing A
-  isDvrAtNonzeroPrime :
+  is_dvr_at_nonzero_prime :
     ∀ (P) (_ : P ≠ (⊥ : Ideal A)), P.IsPrime → DiscreteValuationRing (Localization.AtPrime P)
 #align is_dedekind_domain_dvr IsDedekindDomainDvr
 
@@ -140,7 +140,7 @@ theorem IsLocalization.AtPrime.not_isField {P : Ideal A} (hP : P ≠ ⊥) [pP : 
 #align is_localization.at_prime.not_is_field IsLocalization.AtPrime.not_isField
 
 /-- In a Dedekind domain, the localization at every nonzero prime ideal is a DVR. -/
-theorem IsLocalization.AtPrime.discreteValuationRingOfDedekindDomain [IsDedekindDomain A]
+theorem IsLocalization.AtPrime.discreteValuationRing_of_dedekind_domain [IsDedekindDomain A]
     {P : Ideal A} (hP : P ≠ ⊥) [pP : P.IsPrime] (Aₘ : Type _) [CommRing Aₘ] [IsDomain Aₘ]
     [Algebra A Aₘ] [IsLocalization.AtPrime Aₘ P] : DiscreteValuationRing Aₘ := by
   classical
@@ -151,14 +151,14 @@ theorem IsLocalization.AtPrime.discreteValuationRingOfDedekindDomain [IsDedekind
     exact
       ((DiscreteValuationRing.tFAE Aₘ hnf).out 0 2).mpr
         (IsLocalization.AtPrime.isDedekindDomain A P _)
-#align is_localization.at_prime.discrete_valuation_ring_of_dedekind_domain IsLocalization.AtPrime.discreteValuationRingOfDedekindDomain
+#align is_localization.at_prime.discrete_valuation_ring_of_dedekind_domain IsLocalization.AtPrime.discreteValuationRing_of_dedekind_domain
 
 /-- Dedekind domains, in the sense of Noetherian integrally closed domains of Krull dimension ≤ 1,
 are also Dedekind domains in the sense of Noetherian domains where the localization at every
 nonzero prime ideal is a DVR. -/
 theorem IsDedekindDomain.isDedekindDomainDvr [IsDedekindDomain A] : IsDedekindDomainDvr A :=
   { IsNoetherianRing := IsDedekindDomain.isNoetherianRing
-    isDvrAtNonzeroPrime := fun P hP pP =>
-      IsLocalization.AtPrime.discreteValuationRingOfDedekindDomain A hP _ }
+    is_dvr_at_nonzero_prime := fun P hP pP =>
+      IsLocalization.AtPrime.discreteValuationRing_of_dedekind_domain A hP _ }
 #align is_dedekind_domain.is_dedekind_domain_dvr IsDedekindDomain.isDedekindDomainDvr
 

@@ -72,7 +72,7 @@ theorem coeSubmodule_mul (I J : Ideal R) :
 
 theorem coeSubmodule_fg (hS : Function.Injective (algebraMap R S)) (I : Ideal R) :
     Submodule.Fg (coeSubmodule S I) ↔ Submodule.Fg I :=
-  ⟨Submodule.fgOfFgMap _ (LinearMap.ker_eq_bot.mpr hS), Submodule.Fg.map _⟩
+  ⟨Submodule.fg_of_fg_map _ (LinearMap.ker_eq_bot.mpr hS), Submodule.Fg.map _⟩
 #align is_localization.coe_submodule_fg IsLocalization.coeSubmodule_fg
 
 @[simp]

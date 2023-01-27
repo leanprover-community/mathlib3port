@@ -60,7 +60,7 @@ namespace Ring
 theorem DimensionLeOne.principal_ideal_ring [IsDomain A] [IsPrincipalIdealRing A] :
     DimensionLeOne A := fun p nonzero prime =>
   haveI := Prime
-  IsPrime.toMaximalIdeal nonzero
+  IsPrime.to_maximal_ideal nonzero
 #align ring.dimension_le_one.principal_ideal_ring Ring.DimensionLeOne.principal_ideal_ring
 
 theorem DimensionLeOne.isIntegralClosure (B : Type _) [CommRing B] [IsDomain B] [Nontrivial R]

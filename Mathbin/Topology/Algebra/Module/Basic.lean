@@ -2745,23 +2745,23 @@ protected theorem ClosedComplemented.isClosed [TopologicalAddGroup M] [T1Space M
 #align submodule.closed_complemented.is_closed Submodule.ClosedComplemented.isClosed
 
 @[simp]
-theorem closedComplementedBot : ClosedComplemented (⊥ : Submodule R M) :=
+theorem closedComplemented_bot : ClosedComplemented (⊥ : Submodule R M) :=
   ⟨0, fun x => by simp only [zero_apply, eq_zero_of_bot_submodule x]⟩
-#align submodule.closed_complemented_bot Submodule.closedComplementedBot
+#align submodule.closed_complemented_bot Submodule.closedComplemented_bot
 
 @[simp]
-theorem closedComplementedTop : ClosedComplemented (⊤ : Submodule R M) :=
+theorem closedComplemented_top : ClosedComplemented (⊤ : Submodule R M) :=
   ⟨(id R M).codRestrict ⊤ fun x => trivial, fun x => Subtype.ext_iff_val.2 <| by simp⟩
-#align submodule.closed_complemented_top Submodule.closedComplementedTop
+#align submodule.closed_complemented_top Submodule.closedComplemented_top
 
 end Submodule
 
-theorem ContinuousLinearMap.closedComplementedKerOfRightInverse {R : Type _} [Ring R] {M : Type _}
-    [TopologicalSpace M] [AddCommGroup M] {M₂ : Type _} [TopologicalSpace M₂] [AddCommGroup M₂]
-    [Module R M] [Module R M₂] [TopologicalAddGroup M] (f₁ : M →L[R] M₂) (f₂ : M₂ →L[R] M)
-    (h : Function.RightInverse f₂ f₁) : (ker f₁).ClosedComplemented :=
+theorem ContinuousLinearMap.closedComplemented_ker_of_rightInverse {R : Type _} [Ring R]
+    {M : Type _} [TopologicalSpace M] [AddCommGroup M] {M₂ : Type _} [TopologicalSpace M₂]
+    [AddCommGroup M₂] [Module R M] [Module R M₂] [TopologicalAddGroup M] (f₁ : M →L[R] M₂)
+    (f₂ : M₂ →L[R] M) (h : Function.RightInverse f₂ f₁) : (ker f₁).ClosedComplemented :=
   ⟨f₁.projKerOfRightInverse f₂ h, f₁.proj_ker_of_right_inverse_apply_idem f₂ h⟩
-#align continuous_linear_map.closed_complemented_ker_of_right_inverse ContinuousLinearMap.closedComplementedKerOfRightInverse
+#align continuous_linear_map.closed_complemented_ker_of_right_inverse ContinuousLinearMap.closedComplemented_ker_of_rightInverse
 
 section Quotient
 

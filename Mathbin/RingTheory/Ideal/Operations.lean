@@ -115,18 +115,18 @@ theorem smul_le {P : Submodule R M} : I • N ≤ P ↔ ∀ r ∈ I, ∀ n ∈ N
 #align submodule.smul_le Submodule.smul_le
 
 @[elab_as_elim]
-theorem smulInductionOn {p : M → Prop} {x} (H : x ∈ I • N) (Hb : ∀ r ∈ I, ∀ n ∈ N, p (r • n))
+theorem smul_induction_on {p : M → Prop} {x} (H : x ∈ I • N) (Hb : ∀ r ∈ I, ∀ n ∈ N, p (r • n))
     (H1 : ∀ x y, p x → p y → p (x + y)) : p x :=
   by
   have H0 : p 0 := by simpa only [zero_smul] using Hb 0 I.zero_mem 0 N.zero_mem
-  refine' Submodule.suprInduction _ H _ H0 H1
+  refine' Submodule.supᵢ_induction _ H _ H0 H1
   rintro ⟨i, hi⟩ m ⟨j, hj, rfl : i • _ = m⟩
   exact Hb _ hi _ hj
-#align submodule.smul_induction_on Submodule.smulInductionOn
+#align submodule.smul_induction_on Submodule.smul_induction_on
 
 /-- Dependent version of `submodule.smul_induction_on`. -/
 @[elab_as_elim]
-theorem smulInductionOn' {x : M} (hx : x ∈ I • N) {p : ∀ x, x ∈ I • N → Prop}
+theorem smul_induction_on' {x : M} (hx : x ∈ I • N) {p : ∀ x, x ∈ I • N → Prop}
     (Hb : ∀ (r : R) (hr : r ∈ I) (n : M) (hn : n ∈ N), p (r • n) (smul_mem_smul hr hn))
     (H1 : ∀ x hx y hy, p x hx → p y hy → p (x + y) (Submodule.add_mem _ ‹_› ‹_›)) : p x hx :=
   by
@@ -134,12 +134,12 @@ theorem smulInductionOn' {x : M} (hx : x ∈ I • N) {p : ∀ x, x ∈ I • N 
   exact
     smul_induction_on hx (fun a ha x hx => ⟨_, Hb _ ha _ hx⟩) fun x y ⟨_, hx⟩ ⟨_, hy⟩ =>
       ⟨_, H1 _ _ _ _ hx hy⟩
-#align submodule.smul_induction_on' Submodule.smulInductionOn'
+#align submodule.smul_induction_on' Submodule.smul_induction_on'
 
 theorem mem_smul_span_singleton {I : Ideal R} {m : M} {x : M} :
     x ∈ I • span R ({m} : Set M) ↔ ∃ y ∈ I, y • m = x :=
   ⟨fun hx =>
-    smulInductionOn hx
+    smul_induction_on hx
       (fun r hri n hnm =>
         let ⟨s, hs⟩ := mem_span_singleton.1 hnm
         ⟨r * s, I.mul_mem_right _ hri, hs ▸ mul_smul r s m⟩)
@@ -214,7 +214,7 @@ theorem sup_smul : (I ⊔ J) • N = I • N ⊔ J • N :=
 protected theorem smul_assoc : (I • J) • N = I • J • N :=
   le_antisymm
     (smul_le.2 fun rs hrsij t htn =>
-      smulInductionOn hrsij
+      smul_induction_on hrsij
         (fun r hr s hs =>
           (@smul_eq_mul R _ r s).symm ▸ smul_smul r s t ▸ smul_mem_smul hr (smul_mem_smul hs htn))
         fun x y => (add_smul x y t).symm ▸ Submodule.add_mem _)
@@ -1533,9 +1533,9 @@ theorem comap_Inf' (s : Set (Ideal S)) : (infₛ s).comap f = ⨅ I ∈ comap f 
   trans (comap_infₛ f s) (by rw [infᵢ_image])
 #align ideal.comap_Inf' Ideal.comap_Inf'
 
-theorem comapIsPrime [H : IsPrime K] : IsPrime (comap f K) :=
+theorem comap_isPrime [H : IsPrime K] : IsPrime (comap f K) :=
   ⟨comap_ne_top f H.ne_top, fun x y h => H.mem_or_mem <| by rwa [mem_comap, map_mul] at h⟩
-#align ideal.comap_is_prime Ideal.comapIsPrime
+#align ideal.comap_is_prime Ideal.comap_isPrime
 
 variable {I J K L}
 
@@ -1565,7 +1565,7 @@ theorem smul_top_eq_map {R S : Type _} [CommSemiring R] [CommSemiring S] [Algebr
   · intro x y
     exact Submodule.add_mem _
   intro a x hx
-  refine' Submodule.smulInductionOn hx _ _
+  refine' Submodule.smul_induction_on hx _ _
   · intro r hr s hs
     rw [smul_comm]
     exact Submodule.smul_mem_smul hr Submodule.mem_top
@@ -1587,7 +1587,7 @@ theorem restrictScalars_mul {R S : Type _} [CommSemiring R] [CommSemiring S] [Al
     (I J : Ideal S) : (I * J).restrictScalars R = I.restrictScalars R * J.restrictScalars R :=
   le_antisymm
     (fun x hx =>
-      Submodule.mulInductionOn hx (fun x hx y hy => Submodule.mul_mem_mul hx hy) fun x y =>
+      Submodule.mul_induction_on hx (fun x hx y hy => Submodule.mul_mem_mul hx hy) fun x y =>
         Submodule.add_mem _)
     (Submodule.mul_le.mpr fun x hx y hy => Ideal.mul_mem_mul hx hy)
 #align ideal.restrict_scalars_mul Ideal.restrictScalars_mul
@@ -1738,7 +1738,7 @@ theorem map_eq_top_or_isMaximal_of_surjective {I : Ideal R} (H : IsMaximal I) :
     · exact fun h => hJ.right (le_map_of_comap_le_of_surjective f hf (le_of_eq h.symm))
 #align ideal.map_eq_top_or_is_maximal_of_surjective Ideal.map_eq_top_or_isMaximal_of_surjective
 
-theorem comapIsMaximalOfSurjective {K : Ideal S} [H : IsMaximal K] : IsMaximal (comap f K) :=
+theorem comap_isMaximal_of_surjective {K : Ideal S} [H : IsMaximal K] : IsMaximal (comap f K) :=
   by
   refine' ⟨⟨comap_ne_top _ H.1.1, fun J hJ => _⟩⟩
   suffices map f J = ⊤ by
@@ -1752,7 +1752,7 @@ theorem comapIsMaximalOfSurjective {K : Ideal S} [H : IsMaximal K] : IsMaximal (
         ne_of_lt hJ (trans (congr_arg (comap f) h) _))
   rw [comap_map_of_surjective _ hf, sup_eq_left]
   exact le_trans (comap_mono bot_le) (le_of_lt hJ)
-#align ideal.comap_is_maximal_of_surjective Ideal.comapIsMaximalOfSurjective
+#align ideal.comap_is_maximal_of_surjective Ideal.comap_isMaximal_of_surjective
 
 theorem comap_le_comap_iff_of_surjective (I J : Ideal S) : comap f I ≤ comap f J ↔ I ≤ J :=
   ⟨fun h => (map_comap_of_surjective f hf I).symm.le.trans (map_le_of_le_comap h), fun h =>
@@ -1936,13 +1936,13 @@ theorem mem_radical_of_pow_mem {I : Ideal R} {x : R} {m : ℕ} (hx : x ^ m ∈ r
   radical_idem I ▸ ⟨m, hx⟩
 #align ideal.mem_radical_of_pow_mem Ideal.mem_radical_of_pow_mem
 
-theorem isPrimeRadical {I : Ideal R} (hi : IsPrimary I) : IsPrime (radical I) :=
+theorem isPrime_radical {I : Ideal R} (hi : IsPrimary I) : IsPrime (radical I) :=
   ⟨mt radical_eq_top.1 hi.1, fun x y ⟨m, hxy⟩ =>
     by
     rw [mul_pow] at hxy; cases hi.2 hxy
     · exact Or.inl ⟨m, h⟩
     · exact Or.inr (mem_radical_of_pow_mem h)⟩
-#align ideal.is_prime_radical Ideal.isPrimeRadical
+#align ideal.is_prime_radical Ideal.isPrime_radical
 
 theorem isPrimary_inf {I J : Ideal R} (hi : IsPrimary I) (hj : IsPrimary J)
     (hij : radical I = radical J) : IsPrimary (I ⊓ J) :=
@@ -2224,16 +2224,16 @@ noncomputable def quotientKerEquivOfSurjective (hf : Function.Surjective f) : R 
 end CommRing
 
 /-- The kernel of a homomorphism to a domain is a prime ideal. -/
-theorem kerIsPrime {F : Type _} [Ring R] [Ring S] [IsDomain S] [RingHomClass F R S] (f : F) :
+theorem ker_isPrime {F : Type _} [Ring R] [Ring S] [IsDomain S] [RingHomClass F R S] (f : F) :
     (ker f).IsPrime :=
   ⟨by
     rw [Ne.def, Ideal.eq_top_iff_one]
     exact not_one_mem_ker f, fun x y => by
     simpa only [mem_ker, map_mul] using @eq_zero_or_eq_zero_of_mul_eq_zero S _ _ _ _ _⟩
-#align ring_hom.ker_is_prime RingHom.kerIsPrime
+#align ring_hom.ker_is_prime RingHom.ker_isPrime
 
 /-- The kernel of a homomorphism to a field is a maximal ideal. -/
-theorem kerIsMaximalOfSurjective {R K F : Type _} [Ring R] [Field K] [RingHomClass F R K] (f : F)
+theorem ker_isMaximal_of_surjective {R K F : Type _} [Ring R] [Field K] [RingHomClass F R K] (f : F)
     (hf : Function.Surjective f) : (ker f).IsMaximal :=
   by
   refine'
@@ -2245,7 +2245,7 @@ theorem kerIsMaximalOfSurjective {R K F : Type _} [Ring R] [Field K] [RingHomCla
   refine' J.sub_mem (J.mul_mem_left _ hxJ) (hJ _)
   rw [mem_ker]
   simp only [hy, map_sub, map_one, map_mul, inv_mul_cancel (mt (mem_ker f).mpr hxf), sub_self]
-#align ring_hom.ker_is_maximal_of_surjective RingHom.kerIsMaximalOfSurjective
+#align ring_hom.ker_is_maximal_of_surjective RingHom.ker_isMaximal_of_surjective
 
 end RingHom
 
@@ -2297,7 +2297,7 @@ theorem map_infₛ {A : Set (Ideal R)} {f : F} (hf : Function.Surjective f) :
     simpa only [sub_add_cancel] using J.add_mem this hx'
 #align ideal.map_Inf Ideal.map_infₛ
 
-theorem mapIsPrimeOfSurjective {f : F} (hf : Function.Surjective f) {I : Ideal R} [H : IsPrime I]
+theorem map_isPrime_of_surjective {f : F} (hf : Function.Surjective f) {I : Ideal R} [H : IsPrime I]
     (hk : RingHom.ker f ≤ I) : IsPrime (map f I) :=
   by
   refine' ⟨fun h => H.ne_top (eq_top_iff.2 _), fun x y => _⟩
@@ -2314,7 +2314,7 @@ theorem mapIsPrimeOfSurjective {f : F} (hf : Function.Surjective f) {I : Ideal R
       abel
     exact
       (H.mem_or_mem this).imp (fun h => ha ▸ mem_map_of_mem f h) fun h => hb ▸ mem_map_of_mem f h
-#align ideal.map_is_prime_of_surjective Ideal.mapIsPrimeOfSurjective
+#align ideal.map_is_prime_of_surjective Ideal.map_isPrime_of_surjective
 
 theorem map_eq_bot_iff_of_injective {I : Ideal R} {f : F} (hf : Function.Injective f) :
     I.map f = ⊥ ↔ I = ⊥ := by
@@ -2323,10 +2323,10 @@ theorem map_eq_bot_iff_of_injective {I : Ideal R} {f : F} (hf : Function.Injecti
 
 omit rc
 
-theorem mapIsPrimeOfEquiv {F' : Type _} [RingEquivClass F' R S] (f : F') {I : Ideal R} [IsPrime I] :
-    IsPrime (map f I) :=
-  mapIsPrimeOfSurjective (EquivLike.surjective f) <| by simp only [RingHom.ker_equiv, bot_le]
-#align ideal.map_is_prime_of_equiv Ideal.mapIsPrimeOfEquiv
+theorem map_isPrime_of_equiv {F' : Type _} [RingEquivClass F' R S] (f : F') {I : Ideal R}
+    [IsPrime I] : IsPrime (map f I) :=
+  map_isPrime_of_surjective (EquivLike.surjective f) <| by simp only [RingHom.ker_equiv, bot_le]
+#align ideal.map_is_prime_of_equiv Ideal.map_isPrime_of_equiv
 
 end Ring
 
@@ -2388,8 +2388,8 @@ theorem map_radical_of_surjective {f : R →+* S} (hf : Function.Surjective f) {
 theorem bot_quotient_isMaximal_iff (I : Ideal R) : (⊥ : Ideal (R ⧸ I)).IsMaximal ↔ I.IsMaximal :=
   ⟨fun hI =>
     @mk_ker _ _ I ▸
-      @comapIsMaximalOfSurjective _ _ _ _ _ _ (Quotient.mk I) Quotient.mk_surjective ⊥ hI,
-    fun hI => @botIsMaximal _ (@Field.toDivisionRing _ (@Quotient.field _ _ I hI))⟩
+      @comap_isMaximal_of_surjective _ _ _ _ _ _ (Quotient.mk I) Quotient.mk_surjective ⊥ hI,
+    fun hI => @bot_isMaximal _ (@Field.toDivisionRing _ (@Quotient.field _ _ I hI))⟩
 #align ideal.bot_quotient_is_maximal_iff Ideal.bot_quotient_isMaximal_iff
 
 /-- See also `ideal.mem_quotient_iff_mem` in case `I ≤ J`. -/

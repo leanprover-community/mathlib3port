@@ -76,7 +76,7 @@ theorem Submodule.isInternal_prime_power_torsion_of_pid [Module.Finite R M]
   obtain ⟨P, dec, hP, e, this⟩ := is_internal_prime_power_torsion hM
   refine' ⟨P, inferInstance, dec, fun p => is_principal.generator (p : Ideal R), _, e, _⟩
   · rintro ⟨p, hp⟩
-    haveI := Ideal.isPrimeOfPrime (hP p hp)
+    haveI := Ideal.isPrime_of_prime (hP p hp)
     exact (is_principal.prime_generator_of_is_prime p (hP p hp).NeZero).Irreducible
   · convert this
     ext p : 1
@@ -263,8 +263,8 @@ theorem equiv_directSum_of_isTorsion [h' : Module.Finite R N] (hN : Module.IsTor
       ∃ (d : ℕ)(k : Fin d → ℕ),
         Nonempty <| torsion_by R N (p i ^ e i) ≃ₗ[R] ⨁ j, R ⧸ R ∙ p i ^ k j :=
     by
-    haveI := isNoetherianOfFgOfNoetherian' (module.finite_def.mp h')
-    haveI := fun i => isNoetherianSubmodule' (torsion_by R N <| p i ^ e i)
+    haveI := isNoetherian_of_fg_of_noetherian' (module.finite_def.mp h')
+    haveI := fun i => isNoetherian_submodule' (torsion_by R N <| p i ^ e i)
     exact fun i =>
       torsion_by_prime_power_decomposition (hp i)
         ((is_torsion'_powers_iff <| p i).mpr fun x => ⟨e i, smul_torsion_by _ _⟩)
@@ -287,9 +287,9 @@ theorem equiv_free_prod_directSum [h' : Module.Finite R N] :
     ∃ (n : ℕ)(ι : Type u)(_ : Fintype ι)(p : ι → R)(h : ∀ i, Irreducible <| p i)(e : ι → ℕ),
       Nonempty <| N ≃ₗ[R] (Fin n →₀ R) × ⨁ i : ι, R ⧸ R ∙ p i ^ e i :=
   by
-  haveI := isNoetherianOfFgOfNoetherian' (module.finite_def.mp h')
-  haveI := isNoetherianSubmodule' (torsion R N)
-  haveI := Module.Finite.ofSurjective _ (torsion R N).mkq_surjective
+  haveI := isNoetherian_of_fg_of_noetherian' (module.finite_def.mp h')
+  haveI := isNoetherian_submodule' (torsion R N)
+  haveI := Module.Finite.of_surjective _ (torsion R N).mkq_surjective
   obtain ⟨I, fI, p, hp, e, ⟨h⟩⟩ := equiv_direct_sum_of_is_torsion (@torsion_is_torsion R N _ _ _)
   obtain ⟨n, ⟨g⟩⟩ := @Module.freeOfFiniteTypeTorsionFree' R _ _ _ (N ⧸ torsion R N) _ _ _ _
   haveI : Module.Projective R (N ⧸ torsion R N) := Module.projectiveOfBasis ⟨g⟩

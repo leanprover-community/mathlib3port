@@ -646,17 +646,17 @@ theorem supᵢ_toAddSubmonoid {ι : Sort _} (p : ι → Submodule R M) :
 If `C` holds for `0` and all elements of `p i` for all `i`, and is preserved under addition,
 then it holds for all elements of the supremum of `p`. -/
 @[elab_as_elim]
-theorem suprInduction {ι : Sort _} (p : ι → Submodule R M) {C : M → Prop} {x : M}
+theorem supᵢ_induction {ι : Sort _} (p : ι → Submodule R M) {C : M → Prop} {x : M}
     (hx : x ∈ ⨆ i, p i) (hp : ∀ (i), ∀ x ∈ p i, C x) (h0 : C 0)
     (hadd : ∀ x y, C x → C y → C (x + y)) : C x :=
   by
   rw [← mem_to_add_submonoid, supr_to_add_submonoid] at hx
   exact AddSubmonoid.supᵢ_induction _ hx hp h0 hadd
-#align submodule.supr_induction Submodule.suprInduction
+#align submodule.supr_induction Submodule.supᵢ_induction
 
 /-- A dependent version of `submodule.supr_induction`. -/
 @[elab_as_elim]
-theorem suprInduction' {ι : Sort _} (p : ι → Submodule R M) {C : ∀ x, (x ∈ ⨆ i, p i) → Prop}
+theorem supᵢ_induction' {ι : Sort _} (p : ι → Submodule R M) {C : ∀ x, (x ∈ ⨆ i, p i) → Prop}
     (hp : ∀ (i), ∀ x ∈ p i, C x (mem_supᵢ_of_mem i ‹_›)) (h0 : C 0 (zero_mem _))
     (hadd : ∀ x y hx hy, C x hx → C y hy → C (x + y) (add_mem ‹_› ‹_›)) {x : M}
     (hx : x ∈ ⨆ i, p i) : C x hx :=
@@ -667,7 +667,7 @@ theorem suprInduction' {ι : Sort _} (p : ι → Submodule R M) {C : ∀ x, (x �
   · exact ⟨_, h0⟩
   · rintro ⟨_, Cx⟩ ⟨_, Cy⟩
     refine' ⟨_, hadd _ _ _ _ Cx Cy⟩
-#align submodule.supr_induction' Submodule.suprInduction'
+#align submodule.supr_induction' Submodule.supᵢ_induction'
 
 @[simp]
 theorem span_singleton_le_iff_mem (m : M) (p : Submodule R M) : (R ∙ m) ≤ p ↔ m ∈ p := by

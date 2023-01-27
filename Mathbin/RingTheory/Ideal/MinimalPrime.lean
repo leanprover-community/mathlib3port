@@ -65,7 +65,7 @@ theorem Ideal.exists_minimalPrimes_le [J.IsPrime] (e : I ≤ J) : ∃ p ∈ I.mi
   rintro (c : Set (Ideal R)) hc hc' J' hJ'
   refine'
     ⟨OrderDual.toDual (Inf c),
-      ⟨Ideal.infIsPrimeOfIsChain ⟨J', hJ'⟩ hc'.symm fun x hx => (hc hx).1, _⟩, _⟩
+      ⟨Ideal.infₛ_isPrime_of_isChain ⟨J', hJ'⟩ hc'.symm fun x hx => (hc hx).1, _⟩, _⟩
   · rw [OrderDual.ofDual_toDual]
     convert le_infₛ _
     intro x hx
@@ -153,7 +153,7 @@ theorem Ideal.exists_comap_eq_of_mem_minimalPrimes {I : Ideal S} (f : R →+* S)
     convert congr_arg (Ideal.comap (I f).ker) hp₂
     rwa [Ideal.comap_map_of_surjective (I f).ker Ideal.Quotient.mk_surjective, eq_comm, sup_eq_left]
   refine' ⟨⟨_, bot_le⟩, _⟩
-  · apply Ideal.mapIsPrimeOfSurjective _ this
+  · apply Ideal.map_isPrime_of_surjective _ this
     exact Ideal.Quotient.mk_surjective
   · rintro q ⟨hq, -⟩ hq'
     rw [← Ideal.map_comap_of_surjective (I f).ker Ideal.Quotient.mk_surjective q]
@@ -189,7 +189,7 @@ theorem Ideal.mimimal_primes_comap_of_surjective {f : R →+* S} (hf : Function.
   rw [← sup_eq_left.mpr this, RingHom.ker_eq_comap_bot, ← Ideal.comap_map_of_surjective f hf]
   apply Ideal.comap_mono _
   apply h.2 _ _
-  · exact ⟨Ideal.mapIsPrimeOfSurjective hf this, Ideal.le_map_of_comap_le_of_surjective f hf e₁⟩
+  · exact ⟨Ideal.map_isPrime_of_surjective hf this, Ideal.le_map_of_comap_le_of_surjective f hf e₁⟩
   · exact Ideal.map_le_of_le_comap e₂
 #align ideal.mimimal_primes_comap_of_surjective Ideal.mimimal_primes_comap_of_surjective
 
@@ -218,9 +218,9 @@ theorem Ideal.minimalPrimes_eq_subsingleton (hI : I.IsPrimary) : I.minimalPrimes
   ·
     exact fun H =>
       let e := H.1.1.radical_le_iff.mpr H.1.2
-      (H.2 ⟨Ideal.isPrimeRadical hI, Ideal.le_radical⟩ e).antisymm e
+      (H.2 ⟨Ideal.isPrime_radical hI, Ideal.le_radical⟩ e).antisymm e
   · rintro (rfl : J = I.radical)
-    exact ⟨⟨Ideal.isPrimeRadical hI, Ideal.le_radical⟩, fun _ H _ => H.1.radical_le_iff.mpr H.2⟩
+    exact ⟨⟨Ideal.isPrime_radical hI, Ideal.le_radical⟩, fun _ H _ => H.1.radical_le_iff.mpr H.2⟩
 #align ideal.minimal_primes_eq_subsingleton Ideal.minimalPrimes_eq_subsingleton
 
 theorem Ideal.minimalPrimes_eq_subsingleton_self [I.IsPrime] : I.minimalPrimes = {I} :=

@@ -73,7 +73,7 @@ theorem lift_of_splits {F K L : Type _} [Field F] [Field K] [Field L] [Algebra F
     letI := (f : Algebra.adjoin F (↑s : Set K) →+* L).toAlgebra
     haveI : FiniteDimensional F (Algebra.adjoin F (↑s : Set K)) :=
       ((Submodule.fg_iff_finiteDimensional _).1
-          (fgAdjoinOfFinite s.finite_to_set H3)).of_subalgebra_to_submodule
+          (fg_adjoin_of_finite s.finite_to_set H3)).of_subalgebra_to_submodule
     letI := fieldOfFiniteDimensional F (Algebra.adjoin F (↑s : Set K))
     have H5 : IsIntegral (Algebra.adjoin F (↑s : Set K)) a := isIntegral_of_isScalarTower H1
     have H6 :

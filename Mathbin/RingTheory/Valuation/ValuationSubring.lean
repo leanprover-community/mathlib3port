@@ -325,9 +325,9 @@ def idealOfLe (R S : ValuationSubring K) (h : R ≤ S) : Ideal R :=
   (LocalRing.maximalIdeal S).comap (R.inclusion S h)
 #align valuation_subring.ideal_of_le ValuationSubring.idealOfLe
 
-instance primeIdealOfLe (R S : ValuationSubring K) (h : R ≤ S) : (idealOfLe R S h).IsPrime :=
-  (LocalRing.maximalIdeal S).comapIsPrime _
-#align valuation_subring.prime_ideal_of_le ValuationSubring.primeIdealOfLe
+instance prime_idealOfLe (R S : ValuationSubring K) (h : R ≤ S) : (idealOfLe R S h).IsPrime :=
+  (LocalRing.maximalIdeal S).comap_is_prime _
+#align valuation_subring.prime_ideal_of_le ValuationSubring.prime_idealOfLe
 
 /-- The coarsening of a valuation ring associated to a prime ideal. -/
 def ofPrime (A : ValuationSubring K) (P : Ideal A) [P.IsPrime] : ValuationSubring K :=
@@ -345,12 +345,12 @@ instance ofPrime_scalar_tower (A : ValuationSubring K) (P : Ideal A) [P.IsPrime]
   IsScalarTower.subalgebra' A K K _
 #align valuation_subring.of_prime_scalar_tower ValuationSubring.ofPrime_scalar_tower
 
-instance ofPrimeLocalization (A : ValuationSubring K) (P : Ideal A) [P.IsPrime] :
+instance ofPrime_localization (A : ValuationSubring K) (P : Ideal A) [P.IsPrime] :
     IsLocalization.AtPrime (A.ofPrime P) P := by
   apply
     Localization.subalgebra.isLocalization_ofField K P.prime_compl
       P.prime_compl_le_non_zero_divisors
-#align valuation_subring.of_prime_localization ValuationSubring.ofPrimeLocalization
+#align valuation_subring.of_prime_localization ValuationSubring.ofPrime_localization
 
 theorem le_ofPrime (A : ValuationSubring K) (P : Ideal A) [P.IsPrime] : A ≤ ofPrime A P :=
   fun a ha => Subalgebra.algebraMap_mem _ (⟨a, ha⟩ : A)

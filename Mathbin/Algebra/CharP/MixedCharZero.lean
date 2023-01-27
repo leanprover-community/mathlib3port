@@ -325,7 +325,7 @@ variable {P : Prop}
 
 /-- Split a `Prop` in characteristic zero into equal and mixed characteristic.
 -/
-theorem splitEqualMixedChar [CharZero R] (h_equal : Algebra ℚ R → P)
+theorem split_equal_mixed_char [CharZero R] (h_equal : Algebra ℚ R → P)
     (h_mixed : ∀ p : ℕ, Nat.Prime p → MixedCharZero R p → P) : P :=
   by
   by_cases h : ∃ p > 0, MixedCharZero R p
@@ -335,7 +335,7 @@ theorem splitEqualMixedChar [CharZero R] (h_equal : Algebra ℚ R → P)
   · apply h_equal
     rw [← not_Q_algebra_iff_not_equal_charZero, not_isEmpty_iff] at h
     exact h.some
-#align split_equal_mixed_char splitEqualMixedChar
+#align split_equal_mixed_char split_equal_mixed_char
 
 example (n : ℕ) (h : n ≠ 0) : 0 < n :=
   zero_lt_iff.mpr h
@@ -345,7 +345,7 @@ example (n : ℕ) (h : n ≠ 0) : 0 < n :=
 - equal characteristic zero.
 - mixed characteristic `(0, p)`.
 -/
-theorem splitByCharacteristic (h_pos : ∀ p : ℕ, p ≠ 0 → CharP R p → P) (h_equal : Algebra ℚ R → P)
+theorem split_by_characteristic (h_pos : ∀ p : ℕ, p ≠ 0 → CharP R p → P) (h_equal : Algebra ℚ R → P)
     (h_mixed : ∀ p : ℕ, Nat.Prime p → MixedCharZero R p → P) : P :=
   by
   cases' CharP.exists R with p p_char
@@ -354,37 +354,38 @@ theorem splitByCharacteristic (h_pos : ∀ p : ℕ, p ≠ 0 → CharP R p → P)
     skip
     -- make `p_char : char_p R 0` an instance.
     haveI h0 : CharZero R := CharP.charP_to_charZero R
-    exact splitEqualMixedChar R h_equal h_mixed
+    exact split_equal_mixed_char R h_equal h_mixed
   exact h_pos p h p_char
-#align split_by_characteristic splitByCharacteristic
+#align split_by_characteristic split_by_characteristic
 
 /-- In a `is_domain R`, split any `Prop` over `R` into the three cases:
 - *prime* characteristic.
 - equal characteristic zero.
 - mixed characteristic `(0, p)`.
 -/
-theorem splitByCharacteristicDomain [IsDomain R] (h_pos : ∀ p : ℕ, Nat.Prime p → CharP R p → P)
+theorem split_by_characteristic_domain [IsDomain R] (h_pos : ∀ p : ℕ, Nat.Prime p → CharP R p → P)
     (h_equal : Algebra ℚ R → P) (h_mixed : ∀ p : ℕ, Nat.Prime p → MixedCharZero R p → P) : P :=
   by
-  refine' splitByCharacteristic R _ h_equal h_mixed
+  refine' split_by_characteristic R _ h_equal h_mixed
   intro p p_pos p_char
   have p_prime : Nat.Prime p := or_iff_not_imp_right.mp (CharP.char_is_prime_or_zero R p) p_pos
   exact h_pos p p_prime p_char
-#align split_by_characteristic_domain splitByCharacteristicDomain
+#align split_by_characteristic_domain split_by_characteristic_domain
 
 /-- In a `local_ring R`, split any `Prop` over `R` into the three cases:
 - *prime power* characteristic.
 - equal characteristic zero.
 - mixed characteristic `(0, p)`.
 -/
-theorem splitByCharacteristicLocalRing [LocalRing R] (h_pos : ∀ p : ℕ, IsPrimePow p → CharP R p → P)
-    (h_equal : Algebra ℚ R → P) (h_mixed : ∀ p : ℕ, Nat.Prime p → MixedCharZero R p → P) : P :=
+theorem split_by_characteristic_localRing [LocalRing R]
+    (h_pos : ∀ p : ℕ, IsPrimePow p → CharP R p → P) (h_equal : Algebra ℚ R → P)
+    (h_mixed : ∀ p : ℕ, Nat.Prime p → MixedCharZero R p → P) : P :=
   by
-  refine' splitByCharacteristic R _ h_equal h_mixed
+  refine' split_by_characteristic R _ h_equal h_mixed
   intro p p_pos p_char
   have p_ppow : IsPrimePow (p : ℕ) := or_iff_not_imp_left.mp (charP_zero_or_prime_power R p) p_pos
   exact h_pos p p_ppow p_char
-#align split_by_characteristic_local_ring splitByCharacteristicLocalRing
+#align split_by_characteristic_local_ring split_by_characteristic_localRing
 
 end MainStatements
 

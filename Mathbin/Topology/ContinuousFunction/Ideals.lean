@@ -392,9 +392,9 @@ theorem idealOfSet_isMaximal_iff (s : Opens X) :
   exact ideal_of_set_of_ideal_is_closed inferInstance
 #align continuous_map.ideal_of_set_is_maximal_iff ContinuousMap.idealOfSet_isMaximal_iff
 
-theorem idealOfComplSingletonIsMaximal (x : X) : (idealOfSet 𝕜 ({x}ᶜ : Set X)).IsMaximal :=
+theorem ideal_of_compl_singleton_isMaximal (x : X) : (idealOfSet 𝕜 ({x}ᶜ : Set X)).IsMaximal :=
   (idealOfSet_isMaximal_iff 𝕜 (Closeds.singleton x).compl).mpr <| Opens.isCoatom_iff.mpr ⟨x, rfl⟩
-#align continuous_map.ideal_of_compl_singleton_is_maximal ContinuousMap.idealOfComplSingletonIsMaximal
+#align continuous_map.ideal_of_compl_singleton_is_maximal ContinuousMap.ideal_of_compl_singleton_isMaximal
 
 variable {𝕜}
 

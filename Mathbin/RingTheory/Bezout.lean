@@ -32,16 +32,16 @@ variable (R : Type u) [CommRing R]
 
 /-- A Bézout ring is a ring whose finitely generated ideals are principal. -/
 class IsBezout : Prop where
-  isPrincipalOfFg : ∀ I : Ideal R, I.Fg → I.IsPrincipal
+  is_principal_of_fg : ∀ I : Ideal R, I.Fg → I.IsPrincipal
 #align is_bezout IsBezout
 
 namespace IsBezout
 
 variable {R}
 
-instance spanPairIsPrincipal [IsBezout R] (x y : R) : (Ideal.span {x, y} : Ideal R).IsPrincipal :=
+instance span_pair_isPrincipal [IsBezout R] (x y : R) : (Ideal.span {x, y} : Ideal R).IsPrincipal :=
   by classical exact is_principal_of_fg (Ideal.span {x, y}) ⟨{x, y}, by simp⟩
-#align is_bezout.span_pair_is_principal IsBezout.spanPairIsPrincipal
+#align is_bezout.span_pair_is_principal IsBezout.span_pair_isPrincipal
 
 theorem iff_span_pair_isPrincipal :
     IsBezout R ↔ ∀ x y : R, (Ideal.span {x, y} : Ideal R).IsPrincipal := by
@@ -51,7 +51,7 @@ theorem iff_span_pair_isPrincipal :
       infer_instance
     · intro H
       constructor
-      apply Submodule.fgInduction
+      apply Submodule.fg_induction
       · exact fun _ => ⟨⟨_, rfl⟩⟩
       · rintro _ _ ⟨⟨x, rfl⟩⟩ ⟨⟨y, rfl⟩⟩
         rw [← Submodule.span_insert]
@@ -124,9 +124,9 @@ theorem Function.Surjective.isBezout {S : Type v} [CommRing S] (f : R →+* S)
     rfl
 #align function.surjective.is_bezout Function.Surjective.isBezout
 
-instance (priority := 100) ofIsPrincipalIdealRing [IsPrincipalIdealRing R] : IsBezout R :=
+instance (priority := 100) of_isPrincipalIdealRing [IsPrincipalIdealRing R] : IsBezout R :=
   ⟨fun I _ => IsPrincipalIdealRing.principal I⟩
-#align is_bezout.of_is_principal_ideal_ring IsBezout.ofIsPrincipalIdealRing
+#align is_bezout.of_is_principal_ideal_ring IsBezout.of_isPrincipalIdealRing
 
 /- failed to parenthesize: parenthesize: uncaught backtrack exception
 [PrettyPrinter.parenthesize.input] (Command.declaration
@@ -259,7 +259,7 @@ instance (priority := 100) ofIsPrincipalIdealRing [IsPrincipalIdealRing R] : IsB
                       []
                       "=>"
                       (Term.proj
-                       (Term.app `IsBezout.isPrincipalOfFg [`I `hI])
+                       (Term.app `IsBezout.isPrincipal_of_fg [`I `hI])
                        "."
                        (fieldIdx "1")))))))
                  []
@@ -452,7 +452,7 @@ instance (priority := 100) ofIsPrincipalIdealRing [IsPrincipalIdealRing R] : IsB
                      []
                      "=>"
                      (Term.proj
-                      (Term.app `IsBezout.isPrincipalOfFg [`I `hI])
+                      (Term.app `IsBezout.isPrincipal_of_fg [`I `hI])
                       "."
                       (fieldIdx "1")))))))
                 []
@@ -636,7 +636,7 @@ instance (priority := 100) ofIsPrincipalIdealRing [IsPrincipalIdealRing R] : IsB
                  [(Term.anonymousCtor "⟨" [`I "," `hI] "⟩")]
                  []
                  "=>"
-                 (Term.proj (Term.app `IsBezout.isPrincipalOfFg [`I `hI]) "." (fieldIdx "1")))))))
+                 (Term.proj (Term.app `IsBezout.isPrincipal_of_fg [`I `hI]) "." (fieldIdx "1")))))))
             []
             (Mathlib.Tactic.Choose.choose
              "choose"
@@ -782,7 +782,7 @@ instance (priority := 100) ofIsPrincipalIdealRing [IsPrincipalIdealRing R] : IsB
              [(Term.anonymousCtor "⟨" [`I "," `hI] "⟩")]
              []
              "=>"
-             (Term.proj (Term.app `IsBezout.isPrincipalOfFg [`I `hI]) "." (fieldIdx "1")))))))
+             (Term.proj (Term.app `IsBezout.isPrincipal_of_fg [`I `hI]) "." (fieldIdx "1")))))))
         []
         (Mathlib.Tactic.Choose.choose "choose" [] [(Lean.binderIdent `f) (Lean.binderIdent `hf)] [])
         []
@@ -1211,7 +1211,7 @@ instance (priority := 100) ofIsPrincipalIdealRing [IsPrincipalIdealRing R] : IsB
            [(Term.anonymousCtor "⟨" [`I "," `hI] "⟩")]
            []
            "=>"
-           (Term.proj (Term.app `IsBezout.isPrincipalOfFg [`I `hI]) "." (fieldIdx "1")))))))
+           (Term.proj (Term.app `IsBezout.isPrincipal_of_fg [`I `hI]) "." (fieldIdx "1")))))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.fun
        "fun"
@@ -1219,11 +1219,11 @@ instance (priority := 100) ofIsPrincipalIdealRing [IsPrincipalIdealRing R] : IsB
         [(Term.anonymousCtor "⟨" [`I "," `hI] "⟩")]
         []
         "=>"
-        (Term.proj (Term.app `IsBezout.isPrincipalOfFg [`I `hI]) "." (fieldIdx "1"))))
+        (Term.proj (Term.app `IsBezout.isPrincipal_of_fg [`I `hI]) "." (fieldIdx "1"))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.proj (Term.app `IsBezout.isPrincipalOfFg [`I `hI]) "." (fieldIdx "1"))
+      (Term.proj (Term.app `IsBezout.isPrincipal_of_fg [`I `hI]) "." (fieldIdx "1"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      (Term.app `IsBezout.isPrincipalOfFg [`I `hI])
+      (Term.app `IsBezout.isPrincipal_of_fg [`I `hI])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -1237,13 +1237,13 @@ instance (priority := 100) ofIsPrincipalIdealRing [IsPrincipalIdealRing R] : IsB
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
      [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-      `IsBezout.isPrincipalOfFg
+      `IsBezout.isPrincipal_of_fg
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
      [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
-     (Term.app `IsBezout.isPrincipalOfFg [`I `hI])
+     (Term.app `IsBezout.isPrincipal_of_fg [`I `hI])
      ")")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
      [anonymous]) <=? (none, [anonymous])
@@ -1458,7 +1458,7 @@ theorem
               have
                 : ∀ I : { J : Ideal R // J . Fg } , ∃ x : R , ( I : Ideal R ) = Ideal.span { x }
                   :=
-                  fun ⟨ I , hI ⟩ => IsBezout.isPrincipalOfFg I hI . 1
+                  fun ⟨ I , hI ⟩ => IsBezout.isPrincipal_of_fg I hI . 1
               choose f hf
               exact
                 {

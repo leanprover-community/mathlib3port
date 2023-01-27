@@ -172,8 +172,8 @@ theorem fg_of_fg_of_fg [IsNoetherianRing A] (hAC : (⊤ : Subalgebra A C).Fg)
   Algebra.fg_trans' (B₀.fg_top.2 hAB₀) <|
     Subalgebra.fg_of_submodule_fg <|
       have : IsNoetherianRing B₀ := isNoetherianRing_of_fg hAB₀
-      have : IsNoetherian B₀ C := isNoetherianOfFgOfNoetherian' hB₀C
-      fgOfInjective (IsScalarTower.toAlgHom B₀ B C).toLinearMap hBCi
+      have : IsNoetherian B₀ C := isNoetherian_of_fg_of_noetherian' hB₀C
+      fg_of_injective (IsScalarTower.toAlgHom B₀ B C).toLinearMap hBCi
 #align fg_of_fg_of_fg fg_of_fg_of_fg
 
 end Ring
