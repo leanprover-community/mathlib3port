@@ -660,7 +660,7 @@ theorem Dart.symm_mk {p : V × V} (h : G.Adj p.1 p.2) : (Dart.mk p h).symm = Dar
 
 @[simp]
 theorem Dart.edge_symm (d : G.Dart) : d.symm.edge = d.edge :=
-  Sym2.mk'_prod_swap_eq
+  Sym2.mk''_prod_swap_eq
 #align simple_graph.dart.edge_symm SimpleGraph.Dart.edge_symm
 
 @[simp]
@@ -685,14 +685,14 @@ theorem Dart.symm_ne (d : G.Dart) : d.symm ≠ d :=
 theorem dart_edge_eq_iff : ∀ d₁ d₂ : G.Dart, d₁.edge = d₂.edge ↔ d₁ = d₂ ∨ d₁ = d₂.symm :=
   by
   rintro ⟨p, hp⟩ ⟨q, hq⟩
-  simp [Sym2.mk'_eq_mk'_iff]
+  simp [Sym2.mk''_eq_mk''_iff]
 #align simple_graph.dart_edge_eq_iff SimpleGraph.dart_edge_eq_iff
 
 theorem dart_edge_eq_mk'_iff :
     ∀ {d : G.Dart} {p : V × V}, d.edge = ⟦p⟧ ↔ d.toProd = p ∨ d.toProd = p.swap :=
   by
   rintro ⟨p, h⟩
-  apply Sym2.mk'_eq_mk'_iff
+  apply Sym2.mk''_eq_mk''_iff
 #align simple_graph.dart_edge_eq_mk_iff SimpleGraph.dart_edge_eq_mk'_iff
 
 theorem dart_edge_eq_mk'_iff' :
@@ -750,11 +750,11 @@ theorem mk'_mem_incidenceSet_iff : ⟦(b, c)⟧ ∈ G.incidenceSet a ↔ G.Adj b
 #align simple_graph.mk_mem_incidence_set_iff SimpleGraph.mk'_mem_incidenceSet_iff
 
 theorem mk'_mem_incidenceSet_left_iff : ⟦(a, b)⟧ ∈ G.incidenceSet a ↔ G.Adj a b :=
-  and_iff_left <| Sym2.mem_mk'_left _ _
+  and_iff_left <| Sym2.mem_mk''_left _ _
 #align simple_graph.mk_mem_incidence_set_left_iff SimpleGraph.mk'_mem_incidenceSet_left_iff
 
 theorem mk'_mem_incidenceSet_right_iff : ⟦(a, b)⟧ ∈ G.incidenceSet b ↔ G.Adj a b :=
-  and_iff_left <| Sym2.mem_mk'_right _ _
+  and_iff_left <| Sym2.mem_mk''_right _ _
 #align simple_graph.mk_mem_incidence_set_right_iff SimpleGraph.mk'_mem_incidenceSet_right_iff
 
 theorem edge_mem_incidenceSet_iff {e : G.edgeSet} : ↑e ∈ G.incidenceSet a ↔ a ∈ (e : Sym2 V) :=

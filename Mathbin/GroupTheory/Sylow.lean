@@ -474,7 +474,7 @@ theorem Sylow.normalizer_sup_eq_top {p : ℕ} [Fact p.Prime] {N : Subgroup G} [N
   obtain ⟨n, hn⟩ := exists_smul_eq N ((MulAut.conjNormal g : MulAut N) • P) P
   rw [← inv_mul_cancel_left (↑n) g, sup_comm]
   apply mul_mem_sup (N.inv_mem n.2)
-  rw [Sylow.smul_def, ← mul_smul, ← MulAut.conjNormal_coe, ← mul_aut.conj_normal.map_mul,
+  rw [Sylow.smul_def, ← mul_smul, ← MulAut.conjNormal_val, ← mul_aut.conj_normal.map_mul,
     Sylow.ext_iff, Sylow.pointwise_smul_def, pointwise_smul_def] at hn
   refine' fun x =>
     (mem_map_iff_mem
