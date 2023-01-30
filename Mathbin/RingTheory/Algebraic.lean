@@ -121,7 +121,7 @@ theorem isAlgebraic_one [Nontrivial R] : IsAlgebraic R (1 : A) :=
 
 theorem isAlgebraic_nat [Nontrivial R] (n : ℕ) : IsAlgebraic R (n : A) :=
   by
-  rw [← map_nat_cast _]
+  rw [← map_natCast _]
   exact isAlgebraic_algebraMap n
 #align is_algebraic_nat isAlgebraic_nat
 

@@ -92,7 +92,7 @@ variable {R}
 lean 3 declaration is
   forall {α : Type.{u₁}} {β : Type.{u₂}} {R : α -> β -> Prop}, (Relator.RightTotal.{u₁, u₂} α β R) -> (Relator.LiftFun.{max (succ u₁) 1, max (succ u₂) 1, 1, 1} (α -> Prop) (β -> Prop) Prop Prop (Relator.LiftFun.{succ u₁, succ u₂, 1, 1} α β Prop Prop R Implies) Implies (fun (p : α -> Prop) => forall (i : α), p i) (fun (q : β -> Prop) => forall (i : β), q i))
 but is expected to have type
-  forall {α : Type.{u₁}} {β : Type.{u₂}} {R : α -> β -> Prop}, (Relator.RightTotal.{u₁, u₂} α β R) -> (Relator.LiftFun.{max (succ u₁) (succ u_1), succ u₂, succ (imax (succ u₁) u_1), 1} (α -> Sort.{u_1}) (β -> Prop) Sort.{imax (succ u₁) u_1} Prop (Relator.LiftFun.{succ u₁, succ u₂, succ u_1, 1} α β Sort.{u_1} Prop R (fun (x._@.Mathlib.Logic.Relator._hyg.940 : Sort.{u_1}) (x._@.Mathlib.Logic.Relator._hyg.942 : Prop) => x._@.Mathlib.Logic.Relator._hyg.940 -> x._@.Mathlib.Logic.Relator._hyg.942)) (fun (x._@.Mathlib.Logic.Relator._hyg.953 : Sort.{imax (succ u₁) u_1}) (x._@.Mathlib.Logic.Relator._hyg.955 : Prop) => x._@.Mathlib.Logic.Relator._hyg.953 -> x._@.Mathlib.Logic.Relator._hyg.955) (fun (p : α -> Sort.{u_1}) => forall (i : α), p i) (fun (q : β -> Prop) => forall (i : β), q i))
+  forall {α : Type.{u₁}} {β : Type.{u₂}} {R : α -> β -> Prop}, (Relator.RightTotal.{u₁, u₂} α β R) -> (Relator.LiftFun.{max (succ u₁) (succ u_1), succ u₂, succ (imax (succ u₁) u_1), 1} (α -> Sort.{u_1}) (β -> Prop) Sort.{imax (succ u₁) u_1} Prop (Relator.LiftFun.{succ u₁, succ u₂, succ u_1, 1} α β Sort.{u_1} Prop R (fun (x._@.Mathlib.Logic.Relator._hyg.883 : Sort.{u_1}) (x._@.Mathlib.Logic.Relator._hyg.885 : Prop) => x._@.Mathlib.Logic.Relator._hyg.883 -> x._@.Mathlib.Logic.Relator._hyg.885)) (fun (x._@.Mathlib.Logic.Relator._hyg.896 : Sort.{imax (succ u₁) u_1}) (x._@.Mathlib.Logic.Relator._hyg.898 : Prop) => x._@.Mathlib.Logic.Relator._hyg.896 -> x._@.Mathlib.Logic.Relator._hyg.898) (fun (p : α -> Sort.{u_1}) => forall (i : α), p i) (fun (q : β -> Prop) => forall (i : β), q i))
 Case conversion may be inaccurate. Consider using '#align relator.right_total.rel_forall Relator.RightTotal.rel_forallₓ'. -/
 theorem RightTotal.rel_forall (h : RightTotal R) :
     ((R ⇒ Implies) ⇒ Implies) (fun p => ∀ i, p i) fun q => ∀ i, q i := fun p q Hrel H b =>
@@ -122,9 +122,11 @@ theorem BiTotal.rel_exists (h : BiTotal R) :
 #align relator.bi_total.rel_exists Relator.BiTotal.rel_exists
 -/
 
-theorem leftUnique_of_rel_eq {eq' : β → β → Prop} (he : (R ⇒ R ⇒ Iff) Eq eq') : LeftUnique R :=
+#print Relator.left_unique_of_rel_eq /-
+theorem left_unique_of_rel_eq {eq' : β → β → Prop} (he : (R ⇒ R ⇒ Iff) Eq eq') : LeftUnique R :=
   fun a b c (ac : R a c) (bc : R b c) => (he ac bc).mpr ((he bc bc).mp rfl)
-#align relator.left_unique_of_rel_eq Relator.leftUnique_of_rel_eq
+#align relator.left_unique_of_rel_eq Relator.left_unique_of_rel_eq
+-/
 
 end
 
@@ -138,10 +140,12 @@ theorem rel_not : (Iff ⇒ Iff) Not Not := fun p q h => not_congr h
 #align relator.rel_not Relator.rel_not
 -/
 
-theorem biTotal_eq {α : Type u₁} : Relator.BiTotal (@Eq α) :=
+#print Relator.bi_total_eq /-
+theorem bi_total_eq {α : Type u₁} : Relator.BiTotal (@Eq α) :=
   { left := fun a => ⟨a, rfl⟩
     right := fun a => ⟨a, rfl⟩ }
-#align relator.bi_total_eq Relator.biTotal_eq
+#align relator.bi_total_eq Relator.bi_total_eq
+-/
 
 variable {α : Type _} {β : Type _} {γ : Type _} {δ : Type _}
 
@@ -178,7 +182,7 @@ theorem rel_iff : ((· ↔ ·) ⇒ (· ↔ ·) ⇒ (· ↔ ·)) (· ↔ ·) (· 
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> β -> Prop}, (Relator.BiUnique.{u1, u2} α β r) -> (Relator.LiftFun.{succ u1, succ u2, succ u1, succ u2} α β (α -> Prop) (β -> Prop) r (Relator.LiftFun.{succ u1, succ u2, 1, 1} α β Prop Prop r Iff) (Eq.{succ u1} α) (Eq.{succ u2} β))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> β -> Prop}, (Relator.BiUnique.{u2, u1} α β r) -> (Relator.LiftFun.{succ u2, succ u1, succ u2, succ u1} α β (α -> Prop) (β -> Prop) r (Relator.LiftFun.{succ u2, succ u1, 1, 1} α β Prop Prop r (fun (x._@.Mathlib.Logic.Relator._hyg.2028 : Prop) (x._@.Mathlib.Logic.Relator._hyg.2030 : Prop) => Iff x._@.Mathlib.Logic.Relator._hyg.2028 x._@.Mathlib.Logic.Relator._hyg.2030)) (fun (x._@.Mathlib.Logic.Relator._hyg.2043 : α) (x._@.Mathlib.Logic.Relator._hyg.2045 : α) => Eq.{succ u2} α x._@.Mathlib.Logic.Relator._hyg.2043 x._@.Mathlib.Logic.Relator._hyg.2045) (fun (x._@.Mathlib.Logic.Relator._hyg.2058 : β) (x._@.Mathlib.Logic.Relator._hyg.2060 : β) => Eq.{succ u1} β x._@.Mathlib.Logic.Relator._hyg.2058 x._@.Mathlib.Logic.Relator._hyg.2060))
+  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> β -> Prop}, (Relator.BiUnique.{u2, u1} α β r) -> (Relator.LiftFun.{succ u2, succ u1, succ u2, succ u1} α β (α -> Prop) (β -> Prop) r (Relator.LiftFun.{succ u2, succ u1, 1, 1} α β Prop Prop r (fun (x._@.Mathlib.Logic.Relator._hyg.1983 : Prop) (x._@.Mathlib.Logic.Relator._hyg.1985 : Prop) => Iff x._@.Mathlib.Logic.Relator._hyg.1983 x._@.Mathlib.Logic.Relator._hyg.1985)) (fun (x._@.Mathlib.Logic.Relator._hyg.1998 : α) (x._@.Mathlib.Logic.Relator._hyg.2000 : α) => Eq.{succ u2} α x._@.Mathlib.Logic.Relator._hyg.1998 x._@.Mathlib.Logic.Relator._hyg.2000) (fun (x._@.Mathlib.Logic.Relator._hyg.2013 : β) (x._@.Mathlib.Logic.Relator._hyg.2015 : β) => Eq.{succ u1} β x._@.Mathlib.Logic.Relator._hyg.2013 x._@.Mathlib.Logic.Relator._hyg.2015))
 Case conversion may be inaccurate. Consider using '#align relator.rel_eq Relator.rel_eqₓ'. -/
 theorem rel_eq {r : α → β → Prop} (hr : BiUnique r) : (r ⇒ r ⇒ (· ↔ ·)) (· = ·) (· = ·) :=
   fun a b h₁ c d h₂ => ⟨fun h => hr.right h₁ <| h.symm ▸ h₂, fun h => hr.left h₁ <| h.symm ▸ h₂⟩

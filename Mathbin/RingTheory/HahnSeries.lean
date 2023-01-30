@@ -616,7 +616,7 @@ theorem single_zero_one [Zero R] [One R] : single 0 (1 : R) = 1 :=
 
 @[simp]
 theorem support_one [MulZeroOneClass R] [Nontrivial R] : support (1 : HahnSeries Γ R) = {0} :=
-  support_single_of_ne one_neZero
+  support_single_of_ne one_ne_zero
 #align hahn_series.support_one HahnSeries.support_one
 
 @[simp]
@@ -624,7 +624,7 @@ theorem order_one [MulZeroOneClass R] : order (1 : HahnSeries Γ R) = 0 :=
   by
   cases' subsingleton_or_nontrivial R with h h <;> haveI := h
   · rw [Subsingleton.elim (1 : HahnSeries Γ R) 0, order_zero]
-  · exact order_single one_neZero
+  · exact order_single one_ne_zero
 #align hahn_series.order_one HahnSeries.order_one
 
 instance [NonUnitalNonAssocSemiring R] : Mul (HahnSeries Γ R)
@@ -1361,7 +1361,7 @@ variable (Γ R) [LinearOrderedCancelAddCommMonoid Γ] [Ring R] [IsDomain R]
   a Hahn Series has a nonzero coefficient, or `⊤` for the 0 series.  -/
 def addVal : AddValuation (HahnSeries Γ R) (WithTop Γ) :=
   AddValuation.of (fun x => if x = (0 : HahnSeries Γ R) then (⊤ : WithTop Γ) else x.order)
-    (if_pos rfl) ((if_neg one_neZero).trans (by simp [order_of_ne]))
+    (if_pos rfl) ((if_neg one_ne_zero).trans (by simp [order_of_ne]))
     (fun x y => by
       by_cases hx : x = 0
       · by_cases hy : y = 0 <;> · simp [hx, hy]
@@ -1410,7 +1410,7 @@ theorem isPwo_unionᵢ_support_powers [LinearOrderedCancelAddCommMonoid Γ] [Rin
   refine' Set.unionᵢ_subset fun n => _
   induction' n with n ih <;> intro g hn
   · simp only [exists_prop, and_true_iff, Set.mem_singleton_iff, Set.setOf_eq_eq_singleton,
-      mem_support, ite_eq_right_iff, Ne.def, not_false_iff, one_neZero, pow_zero, not_forall,
+      mem_support, ite_eq_right_iff, Ne.def, not_false_iff, one_ne_zero, pow_zero, not_forall,
       one_coeff] at hn
     rw [hn, SetLike.mem_coe]
     exact AddSubmonoid.zero_mem _
@@ -1871,7 +1871,7 @@ variable [CommRing R] [IsDomain R]
 theorem unit_aux (x : HahnSeries Γ R) {r : R} (hr : r * x.coeff x.order = 1) :
     0 < addVal Γ R (1 - c r * single (-x.order) 1 * x) :=
   by
-  have h10 : (1 : R) ≠ 0 := one_neZero
+  have h10 : (1 : R) ≠ 0 := one_ne_zero
   have x0 : x ≠ 0 := ne_zero_of_coeff_ne_zero (right_ne_zero_of_mul_eq_one hr)
   refine' lt_of_le_of_ne ((add_val Γ R).map_le_sub (ge_of_eq (add_val Γ R).map_one) _) _
   · simp only [AddValuation.map_mul]

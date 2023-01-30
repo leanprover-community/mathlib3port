@@ -59,7 +59,7 @@ theorem char_eq_expChar_iff (p q : ℕ) [hp : CharP R p] [hq : ExpChar R q] : p 
   cases' hq with q hq_one hq_prime
   · apply iff_of_false
     · rintro rfl
-      exact one_neZero (hp.eq R (CharP.of_charZero R))
+      exact one_ne_zero (hp.eq R (CharP.of_charZero R))
     · intro pprime
       rw [(CharP.eq R hp inferInstance : p = 0)] at pprime
       exact Nat.not_prime_zero pprime

@@ -96,7 +96,7 @@ theorem reduce_to_p_prime {P : Prop} :
     have r_pos : r ≠ 0 :=
       by
       have q_zero := congr_arg (Ideal.Quotient.factor I M h_IM) (CharP.cast_eq_zero (R ⧸ I) q)
-      simp only [map_nat_cast, map_zero] at q_zero
+      simp only [map_natCast, map_zero] at q_zero
       apply ne_zero_of_dvd_ne_zero (ne_of_gt q_pos)
       exact (CharP.cast_eq_zero_iff (R ⧸ M) r q).mp q_zero
     have r_prime : Nat.Prime r :=
@@ -171,7 +171,7 @@ theorem Q_algebra_to_equal_charZero [Nontrivial R] [Algebra ℚ R] :
   contrapose! hI
   -- `↑a - ↑b` is a unit contained in `I`, which contradicts `I ≠ ⊤`.
   refine' I.eq_top_of_is_unit_mem _ (IsUnit.map (algebraMap ℚ R) (IsUnit.mk0 (a - b : ℚ) _))
-  · simpa only [← Ideal.Quotient.eq_zero_iff_mem, map_sub, sub_eq_zero, map_nat_cast]
+  · simpa only [← Ideal.Quotient.eq_zero_iff_mem, map_sub, sub_eq_zero, map_natCast]
   simpa only [Ne.def, sub_eq_zero] using (@Nat.cast_injective ℚ _ _).Ne hI
 #align Q_algebra_to_equal_char_zero Q_algebra_to_equal_charZero
 
@@ -189,7 +189,7 @@ theorem EqualCharZero.pNat_coe_isUnit [h : Fact (∀ I : Ideal R, I ≠ ⊤ → 
   -- In particular, the image of `n` in the quotient should be nonzero.
   apply h_char_zero.cast_injective.Ne n.ne_zero
   -- But `n` generates the ideal, so its image is clearly zero.
-  rw [← map_nat_cast (Ideal.Quotient.mk _), Nat.cast_zero, Ideal.Quotient.eq_zero_iff_mem]
+  rw [← map_natCast (Ideal.Quotient.mk _), Nat.cast_zero, Ideal.Quotient.eq_zero_iff_mem]
   exact Ideal.subset_span (Set.mem_singleton _)
 #align equal_char_zero.pnat_coe_is_unit EqualCharZero.pNat_coe_isUnit
 

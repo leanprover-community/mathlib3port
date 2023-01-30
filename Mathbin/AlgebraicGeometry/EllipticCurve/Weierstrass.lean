@@ -398,21 +398,21 @@ theorem polynomial_eq :
 theorem polynomial_ne_zero [Nontrivial R] : W.Polynomial ≠ 0 :=
   by
   rw [polynomial_eq]
-  exact Cubic.ne_zero_of_b_ne_zero one_neZero
+  exact Cubic.ne_zero_of_b_ne_zero one_ne_zero
 #align weierstrass_curve.polynomial_ne_zero WeierstrassCurve.polynomial_ne_zero
 
 @[simp]
 theorem degree_polynomial [Nontrivial R] : W.Polynomial.degree = 2 :=
   by
   rw [polynomial_eq]
-  exact Cubic.degree_of_b_ne_zero' one_neZero
+  exact Cubic.degree_of_b_ne_zero' one_ne_zero
 #align weierstrass_curve.degree_polynomial WeierstrassCurve.degree_polynomial
 
 @[simp]
 theorem natDegree_polynomial [Nontrivial R] : W.Polynomial.natDegree = 2 :=
   by
   rw [polynomial_eq]
-  exact Cubic.natDegree_of_b_ne_zero' one_neZero
+  exact Cubic.natDegree_of_b_ne_zero' one_ne_zero
 #align weierstrass_curve.nat_degree_polynomial WeierstrassCurve.natDegree_polynomial
 
 theorem monic_polynomial : W.Polynomial.Monic :=
@@ -763,8 +763,8 @@ theorem norm_smul_basis (p q : R[X]) :
   by
   simp_rw [Algebra.norm_eq_matrix_det W, Matrix.det_fin_two, Algebra.leftMulMatrix_eq_repr_mul,
     basis_zero, mul_one, basis_one, smul_basis_mul_Y, map_add, Finsupp.add_apply, map_smul,
-    Finsupp.smul_apply, ← basis_zero, ← basis_one, Basis.repr_self_apply, if_pos, if_neg one_neZero,
-    if_neg zero_ne_one, smul_eq_mul]
+    Finsupp.smul_apply, ← basis_zero, ← basis_one, Basis.repr_self_apply, if_pos,
+    if_neg one_ne_zero, if_neg zero_ne_one, smul_eq_mul]
   ring1
 #align weierstrass_curve.coordinate_ring.norm_smul_basis WeierstrassCurve.CoordinateRing.norm_smul_basis
 

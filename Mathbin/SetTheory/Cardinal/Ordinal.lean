@@ -478,7 +478,7 @@ theorem aleph_le_beth (o : Ordinal) : aleph o ≤ beth o :=
   · simp
   · intro o h
     rw [aleph_succ, beth_succ, succ_le_iff]
-    exact (cantor _).trans_le (power_le_power_left two_neZero h)
+    exact (cantor _).trans_le (power_le_power_left two_ne_zero h)
   · intro o ho IH
     rw [aleph_limit ho, beth_limit ho]
     exact csupᵢ_mono (bdd_above_of_small _) fun x => IH x.1 x.2

@@ -273,7 +273,7 @@ theorem log_zpow (x : ℝ) (n : ℤ) : log (x ^ n) = n * log x :=
 theorem log_sqrt {x : ℝ} (hx : 0 ≤ x) : log (sqrt x) = log x / 2 :=
   by
   rw [eq_div_iff, mul_comm, ← Nat.cast_two, ← log_pow, sq_sqrt hx]
-  exact two_neZero
+  exact two_ne_zero
 #align real.log_sqrt Real.log_sqrt
 
 theorem log_le_sub_one_of_pos {x : ℝ} (hx : 0 < x) : log x ≤ x - 1 :=
@@ -289,7 +289,7 @@ theorem abs_log_mul_self_lt (x : ℝ) (h1 : 0 < x) (h2 : x ≤ 1) : |log x * x| 
   have : 0 < 1 / x := by simpa only [one_div, inv_pos] using h1
   replace := log_le_sub_one_of_pos this
   replace : log (1 / x) < 1 / x := by linarith
-  rw [log_div one_neZero h1.ne', log_one, zero_sub, lt_div_iff h1] at this
+  rw [log_div one_ne_zero h1.ne', log_one, zero_sub, lt_div_iff h1] at this
   have aux : 0 ≤ -log x * x := by
     refine' mul_nonneg _ h1.le
     rw [← log_inv]
@@ -374,7 +374,7 @@ theorem tendsto_pow_log_div_mul_add_atTop (a b : ℝ) (n : ℕ) (ha : a ≠ 0) :
 theorem isO_pow_log_id_atTop {n : ℕ} : (fun x => log x ^ n) =o[at_top] id :=
   by
   rw [Asymptotics.isO_iff_tendsto']
-  · simpa using tendsto_pow_log_div_mul_add_at_top 1 0 n one_neZero
+  · simpa using tendsto_pow_log_div_mul_add_at_top 1 0 n one_ne_zero
   filter_upwards [eventually_ne_at_top (0 : ℝ)]with x h₁ h₂ using(h₁ h₂).elim
 #align real.is_o_pow_log_id_at_top Real.isO_pow_log_id_atTop
 

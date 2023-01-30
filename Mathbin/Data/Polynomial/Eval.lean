@@ -756,7 +756,7 @@ theorem coe_mapRingHom (f : R →+* S) : ⇑(mapRingHom f) = map f :=
 -- This is protected to not clash with the global `map_nat_cast`.
 @[simp]
 protected theorem map_nat_cast (n : ℕ) : (n : R[X]).map f = n :=
-  map_nat_cast (mapRingHom f) n
+  map_natCast (mapRingHom f) n
 #align polynomial.map_nat_cast Polynomial.map_nat_cast
 
 @[simp]
@@ -903,7 +903,7 @@ protected theorem map_pow (n : ℕ) : (p ^ n).map f = p.map f ^ n :=
   (mapRingHom f).map_pow _ _
 #align polynomial.map_pow Polynomial.map_pow
 
-theorem mem_map_srange {p : S[X]} : p ∈ (mapRingHom f).srange ↔ ∀ n, p.coeff n ∈ f.srange :=
+theorem mem_map_rangeS {p : S[X]} : p ∈ (mapRingHom f).srange ↔ ∀ n, p.coeff n ∈ f.srange :=
   by
   constructor
   · rintro ⟨p, rfl⟩ n
@@ -916,11 +916,11 @@ theorem mem_map_srange {p : S[X]} : p ∈ (mapRingHom f).srange ↔ ∀ n, p.coe
     rcases h i with ⟨c, hc⟩
     use C c * X ^ i
     rw [coe_map_ring_hom, Polynomial.map_mul, map_C, hc, Polynomial.map_pow, map_X]
-#align polynomial.mem_map_srange Polynomial.mem_map_srange
+#align polynomial.mem_map_srange Polynomial.mem_map_rangeS
 
 theorem mem_map_range {R S : Type _} [Ring R] [Ring S] (f : R →+* S) {p : S[X]} :
     p ∈ (mapRingHom f).range ↔ ∀ n, p.coeff n ∈ f.range :=
-  mem_map_srange f
+  mem_map_rangeS f
 #align polynomial.mem_map_range Polynomial.mem_map_range
 
 theorem eval₂_map [Semiring T] (g : S →+* T) (x : T) : (p.map f).eval₂ g x = p.eval₂ (g.comp f) x :=
@@ -968,7 +968,7 @@ theorem eval_nat_cast_map (f : R →+* S) (p : R[X]) (n : ℕ) : (p.map f).eval 
   · intro p q hp hq
     simp only [hp, hq, Polynomial.map_add, RingHom.map_add, eval_add]
   · intro n r
-    simp only [map_nat_cast f, eval_monomial, map_monomial, f.map_pow, f.map_mul]
+    simp only [map_natCast f, eval_monomial, map_monomial, f.map_pow, f.map_mul]
 #align polynomial.eval_nat_cast_map Polynomial.eval_nat_cast_map
 
 @[simp]

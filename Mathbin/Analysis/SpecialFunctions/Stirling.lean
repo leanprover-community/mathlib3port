@@ -135,7 +135,7 @@ theorem log_stirlingSeq_diff_le_geo_sum (n : ℕ) :
     · simp_rw [← pow_succ] at this
       exact this
     rw [one_div, inv_pow]
-    exact inv_lt_one (one_lt_pow ((lt_add_iff_pos_left 1).mpr <| by positivity) two_neZero)
+    exact inv_lt_one (one_lt_pow ((lt_add_iff_pos_left 1).mpr <| by positivity) two_ne_zero)
   have hab :
     ∀ k : ℕ,
       1 / (2 * (k.succ : ℝ) + 1) * ((1 / (2 * n.succ + 1)) ^ 2) ^ k.succ ≤
@@ -252,7 +252,7 @@ theorem tendsto_self_div_two_mul_self_add_one :
     rw [one_div, ← add_zero (2 : ℝ)]
   refine'
     (((tendsto_const_div_atTop_nhds_0_nat 1).const_add (2 : ℝ)).inv₀
-          ((add_zero (2 : ℝ)).symm ▸ two_neZero)).congr'
+          ((add_zero (2 : ℝ)).symm ▸ two_ne_zero)).congr'
       (eventually_at_top.mpr ⟨1, fun n hn => _⟩)
   rw [add_div' (1 : ℝ) 2 n (cast_ne_zero.mpr (one_le_iff_ne_zero.mp hn)), inv_div]
 #align stirling.tendsto_self_div_two_mul_self_add_one Stirling.tendsto_self_div_two_mul_self_add_one

@@ -761,9 +761,9 @@ section Lex
 /-- Lexicographic order for sum. Sort all the `inl a` before the `inr b`, otherwise use the
 respective order on `α` or `β`. -/
 inductive Lex (r : α → α → Prop) (s : β → β → Prop) : Sum α β → Sum α β → Prop
-  | inl {a₁ a₂} (h : r a₁ a₂) : lex (inl a₁) (inl a₂)
-  | inr {b₁ b₂} (h : s b₁ b₂) : lex (inr b₁) (inr b₂)
-  | sep (a b) : lex (inl a) (inr b)
+  | inl {a₁ a₂} (h : r a₁ a₂) : Lex (inl a₁) (inl a₂)
+  | inr {b₁ b₂} (h : s b₁ b₂) : Lex (inr b₁) (inr b₂)
+  | sep (a b) : Lex (inl a) (inr b)
 #align sum.lex Sum.Lex
 -/
 

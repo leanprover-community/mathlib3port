@@ -1096,7 +1096,7 @@ theorem valuation_one : valuation (1 : ℚ_[p]) = 0 :=
     by
     intro H
     erw [const_equiv p] at H
-    exact one_neZero H
+    exact one_ne_zero H
   rw [dif_neg h]
   simp
 #align padic.valuation_one Padic.valuation_one
@@ -1169,7 +1169,7 @@ theorem AddValuation.map_zero : addValuationDef (0 : ℚ_[p]) = ⊤ := by
 
 @[simp]
 theorem AddValuation.map_one : addValuationDef (1 : ℚ_[p]) = 0 := by
-  simp only [add_valuation_def, if_neg one_neZero, valuation_one, WithTop.coe_zero]
+  simp only [add_valuation_def, if_neg one_ne_zero, valuation_one, WithTop.coe_zero]
 #align padic.add_valuation.map_one Padic.AddValuation.map_one
 
 theorem AddValuation.map_mul (x y : ℚ_[p]) :

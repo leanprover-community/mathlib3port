@@ -115,7 +115,7 @@ theorem even_xor_odd' (n : ℕ) : ∃ k, Xor' (n = 2 * k) (n = 2 * k + 1) :=
       and_false_iff] using (succ_ne_self (2 * k)).symm
   ·
     simp only [Xor', add_right_eq_self, false_or_iff, eq_self_iff_true, not_true, not_false_iff,
-      one_neZero, and_self_iff]
+      one_ne_zero, and_self_iff]
 #align nat.even_xor_odd' Nat.even_xor_odd'
 -/
 

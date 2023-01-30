@@ -497,7 +497,7 @@ theorem limsup_eq_tendsto_sum_indicator_nat_atTop (s : ℕ → Set α) :
       replace hi : (∑ k in Finset.range i, (s (k + 1)).indicator 1 ω) = k + 1 :=
         le_antisymm (h i) hi
       refine' not_lt.2 (h <| j + 1) _
-      rw [← Finset.sum_range_add_sum_ico _ (i.le_succ.trans (hj₁.trans j.le_succ)), hi]
+      rw [← Finset.sum_range_add_sum_Ico _ (i.le_succ.trans (hj₁.trans j.le_succ)), hi]
       refine' lt_add_of_pos_right _ _
       rw [(finset.sum_const_zero.symm : 0 = ∑ k in Finset.Ico i (j + 1), 0)]
       refine'
@@ -525,7 +525,7 @@ theorem limsup_eq_tendsto_sum_indicator_nat_atTop (s : ℕ → Set α) :
         · simpa only [Finset.card_range, smul_eq_mul, mul_one]
       by_cases hij : j < i
       · exact hle _ hij.le
-      · rw [← Finset.sum_range_add_sum_ico _ (not_lt.1 hij)]
+      · rw [← Finset.sum_range_add_sum_Ico _ (not_lt.1 hij)]
         suffices (∑ k in Finset.Ico i j, (s (k + 1)).indicator 1 ω) = 0
           by
           rw [this, add_zero]

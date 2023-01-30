@@ -392,7 +392,7 @@ theorem squarefree_mul {m n : ℕ} (hmn : m.coprime n) :
   by
   simp only [squarefree_iff_prime_squarefree, ← sq, ← forall_and]
   refine' ball_congr fun p hp => _
-  simp only [hmn.is_prime_pow_dvd_mul (hp.is_prime_pow.pow two_neZero), not_or]
+  simp only [hmn.is_prime_pow_dvd_mul (hp.is_prime_pow.pow two_ne_zero), not_or]
 #align nat.squarefree_mul Nat.squarefree_mul
 
 end Nat

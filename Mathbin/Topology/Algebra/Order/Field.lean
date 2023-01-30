@@ -365,7 +365,7 @@ instance (priority := 100) LinearOrderedField.to_topologicalDivisionRing : Topol
       rw [mul_comm, mul_min_of_nonneg _ _ aux.le]
       apply min_le_of_left_le
       rw [← mul_div, ← mul_assoc, div_mul_cancel _ (sq_pos_of_pos ht).ne',
-        mul_div_cancel' ε two_neZero]
+        mul_div_cancel' ε two_ne_zero]
     refine' inv_lt_of_inv_lt aux _
     rw [inv_div, abs_of_pos <| mul_pos ht hx', sq, ← mul_div_assoc']
     exact mul_lt_mul_of_pos_left hx ht

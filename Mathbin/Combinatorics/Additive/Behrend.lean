@@ -384,7 +384,7 @@ theorem div_lt_floor {x : ℝ} (hx : 2 / (1 - 2 / exp 1) ≤ x) : x / exp 1 < (�
   rwa [le_sub_comm, div_eq_mul_one_div x, div_eq_mul_one_div x, ← mul_sub, div_sub', ←
     div_eq_mul_one_div, mul_div_assoc', one_le_div, ← div_le_iff this]
   · exact zero_lt_two
-  · exact two_neZero
+  · exact two_ne_zero
 #align behrend.div_lt_floor Behrend.div_lt_floor
 
 theorem ceil_lt_mul {x : ℝ} (hx : 50 / 19 ≤ x) : (⌈x⌉₊ : ℝ) < 1.38 * x :=
@@ -439,7 +439,7 @@ theorem three_le_nValue (hN : 64 ≤ N) : 3 ≤ nValue N :=
 theorem dValue_pos (hN₃ : 8 ≤ N) : 0 < dValue N :=
   by
   have hN₀ : 0 < (N : ℝ) := cast_pos.2 (succ_pos'.trans_le hN₃)
-  rw [d_value, floor_pos, ← log_le_log zero_lt_one, log_one, log_div _ two_neZero, log_rpow hN₀,
+  rw [d_value, floor_pos, ← log_le_log zero_lt_one, log_one, log_div _ two_ne_zero, log_rpow hN₀,
     div_mul_eq_mul_div, one_mul, sub_nonneg, le_div_iff]
   · have : (n_value N : ℝ) ≤ 2 * sqrt (log N) :=
       by

@@ -682,8 +682,8 @@ protected theorem mul_add : a * (b + c) = a * b + a * c := by
 #print Rat.zero_ne_one /-
 protected theorem zero_ne_one : 0 ≠ (1 : ℚ) :=
   by
-  rw [ne_comm, ← mk_one_one, mk_ne_zero one_neZero]
-  exact one_neZero
+  rw [ne_comm, ← mk_one_one, mk_ne_zero one_ne_zero]
+  exact one_ne_zero
 #align rat.zero_ne_one Rat.zero_ne_one
 -/
 
@@ -741,7 +741,7 @@ instance : CommRing ℚ where
   natCast n := ofInt n
   nat_cast_zero := rfl
   nat_cast_succ n := by
-    simp only [of_int_eq_cast, coe_int_eq_mk, add_def one_neZero one_neZero, ← mk_one_one,
+    simp only [of_int_eq_cast, coe_int_eq_mk, add_def one_ne_zero one_ne_zero, ← mk_one_one,
       Nat.cast_add, Nat.cast_one, mul_one]
 
 instance : CommGroupWithZero ℚ :=
@@ -971,7 +971,7 @@ Case conversion may be inaccurate. Consider using '#align rat.mk_eq_div Rat.divI
 theorem divInt_eq_div (n d : ℤ) : n /. d = (n : ℚ) / d :=
   by
   by_cases d0 : d = 0; · simp [d0, div_zero]
-  simp [division_def, coe_int_eq_mk, mul_def one_neZero d0]
+  simp [division_def, coe_int_eq_mk, mul_def one_ne_zero d0]
 #align rat.mk_eq_div Rat.divInt_eq_div
 
 /- warning: rat.mk_mul_mk_cancel -> Rat.divInt_mul_divInt_cancel is a dubious translation:
@@ -1017,7 +1017,7 @@ Case conversion may be inaccurate. Consider using '#align rat.coe_int_div_eq_mk 
 theorem coe_int_div_eq_divInt {n d : ℤ} : (n : ℚ) / ↑d = n /. d :=
   by
   repeat' rw [coe_int_eq_mk]
-  exact mk_div_mk_cancel_left one_neZero n d
+  exact mk_div_mk_cancel_left one_ne_zero n d
 #align rat.coe_int_div_eq_mk Rat.coe_int_div_eq_divInt
 
 #print Rat.num_div_den /-

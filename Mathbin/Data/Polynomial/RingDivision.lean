@@ -246,7 +246,7 @@ variable [CharZero R]
 @[simp]
 theorem degree_bit0_eq (p : R[X]) : degree (bit0 p) = degree p := by
   rw [bit0_eq_two_mul, degree_mul, (by simp : (2 : R[X]) = C 2),
-    @Polynomial.degree_c R _ _ two_neZero, zero_add]
+    @Polynomial.degree_c R _ _ two_ne_zero, zero_add]
 #align polynomial.degree_bit0_eq Polynomial.degree_bit0_eq
 
 @[simp]
@@ -473,7 +473,7 @@ theorem rootMultiplicity_x_sub_c_pow (a : R) (n : ℕ) : rootMultiplicity a ((X 
   by
   induction' n with n hn
   · refine' root_multiplicity_eq_zero _
-    simp only [eval_one, is_root.def, not_false_iff, one_neZero, pow_zero]
+    simp only [eval_one, is_root.def, not_false_iff, one_ne_zero, pow_zero]
   have hzero := pow_ne_zero n.succ (X_sub_C_ne_zero a)
   rw [pow_succ (X - C a) n] at hzero⊢
   simp only [root_multiplicity_mul hzero, root_multiplicity_X_sub_C_self, hn, Nat.one_add]
@@ -817,7 +817,7 @@ theorem Monic.comp_x_add_c (hp : p.Monic) (r : R) : (p.comp (X + c r)).Monic :=
   by
   refine' hp.comp (monic_X_add_C _) fun ha => _
   rw [nat_degree_X_add_C] at ha
-  exact one_neZero ha
+  exact one_ne_zero ha
 #align polynomial.monic.comp_X_add_C Polynomial.Monic.comp_x_add_c
 
 theorem Monic.comp_x_sub_c (hp : p.Monic) (r : R) : (p.comp (X - c r)).Monic := by

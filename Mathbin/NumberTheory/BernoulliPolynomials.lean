@@ -129,7 +129,7 @@ theorem derivative_bernoulli (k : ℕ) : (bernoulli k).derivative = k * bernoull
 theorem sum_bernoulli (n : ℕ) :
     (∑ k in range (n + 1), ((n + 1).choose k : ℚ) • bernoulli k) = monomial n (n + 1 : ℚ) :=
   by
-  simp_rw [bernoulli_def, Finset.smul_sum, Finset.range_eq_Ico, ← Finset.sum_ico_ico_comm,
+  simp_rw [bernoulli_def, Finset.smul_sum, Finset.range_eq_Ico, ← Finset.sum_Ico_Ico_comm,
     Finset.sum_ico_eq_sum_range]
   simp only [add_tsub_cancel_left, tsub_zero, zero_add, LinearMap.map_add]
   simp_rw [smul_monomial, mul_comm (_root_.bernoulli _) _, smul_eq_mul, ← mul_assoc]
@@ -157,7 +157,7 @@ theorem sum_bernoulli (n : ℕ) :
   rw [sum_bernoulli]
   have g : ite (n + 1 - x = 1) (1 : ℚ) 0 = 0 :=
     by
-    simp only [ite_eq_right_iff, one_neZero]
+    simp only [ite_eq_right_iff, one_ne_zero]
     intro h₁
     exact (f x hx) h₁
   rw [g, zero_smul]

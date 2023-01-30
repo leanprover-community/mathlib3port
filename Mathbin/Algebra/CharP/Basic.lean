@@ -258,7 +258,7 @@ theorem CharP.neg_one_pow_char_pow [CommRing R] (p n : ℕ) [CharP R p] [Fact p.
 
 theorem RingHom.charP_iff_charP {K L : Type _} [DivisionRing K] [Semiring L] [Nontrivial L]
     (f : K →+* L) (p : ℕ) : CharP K p ↔ CharP L p := by
-  simp only [charP_iff, ← f.injective.eq_iff, map_nat_cast f, f.map_zero]
+  simp only [charP_iff, ← f.injective.eq_iff, map_natCast f, f.map_zero]
 #align ring_hom.char_p_iff_char_p RingHom.charP_iff_charP
 
 section frobenius
@@ -336,7 +336,7 @@ theorem frobenius_add : frobenius R p (x + y) = frobenius R p x + frobenius R p 
 #align frobenius_add frobenius_add
 
 theorem frobenius_nat_cast (n : ℕ) : frobenius R p n = n :=
-  map_nat_cast (frobenius R p) n
+  map_natCast (frobenius R p) n
 #align frobenius_nat_cast frobenius_nat_cast
 
 open BigOperators
@@ -451,7 +451,7 @@ variable [NonAssocSemiring R]
 
 theorem char_ne_one [Nontrivial R] (p : ℕ) [hc : CharP R p] : p ≠ 1 := fun hp : p = 1 =>
   have : (1 : R) = 0 := by simpa using (cast_eq_zero_iff R p 1).mpr (hp ▸ dvd_refl p)
-  absurd this one_neZero
+  absurd this one_ne_zero
 #align char_p.char_ne_one CharP.char_ne_one
 
 section NoZeroDivisors
@@ -660,9 +660,9 @@ theorem Int.cast_injOn_of_ringChar_ne_two {R : Type _} [NonAssocRing R] [Nontriv
   have h'' : ((b - a : ℤ) : R) = 0 := by exact_mod_cast sub_eq_zero_of_eq h.symm
   rcases hh with (hh | hh | hh | hh)
   · rw [hh, (by norm_cast : ((1 : ℤ) : R) = 1)] at h'
-    exact one_neZero h'
+    exact one_ne_zero h'
   · rw [hh, (by norm_cast : ((1 : ℤ) : R) = 1)] at h''
-    exact one_neZero h''
+    exact one_ne_zero h''
   · rw [hh, (by norm_cast : ((2 : ℤ) : R) = 2)] at h'
     exact Ring.two_ne_zero hR h'
   · rw [hh, (by norm_cast : ((2 : ℤ) : R) = 2)] at h''

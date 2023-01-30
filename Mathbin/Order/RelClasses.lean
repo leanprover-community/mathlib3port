@@ -205,14 +205,18 @@ theorem rel_of_subsingleton (r) [IsRefl α r] [Subsingleton α] (x y) : r x y :=
 #align rel_of_subsingleton rel_of_subsingleton
 -/
 
+#print empty_relation_apply /-
 @[simp]
-theorem emptyRelation_apply (a b : α) : EmptyRelation a b ↔ False :=
+theorem empty_relation_apply (a b : α) : EmptyRelation a b ↔ False :=
   Iff.rfl
-#align empty_relation_apply emptyRelation_apply
+#align empty_relation_apply empty_relation_apply
+-/
 
-theorem eq_emptyRelation (r) [IsIrrefl α r] [Subsingleton α] : r = EmptyRelation :=
+#print eq_empty_relation /-
+theorem eq_empty_relation (r) [IsIrrefl α r] [Subsingleton α] : r = EmptyRelation :=
   funext₂ <| by simpa using not_rel_of_subsingleton r
-#align eq_empty_relation eq_emptyRelation
+#align eq_empty_relation eq_empty_relation
+-/
 
 instance : IsIrrefl α EmptyRelation :=
   ⟨fun a => id⟩
@@ -429,33 +433,41 @@ instance (priority := 100) IsWellFounded.isIrrefl (r : α → α → Prop) [IsWe
   IsAsymm.isIrrefl
 #align is_well_founded.is_irrefl IsWellFounded.isIrrefl
 
+#print WellFoundedLT /-
 /-- A class for a well founded relation `<`. -/
 @[reducible]
-def WellFoundedLt (α : Type _) [LT α] : Prop :=
+def WellFoundedLT (α : Type _) [LT α] : Prop :=
   IsWellFounded α (· < ·)
-#align well_founded_lt WellFoundedLt
+#align well_founded_lt WellFoundedLT
+-/
 
+#print WellFoundedGT /-
 /-- A class for a well founded relation `>`. -/
 @[reducible]
-def WellFoundedGt (α : Type _) [LT α] : Prop :=
+def WellFoundedGT (α : Type _) [LT α] : Prop :=
   IsWellFounded α (· > ·)
-#align well_founded_gt WellFoundedGt
+#align well_founded_gt WellFoundedGT
+-/
 
 -- See note [lower instance priority]
-instance (priority := 100) (α : Type _) [LT α] [h : WellFoundedLt α] : WellFoundedGt αᵒᵈ :=
+instance (priority := 100) (α : Type _) [LT α] [h : WellFoundedLT α] : WellFoundedGT αᵒᵈ :=
   h
 
 -- See note [lower instance priority]
-instance (priority := 100) (α : Type _) [LT α] [h : WellFoundedGt α] : WellFoundedLt αᵒᵈ :=
+instance (priority := 100) (α : Type _) [LT α] [h : WellFoundedGT α] : WellFoundedLT αᵒᵈ :=
   h
 
-theorem wellFoundedGt_dual_iff (α : Type _) [LT α] : WellFoundedGt αᵒᵈ ↔ WellFoundedLt α :=
+#print wellFoundedGT_dual_iff /-
+theorem wellFoundedGT_dual_iff (α : Type _) [LT α] : WellFoundedGT αᵒᵈ ↔ WellFoundedLT α :=
   ⟨fun h => ⟨h.wf⟩, fun h => ⟨h.wf⟩⟩
-#align well_founded_gt_dual_iff wellFoundedGt_dual_iff
+#align well_founded_gt_dual_iff wellFoundedGT_dual_iff
+-/
 
-theorem wellFoundedLt_dual_iff (α : Type _) [LT α] : WellFoundedLt αᵒᵈ ↔ WellFoundedGt α :=
+#print wellFoundedLT_dual_iff /-
+theorem wellFoundedLT_dual_iff (α : Type _) [LT α] : WellFoundedLT αᵒᵈ ↔ WellFoundedGT α :=
   ⟨fun h => ⟨h.wf⟩, fun h => ⟨h.wf⟩⟩
-#align well_founded_lt_dual_iff wellFoundedLt_dual_iff
+#align well_founded_lt_dual_iff wellFoundedLT_dual_iff
+-/
 
 #print IsWellOrder /-
 /-- A well order is a well-founded linear order. -/
@@ -489,71 +501,95 @@ instance (priority := 100) IsWellOrder.isAsymm {α} (r : α → α → Prop) [Is
     IsAsymm α r := by infer_instance
 #align is_well_order.is_asymm IsWellOrder.isAsymm
 
-namespace WellFoundedLt
+namespace WellFoundedLT
 
-variable [LT α] [WellFoundedLt α]
+variable [LT α] [WellFoundedLT α]
 
+#print WellFoundedLT.induction /-
 /-- Inducts on a well-founded `<` relation. -/
 theorem induction {C : α → Prop} : ∀ a, (∀ x, (∀ y, y < x → C y) → C x) → C a :=
   IsWellFounded.induction _
-#align well_founded_lt.induction WellFoundedLt.induction
+#align well_founded_lt.induction WellFoundedLT.induction
+-/
 
+#print WellFoundedLT.apply /-
 /-- All values are accessible under the well-founded `<`. -/
 theorem apply : ∀ a : α, Acc (· < ·) a :=
   IsWellFounded.apply _
-#align well_founded_lt.apply WellFoundedLt.apply
+#align well_founded_lt.apply WellFoundedLT.apply
+-/
 
+#print WellFoundedLT.fix /-
 /-- Creates data, given a way to generate a value from all that compare as lesser. See also
 `well_founded_lt.fix_eq`. -/
 def fix {C : α → Sort _} : (∀ x : α, (∀ y : α, y < x → C y) → C x) → ∀ x : α, C x :=
   IsWellFounded.fix (· < ·)
-#align well_founded_lt.fix WellFoundedLt.fix
+#align well_founded_lt.fix WellFoundedLT.fix
+-/
 
+/- warning: well_founded_lt.fix_eq -> WellFoundedLT.fix_eq is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] [_inst_2 : WellFoundedLT.{u1} α _inst_1] {C : α -> Sort.{u2}} (F : forall (x : α), (forall (y : α), (LT.lt.{u1} α _inst_1 y x) -> (C y)) -> (C x)) (x : α), Eq.{u2} (C x) (WellFoundedLT.fix.{u1, u2} α _inst_1 _inst_2 (fun (y : α) => C y) F x) (F x (fun (y : α) (h : LT.lt.{u1} α _inst_1 y x) => WellFoundedLT.fix.{u1, u2} α _inst_1 _inst_2 C F y))
+but is expected to have type
+  forall {α : Type.{u2}} [_inst_1 : LT.{u2} α] [_inst_2 : WellFoundedLT.{u2} α _inst_1] {C : α -> Sort.{u1}} (F : forall (x : α), (forall (y : α), (LT.lt.{u2} α _inst_1 y x) -> (C y)) -> (C x)) (x : α), Eq.{u1} (C x) (WellFoundedLT.fix.{u2, u1} α _inst_1 _inst_2 (fun (y : α) => C y) F x) (F x (fun (y : α) (h : LT.lt.{u2} α _inst_1 y x) => WellFoundedLT.fix.{u2, u1} α _inst_1 _inst_2 (fun (y : α) => C y) F y))
+Case conversion may be inaccurate. Consider using '#align well_founded_lt.fix_eq WellFoundedLT.fix_eqₓ'. -/
 /-- The value from `well_founded_lt.fix` is built from the previous ones as specified. -/
 theorem fix_eq {C : α → Sort _} (F : ∀ x : α, (∀ y : α, y < x → C y) → C x) :
     ∀ x, fix F x = F x fun y h => fix F y :=
   IsWellFounded.fix_eq _ F
-#align well_founded_lt.fix_eq WellFoundedLt.fix_eq
+#align well_founded_lt.fix_eq WellFoundedLT.fix_eq
 
 /-- Derive a `has_well_founded` instance from a `well_founded_lt` instance. -/
 def toHasWellFounded : WellFoundedRelation α :=
   IsWellFounded.toHasWellFounded (· < ·)
-#align well_founded_lt.to_has_well_founded WellFoundedLt.toHasWellFounded
+#align well_founded_lt.to_has_well_founded WellFoundedLT.toHasWellFounded
 
-end WellFoundedLt
+end WellFoundedLT
 
-namespace WellFoundedGt
+namespace WellFoundedGT
 
-variable [LT α] [WellFoundedGt α]
+variable [LT α] [WellFoundedGT α]
 
+#print WellFoundedGT.induction /-
 /-- Inducts on a well-founded `>` relation. -/
 theorem induction {C : α → Prop} : ∀ a, (∀ x, (∀ y, x < y → C y) → C x) → C a :=
   IsWellFounded.induction _
-#align well_founded_gt.induction WellFoundedGt.induction
+#align well_founded_gt.induction WellFoundedGT.induction
+-/
 
+#print WellFoundedGT.apply /-
 /-- All values are accessible under the well-founded `>`. -/
 theorem apply : ∀ a : α, Acc (· > ·) a :=
   IsWellFounded.apply _
-#align well_founded_gt.apply WellFoundedGt.apply
+#align well_founded_gt.apply WellFoundedGT.apply
+-/
 
+#print WellFoundedGT.fix /-
 /-- Creates data, given a way to generate a value from all that compare as greater. See also
 `well_founded_gt.fix_eq`. -/
 def fix {C : α → Sort _} : (∀ x : α, (∀ y : α, x < y → C y) → C x) → ∀ x : α, C x :=
   IsWellFounded.fix (· > ·)
-#align well_founded_gt.fix WellFoundedGt.fix
+#align well_founded_gt.fix WellFoundedGT.fix
+-/
 
+/- warning: well_founded_gt.fix_eq -> WellFoundedGT.fix_eq is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] [_inst_2 : WellFoundedGT.{u1} α _inst_1] {C : α -> Sort.{u2}} (F : forall (x : α), (forall (y : α), (LT.lt.{u1} α _inst_1 x y) -> (C y)) -> (C x)) (x : α), Eq.{u2} (C x) (WellFoundedGT.fix.{u1, u2} α _inst_1 _inst_2 (fun (y : α) => C y) F x) (F x (fun (y : α) (h : LT.lt.{u1} α _inst_1 x y) => WellFoundedGT.fix.{u1, u2} α _inst_1 _inst_2 C F y))
+but is expected to have type
+  forall {α : Type.{u2}} [_inst_1 : LT.{u2} α] [_inst_2 : WellFoundedGT.{u2} α _inst_1] {C : α -> Sort.{u1}} (F : forall (x : α), (forall (y : α), (LT.lt.{u2} α _inst_1 x y) -> (C y)) -> (C x)) (x : α), Eq.{u1} (C x) (WellFoundedGT.fix.{u2, u1} α _inst_1 _inst_2 (fun (y : α) => C y) F x) (F x (fun (y : α) (h : LT.lt.{u2} α _inst_1 x y) => WellFoundedGT.fix.{u2, u1} α _inst_1 _inst_2 (fun (y : α) => C y) F y))
+Case conversion may be inaccurate. Consider using '#align well_founded_gt.fix_eq WellFoundedGT.fix_eqₓ'. -/
 /-- The value from `well_founded_gt.fix` is built from the successive ones as specified. -/
 theorem fix_eq {C : α → Sort _} (F : ∀ x : α, (∀ y : α, x < y → C y) → C x) :
     ∀ x, fix F x = F x fun y h => fix F y :=
   IsWellFounded.fix_eq _ F
-#align well_founded_gt.fix_eq WellFoundedGt.fix_eq
+#align well_founded_gt.fix_eq WellFoundedGT.fix_eq
 
 /-- Derive a `has_well_founded` instance from a `well_founded_gt` instance. -/
 def toHasWellFounded : WellFoundedRelation α :=
   IsWellFounded.toHasWellFounded (· > ·)
-#align well_founded_gt.to_has_well_founded WellFoundedGt.toHasWellFounded
+#align well_founded_gt.to_has_well_founded WellFoundedGT.toHasWellFounded
 
-end WellFoundedGt
+end WellFoundedGT
 
 #print IsWellOrder.linearOrder /-
 /-- Construct a decidable linear order from a well-founded linear order. -/
@@ -929,87 +965,113 @@ section SubsetSsubset
 
 variable [HasSubset α] [HasSSubset α] [IsNonstrictStrictOrder α (· ⊆ ·) (· ⊂ ·)] {a b c : α}
 
-theorem sSubset_iff_subset_not_subset : a ⊂ b ↔ a ⊆ b ∧ ¬b ⊆ a :=
+#print ssubset_iff_subset_not_subset /-
+theorem ssubset_iff_subset_not_subset : a ⊂ b ↔ a ⊆ b ∧ ¬b ⊆ a :=
   right_iff_left_not_left
-#align ssubset_iff_subset_not_subset sSubset_iff_subset_not_subset
+#align ssubset_iff_subset_not_subset ssubset_iff_subset_not_subset
+-/
 
-theorem subset_of_sSubset (h : a ⊂ b) : a ⊆ b :=
-  (sSubset_iff_subset_not_subset.1 h).1
-#align subset_of_ssubset subset_of_sSubset
+#print subset_of_ssubset /-
+theorem subset_of_ssubset (h : a ⊂ b) : a ⊆ b :=
+  (ssubset_iff_subset_not_subset.1 h).1
+#align subset_of_ssubset subset_of_ssubset
+-/
 
-theorem not_subset_of_sSubset (h : a ⊂ b) : ¬b ⊆ a :=
-  (sSubset_iff_subset_not_subset.1 h).2
-#align not_subset_of_ssubset not_subset_of_sSubset
+#print not_subset_of_ssubset /-
+theorem not_subset_of_ssubset (h : a ⊂ b) : ¬b ⊆ a :=
+  (ssubset_iff_subset_not_subset.1 h).2
+#align not_subset_of_ssubset not_subset_of_ssubset
+-/
 
-theorem not_sSubset_of_subset (h : a ⊆ b) : ¬b ⊂ a := fun h' => not_subset_of_sSubset h' h
-#align not_ssubset_of_subset not_sSubset_of_subset
+#print not_ssubset_of_subset /-
+theorem not_ssubset_of_subset (h : a ⊆ b) : ¬b ⊂ a := fun h' => not_subset_of_ssubset h' h
+#align not_ssubset_of_subset not_ssubset_of_subset
+-/
 
-theorem sSubset_of_subset_not_subset (h₁ : a ⊆ b) (h₂ : ¬b ⊆ a) : a ⊂ b :=
-  sSubset_iff_subset_not_subset.2 ⟨h₁, h₂⟩
-#align ssubset_of_subset_not_subset sSubset_of_subset_not_subset
+#print ssubset_of_subset_not_subset /-
+theorem ssubset_of_subset_not_subset (h₁ : a ⊆ b) (h₂ : ¬b ⊆ a) : a ⊂ b :=
+  ssubset_iff_subset_not_subset.2 ⟨h₁, h₂⟩
+#align ssubset_of_subset_not_subset ssubset_of_subset_not_subset
+-/
 
-alias subset_of_sSubset ← HasSSubset.SSubset.subset
+alias subset_of_ssubset ← HasSSubset.SSubset.subset
 #align has_ssubset.ssubset.subset HasSSubset.SSubset.subset
 
-alias not_subset_of_sSubset ← HasSSubset.SSubset.not_subset
+alias not_subset_of_ssubset ← HasSSubset.SSubset.not_subset
 #align has_ssubset.ssubset.not_subset HasSSubset.SSubset.not_subset
 
-alias not_sSubset_of_subset ← HasSubset.Subset.not_sSubset
-#align has_subset.subset.not_ssubset HasSubset.Subset.not_sSubset
+alias not_ssubset_of_subset ← HasSubset.Subset.not_ssubset
+#align has_subset.subset.not_ssubset HasSubset.Subset.not_ssubset
 
-alias sSubset_of_subset_not_subset ← HasSubset.Subset.sSubset_of_not_subset
-#align has_subset.subset.ssubset_of_not_subset HasSubset.Subset.sSubset_of_not_subset
+alias ssubset_of_subset_not_subset ← HasSubset.Subset.ssubset_of_not_subset
+#align has_subset.subset.ssubset_of_not_subset HasSubset.Subset.ssubset_of_not_subset
 
-theorem sSubset_of_subset_of_sSubset [IsTrans α (· ⊆ ·)] (h₁ : a ⊆ b) (h₂ : b ⊂ c) : a ⊂ c :=
+#print ssubset_of_subset_of_ssubset /-
+theorem ssubset_of_subset_of_ssubset [IsTrans α (· ⊆ ·)] (h₁ : a ⊆ b) (h₂ : b ⊂ c) : a ⊂ c :=
   (h₁.trans h₂.Subset).ssubset_of_not_subset fun h => h₂.not_subset <| h.trans h₁
-#align ssubset_of_subset_of_ssubset sSubset_of_subset_of_sSubset
+#align ssubset_of_subset_of_ssubset ssubset_of_subset_of_ssubset
+-/
 
-theorem sSubset_of_sSubset_of_subset [IsTrans α (· ⊆ ·)] (h₁ : a ⊂ b) (h₂ : b ⊆ c) : a ⊂ c :=
+#print ssubset_of_ssubset_of_subset /-
+theorem ssubset_of_ssubset_of_subset [IsTrans α (· ⊆ ·)] (h₁ : a ⊂ b) (h₂ : b ⊆ c) : a ⊂ c :=
   (h₁.Subset.trans h₂).ssubset_of_not_subset fun h => h₁.not_subset <| h₂.trans h
-#align ssubset_of_ssubset_of_subset sSubset_of_sSubset_of_subset
+#align ssubset_of_ssubset_of_subset ssubset_of_ssubset_of_subset
+-/
 
-theorem sSubset_of_subset_of_ne [IsAntisymm α (· ⊆ ·)] (h₁ : a ⊆ b) (h₂ : a ≠ b) : a ⊂ b :=
+#print ssubset_of_subset_of_ne /-
+theorem ssubset_of_subset_of_ne [IsAntisymm α (· ⊆ ·)] (h₁ : a ⊆ b) (h₂ : a ≠ b) : a ⊂ b :=
   h₁.ssubset_of_not_subset <| mt h₁.antisymm h₂
-#align ssubset_of_subset_of_ne sSubset_of_subset_of_ne
+#align ssubset_of_subset_of_ne ssubset_of_subset_of_ne
+-/
 
-theorem sSubset_of_ne_of_subset [IsAntisymm α (· ⊆ ·)] (h₁ : a ≠ b) (h₂ : a ⊆ b) : a ⊂ b :=
-  sSubset_of_subset_of_ne h₂ h₁
-#align ssubset_of_ne_of_subset sSubset_of_ne_of_subset
+#print ssubset_of_ne_of_subset /-
+theorem ssubset_of_ne_of_subset [IsAntisymm α (· ⊆ ·)] (h₁ : a ≠ b) (h₂ : a ⊆ b) : a ⊂ b :=
+  ssubset_of_subset_of_ne h₂ h₁
+#align ssubset_of_ne_of_subset ssubset_of_ne_of_subset
+-/
 
-theorem eq_or_sSubset_of_subset [IsAntisymm α (· ⊆ ·)] (h : a ⊆ b) : a = b ∨ a ⊂ b :=
+#print eq_or_ssubset_of_subset /-
+theorem eq_or_ssubset_of_subset [IsAntisymm α (· ⊆ ·)] (h : a ⊆ b) : a = b ∨ a ⊂ b :=
   (em (b ⊆ a)).imp h.antisymm h.ssubset_of_not_subset
-#align eq_or_ssubset_of_subset eq_or_sSubset_of_subset
+#align eq_or_ssubset_of_subset eq_or_ssubset_of_subset
+-/
 
-theorem sSubset_or_eq_of_subset [IsAntisymm α (· ⊆ ·)] (h : a ⊆ b) : a ⊂ b ∨ a = b :=
-  (eq_or_sSubset_of_subset h).swap
-#align ssubset_or_eq_of_subset sSubset_or_eq_of_subset
+#print ssubset_or_eq_of_subset /-
+theorem ssubset_or_eq_of_subset [IsAntisymm α (· ⊆ ·)] (h : a ⊆ b) : a ⊂ b ∨ a = b :=
+  (eq_or_ssubset_of_subset h).swap
+#align ssubset_or_eq_of_subset ssubset_or_eq_of_subset
+-/
 
-alias sSubset_of_subset_of_sSubset ← HasSubset.Subset.trans_sSubset
-#align has_subset.subset.trans_ssubset HasSubset.Subset.trans_sSubset
+alias ssubset_of_subset_of_ssubset ← HasSubset.Subset.trans_ssubset
+#align has_subset.subset.trans_ssubset HasSubset.Subset.trans_ssubset
 
-alias sSubset_of_sSubset_of_subset ← HasSSubset.SSubset.trans_subset
+alias ssubset_of_ssubset_of_subset ← HasSSubset.SSubset.trans_subset
 #align has_ssubset.ssubset.trans_subset HasSSubset.SSubset.trans_subset
 
-alias sSubset_of_subset_of_ne ← HasSubset.Subset.sSubset_of_ne
-#align has_subset.subset.ssubset_of_ne HasSubset.Subset.sSubset_of_ne
+alias ssubset_of_subset_of_ne ← HasSubset.Subset.ssubset_of_ne
+#align has_subset.subset.ssubset_of_ne HasSubset.Subset.ssubset_of_ne
 
-alias sSubset_of_ne_of_subset ← Ne.sSubset_of_subset
-#align ne.ssubset_of_subset Ne.sSubset_of_subset
+alias ssubset_of_ne_of_subset ← Ne.ssubset_of_subset
+#align ne.ssubset_of_subset Ne.ssubset_of_subset
 
-alias eq_or_sSubset_of_subset ← HasSubset.Subset.eq_or_sSubset
-#align has_subset.subset.eq_or_ssubset HasSubset.Subset.eq_or_sSubset
+alias eq_or_ssubset_of_subset ← HasSubset.Subset.eq_or_ssubset
+#align has_subset.subset.eq_or_ssubset HasSubset.Subset.eq_or_ssubset
 
-alias sSubset_or_eq_of_subset ← HasSubset.Subset.sSubset_or_eq
-#align has_subset.subset.ssubset_or_eq HasSubset.Subset.sSubset_or_eq
+alias ssubset_or_eq_of_subset ← HasSubset.Subset.ssubset_or_eq
+#align has_subset.subset.ssubset_or_eq HasSubset.Subset.ssubset_or_eq
 
-theorem sSubset_iff_subset_ne [IsAntisymm α (· ⊆ ·)] : a ⊂ b ↔ a ⊆ b ∧ a ≠ b :=
+#print ssubset_iff_subset_ne /-
+theorem ssubset_iff_subset_ne [IsAntisymm α (· ⊆ ·)] : a ⊂ b ↔ a ⊆ b ∧ a ≠ b :=
   ⟨fun h => ⟨h.Subset, h.Ne⟩, fun h => h.1.ssubset_of_ne h.2⟩
-#align ssubset_iff_subset_ne sSubset_iff_subset_ne
+#align ssubset_iff_subset_ne ssubset_iff_subset_ne
+-/
 
-theorem subset_iff_sSubset_or_eq [IsRefl α (· ⊆ ·)] [IsAntisymm α (· ⊆ ·)] :
+#print subset_iff_ssubset_or_eq /-
+theorem subset_iff_ssubset_or_eq [IsRefl α (· ⊆ ·)] [IsAntisymm α (· ⊆ ·)] :
     a ⊆ b ↔ a ⊂ b ∨ a = b :=
-  ⟨fun h => h.ssubset_or_eq, fun h => h.elim subset_of_sSubset subset_of_eq⟩
-#align subset_iff_ssubset_or_eq subset_iff_sSubset_or_eq
+  ⟨fun h => h.ssubset_or_eq, fun h => h.elim subset_of_ssubset subset_of_eq⟩
+#align subset_iff_ssubset_or_eq subset_iff_ssubset_or_eq
+-/
 
 end SubsetSsubset
 
@@ -1139,7 +1201,7 @@ instance OrderDual.isTotal_le [LE α] [IsTotal α (· ≤ ·)] : IsTotal αᵒ�
 #align order_dual.is_total_le OrderDual.isTotal_le
 -/
 
-instance : WellFoundedLt ℕ :=
+instance : WellFoundedLT ℕ :=
   ⟨Nat.lt_wfRel⟩
 
 #print Nat.lt.isWellOrder /-

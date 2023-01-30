@@ -488,7 +488,7 @@ theorem factors_one : factors (1 : α) = 0 :=
   rw [← Multiset.rel_zero_right]
   refine' factors_unique irreducible_of_factor (fun x hx => (Multiset.not_mem_zero x hx).elim) _
   rw [Multiset.prod_zero]
-  exact factors_prod one_neZero
+  exact factors_prod one_ne_zero
 #align unique_factorization_monoid.factors_one UniqueFactorizationMonoid.factors_one
 
 theorem exists_mem_factors_of_dvd {a p : α} (ha0 : a ≠ 0) (hp : Irreducible p) :
@@ -677,7 +677,7 @@ theorem normalizedFactors_one : normalizedFactors (1 : α) = 0 :=
   · intro x hx
     exfalso
     apply Multiset.not_mem_zero x hx
-  · simp [normalized_factors_prod one_neZero]
+  · simp [normalized_factors_prod one_ne_zero]
   infer_instance
 #align unique_factorization_monoid.normalized_factors_one UniqueFactorizationMonoid.normalizedFactors_one
 

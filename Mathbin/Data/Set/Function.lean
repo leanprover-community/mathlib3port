@@ -452,8 +452,14 @@ theorem eqOn_range {ι : Sort _} {f : ι → α} {g₁ g₂ : α → β} :
   forall_range_iff.trans <| funext_iff.symm
 #align set.eq_on_range Set.eqOn_range
 
+/- warning: set.eq_on.comp_eq -> Set.eqOn.comp_eq is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} {f : ι -> α} {g₁ : α -> β} {g₂ : α -> β}, (Set.EqOn.{u1, u2} α β g₁ g₂ (Set.range.{u1, u3} α ι f)) -> (Eq.{max u3 (succ u2)} (ι -> β) (Function.comp.{u3, succ u1, succ u2} ι α β g₁ f) (Function.comp.{u3, succ u1, succ u2} ι α β g₂ f))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} {ι : Sort.{u3}} {f : ι -> α} {g₁ : α -> β} {g₂ : α -> β}, (Set.EqOn.{u2, u1} α β g₁ g₂ (Set.range.{u2, u3} α ι f)) -> (Eq.{max (succ u1) u3} (ι -> β) (Function.comp.{u3, succ u2, succ u1} ι α β g₁ f) (Function.comp.{u3, succ u2, succ u1} ι α β g₂ f))
+Case conversion may be inaccurate. Consider using '#align set.eq_on.comp_eq Set.eqOn.comp_eqₓ'. -/
 alias eq_on_range ↔ eq_on.comp_eq _
-#align set.eq_on.comp_eq Set.EqOn.comp_eq
+#align set.eq_on.comp_eq Set.eqOn.comp_eq
 
 /-! ### Congruence lemmas -/
 
@@ -3080,15 +3086,15 @@ theorem pi_piecewise {ι : Type _} {α : ι → Type _} (s s' : Set ι) (t t' : 
   by_cases hi : i ∈ s' <;> simp [*]
 #align set.pi_piecewise Set.pi_piecewise
 
-/- warning: set.univ_pi_piecewise -> Set.univ_pi_piecewise is a dubious translation:
+/- warning: set.univ_pi_piecewise -> Set.univ_pi_piecewise_univ is a dubious translation:
 lean 3 declaration is
   forall {ι : Type.{u1}} {α : ι -> Type.{u2}} (s : Set.{u1} ι) (t : forall (i : ι), Set.{u2} (α i)) [_inst_2 : forall (x : ι), Decidable (Membership.Mem.{u1, u1} ι (Set.{u1} ι) (Set.hasMem.{u1} ι) x s)], Eq.{succ (max u1 u2)} (Set.{max u1 u2} (forall (i : ι), α i)) (Set.pi.{u1, u2} ι (fun (i : ι) => α i) (Set.univ.{u1} ι) (Set.piecewise.{u1, succ u2} ι (fun (i : ι) => Set.{u2} (α i)) s t (fun (_x : ι) => Set.univ.{u2} (α _x)) (fun (j : ι) => _inst_2 j))) (Set.pi.{u1, u2} ι (fun (i : ι) => α i) s t)
 but is expected to have type
   forall {ι : Type.{u2}} {α : ι -> Type.{u1}} (s : Set.{u2} ι) (t : forall (i : ι), Set.{u1} (α i)) [_inst_2 : forall (x : ι), Decidable (Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) x s)], Eq.{max (succ u2) (succ u1)} (Set.{max u2 u1} (forall (i : ι), α i)) (Set.pi.{u2, u1} ι (fun (i : ι) => α i) (Set.univ.{u2} ι) (Set.piecewise.{u2, succ u1} ι (fun (i : ι) => Set.{u1} (α i)) s t (fun (_x : ι) => Set.univ.{u1} (α _x)) (fun (j : ι) => _inst_2 j))) (Set.pi.{u2, u1} ι (fun (i : ι) => α i) s t)
-Case conversion may be inaccurate. Consider using '#align set.univ_pi_piecewise Set.univ_pi_piecewiseₓ'. -/
-theorem univ_pi_piecewise {ι : Type _} {α : ι → Type _} (s : Set ι) (t : ∀ i, Set (α i))
+Case conversion may be inaccurate. Consider using '#align set.univ_pi_piecewise Set.univ_pi_piecewise_univₓ'. -/
+theorem univ_pi_piecewise_univ {ι : Type _} {α : ι → Type _} (s : Set ι) (t : ∀ i, Set (α i))
     [∀ x, Decidable (x ∈ s)] : pi univ (s.piecewise t fun _ => univ) = pi s t := by simp
-#align set.univ_pi_piecewise Set.univ_pi_piecewise
+#align set.univ_pi_piecewise Set.univ_pi_piecewise_univ
 
 end Set
 

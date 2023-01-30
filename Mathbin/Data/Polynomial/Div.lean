@@ -359,7 +359,7 @@ theorem map_mod_divByMonic [CommRing S] (f : R →+* S) (hq : Monic q) :
           _ = _ :=
             Eq.symm <|
               degree_map_eq_of_leading_coeff_ne_zero _
-                (by rw [monic.def.1 hq, f.map_one] <;> exact one_neZero)
+                (by rw [monic.def.1 hq, f.map_one] <;> exact one_ne_zero)
           ⟩
   exact ⟨this.1.symm, this.2.symm⟩
 #align polynomial.map_mod_div_by_monic Polynomial.map_mod_divByMonic
@@ -490,7 +490,7 @@ theorem not_isField : ¬IsField R[X] := by
     exact Polynomial.x_ne_zero
   · rw [lt_top_iff_ne_top, Ne.def, Ideal.eq_top_iff_one, Ideal.mem_span_singleton,
       Polynomial.x_dvd_iff, Polynomial.coeff_one_zero]
-    exact one_neZero
+    exact one_ne_zero
 #align polynomial.not_is_field Polynomial.not_isField
 
 variable {R}

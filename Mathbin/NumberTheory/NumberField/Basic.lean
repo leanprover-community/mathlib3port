@@ -48,7 +48,8 @@ open Classical BigOperators
 
 /-- `ℤ` with its usual ring structure is not a field. -/
 theorem Int.not_isField : ¬IsField ℤ := fun h =>
-  Int.not_even_one <| (h.mul_inv_cancel two_neZero).imp fun a => by rw [← two_mul] <;> exact Eq.symm
+  Int.not_even_one <|
+    (h.mul_inv_cancel two_ne_zero).imp fun a => by rw [← two_mul] <;> exact Eq.symm
 #align int.not_is_field Int.not_isField
 
 namespace NumberField

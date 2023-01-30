@@ -1231,7 +1231,7 @@ theorem lt_wf : @WellFounded Nonote (· < ·) :=
   InvImage.wf repr Ordinal.lt_wf
 #align nonote.lt_wf Nonote.lt_wf
 
-instance : WellFoundedLt Nonote :=
+instance : WellFoundedLT Nonote :=
   ⟨lt_wf⟩
 
 instance : WellFoundedRelation Nonote :=

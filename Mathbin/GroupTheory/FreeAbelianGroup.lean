@@ -148,7 +148,7 @@ theorem of_injective : Function.Injective (of : α → FreeAbelianGroup α) := f
     have hfx1 : f (of x) = 1 := (lift.of _ _).trans <| if_pos rfl
     have hfy1 : f (of y) = 1 := hoxy ▸ hfx1
     have hfy0 : f (of y) = 0 := (lift.of _ _).trans <| if_neg hxy
-    one_neZero <| hfy1.symm.trans hfy0
+    one_ne_zero <| hfy1.symm.trans hfy0
 #align free_abelian_group.of_injective FreeAbelianGroup.of_injective
 
 end

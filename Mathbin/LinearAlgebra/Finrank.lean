@@ -529,7 +529,7 @@ theorem Subalgebra.dim_bot [Nontrivial E] : Module.rank F (⊥ : Subalgebra F E)
           LinearEquiv.ofEq _ _ Algebra.toSubmodule_bot).dim_eq.trans <|
     by
     rw [dim_span_set]
-    exacts[mk_singleton _, linearIndependent_singleton one_neZero]
+    exacts[mk_singleton _, linearIndependent_singleton one_ne_zero]
 #align subalgebra.dim_bot Subalgebra.dim_bot
 
 @[simp]

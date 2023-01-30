@@ -566,7 +566,7 @@ theorem Integrable.ae_eq_zero_of_forall_set_integral_eq_zero {f : α → E} (hf 
   let f_Lp := hf_Lp.to_Lp f
   have hf_f_Lp : f =ᵐ[μ] f_Lp := (mem_ℒp.coe_fn_to_Lp hf_Lp).symm
   refine' hf_f_Lp.trans _
-  refine' Lp.ae_eq_zero_of_forall_set_integral_eq_zero f_Lp one_neZero Ennreal.coe_ne_top _ _
+  refine' Lp.ae_eq_zero_of_forall_set_integral_eq_zero f_Lp one_ne_zero Ennreal.coe_ne_top _ _
   · exact fun s hs hμs => integrable.integrable_on (L1.integrable_coe_fn _)
   · intro s hs hμs
     rw [integral_congr_ae (ae_restrict_of_ae hf_f_Lp.symm)]

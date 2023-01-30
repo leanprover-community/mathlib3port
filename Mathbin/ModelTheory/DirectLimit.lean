@@ -267,7 +267,7 @@ theorem exists_quotient_mk'_sigma_mk'_eq {α : Type _} [Fintype α] (x : α → 
   obtain ⟨i, hi⟩ := Fintype.bddAbove_range fun a => (x a).out.1
   refine' ⟨i, unify f (Quotient.out ∘ x) i hi, _⟩
   ext a
-  rw [Quotient.eq_mk'_iff_out, Function.comp_apply, unify, equiv_iff G f _]
+  rw [Quotient.eq_mk_iff_out, Function.comp_apply, unify, equiv_iff G f _]
   · simp only [DirectedSystem.map_self]
   · rfl
 #align first_order.language.direct_limit.exists_quotient_mk_sigma_mk_eq FirstOrder.Language.DirectLimit.exists_quotient_mk'_sigma_mk'_eq
@@ -334,19 +334,19 @@ def lift : DirectLimit G f ↪[L] P
       exact congr_arg _ ((equiv_iff _ _ _ _).1 xy)
   inj' x y xy :=
     by
-    rw [← Quotient.out_eq x, ← Quotient.out_eq y, Quotient.lift_mk', Quotient.lift_mk'] at xy
+    rw [← Quotient.out_eq x, ← Quotient.out_eq y, Quotient.lift_mk, Quotient.lift_mk] at xy
     obtain ⟨i, hx, hy⟩ := directed_of (· ≤ ·) x.out.1 y.out.1
     rw [← Hg x.out.1 i hx, ← Hg y.out.1 i hy] at xy
     rw [← Quotient.out_eq x, ← Quotient.out_eq y, Quotient.eq', equiv_iff G f hx hy]
     exact (g i).Injective xy
   map_fun' n F x := by
     obtain ⟨i, y, rfl⟩ := exists_quotient_mk_sigma_mk_eq G f x
-    rw [fun_map_quotient_mk_sigma_mk, ← Function.comp.assoc, Quotient.lift_comp_mk']
-    simp only [Quotient.lift_mk', embedding.map_fun]
+    rw [fun_map_quotient_mk_sigma_mk, ← Function.comp.assoc, Quotient.lift_comp_mk]
+    simp only [Quotient.lift_mk, embedding.map_fun]
   map_rel' n R x := by
     obtain ⟨i, y, rfl⟩ := exists_quotient_mk_sigma_mk_eq G f x
     rw [rel_map_quotient_mk_sigma_mk G f, ← (g i).map_rel R y, ← Function.comp.assoc,
-      Quotient.lift_comp_mk']
+      Quotient.lift_comp_mk]
 #align first_order.language.direct_limit.lift FirstOrder.Language.DirectLimit.lift
 
 variable {L ι G f}
@@ -357,7 +357,7 @@ omit Hg
 theorem lift_quotient_mk'_sigma_mk' {i} (x : G i) : lift L ι G f g Hg ⟦⟨i, x⟩⟧ = (g i) x :=
   by
   change (lift L ι G f g Hg).toFun ⟦⟨i, x⟩⟧ = _
-  simp only [lift, Quotient.lift_mk']
+  simp only [lift, Quotient.lift_mk]
 #align first_order.language.direct_limit.lift_quotient_mk_sigma_mk FirstOrder.Language.DirectLimit.lift_quotient_mk'_sigma_mk'
 
 theorem lift_of {i} (x : G i) : lift L ι G f g Hg (of L ι G f i x) = g i x := by simp

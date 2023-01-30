@@ -238,8 +238,8 @@ theorem unique_unit_speed {φ : ℝ → ℝ} (φm : MonotoneOn φ s) (hfφ : Has
     (hf : HasUnitSpeedOn f (φ '' s)) ⦃x : ℝ⦄ (xs : x ∈ s) : EqOn φ (fun y => y - x + φ x) s :=
   by
   dsimp only [HasUnitSpeedOn] at hf hfφ
-  convert HasConstantSpeedOnWith.ratio one_neZero φm hfφ hf xs
-  simp only [Nonneg.coe_one, div_self, Ne.def, one_neZero, not_false_iff, one_mul]
+  convert HasConstantSpeedOnWith.ratio one_ne_zero φm hfφ hf xs
+  simp only [Nonneg.coe_one, div_self, Ne.def, one_ne_zero, not_false_iff, one_mul]
 #align unique_unit_speed unique_unit_speed
 
 /-- If both `f` and `f ∘ φ` have unit speed (on `Icc 0 t` and `Icc 0 s` respectively)

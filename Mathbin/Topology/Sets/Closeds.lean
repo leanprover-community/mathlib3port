@@ -224,7 +224,7 @@ def Closeds.complOrderIso : Closeds α ≃o (Opens α)ᵒᵈ
   left_inv s := by simp [closeds.compl_compl]
   right_inv s := by simp [opens.compl_compl]
   map_rel_iff' s t := by
-    simpa only [Equiv.coeFn_mk, Function.comp_apply, OrderDual.toDual_le_toDual] using
+    simpa only [Equiv.coe_fn_mk, Function.comp_apply, OrderDual.toDual_le_toDual] using
       compl_subset_compl
 #align topological_space.closeds.compl_order_iso TopologicalSpace.Closeds.complOrderIso
 
@@ -237,7 +237,7 @@ def Opens.complOrderIso : Opens α ≃o (Closeds α)ᵒᵈ
   left_inv s := by simp [opens.compl_compl]
   right_inv s := by simp [closeds.compl_compl]
   map_rel_iff' s t := by
-    simpa only [Equiv.coeFn_mk, Function.comp_apply, OrderDual.toDual_le_toDual] using
+    simpa only [Equiv.coe_fn_mk, Function.comp_apply, OrderDual.toDual_le_toDual] using
       compl_subset_compl
 #align topological_space.opens.compl_order_iso TopologicalSpace.Opens.complOrderIso
 

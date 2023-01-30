@@ -175,7 +175,7 @@ theorem InftyValuation.map_zero' : inftyValuationDef Fq 0 = 0 :=
 #align function_field.infty_valuation.map_zero' FunctionField.InftyValuation.map_zero'
 
 theorem InftyValuation.map_one' : inftyValuationDef Fq 1 = 1 :=
-  (if_neg one_neZero).trans <| by rw [Ratfunc.intDegree_one, ofAdd_zero, WithZero.coe_one]
+  (if_neg one_ne_zero).trans <| by rw [Ratfunc.intDegree_one, ofAdd_zero, WithZero.coe_one]
 #align function_field.infty_valuation.map_one' FunctionField.InftyValuation.map_one'
 
 theorem InftyValuation.map_mul' (x y : Ratfunc Fq) :

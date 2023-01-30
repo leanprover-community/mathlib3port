@@ -128,33 +128,35 @@ def remapLeft {m n} (f : Fin2 m → Fin2 n) : ∀ k, Fin2 (m + k) → Fin2 (n + 
 #align fin2.remap_left Fin2.remapLeft
 -/
 
+#print Fin2.IsLT /-
 /-- This is a simple type class inference prover for proof obligations
   of the form `m < n` where `m n : ℕ`. -/
-class IsLt (m n : ℕ) where
+class IsLT (m n : ℕ) where
   h : m < n
-#align fin2.is_lt Fin2.IsLt
+#align fin2.is_lt Fin2.IsLT
+-/
 
-instance IsLt.zero (n) : IsLt 0 (succ n) :=
+#print Fin2.IsLT.zero /-
+instance IsLT.zero (n) : IsLT 0 (succ n) :=
   ⟨succ_pos _⟩
-#align fin2.is_lt.zero Fin2.IsLt.zero
+#align fin2.is_lt.zero Fin2.IsLT.zero
+-/
 
-instance IsLt.succ (m n) [l : IsLt m n] : IsLt (succ m) (succ n) :=
+#print Fin2.IsLT.succ /-
+instance IsLT.succ (m n) [l : IsLT m n] : IsLT (succ m) (succ n) :=
   ⟨succ_lt_succ l.h⟩
-#align fin2.is_lt.succ Fin2.IsLt.succ
+#align fin2.is_lt.succ Fin2.IsLT.succ
+-/
 
-/- warning: fin2.of_nat' -> Fin2.ofNat' is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} (m : Nat) [_inst_1 : Fin2.IsLt m n], Fin2 n
-but is expected to have type
-  forall {n : Nat} (m : Nat) [_inst_1 : Fin2.IsLT m n], Fin2 n
-Case conversion may be inaccurate. Consider using '#align fin2.of_nat' Fin2.ofNat'ₓ'. -/
+#print Fin2.ofNat' /-
 /-- Use type class inference to infer the boundedness proof, so that we can directly convert a
 `nat` into a `fin2 n`. This supports notation like `&1 : fin 3`. -/
-def ofNat' : ∀ {n} (m) [IsLt m n], Fin2 n
+def ofNat' : ∀ {n} (m) [IsLT m n], Fin2 n
   | 0, m, ⟨h⟩ => absurd h (Nat.not_lt_zero _)
   | succ n, 0, ⟨h⟩ => fz
   | succ n, succ m, ⟨h⟩ => fs (@of_nat' n m ⟨lt_of_succ_lt_succ h⟩)
 #align fin2.of_nat' Fin2.ofNat'
+-/
 
 -- mathport name: «expr& »
 local prefix:arg "&" => ofNat'

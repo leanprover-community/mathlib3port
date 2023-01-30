@@ -350,7 +350,7 @@ theorem cocone_naturality {j j' : J} (f : j ⟶ j') :
   by
   ext
   apply Quot.sound
-  apply relation.map
+  apply Relation.Map
 #align CommRing.colimits.cocone_naturality CommRingCat.Colimits.cocone_naturality
 
 @[simp]

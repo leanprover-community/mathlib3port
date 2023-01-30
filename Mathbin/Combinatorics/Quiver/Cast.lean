@@ -102,7 +102,7 @@ Case conversion may be inaccurate. Consider using '#align quiver.hom.cast_eq_iff
 theorem Hom.cast_eq_iff_heq {u v u' v' : U} (hu : u = u') (hv : v = v') (e : u ⟶ v) (e' : u' ⟶ v') :
     e.cast hu hv = e' ↔ HEq e e' := by
   rw [hom.cast_eq_cast]
-  exact cast_eq_iff_hEq
+  exact cast_eq_iff_heq
 #align quiver.hom.cast_eq_iff_heq Quiver.Hom.cast_eq_iff_heq
 
 /- warning: quiver.hom.eq_cast_iff_heq -> Quiver.Hom.eq_cast_iff_heq is a dubious translation:
@@ -204,7 +204,7 @@ theorem Path.cast_eq_iff_heq {u v u' v' : U} (hu : u = u') (hv : v = v') (p : Pa
     (p' : Path u' v') : p.cast hu hv = p' ↔ HEq p p' :=
   by
   rw [path.cast_eq_cast]
-  exact cast_eq_iff_hEq
+  exact cast_eq_iff_heq
 #align quiver.path.cast_eq_iff_heq Quiver.Path.cast_eq_iff_heq
 
 /- warning: quiver.path.eq_cast_iff_heq -> Quiver.Path.eq_cast_iff_heq is a dubious translation:

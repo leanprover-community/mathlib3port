@@ -278,7 +278,7 @@ theorem cauchy_product {a b : ℕ → β} (ha : IsCauSeq abs fun m => ∑ n in r
       by rw [← sum_add_distrib] <;> simp [(mul_add _ _ _).symm]
     have two_mul_two : (4 : α) = 2 * 2 := by norm_num
     have hQ0 : Q ≠ 0 := fun h => by simpa [h, lt_irrefl] using hQε0
-    have h2Q0 : 2 * Q ≠ 0 := mul_ne_zero two_neZero hQ0
+    have h2Q0 : 2 * Q ≠ 0 := mul_ne_zero two_ne_zero hQ0
     have hε : ε / (2 * P) * P + ε / (4 * Q) * (2 * Q) = ε := by
       rw [← div_div, div_mul_cancel _ (Ne.symm (ne_of_lt hP0)), two_mul_two, mul_assoc, ← div_div,
         div_mul_cancel _ h2Q0, add_halves]
@@ -600,11 +600,11 @@ theorem exp_of_real_re (x : ℝ) : (exp x).re = Real.exp x :=
 #align complex.exp_of_real_re Complex.exp_of_real_re
 
 theorem two_sinh : 2 * sinh x = exp x - exp (-x) :=
-  mul_div_cancel' _ two_neZero
+  mul_div_cancel' _ two_ne_zero
 #align complex.two_sinh Complex.two_sinh
 
 theorem two_cosh : 2 * cosh x = exp x + exp (-x) :=
-  mul_div_cancel' _ two_neZero
+  mul_div_cancel' _ two_ne_zero
 #align complex.two_cosh Complex.two_cosh
 
 @[simp]
@@ -819,11 +819,11 @@ theorem sin_neg : sin (-x) = -sin x := by
 #align complex.sin_neg Complex.sin_neg
 
 theorem two_sin : 2 * sin x = (exp (-x * I) - exp (x * I)) * I :=
-  mul_div_cancel' _ two_neZero
+  mul_div_cancel' _ two_ne_zero
 #align complex.two_sin Complex.two_sin
 
 theorem two_cos : 2 * cos x = exp (x * I) + exp (-x * I) :=
-  mul_div_cancel' _ two_neZero
+  mul_div_cancel' _ two_ne_zero
 #align complex.two_cos Complex.two_cos
 
 theorem sinh_mul_i : sinh (x * I) = sin x * I := by
@@ -1051,7 +1051,7 @@ theorem sin_two_mul : sin (2 * x) = 2 * sin x * cos x := by
 #align complex.sin_two_mul Complex.sin_two_mul
 
 theorem cos_sq : cos x ^ 2 = 1 / 2 + cos (2 * x) / 2 := by
-  simp [cos_two_mul, div_add_div_same, mul_div_cancel_left, two_neZero, -one_div]
+  simp [cos_two_mul, div_add_div_same, mul_div_cancel_left, two_ne_zero, -one_div]
 #align complex.cos_sq Complex.cos_sq
 
 theorem cos_sq' : cos x ^ 2 = 1 - sin x ^ 2 := by rw [← sin_sq_add_cos_sq x, add_sub_cancel']
@@ -1359,7 +1359,7 @@ theorem sin_three_mul : sin (3 * x) = 3 * sin x - 4 * sin x ^ 3 := by
 
 /-- The definition of `sinh` in terms of `exp`. -/
 theorem sinh_eq (x : ℝ) : sinh x = (exp x - exp (-x)) / 2 :=
-  eq_div_of_mul_eq two_neZero <| by
+  eq_div_of_mul_eq two_ne_zero <| by
     rw [sinh, exp, exp, Complex.of_real_neg, Complex.sinh, mul_two, ← Complex.add_re, ← mul_two,
       div_mul_cancel _ (two_ne_zero' ℂ), Complex.sub_re]
 #align real.sinh_eq Real.sinh_eq
@@ -1378,7 +1378,7 @@ theorem sinh_add : sinh (x + y) = sinh x * cosh y + cosh x * sinh y := by
 
 /-- The definition of `cosh` in terms of `exp`. -/
 theorem cosh_eq (x : ℝ) : cosh x = (exp x + exp (-x)) / 2 :=
-  eq_div_of_mul_eq two_neZero <| by
+  eq_div_of_mul_eq two_ne_zero <| by
     rw [cosh, exp, exp, Complex.of_real_neg, Complex.cosh, mul_two, ← Complex.add_re, ← mul_two,
       div_mul_cancel _ (two_ne_zero' ℂ), Complex.add_re]
 #align real.cosh_eq Real.cosh_eq

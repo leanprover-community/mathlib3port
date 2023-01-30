@@ -257,7 +257,7 @@ theorem Memℒp.snormEssSup_indicator_norm_ge_eq_zero (hf : Memℒp f ∞ μ)
         Ennreal.coe_toReal, coe_nnnorm]
       refine' lt_of_lt_of_le _ hx
       rw [Ennreal.toReal_lt_toReal hbdd.ne]
-      · exact Ennreal.lt_add_right hbdd.ne one_neZero
+      · exact Ennreal.lt_add_right hbdd.ne one_ne_zero
       · exact (Ennreal.add_lt_top.2 ⟨hbdd, Ennreal.one_lt_top⟩).Ne
     rw [← nonpos_iff_eq_zero]
     refine' (measure_mono this).trans _

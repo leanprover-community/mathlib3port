@@ -151,12 +151,12 @@ theorem isLimit_iff_isSheafFor :
   · intro hu E x hx
     specialize hu hx.cone
     erw [(hom_equiv_amalgamation hx).uniqueCongr.nonempty_congr] at hu
-    exact (unique_subtype_iff_existsUnique _).1 hu
+    exact (unique_subtype_iff_exists_unique _).1 hu
   · rintro h ⟨E, π⟩
     let eqv := cones_equiv_sieve_compatible_family P S (op E)
     rw [← eqv.left_inv π]
     erw [(hom_equiv_amalgamation (eqv π).2).uniqueCongr.nonempty_congr]
-    rw [unique_subtype_iff_existsUnique]
+    rw [unique_subtype_iff_exists_unique]
     exact h _ _ (eqv π).2
 #align category_theory.presheaf.is_limit_iff_is_sheaf_for CategoryTheory.Presheaf.isLimit_iff_isSheafFor
 

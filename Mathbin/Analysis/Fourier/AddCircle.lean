@@ -563,7 +563,7 @@ theorem has_antideriv_at_fourier_neg (hT : Fact (0 < T)) {n : ℤ} (hn : n ≠ 0
     rw [div_div_eq_mul_div]
     ring
   · rw [mul_div_cancel_left]
-    simp only [Ne.def, div_eq_zero_iff, neg_eq_zero, mul_eq_zero, bit0_eq_zero, one_neZero,
+    simp only [Ne.def, div_eq_zero_iff, neg_eq_zero, mul_eq_zero, bit0_eq_zero, one_ne_zero,
       of_real_eq_zero, false_or_iff, Int.cast_eq_zero, not_or]
     exact ⟨⟨⟨Real.pi_ne_zero, I_ne_zero⟩, hn⟩, hT.out.ne'⟩
 #align has_antideriv_at_fourier_neg has_antideriv_at_fourier_neg

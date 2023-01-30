@@ -49,7 +49,7 @@ variable [Semiring R]
 
 instance (p : ℕ) [h : CharP R p] : CharP R[X] p :=
   let ⟨h⟩ := h
-  ⟨fun n => by rw [← map_nat_cast C, ← C_0, C_inj, h]⟩
+  ⟨fun n => by rw [← map_natCast C, ← C_0, C_inj, h]⟩
 
 variable (R)
 
@@ -747,7 +747,7 @@ def polynomialQuotientEquivQuotientPolynomial (I : Ideal R) :
       simp only [coe_eval₂_ring_hom] at hq
       simp only [coe_eval₂_ring_hom, hp, hq, RingHom.map_add]
     · rintro n ⟨x⟩
-      simp only [← smul_X_eq_monomial, C_mul', Quotient.lift_mk', Submodule.Quotient.quot_mk_eq_mk,
+      simp only [← smul_X_eq_monomial, C_mul', Quotient.lift_mk, Submodule.Quotient.quot_mk_eq_mk,
         quotient.mk_eq_mk, eval₂_X_pow, eval₂_smul, coe_eval₂_ring_hom, RingHom.map_pow, eval₂_C,
         RingHom.coe_comp, RingHom.map_mul, eval₂_X]
   right_inv := by
@@ -756,7 +756,7 @@ def polynomialQuotientEquivQuotientPolynomial (I : Ideal R) :
     · simp_intro p q hp hq
       rw [hp, hq]
     · intro n a
-      simp only [← smul_X_eq_monomial, ← C_mul' a (X ^ n), Quotient.lift_mk',
+      simp only [← smul_X_eq_monomial, ← C_mul' a (X ^ n), Quotient.lift_mk,
         Submodule.Quotient.quot_mk_eq_mk, quotient.mk_eq_mk, eval₂_X_pow, eval₂_smul,
         coe_eval₂_ring_hom, RingHom.map_pow, eval₂_C, RingHom.coe_comp, RingHom.map_mul, eval₂_X]
 #align ideal.polynomial_quotient_equiv_quotient_polynomial Ideal.polynomialQuotientEquivQuotientPolynomial

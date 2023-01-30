@@ -145,7 +145,7 @@ theorem Associates.finprod_ne_zero (I : Ideal R) :
   · rw [Finset.prod_ne_zero_iff]
     intro v hv
     apply pow_ne_zero _ v.ne_bot
-  · exact one_neZero
+  · exact one_ne_zero
 #align associates.finprod_ne_zero Associates.finprod_ne_zero
 
 namespace Ideal

@@ -96,7 +96,7 @@ theorem isSatisfiable_onTheory_iff {L' : Language.{w, w'}} {φ : L →ᴸ L'} (h
     (φ.onTheory T).IsSatisfiable ↔ T.IsSatisfiable := by
   classical
     refine' ⟨is_satisfiable_of_is_satisfiable_on_Theory φ, fun h' => _⟩
-    haveI : Inhabited h'.some := Classical.inhabitedOfNonempty'
+    haveI : Inhabited h'.some := Classical.inhabited_of_nonempty'
     exact model.is_satisfiable (h'.some.default_expansion h)
 #align first_order.language.Theory.is_satisfiable_on_Theory_iff FirstOrder.Language.TheoryCat.isSatisfiable_onTheory_iff
 

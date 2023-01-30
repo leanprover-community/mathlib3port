@@ -50,7 +50,7 @@ variable {x y : ℝ≥0}
 /-- Square root of a nonnegative real number. -/
 @[pp_nodot]
 noncomputable def sqrt : ℝ≥0 ≃o ℝ≥0 :=
-  OrderIso.symm <| powOrderIso 2 two_neZero
+  OrderIso.symm <| powOrderIso 2 two_ne_zero
 #align nnreal.sqrt Nnreal.sqrt
 
 theorem sqrt_le_sqrt_iff : sqrt x ≤ sqrt y ↔ x ≤ y :=

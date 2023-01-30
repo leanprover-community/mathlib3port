@@ -423,7 +423,7 @@ variable (R)
 
 /-- In a vector bundle, a trivialization in the fiber (which is a priori only linear)
 is in fact a continuous linear equiv between the fibers and the model fiber. -/
-@[simps (config := { fullyApplied := false }) apply symmApply]
+@[simps (config := { fullyApplied := false }) apply symm_apply]
 def continuousLinearEquivAt (e : Trivialization F (π E)) [e.isLinear R] (b : B)
     (hb : b ∈ e.baseSet) : E b ≃L[R] F :=
   {-- given explicitly to help `simps`
@@ -693,7 +693,7 @@ theorem localTriv_symm_fst (p : B × F) :
 @[simp, mfld_simps]
 theorem localTriv_symm_apply {b : B} (hb : b ∈ Z.baseSet i) (v : F) :
     (Z.localTriv i).symm b v = Z.coordChange i (Z.indexAt b) b v := by
-  apply (Z.local_triv i).symmApply hb v
+  apply (Z.local_triv i).symm_apply hb v
 #align vector_bundle_core.local_triv_symm_apply VectorBundleCore.localTriv_symm_apply
 
 @[simp, mfld_simps]

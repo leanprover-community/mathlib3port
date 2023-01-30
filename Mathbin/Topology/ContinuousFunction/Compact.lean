@@ -79,7 +79,7 @@ theorem uniformEmbedding_equivBoundedOfCompact : UniformEmbedding (equivBoundedO
 /-- When `α` is compact, the bounded continuous maps `α →ᵇ 𝕜` are
 additively equivalent to `C(α, 𝕜)`.
 -/
-@[simps (config := { fullyApplied := false }) apply symmApply]
+@[simps (config := { fullyApplied := false }) apply symm_apply]
 def addEquivBoundedOfCompact [AddMonoid β] [HasLipschitzAdd β] : C(α, β) ≃+ (α →ᵇ β) :=
   ({ toContinuousMapAddHom α β, (equivBoundedOfCompact α β).symm with } : (α →ᵇ β) ≃+ C(α, β)).symm
 #align continuous_map.add_equiv_bounded_of_compact ContinuousMap.addEquivBoundedOfCompact
@@ -90,7 +90,7 @@ instance : MetricSpace C(α, β) :=
 /-- When `α` is compact, and `β` is a metric space, the bounded continuous maps `α →ᵇ β` are
 isometric to `C(α, β)`.
 -/
-@[simps (config := { fullyApplied := false }) toEquiv apply symmApply]
+@[simps (config := { fullyApplied := false }) toEquiv apply symm_apply]
 def isometryEquivBoundedOfCompact : C(α, β) ≃ᵢ (α →ᵇ β)
     where
   isometry_to_fun x y := rfl

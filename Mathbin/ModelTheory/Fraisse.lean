@@ -205,7 +205,7 @@ theorem age_directLimit {ι : Type w} [Preorder ι] [IsDirected ι (· ≤ ·)] 
       rw [← hs, closure_le]
       intro x hx
       refine' ⟨f (out x).1 i (hi (out x).1 (Finset.mem_image_of_mem _ hx)) (out x).2, _⟩
-      rw [embedding.coe_to_hom, direct_limit.of_apply, Quotient.mk'_eq_iff_out,
+      rw [embedding.coe_to_hom, direct_limit.of_apply, Quotient.mk_eq_iff_out,
         direct_limit.equiv_iff G f _ (hi (out x).1 (Finset.mem_image_of_mem _ hx)),
         DirectedSystem.map_self]
       rfl
@@ -223,7 +223,7 @@ theorem exists_cg_is_age_of (hn : K.Nonempty)
   by
   obtain ⟨F, hF⟩ := hc.exists_eq_range (hn.image _)
   simp only [Set.ext_iff, forall_quotient_iff, mem_image, mem_range, Quotient.eq'] at hF
-  simp_rw [Quotient.eq_mk'_iff_out] at hF
+  simp_rw [Quotient.eq_mk_iff_out] at hF
   have hF' : ∀ n : ℕ, (F n).out ∈ K := by
     intro n
     obtain ⟨P, hP1, hP2⟩ := (hF (F n).out).2 ⟨n, Setoid.refl _⟩

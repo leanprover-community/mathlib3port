@@ -648,7 +648,7 @@ scoped notation:30 "D∃" => Dioph.vec_ex1_dioph
 -- mathport name: fin2.of_nat'
 scoped prefix:arg "&" => Fin2.ofNat'
 
-theorem proj_dioph_of_nat {n : ℕ} (m : ℕ) [IsLt m n] : DiophFn fun v : Vector3 ℕ n => v &m :=
+theorem proj_dioph_of_nat {n : ℕ} (m : ℕ) [IsLT m n] : DiophFn fun v : Vector3 ℕ n => v &m :=
   proj_dioph &m
 #align dioph.proj_dioph_of_nat Dioph.proj_dioph_of_nat
 

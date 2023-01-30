@@ -383,7 +383,7 @@ theorem ofPrime_idealOfLe (R S : ValuationSubring K) (h : R ≤ S) :
         apply hr
         rw [hh]
         apply Ideal.zero_mem (R.ideal_of_le S h)
-      · exact one_neZero
+      · exact one_ne_zero
   · intro hx
     by_cases hr : x ∈ R
     · exact R.le_of_prime _ hr
@@ -478,7 +478,7 @@ def valuationSubring : ValuationSubring K :=
         · exact le_of_lt h
         · intro c
           simpa [c] using h
-        · exact one_neZero }
+        · exact one_ne_zero }
 #align valuation.valuation_subring Valuation.valuationSubring
 
 @[simp]

@@ -161,9 +161,9 @@ theorem nsmul_eq_iff {ψ θ : Angle} {n : ℕ} (hz : n ≠ 0) :
 #align real.angle.nsmul_eq_iff Real.Angle.nsmul_eq_iff
 
 theorem two_zsmul_eq_iff {ψ θ : Angle} : (2 : ℤ) • ψ = (2 : ℤ) • θ ↔ ψ = θ ∨ ψ = θ + π := by
-  rw [zsmul_eq_iff two_neZero, Int.natAbs_bit0, Int.natAbs_one, Fin.exists_fin_two, Fin.val_zero,
+  rw [zsmul_eq_iff two_ne_zero, Int.natAbs_bit0, Int.natAbs_one, Fin.exists_fin_two, Fin.val_zero,
     Fin.val_one, zero_smul, add_zero, one_smul, Int.cast_two,
-    mul_div_cancel_left (_ : ℝ) two_neZero]
+    mul_div_cancel_left (_ : ℝ) two_ne_zero]
 #align real.angle.two_zsmul_eq_iff Real.Angle.two_zsmul_eq_iff
 
 theorem two_nsmul_eq_iff {ψ θ : Angle} : (2 : ℕ) • ψ = (2 : ℕ) • θ ↔ ψ = θ ∨ ψ = θ + π := by
@@ -276,7 +276,7 @@ theorem cos_sin_inj {θ ψ : ℝ} (Hcos : cos θ = cos ψ) (Hsin : sin θ = sin 
     Int.cast_bit0, ← Int.cast_mul, ← Int.cast_add, Int.cast_inj] at hn
   have : (n * 2 + 1) % (2 : ℤ) = 0 % (2 : ℤ) := congr_arg (· % (2 : ℤ)) hn
   rw [add_comm, Int.add_mul_emod_self] at this
-  exact absurd this one_neZero
+  exact absurd this one_ne_zero
 #align real.angle.cos_sin_inj Real.Angle.cos_sin_inj
 
 /-- The sine of a `real.angle`. -/
@@ -638,13 +638,13 @@ theorem toReal_eq_neg_pi_div_two_iff {θ : Angle} : θ.toReal = -π / 2 ↔ θ =
 theorem pi_div_two_ne_zero : ((π / 2 : ℝ) : Angle) ≠ 0 :=
   by
   rw [← to_real_injective.ne_iff, to_real_pi_div_two, to_real_zero]
-  exact div_ne_zero Real.pi_ne_zero two_neZero
+  exact div_ne_zero Real.pi_ne_zero two_ne_zero
 #align real.angle.pi_div_two_ne_zero Real.Angle.pi_div_two_ne_zero
 
 theorem neg_pi_div_two_ne_zero : ((-π / 2 : ℝ) : Angle) ≠ 0 :=
   by
   rw [← to_real_injective.ne_iff, to_real_neg_pi_div_two, to_real_zero]
-  exact div_ne_zero (neg_ne_zero.2 Real.pi_ne_zero) two_neZero
+  exact div_ne_zero (neg_ne_zero.2 Real.pi_ne_zero) two_ne_zero
 #align real.angle.neg_pi_div_two_ne_zero Real.Angle.neg_pi_div_two_ne_zero
 
 theorem abs_toReal_coe_eq_self_iff {θ : ℝ} : |(θ : Angle).toReal| = θ ↔ 0 ≤ θ ∧ θ ≤ π :=
@@ -680,7 +680,7 @@ theorem nsmul_toReal_eq_mul {n : ℕ} (h : n ≠ 0) {θ : Angle} :
 
 theorem two_nsmul_toReal_eq_two_mul {θ : Angle} :
     ((2 : ℕ) • θ).toReal = 2 * θ.toReal ↔ θ.toReal ∈ Set.Ioc (-π / 2) (π / 2) := by
-  exact_mod_cast nsmul_to_real_eq_mul two_neZero
+  exact_mod_cast nsmul_to_real_eq_mul two_ne_zero
 #align real.angle.two_nsmul_to_real_eq_two_mul Real.Angle.two_nsmul_toReal_eq_two_mul
 
 theorem two_zsmul_toReal_eq_two_mul {θ : Angle} :
@@ -854,8 +854,8 @@ theorem tan_eq_inv_of_two_nsmul_add_two_nsmul_eq_pi {θ ψ : Angle}
   induction ψ using Real.Angle.induction_on
   rw [← smul_add, ← coe_add, ← coe_nsmul, two_nsmul, ← two_mul, angle_eq_iff_two_pi_dvd_sub] at h
   rcases h with ⟨k, h⟩
-  rw [sub_eq_iff_eq_add, ← mul_inv_cancel_left₀ two_neZero π, mul_assoc, ← mul_add,
-    mul_right_inj' (two_ne_zero' ℝ), ← eq_sub_iff_add_eq', mul_inv_cancel_left₀ two_neZero π,
+  rw [sub_eq_iff_eq_add, ← mul_inv_cancel_left₀ two_ne_zero π, mul_assoc, ← mul_add,
+    mul_right_inj' (two_ne_zero' ℝ), ← eq_sub_iff_add_eq', mul_inv_cancel_left₀ two_ne_zero π,
     inv_mul_eq_div, mul_comm] at h
   rw [tan_coe, tan_coe, ← tan_pi_div_two_sub, h, add_sub_assoc, add_comm]
   exact real.tan_periodic.int_mul _ _

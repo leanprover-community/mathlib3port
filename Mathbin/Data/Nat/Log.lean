@@ -219,7 +219,7 @@ theorem log_pow {b : ℕ} (hb : 1 < b) (x : ℕ) : log b (b ^ x) = x :=
 
 #print Nat.log_eq_one_iff' /-
 theorem log_eq_one_iff' {b n : ℕ} : log b n = 1 ↔ b ≤ n ∧ n < b * b := by
-  rw [log_eq_iff (Or.inl one_neZero), pow_add, pow_one]
+  rw [log_eq_iff (Or.inl one_ne_zero), pow_add, pow_one]
 #align nat.log_eq_one_iff' Nat.log_eq_one_iff'
 -/
 

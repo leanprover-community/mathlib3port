@@ -75,7 +75,7 @@ only if there exists a nonzero element `γ₀` such that `Iio γ₀ ⊆ U`. -/
 theorem hasBasis_nhds_zero : (𝓝 (0 : Γ₀)).HasBasis (fun γ : Γ₀ => γ ≠ 0) Iio :=
   by
   rw [nhds_zero]
-  refine' has_basis_binfi_principal _ ⟨1, one_neZero⟩
+  refine' has_basis_binfi_principal _ ⟨1, one_ne_zero⟩
   exact directedOn_iff_directed.2 (directed_of_inf fun a b hab => Iio_subset_Iio hab)
 #align linear_ordered_comm_group_with_zero.has_basis_nhds_zero LinearOrderedCommGroupWithZero.hasBasis_nhds_zero
 
@@ -214,7 +214,7 @@ instance (priority := 100) : HasContinuousMul Γ₀ :=
     · rw [ContinuousAt, zero_mul]
       refine'
         ((has_basis_nhds_zero.prod_nhds has_basis_nhds_zero).tendsto_iff has_basis_nhds_zero).2
-          fun γ hγ => ⟨(γ, 1), ⟨hγ, one_neZero⟩, _⟩
+          fun γ hγ => ⟨(γ, 1), ⟨hγ, one_ne_zero⟩, _⟩
       rintro ⟨x, y⟩ ⟨hx : x < γ, hy : y < 1⟩
       exact (mul_lt_mul₀ hx hy).trans_eq (mul_one γ)
     · rw [ContinuousAt, zero_mul, nhds_prod_eq, nhds_of_ne_zero hy, prod_pure, tendsto_map'_iff]

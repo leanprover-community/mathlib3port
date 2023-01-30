@@ -343,7 +343,7 @@ theorem nsmul_coe (r : ℝ≥0) (n : ℕ) : ↑(n • r) = n • (r : ℝ) := by
 
 @[simp, norm_cast]
 protected theorem coe_nat_cast (n : ℕ) : (↑(↑n : ℝ≥0) : ℝ) = n :=
-  map_nat_cast toRealHom n
+  map_natCast toRealHom n
 #align nnreal.coe_nat_cast Nnreal.coe_nat_cast
 
 noncomputable example : LinearOrder ℝ≥0 := by infer_instance

@@ -516,7 +516,7 @@ theorem degree_one : degree (1 : R[X]) = (0 : WithBot ℕ) :=
 
 @[simp]
 theorem degree_x : degree (x : R[X]) = 1 :=
-  degree_monomial _ one_neZero
+  degree_monomial _ one_ne_zero
 #align polynomial.degree_X Polynomial.degree_x
 
 @[simp]
@@ -869,7 +869,7 @@ theorem monic_of_natDegree_le_of_coeff_eq_one (n : ℕ) (pn : p.natDegree ≤ n)
     Monic p := by
   nontriviality
   refine' (congr_arg _ <| nat_degree_eq_of_le_of_coeff_ne_zero pn _).trans p1
-  exact ne_of_eq_of_ne p1 one_neZero
+  exact ne_of_eq_of_ne p1 one_ne_zero
 #align polynomial.monic_of_nat_degree_le_of_coeff_eq_one Polynomial.monic_of_natDegree_le_of_coeff_eq_one
 
 theorem monic_of_degree_le_of_coeff_eq_one (n : ℕ) (pn : p.degree ≤ n) (p1 : p.coeff n = 1) :

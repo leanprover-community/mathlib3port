@@ -226,14 +226,14 @@ theorem Integrable.uniformIntegrableCondexp {ι : Type _} [IsFiniteMeasure μ] {
     uniform_integrable_of le_rfl Ennreal.one_ne_top
       (fun n => (strongly_measurable_condexp.mono (hℱ n)).AeStronglyMeasurable) fun ε hε => _
   by_cases hne : snorm g 1 μ = 0
-  · rw [snorm_eq_zero_iff hg.1 one_neZero] at hne
+  · rw [snorm_eq_zero_iff hg.1 one_ne_zero] at hne
     refine'
       ⟨0, fun n =>
         (le_of_eq <|
               (snorm_eq_zero_iff
                     ((strongly_measurable_condexp.mono (hℱ n)).AeStronglyMeasurable.indicator
                       (hmeas n 0))
-                    one_neZero).2
+                    one_ne_zero).2
                 _).trans
           (zero_le _)⟩
     filter_upwards [@condexp_congr_ae _ _ _ _ _ (ℱ n) m0 μ _ _ hne]with x hx
@@ -245,7 +245,7 @@ theorem Integrable.uniformIntegrableCondexp {ι : Type _} [IsFiniteMeasure μ] {
     by
     intro n
     have :=
-      mul_meas_ge_le_pow_snorm' μ one_neZero Ennreal.one_ne_top
+      mul_meas_ge_le_pow_snorm' μ one_ne_zero Ennreal.one_ne_top
         ((@strongly_measurable_condexp _ _ _ _ _ (ℱ n) _ μ g).mono (hℱ n)).AeStronglyMeasurable C
     rw [Ennreal.one_toReal, Ennreal.rpow_one, Ennreal.rpow_one, mul_comm, ←
       Ennreal.le_div_iff_mul_le (Or.inl (Ennreal.coe_ne_zero.2 hCpos.ne.symm))

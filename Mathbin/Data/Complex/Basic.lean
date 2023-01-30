@@ -724,7 +724,7 @@ theorem normSq_div (z w : ℂ) : normSq (z / w) = normSq z / normSq w :=
 
 @[simp, norm_cast]
 theorem of_real_nat_cast (n : ℕ) : ((n : ℝ) : ℂ) = n :=
-  map_nat_cast ofReal n
+  map_natCast ofReal n
 #align complex.of_real_nat_cast Complex.of_real_nat_cast
 
 @[simp, norm_cast]
@@ -772,13 +772,13 @@ instance charZero_complex : CharZero ℂ :=
 /-- A complex number `z` plus its conjugate `conj z` is `2` times its real part. -/
 theorem re_eq_add_conj (z : ℂ) : (z.re : ℂ) = (z + conj z) / 2 := by
   simp only [add_conj, of_real_mul, of_real_one, of_real_bit0,
-    mul_div_cancel_left (z.re : ℂ) two_neZero]
+    mul_div_cancel_left (z.re : ℂ) two_ne_zero]
 #align complex.re_eq_add_conj Complex.re_eq_add_conj
 
 /-- A complex number `z` minus its conjugate `conj z` is `2i` times its imaginary part. -/
 theorem im_eq_sub_conj (z : ℂ) : (z.im : ℂ) = (z - conj z) / (2 * I) := by
   simp only [sub_conj, of_real_mul, of_real_one, of_real_bit0, mul_right_comm,
-    mul_div_cancel_left _ (mul_ne_zero two_neZero I_ne_zero : 2 * I ≠ 0)]
+    mul_div_cancel_left _ (mul_ne_zero two_ne_zero I_ne_zero : 2 * I ≠ 0)]
 #align complex.im_eq_sub_conj Complex.im_eq_sub_conj
 
 /-! ### Absolute value -/

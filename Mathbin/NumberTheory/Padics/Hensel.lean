@@ -170,7 +170,7 @@ private theorem T_pow {n : ℕ} (hn : n ≠ 0) : T ^ n < 1 :=
 #align T_pow T_pow
 
 private theorem T_pow' (n : ℕ) : T ^ 2 ^ n < 1 :=
-  T_pow (pow_ne_zero _ two_neZero)
+  T_pow (pow_ne_zero _ two_ne_zero)
 #align T_pow' T_pow'
 
 /-- We will construct a sequence of elements of ℤ_p satisfying successive values of `ih`. -/

@@ -1578,7 +1578,7 @@ theorem div_zero (h : a ≠ 0) : a / 0 = ∞ := by simp [div_eq_mul_inv, h]
 
 instance : DivInvOneMonoid ℝ≥0∞ :=
   { Ennreal.divInvMonoid with
-    inv_one := by simpa only [coe_inv one_neZero, coe_one] using coe_eq_coe.2 inv_one }
+    inv_one := by simpa only [coe_inv one_ne_zero, coe_one] using coe_eq_coe.2 inv_one }
 
 protected theorem inv_pow {n : ℕ} : (a ^ n)⁻¹ = a⁻¹ ^ n :=
   by
@@ -1935,7 +1935,7 @@ theorem div_eq_one_iff {a b : ℝ≥0∞} (hb₀ : b ≠ 0) (hb₁ : b ≠ ∞) 
 #align ennreal.div_eq_one_iff Ennreal.div_eq_one_iff
 
 theorem inv_two_add_inv_two : (2 : ℝ≥0∞)⁻¹ + 2⁻¹ = 1 := by
-  rw [← two_mul, ← div_eq_mul_inv, Ennreal.div_self two_neZero two_ne_top]
+  rw [← two_mul, ← div_eq_mul_inv, Ennreal.div_self two_ne_zero two_ne_top]
 #align ennreal.inv_two_add_inv_two Ennreal.inv_two_add_inv_two
 
 theorem inv_three_add_inv_three : (3 : ℝ≥0∞)⁻¹ + 3⁻¹ + 3⁻¹ = 1 := by
@@ -2017,7 +2017,7 @@ def orderIsoIicCoe (a : ℝ≥0) : Iic (a : ℝ≥0∞) ≃o Iic a :=
       left_inv := fun x => Subtype.ext <| to_nnreal_coe
       right_inv := fun x => Subtype.ext <| coe_toNnreal (ne_top_of_le_ne_top coe_ne_top x.2)
       map_rel_iff' := fun x y => by
-        simp only [Equiv.coeFn_mk, Subtype.mk_le_mk, coe_coe, coe_le_coe, Subtype.coe_le_coe] }
+        simp only [Equiv.coe_fn_mk, Subtype.mk_le_mk, coe_coe, coe_le_coe, Subtype.coe_le_coe] }
 #align ennreal.order_iso_Iic_coe Ennreal.orderIsoIicCoe
 
 @[simp]

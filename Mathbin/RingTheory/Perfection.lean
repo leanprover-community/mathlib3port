@@ -414,7 +414,7 @@ instance : CommRing (ModP K v O hv p) :=
 include hp hvp
 
 instance : CharP (ModP K v O hv p) p :=
-  CharP.quotient O p <| mt hv.one_of_is_unit <| (map_nat_cast (algebraMap O K) p).symm ▸ hvp.1
+  CharP.quotient O p <| mt hv.one_of_is_unit <| (map_natCast (algebraMap O K) p).symm ▸ hvp.1
 
 instance : Nontrivial (ModP K v O hv p) :=
   CharP.nontrivial_of_char_ne_one hp.1.ne_one
@@ -496,7 +496,7 @@ theorem v_p_lt_preVal {x : ModP K v O hv p} : v p < preVal K v O hv p x ↔ x �
       rw [hx, pre_val_zero] at h
       exact not_lt_zero' h, fun h => lt_of_not_le fun hp => h _⟩
   obtain ⟨r, rfl⟩ := Ideal.Quotient.mk_surjective x
-  rw [pre_val_mk h, ← map_nat_cast (algebraMap O K) p, hv.le_iff_dvd] at hp
+  rw [pre_val_mk h, ← map_natCast (algebraMap O K) p, hv.le_iff_dvd] at hp
   rw [Ideal.Quotient.eq_zero_iff_mem, Ideal.mem_span_singleton]; exact hp
 #align mod_p.v_p_lt_pre_val ModP.v_p_lt_preVal
 
@@ -513,7 +513,7 @@ variable (hv hvp)
 
 theorem v_p_lt_val {x : O} :
     v p < v (algebraMap O K x) ↔ (Ideal.Quotient.mk _ x : ModP K v O hv p) ≠ 0 := by
-  rw [lt_iff_not_le, not_iff_not, ← map_nat_cast (algebraMap O K) p, hv.le_iff_dvd,
+  rw [lt_iff_not_le, not_iff_not, ← map_natCast (algebraMap O K) p, hv.le_iff_dvd,
     Ideal.Quotient.eq_zero_iff_mem, Ideal.mem_span_singleton]
 #align mod_p.v_p_lt_val ModP.v_p_lt_val
 
@@ -537,7 +537,7 @@ theorem mul_ne_zero_of_pow_p_ne_zero {x y : ModP K v O hv p} (hx : x ^ p ≠ 0) 
   · rw [hvp]
     exact zero_le _; replace hvp := zero_lt_iff.2 hvp
   conv_lhs => rw [← rpow_one (v p)]; rw [← rpow_add (ne_of_gt hvp)]
-  refine' rpow_le_rpow_of_exponent_ge hvp (map_nat_cast (algebraMap O K) p ▸ hv.2 _) _
+  refine' rpow_le_rpow_of_exponent_ge hvp (map_natCast (algebraMap O K) p ▸ hv.2 _) _
   rw [← add_div, div_le_one (Nat.cast_pos.2 hp.1.Pos : 0 < (p : ℝ))]; exact_mod_cast hp.1.two_le
 #align mod_p.mul_ne_zero_of_pow_p_ne_zero ModP.mul_ne_zero_of_pow_p_ne_zero
 
@@ -608,12 +608,12 @@ theorem valAux_zero : valAux K v O hv p 0 = 0 :=
 #align pre_tilt.val_aux_zero PreTilt.valAux_zero
 
 theorem valAux_one : valAux K v O hv p 1 = 1 :=
-  (val_aux_eq <| show coeff (ModP K v O hv p) p 0 1 ≠ 0 from one_neZero).trans <|
+  (val_aux_eq <| show coeff (ModP K v O hv p) p 0 1 ≠ 0 from one_ne_zero).trans <|
     by
     rw [pow_zero, pow_one, RingHom.map_one, ← (Ideal.Quotient.mk _).map_one, ModP.preVal_mk,
       RingHom.map_one, v.map_one]
     change (1 : ModP K v O hv p) ≠ 0
-    exact one_neZero
+    exact one_ne_zero
 #align pre_tilt.val_aux_one PreTilt.valAux_one
 
 theorem valAux_mul (f g : PreTilt K v O hv p) :

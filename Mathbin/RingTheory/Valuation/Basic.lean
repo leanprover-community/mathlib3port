@@ -363,7 +363,7 @@ theorem map_one_sub_of_lt (h : v x < 1) : v (1 - x) = 1 :=
 #align valuation.map_one_sub_of_lt Valuation.map_one_sub_of_lt
 
 theorem one_lt_val_iff (v : Valuation K Γ₀) {x : K} (h : x ≠ 0) : 1 < v x ↔ v x⁻¹ < 1 := by
-  simpa using (inv_lt_inv₀ (v.ne_zero_iff.2 h) one_neZero).symm
+  simpa using (inv_lt_inv₀ (v.ne_zero_iff.2 h) one_ne_zero).symm
 #align valuation.one_lt_val_iff Valuation.one_lt_val_iff
 
 /-- The subgroup of elements whose valuation is less than a certain unit.-/
@@ -775,7 +775,7 @@ theorem mem_supp_iff (x : R) : x ∈ supp v ↔ v x = 0 :=
 /-- The support of a valuation is a prime ideal. -/
 instance [Nontrivial Γ₀] [NoZeroDivisors Γ₀] : Ideal.IsPrime (supp v) :=
   ⟨fun h : v.supp = ⊤ =>
-    one_neZero <|
+    one_ne_zero <|
       show (1 : Γ₀) = 0 from
         calc
           1 = v 1 := v.map_one.symm

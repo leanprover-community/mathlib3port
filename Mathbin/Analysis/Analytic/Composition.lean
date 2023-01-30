@@ -838,7 +838,7 @@ theorem HasFpowerSeriesAt.comp {g : F → G} {f : E → F} {q : FormalMultilinea
       refine' ⟨1, fun n hn => _⟩
       symm
       rw [eq_sub_iff_add_eq', Finset.range_eq_Ico, ← Hf.coeff_zero fun i => y,
-        Finset.sum_eq_sum_ico_succ_bot hn]
+        Finset.sum_eq_sum_Ico_succ_bot hn]
     have :
       tendsto (fun n => (∑ a in Finset.range n, p a fun b => y) - f x) at_top
         (𝓝 (f (x + y) - f x)) :=

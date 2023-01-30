@@ -178,7 +178,7 @@ theorem support_zero : support (0 : FreeAbelianGroup X) = ∅ := by
 
 @[simp]
 theorem support_of (x : X) : support (of x) = {x} := by
-  simp only [support, to_finsupp_of, Finsupp.support_single_ne_zero _ one_neZero]
+  simp only [support, to_finsupp_of, Finsupp.support_single_ne_zero _ one_ne_zero]
 #align free_abelian_group.support_of FreeAbelianGroup.support_of
 
 @[simp]

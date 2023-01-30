@@ -82,7 +82,7 @@ theorem mem_pow {a : α} {n : ℕ} :
     a ∈ s ^ n ↔ ∃ f : Fin n → s, (List.ofFn fun i => (f i : α)).Prod = a := by
   rw [← mem_prod_list_of_fn, List.ofFn_const, List.prod_replicate]
 #align set.mem_pow Set.mem_pow
-#align set.mem_mul Set.mem_mul
+#align set.mem_nsmul Set.mem_nsmul
 
 end Set
 

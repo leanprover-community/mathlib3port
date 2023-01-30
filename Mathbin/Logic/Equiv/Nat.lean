@@ -45,7 +45,7 @@ def boolProdNatEquivNat : Bool × ℕ ≃ ℕ
 /-- An equivalence between `ℕ ⊕ ℕ` and `ℕ`, by mapping `(sum.inl x)` to `2 * x` and `(sum.inr x)` to
 `2 * x + 1`.
 -/
-@[simps symmApply]
+@[simps symm_apply]
 def natSumNatEquivNat : Sum ℕ ℕ ≃ ℕ :=
   (boolProdEquivSum ℕ).symm.trans boolProdNatEquivNat
 #align equiv.nat_sum_nat_equiv_nat Equiv.natSumNatEquivNat

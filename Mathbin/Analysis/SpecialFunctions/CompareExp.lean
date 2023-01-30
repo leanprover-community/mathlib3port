@@ -80,7 +80,7 @@ theorem of_isO_im_re_pow (hre : Tendsto re l atTop) (n : ℕ) (hr : im =O[l] fun
 theorem of_bounded_under_abs_im (hre : Tendsto re l atTop)
     (him : IsBoundedUnder (· ≤ ·) l fun z => |z.im|) : IsExpCmpFilter l :=
   of_isO_im_re_pow hre 0 <| by
-    simpa only [pow_zero] using @is_bounded_under.is_O_const ℂ ℝ ℝ _ _ _ l him 1 one_neZero
+    simpa only [pow_zero] using @is_bounded_under.is_O_const ℂ ℝ ℝ _ _ _ l him 1 one_ne_zero
 #align complex.is_exp_cmp_filter.of_bounded_under_abs_im Complex.IsExpCmpFilter.of_bounded_under_abs_im
 
 theorem of_bounded_under_im (hre : Tendsto re l atTop) (him_le : IsBoundedUnder (· ≤ ·) l im)
@@ -111,7 +111,7 @@ theorem isO_log_re_re (hl : IsExpCmpFilter l) : (fun z => Real.log z.re) =o[l] r
 
 theorem isO_im_pow_exp_re (hl : IsExpCmpFilter l) (n : ℕ) :
     (fun z : ℂ => z.im ^ n) =o[l] fun z => Real.exp z.re :=
-  flip IsO.of_pow two_neZero <|
+  flip IsO.of_pow two_ne_zero <|
     calc
       (fun z : ℂ => (z.im ^ n) ^ 2) = fun z => z.im ^ (2 * n) := by simp only [pow_mul']
       _ =O[l] fun z => Real.exp z.re := hl.is_O_im_pow_re _

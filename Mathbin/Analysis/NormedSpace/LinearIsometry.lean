@@ -806,7 +806,7 @@ def Simps.symmApply (σ₁₂ : R →+* R₂) {σ₂₁ : R₂ →+* R} [RingHom
 #align linear_isometry_equiv.simps.symm_apply LinearIsometryEquiv.Simps.symmApply
 
 initialize_simps_projections LinearIsometryEquiv (to_linear_equiv_to_fun → apply,
-  to_linear_equiv_inv_fun → symmApply)
+  to_linear_equiv_inv_fun → symm_apply)
 
 include σ₃₁ σ₃₂
 

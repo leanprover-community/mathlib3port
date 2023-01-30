@@ -1305,7 +1305,7 @@ theorem ediam_cthickening_le (ε : ℝ≥0) : Emetric.diam (cthickening ε s) �
   refine' diam_le fun x hx y hy => Ennreal.le_of_forall_pos_le_add fun δ hδ _ => _
   rw [mem_cthickening_iff, Ennreal.ofReal_coe_nnreal] at hx hy
   have hε : (ε : ℝ≥0∞) < ε + ↑(δ / 2) := Ennreal.coe_lt_coe.2 (lt_add_of_pos_right _ <| half_pos hδ)
-  rw [Ennreal.coe_div two_neZero, Ennreal.coe_two] at hε
+  rw [Ennreal.coe_div two_ne_zero, Ennreal.coe_two] at hε
   replace hx := hx.trans_lt hε
   replace hy := hy.trans_lt hε
   rw [inf_edist_lt_iff] at hx hy

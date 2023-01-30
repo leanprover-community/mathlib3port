@@ -833,7 +833,7 @@ def compositionAsSetEquiv (n : ℕ) : CompositionAsSet n ≃ Finset (Fin (n - 1)
     simp only [Fin.ext_iff, exists_prop, Fin.val_zero, add_comm, Set.mem_toFinset, Set.mem_setOf_eq,
       Fin.val_last]
     erw [Set.mem_setOf_eq]
-    simp only [this, false_or_iff, add_right_inj, add_eq_zero_iff, one_neZero, false_and_iff,
+    simp only [this, false_or_iff, add_right_inj, add_eq_zero_iff, one_ne_zero, false_and_iff,
       Fin.val_mk]
     constructor
     · rintro ⟨j, js, hj⟩

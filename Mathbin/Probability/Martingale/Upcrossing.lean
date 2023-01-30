@@ -884,7 +884,7 @@ theorem upcrossingsBefore_eq_sum (hab : a < b) :
   by_cases hN : N = 0
   · simp [hN]
   rw [←
-    Finset.sum_ico_consecutive _ (Nat.succ_le_succ zero_le')
+    Finset.sum_Ico_consecutive _ (Nat.succ_le_succ zero_le')
       (Nat.succ_le_succ (upcrossings_before_le f ω hab))]
   have h₁ :
     ∀ k ∈ Finset.Ico 1 (upcrossings_before a b f N ω + 1),

@@ -103,7 +103,7 @@ theorem ae_empty_or_univ_of_forall_vadd_ae_eq_self {s : Set <| AddCircle T}
   have hI₁ : μ (I j) ≠ ⊤ := measure_ne_top _ _
   have hI₂ : μ (I j) * ↑(n j) = Ennreal.ofReal T :=
     by
-    rw [volume_closed_ball, mul_div, mul_div_mul_left T _ two_neZero,
+    rw [volume_closed_ball, mul_div, mul_div_mul_left T _ two_ne_zero,
       min_eq_right (div_le_self hT₀.le huj'), mul_comm, ← nsmul_eq_mul, ← Ennreal.ofReal_nsmul,
       nsmul_eq_mul, mul_div_cancel']
     exact nat.cast_ne_zero.mpr hj.ne'

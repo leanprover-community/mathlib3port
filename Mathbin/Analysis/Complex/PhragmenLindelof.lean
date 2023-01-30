@@ -356,7 +356,7 @@ theorem vertical_strip (hfd : DiffContOnCl ℂ f (re ⁻¹' Ioo a b))
   refine'
     horizontal_strip (hfd.comp (differentiable_id.mul_const _).DiffContOnCl H) _
       (fun z hz => hle_a _ _) (fun z hz => hle_b _ _) _ _
-  · refine' Exists₃Cat.imp (fun c hc B hO => _) hB
+  · refine' Exists₃.imp (fun c hc B hO => _) hB
     have :
       tendsto (fun z => z * -I) (comap (Abs.abs ∘ re) at_top ⊓ 𝓟 (im ⁻¹' Ioo a b))
         (comap (Abs.abs ∘ im) at_top ⊓ 𝓟 (re ⁻¹' Ioo a b)) :=
@@ -569,7 +569,7 @@ theorem quadrant_II (hd : DiffContOnCl ℂ f (Iio 0 ×ℂ Ioi 0))
     simpa only [mem_re_prod_im, mul_I_re, mul_I_im, neg_lt_zero, mem_Iio] using hw.symm
   refine'
     quadrant_I (hd.comp (differentiable_id.mul_const _).DiffContOnCl H)
-      (Exists₃Cat.imp (fun c hc B hO => _) hB) him (fun x hx => _) hz_im hz_re
+      (Exists₃.imp (fun c hc B hO => _) hB) him (fun x hx => _) hz_im hz_re
   ·
     simpa only [(· ∘ ·), map_mul, abs_I, mul_one] using
       hO.comp_tendsto ((tendsto_mul_right_cobounded I_ne_zero).inf H.tendsto)
@@ -645,7 +645,7 @@ theorem quadrant_III (hd : DiffContOnCl ℂ f (Iio 0 ×ℂ Iio 0))
   refine'
     quadrant_I (hd.comp differentiable_neg.diff_cont_on_cl H) _ (fun x hx => _) (fun x hx => _)
       hz_re hz_im
-  · refine' Exists₃Cat.imp (fun c hc B hO => _) hB
+  · refine' Exists₃.imp (fun c hc B hO => _) hB
     simpa only [(· ∘ ·), complex.abs.map_neg] using
       hO.comp_tendsto (tendsto_neg_cobounded.inf H.tendsto)
   · rw [comp_app, ← of_real_neg]
@@ -722,7 +722,7 @@ theorem quadrant_IV (hd : DiffContOnCl ℂ f (Ioi 0 ×ℂ Iio 0))
   refine'
     quadrant_II (hd.comp differentiable_neg.diff_cont_on_cl H) _ (fun x hx => _) (fun x hx => _)
       hz_re hz_im
-  · refine' Exists₃Cat.imp (fun c hc B hO => _) hB
+  · refine' Exists₃.imp (fun c hc B hO => _) hB
     simpa only [(· ∘ ·), complex.abs.map_neg] using
       hO.comp_tendsto (tendsto_neg_cobounded.inf H.tendsto)
   · rw [comp_app, ← of_real_neg]
@@ -804,12 +804,12 @@ theorem right_half_plane_of_tendsto_zero_on_real (hd : DiffContOnCl ℂ f { z | 
     intro C' hC' z hz
     cases le_total z.im 0
     · refine'
-        quadrant_IV (hd.mono fun _ => And.left) (Exists₃Cat.imp (fun c hc B hO => _) hexp)
+        quadrant_IV (hd.mono fun _ => And.left) (Exists₃.imp (fun c hc B hO => _) hexp)
           (fun x hx => (hC' x hx).trans <| le_max_right _ _)
           (fun x hx => (him x).trans (le_max_left _ _)) hz h
       exact hO.mono (inf_le_inf_left _ <| principal_mono.2 fun _ => And.left)
     · refine'
-        quadrant_I (hd.mono fun _ => And.left) (Exists₃Cat.imp (fun c hc B hO => _) hexp)
+        quadrant_I (hd.mono fun _ => And.left) (Exists₃.imp (fun c hc B hO => _) hexp)
           (fun x hx => (hC' x hx).trans <| le_max_right _ _)
           (fun x hx => (him x).trans (le_max_left _ _)) hz h
       exact hO.mono (inf_le_inf_left _ <| principal_mono.2 fun _ => And.left)
@@ -897,7 +897,7 @@ theorem right_half_plane_of_bounded_on_real (hd : DiffContOnCl ℂ f { z | 0 < z
     intro z
     rw [norm_smul, norm_eq_abs, abs_exp, of_real_mul_re]
   refine' right_half_plane_of_tendsto_zero_on_real hd _ _ (fun y => _) hz
-  · refine' Exists₃Cat.imp (fun c hc B hO => (is_O.of_bound 1 _).trans hO) hexp
+  · refine' Exists₃.imp (fun c hc B hO => (is_O.of_bound 1 _).trans hO) hexp
     refine' eventually_inf_principal.2 <| eventually_of_forall fun z hz => _
     rw [hgn, one_mul]
     refine' mul_le_of_le_one_left (norm_nonneg _) (Real.exp_le_one_iff.2 _)

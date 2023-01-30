@@ -125,7 +125,7 @@ theorem irreducible : Irreducible (p : 𝕎 k) :=
   apply_fun fun x => coeff x 1  at hab
   simp only [coeff_p_one, Nat.add_succ, add_comm _ n, Function.iterate_succ', Function.comp_apply,
     verschiebung_coeff_add_one, verschiebung_coeff_zero] at hab
-  exact (one_neZero hab).elim
+  exact (one_ne_zero hab).elim
 #align witt_vector.irreducible WittVector.irreducible
 
 end Field

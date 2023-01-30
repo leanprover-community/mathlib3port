@@ -753,7 +753,7 @@ instance isFractionRing : IsFractionRing ℤ_[p] ℚ_[p]
       use
         (⟨a, le_of_eq ha_norm⟩,
           ⟨(p ^ n : ℤ_[p]), mem_non_zero_divisors_iff_ne_zero.mpr (NeZero.ne _)⟩)
-      simp only [[anonymous], map_pow, map_nat_cast, algebra_map_apply, PadicInt.coe_pow,
+      simp only [[anonymous], map_pow, map_natCast, algebra_map_apply, PadicInt.coe_pow,
         PadicInt.coe_nat_cast, Subtype.coe_mk]
   eq_iff_exists x y :=
     by

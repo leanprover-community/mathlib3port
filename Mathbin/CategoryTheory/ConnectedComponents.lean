@@ -67,7 +67,7 @@ instance (j : ConnectedComponents J) : Nonempty (Component j) :=
   refine' ⟨⟨k, rfl⟩⟩
 
 instance (j : ConnectedComponents J) : Inhabited (Component j) :=
-  Classical.inhabitedOfNonempty'
+  Classical.inhabited_of_nonempty'
 
 /-- Each connected component of the category is connected. -/
 instance (j : ConnectedComponents J) : IsConnected (Component j) :=

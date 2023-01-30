@@ -255,7 +255,7 @@ theorem isSupported_of {p} {s : Set α} : IsSupported (of p) s ↔ p ∈ s :=
   rcases this with ⟨w, H⟩
   rw [← Polynomial.c_eq_int_cast] at H
   have : polynomial.X.coeff 1 = (Polynomial.c ↑w).coeff 1 := by rw [H]
-  rwa [Polynomial.coeff_c, if_neg (one_neZero : 1 ≠ 0), Polynomial.coeff_x, if_pos rfl] at this
+  rwa [Polynomial.coeff_c, if_neg (one_ne_zero : 1 ≠ 0), Polynomial.coeff_x, if_pos rfl] at this
 #align free_comm_ring.is_supported_of FreeCommRing.isSupported_of
 
 theorem map_subtype_val_restriction {x} (s : Set α) [DecidablePred (· ∈ s)]

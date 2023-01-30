@@ -776,7 +776,7 @@ theorem reaches₁_eq {σ} {f : σ → Option σ} {a b c} (h : f a = f b) :
 
 theorem reaches_total {σ} {f : σ → Option σ} {a b c} (hab : Reaches f a b) (hac : Reaches f a c) :
     Reaches f b c ∨ Reaches f c b :=
-  ReflTransGen.total_of_rightUnique (fun _ _ _ => Option.mem_unique) hab hac
+  ReflTransGen.total_of_right_unique (fun _ _ _ => Option.mem_unique) hab hac
 #align turing.reaches_total Turing.reaches_total
 
 theorem reaches₁_fwd {σ} {f : σ → Option σ} {a b c} (h₁ : Reaches₁ f a c) (h₂ : b ∈ f a) :

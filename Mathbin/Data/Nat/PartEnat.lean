@@ -678,7 +678,7 @@ theorem lt_wf : @WellFounded PartEnat (· < ·) := by
     exact InvImage.wf _ (WithTop.wellFounded_lt Nat.lt_wfRel)
 #align part_enat.lt_wf PartEnat.lt_wf
 
-instance : WellFoundedLt PartEnat :=
+instance : WellFoundedLT PartEnat :=
   ⟨lt_wf⟩
 
 instance : IsWellOrder PartEnat (· < ·) where

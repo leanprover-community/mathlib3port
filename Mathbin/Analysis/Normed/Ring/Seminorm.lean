@@ -146,7 +146,7 @@ theorem seminorm_one_eq_one_iff_ne_zero (hp : p 1 ≤ 1) : p 1 = 1 ↔ p ≠ 0 :
       ne_zero_iff.mpr
         ⟨1, by
           rw [h]
-          exact one_neZero⟩,
+          exact one_ne_zero⟩,
       fun h => _⟩
   obtain hp0 | hp0 := (map_nonneg p (1 : R)).eq_or_gt
   · cases h (ext fun x => (map_nonneg _ _).antisymm' _)
@@ -247,7 +247,7 @@ variable [DecidableEq R] [NoZeroDivisors R] [Nontrivial R]
 every other element. -/
 instance : One (MulRingSeminorm R) :=
   ⟨{ (1 : AddGroupSeminorm R) with
-      map_one' := if_neg one_neZero
+      map_one' := if_neg one_ne_zero
       map_mul' := fun x y => by
         obtain rfl | hx := eq_or_ne x 0
         · simp

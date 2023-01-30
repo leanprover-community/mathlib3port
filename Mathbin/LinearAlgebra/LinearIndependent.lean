@@ -1164,7 +1164,7 @@ theorem linearIndependent_unique_iff (v : ι → M) [Unique ι] :
   simp only [linearIndependent_iff, Finsupp.total_unique, smul_eq_zero]
   refine' ⟨fun h hv => _, fun hv l hl => Finsupp.unique_ext <| hl.resolve_right hv⟩
   have := h (Finsupp.single default 1) (Or.inr hv)
-  exact one_neZero (Finsupp.single_eq_zero.1 this)
+  exact one_ne_zero (Finsupp.single_eq_zero.1 this)
 #align linear_independent_unique_iff linearIndependent_unique_iff
 
 alias linearIndependent_unique_iff ↔ _ linearIndependent_unique
@@ -1214,7 +1214,7 @@ theorem linearIndependent_iff_not_mem_span :
   apply linear_independent_iff_not_smul_mem_span.trans
   constructor
   · intro h i h_in_span
-    apply one_neZero (h i 1 (by simp [h_in_span]))
+    apply one_ne_zero (h i 1 (by simp [h_in_span]))
   · intro h i a ha
     by_contra ha'
     exact False.elim (h _ ((smul_mem_iff _ ha').1 ha))

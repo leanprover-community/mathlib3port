@@ -114,7 +114,7 @@ theorem exists_integral_multiples (s : Finset L) :
   by
   haveI := Classical.decEq L
   refine' s.induction _ _
-  · use 1, one_neZero
+  · use 1, one_ne_zero
     rintro x ⟨⟩
   · rintro x s hx ⟨y, hy, hs⟩
     obtain ⟨x', y', hy', hx'⟩ :=

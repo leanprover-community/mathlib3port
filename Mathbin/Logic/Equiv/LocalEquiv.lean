@@ -191,7 +191,7 @@ def Simps.symmApply (e : LocalEquiv α β) : β → α :=
 #align local_equiv.simps.symm_apply LocalEquiv.Simps.symmApply
 -/
 
-initialize_simps_projections LocalEquiv (toFun → apply, invFun → symmApply)
+initialize_simps_projections LocalEquiv (toFun → apply, invFun → symm_apply)
 
 /- warning: local_equiv.coe_mk clashes with [anonymous] -> [anonymous]
 warning: local_equiv.coe_mk -> [anonymous] is a dubious translation:

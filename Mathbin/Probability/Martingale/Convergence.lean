@@ -213,7 +213,7 @@ theorem Submartingale.exists_ae_tendsto_of_bdd [IsFiniteMeasure μ] (hf : Submar
     (hbdd : ∀ n, snorm (f n) 1 μ ≤ R) : ∀ᵐ ω ∂μ, ∃ c, Tendsto (fun n => f n ω) atTop (𝓝 c) :=
   by
   filter_upwards [hf.upcrossings_ae_lt_top hbdd,
-    ae_bdd_liminf_at_top_of_snorm_bdd one_neZero
+    ae_bdd_liminf_at_top_of_snorm_bdd one_ne_zero
       (fun n => (hf.strongly_measurable n).Measurable.mono (ℱ.le n) le_rfl) hbdd]with ω h₁ h₂
   exact tendsto_of_uncrossing_lt_top h₂ h₁
 #align measure_theory.submartingale.exists_ae_tendsto_of_bdd MeasureTheory.Submartingale.exists_ae_tendsto_of_bdd
@@ -374,7 +374,7 @@ theorem Martingale.eq_condexp_of_tendsto_snorm {μ : Measure Ω} (hf : Martingal
     snorm_eq_zero_iff
       (((hf.strongly_measurable n).mono (ℱ.le _)).sub
           (strongly_measurable_condexp.mono (ℱ.le _))).AeStronglyMeasurable
-      one_neZero]
+      one_ne_zero]
   have ht : tendsto (fun m => snorm (μ[f m - g|ℱ n]) 1 μ) at_top (𝓝 0) :=
     haveI hint : ∀ m, integrable (f m - g) μ := fun m => (hf.integrable m).sub hg
     tendsto_of_tendsto_of_tendsto_of_le_of_le tendsto_const_nhds hgtends (fun m => zero_le _)

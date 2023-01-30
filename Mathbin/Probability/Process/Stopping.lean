@@ -1190,7 +1190,7 @@ theorem stoppedValue_sub_eq_sum [AddCommGroup β] (hle : τ ≤ π) :
       (∑ i in Finset.Ico (τ ω) (π ω), u (i + 1) - u i) ω :=
   by
   ext ω
-  rw [Finset.sum_ico_eq_sub _ (hle ω), Finset.sum_range_sub, Finset.sum_range_sub]
+  rw [Finset.sum_Ico_eq_sub _ (hle ω), Finset.sum_range_sub, Finset.sum_range_sub]
   simp [stopped_value]
 #align measure_theory.stopped_value_sub_eq_sum MeasureTheory.stoppedValue_sub_eq_sum
 

@@ -388,7 +388,7 @@ theorem getLast_digit_ne_zero (b : ℕ) {m : ℕ} (hm : m ≠ 0) :
     · simp
   · cases m
     · cases hm rfl
-    simpa only [digits_one, List.getLast_replicate_succ m 1] using one_neZero
+    simpa only [digits_one, List.getLast_replicate_succ m 1] using one_ne_zero
   revert hm
   apply Nat.strong_induction_on m
   intro n IH hn

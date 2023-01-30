@@ -156,7 +156,7 @@ theorem zero_max : max 0 n = n :=
 lean 3 declaration is
   forall {m : Nat} {n : Nat}, Iff (Eq.{1} Nat (LinearOrder.min.{0} Nat Nat.linearOrder m n) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (Or (Eq.{1} Nat m (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (Eq.{1} Nat n (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))))
 but is expected to have type
-  forall {m : Nat} {n : Nat}, Iff (Eq.{1} Nat (Min.min.{0} Nat Nat.instMinNat m n) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Or (Eq.{1} Nat m (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Eq.{1} Nat n (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))))
+  forall {m : Nat} {n : Nat}, Iff (Eq.{1} Nat (Min.min.{0} Nat instMinNat m n) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Or (Eq.{1} Nat m (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Eq.{1} Nat n (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))))
 Case conversion may be inaccurate. Consider using '#align nat.min_eq_zero_iff Nat.min_eq_zero_iffₓ'. -/
 @[simp]
 theorem min_eq_zero_iff : min m n = 0 ↔ m = 0 ∨ n = 0 :=
@@ -205,7 +205,7 @@ theorem add_eq_max_iff : m + n = max m n ↔ m = 0 ∨ n = 0 :=
 lean 3 declaration is
   forall {m : Nat} {n : Nat}, Iff (Eq.{1} Nat (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) m n) (LinearOrder.min.{0} Nat Nat.linearOrder m n)) (And (Eq.{1} Nat m (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (Eq.{1} Nat n (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))))
 but is expected to have type
-  forall {m : Nat} {n : Nat}, Iff (Eq.{1} Nat (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) m n) (Min.min.{0} Nat Nat.instMinNat m n)) (And (Eq.{1} Nat m (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Eq.{1} Nat n (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))))
+  forall {m : Nat} {n : Nat}, Iff (Eq.{1} Nat (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) m n) (Min.min.{0} Nat instMinNat m n)) (And (Eq.{1} Nat m (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Eq.{1} Nat n (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))))
 Case conversion may be inaccurate. Consider using '#align nat.add_eq_min_iff Nat.add_eq_min_iffₓ'. -/
 theorem add_eq_min_iff : m + n = min m n ↔ m = 0 ∧ n = 0 :=
   by

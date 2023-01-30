@@ -938,7 +938,7 @@ noncomputable def withDensitySmulLi {f : α → ℝ≥0} (f_meas : Measurable f)
       simpa only [Ne.def, Ennreal.coe_eq_zero] using hx
   norm_map' := by
     intro u
-    simp only [snorm, LinearMap.coe_mk, Lp.norm_to_Lp, one_neZero, Ennreal.one_ne_top,
+    simp only [snorm, LinearMap.coe_mk, Lp.norm_to_Lp, one_ne_zero, Ennreal.one_ne_top,
       Ennreal.one_toReal, if_false, snorm', Ennreal.rpow_one, _root_.div_one, Lp.norm_def]
     rw [lintegral_with_density_eq_lintegral_mul_non_measurable _ f_meas.coe_nnreal_ennreal
         (Filter.eventually_of_forall fun x => Ennreal.coe_lt_top)]

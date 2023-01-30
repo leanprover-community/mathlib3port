@@ -723,7 +723,7 @@ private theorem is_st_mul' {x y : ℝ*} {r s : ℝ} (hxr : IsSt x r) (hys : IsSt
             push_cast [-Filter.Germ.const_div]
             -- TODO: Why wasn't `hyperreal.coe_div` used?
             have : (|s| : ℝ*) ≠ 0 := by simpa
-            have : (2 : ℝ*) ≠ 0 := two_neZero
+            have : (2 : ℝ*) ≠ 0 := two_ne_zero
             field_simp [*, add_mul, mul_add, mul_assoc, mul_comm, mul_left_comm]
           _ < (d / 2 * 1 + d / 2 : ℝ*) :=
             add_lt_add_right

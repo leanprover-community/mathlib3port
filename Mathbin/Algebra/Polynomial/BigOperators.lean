@@ -285,7 +285,7 @@ theorem multiset_prod_x_sub_c_coeff_card_pred (t : Multiset R) (ht : 0 < t.card)
     simp_rw [Multiset.sum_eq_zero_iff, Multiset.mem_map] at h
     contrapose! h
     obtain ⟨x, hx⟩ := card_pos_iff_exists_mem.mp ht
-    exact ⟨_, ⟨_, ⟨x, hx, rfl⟩, nat_degree_X_sub_C _⟩, one_neZero⟩
+    exact ⟨_, ⟨_, ⟨x, hx, rfl⟩, nat_degree_X_sub_C _⟩, one_ne_zero⟩
   congr ; rw [nat_degree_multiset_prod_of_monic] <;> · simp [nat_degree_X_sub_C, monic_X_sub_C]
 #align polynomial.multiset_prod_X_sub_C_coeff_card_pred Polynomial.multiset_prod_x_sub_c_coeff_card_pred
 

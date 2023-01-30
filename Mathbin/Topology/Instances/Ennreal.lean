@@ -345,7 +345,7 @@ theorem tendsto_sub {a b : ℝ≥0∞} (h : a ≠ ∞ ∨ b ≠ ∞) :
     refine'
       ⟨fun z => (n + (b + 1) : ℝ≥0∞) < z,
         ioi_mem_nhds (by simp only [one_lt_top, add_lt_top, coe_lt_top, and_self_iff]), fun z =>
-        z < b + 1, iio_mem_nhds (Ennreal.lt_add_right coe_ne_top one_neZero), fun x hx y hy => _⟩
+        z < b + 1, iio_mem_nhds (Ennreal.lt_add_right coe_ne_top one_ne_zero), fun x hx y hy => _⟩
     dsimp
     rw [lt_tsub_iff_right]
     have : (n : ℝ≥0∞) + y + (b + 1) < x + (b + 1) :=
@@ -359,7 +359,7 @@ theorem tendsto_sub {a b : ℝ≥0∞} (h : a ≠ ∞ ∨ b ≠ ∞) :
     exact tendsto_const_nhds.congr' H
     rw [nhds_prod_eq, eventually_prod_iff]
     refine'
-      ⟨fun z => z < a + 1, iio_mem_nhds (Ennreal.lt_add_right coe_ne_top one_neZero), fun z =>
+      ⟨fun z => z < a + 1, iio_mem_nhds (Ennreal.lt_add_right coe_ne_top one_ne_zero), fun z =>
         (a : ℝ≥0∞) + 1 < z,
         ioi_mem_nhds (by simp only [one_lt_top, add_lt_top, coe_lt_top, and_self_iff]),
         fun x hx y hy => _⟩
@@ -536,7 +536,7 @@ protected theorem Tendsto.pow {f : Filter α} {m : α → ℝ≥0∞} {a : ℝ�
 theorem le_of_forall_lt_one_mul_le {x y : ℝ≥0∞} (h : ∀ a < 1, a * x ≤ y) : x ≤ y :=
   by
   have : tendsto (· * x) (𝓝[<] 1) (𝓝 (1 * x)) :=
-    (Ennreal.continuousAt_mul_const (Or.inr one_neZero)).mono_left inf_le_left
+    (Ennreal.continuousAt_mul_const (Or.inr one_ne_zero)).mono_left inf_le_left
   rw [one_mul] at this
   haveI : (𝓝[<] (1 : ℝ≥0∞)).ne_bot := nhdsWithin_iio_self_ne_bot' ⟨0, Ennreal.zero_lt_one⟩
   exact le_of_tendsto this (eventually_nhdsWithin_iff.2 <| eventually_of_forall h)

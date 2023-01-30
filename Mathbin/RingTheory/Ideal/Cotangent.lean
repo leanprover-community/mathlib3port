@@ -98,7 +98,7 @@ theorem cotangent_subsingleton_iff : Subsingleton I.Cotangent ↔ IsIdempotentEl
   by
   constructor
   · intro H
-    refine' (pow_two I).symm.trans (le_antisymm (Ideal.pow_le_self two_neZero) _)
+    refine' (pow_two I).symm.trans (le_antisymm (Ideal.pow_le_self two_ne_zero) _)
     exact fun x hx => (I.to_cotangent_eq_zero ⟨x, hx⟩).mp (Subsingleton.elim _ _)
   ·
     exact fun e =>
@@ -203,7 +203,7 @@ def AlgHom.kerSquareLift (f : A →ₐ[R] B) : A ⧸ f.toRingHom.ker ^ 2 →ₐ[
   by
   refine' { Ideal.Quotient.lift (f.to_ring_hom.ker ^ 2) f.to_ring_hom _ with commutes' := _ }
   · intro a ha
-    exact Ideal.pow_le_self two_neZero ha
+    exact Ideal.pow_le_self two_ne_zero ha
   · intro r
     rw [IsScalarTower.algebraMap_apply R A, RingHom.toFun_eq_coe, Ideal.Quotient.algebraMap_eq,
       Ideal.Quotient.lift_mk]
@@ -226,7 +226,7 @@ def quotCotangent : (R ⧸ I ^ 2) ⧸ I.cotangentIdeal ≃+* R ⧸ I :=
   by
   refine' (Ideal.quotEquivOfEq (Ideal.map_eq_submodule_map _ _).symm).trans _
   refine' (DoubleQuot.quotQuotEquivQuotSup _ _).trans _
-  exact Ideal.quotEquivOfEq (sup_eq_right.mpr <| Ideal.pow_le_self two_neZero)
+  exact Ideal.quotEquivOfEq (sup_eq_right.mpr <| Ideal.pow_le_self two_ne_zero)
 #align ideal.quot_cotangent Ideal.quotCotangent
 
 end Ideal

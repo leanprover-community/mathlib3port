@@ -109,7 +109,7 @@ theorem controlled_closure_of_complete {f : NormedAddGroupHom G H} {K : AddSubgr
           simp only [b, mul_div_cancel' _ hC.ne.symm, ← sum_mul]
         _ ≤ 2 * (ε * ‖h‖ / 2) :=
           mul_le_mul_of_nonneg_right (sum_geometric_two_le _) (by nlinarith [hε, norm_nonneg h])
-        _ = ε * ‖h‖ := mul_div_cancel' _ two_neZero
+        _ = ε * ‖h‖ := mul_div_cancel' _ two_ne_zero
         
     calc
       ‖s n‖ ≤ ∑ k in range (n + 1), ‖u k‖ := norm_sum_le _ _

@@ -536,7 +536,7 @@ theorem isSheafFor_iff_yonedaSheafCondition {P : Cᵒᵖ ⥤ Type v₁} :
   rw [Subtype.forall]
   apply ball_congr
   intro x hx
-  rw [Equiv.existsUnique_congr_left _]
+  rw [Equiv.exists_unique_congr_left _]
   simp
 #align category_theory.presieve.is_sheaf_for_iff_yoneda_sheaf_condition CategoryTheory.Presieve.isSheafFor_iff_yonedaSheafCondition
 

@@ -358,7 +358,7 @@ theorem listDecode_encode_list (l : List (Σn, L.BoundedFormula α n)) :
         simp only [eq_self_iff_true, hEq_iff_eq, true_and_iff]
         refine' ⟨funext fun i => _, _⟩
         · obtain ⟨h1, h2⟩ := Option.eq_some_iff_get_eq.1 (h i)
-          rw [eq_mp_eq_cast, cast_eq_iff_hEq]
+          rw [eq_mp_eq_cast, cast_eq_iff_heq]
           exact (Sigma.ext_iff.1 ((Sigma.eta (Option.get h1)).trans h2)).2
         rw [List.drop_append_eq_append_drop, length_map, length_fin_range, Nat.sub_self, drop,
           drop_eq_nil_of_le, nil_append]

@@ -106,11 +106,11 @@ theorem StrictConvexSpace.ofNormComboLtOne
   refine'
     StrictConvexSpace.ofStrictConvexClosedUnitBall ℝ
       ((convex_closedBall _ _).strict_convex' fun x hx y hy hne => _)
-  rw [interior_closedBall (0 : E) one_neZero, closed_ball_diff_ball, mem_sphere_zero_iff_norm] at
+  rw [interior_closedBall (0 : E) one_ne_zero, closed_ball_diff_ball, mem_sphere_zero_iff_norm] at
     hx hy
   rcases h x y hx hy hne with ⟨a, b, hab, hlt⟩
   use b
-  rwa [AffineMap.lineMap_apply_module, interior_closedBall (0 : E) one_neZero, mem_ball_zero_iff,
+  rwa [AffineMap.lineMap_apply_module, interior_closedBall (0 : E) one_ne_zero, mem_ball_zero_iff,
     sub_eq_iff_eq_add.2 hab.symm]
 #align strict_convex_space.of_norm_combo_lt_one StrictConvexSpace.ofNormComboLtOne
 
@@ -121,8 +121,8 @@ theorem StrictConvexSpace.ofNormComboNeOne
     StrictConvexSpace ℝ E :=
   by
   refine' StrictConvexSpace.ofStrictConvexClosedUnitBall ℝ ((convex_closedBall _ _).StrictConvex _)
-  simp only [interior_closedBall _ one_neZero, closed_ball_diff_ball, Set.Pairwise,
-    frontier_closedBall _ one_neZero, mem_sphere_zero_iff_norm]
+  simp only [interior_closedBall _ one_ne_zero, closed_ball_diff_ball, Set.Pairwise,
+    frontier_closedBall _ one_ne_zero, mem_sphere_zero_iff_norm]
   intro x hx y hy hne
   rcases h x y hx hy hne with ⟨a, b, ha, hb, hab, hne'⟩
   exact ⟨_, ⟨a, b, ha, hb, hab, rfl⟩, mt mem_sphere_zero_iff_norm.1 hne'⟩

@@ -90,7 +90,7 @@ variable (R)
 `cond : ∀ m : M, f m * f m = 0`, this is the canonical lift of `f` to a morphism of `R`-algebras
 from `exterior_algebra R M` to `A`.
 -/
-@[simps symmApply]
+@[simps symm_apply]
 def lift : { f : M →ₗ[R] A // ∀ m, f m * f m = 0 } ≃ (ExteriorAlgebra R M →ₐ[R] A) :=
   Equiv.trans (Equiv.subtypeEquiv (Equiv.refl _) <| by simp) <| CliffordAlgebra.lift _
 #align exterior_algebra.lift ExteriorAlgebra.lift
@@ -232,7 +232,7 @@ theorem ι_eq_algebraMap_iff (x : M) (r : R) : ι R x = algebraMap R _ r ↔ x =
 theorem ι_ne_one [Nontrivial R] (x : M) : ι R x ≠ 1 :=
   by
   rw [← (algebraMap R (ExteriorAlgebra R M)).map_one, Ne.def, ι_eq_algebra_map_iff]
-  exact one_neZero ∘ And.right
+  exact one_ne_zero ∘ And.right
 #align exterior_algebra.ι_ne_one ExteriorAlgebra.ι_ne_one
 
 /-- The generators of the exterior algebra are disjoint from its scalars. -/

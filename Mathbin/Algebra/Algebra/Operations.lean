@@ -89,7 +89,7 @@ theorem one_eq_range : (1 : Submodule R A) = (Algebra.linearMap R A).range :=
 theorem le_one_toAddSubmonoid : 1 ≤ (1 : Submodule R A).toAddSubmonoid :=
   by
   rintro x ⟨n, rfl⟩
-  exact ⟨n, map_nat_cast (algebraMap R A) n⟩
+  exact ⟨n, map_natCast (algebraMap R A) n⟩
 #align submodule.le_one_to_add_submonoid Submodule.le_one_toAddSubmonoid
 
 theorem algebraMap_mem (r : R) : algebraMap R A r ∈ (1 : Submodule R A) :=
@@ -498,7 +498,7 @@ def mapHom {A'} [Semiring A'] [Algebra R A'] (f : A →ₐ[R] A') : Submodule R 
 
 /-- The ring of submodules of the opposite algebra is isomorphic to the opposite ring of
 submodules. -/
-@[simps apply symmApply]
+@[simps apply symm_apply]
 def equivOpposite : Submodule R Aᵐᵒᵖ ≃+* (Submodule R A)ᵐᵒᵖ
     where
   toFun p := op <| p.comap (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ) : A →ₗ[R] Aᵐᵒᵖ)

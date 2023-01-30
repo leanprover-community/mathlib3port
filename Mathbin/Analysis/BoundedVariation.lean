@@ -161,7 +161,7 @@ theorem sum_le_of_monotoneOn_icc (f : α → E) {s : Set α} {m n : ℕ} {u : �
         ∑ i in Finset.range (n - m), edist (f (u (m + i + 1))) (f (u (m + i))) :=
       by
       rw [Finset.range_eq_Ico]
-      convert (Finset.sum_ico_add (fun i => edist (f (u (i + 1))) (f (u i))) 0 (n - m) m).symm
+      convert (Finset.sum_Ico_add (fun i => edist (f (u (i + 1))) (f (u i))) 0 (n - m) m).symm
       · rw [zero_add]
       · rw [tsub_add_cancel_of_le hmn.le]
     _ = ∑ i in Finset.range (n - m), edist (f (v (i + 1))) (f (v i)) :=
@@ -401,7 +401,7 @@ theorem add_point (f : α → E) {s : Set α} {x : α} (hx : x ∈ s) (u : ℕ �
       _ = ∑ i in Finset.Ico 1 (n + 1), edist (f (w (i + 1))) (f (w i)) :=
         by
         rw [Finset.range_eq_Ico]
-        exact Finset.sum_ico_add (fun i => edist (f (w (i + 1))) (f (w i))) 0 n 1
+        exact Finset.sum_Ico_add (fun i => edist (f (w (i + 1))) (f (w i))) 0 n 1
       _ ≤ ∑ j in Finset.range (n + 1), edist (f (w (j + 1))) (f (w j)) :=
         by
         apply Finset.sum_le_sum_of_subset _
@@ -415,7 +415,7 @@ theorem add_point (f : α → E) {s : Set α} {x : α} (hx : x ∈ s) (u : ℕ �
               ∑ i in Finset.Ico (N - 1) N, edist (f (u (i + 1))) (f (u i))) +
             ∑ i in Finset.Ico N n, edist (f (u (i + 1))) (f (u i)) :=
         by
-        rw [Finset.sum_ico_consecutive, Finset.sum_ico_consecutive, Finset.range_eq_Ico]
+        rw [Finset.sum_Ico_consecutive, Finset.sum_Ico_consecutive, Finset.range_eq_Ico]
         · exact zero_le _
         · exact hN.1
         · exact zero_le _
@@ -468,7 +468,7 @@ theorem add_point (f : α → E) {s : Set α} {x : α} (hx : x ∈ s) (u : ℕ �
           have B : N - 1 < N := Nat.pred_lt Npos.ne'
           simp only [A, not_and, not_lt, Nat.succ_ne_self, Nat.add_succ_sub_one, add_zero, if_false,
             B, if_true]
-        · exact Finset.sum_ico_add (fun i => edist (f (w (i + 1))) (f (w i))) N n 1
+        · exact Finset.sum_Ico_add (fun i => edist (f (w (i + 1))) (f (w i))) N n 1
       _ ≤
           ((∑ i in Finset.Ico 0 (N - 1), edist (f (w (i + 1))) (f (w i))) +
               ∑ i in Finset.Ico (N - 1) (N + 1), edist (f (w (i + 1))) (f (w i))) +
@@ -478,12 +478,12 @@ theorem add_point (f : α → E) {s : Set α} {x : α} (hx : x ∈ s) (u : ℕ �
         have A : N - 1 + 1 = N := Nat.succ_pred_eq_of_pos Npos
         have B : N - 1 + 1 < N + 1 := A.symm ▸ N.lt_succ_self
         have C : N - 1 < N + 1 := lt_of_le_of_lt N.pred_le N.lt_succ_self
-        rw [Finset.sum_eq_sum_ico_succ_bot C, Finset.sum_eq_sum_ico_succ_bot B, A, Finset.Ico_self,
+        rw [Finset.sum_eq_sum_Ico_succ_bot C, Finset.sum_eq_sum_Ico_succ_bot B, A, Finset.Ico_self,
           Finset.sum_empty, add_zero, add_comm (edist _ _)]
         exact edist_triangle _ _ _
       _ = ∑ j in Finset.range (n + 1), edist (f (w (j + 1))) (f (w j)) :=
         by
-        rw [Finset.sum_ico_consecutive, Finset.sum_ico_consecutive, Finset.range_eq_Ico]
+        rw [Finset.sum_Ico_consecutive, Finset.sum_Ico_consecutive, Finset.range_eq_Ico]
         · exact zero_le _
         · exact Nat.succ_le_succ hN.left
         · exact zero_le _
@@ -552,7 +552,7 @@ theorem add_le_union (f : α → E) {s t : Set α} (h : ∀ x ∈ s, ∀ y ∈ t
       by
       congr 1
       rw [Finset.range_eq_Ico]
-      convert Finset.sum_ico_add (fun i : ℕ => edist (f (w (i + 1))) (f (w i))) 0 m (n + 1) using
+      convert Finset.sum_Ico_add (fun i : ℕ => edist (f (w (i + 1))) (f (w i))) 0 m (n + 1) using
           3 <;>
         abel
     _ ≤ ∑ i in Finset.range (n + 1 + m), edist (f (w (i + 1))) (f (w i)) :=
@@ -596,7 +596,7 @@ theorem union (f : α → E) {s t : Set α} {x : α} (hs : IsGreatest s x) (ht :
       _ =
           (∑ j in Finset.Ico 0 N, edist (f (v (j + 1))) (f (v j))) +
             ∑ j in Finset.Ico N m, edist (f (v (j + 1))) (f (v j)) :=
-        by rw [Finset.range_eq_Ico, Finset.sum_ico_consecutive _ (zero_le _) hN.le]
+        by rw [Finset.range_eq_Ico, Finset.sum_Ico_consecutive _ (zero_le _) hN.le]
       _ ≤ evariationOn f s + evariationOn f t :=
         by
         refine' add_le_add _ _

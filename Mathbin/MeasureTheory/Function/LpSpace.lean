@@ -138,7 +138,7 @@ theorem snorm_eq_lintegral_rpow_nnnorm (hp_ne_zero : p ≠ 0) (hp_ne_top : p ≠
 #align measure_theory.snorm_eq_lintegral_rpow_nnnorm MeasureTheory.snorm_eq_lintegral_rpow_nnnorm
 
 theorem snorm_one_eq_lintegral_nnnorm {f : α → F} : snorm f 1 μ = ∫⁻ x, ‖f x‖₊ ∂μ := by
-  simp_rw [snorm_eq_lintegral_rpow_nnnorm one_neZero Ennreal.coe_ne_top, Ennreal.one_toReal,
+  simp_rw [snorm_eq_lintegral_rpow_nnnorm one_ne_zero Ennreal.coe_ne_top, Ennreal.one_toReal,
     one_div_one, Ennreal.rpow_one]
 #align measure_theory.snorm_one_eq_lintegral_nnnorm MeasureTheory.snorm_one_eq_lintegral_nnnorm
 
@@ -1569,7 +1569,7 @@ theorem ae_bdd_liminf_atTop_of_snorm_bdd {p : ℝ≥0∞} (hp : p ≠ 0) {f : �
     simp_rw [snorm_exponent_top] at hbdd
     have : ∀ n, ∀ᵐ x ∂μ, (‖f n x‖₊ : ℝ≥0∞) < R + 1 := fun n =>
       ae_lt_of_essSup_lt
-        (lt_of_le_of_lt (hbdd n) <| Ennreal.lt_add_right Ennreal.coe_ne_top one_neZero)
+        (lt_of_le_of_lt (hbdd n) <| Ennreal.lt_add_right Ennreal.coe_ne_top one_ne_zero)
     rw [← ae_all_iff] at this
     filter_upwards [this]with x hx using lt_of_le_of_lt
         (liminf_le_of_frequently_le' <| frequently_of_forall fun n => (hx n).le)
@@ -3144,7 +3144,7 @@ theorem toLp_inj {f g : α →ᵇ E} [μ.IsOpenPosMeasure] [NormedField 𝕜] [N
     toLp p μ 𝕜 f = toLp p μ 𝕜 g ↔ f = g :=
   by
   refine' ⟨fun h => _, by tauto⟩
-  rw [← FunLike.coeFn_eq, ← (map_continuous f).ae_eq_iff_eq μ (map_continuous g)]
+  rw [← FunLike.coe_fn_eq, ← (map_continuous f).ae_eq_iff_eq μ (map_continuous g)]
   refine' (coe_fn_to_Lp p μ 𝕜 f).symm.trans (eventually_eq.trans _ <| coe_fn_to_Lp p μ 𝕜 g)
   rw [h]
 #align bounded_continuous_function.to_Lp_inj BoundedContinuousFunction.toLp_inj

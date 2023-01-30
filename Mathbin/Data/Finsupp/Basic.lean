@@ -1342,7 +1342,7 @@ theorem sumElim_inr {α β γ : Type _} [Zero γ] (f : α →₀ γ) (g : β →
 /-- The equivalence between `(α ⊕ β) →₀ γ` and `(α →₀ γ) × (β →₀ γ)`.
 
 This is the `finsupp` version of `equiv.sum_arrow_equiv_prod_arrow`. -/
-@[simps apply symmApply]
+@[simps apply symm_apply]
 def sumFinsuppEquivProdFinsupp {α β γ : Type _} [Zero γ] : (Sum α β →₀ γ) ≃ (α →₀ γ) × (β →₀ γ)
     where
   toFun f :=
@@ -1380,7 +1380,7 @@ variable [AddMonoid M]
 /-- The additive equivalence between `(α ⊕ β) →₀ M` and `(α →₀ M) × (β →₀ M)`.
 
 This is the `finsupp` version of `equiv.sum_arrow_equiv_prod_arrow`. -/
-@[simps apply symmApply]
+@[simps apply symm_apply]
 def sumFinsuppAddEquivProdFinsupp {α β : Type _} : (Sum α β →₀ M) ≃+ (α →₀ M) × (β →₀ M) :=
   { sumFinsuppEquivProdFinsupp with
     map_add' := by

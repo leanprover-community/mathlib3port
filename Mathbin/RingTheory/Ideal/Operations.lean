@@ -2103,7 +2103,7 @@ include rcf
 theorem not_one_mem_ker [Nontrivial S] (f : F) : (1 : R) ∉ ker f :=
   by
   rw [mem_ker, map_one]
-  exact one_neZero
+  exact one_ne_zero
 #align ring_hom.not_one_mem_ker RingHom.not_one_mem_ker
 
 theorem ker_ne_top [Nontrivial S] (f : F) : ker f ≠ ⊤ :=

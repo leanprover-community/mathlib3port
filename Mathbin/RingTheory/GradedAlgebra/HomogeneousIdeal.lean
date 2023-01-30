@@ -71,7 +71,7 @@ def Ideal.IsHomogeneous : Prop :=
 
 /-- For any `semiring A`, we collect the homogeneous ideals of `A` into a type. -/
 structure HomogeneousIdeal extends Submodule A A where
-  is_homogeneous' : Ideal.IsHomogeneous 𝒜 to_submodule
+  isHomogeneous' : Ideal.IsHomogeneous 𝒜 to_submodule
 #align homogeneous_ideal HomogeneousIdeal
 
 variable {𝒜}
@@ -82,7 +82,7 @@ def HomogeneousIdeal.toIdeal (I : HomogeneousIdeal 𝒜) : Ideal A :=
 #align homogeneous_ideal.to_ideal HomogeneousIdeal.toIdeal
 
 theorem HomogeneousIdeal.isHomogeneous (I : HomogeneousIdeal 𝒜) : I.toIdeal.IsHomogeneous 𝒜 :=
-  I.is_homogeneous'
+  I.isHomogeneous'
 #align homogeneous_ideal.is_homogeneous HomogeneousIdeal.isHomogeneous
 
 theorem HomogeneousIdeal.toIdeal_injective :
@@ -171,7 +171,7 @@ theorem Ideal.mul_homogeneous_element_mem_of_mem {I : Ideal A} (r x : A) (hx₁ 
     · exact I.zero_mem
 #align ideal.mul_homogeneous_element_mem_of_mem Ideal.mul_homogeneous_element_mem_of_mem
 
-theorem Ideal.homogeneous_span (s : Set A) (h : ∀ x ∈ s, Homogeneous 𝒜 x) :
+theorem Ideal.isHomogeneousSpan (s : Set A) (h : ∀ x ∈ s, Homogeneous 𝒜 x) :
     (Ideal.span s).IsHomogeneous 𝒜 := by
   rintro i r hr
   rw [Ideal.span, Finsupp.span_eq_range_total] at hr
@@ -186,13 +186,13 @@ theorem Ideal.homogeneous_span (s : Set A) (h : ∀ x ∈ s, Homogeneous 𝒜 x)
   · rcases z with ⟨z, hz2⟩
     apply h _ hz2
   · exact Ideal.subset_span z.2
-#align ideal.is_homogeneous_span Ideal.homogeneous_span
+#align ideal.is_homogeneous_span Ideal.isHomogeneousSpan
 
 /-- For any `I : ideal A`, not necessarily homogeneous, `I.homogeneous_core' 𝒜`
 is the largest homogeneous ideal of `A` contained in `I`.-/
 def Ideal.homogeneousCore : HomogeneousIdeal 𝒜 :=
   ⟨Ideal.homogeneousCore' 𝒜 I,
-    Ideal.homogeneous_span _ _ fun x h =>
+    Ideal.isHomogeneousSpan _ _ fun x h =>
       by
       rw [Subtype.image_preimage_coe] at h
       exact h.2⟩
@@ -287,7 +287,7 @@ theorem sup {I J : Ideal A} (HI : I.IsHomogeneous 𝒜) (HJ : J.IsHomogeneous �
   exact (Submodule.span_union _ _).symm
 #align ideal.is_homogeneous.sup Ideal.IsHomogeneous.sup
 
-protected theorem supᵢ {κ : Sort _} {f : κ → Ideal A} (h : ∀ i, (f i).IsHomogeneous 𝒜) :
+protected theorem supr {κ : Sort _} {f : κ → Ideal A} (h : ∀ i, (f i).IsHomogeneous 𝒜) :
     (⨆ i, f i).IsHomogeneous 𝒜 := by
   simp_rw [iff_exists] at h⊢
   choose s hs using h
@@ -295,14 +295,14 @@ protected theorem supᵢ {κ : Sort _} {f : κ → Ideal A} (h : ∀ i, (f i).Is
   simp_rw [Set.image_unionᵢ, Ideal.span_unionᵢ]
   congr
   exact funext hs
-#align ideal.is_homogeneous.supr Ideal.IsHomogeneous.supᵢ
+#align ideal.is_homogeneous.supr Ideal.IsHomogeneous.supr
 
-protected theorem infᵢ {κ : Sort _} {f : κ → Ideal A} (h : ∀ i, (f i).IsHomogeneous 𝒜) :
+protected theorem infi {κ : Sort _} {f : κ → Ideal A} (h : ∀ i, (f i).IsHomogeneous 𝒜) :
     (⨅ i, f i).IsHomogeneous 𝒜 := by
   intro i x hx
   simp only [Ideal.mem_infᵢ] at hx⊢
   exact fun j => h _ _ (hx j)
-#align ideal.is_homogeneous.infi Ideal.IsHomogeneous.infᵢ
+#align ideal.is_homogeneous.infi Ideal.IsHomogeneous.infi
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 theorem supr₂ {κ : Sort _} {κ' : κ → Sort _} {f : ∀ i, κ' i → Ideal A}
@@ -316,17 +316,25 @@ theorem infi₂ {κ : Sort _} {κ' : κ → Sort _} {f : ∀ i, κ' i → Ideal 
   is_homogeneous.infi fun i => is_homogeneous.infi <| h i
 #align ideal.is_homogeneous.infi₂ Ideal.IsHomogeneous.infi₂
 
-theorem supₛ {ℐ : Set (Ideal A)} (h : ∀ I ∈ ℐ, Ideal.IsHomogeneous 𝒜 I) :
-    (supₛ ℐ).IsHomogeneous 𝒜 := by
+/- warning: ideal.is_homogeneous.Sup clashes with ideal.is_homogeneous.sup -> Ideal.IsHomogeneous.sup
+Case conversion may be inaccurate. Consider using '#align ideal.is_homogeneous.Sup Ideal.IsHomogeneous.supₓ'. -/
+#print Ideal.IsHomogeneous.sup /-
+theorem sup {ℐ : Set (Ideal A)} (h : ∀ I ∈ ℐ, Ideal.IsHomogeneous 𝒜 I) : (supₛ ℐ).IsHomogeneous 𝒜 :=
+  by
   rw [supₛ_eq_supᵢ]
   exact supr₂ h
-#align ideal.is_homogeneous.Sup Ideal.IsHomogeneous.supₛ
+#align ideal.is_homogeneous.Sup Ideal.IsHomogeneous.sup
+-/
 
-theorem infₛ {ℐ : Set (Ideal A)} (h : ∀ I ∈ ℐ, Ideal.IsHomogeneous 𝒜 I) :
-    (infₛ ℐ).IsHomogeneous 𝒜 := by
+/- warning: ideal.is_homogeneous.Inf clashes with ideal.is_homogeneous.inf -> Ideal.IsHomogeneous.inf
+Case conversion may be inaccurate. Consider using '#align ideal.is_homogeneous.Inf Ideal.IsHomogeneous.infₓ'. -/
+#print Ideal.IsHomogeneous.inf /-
+theorem inf {ℐ : Set (Ideal A)} (h : ∀ I ∈ ℐ, Ideal.IsHomogeneous 𝒜 I) : (infₛ ℐ).IsHomogeneous 𝒜 :=
+  by
   rw [infₛ_eq_infᵢ]
   exact infi₂ h
-#align ideal.is_homogeneous.Inf Ideal.IsHomogeneous.infₛ
+#align ideal.is_homogeneous.Inf Ideal.IsHomogeneous.inf
+-/
 
 end Ideal.IsHomogeneous
 
@@ -567,7 +575,7 @@ the smallest homogeneous ideal containing `I`. -/
 def Ideal.homogeneousHull : HomogeneousIdeal 𝒜 :=
   ⟨Ideal.span { r : A | ∃ (i : ι)(x : I), (DirectSum.decompose 𝒜 (x : A) i : A) = r },
     by
-    refine' Ideal.homogeneous_span _ _ fun x hx => _
+    refine' Ideal.isHomogeneousSpan _ _ fun x hx => _
     obtain ⟨i, x, rfl⟩ := hx
     apply SetLike.homogeneous_coe⟩
 #align ideal.homogeneous_hull Ideal.homogeneousHull
@@ -625,7 +633,7 @@ theorem Ideal.homogeneousHull_eq_supᵢ :
     I.homogeneousHull 𝒜 =
       ⨆ i,
         ⟨Ideal.span (GradedRing.proj 𝒜 i '' I),
-          Ideal.homogeneous_span 𝒜 _
+          Ideal.isHomogeneousSpan 𝒜 _
             (by
               rintro _ ⟨x, -, rfl⟩
               apply SetLike.homogeneous_coe)⟩ :=

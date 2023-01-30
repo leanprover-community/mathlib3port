@@ -192,7 +192,7 @@ theorem integral_mul_cexp_neg_mul_sq {b : ℂ} (hb : 0 < b.re) :
     simp_rw [norm_cexp_neg_mul_sq b]
     exact
       tendsto_exp_at_bot.comp
-        (tendsto.neg_const_mul_at_top (neg_lt_zero.2 hb) (tendsto_pow_at_top two_neZero))
+        (tendsto.neg_const_mul_at_top (neg_lt_zero.2 hb) (tendsto_pow_at_top two_ne_zero))
   simpa using L
 #align integral_mul_cexp_neg_mul_sq integral_mul_cexp_neg_mul_sq
 
@@ -337,7 +337,7 @@ theorem integral_gaussian_complex_ioi {b : ℂ} (hb : 0 < re b) :
     by
     rw [this, ← mul_two] at full_integral
     rwa [eq_div_iff]
-    exact two_neZero
+    exact two_ne_zero
   have : ∀ c : ℝ, (∫ x in 0 ..c, cexp (-b * x ^ 2)) = ∫ x in -c..0, cexp (-b * x ^ 2) :=
     by
     intro c

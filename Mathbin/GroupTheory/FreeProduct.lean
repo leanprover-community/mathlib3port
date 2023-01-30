@@ -126,7 +126,7 @@ theorem ext_hom (f g : FreeProduct M →* N) (h : ∀ i, f.comp (of : M i →* _
 
 /-- A map out of the free product corresponds to a family of maps out of the summands. This is the
 universal property of the free product, charaterizing it as a categorical coproduct. -/
-@[simps symmApply]
+@[simps symm_apply]
 def lift : (∀ i, M i →* N) ≃ (FreeProduct M →* N)
     where
   toFun fi :=

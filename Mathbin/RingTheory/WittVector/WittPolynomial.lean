@@ -121,7 +121,7 @@ theorem map_wittPolynomial (f : R →+* S) (n : ℕ) : map f (W n) = W n :=
   by
   rw [wittPolynomial, RingHom.map_sum, wittPolynomial, sum_congr rfl]
   intro i hi
-  rw [map_monomial, RingHom.map_pow, map_nat_cast]
+  rw [map_monomial, RingHom.map_pow, map_natCast]
 #align map_witt_polynomial map_wittPolynomial
 
 variable (R)

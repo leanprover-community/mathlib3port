@@ -36,7 +36,7 @@ theorem wilsons_lemma : ((p - 1)! : ZMod p) = -1 :=
   refine'
     calc
       ((p - 1)! : ZMod p) = ∏ x in Ico 1 (succ (p - 1)), x := by
-        rw [← Finset.prod_ico_id_eq_factorial, prod_nat_cast]
+        rw [← Finset.prod_Ico_id_eq_factorial, prod_nat_cast]
       _ = ∏ x : (ZMod p)ˣ, x := _
       _ = -1 := by
         simp_rw [← Units.coeHom_apply, ← (Units.coeHom (ZMod p)).map_prod,
@@ -72,7 +72,7 @@ theorem wilsons_lemma : ((p - 1)! : ZMod p) = -1 :=
 theorem prod_ico_one_prime : (∏ x in Ico 1 p, (x : ZMod p)) = -1 :=
   by
   conv in Ico 1 p => rw [← succ_sub_one p, succ_sub (Fact.out p.prime).Pos]
-  rw [← prod_nat_cast, Finset.prod_ico_id_eq_factorial, wilsons_lemma]
+  rw [← prod_nat_cast, Finset.prod_Ico_id_eq_factorial, wilsons_lemma]
 #align zmod.prod_Ico_one_prime ZMod.prod_ico_one_prime
 
 end Wilson
@@ -195,7 +195,7 @@ theorem gauss_lemma {p : ℕ} [Fact p.Prime] {a : ℤ} (hp : p ≠ 2) (ha0 : (a 
       cases
         neg_one_pow_eq_or ℤ
           ((Ico 1 (p / 2).succ).filter fun x : ℕ => p / 2 < (a * x : ZMod p).val).card <;>
-    simp_all [ne_neg_self p one_neZero, (ne_neg_self p one_neZero).symm]
+    simp_all [ne_neg_self p one_ne_zero, (ne_neg_self p one_ne_zero).symm]
 #align zmod.gauss_lemma ZMod.gauss_lemma
 
 private theorem eisenstein_lemma_aux₁ (p : ℕ) [Fact p.Prime] [hp2 : Fact (p % 2 = 1)] {a : ℕ}
@@ -340,7 +340,7 @@ theorem sum_mul_div_add_sum_mul_div_eq_mul (p q : ℕ) [hp : Fact p.Prime] (hq0 
       simpa [hq0] using congr_arg (coe : ℕ → ZMod p) (le_antisymm hpq hqp)
     apply_fun ZMod.val  at this
     rw [val_cast_of_lt hxp, val_zero] at this
-    simpa only [this, nonpos_iff_eq_zero, mem_Ico, one_neZero, false_and_iff, mem_product] using hx
+    simpa only [this, nonpos_iff_eq_zero, mem_Ico, one_ne_zero, false_and_iff, mem_product] using hx
   have hunion :
     (((Ico 1 (p / 2).succ ×ˢ Ico 1 (q / 2).succ).filter fun x : ℕ × ℕ => x.2 * p ≤ x.1 * q) ∪
         (Ico 1 (p / 2).succ ×ˢ Ico 1 (q / 2).succ).filter fun x : ℕ × ℕ => x.1 * q ≤ x.2 * p) =

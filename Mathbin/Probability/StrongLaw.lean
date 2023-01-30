@@ -182,12 +182,12 @@ theorem moment_truncation_eq_intervalIntegral_of_nonneg (hf : AeStronglyMeasurab
 
 theorem integral_truncation_eq_intervalIntegral (hf : AeStronglyMeasurable f μ) {A : ℝ}
     (hA : 0 ≤ A) : (∫ x, truncation f A x ∂μ) = ∫ y in -A..A, y ∂Measure.map f μ := by
-  simpa using moment_truncation_eq_interval_integral hf hA one_neZero
+  simpa using moment_truncation_eq_interval_integral hf hA one_ne_zero
 #align probability_theory.integral_truncation_eq_interval_integral ProbabilityTheory.integral_truncation_eq_intervalIntegral
 
 theorem integral_truncation_eq_intervalIntegral_of_nonneg (hf : AeStronglyMeasurable f μ) {A : ℝ}
     (h'f : 0 ≤ f) : (∫ x, truncation f A x ∂μ) = ∫ y in 0 ..A, y ∂Measure.map f μ := by
-  simpa using moment_truncation_eq_interval_integral_of_nonneg hf one_neZero h'f
+  simpa using moment_truncation_eq_interval_integral_of_nonneg hf one_ne_zero h'f
 #align probability_theory.integral_truncation_eq_interval_integral_of_nonneg ProbabilityTheory.integral_truncation_eq_intervalIntegral_of_nonneg
 
 theorem integral_truncation_le_integral_of_nonneg (hf : Integrable f μ) (h'f : 0 ≤ f) {A : ℝ} :
@@ -375,7 +375,7 @@ theorem sum_variance_truncation_le {X : Ω → ℝ} (hint : Integrable X) (hnonn
     by
     intro n
     change 𝔼[fun x => Y n x ^ 2] = _
-    rw [moment_truncation_eq_interval_integral_of_nonneg hint.1 two_neZero hnonneg]
+    rw [moment_truncation_eq_interval_integral_of_nonneg hint.1 two_ne_zero hnonneg]
   calc
     (∑ j in range K, ((j : ℝ) ^ 2)⁻¹ * 𝔼[Y j ^ 2]) =
         ∑ j in range K, ((j : ℝ) ^ 2)⁻¹ * ∫ x in 0 ..j, x ^ 2 ∂ρ :=

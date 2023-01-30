@@ -216,7 +216,7 @@ theorem inseparable_eq_eq [T0Space α] : Inseparable = @Eq α :=
 
 theorem t0Space_iff_exists_isOpen_xor'_mem (α : Type u) [TopologicalSpace α] :
     T0Space α ↔ ∀ x y, x ≠ y → ∃ U : Set α, IsOpen U ∧ Xor' (x ∈ U) (y ∈ U) := by
-  simp only [t0Space_iff_not_inseparable, xor'_iff_not_iff, not_forall, exists_prop,
+  simp only [t0Space_iff_not_inseparable, xor_iff_not_iff, not_forall, exists_prop,
     inseparable_iff_forall_open]
 #align t0_space_iff_exists_is_open_xor_mem t0Space_iff_exists_isOpen_xor'_mem
 
@@ -295,7 +295,7 @@ theorem exists_open_singleton_of_open_finite [T0Space α] {s : Set α} (hfin : s
     · exact ⟨x, hx.symm ▸ rfl, hx ▸ ho⟩
     refine' fun t hts htne hto => of_not_not fun hts' => ht _
     lift t to Finset α using s.finite_to_set.subset hts
-    exact ⟨t, sSubset_iff_subset_ne.2 ⟨hts, mt Finset.coe_inj.2 hts'⟩, htne, hto⟩
+    exact ⟨t, ssubset_iff_subset_ne.2 ⟨hts, mt Finset.coe_inj.2 hts'⟩, htne, hto⟩
 #align exists_open_singleton_of_open_finite exists_open_singleton_of_open_finite
 
 theorem exists_open_singleton_of_fintype [T0Space α] [Finite α] [Nonempty α] :

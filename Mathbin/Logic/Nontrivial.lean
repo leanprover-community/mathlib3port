@@ -126,8 +126,9 @@ instance (priority := 500) Nontrivial.to_nonempty [Nontrivial α] : Nonempty α 
 
 attribute [instance] instNonempty
 
+#print nontrivialPSumUnique /-
 /-- An inhabited type is either nontrivial, or has a unique element. -/
-noncomputable def nontrivialPsumUnique (α : Type _) [Inhabited α] :
+noncomputable def nontrivialPSumUnique (α : Type _) [Inhabited α] :
     PSum (Nontrivial α) (Unique α) :=
   if h : Nontrivial α then PSum.inl h
   else
@@ -137,7 +138,8 @@ noncomputable def nontrivialPsumUnique (α : Type _) [Inhabited α] :
           change x = default
           contrapose! h
           use x, default }
-#align nontrivial_psum_unique nontrivialPsumUnique
+#align nontrivial_psum_unique nontrivialPSumUnique
+-/
 
 #print subsingleton_iff /-
 theorem subsingleton_iff : Subsingleton α ↔ ∀ x y : α, x = y :=

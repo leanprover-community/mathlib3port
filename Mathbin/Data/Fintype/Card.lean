@@ -409,7 +409,7 @@ theorem fin_injective : Function.Injective Fin := fun m n h =>
 lean 3 declaration is
   forall {n : Nat} {m : Nat} (h : Eq.{2} Type (Fin n) (Fin m)), Eq.{1} ((Fin n) -> (Fin m)) (cast.{1} (Fin n) (Fin m) h) (coeFn.{1, 1} (OrderIso.{0, 0} (Fin n) (Fin m) (Fin.hasLe n) (Fin.hasLe m)) (fun (_x : RelIso.{0, 0} (Fin n) (Fin m) (LE.le.{0} (Fin n) (Fin.hasLe n)) (LE.le.{0} (Fin m) (Fin.hasLe m))) => (Fin n) -> (Fin m)) (RelIso.hasCoeToFun.{0, 0} (Fin n) (Fin m) (LE.le.{0} (Fin n) (Fin.hasLe n)) (LE.le.{0} (Fin m) (Fin.hasLe m))) (Fin.cast n m (fin_injective n m h)))
 but is expected to have type
-  forall {n : Nat} {m : Nat} (h : Eq.{2} Type (Fin n) (Fin m)), Eq.{1} ((Fin n) -> (Fin m)) (cast.{1} (Fin n) (Fin m) h) (FunLike.coe.{1, 1, 1} (Function.Embedding.{1, 1} (Fin n) (Fin m)) (Fin n) (fun (_x : Fin n) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Fin n) => Fin m) _x) (EmbeddingLike.toFunLike.{1, 1, 1} (Function.Embedding.{1, 1} (Fin n) (Fin m)) (Fin n) (Fin m) (Function.instEmbeddingLikeEmbedding.{1, 1} (Fin n) (Fin m))) (RelEmbedding.toEmbedding.{0, 0} (Fin n) (Fin m) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1411 : Fin n) (x._@.Mathlib.Order.Hom.Basic._hyg.1413 : Fin n) => LE.le.{0} (Fin n) (instLEFin n) x._@.Mathlib.Order.Hom.Basic._hyg.1411 x._@.Mathlib.Order.Hom.Basic._hyg.1413) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1426 : Fin m) (x._@.Mathlib.Order.Hom.Basic._hyg.1428 : Fin m) => LE.le.{0} (Fin m) (instLEFin m) x._@.Mathlib.Order.Hom.Basic._hyg.1426 x._@.Mathlib.Order.Hom.Basic._hyg.1428) (RelIso.toRelEmbedding.{0, 0} (Fin n) (Fin m) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1411 : Fin n) (x._@.Mathlib.Order.Hom.Basic._hyg.1413 : Fin n) => LE.le.{0} (Fin n) (instLEFin n) x._@.Mathlib.Order.Hom.Basic._hyg.1411 x._@.Mathlib.Order.Hom.Basic._hyg.1413) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1426 : Fin m) (x._@.Mathlib.Order.Hom.Basic._hyg.1428 : Fin m) => LE.le.{0} (Fin m) (instLEFin m) x._@.Mathlib.Order.Hom.Basic._hyg.1426 x._@.Mathlib.Order.Hom.Basic._hyg.1428) (Fin.cast n m (fin_injective n m h)))))
+  forall {n : Nat} {m : Nat} (h : Eq.{2} Type (Fin n) (Fin m)), Eq.{1} ((Fin n) -> (Fin m)) (cast.{1} (Fin n) (Fin m) h) (FunLike.coe.{1, 1, 1} (Function.Embedding.{1, 1} (Fin n) (Fin m)) (Fin n) (fun (_x : Fin n) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Fin n) => Fin m) _x) (EmbeddingLike.toFunLike.{1, 1, 1} (Function.Embedding.{1, 1} (Fin n) (Fin m)) (Fin n) (Fin m) (Function.instEmbeddingLikeEmbedding.{1, 1} (Fin n) (Fin m))) (RelEmbedding.toEmbedding.{0, 0} (Fin n) (Fin m) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : Fin n) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : Fin n) => LE.le.{0} (Fin n) (instLEFin n) x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : Fin m) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : Fin m) => LE.le.{0} (Fin m) (instLEFin m) x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298) (RelIso.toRelEmbedding.{0, 0} (Fin n) (Fin m) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : Fin n) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : Fin n) => LE.le.{0} (Fin n) (instLEFin n) x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : Fin m) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : Fin m) => LE.le.{0} (Fin m) (instLEFin m) x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298) (Fin.cast n m (fin_injective n m h)))))
 Case conversion may be inaccurate. Consider using '#align fin.cast_eq_cast' Fin.cast_eq_cast'ₓ'. -/
 /-- A reversed version of `fin.cast_eq_cast` that is easier to rewrite with. -/
 theorem Fin.cast_eq_cast' {n m : ℕ} (h : Fin n = Fin m) : cast h = ⇑(Fin.cast <| fin_injective h) :=
@@ -1226,14 +1226,14 @@ theorem Fintype.card_compl_eq_card_compl [Finite α] (p q : α → Prop) [Fintyp
 #print Fintype.card_quotient_le /-
 theorem Fintype.card_quotient_le [Fintype α] (s : Setoid α)
     [DecidableRel ((· ≈ ·) : α → α → Prop)] : Fintype.card (Quotient s) ≤ Fintype.card α :=
-  Fintype.card_le_of_surjective _ (surjective_quotient_mk' _)
+  Fintype.card_le_of_surjective _ (surjective_quotient_mk _)
 #align fintype.card_quotient_le Fintype.card_quotient_le
 -/
 
 #print Fintype.card_quotient_lt /-
 theorem Fintype.card_quotient_lt [Fintype α] {s : Setoid α} [DecidableRel ((· ≈ ·) : α → α → Prop)]
     {x y : α} (h1 : x ≠ y) (h2 : x ≈ y) : Fintype.card (Quotient s) < Fintype.card α :=
-  Fintype.card_lt_of_surjective_not_injective _ (surjective_quotient_mk' _) fun w =>
+  Fintype.card_lt_of_surjective_not_injective _ (surjective_quotient_mk _) fun w =>
     h1 (w <| Quotient.eq'.mpr h2)
 #align fintype.card_quotient_lt Fintype.card_quotient_lt
 -/

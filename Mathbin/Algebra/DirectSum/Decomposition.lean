@@ -83,7 +83,7 @@ def decompose : M ≃ ⨁ i, ℳ i where
   right_inv := Decomposition.right_inv
 #align direct_sum.decompose DirectSum.decompose
 
-protected theorem Decomposition.induction_on {p : M → Prop} (h_zero : p 0)
+protected theorem Decomposition.inductionOn {p : M → Prop} (h_zero : p 0)
     (h_homogeneous : ∀ {i} (m : ℳ i), p (m : M)) (h_add : ∀ m m' : M, p m → p m' → p (m + m')) :
     ∀ m, p m :=
   by
@@ -97,7 +97,7 @@ protected theorem Decomposition.induction_on {p : M → Prop} (h_zero : p 0)
     (DirectSum.IsInternal.addSubmonoid_supᵢ_eq_top ℳ' (decomposition.is_internal ℳ')).symm ▸ trivial
   exact fun m =>
     AddSubmonoid.supᵢ_induction ℳ' (mem m) (fun i m h => h_homogeneous ⟨m, h⟩) h_zero h_add
-#align direct_sum.decomposition.induction_on DirectSum.Decomposition.induction_on
+#align direct_sum.decomposition.induction_on DirectSum.Decomposition.inductionOn
 
 @[simp]
 theorem Decomposition.decompose'_eq : decomposition.decompose' = decompose ℳ :=

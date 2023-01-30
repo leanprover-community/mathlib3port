@@ -53,13 +53,13 @@ theorem eq_of_le_of_cast_pow_eq_zero [CharP R p] (i : ℕ) (hin : i ≤ n)
   replace hin := lt_of_le_of_ne hin hpi
   clear hpi
   have : (↑p ^ i : TruncatedWittVector p n R) = WittVector.truncate n (↑p ^ i) := by
-    rw [RingHom.map_pow, map_nat_cast]
+    rw [RingHom.map_pow, map_natCast]
   rw [this, ext_iff, not_forall]
   clear this
   use ⟨i, hin⟩
   rw [WittVector.coeff_truncate, coeff_zero, Fin.val_mk, WittVector.coeff_p_pow]
   haveI : Nontrivial R := CharP.nontrivial_of_char_ne_one hp.1.ne_one
-  exact one_neZero
+  exact one_ne_zero
 #align truncated_witt_vector.eq_of_le_of_cast_pow_eq_zero TruncatedWittVector.eq_of_le_of_cast_pow_eq_zero
 
 section Iso

@@ -564,13 +564,13 @@ unsafe def match_const {elab} : expr elab → Option (Name × List level)
 
 /-- Match a metavariable. -/
 unsafe def match_mvar {elab} : expr elab → Option (Name × Name × expr elab)
-  | mvar unique pretty type => some (unique, pretty, type)
+  | mvar Unique pretty type => some (Unique, pretty, type)
   | _ => none
 #align expr.match_mvar expr.match_mvar
 
 /-- Match a local constant. -/
 unsafe def match_local_const {elab} : expr elab → Option (Name × Name × BinderInfo × expr elab)
-  | local_const unique pretty bi type => some (unique, pretty, bi, type)
+  | local_const Unique pretty bi type => some (Unique, pretty, bi, type)
   | _ => none
 #align expr.match_local_const expr.match_local_const
 

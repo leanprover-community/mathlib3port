@@ -275,7 +275,7 @@ theorem hasSum_one_div_nat_pow_mul_fourier {k : ℕ} (hk : 2 ≤ k) {x : ℝ} (h
     rw [eq_div_iff, ← mul_pow, ← neg_eq_neg_one_mul, neg_neg, one_pow]
     apply pow_ne_zero
     rw [neg_ne_zero]
-    exact one_neZero
+    exact one_ne_zero
   · rw [Int.cast_zero, zero_pow (by linarith : 0 < k), div_zero, zero_mul, add_zero]
 #align has_sum_one_div_nat_pow_mul_fourier hasSum_one_div_nat_pow_mul_fourier
 
@@ -397,14 +397,14 @@ section Examples
 
 theorem hasSum_zeta_two : HasSum (fun n : ℕ => 1 / (n : ℝ) ^ 2) (π ^ 2 / 6) :=
   by
-  convert hasSum_zeta_nat one_neZero using 1; rw [mul_one]
+  convert hasSum_zeta_nat one_ne_zero using 1; rw [mul_one]
   rw [bernoulli_eq_bernoulli'_of_ne_one (by decide : 2 ≠ 1), bernoulli'_two]
   norm_num; field_simp; ring
 #align has_sum_zeta_two hasSum_zeta_two
 
 theorem hasSum_zeta_four : HasSum (fun n : ℕ => 1 / (n : ℝ) ^ 4) (π ^ 4 / 90) :=
   by
-  convert hasSum_zeta_nat two_neZero using 1; norm_num
+  convert hasSum_zeta_nat two_ne_zero using 1; norm_num
   rw [bernoulli_eq_bernoulli'_of_ne_one, bernoulli'_four]
   norm_num; field_simp; ring; decide
 #align has_sum_zeta_four hasSum_zeta_four
@@ -426,7 +426,7 @@ theorem Polynomial.bernoulli_three_eval_one_quarter :
 theorem hasSum_L_function_mod_four_eval_three :
     HasSum (fun n : ℕ => 1 / (n : ℝ) ^ 3 * Real.sin (π * n / 2)) (π ^ 3 / 32) :=
   by
-  convert hasSum_one_div_nat_pow_mul_sin one_neZero (_ : 1 / 4 ∈ Icc (0 : ℝ) 1)
+  convert hasSum_one_div_nat_pow_mul_sin one_ne_zero (_ : 1 / 4 ∈ Icc (0 : ℝ) 1)
   · ext1 n
     norm_num
     left

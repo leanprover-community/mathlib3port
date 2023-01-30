@@ -58,20 +58,20 @@ variable {R : Type u} [Semiring R] {S : Type v} [Semiring S] {f : R →+* S}
 
 /-- We define the subsemiring of polynomials that lifts as the image of `ring_hom.of (map f)`. -/
 def lifts (f : R →+* S) : Subsemiring S[X] :=
-  RingHom.srange (mapRingHom f)
+  RingHom.rangeS (mapRingHom f)
 #align polynomial.lifts Polynomial.lifts
 
 theorem mem_lifts (p : S[X]) : p ∈ lifts f ↔ ∃ q : R[X], map f q = p := by
-  simp only [coe_map_ring_hom, lifts, RingHom.mem_srange]
+  simp only [coe_map_ring_hom, lifts, RingHom.mem_rangeS]
 #align polynomial.mem_lifts Polynomial.mem_lifts
 
 theorem lifts_iff_set_range (p : S[X]) : p ∈ lifts f ↔ p ∈ Set.range (map f) := by
-  simp only [coe_map_ring_hom, lifts, Set.mem_range, RingHom.mem_srange]
+  simp only [coe_map_ring_hom, lifts, Set.mem_range, RingHom.mem_rangeS]
 #align polynomial.lifts_iff_set_range Polynomial.lifts_iff_set_range
 
-theorem lifts_iff_ringHom_srange (p : S[X]) : p ∈ lifts f ↔ p ∈ (mapRingHom f).srange := by
-  simp only [coe_map_ring_hom, lifts, Set.mem_range, RingHom.mem_srange]
-#align polynomial.lifts_iff_ring_hom_srange Polynomial.lifts_iff_ringHom_srange
+theorem lifts_iff_ringHom_rangeS (p : S[X]) : p ∈ lifts f ↔ p ∈ (mapRingHom f).srange := by
+  simp only [coe_map_ring_hom, lifts, Set.mem_range, RingHom.mem_rangeS]
+#align polynomial.lifts_iff_ring_hom_srange Polynomial.lifts_iff_ringHom_rangeS
 
 theorem lifts_iff_coeff_lifts (p : S[X]) : p ∈ lifts f ↔ ∀ n : ℕ, p.coeff n ∈ Set.range f :=
   by
@@ -112,7 +112,7 @@ theorem x_pow_mem_lifts (f : R →+* S) (n : ℕ) : (X ^ n : S[X]) ∈ lifts f :
 /-- If `p` lifts and `(r : R)` then `r * p` lifts. -/
 theorem base_mul_mem_lifts {p : S[X]} (r : R) (hp : p ∈ lifts f) : c (f r) * p ∈ lifts f :=
   by
-  simp only [lifts, RingHom.mem_srange] at hp⊢
+  simp only [lifts, RingHom.mem_rangeS] at hp⊢
   obtain ⟨p₁, rfl⟩ := hp
   use C r * p₁
   simp only [coe_map_ring_hom, map_C, map_mul]
@@ -261,7 +261,7 @@ def liftsRing (f : R →+* S) : Subring S[X] :=
 /-- If `R` and `S` are rings, `p` is in the subring of polynomials that lift if and only if it is in
 the subsemiring of polynomials that lift. -/
 theorem lifts_iff_liftsRing (p : S[X]) : p ∈ lifts f ↔ p ∈ liftsRing f := by
-  simp only [lifts, lifts_ring, RingHom.mem_range, RingHom.mem_srange]
+  simp only [lifts, lifts_ring, RingHom.mem_range, RingHom.mem_rangeS]
 #align polynomial.lifts_iff_lifts_ring Polynomial.lifts_iff_liftsRing
 
 end Ring
@@ -284,7 +284,7 @@ theorem mapAlg_eq_map (p : R[X]) : mapAlg R S p = map (algebraMap R S) p := by
 /-- A polynomial `p` lifts if and only if it is in the image of `map_alg`. -/
 theorem mem_lifts_iff_mem_alg (R : Type u) [CommSemiring R] {S : Type v} [Semiring S] [Algebra R S]
     (p : S[X]) : p ∈ lifts (algebraMap R S) ↔ p ∈ AlgHom.range (@mapAlg R _ S _ _) := by
-  simp only [coe_map_ring_hom, lifts, map_alg_eq_map, AlgHom.mem_range, RingHom.mem_srange]
+  simp only [coe_map_ring_hom, lifts, map_alg_eq_map, AlgHom.mem_range, RingHom.mem_rangeS]
 #align polynomial.mem_lifts_iff_mem_alg Polynomial.mem_lifts_iff_mem_alg
 
 /-- If `p` lifts and `(r : R)` then `r • p` lifts. -/

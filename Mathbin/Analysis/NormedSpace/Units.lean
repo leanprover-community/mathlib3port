@@ -283,7 +283,7 @@ theorem inverse_add_norm_diff_second_order (x : Rˣ) :
   convert inverse_add_norm_diff_nth_order x 2
   ext t
   simp only [range_succ, range_one, sum_insert, mem_singleton, sum_singleton, not_false_iff,
-    one_neZero, pow_zero, add_mul, pow_one, one_mul, neg_mul, sub_add_eq_sub_sub_swap,
+    one_ne_zero, pow_zero, add_mul, pow_one, one_mul, neg_mul, sub_add_eq_sub_sub_swap,
     sub_neg_eq_add]
 #align normed_ring.inverse_add_norm_diff_second_order NormedRing.inverse_add_norm_diff_second_order
 
@@ -291,7 +291,7 @@ theorem inverse_add_norm_diff_second_order (x : Rˣ) :
 theorem inverse_continuousAt (x : Rˣ) : ContinuousAt inverse (x : R) :=
   by
   have h_is_o : (fun t : R => inverse (↑x + t) - ↑x⁻¹) =o[𝓝 0] (fun _ => 1 : R → ℝ) :=
-    (inverse_add_norm_diff_first_order x).trans_is_o (is_o.norm_left <| is_o_id_const one_neZero)
+    (inverse_add_norm_diff_first_order x).trans_is_o (is_o.norm_left <| is_o_id_const one_ne_zero)
   have h_lim : tendsto (fun y : R => y - x) (𝓝 x) (𝓝 0) :=
     by
     refine' tendsto_zero_iff_norm_tendsto_zero.mpr _

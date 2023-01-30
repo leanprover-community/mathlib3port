@@ -164,7 +164,7 @@ protected theorem lintegral_preimage (t : ℝ) (f : AddCircle T → ℝ≥0∞) 
   have := lintegral_map_equiv f (measurable_equiv_Ioc T t).symm
   swap; exact volume
   simp only [measurable_equiv_Ioc, equiv_Ioc, quotientAddGroup.equivIocMod, MeasurableEquiv.symm_mk,
-    MeasurableEquiv.coe_mk, Equiv.coeFn_symm_mk] at this
+    MeasurableEquiv.coe_mk, Equiv.coe_fn_symm_mk] at this
   rw [← (AddCircle.measurePreservingMk T t).map_eq]
   convert this.symm using 1
   -- TODO : there is no "set_lintegral_eq_subtype"?
@@ -190,7 +190,7 @@ protected theorem integral_preimage (t : ℝ) (f : AddCircle T → E) :
   have m : MeasurableSet (Ioc t (t + T)) := measurableSet_ioc
   have := integral_map_equiv (measurable_equiv_Ioc T t).symm f
   simp only [measurable_equiv_Ioc, equiv_Ioc, quotientAddGroup.equivIocMod, MeasurableEquiv.symm_mk,
-    MeasurableEquiv.coe_mk, Equiv.coeFn_symm_mk, coe_coe] at this
+    MeasurableEquiv.coe_mk, Equiv.coe_fn_symm_mk, coe_coe] at this
   rw [← (AddCircle.measurePreservingMk T t).map_eq, set_integral_eq_subtype m, ← this]
   have : (coe : Ioc t (t + T) → AddCircle T) = (coe : ℝ → AddCircle T) ∘ (coe : _ → ℝ) :=
     by

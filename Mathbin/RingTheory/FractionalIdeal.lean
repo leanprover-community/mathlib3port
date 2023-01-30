@@ -1066,7 +1066,7 @@ instance : Nontrivial (FractionalIdeal R₁⁰ K) :=
         by
         rw [← (algebraMap R₁ K).map_one]
         simpa only [h] using coe_mem_one R₁⁰ 1
-      one_neZero ((mem_zero_iff _).mp this)⟩⟩
+      one_ne_zero ((mem_zero_iff _).mp this)⟩⟩
 
 theorem ne_zero_of_mul_eq_one (I J : FractionalIdeal R₁⁰ K) (h : I * J = 1) : I ≠ 0 := fun hI =>
   zero_ne_one' (FractionalIdeal R₁⁰ K)

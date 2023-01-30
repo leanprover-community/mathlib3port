@@ -361,7 +361,7 @@ theorem δ_comp_σ_of_gt {n} {i : Fin (n + 2)} {j : Fin (n + 1)} (H : j.cast_suc
   swap
   · simp only [Fin.mk_lt_mk] at h_1
     simp only [not_lt] at h_2
-    simp only [self_eq_add_right, one_neZero]
+    simp only [self_eq_add_right, one_ne_zero]
     exact
       lt_irrefl (k - 1)
         (lt_of_lt_of_le (Nat.pred_lt (ne_of_lt (lt_of_le_of_lt (zero_le _) h_1)).symm)

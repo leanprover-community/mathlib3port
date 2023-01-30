@@ -165,7 +165,7 @@ theorem sentence_realize (φ : L.Sentence) : (u : Filter α).product M ⊨ φ �
 #align first_order.language.ultraproduct.sentence_realize FirstOrder.Language.Ultraproduct.sentence_realize
 
 instance : Nonempty ((u : Filter α).product M) :=
-  letI : ∀ a, Inhabited (M a) := fun _ => Classical.inhabitedOfNonempty'
+  letI : ∀ a, Inhabited (M a) := fun _ => Classical.inhabited_of_nonempty'
   instNonempty
 
 end Ultraproduct

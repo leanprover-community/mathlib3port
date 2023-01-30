@@ -194,7 +194,7 @@ theorem eq_one : f c = 1 :=
 theorem support_mem_nhds : support f ∈ 𝓝 c :=
   f.eventually_eq_one.mono fun x hx => by
     rw [hx]
-    exact one_neZero
+    exact one_ne_zero
 #align smooth_bump_function.support_mem_nhds SmoothBumpFunction.support_mem_nhds
 
 theorem tsupport_mem_nhds : tsupport f ∈ 𝓝 c :=

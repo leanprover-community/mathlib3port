@@ -226,7 +226,7 @@ theorem IsPartition.unionₛ_eq_univ {c : Set (Set α)} (hc : IsPartition c) : �
     Set.mem_unionₛ.2 <|
       let ⟨t, ht⟩ := hc.2 x
       ⟨t, by
-        simp only [existsUnique_iff_exists] at ht
+        simp only [exists_unique_iff_exists] at ht
         tauto⟩
 #align setoid.is_partition.sUnion_eq_univ Setoid.IsPartition.unionₛ_eq_univ
 

@@ -1851,19 +1851,19 @@ end ZNum
 namespace Int
 
 /-- Cast a `snum` to the corresponding integer. -/
-def ofSnum : Snum → ℤ :=
-  Snum.rec' (fun a => cond a (-1) 0) fun a p IH => cond a (bit1 IH) (bit0 IH)
+def ofSnum : SNum → ℤ :=
+  SNum.rec' (fun a => cond a (-1) 0) fun a p IH => cond a (bit1 IH) (bit0 IH)
 #align int.of_snum Int.ofSnum
 
-instance snumCoe : Coe Snum ℤ :=
+instance snumCoe : Coe SNum ℤ :=
   ⟨ofSnum⟩
 #align int.snum_coe Int.snumCoe
 
 end Int
 
-instance : LT Snum :=
+instance : LT SNum :=
   ⟨fun a b => (a : ℤ) < b⟩
 
-instance : LE Snum :=
+instance : LE SNum :=
   ⟨fun a b => (a : ℤ) ≤ b⟩
 

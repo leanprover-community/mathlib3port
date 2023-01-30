@@ -447,7 +447,7 @@ open JordanDecomposition
 
 /-- `measure_theory.signed_measure.to_jordan_decomposition` and
 `measure_theory.jordan_decomposition.to_signed_measure` form a `equiv`. -/
-@[simps apply symmApply]
+@[simps apply symm_apply]
 def toJordanDecompositionEquiv (α : Type _) [MeasurableSpace α] :
     SignedMeasure α ≃ JordanDecomposition α
     where

@@ -75,7 +75,7 @@ theorem rotation_ne_conjLie (a : circle) : rotation a ≠ conj_lie :=
   have hI : rotation a I = conj I := LinearIsometryEquiv.congr_fun h I
   rw [rotation_apply, RingHom.map_one, mul_one] at h1
   rw [rotation_apply, conj_I, ← neg_one_mul, mul_left_inj' I_ne_zero, h1, eq_neg_self_iff] at hI
-  exact one_neZero hI
+  exact one_ne_zero hI
 #align rotation_ne_conj_lie rotation_ne_conjLie
 
 /-- Takes an element of `ℂ ≃ₗᵢ[ℝ] ℂ` and checks if it is a rotation, returns an element of the
@@ -97,7 +97,7 @@ theorem rotation_injective : Function.Injective rotation :=
 theorem LinearIsometry.re_apply_eq_re_of_add_conj_eq (f : ℂ →ₗᵢ[ℝ] ℂ)
     (h₃ : ∀ z, z + conj z = f z + conj (f z)) (z : ℂ) : (f z).re = z.re := by
   simpa [ext_iff, add_re, add_im, conj_re, conj_im, ← two_mul,
-    show (2 : ℝ) ≠ 0 by simp [two_neZero]] using (h₃ z).symm
+    show (2 : ℝ) ≠ 0 by simp [two_ne_zero]] using (h₃ z).symm
 #align linear_isometry.re_apply_eq_re_of_add_conj_eq LinearIsometry.re_apply_eq_re_of_add_conj_eq
 
 theorem LinearIsometry.im_apply_eq_im_or_neg_of_re_apply_eq_re {f : ℂ →ₗᵢ[ℝ] ℂ}

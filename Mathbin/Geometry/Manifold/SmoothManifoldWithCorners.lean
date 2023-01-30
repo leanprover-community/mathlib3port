@@ -191,7 +191,7 @@ def Simps.symmApply (𝕜 : Type _) [NontriviallyNormedField 𝕜] (E : Type _) 
 #align model_with_corners.simps.symm_apply ModelWithCorners.Simps.symmApply
 
 initialize_simps_projections ModelWithCorners (to_local_equiv_to_fun → apply,
-  to_local_equiv_inv_fun → symmApply, to_local_equiv_source → source, to_local_equiv_target →
+  to_local_equiv_inv_fun → symm_apply, to_local_equiv_source → source, to_local_equiv_target →
   target, -toLocalEquiv)
 
 -- Register a few lemmas to make sure that `simp` puts expressions in normal form

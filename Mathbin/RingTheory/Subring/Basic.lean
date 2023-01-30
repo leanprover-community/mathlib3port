@@ -170,7 +170,7 @@ theorem coeSubtype : (subtype s : s → R) = coe :=
 
 @[simp, norm_cast]
 theorem coe_nat_cast (n : ℕ) : ((n : s) : R) = n :=
-  map_nat_cast (subtype s) n
+  map_natCast (subtype s) n
 #align subring_class.coe_nat_cast SubringClass.coe_nat_cast
 
 @[simp, norm_cast]
@@ -528,7 +528,7 @@ theorem coeSubtype : ⇑s.Subtype = coe :=
 
 @[simp, norm_cast]
 theorem coe_nat_cast : ∀ n : ℕ, ((n : s) : R) = n :=
-  map_nat_cast s.Subtype
+  map_natCast s.Subtype
 #align subring.coe_nat_cast Subring.coe_nat_cast
 
 @[simp, norm_cast]
@@ -1255,7 +1255,7 @@ def inclusion {S T : Subring R} (h : S ≤ T) : S →+* T :=
 
 @[simp]
 theorem range_subtype (s : Subring R) : s.Subtype.range = s :=
-  SetLike.coe_injective <| (coe_srange _).trans Subtype.range_coe
+  SetLike.coe_injective <| (coe_rangeS _).trans Subtype.range_coe
 #align subring.range_subtype Subring.range_subtype
 
 @[simp]

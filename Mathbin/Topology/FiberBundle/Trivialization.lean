@@ -263,7 +263,7 @@ theorem mk_symm (e : Pretrivialization F (π E)) {b : B} (hb : b ∈ e.baseSet) 
 
 theorem symm_proj_apply (e : Pretrivialization F (π E)) (z : TotalSpace E)
     (hz : z.proj ∈ e.baseSet) : e.symm z.proj (e z).2 = z.2 := by
-  rw [e.symm_apply hz, cast_eq_iff_hEq, e.mk_proj_snd' hz, e.symm_apply_apply (e.mem_source.mpr hz)]
+  rw [e.symm_apply hz, cast_eq_iff_heq, e.mk_proj_snd' hz, e.symm_apply_apply (e.mem_source.mpr hz)]
 #align pretrivialization.symm_proj_apply Pretrivialization.symm_proj_apply
 
 theorem symm_apply_apply_mk (e : Pretrivialization F (π E)) {b : B} (hb : b ∈ e.baseSet) (y : E b) :

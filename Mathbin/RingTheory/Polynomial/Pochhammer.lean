@@ -79,8 +79,8 @@ end
 @[simp, norm_cast]
 theorem pochhammer_eval_cast (n k : ℕ) : ((pochhammer ℕ n).eval k : S) = (pochhammer S n).eval k :=
   by
-  rw [← pochhammer_map (algebraMap ℕ S), eval_map, ← eq_nat_cast (algebraMap ℕ S),
-    eval₂_at_nat_cast, Nat.cast_id, eq_nat_cast]
+  rw [← pochhammer_map (algebraMap ℕ S), eval_map, ← eq_natCast (algebraMap ℕ S), eval₂_at_nat_cast,
+    Nat.cast_id, eq_natCast]
 #align pochhammer_eval_cast pochhammer_eval_cast
 
 theorem pochhammer_eval_zero {n : ℕ} : (pochhammer S n).eval 0 = if n = 0 then 1 else 0 :=

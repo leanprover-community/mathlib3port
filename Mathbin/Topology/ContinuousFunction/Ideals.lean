@@ -151,7 +151,7 @@ def opensOfIdeal [T2Space R] (I : Ideal C(X, R)) : Opens X :=
 
 @[simp]
 theorem set_of_top_eq_univ [Nontrivial R] : setOfIdeal (⊤ : Ideal C(X, R)) = Set.univ :=
-  Set.univ_subset_iff.mp fun x hx => mem_setOfIdeal.mpr ⟨1, Submodule.mem_top, one_neZero⟩
+  Set.univ_subset_iff.mp fun x hx => mem_setOfIdeal.mpr ⟨1, Submodule.mem_top, one_ne_zero⟩
 #align continuous_map.set_of_top_eq_univ ContinuousMap.set_of_top_eq_univ
 
 @[simp]
@@ -355,7 +355,7 @@ theorem setOfIdeal_of_set_eq_interior (s : Set X) : setOfIdeal (idealOfSet 𝕜 
     ⟨⟨fun x => g x, continuous_of_real.comp (map_continuous g)⟩, by
       simpa only [coe_mk, of_real_eq_zero] using fun x hx => hgs (subset_closure hx), by
       simpa only [coe_mk, hgx (Set.mem_singleton x), Pi.one_apply, IsROrC.of_real_one] using
-        one_neZero⟩
+        one_ne_zero⟩
 #align continuous_map.set_of_ideal_of_set_eq_interior ContinuousMap.setOfIdeal_of_set_eq_interior
 
 theorem setOfIdeal_of_set_of_isOpen {s : Set X} (hs : IsOpen s) : setOfIdeal (idealOfSet 𝕜 s) = s :=

@@ -323,7 +323,7 @@ def normalizeIso : tensorFunc C ≅ normalize' C :=
         conv_lhs => rw [← @category.id_comp (F C) _ _ _ ⟦f_g⟧]
         simp only [category.comp_id, tensor_comp, category.assoc]
         congr 2
-        rw [← mk_tensor, Quotient.lift_mk']
+        rw [← mk_tensor, Quotient.lift_mk]
         dsimp
         rw [functor.map_comp, ← category.assoc, ← f_ih_g ⟦f_g⟧, ←
           @category.comp_id (F C) _ _ _ ⟦f_g⟧, ←

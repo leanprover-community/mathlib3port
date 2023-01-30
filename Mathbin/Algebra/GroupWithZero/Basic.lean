@@ -98,7 +98,7 @@ theorem mul_eq_zero_of_ne_zero_imp_eq_zero {a b : M₀} (h : a ≠ 0 → b = 0) 
 lean 3 declaration is
   forall {M₀ : Type.{u1}} [_inst_1 : MulZeroClass.{u1} M₀], Eq.{succ u1} (M₀ -> M₀) (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toHasMul.{u1} M₀ _inst_1)) (OfNat.ofNat.{u1} M₀ 0 (OfNat.mk.{u1} M₀ 0 (Zero.zero.{u1} M₀ (MulZeroClass.toHasZero.{u1} M₀ _inst_1))))) (Function.const.{succ u1, succ u1} M₀ M₀ (OfNat.ofNat.{u1} M₀ 0 (OfNat.mk.{u1} M₀ 0 (Zero.zero.{u1} M₀ (MulZeroClass.toHasZero.{u1} M₀ _inst_1)))))
 but is expected to have type
-  forall {M₀ : Type.{u1}} [_inst_1 : MulZeroClass.{u1} M₀], Eq.{succ u1} (M₀ -> M₀) ((fun (x._@.Mathlib.Algebra.GroupWithZero.Basic._hyg.282 : M₀) (x._@.Mathlib.Algebra.GroupWithZero.Basic._hyg.284 : M₀) => HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toMul.{u1} M₀ _inst_1)) x._@.Mathlib.Algebra.GroupWithZero.Basic._hyg.282 x._@.Mathlib.Algebra.GroupWithZero.Basic._hyg.284) (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MulZeroClass.toZero.{u1} M₀ _inst_1)))) (Function.const.{succ u1, succ u1} M₀ M₀ (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MulZeroClass.toZero.{u1} M₀ _inst_1))))
+  forall {M₀ : Type.{u1}} [_inst_1 : MulZeroClass.{u1} M₀], Eq.{succ u1} (M₀ -> M₀) ((fun (x._@.Mathlib.Algebra.GroupWithZero.Basic._hyg.286 : M₀) (x._@.Mathlib.Algebra.GroupWithZero.Basic._hyg.288 : M₀) => HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toMul.{u1} M₀ _inst_1)) x._@.Mathlib.Algebra.GroupWithZero.Basic._hyg.286 x._@.Mathlib.Algebra.GroupWithZero.Basic._hyg.288) (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MulZeroClass.toZero.{u1} M₀ _inst_1)))) (Function.const.{succ u1, succ u1} M₀ M₀ (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MulZeroClass.toZero.{u1} M₀ _inst_1))))
 Case conversion may be inaccurate. Consider using '#align zero_mul_eq_const zero_mul_eq_constₓ'. -/
 /-- To match `one_mul_eq_id`. -/
 theorem zero_mul_eq_const : (· * ·) (0 : M₀) = Function.const _ 0 :=
@@ -236,7 +236,7 @@ but is expected to have type
   forall {M₀ : Type.{u1}} [_inst_1 : MulZeroOneClass.{u1} M₀] [_inst_2 : Nontrivial.{u1} M₀] {a : M₀} {b : M₀}, (Eq.{succ u1} M₀ (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toMul.{u1} M₀ (MulZeroOneClass.toMulZeroClass.{u1} M₀ _inst_1))) a b) (OfNat.ofNat.{u1} M₀ 1 (One.toOfNat1.{u1} M₀ (MulOneClass.toOne.{u1} M₀ (MulZeroOneClass.toMulOneClass.{u1} M₀ _inst_1))))) -> (Ne.{succ u1} M₀ a (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MulZeroOneClass.toZero.{u1} M₀ _inst_1))))
 Case conversion may be inaccurate. Consider using '#align left_ne_zero_of_mul_eq_one left_ne_zero_of_mul_eq_oneₓ'. -/
 theorem left_ne_zero_of_mul_eq_one (h : a * b = 1) : a ≠ 0 :=
-  left_ne_zero_of_mul <| neZero_of_eq_one h
+  left_ne_zero_of_mul <| ne_zero_of_eq_one h
 #align left_ne_zero_of_mul_eq_one left_ne_zero_of_mul_eq_one
 
 /- warning: right_ne_zero_of_mul_eq_one -> right_ne_zero_of_mul_eq_one is a dubious translation:
@@ -246,7 +246,7 @@ but is expected to have type
   forall {M₀ : Type.{u1}} [_inst_1 : MulZeroOneClass.{u1} M₀] [_inst_2 : Nontrivial.{u1} M₀] {a : M₀} {b : M₀}, (Eq.{succ u1} M₀ (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toMul.{u1} M₀ (MulZeroOneClass.toMulZeroClass.{u1} M₀ _inst_1))) a b) (OfNat.ofNat.{u1} M₀ 1 (One.toOfNat1.{u1} M₀ (MulOneClass.toOne.{u1} M₀ (MulZeroOneClass.toMulOneClass.{u1} M₀ _inst_1))))) -> (Ne.{succ u1} M₀ b (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MulZeroOneClass.toZero.{u1} M₀ _inst_1))))
 Case conversion may be inaccurate. Consider using '#align right_ne_zero_of_mul_eq_one right_ne_zero_of_mul_eq_oneₓ'. -/
 theorem right_ne_zero_of_mul_eq_one (h : a * b = 1) : b ≠ 0 :=
-  right_ne_zero_of_mul <| neZero_of_eq_one h
+  right_ne_zero_of_mul <| ne_zero_of_eq_one h
 #align right_ne_zero_of_mul_eq_one right_ne_zero_of_mul_eq_one
 
 end

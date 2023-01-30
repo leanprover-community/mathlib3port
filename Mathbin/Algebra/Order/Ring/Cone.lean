@@ -60,7 +60,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Ring.{u1} α] [_inst_2 : Nontrivial.{u1} α] (C : Ring.PositiveCone.{u1} α _inst_1), AddCommGroup.PositiveCone.pos.{u1} α (Ring.toAddCommGroup.{u1} α _inst_1) (Ring.PositiveCone.toPositiveCone.{u1} α _inst_1 C) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (NonAssocRing.toOne.{u1} α (Ring.toNonAssocRing.{u1} α _inst_1))))
 Case conversion may be inaccurate. Consider using '#align ring.positive_cone.one_pos Ring.PositiveCone.one_posₓ'. -/
 theorem PositiveCone.one_pos (C : PositiveCone α) : C.Pos 1 :=
-  (C.pos_iff _).2 ⟨C.one_nonneg, fun h => one_neZero <| C.nonneg_antisymm C.one_nonneg h⟩
+  (C.pos_iff _).2 ⟨C.one_nonneg, fun h => one_ne_zero <| C.nonneg_antisymm C.one_nonneg h⟩
 #align ring.positive_cone.one_pos Ring.PositiveCone.one_pos
 
 end Ring

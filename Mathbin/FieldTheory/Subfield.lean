@@ -929,7 +929,7 @@ def inclusion {S T : Subfield K} (h : S ≤ T) : S →+* T :=
 
 @[simp]
 theorem fieldRange_subtype (s : Subfield K) : s.Subtype.fieldRange = s :=
-  SetLike.ext' <| (coe_srange _).trans Subtype.range_coe
+  SetLike.ext' <| (coe_rangeS _).trans Subtype.range_coe
 #align subfield.field_range_subtype Subfield.fieldRange_subtype
 
 end Subfield

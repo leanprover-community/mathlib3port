@@ -568,7 +568,7 @@ See note [partially-applied ext lemmas]. -/
 @[ext]
 theorem ringHom_ext' ⦃F G : (⨁ i, A i) →+* R⦄
     (h : ∀ i, (↑F : _ →+ R).comp (of A i) = (↑G : _ →+ R).comp (of A i)) : F = G :=
-  RingHom.coe_addMonoidHom_injective <| DirectSum.add_hom_ext' h
+  RingHom.coe_addMonoidHom_injective <| DirectSum.addHom_ext' h
 #align direct_sum.ring_hom_ext' DirectSum.ringHom_ext'
 
 /-- Two `ring_hom`s out of a direct sum are equal if they agree on the generators. -/

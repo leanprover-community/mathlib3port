@@ -419,7 +419,7 @@ def Simps.symmApply (h : α ≃ᵢ β) : β → α :=
   h.symm
 #align isometry_equiv.simps.symm_apply IsometryEquiv.Simps.symmApply
 
-initialize_simps_projections IsometryEquiv (to_equiv_to_fun → apply, to_equiv_inv_fun → symmApply)
+initialize_simps_projections IsometryEquiv (to_equiv_to_fun → apply, to_equiv_inv_fun → symm_apply)
 
 @[simp]
 theorem symm_symm (h : α ≃ᵢ β) : h.symm.symm = h :=

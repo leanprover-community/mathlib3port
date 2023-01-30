@@ -99,7 +99,7 @@ theorem ringQuot_mkAlgHom_freeAlgebra_ι_eq_ι (m : M) :
 /-- Given a linear map `f : M → A` where `A` is an `R`-algebra, `lift R f` is the unique lift
 of `f` to a morphism of `R`-algebras `tensor_algebra R M → A`.
 -/
-@[simps symmApply]
+@[simps symm_apply]
 irreducible_def lift {A : Type _} [Semiring A] [Algebra R A] :
   (M →ₗ[R] A) ≃ (TensorAlgebra R M →ₐ[R] A) :=
   { toFun :=
@@ -129,7 +129,7 @@ theorem ι_comp_lift {A : Type _} [Semiring A] [Algebra R A] (f : M →ₗ[R] A)
     (lift R f).toLinearMap.comp (ι R) = f :=
   by
   convert (lift R).symm_apply_apply f
-  simp only [lift, Equiv.coeFn_symm_mk]
+  simp only [lift, Equiv.coe_fn_symm_mk]
 #align tensor_algebra.ι_comp_lift TensorAlgebra.ι_comp_lift
 
 @[simp]
@@ -144,7 +144,7 @@ theorem lift_unique {A : Type _} [Semiring A] [Algebra R A] (f : M →ₗ[R] A)
     (g : TensorAlgebra R M →ₐ[R] A) : g.toLinearMap.comp (ι R) = f ↔ g = lift R f :=
   by
   rw [← (lift R).symm_apply_eq]
-  simp only [lift, Equiv.coeFn_symm_mk]
+  simp only [lift, Equiv.coe_fn_symm_mk]
 #align tensor_algebra.lift_unique TensorAlgebra.lift_unique
 
 -- Marking `tensor_algebra` irreducible makes `ring` instances inaccessible on quotients.
@@ -276,7 +276,7 @@ theorem ι_eq_algebraMap_iff (x : M) (r : R) : ι R x = algebraMap R _ r ↔ x =
 theorem ι_ne_one [Nontrivial R] (x : M) : ι R x ≠ 1 :=
   by
   rw [← (algebraMap R (TensorAlgebra R M)).map_one, Ne.def, ι_eq_algebra_map_iff]
-  exact one_neZero ∘ And.right
+  exact one_ne_zero ∘ And.right
 #align tensor_algebra.ι_ne_one TensorAlgebra.ι_ne_one
 
 /-- The generators of the tensor algebra are disjoint from its scalars. -/

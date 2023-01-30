@@ -169,7 +169,7 @@ local infixr:80 " ∘r " => Relation.Comp
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> β -> Prop}, Eq.{max (succ u1) (succ u2)} (α -> β -> Prop) (Relation.Comp.{u1, u2, u2} α β β r (Eq.{succ u2} β)) r
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> β -> Prop}, Eq.{max (succ u2) (succ u1)} (α -> β -> Prop) (Relation.Comp.{u2, u1, u1} α β β r (fun (x._@.Mathlib.Logic.Relation._hyg.1401 : β) (x._@.Mathlib.Logic.Relation._hyg.1403 : β) => Eq.{succ u1} β x._@.Mathlib.Logic.Relation._hyg.1401 x._@.Mathlib.Logic.Relation._hyg.1403)) r
+  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> β -> Prop}, Eq.{max (succ u2) (succ u1)} (α -> β -> Prop) (Relation.Comp.{u2, u1, u1} α β β r (fun (x._@.Mathlib.Logic.Relation._hyg.1349 : β) (x._@.Mathlib.Logic.Relation._hyg.1351 : β) => Eq.{succ u1} β x._@.Mathlib.Logic.Relation._hyg.1349 x._@.Mathlib.Logic.Relation._hyg.1351)) r
 Case conversion may be inaccurate. Consider using '#align relation.comp_eq Relation.comp_eqₓ'. -/
 theorem comp_eq : r ∘r (· = ·) = r :=
   funext fun a =>
@@ -180,7 +180,7 @@ theorem comp_eq : r ∘r (· = ·) = r :=
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> β -> Prop}, Eq.{max (succ u1) (succ u2)} (α -> β -> Prop) (Relation.Comp.{u1, u1, u2} α α β (Eq.{succ u1} α) r) r
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> β -> Prop}, Eq.{max (succ u2) (succ u1)} (α -> β -> Prop) (Relation.Comp.{u2, u2, u1} α α β (fun (x._@.Mathlib.Logic.Relation._hyg.1501 : α) (x._@.Mathlib.Logic.Relation._hyg.1503 : α) => Eq.{succ u2} α x._@.Mathlib.Logic.Relation._hyg.1501 x._@.Mathlib.Logic.Relation._hyg.1503) r) r
+  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> β -> Prop}, Eq.{max (succ u2) (succ u1)} (α -> β -> Prop) (Relation.Comp.{u2, u2, u1} α α β (fun (x._@.Mathlib.Logic.Relation._hyg.1448 : α) (x._@.Mathlib.Logic.Relation._hyg.1450 : α) => Eq.{succ u2} α x._@.Mathlib.Logic.Relation._hyg.1448 x._@.Mathlib.Logic.Relation._hyg.1450) r) r
 Case conversion may be inaccurate. Consider using '#align relation.eq_comp Relation.eq_compₓ'. -/
 theorem eq_comp : (· = ·) ∘r r = r :=
   funext fun a =>
@@ -439,7 +439,8 @@ theorem cases_head_iff : ReflTransGen r a b ↔ a = b ∨ ∃ c, r a c ∧ ReflT
 #align relation.refl_trans_gen.cases_head_iff Relation.ReflTransGen.cases_head_iff
 -/
 
-theorem total_of_rightUnique (U : Relator.RightUnique r) (ab : ReflTransGen r a b)
+#print Relation.ReflTransGen.total_of_right_unique /-
+theorem total_of_right_unique (U : Relator.RightUnique r) (ab : ReflTransGen r a b)
     (ac : ReflTransGen r a c) : ReflTransGen r b c ∨ ReflTransGen r c b :=
   by
   induction' ab with b d ab bd IH
@@ -450,7 +451,8 @@ theorem total_of_rightUnique (U : Relator.RightUnique r) (ab : ReflTransGen r a 
       · cases U bd be
         exact Or.inl ec
     · exact Or.inr (IH.tail bd)
-#align relation.refl_trans_gen.total_of_right_unique Relation.ReflTransGen.total_of_rightUnique
+#align relation.refl_trans_gen.total_of_right_unique Relation.ReflTransGen.total_of_right_unique
+-/
 
 end ReflTransGen
 
@@ -562,17 +564,19 @@ theorem head'_iff : TransGen r a c ↔ ∃ b, r a b ∧ ReflTransGen r b c :=
 
 end TransGen
 
-theorem Acc.transGen (h : Acc r a) : Acc (TransGen r) a :=
+#print Acc.TransGen /-
+theorem Acc.TransGen (h : Acc r a) : Acc (TransGen r) a :=
   by
   induction' h with x _ H
   refine' Acc.intro x fun y hy => _
   cases' hy with _ hyx z _ hyz hzx
   exacts[H y hyx, (H z hzx).inv hyz]
-#align acc.trans_gen Acc.transGen
+#align acc.trans_gen Acc.TransGen
+-/
 
 #print acc_transGen_iff /-
 theorem acc_transGen_iff : Acc (TransGen r) a ↔ Acc r a :=
-  ⟨Subrelation.accessible fun _ _ => TransGen.single, Acc.transGen⟩
+  ⟨Subrelation.accessible fun _ _ => TransGen.single, Acc.TransGen⟩
 #align acc_trans_gen_iff acc_transGen_iff
 -/
 
@@ -731,9 +735,11 @@ instance : IsRefl α (ReflTransGen r) :=
 instance : IsTrans α (ReflTransGen r) :=
   ⟨@ReflTransGen.trans α r⟩
 
-theorem reflTransGen_idem : ReflTransGen (ReflTransGen r) = ReflTransGen r :=
+#print Relation.refl_trans_gen_idem /-
+theorem refl_trans_gen_idem : ReflTransGen (ReflTransGen r) = ReflTransGen r :=
   reflTransGen_eq_self reflexive_reflTransGen transitive_reflTransGen
-#align relation.refl_trans_gen_idem Relation.reflTransGen_idem
+#align relation.refl_trans_gen_idem Relation.refl_trans_gen_idem
+-/
 
 #print Relation.ReflTransGen.lift' /-
 theorem ReflTransGen.lift' {p : β → β → Prop} {a b : α} (f : α → β)

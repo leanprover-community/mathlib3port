@@ -329,7 +329,7 @@ theorem appr_lt (x : ℤ_[p]) (n : ℕ) : x.appr n < p ^ n :=
   by
   induction' n with n ih generalizing x
   · simp only [appr, succ_pos', pow_zero]
-  simp only [appr, map_nat_cast, ZMod.nat_cast_self, RingHom.map_pow, Int.natAbs, RingHom.map_mul]
+  simp only [appr, map_natCast, ZMod.nat_cast_self, RingHom.map_pow, Int.natAbs, RingHom.map_mul]
   have hp : p ^ n < p ^ (n + 1) := by apply pow_lt_pow hp_prime.1.one_lt (lt_add_one n)
   split_ifs with h
   · apply lt_trans (ih _) hp
@@ -382,7 +382,7 @@ theorem appr_spec (n : ℕ) : ∀ x : ℤ_[p], x - appr x n ∈ (Ideal.span {p ^
   push_cast
   rw [sub_add_eq_sub_sub]
   obtain ⟨c, hc⟩ := ih x
-  simp only [map_nat_cast, ZMod.nat_cast_self, RingHom.map_pow, RingHom.map_mul, ZMod.nat_cast_val]
+  simp only [map_natCast, ZMod.nat_cast_self, RingHom.map_pow, RingHom.map_mul, ZMod.nat_cast_val]
   have hc' : c ≠ 0 := by
     rintro rfl
     simp only [mul_zero] at hc
@@ -680,7 +680,7 @@ See also `padic_int.lift_unique`.
 theorem lift_spec (n : ℕ) : (toZmodPow n).comp (lift f_compat) = f n :=
   by
   ext r
-  rw [RingHom.comp_apply, ← ZMod.nat_cast_zMod_val (f n r), ← map_nat_cast <| to_zmod_pow n, ←
+  rw [RingHom.comp_apply, ← ZMod.nat_cast_zMod_val (f n r), ← map_natCast <| to_zmod_pow n, ←
     sub_eq_zero, ← RingHom.map_sub, ← RingHom.mem_ker, ker_to_zmod_pow]
   apply lift_sub_val_mem_span
 #align padic_int.lift_spec PadicInt.lift_spec

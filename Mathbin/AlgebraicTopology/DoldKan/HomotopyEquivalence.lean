@@ -60,7 +60,7 @@ theorem homotopyPToId_eventually_constant {q n : ℕ} (hqn : n < q) :
   unfold homotopy_P_to_id
   simp only [homotopy_Hσ_to_zero, hσ'_eq_zero hqn (c_mk (n + 1) n rfl), Homotopy.trans_hom,
     Pi.add_apply, Homotopy.ofEq_hom, Pi.zero_apply, Homotopy.add_hom, Homotopy.compLeft_hom,
-    Homotopy.nullHomotopy'_hom, ComplexShape.down_rel, eq_self_iff_true, dite_eq_ite, if_true,
+    Homotopy.nullHomotopy'_hom, ComplexShape.down_Rel, eq_self_iff_true, dite_eq_ite, if_true,
     comp_zero, add_zero, zero_add]
 #align algebraic_topology.dold_kan.homotopy_P_to_id_eventually_constant AlgebraicTopology.DoldKan.homotopyPToId_eventually_constant
 

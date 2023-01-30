@@ -287,7 +287,7 @@ theorem zero_ne_one_of_proper {I : Ideal α} (h : I ≠ ⊤) : (0 : α) ≠ 1 :=
 #align ideal.zero_ne_one_of_proper Ideal.zero_ne_one_of_proper
 
 theorem bot_prime {R : Type _} [Ring R] [IsDomain R] : (⊥ : Ideal R).IsPrime :=
-  ⟨fun h => one_neZero (by rwa [Ideal.eq_top_iff_one, Submodule.mem_bot] at h), fun x y h =>
+  ⟨fun h => one_ne_zero (by rwa [Ideal.eq_top_iff_one, Submodule.mem_bot] at h), fun x y h =>
     mul_eq_zero.mp (by simpa only [Submodule.mem_bot] using h)⟩
 #align ideal.bot_prime Ideal.bot_prime
 

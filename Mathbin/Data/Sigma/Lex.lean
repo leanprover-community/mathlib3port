@@ -46,8 +46,8 @@ variable {ι : Type _} {α : ι → Type _} {r r₁ r₂ : ι → ι → Prop} {
 relation for each summand. `a` is related to `b` iff their summands are related or they are in the
 same summand and are related through the summand's relation. -/
 inductive Lex (r : ι → ι → Prop) (s : ∀ i, α i → α i → Prop) : ∀ a b : Σi, α i, Prop
-  | left {i j : ι} (a : α i) (b : α j) : r i j → lex ⟨i, a⟩ ⟨j, b⟩
-  | right {i : ι} (a b : α i) : s i a b → lex ⟨i, a⟩ ⟨i, b⟩
+  | left {i j : ι} (a : α i) (b : α j) : r i j → Lex ⟨i, a⟩ ⟨j, b⟩
+  | right {i : ι} (a b : α i) : s i a b → Lex ⟨i, a⟩ ⟨i, b⟩
 #align sigma.lex Sigma.Lex
 -/
 

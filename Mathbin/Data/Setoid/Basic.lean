@@ -143,7 +143,7 @@ theorem ker_apply_mk_out {f : α → β} (a : α) :
         haveI := Setoid.ker f
         ⟦a⟧.out) =
       f a :=
-  @Quotient.mk'_out _ (Setoid.ker f) a
+  @Quotient.mk_out _ (Setoid.ker f) a
 #align setoid.ker_apply_mk_out Setoid.ker_apply_mk_out
 -/
 
@@ -266,7 +266,7 @@ theorem top_def : (⊤ : Setoid α).Rel = ⊤ :=
 lean 3 declaration is
   forall {α : Type.{u1}}, Eq.{succ u1} (α -> α -> Prop) (Setoid.Rel.{u1} α (Bot.bot.{u1} (Setoid.{succ u1} α) (CompleteLattice.toHasBot.{u1} (Setoid.{succ u1} α) (Setoid.completeLattice.{u1} α)))) (Eq.{succ u1} α)
 but is expected to have type
-  forall {α : Type.{u1}}, Eq.{succ u1} (α -> α -> Prop) (Setoid.Rel.{u1} α (Bot.bot.{u1} (Setoid.{succ u1} α) (CompleteLattice.toBot.{u1} (Setoid.{succ u1} α) (Setoid.completeLattice.{u1} α)))) (fun (x._@.Mathlib.Data.Setoid.Basic._hyg.1215 : α) (x._@.Mathlib.Data.Setoid.Basic._hyg.1217 : α) => Eq.{succ u1} α x._@.Mathlib.Data.Setoid.Basic._hyg.1215 x._@.Mathlib.Data.Setoid.Basic._hyg.1217)
+  forall {α : Type.{u1}}, Eq.{succ u1} (α -> α -> Prop) (Setoid.Rel.{u1} α (Bot.bot.{u1} (Setoid.{succ u1} α) (CompleteLattice.toBot.{u1} (Setoid.{succ u1} α) (Setoid.completeLattice.{u1} α)))) (fun (x._@.Mathlib.Data.Setoid.Basic._hyg.1211 : α) (x._@.Mathlib.Data.Setoid.Basic._hyg.1213 : α) => Eq.{succ u1} α x._@.Mathlib.Data.Setoid.Basic._hyg.1211 x._@.Mathlib.Data.Setoid.Basic._hyg.1213)
 Case conversion may be inaccurate. Consider using '#align setoid.bot_def Setoid.bot_defₓ'. -/
 @[simp]
 theorem bot_def : (⊥ : Setoid α).Rel = (· = ·) :=
@@ -444,7 +444,7 @@ theorem lift_unique {r : Setoid α} {f : α → β} (H : r ≤ ker f) (g : Quoti
     (Hg : f = g ∘ Quotient.mk') : Quotient.lift f H = g :=
   by
   ext ⟨x⟩
-  erw [Quotient.lift_mk' f H, Hg]
+  erw [Quotient.lift_mk f H, Hg]
   rfl
 #align setoid.lift_unique Setoid.lift_unique
 
@@ -487,7 +487,7 @@ noncomputable def quotientKerEquivRange : Quotient (ker f) ≃ Set.range f :=
       Subtype.ext_val h)
     ⟨fun x y h => ker_lift_injective f <| by rcases x with ⟨⟩ <;> rcases y with ⟨⟩ <;> injections,
       fun ⟨w, z, hz⟩ =>
-      ⟨@Quotient.mk' _ (ker f) z, by rw [Quotient.lift_mk'] <;> exact Subtype.ext_iff_val.2 hz⟩⟩
+      ⟨@Quotient.mk' _ (ker f) z, by rw [Quotient.lift_mk] <;> exact Subtype.ext_iff_val.2 hz⟩⟩
 #align setoid.quotient_ker_equiv_range Setoid.quotientKerEquivRange
 -/
 
@@ -655,8 +655,8 @@ theorem Quotient.subsingleton_iff {s : Setoid α} : Subsingleton (Quotient s) �
   by
   simp only [subsingleton_iff, eq_top_iff, Setoid.le_def, Setoid.top_def, Pi.top_apply,
     forall_const]
-  refine' (surjective_quotient_mk' _).forall.trans (forall_congr' fun a => _)
-  refine' (surjective_quotient_mk' _).forall.trans (forall_congr' fun b => _)
+  refine' (surjective_quotient_mk _).forall.trans (forall_congr' fun a => _)
+  refine' (surjective_quotient_mk _).forall.trans (forall_congr' fun b => _)
   exact Quotient.eq''
 #align quotient.subsingleton_iff Quotient.subsingleton_iff
 

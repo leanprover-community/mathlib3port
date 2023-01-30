@@ -386,7 +386,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align concept.snd_ssubset_snd_iff Concept.snd_ssubset_snd_iffₓ'. -/
 @[simp]
 theorem snd_ssubset_snd_iff : c.snd ⊂ d.snd ↔ d < c := by
-  rw [sSubset_iff_subset_not_subset, lt_iff_le_not_le, snd_subset_snd_iff, snd_subset_snd_iff]
+  rw [ssubset_iff_subset_not_subset, lt_iff_le_not_le, snd_subset_snd_iff, snd_subset_snd_iff]
 #align concept.snd_ssubset_snd_iff Concept.snd_ssubset_snd_iff
 
 /- warning: concept.strict_mono_fst -> Concept.strictMono_fst is a dubious translation:

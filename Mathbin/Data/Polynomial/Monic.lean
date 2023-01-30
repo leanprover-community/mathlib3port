@@ -73,7 +73,7 @@ theorem Monic.map [Semiring S] (f : R →+* S) (hp : Monic p) : Monic (p.map f) 
   have : f (leading_coeff p) ≠ 0 :=
     by
     rw [show _ = _ from hp, f.map_one]
-    exact one_neZero
+    exact one_ne_zero
   rw [monic, leading_coeff, coeff_map]
   suffices p.coeff (map f p).natDegree = 1 by simp [this]
   rwa [nat_degree_eq_of_degree_eq (degree_map_eq_of_leading_coeff_ne_zero f this)]
@@ -231,7 +231,7 @@ theorem eq_one_of_map_eq_one {S : Type _} [Semiring S] [Nontrivial S] (f : R →
     by
     rw [← degree_map_eq_of_leading_coeff_ne_zero f _, map_eq, degree_one]
     · rw [hp.leading_coeff, f.map_one]
-      exact one_neZero
+      exact one_ne_zero
   have hndeg : p.nat_degree = 0 :=
     with_bot.coe_eq_coe.mp ((degree_eq_nat_degree hp.ne_zero).symm.trans hdeg)
   convert eq_C_of_degree_eq_zero hdeg
@@ -318,7 +318,7 @@ theorem Monic.natDegree_map [Semiring S] [Nontrivial S] {P : R[X]} (hmo : P.Moni
   by
   refine' le_antisymm (nat_degree_map_le _ _) (le_nat_degree_of_ne_zero _)
   rw [coeff_map, monic.coeff_nat_degree hmo, RingHom.map_one]
-  exact one_neZero
+  exact one_ne_zero
 #align polynomial.monic.nat_degree_map Polynomial.Monic.natDegree_map
 
 @[simp]
@@ -330,7 +330,7 @@ theorem Monic.degree_map [Semiring S] [Nontrivial S] {P : R[X]} (hmo : P.Monic) 
     rw [degree_eq_nat_degree hP]
     refine' le_degree_of_ne_zero _
     rw [coeff_map, monic.coeff_nat_degree hmo, RingHom.map_one]
-    exact one_neZero
+    exact one_ne_zero
 #align polynomial.monic.degree_map Polynomial.Monic.degree_map
 
 section Injective

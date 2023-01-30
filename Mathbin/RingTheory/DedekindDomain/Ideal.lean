@@ -326,7 +326,7 @@ theorem integrallyClosed : IsIntegrallyClosed A :=
     coe_span_singleton A⁰ (1 : FractionRing A), span_singleton_one, ←
     FractionalIdeal.adjoinIntegral_eq_one_of_isUnit x hx (h.is_unit _)]
   · exact mem_adjoin_integral_self A⁰ x hx
-  · exact fun h => one_neZero (eq_zero_iff.mp h 1 (Subalgebra.one_mem _))
+  · exact fun h => one_ne_zero (eq_zero_iff.mp h 1 (Subalgebra.one_mem _))
 #align is_dedekind_domain_inv.integrally_closed IsDedekindDomainInv.integrallyClosed
 
 open Ring
@@ -1252,7 +1252,7 @@ theorem normalizedFactorsEquivOfQuotEquiv_multiplicity_eq_multiplicity (hI : I �
     (L : Ideal R) (hL : L ∈ normalizedFactors I) :
     multiplicity (↑(normalizedFactorsEquivOfQuotEquiv f hI hJ ⟨L, hL⟩)) J = multiplicity L I :=
   by
-  rw [normalizedFactorsEquivOfQuotEquiv, Equiv.coeFn_mk, Subtype.coe_mk]
+  rw [normalizedFactorsEquivOfQuotEquiv, Equiv.coe_fn_mk, Subtype.coe_mk]
   exact
     multiplicity_factor_dvd_iso_eq_multiplicity_of_mem_normalized_factor hI hJ hL
       fun ⟨l, hl⟩ ⟨l', hl'⟩ => idealFactorsEquivOfQuotEquiv_is_dvd_iso f hl hl'

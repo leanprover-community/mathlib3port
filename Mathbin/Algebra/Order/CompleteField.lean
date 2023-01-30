@@ -270,7 +270,7 @@ theorem le_inducedMap_mul_self_of_mem_cutMap (ha : 0 < a) (b : β) (hb : b ∈ c
     b ≤ inducedMap α β a * inducedMap α β a :=
   by
   obtain ⟨q, hb, rfl⟩ := hb
-  obtain ⟨q', hq', hqq', hqa⟩ := exists_rat_pow_btwn two_neZero hb (mul_self_pos.2 ha.ne')
+  obtain ⟨q', hq', hqq', hqa⟩ := exists_rat_pow_btwn two_ne_zero hb (mul_self_pos.2 ha.ne')
   trans (q' : β) ^ 2
   exact_mod_cast hqq'.le
   rw [pow_two] at hqa⊢
@@ -288,7 +288,7 @@ theorem exists_mem_cutMap_mul_self_of_lt_inducedMap_mul_self (ha : 0 < a) (b : �
   · refine' ⟨0, _, hb⟩
     rw [← Rat.cast_zero, coe_mem_cut_map_iff, Rat.cast_zero]
     exact mul_self_pos.2 ha.ne'
-  obtain ⟨q, hq, hbq, hqa⟩ := exists_rat_pow_btwn two_neZero hba (hb.trans_lt hba)
+  obtain ⟨q, hq, hbq, hqa⟩ := exists_rat_pow_btwn two_ne_zero hba (hb.trans_lt hba)
   rw [← cast_pow] at hbq
   refine' ⟨(q ^ 2 : ℚ), coe_mem_cut_map_iff.2 _, hbq⟩
   rw [pow_two] at hqa⊢
@@ -328,7 +328,7 @@ def inducedOrderRingHom : α →+*o β :=
         refine' fun x hx => csupₛ_eq_of_forall_le_of_forall_lt_exists_gt (cut_map_nonempty β _) _ _
         exact le_induced_map_mul_self_of_mem_cut_map hx
         exact exists_mem_cut_map_mul_self_of_lt_induced_map_mul_self hx)
-      two_neZero (inducedMap_one _ _) with
+      two_ne_zero (inducedMap_one _ _) with
     monotone' := inducedMap_mono _ _ }
 #align linear_ordered_field.induced_order_ring_hom LinearOrderedField.inducedOrderRingHom
 

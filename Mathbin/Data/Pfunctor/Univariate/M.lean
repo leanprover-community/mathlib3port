@@ -349,7 +349,7 @@ theorem mk_dest (x : M F) : M.mk (dest x) = x :=
   · ext a
     dsimp only [children]
     generalize hh : cast _ a = a''
-    rw [cast_eq_iff_hEq] at hh
+    rw [cast_eq_iff_heq] at hh
     revert a''
     rw [h]
     intros
@@ -431,7 +431,7 @@ theorem cases_mk {r : M F → Sort _} (x : F.Obj <| M F) (f : ∀ x : F.Obj <| M
   dsimp only [M.mk, PFunctor.M.cases, dest, head, approx.s_mk, head']
   cases x; dsimp only [approx.s_mk]
   apply eq_of_hEq
-  apply ndrec_hEq_of_hEq; congr with x
+  apply rec_heq_of_heq; congr with x
   dsimp only [children, approx.s_mk, children']
   cases h : x_snd x; dsimp only [head]
   congr with n; change (x_snd x).approx n = _; rw [h]

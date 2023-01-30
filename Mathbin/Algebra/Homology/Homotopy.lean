@@ -121,7 +121,7 @@ theorem dNext_nat (C D : ChainComplex V ℕ) (i : ℕ) (f : ∀ i j, C.x i ⟶ D
   dsimp [dNext]
   cases i
   ·
-    simp only [shape, ChainComplex.next_nat_zero, ComplexShape.down_rel, Nat.one_ne_zero,
+    simp only [shape, ChainComplex.next_nat_zero, ComplexShape.down_Rel, Nat.one_ne_zero,
       not_false_iff, zero_comp]
   · dsimp only [Nat.succ_eq_add_one]
     have : (ComplexShape.down ℕ).next (i + 1) = i + 1 - 1 :=
@@ -137,7 +137,7 @@ theorem prevD_nat (C D : CochainComplex V ℕ) (i : ℕ) (f : ∀ i j, C.x i ⟶
   dsimp [prevD]
   cases i
   ·
-    simp only [shape, CochainComplex.prev_nat_zero, ComplexShape.up_rel, Nat.one_ne_zero,
+    simp only [shape, CochainComplex.prev_nat_zero, ComplexShape.up_Rel, Nat.one_ne_zero,
       not_false_iff, comp_zero]
   · dsimp only [Nat.succ_eq_add_one]
     have : (ComplexShape.up ℕ).prev (i + 1) = i + 1 - 1 :=

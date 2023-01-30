@@ -991,7 +991,7 @@ theorem integral_comp_sub_right (d) : (∫ x in a..b, f (x - d)) = ∫ x in a - 
 
 @[simp]
 theorem integral_comp_sub_left (d) : (∫ x in a..b, f (d - x)) = ∫ x in d - b..d - a, f x := by
-  simpa only [one_mul, one_smul, inv_one] using integral_comp_sub_mul f one_neZero d
+  simpa only [one_mul, one_smul, inv_one] using integral_comp_sub_mul f one_ne_zero d
 #align interval_integral.integral_comp_sub_left intervalIntegral.integral_comp_sub_left
 
 @[simp]
@@ -1051,7 +1051,7 @@ theorem sum_integral_adjacent_intervals_ico {a : ℕ → ℝ} {m n : ℕ} (hmn :
   refine' Nat.le_induction _ _ n hmn
   · simp
   · intro p hmp IH h
-    rw [Finset.sum_ico_succ_top hmp, IH, integral_add_adjacent_intervals]
+    rw [Finset.sum_Ico_succ_top hmp, IH, integral_add_adjacent_intervals]
     · apply IntervalIntegrable.transIterateIco hmp fun k hk => h k _
       exact (Ico_subset_Ico le_rfl (Nat.le_succ _)) hk
     · apply h

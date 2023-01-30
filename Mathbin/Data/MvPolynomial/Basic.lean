@@ -250,7 +250,7 @@ instance infinite_of_infinite (σ : Type _) (R : Type _) [CommSemiring R] [Infin
 instance infinite_of_nonempty (σ : Type _) (R : Type _) [Nonempty σ] [CommSemiring R]
     [Nontrivial R] : Infinite (MvPolynomial σ R) :=
   Infinite.of_injective ((fun s : σ →₀ ℕ => monomial s 1) ∘ single (Classical.arbitrary σ)) <|
-    (monomial_left_injective one_neZero).comp (Finsupp.single_injective _)
+    (monomial_left_injective one_ne_zero).comp (Finsupp.single_injective _)
 #align mv_polynomial.infinite_of_nonempty MvPolynomial.infinite_of_nonempty
 
 theorem c_eq_coe_nat (n : ℕ) : (c ↑n : MvPolynomial σ R) = n := by
@@ -269,7 +269,7 @@ theorem c_eq_smul_one : (c a : MvPolynomial σ R) = a • 1 := by rw [← C_mul'
 #align mv_polynomial.C_eq_smul_one MvPolynomial.c_eq_smul_one
 
 theorem x_injective [Nontrivial R] : Function.Injective (x : σ → MvPolynomial σ R) :=
-  (monomial_left_injective one_neZero).comp (Finsupp.single_left_injective one_neZero)
+  (monomial_left_injective one_ne_zero).comp (Finsupp.single_left_injective one_ne_zero)
 #align mv_polynomial.X_injective MvPolynomial.x_injective
 
 @[simp]
@@ -515,7 +515,7 @@ theorem support_add : (p + q).support ⊆ p.support ∪ q.support :=
 #align mv_polynomial.support_add MvPolynomial.support_add
 
 theorem support_x [Nontrivial R] : (x n : MvPolynomial σ R).support = {single n 1} := by
-  rw [X, support_monomial, if_neg] <;> exact one_neZero
+  rw [X, support_monomial, if_neg] <;> exact one_ne_zero
 #align mv_polynomial.support_X MvPolynomial.support_x
 
 theorem support_x_pow [Nontrivial R] (s : σ) (n : ℕ) :

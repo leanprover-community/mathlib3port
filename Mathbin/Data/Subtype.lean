@@ -100,18 +100,22 @@ theorem ext_iff {a1 a2 : { x // p x }} : a1 = a2 ↔ (a1 : α) = (a2 : α) :=
 #align subtype.ext_iff Subtype.ext_iff
 -/
 
-theorem hEq_iff_coe_eq (h : ∀ x, p x ↔ q x) {a1 : { x // p x }} {a2 : { x // q x }} :
+#print Subtype.heq_iff_coe_eq /-
+theorem heq_iff_coe_eq (h : ∀ x, p x ↔ q x) {a1 : { x // p x }} {a2 : { x // q x }} :
     HEq a1 a2 ↔ (a1 : α) = (a2 : α) :=
   Eq.ndrec (fun a2' => hEq_iff_eq.trans ext_iff) (funext fun x => propext (h x)) a2
-#align subtype.heq_iff_coe_eq Subtype.hEq_iff_coe_eq
+#align subtype.heq_iff_coe_eq Subtype.heq_iff_coe_eq
+-/
 
-theorem hEq_iff_coe_hEq {α β : Sort _} {p : α → Prop} {q : β → Prop} {a : { x // p x }}
+#print Subtype.heq_iff_coe_heq /-
+theorem heq_iff_coe_heq {α β : Sort _} {p : α → Prop} {q : β → Prop} {a : { x // p x }}
     {b : { y // q y }} (h : α = β) (h' : HEq p q) : HEq a b ↔ HEq (a : α) (b : β) :=
   by
   subst h
   subst h'
   rw [hEq_iff_eq, hEq_iff_eq, ext_iff]
-#align subtype.heq_iff_coe_heq Subtype.hEq_iff_coe_hEq
+#align subtype.heq_iff_coe_heq Subtype.heq_iff_coe_heq
+-/
 
 #print Subtype.ext_val /-
 theorem ext_val {a1 a2 : { x // p x }} : a1.1 = a2.1 → a1 = a2 :=

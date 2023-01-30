@@ -115,7 +115,7 @@ theorem degrees_X' (n : σ) : degrees (x n : MvPolynomial σ R) ≤ {n} :=
 
 @[simp]
 theorem degrees_x [Nontrivial R] (n : σ) : degrees (x n : MvPolynomial σ R) = {n} :=
-  (degrees_monomial_eq _ (1 : R) one_neZero).trans (toMultiset_single _ _)
+  (degrees_monomial_eq _ (1 : R) one_ne_zero).trans (toMultiset_single _ _)
 #align mv_polynomial.degrees_X MvPolynomial.degrees_x
 
 @[simp]
@@ -530,7 +530,7 @@ theorem degreeOf_mul_x_ne {i j : σ} (f : MvPolynomial σ R) (h : i ≠ j) :
   simp only [Finset.sup_map]
   congr
   ext
-  simp only [single, Nat.one_ne_zero, add_right_eq_self, add_right_embedding_apply, coe_mk,
+  simp only [single, Nat.one_ne_zero, add_right_eq_self, addRightEmbedding_apply, coe_mk,
     Pi.add_apply, comp_app, ite_eq_right_iff, Finsupp.coe_add, Pi.single_eq_of_ne h]
 #align mv_polynomial.degree_of_mul_X_ne MvPolynomial.degreeOf_mul_x_ne
 
@@ -682,7 +682,7 @@ theorem totalDegree_monomial (s : σ →₀ ℕ) {c : R} (hc : c ≠ 0) :
 
 @[simp]
 theorem totalDegree_x_pow [Nontrivial R] (s : σ) (n : ℕ) :
-    (x s ^ n : MvPolynomial σ R).totalDegree = n := by simp [X_pow_eq_monomial, one_neZero]
+    (x s ^ n : MvPolynomial σ R).totalDegree = n := by simp [X_pow_eq_monomial, one_ne_zero]
 #align mv_polynomial.total_degree_X_pow MvPolynomial.totalDegree_x_pow
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/

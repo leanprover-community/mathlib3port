@@ -211,7 +211,7 @@ variable [NormedRing E] [StarRing E] [CstarRing E]
 @[simp]
 theorem norm_one [Nontrivial E] : ‖(1 : E)‖ = 1 :=
   by
-  have : 0 < ‖(1 : E)‖ := norm_pos_iff.mpr one_neZero
+  have : 0 < ‖(1 : E)‖ := norm_pos_iff.mpr one_ne_zero
   rw [← mul_left_inj' this.ne', ← norm_star_mul_self, mul_one, star_one, one_mul]
 #align cstar_ring.norm_one CstarRing.norm_one
 

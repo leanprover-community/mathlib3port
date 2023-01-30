@@ -390,7 +390,7 @@ theorem coeff_x [DecidableEq σ] (n : σ →₀ ℕ) (s : σ) :
 
 theorem coeff_index_single_x [DecidableEq σ] (s t : σ) :
     coeff R (single t 1) (x s : MvPowerSeries σ R) = if t = s then 1 else 0 := by
-  simp only [coeff_X, single_left_inj one_neZero]
+  simp only [coeff_X, single_left_inj one_ne_zero]
 #align mv_power_series.coeff_index_single_X MvPowerSeries.coeff_index_single_x
 
 @[simp]
@@ -402,7 +402,7 @@ theorem coeff_zero_x (s : σ) : coeff R (0 : σ →₀ ℕ) (x s : MvPowerSeries
   by
   rw [coeff_X, if_neg]
   intro h
-  exact one_neZero (single_eq_zero.mp h.symm)
+  exact one_ne_zero (single_eq_zero.mp h.symm)
 #align mv_power_series.coeff_zero_X MvPowerSeries.coeff_zero_x
 
 theorem commute_x (φ : MvPowerSeries σ R) (s : σ) : Commute φ (x s) :=
@@ -519,9 +519,9 @@ theorem x_inj [Nontrivial R] {s t : σ} : (x s : MvPowerSeries σ R) = x t ↔ s
       cases H
       · exact H.1
       · exfalso
-        exact one_neZero H.1
+        exact one_ne_zero H.1
     · exfalso
-      exact one_neZero h, congr_arg x⟩
+      exact one_ne_zero h, congr_arg x⟩
 #align mv_power_series.X_inj MvPowerSeries.x_inj
 
 end Semiring
@@ -1363,7 +1363,7 @@ theorem coeff_one_x : coeff R 1 (x : PowerSeries R) = 1 := by rw [coeff_X, if_po
 
 @[simp]
 theorem x_ne_zero [Nontrivial R] : (x : PowerSeries R) ≠ 0 := fun H => by
-  simpa only [coeff_one_X, one_neZero, map_zero] using congr_arg (coeff R 1) H
+  simpa only [coeff_one_X, one_ne_zero, map_zero] using congr_arg (coeff R 1) H
 #align power_series.X_ne_zero PowerSeries.x_ne_zero
 
 theorem x_pow_eq (n : ℕ) : (x : PowerSeries R) ^ n = monomial R n 1 :=
@@ -2407,13 +2407,13 @@ variable [Semiring R] [Nontrivial R]
 /-- The order of the formal power series `1` is `0`.-/
 @[simp]
 theorem order_one : order (1 : PowerSeries R) = 0 := by
-  simpa using order_monomial_of_ne_zero 0 (1 : R) one_neZero
+  simpa using order_monomial_of_ne_zero 0 (1 : R) one_ne_zero
 #align power_series.order_one PowerSeries.order_one
 
 /-- The order of the formal power series `X` is `1`.-/
 @[simp]
 theorem order_x : order (x : PowerSeries R) = 1 := by
-  simpa only [Nat.cast_one] using order_monomial_of_ne_zero 1 (1 : R) one_neZero
+  simpa only [Nat.cast_one] using order_monomial_of_ne_zero 1 (1 : R) one_ne_zero
 #align power_series.order_X PowerSeries.order_x
 
 /-- The order of the formal power series `X^n` is `n`.-/
@@ -2421,7 +2421,7 @@ theorem order_x : order (x : PowerSeries R) = 1 := by
 theorem order_x_pow (n : ℕ) : order ((x : PowerSeries R) ^ n) = n :=
   by
   rw [X_pow_eq, order_monomial_of_ne_zero]
-  exact one_neZero
+  exact one_ne_zero
 #align power_series.order_X_pow PowerSeries.order_x_pow
 
 end OrderZeroNeOne

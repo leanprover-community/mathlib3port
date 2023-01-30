@@ -238,7 +238,7 @@ theorem helper {V} (f : V ⟶ U) (y : X ⟶ ((ran G.op).obj ℱ.val).obj (op V))
       2
     simp only [category.assoc]
   simp only [Quiver.Hom.unop_op, Equiv.symm_symm, structured_arrow.map_obj_hom, unop_comp,
-    Equiv.coeFn_mk, functor.comp_map, coyoneda_obj_map, category.assoc, ← this, op_comp,
+    Equiv.coe_fn_mk, functor.comp_map, coyoneda_obj_map, category.assoc, ← this, op_comp,
     Ran_obj_map, nat_trans.id_app]
   erw [category.id_comp, limit.pre_π]
   congr

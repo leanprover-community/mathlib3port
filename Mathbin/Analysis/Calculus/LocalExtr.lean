@@ -109,7 +109,7 @@ theorem mem_posTangentConeAt_of_segment_subset {s : Set E} {x y : E} (h : segmen
     ext n
     simp only [d, smul_smul]
     rw [mul_inv_cancel, one_smul]
-    exact pow_ne_zero _ two_neZero
+    exact pow_ne_zero _ two_ne_zero
 #align mem_pos_tangent_cone_at_of_segment_subset mem_posTangentConeAt_of_segment_subset
 
 theorem mem_posTangentConeAt_of_segment_subset' {s : Set E} {x y : E}

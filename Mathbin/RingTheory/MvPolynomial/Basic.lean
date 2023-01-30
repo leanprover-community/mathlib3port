@@ -127,7 +127,7 @@ theorem coe_basisMonomials :
 
 theorem linearIndependent_x : LinearIndependent R (x : σ → MvPolynomial σ R) :=
   (basisMonomials σ R).LinearIndependent.comp (fun s : σ => Finsupp.single s 1)
-    (Finsupp.single_left_injective one_neZero)
+    (Finsupp.single_left_injective one_ne_zero)
 #align mv_polynomial.linear_independent_X MvPolynomial.linearIndependent_x
 
 end Degree

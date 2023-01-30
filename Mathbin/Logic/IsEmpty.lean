@@ -220,7 +220,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_empty_psigma isEmpty_psigmaₓ'. -/
 @[simp]
 theorem isEmpty_psigma {α} {E : α → Sort _} : IsEmpty (PSigma E) ↔ ∀ a, IsEmpty (E a) := by
-  simp only [← not_nonempty_iff, nonempty_pSigma, not_exists]
+  simp only [← not_nonempty_iff, nonempty_psigma, not_exists]
 #align is_empty_psigma isEmpty_psigma
 
 #print isEmpty_subtype /-
@@ -244,7 +244,7 @@ theorem isEmpty_prod {α β : Type _} : IsEmpty (α × β) ↔ IsEmpty α ∨ Is
 #print isEmpty_pprod /-
 @[simp]
 theorem isEmpty_pprod : IsEmpty (PProd α β) ↔ IsEmpty α ∨ IsEmpty β := by
-  simp only [← not_nonempty_iff, nonempty_pProd, not_and_or]
+  simp only [← not_nonempty_iff, nonempty_pprod, not_and_or]
 #align is_empty_pprod isEmpty_pprod
 -/
 
@@ -267,7 +267,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_empty_psum isEmpty_psumₓ'. -/
 @[simp]
 theorem isEmpty_psum {α β} : IsEmpty (PSum α β) ↔ IsEmpty α ∧ IsEmpty β := by
-  simp only [← not_nonempty_iff, nonempty_pSum, not_or]
+  simp only [← not_nonempty_iff, nonempty_psum, not_or]
 #align is_empty_psum isEmpty_psum
 
 /- warning: is_empty_ulift -> isEmpty_ulift is a dubious translation:
@@ -278,13 +278,13 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_empty_ulift isEmpty_uliftₓ'. -/
 @[simp]
 theorem isEmpty_ulift {α} : IsEmpty (ULift α) ↔ IsEmpty α := by
-  simp only [← not_nonempty_iff, nonempty_uLift]
+  simp only [← not_nonempty_iff, nonempty_ulift]
 #align is_empty_ulift isEmpty_ulift
 
 #print isEmpty_plift /-
 @[simp]
 theorem isEmpty_plift {α} : IsEmpty (PLift α) ↔ IsEmpty α := by
-  simp only [← not_nonempty_iff, nonempty_pLift]
+  simp only [← not_nonempty_iff, nonempty_plift]
 #align is_empty_plift isEmpty_plift
 -/
 

@@ -860,7 +860,7 @@ end Pmap
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u1}} {a : α} {f : α -> β}, Eq.{succ u1} (Option.{u1} β) (Seq.seq.{u1, u1} Option.{u1} (Applicative.toHasSeq.{u1, u1} Option.{u1} (Monad.toApplicative.{u1, u1} Option.{u1} Option.monad.{u1})) α β (Option.some.{u1} (α -> β) f) (Option.some.{u1} α a)) (Option.some.{u1} β (f a))
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u1}} {a : α} {f : α -> β}, Eq.{succ u1} (Option.{u1} β) (Seq.seq.{u1, u1} Option.{u1} (Applicative.toSeq.{u1, u1} Option.{u1} (Alternative.toApplicative.{u1, u1} Option.{u1} instAlternativeOption.{u1})) α β (Option.some.{u1} (α -> β) f) (fun (x._@.Mathlib.Data.Option.Basic._hyg.2302 : Unit) => Option.some.{u1} α a)) (Option.some.{u1} β (f a))
+  forall {α : Type.{u1}} {β : Type.{u1}} {a : α} {f : α -> β}, Eq.{succ u1} (Option.{u1} β) (Seq.seq.{u1, u1} Option.{u1} (Applicative.toSeq.{u1, u1} Option.{u1} (Alternative.toApplicative.{u1, u1} Option.{u1} instAlternativeOption.{u1})) α β (Option.some.{u1} (α -> β) f) (fun (x._@.Mathlib.Data.Option.Basic._hyg.2317 : Unit) => Option.some.{u1} α a)) (Option.some.{u1} β (f a))
 Case conversion may be inaccurate. Consider using '#align option.seq_some Option.seq_someₓ'. -/
 @[simp]
 theorem seq_some {α β} {a : α} {f : α → β} : some f <*> some a = some (f a) :=
@@ -878,7 +878,7 @@ theorem some_orElse' (a : α) (x : Option α) : (some a).orelse x = some a :=
 lean 3 declaration is
   forall {α : Type.{u1}} (a : α) (x : Option.{u1} α), Eq.{succ u1} (Option.{u1} α) (HasOrelse.orelse.{u1, u1} Option.{u1} (Alternative.toHasOrelse.{u1, u1} Option.{u1} Option.alternative.{u1}) α (Option.some.{u1} α a) x) (Option.some.{u1} α a)
 but is expected to have type
-  forall {α : Type.{u1}} (a : α) (x : Option.{u1} α), Eq.{succ u1} (Option.{u1} α) (HOrElse.hOrElse.{u1, u1, u1} (Option.{u1} α) (Option.{u1} α) (Option.{u1} α) (instHOrElse.{u1} (Option.{u1} α) (Option.instOrElseOption.{u1} α)) (Option.some.{u1} α a) (fun (x._@.Std.Data.Option.Lemmas._hyg.3067 : Unit) => x)) (Option.some.{u1} α a)
+  forall {α : Type.{u1}} (a : α) (x : Option.{u1} α), Eq.{succ u1} (Option.{u1} α) (HOrElse.hOrElse.{u1, u1, u1} (Option.{u1} α) (Option.{u1} α) (Option.{u1} α) (instHOrElse.{u1} (Option.{u1} α) (Option.instOrElseOption.{u1} α)) (Option.some.{u1} α a) (fun (x._@.Std.Data.Option.Lemmas._hyg.3041 : Unit) => x)) (Option.some.{u1} α a)
 Case conversion may be inaccurate. Consider using '#align option.some_orelse Option.some_orElseₓ'. -/
 @[simp]
 theorem some_orElse (a : α) (x : Option α) : (some a <|> x) = some a :=
@@ -889,7 +889,7 @@ theorem some_orElse (a : α) (x : Option α) : (some a <|> x) = some a :=
 lean 3 declaration is
   forall {α : Type.{u1}} (x : Option.{u1} α), Eq.{succ u1} (Option.{u1} α) (Option.orelse.{u1} α (Option.none.{u1} α) x) x
 but is expected to have type
-  forall {α : Type.{u1}} (x : Option.{u1} α), Eq.{succ u1} (Option.{u1} α) (Option.orElse.{u1} α (Option.none.{u1} α) (fun (x._@.Mathlib.Data.Option.Basic._hyg.2355 : Unit) => x)) x
+  forall {α : Type.{u1}} (x : Option.{u1} α), Eq.{succ u1} (Option.{u1} α) (Option.orElse.{u1} α (Option.none.{u1} α) (fun (x._@.Mathlib.Data.Option.Basic._hyg.2371 : Unit) => x)) x
 Case conversion may be inaccurate. Consider using '#align option.none_orelse' Option.none_orElse'ₓ'. -/
 @[simp]
 theorem none_orElse' (x : Option α) : none.orelse x = x := by cases x <;> rfl
@@ -899,7 +899,7 @@ theorem none_orElse' (x : Option α) : none.orelse x = x := by cases x <;> rfl
 lean 3 declaration is
   forall {α : Type.{u1}} (x : Option.{u1} α), Eq.{succ u1} (Option.{u1} α) (HasOrelse.orelse.{u1, u1} Option.{u1} (Alternative.toHasOrelse.{u1, u1} Option.{u1} Option.alternative.{u1}) α (Option.none.{u1} α) x) x
 but is expected to have type
-  forall {α : Type.{u1}} (x : Option.{u1} α), Eq.{succ u1} (Option.{u1} α) (HOrElse.hOrElse.{u1, u1, u1} (Option.{u1} α) (Option.{u1} α) (Option.{u1} α) (instHOrElse.{u1} (Option.{u1} α) (Option.instOrElseOption.{u1} α)) (Option.none.{u1} α) (fun (x._@.Std.Data.Option.Lemmas._hyg.3081 : Unit) => x)) x
+  forall {α : Type.{u1}} (x : Option.{u1} α), Eq.{succ u1} (Option.{u1} α) (HOrElse.hOrElse.{u1, u1, u1} (Option.{u1} α) (Option.{u1} α) (Option.{u1} α) (instHOrElse.{u1} (Option.{u1} α) (Option.instOrElseOption.{u1} α)) (Option.none.{u1} α) (fun (x._@.Std.Data.Option.Lemmas._hyg.3055 : Unit) => x)) x
 Case conversion may be inaccurate. Consider using '#align option.none_orelse Option.none_orElseₓ'. -/
 @[simp]
 theorem none_orElse (x : Option α) : (none <|> x) = x :=
@@ -916,7 +916,7 @@ theorem orElse_none' (x : Option α) : x.orelse none = x := by cases x <;> rfl
 lean 3 declaration is
   forall {α : Type.{u1}} (x : Option.{u1} α), Eq.{succ u1} (Option.{u1} α) (HasOrelse.orelse.{u1, u1} Option.{u1} (Alternative.toHasOrelse.{u1, u1} Option.{u1} Option.alternative.{u1}) α x (Option.none.{u1} α)) x
 but is expected to have type
-  forall {α : Type.{u1}} (x : Option.{u1} α), Eq.{succ u1} (Option.{u1} α) (HOrElse.hOrElse.{u1, u1, u1} (Option.{u1} α) (Option.{u1} α) (Option.{u1} α) (instHOrElse.{u1} (Option.{u1} α) (Option.instOrElseOption.{u1} α)) x (fun (x._@.Std.Data.Option.Lemmas._hyg.3095 : Unit) => Option.none.{u1} α)) x
+  forall {α : Type.{u1}} (x : Option.{u1} α), Eq.{succ u1} (Option.{u1} α) (HOrElse.hOrElse.{u1, u1, u1} (Option.{u1} α) (Option.{u1} α) (Option.{u1} α) (instHOrElse.{u1} (Option.{u1} α) (Option.instOrElseOption.{u1} α)) x (fun (x._@.Std.Data.Option.Lemmas._hyg.3069 : Unit) => Option.none.{u1} α)) x
 Case conversion may be inaccurate. Consider using '#align option.orelse_none Option.orElse_noneₓ'. -/
 @[simp]
 theorem orElse_none (x : Option α) : (x <|> none) = x :=
@@ -1130,31 +1130,55 @@ theorem getD_map (f : α → β) (x : α) (o : Option α) : getD (o.map f) (f x)
   cases o <;> rfl
 #align option.get_or_else_map Option.getD_map
 
-theorem orelse_eq_some (o o' : Option α) (x : α) :
+/- warning: option.orelse_eq_some -> Option.orElse_eq_some is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (o : Option.{u1} α) (o' : Option.{u1} α) (x : α), Iff (Eq.{succ u1} (Option.{u1} α) (HasOrelse.orelse.{u1, u1} Option.{u1} (Alternative.toHasOrelse.{u1, u1} Option.{u1} Option.alternative.{u1}) α o o') (Option.some.{u1} α x)) (Or (Eq.{succ u1} (Option.{u1} α) o (Option.some.{u1} α x)) (And (Eq.{succ u1} (Option.{u1} α) o (Option.none.{u1} α)) (Eq.{succ u1} (Option.{u1} α) o' (Option.some.{u1} α x))))
+but is expected to have type
+  forall {α : Type.{u1}} (o : Option.{u1} α) (o' : Option.{u1} α) (x : α), Iff (Eq.{succ u1} (Option.{u1} α) (HOrElse.hOrElse.{u1, u1, u1} (Option.{u1} α) (Option.{u1} α) (Option.{u1} α) (instHOrElse.{u1} (Option.{u1} α) (Option.instOrElseOption.{u1} α)) o (fun (x._@.Mathlib.Data.Option.Basic._hyg.3097 : Unit) => o')) (Option.some.{u1} α x)) (Or (Eq.{succ u1} (Option.{u1} α) o (Option.some.{u1} α x)) (And (Eq.{succ u1} (Option.{u1} α) o (Option.none.{u1} α)) (Eq.{succ u1} (Option.{u1} α) o' (Option.some.{u1} α x))))
+Case conversion may be inaccurate. Consider using '#align option.orelse_eq_some Option.orElse_eq_someₓ'. -/
+theorem orElse_eq_some (o o' : Option α) (x : α) :
     (o <|> o') = some x ↔ o = some x ∨ o = none ∧ o' = some x :=
   by
   cases o
   · simp only [true_and_iff, false_or_iff, eq_self_iff_true, none_orelse]
   · simp only [some_orelse, or_false_iff, false_and_iff]
-#align option.orelse_eq_some Option.orelse_eq_some
+#align option.orelse_eq_some Option.orElse_eq_some
 
-theorem orelse_eq_some' (o o' : Option α) (x : α) :
+/- warning: option.orelse_eq_some' -> Option.orElse_eq_some' is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (o : Option.{u1} α) (o' : Option.{u1} α) (x : α), Iff (Eq.{succ u1} (Option.{u1} α) (Option.orelse.{u1} α o o') (Option.some.{u1} α x)) (Or (Eq.{succ u1} (Option.{u1} α) o (Option.some.{u1} α x)) (And (Eq.{succ u1} (Option.{u1} α) o (Option.none.{u1} α)) (Eq.{succ u1} (Option.{u1} α) o' (Option.some.{u1} α x))))
+but is expected to have type
+  forall {α : Type.{u1}} (o : Option.{u1} α) (o' : Option.{u1} α) (x : α), Iff (Eq.{succ u1} (Option.{u1} α) (Option.orElse.{u1} α o (fun (x._@.Mathlib.Data.Option.Basic._hyg.3158 : Unit) => o')) (Option.some.{u1} α x)) (Or (Eq.{succ u1} (Option.{u1} α) o (Option.some.{u1} α x)) (And (Eq.{succ u1} (Option.{u1} α) o (Option.none.{u1} α)) (Eq.{succ u1} (Option.{u1} α) o' (Option.some.{u1} α x))))
+Case conversion may be inaccurate. Consider using '#align option.orelse_eq_some' Option.orElse_eq_some'ₓ'. -/
+theorem orElse_eq_some' (o o' : Option α) (x : α) :
     o.orelse o' = some x ↔ o = some x ∨ o = none ∧ o' = some x :=
-  Option.orelse_eq_some o o' x
-#align option.orelse_eq_some' Option.orelse_eq_some'
+  Option.orElse_eq_some o o' x
+#align option.orelse_eq_some' Option.orElse_eq_some'
 
+/- warning: option.orelse_eq_none -> Option.orElse_eq_none is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (o : Option.{u1} α) (o' : Option.{u1} α), Iff (Eq.{succ u1} (Option.{u1} α) (HasOrelse.orelse.{u1, u1} Option.{u1} (Alternative.toHasOrelse.{u1, u1} Option.{u1} Option.alternative.{u1}) α o o') (Option.none.{u1} α)) (And (Eq.{succ u1} (Option.{u1} α) o (Option.none.{u1} α)) (Eq.{succ u1} (Option.{u1} α) o' (Option.none.{u1} α)))
+but is expected to have type
+  forall {α : Type.{u1}} (o : Option.{u1} α) (o' : Option.{u1} α), Iff (Eq.{succ u1} (Option.{u1} α) (HOrElse.hOrElse.{u1, u1, u1} (Option.{u1} α) (Option.{u1} α) (Option.{u1} α) (instHOrElse.{u1} (Option.{u1} α) (Option.instOrElseOption.{u1} α)) o (fun (x._@.Mathlib.Data.Option.Basic._hyg.3210 : Unit) => o')) (Option.none.{u1} α)) (And (Eq.{succ u1} (Option.{u1} α) o (Option.none.{u1} α)) (Eq.{succ u1} (Option.{u1} α) o' (Option.none.{u1} α)))
+Case conversion may be inaccurate. Consider using '#align option.orelse_eq_none Option.orElse_eq_noneₓ'. -/
 @[simp]
-theorem orelse_eq_none (o o' : Option α) : (o <|> o') = none ↔ o = none ∧ o' = none :=
+theorem orElse_eq_none (o o' : Option α) : (o <|> o') = none ↔ o = none ∧ o' = none :=
   by
   cases o
   · simp only [true_and_iff, none_orelse, eq_self_iff_true]
   · simp only [some_orelse, false_and_iff]
-#align option.orelse_eq_none Option.orelse_eq_none
+#align option.orelse_eq_none Option.orElse_eq_none
 
+/- warning: option.orelse_eq_none' -> Option.orElse_eq_none' is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (o : Option.{u1} α) (o' : Option.{u1} α), Iff (Eq.{succ u1} (Option.{u1} α) (Option.orelse.{u1} α o o') (Option.none.{u1} α)) (And (Eq.{succ u1} (Option.{u1} α) o (Option.none.{u1} α)) (Eq.{succ u1} (Option.{u1} α) o' (Option.none.{u1} α)))
+but is expected to have type
+  forall {α : Type.{u1}} (o : Option.{u1} α) (o' : Option.{u1} α), Iff (Eq.{succ u1} (Option.{u1} α) (Option.orElse.{u1} α o (fun (x._@.Mathlib.Data.Option.Basic._hyg.3260 : Unit) => o')) (Option.none.{u1} α)) (And (Eq.{succ u1} (Option.{u1} α) o (Option.none.{u1} α)) (Eq.{succ u1} (Option.{u1} α) o' (Option.none.{u1} α)))
+Case conversion may be inaccurate. Consider using '#align option.orelse_eq_none' Option.orElse_eq_none'ₓ'. -/
 @[simp]
-theorem orelse_eq_none' (o o' : Option α) : o.orelse o' = none ↔ o = none ∧ o' = none :=
-  Option.orelse_eq_none o o'
-#align option.orelse_eq_none' Option.orelse_eq_none'
+theorem orElse_eq_none' (o o' : Option α) : o.orelse o' = none ↔ o = none ∧ o' = none :=
+  Option.orElse_eq_none o o'
+#align option.orelse_eq_none' Option.orElse_eq_none'
 
 section
 
@@ -1207,10 +1231,16 @@ theorem toList_none (α : Type _) : (none : Option α).toList = [] :=
   rfl
 #align option.to_list_none Option.toList_none
 
+/- warning: option.elim_none_some -> Option.elim_none_some is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} (f : (Option.{u1} α) -> β), Eq.{max (succ u1) (succ u2)} ((Option.{u1} α) -> β) (Option.elim'.{u1, u2} α β (f (Option.none.{u1} α)) (Function.comp.{succ u1, succ u1, succ u2} α (Option.{u1} α) β f (Option.some.{u1} α))) f
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} (f : (Option.{u2} α) -> β), Eq.{max (succ u2) (succ u1)} ((Option.{u2} α) -> β) (fun (x : Option.{u2} α) => Option.elim.{u2, succ u1} α β x (f (Option.none.{u2} α)) (Function.comp.{succ u2, succ u2, succ u1} α (Option.{u2} α) β f (Option.some.{u2} α))) f
+Case conversion may be inaccurate. Consider using '#align option.elim_none_some Option.elim_none_someₓ'. -/
 @[simp]
-theorem elim'_none_some (f : Option α → β) : Option.elim' (f none) (f ∘ some) = f :=
+theorem elim_none_some (f : Option α → β) : Option.elim' (f none) (f ∘ some) = f :=
   funext fun o => by cases o <;> rfl
-#align option.elim_none_some Option.elim'_none_some
+#align option.elim_none_some Option.elim_none_some
 
 end Option
 

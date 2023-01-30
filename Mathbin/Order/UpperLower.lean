@@ -120,11 +120,11 @@ theorem IsLowerSet.inter (hs : IsLowerSet s) (ht : IsLowerSet t) : IsLowerSet (s
 #align is_lower_set.inter IsLowerSet.inter
 
 theorem isUpperSet_unionᵢ {f : ι → Set α} (hf : ∀ i, IsUpperSet (f i)) : IsUpperSet (⋃ i, f i) :=
-  fun a b h => Exists₂Cat.imp <| forall_range_iff.2 fun i => hf i h
+  fun a b h => Exists₂.imp <| forall_range_iff.2 fun i => hf i h
 #align is_upper_set_Union isUpperSet_unionᵢ
 
 theorem isLowerSet_unionᵢ {f : ι → Set α} (hf : ∀ i, IsLowerSet (f i)) : IsLowerSet (⋃ i, f i) :=
-  fun a b h => Exists₂Cat.imp <| forall_range_iff.2 fun i => hf i h
+  fun a b h => Exists₂.imp <| forall_range_iff.2 fun i => hf i h
 #align is_lower_set_Union isLowerSet_unionᵢ
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
@@ -140,11 +140,11 @@ theorem isLowerSet_Union₂ {f : ∀ i, κ i → Set α} (hf : ∀ i j, IsLowerS
 #align is_lower_set_Union₂ isLowerSet_Union₂
 
 theorem isUpperSet_unionₛ {S : Set (Set α)} (hf : ∀ s ∈ S, IsUpperSet s) : IsUpperSet (⋃₀ S) :=
-  fun a b h => Exists₂Cat.imp fun s hs => hf s hs h
+  fun a b h => Exists₂.imp fun s hs => hf s hs h
 #align is_upper_set_sUnion isUpperSet_unionₛ
 
 theorem isLowerSet_unionₛ {S : Set (Set α)} (hf : ∀ s ∈ S, IsLowerSet s) : IsLowerSet (⋃₀ S) :=
-  fun a b h => Exists₂Cat.imp fun s hs => hf s hs h
+  fun a b h => Exists₂.imp fun s hs => hf s hs h
 #align is_lower_set_sUnion isLowerSet_unionₛ
 
 theorem isUpperSet_interᵢ {f : ι → Set α} (hf : ∀ i, IsUpperSet (f i)) : IsUpperSet (⋂ i, f i) :=
@@ -1490,12 +1490,12 @@ variable [Preorder α] [Preorder β] {s t : Set α} {x : α}
 
 /-- The greatest upper set containing a given set. -/
 def upperClosure (s : Set α) : UpperSet α :=
-  ⟨{ x | ∃ a ∈ s, a ≤ x }, fun x y h => Exists₂Cat.imp fun a _ => h.trans'⟩
+  ⟨{ x | ∃ a ∈ s, a ≤ x }, fun x y h => Exists₂.imp fun a _ => h.trans'⟩
 #align upper_closure upperClosure
 
 /-- The least lower set containing a given set. -/
 def lowerClosure (s : Set α) : LowerSet α :=
-  ⟨{ x | ∃ a ∈ s, x ≤ a }, fun x y h => Exists₂Cat.imp fun a _ => h.trans⟩
+  ⟨{ x | ∃ a ∈ s, x ≤ a }, fun x y h => Exists₂.imp fun a _ => h.trans⟩
 #align lower_closure lowerClosure
 
 @[simp]

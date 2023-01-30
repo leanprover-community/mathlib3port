@@ -202,16 +202,16 @@ instance liftOrGet_isRightId (f : α → α → α) : IsRightId (Option α) (lif
 #align option.lift_or_get_is_right_id Option.liftOrGet_isRightId
 -/
 
-#print Option.Rel /-
+#print Option.rel /-
 /-- Lifts a relation `α → β → Prop` to a relation `option α → option β → Prop` by just adding
 `none ~ none`. -/
-inductive Rel (r : α → β → Prop) : Option α → Option β → Prop/--
+inductive rel (r : α → β → Prop) : Option α → Option β → Prop/--
 If `a ~ b`, then `some a ~ some b` -/
 
   | some {a b} : r a b → Rel (some a) (some b)/-- `none ~ none` -/
 
   | none : Rel none none
-#align option.rel Option.Rel
+#align option.rel Option.rel
 -/
 
 #print Option.pbind /-

@@ -480,7 +480,7 @@ noncomputable def IsNoetherian.equivPunitOfProdInjective [IsNoetherian R M] (f :
   apply Nonempty.intro
   refine' (f.tailing_linear_equiv i n).symm ≪≫ₗ _
   rw [w]
-  exact Submodule.botEquivPunit
+  exact Submodule.botEquivPUnit
 #align is_noetherian.equiv_punit_of_prod_injective IsNoetherian.equivPunitOfProdInjective
 
 end

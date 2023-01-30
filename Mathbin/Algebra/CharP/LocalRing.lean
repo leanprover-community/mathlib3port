@@ -50,7 +50,7 @@ theorem charP_zero_or_prime_power (R : Type _) [CommRing R] [LocalRing R] (q : �
       rw [← mem_nonunits_iff] at g
       rw [← LocalRing.mem_maximalIdeal] at g
       have a_cast_zero := Ideal.Quotient.eq_zero_iff_mem.2 g
-      rw [map_nat_cast] at a_cast_zero
+      rw [map_natCast] at a_cast_zero
       have r_dvd_a := (ringChar.spec K a).1 a_cast_zero
       exact absurd r_dvd_a r_ne_dvd_a
     -- Let `b` be the inverse of `a`.

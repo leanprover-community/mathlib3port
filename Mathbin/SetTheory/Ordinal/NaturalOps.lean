@@ -88,8 +88,8 @@ theorem lt_wf : @WellFounded NatOrdinal (· < ·) :=
   Ordinal.lt_wf
 #align nat_ordinal.lt_wf NatOrdinal.lt_wf
 
-instance : WellFoundedLt NatOrdinal :=
-  Ordinal.wellFoundedLt
+instance : WellFoundedLT NatOrdinal :=
+  Ordinal.wellFoundedLT
 
 instance : IsWellOrder NatOrdinal (· < ·) :=
   Ordinal.HasLt.Lt.isWellOrder

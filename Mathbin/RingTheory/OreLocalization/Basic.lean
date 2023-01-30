@@ -594,7 +594,7 @@ private def add' (r₂ : R) (s₂ : S) : R[S⁻¹] → R[S⁻¹] :=
 
 private theorem add'_comm (r₁ r₂ : R) (s₁ s₂ : S) : add' r₁ s₁ (r₂ /ₒ s₂) = add' r₂ s₂ (r₁ /ₒ s₁) :=
   by
-  simp only [add', ore_div, add'', Quotient.lift_mk', Quotient.eq']
+  simp only [add', ore_div, add'', Quotient.lift_mk, Quotient.eq']
   have hb := ore_eq (↑s₂) s₁
   set rb := ore_num (↑s₂) s₁ with h
   -- r~~

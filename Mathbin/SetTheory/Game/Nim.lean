@@ -115,7 +115,7 @@ theorem toRightMovesNim_symm_lt {o : Ordinal} (i : (nim o).RightMoves) :
 @[simp]
 theorem moveLeft_nim' {o : Ordinal.{u}} (i) :
     (nim o).moveLeft i = nim (toLeftMovesNim.symm i).val :=
-  (congr_hEq (moveLeft_nim_hEq o).symm (cast_hEq _ i)).symm
+  (congr_heq (moveLeft_nim_hEq o).symm (cast_hEq _ i)).symm
 #align pgame.move_left_nim' Pgame.moveLeft_nim'
 
 theorem moveLeft_nim {o : Ordinal} (i) : (nim o).moveLeft (toLeftMovesNim i) = nim i := by simp
@@ -123,7 +123,7 @@ theorem moveLeft_nim {o : Ordinal} (i) : (nim o).moveLeft (toLeftMovesNim i) = n
 
 @[simp]
 theorem moveRight_nim' {o : Ordinal} (i) : (nim o).moveRight i = nim (toRightMovesNim.symm i).val :=
-  (congr_hEq (moveRight_nim_hEq o).symm (cast_hEq _ i)).symm
+  (congr_heq (moveRight_nim_hEq o).symm (cast_hEq _ i)).symm
 #align pgame.move_right_nim' Pgame.moveRight_nim'
 
 theorem moveRight_nim {o : Ordinal} (i) : (nim o).moveRight (toRightMovesNim i) = nim i := by simp

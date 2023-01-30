@@ -232,7 +232,7 @@ theorem Char.card_pow_card {F : Type} [Field F] [Fintype F] {F' : Type} [Field F
   let FF' := CyclotomicField ψ.n F'
   have hchar := Algebra.ringChar_eq F' FF'
   apply (algebraMap F' FF').Injective
-  rw [map_pow, map_mul, map_nat_cast, hc', hchar, Nat.cast_pow]
+  rw [map_pow, map_mul, map_natCast, hc', hchar, Nat.cast_pow]
   simp only [← MulChar.ringHomComp_apply]
   haveI := Fact.mk hp'
   haveI := Fact.mk (hchar.subst hp')

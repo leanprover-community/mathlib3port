@@ -222,7 +222,7 @@ theorem nsmul_pow_two_pow_half' (n k : ℕ) : 2 ^ n • powHalf (n + k) = powHal
       Surreal.powHalf_zero]
   · rw [← double_pow_half_succ_eq_pow_half (n + k), ← double_pow_half_succ_eq_pow_half k,
       smul_algebra_smul_comm] at hk
-    rwa [← zsmul_eq_zsmul_iff' two_neZero]
+    rwa [← zsmul_eq_zsmul_iff' two_ne_zero]
 #align surreal.nsmul_pow_two_pow_half' Surreal.nsmul_pow_two_pow_half'
 
 theorem zsmul_pow_two_powHalf (m : ℤ) (n k : ℕ) : (m * 2 ^ n) • powHalf (n + k) = m • powHalf k :=

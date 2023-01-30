@@ -1222,7 +1222,8 @@ def Simps.symmApply (h : α ≃ᵐ β) : β → α :=
   h.symm
 #align measurable_equiv.simps.symm_apply MeasurableEquiv.Simps.symmApply
 
-initialize_simps_projections MeasurableEquiv (to_equiv_to_fun → apply, to_equiv_inv_fun → symmApply)
+initialize_simps_projections MeasurableEquiv (to_equiv_to_fun → apply, to_equiv_inv_fun →
+  symm_apply)
 
 theorem toEquiv_injective : Injective (toEquiv : α ≃ᵐ β → α ≃ β) :=
   by
@@ -1232,7 +1233,7 @@ theorem toEquiv_injective : Injective (toEquiv : α ≃ᵐ β → α ≃ β) :=
 
 @[ext]
 theorem ext {e₁ e₂ : α ≃ᵐ β} (h : (e₁ : α → β) = e₂) : e₁ = e₂ :=
-  to_equiv_injective <| Equiv.coeFn_injective h
+  to_equiv_injective <| Equiv.coe_fn_injective h
 #align measurable_equiv.ext MeasurableEquiv.ext
 
 @[simp]

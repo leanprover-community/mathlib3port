@@ -76,7 +76,7 @@ def Simps.symmApply (h : α ≃ᵤ β) : β → α :=
   h.symm
 #align uniform_equiv.simps.symm_apply UniformEquiv.Simps.symmApply
 
-initialize_simps_projections UniformEquiv (to_equiv_to_fun → apply, to_equiv_inv_fun → symmApply,
+initialize_simps_projections UniformEquiv (to_equiv_to_fun → apply, to_equiv_inv_fun → symm_apply,
   -toEquiv)
 
 @[simp]

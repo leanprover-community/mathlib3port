@@ -868,7 +868,7 @@ theorem Memℓp.infty_pow {f : ∀ i, B i} (hf : Memℓp f ∞) (n : ℕ) : Mem�
 #align mem_ℓp.infty_pow Memℓp.infty_pow
 
 theorem nat_cast_memℓp_infty (n : ℕ) : Memℓp (n : ∀ i, B i) ∞ :=
-  nat_cast_mem (lpInftySubring B) n
+  natCast_mem (lpInftySubring B) n
 #align nat_cast_mem_ℓp_infty nat_cast_memℓp_infty
 
 theorem int_cast_memℓp_infty (z : ℤ) : Memℓp (z : ∀ i, B i) ∞ :=

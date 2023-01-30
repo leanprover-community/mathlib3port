@@ -211,7 +211,7 @@ theorem Separable.inj_of_prod_x_sub_c [Nontrivial R] {ι : Sort _} {f : ι → R
   rw [← insert_erase hx, prod_insert (not_mem_erase _ _), ←
     insert_erase (mem_erase_of_ne_of_mem (Ne.symm hxy) hy), prod_insert (not_mem_erase _ _), ←
     mul_assoc, hfxy, ← sq] at hfs
-  cases (hfs.of_mul_left.of_pow (not_is_unit_X_sub_C _) two_neZero).2
+  cases (hfs.of_mul_left.of_pow (not_is_unit_X_sub_C _) two_ne_zero).2
 #align polynomial.separable.inj_of_prod_X_sub_C Polynomial.Separable.inj_of_prod_x_sub_c
 
 theorem Separable.injective_of_prod_x_sub_c [Nontrivial R] {ι : Sort _} [Fintype ι] {f : ι → R}

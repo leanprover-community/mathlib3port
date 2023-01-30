@@ -1144,7 +1144,7 @@ theorem gamma_three_div_two_lt_one : gamma (3 / 2) < 1 :=
   -- to avoid unnecessary imports.
   have A : (0 : ℝ) < 3 / 2 := by norm_num
   have :=
-    bohr_mollerup.f_add_nat_le convex_on_log_Gamma (fun y hy => _) two_neZero one_half_pos
+    bohr_mollerup.f_add_nat_le convex_on_log_Gamma (fun y hy => _) two_ne_zero one_half_pos
       (by norm_num : 1 / 2 ≤ (1 : ℝ))
   swap
   ·
@@ -1155,7 +1155,7 @@ theorem gamma_three_div_two_lt_one : gamma (3 / 2) < 1 :=
     log_mul A.ne' (Gamma_pos_of_pos A).ne', ← le_sub_iff_add_le',
     log_le_iff_le_exp (Gamma_pos_of_pos A)] at this
   refine' this.trans_lt (exp_lt_one_iff.mpr _)
-  rw [mul_comm, ← mul_div_assoc, div_sub' _ _ (2 : ℝ) two_neZero]
+  rw [mul_comm, ← mul_div_assoc, div_sub' _ _ (2 : ℝ) two_ne_zero]
   refine' div_neg_of_neg_of_pos _ two_pos
   rw [sub_neg, mul_one, ← Nat.cast_two, ← log_pow, ← exp_lt_exp, Nat.cast_two, exp_log two_pos,
       exp_log] <;>

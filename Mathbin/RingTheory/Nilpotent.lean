@@ -301,7 +301,7 @@ theorem Ideal.IsNilpotent.induction_on (hI : IsNilpotent I)
   cases n
   · rw [pow_one] at hI
     exact (hI' hI).elim
-  apply h₂ (I ^ 2) _ (Ideal.pow_le_self two_neZero)
+  apply h₂ (I ^ 2) _ (Ideal.pow_le_self two_ne_zero)
   · apply H n.succ _ (I ^ 2)
     · rw [← pow_mul, eq_bot_iff, ← hI, Nat.succ_eq_add_one, Nat.succ_eq_add_one]
       exact Ideal.pow_le_pow (by linarith)

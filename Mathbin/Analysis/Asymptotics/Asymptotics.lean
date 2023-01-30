@@ -264,7 +264,7 @@ theorem isO_iff_eventually : f =O[l] g' ↔ ∀ᶠ c in at_top, ∀ᶠ x in l, �
 
 theorem IsO.exists_mem_basis {ι} {p : ι → Prop} {s : ι → Set α} (h : f =O[l] g')
     (hb : l.HasBasis p s) : ∃ (c : ℝ)(hc : 0 < c)(i : ι)(hi : p i), ∀ x ∈ s i, ‖f x‖ ≤ c * ‖g' x‖ :=
-  flip Exists₂Cat.imp h.exists_pos fun c hc h => by
+  flip Exists₂.imp h.exists_pos fun c hc h => by
     simpa only [is_O_with_iff, hb.eventually_iff, exists_prop] using h
 #align asymptotics.is_O.exists_mem_basis Asymptotics.IsO.exists_mem_basis
 
@@ -2507,7 +2507,7 @@ theorem isO_nat_atTop_iff {f : ℕ → E''} {g : ℕ → F''} (h : ∀ x, g x = 
 
 theorem isO_one_nat_atTop_iff {f : ℕ → E''} :
     f =O[at_top] (fun n => 1 : ℕ → ℝ) ↔ ∃ C, ∀ n, ‖f n‖ ≤ C :=
-  Iff.trans (isO_nat_atTop_iff fun n h => (one_neZero h).elim) <| by simp only [norm_one, mul_one]
+  Iff.trans (isO_nat_atTop_iff fun n h => (one_ne_zero h).elim) <| by simp only [norm_one, mul_one]
 #align asymptotics.is_O_one_nat_at_top_iff Asymptotics.isO_one_nat_atTop_iff
 
 theorem isOWith_pi {ι : Type _} [Fintype ι] {E' : ι → Type _} [∀ i, NormedAddCommGroup (E' i)]

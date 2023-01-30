@@ -216,6 +216,6 @@ theorem ne_neg_of_mem_sphere {r : ℝ} (hr : r ≠ 0) (x : sphere (0 : E) r) : x
 #align ne_neg_of_mem_sphere ne_neg_of_mem_sphere
 
 theorem ne_neg_of_mem_unit_sphere (x : sphere (0 : E) 1) : x ≠ -x :=
-  ne_neg_of_mem_sphere 𝕜 one_neZero x
+  ne_neg_of_mem_sphere 𝕜 one_ne_zero x
 #align ne_neg_of_mem_unit_sphere ne_neg_of_mem_unit_sphere
 

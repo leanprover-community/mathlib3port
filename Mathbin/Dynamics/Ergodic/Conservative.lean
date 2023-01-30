@@ -77,7 +77,7 @@ protected theorem id (μ : Measure α) : Conservative id μ :=
   { toQuasiMeasurePreserving := QuasiMeasurePreserving.id μ
     exists_mem_image_mem := fun s hs h0 =>
       let ⟨x, hx⟩ := nonempty_of_measure_ne_zero h0
-      ⟨x, hx, 1, one_neZero, hx⟩ }
+      ⟨x, hx, 1, one_ne_zero, hx⟩ }
 #align measure_theory.conservative.id MeasureTheory.Conservative.id
 
 /-- If `f` is a conservative map and `s` is a measurable set of nonzero measure, then

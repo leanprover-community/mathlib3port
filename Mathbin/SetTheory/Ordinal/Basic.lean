@@ -975,7 +975,7 @@ instance : LinearOrder Ordinal :=
           h₁ h₂
     decidableLe := Classical.decRel _ }
 
-instance : WellFoundedLt Ordinal :=
+instance : WellFoundedLT Ordinal :=
   ⟨lt_wf⟩
 
 instance : IsWellOrder Ordinal (· < ·) where

@@ -554,7 +554,7 @@ def fderivClm : 𝓢(E, F) →L[𝕜] 𝓢(E, E →L[ℝ] F)
       Seminorm.continuous_from_bounded (schwartzWithSeminorms 𝕜 E F)
         (schwartzWithSeminorms 𝕜 E (E →L[ℝ] F)) _ _
     rintro ⟨k, n⟩
-    use {⟨k, n + 1⟩}, 1, one_neZero
+    use {⟨k, n + 1⟩}, 1, one_ne_zero
     intro f
     simp only [schwartz_seminorm_family_apply, Seminorm.comp_apply, Finset.sup_singleton, one_smul]
     refine' (fderiv_lm 𝕜 f).seminorm_le_bound 𝕜 k n (by positivity) _
@@ -620,7 +620,7 @@ def toBoundedContinuousFunctionClm : 𝓢(E, F) →L[𝕜] E →ᵇ F :=
       change Continuous (to_bounded_continuous_function_lm 𝕜 E F)
       refine'
         Seminorm.continuous_from_bounded (schwartzWithSeminorms 𝕜 E F)
-          (normWithSeminorms 𝕜 (E →ᵇ F)) _ fun i => ⟨{0}, 1, one_neZero, fun f => _⟩
+          (normWithSeminorms 𝕜 (E →ᵇ F)) _ fun i => ⟨{0}, 1, one_ne_zero, fun f => _⟩
       rw [Finset.sup_singleton, one_smul, Seminorm.comp_apply, coe_normSeminorm,
         schwartz_seminorm_family_apply_zero, BoundedContinuousFunction.norm_le (map_nonneg _ _)]
       intro x

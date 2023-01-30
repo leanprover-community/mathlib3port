@@ -60,7 +60,7 @@ theorem zeroLocus_bot : zeroLocus (⊥ : Ideal (MvPolynomial σ k)) = ⊤ :=
 #align mv_polynomial.zero_locus_bot MvPolynomial.zeroLocus_bot
 
 theorem zeroLocus_top : zeroLocus (⊤ : Ideal (MvPolynomial σ k)) = ⊥ :=
-  eq_bot_iff.2 fun x hx => one_neZero ((eval x).map_one ▸ hx 1 Submodule.mem_top : (1 : k) = 0)
+  eq_bot_iff.2 fun x hx => one_ne_zero ((eval x).map_one ▸ hx 1 Submodule.mem_top : (1 : k) = 0)
 #align mv_polynomial.zero_locus_top MvPolynomial.zeroLocus_top
 
 /-- Ideal of polynomials with common zeroes at all elements of a set -/

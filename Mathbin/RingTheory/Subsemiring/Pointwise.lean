@@ -87,7 +87,7 @@ theorem smul_sup (a : M) (S T : Subsemiring R) : a • (S ⊔ T) = a • S ⊔ a
 #align subsemiring.smul_sup Subsemiring.smul_sup
 
 theorem smul_closure (a : M) (s : Set R) : a • closure s = closure (a • s) :=
-  RingHom.map_sclosure _ _
+  RingHom.map_closureS _ _
 #align subsemiring.smul_closure Subsemiring.smul_closure
 
 instance pointwise_central_scalar [MulSemiringAction Mᵐᵒᵖ R] [IsCentralScalar M R] :

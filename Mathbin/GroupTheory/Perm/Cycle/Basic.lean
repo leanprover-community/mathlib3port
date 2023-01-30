@@ -1912,11 +1912,11 @@ namespace Int
 open Equiv
 
 theorem addLeft_one_isCycle : (Equiv.addLeft 1 : Perm ℤ).IsCycle :=
-  ⟨0, one_neZero, fun n _ => ⟨n, by simp⟩⟩
+  ⟨0, one_ne_zero, fun n _ => ⟨n, by simp⟩⟩
 #align int.add_left_one_is_cycle Int.addLeft_one_isCycle
 
 theorem addRight_one_isCycle : (Equiv.addRight 1 : Perm ℤ).IsCycle :=
-  ⟨0, one_neZero, fun n _ => ⟨n, by simp⟩⟩
+  ⟨0, one_ne_zero, fun n _ => ⟨n, by simp⟩⟩
 #align int.add_right_one_is_cycle Int.addRight_one_isCycle
 
 end Int

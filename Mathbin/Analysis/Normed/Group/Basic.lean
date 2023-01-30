@@ -693,7 +693,7 @@ theorem ne_one_of_mem_sphere (hr : r ≠ 0) (x : sphere (1 : E) r) : (x : E) ≠
 
 @[to_additive ne_zero_of_mem_unit_sphere]
 theorem ne_one_of_mem_unit_sphere (x : sphere (1 : E) 1) : (x : E) ≠ 1 :=
-  ne_one_of_mem_sphere one_neZero _
+  ne_one_of_mem_sphere one_ne_zero _
 #align ne_one_of_mem_unit_sphere ne_one_of_mem_unit_sphere
 #align ne_zero_of_mem_unit_sphere ne_zero_of_mem_unit_sphere
 

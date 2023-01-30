@@ -34,7 +34,7 @@ instance : LocallyFiniteOrder ℤ
   finset_mem_Icc a b x :=
     by
     simp_rw [mem_map, exists_prop, mem_range, Int.lt_toNat, Function.Embedding.trans_apply,
-      Nat.castEmbedding_apply, add_left_embedding_apply]
+      Nat.castEmbedding_apply, addLeftEmbedding_apply]
     constructor
     · rintro ⟨a, h, rfl⟩
       rw [lt_sub_iff_add_lt, Int.lt_add_one_iff, add_comm] at h
@@ -47,7 +47,7 @@ instance : LocallyFiniteOrder ℤ
   finset_mem_Ico a b x :=
     by
     simp_rw [mem_map, exists_prop, mem_range, Int.lt_toNat, Function.Embedding.trans_apply,
-      Nat.castEmbedding_apply, add_left_embedding_apply]
+      Nat.castEmbedding_apply, addLeftEmbedding_apply]
     constructor
     · rintro ⟨a, h, rfl⟩
       exact ⟨Int.le.intro rfl, lt_sub_iff_add_lt'.mp h⟩
@@ -58,7 +58,7 @@ instance : LocallyFiniteOrder ℤ
   finset_mem_Ioc a b x :=
     by
     simp_rw [mem_map, exists_prop, mem_range, Int.lt_toNat, Function.Embedding.trans_apply,
-      Nat.castEmbedding_apply, add_left_embedding_apply]
+      Nat.castEmbedding_apply, addLeftEmbedding_apply]
     constructor
     · rintro ⟨a, h, rfl⟩
       rw [← add_one_le_iff, le_sub_iff_add_le', add_comm _ (1 : ℤ), ← add_assoc] at h
@@ -70,7 +70,7 @@ instance : LocallyFiniteOrder ℤ
   finset_mem_Ioo a b x :=
     by
     simp_rw [mem_map, exists_prop, mem_range, Int.lt_toNat, Function.Embedding.trans_apply,
-      Nat.castEmbedding_apply, add_left_embedding_apply]
+      Nat.castEmbedding_apply, addLeftEmbedding_apply]
     constructor
     · rintro ⟨a, h, rfl⟩
       rw [sub_sub, lt_sub_iff_add_lt'] at h

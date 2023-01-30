@@ -58,7 +58,7 @@ section Semigroup
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : Semigroup.{u1} α] (x : α) (y : α), Eq.{succ u1} (α -> α) (Function.comp.{succ u1, succ u1, succ u1} α α α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (Semigroup.toHasMul.{u1} α _inst_1)) x) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (Semigroup.toHasMul.{u1} α _inst_1)) y)) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (Semigroup.toHasMul.{u1} α _inst_1)) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (Semigroup.toHasMul.{u1} α _inst_1)) x y))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Semigroup.{u1} α] (x : α) (y : α), Eq.{succ u1} (α -> α) (Function.comp.{succ u1, succ u1, succ u1} α α α (fun (x._@.Mathlib.Algebra.Group.Basic._hyg.32 : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (Semigroup.toMul.{u1} α _inst_1)) x x._@.Mathlib.Algebra.Group.Basic._hyg.32) (fun (x._@.Mathlib.Algebra.Group.Basic._hyg.44 : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (Semigroup.toMul.{u1} α _inst_1)) y x._@.Mathlib.Algebra.Group.Basic._hyg.44)) (fun (x._@.Mathlib.Algebra.Group.Basic._hyg.56 : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (Semigroup.toMul.{u1} α _inst_1)) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (Semigroup.toMul.{u1} α _inst_1)) x y) x._@.Mathlib.Algebra.Group.Basic._hyg.56)
+  forall {α : Type.{u1}} [_inst_1 : Semigroup.{u1} α] (x : α) (y : α), Eq.{succ u1} (α -> α) (Function.comp.{succ u1, succ u1, succ u1} α α α (fun (x._@.Mathlib.Algebra.Group.Basic._hyg.30 : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (Semigroup.toMul.{u1} α _inst_1)) x x._@.Mathlib.Algebra.Group.Basic._hyg.30) (fun (x._@.Mathlib.Algebra.Group.Basic._hyg.42 : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (Semigroup.toMul.{u1} α _inst_1)) y x._@.Mathlib.Algebra.Group.Basic._hyg.42)) (fun (x._@.Mathlib.Algebra.Group.Basic._hyg.54 : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (Semigroup.toMul.{u1} α _inst_1)) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (Semigroup.toMul.{u1} α _inst_1)) x y) x._@.Mathlib.Algebra.Group.Basic._hyg.54)
 Case conversion may be inaccurate. Consider using '#align comp_mul_left comp_mul_leftₓ'. -/
 /-- Composing two multiplications on the left by `y` then `x`
 is equal to a multiplication on the left by `x * y`.
@@ -136,7 +136,7 @@ theorem eq_one_iff_eq_one_of_mul_eq_one {a b : M} (h : a * b = 1) : a = 1 ↔ b 
 lean 3 declaration is
   forall {M : Type.{u1}} [_inst_1 : MulOneClass.{u1} M], Eq.{succ u1} (M -> M) (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toHasMul.{u1} M _inst_1)) (OfNat.ofNat.{u1} M 1 (OfNat.mk.{u1} M 1 (One.one.{u1} M (MulOneClass.toHasOne.{u1} M _inst_1))))) (id.{succ u1} M)
 but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : MulOneClass.{u1} M], Eq.{succ u1} (M -> M) ((fun (x._@.Mathlib.Algebra.Group.Basic._hyg.373 : M) (x._@.Mathlib.Algebra.Group.Basic._hyg.375 : M) => HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toMul.{u1} M _inst_1)) x._@.Mathlib.Algebra.Group.Basic._hyg.373 x._@.Mathlib.Algebra.Group.Basic._hyg.375) (OfNat.ofNat.{u1} M 1 (One.toOfNat1.{u1} M (MulOneClass.toOne.{u1} M _inst_1)))) (id.{succ u1} M)
+  forall {M : Type.{u1}} [_inst_1 : MulOneClass.{u1} M], Eq.{succ u1} (M -> M) ((fun (x._@.Mathlib.Algebra.Group.Basic._hyg.379 : M) (x._@.Mathlib.Algebra.Group.Basic._hyg.381 : M) => HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toMul.{u1} M _inst_1)) x._@.Mathlib.Algebra.Group.Basic._hyg.379 x._@.Mathlib.Algebra.Group.Basic._hyg.381) (OfNat.ofNat.{u1} M 1 (One.toOfNat1.{u1} M (MulOneClass.toOne.{u1} M _inst_1)))) (id.{succ u1} M)
 Case conversion may be inaccurate. Consider using '#align one_mul_eq_id one_mul_eq_idₓ'. -/
 @[to_additive]
 theorem one_mul_eq_id : (· * ·) (1 : M) = id :=
@@ -1141,7 +1141,7 @@ theorem div_eq_inv_self : a / b = b⁻¹ ↔ a = 1 := by rw [div_eq_mul_inv, mul
 lean 3 declaration is
   forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (a : G), Function.Surjective.{succ u1, succ u1} G G (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) a)
 but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (a : G), Function.Surjective.{succ u1, succ u1} G G ((fun (x._@.Mathlib.Algebra.Group.Basic._hyg.3449 : G) (x._@.Mathlib.Algebra.Group.Basic._hyg.3451 : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) x._@.Mathlib.Algebra.Group.Basic._hyg.3449 x._@.Mathlib.Algebra.Group.Basic._hyg.3451) a)
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (a : G), Function.Surjective.{succ u1, succ u1} G G ((fun (x._@.Mathlib.Algebra.Group.Basic._hyg.3536 : G) (x._@.Mathlib.Algebra.Group.Basic._hyg.3538 : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) x._@.Mathlib.Algebra.Group.Basic._hyg.3536 x._@.Mathlib.Algebra.Group.Basic._hyg.3538) a)
 Case conversion may be inaccurate. Consider using '#align mul_left_surjective mul_left_surjectiveₓ'. -/
 @[to_additive]
 theorem mul_left_surjective (a : G) : Function.Surjective ((· * ·) a) := fun x =>

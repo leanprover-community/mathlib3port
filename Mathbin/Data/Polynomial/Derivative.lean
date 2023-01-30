@@ -224,7 +224,7 @@ theorem natDegree_derivative_le (p : R[X]) : p.derivative.natDegree ≤ p.natDeg
 @[simp]
 theorem derivative_nat_cast {n : ℕ} : derivative (n : R[X]) = 0 :=
   by
-  rw [← map_nat_cast C n]
+  rw [← map_natCast C n]
   exact derivative_C
 #align polynomial.derivative_nat_cast Polynomial.derivative_nat_cast
 
@@ -331,7 +331,7 @@ theorem derivative_map [Semiring S] (p : R[X]) (f : R →+* S) :
   rw [sum_over_range' _ _ (n + 1) ((le_max_left _ _).trans_lt (lt_add_one _))]
   rw [sum_over_range' _ _ (n + 1) ((le_max_right _ _).trans_lt (lt_add_one _))]
   simp only [Polynomial.map_sum, Polynomial.map_mul, Polynomial.map_c, map_mul, coeff_map,
-    map_nat_cast, Polynomial.map_nat_cast, Polynomial.map_pow, map_X]
+    map_natCast, Polynomial.map_nat_cast, Polynomial.map_pow, map_X]
   all_goals intro n; rw [zero_mul, C_0, zero_mul]
 #align polynomial.derivative_map Polynomial.derivative_map
 

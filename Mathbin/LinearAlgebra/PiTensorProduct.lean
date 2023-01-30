@@ -530,7 +530,7 @@ theorem reindex_refl : reindex R M (Equiv.refl ι) = LinearEquiv.refl R _ :=
 variable (ι)
 
 /-- The tensor product over an empty index type `ι` is isomorphic to the base ring. -/
-@[simps symmApply]
+@[simps symm_apply]
 def isEmptyEquiv [IsEmpty ι] : (⨂[R] i : ι, M) ≃ₗ[R] R
     where
   toFun := lift (constOfIsEmpty R _ 1)
@@ -558,7 +558,7 @@ theorem isEmptyEquiv_apply_tprod [IsEmpty ι] (f : ι → M) : isEmptyEquiv ι (
 variable {ι}
 
 /-- The tensor product over an single index is isomorphic to the module -/
-@[simps symmApply]
+@[simps symm_apply]
 def subsingletonEquiv [Subsingleton ι] (i₀ : ι) : (⨂[R] i : ι, M) ≃ₗ[R] M
     where
   toFun := lift (MultilinearMap.ofSubsingleton R M i₀)

@@ -29,35 +29,57 @@ namespace Finsupp
 
 variable {n : ℕ} (i : Fin n) {M : Type _} [Zero M] (y : M) (t : Fin (n + 1) →₀ M) (s : Fin n →₀ M)
 
+#print Finsupp.tail /-
 /-- `tail` for maps `fin (n + 1) →₀ M`. See `fin.tail` for more details. -/
 def tail (s : Fin (n + 1) →₀ M) : Fin n →₀ M :=
   Finsupp.equivFunOnFinite.symm (Fin.tail s)
 #align finsupp.tail Finsupp.tail
+-/
 
+#print Finsupp.cons /-
 /-- `cons` for maps `fin n →₀ M`. See `fin.cons` for more details. -/
 def cons (y : M) (s : Fin n →₀ M) : Fin (n + 1) →₀ M :=
   Finsupp.equivFunOnFinite.symm (Fin.cons y s : Fin (n + 1) → M)
 #align finsupp.cons Finsupp.cons
+-/
 
+#print Finsupp.tail_apply /-
 theorem tail_apply : tail t i = t i.succ :=
   rfl
 #align finsupp.tail_apply Finsupp.tail_apply
+-/
 
+/- warning: finsupp.cons_zero -> Finsupp.cons_zero is a dubious translation:
+lean 3 declaration is
+  forall {n : Nat} {M : Type.{u1}} [_inst_1 : Zero.{u1} M] (y : M) (s : Finsupp.{0, u1} (Fin n) M _inst_1), Eq.{succ u1} M (coeFn.{succ u1, succ u1} (Finsupp.{0, u1} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) M _inst_1) (fun (_x : Finsupp.{0, u1} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) M _inst_1) => (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) -> M) (Finsupp.hasCoeToFun.{0, u1} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) M _inst_1) (Finsupp.cons.{u1} n M _inst_1 y s) (OfNat.ofNat.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (One.one.{0} Nat Nat.hasOne))) 0 (OfNat.mk.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (One.one.{0} Nat Nat.hasOne))) 0 (Zero.zero.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (One.one.{0} Nat Nat.hasOne))) (Fin.hasZeroOfNeZero (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (One.one.{0} Nat Nat.hasOne)) (NeZero.succ n)))))) y
+but is expected to have type
+  forall {n : Nat} {M : Type.{u1}} [_inst_1 : Zero.{u1} M] (y : M) (s : Finsupp.{0, u1} (Fin n) M _inst_1), Eq.{succ u1} ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.778 : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) => M) (OfNat.ofNat.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) 0 (Fin.instOfNatFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) 0 (NeZero.succ n)))) (FunLike.coe.{succ u1, 1, succ u1} (Finsupp.{0, u1} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) M _inst_1) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (fun (_x : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) => (fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.778 : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) => M) _x) (Finsupp.funLike.{0, u1} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) M _inst_1) (Finsupp.cons.{u1} n M _inst_1 y s) (OfNat.ofNat.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) 0 (Fin.instOfNatFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) 0 (NeZero.succ n)))) y
+Case conversion may be inaccurate. Consider using '#align finsupp.cons_zero Finsupp.cons_zeroₓ'. -/
 @[simp]
 theorem cons_zero : cons y s 0 = y :=
   rfl
 #align finsupp.cons_zero Finsupp.cons_zero
 
+#print Finsupp.cons_succ /-
 @[simp]
 theorem cons_succ : cons y s i.succ = s i :=
   Fin.cons_succ _ _ _
 #align finsupp.cons_succ Finsupp.cons_succ
+-/
 
+#print Finsupp.tail_cons /-
 @[simp]
 theorem tail_cons : tail (cons y s) = s :=
   ext fun k => by simp only [tail_apply, cons_succ]
 #align finsupp.tail_cons Finsupp.tail_cons
+-/
 
+/- warning: finsupp.cons_tail -> Finsupp.cons_tail is a dubious translation:
+lean 3 declaration is
+  forall {n : Nat} {M : Type.{u1}} [_inst_1 : Zero.{u1} M] (t : Finsupp.{0, u1} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) M _inst_1), Eq.{succ u1} (Finsupp.{0, u1} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) M _inst_1) (Finsupp.cons.{u1} n M _inst_1 (coeFn.{succ u1, succ u1} (Finsupp.{0, u1} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) M _inst_1) (fun (_x : Finsupp.{0, u1} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) M _inst_1) => (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) -> M) (Finsupp.hasCoeToFun.{0, u1} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) M _inst_1) t (OfNat.ofNat.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (One.one.{0} Nat Nat.hasOne))) 0 (OfNat.mk.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (One.one.{0} Nat Nat.hasOne))) 0 (Zero.zero.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (One.one.{0} Nat Nat.hasOne))) (Fin.hasZeroOfNeZero (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (One.one.{0} Nat Nat.hasOne)) (NeZero.succ n)))))) (Finsupp.tail.{u1} n M _inst_1 t)) t
+but is expected to have type
+  forall {n : Nat} {M : Type.{u1}} [_inst_1 : Zero.{u1} M] (t : Finsupp.{0, u1} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) M _inst_1), Eq.{succ u1} (Finsupp.{0, u1} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.778 : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) => M) (OfNat.ofNat.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) 0 (Fin.instOfNatFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) 0 (NeZero.succ n)))) _inst_1) (Finsupp.cons.{u1} n ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.778 : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) => M) (OfNat.ofNat.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) 0 (Fin.instOfNatFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) 0 (NeZero.succ n)))) _inst_1 (FunLike.coe.{succ u1, 1, succ u1} (Finsupp.{0, u1} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) M _inst_1) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (fun (_x : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) => (fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.778 : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) => M) _x) (Finsupp.funLike.{0, u1} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) M _inst_1) t (OfNat.ofNat.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) 0 (Fin.instOfNatFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) 0 (NeZero.succ n)))) (Finsupp.tail.{u1} n ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.778 : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) => M) (OfNat.ofNat.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) 0 (Fin.instOfNatFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) 0 (NeZero.succ n)))) _inst_1 t)) t
+Case conversion may be inaccurate. Consider using '#align finsupp.cons_tail Finsupp.cons_tailₓ'. -/
 @[simp]
 theorem cons_tail : cons (t 0) (tail t) = t := by
   ext
@@ -66,6 +88,7 @@ theorem cons_tail : cons (t 0) (tail t) = t := by
   · rw [← Fin.succ_pred a c_a, cons_succ, ← tail_apply]
 #align finsupp.cons_tail Finsupp.cons_tail
 
+#print Finsupp.cons_zero_zero /-
 @[simp]
 theorem cons_zero_zero : cons 0 (0 : Fin n →₀ M) = 0 :=
   by
@@ -75,28 +98,35 @@ theorem cons_zero_zero : cons 0 (0 : Fin n →₀ M) = 0 :=
   · rw [← Fin.succ_pred a c, cons_succ]
     simp
 #align finsupp.cons_zero_zero Finsupp.cons_zero_zero
+-/
 
 variable {s} {y}
 
+#print Finsupp.cons_ne_zero_of_left /-
 theorem cons_ne_zero_of_left (h : y ≠ 0) : cons y s ≠ 0 :=
   by
   contrapose! h with c
   rw [← cons_zero y s, c, Finsupp.coe_zero, Pi.zero_apply]
 #align finsupp.cons_ne_zero_of_left Finsupp.cons_ne_zero_of_left
+-/
 
+#print Finsupp.cons_ne_zero_of_right /-
 theorem cons_ne_zero_of_right (h : s ≠ 0) : cons y s ≠ 0 :=
   by
   contrapose! h with c
   ext
   simp [← cons_succ a y s, c]
 #align finsupp.cons_ne_zero_of_right Finsupp.cons_ne_zero_of_right
+-/
 
+#print Finsupp.cons_ne_zero_iff /-
 theorem cons_ne_zero_iff : cons y s ≠ 0 ↔ y ≠ 0 ∨ s ≠ 0 :=
   by
   refine' ⟨fun h => _, fun h => h.casesOn cons_ne_zero_of_left cons_ne_zero_of_right⟩
   refine' imp_iff_not_or.1 fun h' c => h _
   rw [h', c, Finsupp.cons_zero_zero]
 #align finsupp.cons_ne_zero_iff Finsupp.cons_ne_zero_iff
+-/
 
 end Finsupp
 

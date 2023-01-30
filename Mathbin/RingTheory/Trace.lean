@@ -386,7 +386,7 @@ theorem sum_embeddings_eq_finrank_mul [FiniteDimensional K F] [IsSeparable K F]
     simp only [Finset.sum_const, Finset.card_univ]
     rw [AlgHom.card L F E]
   · intro σ
-    simp only [algHomEquivSigma, Equiv.coeFn_mk, AlgHom.restrictDomain, AlgHom.comp_apply,
+    simp only [algHomEquivSigma, Equiv.coe_fn_mk, AlgHom.restrictDomain, AlgHom.comp_apply,
       IsScalarTower.coe_to_alg_hom']
 #align sum_embeddings_eq_finrank_mul sum_embeddings_eq_finrank_mul
 
@@ -413,7 +413,7 @@ theorem trace_eq_sum_automorphisms (x : L) [FiniteDimensional K L] [IsGalois K L
     · simp only [algebra_map_eq_smul_one, smul_one_smul]
     · exact IsGalois.to_isSeparable
   · intro σ
-    simp only [Normal.algHomEquivAut, AlgHom.restrictNormal', Equiv.coeFn_mk,
+    simp only [Normal.algHomEquivAut, AlgHom.restrictNormal', Equiv.coe_fn_mk,
       AlgEquiv.coe_ofBijective, AlgHom.restrictNormal_commutes, id.map_eq_id, RingHom.id_apply]
 #align trace_eq_sum_automorphisms trace_eq_sum_automorphisms
 

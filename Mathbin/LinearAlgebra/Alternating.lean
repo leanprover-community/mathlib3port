@@ -677,7 +677,7 @@ theorem domDomCongr_add (σ : ι ≃ ι') (f g : AlternatingMap R M N ι) :
 /-- `alternating_map.dom_dom_congr` as an equivalence.
 
 This is declared separately because it does not work with dot notation. -/
-@[simps apply symmApply]
+@[simps apply symm_apply]
 def domDomCongrEquiv (σ : ι ≃ ι') : AlternatingMap R M N ι ≃+ AlternatingMap R M N ι'
     where
   toFun := domDomCongr σ

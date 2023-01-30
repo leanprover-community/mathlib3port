@@ -166,7 +166,7 @@ theorem exp_mul_exp_eq_exp_add [Algebra ℚ A] (a b : A) :
       a ^ x * b ^ (n - x) * (↑(n.choose x) * (algebraMap ℚ A) (1 / ↑n.factorial))
     by convert this using 1 <;> ring
   congr 1
-  rw [← map_nat_cast (algebraMap ℚ A) (n.choose x), ← map_mul, ← map_mul]
+  rw [← map_natCast (algebraMap ℚ A) (n.choose x), ← map_mul, ← map_mul]
   refine' RingHom.congr_arg _ _
   rw [mul_one_div ↑(n.choose x) _, one_div_mul_one_div]
   symm

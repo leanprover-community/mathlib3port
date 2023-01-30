@@ -273,7 +273,7 @@ def augment (C : CochainComplex V ℕ) {X : V} (f : X ⟶ C.x 0) (w : f ≫ C.d 
     rcases j with (_ | _ | j) <;> cases i <;> unfold_aux <;> try simp
     · simpa using s
     · rw [C.shape]
-      simp only [ComplexShape.up_rel]
+      simp only [ComplexShape.up_Rel]
       contrapose! s
       rw [← s]
   d_comp_d' i j k hij hjk :=
@@ -282,7 +282,7 @@ def augment (C : CochainComplex V ℕ) {X : V} (f : X ⟶ C.x 0) (w : f ≫ C.d 
     cases k
     · exact w
     · rw [C.shape, comp_zero]
-      simp only [Nat.zero_eq, ComplexShape.up_rel, zero_add]
+      simp only [Nat.zero_eq, ComplexShape.up_Rel, zero_add]
       exact (Nat.one_lt_succ_succ _).Ne
 #align cochain_complex.augment CochainComplex.augment
 
@@ -351,7 +351,7 @@ theorem truncateAugment_inv_f (C : CochainComplex V ℕ) {X : V} (f : X ⟶ C.x 
 theorem cochainComplex_d_succ_succ_zero (C : CochainComplex V ℕ) (i : ℕ) : C.d 0 (i + 2) = 0 :=
   by
   rw [C.shape]
-  simp only [ComplexShape.up_rel, zero_add]
+  simp only [ComplexShape.up_Rel, zero_add]
   exact (Nat.one_lt_succ_succ _).Ne
 #align cochain_complex.cochain_complex_d_succ_succ_zero CochainComplex.cochainComplex_d_succ_succ_zero
 

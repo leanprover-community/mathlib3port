@@ -1058,7 +1058,7 @@ unsafe def prove_add_rat' (ic : instance_cache) (a b : expr) :
 #align norm_num.prove_add_rat' norm_num.prove_add_rat'
 
 theorem clear_denom_simple_nat {α} [DivisionRing α] (a : α) : (1 : α) ≠ 0 ∧ a * 1 = a :=
-  ⟨one_neZero, mul_one _⟩
+  ⟨one_ne_zero, mul_one _⟩
 #align norm_num.clear_denom_simple_nat NormNum.clear_denom_simple_nat
 
 theorem clear_denom_simple_div {α} [DivisionRing α] (a b : α) (h : b ≠ 0) : b ≠ 0 ∧ a / b * b = a :=

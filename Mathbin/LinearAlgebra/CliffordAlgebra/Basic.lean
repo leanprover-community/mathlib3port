@@ -109,7 +109,7 @@ variable (Q)
 `cond : ∀ m : M, f m * f m = Q(m)`, this is the canonical lift of `f` to a morphism of `R`-algebras
 from `clifford_algebra Q` to `A`.
 -/
-@[simps symmApply]
+@[simps symm_apply]
 def lift : { f : M →ₗ[R] A // ∀ m, f m * f m = algebraMap _ _ (Q m) } ≃ (CliffordAlgebra Q →ₐ[R] A)
     where
   toFun f :=

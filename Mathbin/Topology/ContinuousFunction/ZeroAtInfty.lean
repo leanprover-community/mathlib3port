@@ -156,7 +156,7 @@ def zeroAtInftyContinuousMapClass.ofCompact {G : Type _} [ContinuousMapClass G �
     [CompactSpace α] : ZeroAtInftyContinuousMapClass G α β
     where
   coe g := g
-  coe_injective' f g h := FunLike.coeFn_eq.mp h
+  coe_injective' f g h := FunLike.coe_fn_eq.mp h
   map_continuous := map_continuous
   zero_at_infty := by simp
 #align zero_at_infty_continuous_map.zero_at_infty_continuous_map_class.of_compact ZeroAtInftyContinuousMap.zeroAtInftyContinuousMapClass.ofCompact

@@ -110,7 +110,7 @@ protected theorem isAsymm [RelHomClass F r s] (f : F) : ∀ [IsAsymm β s], IsAs
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> α -> Prop} {s : β -> β -> Prop} {F : Type.{u3}} [_inst_1 : RelHomClass.{u3, u1, u2} F α β r s] (f : F) (a : α), (Acc.{succ u2} β s (coeFn.{succ u3, max (succ u1) (succ u2)} F (fun (_x : F) => α -> β) (FunLike.hasCoeToFun.{succ u3, succ u1, succ u2} F α (fun (_x : α) => β) (RelHomClass.toFunLike.{u3, u1, u2} F α β r s _inst_1)) f a)) -> (Acc.{succ u1} α r a)
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> α -> Prop} {s : β -> β -> Prop} {F : Type.{u3}} [_inst_1 : RelHomClass.{u3, u2, u1} F α β r s] (f : F) (a : α), (Acc.{succ u1} β s (FunLike.coe.{succ u3, succ u2, succ u1} F α (fun (_x : α) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.931 : α) => β) _x) (RelHomClass.toFunLike.{u3, u2, u1} F α β r s _inst_1) f a)) -> (Acc.{succ u2} α r a)
+  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> α -> Prop} {s : β -> β -> Prop} {F : Type.{u3}} [_inst_1 : RelHomClass.{u3, u2, u1} F α β r s] (f : F) (a : α), (Acc.{succ u1} β s (FunLike.coe.{succ u3, succ u2, succ u1} F α (fun (_x : α) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : α) => β) _x) (RelHomClass.toFunLike.{u3, u2, u1} F α β r s _inst_1) f a)) -> (Acc.{succ u2} α r a)
 Case conversion may be inaccurate. Consider using '#align rel_hom_class.acc RelHomClass.accₓ'. -/
 protected theorem acc [RelHomClass F r s] (f : F) (a : α) : Acc s (f a) → Acc r a :=
   by
@@ -151,7 +151,7 @@ initialize_simps_projections RelHom (toFun → apply)
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> α -> Prop} {s : β -> β -> Prop} (f : RelHom.{u1, u2} α β r s) {a : α} {b : α}, (r a b) -> (s (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (RelHom.{u1, u2} α β r s) (fun (_x : RelHom.{u1, u2} α β r s) => α -> β) (RelHom.hasCoeToFun.{u1, u2} α β r s) f a) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (RelHom.{u1, u2} α β r s) (fun (_x : RelHom.{u1, u2} α β r s) => α -> β) (RelHom.hasCoeToFun.{u1, u2} α β r s) f b))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> α -> Prop} {s : β -> β -> Prop} (f : RelHom.{u2, u1} α β r s) {a : α} {b : α}, (r a b) -> (s (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (RelHom.{u2, u1} α β r s) α (fun (_x : α) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.931 : α) => β) _x) (RelHomClass.toFunLike.{max u2 u1, u2, u1} (RelHom.{u2, u1} α β r s) α β r s (RelHom.instRelHomClassRelHom.{u2, u1} α β r s)) f a) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (RelHom.{u2, u1} α β r s) α (fun (_x : α) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.931 : α) => β) _x) (RelHomClass.toFunLike.{max u2 u1, u2, u1} (RelHom.{u2, u1} α β r s) α β r s (RelHom.instRelHomClassRelHom.{u2, u1} α β r s)) f b))
+  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> α -> Prop} {s : β -> β -> Prop} (f : RelHom.{u2, u1} α β r s) {a : α} {b : α}, (r a b) -> (s (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (RelHom.{u2, u1} α β r s) α (fun (_x : α) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : α) => β) _x) (RelHomClass.toFunLike.{max u2 u1, u2, u1} (RelHom.{u2, u1} α β r s) α β r s (RelHom.instRelHomClassRelHom.{u2, u1} α β r s)) f a) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (RelHom.{u2, u1} α β r s) α (fun (_x : α) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : α) => β) _x) (RelHomClass.toFunLike.{max u2 u1, u2, u1} (RelHom.{u2, u1} α β r s) α β r s (RelHom.instRelHomClassRelHom.{u2, u1} α β r s)) f b))
 Case conversion may be inaccurate. Consider using '#align rel_hom.map_rel RelHom.map_relₓ'. -/
 protected theorem map_rel (f : r →r s) {a b} : r a b → s (f a) (f b) :=
   f.map_rel'
@@ -166,7 +166,7 @@ theorem coeFn_mk (f : α → β) (o) : (@RelHom.mk _ _ r s f o : α → β) = f 
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> α -> Prop} {s : β -> β -> Prop} (f : RelHom.{u1, u2} α β r s), Eq.{max (succ u1) (succ u2)} (α -> β) (RelHom.toFun.{u1, u2} α β r s f) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (RelHom.{u1, u2} α β r s) (fun (_x : RelHom.{u1, u2} α β r s) => α -> β) (RelHom.hasCoeToFun.{u1, u2} α β r s) f)
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> α -> Prop} {s : β -> β -> Prop} (f : RelHom.{u2, u1} α β r s), Eq.{max (succ u2) (succ u1)} (α -> β) (RelHom.toFun.{u2, u1} α β r s f) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (RelHom.{u2, u1} α β r s) α (fun (_x : α) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.931 : α) => β) _x) (RelHomClass.toFunLike.{max u2 u1, u2, u1} (RelHom.{u2, u1} α β r s) α β r s (RelHom.instRelHomClassRelHom.{u2, u1} α β r s)) f)
+  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> α -> Prop} {s : β -> β -> Prop} (f : RelHom.{u2, u1} α β r s), Eq.{max (succ u2) (succ u1)} (α -> β) (RelHom.toFun.{u2, u1} α β r s f) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (RelHom.{u2, u1} α β r s) α (fun (_x : α) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : α) => β) _x) (RelHomClass.toFunLike.{max u2 u1, u2, u1} (RelHom.{u2, u1} α β r s) α β r s (RelHom.instRelHomClassRelHom.{u2, u1} α β r s)) f)
 Case conversion may be inaccurate. Consider using '#align rel_hom.coe_fn_to_fun RelHom.coe_fn_toFunₓ'. -/
 @[simp]
 theorem coe_fn_toFun (f : r →r s) : (f.toFun : α → β) = f :=
@@ -177,7 +177,7 @@ theorem coe_fn_toFun (f : r →r s) : (f.toFun : α → β) = f :=
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> α -> Prop} {s : β -> β -> Prop}, Function.Injective.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (RelHom.{u1, u2} α β r s) (α -> β) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (RelHom.{u1, u2} α β r s) (fun (ᾰ : RelHom.{u1, u2} α β r s) => α -> β) (RelHom.hasCoeToFun.{u1, u2} α β r s))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> α -> Prop} {s : β -> β -> Prop}, Function.Injective.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (RelHom.{u2, u1} α β r s) (forall (ᾰ : α), (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.931 : α) => β) ᾰ) (fun (f : RelHom.{u2, u1} α β r s) => FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (RelHom.{u2, u1} α β r s) α (fun (a : α) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.931 : α) => β) a) (RelHomClass.toFunLike.{max u2 u1, u2, u1} (RelHom.{u2, u1} α β r s) α β r s (RelHom.instRelHomClassRelHom.{u2, u1} α β r s)) f)
+  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> α -> Prop} {s : β -> β -> Prop}, Function.Injective.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (RelHom.{u2, u1} α β r s) (forall (ᾰ : α), (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : α) => β) ᾰ) (fun (f : RelHom.{u2, u1} α β r s) => FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (RelHom.{u2, u1} α β r s) α (fun (a : α) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : α) => β) a) (RelHomClass.toFunLike.{max u2 u1, u2, u1} (RelHom.{u2, u1} α β r s) α β r s (RelHom.instRelHomClassRelHom.{u2, u1} α β r s)) f)
 Case conversion may be inaccurate. Consider using '#align rel_hom.coe_fn_injective RelHom.coe_fn_injectiveₓ'. -/
 /-- The map `coe_fn : (r →r s) → (α → β)` is injective. -/
 theorem coe_fn_injective : @Function.Injective (r →r s) (α → β) coeFn :=
@@ -188,7 +188,7 @@ theorem coe_fn_injective : @Function.Injective (r →r s) (α → β) coeFn :=
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> α -> Prop} {s : β -> β -> Prop} {{f : RelHom.{u1, u2} α β r s}} {{g : RelHom.{u1, u2} α β r s}}, (forall (x : α), Eq.{succ u2} β (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (RelHom.{u1, u2} α β r s) (fun (_x : RelHom.{u1, u2} α β r s) => α -> β) (RelHom.hasCoeToFun.{u1, u2} α β r s) f x) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (RelHom.{u1, u2} α β r s) (fun (_x : RelHom.{u1, u2} α β r s) => α -> β) (RelHom.hasCoeToFun.{u1, u2} α β r s) g x)) -> (Eq.{max (succ u1) (succ u2)} (RelHom.{u1, u2} α β r s) f g)
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> α -> Prop} {s : β -> β -> Prop} {{f : RelHom.{u2, u1} α β r s}} {{g : RelHom.{u2, u1} α β r s}}, (forall (x : α), Eq.{succ u1} ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.931 : α) => β) x) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (RelHom.{u2, u1} α β r s) α (fun (_x : α) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.931 : α) => β) _x) (RelHomClass.toFunLike.{max u2 u1, u2, u1} (RelHom.{u2, u1} α β r s) α β r s (RelHom.instRelHomClassRelHom.{u2, u1} α β r s)) f x) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (RelHom.{u2, u1} α β r s) α (fun (_x : α) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.931 : α) => β) _x) (RelHomClass.toFunLike.{max u2 u1, u2, u1} (RelHom.{u2, u1} α β r s) α β r s (RelHom.instRelHomClassRelHom.{u2, u1} α β r s)) g x)) -> (Eq.{max (succ u2) (succ u1)} (RelHom.{u2, u1} α β r s) f g)
+  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> α -> Prop} {s : β -> β -> Prop} {{f : RelHom.{u2, u1} α β r s}} {{g : RelHom.{u2, u1} α β r s}}, (forall (x : α), Eq.{succ u1} ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : α) => β) x) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (RelHom.{u2, u1} α β r s) α (fun (_x : α) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : α) => β) _x) (RelHomClass.toFunLike.{max u2 u1, u2, u1} (RelHom.{u2, u1} α β r s) α β r s (RelHom.instRelHomClassRelHom.{u2, u1} α β r s)) f x) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (RelHom.{u2, u1} α β r s) α (fun (_x : α) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : α) => β) _x) (RelHomClass.toFunLike.{max u2 u1, u2, u1} (RelHom.{u2, u1} α β r s) α β r s (RelHom.instRelHomClassRelHom.{u2, u1} α β r s)) g x)) -> (Eq.{max (succ u2) (succ u1)} (RelHom.{u2, u1} α β r s) f g)
 Case conversion may be inaccurate. Consider using '#align rel_hom.ext RelHom.extₓ'. -/
 @[ext]
 theorem ext ⦃f g : r →r s⦄ (h : ∀ x, f x = g x) : f = g :=
@@ -199,7 +199,7 @@ theorem ext ⦃f g : r →r s⦄ (h : ∀ x, f x = g x) : f = g :=
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> α -> Prop} {s : β -> β -> Prop} {f : RelHom.{u1, u2} α β r s} {g : RelHom.{u1, u2} α β r s}, Iff (Eq.{max (succ u1) (succ u2)} (RelHom.{u1, u2} α β r s) f g) (forall (x : α), Eq.{succ u2} β (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (RelHom.{u1, u2} α β r s) (fun (_x : RelHom.{u1, u2} α β r s) => α -> β) (RelHom.hasCoeToFun.{u1, u2} α β r s) f x) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (RelHom.{u1, u2} α β r s) (fun (_x : RelHom.{u1, u2} α β r s) => α -> β) (RelHom.hasCoeToFun.{u1, u2} α β r s) g x))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> α -> Prop} {s : β -> β -> Prop} {f : RelHom.{u2, u1} α β r s} {g : RelHom.{u2, u1} α β r s}, Iff (Eq.{max (succ u2) (succ u1)} (RelHom.{u2, u1} α β r s) f g) (forall (x : α), Eq.{succ u1} ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.931 : α) => β) x) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (RelHom.{u2, u1} α β r s) α (fun (_x : α) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.931 : α) => β) _x) (RelHomClass.toFunLike.{max u2 u1, u2, u1} (RelHom.{u2, u1} α β r s) α β r s (RelHom.instRelHomClassRelHom.{u2, u1} α β r s)) f x) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (RelHom.{u2, u1} α β r s) α (fun (_x : α) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.931 : α) => β) _x) (RelHomClass.toFunLike.{max u2 u1, u2, u1} (RelHom.{u2, u1} α β r s) α β r s (RelHom.instRelHomClassRelHom.{u2, u1} α β r s)) g x))
+  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> α -> Prop} {s : β -> β -> Prop} {f : RelHom.{u2, u1} α β r s} {g : RelHom.{u2, u1} α β r s}, Iff (Eq.{max (succ u2) (succ u1)} (RelHom.{u2, u1} α β r s) f g) (forall (x : α), Eq.{succ u1} ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : α) => β) x) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (RelHom.{u2, u1} α β r s) α (fun (_x : α) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : α) => β) _x) (RelHomClass.toFunLike.{max u2 u1, u2, u1} (RelHom.{u2, u1} α β r s) α β r s (RelHom.instRelHomClassRelHom.{u2, u1} α β r s)) f x) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (RelHom.{u2, u1} α β r s) α (fun (_x : α) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : α) => β) _x) (RelHomClass.toFunLike.{max u2 u1, u2, u1} (RelHom.{u2, u1} α β r s) α β r s (RelHom.instRelHomClassRelHom.{u2, u1} α β r s)) g x))
 Case conversion may be inaccurate. Consider using '#align rel_hom.ext_iff RelHom.ext_iffₓ'. -/
 theorem ext_iff {f g : r →r s} : f = g ↔ ∀ x, f x = g x :=
   FunLike.ext_iff
@@ -258,7 +258,7 @@ theorem injective_of_increasing (r : α → α → Prop) (s : β → β → Prop
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> α -> Prop} {s : β -> β -> Prop} [_inst_1 : IsTrichotomous.{u1} α r] [_inst_2 : IsIrrefl.{u2} β s] (f : RelHom.{u1, u2} α β r s), Function.Injective.{succ u1, succ u2} α β (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (RelHom.{u1, u2} α β r s) (fun (_x : RelHom.{u1, u2} α β r s) => α -> β) (RelHom.hasCoeToFun.{u1, u2} α β r s) f)
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> α -> Prop} {s : β -> β -> Prop} [_inst_1 : IsTrichotomous.{u2} α r] [_inst_2 : IsIrrefl.{u1} β s] (f : RelHom.{u2, u1} α β r s), Function.Injective.{succ u2, succ u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (RelHom.{u2, u1} α β r s) α (fun (_x : α) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.931 : α) => β) _x) (RelHomClass.toFunLike.{max u2 u1, u2, u1} (RelHom.{u2, u1} α β r s) α β r s (RelHom.instRelHomClassRelHom.{u2, u1} α β r s)) f)
+  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> α -> Prop} {s : β -> β -> Prop} [_inst_1 : IsTrichotomous.{u2} α r] [_inst_2 : IsIrrefl.{u1} β s] (f : RelHom.{u2, u1} α β r s), Function.Injective.{succ u2, succ u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (RelHom.{u2, u1} α β r s) α (fun (_x : α) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : α) => β) _x) (RelHomClass.toFunLike.{max u2 u1, u2, u1} (RelHom.{u2, u1} α β r s) α β r s (RelHom.instRelHomClassRelHom.{u2, u1} α β r s)) f)
 Case conversion may be inaccurate. Consider using '#align rel_hom.injective_of_increasing RelHom.injective_of_increasingₓ'. -/
 /-- An increasing function is injective -/
 theorem RelHom.injective_of_increasing [IsTrichotomous α r] [IsIrrefl β s] (f : r →r s) :
@@ -673,7 +673,7 @@ noncomputable def Quotient.outRelEmbedding [s : Setoid α] {r : α → α → Pr
   ⟨Embedding.quotientOut α,
     by
     refine' fun x y => Quotient.induction_on₂ x y fun a b => _
-    apply iff_iff_eq.2 (H _ _ _ _ _ _) <;> apply Quotient.mk'_out⟩
+    apply iff_iff_eq.2 (H _ _ _ _ _ _) <;> apply Quotient.mk_out⟩
 #align quotient.out_rel_embedding Quotient.outRelEmbedding
 -/
 
@@ -901,7 +901,7 @@ instance : CoeFun (r ≃r s) fun _ => α → β :=
 -- TODO: define and instantiate a `rel_iso_class` when `equiv_like` is defined
 instance : RelHomClass (r ≃r s) r s where
   coe := coeFn
-  coe_injective' := Equiv.coeFn_injective.comp toEquiv_injective
+  coe_injective' := Equiv.coe_fn_injective.comp toEquiv_injective
   map_rel f a b := Iff.mpr (map_rel_iff' f)
 
 @[simp]
@@ -1002,7 +1002,7 @@ def Simps.symmApply (h : r ≃r s) : β → α :=
 #align rel_iso.simps.symm_apply RelIso.Simps.symmApply
 -/
 
-initialize_simps_projections RelIso (to_equiv_to_fun → apply, to_equiv_inv_fun → symmApply,
+initialize_simps_projections RelIso (to_equiv_to_fun → apply, to_equiv_inv_fun → symm_apply,
   -toEquiv)
 
 #print RelIso.refl /-

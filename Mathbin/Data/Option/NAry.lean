@@ -52,7 +52,7 @@ def map₂ (f : α → β → γ) (a : Option α) (b : Option β) : Option γ :=
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u1}} {γ : Type.{u1}} (f : α -> β -> γ) (a : Option.{u1} α) (b : Option.{u1} β), Eq.{succ u1} (Option.{u1} γ) (Option.map₂.{u1, u1, u1} α β γ f a b) (Seq.seq.{u1, u1} Option.{u1} (Applicative.toHasSeq.{u1, u1} Option.{u1} (Monad.toApplicative.{u1, u1} Option.{u1} Option.monad.{u1})) β γ (Functor.map.{u1, u1} Option.{u1} (Traversable.toFunctor.{u1} Option.{u1} Option.traversable.{u1}) α (β -> γ) f a) b)
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u1}} {γ : Type.{u1}} (f : α -> β -> γ) (a : Option.{u1} α) (b : Option.{u1} β), Eq.{succ u1} (Option.{u1} γ) (Option.map₂.{u1, u1, u1} α β γ f a b) (Seq.seq.{u1, u1} Option.{u1} (Applicative.toSeq.{u1, u1} Option.{u1} (Alternative.toApplicative.{u1, u1} Option.{u1} instAlternativeOption.{u1})) β γ (Functor.map.{u1, u1} Option.{u1} instFunctorOption.{u1} α (β -> γ) f a) (fun (x._@.Mathlib.Data.Option.NAry._hyg.144 : Unit) => b))
+  forall {α : Type.{u1}} {β : Type.{u1}} {γ : Type.{u1}} (f : α -> β -> γ) (a : Option.{u1} α) (b : Option.{u1} β), Eq.{succ u1} (Option.{u1} γ) (Option.map₂.{u1, u1, u1} α β γ f a b) (Seq.seq.{u1, u1} Option.{u1} (Applicative.toSeq.{u1, u1} Option.{u1} (Alternative.toApplicative.{u1, u1} Option.{u1} instAlternativeOption.{u1})) β γ (Functor.map.{u1, u1} Option.{u1} instFunctorOption.{u1} α (β -> γ) f a) (fun (x._@.Mathlib.Data.Option.NAry._hyg.142 : Unit) => b))
 Case conversion may be inaccurate. Consider using '#align option.map₂_def Option.map₂_defₓ'. -/
 /-- `option.map₂` in terms of monadic operations. Note that this can't be taken as the definition
 because of the lack of universe polymorphism. -/

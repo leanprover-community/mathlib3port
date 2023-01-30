@@ -188,7 +188,7 @@ theorem index_eq_two_iff : H.index = 2 ↔ ∃ a, ∀ b, Xor' (b * a ∈ H) (b �
   by
   simp only [index, Nat.card_eq_two_iff' ((1 : G) : G ⧸ H), ExistsUnique, inv_mem_iff,
     QuotientGroup.exists_coe, QuotientGroup.forall_coe, Ne.def, QuotientGroup.eq, mul_one,
-    xor'_iff_iff_not]
+    xor_iff_iff_not]
   refine'
     exists_congr fun a => ⟨fun ha b => ⟨fun hba hb => _, fun hb => _⟩, fun ha => ⟨_, fun b hb => _⟩⟩
   · exact ha.1 ((mul_mem_cancel_left hb).1 hba)
@@ -581,7 +581,7 @@ instance (priority := 100) finiteIndex_of_finite [Finite G] : FiniteIndex H :=
 
 @[to_additive]
 instance : FiniteIndex (⊤ : Subgroup G) :=
-  ⟨ne_of_eq_of_ne index_top one_neZero⟩
+  ⟨ne_of_eq_of_ne index_top one_ne_zero⟩
 
 @[to_additive]
 instance [FiniteIndex H] [FiniteIndex K] : FiniteIndex (H ⊓ K) :=

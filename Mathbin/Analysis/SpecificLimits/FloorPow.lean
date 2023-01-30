@@ -252,7 +252,7 @@ theorem tendsto_div_of_monotone_of_tendsto_div_floor_pow (u : ℕ → ℝ) (l : 
     tendsto (fun n : ℕ => (⌊c k ^ (n + 1)⌋₊ : ℝ) / c k ^ (n + 1) * c k / (⌊c k ^ n⌋₊ / c k ^ n))
       at_top (𝓝 (1 * c k / 1)) :=
     by
-    refine' tendsto.div (tendsto.mul _ tendsto_const_nhds) _ one_neZero
+    refine' tendsto.div (tendsto.mul _ tendsto_const_nhds) _ one_ne_zero
     · refine' tendsto_nat_floor_div_at_top.comp _
       exact (tendsto_pow_atTop_atTop_of_one_lt (cone k)).comp (tendsto_add_at_top_nat 1)
     · refine' tendsto_nat_floor_div_at_top.comp _
@@ -282,7 +282,7 @@ theorem sum_div_pow_sq_le_div_sq (N : ℕ) {j : ℝ} (hj : 0 < j) {c : ℝ} (hc 
     by
     rw [← div_eq_mul_inv, ← div_eq_mul_inv, div_le_div_iff _ (sub_pos.2 hc)]
     swap
-    · exact sub_pos.2 (pow_lt_one (inv_nonneg.2 cpos.le) (inv_lt_one hc) two_neZero)
+    · exact sub_pos.2 (pow_lt_one (inv_nonneg.2 cpos.le) (inv_lt_one hc) two_ne_zero)
     have : c ^ 3 = c ^ 2 * c := by ring
     simp only [mul_sub, this, mul_one, inv_pow, sub_le_sub_iff_left]
     rw [mul_assoc, mul_comm c, ← mul_assoc, mul_inv_cancel (sq_pos_of_pos cpos).ne', one_mul]
@@ -306,7 +306,7 @@ theorem sum_div_pow_sq_le_div_sq (N : ℕ) {j : ℝ} (hj : 0 < j) {c : ℝ} (hc 
       simp [← pow_mul, mul_comm]
     _ ≤ (c⁻¹ ^ 2) ^ ⌊Real.log j / Real.log c⌋₊ / (1 - c⁻¹ ^ 2) :=
       by
-      apply geom_sum_ico_le_of_lt_one (sq_nonneg _)
+      apply geom_sum_Ico_le_of_lt_one (sq_nonneg _)
       rw [sq_lt_one_iff (inv_nonneg.2 (zero_le_one.trans hc.le))]
       exact inv_lt_one hc
     _ ≤ (c⁻¹ ^ 2) ^ (Real.log j / Real.log c - 1) / (1 - c⁻¹ ^ 2) :=
@@ -317,7 +317,7 @@ theorem sum_div_pow_sq_le_div_sq (N : ℕ) {j : ℝ} (hj : 0 < j) {c : ℝ} (hc 
         apply Real.rpow_le_rpow_of_exponent_ge A
         · exact pow_le_one _ (inv_nonneg.2 (zero_le_one.trans hc.le)) (inv_le_one hc.le)
         · exact (Nat.sub_one_lt_floor _).le
-      · simpa only [inv_pow, sub_pos] using inv_lt_one (one_lt_pow hc two_neZero)
+      · simpa only [inv_pow, sub_pos] using inv_lt_one (one_lt_pow hc two_ne_zero)
     _ = c ^ 2 * (1 - c⁻¹ ^ 2)⁻¹ / j ^ 2 :=
       by
       have I : (c⁻¹ ^ 2) ^ (Real.log j / Real.log c) = 1 / j ^ 2 :=
@@ -331,7 +331,7 @@ theorem sum_div_pow_sq_le_div_sq (N : ℕ) {j : ℝ} (hj : 0 < j) {c : ℝ} (hc 
         field_simp [(Real.log_pos hc).ne']
         ring
       rw [Real.rpow_sub A, I]
-      have : c ^ 2 - 1 ≠ 0 := (sub_pos.2 (one_lt_pow hc two_neZero)).ne'
+      have : c ^ 2 - 1 ≠ 0 := (sub_pos.2 (one_lt_pow hc two_ne_zero)).ne'
       field_simp [hj.ne', (zero_lt_one.trans hc).ne']
       ring
     _ ≤ c ^ 3 * (c - 1)⁻¹ / j ^ 2 :=

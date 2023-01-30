@@ -30,11 +30,11 @@ would result in less delta-reduced statements.
 -/
 
 
-alias hEq_iff_eq ↔ HEq.eq Eq.hEq
+alias hEq_iff_eq ↔ HEq.eq Eq.heq
 #align heq.eq HEq.eq
-#align eq.heq Eq.hEq
+#align eq.heq Eq.heq
 
-attribute [protected] HEq.eq Eq.hEq
+attribute [protected] HEq.eq Eq.heq
 
 alias ne_of_eq_of_ne ← Eq.trans_ne
 #align eq.trans_ne Eq.trans_ne
@@ -100,14 +100,18 @@ theorem ite_ite_distrib_right : ite p (ite q a b) c = ite q (ite p a c) (ite p b
 #align ite_ite_distrib_right ite_ite_distrib_right
 -/
 
-theorem PropCat.forall {f : Prop → Prop} : (∀ p, f p) ↔ f True ∧ f False :=
+#print Prop.forall /-
+theorem Prop.forall {f : Prop → Prop} : (∀ p, f p) ↔ f True ∧ f False :=
   ⟨fun h => ⟨h _, h _⟩, by
     rintro ⟨h₁, h₀⟩ p
     by_cases hp : p <;> simp only [hp] <;> assumption⟩
-#align Prop.forall PropCat.forall
+#align Prop.forall Prop.forall
+-/
 
-theorem PropCat.exists {f : Prop → Prop} : (∃ p, f p) ↔ f True ∨ f False :=
+#print Prop.exists /-
+theorem Prop.exists {f : Prop → Prop} : (∃ p, f p) ↔ f True ∨ f False :=
   ⟨fun ⟨p, h⟩ => by refine' (em p).imp _ _ <;> intro H <;> convert h <;> simp [H], by
     rintro (h | h) <;> exact ⟨_, h⟩⟩
-#align Prop.exists PropCat.exists
+#align Prop.exists Prop.exists
+-/
 

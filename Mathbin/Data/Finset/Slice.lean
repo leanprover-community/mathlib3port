@@ -45,22 +45,44 @@ variable {A B : Set (Finset α)} {r : ℕ}
 /-! ### Families of `r`-sets -/
 
 
+#print Set.Sized /-
 /-- `sized r A` means that every finset in `A` has size `r`. -/
 def Sized (r : ℕ) (A : Set (Finset α)) : Prop :=
   ∀ ⦃x⦄, x ∈ A → card x = r
 #align set.sized Set.Sized
+-/
 
+#print Set.Sized.mono /-
 theorem Sized.mono (h : A ⊆ B) (hB : B.Sized r) : A.Sized r := fun x hx => hB <| h hx
 #align set.sized.mono Set.Sized.mono
+-/
 
+/- warning: set.sized_union -> Set.sized_union is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {A : Set.{u1} (Finset.{u1} α)} {B : Set.{u1} (Finset.{u1} α)} {r : Nat}, Iff (Set.Sized.{u1} α r (Union.union.{u1} (Set.{u1} (Finset.{u1} α)) (Set.hasUnion.{u1} (Finset.{u1} α)) A B)) (And (Set.Sized.{u1} α r A) (Set.Sized.{u1} α r B))
+but is expected to have type
+  forall {α : Type.{u1}} {A : Set.{u1} (Finset.{u1} α)} {B : Set.{u1} (Finset.{u1} α)} {r : Nat}, Iff (Set.Sized.{u1} α r (Union.union.{u1} (Set.{u1} (Finset.{u1} α)) (Set.instUnionSet.{u1} (Finset.{u1} α)) A B)) (And (Set.Sized.{u1} α r A) (Set.Sized.{u1} α r B))
+Case conversion may be inaccurate. Consider using '#align set.sized_union Set.sized_unionₓ'. -/
 theorem sized_union : (A ∪ B).Sized r ↔ A.Sized r ∧ B.Sized r :=
   ⟨fun hA => ⟨hA.mono <| subset_union_left _ _, hA.mono <| subset_union_right _ _⟩, fun hA x hx =>
     hx.elim (fun h => hA.1 h) fun h => hA.2 h⟩
 #align set.sized_union Set.sized_union
 
+/- warning: set.sized.union -> Set.sized.union is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {A : Set.{u1} (Finset.{u1} α)} {B : Set.{u1} (Finset.{u1} α)} {r : Nat}, (And (Set.Sized.{u1} α r A) (Set.Sized.{u1} α r B)) -> (Set.Sized.{u1} α r (Union.union.{u1} (Set.{u1} (Finset.{u1} α)) (Set.hasUnion.{u1} (Finset.{u1} α)) A B))
+but is expected to have type
+  forall {α : Type.{u1}} {A : Set.{u1} (Finset.{u1} α)} {B : Set.{u1} (Finset.{u1} α)} {r : Nat}, (And (Set.Sized.{u1} α r A) (Set.Sized.{u1} α r B)) -> (Set.Sized.{u1} α r (Union.union.{u1} (Set.{u1} (Finset.{u1} α)) (Set.instUnionSet.{u1} (Finset.{u1} α)) A B))
+Case conversion may be inaccurate. Consider using '#align set.sized.union Set.sized.unionₓ'. -/
 alias sized_union ↔ _ sized.union
-#align set.sized.union Set.Sized.union
+#align set.sized.union Set.sized.union
 
+/- warning: set.sized_Union -> Set.sized_unionᵢ is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {ι : Sort.{u2}} {r : Nat} {f : ι -> (Set.{u1} (Finset.{u1} α))}, Iff (Set.Sized.{u1} α r (Set.unionᵢ.{u1, u2} (Finset.{u1} α) ι (fun (i : ι) => f i))) (forall (i : ι), Set.Sized.{u1} α r (f i))
+but is expected to have type
+  forall {α : Type.{u2}} {ι : Sort.{u1}} {r : Nat} {f : ι -> (Set.{u2} (Finset.{u2} α))}, Iff (Set.Sized.{u2} α r (Set.unionᵢ.{u2, u1} (Finset.{u2} α) ι (fun (i : ι) => f i))) (forall (i : ι), Set.Sized.{u2} α r (f i))
+Case conversion may be inaccurate. Consider using '#align set.sized_Union Set.sized_unionᵢₓ'. -/
 --TODO: A `forall_Union` lemma would be handy here.
 @[simp]
 theorem sized_unionᵢ {f : ι → Set (Finset α)} : (⋃ i, f i).Sized r ↔ ∀ i, (f i).Sized r :=
@@ -69,35 +91,53 @@ theorem sized_unionᵢ {f : ι → Set (Finset α)} : (⋃ i, f i).Sized r ↔ �
   exact forall_swap
 #align set.sized_Union Set.sized_unionᵢ
 
+/- warning: set.sized_Union₂ -> Set.sized_unionᵢ₂ is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {ι : Sort.{u2}} {κ : ι -> Sort.{u3}} {r : Nat} {f : forall (i : ι), (κ i) -> (Set.{u1} (Finset.{u1} α))}, Iff (Set.Sized.{u1} α r (Set.unionᵢ.{u1, u2} (Finset.{u1} α) ι (fun (i : ι) => Set.unionᵢ.{u1, u3} (Finset.{u1} α) (κ i) (fun (j : κ i) => f i j)))) (forall (i : ι) (j : κ i), Set.Sized.{u1} α r (f i j))
+but is expected to have type
+  forall {α : Type.{u3}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} {r : Nat} {f : forall (i : ι), (κ i) -> (Set.{u3} (Finset.{u3} α))}, Iff (Set.Sized.{u3} α r (Set.unionᵢ.{u3, u2} (Finset.{u3} α) ι (fun (i : ι) => Set.unionᵢ.{u3, u1} (Finset.{u3} α) (κ i) (fun (j : κ i) => f i j)))) (forall (i : ι) (j : κ i), Set.Sized.{u3} α r (f i j))
+Case conversion may be inaccurate. Consider using '#align set.sized_Union₂ Set.sized_unionᵢ₂ₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp]
-theorem sized_Union₂ {f : ∀ i, κ i → Set (Finset α)} :
+theorem sized_unionᵢ₂ {f : ∀ i, κ i → Set (Finset α)} :
     (⋃ (i) (j), f i j).Sized r ↔ ∀ i j, (f i j).Sized r := by simp_rw [sized_Union]
-#align set.sized_Union₂ Set.sized_Union₂
+#align set.sized_Union₂ Set.sized_unionᵢ₂
 
+#print Set.Sized.isAntichain /-
 protected theorem Sized.isAntichain (hA : A.Sized r) : IsAntichain (· ⊆ ·) A :=
   fun s hs t ht h hst => h <| Finset.eq_of_subset_of_card_le hst ((hA ht).trans (hA hs).symm).le
 #align set.sized.is_antichain Set.Sized.isAntichain
+-/
 
+#print Set.Sized.subsingleton /-
 protected theorem Sized.subsingleton (hA : A.Sized 0) : A.Subsingleton :=
   subsingleton_of_forall_eq ∅ fun s hs => card_eq_zero.1 <| hA hs
 #align set.sized.subsingleton Set.Sized.subsingleton
+-/
 
+#print Set.Sized.subsingleton' /-
 theorem Sized.subsingleton' [Fintype α] (hA : A.Sized (Fintype.card α)) : A.Subsingleton :=
   subsingleton_of_forall_eq Finset.univ fun s hs => s.card_eq_iff_eq_univ.1 <| hA hs
 #align set.sized.subsingleton' Set.Sized.subsingleton'
+-/
 
+#print Set.Sized.empty_mem_iff /-
 theorem Sized.empty_mem_iff (hA : A.Sized r) : ∅ ∈ A ↔ A = {∅} :=
   hA.IsAntichain.bot_mem_iff
 #align set.sized.empty_mem_iff Set.Sized.empty_mem_iff
+-/
 
+#print Set.Sized.univ_mem_iff /-
 theorem Sized.univ_mem_iff [Fintype α] (hA : A.Sized r) : Finset.univ ∈ A ↔ A = {Finset.univ} :=
   hA.IsAntichain.top_mem_iff
 #align set.sized.univ_mem_iff Set.Sized.univ_mem_iff
+-/
 
+#print Set.sized_powersetLen /-
 theorem sized_powersetLen (s : Finset α) (r : ℕ) : (powersetLen r s : Set (Finset α)).Sized r :=
   fun t ht => (mem_powersetLen.1 ht).2
 #align set.sized_powerset_len Set.sized_powersetLen
+-/
 
 end Set
 
@@ -107,19 +147,23 @@ section Sized
 
 variable [Fintype α] {𝒜 : Finset (Finset α)} {s : Finset α} {r : ℕ}
 
+#print Finset.subset_powersetLen_univ_iff /-
 theorem subset_powersetLen_univ_iff : 𝒜 ⊆ powersetLen r univ ↔ (𝒜 : Set (Finset α)).Sized r :=
   forall_congr' fun A => by rw [mem_powerset_len_univ_iff, mem_coe]
 #align finset.subset_powerset_len_univ_iff Finset.subset_powersetLen_univ_iff
+-/
 
 alias subset_powerset_len_univ_iff ↔ _ _root_.set.sized.subset_powerset_len_univ
 #align set.sized.subset_powerset_len_univ Set.Sized.subset_powersetLen_univ
 
-theorem Set.Sized.card_le (h𝒜 : (𝒜 : Set (Finset α)).Sized r) :
+#print Finset.Set.Sized.card_le /-
+theorem Finset.Set.Sized.card_le (h𝒜 : (𝒜 : Set (Finset α)).Sized r) :
     card 𝒜 ≤ (Fintype.card α).choose r :=
   by
   rw [Fintype.card, ← card_powerset_len]
   exact card_le_of_subset h𝒜.subset_powerset_len_univ
-#align set.sized.card_le Set.Sized.card_le
+#align set.sized.card_le Finset.Set.Sized.card_le
+-/
 
 end Sized
 
@@ -130,49 +174,70 @@ section Slice
 
 variable {𝒜 : Finset (Finset α)} {A A₁ A₂ : Finset α} {r r₁ r₂ : ℕ}
 
+#print Finset.slice /-
 /-- The `r`-th slice of a set family is the subset of its elements which have cardinality `r`. -/
 def slice (𝒜 : Finset (Finset α)) (r : ℕ) : Finset (Finset α) :=
   𝒜.filter fun i => i.card = r
 #align finset.slice Finset.slice
+-/
 
 -- mathport name: finset.slice
 scoped[FinsetFamily] infixl:90 " # " => Finset.slice
 
+#print Finset.mem_slice /-
 /-- `A` is in the `r`-th slice of `𝒜` iff it's in `𝒜` and has cardinality `r`. -/
 theorem mem_slice : A ∈ 𝒜 # r ↔ A ∈ 𝒜 ∧ A.card = r :=
   mem_filter
 #align finset.mem_slice Finset.mem_slice
+-/
 
+#print Finset.slice_subset /-
 /-- The `r`-th slice of `𝒜` is a subset of `𝒜`. -/
 theorem slice_subset : 𝒜 # r ⊆ 𝒜 :=
   filter_subset _ _
 #align finset.slice_subset Finset.slice_subset
+-/
 
+#print Finset.sized_slice /-
 /-- Everything in the `r`-th slice of `𝒜` has size `r`. -/
 theorem sized_slice : (𝒜 # r : Set (Finset α)).Sized r := fun _ => And.right ∘ mem_slice.mp
 #align finset.sized_slice Finset.sized_slice
+-/
 
+#print Finset.eq_of_mem_slice /-
 theorem eq_of_mem_slice (h₁ : A ∈ 𝒜 # r₁) (h₂ : A ∈ 𝒜 # r₂) : r₁ = r₂ :=
   (sized_slice h₁).symm.trans <| sized_slice h₂
 #align finset.eq_of_mem_slice Finset.eq_of_mem_slice
+-/
 
+#print Finset.ne_of_mem_slice /-
 /-- Elements in distinct slices must be distinct. -/
 theorem ne_of_mem_slice (h₁ : A₁ ∈ 𝒜 # r₁) (h₂ : A₂ ∈ 𝒜 # r₂) : r₁ ≠ r₂ → A₁ ≠ A₂ :=
   mt fun h => (sized_slice h₁).symm.trans ((congr_arg card h).trans (sized_slice h₂))
 #align finset.ne_of_mem_slice Finset.ne_of_mem_slice
+-/
 
+/- warning: finset.pairwise_disjoint_slice -> Finset.pairwiseDisjoint_slice is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {𝒜 : Finset.{u1} (Finset.{u1} α)}, Set.PairwiseDisjoint.{u1, 0} (Finset.{u1} (Finset.{u1} α)) Nat (Finset.partialOrder.{u1} (Finset.{u1} α)) (Finset.orderBot.{u1} (Finset.{u1} α)) (Set.univ.{0} Nat) (Finset.slice.{u1} α 𝒜)
+but is expected to have type
+  forall {α : Type.{u1}} {𝒜 : Finset.{u1} (Finset.{u1} α)}, Set.PairwiseDisjoint.{u1, 0} (Finset.{u1} (Finset.{u1} α)) Nat (Finset.partialOrder.{u1} (Finset.{u1} α)) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} (Finset.{u1} α)) (Set.univ.{0} Nat) (Finset.slice.{u1} α 𝒜)
+Case conversion may be inaccurate. Consider using '#align finset.pairwise_disjoint_slice Finset.pairwiseDisjoint_sliceₓ'. -/
 theorem pairwiseDisjoint_slice : (Set.univ : Set ℕ).PairwiseDisjoint (slice 𝒜) := fun m _ n _ hmn =>
   disjoint_filter.2 fun s hs hm hn => hmn <| hm.symm.trans hn
 #align finset.pairwise_disjoint_slice Finset.pairwiseDisjoint_slice
 
 variable [Fintype α] (𝒜)
 
+#print Finset.bunionᵢ_slice /-
 @[simp]
 theorem bunionᵢ_slice [DecidableEq α] : (Iic <| Fintype.card α).bUnion 𝒜.slice = 𝒜 :=
   Subset.antisymm (bunionᵢ_subset.2 fun r _ => slice_subset) fun s hs =>
     mem_bunionᵢ.2 ⟨s.card, mem_Iic.2 <| s.card_le_univ, mem_slice.2 <| ⟨hs, rfl⟩⟩
 #align finset.bUnion_slice Finset.bunionᵢ_slice
+-/
 
+#print Finset.sum_card_slice /-
 @[simp]
 theorem sum_card_slice : (∑ r in Iic (Fintype.card α), (𝒜 # r).card) = 𝒜.card :=
   by
@@ -180,6 +245,7 @@ theorem sum_card_slice : (∑ r in Iic (Fintype.card α), (𝒜 # r).card) = �
   rw [← card_bUnion, bUnion_slice]
   exact finset.pairwise_disjoint_slice.subset (Set.subset_univ _)
 #align finset.sum_card_slice Finset.sum_card_slice
+-/
 
 end Slice
 

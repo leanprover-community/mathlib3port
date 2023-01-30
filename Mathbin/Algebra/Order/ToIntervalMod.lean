@@ -1270,7 +1270,7 @@ theorem toIocMod_periodic (a : α) {b : α} (hb : 0 < b) : Function.Periodic (to
 #align to_Ioc_mod_periodic toIocMod_periodic
 
 /-- `to_Ico_mod` as an equiv from the quotient. -/
-@[simps symmApply]
+@[simps symm_apply]
 def quotientAddGroup.equivIcoMod (a : α) {b : α} (hb : 0 < b) :
     α ⧸ AddSubgroup.zmultiples b ≃ Set.Ico a (a + b)
     where
@@ -1292,7 +1292,7 @@ theorem quotientAddGroup.equivIcoMod_coe (a : α) {b : α} (hb : 0 < b) (x : α)
 #align quotient_add_group.equiv_Ico_mod_coe quotientAddGroup.equivIcoMod_coe
 
 /-- `to_Ioc_mod` as an equiv  from the quotient. -/
-@[simps symmApply]
+@[simps symm_apply]
 def quotientAddGroup.equivIocMod (a : α) {b : α} (hb : 0 < b) :
     α ⧸ AddSubgroup.zmultiples b ≃ Set.Ioc a (a + b)
     where

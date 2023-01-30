@@ -248,7 +248,7 @@ theorem monic_of_a_eq_one (ha : P.a = 1) : P.toPoly.Monic :=
   rw [monic,
     leading_coeff_of_a_ne_zero <| by
       rw [ha]
-      exact one_neZero,
+      exact one_ne_zero,
     ha]
 #align cubic.monic_of_a_eq_one Cubic.monic_of_a_eq_one
 
@@ -262,7 +262,7 @@ theorem monic_of_b_eq_one (ha : P.a = 0) (hb : P.b = 1) : P.toPoly.Monic :=
   rw [monic,
     leading_coeff_of_b_ne_zero ha <| by
       rw [hb]
-      exact one_neZero,
+      exact one_ne_zero,
     hb]
 #align cubic.monic_of_b_eq_one Cubic.monic_of_b_eq_one
 
@@ -276,7 +276,7 @@ theorem monic_of_c_eq_one (ha : P.a = 0) (hb : P.b = 0) (hc : P.c = 1) : P.toPol
   rw [monic,
     leading_coeff_of_c_ne_zero ha hb <| by
       rw [hc]
-      exact one_neZero,
+      exact one_ne_zero,
     hc]
 #align cubic.monic_of_c_eq_one Cubic.monic_of_c_eq_one
 

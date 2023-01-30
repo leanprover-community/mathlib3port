@@ -238,7 +238,7 @@ protected theorem UniformSpace.metrizable_uniformity (X : Type _) [UniformSpace 
       dsimp only [d]
       simp only [@SymmetricRel.mk_mem_comm _ _ (hU_symm _) x y]
     have hr : (1 / 2 : ℝ≥0) ∈ Ioo (0 : ℝ≥0) 1 :=
-      ⟨Nnreal.half_pos one_pos, Nnreal.half_lt_self one_neZero⟩
+      ⟨Nnreal.half_pos one_pos, Nnreal.half_lt_self one_ne_zero⟩
     letI I := PseudoMetricSpace.ofPrenndist d (fun x => hd₀.2 (Setoid.refl _)) hd_symm
     have hdist_le : ∀ x y, dist x y ≤ d x y := PseudoMetricSpace.dist_ofPrenndist_le _ _ _
     have hle_d : ∀ {x y : X} {n : ℕ}, (1 / 2) ^ n ≤ d x y ↔ (x, y) ∉ U n :=
@@ -255,7 +255,7 @@ protected theorem UniformSpace.metrizable_uniformity (X : Type _) [UniformSpace 
       refine' PseudoMetricSpace.le_two_mul_dist_ofPrenndist _ _ _ fun x₁ x₂ x₃ x₄ => _
       by_cases H : ∃ n, (x₁, x₄) ∉ U n
       · refine' (dif_pos H).trans_le _
-        rw [← Nnreal.div_le_iff' two_neZero, ← mul_one_div (_ ^ _), ← pow_succ']
+        rw [← Nnreal.div_le_iff' two_ne_zero, ← mul_one_div (_ ^ _), ← pow_succ']
         simp only [le_max_iff, hle_d, ← not_and_or]
         rintro ⟨h₁₂, h₂₃, h₃₄⟩
         refine' Nat.find_spec H (hU_comp (lt_add_one <| Nat.find H) _)
@@ -269,7 +269,7 @@ protected theorem UniformSpace.metrizable_uniformity (X : Type _) [UniformSpace 
       contrapose! hx
       refine' le_trans _ ((div_le_iff' (zero_lt_two' ℝ)).2 (hd_le x.1 x.2))
       rwa [← Nnreal.coe_two, ← Nnreal.coe_div, ← Nnreal.coe_pow, Nnreal.coe_le_coe, pow_succ',
-        mul_one_div, Nnreal.div_le_iff two_neZero, div_mul_cancel _ (two_ne_zero' ℝ≥0), hle_d,
+        mul_one_div, Nnreal.div_le_iff two_ne_zero, div_mul_cancel _ (two_ne_zero' ℝ≥0), hle_d,
         Prod.mk.eta]
 #align uniform_space.metrizable_uniformity UniformSpace.metrizable_uniformity
 

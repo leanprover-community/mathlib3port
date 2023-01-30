@@ -266,7 +266,7 @@ theorem Convex.isO_alternate_sum_square {v w : E} (h4v : x + (4 : ℝ) • v ∈
     by
     convert s_conv.interior.add_smul_sub_mem h2w h2v2w B using 1
     simp only [one_div, add_sub_cancel', inv_smul_smul₀, add_sub_add_right_eq_sub, Ne.def,
-      not_false_iff, bit0_eq_zero, one_neZero]
+      not_false_iff, bit0_eq_zero, one_ne_zero]
     rw [two_smul]
     abel
   have TA1 := s_conv.taylor_approx_two_segment hf xs hx h2vw h2vww

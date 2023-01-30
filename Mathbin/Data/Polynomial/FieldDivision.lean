@@ -392,7 +392,7 @@ theorem rootSet_x_pow [CommRing S] [IsDomain S] [Algebra R S] {n : ℕ} (hn : n 
     (X ^ n : R[X]).rootSet S = {0} :=
   by
   rw [← one_mul (X ^ n : R[X]), ← C_1, root_set_C_mul_X_pow hn]
-  exact one_neZero
+  exact one_ne_zero
 #align polynomial.root_set_X_pow Polynomial.rootSet_x_pow
 
 theorem rootSet_prod [CommRing S] [IsDomain S] [Algebra R S] {ι : Type _} (f : ι → R[X])

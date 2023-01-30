@@ -259,7 +259,7 @@ private theorem one_def : 1 = (mk 1 : Cauchy abv) :=
 #align cau_seq.completion.one_def cau_seq.completion.one_def
 
 instance : Ring (Cauchy abv) :=
-  Function.Surjective.ring mk (surjective_quotient_mk' _) zero_def.symm one_def.symm
+  Function.Surjective.ring mk (surjective_quotient_mk _) zero_def.symm one_def.symm
     (fun _ _ => (mk_add _ _).symm) (fun _ _ => (mk_mul _ _).symm) (fun _ => (mk_neg _).symm)
     (fun _ _ => (mk_sub _ _).symm) (fun _ _ => (mk_smul _ _).symm) (fun _ _ => (mk_smul _ _).symm)
     (fun _ _ => (mk_pow _ _).symm) (fun _ => rfl) fun _ => rfl
@@ -295,7 +295,7 @@ variable {α : Type _} [LinearOrderedField α]
 variable {β : Type _} [CommRing β] {abv : β → α} [IsAbsoluteValue abv]
 
 instance : CommRing (Cauchy abv) :=
-  Function.Surjective.commRing mk (surjective_quotient_mk' _) zero_def.symm one_def.symm
+  Function.Surjective.commRing mk (surjective_quotient_mk _) zero_def.symm one_def.symm
     (fun _ _ => (mk_add _ _).symm) (fun _ _ => (mk_mul _ _).symm) (fun _ => (mk_neg _).symm)
     (fun _ _ => (mk_sub _ _).symm) (fun _ _ => (mk_smul _ _).symm) (fun _ _ => (mk_smul _ _).symm)
     (fun _ _ => (mk_pow _ _).symm) (fun _ => rfl) fun _ => rfl
@@ -370,7 +370,7 @@ Case conversion may be inaccurate. Consider using '#align cau_seq.completion.cau
 theorem cau_seq_zero_ne_one : ¬(0 : CauSeq _ abv) ≈ 1 := fun h =>
   have : LimZero (1 - 0) := Setoid.symm h
   have : LimZero 1 := by simpa
-  one_neZero <| const_limZero.1 this
+  one_ne_zero <| const_limZero.1 this
 #align cau_seq.completion.cau_seq_zero_ne_one CauSeq.Completion.cau_seq_zero_ne_one
 
 /- warning: cau_seq.completion.zero_ne_one -> CauSeq.Completion.zero_ne_one is a dubious translation:

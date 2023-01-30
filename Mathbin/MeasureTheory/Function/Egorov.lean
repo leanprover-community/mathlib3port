@@ -163,7 +163,7 @@ theorem measure_unionNotConvergentSeq (hε : 0 < ε) (hf : ∀ n, StronglyMeasur
         (Ennreal.tsum_le_tsum <| not_convergent_seq_lt_index_spec (half_pos hε) hf hg hsm hs hfg) _)
   simp_rw [Ennreal.ofReal_mul (half_pos hε).le]
   rw [Ennreal.tsum_mul_left, ← Ennreal.ofReal_tsum_of_nonneg, inv_eq_one_div, tsum_geometric_two, ←
-    Ennreal.ofReal_mul (half_pos hε).le, div_mul_cancel ε two_neZero]
+    Ennreal.ofReal_mul (half_pos hε).le, div_mul_cancel ε two_ne_zero]
   · exact le_rfl
   · exact fun n => pow_nonneg (by norm_num) _
   · rw [inv_eq_one_div]

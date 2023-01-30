@@ -197,7 +197,7 @@ theorem bind₁_verschiebungPoly_wittPolynomial (n : ℕ) :
   split_ifs with hn
   · simp only [hn, verschiebung_poly_zero, wittPolynomial_zero, bind₁_X_right]
   · obtain ⟨n, rfl⟩ := Nat.exists_eq_succ_of_ne_zero hn
-    rw [Nat.succ_eq_add_one, add_tsub_cancel_right, RingHom.map_mul, map_nat_cast, hom_bind₁]
+    rw [Nat.succ_eq_add_one, add_tsub_cancel_right, RingHom.map_mul, map_natCast, hom_bind₁]
     calc
       _ = ghost_component (n + 1) (verschiebung <| mk p x) := _
       _ = _ := _

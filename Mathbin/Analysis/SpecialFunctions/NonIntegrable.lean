@@ -162,7 +162,7 @@ theorem not_intervalIntegrable_of_sub_inv_isO_punctured {f : ℝ → F} {a b c :
     by
     refine' tendsto_abs_at_bot_at_top.comp (real.tendsto_log_nhds_within_zero.comp _)
     rw [← sub_self c]
-    exact ((hasDerivAt_id c).sub_const c).tendsto_punctured_nhds one_neZero
+    exact ((hasDerivAt_id c).sub_const c).tendsto_punctured_nhds one_ne_zero
   exact
     not_intervalIntegrable_of_tendsto_norm_atTop_of_deriv_isO_punctured
       (A.mono fun x hx => hx.DifferentiableAt) B

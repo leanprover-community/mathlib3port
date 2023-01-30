@@ -163,7 +163,7 @@ variable {σ} (R)
 theorem isHomogeneous_x (i : σ) : IsHomogeneous (x i : MvPolynomial σ R) 1 :=
   by
   apply is_homogeneous_monomial
-  simp only [Finsupp.support_single_ne_zero _ one_neZero, Finset.sum_singleton]
+  simp only [Finsupp.support_single_ne_zero _ one_ne_zero, Finset.sum_singleton]
   exact Finsupp.single_eq_same
 #align mv_polynomial.is_homogeneous_X MvPolynomial.isHomogeneous_x
 

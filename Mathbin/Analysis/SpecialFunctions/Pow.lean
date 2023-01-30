@@ -95,12 +95,12 @@ theorem eq_zero_cpow_iff {x : ℂ} {a : ℂ} : a = 0 ^ x ↔ x ≠ 0 ∧ a = 0 �
 @[simp]
 theorem cpow_one (x : ℂ) : x ^ (1 : ℂ) = x :=
   if hx : x = 0 then by simp [hx, cpow_def]
-  else by rw [cpow_def, if_neg (one_neZero : (1 : ℂ) ≠ 0), if_neg hx, mul_one, exp_log hx]
+  else by rw [cpow_def, if_neg (one_ne_zero : (1 : ℂ) ≠ 0), if_neg hx, mul_one, exp_log hx]
 #align complex.cpow_one Complex.cpow_one
 
 @[simp]
 theorem one_cpow (x : ℂ) : (1 : ℂ) ^ x = 1 := by
-  rw [cpow_def] <;> split_ifs <;> simp_all [one_neZero]
+  rw [cpow_def] <;> split_ifs <;> simp_all [one_ne_zero]
 #align complex.one_cpow Complex.one_cpow
 
 theorem cpow_add {x : ℂ} (y z : ℂ) (hx : x ≠ 0) : x ^ (y + z) = x ^ y * x ^ z := by
@@ -1964,7 +1964,7 @@ theorem rpow_one (x : ℝ≥0∞) : x ^ (1 : ℝ) = x :=
 @[simp]
 theorem one_rpow (x : ℝ) : (1 : ℝ≥0∞) ^ x = 1 :=
   by
-  rw [← coe_one, coe_rpow_of_ne_zero one_neZero]
+  rw [← coe_one, coe_rpow_of_ne_zero one_ne_zero]
   simp
 #align ennreal.one_rpow Ennreal.one_rpow
 

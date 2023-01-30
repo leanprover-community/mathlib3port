@@ -86,7 +86,7 @@ theorem aeval : aeval x (minpoly A x) = 0 :=
 theorem ne_one [Nontrivial B] : minpoly A x ≠ 1 :=
   by
   intro h
-  refine' (one_neZero : (1 : B) ≠ 0) _
+  refine' (one_ne_zero : (1 : B) ≠ 0) _
   simpa using congr_arg (Polynomial.aeval x) h
 #align minpoly.ne_one minpoly.ne_one
 
@@ -188,7 +188,7 @@ theorem natDegree_pos [Nontrivial B] (hx : IsIntegral A x) : 0 < natDegree (minp
     rw [eq_C_of_nat_degree_eq_zero ndeg_eq_zero]
     convert C_1
     simpa only [ndeg_eq_zero.symm] using (monic hx).leadingCoeff
-  simpa only [eq_one, AlgHom.map_one, one_neZero] using aeval A x
+  simpa only [eq_one, AlgHom.map_one, one_ne_zero] using aeval A x
 #align minpoly.nat_degree_pos minpoly.natDegree_pos
 
 /-- The degree of a minimal polynomial is positive. -/

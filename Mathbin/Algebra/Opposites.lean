@@ -131,7 +131,7 @@ protected def rec' {F : ∀ X : αᵐᵒᵖ, Sort v} (h : ∀ X, F (op X)) : ∀
 #print MulOpposite.opEquiv /-
 /-- The canonical bijection between `α` and `αᵐᵒᵖ`. -/
 @[to_additive "The canonical bijection between `α` and `αᵃᵒᵖ`.",
-  simps (config := { fullyApplied := false }) apply symmApply]
+  simps (config := { fullyApplied := false }) apply symm_apply]
 def opEquiv : α ≃ αᵐᵒᵖ :=
   ⟨op, unop, unop_op, op_unop⟩
 #align mul_opposite.op_equiv MulOpposite.opEquiv

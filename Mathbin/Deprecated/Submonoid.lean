@@ -115,6 +115,7 @@ theorem IsSubmonoid.Inter {ι : Sort _} {s : ι → Set M} (h : ∀ y : ι, IsSu
     mul_mem := fun x₁ x₂ h₁ h₂ =>
       Set.mem_interᵢ.2 fun y => (h y).mul_mem (Set.mem_interᵢ.1 h₁ y) (Set.mem_interᵢ.1 h₂ y) }
 #align is_submonoid.Inter IsSubmonoid.Inter
+#align is_add_submonoid.Inter IsAddSubmonoid.Inter
 -/
 
 #print is_submonoid_Union_of_directed /-
@@ -134,6 +135,7 @@ theorem is_submonoid_Union_of_directed {ι : Type _} [hι : Nonempty ι] {s : ι
       let ⟨k, hk⟩ := Directed i j
       Set.mem_unionᵢ.2 ⟨k, (hs k).mul_mem (hk.1 hi) (hk.2 hj)⟩ }
 #align is_submonoid_Union_of_directed is_submonoid_Union_of_directed
+#align is_add_submonoid_Union_of_directed is_addSubmonoid_Union_of_directed
 -/
 
 section powers
@@ -193,6 +195,7 @@ theorem powers.is_submonoid (x : M) : IsSubmonoid (powers x) :=
   { one_mem := powers.one_mem
     mul_mem := fun y z => powers.mul_mem }
 #align powers.is_submonoid powers.is_submonoid
+#align multiples.is_add_submonoid multiples.is_addSubmonoid
 -/
 
 #print Univ.IsSubmonoid /-
@@ -200,6 +203,7 @@ theorem powers.is_submonoid (x : M) : IsSubmonoid (powers x) :=
 @[to_additive "An `add_monoid` is an `add_submonoid` of itself."]
 theorem Univ.IsSubmonoid : IsSubmonoid (@Set.univ M) := by constructor <;> simp
 #align univ.is_submonoid Univ.IsSubmonoid
+#align univ.is_add_submonoid Univ.IsAddSubmonoid
 -/
 
 #print IsSubmonoid.preimage /-
@@ -236,6 +240,7 @@ theorem Range.is_submonoid {γ : Type _} [Monoid γ] {f : M → γ} (hf : IsMono
   rw [← Set.image_univ]
   exact univ.is_submonoid.image hf
 #align range.is_submonoid Range.is_submonoid
+#align range.is_add_submonoid Range.is_addSubmonoid
 -/
 
 #print IsSubmonoid.pow_mem /-
@@ -360,6 +365,7 @@ theorem closure.IsSubmonoid (s : Set M) : IsSubmonoid (Closure s) :=
   { one_mem := InClosure.one
     mul_mem := fun a b => InClosure.mul }
 #align monoid.closure.is_submonoid Monoid.closure.IsSubmonoid
+#align add_monoid.closure.is_add_submonoid AddMonoid.closure.IsAddSubmonoid
 -/
 
 #print Monoid.subset_closure /-
@@ -508,4 +514,5 @@ Case conversion may be inaccurate. Consider using '#align submonoid.is_submonoid
 theorem Submonoid.is_submonoid (S : Submonoid M) : IsSubmonoid (S : Set M) :=
   ⟨S.3, fun _ _ => S.2⟩
 #align submonoid.is_submonoid Submonoid.is_submonoid
+#align add_submonoid.is_add_submonoid AddSubmonoid.is_addSubmonoid
 

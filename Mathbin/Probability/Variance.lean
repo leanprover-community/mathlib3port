@@ -66,7 +66,7 @@ theorem MeasureTheory.Memℒp.evariance_lt_top [IsFiniteMeasure μ] (hX : Memℒ
   rw [snorm_eq_lintegral_rpow_nnnorm Ennreal.two_ne_zero Ennreal.two_ne_top, ← Ennreal.rpow_two] at
     this
   simp only [Pi.sub_apply, Ennreal.toReal_bit0, Ennreal.one_toReal, one_div] at this
-  rw [← Ennreal.rpow_mul, inv_mul_cancel (two_neZero : (2 : ℝ) ≠ 0), Ennreal.rpow_one] at this
+  rw [← Ennreal.rpow_mul, inv_mul_cancel (two_ne_zero : (2 : ℝ) ≠ 0), Ennreal.rpow_one] at this
   simp_rw [Ennreal.rpow_two] at this
   exact this
 #align measure_theory.mem_ℒp.evariance_lt_top MeasureTheory.Memℒp.evariance_lt_top
@@ -296,7 +296,7 @@ theorem meas_ge_le_evariance_div_sq {X : Ω → ℝ} (hX : AeStronglyMeasurable 
     simp only [Ennreal.toReal_bit0, Ennreal.one_toReal, Pi.sub_apply, one_div]
     rw [div_eq_mul_inv, Ennreal.inv_pow, mul_comm, Ennreal.rpow_two]
     congr
-    simp_rw [← Ennreal.rpow_mul, inv_mul_cancel (two_neZero : (2 : ℝ) ≠ 0), Ennreal.rpow_two,
+    simp_rw [← Ennreal.rpow_mul, inv_mul_cancel (two_ne_zero : (2 : ℝ) ≠ 0), Ennreal.rpow_two,
       Ennreal.rpow_one, evariance]
 #align probability_theory.meas_ge_le_evariance_div_sq ProbabilityTheory.meas_ge_le_evariance_div_sq
 

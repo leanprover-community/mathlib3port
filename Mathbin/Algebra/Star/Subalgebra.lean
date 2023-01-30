@@ -135,9 +135,9 @@ theorem algebraMap_mem (r : R) : algebraMap R A r ∈ S :=
   S.algebra_map_mem' r
 #align star_subalgebra.algebra_map_mem StarSubalgebra.algebraMap_mem
 
-theorem srange_le : (algebraMap R A).srange ≤ S.toSubalgebra.toSubsemiring := fun x ⟨r, hr⟩ =>
+theorem rangeS_le : (algebraMap R A).srange ≤ S.toSubalgebra.toSubsemiring := fun x ⟨r, hr⟩ =>
   hr ▸ S.algebra_map_mem r
-#align star_subalgebra.srange_le StarSubalgebra.srange_le
+#align star_subalgebra.srange_le StarSubalgebra.rangeS_le
 
 theorem range_subset : Set.range (algebraMap R A) ⊆ S := fun x ⟨r, hr⟩ => hr ▸ S.algebra_map_mem r
 #align star_subalgebra.range_subset StarSubalgebra.range_subset

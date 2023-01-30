@@ -448,7 +448,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.image3_mono Set.image3_monoₓ'. -/
 theorem image3_mono (hs : s ⊆ s') (ht : t ⊆ t') (hu : u ⊆ u') :
     image3 g s t u ⊆ image3 g s' t' u' := fun x =>
-  Exists₃Cat.imp fun a b c ⟨ha, hb, hc, hx⟩ => ⟨hs ha, ht hb, hu hc, hx⟩
+  Exists₃.imp fun a b c ⟨ha, hb, hc, hx⟩ => ⟨hs ha, ht hb, hu hc, hx⟩
 #align set.image3_mono Set.image3_mono
 
 /- warning: set.image3_congr -> Set.image3_congr is a dubious translation:

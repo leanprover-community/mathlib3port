@@ -450,7 +450,7 @@ theorem ι_injective [Nontrivial R] : Function.Injective (ι R : X → FreeAlgeb
         have hfx1 : f (ι R x) = 1 := (lift_ι_apply _ _).trans <| if_pos rfl
         have hfy1 : f (ι R y) = 1 := hoxy ▸ hfx1
         have hfy0 : f (ι R y) = 0 := (lift_ι_apply _ _).trans <| if_neg hxy
-        one_neZero <| hfy1.symm.trans hfy0
+        one_ne_zero <| hfy1.symm.trans hfy0
 #align free_algebra.ι_injective FreeAlgebra.ι_injective
 
 @[simp]

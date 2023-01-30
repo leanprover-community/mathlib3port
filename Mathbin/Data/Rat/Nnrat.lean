@@ -200,7 +200,7 @@ def coeHom : ℚ≥0 →+* ℚ :=
 
 @[simp, norm_cast]
 theorem coe_nat_cast (n : ℕ) : (↑(↑n : ℚ≥0) : ℚ) = n :=
-  map_nat_cast coeHom n
+  map_natCast coeHom n
 #align nnrat.coe_nat_cast Nnrat.coe_nat_cast
 
 @[simp]

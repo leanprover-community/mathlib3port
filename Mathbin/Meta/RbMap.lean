@@ -161,7 +161,7 @@ unsafe instance : has_to_tactic_format (rb_map key data) :=
           let p ← p
           let pkd ← pp_key_data k d (snd p)
           return (fst p ++ pkd, ff)
-    return <| group <| to_fmt "⟨" ++ nest 1 fmt ++ to_fmt "⟩"⟩
+    return <| Group <| to_fmt "⟨" ++ nest 1 fmt ++ to_fmt "⟩"⟩
 
 end
 

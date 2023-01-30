@@ -349,7 +349,7 @@ instance types.finitaryExtensive : FinitaryExtensive (Type u) :=
         intro x
         cases h : s.fst x
         · simp_rw [sum.inl_injective.eq_iff]
-          exact existsUnique_eq'
+          exact exists_unique_eq'
         · apply_fun f  at h
           cases ((congr_fun s.condition x).symm.trans h).trans (congr_fun hαY val : _).symm
       delta ExistsUnique at this
@@ -366,7 +366,7 @@ instance types.finitaryExtensive : FinitaryExtensive (Type u) :=
         · apply_fun f  at h
           cases ((congr_fun s.condition x).symm.trans h).trans (congr_fun hαX val : _).symm
         · simp_rw [sum.inr_injective.eq_iff]
-          exact existsUnique_eq'
+          exact exists_unique_eq'
       delta ExistsUnique at this
       choose l hl hl'
       exact
@@ -507,7 +507,7 @@ instance : FinitaryExtensive TopCat.{u} :=
         intro x
         cases h : s.fst x
         · simp_rw [sum.inl_injective.eq_iff]
-          exact existsUnique_eq'
+          exact exists_unique_eq'
         · apply_fun f  at h
           cases
             ((concrete_category.congr_hom s.condition x).symm.trans h).trans
@@ -532,7 +532,7 @@ instance : FinitaryExtensive TopCat.{u} :=
             ((concrete_category.congr_hom s.condition x).symm.trans h).trans
               (concrete_category.congr_hom hαX val : _).symm
         · simp_rw [sum.inr_injective.eq_iff]
-          exact existsUnique_eq'
+          exact exists_unique_eq'
       delta ExistsUnique at this
       choose l hl hl'
       refine'

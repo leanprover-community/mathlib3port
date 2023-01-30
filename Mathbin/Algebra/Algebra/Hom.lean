@@ -161,7 +161,7 @@ theorem coeFn_injective : @Function.Injective (A →ₐ[R] B) (A → B) coeFn :=
 #align alg_hom.coe_fn_injective AlgHom.coeFn_injective
 
 theorem coeFn_inj {φ₁ φ₂ : A →ₐ[R] B} : (φ₁ : A → B) = φ₂ ↔ φ₁ = φ₂ :=
-  FunLike.coeFn_eq
+  FunLike.coe_fn_eq
 #align alg_hom.coe_fn_inj AlgHom.coeFn_inj
 
 theorem coe_ringHom_injective : Function.Injective (coe : (A →ₐ[R] B) → A →+* B) := fun φ₁ φ₂ H =>

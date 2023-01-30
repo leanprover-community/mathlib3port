@@ -212,7 +212,7 @@ def Simps.symmApply (e : P₁ ≃ᵃ[k] P₂) : P₂ → P₁ :=
   e.symm
 #align affine_equiv.simps.symm_apply AffineEquiv.Simps.symmApply
 
-initialize_simps_projections AffineEquiv (to_equiv_to_fun → apply, to_equiv_inv_fun → symmApply,
+initialize_simps_projections AffineEquiv (to_equiv_to_fun → apply, to_equiv_inv_fun → symm_apply,
   linear → linear as_prefix, -toEquiv)
 
 protected theorem bijective (e : P₁ ≃ᵃ[k] P₂) : Bijective e :=

@@ -48,9 +48,9 @@ variable {α : Type u}
 `[a0, ..., an] < [b0, ..., b_k]` if `a0 < b0` or `a0 = b0` and `[a1, ..., an] < [b1, ..., bk]`.
 The definition is given for any relation `r`, not only strict orders. -/
 inductive Lex (r : α → α → Prop) : List α → List α → Prop
-  | nil {a l} : lex [] (a :: l)
-  | cons {a l₁ l₂} (h : lex l₁ l₂) : lex (a :: l₁) (a :: l₂)
-  | Rel {a₁ l₁ a₂ l₂} (h : r a₁ a₂) : lex (a₁ :: l₁) (a₂ :: l₂)
+  | nil {a l} : Lex [] (a :: l)
+  | cons {a l₁ l₂} (h : Lex l₁ l₂) : Lex (a :: l₁) (a :: l₂)
+  | Rel {a₁ l₁ a₂ l₂} (h : r a₁ a₂) : Lex (a₁ :: l₁) (a₂ :: l₂)
 #align list.lex List.Lex
 -/
 
@@ -129,7 +129,7 @@ instance decidableRel [DecidableEq α] (r : α → α → Prop) [DecidableRel r]
   | [], b :: l₂ => isTrue Lex.nil
   | a :: l₁, b :: l₂ => by
     haveI := DecidableRel l₁ l₂
-    refine' decidable_of_iff (r a b ∨ a = b ∧ lex r l₁ l₂) ⟨fun h => _, fun h => _⟩
+    refine' decidable_of_iff (r a b ∨ a = b ∧ Lex r l₁ l₂) ⟨fun h => _, fun h => _⟩
     · rcases h with (h | ⟨rfl, h⟩)
       · exact lex.rel h
       · exact lex.cons h

@@ -103,7 +103,7 @@ variable [Nontrivial R]
 
 theorem incMatrix_apply_eq_zero_iff : G.incMatrix R a e = 0 ↔ e ∉ G.incidenceSet a :=
   by
-  simp only [inc_matrix_apply, Set.indicator_apply_eq_zero, Pi.one_apply, one_neZero]
+  simp only [inc_matrix_apply, Set.indicator_apply_eq_zero, Pi.one_apply, one_ne_zero]
   exact Iff.rfl
 #align simple_graph.inc_matrix_apply_eq_zero_iff SimpleGraph.incMatrix_apply_eq_zero_iff
 

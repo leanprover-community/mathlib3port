@@ -388,7 +388,7 @@ theorem UniqueDiffWithinAt.pi (ι : Type _) [Finite ι] (E : ι → Type _)
     (I : Set ι) (h : ∀ i ∈ I, UniqueDiffWithinAt 𝕜 (s i) (x i)) :
     UniqueDiffWithinAt 𝕜 (Set.pi I s) x := by
   classical
-    rw [← Set.univ_pi_piecewise]
+    rw [← Set.univ_pi_piecewise_univ]
     refine' UniqueDiffWithinAt.univ_pi _ _ _ _ fun i => _
     by_cases hi : i ∈ I <;> simp [*, uniqueDiffWithinAt_univ]
 #align unique_diff_within_at.pi UniqueDiffWithinAt.pi

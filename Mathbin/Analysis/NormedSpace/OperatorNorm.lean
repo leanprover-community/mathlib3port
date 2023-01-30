@@ -2002,7 +2002,7 @@ include σ₂₁ σ₃₄ σ₁₃ σ₂₄
 
 /-- A pair of continuous (semi)linear equivalences generates an continuous (semi)linear equivalence
 between the spaces of continuous (semi)linear maps. -/
-@[simps apply symmApply]
+@[simps apply symm_apply]
 def arrowCongrSL (e₁₂ : E ≃SL[σ₁₂] F) (e₄₃ : H ≃SL[σ₄₃] G) : (E →SL[σ₁₄] H) ≃SL[σ₄₃] F →SL[σ₂₃] G :=
   {-- given explicitly to help `simps`
         -- given explicitly to help `simps`

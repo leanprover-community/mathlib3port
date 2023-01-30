@@ -694,7 +694,7 @@ instance nontrivial [DirectedSystem G fun i j h => f' i j h] :
         rw [← (Ring.DirectLimit.of _ _ _).map_one]
         intro H; rcases Ring.DirectLimit.of.zero_exact H.symm with ⟨j, hij, hf⟩
         rw [(f' i j hij).map_one] at hf
-        exact one_neZero hf⟩⟩
+        exact one_ne_zero hf⟩⟩
 #align field.direct_limit.nontrivial Field.DirectLimit.nontrivial
 
 theorem exists_inv {p : Ring.DirectLimit G f} : p ≠ 0 → ∃ y, p * y = 1 :=

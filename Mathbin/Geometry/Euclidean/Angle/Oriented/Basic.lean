@@ -744,7 +744,7 @@ theorem oangle_eq_of_angle_eq_of_sign_eq {w x y z : V}
       intro hpi
       rw [div_eq_iff, eq_comm, ← sub_eq_zero, mul_two, add_sub_cancel] at hpi
       · exact real.pi_pos.ne.symm hpi
-      · exact two_neZero
+      · exact two_ne_zero
     have h0wx : w = 0 ∨ x = 0 :=
       by
       have h0' := o.eq_zero_or_angle_eq_zero_or_pi_of_sign_oangle_eq_zero hswx

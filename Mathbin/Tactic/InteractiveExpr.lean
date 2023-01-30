@@ -77,7 +77,7 @@ unsafe instance : Repr sf :=
 /-- Constructs an `sf` from an `eformat` by forgetting grouping, nesting, etc. -/
 unsafe def sf.of_eformat : eformat → sf
   | tag ⟨ea, e⟩ m => sf.tag_expr ea e <| sf.of_eformat m
-  | group m => sf.block 0 <| sf.of_eformat m
+  | Group m => sf.block 0 <| sf.of_eformat m
   | nest i m => sf.block i <| sf.of_eformat m
   | highlight c m => sf.highlight c <| sf.of_eformat m
   | of_format f => sf.of_string <| format.to_string f

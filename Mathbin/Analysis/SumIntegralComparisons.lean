@@ -97,7 +97,7 @@ theorem AntitoneOn.integral_le_sum_ico (hab : a ≤ b) (hf : AntitoneOn f (Set.I
     congr
     congr
     rw [← zero_add a]
-  rw [← Finset.sum_ico_add, Nat.Ico_zero_eq_range]
+  rw [← Finset.sum_Ico_add, Nat.Ico_zero_eq_range]
   conv =>
     rhs
     congr
@@ -156,7 +156,7 @@ theorem AntitoneOn.sum_le_integral_ico (hab : a ≤ b) (hf : AntitoneOn f (Set.I
     skip
     skip
     rw [add_comm]
-  rw [← Finset.sum_ico_add, Nat.Ico_zero_eq_range]
+  rw [← Finset.sum_Ico_add, Nat.Ico_zero_eq_range]
   conv =>
     lhs
     congr

@@ -627,7 +627,7 @@ instance (priority := 100) : CstarRing K
 
 @[simp, is_R_or_C_simps, norm_cast]
 theorem of_real_nat_cast (n : ℕ) : ((n : ℝ) : K) = n :=
-  map_nat_cast (@ofRealHom K _) n
+  map_natCast (@ofRealHom K _) n
 #align is_R_or_C.of_real_nat_cast IsROrC.of_real_nat_cast
 
 @[simp, is_R_or_C_simps, norm_cast]
@@ -675,7 +675,7 @@ instance (priority := 100) charZero_R_or_C : CharZero K :=
 #align is_R_or_C.char_zero_R_or_C IsROrC.charZero_R_or_C
 
 theorem re_eq_add_conj (z : K) : ↑(re z) = (z + conj z) / 2 := by
-  rw [add_conj, mul_div_cancel_left (re z : K) two_neZero]
+  rw [add_conj, mul_div_cancel_left (re z : K) two_ne_zero]
 #align is_R_or_C.re_eq_add_conj IsROrC.re_eq_add_conj
 
 theorem im_eq_conj_sub (z : K) : ↑(im z) = I * (conj z - z) / 2 :=

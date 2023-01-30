@@ -1357,7 +1357,7 @@ variable {H : Type _} [NormedAddCommGroup H]
 theorem L1Cat.norm_eq_integral_norm (f : α →₁[μ] H) : ‖f‖ = ∫ a, ‖f a‖ ∂μ :=
   by
   simp only [snorm, snorm', Ennreal.one_toReal, Ennreal.rpow_one, Lp.norm_def, if_false,
-    Ennreal.one_ne_top, one_neZero, _root_.div_one]
+    Ennreal.one_ne_top, one_ne_zero, _root_.div_one]
   rw [integral_eq_lintegral_of_nonneg_ae (eventually_of_forall (by simp [norm_nonneg]))
       (Lp.ae_strongly_measurable f).norm]
   simp [ofReal_norm_eq_coe_nnnorm]
@@ -1977,7 +1977,7 @@ theorem snorm_one_le_of_le {r : ℝ≥0} {f : α → ℝ} (hfint : Integrable f 
     rw [← integral_const]
     refine' integral_mono_ae hfint.real_to_nnreal (integrable_const r) _
     filter_upwards [hf]with ω hω using Real.toNnreal_le_iff_le_coe.2 hω
-  rw [mem_ℒp.snorm_eq_integral_rpow_norm one_neZero Ennreal.one_ne_top
+  rw [mem_ℒp.snorm_eq_integral_rpow_norm one_ne_zero Ennreal.one_ne_top
       (mem_ℒp_one_iff_integrable.2 hfint),
     Ennreal.ofReal_le_iff_le_toReal
       (Ennreal.mul_ne_top (Ennreal.mul_ne_top Ennreal.two_ne_top <| @measure_ne_top _ _ _ hμ _)

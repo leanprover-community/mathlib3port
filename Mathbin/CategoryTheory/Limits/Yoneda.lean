@@ -184,5 +184,5 @@ end CategoryTheory
 -- in the category theory hierarchy.
 assert_not_exists Set.range
 
-assert_not_exists add_comm_monoid
+assert_not_exists AddCommMonoid
 

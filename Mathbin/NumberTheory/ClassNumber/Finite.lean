@@ -82,7 +82,7 @@ theorem normBound_pos : 0 < normBound abv bS :=
       (injective_iff_map_eq_zero (Algebra.leftMulMatrix bS)).mp (Algebra.leftMulMatrix_injective bS)
     ext (j k)
     simp [h, DMatrix.zero_apply]
-  simp only [norm_bound, Algebra.smul_def, eq_nat_cast]
+  simp only [norm_bound, Algebra.smul_def, eq_natCast]
   refine' mul_pos (int.coe_nat_pos.mpr (Nat.factorial_pos _)) _
   refine' pow_pos (mul_pos (int.coe_nat_pos.mpr (fintype.card_pos_iff.mpr ⟨i⟩)) _) _
   refine' lt_of_lt_of_le (abv.pos hijk) (Finset.le_max' _ _ _)

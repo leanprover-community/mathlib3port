@@ -90,7 +90,7 @@ theorem ZeroAtFilter.boundedAtFilter [NormedAddCommGroup β] {l : Filter α} {f 
 
 theorem const_boundedAtFilter [NormedField β] (l : Filter α) (c : β) :
     BoundedAtFilter l (Function.const α c : α → β) :=
-  Asymptotics.isO_const_const c one_neZero l
+  Asymptotics.isO_const_const c one_ne_zero l
 #align filter.const_bounded_at_filter Filter.const_boundedAtFilter
 
 theorem BoundedAtFilter.add [NormedAddCommGroup β] {l : Filter α} {f g : α → β}

@@ -201,14 +201,14 @@ def ssubsets (s : Finset α) : Finset (Finset α) :=
 #print Finset.mem_ssubsets /-
 @[simp]
 theorem mem_ssubsets {s t : Finset α} : t ∈ s.ssubsets ↔ t ⊂ s := by
-  rw [ssubsets, mem_erase, mem_powerset, sSubset_iff_subset_ne, and_comm]
+  rw [ssubsets, mem_erase, mem_powerset, ssubset_iff_subset_ne, and_comm]
 #align finset.mem_ssubsets Finset.mem_ssubsets
 -/
 
 #print Finset.empty_mem_ssubsets /-
 theorem empty_mem_ssubsets {s : Finset α} (h : s.Nonempty) : ∅ ∈ s.ssubsets :=
   by
-  rw [mem_ssubsets, sSubset_iff_subset_ne]
+  rw [mem_ssubsets, ssubset_iff_subset_ne]
   exact ⟨empty_subset s, h.ne_empty.symm⟩
 #align finset.empty_mem_ssubsets Finset.empty_mem_ssubsets
 -/

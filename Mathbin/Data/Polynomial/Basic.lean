@@ -341,7 +341,7 @@ variable (R)
 
 /-- Ring isomorphism between `R[X]` and `add_monoid_algebra R ℕ`. This is just an
 implementation detail, but it can be useful to transfer results from `finsupp` to polynomials. -/
-@[simps apply symmApply]
+@[simps apply symm_apply]
 def toFinsuppIso : R[X] ≃+* AddMonoidAlgebra R ℕ
     where
   toFun := toFinsupp
@@ -515,7 +515,7 @@ theorem c_pow : c (a ^ n) = c a ^ n :=
 
 @[simp]
 theorem c_eq_nat_cast (n : ℕ) : c (n : R) = (n : R[X]) :=
-  map_nat_cast c n
+  map_natCast c n
 #align polynomial.C_eq_nat_cast Polynomial.c_eq_nat_cast
 
 @[simp]
@@ -633,7 +633,7 @@ def coeff : R[X] → ℕ → R
 theorem coeff_injective : Injective (coeff : R[X] → ℕ → R) :=
   by
   rintro ⟨p⟩ ⟨q⟩
-  simp only [coeff, FunLike.coeFn_eq, imp_self]
+  simp only [coeff, FunLike.coe_fn_eq, imp_self]
 #align polynomial.coeff_injective Polynomial.coeff_injective
 
 @[simp]

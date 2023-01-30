@@ -239,7 +239,7 @@ theorem aeval_bit1 : aeval x (bit1 p) = bit1 (aeval x p) :=
 
 @[simp]
 theorem aeval_nat_cast (n : ℕ) : aeval x (n : R[X]) = n :=
-  map_nat_cast _ _
+  map_natCast _ _
 #align polynomial.aeval_nat_cast Polynomial.aeval_nat_cast
 
 theorem aeval_mul : aeval x (p * q) = aeval x p * aeval x q :=

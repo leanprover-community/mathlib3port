@@ -301,7 +301,7 @@ def Simps.symmApply (e : A₁ ≃ₐ[R] A₂) : A₂ → A₁ :=
   e.symm
 #align alg_equiv.simps.symm_apply AlgEquiv.Simps.symmApply
 
-initialize_simps_projections AlgEquiv (toFun → apply, invFun → symmApply)
+initialize_simps_projections AlgEquiv (toFun → apply, invFun → symm_apply)
 
 @[simp]
 theorem coe_apply_coe_coe_symm_apply {F : Type _} [AlgEquivClass F R A₁ A₂] (f : F) (x : A₂) :
@@ -439,7 +439,7 @@ theorem arrowCongr_comp {A₁' A₂' A₃' : Type _} [Semiring A₁'] [Semiring 
     arrowCongr e₁ e₃ (g.comp f) = (arrowCongr e₂ e₃ g).comp (arrowCongr e₁ e₂ f) :=
   by
   ext
-  simp only [arrow_congr, Equiv.coeFn_mk, AlgHom.comp_apply]
+  simp only [arrow_congr, Equiv.coe_fn_mk, AlgHom.comp_apply]
   congr
   exact (e₂.symm_apply_apply _).symm
 #align alg_equiv.arrow_congr_comp AlgEquiv.arrowCongr_comp

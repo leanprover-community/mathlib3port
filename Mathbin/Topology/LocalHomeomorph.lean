@@ -95,7 +95,7 @@ def Simps.symmApply (e : LocalHomeomorph α β) : β → α :=
 #align local_homeomorph.simps.symm_apply LocalHomeomorph.Simps.symmApply
 
 initialize_simps_projections LocalHomeomorph (to_local_equiv_to_fun → apply,
-  to_local_equiv_inv_fun → symmApply, to_local_equiv_source → source, to_local_equiv_target →
+  to_local_equiv_inv_fun → symm_apply, to_local_equiv_source → source, to_local_equiv_target →
   target, -toLocalEquiv)
 
 protected theorem continuousOn : ContinuousOn e e.source :=
@@ -714,7 +714,7 @@ theorem restrOpen_source (s : Set α) (hs : IsOpen s) : (e.restrOpen s hs).sourc
 sure that the restriction is well defined whatever the set s, since local homeomorphisms are by
 definition defined on open sets. In applications where `s` is open, this coincides with the
 restriction of local equivalences -/
-@[simps (config := mfld_cfg) apply symmApply, simps (config := { attrs := [] }) source target]
+@[simps (config := mfld_cfg) apply symm_apply, simps (config := { attrs := [] }) source target]
 protected def restr (s : Set α) : LocalHomeomorph α β :=
   e.restrOpen (interior s) isOpen_interior
 #align local_homeomorph.restr LocalHomeomorph.restr
@@ -1052,7 +1052,7 @@ section Prod
 
 /-- The product of two local homeomorphisms, as a local homeomorphism on the product space. -/
 @[simps (config := mfld_cfg) toLocalEquiv apply,
-  simps (config := { attrs := [] }) source target symmApply]
+  simps (config := { attrs := [] }) source target symm_apply]
 def prod (e : LocalHomeomorph α β) (e' : LocalHomeomorph γ δ) : LocalHomeomorph (α × γ) (β × δ)
     where
   open_source := e.open_source.Prod e'.open_source
@@ -1299,7 +1299,7 @@ theorem secondCountableTopology_source [SecondCountableTopology β] (e : LocalHo
 
 /-- If a local homeomorphism has source and target equal to univ, then it induces a homeomorphism
 between the whole spaces, expressed in this definition. -/
-@[simps (config := mfld_cfg) apply symmApply]
+@[simps (config := mfld_cfg) apply symm_apply]
 def toHomeomorphOfSourceEqUnivTargetEqUniv (h : e.source = (univ : Set α)) (h' : e.target = univ) :
     α ≃ₜ β where
   toFun := e

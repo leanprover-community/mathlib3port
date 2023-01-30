@@ -169,7 +169,7 @@ protected theorem ne_zero {a : ℤ} {b : ℕ} (h : a.gcd b = 1) : J(a | b) ≠ 0
   by
   cases' eq_zero_or_neZero b with hb
   · rw [hb, zero_right]
-    exact one_neZero
+    exact one_ne_zero
   · contrapose! h
     exact eq_zero_iff_not_coprime.1 h
 #align jacobi_sym.ne_zero jacobiSym.ne_zero

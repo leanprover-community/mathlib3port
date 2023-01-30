@@ -391,7 +391,7 @@ def skyscraperPresheafStalkAdjunction [HasColimits C] :
   counit := StalkSkyscraperPresheafAdjunctionAuxs.counit _
   hom_equiv_unit' 𝓕 c α := by
     ext U;
-    simp only [Equiv.coeFn_mk, to_skyscraper_presheaf_app, nat_trans.comp_app,
+    simp only [Equiv.coe_fn_mk, to_skyscraper_presheaf_app, nat_trans.comp_app,
       SkyscraperPresheafFunctor.map'_app, skyscraperPresheafFunctor_map, unit_app]
     split_ifs
     ·
@@ -400,7 +400,7 @@ def skyscraperPresheafStalkAdjunction [HasColimits C] :
         category.assoc _ _ α, eq_to_hom_trans, eq_to_hom_refl, category.id_comp]
     · apply ((if_neg h).symm.rec terminal_is_terminal).hom_ext
   hom_equiv_counit' 𝓕 c α := by
-    ext U; simp only [Equiv.coeFn_symm_mk, counit_app]
+    ext U; simp only [Equiv.coe_fn_symm_mk, counit_app]
     erw [colimit.ι_desc, ← category.assoc, colimit.ι_map, whisker_left_app, category.assoc,
       colimit.ι_desc]
     rfl

@@ -493,7 +493,7 @@ theorem degree_c_mul_t_ite (n : ℤ) (a : R) : (c a * t n).degree = ite (a = 0) 
 theorem degree_t [Nontrivial R] (n : ℤ) : (t n : R[T;T⁻¹]).degree = n :=
   by
   rw [← one_mul (T n), ← map_one C]
-  exact degree_C_mul_T n 1 (one_neZero : (1 : R) ≠ 0)
+  exact degree_C_mul_T n 1 (one_ne_zero : (1 : R) ≠ 0)
 #align laurent_polynomial.degree_T LaurentPolynomial.degree_t
 
 theorem degree_c {a : R} (a0 : a ≠ 0) : (c a).degree = 0 :=

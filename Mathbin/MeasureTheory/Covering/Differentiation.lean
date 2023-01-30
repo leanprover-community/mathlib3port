@@ -757,7 +757,7 @@ theorem withDensity_limRatioMeas_eq : μ.withDensity (v.limRatioMeas hρ) = ρ :
       by
       refine' Ennreal.Tendsto.mul _ _ tendsto_const_nhds _
       · exact Ennreal.Tendsto.pow (Ennreal.tendsto_coe.2 nhdsWithin_le_nhds)
-      · simp only [one_pow, Ennreal.coe_one, true_or_iff, Ne.def, not_false_iff, one_neZero]
+      · simp only [one_pow, Ennreal.coe_one, true_or_iff, Ne.def, not_false_iff, one_ne_zero]
       · simp only [one_pow, Ennreal.coe_one, Ne.def, or_true_iff, Ennreal.one_ne_top, not_false_iff]
     simp only [one_pow, one_mul, Ennreal.coe_one] at this
     refine' ge_of_tendsto this _
@@ -768,7 +768,7 @@ theorem withDensity_limRatioMeas_eq : μ.withDensity (v.limRatioMeas hρ) = ρ :
         (𝓝 ((1 : ℝ≥0) * μ.with_density (v.lim_ratio_meas hρ) s)) :=
       by
       refine' Ennreal.Tendsto.mul_const (Ennreal.tendsto_coe.2 nhdsWithin_le_nhds) _
-      simp only [Ennreal.coe_one, true_or_iff, Ne.def, not_false_iff, one_neZero]
+      simp only [Ennreal.coe_one, true_or_iff, Ne.def, not_false_iff, one_ne_zero]
     simp only [one_mul, Ennreal.coe_one] at this
     refine' ge_of_tendsto this _
     filter_upwards [self_mem_nhdsWithin]with _ ht

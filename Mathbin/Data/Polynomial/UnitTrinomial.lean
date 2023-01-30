@@ -110,7 +110,7 @@ theorem trinomial_monic (hkm : k < m) (hmn : m < n) : (trinomial k m n u v 1).Mo
   by
   cases' subsingleton_or_nontrivial R with h h
   · apply Subsingleton.elim
-  · exact trinomial_leading_coeff hkm hmn one_neZero
+  · exact trinomial_leading_coeff hkm hmn one_ne_zero
 #align polynomial.trinomial_monic Polynomial.trinomial_monic
 
 theorem trinomial_mirror (hkm : k < m) (hmn : m < n) (hu : u ≠ 0) (hw : w ≠ 0) :
@@ -217,7 +217,7 @@ theorem isUnitTrinomial_iff' :
   · have key : ∀ k ∈ p.support, p.coeff k ^ 2 = 1 := fun k hk =>
       Int.sq_eq_one_of_sq_le_three
         ((single_le_sum (fun k hk => sq_nonneg (p.coeff k)) hk).trans hp.le) (mem_support_iff.mp hk)
-    refine' is_unit_trinomial_iff.mpr ⟨_, fun k hk => isUnit_ofPowEqOne (key k hk) two_neZero⟩
+    refine' is_unit_trinomial_iff.mpr ⟨_, fun k hk => isUnit_ofPowEqOne (key k hk) two_ne_zero⟩
     rw [sum_def, sum_congr rfl key, sum_const, Nat.smul_one_eq_coe] at hp
     exact Nat.cast_injective hp
 #align polynomial.is_unit_trinomial_iff' Polynomial.isUnitTrinomial_iff'
@@ -280,7 +280,7 @@ theorem irreducible_aux2 {k m m' n : ℕ} (hkm : k < m) (hmn : m < n) (hkm' : k 
       exact Or.inl (hq.trans hp.symm)
     rw [tsub_add_eq_add_tsub hmn.le, eq_tsub_iff_add_eq_of_le, ← two_mul] at hm
     rw [tsub_add_eq_add_tsub hmn'.le, eq_tsub_iff_add_eq_of_le, ← two_mul] at hm'
-    exact mul_left_cancel₀ two_neZero (hm.trans hm'.symm)
+    exact mul_left_cancel₀ two_ne_zero (hm.trans hm'.symm)
     exact hmn'.le.trans (Nat.le_add_right n k)
     exact hmn.le.trans (Nat.le_add_right n k)
 #align polynomial.is_unit_trinomial.irreducible_aux2 Polynomial.IsUnitTrinomial.irreducible_aux2
@@ -300,7 +300,7 @@ theorem irreducible_aux3 {k m m' n : ℕ} (hkm : k < m) (hmn : m < n) (hkm' : k 
   rw [add_assoc, add_assoc, add_comm ↑u, add_comm ↑x, add_assoc, add_assoc] at hadd
   simp only [add_sq', add_assoc, add_right_inj, ← Units.val_pow_eq_pow_val, Int.units_sq] at hadd
   rw [mul_assoc, hmul, ← mul_assoc, add_right_inj,
-    mul_right_inj' (show 2 * (v : ℤ) ≠ 0 from mul_ne_zero two_neZero v.ne_zero)] at hadd
+    mul_right_inj' (show 2 * (v : ℤ) ≠ 0 from mul_ne_zero two_ne_zero v.ne_zero)] at hadd
   replace hadd :=
     (Int.isUnit_add_isUnit_eq_isUnit_add_isUnit w.is_unit u.is_unit z.is_unit x.is_unit).mp hadd
   simp only [Units.eq_iff] at hadd
@@ -322,11 +322,11 @@ theorem irreducible_of_coprime (hp : p.IsUnitTrinomial)
   obtain ⟨k, m, n, hkm, hmn, u, v, w, hp⟩ := hp
   obtain ⟨k', m', n', hkm', hmn', x, y, z, hq⟩ := hq
   have hk : k = k' := by
-    rw [← mul_right_inj' (show 2 ≠ 0 from two_neZero), ←
+    rw [← mul_right_inj' (show 2 ≠ 0 from two_ne_zero), ←
       trinomial_nat_trailing_degree hkm hmn u.ne_zero, ← hp, ← nat_trailing_degree_mul_mirror, hpq,
       nat_trailing_degree_mul_mirror, hq, trinomial_nat_trailing_degree hkm' hmn' x.ne_zero]
   have hn : n = n' := by
-    rw [← mul_right_inj' (show 2 ≠ 0 from two_neZero), ← trinomial_nat_degree hkm hmn w.ne_zero, ←
+    rw [← mul_right_inj' (show 2 ≠ 0 from two_ne_zero), ← trinomial_nat_degree hkm hmn w.ne_zero, ←
       hp, ← nat_degree_mul_mirror, hpq, nat_degree_mul_mirror, hq,
       trinomial_nat_degree hkm' hmn' z.ne_zero]
   subst hk

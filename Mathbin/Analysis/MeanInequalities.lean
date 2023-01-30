@@ -149,7 +149,7 @@ theorem geom_mean_weighted_of_constant (w z : ι → ℝ) (x : ℝ) (hw : ∀ i 
       rw [← rpow_sum_of_nonneg _ hw, hw', rpow_one]
       have : (∑ i in s, w i) ≠ 0 := by
         rw [hw']
-        exact one_neZero
+        exact one_ne_zero
       obtain ⟨i, his, hi⟩ := exists_ne_zero_of_sum_ne_zero this
       rw [← hx i his hi]
       exact hz i his

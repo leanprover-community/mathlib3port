@@ -363,10 +363,10 @@ theorem sum_smul (n : ℕ) : (∑ ν in Finset.range (n + 1), ν • bernsteinPo
     refine' Finset.sum_congr rfl fun k hk => (w k).trans _
     simp only [pderiv_tt_x, pderiv_tt_y, Algebra.id.smul_eq_mul, nsmul_eq_mul, e, Bool.cond_true,
       Bool.cond_false, add_zero, mul_one, mul_zero, smul_zero, MvPolynomial.aeval_x,
-      MvPolynomial.pderiv_mul, Derivation.leibniz_pow, Derivation.map_coe_nat, map_nat_cast,
-      map_pow, map_mul]
+      MvPolynomial.pderiv_mul, Derivation.leibniz_pow, Derivation.map_coe_nat, map_natCast, map_pow,
+      map_mul]
   · rw [(pderiv tt).leibniz_pow, (pderiv tt).map_add, pderiv_tt_x, pderiv_tt_y]
-    simp only [Algebra.id.smul_eq_mul, nsmul_eq_mul, map_nat_cast, map_pow, map_add, map_mul, e,
+    simp only [Algebra.id.smul_eq_mul, nsmul_eq_mul, map_natCast, map_pow, map_add, map_mul, e,
       Bool.cond_true, Bool.cond_false, MvPolynomial.aeval_x, add_sub_cancel'_right, one_pow,
       add_zero, mul_one]
 #align bernstein_polynomial.sum_smul bernsteinPolynomial.sum_smul
@@ -413,7 +413,7 @@ theorem sum_mul_smul (n : ℕ) :
     simp only [pderiv_tt_x, pderiv_tt_y, Algebra.id.smul_eq_mul, nsmul_eq_mul, e, Bool.cond_true,
       Bool.cond_false, add_zero, zero_add, mul_zero, smul_zero, mul_one, MvPolynomial.aeval_x,
       MvPolynomial.pderiv_x_self, MvPolynomial.pderiv_x_of_ne, Derivation.leibniz_pow,
-      Derivation.leibniz, Derivation.map_coe_nat, map_nat_cast, map_pow, map_mul, map_add]
+      Derivation.leibniz, Derivation.map_coe_nat, map_natCast, map_pow, map_mul, map_add]
   -- On the right hand side, we'll just simplify.
   ·
     simp only [pderiv_one, pderiv_mul, (pderiv _).leibniz_pow, (pderiv _).map_coe_nat,

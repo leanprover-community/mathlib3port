@@ -129,7 +129,7 @@ def Simps.symmApply (h : X ≃ₕ Y) : Y → X :=
   h.symm
 #align continuous_map.homotopy_equiv.simps.symm_apply ContinuousMap.HomotopyEquiv.Simps.symmApply
 
-initialize_simps_projections HomotopyEquiv (to_fun_to_fun → apply, inv_fun_to_fun → symmApply,
+initialize_simps_projections HomotopyEquiv (to_fun_to_fun → apply, inv_fun_to_fun → symm_apply,
   -toFun, -invFun)
 
 /-- Any topological space is homotopy equivalent to itself.

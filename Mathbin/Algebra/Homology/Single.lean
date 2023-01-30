@@ -298,7 +298,7 @@ def fromSingle₀Equiv (C : ChainComplex V ℕ) (X : V) : ((single₀ V).obj X �
         | n + 1 => 0
       comm' := fun i j h => by
         cases i <;> cases j <;> unfold_aux <;>
-          simp only [shape, ComplexShape.down_rel, Nat.one_ne_zero, not_false_iff, comp_zero,
+          simp only [shape, ComplexShape.down_Rel, Nat.one_ne_zero, not_false_iff, comp_zero,
             zero_comp, Nat.succ_ne_zero, single₀_obj_X_d] }
   left_inv f := by
     ext i
@@ -476,7 +476,7 @@ def fromSingle₀Equiv (C : CochainComplex V ℕ) (X : V) :
         · exact f.2
         · convert comp_zero
           rw [C.shape]
-          simp only [ComplexShape.up_rel, zero_add]
+          simp only [ComplexShape.up_Rel, zero_add]
           exact (Nat.one_lt_succ_succ j).Ne }
   left_inv f := by
     ext i

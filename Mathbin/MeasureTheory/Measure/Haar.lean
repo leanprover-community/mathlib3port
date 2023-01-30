@@ -749,7 +749,7 @@ instance isHaarMeasureHaarMeasure (K₀ : PositiveCompacts G) : IsHaarMeasure (h
     is_haar_measure_of_is_compact_nonempty_interior (haar_measure K₀) K₀ K₀.is_compact
       K₀.interior_nonempty
   · simp only [haar_measure_self]
-    exact one_neZero
+    exact one_ne_zero
   · simp only [haar_measure_self]
     exact Ennreal.coe_ne_top
 #align measure_theory.measure.is_haar_measure_haar_measure MeasureTheory.Measure.isHaarMeasureHaarMeasure
@@ -926,7 +926,7 @@ instance (priority := 100) IsHaarMeasure.isInvInvariant [LocallyCompactSpace G] 
     (Ennreal.mul_eq_mul_right (measure_pos_of_nonempty_interior _ K.interior_nonempty).ne'
           K.is_compact.measure_lt_top.ne).1
       this
-  have : c = 1 := (Ennreal.pow_strictMono two_neZero).Injective this
+  have : c = 1 := (Ennreal.pow_strictMono two_ne_zero).Injective this
   rw [measure.inv, hc, this, one_smul]
 #align measure_theory.measure.is_haar_measure.is_inv_invariant MeasureTheory.Measure.IsHaarMeasure.isInvInvariant
 #align measure_theory.measure.is_add_haar_measure.is_neg_invariant MeasureTheory.Measure.IsAddHaarMeasure.is_neg_invariant

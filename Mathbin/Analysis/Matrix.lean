@@ -511,7 +511,7 @@ theorem frobenius_nnnorm_diagonal [DecidableEq n] (v : n → α) :
   · rw [Finset.sum_map, Nnreal.sqrt_eq_rpow]
     dsimp
     simp_rw [diagonal_apply_eq, Nnreal.rpow_two]
-  · suffices i.1 ≠ i.2 by rw [diagonal_apply_ne _ this, nnnorm_zero, Nnreal.zero_rpow two_neZero]
+  · suffices i.1 ≠ i.2 by rw [diagonal_apply_ne _ this, nnnorm_zero, Nnreal.zero_rpow two_ne_zero]
     intro h
     exact finset.mem_map.not.mp his ⟨i.1, Finset.mem_univ _, Prod.ext rfl h⟩
 #align matrix.frobenius_nnnorm_diagonal Matrix.frobenius_nnnorm_diagonal
@@ -542,8 +542,8 @@ theorem frobenius_nnnorm_mul (A : Matrix l m α) (B : Matrix m n α) : ‖A ⬝ 
   rw [← Nnreal.mul_rpow, @Finset.sum_comm _ n m, Finset.sum_mul_sum, Finset.sum_product]
   refine' Nnreal.rpow_le_rpow _ one_half_pos.le
   refine' Finset.sum_le_sum fun i hi => Finset.sum_le_sum fun j hj => _
-  rw [← Nnreal.rpow_le_rpow_iff one_half_pos, ← Nnreal.rpow_mul, mul_div_cancel' (1 : ℝ) two_neZero,
-    Nnreal.rpow_one, Nnreal.mul_rpow]
+  rw [← Nnreal.rpow_le_rpow_iff one_half_pos, ← Nnreal.rpow_mul,
+    mul_div_cancel' (1 : ℝ) two_ne_zero, Nnreal.rpow_one, Nnreal.mul_rpow]
   dsimp only
   have :=
     @nnnorm_inner_le_nnnorm α _ _ _ ((PiLp.equiv 2 fun i => α).symm fun j => star (A i j))

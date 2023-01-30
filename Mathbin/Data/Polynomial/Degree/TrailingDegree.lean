@@ -423,17 +423,17 @@ variable [Semiring R] [Nontrivial R] {p q : R[X]}
 
 @[simp]
 theorem trailingDegree_one : trailingDegree (1 : R[X]) = (0 : ℕ∞) :=
-  trailingDegree_c one_neZero
+  trailingDegree_c one_ne_zero
 #align polynomial.trailing_degree_one Polynomial.trailingDegree_one
 
 @[simp]
 theorem trailingDegree_x : trailingDegree (x : R[X]) = 1 :=
-  trailingDegree_monomial one_neZero
+  trailingDegree_monomial one_ne_zero
 #align polynomial.trailing_degree_X Polynomial.trailingDegree_x
 
 @[simp]
 theorem natTrailingDegree_x : (x : R[X]).natTrailingDegree = 1 :=
-  natTrailingDegree_monomial one_neZero
+  natTrailingDegree_monomial one_ne_zero
 #align polynomial.nat_trailing_degree_X Polynomial.natTrailingDegree_x
 
 end NonzeroSemiring

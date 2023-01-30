@@ -113,9 +113,9 @@ theorem algebraMap_mem (r : R) : algebraMap R A r ∈ S :=
   S.algebra_map_mem' r
 #align subalgebra.algebra_map_mem Subalgebra.algebraMap_mem
 
-theorem srange_le : (algebraMap R A).srange ≤ S.toSubsemiring := fun x ⟨r, hr⟩ =>
+theorem rangeS_le : (algebraMap R A).srange ≤ S.toSubsemiring := fun x ⟨r, hr⟩ =>
   hr ▸ S.algebra_map_mem r
-#align subalgebra.srange_le Subalgebra.srange_le
+#align subalgebra.srange_le Subalgebra.rangeS_le
 
 theorem range_subset : Set.range (algebraMap R A) ⊆ S := fun x ⟨r, hr⟩ => hr ▸ S.algebra_map_mem r
 #align subalgebra.range_subset Subalgebra.range_subset
@@ -625,7 +625,7 @@ protected def range (φ : A →ₐ[R] B) : Subalgebra R B :=
 
 @[simp]
 theorem mem_range (φ : A →ₐ[R] B) {y : B} : y ∈ φ.range ↔ ∃ x, φ x = y :=
-  RingHom.mem_srange
+  RingHom.mem_rangeS
 #align alg_hom.mem_range AlgHom.mem_range
 
 theorem mem_range_self (φ : A →ₐ[R] B) (x : A) : φ x ∈ φ.range :=
@@ -996,7 +996,7 @@ noncomputable def botEquivOfInjective (h : Function.Injective (algebraMap R A)) 
 #align algebra.bot_equiv_of_injective Algebra.botEquivOfInjective
 
 /-- The bottom subalgebra is isomorphic to the field. -/
-@[simps symmApply]
+@[simps symm_apply]
 noncomputable def botEquiv (F R : Type _) [Field F] [Semiring R] [Nontrivial R] [Algebra F R] :
     (⊥ : Subalgebra F R) ≃ₐ[F] F :=
   botEquivOfInjective (RingHom.injective _)
@@ -1333,11 +1333,11 @@ theorem algebraMap_eq {R A : Type _} [CommSemiring R] [CommSemiring A] [Semiring
 #align subalgebra.algebra_map_eq Subalgebra.algebraMap_eq
 
 @[simp]
-theorem srange_algebraMap {R A : Type _} [CommSemiring R] [CommSemiring A] [Algebra R A]
+theorem rangeS_algebraMap {R A : Type _} [CommSemiring R] [CommSemiring A] [Algebra R A]
     (S : Subalgebra R A) : (algebraMap S A).srange = S.toSubsemiring := by
   rw [algebra_map_eq, Algebra.id.map_eq_id, RingHom.id_comp, ← to_subsemiring_subtype,
-    Subsemiring.srange_subtype]
-#align subalgebra.srange_algebra_map Subalgebra.srange_algebraMap
+    Subsemiring.rangeS_subtype]
+#align subalgebra.srange_algebra_map Subalgebra.rangeS_algebraMap
 
 @[simp]
 theorem range_algebraMap {R A : Type _} [CommRing R] [CommRing A] [Algebra R A]

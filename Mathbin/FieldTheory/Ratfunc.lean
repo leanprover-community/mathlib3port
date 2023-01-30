@@ -856,7 +856,7 @@ theorem map_apply_div {R F : Type _} [CommRing R] [IsDomain R] [MonoidWithZeroHo
   · have : (0 : Ratfunc K) = algebraMap K[X] _ 0 / algebraMap K[X] _ 1 := by simp
     rw [map_zero, map_zero, map_zero, div_zero, div_zero, this, map_apply_div_ne_zero, map_one,
       map_one, div_one, map_zero, map_zero]
-    exact one_neZero
+    exact one_ne_zero
   exact map_apply_div_ne_zero _ _ _ _ hq
 #align ratfunc.map_apply_div Ratfunc.map_apply_div
 
@@ -1113,7 +1113,7 @@ private theorem num_div' (p : K[X]) {q : K[X]} (hq : q ≠ 0) :
 #align ratfunc.num_div' ratfunc.num_div'
 
 @[simp]
-theorem num_zero : num (0 : Ratfunc K) = 0 := by convert num_div' (0 : K[X]) one_neZero <;> simp
+theorem num_zero : num (0 : Ratfunc K) = 0 := by convert num_div' (0 : K[X]) one_ne_zero <;> simp
 #align ratfunc.num_zero Ratfunc.num_zero
 
 @[simp]
@@ -1173,16 +1173,17 @@ theorem denom_ne_zero (x : Ratfunc K) : denom x ≠ 0 :=
 
 @[simp]
 theorem denom_zero : denom (0 : Ratfunc K) = 1 := by
-  convert denom_div (0 : K[X]) one_neZero <;> simp
+  convert denom_div (0 : K[X]) one_ne_zero <;> simp
 #align ratfunc.denom_zero Ratfunc.denom_zero
 
 @[simp]
-theorem denom_one : denom (1 : Ratfunc K) = 1 := by convert denom_div (1 : K[X]) one_neZero <;> simp
+theorem denom_one : denom (1 : Ratfunc K) = 1 := by
+  convert denom_div (1 : K[X]) one_ne_zero <;> simp
 #align ratfunc.denom_one Ratfunc.denom_one
 
 @[simp]
 theorem denom_algebraMap (p : K[X]) : denom (algebraMap _ (Ratfunc K) p) = 1 := by
-  convert denom_div p one_neZero <;> simp
+  convert denom_div p one_ne_zero <;> simp
 #align ratfunc.denom_algebra_map Ratfunc.denom_algebraMap
 
 @[simp]

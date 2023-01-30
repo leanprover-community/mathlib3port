@@ -141,7 +141,7 @@ theorem martingaleMartingalePart (hf : Adapted ℱ f) (hf_int : ∀ n, Integrabl
       · exact integrable_condexp
   rw [martingale_part_eq_sum]
   refine' eventually_eq.add eventually_eq.rfl _
-  rw [← Finset.sum_range_add_sum_ico _ hij, ←
+  rw [← Finset.sum_range_add_sum_Ico _ hij, ←
     add_zero (∑ i in Finset.range i, f (i + 1) - f i - μ[f (i + 1) - f i|ℱ i])]
   refine' (eventuallyEq_sum fun k hk => h_lt k (finset.mem_range.mp hk)).add _
   refine' (eventuallyEq_sum fun k hk => h_ge k (finset.mem_Ico.mp hk).1).trans _

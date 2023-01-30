@@ -674,7 +674,7 @@ unsafe def h_generalize (rev : parse (parser.optional (tk "!")))
       tactic.clear h'
   when h do
       ((to_expr ``(hEq_of_eq_rec_left $(eq_h) $(asm)) <|>
-              to_expr ``(hEq_of_cast_eq $(eq_h) $(asm))) >>=
+              to_expr ``(heq_of_cast_eq $(eq_h) $(asm))) >>=
             note h' none) >>
           pure ()
   tactic.clear asm
@@ -1127,7 +1127,7 @@ unsafe def inhabit (t : parse parser.pexpr) (inst_name : parse (parser.optional 
       introI nm
     else do
       decorate_error "could not infer nonempty instance:" <|
-          mk_mapp `` Classical.inhabitedOfNonempty' [ty, none] >>= note nm none
+          mk_mapp `` Classical.inhabited_of_nonempty' [ty, none] >>= note nm none
       resetI
 #align tactic.interactive.inhabit tactic.interactive.inhabit
 

@@ -62,7 +62,7 @@ theorem funMap_quotient_mk' {n : ℕ} (f : L.Functions n) (x : Fin n → M) :
   change
     Quotient.map (@fun_map L M ps.to_structure n f) prestructure.fun_equiv (Quotient.finChoice _) =
       _
-  rw [Quotient.finChoice_eq, Quotient.map_mk']
+  rw [Quotient.finChoice_eq, Quotient.map_mk]
 #align first_order.language.fun_map_quotient_mk FirstOrder.Language.funMap_quotient_mk'
 
 theorem relMap_quotient_mk' {n : ℕ} (r : L.Relations n) (x : Fin n → M) :
@@ -71,7 +71,7 @@ theorem relMap_quotient_mk' {n : ℕ} (r : L.Relations n) (x : Fin n → M) :
   change
     Quotient.lift (@rel_map L M ps.to_structure n r) prestructure.rel_equiv (Quotient.finChoice _) ↔
       _
-  rw [Quotient.finChoice_eq, Quotient.lift_mk']
+  rw [Quotient.finChoice_eq, Quotient.lift_mk]
 #align first_order.language.rel_map_quotient_mk FirstOrder.Language.relMap_quotient_mk'
 
 theorem Term.realize_quotient_mk' {β : Type _} (t : L.term β) (x : β → M) :

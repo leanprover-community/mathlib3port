@@ -91,7 +91,7 @@ open Format
 unsafe instance : has_to_tactic_format projection_data :=
   ⟨fun ⟨a, b, c, d, e⟩ =>
     (fun x =>
-        group <|
+        Group <|
           nest 1 <|
             to_fmt "⟨" ++ to_fmt a ++ to_fmt "," ++ line ++ x ++ to_fmt "," ++ line ++ to_fmt c ++
                           to_fmt "," ++
@@ -105,7 +105,7 @@ unsafe instance : has_to_tactic_format projection_data :=
 
 unsafe instance : has_to_format parsed_projection_data :=
   ⟨fun ⟨a, b, c, d⟩ =>
-    group <|
+    Group <|
       nest 1 <|
         to_fmt "⟨" ++ to_fmt a ++ to_fmt "," ++ line ++ to_fmt b ++ to_fmt "," ++ line ++
                   to_fmt c ++

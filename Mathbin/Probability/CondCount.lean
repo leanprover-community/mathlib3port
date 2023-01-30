@@ -129,7 +129,7 @@ theorem pred_true_of_condCount_eq_one (h : condCount s t = 1) : s ⊆ t :=
     finite_of_cond_count_ne_zero
       (by
         rw [h]
-        exact one_neZero)
+        exact one_ne_zero)
   rw [cond_count, cond_apply _ hsf.measurable_set, mul_comm] at h
   replace h := Ennreal.eq_inv_of_mul_eq_one_left h
   rw [inv_inv, measure.count_apply_finite _ hsf, measure.count_apply_finite _ (hsf.inter_of_left _),

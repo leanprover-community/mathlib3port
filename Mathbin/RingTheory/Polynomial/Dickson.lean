@@ -251,7 +251,7 @@ theorem dickson_one_one_zMod_p (p : ℕ) [Fact p.Prime] : dickson 1 (1 : ZMod p)
         intro H
         have : φ.eval 0 = 0 := by rw [H, eval_zero]
         simpa [eval_X, eval_one, eval_pow, eval_sub, sub_zero, eval_add, eval_mul, mul_zero, sq,
-          zero_add, one_neZero]
+          zero_add, one_ne_zero]
       classical
         convert (φ.roots ∪ {0}).toFinset.finite_to_set using 1
         ext1 y
@@ -270,7 +270,7 @@ theorem dickson_one_one_zMod_p (p : ℕ) [Fact p.Prime] : dickson 1 (1 : ZMod p)
       simp only [exists_prop, Set.mem_unionᵢ, Set.bind_def, Ne.def, Set.mem_setOf_eq]
       by_cases hx : x = 0
       · simp only [hx, and_true_iff, eq_self_iff_true, inv_zero, or_true_iff]
-        exact ⟨_, 1, rfl, one_neZero⟩
+        exact ⟨_, 1, rfl, one_ne_zero⟩
       · simp only [hx, or_false_iff, exists_eq_right]
         exact ⟨_, rfl, hx⟩
 #align polynomial.dickson_one_one_zmod_p Polynomial.dickson_one_one_zMod_p

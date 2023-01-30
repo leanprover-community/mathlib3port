@@ -49,7 +49,7 @@ def map₂ (m : α → β → γ) (f : Filter α) (g : Filter β) : Filter γ
   sets := { s | ∃ u v, u ∈ f ∧ v ∈ g ∧ image2 m u v ⊆ s }
   univ_sets := ⟨univ, univ, univ_sets _, univ_sets _, subset_univ _⟩
   sets_of_superset s t hs hst :=
-    Exists₂Cat.imp (fun u v => And.imp_right <| And.imp_right fun h => Subset.trans h hst) hs
+    Exists₂.imp (fun u v => And.imp_right <| And.imp_right fun h => Subset.trans h hst) hs
   inter_sets s t := by
     simp only [exists_prop, mem_set_of_eq, subset_inter_iff]
     rintro ⟨s₁, s₂, hs₁, hs₂, hs⟩ ⟨t₁, t₂, ht₁, ht₂, ht⟩
@@ -405,7 +405,7 @@ def map₃ (m : α → β → γ → δ) (f : Filter α) (g : Filter β) (h : Fi
   sets := { s | ∃ u v w, u ∈ f ∧ v ∈ g ∧ w ∈ h ∧ image3 m u v w ⊆ s }
   univ_sets := ⟨univ, univ, univ, univ_sets _, univ_sets _, univ_sets _, subset_univ _⟩
   sets_of_superset s t hs hst :=
-    Exists₃Cat.imp
+    Exists₃.imp
       (fun u v w => And.imp_right <| And.imp_right <| And.imp_right fun h => Subset.trans h hst) hs
   inter_sets s t := by
     simp only [exists_prop, mem_set_of_eq, subset_inter_iff]

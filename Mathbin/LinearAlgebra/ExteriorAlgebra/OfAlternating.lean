@@ -151,7 +151,7 @@ theorem liftAlternating_ιMulti :
 #align exterior_algebra.lift_alternating_ι_multi ExteriorAlgebra.liftAlternating_ιMulti
 
 /-- `exterior_algebra.lift_alternating` is an equivalence. -/
-@[simps apply symmApply]
+@[simps apply symm_apply]
 def liftAlternatingEquiv : (∀ i, AlternatingMap R M N (Fin i)) ≃ₗ[R] ExteriorAlgebra R M →ₗ[R] N
     where
   toFun := liftAlternating

@@ -124,7 +124,7 @@ theorem coe_of_repr (e : M ≃ₗ[R] ι →₀ R) : ⇑(of_repr e) = fun i => e.
 #align basis.coe_of_repr Basis.coe_of_repr
 
 protected theorem injective [Nontrivial R] : Injective b :=
-  b.repr.symm.Injective.comp fun _ _ => (Finsupp.single_left_inj (one_neZero : (1 : R) ≠ 0)).mp
+  b.repr.symm.Injective.comp fun _ _ => (Finsupp.single_left_inj (one_ne_zero : (1 : R) ≠ 0)).mp
 #align basis.injective Basis.injective
 
 theorem repr_symm_single_one : b.repr.symm (Finsupp.single i 1) = b i :=
@@ -804,7 +804,7 @@ theorem eq_bot_of_rank_eq_zero [NoZeroDivisors R] (b : Basis ι R M) (N : Submod
   rw [Submodule.eq_bot_iff]
   intro x hx
   contrapose! rank_eq with x_ne
-  refine' ⟨1, fun _ => ⟨x, hx⟩, _, one_neZero⟩
+  refine' ⟨1, fun _ => ⟨x, hx⟩, _, one_ne_zero⟩
   rw [Fintype.linearIndependent_iff]
   rintro g sum_eq i
   cases i
@@ -1121,7 +1121,7 @@ theorem maximal [Nontrivial R] (b : Basis ι R M) : b.LinearIndependent.Maximal 
     ((b.repr x).Sum fun (i : ι) (a : R) => (fun (x : w) (r : R) => r • (x : M)) (u i) a) =
       ((⟨x, p⟩ : w) : M) at
     e
-  rw [← Finsupp.sum_emb_domain, ← Finsupp.total_apply] at e
+  rw [← Finsupp.sum_embDomain, ← Finsupp.total_apply] at e
   -- Now we can contradict the linear independence of `hi`
   refine' hi.total_ne_of_not_mem_support _ _ e
   simp only [Finset.mem_map, Finsupp.support_embDomain]

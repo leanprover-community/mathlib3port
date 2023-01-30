@@ -135,7 +135,7 @@ theorem bot_eq_empty : (⊥ : Set α) = ∅ :=
 lean 3 declaration is
   forall {α : Type.{u1}}, Eq.{succ u1} ((Set.{u1} α) -> (Set.{u1} α) -> (Set.{u1} α)) (HasSup.sup.{u1} (Set.{u1} α) (SemilatticeSup.toHasSup.{u1} (Set.{u1} α) (Lattice.toSemilatticeSup.{u1} (Set.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} α) (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))))))) (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α))
 but is expected to have type
-  forall {α : Type.{u1}}, Eq.{succ u1} ((Set.{u1} α) -> (Set.{u1} α) -> (Set.{u1} α)) (fun (x._@.Mathlib.Data.Set.Basic._hyg.336 : Set.{u1} α) (x._@.Mathlib.Data.Set.Basic._hyg.338 : Set.{u1} α) => HasSup.sup.{u1} (Set.{u1} α) (SemilatticeSup.toHasSup.{u1} (Set.{u1} α) (Lattice.toSemilatticeSup.{u1} (Set.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} α) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} α) (BiheytingAlgebra.toCoheytingAlgebra.{u1} (Set.{u1} α) (BooleanAlgebra.toBiheytingAlgebra.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α))))))) x._@.Mathlib.Data.Set.Basic._hyg.336 x._@.Mathlib.Data.Set.Basic._hyg.338) (fun (x._@.Mathlib.Data.Set.Basic._hyg.351 : Set.{u1} α) (x._@.Mathlib.Data.Set.Basic._hyg.353 : Set.{u1} α) => Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) x._@.Mathlib.Data.Set.Basic._hyg.351 x._@.Mathlib.Data.Set.Basic._hyg.353)
+  forall {α : Type.{u1}}, Eq.{succ u1} ((Set.{u1} α) -> (Set.{u1} α) -> (Set.{u1} α)) (fun (x._@.Mathlib.Data.Set.Basic._hyg.334 : Set.{u1} α) (x._@.Mathlib.Data.Set.Basic._hyg.336 : Set.{u1} α) => HasSup.sup.{u1} (Set.{u1} α) (SemilatticeSup.toHasSup.{u1} (Set.{u1} α) (Lattice.toSemilatticeSup.{u1} (Set.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} α) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} α) (BiheytingAlgebra.toCoheytingAlgebra.{u1} (Set.{u1} α) (BooleanAlgebra.toBiheytingAlgebra.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α))))))) x._@.Mathlib.Data.Set.Basic._hyg.334 x._@.Mathlib.Data.Set.Basic._hyg.336) (fun (x._@.Mathlib.Data.Set.Basic._hyg.349 : Set.{u1} α) (x._@.Mathlib.Data.Set.Basic._hyg.351 : Set.{u1} α) => Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) x._@.Mathlib.Data.Set.Basic._hyg.349 x._@.Mathlib.Data.Set.Basic._hyg.351)
 Case conversion may be inaccurate. Consider using '#align set.sup_eq_union Set.sup_eq_unionₓ'. -/
 @[simp]
 theorem sup_eq_union : ((· ⊔ ·) : Set α → Set α → Set α) = (· ∪ ·) :=
@@ -146,7 +146,7 @@ theorem sup_eq_union : ((· ⊔ ·) : Set α → Set α → Set α) = (· ∪ ·
 lean 3 declaration is
   forall {α : Type.{u1}}, Eq.{succ u1} ((Set.{u1} α) -> (Set.{u1} α) -> (Set.{u1} α)) (HasInf.inf.{u1} (Set.{u1} α) (SemilatticeInf.toHasInf.{u1} (Set.{u1} α) (Lattice.toSemilatticeInf.{u1} (Set.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} α) (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))))))) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α))
 but is expected to have type
-  forall {α : Type.{u1}}, Eq.{succ u1} ((Set.{u1} α) -> (Set.{u1} α) -> (Set.{u1} α)) (fun (x._@.Mathlib.Data.Set.Basic._hyg.388 : Set.{u1} α) (x._@.Mathlib.Data.Set.Basic._hyg.390 : Set.{u1} α) => HasInf.inf.{u1} (Set.{u1} α) (Lattice.toHasInf.{u1} (Set.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} α) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} α) (BiheytingAlgebra.toCoheytingAlgebra.{u1} (Set.{u1} α) (BooleanAlgebra.toBiheytingAlgebra.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)))))) x._@.Mathlib.Data.Set.Basic._hyg.388 x._@.Mathlib.Data.Set.Basic._hyg.390) (fun (x._@.Mathlib.Data.Set.Basic._hyg.403 : Set.{u1} α) (x._@.Mathlib.Data.Set.Basic._hyg.405 : Set.{u1} α) => Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) x._@.Mathlib.Data.Set.Basic._hyg.403 x._@.Mathlib.Data.Set.Basic._hyg.405)
+  forall {α : Type.{u1}}, Eq.{succ u1} ((Set.{u1} α) -> (Set.{u1} α) -> (Set.{u1} α)) (fun (x._@.Mathlib.Data.Set.Basic._hyg.386 : Set.{u1} α) (x._@.Mathlib.Data.Set.Basic._hyg.388 : Set.{u1} α) => HasInf.inf.{u1} (Set.{u1} α) (Lattice.toHasInf.{u1} (Set.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} α) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} α) (BiheytingAlgebra.toCoheytingAlgebra.{u1} (Set.{u1} α) (BooleanAlgebra.toBiheytingAlgebra.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)))))) x._@.Mathlib.Data.Set.Basic._hyg.386 x._@.Mathlib.Data.Set.Basic._hyg.388) (fun (x._@.Mathlib.Data.Set.Basic._hyg.401 : Set.{u1} α) (x._@.Mathlib.Data.Set.Basic._hyg.403 : Set.{u1} α) => Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) x._@.Mathlib.Data.Set.Basic._hyg.401 x._@.Mathlib.Data.Set.Basic._hyg.403)
 Case conversion may be inaccurate. Consider using '#align set.inf_eq_inter Set.inf_eq_interₓ'. -/
 @[simp]
 theorem inf_eq_inter : ((· ⊓ ·) : Set α → Set α → Set α) = (· ∩ ·) :=
@@ -164,7 +164,7 @@ theorem le_eq_subset : ((· ≤ ·) : Set α → Set α → Prop) = (· ⊆ ·) 
 lean 3 declaration is
   forall {α : Type.{u1}}, Eq.{succ u1} ((Set.{u1} α) -> (Set.{u1} α) -> Prop) (LT.lt.{u1} (Set.{u1} α) (Preorder.toLT.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (Lattice.toSemilatticeInf.{u1} (Set.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} α) (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))))))))) (HasSSubset.SSubset.{u1} (Set.{u1} α) (Set.hasSsubset.{u1} α))
 but is expected to have type
-  forall {α : Type.{u1}}, Eq.{succ u1} ((Set.{u1} α) -> (Set.{u1} α) -> Prop) (fun (x._@.Mathlib.Data.Set.Basic._hyg.490 : Set.{u1} α) (x._@.Mathlib.Data.Set.Basic._hyg.492 : Set.{u1} α) => LT.lt.{u1} (Set.{u1} α) (Preorder.toLT.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (Lattice.toSemilatticeInf.{u1} (Set.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} α) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} α) (BiheytingAlgebra.toCoheytingAlgebra.{u1} (Set.{u1} α) (BooleanAlgebra.toBiheytingAlgebra.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α))))))))) x._@.Mathlib.Data.Set.Basic._hyg.490 x._@.Mathlib.Data.Set.Basic._hyg.492) (fun (x._@.Mathlib.Data.Set.Basic._hyg.505 : Set.{u1} α) (x._@.Mathlib.Data.Set.Basic._hyg.507 : Set.{u1} α) => HasSSubset.SSubset.{u1} (Set.{u1} α) (Set.instHasSSubsetSet.{u1} α) x._@.Mathlib.Data.Set.Basic._hyg.505 x._@.Mathlib.Data.Set.Basic._hyg.507)
+  forall {α : Type.{u1}}, Eq.{succ u1} ((Set.{u1} α) -> (Set.{u1} α) -> Prop) (fun (x._@.Mathlib.Data.Set.Basic._hyg.488 : Set.{u1} α) (x._@.Mathlib.Data.Set.Basic._hyg.490 : Set.{u1} α) => LT.lt.{u1} (Set.{u1} α) (Preorder.toLT.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (Lattice.toSemilatticeInf.{u1} (Set.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} α) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} α) (BiheytingAlgebra.toCoheytingAlgebra.{u1} (Set.{u1} α) (BooleanAlgebra.toBiheytingAlgebra.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α))))))))) x._@.Mathlib.Data.Set.Basic._hyg.488 x._@.Mathlib.Data.Set.Basic._hyg.490) (fun (x._@.Mathlib.Data.Set.Basic._hyg.503 : Set.{u1} α) (x._@.Mathlib.Data.Set.Basic._hyg.505 : Set.{u1} α) => HasSSubset.SSubset.{u1} (Set.{u1} α) (Set.instHasSSubsetSet.{u1} α) x._@.Mathlib.Data.Set.Basic._hyg.503 x._@.Mathlib.Data.Set.Basic._hyg.505)
 Case conversion may be inaccurate. Consider using '#align set.lt_eq_ssubset Set.lt_eq_ssubsetₓ'. -/
 @[simp]
 theorem lt_eq_ssubset : ((· < ·) : Set α → Set α → Prop) = (· ⊂ ·) :=
@@ -622,7 +622,7 @@ theorem nonempty_coe_sort {s : Set α} : Nonempty ↥s ↔ s.Nonempty :=
 -/
 
 alias nonempty_coe_sort ↔ _ nonempty.coe_sort
-#align set.nonempty.coe_sort Set.Nonempty.coeSort
+#align set.nonempty.coe_sort Set.Nonempty.coe_sort
 
 #print Set.nonempty_def /-
 theorem nonempty_def : s.Nonempty ↔ ∃ x, x ∈ s :=
@@ -952,8 +952,14 @@ theorem empty_ssubset : ∅ ⊂ s ↔ s.Nonempty :=
   (@bot_lt_iff_ne_bot (Set α) _ _ _).trans nonempty_iff_ne_empty.symm
 #align set.empty_ssubset Set.empty_ssubset
 
+/- warning: set.nonempty.empty_ssubset -> Set.Nonempty.empty_ssubset is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {s : Set.{u1} α}, (Set.Nonempty.{u1} α s) -> (HasSSubset.SSubset.{u1} (Set.{u1} α) (Set.hasSsubset.{u1} α) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.hasEmptyc.{u1} α)) s)
+but is expected to have type
+  forall {α : Type.{u1}} {s : Set.{u1} α}, (Set.Nonempty.{u1} α s) -> (HasSSubset.SSubset.{u1} (Set.{u1} α) (Set.instHasSSubsetSet.{u1} α) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.instEmptyCollectionSet.{u1} α)) s)
+Case conversion may be inaccurate. Consider using '#align set.nonempty.empty_ssubset Set.Nonempty.empty_ssubsetₓ'. -/
 alias empty_ssubset ↔ _ nonempty.empty_ssubset
-#align set.nonempty.empty_ssubset Set.Nonempty.empty_sSubset
+#align set.nonempty.empty_ssubset Set.Nonempty.empty_ssubset
 
 /-!
 
@@ -1196,7 +1202,7 @@ theorem union_assoc (a b c : Set α) : a ∪ b ∪ c = a ∪ (b ∪ c) :=
 lean 3 declaration is
   forall {α : Type.{u1}}, IsAssociative.{u1} (Set.{u1} α) (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α))
 but is expected to have type
-  forall {α : Type.{u1}}, IsAssociative.{u1} (Set.{u1} α) (fun (x._@.Mathlib.Data.Set.Basic._hyg.8002 : Set.{u1} α) (x._@.Mathlib.Data.Set.Basic._hyg.8004 : Set.{u1} α) => Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) x._@.Mathlib.Data.Set.Basic._hyg.8002 x._@.Mathlib.Data.Set.Basic._hyg.8004)
+  forall {α : Type.{u1}}, IsAssociative.{u1} (Set.{u1} α) (fun (x._@.Mathlib.Data.Set.Basic._hyg.7936 : Set.{u1} α) (x._@.Mathlib.Data.Set.Basic._hyg.7938 : Set.{u1} α) => Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) x._@.Mathlib.Data.Set.Basic._hyg.7936 x._@.Mathlib.Data.Set.Basic._hyg.7938)
 Case conversion may be inaccurate. Consider using '#align set.union_is_assoc Set.union_isAssocₓ'. -/
 instance union_isAssoc : IsAssociative (Set α) (· ∪ ·) :=
   ⟨union_assoc⟩
@@ -1206,7 +1212,7 @@ instance union_isAssoc : IsAssociative (Set α) (· ∪ ·) :=
 lean 3 declaration is
   forall {α : Type.{u1}}, IsCommutative.{u1} (Set.{u1} α) (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α))
 but is expected to have type
-  forall {α : Type.{u1}}, IsCommutative.{u1} (Set.{u1} α) (fun (x._@.Mathlib.Data.Set.Basic._hyg.8047 : Set.{u1} α) (x._@.Mathlib.Data.Set.Basic._hyg.8049 : Set.{u1} α) => Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) x._@.Mathlib.Data.Set.Basic._hyg.8047 x._@.Mathlib.Data.Set.Basic._hyg.8049)
+  forall {α : Type.{u1}}, IsCommutative.{u1} (Set.{u1} α) (fun (x._@.Mathlib.Data.Set.Basic._hyg.7981 : Set.{u1} α) (x._@.Mathlib.Data.Set.Basic._hyg.7983 : Set.{u1} α) => Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) x._@.Mathlib.Data.Set.Basic._hyg.7981 x._@.Mathlib.Data.Set.Basic._hyg.7983)
 Case conversion may be inaccurate. Consider using '#align set.union_is_comm Set.union_isCommₓ'. -/
 instance union_isComm : IsCommutative (Set α) (· ∪ ·) :=
   ⟨union_comm⟩
@@ -1549,7 +1555,7 @@ theorem inter_assoc (a b c : Set α) : a ∩ b ∩ c = a ∩ (b ∩ c) :=
 lean 3 declaration is
   forall {α : Type.{u1}}, IsAssociative.{u1} (Set.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α))
 but is expected to have type
-  forall {α : Type.{u1}}, IsAssociative.{u1} (Set.{u1} α) (fun (x._@.Mathlib.Data.Set.Basic._hyg.9710 : Set.{u1} α) (x._@.Mathlib.Data.Set.Basic._hyg.9712 : Set.{u1} α) => Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) x._@.Mathlib.Data.Set.Basic._hyg.9710 x._@.Mathlib.Data.Set.Basic._hyg.9712)
+  forall {α : Type.{u1}}, IsAssociative.{u1} (Set.{u1} α) (fun (x._@.Mathlib.Data.Set.Basic._hyg.9578 : Set.{u1} α) (x._@.Mathlib.Data.Set.Basic._hyg.9580 : Set.{u1} α) => Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) x._@.Mathlib.Data.Set.Basic._hyg.9578 x._@.Mathlib.Data.Set.Basic._hyg.9580)
 Case conversion may be inaccurate. Consider using '#align set.inter_is_assoc Set.inter_isAssocₓ'. -/
 instance inter_isAssoc : IsAssociative (Set α) (· ∩ ·) :=
   ⟨inter_assoc⟩
@@ -1559,7 +1565,7 @@ instance inter_isAssoc : IsAssociative (Set α) (· ∩ ·) :=
 lean 3 declaration is
   forall {α : Type.{u1}}, IsCommutative.{u1} (Set.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α))
 but is expected to have type
-  forall {α : Type.{u1}}, IsCommutative.{u1} (Set.{u1} α) (fun (x._@.Mathlib.Data.Set.Basic._hyg.9755 : Set.{u1} α) (x._@.Mathlib.Data.Set.Basic._hyg.9757 : Set.{u1} α) => Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) x._@.Mathlib.Data.Set.Basic._hyg.9755 x._@.Mathlib.Data.Set.Basic._hyg.9757)
+  forall {α : Type.{u1}}, IsCommutative.{u1} (Set.{u1} α) (fun (x._@.Mathlib.Data.Set.Basic._hyg.9623 : Set.{u1} α) (x._@.Mathlib.Data.Set.Basic._hyg.9625 : Set.{u1} α) => Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) x._@.Mathlib.Data.Set.Basic._hyg.9623 x._@.Mathlib.Data.Set.Basic._hyg.9625)
 Case conversion may be inaccurate. Consider using '#align set.inter_is_comm Set.inter_isCommₓ'. -/
 instance inter_isComm : IsCommutative (Set α) (· ∩ ·) :=
   ⟨inter_comm⟩
@@ -2563,7 +2569,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.ssubset_singleton_iff Set.ssubset_singleton_iffₓ'. -/
 theorem ssubset_singleton_iff {s : Set α} {x : α} : s ⊂ {x} ↔ s = ∅ :=
   by
-  rw [sSubset_iff_subset_ne, subset_singleton_iff_eq, or_and_right, and_not_self_iff, or_false_iff,
+  rw [ssubset_iff_subset_ne, subset_singleton_iff_eq, or_and_right, and_not_self_iff, or_false_iff,
     and_iff_left_iff_imp]
   exact fun h => ne_of_eq_of_ne h (singleton_ne_empty _).symm
 #align set.ssubset_singleton_iff Set.ssubset_singleton_iff
@@ -4717,7 +4723,7 @@ theorem nontrivial_coe_sort {s : Set α} : Nontrivial s ↔ s.Nontrivial := by
 -/
 
 alias nontrivial_coe_sort ↔ _ nontrivial.coe_sort
-#align set.nontrivial.coe_sort Set.Nontrivial.coeSort
+#align set.nontrivial.coe_sort Set.Nontrivial.coe_sort
 
 #print Set.nontrivial_of_nontrivial_coe /-
 /-- A type with a set `s` whose `coe_sort` is a nontrivial type is nontrivial.

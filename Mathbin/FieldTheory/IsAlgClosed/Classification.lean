@@ -60,7 +60,7 @@ theorem cardinal_mk_le_sigma_polynomial :
     fun x y => by
     intro h
     simp only at h
-    refine' (Subtype.hEq_iff_coe_eq _).1 h.2
+    refine' (Subtype.heq_iff_coe_eq _).1 h.2
     simp only [h.1, iff_self_iff, forall_true_iff]
 #align algebra.is_algebraic.cardinal_mk_le_sigma_polynomial Algebra.IsAlgebraic.cardinal_mk_le_sigma_polynomial
 

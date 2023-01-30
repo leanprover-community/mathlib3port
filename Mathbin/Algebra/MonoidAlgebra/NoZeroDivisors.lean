@@ -109,14 +109,14 @@ theorem NoZeroDivisors.of_left_ordered [NoZeroDivisors R] [AddRightCancelSemigro
           apply Finset.mem_erase_of_ne_of_mem
           · simpa only [Ne.def, add_left_inj]
           · rw [support_mul_single _ _ (fun y => by rw [mul_one] : ∀ y : R, y * 1 = 0 ↔ _)]
-            simpa only [Finset.mem_map, add_right_embedding_apply, add_left_inj, exists_prop,
+            simpa only [Finset.mem_map, addRightEmbedding_apply, add_left_inj, exists_prop,
               exists_eq_right]
         · haveI : CovariantClass A A (· + ·) (· ≤ ·) := Add.to_covariantClass_left A
           exact add_le_add_left (Finset.min'_le _ _ cg) _
       · refine' lt_of_le_of_lt (_ : _ ≤ b + gmin) _
         · apply Finset.min'_le
           rw [support_mul_single _ _ (fun y => by rw [mul_one] : ∀ y : R, y * 1 = 0 ↔ _)]
-          simp only [bf, Finset.mem_map, add_right_embedding_apply, add_left_inj, exists_prop,
+          simp only [bf, Finset.mem_map, addRightEmbedding_apply, add_left_inj, exists_prop,
             exists_eq_right]
         · refine' add_lt_add_left _ _
           exact Finset.min'_lt_of_mem_erase_min' _ _ (finset.mem_erase.mpr ⟨hc, cg⟩)⟩
@@ -145,7 +145,7 @@ theorem NoZeroDivisors.of_right_ordered [NoZeroDivisors R] [AddLeftCancelSemigro
       · refine' lt_of_le_of_lt (_ : _ ≤ fmin + c) _
         · apply Finset.min'_le
           rw [support_single_mul _ _ (fun y => by rw [one_mul] : ∀ y : R, 1 * y = 0 ↔ _)]
-          simp only [cg, Finset.mem_map, add_left_embedding_apply, add_right_inj, exists_prop,
+          simp only [cg, Finset.mem_map, addLeftEmbedding_apply, add_right_inj, exists_prop,
             exists_eq_right]
         · refine' add_lt_add_right _ _
           exact Finset.min'_lt_of_mem_erase_min' _ _ (finset.mem_erase.mpr ⟨hb, bf⟩)
@@ -155,7 +155,7 @@ theorem NoZeroDivisors.of_right_ordered [NoZeroDivisors R] [AddLeftCancelSemigro
           apply Finset.mem_erase_of_ne_of_mem
           · simpa only [Ne.def, add_right_inj]
           · rw [support_single_mul _ _ (fun y => by rw [one_mul] : ∀ y : R, 1 * y = 0 ↔ _)]
-            simpa only [Finset.mem_map, add_left_embedding_apply, add_right_inj, exists_prop,
+            simpa only [Finset.mem_map, addLeftEmbedding_apply, add_right_inj, exists_prop,
               exists_eq_right]
         · haveI : CovariantClass A A (Function.swap (· + ·)) (· ≤ ·) :=
             Add.to_covariantClass_right A

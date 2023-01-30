@@ -104,7 +104,7 @@ theorem isAddFundamentalDomainOfAeBall (I : Set <| AddCircle T) (u x : AddCircle
     simp_rw [measure_vadd]
     rw [AddCircle.measure_univ, tsum_fintype, Finset.sum_const, measure_congr hI,
       volume_closed_ball, ← Ennreal.ofReal_nsmul, mul_div, mul_div_mul_comm,
-      div_self (@two_neZero ℝ _ _ _ _), one_mul, min_eq_right (div_le_self hT.out.le hn), hG_card,
+      div_self (@two_ne_zero ℝ _ _ _ _), one_mul, min_eq_right (div_le_self hT.out.le hn), hG_card,
       nsmul_eq_mul, mul_div_cancel' T (lt_of_lt_of_le zero_lt_one hn).Ne.symm]
     exact le_refl _
 #align add_circle.is_add_fundamental_domain_of_ae_ball AddCircle.isAddFundamentalDomainOfAeBall

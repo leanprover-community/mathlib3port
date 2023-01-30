@@ -758,7 +758,7 @@ theorem reflection_eq_self_iff (x : E) : reflection K x = x ↔ x ∈ K :=
   rw [← orthogonalProjection_eq_self_iff, reflection_apply, sub_eq_iff_eq_add', ← two_smul 𝕜, ←
     two_smul' 𝕜]
   refine' (smul_right_injective E _).eq_iff
-  exact two_neZero
+  exact two_ne_zero
 #align reflection_eq_self_iff reflection_eq_self_iff
 
 theorem reflection_mem_subspace_eq_self {x : E} (hx : x ∈ K) : reflection K x = x :=

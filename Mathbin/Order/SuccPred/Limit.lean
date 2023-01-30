@@ -248,7 +248,7 @@ theorem isSuccLimitRecOn_succ' (hs : ∀ a, ¬IsMax a → C (succ a)) (hl : ∀ 
   have hb' := not_is_succ_limit_succ_of_not_is_max hb
   have H := Classical.choose_spec (not_is_succ_limit_iff.1 hb')
   rw [is_succ_limit_rec_on]
-  simp only [cast_eq_iff_hEq, hb', not_false_iff, eq_mpr_eq_cast, dif_neg]
+  simp only [cast_eq_iff_heq, hb', not_false_iff, eq_mpr_eq_cast, dif_neg]
   congr
   · exact (succ_eq_succ_iff_of_not_is_max H.1 hb).1 H.2
   · apply proof_irrel_hEq
@@ -360,10 +360,10 @@ theorem isPredLimit_toDual_iff : IsPredLimit (toDual a) ↔ IsSuccLimit a := by
 -/
 
 alias is_succ_limit_to_dual_iff ↔ _ is_pred_limit.dual
-#align order.is_pred_limit.dual Order.IsPredLimit.dual
+#align order.is_pred_limit.dual Order.isPredLimit.dual
 
 alias is_pred_limit_to_dual_iff ↔ _ is_succ_limit.dual
-#align order.is_succ_limit.dual Order.IsSuccLimit.dual
+#align order.is_succ_limit.dual Order.isSuccLimit.dual
 
 end LT
 

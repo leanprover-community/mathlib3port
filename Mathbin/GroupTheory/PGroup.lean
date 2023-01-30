@@ -225,7 +225,7 @@ theorem card_modEq_card_fixedPoints [Fintype (fixedPoints G α)] :
                   Nat.cast_zero]))))
     exact
       ⟨⟨b, mem_fixed_points_iff_card_orbit_eq_one.2 <| by rw [hk, this, pow_zero]⟩,
-        Finset.mem_univ _, ne_of_eq_of_ne Nat.cast_one one_neZero, rfl⟩
+        Finset.mem_univ _, ne_of_eq_of_ne Nat.cast_one one_ne_zero, rfl⟩
 #align is_p_group.card_modeq_card_fixed_points IsPGroup.card_modEq_card_fixedPoints
 
 /-- If a p-group acts on `α` and the cardinality of `α` is not a multiple

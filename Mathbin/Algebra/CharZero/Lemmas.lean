@@ -96,7 +96,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align add_self_eq_zero add_self_eq_zeroₓ'. -/
 @[simp]
 theorem add_self_eq_zero {a : R} : a + a = 0 ↔ a = 0 := by
-  simp only [(two_mul a).symm, mul_eq_zero, two_neZero, false_or_iff]
+  simp only [(two_mul a).symm, mul_eq_zero, two_ne_zero, false_or_iff]
 #align add_self_eq_zero add_self_eq_zero
 
 /- warning: bit0_eq_zero -> bit0_eq_zero is a dubious translation:
@@ -201,7 +201,7 @@ theorem bit0_injective : Function.Injective (bit0 : R → R) := fun a b h =>
   by
   dsimp [bit0] at h
   simp only [(two_mul a).symm, (two_mul b).symm] at h
-  refine' nat_mul_inj' _ two_neZero
+  refine' nat_mul_inj' _ two_ne_zero
   exact_mod_cast h
 #align bit0_injective bit0_injective
 
@@ -276,7 +276,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : DivisionRing.{u1} R] [_inst_2 : CharZero.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (Ring.toAddGroupWithOne.{u1} R (DivisionRing.toRing.{u1} R _inst_1)))] (a : R), Eq.{succ u1} R (HDiv.hDiv.{u1, u1, u1} R R R (instHDiv.{u1} R (DivisionRing.toDiv.{u1} R _inst_1)) (HAdd.hAdd.{u1, u1, u1} R R R (instHAdd.{u1} R (Distrib.toAdd.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (DivisionRing.toRing.{u1} R _inst_1))))))) a a) (OfNat.ofNat.{u1} R 2 (instOfNat.{u1} R 2 (NonAssocRing.toNatCast.{u1} R (Ring.toNonAssocRing.{u1} R (DivisionRing.toRing.{u1} R _inst_1))) (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))))) a
 Case conversion may be inaccurate. Consider using '#align half_add_self half_add_selfₓ'. -/
 @[simp]
-theorem half_add_self (a : R) : (a + a) / 2 = a := by rw [← mul_two, mul_div_cancel a two_neZero]
+theorem half_add_self (a : R) : (a + a) / 2 = a := by rw [← mul_two, mul_div_cancel a two_ne_zero]
 #align half_add_self half_add_self
 
 /- warning: add_halves' -> add_halves' is a dubious translation:
@@ -327,18 +327,18 @@ but is expected to have type
   forall {R : Type.{u2}} {S : Type.{u1}} [_inst_1 : NonAssocSemiring.{u2} R] [_inst_2 : NonAssocSemiring.{u1} S], (RingHom.{u2, u1} R S _inst_1 _inst_2) -> (forall [hS : CharZero.{u1} S (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} S (NonAssocSemiring.toAddCommMonoidWithOne.{u1} S _inst_2))], CharZero.{u2} R (AddCommMonoidWithOne.toAddMonoidWithOne.{u2} R (NonAssocSemiring.toAddCommMonoidWithOne.{u2} R _inst_1)))
 Case conversion may be inaccurate. Consider using '#align ring_hom.char_zero RingHom.charZeroₓ'. -/
 theorem RingHom.charZero (ϕ : R →+* S) [hS : CharZero S] : CharZero R :=
-  ⟨fun a b h => CharZero.cast_injective (by rw [← map_nat_cast ϕ, ← map_nat_cast ϕ, h])⟩
+  ⟨fun a b h => CharZero.cast_injective (by rw [← map_natCast ϕ, ← map_natCast ϕ, h])⟩
 #align ring_hom.char_zero RingHom.charZero
 
 /- warning: ring_hom.char_zero_iff -> RingHom.charZero_iff is a dubious translation:
 lean 3 declaration is
   forall {R : Type.{u1}} {S : Type.{u2}} [_inst_1 : NonAssocSemiring.{u1} R] [_inst_2 : NonAssocSemiring.{u2} S] {ϕ : RingHom.{u1, u2} R S _inst_1 _inst_2}, (Function.Injective.{succ u1, succ u2} R S (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (RingHom.{u1, u2} R S _inst_1 _inst_2) (fun (_x : RingHom.{u1, u2} R S _inst_1 _inst_2) => R -> S) (RingHom.hasCoeToFun.{u1, u2} R S _inst_1 _inst_2) ϕ)) -> (Iff (CharZero.{u1} R (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} R (NonAssocSemiring.toAddCommMonoidWithOne.{u1} R _inst_1))) (CharZero.{u2} S (AddCommMonoidWithOne.toAddMonoidWithOne.{u2} S (NonAssocSemiring.toAddCommMonoidWithOne.{u2} S _inst_2))))
 but is expected to have type
-  forall {R : Type.{u2}} {S : Type.{u1}} [_inst_1 : NonAssocSemiring.{u2} R] [_inst_2 : NonAssocSemiring.{u1} S] {ϕ : RingHom.{u2, u1} R S _inst_1 _inst_2}, (Function.Injective.{succ u2, succ u1} R S (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (RingHom.{u2, u1} R S _inst_1 _inst_2) R (fun (_x : R) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : R) => S) _x) (MulHomClass.toFunLike.{max u2 u1, u2, u1} (RingHom.{u2, u1} R S _inst_1 _inst_2) R S (NonUnitalNonAssocSemiring.toMul.{u2} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} R _inst_1)) (NonUnitalNonAssocSemiring.toMul.{u1} S (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} S _inst_2)) (NonUnitalRingHomClass.toMulHomClass.{max u2 u1, u2, u1} (RingHom.{u2, u1} R S _inst_1 _inst_2) R S (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} S _inst_2) (RingHomClass.toNonUnitalRingHomClass.{max u2 u1, u2, u1} (RingHom.{u2, u1} R S _inst_1 _inst_2) R S _inst_1 _inst_2 (RingHom.instRingHomClassRingHom.{u2, u1} R S _inst_1 _inst_2)))) ϕ)) -> (Iff (CharZero.{u2} R (AddCommMonoidWithOne.toAddMonoidWithOne.{u2} R (NonAssocSemiring.toAddCommMonoidWithOne.{u2} R _inst_1))) (CharZero.{u1} S (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} S (NonAssocSemiring.toAddCommMonoidWithOne.{u1} S _inst_2))))
+  forall {R : Type.{u2}} {S : Type.{u1}} [_inst_1 : NonAssocSemiring.{u2} R] [_inst_2 : NonAssocSemiring.{u1} S] {ϕ : RingHom.{u2, u1} R S _inst_1 _inst_2}, (Function.Injective.{succ u2, succ u1} R S (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (RingHom.{u2, u1} R S _inst_1 _inst_2) R (fun (_x : R) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : R) => S) _x) (MulHomClass.toFunLike.{max u2 u1, u2, u1} (RingHom.{u2, u1} R S _inst_1 _inst_2) R S (NonUnitalNonAssocSemiring.toMul.{u2} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} R _inst_1)) (NonUnitalNonAssocSemiring.toMul.{u1} S (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} S _inst_2)) (NonUnitalRingHomClass.toMulHomClass.{max u2 u1, u2, u1} (RingHom.{u2, u1} R S _inst_1 _inst_2) R S (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} S _inst_2) (RingHomClass.toNonUnitalRingHomClass.{max u2 u1, u2, u1} (RingHom.{u2, u1} R S _inst_1 _inst_2) R S _inst_1 _inst_2 (RingHom.instRingHomClassRingHom.{u2, u1} R S _inst_1 _inst_2)))) ϕ)) -> (Iff (CharZero.{u2} R (AddCommMonoidWithOne.toAddMonoidWithOne.{u2} R (NonAssocSemiring.toAddCommMonoidWithOne.{u2} R _inst_1))) (CharZero.{u1} S (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} S (NonAssocSemiring.toAddCommMonoidWithOne.{u1} S _inst_2))))
 Case conversion may be inaccurate. Consider using '#align ring_hom.char_zero_iff RingHom.charZero_iffₓ'. -/
 theorem RingHom.charZero_iff {ϕ : R →+* S} (hϕ : Function.Injective ϕ) : CharZero R ↔ CharZero S :=
   ⟨fun hR =>
-    ⟨by intro a b h <;> rwa [← @Nat.cast_inj R, ← hϕ.eq_iff, map_nat_cast ϕ, map_nat_cast ϕ]⟩,
+    ⟨by intro a b h <;> rwa [← @Nat.cast_inj R, ← hϕ.eq_iff, map_natCast ϕ, map_natCast ϕ]⟩,
     fun hS => ϕ.char_zero⟩
 #align ring_hom.char_zero_iff RingHom.charZero_iff
 
@@ -346,7 +346,7 @@ theorem RingHom.charZero_iff {ϕ : R →+* S} (hϕ : Function.Injective ϕ) : Ch
 lean 3 declaration is
   forall {R : Type.{u1}} [_inst_1 : NonAssocSemiring.{u1} R] (f : RingHom.{0, u1} Nat R (Semiring.toNonAssocSemiring.{0} Nat Nat.semiring) _inst_1) [_inst_3 : CharZero.{u1} R (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} R (NonAssocSemiring.toAddCommMonoidWithOne.{u1} R _inst_1))], Function.Injective.{1, succ u1} Nat R (coeFn.{succ u1, succ u1} (RingHom.{0, u1} Nat R (Semiring.toNonAssocSemiring.{0} Nat Nat.semiring) _inst_1) (fun (_x : RingHom.{0, u1} Nat R (Semiring.toNonAssocSemiring.{0} Nat Nat.semiring) _inst_1) => Nat -> R) (RingHom.hasCoeToFun.{0, u1} Nat R (Semiring.toNonAssocSemiring.{0} Nat Nat.semiring) _inst_1) f)
 but is expected to have type
-  forall {R : Type.{u1}} [_inst_1 : NonAssocSemiring.{u1} R] (f : RingHom.{0, u1} Nat R (Semiring.toNonAssocSemiring.{0} Nat Nat.semiring) _inst_1) [_inst_3 : CharZero.{u1} R (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} R (NonAssocSemiring.toAddCommMonoidWithOne.{u1} R _inst_1))], Function.Injective.{1, succ u1} Nat R (FunLike.coe.{succ u1, 1, succ u1} (RingHom.{0, u1} Nat R (Semiring.toNonAssocSemiring.{0} Nat Nat.semiring) _inst_1) Nat (fun (_x : Nat) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : Nat) => R) _x) (MulHomClass.toFunLike.{u1, 0, u1} (RingHom.{0, u1} Nat R (Semiring.toNonAssocSemiring.{0} Nat Nat.semiring) _inst_1) Nat R (NonUnitalNonAssocSemiring.toMul.{0} Nat (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} Nat (Semiring.toNonAssocSemiring.{0} Nat Nat.semiring))) (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1)) (NonUnitalRingHomClass.toMulHomClass.{u1, 0, u1} (RingHom.{0, u1} Nat R (Semiring.toNonAssocSemiring.{0} Nat Nat.semiring) _inst_1) Nat R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} Nat (Semiring.toNonAssocSemiring.{0} Nat Nat.semiring)) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1) (RingHomClass.toNonUnitalRingHomClass.{u1, 0, u1} (RingHom.{0, u1} Nat R (Semiring.toNonAssocSemiring.{0} Nat Nat.semiring) _inst_1) Nat R (Semiring.toNonAssocSemiring.{0} Nat Nat.semiring) _inst_1 (RingHom.instRingHomClassRingHom.{0, u1} Nat R (Semiring.toNonAssocSemiring.{0} Nat Nat.semiring) _inst_1)))) f)
+  forall {R : Type.{u1}} [_inst_1 : NonAssocSemiring.{u1} R] (f : RingHom.{0, u1} Nat R (Semiring.toNonAssocSemiring.{0} Nat Nat.semiring) _inst_1) [_inst_3 : CharZero.{u1} R (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} R (NonAssocSemiring.toAddCommMonoidWithOne.{u1} R _inst_1))], Function.Injective.{1, succ u1} Nat R (FunLike.coe.{succ u1, 1, succ u1} (RingHom.{0, u1} Nat R (Semiring.toNonAssocSemiring.{0} Nat Nat.semiring) _inst_1) Nat (fun (_x : Nat) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : Nat) => R) _x) (MulHomClass.toFunLike.{u1, 0, u1} (RingHom.{0, u1} Nat R (Semiring.toNonAssocSemiring.{0} Nat Nat.semiring) _inst_1) Nat R (NonUnitalNonAssocSemiring.toMul.{0} Nat (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} Nat (Semiring.toNonAssocSemiring.{0} Nat Nat.semiring))) (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1)) (NonUnitalRingHomClass.toMulHomClass.{u1, 0, u1} (RingHom.{0, u1} Nat R (Semiring.toNonAssocSemiring.{0} Nat Nat.semiring) _inst_1) Nat R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} Nat (Semiring.toNonAssocSemiring.{0} Nat Nat.semiring)) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1) (RingHomClass.toNonUnitalRingHomClass.{u1, 0, u1} (RingHom.{0, u1} Nat R (Semiring.toNonAssocSemiring.{0} Nat Nat.semiring) _inst_1) Nat R (Semiring.toNonAssocSemiring.{0} Nat Nat.semiring) _inst_1 (RingHom.instRingHomClassRingHom.{0, u1} Nat R (Semiring.toNonAssocSemiring.{0} Nat Nat.semiring) _inst_1)))) f)
 Case conversion may be inaccurate. Consider using '#align ring_hom.injective_nat RingHom.injective_natₓ'. -/
 theorem RingHom.injective_nat (f : ℕ →+* R) [CharZero R] : Function.Injective f :=
   Subsingleton.elim (Nat.castRingHom _) f ▸ Nat.cast_injective

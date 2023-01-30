@@ -142,7 +142,7 @@ theorem linearly_dependent_of_isLocalExtrOn (hT : IsSelfAdjoint T) {x₀ : F}
   apply (InnerProductSpace.toDualMap ℝ F).Injective
   simp only [LinearIsometry.map_add, LinearIsometry.map_smul, LinearIsometry.map_zero]
   change a • innerSL x₀ + b • innerSL (T x₀) = 0
-  apply smul_right_injective (F →L[ℝ] ℝ) (two_neZero : (2 : ℝ) ≠ 0)
+  apply smul_right_injective (F →L[ℝ] ℝ) (two_ne_zero : (2 : ℝ) ≠ 0)
   simpa only [_root_.bit0, add_smul, smul_add, one_smul, add_zero] using h₂
 #align is_self_adjoint.linearly_dependent_of_is_local_extr_on IsSelfAdjoint.linearly_dependent_of_isLocalExtrOn
 

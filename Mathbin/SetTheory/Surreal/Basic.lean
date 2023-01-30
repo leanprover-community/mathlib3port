@@ -428,7 +428,7 @@ theorem one_toGame : toGame 1 = 1 :=
 
 @[simp]
 theorem nat_toGame : ∀ n : ℕ, toGame n = n :=
-  map_nat_cast' _ one_toGame
+  map_natCast' _ one_toGame
 #align surreal.nat_to_game Surreal.nat_toGame
 
 end Surreal

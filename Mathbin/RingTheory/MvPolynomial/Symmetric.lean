@@ -225,11 +225,11 @@ theorem support_esymm'' (n : ℕ) [DecidableEq σ] [Nontrivial R] :
   convert Finsupp.support_sum_eq_bunionᵢ (powerset_len n (univ : Finset σ)) _
   intro s t hst
   rw [Finset.disjoint_left]
-  simp only [Finsupp.support_single_ne_zero _ one_neZero, mem_singleton]
+  simp only [Finsupp.support_single_ne_zero _ one_ne_zero, mem_singleton]
   rintro a h rfl
   have := congr_arg Finsupp.support h
   rw [Finsupp.support_sum_eq_bunionᵢ, Finsupp.support_sum_eq_bunionᵢ] at this
-  · simp only [Finsupp.support_single_ne_zero _ one_neZero, bUnion_singleton_eq_self] at this
+  · simp only [Finsupp.support_single_ne_zero _ one_ne_zero, bUnion_singleton_eq_self] at this
     exact absurd this hst.symm
   all_goals intro x y; simp [Finsupp.support_single_disjoint]
 #align mv_polynomial.support_esymm'' MvPolynomial.support_esymm''
@@ -241,7 +241,7 @@ theorem support_esymm' (n : ℕ) [DecidableEq σ] [Nontrivial R] :
   rw [support_esymm'']
   congr
   funext
-  exact Finsupp.support_single_ne_zero _ one_neZero
+  exact Finsupp.support_single_ne_zero _ one_ne_zero
 #align mv_polynomial.support_esymm' MvPolynomial.support_esymm'
 
 theorem support_esymm (n : ℕ) [DecidableEq σ] [Nontrivial R] :

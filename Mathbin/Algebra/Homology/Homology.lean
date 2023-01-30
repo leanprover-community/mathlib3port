@@ -158,7 +158,7 @@ def ChainComplex.homologyZeroIso [HasKernels V] [HasImages V] [HasCokernels V]
           Arrow.mk (C.dTo 0) ≅ Arrow.mk (C.d 1 0))
         (Arrow.isoMk (Iso.refl _) (Iso.refl _) <| by
             simp [C.d_from_eq_zero fun h : _ = _ =>
-                one_neZero <| by rwa [ChainComplex.next_nat_zero] at h] :
+                one_ne_zero <| by rwa [ChainComplex.next_nat_zero] at h] :
           Arrow.mk (C.dFrom 0) ≅ Arrow.mk 0)
         rfl).trans <|
     homologyOfZeroRight _
@@ -168,7 +168,7 @@ def ChainComplex.homologyZeroIso [HasKernels V] [HasImages V] [HasCokernels V]
 def CochainComplex.homologyZeroIso [HasZeroObject V] [HasKernels V] [HasImages V] [HasCokernels V]
     (C : CochainComplex V ℕ) : C.homology 0 ≅ kernel (C.d 0 1) :=
   (homology.mapIso _ _
-          (Arrow.isoMk (C.xPrevIsoSelf (by rw [CochainComplex.prev_nat_zero] <;> exact one_neZero))
+          (Arrow.isoMk (C.xPrevIsoSelf (by rw [CochainComplex.prev_nat_zero] <;> exact one_ne_zero))
               (Iso.refl _) (by simp) :
             Arrow.mk (C.dTo 0) ≅ Arrow.mk 0)
           (Arrow.isoMk (Iso.refl _) (C.xNextIso rfl) (by simp) :

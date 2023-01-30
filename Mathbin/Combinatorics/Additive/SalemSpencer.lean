@@ -290,7 +290,7 @@ theorem addSalemSpencer_iff_eq_right {s : Set ℕ} :
   refine' forall₄_congr fun a b c _ => forall₃_congr fun _ _ habc => ⟨_, _⟩
   · rintro rfl
     simp_rw [← two_mul] at habc
-    exact mul_left_cancel₀ two_neZero habc
+    exact mul_left_cancel₀ two_ne_zero habc
   · rintro rfl
     exact (add_left_cancel habc).symm
 #align add_salem_spencer_iff_eq_right addSalemSpencer_iff_eq_right
@@ -468,7 +468,7 @@ theorem mulRothNumber_map_mul_left :
 @[simp, to_additive]
 theorem mulRothNumber_map_mul_right :
     mulRothNumber (s.map <| mulRightEmbedding a) = mulRothNumber s := by
-  rw [← mulLeftEmbedding_eq_mulRightEmbedding, mulRothNumber_map_mul_left s a]
+  rw [← mul_left_embedding_eq_mul_right_embedding, mulRothNumber_map_mul_left s a]
 #align mul_roth_number_map_mul_right mulRothNumber_map_mul_right
 #align add_roth_number_map_add_right add_roth_number_map_add_right
 

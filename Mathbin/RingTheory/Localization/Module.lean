@@ -158,7 +158,7 @@ variable {V : Type _} [AddCommGroup V] [Module R V] [Module K V] [IsScalarTower 
 theorem LinearIndependent.iff_fraction_ring {ι : Type _} {b : ι → V} :
     LinearIndependent R b ↔ LinearIndependent K b :=
   ⟨LinearIndependent.localization K R⁰,
-    LinearIndependent.restrict_scalars (smul_left_injective R one_neZero)⟩
+    LinearIndependent.restrict_scalars (smul_left_injective R one_ne_zero)⟩
 #align linear_independent.iff_fraction_ring LinearIndependent.iff_fraction_ring
 
 end FractionRing
