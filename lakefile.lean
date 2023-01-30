@@ -4,7 +4,7 @@ open Lake DSL System
 -- Usually the `tag` will be of the form `nightly-2021-11-22`.
 -- If you would like to use an artifact from a PR build,
 -- it will be of the form `pr-branchname-sha`.
-def tag : String := "nightly-2023-01-30-20"
+def tag : String := "nightly-2023-01-30-22"
 def releaseRepo : String := "leanprover-community/mathport"
 def oleanTarName : String := "mathlib3-binport.tar.gz"
 
@@ -38,7 +38,7 @@ target fetchOleans (_pkg : Package) : Unit := do
     untarReleaseArtifact releaseRepo tag oleanTarName libDir
   return .nil
 
-require lean3port from git "https://github.com/leanprover-community/lean3port.git"@"72a7c562d2eb79f29c0e9fc2de92d96c1917ec03"
+require lean3port from git "https://github.com/leanprover-community/lean3port.git"@"7d1975f521376bbfe3245d28f033beb62f2de14a"
 
 @[default_target]
 lean_lib Mathbin where
