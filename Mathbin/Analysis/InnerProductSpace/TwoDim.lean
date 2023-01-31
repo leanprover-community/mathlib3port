@@ -602,7 +602,7 @@ theorem kahler_ne_zero_iff (x y : E) : o.kahler x y ≠ 0 ↔ x ≠ 0 ∧ y ≠ 
   by
   refine' ⟨_, fun h => o.kahler_ne_zero h.1 h.2⟩
   contrapose
-  simp only [not_and_or, not_not, kahler_apply_apply, Complex.real_smul]
+  simp only [not_and_or, Classical.not_not, kahler_apply_apply, Complex.real_smul]
   rintro (rfl | rfl) <;> simp
 #align orientation.kahler_ne_zero_iff Orientation.kahler_ne_zero_iff
 

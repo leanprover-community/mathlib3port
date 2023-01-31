@@ -1464,7 +1464,8 @@ theorem continuousAt_cpow_of_re_pos {p : ℂ × ℂ} (h₁ : 0 ≤ p.1.re ∨ p.
     ContinuousAt (fun x : ℂ × ℂ => x.1 ^ x.2) p :=
   by
   cases' p with z w
-  rw [← not_lt_zero_iff, lt_iff_le_and_ne, not_and_or, Ne.def, not_not, not_le_zero_iff] at h₁
+  rw [← not_lt_zero_iff, lt_iff_le_and_ne, not_and_or, Ne.def, Classical.not_not,
+    not_le_zero_iff] at h₁
   rcases h₁ with (h₁ | (rfl : z = 0))
   exacts[continuousAt_cpow h₁, continuous_at_cpow_zero_of_re_pos h₂]
 #align complex.continuous_at_cpow_of_re_pos Complex.continuousAt_cpow_of_re_pos

@@ -453,7 +453,7 @@ theorem ae_le_of_ae_lt {f g : α → ℝ≥0∞} (h : ∀ᵐ x ∂μ, f x < g x)
 
 @[simp]
 theorem ae_eq_empty : s =ᵐ[μ] (∅ : Set α) ↔ μ s = 0 :=
-  eventuallyEq_empty.trans <| by simp only [ae_iff, not_not, set_of_mem_eq]
+  eventuallyEq_empty.trans <| by simp only [ae_iff, Classical.not_not, set_of_mem_eq]
 #align measure_theory.ae_eq_empty MeasureTheory.ae_eq_empty
 
 @[simp]

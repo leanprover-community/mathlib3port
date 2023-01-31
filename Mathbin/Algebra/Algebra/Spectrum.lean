@@ -130,7 +130,8 @@ theorem zero_mem_iff {a : A} : (0 : R) ∈ σ a ↔ ¬IsUnit a := by
   rw [mem_iff, map_zero, zero_sub, IsUnit.neg_iff]
 #align spectrum.zero_mem_iff spectrum.zero_mem_iff
 
-theorem zero_not_mem_iff {a : A} : (0 : R) ∉ σ a ↔ IsUnit a := by rw [zero_mem_iff, not_not]
+theorem zero_not_mem_iff {a : A} : (0 : R) ∉ σ a ↔ IsUnit a := by
+  rw [zero_mem_iff, Classical.not_not]
 #align spectrum.zero_not_mem_iff spectrum.zero_not_mem_iff
 
 variable {R}

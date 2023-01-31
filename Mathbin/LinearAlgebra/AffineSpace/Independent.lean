@@ -109,7 +109,8 @@ theorem affineIndependent_iff_linearIndependent_vsub (p : ι → P) (i1 : ι) :
       rw [hfg]
       have hf : (∑ ι in s2, f ι) = 0 :=
         by
-        rw [Finset.sum_insert (Finset.not_mem_map_subtype_of_not_property s (not_not.2 rfl)),
+        rw [Finset.sum_insert
+            (Finset.not_mem_map_subtype_of_not_property s (Classical.not_not.2 rfl)),
           Finset.sum_subtype_map_embedding fun x hx => (hfg x).symm]
         rw [hfdef]
         dsimp only
@@ -679,14 +680,14 @@ theorem AffineIndependent.affineIndependent_of_not_mem_span {p : ι → P} {i : 
         by
         simp_rw [w', Finset.sum_subtype_eq_sum_filter]
         rw [← s.sum_filter_add_sum_filter_not (· ≠ i)] at hwm
-        simp_rw [not_not, Finset.filter_eq', if_pos his.1, Finset.sum_singleton, ← wm, hwmi, ←
-          sub_eq_add_neg, sub_eq_zero] at hwm
+        simp_rw [Classical.not_not, Finset.filter_eq', if_pos his.1, Finset.sum_singleton, ← wm,
+          hwmi, ← sub_eq_add_neg, sub_eq_zero] at hwm
         exact hwm
       rw [← s.affine_combination_eq_of_weighted_vsub_eq_zero_of_eq_neg_one hms his.1 hwmi, ←
         (Subtype.range_coe : _ = { x | x ≠ i }), ← Set.range_comp, ←
         s.affine_combination_subtype_eq_filter]
       exact affineCombination_mem_affineSpan hw' p'
-    · rw [not_and_or, not_not] at his
+    · rw [not_and_or, Classical.not_not] at his
       let w' : { y // y ≠ i } → k := fun x => w x
       have hw' : (∑ x in s', w' x) = 0 :=
         by

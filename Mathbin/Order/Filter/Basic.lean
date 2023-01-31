@@ -2279,7 +2279,7 @@ theorem not_eventually {p : α → Prop} {f : Filter α} : (¬∀ᶠ x in f, p x
 #print Filter.not_frequently /-
 @[simp]
 theorem not_frequently {p : α → Prop} {f : Filter α} : (¬∃ᶠ x in f, p x) ↔ ∀ᶠ x in f, ¬p x := by
-  simp only [Filter.Frequently, not_not]
+  simp only [Filter.Frequently, Classical.not_not]
 #align filter.not_frequently Filter.not_frequently
 -/
 
@@ -3221,7 +3221,8 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {l : Filter.{u2} β} {s : Set.{u1} α}, Iff (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s (Filter.comap.{u1, u2} α β f l)) (Membership.mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (instMembershipSetFilter.{u2} β) (HasCompl.compl.{u2} (Set.{u2} β) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} β) (Set.instBooleanAlgebraSet.{u2} β)) (Set.image.{u1, u2} α β f (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s))) l)
 Case conversion may be inaccurate. Consider using '#align filter.mem_comap_iff_compl Filter.mem_comap_iff_complₓ'. -/
 theorem mem_comap_iff_compl : s ∈ comap f l ↔ (f '' sᶜ)ᶜ ∈ l := by
-  simp only [mem_comap', compl_def, mem_image, mem_set_of_eq, not_exists, not_and', not_not]
+  simp only [mem_comap', compl_def, mem_image, mem_set_of_eq, not_exists, not_and',
+    Classical.not_not]
 #align filter.mem_comap_iff_compl Filter.mem_comap_iff_compl
 
 /- warning: filter.compl_mem_comap -> Filter.compl_mem_comap is a dubious translation:

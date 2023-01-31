@@ -174,7 +174,7 @@ but is expected to have type
   forall {α : Type.{u1}} {f : Ultrafilter.{u1} α} {g : Filter.{u1} α}, Iff (Disjoint.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))) (Ultrafilter.toFilter.{u1} α f) g) (Not (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (Ultrafilter.toFilter.{u1} α f) g))
 Case conversion may be inaccurate. Consider using '#align ultrafilter.disjoint_iff_not_le Ultrafilter.disjoint_iff_not_leₓ'. -/
 theorem disjoint_iff_not_le {f : Ultrafilter α} {g : Filter α} : Disjoint (↑f) g ↔ ¬↑f ≤ g := by
-  rw [← inf_ne_bot_iff, ne_bot_iff, Ne.def, not_not, disjoint_iff]
+  rw [← inf_ne_bot_iff, ne_bot_iff, Ne.def, Classical.not_not, disjoint_iff]
 #align ultrafilter.disjoint_iff_not_le Ultrafilter.disjoint_iff_not_le
 
 /- warning: ultrafilter.compl_not_mem_iff -> Ultrafilter.compl_not_mem_iff is a dubious translation:

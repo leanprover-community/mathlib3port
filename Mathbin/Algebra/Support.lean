@@ -75,7 +75,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align function.nmem_mul_support Function.nmem_mulSupportₓ'. -/
 @[to_additive]
 theorem nmem_mulSupport {f : α → M} {x : α} : x ∉ mulSupport f ↔ f x = 1 :=
-  not_not
+  Classical.not_not
 #align function.nmem_mul_support Function.nmem_mulSupport
 #align function.nmem_support Function.nmem_support
 

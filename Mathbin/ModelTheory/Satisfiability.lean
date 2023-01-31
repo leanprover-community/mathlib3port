@@ -392,7 +392,7 @@ theorem models_not_iff (h : T.IsComplete) (φ : L.Sentence) : T ⊨ φ.Not ↔ �
   · simp only [hφ, not_true, iff_false_iff]
     rw [models_sentence_iff, not_forall]
     refine' ⟨h.1.some, _⟩
-    simp only [sentence.realize_not, not_not]
+    simp only [sentence.realize_not, Classical.not_not]
     exact models_sentence_iff.1 hφ _
   · simp only [hφn, true_iff_iff]
     intro hφ
@@ -706,7 +706,7 @@ theorem Categorical.isComplete (h : κ.Categorical T) (h1 : ℵ₀ ≤ κ)
     by_contra con
     push_neg  at con
     obtain ⟨⟨MF, hMF⟩, MT, hMT⟩ := Con
-    rw [sentence.realize_not, not_not] at hMT
+    rw [sentence.realize_not, Classical.not_not] at hMT
     refine' hMF _
     haveI := hT MT
     haveI := hT MF

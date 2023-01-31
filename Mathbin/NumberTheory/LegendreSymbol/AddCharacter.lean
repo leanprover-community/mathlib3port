@@ -312,7 +312,7 @@ theorem IsPrimitive.zMod_char_eq_one_iff (n : ℕ+) {ψ : AddChar (ZMod n) C} (h
     (a : ZMod n) : ψ a = 1 ↔ a = 0 :=
   by
   refine' ⟨fun h => not_imp_comm.mp (hψ a) _, fun ha => by rw [ha, map_zero_one]⟩
-  rw [zmod_char_is_nontrivial_iff n (mul_shift ψ a), mul_shift_apply, mul_one, h, not_not]
+  rw [zmod_char_is_nontrivial_iff n (mul_shift ψ a), mul_shift_apply, mul_one, h, Classical.not_not]
 #align add_char.is_primitive.zmod_char_eq_one_iff AddChar.IsPrimitive.zMod_char_eq_one_iff
 
 /-- The converse: if the additive character takes the value `1` only at `0`,

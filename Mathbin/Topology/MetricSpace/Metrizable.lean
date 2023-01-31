@@ -209,7 +209,7 @@ theorem exists_embedding_l_infty : ∃ f : X → ℕ →ᵇ ℝ, Embedding f :=
   refine' ⟨F, Embedding.mk' _ (fun x y hxy => _) fun x => le_antisymm _ _⟩
   · /- First we prove that `F` is injective. Indeed, if `F x = F y` and `x ≠ y`, then we can find
         `(U, V) ∈ s` such that `x ∈ U` and `y ∉ V`, hence `F x UV = 0 ≠ ε UV = F y UV`. -/
-    refine' not_not.1 fun Hne => _
+    refine' Classical.not_not.1 fun Hne => _
     -- `by_contra Hne` timeouts
     rcases hB.mem_nhds_iff.1 (is_open_ne.mem_nhds Hne) with ⟨V, hVB, hxV, hVy⟩
     rcases hB.exists_closure_subset (hB.mem_nhds hVB hxV) with ⟨U, hUB, hxU, hUV⟩

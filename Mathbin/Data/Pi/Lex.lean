@@ -79,7 +79,7 @@ theorem lex_lt_of_lt_of_preorder [∀ i, Preorder (β i)] {r} (hwf : WellFounded
     (hlt : x < y) : ∃ i, (∀ j, r j i → x j ≤ y j ∧ y j ≤ x j) ∧ x i < y i :=
   let h' := Pi.lt_def.1 hlt
   let ⟨i, hi, hl⟩ := hwf.has_min _ h'.2
-  ⟨i, fun j hj => ⟨h'.1 j, not_not.1 fun h => hl j (lt_of_le_not_le (h'.1 j) h) hj⟩, hi⟩
+  ⟨i, fun j hj => ⟨h'.1 j, Classical.not_not.1 fun h => hl j (lt_of_le_not_le (h'.1 j) h) hj⟩, hi⟩
 #align pi.lex_lt_of_lt_of_preorder Pi.lex_lt_of_lt_of_preorder
 -/
 

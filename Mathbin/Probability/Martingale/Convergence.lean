@@ -120,7 +120,7 @@ theorem not_frequently_of_upcrossings_lt_top (hab : a < b) (hω : upcrossings a 
     exact ⟨k + 1, fun N => lt_of_le_of_lt (hk N) k.lt_succ_self⟩
   rintro ⟨h₁, h₂⟩
   rw [frequently_at_top] at h₁ h₂
-  refine' not_not.2 hω _
+  refine' Classical.not_not.2 hω _
   push_neg
   intro k
   induction' k with k ih

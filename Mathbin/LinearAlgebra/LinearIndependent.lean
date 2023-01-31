@@ -877,7 +877,7 @@ theorem linearIndependent_iff_not_smul_mem_span :
       · rw [Finsupp.mem_supported']
         intro j hj
         have hij : j = i :=
-          not_not.1 fun hij : j ≠ i =>
+          Classical.not_not.1 fun hij : j ≠ i =>
             hj ((mem_diff _).2 ⟨mem_univ _, fun h => hij (eq_of_mem_singleton h)⟩)
         simp [hij]
       · simp [hl]⟩

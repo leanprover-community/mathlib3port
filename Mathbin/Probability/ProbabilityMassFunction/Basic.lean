@@ -86,7 +86,7 @@ theorem mem_support_iff (p : Pmf α) (a : α) : a ∈ p.support ↔ p a ≠ 0 :=
 #align pmf.mem_support_iff Pmf.mem_support_iff
 
 theorem apply_eq_zero_iff (p : Pmf α) (a : α) : p a = 0 ↔ a ∉ p.support := by
-  rw [mem_support_iff, not_not]
+  rw [mem_support_iff, Classical.not_not]
 #align pmf.apply_eq_zero_iff Pmf.apply_eq_zero_iff
 
 theorem apply_pos_iff (p : Pmf α) (a : α) : 0 < p a ↔ a ∈ p.support :=

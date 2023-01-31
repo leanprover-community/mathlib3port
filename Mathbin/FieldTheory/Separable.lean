@@ -333,7 +333,7 @@ theorem separable_or {f : F[X]} (hf : Irreducible f) :
     haveI := is_local_ring_hom_expand F hp
     exact
       Or.inr
-        ⟨by rw [separable_iff_derivative_ne_zero hf, not_not, H], contract p f,
+        ⟨by rw [separable_iff_derivative_ne_zero hf, Classical.not_not, H], contract p f,
           of_irreducible_map (↑(expand F p)) (by rwa [← expand_contract p H hp.ne'] at hf),
           expand_contract p H hp.ne'⟩
   else Or.inl <| (separable_iff_derivative_ne_zero hf).2 H
@@ -349,7 +349,7 @@ theorem exists_separable_of_irreducible {f : F[X]} (hf : Irreducible f) (hp : p 
     rw [pow_zero, expand_one]
   · cases' N with N
     · rw [nat_degree_eq_zero_iff_degree_le_zero, degree_le_zero_iff] at hn
-      rw [hn, separable_C, isUnit_iff_ne_zero, not_not] at h1
+      rw [hn, separable_C, isUnit_iff_ne_zero, Classical.not_not] at h1
       have hf0 : f ≠ 0 := hf.ne_zero
       rw [h1, C_0] at hn
       exact absurd hn hf0

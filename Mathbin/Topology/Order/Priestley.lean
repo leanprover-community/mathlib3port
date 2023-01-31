@@ -58,7 +58,7 @@ theorem exists_clopen_upper_of_not_le :
 theorem exists_clopen_lower_of_not_le (h : ¬x ≤ y) :
     ∃ U : Set α, IsClopen U ∧ IsLowerSet U ∧ x ∉ U ∧ y ∈ U :=
   let ⟨U, hU, hU', hx, hy⟩ := exists_clopen_upper_of_not_le h
-  ⟨Uᶜ, hU.compl, hU'.compl, not_not.2 hx, hy⟩
+  ⟨Uᶜ, hU.compl, hU'.compl, Classical.not_not.2 hx, hy⟩
 #align exists_clopen_lower_of_not_le exists_clopen_lower_of_not_le
 
 end Preorder

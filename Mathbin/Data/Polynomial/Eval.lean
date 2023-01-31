@@ -59,8 +59,8 @@ theorem eval₂_congr {R S : Type _} [Semiring R] [Semiring S] {f g : R →+* S}
 @[simp]
 theorem eval₂_at_zero : p.eval₂ f 0 = f (coeff p 0) := by
   simp (config := { contextual := true }) only [eval₂_eq_sum, zero_pow_eq, mul_ite, mul_zero,
-    mul_one, Sum, not_not, mem_support_iff, sum_ite_eq', ite_eq_left_iff, RingHom.map_zero,
-    imp_true_iff, eq_self_iff_true]
+    mul_one, Sum, Classical.not_not, mem_support_iff, sum_ite_eq', ite_eq_left_iff,
+    RingHom.map_zero, imp_true_iff, eq_self_iff_true]
 #align polynomial.eval₂_at_zero Polynomial.eval₂_at_zero
 
 @[simp]

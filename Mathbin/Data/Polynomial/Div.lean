@@ -144,7 +144,7 @@ theorem degree_modByMonic_lt [Nontrivial R] :
         (by
           intro hp
           unfold mod_by_monic div_mod_by_monic_aux
-          rw [dif_pos hq, if_neg h, not_not.1 hp]
+          rw [dif_pos hq, if_neg h, Classical.not_not.1 hp]
           exact lt_of_le_of_ne bot_le (Ne.symm (mt degree_eq_bot.1 hq.ne_zero)))
 #align polynomial.degree_mod_by_monic_lt Polynomial.degree_modByMonic_lt
 

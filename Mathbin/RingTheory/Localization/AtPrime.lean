@@ -157,7 +157,7 @@ theorem isUnit_to_map_iff (x : R) : IsUnit ((algebraMap R S) x) ↔ x ∈ I.prim
 theorem to_map_mem_maximal_iff (x : R) (h : LocalRing S := localRing S I) :
     algebraMap R S x ∈ LocalRing.maximalIdeal S ↔ x ∈ I :=
   not_iff_not.mp <| by
-    simpa only [LocalRing.mem_maximalIdeal, mem_nonunits_iff, not_not] using
+    simpa only [LocalRing.mem_maximalIdeal, mem_nonunits_iff, Classical.not_not] using
       is_unit_to_map_iff S I x
 #align is_localization.at_prime.to_map_mem_maximal_iff IsLocalization.AtPrime.to_map_mem_maximal_iff
 
@@ -174,7 +174,8 @@ theorem isUnit_mk'_iff (x : R) (y : I.primeCompl) : IsUnit (mk' S x y) ↔ x ∈
 theorem mk'_mem_maximal_iff (x : R) (y : I.primeCompl) (h : LocalRing S := localRing S I) :
     mk' S x y ∈ LocalRing.maximalIdeal S ↔ x ∈ I :=
   not_iff_not.mp <| by
-    simpa only [LocalRing.mem_maximalIdeal, mem_nonunits_iff, not_not] using is_unit_mk'_iff S I x y
+    simpa only [LocalRing.mem_maximalIdeal, mem_nonunits_iff, Classical.not_not] using
+      is_unit_mk'_iff S I x y
 #align is_localization.at_prime.mk'_mem_maximal_iff IsLocalization.AtPrime.mk'_mem_maximal_iff
 
 end AtPrime

@@ -1846,7 +1846,7 @@ theorem setToFun_top_smul_measure (hT : DominatedFinMeasAdditive (∞ • μ) T 
   refine' set_to_fun_measure_zero' hT fun s hs hμs => _
   rw [lt_top_iff_ne_top] at hμs
   simp only [true_and_iff, measure.smul_apply, WithTop.mul_eq_top_iff, eq_self_iff_true,
-    top_ne_zero, Ne.def, not_false_iff, not_or, not_not, smul_eq_mul] at hμs
+    top_ne_zero, Ne.def, not_false_iff, not_or, Classical.not_not, smul_eq_mul] at hμs
   simp only [hμs.right, measure.smul_apply, mul_zero, smul_eq_mul]
 #align measure_theory.set_to_fun_top_smul_measure MeasureTheory.setToFun_top_smul_measure
 

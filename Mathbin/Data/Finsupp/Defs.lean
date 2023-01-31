@@ -1260,7 +1260,7 @@ def embDomain (f : α ↪ β) (v : α →₀ M) : β →₀ M
   mem_support_to_fun a₂ := by
     split_ifs
     · simp only [h, true_iff_iff, Ne.def]
-      rw [← not_mem_support_iff, not_not]
+      rw [← not_mem_support_iff, Classical.not_not]
       apply Finset.choose_mem
     · simp only [h, Ne.def, ne_self_iff_false]
 #align finsupp.emb_domain Finsupp.embDomain
@@ -1514,10 +1514,11 @@ theorem support_add_eq [DecidableEq α] {g₁ g₂ : α →₀ M} (h : Disjoint 
     (Finset.mem_union.1 ha).elim
       (fun ha => by
         have : a ∉ g₂.support := disjoint_left.1 h ha
-        simp only [mem_support_iff, not_not] at * <;> simpa only [add_apply, this, add_zero] )
+        simp only [mem_support_iff, Classical.not_not] at * <;>
+          simpa only [add_apply, this, add_zero] )
       fun ha => by
       have : a ∉ g₁.support := disjoint_right.1 h ha
-      simp only [mem_support_iff, not_not] at * <;> simpa only [add_apply, this, zero_add]
+      simp only [mem_support_iff, Classical.not_not] at * <;> simpa only [add_apply, this, zero_add]
 #align finsupp.support_add_eq Finsupp.support_add_eq
 
 /- warning: finsupp.single_add -> Finsupp.single_add is a dubious translation:

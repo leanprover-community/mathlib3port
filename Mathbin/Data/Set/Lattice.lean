@@ -3795,8 +3795,8 @@ theorem pi_diff_pi_subset (i : Set α) (s t : ∀ a, Set (π a)) :
     pi i s \ pi i t ⊆ ⋃ a ∈ i, eval a ⁻¹' (s a \ t a) :=
   by
   refine' diff_subset_comm.2 fun x hx a ha => _
-  simp only [mem_diff, mem_pi, mem_Union, not_exists, mem_preimage, not_and, not_not, eval_apply] at
-    hx
+  simp only [mem_diff, mem_pi, mem_Union, not_exists, mem_preimage, not_and, Classical.not_not,
+    eval_apply] at hx
   exact hx.2 _ ha (hx.1 _ ha)
 #align set.pi_diff_pi_subset Set.pi_diff_pi_subset
 

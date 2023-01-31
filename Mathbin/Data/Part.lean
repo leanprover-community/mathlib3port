@@ -280,7 +280,7 @@ theorem none_ne_some (x : α) : none ≠ some x :=
 theorem ne_none_iff {o : Part α} : o ≠ none ↔ ∃ x, o = some x :=
   by
   constructor
-  · rw [Ne, eq_none_iff', not_not]
+  · rw [Ne, eq_none_iff', Classical.not_not]
     exact fun h => ⟨o.get h, eq_some_iff.2 (get_mem h)⟩
   · rintro ⟨x, rfl⟩
     apply some_ne_none

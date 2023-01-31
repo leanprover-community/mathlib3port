@@ -76,7 +76,7 @@ def toΓSpecFun : X → PrimeSpectrum (Γ.obj (op X)) := fun x =>
 
 theorem not_mem_prime_iff_unit_in_stalk (r : Γ.obj (op X)) (x : X) :
     r ∉ (X.toΓSpecFun x).asIdeal ↔ IsUnit (X.ΓToStalk x r) := by
-  erw [LocalRing.mem_maximalIdeal, not_not]
+  erw [LocalRing.mem_maximalIdeal, Classical.not_not]
 #align algebraic_geometry.LocallyRingedSpace.not_mem_prime_iff_unit_in_stalk AlgebraicGeometry.LocallyRingedSpaceCat.not_mem_prime_iff_unit_in_stalk
 
 /-- The preimage of a basic open in `Spec Γ(X)` under the unit is the basic

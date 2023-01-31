@@ -442,7 +442,7 @@ theorem edgeSet_sdiff_sdiff_isDiag (G : SimpleGraph V) (s : Set (Sym2 V)) :
     G.edgeSet \ (s \ { e | e.IsDiag }) = G.edgeSet \ s :=
   by
   ext e
-  simp only [Set.mem_diff, Set.mem_setOf_eq, not_and, not_not, and_congr_right_iff]
+  simp only [Set.mem_diff, Set.mem_setOf_eq, not_and, Classical.not_not, and_congr_right_iff]
   intro h
   simp only [G.not_is_diag_of_mem_edge_set h, imp_false]
 #align simple_graph.edge_set_sdiff_sdiff_is_diag SimpleGraph.edgeSet_sdiff_sdiff_isDiag

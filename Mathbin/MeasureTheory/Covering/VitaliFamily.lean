@@ -299,8 +299,8 @@ theorem eventually_filterAt_measurableSet (x : α) : ∀ᶠ a in v.filterAt x, M
 
 theorem frequently_filterAt_iff {x : α} {P : Set α → Prop} :
     (∃ᶠ a in v.filterAt x, P a) ↔ ∀ ε > (0 : ℝ), ∃ a ∈ v.setsAt x, a ⊆ closedBall x ε ∧ P a := by
-  simp only [Filter.Frequently, eventually_filter_at_iff, not_exists, exists_prop, not_and, not_not,
-    not_forall]
+  simp only [Filter.Frequently, eventually_filter_at_iff, not_exists, exists_prop, not_and,
+    Classical.not_not, not_forall]
 #align vitali_family.frequently_filter_at_iff VitaliFamily.frequently_filterAt_iff
 
 theorem eventually_filterAt_subset_of_nhds {x : α} {o : Set α} (hx : o ∈ 𝓝 x) :

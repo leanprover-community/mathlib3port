@@ -391,7 +391,7 @@ section BasicOpen
 def basicOpen (r : A) : TopologicalSpace.Opens (ProjectiveSpectrum 𝒜)
     where
   val := { x | r ∉ x.asHomogeneousIdeal }
-  property := ⟨{r}, Set.ext fun x => Set.singleton_subset_iff.trans <| not_not.symm⟩
+  property := ⟨{r}, Set.ext fun x => Set.singleton_subset_iff.trans <| Classical.not_not.symm⟩
 #align projective_spectrum.basic_open ProjectiveSpectrum.basicOpen
 
 @[simp]

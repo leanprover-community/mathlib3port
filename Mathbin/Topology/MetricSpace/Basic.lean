@@ -2971,7 +2971,8 @@ theorem Bounded.ediam_ne_top (h : Bounded s) : Emetric.diam s ≠ ⊤ :=
 
 theorem ediam_univ_eq_top_iff_noncompact [ProperSpace α] :
     Emetric.diam (univ : Set α) = ∞ ↔ NoncompactSpace α := by
-  rw [← not_compactSpace_iff, compact_space_iff_bounded_univ, bounded_iff_ediam_ne_top, not_not]
+  rw [← not_compactSpace_iff, compact_space_iff_bounded_univ, bounded_iff_ediam_ne_top,
+    Classical.not_not]
 #align metric.ediam_univ_eq_top_iff_noncompact Metric.ediam_univ_eq_top_iff_noncompact
 
 @[simp]
@@ -2991,7 +2992,7 @@ theorem dist_le_diam_of_mem (h : Bounded s) (hx : x ∈ s) (hy : y ∈ s) : dist
 #align metric.dist_le_diam_of_mem Metric.dist_le_diam_of_mem
 
 theorem ediam_of_unbounded (h : ¬Bounded s) : Emetric.diam s = ∞ := by
-  rwa [bounded_iff_ediam_ne_top, not_not] at h
+  rwa [bounded_iff_ediam_ne_top, Classical.not_not] at h
 #align metric.ediam_of_unbounded Metric.ediam_of_unbounded
 
 /-- An unbounded set has zero diameter. If you would prefer to get the value ∞, use `emetric.diam`.

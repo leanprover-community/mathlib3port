@@ -133,7 +133,7 @@ theorem Finset.centerMass_subset {t' : Finset ι} (ht : t ⊆ t') (h : ∀ i ∈
 theorem Finset.centerMass_filter_ne_zero :
     (t.filter fun i => w i ≠ 0).centerMass w z = t.centerMass w z :=
   Finset.centerMass_subset z (filter_subset _ _) fun i hit hit' => by
-    simpa only [hit, mem_filter, true_and_iff, Ne.def, not_not] using hit'
+    simpa only [hit, mem_filter, true_and_iff, Ne.def, Classical.not_not] using hit'
 #align finset.center_mass_filter_ne_zero Finset.centerMass_filter_ne_zero
 
 namespace Finset

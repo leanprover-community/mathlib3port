@@ -454,7 +454,7 @@ theorem exists_positive_of_not_mutuallySingular (μ ν : Measure α) [IsFiniteMe
     · suffices ∀ b, 0 < b → μA ≤ b by
         by_contra
         have h' := this (μA / 2) (Nnreal.half_pos (zero_lt_iff.2 h))
-        rw [← @not_not (μA ≤ μA / 2)] at h'
+        rw [← @Classical.not_not (μA ≤ μA / 2)] at h'
         exact h' (not_le.2 (Nnreal.half_lt_self h))
       intro c hc
       have : ∃ n : ℕ, 1 / (n + 1 : ℝ) < c * νA⁻¹

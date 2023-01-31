@@ -152,9 +152,9 @@ theorem prod_pow_factorization_choose (n k : ℕ) (hkn : k ≤ n) :
   · intro p hp
     rw [Finset.mem_range]
     contrapose! hp
-    rw [Finsupp.mem_support_iff, not_not, factorization_choose_eq_zero_of_lt hp]
+    rw [Finsupp.mem_support_iff, Classical.not_not, factorization_choose_eq_zero_of_lt hp]
   · intro p _ h2
-    simp [not_not.1 (mt Finsupp.mem_support_iff.2 h2)]
+    simp [Classical.not_not.1 (mt Finsupp.mem_support_iff.2 h2)]
 #align nat.prod_pow_factorization_choose Nat.prod_pow_factorization_choose
 
 /-- The `n`th central binomial coefficient is the product of its prime factors, which are

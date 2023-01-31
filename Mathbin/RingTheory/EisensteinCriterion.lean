@@ -126,7 +126,8 @@ theorem irreducible_of_eisenstein_criterion {f : R[X]} {P : Ideal R} (hP : P.IsP
       · exact add_lt_add_of_lt_of_le (lt_of_le_of_ne hmp (Ne.symm hmnd)) hnq
       · exact add_lt_add_of_le_of_lt hmp (lt_of_le_of_ne hnq (Ne.symm hmnd))
     obtain rfl | rfl : m = 0 ∨ n = 0 := by
-      rwa [pos_iff_ne_zero, pos_iff_ne_zero, imp_false, not_not, ← or_iff_not_imp_left] at hmn
+      rwa [pos_iff_ne_zero, pos_iff_ne_zero, imp_false, Classical.not_not, ← or_iff_not_imp_left] at
+        hmn
     · exact Or.inl (is_unit_of_nat_degree_eq_zero_of_forall_dvd_is_unit hu hpmqn.1)
     ·
       exact

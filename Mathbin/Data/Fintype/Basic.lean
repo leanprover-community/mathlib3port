@@ -245,7 +245,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Fintype.{u1} α] {s : Finset.{u1} α} [_inst_2 : DecidableEq.{succ u1} α] {a : α}, Iff (Not (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a (HasCompl.compl.{u1} (Finset.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Finset.{u1} α) (Finset.instBooleanAlgebraFinset.{u1} α _inst_1 (fun (a : α) (b : α) => _inst_2 a b))) s))) (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a s)
 Case conversion may be inaccurate. Consider using '#align finset.not_mem_compl Finset.not_mem_complₓ'. -/
-theorem not_mem_compl : a ∉ sᶜ ↔ a ∈ s := by rw [mem_compl, not_not]
+theorem not_mem_compl : a ∉ sᶜ ↔ a ∈ s := by rw [mem_compl, Classical.not_not]
 #align finset.not_mem_compl Finset.not_mem_compl
 
 /- warning: finset.coe_compl -> Finset.coe_compl is a dubious translation:

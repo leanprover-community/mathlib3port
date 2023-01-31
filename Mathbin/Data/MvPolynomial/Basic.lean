@@ -711,7 +711,7 @@ theorem support_sdiff_support_subset_support_add [DecidableEq σ] (p q : MvPolyn
     p.support \ q.support ⊆ (p + q).support :=
   by
   intro m hm
-  simp only [not_not, mem_support_iff, Finset.mem_sdiff, Ne.def] at hm
+  simp only [Classical.not_not, mem_support_iff, Finset.mem_sdiff, Ne.def] at hm
   simp [hm.2, hm.1]
 #align mv_polynomial.support_sdiff_support_subset_support_add MvPolynomial.support_sdiff_support_subset_support_add
 
@@ -1326,7 +1326,7 @@ theorem support_map_of_injective (p : MvPolynomial σ R) {f : R →+* S₁} (hf 
   intro x hx
   rw [mem_support_iff]
   contrapose! hx
-  simp only [not_not, mem_support_iff]
+  simp only [Classical.not_not, mem_support_iff]
   change (map f p).coeff x = 0 at hx
   rw [coeff_map, ← f.map_zero] at hx
   exact hf hx

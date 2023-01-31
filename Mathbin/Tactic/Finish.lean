@@ -125,7 +125,7 @@ variable (s : α → Prop)
 attribute [local instance] Classical.propDecidable
 
 theorem not_not_eq : (¬¬p) = p :=
-  propext not_not
+  propext Classical.not_not
 #align auto.not_not_eq Auto.not_not_eq
 
 theorem not_and_eq : (¬(p ∧ q)) = (¬p ∨ ¬q) :=

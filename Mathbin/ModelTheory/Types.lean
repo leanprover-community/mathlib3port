@@ -109,7 +109,7 @@ theorem setOf_subset_eq_empty_iff (S : L[[α]].TheoryCat) :
     { p : T.CompleteType α | S ⊆ ↑p } = ∅ ↔
       ¬((L.lhomWithConstants α).onTheory T ∪ S).IsSatisfiable :=
   by
-  rw [iff_not_comm, ← not_nonempty_iff_eq_empty, not_not, Set.Nonempty]
+  rw [iff_not_comm, ← not_nonempty_iff_eq_empty, Classical.not_not, Set.Nonempty]
   refine'
     ⟨fun h =>
       ⟨⟨L[[α]].completeTheory h.some, (subset_union_left _ S).trans complete_theory.subset,

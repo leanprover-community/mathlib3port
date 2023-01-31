@@ -519,7 +519,7 @@ theorem AlgebraicIndependent.option_iff (hx : AlgebraicIndependent R x) (a : A) 
     (AlgebraicIndependent R fun o : Option ι => o.elim a x) ↔
       ¬IsAlgebraic (adjoin R (Set.range x)) a :=
   by
-  erw [algebraicIndependent_iff_injective_aeval, isAlgebraic_iff_not_injective, not_not, ←
+  erw [algebraicIndependent_iff_injective_aeval, isAlgebraic_iff_not_injective, Classical.not_not, ←
     AlgHom.coe_to_ringHom, ← hx.aeval_comp_mv_polynomial_option_equiv_polynomial_adjoin,
     RingHom.coe_comp, injective.of_comp_iff' _ (RingEquiv.bijective _), AlgHom.coe_to_ringHom]
 #align algebraic_independent.option_iff AlgebraicIndependent.option_iff

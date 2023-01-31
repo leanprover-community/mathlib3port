@@ -666,14 +666,14 @@ protected theorem Decidable.not_not [Decidable a] : ¬¬a ↔ a :=
 #align decidable.not_not Decidable.not_not
 -/
 
-#print not_not /-
+#print Classical.not_not /-
 /-- The Double Negation Theorem: `¬ ¬ P` is equivalent to `P`.
 The left-to-right direction, double negation elimination (DNE),
 is classically true but not constructively. -/
 @[simp]
-theorem not_not : ¬¬a ↔ a :=
+theorem Classical.not_not : ¬¬a ↔ a :=
   Decidable.not_not
-#align not_not not_not
+#align not_not Classical.not_not
 -/
 
 #print of_not_not /-
@@ -684,7 +684,7 @@ theorem of_not_not : ¬¬a → a :=
 
 #print not_ne_iff /-
 theorem not_ne_iff {α : Sort _} {a b : α} : ¬a ≠ b ↔ a = b :=
-  not_not
+  Classical.not_not
 #align not_ne_iff not_ne_iff
 -/
 
@@ -779,13 +779,13 @@ theorem Iff.not (h : a ↔ b) : ¬a ↔ ¬b :=
 
 #print Iff.not_left /-
 theorem Iff.not_left (h : a ↔ ¬b) : ¬a ↔ b :=
-  h.Not.trans not_not
+  h.Not.trans Classical.not_not
 #align iff.not_left Iff.not_left
 -/
 
 #print Iff.not_right /-
 theorem Iff.not_right (h : ¬a ↔ b) : a ↔ ¬b :=
-  not_not.symm.trans h.Not
+  Classical.not_not.symm.trans h.Not
 #align iff.not_right Iff.not_right
 -/
 
@@ -1670,7 +1670,7 @@ theorem and_iff_not_or_not : a ∧ b ↔ ¬(¬a ∨ ¬b) :=
 #print not_xor /-
 @[simp]
 theorem not_xor (P Q : Prop) : ¬Xor' P Q ↔ (P ↔ Q) := by
-  simp only [not_and, Xor', not_or, not_not, ← iff_iff_implies_and_implies]
+  simp only [not_and, Xor', not_or, Classical.not_not, ← iff_iff_implies_and_implies]
 #align not_xor not_xor
 -/
 
@@ -1681,12 +1681,14 @@ theorem xor_iff_not_iff (P Q : Prop) : Xor' P Q ↔ ¬(P ↔ Q) :=
 -/
 
 #print xor_iff_iff_not /-
-theorem xor_iff_iff_not : Xor' a b ↔ (a ↔ ¬b) := by simp only [← @xor_not_right a, not_not]
+theorem xor_iff_iff_not : Xor' a b ↔ (a ↔ ¬b) := by
+  simp only [← @xor_not_right a, Classical.not_not]
 #align xor_iff_iff_not xor_iff_iff_not
 -/
 
 #print xor_iff_not_iff' /-
-theorem xor_iff_not_iff' : Xor' a b ↔ (¬a ↔ b) := by simp only [← @xor_not_left _ b, not_not]
+theorem xor_iff_not_iff' : Xor' a b ↔ (¬a ↔ b) := by
+  simp only [← @xor_not_left _ b, Classical.not_not]
 #align xor_iff_not_iff' xor_iff_not_iff'
 -/
 

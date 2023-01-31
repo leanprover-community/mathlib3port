@@ -163,7 +163,7 @@ theorem IsSRGWith.card_commonNeighbors_eq_of_not_adj_compl (h : G.IsSRGWith n k 
   by
   simp only [← Set.toFinset_card, common_neighbors, Set.toFinset_inter, neighbor_set_compl,
     Set.toFinset_diff, Set.toFinset_singleton, Set.toFinset_compl, ← neighbor_finset_def]
-  simp only [not_and, not_not, compl_adj] at hna
+  simp only [not_and, Classical.not_not, compl_adj] at hna
   have h2' := hna hn
   simp_rw [compl_neighbor_finset_sdiff_inter_eq, sdiff_compl_neighbor_finset_inter_eq h2']
   rwa [← Finset.compl_union, card_compl, h.card_neighbor_finset_union_of_adj, ← h.card]

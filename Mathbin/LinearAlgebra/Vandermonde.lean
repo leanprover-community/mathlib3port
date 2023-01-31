@@ -154,7 +154,7 @@ theorem det_vandermonde_eq_zero_iff [IsDomain R] {n : ℕ} {v : Fin n → R} :
 
 theorem det_vandermonde_ne_zero_iff [IsDomain R] {n : ℕ} {v : Fin n → R} :
     det (vandermonde v) ≠ 0 ↔ Function.Injective v := by
-  simpa only [det_vandermonde_eq_zero_iff, Ne.def, not_exists, not_and, not_not]
+  simpa only [det_vandermonde_eq_zero_iff, Ne.def, not_exists, not_and, Classical.not_not]
 #align matrix.det_vandermonde_ne_zero_iff Matrix.det_vandermonde_ne_zero_iff
 
 theorem eq_zero_of_forall_index_sum_pow_mul_eq_zero {R : Type _} [CommRing R] [IsDomain R] {n : ℕ}

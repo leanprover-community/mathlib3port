@@ -215,7 +215,7 @@ noncomputable instance : LinearOrderedCommGroupWithZero (ValueGroup A K) :=
       simp only [one_smul]
       apply (mul_inv_cancel _).symm
       contrapose ha
-      simp only [not_not] at ha⊢
+      simp only [Classical.not_not] at ha⊢
       rw [ha]; rfl }
 
 /-- Any valuation ring induces a valuation on its fraction field. -/

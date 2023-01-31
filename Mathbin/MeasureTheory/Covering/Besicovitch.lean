@@ -387,7 +387,8 @@ theorem color_lt {i : Ordinal.{u}} (hi : i < p.lastStep) {N : ℕ}
     intro k hk
     rw [← Inf_eq_N] at hk
     have : k ∈ A := by
-      simpa only [true_and_iff, mem_univ, not_not, mem_diff] using Nat.not_mem_of_lt_infₛ hk
+      simpa only [true_and_iff, mem_univ, Classical.not_not, mem_diff] using
+        Nat.not_mem_of_lt_infₛ hk
     simp at this
     simpa only [exists_prop, mem_Union, mem_singleton_iff, mem_closed_ball, Subtype.exists,
       Subtype.coe_mk]

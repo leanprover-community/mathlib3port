@@ -190,7 +190,7 @@ theorem log_eq_iff {b m n : ℕ} (h : m ≠ 0 ∨ 1 < b ∧ n ≠ 0) :
     rw [le_antisymm_iff, ← lt_succ_iff, ← pow_le_iff_le_log, ← lt_pow_iff_log_lt, and_comm] <;>
       assumption
   · have hm : m ≠ 0 := h.resolve_right hbn
-    rw [not_and_or, not_lt, Ne.def, not_not] at hbn
+    rw [not_and_or, not_lt, Ne.def, Classical.not_not] at hbn
     rcases hbn with (hb | rfl)
     ·
       simpa only [log_of_left_le_one hb, hm.symm, false_iff_iff, not_and, not_lt] using

@@ -40,7 +40,7 @@ theorem pushNeg_equiv : ∀ {p : Preform}, Preform.Equiv (pushNeg p) (¬* p) :=
   by
   run_tac
     preform.induce sorry
-  · simp only [not_not, push_neg, preform.holds]
+  · simp only [Classical.not_not, push_neg, preform.holds]
   · simp only [preform.holds, push_neg, not_or, ihp v, ihq v]
   · simp only [preform.holds, push_neg, not_and_or, ihp v, ihq v]
 #align omega.int.push_neg_equiv Omega.Int.pushNeg_equiv

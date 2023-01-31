@@ -347,7 +347,7 @@ theorem c_dvd_iff_dvd_coeff (r : R) (φ : R[X]) : c r ∣ φ ↔ ∀ i, r ∣ φ
         Finset.sum_ite_eq']
       split_ifs with hi hi
       · rw [hc]
-      · rw [not_not] at hi
+      · rw [Classical.not_not] at hi
         rwa [mul_zero]
 #align polynomial.C_dvd_iff_dvd_coeff Polynomial.c_dvd_iff_dvd_coeff
 

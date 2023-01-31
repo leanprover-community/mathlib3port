@@ -598,7 +598,7 @@ theorem not_mem_empty (x : α) : ¬x ∈ (∅ : Set α) :=
 #print Set.not_not_mem /-
 @[simp]
 theorem not_not_mem : ¬a ∉ s ↔ a ∈ s :=
-  not_not
+  Classical.not_not
 #align set.not_not_mem Set.not_not_mem
 -/
 
@@ -2643,7 +2643,7 @@ but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α}, Iff (Not (Disjoint.{u1} (Set.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (Lattice.toSemilatticeInf.{u1} (Set.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} α) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} α) (BiheytingAlgebra.toCoheytingAlgebra.{u1} (Set.{u1} α) (BooleanAlgebra.toBiheytingAlgebra.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α))))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (Lattice.toSemilatticeInf.{u1} (Set.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} α) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} α) (BiheytingAlgebra.toCoheytingAlgebra.{u1} (Set.{u1} α) (BooleanAlgebra.toBiheytingAlgebra.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α))))))))) (BooleanAlgebra.toBoundedOrder.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α))) s t)) (Exists.{succ u1} α (fun (x : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x t)))
 Case conversion may be inaccurate. Consider using '#align set.not_disjoint_iff Set.not_disjoint_iffₓ'. -/
 theorem not_disjoint_iff : ¬Disjoint s t ↔ ∃ x, x ∈ s ∧ x ∈ t :=
-  Set.disjoint_iff.Not.trans <| not_forall.trans <| exists_congr fun x => not_not
+  Set.disjoint_iff.Not.trans <| not_forall.trans <| exists_congr fun x => Classical.not_not
 #align set.not_disjoint_iff Set.not_disjoint_iff
 
 /- warning: set.not_disjoint_iff_nonempty_inter -> Set.not_disjoint_iff_nonempty_inter is a dubious translation:
@@ -2915,7 +2915,7 @@ but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α} {x : α}, Iff (Not (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s))) (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s)
 Case conversion may be inaccurate. Consider using '#align set.not_mem_compl_iff Set.not_mem_compl_iffₓ'. -/
 theorem not_mem_compl_iff {x : α} : x ∉ sᶜ ↔ x ∈ s :=
-  not_not
+  Classical.not_not
 #align set.not_mem_compl_iff Set.not_mem_compl_iff
 
 /- warning: set.inter_compl_self -> Set.inter_compl_self is a dubious translation:

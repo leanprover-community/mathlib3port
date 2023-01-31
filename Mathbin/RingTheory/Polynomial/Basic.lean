@@ -445,7 +445,7 @@ def ofSubring (p : T[X]) : R[X] :=
 theorem coeff_ofSubring (p : T[X]) (n : ℕ) : coeff (ofSubring T p) n = (coeff p n : T) :=
   by
   simp only [of_subring, coeff_monomial, finset_sum_coeff, mem_support_iff, Finset.sum_ite_eq',
-    ite_eq_right_iff, Ne.def, ite_not, not_not, ite_eq_left_iff]
+    ite_eq_right_iff, Ne.def, ite_not, Classical.not_not, ite_eq_left_iff]
   intro h
   rw [h]
   rfl

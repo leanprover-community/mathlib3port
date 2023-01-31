@@ -1637,7 +1637,7 @@ theorem eq_mk_support (f : Π₀ i, β i) : f = mk f.support fun i => f i :=
   by
   change f = mk f.support fun i => f i.1
   ext i
-  by_cases h : f i ≠ 0 <;> [skip, rw [not_not] at h] <;> simp [h]
+  by_cases h : f i ≠ 0 <;> [skip, rw [Classical.not_not] at h] <;> simp [h]
 #align dfinsupp.eq_mk_support Dfinsupp.eq_mk_support
 -/
 
@@ -1739,7 +1739,8 @@ theorem zipWith_def {ι : Type u} {β : ι → Type v} {β₁ : ι → Type v₁
     zipWith f hf g₁ g₂ = mk (g₁.support ∪ g₂.support) fun i => f i.1 (g₁ i.1) (g₂ i.1) :=
   by
   ext i
-  by_cases h1 : g₁ i ≠ 0 <;> by_cases h2 : g₂ i ≠ 0 <;> simp only [not_not, Ne.def] at h1 h2 <;>
+  by_cases h1 : g₁ i ≠ 0 <;> by_cases h2 : g₂ i ≠ 0 <;>
+      simp only [Classical.not_not, Ne.def] at h1 h2 <;>
     simp [h1, h2, hf]
 #align dfinsupp.zip_with_def Dfinsupp.zipWith_def
 -/
@@ -1880,8 +1881,8 @@ instance [∀ i, Zero (β i)] [∀ i, DecidableEq (β i)] : DecidableEq (Π₀ i
       ext fun i =>
         if h : i ∈ f.support then h₂ i h
         else by
-          have hf : f i = 0 := by rwa [mem_support_iff, not_not] at h
-          have hg : g i = 0 := by rwa [h₁, mem_support_iff, not_not] at h
+          have hf : f i = 0 := by rwa [mem_support_iff, Classical.not_not] at h
+          have hg : g i = 0 := by rwa [h₁, mem_support_iff, Classical.not_not] at h
           rw [hf, hg],
       by
       rintro rfl
@@ -2540,7 +2541,7 @@ theorem prod_single_index [∀ i, Zero (β i)] [∀ (i) (x : β i), Decidable (x
   by
   by_cases h : b ≠ 0
   · simp [Dfinsupp.prod, support_single_ne_zero h]
-  · rw [not_not] at h
+  · rw [Classical.not_not] at h
     simp [h, prod_zero_index, h_zero]
     rfl
 #align dfinsupp.prod_single_index Dfinsupp.prod_single_index
@@ -2734,7 +2735,7 @@ theorem prod_eq_prod_fintype [Fintype ι] [∀ i, Zero (β i)] [∀ (i : ι) (x 
   suffices (∏ i in v.support, f i (v i)) = ∏ i, f i (v i) by simp [Dfinsupp.prod, this]
   apply Finset.prod_subset v.support.subset_univ
   intro i hi' hi
-  rw [mem_support_iff, not_not] at hi
+  rw [mem_support_iff, Classical.not_not] at hi
   rw [hi, hf]
 #align dfinsupp.prod_eq_prod_fintype Dfinsupp.prod_eq_prod_fintype
 #align dfinsupp.sum_eq_sum_fintype Dfinsupp.sum_eq_sum_fintype

@@ -350,7 +350,7 @@ exists a numerator `a` such that `x ≠ a / b` and `|x - a / b| < 1 / b ^ n`. -/
 theorem frequently_exists_num (hx : Liouville x) (n : ℕ) :
     ∃ᶠ b : ℕ in at_top, ∃ a : ℤ, x ≠ a / b ∧ |x - a / b| < 1 / b ^ n :=
   by
-  refine' not_not.1 fun H => _
+  refine' Classical.not_not.1 fun H => _
   simp only [Liouville, not_forall, not_exists, not_frequently, not_and, not_lt,
     eventually_at_top] at H
   rcases H with ⟨N, hN⟩

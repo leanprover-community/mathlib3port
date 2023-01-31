@@ -689,7 +689,7 @@ def biproduct.isLimitFromSubtype :
       rw [kernel_fork.ι_of_ι, category.assoc, category.assoc,
         biproduct.to_subtype_from_subtype_assoc, biproduct.map_π]
       rcases em (i = j) with (rfl | h)
-      · rw [if_neg (not_not.2 rfl), comp_zero, comp_zero, kernel_fork.condition]
+      · rw [if_neg (Classical.not_not.2 rfl), comp_zero, comp_zero, kernel_fork.condition]
       · rw [if_pos (Ne.symm h), category.comp_id],
       by
       intro m hm
@@ -717,7 +717,7 @@ def biproduct.isColimitToSubtype :
       ext j
       rw [cokernel_cofork.π_of_π, biproduct.to_subtype_from_subtype_assoc, biproduct.ι_map_assoc]
       rcases em (i = j) with (rfl | h)
-      · rw [if_neg (not_not.2 rfl), zero_comp, cokernel_cofork.condition]
+      · rw [if_neg (Classical.not_not.2 rfl), zero_comp, cokernel_cofork.condition]
       · rw [if_pos (Ne.symm h), category.id_comp],
       by
       intro m hm

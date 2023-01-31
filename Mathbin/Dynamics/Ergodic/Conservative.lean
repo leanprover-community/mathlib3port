@@ -87,7 +87,7 @@ theorem frequently_measure_inter_ne_zero (hf : Conservative f μ) (hs : Measurab
     (h0 : μ s ≠ 0) : ∃ᶠ m in at_top, μ (s ∩ f^[m] ⁻¹' s) ≠ 0 :=
   by
   by_contra H
-  simp only [not_frequently, eventually_at_top, Ne.def, not_not] at H
+  simp only [not_frequently, eventually_at_top, Ne.def, Classical.not_not] at H
   rcases H with ⟨N, hN⟩
   induction' N with N ihN
   · apply h0

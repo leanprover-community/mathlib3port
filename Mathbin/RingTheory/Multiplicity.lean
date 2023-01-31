@@ -84,8 +84,8 @@ theorem not_finite_iff_forall {a b : α} : ¬Finite a b ↔ ∀ n : ℕ, a ^ n �
       (by
         rw [pow_zero]
         exact one_dvd _)
-      (by simpa [Finite, not_not] using h),
-    by simp [Finite, multiplicity, not_not] <;> tauto⟩
+      (by simpa [Finite, Classical.not_not] using h),
+    by simp [Finite, multiplicity, Classical.not_not] <;> tauto⟩
 #align multiplicity.not_finite_iff_forall multiplicity.not_finite_iff_forall
 
 theorem not_unit_of_finite {a b : α} (h : Finite a b) : ¬IsUnit a :=
@@ -175,8 +175,9 @@ theorem eq_coe_iff {a b : α} {n : ℕ} :
 #align multiplicity.eq_coe_iff multiplicity.eq_coe_iff
 
 theorem eq_top_iff {a b : α} : multiplicity a b = ⊤ ↔ ∀ n : ℕ, a ^ n ∣ b :=
-  (PartEnat.find_eq_top_iff _).trans <| by
-    simp only [not_not]
+  (PartEnat.find_eq_top_iff _).trans <|
+    by
+    simp only [Classical.not_not]
     exact
       ⟨fun h n =>
         Nat.casesOn n
@@ -220,7 +221,7 @@ theorem eq_top_iff_not_finite {a b : α} : multiplicity a b = ⊤ ↔ ¬Finite a
 #align multiplicity.eq_top_iff_not_finite multiplicity.eq_top_iff_not_finite
 
 theorem ne_top_iff_finite {a b : α} : multiplicity a b ≠ ⊤ ↔ Finite a b := by
-  rw [Ne.def, eq_top_iff_not_finite, not_not]
+  rw [Ne.def, eq_top_iff_not_finite, Classical.not_not]
 #align multiplicity.ne_top_iff_finite multiplicity.ne_top_iff_finite
 
 theorem lt_top_iff_finite {a b : α} : multiplicity a b < ⊤ ↔ Finite a b := by
@@ -289,7 +290,8 @@ theorem dvd_iff_multiplicity_pos {a b : α} : (0 : PartEnat) < multiplicity a b 
 
 theorem finite_nat_iff {a b : ℕ} : Finite a b ↔ a ≠ 1 ∧ 0 < b :=
   by
-  rw [← not_iff_not, not_finite_iff_forall, not_and_or, Ne.def, not_not, not_lt, le_zero_iff]
+  rw [← not_iff_not, not_finite_iff_forall, not_and_or, Ne.def, Classical.not_not, not_lt,
+    le_zero_iff]
   exact
     ⟨fun h =>
       or_iff_not_imp_right.2 fun hb =>

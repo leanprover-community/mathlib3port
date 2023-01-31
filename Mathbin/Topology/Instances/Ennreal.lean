@@ -1266,7 +1266,7 @@ theorem tsum_coe_ne_top_iff_summable_coe {f : α → ℝ≥0} :
 theorem tsum_coe_eq_top_iff_not_summable_coe {f : α → ℝ≥0} :
     (∑' a, (f a : ℝ≥0∞)) = ∞ ↔ ¬Summable fun a => (f a : ℝ) :=
   by
-  rw [← @not_not ((∑' a, ↑(f a)) = ⊤)]
+  rw [← @Classical.not_not ((∑' a, ↑(f a)) = ⊤)]
   exact not_congr tsum_coe_ne_top_iff_summable_coe
 #align ennreal.tsum_coe_eq_top_iff_not_summable_coe Ennreal.tsum_coe_eq_top_iff_not_summable_coe
 
@@ -1293,7 +1293,7 @@ theorem tsum_eq_toNnreal_tsum {f : β → ℝ≥0} : (∑' b, f b) = (∑' b, (f
   by_cases h : Summable f
   · rw [← Ennreal.coe_tsum h, Ennreal.toNnreal_coe]
   · have A := tsum_eq_zero_of_not_summable h
-    simp only [← Ennreal.tsum_coe_ne_top_iff_summable, not_not] at h
+    simp only [← Ennreal.tsum_coe_ne_top_iff_summable, Classical.not_not] at h
     simp only [h, Ennreal.top_toNnreal, A]
 #align nnreal.tsum_eq_to_nnreal_tsum Nnreal.tsum_eq_toNnreal_tsum
 
@@ -1338,7 +1338,7 @@ theorem not_summable_iff_tendsto_nat_atTop {f : ℕ → ℝ≥0} :
 
 theorem summable_iff_not_tendsto_nat_atTop {f : ℕ → ℝ≥0} :
     Summable f ↔ ¬Tendsto (fun n : ℕ => ∑ i in Finset.range n, f i) atTop atTop := by
-  rw [← not_iff_not, not_not, not_summable_iff_tendsto_nat_at_top]
+  rw [← not_iff_not, Classical.not_not, not_summable_iff_tendsto_nat_at_top]
 #align nnreal.summable_iff_not_tendsto_nat_at_top Nnreal.summable_iff_not_tendsto_nat_atTop
 
 theorem summable_of_sum_range_le {f : ℕ → ℝ≥0} {c : ℝ≥0}
@@ -1538,7 +1538,7 @@ theorem not_summable_iff_tendsto_nat_atTop_of_nonneg {f : ℕ → ℝ} (hf : ∀
 
 theorem summable_iff_not_tendsto_nat_atTop_of_nonneg {f : ℕ → ℝ} (hf : ∀ n, 0 ≤ f n) :
     Summable f ↔ ¬Tendsto (fun n : ℕ => ∑ i in Finset.range n, f i) atTop atTop := by
-  rw [← not_iff_not, not_not, not_summable_iff_tendsto_nat_atTop_of_nonneg hf]
+  rw [← not_iff_not, Classical.not_not, not_summable_iff_tendsto_nat_atTop_of_nonneg hf]
 #align summable_iff_not_tendsto_nat_at_top_of_nonneg summable_iff_not_tendsto_nat_atTop_of_nonneg
 
 theorem summable_sigma_of_nonneg {β : ∀ x : α, Type _} {f : (Σx, β x) → ℝ} (hf : ∀ x, 0 ≤ f x) :

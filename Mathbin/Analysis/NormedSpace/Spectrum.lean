@@ -94,7 +94,7 @@ theorem spectralRadius_zero : spectralRadius 𝕜 (0 : A) = 0 :=
 
 theorem mem_resolventSet_of_spectralRadius_lt {a : A} {k : 𝕜} (h : spectralRadius 𝕜 a < ‖k‖₊) :
     k ∈ ρ a :=
-  not_not.mp fun hn => h.not_le <| le_supᵢ₂ k hn
+  Classical.not_not.mp fun hn => h.not_le <| le_supᵢ₂ k hn
 #align spectrum.mem_resolvent_set_of_spectral_radius_lt spectrum.mem_resolventSet_of_spectralRadius_lt
 
 variable [CompleteSpace A]
@@ -496,7 +496,7 @@ include hA
 local notation "σ" => spectrum ℂ
 
 theorem algebraMap_eq_of_mem {a : A} {z : ℂ} (h : z ∈ σ a) : algebraMap ℂ A z = a := by
-  rwa [mem_iff, hA, not_not, sub_eq_zero] at h
+  rwa [mem_iff, hA, Classical.not_not, sub_eq_zero] at h
 #align spectrum.algebra_map_eq_of_mem spectrum.algebraMap_eq_of_mem
 
 /-- **Gelfand-Mazur theorem**: For a complex Banach division algebra, the natural `algebra_map ℂ A`

@@ -2252,7 +2252,7 @@ theorem count_apply_lt_top' (s_mble : MeasurableSet s) : count s < ∞ ↔ s.Fin
   calc
     count s < ∞ ↔ count s ≠ ∞ := lt_top_iff_ne_top
     _ ↔ ¬s.Infinite := not_congr (count_apply_eq_top' s_mble)
-    _ ↔ s.Finite := not_not
+    _ ↔ s.Finite := Classical.not_not
     
 #align measure_theory.measure.count_apply_lt_top' MeasureTheory.Measure.count_apply_lt_top'
 
@@ -2261,7 +2261,7 @@ theorem count_apply_lt_top [MeasurableSingletonClass α] : count s < ∞ ↔ s.F
   calc
     count s < ∞ ↔ count s ≠ ∞ := lt_top_iff_ne_top
     _ ↔ ¬s.Infinite := not_congr count_apply_eq_top
-    _ ↔ s.Finite := not_not
+    _ ↔ s.Finite := Classical.not_not
     
 #align measure_theory.measure.count_apply_lt_top MeasureTheory.Measure.count_apply_lt_top
 
@@ -3327,7 +3327,7 @@ theorem Set.Countable.measure_zero {α : Type _} {m : MeasurableSpace α} {s : S
 
 theorem Set.Countable.ae_not_mem {α : Type _} {m : MeasurableSpace α} {s : Set α} (h : s.Countable)
     (μ : Measure α) [HasNoAtoms μ] : ∀ᵐ x ∂μ, x ∉ s := by
-  simpa only [ae_iff, not_not] using h.measure_zero μ
+  simpa only [ae_iff, Classical.not_not] using h.measure_zero μ
 #align set.countable.ae_not_mem Set.Countable.ae_not_mem
 
 theorem Set.Finite.measure_zero {α : Type _} {m : MeasurableSpace α} {s : Set α} (h : s.Finite)

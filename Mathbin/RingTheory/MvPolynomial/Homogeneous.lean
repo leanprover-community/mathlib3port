@@ -176,7 +176,7 @@ variable [CommSemiring R] {φ ψ : MvPolynomial σ R} {m n : ℕ}
 theorem coeff_eq_zero (hφ : IsHomogeneous φ n) (d : σ →₀ ℕ) (hd : (∑ i in d.support, d i) ≠ n) :
     coeff d φ = 0 := by
   have aux := mt (@hφ d) hd
-  classical rwa [not_not] at aux
+  classical rwa [Classical.not_not] at aux
 #align mv_polynomial.is_homogeneous.coeff_eq_zero MvPolynomial.IsHomogeneous.coeff_eq_zero
 
 theorem inj_right (hm : IsHomogeneous φ m) (hn : IsHomogeneous φ n) (hφ : φ ≠ 0) : m = n :=

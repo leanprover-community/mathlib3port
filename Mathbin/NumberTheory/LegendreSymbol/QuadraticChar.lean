@@ -159,7 +159,7 @@ theorem quadraticChar_zero : quadraticChar F 0 = 0 := by
 theorem quadraticChar_one_iff_isSquare {a : F} (ha : a ≠ 0) : quadraticChar F a = 1 ↔ IsSquare a :=
   by
   simp only [quadraticChar_apply, quadraticCharFun, ha, (by decide : (-1 : ℤ) ≠ 1), if_false,
-    ite_eq_left_iff, imp_false, not_not]
+    ite_eq_left_iff, imp_false, Classical.not_not]
 #align quadratic_char_one_iff_is_square quadraticChar_one_iff_isSquare
 
 /-- The quadratic character takes the value `1` on nonzero squares. -/
@@ -343,7 +343,7 @@ theorem FiniteField.isSquare_neg_one_iff : IsSquare (-1 : F) ↔ Fintype.card F 
       rw [← quadraticChar_one_iff_isSquare (neg_ne_zero.mpr (one_ne_zero' F)),
         quadraticChar_neg_one hF, χ₄_nat_eq_if_mod_four, h₁]
       simp only [Nat.one_ne_zero, if_false, ite_eq_left_iff, Ne.def, (by decide : (-1 : ℤ) ≠ 1),
-        imp_false, not_not]
+        imp_false, Classical.not_not]
       exact
         ⟨fun h => ne_of_eq_of_ne h (by decide : 1 ≠ 3),
           Or.resolve_right (nat.odd_mod_four_iff.mp h₁)⟩
@@ -370,7 +370,7 @@ theorem FiniteField.isSquare_two_iff :
       rw [← quadraticChar_one_iff_isSquare (Ring.two_ne_zero hF), quadraticChar_two hF,
         χ₈_nat_eq_if_mod_eight]
       simp only [h, Nat.one_ne_zero, if_false, ite_eq_left_iff, Ne.def, (by decide : (-1 : ℤ) ≠ 1),
-        imp_false, not_not]
+        imp_false, Classical.not_not]
     all_goals
       rw [← Nat.mod_mod_of_dvd _ (by norm_num : 2 ∣ 8)] at h
       have h₁ := Nat.mod_lt (Fintype.card F) (by decide : 0 < 8)
@@ -400,7 +400,7 @@ theorem FiniteField.isSquare_neg_two_iff :
       rw [← quadraticChar_one_iff_isSquare (neg_ne_zero.mpr (Ring.two_ne_zero hF)),
         quadraticChar_neg_two hF, χ₈'_nat_eq_if_mod_eight]
       simp only [h, Nat.one_ne_zero, if_false, ite_eq_left_iff, Ne.def, (by decide : (-1 : ℤ) ≠ 1),
-        imp_false, not_not]
+        imp_false, Classical.not_not]
     all_goals
       rw [← Nat.mod_mod_of_dvd _ (by norm_num : 2 ∣ 8)] at h
       have h₁ := Nat.mod_lt (Fintype.card F) (by decide : 0 < 8)

@@ -68,7 +68,7 @@ theorem splits_of_map_eq_c {f : K[X]} {a : L} (h : f.map i = c a) : Splits i f :
   else
     Or.inr fun g hg ⟨p, hp⟩ =>
       absurd hg.1 <|
-        not_not.2 <|
+        Classical.not_not.2 <|
           isUnit_iff_degree_eq_zero.2 <| by
             have := congr_arg degree hp
             rw [h, degree_C ha, degree_mul, @eq_comm (WithBot ℕ) 0, Nat.WithBot.add_eq_zero_iff] at

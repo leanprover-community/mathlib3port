@@ -161,7 +161,7 @@ theorem isOpen_iff {s : Set Γ₀} : IsOpen s ↔ (0 : Γ₀) ∉ s ∨ ∃ (γ 
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (γ «expr ≠ » 0) -/
 theorem isClosed_iff {s : Set Γ₀} : IsClosed s ↔ (0 : Γ₀) ∈ s ∨ ∃ (γ : _)(_ : γ ≠ 0), s ⊆ Ici γ :=
   by
-  simp only [← isOpen_compl_iff, is_open_iff, mem_compl_iff, not_not, ← compl_Ici,
+  simp only [← isOpen_compl_iff, is_open_iff, mem_compl_iff, Classical.not_not, ← compl_Ici,
     compl_subset_compl]
 #align linear_ordered_comm_group_with_zero.is_closed_iff LinearOrderedCommGroupWithZero.isClosed_iff
 

@@ -1832,7 +1832,7 @@ theorem aeStronglyMeasurable_withDensity_iff {E : Type _} [NormedAddCommGroup E]
       have : (f a : ℝ≥0∞) ≠ 0 := by simpa only [Ne.def, Ennreal.coe_eq_zero] using h'a
       rw [ha this]
     · filter_upwards [ae_restrict_mem A.compl]with x hx
-      simp only [not_not, mem_set_of_eq, mem_compl_iff] at hx
+      simp only [Classical.not_not, mem_set_of_eq, mem_compl_iff] at hx
       simp [hx]
   · rintro ⟨g', g'meas, hg'⟩
     refine' ⟨fun x => (f x : ℝ)⁻¹ • g' x, hf.coe_nnreal_real.inv.strongly_measurable.smul g'meas, _⟩

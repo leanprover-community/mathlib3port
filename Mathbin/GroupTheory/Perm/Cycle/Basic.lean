@@ -702,7 +702,7 @@ theorem IsCycle.pow_eq_one_iff [Finite β] {f : Perm β} (hf : IsCycle f) {n : �
       by_cases h : support (f ^ n) = support f
       · rw [← mem_support, ← h, mem_support] at hx
         contradiction
-      · rw [hf.support_pow_eq_iff, not_not] at h
+      · rw [hf.support_pow_eq_iff, Classical.not_not] at h
         obtain ⟨k, rfl⟩ := h
         rw [pow_mul, pow_orderOf_eq_one, one_pow]
 #align equiv.perm.is_cycle.pow_eq_one_iff Equiv.Perm.IsCycle.pow_eq_one_iff
@@ -1068,7 +1068,7 @@ theorem IsCycle.cycleOf_eq (hf : IsCycle f) (hx : f x ≠ x) : cycleOf f x = f :
     if h : SameCycle f x y then by rw [h.cycle_of_apply]
     else by
       rw [cycle_of_apply_of_not_same_cycle h,
-        not_not.1 (mt ((is_cycle_iff_same_cycle hx).1 hf).2 h)]
+        Classical.not_not.1 (mt ((is_cycle_iff_same_cycle hx).1 hf).2 h)]
 #align equiv.perm.is_cycle.cycle_of_eq Equiv.Perm.IsCycle.cycleOf_eq
 
 @[simp]
@@ -1279,7 +1279,7 @@ def cycleFactorsAux [Fintype α] :
     ⟨[],
       by
       simp only [imp_false, List.Pairwise.nil, List.not_mem_nil, forall_const, and_true_iff,
-        forall_prop_of_false, not_not, not_false_iff, List.prod_nil] at *
+        forall_prop_of_false, Classical.not_not, not_false_iff, List.prod_nil] at *
       ext
       simp [*]⟩
   | x::l, f, h =>
@@ -1304,7 +1304,8 @@ def cycleFactorsAux [Fintype α] :
         List.pairwise_cons.2
           ⟨fun g hg y =>
             or_iff_not_imp_left.2 fun hfy =>
-              have hxy : SameCycle f x y := not_not.1 (mt cycleOf_apply_of_not_sameCycle hfy)
+              have hxy : SameCycle f x y :=
+                Classical.not_not.1 (mt cycleOf_apply_of_not_sameCycle hfy)
               have hgm : (g::m.erase g) ~ m :=
                 List.cons_perm_iff_perm_erase.2 ⟨hg, List.Perm.refl _⟩
               have : ∀ h ∈ m.erase g, Disjoint g h :=
@@ -1766,8 +1767,8 @@ theorem isConj_of_support_equiv
   · rw [Equiv.extendSubtype_apply_of_mem, Equiv.extendSubtype_apply_of_mem]
     · exact hf x (Finset.mem_coe.2 hx)
   ·
-    rwa [not_not.1 ((not_congr mem_support).1 (Equiv.extendSubtype_not_mem f _ _)),
-      not_not.1 ((not_congr mem_support).mp hx)]
+    rwa [Classical.not_not.1 ((not_congr mem_support).1 (Equiv.extendSubtype_not_mem f _ _)),
+      Classical.not_not.1 ((not_congr mem_support).mp hx)]
 #align equiv.perm.is_conj_of_support_equiv Equiv.Perm.isConj_of_support_equiv
 
 theorem IsCycle.isConj (hσ : IsCycle σ) (hτ : IsCycle τ) (h : σ.Support.card = τ.Support.card) :
@@ -1801,8 +1802,8 @@ theorem IsCycle.isConj_iff (hσ : IsCycle σ) (hτ : IsCycle τ) :
     · simp [mem_support.1 ha]
     · refine' ⟨π⁻¹ b, ⟨_, π.apply_inv_self b⟩⟩
       contrapose! hb
-      rw [mem_support, not_not] at hb
-      rw [mem_support, not_not, perm.mul_apply, perm.mul_apply, hb, perm.apply_inv_self],
+      rw [mem_support, Classical.not_not] at hb
+      rw [mem_support, Classical.not_not, perm.mul_apply, perm.mul_apply, hb, perm.apply_inv_self],
     hσ.IsConj hτ⟩
 #align equiv.perm.is_cycle.is_conj_iff Equiv.Perm.IsCycle.isConj_iff
 

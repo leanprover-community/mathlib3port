@@ -175,7 +175,7 @@ def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ]
     rw [supᵢ_split_single _ x, comap_const_of_mem fun V => mem_of_mem_nhds]
     suffices ∀ (y) (_ : y ≠ x), comap (fun y : γ => x) (𝓝 y) ⊓ 𝓝 y ≤ 𝓝 x by simpa
     intro y hxy
-    simp [comap_const_of_not_mem (compl_singleton_mem_nhds hxy) (not_not.2 rfl)]
+    simp [comap_const_of_not_mem (compl_singleton_mem_nhds hxy) (Classical.not_not.2 rfl)]
 #align uniform_space_of_compact_t2 uniformSpaceOfCompactT2
 
 /-!

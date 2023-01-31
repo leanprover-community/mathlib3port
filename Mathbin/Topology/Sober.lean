@@ -89,7 +89,7 @@ theorem mem_open_set_iff (h : IsGenericPoint x S) (hU : IsOpen U) : x ∈ U ↔ 
 #align is_generic_point.mem_open_set_iff IsGenericPoint.mem_open_set_iff
 
 theorem disjoint_iff (h : IsGenericPoint x S) (hU : IsOpen U) : Disjoint S U ↔ x ∉ U := by
-  rw [h.mem_open_set_iff hU, ← not_disjoint_iff_nonempty_inter, not_not]
+  rw [h.mem_open_set_iff hU, ← not_disjoint_iff_nonempty_inter, Classical.not_not]
 #align is_generic_point.disjoint_iff IsGenericPoint.disjoint_iff
 
 theorem mem_closed_set_iff (h : IsGenericPoint x S) (hZ : IsClosed Z) : x ∈ Z ↔ S ⊆ Z := by

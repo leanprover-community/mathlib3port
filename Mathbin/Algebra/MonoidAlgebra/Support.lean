@@ -29,8 +29,10 @@ theorem support_single_mul_subset [DecidableEq G] [Mul G] (f : MonoidAlgebra k G
   intro x hx
   contrapose hx
   have : ∀ y, a * y = x → f y = 0 := by
-    simpa only [not_and', mem_image, mem_support_iff, exists_prop, not_exists, not_not] using hx
-  simp only [mem_support_iff, mul_apply, sum_single_index, zero_mul, if_t_t, sum_zero, not_not]
+    simpa only [not_and', mem_image, mem_support_iff, exists_prop, not_exists,
+      Classical.not_not] using hx
+  simp only [mem_support_iff, mul_apply, sum_single_index, zero_mul, if_t_t, sum_zero,
+    Classical.not_not]
   exact
     Finset.sum_eq_zero
       (by
@@ -44,8 +46,10 @@ theorem support_mul_single_subset [DecidableEq G] [Mul G] (f : MonoidAlgebra k G
   intro x hx
   contrapose hx
   have : ∀ y, y * a = x → f y = 0 := by
-    simpa only [not_and', mem_image, mem_support_iff, exists_prop, not_exists, not_not] using hx
-  simp only [mem_support_iff, mul_apply, sum_single_index, zero_mul, if_t_t, sum_zero, not_not]
+    simpa only [not_and', mem_image, mem_support_iff, exists_prop, not_exists,
+      Classical.not_not] using hx
+  simp only [mem_support_iff, mul_apply, sum_single_index, zero_mul, if_t_t, sum_zero,
+    Classical.not_not]
   exact
     Finset.sum_eq_zero
       (by

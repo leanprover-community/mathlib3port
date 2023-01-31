@@ -36,7 +36,7 @@ theorem pushNeg_equiv : ∀ {p : Preform}, Preform.Equiv (pushNeg p) (¬* p) :=
   by
   run_tac
     preform.induce sorry
-  · simp only [not_not, preform.holds, push_neg]
+  · simp only [Classical.not_not, preform.holds, push_neg]
   · simp only [preform.holds, push_neg, not_or, ihp v, ihq v]
   · simp only [preform.holds, push_neg, not_and_or, ihp v, ihq v]
 #align omega.nat.push_neg_equiv Omega.Nat.pushNeg_equiv

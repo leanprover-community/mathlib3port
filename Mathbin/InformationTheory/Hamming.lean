@@ -100,7 +100,7 @@ theorem swap_hammingDist : swap (@hammingDist _ β _ _) = hammingDist :=
 
 /-- Corresponds to `eq_of_dist_eq_zero`. -/
 theorem eq_of_hammingDist_eq_zero {x y : ∀ i, β i} : hammingDist x y = 0 → x = y := by
-  simp_rw [hammingDist, card_eq_zero, filter_eq_empty_iff, not_not, funext_iff, mem_univ,
+  simp_rw [hammingDist, card_eq_zero, filter_eq_empty_iff, Classical.not_not, funext_iff, mem_univ,
     forall_true_left, imp_self]
 #align eq_of_hamming_dist_eq_zero eq_of_hammingDist_eq_zero
 

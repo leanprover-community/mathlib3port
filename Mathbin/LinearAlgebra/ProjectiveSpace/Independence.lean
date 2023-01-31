@@ -109,7 +109,7 @@ theorem dependent_iff_not_independent : Dependent f ↔ ¬Independent f := by
 
 /-- Independence is the negation of dependence. -/
 theorem independent_iff_not_dependent : Independent f ↔ ¬Dependent f := by
-  rw [dependent_iff_not_independent, not_not]
+  rw [dependent_iff_not_independent, Classical.not_not]
 #align projectivization.independent_iff_not_dependent Projectivization.independent_iff_not_dependent
 
 /-- Two points in a projective space are dependent if and only if they are equal. -/
@@ -118,8 +118,8 @@ theorem dependent_pair_iff_eq (u v : ℙ K V) : Dependent ![u, v] ↔ u = v :=
   by
   simp_rw [dependent_iff_not_independent, independent_iff, linearIndependent_fin2,
     Function.comp_apply, Matrix.cons_val_one, Matrix.head_cons, Ne.def, Matrix.cons_val_zero,
-    not_and, not_forall, not_not, ← mk_eq_mk_iff' K _ _ (rep_nonzero u) (rep_nonzero v), mk_rep,
-    imp_iff_right_iff]
+    not_and, not_forall, Classical.not_not, ← mk_eq_mk_iff' K _ _ (rep_nonzero u) (rep_nonzero v),
+    mk_rep, imp_iff_right_iff]
   exact Or.inl (rep_nonzero v)
 #align projectivization.dependent_pair_iff_eq Projectivization.dependent_pair_iff_eq
 

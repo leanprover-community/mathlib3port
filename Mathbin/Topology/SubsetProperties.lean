@@ -344,7 +344,8 @@ theorem isCompact_of_finite_subfamily_closed
         (∀ i, IsClosed (Z i)) → (s ∩ ⋂ i, Z i) = ∅ → ∃ t : Finset ι, (s ∩ ⋂ i ∈ t, Z i) = ∅) :
     IsCompact s := fun f hfn hfs =>
   by_contradiction fun this : ¬∃ x ∈ s, ClusterPt x f =>
-    have hf : ∀ x ∈ s, 𝓝 x ⊓ f = ⊥ := by simpa only [ClusterPt, not_exists, not_not, ne_bot_iff]
+    have hf : ∀ x ∈ s, 𝓝 x ⊓ f = ⊥ := by
+      simpa only [ClusterPt, not_exists, Classical.not_not, ne_bot_iff]
     have : ¬∃ x ∈ s, ∀ t ∈ f.sets, x ∈ closure t := fun ⟨x, hxs, hx⟩ =>
       by
       have : ∅ ∈ 𝓝 x ⊓ f := by rw [empty_mem_iff_bot, hf x hxs]
@@ -620,7 +621,7 @@ theorem Tendsto.isCompact_insert_range_of_cocompact {f : α → β} {b}
   intro l hne hle
   by_cases hb : ClusterPt b l
   · exact ⟨b, Or.inl rfl, hb⟩
-  simp only [clusterPt_iff, not_forall, ← not_disjoint_iff_nonempty_inter, not_not] at hb
+  simp only [clusterPt_iff, not_forall, ← not_disjoint_iff_nonempty_inter, Classical.not_not] at hb
   rcases hb with ⟨s, hsb, t, htl, hd⟩
   rcases mem_cocompact.1 (hf hsb) with ⟨K, hKc, hKs⟩
   have : f '' K ∈ l :=
@@ -628,7 +629,7 @@ theorem Tendsto.isCompact_insert_range_of_cocompact {f : α → β} {b}
     filter_upwards [htl, le_principal_iff.1 hle]with y hyt hyf
     rcases hyf with (rfl | ⟨x, rfl⟩)
     exacts[(hd.le_bot ⟨mem_of_mem_nhds hsb, hyt⟩).elim,
-      mem_image_of_mem _ (not_not.1 fun hxK => hd.le_bot ⟨hKs hxK, hyt⟩)]
+      mem_image_of_mem _ (Classical.not_not.1 fun hxK => hd.le_bot ⟨hKs hxK, hyt⟩)]
   rcases hKc.image hfc (le_principal_iff.2 this) with ⟨y, hy, hyl⟩
   exact ⟨y, Or.inr <| image_subset_range _ _ hy, hyl⟩
 #align filter.tendsto.is_compact_insert_range_of_cocompact Filter.Tendsto.isCompact_insert_range_of_cocompact

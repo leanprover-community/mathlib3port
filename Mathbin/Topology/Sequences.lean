@@ -172,7 +172,7 @@ theorem FrechetUrysohnSpace.of_seq_tendsto_imp_tendsto
   simp_rw [(· ∘ ·), ContinuousAt, hx, not_false_iff, nhds_true, tendsto_pure, eq_true_iff, ←
     mem_compl_iff, eventually_mem_set, ← mem_interior_iff_mem_nhds, interior_compl] at h
   rw [mem_compl_iff, imp_not_comm] at h
-  simp only [not_forall, not_eventually, mem_compl_iff, not_not] at h
+  simp only [not_forall, not_eventually, mem_compl_iff, Classical.not_not] at h
   rcases h hcx with ⟨u, hux, hus⟩
   rcases extraction_of_frequently_at_top hus with ⟨φ, φ_mono, hφ⟩
   exact ⟨u ∘ φ, hφ, hux.comp φ_mono.tendsto_at_top⟩

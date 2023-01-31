@@ -873,7 +873,7 @@ theorem fill_filterNe [DecidableEq α] (a : α) (m : Sym α n) :
       dsimp only [coe_fill, filter_ne, Subtype.coe_mk, Fin.val_mk]
       ext b; rw [count_add, count_filter, Sym.coe_replicate, count_replicate]
       obtain rfl | h := eq_or_ne a b
-      · rw [if_pos rfl, if_neg (not_not.2 rfl), zero_add]
+      · rw [if_pos rfl, if_neg (Classical.not_not.2 rfl), zero_add]
         rfl
       · rw [if_pos h, if_neg h.symm, add_zero]
         rfl)

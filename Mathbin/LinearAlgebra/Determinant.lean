@@ -367,7 +367,7 @@ theorem range_lt_top_of_det_eq_zero {𝕜 : Type _} [Field 𝕜] [Module 𝕜 M]
   by
   have : FiniteDimensional 𝕜 M := by simp [f.finite_dimensional_of_det_ne_one, hf]
   contrapose hf
-  simp only [lt_top_iff_ne_top, not_not, ← is_unit_iff_range_eq_top] at hf
+  simp only [lt_top_iff_ne_top, Classical.not_not, ← is_unit_iff_range_eq_top] at hf
   exact isUnit_iff_ne_zero.1 (f.is_unit_det hf)
 #align linear_map.range_lt_top_of_det_eq_zero LinearMap.range_lt_top_of_det_eq_zero
 
@@ -377,7 +377,7 @@ theorem bot_lt_ker_of_det_eq_zero {𝕜 : Type _} [Field 𝕜] [Module 𝕜 M] {
   by
   have : FiniteDimensional 𝕜 M := by simp [f.finite_dimensional_of_det_ne_one, hf]
   contrapose hf
-  simp only [bot_lt_iff_ne_bot, not_not, ← is_unit_iff_ker_eq_bot] at hf
+  simp only [bot_lt_iff_ne_bot, Classical.not_not, ← is_unit_iff_ker_eq_bot] at hf
   exact isUnit_iff_ne_zero.1 (f.is_unit_det hf)
 #align linear_map.bot_lt_ker_of_det_eq_zero LinearMap.bot_lt_ker_of_det_eq_zero
 

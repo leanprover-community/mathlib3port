@@ -74,7 +74,7 @@ theorem hall_cond_of_erase {x : ι} (a : α)
       exact Nat.le_pred_of_lt ha'
     · rw [erase_eq_of_not_mem hb]
       exact Nat.le_of_lt ha'
-  · rw [nonempty_iff_ne_empty, not_not] at he
+  · rw [nonempty_iff_ne_empty, Classical.not_not] at he
     subst s'
     simp
 #align hall_marriage_theorem.hall_cond_of_erase HallMarriageTheorem.hall_cond_of_erase

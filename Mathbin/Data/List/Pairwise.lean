@@ -577,7 +577,7 @@ theorem forall_mem_pwFilter (neg_trans : ∀ {x y z}, R x z → R x y ∨ R y z)
       refine' fun H => ⟨_, IH H⟩
       cases' e : find (fun y => ¬R x y) (pw_filter R l) with k
       · refine' h.elim (BAll.imp_right _ (find_eq_none.1 e))
-        exact fun y _ => not_not.1
+        exact fun y _ => Classical.not_not.1
       · have := find_some e
         exact (neg_trans (H k (find_mem e))).resolve_right this, BAll.imp_left (pwFilter_subset l)⟩
 #align list.forall_mem_pw_filter List.forall_mem_pwFilter

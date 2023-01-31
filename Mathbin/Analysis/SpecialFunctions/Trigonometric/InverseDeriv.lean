@@ -125,7 +125,7 @@ theorem deriv_arcsin : deriv arcsin = fun x => 1 / sqrt (1 - x ^ 2) :=
   by_cases h : x ≠ -1 ∧ x ≠ 1
   · exact (has_deriv_at_arcsin h.1 h.2).deriv
   · rw [deriv_zero_of_not_differentiableAt (mt differentiable_at_arcsin.1 h)]
-    simp only [not_and_or, Ne.def, not_not] at h
+    simp only [not_and_or, Ne.def, Classical.not_not] at h
     rcases h with (rfl | rfl) <;> simp
 #align real.deriv_arcsin Real.deriv_arcsin
 

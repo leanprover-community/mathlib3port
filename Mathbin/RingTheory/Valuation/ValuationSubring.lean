@@ -396,7 +396,7 @@ theorem ofPrime_idealOfLe (R S : ValuationSubring K) (h : R ≤ S) :
     · use 1, x⁻¹, hr
       constructor
       · change (⟨x⁻¹, h hr⟩ : S) ∉ nonunits S
-        erw [mem_nonunits_iff, not_not]
+        erw [mem_nonunits_iff, Classical.not_not]
         apply isUnit_of_mul_eq_one _ (⟨x, hx⟩ : S)
         ext
         field_simp

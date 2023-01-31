@@ -38,7 +38,7 @@ variable (s : α → Prop)
 attribute [local instance] Classical.propDecidable
 
 theorem not_not_eq : (¬¬p) = p :=
-  propext not_not
+  propext Classical.not_not
 #align push_neg.not_not_eq PushNeg.not_not_eq
 
 theorem not_and_eq : (¬(p ∧ q)) = (p → ¬q) :=

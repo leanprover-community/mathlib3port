@@ -357,11 +357,11 @@ def Blunt (S : ConvexCone 𝕜 E) : Prop :=
 #align convex_cone.blunt ConvexCone.Blunt
 
 theorem pointed_iff_not_blunt (S : ConvexCone 𝕜 E) : S.Pointed ↔ ¬S.Blunt :=
-  ⟨fun h₁ h₂ => h₂ h₁, not_not.mp⟩
+  ⟨fun h₁ h₂ => h₂ h₁, Classical.not_not.mp⟩
 #align convex_cone.pointed_iff_not_blunt ConvexCone.pointed_iff_not_blunt
 
 theorem blunt_iff_not_pointed (S : ConvexCone 𝕜 E) : S.Blunt ↔ ¬S.Pointed := by
-  rw [pointed_iff_not_blunt, not_not]
+  rw [pointed_iff_not_blunt, Classical.not_not]
 #align convex_cone.blunt_iff_not_pointed ConvexCone.blunt_iff_not_pointed
 
 theorem Pointed.mono {S T : ConvexCone 𝕜 E} (h : S ≤ T) : S.Pointed → T.Pointed :=

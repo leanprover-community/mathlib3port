@@ -106,7 +106,7 @@ def atMostOneFixedPointEquivSumDerangements [DecidableEq α] (a : α) :
         Equiv.sumCongr ((derangements.subtypeEquiv _).trans <| subtype_equiv_right fun x => _).symm
           (subtype_equiv_right fun f => mem_derangements_iff_fixed_points_eq_empty.symm)
       rw [eq_comm, Set.ext_iff]
-      simp_rw [Set.mem_compl_iff, not_not]
+      simp_rw [Set.mem_compl_iff, Classical.not_not]
     
 #align derangements.at_most_one_fixed_point_equiv_sum_derangements derangements.atMostOneFixedPointEquivSumDerangements
 

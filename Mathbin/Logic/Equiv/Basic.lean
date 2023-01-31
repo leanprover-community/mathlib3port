@@ -1974,7 +1974,7 @@ def subtypeEquivCodomain (f : { x' // x' ≠ x } → Y) : { g : X → Y // g ∘
           (show Unique { x' // x' = x } from
             { default := ⟨x, rfl⟩
               uniq := fun ⟨x', h⟩ => Subtype.val_injective h })
-          (subtype_equiv_right fun a => not_not)
+          (subtype_equiv_right fun a => Classical.not_not)
 #align equiv.subtype_equiv_codomain Equiv.subtypeEquivCodomain
 
 /- warning: equiv.coe_subtype_equiv_codomain -> Equiv.coe_subtypeEquivCodomain is a dubious translation:
@@ -2038,7 +2038,7 @@ Case conversion may be inaccurate. Consider using '#align equiv.subtype_equiv_co
 @[simp]
 theorem subtypeEquivCodomain_symm_apply_eq (f : { x' // x' ≠ x } → Y) (y : Y) :
     ((subtypeEquivCodomain f).symm y : X → Y) x = y :=
-  dif_neg (not_not.mpr rfl)
+  dif_neg (Classical.not_not.mpr rfl)
 #align equiv.subtype_equiv_codomain_symm_apply_eq Equiv.subtypeEquivCodomain_symm_apply_eq
 
 /- warning: equiv.subtype_equiv_codomain_symm_apply_ne -> Equiv.subtypeEquivCodomain_symm_apply_ne is a dubious translation:

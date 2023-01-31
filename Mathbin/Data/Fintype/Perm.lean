@@ -105,7 +105,7 @@ theorem nodup_permsOfList : ∀ {l : List α} (hl : l.Nodup), (permsOfList l).No
     have hl' : l.Nodup := hl.of_cons
     have hln' : (permsOfList l).Nodup := nodup_permsOfList hl'
     have hmeml : ∀ {f : Perm α}, f ∈ permsOfList l → f a = a := fun f hf =>
-      not_not.1 (mt (mem_of_mem_permsOfList hf) (nodup_cons.1 hl).1)
+      Classical.not_not.1 (mt (mem_of_mem_permsOfList hf) (nodup_cons.1 hl).1)
     rw [permsOfList, List.nodup_append, List.nodup_bind, pairwise_iff_nth_le] <;>
       exact
         ⟨hln',

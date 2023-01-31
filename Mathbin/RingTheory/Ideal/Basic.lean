@@ -275,7 +275,7 @@ theorem IsPrime.mem_of_pow_mem {I : Ideal α} (hI : I.IsPrime) {r : α} (n : ℕ
 theorem not_isPrime_iff {I : Ideal α} :
     ¬I.IsPrime ↔ I = ⊤ ∨ ∃ (x : _)(_ : x ∉ I)(y : _)(_ : y ∉ I), x * y ∈ I :=
   by
-  simp_rw [Ideal.isPrime_iff, not_and_or, Ne.def, not_not, not_forall, not_or]
+  simp_rw [Ideal.isPrime_iff, not_and_or, Ne.def, Classical.not_not, not_forall, not_or]
   exact
     or_congr Iff.rfl
       ⟨fun ⟨x, y, hxy, hx, hy⟩ => ⟨x, hx, y, hy, hxy⟩, fun ⟨x, hx, y, hy, hxy⟩ =>

@@ -253,7 +253,7 @@ theorem arg_eq_pi_iff {z : ℂ} : arg z = π ↔ z.re < 0 ∧ z.im = 0 :=
 #align complex.arg_eq_pi_iff Complex.arg_eq_pi_iff
 
 theorem arg_lt_pi_iff {z : ℂ} : arg z < π ↔ 0 ≤ z.re ∨ z.im ≠ 0 := by
-  rw [(arg_le_pi z).lt_iff_ne, not_iff_comm, not_or, not_le, not_not, arg_eq_pi_iff]
+  rw [(arg_le_pi z).lt_iff_ne, not_iff_comm, not_or, not_le, Classical.not_not, arg_eq_pi_iff]
 #align complex.arg_lt_pi_iff Complex.arg_lt_pi_iff
 
 theorem arg_of_real_of_neg {x : ℝ} (hx : x < 0) : arg x = π :=

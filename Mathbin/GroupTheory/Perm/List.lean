@@ -229,7 +229,7 @@ theorem zipWith_swap_prod_support' (l l' : List α) :
           · simp only [Finset.coe_insert, Set.mem_insert_iff, Finset.mem_coe, to_finset_cons,
               mem_to_finset] at hm⊢
             simp [hm]
-      · simp only [not_not, Set.mem_setOf_eq] at h
+      · simp only [Classical.not_not, Set.mem_setOf_eq] at h
         simp only [h, Set.mem_setOf_eq] at hx
         rw [swap_apply_ne_self_iff] at hx
         rcases hx with ⟨hyz, rfl | rfl⟩ <;> simp

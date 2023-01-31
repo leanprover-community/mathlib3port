@@ -118,7 +118,7 @@ instance maximalIdeal.isMaximal : (maximalIdeal R).IsMaximal :=
     apply h
     exact isUnit_one
   · intro I x hI hx H
-    erw [not_not] at hx
+    erw [Classical.not_not] at hx
     rcases hx with ⟨u, rfl⟩
     simpa using I.mul_mem_left (↑u⁻¹) H
 #align local_ring.maximal_ideal.is_maximal LocalRing.maximalIdeal.isMaximal
@@ -669,7 +669,8 @@ theorem ResidueField.algebraMap_eq : algebraMap R (ResidueField R) = residue R :
 #align local_ring.residue_field.algebra_map_eq LocalRing.ResidueField.algebraMap_eq
 
 instance : IsLocalRingHom (LocalRing.residue R) :=
-  ⟨fun a ha => not_not.mp (Ideal.Quotient.eq_zero_iff_mem.Not.mp (isUnit_iff_ne_zero.mp ha))⟩
+  ⟨fun a ha =>
+    Classical.not_not.mp (Ideal.Quotient.eq_zero_iff_mem.Not.mp (isUnit_iff_ne_zero.mp ha))⟩
 
 variable {R}
 

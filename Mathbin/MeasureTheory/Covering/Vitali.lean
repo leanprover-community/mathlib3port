@@ -154,7 +154,7 @@ theorem exists_disjoint_subfamily_covering_enlargment (B : ι → Set α) (t : S
     -- moreover, `δ c` is smaller than the maximum `m` of `δ` over `A`, which is `≤ δ a' / τ`
     -- thanks to the good choice of `a'`. This is the desired inequality.
     · push_neg  at H
-      simp only [← not_disjoint_iff_nonempty_inter, not_not] at H
+      simp only [← not_disjoint_iff_nonempty_inter, Classical.not_not] at H
       rcases mem_insert_iff.1 ba'u with (rfl | H')
       · refine' ⟨b, mem_insert _ _, hcb, _⟩
         calc
@@ -314,7 +314,7 @@ theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [Opens
     · have R0pos : 0 < R0 := (hR0 x).trans_le H
       have vnonempty : v.nonempty := by
         by_contra
-        rw [nonempty_iff_ne_empty, not_not] at h
+        rw [nonempty_iff_ne_empty, Classical.not_not] at h
         simp only [h, Real.supₛ_empty, image_empty] at R0_def
         exact lt_irrefl _ (R0pos.trans_le (le_of_eq R0_def))
       obtain ⟨a, hav, R0a⟩ : ∃ a ∈ v, R0 / 2 < r a :=

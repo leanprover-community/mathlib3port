@@ -463,7 +463,7 @@ theorem isClosed_singleton_iff_isMaximal (x : PrimeSpectrum R) :
     rw [eq_comm, Set.eq_singleton_iff_unique_mem] at hs
     refine'
       ⟨⟨x.2.1, fun I hI =>
-          not_not.1
+          Classical.not_not.1
             (mt (Ideal.exists_le_maximal I) <| not_exists.2 fun J => not_and.2 fun hJ hIJ => _)⟩⟩
     exact
       ne_of_lt (lt_of_lt_of_le hI hIJ)
@@ -530,11 +530,11 @@ theorem t1Space_iff_isField [IsDomain R] : T1Space (PrimeSpectrum R) ↔ IsField
   · intro h
     have hbot : Ideal.IsPrime (⊥ : Ideal R) := Ideal.bot_prime
     exact
-      not_not.1
+      Classical.not_not.1
         (mt
           (Ring.ne_bot_of_isMaximal_of_not_isField <|
             (is_closed_singleton_iff_is_maximal _).1 (T1Space.t1 ⟨⊥, hbot⟩))
-          (not_not.2 rfl))
+          (Classical.not_not.2 rfl))
   · refine' ⟨fun x => (is_closed_singleton_iff_is_maximal x).2 _⟩
     by_cases hx : x.as_ideal = ⊥
     · letI := h.to_field
@@ -791,7 +791,7 @@ section BasicOpen
 def basicOpen (r : R) : TopologicalSpace.Opens (PrimeSpectrum R)
     where
   val := { x | r ∉ x.asIdeal }
-  property := ⟨{r}, Set.ext fun x => Set.singleton_subset_iff.trans <| not_not.symm⟩
+  property := ⟨{r}, Set.ext fun x => Set.singleton_subset_iff.trans <| Classical.not_not.symm⟩
 #align prime_spectrum.basic_open PrimeSpectrum.basicOpen
 
 @[simp]

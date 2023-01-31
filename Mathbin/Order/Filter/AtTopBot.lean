@@ -3256,10 +3256,10 @@ theorem eventually_iff_seq_eventually {ι : Type _} {l : Filter ι} {p : ι → 
   have : (∀ᶠ n in l, p n) ↔ ¬∃ᶠ n in l, ¬p n :=
     by
     rw [not_frequently]
-    simp_rw [not_not]
+    simp_rw [Classical.not_not]
   rw [this, frequently_iff_seq_frequently]
   push_neg
-  simp_rw [not_frequently, not_not]
+  simp_rw [not_frequently, Classical.not_not]
 #align filter.eventually_iff_seq_eventually Filter.eventually_iff_seq_eventually
 -/
 

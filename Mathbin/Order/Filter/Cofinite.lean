@@ -87,7 +87,7 @@ instance cofinite_neBot [Infinite α] : NeBot (@cofinite α) :=
 #print Filter.frequently_cofinite_iff_infinite /-
 theorem frequently_cofinite_iff_infinite {p : α → Prop} :
     (∃ᶠ x in cofinite, p x) ↔ Set.Infinite { x | p x } := by
-  simp only [Filter.Frequently, Filter.Eventually, mem_cofinite, compl_set_of, not_not,
+  simp only [Filter.Frequently, Filter.Eventually, mem_cofinite, compl_set_of, Classical.not_not,
     Set.Infinite]
 #align filter.frequently_cofinite_iff_infinite Filter.frequently_cofinite_iff_infinite
 -/

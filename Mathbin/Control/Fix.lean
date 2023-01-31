@@ -104,7 +104,7 @@ protected theorem fix_def {x : α} (h' : ∃ i, (Fix.approx f i x).Dom) :
     rw [assert_neg]
     rfl
     rw [Nat.zero_add] at this
-    simpa only [not_not, Subtype.val_eq_coe]
+    simpa only [Classical.not_not, Subtype.val_eq_coe]
   · rw [fix.approx, WellFounded.fix_eq, fix_aux]
     congr
     ext : 1

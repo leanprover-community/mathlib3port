@@ -503,7 +503,7 @@ theorem rowLens_length_ofRowLens {w : List ℕ} {hw : w.Sorted (· ≥ ·)} (hpo
     (ofRowLens w hw).rowLens.length = w.length :=
   by
   simp only [length_row_lens, col_len, Nat.find_eq_iff, mem_cells, mem_of_row_lens,
-    lt_self_iff_false, IsEmpty.exists_iff, not_not]
+    lt_self_iff_false, IsEmpty.exists_iff, Classical.not_not]
   exact ⟨id, fun n hn => ⟨hn, hpos _ (List.nthLe_mem _ _ hn)⟩⟩
 #align young_diagram.row_lens_length_of_row_lens YoungDiagram.rowLens_length_ofRowLens
 

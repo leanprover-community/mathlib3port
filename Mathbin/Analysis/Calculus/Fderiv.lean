@@ -573,7 +573,7 @@ theorem HasFderivWithinAt.fderivWithin (h : HasFderivWithinAt f f' s x)
 as this statement is empty. -/
 theorem hasFderivWithinAt_of_not_mem_closure (h : x ∉ closure s) : HasFderivWithinAt f f' s x :=
   by
-  simp only [mem_closure_iff_nhdsWithin_neBot, ne_bot_iff, Ne.def, not_not] at h
+  simp only [mem_closure_iff_nhdsWithin_neBot, ne_bot_iff, Ne.def, Classical.not_not] at h
   simp [HasFderivWithinAt, HasFderivAtFilter, h, is_o, is_O_with]
 #align has_fderiv_within_at_of_not_mem_closure hasFderivWithinAt_of_not_mem_closure
 

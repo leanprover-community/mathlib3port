@@ -372,7 +372,7 @@ variable [CommRing R]
 theorem le_rootMultiplicity_iff {p : R[X]} (p0 : p ≠ 0) {a : R} {n : ℕ} :
     n ≤ rootMultiplicity a p ↔ (X - c a) ^ n ∣ p :=
   by
-  simp_rw [root_multiplicity, dif_neg p0, Nat.le_find_iff, not_not]
+  simp_rw [root_multiplicity, dif_neg p0, Nat.le_find_iff, Classical.not_not]
   refine' ⟨fun h => _, fun h m hm => (pow_dvd_pow _ hm).trans h⟩
   cases n;
   · rw [pow_zero]

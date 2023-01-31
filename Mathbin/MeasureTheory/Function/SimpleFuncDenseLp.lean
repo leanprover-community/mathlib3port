@@ -880,7 +880,7 @@ theorem exists_simpleFunc_nonneg_ae_eq {f : lp.simpleFunc G p μ} (hf : 0 ≤ f)
     rw [mem_compl_iff] at hxs
     have hx' : x ∉ { a : α | ¬0 ≤ simple_func.to_simple_func f a } := fun h =>
       hxs (subset_to_measurable μ _ h)
-    rwa [Set.nmem_setOf_iff, not_not] at hx'
+    rwa [Set.nmem_setOf_iff, Classical.not_not] at hx'
   let f' :=
     simple_func.piecewise s (measurable_set_to_measurable μ _).compl (simple_func.to_simple_func f)
       (simple_func.const α (0 : G))

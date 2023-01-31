@@ -353,7 +353,7 @@ theorem realize_all : (all θ).realize v xs ↔ ∀ a : M, θ.realize v (Fin.sno
 theorem realize_ex : θ.ex.realize v xs ↔ ∃ a : M, θ.realize v (Fin.snoc xs a) :=
   by
   rw [bounded_formula.ex, realize_not, realize_all, not_forall]
-  simp_rw [realize_not, not_not]
+  simp_rw [realize_not, Classical.not_not]
 #align first_order.language.bounded_formula.realize_ex FirstOrder.Language.BoundedFormula.realize_ex
 
 @[simp]

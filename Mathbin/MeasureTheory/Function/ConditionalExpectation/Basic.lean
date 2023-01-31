@@ -2305,7 +2305,7 @@ theorem condexp_bot_ae_eq (f : α → F') :
   · refine' eventually_of_forall fun x => _
     rw [condexp_bot' f]
     exact h
-  · rw [ne_bot_iff, not_not, ae_eq_bot] at h
+  · rw [ne_bot_iff, Classical.not_not, ae_eq_bot] at h
     simp only [h, ae_zero]
 #align measure_theory.condexp_bot_ae_eq MeasureTheory.condexp_bot_ae_eq
 

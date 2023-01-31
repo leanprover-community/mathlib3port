@@ -398,7 +398,7 @@ theorem mem_erase {a a' : α} {s : Finmap β} : a' ∈ erase a s ↔ a' ≠ a �
 #align finmap.mem_erase Finmap.mem_erase
 
 theorem not_mem_erase_self {a : α} {s : Finmap β} : ¬a ∈ erase a s := by
-  rw [mem_erase, not_and_or, not_not] <;> left <;> rfl
+  rw [mem_erase, not_and_or, Classical.not_not] <;> left <;> rfl
 #align finmap.not_mem_erase_self Finmap.not_mem_erase_self
 
 @[simp]

@@ -117,6 +117,12 @@ def IsOpen [TopologicalSpace α] (s : Set α) : Prop :=
 -- mathport name: is_open_of
 scoped[Topology] notation "is_open[" t "]" => @IsOpen hole! t
 
+/- warning: is_open_mk -> isOpen_mk is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {p : (Set.{u1} α) -> Prop} {h₁ : p (Set.univ.{u1} α)} {h₂ : forall (s : Set.{u1} α) (t : Set.{u1} α), (p s) -> (p t) -> (p (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s t))} {h₃ : forall (s : Set.{u1} (Set.{u1} α)), (forall (t : Set.{u1} α), (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) t s) -> (p t)) -> (p (Set.unionₛ.{u1} α s))} {s : Set.{u1} α}, Iff (IsOpen.{u1} α (TopologicalSpace.mk.{u1} α p h₁ h₂ h₃) s) (p s)
+but is expected to have type
+  forall {α : Type.{u1}} {p : (Set.{u1} α) -> Prop} {h₁ : p (Set.univ.{u1} α)} {h₂ : forall (s : Set.{u1} α) (t : Set.{u1} α), (p s) -> (p t) -> (p (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t))} {h₃ : forall (s : Set.{u1} (Set.{u1} α)), (forall (t : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) t s) -> (p t)) -> (p (Set.unionₛ.{u1} α s))} {s : Set.{u1} α}, Iff (IsOpen.{u1} α (TopologicalSpace.mk.{u1} α p h₁ h₂ h₃) s) (p s)
+Case conversion may be inaccurate. Consider using '#align is_open_mk isOpen_mkₓ'. -/
 theorem isOpen_mk {p h₁ h₂ h₃} {s : Set α} : is_open[⟨p, h₁, h₂, h₃⟩] s ↔ p s :=
   Iff.rfl
 #align is_open_mk isOpen_mk
@@ -2569,7 +2575,7 @@ structure Continuous (f : α → β) : Prop where
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β}, Iff (Continuous.{u1, u2} α β _inst_1 _inst_2 f) (forall (s : Set.{u2} β), (IsOpen.{u2} β _inst_2 s) -> (IsOpen.{u1} α _inst_1 (Set.preimage.{u1, u2} α β f s)))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] {f : α -> β}, Iff (Continuous.{u2, u1} α β _inst_1 _inst_2 f) (forall (s : Set.{u1} β), (IsOpen.{u1} β _inst_2 s) -> (IsOpen.{u2} α _inst_1 (Set.preimage.{u2, u1} α β f s)))
+  forall {α : Type.{u2}} {β : Type.{u1}} {_inst_1 : TopologicalSpace.{u2} α} {_inst_2 : TopologicalSpace.{u1} β} {f : α -> β}, Iff (Continuous.{u2, u1} α β _inst_1 _inst_2 f) (forall (s : Set.{u1} β), (IsOpen.{u1} β _inst_2 s) -> (IsOpen.{u2} α _inst_1 (Set.preimage.{u2, u1} α β f s)))
 Case conversion may be inaccurate. Consider using '#align continuous_def continuous_defₓ'. -/
 theorem continuous_def {f : α → β} : Continuous f ↔ ∀ s, IsOpen s → IsOpen (f ⁻¹' s) :=
   ⟨fun hf s hs => hf.is_open_preimage s hs, fun h => ⟨h⟩⟩

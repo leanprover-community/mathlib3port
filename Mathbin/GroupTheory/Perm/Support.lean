@@ -467,7 +467,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align equiv.perm.support_eq_empty_iff Equiv.Perm.support_eq_empty_iffₓ'. -/
 @[simp]
 theorem support_eq_empty_iff {σ : Perm α} : σ.Support = ∅ ↔ σ = 1 := by
-  simp_rw [Finset.ext_iff, mem_support, Finset.not_mem_empty, iff_false_iff, not_not,
+  simp_rw [Finset.ext_iff, mem_support, Finset.not_mem_empty, iff_false_iff, Classical.not_not,
     Equiv.Perm.ext_iff, one_apply]
 #align equiv.perm.support_eq_empty_iff Equiv.Perm.support_eq_empty_iff
 
@@ -523,7 +523,7 @@ theorem exists_mem_support_of_mem_support_prod {l : List (Perm α)} {x : α}
     (hx : x ∈ l.Prod.Support) : ∃ f : Perm α, f ∈ l ∧ x ∈ f.Support :=
   by
   contrapose! hx
-  simp_rw [mem_support, not_not] at hx⊢
+  simp_rw [mem_support, Classical.not_not] at hx⊢
   induction' l with f l ih generalizing hx
   · rfl
   · rw [List.prod_cons, mul_apply, ih fun g hg => hx g (Or.inr hg), hx f (Or.inl rfl)]

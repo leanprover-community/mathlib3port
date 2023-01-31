@@ -692,7 +692,7 @@ instance : CanonicallyLinearOrderedAddMonoid Cardinal.{u} :=
 instance : DistribLattice Cardinal.{u} := by infer_instance
 
 theorem one_lt_iff_nontrivial {α : Type u} : 1 < (#α) ↔ Nontrivial α := by
-  rw [← not_le, le_one_iff_subsingleton, ← not_nontrivial_iff_subsingleton, not_not]
+  rw [← not_le, le_one_iff_subsingleton, ← not_nontrivial_iff_subsingleton, Classical.not_not]
 #align cardinal.one_lt_iff_nontrivial Cardinal.one_lt_iff_nontrivial
 
 theorem power_le_max_power_one {a b c : Cardinal} (h : b ≤ c) : (a^b) ≤ max (a^c) 1 :=

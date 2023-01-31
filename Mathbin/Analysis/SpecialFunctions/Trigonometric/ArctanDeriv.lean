@@ -65,7 +65,7 @@ theorem differentiableAt_tan {x : ℝ} : DifferentiableAt ℝ tan x ↔ cos x �
 theorem deriv_tan (x : ℝ) : deriv tan x = 1 / cos x ^ 2 :=
   if h : cos x = 0 then
     by
-    have : ¬DifferentiableAt ℝ tan x := mt differentiableAt_tan.1 (not_not.2 h)
+    have : ¬DifferentiableAt ℝ tan x := mt differentiableAt_tan.1 (Classical.not_not.2 h)
     simp [deriv_zero_of_not_differentiableAt this, h, sq]
   else (hasDerivAt_tan h).deriv
 #align real.deriv_tan Real.deriv_tan

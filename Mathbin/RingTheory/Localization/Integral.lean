@@ -67,7 +67,7 @@ theorem coeffIntegerNormalization_mem_support (p : S[X]) (i : ℕ)
     (h : coeffIntegerNormalization M p i ≠ 0) : i ∈ p.support :=
   by
   contrapose h
-  rw [Ne.def, not_not, coeff_integer_normalization, dif_neg h]
+  rw [Ne.def, Classical.not_not, coeff_integer_normalization, dif_neg h]
 #align is_localization.coeff_integer_normalization_mem_support IsLocalization.coeffIntegerNormalization_mem_support
 
 /-- `integer_normalization g` normalizes `g` to have integer coefficients

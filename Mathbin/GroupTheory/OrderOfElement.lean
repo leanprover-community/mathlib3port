@@ -540,7 +540,7 @@ theorem infinite_not_isOfFinOrder {x : G} (h : ¬IsOfFinOrder x) :
     have := Set.not_injOn_infinite_finite_image (Set.Ioi_infinite 0) (set.not_infinite.mp h)
     contrapose! this
     exact Set.injOn_of_injective this _
-  rwa [injective_pow_iff_not_isOfFinOrder, not_not] at this
+  rwa [injective_pow_iff_not_isOfFinOrder, Classical.not_not] at this
 #align infinite_not_is_of_fin_order infinite_not_isOfFinOrder
 #align infinite_not_is_of_fin_add_order infinite_not_is_of_fin_add_order
 

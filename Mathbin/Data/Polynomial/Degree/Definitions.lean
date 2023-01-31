@@ -124,7 +124,7 @@ theorem natDegree_of_subsingleton [Subsingleton R] : natDegree p = 0 := by
 theorem degree_eq_natDegree (hp : p ≠ 0) : degree p = (natDegree p : WithBot ℕ) :=
   by
   let ⟨n, hn⟩ := not_forall.1 (mt Option.eq_none_iff_forall_not_mem.2 (mt degree_eq_bot.1 hp))
-  have hn : degree p = some n := not_not.1 hn
+  have hn : degree p = some n := Classical.not_not.1 hn
   rw [nat_degree, hn] <;> rfl
 #align polynomial.degree_eq_nat_degree Polynomial.degree_eq_natDegree
 
@@ -340,7 +340,7 @@ theorem natDegree_monomial_eq (i : ℕ) {r : R} (r0 : r ≠ 0) : (monomial i r).
 #align polynomial.nat_degree_monomial_eq Polynomial.natDegree_monomial_eq
 
 theorem coeff_eq_zero_of_degree_lt (h : degree p < n) : coeff p n = 0 :=
-  not_not.1 (mt le_degree_of_ne_zero (not_le_of_gt h))
+  Classical.not_not.1 (mt le_degree_of_ne_zero (not_le_of_gt h))
 #align polynomial.coeff_eq_zero_of_degree_lt Polynomial.coeff_eq_zero_of_degree_lt
 
 theorem coeff_eq_zero_of_natDegree_lt {p : R[X]} {n : ℕ} (h : p.natDegree < n) : p.coeff n = 0 :=
@@ -664,7 +664,7 @@ theorem leadingCoeff_zero : leadingCoeff (0 : R[X]) = 0 :=
 theorem leadingCoeff_eq_zero : leadingCoeff p = 0 ↔ p = 0 :=
   ⟨fun h =>
     by_contradiction fun hp =>
-      mt mem_support_iff.1 (not_not.2 h) (mem_of_max (degree_eq_natDegree hp)),
+      mt mem_support_iff.1 (Classical.not_not.2 h) (mem_of_max (degree_eq_natDegree hp)),
     fun h => h.symm ▸ leading_coeff_zero⟩
 #align polynomial.leading_coeff_eq_zero Polynomial.leadingCoeff_eq_zero
 

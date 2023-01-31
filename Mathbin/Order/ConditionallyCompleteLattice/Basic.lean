@@ -2505,7 +2505,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align with_top.supr_coe_lt_top WithTop.supr_coe_lt_topₓ'. -/
 theorem WithTop.supr_coe_lt_top {ι : Sort _} {α : Type _} [ConditionallyCompleteLinearOrderBot α]
     (f : ι → α) : (⨆ x, (f x : WithTop α)) < ⊤ ↔ BddAbove (Set.range f) :=
-  lt_top_iff_ne_top.trans <| (WithTop.supr_coe_eq_top f).Not.trans not_not
+  lt_top_iff_ne_top.trans <| (WithTop.supr_coe_eq_top f).Not.trans Classical.not_not
 #align with_top.supr_coe_lt_top WithTop.supr_coe_lt_top
 
 end WithTopBot

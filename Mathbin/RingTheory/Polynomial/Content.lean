@@ -88,7 +88,7 @@ theorem content_dvd_coeff {p : R[X]} (n : ℕ) : p.content ∣ p.coeff n :=
   by
   by_cases h : n ∈ p.support
   · apply Finset.gcd_dvd h
-  rw [mem_support_iff, not_not] at h
+  rw [mem_support_iff, Classical.not_not] at h
   rw [h]
   apply dvd_zero
 #align polynomial.content_dvd_coeff Polynomial.content_dvd_coeff

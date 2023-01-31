@@ -1608,7 +1608,7 @@ theorem mul_finprod_cond_ne (a : α) (hf : (mulSupport f).Finite) :
     rw [finprod_cond_eq_prod_of_cond_iff f h, Finset.sdiff_singleton_eq_erase]
     by_cases ha : a ∈ mul_support f
     · apply Finset.mul_prod_erase _ _ ((finite.mem_to_finset _).mpr ha)
-    · rw [mem_mul_support, not_not] at ha
+    · rw [mem_mul_support, Classical.not_not] at ha
       rw [ha, one_mul]
       apply Finset.prod_erase _ ha
 #align mul_finprod_cond_ne mul_finprod_cond_ne
@@ -1712,7 +1712,7 @@ theorem finprod_prod_comm (s : Finset β) (f : α → β → M)
     intro x hx
     simp only [exists_prop, mem_Union, Ne.def, mem_mul_support, Finset.mem_coe]
     contrapose! hx
-    rw [mem_mul_support, not_not, Finset.prod_congr rfl hx, Finset.prod_const_one]
+    rw [mem_mul_support, Classical.not_not, Finset.prod_congr rfl hx, Finset.prod_const_one]
   rw [finprod_eq_prod_of_mulSupport_subset _ hU, Finset.prod_comm]
   refine' Finset.prod_congr rfl fun b hb => (finprod_eq_prod_of_mulSupport_subset _ _).symm
   intro a ha

@@ -569,7 +569,8 @@ section CommMonoidWithZero
 variable {M₀ : Type _} [CommMonoidWithZero M₀]
 
 theorem zero [Nontrivial M₀] : IsPrimitiveRoot (0 : M₀) 0 :=
-  ⟨pow_zero 0, fun l hl => by simpa [zero_pow_eq, show ∀ p, ¬p → False ↔ p from @not_not] using hl⟩
+  ⟨pow_zero 0, fun l hl => by
+    simpa [zero_pow_eq, show ∀ p, ¬p → False ↔ p from @Classical.not_not] using hl⟩
 #align is_primitive_root.zero IsPrimitiveRoot.zero
 
 protected theorem ne_zero [Nontrivial M₀] {ζ : M₀} (h : IsPrimitiveRoot ζ k) : k ≠ 0 → ζ ≠ 0 :=

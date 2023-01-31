@@ -289,7 +289,7 @@ theorem filter_apply_eq_zero_iff (a : α) : (p.filter s h) a = 0 ↔ a ∉ s ∨
 #align pmf.filter_apply_eq_zero_iff Pmf.filter_apply_eq_zero_iff
 
 theorem filter_apply_ne_zero_iff (a : α) : (p.filter s h) a ≠ 0 ↔ a ∈ s ∧ a ∈ p.support := by
-  rw [Ne.def, filter_apply_eq_zero_iff, not_or, not_not, not_not]
+  rw [Ne.def, filter_apply_eq_zero_iff, not_or, Classical.not_not, Classical.not_not]
 #align pmf.filter_apply_ne_zero_iff Pmf.filter_apply_ne_zero_iff
 
 end Filter

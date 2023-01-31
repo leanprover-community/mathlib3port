@@ -87,7 +87,7 @@ theorem intersecting_iff_pairwise_not_disjoint :
   refine' ⟨fun h => ⟨fun a ha b hb _ => h ha hb, _⟩, fun h a ha b hb hab => _⟩
   · rintro rfl
     exact intersecting_singleton.1 h rfl
-  · have := h.1.Eq ha hb (not_not.2 hab)
+  · have := h.1.Eq ha hb (Classical.not_not.2 hab)
     rw [this, disjoint_self] at hab
     rw [hab] at hb
     exact

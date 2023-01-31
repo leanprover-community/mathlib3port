@@ -274,7 +274,7 @@ def embDomain (f : Γ ↪o Γ') : HahnSeries Γ R → HahnSeries Γ' R := fun x 
       (x.is_pwo_support.image_of_monotone f.Monotone).mono fun b hb =>
         by
         contrapose! hb
-        rw [Function.mem_support, dif_neg hb, not_not] }
+        rw [Function.mem_support, dif_neg hb, Classical.not_not] }
 #align hahn_series.emb_domain HahnSeries.embDomain
 
 @[simp]
@@ -286,7 +286,7 @@ theorem embDomain_coeff {f : Γ ↪o Γ'} {x : HahnSeries Γ R} {a : Γ} :
   by_cases ha : a ∈ x.support
   · rw [dif_pos (Set.mem_image_of_mem f ha)]
     exact congr rfl (f.injective (Classical.choose_spec (Set.mem_image_of_mem f ha)).2)
-  · rw [dif_neg, not_not.1 fun c => ha ((mem_support _ _).2 c)]
+  · rw [dif_neg, Classical.not_not.1 fun c => ha ((mem_support _ _).2 c)]
     contrapose! ha
     obtain ⟨b, hb1, hb2⟩ := (Set.mem_image _ _ _).1 ha
     rwa [f.injective hb2] at hb1
@@ -309,7 +309,7 @@ theorem support_embDomain_subset {f : Γ ↪o Γ'} {x : HahnSeries Γ R} :
   by
   intro g hg
   contrapose! hg
-  rw [mem_support, emb_domain_notin_image_support hg, not_not]
+  rw [mem_support, emb_domain_notin_image_support hg, Classical.not_not]
 #align hahn_series.support_emb_domain_subset HahnSeries.support_embDomain_subset
 
 theorem embDomain_notin_range {f : Γ ↪o Γ'} {x : HahnSeries Γ R} {b : Γ'} (hb : b ∉ Set.range f) :
@@ -712,8 +712,8 @@ theorem single_mul_coeff_add [NonUnitalNonAssocSemiring R] {r : R} {x : HahnSeri
   · simp only [hx, mul_zero]
     rw [sum_congr _ fun _ _ => rfl, sum_empty]
     ext ⟨a1, a2⟩
-    simp only [not_mem_empty, not_and, Set.mem_singleton_iff, not_not, mem_add_antidiagonal,
-      Set.mem_setOf_eq, iff_false_iff]
+    simp only [not_mem_empty, not_and, Set.mem_singleton_iff, Classical.not_not,
+      mem_add_antidiagonal, Set.mem_setOf_eq, iff_false_iff]
     rintro rfl h2 h1
     rw [add_comm] at h1
     rw [← add_right_cancel h1] at hx
@@ -742,8 +742,8 @@ theorem mul_single_coeff_add [NonUnitalNonAssocSemiring R] {r : R} {x : HahnSeri
   · simp only [hx, zero_mul]
     rw [sum_congr _ fun _ _ => rfl, sum_empty]
     ext ⟨a1, a2⟩
-    simp only [not_mem_empty, not_and, Set.mem_singleton_iff, not_not, mem_add_antidiagonal,
-      Set.mem_setOf_eq, iff_false_iff]
+    simp only [not_mem_empty, not_and, Set.mem_singleton_iff, Classical.not_not,
+      mem_add_antidiagonal, Set.mem_setOf_eq, iff_false_iff]
     rintro h2 rfl h1
     rw [← add_right_cancel h1] at hx
     exact h2 hx
@@ -1527,8 +1527,8 @@ def hsum (s : SummableFamily Γ R α) : HahnSeries Γ R
   is_pwo_support' :=
     s.is_pwo_Union_support.mono fun g => by
       contrapose
-      rw [Set.mem_unionᵢ, not_exists, Function.mem_support, not_not]
-      simp_rw [mem_support, not_not]
+      rw [Set.mem_unionᵢ, not_exists, Function.mem_support, Classical.not_not]
+      simp_rw [mem_support, Classical.not_not]
       intro h
       rw [finsum_congr h, finsum_zero]
 #align hahn_series.summable_family.hsum HahnSeries.SummableFamily.hsum
@@ -1653,10 +1653,10 @@ theorem hsum_smul {x : HahnSeries Γ R} {s : SummableFamily Γ R α} : (x • s)
   · refine' sum_subset (add_antidiagonal_mono_right (Set.subset_unionᵢ _ a)) _
     rintro ⟨i, j⟩ hU ha
     rw [mem_add_antidiagonal] at *
-    rw [not_not.1 fun con => ha ⟨hU.1, Con, hU.2.2⟩, mul_zero]
+    rw [Classical.not_not.1 fun con => ha ⟨hU.1, Con, hU.2.2⟩, mul_zero]
   · rintro ⟨i, j⟩ hij
     refine' (s.finite_co_support j).Subset _
-    simp_rw [Function.support_subset_iff', Function.mem_support, not_not]
+    simp_rw [Function.support_subset_iff', Function.mem_support, Classical.not_not]
     intro a ha
     rw [ha, mul_zero]
   · refine' (sum_congr rfl _).trans (sum_subset (add_antidiagonal_mono_right _) _).symm
@@ -1669,7 +1669,7 @@ theorem hsum_smul {x : HahnSeries Γ R} {s : SummableFamily Γ R α} : (x • s)
       simp [hx]
     · rintro ⟨i, j⟩ hU ha
       rw [mem_add_antidiagonal] at *
-      rw [← hsum_coeff, not_not.1 fun con => ha ⟨hU.1, Con, hU.2.2⟩, mul_zero]
+      rw [← hsum_coeff, Classical.not_not.1 fun con => ha ⟨hU.1, Con, hU.2.2⟩, mul_zero]
 #align hahn_series.summable_family.hsum_smul HahnSeries.SummableFamily.hsum_smul
 
 /-- The summation of a `summable_family` as a `linear_map`. -/
@@ -1759,7 +1759,7 @@ def embDomain (s : SummableFamily Γ R α) (f : α ↪ β) : SummableFamily Γ R
         · simp only [Ne.def, Set.mem_setOf_eq, dif_pos hb] at h
           exact ⟨Classical.choose hb, h, Classical.choose_spec hb⟩
         · contrapose! h
-          simp only [Ne.def, Set.mem_setOf_eq, dif_neg hb, not_not, zero_coeff])
+          simp only [Ne.def, Set.mem_setOf_eq, dif_neg hb, Classical.not_not, zero_coeff])
 #align hahn_series.summable_family.emb_domain HahnSeries.SummableFamily.embDomain
 
 variable (s : SummableFamily Γ R α) (f : α ↪ β) {a : α} {b : β}

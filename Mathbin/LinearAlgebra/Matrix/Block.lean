@@ -199,10 +199,10 @@ theorem two_block_triangular_det' (M : Matrix m m R) (p : m → Prop) [Decidable
     M.det = (toSquareBlockProp M p).det * (toSquareBlockProp M fun i => ¬p i).det :=
   by
   rw [M.two_block_triangular_det fun i => ¬p i, mul_comm]
-  simp_rw [not_not]
+  simp_rw [Classical.not_not]
   congr 1
   exact equiv_block_det _ fun _ => not_not.symm
-  simpa only [not_not] using h
+  simpa only [Classical.not_not] using h
 #align matrix.two_block_triangular_det' Matrix.two_block_triangular_det'
 
 protected theorem BlockTriangular.det [DecidableEq α] [LinearOrder α] (hM : BlockTriangular M b) :

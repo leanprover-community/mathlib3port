@@ -595,7 +595,7 @@ theorem isUnit_iff_isUnit_val (f : HomogeneousLocalization.AtPrime 𝒜 𝔭) : 
       eq1.symm ▸ fun r => Or.elim (Ideal.IsPrime.mem_or_mem inferInstance r) (by tauto) (by tauto)
     have mem2 : f.num ∉ 𝔭 := by
       contrapose! mem1
-      erw [not_not]
+      erw [Classical.not_not]
       exact Ideal.mul_mem_left _ _ (Ideal.mul_mem_left _ _ mem1)
     refine'
             ⟨⟨f, Quotient.mk'' ⟨f.deg, ⟨f.denom, f.denom_mem_deg⟩, ⟨f.num, f.num_mem_deg⟩, mem2⟩, _,

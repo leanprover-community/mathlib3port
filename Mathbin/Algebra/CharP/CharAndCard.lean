@@ -85,6 +85,7 @@ theorem prime_dvd_char_iff_dvd_card {R : Type _} [CommRing R] [Fintype R] (p : �
 is a unit in `R`. -/
 theorem not_isUnit_prime_of_dvd_card {R : Type _} [CommRing R] [Fintype R] (p : ℕ) [Fact p.Prime]
     (hp : p ∣ Fintype.card R) : ¬IsUnit (p : R) :=
-  mt (isUnit_iff_not_dvd_char R p).mp (not_not.mpr ((prime_dvd_char_iff_dvd_card p).mpr hp))
+  mt (isUnit_iff_not_dvd_char R p).mp
+    (Classical.not_not.mpr ((prime_dvd_char_iff_dvd_card p).mpr hp))
 #align not_is_unit_prime_of_dvd_card not_isUnit_prime_of_dvd_card
 

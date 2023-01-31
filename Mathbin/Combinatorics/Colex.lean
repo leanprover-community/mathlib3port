@@ -179,14 +179,14 @@ theorem lt_trichotomy [LinearOrder α] (A B : Finset.Colex α) : A < B ∨ A = B
       specialize z t
       by_contra h₂
       simp only [mem_union, mem_sdiff, id.def] at z
-      rw [not_iff, iff_iff_and_or_not_and_not, not_not, and_comm'] at h₂
+      rw [not_iff, iff_iff_and_or_not_and_not, Classical.not_not, and_comm'] at h₂
       apply not_le_of_lt th (z h₂)
     · left
       refine' ⟨k, fun t th => _, hk.2, hk.1⟩
       specialize z t
       by_contra h₃
       simp only [mem_union, mem_sdiff, id.def] at z
-      rw [not_iff, iff_iff_and_or_not_and_not, not_not, and_comm', or_comm'] at h₃
+      rw [not_iff, iff_iff_and_or_not_and_not, Classical.not_not, and_comm', or_comm'] at h₃
       apply not_le_of_lt th (z h₃)
   rw [nonempty_iff_ne_empty]
   intro a
@@ -310,7 +310,7 @@ theorem sdiff_lt_sdiff_iff_lt [LT α] [DecidableEq α] (A B : Finset α) :
   rw [Colex.lt_def, Colex.lt_def]
   apply exists_congr
   intro k
-  simp only [mem_sdiff, not_and, not_not]
+  simp only [mem_sdiff, not_and, Classical.not_not]
   constructor
   · rintro ⟨z, kAB, kB, kA⟩
     refine' ⟨_, kA, kB⟩

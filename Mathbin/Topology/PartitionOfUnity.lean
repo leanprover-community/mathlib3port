@@ -305,7 +305,7 @@ theorem exists_isSubordinate_of_locallyFinite_of_prop [NormalSpace X] (p : (X �
     ⟨W, hsW, hWo, hWV⟩
   choose f hfp hf0 hf1 hf01 using fun i =>
     h01 _ _ (isClosed_compl_iff.2 <| hVo i) isClosed_closure
-      (disjoint_right.2 fun x hx => not_not.2 (hWV i hx))
+      (disjoint_right.2 fun x hx => Classical.not_not.2 (hWV i hx))
   have hsupp : ∀ i, support (f i) ⊆ V i := fun i => support_subset_iff'.2 (hf0 i)
   refine'
     ⟨⟨f, hf.subset fun i => subset.trans (hsupp i) (hVU' i), fun i x => (hf01 i x).1, fun i x =>

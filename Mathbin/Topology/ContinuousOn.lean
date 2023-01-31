@@ -1140,7 +1140,7 @@ theorem continuousWithinAt_of_not_mem_closure {f : α → β} {s : Set α} {x : 
     x ∉ closure s → ContinuousWithinAt f s x :=
   by
   intro hx
-  rw [mem_closure_iff_nhdsWithin_neBot, ne_bot_iff, not_not] at hx
+  rw [mem_closure_iff_nhdsWithin_neBot, ne_bot_iff, Classical.not_not] at hx
   rw [ContinuousWithinAt, hx]
   exact tendsto_bot
 #align continuous_within_at_of_not_mem_closure continuousWithinAt_of_not_mem_closure

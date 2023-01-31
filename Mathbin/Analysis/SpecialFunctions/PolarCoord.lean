@@ -125,7 +125,7 @@ theorem polarCoord_source_ae_eq_univ : polarCoord.source =ᵐ[volume] univ :=
     by
     intro x hx
     simp only [polarCoord_source, compl_union, mem_inter_iff, mem_compl_iff, mem_set_of_eq, not_lt,
-      not_not] at hx
+      Classical.not_not] at hx
     exact hx.2
   have B : volume ((LinearMap.snd ℝ ℝ ℝ).ker : Set (ℝ × ℝ)) = 0 :=
     by

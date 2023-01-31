@@ -751,7 +751,7 @@ theorem normalizeScaleRoots_support : (normalizeScaleRoots p).support ≤ p.supp
   intro x
   contrapose
   simp only [not_mem_support_iff, normalizeScaleRoots, finset_sum_coeff, coeff_monomial,
-    Finset.sum_ite_eq', mem_support_iff, Ne.def, not_not, ite_eq_right_iff]
+    Finset.sum_ite_eq', mem_support_iff, Ne.def, Classical.not_not, ite_eq_right_iff]
   intro h₁ h₂
   exact (h₂ h₁).rec _
 #align normalize_scale_roots_support normalizeScaleRoots_support
@@ -802,7 +802,7 @@ theorem RingHom.isIntegralElem_leadingCoeff_mul (h : p.eval₂ f x = 0) :
       rw [coeff_map, coeff_zero, coeff_nat_degree] at hp
       rw [hp, zero_mul]
       exact f.is_integral_zero
-    · rw [Nat.one_le_iff_ne_zero, not_not] at h'
+    · rw [Nat.one_le_iff_ne_zero, Classical.not_not] at h'
       rw [eq_C_of_nat_degree_eq_zero h', eval₂_C] at h
       suffices p.map f = 0 by exact (hp this).rec _
       rw [eq_C_of_nat_degree_eq_zero h', map_C, h, C_eq_zero]

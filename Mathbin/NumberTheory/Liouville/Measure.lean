@@ -134,7 +134,8 @@ theorem volume_unionᵢ_setOf_liouvilleWith :
 #align volume_Union_set_of_liouville_with volume_unionᵢ_setOf_liouvilleWith
 
 theorem ae_not_liouvilleWith : ∀ᵐ x, ∀ p > (2 : ℝ), ¬LiouvilleWith p x := by
-  simpa only [ae_iff, not_forall, not_not, set_of_exists] using volume_unionᵢ_setOf_liouvilleWith
+  simpa only [ae_iff, not_forall, Classical.not_not, set_of_exists] using
+    volume_unionᵢ_setOf_liouvilleWith
 #align ae_not_liouville_with ae_not_liouvilleWith
 
 theorem ae_not_liouville : ∀ᵐ x, ¬Liouville x :=
@@ -144,7 +145,7 @@ theorem ae_not_liouville : ∀ᵐ x, ¬Liouville x :=
 /-- The set of Liouville numbers has Lebesgue measure zero. -/
 @[simp]
 theorem volume_setOf_liouville : volume { x : ℝ | Liouville x } = 0 := by
-  simpa only [ae_iff, not_not] using ae_not_liouville
+  simpa only [ae_iff, Classical.not_not] using ae_not_liouville
 #align volume_set_of_liouville volume_setOf_liouville
 
 /-- The filters `residual ℝ` and `volume.ae` are disjoint. This means that there exists a residual

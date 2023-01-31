@@ -103,7 +103,7 @@ theorem eqOn_open_of_ae_eq {f g : X → Y} (h : f =ᵐ[μ.restrict U] g) (hU : I
       (hf.continuous_at (hU.mem_nhds ha)).prod_mk_nhds (hg.continuous_at (hU.mem_nhds ha))
         (is_closed_diagonal.is_open_compl.mem_nhds ha')
   replace := (this.eq_empty_of_measure_zero h).le
-  exact fun x hx => not_not.1 fun h => this ⟨hx, h⟩
+  exact fun x hx => Classical.not_not.1 fun h => this ⟨hx, h⟩
 #align measure_theory.measure.eq_on_open_of_ae_eq MeasureTheory.Measure.eqOn_open_of_ae_eq
 
 /-- If two continuous functions are a.e. equal, then they are equal. -/

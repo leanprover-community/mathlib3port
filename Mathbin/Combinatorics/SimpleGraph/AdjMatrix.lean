@@ -75,7 +75,7 @@ theorem apply_ne_one_iff [MulZeroOneClass α] [Nontrivial α] (h : IsAdjMatrix A
 
 @[simp]
 theorem apply_ne_zero_iff [MulZeroOneClass α] [Nontrivial α] (h : IsAdjMatrix A) (i j : V) :
-    ¬A i j = 0 ↔ A i j = 1 := by rw [← apply_ne_one_iff h, not_not]
+    ¬A i j = 0 ↔ A i j = 1 := by rw [← apply_ne_one_iff h, Classical.not_not]
 #align matrix.is_adj_matrix.apply_ne_zero_iff Matrix.IsAdjMatrix.apply_ne_zero_iff
 
 /-- For `A : matrix V V α` and `h : is_adj_matrix A`,
@@ -197,7 +197,7 @@ theorem toGraph_adjMatrix_eq [MulZeroOneClass α] [Nontrivial α] :
   by
   ext
   simp only [is_adj_matrix.to_graph_adj, adj_matrix_apply, ite_eq_left_iff, zero_ne_one]
-  apply not_not
+  apply Classical.not_not
 #align simple_graph.to_graph_adj_matrix_eq SimpleGraph.toGraph_adjMatrix_eq
 
 variable {α} [Fintype V]

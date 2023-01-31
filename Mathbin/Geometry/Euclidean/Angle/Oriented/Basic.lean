@@ -498,7 +498,8 @@ theorem oangle_eq_zero_or_eq_pi_iff_right_eq_smul {x y : V} :
 are linearly independent. -/
 theorem oangle_ne_zero_and_ne_pi_iff_linearIndependent {x y : V} :
     o.oangle x y ≠ 0 ∧ o.oangle x y ≠ π ↔ LinearIndependent ℝ ![x, y] := by
-  rw [← not_or, ← not_iff_not, not_not, oangle_eq_zero_or_eq_pi_iff_not_linear_independent]
+  rw [← not_or, ← not_iff_not, Classical.not_not,
+    oangle_eq_zero_or_eq_pi_iff_not_linear_independent]
 #align orientation.oangle_ne_zero_and_ne_pi_iff_linear_independent Orientation.oangle_ne_zero_and_ne_pi_iff_linearIndependent
 
 /-- Two vectors are equal if and only if they have equal norms and zero angle between them. -/

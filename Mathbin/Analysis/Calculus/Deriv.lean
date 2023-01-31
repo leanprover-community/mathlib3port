@@ -1759,7 +1759,7 @@ theorem differentiableOn_inv : DifferentiableOn 𝕜 (fun x : 𝕜 => x⁻¹) { 
 theorem deriv_inv : deriv (fun x => x⁻¹) x = -(x ^ 2)⁻¹ :=
   by
   rcases eq_or_ne x 0 with (rfl | hne)
-  · simp [deriv_zero_of_not_differentiableAt (mt differentiableAt_inv.1 (not_not.2 rfl))]
+  · simp [deriv_zero_of_not_differentiableAt (mt differentiableAt_inv.1 (Classical.not_not.2 rfl))]
   · exact (hasDerivAt_inv hne).deriv
 #align deriv_inv deriv_inv
 

@@ -790,7 +790,7 @@ theorem nonempty_iff_ne_empty {s : Finset α} : s.Nonempty ↔ s ≠ ∅ :=
 #print Finset.not_nonempty_iff_eq_empty /-
 @[simp]
 theorem not_nonempty_iff_eq_empty {s : Finset α} : ¬s.Nonempty ↔ s = ∅ :=
-  nonempty_iff_ne_empty.Not.trans not_not
+  nonempty_iff_ne_empty.Not.trans Classical.not_not
 #align finset.not_nonempty_iff_eq_empty Finset.not_nonempty_iff_eq_empty
 -/
 
@@ -1253,7 +1253,8 @@ but is expected to have type
   forall {α : Type.{u1}} {s : Finset.{u1} α} {t : Finset.{u1} α}, Iff (Not (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s t)) (Exists.{succ u1} α (fun (a : α) => And (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a s) (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a t)))
 Case conversion may be inaccurate. Consider using '#align finset.not_disjoint_iff Finset.not_disjoint_iffₓ'. -/
 theorem not_disjoint_iff : ¬Disjoint s t ↔ ∃ a, a ∈ s ∧ a ∈ t :=
-  disjoint_left.Not.trans <| not_forall.trans <| exists_congr fun _ => by rw [not_imp, not_not]
+  disjoint_left.Not.trans <|
+    not_forall.trans <| exists_congr fun _ => by rw [not_imp, Classical.not_not]
 #align finset.not_disjoint_iff Finset.not_disjoint_iff
 
 /- warning: finset.disjoint_of_subset_left -> Finset.disjoint_of_subset_left is a dubious translation:
@@ -3836,7 +3837,7 @@ but is expected to have type
   forall {α : Type.{u1}} {p : α -> Prop} [_inst_1 : DecidablePred.{succ u1} α p] {s : Finset.{u1} α}, Iff (Finset.Nonempty.{u1} α (Finset.filter.{u1} α p (fun (a : α) => _inst_1 a) s)) (Exists.{succ u1} α (fun (a : α) => And (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a s) (p a)))
 Case conversion may be inaccurate. Consider using '#align finset.filter_nonempty_iff Finset.filter_nonempty_iffₓ'. -/
 theorem filter_nonempty_iff {s : Finset α} : (s.filter p).Nonempty ↔ ∃ a ∈ s, p a := by
-  simp only [nonempty_iff_ne_empty, Ne.def, filter_eq_empty_iff, not_not, not_forall]
+  simp only [nonempty_iff_ne_empty, Ne.def, filter_eq_empty_iff, Classical.not_not, not_forall]
 #align finset.filter_nonempty_iff Finset.filter_nonempty_iff
 
 #print Finset.filter_congr /-
@@ -4356,7 +4357,7 @@ theorem nonempty_range_iff : (range n).Nonempty ↔ n ≠ 0 :=
 #print Finset.range_eq_empty_iff /-
 @[simp]
 theorem range_eq_empty_iff : range n = ∅ ↔ n = 0 := by
-  rw [← not_nonempty_iff_eq_empty, nonempty_range_iff, not_not]
+  rw [← not_nonempty_iff_eq_empty, nonempty_range_iff, Classical.not_not]
 #align finset.range_eq_empty_iff Finset.range_eq_empty_iff
 -/
 

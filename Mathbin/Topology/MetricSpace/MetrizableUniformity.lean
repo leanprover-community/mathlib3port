@@ -232,7 +232,7 @@ protected theorem UniformSpace.metrizable_uniformity (X : Type _) [UniformSpace 
       split_ifs with h
       · rw [← not_forall] at h
         simp [h, pow_eq_zero_iff']
-      · simpa only [not_exists, not_not, eq_self_iff_true, true_iff_iff] using h
+      · simpa only [not_exists, Classical.not_not, eq_self_iff_true, true_iff_iff] using h
     have hd_symm : ∀ x y, d x y = d y x := by
       intro x y
       dsimp only [d]
@@ -263,7 +263,7 @@ protected theorem UniformSpace.metrizable_uniformity (X : Type _) [UniformSpace 
       · exact (dif_neg H).trans_le (zero_le _)
     refine' ⟨I, uniformSpace_eq <| (uniformity_basis_dist_pow hr.1 hr.2).ext hB.to_has_basis _ _⟩
     · refine' fun n hn => ⟨n, hn, fun x hx => (hdist_le _ _).trans_lt _⟩
-      rwa [← Nnreal.coe_pow, Nnreal.coe_lt_coe, ← not_le, hle_d, not_not, Prod.mk.eta]
+      rwa [← Nnreal.coe_pow, Nnreal.coe_lt_coe, ← not_le, hle_d, Classical.not_not, Prod.mk.eta]
     · refine' fun n hn => ⟨n + 1, trivial, fun x hx => _⟩
       rw [mem_set_of_eq] at hx
       contrapose! hx

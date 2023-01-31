@@ -251,7 +251,7 @@ theorem one_le_padicValNat_of_dvd {n : ℕ} [hp : Fact p.Prime] (hn : 0 < n) (di
 theorem dvd_iff_padicValNat_ne_zero {p n : ℕ} [Fact p.Prime] (hn0 : n ≠ 0) :
     p ∣ n ↔ padicValNat p n ≠ 0 :=
   ⟨fun h => one_le_iff_ne_zero.mp (one_le_padicValNat_of_dvd hn0.bot_lt h), fun h =>
-    not_not.1 (mt padicValNat.eq_zero_of_not_dvd h)⟩
+    Classical.not_not.1 (mt padicValNat.eq_zero_of_not_dvd h)⟩
 #align dvd_iff_padic_val_nat_ne_zero dvd_iff_padicValNat_ne_zero
 
 end padicValNat

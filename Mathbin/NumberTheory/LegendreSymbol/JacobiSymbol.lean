@@ -180,7 +180,7 @@ theorem eq_zero_iff {a : ℤ} {b : ℕ} : J(a | b) = 0 ↔ b ≠ 0 ∧ a.gcd b �
     cases' eq_or_ne b 0 with hb hb
     · rw [hb, zero_right] at h
       cases h
-    exact ⟨hb, mt jacobiSym.ne_zero <| not_not.2 h⟩, fun ⟨hb, h⟩ =>
+    exact ⟨hb, mt jacobiSym.ne_zero <| Classical.not_not.2 h⟩, fun ⟨hb, h⟩ =>
     by
     rw [← neZero_iff] at hb
     exact eq_zero_iff_not_coprime.2 h⟩
@@ -267,7 +267,7 @@ theorem nonsquare_iff_jacobiSym_eq_neg_one {a : ℤ} {p : ℕ} [Fact p.Prime] :
 /-- If `p` is prime and `J(a | p) = 1`, then `a` is q square mod `p`. -/
 theorem isSquare_of_jacobiSym_eq_one {a : ℤ} {p : ℕ} [Fact p.Prime] (h : J(a | p) = 1) :
     IsSquare (a : ZMod p) :=
-  not_not.mp <| by
+  Classical.not_not.mp <| by
     rw [← nonsquare_iff_jacobi_sym_eq_neg_one, h]
     decide
 #align zmod.is_square_of_jacobi_sym_eq_one ZMod.isSquare_of_jacobiSym_eq_one

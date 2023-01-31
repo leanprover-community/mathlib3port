@@ -1261,7 +1261,7 @@ theorem lintegral_lt_top {f : α →ₛ ℝ≥0∞} (hm : f.FinMeasSupp μ) (hf 
     f.lintegral μ < ∞ := by
   refine' sum_lt_top fun a ha => _
   rcases eq_or_ne a ∞ with (rfl | ha)
-  · simp only [ae_iff, Ne.def, not_not] at hf
+  · simp only [ae_iff, Ne.def, Classical.not_not] at hf
     simp [Set.preimage, hf]
   · by_cases ha0 : a = 0
     · subst a
@@ -2200,7 +2200,7 @@ theorem lintegral_supᵢ_ae {f : ℕ → α → ℝ≥0∞} (hf : ∀ n, Measura
           by_cases (fun h : a ∈ s => by simp [g, if_pos h]) fun h : a ∉ s =>
             by
             simp only [g, if_neg h]; have := hs.1; rw [subset_def] at this; have := mt (this a) h
-            simp only [not_not, mem_set_of_eq] at this; exact this n)
+            simp only [Classical.not_not, mem_set_of_eq] at this; exact this n)
     _ = ⨆ n, ∫⁻ a, f n a ∂μ := by simp only [lintegral_congr_ae (g_eq_f.mono fun a ha => ha _)]
     
 #align measure_theory.lintegral_supr_ae MeasureTheory.lintegral_supᵢ_ae
@@ -2228,7 +2228,7 @@ theorem lintegral_strict_mono_of_ae_le_of_frequently_ae_lt {f g : α → ℝ≥0
     (hfi : (∫⁻ x, f x ∂μ) ≠ ∞) (h_le : f ≤ᵐ[μ] g) (h : ∃ᵐ x ∂μ, f x ≠ g x) :
     (∫⁻ x, f x ∂μ) < ∫⁻ x, g x ∂μ := by
   contrapose! h
-  simp only [not_frequently, Ne.def, not_not]
+  simp only [not_frequently, Ne.def, Classical.not_not]
   exact ae_eq_of_ae_le_of_lintegral_le h_le hfi hg h
 #align measure_theory.lintegral_strict_mono_of_ae_le_of_frequently_ae_lt MeasureTheory.lintegral_strict_mono_of_ae_le_of_frequently_ae_lt
 
@@ -3050,7 +3050,7 @@ theorem aeMeasurable_withDensity_iff {E : Type _} [NormedAddCommGroup E] [Normed
       rw [ha this]
     · filter_upwards [ae_restrict_mem A.compl]
       intro x hx
-      simp only [not_not, mem_set_of_eq, mem_compl_iff] at hx
+      simp only [Classical.not_not, mem_set_of_eq, mem_compl_iff] at hx
       simp [hx]
   · rintro ⟨g', g'meas, hg'⟩
     refine' ⟨fun x => (f x : ℝ)⁻¹ • g' x, hf.coe_nnreal_real.inv.smul g'meas, _⟩
@@ -3079,7 +3079,7 @@ theorem aeMeasurable_withDensity_ennreal_iff {f : α → ℝ≥0} (hf : Measurab
       rw [ha this]
     · filter_upwards [ae_restrict_mem A.compl]
       intro x hx
-      simp only [not_not, mem_set_of_eq, mem_compl_iff] at hx
+      simp only [Classical.not_not, mem_set_of_eq, mem_compl_iff] at hx
       simp [hx]
   · rintro ⟨g', g'meas, hg'⟩
     refine' ⟨fun x => (f x)⁻¹ * g' x, hf.coe_nnreal_ennreal.inv.smul g'meas, _⟩
@@ -3187,7 +3187,7 @@ theorem lintegral_withDensity_eq_lintegral_mul₀' {μ : Measure α} {f : α →
           (hf.measurable_mk (measurable_set_singleton 0).compl).compl
         filter_upwards [ae_restrict_mem M]
         intro x hx
-        simp only [not_not, mem_set_of_eq, mem_compl_iff] at hx
+        simp only [Classical.not_not, mem_set_of_eq, mem_compl_iff] at hx
         simp only [hx, zero_mul, Pi.mul_apply]
     _ = ∫⁻ a : α, (f * g) a ∂μ := by
       apply lintegral_congr_ae

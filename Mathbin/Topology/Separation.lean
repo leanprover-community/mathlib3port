@@ -1709,7 +1709,7 @@ theorem tendsto_nhds_unique_of_eventuallyEq [T2Space α] {f g : β → α} {l : 
 theorem tendsto_nhds_unique_of_frequently_eq [T2Space α] {f g : β → α} {l : Filter β} {a b : α}
     (ha : Tendsto f l (𝓝 a)) (hb : Tendsto g l (𝓝 b)) (hfg : ∃ᶠ x in l, f x = g x) : a = b :=
   have : ∃ᶠ z : α × α in 𝓝 (a, b), z.1 = z.2 := (ha.prod_mk_nhds hb).Frequently hfg
-  not_not.1 fun hne => this (isClosed_diagonal.is_open_compl.mem_nhds hne)
+  Classical.not_not.1 fun hne => this (isClosed_diagonal.is_open_compl.mem_nhds hne)
 #align tendsto_nhds_unique_of_frequently_eq tendsto_nhds_unique_of_frequently_eq
 
 /-- A T₂.₅ space, also known as a Urysohn space, is a topological space
@@ -2321,7 +2321,7 @@ class RegularSpace (X : Type u) [TopologicalSpace X] : Prop where
                 ","
                 (Tactic.simpLemma [] [] `mem_compl_iff)
                 ","
-                (Tactic.simpLemma [] [] `not_not)
+                (Tactic.simpLemma [] [] `Classical.not_not)
                 ","
                 (Tactic.simpLemma
                  []
@@ -2617,7 +2617,7 @@ class RegularSpace (X : Type u) [TopologicalSpace X] : Prop where
                ","
                (Tactic.simpLemma [] [] `mem_compl_iff)
                ","
-               (Tactic.simpLemma [] [] `not_not)
+               (Tactic.simpLemma [] [] `Classical.not_not)
                ","
                (Tactic.simpLemma
                 []
@@ -3066,7 +3066,7 @@ theorem
                   ,
                   mem_compl_iff
                   ,
-                  not_not
+                  Classical.not_not
                   ,
                   @ and_comm' _ ∈ _
                   ,
@@ -3448,7 +3448,8 @@ theorem normalSpaceOfT3SecondCountable [SecondCountableTopology α] [T3Space α]
     simp only [mem_Union]
     rintro ⟨u, huU, -, hxu⟩
     exact (hUd u huU).le_bot ⟨hxu, hx⟩
-  · simp only [disjoint_left, mem_Union, mem_diff, not_exists, not_and, not_forall, not_not]
+  · simp only [disjoint_left, mem_Union, mem_diff, not_exists, not_and, not_forall,
+      Classical.not_not]
     rintro a ⟨u, huU, hau, haV⟩ v hvV hav
     cases' le_total (Encodable.encode u) (Encodable.encode v) with hle hle
     exacts[⟨u, huU, hle, subset_closure hau⟩, (haV _ hvV hle <| subset_closure hav).elim]

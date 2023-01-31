@@ -164,7 +164,7 @@ protected def Infinite (s : Set α) : Prop :=
 #print Set.not_infinite /-
 @[simp]
 theorem not_infinite {s : Set α} : ¬s.Infinite ↔ s.Finite :=
-  not_not
+  Classical.not_not
 #align set.not_infinite Set.not_infinite
 -/
 

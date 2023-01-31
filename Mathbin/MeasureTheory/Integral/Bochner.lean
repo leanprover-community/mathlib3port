@@ -358,7 +358,7 @@ theorem integral_eq_sum_of_subset [DecidablePred fun x : F => x ≠ 0] {f : α �
     f.integral μ = ∑ x in s, (μ (f ⁻¹' {x})).toReal • x :=
   by
   rw [simple_func.integral_eq_sum_filter, Finset.sum_subset hs]
-  rintro x - hx; rw [Finset.mem_filter, not_and_or, Ne.def, not_not] at hx
+  rintro x - hx; rw [Finset.mem_filter, not_and_or, Ne.def, Classical.not_not] at hx
   rcases hx with (hx | rfl) <;> [skip, simp]
   rw [simple_func.mem_range] at hx;
   rw [preimage_eq_empty] <;> simp [Set.disjoint_singleton_left, hx]
@@ -1219,7 +1219,7 @@ theorem integral_eq_lintegral_of_nonneg_ae {f : α → ℝ} (hf : 0 ≤ᵐ[μ] f
     rw [h_min, zero_to_real, _root_.sub_zero]
   · rw [integral_undef hfi]
     simp_rw [integrable, hfm, has_finite_integral_iff_norm, lt_top_iff_ne_top, Ne.def, true_and_iff,
-      not_not] at hfi
+      Classical.not_not] at hfi
     have : (∫⁻ a : α, Ennreal.ofReal (f a) ∂μ) = ∫⁻ a, Ennreal.ofReal ‖f a‖ ∂μ :=
       by
       refine' lintegral_congr_ae (hf.mono fun a h => _)

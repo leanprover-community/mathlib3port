@@ -227,7 +227,7 @@ def swapFactorsAux :
     ⟨[],
       Equiv.ext fun x => by
         rw [List.prod_nil]
-        exact (not_not.1 (mt h (List.not_mem_nil _))).symm,
+        exact (Classical.not_not.1 (mt h (List.not_mem_nil _))).symm,
       by simp⟩
   | x::l => fun f h =>
     if hfx : x = f x then
@@ -488,7 +488,7 @@ theorem signAux_eq_signAux2 {n : ℕ} :
       signAux ((e.symm.trans f).trans e) = signAux2 l f
   | [], f, e, h =>
     by
-    have : f = 1 := Equiv.ext fun y => not_not.1 (mt (h y) (List.not_mem_nil _))
+    have : f = 1 := Equiv.ext fun y => Classical.not_not.1 (mt (h y) (List.not_mem_nil _))
     rw [this, one_def, Equiv.trans_refl, Equiv.symm_trans_self, ← one_def, sign_aux_one, sign_aux2]
   | x::l, f, e, h => by
     rw [sign_aux2]

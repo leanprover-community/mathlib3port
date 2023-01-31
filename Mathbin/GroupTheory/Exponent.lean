@@ -88,7 +88,7 @@ theorem exponentExists_iff_ne_zero : ExponentExists G ↔ exponent G ≠ 0 :=
 
 @[to_additive]
 theorem exponent_eq_zero_iff : exponent G = 0 ↔ ¬ExponentExists G := by
-  simp only [exponent_exists_iff_ne_zero, not_not]
+  simp only [exponent_exists_iff_ne_zero, Classical.not_not]
 #align monoid.exponent_eq_zero_iff Monoid.exponent_eq_zero_iff
 #align add_monoid.exponent_eq_zero_iff AddMonoid.exponent_eq_zero_iff
 

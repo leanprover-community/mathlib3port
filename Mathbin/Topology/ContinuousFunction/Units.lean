@@ -113,8 +113,8 @@ theorem spectrum_eq_range (f : C(X, 𝕜)) : spectrum 𝕜 f = Set.range f :=
   by
   ext
   simp only [spectrum.mem_iff, is_unit_iff_forall_ne_zero, not_forall, coe_sub, Pi.sub_apply,
-    algebraMap_apply, Algebra.id.smul_eq_mul, mul_one, not_not, Set.mem_range, sub_eq_zero,
-    @eq_comm _ x _]
+    algebraMap_apply, Algebra.id.smul_eq_mul, mul_one, Classical.not_not, Set.mem_range,
+    sub_eq_zero, @eq_comm _ x _]
 #align continuous_map.spectrum_eq_range ContinuousMap.spectrum_eq_range
 
 end NormedField

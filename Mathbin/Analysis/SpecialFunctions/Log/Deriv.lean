@@ -70,8 +70,9 @@ theorem differentiableAt_log_iff : DifferentiableAt ℝ log x ↔ x ≠ 0 :=
 
 theorem deriv_log (x : ℝ) : deriv log x = x⁻¹ :=
   if hx : x = 0 then by
-    rw [deriv_zero_of_not_differentiableAt (mt differentiable_at_log_iff.1 (not_not.2 hx)), hx,
-      inv_zero]
+    rw [deriv_zero_of_not_differentiableAt
+        (mt differentiable_at_log_iff.1 (Classical.not_not.2 hx)),
+      hx, inv_zero]
   else (hasDerivAt_log hx).deriv
 #align real.deriv_log Real.deriv_log
 

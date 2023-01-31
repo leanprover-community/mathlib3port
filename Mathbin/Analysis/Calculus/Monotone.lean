@@ -92,7 +92,7 @@ theorem StieltjesFunction.ae_hasDerivAt (f : StieltjesFunction) :
         ((Ennreal.tendsto_toReal h'x.ne).comp (hx.comp (Real.tendsto_icc_vitaliFamily_right x)))
     filter_upwards [self_mem_nhdsWithin]
     rintro y (hxy : x < y)
-    simp only [comp_app, StieltjesFunction.measure_icc, Real.volume_icc, not_not.1 h''x]
+    simp only [comp_app, StieltjesFunction.measure_icc, Real.volume_icc, Classical.not_not.1 h''x]
     rw [← Ennreal.ofReal_div_of_pos (sub_pos.2 hxy), Ennreal.toReal_ofReal]
     exact div_nonneg (sub_nonneg.2 (f.mono hxy.le)) (sub_pos.2 hxy).le
   -- Limit on the left, following from differentiation of measures. Its form is not exactly the one
@@ -162,7 +162,7 @@ theorem Monotone.ae_hasDerivAt {f : ℝ → ℝ} (hf : Monotone f) :
     hf.countable_not_continuous_at.ae_not_mem volume]with x hx h'x
   have A : hf.stieltjes_function x = f x :=
     by
-    rw [not_not, hf.continuous_at_iff_left_lim_eq_right_lim] at h'x
+    rw [Classical.not_not, hf.continuous_at_iff_left_lim_eq_right_lim] at h'x
     apply le_antisymm _ (hf.le_right_lim (le_refl _))
     rw [← h'x]
     exact hf.left_lim_le (le_refl _)

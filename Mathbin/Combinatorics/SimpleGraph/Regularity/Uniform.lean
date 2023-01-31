@@ -240,8 +240,8 @@ theorem nonUniforms_bot (hε : 0 < ε) : (⊥ : Finpartition A).nonUniforms G ε
   by
   rw [eq_empty_iff_forall_not_mem]
   rintro ⟨u, v⟩
-  simp only [Finpartition.mk_mem_nonUniforms_iff, Finpartition.parts_bot, mem_map, not_and, not_not,
-    exists_imp]
+  simp only [Finpartition.mk_mem_nonUniforms_iff, Finpartition.parts_bot, mem_map, not_and,
+    Classical.not_not, exists_imp]
   rintro x hx rfl y hy rfl h
   exact G.is_uniform_singleton hε
 #align finpartition.non_uniforms_bot Finpartition.nonUniforms_bot

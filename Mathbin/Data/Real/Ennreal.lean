@@ -625,7 +625,7 @@ theorem toNnreal_add {r₁ r₂ : ℝ≥0∞} (h₁ : r₁ ≠ ∞) (h₂ : r₂
   rfl
 #align ennreal.to_nnreal_add Ennreal.toNnreal_add
 
-theorem not_lt_top {x : ℝ≥0∞} : ¬x < ∞ ↔ x = ∞ := by rw [lt_top_iff_ne_top, not_not]
+theorem not_lt_top {x : ℝ≥0∞} : ¬x < ∞ ↔ x = ∞ := by rw [lt_top_iff_ne_top, Classical.not_not]
 #align ennreal.not_lt_top Ennreal.not_lt_top
 
 theorem add_ne_top : a + b ≠ ∞ ↔ a ≠ ∞ ∧ b ≠ ∞ := by simpa only [lt_top_iff_ne_top] using add_lt_top
@@ -1290,7 +1290,7 @@ protected theorem lt_add_of_sub_lt_left (h : a ≠ ∞ ∨ b ≠ ∞) : a - b < 
   by
   obtain rfl | hb := eq_or_ne b ∞
   · rw [top_add, lt_top_iff_ne_top]
-    exact fun _ => h.resolve_right (not_not.2 rfl)
+    exact fun _ => h.resolve_right (Classical.not_not.2 rfl)
   · exact (cancel_of_ne hb).lt_add_of_tsub_lt_left
 #align ennreal.lt_add_of_sub_lt_left Ennreal.lt_add_of_sub_lt_left
 

@@ -251,7 +251,7 @@ theorem TendstoInMeasure.exists_seq_tendsto_ae (hfg : TendstoInMeasure μ f atTo
   rw [ae_iff]
   refine'
     ⟨exists_seq_tendsto_ae.seq_tendsto_ae_seq_strict_mono hfg, measure_mono_null (fun x => _) hμs⟩
-  rw [Set.mem_setOf_eq, ← @not_not (x ∈ s), not_imp_not]
+  rw [Set.mem_setOf_eq, ← @Classical.not_not (x ∈ s), not_imp_not]
   exact h_tendsto x
 #align measure_theory.tendsto_in_measure.exists_seq_tendsto_ae MeasureTheory.TendstoInMeasure.exists_seq_tendsto_ae
 
